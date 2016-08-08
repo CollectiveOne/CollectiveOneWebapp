@@ -22,7 +22,6 @@
 	</bean>
 	
 	<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="${database.driverClassName}"/>
 		<property name="url" value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() }"/>
 		<property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>
 		<property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
