@@ -26,6 +26,7 @@ public class StartUpMethods {
 	
 	@PostConstruct
 	public void UpdateDecisionsStatus() {
+		/*
 		System.out.println("Filling DB");
 		
 		dbServices.userCreate("pepoospina","12345678");
@@ -37,6 +38,6 @@ public class StartUpMethods {
 		projectDto1.setCreatorUsername("pepoospina");
 		
 		dbServices.projectCreate(projectDto1);
-		
+		*/
 	}
 }
