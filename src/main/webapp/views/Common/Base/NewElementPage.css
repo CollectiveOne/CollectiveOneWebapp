@@ -1,0 +1,85 @@
+#container #content #content_pane {
+	width:calc(100% - 200px - 10px);
+	padding-top:50px;
+	max-width:600px;
+	height:100%;
+	float:left;
+	border-radius:5px;
+}
+
+.select_div {
+	margin-left:10px;
+	margin-bottom:10px;
+	width:calc(100% - 20px);
+	float:left;
+	clear:both;
+}
+
+.select {
+	float:right;
+	width:calc(100% - 100px - 10px);
+	border-radius:5px;
+	font-family:'calibri';
+	border-style:solid;
+	border-width:1px;
+	border-color:#888844;
+}
+
+.field {
+	margin-left:10px;
+	margin-bottom:10px;
+	width:calc(100% - 20px);
+	float:left;
+	clear:both;
+}
+
+.field_name_p {
+	float:left;
+	width:100px;
+	padding-top:1px;
+	padding-right:6px;
+	text-align:right;
+	font-size:14px;
+	color:#888844;
+	margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;	
+}
+
+.field_in {
+	float:right;
+	width:calc(100% - 100px - 10px);;
+	border-radius:5px;
+	font-family:'calibri';
+	border-style:solid;
+	border-width:1px;
+	border-color:#888844;
+}
+
+.textarea_in {
+	float:right;
+	width:calc(100% - 100px - 10px);
+	max-width: calc(100% - 100px - 10px);;
+    max-height: 200px;
+    resize: vertical;
+	height:50px;	
+	border-radius:5px;
+	border-style:solid;
+	border-width:1px;
+	border-color:#888844;
+}
+
+#container #content #content_pane button {
+	background-color:#D1DBBD;
+	float:right;
+	height:25px;
+	width:200px;
+	margin-top:10px;	
+	margin-left:10px;
+	margin-right:10px;	
+	margin-bottom:5px;
+	border-radius:5px;
+	cursor:pointer;
+	color:#888844;
+}

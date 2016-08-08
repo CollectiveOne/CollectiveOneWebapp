@@ -1,0 +1,54 @@
+#userBid_div {
+	height:50px;
+	width:150px;
+	clear:none;
+	border-radius:5px;
+	border-style:solid;
+	border-width:2px;
+	border-color:#888844;
+}
+
+#userBid_div #left_div {
+	height:100%;
+	width:100%;	
+	float:left;
+}
+
+#userBid_div #right_div {
+	height:100%;
+	width:0 px;	
+	float:left;
+}
+
+#userBid_div #left_div #avatar {
+	background-image: url("../../images/male-avatar-75x35.png");
+	background-repeat: no-repeat;
+	height:20px;
+	width:100%;	
+}
+
+#userBid_div #left_div #username {
+	height:15px;
+	width:100%;	
+}
+
+#userBid_div #left_div #username a {
+	margin-left:5px;
+	color:#888844;
+	font-size:12px;		
+	font-style:normal;
+}
+
+#userBid_div #left_div #ppoints_div {
+	height:15px;
+	width:100%;	
+}
+
+#userBid_div #left_div #ppoints_div p {
+	margin-left:5px;
+	text-align:left;
+	color:#888844;
+	font-size:10px;		
+	font-style:normal;
+}
+

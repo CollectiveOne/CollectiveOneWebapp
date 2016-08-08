@@ -1,0 +1,211 @@
+body {
+    margin: 0px;
+}
+
+#container {
+	font-family: "calibri";
+	position: relative;
+	margin-top:0px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#container #top{
+	width:100%;
+	height:80px;
+	clear:both;
+}
+
+#container #content {
+	position: relative;
+	height:1112px;
+	width:100%;
+	clear:both;
+}
+
+#container #bottom {
+	position: relative;
+	width:100%;
+	height:50px;
+	text-align:center;
+	clear:both;
+}
+
+#container #top #top_left {
+	width:250px;
+	height:100%;
+	float:left;
+}
+
+#container #top #top_left #logo{
+	width:100%;
+	cursor:pointer;
+}
+
+#container #top #top_right {
+	width:calc(100% - 250px);
+	height:100%;
+	float:right;
+}
+
+#container #top #top_right #search_box_div {
+	width:calc(100% - 150px);
+	height:100%;
+	float:left;
+}
+
+#container #top #top_right #search_box_div #search_box_input {
+	margin-top:27px;
+	height:30px;
+	width:100%;
+	border-radius:5px;
+	border-style:solid;
+	border-width:1px;
+	border-color:#888844;
+}
+
+#container #control_div {
+	height:80px;	
+	width:100px;
+	position:absolute;
+	right: 10px;
+	top: 0px;
+}
+
+#container #new_element_form_div {
+	height:600px;	
+	width:500px;
+	position:absolute;
+	left:230px;
+	top: 150px;
+	display:none;
+	background-color:#888844;
+	border-radius:15px;
+	padding-left:10px;
+	padding-top:15px;
+}
+
+#container #control_div button{
+	float:right;
+	height:20px;
+	width:100px;	
+	border-radius:5px;
+	cursor:pointer;
+	margin-bottom:5px;
+	background-color:#D1DBBD;
+	color:#888844;
+}
+
+#container #user_div {
+	background-color:#888844;
+	width:200px;	
+	float:right;
+	position:absolute;
+	right: 10px;
+	top: 30px;
+	display:none;
+	border-radius:5px;
+}
+
+#container #user_div #login_div .input {
+	margin-top:5px;
+	margin-right:5px;
+	width:calc(100% - 10px);
+	float:right;
+	clear:both;
+	border-radius:5px;
+}
+
+#container #user_div button {
+	background-color:#D1DBBD;
+	margin-top:5px;
+	margin-right:6px;
+	margin-bottom:0px;
+	height:20px;
+	width:50%;
+	text-align:center;
+	float:right;
+	cursor:pointer;
+	border-radius:5px;
+	clear:both;
+}
+
+#container #user_div a {
+	clear:both;
+	float: right;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: white;
+}
+
+#container #output_div{
+	white-space: nowrap;
+	position:fixed;
+	top:0px;
+}
+
+#container #output_div p {
+	white-space: nowrap;
+	position:fixed;
+	top:0px;
+	left:calc(50% - 100px);
+	margin-top:0px;
+	margin-bottom:0px;
+	font-size: 12px;
+	text-align:center;
+	background-color:yellow;
+}
+
+#container #content #nav_pane {
+	height:100%;
+	width:200px;
+	margin-right:10px;
+	float:left;
+	background-color:#888844;
+	border-radius:5px;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+#container #content #nav_pane button {
+	background-color:#D1DBBD;
+	float:left;
+	height:25px;
+	width:calc(100% - 20px);
+	margin-left:10px;	
+	border-radius:5px;
+	cursor:pointer;
+	margin-bottom:5px;
+	color:#888844;
+}
+
+#container #content #content_pane {
+	width:calc(100% - 200px - 10px);
+	float:right;
+	border-radius:5px;
+}
+
+#content_pane .p_header {
+	margin-top: 10px;
+    margin-bottom: 5px;
+    margin-left: 0;
+    margin-right: 0;
+	clear:both;
+	font-family: "calibri";
+	color:#888844;
+	font-size:10px;
+	font-style: italic;
+}
+
+#content_pane p {
+	margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0;
+    margin-right: 0;
+	clear:both;
+	font-family: "calibri";
+	color:#888844;
+	font-size:10px;
+	font-style: italic;
+}

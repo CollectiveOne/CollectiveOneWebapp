@@ -1,0 +1,134 @@
+#decision_div {
+	height:50px;
+	width:250px;
+	clear:none;
+	border-radius:5px;
+	border-style:solid;
+	border-width:2px;
+	border-color:#888844;
+}
+
+#decision_div #left_div {
+	margin-left:5px;
+	height:100%;
+	width:50px;	
+	float:left;
+}
+
+#decision_div #center_div {
+	height:100%;
+	width:150px;	
+	float:left;
+}
+
+#decision_div #right_div {
+	height:100%;
+	width:45px;	
+	float:left;
+	padding-top:2px;
+}
+
+#decision_div #left_div #state p {
+	height:15px;
+	width:100%;	
+	font-style:normal;
+	overflow:hidden;
+}
+
+#decision_div #left_div #verdict p {
+	height:15px;
+	width:100%;	
+	font-style:normal;
+	font-size:14px;	
+	color:red;
+}
+
+#decision_div #left_div #verdictTime p {
+	height:15px;
+	width:100%;	
+	font-style:normal;
+}
+
+#decision_div #center_div #center_top_div {
+	height:20px;
+	width:100%;	
+}
+
+#decision_div #center_div #center_bottom_div {
+	height:30px;
+	width:100%;	
+}
+
+#decision_div #center_div #center_top_div p {
+	text-align:left;
+	color:#888844;
+	font-size:10px;		
+	font-style:normal;
+}
+
+#decision_div #center_div #center_bottom_div p {
+	text-align:left;
+	color:#888844;
+	font-size:10px;		
+	font-style:normal;
+}
+
+#decision_div #center_div #center_bottom_div #description {
+	height:15px;
+	width:100%;
+	float:left;
+}
+
+#decision_div #center_div #center_bottom_div #clarity {
+	height:15px;
+	width:75px;
+	float:left;	
+}
+
+#decision_div #center_div #center_bottom_div #stability {
+	height:15px;
+	width:75px;
+	float:left;	
+}
+
+#decision_div #center_div #center_bottom_div #acceptToRejectRatio {
+	height:15px;
+	width:75px;
+	float:left;	
+}
+
+#decision_div #center_div #center_bottom_div #votedRatio {
+	height:100%;
+	width:75px;
+	float:left;	
+}
+
+#decision_div #right_div  p {
+	text-align:left;
+	color:#888844;
+	font-size:14px;		
+	font-style:normal;
+}
+
+#decision_div #right_div #accept_div {
+	height:20px;
+	width:40px;	
+	background-color:#D1DBBD;
+	border-radius:5px;
+	margin:2px;
+	cursor:pointer;
+}
+
+#decision_div #right_div p{
+	text-align:center;
+}
+
+#decision_div #right_div #reject_div {
+	height:20px;
+	width:40px;	
+	background-color:#D1DBBD;
+	border-radius:5px;
+	margin:2px;
+	cursor:pointer;
+}
+

@@ -1,0 +1,247 @@
+#cbtion_container {
+	height:70px;
+	width:calc(100% - 10px);
+}
+
+#cbtion_container #cbtion_project {
+	margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 30px;
+    margin-right: 0;
+	clear:both;
+	font-family: "calibri";
+	color:#888844;
+	font-size:22px;
+	font-weight: bold;
+	cursor:pointer;
+}
+
+#cbtion_container #cbtion_title {
+	margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 30px;
+    margin-right: 0;
+	clear:both;
+	font-family: "calibri";
+	color:#888844;
+	font-size:22px;
+	font-weight: bold;
+}
+
+#cbtion_container #cbtion_description {
+	margin-top: 0;
+    margin-bottom: 0;
+    margin-left:30px;
+    margin-right: 0;
+	clear:both;
+	font-family: "calibri";
+	color:#888844;
+	font-size:14px;
+	font-weight: normal;
+}
+
+#cbtion_container #cbtion_product {
+	margin-top: 0;
+    margin-bottom: 0;
+    margin-left:30px;
+    margin-right: 0;
+	clear:both;
+	font-family: "calibri";
+	color:#888844;
+	font-size:14px;
+	font-weight: normal;
+}
+
+#cbtion_container #creator_username {
+	margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 30px;
+    margin-right: 0;
+	clear:both;
+	font-family: "calibri";
+	color:#888844;
+	font-size:14px;
+	font-weight: bold;
+}
+
+#cbtion_container #cbtion_state {
+	margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 30px;
+    margin-right: 0;
+	clear:both;
+	font-family: "calibri";
+	color:#888844;
+	font-size:14px;
+	font-weight: normal;
+}
+
+#cbtion_container button {
+	background-color:#D1DBBD;
+	margin-top:5px;
+	margin-left: 30px;
+	margin-right:6px;
+	margin-bottom:6px;
+	height:20px;
+	color:#888844;
+	text-align:center;
+	float:left;
+	cursor:pointer;
+	border-radius:5px;
+	clear:both;
+}
+
+#cbtion_container #bids_portion_div {
+	width:calc(100%);	
+}
+
+#cbtion_container #new_bid_btn {
+	height:20px;
+	width:200px;
+	float:left;
+	cursor:pointer;
+	border-radius:3px;
+	background-color:#D1DBBD;
+	margin-left:calc(30px + 3px + 3px);
+	margin-bottom: 5px;	
+}
+
+#cbtion_container #new_bid_btn p {
+	margin-top: 2px;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    width:100%;
+    color: #888844;
+    font-family: "calibri";
+    text-align:center;
+    font-size:14px;	
+	font-style: normal;
+}
+
+#cbtion_container #new_bid_div {
+	display:none;
+	width:calc(100% - 30px - 3px - 3px - 10px - 3px - 3px);
+	height:25px;
+	background-color:#D1DBBD;
+	clear:both;
+	margin-bottom: 3px;
+	margin-left:calc(30px + 3px + 3px);
+	border-radius:3px;	
+}
+
+#cbtion_container #new_bid_div p {
+	margin-top: 3px;
+    margin-bottom: 0;
+    margin-left: 0px;
+    margin-right: 0;
+    width:100%;
+    text-align:center;
+	font-family: "calibri";
+	color:#888844;
+	font-size:14px;	
+}
+
+#cbtion_container #new_bid_div #newbid_username_div {
+	width:150px;
+	height:100%;
+	background-color:#D1DBBD;
+	float:left;
+	border-radius:3px;	
+}
+
+#cbtion_container #new_bid_div #newbid_ppoints_div {
+	width:120px;
+	height:100%;
+	background-color:#D1DBBD;
+	float:left;
+	border-radius:3px;
+}
+
+#cbtion_container #new_bid_div #newbid_description_div {
+	width:200px;
+	height:100%;
+	background-color:#D1DBBD;
+	float:left;
+	border-radius:3px;
+}
+
+#cbtion_container #new_bid_div #newbid_ppoints_in {
+	width:100%;
+	height:100%;
+	background-color:#D1DBBD;
+	text-align:center;
+	color:#888844;
+}
+
+#cbtion_container #new_bid_div #newbid_description_in {
+	float:right;
+	width:200px;
+	max-width: 200px;
+    max-height: 200px;
+    resize: vertical;
+	height:100%;	
+	border-radius:5px;
+	background-color:#D1DBBD;
+}
+
+
+#cbtion_container #new_bid_div #newbid_submit_div {
+	width:100px;
+	height:calc(100% - 6px);
+	margin-top: 3px;
+	margin-left: 20px;
+	background-color:#888844;
+	float:left;
+	border-radius:3px;
+	cursor:pointer;
+}
+
+#cbtion_container #new_bid_div #newbid_submit_div p {
+	color:#D1DBBD;
+	font-size:12px;	
+}
+
+#cbtion_container #bids_div {
+	width:calc(100% - 52px);
+	max-height: 350px;
+	overflow: auto;
+	margin-left:30px;
+	margin-top: 10px;
+	border-color:#888844;
+	border-width:3px;
+	border-style:solid;
+	border-radius:5px;
+	padding-top:3px;
+	padding-left:3px;
+	padding-right:3px;
+}
+
+#cbtion_container #bids_div .bid_div {
+     width:calc(100%);
+     height:55px;
+     clear:both;
+     margin-bottom:3px;
+} 
+
+#cbtion_container #bids_div .bid_creator_div {
+     width:155px;
+     height:55px;
+     float:left;
+}
+
+#cbtion_container #bids_div .bid_contents_div {
+     width:205px;
+     height:55px;
+     float:left;
+}
+
+#cbtion_container #bids_div .bid_decision_div {
+     width:250px;
+     height:55px;
+     float:left;
+}   
+
+
+
+

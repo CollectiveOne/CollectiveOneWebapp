@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- The web.xml, also known as the deployment descriptor, defines a Java Servlet web application. 
+		 This document is a mandatory element of any web application and must reside within WEB-INF.  The 
+		 deployment descriptor defines all the servlets and servlet filters that belong to this web
+		 application. -->
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	      version="3.0">
+
+    <display-name>CoProject</display-name>
+
+	<filter>
+        <filter-name>struts2</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+    </filter>
+   			 
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <welcome-file-list>
+        <welcome-file>views/index.jsp</welcome-file>
+    </welcome-file-list>
+ 
+	<listener>
+	    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<context-param>
+	    <param-name>contextConfigLocation</param-name>
+	    <param-value>/WEB-INF/beans.xml</param-value>
+	</context-param>
+
+</web-app>
