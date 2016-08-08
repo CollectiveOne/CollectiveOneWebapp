@@ -1,1 +1,1 @@
-web:	java -jar target/coprojects-hk.jar
+web: java -cp target/classes:target/dependency/* coprojects-hk
