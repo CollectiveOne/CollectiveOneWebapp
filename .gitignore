@@ -1,3 +1,5 @@
 target
 .project
 bin/
+.classpath
+.settings/
