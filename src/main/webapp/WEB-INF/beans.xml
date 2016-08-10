@@ -18,7 +18,7 @@
     <task:annotation-driven/>
 	    
 	<bean class="java.net.URI" id="dbUrl">
-	    <constructor-arg value="#{systemEnvironment['DATABASE_URL']}"/>
+		<constructor-arg value="${DATABASE_URL}"/>
 	</bean>
 	
 	<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource">
