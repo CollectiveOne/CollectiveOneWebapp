@@ -1,5 +1,15 @@
 package coproject.cpweb.actions.json;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Properties;
+import java.util.Scanner;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
@@ -55,7 +65,22 @@ public class UserNew extends ActionSupport{
 		this.res = res;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.opensymphony.xwork2.ActionSupport#validate()
+	 */
 	public void validate() {
+		if(username.contains(" ")) {
+			addFieldError("username", "cant include spaces");
+		}
+		
+		if(password.contains(" ")) {
+			addFieldError("password", "cant include spaces");
+		}
+		
+		if(!username.equals(username.toLowerCase())) {
+			addFieldError("username", "must be lower case only");
+		}
+		
 		if(username.length() < 6){
 			addFieldError("username", "must be at least 6 charachers long");
 		}
@@ -63,6 +88,24 @@ public class UserNew extends ActionSupport{
 		if(password.length() < 8){
 			addFieldError("password", "must be at least 8 charachers long");
 		}
+		
+		/* allow only a given set of users */
+		Properties prop = new Properties();
+		InputStream input = null;
+		 
+		try {
+			input = getClass().getResourceAsStream("login.properties");
+			prop.load(input);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		String[] aprovedUsers = prop.getProperty("aprovedUsers").split(",");
+		if(!Arrays.asList(aprovedUsers).contains(username)) {
+			addFieldError("username", "signup not aproved");
+		}
+		
 	}
 	
 	/* Execute */

@@ -1,13 +1,10 @@
 package coproject.cpweb.utils.db.services;
 
-import java.sql.Timestamp;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import coproject.cpweb.utils.db.entities.dtos.ProjectDto;
 
 @Component
 public class StartUpMethods {

@@ -23,11 +23,13 @@ Page.prototype.get_div_jQ = function(div_type,id) {
 	return $('#'+div_type+'_div'+id);
 }
 
-Page.prototype.append_input = function(id,txt,val) {
+Page.prototype.append_input = function(id,txt,val,type) {
+	type = type || "text";
 	this.container.append($('<div class=field id='+id+'>'));
 	
 	$('#'+id).append($('<p class=field_name_p>'+txt+'</p>'));
-	$('#'+id).append($('<input type="text" class=field_in id='+id+'_in value="'+val+'">'));
+	$('#'+id).append($('<input type='+type+' class=field_in id='+id+'_in value="'+val+'">'));
+	
 }
 
 Page.prototype.append_project_selector = function(id) {

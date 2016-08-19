@@ -34,8 +34,8 @@ UserNewPage.prototype.draw = function() {
 		this.container.empty();
 
 		this.append_input('username', 'username', '');
-		this.append_input('password', 'password', '');
-		this.append_input('password_check', 'password_check', '');
+		this.append_input('password', 'password', '','password');
+		this.append_input('password_check', 'password_check', '','password');
 		
 		// append create button
 		this.container.append($('<button id="create_btn">Sign up</button>'));
