@@ -101,7 +101,7 @@ public class UserNew extends ActionSupport{
 			e.printStackTrace();
 		}
 		
-		String[] aprovedUsers = prop.getProperty("aprovedUsers").split(",");
+		String[] aprovedUsers = prop.getProperty("approvedUsers").split(",");
 		if(!Arrays.asList(aprovedUsers).contains(username)) {
 			addFieldError("username", "signup not aproved");
 		}
