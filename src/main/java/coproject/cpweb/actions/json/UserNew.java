@@ -87,20 +87,11 @@ public class UserNew extends ActionSupport{
 		}
 		
 		/* allow only a given set of users */
-		Properties prop = new Properties();
-		InputStream input = null;
-		 
-		try {
-			URL resource = getClass().getResource("login.properties");
-			String loginPath = resource.getPath();
-			input = new FileInputStream(loginPath);
-			prop.load(input);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
-		String[] aprovedUsers = prop.getProperty("approvedUsers").split(",");
+		String[] aprovedUsers = {"rosapm",
+				"martinos"
+		};
+		
 		if(!Arrays.asList(aprovedUsers).contains(username)) {
 			addFieldError("username", "signup not aproved");
 		}
