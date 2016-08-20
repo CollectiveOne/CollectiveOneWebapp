@@ -1,14 +1,11 @@
 package coproject.cpweb.actions.json;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Properties;
-import java.util.Scanner;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -94,7 +91,9 @@ public class UserNew extends ActionSupport{
 		InputStream input = null;
 		 
 		try {
-			input = getClass().getResourceAsStream("login.properties");
+			URL resource = getClass().getResource("login.properties");
+			String loginPath = resource.getPath();
+			input = new FileInputStream(loginPath);
 			prop.load(input);
 			
 		} catch (IOException e) {
