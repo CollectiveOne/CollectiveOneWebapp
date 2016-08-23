@@ -17,12 +17,20 @@
   	<context:component-scan base-package="coproject.cpweb.utils.db.services" />
     <task:annotation-driven/>
 	    
-	<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-       <property name="driverClassName" value="org.postgresql.Driver" />
-       <property name="url" value="jdbc:postgresql://localhost:5432/cpdb" />
-       <property name="username" value="postgres" />
-       <property name="password" value="iristra" />
-  	</bean>
+	<bean class="java.net.URI" id="dbUrl">
+        <constructor-arg value="#{systemEnvironment['DATABASE_URL']}"/>
+	</bean>
+	
+	<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="url" value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() }"/>
+		<property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>
+		<property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
+		<property name="maxActive" value="10"/>
+		<property name="maxIdle" value="5"/>
+		<property name="minIdle" value="2"/>
+		<property name="initialSize" value="5"/>
+		<property name="removeAbandoned" value="true"/>
+	</bean>
 	
     <bean id="mySessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
         <property name="dataSource" ref="myDataSource"/>
@@ -36,7 +44,7 @@
             	<prop key="current_session_context_class">thread</prop >
                 <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
                 <prop key="hibernate.show_sql">false</prop>
-                <prop key="hibernate.hbm2ddl.auto">create</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
             </props>
         </property>
     </bean>
