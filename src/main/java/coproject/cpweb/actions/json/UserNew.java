@@ -1,11 +1,6 @@
 package coproject.cpweb.actions.json;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Arrays;
-import java.util.Properties;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
