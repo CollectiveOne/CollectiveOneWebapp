@@ -20,7 +20,7 @@ DecisionBox.prototype.decisionReceivedCallback = function(decisionDto) {
 }
 
 DecisionBox.prototype.draw = function() {
-	this.container.load("DecisionBox/DecisionBox.html",this.decisionBoxLoaded.bind(this));
+	this.container.load("../elements/DecisionBox/DecisionBox.html",this.decisionBoxLoaded.bind(this));
 }
 
 DecisionBox.prototype.decisionBoxLoaded = function() {

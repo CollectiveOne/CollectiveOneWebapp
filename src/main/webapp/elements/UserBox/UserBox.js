@@ -22,7 +22,7 @@ UserBox.prototype.userDataReceivedCallback = function(dataIn) {
 }
 
 UserBox.prototype.draw = function() {
-	this.container.load("UserBox/UserBox.html",this.userBoxLoaded.bind(this));
+	this.container.load("../elements/UserBox/UserBox.html",this.userBoxLoaded.bind(this));
 }
 
 UserBox.prototype.userBoxLoaded = function() {

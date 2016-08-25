@@ -19,7 +19,7 @@ BidBox.prototype.bidReceivedCallback = function(bidDto) {
 }
 
 BidBox.prototype.draw = function() {
-	this.container.load("BidBox/BidBox.html",this.bidBoxLoaded.bind(this));
+	this.container.load("../elements/BidBox/BidBox.html",this.bidBoxLoaded.bind(this));
 }
 
 BidBox.prototype.bidBoxLoaded = function() {
