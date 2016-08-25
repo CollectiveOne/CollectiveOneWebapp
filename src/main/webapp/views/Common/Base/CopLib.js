@@ -5,16 +5,24 @@ function CopDocReadyCommon(callbackFun,callbackObj) {
 	GLOBAL.sessionData = new SessionData("#user_div");
 	GLOBAL.sessionData.init(callbackFun,callbackObj);
 
-	$("#cbtion_list").click(function() {
-		window.location = 'CbtionListPage.action';
-	});
-	
 	$("#logo").click(function() {
 		window.location = 'CbtionListPage.action';
 	});
 	
+	$("#cbtion_list").click(function() {
+		window.location = 'CbtionListPage.action';
+	});
+	
+	$("#goals_list").click(function() {
+		window.location = 'GoalListPage.action';
+	});
+	
 	$("#new_cbtion").click(function() {
 		window.location = 'CbtionNewPage.action';
+	});
+	
+	$("#new_goal").click(function() {
+		window.location = 'GoalNewPage.action';
 	});
 	
 	$("#new_project").click(function() {

@@ -5,8 +5,8 @@
 <%@ include file="../Common/Base/CommonHead.jsp"%>
 <script type="text/javascript" src="CbtionPage/CbtionPage.js"></script>
 <link rel="stylesheet" type="text/css" href="CbtionPage/CbtionPage.css" />
-<script type="text/javascript" src="BidBox/BidBox.js"></script>
-<link rel="stylesheet" type="text/css" href="BidBox/BidBox.css" />
+<script type="text/javascript" src="../elements/BidBox/BidBox.js"></script>
+<link rel="stylesheet" type="text/css" href="../elements/BidBox/BidBox.css" />
 <title>CoProject - Contribution</title>
 </head>
 

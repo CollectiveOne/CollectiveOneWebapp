@@ -26,7 +26,16 @@ CbtionNewPage.prototype.draw = function() {
 		this.append_input('title', 'Title', '');
 		this.append_text_area('description', 'Description','');
 		this.append_text_area('product', 'Product','');
-
+		
+		this.container.append(	"<div class=field id=goalTag_div>"+
+									"<p class=field_name_p>Goal</p>"+
+									"<input type=text class=field_in id=autocomplete>"+
+								"</div>");
+		
+		$('#autocomplete').autocomplete({
+		    serviceUrl: '../json/GoalGetSuggestions.action',
+		});
+		
 		// append create button
 		this.container.append($('<button id="create_btn">Create</button>'));
 

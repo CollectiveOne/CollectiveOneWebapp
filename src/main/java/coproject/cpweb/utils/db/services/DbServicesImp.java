@@ -13,6 +13,7 @@ import coproject.cpweb.utils.db.daos.*;
 import coproject.cpweb.utils.db.entities.*;
 import coproject.cpweb.utils.db.entities.dtos.BidDto;
 import coproject.cpweb.utils.db.entities.dtos.CbtionDto;
+import coproject.cpweb.utils.db.entities.dtos.GoalDto;
 import coproject.cpweb.utils.db.entities.dtos.ProjectDto;
 import coproject.cpweb.utils.db.entities.dtos.ThesisDto;
 import coproject.cpweb.utils.db.entities.dtos.UserDto;
@@ -26,6 +27,9 @@ public class DbServicesImp {
 
 	@Autowired
 	protected CbtionDao cbtionDao;
+	
+	@Autowired
+	protected GoalDao goalDao;
 
 	@Autowired
 	protected ProjectDao projectDao;
@@ -251,7 +255,73 @@ public class DbServicesImp {
 	public double projectGetPpsTot(int projectId) {
 		return projectDao.projectGetPpsTot(projectId);
 	}
+	
+	@Transactional
+	public int goalCreate(GoalDto goalDto) {
+		Goal goal = new Goal();
+		Project project = projectDao.get(goalDto.getProjectName());
+		projectDao.save(project);
+		
+		goal.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		goal.setCreator(userDao.get(goalDto.getCreatorUsername()));
+		goal.setDescription(goalDto.getDescription());
+		goal.setProject(project);
+		goal.setState(GoalState.PROPOSED);
+		goal.setGoalTag(goalDto.getGoalTag());
+		
+		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
+		decisionRealmDao.save(realm);
+		
+		Decision create = new Decision();
+		Decision delete = new Decision();
+		
+		create.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		create.setDescription("Close contribution");
+		create.setState(DecisionState.IDLE);
+		create.setVerdictHours(36);
+		create.setDecisionRealm(realm);
+		
+		delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		delete.setDescription("Close contribution");
+		delete.setState(DecisionState.IDLE);
+		delete.setVerdictHours(36);
+		delete.setDecisionRealm(realm);
+		
+		decisionDao.save(create);
+		decisionDao.save(delete);
+		
+		goal.setCreate(create);
+		goal.setDelete(delete);
+		
+		return goalDao.save(goal);
+	}
+	
+	@Transactional
+	public GoalDto goalGetDto(int goalId) {
+		return goalDao.get(goalId).toDto();
+	}
+	
+	@Transactional
+	public GoalDtoListRes goalDtoGetFiltered(GoalFilters filters, int page, int nPerPage) {
+		GoalListRes goalsRes = goalDao.get(filters,page,nPerPage);
 
+		GoalDtoListRes goalsDtosRes = new GoalDtoListRes();
+
+		goalsDtosRes.setResSet(goalsRes.getResSet());
+		goalsDtosRes.setGoalDtos(new ArrayList<GoalDto>());
+
+		for(Goal goal : goalsRes.getGoals()) {
+			goalsDtosRes.getGoalDtos().add(goal.toDto());
+		}
+
+		return goalsDtosRes;
+	}
+	
+	@Transactional
+	public List<String> goalGetSuggestions(String query) {
+		return goalDao.getSuggestions(query);
+	}
+	
 	@Transactional
 	public void cbtionSave(Cbtion cbtion) {
 		cbtionDao.save(cbtion);

@@ -111,6 +111,59 @@ ServerComm.prototype = {
 			}
 		});
 	},
+	
+	goalNew : function(goalData,callbackFunction,callbackObj) {
+		//TODO: update
+		var data = {
+			'goalDtoIn' : goalData
+		};
+		var datastr = JSON.stringify(data);
+
+		$.ajax({
+			type : 'POST',
+			url : '../json/GoalNew',
+			data : datastr,
+			dataType : 'json',
+			contentType : 'application/json',
+			success : function(data, textStatus, jqXHR) {
+				if (data.goalDto) {
+					callbackFunction.call(callbackObj,data.goalDto);
+				} else {
+					showOutput(data);
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(errorThrown);
+			}
+		});
+	},
+	
+	goalListGet : function(filters,callbackFunction,callbackObj) {
+
+		var data = {
+			'projectNames' : filters.projects,
+			'stateNames' : filters.states,
+			'page': filters.page,
+			'nPerPage': filters.nPerPage
+		};
+		var datastr = JSON.stringify(data);
+
+		$.ajax({
+			type : 'POST',
+			url : '../json/GoalListGet',
+			data : datastr,
+			dataType : "json",
+			contentType : 'application/json',
+			success : function(data, textStatus, jqXHR) {
+				if (data) {
+					callbackFunction.call(callbackObj,data.goalDtos, data.resSet);
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(errorThrown);
+			}
+		});
+	},
 
 	userGet : function(username,callbackFunction,callbackObj) {
 

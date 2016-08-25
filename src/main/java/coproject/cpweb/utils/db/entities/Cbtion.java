@@ -8,7 +8,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -44,12 +43,7 @@ public class Cbtion {
 	private User contributor;
 	private double assignedPpoints;
 	@OneToOne
-	private Decision create;
-	@OneToOne
 	private Decision close;
-	
-	@ManyToMany
-	private List<Goal> goals = new ArrayList<Goal>();
 	
 	public CbtionDto toDto() {
 		CbtionDto dto = new CbtionDto();
@@ -143,23 +137,10 @@ public class Cbtion {
 	public void setAssignedPpoints(double assignedPpoints) {
 		this.assignedPpoints = assignedPpoints;
 	}
-	public Decision getCreate() {
-		return create;
-	}
-	public void setCreate(Decision create) {
-		this.create = create;
-	}
 	public Decision getClose() {
 		return close;
 	}
 	public void setClose(Decision close) {
 		this.close = close;
 	}
-	public List<Goal> getGoals() {
-		return goals;
-	}
-	public void setGoals(List<Goal> goals) {
-		this.goals = goals;
-	}
-	
 }
