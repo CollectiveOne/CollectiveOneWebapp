@@ -28,6 +28,8 @@ public class Decision {
 	private int id;
 	private String description;
 	private Timestamp creationDate;
+	private String fromState;
+	private String toState;
 
 	@ManyToOne
 	private DecisionRealm decisionRealm = new DecisionRealm();
@@ -76,6 +78,8 @@ public class Decision {
 		dto.setId(id);
 		dto.setDescription(description);
 		dto.setCreationDate(creationDate);
+		dto.setFromState(fromState);
+		dto.setToState(toState);
 		dto.setnVoters(decisionRealm.size());
 		dto.setPpsTot(ppsTot);
 		dto.setVerdictHours(verdictHours);
@@ -117,6 +121,18 @@ public class Decision {
 	}
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
+	}
+	public String getFromState() {
+		return fromState;
+	}
+	public void setFromState(String fromState) {
+		this.fromState = fromState;
+	}
+	public String getToState() {
+		return toState;
+	}
+	public void setToState(String toState) {
+		this.toState = toState;
 	}
 	public DecisionRealm getDecisionRealm() {
 		return decisionRealm;

@@ -467,6 +467,8 @@ public class DbServicesImp {
 			Decision assign = new Decision();
 			assign.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			assign.setDescription("Assign cbtion "+bid.getCbtion().getId()+" to "+bid.getCreator().getUsername());
+			assign.setFromState(BidState.OFFERED.toString());
+			assign.setToState(BidState.ASSIGNED.toString());
 			assign.setState(DecisionState.OPEN);
 			/* TODO: Include bid duration logic */
 			assign.setVerdictHours(36);
@@ -475,6 +477,8 @@ public class DbServicesImp {
 			Decision accept = new Decision();
 			accept.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			accept.setDescription("Accept cbtion "+bid.getCbtion().getId()+" to "+bid.getCreator().getUsername());
+			accept.setFromState(BidState.ASSIGNED.toString());
+			accept.setToState(BidState.ACCEPTED.toString());
 			accept.setState(DecisionState.OPEN);
 			/* TODO: Include bid duration logic */
 			accept.setVerdictHours(36);

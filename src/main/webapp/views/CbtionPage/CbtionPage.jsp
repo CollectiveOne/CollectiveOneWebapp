@@ -36,7 +36,6 @@
 		<div id="state_div">
 			<p class="p_header">state:</p>
 		</div>
-		<button id="close_cbtion_btn">propose closure</button>
 		<div id="bids_portion_div">
 			<p class="p_header">bids:</p>
 			<div id="new_bid_btn">

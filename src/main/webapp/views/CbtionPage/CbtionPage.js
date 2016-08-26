@@ -26,8 +26,6 @@ CbtionPage.prototype.init = function() {
 		}
 	});
 	
-	$("#close_cbtion_btn",this.container).click(this.cbtionClose.bind(this));
-	
 	$("#newbid_submit_div",this.container).click(this.bidNew.bind(this));
 	
 	GLOBAL.cbtionPage.updateCbtion(JSP_cbtionId);
@@ -155,7 +153,7 @@ CbtionPage.prototype.drawBids = function() {
 				console.log("Unexected bid state " + bid.state);
 				
 		}
-		var decBox = new DecisionBox("#bid"+ix+"_decision_div",applicable_decision, GLOBAL.sessionData.userLogged);
+		var decBox = new DecisionBoxSmall("#bid"+ix+"_decision_div",applicable_decision, GLOBAL.sessionData.userLogged);
 		decBox.draw();
 	}
 }

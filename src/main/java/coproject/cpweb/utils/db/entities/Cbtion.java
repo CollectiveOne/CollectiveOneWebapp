@@ -8,12 +8,14 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import coproject.cpweb.utils.db.entities.Project;
 import coproject.cpweb.utils.db.entities.User;
@@ -33,6 +35,8 @@ public class Cbtion {
 	private User creator;
 	private Timestamp creationDate;
 	private String title;
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")
 	private String description;
 	private String product;
 	private Integer relevance;

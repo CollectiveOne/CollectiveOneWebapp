@@ -7,5 +7,5 @@
 <script type="text/javascript" src="../views/Common/SessionData/SessionData.js"></script>
 <script type="text/javascript" src="../elements/UserBox/UserBox.js"></script>
 <link rel="stylesheet" type="text/css" href="../elements/UserBox/UserBox.css"/>
-<script type="text/javascript" src="../elements/DecisionBox/DecisionBox.js"></script>
-<link rel="stylesheet" type="text/css" href="../elements/DecisionBox/DecisionBox.css"/>
+<script type="text/javascript" src="../elements/DecisionBoxSmall/DecisionBoxSmall.js"></script>
+<link rel="stylesheet" type="text/css" href="../elements/DecisionBoxSmall/DecisionBoxSmall.css"/>

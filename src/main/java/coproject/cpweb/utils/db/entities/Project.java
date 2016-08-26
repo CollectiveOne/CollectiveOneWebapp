@@ -9,12 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import coproject.cpweb.utils.db.entities.dtos.ProjectDto;
 
@@ -28,6 +30,8 @@ public class Project {
 	private int id;
 	
 	private String name;
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")
 	private String description;
 	private Timestamp creationDate;
 	

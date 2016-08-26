@@ -7,6 +7,8 @@ public class DecisionDto {
 	protected int id;
 	protected String description;
 	protected Timestamp creationDate;
+	protected String fromState;
+	protected String toState;
 	protected int nVoters;
 	protected double ppsTot;
 	protected double verdictHours;
@@ -37,6 +39,18 @@ public class DecisionDto {
 	}
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
+	}
+	public String getFromState() {
+		return fromState;
+	}
+	public void setFromState(String fromState) {
+		this.fromState = fromState;
+	}
+	public String getToState() {
+		return toState;
+	}
+	public void setToState(String toState) {
+		this.toState = toState;
 	}
 	public int getnVoters() {
 		return nVoters;

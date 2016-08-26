@@ -1,0 +1,79 @@
+#decision_div {
+	height:30px;
+	width:200px;
+	clear:none;
+	border-radius:5px;
+	border-style:solid;
+	border-width:2px;
+	border-color:#888844;
+}
+
+#decision_div #left_div {
+	margin-left:5px;
+	height:100%;
+	width:100px;	
+	float:left;
+	padding-top:4px;
+}
+
+#decision_div #center_div {
+	height:100%;
+	width:30px;	
+	float:left;
+}
+
+#decision_div #right_div {
+	height:100%;
+	width:50px;	
+	float:left;
+	padding-top:4px;
+	margin-left:10px;
+}
+
+#decision_div #left_div p {
+	font-size:10px;
+	font-style:normal;
+	text-align:right;
+	overflow:hidden;
+	clear:none;
+	display:inline;
+	width: 30px;
+}
+
+#decision_div #left_div #current_state {
+	color:red;
+}
+
+#decision_div #left_div #candidate_state {
+	color:red;
+}
+
+
+#decision_div #center_div  p {
+	font-size:10px;
+	width:100%;	
+	font-style:normal;
+	overflow:hidden;
+}
+
+#decision_div #center_div #accept_div {
+	height:12px;
+	text-align:center;
+	width:100%;	
+	background-color:#D1DBBD;
+	border-radius:5px;
+	margin:2px;
+	cursor:pointer;
+}
+
+#decision_div #center_div #reject_div {
+	height:12px;
+	text-align:center;
+	width:100%;	
+	background-color:#D1DBBD;
+	border-radius:5px;
+	margin:2px;
+	cursor:pointer;
+}
+
+
