@@ -1,26 +1,53 @@
 #bidBox_div {
-	height:50px;
-	width:200px;
+	height:190px;
+	width:210px;
 	clear:none;
 	border-radius:5px;
 	border-style:solid;
 	border-width:2px;
 	border-color:#888844;
+	padding-top:10px;
+	padding-left:10px;
+	padding-right:10px;	
+	
 }
 
-#bidBox_div #left_div {
+#bidBox_div #bid_user_div {
+	height:50px;
+	width:100%;
+	float:left;
+	clear:both;
+}
+
+#bidBox_div #bid_div {
+	height: 50px;
+	width:100%;
+	margin-top:20px;
+	margin-bottom:20px;
+	float:left;
+	clear:both;
+}
+
+#bidBox_div #bid_decision_div {
+	height:30px;
+	width:100%;	
+	float:left;
+	clear:both;
+}
+
+#bidBox_div #bid_div #left_div {
 	height:100%;
 	width:75px;	
 	float:left;
 }
 
-#bidBox_div #right_div {
+#bidBox_div #bid_div #right_div {
 	height:100%;
 	width:calc(100% - 75px);	
 	float:left;
 }
 
-#bidBox_div #left_div #bid_value_text {
+#bidBox_div #bid_div #left_div #bid_value_text {
 	margin-top:0px;
 	text-align:center;
 	color:#888844;
@@ -28,14 +55,15 @@
 	font-style:italic;
 }
 
-#bidBox_div #left_div #bid_value_num {
+#bidBox_div #bid_div #left_div #bid_value_num {
 	text-align:center;
 	color:#888844;
 	font-size:16px;		
 	font-style:normal;
+	font-weight:bold;
 }
 
-#bidBox_div #left_div #bid_status {
+#bidBox_div #bid_div #left_div #bid_status {
 	margin-top:0px;
 	text-align:center;
 	color:red;
@@ -43,7 +71,7 @@
 	font-style:normal;
 }
 
-#bidBox_div #left_div #bid_status {
+#bidBox_div #bid_div #left_div #bid_status {
 	margin-top:0px;
 	text-align:center;
 	color:red;
@@ -52,20 +80,20 @@
 }
 
 
-#bidBox_div #right_div #bid_description_div {
+#bidBox_div #bid_div #right_div #bid_description_div {
 	width:100%;
 	height:35px;
 	overflow:auto;
 }
 
-#bidBox_div #right_div #bid_description_div p {
+#bidBox_div #bid_div #right_div #bid_description_div p {
 	text-align:left;
 	color:#888844;
 	font-size:10px;		
 	font-style:normal;
 }
 
-#bidBox_div #right_div #bid_done_div {
+#bidBox_div #bid_div #right_div #bid_done_div {
 	height:10px;
 	width:40px;	
 	background-color:#D1DBBD;
@@ -77,7 +105,7 @@
 	float:right;
 }
 
-#bidBox_div #right_div #bid_done_div p{
+#bidBox_div #bid_div #right_div #bid_done_div p{
 	text-align:center;
 }
 

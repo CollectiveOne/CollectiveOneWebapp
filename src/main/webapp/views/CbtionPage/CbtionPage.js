@@ -105,55 +105,9 @@ CbtionPage.prototype.drawBids = function() {
 	for(var ix=0; ix<nb ; ix++ ) {
 		
 		$("#bids_div",this.container).append($("<div class=bid_div id=bid_"+ix+"_div></div>"));
-
-		$("#bid_"+ix+"_div",this.container).append($("<div class=bid_creator_div id=bid"+ix+"_creator_div></div>"));
-		$("#bid_"+ix+"_div",this.container).append($("<div class=bid_contents_div id=bid"+ix+"_contents_div></div>"));
-		$("#bid_"+ix+"_div",this.container).append($("<div class=bid_decision_div id=bid"+ix+"_decision_div></div>"));
 		
-		var bid = this.cbtion.bids[ix];
-		
-		var userBox = new UserBox("#bid"+ix+"_creator_div",bid.creatorDto,this.cbtion.projectName);
-		userBox.updateUser();
-		
-		var bidBox = new BidBox("#bid"+ix+"_contents_div",bid);
+		var bidBox = new BidBox("#bid_"+ix+"_div",this.cbtion.bids[ix], this.cbtion.projectName);
 		bidBox.draw();
 		
-		var applicable_decision = null;
-		
-		switch(bid.state) {
-			case "OFFERED":
-				applicable_decision = bid.assignDec;
-				break;
-				
-			case "ASSIGNED":
-				applicable_decision = bid.acceptDec;
-				break;
-
-			case "DONE":
-				applicable_decision = bid.acceptDec;
-				break;
-				
-			case "NOT_ASSIGNED":
-				applicable_decision = bid.assignDec;
-				break;
-				
-			case "ACCEPTED":
-				applicable_decision = bid.acceptDec;
-				break;
-				
-			case "NOT_ACCEPTED":
-				applicable_decision = bid.acceptDec;
-				break;
-				
-			case "OVERSEED":
-				applicable_decision = bid.assignDec;
-				break;	
-				
-			default:
-				console.log("Unexected bid state " + bid.state);
-				
-		}
-		var decBox = new DecisionBoxSmall("#bid"+ix+"_decision_div",applicable_decision, GLOBAL.sessionData.userLogged);
-		decBox.draw();
 	}
 }
