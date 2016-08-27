@@ -197,12 +197,16 @@ public class DbServicesImp {
 		assign_bid.setVerdict(1);
 		assign_bid.setState(DecisionState.CLOSED_ACCEPTED);
 		assign_bid.setDecisionRealm(realm);
+		assign_bid.setFromState(BidState.OFFERED.toString());
+		assign_bid.setToState(BidState.ASSIGNED.toString());
 
 		accept_bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		accept_bid.setDescription("accept bid "+bid.getId()+" of cbtion:"+bid.getCbtion().getId()+" to:"+bid.getCreator().getUsername());
 		accept_bid.setVerdict(1);
 		accept_bid.setState(DecisionState.CLOSED_ACCEPTED);
 		accept_bid.setDecisionRealm(realm);
+		accept_bid.setFromState(BidState.ASSIGNED.toString());
+		accept_bid.setToState(BidState.ACCEPTED.toString());
 
 		/* simulate the bid acceptance process */
 		bid.setState(BidState.ACCEPTED);
@@ -276,7 +280,7 @@ public class DbServicesImp {
 		Decision delete = new Decision();
 		
 		create.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		create.setDescription("Close contribution");
+		create.setDescription("Create goal"+goal.getGoalTag());
 		create.setState(DecisionState.IDLE);
 		create.setVerdictHours(36);
 		create.setDecisionRealm(realm);
@@ -284,7 +288,7 @@ public class DbServicesImp {
 		create.setToState(GoalState.ACCEPTED.toString());
 		
 		delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		delete.setDescription("Close contribution");
+		delete.setDescription("Delete goal"+goal.getGoalTag());
 		delete.setState(DecisionState.IDLE);
 		delete.setVerdictHours(36);
 		delete.setDecisionRealm(realm);

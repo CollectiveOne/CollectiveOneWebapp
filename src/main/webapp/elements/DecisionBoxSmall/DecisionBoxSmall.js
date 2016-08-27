@@ -27,11 +27,12 @@ DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
 	
 	this.updateVoteStatus();
 	
-	$("#dec_left_div #current_state",this.container).html(this.decision.fromState);
-	$("#dec_left_div #candidate_state",this.container).html(this.decision.toState+"?");
 	var verdictStr = [];
+	if(this.decision.state == "IDLE" || this.decision.state == "OPEN") {
 
-	if(this.decision.state == "OPEN" || this.decision.state == "IDLE") {
+		$("#dec_left_div #current_state",this.container).html(this.decision.fromState);
+		$("#dec_left_div #candidate_state",this.container).html(this.decision.toState+"?");
+
 		// if decision is still open
 		$("#dec_center_div #vote_div",this.container).html(	"<div id=accept_div>" +
 														"	<p>Yes</p>" +
@@ -62,8 +63,9 @@ DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
 		$("#dec_right_div #verdict_status",this.container).html(statusStr);
 		
 	} else {
-		$("#dec_right_div #vote_div",this.container).empty();
-		
+		$("#dec_left_div #current_state_div",this.container).html("<p>CLOSED</p>");
+		$("#dec_left_div #candidate_state_div",this.container).html("");
+
 		var verdictStr = [];
 		if(this.decision.verdict == 1) verdictStr = "yes";
 		else verdictStr = "no";

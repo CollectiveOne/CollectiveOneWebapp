@@ -40,11 +40,11 @@
 	width: 30px;
 }
 
-#decision_div #dec_left_div #current_state {
+#decision_div #dec_left_div #current_state_div #current_state {
 	color:DarkGreen;
 }
 
-#decision_div #dec_left_div #candidate_state {
+#decision_div #dec_left_div #current_state_div #candidate_state {
 	color:DarkRed;
 }
 

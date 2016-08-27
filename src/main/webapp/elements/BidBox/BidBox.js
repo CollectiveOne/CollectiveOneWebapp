@@ -71,8 +71,10 @@ BidBox.prototype.bidBoxLoaded = function() {
 			
 	}
 	
-	var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),applicable_decision, GLOBAL.sessionData.userLogged);
-	decBox.draw();
+	if(applicable_decision.state == "IDLE" || applicable_decision.state == "OPEN") {
+		var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),applicable_decision, GLOBAL.sessionData.userLogged);
+		decBox.draw();
+	}
 	
 	$("#bid_done_div",this.container).hide();
 	$("#bid_done_div",this.container).click(this.bidDoneClick.bind(this));

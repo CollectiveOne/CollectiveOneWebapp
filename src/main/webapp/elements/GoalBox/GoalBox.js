@@ -45,8 +45,10 @@ GoalBox.prototype.goalBoxLoaded = function() {
 			console.log("Unexected goal state " + this.goal.state);
 			
 	}
-	
-	var decBox = new DecisionBoxSmall($("#bottom_div",this.container),applicable_decision, GLOBAL.sessionData.userLogged);
-	decBox.draw();
+
+	if(applicable_decision.state == "IDLE" || applicable_decision.state == "OPEN") {
+		var decBox = new DecisionBoxSmall($("#bottom_div",this.container),applicable_decision, GLOBAL.sessionData.userLogged);
+		decBox.draw();
+	}
 	
 }
