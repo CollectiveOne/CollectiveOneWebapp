@@ -19,6 +19,7 @@ public class CbtionDto {
 	private String state;
 	private int nBids;
 	private String contributorUsername;
+	private String goalTag;
 	private double assignedPpoints;	
 	
 	public Cbtion toCbtion(User creator, Project project) {
@@ -97,6 +98,12 @@ public class CbtionDto {
 	}
 	public void setContributorUsername(String contributorUsername) {
 		this.contributorUsername = contributorUsername;
+	}
+	public String getGoalTag() {
+		return goalTag;
+	}
+	public void setGoalTag(String goalTag) {
+		this.goalTag = goalTag;
 	}
 	public double getAssignedPpoints() {
 		return assignedPpoints;

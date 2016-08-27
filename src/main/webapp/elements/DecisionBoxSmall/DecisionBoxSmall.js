@@ -27,13 +27,13 @@ DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
 	
 	this.updateVoteStatus();
 	
-	$("#left_div #current_state",this.container).html(this.decision.fromState);
-	$("#left_div #candidate_state",this.container).html(this.decision.toState+"?");
+	$("#dec_left_div #current_state",this.container).html(this.decision.fromState);
+	$("#dec_left_div #candidate_state",this.container).html(this.decision.toState+"?");
 	var verdictStr = [];
 
-	if(this.decision.state == "OPEN") {
+	if(this.decision.state == "OPEN" || this.decision.state == "IDLE") {
 		// if decision is still open
-		$("#center_div #vote_div",this.container).html(	"<div id=accept_div>" +
+		$("#dec_center_div #vote_div",this.container).html(	"<div id=accept_div>" +
 														"	<p>Yes</p>" +
 														"</div>" +
 														"<div id=reject_div>" +
@@ -43,24 +43,32 @@ DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
 		$("#accept_div",this.container).click(this.voteAccept.bind(this));
 		$("#reject_div",this.container).click(this.voteReject.bind(this));
 	
-		var verdictStr = [];
-		if(this.decision.verdict == 1) verdictStr = "Yes";
-		else verdictStr = "No";
+		var statusStr = [];
 		
-		var elapsedHrs = (1-this.decision.elapsedFactor)*this.decision.verdictHours
-		var remHrs = this.decision.verdictHours - elapsedHrs;
+		if(this.decision.state == "OPEN") {
+			var verdictStr = [];
+			if(this.decision.verdict == 1) verdictStr = "Yes";
+			else verdictStr = "No";
+			
+			var elapsedHrs = (1-this.decision.elapsedFactor)*this.decision.verdictHours
+			var remHrs = this.decision.verdictHours - elapsedHrs;
+			
+			statusStr = "Verdict:"+verdictStr+" in < "+floatToChar(remHrs,1)+" hr";
+			
+		} else if (this.decision.state == "IDLE") {
+			statusStr = "Idle";
+		}
 		
-		$("#right_div #verdict_status",this.container).html("Verdict:"+verdictStr+" in < "+floatToChar(remHrs,1)+" hr");
-		
+		$("#dec_right_div #verdict_status",this.container).html(statusStr);
 		
 	} else {
-		$("#right_div #vote_div",this.container).empty();
+		$("#dec_right_div #vote_div",this.container).empty();
 		
 		var verdictStr = [];
 		if(this.decision.verdict == 1) verdictStr = "yes";
 		else verdictStr = "no";
 		
-		$("#right_div #verdict_status",this.container).html(verdictStr+", closed");
+		$("#dec_right_div #verdict_status",this.container).html(verdictStr+", closed");
 	}
 }
 

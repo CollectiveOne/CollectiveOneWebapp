@@ -1,6 +1,6 @@
 #goal_div {
 	height:100px;
-	width:120px;
+	width:220px;
 	clear:none;
 	border-radius:5px;
 	border-style:solid;
@@ -15,15 +15,16 @@
 }
 
 #goal_div #center_div {
-	height:50px;
+	height:40px;
 	width:100%;	
 	float:left;
 }
 
 #goal_div #bottom_div {
-	height:10px;
+	height:30px;
 	width:100%;	
 	float:left;
+	margin-left:7px;
 }
 
 #goal_div #top_div #goaltag {

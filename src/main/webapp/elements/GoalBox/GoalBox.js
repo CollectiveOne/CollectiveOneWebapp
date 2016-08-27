@@ -24,5 +24,29 @@ GoalBox.prototype.draw = function() {
 GoalBox.prototype.goalBoxLoaded = function() {
 	$("#goaltag",this.container).append("<p>"+this.goal.goalTag+"</p>");
 	$("#description",this.container).append("<p>"+this.goal.description+"</p>");
-	$("#state",this.container).append("<p>"+this.goal.state+"</p>");
+	
+	var applicable_decision = [];
+		
+
+	switch(this.goal.state) {
+		case "PROPOSED":
+			applicable_decision = this.goal.createDec;
+			break;
+			
+		case "ACCEPTED":
+			applicable_decision = this.goal.deleteDec;
+			break;
+
+		case "DELETED":
+			applicable_decision = this.goal.createDec;
+			break;
+			
+		default:
+			console.log("Unexected goal state " + this.goal.state);
+			
+	}
+	
+	var decBox = new DecisionBoxSmall($("#bottom_div",this.container),applicable_decision, GLOBAL.sessionData.userLogged);
+	decBox.draw();
+	
 }

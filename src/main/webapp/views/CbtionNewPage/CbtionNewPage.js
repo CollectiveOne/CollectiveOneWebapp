@@ -54,7 +54,8 @@ CbtionNewPage.prototype.cbtionNew = function() {
 		projectName: $("#project_select", this.container).val(),
 		title: $("#title_in", this.container).val(),
 		description: $("#description_in", this.container).val(),
-		product: $("#product_in", this.container).val()
+		product: $("#product_in", this.container).val(),
+		goalTag: $("#goalTag_div #autocomplete", this.container).val()
 	};
 	
 	GLOBAL.serverComm.cbtionNew(data,this.cbtionNewCallback,this);

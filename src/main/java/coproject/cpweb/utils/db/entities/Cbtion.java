@@ -46,8 +46,8 @@ public class Cbtion {
 	@ManyToOne
 	private User contributor;
 	private double assignedPpoints;
-	@OneToOne
-	private Decision close;
+	@ManyToOne
+	private Goal goal;
 	
 	public CbtionDto toDto() {
 		CbtionDto dto = new CbtionDto();
@@ -63,6 +63,7 @@ public class Cbtion {
 		dto.setState(state.toString());
 		if(bids != null) dto.setnBids(bids.size());
 		if(contributor != null) dto.setContributorUsername(contributor.getUsername());
+		if(goal != null) dto.setGoalTag(goal.getGoalTag());
 		dto.setAssignedPpoints(assignedPpoints);
 		
 		return dto;
@@ -141,10 +142,11 @@ public class Cbtion {
 	public void setAssignedPpoints(double assignedPpoints) {
 		this.assignedPpoints = assignedPpoints;
 	}
-	public Decision getClose() {
-		return close;
+	public Goal getGoal() {
+		return goal;
 	}
-	public void setClose(Decision close) {
-		this.close = close;
+	public void setGoal(Goal goal) {
+		this.goal = goal;
 	}
+	
 }

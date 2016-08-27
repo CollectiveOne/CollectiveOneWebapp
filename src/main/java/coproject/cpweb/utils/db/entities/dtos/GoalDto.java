@@ -11,6 +11,8 @@ public class GoalDto {
 	private String goalTag;
 	private String description;
 	private String state;
+	private DecisionDto createDec;
+	private DecisionDto deleteDec;
 	
 	public int getId() {
 		return id;
@@ -54,5 +56,18 @@ public class GoalDto {
 	public void setState(String state) {
 		this.state = state;
 	}
+	public DecisionDto getCreateDec() {
+		return createDec;
+	}
+	public void setCreateDec(DecisionDto createDec) {
+		this.createDec = createDec;
+	}
+	public DecisionDto getDeleteDec() {
+		return deleteDec;
+	}
+	public void setDeleteDec(DecisionDto deleteDec) {
+		this.deleteDec = deleteDec;
+	}
+	
 }
 

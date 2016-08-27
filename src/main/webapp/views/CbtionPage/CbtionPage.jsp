@@ -21,8 +21,11 @@
 		<div id="project_div">
 			<p class="p_header">project:</p>
 		</div>
+		<div id="goals_div">
+			<p class="p_header">goals:</p>
+		</div>
 		<div id="title_div">
-			<p class="p_header">contribution:</p>
+			<p class="p_header">contribution title:</p>
 		</div>
 		<div id="description_div">
 			<p class="p_header">description:</p>

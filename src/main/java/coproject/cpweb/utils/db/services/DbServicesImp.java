@@ -280,18 +280,23 @@ public class DbServicesImp {
 		create.setState(DecisionState.IDLE);
 		create.setVerdictHours(36);
 		create.setDecisionRealm(realm);
+		create.setFromState(GoalState.PROPOSED.toString());
+		create.setToState(GoalState.ACCEPTED.toString());
 		
 		delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		delete.setDescription("Close contribution");
 		delete.setState(DecisionState.IDLE);
 		delete.setVerdictHours(36);
 		delete.setDecisionRealm(realm);
+		delete.setFromState(GoalState.ACCEPTED.toString());
+		delete.setToState(GoalState.DELETED.toString());
+		
+		
+		goal.setCreateDec(create);
+		goal.setDeleteDec(delete);
 		
 		decisionDao.save(create);
 		decisionDao.save(delete);
-		
-		goal.setCreate(create);
-		goal.setDelete(delete);
 		
 		return goalDao.save(goal);
 	}
@@ -332,6 +337,7 @@ public class DbServicesImp {
 		Cbtion cbtion = new Cbtion();
 		Project project = projectDao.get(cbtionDto.getProjectName());
 		projectDao.save(project);
+		Goal goal = goalDao.get(cbtionDto.getGoalTag());
 		
 		cbtion.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		cbtion.setCreator(userDao.get(cbtionDto.getCreatorUsername()));
@@ -341,20 +347,10 @@ public class DbServicesImp {
 		cbtion.setRelevance(0);
 		cbtion.setState(CbtionState.OPEN);
 		cbtion.setTitle(cbtionDto.getTitle());
+		cbtion.setGoal(goal);
 		
 		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
 		decisionRealmDao.save(realm);
-		
-		Decision close = new Decision();
-		
-		close.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		close.setDescription("Close contribution");
-		close.setState(DecisionState.IDLE);
-		close.setVerdictHours(36);
-		close.setDecisionRealm(realm);
-		
-		decisionDao.save(close);
-		cbtion.setClose(close);
 		
 		return cbtionDao.save(cbtion);
 	}
@@ -469,7 +465,7 @@ public class DbServicesImp {
 			assign.setDescription("Assign cbtion "+bid.getCbtion().getId()+" to "+bid.getCreator().getUsername());
 			assign.setFromState(BidState.OFFERED.toString());
 			assign.setToState(BidState.ASSIGNED.toString());
-			assign.setState(DecisionState.OPEN);
+			assign.setState(DecisionState.IDLE);
 			/* TODO: Include bid duration logic */
 			assign.setVerdictHours(36);
 			assign.setDecisionRealm(realm);
@@ -479,7 +475,7 @@ public class DbServicesImp {
 			accept.setDescription("Accept cbtion "+bid.getCbtion().getId()+" to "+bid.getCreator().getUsername());
 			accept.setFromState(BidState.ASSIGNED.toString());
 			accept.setToState(BidState.ACCEPTED.toString());
-			accept.setState(DecisionState.OPEN);
+			accept.setState(DecisionState.IDLE);
 			/* TODO: Include bid duration logic */
 			accept.setVerdictHours(36);
 			accept.setDecisionRealm(realm);
@@ -531,7 +527,7 @@ public class DbServicesImp {
 
 		Decision dec = decisionDao.get(decId);
 
-		if(dec.getState() == DecisionState.OPEN) {
+		if(dec.getState() == DecisionState.IDLE || dec.getState() == DecisionState.OPEN) {
 			/* if decision is still open */
 			Voter voter = voterDao.getFromUserAndRealm(dec.getDecisionRealm().getId(),author.getId());
 
@@ -717,11 +713,17 @@ public class DbServicesImp {
 
 	@Transactional
 	public void decisionsUpdateState() {
+		List<Decision> decsIdle = decisionDao.getWithState(DecisionState.IDLE);
+		for(Decision dec : decsIdle) {
+			dec.updateState();
+			decisionDao.save(dec);
+		}
+		
 		List<Decision> decsOpen = decisionDao.getWithState(DecisionState.OPEN);
 		for(Decision dec : decsOpen) {
 			dec.updateState();
 			decisionDao.save(dec);
-		}	
+		}
 	}
 
 	@Transactional
@@ -731,6 +733,101 @@ public class DbServicesImp {
 		for(Bid bid : bidsNotClosed) {
 			bidUpdateState(bid.getId());
 		}	
+	}
+	
+	@Transactional
+	public void goalsUpdateState() {
+		/* Update state of all not closed bids */
+		List<Goal> goalsNotDeleted = goalDao.getNotDeleted();
+		for(Goal goal : goalsNotDeleted) {
+			goalUpdateState(goal.getId());
+		}	
+	}
+	
+	@Transactional
+	public void goalUpdateState(int goalId) {
+		Goal goal = goalDao.get(goalId);
+		
+		goalDao.save(goal);
+		
+		/* Create decision */ 
+		Decision create = goal.getCreateDec();
+
+		/* update goal state based on create decision */
+
+		switch(create.getState()){
+		case OPEN: 
+			break;
+
+		case CLOSED_DENIED : 
+			switch(goal.getState()) {
+			case PROPOSED:
+				goal.setState(GoalState.NOT_ACCEPTED);
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+
+		case CLOSED_ACCEPTED: 
+			switch(goal.getState()) {
+			case PROPOSED:
+				goal.setState(GoalState.ACCEPTED);
+				break;
+			default:
+				break;
+			}
+
+		default:
+			break;
+		} 
+
+		/* Update accept decision */ 
+		Decision delete = goal.getDeleteDec();
+
+		/* update goal state based on delete decision */
+
+		switch(delete.getState()){
+		case OPEN: 
+			break;
+
+		case CLOSED_DENIED : 
+			switch(goal.getState()) {
+			case PROPOSED:
+				goal.setState(GoalState.PROPOSED);
+				break;
+				
+			case ACCEPTED:
+				goal.setState(GoalState.ACCEPTED);
+				break;				
+
+			default:
+				break;
+			}
+
+			break;
+
+		case CLOSED_ACCEPTED: 
+			switch(goal.getState()) {
+			case PROPOSED:
+				goal.setState(GoalState.DELETED);
+				break;
+				
+			case ACCEPTED:
+				goal.setState(GoalState.DELETED);
+				break;				
+
+			default:
+				break;
+			}
+
+			break;
+
+		default:
+			break;
+		} 
 	}
 
 }

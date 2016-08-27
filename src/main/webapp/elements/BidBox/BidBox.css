@@ -66,19 +66,10 @@
 #bidBox_div #bid_div #left_div #bid_status {
 	margin-top:0px;
 	text-align:center;
-	color:red;
+	color:DarkGreen;
 	font-size:14px;		
 	font-style:normal;
 }
-
-#bidBox_div #bid_div #left_div #bid_status {
-	margin-top:0px;
-	text-align:center;
-	color:red;
-	font-size:14px;		
-	font-style:normal;
-}
-
 
 #bidBox_div #bid_div #right_div #bid_description_div {
 	width:100%;

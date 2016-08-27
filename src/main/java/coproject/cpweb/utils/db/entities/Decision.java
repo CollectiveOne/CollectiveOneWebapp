@@ -37,7 +37,8 @@ public class Decision {
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "DECISIONS_THESESCAST")
 	private List<Thesis> thesesCast = new ArrayList<Thesis>();
-
+	private Timestamp openDate;
+	
 	private double verdictHours = 36;
 	private int verdict;
 	private DecisionState state;
@@ -78,6 +79,7 @@ public class Decision {
 		dto.setId(id);
 		dto.setDescription(description);
 		dto.setCreationDate(creationDate);
+		dto.setOpenDate(openDate);
 		dto.setFromState(fromState);
 		dto.setToState(toState);
 		dto.setnVoters(decisionRealm.size());
@@ -140,6 +142,12 @@ public class Decision {
 	public void setDecisionRealm(DecisionRealm decisionRealm) {
 		this.decisionRealm = decisionRealm;
 	}
+	public Timestamp getOpenDate() {
+		return openDate;
+	}
+	public void setOpenDate(Timestamp openDate) {
+		this.openDate = openDate;
+	}
 	public List<Thesis> getThesesCast() {
 		return thesesCast;
 	}
@@ -170,6 +178,14 @@ public class Decision {
 	 */
 	public void updateState() {
 
+		if (state == DecisionState.IDLE) {
+			// force open the decision after the first vote
+			if(thesesCast.size() > 0) {
+				state = DecisionState.OPEN;
+				openDate = new Timestamp(System.currentTimeMillis());
+			}
+		}
+		
 		if (state == DecisionState.OPEN) {
 			
 			n = thesesCast.size();
@@ -311,7 +327,7 @@ public class Decision {
 			/* extend/contract the confidence intervals based on the time passed */
 			Timestamp now = new Timestamp(System.currentTimeMillis());
 
-			double elapsedHours = (now.getTime() - creationDate.getTime())
+			double elapsedHours = (now.getTime() - openDate.getTime())
 					/ (1000.0 * 60.0 * 60.0);
 			elapsedFactor = elapsedHours / verdictHours;
 

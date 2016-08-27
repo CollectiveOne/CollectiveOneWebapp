@@ -73,6 +73,7 @@ CbtionPage.prototype.drawCbtion = function() {
 	$("#project_div",this.container).click(function (){
 		window.location = 'ProjectPage.action?projectName='+GLOBAL.cbtionPage.cbtion.projectName;
 	});
+	$("#goals_div",this.container).append($("<p id=cbtion_goals>"+this.cbtion.goalTag+"</p>"));
 	$("#title_div",this.container).append($("<p id=cbtion_title>"+this.cbtion.title+"</p>"));
 	$("#creator_div",this.container).append($("<p id=creator_username>"+this.cbtion.creatorUsername+"</p>"));
 	if(this.cbtion.state == "ACCEPTED") {

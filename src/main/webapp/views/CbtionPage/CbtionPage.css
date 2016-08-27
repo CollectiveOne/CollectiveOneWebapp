@@ -16,6 +16,18 @@
 	cursor:pointer;
 }
 
+#cbtion_container #cbtion_goals {
+	margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 30px;
+    margin-right: 0;
+	clear:both;
+	font-family: "calibri";
+	color:#888844;
+	font-size:22px;
+	font-weight: bold;
+}
+
 #cbtion_container #cbtion_title {
 	margin-top: 0;
     margin-bottom: 0;

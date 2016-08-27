@@ -34,9 +34,9 @@ public class Goal {
 	private String description;
 	private GoalState state;	
 	@OneToOne
-	private Decision create;
+	private Decision createDec;
 	@OneToOne
-	private Decision delete;
+	private Decision deleteDec;
 	
 	public GoalDto toDto() {
 		GoalDto dto = new GoalDto();
@@ -48,6 +48,8 @@ public class Goal {
 		dto.setGoalTag(goalTag);
 		dto.setDescription(description);
 		dto.setState(state.toString());
+		if(createDec != null) dto.setCreateDec(createDec.ToDto());
+		if(deleteDec != null) dto.setDeleteDec(deleteDec.ToDto());
 		
 		return dto;
 	}
@@ -108,19 +110,19 @@ public class Goal {
 		this.state = state;
 	}
 
-	public Decision getCreate() {
-		return create;
+	public Decision getCreateDec() {
+		return createDec;
 	}
 
-	public void setCreate(Decision create) {
-		this.create = create;
+	public void setCreateDec(Decision createDec) {
+		this.createDec = createDec;
 	}
 
-	public Decision getDelete() {
-		return delete;
+	public Decision getDeleteDec() {
+		return deleteDec;
 	}
 
-	public void setDelete(Decision delete) {
-		this.delete = delete;
+	public void setDeleteDec(Decision deleteDec) {
+		this.deleteDec = deleteDec;
 	}
 }

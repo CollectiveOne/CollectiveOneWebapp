@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Goal;
 import coproject.cpweb.utils.db.entities.GoalState;
+import coproject.cpweb.utils.db.entities.User;
 import coproject.cpweb.utils.db.services.GoalFilters;
 import coproject.cpweb.utils.db.services.GoalListRes;
 
@@ -34,6 +35,13 @@ public class GoalDao {
 		return goal;
 	}
 	
+	public Goal get(String goalTag) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class);
+		query.add(Restrictions.eq("goalTag", goalTag));
+		
+		return (Goal) query.uniqueResult();
+	}
+	
 	public List<Goal> getAll(Integer max) {
 		Session session = sessionFactory.getCurrentSession();
 		
@@ -44,11 +52,24 @@ public class GoalDao {
 		return res;
 	}
 	
+	public List<Goal> getNotDeleted() {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class);
+		query.add(Restrictions.or(
+				Restrictions.eq("state", GoalState.PROPOSED),
+				Restrictions.eq("state", GoalState.ACCEPTED)));
+		
+		@SuppressWarnings("unchecked")
+		List<Goal> res = (List<Goal>) query.list();
+		
+		return res;
+	}
+	
 	public List<String> getSuggestions(String query) {
 		Session session = sessionFactory.getCurrentSession();
 		
 		@SuppressWarnings("unchecked")
 		List<String> res = (List<String>) session.createCriteria(Goal.class)
+				.add(Restrictions.eq("state", GoalState.ACCEPTED))
 				.add(Restrictions.like("goalTag", "%"+query+"%"))
 				.setProjection(Projections.property("goalTag"))
 				.list();

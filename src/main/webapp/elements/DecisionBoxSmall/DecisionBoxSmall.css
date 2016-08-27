@@ -8,7 +8,7 @@
 	border-color:#888844;
 }
 
-#decision_div #left_div {
+#decision_div #dec_left_div {
 	margin-left:5px;
 	height:100%;
 	width:100px;	
@@ -16,13 +16,13 @@
 	padding-top:4px;
 }
 
-#decision_div #center_div {
+#decision_div #dec_center_div {
 	height:100%;
 	width:30px;	
 	float:left;
 }
 
-#decision_div #right_div {
+#decision_div #dec_right_div {
 	height:100%;
 	width:50px;	
 	float:left;
@@ -30,7 +30,7 @@
 	margin-left:10px;
 }
 
-#decision_div #left_div p {
+#decision_div #dec_left_div p {
 	font-size:10px;
 	font-style:normal;
 	text-align:right;
@@ -40,23 +40,23 @@
 	width: 30px;
 }
 
-#decision_div #left_div #current_state {
-	color:red;
+#decision_div #dec_left_div #current_state {
+	color:DarkGreen;
 }
 
-#decision_div #left_div #candidate_state {
-	color:red;
+#decision_div #dec_left_div #candidate_state {
+	color:DarkRed;
 }
 
 
-#decision_div #center_div  p {
+#decision_div #dec_center_div  p {
 	font-size:10px;
 	width:100%;	
 	font-style:normal;
 	overflow:hidden;
 }
 
-#decision_div #center_div #accept_div {
+#decision_div #dec_center_div #accept_div {
 	height:12px;
 	text-align:center;
 	width:100%;	
@@ -66,7 +66,7 @@
 	cursor:pointer;
 }
 
-#decision_div #center_div #reject_div {
+#decision_div #dec_center_div #reject_div {
 	height:12px;
 	text-align:center;
 	width:100%;	
