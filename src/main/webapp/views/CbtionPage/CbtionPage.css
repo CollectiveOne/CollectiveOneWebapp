@@ -9,8 +9,6 @@
     margin-left: 30px;
     margin-right: 0;
 	clear:both;
-	font-family: "calibri";
-	color:#888844;
 	font-size:22px;
 	font-weight: bold;
 	cursor:pointer;
@@ -22,8 +20,6 @@
     margin-left: 30px;
     margin-right: 0;
 	clear:both;
-	font-family: "calibri";
-	color:#888844;
 	font-size:22px;
 	font-weight: bold;
 }
@@ -34,8 +30,6 @@
     margin-left: 30px;
     margin-right: 0;
 	clear:both;
-	font-family: "calibri";
-	color:#888844;
 	font-size:22px;
 	font-weight: bold;
 }
@@ -46,8 +40,6 @@
     margin-left:30px;
     margin-right: 0;
 	clear:both;
-	font-family: "calibri";
-	color:#888844;
 	font-size:14px;
 	font-weight: normal;
 }
@@ -58,8 +50,6 @@
     margin-left:30px;
     margin-right: 0;
 	clear:both;
-	font-family: "calibri";
-	color:#888844;
 	font-size:14px;
 	font-weight: normal;
 }
@@ -70,8 +60,6 @@
     margin-left: 30px;
     margin-right: 0;
 	clear:both;
-	font-family: "calibri";
-	color:#888844;
 	font-size:14px;
 	font-weight: bold;
 }
@@ -82,9 +70,6 @@
     margin-left: 30px;
     margin-right: 0;
 	clear:both;
-	font-family: "calibri";
-	color:#888844;
-	font-size:14px;
 	font-weight: normal;
 }
 
@@ -114,21 +99,20 @@
 	float:left;
 	cursor:pointer;
 	border-radius:3px;
-	background-color:#D1DBBD;
+	background-color: #cccccc;
 	margin-left:calc(30px + 3px + 3px);
-	margin-bottom: 5px;	
+	margin-bottom: 5px;
 }
 
 #cbtion_container #new_bid_btn p {
 	margin-top: 2px;
-    margin-bottom: 0;
-    margin-left: 0;
-    margin-right: 0;
-    width:100%;
-    color: #888844;
-    font-family: "calibri";
-    text-align:center;
-    font-size:14px;	
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0;
+	width:100%;
+	font-family: "calibri";
+	text-align:center;
+	font-size:14px;
 	font-style: normal;
 }
 
@@ -136,37 +120,36 @@
 	display:none;
 	width:calc(100% - 30px - 3px - 3px - 10px - 3px - 3px);
 	height:25px;
-	background-color:#D1DBBD;
 	clear:both;
 	margin-bottom: 3px;
 	margin-left:calc(30px + 3px + 3px);
-	border-radius:3px;	
+	border-radius: 5px;
+	border-style: solid;
+	border-width: 3px;
+	padding: 5px;
+	border-color: #cccccc;
 }
 
 #cbtion_container #new_bid_div p {
 	margin-top: 3px;
-    margin-bottom: 0;
-    margin-left: 0px;
-    margin-right: 0;
-    width:100%;
-    text-align:center;
-	font-family: "calibri";
-	color:#888844;
-	font-size:14px;	
+	margin-bottom: 0;
+	margin-left: 0px;
+	margin-right: 0;
+	width:100%;
+	text-align:center;
+	font-size:14px;
 }
 
 #cbtion_container #new_bid_div #newbid_username_div {
 	width:150px;
 	height:100%;
-	background-color:#D1DBBD;
 	float:left;
-	border-radius:3px;	
+	border-radius:3px;
 }
 
 #cbtion_container #new_bid_div #newbid_ppoints_div {
 	width:120px;
 	height:100%;
-	background-color:#D1DBBD;
 	float:left;
 	border-radius:3px;
 }
@@ -174,28 +157,26 @@
 #cbtion_container #new_bid_div #newbid_description_div {
 	width:200px;
 	height:100%;
-	background-color:#D1DBBD;
 	float:left;
 	border-radius:3px;
+	margin-left: 20px;
 }
 
 #cbtion_container #new_bid_div #newbid_ppoints_in {
 	width:100%;
 	height:100%;
-	background-color:#D1DBBD;
 	text-align:center;
-	color:#888844;
+	border-radius: 5px;
 }
 
 #cbtion_container #new_bid_div #newbid_description_in {
 	float:right;
 	width:200px;
 	max-width: 200px;
-    max-height: 200px;
-    resize: vertical;
-	height:100%;	
+	max-height: 200px;
+	resize: vertical;
+	height:100%;
 	border-radius:5px;
-	background-color:#D1DBBD;
 }
 
 
@@ -204,15 +185,14 @@
 	height:calc(100% - 6px);
 	margin-top: 3px;
 	margin-left: 20px;
-	background-color:#888844;
 	float:left;
 	border-radius:3px;
 	cursor:pointer;
+	background-color: #e6e6e6;
 }
 
 #cbtion_container #new_bid_div #newbid_submit_div p {
-	color:#D1DBBD;
-	font-size:12px;	
+	font-size:12px;
 }
 
 #cbtion_container #bids_div {
@@ -222,7 +202,7 @@
 	overflow: auto;
 	margin-left:30px;
 	margin-top: 10px;
-	border-color:#888844;
+	border-color: #cccccc;
 	border-width:3px;
 	border-style:solid;
 	border-radius:5px;

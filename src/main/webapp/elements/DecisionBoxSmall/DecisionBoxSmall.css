@@ -5,13 +5,18 @@
 	border-radius:5px;
 	border-style:solid;
 	border-width:2px;
-	border-color:#888844;
+	border-color: #cccccc;
 }
+
+#decision_div p {
+	font-size:10px;
+}
+
 
 #decision_div #dec_left_div {
 	margin-left:5px;
 	height:100%;
-	width:100px;	
+	width: 110px;
 	float:left;
 	padding-top:4px;
 }
@@ -24,14 +29,13 @@
 
 #decision_div #dec_right_div {
 	height:100%;
-	width:50px;	
+	width: 45px;
 	float:left;
-	padding-top:4px;
-	margin-left:10px;
+	padding-top: 2px;
+	margin-left: 6px;
 }
 
 #decision_div #dec_left_div p {
-	font-size:10px;
 	font-style:normal;
 	text-align:right;
 	overflow:hidden;
@@ -59,8 +63,8 @@
 #decision_div #dec_center_div #accept_div {
 	height:12px;
 	text-align:center;
-	width:100%;	
-	background-color:#D1DBBD;
+	width:100%;
+	background-color: #e6e6e6;
 	border-radius:5px;
 	margin:2px;
 	cursor:pointer;
@@ -69,8 +73,8 @@
 #decision_div #dec_center_div #reject_div {
 	height:12px;
 	text-align:center;
-	width:100%;	
-	background-color:#D1DBBD;
+	width:100%;
+	background-color: #e6e6e6;
 	border-radius:5px;
 	margin:2px;
 	cursor:pointer;

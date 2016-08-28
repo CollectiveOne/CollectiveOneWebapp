@@ -5,11 +5,10 @@
 	border-radius:5px;
 	border-style:solid;
 	border-width:2px;
-	border-color:#888844;
+	border-color: #cccccc;
 	padding-top:10px;
 	padding-left:10px;
-	padding-right:10px;	
-	
+	padding-right:10px;
 }
 
 #bidBox_div #bid_user_div {
@@ -51,15 +50,13 @@
 #bidBox_div #bid_div #left_div #bid_value_text {
 	margin-top:0px;
 	text-align:center;
-	color:#888844;
-	font-size:10px;		
+	font-size:10px;
 	font-style:italic;
 }
 
 #bidBox_div #bid_div #left_div #bid_value_num {
 	text-align:center;
-	color:#888844;
-	font-size:16px;		
+	font-size:16px;
 	font-style:normal;
 	font-weight:bold;
 }
@@ -81,7 +78,6 @@
 
 #bidBox_div #bid_div #right_div #bid_description_div p {
 	text-align:left;
-	color:#888844;
-	font-size:10px;		
+	font-size:10px;
 	font-style:normal;
 }
