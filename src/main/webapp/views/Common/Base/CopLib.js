@@ -36,7 +36,7 @@ function CopSessionReadyCommon(userLogged) {
 
 function showOutput(output,color) {
 	
-	color = color || "yellow";
+	color = color || "darkorange";
 	
 	if(typeof output == "string"){
 		txt = output
