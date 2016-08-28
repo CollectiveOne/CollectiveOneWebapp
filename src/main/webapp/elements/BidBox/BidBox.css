@@ -83,20 +83,3 @@
 	font-size:10px;		
 	font-style:normal;
 }
-
-#bidBox_div #bid_div #right_div #bid_done_div {
-	height:10px;
-	width:40px;	
-	background-color:#D1DBBD;
-	border-radius:5px;
-	margin-top:2px;
-	margin-bottom:2px;
-	margin-right:3px;
-	cursor:pointer;
-	float:right;
-}
-
-#bidBox_div #bid_div #right_div #bid_done_div p{
-	text-align:center;
-}
-

@@ -43,8 +43,7 @@ public class BidDao {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Bid.class);
 		query.add(Restrictions.or(
 				Restrictions.eq("state", BidState.OFFERED),
-				Restrictions.eq("state", BidState.ASSIGNED),
-				Restrictions.eq("state", BidState.DONE)));
+				Restrictions.eq("state", BidState.ASSIGNED)));
 		
 		@SuppressWarnings("unchecked")
 		List<Bid> res = (List<Bid>) query.list();

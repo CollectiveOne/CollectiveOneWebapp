@@ -661,7 +661,6 @@ public class DbServicesImp {
 		case CLOSED_DENIED : 
 			switch(bid.getState()) {
 			case ASSIGNED:
-			case DONE:
 				bid.setState(BidState.NOT_ACCEPTED);
 				break;
 
@@ -671,43 +670,53 @@ public class DbServicesImp {
 			break;
 
 		case CLOSED_ACCEPTED: 
-			bid.setState(BidState.ACCEPTED); 
+			switch(bid.getState()) {
+			case ASSIGNED:
+				bid.setState(BidState.ACCEPTED); 
 
-			/* once a bid is accepted, the cbtion and all other bids on it
-			 * are closed */
+				/* once a bid is accepted, the cbtion and all other bids on it
+				 * are closed */
 
-			/* update cbtion state */
-			cbtion.setAssignedPpoints(bid.getPpoints());
-			cbtion.setContributor(bid.getCreator());
-			cbtion.setState(CbtionState.ACCEPTED);
+				/* update cbtion state */
+				cbtion.setAssignedPpoints(bid.getPpoints());
+				cbtion.setContributor(bid.getCreator());
+				cbtion.setState(CbtionState.ACCEPTED);
 
-			/* Update project */
-			Project project = cbtion.getProject(); 
-			project.getCbtionsAccepted().add(cbtion);
-			projectDao.addContributor(bid.getCreator().getId(), project.getId());
-			projectDao.save(project);
-			
-			/* Update user creator */
-			bid.getCreator().getCbtionsAccepted().add(cbtion);
-			userDao.addProjectContributed(bid.getCreator().getId(), cbtion.getProject().getId());
-			
-			/* close all other bids and decisions */
-			for(Bid otherBid : cbtion.getBids()) {
-				if(otherBid.getId() != bid.getId()) {
-					otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
-					otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
-					otherBid.setState(BidState.OVERSEED);
-					bidDao.save(otherBid);
+				/* Update project */
+				Project project = cbtion.getProject(); 
+				project.getCbtionsAccepted().add(cbtion);
+				projectDao.addContributor(bid.getCreator().getId(), project.getId());
+				projectDao.save(project);
+				
+				/* Update user creator */
+				bid.getCreator().getCbtionsAccepted().add(cbtion);
+				userDao.addProjectContributed(bid.getCreator().getId(), cbtion.getProject().getId());
+				
+				/* close all other bids and decisions */
+				for(Bid otherBid : cbtion.getBids()) {
+					if(otherBid.getId() != bid.getId()) {
+						otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
+						otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
+						otherBid.setState(BidState.OVERSEED);
+						bidDao.save(otherBid);
+					}
 				}
+
+				/* add author to decision realm (internally checks if it is already in it) 
+				 * the pps are added to the weight of that user in that decision realm, therefore
+				 * bookkeeping of pps of user per realm is only taken here */
+				voterDao.updateOrAdd(decisionRealmDao.getIdFromProjectId(cbtion.getProject().getId()), 
+						bid.getCreator().getId(),
+						bid.getPpoints());
+				break;
+				
+			case ACCEPTED:
+				break;
+				
+			default:
+				break;
 			}
-
-			/* add author to decision realm (internally checks if it is already in it) 
-			 * the pps are added to the weight of that user in that decision realm, therefore
-			 * bookkeeping of pps of user per realm is only taken here */
-			voterDao.updateOrAdd(decisionRealmDao.getIdFromProjectId(cbtion.getProject().getId()), 
-					bid.getCreator().getId(),
-					bid.getPpoints());
-
+			
 			break;
 
 		default:

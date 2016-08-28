@@ -46,10 +46,6 @@ BidBox.prototype.bidBoxLoaded = function() {
 			applicable_decision = this.bid.acceptDec;
 			break;
 
-		case "DONE":
-			applicable_decision = this.bid.acceptDec;
-			break;
-			
 		case "NOT_ASSIGNED":
 			applicable_decision = this.bid.assignDec;
 			break;
@@ -75,19 +71,4 @@ BidBox.prototype.bidBoxLoaded = function() {
 		var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),applicable_decision, GLOBAL.sessionData.userLogged);
 		decBox.draw();
 	}
-	
-	$("#bid_done_div",this.container).hide();
-	$("#bid_done_div",this.container).click(this.bidDoneClick.bind(this));
-	
-	if(GLOBAL.sessionData.userLogged != null) {
-		if(GLOBAL.sessionData.userLogged.id == this.bid.creatorDto.id) {
-			/* If the bid is assigned and the user logged is the bid creator, allow him/she to change the bid state
-			 * to DONE, so that the bid can then be accepted */
-			$("#bid_done_div",this.container).show();
-		}
-	}
-}
-
-BidBox.prototype.bidDoneClick = function() {
-	GLOBAL.serverComm.bidDone(this.bid.id,this.udpateBid,this);
 }

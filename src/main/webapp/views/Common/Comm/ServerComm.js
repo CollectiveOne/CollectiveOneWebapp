@@ -453,7 +453,7 @@ ServerComm.prototype = {
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				console.log(errorThrown);
-				showOutput("error setting bid to done");
+				showOutput("error getting bid");
 			}
 		})
 	},
@@ -484,36 +484,6 @@ ServerComm.prototype = {
 			error : function(jqXHR, textStatus, errorThrown) {
 				console.log(errorThrown);
 				showOutput("error creating bid");
-			}
-		})
-	},
-	
-	bidDone : function(bidId,callbackFunction,callbackObj) {
-
-		var data = {
-			'bidId' : bidId
-		};
-		var datastr = JSON.stringify(data);
-
-		$.ajax({
-			type : 'POST',
-			url : '../json/BidDone',
-			data : datastr,
-			dataType : 'json',
-			contentType : 'application/json',
-			success : function(data, textStatus, jqXHR) {
-				if (data.res) {
-					showOutput("bid marked done", "green");
-					setTimeout(function() {
-						callbackFunction.call(callbackObj);
-					}, 3000);
-				} else {
-					showOutput(data);
-				}
-			},
-			error : function(jqXHR, textStatus, errorThrown) {
-				console.log(errorThrown);
-				showOutput("error setting bid to done");
 			}
 		})
 	},

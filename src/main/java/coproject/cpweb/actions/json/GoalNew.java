@@ -59,7 +59,9 @@ public class GoalNew extends ActionSupport implements SessionAware {
 	}
 
 	public void validate() {
-		
+		if(goalDtoIn.getGoalTag().contains(" ")) {
+			addFieldError("goalTag", "cant include spaces");
+		}
 	}
 	
 	/* Execute */
