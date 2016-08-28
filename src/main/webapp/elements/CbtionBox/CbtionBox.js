@@ -23,7 +23,7 @@ CbtionBox.prototype.draw = function() {
 
 CbtionBox.prototype.CbtionBoxLoaded = function() {
 	
-	$(".cbtion_div #promotion_center_div",this.container).append("<p>"+this.cbtion.relevance+"</p>");
+	// $(".cbtion_div #promotion_center_div",this.container).append("<p>"+this.cbtion.relevance+"</p>");
 
 	$(".cbtion_div #title_div",this.container).append("<a href=CbtionPage.action?cbtionId="+ this.cbtion.id+">"+this.cbtion.title+"</a>");
 	$(".cbtion_div #description_div",this.container).append("<p>"+this.cbtion.description+"</p>");
