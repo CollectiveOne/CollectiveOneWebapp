@@ -20,10 +20,10 @@
 }
 
 #bidBox_div #bid_div {
-	height: 50px;
+	height: 70px;
 	width:100%;
-	margin-top:20px;
-	margin-bottom:20px;
+	margin-top: 15px;
+	margin-bottom: 10px;
 	float:left;
 	clear:both;
 }
@@ -37,8 +37,9 @@
 
 #bidBox_div #bid_div #left_div {
 	height:100%;
-	width:75px;	
+	width:75px;
 	float:left;
+	margin-top: 8px;
 }
 
 #bidBox_div #bid_div #right_div {
@@ -73,8 +74,9 @@
 
 #bidBox_div #bid_div #right_div #bid_description_div {
 	width:100%;
-	height:35px;
+	height: 70px;
 	overflow:auto;
+	margin-left: 5px;
 }
 
 #bidBox_div #bid_div #right_div #bid_description_div p {

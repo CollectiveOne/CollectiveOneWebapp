@@ -1,6 +1,6 @@
 		</div>
 
-		<div id="bottom">CoProject</div>
+		<div id="bottom"></div>
 
 		<div id="control_div">
 			<button id="login_expand">login</button>

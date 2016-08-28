@@ -172,80 +172,12 @@ CbtionListPage.prototype.drawCbtions = function() {
 	$("#list_of_elements", this.container).empty();
 
 	for ( var ix in this.cbtions) {
-		this.appendCbtion(this.cbtions[ix], ix);
+		$("#list_of_elements", this.container).append(this.create_div_jQ("cbtionbox",ix));
+		var cbtionBox = new CbtionBox(this.get_div_jQ("cbtionbox",ix),this.cbtions[ix]);
+		cbtionBox.draw();
 	}
 }
 
 CbtionListPage.prototype.updateResSet = function() {
 	$("#page_set", this.container).html("<p>"+this.resSet[0]+"-"+this.resSet[1]+" of "+this.resSet[2]+"</p>");
-}
-
-CbtionListPage.prototype.appendCbtion = function(cbtion, ix) {
-
-	var el_to_append;
-	var dum_str;
-
-	// Append the div with the cbtion box
-	$("#list_of_elements", this.container).append(
-			this.create_div_jQ('data_box', ix));
-
-	// ------------------------
-	// Prepare DIVs
-	// ------------------------
-
-	// First level DIVs
-	var cbtion_box_jQ = this.get_div_jQ('data_box', ix);
-	cbtion_box_jQ.append(this.create_div_jQ('promotion', ix));
-	cbtion_box_jQ.append(this.create_div_jQ('keydata', ix));
-	cbtion_box_jQ.append(this.create_div_jQ('description', ix));
-	cbtion_box_jQ.append(this.create_div_jQ('details', ix));
-
-	// Promotion DIVs
-	var promotion_box_jQ = this.get_div_jQ('promotion', ix);
-	promotion_box_jQ.append(this.create_div_jQ('promotion_up', ix));
-	promotion_box_jQ.append(this.create_div_jQ('promotion_center', ix));
-	promotion_box_jQ.append(this.create_div_jQ('promotion_down', ix));
-
-	// Keydata DIVs
-	var title_box_jQ = this.get_div_jQ('keydata', ix);
-	title_box_jQ.append(this.create_div_jQ('kd_project', ix));
-	title_box_jQ.append(this.create_div_jQ('kd_title', ix));
-	title_box_jQ.append(this.create_div_jQ('kd_creator', ix));
-	title_box_jQ.append(this.create_div_jQ('kd_status', ix));
-
-	// Details DIVs
-	var details_box_jQ = this.get_div_jQ('details', ix);
-	details_box_jQ.append(this.create_div_jQ('product', ix));
-	
-
-	// ------------------------
-	// Fill DIVs
-	// ------------------------
-
-	// Promotion DIV
-	this.get_div_jQ('promotion_center', ix).append(
-			this.create_p_str('promotion_center', ix, cbtion.relevance));
-
-	// Keydata DIV
-	this.get_div_jQ('kd_project', ix).append(
-			this.create_a_str('kd_project', ix, cbtion.projectName,'ProjectPage.action?projectName=' + cbtion.projectName));
-
-	this.get_div_jQ('kd_title', ix).append(
-			this.create_a_str('kd_title', ix, cbtion.title,'CbtionPage.action?cbtionId=' + cbtion.id));
-
-	this.get_div_jQ('kd_creator', ix).append(
-			this.create_pap_str('kd_creator', ix,'created by ',
-					cbtion.creatorUsername, 'UserPage.action?username=' + cbtion.creatorUsername,
-					' '+this.getTimeStrSince(cbtion.creationDate) + ' ago'));
-
-	this.get_div_jQ('kd_status', ix).append(
-			this.create_p_str('kd_status', ix, cbtion.state));
-
-	// Description DIV
-	this.get_div_jQ('description', ix).append(
-			this.create_p_str('description', ix, cbtion.description));
-
-	// Details DIV
-	this.get_div_jQ('product', ix).append(
-			this.create_p_str('product', ix, cbtion.product));
 }
