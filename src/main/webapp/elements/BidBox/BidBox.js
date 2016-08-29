@@ -62,7 +62,7 @@ BidBox.prototype.bidBoxLoaded = function() {
 			applicable_decision = this.bid.acceptDec;
 			break;
 			
-		case "OVERSEED":
+		case "SUPERSEEDED":
 			applicable_decision = this.bid.assignDec;
 			break;	
 			

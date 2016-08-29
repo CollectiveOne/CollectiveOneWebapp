@@ -6,5 +6,5 @@ public enum BidState {
 	NOT_ASSIGNED,
 	ACCEPTED,
 	NOT_ACCEPTED,
-	OVERSEED
+	SUPERSEEDED
 }

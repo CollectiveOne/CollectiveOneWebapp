@@ -698,7 +698,7 @@ public class DbServicesImp {
 					if(otherBid.getId() != bid.getId()) {
 						otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
 						otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
-						otherBid.setState(BidState.OVERSEED);
+						otherBid.setState(BidState.SUPERSEEDED);
 						bidDao.save(otherBid);
 					}
 				}
