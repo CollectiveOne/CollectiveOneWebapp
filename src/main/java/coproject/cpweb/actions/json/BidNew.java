@@ -93,6 +93,9 @@ public class BidNew extends ActionSupport implements SessionAware {
 			return SUCCESS;
 		}
 			
+		/* Sum one day as delivery is at the end of the date marked as delivery day*/
+		bidDto.setDeliveryDate(bidDto.getDeliveryDate() + 24*60*60*1000); 
+		
 		msg = dbServices.bidCreate(bidDto);
 		res = true;
 		
