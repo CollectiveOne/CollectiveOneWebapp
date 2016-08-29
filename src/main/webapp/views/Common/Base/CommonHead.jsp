@@ -12,3 +12,4 @@
 <script type="text/javascript" src="../elements/DecisionBoxSmall/DecisionBoxSmall.js"></script>
 <link rel="stylesheet" type="text/css" href="../elements/DecisionBoxSmall/DecisionBoxSmall.css"/>
 <link rel="stylesheet" type="text/css" href="../views/Common/Base/Filter.css"/>
+<link rel="icon" type="image/ico" href="../images/favicon.ico">
