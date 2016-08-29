@@ -1,7 +1,7 @@
 .cbtion_div {
 	/* background-color: #ccddff; */
 	height: 100px;
-	width:100%;
+	width:calc(100% - 6px);
 	margin-top: 6px;
 	clear:both;
 	overflow: hidden;

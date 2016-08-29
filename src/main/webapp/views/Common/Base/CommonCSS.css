@@ -9,6 +9,7 @@ body {
 	margin-right:auto;
 	max-width: 1024px;
 	min-width: 600px;
+	height:1800px;
 	color:#545454;
 }
 
@@ -42,6 +43,16 @@ body {
 	color: #545454;
 }
 
+#container input {
+	font-family: "arial",sans-serif;
+	color: #545454;
+}
+
+#container textarea {
+	font-family: "arial",sans-serif;
+	color: #545454;
+}
+
 #container #top{
 	width:100%;
 	height:80px;
@@ -50,7 +61,7 @@ body {
 
 #container #content {
 	position: relative;
-	height: auto;
+	height: calc(100% - 80px - 50px);
 	width:100%;
 	clear:both;
 }

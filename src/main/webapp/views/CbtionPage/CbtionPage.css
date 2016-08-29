@@ -177,13 +177,14 @@
 	resize: vertical;
 	height:100%;
 	border-radius:5px;
+	padding-top:3px;
 }
 
 
 #cbtion_container #new_bid_div #newbid_submit_div {
 	width:100px;
-	height:calc(100% - 6px);
-	margin-top: 3px;
+	height:calc(100% - 2px);
+	margin-top: 1px;
 	margin-left: 20px;
 	float:left;
 	border-radius:3px;
