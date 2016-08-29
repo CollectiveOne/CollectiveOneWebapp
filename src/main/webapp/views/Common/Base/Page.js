@@ -54,23 +54,5 @@ Page.prototype.append_text_area = function(id,txt,val) {
 	$('#'+id).append($('<textarea class=textarea_in id='+id+'_in value="'+val+'">'));
 }
 
-Page.prototype.getTimeStrSince = function(date) {
-	/* Server is in timezoneoffset -120 */
-	var datems = Date.parse(date) - 120*60*1000
-	var nowms = new Date().getTime();
-	var dtsec = (nowms - datems)/1000;
-	var strout;
-	if(Math.abs(dtsec) < 60) 
-		strout = floatToChar(dtsec,0) +" sec";
-	else if(Math.abs(dtsec) < 60*60) 
-		strout = floatToChar(dtsec/60,0) +" min";
-	else if(Math.abs(dtsec) < 60*60*24) 
-		strout = floatToChar(dtsec/(60*60),0) +" hr";
-	else	 
-		strout = floatToChar(dtsec/(60*60*24),0) +" days";
-		
-	return strout;
-}
-
 
 

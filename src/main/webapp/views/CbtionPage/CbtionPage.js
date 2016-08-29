@@ -26,6 +26,7 @@ CbtionPage.prototype.init = function() {
 		}
 	});
 	
+	$("#newbid_datepicker",this.container).datepicker();
 	$("#newbid_submit_div",this.container).click(this.bidNew.bind(this));
 	
 	GLOBAL.cbtionPage.updateCbtion(JSP_cbtionId);
@@ -48,6 +49,7 @@ CbtionPage.prototype.bidNew = function (){
 			cbtionId:this.cbtion.id,
 			ppoints:$("#newbid_ppoints_in",this.container).attr('value'),
 			description:$("#newbid_description_in",this.container).attr('value'),
+			deliveryDate:Date.parse($("#newbid_datepicker",this.container).attr('value')),
 			creatorDto: GLOBAL.sessionData.userLogged
 		}; 
 	

@@ -455,6 +455,7 @@ public class DbServicesImp {
 			bid.setCreator(userDao.get(userId));
 			bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			bid.setDescription(bidDtoIn.getDescription());
+			bid.setDeliveryDate(new Timestamp(bidDtoIn.getDeliveryDate()));
 			bid.setCbtion(cbtion);
 			bid.setPpoints(bidDtoIn.getPpoints());
 			bid.setState(BidState.OFFERED);

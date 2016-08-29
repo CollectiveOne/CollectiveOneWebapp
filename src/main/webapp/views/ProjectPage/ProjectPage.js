@@ -35,7 +35,4 @@ ProjectPage.prototype.drawProject = function() {
 			this.create_pap_str('project_cbtions','',this.project.nCbtions+' ',
 			'contributions', 'CbtionListPage.action?projectFilter=' + this.project.name,
 			''));
-	
-	(div_type,id,textprev,texthref,href,textafter) 
-	
 }

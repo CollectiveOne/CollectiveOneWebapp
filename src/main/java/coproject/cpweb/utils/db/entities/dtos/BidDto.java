@@ -11,8 +11,9 @@ public class BidDto {
 	private int cbtionId;
 	private UserDto creatorDto;
 	private double ppoints;
-	private Timestamp creationDate;
+	private long creationDate;
 	private String description;
+	private long deliveryDate;
 	private String state;
 	private DecisionDto assignDec;
 	private DecisionDto acceptDec;
@@ -24,8 +25,9 @@ public class BidDto {
 		bid.setCbtion(cbtion);
 		bid.setCreator(creator);
 		bid.setPpoints(ppoints);
-		bid.setCreationDate(creationDate);
+		bid.setCreationDate(new Timestamp(creationDate));
 		bid.setDescription(description);
+		bid.setDeliveryDate(new Timestamp(deliveryDate));
 		
 		return bid;
 	}
@@ -56,10 +58,10 @@ public class BidDto {
 	public void setPpoints(double ppoints) {
 		this.ppoints = ppoints;
 	}
-	public Timestamp getCreationDate() {
+	public long getCreationDate() {
 		return creationDate;
 	}
-	public void setCreationDate(Timestamp creationDate) {
+	public void setCreationDate(long creationDate) {
 		this.creationDate = creationDate;
 	}
 	public String getDescription() {
@@ -67,6 +69,12 @@ public class BidDto {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public long getDeliveryDate() {
+		return deliveryDate;
+	}
+	public void setDeliveryDate(long deliveryDate) {
+		this.deliveryDate = deliveryDate;
 	}
 	public String getState() {
 		return state;

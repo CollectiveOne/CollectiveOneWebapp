@@ -33,6 +33,7 @@ public class Bid {
 	@Lob
 	@Type(type = "org.hibernate.type.TextType")
 	private String description;
+	private Timestamp deliveryDate;
 	private BidState state;
 	@OneToOne
 	private Decision assign;
@@ -46,8 +47,9 @@ public class Bid {
 		if(cbtion != null) dto.setCbtionId(cbtion.getId());
 		if(creator != null) dto.setCreatorDto(creator.toDto());
 		dto.setPpoints(ppoints);
-		if(creationDate != null) dto.setCreationDate(creationDate);
+		if(creationDate != null) dto.setCreationDate(creationDate.getTime());
 		if(description != null) dto.setDescription(description);
+		if(deliveryDate != null) dto.setDeliveryDate(deliveryDate.getTime());
 		if(state != null) dto.setState(state.toString());
 		if(assign != null) dto.setAssignDec(assign.ToDto());
 		if(accept != null) dto.setAcceptDec(accept.ToDto());
@@ -90,6 +92,12 @@ public class Bid {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public Timestamp getDeliveryDate() {
+		return deliveryDate;
+	}
+	public void setDeliveryDate(Timestamp deliveryDate) {
+		this.deliveryDate = deliveryDate;
 	}
 	public BidState getState() {
 		return state;

@@ -64,3 +64,31 @@ function showOutput(output,color) {
 function floatToChar(x,ndec) {
 	return parseFloat(Math.round(x*Math.pow(10,ndec))/Math.pow(10,ndec)).toFixed(ndec);
 }
+
+function getTimeStrUntil(timestamp) {
+	return getNiceTimeStr(-getSecondsSince(timestamp));
+}
+
+function getTimeStrSince(timestamp) {
+	return getNiceTimeStr(getSecondsSince(timestamp));
+}
+
+function getNiceTimeStr(dtsec) {
+	var strout;
+	if(Math.abs(dtsec) < 60) 
+		strout = floatToChar(dtsec,0) +" sec";
+	else if(Math.abs(dtsec) < 60*60) 
+		strout = floatToChar(dtsec/60,0) +" min";
+	else if(Math.abs(dtsec) < 60*60*24) 
+		strout = floatToChar(dtsec/(60*60),0) +" hr";
+	else	 
+		strout = floatToChar(dtsec/(60*60*24),0) +" days";
+		
+	return strout;
+}
+
+function getSecondsSince(timestamp) {
+	var nowms = new Date().getTime();
+	var dtsec = (nowms - timestamp)/1000;
+	return dtsec;
+}

@@ -77,7 +77,9 @@ public class BidNew extends ActionSupport implements SessionAware {
 	}
 	
 	public void validate() {
-		
+		if(bidDto.getDeliveryDate() == 0) {
+			addFieldError("delivery date", " needed");
+		}
 	}
 	
 	/* Execute */

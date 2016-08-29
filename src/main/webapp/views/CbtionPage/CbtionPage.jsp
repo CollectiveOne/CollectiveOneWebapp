@@ -47,10 +47,13 @@
 			<div id="new_bid_div">
 				<div id="newbid_username_div"></div>
 				<div id="newbid_ppoints_div">
-					<input type="number" id=newbid_ppoints_in value=0>
+					<input type="number" id=newbid_ppoints_in placeholder="pps">
 				</div>
 				<div id="newbid_description_div">
 					<textarea id=newbid_description_in placeholder="description"></textarea>
+				</div>
+				<div id="newbid_delivery_date_div">
+					<input type="text" placeholder="delivery" id="newbid_datepicker">
 				</div>
 				<div id="newbid_submit_div">
 					<p>submit</p>

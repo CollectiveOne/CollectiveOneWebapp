@@ -32,8 +32,12 @@ BidBox.prototype.bidBoxLoaded = function() {
 	
 	$("#bid_value_div",this.container).append($("<p id=bid_value_text>bid value</p>"));
 	$("#bid_value_div",this.container).append($("<p id=bid_value_num>"+floatToChar(this.bid.ppoints,2)+"</p>"));
-	$("#bid_value_div",this.container).append($("<p id=bid_status>"+this.bid.state+"</p>"));
+	$("#bid_state_div",this.container).append($("<p id=bid_state>"+this.bid.state+"</p>"));
+	
+	$("#bid_times_created_div",this.container).append($("<p id=bid_times_created_p>created "+getTimeStrSince(this.bid.creationDate)+" ago</p>"));
 	$("#bid_description_div",this.container).append("<p>"+this.bid.description+"</p>");
+	$("#bid_delivered_div",this.container).append($("<p id=bid_delivered_p>...to be delivered in "+getTimeStrUntil(this.bid.deliveryDate)+"</p>"));
+	
 	
 	var applicable_decision = null;
 	
