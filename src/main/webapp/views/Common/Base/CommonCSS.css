@@ -231,6 +231,7 @@ body {
 	width:calc(100% - 200px - 10px);
 	float:right;
 	border-radius:5px;
+	overflow: auto;
 }
 
 #container .p_header {

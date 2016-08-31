@@ -1,5 +1,4 @@
 #cbtion_container {
-	height:70px;
 	width:calc(100% - 10px);
 }
 
@@ -89,8 +88,8 @@
 }
 
 #cbtion_container #bids_portion_div {
-	height:700px;
-	width:100%;	
+	width:100%;
+	overflow: auto;
 }
 
 #cbtion_container #new_bid_btn {
@@ -213,7 +212,7 @@
 }
 
 #cbtion_container #bids_div {
-	width:calc(100% - 52px);
+	width: calc(100% - 56px);
 	max-height: 1200px;
 	height: auto;
 	overflow: auto;
