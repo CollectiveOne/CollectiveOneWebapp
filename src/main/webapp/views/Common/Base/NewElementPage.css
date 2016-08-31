@@ -19,10 +19,11 @@
 	float:right;
 	width:calc(100% - 100px - 10px);
 	border-radius:5px;
-	font-family:'calibri';
 	border-style:solid;
 	border-width:1px;
 	border-color: #cccccc;
+	height: 22px;
+	background-color: white;
 }
 
 .field {

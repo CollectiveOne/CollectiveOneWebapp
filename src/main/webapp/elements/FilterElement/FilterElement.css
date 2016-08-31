@@ -1,0 +1,114 @@
+#filter_div {
+	width: 100%;
+}
+
+#filter_bar {
+	width: 100%;
+	height: 30px;
+}
+
+#filter_bar .filter_div_btn {
+	height: 25px;
+	background-color: #cccccc;
+	cursor:pointer;
+	border-radius:5px;
+	float: left;
+}
+
+#filter_bar .filter_div_btn p {
+	width:100%;
+	text-align:center;
+	vertical-align: middle;
+	margin-top:0px;
+	line-height: 25px;
+	font-size: 14px;
+	font-style: normal;
+}
+
+#filter_bar #filter_btn {
+	width:200px;
+	float: left;
+	-webkit-user-select: none;
+}
+
+#filter_bar #page_btns {
+	width:200px;
+	float: right;
+}
+
+#filter_bar #page_btns #page_set {
+	width:120px;
+	float: right;
+	margin-right:5px;
+}
+
+#filter_bar #page_btns #back_page {
+	width:30px;
+	float: right;
+	margin-right:5px;
+}
+
+#filter_bar #page_btns #next_page {
+	width:30px;
+	float: right;
+	margin-right:5px;
+}
+
+
+#filter_bar #page_btns #page_set p {
+}
+
+#filter_bar #page_btns #next_page p {
+}
+
+#filter_bar #page_btns #back_page p {
+}
+
+#filter_bar #filter_btn p {
+	
+}
+
+#filter_contents {
+	width: calc(100% - 6px);
+	overflow: auto;
+	margin-bottom: 14px;
+	border-radius:5px;
+	clear:both;
+	border-style: solid;
+	border-width: 3px;
+	border-color: #cccccc;
+	display: none;
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
+#filter_contents p {
+	font-size:10pt;
+	display:inline;
+}
+
+#filter_contents .filter_checkbox {
+	float: left;
+	clear: both;
+}
+
+#filter_contents .checkbox_p_div {
+	float:left;
+	padding-top: 2px;
+}
+
+#filter_contents #filter_projects {
+	width: 120px;
+	margin-left:5px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	float:left;
+}
+
+#filter_contents #filter_states {
+	width: 120px;
+	margin-left:5px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	float:left;
+}

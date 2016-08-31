@@ -22,7 +22,7 @@ ServerComm.prototype = {
 			contentType : 'application/json',
 			success : function(data, textStatus, jqXHR) {
 				if (data) {
-					callbackFunction.call(callbackObj,data.cbtionDtos, data.resSet);
+					callbackFunction.call(callbackObj,data);
 				}
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
@@ -156,7 +156,7 @@ ServerComm.prototype = {
 			contentType : 'application/json',
 			success : function(data, textStatus, jqXHR) {
 				if (data) {
-					callbackFunction.call(callbackObj,data.goalDtos, data.resSet);
+					callbackFunction.call(callbackObj,data);
 				}
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
