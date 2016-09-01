@@ -51,8 +51,8 @@ public class Bid {
 		if(description != null) dto.setDescription(description);
 		if(deliveryDate != null) dto.setDeliveryDate(deliveryDate.getTime());
 		if(state != null) dto.setState(state.toString());
-		if(assign != null) dto.setAssignDec(assign.ToDto());
-		if(accept != null) dto.setAcceptDec(accept.ToDto());
+		if(assign != null) dto.setAssignDec(assign.toDto());
+		if(accept != null) dto.setAcceptDec(accept.toDto());
 		
 		return dto;
 	}

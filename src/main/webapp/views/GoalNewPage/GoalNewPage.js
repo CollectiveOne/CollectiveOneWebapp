@@ -34,7 +34,7 @@ GoalNewPage.prototype.draw = function() {
 	} else {
 		this.container.empty();
 		this.container
-				.append($("<p>please login to be able to create a new contribution</p>"));
+				.append($("<p>please login to be able to create a new goal</p>"));
 	}
 }
 

@@ -1,6 +1,6 @@
 #user_container {
-	height:70px;
 	width:calc(100% - 10px);
+	overflow: auto;
 }
 
 #user_container #username {

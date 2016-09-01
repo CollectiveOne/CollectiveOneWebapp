@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Goal;
 import coproject.cpweb.utils.db.entities.GoalState;
-import coproject.cpweb.utils.db.entities.User;
 import coproject.cpweb.utils.db.services.GoalFilters;
 import coproject.cpweb.utils.db.services.GoalListRes;
 
@@ -78,7 +77,7 @@ public class GoalDao {
 	}
 	
 	public GoalListRes get(GoalFilters filters, int page, int nPerPage) {
-		
+		// TODO: repeated code used to list Cbtions, Goals and Decisions. DRY.
 		List<String> projectNames = filters.projectNames;
 		List<String> stateNames = filters.stateNames;
 		

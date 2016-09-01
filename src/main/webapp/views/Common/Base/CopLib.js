@@ -17,12 +17,20 @@ function CopDocReadyCommon(callbackFun,callbackObj) {
 		window.location = 'GoalListPage.action';
 	});
 	
+	$("#decisions_list").click(function() {
+		window.location = 'DecisionListPage.action';
+	});
+	
 	$("#new_cbtion").click(function() {
 		window.location = 'CbtionNewPage.action';
 	});
 	
 	$("#new_goal").click(function() {
 		window.location = 'GoalNewPage.action';
+	});
+	
+	$("#new_decision").click(function() {
+		window.location = 'DecisionNewPage.action';
 	});
 	
 	$("#new_project").click(function() {
@@ -53,11 +61,13 @@ function showOutput(output,color) {
 		}
 	}
 	
-	$("#output").css("background-color",color);
+	$("#output_div").css("background-color",color);
+	$("#output_div").show();
 	$("#output").empty();
 	$("#output").append(txt);
 	setTimeout(function() {
 		$("#output").empty();
+		$("#output_div").hide();
 	}, 3000)
 }
 

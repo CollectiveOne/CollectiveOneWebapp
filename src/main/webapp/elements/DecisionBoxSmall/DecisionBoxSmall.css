@@ -18,7 +18,7 @@
 	height:100%;
 	width: 110px;
 	float:left;
-	padding-top:4px;
+	padding-top: 0px;
 }
 
 #decision_div #dec_center_div {
@@ -44,11 +44,22 @@
 	width: 30px;
 }
 
-#decision_div #dec_left_div #current_state_div #current_state {
+#decision_div #current_state_div {
+    height: 12px;
+    margin-top: 3px;
+}
+
+/* TODO: something is messy here, the ASSIGNED and ACCEPTED words are displaced down */
+#decision_div #candidate_state_div {
+	height: 12px;
+	margin-top: 1px;
+}
+
+#decision_div #current_state_div #state {
 	color:DarkGreen;
 }
 
-#decision_div #dec_left_div #candidate_state_div #candidate_state {
+#decision_div #candidate_state_div #state {
 	color:DarkRed;
 }
 
@@ -60,7 +71,7 @@
 	overflow:hidden;
 }
 
-#decision_div #dec_center_div #accept_div {
+#decision_div #dec_center_div .vote_div {
 	height:12px;
 	text-align:center;
 	width:100%;
@@ -68,16 +79,8 @@
 	border-radius:5px;
 	margin:2px;
 	cursor:pointer;
+	-webkit-user-select:none;
 }
 
-#decision_div #dec_center_div #reject_div {
-	height:12px;
-	text-align:center;
-	width:100%;
-	background-color: #e6e6e6;
-	border-radius:5px;
-	margin:2px;
-	cursor:pointer;
-}
 
 

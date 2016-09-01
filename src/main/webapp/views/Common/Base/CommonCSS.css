@@ -184,25 +184,24 @@ body {
 }
 
 #container #output_div {
-	white-space: nowrap;
 	position:fixed;
-	top:0px;
+	top: 0px;
+	left:calc(50% - 100px);
+	margin-top:0px;
+	margin-bottom:0px;
+	white-space: nowrap;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border-radius: 5px;
 }
 
 #container #output_div p {
 	color: white;
-}
-
-#container #output_div p {
 	white-space: nowrap;
-	position:fixed;
-	top:0px;
-	left:calc(50% - 100px);
-	margin-top:0px;
-	margin-bottom:0px;
 	font-size: 12px;
 	text-align:center;
-	background-color: darkorange;
 }
 
 #container #content #nav_pane {

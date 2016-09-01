@@ -84,34 +84,6 @@ ServerComm.prototype = {
 		});
 	},
 	
-	cbtionClose : function(cbtionId,callbackFunction,callbackObj) {
-		var data = {
-			'cbtionId' : cbtionId
-		};
-		var datastr = JSON.stringify(data);
-
-		$.ajax({
-			type : 'POST',
-			url : '../json/CbtionClose',
-			data : datastr,
-			dataType : 'json',
-			contentType : 'application/json',
-			success : function(data, textStatus, jqXHR) {
-				if (res) {
-					showOutput("Decision to close Cbtion created", "green");
-					setTimeout(function() {
-						callbackFunction.call(callbackObj);
-					}, 3000);
-				} else {
-					showOutput(data);
-				}
-			},
-			error : function(jqXHR, textStatus, errorThrown) {
-				console.log(errorThrown);
-			}
-		});
-	},
-	
 	goalNew : function(goalData,callbackFunction,callbackObj) {
 		//TODO: update
 		var data = {
@@ -488,6 +460,36 @@ ServerComm.prototype = {
 		})
 	},
 	
+	decisionNew : function(decisionData,callbackFunction,callbackObj) {
+
+		var data = {
+			'decisionDto' : decisionData
+		};
+		var datastr = JSON.stringify(data);
+
+		$.ajax({
+			type : 'POST',
+			url : '../json/DecisionNew',
+			data : datastr,
+			dataType : 'json',
+			contentType : 'application/json',
+			success : function(data, textStatus, jqXHR) {
+				if (data.res) {
+					showOutput(data.msg, "green");
+					setTimeout(function() {
+						callbackFunction.call(callbackObj);
+					}, 3000);
+				} else {
+					showOutput(data);
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(errorThrown);
+				showOutput("error creating decision");
+			}
+		})
+	},
+	
 	decisionVote : function(vote,decId, callbackFunction, callbackObj) {
 		var data = {
 			'vote'  : vote,
@@ -516,7 +518,7 @@ ServerComm.prototype = {
 				}
 			})
 		} else {
-			showOutput("plase login to vote on this decision");
+			showOutput("please login to vote on this decision");
 		}
 	},
 	
@@ -547,5 +549,32 @@ ServerComm.prototype = {
 		} else {
 			showOutput("plase login to vote on this decision");
 		}
+	},
+	
+	decisionListGet : function(filters,callbackFunction,callbackObj) {
+
+		var data = {
+			'projectNames' : filters.projects,
+			'stateNames' : filters.states,
+			'page': filters.page,
+			'nPerPage': filters.nPerPage
+		};
+		var datastr = JSON.stringify(data);
+
+		$.ajax({
+			type : 'POST',
+			url : '../json/DecisionListGet',
+			data : datastr,
+			dataType : "json",
+			contentType : 'application/json',
+			success : function(data, textStatus, jqXHR) {
+				if (data) {
+					callbackFunction.call(callbackObj,data);
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(errorThrown);
+			}
+		});
 	}
 };

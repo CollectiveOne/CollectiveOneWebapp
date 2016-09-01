@@ -5,6 +5,7 @@
 #filter_bar {
 	width: 100%;
 	height: 30px;
+	-webkit-user-select: none;
 }
 
 #filter_bar .filter_div_btn {
@@ -27,8 +28,6 @@
 
 #filter_bar #filter_btn {
 	width:200px;
-	float: left;
-	-webkit-user-select: none;
 }
 
 #filter_bar #page_btns {
@@ -94,20 +93,18 @@
 
 #filter_contents .checkbox_p_div {
 	float:left;
-	padding-top: 2px;
+	padding-top: 1.4px;
 }
 
 #filter_contents #filter_projects {
-	width: 120px;
-	margin-left:5px;
+	margin-left: 15px;
 	overflow-x: hidden;
 	overflow-y: auto;
 	float:left;
 }
 
 #filter_contents #filter_states {
-	width: 120px;
-	margin-left:5px;
+	margin-left: 15px;
 	overflow-x: hidden;
 	overflow-y: auto;
 	float:left;

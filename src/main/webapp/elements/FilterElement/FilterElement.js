@@ -111,7 +111,7 @@ FilterElement.prototype.nextPageClick = function() {
 	if(this.resSet) {
 		var page_max = Math.ceil(this.resSet[2]/this.filters.nPerPage);
 		if(this.filters.page > page_max) {
-			showOutput("no more data available","green");
+			showOutput("no more data available","DarkGreen");
 			this.filters.page = page_max;
 		}
 	}

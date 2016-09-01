@@ -30,6 +30,10 @@ public class Decision {
 	private Timestamp creationDate;
 	private String fromState;
 	private String toState;
+	@ManyToOne
+	private Project project = new Project();
+	@ManyToOne
+	private User creator = new User();
 
 	@ManyToOne
 	private DecisionRealm decisionRealm = new DecisionRealm();
@@ -38,6 +42,7 @@ public class Decision {
 	@JoinTable(name = "DECISIONS_THESESCAST")
 	private List<Thesis> thesesCast = new ArrayList<Thesis>();
 	private Timestamp openDate;
+	private Timestamp actualVerdictDate;
 	
 	private double verdictHours = 36;
 	private int verdict;
@@ -72,16 +77,18 @@ public class Decision {
 	private double elapsedFactor = 0.0;
 
 	/* ============================== */
-	public DecisionDto ToDto() {
+	public DecisionDto toDto() {
 
 		DecisionDto dto = new DecisionDto();
 
 		dto.setId(id);
 		dto.setDescription(description);
-		dto.setCreationDate(creationDate);
-		dto.setOpenDate(openDate);
+		if(creationDate != null) dto.setCreationDate(creationDate.getTime());
+		if(openDate != null) dto.setOpenDate(openDate.getTime());
+		if(actualVerdictDate != null) dto.setActualVerdictDate(actualVerdictDate.getTime());
 		dto.setFromState(fromState);
 		dto.setToState(toState);
+		if(project != null) dto.setProjectName(project.getName());
 		dto.setnVoters(decisionRealm.size());
 		dto.setPpsTot(ppsTot);
 		dto.setVerdictHours(verdictHours);
@@ -136,6 +143,18 @@ public class Decision {
 	public void setToState(String toState) {
 		this.toState = toState;
 	}
+	public Project getProject() {
+		return project;
+	}
+	public void setProject(Project project) {
+		this.project = project;
+	}
+	public User getCreator() {
+		return creator;
+	}
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
 	public DecisionRealm getDecisionRealm() {
 		return decisionRealm;
 	}
@@ -148,6 +167,13 @@ public class Decision {
 	public void setOpenDate(Timestamp openDate) {
 		this.openDate = openDate;
 	}
+	public Timestamp getActualVerdictDate() {
+		return actualVerdictDate;
+	}
+	public void setActualVerdictDate(Timestamp actualVerdictDate) {
+		this.actualVerdictDate = actualVerdictDate;
+	}
+
 	public List<Thesis> getThesesCast() {
 		return thesesCast;
 	}
@@ -208,6 +234,8 @@ public class Decision {
 						state = DecisionState.CLOSED_DENIED;
 					if (verdict == 1)
 						state = DecisionState.CLOSED_ACCEPTED;
+					
+					actualVerdictDate = new Timestamp(System.currentTimeMillis());
 				}
 			}
 		}

@@ -48,8 +48,8 @@ public class Goal {
 		dto.setGoalTag(goalTag);
 		dto.setDescription(description);
 		dto.setState(state.toString());
-		if(createDec != null) dto.setCreateDec(createDec.ToDto());
-		if(deleteDec != null) dto.setDeleteDec(deleteDec.ToDto());
+		if(createDec != null) dto.setCreateDec(createDec.toDto());
+		if(deleteDec != null) dto.setDeleteDec(deleteDec.toDto());
 		
 		return dto;
 	}

@@ -17,5 +17,7 @@
 				<button id="new_cbtion">New Contribution</button>
 				<button id="goals_list">Search Goals</button>
 				<button id="new_goal">New Goal</button>
+				<button id="decisions_list">Search Decisions</button>
+				<button id="new_decision">New Decision</button>
 				<button id="new_project">New Project</button>
 			</div>

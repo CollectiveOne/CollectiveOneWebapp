@@ -13,6 +13,7 @@ import coproject.cpweb.utils.db.daos.*;
 import coproject.cpweb.utils.db.entities.*;
 import coproject.cpweb.utils.db.entities.dtos.BidDto;
 import coproject.cpweb.utils.db.entities.dtos.CbtionDto;
+import coproject.cpweb.utils.db.entities.dtos.DecisionDto;
 import coproject.cpweb.utils.db.entities.dtos.GoalDto;
 import coproject.cpweb.utils.db.entities.dtos.ProjectDto;
 import coproject.cpweb.utils.db.entities.dtos.ThesisDto;
@@ -332,6 +333,101 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
+	public void goalsUpdateState() {
+		/* Update state of all not closed bids */
+		List<Goal> goalsNotDeleted = goalDao.getNotDeleted();
+		for(Goal goal : goalsNotDeleted) {
+			goalUpdateState(goal.getId());
+		}	
+	}
+	
+	@Transactional
+	public void goalUpdateState(int goalId) {
+		Goal goal = goalDao.get(goalId);
+		
+		goalDao.save(goal);
+		
+		/* Create decision */ 
+		Decision create = goal.getCreateDec();
+
+		/* update goal state based on create decision */
+
+		switch(create.getState()){
+		case OPEN: 
+			break;
+
+		case CLOSED_DENIED : 
+			switch(goal.getState()) {
+			case PROPOSED:
+				goal.setState(GoalState.NOT_ACCEPTED);
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+
+		case CLOSED_ACCEPTED: 
+			switch(goal.getState()) {
+			case PROPOSED:
+				goal.setState(GoalState.ACCEPTED);
+				break;
+			default:
+				break;
+			}
+
+		default:
+			break;
+		} 
+
+		/* Update accept decision */ 
+		Decision delete = goal.getDeleteDec();
+
+		/* update goal state based on delete decision */
+
+		switch(delete.getState()){
+		case OPEN: 
+			break;
+
+		case CLOSED_DENIED : 
+			switch(goal.getState()) {
+			case PROPOSED:
+				goal.setState(GoalState.PROPOSED);
+				break;
+				
+			case ACCEPTED:
+				goal.setState(GoalState.ACCEPTED);
+				break;				
+
+			default:
+				break;
+			}
+
+			break;
+
+		case CLOSED_ACCEPTED: 
+			switch(goal.getState()) {
+			case PROPOSED:
+				goal.setState(GoalState.DELETED);
+				break;
+				
+			case ACCEPTED:
+				goal.setState(GoalState.DELETED);
+				break;				
+
+			default:
+				break;
+			}
+
+			break;
+
+		default:
+			break;
+		} 
+	}
+	
+	@Transactional
 	public void cbtionSave(Cbtion cbtion) {
 		cbtionDao.save(cbtion);
 	}
@@ -448,7 +544,9 @@ public class DbServicesImp {
 
 		if(bid == null) {
 			Cbtion cbtion = cbtionDao.get(cbtionId);
-
+			Project project = cbtion.getProject();
+			projectDao.save(project);
+			
 			/* create bid only if this user has not created one yet */
 			bid = new Bid();
 
@@ -474,6 +572,7 @@ public class DbServicesImp {
 			/* TODO: Include bid duration logic */
 			assign.setVerdictHours(36);
 			assign.setDecisionRealm(realm);
+			assign.setProject(project);
 
 			Decision accept = new Decision();
 			accept.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -484,6 +583,7 @@ public class DbServicesImp {
 			/* TODO: Include bid duration logic */
 			accept.setVerdictHours(36);
 			accept.setDecisionRealm(realm);
+			accept.setProject(project);
 
 			bid.setAssign(assign);
 			bid.setAccept(accept);
@@ -518,75 +618,14 @@ public class DbServicesImp {
 		}
 		return bidDtos;
 	}
-
+	
 	@Transactional
-	public ThesisDto thesisOfUser(int decId, int userId) {
-		Thesis thesis = thesisDao.getOfUserInDec(decId, userId);
-		ThesisDto thesisDto = null;
-		if(thesis != null) thesisDto = thesis.toDto();
-		return thesisDto;
-	}
-
-	@Transactional
-	public String thesisOfDecSave(User author, int value, int decId) {
-
-		Decision dec = decisionDao.get(decId);
-
-		if(dec.getState() == DecisionState.IDLE || dec.getState() == DecisionState.OPEN) {
-			/* if decision is still open */
-			Voter voter = voterDao.getFromUserAndRealm(dec.getDecisionRealm().getId(),author.getId());
-
-			if(voter != null) {
-				/* if voter is in the realm of the decision */
-				Thesis thesis = decisionDao.getThesisCasted(decId, author.getId());				
-
-				boolean newThesis = false;
-
-				if(thesis == null) {
-					thesis = new Thesis();
-					thesis.setAuthor(author);
-					thesis.setDecision(dec);
-					newThesis = true;
-				}
-				thesisDao.save(thesis);
-
-				thesis.setValue(value);
-				thesis.setCastDate(new Timestamp(System.currentTimeMillis()));
-
-				/* weight of the thesis are set at the cast time */
-				thesis.setWeight(voter.getWeight());
-
-				/* make a copy of the thesis in the cast theses list */
-				if(newThesis) dec.getThesesCast().add(thesis);
-				decisionDao.save(dec);
-
-				return "thesis saved";
-			} else {
-				return "voter not in decision realm";
-			}
-		} else {
-			return "decision is not open";
-		}
-	}
-
-	@Transactional
-	public void thesisAssignOfBidSave(User author, int value, int bidId) {
-		Bid bid = bidDao.get(bidId);
-		Cbtion cbtion = bid.getCbtion();
-		if((cbtion.getState() == CbtionState.OPEN) || 
-				(cbtion.getState() == CbtionState.ASSIGNED)) {
-
-			thesisOfDecSave(author, value, bid.getAssign().getId());	
-		}
-	}
-
-	@Transactional
-	public void thesisAcceptOfBidSave(User author, int value, int bidId) {
-		Bid bid = bidDao.get(bidId);
-		Cbtion cbtion = bid.getCbtion();
-		if(cbtion.getState() == CbtionState.ASSIGNED) {
-			thesisOfDecSave(author, value, bid.getAccept().getId());	
-		}
+	public void bidsUpdateState() {
+		/* Update state of all not closed bids */
+		List<Bid> bidsNotClosed = bidDao.getNotClosed();
+		for(Bid bid : bidsNotClosed) {
+			bidUpdateState(bid.getId());
+		}	
 	}
 
 	@Transactional
@@ -594,7 +633,7 @@ public class DbServicesImp {
 		List<Bid> bids = bidDao.getAll(100000);
 		return bids;
 	}
-
+	
 	@Transactional
 	public void bidUpdateState(int bidId) {
 		Bid bid = bidDao.get(bidId);
@@ -724,6 +763,76 @@ public class DbServicesImp {
 			break;
 		} 
 	}
+	
+	@Transactional
+	public ThesisDto thesisOfUser(int decId, int userId) {
+		Thesis thesis = thesisDao.getOfUserInDec(decId, userId);
+		ThesisDto thesisDto = null;
+		if(thesis != null) thesisDto = thesis.toDto();
+		return thesisDto;
+	}
+
+	@Transactional
+	public String thesisOfDecSave(User author, int value, int decId) {
+
+		Decision dec = decisionDao.get(decId);
+
+		if(dec.getState() == DecisionState.IDLE || dec.getState() == DecisionState.OPEN) {
+			/* if decision is still open */
+			Voter voter = voterDao.getFromUserAndRealm(dec.getDecisionRealm().getId(),author.getId());
+
+			if(voter != null) {
+				/* if voter is in the realm of the decision */
+				Thesis thesis = decisionDao.getThesisCasted(decId, author.getId());				
+
+				boolean newThesis = false;
+
+				if(thesis == null) {
+					thesis = new Thesis();
+					thesis.setAuthor(author);
+					thesis.setDecision(dec);
+					newThesis = true;
+				}
+				thesisDao.save(thesis);
+
+				thesis.setValue(value);
+				thesis.setCastDate(new Timestamp(System.currentTimeMillis()));
+
+				/* weight of the thesis are set at the cast time */
+				thesis.setWeight(voter.getWeight());
+
+				/* make a copy of the thesis in the cast theses list */
+				if(newThesis) dec.getThesesCast().add(thesis);
+				decisionDao.save(dec);
+
+				return "thesis saved";
+			} else {
+				return "voter not in decision realm";
+			}
+		} else {
+			return "decision is not open";
+		}
+	}
+
+	@Transactional
+	public void thesisAssignOfBidSave(User author, int value, int bidId) {
+		Bid bid = bidDao.get(bidId);
+		Cbtion cbtion = bid.getCbtion();
+		if((cbtion.getState() == CbtionState.OPEN) || 
+				(cbtion.getState() == CbtionState.ASSIGNED)) {
+
+			thesisOfDecSave(author, value, bid.getAssign().getId());	
+		}
+	}
+
+	@Transactional
+	public void thesisAcceptOfBidSave(User author, int value, int bidId) {
+		Bid bid = bidDao.get(bidId);
+		Cbtion cbtion = bid.getCbtion();
+		if(cbtion.getState() == CbtionState.ASSIGNED) {
+			thesisOfDecSave(author, value, bid.getAccept().getId());	
+		}
+	}
 
 	@Transactional
 	public void decisionsUpdateState() {
@@ -739,111 +848,46 @@ public class DbServicesImp {
 			decisionDao.save(dec);
 		}
 	}
-
-	@Transactional
-	public void bidsUpdateState() {
-		/* Update state of all not closed bids */
-		List<Bid> bidsNotClosed = bidDao.getNotClosed();
-		for(Bid bid : bidsNotClosed) {
-			bidUpdateState(bid.getId());
-		}	
-	}
 	
 	@Transactional
-	public void goalsUpdateState() {
-		/* Update state of all not closed bids */
-		List<Goal> goalsNotDeleted = goalDao.getNotDeleted();
-		for(Goal goal : goalsNotDeleted) {
-			goalUpdateState(goal.getId());
-		}	
-	}
+	public DecisionDtoListRes decisionDtoGetFiltered(DecisionFilters filters, int page, int nPerPage) {
+		DecisionListRes decisionsRes = decisionDao.get(filters,page,nPerPage);
+
+		DecisionDtoListRes decisionsDtosRes = new DecisionDtoListRes();
+
+		decisionsDtosRes.setResSet(decisionsRes.getResSet());
+		decisionsDtosRes.setDecisionDtos(new ArrayList<DecisionDto>());
+
+		for(Decision decision : decisionsRes.getDecisions()) {
+			decisionsDtosRes.getDecisionDtos().add(decision.toDto());
+		}
+
+		return decisionsDtosRes;
+	}	
 	
 	@Transactional
-	public void goalUpdateState(int goalId) {
-		Goal goal = goalDao.get(goalId);
+	public String decisionCreate(DecisionDto decisionDto) {
+		Decision decision = new Decision();
+		Project project = projectDao.get(decisionDto.getProjectName());
+		projectDao.save(project);
 		
-		goalDao.save(goal);
+		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
+		decisionRealmDao.save(realm);
 		
-		/* Create decision */ 
-		Decision create = goal.getCreateDec();
-
-		/* update goal state based on create decision */
-
-		switch(create.getState()){
-		case OPEN: 
-			break;
-
-		case CLOSED_DENIED : 
-			switch(goal.getState()) {
-			case PROPOSED:
-				goal.setState(GoalState.NOT_ACCEPTED);
-				break;
-
-			default:
-				break;
-			}
-
-			break;
-
-		case CLOSED_ACCEPTED: 
-			switch(goal.getState()) {
-			case PROPOSED:
-				goal.setState(GoalState.ACCEPTED);
-				break;
-			default:
-				break;
-			}
-
-		default:
-			break;
-		} 
-
-		/* Update accept decision */ 
-		Decision delete = goal.getDeleteDec();
-
-		/* update goal state based on delete decision */
-
-		switch(delete.getState()){
-		case OPEN: 
-			break;
-
-		case CLOSED_DENIED : 
-			switch(goal.getState()) {
-			case PROPOSED:
-				goal.setState(GoalState.PROPOSED);
-				break;
-				
-			case ACCEPTED:
-				goal.setState(GoalState.ACCEPTED);
-				break;				
-
-			default:
-				break;
-			}
-
-			break;
-
-		case CLOSED_ACCEPTED: 
-			switch(goal.getState()) {
-			case PROPOSED:
-				goal.setState(GoalState.DELETED);
-				break;
-				
-			case ACCEPTED:
-				goal.setState(GoalState.DELETED);
-				break;				
-
-			default:
-				break;
-			}
-
-			break;
-
-		default:
-			break;
-		} 
+		decision.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		decision.setCreator(userDao.get(decisionDto.getCreatorUsername()));
+		decision.setDescription(decisionDto.getDescription());
+		decision.setProject(project);
+		decision.setState(DecisionState.IDLE);
+		decision.setDecisionRealm(realm);
+		
+		decisionDao.save(decision);
+		
+		return "decision created";
 	}
 
+	
+	
 }
 
 

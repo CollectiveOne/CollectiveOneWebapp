@@ -1,15 +1,17 @@
 package coproject.cpweb.utils.db.entities.dtos;
 
-import java.sql.Timestamp;
-
 public class DecisionDto {
 	
 	protected int id;
 	protected String description;
-	protected Timestamp creationDate;
-	protected Timestamp openDate;
+	protected long creationDate;
+	protected long openDate;
+	protected long actualVerdictDate;
 	protected String fromState;
 	protected String toState;
+	protected String projectName;
+	protected String creatorUsername;
+	
 	protected int nVoters;
 	protected double ppsTot;
 	protected double verdictHours;
@@ -35,17 +37,23 @@ public class DecisionDto {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Timestamp getCreationDate() {
+	public long getCreationDate() {
 		return creationDate;
 	}
-	public void setCreationDate(Timestamp creationDate) {
+	public void setCreationDate(long creationDate) {
 		this.creationDate = creationDate;
 	}
-	public Timestamp getOpenDate() {
+	public long getOpenDate() {
 		return openDate;
 	}
-	public void setOpenDate(Timestamp openDate) {
+	public void setOpenDate(long openDate) {
 		this.openDate = openDate;
+	}
+	public long getActualVerdictDate() {
+		return actualVerdictDate;
+	}
+	public void setActualVerdictDate(long actualVerdictDate) {
+		this.actualVerdictDate = actualVerdictDate;
 	}
 	public String getFromState() {
 		return fromState;
@@ -59,6 +67,20 @@ public class DecisionDto {
 	public void setToState(String toState) {
 		this.toState = toState;
 	}
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	public String getCreatorUsername() {
+		return creatorUsername;
+	}
+	public void setCreatorUsername(String creatorUsername) {
+		this.creatorUsername = creatorUsername;
+	}
+	
+	
 	public int getnVoters() {
 		return nVoters;
 	}
