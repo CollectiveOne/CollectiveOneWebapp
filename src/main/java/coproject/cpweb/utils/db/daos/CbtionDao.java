@@ -5,12 +5,9 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Cbtion;
@@ -19,42 +16,18 @@ import coproject.cpweb.utils.db.services.CbtionFilters;
 import coproject.cpweb.utils.db.services.CbtionListRes;
 
 @Service
-public class CbtionDao {
-	
-	@Autowired
-	SessionFactory sessionFactory;
-	
-	public int save(Cbtion cbtion) {
-		Session session = sessionFactory.getCurrentSession();
-		int id = (Integer) session.save(cbtion);
-		return id;
-	}
+public class CbtionDao extends BaseDao {
 	
 	public Cbtion get(Integer id) {
-		Session session = sessionFactory.getCurrentSession();
-		Cbtion cbtion = session.get(Cbtion.class,id);
-		return cbtion;
+		return (Cbtion) super.get(id,Cbtion.class);
 	}
 	
 	public List<Cbtion> getAll(Integer max) {
-		Session session = sessionFactory.getCurrentSession();
-		
-		@SuppressWarnings("unchecked")
-		List<Cbtion> res = (List<Cbtion>) session.createCriteria(Cbtion.class)
-				.list();
-		
-		return res;
+		return (List<Cbtion>) super.getAll(max,Cbtion.class);
 	}
 	
 	public List<Cbtion> get(Cbtion refCbtion) {
-		
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<Cbtion> res = (List<Cbtion>) session.createCriteria(Cbtion.class)
-							.add(Example.create(refCbtion))
-							.list();
-		
-		return res;
+		return (List<Cbtion>) super.get(refCbtion,Cbtion.class);
 	}
 	
 	public CbtionListRes get(CbtionFilters filters, int page, int nPerPage) {

@@ -2,8 +2,6 @@ package coproject.cpweb.utils.db.daos;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.DecisionRealm;
@@ -11,20 +9,10 @@ import coproject.cpweb.utils.db.entities.User;
 import coproject.cpweb.utils.db.entities.Voter;
 
 @Service
-public class VoterDao {
+public class VoterDao extends BaseDao {
 
-	@Autowired
-	SessionFactory sessionFactory;
-
-	public void save(Voter voter) {
-		Session session = sessionFactory.getCurrentSession();
-		session.save(voter);
-	}
-	
 	public Voter get(int id) {
-		Session session = sessionFactory.getCurrentSession();
-		Voter voter = session.get(Voter.class,id);
-		return voter;
+		return (Voter) super.get(id,Voter.class);
 	}
 	
 	public void updateOrAdd(int realmId, int voterUserId, double addWeight) {

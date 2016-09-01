@@ -36,7 +36,7 @@ GoalListPage.prototype.init = function() {
 			GLOBAL.serverComm.goalListGet, 
 			this.GoalsReceivedCallback, 
 			this, 
-			["PROPOSED","ACCEPTED"], 
+			["PROPOSED","ACCEPTED","DELETED"], 
 			filters);
 
 	this.filter.updateData();

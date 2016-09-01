@@ -4,11 +4,9 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Goal;
@@ -17,21 +15,10 @@ import coproject.cpweb.utils.db.services.GoalFilters;
 import coproject.cpweb.utils.db.services.GoalListRes;
 
 @Service
-public class GoalDao {
-	
-	@Autowired
-	SessionFactory sessionFactory;
-	
-	public int save(Goal goal) {
-		Session session = sessionFactory.getCurrentSession();
-		int id = (Integer) session.save(goal);
-		return id;
-	}
+public class GoalDao extends BaseDao {
 	
 	public Goal get(Integer id) {
-		Session session = sessionFactory.getCurrentSession();
-		Goal goal = session.get(Goal.class,id);
-		return goal;
+		return (Goal) super.get(id,Goal.class);
 	}
 	
 	public Goal get(String goalTag) {
@@ -42,13 +29,7 @@ public class GoalDao {
 	}
 	
 	public List<Goal> getAll(Integer max) {
-		Session session = sessionFactory.getCurrentSession();
-		
-		@SuppressWarnings("unchecked")
-		List<Goal> res = (List<Goal>) session.createCriteria(Goal.class)
-				.list();
-		
-		return res;
+		return (List<Goal>) super.getAll(max,Goal.class);
 	}
 	
 	public List<Goal> getNotDeleted() {

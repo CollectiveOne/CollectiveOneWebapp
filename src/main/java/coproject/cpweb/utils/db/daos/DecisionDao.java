@@ -5,11 +5,9 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Decision;
@@ -19,20 +17,10 @@ import coproject.cpweb.utils.db.services.DecisionFilters;
 import coproject.cpweb.utils.db.services.DecisionListRes;
 
 @Service
-public class DecisionDao {
-
-	@Autowired
-	SessionFactory sessionFactory;
-
-	public void save(Decision dec) {
-		Session session = sessionFactory.getCurrentSession();
-		session.save(dec);
-	}
+public class DecisionDao extends BaseDao {
 
 	public Decision get(int id) {
-		Session session = sessionFactory.getCurrentSession();
-		Decision dec = session.get(Decision.class,id);
-		return dec;
+		return (Decision) super.get(id,Decision.class);
 	}
 	
 	public List<Decision> getWithState(DecisionState state) {

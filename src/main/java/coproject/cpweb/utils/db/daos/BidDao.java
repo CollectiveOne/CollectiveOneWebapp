@@ -3,40 +3,21 @@ package coproject.cpweb.utils.db.daos;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Bid;
 import coproject.cpweb.utils.db.entities.BidState;
 
 @Service
-public class BidDao {
-	
-	@Autowired
-	SessionFactory sessionFactory;
-	
-	public void save(Bid bid) {
-		Session session = sessionFactory.getCurrentSession();
-		session.save(bid);
-	}
+public class BidDao extends BaseDao {
 	
 	public Bid get(Integer id) {
-		Session session = sessionFactory.getCurrentSession();
-		Bid bid = session.get(Bid.class,id);
-		return bid;
+		return (Bid) super.get(id,Bid.class);
 	}
 	
 	public List<Bid> getAll(Integer max) {
-		Session session = sessionFactory.getCurrentSession();
-		
-		@SuppressWarnings("unchecked")
-		List<Bid> res = (List<Bid>) session.createCriteria(Bid.class)
-				.list();
-		
-		return res;
+		return (List<Bid>) super.getAll(max,Bid.class);
 	}
 	
 	public List<Bid> getNotClosed() {

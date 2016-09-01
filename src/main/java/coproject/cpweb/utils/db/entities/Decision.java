@@ -33,7 +33,7 @@ public class Decision {
 	@ManyToOne
 	private Project project = new Project();
 	@ManyToOne
-	private User creator = new User();
+	private User creator;
 
 	@ManyToOne
 	private DecisionRealm decisionRealm = new DecisionRealm();

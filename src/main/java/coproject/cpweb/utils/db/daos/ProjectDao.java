@@ -5,11 +5,9 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Cbtion;
@@ -17,22 +15,14 @@ import coproject.cpweb.utils.db.entities.Project;
 import coproject.cpweb.utils.db.entities.User;
 
 @Service
-public class ProjectDao {
-
-	@Autowired
-	SessionFactory sessionFactory;
-
-	public void save(Project project) {		
-		Session session = sessionFactory.getCurrentSession();
-		session.save(project);
-	}
+public class ProjectDao extends BaseDao {
 
 	public Project get(Integer id) {
-
-		Session session = sessionFactory.getCurrentSession();
-		Project project = session.get(Project.class,id);
-
-		return project;
+		return (Project) super.get(id,Project.class);
+	}
+	
+	public List<Project> getAll(Integer max) {
+		return (List<Project>) super.getAll(max,Project.class);
 	}
 
 	public Project get(String project_name) {
@@ -49,16 +39,6 @@ public class ProjectDao {
 			project = null;
 
 		return project;
-	}
-
-	public List<Project> getAll(Integer max) {
-		Session session = sessionFactory.getCurrentSession();
-
-		@SuppressWarnings("unchecked")
-		List<Project> res = (List<Project>) session.createCriteria(Project.class)
-		.list();
-
-		return res;
 	}
 
 	public List<String> getList() {
@@ -105,7 +85,7 @@ public class ProjectDao {
 			UserDao userDAO = new UserDao();
 			userDAO.sessionFactory = sessionFactory;
 
-			Project project = get(projectId);
+			Project project = this.get(projectId);
 			User contributor = userDAO.get(contributorId);
 			project.getContributors().add(contributor);
 

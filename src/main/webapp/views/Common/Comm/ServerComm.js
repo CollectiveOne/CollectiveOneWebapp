@@ -181,7 +181,7 @@ ServerComm.prototype = {
 			success : function(data, textStatus, jqXHR) {
 				if (data.res) {
 					if(data.res == "user created") {
-						showOutput("user_created", "green");
+						showOutput("user_created", "DarkGreen");
 						setTimeout(function() {
 							callbackFunction.call(callbackObj);
 						}, 3000);
@@ -362,7 +362,7 @@ ServerComm.prototype = {
 			contentType : 'application/json',
 			success : function(data, textStatus, jqXHR) {
 				if (data.res) {
-					showOutput("project created", "lightgreen");
+					showOutput("project created", "DarkGreen");
 					GLOBAL.sessionData.userLogged = data.userLoggedDto;
 					callbackFunction.call(callbackObj);
 				} else {
@@ -445,7 +445,7 @@ ServerComm.prototype = {
 			contentType : 'application/json',
 			success : function(data, textStatus, jqXHR) {
 				if (data.res) {
-					showOutput(data.msg, "green");
+					showOutput(data.msg, "DarkGreen");
 					setTimeout(function() {
 						callbackFunction.call(callbackObj);
 					}, 3000);
@@ -475,7 +475,7 @@ ServerComm.prototype = {
 			contentType : 'application/json',
 			success : function(data, textStatus, jqXHR) {
 				if (data.res) {
-					showOutput(data.msg, "green");
+					showOutput(data.msg, "DarkGreen");
 					setTimeout(function() {
 						callbackFunction.call(callbackObj);
 					}, 3000);
@@ -506,7 +506,7 @@ ServerComm.prototype = {
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
 					if (data.res) {
-						showOutput(data.res);
+						showOutput(data.res,"DarkGreen");
 						callbackFunction.call(callbackObj);
 					} else {
 						showOutput(data);

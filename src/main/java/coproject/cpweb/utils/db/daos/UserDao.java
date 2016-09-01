@@ -5,41 +5,29 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Example;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Project;
 import coproject.cpweb.utils.db.entities.User;
 
 @Service
-public class UserDao {
-	
-	@Autowired
-	SessionFactory sessionFactory;
-	
-	public void save(User user) {
-		Session session = sessionFactory.getCurrentSession();
-		session.save(user);
-	}
+public class UserDao extends BaseDao {
 	
 	public User get(Integer id) {
-		
-		Session session = sessionFactory.getCurrentSession();
-		User user = session.get(User.class,id);
-		return user;
+		return (User) super.get(id,User.class);
+	}
+	
+	public List<User> getAll(Integer max) {
+		return (List<User>) super.getAll(max,User.class);
+	}
+	
+	public List<User> getFromRef(User refUser) {
+		return (List<User>) super.get(refUser,User.class);
 	}
 	
 	public int getN() {
-		Session session = sessionFactory.getCurrentSession();
-		
-		Long count = (Long) session.createCriteria(User.class)
-				.setProjection(Projections.rowCount()).uniqueResult();
-		
-		return (int)(count + 0);
+		return super.getN(User.class);
 	}
 	
 	public User get(String username) {
@@ -56,27 +44,6 @@ public class UserDao {
 			user = null;
 		
 		return user;
-	}
-	
-	public List<User> getAll(Integer max) {
-		Session session = sessionFactory.getCurrentSession();
-		
-		@SuppressWarnings("unchecked")
-		List<User> res = (List<User>) session.createCriteria(User.class)
-				.list();
-		
-		return res;
-	}
-
-	public List<User> getFromRef(User refUser, Integer max) {
-		Session session = sessionFactory.getCurrentSession();
-		
-		@SuppressWarnings("unchecked")
-		List<User> res = (List<User>) session.createCriteria(User.class)
-				.add(Example.create(refUser))
-				.list();
-		
-		return res;
 	}
 	
 	public Project getProjectContributed(int userId, int projectId) {

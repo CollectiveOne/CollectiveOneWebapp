@@ -45,7 +45,7 @@ SessionData.prototype = {
 	
 	userLoginCallback: function(userLoggedDto) {
 		if (userLoggedDto != null) {
-			showOutput(userLoggedDto.username+" logged in","green");
+			showOutput(userLoggedDto.username+" logged in","DarkGreen");
 			this.userLogged = userLoggedDto;
 			this.draw();
 		} else {

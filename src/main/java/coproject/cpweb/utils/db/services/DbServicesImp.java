@@ -97,23 +97,14 @@ public class DbServicesImp {
 
 	@Transactional
 	public List<User> userGetAll(Integer max) {
-		return userDao.getFromRef(new User(), max);
+		return userDao.getAll(max);
 	}
 
 	@Transactional
 	public UserDto userLoginDto(String username, String password) {
-
-		User refUser = new User();
-		refUser.setUsername(username);
-		List<User> users = userDao.getFromRef(refUser,1);
-
-		if(users.size() == 1) {
-			User user = users.get(0);
-			if(user.getPassword().equals(password)) {
-				return user.toDto();
-			} else {
-				return null;
-			}
+		User user = userDao.get(username);
+		if(user.getPassword().equals(password)) {
+			return user.toDto();
 		} else {
 			return null;
 		}
@@ -200,7 +191,8 @@ public class DbServicesImp {
 		assign_bid.setDecisionRealm(realm);
 		assign_bid.setFromState(BidState.OFFERED.toString());
 		assign_bid.setToState(BidState.ASSIGNED.toString());
-
+		assign_bid.setProject(project);
+		
 		accept_bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		accept_bid.setDescription("accept bid "+bid.getId()+" of cbtion:"+bid.getCbtion().getId()+" to:"+bid.getCreator().getUsername());
 		accept_bid.setVerdict(1);
@@ -208,6 +200,7 @@ public class DbServicesImp {
 		accept_bid.setDecisionRealm(realm);
 		accept_bid.setFromState(BidState.ASSIGNED.toString());
 		accept_bid.setToState(BidState.ACCEPTED.toString());
+		accept_bid.setProject(project);
 
 		/* simulate the bid acceptance process */
 		bid.setState(BidState.ACCEPTED);
@@ -287,6 +280,7 @@ public class DbServicesImp {
 		create.setDecisionRealm(realm);
 		create.setFromState(GoalState.PROPOSED.toString());
 		create.setToState(GoalState.ACCEPTED.toString());
+		create.setProject(project);
 		
 		delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		delete.setDescription("Delete goal"+goal.getGoalTag());
@@ -295,7 +289,7 @@ public class DbServicesImp {
 		delete.setDecisionRealm(realm);
 		delete.setFromState(GoalState.ACCEPTED.toString());
 		delete.setToState(GoalState.DELETED.toString());
-		
+		delete.setProject(project);
 		
 		goal.setCreateDec(create);
 		goal.setDeleteDec(delete);
