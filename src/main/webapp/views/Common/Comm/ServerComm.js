@@ -459,6 +459,33 @@ ServerComm.prototype = {
 			}
 		})
 	},
+
+	decisionGet : function(decisionId,callbackFunction,callbackObj) {
+
+		var data = {
+			'id' : decisionId
+		};
+		var datastr = JSON.stringify(data);
+
+		$.ajax({
+			type : 'POST',
+			url : '../json/DecisionGet',
+			data : datastr,
+			dataType : 'json',
+			contentType : 'application/json',
+			success : function(data, textStatus, jqXHR) {
+				if (data.decisionDto) {
+					callbackFunction.call(callbackObj,data.decisionDto);
+				} else {
+					showOutput(data);
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(errorThrown);
+				showOutput("error getting decision");
+			}
+		});
+	},
 	
 	decisionNew : function(decisionData,callbackFunction,callbackObj) {
 
@@ -564,6 +591,157 @@ ServerComm.prototype = {
 		$.ajax({
 			type : 'POST',
 			url : '../json/DecisionListGet',
+			data : datastr,
+			dataType : "json",
+			contentType : 'application/json',
+			success : function(data, textStatus, jqXHR) {
+				if (data) {
+					callbackFunction.call(callbackObj,data);
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(errorThrown);
+			}
+		});
+	},
+
+	argumentGet : function(argumentId,callbackFunction,callbackObj) {
+
+		var data = {
+			'id' : argumentId,
+		};
+		var datastr = JSON.stringify(data);
+
+		$.ajax({
+			type : 'POST',
+			url : '../json/ArgumentGet',
+			data : datastr,
+			dataType : "json",
+			contentType : 'application/json',
+			success : function(data, textStatus, jqXHR) {
+				if (data) {
+					callbackFunction.call(callbackObj,data);
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(errorThrown);
+			}
+		});
+	},
+	
+	argumentsGetOfDecision : function(decisionId,callbackFunction,callbackObj) {
+
+		var data = {
+			'decisionId' : decisionId
+		};
+		var datastr = JSON.stringify(data);
+
+		$.ajax({
+			type : 'POST',
+			url : '../json/ArgumentsGetOfDecision',
+			data : datastr,
+			dataType : "json",
+			contentType : 'application/json',
+			success : function(data, textStatus, jqXHR) {
+				if (data) {
+					callbackFunction.call(callbackObj,data);
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(errorThrown);
+			}
+		});
+	},
+	
+	argumentNew : function(argDto,callbackFunction,callbackObj) {
+
+		var data = {
+			'argumentDto' : argDto
+		};
+		
+		var datastr = JSON.stringify(data);
+
+		$.ajax({
+			type : 'POST',
+			url : '../json/ArgumentNew',
+			data : datastr,
+			dataType : "json",
+			contentType : 'application/json',
+			success : function(data, textStatus, jqXHR) {
+				if (data) {
+					if (data.res) {
+						showOutput(data.msg,"DarkGreen");
+						callbackFunction.call(callbackObj,data); 
+					} else {
+						showOutput(data.msg,"DarkRed");
+					}
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(errorThrown);
+			}
+		});
+	},
+
+	argumentIsBacked : function(argumentId,userId,callbackFunction,callbackObj) {
+
+		var data = {
+			'argId' : argumentId,
+			'userId' : userId
+		};
+		var datastr = JSON.stringify(data);
+
+		$.ajax({
+			type : 'POST',
+			url : '../json/ArgumentIsBacked',
+			data : datastr,
+			dataType : "json",
+			contentType : 'application/json',
+			success : function(data, textStatus, jqXHR) {
+				if (data) {
+					callbackFunction.call(callbackObj,data);
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(errorThrown);
+			}
+		});
+	},
+
+	argumentBack : function(argumentId,callbackFunction,callbackObj) {
+
+		var data = {
+			'argId' : argumentId
+		};
+		var datastr = JSON.stringify(data);
+
+		$.ajax({
+			type : 'POST',
+			url : '../json/ArgumentBack',
+			data : datastr,
+			dataType : "json",
+			contentType : 'application/json',
+			success : function(data, textStatus, jqXHR) {
+				if (data) {
+					callbackFunction.call(callbackObj,data);
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(errorThrown);
+			}
+		});
+	},
+
+	argumentUnBack : function(argumentId,callbackFunction,callbackObj) {
+
+		var data = {
+			'argId' : argumentId
+		};
+		var datastr = JSON.stringify(data);
+
+		$.ajax({
+			type : 'POST',
+			url : '../json/ArgumentUnBack',
 			data : datastr,
 			dataType : "json",
 			contentType : 'application/json',

@@ -9,6 +9,8 @@
 	<link rel="stylesheet" type="text/css" href="../elements/DecisionBox/DecisionBox.css" />
 	<script type="text/javascript" src="../elements/FilterElement/FilterElement.js"></script>
 	<link rel="stylesheet" type="text/css" href="../elements/FilterElement/FilterElement.css"/>
+	<script type="text/javascript" src="../elements/ArgumentBox/ArgumentBox.js"></script>
+	<link rel="stylesheet" type="text/css" href="../elements/ArgumentBox/ArgumentBox.css" />
 	<title>CoProject - Search Decisions</title>
 </head>
 

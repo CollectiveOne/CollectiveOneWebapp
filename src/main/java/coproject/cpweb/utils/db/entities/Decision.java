@@ -47,6 +47,10 @@ public class Decision {
 	private double verdictHours = 36;
 	private int verdict;
 	private DecisionState state;
+	
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "DECISIONS_ARGS")
+	private List<Argument> arguments = new ArrayList<Argument>();
 
 	/* ============================== */
 	/* Decisions mechanics parameters */
@@ -198,7 +202,13 @@ public class Decision {
 	public void setState(DecisionState state) {
 		this.state = state;
 	}
-
+	public List<Argument> getArguments() {
+		return arguments;
+	}
+	public void setArguments(List<Argument> arguments) {
+		this.arguments = arguments;
+	}
+	
 	/*
 	 * Decision Engine logic
 	 */

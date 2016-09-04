@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import coproject.cpweb.utils.db.daos.*;
 import coproject.cpweb.utils.db.entities.*;
+import coproject.cpweb.utils.db.entities.dtos.ArgumentDto;
 import coproject.cpweb.utils.db.entities.dtos.BidDto;
 import coproject.cpweb.utils.db.entities.dtos.CbtionDto;
 import coproject.cpweb.utils.db.entities.dtos.DecisionDto;
@@ -52,6 +53,10 @@ public class DbServicesImp {
 
 	@Autowired 
 	protected DecisionRealmDao decisionRealmDao;
+	
+	@Autowired 
+	protected ArgumentDao argumentDao;
+
 
 
 	@Transactional
@@ -879,8 +884,69 @@ public class DbServicesImp {
 		
 		return "decision created";
 	}
-
 	
+	@Transactional
+	public DecisionDto decisionGetDto(int id) {
+		return decisionDao.get(id).toDto();
+	}
+	
+	@Transactional
+	public ArgumentDto argumentGetDto(int id) {
+		return argumentDao.get(id).toDto();
+	}
+	
+	@Transactional
+	public List<ArgumentDto> argumentGetOfDecisionDto(int decisionId, ArgumentTendency tendency) {
+		List<Argument> arguments = argumentDao.getOfDecision(decisionId,tendency);
+		List<ArgumentDto> argumentDtos = new ArrayList<ArgumentDto>();
+		for (Argument argument : arguments) {
+			argumentDtos.add(argument.toDto());
+		}
+		return argumentDtos;
+	}
+	
+	
+	@Transactional
+	public String argumentCreate(ArgumentDto argumentDto) {
+
+		User creator = userDao.get(argumentDto.getCreatorUsername());
+		Decision decision = decisionDao.get(argumentDto.getDecisionId());
+		Argument argument = new Argument();
+		
+		argument.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		argument.setCreator(creator);
+		argument.setDecision(decision);
+		argument.setDescription(argumentDto.getDescription());
+		argument.setTendency(ArgumentTendency.valueOf(argumentDto.getTendency()));
+		
+		decision.getArguments().add(argument);
+		
+		argumentDao.save(argument);
+		decisionDao.save(decision);
+		
+		return "argument created";
+	}
+	
+	@Transactional
+	public String argumentBack(int argId, int userId) {
+		User user = userDao.get(userId);
+		return argumentDao.back(argId,user);
+	}
+	
+	@Transactional
+	public String argumentUnBack(int argId, int userId) {
+		User user = userDao.get(userId);
+		return argumentDao.unBack(argId,user);
+	}
+	
+	@Transactional
+	public boolean argumentIsBacked(int argId, int userId) {
+		if(argumentDao.getBacker(argId,userId) == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	
 }
 

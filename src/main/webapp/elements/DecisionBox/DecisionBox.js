@@ -1,5 +1,6 @@
 function DecisionBox(container_id,decisionData, voter) {
 	DecisionBase.call(this,container_id,decisionData, voter);
+	this.argumentsExpanded = false;
 };
 
 DecisionBox.prototype = DecisionBase.prototype;
@@ -15,7 +16,8 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 	
 	this.updateVoteStatus();
 	
-	$("#description",this.container).append($("<p>"+this.decision.description+"</p>"));
+	
+	$("#description",this.container).append("<a href=DecisionPage.action?decisionId="+ this.decision.id+">"+this.decision.description+"</a>");
 	
 	if(this.decision.fromState != null && this.decision.toState != null) {
 		$("#from_to_state",this.container).append($("<p>Changes the state from "
@@ -99,4 +101,101 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 			$("#right_div #verdict",this.container).css("color","DarkRed");
 		}
 	}
+	
+	// Arguments portion expansion
+	$("#arguments_expand_div",this.container).click(this.argumentsExpandClick.bind(this));
+	$("#arguments_no_new_btn",this.container).click(this.argumentNoExpand.bind(this));
+	$("#arguments_yes_new_btn",this.container).click(this.argumentYesExpand.bind(this));
+
+	$("#arg_no_new_save",this.container).click(this.argumentNoSave.bind(this));
+	$("#arg_yes_new_save",this.container).click(this.argumentYesSave.bind(this));
+}
+
+DecisionBox.prototype.argumentsExpandClick = function() {
+
+	if(this.argumentsExpanded) {
+		$("#discussion_div",this.container).hide();
+		this.argumentsExpanded = false;
+	} else {
+		this.updateArguments();
+		this.argumentsExpanded = true;
+	}
+	
+}
+
+DecisionBox.prototype.updateArguments = function(data) {
+	GLOBAL.serverComm.argumentsGetOfDecision(this.decision.id,this.argumentsReceivedCallback,this);
+}
+
+DecisionBox.prototype.argumentsReceivedCallback = function(data) {
+
+	this.decision.argumentsNo = data.argumentNoDtos;
+	this.decision.argumentsYes = data.argumentYesDtos;
+
+	this.drawArguments();
+}
+
+DecisionBox.prototype.drawArguments = function(data) {
+
+	$("#discussion_div",this.container).show();
+
+	$("#args_no_div", this.container).empty();
+	for ( var ix in this.decision.argumentsNo ) {
+		$("#args_no_div", this.container).append("<div id=argument_no"+ix+" class=argument_container></div>");
+		var argumentBox = new ArgumentBox($("#argument_no"+ix),this.decision.argumentsNo[ix]);
+		argumentBox.draw();
+	}
+	
+	$("#args_yes_div", this.container).empty();
+	for ( var ix in this.decision.argumentsYes ) {
+		$("#args_yes_div", this.container).append("<div id=argument_yes"+ix+" class=argument_container></div>");
+		var argumentBox = new ArgumentBox($("#argument_yes"+ix),this.decision.argumentsYes[ix]);
+		argumentBox.draw();
+	}	
+}
+
+DecisionBox.prototype.argumentNoExpand = function() {
+	if(GLOBAL.sessionData.userLogged != null) {
+		$("#arg_no_new_form",this.container).toggle();	
+	} else {
+		showOutput("please login to add arguments","DarkRed")
+	}
+	
+}
+
+DecisionBox.prototype.argumentYesExpand = function() {
+	if(GLOBAL.sessionData.userLogged != null) {
+		$("#arg_yes_new_form",this.container).toggle();
+	} else {
+		showOutput("please login to add arguments","DarkRed")
+	}
+}
+
+DecisionBox.prototype.argumentNoSave = function() {
+	argDto = {
+		creatorUsername : GLOBAL.sessionData.userLogged.username,
+		description : $("#arg_no_new_description", this.container).val(),
+		decisionId : this.decision.id,
+		tendency: "FORNO"
+	}
+
+	description : $("#arg_no_new_description", this.container).val("");
+	$("#arg_no_new_form",this.container).hide();	
+	GLOBAL.serverComm.argumentNew(argDto,this.argumentNewCallback,this);	
+}
+
+DecisionBox.prototype.argumentYesSave = function() {
+	argDto = {
+		creatorUsername : GLOBAL.sessionData.userLogged.username,
+		description : $("#arg_yes_new_description", this.container).val(),
+		decisionId : this.decision.id,
+		tendency: "FORYES"
+	}
+	$("#arg_yes_new_description", this.container).val("");
+	$("#arg_yes_new_form",this.container).hide();
+	GLOBAL.serverComm.argumentNew(argDto,this.argumentNewCallback,this);		
+}
+
+DecisionBox.prototype.argumentNewCallback = function() {
+	this.updateArguments();
 }
