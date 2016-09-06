@@ -56,6 +56,30 @@ body {
 	padding-left: 4px;
 }
 
+#container .cp_btn_light {
+	overflow: hidden;
+	background-color: #e6e6e6;
+	border-radius: 5px;
+	text-align: center;
+	cursor: pointer;
+	-webkit-user-select: none;
+}
+
+#container .cp_btn_dark {
+	background-color: #cccccc;
+	border-radius: 5px;
+	text-align: center;
+	cursor: pointer;
+	-webkit-user-select: none;
+}
+
+#container .cp_btn_light p {
+	font-size:12px;
+}
+
+#container .cp_btn_dark p {
+	font-size:12px;
+}
 
 #container #top{
 	width:100%;

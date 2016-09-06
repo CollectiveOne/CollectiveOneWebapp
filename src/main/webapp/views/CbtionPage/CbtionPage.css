@@ -212,7 +212,7 @@
 }
 
 #cbtion_container #bids_div {
-	width: calc(100% - 56px);
+	width: calc(100% - 76px);
 	max-height: 1200px;
 	height: auto;
 	overflow: auto;
@@ -225,15 +225,13 @@
 	padding-top:10px;
 	padding-bottom:10px;
 	padding-left:10px;
-	padding-right:10px;
+	padding-right: 0;
 }
 
 #cbtion_container #bids_div .bid_div {
-     width: 260px;
-     height: 215px;
      float: left;
      margin-bottom:3px;
-     margin-right: 20px;
+     margin-right: 10px;
 } 
 
 

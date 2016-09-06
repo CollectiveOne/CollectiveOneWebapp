@@ -3,7 +3,8 @@ function BidBox(container_id, bid, projectName) {
 	this.container = $(container_id);
 	this.bid = bid;
 	this.projectName = projectName;
-
+	this.reviewsElement == null;
+	this.reviewsExpanded = false;
 };
 
 //Inheritance
@@ -38,32 +39,29 @@ BidBox.prototype.bidBoxLoaded = function() {
 	$("#bid_description_div",this.container).append("<p>"+this.bid.description+"</p>");
 	$("#bid_delivered_div",this.container).append($("<p id=bid_delivered_p>...to be delivered in "+getTimeStrUntil(this.bid.deliveryDate)+"</p>"));
 	
-	
-	var applicable_decision = null;
-	
 	switch(this.bid.state) {
 		case "OFFERED":
 			applicable_decision = this.bid.assignDec;
+			var decBox = new DecisionBoxSmall($("#bid_bottom_div",this.container),this.bid.assignDec, GLOBAL.sessionData.userLogged);
+			decBox.draw();
+			$("#show_reviews_btn",this.container).hide();
 			break;
 			
 		case "ASSIGNED":
 			applicable_decision = this.bid.acceptDec;
+			var decBox = new DecisionBoxSmall($("#bid_bottom_div",this.container),this.bid.acceptDec, GLOBAL.sessionData.userLogged);
+			decBox.draw();
+			$("#show_reviews_btn",this.container).hide();
 			break;
 
 		case "NOT_ASSIGNED":
-			applicable_decision = this.bid.assignDec;
-			break;
-			
 		case "ACCEPTED":
-			applicable_decision = this.bid.acceptDec;
-			break;
-			
 		case "NOT_ACCEPTED":
-			applicable_decision = this.bid.acceptDec;
+			$("#show_reviews_btn",this.container).show();
+			$("#show_reviews_btn",this.container).click(this.reviewsExpandClick.bind(this));
 			break;
 			
 		case "SUPERSEEDED":
-			applicable_decision = this.bid.assignDec;
 			break;	
 			
 		default:
@@ -71,8 +69,25 @@ BidBox.prototype.bidBoxLoaded = function() {
 			
 	}
 	
-	if(applicable_decision.state == "IDLE" || applicable_decision.state == "OPEN") {
-		var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),applicable_decision, GLOBAL.sessionData.userLogged);
-		decBox.draw();
-	}
 }
+
+BidBox.prototype.reviewsExpandClick = function() {
+
+	if(!this.reviewsExpanded) {
+		if(this.reviewsElement == null) {
+			this.reviewsElement = new ReviewsElement("#reviews_container",{bidId: this.bid.id});
+		}
+		
+		this.reviewsElement.updateData();
+		
+		$("#reviews_container",this.container).show();
+		this.reviewsExpanded = true;
+		
+	} else {
+		$("#reviews_container",this.container).hide();
+		this.reviewsExpanded = false;
+	}
+	
+}
+
+

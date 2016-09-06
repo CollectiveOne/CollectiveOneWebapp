@@ -1,12 +1,15 @@
 package coproject.cpweb.utils.db.entities;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -39,6 +42,9 @@ public class Bid {
 	private Decision assign;
 	@OneToOne
 	private Decision accept;
+	
+	@OneToMany
+	private List<Review> reviews = new ArrayList<Review>();
 	
 	public BidDto toDto() {
 		BidDto dto = new BidDto();
@@ -117,6 +123,13 @@ public class Bid {
 	public void setAccept(Decision accept) {
 		this.accept = accept;
 	}
+	public List<Review> getReviews() {
+		return reviews;
+	}
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
+	}
+	
 	
 	
 }

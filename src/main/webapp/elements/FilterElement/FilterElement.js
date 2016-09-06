@@ -34,7 +34,7 @@ FilterElement.prototype.filterClick = function() {
 	if (!this.filters_expanded) {
 		// if the filters are not expanded, expand and update the first time
 		this.filters_expanded = true;
-		$("#filter_contents", this.container).slideDown();
+		$("#filter_contents", this.container).show();
 		$("#filter_bar_p", this.container).text("update results");
 
 		// Cbtion state
@@ -73,7 +73,7 @@ FilterElement.prototype.filterClick = function() {
 			}
 		}
 		
-		$("#filter_contents", this.container).slideUp();
+		$("#filter_contents", this.container).hide();
 		$("#filter_bar_p", this.container).text("filter");
 
 		this.updateData();

@@ -1,6 +1,5 @@
 #bidBox_div {
-	height: 205px;
-	width: 250px;
+	width: 330px;
 	clear:none;
 	border-radius:5px;
 	border-style:solid;
@@ -9,6 +8,8 @@
 	padding-top:10px;
 	padding-left:10px;
 	padding-right:10px;
+	padding-bottom: 10px;
+	overflow: auto;
 }
 
 #bidBox_div #bid_user_div {
@@ -28,10 +29,48 @@
 }
 
 #bidBox_div #bid_decision_div {
-	height:30px;
-	width:100%;	
+	width:100%;
 	float:left;
 	clear:both;
+}
+
+#bidBox_div #show_reviews_btn {
+	height: 15px;
+	width: 100%;
+	float:left;
+	clear:both;
+}
+
+#bidBox_div #reviews_container {
+	width:100%;
+	float:left;
+	clear:both;
+	overflow: auto;
+	margin-top: 5px;
+}
+
+#bidBox_div #show_reviews_btn p {
+	font-size:12px;
+}
+
+#bidBox_div #show_reviews_btn #show_reviews_div {
+	height: 100%;
+	float:left;
+	width: 100%;
+}
+
+#bidBox_div #show_reviews_btn #show_reviews_div p {
+}
+
+#bidBox_div #show_reviews_btn #new_btn_div {
+	float: left;
+	width: 50px;
+	display:block;
+	height: 100%;
+}
+
+#bidBox_div #new_btn_div p {
+	
 }
 
 #bidBox_div #bid_div #left_div {
@@ -91,6 +130,8 @@
 
 #bidBox_div #bid_div #right_div #bid_description_div {
 	width:100%;
+	overflow-y: auto;
+	height: calc(100% - 15px);
 }
 
 #bidBox_div #bid_div #right_div #bid_description_div p {

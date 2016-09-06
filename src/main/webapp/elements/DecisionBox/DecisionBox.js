@@ -123,7 +123,7 @@ DecisionBox.prototype.argumentsExpandClick = function() {
 	
 }
 
-DecisionBox.prototype.updateArguments = function(data) {
+DecisionBox.prototype.updateArguments = function() {
 	GLOBAL.serverComm.argumentsGetOfDecision(this.decision.id,this.argumentsReceivedCallback,this);
 }
 
@@ -135,7 +135,7 @@ DecisionBox.prototype.argumentsReceivedCallback = function(data) {
 	this.drawArguments();
 }
 
-DecisionBox.prototype.drawArguments = function(data) {
+DecisionBox.prototype.drawArguments = function() {
 
 	$("#discussion_div",this.container).show();
 
@@ -179,7 +179,6 @@ DecisionBox.prototype.argumentNoSave = function() {
 		tendency: "FORNO"
 	}
 
-	description : $("#arg_no_new_description", this.container).val("");
 	$("#arg_no_new_form",this.container).hide();	
 	GLOBAL.serverComm.argumentNew(argDto,this.argumentNewCallback,this);	
 }

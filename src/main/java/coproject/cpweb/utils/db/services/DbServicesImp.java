@@ -17,6 +17,7 @@ import coproject.cpweb.utils.db.entities.dtos.CbtionDto;
 import coproject.cpweb.utils.db.entities.dtos.DecisionDto;
 import coproject.cpweb.utils.db.entities.dtos.GoalDto;
 import coproject.cpweb.utils.db.entities.dtos.ProjectDto;
+import coproject.cpweb.utils.db.entities.dtos.ReviewDto;
 import coproject.cpweb.utils.db.entities.dtos.ThesisDto;
 import coproject.cpweb.utils.db.entities.dtos.UserDto;
 
@@ -57,7 +58,8 @@ public class DbServicesImp {
 	@Autowired 
 	protected ArgumentDao argumentDao;
 
-
+	@Autowired 
+	protected ReviewDao reviewDao;
 
 	@Transactional
 	public void userSave(User user) {
@@ -279,7 +281,7 @@ public class DbServicesImp {
 		Decision delete = new Decision();
 		
 		create.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		create.setDescription("Create goal"+goal.getGoalTag());
+		create.setDescription("Create goal "+goal.getGoalTag());
 		create.setState(DecisionState.IDLE);
 		create.setVerdictHours(36);
 		create.setDecisionRealm(realm);
@@ -288,7 +290,7 @@ public class DbServicesImp {
 		create.setProject(project);
 		
 		delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		delete.setDescription("Delete goal"+goal.getGoalTag());
+		delete.setDescription("Delete goal "+goal.getGoalTag());
 		delete.setState(DecisionState.IDLE);
 		delete.setVerdictHours(36);
 		delete.setDecisionRealm(realm);
@@ -634,6 +636,16 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
+	public List<ReviewDto> bidGetReviewsDtos(int bidId) {
+		List<Review> reviews = bidDao.get(bidId).getReviews();
+		List<ReviewDto> reviewsDtos = new ArrayList<ReviewDto>();
+		for (Review review : reviews) {
+			reviewsDtos.add(review.toDto());
+		}
+		return reviewsDtos;
+	}
+	
+	@Transactional
 	public void bidUpdateState(int bidId) {
 		Bid bid = bidDao.get(bidId);
 		Cbtion cbtion = bid.getCbtion();
@@ -948,6 +960,37 @@ public class DbServicesImp {
 		}
 	}
 	
+	@Transactional
+	public String reviewBidCreate(ReviewDto reviewDto, int bidId) {
+
+		User creator = userDao.get(reviewDto.getCreatorUsername());
+		Bid bid = bidDao.get(bidId);
+		
+		if(bidDao.getReviewer(bidId, creator.getId()) == null) {
+			User reviewee = bid.getCreator();
+			
+			Review review = new Review();
+			
+			review.setCreationDate(new Timestamp(System.currentTimeMillis()));
+			review.setCreator(creator);
+			review.setReviewee(reviewee);
+			review.setDescription(reviewDto.getDescription());
+			review.setRate(ReviewRate.valueOf(reviewDto.getRate()));
+			
+			bid.getReviews().add(review);
+			
+			bidDao.save(bid);
+			reviewDao.save(review);
+			
+			return "review created";
+		} else {
+			return "user has already reviewed this bid";
+		}
+			
+		
+	}
+	
 }
 
 
+ 

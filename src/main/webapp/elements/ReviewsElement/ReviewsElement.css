@@ -1,0 +1,139 @@
+#reviews_div {
+	width: calc(100% - 4px);
+	clear:none;
+	border-radius:5px;
+	border-style:solid;
+	border-width:2px;
+	border-color: #cccccc;
+	overflow: auto;
+	min-height: 80px;
+	padding-top: 5px;
+}
+
+#reviews_div #reviews_summary_div {
+	width:100%;
+}
+
+#reviews_div #new_btn_div {
+	width: calc(100% - 20px);
+	float:left;
+	margin-left:10px;
+	margin-right:3px;
+}
+
+#reviews_div #review_new_form {
+	width: calc(100% - 10px);
+	float:left;
+	overflow:auto;
+	margin-left:5px;
+	margin-top:5px;
+	margin-bottom: 10px;
+	display: none;
+}
+
+#reviews_div #reviews_list_div {
+	width: 100%;
+	float: left;
+	padding-bottom: 5px;
+	max-height: 500px;
+	overflow-y: visible;
+}
+
+#reviews_div .review_item_div {	
+	width: 100%;
+	float: left;
+}
+
+
+#reviews_div #review_new_rater {
+	width: 100%;
+	float:left;
+	overflow:auto;
+	margin-bottom: -1px;
+}
+
+#reviews_div #review_new_rater .rate_subbox_container {
+	width: 20%;
+	height:100%;
+	float: left;
+}
+
+#reviews_div .rate_subbox {
+	height: 100%;
+	width: calc(100% - 6px);
+	margin-left: 3px;
+	float:left;
+	text-align:center;
+	border-radius:5px;
+}
+
+#reviews_div .rate_subbox p {
+	font-size:10px;
+	font-weight: bolder;
+	color: white;
+}
+
+#reviews_div #review_new_rater #review_rate_text {
+	margin-bottom:5px;
+}
+
+#reviews_div #review_new_rater #review_rate_text p {
+	font-size:10px;
+}
+
+#reviews_div #review_new_rater #review_rate_boxes {
+	height: 35px;
+	margin-bottom: 5px;
+}
+
+#reviews_div .rate_box_selected {
+	border-style: dotted;
+	border-color: white;
+	height: 30px;
+	border-width: 3px;
+	margin-left: 0px;
+}
+
+#reviews_div .much_worse_btn  {
+	background-color: #b30000;
+}
+
+#reviews_div .worse_btn {
+	background-color: #e68a00;
+}
+
+#reviews_div .as_btn {
+	background-color: #248f24;
+}
+
+#reviews_div .better_btn {
+	background-color: #007acc;
+}
+
+#reviews_div .much_better_btn {
+	background-color: #5c00e6;
+}
+
+#reviews_div .single_line p {
+	margin-top: 12px;
+}
+
+#reviews_div .double_line p {
+	margin-top: 6px;
+}
+
+#reviews_div #review_new_description {
+	width: 100%;
+	float:left;
+	height: 40px;
+	overflow:auto;
+	border-radius:5px;
+	resize: vertical;
+}
+
+#reviews_div #review_new_save {
+	width: 120px;
+	float:right;
+	height: 15px;
+	margin-top: 5px;
+}

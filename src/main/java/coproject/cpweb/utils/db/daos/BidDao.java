@@ -3,11 +3,14 @@ package coproject.cpweb.utils.db.daos;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Bid;
 import coproject.cpweb.utils.db.entities.BidState;
+import coproject.cpweb.utils.db.entities.User;
 
 @Service
 public class BidDao extends BaseDao {
@@ -64,6 +67,23 @@ public class BidDao extends BaseDao {
 		List<Bid> bids = (List<Bid>) query.list();
 		
 		return bids;
+	}
+	
+	public User getReviewer(int bidId, int creatorId) {
+		Session session = sessionFactory.getCurrentSession();
+
+		Query query = session.createQuery(
+				"SELECT review.creator "
+						+" FROM Bid bid "
+						+ "JOIN bid.reviews review "
+						+ "WHERE bid.id = :bId "
+						+ "AND review.creator.id = :cId"
+				);
+		
+		query.setParameter("bId", bidId);
+		query.setParameter("cId", creatorId);
+		
+		return (User) query.uniqueResult();
 	}
 	
 }
