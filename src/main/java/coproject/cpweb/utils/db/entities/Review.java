@@ -29,7 +29,7 @@ public class Review {
 	@Lob
 	@Type(type = "org.hibernate.type.TextType")
 	private String description;
-	private ReviewRate rate;
+	private double rate;
 	
 	public ReviewDto toDto() {
 		ReviewDto dto = new ReviewDto();
@@ -39,7 +39,7 @@ public class Review {
 		if(creationDate != null) dto.setCreationDate(creationDate.getTime());
 		if(reviewee != null) dto.setRevieweeUsername(reviewee.getUsername());
 		if(description != null) dto.setDescription(description);
-		if(rate != null) dto.setRate(rate.toString());
+		dto.setRate(rate);
 		
 		return dto;
 	}
@@ -74,11 +74,12 @@ public class Review {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public ReviewRate getRate() {
+	public double getRate() {
 		return rate;
 	}
-	public void setRate(ReviewRate rate) {
+	public void setRate(double rate) {
 		this.rate = rate;
 	}
+	
 	
 }

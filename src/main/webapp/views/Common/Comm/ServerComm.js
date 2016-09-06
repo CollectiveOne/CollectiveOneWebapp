@@ -242,7 +242,10 @@ ServerComm.prototype = {
 			success : function(data, textStatus, jqXHR) {
 				GLOBAL.sessionData.userLogged = data.userLoggedDto;
 				GLOBAL.sessionData.draw();
-				callbackFunction.call(callbackObj);
+				if(callbackFunction) {
+					callbackFunction.call(callbackObj);
+				}
+
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				console.log(errorThrown);

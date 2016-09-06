@@ -38,12 +38,14 @@ Page.prototype.append_project_selector = function(id) {
 	$('#project_selector_div').append($('<p class=field_name_p>Project</p>'));
 	$('#project_selector_div').append($('<select class=select id='+id+'>'));
 	
-	var np = GLOBAL.sessionData.userLogged.projectsFollowing.length;
+	GLOBAL.serverComm.projectListGet(this.projectListReceivedCallback,this);
+}
+
+Page.prototype.projectListReceivedCallback = function(projectList) {
 	$("#project_select").empty();
 	
-	for(var i=0; i<np ; i++ ) {
-		var pname = GLOBAL.sessionData.userLogged.projectsFollowing[i];
-		$("#project_select").append($("<option value="+pname+">"+pname+"</option>"));
+	for(var ix in projectList) {
+		$("#project_select").append($("<option value="+projectList[ix]+">"+projectList[ix]+"</option>"));
 	} 
 }
 

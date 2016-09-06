@@ -259,27 +259,6 @@ public class DbRandomFill extends DbServicesImp {
 
 
 	@Transactional
-	public void randomProjectsFollowed() {
-		// ==================
-		// Add projects (being followed) to each user
-		List<User> users = userDao.getAll(100);
-		List<Project> projects = projectDao.getAll(100);
-
-		for(User user:users) {
-
-			userDao.save(user);
-
-			int nproj = get_random_int(1,projects.size());
-			List<Integer> ixs_proj = get_random_list(0,projects.size()-1,nproj);
-
-			for(Integer ix_proj:ixs_proj) {
-				Project this_project = projectDao.get(projects.get(ix_proj).getId());
-				user.getProjectsFollowing().add(this_project);
-			}
-		}
-	} 
-
-	@Transactional
 	public void randomBidAssignTheses() {
 
 		List<Bid> bids = bidDao.getAll(10000);

@@ -11,6 +11,10 @@
 <link rel="stylesheet" type="text/css" href="../elements/ReviewsElement/ReviewsElement.css" />
 <script type="text/javascript" src="../elements/ReviewsElement/ReviewItem.js"></script>
 <link rel="stylesheet" type="text/css" href="../elements/ReviewsElement/ReviewItem.css" />
+<link rel="stylesheet" type="text/css" href="../external/jquery-ui-datepicker.css"/>
+<link rel="stylesheet" href="../external/jquery.rateyo.css"/>
+<script type="text/javascript" src="../external/jquery.rateyo.js"></script>
+
 <title>CoProject - Contribution</title>
 </head>
 

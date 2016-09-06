@@ -149,8 +149,6 @@ public class DbServicesImp {
 		project.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		project.setDescription(projectDto.getDescription());
 
-		creator.getProjectsFollowing().add(project);
-
 		/* Each project has its own decision realm */
 		DecisionRealm realm = new DecisionRealm();
 		decisionRealmDao.save(realm);
@@ -975,7 +973,7 @@ public class DbServicesImp {
 			review.setCreator(creator);
 			review.setReviewee(reviewee);
 			review.setDescription(reviewDto.getDescription());
-			review.setRate(ReviewRate.valueOf(reviewDto.getRate()));
+			review.setRate(reviewDto.getRate());
 			
 			bid.getReviews().add(review);
 			

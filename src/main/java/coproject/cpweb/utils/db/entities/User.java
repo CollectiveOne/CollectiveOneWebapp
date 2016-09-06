@@ -34,10 +34,6 @@ public class User {
 	private Timestamp joindate;
 	
 	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "USER_PROJECTSFOLLOWING")
-	private List<Project> projectsFollowing = new ArrayList<Project>();
-	
-	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "USER_PROJECTSCONTRIBUTED")
 	private List<Project> projectsContributed = new ArrayList<Project>();
 	
@@ -55,9 +51,6 @@ public class User {
 		
 		dto.setId(id);
 		dto.setUsername(username);
-		for(Project project:projectsFollowing) {
-			dto.getProjectsFollowing().add(project.getName());
-		}
 		for(Project project:projectsContributed) {
 			dto.getProjectsContributed().add(project.getName());
 		}
@@ -110,12 +103,6 @@ public class User {
 	}
 	public void setJoindate(Timestamp joindate) {
 		this.joindate = joindate;
-	}
-	public List<Project> getProjectsFollowing() {
-		return projectsFollowing;
-	}
-	public void setProjectsFollowing(List<Project> projectsFollowing) {
-		this.projectsFollowing = projectsFollowing;
 	}
 	public List<Project> getProjectsContributed() {
 		return projectsContributed;

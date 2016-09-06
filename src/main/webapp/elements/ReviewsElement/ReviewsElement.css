@@ -74,52 +74,49 @@
 }
 
 #reviews_div #review_new_rater #review_rate_text {
-	margin-bottom:5px;
 }
 
 #reviews_div #review_new_rater #review_rate_text p {
-	font-size:10px;
 }
 
-#reviews_div #review_new_rater #review_rate_boxes {
+#reviews_div #review_new_rater #review_rate_stars_selector {
 	height: 35px;
+	width:100%;
 	margin-bottom: 5px;
 }
 
-#reviews_div .rate_box_selected {
-	border-style: dotted;
-	border-color: white;
-	height: 30px;
-	border-width: 3px;
-	margin-left: 0px;
+#reviews_div #review_new_rater #review_rate_stars {
+	float: left;
+	clear: none;
 }
 
-#reviews_div .much_worse_btn  {
-	background-color: #b30000;
+#reviews_div #review_new_rater #review_rate_status {
+	float: left;
+	width: calc(100% - 170px);
+	height: 100%;
+	clear: none;
 }
 
-#reviews_div .worse_btn {
-	background-color: #e68a00;
+#reviews_div #review_new_rater #stars_status_num {
+	display:block;
+	float:left;
+	width: 20px;
+	clear: none;
+	margin-left: 25px;
+	font-size:22px;
+	margin-top:5px;
 }
 
-#reviews_div .as_btn {
-	background-color: #248f24;
-}
-
-#reviews_div .better_btn {
-	background-color: #007acc;
-}
-
-#reviews_div .much_better_btn {
-	background-color: #5c00e6;
-}
-
-#reviews_div .single_line p {
-	margin-top: 12px;
-}
-
-#reviews_div .double_line p {
-	margin-top: 6px;
+#reviews_div #review_new_rater #stars_status_txt {
+	display:block;
+	float: right;
+	width: 70px;
+	clear: none;
+	margin-left: 5px;
+	font-size:10px;
+	margin-top: 7px;
+	text-align: center;
+	margin-right: 15px;
 }
 
 #reviews_div #review_new_description {

@@ -6,7 +6,7 @@ public class ReviewDto {
 	private long creationDate;
 	private String revieweeUsername;
 	private String description;
-	private String rate;
+	private double rate;
 	
 	public int getId() {
 		return id;
@@ -38,11 +38,12 @@ public class ReviewDto {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getRate() {
+	public double getRate() {
 		return rate;
 	}
-	public void setRate(String rate) {
+	public void setRate(double rate) {
 		this.rate = rate;
 	}
+	
 	
 }

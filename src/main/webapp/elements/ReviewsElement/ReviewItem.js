@@ -20,35 +20,13 @@ ReviewItem.prototype.draw = function() {
 
 ReviewItem.prototype.reviewBoxLoaded = function() {
 	
-	switch(this.review.rate) {
-		case "MUCHWORSE":
-			$("#review_rate", this.container).append("<p>much worse</p>");
-			$("#review_rate", this.container).addClass("much_worse_btn rate_subbox double_line");
-			break;
-			
-		case "WORSE":
-			$("#review_rate", this.container).append("<p>worse</p>");
-			$("#review_rate", this.container).addClass("worse_btn rate_subbox single_line");
-			break;
-		
-		case "ASEXPECTED":
-			$("#review_rate", this.container).append("<p>as expected</p>");
-			$("#review_rate", this.container).addClass("as_btn rate_subbox double_line");
-			break;
-			
-		case "BETTER":
-			$("#review_rate", this.container).append("<p>better</p>");
-			$("#review_rate", this.container).addClass("better_btn rate_subbox single_line");
-			break;
-			
-		case "MUCHBETTER":
-			$("#review_rate", this.container).append("<p>much better</p>");
-			$("#review_rate", this.container).addClass("much_better_btn rate_subbox double_line");
-			break;
-	}
-	
-	
+	$("#review_stars_container", this.container).rateYo({
+        rating: this.review.rate,
+        readOnly: true,
+        starWidth: "15px"
+    });
 	$("#review_description", this.container).append("<p>"+this.review.description+"</p>");
-	$("#review_author", this.container).append("<p>...by "+this.review.creatorUsername+"</p>");
+	var creationDate = new Date(this.review.creationDate);
+	$("#creation_info", this.container).append("<p>made by "+this.review.creatorUsername+" on "+creationDate.toDateString()+"</p>");
 	
 }

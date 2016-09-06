@@ -24,12 +24,11 @@ ReviewsElement.prototype.reviewsBoxLoaded = function() {
 
 	$("#new_btn_div", this.container).click(this.newReviewClicked.bind(this));
 
-	$("#review_rate_boxes #much_worse", this.container).click(this.muchWorseClicked.bind(this));
-	$("#review_rate_boxes #worse", this.container).click(this.worseClicked.bind(this));
-	$("#review_rate_boxes #as", this.container).click(this.asExpectedClicked.bind(this));
-	$("#review_rate_boxes #better", this.container).click(this.betterClicked.bind(this));
-	$("#review_rate_boxes #much_better", this.container).click(this.muchBetterClicked.bind(this));
-
+	$(".rateyo").rateYo({
+          precision: 0
+          }).on("rateyo.set", this.newRateYoSet.bind(this))
+          	.on("rateyo.change", this.newRateYoChanged.bind(this));
+	
 	$("#review_new_save", this.container).click(this.newReviewSaveClicked.bind(this));
 
 	$("#reviews_list_div", this.container).empty();
@@ -42,42 +41,35 @@ ReviewsElement.prototype.reviewsBoxLoaded = function() {
 
 }
 
+ReviewsElement.prototype.newRateYoChanged = function (e,data) {
+	var str = '';
+
+	if(data.rating <= 1.5) {
+		str	= "much worse than expected";
+	} else if(1.5 < data.rating && data.rating <= 2.5) {
+		str	= "worse than expected";
+	} else if(2.5 < data.rating && data.rating <= 3.5) {
+		str	= "broadly as expected";
+	} else if(3.5 < data.rating && data.rating <= 4.5) {
+		str	= "better than expected";
+	} else if(4.5 < data.rating && data.rating <= 5.5) {
+		str	= "much better than expected";
+	}
+
+	$("#stars_status_num",this.container).html(data.rating);
+	$("#stars_status_txt",this.container).html(str);
+}
+
+ReviewsElement.prototype.newRateYoSet = function (e,data) {
+	this.rateSelected = data.rating;
+}
+
 ReviewsElement.prototype.newReviewClicked = function() {
 	if(GLOBAL.sessionData.userLogged != null) {
 		$("#review_new_form", this.container).toggle();	
 	} else {
 		showOutput("please login to add a review","DarkRed")
 	}
-}
-
-ReviewsElement.prototype.muchWorseClicked = function() {
-	this.rateSelected = "MUCHWORSE";
-	$(".rate_subbox").removeClass('rate_box_selected');
-	$("#review_rate_boxes #much_worse", this.container).addClass("rate_box_selected");
-}
-
-ReviewsElement.prototype.worseClicked = function() {
-	this.rateSelected = "WORSE";
-	$(".rate_subbox").removeClass('rate_box_selected');
-	$("#review_rate_boxes #worse", this.container).addClass("rate_box_selected");
-}
-
-ReviewsElement.prototype.asExpectedClicked = function() {
-	this.rateSelected = "ASEXPECTED";
-	$(".rate_subbox").removeClass('rate_box_selected');
-	$("#review_rate_boxes #as", this.container).addClass("rate_box_selected");
-}
-
-ReviewsElement.prototype.betterClicked = function() {
-	this.rateSelected = "BETTER";
-	$(".rate_subbox").removeClass('rate_box_selected');
-	$("#review_rate_boxes #better", this.container).addClass("rate_box_selected");
-}
-
-ReviewsElement.prototype.muchBetterClicked = function() {
-	this.rateSelected = "MUCHBETTER";
-	$(".rate_subbox").removeClass('rate_box_selected');
-	$("#review_rate_boxes #much_better", this.container).addClass("rate_box_selected");
 }
 
 ReviewsElement.prototype.newReviewSaveClicked = function() {

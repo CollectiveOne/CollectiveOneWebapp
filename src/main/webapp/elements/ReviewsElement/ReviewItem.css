@@ -18,30 +18,38 @@
 }
 
 #review_item_div #review_left {
-	width: 50px;
+	width: calc(100% - 10px);
+	height: 15px;
 	float:left;
+	margin-bottom: 5px;
 }
 
 #review_item_div #review_right {
-	width: calc(100% - 50px - 10px);
+	width: calc(100% - 10px);
 	float:left;
 	padding-left: 5px;
 	padding-right: 5px;
 }
 
-#review_item_div #review_rate_container {
-	width: 100%;
-	height: 35px;
+#review_item_div #review_stars_container {
+	width: 160px;
 	float:left;
-	margin-top: 7;
+}
+
+#review_item_div #creation_info {
+	width: calc(100% - 85px);
+	float:left;
+	overflow: hidden;
+	height: 15px;
+	padding-top: 2.5px;
+}
+
+#review_item_div #creation_info p {
+	font-size:10px;
+	display: inline;
 }
 
 #review_item_div #review_right #review_description {
 	width:100%;
 	min-height: 35px;
-}
-
-#review_item_div #review_right #review_author {
-	width:auto;
-	float:right;
 }

@@ -117,7 +117,7 @@
 
 #cbtion_container #new_bid_div {
 	display:none;
-	width:calc(100% - 30px - 3px - 3px - 10px - 3px - 3px);
+	width: calc(100% - 76px);
 	height:25px;
 	clear:both;
 	margin-bottom: 3px;
@@ -216,7 +216,7 @@
 	max-height: 1200px;
 	height: auto;
 	overflow: auto;
-	margin-left:30px;
+	margin-left: calc(30px + 3px + 3px);
 	margin-top: 10px;
 	border-color: #cccccc;
 	border-width:3px;
