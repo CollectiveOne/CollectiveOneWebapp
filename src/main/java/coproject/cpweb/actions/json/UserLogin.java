@@ -79,12 +79,14 @@ public class UserLogin extends ActionSupport implements SessionAware {
 	/* Execute */
 	public String execute() throws Exception  {
     	
-		userLoggedDto = dbServices.userLoginDto(user.getUsername(), user.getPassword() );
-		
-		if(userLoggedDto!=null) {
-			userSession.put("userLoggedDto",userLoggedDto);
-		} else {
-			addFieldError("userlogin", " error");
+		if(!user.getUsername().equals("coprojects")) {
+			userLoggedDto = dbServices.userLoginDto(user.getUsername(), user.getPassword() );
+			
+			if(userLoggedDto!=null) {
+				userSession.put("userLoggedDto",userLoggedDto);
+			} else {
+				addFieldError("userlogin", " error");
+			}
 		}
 		
 		// Success/Failure logic is moved to client JS
