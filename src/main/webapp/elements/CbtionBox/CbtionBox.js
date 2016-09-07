@@ -35,7 +35,7 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 	
 	switch(this.cbtion.state) {
 		case "PROPOSED":
-			var openDec = new DecisionBoxSmall("#status_desc_div",this.cbtion.openDec, GLOBAL.sessionData.userLogged);		
+			var openDec = new DecisionBoxSmall($("#status_desc_div",this.container),this.cbtion.openDec, GLOBAL.sessionData.userLogged);		
 			openDec.draw();
 			break;
 
