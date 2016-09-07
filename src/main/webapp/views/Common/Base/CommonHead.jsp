@@ -2,6 +2,7 @@
 <script type="text/javascript" src="../external/jquery-ui-datepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="../external/jquery-ui-datepicker.css"/>
 <script type="text/javascript" src="../external/jquery.autocomplete.js"></script>
+<link rel="stylesheet" type="text/css" href="../views/Common/Base/autocomplete.css"/>
 <script type="text/javascript" src="../views/Common/Base/CopLib.js"></script>
 <script type="text/javascript" src="../views/Common/Base/Page.js"></script>
 <link rel="stylesheet" type="text/css" href="../views/Common/Base/CommonCSS.css"/>

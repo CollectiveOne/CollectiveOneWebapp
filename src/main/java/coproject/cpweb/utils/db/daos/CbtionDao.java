@@ -29,14 +29,24 @@ public class CbtionDao extends BaseDao {
 		return (List<Cbtion>) super.get(refCbtion,Cbtion.class);
 	}
 	
-	public ObjectListRes<Cbtion> get(Filters filters, int page, int nPerPage) {
+	public List<Cbtion> getWithState(CbtionState state) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
+		query.add(Restrictions.eq("state", state));
+		
+		@SuppressWarnings("unchecked")
+		List<Cbtion> res = (List<Cbtion>) query.list();
+		
+		return res;
+	}
+	
+	public ObjectListRes<Cbtion> get(Filters filters) {
 		
 		Criteria q = applyGeneralFilters(filters, Cbtion.class);
 		
 		/* State names are entity specific and I was not able to put these
 		 * disjunction in a common function*/
 		
-		List<String> stateNames = filters.stateNames;
+		List<String> stateNames = filters.getStateNames();
 		Disjunction stateDisj = Restrictions.disjunction();
 		for(String stateName:stateNames) {	
 			stateDisj.add( Restrictions.eq("state", CbtionState.valueOf(stateName)));
@@ -44,7 +54,7 @@ public class CbtionDao extends BaseDao {
 		
 		q.add(stateDisj);
 		
-		return getObjectsAndResSet(q, page, nPerPage, Cbtion.class);
+		return getObjectsAndResSet(q, filters.getPage(), filters.getNperpage(), Cbtion.class);
 	}
 	
 	public List<Cbtion> getAcceptedOfUserInProject(int userId, int projectId) {

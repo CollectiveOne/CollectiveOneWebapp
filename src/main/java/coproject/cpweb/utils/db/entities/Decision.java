@@ -238,8 +238,9 @@ public class Decision {
 				/* determine if the decision shall be closed */
 				boolean isTime = isVerdictTime();
 
+				updateVerdict();
+				
 				if (isTime) {
-					updateVerdict();
 					if (verdict == 0)
 						state = DecisionState.CLOSED_DENIED;
 					if (verdict == 1)

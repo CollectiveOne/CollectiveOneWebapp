@@ -109,3 +109,31 @@
 	overflow-y: auto;
 	float:left;
 }
+
+#filter_contents #filter_inputs {
+	width: 100px;
+	margin-left: 15px;
+	float:left;
+}
+
+#filter_contents #filter_inputs p {
+	font-size:10px;
+	margin-left:4px;
+}
+
+#filter_contents #filter_inputs input {
+	width: 100%;
+	border-radius:5px;
+}
+
+#filter_contents #filter_inputs #filter_keyword {
+	margin-bottom:5px;
+}
+
+#filter_contents #filter_inputs #filter_creators {
+	
+}
+
+
+
+

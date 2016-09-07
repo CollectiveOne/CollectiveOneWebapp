@@ -10,7 +10,6 @@ import org.apache.struts2.convention.annotation.Results;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-import coproject.cpweb.utils.db.entities.GoalState;
 import coproject.cpweb.utils.db.entities.dtos.GoalDto;
 import coproject.cpweb.utils.db.services.DbServicesImp;
 import coproject.cpweb.utils.db.services.Filters;
@@ -38,43 +37,14 @@ public class GoalListGet extends ActionSupport{
 	}
 	
 	/* Input parameters  */
-	private List<String> projectNames = new ArrayList<String>();
-
-	public List<String> getProjectNames() {
-		return projectNames;
+	private Filters filters = new Filters();
+	public Filters getFilters() {
+		return filters;
 	}
-	public void setProjectNames(List<String> projectNames) {
-		this.projectNames = projectNames;
+	public void setFilters(Filters filters) {
+		this.filters = filters;
 	}
 	
-	public List<String> stateNames = new ArrayList<String>();
-	
-	public List<String> getStateNames() {
-		return stateNames;
-	}
-	public void setStateNames(List<String> stateNames) {
-		this.stateNames = stateNames;
-	}
-
-	private int page;
-	
-	public int getPage() {
-		return page;
-	}
-	public void setPage(int page) {
-		this.page = page;
-	}
-
-	private int nPerPage;
-	
-	public int getnPerPage() {
-		return nPerPage;
-	}
-
-	public void setnPerPage(int nPerPage) {
-		this.nPerPage = nPerPage;
-	}
-
 	/* Output parameters  */
 	private List<GoalDto> goalDtos = new ArrayList<GoalDto>();
 	
@@ -98,25 +68,16 @@ public class GoalListGet extends ActionSupport{
 	/* Execute */
 	public String execute() throws Exception  {
     	
-		if(page == 0) page = 1;
-		if(nPerPage == 0) nPerPage = 15;
+		if(filters.getPage() == 0) filters.setPage(1);
+		if(filters.getNperpage() == 0) filters.setNperpage(15);
 		
-		Filters filters = new Filters();
-		filters.projectNames = projectNames;
-		filters.stateNames = stateNames;
-		
-		/* by default show only open and assigned cbtions */
-		if(filters.stateNames.size() == 0) {
-			filters.stateNames.add(GoalState.PROPOSED.toString());
-			filters.stateNames.add(GoalState.ACCEPTED.toString());
-		}	
-		
-		GoalDtoListRes goalsDtosRes = dbServices.goalDtoGetFiltered(filters,page,nPerPage);
+		GoalDtoListRes goalsDtosRes = dbServices.goalDtoGetFiltered(filters);
 		
 		goalDtos = goalsDtosRes.getGoalDtos();
 		resSet = goalsDtosRes.getResSet();
 		
      	return SUCCESS;
+		
     }
 	
 

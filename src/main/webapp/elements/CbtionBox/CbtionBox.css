@@ -20,7 +20,7 @@
 }
 
 .cbtion_div #cb_left_div {
-	width:calc(100% - 25px - 200px);
+	width: calc(100% - 25px - 220px);
 	height:100%;
 	float:left;
 	margin-top: 0px;
@@ -34,7 +34,7 @@
 }
 
 .cbtion_div #cb_right_div {
-	width:200px;
+	width: 220px;
 	height:100%;
 	float:left;
 	margin-top: 0px;
@@ -88,14 +88,14 @@
 	margin-top:6px;
 }
 
-.cbtion_div #cb_right_div a {
+.cbtion_div #cb_right_div #cbtion_meta_data_div a {
 	font-size: 10pt;
 	cursor:pointer;
 	overflow:hidden;
 }
 
-.cbtion_div #cb_right_div p {
-	font-size: 10pt;
+.cbtion_div #cb_right_div #cbtion_meta_data_div p {
+	font-size: 13px;
 	font-style:normal;
 	overflow:hidden;
 	display:inline;
@@ -114,10 +114,11 @@
 	margin-top: 4px;
 }
 
-.cbtion_div #contributor_div {
-	height: 15px;
+.cbtion_div #status_desc_div {
+	height: 35px;
 	float:left;
 	clear:both;
+	margin-top: 3px;
 }
 
 .cbtion_div #project_div {

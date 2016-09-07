@@ -1,5 +1,7 @@
 function Page(container_id) {
 	this.container = $(container_id);
+	this.projectsRecivedCallBackFun = null;
+	this.projectsRecivedCallBackObj = null;
 };
 
 Page.prototype.create_div_jQ = function(div_type,id) {
@@ -32,11 +34,14 @@ Page.prototype.append_input = function(id,txt,val,type) {
 	
 }
 
-Page.prototype.append_project_selector = function(id) {
+Page.prototype.append_project_selector = function(id,callBackFunc, callBackObj) {
 	this.container.append($('<div class=select_div id=project_selector_div>'));
 	
 	$('#project_selector_div').append($('<p class=field_name_p>Project</p>'));
 	$('#project_selector_div').append($('<select class=select id='+id+'>'));
+	
+	this.projectsRecivedCallBackFun = callBackFunc;
+	this.projectsRecivedCallBackObj = callBackObj;
 	
 	GLOBAL.serverComm.projectListGet(this.projectListReceivedCallback,this);
 }
@@ -47,6 +52,8 @@ Page.prototype.projectListReceivedCallback = function(projectList) {
 	for(var ix in projectList) {
 		$("#project_select").append($("<option value="+projectList[ix]+">"+projectList[ix]+"</option>"));
 	} 
+
+	this.projectsRecivedCallBackFun.call(this.projectsRecivedCallBackObj);
 }
 
 Page.prototype.append_text_area = function(id,txt,val) {

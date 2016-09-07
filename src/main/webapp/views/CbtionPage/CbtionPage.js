@@ -83,6 +83,11 @@ CbtionPage.prototype.drawCbtion = function() {
 				" to "+this.cbtion.contributorUsername+" for "+floatToChar(this.cbtion.assignedPpoints,2)+" pp's</p>"));
 	} else {
 		$("#state_div",this.container).append($("<p id=cbtion_state>"+this.cbtion.state+"</p>"));
+		if(this.cbtion.state == "PROPOSED") {
+			$("#state_div",this.container).append($("<div id=cbtion_open_dec></div>"));
+			var openDec = new DecisionBoxSmall("#cbtion_open_dec",this.cbtion.openDec, GLOBAL.sessionData.userLogged);		
+			openDec.draw();
+		}
 	}	
 	
 	$("#description_div",this.container).append($("<p id=cbtion_description>"+this.cbtion.description+"</p>"));

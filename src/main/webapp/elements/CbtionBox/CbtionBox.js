@@ -33,12 +33,20 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 	$(".cbtion_div #creator_div",this.container).append("<a href=UserPage.action?username="+this.cbtion.creatorUsername+">"+this.cbtion.creatorUsername+"</a>");
 	$(".cbtion_div #state_div",this.container).append("<p>"+this.cbtion.state+"</p>");
 	
-	if(this.cbtion.state == "ACCEPTED") {
-		$(".cbtion_div #contributor_div",this.container).append("<p>contributed by </p>");
-		$(".cbtion_div #contributor_div",this.container).append("<a href=UserPage.action?username="+this.cbtion.contributorUsername+">"+this.cbtion.contributorUsername+"</a>");		
-		$(".cbtion_div #contributor_div",this.container).append("<p> for "+this.cbtion.assignedPpoints+" pps</p>");
+	switch(this.cbtion.state) {
+		case "PROPOSED":
+			var openDec = new DecisionBoxSmall("#status_desc_div",this.cbtion.openDec, GLOBAL.sessionData.userLogged);		
+			openDec.draw();
+			break;
+
+		case "ACCEPTED":
+			$(".cbtion_div #status_desc_div",this.container).append("<p>contributed by "+
+				"<a href=UserPage.action?username="+this.cbtion.contributorUsername+">"+this.cbtion.contributorUsername+"</a>"+
+				" for "+this.cbtion.assignedPpoints+" pps</p>");
+
+			$(".cbtion_div #status_desc_div p",this.container).css("font-size","10px");
+			break;
+
 	}
-	
-	
 }
 

@@ -4,5 +4,7 @@ public enum CbtionState {
 	OPEN,
 	ASSIGNED,
 	ACCEPTED,
-	CLOSED
+	CLOSED,
+	PROPOSED,
+	NOTOPENED
 }

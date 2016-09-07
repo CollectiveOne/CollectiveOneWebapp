@@ -5,9 +5,6 @@
 				<img id="logo" src="../images/Logo.png">
 			</div>
 			<div id="top_right">
-				<div id="search_box_div">
-					<input type="text" id="search_box_input">
-				</div>
 			</div>
 		</div>
 

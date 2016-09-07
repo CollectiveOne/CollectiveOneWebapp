@@ -5,8 +5,10 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Example;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,17 +72,50 @@ public class BaseDao {
 	
 	public <T> Criteria applyGeneralFilters(Filters filters, Class<T> clazz) {
 		
-		List<String> projectNames = filters.projectNames;
-		
 		Session session = sessionFactory.getCurrentSession();
-		Criteria q = session.createCriteria(clazz).createAlias("project", "proj");
+		Criteria q = session.createCriteria(clazz);
 		
+		q.createAlias("project", "proj");
+		List<String> projectNames = filters.getProjectNames();
 		Disjunction projDisj = Restrictions.disjunction();
 		for(String projectName:projectNames) {
 			projDisj.add( Restrictions.eq("proj.name", projectName));
 		}
-		
 		q.add(projDisj);
+		
+		q.createAlias("creator", "crea");
+		List<String> creatorUsernames = filters.getCreatorUsernames();
+		Disjunction userDisj = Restrictions.disjunction();
+		for(String creatorUsername:creatorUsernames) {
+			if(creatorUsername.length() > 0) {
+				userDisj.add( Restrictions.eq("crea.username", creatorUsername));
+			}
+		}
+		q.add(userDisj);
+		
+		String keyw = filters.getKeyw();
+		if(keyw.length() > 0) {
+			Criterion keywInDescRestr = Restrictions.ilike("description",keyw, MatchMode.ANYWHERE);
+			
+			Criterion keyWordCrit = null; 
+			
+			switch(clazz.getSimpleName()) {
+			
+				case "Cbtion":
+					keyWordCrit = Restrictions.or(keywInDescRestr,Restrictions.ilike("title",keyw, MatchMode.ANYWHERE));
+					break;
+					
+				case "Decision":
+					keyWordCrit = keywInDescRestr;
+					break;
+					
+				case "Goal":
+					keyWordCrit = Restrictions.or(keywInDescRestr,Restrictions.ilike("goalTag",keyw, MatchMode.ANYWHERE));
+					break;
+			}
+			
+			q.add(keyWordCrit);
+		}
 		
 		return q;
 		

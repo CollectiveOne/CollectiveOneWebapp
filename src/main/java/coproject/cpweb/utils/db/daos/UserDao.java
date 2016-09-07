@@ -5,6 +5,8 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
@@ -71,5 +73,17 @@ public class UserDao extends BaseDao {
 			user.getProjectsContributed().add(session.get(Project.class,projectId));
 			save(user);
 		}
+	}
+	
+	public List<String> getSuggestions(String query) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		@SuppressWarnings("unchecked")
+		List<String> res = (List<String>) session.createCriteria(User.class)
+				.add(Restrictions.ilike("username", query, MatchMode.ANYWHERE))
+				.setProjection(Projections.property("username"))
+				.list();
+		
+		return res;
 	}
 }

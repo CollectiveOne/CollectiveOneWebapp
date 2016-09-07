@@ -24,19 +24,19 @@ CbtionListPage.prototype.init = function() {
 	CopSessionReadyCommon();
 	
 	var filters = {
-			projects : [],
-			creators : [],
-			states: ["OPEN","ASSIGNED"],
-			keyw : [],
+			projectNames : [],
+			stateNames: ["PROPOSED","OPEN","ASSIGNED"],
+			creatorUsernames: [],
+			keyw : '',
 			page : 1,
-			nPerPage : 15
+			nperpage : 15
 	};
 	
 	this.filter = new FilterElement("#filter_container", 
 			GLOBAL.serverComm.cbtionListGet, 
 			this.CbtionsReceivedCallback, 
 			this, 
-			["OPEN","ASSIGNED","ACCEPTED"], 
+			["PROPOSED","OPEN","ASSIGNED","ACCEPTED","NOTOPENED"], 
 			filters);
 
 	this.filter.updateData();

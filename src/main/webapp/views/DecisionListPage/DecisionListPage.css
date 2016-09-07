@@ -1,4 +1,6 @@
-#content_pane #list_of_elements {}
+#content_pane #list_of_elements {
+    margin-top: 8px;
+}
 
 #content_pane #list_of_elements .goalbox_div {
 	width:220px;

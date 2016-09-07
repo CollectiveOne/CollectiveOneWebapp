@@ -81,7 +81,7 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 			case "OPEN":
 				verdictPre = "Temporary verdict is ";
 				verdictTime = "to be closed in less than "
-				+getNiceTimeStr((1-this.decision.elapsedFactor)*this.decision.verdictHours*3600);
+				+floatToChar((1-this.decision.elapsedFactor)*this.decision.verdictHours,1)+" hr";
 				break;
 
 			case "CLOSED_ACCEPTED":

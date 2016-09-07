@@ -22,30 +22,39 @@ CbtionNewPage.prototype.draw = function() {
 	if (GLOBAL.sessionData.userLogged) {
 		this.container.empty();
 
-		this.append_project_selector('project_select');
+		this.append_project_selector('project_select',this.projectSelectorDrawn,this);
 		this.append_input('title', 'Title', '');
 		this.append_text_area('description', 'Description','');
 		this.append_text_area('product', 'Product','');
 		
 		this.container.append(	"<div class=field id=goalTag_div>"+
 									"<p class=field_name_p>Goal</p>"+
-									"<input type=text class=field_in id=autocomplete>"+
+									"<input type=text class=field_in id=goalTag_selector>"+
 								"</div>");
-		
-		$('#autocomplete').autocomplete({
-		    serviceUrl: '../json/GoalGetSuggestions.action',
-		});
 		
 		// append create button
 		this.container.append($('<button id="create_btn">Create</button>'));
 
 		$('#create_btn').click(this.cbtionNew.bind(this));
+		$('#project_select').on('change', this.projectSelectorUpdated.bind(this));
 
 	} else {
 		this.container.empty();
 		this.container
 				.append($("<p>please login to be able to create a new contribution</p>"));
 	}
+}
+
+CbtionNewPage.prototype.projectSelectorUpdated = function() {
+	$('#goalTag_selector',this.container).autocomplete().clear();
+	$('#goalTag_selector',this.container).autocomplete().setOptions({params: {projectName: $("#project_select", this.container).val()}});
+}
+
+CbtionNewPage.prototype.projectSelectorDrawn = function() {
+	$('#goalTag_selector',this.container).autocomplete({
+		serviceUrl: '../json/GoalGetSuggestions.action',
+		params: {projectName: $("#project_select", this.container).val()}
+	});
 }
 
 CbtionNewPage.prototype.cbtionNew = function() {
@@ -55,7 +64,7 @@ CbtionNewPage.prototype.cbtionNew = function() {
 		title: $("#title_in", this.container).val(),
 		description: $("#description_in", this.container).val(),
 		product: $("#product_in", this.container).val(),
-		goalTag: $("#goalTag_div #autocomplete", this.container).val()
+		goalTag: $("#goalTag_div #goalTag_selector", this.container).val()
 	};
 	
 	GLOBAL.serverComm.cbtionNew(data,this.cbtionNewCallback,this);

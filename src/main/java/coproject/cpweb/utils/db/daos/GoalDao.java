@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
@@ -44,27 +45,28 @@ public class GoalDao extends BaseDao {
 		return res;
 	}
 	
-	public List<String> getSuggestions(String query) {
+	public List<String> getSuggestions(String query, int projectId) {
 		Session session = sessionFactory.getCurrentSession();
 		
 		@SuppressWarnings("unchecked")
 		List<String> res = (List<String>) session.createCriteria(Goal.class)
 				.add(Restrictions.eq("state", GoalState.ACCEPTED))
-				.add(Restrictions.like("goalTag", "%"+query+"%"))
+				.add(Restrictions.eq("project.id", projectId))
+				.add(Restrictions.ilike("goalTag", query, MatchMode.ANYWHERE))
 				.setProjection(Projections.property("goalTag"))
 				.list();
 		
 		return res;
 	}
 	
-	public ObjectListRes<Goal> get(Filters filters, int page, int nPerPage) {
+	public ObjectListRes<Goal> get(Filters filters) {
 		
 		Criteria q = applyGeneralFilters(filters, Goal.class);
 		
 		/* State names are entity specific and I was not able to put these
 		 * disjunction in a common function*/
 		
-		List<String> stateNames = filters.stateNames;
+		List<String> stateNames = filters.getStateNames();
 		Disjunction stateDisj = Restrictions.disjunction();
 		for(String stateName:stateNames) {	
 			stateDisj.add( Restrictions.eq("state", GoalState.valueOf(stateName)));
@@ -72,7 +74,7 @@ public class GoalDao extends BaseDao {
 		
 		q.add(stateDisj);
 		
-		return getObjectsAndResSet(q, page, nPerPage, Goal.class);
+		return getObjectsAndResSet(q, filters.getPage(), filters.getNperpage(), Goal.class);
 	}
 	
 }

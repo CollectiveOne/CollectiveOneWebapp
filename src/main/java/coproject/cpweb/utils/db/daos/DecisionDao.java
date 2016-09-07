@@ -50,14 +50,14 @@ public class DecisionDao extends BaseDao {
 		return (Thesis)query.uniqueResult();
 	}
 	
-	public ObjectListRes<Decision> get(Filters filters, int page, int nPerPage) {
+	public ObjectListRes<Decision> get(Filters filters) {
 		
 		Criteria q = applyGeneralFilters(filters, Decision.class);
 		
 		/* State names are entity specific and I was not able to put these
 		 * disjunction in a common function*/
 		
-		List<String> stateNames = filters.stateNames;
+		List<String> stateNames = filters.getStateNames();
 		Disjunction stateDisj = Restrictions.disjunction();
 		for(String stateName:stateNames) {	
 			stateDisj.add( Restrictions.eq("state", DecisionState.valueOf(stateName)));
@@ -65,7 +65,7 @@ public class DecisionDao extends BaseDao {
 		
 		q.add(stateDisj);
 		
-		return getObjectsAndResSet(q, page, nPerPage, Decision.class);
+		return getObjectsAndResSet(q, filters.getPage(), filters.getNperpage(), Decision.class);
 	}
 
 }

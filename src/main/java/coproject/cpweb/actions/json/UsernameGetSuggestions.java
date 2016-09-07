@@ -12,13 +12,13 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import coproject.cpweb.utils.db.services.DbServicesImp;
 
-@Action("GoalGetSuggestions")
+@Action("UsernameGetSuggestions")
 @ParentPackage("json-data")
 @Results({
     @Result(name="success", type="json", params={"ignoreHierarchy","false","includeProperties","^suggestions.*,^fieldErrors.*"}),
     @Result(name="input", type="json", params={"ignoreHierarchy","false","includeProperties","^fieldErrors.*"})
 })
-public class GoalGetSuggestions extends ActionSupport{
+public class UsernameGetSuggestions extends ActionSupport{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -42,15 +42,6 @@ public class GoalGetSuggestions extends ActionSupport{
 	public void setQuery(String query) {
 		this.query = query;
 	}
-	
-	private String projectName;
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
 
 	/* Output parameters  */
 	private List<String> suggestions = new ArrayList<String>();
@@ -65,7 +56,7 @@ public class GoalGetSuggestions extends ActionSupport{
 	/* Execute */
 	public String execute() throws Exception  {
     	
-		suggestions = dbServices.goalGetSuggestions(query, projectName);
+		suggestions = dbServices.usernameGetSuggestions(query);
 		
 		return SUCCESS;
     }

@@ -72,6 +72,11 @@
 	font-weight: normal;
 }
 
+#cbtion_container #cbtion_open_dec {
+	margin-top: 5px;
+	margin-left: 30px;
+}
+
 #cbtion_container button {
 	background-color:#D1DBBD;
 	margin-top:5px;

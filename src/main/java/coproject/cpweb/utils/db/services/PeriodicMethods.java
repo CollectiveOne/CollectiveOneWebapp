@@ -25,6 +25,7 @@ public class PeriodicMethods {
 		dbServices.decisionsUpdateState();
 		dbServices.bidsUpdateState();
 		dbServices.goalsUpdateState();
+		dbServices.cbtionsUpdateState();
 		//System.out.print("-");
 	}
 }

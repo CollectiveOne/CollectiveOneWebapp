@@ -24,12 +24,12 @@ GoalListPage.prototype.init = function() {
 	CopSessionReadyCommon();
 	
 	var filters = {
-			projects : [],
-			creators : [],
-			states: ["PROPOSED","ACCEPTED"],
-			keyw : [],
+			projectNames : [],
+			stateNames: ["PROPOSED","ACCEPTED"],
+			creatorUsernames: [],
+			keyw : '',
 			page : 1,
-			nPerPage : 15
+			nperpage : 15
 	};
 	
 	this.filter = new FilterElement("#filter_container", 

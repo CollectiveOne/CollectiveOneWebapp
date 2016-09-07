@@ -41,14 +41,12 @@ BidBox.prototype.bidBoxLoaded = function() {
 	
 	switch(this.bid.state) {
 		case "OFFERED":
-			applicable_decision = this.bid.assignDec;
 			var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),this.bid.assignDec, GLOBAL.sessionData.userLogged);
 			decBox.draw();
 			$("#show_reviews_btn",this.container).hide();
 			break;
 			
 		case "ASSIGNED":
-			applicable_decision = this.bid.acceptDec;
 			var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),this.bid.acceptDec, GLOBAL.sessionData.userLogged);
 			decBox.draw();
 			$("#show_reviews_btn",this.container).hide();

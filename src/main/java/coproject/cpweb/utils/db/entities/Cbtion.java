@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -47,6 +48,8 @@ public class Cbtion {
 	private double assignedPpoints;
 	@ManyToOne
 	private Goal goal;
+	@OneToOne
+	private Decision openDec;
 	
 	public CbtionDto toDto() {
 		CbtionDto dto = new CbtionDto();
@@ -64,6 +67,7 @@ public class Cbtion {
 		if(contributor != null) dto.setContributorUsername(contributor.getUsername());
 		if(goal != null) dto.setGoalTag(goal.getGoalTag());
 		dto.setAssignedPpoints(assignedPpoints);
+		if(openDec != null) dto.setOpenDec(openDec.toDto());
 		
 		return dto;
 	}
@@ -146,6 +150,12 @@ public class Cbtion {
 	}
 	public void setGoal(Goal goal) {
 		this.goal = goal;
+	}
+	public Decision getOpenDec() {
+		return openDec;
+	}
+	public void setOpenDec(Decision openDec) {
+		this.openDec = openDec;
 	}
 	
 }

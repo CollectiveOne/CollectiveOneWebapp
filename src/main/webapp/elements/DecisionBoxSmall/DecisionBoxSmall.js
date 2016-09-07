@@ -10,6 +10,8 @@ DecisionBoxSmall.prototype.draw = function() {
 }
 
 DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
+
+	$("#dec_more_div",this.container).click(this.decMoreClick.bind(this));
 	
 	var verdictStr = [];
 
@@ -29,19 +31,28 @@ DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
 
 			if(this.decision.state == "OPEN") {
 				var verdictStr = [];
-				if(this.decision.verdict == 1) verdictStr = "Yes";
-				else verdictStr = "No";
+				if(this.decision.verdict == 1) {
+					verdictStr = "Yes";
+				} else { 
+					verdictStr = "No";
+				}
 
-				var elapsedHrs = (1-this.decision.elapsedFactor)*this.decision.verdictHours
-				var remHrs = this.decision.verdictHours - elapsedHrs;
-
-				statusStr = "Verdict:"+verdictStr+" in < "+floatToChar(remHrs,1)+" hr";
+				var remHrs = (1-this.decision.elapsedFactor)*this.decision.verdictHours
+				
+				statusStr = "<span id=verdict_span>"+verdictStr+"</span> in < "+floatToChar(remHrs,1)+" hr";
 
 			} else if (this.decision.state == "IDLE") {
 				statusStr = "Idle";
 			}
 
 			$("#dec_right_div #verdict_status",this.container).html(statusStr);
+
+			if(this.decision.verdict == 1) {
+				$("#verdict_span",this.container).addClass("yes_verdict");
+			} else { 
+				$("#verdict_span",this.container).addClass("no_verdict");
+			}
+
 
 			break;
 
@@ -63,10 +74,13 @@ DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
 	}
 
 	if(this.decision.state == "IDLE" || this.decision.state == "OPEN") {
-
-		
 		
 	} else {
 		
 	}
 }
+
+DecisionBoxSmall.prototype.decMoreClick = function() {
+	window.open('DecisionPage.action?decisionId='+this.decision.id,'_blank');
+}
+

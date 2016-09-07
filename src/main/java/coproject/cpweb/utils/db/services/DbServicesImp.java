@@ -130,6 +130,11 @@ public class DbServicesImp {
 
 		return ppoints;
 	}
+	
+	@Transactional
+	public List<String> usernameGetSuggestions(String query) {
+		return userDao.getSuggestions(query);
+	}
 
 	@Transactional
 	public void projectSave(Project project) {
@@ -311,8 +316,8 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
-	public GoalDtoListRes goalDtoGetFiltered(Filters filters, int page, int nPerPage) {
-		ObjectListRes<Goal> goalsRes = goalDao.get(filters,page,nPerPage);
+	public GoalDtoListRes goalDtoGetFiltered(Filters filters) {
+		ObjectListRes<Goal> goalsRes = goalDao.get(filters);
 
 		GoalDtoListRes goalsDtosRes = new GoalDtoListRes();
 
@@ -327,8 +332,8 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
-	public List<String> goalGetSuggestions(String query) {
-		return goalDao.getSuggestions(query);
+	public List<String> goalGetSuggestions(String query, String projectName) {
+		return goalDao.getSuggestions(query, projectDao.get(projectName).getId());
 	}
 	
 	@Transactional
@@ -444,14 +449,29 @@ public class DbServicesImp {
 		cbtion.setProject(project);
 		cbtion.setProduct(cbtionDto.getProduct());
 		cbtion.setRelevance(0);
-		cbtion.setState(CbtionState.OPEN);
+		cbtion.setState(CbtionState.PROPOSED);
 		cbtion.setTitle(cbtionDto.getTitle());
 		cbtion.setGoal(goal);
+		
+		int id = cbtionDao.save(cbtion);
 		
 		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
 		decisionRealmDao.save(realm);
 		
-		return cbtionDao.save(cbtion);
+		Decision open = new Decision();
+		open.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		open.setDecisionRealm(realm);
+		open.setDescription("OPEN contribution "+id);
+		open.setFromState(CbtionState.PROPOSED.toString());		
+		open.setToState(CbtionState.OPEN.toString());
+		open.setProject(project);
+		open.setState(DecisionState.IDLE);
+		open.setVerdictHours(36);
+		
+		cbtion.setOpenDec(open);
+		decisionDao.save(open);
+		
+		return id;
 	}
 
 	@Transactional
@@ -480,8 +500,8 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public CbtionDtoListRes cbtionDtoGetFiltered(Filters filters, int page, int nPerPage) {
-		ObjectListRes<Cbtion> cbtionsRes = cbtionDao.get(filters,page,nPerPage);
+	public CbtionDtoListRes cbtionDtoGetFiltered(Filters filters) {
+		ObjectListRes<Cbtion> cbtionsRes = cbtionDao.get(filters);
 
 		CbtionDtoListRes cbtionsDtosRes = new CbtionDtoListRes();
 
@@ -493,7 +513,54 @@ public class DbServicesImp {
 		}
 
 		return cbtionsDtosRes;
-	}	
+	}
+	
+	@Transactional
+	public void cbtionsUpdateState() {
+		/* Update state of all not closed bids */
+		List<Cbtion> cbtionsProposed = cbtionDao.getWithState(CbtionState.PROPOSED);
+		for(Cbtion cbtion : cbtionsProposed) {
+			cbtionUpdateState(cbtion.getId());
+		}	
+	}
+	
+	@Transactional
+	public void cbtionUpdateState(int cbtionId) {
+		Cbtion cbtion = cbtionDao.get(cbtionId);
+		
+		cbtionDao.save(cbtion);
+		
+		Decision open = cbtion.getOpenDec();
+
+		switch(open.getState()){
+		case OPEN: 
+			break;
+
+		case CLOSED_DENIED : 
+			switch(cbtion.getState()) {
+			case PROPOSED:
+				cbtion.setState(CbtionState.NOTOPENED);
+				break;
+
+			default:
+				break;
+			}
+
+			break;
+
+		case CLOSED_ACCEPTED: 
+			switch(cbtion.getState()) {
+			case PROPOSED:
+				cbtion.setState(CbtionState.OPEN);
+				break;
+			default:
+				break;
+			}
+
+		default:
+			break;
+		} 
+	}
 
 	@Transactional
 	public void bidSave(Bid bid, int cbtionId) {
@@ -540,59 +607,66 @@ public class DbServicesImp {
 		int userId = bidDtoIn.getCreatorDto().getId();
 
 		Bid bid = bidDao.getOfCbtionAndUser(cbtionId, userId);
-
+		
 		if(bid == null) {
 			Cbtion cbtion = cbtionDao.get(cbtionId);
-			Project project = cbtion.getProject();
-			projectDao.save(project);
 			
-			/* create bid only if this user has not created one yet */
-			bid = new Bid();
-
-			bid.setCreator(userDao.get(userId));
-			bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
-			bid.setDescription(bidDtoIn.getDescription());
-			bid.setDeliveryDate(new Timestamp(bidDtoIn.getDeliveryDate()));
-			bid.setCbtion(cbtion);
-			bid.setPpoints(bidDtoIn.getPpoints());
-			bid.setState(BidState.OFFERED);
-
-			cbtion.getBids().add(bid);
-			cbtionDao.save(cbtion);
-
-			DecisionRealm realm = decisionRealmDao.getFromProjectId(bid.getCbtion().getProject().getId());
-
-			Decision assign = new Decision();
-			assign.setCreationDate(new Timestamp(System.currentTimeMillis()));
-			assign.setDescription("Assign cbtion "+bid.getCbtion().getId()+" to "+bid.getCreator().getUsername());
-			assign.setFromState(BidState.OFFERED.toString());
-			assign.setToState(BidState.ASSIGNED.toString());
-			assign.setState(DecisionState.IDLE);
-			/* TODO: Include bid duration logic */
-			assign.setVerdictHours(36);
-			assign.setDecisionRealm(realm);
-			assign.setProject(project);
-
-			Decision accept = new Decision();
-			accept.setCreationDate(new Timestamp(System.currentTimeMillis()));
-			accept.setDescription("Accept cbtion "+bid.getCbtion().getId()+" to "+bid.getCreator().getUsername());
-			accept.setFromState(BidState.ASSIGNED.toString());
-			accept.setToState(BidState.ACCEPTED.toString());
-			accept.setState(DecisionState.IDLE);
-			/* TODO: Include bid duration logic */
-			accept.setVerdictHours(36);
-			accept.setDecisionRealm(realm);
-			accept.setProject(project);
-
-			bid.setAssign(assign);
-			bid.setAccept(accept);
-
-			decisionRealmDao.save(realm);
-			decisionDao.save(assign);
-			decisionDao.save(accept);
-			bidDao.save(bid);
+			if(cbtion.getState() == CbtionState.OPEN) {
 			
-			return " bid created";
+				Project project = cbtion.getProject();
+				projectDao.save(project);
+				
+				/* create bid only if this user has not created one yet */
+				bid = new Bid();
+	
+				bid.setCreator(userDao.get(userId));
+				bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				bid.setDescription(bidDtoIn.getDescription());
+				bid.setDeliveryDate(new Timestamp(bidDtoIn.getDeliveryDate()));
+				bid.setCbtion(cbtion);
+				bid.setPpoints(bidDtoIn.getPpoints());
+				bid.setState(BidState.OFFERED);
+	
+				cbtion.getBids().add(bid);
+				cbtionDao.save(cbtion);
+	
+				DecisionRealm realm = decisionRealmDao.getFromProjectId(bid.getCbtion().getProject().getId());
+	
+				Decision assign = new Decision();
+				assign.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				assign.setDescription("Assign cbtion "+bid.getCbtion().getId()+" to "+bid.getCreator().getUsername());
+				assign.setFromState(BidState.OFFERED.toString());
+				assign.setToState(BidState.ASSIGNED.toString());
+				assign.setState(DecisionState.IDLE);
+				/* TODO: Include bid duration logic */
+				assign.setVerdictHours(36);
+				assign.setDecisionRealm(realm);
+				assign.setProject(project);
+	
+				Decision accept = new Decision();
+				accept.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				accept.setDescription("Accept cbtion "+bid.getCbtion().getId()+" to "+bid.getCreator().getUsername());
+				accept.setFromState(BidState.ASSIGNED.toString());
+				accept.setToState(BidState.ACCEPTED.toString());
+				accept.setState(DecisionState.IDLE);
+				/* TODO: Include bid duration logic */
+				accept.setVerdictHours(36);
+				accept.setDecisionRealm(realm);
+				accept.setProject(project);
+	
+				bid.setAssign(assign);
+				bid.setAccept(accept);
+	
+				decisionRealmDao.save(realm);
+				decisionDao.save(assign);
+				decisionDao.save(accept);
+				bidDao.save(bid);
+				
+				return " bid created";
+				
+			} else {
+				return " contribution is not open";
+			}
 		} else {
 			return " user already bid to this contribution";
 		}
@@ -859,8 +933,8 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
-	public DecisionDtoListRes decisionDtoGetFiltered(Filters filters, int page, int nPerPage) {
-		ObjectListRes<Decision> decisionsRes = decisionDao.get(filters,page,nPerPage);
+	public DecisionDtoListRes decisionDtoGetFiltered(Filters filters) {
+		ObjectListRes<Decision> decisionsRes = decisionDao.get(filters);
 
 		DecisionDtoListRes decisionsDtosRes = new DecisionDtoListRes();
 

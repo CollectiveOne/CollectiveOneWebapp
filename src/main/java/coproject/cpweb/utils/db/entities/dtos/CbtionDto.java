@@ -21,6 +21,7 @@ public class CbtionDto {
 	private String contributorUsername;
 	private String goalTag;
 	private double assignedPpoints;	
+	private DecisionDto openDec;
 	
 	public Cbtion toCbtion(User creator, Project project) {
 		Cbtion cbtion = new Cbtion();
@@ -111,5 +112,10 @@ public class CbtionDto {
 	public void setAssignedPpoints(double assignedPpoints) {
 		this.assignedPpoints = assignedPpoints;
 	}
-	
+	public DecisionDto getOpenDec() {
+		return openDec;
+	}
+	public void setOpenDec(DecisionDto openDec) {
+		this.openDec = openDec;
+	}
 }

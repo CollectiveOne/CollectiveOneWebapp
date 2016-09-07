@@ -24,12 +24,12 @@ DecisionListPage.prototype.init = function() {
 	CopSessionReadyCommon();
 	
 	var filters = {
-			projects : [],
-			creators : [],
-			states: ["IDLE","OPEN"],
-			keyw : [],
+			projectNames : [],
+			stateNames: ["IDLE","OPEN"],
+			creatorUsernames: [],
+			keyw : '',
 			page : 1,
-			nPerPage : 10
+			nperpage : 10
 	};
 	
 	this.filter = new FilterElement("#filter_container", 
