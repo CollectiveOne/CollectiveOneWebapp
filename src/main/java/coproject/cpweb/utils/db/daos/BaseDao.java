@@ -99,20 +99,10 @@ public class BaseDao {
 			
 			Criterion keyWordCrit = null; 
 			
-			switch(clazz.getSimpleName()) {
-			
-				case "Cbtion":
-					keyWordCrit = Restrictions.or(keywInDescRestr,Restrictions.ilike("title",keyw, MatchMode.ANYWHERE));
-					break;
-					
-				case "Decision":
-					keyWordCrit = keywInDescRestr;
-					break;
-					
-				case "Goal":
-					keyWordCrit = Restrictions.or(keywInDescRestr,Restrictions.ilike("goalTag",keyw, MatchMode.ANYWHERE));
-					break;
-			}
+			String clazzName = clazz.getSimpleName();
+			if(clazzName.equals("Cbtion")) keyWordCrit = Restrictions.or(keywInDescRestr,Restrictions.ilike("title",keyw, MatchMode.ANYWHERE));
+			if(clazzName.equals("Decision")) keyWordCrit = keywInDescRestr; 
+			if(clazzName.equals("Goal")) keyWordCrit = Restrictions.or(keywInDescRestr,Restrictions.ilike("goalTag",keyw, MatchMode.ANYWHERE)); 
 			
 			q.add(keyWordCrit);
 		}
