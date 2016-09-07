@@ -14,7 +14,7 @@ import coproject.cpweb.utils.db.entities.DecisionState;
 import coproject.cpweb.utils.db.entities.dtos.DecisionDto;
 import coproject.cpweb.utils.db.services.DbServicesImp;
 import coproject.cpweb.utils.db.services.DecisionDtoListRes;
-import coproject.cpweb.utils.db.services.DecisionFilters;
+import coproject.cpweb.utils.db.services.Filters;
 
 @Action("DecisionListGet")
 @ParentPackage("json-data")
@@ -101,7 +101,7 @@ public class DecisionListGet extends ActionSupport{
 		if(page == 0) page = 1;
 		if(nPerPage == 0) nPerPage = 15;
 		
-		DecisionFilters filters = new DecisionFilters();
+		Filters filters = new Filters();
 		filters.projectNames = projectNames;
 		filters.stateNames = stateNames;
 		

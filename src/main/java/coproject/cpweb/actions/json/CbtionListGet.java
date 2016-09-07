@@ -13,8 +13,8 @@ import com.opensymphony.xwork2.ActionSupport;
 import coproject.cpweb.utils.db.entities.CbtionState;
 import coproject.cpweb.utils.db.entities.dtos.CbtionDto;
 import coproject.cpweb.utils.db.services.CbtionDtoListRes;
-import coproject.cpweb.utils.db.services.CbtionFilters;
 import coproject.cpweb.utils.db.services.DbServicesImp;
+import coproject.cpweb.utils.db.services.Filters;
 
 @Action("CbtionListGet")
 @ParentPackage("json-data")
@@ -101,7 +101,7 @@ public class CbtionListGet extends ActionSupport{
 		if(page == 0) page = 1;
 		if(nPerPage == 0) nPerPage = 15;
 		
-		CbtionFilters filters = new CbtionFilters();
+		Filters filters = new Filters();
 		filters.projectNames = projectNames;
 		filters.stateNames = stateNames;
 		

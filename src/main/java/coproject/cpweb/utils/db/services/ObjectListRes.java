@@ -2,17 +2,15 @@ package coproject.cpweb.utils.db.services;
 
 import java.util.List;
 
-import coproject.cpweb.utils.db.entities.Goal;
-
-public class GoalListRes {
-	private List<Goal> goals;
+public class ObjectListRes<T> {
+	private List<T> objects;
 	private int[] resSet = {0,0,0};
 	
-	public List<Goal> getGoals() {
-		return goals;
+	public List<T> getObjects() {
+		return objects;
 	}
-	public void setGoals(List<Goal> goals) {
-		this.goals = goals;
+	public void setObjects(List<T> objects) {
+		this.objects = objects;
 	}
 	public int[] getResSet() {
 		return resSet;

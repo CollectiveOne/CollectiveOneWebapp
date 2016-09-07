@@ -311,15 +311,15 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
-	public GoalDtoListRes goalDtoGetFiltered(GoalFilters filters, int page, int nPerPage) {
-		GoalListRes goalsRes = goalDao.get(filters,page,nPerPage);
+	public GoalDtoListRes goalDtoGetFiltered(Filters filters, int page, int nPerPage) {
+		ObjectListRes<Goal> goalsRes = goalDao.get(filters,page,nPerPage);
 
 		GoalDtoListRes goalsDtosRes = new GoalDtoListRes();
 
 		goalsDtosRes.setResSet(goalsRes.getResSet());
 		goalsDtosRes.setGoalDtos(new ArrayList<GoalDto>());
 
-		for(Goal goal : goalsRes.getGoals()) {
+		for(Goal goal : goalsRes.getObjects()) {
 			goalsDtosRes.getGoalDtos().add(goal.toDto());
 		}
 
@@ -480,15 +480,15 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public CbtionDtoListRes cbtionDtoGetFiltered(CbtionFilters filters, int page, int nPerPage) {
-		CbtionListRes cbtionsRes = cbtionDao.get(filters,page,nPerPage);
+	public CbtionDtoListRes cbtionDtoGetFiltered(Filters filters, int page, int nPerPage) {
+		ObjectListRes<Cbtion> cbtionsRes = cbtionDao.get(filters,page,nPerPage);
 
 		CbtionDtoListRes cbtionsDtosRes = new CbtionDtoListRes();
 
 		cbtionsDtosRes.setResSet(cbtionsRes.getResSet());
 		cbtionsDtosRes.setCbtionsDtos(new ArrayList<CbtionDto>());
 
-		for(Cbtion cbtion : cbtionsRes.getCbtions()) {
+		for(Cbtion cbtion : cbtionsRes.getObjects()) {
 			cbtionsDtosRes.getCbtionsDtos().add(cbtion.toDto());
 		}
 
@@ -859,15 +859,15 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
-	public DecisionDtoListRes decisionDtoGetFiltered(DecisionFilters filters, int page, int nPerPage) {
-		DecisionListRes decisionsRes = decisionDao.get(filters,page,nPerPage);
+	public DecisionDtoListRes decisionDtoGetFiltered(Filters filters, int page, int nPerPage) {
+		ObjectListRes<Decision> decisionsRes = decisionDao.get(filters,page,nPerPage);
 
 		DecisionDtoListRes decisionsDtosRes = new DecisionDtoListRes();
 
 		decisionsDtosRes.setResSet(decisionsRes.getResSet());
 		decisionsDtosRes.setDecisionDtos(new ArrayList<DecisionDto>());
 
-		for(Decision decision : decisionsRes.getDecisions()) {
+		for(Decision decision : decisionsRes.getObjects()) {
 			decisionsDtosRes.getDecisionDtos().add(decision.toDto());
 		}
 

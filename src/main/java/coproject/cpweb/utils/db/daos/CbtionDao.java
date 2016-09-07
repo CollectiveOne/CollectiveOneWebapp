@@ -6,14 +6,13 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Cbtion;
 import coproject.cpweb.utils.db.entities.CbtionState;
-import coproject.cpweb.utils.db.services.CbtionFilters;
-import coproject.cpweb.utils.db.services.CbtionListRes;
+import coproject.cpweb.utils.db.services.Filters;
+import coproject.cpweb.utils.db.services.ObjectListRes;
 
 @Service
 public class CbtionDao extends BaseDao {
@@ -30,44 +29,22 @@ public class CbtionDao extends BaseDao {
 		return (List<Cbtion>) super.get(refCbtion,Cbtion.class);
 	}
 	
-	public CbtionListRes get(CbtionFilters filters, int page, int nPerPage) {
+	public ObjectListRes<Cbtion> get(Filters filters, int page, int nPerPage) {
 		
-		List<String> projectNames = filters.projectNames;
+		Criteria q = applyGeneralFilters(filters, Cbtion.class);
+		
+		/* State names are entity specific and I was not able to put these
+		 * disjunction in a common function*/
+		
 		List<String> stateNames = filters.stateNames;
-		
-		Session session = sessionFactory.getCurrentSession();
-		Criteria q = session.createCriteria(Cbtion.class).createAlias("project", "proj");
-		
-		Disjunction projDisj = Restrictions.disjunction();
-		for(String projectName:projectNames) {
-			projDisj.add( Restrictions.eq("proj.name", projectName));
-		}
-		
 		Disjunction stateDisj = Restrictions.disjunction();
 		for(String stateName:stateNames) {	
 			stateDisj.add( Restrictions.eq("state", CbtionState.valueOf(stateName)));
 		}
-		q.add(Restrictions.and(projDisj,stateDisj));
 		
-		Long count = (Long) q.setProjection(Projections.rowCount()).uniqueResult();
+		q.add(stateDisj);
 		
-		// Remove the projection
-		q.setProjection(null);
-		q.setResultTransformer(Criteria.ROOT_ENTITY);
-		
-		@SuppressWarnings("unchecked")
-		List<Cbtion> cbtions = (List<Cbtion>) q.setFirstResult((page-1)*nPerPage).setMaxResults(nPerPage).list();
-		
-		int lastRes = page*nPerPage;
-		if(count < page*nPerPage) lastRes = (int) (count + 0);
-		
-		CbtionListRes res = new CbtionListRes();
-		res.setCbtions(cbtions);
-		
-		int[] resSet = {(page-1)*nPerPage+1,lastRes,(int) (count + 0)};
-		res.setResSet(resSet);
-		
-		return res;
+		return getObjectsAndResSet(q, page, nPerPage, Cbtion.class);
 	}
 	
 	public List<Cbtion> getAcceptedOfUserInProject(int userId, int projectId) {

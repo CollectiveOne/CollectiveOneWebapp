@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Goal;
 import coproject.cpweb.utils.db.entities.GoalState;
-import coproject.cpweb.utils.db.services.GoalFilters;
-import coproject.cpweb.utils.db.services.GoalListRes;
+import coproject.cpweb.utils.db.services.Filters;
+import coproject.cpweb.utils.db.services.ObjectListRes;
 
 @Service
 public class GoalDao extends BaseDao {
@@ -57,44 +57,22 @@ public class GoalDao extends BaseDao {
 		return res;
 	}
 	
-	public GoalListRes get(GoalFilters filters, int page, int nPerPage) {
-		// TODO: repeated code used to list Cbtions, Goals and Decisions. DRY.
-		List<String> projectNames = filters.projectNames;
+	public ObjectListRes<Goal> get(Filters filters, int page, int nPerPage) {
+		
+		Criteria q = applyGeneralFilters(filters, Goal.class);
+		
+		/* State names are entity specific and I was not able to put these
+		 * disjunction in a common function*/
+		
 		List<String> stateNames = filters.stateNames;
-		
-		Session session = sessionFactory.getCurrentSession();
-		Criteria q = session.createCriteria(Goal.class).createAlias("project", "proj");
-		
-		Disjunction projDisj = Restrictions.disjunction();
-		for(String projectName:projectNames) {
-			projDisj.add( Restrictions.eq("proj.name", projectName));
-		}
-		
 		Disjunction stateDisj = Restrictions.disjunction();
 		for(String stateName:stateNames) {	
 			stateDisj.add( Restrictions.eq("state", GoalState.valueOf(stateName)));
 		}
-		q.add(Restrictions.and(projDisj,stateDisj));
 		
-		Long count = (Long) q.setProjection(Projections.rowCount()).uniqueResult();
+		q.add(stateDisj);
 		
-		// Remove the projection
-		q.setProjection(null);
-		q.setResultTransformer(Criteria.ROOT_ENTITY);
-		
-		@SuppressWarnings("unchecked")
-		List<Goal> goals = (List<Goal>) q.setFirstResult((page-1)*nPerPage).setMaxResults(nPerPage).list();
-		
-		int lastRes = page*nPerPage;
-		if(count < page*nPerPage) lastRes = (int) (count + 0);
-		
-		GoalListRes res = new GoalListRes();
-		res.setGoals(goals);
-		
-		int[] resSet = {(page-1)*nPerPage+1,lastRes,(int) (count + 0)};
-		res.setResSet(resSet);
-		
-		return res;
+		return getObjectsAndResSet(q, page, nPerPage, Goal.class);
 	}
 	
 }

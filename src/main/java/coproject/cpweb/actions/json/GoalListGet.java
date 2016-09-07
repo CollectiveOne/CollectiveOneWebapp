@@ -13,8 +13,8 @@ import com.opensymphony.xwork2.ActionSupport;
 import coproject.cpweb.utils.db.entities.GoalState;
 import coproject.cpweb.utils.db.entities.dtos.GoalDto;
 import coproject.cpweb.utils.db.services.DbServicesImp;
+import coproject.cpweb.utils.db.services.Filters;
 import coproject.cpweb.utils.db.services.GoalDtoListRes;
-import coproject.cpweb.utils.db.services.GoalFilters;
 
 @Action("GoalListGet")
 @ParentPackage("json-data")
@@ -101,7 +101,7 @@ public class GoalListGet extends ActionSupport{
 		if(page == 0) page = 1;
 		if(nPerPage == 0) nPerPage = 15;
 		
-		GoalFilters filters = new GoalFilters();
+		Filters filters = new Filters();
 		filters.projectNames = projectNames;
 		filters.stateNames = stateNames;
 		
