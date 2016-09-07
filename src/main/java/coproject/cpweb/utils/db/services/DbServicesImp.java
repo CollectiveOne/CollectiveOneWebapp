@@ -194,6 +194,7 @@ public class DbServicesImp {
 		bid.setAssign(assign_bid);
 		bid.setAccept(accept_bid);
 
+		assign_bid.setCreator(userDao.get("coprojects"));
 		assign_bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		assign_bid.setDescription("assign bid "+bid.getId()+" of cbtion:"+bid.getCbtion().getId()+" to:"+bid.getCreator().getUsername());
 		assign_bid.setVerdict(1);
@@ -203,6 +204,7 @@ public class DbServicesImp {
 		assign_bid.setToState(BidState.ASSIGNED.toString());
 		assign_bid.setProject(project);
 		
+		accept_bid.setCreator(userDao.get("coprojects"));
 		accept_bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		accept_bid.setDescription("accept bid "+bid.getId()+" of cbtion:"+bid.getCbtion().getId()+" to:"+bid.getCreator().getUsername());
 		accept_bid.setVerdict(1);
@@ -283,6 +285,7 @@ public class DbServicesImp {
 		Decision create = new Decision();
 		Decision delete = new Decision();
 		
+		create.setCreator(userDao.get("coprojects"));
 		create.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		create.setDescription("Create goal "+goal.getGoalTag());
 		create.setState(DecisionState.IDLE);
@@ -292,6 +295,7 @@ public class DbServicesImp {
 		create.setToState(GoalState.ACCEPTED.toString());
 		create.setProject(project);
 		
+		delete.setCreator(userDao.get("coprojects"));
 		delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		delete.setDescription("Delete goal "+goal.getGoalTag());
 		delete.setState(DecisionState.IDLE);
@@ -459,6 +463,8 @@ public class DbServicesImp {
 		decisionRealmDao.save(realm);
 		
 		Decision open = new Decision();
+		
+		open.setCreator(userDao.get("coprojects"));
 		open.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		open.setDecisionRealm(realm);
 		open.setDescription("OPEN contribution "+id);
@@ -633,6 +639,7 @@ public class DbServicesImp {
 				DecisionRealm realm = decisionRealmDao.getFromProjectId(bid.getCbtion().getProject().getId());
 	
 				Decision assign = new Decision();
+				assign.setCreator(userDao.get("coprojects"));
 				assign.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				assign.setDescription("Assign cbtion "+bid.getCbtion().getId()+" to "+bid.getCreator().getUsername());
 				assign.setFromState(BidState.OFFERED.toString());
@@ -644,6 +651,7 @@ public class DbServicesImp {
 				assign.setProject(project);
 	
 				Decision accept = new Decision();
+				accept.setCreator(userDao.get("coprojects"));
 				accept.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				accept.setDescription("Accept cbtion "+bid.getCbtion().getId()+" to "+bid.getCreator().getUsername());
 				accept.setFromState(BidState.ASSIGNED.toString());
