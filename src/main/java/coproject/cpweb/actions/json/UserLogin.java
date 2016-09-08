@@ -71,6 +71,10 @@ public class UserLogin extends ActionSupport implements SessionAware {
 			addFieldError("user", "cant be empty");
 		}
 		
+		if(user.getUsername().length() > 20){
+			addFieldError("user", "too large (max 20 characters)");
+		}
+		
 		if(user.getPassword().length() <= 0){
 			addFieldError("password", "cant be empty");
 		}

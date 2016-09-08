@@ -65,7 +65,7 @@ public class DecisionDao extends BaseDao {
 		
 		q.add(stateDisj);
 		
-		return getObjectsAndResSet(q, filters.getPage(), filters.getNperpage(), Decision.class);
+		return getObjectsAndResSet(q, filters, Decision.class);
 	}
 
 }

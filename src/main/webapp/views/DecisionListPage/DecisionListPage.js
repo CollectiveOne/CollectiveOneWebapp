@@ -28,15 +28,23 @@ DecisionListPage.prototype.init = function() {
 			stateNames: ["IDLE","OPEN"],
 			creatorUsernames: [],
 			keyw : '',
+			sortBy: "CREATIONDATEDESC",
 			page : 1,
 			nperpage : 10
+	};
+	
+	customElements = { 
+			stateNames: ["IDLE","OPEN","CLOSED_ACCEPTED","CLOSED_DENIED","CLOSED_EXTERNALLY"],
+			sortBy: [ { text:"New first", value:"CREATIONDATEDESC" },
+			          { text:"Old first", value:"CREATIONDATEASC" },
+			]
 	};
 	
 	this.filter = new FilterElement("#filter_container", 
 			GLOBAL.serverComm.decisionListGet, 
 			this.decisionsReceivedCallback, 
 			this, 
-			["IDLE","OPEN","CLOSED_ACCEPTED","CLOSED_DENIED","CLOSED_EXTERNALLY"], 
+			customElements, 
 			filters);
 
 	this.filter.updateData();

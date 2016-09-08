@@ -1,4 +1,4 @@
-function FilterElement(container_id, getDataCall, callBack, callObject, stateNames, filters) {
+function FilterElement(container_id, getDataCall, callBack, callObject, customElements, filters) {
 	
 	this.container = $(container_id);
 	this.getDataCall = getDataCall;
@@ -6,7 +6,8 @@ function FilterElement(container_id, getDataCall, callBack, callObject, stateNam
 	this.callObject = callObject;
 	
 	this.resSet = {};
-	this.possibleStateNames = stateNames;
+	this.possibleStateNames = customElements.stateNames;
+	this.possibleSortBy = customElements.sortBy;
 	this.filters = filters;
 
 	this.filters_expanded = false;
@@ -21,13 +22,19 @@ FilterElement.prototype.init = function() {
 	$("#next_page", this.container).click(this.nextPageClick.bind(this));
 	$("#back_page", this.container).click(this.backPageClick.bind(this));
 
-	$('#filter_creator_input').keydown(this.inputEnterKey.bind(this));
-	$('#filter_keyword_input').keydown(this.inputEnterKey.bind(this));
+	$('#filter_creator_input', this.container).keydown(this.inputEnterKey.bind(this));
+	$('#filter_keyword_input', this.container).keydown(this.inputEnterKey.bind(this));
 	
 	$('#filter_creator_input').autocomplete({
 	    serviceUrl: '../json/UsernameGetSuggestions.action',
 	    maxHeight: 100
 	});
+	
+	for(ix in this.possibleSortBy) {
+		$('#sort_by_sel', this.container).append("<option value="+this.possibleSortBy[ix].value+">"+this.possibleSortBy[ix].text+"</option>");
+	}
+
+	$('#sort_by_sel', this.container).change(this.getFiltersAndUpdateData.bind(this));
 }
 
 FilterElement.prototype.inputEnterKey = function (e) {
@@ -41,55 +48,64 @@ FilterElement.prototype.filterClick = function() {
 	if (!this.filters_expanded) {
 		// if the filters are not expanded, expand and update the first time
 		this.filters_expanded = true;
-		$("#filter_contents", this.container).show();
-		$("#filter_bar_p", this.container).text("update results");
-
-		// Cbtion state
-		$("#filter_states", this.container).empty();
-		for(var ix = 0; ix < this.possibleStateNames.length; ix++) {
-			this.stateFilterDraw(this.possibleStateNames[ix])
-		}
-
-		// All Projects
-		GLOBAL.serverComm.projectListGet(this.projectListReceivedCallback,this);
+		this.updateFilterContents();
 		
 	} else {
 		// if filters are expanded, collapse and update the cbtions list
 		this.filters_expanded = false;
-		this.filters.projectNames = [];
-		
-		var projects = $("#filter_projects", this.container).find("input");
-		var npf = projects.length;
-
-		for (var i = 0; i < npf; i++) {
-			if ($(projects[i]).is(":checked")) {
-				this.filters.projectNames.push($(projects[i]).attr(
-				"project_name"));
-			}
-		}
-		
-		this.filters.stateNames = [];
-		
-		var statefilter = $("#filter_states", this.container).find("input");
-		var nsf = statefilter.length;
-
-		for (var i = 0; i < nsf; i++) {
-			if ($(statefilter[i]).is(":checked")) {
-				this.filters.stateNames.push($(statefilter[i]).attr(
-				"state_id"));
-			}
-		}
-
-		this.filters.keyw = $("#filter_keyword_input", this.container).val();
-		this.filters.creatorUsernames = [$("#filter_creator_input", this.container).val()];
-		
-		$("#filter_contents", this.container).hide();
-		$("#filter_bar_p", this.container).text("filter");
-
-		this.updateData();
+		this.getFiltersAndUpdateData();
 	}
 
 	
+}
+
+FilterElement.prototype.updateFilterContents = function() {
+	$("#filter_contents", this.container).show();
+	$("#filter_bar_p", this.container).text("update results");
+
+	// Cbtion state
+	$("#filter_states", this.container).empty();
+	for(var ix = 0; ix < this.possibleStateNames.length; ix++) {
+		this.stateFilterDraw(this.possibleStateNames[ix])
+	}
+
+	// All Projects
+	GLOBAL.serverComm.projectListGet(this.projectListReceivedCallback,this);
+}
+
+FilterElement.prototype.getFiltersAndUpdateData = function() {
+	this.filters.projectNames = [];
+
+	var projects = $("#filter_projects", this.container).find("input");
+	var npf = projects.length;
+
+	for (var i = 0; i < npf; i++) {
+		if ($(projects[i]).is(":checked")) {
+			this.filters.projectNames.push($(projects[i]).attr(
+			"project_name"));
+		}
+	}
+
+	this.filters.stateNames = [];
+
+	var statefilter = $("#filter_states", this.container).find("input");
+	var nsf = statefilter.length;
+
+	for (var i = 0; i < nsf; i++) {
+		if ($(statefilter[i]).is(":checked")) {
+			this.filters.stateNames.push($(statefilter[i]).attr(
+			"state_id"));
+		}
+	}
+
+	this.filters.keyw = $("#filter_keyword_input", this.container).val();
+	this.filters.creatorUsernames = [$("#filter_creator_input", this.container).val()];
+	this.filters.sortBy = $('#sort_by_sel', this.container).attr("value");
+
+	$("#filter_contents", this.container).hide();
+	$("#filter_bar_p", this.container).text("filter");
+
+	this.updateData();
 }
 
 FilterElement.prototype.updateData = function() {

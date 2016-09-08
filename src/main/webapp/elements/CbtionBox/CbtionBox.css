@@ -16,7 +16,29 @@
 	height:100%;
 	float:left;
 	margin-top: 0px;
-	text-align: center;	
+	text-align: center;
+	color:#cccccc;
+}
+
+.cbtion_div #promotion_up_div {
+	width:100%;
+	height: calc(50% - 10px - 15px);
+	padding-top:15px;
+	cursor: pointer;
+}
+
+.cbtion_div #promotion_down_div {
+	width:100%;
+	height:calc(50% - 10px - 15px);
+	padding-top:2px;
+	cursor: pointer;
+}
+
+.cbtion_div #promotion_center_div {
+	width:100%;
+	height:20px;
+	font-size:14px;
+	color:#545454;
 }
 
 .cbtion_div #cb_left_div {

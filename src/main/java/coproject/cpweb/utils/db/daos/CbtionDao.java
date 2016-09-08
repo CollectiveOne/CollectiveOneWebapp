@@ -54,7 +54,7 @@ public class CbtionDao extends BaseDao {
 		
 		q.add(stateDisj);
 		
-		return getObjectsAndResSet(q, filters.getPage(), filters.getNperpage(), Cbtion.class);
+		return getObjectsAndResSet(q, filters, Cbtion.class);
 	}
 	
 	public List<Cbtion> getAcceptedOfUserInProject(int userId, int projectId) {
@@ -76,5 +76,30 @@ public class CbtionDao extends BaseDao {
 		
 		return res;
 	}
+	
+	public int countPromotersDiff(int cbtionId) {
+		return countPromoters(cbtionId, true) - countPromoters(cbtionId, false); 
+	}
+	
+	
+	public int countPromoters(int cbtionId, boolean promoteUp) {
+		
+		Session session = sessionFactory.getCurrentSession();
 
+		Query query = session.createQuery(
+				"SELECT COUNT(*) "
+						+" FROM Cbtion cbt "
+						+ "JOIN cbt.promoters prom "
+						+ "WHERE cbt.id = :cId "
+						+ "AND prom.promoteUp = :puId "
+				);
+		
+		query.setParameter("cId", cbtionId);
+		query.setParameter("puId", promoteUp);
+		
+		Long count = (Long) query.uniqueResult();
+		
+		return (int)(count + 0);
+	}	
+	
 }

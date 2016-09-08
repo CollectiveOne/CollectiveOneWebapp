@@ -1,7 +1,5 @@
 package coproject.cpweb.utils.db.entities.dtos;
 
-import java.sql.Timestamp;
-
 import coproject.cpweb.utils.db.entities.Cbtion;
 import coproject.cpweb.utils.db.entities.Project;
 import coproject.cpweb.utils.db.entities.User;
@@ -11,7 +9,7 @@ public class CbtionDto {
 	private int id;
 	private String projectName;
 	private String creatorUsername;
-	private Timestamp creationDate;
+	private Long creationDate;
 	private String title;
 	private String description;
 	private String product;
@@ -52,10 +50,10 @@ public class CbtionDto {
 	public void setCreatorUsername(String creatorUsername) {
 		this.creatorUsername = creatorUsername;
 	}
-	public Timestamp getCreationDate() {
+	public Long getCreationDate() {
 		return creationDate;
 	}
-	public void setCreationDate(Timestamp creationDate) {
+	public void setCreationDate(Long creationDate) {
 		this.creationDate = creationDate;
 	}
 	public String getTitle() {

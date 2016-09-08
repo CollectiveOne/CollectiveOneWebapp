@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import coproject.cpweb.actions.json.ResStatus;
 import coproject.cpweb.utils.db.daos.*;
 import coproject.cpweb.utils.db.entities.*;
 import coproject.cpweb.utils.db.entities.dtos.ArgumentDto;
@@ -60,6 +61,10 @@ public class DbServicesImp {
 
 	@Autowired 
 	protected ReviewDao reviewDao;
+	
+	@Autowired 
+	protected PromoterDao promoterDao;
+
 
 	@Transactional
 	public void userSave(User user) {
@@ -169,7 +174,6 @@ public class DbServicesImp {
 		cbtion.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		cbtion.setTitle("Create project " + project.getName());
 		cbtion.setDescription("Start contribution");
-		cbtion.setRelevance(0);
 		cbtion.setProject(project);
 
 		/* Bids and decisions are created for consistency */
@@ -452,7 +456,6 @@ public class DbServicesImp {
 		cbtion.setDescription(cbtionDto.getDescription());
 		cbtion.setProject(project);
 		cbtion.setProduct(cbtionDto.getProduct());
-		cbtion.setRelevance(0);
 		cbtion.setState(CbtionState.PROPOSED);
 		cbtion.setTitle(cbtionDto.getTitle());
 		cbtion.setGoal(goal);
@@ -566,6 +569,34 @@ public class DbServicesImp {
 		default:
 			break;
 		} 
+	}
+	
+	@Transactional
+	public ResStatus cbtionPromote(int cbtionId, int userId, boolean promoteUp) {
+		ResStatus resStatus = new ResStatus();
+		
+		Cbtion cbtion = cbtionDao.get(cbtionId);
+		cbtionDao.save(cbtion);
+		
+		Promoter promoter = promoterDao.getOfCbtion(cbtionId, userId);
+		
+		if(promoter == null) {
+			promoter = new Promoter();
+			promoter.setUser(userDao.get(userId));
+			cbtion.getPromoters().add(promoter);
+		}
+		
+		promoter.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		promoter.setPromoteUp(promoteUp);
+		
+		if(promoteUp) resStatus.setMsg("contribution promoted up");
+		else resStatus.setMsg("contribution promoted down");
+		
+		cbtion.setRelevance(cbtionDao.countPromotersDiff(cbtionId));
+		
+		resStatus.setSuccess(true);
+		
+		return resStatus;		
 	}
 
 	@Transactional

@@ -23,7 +23,9 @@ CbtionBox.prototype.draw = function() {
 
 CbtionBox.prototype.CbtionBoxLoaded = function() {
 	
-	// $(".cbtion_div #promotion_center_div",this.container).append("<p>"+this.cbtion.relevance+"</p>");
+	$(".cbtion_div #promotion_center_div",this.container).append(this.cbtion.relevance);
+	$(".cbtion_div #promotion_up_div",this.container).click(this.promoteUpClick.bind(this));
+	$(".cbtion_div #promotion_down_div",this.container).click(this.promoteDownClick.bind(this));
 
 	$(".cbtion_div #title_div",this.container).append("<a href=CbtionPage.action?cbtionId="+ this.cbtion.id+">"+this.cbtion.title+"</a>");
 	$(".cbtion_div #description_div",this.container).append("<p>"+this.cbtion.description+"</p>");
@@ -31,6 +33,7 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 	
 	$(".cbtion_div #project_div",this.container).append("<a href=ProjectPage.action?projectName="+this.cbtion.projectName+">"+this.cbtion.projectName+"</a>");
 	$(".cbtion_div #creator_div",this.container).append("<a href=UserPage.action?username="+this.cbtion.creatorUsername+">"+this.cbtion.creatorUsername+"</a>");
+	$(".cbtion_div #creator_div",this.container).append("<p> "+getTimeStrSince(this.cbtion.creationDate)+" ago</p>");
 	$(".cbtion_div #state_div",this.container).append("<p>"+this.cbtion.state+"</p>");
 	
 	switch(this.cbtion.state) {
@@ -50,3 +53,10 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 	}
 }
 
+CbtionBox.prototype.promoteUpClick = function() {
+	GLOBAL.serverComm.cbtionPromote(this.cbtion.id,true,this.cbtionReceivedCallback,this);
+}
+
+CbtionBox.prototype.promoteDownClick = function() {
+	GLOBAL.serverComm.cbtionPromote(this.cbtion.id,false,this.cbtionReceivedCallback,this);
+}

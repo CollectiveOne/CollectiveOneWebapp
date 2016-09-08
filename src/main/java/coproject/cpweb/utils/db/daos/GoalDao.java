@@ -74,7 +74,7 @@ public class GoalDao extends BaseDao {
 		
 		q.add(stateDisj);
 		
-		return getObjectsAndResSet(q, filters.getPage(), filters.getNperpage(), Goal.class);
+		return getObjectsAndResSet(q, filters, Goal.class);
 	}
 	
 }

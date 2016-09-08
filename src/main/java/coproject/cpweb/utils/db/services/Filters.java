@@ -7,6 +7,7 @@ public class Filters {
 	private List<String> stateNames;
 	private List<String> creatorUsernames;
 	private String keyw;
+	private String sortBy;
 	private int page;
 	private int nperpage;
 	
@@ -34,6 +35,12 @@ public class Filters {
 	}
 	public void setKeyw(String keyw) {
 		this.keyw = keyw;
+	}
+	public String getSortBy() {
+		return sortBy;
+	}
+	public void setSortBy(String sortBy) {
+		this.sortBy = sortBy;
 	}
 	public int getPage() {
 		return page;

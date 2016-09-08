@@ -22,21 +22,31 @@ CbtionListPage.prototype = Page.prototype;
 CbtionListPage.prototype.init = function() {
 	// Common after sessionUpdate code
 	CopSessionReadyCommon();
-	
+
 	var filters = {
 			projectNames : [],
 			stateNames: ["PROPOSED","OPEN","ASSIGNED"],
 			creatorUsernames: [],
 			keyw : '',
+			sortBy: "CREATIONDATEDESC",
 			page : 1,
 			nperpage : 15
 	};
-	
+
+	customElements = { 
+			stateNames: ["PROPOSED","OPEN","ASSIGNED","ACCEPTED","NOTOPENED"],
+			sortBy: [ { text:"New first", value:"CREATIONDATEDESC" },
+			          { text:"Old first", value:"CREATIONDATEASC" },
+			          { text:"More relevant", value:"RELEVANCEDESC" },
+			          { text:"Less relevant", value:"RELEVANCEASC" },
+			]
+	};
+
 	this.filter = new FilterElement("#filter_container", 
 			GLOBAL.serverComm.cbtionListGet, 
 			this.CbtionsReceivedCallback, 
 			this, 
-			["PROPOSED","OPEN","ASSIGNED","ACCEPTED","NOTOPENED"], 
+			customElements, 
 			filters);
 
 	this.filter.updateData();

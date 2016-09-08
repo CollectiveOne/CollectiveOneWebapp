@@ -1,3 +1,12 @@
+function showReqOutput(resStatus) {
+	if(resStatus.success) {
+		showOutput(resStatus.msg,"DarkGreen")
+	} else {
+		if(resStatus.msg) showOutput(resStatus.msg,"DarkRed")
+		else  showOutput("unknown error","DarkRed")
+	}
+}
+
 function ServerComm() {
 
 };
@@ -73,6 +82,31 @@ ServerComm.prototype = {
 						callbackFunction.call(callbackObj,data.cbtionDto);
 					} else {
 						showOutput(data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
+		cbtionPromote : function(cbtionId,promoteUp,callbackFunction,callbackObj) {
+			//TODO: update
+			var data = {
+					'cbtionId' : cbtionId,
+					'promoteUp' : promoteUp
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/CbtionPromote',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						showReqOutput(data.resStatus);
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {

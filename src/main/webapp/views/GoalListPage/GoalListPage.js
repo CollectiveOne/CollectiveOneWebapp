@@ -28,15 +28,23 @@ GoalListPage.prototype.init = function() {
 			stateNames: ["PROPOSED","ACCEPTED"],
 			creatorUsernames: [],
 			keyw : '',
+			sortBy: "CREATIONDATEDESC",
 			page : 1,
 			nperpage : 15
+	};
+	
+	customElements = { 
+			stateNames: ["PROPOSED","OPEN","DELETED"],
+			sortBy: [ { text:"New first", value:"CREATIONDATEDESC" },
+			          { text:"Old first", value:"CREATIONDATEASC" },
+			]
 	};
 	
 	this.filter = new FilterElement("#filter_container", 
 			GLOBAL.serverComm.goalListGet, 
 			this.GoalsReceivedCallback, 
 			this, 
-			["PROPOSED","ACCEPTED","DELETED"], 
+			customElements, 
 			filters);
 
 	this.filter.updateData();

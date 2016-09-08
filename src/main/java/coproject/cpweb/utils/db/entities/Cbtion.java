@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -39,7 +40,6 @@ public class Cbtion {
 	@Type(type = "org.hibernate.type.TextType")
 	private String description;
 	private String product;
-	private Integer relevance;
 	private CbtionState state;	
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Bid> bids = new ArrayList<Bid>();
@@ -50,6 +50,10 @@ public class Cbtion {
 	private Goal goal;
 	@OneToOne
 	private Decision openDec;
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "CBTIONS_PROMOTERS")
+	private List<Promoter> promoters = new ArrayList<Promoter>();
+	private int relevance;
 	
 	public CbtionDto toDto() {
 		CbtionDto dto = new CbtionDto();
@@ -60,14 +64,14 @@ public class Cbtion {
 		dto.setDescription(description);
 		dto.setProduct(product);
 		dto.setCreatorUsername(creator.getUsername());
-		dto.setCreationDate(creationDate);
-		dto.setRelevance(relevance);
+		dto.setCreationDate(creationDate.getTime());
 		dto.setState(state.toString());
 		if(bids != null) dto.setnBids(bids.size());
 		if(contributor != null) dto.setContributorUsername(contributor.getUsername());
 		if(goal != null) dto.setGoalTag(goal.getGoalTag());
 		dto.setAssignedPpoints(assignedPpoints);
 		if(openDec != null) dto.setOpenDec(openDec.toDto());
+		dto.setRelevance(relevance);
 		
 		return dto;
 	}
@@ -115,12 +119,6 @@ public class Cbtion {
 	public void setProduct(String product) {
 		this.product = product;
 	}
-	public Integer getRelevance() {
-		return relevance;
-	}
-	public void setRelevance(Integer relevance) {
-		this.relevance = relevance;
-	}
 	public CbtionState getState() {
 		return state;
 	}
@@ -157,5 +155,18 @@ public class Cbtion {
 	public void setOpenDec(Decision openDec) {
 		this.openDec = openDec;
 	}
+	public List<Promoter> getPromoters() {
+		return promoters;
+	}
+	public void setPromoters(List<Promoter> promoters) {
+		this.promoters = promoters;
+	}
+	public int getRelevance() {
+		return relevance;
+	}
+	public void setRelevance(int relevance) {
+		this.relevance = relevance;
+	}
+	
 	
 }
