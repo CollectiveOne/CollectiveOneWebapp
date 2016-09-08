@@ -35,6 +35,7 @@ FilterElement.prototype.init = function() {
 	}
 
 	$('#sort_by_sel', this.container).change(this.getFiltersAndUpdateData.bind(this));
+	this.updateFilterContents();
 }
 
 FilterElement.prototype.inputEnterKey = function (e) {
@@ -47,11 +48,13 @@ FilterElement.prototype.filterClick = function() {
 
 	if (!this.filters_expanded) {
 		// if the filters are not expanded, expand and update the first time
+		$("#filter_contents", this.container).show();
 		this.filters_expanded = true;
 		this.updateFilterContents();
 		
 	} else {
 		// if filters are expanded, collapse and update the cbtions list
+		$("#filter_contents", this.container).hide();
 		this.filters_expanded = false;
 		this.getFiltersAndUpdateData();
 	}
@@ -60,7 +63,6 @@ FilterElement.prototype.filterClick = function() {
 }
 
 FilterElement.prototype.updateFilterContents = function() {
-	$("#filter_contents", this.container).show();
 	$("#filter_bar_p", this.container).text("update results");
 
 	// Cbtion state
@@ -102,7 +104,6 @@ FilterElement.prototype.getFiltersAndUpdateData = function() {
 	this.filters.creatorUsernames = [$("#filter_creator_input", this.container).val()];
 	this.filters.sortBy = $('#sort_by_sel', this.container).attr("value");
 
-	$("#filter_contents", this.container).hide();
 	$("#filter_bar_p", this.container).text("filter");
 
 	this.updateData();
