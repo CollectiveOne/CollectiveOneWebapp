@@ -16,7 +16,7 @@ import coproject.cpweb.utils.db.services.DbServicesImp;
     @Result(name="success", type="json", params={"ignoreHierarchy","false","includeProperties","^cbtionDto.*,^fieldErrors.*"}),
     @Result(name="input", type="json", params={"ignoreHierarchy","false","includeProperties","^fieldErrors.*"})
 })
-public class CbtionGet extends ActionSupport{
+public class CbtionGet extends ActionSupport {
 	
 	private static final long serialVersionUID = 1L;
 	
