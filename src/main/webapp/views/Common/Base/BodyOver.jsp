@@ -17,4 +17,5 @@
 				<button id="decisions_list">Search Decisions</button>
 				<button id="new_decision">New Decision</button>
 				<button id="new_project">New Project</button>
+				<button id="activity_page">Recent Activity</button>
 			</div>

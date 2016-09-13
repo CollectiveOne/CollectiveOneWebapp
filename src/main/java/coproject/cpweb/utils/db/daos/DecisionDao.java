@@ -22,9 +22,15 @@ public class DecisionDao extends BaseDao {
 		return (Decision) super.get(id,Decision.class);
 	}
 	
-	public List<Decision> getWithState(DecisionState state) {
+	public List<Decision> getWithStates(List<DecisionState> states) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Decision.class);
-		query.add(Restrictions.eq("state", state));
+		
+		Disjunction stateDisj = Restrictions.disjunction();
+		for(DecisionState state:states) {	
+			stateDisj.add( Restrictions.eq("state", state));
+		}
+		
+		query.add(stateDisj);
 		
 		@SuppressWarnings("unchecked")
 		List<Decision> res = (List<Decision>) query.list();

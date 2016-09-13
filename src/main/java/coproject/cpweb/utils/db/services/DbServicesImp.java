@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import coproject.cpweb.actions.json.ResStatus;
 import coproject.cpweb.utils.db.daos.*;
 import coproject.cpweb.utils.db.entities.*;
+import coproject.cpweb.utils.db.entities.dtos.ActivityDto;
 import coproject.cpweb.utils.db.entities.dtos.ArgumentDto;
 import coproject.cpweb.utils.db.entities.dtos.BidDto;
 import coproject.cpweb.utils.db.entities.dtos.CbtionDto;
@@ -64,6 +65,10 @@ public class DbServicesImp {
 	
 	@Autowired 
 	protected PromoterDao promoterDao;
+	
+	@Autowired
+	protected ActivityDao activityDao;
+	
 
 
 	@Transactional
@@ -315,6 +320,14 @@ public class DbServicesImp {
 		decisionDao.save(create);
 		decisionDao.save(delete);
 		
+		Activity act = new Activity("proposed", 
+				new Timestamp(System.currentTimeMillis()),
+				project);
+		
+		act.setGoal(goal);
+		act.setType(ActivityType.GOAL);
+		activityDao.save(act);
+		
 		return goalDao.save(goal);
 	}
 	
@@ -363,7 +376,13 @@ public class DbServicesImp {
 		Decision create = goal.getCreateDec();
 
 		/* update goal state based on create decision */
-
+		
+		Activity act = new Activity();
+		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		act.setProject(goal.getProject());
+		act.setGoal(goal);
+		act.setType(ActivityType.GOAL);
+		
 		switch(create.getState()){
 		case OPEN: 
 			break;
@@ -372,6 +391,8 @@ public class DbServicesImp {
 			switch(goal.getState()) {
 			case PROPOSED:
 				goal.setState(GoalState.NOT_ACCEPTED);
+				act.setEvent("not accepted");
+				activityDao.save(act);
 				break;
 
 			default:
@@ -384,6 +405,8 @@ public class DbServicesImp {
 			switch(goal.getState()) {
 			case PROPOSED:
 				goal.setState(GoalState.ACCEPTED);
+				act.setEvent("accepted");
+				activityDao.save(act);
 				break;
 			default:
 				break;
@@ -405,11 +428,9 @@ public class DbServicesImp {
 		case CLOSED_DENIED : 
 			switch(goal.getState()) {
 			case PROPOSED:
-				goal.setState(GoalState.PROPOSED);
 				break;
 				
 			case ACCEPTED:
-				goal.setState(GoalState.ACCEPTED);
 				break;				
 
 			default:
@@ -422,10 +443,14 @@ public class DbServicesImp {
 			switch(goal.getState()) {
 			case PROPOSED:
 				goal.setState(GoalState.DELETED);
+				act.setEvent("deleted");
+				activityDao.save(act);
 				break;
 				
 			case ACCEPTED:
 				goal.setState(GoalState.DELETED);
+				act.setEvent("deleted");
+				activityDao.save(act);
 				break;				
 
 			default:
@@ -479,6 +504,14 @@ public class DbServicesImp {
 		
 		cbtion.setOpenDec(open);
 		decisionDao.save(open);
+		
+		Activity act = new Activity("created", 
+				new Timestamp(System.currentTimeMillis()),
+				cbtion.getProject());
+		
+		act.setCbtion(cbtion);
+		act.setType(ActivityType.CBTION);
+		activityDao.save(act);
 		
 		return id;
 	}
@@ -538,8 +571,13 @@ public class DbServicesImp {
 		Cbtion cbtion = cbtionDao.get(cbtionId);
 		
 		cbtionDao.save(cbtion);
-		
 		Decision open = cbtion.getOpenDec();
+		
+		Activity act = new Activity();
+		act.setProject(cbtion.getProject());
+		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		act.setType(ActivityType.CBTION);
+		act.setCbtion(cbtion);
 
 		switch(open.getState()){
 		case OPEN: 
@@ -549,6 +587,8 @@ public class DbServicesImp {
 			switch(cbtion.getState()) {
 			case PROPOSED:
 				cbtion.setState(CbtionState.NOTOPENED);
+				act.setEvent("proposal refused");
+				activityDao.save(act);
 				break;
 
 			default:
@@ -561,6 +601,8 @@ public class DbServicesImp {
 			switch(cbtion.getState()) {
 			case PROPOSED:
 				cbtion.setState(CbtionState.OPEN);
+				act.setEvent("opened for bidding");
+				activityDao.save(act);
 				break;
 			default:
 				break;
@@ -701,6 +743,14 @@ public class DbServicesImp {
 				decisionDao.save(accept);
 				bidDao.save(bid);
 				
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setProject(project);
+				act.setBid(bid);
+				act.setType(ActivityType.BID);
+				act.setEvent("created");
+				activityDao.save(act);
+				
 				return " bid created";
 				
 			} else {
@@ -767,10 +817,18 @@ public class DbServicesImp {
 		/* Update assign decision */ 
 		Decision assign = bid.getAssign();
 
+
+		Activity act = new Activity();
+		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		act.setBid(bid);
+		act.setType(ActivityType.BID);
+		act.setProject(cbtion.getProject());
+		
 		/* update bid state based on assign decision state 
 		 * and propagate all consequences of the decision 
 		 * outcome */
-
+		
+		
 		switch(assign.getState()){
 		case OPEN: 
 			break;
@@ -779,6 +837,8 @@ public class DbServicesImp {
 			switch(bid.getState()) {
 			case OFFERED:
 				bid.setState(BidState.NOT_ASSIGNED);
+				act.setEvent("not assigned");
+				activityDao.save(act);
 				break;
 
 			default:
@@ -791,6 +851,8 @@ public class DbServicesImp {
 			switch(bid.getState()) {
 			case OFFERED:
 				bid.setState(BidState.ASSIGNED);
+				act.setEvent("assigned");
+				activityDao.save(act);
 				break;
 			default:
 				break;
@@ -799,6 +861,16 @@ public class DbServicesImp {
 			switch(cbtion.getState()) {
 			case OPEN:
 				cbtion.setState(CbtionState.ASSIGNED);
+				
+				Activity actCb = new Activity();
+				actCb.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				actCb.setCbtion(cbtion);
+				actCb.setType(ActivityType.CBTION);
+				actCb.setProject(cbtion.getProject());
+				actCb.setEvent("assigned");
+				activityDao.save(actCb);	
+				
+				
 				break;
 			default:
 				break;
@@ -824,6 +896,8 @@ public class DbServicesImp {
 			switch(bid.getState()) {
 			case ASSIGNED:
 				bid.setState(BidState.NOT_ACCEPTED);
+				act.setEvent("not accepted");
+				activityDao.save(act);
 				break;
 
 			default:
@@ -870,6 +944,19 @@ public class DbServicesImp {
 				voterDao.updateOrAdd(decisionRealmDao.getIdFromProjectId(cbtion.getProject().getId()), 
 						bid.getCreator().getId(),
 						bid.getPpoints());
+				
+				
+				act.setEvent("accepted");
+				activityDao.save(act);
+				
+				Activity actCb = new Activity();
+				actCb.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				actCb.setCbtion(cbtion);
+				actCb.setType(ActivityType.CBTION);
+				actCb.setProject(cbtion.getProject());
+				actCb.setEvent("accepted");
+				activityDao.save(actCb);	
+				
 				break;
 				
 			case ACCEPTED:
@@ -958,16 +1045,90 @@ public class DbServicesImp {
 
 	@Transactional
 	public void decisionsUpdateState() {
-		List<Decision> decsIdle = decisionDao.getWithState(DecisionState.IDLE);
-		for(Decision dec : decsIdle) {
-			dec.updateState();
-			decisionDao.save(dec);
-		}
 		
-		List<Decision> decsOpen = decisionDao.getWithState(DecisionState.OPEN);
-		for(Decision dec : decsOpen) {
+		List<DecisionState> states = new ArrayList<DecisionState>();
+		states.add(DecisionState.IDLE);
+		states.add(DecisionState.OPEN);
+		
+		List<Decision> decsIdle = decisionDao.getWithStates(states);
+		for(Decision dec : decsIdle) {
+			
+			/* Update the decision */
+			DecisionState before = dec.getState();
 			dec.updateState();
 			decisionDao.save(dec);
+			
+			/* store activity if switched state and user created decision */
+			if(!dec.getCreator().getUsername().equals("coprojects")) {
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setDecision(dec);
+				act.setType(ActivityType.DECISION);
+				act.setProject(dec.getProject());
+				
+				switch(before) {
+					case IDLE:
+						switch(dec.getState()) {
+							case IDLE:
+								break;
+								
+							case OPEN:
+								act.setEvent("opened");
+								activityDao.save(act);	
+								break;
+								
+							case CLOSED_ACCEPTED:
+								act.setEvent("accepted");
+								activityDao.save(act);	
+								break;
+								
+							case CLOSED_DENIED:
+								act.setEvent("rejected");
+								activityDao.save(act);	
+								break;
+								
+							case CLOSED_EXTERNALLY:
+								act.setEvent("closed externally");
+								activityDao.save(act);	
+								break;
+						}		
+								
+						break;
+						
+					case OPEN:
+						switch(dec.getState()) {
+							case IDLE:
+								act.setEvent("back to idle");
+								activityDao.save(act);
+								break;
+								
+							case OPEN:
+								break;
+								
+							case CLOSED_ACCEPTED:
+								act.setEvent("accepted");
+								activityDao.save(act);	
+								break;
+								
+							case CLOSED_DENIED:
+								act.setEvent("rejected");
+								activityDao.save(act);	
+								break;
+								
+							case CLOSED_EXTERNALLY:
+								act.setEvent("closed externally");
+								activityDao.save(act);	
+								break;
+						}	
+						break;
+						
+					case CLOSED_ACCEPTED:
+					case CLOSED_DENIED:
+					case CLOSED_EXTERNALLY:
+						break;
+						
+				}
+			}
 		}
 	}
 	
@@ -1004,6 +1165,16 @@ public class DbServicesImp {
 		decision.setDecisionRealm(realm);
 		
 		decisionDao.save(decision);
+		
+		if(!decision.getCreator().getUsername().equals("coprojects"))  {
+			Activity act = new Activity();
+			act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+			act.setDecision(decision);
+			act.setType(ActivityType.DECISION);
+			act.setProject(project);
+			act.setEvent("created");
+			activityDao.save(act);	
+		}
 		
 		return "decision created";
 	}
@@ -1046,6 +1217,14 @@ public class DbServicesImp {
 		
 		argumentDao.save(argument);
 		decisionDao.save(decision);
+		
+		Activity act = new Activity();
+		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		act.setArgument(argument);
+		act.setType(ActivityType.ARGUMENT);
+		act.setProject(argument.getDecision().getProject());
+		act.setEvent("created");
+		activityDao.save(act);
 		
 		return "argument created";
 	}
@@ -1099,6 +1278,22 @@ public class DbServicesImp {
 		}
 			
 		
+	}
+	
+	@Transactional
+	public ActivityDtoListRes activityDtoGetFiltered(Filters filters) {
+		ObjectListRes<Activity> activityRes = activityDao.get(filters);
+
+		ActivityDtoListRes activityDtosRes = new ActivityDtoListRes();
+
+		activityDtosRes.setResSet(activityRes.getResSet());
+		activityDtosRes.setActivityDtos(new ArrayList<ActivityDto>());
+
+		for(Activity activity : activityRes.getObjects()) {
+			activityDtosRes.getActivityDtos().add(activity.toDto());
+		}
+
+		return activityDtosRes;
 	}
 	
 }

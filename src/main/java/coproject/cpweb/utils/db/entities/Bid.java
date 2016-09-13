@@ -50,7 +50,11 @@ public class Bid {
 		BidDto dto = new BidDto();
 		
 		dto.setId(id);
-		if(cbtion != null) dto.setCbtionId(cbtion.getId());
+		if(cbtion != null) { 
+			dto.setCbtionId(cbtion.getId());
+			dto.setCbtionTitle(cbtion.getTitle());
+		}
+		
 		if(creator != null) dto.setCreatorDto(creator.toDto());
 		dto.setPpoints(ppoints);
 		if(creationDate != null) dto.setCreationDate(creationDate.getTime());

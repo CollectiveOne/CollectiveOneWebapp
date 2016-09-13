@@ -9,12 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import coproject.cpweb.utils.db.entities.dtos.DecisionDto;
 
@@ -26,6 +28,8 @@ public class Decision {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")
 	private String description;
 	private Timestamp creationDate;
 	private String fromState;
@@ -86,6 +90,7 @@ public class Decision {
 		DecisionDto dto = new DecisionDto();
 
 		dto.setId(id);
+		dto.setCreatorUsername(creator.getUsername());
 		dto.setDescription(description);
 		if(creationDate != null) dto.setCreationDate(creationDate.getTime());
 		if(openDate != null) dto.setOpenDate(openDate.getTime());

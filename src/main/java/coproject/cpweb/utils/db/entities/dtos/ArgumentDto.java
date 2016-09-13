@@ -5,7 +5,8 @@ public class ArgumentDto {
 	private String creatorUsername;
 	private long creationDate;
 	private String description;
-	private int DecisionId;
+	private int decisionId;
+	private String decisionDescription;
 	private String tendency;
 	private int nbackers;
 	
@@ -34,10 +35,16 @@ public class ArgumentDto {
 		this.description = description;
 	}
 	public int getDecisionId() {
-		return DecisionId;
+		return decisionId;
 	}
 	public void setDecisionId(int decisionId) {
-		DecisionId = decisionId;
+		this.decisionId = decisionId;
+	}
+	public String getDecisionDescription() {
+		return decisionDescription;
+	}
+	public void setDecisionDescription(String decisionDescription) {
+		this.decisionDescription = decisionDescription;
 	}
 	public String getTendency() {
 		return tendency;

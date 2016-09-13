@@ -1,3 +1,4 @@
+
 function CopDocReadyCommon(callbackFun,callbackObj) {
 	
 	GLOBAL.serverComm = new ServerComm();
@@ -35,6 +36,10 @@ function CopDocReadyCommon(callbackFun,callbackObj) {
 	
 	$("#new_project").click(function() {
 		window.location = 'ProjectNewPage.action';
+	});
+	
+	$("#activity_page").click(function() {
+		window.location = 'ActivityListPage.action';
 	});
 }
 

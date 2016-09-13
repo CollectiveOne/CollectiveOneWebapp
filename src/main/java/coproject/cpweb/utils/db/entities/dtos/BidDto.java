@@ -9,6 +9,7 @@ import coproject.cpweb.utils.db.entities.User;
 public class BidDto {
 	private int id;
 	private int cbtionId;
+	private String cbtionTitle;
 	private UserDto creatorDto;
 	private double ppoints;
 	private long creationDate;
@@ -44,14 +45,18 @@ public class BidDto {
 	public void setCbtionId(int cbtionId) {
 		this.cbtionId = cbtionId;
 	}
+	public String getCbtionTitle() {
+		return cbtionTitle;
+	}
+	public void setCbtionTitle(String cbtionTitle) {
+		this.cbtionTitle = cbtionTitle;
+	}
 	public UserDto getCreatorDto() {
 		return creatorDto;
 	}
-
 	public void setCreatorDto(UserDto creatorDto) {
 		this.creatorDto = creatorDto;
 	}
-
 	public double getPpoints() {
 		return ppoints;
 	}

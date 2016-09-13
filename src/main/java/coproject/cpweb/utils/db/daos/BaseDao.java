@@ -76,23 +76,27 @@ public class BaseDao {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria q = session.createCriteria(clazz);
 
-		q.createAlias("project", "proj");
-		List<String> projectNames = filters.getProjectNames();
-		Disjunction projDisj = Restrictions.disjunction();
-		for(String projectName:projectNames) {
-			projDisj.add( Restrictions.eq("proj.name", projectName));
-		}
-		q.add(projDisj);
-
-		q.createAlias("creator", "crea");
-		List<String> creatorUsernames = filters.getCreatorUsernames();
-		Disjunction userDisj = Restrictions.disjunction();
-		for(String creatorUsername:creatorUsernames) {
-			if(creatorUsername.length() > 0) {
-				userDisj.add( Restrictions.eq("crea.username", creatorUsername));
+		if(filters.getProjectNames().size() > 0) {
+			q.createAlias("project", "proj");
+			List<String> projectNames = filters.getProjectNames();
+			Disjunction projDisj = Restrictions.disjunction();
+			for(String projectName:projectNames) {
+				projDisj.add( Restrictions.eq("proj.name", projectName));
 			}
+			q.add(projDisj);
 		}
-		q.add(userDisj);
+
+		if(filters.getCreatorUsernames().size() > 0) {
+			q.createAlias("creator", "crea");
+			List<String> creatorUsernames = filters.getCreatorUsernames();
+			Disjunction userDisj = Restrictions.disjunction();
+			for(String creatorUsername:creatorUsernames) {
+				if(creatorUsername.length() > 0) {
+					userDisj.add( Restrictions.eq("crea.username", creatorUsername));
+				}
+			}
+			q.add(userDisj);	
+		}
 
 		String keyw = filters.getKeyw();
 		if(keyw.length() > 0) {

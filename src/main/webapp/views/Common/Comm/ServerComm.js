@@ -615,7 +615,7 @@ ServerComm.prototype = {
 			var data = {
 					'filters' : filters
 			};
-			
+
 			var datastr = JSON.stringify(data);
 
 			$.ajax({
@@ -839,7 +839,31 @@ ServerComm.prototype = {
 					console.log(errorThrown);
 				}
 			});
-		}
+		},
 
+		activityListGet : function(filters,callbackFunction,callbackObj) {
+
+			var data = {
+					'filters' : filters
+			};
+
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/ActivityListGet',
+				data : datastr,
+				dataType : "json",
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		}
 
 };

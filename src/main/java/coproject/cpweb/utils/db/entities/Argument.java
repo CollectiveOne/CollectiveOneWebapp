@@ -46,7 +46,10 @@ public class Argument {
 		if(creator != null) dto.setCreatorUsername(creator.getUsername());
 		if(creationDate != null) dto.setCreationDate(creationDate.getTime());
 		if(description != null) dto.setDescription(description);
-		if(decision != null) dto.setDecisionId(decision.getId());
+		if(decision != null) {
+			dto.setDecisionId(decision.getId());
+			dto.setDecisionDescription(decision.getDescription());
+		}
 		if(backers != null) dto.setNbackers(backers.size());
 		else dto.setNbackers(0);
 		
