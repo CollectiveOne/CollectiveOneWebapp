@@ -27,6 +27,7 @@ ActivityBox.prototype.activityBoxLoaded = function() {
 				case "accepted":
 					eventPretty = "bid from <a href=UserPage.action?username="+this.activity.bidDto.creatorDto.username+">"+this.activity.bidDto.creatorDto.username+"</a>"+
 						" to <a href=CbtionPage.action?cbtionId="+this.activity.bidDto.cbtionId+">"+this.activity.bidDto.cbtionTitle+"</a> was "+this.activity.event;
+					break;
 			}
 			
 			break;
@@ -66,6 +67,7 @@ ActivityBox.prototype.activityBoxLoaded = function() {
 						this.activity.argumentDto.decisionId+">"+this.activity.argumentDto.decisionDescription+"</a>'";
 						break;
 			}
+			break;
 	}
 	
 	var projectLink = "<a href=ProjectPage.action?projectName="+this.activity.projectName+">"+this.activity.projectName+"</a>"; 

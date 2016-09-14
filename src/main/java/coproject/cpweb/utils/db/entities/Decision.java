@@ -55,7 +55,16 @@ public class Decision {
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "DECISIONS_ARGS")
 	private List<Argument> arguments = new ArrayList<Argument>();
-
+	
+	/* hold a reference to the affected object */
+	private DecisionType type;
+	@ManyToOne
+	private Cbtion cbtion;
+	@ManyToOne
+	private Goal goal;
+	@ManyToOne
+	private Bid bid;
+	
 	/* ============================== */
 	/* Decisions mechanics parameters */
 	private double ci = 0.95;
@@ -98,6 +107,39 @@ public class Decision {
 		dto.setFromState(fromState);
 		dto.setToState(toState);
 		if(project != null) dto.setProjectName(project.getName());
+		
+		if(type != null) { 
+			dto.setType(type.toString());
+			switch(type) {
+				case CBTION:
+					if(cbtion != null) {
+						dto.setCbtionId(cbtion.getId());
+						dto.setCbtionTitle(cbtion.getTitle());
+					}
+					break;
+					
+				case GOAL:
+					if(goal != null) {
+						dto.setGoalId(goal.getId());
+						dto.setGoalTag(goal.getGoalTag());
+					}
+					break;
+					
+				case BID:
+					if(bid != null) {
+						dto.setBidId(bid.getId());
+						dto.setBidCreatorUsername(bid.getCreator().getUsername());
+						dto.setCbtionId(bid.getCbtion().getId());
+						dto.setCbtionTitle(bid.getCbtion().getTitle());
+					}
+					break;
+				
+				case GENERAL:
+					break;
+	
+			}
+		}
+		
 		dto.setnVoters(decisionRealm.size());
 		dto.setPpsTot(ppsTot);
 		dto.setVerdictHours(verdictHours);
@@ -213,7 +255,31 @@ public class Decision {
 	public void setArguments(List<Argument> arguments) {
 		this.arguments = arguments;
 	}
-	
+	public Cbtion getCbtion() {
+		return cbtion;
+	}
+	public void setCbtion(Cbtion cbtion) {
+		this.cbtion = cbtion;
+	}
+	public Goal getGoal() {
+		return goal;
+	}
+	public void setGoal(Goal goal) {
+		this.goal = goal;
+	}
+	public Bid getBid() {
+		return bid;
+	}
+	public void setBid(Bid bid) {
+		this.bid = bid;
+	}
+	public DecisionType getType() {
+		return type;
+	}
+	public void setType(DecisionType type) {
+		this.type = type;
+	}
+
 	/*
 	 * Decision Engine logic
 	 */

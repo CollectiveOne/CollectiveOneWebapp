@@ -36,10 +36,11 @@
 }
 
 #cbtion_div #cbtion_data_div #cb_left_div {
-	width: calc(100% - 25px - 220px);
+	width: calc(100% - 25px - 220px - 10px);
 	height: calc(100% - 20px);
 	float:left;
 	margin-top: 0px;
+	padding-right: 10px;
 }
 
 #cbtion_div #cbtion_data_div #cb_center_div {

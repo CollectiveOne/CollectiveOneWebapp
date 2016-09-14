@@ -16,15 +16,24 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 	
 	this.updateVoteStatus();
 	
-	
 	$("#description",this.container).append("<a href=DecisionPage.action?decisionId="+ this.decision.id+">"+this.decision.description+"</a>");
 	
-	if(this.decision.fromState != null && this.decision.toState != null) {
-		$("#from_to_state",this.container).append($("<p>Changes the state from "
-			+this.decision.fromState
-			+" to "+this.decision.toState+"</p>"));	
-	} else {
-		$("#from_to_state",this.container).hide();
+	switch(this.decision.type) {
+		case "GENERAL":
+			$("#from_to_state",this.container).hide();
+			break;
+		case "CBTION":
+			$("#from_to_state",this.container).append("<p>changes the state of contribution <a href=CbtionPage.action?cbtionId="+
+			this.decision.cbtionId+">"+this.decision.cbtionTitle+"</a> from "+this.decision.fromState+" to "+this.decision.toState+"</p>");	
+			break;
+		case "BID":
+			$("#from_to_state",this.container).append("<p>modifies bid to contribution <a href=CbtionPage.action?cbtionId="+
+			this.decision.cbtionId+">"+this.decision.cbtionTitle+"</a> made by <a href=UserPage.action?username="+
+			this.decision.bidCreatorUsername+">"+this.decision.bidCreatorUsername+"</a></p>");	
+			break;
+		case "GOAL":
+			$("#from_to_state",this.container).append("<p>modifies goal <a href=GoalListPage.action>"+this.decision.goalTag+"</a>");
+			break;
 	}
 	
 	var stateStr = '';

@@ -12,6 +12,14 @@ public class DecisionDto {
 	protected String projectName;
 	protected String creatorUsername;
 	
+	protected String type;
+	protected int cbtionId;
+	protected String cbtionTitle;
+	protected int goalId;
+	protected String goalTag;
+	protected int bidId;
+	protected String bidCreatorUsername;
+	
 	protected int nVoters;
 	protected double ppsTot;
 	protected double verdictHours;
@@ -78,6 +86,50 @@ public class DecisionDto {
 	}
 	public void setCreatorUsername(String creatorUsername) {
 		this.creatorUsername = creatorUsername;
+	}
+	
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public int getCbtionId() {
+		return cbtionId;
+	}
+	public void setCbtionId(int cbtionId) {
+		this.cbtionId = cbtionId;
+	}
+	public String getCbtionTitle() {
+		return cbtionTitle;
+	}
+	public void setCbtionTitle(String cbtionTitle) {
+		this.cbtionTitle = cbtionTitle;
+	}
+	public int getGoalId() {
+		return goalId;
+	}
+	public void setGoalId(int goalId) {
+		this.goalId = goalId;
+	}
+	public String getGoalTag() {
+		return goalTag;
+	}
+	public void setGoalTag(String goalTag) {
+		this.goalTag = goalTag;
+	}
+	public int getBidId() {
+		return bidId;
+	}
+	public void setBidId(int bidId) {
+		this.bidId = bidId;
+	}
+	public String getBidCreatorUsername() {
+		return bidCreatorUsername;
+	}
+	public void setBidCreatorUsername(String bidCreatorUsername) {
+		this.bidCreatorUsername = bidCreatorUsername;
 	}
 	
 	
