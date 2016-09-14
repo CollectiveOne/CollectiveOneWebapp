@@ -3,6 +3,7 @@ package coproject.cpweb.utils.db.daos;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -75,6 +76,38 @@ public class GoalDao extends BaseDao {
 		q.add(stateDisj);
 		
 		return getObjectsAndResSet(q, filters, Goal.class);
+	}
+	
+	public Goal getSubGoal(int goalId, int subGoalId) {
+		Session session = sessionFactory.getCurrentSession();
+
+		Query query = session.createQuery(
+				"SELECT subgoalx "
+						+" FROM Goal goalx "
+						+ "JOIN goalx.subgoals subgoalx "
+						+ "WHERE goalx.id = :gId "
+						+ "AND subgoalx.id = :sId "
+				);
+		
+		query.setParameter("gId", goalId);
+		query.setParameter("sId", subGoalId);
+		
+		return (Goal) query.uniqueResult();
+	}
+	
+	public String addSubGoal(int goalId, int subGoalId) {
+		String msg;
+		
+		if(getSubGoal(goalId,subGoalId) == null) {
+			// goal is not a subgoal yet
+			Goal goal = get(goalId);
+			goal.getSubgoals().add(get(subGoalId));
+			msg = "subgoal added";
+		} else {
+			msg = "subgoal is already set";
+		}
+		
+		return msg;
 	}
 	
 }

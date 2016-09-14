@@ -1,11 +1,8 @@
 #goal_div {
-	height: 120px;
-	width: 221px;
+	min-height: 90px;
+	width: 220px;
 	clear:none;
-	border-radius:5px;
-	border-style:solid;
-	border-width:2px;
-	border-color: #cccccc;
+	overflow: auto;
 }
 
 #goal_div #top_div {
@@ -15,16 +12,18 @@
 }
 
 #goal_div #center_div {
-	height: 60px;
+	min-height: 20px;
+	max-height: 60px;
 	width:100%;
 	float:left;
+	margin-bottom: 10px;
 }
 
 #goal_div #bottom_div {
-	height:30px;
-	width:100%;	
+	width:100%;
 	float:left;
-	margin-left:7px;
+	margin-left: 7px;
+	margin-bottom: 10px;
 }
 
 #goal_div #top_div #goaltag {
@@ -42,7 +41,6 @@
 }
 
 #goal_div #center_div #description {
-	height:100%;
 	width:100%;
 	margin-top: 6px;
 }
@@ -67,5 +65,20 @@
 	font-style:normal;
 }
 
+#goal_div #show_subgoals_btn {
+	height: 15px;
+	width: 220px;
+	float:left;
+	margin-left: 0px;
+	display: none;
+}
+
+#goal_div #subgoals_div {
+	width:100%;
+	float:left;
+	margin-left: 0px;
+	margin-top: 10px;
+	display: none;
+}
 
 

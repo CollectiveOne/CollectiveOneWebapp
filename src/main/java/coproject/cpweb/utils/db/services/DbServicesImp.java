@@ -294,6 +294,14 @@ public class DbServicesImp {
 		
 		int id = goalDao.save(goal);
 		
+		if(goalDto.getParentGoalsTags().size() > 0) {
+			for(String parentGoalTag : goalDto.getParentGoalsTags()) {
+				Goal parentGoal = goalDao.get(parentGoalTag);
+				goalDao.addSubGoal(parentGoal.getId(),goal.getId());
+				goalDao.save(parentGoal);
+			}
+		}
+		
 		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
 		decisionRealmDao.save(realm);
 		
@@ -344,6 +352,12 @@ public class DbServicesImp {
 	@Transactional
 	public GoalDto goalGetDto(int goalId) {
 		return goalDao.get(goalId).toDto();
+	}
+	
+	@Transactional
+	public GoalDto goalGetDto(String goalTag) {
+		Goal goal = goalDao.get(goalTag);
+		return goal.toDto();
 	}
 	
 	@Transactional

@@ -3,10 +3,11 @@
 }
 
 #content_pane #list_of_elements .goalbox_div {
-	width:220px;
-	height: 120px;
+	min-width: 245px;
+	min-height: 120px;
 	float:left;
 	margin-bottom:10px;
 	margin-right:10px;
+	clear: both;
 }
 

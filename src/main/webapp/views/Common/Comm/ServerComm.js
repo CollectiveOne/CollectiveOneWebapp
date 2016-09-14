@@ -140,6 +140,33 @@ ServerComm.prototype = {
 				}
 			});
 		},
+		
+		goalGet : function(goalTag,callbackFunction,callbackObj) {
+
+			var data = {
+					'goalTag' : goalTag
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/GoalGet',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data.goalDto) {
+						callbackFunction.call(callbackObj,data.goalDto);
+					} else {
+						showOutput(data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+					showOutput("error getting goal","DarkRed");
+				}
+			});
+		},
 
 		goalListGet : function(filters,callbackFunction,callbackObj) {
 

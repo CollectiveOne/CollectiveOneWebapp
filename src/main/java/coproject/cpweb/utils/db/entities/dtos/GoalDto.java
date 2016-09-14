@@ -1,6 +1,8 @@
 package coproject.cpweb.utils.db.entities.dtos;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GoalDto {
 	
@@ -9,6 +11,8 @@ public class GoalDto {
 	private String creatorUsername;
 	private Timestamp creationDate;
 	private String goalTag;
+	private List<String> parentGoalsTags = new ArrayList<String>();
+	private List<String> subGoalsTags = new ArrayList<String>();
 	private String description;
 	private String state;
 	private DecisionDto createDec;
@@ -68,6 +72,19 @@ public class GoalDto {
 	public void setDeleteDec(DecisionDto deleteDec) {
 		this.deleteDec = deleteDec;
 	}
+	public List<String> getParentGoalsTags() {
+		return parentGoalsTags;
+	}
+	public void setParentGoalsTags(List<String> parentGoalsTags) {
+		this.parentGoalsTags = parentGoalsTags;
+	}
+	public List<String> getSubGoalsTags() {
+		return subGoalsTags;
+	}
+	public void setSubGoalsTags(List<String> subGoalsTags) {
+		this.subGoalsTags = subGoalsTags;
+	}
+	
 	
 }
 

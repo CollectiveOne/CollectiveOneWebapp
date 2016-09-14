@@ -2,18 +2,23 @@ function GoalBox(container_id,goalData) {
 	// Parent constructor
 	this.container = $(container_id);
 	this.goal = goalData;
+	this.subgoals_expanded = false;
 	if(goalData) {
 		this.draw();
 	}
 };
 
 //Inheritance
+GoalBox.prototype.getGoal = function(goalTag) {
+	GLOBAL.serverComm.goalGet(goalTag,this.goalReceivedCallback,this);
+}
+
 GoalBox.prototype.updateGoal = function() {
 	GLOBAL.serverComm.goalGet(this.goal.goalTag,this.goalReceivedCallback,this);
 }
 
 GoalBox.prototype.goalReceivedCallback = function(goalDto) {
-	this.user = goalDto;
+	this.goal = goalDto;
 	this.draw();
 }
 
@@ -51,4 +56,30 @@ GoalBox.prototype.goalBoxLoaded = function() {
 		decBox.draw();
 	}
 	
+	if(this.goal.subGoalsTags.length > 0) {
+		$("#show_subgoals_btn",this.container).show();
+		$("#show_subgoals_btn",this.container).click(this.showSubGoals.bind(this));
+	}
+}
+
+GoalBox.prototype.showSubGoals = function() {
+	
+	if(!this.subgoals_expanded) {
+		this.subgoals_expanded = true;
+		$("#goal_div",this.container).css("width","auto");
+		$("#subgoals_div",this.container).show();
+
+		for(var ix in this.goal.subGoalsTags) {
+			$("#subgoals_div",this.container).append("<div id=subgoal_"+ix+"></div>");
+			var subGoalBox = new GoalBox($("#subgoal_"+ix,this.container));
+			subGoalBox.getGoal(this.goal.subGoalsTags[ix]);
+		}
+
+	} else {
+		this.subgoals_expanded = false;
+		$("#goal_div",this.container).removeAttr("style");
+		$("#subgoals_div",this.container).empty();
+		$("#subgoals_div",this.container).hide();
+		
+	}
 }
