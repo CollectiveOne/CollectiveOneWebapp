@@ -372,7 +372,7 @@ public class DbServicesImp {
 		for(Goal goal : goalsRes.getObjects()) {
 			goalsDtosRes.getGoalDtos().add(goal.toDto());
 		}
-
+		
 		return goalsDtosRes;
 	}
 	

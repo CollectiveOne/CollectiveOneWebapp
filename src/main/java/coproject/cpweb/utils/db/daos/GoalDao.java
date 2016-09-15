@@ -5,10 +5,12 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Goal;
@@ -65,7 +67,7 @@ public class GoalDao extends BaseDao {
 		Criteria q = applyGeneralFilters(filters, Goal.class);
 		
 		/* State names are entity specific and I was not able to put these
-		 * disjunction in a common function*/
+		 * disjunction in a common function */
 		
 		List<String> stateNames = filters.getStateNames();
 		Disjunction stateDisj = Restrictions.disjunction();
@@ -75,7 +77,30 @@ public class GoalDao extends BaseDao {
 		
 		q.add(stateDisj);
 		
+		boolean only_parent_goals = true;
+		
+		/* Only filter subgoals if showing accepted goals (as proposed subgoals would be hidden) */
+		if(filters.getStateNames().size() == 1) {
+			if(filters.getStateNames().get(0).equals("PROPOSED")) {
+				only_parent_goals = false;
+			}
+		}
+		
+		if(only_parent_goals) {
+			/* Filter all goals that are subgoals so that results are only parent only goals */
+			DetachedCriteria subgoalsIds = DetachedCriteria.forClass(Goal.class,"goalx")
+					.createAlias("goalx.subgoals", "subgoalsx")
+					.setProjection(Projections.property("subgoalsx.id"));
+			
+			DetachedCriteria notSubgoals = DetachedCriteria.forClass(Goal.class)
+					.add(Subqueries.propertyNotIn("id",subgoalsIds))
+					.setProjection(Projections.property("id"));
+			
+			q.add(Subqueries.propertyIn("id", notSubgoals));
+		}
+		
 		return getObjectsAndResSet(q, filters, Goal.class);
+		
 	}
 	
 	public Goal getSubGoal(int goalId, int subGoalId) {
@@ -93,6 +118,22 @@ public class GoalDao extends BaseDao {
 		query.setParameter("sId", subGoalId);
 		
 		return (Goal) query.uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Goal> getAllSubGoals() {
+		Session session = sessionFactory.getCurrentSession();
+
+		DetachedCriteria subQuery = DetachedCriteria.forClass(Goal.class,"goalx")
+				.createAlias("goalx.subgoals", "subgoalsx")
+				.setProjection(Projections.property("subgoalsx.id"));
+		
+		Criteria query = session.createCriteria(Goal.class)
+				.add(Subqueries.propertyNotIn("id",subQuery));
+		
+		List<Goal> res = (List<Goal>) query.list();
+		
+		return res;
 	}
 	
 	public String addSubGoal(int goalId, int subGoalId) {

@@ -27,7 +27,7 @@ GoalBox.prototype.draw = function() {
 }
 
 GoalBox.prototype.goalBoxLoaded = function() {
-	$("#goaltag",this.container).append("<p>"+this.goal.goalTag+"</p>");
+	$("#goaltag",this.container).append("<a href=GoalPage.action?goalTag="+this.goal.goalTag+">"+this.goal.goalTag+"</a>");
 	$("#description",this.container).append("<p>"+this.goal.description+"</p>");
 	
 	var applicable_decision = [];
@@ -66,18 +66,16 @@ GoalBox.prototype.showSubGoals = function() {
 	
 	if(!this.subgoals_expanded) {
 		this.subgoals_expanded = true;
-		$("#goal_div",this.container).css("width","auto");
 		$("#subgoals_div",this.container).show();
 
 		for(var ix in this.goal.subGoalsTags) {
-			$("#subgoals_div",this.container).append("<div id=subgoal_"+ix+"></div>");
-			var subGoalBox = new GoalBox($("#subgoal_"+ix,this.container));
+			$("#subgoals_div",this.container).append("<div id=subgoal_container_"+ix+" class=subgoal_container></div>");
+			var subGoalBox = new GoalBox($("#subgoal_container_"+ix,this.container));
 			subGoalBox.getGoal(this.goal.subGoalsTags[ix]);
 		}
 
 	} else {
 		this.subgoals_expanded = false;
-		$("#goal_div",this.container).removeAttr("style");
 		$("#subgoals_div",this.container).empty();
 		$("#subgoals_div",this.container).hide();
 		

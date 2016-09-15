@@ -1,5 +1,6 @@
 #filter_div {
 	width: 100%;
+	min-width: 535px;
 }
 
 #filter_bar {

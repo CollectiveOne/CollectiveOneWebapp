@@ -34,7 +34,7 @@ GoalListPage.prototype.init = function() {
 	};
 	
 	customElements = { 
-			stateNames: ["PROPOSED","OPEN","DELETED"],
+			stateNames: ["PROPOSED","ACCEPTED","NOT_ACCEPTED","DELETED"],
 			sortBy: [ { text:"New first", value:"CREATIONDATEDESC" },
 			          { text:"Old first", value:"CREATIONDATEASC" },
 			]

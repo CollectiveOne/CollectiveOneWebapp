@@ -1,7 +1,6 @@
 package coproject.cpweb.utils.db.entities;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -42,7 +41,7 @@ public class Goal {
 	private Decision deleteDec;
 	@OneToMany
 	@JoinTable(name = "goal_subgoals")
-	private List<Goal> subgoals = new ArrayList<Goal>();
+	private List<Goal> subgoals;
 	
 	public GoalDto toDto() {
 		GoalDto dto = new GoalDto();
