@@ -18,7 +18,7 @@
 	<p class="welcome_p">- define the overall long and short term <strong>goals of the project</strong>.</p>
 	<p class="welcome_p">- <strong>create and assign tasks</strong> to project collaborators.</p>
 	<p class="welcome_p">- <strong>keep track of the value added</strong> to the project by each contributor.</p>    
-	<p class="welcome_p">CoProjects is itself an open project at its first stages.</p>
+	<p class="welcome_p">CoProjects is itself an open project at its first stages. Contributions are welcome!</p>
 	<p class="welcome_p"><a href="https://docs.google.com/document/d/1C9dCnPbKEZzCqaLYjmhsYIv0t0ehlaRbzwRaMZtzNNA/edit?usp=sharing">Learn more </a></p>
 </div>
 
