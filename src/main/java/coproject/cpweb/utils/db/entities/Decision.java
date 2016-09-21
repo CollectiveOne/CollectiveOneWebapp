@@ -34,12 +34,12 @@ public class Decision {
 	private Timestamp creationDate;
 	private String fromState;
 	private String toState;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Project project = new Project();
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private User creator;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private DecisionRealm decisionRealm = new DecisionRealm();
 
 	@OneToMany(cascade=CascadeType.ALL)

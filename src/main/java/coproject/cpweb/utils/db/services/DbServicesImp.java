@@ -203,7 +203,10 @@ public class DbServicesImp {
 		bid.setAssign(assign_bid);
 		bid.setAccept(accept_bid);
 
-		assign_bid.setCreator(userDao.get("coprojects"));
+		User coprojects = userDao.get("coprojects");
+		userDao.save(coprojects);
+		
+		assign_bid.setCreator(coprojects);
 		assign_bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		assign_bid.setDescription("assign bid "+bid.getId()+" of cbtion:"+bid.getCbtion().getId()+" to:"+bid.getCreator().getUsername());
 		assign_bid.setVerdict(1);
@@ -215,7 +218,7 @@ public class DbServicesImp {
 		assign_bid.setType(DecisionType.BID);
 		assign_bid.setBid(bid);
 		
-		accept_bid.setCreator(userDao.get("coprojects"));
+		accept_bid.setCreator(coprojects);
 		accept_bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		accept_bid.setDescription("accept bid "+bid.getId()+" of cbtion:"+bid.getCbtion().getId()+" to:"+bid.getCreator().getUsername());
 		accept_bid.setVerdict(1);

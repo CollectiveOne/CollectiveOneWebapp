@@ -35,17 +35,8 @@ public class UserDao extends BaseDao {
 	public User get(String username) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(User.class);
 		query.add(Restrictions.eq("username", username));
-		
-		@SuppressWarnings("unchecked")
-		List<User> res = (List<User>) query.list();
-		
-		User user;
-		if(res.size() > 0)
-			user = res.get(0);
-		else
-			user = null;
-		
-		return user;
+
+		return (User) query.uniqueResult();
 	}
 	
 	public Project getProjectContributed(int userId, int projectId) {

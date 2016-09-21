@@ -23,7 +23,7 @@ public class DecisionRealm {
 	private int id;
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Voter> voters = new ArrayList<Voter>();
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	private Project project;
 	
 	public int getId() {
