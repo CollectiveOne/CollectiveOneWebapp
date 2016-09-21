@@ -168,19 +168,36 @@ public class DbServicesImp {
 		DecisionRealm realm = new DecisionRealm();
 		decisionRealmDao.save(realm);
 		realm.setProject(project);
-
+	}
+	
+	@Transactional
+	public void projectStart(String projectName) {
+		
+		User coprojects = userDao.get("coprojects");
+		userDao.save(coprojects);
+		
+		Project project = projectDao.get(projectName);
+		projectDao.save(project);
+		
+		User creator = project.getCreator();
+		userDao.save(creator);
+		
+		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
+		decisionRealmDao.save(realm);
+		
 		/* An accepted cbtion is added to the project to the contributor */
 		Cbtion cbtion = new Cbtion();
 
 		cbtion.setCreator(creator);
 		creator.getCbtionsCreated().add(cbtion);
-		userDao.save(creator);
-
+		
 		cbtion.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		cbtion.setTitle("Create project " + project.getName());
 		cbtion.setDescription("Start contribution");
 		cbtion.setProject(project);
 
+		cbtionDao.save(cbtion);
+		
 		/* Bids and decisions are created for consistency */
 		Bid bid = new Bid();
 		bidDao.save(bid);
@@ -203,12 +220,9 @@ public class DbServicesImp {
 		bid.setAssign(assign_bid);
 		bid.setAccept(accept_bid);
 
-		User coprojects = userDao.get("coprojects");
-		userDao.save(coprojects);
-		
 		assign_bid.setCreator(coprojects);
 		assign_bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		assign_bid.setDescription("assign bid "+bid.getId()+" of cbtion:"+bid.getCbtion().getId()+" to:"+bid.getCreator().getUsername());
+		assign_bid.setDescription("assign bid to cbtion:"+bid.getCbtion().getTitle()+" by:"+bid.getCreator().getUsername());
 		assign_bid.setVerdict(1);
 		assign_bid.setState(DecisionState.CLOSED_ACCEPTED);
 		assign_bid.setDecisionRealm(realm);
@@ -220,7 +234,7 @@ public class DbServicesImp {
 		
 		accept_bid.setCreator(coprojects);
 		accept_bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		accept_bid.setDescription("accept bid "+bid.getId()+" of cbtion:"+bid.getCbtion().getId()+" to:"+bid.getCreator().getUsername());
+		accept_bid.setDescription("accept bid to cbtion:"+bid.getCbtion().getTitle()+" by:"+bid.getCreator().getUsername());
 		accept_bid.setVerdict(1);
 		accept_bid.setState(DecisionState.CLOSED_ACCEPTED);
 		accept_bid.setDecisionRealm(realm);

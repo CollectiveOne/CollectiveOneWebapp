@@ -71,7 +71,9 @@ public class ProjectNew extends ActionSupport implements SessionAware {
 	}
 	
 	public void validate() {
-		
+		if(projectDto.getName().contains(" ")) {
+			addFieldError("project name", "cant include spaces");
+		}
 	}
 	
 	/* Execute */
@@ -86,6 +88,8 @@ public class ProjectNew extends ActionSupport implements SessionAware {
 		}
 			
 		dbServices.projectCreate(projectDto);
+		dbServices.projectStart(projectDto.getName());
+		
 		res = true;
 		
 		// updated logged user data with new projects and send it back as parameter

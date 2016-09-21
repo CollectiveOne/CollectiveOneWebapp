@@ -35,7 +35,7 @@ public class Project {
 	private String description;
 	private Timestamp creationDate;
 	
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	private User creator;
 	
 	@OneToMany(cascade=CascadeType.ALL)

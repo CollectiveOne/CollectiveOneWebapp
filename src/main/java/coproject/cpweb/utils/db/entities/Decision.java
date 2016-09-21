@@ -34,9 +34,9 @@ public class Decision {
 	private Timestamp creationDate;
 	private String fromState;
 	private String toState;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	private Project project = new Project();
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	private User creator;
 
 	@ManyToOne(cascade = CascadeType.ALL)
