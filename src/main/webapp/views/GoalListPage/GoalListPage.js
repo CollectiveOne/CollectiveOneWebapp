@@ -57,6 +57,8 @@ GoalListPage.prototype.GoalsReceivedCallback = function(data) {
 	
 	this.filter.resSet = data.resSet;
 	this.filter.updateResSet();
+
+	UpdateBtns();
 }
 
 GoalListPage.prototype.drawGoals = function() {

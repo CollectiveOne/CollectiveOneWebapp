@@ -58,6 +58,8 @@ CbtionListPage.prototype.CbtionsReceivedCallback = function(data) {
 
 	this.filter.resSet = data.resSet;
 	this.filter.updateResSet();
+
+	UpdateBtns();
 }
 
 CbtionListPage.prototype.drawCbtions = function() {

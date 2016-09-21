@@ -22,6 +22,7 @@ DecisionNewPage.prototype.draw = function() {
 	if (GLOBAL.sessionData.userLogged) {
 		this.container.empty();
 
+		this.container.append("<h3>Create new decision</h3>")
 		this.append_project_selector('project_select');
 		this.append_text_area('decisionDescription', 'Description', '');
 		

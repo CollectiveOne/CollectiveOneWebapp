@@ -29,6 +29,7 @@ ProjectNewPage.prototype.draw = function() {
 	if (GLOBAL.sessionData.userLogged) {
 		this.container.empty();
 
+		this.container.append("<h3>Create new project</h3>")
 		this.append_input('name', 'Name', '');
 		this.append_text_area('description', 'Description','');
 

@@ -48,7 +48,6 @@ DecisionListPage.prototype.init = function() {
 			filters);
 
 	this.filter.updateData();
-
 }
 
 DecisionListPage.prototype.decisionsReceivedCallback = function(data) {
@@ -57,6 +56,8 @@ DecisionListPage.prototype.decisionsReceivedCallback = function(data) {
 	
 	this.filter.resSet = data.resSet;
 	this.filter.updateResSet();
+
+	UpdateBtns();
 }
 
 DecisionListPage.prototype.drawDecisions = function() {

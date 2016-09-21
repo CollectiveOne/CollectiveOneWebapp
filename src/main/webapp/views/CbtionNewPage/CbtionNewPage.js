@@ -22,6 +22,8 @@ CbtionNewPage.prototype.draw = function() {
 	if (GLOBAL.sessionData.userLogged) {
 		this.container.empty();
 
+		this.container.append("<h3>Create new contribution</h3>")
+		
 		this.append_project_selector('project_select',this.projectSelectorDrawn,this);
 		this.append_input('title', 'Title', '');
 		this.append_text_area('description', 'Description','');

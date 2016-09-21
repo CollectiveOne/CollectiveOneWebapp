@@ -11,9 +11,6 @@
 
 #filter_bar .filter_div_btn {
 	height: 25px;
-	background-color: #cccccc;
-	cursor:pointer;
-	border-radius:5px;
 	float: left;
 }
 
@@ -23,12 +20,12 @@
 	vertical-align: middle;
 	margin-top:0px;
 	line-height: 25px;
-	font-size: 14px;
+	font-size: 11pt;
 	font-style: normal;
 }
 
 #filter_bar #filter_btn {
-	width:200px;
+	width: calc(20% - 5px - 15px);
 }
 
 #filter_bar #page_btns {
@@ -40,6 +37,8 @@
 	width:120px;
 	float: right;
 	margin-right:5px;
+	background-color: #cccccc;
+	border-radius:5px;
 }
 
 #filter_bar #page_btns #back_page {

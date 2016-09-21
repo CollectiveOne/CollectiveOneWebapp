@@ -22,6 +22,7 @@ GoalNewPage.prototype.draw = function() {
 	if (GLOBAL.sessionData.userLogged) {
 		this.container.empty();
 
+		this.container.append("<h3>Create new goal</h3>")
 		this.append_project_selector('project_select',this.projectSelectorDrawn,this);
 		this.container.append(	"<div class=field id=superGoalTag_div>"+
 				"<p class=field_name_p>Parent Goal</p>"+

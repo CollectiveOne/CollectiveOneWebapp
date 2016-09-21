@@ -7,7 +7,11 @@ function CopDocReadyCommon(callbackFun,callbackObj) {
 	GLOBAL.sessionData.init(callbackFun,callbackObj);
 
 	$("#logo").click(function() {
-		window.location = 'CbtionListPage.action';
+		window.location = 'WelcomePage.action';
+	});
+	
+	$("#welcome").click(function() {
+		window.location = 'WelcomePage.action';
 	});
 	
 	$("#cbtion_list").click(function() {
@@ -40,6 +44,18 @@ function CopDocReadyCommon(callbackFun,callbackObj) {
 	
 	$("#activity_page").click(function() {
 		window.location = 'ActivityListPage.action';
+	});
+
+	UpdateBtns();
+}
+
+
+function UpdateBtns() {
+	$(".cp_btn_dark").hover(function() { 
+		$(this).addClass("cp_btn_dark_hover") 
+	}, 
+	function() { 
+		$(this).removeClass("cp_btn_dark_hover") 
 	});
 }
 
