@@ -52,8 +52,22 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 
 	$("#newbid_datepicker",this.container).datepicker();
 	$("#newbid_submit_div",this.container).click(this.bidNew.bind(this));
+	
+	if(this.cbtion.ncomments > 0) {
+		$("#show_comments_btn",this.container).append("<p>show comments ("+this.cbtion.ncomments+")</p>")
+	} else {
+		$("#show_comments_btn",this.container).append("<p>show comments</p>")
+	}
+	
+	$("#show_comments_btn",this.container).click(this.showCommentsClick.bind(this));
 
 	this.updateBids();
+}
+
+CbtionBoxComplete.prototype.showCommentsClick = function() {
+	$("#comments_box_container",this.container).toggle();
+	var commentsBox = new CommentsBox($("#comments_box_container",this.container),{cbtionId: this.cbtion.id});
+	commentsBox.updateData();
 }
 
 CbtionBoxComplete.prototype.promoteUpClick = function() {
@@ -101,8 +115,6 @@ CbtionBoxComplete.prototype.drawBids = function() {
 		if(ix % 2 == 1) $("#bids_div",this.container).append($("<div class=bid_div_spacer></div>"));
 		
 		$("#bids_div",this.container).append($("<div class=bid_div id=bid_"+ix+"_div></div>"));
-		
-		
 		
 		var bidBox = new BidBox("#bid_"+ix+"_div",this.cbtion.bids[ix], this.cbtion.projectName);
 		bidBox.draw();

@@ -16,6 +16,7 @@ import coproject.cpweb.utils.db.entities.dtos.ActivityDto;
 import coproject.cpweb.utils.db.entities.dtos.ArgumentDto;
 import coproject.cpweb.utils.db.entities.dtos.BidDto;
 import coproject.cpweb.utils.db.entities.dtos.CbtionDto;
+import coproject.cpweb.utils.db.entities.dtos.CommentDto;
 import coproject.cpweb.utils.db.entities.dtos.DecisionDto;
 import coproject.cpweb.utils.db.entities.dtos.GoalDto;
 import coproject.cpweb.utils.db.entities.dtos.ProjectDto;
@@ -68,6 +69,9 @@ public class DbServicesImp {
 	
 	@Autowired
 	protected ActivityDao activityDao;
+	
+	@Autowired
+	protected CommentDao commentDao;
 	
 
 
@@ -682,6 +686,16 @@ public class DbServicesImp {
 		resStatus.setSuccess(true);
 		
 		return resStatus;		
+	}
+	
+	@Transactional
+	public List<CommentDto> cbtionGetCommentsDtos(int cbtionId) {
+		List<Comment> comments = cbtionDao.getCommentsSorted(cbtionId);
+		List<CommentDto> commentsDtos = new ArrayList<CommentDto>();
+		for (Comment comment : comments) {
+			commentsDtos.add(comment.toDto());
+		}
+		return commentsDtos;
 	}
 
 	@Transactional
@@ -1343,6 +1357,86 @@ public class DbServicesImp {
 		}
 
 		return activityDtosRes;
+	}
+	
+	@Transactional
+	public ResStatus commentCbtionCreate(CommentDto commentDto) {
+
+		User creator = userDao.get(commentDto.getCreatorUsername());
+		Cbtion cbtion = cbtionDao.get(commentDto.getCbtionId());
+		
+		Comment parent = null;
+		
+		if(commentDto.getParentId() != 0) {
+			parent = commentDao.get(commentDto.getParentId());
+		}
+		
+		Comment comment = new Comment();
+		
+		comment.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		comment.setCreator(creator);
+		comment.setContent(commentDto.getContent());
+		
+		
+		if(parent != null) {
+			parent.getReplies().add(comment);
+			comment.setParent(parent);
+			commentDao.save(parent);
+		} else {
+			cbtion.getComments().add(comment);
+		}
+
+		comment.setCbtion(cbtion);
+		
+		cbtionDao.save(cbtion);
+		commentDao.save(comment);
+		
+		ResStatus resStatus = new ResStatus();
+		
+		resStatus.setSuccess(true);
+		resStatus.setMsg("comment saved");
+		
+		return resStatus;
+	}
+	
+	@Transactional
+	public List<CommentDto> commentGetRepliesDtos(int commentId) {
+		List<Comment> replies = commentDao.getRepliesSorted(commentId);
+		List<CommentDto> repliesDtos = new ArrayList<CommentDto>();
+		for (Comment comment : replies) {
+			repliesDtos.add(comment.toDto());
+		}
+		return repliesDtos;
+	}
+	
+	
+	@Transactional
+	public ResStatus commentPromote(int commentId, int userId, boolean promoteUp) {
+		ResStatus resStatus = new ResStatus();
+		
+		Comment comment = commentDao.get(commentId);
+		commentDao.save(comment);
+		
+		Promoter promoter = promoterDao.getOfComment(commentId, userId);
+		
+		if(promoter == null) {
+			promoter = new Promoter();
+			promoter.setUser(userDao.get(userId));
+			comment.getPromoters().add(promoter);
+		}
+		
+		promoter.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		promoter.setPromoteUp(promoteUp);
+		
+		if(promoteUp) resStatus.setMsg("comment promoted up");
+		else resStatus.setMsg("comment promoted down");
+		
+		/* update relevance to order results */
+		comment.setRelevance(commentDao.countPromotersDiff(commentId));
+		
+		resStatus.setSuccess(true);
+		
+		return resStatus;		
 	}
 	
 }

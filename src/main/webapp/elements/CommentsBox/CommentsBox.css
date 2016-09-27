@@ -1,0 +1,66 @@
+#comments_div {
+	width: calc(100%);
+	clear:none;
+	overflow: auto;
+	padding-top: 5px;
+}
+
+#comments_div #new_comment_btn {
+	width: 250px;
+	float: right;
+	clear:both;
+	margin-right: 5px;
+}
+
+#comments_div #new_comment_form {
+	width: calc(100% - 30px);
+	float:left;
+	overflow:auto;
+	margin-left: 25px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	display: none;
+	margin-right: 5px;
+}
+
+#comments_div #replies_elements {
+	margin-top: 10px;
+	margin-bottom: 5px;
+	display:none;
+	float: left;
+	width: 100%;
+}
+
+
+#comments_div #new_comment_content {
+	width: calc(100%);
+	min-height:60px;
+	float:left;
+	overflow:auto;
+	border-radius:5px;
+	resize: vertical;
+}
+
+#comments_div #new_comment_save {
+	width: 150px;
+	float:right;
+	height: 15px;
+	margin-top: 5px;
+}
+
+
+#comments_div #comments_list_container {
+	width: 100%;
+	float: left;
+	margin-top: 10px;
+	max-height: 500px;
+	overflow-y: visible;
+}
+
+#comments_div .comment_item_div {
+	width: calc(100%);
+	float: left;
+	margin-top: 5px;
+}
+
+

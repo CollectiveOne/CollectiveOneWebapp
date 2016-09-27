@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Cbtion;
 import coproject.cpweb.utils.db.entities.CbtionState;
+import coproject.cpweb.utils.db.entities.Comment;
 import coproject.cpweb.utils.db.services.Filters;
 import coproject.cpweb.utils.db.services.ObjectListRes;
 
@@ -101,5 +102,24 @@ public class CbtionDao extends BaseDao {
 		
 		return (int)(count + 0);
 	}	
+	
+	public List<Comment> getCommentsSorted(int cbtionId) {
+		Session session = sessionFactory.getCurrentSession();
+
+		Query query = session.createQuery(
+				"SELECT coms "
+						+" FROM Cbtion cbt "
+						+ "JOIN cbt.comments coms "
+						+ "WHERE cbt.id = :cId "
+						+ "ORDER BY coms.relevance DESC"
+				);
+		
+		query.setParameter("cId", cbtionId);
+				
+		@SuppressWarnings("unchecked")
+		List<Comment> res = (List<Comment>) query.list();
+		
+		return res;
+	}
 	
 }

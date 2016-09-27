@@ -55,6 +55,10 @@ public class Cbtion {
 	private List<Promoter> promoters = new ArrayList<Promoter>();
 	private int relevance;
 	
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "CBTIONS_COMMENTS")
+	private List<Comment> comments = new ArrayList<Comment>();
+	
 	public CbtionDto toDto() {
 		CbtionDto dto = new CbtionDto();
 		
@@ -72,6 +76,7 @@ public class Cbtion {
 		dto.setAssignedPpoints(assignedPpoints);
 		if(openDec != null) dto.setOpenDec(openDec.toDto());
 		dto.setRelevance(relevance);
+		dto.setNcomments(comments.size());
 		
 		return dto;
 	}
@@ -167,6 +172,11 @@ public class Cbtion {
 	public void setRelevance(int relevance) {
 		this.relevance = relevance;
 	}
-	
+	public List<Comment> getComments() {
+		return comments;
+	}
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
 	
 }

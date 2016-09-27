@@ -25,6 +25,7 @@ public class CpAction extends ActionSupport  implements SessionAware {
 	
 	/* Output parameters  */
 	public ResStatus resStatus = new ResStatus();
+	
 	public ResStatus getResStatus() {
 		return resStatus;
 	}

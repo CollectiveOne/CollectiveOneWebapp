@@ -35,5 +35,22 @@ public class PromoterDao extends BaseDao {
 
 		return (Promoter) query.uniqueResult();
 	}
+	
+	public Promoter getOfComment(int commentId, int userId) {
+		Session session = sessionFactory.getCurrentSession();
+
+		Query query = session.createQuery(
+				" SELECT prom "
+						+ "FROM Comment com "
+						+ "JOIN com.promoters prom "
+						+ "WHERE com.id = :cId "
+						+ "AND prom.user.id = :uId"
+				);
+
+		query.setParameter("cId", commentId);
+		query.setParameter("uId", userId);
+
+		return (Promoter) query.uniqueResult();
+	}
 
 }

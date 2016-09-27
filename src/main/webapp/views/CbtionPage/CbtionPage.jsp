@@ -11,6 +11,10 @@
 <link rel="stylesheet" type="text/css" href="../elements/ReviewsElement/ReviewsElement.css" />
 <script type="text/javascript" src="../elements/ReviewsElement/ReviewItem.js"></script>
 <link rel="stylesheet" type="text/css" href="../elements/ReviewsElement/ReviewItem.css" />
+<script type="text/javascript" src="../elements/CommentsBox/CommentsBox.js"></script>
+<link rel="stylesheet" type="text/css" href="../elements/CommentsBox/CommentsBox.css" />
+<script type="text/javascript" src="../elements/CommentsBox/CommentItem.js"></script>
+<link rel="stylesheet" type="text/css" href="../elements/CommentsBox/CommentItem.css" />
 <script type="text/javascript" src="../elements/CbtionBoxComplete/CbtionBoxComplete.js"></script>
 <link rel="stylesheet" type="text/css" href="../elements/CbtionBoxComplete/CbtionBoxComplete.css" />
 <link rel="stylesheet" type="text/css" href="../external/jquery-ui-datepicker.css"/>

@@ -20,6 +20,7 @@ public class CbtionDto {
 	private String goalTag;
 	private double assignedPpoints;	
 	private DecisionDto openDec;
+	private int ncomments; 
 	
 	public Cbtion toCbtion(User creator, Project project) {
 		Cbtion cbtion = new Cbtion();
@@ -116,4 +117,11 @@ public class CbtionDto {
 	public void setOpenDec(DecisionDto openDec) {
 		this.openDec = openDec;
 	}
+	public int getNcomments() {
+		return ncomments;
+	}
+	public void setNcomments(int ncomments) {
+		this.ncomments = ncomments;
+	}
+	
 }

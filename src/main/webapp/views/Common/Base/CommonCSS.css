@@ -11,6 +11,7 @@ body {
 	min-width: 600px;
 	color:#545454;
 	font-family: "arial",sans-serif;
+	padding: 10px;
 }
 
 #container p {
@@ -21,7 +22,7 @@ body {
 	clear:both;
 	font-family: "arial",sans-serif;
 	color: #545454;
-	font-size: 11pt;
+	font-size: 16px;
 	font-style: normal;
 }
 
@@ -89,7 +90,7 @@ body {
 }
 
 #container .cp_btn_dark p {
-	font-size:12px;
+	font-size: 12px;
 }
 
 #container .cp_box_gray_thick {

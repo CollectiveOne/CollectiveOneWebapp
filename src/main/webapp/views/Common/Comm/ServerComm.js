@@ -837,6 +837,107 @@ ServerComm.prototype = {
 			});
 		},
 
+		commentsGetOfCbtion : function(cbtionId,callbackFunction,callbackObj) {
+
+			var data = {
+				'cbtionId' : cbtionId
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/CommentsGetOfCbtion',
+				data : datastr,
+				dataType : "json",
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						// showReqOutput(data.resStatus);
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
+		commentNew : function(commentDto,callbackFunction,callbackObj) {
+
+			var data = {
+					'commentDto' : commentDto
+			};
+
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/CommentCbtionNew',
+				data : datastr,
+				dataType : "json",
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						showReqOutput(data.resStatus);
+						callbackFunction.call(callbackObj,data); 
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
+		commentGetReplies : function(commentId,callbackFunction,callbackObj) {
+
+			var data = {
+				'commentId' : commentId
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/CommentGetReplies',
+				data : datastr,
+				dataType : "json",
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						// showReqOutput(data.resStatus);
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+		
+		commentPromote : function(commentId,promoteUp,callbackFunction,callbackObj) {
+			//TODO: update
+			var data = {
+					'commentId' : commentId,
+					'promoteUp' : promoteUp
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/CommentPromote',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						showReqOutput(data.resStatus);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
 		reviewNew : function(reviewDto,bidId,callbackFunction,callbackObj) {
 
 			var data = {

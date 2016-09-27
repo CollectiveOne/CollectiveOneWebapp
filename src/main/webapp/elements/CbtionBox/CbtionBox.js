@@ -54,9 +54,13 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 }
 
 CbtionBox.prototype.promoteUpClick = function() {
-	GLOBAL.serverComm.cbtionPromote(this.cbtion.id,true,this.cbtionReceivedCallback,this);
+	GLOBAL.serverComm.cbtionPromote(this.cbtion.id,true,this.promotionSentCallback,this);
 }
 
 CbtionBox.prototype.promoteDownClick = function() {
-	GLOBAL.serverComm.cbtionPromote(this.cbtion.id,false,this.cbtionReceivedCallback,this);
+	GLOBAL.serverComm.cbtionPromote(this.cbtion.id,false,this.promotionSentCallback,this);
+}
+
+CbtionBox.prototype.promotionSentCallback = function() {
+	
 }
