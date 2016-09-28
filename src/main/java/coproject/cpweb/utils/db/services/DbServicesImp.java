@@ -930,15 +930,6 @@ public class DbServicesImp {
 			case OPEN:
 				cbtion.setState(CbtionState.ASSIGNED);
 				
-				Activity actCb = new Activity();
-				actCb.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				actCb.setCbtion(cbtion);
-				actCb.setType(ActivityType.CBTION);
-				actCb.setProject(cbtion.getProject());
-				actCb.setEvent("assigned");
-				activityDao.save(actCb);	
-				
-				
 				break;
 			default:
 				break;
@@ -1016,14 +1007,6 @@ public class DbServicesImp {
 				
 				act.setEvent("accepted");
 				activityDao.save(act);
-				
-				Activity actCb = new Activity();
-				actCb.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				actCb.setCbtion(cbtion);
-				actCb.setType(ActivityType.CBTION);
-				actCb.setProject(cbtion.getProject());
-				actCb.setEvent("accepted");
-				activityDao.save(actCb);	
 				
 				break;
 				
