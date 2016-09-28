@@ -1,6 +1,6 @@
 .cbtion_div {
 	/* background-color: #ccddff; */
-	height: 100px;
+	min-height: 100px;
 	width:calc(100% - 6px);
 	margin-top: 6px;
 	clear:both;
@@ -13,7 +13,7 @@
 
 .cbtion_div #promotion_div {
 	width:25px;
-	height:100%;
+	height: 100px;
 	float:left;
 	margin-top: 0px;
 	text-align: center;
@@ -43,23 +43,23 @@
 
 .cbtion_div #cb_left_div {
 	width: calc(100% - 25px - 220px);
-	height:100%;
+	height: 100px;
 	float:left;
 	margin-top: 0px;
 }
 
 .cbtion_div #cb_center_div {
 	width:0px;
-	height:100%;
+	height: 100px;
 	float:left;
 	margin-top: 0px;
 }
 
 .cbtion_div #cb_right_div {
 	width: 220px;
-	height:100%;
+	height: 100px;
 	float:left;
-	margin-top: 0px;
+	margin-top:6px;
 }
 
 .cbtion_div #title_div {
@@ -106,10 +106,6 @@
 }
 
 
-.cbtion_div #cb_right_div {
-	margin-top:6px;
-}
-
 .cbtion_div #cb_right_div #cbtion_meta_data_div a {
 	font-size: 10pt;
 	cursor:pointer;
@@ -124,7 +120,6 @@
 }
 
 .cbtion_div #creator_div {
-	height: 15px;
 	float:left;
 	clear:both;
 }
@@ -143,9 +138,33 @@
 	margin-top: 3px;
 }
 
+.cbtion_div #status_desc_div .status_accepted_p {
+	font-size:14px;
+}
+
 .cbtion_div #project_div {
 	height: 15px;
 	float:left;
 	clear:both;
 }
+
+.cbtion_div #cbtion_show_reviews {
+	margin-top: 10px;
+	height:15px;
+	width:100%;
+}
+
+.cbtion_div #cbtion_reviews_div {
+	float: left;
+	overflow: auto;
+	margin-bottom: 10px;
+	margin-left: 5px;
+	width: 100%;
+}
+
+.cbtion_div .cbtion_review_container {
+	width: calc(50% - 7px );
+}
+
+
 

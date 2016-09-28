@@ -6,6 +6,7 @@ public class Filters {
 	private List<String> projectNames;
 	private List<String> stateNames;
 	private List<String> creatorUsernames;
+	private int contributorId;
 	private String keyw;
 	private String sortBy;
 	private int page;
@@ -29,6 +30,12 @@ public class Filters {
 	}
 	public void setCreatorUsernames(List<String> creatorUsernames) {
 		this.creatorUsernames = creatorUsernames;
+	}
+	public int getContributorId() {
+		return contributorId;
+	}
+	public void setContributorId(int contributorId) {
+		this.contributorId = contributorId;
 	}
 	public String getKeyw() {
 		return keyw;

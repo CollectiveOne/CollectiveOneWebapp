@@ -697,6 +697,12 @@ public class DbServicesImp {
 		}
 		return commentsDtos;
 	}
+	
+	@Transactional
+	public List<ReviewDto> cbtionGetReviewsDtos(int cbtionId) {
+		Bid bid = cbtionDao.getAcceptedBid(cbtionId);
+		return bidGetReviewsDtos(bid.getId());
+	}
 
 	@Transactional
 	public void bidSave(Bid bid, int cbtionId) {

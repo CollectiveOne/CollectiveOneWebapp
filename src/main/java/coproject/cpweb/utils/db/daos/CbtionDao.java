@@ -9,6 +9,8 @@ import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
+import coproject.cpweb.utils.db.entities.Bid;
+import coproject.cpweb.utils.db.entities.BidState;
 import coproject.cpweb.utils.db.entities.Cbtion;
 import coproject.cpweb.utils.db.entities.CbtionState;
 import coproject.cpweb.utils.db.entities.Comment;
@@ -54,6 +56,13 @@ public class CbtionDao extends BaseDao {
 		}
 		
 		q.add(stateDisj);
+		
+		/* if contributorUsername requested */
+		int contributorId = filters.getContributorId();
+		if(contributorId != 0) {
+			q.createAlias("contributor","cont")
+				.add(Restrictions.eq("cont.id",contributorId));
+		}
 		
 		return getObjectsAndResSet(q, filters, Cbtion.class);
 	}
@@ -118,6 +127,19 @@ public class CbtionDao extends BaseDao {
 				
 		@SuppressWarnings("unchecked")
 		List<Comment> res = (List<Comment>) query.list();
+		
+		return res;
+	}
+	
+	public Bid getAcceptedBid(int cbtionId) {
+		Session session = sessionFactory.getCurrentSession();
+
+		Criteria q = session.createCriteria(Bid.class)
+				.createAlias("cbtion", "cbt")
+				.add(Restrictions.eq("state",BidState.ACCEPTED))
+				.add(Restrictions.eq("cbt.id",cbtionId));
+						
+		Bid res = (Bid) q.uniqueResult();
 		
 		return res;
 	}

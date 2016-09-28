@@ -5,6 +5,8 @@
 	<%@ include file="../Common/Base/CommonHead.jsp"%>
 	<script type="text/javascript" src="CbtionListPage/CbtionListPage.js"></script>
 	<link rel="stylesheet" type="text/css" href="CbtionListPage/CbtionListPage.css" />
+	<script type="text/javascript" src="../elements/CbtionList/CbtionList.js"></script>
+	<link rel="stylesheet" type="text/css" href="../elements/CbtionList/CbtionList.css"/>
 	<script type="text/javascript" src="../elements/FilterElement/FilterElement.js"></script>
 	<link rel="stylesheet" type="text/css" href="../elements/FilterElement/FilterElement.css"/>
 	<title>CoProject - Search Contributions</title>
@@ -16,8 +18,6 @@
 
 <%@ include file="../Common/Base/BodyOver.jsp"%>
 <div id="content_pane">
-	<div id="filter_container"></div>
-	<div id="list_of_elements"></div>
 </div>
 <%@ include file="../Common/Base/BodyBelow.jsp"%>
 

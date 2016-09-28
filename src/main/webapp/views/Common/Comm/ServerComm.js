@@ -812,6 +812,37 @@ ServerComm.prototype = {
 				}
 			});
 		},
+		
+		reviewNew : function(reviewDto,bidId,callbackFunction,callbackObj) {
+
+			var data = {
+					'bidId': bidId,
+					'reviewDto' : reviewDto
+			};
+
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/ReviewBidNew',
+				data : datastr,
+				dataType : "json",
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						if (data.res) {
+							showOutput(data.msg,"DarkGreen");
+							callbackFunction.call(callbackObj,data); 
+						} else {
+							showOutput(data.msg,"DarkRed");
+						}
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
 
 		reviewsGetOfBid : function(bidId,callbackFunction,callbackObj) {
 
@@ -823,6 +854,30 @@ ServerComm.prototype = {
 			$.ajax({
 				type : 'POST',
 				url : '../json/ReviewsGetOfBid',
+				data : datastr,
+				dataType : "json",
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+		
+		reviewsGetOfCbtion : function(cbtionId,callbackFunction,callbackObj) {
+
+			var data = {
+					'cbtionId' : cbtionId
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/ReviewsGetOfCbtion',
 				data : datastr,
 				dataType : "json",
 				contentType : 'application/json',
@@ -930,37 +985,6 @@ ServerComm.prototype = {
 				success : function(data, textStatus, jqXHR) {
 					if (data) {
 						showReqOutput(data.resStatus);
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-				}
-			});
-		},
-
-		reviewNew : function(reviewDto,bidId,callbackFunction,callbackObj) {
-
-			var data = {
-					'bidId': bidId,
-					'reviewDto' : reviewDto
-			};
-
-			var datastr = JSON.stringify(data);
-
-			$.ajax({
-				type : 'POST',
-				url : '../json/ReviewBidNew',
-				data : datastr,
-				dataType : "json",
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					if (data) {
-						if (data.res) {
-							showOutput(data.msg,"DarkGreen");
-							callbackFunction.call(callbackObj,data); 
-						} else {
-							showOutput(data.msg,"DarkRed");
-						}
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {

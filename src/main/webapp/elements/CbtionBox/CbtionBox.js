@@ -2,6 +2,7 @@ function CbtionBox(container_id,cbtionData) {
 	// Parent constructor
 	this.container = $(container_id);
 	this.cbtion = cbtionData;
+	this.conf = { showReviews: true };
 	this.init();
 };
 
@@ -23,31 +24,34 @@ CbtionBox.prototype.draw = function() {
 
 CbtionBox.prototype.CbtionBoxLoaded = function() {
 	
-	$(".cbtion_div #promotion_center_div",this.container).append(this.cbtion.relevance);
-	$(".cbtion_div #promotion_up_div",this.container).click(this.promoteUpClick.bind(this));
-	$(".cbtion_div #promotion_down_div",this.container).click(this.promoteDownClick.bind(this));
+	$("#promotion_center_div",this.container).append(this.cbtion.relevance);
+	$("#promotion_up_div",this.container).click(this.promoteUpClick.bind(this));
+	$("#promotion_down_div",this.container).click(this.promoteDownClick.bind(this));
 
-	$(".cbtion_div #title_div",this.container).append("<a href=CbtionPage.action?cbtionId="+ this.cbtion.id+">"+this.cbtion.title+"</a>");
-	$(".cbtion_div #description_div",this.container).append("<p>"+this.cbtion.description+"</p>");
-	$(".cbtion_div #product_div",this.container).append("<p>"+this.cbtion.product+"</p>");
+	$("#title_div",this.container).append("<a href=CbtionPage.action?cbtionId="+ this.cbtion.id+">"+this.cbtion.title+"</a>");
+	$("#description_div",this.container).append("<p>"+this.cbtion.description+"</p>");
+	$("#product_div",this.container).append("<p>"+this.cbtion.product+"</p>");
 	
-	$(".cbtion_div #project_div",this.container).append("<a href=ProjectPage.action?projectName="+this.cbtion.projectName+">"+this.cbtion.projectName+"</a>");
-	$(".cbtion_div #creator_div",this.container).append("<a href=UserPage.action?username="+this.cbtion.creatorUsername+">"+this.cbtion.creatorUsername+"</a>");
-	$(".cbtion_div #creator_div",this.container).append("<p> "+getTimeStrSince(this.cbtion.creationDate)+" ago</p>");
-	$(".cbtion_div #state_div",this.container).append("<p>"+this.cbtion.state+"</p>");
+	$("#project_div",this.container).append("<a href=ProjectPage.action?projectName="+this.cbtion.projectName+">"+this.cbtion.projectName+"</a>");
+	$("#state_div",this.container).append("<p>"+this.cbtion.state+"</p>");
 	
 	switch(this.cbtion.state) {
 		case "PROPOSED":
+			$("#creator_div",this.container).append("<p>created by</p>");	
+			$("#creator_div",this.container).append("<a href=UserPage.action?username="+this.cbtion.creatorUsername+">"+this.cbtion.creatorUsername+"</a>");
+			$("#creator_div",this.container).append("<p> "+getTimeStrSince(this.cbtion.creationDate)+" ago</p>");
 			var openDec = new DecisionBoxSmall($("#status_desc_div",this.container),this.cbtion.openDec, GLOBAL.sessionData.userLogged);		
 			openDec.draw();
 			break;
 
 		case "ACCEPTED":
-			$(".cbtion_div #status_desc_div",this.container).append("<p>contributed by "+
-				"<a href=UserPage.action?username="+this.cbtion.contributorUsername+">"+this.cbtion.contributorUsername+"</a>"+
+			$("#status_desc_div",this.container).append("<p>contributed by "+
+				"<a href=UserPage.action?username="+this.cbtion.contributorUsername+">"+this.cbtion.contributorUsername+"</a><br />"+
 				" for "+this.cbtion.assignedPpoints+" pps</p>");
 
-			$(".cbtion_div #status_desc_div p",this.container).css("font-size","10px");
+			$("#status_desc_div p",this.container).addClass("status_accepted_p");
+			if(this.conf.showReviews) this.showReviews();
+			
 			break;
 
 	}
@@ -64,3 +68,18 @@ CbtionBox.prototype.promoteDownClick = function() {
 CbtionBox.prototype.promotionSentCallback = function() {
 	
 }
+
+CbtionBox.prototype.showReviews = function() {
+	GLOBAL.serverComm.reviewsGetOfCbtion(this.cbtion.id,this.reviewsReceivedCallback,this);
+}
+
+CbtionBox.prototype.reviewsReceivedCallback = function(data) {
+	var reviews = data.reviewDtos;
+
+	for(var ix in reviews) {
+		$("#cbtion_reviews_div",this.container).append("<div id=cbtion_review_container"+ix+" class=cbtion_review_container></div>")
+		var review = new ReviewItem($("#cbtion_review_container"+ix,this.container),reviews[ix]);
+		review.draw();
+	}
+}
+
