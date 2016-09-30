@@ -29,10 +29,24 @@ ProjectPage.prototype.ProjectReceivedCallback = function(projectDto) {
 }
 
 ProjectPage.prototype.drawProject = function() {
-	$("#name_div",this.container).append($("<p id=project_name>"+this.project.name+"</p>"));
-	$("#description_div",this.container).append($("<p id=project_description>"+this.project.description+"</p>"));
-	$("#cbtions_div",this.container).append(
-			this.create_pap_str('project_cbtions','',this.project.nCbtions+' ',
-			'contributions', 'CbtionListPage.action?projectFilter=' + this.project.name,
-			''));
+	$("#project_name",this.container).append($("<p>"+this.project.name+"</p>"));
+	$("#project_description",this.container).append($("<p>"+this.project.description+"</p>"));
+	
+	this.updateContributors();
 }
+
+ProjectPage.prototype.updateContributors = function() {
+	GLOBAL.serverComm.projectContributorsGet(this.project.name,this.contributorsOfProjectGetReceivedCallback,this);
+}
+
+ProjectPage.prototype.contributorsOfProjectGetReceivedCallback = function(data) {
+	var usernamesAndPpps = data.usernamesAndPps;
+	var ppsTot = data.ppsTot;
+	for(var ix in usernamesAndPpps) {
+		var username = usernamesAndPpps[ix].username;
+		var pps = usernamesAndPpps[ix].pps;
+		var percentage = pps/ppsTot*100;
+		$("#contributors_list",this.container).append("<p><a href=../views/UserPage.action?username="+username+">"+username+"</a> with ("+floatToChar(percentage,2)+" %)</p>");
+	}
+}
+

@@ -2,6 +2,8 @@ package coproject.cpweb.utils.db.services;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import coproject.cpweb.utils.db.entities.dtos.ProjectDto;
 import coproject.cpweb.utils.db.entities.dtos.ReviewDto;
 import coproject.cpweb.utils.db.entities.dtos.ThesisDto;
 import coproject.cpweb.utils.db.entities.dtos.UserDto;
+import coproject.cpweb.utils.db.entities.dtos.UsernameAndPps;
 
 @Service
 @Component(value="dbServices")
@@ -258,7 +261,6 @@ public class DbServicesImp {
 		creator.getCbtionsAccepted().add(cbtion);
 		userDao.addProjectContributed(creator.getId(),project.getId());
 
-		project.getCbtions().add(cbtion);
 		project.getCbtionsAccepted().add(cbtion);
 		projectDao.addContributor(creator.getId(), project.getId());
 
@@ -298,6 +300,30 @@ public class DbServicesImp {
 	@Transactional
 	public double projectGetPpsTot(int projectId) {
 		return projectDao.projectGetPpsTot(projectId);
+	}
+	
+	@Transactional
+	public List<UsernameAndPps> projectContributorsAndPpsGet(int projectId) {
+		
+		Project project = projectDao.get(projectId);
+
+		List<UsernameAndPps> usernamesAndPps = new ArrayList<UsernameAndPps>();
+		
+		for(User contributor : project.getContributors()) {
+			UsernameAndPps usernameAndPps = new UsernameAndPps();
+			usernameAndPps.setUsername(contributor.getUsername());
+			usernameAndPps.setPps(userPpointsInProjectGet(contributor.getId(), project.getId()));
+			
+			usernamesAndPps.add(usernameAndPps);
+		}
+		
+		Collections.sort(usernamesAndPps, new Comparator<UsernameAndPps>(){
+		     public int compare(UsernameAndPps o1, UsernameAndPps o2){
+		        return Double.compare(o2.getPps(), o1.getPps());
+		     }
+		});
+		
+		return usernamesAndPps;
 	}
 	
 	@Transactional

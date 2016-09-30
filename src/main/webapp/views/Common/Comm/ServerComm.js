@@ -434,6 +434,33 @@ ServerComm.prototype = {
 				}
 			});
 		},
+		
+		projectContributorsGet : function(projectName,callbackFunction,callbackObj) {
+
+			var data = {
+					'projectName' : projectName
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/ProjectContributorsGet',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					} else {
+						showOutput(data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+					showOutput("error creating project");
+				}
+			});
+		},
 
 		bidsOfCbtionGet : function(cbtion_id,callbackFunction,callbackObj) {
 

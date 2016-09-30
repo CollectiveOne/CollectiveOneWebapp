@@ -15,15 +15,12 @@
 <%@ include file="../Common/Base/BodyOver.jsp"%>
 
 <div id="content_pane">
-	<div id="project_container">
-		<div id="name_div">
-			<p class="p_header">name:</p>
-		</div>
-		<div id="description_div">
-			<p class="p_header">description:</p>
-		</div>
-		<div id="cbtions_div">
-			<p class="p_header">contributions:</p>
+	<div id="project_container" class=cp_box_gray_thick>
+		<div id="project_name"></div>
+		<div id="project_description" class=cp_box_gray_slim></div>
+		<div id="project_contributors" class=cp_box_gray_slim>
+			<p class=marker>Contributors</p>
+			<div id="contributors_list"></div>
 		</div>
 	</div>
 </div>

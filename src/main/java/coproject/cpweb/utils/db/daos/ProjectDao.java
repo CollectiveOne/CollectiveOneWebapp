@@ -94,9 +94,7 @@ public class ProjectDao extends BaseDao {
 	}
 	
 	public double projectGetPpsTot(int projectId) {
-		Session session = sessionFactory.getCurrentSession();
-		
-		Project project = session.get(Project.class,projectId);
+		Project project = get(projectId);
 		
 		double ppsTot = 0.0;
 		for(Cbtion cbtion : project.getCbtionsAccepted()) {
@@ -104,4 +102,5 @@ public class ProjectDao extends BaseDao {
 		}
 		return ppsTot;
 	}
+
 }

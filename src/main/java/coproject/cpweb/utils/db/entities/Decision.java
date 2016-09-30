@@ -348,18 +348,18 @@ public class Decision {
 	}
 
 	public double estimateP(int[] ixs) {
-		double pc = 0;
+		double pest = 0;
 		double weight_cum = 0;
 
 		for (Integer ix : ixs) {
 			Thesis thesis = thesesCast.get(ix);
-			pc += thesis.getValue() * thesis.getWeight();
+			pest += thesis.getValue() * thesis.getWeight();
 			weight_cum += thesis.getWeight();
 		}
 
-		pc = pc / weight_cum;
+		pest = pest / weight_cum;
 
-		return pc;
+		return pest;
 	}
 
 	public void updateP() {

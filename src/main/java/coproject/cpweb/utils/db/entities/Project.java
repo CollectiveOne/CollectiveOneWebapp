@@ -39,10 +39,6 @@ public class Project {
 	private User creator;
 	
 	@OneToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "PROJECT_CBTIONS")
-	private List<Cbtion> cbtions = new ArrayList<Cbtion>();
-	
-	@OneToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "PROJECT_CBTIONSACCEPTED")
 	private List<Cbtion> cbtionsAccepted = new ArrayList<Cbtion>();
 	
@@ -58,7 +54,6 @@ public class Project {
 		dto.setCreatorUsername(creator.getUsername());
 		dto.setCreationDate(creationDate);
 		dto.setDescription(description);
-		dto.setnCbtions(cbtions.size());
 		dto.setnCbtionsAccepted(cbtionsAccepted.size());
 		dto.setnContributors(contributors.size());
 		
@@ -94,12 +89,6 @@ public class Project {
 	}
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
-	}
-	public List<Cbtion> getCbtions() {
-		return cbtions;
-	}
-	public void setCbtions(List<Cbtion> cbtions) {
-		this.cbtions = cbtions;
 	}
 	public List<Cbtion> getCbtionsAccepted() {
 		return cbtionsAccepted;

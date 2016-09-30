@@ -12,7 +12,6 @@ public class ProjectDto {
 	private String description;
 	private Timestamp creationDate;
 	private String creatorUsername;
-	private int nCbtions;
 	private int nCbtionsAccepted;
 	private double ppsTot;
 	private int nContributors;
@@ -56,12 +55,6 @@ public class ProjectDto {
 	}
 	public void setCreatorUsername(String creatorUsername) {
 		this.creatorUsername = creatorUsername;
-	}
-	public int getnCbtions() {
-		return nCbtions;
-	}
-	public void setnCbtions(int nCbtions) {
-		this.nCbtions = nCbtions;
 	}
 	public int getnCbtionsAccepted() {
 		return nCbtionsAccepted;
