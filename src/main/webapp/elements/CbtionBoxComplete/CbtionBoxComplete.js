@@ -79,15 +79,30 @@ CbtionBoxComplete.prototype.promoteDownClick = function() {
 }
 
 CbtionBoxComplete.prototype.bidNew = function (){
-	var bidData = { 
-			cbtionId:this.cbtion.id,
-			ppoints:$("#newbid_ppoints_in",this.container).attr('value'),
-			description:$("#newbid_description_in",this.container).attr('value'),
-			deliveryDate:Date.parse($("#newbid_datepicker",this.container).attr('value')),
-			creatorDto: GLOBAL.sessionData.userLogged
-		}; 
 	
-	GLOBAL.serverComm.bidNew(bidData,this.newBidSavedCallback,this);
+	if($("#newbid_ppoints_in",this.container).attr('value') != "") {
+		if($("#newbid_description_in",this.container).attr('value') != "") {
+			if($("#newbid_datepicker",this.container).attr('value') != "") {
+				var bidData = { 
+					cbtionId:this.cbtion.id,
+					ppoints:$("#newbid_ppoints_in",this.container).attr('value'),
+					description:$("#newbid_description_in",this.container).attr('value'),
+					deliveryDate:Date.parse($("#newbid_datepicker",this.container).attr('value')),
+					creatorDto: GLOBAL.sessionData.userLogged
+				}; 
+
+				GLOBAL.serverComm.bidNew(bidData,this.newBidSavedCallback,this);
+			} else {
+				showOutput("please select a delivery date","darkred");
+			}
+		} else {
+			showOutput("please add a description","darkred");
+		} 
+	} else {
+		showOutput("please chose yout bid price in pps","darkred");
+	}
+
+	
 }
 
 CbtionBoxComplete.prototype.newBidSavedCallback = function() {

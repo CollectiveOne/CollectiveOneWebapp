@@ -179,11 +179,16 @@
 
 #cbtion_div #new_bid_form_container {
 	display:none;
-	width: calc(100% - 20px - 6px);
-	height: 25px;
+	width: 360px;
 	clear:both;
 	margin-bottom: 3px;
 	margin-top: 10px;
+	overflow: auto;
+}
+
+#cbtion_div #new_bid_form_container #new_bid_form {
+	width: 100%;
+	overflow: auto;
 }
  
 #cbtion_div #new_bid_form_container #new_bid_form p {
@@ -197,25 +202,28 @@
 }
 
 #cbtion_div #new_bid_form_container #new_bid_form #newbid_username_div {
-	width:150px;
-	height:100%;
+	width: 100%;
+	height: 25px;
 	float:left;
 	border-radius:3px;
+	clear: both;
+	margin-bottom: 10px;
 }
 
 #cbtion_div #new_bid_form_container #new_bid_form #newbid_ppoints_div {
 	width: 60px;
-	height:100%;
+	height: 25px;
 	float:left;
 	border-radius:3px;
+	clear: both;
 }
 
 #cbtion_div #new_bid_form_container #new_bid_form #newbid_description_div {
-	width:200px;
-	height:100%;
+	width: calc(100% - 60px - 15px);
 	float:left;
 	border-radius:3px;
 	margin-left: 15px;
+	margin-bottom: 10px;
 }
 
 #cbtion_div #new_bid_form_container #new_bid_form #newbid_ppoints_in {
@@ -226,24 +234,22 @@
 }
 
 #cbtion_div #new_bid_form_container #new_bid_form #newbid_description_in {
-	float:right;
-	width:200px;
-	max-width: 200px;
-	max-height: 200px;
+	min-height: 100px;
 	resize: vertical;
-	height:100%;
 	border-radius:5px;
 	padding-top:3px;
 	padding-left: 6px;
+	width: 100%;
 }
 
 #cbtion_div #new_bid_form_container #new_bid_form #newbid_delivery_date_div {
 	width:100px;
-	height:100%;
+	height: 25px;
 	text-align:center;
 	border-radius: 5px;
-	float: left;
-	margin-left: 15px;
+	float: right;
+	clear: both;
+	margin-bottom: 10px;
 }
 
 #cbtion_div #new_bid_form_container #new_bid_form #newbid_delivery_date_div input {
@@ -256,12 +262,10 @@
 
 #cbtion_div #new_bid_form_container #new_bid_form #newbid_submit_div {
 	width:100px;
-	height: 100%;
+	height: 25px;
 	margin-left: 20px;
-	float:left;
-	border-radius:3px;
-	cursor:pointer;
-	background-color: #cccccc;
+	float: right;
+	clear: both;
 }
 
 #cbtion_div #new_bid_form_container #new_bid_form #newbid_submit_div p {
