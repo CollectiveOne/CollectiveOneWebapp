@@ -6,8 +6,10 @@ public class Filters {
 	private List<String> projectNames;
 	private List<String> stateNames;
 	private List<String> creatorUsernames;
-	private int contributorId;
+	private String contributorUsername;
 	private String keyw;
+	private String goalTag;
+	private boolean goalSubgoalsFlag;
 	private String sortBy;
 	private int page;
 	private int nperpage;
@@ -31,17 +33,29 @@ public class Filters {
 	public void setCreatorUsernames(List<String> creatorUsernames) {
 		this.creatorUsernames = creatorUsernames;
 	}
-	public int getContributorId() {
-		return contributorId;
+	public String getContributorUsername() {
+		return contributorUsername;
 	}
-	public void setContributorId(int contributorId) {
-		this.contributorId = contributorId;
+	public void setContributorUsername(String contributorUsername) {
+		this.contributorUsername = contributorUsername;
 	}
 	public String getKeyw() {
 		return keyw;
 	}
 	public void setKeyw(String keyw) {
 		this.keyw = keyw;
+	}
+	public String getGoalTag() {
+		return goalTag;
+	}
+	public void setGoalTag(String goalTag) {
+		this.goalTag = goalTag;
+	}
+	public boolean getGoalSubgoalsFlag() {
+		return goalSubgoalsFlag;
+	}
+	public void setGoalSubgoalsFlag(boolean goalSubgoalsFlag) {
+		this.goalSubgoalsFlag = goalSubgoalsFlag;
 	}
 	public String getSortBy() {
 		return sortBy;

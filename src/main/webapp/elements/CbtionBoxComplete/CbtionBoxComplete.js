@@ -10,18 +10,20 @@ CbtionBoxComplete.prototype.draw = function() {
 
 CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	
-	$("#cbtion_div #promotion_center_div",this.container).append(this.cbtion.relevance);
-	$("#cbtion_div #promotion_up_div",this.container).click(this.promoteUpClick.bind(this));
-	$("#cbtion_div #promotion_down_div",this.container).click(this.promoteDownClick.bind(this));
+	$("#promotion_center_div",this.container).append(this.cbtion.relevance);
+	$("#promotion_up_div",this.container).click(this.promoteUpClick.bind(this));
+	$("#promotion_down_div",this.container).click(this.promoteDownClick.bind(this));
 
-	$("#cbtion_div #title_div",this.container).append("<a href=CbtionPage.action?cbtionId="+ this.cbtion.id+">"+this.cbtion.title+"</a>");
-	$("#cbtion_div #description_div",this.container).append("<p>"+this.cbtion.description+"</p>");
-	$("#cbtion_div #product_div",this.container).append("<p>"+this.cbtion.product+"</p>");
+	$("#title_div",this.container).append("<a href=CbtionPage.action?cbtionId="+ this.cbtion.id+">"+this.cbtion.title+"</a>");
+	$("#description_div",this.container).append("<p>"+this.cbtion.description+"</p>");
 	
-	$("#cbtion_div #project_div",this.container).append("<a href=ProjectPage.action?projectName="+this.cbtion.projectName+">"+this.cbtion.projectName+"</a>");
-	$("#cbtion_div #creator_div",this.container).append("<a href=UserPage.action?username="+this.cbtion.creatorUsername+">"+this.cbtion.creatorUsername+"</a>");
-	$("#cbtion_div #creator_div",this.container).append("<p> "+getTimeStrSince(this.cbtion.creationDate)+" ago</p>");
-	$("#cbtion_div #state_div",this.container).append("<p>Current state: "+this.cbtion.state+"</p>");
+	$("#product_div",this.container).append("<p>"+this.cbtion.product+"</p>");
+	if(this.cbtion.goalTag)	$("#goal_div",this.container).append("<a href=../views/GoalPage.action?goalTag="+this.cbtion.goalTag+">#"+this.cbtion.goalTag+"</a>");
+	
+	$("#project_div",this.container).append("<a href=ProjectPage.action?projectName="+this.cbtion.projectName+">"+this.cbtion.projectName+"</a>");
+	$("#creator_div",this.container).append("<a href=UserPage.action?username="+this.cbtion.creatorUsername+">"+this.cbtion.creatorUsername+"</a>");
+	$("#creator_div",this.container).append("<p> "+getTimeStrSince(this.cbtion.creationDate)+" ago</p>");
+	$("#state_div",this.container).append("<p>Current state: "+this.cbtion.state+"</p>");
 	
 	switch(this.cbtion.state) {
 		case "PROPOSED":
@@ -30,7 +32,7 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 			break;
 
 		case "ACCEPTED":
-			$("#cbtion_div #status_desc_div",this.container).append("<p>contributed by "+
+			$("#status_desc_div",this.container).append("<p>contributed by "+
 				"<a href=UserPage.action?username="+this.cbtion.contributorUsername+">"+this.cbtion.contributorUsername+"</a>"+
 				" for "+this.cbtion.assignedPpoints+" pps</p>");
 

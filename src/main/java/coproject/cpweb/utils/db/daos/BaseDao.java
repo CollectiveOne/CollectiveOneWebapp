@@ -23,6 +23,14 @@ public class BaseDao {
 
 	@Autowired
 	SessionFactory sessionFactory;
+	
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	public int save(Object object) {
 		Session session = sessionFactory.getCurrentSession();
@@ -76,26 +84,30 @@ public class BaseDao {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria q = session.createCriteria(clazz);
 
-		if(filters.getProjectNames().size() > 0) {
-			q.createAlias("project", "proj");
-			List<String> projectNames = filters.getProjectNames();
-			Disjunction projDisj = Restrictions.disjunction();
-			for(String projectName:projectNames) {
-				projDisj.add( Restrictions.eq("proj.name", projectName));
+		if(filters.getProjectNames() != null) {
+			if(filters.getProjectNames().size() > 0) {
+				q.createAlias("project", "proj");
+				List<String> projectNames = filters.getProjectNames();
+				Disjunction projDisj = Restrictions.disjunction();
+				for(String projectName:projectNames) {
+					projDisj.add( Restrictions.eq("proj.name", projectName));
+				}
+				q.add(projDisj);
 			}
-			q.add(projDisj);
 		}
 
-		if(filters.getCreatorUsernames().size() > 0) {
-			q.createAlias("creator", "crea");
-			List<String> creatorUsernames = filters.getCreatorUsernames();
-			Disjunction userDisj = Restrictions.disjunction();
-			for(String creatorUsername:creatorUsernames) {
-				if(creatorUsername.length() > 0) {
-					userDisj.add( Restrictions.eq("crea.username", creatorUsername));
+		if(filters.getCreatorUsernames() != null) {
+			if(filters.getCreatorUsernames().size() > 0) {
+				q.createAlias("creator", "crea");
+				List<String> creatorUsernames = filters.getCreatorUsernames();
+				Disjunction userDisj = Restrictions.disjunction();
+				for(String creatorUsername:creatorUsernames) {
+					if(creatorUsername.length() > 0) {
+						userDisj.add( Restrictions.eq("crea.username", creatorUsername));
+					}
 				}
+				q.add(userDisj);	
 			}
-			q.add(userDisj);	
 		}
 
 		String keyw = filters.getKeyw();

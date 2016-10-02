@@ -1,5 +1,6 @@
 package coproject.cpweb.utils.db.daos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -48,15 +49,25 @@ public class GoalDao extends BaseDao {
 		return res;
 	}
 	
-	public List<String> getSuggestions(String query, int projectId) {
+	public List<String> getSuggestions(String query, List<String>  projectNames) {
 		Session session = sessionFactory.getCurrentSession();
 		
-		@SuppressWarnings("unchecked")
-		List<String> res = (List<String>) session.createCriteria(Goal.class)
+		Criteria q = session.createCriteria(Goal.class,"go")
 				.add(Restrictions.eq("state", GoalState.ACCEPTED))
-				.add(Restrictions.eq("project.id", projectId))
-				.add(Restrictions.ilike("goalTag", query, MatchMode.ANYWHERE))
-				.setProjection(Projections.property("goalTag"))
+				.add(Restrictions.ilike("goalTag", query, MatchMode.ANYWHERE));
+			
+		if(projectNames.size() > 0) {
+			q.createAlias("go.project", "pr");
+			
+			Disjunction prDisj = Restrictions.disjunction();
+			for(String projectName : projectNames) {
+				prDisj.add( Restrictions.eq("pr.name", projectName));
+			}
+			q.add(prDisj);
+		}
+		
+		@SuppressWarnings("unchecked")
+		List<String> res = q.setProjection(Projections.property("goalTag"))
 				.list();
 		
 		return res;
@@ -79,9 +90,9 @@ public class GoalDao extends BaseDao {
 		
 		boolean only_parent_goals = true;
 		
-		/* Only filter subgoals if showing accepted goals (as proposed subgoals would be hidden) */
-		if(filters.getStateNames().size() == 1) {
-			if(filters.getStateNames().get(0).equals("PROPOSED")) {
+		/* Only filter subgoals if showing accepted goals, otherwise nothing would be shown */
+		if(filters.getStateNames().size() > 0) {
+			if(!filters.getStateNames().contains("ACCEPTED")) {
 				only_parent_goals = false;
 			}
 		}
@@ -149,6 +160,32 @@ public class GoalDao extends BaseDao {
 		}
 		
 		return msg;
+	}
+	
+	public Goal getParent(int goalId) {
+		Session session = sessionFactory.getCurrentSession();
+
+		Query query = session.createQuery(
+						"  FROM Goal goalx "
+						+ "JOIN goalx.subgoals subgoalx "
+						+ "WHERE subgoalx.id = :gId "
+				);
+		
+		query.setParameter("gId", goalId);
+		
+		return (Goal) query.uniqueResult();
+	}
+	
+	public List<Goal> getAllParents(int goalId) {
+		
+		List<Goal> parents = new ArrayList<Goal>();
+		
+		Goal parent = getParent(goalId);
+		while(parent != null) {
+			parents.add(parent);
+			parent = getParent(parent.getId());
+		}
+		return parents;
 	}
 	
 }

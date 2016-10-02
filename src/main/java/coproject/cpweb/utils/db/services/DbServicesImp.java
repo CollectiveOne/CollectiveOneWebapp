@@ -424,8 +424,11 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
-	public List<String> goalGetSuggestions(String query, String projectName) {
-		return goalDao.getSuggestions(query, projectDao.get(projectName).getId());
+	public List<String> goalGetSuggestions(String query, List<String> projectNames) {
+		if(projectNames.size() == 0) {
+			projectNames = projectDao.getList();
+		}
+		return goalDao.getSuggestions(query, projectNames);
 	}
 	
 	@Transactional

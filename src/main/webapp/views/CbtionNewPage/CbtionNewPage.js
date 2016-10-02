@@ -49,13 +49,13 @@ CbtionNewPage.prototype.draw = function() {
 
 CbtionNewPage.prototype.projectSelectorUpdated = function() {
 	$('#goalTag_selector',this.container).autocomplete().clear();
-	$('#goalTag_selector',this.container).autocomplete().setOptions({params: {projectName: $("#project_select", this.container).val()}});
+	$('#goalTag_selector',this.container).autocomplete().setOptions({params: {projectNames: [$("#project_select", this.container).val()]}});
 }
 
 CbtionNewPage.prototype.projectSelectorDrawn = function() {
 	$('#goalTag_selector',this.container).autocomplete({
 		serviceUrl: '../json/GoalGetSuggestions.action',
-		params: {projectName: $("#project_select", this.container).val()}
+		params: {projectNames: [$("#project_select", this.container).val()]}
 	});
 }
 

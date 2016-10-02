@@ -8,15 +8,13 @@ $(document).ready(function() {
 function GoalPage(container_id) {
 	// Parent constructor
 	Page.call(this,container_id);
-	
-	this.goal;
 };
 
 //Inheritance
 GoalPage.prototype = Page.prototype;
 
 GoalPage.prototype.init = function() {
-	GLOBAL.goalPage.updateGoal(JSP_goalTag);
+	this.updateGoal(JSP_goalTag);
 }
 
 GoalPage.prototype.updateGoal = function(goalTag) {
@@ -27,5 +25,13 @@ GoalPage.prototype.goalReceivedCallback = function(goalDto) {
 	this.goal = goalDto;
 	var goalBox = new GoalBox($("#goal_container"),this.goal);
 	goalBox.draw();
+	
+	this.updateCbtions();
 }
 
+GoalPage.prototype.updateCbtions = function(goalDto) {
+	this.cbtionList = new CbtionList($("#cbtions_container",this.container),{ 
+			goalTag: this.goal.goalTag,
+			maxheight: "600px"
+		});
+}

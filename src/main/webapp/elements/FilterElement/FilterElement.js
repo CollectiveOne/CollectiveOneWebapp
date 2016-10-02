@@ -24,7 +24,21 @@ FilterElement.prototype.init = function() {
 
 	$('#filter_creator_input', this.container).keydown(this.inputEnterKey.bind(this));
 	$('#filter_keyword_input', this.container).keydown(this.inputEnterKey.bind(this));
+	$('#filter_goal_input', this.container).keydown(this.inputEnterKey.bind(this));
+	$('#filter_contributor_input', this.container).keydown(this.inputEnterKey.bind(this));
+
+	$('#filter_goal_input',this.container).autocomplete({
+		serviceUrl: '../json/GoalGetSuggestions.action',
+		projectNames: [],
+		maxHeight: 100
+	});
+
+	$('#filter_contributor_input',this.container).autocomplete({
+		serviceUrl: '../json/UsernameGetSuggestions.action',
+		maxHeight: 100
+	});
 	
+
 	$('#filter_creator_input').autocomplete({
 	    serviceUrl: '../json/UsernameGetSuggestions.action',
 	    maxHeight: 100
@@ -35,7 +49,9 @@ FilterElement.prototype.init = function() {
 	}
 
 	$('#sort_by_sel', this.container).change(this.getFiltersAndUpdateData.bind(this));
+	
 	this.updateFilterContents();
+
 }
 
 FilterElement.prototype.inputEnterKey = function (e) {
@@ -69,24 +85,40 @@ FilterElement.prototype.updateFilterContents = function() {
 		this.stateFilterDraw(this.possibleStateNames[ix])
 	}
 
-	// All Projects
+	if(this.filters.keyw != "") $("#filter_keyword_input", this.container).val(this.filters.keyw);
+	if(this.filters.creatorUsernames.length > 0) [$("#filter_creator_input", this.container).val(this.filters.creatorUsernames)];
+	if(this.filters.goalTag != "") $("#filter_goal_input", this.container).val(this.filters.goalTag);
+	if(this.filters.goalSubgoalsFlag != null) $("#filter_subgoals_input").attr('checked', this.filters.goalSubgoalsFlag);
+	if(this.filters.contributorUsername != "") $("#filter_contributor_input", this.container).val(this.filters.contributorUsername);
+
+	// Filter by project
 	GLOBAL.serverComm.projectListGet(this.projectListReceivedCallback,this);
 }
 
-FilterElement.prototype.getFiltersAndUpdateData = function() {
-	this.filters.projectNames = [];
-
+FilterElement.prototype.getSelectedProjects = function() {
 	var projects = $("#filter_projects", this.container).find("input");
 	var npf = projects.length;
 
+	var selectedProjectNames = [];
+
 	for (var i = 0; i < npf; i++) {
 		if ($(projects[i]).is(":checked")) {
-			this.filters.projectNames.push($(projects[i]).attr(
+			selectedProjectNames.push($(projects[i]).attr(
 			"project_name"));
 		}
 	}
 
+	return(selectedProjectNames);
+}
+
+FilterElement.prototype.getFiltersAndUpdateData = function() {
+	
+	this.filters.projectNames = this.getSelectedProjects();
 	this.filters.stateNames = [];
+
+	// BUG: for some reason the projectNames oarameter is not reaching the projectNames property of the GoalGetSuggestions action
+	$('#filter_goal_input',this.container).autocomplete().clear();
+	$('#filter_goal_input',this.container).autocomplete().setOptions({params: {projectNames: this.getSelectedProjects() }});
 
 	var statefilter = $("#filter_states", this.container).find("input");
 	var nsf = statefilter.length;
@@ -100,6 +132,10 @@ FilterElement.prototype.getFiltersAndUpdateData = function() {
 
 	this.filters.keyw = $("#filter_keyword_input", this.container).val();
 	this.filters.creatorUsernames = [$("#filter_creator_input", this.container).val()];
+	this.filters.goalTag = $("#filter_goal_input", this.container).val();
+	this.filters.goalSubgoalsFlag = $("#filter_subgoals_input").is(":checked");
+	this.filters.contributorUsername = $("#filter_contributor_input", this.container).val();
+
 	this.filters.sortBy = $('#sort_by_sel', this.container).attr("value");
 
 	this.updateData();
@@ -122,8 +158,10 @@ FilterElement.prototype.projectListReceivedCallback = function(projectList) {
 								"<div class=checkbox_p_div>"+"" +
 										"<p>" + pname + "</p>" +
 												"</div>"));
-		if (this.filters.projectNames.includes(pname)) {
-			$("#" + pname + "_input_fe").attr('checked', true);
+		if(this.filters.projectNames) {
+			if (this.filters.projectNames.includes(pname)) {
+				$("#" + pname + "_input_fe").attr('checked', true);
+			}	
 		}
 	}
 }
@@ -164,7 +202,7 @@ FilterElement.prototype.stateFilterDraw = function(state_name) {
 									"</div>"));
 	
 	if (this.filters.stateNames.includes(state_name)) {
-		$("#" + state_name + "_input_fe").attr('checked', true);
+			$("#" + state_name + "_input_fe").attr('checked', true);
 	}
 
 }

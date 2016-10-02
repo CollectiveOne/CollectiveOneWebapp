@@ -135,7 +135,18 @@
 	float:left;
 }
 
+#filter_contents #filter_inputs_specific {
+	width: 100px;
+	margin-left: 15px;
+	float:left;
+}
+
 #filter_contents #filter_inputs p {
+	font-size:10px;
+	margin-left:4px;
+}
+
+#filter_contents #filter_inputs_specific p {
 	font-size:10px;
 	margin-left:4px;
 }
@@ -145,12 +156,34 @@
 	border-radius:5px;
 }
 
+#filter_contents #filter_inputs_specific input {
+	width: 100%;
+	border-radius:5px;
+}
+
 #filter_contents #filter_inputs #filter_keyword {
 	margin-bottom:5px;
 }
 
-#filter_contents #filter_inputs #filter_creators {
-	
+#filter_contents #filter_inputs_specific #filter_goal {
+}
+
+#filter_contents #filter_inputs_specific #filter_subgoals {
+	width:100%;
+	height: 16px;
+}
+
+#filter_contents #filter_inputs_specific #filter_subgoals p {
+    height: 100%;
+    display: block;
+    float: left;
+    clear: none;
+    padding-top: 3px;
+    margin-left: 0px;
+}
+
+#filter_contents #filter_inputs_specific #filter_subgoals_input {
+	width:10px;
 }
 
 

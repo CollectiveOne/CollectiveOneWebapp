@@ -14,6 +14,7 @@ import coproject.cpweb.utils.db.entities.BidState;
 import coproject.cpweb.utils.db.entities.Cbtion;
 import coproject.cpweb.utils.db.entities.CbtionState;
 import coproject.cpweb.utils.db.entities.Comment;
+import coproject.cpweb.utils.db.entities.Goal;
 import coproject.cpweb.utils.db.services.Filters;
 import coproject.cpweb.utils.db.services.ObjectListRes;
 
@@ -58,10 +59,36 @@ public class CbtionDao extends BaseDao {
 		q.add(stateDisj);
 		
 		/* if contributorUsername requested */
-		int contributorId = filters.getContributorId();
-		if(contributorId != 0) {
-			q.createAlias("contributor","cont")
-				.add(Restrictions.eq("cont.id",contributorId));
+		String contributorUsername = filters.getContributorUsername();
+		if(contributorUsername != null) {
+			if(!contributorUsername.equals("")) {
+				q.createAlias("contributor","cont")
+					.add(Restrictions.eq("cont.username",contributorUsername));
+			}
+		}
+		
+		/* if goalTag requested */
+		String goalTag = filters.getGoalTag();
+		if(goalTag != null) {
+			if(!goalTag.equals("")) {
+				
+				GoalDao goalDao = new GoalDao();
+				goalDao.setSessionFactory(this.getSessionFactory());
+				
+				Disjunction goalDisj = Restrictions.disjunction();
+				Goal goal = goalDao.get(goalTag);
+				
+				q.createAlias("goal","go");
+				goalDisj.add(Restrictions.eq("go.id",goal.getId()));
+				
+				if(filters.getGoalSubgoalsFlag()) {
+					for(Goal subgoal : goal.getSubgoals()) {
+						goalDisj.add(Restrictions.eq("go.id",subgoal.getId()));
+					}
+				}
+				
+				q.add(goalDisj);
+			}
 		}
 		
 		return getObjectsAndResSet(q, filters, Cbtion.class);

@@ -54,7 +54,7 @@ UserPage.prototype.userDataInReceivedCallback = function(userDataIn) {
 
 UserPage.prototype.updateContributionsAccepted = function() {
 	this.cbtionList = new CbtionList("#contributions_list", {
-		contributorId: this.user.id, 
+		contributorUsername: this.user.username, 
 		maxheight: "600px",
 		stateNames: ["ACCEPTED"]
 		});

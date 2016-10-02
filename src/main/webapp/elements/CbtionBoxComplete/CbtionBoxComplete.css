@@ -72,7 +72,7 @@
 }
 
 #cbtion_div #cbtion_data_div #description_div {
-	height: 90px;
+	height: 120px;
 	float:left;
 	/* margin-top: 5px; */
 	clear:both;
@@ -84,20 +84,31 @@
 	font-style: normal;
 }
 
-#cbtion_div #cbtion_data_div #product_div {
-	height: 40px;
-	width: 100%;
-	float:left;
-	/* margin-top: 5px; */
+#cbtion_div #left_bottom_div {
+	height: 20px;
+	width: calc(100% - 25px);
 	clear:both;
-	overflow-y: auto;
 }
 
-#cbtion_div #cbtion_data_div #product_div p {
-	font-size: 10pt;
-	font-style:italic;
+#cbtion_div #left_bottom_div a {
+	font-size: 12px;
+}
+
+#cbtion_div #left_bottom_div p {
+	font-size: 12px;
 	display: inline;
 }
+
+#cbtion_div #product_div {
+	float:left;
+	height: 100%;
+}
+
+#cbtion_div #goal_div {
+	float: right;
+	height: 100%;
+}
+
 
 #cbtion_div #cbtion_data_div #cb_right_div #cbtion_meta_data_div a {
 	font-size: 10pt;

@@ -7,6 +7,10 @@
 <link rel="stylesheet" type="text/css" href="GoalPage/GoalPage.css" />
 <script type="text/javascript" src="../elements/GoalBox/GoalBox.js"></script>
 <link rel="stylesheet" type="text/css" href="../elements/GoalBox/GoalBox.css" />
+<script type="text/javascript" src="../elements/CbtionList/CbtionList.js"></script>
+<link rel="stylesheet" type="text/css" href="../elements/CbtionList/CbtionList.css"/>
+<script type="text/javascript" src="../elements/FilterElement/FilterElement.js"></script>
+<link rel="stylesheet" type="text/css" href="../elements/FilterElement/FilterElement.css"/>
 <title>CoProject - Goal</title>
 </head>
 
@@ -18,6 +22,9 @@
 
 <div id="content_pane">
 	<div id="goal_container">
+	</div>
+	<div id="cbtions_div">
+		<div id="cbtions_container" class="cp_box_gray_thick"></div>
 	</div>
 </div>
 

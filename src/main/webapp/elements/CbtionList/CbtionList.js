@@ -21,6 +21,9 @@ CbtionList.prototype.boxLoaded = function(data) {
 			stateNames: ["PROPOSED","OPEN","ASSIGNED"],
 			contributorUsername: [],
 			creatorUsernames: [],
+			contributorUsername: "",
+			goalTag: "",
+			goalSubgoalsFlag: true,
 			keyw : '',
 			sortBy: "CREATIONDATEDESC",
 			page : 1,
@@ -36,8 +39,12 @@ CbtionList.prototype.boxLoaded = function(data) {
 			]
 	};
 
-	if(this.conf.contributorId) {
-		filters.contributorId = this.conf.contributorId;
+	if(this.conf.contributorUsername) {
+		filters.contributorUsername = this.conf.contributorUsername;
+	}
+	
+	if(this.conf.goalTag) {
+		filters.goalTag = this.conf.goalTag;
 	}
 
 	if(this.conf.maxheight) {
