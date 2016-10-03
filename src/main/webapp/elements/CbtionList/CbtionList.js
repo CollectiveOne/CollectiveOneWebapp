@@ -38,7 +38,7 @@ CbtionList.prototype.boxLoaded = function(data) {
 			          { text:"Less relevant", value:"RELEVANCEASC" },
 			]
 	};
-
+	
 	if(this.conf.contributorUsername) {
 		filters.contributorUsername = this.conf.contributorUsername;
 	}
@@ -54,14 +54,14 @@ CbtionList.prototype.boxLoaded = function(data) {
 	if(this.conf.stateNames) {
 		filters.stateNames = this.conf.stateNames;
 	}
-
-
+	
 	this.filter = new FilterElement($("#filter_container",this.container), 
 			GLOBAL.serverComm.cbtionListGet, 
 			this.CbtionsReceivedCallback, 
 			this, 
 			customElements, 
-			filters);
+			filters,
+			"cbtions");
 
 	this.updateData();
 }

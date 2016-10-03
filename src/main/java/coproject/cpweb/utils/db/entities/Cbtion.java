@@ -81,6 +81,13 @@ public class Cbtion {
 		return dto;
 	}
 	
+	public CbtionDto toDto(List<String> parentGoalsTags) {
+		CbtionDto dto = this.toDto();
+		dto.setParentGoalsTags(parentGoalsTags);
+		
+		return dto;
+	}
+	
 	
 	public int getId() {
 		return id;

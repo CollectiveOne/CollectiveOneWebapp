@@ -604,7 +604,17 @@ public class DbServicesImp {
 
 	@Transactional
 	public CbtionDto cbtionGetDto(int cbtionId) {
-		return cbtionDao.get(cbtionId).toDto();
+		Cbtion cbtion = cbtionDao.get(cbtionId);
+		
+		/* Add parent goals too */
+		List<String> parentGoalsTags = new ArrayList<String>();
+		if(cbtion.getGoal() != null) {
+			List<Goal> parentGoals = goalDao.getAllParents(cbtion.getGoal().getId());
+			for(Goal parent : parentGoals) { parentGoalsTags.add(parent.getGoalTag()); }
+		}
+		CbtionDto cbtionDto = cbtion.toDto(parentGoalsTags);
+		
+		return cbtionDto;
 	}
 
 	@Transactional
@@ -627,7 +637,15 @@ public class DbServicesImp {
 		cbtionsDtosRes.setCbtionsDtos(new ArrayList<CbtionDto>());
 
 		for(Cbtion cbtion : cbtionsRes.getObjects()) {
-			cbtionsDtosRes.getCbtionsDtos().add(cbtion.toDto());
+			
+			/* Add parent goals too */
+			List<String> parentGoalsTags = new ArrayList<String>();
+			if(cbtion.getGoal() != null) {
+				List<Goal> parentGoals = goalDao.getAllParents(cbtion.getGoal().getId());
+				for(Goal parent : parentGoals) { parentGoalsTags.add(parent.getGoalTag()); }
+			}
+			
+			cbtionsDtosRes.getCbtionsDtos().add(cbtion.toDto(parentGoalsTags));
 		}
 
 		return cbtionsDtosRes;

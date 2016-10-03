@@ -32,12 +32,12 @@ public class GoalGetSuggestions extends CpAction {
 		this.query = query;
 	}
 	
-	private List<String> projectNames = new ArrayList<String>();
-	public List<String> getProjectNames() {
-		return projectNames;
+	private String projectName;
+	public String getProjectName() {
+		return projectName;
 	}
-	public void setProjectNames(List<String> projectNames) {
-		this.projectNames = projectNames;
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 
 	/* Output parameters  */
@@ -52,6 +52,13 @@ public class GoalGetSuggestions extends CpAction {
 	/* Execute */
 	public String execute() throws Exception  {
     	
+		List<String> projectNames = new ArrayList<String>();
+		if(projectName != null) {
+			if(!projectName.equals("")) {
+				projectNames.add(projectName);
+			}
+		}
+		
 		suggestions = dbServices.goalGetSuggestions(query, projectNames);
 		
 		return SUCCESS;

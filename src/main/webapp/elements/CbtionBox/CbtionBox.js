@@ -32,7 +32,14 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 	$("#description_div",this.container).append("<p>"+this.cbtion.description+"</p>");
 	
 	$("#product_div",this.container).append("<p>"+this.cbtion.product+"</p>");
-	if(this.cbtion.goalTag)	$("#goal_div",this.container).append("<a href=../views/GoalPage.action?goalTag="+this.cbtion.goalTag+">#"+this.cbtion.goalTag+"</a>");
+	
+	if(this.cbtion.parentGoalsTags) {
+		for(var ix in this.cbtion.parentGoalsTags) {
+			var this_parent = this.cbtion.parentGoalsTags[ix];
+			$("#goal_div",this.container).append("<a href=../views/GoalPage.action?goalTag="+this_parent+">@"+this_parent+"</a> &#x2192 ");
+		}
+	}
+	if(this.cbtion.goalTag)	$("#goal_div",this.container).append("<a href=../views/GoalPage.action?goalTag="+this.cbtion.goalTag+">@"+this.cbtion.goalTag+"</a>");
 
 	$("#project_div",this.container).append("<a href=ProjectPage.action?projectName="+this.cbtion.projectName+">"+this.cbtion.projectName+"</a>");
 	$("#state_div",this.container).append("<p>"+this.cbtion.state+"</p>");

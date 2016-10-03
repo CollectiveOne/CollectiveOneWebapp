@@ -1,4 +1,4 @@
-function FilterElement(container_id, getDataCall, callBack, callObject, customElements, filters) {
+function FilterElement(container_id, getDataCall, callBack, callObject, customElements, filters, type) {
 	
 	this.container = $(container_id);
 	this.getDataCall = getDataCall;
@@ -9,7 +9,8 @@ function FilterElement(container_id, getDataCall, callBack, callObject, customEl
 	this.possibleStateNames = customElements.stateNames;
 	this.possibleSortBy = customElements.sortBy;
 	this.filters = filters;
-
+	this.type = type;
+	
 	this.filters_expanded = false;
 	
 	this.container.load("../elements/FilterElement/FilterElement.html",this.init.bind(this));
@@ -17,7 +18,16 @@ function FilterElement(container_id, getDataCall, callBack, callObject, customEl
 
 //Inheritance
 FilterElement.prototype.init = function() {
-	// Apply JQ effects
+	
+	switch(this.type) {
+		case "cbtions":
+			break;
+		default: 
+			$("#filter_inputs_specific",this.container).hide();
+			break; 	
+
+	}
+
 	$("#filter_btn", this.container).click(this.filterClick.bind(this));
 	$("#next_page", this.container).click(this.nextPageClick.bind(this));
 	$("#back_page", this.container).click(this.backPageClick.bind(this));
@@ -29,7 +39,7 @@ FilterElement.prototype.init = function() {
 
 	$('#filter_goal_input',this.container).autocomplete({
 		serviceUrl: '../json/GoalGetSuggestions.action',
-		projectNames: [],
+		projectName: [],
 		maxHeight: 100
 	});
 
@@ -116,9 +126,11 @@ FilterElement.prototype.getFiltersAndUpdateData = function() {
 	this.filters.projectNames = this.getSelectedProjects();
 	this.filters.stateNames = [];
 
-	// BUG: for some reason the projectNames oarameter is not reaching the projectNames property of the GoalGetSuggestions action
 	$('#filter_goal_input',this.container).autocomplete().clear();
-	$('#filter_goal_input',this.container).autocomplete().setOptions({params: {projectNames: this.getSelectedProjects() }});
+	
+	var selectedProjects = this.getSelectedProjects();
+	if(selectedProjects.length > 0)	$('#filter_goal_input',this.container).autocomplete().setOptions({params: {projectName: selectedProjects[0] }});
+	else $('#filter_goal_input',this.container).autocomplete().setOptions({params: {projectName: "" }});
 
 	var statefilter = $("#filter_states", this.container).find("input");
 	var nsf = statefilter.length;

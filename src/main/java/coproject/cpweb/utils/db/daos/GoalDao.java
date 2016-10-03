@@ -166,7 +166,8 @@ public class GoalDao extends BaseDao {
 		Session session = sessionFactory.getCurrentSession();
 
 		Query query = session.createQuery(
-						"  FROM Goal goalx "
+				"SELECT goalx " 
+						+"  FROM Goal goalx "
 						+ "JOIN goalx.subgoals subgoalx "
 						+ "WHERE subgoalx.id = :gId "
 				);

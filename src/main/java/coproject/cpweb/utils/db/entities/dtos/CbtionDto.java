@@ -1,5 +1,7 @@
 package coproject.cpweb.utils.db.entities.dtos;
 
+import java.util.List;
+
 import coproject.cpweb.utils.db.entities.Cbtion;
 import coproject.cpweb.utils.db.entities.Project;
 import coproject.cpweb.utils.db.entities.User;
@@ -17,6 +19,7 @@ public class CbtionDto {
 	private String state;
 	private int nBids;
 	private String contributorUsername;
+	private List<String> parentGoalsTags;
 	private String goalTag;
 	private double assignedPpoints;	
 	private DecisionDto openDec;
@@ -101,6 +104,12 @@ public class CbtionDto {
 	}
 	public String getGoalTag() {
 		return goalTag;
+	}
+	public List<String> getParentGoalsTags() {
+		return parentGoalsTags;
+	}
+	public void setParentGoalsTags(List<String> parentGoalsTags) {
+		this.parentGoalsTags = parentGoalsTags;
 	}
 	public void setGoalTag(String goalTag) {
 		this.goalTag = goalTag;
