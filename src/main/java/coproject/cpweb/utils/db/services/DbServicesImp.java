@@ -611,7 +611,7 @@ public class DbServicesImp {
 					switch(goal.getParentState()) {
 					case PROPOSED:
 						goal.setParentState(GoalParentState.ACCEPTED);
-						act.setEvent("goal "+goal.getProposedParent().getGoalTag()+" not accepted as parent");
+						act.setEvent(goal.getProposedParent().getGoalTag()+" not accepted as parent");
 						activityDao.save(act);
 						break;
 	
@@ -626,7 +626,7 @@ public class DbServicesImp {
 					case PROPOSED:
 						goal.setParentState(GoalParentState.ACCEPTED);
 						goal.setParent(goal.getProposedParent());
-						act.setEvent("goal "+goal.getProposedParent().getGoalTag()+" accepted as parent");
+						act.setEvent(goal.getProposedParent().getGoalTag()+" accepted as parent");
 						activityDao.save(act);
 						break;
 					default:

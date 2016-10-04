@@ -33,15 +33,13 @@ ActivityBox.prototype.activityBoxLoaded = function() {
 			break;
 
 		case "GOAL":
+			var goalLinkStr = "<a href=../views/GoalPage.action?goalTag="+this.activity.goalDto.goalTag+">"+this.activity.goalDto.goalTag+"</a>"
 			switch(this.activity.event) {
 				case "proposed":
-					eventPretty = "goal '"+this.activity.goalDto.goalTag+"' was "+this.activity.event+" by <a href=UserPage.action?username="+this.activity.goalDto.creatorUsername+">"+this.activity.goalDto.creatorUsername+"</a>";
+					eventPretty = "goal "+goalLinkStr+" was "+this.activity.event+" by <a href=UserPage.action?username="+this.activity.goalDto.creatorUsername+">"+this.activity.goalDto.creatorUsername+"</a>";
 					break;
-				case "accepted":
-				case "not accepted":
-				case "deleted":
-				case "not deleted":
-					eventPretty = "goal '"+this.activity.goalDto.goalTag+"' was "+this.activity.event;
+				default:
+					eventPretty = "goal "+goalLinkStr+" - "+this.activity.event;
 					break;
 			}
 			break;
