@@ -654,7 +654,7 @@ public class DbServicesImp {
 				proposeParent.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				proposeParent.setCreator(userDao.get("coprojects"));
 				proposeParent.setDecisionRealm(decisionRealmDao.getFromProjectId(project.getId()));
-				proposeParent.setDescription("set "+proposedParent.getGoalTag()+" as parent tag");
+				proposeParent.setDescription("set "+proposedParent.getGoalTag()+" as parent goal");
 				proposeParent.setProject(project);
 				proposeParent.setState(DecisionState.IDLE);
 				proposeParent.setType(DecisionType.GOAL);
