@@ -15,10 +15,10 @@
 
 #decision_small_div #dec_left_div {
 	margin-left:5px;
-	height:100%;
 	width: 100px;
 	float:left;
-	padding-top: 2px;
+	padding-top: 4px;
+	overflow-y: auto;
 }
 
 #decision_small_div #dec_center_div {
@@ -71,13 +71,8 @@
 	margin-top: 1px;
 }
 
-#decision_small_div #current_state_div #state {
+#decision_small_div #state {
 	color:DarkGreen;
-	font-size:9px;
-}
-
-#decision_small_div #candidate_state_div #state {
-	color:DarkRed;
 	font-size:9px;
 }
 

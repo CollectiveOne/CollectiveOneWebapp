@@ -18,8 +18,11 @@ DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
 	switch(this.decision.state) {
 		case "IDLE":
 		case "OPEN":
-			$("#dec_left_div #current_state_div",this.container).html("<p>Now <span id=state>"+this.decision.fromState+"</span><p>");
-			$("#dec_left_div #candidate_state_div",this.container).html("<p>switch to <span id=state>"+this.decision.toState+"?</span></p>");
+			if((this.decision.fromState) && (this.decision.toState)) {
+				$("#dec_left_div",this.container).append("<p>Now <span id=state>"+this.decision.fromState+"</span>, switch to <span id=state>"+this.decision.toState+"?<p>");
+			} else {
+				$("#dec_left_div",this.container).append("<p>"+this.decision.description+"<p>");
+			}
 
 			// if decision is still open
 			$("#dec_center_div #vote_div",this.container).show();

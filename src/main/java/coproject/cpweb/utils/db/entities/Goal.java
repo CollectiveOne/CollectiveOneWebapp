@@ -1,15 +1,12 @@
 package coproject.cpweb.utils.db.entities;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -39,9 +36,14 @@ public class Goal {
 	private Decision createDec;
 	@OneToOne
 	private Decision deleteDec;
-	@OneToMany
-	@JoinTable(name = "goal_subgoals")
-	private List<Goal> subgoals;
+	@ManyToOne
+	private Goal parent;
+	@ManyToOne
+	private Goal proposedParent;
+	@OneToOne
+	private Decision proposeParent;
+	private GoalParentState parentState;
+	
 	
 	public GoalDto toDto() {
 		GoalDto dto = new GoalDto();
@@ -55,15 +57,14 @@ public class Goal {
 		dto.setState(state.toString());
 		if(createDec != null) dto.setCreateDec(createDec.toDto());
 		if(deleteDec != null) dto.setDeleteDec(deleteDec.toDto());
-		if(subgoals != null) {
-			for(Goal goal : subgoals) {
-				dto.getSubGoalsTags().add(goal.getGoalTag());
-			}
-		}
+		if(parent != null) dto.setParentGoalTag(parent.getGoalTag());
+		if(proposedParent != null) dto.setProposedParent(proposedParent.getGoalTag());
+		if(proposeParent != null) dto.setProposeParent(proposeParent.toDto());
+		if(parentState != null) dto.setParentState(parentState.toString());
 		
 		return dto;
 	}
-
+	
 	public int getId() {
 		return id;
 	}
@@ -118,10 +119,29 @@ public class Goal {
 	public void setDeleteDec(Decision deleteDec) {
 		this.deleteDec = deleteDec;
 	}
-	public List<Goal> getSubgoals() {
-		return subgoals;
+	public Goal getParent() {
+		return parent;
 	}
-	public void setSubgoals(List<Goal> subgoals) {
-		this.subgoals = subgoals;
+	public void setParent(Goal parent) {
+		this.parent = parent;
 	}
+	public Goal getProposedParent() {
+		return proposedParent;
+	}
+	public void setProposedParent(Goal proposedParent) {
+		this.proposedParent = proposedParent;
+	}
+	public Decision getProposeParent() {
+		return proposeParent;
+	}
+	public void setProposeParent(Decision proposeParent) {
+		this.proposeParent = proposeParent;
+	}
+	public GoalParentState getParentState() {
+		return parentState;
+	}
+	public void setParentState(GoalParentState parentState) {
+		this.parentState = parentState;
+	}
+	
 }

@@ -1,5 +1,4 @@
 #goal_div {
-	min-height: 90px;
 	width: calc(100% - 20px - 6px);
 	clear:none;
 	overflow: auto;
@@ -15,12 +14,26 @@
 	max-height: 70px;
 	width:100%;
 	float:left;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
 }
 
-#goal_div #bottom_div {
-	width:100%;
+#goal_div #goal_control_div {
+	width: calc(100% - 20px);
 	float:left;
+	display: none;
+	margin-top: 5px;
+}
+
+#goal_div #new_subgoal_form {
+	width: 300;
+	float:left;
+	display: none;
+	margin-top: 10px;
+	clear: both;
+}
+
+#goal_div #new_subgoal_form p {
+	font-size: 10px;
 }
 
 #goal_div #top_div #goaltag {
@@ -49,12 +62,12 @@
 	font-style:normal;
 }
 
-#goal_div #bottom_div #state {
+#goal_div #goal_control_div #state {
 	height:100%;
 	width:100%;	
 }
 
-#goal_div #bottom_div #state p {
+#goal_div #goal_control_div #state p {
 	margin-left:5px;
 	text-align:left;
 	color:red;
@@ -64,11 +77,93 @@
 
 #goal_div #show_subgoals_btn {
 	height: 15px;
-	width: 220px;
+	width: 120px;
 	float:left;
-	margin-left: 0px;
+	margin-left: 10px;
 	display: none;
-	margin-top: 10px;
+	margin-top: 5px;
+}
+
+#goal_div #show_new_subgoal_btn {
+	height: 15px;
+	width: 120px;
+	float:left;
+	margin-left: 10px;
+	display: block;
+	margin-top: 5px;
+}
+
+#goal_div #show_control_btn {
+	height: 15px;
+	width: 120px;
+	float:left;
+	margin-left: 10px;
+	display: none;
+	margin-top: 5px;
+}
+
+#goal_div #propose_parent_form_container {
+	width: 200px;
+	margin-right:10px;
+	float:left;
+	display:none;
+}
+
+#goal_div #propose_parent_decision_container {
+	width: 200px;
+	margin-left:10px;
+	margin-right:10px;
+	float:left;
+	display:none;
+}
+
+#goal_div #propose_parent_btn {
+	width:100%;
+	height:15px;
+	float:left;
+}
+
+#goal_div #propose_parent_form {
+	display:none;
+}
+
+#goal_div #parent_goal_input {
+	width:100%;
+	height: 20px;
+	float:left;
+	margin-top: 3px;
+	text-align:center;
+}
+
+#goal_div #propose_parent_save_btn {
+	width:100%;
+	height:15px;
+	float:left;
+	margin-top: 3px;
+}
+
+#goal_div #state_decision_div {
+	width: 200px;
+	float:left;
+}
+
+#goal_div #new_subgoal_form #new_subgoal_tag_input {
+	width: 150px;
+	margin-bottom: 5px;
+}
+
+#goal_div #new_subgoal_form #new_subgoal_description_input {
+	width: 100%;
+	margin-bottom: 10px;
+	resize: vertical;
+}
+
+#goal_div #new_subgoal_form #new_subgoal_save_btn {
+	width: 100px;
+}
+
+#goal_div #new_subgoal_form #new_subgoal_save_btn p {
+	font-size:12px;
 }
 
 #goal_div #subgoals_div {
@@ -84,4 +179,5 @@
 	margin-left: 0px;
 	margin-top: 10px;
 }
+
 

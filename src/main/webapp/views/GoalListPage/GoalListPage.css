@@ -4,10 +4,10 @@
 
 #content_pane #list_of_elements .goalbox_div {
 	width: calc(100% - 26px);
-	min-height: 120px;
 	float:left;
 	margin-bottom:10px;
 	margin-right:10px;
 	clear: none;
+	overflow: auto;
 }
 

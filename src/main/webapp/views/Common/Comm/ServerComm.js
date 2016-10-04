@@ -129,8 +129,8 @@ ServerComm.prototype = {
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
-					if (data.goalDto) {
-						callbackFunction.call(callbackObj,data.goalDto);
+					if (data) {
+						callbackFunction.call(callbackObj,data);
 					} else {
 						showOutput(data);
 					}
@@ -184,6 +184,32 @@ ServerComm.prototype = {
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
 					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
+		goalProposeParent : function(goalId,parentTag,callbackFunction,callbackObj) {
+			//TODO: update
+			var data = {
+				'goalId' : goalId,
+				'parentTag' : parentTag
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/GoalProposeParent',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						showReqOutput(data.resStatus);
 						callbackFunction.call(callbackObj,data);
 					}
 				},

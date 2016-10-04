@@ -11,12 +11,16 @@ public class GoalDto {
 	private String creatorUsername;
 	private Timestamp creationDate;
 	private String goalTag;
+	private String parentGoalTag;
 	private List<String> parentGoalsTags = new ArrayList<String>();
 	private List<String> subGoalsTags = new ArrayList<String>();
 	private String description;
 	private String state;
 	private DecisionDto createDec;
 	private DecisionDto deleteDec;
+	private String parentState;
+	private String proposedParent;
+	private DecisionDto proposeParent;
 	
 	public int getId() {
 		return id;
@@ -41,6 +45,12 @@ public class GoalDto {
 	}
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
+	}
+	public String getParentGoalTag() {
+		return parentGoalTag;
+	}
+	public void setParentGoalTag(String parentGoalTag) {
+		this.parentGoalTag = parentGoalTag;
 	}
 	public String getGoalTag() {
 		return goalTag;
@@ -84,7 +94,23 @@ public class GoalDto {
 	public void setSubGoalsTags(List<String> subGoalsTags) {
 		this.subGoalsTags = subGoalsTags;
 	}
-	
-	
+	public String getParentState() {
+		return parentState;
+	}
+	public void setParentState(String parentState) {
+		this.parentState = parentState;
+	}
+	public String getProposedParent() {
+		return proposedParent;
+	}
+	public void setProposedParent(String proposedParent) {
+		this.proposedParent = proposedParent;
+	}
+	public DecisionDto getProposeParent() {
+		return proposeParent;
+	}
+	public void setProposeParent(DecisionDto proposeParent) {
+		this.proposeParent = proposeParent;
+	}
 }
 

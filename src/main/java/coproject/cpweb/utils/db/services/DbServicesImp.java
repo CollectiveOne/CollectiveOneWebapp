@@ -31,6 +31,9 @@ import coproject.cpweb.utils.db.entities.dtos.UsernameAndPps;
 @Component(value="dbServices")
 public class DbServicesImp {
 
+	/* global variable to store the status */
+	private ResStatus status = new ResStatus();
+	
 	@Autowired
 	protected SessionDao sessionDao;
 
@@ -76,7 +79,12 @@ public class DbServicesImp {
 	@Autowired
 	protected CommentDao commentDao;
 	
-
+	public ResStatus getStatus() {
+		return status;
+	}
+	public void setStatus(ResStatus status) {
+		this.status = status;
+	}
 
 	@Transactional
 	public void userSave(User user) {
@@ -341,11 +349,12 @@ public class DbServicesImp {
 		
 		int id = goalDao.save(goal);
 		
-		if(goalDto.getParentGoalsTags().size() > 0) {
-			for(String parentGoalTag : goalDto.getParentGoalsTags()) {
-				Goal parentGoal = goalDao.get(parentGoalTag);
-				goalDao.addSubGoal(parentGoal.getId(),goal.getId());
-				goalDao.save(parentGoal);
+		if(goalDto.getParentGoalTag() != null) {
+			if(goalDto.getParentGoalTag() != "") {
+				Goal parent = goalDao.get(goalDto.getParentGoalTag());
+				if(parent != null) {
+					goal.setParent(parent);
+				}
 			}
 		}
 		
@@ -398,13 +407,20 @@ public class DbServicesImp {
 	
 	@Transactional
 	public GoalDto goalGetDto(int goalId) {
-		return goalDao.get(goalId).toDto();
+		Goal goal = goalDao.get(goalId);
+		GoalDto dto = goal.toDto();
+		goalAddParentsAndSubgoals(dto);
+		
+		return dto;
 	}
 	
 	@Transactional
 	public GoalDto goalGetDto(String goalTag) {
 		Goal goal = goalDao.get(goalTag);
-		return goal.toDto();
+		GoalDto dto = goal.toDto();
+		goalAddParentsAndSubgoals(dto);
+		
+		return dto;
 	}
 	
 	@Transactional
@@ -417,10 +433,24 @@ public class DbServicesImp {
 		goalsDtosRes.setGoalDtos(new ArrayList<GoalDto>());
 
 		for(Goal goal : goalsRes.getObjects()) {
-			goalsDtosRes.getGoalDtos().add(goal.toDto());
+			GoalDto dto = goal.toDto();
+			goalAddParentsAndSubgoals(dto);
+			
+			goalsDtosRes.getGoalDtos().add(dto);
 		}
 		
 		return goalsDtosRes;
+	}
+	
+	@Transactional
+	public void goalAddParentsAndSubgoals(GoalDto goalDto) {
+		List<String> parentGoalsTags = new ArrayList<String>();
+		for(Goal parent : goalDao.getAllParents(goalDto.getId())) { parentGoalsTags.add(parent.getGoalTag()); }
+		goalDto.setParentGoalsTags(parentGoalsTags);
+		
+		List<String> subGoalsTags = new ArrayList<String>();
+		for(Goal subgoal : goalDao.getSubgoals(goalDto.getId())) { subGoalsTags.add(subgoal.getGoalTag()); }
+		goalDto.setSubGoalsTags(subGoalsTags);
 	}
 	
 	@Transactional
@@ -442,8 +472,14 @@ public class DbServicesImp {
 	
 	@Transactional
 	public void goalUpdateState(int goalId) {
+		goalFromProposedToAccepted(goalId);
+		goalFromAcceptedToDeleted(goalId);
+		goalUpdateNewParent(goalId);
+	}
+	
+	@Transactional
+	public void goalFromProposedToAccepted(int goalId) {
 		Goal goal = goalDao.get(goalId);
-		
 		goalDao.save(goal);
 		
 		/* Create decision */ 
@@ -489,9 +525,21 @@ public class DbServicesImp {
 		default:
 			break;
 		} 
-
+	}
+	
+	@Transactional
+	public void goalFromAcceptedToDeleted(int goalId) {
+		Goal goal = goalDao.get(goalId);
+		goalDao.save(goal);
+		
 		/* Update accept decision */ 
 		Decision delete = goal.getDeleteDec();
+		
+		Activity act = new Activity();
+		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		act.setProject(goal.getProject());
+		act.setGoal(goal);
+		act.setType(ActivityType.GOAL);
 
 		/* update goal state based on delete decision */
 
@@ -536,6 +584,110 @@ public class DbServicesImp {
 		default:
 			break;
 		} 
+	}
+	
+	@Transactional
+	public void goalUpdateNewParent(int goalId) {
+		Goal goal = goalDao.get(goalId);
+		goalDao.save(goal);
+		
+		if(goal.getParentState() == GoalParentState.PROPOSED) {
+			/* Create decision */ 
+			Decision proposeParent = goal.getProposeParent();
+			
+			if(proposeParent != null) {
+				/* update goal parent based on create proposeParent */
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setProject(goal.getProject());
+				act.setGoal(goal);
+				act.setType(ActivityType.GOAL);
+				
+				switch(proposeParent.getState()){
+				case OPEN: 
+					break;
+	
+				case CLOSED_DENIED : 
+					switch(goal.getParentState()) {
+					case PROPOSED:
+						goal.setParentState(GoalParentState.ACCEPTED);
+						act.setEvent("goal "+goal.getProposedParent().getGoalTag()+" not accepted as parent");
+						activityDao.save(act);
+						break;
+	
+					default:
+						break;
+					}
+	
+					break;
+	
+				case CLOSED_ACCEPTED: 
+					switch(goal.getParentState()) {
+					case PROPOSED:
+						goal.setParentState(GoalParentState.ACCEPTED);
+						goal.setParent(goal.getProposedParent());
+						act.setEvent("goal "+goal.getProposedParent().getGoalTag()+" accepted as parent");
+						activityDao.save(act);
+						break;
+					default:
+						break;
+					}
+	
+				default:
+					break;
+				} 
+			}
+		}
+	}
+	
+	@Transactional
+	public void goalProposeParent(int goalId, String parentTag) {
+		Goal goal = goalDao.get(goalId);
+		Goal proposedParent = goalDao.get(parentTag);
+		
+		if(proposedParent != null) {
+			if(goal.getParentState() != GoalParentState.PROPOSED) {
+				Project project = goal.getProject();
+				Decision proposeParent = new Decision();
+				
+				proposeParent.setGoal(goal);
+				proposeParent.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				proposeParent.setCreator(userDao.get("coprojects"));
+				proposeParent.setDecisionRealm(decisionRealmDao.getFromProjectId(project.getId()));
+				proposeParent.setDescription("set "+proposedParent.getGoalTag()+" as parent tag");
+				proposeParent.setProject(project);
+				proposeParent.setState(DecisionState.IDLE);
+				proposeParent.setType(DecisionType.GOAL);
+				proposeParent.setVerdictHours(36);
+				
+				decisionDao.save(proposeParent);
+				
+				goal.setProposeParent(proposeParent);
+				goal.setProposedParent(proposedParent);
+				goal.setParentState(GoalParentState.PROPOSED);
+				
+				goalDao.save(goal);
+				
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setProject(project);
+				act.setGoal(goal);
+				act.setType(ActivityType.GOAL);
+				act.setEvent(proposedParent.getGoalTag()+" proposed as parent");
+				activityDao.save(act);
+				
+				status.setMsg(proposedParent.getGoalTag()+" proposed as parent");
+				status.setSuccess(true);
+				
+			} else {
+				status.setMsg(goal.getProposedParent().getGoalTag()+
+						" already proposed as parent. Cannot propose more than one parent at the same time");
+				status.setSuccess(false);
+			}
+		} else {
+			status.setMsg("parent tag "+parentTag+" not found");
+			status.setSuccess(false);
+		}
 	}
 	
 	@Transactional

@@ -66,7 +66,7 @@ GoalNewPage.prototype.goalNew = function() {
 	var data = {
 		creatorUsername: GLOBAL.sessionData.userLogged.username, 
 		projectName: $("#project_select", this.container).val(),
-		parentGoalsTags: [$("#superGoalTag_div #superGoalTag_selector", this.container).val()],
+		parentGoalTag: $("#superGoalTag_div #superGoalTag_selector", this.container).val(),
 		goalTag: $("#goalTag_in", this.container).val(),
 		description: $("#description_in", this.container).val()
 	};

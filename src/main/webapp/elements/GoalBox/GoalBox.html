@@ -7,9 +7,34 @@
 		<div id="description">
 		</div>	
 	</div>
-	<div id="bottom_div"></div>
 	<div id="show_subgoals_btn" class="cp_btn_light">
 		<p>show subgoals</p>
 	</div>
+	<div id="show_new_subgoal_btn" class="cp_btn_light">
+		<p>create new subgoal</p>
+	</div>
+	<div id="show_control_btn" class="cp_btn_light">
+		<p>control</p>
+	</div>
+	<div id="goal_control_div" class="cp_box_gray_slim">
+		<div id="propose_parent_form_container">
+			<div id="propose_parent_btn" class ="cp_btn_light"><p>propose parent</p></div>
+			<div id="propose_parent_form">
+				<input type="text" placeholder="parent" id="parent_goal_input"></input> 
+				<div id="propose_parent_save_btn" class ="cp_btn_dark"><p>save</p></div>
+			</div>
+		</div>
+		<div id="propose_parent_decision_container">
+		</div>
+		<div id="state_decision_div"></div>
+	</div>
+	<div id="new_subgoal_form" class="cp_box_gray_slim">
+		<p>Tag:</p><input type="text" id="new_subgoal_tag_input"></input>
+		<p>Description:</p><textarea type="text" id="new_subgoal_description_input"></textarea>
+		<div id="new_subgoal_save_btn" class="cp_btn_dark">
+			<p>save</p>
+		</div>
+	</div>
 	<div id="subgoals_div"></div>
+	
 </div>

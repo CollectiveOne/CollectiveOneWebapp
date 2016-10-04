@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Goal;
@@ -90,7 +87,7 @@ public class GoalDao extends BaseDao {
 		
 		boolean only_parent_goals = true;
 		
-		/* Only filter subgoals if showing accepted goals, otherwise nothing would be shown */
+		/* Only filter subgoals if showing accepted goals, non accepted goals are not formal goals */
 		if(filters.getStateNames().size() > 0) {
 			if(!filters.getStateNames().contains("ACCEPTED")) {
 				only_parent_goals = false;
@@ -98,93 +95,37 @@ public class GoalDao extends BaseDao {
 		}
 		
 		if(only_parent_goals) {
-			/* Filter all goals that are subgoals so that results are only parent only goals */
-			DetachedCriteria subgoalsIds = DetachedCriteria.forClass(Goal.class,"goalx")
-					.createAlias("goalx.subgoals", "subgoalsx")
-					.setProjection(Projections.property("subgoalsx.id"));
-			
-			DetachedCriteria notSubgoals = DetachedCriteria.forClass(Goal.class)
-					.add(Subqueries.propertyNotIn("id",subgoalsIds))
-					.setProjection(Projections.property("id"));
-			
-			q.add(Subqueries.propertyIn("id", notSubgoals));
+			q.add(Restrictions.isNull("parent"));
 		}
 		
 		return getObjectsAndResSet(q, filters, Goal.class);
 		
 	}
 	
-	public Goal getSubGoal(int goalId, int subGoalId) {
-		Session session = sessionFactory.getCurrentSession();
-
-		Query query = session.createQuery(
-				"SELECT subgoalx "
-						+" FROM Goal goalx "
-						+ "JOIN goalx.subgoals subgoalx "
-						+ "WHERE goalx.id = :gId "
-						+ "AND subgoalx.id = :sId "
-				);
+	public List<Goal> getSubgoals(int goalId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class,"go");
 		
-		query.setParameter("gId", goalId);
-		query.setParameter("sId", subGoalId);
+		query.createAlias("go.parent","pa")
+			.add(Restrictions.eq("pa.id", goalId));
 		
-		return (Goal) query.uniqueResult();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Goal> getAllSubGoals() {
-		Session session = sessionFactory.getCurrentSession();
-
-		DetachedCriteria subQuery = DetachedCriteria.forClass(Goal.class,"goalx")
-				.createAlias("goalx.subgoals", "subgoalsx")
-				.setProjection(Projections.property("subgoalsx.id"));
-		
-		Criteria query = session.createCriteria(Goal.class)
-				.add(Subqueries.propertyNotIn("id",subQuery));
-		
+		@SuppressWarnings("unchecked")
 		List<Goal> res = (List<Goal>) query.list();
 		
 		return res;
-	}
-	
-	public String addSubGoal(int goalId, int subGoalId) {
-		String msg;
-		
-		if(getSubGoal(goalId,subGoalId) == null) {
-			// goal is not a subgoal yet
-			Goal goal = get(goalId);
-			goal.getSubgoals().add(get(subGoalId));
-			msg = "subgoal added";
-		} else {
-			msg = "subgoal is already set";
-		}
-		
-		return msg;
-	}
-	
-	public Goal getParent(int goalId) {
-		Session session = sessionFactory.getCurrentSession();
-
-		Query query = session.createQuery(
-				"SELECT goalx " 
-						+"  FROM Goal goalx "
-						+ "JOIN goalx.subgoals subgoalx "
-						+ "WHERE subgoalx.id = :gId "
-				);
-		
-		query.setParameter("gId", goalId);
-		
-		return (Goal) query.uniqueResult();
 	}
 	
 	public List<Goal> getAllParents(int goalId) {
 		
 		List<Goal> parents = new ArrayList<Goal>();
 		
-		Goal parent = getParent(goalId);
-		while(parent != null) {
+		Goal goal = get(goalId);
+		Goal parent = goal.getParent();
+		int count = 0;
+		
+		while((parent != null) && (count < 20)) {
 			parents.add(parent);
-			parent = getParent(parent.getId());
+			parent = parent.getParent();
+			count++;
 		}
 		return parents;
 	}

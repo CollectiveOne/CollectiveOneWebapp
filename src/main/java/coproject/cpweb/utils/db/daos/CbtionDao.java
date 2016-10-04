@@ -82,7 +82,7 @@ public class CbtionDao extends BaseDao {
 				goalDisj.add(Restrictions.eq("go.id",goal.getId()));
 				
 				if(filters.getGoalSubgoalsFlag()) {
-					for(Goal subgoal : goal.getSubgoals()) {
+					for(Goal subgoal : goalDao.getSubgoals(goal.getId())) {
 						goalDisj.add(Restrictions.eq("go.id",subgoal.getId()));
 					}
 				}

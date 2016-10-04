@@ -36,10 +36,10 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 	if(this.cbtion.parentGoalsTags) {
 		for(var ix in this.cbtion.parentGoalsTags) {
 			var this_parent = this.cbtion.parentGoalsTags[ix];
-			$("#goal_div",this.container).append("<a href=../views/GoalPage.action?goalTag="+this_parent+">@"+this_parent+"</a> &#x2192 ");
+			$("#goal_div",this.container).append("<a href=../views/GoalPage.action?goalTag="+this_parent+">&#x0371 "+this_parent+"</a> ");
 		}
 	}
-	if(this.cbtion.goalTag)	$("#goal_div",this.container).append("<a href=../views/GoalPage.action?goalTag="+this.cbtion.goalTag+">@"+this.cbtion.goalTag+"</a>");
+	if(this.cbtion.goalTag)	$("#goal_div",this.container).append("<a href=../views/GoalPage.action?goalTag="+this.cbtion.goalTag+">&#x0371 "+this.cbtion.goalTag+"</a>");
 
 	$("#project_div",this.container).append("<a href=ProjectPage.action?projectName="+this.cbtion.projectName+">"+this.cbtion.projectName+"</a>");
 	$("#state_div",this.container).append("<p>"+this.cbtion.state+"</p>");
