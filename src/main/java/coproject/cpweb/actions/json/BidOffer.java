@@ -5,11 +5,12 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 
+import coproject.cpweb.utils.db.entities.Bid;
 import coproject.cpweb.utils.db.entities.User;
-import coproject.cpweb.utils.db.entities.dtos.BidDto;
+import coproject.cpweb.utils.db.entities.dtos.OfferDto;
 import coproject.cpweb.utils.db.entities.dtos.UserDto;
 
-@Action("BidNew")
+@Action("BidOffer")
 @ParentPackage("json-data")
 @Results({
     @Result(name="success", type="json", params={"ignoreHierarchy","false",
@@ -17,30 +18,23 @@ import coproject.cpweb.utils.db.entities.dtos.UserDto;
     				+ "^resStatus.*"}),
     @Result(name="input", type="json", params={"ignoreHierarchy","false","includeProperties","^fieldErrors.*,res"})
 })
-public class BidNew extends CpAction {
+public class BidOffer extends CpAction {
 	
 	private static final long serialVersionUID = 1L;
 	
 	/* Input Json  */
-	private BidDto bidDto = new BidDto();
-	public BidDto getBidDto() {
-		return bidDto;
+	private OfferDto offerDto = new OfferDto();
+	public OfferDto getOfferDto() {
+		return offerDto;
 	}
-	public void setBidDto(BidDto bidDto) {
-		this.bidDto = bidDto;
+
+	public void setOfferDto(OfferDto offerDto) {
+		this.offerDto = offerDto;
 	}
-	
-	private boolean offer;
-	public boolean getOffer() {
-		return offer;
-	}
-	public void setOffer(boolean offer) {
-		this.offer = offer;
-	}
+
 	public void validate() {
-		if(offer) { if(bidDto.getDeliveryDate() == 0) {
-				addFieldError("delivery date", " needed");
-			}
+		if(offerDto.getDeliveryDate() == 0) {
+			addFieldError("delivery date", " needed");
 		}
 	}
 	
@@ -48,27 +42,17 @@ public class BidNew extends CpAction {
 	public String execute() throws Exception  {
     	
 		UserDto userLoggedDtoSes = (UserDto) getSession().get("userLoggedDto");
-		User creator = dbServices.userGet(bidDto.getCreatorDto().getUsername());
+		User creator = dbServices.userGet(offerDto.getCreatorUsername());
 		
 		if(creator.getId() != userLoggedDtoSes.getId()) {
 			addFieldError("creator", " project creator is not logged in");
 			return SUCCESS;
 		}
 			
-		int bidId = dbServices.bidCreate(bidDto);
-		
-		/* if pps offered and delivery date are provided switch state to OFFERED */
-		if(dbServices.getStatus().getSuccess()) {
-			if(offer) {
-				dbServices.bidFromConsideringToOffered(bidId,bidDto.getPpoints(),bidDto.getDeliveryDate());
-			}	
-		}		
-		
+		Bid bid = dbServices.bidGet(offerDto.getBidId());
+				
+		dbServices.bidFromConsideringToOffered(bid.getId(), offerDto.getPpoints(), offerDto.getDeliveryDate());
 		resStatus = dbServices.getStatus();
-		
-		// updated logged user data with new projects
-		UserDto userLoggedDto = dbServices.userGetDto(creator.getUsername());
-		getSession().put("userLoggedDto",userLoggedDto);
 		
 		return SUCCESS;
     }

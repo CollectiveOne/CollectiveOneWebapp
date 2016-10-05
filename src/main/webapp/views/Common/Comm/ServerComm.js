@@ -542,10 +542,11 @@ ServerComm.prototype = {
 			})
 		},
 
-		bidNew : function(bidData,callbackFunction,callbackObj) {
+		bidNew : function(bidData,offer,callbackFunction,callbackObj) {
 
 			var data = {
-					'bidDto' : bidData
+					'bidDto' : bidData,
+					'offer': offer
 			};
 			var datastr = JSON.stringify(data);
 
@@ -556,11 +557,43 @@ ServerComm.prototype = {
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
-					if (data.res) {
-						showOutput(data.msg, "DarkGreen");
-						setTimeout(function() {
-							callbackFunction.call(callbackObj);
-						}, 3000);
+					if (data) {
+						showReqOutput(data.resStatus);
+						if(data.resStatus.success) {
+							setTimeout(function() {
+								callbackFunction.call(callbackObj);
+							}, 2000);	
+						}
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+					showOutput("error creating bid");
+				}
+			})
+		},
+
+		bidOffer : function(offerData,callbackFunction,callbackObj) {
+
+			var data = {
+					'offerDto' : offerData
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/BidOffer',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data.resStatus) {
+						showReqOutput(data.resStatus);
+						if(data.resStatus.success) {
+							setTimeout(function() {
+								callbackFunction.call(callbackObj);
+							}, 2000);	
+						}
 					} else {
 						showOutput(data);
 					}

@@ -942,73 +942,35 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public String bidCreate(BidDto bidDtoIn) {
+	public int bidCreate(BidDto bidDtoIn) {
 
 		int cbtionId = bidDtoIn.getCbtionId();
 		int userId = bidDtoIn.getCreatorDto().getId();
 
 		Bid bid = bidDao.getOfCbtionAndUser(cbtionId, userId);
 		
+		/* create bid only if this user has not created one yet */
 		if(bid == null) {
 			Cbtion cbtion = cbtionDao.get(cbtionId);
 			
+			/* create bid only if this the contribution is still open */
 			if(cbtion.getState() == CbtionState.OPEN) {
-			
 				Project project = cbtion.getProject();
 				projectDao.save(project);
 				
-				/* create bid only if this user has not created one yet */
 				bid = new Bid();
 	
 				bid.setCreator(userDao.get(userId));
 				bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				bid.setDescription(bidDtoIn.getDescription());
-				bid.setDeliveryDate(new Timestamp(bidDtoIn.getDeliveryDate()));
 				bid.setCbtion(cbtion);
-				bid.setPpoints(bidDtoIn.getPpoints());
-				bid.setState(BidState.OFFERED);
-	
+				
+				bid.setState(BidState.CONSIDERING);
+				
 				bidDao.save(bid);
 				
 				cbtion.getBids().add(bid);
 				cbtionDao.save(cbtion);
-	
-				DecisionRealm realm = decisionRealmDao.getFromProjectId(bid.getCbtion().getProject().getId());
-	
-				Decision assign = new Decision();
-				assign.setCreator(userDao.get("coprojects"));
-				assign.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				assign.setDescription("assign contribution '"+bid.getCbtion().getTitle()+"' to "+bid.getCreator().getUsername());
-				assign.setFromState(BidState.OFFERED.toString());
-				assign.setToState(BidState.ASSIGNED.toString());
-				assign.setState(DecisionState.IDLE);
-				/* TODO: Include bid duration logic */
-				assign.setVerdictHours(36);
-				assign.setDecisionRealm(realm);
-				assign.setProject(project);
-				assign.setType(DecisionType.BID);
-				assign.setBid(bid);
-	
-				Decision accept = new Decision();
-				accept.setCreator(userDao.get("coprojects"));
-				accept.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				accept.setDescription("accept contribution '"+bid.getCbtion().getTitle()+"' as delivered by "+bid.getCreator().getUsername());
-				accept.setFromState(BidState.ASSIGNED.toString());
-				accept.setToState(BidState.ACCEPTED.toString());
-				accept.setState(DecisionState.IDLE);
-				/* TODO: Include bid duration logic */
-				accept.setVerdictHours(36);
-				accept.setDecisionRealm(realm);
-				accept.setProject(project);
-				accept.setType(DecisionType.BID);
-				accept.setBid(bid);
-	
-				bid.setAssign(assign);
-				bid.setAccept(accept);
-	
-				decisionRealmDao.save(realm);
-				decisionDao.save(assign);
-				decisionDao.save(accept);
 				
 				Activity act = new Activity();
 				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -1018,13 +980,61 @@ public class DbServicesImp {
 				act.setEvent("created");
 				activityDao.save(act);
 				
-				return " bid created";
+				status.setSuccess(true);
+				status.setMsg("bid created");
+				return bid.getId();
 				
 			} else {
-				return " contribution is not open";
+				status.setSuccess(false);
+				status.setMsg("contribution is not open");
+				return 0;
 			}
 		} else {
-			return " user already bid to this contribution";
+			status.setSuccess(false);
+			status.setMsg("user already bid to this contribution");
+			return 0;
+		}
+	}
+	
+	@Transactional
+	public void bidFromConsideringToOffered(int bidId, double pps, long deliveryDate) {
+		Bid bid = bidDao.get(bidId);
+		if(bid.getState() == BidState.CONSIDERING) {
+			Project project = bid.getCbtion().getProject();
+			bid.setState(BidState.OFFERED);
+			
+			bid.setPpoints(pps);
+			/* Sum one day as delivery is at the end of the date marked as delivery day*/
+			bid.setDeliveryDate(new Timestamp(deliveryDate + 24*60*60*1000));
+			bid.setState(BidState.OFFERED);
+			
+			/* prepare assign decision */
+			DecisionRealm realm = decisionRealmDao.getFromProjectId(bid.getCbtion().getProject().getId());
+			
+			Decision assign = new Decision();
+			assign.setCreator(userDao.get("coprojects"));
+			assign.setCreationDate(new Timestamp(System.currentTimeMillis()));
+			assign.setDescription("assign contribution '"+bid.getCbtion().getTitle()+"' to "+bid.getCreator().getUsername());
+			assign.setFromState(BidState.OFFERED.toString());
+			assign.setToState(BidState.ASSIGNED.toString());
+			assign.setState(DecisionState.IDLE);
+			/* TODO: Include bid duration logic */
+			assign.setVerdictHours(36);
+			assign.setDecisionRealm(realm);
+			assign.setProject(project);
+			assign.setType(DecisionType.BID);
+			assign.setBid(bid);
+			
+			bid.setAssign(assign);
+			
+			decisionDao.save(assign);
+			bidDao.save(bid);
+			
+			status.setSuccess(true);
+			status.setMsg("offer created");
+		} else {
+			status.setSuccess(false);
+			status.setMsg("bid not in considering state");
 		}
 	}
 
@@ -1081,147 +1091,127 @@ public class DbServicesImp {
 		bidDao.save(bid);
 		cbtionDao.save(cbtion);
 
-		/* Update assign decision */ 
-		Decision assign = bid.getAssign();
-
-
 		Activity act = new Activity();
 		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		act.setBid(bid);
 		act.setType(ActivityType.BID);
 		act.setProject(cbtion.getProject());
 		
-		/* update bid state based on assign decision state 
-		 * and propagate all consequences of the decision 
-		 * outcome */
-		
-		
-		switch(assign.getState()){
-		case OPEN: 
-			break;
-
-		case CLOSED_DENIED : 
-			switch(bid.getState()) {
+		switch(bid.getState()) {
 			case OFFERED:
-				bid.setState(BidState.NOT_ASSIGNED);
-				act.setEvent("not assigned");
-				activityDao.save(act);
+				Decision assign = bid.getAssign();
+				switch(assign.getState()) {
+					case OPEN: 
+						break;
+	
+					case CLOSED_DENIED : 
+						bid.setState(BidState.NOT_ASSIGNED);
+						act.setEvent("not assigned");
+						activityDao.save(act);
+						break;
+	
+					case CLOSED_ACCEPTED: 
+						bid.setState(BidState.ASSIGNED);
+						act.setEvent("assigned");
+						activityDao.save(act);
+						cbtion.setState(CbtionState.ASSIGNED);
+						
+						Project project = bid.getCbtion().getProject();
+						
+						/* prepare accept decision */
+						Decision accept = new Decision();
+						accept.setCreator(userDao.get("coprojects"));
+						accept.setCreationDate(new Timestamp(System.currentTimeMillis()));
+						accept.setDescription("accept contribution '"+bid.getCbtion().getTitle()+"' as delivered by "+bid.getCreator().getUsername());
+						accept.setFromState(BidState.ASSIGNED.toString());
+						accept.setToState(BidState.ACCEPTED.toString());
+						accept.setState(DecisionState.IDLE);
+						/* TODO: Include bid duration logic */
+						accept.setVerdictHours(36);
+						accept.setDecisionRealm(decisionRealmDao.getFromProjectId(project.getId()));
+						accept.setProject(project);
+						accept.setType(DecisionType.BID);
+						accept.setBid(bid);
+						
+						bid.setAccept(accept);
+						decisionDao.save(accept);
+						
+						break;
+	
+					default:
+						break;
+				}
 				break;
-
-			default:
-				break;
-			}
-
-			break;
-
-		case CLOSED_ACCEPTED: 
-			switch(bid.getState()) {
-			case OFFERED:
-				bid.setState(BidState.ASSIGNED);
-				act.setEvent("assigned");
-				activityDao.save(act);
-				break;
-			default:
-				break;
-			}
-
-			switch(cbtion.getState()) {
-			case OPEN:
-				cbtion.setState(CbtionState.ASSIGNED);
 				
-				break;
-			default:
-				break;
-			}
-			break;
-
-		default:
-			break;
-		} 
-
-		/* Update accept decision */ 
-		Decision accept = bid.getAccept();
-
-		/* update bid state based on accept decision state 
-		 * and propagate all consequences of the decision 
-		 * outcome */
-
-		switch(accept.getState()){
-		case OPEN: 
-			break;
-
-		case CLOSED_DENIED : 
-			switch(bid.getState()) {
 			case ASSIGNED:
-				bid.setState(BidState.NOT_ACCEPTED);
-				act.setEvent("not accepted");
-				activityDao.save(act);
-				break;
-
-			default:
-				break;
-			}
-			break;
-
-		case CLOSED_ACCEPTED: 
-			switch(bid.getState()) {
-			case ASSIGNED:
-				bid.setState(BidState.ACCEPTED); 
-
-				/* once a bid is accepted, the cbtion and all other bids on it
-				 * are closed */
-
-				/* update cbtion state */
-				cbtion.setAssignedPpoints(bid.getPpoints());
-				cbtion.setContributor(bid.getCreator());
-				cbtion.setState(CbtionState.ACCEPTED);
-
-				/* Update project */
-				Project project = cbtion.getProject(); 
-				project.getCbtionsAccepted().add(cbtion);
-				projectDao.addContributor(bid.getCreator().getId(), project.getId());
-				projectDao.save(project);
-				
-				/* Update user creator */
-				bid.getCreator().getCbtionsAccepted().add(cbtion);
-				userDao.addProjectContributed(bid.getCreator().getId(), cbtion.getProject().getId());
-				
-				/* close all other bids and decisions */
-				for(Bid otherBid : cbtion.getBids()) {
-					if(otherBid.getId() != bid.getId()) {
-						otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
-						otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
-						otherBid.setState(BidState.SUPERSEEDED);
-						bidDao.save(otherBid);
+				Decision accept = bid.getAccept();
+				if(accept != null) {
+					switch(accept.getState()) {
+						case OPEN: 
+							break;
+		
+						case CLOSED_DENIED: 
+							bid.setState(BidState.NOT_ACCEPTED);
+							act.setEvent("not accepted");
+							activityDao.save(act);
+							break;
+		
+						case CLOSED_ACCEPTED: 
+							bid.setState(BidState.ACCEPTED); 
+							
+							/* once a bid is accepted, the cbtion and all other bids on it
+							 * are closed */
+	
+							/* update cbtion state */
+							cbtion.setAssignedPpoints(bid.getPpoints());
+							cbtion.setContributor(bid.getCreator());
+							cbtion.setState(CbtionState.ACCEPTED);
+	
+							/* Update project */
+							Project project = cbtion.getProject(); 
+							project.getCbtionsAccepted().add(cbtion);
+							projectDao.addContributor(bid.getCreator().getId(), project.getId());
+							projectDao.save(project);
+							
+							/* Update user creator */
+							bid.getCreator().getCbtionsAccepted().add(cbtion);
+							userDao.addProjectContributed(bid.getCreator().getId(), cbtion.getProject().getId());
+							
+							/* close all other bids and decisions */
+							for(Bid otherBid : cbtion.getBids()) {
+								if(otherBid.getId() != bid.getId()) {
+									otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
+									otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
+									otherBid.setState(BidState.SUPERSEEDED);
+									bidDao.save(otherBid);
+								}
+							}
+	
+							/* add author to decision realm (internally checks if it is already in it) 
+							 * the pps are added to the weight of that user in that decision realm, therefore
+							 * bookkeeping of pps of user per realm is only taken here */
+							voterDao.updateOrAdd(decisionRealmDao.getIdFromProjectId(cbtion.getProject().getId()), 
+									bid.getCreator().getId(),
+									bid.getPpoints());
+							
+							
+							act.setEvent("accepted");
+							activityDao.save(act);
+							
+							break;
+						
+						default:
+							break;
 					}
 				}
-
-				/* add author to decision realm (internally checks if it is already in it) 
-				 * the pps are added to the weight of that user in that decision realm, therefore
-				 * bookkeeping of pps of user per realm is only taken here */
-				voterDao.updateOrAdd(decisionRealmDao.getIdFromProjectId(cbtion.getProject().getId()), 
-						bid.getCreator().getId(),
-						bid.getPpoints());
-				
-				
-				act.setEvent("accepted");
-				activityDao.save(act);
-				
 				break;
-				
-			case ACCEPTED:
-				break;
-				
+			
 			default:
 				break;
-			}
-			
-			break;
-
-		default:
-			break;
-		} 
+					
+		}
 	}
+	
 	
 	@Transactional
 	public ThesisDto thesisOfUser(int decId, int userId) {

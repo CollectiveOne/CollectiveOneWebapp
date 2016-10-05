@@ -4,7 +4,7 @@ public class ResStatus {
 	private boolean success;
 	private String msg;
 	
-	public boolean isSuccess() {
+	public boolean getSuccess() {
 		return success;
 	}
 	public void setSuccess(boolean success) {

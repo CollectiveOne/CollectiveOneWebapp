@@ -2,6 +2,7 @@ function CbtionBoxComplete(container_id,cbtionData) {
 	// Parent constructor
 	this.container = $(container_id);
 	this.cbtion = cbtionData;
+	this.bidOffer = false;
 }
 
 CbtionBoxComplete.prototype.draw = function() {
@@ -48,20 +49,19 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 
 	}
 	
-	
+	if(GLOBAL.sessionData.userLogged) $("#new_bid_btn",this.container).show();
+
 	$("#new_bid_btn",this.container).click(function (){
-		if(GLOBAL.sessionData.userLogged) {
-			$("#new_bid_form_container",this.container).toggle();
-			$("#newbid_username_div",this.container).html(("<p>"+GLOBAL.sessionData.userLogged.username+"</p>"));
-		} else {
-			$("#new_bid_div",this.container).hide();
-			showOutput("plase login to bid to this contribution","DarkRed");
-		}
+		$("#new_bid_form_container",this.container).toggle();
+		$("#newbid_username_div",this.container).html(("<p>bidder: "+GLOBAL.sessionData.userLogged.username+"</p>"));
 	});
 
-	$("#newbid_datepicker",this.container).datepicker();
-	$("#newbid_submit_div",this.container).click(this.bidNew.bind(this));
+	$("#newbid_just_considering_btn",this.container).click(this.bidConsideringClick.bind(this));
+	$("#newbid_offer_now_btn",this.container).click(this.bidOfferClick.bind(this));
 	
+	$("#newbid_submit_div",this.container).click(this.bidNew.bind(this));
+	$("#newbid_datepicker",this.container).datepicker();
+		
 	if(this.cbtion.ncomments > 0) {
 		$("#show_comments_btn",this.container).append("<p>show comments ("+this.cbtion.ncomments+")</p>")
 	} else {
@@ -72,6 +72,25 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 
 	this.updateBids();
 }
+
+CbtionBoxComplete.prototype.bidConsideringClick = function() {
+	this.bidOffer = false;
+	$("#newbid_just_considering_btn",this.container).removeClass("cp_btn_light").addClass("cp_btn_dark");
+	$("#newbid_offer_now_btn",this.container).removeClass("cp_btn_dark").addClass("cp_btn_light");
+
+	$("#newbid_ppoints_div",this.container).hide();
+	$("#newbid_delivery_date_div",this.container).hide();
+}
+
+CbtionBoxComplete.prototype.bidOfferClick = function() {
+	this.bidOffer = true;
+	$("#newbid_just_considering_btn",this.container).removeClass("cp_btn_dark").addClass("cp_btn_light");
+	$("#newbid_offer_now_btn",this.container).removeClass("cp_btn_light").addClass("cp_btn_dark");
+
+	$("#newbid_ppoints_div",this.container).show();
+	$("#newbid_delivery_date_div",this.container).show();
+}
+
 
 CbtionBoxComplete.prototype.showCommentsClick = function() {
 	$("#comments_box_container",this.container).toggle();
@@ -88,30 +107,24 @@ CbtionBoxComplete.prototype.promoteDownClick = function() {
 }
 
 CbtionBoxComplete.prototype.bidNew = function (){
-	
-	if($("#newbid_ppoints_in",this.container).attr('value') != "") {
-		if($("#newbid_description_in",this.container).attr('value') != "") {
-			if($("#newbid_datepicker",this.container).attr('value') != "") {
-				var bidData = { 
-					cbtionId:this.cbtion.id,
-					ppoints:$("#newbid_ppoints_in",this.container).attr('value'),
-					description:$("#newbid_description_in",this.container).attr('value'),
-					deliveryDate:Date.parse($("#newbid_datepicker",this.container).attr('value')),
-					creatorDto: GLOBAL.sessionData.userLogged
-				}; 
+	if($("#newbid_description_in",this.container).val() != "") {
+		var bidData = { 
+			cbtionId:this.cbtion.id,
+			description:$("#newbid_description_in",this.container).val(),
+			creatorDto: GLOBAL.sessionData.userLogged
+		}; 
 
-				GLOBAL.serverComm.bidNew(bidData,this.newBidSavedCallback,this);
-			} else {
-				showOutput("please select a delivery date","darkred");
-			}
-		} else {
-			showOutput("please add a description","darkred");
-		} 
+		if($("#newbid_datepicker",this.container).val() == "") bidData.deliveryDate = 0;
+		else bidData.deliveryDate = deliveryDate = Date.parse($("#newbid_datepicker",this.container).val());
+
+		if($("#newbid_ppoints_in",this.container).val() == "") bidData.ppoints = 0;
+		else bidData.ppoints = $("#newbid_ppoints_in",this.container).val();
+		
+		GLOBAL.serverComm.bidNew(bidData,this.bidOffer,this.newBidSavedCallback,this);
+
 	} else {
-		showOutput("please chose yout bid price in pps","darkred");
-	}
-
-	
+		showOutput("please add a description","darkred");
+	} 
 }
 
 CbtionBoxComplete.prototype.newBidSavedCallback = function() {

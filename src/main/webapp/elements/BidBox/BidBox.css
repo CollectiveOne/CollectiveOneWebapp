@@ -13,16 +13,15 @@
 }
 
 #bidBox_div #bid_user_div {
-	height:50px;
 	width:100%;
 	float:left;
 	clear:both;
 }
 
 #bidBox_div #bid_div {
-	height: 70px;
+	min-height: 30px;
 	width:100%;
-	margin-top: 15px;
+	margin-top: 10px;
 	margin-bottom: 10px;
 	float:left;
 	clear:both;
@@ -33,6 +32,28 @@
 	float:left;
 	clear:both;
 }
+
+#bidBox_div #bidder_update_div {
+	width:100%;
+	float:left;
+	clear:both;
+	display: none;
+}
+
+#bidBox_div #bidder_offer_btn {
+	width:100px;
+	float:left;
+	margin-left:10px;
+}
+
+#bidBox_div #bidder_offer_save_btn {
+	width:100px;
+	float: right;
+	margin-left:10px;
+	display: none;
+	margin-right: 6px;
+}
+
 
 #bidBox_div #show_reviews_btn {
 	height: 15px;
@@ -47,6 +68,7 @@
 	clear:both;
 	overflow: auto;
 	margin-top: 5px;
+	display: none;
 }
 
 #bidBox_div #show_reviews_btn p {
@@ -74,14 +96,12 @@
 }
 
 #bidBox_div #bid_div #left_div {
-	height:100%;
-	width: 85px;
+	width: 120px;
 	float:left;
 }
 
 #bidBox_div #bid_div #right_div {
-	height:100%;
-	width: calc(100% - 85px);
+	width: calc(100% - 125px);
 	float:left;
 }
 
@@ -128,10 +148,21 @@
 	display: inline;
 }
 
+#bidBox_div #bid_div #left_div #bid_value_form {
+	width: 100%;
+	text-align:center;
+	display:none;
+}
+
+#bidBox_div #bid_div #left_div #bid_value_form input {
+	width: 50px;
+}
+
+
 #bidBox_div #bid_div #right_div #bid_description_div {
 	width:100%;
 	overflow-y: auto;
-	height: calc(100% - 15px);
+	max-height: 160px;
 }
 
 #bidBox_div #bid_div #right_div #bid_description_div p {
@@ -145,6 +176,19 @@
 	overflow:auto;
 	margin-top: 6px;
 	margin-left: 0px;
+}
+
+#bidBox_div #bid_div #right_div #bid_delivered_form {
+	width:100px;
+	margin-top: 6px;
+	margin-left: 0px;
+	float: right;
+	clear:both;
+	display:none;
+}
+
+#bidBox_div #bid_div #right_div #bid_delivered_form input {
+	width:100%;
 }
 
 #bidBox_div #bid_div #right_div #bid_delivered_div p {
