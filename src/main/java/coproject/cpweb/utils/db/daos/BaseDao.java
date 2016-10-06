@@ -112,14 +112,29 @@ public class BaseDao {
 
 		String keyw = filters.getKeyw();
 		if(keyw.length() > 0) {
-			Criterion keywInDescRestr = Restrictions.ilike("description",keyw, MatchMode.ANYWHERE);
-
+			Criterion keywInDescRestr = null;
 			Criterion keyWordCrit = null; 
 
 			String clazzName = clazz.getSimpleName();
-			if(clazzName.equals("Cbtion")) keyWordCrit = Restrictions.or(keywInDescRestr,Restrictions.ilike("title",keyw, MatchMode.ANYWHERE));
-			if(clazzName.equals("Decision")) keyWordCrit = keywInDescRestr; 
-			if(clazzName.equals("Goal")) keyWordCrit = Restrictions.or(keywInDescRestr,Restrictions.ilike("goalTag",keyw, MatchMode.ANYWHERE)); 
+			
+			if(clazzName.equals("Cbtion")) {
+				keywInDescRestr = Restrictions.ilike("description",keyw, MatchMode.ANYWHERE);
+				keyWordCrit = Restrictions.or(keywInDescRestr,Restrictions.ilike("title",keyw, MatchMode.ANYWHERE));
+			}
+			
+			if(clazzName.equals("Decision")) {
+				keywInDescRestr = Restrictions.ilike("description",keyw, MatchMode.ANYWHERE);
+				keyWordCrit = keywInDescRestr;
+			} 
+			
+			if(clazzName.equals("Goal")) {
+				keywInDescRestr = Restrictions.ilike("description",keyw, MatchMode.ANYWHERE);
+				keyWordCrit = Restrictions.or(keywInDescRestr,Restrictions.ilike("goalTag",keyw, MatchMode.ANYWHERE));
+			}
+			
+			if(clazzName.equals("Activity")) { 
+				keyWordCrit = Restrictions.ilike("event",keyw, MatchMode.ANYWHERE);
+			}
 
 			q.add(keyWordCrit);
 		}

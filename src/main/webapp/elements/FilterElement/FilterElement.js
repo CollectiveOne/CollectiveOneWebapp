@@ -143,7 +143,12 @@ FilterElement.prototype.getFiltersAndUpdateData = function() {
 	}
 
 	this.filters.keyw = $("#filter_keyword_input", this.container).val();
-	this.filters.creatorUsernames = [$("#filter_creator_input", this.container).val()];
+	if($("#filter_creator_input", this.container).val() != "") {
+		this.filters.creatorUsernames = [$("#filter_creator_input", this.container).val()];
+	} else {
+		this.filters.creatorUsernames = [];
+	}
+		
 	this.filters.goalTag = $("#filter_goal_input", this.container).val();
 	this.filters.goalSubgoalsFlag = $("#filter_subgoals_input").is(":checked");
 	this.filters.contributorUsername = $("#filter_contributor_input", this.container).val();
