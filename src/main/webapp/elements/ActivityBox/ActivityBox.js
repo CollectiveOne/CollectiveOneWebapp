@@ -28,6 +28,11 @@ ActivityBox.prototype.activityBoxLoaded = function() {
 					eventPretty = "bid from <a href=UserPage.action?username="+this.activity.bidDto.creatorDto.username+">"+this.activity.bidDto.creatorDto.username+"</a>"+
 						" to <a href=CbtionPage.action?cbtionId="+this.activity.bidDto.cbtionId+">"+this.activity.bidDto.cbtionTitle+"</a> was "+this.activity.event;
 					break;
+
+				case "marked done":
+					eventPretty = "<a href=UserPage.action?username="+this.activity.bidDto.creatorDto.username+">"+this.activity.bidDto.creatorDto.username+"</a>"+
+						" marked bid on <a href=CbtionPage.action?cbtionId="+this.activity.bidDto.cbtionId+">"+this.activity.bidDto.cbtionTitle+"</a> as done";
+					break;
 			}
 			
 			break;

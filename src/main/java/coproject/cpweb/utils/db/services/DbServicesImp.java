@@ -1047,6 +1047,14 @@ public class DbServicesImp {
 		bid.setDoneDate(new Timestamp(System.currentTimeMillis()));
 		bidDao.save(bid);	
 		
+		Activity act = new Activity();
+		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		act.setProject(bid.getCbtion().getProject());
+		act.setBid(bid);
+		act.setType(ActivityType.BID);
+		act.setEvent("marked done");
+		activityDao.save(act);
+		
 		status.setMsg("bid marked as done");
 		status.setSuccess(true);
 	}
