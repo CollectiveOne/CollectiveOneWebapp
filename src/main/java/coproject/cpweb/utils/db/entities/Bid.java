@@ -43,6 +43,12 @@ public class Bid {
 	@OneToOne
 	private Decision accept;
 	
+	private BidDoneState doneState;
+	private Timestamp doneDate;
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")
+	private String doneDescription;
+	
 	@OneToMany
 	private List<Review> reviews = new ArrayList<Review>();
 	
@@ -63,6 +69,9 @@ public class Bid {
 		if(state != null) dto.setState(state.toString());
 		if(assign != null) dto.setAssignDec(assign.toDto());
 		if(accept != null) dto.setAcceptDec(accept.toDto());
+		if(doneState != null) dto.setDoneState(doneState.toString());
+		if(doneDate != null) dto.setDoneDate(doneDate.getTime());
+		if(doneDescription != null) dto.setDoneDescription(doneDescription);		
 		
 		return dto;
 	}
@@ -133,8 +142,24 @@ public class Bid {
 	public void setReviews(List<Review> reviews) {
 		this.reviews = reviews;
 	}
-	
-	
+	public BidDoneState getDoneState() {
+		return doneState;
+	}
+	public void setDoneState(BidDoneState doneState) {
+		this.doneState = doneState;
+	}
+	public Timestamp getDoneDate() {
+		return doneDate;
+	}
+	public void setDoneDate(Timestamp doneDate) {
+		this.doneDate = doneDate;
+	}
+	public String getDoneDescription() {
+		return doneDescription;
+	}
+	public void setDoneDescription(String doneDescription) {
+		this.doneDescription = doneDescription;
+	}
 	
 }
 

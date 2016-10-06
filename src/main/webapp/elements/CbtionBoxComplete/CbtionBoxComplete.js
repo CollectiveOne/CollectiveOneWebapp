@@ -51,10 +51,7 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	
 	if(GLOBAL.sessionData.userLogged) $("#new_bid_btn",this.container).show();
 
-	$("#new_bid_btn",this.container).click(function (){
-		$("#new_bid_form_container",this.container).toggle();
-		$("#newbid_username_div",this.container).html(("<p>bidder: "+GLOBAL.sessionData.userLogged.username+"</p>"));
-	});
+	$("#new_bid_btn",this.container).click(this.newBidClick.bind(this));
 
 	$("#newbid_just_considering_btn",this.container).click(this.bidConsideringClick.bind(this));
 	$("#newbid_offer_now_btn",this.container).click(this.bidOfferClick.bind(this));
@@ -71,6 +68,16 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	$("#show_comments_btn",this.container).click(this.showCommentsClick.bind(this));
 
 	this.updateBids();
+}
+
+CbtionBoxComplete.prototype.newBidClick = function (){
+	if(this.cbtion.state == "OPEN") {
+		$("#new_bid_form_container",this.container).toggle();
+		$("#newbid_username_div",this.container).html(("<p>bidder: "+GLOBAL.sessionData.userLogged.username+"</p>"));	
+	} else {
+		showOutput("contribution is not open");
+	}
+	
 }
 
 CbtionBoxComplete.prototype.bidConsideringClick = function() {

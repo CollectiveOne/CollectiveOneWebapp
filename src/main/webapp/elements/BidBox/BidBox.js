@@ -37,7 +37,14 @@ BidBox.prototype.bidBoxLoaded = function() {
 	
 	$("#bid_times_created_div",this.container).append($("<p id=bid_times_created_p>created "+getTimeStrSince(this.bid.creationDate)+" ago</p>"));
 	$("#bid_description_div",this.container).append("<p>"+this.bid.description+"</p>");
-	$("#bid_delivered_div",this.container).append($("<p id=bid_delivered_p>...to be delivered in "+getTimeStrUntil(this.bid.deliveryDate)+"</p>"));
+
+	if(this.bid.doneState == "DONE") {
+		$("#bid_delivered_div",this.container).append($("<p>done "+getTimeStrSince(this.bid.doneDate)+" ago</p>"));
+		$("#bid_done_description",this.container).append($("<p>"+this.bid.doneDescription+"</p>"));
+	} else {
+		$("#bid_delivered_div",this.container).append($("<p>to be delivered in "+getTimeStrUntil(this.bid.deliveryDate)+"</p>"));
+	}
+		
 	
 	switch(this.bid.state) {
 		case "CONSIDERING":
@@ -45,22 +52,22 @@ BidBox.prototype.bidBoxLoaded = function() {
 			$("#bid_delivered_div",this.container).hide();
 			$("#show_reviews_btn",this.container).hide();
 			
-			if(GLOBAL.sessionData.userLogged) {
-				if(GLOBAL.sessionData.userLogged.username == this.bid.creatorDto.username) {
-					$("#bidder_update_div",this.container).show();
-					$("#bidder_offer_btn",this.container).click(this.offerNowClick.bind(this));
-				}
-			}
+			this.enableBidderControl();
+			this.enableOffer();
 
 			break;
 
 		case "OFFERED":
+			this.enableBidderControl();
+			this.enableDone();
 			var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),this.bid.assignDec, GLOBAL.sessionData.userLogged);
 			decBox.draw();
 			$("#show_reviews_btn",this.container).hide();
 			break;
 			
 		case "ASSIGNED":
+			this.enableBidderControl();
+			this.enableDone();
 			var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),this.bid.acceptDec, GLOBAL.sessionData.userLogged);
 			decBox.draw();
 			$("#show_reviews_btn",this.container).hide();
@@ -82,9 +89,44 @@ BidBox.prototype.bidBoxLoaded = function() {
 	
 }
 
+BidBox.prototype.enableBidderControl = function() {
+	if(GLOBAL.sessionData.userLogged) {
+		if(GLOBAL.sessionData.userLogged.username == this.bid.creatorDto.username) {
+			$("#bidder_update_div",this.container).show();
+		}
+	}
+}
+
+BidBox.prototype.enableOffer = function() {
+	$("#bidder_offer_btn",this.container).toggle();
+	$("#bidder_offer_btn",this.container).click(this.offerNowClick.bind(this));
+}
+
+BidBox.prototype.enableDone = function() {
+	if(this.bid.doneState != "DONE") {
+		$("#bidder_done_btn",this.container).show();
+		$("#bidder_done_btn",this.container).click(this.markDoneClick.bind(this));
+		$("#bid_markdone_save_btn",this.container).click(this.doneSaveClick.bind(this));	
+	}
+}
+
+BidBox.prototype.markDoneClick = function() {
+	$("#mark_done_form",this.container).toggle();
+}
+
+BidBox.prototype.doneSaveClick = function() {
+	GLOBAL.serverComm.bidMarkDone(this.bid.id, $("#bid_markdone_in",this.container).val(),this.markDoneSaveCallback,this);
+}
+
+BidBox.prototype.markDoneSaveCallback = function() {
+	this.udpateBid();
+}
+
+
 BidBox.prototype.offerNowClick = function() {
 	$("#bid_description_div",this.container).hide();
-
+	$("#bidder_offer_btn",this.container).hide();
+	
 	$("#bid_value_form",this.container).show();
 	$("#bid_description_form",this.container).show();
 	$("#offer_description_in",this.container).val(this.bid.description);

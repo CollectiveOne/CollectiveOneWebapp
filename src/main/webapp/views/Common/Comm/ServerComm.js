@@ -605,6 +605,36 @@ ServerComm.prototype = {
 			})
 		},
 
+		bidMarkDone : function(bidId,description,callbackFunction,callbackObj) {
+
+			var data = {
+					'bidId' : bidId,
+					'description': description
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/BidMarkDone',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data.resStatus) {
+						showReqOutput(data.resStatus);
+						callbackFunction.call(callbackObj);
+					} else {
+						showOutput(data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+					showOutput("error creating bid");
+				}
+			})
+		},
+
+
 		decisionGet : function(decisionId,callbackFunction,callbackObj) {
 
 			var data = {

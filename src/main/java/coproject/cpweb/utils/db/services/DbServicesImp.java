@@ -1040,6 +1040,18 @@ public class DbServicesImp {
 	}
 
 	@Transactional
+	public void bidMarkDone(int bidId, String description) {
+		Bid bid = bidDao.get(bidId);
+		bid.setDoneState(BidDoneState.DONE);
+		bid.setDoneDescription(description);
+		bid.setDoneDate(new Timestamp(System.currentTimeMillis()));
+		bidDao.save(bid);	
+		
+		status.setMsg("bid marked as done");
+		status.setSuccess(true);
+	}
+	
+	@Transactional
 	public List<BidDto> bidGetOfUserDto(int userId) {
 		List<Bid> bids = bidDao.getOfUser(userId);
 		List<BidDto> bidDtos = new ArrayList<BidDto>();

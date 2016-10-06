@@ -18,6 +18,11 @@ public class BidDto {
 	private String state;
 	private DecisionDto assignDec;
 	private DecisionDto acceptDec;
+	private String doneState;
+	private long doneDate;
+	private String doneDescription;
+	
+	
 	
 	public Bid toBid(User creator, Cbtion cbtion) {
 		Bid bid = new Bid();
@@ -99,5 +104,24 @@ public class BidDto {
 	public void setAcceptDec(DecisionDto acceptDec) {
 		this.acceptDec = acceptDec;
 	}
+	public String getDoneState() {
+		return doneState;
+	}
+	public void setDoneState(String doneState) {
+		this.doneState = doneState;
+	}
+	public long getDoneDate() {
+		return doneDate;
+	}
+	public void setDoneDate(long doneDate) {
+		this.doneDate = doneDate;
+	}
+	public String getDoneDescription() {
+		return doneDescription;
+	}
+	public void setDoneDescription(String doneDescription) {
+		this.doneDescription = doneDescription;
+	}
+	
 
 }

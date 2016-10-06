@@ -38,12 +38,29 @@
 	float:left;
 	clear:both;
 	display: none;
+	margin-top: 10px;
+}
+
+#bidBox_div #mark_done_form {
+	width:100%;
+	float:left;
+	clear:both;
+	display: none;
+	margin-top: 10px;
 }
 
 #bidBox_div #bidder_offer_btn {
 	width:100px;
 	float:left;
 	margin-left:10px;
+	display: none;
+}
+
+#bidBox_div #bidder_done_btn {
+	width:100px;
+	float:left;
+	margin-left:10px;
+	display: none;
 }
 
 #bidBox_div #bidder_offer_save_btn {
@@ -139,7 +156,7 @@
 	width:100%;
 	height: 10px;
 	overflow:auto;
-	margin-left: 5px;
+	text-align: center;
 }
 
 #bidBox_div #bid_div #left_div #bid_times_created_div p {
@@ -165,6 +182,11 @@
 	max-height: 160px;
 }
 
+#bidBox_div #bid_div #right_div p {
+	font-size:10px;	
+}
+
+
 #bidBox_div #bid_div #right_div #bid_description_form {
 	width:100%;
 	overflow-y: auto;
@@ -181,12 +203,32 @@
 
 #bidBox_div #bid_div #right_div #bid_description_div p {
 	margin-top:0px;
-	font-size:10px;
+}
+
+#bidBox_div #mark_done_form #bid_markdone_in {
+	width:100%;
+	float:left;
+	resize: vertical;
+	overflow-y: auto;
+	max-height: 160px;
+	margin-bottom: 10px;
+}
+
+#bidBox_div #mark_done_form #bid_markdone_save_btn {
+	width:100px;
+	float: right;
 }
 
 #bidBox_div #bid_div #right_div #bid_delivered_div {
 	width:100%;
 	height: 12px;
+	overflow:auto;
+	margin-top: 6px;
+	margin-left: 0px;
+}
+
+#bidBox_div #bid_div #right_div #bid_done_description {
+	width:240px;
 	overflow:auto;
 	margin-top: 6px;
 	margin-left: 0px;
@@ -207,6 +249,5 @@
 
 #bidBox_div #bid_div #right_div #bid_delivered_div p {
 	margin-top:0px;
-	font-size:10px;
 	text-align:right;
 }

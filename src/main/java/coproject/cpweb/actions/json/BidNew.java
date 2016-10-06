@@ -55,11 +55,12 @@ public class BidNew extends CpAction {
 			return SUCCESS;
 		}
 			
-		dbServices.bidCreate(bidDto);
+		int bidId = dbServices.bidCreate(bidDto);
 		
 		/* if pps offered and delivery date are provided switch state to OFFERED */
 		if(dbServices.getStatus().getSuccess()) {
 			if(offer) {
+				bidDto.setId(bidId);
 				dbServices.bidFromConsideringToOffered(bidDto);
 			}	
 		}		
