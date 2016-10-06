@@ -997,15 +997,16 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
-	public void bidFromConsideringToOffered(int bidId, double pps, long deliveryDate) {
-		Bid bid = bidDao.get(bidId);
+	public void bidFromConsideringToOffered(BidDto bidDto) {
+		Bid bid = bidDao.get(bidDto.getId());
+		
 		if(bid.getState() == BidState.CONSIDERING) {
 			Project project = bid.getCbtion().getProject();
-			bid.setState(BidState.OFFERED);
 			
-			bid.setPpoints(pps);
+			bid.setDescription(bidDto.getDescription());
+			bid.setPpoints(bidDto.getPpoints());
 			/* Sum one day as delivery is at the end of the date marked as delivery day*/
-			bid.setDeliveryDate(new Timestamp(deliveryDate + 24*60*60*1000));
+			bid.setDeliveryDate(new Timestamp(bidDto.getDeliveryDate() + 24*60*60*1000));
 			bid.setState(BidState.OFFERED);
 			
 			/* prepare assign decision */

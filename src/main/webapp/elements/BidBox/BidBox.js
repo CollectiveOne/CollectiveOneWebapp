@@ -83,7 +83,11 @@ BidBox.prototype.bidBoxLoaded = function() {
 }
 
 BidBox.prototype.offerNowClick = function() {
+	$("#bid_description_div",this.container).hide();
+
 	$("#bid_value_form",this.container).show();
+	$("#bid_description_form",this.container).show();
+	$("#offer_description_in",this.container).val(this.bid.description);
 	$("#bid_delivered_form",this.container).show();
 	$("#offer_delivery_date_in",this.container).datepicker();
 	$("#bidder_offer_save_btn",this.container).show();
@@ -92,18 +96,20 @@ BidBox.prototype.offerNowClick = function() {
 }
 
 BidBox.prototype.offerSave = function() {
-	var offerData = {
-		bidId: this.bid.id,
-		creatorUsername: GLOBAL.sessionData.userLogged.username,
-	}
+	var bidData = { 
+		id: this.bid.id,
+		description:$("#offer_description_in",this.container).val(),
+		creatorDto: GLOBAL.sessionData.userLogged
+	}; 
 
-	if($("#offer_delivery_date_in",this.container).val() == "") offerData.deliveryDate = 0;
-	else offerData.deliveryDate = deliveryDate = Date.parse($("#offer_delivery_date_in",this.container).val());
+	if($("#offer_delivery_date_in",this.container).val() == "") bidData.deliveryDate = 0;
+	else bidData.deliveryDate = deliveryDate = Date.parse($("#offer_delivery_date_in",this.container).val());
 
-	if($("#offer_ppoints_in",this.container).val() == "") offerData.ppoints = 0;
-	else offerData.ppoints = $("#offer_ppoints_in",this.container).val();
+	if($("#offer_ppoints_in",this.container).val() == "") bidData.ppoints = 0;
+	else bidData.ppoints = $("#offer_ppoints_in",this.container).val();
 
-	GLOBAL.serverComm.bidOffer(offerData, this.offerSentCallback, this)
+	GLOBAL.serverComm.bidOffer(bidData,this.offerSentCallback,this);
+
 }
 
 BidBox.prototype.offerSentCallback = function() {

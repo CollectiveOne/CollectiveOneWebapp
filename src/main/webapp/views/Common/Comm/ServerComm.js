@@ -573,10 +573,10 @@ ServerComm.prototype = {
 			})
 		},
 
-		bidOffer : function(offerData,callbackFunction,callbackObj) {
+		bidOffer : function(bidData,callbackFunction,callbackObj) {
 
 			var data = {
-					'offerDto' : offerData
+					'bidDto' : bidData
 			};
 			var datastr = JSON.stringify(data);
 

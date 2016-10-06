@@ -107,24 +107,19 @@ CbtionBoxComplete.prototype.promoteDownClick = function() {
 }
 
 CbtionBoxComplete.prototype.bidNew = function (){
-	if($("#newbid_description_in",this.container).val() != "") {
-		var bidData = { 
-			cbtionId:this.cbtion.id,
-			description:$("#newbid_description_in",this.container).val(),
-			creatorDto: GLOBAL.sessionData.userLogged
-		}; 
+	var bidData = { 
+		cbtionId:this.cbtion.id,
+		description:$("#newbid_description_in",this.container).val(),
+		creatorDto: GLOBAL.sessionData.userLogged
+	}; 
 
-		if($("#newbid_datepicker",this.container).val() == "") bidData.deliveryDate = 0;
-		else bidData.deliveryDate = deliveryDate = Date.parse($("#newbid_datepicker",this.container).val());
+	if($("#newbid_datepicker",this.container).val() == "") bidData.deliveryDate = 0;
+	else bidData.deliveryDate = deliveryDate = Date.parse($("#newbid_datepicker",this.container).val());
 
-		if($("#newbid_ppoints_in",this.container).val() == "") bidData.ppoints = 0;
-		else bidData.ppoints = $("#newbid_ppoints_in",this.container).val();
-		
-		GLOBAL.serverComm.bidNew(bidData,this.bidOffer,this.newBidSavedCallback,this);
+	if($("#newbid_ppoints_in",this.container).val() == "") bidData.ppoints = 0;
+	else bidData.ppoints = $("#newbid_ppoints_in",this.container).val();
 
-	} else {
-		showOutput("please add a description","darkred");
-	} 
+	GLOBAL.serverComm.bidNew(bidData,this.bidOffer,this.newBidSavedCallback,this);
 }
 
 CbtionBoxComplete.prototype.newBidSavedCallback = function() {

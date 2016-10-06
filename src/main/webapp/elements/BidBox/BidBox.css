@@ -165,6 +165,20 @@
 	max-height: 160px;
 }
 
+#bidBox_div #bid_div #right_div #bid_description_form {
+	width:100%;
+	overflow-y: auto;
+	max-height: 160px;
+	display:none;
+}
+
+#bidBox_div #bid_div #right_div #bid_description_form textarea {
+	width:100%;
+	resize: vertical;
+	overflow-y: auto;
+	max-height: 160px;
+}
+
 #bidBox_div #bid_div #right_div #bid_description_div p {
 	margin-top:0px;
 	font-size:10px;
