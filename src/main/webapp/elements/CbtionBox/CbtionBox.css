@@ -1,6 +1,5 @@
 .cbtion_div {
 	/* background-color: #ccddff; */
-	min-height: 100px;
 	width:calc(100% - 6px);
 	margin-top: 6px;
 	clear:both;
@@ -9,6 +8,8 @@
 	border-style: solid;
 	border-width: 3px;
 	border-color: #cccccc;
+	padding-bottom: 5px;
+	padding-top: 5px;
 }
 
 .cbtion_div #promotion_div {
@@ -43,21 +44,18 @@
 
 .cbtion_div #cb_left_div {
 	width: calc(100% - 25px - 220px);
-	height: 100px;
 	float:left;
 	margin-top: 0px;
 }
 
 .cbtion_div #cb_center_div {
 	width:0px;
-	height: 100px;
 	float:left;
 	margin-top: 0px;
 }
 
 .cbtion_div #cb_right_div {
 	width: 220px;
-	height: 100px;
 	float:left;
 	margin-top:6px;
 }
@@ -91,9 +89,10 @@
 }
 
 .cbtion_div #left_bottom_div {
-	height: 20px;
 	width: calc(100% - 25px);
 	clear:both;
+	overflow: auto;
+	float: left;
 }
 
 .cbtion_div #left_bottom_div a {
@@ -107,13 +106,13 @@
 
 .cbtion_div #product_div {
 	float:left;
-	height: 100%;
-	width: 70%;
+	width: calc(50% - 10px);
+	margin-right: 10px;
 }
 
 .cbtion_div #goal_div {
-	float: right;
-	width: 30%;
+	float: left;
+	width: calc(50%);
 }
 
 

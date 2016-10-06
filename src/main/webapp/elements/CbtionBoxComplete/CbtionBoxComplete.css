@@ -101,12 +101,12 @@
 
 #cbtion_div #product_div {
 	float:left;
-	height: 100%;
+	width: calc(50%);
 }
 
 #cbtion_div #goal_div {
-	float: right;
-	height: 100%;
+	float: left;
+	width: calc(50% - 10px);
 }
 
 
