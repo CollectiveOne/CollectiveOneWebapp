@@ -11,7 +11,7 @@
 	<link rel="stylesheet" type="text/css" href="../elements/FilterElement/FilterElement.css"/>
 	<script type="text/javascript" src="../elements/ArgumentBox/ArgumentBox.js"></script>
 	<link rel="stylesheet" type="text/css" href="../elements/ArgumentBox/ArgumentBox.css" />
-	<title>CoProject - Search Decisions</title>
+	<title>CollectiveOne - Search Decisions</title>
 </head>
 
 <script type="text/javascript">

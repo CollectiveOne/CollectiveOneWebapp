@@ -188,7 +188,7 @@ public class DbServicesImp {
 	@Transactional
 	public void projectStart(String projectName) {
 		
-		User coprojects = userDao.get("coprojects");
+		User coprojects = userDao.get("collectiveone");
 		userDao.save(coprojects);
 		
 		Project project = projectDao.get(projectName);
@@ -364,7 +364,7 @@ public class DbServicesImp {
 		Decision create = new Decision();
 		Decision delete = new Decision();
 		
-		create.setCreator(userDao.get("coprojects"));
+		create.setCreator(userDao.get("collectiveone"));
 		create.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		create.setDescription("create goal '"+goal.getGoalTag()+"'");
 		create.setState(DecisionState.IDLE);
@@ -376,7 +376,7 @@ public class DbServicesImp {
 		create.setType(DecisionType.GOAL);
 		create.setGoal(goal);
 		
-		delete.setCreator(userDao.get("coprojects"));
+		delete.setCreator(userDao.get("collectiveone"));
 		delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		delete.setDescription("delete goal '"+goal.getGoalTag()+"'");
 		delete.setState(DecisionState.IDLE);
@@ -652,7 +652,7 @@ public class DbServicesImp {
 				
 				proposeParent.setGoal(goal);
 				proposeParent.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				proposeParent.setCreator(userDao.get("coprojects"));
+				proposeParent.setCreator(userDao.get("collectiveone"));
 				proposeParent.setDecisionRealm(decisionRealmDao.getFromProjectId(project.getId()));
 				proposeParent.setDescription("set "+proposedParent.getGoalTag()+" as parent goal");
 				proposeParent.setProject(project);
@@ -718,7 +718,7 @@ public class DbServicesImp {
 		
 		Decision open = new Decision();
 		
-		open.setCreator(userDao.get("coprojects"));
+		open.setCreator(userDao.get("collectiveone"));
 		open.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		open.setDecisionRealm(realm);
 		open.setDescription("open contribution '"+cbtion.getTitle()+"'");
@@ -1013,7 +1013,7 @@ public class DbServicesImp {
 			DecisionRealm realm = decisionRealmDao.getFromProjectId(bid.getCbtion().getProject().getId());
 			
 			Decision assign = new Decision();
-			assign.setCreator(userDao.get("coprojects"));
+			assign.setCreator(userDao.get("collectiveone"));
 			assign.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			assign.setDescription("assign contribution '"+bid.getCbtion().getTitle()+"' to "+bid.getCreator().getUsername());
 			assign.setFromState(BidState.OFFERED.toString());
@@ -1141,7 +1141,7 @@ public class DbServicesImp {
 						
 						/* prepare accept decision */
 						Decision accept = new Decision();
-						accept.setCreator(userDao.get("coprojects"));
+						accept.setCreator(userDao.get("collectiveone"));
 						accept.setCreationDate(new Timestamp(System.currentTimeMillis()));
 						accept.setDescription("accept contribution '"+bid.getCbtion().getTitle()+"' as delivered by "+bid.getCreator().getUsername());
 						accept.setFromState(BidState.ASSIGNED.toString());
@@ -1320,7 +1320,7 @@ public class DbServicesImp {
 			decisionDao.save(dec);
 			
 			/* store activity if switched state and user created decision */
-			if(!dec.getCreator().getUsername().equals("coprojects")) {
+			if(!dec.getCreator().getUsername().equals("collectiveone")) {
 				Activity act = new Activity();
 				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				act.setDecision(dec);
@@ -1428,7 +1428,7 @@ public class DbServicesImp {
 		
 		decisionDao.save(decision);
 		
-		if(!decision.getCreator().getUsername().equals("coprojects"))  {
+		if(!decision.getCreator().getUsername().equals("collectiveone"))  {
 			Activity act = new Activity();
 			act.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			act.setDecision(decision);

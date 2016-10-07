@@ -9,7 +9,7 @@
 <link rel="stylesheet" type="text/css" href="../elements/DecisionBox/DecisionBox.css" />
 <script type="text/javascript" src="../elements/ArgumentBox/ArgumentBox.js"></script>
 <link rel="stylesheet" type="text/css" href="../elements/ArgumentBox/ArgumentBox.css" />
-<title>CoProject - Contribution</title>
+<title>CollectiveOne - Decision</title>
 </head>
 
 <%@ include file="../Common/Base/BodyOver.jsp"%>

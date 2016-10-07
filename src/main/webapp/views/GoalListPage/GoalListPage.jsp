@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="../elements/GoalBox/GoalBox.css" />
 	<script type="text/javascript" src="../elements/FilterElement/FilterElement.js"></script>
 	<link rel="stylesheet" type="text/css" href="../elements/FilterElement/FilterElement.css"/>
-	<title>CoProject - Search Goals</title>
+	<title>CollectiveOne - Search Goals</title>
 </head>
 
 <script type="text/javascript">

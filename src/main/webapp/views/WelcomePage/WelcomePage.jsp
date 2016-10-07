@@ -5,22 +5,29 @@
 <%@ include file="../Common/Base/CommonHead.jsp"%>
 <script type="text/javascript" src="WelcomePage/WelcomePage.js"></script>
 <link rel="stylesheet" type="text/css" href="WelcomePage/WelcomePage.css" />
-<title>CoProject - Welcome</title>
+<title>CollectiveOne - Welcome</title>
 </head>
 
 <%@ include file="../Common/Base/BodyOver.jsp"%>
 
 <div id="content_pane">
-	<h1>Welcome to CoProjects!</h1>
-	<p class="welcome_p">In CoProjects you can create and contribute to open projects: collaborative projects to which anyone can contribute.</p>
-	<p class="welcome_p">CoProjects provides tools to manage open projects by allowing its contributors to</p>  
-	<p class="welcome_p">- efficiently take <strong>collective decisions</strong></p>
-	<p class="welcome_p">- define the overall long and short term <strong>goals of the project</strong>.</p>
-	<p class="welcome_p">- <strong>create and assign tasks</strong> to project collaborators.</p>
-	<p class="welcome_p">- <strong>keep track of the value added</strong> to the project by each contributor.</p>    
-	<p class="welcome_p">CoProjects is itself an open project at its first stages. Contributions are welcome!</p>
-        <p class="welcome_p">Contact us at pepo.ospina (a) gmail (dot) com</p>
-	<p class="welcome_p"><a href="https://docs.google.com/document/d/1C9dCnPbKEZzCqaLYjmhsYIv0t0ehlaRbzwRaMZtzNNA/edit?usp=sharing">Learn more </a></p>
+	<div id="presentation_container">
+		<iframe src="https://docs.google.com/presentation/d/1Sma1CKVq1plvPrvglOs5qHB1ldjzkHHE4g_yJBRu_0Q/embed?start=false&loop=false&delayms=3000" 
+			frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" 
+			webkitallowfullscreen="true">
+		</iframe>
+	</div>
+	
+	<div class="row_container">
+		<div id="link_to_reddit_container"><a href="https://www.reddit.com/r/CollectiveOne/" target='_blank'><img id="logo" src="../images/Reddit.png"></a></div>
+		<div id="link_to_slack_container"><a href="https://collectiveone.slack.com/" target='_blank'><img id="logo" src="../images/Slack.png"></a></div>
+		<div id="join_the_conversation"><p>Join the conversation at </p></div>
+	</div>
+	<div class="row_container">
+		<div id="learn_more">
+			<p>Take a look at the <a href="https://docs.google.com/document/d/1C9dCnPbKEZzCqaLYjmhsYIv0t0ehlaRbzwRaMZtzNNA/edit?usp=sharing" target='_blank'>white paper draft</a></p>
+		</div>
+	</div>
 </div>
 
 <%@ include file="../Common/Base/BodyBelow.jsp"%>

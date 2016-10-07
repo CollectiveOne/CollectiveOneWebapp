@@ -13,7 +13,7 @@
 <link rel="stylesheet" type="text/css" href="../elements/ReviewsElement/ReviewItem.css" />
 <link rel="stylesheet" href="../external/jquery.rateyo.css"/>
 <script type="text/javascript" src="../external/jquery.rateyo.js"></script>
-<title>CoProject - User</title>
+<title>CollectiveOne - User</title>
 </head>
 
 <script type="text/javascript">

@@ -6,7 +6,7 @@
 <script type="text/javascript" src="DecisionNewPage/DecisionNewPage.js"></script>
 <link rel="stylesheet" type="text/css" href="DecisionNewPage/DecisionNewPage.css" />
 <link rel="stylesheet" type="text/css" href="Common/Base/NewElementPage.css" />
-<title>CoProject - New Goal</title>
+<title>CollectiveOne - New Decision</title>
 </head>
 
 <script type="text/javascript">

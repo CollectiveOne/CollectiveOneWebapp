@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="../external/jquery.rateyo.css"/>
 <script type="text/javascript" src="../external/jquery.rateyo.js"></script>
 
-<title>CoProject - Contribution</title>
+<title>CollectiveOne - Contribution</title>
 </head>
 
 <script type="text/javascript">

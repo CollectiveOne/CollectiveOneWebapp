@@ -83,7 +83,7 @@ public class UserLogin extends ActionSupport implements SessionAware {
 	/* Execute */
 	public String execute() throws Exception  {
     	
-		if(!user.getUsername().equals("coprojects")) {
+		if(!user.getUsername().equals("collectiveone")) {
 			userLoggedDto = dbServices.userLoginDto(user.getUsername(), user.getPassword() );
 			
 			if(userLoggedDto!=null) {

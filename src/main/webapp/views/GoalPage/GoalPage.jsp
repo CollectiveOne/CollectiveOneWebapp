@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="../elements/CbtionList/CbtionList.css"/>
 <script type="text/javascript" src="../elements/FilterElement/FilterElement.js"></script>
 <link rel="stylesheet" type="text/css" href="../elements/FilterElement/FilterElement.css"/>
-<title>CoProject - Goal</title>
+<title>CollectiveOne - Goal</title>
 </head>
 
 <%@ include file="../Common/Base/BodyOver.jsp"%>

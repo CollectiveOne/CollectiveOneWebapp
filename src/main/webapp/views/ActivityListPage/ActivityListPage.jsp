@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="../elements/FilterElement/FilterElement.css"/>
 	<script type="text/javascript" src="../elements/ActivityBox/ActivityBox.js"></script>
 	<link rel="stylesheet" type="text/css" href="../elements/ActivityBox/ActivityBox.css"/>
-	<title>CoProject - Recent Activity</title>
+	<title>CollectiveOne - Recent Activity</title>
 </head>
 
 <script type="text/javascript">

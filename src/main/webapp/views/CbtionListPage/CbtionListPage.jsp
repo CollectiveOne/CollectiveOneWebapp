@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="../elements/CbtionList/CbtionList.css"/>
 	<script type="text/javascript" src="../elements/FilterElement/FilterElement.js"></script>
 	<link rel="stylesheet" type="text/css" href="../elements/FilterElement/FilterElement.css"/>
-	<title>CoProject - Search Contributions</title>
+	<title>CollectiveOne - Search Contributions</title>
 </head>
 
 <script type="text/javascript">

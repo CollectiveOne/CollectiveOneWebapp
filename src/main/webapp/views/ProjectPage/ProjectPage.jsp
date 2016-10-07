@@ -5,7 +5,7 @@
 <%@ include file="../Common/Base/CommonHead.jsp"%>
 <script type="text/javascript" src="ProjectPage/ProjectPage.js"></script>
 <link rel="stylesheet" type="text/css" href="ProjectPage/ProjectPage.css" />
-<title>CoProject - Contribution</title>
+<title>CollectiveOne - Project</title>
 </head>
 
 <script type="text/javascript">

@@ -6,7 +6,7 @@
 <script type="text/javascript" src="CbtionNewPage/CbtionNewPage.js"></script>
 <link rel="stylesheet" type="text/css" href="CbtionNewPage/CbtionNewPage.css" />
 <link rel="stylesheet" type="text/css" href="Common/Base/NewElementPage.css" />
-<title>CoProject - New Contribution</title>
+<title>CollectiveOne - New Contribution</title>
 </head>
 
 <script type="text/javascript">

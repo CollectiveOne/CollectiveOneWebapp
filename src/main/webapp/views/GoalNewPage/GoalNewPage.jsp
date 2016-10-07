@@ -6,7 +6,7 @@
 <script type="text/javascript" src="GoalNewPage/GoalNewPage.js"></script>
 <link rel="stylesheet" type="text/css" href="GoalNewPage/GoalNewPage.css" />
 <link rel="stylesheet" type="text/css" href="Common/Base/NewElementPage.css" />
-<title>CoProject - New Goal</title>
+<title>CollectiveOne - New Goal</title>
 </head>
 
 <script type="text/javascript">
