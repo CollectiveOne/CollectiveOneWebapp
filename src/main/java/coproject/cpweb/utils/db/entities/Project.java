@@ -1,19 +1,14 @@
 package coproject.cpweb.utils.db.entities;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -38,13 +33,7 @@ public class Project {
 	@ManyToOne(cascade=CascadeType.ALL)
 	private User creator;
 	
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "PROJECT_CBTIONSACCEPTED")
-	private List<Cbtion> cbtionsAccepted = new ArrayList<Cbtion>();
-	
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "PROJECT_CONTRIBUTORS")
-	private List<User> contributors = new ArrayList<User>();
+	private double ppsTot;
 	
 	public ProjectDto toDto() {
 		ProjectDto dto = new ProjectDto();
@@ -54,8 +43,7 @@ public class Project {
 		dto.setCreatorUsername(creator.getUsername());
 		dto.setCreationDate(creationDate);
 		dto.setDescription(description);
-		dto.setnCbtionsAccepted(cbtionsAccepted.size());
-		dto.setnContributors(contributors.size());
+		dto.setPpsTot(ppsTot);
 		
 		return dto;
 	}
@@ -90,16 +78,11 @@ public class Project {
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
 	}
-	public List<Cbtion> getCbtionsAccepted() {
-		return cbtionsAccepted;
+	public double getPpsTot() {
+		return ppsTot;
 	}
-	public void setCbtionsAccepted(List<Cbtion> cbtionsAccepted) {
-		this.cbtionsAccepted = cbtionsAccepted;
+	public void setPpsTot(double ppsTot) {
+		this.ppsTot = ppsTot;
 	}
-	public List<User> getContributors() {
-		return contributors;
-	}
-	public void setContributors(List<User> contributors) {
-		this.contributors = contributors;
-	}
+	
 }

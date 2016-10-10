@@ -53,7 +53,7 @@ public class ProjectContributorsGet extends CpAction {
 		Project project = dbServices.projectGet(projectName);
 		
 		usernamesAndPps = dbServices.projectContributorsAndPpsGet(project.getId());
-		ppsTot = dbServices.projectGetPpsTot(project.getId());
+		ppsTot = project.getPpsTot();
 		
 		return SUCCESS;
     }

@@ -42,11 +42,14 @@ ProjectPage.prototype.updateContributors = function() {
 ProjectPage.prototype.contributorsOfProjectGetReceivedCallback = function(data) {
 	var usernamesAndPpps = data.usernamesAndPps;
 	var ppsTot = data.ppsTot;
+
+	$("#total_pps_div",this.container).append("<p>A total of "+floatToChar(ppsTot,2)+" pps have been contributed.</p>");
+	
 	for(var ix in usernamesAndPpps) {
 		var username = usernamesAndPpps[ix].username;
 		var pps = usernamesAndPpps[ix].pps;
 		var percentage = pps/ppsTot*100;
-		$("#contributors_list",this.container).append("<p><a href=../views/UserPage.action?username="+username+">"+username+"</a> with ("+floatToChar(percentage,2)+" %)</p>");
+		$("#contributors_list",this.container).append("<p>"+floatToChar(pps,2)+" by <a href=../views/UserPage.action?username="+username+">"+username+"</a> ("+floatToChar(percentage,2)+" %)</p>");
 	}
 }
 

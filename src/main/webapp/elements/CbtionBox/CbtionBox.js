@@ -34,9 +34,11 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 	$("#product_div",this.container).append("<p>"+this.cbtion.product+"</p>");
 	
 	if(this.cbtion.parentGoalsTags) {
-		for(var ix in this.cbtion.parentGoalsTags) {
-			var this_parent = this.cbtion.parentGoalsTags[ix];
-			$("#goal_div",this.container).append("<a href=../views/GoalPage.action?goalTag="+this_parent+">&#x0371 "+this_parent+"</a> ");
+		var nparents = this.cbtion.parentGoalsTags.length;
+		for(var ix=0; ix < nparents; ix++) {
+			// cycle from last to first as the first parent is the immediate parent
+			var parentTag = this.cbtion.parentGoalsTags[nparents - ix - 1];
+			$("#goal_div",this.container).append("<a href=GoalPage.action?goalTag="+parentTag+">&#x0371 "+parentTag+"</a>");
 		}
 	}
 	if(this.cbtion.goalTag)	$("#goal_div",this.container).append("<a href=../views/GoalPage.action?goalTag="+this.cbtion.goalTag+">&#x0371 "+this.cbtion.goalTag+"</a>");

@@ -55,7 +55,7 @@ CbtionNewPage.prototype.projectSelectorUpdated = function() {
 CbtionNewPage.prototype.projectSelectorDrawn = function() {
 	$('#goalTag_selector',this.container).autocomplete({
 		serviceUrl: '../json/GoalGetSuggestions.action',
-		params: {projectNames: [$("#project_select", this.container).val()]}
+		params: {projectName: $("#project_select", this.container).val()}
 	});
 }
 

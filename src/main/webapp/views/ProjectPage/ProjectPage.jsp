@@ -20,6 +20,7 @@
 		<div id="project_description" class=cp_box_gray_slim></div>
 		<div id="project_contributors" class=cp_box_gray_slim>
 			<p class=marker>Contributors</p>
+			<div id="total_pps_div"></div>
 			<div id="contributors_list"></div>
 		</div>
 	</div>

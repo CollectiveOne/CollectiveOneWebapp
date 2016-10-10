@@ -102,6 +102,21 @@ public class GoalDao extends BaseDao {
 		
 	}
 	
+	public List<Goal> getSubgoalsIteratively(int goalId) {
+		List<Goal> subgoals = getSubgoals(goalId);
+		int nsubgoals = subgoals.size();
+		for(int ix = 0; ix < nsubgoals ; ix++) {
+			Goal subgoal = subgoals.get(ix);
+			/* reentrance */ 
+			List<Goal> subsubgoals = getSubgoalsIteratively(subgoal.getId());
+			for(Goal subsubgoal : subsubgoals) {
+				subgoals.add(subsubgoal);
+			}
+		}
+		
+		return subgoals;
+	}
+	
 	public List<Goal> getSubgoals(int goalId) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class,"go");
 		

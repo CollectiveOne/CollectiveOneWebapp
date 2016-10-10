@@ -5,10 +5,7 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 
-import com.opensymphony.xwork2.ActionSupport;
-
 import coproject.cpweb.utils.db.entities.dtos.UserDto;
-import coproject.cpweb.utils.db.services.DbServicesImp;
 
 @Action("UserGet")
 @ParentPackage("json-data")
@@ -16,20 +13,10 @@ import coproject.cpweb.utils.db.services.DbServicesImp;
     @Result(name="success", type="json", params={"ignoreHierarchy","false","includeProperties","^userDto.*,^fieldErrors.*"}),
     @Result(name="input", type="json", params={"ignoreHierarchy","false","includeProperties","^fieldErrors.*"})
 })
-public class UserGet extends ActionSupport{
+public class UserGet extends CpAction{
 	
 	private static final long serialVersionUID = 1L;
 	
-	/* Services  */
-	DbServicesImp dbServices;
-	
-	public DbServicesImp getDbServices() {
-		return dbServices;
-	}
-
-	public void setDbServices(DbServicesImp dbServices) {
-		this.dbServices = dbServices;
-	}
 	
 	/* Input parameters  */
 	private String username;

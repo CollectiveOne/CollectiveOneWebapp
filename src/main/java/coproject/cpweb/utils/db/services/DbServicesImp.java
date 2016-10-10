@@ -21,6 +21,7 @@ import coproject.cpweb.utils.db.entities.dtos.CbtionDto;
 import coproject.cpweb.utils.db.entities.dtos.CommentDto;
 import coproject.cpweb.utils.db.entities.dtos.DecisionDto;
 import coproject.cpweb.utils.db.entities.dtos.GoalDto;
+import coproject.cpweb.utils.db.entities.dtos.ProjectContributedDto;
 import coproject.cpweb.utils.db.entities.dtos.ProjectDto;
 import coproject.cpweb.utils.db.entities.dtos.ReviewDto;
 import coproject.cpweb.utils.db.entities.dtos.ThesisDto;
@@ -143,17 +144,54 @@ public class DbServicesImp {
 	}
 
 	@Transactional
+	public void voterUpdate(int userId, int projectId) { 
+		int realmId = decisionRealmDao.getIdFromProjectId(projectId);
+		decisionRealmDao.updateVoter(realmId,userId,userPpointsInProjectGet(userId, projectId));
+	}
+	
+	@Transactional
 	public double userPpointsInProjectGet(int userId, int projectId) {
 
 		double ppoints = 0;
-
 		List<Cbtion> cbtionsAccepted = cbtionDao.getAcceptedOfUserInProject(userId, projectId);
 
-		for(Cbtion cbtion : cbtionsAccepted) {
-			ppoints += cbtion.getAssignedPpoints();
-		}
+		for(Cbtion cbtion : cbtionsAccepted) {	ppoints += cbtion.getAssignedPpoints();	}
 
 		return ppoints;
+	}
+	
+	@Transactional
+	public List<ProjectContributedDto> userProjectsContributedAndPpsGet(String username) {
+		
+		List<ProjectContributedDto> projectsAndPps = new ArrayList<ProjectContributedDto>();
+		User user = userDao.get(username);
+		
+		for(Project project : userProjectsContributedGet(user.getId())) {
+			ProjectContributedDto projectAndPps = new ProjectContributedDto();
+			
+			projectAndPps.setProjectName(project.getName());
+			projectAndPps.setUsername(user.getUsername());
+			projectAndPps.setPpsTot(project.getPpsTot());
+			
+			Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(project.getId()),user.getId());
+			projectAndPps.setPpsContributed(voter.getWeight());
+			
+			projectsAndPps.add(projectAndPps);
+		}
+		
+		/* sort based on the projects in which the user has relative larger contributions */
+		Collections.sort(projectsAndPps, new Comparator<ProjectContributedDto>(){
+		     public int compare(ProjectContributedDto o1, ProjectContributedDto o2){
+		        return Double.compare(o2.getPpsContributed()/o2.getPpsTot(), o1.getPpsContributed()/o1.getPpsTot());
+		     }
+		});
+		
+		return projectsAndPps;
+	}
+	
+	@Transactional
+	public List<Project> userProjectsContributedGet(int userId) {
+		return userDao.getProjectsContributed(userId);
 	}
 	
 	@Transactional
@@ -204,7 +242,6 @@ public class DbServicesImp {
 		Cbtion cbtion = new Cbtion();
 
 		cbtion.setCreator(creator);
-		creator.getCbtionsCreated().add(cbtion);
 		
 		cbtion.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		cbtion.setTitle("Create project " + project.getName());
@@ -266,14 +303,8 @@ public class DbServicesImp {
 		cbtion.setContributor(bid.getCreator());
 		cbtion.setState(CbtionState.ACCEPTED);
 
-		creator.getCbtionsAccepted().add(cbtion);
-		userDao.addProjectContributed(creator.getId(),project.getId());
-
-		project.getCbtionsAccepted().add(cbtion);
-		projectDao.addContributor(creator.getId(), project.getId());
-
 		/* add user to decision realm */
-		voterDao.updateOrAdd(realm.getId(), creator.getId(), bid.getPpoints());
+		decisionRealmDao.updateVoter(realm.getId(), creator.getId(), bid.getPpoints());
 
 	}
 
@@ -291,7 +322,6 @@ public class DbServicesImp {
 	public ProjectDto projectGetDto(String project_name) {
 		Project project = projectDao.get(project_name);
 		ProjectDto dto = project.toDto();
-		dto.setPpsTot(projectGetPpsTot(project.getId()));
 		return dto;
 	}
 
@@ -306,22 +336,16 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public double projectGetPpsTot(int projectId) {
-		return projectDao.projectGetPpsTot(projectId);
-	}
-	
-	@Transactional
 	public List<UsernameAndPps> projectContributorsAndPpsGet(int projectId) {
 		
-		Project project = projectDao.get(projectId);
-
 		List<UsernameAndPps> usernamesAndPps = new ArrayList<UsernameAndPps>();
 		
-		for(User contributor : project.getContributors()) {
+		for(User contributor : getProjectContributors(projectId)) {
 			UsernameAndPps usernameAndPps = new UsernameAndPps();
 			usernameAndPps.setUsername(contributor.getUsername());
-			usernameAndPps.setPps(userPpointsInProjectGet(contributor.getId(), project.getId()));
 			
+			Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(projectId),contributor.getId());
+			usernameAndPps.setPps(voter.getWeight());
 			usernamesAndPps.add(usernameAndPps);
 		}
 		
@@ -332,6 +356,24 @@ public class DbServicesImp {
 		});
 		
 		return usernamesAndPps;
+	}
+	
+	@Transactional
+	public void projectUpdatePpsTot(int projectId) {
+		Project project = projectDao.get(projectId);
+		
+		double ppsTot = 0.0;
+		for(Cbtion cbtion : cbtionDao.getAcceptedInProject(projectId)) {
+			ppsTot += cbtion.getAssignedPpoints();
+		}
+		
+		project.setPpsTot(ppsTot);
+		projectDao.save(project);
+	}
+	
+	@Transactional
+	public List<User> getProjectContributors(int projectId) {
+		return projectDao.getContributors(projectId);
 	}
 	
 	@Transactional
@@ -757,15 +799,7 @@ public class DbServicesImp {
 	@Transactional
 	public CbtionDto cbtionGetDto(int cbtionId) {
 		Cbtion cbtion = cbtionDao.get(cbtionId);
-		
-		/* Add parent goals too */
-		List<String> parentGoalsTags = new ArrayList<String>();
-		if(cbtion.getGoal() != null) {
-			List<Goal> parentGoals = goalDao.getAllParents(cbtion.getGoal().getId());
-			for(Goal parent : parentGoals) { parentGoalsTags.add(parent.getGoalTag()); }
-		}
-		CbtionDto cbtionDto = cbtion.toDto(parentGoalsTags);
-		
+		CbtionDto cbtionDto = cbtion.toDto(goalGetParentGoalsTags(cbtion.getGoal()));
 		return cbtionDto;
 	}
 
@@ -789,18 +823,21 @@ public class DbServicesImp {
 		cbtionsDtosRes.setCbtionsDtos(new ArrayList<CbtionDto>());
 
 		for(Cbtion cbtion : cbtionsRes.getObjects()) {
-			
-			/* Add parent goals too */
-			List<String> parentGoalsTags = new ArrayList<String>();
-			if(cbtion.getGoal() != null) {
-				List<Goal> parentGoals = goalDao.getAllParents(cbtion.getGoal().getId());
-				for(Goal parent : parentGoals) { parentGoalsTags.add(parent.getGoalTag()); }
-			}
-			
-			cbtionsDtosRes.getCbtionsDtos().add(cbtion.toDto(parentGoalsTags));
+			cbtionsDtosRes.getCbtionsDtos().add(cbtion.toDto(goalGetParentGoalsTags(cbtion.getGoal())));
 		}
 
 		return cbtionsDtosRes;
+	}
+	
+	@Transactional
+	public List<String> goalGetParentGoalsTags(Goal goal) {
+		/* Add parent goals too */
+		List<String> parentGoalsTags = new ArrayList<String>();
+		if(goal!= null) {
+			List<Goal> parentGoals = goalDao.getAllParents(goal.getId());
+			for(Goal parent : parentGoals) { parentGoalsTags.add(parent.getGoalTag()); }
+		}
+		return parentGoalsTags;
 	}
 	
 	@Transactional
@@ -1188,16 +1225,6 @@ public class DbServicesImp {
 							cbtion.setContributor(bid.getCreator());
 							cbtion.setState(CbtionState.ACCEPTED);
 	
-							/* Update project */
-							Project project = cbtion.getProject(); 
-							project.getCbtionsAccepted().add(cbtion);
-							projectDao.addContributor(bid.getCreator().getId(), project.getId());
-							projectDao.save(project);
-							
-							/* Update user creator */
-							bid.getCreator().getCbtionsAccepted().add(cbtion);
-							userDao.addProjectContributed(bid.getCreator().getId(), cbtion.getProject().getId());
-							
 							/* close all other bids and decisions */
 							for(Bid otherBid : cbtion.getBids()) {
 								if(otherBid.getId() != bid.getId()) {
@@ -1208,12 +1235,14 @@ public class DbServicesImp {
 								}
 							}
 	
-							/* add author to decision realm (internally checks if it is already in it) 
-							 * the pps are added to the weight of that user in that decision realm, therefore
-							 * bookkeeping of pps of user per realm is only taken here */
-							voterDao.updateOrAdd(decisionRealmDao.getIdFromProjectId(cbtion.getProject().getId()), 
-									bid.getCreator().getId(),
-									bid.getPpoints());
+							/* -----------------------------------------------------------------------*/ 
+							/* updated voter weight - This is the only place where PPS are transacted */
+							/* -----------------------------------------------------------------------*/
+							
+							voterUpdate(bid.getCreator().getId(), bid.getCbtion().getProject().getId());
+							projectUpdatePpsTot(bid.getCbtion().getProject().getId());
+							
+							/* -----------------------------------------------------------------------*/
 							
 							
 							act.setEvent("accepted");
@@ -1249,7 +1278,7 @@ public class DbServicesImp {
 
 		if(dec.getState() == DecisionState.IDLE || dec.getState() == DecisionState.OPEN) {
 			/* if decision is still open */
-			Voter voter = voterDao.getFromUserAndRealm(dec.getDecisionRealm().getId(),author.getId());
+			Voter voter = decisionRealmDao.getVoter(dec.getDecisionRealm().getId(),author.getId());
 
 			if(voter != null) {
 				/* if voter is in the realm of the decision */
@@ -1319,7 +1348,9 @@ public class DbServicesImp {
 			dec.updateState();
 			decisionDao.save(dec);
 			
-			/* store activity if switched state and user created decision */
+			/* store activity only for custom decisions (automatic decisions activity 
+			 * is recorded based on the element it changes).
+			 * Activity is recorded if the decision switch state */
 			if(!dec.getCreator().getUsername().equals("collectiveone")) {
 				Activity act = new Activity();
 				act.setCreationDate(new Timestamp(System.currentTimeMillis()));

@@ -4,10 +4,6 @@ public class UsernameAndPps {
 	private String username;
 	private double pps;
 	
-	public int compareTo(UsernameAndPps o)	{
-	     return Double.compare(pps, o.getPps());
-	}
-	
 	public String getUsername() {
 		return username;
 	}

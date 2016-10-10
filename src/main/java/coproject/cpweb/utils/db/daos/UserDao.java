@@ -10,6 +10,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
+import coproject.cpweb.utils.db.entities.CbtionState;
 import coproject.cpweb.utils.db.entities.Project;
 import coproject.cpweb.utils.db.entities.User;
 
@@ -39,31 +40,23 @@ public class UserDao extends BaseDao {
 		return (User) query.uniqueResult();
 	}
 	
-	public Project getProjectContributed(int userId, int projectId) {
+	public List<Project> getProjectsContributed(int userId) {
 		Session session = sessionFactory.getCurrentSession();
 
 		Query query = session.createQuery(
-				"SELECT project "
-						+ "FROM User user "
-						+ "JOIN user.projectsContributed project "
-						+ "WHERE user.id = :uId "
-						+ "AND project.id = :pId"
+				"SELECT DISTINCT cbt.project "
+						+ "FROM Cbtion cbt "
+						+ "WHERE cbt.state = :sT "
+						+ "AND cbt.contributor.id = :cId"
 				);
 		
-		query.setParameter("uId", userId);
-		query.setParameter("pId", projectId);
+		query.setParameter("cId", userId);
+		query.setParameter("sT", CbtionState.ACCEPTED);
 		
-		return (Project) query.uniqueResult();
-	}
-	
-	public void addProjectContributed(int userId, int projectId) {
-		Session session = sessionFactory.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<Project> res = (List<Project>) query.list();
 		
-		if(getProjectContributed(userId,projectId) == null) {
-			User user = get(userId);
-			user.getProjectsContributed().add(session.get(Project.class,projectId));
-			save(user);
-		}
+		return res;
 	}
 	
 	public List<String> getSuggestions(String query) {

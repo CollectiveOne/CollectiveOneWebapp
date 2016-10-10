@@ -12,9 +12,7 @@ public class ProjectDto {
 	private String description;
 	private Timestamp creationDate;
 	private String creatorUsername;
-	private int nCbtionsAccepted;
 	private double ppsTot;
-	private int nContributors;
 	
 	public Project toProject(User creator) {
 		Project project = new Project();
@@ -56,25 +54,11 @@ public class ProjectDto {
 	public void setCreatorUsername(String creatorUsername) {
 		this.creatorUsername = creatorUsername;
 	}
-	public int getnCbtionsAccepted() {
-		return nCbtionsAccepted;
-	}
-	public void setnCbtionsAccepted(int nCbtionsAccepted) {
-		this.nCbtionsAccepted = nCbtionsAccepted;
-	}
 	public double getPpsTot() {
 		return ppsTot;
 	}
 	public void setPpsTot(double ppsTot) {
 		this.ppsTot = ppsTot;
 	}
-	public int getnContributors() {
-		return nContributors;
-	}
-	public void setnContributors(int nContributors) {
-		this.nContributors = nContributors;
-	}
-	
-	
 		
 }

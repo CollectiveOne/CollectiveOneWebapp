@@ -357,16 +357,15 @@ ServerComm.prototype = {
 			});
 		},
 
-		userDataIn : function(username,projectName,callbackFunction,callbackObj) {
+		userGetProjectsContributed : function(username,callbackFunction,callbackObj) {
 			var data = {
-					'username' : username,
-					'projectName' : projectName
+					'username' : username
 			};
 			var datastr = JSON.stringify(data);
 
 			$.ajax({
 				type : 'POST',
-				url : '../json/UserDataIn',
+				url : '../json/UserGetProjectsContributed',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',

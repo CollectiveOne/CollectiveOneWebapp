@@ -22,7 +22,7 @@ import coproject.cpweb.utils.db.services.ObjectListRes;
 public class BaseDao {
 
 	@Autowired
-	SessionFactory sessionFactory;
+	protected SessionFactory sessionFactory;
 	
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;

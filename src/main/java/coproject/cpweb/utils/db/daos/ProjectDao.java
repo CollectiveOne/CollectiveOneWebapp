@@ -10,7 +10,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
-import coproject.cpweb.utils.db.entities.Cbtion;
+import coproject.cpweb.utils.db.entities.CbtionState;
 import coproject.cpweb.utils.db.entities.Project;
 import coproject.cpweb.utils.db.entities.User;
 
@@ -63,44 +63,24 @@ public class ProjectDao extends BaseDao {
 		return res;
 	}
 
-	public void addContributor(int contributorId, int projectId) {
+	public List<User> getContributors(int projectId) {
 
 		Session session = sessionFactory.getCurrentSession();
 
 		Query query = session.createQuery(
-				"SELECT pj.contributors "
-						+ "FROM Project pj "
-						+ "JOIN pj.contributors cn "
-						+ "WHERE pj.id = :pId "
-						+ "AND cn.id = :cId"
+				"SELECT DISTINCT cbt.contributor "
+						+ "FROM Cbtion cbt "
+						+ "WHERE cbt.project.id = :pId "
+						+ "AND cbt.state = :cSt "
 				);
 
 		query.setParameter("pId", projectId);
-		query.setParameter("cId", contributorId);
+		query.setParameter("cSt", CbtionState.ACCEPTED);
 
 		@SuppressWarnings("unchecked")
 		List<User> res = (List<User>) query.list();
-
-		if(res.size() == 0) {
-			UserDao userDAO = new UserDao();
-			userDAO.sessionFactory = sessionFactory;
-
-			Project project = this.get(projectId);
-			User contributor = userDAO.get(contributorId);
-			project.getContributors().add(contributor);
-
-			save(project);
-		}
-	}
-	
-	public double projectGetPpsTot(int projectId) {
-		Project project = get(projectId);
 		
-		double ppsTot = 0.0;
-		for(Cbtion cbtion : project.getCbtionsAccepted()) {
-			ppsTot += cbtion.getAssignedPpoints();
-		}
-		return ppsTot;
+		return res;
 	}
 
 }

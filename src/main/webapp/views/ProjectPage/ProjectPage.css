@@ -41,6 +41,15 @@
 	clear:both;
 }
 
+#project_container #project_contributors #total_pps_div {
+	margin-top: 10px;
+	margin-bottom: 0;
+	margin-left: 15px;
+	margin-right: 0;
+	clear:both;
+}
+
+
 #project_container #project_contributors #contributors_list {
 	margin-top: 10px;
 	margin-bottom: 0;
@@ -48,6 +57,7 @@
 	margin-right: 0;
 	clear:both;
 }
+
 
 #project_container #project_contributors #contributors_list p {
 	margin-top: 3px;

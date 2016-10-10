@@ -82,7 +82,7 @@ public class CbtionDao extends BaseDao {
 				goalDisj.add(Restrictions.eq("go.id",goal.getId()));
 				
 				if(filters.getGoalSubgoalsFlag()) {
-					for(Goal subgoal : goalDao.getSubgoals(goal.getId())) {
+					for(Goal subgoal : goalDao.getSubgoalsIteratively(goal.getId())) {
 						goalDisj.add(Restrictions.eq("go.id",subgoal.getId()));
 					}
 				}
@@ -94,19 +94,24 @@ public class CbtionDao extends BaseDao {
 		return getObjectsAndResSet(q, filters, Cbtion.class);
 	}
 	
-	public List<Cbtion> getAcceptedOfUserInProject(int userId, int projectId) {
-		Session session = sessionFactory.getCurrentSession();
-
-		Query query = session.createQuery(
-				"SELECT cbtion "
-						+" FROM User user "
-						+ "JOIN user.cbtionsAccepted cbtion "
-						+ "WHERE user.id = :uId "
-						+ "AND cbtion.project.id = :pId "
-				);
+	public List<Cbtion> getAcceptedInProject(int projectId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
 		
-		query.setParameter("uId", userId);
-		query.setParameter("pId", projectId);
+		query.add(Restrictions.eq("state", CbtionState.ACCEPTED))
+			.add(Restrictions.eq("project.id", projectId));
+		
+		@SuppressWarnings("unchecked")
+		List<Cbtion> res = (List<Cbtion>) query.list();
+		
+		return res;
+	}
+	
+	public List<Cbtion> getAcceptedOfUserInProject(int contributorId, int projectId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
+		
+		query.add(Restrictions.eq("state", CbtionState.ACCEPTED))
+			.add(Restrictions.eq("project.id", projectId))
+			.add(Restrictions.eq("contributor.id", contributorId));
 		
 		@SuppressWarnings("unchecked")
 		List<Cbtion> res = (List<Cbtion>) query.list();

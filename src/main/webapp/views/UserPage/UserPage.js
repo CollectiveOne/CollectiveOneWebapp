@@ -37,19 +37,28 @@ UserPage.prototype.drawUser = function() {
 }
 
 UserPage.prototype.updateProjectsContributed = function() {
-	for(var ix=0; ix < this.user.projectsContributed.length; ix++) {
-		var project_name = this.user.projectsContributed[ix];
-		GLOBAL.serverComm.userDataIn(this.user.username,project_name,this.userDataInReceivedCallback,this);
-	}
+	GLOBAL.serverComm.userGetProjectsContributed(this.user.username,this.userProjectsContributedCallback,this);
 }
 
-UserPage.prototype.userDataInReceivedCallback = function(userDataIn) {
+UserPage.prototype.userProjectsContributedCallback = function(data) {
 	
-	var percentage = floatToChar(userDataIn.ppoints/userDataIn.projectDto.ppsTot*100, 2);
-	var projectLink = "<a href=../views/ProjectPage.action?projectName="+userDataIn.projectDto.name+">"+userDataIn.projectDto.name+"</a>";
+	var projectsContributed = data.projectsContributedDtos;
 
-	$("#projects_contributed_div",this.container).append(
-		$("<p class=projec_contributed>"+percentage+"% of "+projectLink+" with "+userDataIn.ppoints+ " of "+userDataIn.projectDto.ppsTot+" pp's</p>"));
+	for(var ix in projectsContributed) {
+		var projectContributed = projectsContributed[ix];
+
+		var ppsContributed = projectContributed.ppsContributed;
+		var ppsTot = projectContributed.ppsTot;
+
+		var percentage = floatToChar(ppsContributed/ppsTot*100, 2);
+		var projectLink = "<a href=../views/ProjectPage.action?projectName="+projectContributed.projectName+">"+projectContributed.projectName+"</a>";
+
+		$("#projects_contributed_div",this.container).append(
+		$("<p class=project_contributed>"+percentage+"% of "+projectLink+" with "+ppsContributed+ " of "+ppsTot+" pp's</p>"));	
+	}
+
+
+	
 }
 
 UserPage.prototype.updateContributionsAccepted = function() {
