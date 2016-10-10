@@ -13,6 +13,7 @@
 #container .row_container p {
 	font-size: 30px;
 	font-weight: bold;
+	font-style: italic;
 }
 
 #container .row_container #join_the_conversation {

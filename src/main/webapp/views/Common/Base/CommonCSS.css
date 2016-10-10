@@ -131,7 +131,6 @@ body {
 
 #container #top{
 	width:100%;
-	height: 99px;
 	clear:both;
 }
 
@@ -151,8 +150,8 @@ body {
 }
 
 #container #top #top_left {
-	width: 398px;
-	height: 99px;
+	width: 318.4px;
+	height: 80px;
 	float:left;
 }
 
