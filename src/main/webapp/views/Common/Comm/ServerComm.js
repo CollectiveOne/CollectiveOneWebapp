@@ -378,6 +378,28 @@ ServerComm.prototype = {
 			});
 		},
 
+		userProjectPpsGet : function(username,projectName,callbackFunction,callbackObj) {
+			var data = {
+					'username' : username,
+					'projectName' : projectName
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/UserProjectPpsGet',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					callbackFunction.call(callbackObj,data);
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
 		projectGet : function(projectName,callbackFunction,callbackObj) {
 
 			var data = {

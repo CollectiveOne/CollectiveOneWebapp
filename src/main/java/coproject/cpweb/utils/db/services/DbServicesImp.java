@@ -161,6 +161,23 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
+	public ProjectContributedDto userProjectPpsGet(String username, String projectName) {
+		Project project = projectDao.get(projectName);
+		User user = userDao.get(username);
+		
+		ProjectContributedDto projectAndPps = new ProjectContributedDto();
+		
+		projectAndPps.setProjectName(project.getName());
+		projectAndPps.setUsername(user.getUsername());
+		projectAndPps.setPpsTot(project.getPpsTot());
+		
+		Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(project.getId()),user.getId());
+		projectAndPps.setPpsContributed(voter.getWeight());
+		
+		return projectAndPps;
+	}
+	
+	@Transactional
 	public List<ProjectContributedDto> userProjectsContributedAndPpsGet(String username) {
 		
 		List<ProjectContributedDto> projectsAndPps = new ArrayList<ProjectContributedDto>();

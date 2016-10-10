@@ -13,11 +13,11 @@ UserBox.prototype.updateUser = function() {
 
 UserBox.prototype.userReceivedCallback = function(userDto) {
 	this.user = userDto;
-	GLOBAL.serverComm.userDataIn(this.user.username,this.projectName,this.userDataReceivedCallback,this);
+	GLOBAL.serverComm.userProjectPpsGet(this.user.username,this.projectName,this.userDataReceivedCallback,this);
 }
 
-UserBox.prototype.userDataReceivedCallback = function(dataIn) {
-	this.ppointsInProject = dataIn.ppoints;
+UserBox.prototype.userDataReceivedCallback = function(data) {
+	this.data = data;
 	this.draw();
 }
 
@@ -28,6 +28,10 @@ UserBox.prototype.draw = function() {
 UserBox.prototype.userBoxLoaded = function() {
 	var href = 'UserPage.action?username=' + this.user.username;
 	var text = this.user.username;
+	var pps = this.data.projectContributedDto.ppsContributed;
+	var ppsTot = this.data.projectContributedDto.ppsTot;
+	var percentage = pps/ppsTot*100;
+
 	$("#username",this.container).append($('<a href='+href+'>'+text+'</a>'));
-	$("#ppoints_div",this.container).append("<p>"+floatToChar(this.ppointsInProject,0)+" pp's in "+this.projectName+"</p>");
+	$("#ppoints_div",this.container).append("<p>"+floatToChar(percentage,0)+"% in "+this.projectName+"</p>");
 }
