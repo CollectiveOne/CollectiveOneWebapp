@@ -151,10 +151,10 @@
 
 
 #cbtion_div #cbtion_data_div #show_comments_btn {
-	clear:both;
-	width: 100%;
+	clear: both;
+	width: calc(100% - 10px);
 	height: 20px;
-	margin-top: 5px;	
+	margin-top: 5px;
 }
 
 #cbtion_div #cbtion_data_div #comments_box_container {
@@ -180,7 +180,7 @@
 
 #cbtion_div #cbtion_data_div #new_bid_btn {
 	clear:both;
-	width: 100%;
+	width: calc(100% - 10px);
 	height: 20px;
 	display: none;
 }
@@ -216,13 +216,13 @@
 }
 
 #cbtion_div #new_bid_form_container #new_bid_form #newbid_just_considering_btn {
-	width: calc(50% - 5px);
+	width: calc(50% - 7px);
 	margin-right: 10px;
 	float:left;
 }
 
 #cbtion_div #new_bid_form_container #new_bid_form #newbid_offer_now_btn {
-	width: calc(50% - 5px);
+	width: calc(50% - 7px);
 	float:left;
 }
 
