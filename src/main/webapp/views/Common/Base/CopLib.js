@@ -123,3 +123,11 @@ function getSecondsSince(timestamp) {
 	var dtsec = (nowms - timestamp)/1000;
 	return dtsec;
 }
+
+function getGoalPageLink(goalTag,projectName) {
+	return "<a href=../views/GoalPage.action?projectName="+projectName+"&goalTag="+goalTag+">&#x0371 "+goalTag+"</a>";
+}
+
+
+
+

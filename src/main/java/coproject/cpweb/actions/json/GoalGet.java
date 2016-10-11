@@ -5,10 +5,7 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 
-import com.opensymphony.xwork2.ActionSupport;
-
 import coproject.cpweb.utils.db.entities.dtos.GoalDto;
-import coproject.cpweb.utils.db.services.DbServicesImp;
 
 @Action("GoalGet")
 @ParentPackage("json-data")
@@ -16,28 +13,28 @@ import coproject.cpweb.utils.db.services.DbServicesImp;
     @Result(name="success", type="json", params={"ignoreHierarchy","false","includeProperties","^goalDto.*,^fieldErrors.*"}),
     @Result(name="input", type="json", params={"ignoreHierarchy","false","includeProperties","^fieldErrors.*"})
 })
-public class GoalGet extends ActionSupport{
+public class GoalGet extends CpAction {
 	
 	private static final long serialVersionUID = 1L;
 	
-	/* Services  */
-	DbServicesImp dbServices;
-	
-	public DbServicesImp getDbServices() {
-		return dbServices;
-	}
-	public void setDbServices(DbServicesImp dbServices) {
-		this.dbServices = dbServices;
-	}
-	
 	/* Input parameters  */
 	private String goalTag;
+	private String projectName;
+	
 	public String getGoalTag() {
 		return goalTag;
 	}
 	public void setGoalTag(String goalTag) {
 		this.goalTag = goalTag;
 	}
+	
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
 
 	/* Output parameters  */
 	private GoalDto goalDto = new GoalDto();
@@ -51,7 +48,7 @@ public class GoalGet extends ActionSupport{
 	/* Execute */
 	public String execute() throws Exception  {
     	
-		goalDto	= dbServices.goalGetDto(goalTag);
+		goalDto	= dbServices.goalGetDto(goalTag,projectName);
 		
      	return SUCCESS;
     }

@@ -410,7 +410,7 @@ public class DbServicesImp {
 		
 		if(goalDto.getParentGoalTag() != null) {
 			if(goalDto.getParentGoalTag() != "") {
-				Goal parent = goalDao.get(goalDto.getParentGoalTag());
+				Goal parent = goalDao.get(goalDto.getParentGoalTag(), project.getName());
 				if(parent != null) {
 					goal.setParent(parent);
 				}
@@ -474,10 +474,13 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
-	public GoalDto goalGetDto(String goalTag) {
-		Goal goal = goalDao.get(goalTag);
-		GoalDto dto = goal.toDto();
-		goalAddParentsAndSubgoals(dto);
+	public GoalDto goalGetDto(String goalTag, String projectName) {
+		Goal goal = goalDao.get(goalTag, projectName);
+		GoalDto dto = null;
+		if(goal != null) {
+			dto = goal.toDto();
+			goalAddParentsAndSubgoals(dto);
+		}
 		
 		return dto;
 	}
@@ -702,7 +705,7 @@ public class DbServicesImp {
 	@Transactional
 	public void goalProposeParent(int goalId, String parentTag) {
 		Goal goal = goalDao.get(goalId);
-		Goal proposedParent = goalDao.get(parentTag);
+		Goal proposedParent = goalDao.get(parentTag,goal.getProject().getName());
 		
 		if(proposedParent != null) {
 			if(goal.getParentState() != GoalParentState.PROPOSED) {
@@ -759,7 +762,7 @@ public class DbServicesImp {
 		Cbtion cbtion = new Cbtion();
 		Project project = projectDao.get(cbtionDto.getProjectName());
 		projectDao.save(project);
-		Goal goal = goalDao.get(cbtionDto.getGoalTag());
+		Goal goal = goalDao.get(cbtionDto.getGoalTag(), project.getName());
 		
 		cbtion.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		cbtion.setCreator(userDao.get(cbtionDto.getCreatorUsername()));

@@ -23,9 +23,11 @@ public class GoalDao extends BaseDao {
 		return (Goal) super.get(id,Goal.class);
 	}
 	
-	public Goal get(String goalTag) {
+	public Goal get(String goalTag, String projectName) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class);
-		query.add(Restrictions.eq("goalTag", goalTag));
+		query.add(Restrictions.eq("goalTag", goalTag))
+			.createAlias("project", "prj")
+			.add(Restrictions.eq("prj.name", projectName));
 		
 		return (Goal) query.uniqueResult();
 	}
@@ -103,10 +105,13 @@ public class GoalDao extends BaseDao {
 	}
 	
 	public List<Goal> getSubgoalsIteratively(int goalId) {
+		
 		List<Goal> subgoals = getSubgoals(goalId);
 		int nsubgoals = subgoals.size();
+		
 		for(int ix = 0; ix < nsubgoals ; ix++) {
 			Goal subgoal = subgoals.get(ix);
+			
 			/* reentrance */ 
 			List<Goal> subsubgoals = getSubgoalsIteratively(subgoal.getId());
 			for(Goal subsubgoal : subsubgoals) {
@@ -118,6 +123,7 @@ public class GoalDao extends BaseDao {
 	}
 	
 	public List<Goal> getSubgoals(int goalId) {
+		
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class,"go");
 		
 		query.createAlias("go.parent","pa")

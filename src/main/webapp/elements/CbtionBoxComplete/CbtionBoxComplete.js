@@ -25,11 +25,11 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 		for(var ix=0; ix < nparents; ix++) {
 			// cycle from last to first as the first parent is the immediate parent
 			var parentTag = this.cbtion.parentGoalsTags[nparents - ix - 1];
-			$("#goal_div",this.container).append("<a href=GoalPage.action?goalTag="+parentTag+">&#x0371 "+parentTag+"</a>");
+			$("#goal_div",this.container).append(getGoalPageLink(parentTag,this.cbtion.projectName));
 		}
 	}
 	
-	if(this.cbtion.goalTag)	$("#goal_div",this.container).append("<a href=../views/GoalPage.action?goalTag="+this.cbtion.goalTag+">&#x0371 "+this.cbtion.goalTag+"</a>");
+	if(this.cbtion.goalTag)	$("#goal_div",this.container).append(getGoalPageLink(this.cbtion.goalTag,this.cbtion.projectName));
 	
 	$("#project_div",this.container).append("<a href=ProjectPage.action?projectName="+this.cbtion.projectName+">"+this.cbtion.projectName+"</a>");
 	$("#creator_div",this.container).append("<a href=UserPage.action?username="+this.cbtion.creatorUsername+">"+this.cbtion.creatorUsername+"</a>");

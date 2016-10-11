@@ -38,7 +38,7 @@ ActivityBox.prototype.activityBoxLoaded = function() {
 			break;
 
 		case "GOAL":
-			var goalLinkStr = "<a href=../views/GoalPage.action?goalTag="+this.activity.goalDto.goalTag+">"+this.activity.goalDto.goalTag+"</a>"
+			var goalLinkStr = getGoalPageLink(this.activity.goalDto.goalTag,this.activity.goalDto.projectName);
 			switch(this.activity.event) {
 				case "proposed":
 					eventPretty = "goal "+goalLinkStr+" was "+this.activity.event+" by <a href=UserPage.action?username="+this.activity.goalDto.creatorUsername+">"+this.activity.goalDto.creatorUsername+"</a>";

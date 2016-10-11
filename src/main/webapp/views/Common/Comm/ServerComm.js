@@ -141,10 +141,11 @@ ServerComm.prototype = {
 			});
 		},
 		
-		goalGet : function(goalTag,callbackFunction,callbackObj) {
+		goalGet : function(goalTag,projectName,callbackFunction,callbackObj) {
 
 			var data = {
-					'goalTag' : goalTag
+					'goalTag' : goalTag,
+					'projectName' : projectName
 			};
 			var datastr = JSON.stringify(data);
 

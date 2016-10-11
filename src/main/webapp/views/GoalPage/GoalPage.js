@@ -14,11 +14,11 @@ function GoalPage(container_id) {
 GoalPage.prototype = Page.prototype;
 
 GoalPage.prototype.init = function() {
-	this.updateGoal(JSP_goalTag);
+	this.updateGoal(JSP_goalTag, JSP_projectName);
 }
 
-GoalPage.prototype.updateGoal = function(goalTag) {
-	GLOBAL.serverComm.goalGet(goalTag,this.goalReceivedCallback,this);
+GoalPage.prototype.updateGoal = function(goalTag, projectName) {
+	GLOBAL.serverComm.goalGet(goalTag,projectName,this.goalReceivedCallback,this);
 }
 
 GoalPage.prototype.goalReceivedCallback = function(goalDto) {
@@ -32,6 +32,7 @@ GoalPage.prototype.goalReceivedCallback = function(goalDto) {
 GoalPage.prototype.updateCbtions = function(goalDto) {
 	this.cbtionList = new CbtionList($("#cbtions_container",this.container),{ 
 			goalTag: this.goal.goalTag,
+			projectNames: [this.goal.projectName],
 			maxheight: "600px"
 		});
 }

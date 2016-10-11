@@ -17,13 +17,20 @@ public class GoalPage extends ActionSupport {
 	private static final long serialVersionUID = 1L;
 	
 	private String goalTag;
+	private String projectName;
 	public String getGoalTag() {
 		return goalTag;
 	}
 	public void setGoalTag(String goalTag) {
 		this.goalTag = goalTag;
 	}
-
+	public String getProjectName() {
+		return projectName;
+	}
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}

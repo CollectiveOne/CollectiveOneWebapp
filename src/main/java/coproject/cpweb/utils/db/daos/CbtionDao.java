@@ -68,26 +68,29 @@ public class CbtionDao extends BaseDao {
 		}
 		
 		/* if goalTag requested */
-		String goalTag = filters.getGoalTag();
-		if(goalTag != null) {
-			if(!goalTag.equals("")) {
-				
-				GoalDao goalDao = new GoalDao();
-				goalDao.setSessionFactory(this.getSessionFactory());
-				
-				Disjunction goalDisj = Restrictions.disjunction();
-				Goal goal = goalDao.get(goalTag);
-				
-				q.createAlias("goal","go");
-				goalDisj.add(Restrictions.eq("go.id",goal.getId()));
-				
-				if(filters.getGoalSubgoalsFlag()) {
-					for(Goal subgoal : goalDao.getSubgoalsIteratively(goal.getId())) {
-						goalDisj.add(Restrictions.eq("go.id",subgoal.getId()));
+		if(filters.getProjectNames().size() == 1) {
+			String projectName = filters.getProjectNames().get(0);
+			String goalTag = filters.getGoalTag();
+			if(goalTag != null) {
+				if(!goalTag.equals("")) {
+					
+					GoalDao goalDao = new GoalDao();
+					goalDao.setSessionFactory(this.getSessionFactory());
+					Goal goal = goalDao.get(goalTag, projectName);
+					
+					q.createAlias("goal","go");
+					
+					Disjunction goalDisj = Restrictions.disjunction();
+					goalDisj.add(Restrictions.eq("go.id",goal.getId()));
+					
+					if(filters.getGoalSubgoalsFlag()) {
+						for(Goal subgoal : goalDao.getSubgoalsIteratively(goal.getId())) {
+							goalDisj.add(Restrictions.eq("go.id",subgoal.getId()));
+						}
 					}
+					
+					q.add(goalDisj);
 				}
-				
-				q.add(goalDisj);
 			}
 		}
 		

@@ -9,12 +9,12 @@ function GoalBox(container_id,goalData) {
 };
 
 //Inheritance
-GoalBox.prototype.getGoal = function(goalTag) {
-	GLOBAL.serverComm.goalGet(goalTag,this.goalReceivedCallback,this);
+GoalBox.prototype.getGoal = function(goalTag, projectName) {
+	GLOBAL.serverComm.goalGet(goalTag,projectName,this.goalReceivedCallback,this);
 }
 
 GoalBox.prototype.updateGoal = function() {
-	GLOBAL.serverComm.goalGet(this.goal.goalTag,this.goalReceivedCallback,this);
+	GLOBAL.serverComm.goalGet(this.goal.goalTag,this.goal.projectName,this.goalReceivedCallback,this);
 }
 
 GoalBox.prototype.goalReceivedCallback = function(goalDto) {
@@ -28,12 +28,14 @@ GoalBox.prototype.draw = function() {
 
 GoalBox.prototype.goalBoxLoaded = function() {
 	
+	$("#goaltag",this.container).append("<a href=ProjectPage.action?projectName="+this.goal.projectName+">"+this.goal.projectName+"</a>");
+	
 	if(this.goal.parentGoalsTags) {
 		var nparents = this.goal.parentGoalsTags.length;
 		for(var ix=0; ix < nparents; ix++) {
 			// cycle from last to first as the first parent is the immediate parent
 			var parentTag = this.goal.parentGoalsTags[nparents - ix - 1];
-			$("#goaltag",this.container).append("<a href=GoalPage.action?goalTag="+parentTag+">&#x0371 "+parentTag+"</a>");
+			$("#goaltag",this.container).append(getGoalPageLink(parentTag,this.goal.projectName));
 		}
 	}
 
@@ -42,7 +44,7 @@ GoalBox.prototype.goalBoxLoaded = function() {
 		tagSuffix = " (proposed)";
 	}
 	
-	$("#goaltag",this.container).append("<a href=GoalPage.action?goalTag="+this.goal.goalTag+">"+"&#x0371 "+this.goal.goalTag+"</a>"+tagSuffix);	
+	$("#goaltag",this.container).append(getGoalPageLink(this.goal.goalTag,this.goal.projectName));
 	$("#description",this.container).append("<p>"+this.goal.description+"</p>");
 
 	if(GLOBAL.sessionData.userLogged) {
@@ -146,7 +148,7 @@ GoalBox.prototype.showSubGoals = function() {
 		for(var ix in this.goal.subGoalsTags) {
 			$("#subgoals_div",this.container).append("<div id=subgoal_container_"+ix+" class=subgoal_container></div>");
 			var subGoalBox = new GoalBox($("#subgoal_container_"+ix,this.container));
-			subGoalBox.getGoal(this.goal.subGoalsTags[ix]);
+			subGoalBox.getGoal(this.goal.subGoalsTags[ix], this.goal.projectName);
 		}
 
 	} else {

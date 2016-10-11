@@ -129,7 +129,7 @@ FilterElement.prototype.getFiltersAndUpdateData = function() {
 	$('#filter_goal_input',this.container).autocomplete().clear();
 	
 	var selectedProjects = this.getSelectedProjects();
-	if(selectedProjects.length > 0)	$('#filter_goal_input',this.container).autocomplete().setOptions({params: {projectName: selectedProjects[0] }});
+	if(selectedProjects.length == 1)	$('#filter_goal_input',this.container).autocomplete().setOptions({params: {projectName: selectedProjects[0] }});
 	else $('#filter_goal_input',this.container).autocomplete().setOptions({params: {projectName: "" }});
 
 	var statefilter = $("#filter_states", this.container).find("input");
@@ -149,6 +149,11 @@ FilterElement.prototype.getFiltersAndUpdateData = function() {
 		this.filters.creatorUsernames = [];
 	}
 		
+	if(($("#filter_goal_input", this.container).val() != "") && (selectedProjects.length != 1)) {
+		showOutput("to filter by goal select one project");
+		return;
+	}
+
 	this.filters.goalTag = $("#filter_goal_input", this.container).val();
 	this.filters.goalSubgoalsFlag = $("#filter_subgoals_input").is(":checked");
 	this.filters.contributorUsername = $("#filter_contributor_input", this.container).val();

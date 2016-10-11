@@ -18,6 +18,7 @@
 
 <script type="text/javascript">
 	var JSP_goalTag = "<s:property value="goalTag" />";
+	var JSP_projectName = "<s:property value="projectName" />";
 </script>
 
 <div id="content_pane">

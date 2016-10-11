@@ -38,6 +38,10 @@ CbtionList.prototype.boxLoaded = function(data) {
 			          { text:"Less relevant", value:"RELEVANCEASC" },
 			]
 	};
+
+	if(this.conf.projectNames) {
+		filters.projectNames = this.conf.projectNames;
+	}
 	
 	if(this.conf.contributorUsername) {
 		filters.contributorUsername = this.conf.contributorUsername;
