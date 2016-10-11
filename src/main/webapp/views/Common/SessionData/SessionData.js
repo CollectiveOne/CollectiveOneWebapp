@@ -65,7 +65,7 @@ SessionData.prototype = {
 		if (userLoggedDto != null) {
 			showOutput(userLoggedDto.username+" logged in","DarkGreen");
 			this.userLogged = userLoggedDto;
-			this.draw();
+			this.drawUserBox();
 		} else {
 			showOutput("login error");
 		}
