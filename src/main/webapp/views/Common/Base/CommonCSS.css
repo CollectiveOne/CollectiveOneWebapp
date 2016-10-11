@@ -73,6 +73,9 @@ body {
 	text-align: center;
 	cursor: pointer;
 	-webkit-user-select: none;
+	border-style: solid;
+	border-color: #545454;
+	border-width: 1px;
 }
 
 #container .cp_btn_dark {
@@ -81,6 +84,9 @@ body {
 	text-align: center;
 	cursor: pointer;
 	-webkit-user-select: none;
+	border-style: solid;
+	border-color: #545454;
+	border-width: 1px;
 }
 
 #container .cp_btn_dark_hover {
@@ -170,6 +176,8 @@ body {
 
 #container #top #top_right #active_projects {
 	float:left;
+	padding-top: 30px;
+	padding-left: 10px;
 }
 
 #container #top #top_right #active_projects .active_project_btn {
@@ -219,10 +227,14 @@ body {
 	padding-top:15px;
 }
 
-#container #control_div button{
+#container #control_div #login_expand {
 	width: auto;
 	min-width: 100px;
 	font-size: 16px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 #container #user_div {
@@ -230,7 +242,7 @@ body {
 	width:200px;
 	float:right;
 	position:absolute;
-	right: 10px;
+	right: 0;
 	top: 30px;
 	display:none;
 	border-radius:5px;
@@ -248,18 +260,23 @@ body {
 	font-size: 14px;
 }
 
-#container #user_div button {
+#container #user_div #submit_login {
 	margin-top: 10px;
 	margin-right:6px;
 	margin-bottom:0px;
 	margin-bottom: 6px;
-	height:20px;
 	width:50%;
 	text-align:center;
 	float:right;
 	cursor:pointer;
 	border-radius:5px;
 	clear:both;
+}
+
+#container #user_div #logout {
+	float:right;
+	clear:both;
+	width:50%;
 }
 
 #container #user_div a {
@@ -301,7 +318,7 @@ body {
 }
 
 #container #nav_pane .nav_btn_list {
-	width: calc(16.66% - 17px);
+	width: calc(16.66% - 20px);
 	height: calc(100% - 4px);
 	float: left;
 	padding-top: 4px;

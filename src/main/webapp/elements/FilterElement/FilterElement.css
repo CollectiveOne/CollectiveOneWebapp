@@ -39,6 +39,9 @@
 	margin-right:5px;
 	background-color: #cccccc;
 	border-radius:5px;
+	border-style: solid;
+	border-color: #545454;
+	border-width: 1px;
 }
 
 #filter_bar #page_btns #back_page {
@@ -78,11 +81,13 @@
 	min-width: 120px;
 	float: right;
 	clear:none;
-	height: 25px;	
+	height: 27px;
 	margin-right:5px;
 	border-radius:5px;
-	border-style:none;
 	background-color:#cccccc;
+	border-style: solid;
+	border-color: #545454;
+	border-width: 1px;
 }
 
 
