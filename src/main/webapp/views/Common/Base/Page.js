@@ -53,7 +53,6 @@ Page.prototype.projectListReceivedCallback = function(projectList) {
 		$("#project_select").append($("<option value="+projectList[ix]+">"+projectList[ix]+"</option>"));
 	} 
 
-	this.projectsRecivedCallBackFun.call(this.projectsRecivedCallBackObj);
 }
 
 Page.prototype.append_text_area = function(id,txt,val) {

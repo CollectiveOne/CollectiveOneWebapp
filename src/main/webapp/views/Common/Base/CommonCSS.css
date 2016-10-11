@@ -132,6 +132,7 @@ body {
 #container #top{
 	width:100%;
 	clear:both;
+	float: left;
 }
 
 #container #content {
@@ -155,18 +156,41 @@ body {
 	float:left;
 }
 
-#container #top #top_left #logo{
+#container #top #top_left #logo {
 	width:100%;
 	cursor:pointer;
 }
 
 #container #top #top_right {
-	width: calc(100% - 398px);
-	float:right;
+	width: calc(100% - 318.4px - 20px - 100px);
+	float: left;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 #container #top #top_right #active_projects {
 	float:left;
+}
+
+#container #top #top_right #active_projects .active_project_btn {
+	float:left;
+	padding-top:3px;
+	padding-bottom:3px;
+	padding-left:10px;
+	padding-right:10px;
+	margin-right:5px;
+	margin-bottom:5px;
+}
+
+#container #top #top_right #active_projects .active_project_btn_selected {
+	float:left;	
+	padding-top:3px;
+	padding-bottom:3px;
+	padding-left:10px;
+	padding-right:10px;
+	margin-right:5px;
+	margin-bottom:5px;
+	color:#CC0000;
 }
 
 #container #top #top_right #search_box_div {
@@ -281,6 +305,10 @@ body {
 	height: calc(100% - 4px);
 	float: left;
 	padding-top: 4px;
+}
+
+#container #nav_pane a {
+	color: #545454;
 }
 
 #container #nav_pane #welcome {

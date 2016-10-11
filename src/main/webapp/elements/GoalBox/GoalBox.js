@@ -44,13 +44,13 @@ GoalBox.prototype.goalBoxLoaded = function() {
 		tagSuffix = " (proposed)";
 	}
 	
-	$("#goaltag",this.container).append(getGoalPageLink(this.goal.goalTag,this.goal.projectName));
+	$("#goaltag",this.container).append(getGoalPageLink(this.goal.goalTag,this.goal.projectName)+" "+tagSuffix);
 	$("#description",this.container).append("<p>"+this.goal.description+"</p>");
 
 	if(GLOBAL.sessionData.userLogged) {
 
-		$("#show_new_subgoal_btn",this.container).show();
-		$("#show_new_subgoal_btn",this.container).click(this.showNewSubgoalBtnClicked.bind(this));
+		$("#new_subgoal_btn",this.container).show();
+		$("#new_subgoal_btn",this.container).click(this.newSubgoalBtnClicked.bind(this));
 		$("#new_subgoal_save_btn",this.container).click(this.newSubgoalSaveBtnClicked.bind(this));
 
 		$("#show_control_btn",this.container).show();
@@ -102,7 +102,7 @@ GoalBox.prototype.goalBoxLoaded = function() {
 	
 }
 
-GoalBox.prototype.showNewSubgoalBtnClicked = function() {
+GoalBox.prototype.newSubgoalBtnClicked = function() {
 	$("#new_subgoal_form",this.container).toggle();
 }
 

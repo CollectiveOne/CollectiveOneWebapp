@@ -10,15 +10,15 @@
 		</div>
 		
 		<div id="nav_pane">
-			<div id="welcome" class="cp_btn_dark nav_btn_list">Welcome</div>
-			<div id="cbtion_list" class="cp_btn_dark nav_btn_list">Contributions</div>
-			<div id="new_cbtion" class="cp_btn_dark nav_btn_plus">+</div>
-			<div id="goals_list" class="cp_btn_dark nav_btn_list">Goals</div>
-			<div id="new_goal" class="cp_btn_dark nav_btn_plus">+</div>
-			<div id="decisions_list" class="cp_btn_dark nav_btn_list">Decisions</div>
-			<div id="new_decision" class="cp_btn_dark nav_btn_plus">+</div>
-			<div id="activity_page" class="cp_btn_dark nav_btn_list">Recent Activity</div>
-			<div id="new_project" class="cp_btn_dark nav_btn_list">New Project</div>
+			<a href="../views/WelcomePage.action" id="welcome" class="cp_btn_dark nav_btn_list">Welcome</a>
+			<a href="../views/CbtionListPage.action" id="cbtion_list" class="cp_btn_dark nav_btn_list">Contributions</a>
+			<a href="../views/CbtionNewPage.action" id="new_cbtion" class="cp_btn_dark nav_btn_plus">+</a>
+			<a href="../views/GoalListPage.action" id="goals_list" class="cp_btn_dark nav_btn_list">Goals</a>
+			<a href="../views/GoalNewPage.action" id="new_goal" class="cp_btn_dark nav_btn_plus">+</a>
+			<a href="../views/DecisionListPage.action" id="decisions_list" class="cp_btn_dark nav_btn_list">Decisions</a>
+			<a href="../views/DecisionNewPage.action" id="new_decision" class="cp_btn_dark nav_btn_plus">+</a>
+			<a href="../views/ActivityListPage.action" id="activity_page" class="cp_btn_dark nav_btn_list">Recent Activity</a>
+			<a href="../views/ProjectNewPage.action" id="new_project" class="cp_btn_dark nav_btn_list">New Project</a>
 		</div>
 
 		<div id="content">

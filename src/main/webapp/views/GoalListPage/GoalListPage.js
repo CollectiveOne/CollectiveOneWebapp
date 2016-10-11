@@ -24,7 +24,7 @@ GoalListPage.prototype.init = function() {
 	CopSessionReadyCommon();
 	
 	var filters = {
-			projectNames : [],
+			projectNames : GLOBAL.sessionData.activeProjectsController.getActiveProjectsNames(),
 			stateNames: ["PROPOSED","ACCEPTED"],
 			creatorUsernames: [],
 			keyw : '',

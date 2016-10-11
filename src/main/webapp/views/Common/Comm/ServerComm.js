@@ -323,10 +323,8 @@ ServerComm.prototype = {
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
-					GLOBAL.sessionData.userLogged = data.userLoggedDto;
-					GLOBAL.sessionData.draw();
-					if(callbackFunction) {
-						callbackFunction.call(callbackObj);
+					if(data) {
+						callbackFunction.call(callbackObj,data);
 					}
 
 				},
@@ -397,6 +395,60 @@ ServerComm.prototype = {
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
 					console.log(errorThrown);
+				}
+			});
+		},
+
+		activeProjectsGet : function(callbackFunction,callbackObj) {
+			var data = {
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/ActiveProjectsGet',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					} else {
+						showOutput(data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+					showOutput("error getting user");
+				}
+			});
+		},
+
+		activeProjectChange : function(projectName,active,callbackFunction,callbackObj) {
+			var data = {
+				"projectName": projectName,
+				"active": active
+			};
+
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/ActiveProjectChange',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						// showReqOutput(data.resStatus);
+						callbackFunction.call(callbackObj,data);
+					} else {
+						showOutput(data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+					showOutput("error getting user");
 				}
 			});
 		},

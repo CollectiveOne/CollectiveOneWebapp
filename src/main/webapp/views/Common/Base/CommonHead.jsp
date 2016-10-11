@@ -8,6 +8,7 @@
 <link rel="stylesheet" type="text/css" href="../views/Common/Base/CommonCSS.css"/>
 <script type="text/javascript" src="../views/Common/Comm/ServerComm.js"></script>
 <script type="text/javascript" src="../views/Common/SessionData/SessionData.js"></script>
+<script type="text/javascript" src="../views/Common/SessionData/ActiveProjectsController.js"></script>
 <script type="text/javascript" src="../elements/UserBox/UserBox.js"></script>
 <link rel="stylesheet" type="text/css" href="../elements/UserBox/UserBox.css"/>
 <script type="text/javascript" src="../elements/CbtionBox/CbtionBox.js"></script>

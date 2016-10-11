@@ -1,24 +1,42 @@
 function SessionData(containerId) {
 	this.container = $(containerId);
+	
 	this.userLogged = null;
+	this.activeProjectsController = null;
+	
+	this.callbackFun = null;
+	this.callbackObj = null;
 };
 
 SessionData.prototype = {
 		
 	init: function(callbackFun,callbackObj) {
 		
-		this.updateUserLogged(callbackFun,callbackObj);
+		this.callbackFun = callbackFun;
+		this.callbackObj = callbackObj;
+		
+		this.updateUserLogged();
 		
 		$("#login_expand").click(function() {
 			$("#user_div").toggle();
 		});
 	},
 	
-	updateUserLogged: function(callbackFun,callbackObj) {
-		GLOBAL.serverComm.userLoggedGet(callbackFun,callbackObj);
+	updateUserLogged: function() {
+		/* first get the user logged */
+		GLOBAL.serverComm.userLoggedGet(this.userLoggedGetCallback,this);
+	},
+
+	userLoggedGetCallback: function(data) {
+		GLOBAL.sessionData.userLogged = data.userLoggedDto;
+		GLOBAL.sessionData.drawUserBox();
+
+		/* update active projects before returning */
+		/* this.callbackFun.call(this.callbackObj); */
+		this.activeProjectsController = new ActiveProjectsController($("#container #top #active_projects"),this.callbackFun,this.callbackObj);
 	},
 	
-	draw: function() {
+	drawUserBox: function() {
 		if(this.userLogged == null) {
 			this.drawNotLogged();
 		} else {
@@ -78,4 +96,5 @@ SessionData.prototype = {
 		
 		this.updateUserLogged();
 	}, 
+	
 }

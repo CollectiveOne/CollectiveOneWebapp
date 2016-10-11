@@ -24,7 +24,7 @@ DecisionListPage.prototype.init = function() {
 	CopSessionReadyCommon();
 	
 	var filters = {
-			projectNames : [],
+			projectNames : GLOBAL.sessionData.activeProjectsController.getActiveProjectsNames(),
 			stateNames: ["IDLE","OPEN"],
 			creatorUsernames: [],
 			keyw : '',

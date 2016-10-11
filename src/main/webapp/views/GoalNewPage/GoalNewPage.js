@@ -34,7 +34,8 @@ GoalNewPage.prototype.draw = function() {
 		
 		
 		$('#superGoalTag_selector',this.container).autocomplete({
-			serviceUrl: '../json/GoalGetSuggestions.action'
+			serviceUrl: '../json/GoalGetSuggestions.action',
+			params: {projectName: $("#project_select", this.container).val()}
 		});
 		
 		// append create button

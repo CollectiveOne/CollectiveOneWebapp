@@ -107,6 +107,7 @@ public class Decision {
 		dto.setFromState(fromState);
 		dto.setToState(toState);
 		if(project != null) dto.setProjectName(project.getName());
+		if(arguments != null) dto.setNarguments(arguments.size());
 		
 		if(type != null) { 
 			dto.setType(type.toString());

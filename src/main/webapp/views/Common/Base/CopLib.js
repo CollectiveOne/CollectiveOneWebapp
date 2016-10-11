@@ -10,45 +10,8 @@ function CopDocReadyCommon(callbackFun,callbackObj) {
 		window.location = 'WelcomePage.action';
 	});
 	
-	$("#welcome").click(function() {
-		window.location = 'WelcomePage.action';
-	});
-	
-	$("#cbtion_list").click(function() {
-		window.location = 'CbtionListPage.action';
-	});
-	
-	$("#goals_list").click(function() {
-		window.location = 'GoalListPage.action';
-	});
-	
-	$("#decisions_list").click(function() {
-		window.location = 'DecisionListPage.action';
-	});
-	
-	$("#new_cbtion").click(function() {
-		window.location = 'CbtionNewPage.action';
-	});
-	
-	$("#new_goal").click(function() {
-		window.location = 'GoalNewPage.action';
-	});
-	
-	$("#new_decision").click(function() {
-		window.location = 'DecisionNewPage.action';
-	});
-	
-	$("#new_project").click(function() {
-		window.location = 'ProjectNewPage.action';
-	});
-	
-	$("#activity_page").click(function() {
-		window.location = 'ActivityListPage.action';
-	});
-
 	UpdateBtns();
 }
-
 
 function UpdateBtns() {
 	$(".cp_btn_dark").hover(function() { 

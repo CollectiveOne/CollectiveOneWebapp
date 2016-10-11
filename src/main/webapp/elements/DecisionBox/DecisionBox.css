@@ -5,7 +5,6 @@
 }
 
 #decision_info_div {
-	height: 110px;
 }
 
 #discussion_div {
@@ -13,6 +12,8 @@
 	margin-top: 10px;
 	margin-bottom: 10px;
 	overflow: auto;
+	float: left;
+	width: 100%;
 }
 
 #decision_div #arguments_expand_div {
@@ -26,6 +27,8 @@
 	border-radius: 3px;
 	-webkit-user-select: none;
 	cursor:pointer;
+	margin-top: 10px;
+	float: left;
 }
 
 #decision_div #arguments_div {
@@ -45,21 +48,18 @@
 
 #decision_div #left_div {
 	margin-left:5px;
-	height: 90px;
 	width: calc(100% - 140px - 50px - 40px);
 	float:left;
 	padding-right: 10px;
 }
 
 #decision_div #center_div {
-	height: 90px;
 	width: 50px;
 	float: left;
 	padding-top: 2px;
 }
 
 #decision_div #right_div {
-	height: 90px;
 	width: 140px;
 	float: left;
 	padding-top:2px;
@@ -90,6 +90,7 @@
 	height: 30px;
 	width: 100%;
 	margin-top: 2px;
+	display: none;
 }
 
 #decision_div #metrics .metric_div {
@@ -126,17 +127,24 @@
 	font-size: 12px;	
 }
 
+#decision_div #right_div #project_div {
+	height:15px;
+	margin-bottom:3px;
+}
+
 #decision_div #right_div #state_div {
 	height:15px;
 }
 
 #decision_div #right_div #verdictTime_div {
 	height:15px;
+	display: none;
 }
 
 #decision_div #right_div #verdict_div {
 	height:15px;
 	margin-top: 30px;
+	display: none;
 }
 
 #decision_div #right_div #state {

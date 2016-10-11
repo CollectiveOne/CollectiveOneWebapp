@@ -41,34 +41,29 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 	switch(this.decision.state) {
 		case "IDLE":
 		case "OPEN":
+			$("#right_div #state",this.container).css("color","DarkGreen");
 			stateStr = this.decision.state;
 			break;
 
 		case "CLOSED_ACCEPTED":
 		case "CLOSED_DENIED":
 		case "CLOSED_EXTERNALLY":
+			$("#right_div #state",this.container).css("color","DarkRed");
 			$("#center_div",this.container).hide();
 			stateStr = "CLOSED";
 			break;
 	}
 
+
+	$("#project_div",this.container).append($("<p>In <a href=../views/ProjectPage.action?projectName="+this.decision.projectName+">"+this.decision.projectName+"</a></p>"));
 	$("#state_div",this.container).append($("<p>Currenlty <span id=state>"+stateStr+"</span></p>"));
 
-	switch(this.decision.state) {
-		case "IDLE":
-		case "OPEN":
-			$("#right_div #state",this.container).css("color","DarkGreen");
-			break;
-
-		case "CLOSED_ACCEPTED":
-		case "CLOSED_DENIED":
-		case "CLOSED_EXTERNALLY":
-			$("#right_div #state",this.container).css("color","DarkRed");
-			stateStr = "CLOSED";
-			break;
-	}
-	
 	if(this.decision.state != "IDLE") {
+
+		$("#metrics",this.container).show();
+		$("#verdictTime_div",this.container).show();
+		$("#verdict_div",this.container).show();
+		
 		$("#clarity",this.container).append($("<p>clarity: "+floatToChar(this.decision.clarity*100,1)+"</p>"));
 		$("#stability",this.container).append($("<p>stability: "+floatToChar(this.decision.stability*100,1)+"</p>"));
 		$("#votedRatio",this.container).append($("<p>voted ratio: "+floatToChar(this.decision.ppsCum/this.decision.ppsTot*100,2)+"%</p>"));
@@ -112,6 +107,9 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 	}
 	
 	// Arguments portion expansion
+
+	$("#arguments_expand_div",this.container).append("<p>see arguments ("+this.decision.narguments+")</p>");
+	
 	$("#arguments_expand_div",this.container).click(this.argumentsExpandClick.bind(this));
 	$("#arguments_no_new_btn",this.container).click(this.argumentNoExpand.bind(this));
 	$("#arguments_yes_new_btn",this.container).click(this.argumentYesExpand.bind(this));

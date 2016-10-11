@@ -12,6 +12,8 @@ public class DecisionDto {
 	protected String projectName;
 	protected String creatorUsername;
 	
+	protected int narguments;
+	
 	protected String type;
 	protected int cbtionId;
 	protected String cbtionTitle;
@@ -86,6 +88,12 @@ public class DecisionDto {
 	}
 	public void setCreatorUsername(String creatorUsername) {
 		this.creatorUsername = creatorUsername;
+	}
+	public int getNarguments() {
+		return narguments;
+	}
+	public void setNarguments(int narguments) {
+		this.narguments = narguments;
 	}
 	
 	
