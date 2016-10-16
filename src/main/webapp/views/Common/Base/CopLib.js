@@ -91,6 +91,20 @@ function getGoalPageLink(goalTag,projectName) {
 	return "<a href=../views/GoalPage.action?projectName="+projectName+"&goalTag="+goalTag+">&#x0371 "+goalTag+"</a>";
 }
 
+function getUserPageLink(username) {
+	return "<a href=../views/UserPage.action?username="+username+">"+username+"</a>";
+}
+
+function LimitStrSize(strIn, size) {
+	if(!size) size = 70;
+
+	if(strIn.length > size) {
+		return strIn.slice(0,size)+" ...";
+	} else {
+		return strIn;
+	}
+}
+
 
 
 

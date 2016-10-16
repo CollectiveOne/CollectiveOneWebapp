@@ -19,18 +19,19 @@ ActivityBox.prototype.activityBoxLoaded = function() {
 		case "BID":
 			switch(this.activity.event) {
 				case "created":
-					eventPretty = "<a href=UserPage.action?username="+this.activity.bidDto.creatorDto.username+">"+this.activity.bidDto.creatorDto.username+"</a>"+
+					eventPretty = getUserPageLink(this.activity.bidDto.creatorDto.username)+
 						" made a new bid on <a href=CbtionPage.action?cbtionId="+this.activity.bidDto.cbtionId+">"+this.activity.bidDto.cbtionTitle+"</a>";
 					break;
 
 				case "assigned":
 				case "accepted":
-					eventPretty = "bid from <a href=UserPage.action?username="+this.activity.bidDto.creatorDto.username+">"+this.activity.bidDto.creatorDto.username+"</a>"+
+					
+					eventPretty = "bid from "+getUserPageLink(this.activity.bidDto.creatorDto.username)+
 						" to <a href=CbtionPage.action?cbtionId="+this.activity.bidDto.cbtionId+">"+this.activity.bidDto.cbtionTitle+"</a> was "+this.activity.event;
 					break;
 
 				case "marked done":
-					eventPretty = "<a href=UserPage.action?username="+this.activity.bidDto.creatorDto.username+">"+this.activity.bidDto.creatorDto.username+"</a>"+
+					eventPretty = getUserPageLink(this.activity.bidDto.creatorDto.username)+
 						" marked bid on <a href=CbtionPage.action?cbtionId="+this.activity.bidDto.cbtionId+">"+this.activity.bidDto.cbtionTitle+"</a> as done";
 					break;
 			}
@@ -41,7 +42,7 @@ ActivityBox.prototype.activityBoxLoaded = function() {
 			var goalLinkStr = getGoalPageLink(this.activity.goalDto.goalTag,this.activity.goalDto.projectName);
 			switch(this.activity.event) {
 				case "proposed":
-					eventPretty = "goal "+goalLinkStr+" was "+this.activity.event+" by <a href=UserPage.action?username="+this.activity.goalDto.creatorUsername+">"+this.activity.goalDto.creatorUsername+"</a>";
+					eventPretty = "goal "+goalLinkStr+" was "+this.activity.event+" by "+getUserPageLink(this.activity.goalDto.creatorUsername);
 					break;
 				default:
 					eventPretty = "goal "+goalLinkStr+" - "+this.activity.event;
@@ -52,12 +53,12 @@ ActivityBox.prototype.activityBoxLoaded = function() {
 		case "DECISION":
 			switch(this.activity.event) {
 				case "created":	
-					eventPretty = "decision <a href=DecisionPage?decisionId="+this.activity.decisionDto.id+">"+this.activity.decisionDto.description+"</a> was "+this.activity.event+" by <a href=UserPage.action?username="+this.activity.decisionDto.creatorUsername+">"+this.activity.decisionDto.creatorUsername+"</a>";
+					eventPretty = "decision <a href=DecisionPage?decisionId="+this.activity.decisionDto.id+">"+LimitStrSize(this.activity.decisionDto.description,70)+"</a> was "+this.activity.event+" by "+getUserPageLink(this.activity.decisionDto.creatorUsername);
 					break;
 
 				case "accepted":
 				case "rejected":
-					eventPretty = "decision <a href=DecisionPage?decisionId="+this.activity.decisionDto.id+">"+this.activity.decisionDto.description+"</a> was "+this.activity.event;
+					eventPretty = "decision <a href=DecisionPage?decisionId="+this.activity.decisionDto.id+">"+LimitStrSize(this.activity.decisionDto.description,70)+"</a> was "+this.activity.event;
 					break;
 			}
 			break;
@@ -65,9 +66,8 @@ ActivityBox.prototype.activityBoxLoaded = function() {
 		case "ARGUMENT":
 			switch(this.activity.event) {
 				case "created":	
-						eventPretty = "<a href=UserPage.action?username="+this.activity.argumentDto.creatorUsername+">"+
-						this.activity.argumentDto.creatorUsername+"</a> added an argument to decision '<a href=DecisionPage?decisionId="+
-						this.activity.argumentDto.decisionId+">"+this.activity.argumentDto.decisionDescription+"</a>'";
+						eventPretty = getUserPageLink(this.activity.argumentDto.creatorUsername)+" added an argument to decision '<a href=DecisionPage?decisionId="+
+						this.activity.argumentDto.decisionId+">"+LimitStrSize(this.activity.argumentDto.decisionDescription,70)+"</a>'";
 						break;
 			}
 			break;

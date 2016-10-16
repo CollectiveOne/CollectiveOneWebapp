@@ -49,7 +49,7 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 	switch(this.cbtion.state) {
 		case "PROPOSED":
 			$("#creator_div",this.container).append("<p>created by </p>");	
-			$("#creator_div",this.container).append("<a href=UserPage.action?username="+this.cbtion.creatorUsername+">"+this.cbtion.creatorUsername+"</a>");
+			$("#creator_div",this.container).append(getUserPageLink(this.cbtion.creatorUsername));
 			$("#creator_div",this.container).append("<p> "+getTimeStrSince(this.cbtion.creationDate)+" ago</p>");
 			var openDec = new DecisionBoxSmall($("#status_desc_div",this.container),this.cbtion.openDec, GLOBAL.sessionData.userLogged);		
 			openDec.draw();
@@ -57,7 +57,7 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 
 		case "ACCEPTED":
 			$("#status_desc_div",this.container).append("<p>contributed by "+
-				"<a href=UserPage.action?username="+this.cbtion.contributorUsername+">"+this.cbtion.contributorUsername+"</a><br />"+
+				getUserPageLink(this.cbtion.contributorUsername)+"<br />"+
 				" for "+this.cbtion.assignedPpoints+" pps</p>");
 
 			$("#status_desc_div p",this.container).addClass("status_accepted_p");

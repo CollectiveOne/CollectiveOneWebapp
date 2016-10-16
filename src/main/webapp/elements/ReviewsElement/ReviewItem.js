@@ -27,7 +27,6 @@ ReviewItem.prototype.reviewBoxLoaded = function() {
     });
 	$("#review_description", this.container).append("<p>"+this.review.description+"</p>");
 	var creationDate = new Date(this.review.creationDate);
-	$("#creation_info", this.container).append("<p>made by <a href=../views/UserPage.action?username="
-		+this.review.creatorUsername+">"+this.review.creatorUsername+"</a> on "+creationDate.toDateString()+"</p>");
+	$("#creation_info", this.container).append("<p>made by "+getUserPageLink(this.review.creatorUsername)+" on "+creationDate.toDateString()+"</p>");
 	
 }

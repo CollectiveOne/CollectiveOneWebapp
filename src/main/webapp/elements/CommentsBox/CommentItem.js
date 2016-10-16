@@ -24,7 +24,7 @@ CommentItem.prototype.commentBoxLoaded = function() {
 	$("#comment_content", this.container).append("<p>"+this.comment.content+"</p>");
 	
 	var creationDate = new Date(this.comment.creationDate);
-	$("#comment_creator", this.container).append("<p>by <a href=../views/UserPage.action?username="+this.comment.creatorUsername+">"+this.comment.creatorUsername+"</a> "+getTimeStrSince(creationDate)+" ago</p>");
+	$("#comment_creator", this.container).append("<p>by "+getUserPageLink(this.comment.creatorUsername)+getTimeStrSince(creationDate)+" ago</p>");
 	
 	if(this.comment.nreplies > 0) {
 		$("#comment_show_replies", this.container).append("<p>show replies ("+this.comment.nreplies+")</p>");

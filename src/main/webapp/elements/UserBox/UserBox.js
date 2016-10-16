@@ -26,12 +26,10 @@ UserBox.prototype.draw = function() {
 }
 
 UserBox.prototype.userBoxLoaded = function() {
-	var href = 'UserPage.action?username=' + this.user.username;
-	var text = this.user.username;
 	var pps = this.data.projectContributedDto.ppsContributed;
 	var ppsTot = this.data.projectContributedDto.ppsTot;
 	var percentage = pps/ppsTot*100;
 
-	$("#username",this.container).append($('<a href='+href+'>'+text+'</a>'));
+	$("#username",this.container).append($(getUserPageLink(this.user.username)));
 	$("#ppoints_div",this.container).append("<p>"+floatToChar(percentage,0)+"% in "+this.projectName+"</p>");
 }

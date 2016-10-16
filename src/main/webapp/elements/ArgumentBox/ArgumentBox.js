@@ -20,7 +20,7 @@ ArgumentBox.prototype.draw = function() {
 
 ArgumentBox.prototype.argumentBoxLoaded = function() {
 	$("#description_div",this.container).append("<p>"+this.argument.description+"</p>");
-	$("#creator_div",this.container).append("<p>...by "+this.argument.creatorUsername+"</p>");
+	$("#creator_div",this.container).append("<p>...by "+getUserPageLink(this.argument.creatorUsername)+"</p>");
 	$("#backers_div",this.container).append("<p>"+this.argument.nbackers+" backers</p>");
 	
 	this.updateBacked();

@@ -49,7 +49,7 @@ ProjectPage.prototype.contributorsOfProjectGetReceivedCallback = function(data) 
 		var username = usernamesAndPpps[ix].username;
 		var pps = usernamesAndPpps[ix].pps;
 		var percentage = pps/ppsTot*100;
-		$("#contributors_list",this.container).append("<p>"+floatToChar(pps,2)+" by <a href=../views/UserPage.action?username="+username+">"+username+"</a> ("+floatToChar(percentage,2)+" %)</p>");
+		$("#contributors_list",this.container).append("<p>"+floatToChar(pps,2)+" by "+getUserPageLink(username)+" ("+floatToChar(percentage,2)+" %)</p>");
 	}
 }
 

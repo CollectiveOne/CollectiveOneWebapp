@@ -28,8 +28,7 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 			break;
 		case "BID":
 			$("#from_to_state",this.container).append("<p>modifies bid to contribution <a href=CbtionPage.action?cbtionId="+
-			this.decision.cbtionId+">"+this.decision.cbtionTitle+"</a> made by <a href=UserPage.action?username="+
-			this.decision.bidCreatorUsername+">"+this.decision.bidCreatorUsername+"</a></p>");	
+			this.decision.cbtionId+">"+this.decision.cbtionTitle+"</a> made by "+getUserPageLink(this.decision.bidCreatorUsername)+"</p>");	
 			break;
 		case "GOAL":
 			$("#from_to_state",this.container).append("<p>modifies goal <a href=GoalListPage.action>"+this.decision.goalTag+"</a>");
@@ -149,14 +148,14 @@ DecisionBox.prototype.drawArguments = function() {
 	$("#args_no_div", this.container).empty();
 	for ( var ix in this.decision.argumentsNo ) {
 		$("#args_no_div", this.container).append("<div id=argument_no"+ix+" class=argument_container></div>");
-		var argumentBox = new ArgumentBox($("#argument_no"+ix),this.decision.argumentsNo[ix]);
+		var argumentBox = new ArgumentBox($("#argument_no"+ix,this.container),this.decision.argumentsNo[ix]);
 		argumentBox.draw();
 	}
 	
 	$("#args_yes_div", this.container).empty();
 	for ( var ix in this.decision.argumentsYes ) {
 		$("#args_yes_div", this.container).append("<div id=argument_yes"+ix+" class=argument_container></div>");
-		var argumentBox = new ArgumentBox($("#argument_yes"+ix),this.decision.argumentsYes[ix]);
+		var argumentBox = new ArgumentBox($("#argument_yes"+ix,this.container),this.decision.argumentsYes[ix]);
 		argumentBox.draw();
 	}	
 }

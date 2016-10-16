@@ -32,7 +32,7 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	if(this.cbtion.goalTag)	$("#goal_div",this.container).append(getGoalPageLink(this.cbtion.goalTag,this.cbtion.projectName));
 	
 	$("#project_div",this.container).append("<a href=ProjectPage.action?projectName="+this.cbtion.projectName+">"+this.cbtion.projectName+"</a>");
-	$("#creator_div",this.container).append("<a href=UserPage.action?username="+this.cbtion.creatorUsername+">"+this.cbtion.creatorUsername+"</a>");
+	$("#creator_div",this.container).append(getUserPageLink(this.cbtion.creatorUsername));
 	$("#creator_div",this.container).append("<p> "+getTimeStrSince(this.cbtion.creationDate)+" ago</p>");
 	$("#state_div",this.container).append("<p>Current state: "+this.cbtion.state+"</p>");
 	
@@ -44,7 +44,7 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 
 		case "ACCEPTED":
 			$("#status_desc_div",this.container).append("<p>contributed by "+
-				"<a href=UserPage.action?username="+this.cbtion.contributorUsername+">"+this.cbtion.contributorUsername+"</a>"+
+				getUserPageLink(this.cbtion.creatorUsername)+
 				" for "+this.cbtion.assignedPpoints+" pps</p>");
 
 			$("#cbtion_div #status_desc_div p",this.container).css("font-size","10px");
