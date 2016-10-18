@@ -21,9 +21,27 @@ FilterElement.prototype.init = function() {
 	
 	switch(this.type) {
 		case "cbtions":
+			$("#filter_inputs_cbtion",this.container).show();
+			$('#filter_goal_input', this.container).keydown(this.inputEnterKey.bind(this));
+			$('#filter_contributor_input', this.container).keydown(this.inputEnterKey.bind(this));
+
+			$('#filter_goal_input',this.container).autocomplete({
+				serviceUrl: '../json/GoalGetSuggestions.action',
+				projectName: [],
+				maxHeight: 100
+			});
+
+			$('#filter_contributor_input',this.container).autocomplete({
+				serviceUrl: '../json/UsernameGetSuggestions.action',
+				maxHeight: 100
+			});
+
+			break;
+
+		case "decisions":
+			$("#filter_inputs_decision",this.container).show();
 			break;
 		default: 
-			$("#filter_inputs_specific",this.container).hide();
 			break; 	
 
 	}
@@ -34,21 +52,7 @@ FilterElement.prototype.init = function() {
 
 	$('#filter_creator_input', this.container).keydown(this.inputEnterKey.bind(this));
 	$('#filter_keyword_input', this.container).keydown(this.inputEnterKey.bind(this));
-	$('#filter_goal_input', this.container).keydown(this.inputEnterKey.bind(this));
-	$('#filter_contributor_input', this.container).keydown(this.inputEnterKey.bind(this));
-
-	$('#filter_goal_input',this.container).autocomplete({
-		serviceUrl: '../json/GoalGetSuggestions.action',
-		projectName: [],
-		maxHeight: 100
-	});
-
-	$('#filter_contributor_input',this.container).autocomplete({
-		serviceUrl: '../json/UsernameGetSuggestions.action',
-		maxHeight: 100
-	});
 	
-
 	$('#filter_creator_input').autocomplete({
 	    serviceUrl: '../json/UsernameGetSuggestions.action',
 	    maxHeight: 100
@@ -97,10 +101,21 @@ FilterElement.prototype.updateFilterContents = function() {
 
 	if(this.filters.keyw != "") $("#filter_keyword_input", this.container).val(this.filters.keyw);
 	if(this.filters.creatorUsernames.length > 0) [$("#filter_creator_input", this.container).val(this.filters.creatorUsernames)];
-	if(this.filters.goalTag != "") $("#filter_goal_input", this.container).val(this.filters.goalTag);
-	if(this.filters.goalSubgoalsFlag != null) $("#filter_subgoals_input").attr('checked', this.filters.goalSubgoalsFlag);
-	if(this.filters.contributorUsername != "") $("#filter_contributor_input", this.container).val(this.filters.contributorUsername);
 
+
+		
+	switch(this.type) {
+		case "cbtions":	
+			if(this.filters.goalTag != "") $("#filter_goal_input", this.container).val(this.filters.goalTag);
+			if(this.filters.goalSubgoalsFlag != null) $("#filter_subgoals_input").attr('checked', this.filters.goalSubgoalsFlag);
+			if(this.filters.contributorUsername != "") $("#filter_contributor_input", this.container).val(this.filters.contributorUsername);
+			break;
+
+		case "decisions":
+			if(this.filters.showInternalDecisions != "") $("#filter_automatic_decisions").attr('checked', this.filters.showInternalDecisions);
+			break;
+	}
+			
 	// Filter by project
 	GLOBAL.serverComm.projectListGet(this.projectListReceivedCallback,this);
 }
@@ -126,12 +141,6 @@ FilterElement.prototype.getFiltersAndUpdateData = function() {
 	this.filters.projectNames = this.getSelectedProjects();
 	this.filters.stateNames = [];
 
-	$('#filter_goal_input',this.container).autocomplete().clear();
-	
-	var selectedProjects = this.getSelectedProjects();
-	if(selectedProjects.length == 1)	$('#filter_goal_input',this.container).autocomplete().setOptions({params: {projectName: selectedProjects[0] }});
-	else $('#filter_goal_input',this.container).autocomplete().setOptions({params: {projectName: "" }});
-
 	var statefilter = $("#filter_states", this.container).find("input");
 	var nsf = statefilter.length;
 
@@ -149,17 +158,31 @@ FilterElement.prototype.getFiltersAndUpdateData = function() {
 		this.filters.creatorUsernames = [];
 	}
 		
-	if(($("#filter_goal_input", this.container).val() != "") && (selectedProjects.length != 1)) {
-		showOutput("to filter by goal select one project");
-		return;
+	switch(this.type) {
+		case "cbtions":
+			$('#filter_goal_input',this.container).autocomplete().clear();
+	
+			var selectedProjects = this.getSelectedProjects();
+			if(selectedProjects.length == 1)	$('#filter_goal_input',this.container).autocomplete().setOptions({params: {projectName: selectedProjects[0] }});
+			else $('#filter_goal_input',this.container).autocomplete().setOptions({params: {projectName: "" }});
+
+		
+			if(($("#filter_goal_input", this.container).val() != "") && (selectedProjects.length != 1)) {
+				showOutput("to filter by goal select only one project");
+				return;
+			}
+
+			this.filters.goalTag = $("#filter_goal_input", this.container).val();
+			this.filters.goalSubgoalsFlag = $("#filter_subgoals_input").is(":checked");
+			this.filters.contributorUsername = $("#filter_contributor_input", this.container).val();
+			break;
+
+		case "decisions":
+			this.filters.showInternalDecisions = $("#filter_automatic_decisions").is(":checked");
+			break;
 	}
 
-	this.filters.goalTag = $("#filter_goal_input", this.container).val();
-	this.filters.goalSubgoalsFlag = $("#filter_subgoals_input").is(":checked");
-	this.filters.contributorUsername = $("#filter_contributor_input", this.container).val();
-
 	this.filters.sortBy = $('#sort_by_sel', this.container).attr("value");
-
 	this.updateData();
 }
 

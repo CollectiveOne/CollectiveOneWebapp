@@ -16,21 +16,10 @@ import coproject.cpweb.utils.db.services.DbServicesImp;
     @Result(name="success", type="json", params={"ignoreHierarchy","false","includeProperties","^decisionDto.*,^fieldErrors.*"}),
     @Result(name="input", type="json", params={"ignoreHierarchy","false","includeProperties","^fieldErrors.*"})
 })
-public class DecisionGet extends ActionSupport{
+public class DecisionGet extends CpAction {
 	
 	private static final long serialVersionUID = 1L;
-	
-	/* Services  */
-	DbServicesImp dbServices;
-	
-	public DbServicesImp getDbServices() {
-		return dbServices;
-	}
-
-	public void setDbServices(DbServicesImp dbServices) {
-		this.dbServices = dbServices;
-	}
-	
+		
 	/* Input parameters  */
 	private int id;
 

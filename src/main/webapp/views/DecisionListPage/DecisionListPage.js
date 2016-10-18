@@ -43,7 +43,8 @@ DecisionListPage.prototype.draw = function() {
 			this.decisionsReceivedCallback, 
 			this, 
 			customElements, 
-			filters);
+			filters,
+			"decisions");
 
 	this.filter.updateData();
 }

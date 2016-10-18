@@ -140,10 +140,18 @@
 	float:left;
 }
 
-#filter_contents #filter_inputs_specific {
+#filter_contents #filter_inputs_cbtion {
 	width: 100px;
 	margin-left: 15px;
 	float:left;
+	display:none;
+}
+
+#filter_contents #filter_inputs_decision {
+	width: 170px;
+	margin-left: 15px;
+	float:left;
+	display:none;
 }
 
 #filter_contents #filter_inputs p {
@@ -151,7 +159,7 @@
 	margin-left:4px;
 }
 
-#filter_contents #filter_inputs_specific p {
+#filter_contents #filter_inputs_cbtion p {
 	font-size:10px;
 	margin-left:4px;
 }
@@ -161,7 +169,7 @@
 	border-radius:5px;
 }
 
-#filter_contents #filter_inputs_specific input {
+#filter_contents #filter_inputs_cbtion input {
 	width: 100%;
 	border-radius:5px;
 }
@@ -170,15 +178,15 @@
 	margin-bottom:5px;
 }
 
-#filter_contents #filter_inputs_specific #filter_goal {
+#filter_contents #filter_inputs_cbtion #filter_goal {
 }
 
-#filter_contents #filter_inputs_specific #filter_subgoals {
+#filter_contents #filter_inputs_cbtion #filter_subgoals {
 	width:100%;
 	height: 16px;
 }
 
-#filter_contents #filter_inputs_specific #filter_subgoals p {
+#filter_contents #filter_inputs_cbtion #filter_subgoals p {
     height: 100%;
     display: block;
     float: left;
@@ -187,7 +195,7 @@
     margin-left: 0px;
 }
 
-#filter_contents #filter_inputs_specific #filter_subgoals_input {
+#filter_contents #filter_inputs_cbtion #filter_subgoals_input {
 	width:10px;
 }
 

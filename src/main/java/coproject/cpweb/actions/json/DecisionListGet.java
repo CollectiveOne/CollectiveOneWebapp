@@ -21,20 +21,9 @@ import coproject.cpweb.utils.db.services.Filters;
     @Result(name="success", type="json", params={"ignoreHierarchy","false","includeProperties","^decisionDtos.*,^resSet.*,^fieldErrors.*"}),
     @Result(name="input", type="json", params={"ignoreHierarchy","false","includeProperties","^fieldErrors.*"})
 })
-public class DecisionListGet extends ActionSupport{
+public class DecisionListGet extends CpAction {
 	
 	private static final long serialVersionUID = 1L;
-	
-	/* Services  */
-	DbServicesImp dbServices;
-	
-	public DbServicesImp getDbServices() {
-		return dbServices;
-	}
-
-	public void setDbServices(DbServicesImp dbServices) {
-		this.dbServices = dbServices;
-	}
 	
 	/* Input parameters  */
 	private Filters filters = new Filters();
@@ -56,11 +45,9 @@ public class DecisionListGet extends ActionSupport{
 	}
 
 	private int[] resSet;
-	
 	public int[] getResSet() {
 		return resSet;
 	}
-
 	public void setResSet(int[] resSet) {
 		this.resSet = resSet;
 	}

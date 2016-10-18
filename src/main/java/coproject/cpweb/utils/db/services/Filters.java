@@ -3,6 +3,9 @@ package coproject.cpweb.utils.db.services;
 import java.util.List;
 
 public class Filters {
+	private String sortBy;
+	private int page;
+	private int nperpage;
 	private List<String> projectNames;
 	private List<String> stateNames;
 	private List<String> creatorUsernames;
@@ -10,11 +13,26 @@ public class Filters {
 	private String keyw;
 	private String goalTag;
 	private boolean goalSubgoalsFlag;
-	private String sortBy;
-	private int page;
-	private int nperpage;
+	private boolean showInternalDecisions;
 	
-	
+	public String getSortBy() {
+		return sortBy;
+	}
+	public void setSortBy(String sortBy) {
+		this.sortBy = sortBy;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public int getNperpage() {
+		return nperpage;
+	}
+	public void setNperpage(int nperpage) {
+		this.nperpage = nperpage;
+	}
 	public List<String> getProjectNames() {
 		return projectNames;
 	}
@@ -57,23 +75,12 @@ public class Filters {
 	public void setGoalSubgoalsFlag(boolean goalSubgoalsFlag) {
 		this.goalSubgoalsFlag = goalSubgoalsFlag;
 	}
-	public String getSortBy() {
-		return sortBy;
+	public boolean getShowInternalDecisions() {
+		return showInternalDecisions;
 	}
-	public void setSortBy(String sortBy) {
-		this.sortBy = sortBy;
+	public void setShowInternalDecisions(boolean showInternalDecisions) {
+		this.showInternalDecisions = showInternalDecisions;
 	}
-	public int getPage() {
-		return page;
-	}
-	public void setPage(int page) {
-		this.page = page;
-	}
-	public int getNperpage() {
-		return nperpage;
-	}
-	public void setNperpage(int nperpage) {
-		this.nperpage = nperpage;
-	}
+	
 	
 }

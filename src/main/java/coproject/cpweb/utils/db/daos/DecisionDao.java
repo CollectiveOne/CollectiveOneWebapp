@@ -71,6 +71,12 @@ public class DecisionDao extends BaseDao {
 		
 		q.add(stateDisj);
 		
+		/* Decisions created by the platform can be filtered */
+		if(!filters.getShowInternalDecisions()) {
+			q.createAlias("creator", "crea")
+				.add(Restrictions.ne("crea.username", "collectiveone"));
+		}
+		
 		return getObjectsAndResSet(q, filters, Decision.class);
 	}
 
