@@ -1,30 +1,30 @@
 package coproject.cpweb.actions.json;
 
-import java.util.Map;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
-import org.apache.struts2.interceptor.SessionAware;
-
-import com.opensymphony.xwork2.ActionSupport;
 
 import coproject.cpweb.utils.db.entities.User;
 import coproject.cpweb.utils.db.entities.dtos.DecisionDto;
 import coproject.cpweb.utils.db.entities.dtos.UserDto;
 import coproject.cpweb.utils.db.services.DbServicesImp;
 
+/**
+ * @author pepo
+ *
+ */
 @Action("DecisionNew")
 @ParentPackage("json-data")
 @Results({
     @Result(name="success", type="json", params={"ignoreHierarchy","false",
     		"includeProperties","^fieldErrors.*,"
-    				+ "res,msg"
+    				+ "^decisionDto.*,"
+    				+ "^resStatus.*"
     				}),
     @Result(name="input", type="json", params={"ignoreHierarchy","false","includeProperties","^fieldErrors.*,res"})
 })
-public class DecisionNew extends ActionSupport implements SessionAware {
+public class DecisionNew extends CpAction {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -40,6 +40,16 @@ public class DecisionNew extends ActionSupport implements SessionAware {
 	}
 	
 	/* Input Json  */
+	private DecisionDto decisionDtoIn = new DecisionDto();
+	public DecisionDto getDecisionDtoIn() {
+		return decisionDtoIn;
+	}
+
+	public void setDecisionDtoIn(DecisionDto decisionDtoIn) {
+		this.decisionDtoIn = decisionDtoIn;
+	}
+
+	/* Output Data*/
 	private DecisionDto decisionDto = new DecisionDto();
 	public DecisionDto getDecisionDto() {
 		return decisionDto;
@@ -47,28 +57,12 @@ public class DecisionNew extends ActionSupport implements SessionAware {
 	public void setDecisionDto(DecisionDto decisionDto) {
 		this.decisionDto = decisionDto;
 	}
-	
-	/* Output Data*/
-	boolean res;
-	public boolean isRes() {
-		return res;
-	}
-	public void setRes(boolean res) {
-		this.res = res;
-	}
-	String msg;
-	public String getMsg() {
-		return msg;
-	}
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
 
 	/* Execute */
 	public String execute() throws Exception  {
     	
-		UserDto userLoggedDtoses = (UserDto) userSession.get("userLoggedDto");
-		User creator = dbServices.userGet(decisionDto.getCreatorUsername());
+		UserDto userLoggedDtoses = (UserDto) getSession().get("userLoggedDto");
+		User creator = dbServices.userGet(decisionDtoIn.getCreatorUsername());
 		
 		if(creator.getId() != userLoggedDtoses.getId()) {
 			addFieldError("creator", " decision creator is not logged in");
@@ -76,17 +70,12 @@ public class DecisionNew extends ActionSupport implements SessionAware {
 		}
 			
 		// create
-		msg = dbServices.decisionCreate(decisionDto);
-		res = true;
+		int id = dbServices.decisionCreate(decisionDtoIn);
+		
+		decisionDto = dbServices.decisionGetDto(id);
+		resStatus = dbServices.getStatus();
 		
 		return SUCCESS;
     }
-
-	private Map<String,Object> userSession;
-	
-	public void setSession(Map<String, Object> session) {
-		this.userSession = session;
-	}
-	
 
 }

@@ -1461,7 +1461,7 @@ public class DbServicesImp {
 	}	
 	
 	@Transactional
-	public String decisionCreate(DecisionDto decisionDto) {
+	public int decisionCreate(DecisionDto decisionDto) {
 		Decision decision = new Decision();
 		Project project = projectDao.get(decisionDto.getProjectName());
 		projectDao.save(project);
@@ -1489,7 +1489,10 @@ public class DbServicesImp {
 			activityDao.save(act);	
 		}
 		
-		return "decision created";
+		status.setMsg("decision created");
+		status.setSuccess(true);
+		
+		return decision.getId();
 	}
 	
 	@Transactional

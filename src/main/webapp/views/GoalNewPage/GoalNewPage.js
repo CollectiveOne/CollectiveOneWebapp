@@ -2,7 +2,9 @@ $(document).ready(function() {
 
 	GLOBAL = new Object();
 	GLOBAL.goalNewPage = new GoalNewPage("#content_pane");
-	CopDocReadyCommon(GLOBAL.goalNewPage.init,GLOBAL.goalNewPage);
+	CopDocReadyCommon(GLOBAL.goalNewPage.draw,GLOBAL.goalNewPage);
+
+	GLOBAL.goalNewPage.init();
 	
 });
 
@@ -15,35 +17,14 @@ function GoalNewPage(container_id) {
 GoalNewPage.prototype = Page.prototype;
 
 GoalNewPage.prototype.init = function() {
-	this.draw();
+	$('#create_btn').click(this.goalNew.bind(this));
+	$('#project_select').on('change', this.projectSelectorUpdated.bind(this));
 }
+
 GoalNewPage.prototype.draw = function() {
 
 	if (GLOBAL.sessionData.userLogged) {
-		this.container.empty();
-
-		this.container.append("<h3>Create new goal</h3>")
-		this.append_project_selector('project_select',this.projectSelectorDrawn,this);
-		this.container.append(	"<div class=field id=superGoalTag_div>"+
-				"<p class=field_name_p>Parent Goal</p>"+
-				"<input type=text class=field_in id=superGoalTag_selector>"+
-			"</div>");
-		this.append_input('goalTag', 'New Goal Tag', '');
-		this.append_text_area('description', 'Description','');
-		
-		
-		
-		$('#superGoalTag_selector',this.container).autocomplete({
-			serviceUrl: '../json/GoalGetSuggestions.action',
-			params: {projectName: $("#project_select", this.container).val()}
-		});
-		
-		// append create button
-		this.container.append($('<button id="create_btn">Create</button>'));
-
-		$('#create_btn').click(this.goalNew.bind(this));
-		$('#project_select').on('change', this.projectSelectorUpdated.bind(this));
-
+		this.fillProjectSelector($("#content_pane #project_select"),this.projectSelectorDrawn,this);
 	} else {
 		this.container.empty();
 		this.container
@@ -75,6 +56,6 @@ GoalNewPage.prototype.goalNew = function() {
 	GLOBAL.serverComm.goalNew(data,this.goalNewCallback,this);
 }
 
-GoalNewPage.prototype.goalNewCallback = function(goalDto) {
-	window.location = 'GoalListPage.action';
+GoalNewPage.prototype.goalNewCallback = function(data) {
+	window.location = "../views/GoalPage.action?projectName="+data.goalDto.projectName+"&goalTag="+data.goalDto.goalTag;
 }

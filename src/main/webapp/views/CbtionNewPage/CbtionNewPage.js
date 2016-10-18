@@ -2,8 +2,9 @@ $(document).ready(function() {
 
 	GLOBAL = new Object();
 	GLOBAL.cbtionNewPage = new CbtionNewPage("#content_pane");
-	CopDocReadyCommon(GLOBAL.cbtionNewPage.init,GLOBAL.cbtionNewPage);
+	CopDocReadyCommon(GLOBAL.cbtionNewPage.draw,GLOBAL.cbtionNewPage);
 	
+	GLOBAL.cbtionNewPage.init();
 });
 
 function CbtionNewPage(container_id) {
@@ -15,30 +16,15 @@ function CbtionNewPage(container_id) {
 CbtionNewPage.prototype = Page.prototype;
 
 CbtionNewPage.prototype.init = function() {
-	this.draw();
+	/* assign events here otherwise they are reasigned when the page is redrawn */
+	$('#create_btn').click(this.cbtionNew.bind(this));
+	$('#project_select').on('change', this.projectSelectorUpdated.bind(this));	
 }
+
 CbtionNewPage.prototype.draw = function() {
 
 	if (GLOBAL.sessionData.userLogged) {
-		this.container.empty();
-
-		this.container.append("<h3>Create new contribution</h3>")
-		
-		this.append_project_selector('project_select',this.projectSelectorDrawn,this);
-		this.append_input('title', 'Title', '');
-		this.append_text_area('description', 'Description','');
-		this.append_text_area('product', 'Product','');
-		
-		this.container.append(	"<div class=field id=goalTag_div>"+
-									"<p class=field_name_p>Goal</p>"+
-									"<input type=text class=field_in id=goalTag_selector>"+
-								"</div>");
-		
-		// append create button
-		this.container.append($('<button id="create_btn">Create</button>'));
-
-		$('#create_btn').click(this.cbtionNew.bind(this));
-		$('#project_select').on('change', this.projectSelectorUpdated.bind(this));
+		this.fillProjectSelector($("#content_pane #project_select"),this.projectSelectorDrawn,this);
 
 	} else {
 		this.container.empty();

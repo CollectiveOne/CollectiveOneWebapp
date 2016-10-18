@@ -2,8 +2,9 @@ $(document).ready(function() {
 
 	GLOBAL = new Object();
 	GLOBAL.decisionNewPage = new DecisionNewPage("#content_pane");
-	CopDocReadyCommon(GLOBAL.decisionNewPage.init,GLOBAL.decisionNewPage);
+	CopDocReadyCommon(GLOBAL.decisionNewPage.draw,GLOBAL.decisionNewPage);
 	
+	GLOBAL.decisionNewPage.init();
 });
 
 function DecisionNewPage(container_id) {
@@ -15,27 +16,22 @@ function DecisionNewPage(container_id) {
 DecisionNewPage.prototype = Page.prototype;
 
 DecisionNewPage.prototype.init = function() {
-	this.draw();
+	$('#create_btn').click(this.decisionNew.bind(this));
 }
+
 DecisionNewPage.prototype.draw = function() {
 
 	if (GLOBAL.sessionData.userLogged) {
-		this.container.empty();
-
-		this.container.append("<h3>Create new decision</h3>")
-		this.append_project_selector('project_select');
-		this.append_text_area('decisionDescription', 'Description', '');
-		
-		// append create button
-		this.container.append($('<button id="create_btn">Create</button>'));
-
-		$('#create_btn').click(this.decisionNew.bind(this));
-
+		this.fillProjectSelector($("#content_pane #project_select"),this.projectSelectorDrawn,this);
 	} else {
 		this.container.empty();
 		this.container
 				.append($("<p>please login to be able to create a new decision</p>"));
 	}
+}
+
+DecisionNewPage.prototype.projectSelectorDrawn = function() {
+	// nop
 }
 
 DecisionNewPage.prototype.decisionNew = function() {
@@ -48,6 +44,6 @@ DecisionNewPage.prototype.decisionNew = function() {
 	GLOBAL.serverComm.decisionNew(data,this.decisionNewCallback,this);
 }
 
-DecisionNewPage.prototype.decisionNewCallback = function(goalDto) {
-	window.location = 'DecisionListPage.action';
+DecisionNewPage.prototype.decisionNewCallback = function(data) {
+	window.location = 'DecisionPage.action?decisionId='+data.decisionDto.id;
 }

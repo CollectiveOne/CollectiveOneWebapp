@@ -2,7 +2,7 @@ $(document).ready(function() {
 
 	GLOBAL = new Object();
 	GLOBAL.goalListPage = new GoalListPage("#content_pane");
-	CopDocReadyCommon(GLOBAL.goalListPage.init,GLOBAL.goalListPage);
+	CopDocReadyCommon(GLOBAL.goalListPage.draw,GLOBAL.goalListPage);
 
 });
 
@@ -19,10 +19,8 @@ function GoalListPage(container_id) {
 //Inheritance
 GoalListPage.prototype = Page.prototype;
 
-GoalListPage.prototype.init = function() {
-	// Common after sessionUpdate code
-	CopSessionReadyCommon();
-	
+GoalListPage.prototype.draw = function() {
+
 	var filters = {
 			projectNames : GLOBAL.sessionData.activeProjectsController.getActiveProjectsNames(),
 			stateNames: ["PROPOSED","ACCEPTED"],
@@ -67,8 +65,8 @@ GoalListPage.prototype.drawGoals = function() {
 	$("#list_of_elements", this.container).empty();
 
 	for ( var ix in this.goals) {
-		$("#list_of_elements", this.container).append(this.create_div_jQ("goalbox",ix));
-		var goalBox = new GoalBox(this.get_div_jQ("goalbox",ix),this.goals[ix]);
+		$("#list_of_elements", this.container).append("<div class=goalBox_div id=goalbox"+ix+"_div></div>");
+		var goalBox = new GoalBox($("#goalbox"+ix+"_div"),this.goals[ix]);
 	}
 }
 

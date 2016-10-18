@@ -2,7 +2,7 @@ $(document).ready(function() {
 
 	GLOBAL = new Object();
 	GLOBAL.decisionListPage = new DecisionListPage("#content_pane");
-	CopDocReadyCommon(GLOBAL.decisionListPage.init,GLOBAL.decisionListPage);
+	CopDocReadyCommon(GLOBAL.decisionListPage.draw,GLOBAL.decisionListPage);
 
 });
 
@@ -19,9 +19,7 @@ function DecisionListPage(container_id) {
 //Inheritance
 DecisionListPage.prototype = Page.prototype;
 
-DecisionListPage.prototype.init = function() {
-	// Common after sessionUpdate code
-	CopSessionReadyCommon();
+DecisionListPage.prototype.draw = function() {
 	
 	var filters = {
 			projectNames : GLOBAL.sessionData.activeProjectsController.getActiveProjectsNames(),
@@ -66,8 +64,8 @@ DecisionListPage.prototype.drawDecisions = function() {
 	$("#list_of_elements", this.container).empty();
 
 	for ( var ix in this.decisions) {
-		$("#list_of_elements", this.container).append(this.create_div_jQ("decisionbox",ix));
-		var decisionBox = new DecisionBox(this.get_div_jQ("decisionbox",ix),this.decisions[ix]);
+		$("#list_of_elements", this.container).append("<div class=decisionbox_div id=decisionbox"+ix+"_div></div>");
+		var decisionBox = new DecisionBox($("#decisionbox"+ix+"_div"),this.decisions[ix]);
 		decisionBox.draw();
 	}
 }

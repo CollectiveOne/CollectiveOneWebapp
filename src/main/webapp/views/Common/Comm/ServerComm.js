@@ -739,7 +739,7 @@ ServerComm.prototype = {
 		decisionNew : function(decisionData,callbackFunction,callbackObj) {
 
 			var data = {
-					'decisionDto' : decisionData
+					'decisionDtoIn' : decisionData
 			};
 			var datastr = JSON.stringify(data);
 
@@ -750,10 +750,10 @@ ServerComm.prototype = {
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
-					if (data.res) {
-						showOutput(data.msg, "DarkGreen");
+					if (data) {
+						showReqOutput(data.resStatus);
 						setTimeout(function() {
-							callbackFunction.call(callbackObj);
+							callbackFunction.call(callbackObj,data);
 						}, 3000);
 					} else {
 						showOutput(data);

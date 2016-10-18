@@ -1,19 +1,13 @@
 package coproject.cpweb.actions.json;
 
-import java.util.Map;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
-import org.apache.struts2.interceptor.SessionAware;
-
-import com.opensymphony.xwork2.ActionSupport;
 
 import coproject.cpweb.utils.db.entities.User;
 import coproject.cpweb.utils.db.entities.dtos.GoalDto;
 import coproject.cpweb.utils.db.entities.dtos.UserDto;
-import coproject.cpweb.utils.db.services.DbServicesImp;
 
 @Action("GoalNew")
 @ParentPackage("json-data")
@@ -25,20 +19,9 @@ import coproject.cpweb.utils.db.services.DbServicesImp;
     				}),
     @Result(name="input", type="json", params={"ignoreHierarchy","false","includeProperties","^fieldErrors.*,res"})
 })
-public class GoalNew extends ActionSupport implements SessionAware {
+public class GoalNew extends CpAction {
 	
 	private static final long serialVersionUID = 1L;
-	
-	/* Services  */
-	DbServicesImp dbServices;
-	
-	public DbServicesImp getDbServices() {
-		return dbServices;
-	}
-
-	public void setDbServices(DbServicesImp dbServices) {
-		this.dbServices = dbServices;
-	}
 	
 	/* Input Json  */
 	private GoalDto goalDtoIn = new GoalDto();
@@ -67,7 +50,7 @@ public class GoalNew extends ActionSupport implements SessionAware {
 	/* Execute */
 	public String execute() throws Exception  {
     	
-		UserDto userLoggedDtoses = (UserDto) userSession.get("userLoggedDto");
+		UserDto userLoggedDtoses = (UserDto) getSession().get("userLoggedDto");
 		User creator = dbServices.userGet(goalDtoIn.getCreatorUsername());
 		
 		if(creator.getId() != userLoggedDtoses.getId()) {
@@ -83,12 +66,5 @@ public class GoalNew extends ActionSupport implements SessionAware {
 	
 		return SUCCESS;
     }
-
-	private Map<String,Object> userSession;
-	
-	public void setSession(Map<String, Object> session) {
-		this.userSession = session;
-	}
-	
 
 }

@@ -2,7 +2,7 @@ $(document).ready(function() {
 
 	GLOBAL = new Object();
 	GLOBAL.cbtionListPage = new CbtionListPage("#content_pane");
-	CopDocReadyCommon(GLOBAL.cbtionListPage.init,GLOBAL.cbtionListPage);
+	CopDocReadyCommon(GLOBAL.cbtionListPage.draw,GLOBAL.cbtionListPage);
 
 });
 
@@ -18,9 +18,7 @@ function CbtionListPage(container_id) {
 //Inheritance
 CbtionListPage.prototype = Page.prototype;
 
-CbtionListPage.prototype.init = function() {
-	// Common after sessionUpdate code
-	CopSessionReadyCommon();
+CbtionListPage.prototype.draw = function() {
 	this.cbtionList = new CbtionList("#content_pane",{});
 	 
 }
