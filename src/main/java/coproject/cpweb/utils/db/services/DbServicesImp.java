@@ -312,9 +312,11 @@ public class DbServicesImp {
 		accept_bid.setProject(project);
 		accept_bid.setType(DecisionType.BID);
 		accept_bid.setBid(bid);
-
+		
 		/* simulate the bid acceptance process */
 		bid.setState(BidState.ACCEPTED);
+		
+		project.setPpsTot(bid.getPpoints());
 
 		cbtion.setAssignedPpoints(bid.getPpoints());
 		cbtion.setContributor(bid.getCreator());

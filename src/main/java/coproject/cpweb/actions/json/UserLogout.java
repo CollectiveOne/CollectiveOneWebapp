@@ -50,6 +50,7 @@ public class UserLogout extends ActionSupport implements SessionAware {
 	public String execute() throws Exception  {
     	
 		userSession.remove("userLoggedDto");
+		userSession.remove("activeProjects");
 		
 		// Success/Failure logic is moved to client JS
 		return SUCCESS;
