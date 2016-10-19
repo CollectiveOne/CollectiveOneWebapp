@@ -62,8 +62,8 @@ ActivityListPage.prototype.drawActivityItems = function() {
 	$("#list_of_elements", this.container).empty();
 
 	for ( var ix in this.activityItems) {
-		$("#list_of_elements", this.container).append(this.create_div_jQ("itembox",ix));
-		var activityBox = new ActivityBox(this.get_div_jQ("itembox",ix),this.activityItems[ix]);
+		$("#list_of_elements", this.container).append("<div class=itembox_div id=itembox"+ix+"_div></div>");
+		var activityBox = new ActivityBox($("#itembox"+ix+"_div"),this.activityItems[ix]);
 		activityBox.draw();
 	}
 }
