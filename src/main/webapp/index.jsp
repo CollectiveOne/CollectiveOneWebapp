@@ -5,7 +5,7 @@
 <body>
 	<p align="center">redirecting...</p>
 	<% 
-	  response.sendRedirect("views/CbtionListPage.action");
+	  response.sendRedirect("views/WelcomePage.action");
 	%>
 </body>
 </html>
