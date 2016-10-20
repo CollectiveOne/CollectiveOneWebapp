@@ -22,11 +22,7 @@
 	height: 15px;
 	clear: both;
 	text-align: center;
-	background-color: #e6e6e6;
 	padding-top: 3px;
-	border-radius: 3px;
-	-webkit-user-select: none;
-	cursor:pointer;
 	margin-top: 10px;
 	float: left;
 }

@@ -107,7 +107,7 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 	
 	// Arguments portion expansion
 
-	$("#arguments_expand_div",this.container).append("<p>see arguments ("+this.decision.narguments+")</p>");
+	$("#arguments_expand_div",this.container).append("<p>show arguments ("+this.decision.narguments+")</p>");
 	
 	$("#arguments_expand_div",this.container).click(this.argumentsExpandClick.bind(this));
 	$("#arguments_no_new_btn",this.container).click(this.argumentNoExpand.bind(this));
