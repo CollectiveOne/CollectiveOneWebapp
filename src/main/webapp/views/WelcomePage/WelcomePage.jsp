@@ -18,18 +18,23 @@
 		</iframe>
 	</div>
 	
-	<div class="row_container">
-		<div id="link_to_reddit_container"><a href="https://www.reddit.com/r/CollectiveOne/" target='_blank'><img id="logo" src="../images/Reddit.png"></a></div>
-		<div id="link_to_slack_container"><a href="https://collectiveone.slack.com/" target='_blank'><img id="logo" src="../images/Slack.png"></a></div>
-		<div id="join_the_conversation"><p>Join the conversation at </p></div>
-	</div>
-	<div class="row_container">
-		<div id="learn_more">
-			<p>Take a look at the <a href="https://docs.google.com/document/d/1C9dCnPbKEZzCqaLYjmhsYIv0t0ehlaRbzwRaMZtzNNA/edit?usp=sharing" target='_blank'>white paper draft</a></p>
+	<div id="under_presentation">
+		<div class="row_container">
+			<p>Take a look at the white paper draft</p>
+				<a id=link_to_gdoc_container href="https://docs.google.com/document/d/1C9dCnPbKEZzCqaLYjmhsYIv0t0ehlaRbzwRaMZtzNNA" target='_blank'>
+					<img id="logo" src="../images/GDocs.png">
+				</a>
 		</div>
-	</div>
-	<div class="row_container">
-		<div id="contact_us">
+		<div class="row_container">
+			<p>Join the conversation at </p>
+			<a id=link_to_reddit_container href="https://www.reddit.com/r/CollectiveOne/" target='_blank'>
+				<img id="logo" src="../images/Reddit.png">
+			</a>
+			<a id=link_to_slack_container href="https://collectiveone.slack.com/" target='_blank'>
+				<img id="logo" src="../images/Slack.png">
+			</a>
+		</div>
+		<div class="row_container">
 			<p>Contact us at <a href="mailto:contact@collectiveone.org" target="_top">contact@collectiveone.org</a></p>
 		</div>
 	</div>

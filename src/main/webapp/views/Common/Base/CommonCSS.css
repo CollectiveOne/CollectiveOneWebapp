@@ -214,6 +214,16 @@ body {
 	top: 0px;
 }
 
+#container #license_div {
+	text-align:center;
+	font-size: 12px;
+	font-style: italic;
+}
+
+#container #license_div p {
+	
+}
+
 #container #new_element_form_div {
 	height:600px;	
 	width:500px;

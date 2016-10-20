@@ -1,13 +1,17 @@
 #container #presentation_container {
 	text-align: center;
+	margin-bottom: 40px;
+}
+
+#container #under_presentation {
+	text-align: center;
 }
 
 #container .row_container {
-	margin-top:20px;
 	overflow: auto;
-	margin-bottom: 20px;
-	min-width: 740px;
-	padding-right: 20px;
+	margin-bottom: 40px;
+	text-align: center;
+	width: auto;
 }
 
 #container .row_container p {
@@ -16,45 +20,27 @@
 	font-style: italic;
 }
 
-#container .row_container #join_the_conversation {
-	float: right;
-	padding-top:30px;
-	margin-right: 10px;
-	margin-left: 20px;
+#container #link_to_gdoc_container {
+	height: 60px;
+	width: 60px;
+	display: inline-block;
 }
-
-#container .row_container #learn_more {
-	float: right;
-	margin-right: 20px;
-	margin-left: 20px;
-}
-
-#container .row_container #contact_us {
-	float: right;
-	margin-right: 20px;
-	margin-left: 20px;
-}
-
 
 #container #link_to_reddit_container {
-	float: right;
 	height: 62.5px;
 	width: 175px;
+	display: inline-block;
 }
 
 #container #link_to_slack_container {
-	float: right;
 	margin-top: 21px;
 	height: 50px;
 	width: 175px;
+	display: inline-block;
 }
 
-#container #link_to_reddit_container img {
+#container #under_presentation img {
 	height:100%;
 	width:100%;
 }
 
-#container #link_to_slack_container img {
-	height:100%;
-	width:100%;
-}
