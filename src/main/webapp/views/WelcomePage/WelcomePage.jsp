@@ -28,6 +28,11 @@
 			<p>Take a look at the <a href="https://docs.google.com/document/d/1C9dCnPbKEZzCqaLYjmhsYIv0t0ehlaRbzwRaMZtzNNA/edit?usp=sharing" target='_blank'>white paper draft</a></p>
 		</div>
 	</div>
+	<div class="row_container">
+		<div id="contact_us">
+			<p>Contact us at <a href="mailto:contact@collectiveone.org" target="_top">contact@collectiveone.org</a></p>
+		</div>
+	</div>
 </div>
 
 <%@ include file="../Common/Base/BodyBelow.jsp"%>

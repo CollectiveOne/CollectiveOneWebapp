@@ -29,6 +29,13 @@
 	margin-left: 20px;
 }
 
+#container .row_container #contact_us {
+	float: right;
+	margin-right: 20px;
+	margin-left: 20px;
+}
+
+
 #container #link_to_reddit_container {
 	float: right;
 	height: 62.5px;
