@@ -10,7 +10,7 @@
 		</div>
 		
 		<div id="nav_pane">
-			<a href="../views/WelcomePage.action" id="welcome" class="cp_btn_dark nav_btn_list">Welcome</a>
+			<a href="../views/WelcomePage.action" id="welcome" class="cp_btn_dark nav_btn_list">About</a>
 			<a href="../views/CbtionListPage.action" id="cbtion_list" class="cp_btn_dark nav_btn_list">Contributions</a>
 			<a href="../views/CbtionNewPage.action" id="new_cbtion" class="cp_btn_dark nav_btn_plus">+</a>
 			<a href="../views/GoalListPage.action" id="goals_list" class="cp_btn_dark nav_btn_list">Goals</a>

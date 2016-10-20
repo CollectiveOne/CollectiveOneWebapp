@@ -71,6 +71,9 @@ public class ProjectNew extends ActionSupport implements SessionAware {
 	}
 	
 	public void validate() {
+		
+		addFieldError("project creation", "is currently disabled");
+		
 		if(projectDto.getName().contains(" ")) {
 			addFieldError("project name", "cant include spaces");
 		}
@@ -86,7 +89,7 @@ public class ProjectNew extends ActionSupport implements SessionAware {
 			addFieldError("creator", " project creator is not logged in");
 			return SUCCESS;
 		}
-			
+		
 		dbServices.projectCreate(projectDto);
 		dbServices.projectStart(projectDto.getName());
 		

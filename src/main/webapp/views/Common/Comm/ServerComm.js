@@ -129,7 +129,7 @@ ServerComm.prototype = {
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
-					if (data) {
+					if (data.goalDto) {
 						callbackFunction.call(callbackObj,data);
 					} else {
 						showOutput(data);
