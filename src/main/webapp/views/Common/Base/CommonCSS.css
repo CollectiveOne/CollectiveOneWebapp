@@ -154,6 +154,7 @@ body {
 	height:50px;
 	text-align:center;
 	clear:both;
+	margin-top: 30px;
 }
 
 #container #top #top_left {
@@ -359,6 +360,7 @@ body {
 	float:right;
 	border-radius:5px;
 	overflow: auto;
+	min-height: 600px;
 }
 
 #container .p_header {
