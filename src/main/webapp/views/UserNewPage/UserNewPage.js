@@ -3,7 +3,9 @@ $(document).ready(function() {
 	GLOBAL = new Object();
 	GLOBAL.userNewPage = new UserNewPage("#content_pane");
 	
-	CopDocReadyCommon(GLOBAL.userNewPage.init,GLOBAL.userNewPage);
+	CopDocReadyCommon(GLOBAL.userNewPage.draw,GLOBAL.userNewPage);
+	
+	GLOBAL.userNewPage.init();
 	
 });
 
@@ -16,12 +18,7 @@ function UserNewPage(container_id) {
 UserNewPage.prototype = Page.prototype;
 
 UserNewPage.prototype.init = function() {
-	this.data = {
-			username: [], 
-			password: []
-	};
-	
-	this.draw();
+	$('#create_btn').click(this.userNew.bind(this));
 }
 UserNewPage.prototype.draw = function() {
 
@@ -31,26 +28,20 @@ UserNewPage.prototype.draw = function() {
 				.append($("<p>user already logged in</p>"));
 		
 	} else {
-		this.container.empty();
-
-		this.append_input('username', 'username', '');
-		this.append_input('password', 'password', '','password');
-		this.append_input('password_check', 'password_check', '','password');
 		
-		// append create button
-		this.container.append($('<button id="create_btn">Sign up</button>'));
-
-		$('#create_btn').click(this.userNew.bind(this));
 	}
 }
 
 UserNewPage.prototype.userNew = function() {
 	if($("#password_in", this.container).val() == $("#password_check_in", this.container).val()) {
-		this.data.username = $("#username_in", this.container).val();
-		this.data.password = $("#password_in", this.container).val();
-		GLOBAL.serverComm.userNew(this.data,this.userNewCallback,this);
+		var data = {	
+			username : $("#username_in", this.container).val(),
+			password : $("#password_in", this.container).val()
+		}
+		
+		GLOBAL.serverComm.userNew(data,this.userNewCallback,this);
 	} else {
-		showOutput(" passwords do not match", "red")
+		showOutput(" passwords do not match", "DarkRed")
 	}
 }
 

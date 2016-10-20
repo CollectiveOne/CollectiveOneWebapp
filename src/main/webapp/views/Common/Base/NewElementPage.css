@@ -17,7 +17,7 @@
 
 .select {
 	float:right;
-	width: calc(100% - 120px - 10px);
+	width: calc(100% - 130px - 10px);
 	border-radius:5px;
 	border-style:solid;
 	border-width:1px;
@@ -36,7 +36,7 @@
 
 .field_name_p {
 	float:left;
-	width: 120px;
+	width: 130px;
 	padding-top:1px;
 	padding-right:6px;
 	text-align:right;
@@ -50,7 +50,7 @@
 
 .field_in {
 	float:right;
-	width: calc(100% - 120px - 10px);
+	width: calc(100% - 130px - 10px);
 	border-radius:5px;
 	font-family:'calibri';
 	border-style:solid;
@@ -60,8 +60,8 @@
 
 .textarea_in {
 	float:right;
-	width:calc(100% - 120px - 10px);
-	max-width: calc(100% - 120px - 10px);
+	width: calc(100% - 130px - 10px);
+	max-width: calc(100% - 130px - 10px);
 	max-height: 200px;
 	resize: vertical;
 	height:50px;

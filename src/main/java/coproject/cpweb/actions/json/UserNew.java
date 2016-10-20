@@ -83,9 +83,7 @@ public class UserNew extends ActionSupport{
 		
 		/* allow only a given set of users */
 		
-		String[] aprovedUsers = {"rosapm",
-				"martinos"
-		};
+		String[] aprovedUsers = {};
 		
 		if(!Arrays.asList(aprovedUsers).contains(username)) {
 			addFieldError("username", "signup not aproved");
