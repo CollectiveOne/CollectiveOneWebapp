@@ -15,15 +15,6 @@
 <%@ include file="../Common/Base/BodyOver.jsp"%>
 
 <div id="content_pane">
-	<div id="project_container" class=cp_box_gray_thick>
-		<div id="project_name"></div>
-		<div id="project_description" class=cp_box_gray_slim></div>
-		<div id="project_contributors" class=cp_box_gray_slim>
-			<p class=marker>Contributors</p>
-			<div id="total_pps_div"></div>
-			<div id="contributors_list"></div>
-		</div>
-	</div>
 </div>
 
 <%@ include file="../Common/Base/BodyBelow.jsp"%>

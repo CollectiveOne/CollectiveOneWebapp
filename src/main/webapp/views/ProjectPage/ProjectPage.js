@@ -29,6 +29,10 @@ ProjectPage.prototype.ProjectReceivedCallback = function(projectDto) {
 }
 
 ProjectPage.prototype.drawProject = function() {
+	this.container.load("../views/ProjectPage/ProjectPage.html",this.fillProject.bind(this));
+}
+
+ProjectPage.prototype.fillProject = function() {
 	$("#project_name",this.container).append($("<p>"+this.project.name+"</p>"));
 	$("#project_description",this.container).append($("<p>"+this.project.description+"</p>"));
 	

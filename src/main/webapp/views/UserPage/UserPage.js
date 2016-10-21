@@ -29,6 +29,11 @@ UserPage.prototype.UserReceivedCallback = function(userDto) {
 }
 
 UserPage.prototype.drawUser = function() {
+	this.container.load("../views/UserPage/UserPage.html",this.fillUser.bind(this));
+}
+
+
+UserPage.prototype.fillUser = function() {
 	
 	$("#username_div",this.container).append($("<p id=username>"+this.user.username+"</p>"));
 	
