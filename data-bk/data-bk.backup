@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2016-10-20 13:05:55 CEST
+-- Started on 2016-10-24 11:19:08 CEST
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -90,6 +90,7 @@ COPY bids (id, creationdate, deliverydate, description, donedate, donedescriptio
 68	2016-10-16 10:23:01.212	2016-10-16 22:00:00	I have fixed bug, added a link to argument creator page and updated all links to UserPage to use a helper function	2016-10-16 10:23:27.303	https://github.com/CollectiveOne/CollectiveOne-Webapp/commit/6c4898c23f8b3b947ceb4e0008fb1812c43d5dbf	1	3	3	236	235	75	1
 64	2016-10-10 20:09:51.438	2016-10-10 22:00:00	I have updated the model and removed all redundancies. Added a few methods to the API and updated a few JS elements	2016-10-10 20:10:05.69	https://github.com/CollectiveOne/CollectiveOne-Webapp/commit/9f9c4f1675bc0ecf88ffaa75c4bd43339c513480	1	10	3	219	218	73	1
 71	2016-10-19 21:10:56.196	2016-10-25 05:00:00	add data sets for urbano project	\N	\N	\N	0.100000000000000006	1	261	260	79	5
+74	2016-10-21 18:06:04.799	2016-10-21 22:00:00	I will do it using React.js	2016-10-21 18:06:28.198	see last commit	1	10	3	275	274	69	1
 65	2016-10-11 21:36:06.805	2016-10-11 22:00:00	I have added the google drive presentation and the links to slack and reddit	\N	\N	\N	5	3	227	226	59	1
 69	2016-10-18 14:51:58.291	2016-10-18 22:00:00	I have updated all the forms to abandon the dynamic writing and replaced with the form being specified directly in the JSP file. Other fixes have been done, including showing only custom decisions in the decision list page by default.	2016-10-18 14:52:31.142	https://github.com/CollectiveOne/CollectiveOne-Webapp/commit/915b827ffdd6b48f8a920e669a59254bfd47fb38	1	5	3	246	245	77	1
 66	2016-10-11 21:37:31.523	2016-10-11 22:00:00	I have updated the goal methods to force projectName to be used whenever goalTag is used	\N	\N	\N	10	3	229	228	74	1
@@ -97,6 +98,7 @@ COPY bids (id, creationdate, deliverydate, description, donedate, donedescriptio
 67	2016-10-11 21:38:36.283	2016-10-11 22:00:00	I have updated only the nav pane divs and replaced them with anchors	\N	\N	\N	5	3	231	230	66	1
 42	2016-09-08 18:36:09.301	2016-09-09 22:00:00	I have created a new ActiveProject JS element and two API methods. Filters are preinitializaed based on the active projects.	\N	\N	\N	15	3	225	135	31	1
 72	2016-10-19 21:14:11.304	2016-10-20 05:00:00	webpage using nodejs keystone	2016-10-19 21:14:54.201	github.com/randommonkey	1	1	3	266	265	80	5
+73	2016-10-21 14:06:40.943	2016-10-21 22:00:00	I have moved the User and Project page to an html dynamically loaded every time the apge is redrawn	\N	\N	\N	5	3	273	272	81	1
 \.
 
 
@@ -112,8 +114,8 @@ ALTER TABLE projects DISABLE TRIGGER ALL;
 
 COPY projects (id, creationdate, description, name, ppstot, creator_id) FROM stdin;
 2	2016-09-21 15:38:54.641	With JieMaps, you can create and share your navigation experience, and find the navigation experiences of others.\n\nIn JieMaps, a navigation experience is represented by a path (a sequence and group of links). This paths are called Jies. That's all. 	JieMaps	100	1
-1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2466.5	1
 3	2016-10-19 20:51:28.032	Data journalism tools	datasketch	101	5
+1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2481.5	1
 \.
 
 
@@ -191,14 +193,12 @@ COPY cbtions (id, assignedppoints, creationdate, description, product, relevance
 62	10	2016-09-21 17:02:07.975	Current is version is dummy. Improve it, at least add a list of contributors and their ownership.	updated ProjectPage	0	2	Improve Project Page	1	1	4	166	1
 53	35	2016-09-08 22:51:51.221	The name CoProjects is not considered good enough. Think of another one that is more catchy. Elements like points"participation points", "goals", "contributions" and "decisions" could also be renamed.  The new name should be accompanied from a free (and reasonably cheap) domain name.	Presentation of the names	2	2	Catchy names	3	1	7	139	1
 67	10	2016-10-04 17:49:09.021	Allow users to change the goal hierarchy (set Goal parents and subgoals) with Decision items	Updated goal modification process	0	2	Allow Goal hierarchy to be edited with decisions	1	1	4	195	1
-69	0	2016-10-06 10:44:45.314	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	0	0	Setup markdown basic infrastructure	\N	1	12	204	1
 37	15	2016-09-05 10:15:39.715	Add the possibility for users to mark that they are reviewing a Bid but cannot provide a Bid price yet as its not clear how much work is needed. This way other users can contact them in case they are also interested in Bidding to that contribution. This could be added as a new Bid state in which the bid value is not mandatory	updated Bid entity and all dependencies	0	2	Add "under review" marks to Contributions	1	1	3	\N	1
 71	5	2016-10-07 21:53:37.745	Update webapp and overall project support tools like slack, github, docs in Google Drive, white paper, etc to use the new name of the project: "CollectiveOne"	Updated names all arround	0	2	Remove CoProjects and use CollectiveOne	1	1	7	213	1
 68	15	2016-10-05 09:25:26.816	Create a basic slides presentation to be used as the starting point of a video presentation (separate contribution)	Google Drive Slides	0	2	Slides Presentation	1	1	11	198	1
 70	5	2016-10-07 14:35:56.187	Create a namecheap account to the name of CollectiveOne and buy the domain	Domain assignation	0	2	Buy the collectiveone.org domain	4	1	7	209	1
 31	15	2016-09-01 20:14:46.486	Create a bar with the Platform projects in which the user can select one or more projects and the web app will automatically filter its interaction in the platform to those projects. For example, if the user select the project "CoProjects" and them search for contributions, only the contributions of the "CoProjects" projects will be shown. The bar can be located just below the Coprojects logo	Updated UI with bar	1	2	Active Project Bar	1	1	4	\N	1
 66	5	2016-10-03 15:11:10.568	Update all DIV buttons to ANCHOS so that they are identified by the browser as links, allowing the user to interact with them as links (open them in a new tab etc)	updated user interface (JS, CSS and HTML)	0	2	Update DIV buttons to ANCHORS	1	1	4	182	1
-72	0	2016-10-07 22:22:22.623	Use a screen video recorder to create a short video showing the typical use of the CollectiveOne web application	HD video file	1	4	Save screen while using the webapp	\N	1	11	216	1
 73	10	2016-10-10 20:08:58.375	Remove properties in User and Project entities (mostly lists of contributions) to avoid redundancies. Store all data in one single place	updated data model	0	2	Refactor model to avoid redundancies	1	1	3	217	1
 59	5	2016-09-15 14:47:23.821	Create a welcome page which provides an appealing overview of CoProjects and invites visitors to get engaged	new page	0	2	Welcome page 	1	1	4	158	1
 74	10	2016-10-10 20:29:16.714	Allow for goaltags to be the same in two projects. Add the project to the GoalBox	updated webapp db service	0	2	Goal tags	1	1	6	222	1
@@ -208,6 +208,14 @@ COPY cbtions (id, assignedppoints, creationdate, description, product, relevance
 78	100	2016-10-19 20:51:28.066	Start contribution	\N	0	2	Create project datasketch	5	5	\N	\N	3
 79	0	2016-10-19 21:08:31.577		data sets	0	1	Prepare initial public data sets	\N	5	23	259	3
 80	1	2016-10-19 21:13:30.346		nodejs repo	0	2	create webpage	5	5	24	264	3
+72	0	2016-10-07 22:22:22.623	Use a screen video recorder to create a short video showing the typical use of the CollectiveOne web application	HD video file	1	5	Save screen while using the webapp	\N	1	11	216	1
+69	10	2016-10-06 10:44:45.314	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	0	2	Setup markdown basic infrastructure	1	1	12	204	1
+81	5	2016-10-20 13:20:04.689	ActiveProject selection automatically redraw the current page. While this is ok for pages of list of objects, it is not working ok for user and project pages, since some elements are duplicated. 	updated pages and/or active project logic 	0	2	BUG FIX Active project selection wrong redraw	1	1	4	270	1
+85	0	2016-10-23 12:26:16.853	See if other domains that could be used by CollectiveOne are free and aquire them	domain control	0	4	Look for and acquire other domains	\N	1	7	279	1
+86	0	2016-10-23 21:42:33.991	The video should describe the collectiveone concept and the current features of the webapp 	Video file 	0	4	Prepare video for Welcome page  	\N	1	8	281	1
+84	0	2016-10-21 18:25:59.693	Use an native english speaking person if possible	audio file	0	5	Improve the welcome video audio	\N	1	8	277	1
+82	0	2016-10-20 13:22:18.629	Allow contributions to be deleted by its creator (if they have not been yet accepted) or by a collective decision (if they have)	update contribution lifecycle and ui	1	4	Allow contributions to be deleted	\N	1	3	271	1
+87	0	2016-10-23 22:47:24.759	Prepare a presentation email starting from email from esteban to introduce selected people to the project.	email draft	0	4	Prepare presentation email	\N	1	7	282	1
 \.
 
 
@@ -347,7 +355,7 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 132	2016-09-28 15:44:43.62	0.949999999999999956	1	2016-09-08 16:37:17.432	OPEN contribution 50	0	PROPOSED	0	1	1	8	2016-09-28 15:44:43.618	1	1956	2273.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 139	2016-09-28 16:44:17.849	0.949999999999999956	1	2016-09-08 22:51:51.23	OPEN contribution 53	0	PROPOSED	0	1	1	8	2016-09-28 16:44:17.846	1	1966	2283.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 145	2016-09-09 18:27:53.392	0.949999999999999956	1	2016-09-09 18:27:37.405	Accept cbtion 54 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-09 18:27:53.39	1	1868	2185.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
-146	\N	0.949999999999999956	0	2016-09-10 11:26:27.247	Goals should be renamed to milestones	0	\N	1	0	0	8	\N	0	0	0	0.5	0	0	\N	\N	0	36	\N	\N	1	1	\N	1
+146	2016-10-20 13:12:30.707	0.949999999999999956	1	2016-09-10 11:26:27.247	Goals should be renamed to milestones	0	\N	1	0	1	8	2016-10-20 13:12:30.705	0	2109	2466.5	0.5	0	3	\N	\N	0	36	\N	\N	1	1	\N	1
 148	2016-09-12 19:35:42.465	0.949999999999999956	1	2016-09-12 19:34:56.635	OPEN contribution 57	0	PROPOSED	0	1	1	8	2016-09-12 19:35:42.456	1	1874	2191.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 149	2016-09-12 19:35:53.023	0.949999999999999956	1	2016-09-12 19:35:43.555	Assign cbtion 57 to pepoospina	0	OFFERED	0	1	1	8	2016-09-12 19:35:53.015	1	1874	2191.5	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
 150	2016-09-12 19:35:58.429	0.949999999999999956	1	2016-09-12 19:35:43.556	Accept cbtion 57 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-12 19:35:58.424	1	1874	2191.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
@@ -415,7 +423,6 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 214	2016-10-07 21:54:52.617	0.949999999999999956	1	2016-10-07 21:54:42.953	assign contribution 'Remove CoProjects and use CollectiveOne' to pepoospina	0	OFFERED	0	1	1	8	2016-10-07 21:54:52.615	1	2036	2393.5	0.5	0	2	ASSIGNED	3	1	36	63	\N	6	1	\N	1
 215	2016-10-07 21:55:07.379	0.949999999999999956	1	2016-10-07 21:54:53.609	accept contribution 'Remove CoProjects and use CollectiveOne' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-07 21:55:07.377	1	2036	2393.5	0.5	0	2	ACCEPTED	3	1	36	63	\N	6	1	\N	1
 205	2016-10-07 21:55:35.511	0.949999999999999956	1	2016-10-06 17:20:47.929	accept contribution 'Slides Presentation' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-07 21:55:35.509	1	2041	2398.5	0.5	0	2	ACCEPTED	3	1	36	58	\N	6	1	\N	1
-216	\N	0.949999999999999956	0	2016-10-07 22:22:22.649	open contribution 'Save screen while using the webapp'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	72	6	1	\N	1
 143	2016-10-07 14:28:46.747	0.949999999999999956	1	2016-09-08 23:05:16.274	OPEN contribution 55	0.000708256172839506152	PROPOSED	0.0225618408609440622	0.522561840860944038	2	8	2016-10-07 14:27:08.519	1	2263	2388.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 209	2016-10-07 15:00:40.962	0.949999999999999956	1	2016-10-07 14:35:56.193	open contribution 'Buy the collectiveone.org domain'	0	PROPOSED	0	1	1	8	2016-10-07 15:00:40.96	1	2036	2388.5	0.5	0	2	OPEN	1	1	36	\N	70	6	1	\N	1
 210	2016-10-07 16:03:56.582	0.949999999999999956	1	2016-10-07 15:58:03.796	assign contribution 'Buy the collectiveone.org domain' to mospina	0	OFFERED	0	1	1	8	2016-10-07 16:03:56.581	1	2036	2388.5	0.5	0	2	ASSIGNED	3	1	36	62	\N	6	1	\N	1
@@ -434,10 +441,9 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 229	2016-10-11 21:37:54.588	0.949999999999999956	1	2016-10-11 21:37:41.75	accept contribution 'Goal tags' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-11 21:37:54.586	1	2086	2443.5	0.5	0	2	ACCEPTED	3	1	36	66	\N	6	1	\N	1
 182	2016-10-11 21:38:09.129	0.949999999999999956	1	2016-10-03 15:11:10.604	open contribution 'Update DIV buttons to ANCHORS'	0	PROPOSED	0	1	1	8	2016-10-11 21:38:09.128	1	2096	2453.5	0.5	0	2	OPEN	1	1	36	\N	66	6	1	\N	1
 230	2016-10-11 21:38:42.864	0.949999999999999956	1	2016-10-11 21:38:36.627	assign contribution 'Update DIV buttons to ANCHORS' to pepoospina	0	OFFERED	0	1	1	8	2016-10-11 21:38:42.862	1	2096	2453.5	0.5	0	2	ASSIGNED	3	1	36	67	\N	6	1	\N	1
+216	2016-10-23 21:43:25.074	0.949999999999999956	1	2016-10-07 22:22:22.649	open contribution 'Save screen while using the webapp'	0	PROPOSED	1	0	1	8	2016-10-23 21:43:25.073	0	2124	2481.5	0.5	0	3	OPEN	1	0	36	\N	72	6	1	\N	1
 231	2016-10-11 21:38:56.497	0.949999999999999956	1	2016-10-11 21:38:43.569	accept contribution 'Update DIV buttons to ANCHORS' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-11 21:38:56.495	1	2096	2453.5	0.5	0	2	ACCEPTED	3	1	36	67	\N	6	1	\N	1
-233	\N	0.949999999999999956	0	2016-10-14 10:11:26.806	CollectiveOne should prepare and launch a kickstarter campaign asking for cash (around $15k) and use that money to pay for professional developers. Kickstarter contributors would receive participation points in exchange.	0	\N	1	0	0	8	\N	0	0	0	0.5	0	0	\N	0	0	36	\N	\N	1	1	\N	1
 234	2016-10-14 18:30:26.708	0.949999999999999956	1	2016-10-14 18:30:06.987	open contribution 'Fix bug in decision arguments display'	0	PROPOSED	0	1	1	8	2016-10-14 18:30:26.705	1	2101	2458.5	0.5	0	2	OPEN	1	1	36	\N	75	6	1	\N	1
-232	\N	0.949999999999999956	0	2016-10-12 23:10:52.872	CollectiveOne should share its prototype and concept (white paper) through Reddit (or relevant slack channels) to get feedback from other people and try to get other people involved in the development of the project? 	0	\N	1	0	0	8	\N	0	0	0	0.5	0	0	\N	0	0	36	\N	\N	1	1	\N	1
 235	2016-10-16 10:23:11.227	0.949999999999999956	1	2016-10-16 10:23:01.368	assign contribution 'Fix bug in decision arguments display' to pepoospina	0	OFFERED	0	1	1	8	2016-10-16 10:23:11.226	1	2101	2458.5	0.5	0	2	ASSIGNED	3	1	36	68	\N	6	1	\N	1
 236	2016-10-16 10:23:31.335	0.949999999999999956	1	2016-10-16 10:23:11.932	accept contribution 'Fix bug in decision arguments display' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-16 10:23:31.334	1	2101	2458.5	0.5	0	2	ACCEPTED	3	1	36	68	\N	6	1	\N	1
 238	\N	0.949999999999999956	0	2016-10-17 16:04:44.596	delete goal 'jiemap'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	2	14	2
@@ -463,6 +469,7 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 258	\N	0.949999999999999956	0	2016-10-19 21:04:51.572	delete goal 'data-management'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	5	23	3
 257	2016-10-19 21:05:35.952	0.949999999999999956	1	2016-10-19 21:04:51.568	create goal 'data-management'	0	PROPOSED	0	1	1	8	2016-10-19 21:05:35.95	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	5	23	3
 259	2016-10-19 21:09:08.473	0.949999999999999956	1	2016-10-19 21:08:31.583	open contribution 'Prepare initial public data sets'	0	PROPOSED	0	1	1	8	2016-10-19 21:09:08.473	1	100	100	0.5	0	2	OPEN	1	1	36	\N	79	6	5	\N	3
+232	2016-10-20 13:12:23.168	0.949999999999999956	1	2016-10-12 23:10:52.872	CollectiveOne should share its prototype and concept (white paper) through Reddit (or relevant slack channels) to get feedback from other people and try to get other people involved in the development of the project? 	0	\N	1	0	1	8	2016-10-20 13:12:23.166	0	2109	2466.5	0.5	0	3	\N	0	0	36	\N	\N	1	1	\N	1
 260	2016-10-19 21:11:24.623	0.949999999999999956	1	2016-10-19 21:10:56.471	assign contribution 'Prepare initial public data sets' to jpmarindiaz	0	OFFERED	0	1	1	8	2016-10-19 21:11:24.621	1	100	100	0.5	0	2	ASSIGNED	3	1	36	71	\N	6	5	\N	3
 261	\N	0.949999999999999956	0	2016-10-19 21:11:25.436	accept contribution 'Prepare initial public data sets' as delivered by jpmarindiaz	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	71	\N	6	5	\N	3
 262	2016-10-19 21:12:59.395	0.949999999999999956	1	2016-10-19 21:12:37.057	create goal 'webpage'	0	PROPOSED	0	1	1	8	2016-10-19 21:12:59.394	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	5	24	3
@@ -471,6 +478,21 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 266	2016-10-19 21:14:59.487	0.949999999999999956	1	2016-10-19 21:14:37.728	accept contribution 'create webpage' as delivered by jpmarindiaz	0	ASSIGNED	0	1	1	8	2016-10-19 21:14:59.485	1	100	100	0.5	0	2	ACCEPTED	3	1	36	72	\N	6	5	\N	3
 263	\N	0.949999999999999956	0	2016-10-19 21:12:37.058	delete goal 'webpage'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	5	24	3
 267	\N	0.949999999999999956	0	2016-10-19 21:17:29.082	Usar neo4j	0	\N	1	0	0	8	\N	0	0	0	0.5	0	0	\N	0	0	36	\N	\N	5	2	\N	2
+268	\N	0.949999999999999956	0	2016-10-20 13:08:55.818	CollectiveOne should send emails to people selected a priori. These people may not be personally acquaintances of current contributors and should have experience relevant for the development of the CollectiveOne concept and platform. Names on the list will be proposed by any contributor and approved through dedicated decisions.	0	\N	1	0	0	8	\N	0	0	0	0.5	0	0	\N	0	0	36	\N	\N	1	1	\N	1
+269	\N	0.949999999999999956	0	2016-10-20 13:12:00.94	CollectiveOne should start opening the whitepaper and the prototype gradually over public forums (slack and reddit) so that potentially interested people can get involved with the project.	0	\N	1	0	0	8	\N	0	0	0	0.5	0	0	\N	0	0	36	\N	\N	1	1	\N	1
+233	2016-10-20 13:12:15.77	0.949999999999999956	1	2016-10-14 10:11:26.806	CollectiveOne should prepare and launch a kickstarter campaign asking for cash (around $15k) and use that money to pay for professional developers. Kickstarter contributors would receive participation points in exchange.	0	\N	1	0	1	8	2016-10-20 13:12:15.768	0	2109	2466.5	0.5	0	3	\N	0	0	36	\N	\N	1	1	\N	1
+271	\N	0.949999999999999956	0	2016-10-20 13:22:18.634	open contribution 'Allow contributions to be deleted'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	82	6	1	\N	1
+270	2016-10-21 14:05:57.299	0.949999999999999956	1	2016-10-20 13:20:04.697	open contribution 'BUG FIX Active project selection wrong redraw'	0	PROPOSED	0	1	1	8	2016-10-21 14:05:57.296	1	2109	2466.5	0.5	0	2	OPEN	1	1	36	\N	81	6	1	\N	1
+272	2016-10-21 14:06:50.91	0.949999999999999956	1	2016-10-21 14:06:41.138	assign contribution 'BUG FIX Active project selection wrong redraw' to pepoospina	0	OFFERED	0	1	1	8	2016-10-21 14:06:50.907	1	2109	2466.5	0.5	0	2	ASSIGNED	3	1	36	73	\N	6	1	\N	1
+273	2016-10-21 14:06:58.575	0.949999999999999956	1	2016-10-21 14:06:52	accept contribution 'BUG FIX Active project selection wrong redraw' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-21 14:06:58.571	1	2109	2466.5	0.5	0	2	ACCEPTED	3	1	36	73	\N	6	1	\N	1
+274	2016-10-21 18:06:18.307	0.949999999999999956	1	2016-10-21 18:06:05.13	assign contribution 'Setup markdown basic infrastructure' to pepoospina	0	OFFERED	0	1	1	8	2016-10-21 18:06:18.305	1	2114	2471.5	0.5	0	2	ASSIGNED	3	1	36	74	\N	6	1	\N	1
+275	2016-10-21 18:06:33.481	0.949999999999999956	1	2016-10-21 18:06:19.335	accept contribution 'Setup markdown basic infrastructure' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-21 18:06:33.48	1	2114	2471.5	0.5	0	2	ACCEPTED	3	1	36	74	\N	6	1	\N	1
+278	\N	0.949999999999999956	0	2016-10-21 18:41:25.899	Should CollectiveOne create a new decision to reject a bid from a user, even after it has been accepted, and get the pps back?	0	\N	1	0	0	8	\N	0	0	0	0.5	0	0	\N	0	0	36	\N	\N	1	1	\N	1
+279	\N	0.949999999999999956	0	2016-10-23 12:26:16.869	open contribution 'Look and aquire other domains'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	85	6	1	\N	1
+280	2016-10-23 21:39:44.383	0.949999999999999956	1	2016-10-23 21:38:12.451	Should the video created by pepoospina be placed in the welcome page? 	0	\N	1	0	1	8	2016-10-23 21:39:44.382	0	2124	2481.5	0.5	0	3	\N	0	0	36	\N	\N	1	1	\N	1
+281	\N	0.949999999999999956	0	2016-10-23 21:42:34.021	open contribution 'Prepare video for Welcome page  '	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	86	6	1	\N	1
+277	2016-10-23 21:43:03.801	0.949999999999999956	1	2016-10-21 18:25:59.699	open contribution 'Improve the welcome video audio'	0	PROPOSED	1	0	1	8	2016-10-23 21:43:03.799	0	2124	2481.5	0.5	0	3	OPEN	1	0	36	\N	84	6	1	\N	1
+282	\N	0.949999999999999956	0	2016-10-23 22:47:24.764	open contribution 'Prepare presentation email'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	87	6	1	\N	1
 \.
 
 
@@ -510,6 +532,11 @@ COPY arguments (id, creationdate, description, tendency, creator_id, decision_id
 23	2016-10-19 14:10:03.678	I think we could try to open up the model (at the same time that we launch a kickstarter campaign), but without inviting point contributions (and without opening the prototype). This could be done along the lines of what @pepospina is already doing here: https://medium.com/@pepoospina/labor-only-tokens-for-decentralized-autonomous-companies-c2e62a653a41#.seecbrf3q \n\nThe reason for doing this instead of what the decision item suggests, is that we can be more selective  in the way we allocate our time and resources (e.g. ignore people who just ask millions of questions). See my other comment below about fears of 'uncontrolled' demands for our time.	1	3	232
 24	2016-10-19 14:12:45.913	Milestones imply a fixed time horizon. In some projects there will be goals (those high up in the hierarchy) that are likely never reached – and that's probably fine	1	3	146
 25	2016-10-19 21:18:04.372	Graph databases are awesome	0	5	267
+26	2016-10-20 14:48:14.195	SQL table seems sufficient for a while and for a proof of concept. When the database grows and more data is stored, migrating to a NoSQL graph database could be considered	1	1	267
+27	2016-10-20 14:50:57.231	The possibility can remain open. Whenever someone wants to devote time to recreate the current db with neoj4. a contribution can be created for this	0	1	267
+28	2016-10-21 18:41:38.597	Dangerous terrain here	1	1	278
+29	2016-10-21 18:42:16.131	It could help as a red button to protect CollectiveOne from abuses.	0	1	278
+30	2016-10-23 21:39:34.492	Sound is too amateurish and it could scare people out more that what it actually invite in. (by Esteban) 	1	1	280
 \.
 
 
@@ -679,6 +706,8 @@ COPY activity (id, creationdate, event, type, argument_id, bid_id, cbtion_id, de
 117	2016-10-10 20:10:05.69	marked done	1	\N	64	\N	\N	\N	1
 118	2016-10-10 20:10:13.381	assigned	1	\N	64	\N	\N	\N	1
 119	2016-10-10 20:10:34.334	accepted	1	\N	64	\N	\N	\N	1
+198	2016-10-20 13:08:55.829	created	3	\N	\N	\N	268	\N	1
+199	2016-10-20 13:12:00.941	created	3	\N	\N	\N	269	\N	1
 122	2016-10-10 20:29:16.718	created	0	\N	\N	74	\N	\N	1
 123	2016-10-10 20:29:26.959	opened for bidding	0	\N	\N	74	\N	\N	1
 124	2016-10-11 21:06:27.322	proposed	2	\N	\N	\N	\N	13	2
@@ -755,6 +784,33 @@ COPY activity (id, creationdate, event, type, argument_id, bid_id, cbtion_id, de
 195	2016-10-19 21:15:00.217	accepted	1	\N	72	\N	\N	\N	3
 196	2016-10-19 21:17:29.084	created	3	\N	\N	\N	267	\N	2
 197	2016-10-19 21:18:04.47	created	4	25	\N	\N	\N	\N	2
+200	2016-10-20 13:12:15.77	rejected	3	\N	\N	\N	233	\N	1
+201	2016-10-20 13:12:23.168	rejected	3	\N	\N	\N	232	\N	1
+202	2016-10-20 13:12:30.707	rejected	3	\N	\N	\N	146	\N	1
+203	2016-10-20 13:20:04.698	created	0	\N	\N	81	\N	\N	1
+204	2016-10-20 13:22:18.637	created	0	\N	\N	82	\N	\N	1
+205	2016-10-20 14:48:14.242	created	4	26	\N	\N	\N	\N	2
+206	2016-10-20 14:50:57.255	created	4	27	\N	\N	\N	\N	2
+207	2016-10-21 14:05:59.287	opened for bidding	0	\N	\N	81	\N	\N	1
+208	2016-10-21 14:06:40.967	created	1	\N	73	\N	\N	\N	1
+209	2016-10-21 14:06:51.998	assigned	1	\N	73	\N	\N	\N	1
+210	2016-10-21 14:06:59.56	accepted	1	\N	73	\N	\N	\N	1
+211	2016-10-21 18:06:04.845	created	1	\N	74	\N	\N	\N	1
+212	2016-10-21 18:06:19.332	assigned	1	\N	74	\N	\N	\N	1
+213	2016-10-21 18:06:28.198	marked done	1	\N	74	\N	\N	\N	1
+214	2016-10-21 18:06:34.474	accepted	1	\N	74	\N	\N	\N	1
+216	2016-10-21 18:25:59.699	created	0	\N	\N	84	\N	\N	1
+217	2016-10-21 18:41:25.9	created	3	\N	\N	\N	278	\N	1
+218	2016-10-21 18:41:38.62	created	4	28	\N	\N	\N	\N	1
+219	2016-10-21 18:42:16.145	created	4	29	\N	\N	\N	\N	1
+220	2016-10-23 12:26:16.87	created	0	\N	\N	85	\N	\N	1
+221	2016-10-23 21:38:12.468	created	3	\N	\N	\N	280	\N	1
+222	2016-10-23 21:39:34.507	created	4	30	\N	\N	\N	\N	1
+223	2016-10-23 21:39:44.383	rejected	3	\N	\N	\N	280	\N	1
+224	2016-10-23 21:42:34.021	created	0	\N	\N	86	\N	\N	1
+225	2016-10-23 21:43:05.285	proposal refused	0	\N	\N	84	\N	\N	1
+226	2016-10-23 21:43:26.278	proposal refused	0	\N	\N	72	\N	\N	1
+227	2016-10-23 22:47:24.765	created	0	\N	\N	87	\N	\N	1
 \.
 
 
@@ -789,6 +845,7 @@ COPY argument_backers (argument_id, backers_id) FROM stdin;
 14	1
 14	3
 16	3
+30	1
 \.
 
 
@@ -908,6 +965,8 @@ COPY cbtions_bids (cbtion_id, bids_id) FROM stdin;
 78	70
 79	71
 80	72
+81	73
+69	74
 \.
 
 
@@ -978,6 +1037,7 @@ COPY promoters (id, creationdate, promoteup, user_id) FROM stdin;
 14	2016-10-07 14:19:22.036	t	3
 15	2016-10-07 16:13:38.445	t	1
 16	2016-10-12 20:17:12.625	t	1
+17	2016-10-23 21:44:10.199	t	1
 \.
 
 
@@ -1008,6 +1068,7 @@ COPY cbtions_promoters (cbtion_id, promoters_id) FROM stdin;
 53	14
 55	15
 72	16
+82	17
 \.
 
 
@@ -1056,8 +1117,8 @@ COPY voters (id, weight, voteruser_id) FROM stdin;
 5	100	1
 2	262	3
 3	95	4
-1	2109	1
 6	101	5
+1	2124	1
 \.
 
 
@@ -1117,6 +1178,11 @@ COPY decisions_args (decision_id, arguments_id) FROM stdin;
 146	7
 146	24
 267	25
+267	26
+267	27
+278	28
+278	29
+280	30
 \.
 
 
@@ -1311,6 +1377,17 @@ COPY theses (id, castdate, value, weight, author_id, decision_id) FROM stdin;
 179	2016-10-19 21:13:40.691	1	100	5	264
 180	2016-10-19 21:14:35.823	1	100	5	265
 181	2016-10-19 21:14:59.018	1	100	5	266
+182	2016-10-20 13:12:13.871	0	2109	1	233
+183	2016-10-20 13:12:17.829	0	2109	1	232
+184	2016-10-20 13:12:26.174	0	2109	1	146
+185	2016-10-21 14:05:52.342	1	2109	1	270
+186	2016-10-21 14:06:51.253	1	2109	1	272
+187	2016-10-21 14:06:56.42	1	2109	1	273
+188	2016-10-21 18:06:15.149	1	2114	1	274
+189	2016-10-21 18:06:30.85	1	2114	1	275
+190	2016-10-23 21:39:40.215	0	2124	1	280
+191	2016-10-23 21:43:03.756	0	2124	1	277
+192	2016-10-23 21:43:20.608	0	2124	1	216
 \.
 
 
@@ -1505,12 +1582,23 @@ COPY decisions_thesescast (decision_id, thesescast_id) FROM stdin;
 264	179
 265	180
 266	181
+233	182
+232	183
+146	184
+270	185
+272	186
+273	187
+274	188
+275	189
+280	190
+277	191
+216	192
 \.
 
 
 ALTER TABLE decisions_thesescast ENABLE TRIGGER ALL;
 
--- Completed on 2016-10-20 13:06:45 CEST
+-- Completed on 2016-10-24 11:20:19 CEST
 
 --
 -- PostgreSQL database dump complete
