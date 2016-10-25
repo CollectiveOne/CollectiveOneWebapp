@@ -11,5 +11,9 @@ function CbtionPage(container_id) {
 CbtionPage.prototype = Page.prototype;
 
 CbtionPage.prototype.init = function() {
+	setTimeout(function() {
+		$("#preferred_browser_div").slideUp();
+	}, 3000);
+	
 }
 

@@ -11,11 +11,13 @@
 <%@ include file="../Common/Base/BodyOver.jsp"%>
 
 <div id="content_pane">
+	
+	<div id="preferred_browser_div" class="cp_box_gray_slim">
+		<p>The preferred browsers for this page are Chrome, Firefox, Opera or Safari</p>
+	</div>
+	
 	<div id="presentation_container">
-		<iframe src="https://docs.google.com/presentation/d/1Sma1CKVq1plvPrvglOs5qHB1ldjzkHHE4g_yJBRu_0Q/embed?start=false&loop=false&delayms=3000" 
-			frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" 
-			webkitallowfullscreen="true">
-		</iframe>
+		<iframe width="800" height="450" src="https://www.youtube.com/embed/QT0T2EvtLok" frameborder="0" allowfullscreen></iframe>
 	</div>
 	
 	<div id="under_presentation">
