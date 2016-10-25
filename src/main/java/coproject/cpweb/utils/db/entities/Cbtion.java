@@ -50,6 +50,9 @@ public class Cbtion {
 	private Goal goal;
 	@OneToOne
 	private Decision openDec;
+	@OneToOne
+	private Decision deleteDec;
+	private Timestamp deleteDate;
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "CBTIONS_PROMOTERS")
 	private List<Promoter> promoters = new ArrayList<Promoter>();
@@ -75,6 +78,7 @@ public class Cbtion {
 		if(goal != null) dto.setGoalTag(goal.getGoalTag());
 		dto.setAssignedPpoints(assignedPpoints);
 		if(openDec != null) dto.setOpenDec(openDec.toDto());
+		if(deleteDec != null) dto.setDeleteDec(deleteDec.toDto());
 		dto.setRelevance(relevance);
 		dto.setNcomments(comments.size());
 		
@@ -166,6 +170,18 @@ public class Cbtion {
 	}
 	public void setOpenDec(Decision openDec) {
 		this.openDec = openDec;
+	}
+	public Decision getDeleteDec() {
+		return deleteDec;
+	}
+	public void setDeleteDec(Decision deleteDec) {
+		this.deleteDec = deleteDec;
+	}
+	public Timestamp getDeleteDate() {
+		return deleteDate;
+	}
+	public void setDeleteDate(Timestamp deleteDate) {
+		this.deleteDate = deleteDate;
 	}
 	public List<Promoter> getPromoters() {
 		return promoters;

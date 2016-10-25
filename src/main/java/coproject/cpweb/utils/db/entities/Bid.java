@@ -49,6 +49,8 @@ public class Bid {
 	@Type(type = "org.hibernate.type.TextType")
 	private String doneDescription;
 	
+	private Timestamp deleteDate;
+	
 	@OneToMany
 	private List<Review> reviews = new ArrayList<Review>();
 	
@@ -160,6 +162,13 @@ public class Bid {
 	public void setDoneDescription(String doneDescription) {
 		this.doneDescription = doneDescription;
 	}
+	public Timestamp getDeleteDate() {
+		return deleteDate;
+	}
+	public void setDeleteDate(Timestamp deleteDate) {
+		this.deleteDate = deleteDate;
+	}
+	
 	
 }
 

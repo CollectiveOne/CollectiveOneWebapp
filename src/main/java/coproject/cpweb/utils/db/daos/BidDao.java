@@ -1,5 +1,6 @@
 package coproject.cpweb.utils.db.daos;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import coproject.cpweb.utils.db.entities.Bid;
 import coproject.cpweb.utils.db.entities.BidState;
+import coproject.cpweb.utils.db.entities.DecisionState;
 import coproject.cpweb.utils.db.entities.User;
 
 @Service
@@ -21,6 +23,21 @@ public class BidDao extends BaseDao {
 	
 	public List<Bid> getAll(Integer max) {
 		return (List<Bid>) super.getAll(max,Bid.class);
+	}
+	
+	public void remove(int id) {
+		Bid bid = get(id);
+		
+		bid.setState(BidState.DELETED);
+		bid.setDeleteDate(new Timestamp(System.currentTimeMillis()));
+		
+		if(bid.getAssign() != null)	bid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
+		if(bid.getAccept() != null)	bid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
+		
+		BidDao bidDao = new BidDao();
+		bidDao.setSessionFactory(sessionFactory);
+		
+		save(bid);
 	}
 	
 	public List<Bid> getNotClosed() {

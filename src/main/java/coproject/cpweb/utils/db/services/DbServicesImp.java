@@ -2,6 +2,7 @@ package coproject.cpweb.utils.db.services;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -34,13 +35,13 @@ public class DbServicesImp {
 
 	/* global variable to store the status */
 	private ResStatus status = new ResStatus();
-	
+
 	@Autowired
 	protected SessionDao sessionDao;
 
 	@Autowired
 	protected CbtionDao cbtionDao;
-	
+
 	@Autowired
 	protected GoalDao goalDao;
 
@@ -64,22 +65,22 @@ public class DbServicesImp {
 
 	@Autowired 
 	protected DecisionRealmDao decisionRealmDao;
-	
+
 	@Autowired 
 	protected ArgumentDao argumentDao;
 
 	@Autowired 
 	protected ReviewDao reviewDao;
-	
+
 	@Autowired 
 	protected PromoterDao promoterDao;
-	
+
 	@Autowired
 	protected ActivityDao activityDao;
-	
+
 	@Autowired
 	protected CommentDao commentDao;
-	
+
 	public ResStatus getStatus() {
 		return status;
 	}
@@ -148,7 +149,7 @@ public class DbServicesImp {
 		int realmId = decisionRealmDao.getIdFromProjectId(projectId);
 		decisionRealmDao.updateVoter(realmId,userId,userPpointsInProjectGet(userId, projectId));
 	}
-	
+
 	@Transactional
 	public double userPpointsInProjectGet(int userId, int projectId) {
 
@@ -159,58 +160,58 @@ public class DbServicesImp {
 
 		return ppoints;
 	}
-	
+
 	@Transactional
-	public ProjectContributedDto userProjectPpsGet(String username, String projectName) {
+	public ProjectContributedDto  userProjectPpsGet(String username, String projectName) {
 		Project project = projectDao.get(projectName);
 		User user = userDao.get(username);
-		
+
 		ProjectContributedDto projectAndPps = new ProjectContributedDto();
-		
+
 		projectAndPps.setProjectName(project.getName());
 		projectAndPps.setUsername(user.getUsername());
 		projectAndPps.setPpsTot(project.getPpsTot());
-		
+
 		Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(project.getId()),user.getId());
 		projectAndPps.setPpsContributed(voter.getWeight());
-		
+
 		return projectAndPps;
 	}
-	
+
 	@Transactional
 	public List<ProjectContributedDto> userProjectsContributedAndPpsGet(String username) {
-		
+
 		List<ProjectContributedDto> projectsAndPps = new ArrayList<ProjectContributedDto>();
 		User user = userDao.get(username);
-		
+
 		for(Project project : userProjectsContributedGet(user.getId())) {
 			ProjectContributedDto projectAndPps = new ProjectContributedDto();
-			
+
 			projectAndPps.setProjectName(project.getName());
 			projectAndPps.setUsername(user.getUsername());
 			projectAndPps.setPpsTot(project.getPpsTot());
-			
+
 			Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(project.getId()),user.getId());
 			projectAndPps.setPpsContributed(voter.getWeight());
-			
+
 			projectsAndPps.add(projectAndPps);
 		}
-		
+
 		/* sort based on the projects in which the user has relative larger contributions */
 		Collections.sort(projectsAndPps, new Comparator<ProjectContributedDto>(){
-		     public int compare(ProjectContributedDto o1, ProjectContributedDto o2){
-		        return Double.compare(o2.getPpsContributed()/o2.getPpsTot(), o1.getPpsContributed()/o1.getPpsTot());
-		     }
+			public int compare(ProjectContributedDto o1, ProjectContributedDto o2){
+				return Double.compare(o2.getPpsContributed()/o2.getPpsTot(), o1.getPpsContributed()/o1.getPpsTot());
+			}
 		});
-		
+
 		return projectsAndPps;
 	}
-	
+
 	@Transactional
 	public List<Project> userProjectsContributedGet(int userId) {
 		return userDao.getProjectsContributed(userId);
 	}
-	
+
 	@Transactional
 	public List<String> usernameGetSuggestions(String query) {
 		return userDao.getSuggestions(query);
@@ -239,34 +240,34 @@ public class DbServicesImp {
 		decisionRealmDao.save(realm);
 		realm.setProject(project);
 	}
-	
+
 	@Transactional
 	public void projectStart(String projectName) {
-		
+
 		User coprojects = userDao.get("collectiveone");
 		userDao.save(coprojects);
-		
+
 		Project project = projectDao.get(projectName);
 		projectDao.save(project);
-		
+
 		User creator = project.getCreator();
 		userDao.save(creator);
-		
+
 		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
 		decisionRealmDao.save(realm);
-		
+
 		/* An accepted cbtion is added to the project to the contributor */
 		Cbtion cbtion = new Cbtion();
 
 		cbtion.setCreator(creator);
-		
+
 		cbtion.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		cbtion.setTitle("Create project " + project.getName());
 		cbtion.setDescription("Start contribution");
 		cbtion.setProject(project);
 
 		cbtionDao.save(cbtion);
-		
+
 		/* Bids and decisions are created for consistency */
 		Bid bid = new Bid();
 		bidDao.save(bid);
@@ -300,7 +301,7 @@ public class DbServicesImp {
 		assign_bid.setProject(project);
 		assign_bid.setType(DecisionType.BID);
 		assign_bid.setBid(bid);
-		
+
 		accept_bid.setCreator(coprojects);
 		accept_bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		accept_bid.setDescription("accept bid to cbtion:"+bid.getCbtion().getTitle()+" by:"+bid.getCreator().getUsername());
@@ -312,10 +313,10 @@ public class DbServicesImp {
 		accept_bid.setProject(project);
 		accept_bid.setType(DecisionType.BID);
 		accept_bid.setBid(bid);
-		
+
 		/* simulate the bid acceptance process */
 		bid.setState(BidState.ACCEPTED);
-		
+
 		project.setPpsTot(bid.getPpoints());
 
 		cbtion.setAssignedPpoints(bid.getPpoints());
@@ -356,60 +357,60 @@ public class DbServicesImp {
 
 	@Transactional
 	public List<UsernameAndPps> projectContributorsAndPpsGet(int projectId) {
-		
+
 		List<UsernameAndPps> usernamesAndPps = new ArrayList<UsernameAndPps>();
-		
+
 		for(User contributor : getProjectContributors(projectId)) {
 			UsernameAndPps usernameAndPps = new UsernameAndPps();
 			usernameAndPps.setUsername(contributor.getUsername());
-			
+
 			Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(projectId),contributor.getId());
 			usernameAndPps.setPps(voter.getWeight());
 			usernamesAndPps.add(usernameAndPps);
 		}
-		
+
 		Collections.sort(usernamesAndPps, new Comparator<UsernameAndPps>(){
-		     public int compare(UsernameAndPps o1, UsernameAndPps o2){
-		        return Double.compare(o2.getPps(), o1.getPps());
-		     }
+			public int compare(UsernameAndPps o1, UsernameAndPps o2){
+				return Double.compare(o2.getPps(), o1.getPps());
+			}
 		});
-		
+
 		return usernamesAndPps;
 	}
-	
+
 	@Transactional
 	public void projectUpdatePpsTot(int projectId) {
 		Project project = projectDao.get(projectId);
-		
+
 		double ppsTot = 0.0;
 		for(Cbtion cbtion : cbtionDao.getAcceptedInProject(projectId)) {
 			ppsTot += cbtion.getAssignedPpoints();
 		}
-		
+
 		project.setPpsTot(ppsTot);
 		projectDao.save(project);
 	}
-	
+
 	@Transactional
 	public List<User> getProjectContributors(int projectId) {
 		return projectDao.getContributors(projectId);
 	}
-	
+
 	@Transactional
 	public int goalCreate(GoalDto goalDto) {
 		Goal goal = new Goal();
 		Project project = projectDao.get(goalDto.getProjectName());
 		projectDao.save(project);
-		
+
 		goal.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		goal.setCreator(userDao.get(goalDto.getCreatorUsername()));
 		goal.setDescription(goalDto.getDescription());
 		goal.setProject(project);
 		goal.setState(GoalState.PROPOSED);
 		goal.setGoalTag(goalDto.getGoalTag());
-		
+
 		int id = goalDao.save(goal);
-		
+
 		if(goalDto.getParentGoalTag() != null) {
 			if(goalDto.getParentGoalTag() != "") {
 				Goal parent = goalDao.get(goalDto.getParentGoalTag(), project.getName());
@@ -418,13 +419,13 @@ public class DbServicesImp {
 				}
 			}
 		}
-		
+
 		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
 		decisionRealmDao.save(realm);
-		
+
 		Decision create = new Decision();
 		Decision delete = new Decision();
-		
+
 		create.setCreator(userDao.get("collectiveone"));
 		create.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		create.setDescription("create goal '"+goal.getGoalTag()+"'");
@@ -436,7 +437,7 @@ public class DbServicesImp {
 		create.setProject(project);
 		create.setType(DecisionType.GOAL);
 		create.setGoal(goal);
-		
+
 		delete.setCreator(userDao.get("collectiveone"));
 		delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		delete.setDescription("delete goal '"+goal.getGoalTag()+"'");
@@ -448,33 +449,33 @@ public class DbServicesImp {
 		delete.setProject(project);
 		delete.setType(DecisionType.GOAL);
 		delete.setGoal(goal);
-		
+
 		goal.setCreateDec(create);
 		goal.setDeleteDec(delete);
-		
+
 		decisionDao.save(create);
 		decisionDao.save(delete);
-		
+
 		Activity act = new Activity("proposed", 
 				new Timestamp(System.currentTimeMillis()),
 				project);
-		
+
 		act.setGoal(goal);
 		act.setType(ActivityType.GOAL);
 		activityDao.save(act);
-		
+
 		return id;
 	}
-	
+
 	@Transactional
 	public GoalDto goalGetDto(int goalId) {
 		Goal goal = goalDao.get(goalId);
 		GoalDto dto = goal.toDto();
 		goalAddParentsAndSubgoals(dto);
-		
+
 		return dto;
 	}
-	
+
 	@Transactional
 	public GoalDto goalGetDto(String goalTag, String projectName) {
 		Goal goal = goalDao.get(goalTag, projectName);
@@ -483,10 +484,10 @@ public class DbServicesImp {
 			dto = goal.toDto();
 			goalAddParentsAndSubgoals(dto);
 		}
-		
+
 		return dto;
 	}
-	
+
 	@Transactional
 	public GoalDtoListRes goalDtoGetFiltered(Filters filters) {
 		ObjectListRes<Goal> goalsRes = goalDao.get(filters);
@@ -499,24 +500,24 @@ public class DbServicesImp {
 		for(Goal goal : goalsRes.getObjects()) {
 			GoalDto dto = goal.toDto();
 			goalAddParentsAndSubgoals(dto);
-			
+
 			goalsDtosRes.getGoalDtos().add(dto);
 		}
-		
+
 		return goalsDtosRes;
 	}
-	
+
 	@Transactional
 	public void goalAddParentsAndSubgoals(GoalDto goalDto) {
 		List<String> parentGoalsTags = new ArrayList<String>();
 		for(Goal parent : goalDao.getAllParents(goalDto.getId())) { parentGoalsTags.add(parent.getGoalTag()); }
 		goalDto.setParentGoalsTags(parentGoalsTags);
-		
+
 		List<String> subGoalsTags = new ArrayList<String>();
 		for(Goal subgoal : goalDao.getSubgoals(goalDto.getId())) { subGoalsTags.add(subgoal.getGoalTag()); }
 		goalDto.setSubGoalsTags(subGoalsTags);
 	}
-	
+
 	@Transactional
 	public List<String> goalGetSuggestions(String query, List<String> projectNames) {
 		if(projectNames.size() == 0) {
@@ -524,7 +525,7 @@ public class DbServicesImp {
 		}
 		return goalDao.getSuggestions(query, projectNames);
 	}
-	
+
 	@Transactional
 	public void goalsUpdateState() {
 		/* Update state of all not closed bids */
@@ -533,30 +534,30 @@ public class DbServicesImp {
 			goalUpdateState(goal.getId());
 		}	
 	}
-	
+
 	@Transactional
 	public void goalUpdateState(int goalId) {
 		goalFromProposedToAccepted(goalId);
 		goalFromAcceptedToDeleted(goalId);
 		goalUpdateNewParent(goalId);
 	}
-	
+
 	@Transactional
 	public void goalFromProposedToAccepted(int goalId) {
 		Goal goal = goalDao.get(goalId);
 		goalDao.save(goal);
-		
+
 		/* Create decision */ 
 		Decision create = goal.getCreateDec();
 
 		/* update goal state based on create decision */
-		
+
 		Activity act = new Activity();
 		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		act.setProject(goal.getProject());
 		act.setGoal(goal);
 		act.setType(ActivityType.GOAL);
-		
+
 		switch(create.getState()){
 		case OPEN: 
 			break;
@@ -590,15 +591,15 @@ public class DbServicesImp {
 			break;
 		} 
 	}
-	
+
 	@Transactional
 	public void goalFromAcceptedToDeleted(int goalId) {
 		Goal goal = goalDao.get(goalId);
 		goalDao.save(goal);
-		
+
 		/* Update accept decision */ 
 		Decision delete = goal.getDeleteDec();
-		
+
 		Activity act = new Activity();
 		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		act.setProject(goal.getProject());
@@ -615,7 +616,7 @@ public class DbServicesImp {
 			switch(goal.getState()) {
 			case PROPOSED:
 				break;
-				
+
 			case ACCEPTED:
 				break;				
 
@@ -632,7 +633,7 @@ public class DbServicesImp {
 				act.setEvent("deleted");
 				activityDao.save(act);
 				break;
-				
+
 			case ACCEPTED:
 				goal.setState(GoalState.DELETED);
 				act.setEvent("deleted");
@@ -649,16 +650,16 @@ public class DbServicesImp {
 			break;
 		} 
 	}
-	
+
 	@Transactional
 	public void goalUpdateNewParent(int goalId) {
 		Goal goal = goalDao.get(goalId);
 		goalDao.save(goal);
-		
+
 		if(goal.getParentState() == GoalParentState.PROPOSED) {
 			/* Create decision */ 
 			Decision proposeParent = goal.getProposeParent();
-			
+
 			if(proposeParent != null) {
 				/* update goal parent based on create proposeParent */
 				Activity act = new Activity();
@@ -666,11 +667,11 @@ public class DbServicesImp {
 				act.setProject(goal.getProject());
 				act.setGoal(goal);
 				act.setType(ActivityType.GOAL);
-				
+
 				switch(proposeParent.getState()){
 				case OPEN: 
 					break;
-	
+
 				case CLOSED_DENIED : 
 					switch(goal.getParentState()) {
 					case PROPOSED:
@@ -678,13 +679,13 @@ public class DbServicesImp {
 						act.setEvent(goal.getProposedParent().getGoalTag()+" not accepted as parent");
 						activityDao.save(act);
 						break;
-	
+
 					default:
 						break;
 					}
-	
+
 					break;
-	
+
 				case CLOSED_ACCEPTED: 
 					switch(goal.getParentState()) {
 					case PROPOSED:
@@ -696,24 +697,24 @@ public class DbServicesImp {
 					default:
 						break;
 					}
-	
+
 				default:
 					break;
 				} 
 			}
 		}
 	}
-	
+
 	@Transactional
 	public void goalProposeParent(int goalId, String parentTag) {
 		Goal goal = goalDao.get(goalId);
 		Goal proposedParent = goalDao.get(parentTag,goal.getProject().getName());
-		
+
 		if(proposedParent != null) {
 			if(goal.getParentState() != GoalParentState.PROPOSED) {
 				Project project = goal.getProject();
 				Decision proposeParent = new Decision();
-				
+
 				proposeParent.setGoal(goal);
 				proposeParent.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				proposeParent.setCreator(userDao.get("collectiveone"));
@@ -723,15 +724,15 @@ public class DbServicesImp {
 				proposeParent.setState(DecisionState.IDLE);
 				proposeParent.setType(DecisionType.GOAL);
 				proposeParent.setVerdictHours(36);
-				
+
 				decisionDao.save(proposeParent);
-				
+
 				goal.setProposeParent(proposeParent);
 				goal.setProposedParent(proposedParent);
 				goal.setParentState(GoalParentState.PROPOSED);
-				
+
 				goalDao.save(goal);
-				
+
 				Activity act = new Activity();
 				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				act.setProject(project);
@@ -739,10 +740,10 @@ public class DbServicesImp {
 				act.setType(ActivityType.GOAL);
 				act.setEvent(proposedParent.getGoalTag()+" proposed as parent");
 				activityDao.save(act);
-				
+
 				status.setMsg(proposedParent.getGoalTag()+" proposed as parent");
 				status.setSuccess(true);
-				
+
 			} else {
 				status.setMsg(goal.getProposedParent().getGoalTag()+
 						" already proposed as parent. Cannot propose more than one parent at the same time");
@@ -755,6 +756,17 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
+	public List<String> goalGetParentGoalsTags(Goal goal) {
+		/* Add parent goals too */
+		List<String> parentGoalsTags = new ArrayList<String>();
+		if(goal!= null) {
+			List<Goal> parentGoals = goalDao.getAllParents(goal.getId());
+			for(Goal parent : parentGoals) { parentGoalsTags.add(parent.getGoalTag()); }
+		}
+		return parentGoalsTags;
+	}
+
+	@Transactional
 	public void cbtionSave(Cbtion cbtion) {
 		cbtionDao.save(cbtion);
 	}
@@ -765,7 +777,7 @@ public class DbServicesImp {
 		Project project = projectDao.get(cbtionDto.getProjectName());
 		projectDao.save(project);
 		Goal goal = goalDao.get(cbtionDto.getGoalTag(), project.getName());
-		
+
 		cbtion.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		cbtion.setCreator(userDao.get(cbtionDto.getCreatorUsername()));
 		cbtion.setDescription(cbtionDto.getDescription());
@@ -774,14 +786,14 @@ public class DbServicesImp {
 		cbtion.setState(CbtionState.PROPOSED);
 		cbtion.setTitle(cbtionDto.getTitle());
 		cbtion.setGoal(goal);
-		
+
 		int id = cbtionDao.save(cbtion);
-		
+
 		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
 		decisionRealmDao.save(realm);
-		
+
 		Decision open = new Decision();
-		
+
 		open.setCreator(userDao.get("collectiveone"));
 		open.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		open.setDecisionRealm(realm);
@@ -793,18 +805,18 @@ public class DbServicesImp {
 		open.setVerdictHours(36);
 		open.setType(DecisionType.CBTION);
 		open.setCbtion(cbtion);
-		
+
 		cbtion.setOpenDec(open);
 		decisionDao.save(open);
-		
+
 		Activity act = new Activity("created", 
 				new Timestamp(System.currentTimeMillis()),
 				cbtion.getProject());
-		
+
 		act.setCbtion(cbtion);
 		act.setType(ActivityType.CBTION);
 		activityDao.save(act);
-		
+
 		return id;
 	}
 
@@ -850,33 +862,19 @@ public class DbServicesImp {
 
 		return cbtionsDtosRes;
 	}
-	
-	@Transactional
-	public List<String> goalGetParentGoalsTags(Goal goal) {
-		/* Add parent goals too */
-		List<String> parentGoalsTags = new ArrayList<String>();
-		if(goal!= null) {
-			List<Goal> parentGoals = goalDao.getAllParents(goal.getId());
-			for(Goal parent : parentGoals) { parentGoalsTags.add(parent.getGoalTag()); }
-		}
-		return parentGoalsTags;
-	}
-	
+
 	@Transactional
 	public void cbtionsUpdateState() {
 		/* Update state of all not closed bids */
-		List<Cbtion> cbtionsProposed = cbtionDao.getWithState(CbtionState.PROPOSED);
+		List<Cbtion> cbtionsProposed = cbtionDao.getWithStates(Arrays.asList(CbtionState.PROPOSED, CbtionState.OPEN));
 		for(Cbtion cbtion : cbtionsProposed) {
 			cbtionUpdateState(cbtion.getId());
 		}	
 	}
-	
+
 	@Transactional
 	public void cbtionUpdateState(int cbtionId) {
 		Cbtion cbtion = cbtionDao.get(cbtionId);
-		
-		cbtionDao.save(cbtion);
-		Decision open = cbtion.getOpenDec();
 		
 		Activity act = new Activity();
 		act.setProject(cbtion.getProject());
@@ -884,68 +882,121 @@ public class DbServicesImp {
 		act.setType(ActivityType.CBTION);
 		act.setCbtion(cbtion);
 
-		switch(open.getState()){
-		case OPEN: 
-			break;
 
-		case CLOSED_DENIED : 
-			switch(cbtion.getState()) {
-			case PROPOSED:
-				cbtion.setState(CbtionState.NOTOPENED);
-				act.setEvent("proposal refused");
-				activityDao.save(act);
-				break;
+		switch(cbtion.getState()) {
+		
+		case PROPOSED:
+			Decision open = cbtion.getOpenDec();
+			
+			switch(open.getState()){
+			
+				case OPEN: 
+					break;
+	
+				case CLOSED_DENIED :
+					cbtion.setState(CbtionState.NOTOPENED);
+					cbtionDao.save(cbtion);
 
-			default:
-				break;
+					act.setEvent("proposal refused");
+					activityDao.save(act);
+					break;
+	
+				case CLOSED_ACCEPTED: 
+					cbtion.setState(CbtionState.OPEN);
+					
+					DecisionRealm realm = decisionRealmDao.getFromProjectId(cbtion.getProject().getId());
+					decisionRealmDao.save(realm);
+	
+					Decision delete = new Decision();
+	
+					delete.setCreator(userDao.get("collectiveone"));
+					delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
+					delete.setDecisionRealm(realm);
+					delete.setDescription("delete contribution '"+cbtion.getTitle()+"'");
+					delete.setFromState(CbtionState.OPEN.toString());		
+					delete.setToState(CbtionState.DELETED.toString());
+					delete.setProject(cbtion.getProject());
+					delete.setState(DecisionState.IDLE);
+					delete.setVerdictHours(36);
+					delete.setType(DecisionType.CBTION);
+					delete.setCbtion(cbtion);
+					
+					decisionDao.save(delete);
+					
+					cbtion.setDeleteDec(delete);
+					cbtionDao.save(cbtion);
+
+					act.setEvent("opened for bidding");
+					activityDao.save(act);
+					
+					break;
+	
+				default:
+					break;
 			}
 
 			break;
-
-		case CLOSED_ACCEPTED: 
-			switch(cbtion.getState()) {
-			case PROPOSED:
-				cbtion.setState(CbtionState.OPEN);
-				act.setEvent("opened for bidding");
-				activityDao.save(act);
-				break;
-			default:
-				break;
-			}
+			
+		case OPEN:
+			Decision delete = cbtion.getDeleteDec();
+			
+			if(delete != null) {
+				switch(delete.getState()) {
+					case OPEN: 
+						break;
+						
+					case CLOSED_DENIED:
+						break;
+						
+					case CLOSED_ACCEPTED:
+						cbtionDao.remove(cbtion.getId());
+						
+						act.setEvent("deleted");
+						activityDao.save(act);
+						
+						break;
+					
+					default:
+						break;
+				}
+			}			
+			
+			break;
 
 		default:
 			break;
-		} 
+		}
 	}
-	
+
+
 	@Transactional
 	public ResStatus cbtionPromote(int cbtionId, int userId, boolean promoteUp) {
 		ResStatus resStatus = new ResStatus();
-		
+
 		Cbtion cbtion = cbtionDao.get(cbtionId);
 		cbtionDao.save(cbtion);
-		
+
 		Promoter promoter = promoterDao.getOfCbtion(cbtionId, userId);
-		
+
 		if(promoter == null) {
 			promoter = new Promoter();
 			promoter.setUser(userDao.get(userId));
 			cbtion.getPromoters().add(promoter);
 		}
-		
+
 		promoter.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		promoter.setPromoteUp(promoteUp);
-		
+
 		if(promoteUp) resStatus.setMsg("contribution promoted up");
 		else resStatus.setMsg("contribution promoted down");
-		
+
 		cbtion.setRelevance(cbtionDao.countPromotersDiff(cbtionId));
-		
+
 		resStatus.setSuccess(true);
-		
+
 		return resStatus;		
 	}
-	
+
 	@Transactional
 	public List<CommentDto> cbtionGetCommentsDtos(int cbtionId) {
 		List<Comment> comments = cbtionDao.getCommentsSorted(cbtionId);
@@ -955,7 +1006,7 @@ public class DbServicesImp {
 		}
 		return commentsDtos;
 	}
-	
+
 	@Transactional
 	public List<ReviewDto> cbtionGetReviewsDtos(int cbtionId) {
 		Bid bid = cbtionDao.getAcceptedBid(cbtionId);
@@ -972,17 +1023,17 @@ public class DbServicesImp {
 		cbtionDao.save(cbtion);
 
 	}
-	
+
 	@Transactional
 	public Bid bidGet(int id) {
 		return bidDao.get(id);
 	}
-	
+
 	@Transactional
 	public BidDto bidGetDto(int id) {
 		return bidDao.get(id).toDto();
 	}
-	
+
 	@Transactional
 	public User bidGetCreator(int id) {
 		return bidDao.get(id).getCreator();
@@ -992,7 +1043,7 @@ public class DbServicesImp {
 	public void bidSave(Bid bid) {
 		bidDao.save(bid);
 	}
-	
+
 	@Transactional
 	public void bidSaveState(int bidId, BidState state) {
 		Bid bid = bidDao.get(bidId);
@@ -1007,30 +1058,30 @@ public class DbServicesImp {
 		int userId = bidDtoIn.getCreatorDto().getId();
 
 		Bid bid = bidDao.getOfCbtionAndUser(cbtionId, userId);
-		
+
 		/* create bid only if this user has not created one yet */
 		if(bid == null) {
 			Cbtion cbtion = cbtionDao.get(cbtionId);
-			
+
 			/* create bid only if this the contribution is still open */
 			if(cbtion.getState() == CbtionState.OPEN) {
 				Project project = cbtion.getProject();
 				projectDao.save(project);
-				
+
 				bid = new Bid();
-	
+
 				bid.setCreator(userDao.get(userId));
 				bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				bid.setDescription(bidDtoIn.getDescription());
 				bid.setCbtion(cbtion);
-				
+
 				bid.setState(BidState.CONSIDERING);
-				
+
 				bidDao.save(bid);
-				
+
 				cbtion.getBids().add(bid);
 				cbtionDao.save(cbtion);
-				
+
 				Activity act = new Activity();
 				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				act.setProject(project);
@@ -1038,11 +1089,11 @@ public class DbServicesImp {
 				act.setType(ActivityType.BID);
 				act.setEvent("created");
 				activityDao.save(act);
-				
+
 				status.setSuccess(true);
 				status.setMsg("bid created");
 				return bid.getId();
-				
+
 			} else {
 				status.setSuccess(false);
 				status.setMsg("contribution is not open");
@@ -1054,23 +1105,23 @@ public class DbServicesImp {
 			return 0;
 		}
 	}
-	
+
 	@Transactional
 	public void bidFromConsideringToOffered(BidDto bidDto) {
 		Bid bid = bidDao.get(bidDto.getId());
-		
+
 		if(bid.getState() == BidState.CONSIDERING) {
 			Project project = bid.getCbtion().getProject();
-			
+
 			bid.setDescription(bidDto.getDescription());
 			bid.setPpoints(bidDto.getPpoints());
 			/* Sum one day as delivery is at the end of the date marked as delivery day*/
 			bid.setDeliveryDate(new Timestamp(bidDto.getDeliveryDate() + 24*60*60*1000));
 			bid.setState(BidState.OFFERED);
-			
+
 			/* prepare assign decision */
 			DecisionRealm realm = decisionRealmDao.getFromProjectId(bid.getCbtion().getProject().getId());
-			
+
 			Decision assign = new Decision();
 			assign.setCreator(userDao.get("collectiveone"));
 			assign.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -1084,12 +1135,12 @@ public class DbServicesImp {
 			assign.setProject(project);
 			assign.setType(DecisionType.BID);
 			assign.setBid(bid);
-			
+
 			bid.setAssign(assign);
-			
+
 			decisionDao.save(assign);
 			bidDao.save(bid);
-			
+
 			status.setSuccess(true);
 			status.setMsg("offer created");
 		} else {
@@ -1105,7 +1156,7 @@ public class DbServicesImp {
 		bid.setDoneDescription(description);
 		bid.setDoneDate(new Timestamp(System.currentTimeMillis()));
 		bidDao.save(bid);	
-		
+
 		Activity act = new Activity();
 		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		act.setProject(bid.getCbtion().getProject());
@@ -1113,11 +1164,11 @@ public class DbServicesImp {
 		act.setType(ActivityType.BID);
 		act.setEvent("marked done");
 		activityDao.save(act);
-		
+
 		status.setMsg("bid marked as done");
 		status.setSuccess(true);
 	}
-	
+
 	@Transactional
 	public List<BidDto> bidGetOfUserDto(int userId) {
 		List<Bid> bids = bidDao.getOfUser(userId);
@@ -1137,7 +1188,7 @@ public class DbServicesImp {
 		}
 		return bidDtos;
 	}
-	
+
 	@Transactional
 	public void bidsUpdateState() {
 		/* Update state of all not closed bids */
@@ -1152,7 +1203,7 @@ public class DbServicesImp {
 		List<Bid> bids = bidDao.getAll(100000);
 		return bids;
 	}
-	
+
 	@Transactional
 	public List<ReviewDto> bidGetReviewsDtos(int bidId) {
 		List<Review> reviews = bidDao.get(bidId).getReviews();
@@ -1162,7 +1213,7 @@ public class DbServicesImp {
 		}
 		return reviewsDtos;
 	}
-	
+
 	@Transactional
 	public void bidUpdateState(int bidId) {
 		Bid bid = bidDao.get(bidId);
@@ -1176,115 +1227,115 @@ public class DbServicesImp {
 		act.setBid(bid);
 		act.setType(ActivityType.BID);
 		act.setProject(cbtion.getProject());
-		
+
 		switch(bid.getState()) {
-			case OFFERED:
-				Decision assign = bid.getAssign();
-				switch(assign.getState()) {
-					case OPEN: 
-						break;
-	
-					case CLOSED_DENIED : 
-						bid.setState(BidState.NOT_ASSIGNED);
-						act.setEvent("not assigned");
-						activityDao.save(act);
-						break;
-	
-					case CLOSED_ACCEPTED: 
-						bid.setState(BidState.ASSIGNED);
-						act.setEvent("assigned");
-						activityDao.save(act);
-						cbtion.setState(CbtionState.ASSIGNED);
-						
-						Project project = bid.getCbtion().getProject();
-						
-						/* prepare accept decision */
-						Decision accept = new Decision();
-						accept.setCreator(userDao.get("collectiveone"));
-						accept.setCreationDate(new Timestamp(System.currentTimeMillis()));
-						accept.setDescription("accept contribution '"+bid.getCbtion().getTitle()+"' as delivered by "+bid.getCreator().getUsername());
-						accept.setFromState(BidState.ASSIGNED.toString());
-						accept.setToState(BidState.ACCEPTED.toString());
-						accept.setState(DecisionState.IDLE);
-						/* TODO: Include bid duration logic */
-						accept.setVerdictHours(36);
-						accept.setDecisionRealm(decisionRealmDao.getFromProjectId(project.getId()));
-						accept.setProject(project);
-						accept.setType(DecisionType.BID);
-						accept.setBid(bid);
-						
-						bid.setAccept(accept);
-						decisionDao.save(accept);
-						
-						break;
-	
-					default:
-						break;
-				}
+		case OFFERED:
+			Decision assign = bid.getAssign();
+			switch(assign.getState()) {
+			case OPEN: 
 				break;
-				
-			case ASSIGNED:
-				Decision accept = bid.getAccept();
-				if(accept != null) {
-					switch(accept.getState()) {
-						case OPEN: 
-							break;
-		
-						case CLOSED_DENIED: 
-							bid.setState(BidState.NOT_ACCEPTED);
-							act.setEvent("not accepted");
-							activityDao.save(act);
-							break;
-		
-						case CLOSED_ACCEPTED: 
-							bid.setState(BidState.ACCEPTED); 
-							
-							/* once a bid is accepted, the cbtion and all other bids on it
-							 * are closed */
-	
-							/* update cbtion state */
-							cbtion.setAssignedPpoints(bid.getPpoints());
-							cbtion.setContributor(bid.getCreator());
-							cbtion.setState(CbtionState.ACCEPTED);
-	
-							/* close all other bids and decisions */
-							for(Bid otherBid : cbtion.getBids()) {
-								if(otherBid.getId() != bid.getId()) {
-									otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
-									otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
-									otherBid.setState(BidState.SUPERSEEDED);
-									bidDao.save(otherBid);
-								}
-							}
-	
-							/* -----------------------------------------------------------------------*/ 
-							/* updated voter weight - This is the only place where PPS are transacted */
-							/* -----------------------------------------------------------------------*/
-							
-							voterUpdate(bid.getCreator().getId(), bid.getCbtion().getProject().getId());
-							projectUpdatePpsTot(bid.getCbtion().getProject().getId());
-							
-							/* -----------------------------------------------------------------------*/
-							
-							
-							act.setEvent("accepted");
-							activityDao.save(act);
-							
-							break;
-						
-						default:
-							break;
-					}
-				}
+
+			case CLOSED_DENIED : 
+				bid.setState(BidState.NOT_ASSIGNED);
+				act.setEvent("not assigned");
+				activityDao.save(act);
 				break;
-			
+
+			case CLOSED_ACCEPTED: 
+				bid.setState(BidState.ASSIGNED);
+				act.setEvent("assigned");
+				activityDao.save(act);
+				cbtion.setState(CbtionState.ASSIGNED);
+
+				Project project = bid.getCbtion().getProject();
+
+				/* prepare accept decision */
+				Decision accept = new Decision();
+				accept.setCreator(userDao.get("collectiveone"));
+				accept.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				accept.setDescription("accept contribution '"+bid.getCbtion().getTitle()+"' as delivered by "+bid.getCreator().getUsername());
+				accept.setFromState(BidState.ASSIGNED.toString());
+				accept.setToState(BidState.ACCEPTED.toString());
+				accept.setState(DecisionState.IDLE);
+				/* TODO: Include bid duration logic */
+				accept.setVerdictHours(36);
+				accept.setDecisionRealm(decisionRealmDao.getFromProjectId(project.getId()));
+				accept.setProject(project);
+				accept.setType(DecisionType.BID);
+				accept.setBid(bid);
+
+				bid.setAccept(accept);
+				decisionDao.save(accept);
+
+				break;
+
 			default:
 				break;
-					
+			}
+			break;
+
+		case ASSIGNED:
+			Decision accept = bid.getAccept();
+			if(accept != null) {
+				switch(accept.getState()) {
+				case OPEN: 
+					break;
+
+				case CLOSED_DENIED: 
+					bid.setState(BidState.NOT_ACCEPTED);
+					act.setEvent("not accepted");
+					activityDao.save(act);
+					break;
+
+				case CLOSED_ACCEPTED: 
+					bid.setState(BidState.ACCEPTED); 
+
+					/* once a bid is accepted, the cbtion and all other bids on it
+					 * are closed */
+
+					/* update cbtion state */
+					cbtion.setAssignedPpoints(bid.getPpoints());
+					cbtion.setContributor(bid.getCreator());
+					cbtion.setState(CbtionState.ACCEPTED);
+
+					/* close all other bids and decisions */
+					for(Bid otherBid : cbtion.getBids()) {
+						if(otherBid.getId() != bid.getId()) {
+							otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
+							otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
+							otherBid.setState(BidState.SUPERSEEDED);
+							bidDao.save(otherBid);
+						}
+					}
+
+					/* -----------------------------------------------------------------------*/ 
+					/* updated voter weight - This is the only place where PPS are transacted */
+					/* -----------------------------------------------------------------------*/
+
+					voterUpdate(bid.getCreator().getId(), bid.getCbtion().getProject().getId());
+					projectUpdatePpsTot(bid.getCbtion().getProject().getId());
+
+					/* -----------------------------------------------------------------------*/
+
+
+					act.setEvent("accepted");
+					activityDao.save(act);
+
+					break;
+
+				default:
+					break;
+				}
+			}
+			break;
+
+		default:
+			break;
+
 		}
 	}
-	
-	
+
+
 	@Transactional
 	public ThesisDto thesisOfUser(int decId, int userId) {
 		Thesis thesis = thesisDao.getOfUserInDec(decId, userId);
@@ -1357,19 +1408,19 @@ public class DbServicesImp {
 
 	@Transactional
 	public void decisionsUpdateState() {
-		
+
 		List<DecisionState> states = new ArrayList<DecisionState>();
 		states.add(DecisionState.IDLE);
 		states.add(DecisionState.OPEN);
-		
+
 		List<Decision> decsIdle = decisionDao.getWithStates(states);
 		for(Decision dec : decsIdle) {
-			
+
 			/* Update the decision */
 			DecisionState before = dec.getState();
 			dec.updateState();
 			decisionDao.save(dec);
-			
+
 			/* store activity only for custom decisions (automatic decisions activity 
 			 * is recorded based on the element it changes).
 			 * Activity is recorded if the decision switch state */
@@ -1379,73 +1430,73 @@ public class DbServicesImp {
 				act.setDecision(dec);
 				act.setType(ActivityType.DECISION);
 				act.setProject(dec.getProject());
-				
+
 				switch(before) {
+				case IDLE:
+					switch(dec.getState()) {
 					case IDLE:
-						switch(dec.getState()) {
-							case IDLE:
-								break;
-								
-							case OPEN:
-								act.setEvent("opened");
-								activityDao.save(act);	
-								break;
-								
-							case CLOSED_ACCEPTED:
-								act.setEvent("accepted");
-								activityDao.save(act);	
-								break;
-								
-							case CLOSED_DENIED:
-								act.setEvent("rejected");
-								activityDao.save(act);	
-								break;
-								
-							case CLOSED_EXTERNALLY:
-								act.setEvent("closed externally");
-								activityDao.save(act);	
-								break;
-						}		
-								
 						break;
-						
+
 					case OPEN:
-						switch(dec.getState()) {
-							case IDLE:
-								act.setEvent("back to idle");
-								activityDao.save(act);
-								break;
-								
-							case OPEN:
-								break;
-								
-							case CLOSED_ACCEPTED:
-								act.setEvent("accepted");
-								activityDao.save(act);	
-								break;
-								
-							case CLOSED_DENIED:
-								act.setEvent("rejected");
-								activityDao.save(act);	
-								break;
-								
-							case CLOSED_EXTERNALLY:
-								act.setEvent("closed externally");
-								activityDao.save(act);	
-								break;
-						}	
+						act.setEvent("opened");
+						activityDao.save(act);	
 						break;
-						
+
 					case CLOSED_ACCEPTED:
-					case CLOSED_DENIED:
-					case CLOSED_EXTERNALLY:
+						act.setEvent("accepted");
+						activityDao.save(act);	
 						break;
-						
+
+					case CLOSED_DENIED:
+						act.setEvent("rejected");
+						activityDao.save(act);	
+						break;
+
+					case CLOSED_EXTERNALLY:
+						act.setEvent("closed externally");
+						activityDao.save(act);	
+						break;
+					}		
+
+					break;
+
+				case OPEN:
+					switch(dec.getState()) {
+					case IDLE:
+						act.setEvent("back to idle");
+						activityDao.save(act);
+						break;
+
+					case OPEN:
+						break;
+
+					case CLOSED_ACCEPTED:
+						act.setEvent("accepted");
+						activityDao.save(act);	
+						break;
+
+					case CLOSED_DENIED:
+						act.setEvent("rejected");
+						activityDao.save(act);	
+						break;
+
+					case CLOSED_EXTERNALLY:
+						act.setEvent("closed externally");
+						activityDao.save(act);	
+						break;
+					}	
+					break;
+
+				case CLOSED_ACCEPTED:
+				case CLOSED_DENIED:
+				case CLOSED_EXTERNALLY:
+					break;
+
 				}
 			}
 		}
 	}
-	
+
 	@Transactional
 	public DecisionDtoListRes decisionDtoGetFiltered(Filters filters) {
 		ObjectListRes<Decision> decisionsRes = decisionDao.get(filters);
@@ -1461,16 +1512,16 @@ public class DbServicesImp {
 
 		return decisionsDtosRes;
 	}	
-	
+
 	@Transactional
 	public int decisionCreate(DecisionDto decisionDto) {
 		Decision decision = new Decision();
 		Project project = projectDao.get(decisionDto.getProjectName());
 		projectDao.save(project);
-		
+
 		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
 		decisionRealmDao.save(realm);
-		
+
 		decision.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		decision.setCreator(userDao.get(decisionDto.getCreatorUsername()));
 		decision.setDescription(decisionDto.getDescription());
@@ -1478,9 +1529,9 @@ public class DbServicesImp {
 		decision.setState(DecisionState.IDLE);
 		decision.setDecisionRealm(realm);
 		decision.setType(DecisionType.GENERAL);
-		
+
 		decisionDao.save(decision);
-		
+
 		if(!decision.getCreator().getUsername().equals("collectiveone"))  {
 			Activity act = new Activity();
 			act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -1490,23 +1541,23 @@ public class DbServicesImp {
 			act.setEvent("created");
 			activityDao.save(act);	
 		}
-		
+
 		status.setMsg("decision created");
 		status.setSuccess(true);
-		
+
 		return decision.getId();
 	}
-	
+
 	@Transactional
 	public DecisionDto decisionGetDto(int id) {
 		return decisionDao.get(id).toDto();
 	}
-	
+
 	@Transactional
 	public ArgumentDto argumentGetDto(int id) {
 		return argumentDao.get(id).toDto();
 	}
-	
+
 	@Transactional
 	public List<ArgumentDto> argumentGetOfDecisionDto(int decisionId, ArgumentTendency tendency) {
 		List<Argument> arguments = argumentDao.getOfDecision(decisionId,tendency);
@@ -1516,26 +1567,26 @@ public class DbServicesImp {
 		}
 		return argumentDtos;
 	}
-	
-	
+
+
 	@Transactional
 	public String argumentCreate(ArgumentDto argumentDto) {
 
 		User creator = userDao.get(argumentDto.getCreatorUsername());
 		Decision decision = decisionDao.get(argumentDto.getDecisionId());
 		Argument argument = new Argument();
-		
+
 		argument.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		argument.setCreator(creator);
 		argument.setDecision(decision);
 		argument.setDescription(argumentDto.getDescription());
 		argument.setTendency(ArgumentTendency.valueOf(argumentDto.getTendency()));
-		
+
 		decision.getArguments().add(argument);
-		
+
 		argumentDao.save(argument);
 		decisionDao.save(decision);
-		
+
 		Activity act = new Activity();
 		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		act.setArgument(argument);
@@ -1543,22 +1594,22 @@ public class DbServicesImp {
 		act.setProject(argument.getDecision().getProject());
 		act.setEvent("created");
 		activityDao.save(act);
-		
+
 		return "argument created";
 	}
-	
+
 	@Transactional
 	public String argumentBack(int argId, int userId) {
 		User user = userDao.get(userId);
 		return argumentDao.back(argId,user);
 	}
-	
+
 	@Transactional
 	public String argumentUnBack(int argId, int userId) {
 		User user = userDao.get(userId);
 		return argumentDao.unBack(argId,user);
 	}
-	
+
 	@Transactional
 	public boolean argumentIsBacked(int argId, int userId) {
 		if(argumentDao.getBacker(argId,userId) == null) {
@@ -1567,37 +1618,37 @@ public class DbServicesImp {
 			return true;
 		}
 	}
-	
+
 	@Transactional
 	public String reviewBidCreate(ReviewDto reviewDto, int bidId) {
 
 		User creator = userDao.get(reviewDto.getCreatorUsername());
 		Bid bid = bidDao.get(bidId);
-		
+
 		if(bidDao.getReviewer(bidId, creator.getId()) == null) {
 			User reviewee = bid.getCreator();
-			
+
 			Review review = new Review();
-			
+
 			review.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			review.setCreator(creator);
 			review.setReviewee(reviewee);
 			review.setDescription(reviewDto.getDescription());
 			review.setRate(reviewDto.getRate());
-			
+
 			bid.getReviews().add(review);
-			
+
 			bidDao.save(bid);
 			reviewDao.save(review);
-			
+
 			return "review created";
 		} else {
 			return "user has already reviewed this bid";
 		}
-			
-		
+
+
 	}
-	
+
 	@Transactional
 	public ActivityDtoListRes activityDtoGetFiltered(Filters filters) {
 		ObjectListRes<Activity> activityRes = activityDao.get(filters);
@@ -1613,26 +1664,26 @@ public class DbServicesImp {
 
 		return activityDtosRes;
 	}
-	
+
 	@Transactional
 	public ResStatus commentCbtionCreate(CommentDto commentDto) {
 
 		User creator = userDao.get(commentDto.getCreatorUsername());
 		Cbtion cbtion = cbtionDao.get(commentDto.getCbtionId());
-		
+
 		Comment parent = null;
-		
+
 		if(commentDto.getParentId() != 0) {
 			parent = commentDao.get(commentDto.getParentId());
 		}
-		
+
 		Comment comment = new Comment();
-		
+
 		comment.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		comment.setCreator(creator);
 		comment.setContent(commentDto.getContent());
-		
-		
+
+
 		if(parent != null) {
 			parent.getReplies().add(comment);
 			comment.setParent(parent);
@@ -1642,18 +1693,18 @@ public class DbServicesImp {
 		}
 
 		comment.setCbtion(cbtion);
-		
+
 		cbtionDao.save(cbtion);
 		commentDao.save(comment);
-		
+
 		ResStatus resStatus = new ResStatus();
-		
+
 		resStatus.setSuccess(true);
 		resStatus.setMsg("comment saved");
-		
+
 		return resStatus;
 	}
-	
+
 	@Transactional
 	public List<CommentDto> commentGetRepliesDtos(int commentId) {
 		List<Comment> replies = commentDao.getRepliesSorted(commentId);
@@ -1663,38 +1714,37 @@ public class DbServicesImp {
 		}
 		return repliesDtos;
 	}
-	
-	
+
+
 	@Transactional
 	public ResStatus commentPromote(int commentId, int userId, boolean promoteUp) {
 		ResStatus resStatus = new ResStatus();
-		
+
 		Comment comment = commentDao.get(commentId);
 		commentDao.save(comment);
-		
+
 		Promoter promoter = promoterDao.getOfComment(commentId, userId);
-		
+
 		if(promoter == null) {
 			promoter = new Promoter();
 			promoter.setUser(userDao.get(userId));
 			comment.getPromoters().add(promoter);
 		}
-		
+
 		promoter.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		promoter.setPromoteUp(promoteUp);
-		
+
 		if(promoteUp) resStatus.setMsg("comment promoted up");
 		else resStatus.setMsg("comment promoted down");
-		
+
 		/* update relevance to order results */
 		comment.setRelevance(commentDao.countPromotersDiff(commentId));
-		
+
 		resStatus.setSuccess(true);
-		
+
 		return resStatus;		
 	}
-	
+
 }
 
 
- 

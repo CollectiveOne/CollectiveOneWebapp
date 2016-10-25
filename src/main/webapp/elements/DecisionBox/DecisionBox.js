@@ -31,7 +31,8 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 			this.decision.cbtionId+">"+this.decision.cbtionTitle+"</a> made by "+getUserPageLink(this.decision.bidCreatorUsername)+"</p>");	
 			break;
 		case "GOAL":
-			$("#from_to_state",this.container).append("<p>modifies goal <a href=GoalListPage.action>"+this.decision.goalTag+"</a>");
+			var goalLinkStr = getGoalPageLink(this.decision.goalTag,this.decision.projectName);
+			$("#from_to_state",this.container).append("<p>modifies goal "+goalLinkStr);
 			break;
 	}
 	

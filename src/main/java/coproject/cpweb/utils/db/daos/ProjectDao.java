@@ -6,6 +6,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Example;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,7 @@ public class ProjectDao extends BaseDao {
 		@SuppressWarnings("unchecked")
 		List<String> res = (List<String>) session.createCriteria(Project.class)
 		.setProjection(Projections.property("name"))
+		.addOrder(Order.desc("ppsTot"))
 		.list();
 
 		return res;

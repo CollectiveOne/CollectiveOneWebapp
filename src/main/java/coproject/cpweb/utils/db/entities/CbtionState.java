@@ -6,5 +6,6 @@ public enum CbtionState {
 	ACCEPTED,
 	CLOSED,
 	PROPOSED,
-	NOTOPENED
+	NOTOPENED,
+	DELETED
 }

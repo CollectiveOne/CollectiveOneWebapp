@@ -42,6 +42,11 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 			openDec.draw();
 			break;
 
+		case "OPEN":
+			var deleteDec = new DecisionBoxSmall($("#status_desc_div",this.container),this.cbtion.deleteDec, GLOBAL.sessionData.userLogged);		
+			deleteDec.draw();
+			break;
+
 		case "ACCEPTED":
 			$("#status_desc_div",this.container).append("<p>contributed by "+
 				getUserPageLink(this.cbtion.creatorUsername)+

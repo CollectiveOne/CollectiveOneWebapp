@@ -1,5 +1,6 @@
 package coproject.cpweb.utils.db.daos;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -14,6 +15,7 @@ import coproject.cpweb.utils.db.entities.BidState;
 import coproject.cpweb.utils.db.entities.Cbtion;
 import coproject.cpweb.utils.db.entities.CbtionState;
 import coproject.cpweb.utils.db.entities.Comment;
+import coproject.cpweb.utils.db.entities.DecisionState;
 import coproject.cpweb.utils.db.entities.Goal;
 import coproject.cpweb.utils.db.services.Filters;
 import coproject.cpweb.utils.db.services.ObjectListRes;
@@ -33,9 +35,33 @@ public class CbtionDao extends BaseDao {
 		return (List<Cbtion>) super.get(refCbtion,Cbtion.class);
 	}
 	
-	public List<Cbtion> getWithState(CbtionState state) {
+	public void remove(int id) {
+		Cbtion cbtion = get(id);
+		
+		cbtion.setState(CbtionState.DELETED);
+		cbtion.setDeleteDate(new Timestamp(System.currentTimeMillis()));
+		
+		if(cbtion.getOpenDec() != null)	cbtion.getOpenDec().setState(DecisionState.CLOSED_EXTERNALLY);
+		
+		BidDao bidDao = new BidDao();
+		bidDao.setSessionFactory(sessionFactory);
+		
+		for(Bid bid : cbtion.getBids()) {
+			bidDao.remove(bid.getId());
+		}
+		
+		save(cbtion);
+	}
+	
+	public List<Cbtion> getWithStates(List<CbtionState> states) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
-		query.add(Restrictions.eq("state", state));
+		
+		Disjunction stateDisj = Restrictions.disjunction();
+		for(CbtionState state : states) {
+			stateDisj.add(Restrictions.eq("state", state));	
+		}
+		
+		query.add(stateDisj);
 		
 		@SuppressWarnings("unchecked")
 		List<Cbtion> res = (List<Cbtion>) query.list();
