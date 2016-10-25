@@ -90,6 +90,34 @@ ServerComm.prototype = {
 			});
 		},
 
+		cbtionEdit : function(cbtionEditData,callbackFunction,callbackObj) {
+			//TODO: update
+			var data = {
+					'cbtionDtoIn' : cbtionEditData
+			};
+
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '../json/CbtionEdit',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						showReqOutput(data.resStatus);
+						callbackFunction.call(callbackObj,data);
+					} else {
+						showOutput(data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
 		cbtionPromote : function(cbtionId,promoteUp,callbackFunction,callbackObj) {
 			//TODO: update
 			var data = {

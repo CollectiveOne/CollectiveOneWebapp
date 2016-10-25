@@ -5,10 +5,7 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 
-import com.opensymphony.xwork2.ActionSupport;
-
 import coproject.cpweb.utils.db.entities.dtos.DecisionDto;
-import coproject.cpweb.utils.db.services.DbServicesImp;
 
 @Action("DecisionGet")
 @ParentPackage("json-data")

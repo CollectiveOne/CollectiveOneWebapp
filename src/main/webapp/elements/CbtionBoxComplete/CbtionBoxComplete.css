@@ -65,6 +65,11 @@
 	overflow: hidden;
 }
 
+#cbtion_div #cbtion_data_div #title_div input {
+	height:20px;
+	width: 100%;
+}
+
 #cbtion_div #cbtion_data_div #title_div a {
 	font-size: 12pt;
 	cursor:pointer;
@@ -77,6 +82,18 @@
 	/* margin-top: 5px; */
 	clear:both;
 	overflow-y: auto;
+	width: 100%;
+}
+
+#cbtion_div #cbtion_data_div #description_div textarea {
+	float:left;
+	/* margin-top: 5px; */
+	clear:both;
+	overflow-y: auto;
+	height: calc(100% - 20px);
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 #cbtion_div #cbtion_data_div #description_div p {
@@ -86,7 +103,7 @@
 
 #cbtion_div #left_bottom_div {
 	height: 20px;
-	width: calc(100% - 25px);
+	width: calc(100%);
 	clear:both;
 }
 
@@ -102,6 +119,11 @@
 #cbtion_div #product_div {
 	float:left;
 	width: calc(50%);
+}
+
+#cbtion_div #product_div input {
+	float:left;
+	width: 100%;
 }
 
 #cbtion_div #goal_div {
@@ -141,6 +163,32 @@
 	float:left;
 	clear:both;
 	margin-top: 3px;
+}
+
+#cbtion_div #cbtion_data_div #edit_div {
+	float:left;
+	display:block;
+	margin-top: 15px;
+}
+
+#cbtion_div #cbtion_data_div #edit_cbtion_btn {
+	float: left;
+	clear:both;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	display: none;
+}
+
+#cbtion_div #cbtion_data_div #edit_cbtion_save_btn {
+	float: left;
+	clear:both;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	display: none;
 }
 
 #cbtion_div #cbtion_data_div #project_div {

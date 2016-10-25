@@ -56,6 +56,7 @@ ActivityBox.prototype.activityBoxLoaded = function() {
 					eventPretty = "decision <a href=DecisionPage?decisionId="+this.activity.decisionDto.id+">"+LimitStrSize(this.activity.decisionDto.description,70)+"</a> was "+this.activity.event+" by "+getUserPageLink(this.activity.decisionDto.creatorUsername);
 					break;
 
+				case "opened":
 				case "accepted":
 				case "rejected":
 					eventPretty = "decision <a href=DecisionPage?decisionId="+this.activity.decisionDto.id+">"+LimitStrSize(this.activity.decisionDto.description,70)+"</a> was "+this.activity.event;

@@ -819,6 +819,41 @@ public class DbServicesImp {
 
 		return id;
 	}
+	
+	@Transactional
+	public int cbtionEdit(CbtionDto cbtionDto) {
+		Cbtion cbtion = cbtionDao.get(cbtionDto.getId());
+		
+		if(cbtion != null) {
+			switch(cbtion.getState()) {
+			case PROPOSED:
+				cbtion.setTitle(cbtionDto.getTitle());
+				cbtion.setDescription(cbtionDto.getDescription());
+				cbtion.setProduct(cbtionDto.getProduct());
+				
+				cbtionDao.save(cbtion);	
+				
+				status.setMsg("cbtion updated");
+				status.setSuccess(true);
+				break;
+			
+			default:
+				status.setMsg("cbtion is already open");
+				status.setSuccess(true);
+				break;
+			}
+			
+
+			return cbtion.getId();
+			
+		} else {
+			status.setMsg("cbtion not found");
+			status.setSuccess(false);
+			
+			return 0;
+		}
+		
+	}
 
 	@Transactional
 	public Cbtion cbtionGet(Integer id) {
@@ -828,6 +863,11 @@ public class DbServicesImp {
 	@Transactional
 	public List<Cbtion> cbtionGet(Cbtion refCbtion) {
 		return cbtionDao.get(refCbtion);
+	}
+	
+	@Transactional
+	public User cbtionGetCreator(Integer id) {
+		return cbtionDao.get(id).getCreator();
 	}
 
 	@Transactional

@@ -18,7 +18,7 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	$("#title_div",this.container).append("<a href=CbtionPage.action?cbtionId="+ this.cbtion.id+">"+this.cbtion.title+"</a>");
 	$("#description_div",this.container).append("<p>"+this.cbtion.description+"</p>");
 	
-	$("#product_div",this.container).append("<p>"+this.cbtion.product+"</p>");
+	$("#product_div",this.container).append("<p id=product_text>"+this.cbtion.product+"</p>");
 	
 	if(this.cbtion.parentGoalsTags) {
 		var nparents = this.cbtion.parentGoalsTags.length;
@@ -38,13 +38,17 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	
 	switch(this.cbtion.state) {
 		case "PROPOSED":
-			var openDec = new DecisionBoxSmall($("#status_desc_div",this.container),this.cbtion.openDec, GLOBAL.sessionData.userLogged);		
-			openDec.draw();
+			if(GLOBAL.sessionData.userLogged) {
+				var openDec = new DecisionBoxSmall($("#status_desc_div",this.container),this.cbtion.openDec, GLOBAL.sessionData.userLogged);		
+				openDec.draw();	
+			}
 			break;
 
 		case "OPEN":
-			var deleteDec = new DecisionBoxSmall($("#status_desc_div",this.container),this.cbtion.deleteDec, GLOBAL.sessionData.userLogged);		
-			deleteDec.draw();
+			if(GLOBAL.sessionData.userLogged) {
+				var deleteDec = new DecisionBoxSmall($("#status_desc_div",this.container),this.cbtion.deleteDec, GLOBAL.sessionData.userLogged);		
+				deleteDec.draw();
+			}
 			break;
 
 		case "ACCEPTED":
@@ -75,10 +79,62 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	
 	$("#show_comments_btn",this.container).click(this.showCommentsClick.bind(this));
 
+	if(GLOBAL.sessionData.userLogged) {
+		if(GLOBAL.sessionData.userLogged.username == this.cbtion.creatorUsername) {
+			if(this.cbtion.state == "PROPOSED") {
+				$("#edit_cbtion_btn",this.container).show();	
+				$("#edit_cbtion_btn",this.container).click(this.editClick.bind(this));	
+			}
+		}
+	}
+
 	this.updateBids();
+
+
 }
 
-CbtionBoxComplete.prototype.newBidClick = function (){
+CbtionBoxComplete.prototype.editClick = function () {
+	$("#edit_cbtion_btn",this.container).hide();	
+	
+	$("#edit_cbtion_save_btn",this.container).show();	
+	$("#edit_cbtion_save_btn",this.container).click(this.editSaveClick.bind(this));
+
+	var currentTitle = $("#title_div a", this.container).html();
+	var currentDescription = $("#description_div p", this.container).html();
+	var currentProduct = $("#product_div #product_text", this.container).html();
+
+	$("#title_div", this.container).empty();
+	$("#description_div", this.container).empty();
+	$("#product_div", this.container).empty();
+
+	$("#title_div", this.container).append("<input type=text id=title_edit_input></input");
+	$("#title_edit_input", this.container).val(currentTitle);
+
+	$("#description_div", this.container).append("<textarea id=description_edit_input></textarea>");
+	$("#description_edit_input", this.container).val(currentDescription);
+
+	$("#product_div", this.container).append("<input type=text id=product_edit_input></input");
+	$("#product_edit_input", this.container).val(currentProduct);
+
+}
+
+CbtionBoxComplete.prototype.editSaveClick = function () {
+	var cbtionEditData = {
+		id: this.cbtion.id,
+		title: $("#title_edit_input", this.container).val(),
+		description: $("#description_edit_input", this.container).val(),
+		product: $("#product_edit_input", this.container).val()
+	}
+
+	GLOBAL.serverComm.cbtionEdit(cbtionEditData,this.editedCallback,this);
+}
+
+CbtionBoxComplete.prototype.editedCallback = function (data) { 
+	this.cbtion = data.cbtionDto;
+	this.draw();
+}
+
+CbtionBoxComplete.prototype.newBidClick = function () {
 	if(this.cbtion.state == "OPEN") {
 		$("#new_bid_form_container",this.container).toggle();
 		$("#newbid_username_div",this.container).html(("<p>bidder: "+GLOBAL.sessionData.userLogged.username+"</p>"));	
