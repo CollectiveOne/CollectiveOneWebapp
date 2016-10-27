@@ -88,7 +88,7 @@ function getSecondsSince(timestamp) {
 }
 
 function getGoalPageLink(goalTag,projectName) {
-	return "<a href=../views/GoalPage.action?projectName="+projectName+"&goalTag="+goalTag+">&#x0371 "+goalTag+"</a>";
+	return "<a href=../views/GoalPage.action?projectName="+projectName+"&goalTag="+goalTag+"> <b>+</b>"+goalTag+"</a>";
 }
 
 function getUserPageLink(username) {

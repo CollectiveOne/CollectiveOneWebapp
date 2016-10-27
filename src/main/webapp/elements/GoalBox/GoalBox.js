@@ -3,6 +3,7 @@ function GoalBox(container_id,goalData) {
 	this.container = $(container_id);
 	this.goal = goalData;
 	this.subgoals_expanded = false;
+	this.prependPath = true;
 	if(goalData) {
 		this.draw();
 	}
@@ -28,16 +29,18 @@ GoalBox.prototype.draw = function() {
 
 GoalBox.prototype.goalBoxLoaded = function() {
 	
-	$("#goaltag",this.container).append("<a href=ProjectPage.action?projectName="+this.goal.projectName+">"+this.goal.projectName+"</a>");
-	
-	if(this.goal.parentGoalsTags) {
-		var nparents = this.goal.parentGoalsTags.length;
-		for(var ix=0; ix < nparents; ix++) {
-			// cycle from last to first as the first parent is the immediate parent
-			var parentTag = this.goal.parentGoalsTags[nparents - ix - 1];
-			$("#goaltag",this.container).append(getGoalPageLink(parentTag,this.goal.projectName));
-		}
-	}
+	if(this.prependPath) {
+		$("#goaltag",this.container).append("<a href=ProjectPage.action?projectName="+this.goal.projectName+">"+this.goal.projectName+"</a>");
+
+		if(this.goal.parentGoalsTags) {
+			var nparents = this.goal.parentGoalsTags.length;
+			for(var ix=0; ix < nparents; ix++) {
+				// cycle from last to first as the first parent is the immediate parent
+				var parentTag = this.goal.parentGoalsTags[nparents - ix - 1];
+				$("#goaltag",this.container).append(getGoalPageLink(parentTag,this.goal.projectName));
+			}
+		}	
+	}	
 
 	var tagSuffix = "";
 	if(this.goal.state == "PROPOSED") {
@@ -148,6 +151,7 @@ GoalBox.prototype.showSubGoals = function() {
 		for(var ix in this.goal.subGoalsTags) {
 			$("#subgoals_div",this.container).append("<div id=subgoal_container_"+ix+" class=subgoal_container></div>");
 			var subGoalBox = new GoalBox($("#subgoal_container_"+ix,this.container));
+			subGoalBox.prependPath = false;
 			subGoalBox.getGoal(this.goal.subGoalsTags[ix], this.goal.projectName);
 		}
 

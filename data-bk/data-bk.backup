@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2016-10-26 16:01:01 CEST
+-- Started on 2016-10-27 11:50:42 CEST
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -102,6 +102,7 @@ COPY bids (id, creationdate, deliverydate, description, donedate, donedescriptio
 73	2016-10-21 14:06:40.943	2016-10-21 22:00:00	I have moved the User and Project page to an html dynamically loaded every time the apge is redrawn	\N	\N	\N	5	3	273	272	81	1	\N
 75	2016-10-25 10:51:34.279	2016-10-25 22:00:00	Done it. You can delete it only from the contribution page and not from the contribution browser. The contribution is not actually deleted but just changed to "deleted" state	2016-10-25 10:52:24.228	bb69560a6612ca65e53ddf8d567e21042e7b35d3	1	10	3	289	288	82	1	\N
 76	2016-10-25 15:10:34.111	2016-10-25 22:00:00	I have saved the screen while watching at the presentation slides and then while using the prototype and added captions to describe what its going on. Music is creative commons	\N	\N	\N	50	3	293	291	86	1	\N
+78	2016-10-26 16:42:54.722	2016-10-26 22:00:00	Updated billing info of Heroku account	\N	\N	\N	5	3	305	304	96	4	\N
 \.
 
 
@@ -118,7 +119,7 @@ ALTER TABLE projects DISABLE TRIGGER ALL;
 COPY projects (id, creationdate, description, name, ppstot, creator_id) FROM stdin;
 2	2016-09-21 15:38:54.641	With JieMaps, you can create and share your navigation experience, and find the navigation experiences of others.\n\nIn JieMaps, a navigation experience is represented by a path (a sequence and group of links). This paths are called Jies. That's all. 	JieMaps	100	1
 3	2016-10-19 20:51:28.032	Data journalism tools	datasketch	101	5
-1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2546.5	1
+1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2551.5	1
 \.
 
 
@@ -147,8 +148,6 @@ COPY cbtions (id, assignedppoints, creationdate, description, product, relevance
 19	10	2016-08-20 16:02:02.831	Prepare a google spreadsheet to track the contribution items from the beginning so that the CoProjects method is applied from the beginning	Google sheet	0	2	Contribution Tracker Google Sheet	1	1	1	\N	1	\N	\N
 20	0	2016-08-20 16:32:22.509	Add LiquidBase to the webapp so that updates to the database can be done cleanly	Updated webapp	0	0	Add LiquidBase	\N	1	3	\N	1	\N	\N
 24	10	2016-08-26 18:54:55.83	Change the type of the description of the entities to allow larger descriptions. Current limit of 255 characters is too low.	Updated DB schema and data	0	2	Extend description size	1	1	3	\N	1	\N	\N
-2	50	2016-08-08 14:37:36.535	Deploy webapp in heroku as it is. 	Heroku app running	0	2	Deploy in Heroku	1	1	5	\N	1	\N	\N
-6	900	2016-08-10 10:59:43.963	Develop the CoProjects web page prototype	Web application prototype in JAVAEE using Struts2, Spring and Hibernate frameworks	0	2	Web App	1	1	5	\N	1	\N	\N
 22	7	2016-08-24 22:16:35.843	Prepare an email to invite collaborators to join project and help develop the CoProjects platform	Email draft	0	2	Prepare invitation email 	3	1	1	\N	1	\N	\N
 23	20	2016-08-26 08:47:41.154	Simplify DecisionBox so that it focus in the state that it wants to change. E.g. Bid OFFERED->ASSIGN? yes/no | yes in 4 hr	Updated DecisionBox integration	0	2	Uptade DecisionBox	1	1	4	\N	1	\N	\N
 3	30	2016-08-08 14:42:27.589	Add Goals items to db. A goal must have a tag and a description. It must have a page to create one and a page to search goals (follow contributions structure), at least three states and and two decisions should operate on it: create, and delete.	New entity	0	2	Add Goals to DB	1	1	3	\N	1	\N	\N
@@ -163,7 +162,7 @@ COPY cbtions (id, assignedppoints, creationdate, description, product, relevance
 30	2	2016-09-01 20:04:36.437	Merge Cbtion, Goals and Decisions filtered search methods into a single one so that filter functionality can evolve cleanly	updated DbServices class and dependencies	0	2	Merge all *GetList DB service method	1	1	3	\N	1	\N	\N
 32	5	2016-09-01 23:47:44.616	Create a BaseDao superclass to concentrate all common methods to all entities Daos. This is a preliminary step to have the search functionality in a single place. Update all dependencies and Daos methods to wrap and cast the super caller methods	updated Dao Java classes	0	2	Create BaseDao superclass	1	1	6	\N	1	\N	\N
 14	0	2016-08-20 15:23:07.49	Allow creators to edit a contribution description if no one has yet bid	Updated UI and API	1	0	Editable Contributions	\N	1	4	\N	1	\N	\N
-42	0.5	2016-09-05 16:43:55.567	Support pepospina to create a new remote of the CoProjects repository in github	github repository	0	2	Support pepospina to create a new remote in github	5	1	5	\N	1	\N	\N
+2	50	2016-08-08 14:37:36.535	Deploy webapp in heroku as it is. 	Heroku app running	0	2	Deploy in Heroku	1	1	6	\N	1	\N	\N
 33	15	2016-09-04 15:04:51.427	Add the possibility for users to review bids that have been closed, either accepted or not accepted, by adding a rate and comment. Update the BidBox so that users can add their reviews below the bid. Store the reviews in the User entity.	Updated DB and BidBox UI	0	2	Add Reviews to Bids	1	1	3	\N	1	\N	\N
 43	4	2016-09-06 16:33:16.522	Use a simple 1-5 review logic using yellow stars and revert the current method.	Updated UI and minot model updates	0	2	Updated Reviews to use Stars	1	1	4	\N	1	\N	\N
 38	2	2016-09-05 10:17:23.588	Updated Goal autocomplete in new Contribution form, to show goals of the project in which the contribution is being created. It currently shows all Goals in the DB	updated CbionNewPage and dependencies	0	2	Goal autocomplete per project	1	1	4	\N	1	\N	\N
@@ -177,8 +176,6 @@ COPY cbtions (id, assignedppoints, creationdate, description, product, relevance
 41	15	2016-09-05 10:22:36.319	Add hierarchy links to goals so that any goal can be marked as a sub-goal of other goal. Updated Goal search page to represent this hierarchy and allow the user to create these links. Updated GoalNewPage to allow new goals to be marked as subgoals of other.	Updated Goal entity, GoalListPage, GoalNew forma and dependencies	1	2	Add hierarchy to Goals	1	1	3	\N	1	\N	\N
 50	10	2016-09-08 16:37:17.423	Add a list of the reviews that a user has received in the platforn	updated UserPage	0	2	Add user reviews to user profile	1	1	4	132	1	\N	\N
 48	0	2016-09-08 08:01:09.603	Merge CbtionListPage, GoalListPage and DecisionListPage into a single page that adapts to the type of enttiy requested. Merge, as much as possible, code in the client and server side to have a single GetList process.	updated client and server side	-1	4	Merge EntityListPages	\N	1	6	126	1	\N	\N
-52	0	2016-09-08 16:48:30.339	Not very clear, but the idea is to add security to the webpage to protect unwanted access, find a way to hide user passwords from developers (except a few of them), and save passwords crypted so that they are better protected. Use spring security if possible	updated app	0	4	Add security	\N	1	9	134	1	\N	\N
-40	0	2016-09-05 10:19:09.952	Allow the user to select more than one goal per contribution	updated CbtionNewPage, Cbtion entitiy and dependencies	-1	0	Allow for multiple goals per Contribution	\N	1	3	\N	1	\N	\N
 39	25	2016-09-05 10:18:00.846	Add the possibility to filter Contributions by goal	updated filter element	0	2	Filter Contributions by goal	1	1	4	\N	1	\N	\N
 56	8	2016-09-10 11:45:12.991	Keep a record of recent activity and add a page in which it is shown. 	Updated model and new page 	0	2	Recent activity record 	1	1	3	147	1	\N	\N
 46	0	2016-09-07 18:24:51.297	Store the filter selections in server session and use it as initialization for the filters in other pages. This way the user does not have to update the filters every time she moves from one page to another.	updated server side and filter JS element	2	4	Store filter in server session	\N	1	6	124	1	\N	\N
@@ -186,6 +183,9 @@ COPY cbtions (id, assignedppoints, creationdate, description, product, relevance
 55	0	2016-09-08 23:05:16.268	Propose new approaches to the decision mechanism, analyze and test them. If possible compare them with the current implementation of the decision algorithm. 	Analysis document 	1	1	Review of the decision mechanism	\N	1	2	143	1	\N	\N
 54	6	2016-09-08 23:00:46.102	Write a simple document to help new people have an overview of how the CoProjects webapp is structured. Describe the frameworks and the overall structure of the application. 	Google doc 	0	2	Webapp technical overview	1	1	8	142	1	\N	\N
 57	4	2016-09-12 19:34:56.622	Improve the contribution page as the current layout is rather ugly. Use CbtionBox as an example, and add the list of bids and allow the user to bid on the contribution	updated CbtionPage 	1	2	Improve Contribution Page	1	1	4	148	1	\N	\N
+52	0	2016-09-08 16:48:30.339	Not very clear, but the idea is to add security to the webpage to protect unwanted access, find a way to hide user passwords from developers (except a few of them), and save passwords crypted so that they are better protected. Use spring security if possible	updated app	0	4	Add security	\N	1	6	134	1	\N	\N
+40	0	2016-09-05 10:19:09.952	Allow the user to select more than one goal per contribution	updated CbtionNewPage, Cbtion entitiy and dependencies	-1	6	Allow for multiple goals per Contribution	\N	1	3	\N	1	\N	\N
+42	0.5	2016-09-05 16:43:55.567	Support pepospina to create a new remote of the CoProjects repository in github	github repository	0	2	Support pepospina to create a new remote in github	5	1	10	\N	1	\N	\N
 51	10	2016-09-08 16:41:08.864	Improve the decision creation process (those created by the platform) to make it simpler to understand the effects of the decision. "OPEN contribution 50" is not clear at all. Moreover, allow some sort of link to the affected entity within the decision box so that the user can go and see the object that is affected by the decision	updated decisionBox and dependencies	1	2	Add affected entity informatione to DecisionBox	1	1	4	133	1	\N	\N
 60	100	2016-09-21 15:38:54.697	Start contribution	\N	0	2	Create project JieMaps	1	1	\N	\N	2	\N	\N
 61	0	2016-09-21 15:40:53.086	Updated the old prototype to use Spring/Hiberante/Struts2	updated webapp	0	0	Commit first version of the prototype	\N	1	\N	163	2	\N	\N
@@ -215,6 +215,7 @@ COPY cbtions (id, assignedppoints, creationdate, description, product, relevance
 69	10	2016-10-06 10:44:45.314	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	0	2	Setup markdown basic infrastructure	1	1	12	204	1	\N	\N
 90	0	2016-10-24 19:35:00.54	Prepare a roadmap for the project so that new contributors can have an idea of which is are current expectations 	roadmap document	0	4	Prepare a roadmap for collectiveone	\N	1	7	285	1	\N	\N
 81	5	2016-10-20 13:20:04.689	ActiveProject selection automatically redraw the current page. While this is ok for pages of list of objects, it is not working ok for user and project pages, since some elements are duplicated. 	updated pages and/or active project logic 	0	2	BUG FIX Active project selection wrong redraw	1	1	4	270	1	\N	\N
+95	0	2016-10-26 15:59:06.725	Pay for one moth heroku hobby hosting. Current price is 7 dollars maximum.	credit card payment	0	6	Pay for one moth heroku hobby hosting	\N	1	6	300	1	2016-10-26 15:59:38.976	301
 91	0	2016-10-25 10:48:50.46	Dummy contribution to be deleted	none	0	6	Test to be deleted	\N	1	\N	286	1	2016-10-25 10:49:37.709	287
 82	10	2016-10-20 13:22:18.629	Allow contributions to be deleted by its creator (if they have not been yet accepted) or by a collective decision (if they have)	update contribution lifecycle and ui	1	2	Allow contributions to be deleted	1	1	3	271	1	\N	\N
 85	0	2016-10-23 12:26:16.853	See if other domains that could be used by CollectiveOne are free and aquire them	domain control	0	4	Look for and acquire other domains	\N	1	7	279	1	\N	\N
@@ -222,10 +223,14 @@ COPY cbtions (id, assignedppoints, creationdate, description, product, relevance
 87	0	2016-10-23 22:47:24.759	Prepare a presentation email starting from email from esteban to introduce selected people to the project.	email draft	0	4	Prepare presentation email	\N	1	7	282	1	\N	\N
 88	0	2016-10-24 15:26:45.566	Currently all decisions duration is set to 36 hours. This is considered a temporary solution. Decision duration should follow some criteria which could be related to the decision creator (new users, or users whose decisions are usually rejected require more time), the decision impact (decisions affecting more pps should require more time) or the decision level (decisions at higher order goals should require more time and those at lower level specific goals)	document (or reddit post) with the proposal	0	4	Propose an stratergy to handle decision duration	\N	1	1	283	1	\N	\N
 89	0	2016-10-24 15:33:45.623	Update argumentation method to allow arguments to be a reply to another argument. Perhaps consider using standard replies like (this is true but ...) or (this is not true since...) etc...\n	Updated argument strategy and UI	0	4	Review arguments structure to allow replies	\N	1	3	284	1	\N	\N
+96	5	2016-10-26 16:00:18.436	Current price is 7 dollars	heroku one month payment	0	2	Pay for one moth heroku hobby hosting	4	1	6	302	1	\N	303
 86	50	2016-10-23 21:42:33.991	The video should describe the collectiveone concept and the current features of the webapp 	Video file 	0	2	Prepare video for Welcome page  	1	1	8	281	1	\N	290
 93	0	2016-10-26 10:46:30.535	Text below the video is ugly. Find a better way to display this info and links.	updated welcom page	0	4	Update the welcome page	\N	1	7	298	1	\N	\N
 92	5	2016-10-26 09:37:40.668	Prepare the first version of the CollectiveOne lean canvas.	lean canvas in google draw	0	2	Prepare the CollectiveOne lean canvas	1	1	1	294	1	\N	295
 94	0	2016-10-26 11:01:47.017	Current goals structure is not well organized nor planed for the work ahead. Prepare a better starting point.	propose a goal architecture	0	4	Preare goals structure	\N	1	1	299	1	\N	\N
+6	900	2016-08-10 10:59:43.963	Develop the CoProjects web page prototype	Web application prototype in JAVAEE using Struts2, Spring and Hibernate frameworks	0	2	Web App	1	1	10	\N	1	\N	\N
+97	0	2016-10-26 16:45:58.063	Add loading animation (gif) when loading list results	updated UI	0	4	Loading animation	\N	1	4	306	1	\N	\N
+98	0	2016-10-27 09:49:59.232	Current list and subgoals expansion is confusing and hard to read. Improve it.	updated goals list page	0	4	Improve Goals browser	\N	1	4	323	1	\N	\N
 \.
 
 
@@ -373,8 +378,6 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 147	2016-09-13 22:05:17.672	0.949999999999999956	1	2016-09-10 11:45:12.996	OPEN contribution 56	0	PROPOSED	0	1	1	8	2016-09-13 22:05:17.659	1	1878	2195.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 152	2016-09-13 22:07:22.233	0.949999999999999956	1	2016-09-13 22:07:02.06	Assign cbtion 56 to pepoospina	0	OFFERED	0	1	1	8	2016-09-13 22:07:22.231	1	1878	2195.5	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
 153	2016-09-13 22:07:27.399	0.949999999999999956	1	2016-09-13 22:07:02.062	Accept cbtion 56 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-13 22:07:27.398	1	1878	2195.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
-155	\N	0.949999999999999956	0	2016-09-15 14:21:57.804	delete goal 'data-security'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	9	1
-154	2016-09-15 14:22:12.776	0.949999999999999956	1	2016-09-15 14:21:57.802	create goal 'data-security'	0	PROPOSED	0	1	1	8	2016-09-15 14:22:12.773	1	1886	2203.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	9	1
 156	2016-09-15 14:23:35.95	0.949999999999999956	1	2016-09-15 14:23:21.832	assign contribution 'Add hierarchy to Goals' to pepoospina	0	OFFERED	0	1	1	8	2016-09-15 14:23:35.948	1	1886	2203.5	0.5	0	2	ASSIGNED	3	1	36	46	\N	6	1	\N	1
 157	2016-09-15 14:23:41.905	0.949999999999999956	1	2016-09-15 14:23:21.833	accept contribution 'Add hierarchy to Goals' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-09-15 14:23:41.903	1	1886	2203.5	0.5	0	2	ACCEPTED	3	1	36	46	\N	6	1	\N	1
 133	2016-09-18 18:21:54.566	0.949999999999999956	1	2016-09-08 16:41:08.871	OPEN contribution 51	0	PROPOSED	0	1	1	8	2016-09-18 18:21:54.56	1	1901	2218.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
@@ -402,11 +405,9 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 181	\N	0.949999999999999956	0	2016-10-01 20:17:58.049	open contribution 'Add email notification infrastructuer'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	65	6	1	\N	1
 183	2016-10-03 15:14:17.642	0.949999999999999956	1	2016-10-03 15:14:08.819	assign contribution 'Filter Contributions by goal' to pepoospina	0	OFFERED	0	1	1	8	2016-10-03 15:14:17.641	1	1986	2303.5	0.5	0	2	ASSIGNED	3	1	36	56	\N	6	1	\N	1
 184	2016-10-03 15:14:36.107	0.949999999999999956	1	2016-10-03 15:14:08.839	accept contribution 'Filter Contributions by goal' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-03 15:14:36.106	1	1986	2303.5	0.5	0	2	ACCEPTED	3	1	36	56	\N	6	1	\N	1
-185	2016-10-04 17:31:02.862	0.949999999999999956	1	2016-10-04 17:30:55.809	set webapp-backend as parent tag	0	\N	0	1	1	8	2016-10-04 17:31:02.859	1	2011	2328.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	9	1
 187	\N	0.949999999999999956	0	2016-10-04 17:33:18.537	delete goal 'webapp'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	10	1
 186	2016-10-04 17:33:33.723	0.949999999999999956	1	2016-10-04 17:33:18.536	create goal 'webapp'	0	PROPOSED	0	1	1	8	2016-10-04 17:33:33.721	1	2011	2328.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	10	1
 188	2016-10-04 17:34:57.171	0.949999999999999956	1	2016-10-04 17:34:08.478	set webapp as parent tag	0	\N	0	1	1	8	2016-10-04 17:34:57.17	1	2011	2328.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	6	1
-189	2016-10-04 17:35:43.064	0.949999999999999956	1	2016-10-04 17:35:30.576	set webapp as parent tag	0	\N	0	1	1	8	2016-10-04 17:35:43.063	1	2011	2328.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	5	1
 190	2016-10-04 17:35:56.759	0.949999999999999956	1	2016-10-04 17:35:47.64	set webapp as parent tag	0	\N	0	1	1	8	2016-10-04 17:35:56.758	1	2011	2328.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	4	1
 191	2016-10-04 17:36:03.341	0.949999999999999956	1	2016-10-04 17:35:57.372	set webapp as parent tag	0	\N	0	1	1	8	2016-10-04 17:36:03.34	1	2011	2328.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	3	1
 192	2016-10-04 17:36:16.417	0.949999999999999956	1	2016-10-04 17:36:11.608	set marketing as parent tag	0	\N	0	1	1	8	2016-10-04 17:36:16.416	1	2011	2328.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	8	1
@@ -519,7 +520,31 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 294	2016-10-26 10:42:22.084	0.949999999999999956	1	2016-10-26 09:37:40.725	open contribution 'Prepare the CollectiveOne lean canvas'	0	PROPOSED	0	1	1	8	2016-10-26 10:42:22.084	1	2184	2541.5	0.5	0	2	OPEN	1	1	36	\N	92	6	1	\N	1
 295	\N	0.949999999999999956	0	2016-10-26 10:42:23.812	delete contribution 'Prepare the CollectiveOne lean canvas'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	92	6	1	\N	1
 296	2016-10-26 10:43:09.953	0.949999999999999956	1	2016-10-26 10:42:55.698	assign contribution 'Prepare the CollectiveOne lean canvas' to pepoospina	0	OFFERED	0	1	1	8	2016-10-26 10:43:09.952	1	2184	2541.5	0.5	0	2	ASSIGNED	3	1	36	77	\N	6	1	\N	1
-292	\N	0.949999999999999956	1	2016-10-25 16:01:01.716	Should the new version (V1) of the welcome video be placed in the welcome page to replace the current google slides?	0.598539097222222205	\N	0	1	1	8	2016-10-25 16:18:46.831	1	262	2546.5	0.5	0	1	\N	0	1	36	\N	\N	1	1	\N	1
+304	2016-10-26 16:43:16.203	0.949999999999999956	1	2016-10-26 16:42:54.946	assign contribution 'Pay for one moth heroku hobby hosting' to mospina	0	OFFERED	0	1	1	8	2016-10-26 16:43:16.203	1	2189	2546.5	0.5	0	2	ASSIGNED	3	1	36	78	\N	6	1	\N	1
+305	2016-10-26 16:43:25.684	0.949999999999999956	1	2016-10-26 16:43:17.578	accept contribution 'Pay for one moth heroku hobby hosting' as delivered by mospina	0	ASSIGNED	0	1	1	8	2016-10-26 16:43:25.681	1	2189	2546.5	0.5	0	2	ACCEPTED	3	1	36	78	\N	6	1	\N	1
+312	2016-10-27 09:17:55.948	0.949999999999999956	1	2016-10-27 09:17:50.744	set vision as parent goal	0	\N	0	1	1	8	2016-10-27 09:17:55.947	1	2189	2551.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	7	1
+301	2016-10-26 15:59:36.784	0.949999999999999956	1	2016-10-26 15:59:22.541	delete contribution 'Pay for one moth heroku hobby hosting'	0	OPEN	0	1	1	8	2016-10-26 15:59:36.784	1	2189	2546.5	0.5	0	2	DELETED	1	1	36	\N	95	6	1	\N	1
+300	2016-10-26 15:59:20.005	0.949999999999999956	1	2016-10-26 15:59:06.739	open contribution 'Pay for one moth heroku hobby hosting'	0	PROPOSED	0	1	1	8	2016-10-26 15:59:20.005	1	2189	2546.5	0.5	0	4	OPEN	1	1	36	\N	95	6	1	\N	1
+306	\N	0.949999999999999956	0	2016-10-26 16:45:58.072	open contribution 'Loading animation'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	97	6	1	\N	1
+314	\N	0.949999999999999956	0	2016-10-27 09:19:02.024	delete goal 'method-definition'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	27	1
+313	2016-10-27 09:19:18.165	0.949999999999999956	1	2016-10-27 09:19:02.023	create goal 'method-definition'	0	PROPOSED	0	1	1	8	2016-10-27 09:19:18.164	1	2189	2551.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	27	1
+316	2016-10-27 09:20:08.345	0.949999999999999956	1	2016-10-27 09:19:57.916	set method-definition as parent goal	0	\N	0	1	1	8	2016-10-27 09:20:08.344	1	2189	2551.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	1	1
+302	2016-10-26 16:00:30.546	0.949999999999999956	1	2016-10-26 16:00:18.441	open contribution 'Pay for one moth heroku hobby hosting'	0	PROPOSED	0	1	1	8	2016-10-26 16:00:30.546	1	2189	2546.5	0.5	0	2	OPEN	1	1	36	\N	96	6	1	\N	1
+303	\N	0.949999999999999956	0	2016-10-26 16:00:35.194	delete contribution 'Pay for one moth heroku hobby hosting'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	96	6	1	\N	1
+315	2016-10-27 09:20:08.362	0.949999999999999956	1	2016-10-27 09:19:49.875	set method-definition as parent goal	0	\N	0	1	1	8	2016-10-27 09:20:08.362	1	2189	2551.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	2	1
+318	\N	0.949999999999999956	0	2016-10-27 09:24:20.375	delete goal 'marketing'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	28	1
+292	2016-10-27 02:15:13.763	0.949999999999999956	1	2016-10-25 16:01:01.716	Should the new version (V1) of the welcome video be placed in the welcome page to replace the current google slides?	0.942800401234567875	\N	0	1	1	8	2016-10-25 16:18:46.831	1	262	2551.5	0.5	0	2	\N	0	1	36	\N	\N	1	1	\N	1
+308	\N	0.949999999999999956	0	2016-10-26 19:57:18.555	delete goal 'vision'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	25	1
+310	\N	0.949999999999999956	0	2016-10-27 09:16:49.241	delete goal 'tools'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	26	1
+309	2016-10-27 09:16:59.969	0.949999999999999956	1	2016-10-27 09:16:49.24	create goal 'tools'	0	PROPOSED	0	1	1	8	2016-10-27 09:16:59.967	1	2189	2551.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	26	1
+307	2016-10-26 19:57:34.191	0.949999999999999956	1	2016-10-26 19:57:18.551	create goal 'vision'	0	PROPOSED	0	1	1	8	2016-10-26 19:57:34.191	1	2189	2551.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	25	1
+311	2016-10-27 09:17:23.727	0.949999999999999956	1	2016-10-27 09:17:18.997	set tools as parent goal	0	\N	0	1	1	8	2016-10-27 09:17:23.726	1	2189	2551.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	10	1
+320	\N	0.949999999999999956	0	2016-10-27 09:26:45.84	delete goal 'public-relations'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	29	1
+319	2016-10-27 09:27:02.934	0.949999999999999956	1	2016-10-27 09:26:45.836	create goal 'public-relations'	0	PROPOSED	0	1	1	8	2016-10-27 09:27:02.931	1	2189	2551.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	29	1
+317	2016-10-27 09:27:03.026	0.949999999999999956	1	2016-10-27 09:24:20.374	create goal 'marketing'	0	PROPOSED	0	1	1	8	2016-10-27 09:27:03.026	1	2189	2551.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	28	1
+322	\N	0.949999999999999956	0	2016-10-27 09:43:57.792	delete goal 'integration'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	30	1
+321	2016-10-27 09:44:12.987	0.949999999999999956	1	2016-10-27 09:43:57.791	create goal 'integration'	0	PROPOSED	0	1	1	8	2016-10-27 09:44:12.985	1	2189	2551.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	30	1
+323	\N	0.949999999999999956	0	2016-10-27 09:49:59.237	open contribution 'Improve Goals browser'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	98	6	1	\N	1
 \.
 
 
@@ -579,18 +604,7 @@ ALTER TABLE arguments ENABLE TRIGGER ALL;
 ALTER TABLE goal DISABLE TRIGGER ALL;
 
 COPY goal (id, creationdate, description, goaltag, parentstate, state, createdec_id, creator_id, deletedec_id, parent_id, project_id, proposeparent_id, proposedparent_id) FROM stdin;
-1	2016-08-28 13:10:18.887	Define, describe and clarify the CoProjects method	method-concept	\N	1	70	1	71	\N	1	\N	\N
-2	2016-08-28 13:13:56.758	Define, analyze, test and optimize the CoProjects decision mechanism	decision-mechanism	\N	1	72	1	73	\N	1	\N	\N
-7	2016-09-08 22:46:47.411	CoProjects shall spread its method and attract new projects and collaborators that enrich its ecosystem. 	marketing	\N	1	137	1	138	\N	1	\N	\N
-9	2016-09-15 14:21:57.564	Some of the data stored in CoProjects databases shall be protected from unauthorized access. 	data-security	0	1	154	1	155	6	1	185	6
-10	2016-10-04 17:33:18.485	A webapp shall be created to allow users to develop projects using the CoProjects method	webapp	\N	1	186	1	187	\N	1	\N	\N
-6	2016-09-01 23:47:23.177	Improve, expand and optimize the backend functionalities	webapp-backend	0	1	99	1	100	10	1	188	10
-5	2016-08-28 13:18:33.791	Deploy and maintain the Web Application online	webapp-host	0	1	78	1	79	10	1	189	10
-4	2016-08-28 13:18:01.937	Update and optimize the Web Application user interface	webapp-ui	0	1	76	1	77	10	1	190	10
-3	2016-08-28 13:16:30.799	Update the Web Application database model by creating, updating entities	webapp-model	0	1	74	1	75	10	1	191	10
-8	2016-09-08 23:00:24.308	CoProjects shall prepare tutorials, presentations and documents to help new contributors learn the status of the project fast. 	help-new-contributors	0	1	140	1	141	7	1	192	7
-11	2016-10-04 17:40:30.046	Create an introductory video to be placed in the Welcome Page. The video shall describe the CoProjects concept, and shall provide basic instructions on how to interact with the webapp to create open projects.	webapp-intro-video	\N	1	193	1	194	8	1	\N	\N
-12	2016-10-06 10:43:58.816	Users shall be able to include markdown in the comments/reviews or descriptions they add.	webapp-markdown	\N	1	202	1	203	4	1	\N	\N
+7	2016-09-08 22:46:47.411	Spread and attract high quality projects and users who create an thriving ecosystem of creators and open collaborative projects	adoption	0	1	137	1	138	25	1	312	25
 23	2016-10-19 21:04:51.518	Manage data	data-management	\N	1	257	5	258	\N	3	\N	\N
 13	2016-10-11 21:06:27.145	Develop a web application in which users can create, browse, visualize and edit Jies.	webapp	\N	1	223	1	224	\N	2	\N	\N
 24	2016-10-19 21:12:37.023		webpage	\N	1	262	5	263	\N	3	\N	\N
@@ -598,9 +612,24 @@ COPY goal (id, creationdate, description, goaltag, parentstate, state, createdec
 14	2016-10-17 16:04:44.406	The webapp shall include a jie browser which fetch jies from the server and display them graphically to the user	jiemap	\N	1	237	1	238	13	2	\N	\N
 18	2016-10-17 16:10:30.488	The jiemap shall allow the user to get Jies from the server using filters e.g. keywords, tags	filtered-query	\N	1	241	1	242	14	2	\N	\N
 19	2016-10-18 21:10:52.734	The jiemap shall allow the user to move elements around by dragging and dropping them. It should feel as if the Jies were physical elements 	user-manipulation	\N	1	247	1	248	14	2	\N	\N
+11	2016-10-04 17:40:30.046	Create an introductory video to be placed in the Welcome Page. The video shall describe the CollectiveOne basic concepts, and provide basic instructions on how to interact with the webapp	intro-video	\N	1	193	1	194	8	1	\N	\N
 20	2016-10-18 21:13:41.637	The webapp shall allow the user to save,  keep track and edit multiple personal jiemaps. 	custom-jiemaps	\N	1	249	1	250	13	2	\N	\N
+12	2016-10-06 10:43:58.816	Users shall be able to include markdown in the comments/reviews or descriptions they add in the platform	markdown	\N	1	202	1	203	4	1	\N	\N
 21	2016-10-18 21:16:10.321	The webapp shall be able to display more than one jiemap in a single page 	multiple-jiemaps	\N	1	251	1	252	13	2	\N	\N
+27	2016-10-27 09:19:01.969	Define, describe and clarify the CollectiveOne method	method-definition	\N	1	313	1	314	25	1	\N	\N
 22	2016-10-18 21:18:11.555	All elements (Jies, baos and urls) shall be drag and droppable from one jiemap to another 	dd-multiple-jiemaps	\N	1	253	1	254	21	2	\N	\N
+1	2016-08-28 13:10:18.887	Define, describe and clarify the CollectiveOne method	basic-concept	0	1	70	1	71	27	1	316	27
+3	2016-08-28 13:16:30.799	Define and update the  Web Application data and funcional models	model	0	1	74	1	75	10	1	191	10
+4	2016-08-28 13:18:01.937	Build, update and optimize the Web Application frontend	frontend	0	1	76	1	77	10	1	190	10
+2	2016-08-28 13:13:56.758	Define, analyze, test and optimize the CollectiveOne decision mechanism	decision-mechanism	0	1	72	1	73	27	1	315	27
+8	2016-09-08 23:00:24.308	Prepare tutorials, presentations and documents to help new contributors learn the status of the project fast	learning	0	1	140	1	141	7	1	192	7
+6	2016-09-01 23:47:23.177	Build,  update, expand and optimize the web application backend 	backend	0	1	99	1	100	10	1	188	10
+25	2016-10-26 19:57:18.497	Develop and manage an organic set of methods and tools that are widely used by people all over the world in order to successfully create and manage complex and meaningful collaborative projects	vision	\N	1	307	1	308	\N	1	\N	\N
+26	2016-10-27 09:16:49.199	Create tools that help users to create and manage projects following the CollectiveOne method	tools	\N	1	309	1	310	25	1	\N	\N
+10	2016-10-04 17:33:18.485	Develop a Web Application in which users can create and manage projects following the CollectiveOne method	webapp	0	1	186	1	187	26	1	311	26
+29	2016-10-27 09:26:45.691	Present the CollectiveOne project at different forums to improve its visibility and extend its reach	public-relations	\N	1	319	1	320	7	1	\N	\N
+28	2016-10-27 09:24:20.217	Promote the CollectiveOne platform spread by attracting new projects and users	marketing	\N	1	317	1	318	7	1	\N	\N
+30	2016-10-27 09:43:57.604	Integrate the web application with other services like cloud storage, git repositories or messaging apps	integration	\N	1	321	1	322	6	1	\N	\N
 \.
 
 
@@ -621,8 +650,6 @@ COPY activity (id, creationdate, event, type, argument_id, bid_id, cbtion_id, de
 4	2016-09-13 22:07:22.285	assigned	0	\N	\N	56	\N	\N	1
 5	2016-09-13 22:07:27.422	accepted	1	\N	45	\N	\N	\N	1
 6	2016-09-13 22:07:27.478	accepted	0	\N	\N	56	\N	\N	1
-7	2016-09-15 14:21:57.806	proposed	2	\N	\N	\N	\N	9	1
-8	2016-09-15 14:22:13.271	accepted	2	\N	\N	\N	\N	9	1
 9	2016-09-15 14:23:21.834	created	1	\N	46	\N	\N	\N	1
 10	2016-09-15 14:23:36.469	assigned	1	\N	46	\N	\N	\N	1
 11	2016-09-15 14:23:36.469	assigned	0	\N	\N	41	\N	\N	1
@@ -674,14 +701,10 @@ COPY activity (id, creationdate, event, type, argument_id, bid_id, cbtion_id, de
 57	2016-10-03 15:14:08.84	created	1	\N	56	\N	\N	\N	1
 58	2016-10-03 15:14:18.123	assigned	1	\N	56	\N	\N	\N	1
 59	2016-10-03 15:14:36.503	accepted	1	\N	56	\N	\N	\N	1
-60	2016-10-04 17:30:55.831	webapp-backend proposed as parent	2	\N	\N	\N	\N	9	1
-61	2016-10-04 17:31:03.98	webapp-backend accepted as parent	2	\N	\N	\N	\N	9	1
 62	2016-10-04 17:33:18.537	proposed	2	\N	\N	\N	\N	10	1
 63	2016-10-04 17:33:34.758	accepted	2	\N	\N	\N	\N	10	1
 64	2016-10-04 17:34:08.481	webapp proposed as parent	2	\N	\N	\N	\N	6	1
 65	2016-10-04 17:34:57.849	webapp accepted as parent	2	\N	\N	\N	\N	6	1
-66	2016-10-04 17:35:30.583	webapp proposed as parent	2	\N	\N	\N	\N	5	1
-67	2016-10-04 17:35:43.984	webapp accepted as parent	2	\N	\N	\N	\N	5	1
 68	2016-10-04 17:35:47.643	webapp proposed as parent	2	\N	\N	\N	\N	4	1
 69	2016-10-04 17:35:57.377	webapp proposed as parent	2	\N	\N	\N	\N	3	1
 70	2016-10-04 17:35:57.844	webapp accepted as parent	2	\N	\N	\N	\N	4	1
@@ -865,6 +888,37 @@ COPY activity (id, creationdate, event, type, argument_id, bid_id, cbtion_id, de
 251	2016-10-26 10:46:30.542	created	0	\N	\N	93	\N	\N	1
 252	2016-10-26 10:51:54.042	accepted	1	\N	77	\N	\N	\N	1
 253	2016-10-26 11:01:47.026	created	0	\N	\N	94	\N	\N	1
+254	2016-10-26 15:59:06.741	created	0	\N	\N	95	\N	\N	1
+255	2016-10-26 15:59:22.535	opened for bidding	0	\N	\N	95	\N	\N	1
+256	2016-10-26 15:59:38.976	deleted	0	\N	\N	95	\N	\N	1
+257	2016-10-26 16:00:18.441	created	0	\N	\N	96	\N	\N	1
+258	2016-10-26 16:00:34.995	opened for bidding	0	\N	\N	96	\N	\N	1
+259	2016-10-26 16:42:54.751	created	1	\N	78	\N	\N	\N	1
+260	2016-10-26 16:43:17.558	assigned	1	\N	78	\N	\N	\N	1
+261	2016-10-26 16:43:27.049	accepted	1	\N	78	\N	\N	\N	1
+262	2016-10-26 16:45:58.072	created	0	\N	\N	97	\N	\N	1
+263	2016-10-26 19:57:18.556	proposed	2	\N	\N	\N	\N	25	1
+264	2016-10-26 19:57:38.552	accepted	2	\N	\N	\N	\N	25	1
+265	2016-10-27 02:15:13.763	accepted	3	\N	\N	\N	292	\N	1
+266	2016-10-27 09:16:49.241	proposed	2	\N	\N	\N	\N	26	1
+267	2016-10-27 09:17:01.395	accepted	2	\N	\N	\N	\N	26	1
+268	2016-10-27 09:17:19	tools proposed as parent	2	\N	\N	\N	\N	10	1
+269	2016-10-27 09:17:25.285	tools accepted as parent	2	\N	\N	\N	\N	10	1
+270	2016-10-27 09:17:50.747	vision proposed as parent	2	\N	\N	\N	\N	7	1
+271	2016-10-27 09:17:57.46	vision accepted as parent	2	\N	\N	\N	\N	7	1
+272	2016-10-27 09:19:02.025	proposed	2	\N	\N	\N	\N	27	1
+273	2016-10-27 09:19:19.973	accepted	2	\N	\N	\N	\N	27	1
+274	2016-10-27 09:19:49.879	method-definition proposed as parent	2	\N	\N	\N	\N	2	1
+275	2016-10-27 09:19:57.919	method-definition proposed as parent	2	\N	\N	\N	\N	1	1
+276	2016-10-27 09:20:10.014	method-definition accepted as parent	2	\N	\N	\N	\N	1	1
+277	2016-10-27 09:20:10.014	method-definition accepted as parent	2	\N	\N	\N	\N	2	1
+278	2016-10-27 09:24:20.376	proposed	2	\N	\N	\N	\N	28	1
+279	2016-10-27 09:26:45.84	proposed	2	\N	\N	\N	\N	29	1
+280	2016-10-27 09:27:05.217	accepted	2	\N	\N	\N	\N	29	1
+281	2016-10-27 09:27:05.217	accepted	2	\N	\N	\N	\N	28	1
+282	2016-10-27 09:43:57.792	proposed	2	\N	\N	\N	\N	30	1
+283	2016-10-27 09:44:15.471	accepted	2	\N	\N	\N	\N	30	1
+284	2016-10-27 09:49:59.237	created	0	\N	\N	98	\N	\N	1
 \.
 
 
@@ -1025,6 +1079,7 @@ COPY cbtions_bids (cbtion_id, bids_id) FROM stdin;
 82	75
 86	76
 92	77
+96	78
 \.
 
 
@@ -1176,9 +1231,9 @@ COPY voters (id, weight, voteruser_id) FROM stdin;
 4	0.5	5
 5	100	1
 2	262	3
-3	95	4
 6	101	5
 1	2189	1
+3	100	4
 \.
 
 
@@ -1288,7 +1343,6 @@ COPY theses (id, castdate, value, weight, author_id, decision_id) FROM stdin;
 28	2016-08-28 13:14:45.251	1	1700	1	72
 29	2016-08-28 13:16:33.757	1	1700	1	74
 30	2016-08-28 13:18:35.898	1	1700	1	76
-31	2016-08-28 13:18:36.903	1	1700	1	78
 32	2016-08-28 13:20:24.96	1	1700	1	47
 33	2016-08-28 16:19:20.447	1	1730	1	80
 34	2016-08-28 18:26:01.955	1	1730	1	81
@@ -1348,7 +1402,6 @@ COPY theses (id, castdate, value, weight, author_id, decision_id) FROM stdin;
 88	2016-09-13 22:05:17.078	1	1878	1	147
 89	2016-09-13 22:07:21.285	1	1878	1	152
 90	2016-09-13 22:07:27.234	1	1878	1	153
-91	2016-09-15 14:22:09.556	1	1886	1	154
 92	2016-09-15 14:23:31.46	1	1886	1	156
 93	2016-09-15 14:23:40.298	1	1886	1	157
 94	2016-09-18 18:21:48.633	1	1901	1	133
@@ -1373,11 +1426,11 @@ COPY theses (id, castdate, value, weight, author_id, decision_id) FROM stdin;
 113	2016-09-30 15:43:42.249	1	1976	1	180
 114	2016-10-03 15:14:14.752	1	1986	1	183
 115	2016-10-03 15:14:32.043	1	1986	1	184
-116	2016-10-04 17:30:59.907	1	2011	1	185
 117	2016-10-04 17:33:28.16	1	2011	1	186
 118	2016-10-04 17:34:54.09	1	2011	1	188
-119	2016-10-04 17:35:38.761	1	2011	1	189
 120	2016-10-04 17:35:50.724	1	2011	1	190
+91	2016-09-15 14:22:09.556	1	1886	1	\N
+116	2016-10-04 17:30:59.907	1	2011	1	\N
 121	2016-10-04 17:36:00.84	1	2011	1	191
 122	2016-10-04 17:36:14.184	1	2011	1	192
 123	2016-10-04 17:49:21.453	1	2011	1	195
@@ -1452,6 +1505,7 @@ COPY theses (id, castdate, value, weight, author_id, decision_id) FROM stdin;
 192	2016-10-23 21:43:20.608	0	2124	1	216
 194	2016-10-25 10:49:07.598	1	2124	1	286
 195	2016-10-25 10:49:33.9	1	2124	1	287
+210	2016-10-26 19:57:25.562	1	2189	1	307
 196	2016-10-25 10:52:36.515	1	2124	1	288
 197	2016-10-25 10:52:49.75	1	2124	1	289
 198	2016-10-25 15:08:37.431	1	2134	1	281
@@ -1461,6 +1515,22 @@ COPY theses (id, castdate, value, weight, author_id, decision_id) FROM stdin;
 202	2016-10-26 10:42:18.758	1	2184	1	294
 203	2016-10-26 10:43:04.463	1	2184	1	296
 204	2016-10-26 10:51:46.524	1	2184	1	297
+205	2016-10-26 15:59:16.682	1	2189	1	300
+206	2016-10-26 15:59:34.034	1	2189	1	301
+207	2016-10-26 16:00:27.055	1	2189	1	302
+208	2016-10-26 16:43:08.78	1	2189	1	304
+209	2016-10-26 16:43:25.612	1	2189	1	305
+31	2016-08-28 13:18:36.903	1	1700	1	\N
+119	2016-10-04 17:35:38.761	1	2011	1	\N
+211	2016-10-27 09:16:53.222	1	2189	1	309
+212	2016-10-27 09:17:23.192	1	2189	1	311
+213	2016-10-27 09:17:55.324	1	2189	1	312
+214	2016-10-27 09:19:14.836	1	2189	1	313
+215	2016-10-27 09:20:01.433	1	2189	1	315
+216	2016-10-27 09:20:02.853	1	2189	1	316
+217	2016-10-27 09:26:58.37	1	2189	1	317
+218	2016-10-27 09:27:00.781	1	2189	1	319
+219	2016-10-27 09:44:03.926	1	2189	1	321
 \.
 
 
@@ -1505,7 +1575,6 @@ COPY decisions_thesescast (decision_id, thesescast_id) FROM stdin;
 72	28
 74	29
 76	30
-78	31
 47	32
 80	33
 81	34
@@ -1565,7 +1634,6 @@ COPY decisions_thesescast (decision_id, thesescast_id) FROM stdin;
 147	88
 152	89
 153	90
-154	91
 156	92
 157	93
 133	94
@@ -1590,10 +1658,8 @@ COPY decisions_thesescast (decision_id, thesescast_id) FROM stdin;
 180	113
 183	114
 184	115
-185	116
 186	117
 188	118
-189	119
 190	120
 191	121
 192	122
@@ -1678,12 +1744,27 @@ COPY decisions_thesescast (decision_id, thesescast_id) FROM stdin;
 294	202
 296	203
 297	204
+300	205
+301	206
+302	207
+304	208
+305	209
+307	210
+309	211
+311	212
+312	213
+313	214
+315	215
+316	216
+317	217
+319	218
+321	219
 \.
 
 
 ALTER TABLE decisions_thesescast ENABLE TRIGGER ALL;
 
--- Completed on 2016-10-26 16:02:02 CEST
+-- Completed on 2016-10-27 11:51:27 CEST
 
 --
 -- PostgreSQL database dump complete

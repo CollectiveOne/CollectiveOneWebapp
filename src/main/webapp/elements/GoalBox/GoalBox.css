@@ -76,30 +76,21 @@
 }
 
 #goal_div #show_subgoals_btn {
-	height: 15px;
-	width: 120px;
 	float:left;
-	margin-left: 10px;
-	display: none;
-	margin-top: 5px;
+	margin-left:10px;
+	display:none;
 }
 
 #goal_div #new_subgoal_btn {
-	height: 15px;
-	width: 120px;
 	float:left;
-	margin-left: 10px;
-	display: none;
-	margin-top: 5px;
+	margin-left:10px;
+	display:none;
 }
 
 #goal_div #show_control_btn {
-	height: 15px;
-	width: 120px;
 	float:left;
-	margin-left: 10px;
-	display: none;
-	margin-top: 5px;
+	margin-left:10px;
+	display:none;
 }
 
 #goal_div #propose_parent_form_container {
