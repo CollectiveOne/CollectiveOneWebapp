@@ -13,7 +13,7 @@
 <div id="content_pane">
 	
 	<div id="preferred_browser_div" class="cp_box_gray_slim">
-		<p>The preferred browsers for this page are Chrome or Firefox</p>
+		<p>The preferred browsers for visiting this page are Chrome or Firefox</p>
 	</div>
 	
 	<div id="presentation_container">
