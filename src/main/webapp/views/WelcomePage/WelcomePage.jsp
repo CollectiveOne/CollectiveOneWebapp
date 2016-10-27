@@ -22,22 +22,27 @@
 	
 	<div id="under_presentation">
 		<div class="row_container">
-			<p>Take a look at the white paper draft</p>
+			<div id="first_box" class="cp_box_gray_slim">
+				<p>Take a look at the white paper draft</p>
 				<a id=link_to_gdoc_container href="https://docs.google.com/document/d/1C9dCnPbKEZzCqaLYjmhsYIv0t0ehlaRbzwRaMZtzNNA" target='_blank'>
 					<img id="logo" src="../images/GDocs.png">
 				</a>
-		</div>
-		<div class="row_container">
-			<p>Join the conversation at </p>
-			<a id=link_to_reddit_container href="https://www.reddit.com/r/CollectiveOne/" target='_blank'>
-				<img id="logo" src="../images/Reddit.png">
-			</a>
-			<a id=link_to_slack_container href="https://collectiveone.slack.com/" target='_blank'>
-				<img id="logo" src="../images/Slack.png">
-			</a>
-		</div>
-		<div class="row_container">
-			<p>Contact us at <a href="mailto:contact@collectiveone.org" target="_top">contact@collectiveone.org</a></p>
+			</div>
+			
+			<div id="second_box" class="cp_box_gray_slim">
+				<p>Join the conversation at </p>
+				<a id=link_to_reddit_container href="https://www.reddit.com/r/CollectiveOne/" target='_blank'>
+					<img id="logo" src="../images/Reddit.png">
+				</a>
+				<a id=link_to_slack_container href="https://collectiveone.slack.com/" target='_blank'>
+					<img id="logo" src="../images/Slack.png">
+				</a>
+			</div>
+			
+			<div id="third_box" class="cp_box_gray_slim">
+				<p>Contact us at</p>
+				 <a href="mailto:contact@collectiveone.org" target="_top">contact@collectiveone.org</a>
+			</div>
 		</div>
 	</div>
 </div>
