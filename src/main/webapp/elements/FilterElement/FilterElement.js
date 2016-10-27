@@ -187,8 +187,15 @@ FilterElement.prototype.getFiltersAndUpdateData = function() {
 }
 
 FilterElement.prototype.updateData = function() {
-	this.getDataCall.call([],this.filters, this.callBack, this.callObject);
+	$("#loading_gif",this.container).show();
+	this.getDataCall.call([],this.filters, this.dataReceivedCallback, this);
 }
+
+FilterElement.prototype.dataReceivedCallback = function(data) {
+	$("#loading_gif",this.container).hide();
+	this.callBack.call(this.callObject,data);
+}
+
 
 FilterElement.prototype.projectListReceivedCallback = function(projectList) {
 	np = projectList.length;

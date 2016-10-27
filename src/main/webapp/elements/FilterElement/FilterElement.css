@@ -105,6 +105,13 @@
 	padding-top: 10px;
 }
 
+#loading_gif {
+	margin: 0 auto;
+	width: 50px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
 #filter_contents p {
 	font-size:10pt;
 	display:inline;
