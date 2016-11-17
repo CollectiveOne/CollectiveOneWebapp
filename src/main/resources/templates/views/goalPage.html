@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+	layout:decorator="layouts/main">
+<head>
+	<script type="text/javascript" th:src="@{/views/goalPage.js}"></script>
+	<script type="text/javascript" th:src="@{/elements/goalBox/goalBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/goalBox/goalBox.css}" />
+	
+	
+	<script th:src="@{/elements/cbtionList/cbtionList.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionList/cbtionList.css}"/>
+	
+	<!-- TODO these dependencies should be loaded dynamically when cbtionList is needed -->
+	<script type="text/javascript" th:src="@{/elements/cbtionBox/cbtionBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionBox/cbtionBox.css}"/>
+	<script type="text/javascript" th:src="@{/elements/decisionBase/decisionBase.js}"></script>
+	<script type="text/javascript" th:src="@{/elements/decisionBoxSmall/decisionBoxSmall.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/decisionBoxSmall/decisionBoxSmall.css}"/>
+	<script th:src="@{/elements/filterElement/filterElement.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/filterElement/filterElement.css}"/>
+	
+	<title>CollectiveOne - Goal</title>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		/* request parameters are sent back to JS by thymeleaf model */
+		GLOBAL.REQ_goalTag = [[${goalTag}]]; 
+		GLOBAL.REQ_projectName = [[${projectName}]];
+	/*]]>*/
+	</script>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<div id="goal_container"></div>
+		<div id="cbtions_div">
+			<div id="cbtions_container" class="cp_box_gray_thick"></div>
+		</div>
+	</div>
+</body>
+</html>

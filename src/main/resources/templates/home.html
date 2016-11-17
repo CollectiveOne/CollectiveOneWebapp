@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	layout:decorator="layouts/main">
+<head>
+<title>CollectiveOne - Welcome</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/views/home.css}" />
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(document).ready(function() {
+			setTimeout(function() {
+				$("#preferred_browser_div").slideUp();
+			}, 3000);
+		});
+	/*]]>*/
+	</script>
+</head>
+<body>
+
+	<div layout:fragment="content_pane">
+		<div id="preferred_browser_div" class="cp_box_gray_slim">
+			<p>The preferred browsers for visiting this page are Google
+				Chrome or Mozilla Firefox</p>
+		</div>
+
+		<div id="presentation_container">
+			<div id="video_container">
+				<iframe id="video_iframe" 
+					src="https://www.youtube.com/embed/QT0T2EvtLok" frameborder="0"
+					allowfullscreen="true"> </iframe>
+			</div>
+		</div>
+
+		<div id="under_presentation">
+			<div class="row_container">
+				<div id="first_box" class="cp_box_gray_slim">
+					<p>Take a look at the white paper draft</p>
+					<a id="link_to_gdoc_container"
+						href="https://docs.google.com/document/d/1C9dCnPbKEZzCqaLYjmhsYIv0t0ehlaRbzwRaMZtzNNA"
+						target='_blank'> <img id="logo" src="../images/GDocs.png"></img>
+					</a>
+				</div>
+
+				<div id="second_box" class="cp_box_gray_slim">
+					<p>Join the conversation at</p>
+					<a id="link_to_reddit_container"
+						href="https://www.reddit.com/r/CollectiveOne/" target='_blank'>
+						<img id="logo" src="../images/Reddit.png"></img>
+					</a> <a id="link_to_slack_container"
+						href="https://collectiveone.slack.com/" target='_blank'> <img
+						id="logo" src="../images/Slack.png"></img>
+					</a>
+				</div>
+
+				<div id="third_box" class="cp_box_gray_slim">
+					<p>Contact us at</p>
+					<a href="mailto:contact@collectiveone.org" target="_top">contact@collectiveone.org</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

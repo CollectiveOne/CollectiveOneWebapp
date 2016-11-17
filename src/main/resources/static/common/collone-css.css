@@ -1,0 +1,260 @@
+#container {
+	overflow: auto;
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+#container #logo {
+	width: 210px;
+}
+
+#container #behind_nav {
+	float: left;
+	width: 100%;
+	height: 51px;
+}
+
+#container #active_projects {
+	float: right;
+	clear: both;
+	width: auto;
+	margin-bottom: 20px;
+}
+
+#container #active_projects div {
+	float: left;
+}
+
+#container #active_projects #active_projects_list label {
+	cursor: pointer;
+	margin-right: 2px;
+	-webkit-user-select: none;
+}
+
+.navbar-brand {
+	padding-top:0px;
+	padding-bottom: 0px;
+}
+
+.navbar {
+	margin-bottom: 0px;
+	padding-right:10px;
+}
+
+@media (max-width: 876px) {
+  .navbar-header {
+      float: none;
+  }
+  .navbar-left,.navbar-right {
+      float: none !important;
+  }
+  .navbar-toggle {
+      display: block;
+  }
+  .navbar-collapse {
+      border-top: 1px solid transparent;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .navbar-fixed-top {
+      top: 0;
+      border-width: 0 0 1px;
+  }
+  .navbar-collapse.collapse {
+      display: none!important;
+  }
+  .navbar-nav {
+      float: none!important;
+      margin-top: 7.5px;
+  }
+  .navbar-nav>li {
+      float: none;
+  }
+  .navbar-nav>li>a {
+      padding-top: 10px;
+      padding-bottom: 10px;
+  }
+  .collapse.in{
+      display:block !important;
+  }
+}
+
+.navbar a {
+	color:#cccccc;
+}
+
+textarea.form-control {
+	resize:vertical;
+}
+
+#container .cp_navbar-right form {
+	display: inline;
+} 
+	
+
+#container .cp_box_gray_thick {
+	border-color: #cccccc;
+	border-style:solid;
+	border-radius:5px;
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-left:10px;
+	padding-right: 10px;
+	border-width:3px;
+}
+
+#container .cp_box_gray_thin {
+	border-color: #cccccc;
+	border-style:solid;
+	border-radius:5px;
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-left:10px;
+	padding-right: 10px;
+	border-width:2px;
+}
+
+#container .cp_box_gray_slim {
+	border-color: #cccccc;
+	border-style:solid;
+	border-radius:5px;
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-left:10px;
+	padding-right: 10px;
+	border-width:1px;
+}
+
+#container .cp_btn_icon {
+	width: 20px;
+	cursor:pointer;
+}
+
+#container .cp_btn_icon img {
+	width:100%;
+	height:100%;
+}
+
+#container #login_form {
+	max-width:300px;
+	margin:0 auto;
+}
+
+#container #signup_form {
+	max-width:300px;
+	margin:0 auto;
+}
+
+#container #new_cbtion_form {
+	max-width:600px;
+	margin:0 auto;
+}
+
+#container #bottom {
+	position: relative;
+	width:100%;
+	height:50px;
+	text-align:center;
+	clear:both;
+	margin-top: 30px;
+}
+
+#container #top #top_right #active_projects {
+	float:left;
+	padding-top: 30px;
+	padding-left: 10px;
+}
+
+#container #top #top_right #active_projects .active_project_btn {
+	float:left;
+	padding-top:3px;
+	padding-bottom:3px;
+	padding-left:10px;
+	padding-right:10px;
+	margin-right:5px;
+	margin-bottom:5px;
+}
+
+#container #top #top_right #active_projects .active_project_btn_selected {
+	float:left;	
+	padding-top:3px;
+	padding-bottom:3px;
+	padding-left:10px;
+	padding-right:10px;
+	margin-right:5px;
+	margin-bottom:5px;
+	color:#CC0000;
+}
+
+#container #license_div {
+	text-align:center;
+	font-size: 12px;
+	font-style: italic;
+}
+
+#container #license_div p {
+	
+}
+
+#container #output_div {
+	position:fixed;
+	top: 0px;
+	left:calc(50% - 100px);
+	margin-top:0px;
+	margin-bottom:0px;
+	white-space: nowrap;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border-radius: 5px;
+}
+
+#container #output_div p {
+	color: white;
+	white-space: nowrap;
+	font-size: 12px;
+	text-align:center;
+}
+
+#container #content_pane {
+	width: calc(100%);
+	overflow: auto;
+	min-height: 600px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+
+/* page specific goalList*/
+#content_pane #list_of_elements .goalBox_div {
+	width: calc(100%);
+	overflow: auto;
+	max-width: 800px;
+	margin: 0 auto;
+	margin-top: 10px;
+}
+
+/* page specific goalPage*/
+#container #goal_container {
+	width: 100%;
+	overflow: auto;
+	margin-bottom:10px;
+}
+
+#container #cbtions_div {
+	width: 100%;
+	overflow: auto;
+}
+
+#container #cbtions_container {
+	overflow: auto;
+}
+
+/* page specific decisionList*/
+#content_pane #list_of_elements .decisionbox_div {
+	width: calc(100%);
+	overflow: auto;
+	margin-top: 10px;
+}
+
+

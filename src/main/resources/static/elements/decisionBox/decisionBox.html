@@ -1,0 +1,102 @@
+<div id="decision_div" class="cp_box_gray_thick">
+	<div id="decision_info_div">
+		<div id="left_div">
+			<h4 id="description"></h4>
+			<div id="from_to_state"></div>
+			<div id="metrics">
+				<div class="progress-group">
+					<label>yes ratio:</label> 
+					<label id="yesRatio" class="badge"></label>
+					<div class="progress">
+						<div id="yesRatio_bar" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0"
+					  		aria-valuemin="0" aria-valuemax="100" style="width:50%">
+					  	</div>
+					</div>
+				</div>
+				<div class="progress-group">
+					<label>voted ratio:</label> 
+					<label id="votedRatio" class="badge"></label>
+					<div class="progress">
+						<div id="votedRatio_bar" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0"
+					  		aria-valuemin="0" aria-valuemax="100" style="width:50%">
+					  	</div>
+					</div>
+				</div>
+				<div class="progress-group">
+					<label>clarity:</label> 
+					<label id="clarity" class="badge"></label>
+					<div class="progress">
+						<div id="clarity_bar" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0"
+					  		aria-valuemin="0" aria-valuemax="100" style="width:50%">
+					  	</div>
+					</div>
+				</div>
+				<div class="progress-group">
+					<label>stability:</label> 
+					<label id="stability" class="badge"></label>
+					<div class="progress">
+						<div id="stability_bar" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0"
+					  		aria-valuemin="0" aria-valuemax="100" style="width:50%">
+					  	</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="right_div">
+			<div id="right-top">
+				<div id="project_div"></div>
+				<div id="state_div">
+					State:
+					<label id="state" class="label label-info"></label>
+				</div>
+				<div id="verdictTime_div"></div>
+				<div id="verdict_div"></div>
+			</div>
+			<div id="right-bottom">
+				Your opinion
+				<div id="accept_div" class="btn btn-info">
+					Yes
+				</div>
+				<div id="reject_div" class="btn btn-info">
+					No
+				</div>
+			</div>
+		</div>
+		
+		<div id="arguments_expand_div" class="btn btn-xs btn-info">
+		</div>
+	</div>
+
+	<div id="discussion_div">
+		<div id="arg_container_no_div" class="panel panel-info">
+			<div class="panel-heading clearfix">
+				<b>for voting "No"</b>
+				<div id="arguments_no_new_btn" class="btn btn-xs btn-info pull-right">new</div>
+			</div>
+			<div class="panel-body">
+				<div id="arg_no_new_form" class="arg_new_form">
+					<textarea id="arg_no_new_description" rows="3" class="form-control"></textarea>
+					<div id="arg_no_new_save" class="btn btn-xs btn-info save-btn">
+						save
+					</div>
+				</div>
+				<div id="args_no_div" class="args_list_div"></div>
+			</div>
+		</div>
+		<div id="arg_container_yes_div" class="panel panel-info">
+			<div class="panel-heading clearfix">
+				<b>for voting "Yes"</b>
+				<div id="arguments_yes_new_btn" class="btn btn-xs btn-info pull-right">new</div>
+			</div>
+			<div class="panel-body">
+				<div id="arg_yes_new_form" class="arg_new_form">
+					<textarea id="arg_yes_new_description" rows="3" class="form-control"></textarea>
+					<div id="arg_yes_new_save" class="btn btn-xs btn-info save-btn">
+						save
+					</div>
+				</div>
+				<div id="args_yes_div" class="args_list_div"></div>
+			</div>
+		</div>
+	</div>
+</div>	

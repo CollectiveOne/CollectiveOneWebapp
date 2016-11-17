@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"
+	layout:decorator="layouts/main">
+<head>
+	<script th:src="@{/elements/cbtionList/cbtionList.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionList/cbtionList.css}"/>
+	
+	<!-- TODO these dependencies should be loaded dynamically when cbtionList is needed -->
+	<script type="text/javascript" th:src="@{/elements/cbtionBox/cbtionBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionBox/cbtionBox.css}"/>
+	<script type="text/javascript" th:src="@{/elements/decisionBase/decisionBase.js}"></script>
+	<script type="text/javascript" th:src="@{/elements/decisionBoxSmall/decisionBoxSmall.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/decisionBoxSmall/decisionBoxSmall.css}"/>
+	<script th:src="@{/elements/filterElement/filterElement.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/filterElement/filterElement.css}"/>
+	
+	<title>CollectiveOne - Search Contributions</title>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(document).ready(function() {
+			var cbtionList = new CbtionList("#content_pane",{});
+			docReadyCommon(cbtionList.init,cbtionList);
+		});
+	/*]]>*/
+	</script>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+	</div>
+</body>
+</html>

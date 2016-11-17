@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+	layout:decorator="layouts/main">
+<head>
+
+	<script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.js}"></script>
+	<script type="text/javascript" th:src="@{/views/projectPage.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/views/projectPage.css}"/>
+	
+	<script type="text/javascript" th:src="@{/elements/goalBox/goalBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/goalBox/goalBox.css}" />
+	
+	
+	<script th:src="@{/elements/cbtionList/cbtionList.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionList/cbtionList.css}"/>
+	<!-- TODO these dependencies should be loaded dynamically when cbtionList is needed -->
+	<script type="text/javascript" th:src="@{/elements/cbtionBox/cbtionBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionBox/cbtionBox.css}"/>
+	<script type="text/javascript" th:src="@{/elements/decisionBase/decisionBase.js}"></script>
+	<script type="text/javascript" th:src="@{/elements/decisionBoxSmall/decisionBoxSmall.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/decisionBoxSmall/decisionBoxSmall.css}"/>
+	<script th:src="@{/elements/filterElement/filterElement.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/filterElement/filterElement.css}"/>
+	
+	<title th:text="'CollectiveOne - ' + ${projectName}">CollectiveOne - Project</title>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		/* request parameters are sent back to JS by thymeleaf model */
+		GLOBAL.REQ_projectName = [[${projectName}]];
+	/*]]>*/
+	</script>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<div id="project_container" class="cp_box_gray_thick">
+			<div id="project_name"><h2></h2></div>
+			<div id="description_panel" class="panel panel-info">
+				<div class="panel-heading"><b>Description</b></div>
+			 	<div class="panel-body" id="project_description"></div>
+			</div>
+			<div id="goals_panel" class="panel panel-info">
+				<div class="panel-heading"><b>Goals</b></div>
+			 	<div class="panel-body" id="project_goals"></div>
+			</div>
+			<div id="contributors_panel" class="panel panel-info">
+				<div class="panel-heading"><b>Contributors</b></div>
+			 	<div id="contributors_chart_container" class="cp_box_gray_slim">
+					<canvas id="contributors_chart" width="100%" height="100%"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

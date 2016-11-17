@@ -1,0 +1,61 @@
+#argument_div {
+	min-height: 50px;
+	max-height: 300px;
+	width: calc(100%);
+	margin-top:5px;
+	padding: 3px;
+	overflow: auto;
+}
+
+#argument_div p {
+	font-size: 12px;
+}
+
+#argument_div #arg_left_div {
+	width: 75%;
+	float:left;
+	overflow: auto;
+	padding-left: 3px;
+	padding-right: 7px;
+}
+
+#argument_div #arg_right_div {
+	width: calc(25% - 10px);
+	float:left;
+	overflow: hidden;
+	text-align: center;
+}
+
+#argument_div #arg_left_div #description_div {
+	width:100%;
+	float:left;
+	overflow: auto;
+}
+
+#argument_div #arg_left_div #creator_div {
+	float: right;
+	margin-right: 15px;
+}
+
+#argument_div #backers_div {
+	width: 100%;
+	float:left;
+	overflow: hidden;
+}
+
+#argument_div #back_div {
+	width: 100%;
+	height: 20px;
+	float:left;
+	overflow: hidden;
+	background-color: #cccccc;
+	border-radius: 5px;
+	text-align: center;
+	margin-top: 15px;
+	cursor: pointer;
+	-webkit-user-select: none;
+}
+
+#argument_div #back_div p {
+	margin-top:3px;
+}

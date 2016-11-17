@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"
+	layout:decorator="layouts/main">
+<head>
+	<title>CollectiveOne - Login</title>
+</head>
+<body>
+		
+	<div layout:fragment="content_pane">
+		
+		<form name="f" id="login_form" th:action="@{/login}" method="post" class="form-signin">
+		    <h2 class="form-signin-heading">Please sign in</h2>
+		    <div th:if="${param.error != null}" class="alert alert-info" >    
+                Invalid username or password.
+            </div>
+            <div th:if="${param.logout != null}" class="alert alert-info" > 
+                You have been logged out.
+            </div>
+            <div th:if="${message}" class="alert alert-info" th:text="${message}">
+            	message
+            </div>
+            <label for="username" class="sr-only">Username</label>
+		    <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="true" />
+		    <label for="password" class="sr-only">Password</label>
+		    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="true" />
+		    <br />
+		    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+		    <br />
+		    <a th:href="@{/user/forgotPassword}" th:text="#{label.form.forgotPswdLink}">I'v forgot my password</a>
+		</form>
+		
+	</div>
+		
+</body>
+</html>

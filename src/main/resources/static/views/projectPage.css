@@ -1,0 +1,19 @@
+#project_container #project_name {
+	text-align: center;
+}
+
+#project_container #description_panel {
+	margin-top: 20px;
+}
+
+#project_container #contributors_panel {
+	margin-top: 10px;
+}
+
+#project_container #contributors_chart_container {
+	width: 100%;
+	max-width:400px;
+	margin: 0 auto;
+	margin-top:10px;
+	margin-bottom:10px;
+}

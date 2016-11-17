@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	layout:decorator="layouts/main">
+<head>
+<title th:text="#{label.form.title}">form</title>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<div>
+			
+
+			<form id="signup_form" action="#" th:action="@{/user/signupSubmit}" th:object="${user}"
+				method="post">
+				<h2 th:text="#{label.form.title}">form</h2>
+				<br />
+				<div class="form-group">
+					<label for="username">Username:</label> 
+					<input type="text" class="form-control" th:field="*{username}"></input>
+				</div>
+				<div class="form-group">
+					<label for="email">Email:</label> 
+					<input type="email" class="form-control" th:field="*{email}"></input>
+				</div>
+				<div class="form-group">
+					<label for="pwd">Password:</label>
+					<input type="password" class="form-control" th:field="*{password}"></input>
+				</div>
+				<div class="form-group">
+					<label for="pwd">Confirm Password:</label>
+					<input type="password" class="form-control" th:field="*{passwordConfirm}"></input>
+				</div>
+				<br /> 
+				<button type="submit" class="btn btn-lg btn-primary btn-block">Submit</button>
+				<br /> <a th:href="@{/login}" th:text="#{label.form.loginLink}">login</a>
+			</form>
+			
+		</div>
+	</div>
+</body>
+
+</html>

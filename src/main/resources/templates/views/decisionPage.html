@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"
+	layout:decorator="layouts/main">
+<head>
+	<script type="text/javascript" th:src="@{/elements/decisionBase/decisionBase.js}"></script>
+	<script type="text/javascript" th:src="@{/elements/decisionBox/decisionBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/decisionBox/decisionBox.css}" />
+	<script type="text/javascript" th:src="@{/elements/argumentBox/argumentBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/argumentBox/argumentBox.css}" />
+	
+	<script type="text/javascript" th:src="@{/elements/filterElement/filterElement.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/filterElement/filterElement.css}"/>
+
+	
+	<title>CollectiveOne - Decision</title>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(document).ready(function() {
+			var decisionDto = {id: [[${decisionId}]]};
+			var decisionBox = new DecisionBox($("#decision_container"),decisionDto);
+			decisionBox.update();
+		});
+	/*]]>*/
+	</script>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<br />
+		<div id="decision_container"></div>
+	</div>
+</body>
+</html>

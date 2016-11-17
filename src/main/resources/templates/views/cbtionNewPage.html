@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorator="layouts/main">
+<head>
+	<title>CollectiveOne - Create Contribution</title>
+	
+	<script type="text/javascript" th:src="@{/views/cbtionNewPage.js}"></script>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<div sec:authorize="isAuthenticated()">
+			<form id="new_cbtion_form" action="#" th:action="@{/views/cbtionNewSubmit}" th:object="${cbtion}" method="post">
+				<h2>Create a new contribution request</h2>
+				<br />
+	
+				<div class="form-group">
+					<label for="sel1">Project:</label>
+					<select id="project_select" class="form-control" th:field="*{projectName}"></select>
+				</div>
+				<div class="form-group">
+					<label for="title">Title:</label> 
+					<input type="text" class="form-control" th:field="*{title}"></input>
+				</div>
+				<div class="form-group">
+					<label for="description">Description:</label>
+					<textarea type="text" class="form-control" rows="5" th:field="*{description}"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="product">Product:</label>
+					<input type="text" class="form-control" th:field="*{product}"></input>
+				</div>
+				<div class="form-group">
+					<label for="goalTag">Goal:</label>
+					<input id="goalTag_selector" type="text" class="form-control" th:field="*{goalTag}"></input>
+				</div>
+	
+				<button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

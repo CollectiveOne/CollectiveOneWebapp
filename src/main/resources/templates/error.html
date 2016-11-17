@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorator="layouts/main">
+<head>
+<title>CollectiveOne - Login</title>
+</head>
+<body>
+
+	<div layout:fragment="content_pane">
+
+		<div class="alert alert-danger">
+			Unexpected Error
+		</div>
+			
+		<div th:if="${message != null}" class="alert alert-info" th:text="${message}"> 
+             Message
+         </div>	
+
+	</div>
+
+</body>
+</html>

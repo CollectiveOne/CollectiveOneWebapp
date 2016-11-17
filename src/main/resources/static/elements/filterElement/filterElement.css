@@ -1,0 +1,101 @@
+#filter_div {
+	width: 100%;
+}
+
+#filter_bar {
+	width: 100%;
+}
+
+#filter_bar #filter_btn{
+	width: 120px;
+	margin-left: 5px;
+	margin-bottom: 10px;
+}
+
+#filter_bar #page_btns {
+	float: right;
+}
+
+#filter_bar #page_btns button {
+	float: right;
+	margin-right:5px;
+}
+
+#filter_bar #page_btns select {
+	float: right;
+	margin-right:5px;
+	width:auto;
+	margin-bottom: 10px;
+}
+
+#filter_bar #page_btns div {
+	float: right;
+	margin-right:5px;
+	height: 34px;
+	padding-top:12px;
+	padding-left:30px;
+	padding-right:30px;
+	border-radius: 5px;
+	margin-bottom: 10px;
+}
+
+
+
+#filter_contents {
+	overflow: auto;
+	margin-top: 10px;
+	margin-bottom: 14px;
+	border-radius:5px;
+	clear:both;
+	display: none;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	max-width: 678px;
+}
+
+#loading_gif {
+	margin: 0 auto;
+	width: 50px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#filter_contents #filter_projects {
+	margin-left: 15px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	float:left;
+}
+
+#filter_contents #filter_states {
+	margin-left: 15px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	float:left;
+}
+
+#filter_contents #filter_inputs {
+	width: 130px;
+	margin-left: 15px;
+	float:left;
+}
+
+#filter_contents #filter_inputs_cbtion {
+	width: 130px;
+	margin-left: 15px;
+	float:left;
+	display:none;
+}
+
+#filter_contents #filter_inputs_decision {
+	width: 130px;
+	margin-left: 15px;
+	float:left;
+	display:none;
+}
+
+#filter_contents #filter_update {
+	clear:both;
+	float: right;
+	margin-right: 10px;
+}

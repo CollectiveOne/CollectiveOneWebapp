@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"
+	layout:decorator="layouts/main">
+<head>
+	<script type="text/javascript" th:src="@{/views/decisionListPage.js}"></script>
+	<script type="text/javascript" th:src="@{/elements/decisionBase/decisionBase.js}"></script>
+	<script type="text/javascript" th:src="@{/elements/decisionBox/decisionBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/decisionBox/decisionBox.css}" />
+	<script type="text/javascript" th:src="@{/elements/argumentBox/argumentBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/argumentBox/argumentBox.css}" />
+	
+	<script type="text/javascript" th:src="@{/elements/filterElement/filterElement.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/filterElement/filterElement.css}"/>
+	
+	<title>CollectiveOne - Browse Decisions</title>
+	
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<div id="filter_container"></div>
+		<div id="list_of_elements"></div>
+	</div>
+</body>
+</html>

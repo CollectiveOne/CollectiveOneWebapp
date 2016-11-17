@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"
+	layout:decorator="layouts/main">
+<head>
+	<script type="text/javascript" th:src="@{/elements/cbtionBoxComplete/cbtionBoxComplete.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionBoxComplete/cbtionBoxComplete.css}" />
+	
+	<!-- TODO these dependencies should be loaded dynamically when cbtionBoxComplete is needed -->	
+	<script type="text/javascript" th:src="@{/elements/decisionBase/decisionBase.js}"></script>
+	<script type="text/javascript" th:src="@{/elements/decisionBoxSmall/decisionBoxSmall.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/decisionBoxSmall/decisionBoxSmall.css}"/>
+	
+	<script type="text/javascript" th:src="@{/elements/bidBox/bidBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/bidBox/bidBox.css}" />
+	<script type="text/javascript" th:src="@{/external/jquery-ui-datepicker.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/external/jquery-ui-datepicker.css}"/>
+	<script type="text/javascript" th:src="@{/elements/userBox/userBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/userBox/userBox.css}" />
+	
+	<script type="text/javascript" th:src="@{/elements/reviewsElement/reviewsElement.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/reviewsElement/reviewsElement.css}" />
+	<script type="text/javascript" th:src="@{/elements/reviewsElement/reviewItem.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/reviewsElement/reviewItem.css}" />
+	<script type="text/javascript" th:src="@{/elements/commentsBox/commentsBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/commentsBox/commentsBox.css}" />
+	<script type="text/javascript" th:src="@{/elements/commentsBox/commentItem.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/commentsBox/commentItem.css}" />
+	
+	<title th:text="'CollectiveOne | ' + ${cbtionTitle}">CollectiveOne - Contribution</title>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(document).ready(function() {
+			var cbtionDto = {id: [[${cbtionId}]]};
+			var cbtionBoxComplete = new CbtionBoxComplete("#cbtion_container",cbtionDto);
+			cbtionBoxComplete.update();
+		});
+	/*]]>*/
+	</script>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<br />
+		<div id="cbtion_container"></div>
+	</div>
+</body>
+</html>
