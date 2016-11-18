@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 	GLOBAL.goalNewPage = new GoalNewPage("#content_pane");
-	docReadyCommon(GLOBAL.goalNewPage.init,GLOBAL.goalNewPage);
+	docReadyCommon(GLOBAL.goalNewPage.init,GLOBAL.goalNewPage,true);
 	
 });
 

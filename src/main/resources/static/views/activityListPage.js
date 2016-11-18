@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	GLOBAL.activityListPage = new ActivityListPage("#content_pane");
-	docReadyCommon(GLOBAL.activityListPage.init,GLOBAL.activityListPage);
+	docReadyCommon(GLOBAL.activityListPage.init,GLOBAL.activityListPage,true);
 
 });
 

@@ -243,7 +243,6 @@ ServerComm.prototype = {
 		},
 
 		userGet : function(username,callbackFunction,callbackObj) {
-
 			$.ajax({
 				type : 'POST',
 				url : '/rest/users/get/'+username,
@@ -257,7 +256,6 @@ ServerComm.prototype = {
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
 					console.log(errorThrown);
-					showOutput("error getting user");
 				}
 			});
 		},
@@ -372,15 +370,10 @@ ServerComm.prototype = {
 		},
 
 		userGetProjectsContributed : function(username,callbackFunction,callbackObj) {
-			var data = {
-					'username' : username
-			};
-			var datastr = JSON.stringify(data);
-
 			$.ajax({
 				type : 'POST',
-				url : '../json/UserGetProjectsContributed',
-				data : datastr,
+				url : '/rest/users/getProjectsContributed/'+username,
+				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {

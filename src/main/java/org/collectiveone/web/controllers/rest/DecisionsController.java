@@ -11,7 +11,6 @@ import org.collectiveone.services.DecisionDtoListRes;
 import org.collectiveone.services.Filters;
 import org.collectiveone.web.dto.ArgumentBackDto;
 import org.collectiveone.web.dto.ArgumentDto;
-import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.DecisionDto;
 import org.collectiveone.web.dto.ThesisDto;
 import org.springframework.beans.factory.annotation.Autowired;

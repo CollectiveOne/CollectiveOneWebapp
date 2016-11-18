@@ -1,7 +1,11 @@
-function docReadyCommon(callbackFun,callbackObj) {
-	
-	/* update the page every time an active project is selected*/
-	GLOBAL.sessionData.activeProjectsController = new ActiveProjectsController("#active_projects",callbackFun,callbackObj);
+function docReadyCommon(callbackFun,callbackObj,addActiveProjects) {
+	if(addActiveProjects) {
+		/* update the page every time an active project is selected*/
+		GLOBAL.sessionData.activeProjectsController = new ActiveProjectsController("#active_projects",callbackFun,callbackObj);
+	} else {
+		/* directly call callback*/
+		callbackFun.call(callbackObj);
+	}
 }
 
 

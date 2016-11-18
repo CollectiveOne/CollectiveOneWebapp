@@ -1,3 +1,7 @@
+#project_container{
+	margin-top:10px;
+}
+
 #project_container #project_name {
 	text-align: center;
 }

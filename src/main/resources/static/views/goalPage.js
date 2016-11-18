@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	GLOBAL.goalPage = new GoalPage();
-	docReadyCommon(GLOBAL.goalPage.init,GLOBAL.goalPage);
+	docReadyCommon(GLOBAL.goalPage.init,GLOBAL.goalPage,false);
 });
 
 function GoalPage(container_id) {

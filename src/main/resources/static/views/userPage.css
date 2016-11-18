@@ -1,0 +1,51 @@
+#user_container {
+	width: calc(100%);
+	overflow: auto;
+	margin-top:10px;
+}
+
+#user_container #username_div {
+	margin-top: 5px;
+	margin-bottom: 0;
+	margin-left: 10px;
+	margin-right: 0;
+	text-align: center;
+}
+
+#user_container #username {
+	clear:both;
+	font-size:35px;
+	font-weight: bold;
+	font-style:normal;
+}
+
+#user_container #projects_contributed_div {
+	margin-top: 20px;
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0;
+	clear:both;
+}
+
+#user_container #accepted_contributions_div {
+	margin-top: 20px;
+	clear:both;
+	overflow: auto;
+}
+
+#user_container .project_contributed {
+	clear:both;
+	font-size:16px;
+	margin-top:10px;
+	margin-left:10px
+}
+
+#user_container #contributions_list {
+	clear:both;
+	margin-top:10px;
+}
+
+
+
+
+

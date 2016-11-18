@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 	GLOBAL.cbtionNewPage = new CbtionNewPage("#content_pane");
-	docReadyCommon(GLOBAL.cbtionNewPage.init,GLOBAL.cbtionNewPage);
+	docReadyCommon(GLOBAL.cbtionNewPage.init,GLOBAL.cbtionNewPage,true);
 	
 });
 

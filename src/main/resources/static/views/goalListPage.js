@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 	GLOBAL.goalListPage = new GoalListPage("#content_pane");
-	docReadyCommon(GLOBAL.goalListPage.draw,GLOBAL.goalListPage);
+	docReadyCommon(GLOBAL.goalListPage.draw,GLOBAL.goalListPage,true);
 
 });
 

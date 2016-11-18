@@ -44,8 +44,14 @@
 	padding-top: 9px;
 }
 
+.cbtion_div #cb_left_with_promotion {
+	width:100%;
+	float:left;
+	overflow:auto;
+}
+
 .cbtion_div #cb_left_div {
-	width: calc(100% - 25px - 220px);
+	width: calc(100% - 25px);
 	float:left;
 	margin-top: 0px;
 	min-width: 229px;

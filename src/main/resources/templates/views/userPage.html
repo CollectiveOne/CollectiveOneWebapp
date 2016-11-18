@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"
+	layout:decorator="layouts/main">
+<head>
+	<script type="text/javascript" th:src="@{/views/userPage.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/views/userPage.css}"/>
+	
+	<script th:src="@{/elements/cbtionList/cbtionList.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionList/cbtionList.css}"/>
+	<!-- TODO these dependencies should be loaded dynamically when cbtionList is needed -->
+	<script type="text/javascript" th:src="@{/elements/cbtionBox/cbtionBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionBox/cbtionBox.css}"/>
+	<script type="text/javascript" th:src="@{/elements/decisionBase/decisionBase.js}"></script>
+	<script type="text/javascript" th:src="@{/elements/decisionBoxSmall/decisionBoxSmall.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/decisionBoxSmall/decisionBoxSmall.css}"/>
+	<script th:src="@{/elements/filterElement/filterElement.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/filterElement/filterElement.css}"/>
+	
+	<title th:text="'CollectiveOne - ' + ${username}">CollectiveOne - User</title>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		/* request parameters are sent back to JS by thymeleaf model */
+		GLOBAL.REQ_username = [[${username}]];
+	/*]]>*/
+	</script>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<div id="user_container" class="cp_box_gray_thick">
+			<div id="username_div">
+				<h2></h2>
+			</div>
+			<div id="projects_contributed_div" class="cp_box_gray_slim">
+				Projects
+			</div>
+			<div id="accepted_contributions_div" class="cp_box_gray_slim">
+				Contributions
+				<div id="contributions_list"></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

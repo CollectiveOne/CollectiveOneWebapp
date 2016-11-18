@@ -15,8 +15,13 @@ CbtionList.prototype.draw = function(data) {
 
 CbtionList.prototype.boxLoaded = function(data) {
 
+	var activeProjects = [];
+	if(GLOBAL.sessionData.activeProjectsController) {
+		activeProjects = GLOBAL.sessionData.activeProjectsController.getActiveProjectsNames();
+	}
+	
 	var filters = {
-			projectNames : GLOBAL.sessionData.activeProjectsController.getActiveProjectsNames(),
+			projectNames : activeProjects,
 			stateNames: ["PROPOSED","OPEN","ASSIGNED"],
 			contributorUsername: [],
 			creatorUsernames: [],

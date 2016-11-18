@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	GLOBAL.decisionListPage = new DecisionListPage("#content_pane");
-	docReadyCommon(GLOBAL.decisionListPage.draw,GLOBAL.decisionListPage);
+	docReadyCommon(GLOBAL.decisionListPage.draw,GLOBAL.decisionListPage,true);
 });
 
 function DecisionListPage(container_id) {

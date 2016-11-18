@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	GLOBAL.projectPage = new ProjectPage("#content_pane");
-	docReadyCommon(GLOBAL.projectPage.init,GLOBAL.projectPage);
+	docReadyCommon(GLOBAL.projectPage.init,GLOBAL.projectPage,false);
 });
 
 function ProjectPage(container_id) {

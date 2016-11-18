@@ -24,6 +24,12 @@ public class ViewsController {
 	@Autowired
 	DbServicesImp dbServices;
 	
+	@RequestMapping("/userPageR/{username}")
+	public String userPage(@PathVariable("username") String username, Model model) {
+		model.addAttribute("username",username);
+		return "views/userPage";
+	}
+	
 	@RequestMapping("/activityListPageR")
 	public String activityList(Model model) {
 		return "views/activityListPage";
