@@ -45,9 +45,10 @@
 }
 
 .cbtion_div #cb_left_with_promotion {
-	width:100%;
+	width: calc(100% - 220px);
 	float:left;
 	overflow:auto;
+	min-width: 328px;
 }
 
 .cbtion_div #cb_left_div {
