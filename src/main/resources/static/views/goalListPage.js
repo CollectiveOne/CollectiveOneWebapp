@@ -24,7 +24,7 @@ GoalListPage.prototype.draw = function() {
 			nperpage : 15
 	};
 	
-	customElements = { 
+	var customElements = { 
 			stateNames: ["PROPOSED","ACCEPTED","NOT_ACCEPTED","DELETED"],
 			sortBy: [ { text:"New first", value:"CREATIONDATEDESC" },
 			          { text:"Old first", value:"CREATIONDATEASC" },

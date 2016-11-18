@@ -20,7 +20,7 @@ ActivityListPage.prototype.init = function() {
 			nperpage : 30
 	};
 
-	customElements = { 
+	var customElements = { 
 			stateNames: [],
 			sortBy: [ { text:"New first", value:"CREATIONDATEDESC" },
 			          { text:"Old first", value:"CREATIONDATEASC" } ]

@@ -29,7 +29,7 @@ CbtionList.prototype.boxLoaded = function(data) {
 			nperpage : 15
 	};
 
-	customElements = { 
+	var customElements = { 
 			stateNames: ["PROPOSED","OPEN","ASSIGNED","ACCEPTED","NOTOPENED","DELETED"],
 			sortBy: [ { text:"New first", value:"CREATIONDATEDESC" },
 			          { text:"Old first", value:"CREATIONDATEASC" },

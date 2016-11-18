@@ -20,7 +20,7 @@ DecisionListPage.prototype.draw = function() {
 			nperpage : 10
 	};
 	
-	customElements = { 
+	var customElements = { 
 			stateNames: ["IDLE","OPEN","CLOSED_ACCEPTED","CLOSED_DENIED","CLOSED_EXTERNALLY"],
 			sortBy: [ { text:"New first", value:"CREATIONDATEDESC" },
 			          { text:"Old first", value:"CREATIONDATEASC" },
