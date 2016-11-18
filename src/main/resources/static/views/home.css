@@ -45,33 +45,24 @@
 	margin-bottom: 40px;
 	margin: 0 auto;
 	overflow: auto;
-	max-width: 853px;
-}
-
-#container .row_container p {
-	font-size: 12px;
-	font-weight: normal;
-	font-style: italic;
-}
-
-#container .row_container a {
-	font-size: 12px;
+	max-width: 752px;
 }
 
 #container .row_container #first_box {
-	height: 82px;
-	max-width: 172px;
+	height: 68px;
+	width: 152px;
 	float:left;
 	margin-left: 10px;
 	margin-bottom: 5px;
+	overflow: auto;
 }
 
-#container .row_container #first_box p {
-	width: 90px;
-	display: block;
-	float: left;
-	padding-top: 5px;
+#container .row_container #first_box #first_box_text {
+	display:block;
+	float:left;
+	width: 75px;
 }
+
 
 #container .row_container #second_box {
 	height: auto;
@@ -79,17 +70,12 @@
 	float:left;
 	margin-left: 10px;
 	margin-bottom: 5px;
-}
-
-#container .row_container #second_box p {
-	width: 90px;
-	display: block;
-	float: left;
-	padding-top: 13px;
+	text-align: center;
+	padding-top: 6px;
 }
 
 #container .row_container #third_box {
-	height: 82px;
+	height: 64px;
 	max-width: 200px;
 	float:left;
 	margin-left: 10px;
@@ -97,35 +83,34 @@
 	margin-bottom: 5px;
 }
 
-#container .row_container #third_box p {
-	width: 90px;
-	display: block;
-	float: left;
-	padding-top: 9px;
-	margin-bottom: 3px;
-}
-
 #container #link_to_gdoc_container {
-	height: 60px;
-	width: 60px;
-	display: inline-block;
-	float: left;
+	height: 40px;
+	width: 40px;
+	display: block;
+	float: right;
 }
 
 #container #link_to_reddit_container {
-	height: 55px;
-	width: 154px;
+	width: 120px;
 	display: inline-block;
 	float: left;
+	margin: 0 auto;
 	margin-left: 10px;
 }
 
 #container #link_to_slack_container {
-	margin-top: 10px;
-	height: 50px;
-	width: 175px;
+	width: 125px;
 	display: inline-block;
 	float: left;
+	margin: 0 auto;
+	margin-top: 10px;
+}
+
+#container #link_to_github_container {
+	width: 92px;
+	display: inline-block;
+	margin: 0 auto;
+	margin-top: 8px;
 }
 
 #container #under_presentation img {
