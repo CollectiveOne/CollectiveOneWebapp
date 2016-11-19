@@ -63,7 +63,7 @@ public class ViewsController {
 		return "views/goalPage";
 	}
 	
-	@RequestMapping("/project/{projectName}")
+	@RequestMapping("/projectPageR/{projectName}")
 	public String projectPageR(@PathVariable("projectName") String projectName, Model model) {
 		model.addAttribute("projectName",projectName);
 		return "views/projectPage";

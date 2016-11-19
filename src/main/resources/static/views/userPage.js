@@ -42,10 +42,9 @@ UserPage.prototype.userProjectsContributedCallback = function(projectsContribute
 		var ppsTot = projectContributed.ppsTot;
 
 		var percentage = floatToChar(ppsContributed/ppsTot*100, 2);
-		var projectLink = "<a href=/views/ProjectPageR/"+projectContributed.projectName+">"+projectContributed.projectName+"</a>";
-
+		
 		$("#projects_contributed_div",this.container).append(
-		$("<p class=project_contributed>"+percentage+"% of "+projectLink+" with "+ppsContributed+ " of "+ppsTot+" pp's</p>"));	
+		$("<p class=project_contributed>"+percentage+"% of "+getProjectLink(projectContributed.projectName)+" with "+ppsContributed+ " of "+ppsTot+" pp's</p>"));	
 	}
 
 

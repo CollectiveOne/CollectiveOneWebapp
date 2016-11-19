@@ -11,16 +11,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 
 @Entity
-@SequenceGenerator(name="ver_token_seq", initialValue=1, allocationSize=100)
 public class VerificationToken {
 
     private static final int EXPIRATION = 60 * 24;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ver_token_seq")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     private String token;

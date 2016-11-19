@@ -89,7 +89,7 @@ function getUserPageLink(username) {
 }
 
 function getProjectLink(projectName) {
-	return "<a href=/views/project/"+projectName+">"+projectName+"</a>";
+	return "<a href=/views/projectPageR/"+projectName+">"+projectName+"</a>";
 }
 
 function LimitStrSize(strIn, size) {

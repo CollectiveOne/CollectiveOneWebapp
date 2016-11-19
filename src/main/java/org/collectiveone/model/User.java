@@ -7,18 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.UserDto;
 
 @Entity
 @Table( name = "APP_USERS" )
-@SequenceGenerator(name="users_seq", initialValue=1, allocationSize=100)
 public class User {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="users_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String email;
 	private String username;

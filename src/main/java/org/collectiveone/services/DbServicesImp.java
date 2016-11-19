@@ -178,9 +178,9 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void voterUpdate(Long userId, Long projectId) { 
+	public void voterUpdate(Long userId, Long projectId, double lastOne) { 
 		Long realmId = decisionRealmDao.getIdFromProjectId(projectId);
-		decisionRealmDao.updateVoter(realmId,userId,userPpointsInProjectGet(userId, projectId));
+		decisionRealmDao.updateVoter(realmId,userId,userPpointsInProjectGet(userId, projectId)+lastOne);
 	}
 
 	@Transactional
@@ -206,8 +206,10 @@ public class DbServicesImp {
 		projectAndPps.setPpsTot(project.getPpsTot());
 
 		Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(project.getId()),user.getId());
-		projectAndPps.setPpsContributed(voter.getWeight());
-
+		if(voter != null) {
+			projectAndPps.setPpsContributed(voter.getWeight());
+		}
+		
 		return projectAndPps;
 	}
 
@@ -412,7 +414,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void projectUpdatePpsTot(Long projectId) {
+	public void projectUpdatePpsTot(Long projectId, double lastOne) {
 		Project project = projectDao.get(projectId);
 
 		double ppsTot = 0.0;
@@ -420,7 +422,7 @@ public class DbServicesImp {
 			ppsTot += cbtion.getAssignedPpoints();
 		}
 
-		project.setPpsTot(ppsTot);
+		project.setPpsTot(ppsTot+lastOne);
 		projectDao.save(project);
 	}
 
@@ -1392,8 +1394,10 @@ public class DbServicesImp {
 					/* updated voter weight - This is the only place where PPS are transacted */
 					/* -----------------------------------------------------------------------*/
 
-					voterUpdate(bid.getCreator().getId(), bid.getCbtion().getProject().getId());
-					projectUpdatePpsTot(bid.getCbtion().getProject().getId());
+					// TODO review assignation logic as the current bid is not found in the list of bids accepted
+					
+					voterUpdate(bid.getCreator().getId(), bid.getCbtion().getProject().getId(),cbtion.getAssignedPpoints());
+					projectUpdatePpsTot(bid.getCbtion().getProject().getId(),cbtion.getAssignedPpoints());
 
 					/* -----------------------------------------------------------------------*/
 

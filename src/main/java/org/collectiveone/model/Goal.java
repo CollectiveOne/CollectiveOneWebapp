@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.GoalDto;
@@ -17,10 +16,9 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Table( name = "GOAL" )
-@SequenceGenerator(name="goals_seq", initialValue=1, allocationSize=100)
 public class Goal {
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="goals_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@ManyToOne
 	private Project project;

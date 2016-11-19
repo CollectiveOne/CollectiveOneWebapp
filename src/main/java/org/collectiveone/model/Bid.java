@@ -12,7 +12,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.BidDto;
@@ -20,11 +19,10 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Table( name = "BIDS" )
-@SequenceGenerator(name="bids_seq", initialValue=1, allocationSize=100)
 public class Bid {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bids_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@ManyToOne
 	private Cbtion cbtion = new Cbtion();

@@ -7,16 +7,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
 @Entity
 @Table(name = "PROMOTERS")
-@SequenceGenerator(name="promoters_seq", initialValue=1, allocationSize=100)
 public class Promoter {
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="promoters_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@ManyToOne
 	private User user;

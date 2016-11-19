@@ -13,7 +13,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
@@ -22,11 +21,10 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "DECISIONS")
-@SequenceGenerator(name="decisions_seq", initialValue=1, allocationSize=100)
 public class Decision {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="decisions_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@Lob
 	@Type(type = "org.hibernate.type.TextType")

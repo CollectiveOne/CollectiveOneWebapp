@@ -7,18 +7,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.ThesisDto;
 
 @Entity
 @Table( name = "THESES" )
-@SequenceGenerator(name="theses_seq", initialValue=1, allocationSize=100)
 public class Thesis {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="theses_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private int value;
 	private Timestamp castDate;

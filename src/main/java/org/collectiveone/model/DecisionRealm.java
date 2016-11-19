@@ -10,16 +10,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table( name = "DECISION_REALMS" )
-@SequenceGenerator(name="decision_realms_seq", initialValue=1, allocationSize=100)
 public class DecisionRealm {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="decision_realms_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Voter> voters = new ArrayList<Voter>();

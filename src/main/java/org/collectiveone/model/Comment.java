@@ -13,7 +13,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.CommentDto;
@@ -21,10 +20,9 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "COMMENTS")
-@SequenceGenerator(name="comments_seq", initialValue=1, allocationSize=100)
 public class Comment {
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="comments_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@ManyToOne
 	private User creator;

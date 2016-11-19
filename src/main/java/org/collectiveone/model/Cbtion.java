@@ -14,7 +14,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.CbtionDto;
@@ -22,11 +21,10 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Table( name = "CBTIONS" )
-@SequenceGenerator(name="cbtions_seq", initialValue=1, allocationSize=100)
 public class Cbtion {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="cbtions_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@ManyToOne
 	private Project project;

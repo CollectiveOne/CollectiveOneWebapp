@@ -13,7 +13,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.ArgumentDto;
@@ -21,10 +20,9 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "ARGUMENTS")
-@SequenceGenerator(name="arguments_seq", initialValue=1, allocationSize=100)
 public class Argument {
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="arguments_seq")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@ManyToOne
 	private User creator;
