@@ -30,6 +30,17 @@ public class StartUpMethods {
 	public void UpdateDecisionsStatus() {
 		
 		System.out.println("Filling DB");
+		/*AuthorizedEmail authEmail = new AuthorizedEmail();
+		authEmail.setEmail("p@x.com");
+		authEmail.setAuthorized(true);
+		authorizedEmailRepository.save(authEmail);
+		
+		createUser("pepoospina", 			"pepo.ospina@gmail.com", 	"pepoospina1", 		true);
+		createUser("estebanortizospina", 	"temp1@gmail.com", 			"Esteban1017", 		true);
+		createUser("mospina", 				"temp2@gmail.com", 			"amoajose", 		true);
+		createUser("jpmarindiaz", 			"temp3@gmail.com", 			"jpmarindiazx", 	true);
+		createUser("quiquin", 				"temp4@gmail.com", 			"quiquines", 		true);
+		createUser("collectiveone", 		"temp5@gmail.com", 			"collectiveone", 	false);*/
 		System.out.println("done");
 		
 	}

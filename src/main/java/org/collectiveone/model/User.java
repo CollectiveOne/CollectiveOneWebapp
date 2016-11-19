@@ -5,19 +5,20 @@ import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.UserDto;
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table( name = "APP_USERS" )
+@SequenceGenerator(name="users_seq", initialValue=1, allocationSize=100)
 public class User {
 
 	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy = "increment")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="users_seq")
 	private Long id;
 	private String email;
 	private String username;

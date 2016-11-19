@@ -6,20 +6,20 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table( name = "DECISION_REALMS" )
+@SequenceGenerator(name="decision_realms_seq", initialValue=1, allocationSize=100)
 public class DecisionRealm {
 	
 	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy = "increment")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="decision_realms_seq")
 	private Long id;
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Voter> voters = new ArrayList<Voter>();

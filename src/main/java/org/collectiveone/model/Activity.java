@@ -4,19 +4,20 @@ import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.ActivityDto;
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "ACTIVITY")
+@SequenceGenerator(name="activities_seq", initialValue=1, allocationSize=100)
 public class Activity {
 	@Id
-	@GeneratedValue(generator = "increment")
-	@GenericGenerator(name = "increment", strategy = "increment")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="activities_seq")
 	private Long id;
 	private Timestamp creationDate;
 	private String event;
