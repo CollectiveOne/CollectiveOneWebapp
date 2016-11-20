@@ -904,16 +904,10 @@ ServerComm.prototype = {
 		},
 		
 		reviewsGetOfCbtion : function(cbtionId,callbackFunction,callbackObj) {
-
-			var data = {
-					'cbtionId' : cbtionId
-			};
-			var datastr = JSON.stringify(data);
-
 			$.ajax({
 				type : 'POST',
-				url : '../json/ReviewsGetOfCbtion',
-				data : datastr,
+				url : '/rest/cbtions/getReviews/'+cbtionId,
+				data : '',
 				dataType : "json",
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {

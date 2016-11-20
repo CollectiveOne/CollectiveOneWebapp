@@ -80,8 +80,8 @@ CbtionBox.prototype.showReviews = function() {
 	GLOBAL.serverComm.reviewsGetOfCbtion(this.cbtion.id,this.reviewsReceivedCallback,this);
 }
 
-CbtionBox.prototype.reviewsReceivedCallback = function(data) {
-	var reviews = data.reviewDtos;
+CbtionBox.prototype.reviewsReceivedCallback = function(reviewDtos) {
+	var reviews = reviewDtos;
 
 	for(var ix in reviews) {
 		$("#cbtion_reviews_div",this.container).append("<div id=cbtion_review_container"+ix+" class=cbtion_review_container></div>")

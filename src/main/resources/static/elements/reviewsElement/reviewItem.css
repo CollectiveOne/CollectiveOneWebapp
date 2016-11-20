@@ -1,15 +1,9 @@
 #review_item_div {
 	min-height: 50px;
 	max-height: 300px;
-	width: calc(100% - 10px - 6px);
+	width: calc(100% - 5px);
 	clear:none;
-	border-radius:5px;
-	border-style:solid;
-	border-width:1px;
-	border-color: #cccccc;
-	margin-left:5px;
 	margin-top:5px;
-	padding: 3px;
 	overflow: auto;
 }
 
@@ -18,13 +12,13 @@
 }
 
 #review_item_div #review_left {
-	width: calc(100% - 10px);
+	width: calc(100%);
 	float:left;
 	margin-bottom: 5px;
 }
 
 #review_item_div #review_right {
-	width: calc(100% - 10px);
+	width: calc(100%);
 	float:left;
 	padding-left: 5px;
 	padding-right: 5px;
@@ -39,7 +33,7 @@
 	width: calc(100% - 85px);
 	float:left;
 	overflow: hidden;
-	padding-top: 2.5px;
+	font-size: 12px;
 }
 
 #review_item_div #review_right #review_description {

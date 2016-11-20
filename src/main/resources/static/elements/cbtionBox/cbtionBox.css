@@ -48,7 +48,7 @@
 	width: calc(100% - 220px);
 	float:left;
 	overflow:auto;
-	min-width: 328px;
+	min-width: 301px;
 }
 
 .cbtion_div #cb_left_div {
@@ -73,7 +73,6 @@
 }
 
 .cbtion_div #title_div {
-	height:20px;
 	width: 100%;
 	float:left;
 	margin-top: 5px;
@@ -84,7 +83,6 @@
 .cbtion_div #title_div a {
 	font-size: 16px;
 	cursor:pointer;
-	white-space: nowrap;
 }
 
 .cbtion_div #description_div {
@@ -182,13 +180,13 @@
 	float: left;
 	overflow: auto;
 	margin-bottom: 10px;
-	margin-left: 5px;
 	width: 100%;
 	display: none;
 }
 
 .cbtion_div .cbtion_review_container {
-	width: calc(50% - 7px );
+	width: 100%;
+	max-width: 450px;
 }
 
 

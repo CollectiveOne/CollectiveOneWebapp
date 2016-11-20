@@ -11,6 +11,7 @@ import org.collectiveone.services.Filters;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.CommentDto;
 import org.collectiveone.web.dto.ObjectPromote;
+import org.collectiveone.web.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -98,5 +99,10 @@ public class CbtionsController {
 			dbServices.commentPromote(commentPromote.getElementId(), logged.getId(), commentPromote.getPromoteUp());
 		}
 		return true;
+	}
+	
+	@RequestMapping(value="/getReviews/{id}", method = RequestMethod.POST)
+	public @ResponseBody List<ReviewDto> getReviews(@PathVariable Long id) {
+		return dbServices.cbtionGetReviewsDtos(id);
 	}
 }
