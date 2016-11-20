@@ -2,6 +2,7 @@ package org.collectiveone.web.dto;
 
 public class ReviewDto {
 	private Long id;
+	private Long bidId;
 	private String creatorUsername;
 	private long creationDate;
 	private String revieweeUsername;
@@ -13,6 +14,12 @@ public class ReviewDto {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public Long getBidId() {
+		return bidId;
+	}
+	public void setBidId(Long bidId) {
+		this.bidId = bidId;
 	}
 	public String getCreatorUsername() {
 		return creatorUsername;

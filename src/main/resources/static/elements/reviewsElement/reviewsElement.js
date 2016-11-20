@@ -11,18 +11,22 @@ ReviewsElement.prototype.updateData = function() {
 	GLOBAL.serverComm.reviewsGetOfBid(this.confData.bidId,this.reviewsReceivedCallback,this);
 }
 
-ReviewsElement.prototype.reviewsReceivedCallback = function(data) {
-	this.reviewsData.reviews = data.reviewDtos;
+ReviewsElement.prototype.reviewsReceivedCallback = function(reviewDtos) {
+	this.reviewsData.reviews = reviewDtos;
 	this.draw();
 }
 
 ReviewsElement.prototype.draw = function() {
-	this.container.load("../elements/ReviewsElement/ReviewsElement.html",this.reviewsBoxLoaded.bind(this));
+	this.container.load("/elements/reviewsElement/reviewsElement.html",this.reviewsBoxLoaded.bind(this));
 }
 
 ReviewsElement.prototype.reviewsBoxLoaded = function() {
 
 	$("#new_btn_div", this.container).click(this.newReviewClicked.bind(this));
+
+	if(isUserLogged()) {
+		$("#new_btn_div", this.container).show();
+	}
 
 	$(".rateyo").rateYo({
           precision: 0
@@ -77,13 +81,14 @@ ReviewsElement.prototype.newReviewSaveClicked = function() {
 		showOutput("please select one of the rate options","DarkRed")
 	} else {
 		var reviewDto = {
+				bidId : this.confData.bidId,
 				creatorUsername : GLOBAL.sessionData.userLogged.username,
 				rate: this.rateSelected,
 				description: $("#review_new_description",this.container).val() 
 		}
 
 		$("#review_new_form",this.container).hide();	
-		GLOBAL.serverComm.reviewNew(reviewDto,this.confData.bidId,this.reviewNewCallback,this);
+		GLOBAL.serverComm.reviewNew(reviewDto,this.reviewNewCallback,this);
 	}
 	
 }

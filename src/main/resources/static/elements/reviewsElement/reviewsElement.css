@@ -1,10 +1,6 @@
 #reviews_div {
-	width: calc(100% - 4px);
+	width: calc(100%);
 	clear:none;
-	border-radius:5px;
-	border-style:solid;
-	border-width:2px;
-	border-color: #cccccc;
 	overflow: auto;
 	min-height: 80px;
 	padding-top: 5px;
@@ -18,15 +14,13 @@
 	width: calc(100% - 20px);
 	float:left;
 	margin-left:10px;
-	margin-right:3px;
+	display: none;
 }
 
 #reviews_div #review_new_form {
-	width: calc(100% - 10px);
+	width: calc(100%);
 	float:left;
 	overflow:auto;
-	margin-left:5px;
-	margin-top:5px;
 	margin-bottom: 10px;
 	display: none;
 }
@@ -50,6 +44,7 @@
 	float:left;
 	overflow:auto;
 	margin-bottom: -1px;
+	height: 45px;
 }
 
 #reviews_div #review_new_rater .rate_subbox_container {
@@ -80,7 +75,6 @@
 }
 
 #reviews_div #review_new_rater #review_rate_stars_selector {
-	height: 35px;
 	width:100%;
 	margin-bottom: 5px;
 }
@@ -88,12 +82,12 @@
 #reviews_div #review_new_rater #review_rate_stars {
 	float: left;
 	clear: none;
+	margin-top: 5px;
 }
 
 #reviews_div #review_new_rater #review_rate_status {
 	float: left;
 	width: calc(100% - 170px);
-	height: 100%;
 	clear: none;
 }
 
@@ -104,7 +98,7 @@
 	clear: none;
 	margin-left: 25px;
 	font-size:22px;
-	margin-top:5px;
+	margin-top: 7px;
 }
 
 #reviews_div #review_new_rater #stars_status_txt {
@@ -114,7 +108,7 @@
 	clear: none;
 	margin-left: 5px;
 	font-size:10px;
-	margin-top: 7px;
+	margin-top: 9px;
 	text-align: center;
 	margin-right: 15px;
 }
@@ -122,15 +116,10 @@
 #reviews_div #review_new_description {
 	width: 100%;
 	float:left;
-	height: 40px;
-	overflow:auto;
-	border-radius:5px;
-	resize: vertical;
 }
 
 #reviews_div #review_new_save {
 	width: 120px;
 	float:right;
-	height: 15px;
 	margin-top: 5px;
 }

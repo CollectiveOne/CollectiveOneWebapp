@@ -15,7 +15,7 @@ ReviewItem.prototype.reviewReceivedCallback = function(reviewDtos) {
 }
 
 ReviewItem.prototype.draw = function() {
-	this.container.load("../elements/ReviewsElement/ReviewItem.html",this.reviewBoxLoaded.bind(this));
+	this.container.load("/elements/reviewsElement/reviewItem.html",this.reviewBoxLoaded.bind(this));
 }
 
 ReviewItem.prototype.reviewBoxLoaded = function() {
@@ -25,8 +25,8 @@ ReviewItem.prototype.reviewBoxLoaded = function() {
         readOnly: true,
         starWidth: "15px"
     });
-	$("#review_description", this.container).append("<p>"+this.review.description+"</p>");
+	$("#review_description", this.container).append(this.review.description);
 	var creationDate = new Date(this.review.creationDate);
-	$("#creation_info", this.container).append("<p>made by "+getUserPageLink(this.review.creatorUsername)+" on "+creationDate.toDateString()+"</p>");
+	$("#creation_info", this.container).append("made by "+getUserPageLink(this.review.creatorUsername)+" on "+creationDate.toDateString());
 	
 }

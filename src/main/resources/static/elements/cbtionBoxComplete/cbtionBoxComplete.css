@@ -35,6 +35,13 @@
 	padding-top: 7px;
 }
 
+#cbtion_div #cb_left_with_promotion {
+	width: calc(100% - 220px);
+	float:left;
+	overflow:auto;
+	min-width: 328px;
+}
+
 #cbtion_div #cbtion_data_div #cb_left_div {
 	width: calc(100% - 25px - 220px - 10px);
 	float:left;
@@ -106,8 +113,7 @@
 	float: left;
 }
 
-#cbtion_div #left_bottom_div a {
-}
+#cbtion_div #left_bottom_div a {display: block;float: left;}
 
 #cbtion_div #left_bottom_div p {
 	display: inline;

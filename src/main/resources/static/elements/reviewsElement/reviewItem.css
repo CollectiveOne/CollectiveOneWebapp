@@ -19,7 +19,6 @@
 
 #review_item_div #review_left {
 	width: calc(100% - 10px);
-	height: 15px;
 	float:left;
 	margin-bottom: 5px;
 }
@@ -40,13 +39,7 @@
 	width: calc(100% - 85px);
 	float:left;
 	overflow: hidden;
-	height: 15px;
 	padding-top: 2.5px;
-}
-
-#review_item_div #creation_info p {
-	font-size:10px;
-	display: inline;
 }
 
 #review_item_div #review_right #review_description {

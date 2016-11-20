@@ -864,28 +864,18 @@ ServerComm.prototype = {
 		},
 
 		
-		reviewNew : function(reviewDto,bidId,callbackFunction,callbackObj) {
-
-			var data = {
-					'bidId': bidId,
-					'reviewDto' : reviewDto
-			};
-
-			var datastr = JSON.stringify(data);
-
+		reviewNew : function(reviewDto,callbackFunction,callbackObj) {
+			var datastr = JSON.stringify(reviewDto);
 			$.ajax({
 				type : 'POST',
-				url : '../json/ReviewBidNew',
+				url : '/rest/bids/newReview',
 				data : datastr,
 				dataType : "json",
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
 					if (data) {
 						if (data.res) {
-							showOutput(data.msg,"DarkGreen");
 							callbackFunction.call(callbackObj,data); 
-						} else {
-							showOutput(data.msg,"DarkRed");
 						}
 					}
 				},
@@ -896,16 +886,10 @@ ServerComm.prototype = {
 		},
 
 		reviewsGetOfBid : function(bidId,callbackFunction,callbackObj) {
-
-			var data = {
-					'bidId' : bidId
-			};
-			var datastr = JSON.stringify(data);
-
 			$.ajax({
 				type : 'POST',
-				url : '../json/ReviewsGetOfBid',
-				data : datastr,
+				url : '/rest/bids/getReviews/'+bidId,
+				data : '',
 				dataType : "json",
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {

@@ -6,6 +6,7 @@ import org.collectiveone.services.DbServicesImp;
 import org.collectiveone.web.dto.BidDto;
 import org.collectiveone.web.dto.BidNewDto;
 import org.collectiveone.web.dto.DoneDto;
+import org.collectiveone.web.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -64,5 +65,22 @@ public class BidsController {
 		dbServices.bidMarkDone(doneDto);
 		return true;
 	}
+	
+	@RequestMapping(value="/getReviews/{id}", method = RequestMethod.POST)
+	public @ResponseBody List<ReviewDto> getReviews(@PathVariable Long id) {
+		return dbServices.bidGetReviewsDtos(id);
+	}
+	
+	@RequestMapping(value="/newReview", method = RequestMethod.POST)
+	public @ResponseBody boolean newReview(@RequestBody ReviewDto reviewDto) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(auth.isAuthenticated()) {
+			reviewDto.setCreatorUsername(auth.getName());
+			dbServices.reviewBidCreate(reviewDto);
+			return true;
+		}
+		return false;
+	}
+	
 	
 }

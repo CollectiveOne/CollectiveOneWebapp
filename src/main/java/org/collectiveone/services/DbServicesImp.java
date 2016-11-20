@@ -1704,12 +1704,12 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public String reviewBidCreate(ReviewDto reviewDto, Long bidId) {
+	public String reviewBidCreate(ReviewDto reviewDto) {
 
 		User creator = userDao.get(reviewDto.getCreatorUsername());
-		Bid bid = bidDao.get(bidId);
+		Bid bid = bidDao.get(reviewDto.getBidId());
 
-		if(bidDao.getReviewer(bidId, creator.getId()) == null) {
+		if(bidDao.getReviewer(reviewDto.getBidId(), creator.getId()) == null) {
 			User reviewee = bid.getCreator();
 
 			Review review = new Review();
