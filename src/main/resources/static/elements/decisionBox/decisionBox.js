@@ -13,7 +13,7 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 
 	if(isUserLogged()) {
 		this.drawVoteStatus();
-		$("#right-bottom").show()
+		$("#right-bottom",this.container).show()
 	}
 	
 	$("#accept_div",this.container).click(this.voteAccept.bind(this));
@@ -71,19 +71,19 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 		
 		var clarityRatio = floatToChar(this.decision.clarity*100,1);
 		$("#clarity",this.container).append(clarityRatio);
-		$("#clarity_bar").css('width', clarityRatio+'%').attr('aria-valuenow', clarityRatio);  
+		$("#clarity_bar",this.container).css('width', clarityRatio+'%').attr('aria-valuenow', clarityRatio);  
 		
 		var stabilityRatio = floatToChar(this.decision.stability*100,1);
 		$("#stability",this.container).append(stabilityRatio);
-		$("#stability_bar").css('width', stabilityRatio+'%').attr('aria-valuenow', stabilityRatio);  
+		$("#stability_bar",this.container).css('width', stabilityRatio+'%').attr('aria-valuenow', stabilityRatio);  
 
 		var yesRatio = floatToChar(this.decision.pest*100,1);
 		$("#yesRatio",this.container).append(yesRatio+"%");
-		$("#yesRatio_bar").css('width', yesRatio+'%').attr('aria-valuenow', yesRatio);  
+		$("#yesRatio_bar",this.container).css('width', yesRatio+'%').attr('aria-valuenow', yesRatio);  
 
 		var votedRatio = floatToChar(this.decision.ppsCum/this.decision.ppsTot*100,1);
 		$("#votedRatio",this.container).append(votedRatio+"%");
-		$("#votedRatio_bar").css('width', votedRatio+'%').attr('aria-valuenow', votedRatio);  
+		$("#votedRatio_bar",this.container).css('width', votedRatio+'%').attr('aria-valuenow', votedRatio);  
 
 		var verdictStr = [];
 		if(this.decision.verdict == 1) {
