@@ -161,6 +161,7 @@
 
 #cbtion_div #cbtion_data_div #creator_div {
 	float: left;
+	clear: both;
 }
 
 #cbtion_div #cbtion_data_div #state_div {

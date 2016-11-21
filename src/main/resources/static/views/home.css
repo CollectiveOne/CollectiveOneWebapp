@@ -45,7 +45,7 @@
 	margin-bottom: 40px;
 	margin: 0 auto;
 	overflow: auto;
-	max-width: 752px;
+	max-width: 670px;
 }
 
 #container .row_container #first_box {
@@ -81,6 +81,7 @@
 	margin-left: 10px;
 	text-align: center;
 	margin-bottom: 5px;
+	padding-top: 5px;
 }
 
 #container #link_to_gdoc_container {
@@ -111,6 +112,20 @@
 	display: inline-block;
 	margin: 0 auto;
 	margin-top: 8px;
+}
+
+#container #link_to_email_container {
+	width: 35px;
+	display: inline-block;
+	margin: 0 auto;
+	margin-left: 5px;
+}
+
+#container #link_to_twitter_container {
+	width: 50px;
+	display: inline-block;
+	margin: 0 auto;
+	margin-left: 3px;
 }
 
 #container #under_presentation img {

@@ -19,10 +19,16 @@
 	clear: both;
 	width: auto;
 	margin-bottom: 20px;
+	display: none;
 }
 
 #container #active_projects div {
 	float: left;
+}
+
+#container #active_projects label {
+	float: left;
+	margin-right: 5px;
 }
 
 #container #active_projects #active_projects_list label {
@@ -41,7 +47,7 @@
 	padding-right:10px;
 }
 
-@media (max-width: 876px) {
+@media (max-width: 907px) {
   .navbar-header {
       float: none;
   }
@@ -145,6 +151,11 @@ textarea.form-control {
 }
 
 #container #new_cbtion_form {
+	max-width:600px;
+	margin:0 auto;
+}
+
+#container #new_project_form {
 	max-width:600px;
 	margin:0 auto;
 }

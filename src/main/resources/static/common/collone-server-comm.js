@@ -225,115 +225,6 @@ ServerComm.prototype = {
 			});
 		},
 
-		userNew : function(userData,callbackFunction,callbackObj) {
-
-			var data = {
-					'username' : userData.username,
-					'password' : userData.password
-			};
-			var datastr = JSON.stringify(data);
-
-			$.ajax({
-				type : 'POST',
-				url : '../json/UserNew',
-				data : datastr,
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					if (data.res) {
-						if(data.res == "user created") {
-							showOutput("user_created", "DarkGreen");
-							setTimeout(function() {
-								callbackFunction.call(callbackObj);
-							}, 3000);
-						} else {
-							showOutput(data.res, "red");
-						}
-					} else {
-						showOutput(data);
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-					showOutput("error creating user");
-				}
-			});
-		},
-
-		userLogin : function(callbackFunction,callbackObj) {
-
-			var user = {
-					username : $('#user_username').val(),
-					password : $('#user_password').val()
-			};
-
-			var data = {
-					'user' : user
-			};
-			var datastr = JSON.stringify(data);
-
-			$.ajax({
-				type : 'POST',
-				url : '../json/UserLogin',
-				data : datastr,
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					callbackFunction.call(callbackObj,data.userLoggedDto);
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-				}
-			});
-		},
-
-		userLoggedGet : function(callbackFunction,callbackObj) {
-
-			var data = {
-					'user' : ''
-			};
-			var datastr = JSON.stringify(data);
-
-			$.ajax({
-				type : 'POST',
-				url : '../json/UserLoggedGet',
-				data : datastr,
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					if(data) {
-						callbackFunction.call(callbackObj,data);
-					}
-
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-				}
-			});
-		},
-
-		userLogout: function(callbackFunction,callbackObj) {
-
-			var data = {
-					'user' : ''
-			};
-			var datastr = JSON.stringify(data);
-
-			$.ajax({
-				type : 'POST',
-				url : '../json/UserLogout',
-				data : datastr,
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					callbackFunction.call(callbackObj,data.userLoggedDto);
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-				}
-			});
-		},
-
 		userGetProjectsContributed : function(username,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'POST',
@@ -459,35 +350,6 @@ ServerComm.prototype = {
 			});
 		},
 
-		projectNew : function(projectData,callbackFunction,callbackObj) {
-
-			var data = {
-					'projectDto' : projectData
-			};
-			var datastr = JSON.stringify(data);
-
-			$.ajax({
-				type : 'POST',
-				url : '../json/ProjectNew',
-				data : datastr,
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					if (data.res) {
-						showOutput("project created", "DarkGreen");
-						GLOBAL.sessionData.userLogged = data.userLoggedDto;
-						callbackFunction.call(callbackObj);
-					} else {
-						showOutput(data);
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-					showOutput("error creating project");
-				}
-			});
-		},
-		
 		projectContributorsGet : function(projectName,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'POST',
@@ -634,35 +496,6 @@ ServerComm.prototype = {
 					showOutput("error getting decision");
 				}
 			});
-		},
-
-		decisionNew : function(decisionData,callbackFunction,callbackObj) {
-
-			var data = {
-					'decisionDtoIn' : decisionData
-			};
-			var datastr = JSON.stringify(data);
-
-			$.ajax({
-				type : 'POST',
-				url : '../json/DecisionNew',
-				data : datastr,
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					if (data) {
-						showReqOutput(data.resStatus);
-						setTimeout(function() {
-							callbackFunction.call(callbackObj,data);
-						}, 3000);
-					} else {
-						showOutput(data);
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-				}
-			})
 		},
 
 		decisionVote : function(vote,decId, callbackFunction, callbackObj) {

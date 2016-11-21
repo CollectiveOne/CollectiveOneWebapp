@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorator="layouts/main">
+<head>
+	<title>CollectiveOne - Create Project</title>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<div sec:authorize="isAuthenticated()">
+			<form id="new_project_form" action="#" th:action="@{/views/projectNewSubmit}" th:object="${project}" method="post">
+				<h2>Create a new project</h2>
+				<br />
+	
+				<div th:if="${error_msg != null}" th:text="${error_msg}" class="alert alert-info" ></div>
+				<div class="form-group">
+					<label for="title">Name:</label> 
+					<input type="text" class="form-control" th:field="*{name}"></input>
+				</div>
+				<div class="form-group">
+					<label for="description">Description:</label>
+					<textarea type="text" class="form-control" rows="5" th:field="*{description}"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="title">Initial pp's:</label> 
+					<input type="number" class="form-control" th:field="*{ppsInitial}"></input>
+					(assigned to project creator)
+				</div>
+				
+				<button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

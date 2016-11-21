@@ -7,6 +7,7 @@ import org.collectiveone.services.DbServicesImp;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.DecisionDto;
 import org.collectiveone.web.dto.GoalDto;
+import org.collectiveone.web.dto.ProjectNewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -137,5 +138,32 @@ public class ViewsController {
 		return "redirect:/views/decisionPageR/"+decisionId;
 	}
 	
+	@Secured("ROLE_USER")
+	@RequestMapping("/projectNewPageR")
+	public String projectNewPage(Model model) {
+		model.addAttribute("project",new ProjectNewDto());
+		return "views/projectNewPage";
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/projectNewSubmit", method = RequestMethod.POST)
+	public String projectNewSubmit(ProjectNewDto projectDto, Model model) {
+		/* creator is the logged user */
+		
+		if(dbServices.isProjectAuthorized(projectDto.getName())) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			projectDto.setCreatorUsername(auth.getName()); 
+			
+			dbServices.projectCreate(projectDto);
+			dbServices.projectStart(projectDto.getName(),projectDto.getPpsInitial());
+			return "redirect:/views/projectPageR/"+projectDto.getName();
+		} else {
+			model.addAttribute("error_msg","Sorry, project creation needs authorization, plase contact us.");
+			model.addAttribute("project",projectDto);
+			return "views/projectNewPage";
+		}
+		
+		
+	}
 	
 }

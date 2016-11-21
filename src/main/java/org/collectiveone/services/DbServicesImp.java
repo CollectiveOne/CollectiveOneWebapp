@@ -11,6 +11,7 @@ import org.collectiveone.model.Activity;
 import org.collectiveone.model.ActivityType;
 import org.collectiveone.model.Argument;
 import org.collectiveone.model.ArgumentTendency;
+import org.collectiveone.model.AuthorizedProject;
 import org.collectiveone.model.Bid;
 import org.collectiveone.model.BidDoneState;
 import org.collectiveone.model.BidState;
@@ -32,6 +33,7 @@ import org.collectiveone.model.User;
 import org.collectiveone.model.Voter;
 import org.collectiveone.repositories.ActivityDao;
 import org.collectiveone.repositories.ArgumentDao;
+import org.collectiveone.repositories.AuthorizedProjectDao;
 import org.collectiveone.repositories.BidDao;
 import org.collectiveone.repositories.CbtionRepository;
 import org.collectiveone.repositories.CommentDao;
@@ -56,6 +58,7 @@ import org.collectiveone.web.dto.DoneDto;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.ProjectContributedDto;
 import org.collectiveone.web.dto.ProjectDto;
+import org.collectiveone.web.dto.ProjectNewDto;
 import org.collectiveone.web.dto.ReviewDto;
 import org.collectiveone.web.dto.ThesisDto;
 import org.collectiveone.web.dto.UserDto;
@@ -113,6 +116,9 @@ public class DbServicesImp {
 
 	@Autowired
 	protected CommentDao commentDao;
+	
+	@Autowired
+	protected AuthorizedProjectDao authorizedProjectDao;
 
 	public ResStatus getStatus() {
 		return status;
@@ -233,7 +239,17 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void projectCreate(ProjectDto projectDto) {
+	public boolean isProjectAuthorized(String projectName) {
+		AuthorizedProject projectAuthorized = authorizedProjectDao.get(projectName);
+		if(projectAuthorized != null) {
+			return true;
+		} else {
+			return false;
+		}
+    }
+	
+	@Transactional
+	public void projectCreate(ProjectNewDto projectDto) {
 
 		Project project = new Project();
 		projectDao.save(project);
@@ -252,7 +268,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void projectStart(String projectName) {
+	public void projectStart(String projectName, double ppsInit) {
 
 		User coprojects = userDao.get("collectiveone");
 		userDao.save(coprojects);
@@ -287,7 +303,7 @@ public class DbServicesImp {
 
 		bid.setCreator(creator);
 		bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		bid.setPpoints(100.0);
+		bid.setPpoints(ppsInit);
 		bid.setDescription("Create project "+ project.getName());
 		bid.setState(BidState.OFFERED);
 

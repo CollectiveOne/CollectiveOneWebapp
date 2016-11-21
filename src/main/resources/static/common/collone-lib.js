@@ -1,5 +1,6 @@
 function docReadyCommon(callbackFun,callbackObj,addActiveProjects) {
 	if(addActiveProjects) {
+		$("#active_projects").show();
 		/* update the page every time an active project is selected*/
 		GLOBAL.sessionData.activeProjectsController = new ActiveProjectsController("#active_projects",callbackFun,callbackObj);
 	} else {
