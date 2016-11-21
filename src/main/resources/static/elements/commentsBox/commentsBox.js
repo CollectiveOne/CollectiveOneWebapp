@@ -23,6 +23,10 @@ CommentsBox.prototype.commentsBoxLoaded = function() {
 
 	$("#new_comment_btn", this.container).click(this.newCommentClicked.bind(this));
 	$("#new_comment_save", this.container).click(this.newCommentSaveClicked.bind(this));
+	
+	if(isUserLogged()) {
+		$("#new_comment_btn", this.container).show();
+	}
 
 	$("#comments_list_div", this.container).empty();
 	for ( var ix in this.commentsData.comments ) {

@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2016-10-27 11:50:42 CEST
+-- Started on 2016-11-21 11:57:21 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -18,8 +18,8 @@ SET row_security = off;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 3195 (class 0 OID 959804)
--- Dependencies: 185
+-- TOC entry 3279 (class 0 OID 1402190)
+-- Dependencies: 190
 -- Data for Name: bids; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -27,218 +27,251 @@ SET SESSION AUTHORIZATION DEFAULT;
 
 ALTER TABLE bids DISABLE TRIGGER ALL;
 
-COPY bids (id, creationdate, deliverydate, description, donedate, donedescription, donestate, ppoints, state, accept_id, assign_id, cbtion_id, creator_id, deletedate) FROM stdin;
-21	2016-08-28 18:28:49.362	2016-09-10 00:00:00	I will clean and update the CSS files	\N	\N	\N	5	3	83	82	26	1	\N
-22	2016-08-28 22:22:45.548	2016-09-10 00:00:00	Presentation presented o a previous meeting 	\N	\N	\N	80	3	85	84	17	4	\N
-23	2016-08-28 22:23:47.786	2016-09-10 00:00:00	Already done	\N	\N	\N	10	3	87	86	10	4	\N
-24	2016-08-29 11:04:59.125	2016-09-10 00:00:00	I will just add the new property and include the date selector	\N	\N	\N	10	3	89	88	12	1	\N
-16	2016-08-23 22:12:11.299	2016-09-10 00:00:00	I will study nice, comfortable colours and propose it phantone code.	\N	\N	\N	5	5	52	51	21	4	\N
-25	2016-08-29 17:47:46.553	2016-08-28 22:00:00	I propose we use a simple set of grays	\N	\N	\N	5	3	91	90	21	1	\N
-1	2016-08-08 14:36:40.337	2016-09-10 00:00:00	Create project CoProjects	\N	\N	\N	100	3	2	1	1	1	\N
-2	2016-08-08 14:37:52.093	2016-09-10 00:00:00		\N	\N	\N	50	3	5	4	2	1	\N
-3	2016-08-10 10:58:38.38	2016-09-10 00:00:00		\N	\N	\N	500	3	10	9	5	1	\N
-4	2016-08-10 10:59:53.117	2016-09-10 00:00:00		\N	\N	\N	900	3	13	12	6	1	\N
-5	2016-08-10 11:01:12.005	2016-09-10 00:00:00		\N	\N	\N	100	3	16	15	7	1	\N
-6	2016-08-10 15:02:06.779	2016-09-10 00:00:00	I can produce a document (max. 10 pages) stipulating the key principles and functionalities of CoProjects. I'll compile all information from previous discussions. 	\N	\N	\N	20	3	24	23	4	3	\N
-10	2016-08-10 15:21:15.636	2016-09-10 00:00:00	I can produce a document with a set of basic models to conceptualise the decision problem, and solve them numerically.	\N	\N	\N	100	3	32	31	8	3	\N
-11	2016-08-10 15:30:32.557	2016-09-10 00:00:00	I can send a document summarising the different arguments that have been put forward, and make proposals to decide on critical points where there is dissent.	\N	\N	\N	60	3	34	33	9	3	\N
-12	2016-08-20 16:00:12.595	2016-09-10 00:00:00		\N	\N	\N	10	3	41	40	18	1	\N
-13	2016-08-20 16:02:13.81	2016-09-10 00:00:00	Already done	\N	\N	\N	10	3	44	43	19	1	\N
-14	2016-08-20 17:54:02.381	2016-09-10 00:00:00	This needs significant backend and frontend modifications	\N	\N	\N	30	3	47	46	3	1	\N
-15	2016-08-22 14:46:21.121	2016-09-10 00:00:00	I'll write the last version of the draft	\N	\N	\N	40	3	49	48	15	3	\N
-17	2016-08-26 08:48:15.505	2016-09-10 00:00:00	The DecisionBox will be very small so that it can be inserted into the BidBox and other places	\N	\N	\N	20	3	62	61	23	1	\N
-18	2016-08-26 18:55:15.387	2016-09-10 00:00:00	Update schema and migrated database	\N	\N	\N	10	3	67	66	24	1	\N
-19	2016-08-27 02:18:17.733	2016-09-10 00:00:00		\N	\N	\N	7	3	69	68	22	3	\N
-20	2016-08-28 16:08:02.437	2016-09-10 00:00:00	I wont use angularJs but simply create a new element similar to the others (bids, decisions...) so that it can be reused in other pages	\N	\N	\N	10	3	81	80	13	1	\N
-27	2016-08-29 21:54:23.413	2016-08-30 22:00:00	Just as described	\N	\N	\N	5	3	95	94	28	1	\N
-26	2016-08-29 18:36:02.199	2016-08-30 22:00:00	I will follow the same method used for goals and contributions 	\N	\N	\N	10	3	93	92	27	1	\N
-28	2016-09-01 17:15:48.681	2016-09-01 22:00:00	Already done	\N	\N	\N	15	3	97	96	29	1	\N
-29	2016-09-01 23:48:03.506	2016-09-02 22:00:00	Already done it, it was relatively heavy	\N	\N	\N	5	3	102	101	32	1	\N
-30	2016-09-04 12:57:56.493	2016-09-04 22:00:00	I have updated the Decision entity by adding an argument list. Created the argumen entity and created all new vies and API methods to access, create and back decisions arguments. It is functional. Further improvements can be done. Its already done and pushed.	\N	\N	\N	30	3	104	103	11	1	\N
-31	2016-09-05 16:00:54.089	2016-09-09 22:00:00	Temporary	\N	\N	\N	10	0	106	105	25	1	\N
-32	2016-09-05 17:02:21.371	2016-09-06 05:00:00	skype to explain remotes	\N	\N	\N	0.5	3	108	107	42	5	\N
-33	2016-09-06 15:09:44.542	2016-09-06 22:00:00	I have added this functionality already. It allows to rate between 5 possibilities and shows the list of reviews of a bid below it, if the user clicks on the show bids button.	\N	\N	\N	15	3	110	109	33	1	\N
-34	2016-09-06 20:07:40.446	2016-09-06 22:00:00	I had to revert a few things so I will charge the update work	\N	\N	\N	4	3	112	111	43	1	\N
-35	2016-09-07 09:02:00.975	2016-09-07 22:00:00	I was not able to make a single method as state is entity-dependant. I made two methods and left the state disjunction outside of them	\N	\N	\N	2	3	114	113	30	1	\N
-36	2016-09-07 18:06:13.165	2016-09-07 22:00:00	Added creator bar and included autocomplete with all the usernames in the db	\N	\N	\N	5	3	116	115	34	1	\N
-37	2016-09-07 18:07:37.558	2016-09-07 22:00:00	Added keyword filter on descritption and title/name of entities	\N	\N	\N	3	3	118	117	35	1	\N
-38	2016-09-07 18:08:35.753	2016-09-07 22:00:00	Already fixed this	\N	\N	\N	2	3	120	119	38	1	\N
-39	2016-09-07 18:09:12.364	2016-09-07 22:00:00	Done	\N	\N	\N	2	3	122	121	44	1	\N
-40	2016-09-08 16:27:32.449	2016-09-08 22:00:00	I have added the functionality by keeping track of who promoted what and allowing user to update their promotion from up to down or viceversa	\N	\N	\N	5	3	128	127	47	1	\N
-43	2016-09-09 18:27:37.368	2016-09-09 22:00:00	I have done a first draft. It should be used as a base to be used as documentation as the application evolves	\N	\N	\N	6	3	145	144	54	1	\N
-41	2016-09-08 16:29:24.933	2016-09-08 22:00:00	I have added sortby creation date functionalities for Cbtions, Goals and Decisions listPages and added sortBy relevance to CbtionList page	\N	\N	\N	5	3	130	129	36	1	\N
-45	2016-09-13 22:07:02.045	2016-09-14 22:00:00	I have added a new entity to the database to store activity events, updated the DB interface to save some significant events on Cbtions, Bids, Goals and Decisions and added a page to list the most recent activity (Filters are not working)	\N	\N	\N	8	3	153	152	56	1	\N
-44	2016-09-12 19:35:43.48	2016-09-12 22:00:00	I have reused the CbtionBox, extended it a little bit and included the bid creator and bid list inside	\N	\N	\N	4	3	150	149	57	1	\N
-47	2016-09-18 18:22:01.985	2016-09-17 22:00:00	I have added affected entity and type to decisions and updated the creation process to include this for new decisions. I have also updated the decision box to show the affected entity and provide a link to it	\N	\N	\N	10	3	160	159	51	1	\N
-46	2016-09-15 14:23:21.815	2016-09-15 22:00:00	I have updated the Goal entity, created a set of subgoals, updated the GoalBox and created a GoalPage to show each goal.	\N	\N	\N	15	3	157	156	41	1	\N
-48	2016-09-21 15:38:54.699	\N	Create project JieMaps	\N	\N	\N	100	3	162	161	60	1	\N
-49	2016-09-21 16:58:23.13	2016-09-30 22:00:00	I will follow a similar structure as that of CoProjects	\N	\N	\N	100	0	165	164	61	1	\N
-50	2016-09-27 17:43:14.686	2016-09-27 22:00:00	I have added comments to contributions and allowed an indefinite amount of nested replies to each comment. I have also included comments promotion to sort the comments and the replies.	\N	\N	\N	30	3	169	168	63	1	\N
-51	2016-09-28 15:43:07.393	2016-09-28 22:00:00	I have updated the API and added the list, reusing the CbtionList module of the CbtionListPage	\N	\N	\N	15	3	171	170	49	1	\N
-52	2016-09-28 15:44:49.338	2016-09-28 22:00:00	I have extended the CbtionBox element to include the reviews if the state is accepted	\N	\N	\N	10	3	173	172	50	1	\N
-54	2016-09-29 17:55:22.867	2016-09-29 22:00:00	I have reviewed and cleaned the old code and prepared a new one. It should be relatively easy to add and compare different algorithms	\N	\N	\N	10	3	178	177	64	1	\N
-55	2016-09-30 15:43:30.258	2016-09-30 22:00:00	I have updated the page and added a new function to the API to return the list of users and their pps of a project	\N	\N	\N	10	3	180	179	62	1	\N
-56	2016-10-03 15:14:08.76	2016-10-03 22:00:00	I have updated the filters to get all Cbtions from goal, updated the goalPage  to include a CbtionList element, and updated the CbtionBox and CbtionBoxComplete to show goals and parent goals of a contribution	\N	\N	\N	25	3	184	183	39	1	\N
-57	2016-10-04 17:49:54.698	2016-10-04 22:00:00	I have already done this.\n\nAllowed decisions to create/change the parent of a goal\nRefactored goals hierachy in database to mark only the parent goal\nUpdated GoalBox in several ways\nCreated new subgoal creation option from within a goalBox\n\nhttps://github.com/JoseOspina/CoProjects-Webapp/commit/f7d7b4b8650600a2c209375e558808902174a1b2	\N	\N	\N	10	3	197	196	67	1	\N
-61	2016-10-07 14:33:08.592	2016-07-11 05:00:00	I propose a new algorithm based on a bayesian inference approach.	\N	\N	\N	150	1	212	208	55	3	\N
-62	2016-10-07 15:27:35.755	2016-10-12 05:00:00	I will do it for 5 pos	\N	\N	\N	5	3	211	210	70	4	\N
-59	2016-10-06 10:36:29.916	2016-10-06 22:00:00	I have updated the Bid creation and update process by allowing users to mark the Bid as "under consideration" before having to place a pp value and a delivery date. In addition, bidder can mark the bid as done and add a description (hopefully with a proof of what he did)	2016-10-06 10:37:53.68	Commits from https://github.com/JoseOspina/CoProjects-Webapp/commit/11cbb525326c6334d2715f656acdda9e3f0d646f up to https://github.com/JoseOspina/CoProjects-Webapp/commit/13f056ec1d681025f2ba27c14bb24c5ae863e8ca	1	15	3	201	200	37	1	\N
-63	2016-10-07 21:54:42.867	2016-10-07 22:00:00	I have updated slack, created a new reddit, updated the logo, updated the file names in the Google Drive folder, updated the White Paper	\N	\N	\N	5	3	215	214	71	1	\N
-53	2016-09-28 16:44:24.483	2016-09-28 22:00:00	I propose rename coprojects as codoit and the domain name co-do.it	\N	\N	\N	20	5	175	174	53	1	\N
-60	2016-10-07 14:23:20.189	2016-10-08 05:00:00	I propose using collectiveone.org. \nIt is simple, catchy and can be used in conversation: "I'm moving my firm to the collectiveone".\n\nThe cost per year according to namecheap is app. 13$/year 	\N	\N	\N	35	3	207	206	53	3	\N
-58	2016-10-06 10:25:09.222	2016-10-07 22:00:00	I will prepare a first draft of the presentation which can be then improved and converted to video	2016-10-06 10:27:21.889	https://docs.google.com/presentation/d/1Sma1CKVq1plvPrvglOs5qHB1ldjzkHHE4g_yJBRu_0Q/	1	15	3	205	199	68	1	\N
-68	2016-10-16 10:23:01.212	2016-10-16 22:00:00	I have fixed bug, added a link to argument creator page and updated all links to UserPage to use a helper function	2016-10-16 10:23:27.303	https://github.com/CollectiveOne/CollectiveOne-Webapp/commit/6c4898c23f8b3b947ceb4e0008fb1812c43d5dbf	1	3	3	236	235	75	1	\N
-64	2016-10-10 20:09:51.438	2016-10-10 22:00:00	I have updated the model and removed all redundancies. Added a few methods to the API and updated a few JS elements	2016-10-10 20:10:05.69	https://github.com/CollectiveOne/CollectiveOne-Webapp/commit/9f9c4f1675bc0ecf88ffaa75c4bd43339c513480	1	10	3	219	218	73	1	\N
-71	2016-10-19 21:10:56.196	2016-10-25 05:00:00	add data sets for urbano project	\N	\N	\N	0.100000000000000006	1	261	260	79	5	\N
-74	2016-10-21 18:06:04.799	2016-10-21 22:00:00	I will do it using React.js	2016-10-21 18:06:28.198	see last commit	1	10	3	275	274	69	1	\N
-65	2016-10-11 21:36:06.805	2016-10-11 22:00:00	I have added the google drive presentation and the links to slack and reddit	\N	\N	\N	5	3	227	226	59	1	\N
-69	2016-10-18 14:51:58.291	2016-10-18 22:00:00	I have updated all the forms to abandon the dynamic writing and replaced with the form being specified directly in the JSP file. Other fixes have been done, including showing only custom decisions in the decision list page by default.	2016-10-18 14:52:31.142	https://github.com/CollectiveOne/CollectiveOne-Webapp/commit/915b827ffdd6b48f8a920e669a59254bfd47fb38	1	5	3	246	245	77	1	\N
-66	2016-10-11 21:37:31.523	2016-10-11 22:00:00	I have updated the goal methods to force projectName to be used whenever goalTag is used	\N	\N	\N	10	3	229	228	74	1	\N
-70	2016-10-19 20:51:28.07	\N	Create project datasketch	\N	\N	\N	100	3	256	255	78	5	\N
-67	2016-10-11 21:38:36.283	2016-10-11 22:00:00	I have updated only the nav pane divs and replaced them with anchors	\N	\N	\N	5	3	231	230	66	1	\N
-42	2016-09-08 18:36:09.301	2016-09-09 22:00:00	I have created a new ActiveProject JS element and two API methods. Filters are preinitializaed based on the active projects.	\N	\N	\N	15	3	225	135	31	1	\N
-72	2016-10-19 21:14:11.304	2016-10-20 05:00:00	webpage using nodejs keystone	2016-10-19 21:14:54.201	github.com/randommonkey	1	1	3	266	265	80	5	\N
-77	2016-10-26 10:42:55.576	2016-10-26 22:00:00	I will prepare a first draft in the google drive	2016-10-26 10:43:01.678	https://docs.google.com/drawings/d/1WjxJFBF0GE2lTCGJOjxWotZY9-d1SSMhkkwKwHEA0lg	1	5	3	297	296	92	1	\N
-73	2016-10-21 14:06:40.943	2016-10-21 22:00:00	I have moved the User and Project page to an html dynamically loaded every time the apge is redrawn	\N	\N	\N	5	3	273	272	81	1	\N
-75	2016-10-25 10:51:34.279	2016-10-25 22:00:00	Done it. You can delete it only from the contribution page and not from the contribution browser. The contribution is not actually deleted but just changed to "deleted" state	2016-10-25 10:52:24.228	bb69560a6612ca65e53ddf8d567e21042e7b35d3	1	10	3	289	288	82	1	\N
-76	2016-10-25 15:10:34.111	2016-10-25 22:00:00	I have saved the screen while watching at the presentation slides and then while using the prototype and added captions to describe what its going on. Music is creative commons	\N	\N	\N	50	3	293	291	86	1	\N
-78	2016-10-26 16:42:54.722	2016-10-26 22:00:00	Updated billing info of Heroku account	\N	\N	\N	5	3	305	304	96	4	\N
+COPY bids (id, creation_date, delete_date, delivery_date, description, done_date, done_description, done_state, ppoints, state, accept_id, assign_id, cbtion_id, creator_id) FROM stdin;
+21	2016-08-28 18:28:49.362	\N	2016-09-10 00:00:00	I will clean and update the CSS files	\N	\N	\N	5	3	83	82	26	1
+22	2016-08-28 22:22:45.548	\N	2016-09-10 00:00:00	Presentation presented o a previous meeting 	\N	\N	\N	80	3	85	84	17	4
+23	2016-08-28 22:23:47.786	\N	2016-09-10 00:00:00	Already done	\N	\N	\N	10	3	87	86	10	4
+24	2016-08-29 11:04:59.125	\N	2016-09-10 00:00:00	I will just add the new property and include the date selector	\N	\N	\N	10	3	89	88	12	1
+16	2016-08-23 22:12:11.299	\N	2016-09-10 00:00:00	I will study nice, comfortable colours and propose it phantone code.	\N	\N	\N	5	5	52	51	21	4
+25	2016-08-29 17:47:46.553	\N	2016-08-28 22:00:00	I propose we use a simple set of grays	\N	\N	\N	5	3	91	90	21	1
+1	2016-08-08 14:36:40.337	\N	2016-09-10 00:00:00	Create project CoProjects	\N	\N	\N	100	3	2	1	1	1
+2	2016-08-08 14:37:52.093	\N	2016-09-10 00:00:00		\N	\N	\N	50	3	5	4	2	1
+3	2016-08-10 10:58:38.38	\N	2016-09-10 00:00:00		\N	\N	\N	500	3	10	9	5	1
+4	2016-08-10 10:59:53.117	\N	2016-09-10 00:00:00		\N	\N	\N	900	3	13	12	6	1
+5	2016-08-10 11:01:12.005	\N	2016-09-10 00:00:00		\N	\N	\N	100	3	16	15	7	1
+6	2016-08-10 15:02:06.779	\N	2016-09-10 00:00:00	I can produce a document (max. 10 pages) stipulating the key principles and functionalities of CoProjects. I'll compile all information from previous discussions. 	\N	\N	\N	20	3	24	23	4	3
+10	2016-08-10 15:21:15.636	\N	2016-09-10 00:00:00	I can produce a document with a set of basic models to conceptualise the decision problem, and solve them numerically.	\N	\N	\N	100	3	32	31	8	3
+11	2016-08-10 15:30:32.557	\N	2016-09-10 00:00:00	I can send a document summarising the different arguments that have been put forward, and make proposals to decide on critical points where there is dissent.	\N	\N	\N	60	3	34	33	9	3
+12	2016-08-20 16:00:12.595	\N	2016-09-10 00:00:00		\N	\N	\N	10	3	41	40	18	1
+13	2016-08-20 16:02:13.81	\N	2016-09-10 00:00:00	Already done	\N	\N	\N	10	3	44	43	19	1
+14	2016-08-20 17:54:02.381	\N	2016-09-10 00:00:00	This needs significant backend and frontend modifications	\N	\N	\N	30	3	47	46	3	1
+15	2016-08-22 14:46:21.121	\N	2016-09-10 00:00:00	I'll write the last version of the draft	\N	\N	\N	40	3	49	48	15	3
+17	2016-08-26 08:48:15.505	\N	2016-09-10 00:00:00	The DecisionBox will be very small so that it can be inserted into the BidBox and other places	\N	\N	\N	20	3	62	61	23	1
+18	2016-08-26 18:55:15.387	\N	2016-09-10 00:00:00	Update schema and migrated database	\N	\N	\N	10	3	67	66	24	1
+19	2016-08-27 02:18:17.733	\N	2016-09-10 00:00:00		\N	\N	\N	7	3	69	68	22	3
+20	2016-08-28 16:08:02.437	\N	2016-09-10 00:00:00	I wont use angularJs but simply create a new element similar to the others (bids, decisions...) so that it can be reused in other pages	\N	\N	\N	10	3	81	80	13	1
+27	2016-08-29 21:54:23.413	\N	2016-08-30 22:00:00	Just as described	\N	\N	\N	5	3	95	94	28	1
+26	2016-08-29 18:36:02.199	\N	2016-08-30 22:00:00	I will follow the same method used for goals and contributions 	\N	\N	\N	10	3	93	92	27	1
+28	2016-09-01 17:15:48.681	\N	2016-09-01 22:00:00	Already done	\N	\N	\N	15	3	97	96	29	1
+29	2016-09-01 23:48:03.506	\N	2016-09-02 22:00:00	Already done it, it was relatively heavy	\N	\N	\N	5	3	102	101	32	1
+30	2016-09-04 12:57:56.493	\N	2016-09-04 22:00:00	I have updated the Decision entity by adding an argument list. Created the argumen entity and created all new vies and API methods to access, create and back decisions arguments. It is functional. Further improvements can be done. Its already done and pushed.	\N	\N	\N	30	3	104	103	11	1
+32	2016-09-05 17:02:21.371	\N	2016-09-06 05:00:00	skype to explain remotes	\N	\N	\N	0.5	3	108	107	42	5
+33	2016-09-06 15:09:44.542	\N	2016-09-06 22:00:00	I have added this functionality already. It allows to rate between 5 possibilities and shows the list of reviews of a bid below it, if the user clicks on the show bids button.	\N	\N	\N	15	3	110	109	33	1
+34	2016-09-06 20:07:40.446	\N	2016-09-06 22:00:00	I had to revert a few things so I will charge the update work	\N	\N	\N	4	3	112	111	43	1
+35	2016-09-07 09:02:00.975	\N	2016-09-07 22:00:00	I was not able to make a single method as state is entity-dependant. I made two methods and left the state disjunction outside of them	\N	\N	\N	2	3	114	113	30	1
+36	2016-09-07 18:06:13.165	\N	2016-09-07 22:00:00	Added creator bar and included autocomplete with all the usernames in the db	\N	\N	\N	5	3	116	115	34	1
+37	2016-09-07 18:07:37.558	\N	2016-09-07 22:00:00	Added keyword filter on descritption and title/name of entities	\N	\N	\N	3	3	118	117	35	1
+38	2016-09-07 18:08:35.753	\N	2016-09-07 22:00:00	Already fixed this	\N	\N	\N	2	3	120	119	38	1
+39	2016-09-07 18:09:12.364	\N	2016-09-07 22:00:00	Done	\N	\N	\N	2	3	122	121	44	1
+40	2016-09-08 16:27:32.449	\N	2016-09-08 22:00:00	I have added the functionality by keeping track of who promoted what and allowing user to update their promotion from up to down or viceversa	\N	\N	\N	5	3	128	127	47	1
+43	2016-09-09 18:27:37.368	\N	2016-09-09 22:00:00	I have done a first draft. It should be used as a base to be used as documentation as the application evolves	\N	\N	\N	6	3	145	144	54	1
+41	2016-09-08 16:29:24.933	\N	2016-09-08 22:00:00	I have added sortby creation date functionalities for Cbtions, Goals and Decisions listPages and added sortBy relevance to CbtionList page	\N	\N	\N	5	3	130	129	36	1
+45	2016-09-13 22:07:02.045	\N	2016-09-14 22:00:00	I have added a new entity to the database to store activity events, updated the DB interface to save some significant events on Cbtions, Bids, Goals and Decisions and added a page to list the most recent activity (Filters are not working)	\N	\N	\N	8	3	153	152	56	1
+44	2016-09-12 19:35:43.48	\N	2016-09-12 22:00:00	I have reused the CbtionBox, extended it a little bit and included the bid creator and bid list inside	\N	\N	\N	4	3	150	149	57	1
+47	2016-09-18 18:22:01.985	\N	2016-09-17 22:00:00	I have added affected entity and type to decisions and updated the creation process to include this for new decisions. I have also updated the decision box to show the affected entity and provide a link to it	\N	\N	\N	10	3	160	159	51	1
+46	2016-09-15 14:23:21.815	\N	2016-09-15 22:00:00	I have updated the Goal entity, created a set of subgoals, updated the GoalBox and created a GoalPage to show each goal.	\N	\N	\N	15	3	157	156	41	1
+48	2016-09-21 15:38:54.699	\N	\N	Create project JieMaps	\N	\N	\N	100	3	162	161	60	1
+49	2016-09-21 16:58:23.13	\N	2016-09-30 22:00:00	I will follow a similar structure as that of CoProjects	\N	\N	\N	100	0	165	164	61	1
+50	2016-09-27 17:43:14.686	\N	2016-09-27 22:00:00	I have added comments to contributions and allowed an indefinite amount of nested replies to each comment. I have also included comments promotion to sort the comments and the replies.	\N	\N	\N	30	3	169	168	63	1
+51	2016-09-28 15:43:07.393	\N	2016-09-28 22:00:00	I have updated the API and added the list, reusing the CbtionList module of the CbtionListPage	\N	\N	\N	15	3	171	170	49	1
+52	2016-09-28 15:44:49.338	\N	2016-09-28 22:00:00	I have extended the CbtionBox element to include the reviews if the state is accepted	\N	\N	\N	10	3	173	172	50	1
+54	2016-09-29 17:55:22.867	\N	2016-09-29 22:00:00	I have reviewed and cleaned the old code and prepared a new one. It should be relatively easy to add and compare different algorithms	\N	\N	\N	10	3	178	177	64	1
+55	2016-09-30 15:43:30.258	\N	2016-09-30 22:00:00	I have updated the page and added a new function to the API to return the list of users and their pps of a project	\N	\N	\N	10	3	180	179	62	1
+56	2016-10-03 15:14:08.76	\N	2016-10-03 22:00:00	I have updated the filters to get all Cbtions from goal, updated the goalPage  to include a CbtionList element, and updated the CbtionBox and CbtionBoxComplete to show goals and parent goals of a contribution	\N	\N	\N	25	3	184	183	39	1
+57	2016-10-04 17:49:54.698	\N	2016-10-04 22:00:00	I have already done this.\n\nAllowed decisions to create/change the parent of a goal\nRefactored goals hierachy in database to mark only the parent goal\nUpdated GoalBox in several ways\nCreated new subgoal creation option from within a goalBox\n\nhttps://github.com/JoseOspina/CoProjects-Webapp/commit/f7d7b4b8650600a2c209375e558808902174a1b2	\N	\N	\N	10	3	197	196	67	1
+61	2016-10-07 14:33:08.592	\N	2016-07-11 05:00:00	I propose a new algorithm based on a bayesian inference approach.	\N	\N	\N	150	1	212	208	55	3
+62	2016-10-07 15:27:35.755	\N	2016-10-12 05:00:00	I will do it for 5 pos	\N	\N	\N	5	3	211	210	70	4
+59	2016-10-06 10:36:29.916	\N	2016-10-06 22:00:00	I have updated the Bid creation and update process by allowing users to mark the Bid as "under consideration" before having to place a pp value and a delivery date. In addition, bidder can mark the bid as done and add a description (hopefully with a proof of what he did)	2016-10-06 10:37:53.68	Commits from https://github.com/JoseOspina/CoProjects-Webapp/commit/11cbb525326c6334d2715f656acdda9e3f0d646f up to https://github.com/JoseOspina/CoProjects-Webapp/commit/13f056ec1d681025f2ba27c14bb24c5ae863e8ca	1	15	3	201	200	37	1
+63	2016-10-07 21:54:42.867	\N	2016-10-07 22:00:00	I have updated slack, created a new reddit, updated the logo, updated the file names in the Google Drive folder, updated the White Paper	\N	\N	\N	5	3	215	214	71	1
+53	2016-09-28 16:44:24.483	\N	2016-09-28 22:00:00	I propose rename coprojects as codoit and the domain name co-do.it	\N	\N	\N	20	5	175	174	53	1
+60	2016-10-07 14:23:20.189	\N	2016-10-08 05:00:00	I propose using collectiveone.org. \nIt is simple, catchy and can be used in conversation: "I'm moving my firm to the collectiveone".\n\nThe cost per year according to namecheap is app. 13$/year 	\N	\N	\N	35	3	207	206	53	3
+58	2016-10-06 10:25:09.222	\N	2016-10-07 22:00:00	I will prepare a first draft of the presentation which can be then improved and converted to video	2016-10-06 10:27:21.889	https://docs.google.com/presentation/d/1Sma1CKVq1plvPrvglOs5qHB1ldjzkHHE4g_yJBRu_0Q/	1	15	3	205	199	68	1
+68	2016-10-16 10:23:01.212	\N	2016-10-16 22:00:00	I have fixed bug, added a link to argument creator page and updated all links to UserPage to use a helper function	2016-10-16 10:23:27.303	https://github.com/CollectiveOne/CollectiveOne-Webapp/commit/6c4898c23f8b3b947ceb4e0008fb1812c43d5dbf	1	3	3	236	235	75	1
+64	2016-10-10 20:09:51.438	\N	2016-10-10 22:00:00	I have updated the model and removed all redundancies. Added a few methods to the API and updated a few JS elements	2016-10-10 20:10:05.69	https://github.com/CollectiveOne/CollectiveOne-Webapp/commit/9f9c4f1675bc0ecf88ffaa75c4bd43339c513480	1	10	3	219	218	73	1
+71	2016-10-19 21:10:56.196	\N	2016-10-25 05:00:00	add data sets for urbano project	\N	\N	\N	0.100000000000000006	1	261	260	79	5
+74	2016-10-21 18:06:04.799	\N	2016-10-21 22:00:00	I will do it using React.js	2016-10-21 18:06:28.198	see last commit	1	10	3	275	274	69	1
+65	2016-10-11 21:36:06.805	\N	2016-10-11 22:00:00	I have added the google drive presentation and the links to slack and reddit	\N	\N	\N	5	3	227	226	59	1
+69	2016-10-18 14:51:58.291	\N	2016-10-18 22:00:00	I have updated all the forms to abandon the dynamic writing and replaced with the form being specified directly in the JSP file. Other fixes have been done, including showing only custom decisions in the decision list page by default.	2016-10-18 14:52:31.142	https://github.com/CollectiveOne/CollectiveOne-Webapp/commit/915b827ffdd6b48f8a920e669a59254bfd47fb38	1	5	3	246	245	77	1
+66	2016-10-11 21:37:31.523	\N	2016-10-11 22:00:00	I have updated the goal methods to force projectName to be used whenever goal_tag is used	\N	\N	\N	10	3	229	228	74	1
+70	2016-10-19 20:51:28.07	\N	\N	Create project datasketch	\N	\N	\N	100	3	256	255	78	5
+67	2016-10-11 21:38:36.283	\N	2016-10-11 22:00:00	I have updated only the nav pane divs and replaced them with anchors	\N	\N	\N	5	3	231	230	66	1
+42	2016-09-08 18:36:09.301	\N	2016-09-09 22:00:00	I have created a new ActiveProject JS element and two API methods. Filters are preinitializaed based on the active projects.	\N	\N	\N	15	3	225	135	31	1
+72	2016-10-19 21:14:11.304	\N	2016-10-20 05:00:00	webpage using nodejs keystone	2016-10-19 21:14:54.201	github.com/randommonkey	1	1	3	266	265	80	5
+77	2016-10-26 10:42:55.576	\N	2016-10-26 22:00:00	I will prepare a first draft in the google drive	2016-10-26 10:43:01.678	https://docs.google.com/drawings/d/1WjxJFBF0GE2lTCGJOjxWotZY9-d1SSMhkkwKwHEA0lg	1	5	3	297	296	92	1
+73	2016-10-21 14:06:40.943	\N	2016-10-21 22:00:00	I have moved the User and Project page to an html dynamically loaded every time the apge is redrawn	\N	\N	\N	5	3	273	272	81	1
+75	2016-10-25 10:51:34.279	\N	2016-10-25 22:00:00	Done it. You can delete it only from the contribution page and not from the contribution browser. The contribution is not actually deleted but just changed to "deleted" state	2016-10-25 10:52:24.228	bb69560a6612ca65e53ddf8d567e21042e7b35d3	1	10	3	289	288	82	1
+76	2016-10-25 15:10:34.111	\N	2016-10-25 22:00:00	I have saved the screen while watching at the presentation slides and then while using the prototype and added captions to describe what its going on. Music is creative commons	\N	\N	\N	50	3	293	291	86	1
+79	2016-10-27 11:09:33.764	\N	2016-10-27 22:00:00	I have replaced the text buttons with icons and hide the subgoals path in the title	2016-10-27 11:09:56.98	b62b586b996b0d7a2b9c4ca1991d597d42b84a13	1	5	3	328	327	98	1
+78	2016-10-26 16:42:54.722	\N	2016-10-26 22:00:00	Updated billing info of Heroku account	\N	\N	\N	5	3	305	304	96	4
+80	2016-10-27 11:10:50.846	\N	2016-10-27 22:00:00	I will rearranged the goal structure	2016-10-27 11:11:20.981	I have implemented this structure: https://docs.google.com/drawings/d/1H2DwmD_CykBkGCeTza_3ehxOiTajiNapSqriW7ZyCQU	1	5	3	330	329	94	1
+81	2016-10-27 11:12:26.509	\N	2016-10-27 22:00:00	I will simply rearranged in smaller boxes and text what is now three rows	2016-10-27 11:12:42.316	72bba9927e34bd70db7ac81e9ee1f4eb727412c8	1	2	3	332	331	93	1
+82	2016-10-27 11:36:16.045	\N	2016-10-27 22:00:00	I will do it	2016-10-27 11:36:39.063	added to the filter element and uploaded a GIF	1	5	3	335	334	97	1
+31	2016-09-05 16:00:54.089	\N	2016-09-09 22:00:00	Temporary	2016-11-01 23:11:03.914	I have prepared a first draft of the story in Drive\nhttps://docs.google.com/document/d/1JzFvUytj5I7IhGza-mFt8xXz9avjSiFere3cwXRhW3Q	1	10	3	342	105	25	1
+83	2016-11-11 10:20:12.952	\N	2016-11-11 23:00:00	I have made the payment already	\N	\N	\N	15	3	351	350	105	1
+84	2016-11-11 10:32:54.835	\N	2016-11-11 23:00:00	I did this as part of the intro video preparation http://www.collectiveone.org/views/CbtionPage.action?cbtionId=86	\N	\N	\N	0	3	355	354	102	1
+85	2016-11-11 10:35:56.728	\N	2016-11-11 23:00:00	I did this a week ago	\N	\N	\N	10	3	367	366	14	1
+86	2016-11-11 12:00:44.147	\N	2016-11-11 23:00:00	Already paid	\N	\N	\N	20	3	371	370	107	1
+87	2016-11-11 12:33:50.416	\N	2016-11-11 23:00:00	Already paid	\N	\N	\N	15	3	375	374	108	1
+88	2016-11-17 19:22:46.733	\N	2016-11-17 23:00:00	I've made this by hiring a fiverr contribution	\N	\N	\N	10	3	377	376	106	1
+89	2016-11-17 19:34:48.138	\N	2016-11-17 23:00:00	I updated the entire backend to use Spring MVC (as part of a spring-boot application)	2016-11-17 19:35:24.976	https://github.com/CollectiveOne/CollectiveOneWebapp/commit/accf51355f38667f79ea855e0ea5db85dfa6c393	1	150	3	379	378	99	1
+90	2016-11-17 19:38:04.771	\N	2016-11-17 23:00:00	I have added SendGrid integration to send signup confirmation and password recovry emails	\N	\N	\N	20	3	381	380	65	1
+91	2016-11-17 19:40:49.322	\N	2016-11-17 23:00:00	I have added Spring security to handle application access, and encrypted users passwords	\N	\N	\N	30	3	383	382	52	1
+92	2016-11-18 09:20:01.026	\N	2016-11-18 23:00:00	I will do it this afternoon	\N	\N	\N	5	3	390	389	112	1
+94	2016-11-20 17:39:52.133	\N	2016-11-20 23:00:00	Already done. UserPage is exactly as it was before	\N	\N	\N	5	3	398	397	109	1
+95	2016-11-20 17:40:41.238	\N	2016-11-20 23:00:00	Updated the bid elements and the API	\N	\N	\N	8	3	401	400	110	1
 \.
 
 
 ALTER TABLE bids ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3210 (class 0 OID 959864)
--- Dependencies: 200
+-- TOC entry 3302 (class 0 OID 1402267)
+-- Dependencies: 213
 -- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE projects DISABLE TRIGGER ALL;
 
-COPY projects (id, creationdate, description, name, ppstot, creator_id) FROM stdin;
+COPY projects (id, creation_date, description, name, pps_tot, creator_id) FROM stdin;
 2	2016-09-21 15:38:54.641	With JieMaps, you can create and share your navigation experience, and find the navigation experiences of others.\n\nIn JieMaps, a navigation experience is represented by a path (a sequence and group of links). This paths are called Jies. That's all. 	JieMaps	100	1
 3	2016-10-19 20:51:28.032	Data journalism tools	datasketch	101	5
-1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2551.5	1
+1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2866.5	1
 \.
 
 
 ALTER TABLE projects ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3197 (class 0 OID 959813)
--- Dependencies: 187
+-- TOC entry 3282 (class 0 OID 1402201)
+-- Dependencies: 193
 -- Data for Name: cbtions; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE cbtions DISABLE TRIGGER ALL;
 
-COPY cbtions (id, assignedppoints, creationdate, description, product, relevance, state, title, contributor_id, creator_id, goal_id, opendec_id, project_id, deletedate, deletedec_id) FROM stdin;
-1	100	2016-08-08 14:36:40.335	Start contribution	\N	0	2	Create project CoProjects	1	1	1	\N	1	\N	\N
-4	20	2016-08-08 16:31:23.877	Support preparation of white paper	White paper sections and editions 	0	2	Support white paper draft	3	1	1	\N	1	\N	\N
-5	500	2016-08-10 10:58:24.39	Propose the CoProjects idea as a way of creating economic value decentralizedly	First CoProjects concept	0	2	CoProjects First Proposal	1	1	1	\N	1	\N	\N
-7	100	2016-08-10 11:00:36.643	Migrate the contents of the Wiki and Reddit to Basecamp summarizing the key points to be discussed	First set of basecamp messages and docs	0	2	Status Summary in Basecamp	1	1	1	\N	1	\N	\N
-9	60	2016-08-10 11:02:34.493	Review the CoProjects business model and find critical points. In particular, analyze how should the CoProjects platform relation with the projects should be.	Feedback and analysis report	0	2	Study CoProjects Business Model Alternatives	3	1	1	\N	1	\N	\N
-15	40	2016-08-20 15:31:38.967	Further contributions to white paper	White paper updated	0	2	Contributions to white paper	3	1	1	\N	1	\N	\N
-16	0	2016-08-20 15:44:57.06	Update the diagram of the white paper using, as basis, the old diagram and the text included in the white paper.	Diagram file (editable)	0	0	Update White Paper Diagram	\N	1	1	\N	1	\N	\N
-12	10	2016-08-10 11:09:36.933	Update bids to have a delivery date and udpate new bid form to request delivery date. Basic functionality needed. Style to be added on another contribution	Updated Bid entity and new bid form	0	2	Add delivery date to bids	1	1	3	\N	1	\N	\N
-18	10	2016-08-20 16:00:05.469	Add IP and licensing sections to white paper	White paper updated	0	2	IP and Licensing in White Paper	1	1	1	\N	1	\N	\N
-21	5	2016-08-23 22:10:35.014	Select a new set of three colors to update the current user interface. Olive is just hard to read.	Three hex codes	0	2	New UI colors	1	1	4	\N	1	\N	\N
-8	100	2016-08-10 11:02:08.133	Review the Decision Mechanism concept, formulate it and propose improvements and alternatives	Feedback and analysis report	0	2	Review Decision Mechanism	3	1	2	\N	1	\N	\N
-19	10	2016-08-20 16:02:02.831	Prepare a google spreadsheet to track the contribution items from the beginning so that the CoProjects method is applied from the beginning	Google sheet	0	2	Contribution Tracker Google Sheet	1	1	1	\N	1	\N	\N
-20	0	2016-08-20 16:32:22.509	Add LiquidBase to the webapp so that updates to the database can be done cleanly	Updated webapp	0	0	Add LiquidBase	\N	1	3	\N	1	\N	\N
-24	10	2016-08-26 18:54:55.83	Change the type of the description of the entities to allow larger descriptions. Current limit of 255 characters is too low.	Updated DB schema and data	0	2	Extend description size	1	1	3	\N	1	\N	\N
-22	7	2016-08-24 22:16:35.843	Prepare an email to invite collaborators to join project and help develop the CoProjects platform	Email draft	0	2	Prepare invitation email 	3	1	1	\N	1	\N	\N
-23	20	2016-08-26 08:47:41.154	Simplify DecisionBox so that it focus in the state that it wants to change. E.g. Bid OFFERED->ASSIGN? yes/no | yes in 4 hr	Updated DecisionBox integration	0	2	Uptade DecisionBox	1	1	4	\N	1	\N	\N
-3	30	2016-08-08 14:42:27.589	Add Goals items to db. A goal must have a tag and a description. It must have a page to create one and a page to search goals (follow contributions structure), at least three states and and two decisions should operate on it: create, and delete.	New entity	0	2	Add Goals to DB	1	1	3	\N	1	\N	\N
-10	10	2016-08-10 11:02:56.3	Identify the key open points that shall be clarified as part of the definition of CoProjects	Basecam To-Do list	0	2	Concept Key To-Do items	4	1	1	\N	1	\N	\N
-13	10	2016-08-10 11:11:40.77	Update CbtionList page to use a separate CbtionBox class that can be reused all over the platform. Use AngularJS templates,	New CbtionBox javascript class	0	2	Create CbtionBox js object using AngularJS	1	1	4	\N	1	\N	\N
-27	10	2016-08-29 18:03:02.037	Allow arbitrary decision items to be created, listed and voted. Current decisions are only linked to actions in the platform, e.g accepting bids. General-topic decision items would allow to poll the contributors of a project about any given matter. The outcome of the decision will have no automatic effect in the platform, but will be handled by the community. For example: the decision to send an email (in behalf of the project) to someone.	Decision creation page and decision search page (like Contributions and goals)	0	2	Arbitary decisions	1	1	3	\N	1	\N	\N
-26	5	2016-08-28 18:28:01.659	Clean and update user interface (mainly CSS files) to abandon olive green backgrounds and fonts. Replace following the structure of the CbtionBox element just commited	Updated CSS files	0	2	Basic UI update	1	1	4	\N	1	\N	\N
-28	5	2016-08-29 21:49:13.9	Create a js+css+html independent filter element that can be reused in the pages that needs it (currently goals and contributions), but that can be used in other list pages (like decision list page)	js+css+html element integrated in GoalListPage and CbtionListPage	0	2	Create Filter Element	1	1	4	\N	1	\N	\N
-17	80	2016-08-20 15:53:52.498	Review the CoProjects concept and find critical points	Presentation	0	2	Review the CoProjects concept and find critical points	4	1	1	\N	1	\N	\N
-29	15	2016-09-01 17:15:38.157	Improve DecisionBox element. Make it nice and useful.	Updated DecisionBox html+js+css	0	2	Improve DecisionBox	1	1	4	\N	1	\N	\N
-11	30	2016-08-10 11:07:35.129	Edit decision entity to have a list of pro and against arguments and create a DecisionPage view to show the decision status, and allow the addition of arguments.	Updated decision entity and new DecisionPage view with basic functionality	0	2	Add pro and against lists of arguments to decisions	1	1	3	\N	1	\N	\N
-30	2	2016-09-01 20:04:36.437	Merge Cbtion, Goals and Decisions filtered search methods into a single one so that filter functionality can evolve cleanly	updated DbServices class and dependencies	0	2	Merge all *GetList DB service method	1	1	3	\N	1	\N	\N
-32	5	2016-09-01 23:47:44.616	Create a BaseDao superclass to concentrate all common methods to all entities Daos. This is a preliminary step to have the search functionality in a single place. Update all dependencies and Daos methods to wrap and cast the super caller methods	updated Dao Java classes	0	2	Create BaseDao superclass	1	1	6	\N	1	\N	\N
-14	0	2016-08-20 15:23:07.49	Allow creators to edit a contribution description if no one has yet bid	Updated UI and API	1	0	Editable Contributions	\N	1	4	\N	1	\N	\N
-2	50	2016-08-08 14:37:36.535	Deploy webapp in heroku as it is. 	Heroku app running	0	2	Deploy in Heroku	1	1	6	\N	1	\N	\N
-33	15	2016-09-04 15:04:51.427	Add the possibility for users to review bids that have been closed, either accepted or not accepted, by adding a rate and comment. Update the BidBox so that users can add their reviews below the bid. Store the reviews in the User entity.	Updated DB and BidBox UI	0	2	Add Reviews to Bids	1	1	3	\N	1	\N	\N
-43	4	2016-09-06 16:33:16.522	Use a simple 1-5 review logic using yellow stars and revert the current method.	Updated UI and minot model updates	0	2	Updated Reviews to use Stars	1	1	4	\N	1	\N	\N
-38	2	2016-09-05 10:17:23.588	Updated Goal autocomplete in new Contribution form, to show goals of the project in which the contribution is being created. It currently shows all Goals in the DB	updated CbionNewPage and dependencies	0	2	Goal autocomplete per project	1	1	4	\N	1	\N	\N
-34	5	2016-09-05 10:09:10.66	Add "creator" as a field to Goals, Cbtions and Decisions filters. Use autocomplete to select one or more users as creators and return results for those users (and the rest of filter criteria). Try to do this in combination of the https://coprojects-hk.herokuapp.com/views/CbtionPage.action?cbtionId=30 contribution, which as to merge the filter logic in one single place.	Updated js filter element and DB services	0	2	Add creator filter	1	1	4	\N	1	\N	\N
-35	3	2016-09-05 10:10:47.582	Add "keyword" as a field to Goals, Cbtions and Decisions filters. Use a sumple %query% logic to return items with that word in their title, or description. Try to do this in combination of the https://coprojects-hk.herokuapp.com/views/CbtionPage.action?cbtionId=30 contribution, which ask to merge the filter logic in one single place.	updated filter element JS and DB services	0	2	Add keyword filter	1	1	4	\N	1	\N	\N
-44	2	2016-09-07 09:04:54.21	Add some way for the user to click in a portion of the smallDecisionBox object and go to the decision page of that decision so that he can see more details about it	updated smallDecisionBox	0	2	Add link to decision page in smallDecisionBox	1	1	4	\N	1	\N	\N
-45	0	2016-09-07 18:13:52.233	Add a filter to search elements based on their creation date (i.e. if the date is within a range). Updated filter element and DB service	updated Filter JS element and DB BaseDao get methods	0	4	Add filter by creation date	\N	1	4	123	1	\N	\N
-47	5	2016-09-07 18:55:40.09	Add relevance property to contributions as a number. Allow users to upvote or downvote contributions. Each upvote increases relevance by 1. Updated CbtionBox so that it includes to arrows at the left to allow users to upvote and downvote	updated Cbtion entity and BidBox js	0	2	Add relevance level to contributions	1	1	4	125	1	\N	\N
-36	5	2016-09-05 10:12:12.682	Allow the user to sort the results of Goals, Cbtions and Decisions list based in creation date. If possible allow for other criteria.	updated filter element JS and DB services	0	2	Add "sort by" to filter	1	1	4	\N	1	\N	\N
-58	0	2016-09-13 10:58:14.145	Configure Log4J so that it keeps a log of the web app activity. Add an example of how to add logging within the application. Another contribution(s) can be used to populate the log of events.	updated backend application	0	4	Setup Log4J	\N	1	6	151	1	\N	\N
-41	15	2016-09-05 10:22:36.319	Add hierarchy links to goals so that any goal can be marked as a sub-goal of other goal. Updated Goal search page to represent this hierarchy and allow the user to create these links. Updated GoalNewPage to allow new goals to be marked as subgoals of other.	Updated Goal entity, GoalListPage, GoalNew forma and dependencies	1	2	Add hierarchy to Goals	1	1	3	\N	1	\N	\N
-50	10	2016-09-08 16:37:17.423	Add a list of the reviews that a user has received in the platforn	updated UserPage	0	2	Add user reviews to user profile	1	1	4	132	1	\N	\N
-48	0	2016-09-08 08:01:09.603	Merge CbtionListPage, GoalListPage and DecisionListPage into a single page that adapts to the type of enttiy requested. Merge, as much as possible, code in the client and server side to have a single GetList process.	updated client and server side	-1	4	Merge EntityListPages	\N	1	6	126	1	\N	\N
-39	25	2016-09-05 10:18:00.846	Add the possibility to filter Contributions by goal	updated filter element	0	2	Filter Contributions by goal	1	1	4	\N	1	\N	\N
-56	8	2016-09-10 11:45:12.991	Keep a record of recent activity and add a page in which it is shown. 	Updated model and new page 	0	2	Recent activity record 	1	1	3	147	1	\N	\N
-46	0	2016-09-07 18:24:51.297	Store the filter selections in server session and use it as initialization for the filters in other pages. This way the user does not have to update the filters every time she moves from one page to another.	updated server side and filter JS element	2	4	Store filter in server session	\N	1	6	124	1	\N	\N
-25	0	2016-08-27 09:21:46.317	Prepare the first version of the use-cases doc by describing an example of the typical interactions that a group of people, developing collaboratively a webpage, would have.  	update https://docs.google.com/document/d/1JzFvUytj5I7IhGza-mFt8xXz9avjSiFere3cwXRhW3Q/edit	0	0	Uses-Cases Doc	\N	1	1	\N	1	\N	\N
-55	0	2016-09-08 23:05:16.268	Propose new approaches to the decision mechanism, analyze and test them. If possible compare them with the current implementation of the decision algorithm. 	Analysis document 	1	1	Review of the decision mechanism	\N	1	2	143	1	\N	\N
-54	6	2016-09-08 23:00:46.102	Write a simple document to help new people have an overview of how the CoProjects webapp is structured. Describe the frameworks and the overall structure of the application. 	Google doc 	0	2	Webapp technical overview	1	1	8	142	1	\N	\N
-57	4	2016-09-12 19:34:56.622	Improve the contribution page as the current layout is rather ugly. Use CbtionBox as an example, and add the list of bids and allow the user to bid on the contribution	updated CbtionPage 	1	2	Improve Contribution Page	1	1	4	148	1	\N	\N
-52	0	2016-09-08 16:48:30.339	Not very clear, but the idea is to add security to the webpage to protect unwanted access, find a way to hide user passwords from developers (except a few of them), and save passwords crypted so that they are better protected. Use spring security if possible	updated app	0	4	Add security	\N	1	6	134	1	\N	\N
-40	0	2016-09-05 10:19:09.952	Allow the user to select more than one goal per contribution	updated CbtionNewPage, Cbtion entitiy and dependencies	-1	6	Allow for multiple goals per Contribution	\N	1	3	\N	1	\N	\N
-42	0.5	2016-09-05 16:43:55.567	Support pepospina to create a new remote of the CoProjects repository in github	github repository	0	2	Support pepospina to create a new remote in github	5	1	10	\N	1	\N	\N
-51	10	2016-09-08 16:41:08.864	Improve the decision creation process (those created by the platform) to make it simpler to understand the effects of the decision. "OPEN contribution 50" is not clear at all. Moreover, allow some sort of link to the affected entity within the decision box so that the user can go and see the object that is affected by the decision	updated decisionBox and dependencies	1	2	Add affected entity informatione to DecisionBox	1	1	4	133	1	\N	\N
-60	100	2016-09-21 15:38:54.697	Start contribution	\N	0	2	Create project JieMaps	1	1	\N	\N	2	\N	\N
-61	0	2016-09-21 15:40:53.086	Updated the old prototype to use Spring/Hiberante/Struts2	updated webapp	0	0	Commit first version of the prototype	\N	1	\N	163	2	\N	\N
-65	0	2016-10-01 20:17:58.03	Setup the infrastructure to send emails from the application. Include a simple example. Separate contributions will be dedicated to construct and configure the emails	Example service that sends email from webapp	0	4	Add email notification infrastructuer	\N	1	6	181	1	\N	\N
-63	30	2016-09-26 06:34:34.08	Add the possibility for users to add comments and answer to those comments (following a tree approach) in a contribution	new comment entity and updated UI (CbtionBox)	1	2	Add comments to contributions	1	1	3	167	1	\N	\N
-49	15	2016-09-08 16:35:53.726	Add a list of the contributions accepted to a user in its profile page.	updated UserPage	0	2	Add accepted contributions list to user profile page	1	1	4	131	1	\N	\N
-64	10	2016-09-29 17:54:34.229	Take the original R scripts with the current decision algorithm and reorganize them so that it is easy to compare multiple algorithms	R code	0	2	Prepare R code to test decision algorithms	1	1	2	176	1	\N	\N
-62	10	2016-09-21 17:02:07.975	Current is version is dummy. Improve it, at least add a list of contributors and their ownership.	updated ProjectPage	0	2	Improve Project Page	1	1	4	166	1	\N	\N
-53	35	2016-09-08 22:51:51.221	The name CoProjects is not considered good enough. Think of another one that is more catchy. Elements like points"participation points", "goals", "contributions" and "decisions" could also be renamed.  The new name should be accompanied from a free (and reasonably cheap) domain name.	Presentation of the names	2	2	Catchy names	3	1	7	139	1	\N	\N
-67	10	2016-10-04 17:49:09.021	Allow users to change the goal hierarchy (set Goal parents and subgoals) with Decision items	Updated goal modification process	0	2	Allow Goal hierarchy to be edited with decisions	1	1	4	195	1	\N	\N
-37	15	2016-09-05 10:15:39.715	Add the possibility for users to mark that they are reviewing a Bid but cannot provide a Bid price yet as its not clear how much work is needed. This way other users can contact them in case they are also interested in Bidding to that contribution. This could be added as a new Bid state in which the bid value is not mandatory	updated Bid entity and all dependencies	0	2	Add "under review" marks to Contributions	1	1	3	\N	1	\N	\N
-71	5	2016-10-07 21:53:37.745	Update webapp and overall project support tools like slack, github, docs in Google Drive, white paper, etc to use the new name of the project: "CollectiveOne"	Updated names all arround	0	2	Remove CoProjects and use CollectiveOne	1	1	7	213	1	\N	\N
-68	15	2016-10-05 09:25:26.816	Create a basic slides presentation to be used as the starting point of a video presentation (separate contribution)	Google Drive Slides	0	2	Slides Presentation	1	1	11	198	1	\N	\N
-70	5	2016-10-07 14:35:56.187	Create a namecheap account to the name of CollectiveOne and buy the domain	Domain assignation	0	2	Buy the collectiveone.org domain	4	1	7	209	1	\N	\N
-31	15	2016-09-01 20:14:46.486	Create a bar with the Platform projects in which the user can select one or more projects and the web app will automatically filter its interaction in the platform to those projects. For example, if the user select the project "CoProjects" and them search for contributions, only the contributions of the "CoProjects" projects will be shown. The bar can be located just below the Coprojects logo	Updated UI with bar	1	2	Active Project Bar	1	1	4	\N	1	\N	\N
-66	5	2016-10-03 15:11:10.568	Update all DIV buttons to ANCHOS so that they are identified by the browser as links, allowing the user to interact with them as links (open them in a new tab etc)	updated user interface (JS, CSS and HTML)	0	2	Update DIV buttons to ANCHORS	1	1	4	182	1	\N	\N
-73	10	2016-10-10 20:08:58.375	Remove properties in User and Project entities (mostly lists of contributions) to avoid redundancies. Store all data in one single place	updated data model	0	2	Refactor model to avoid redundancies	1	1	3	217	1	\N	\N
-59	5	2016-09-15 14:47:23.821	Create a welcome page which provides an appealing overview of CoProjects and invites visitors to get engaged	new page	0	2	Welcome page 	1	1	4	158	1	\N	\N
-74	10	2016-10-10 20:29:16.714	Allow for goaltags to be the same in two projects. Add the project to the GoalBox	updated webapp db service	0	2	Goal tags	1	1	6	222	1	\N	\N
-76	0	2016-10-18 14:48:48.587	Decisions are not independent one of each other. If one is accepted, perhaps another should be rejected. Or maybe a decision should be accepted only if three other decisions are also accepted, otherwise none should be accepted at all. Propose a method to group decisions together (create plans?) so that the decision process is able to handle these scenarios.\n	decision grouping approach	0	4	Group decisions	\N	1	2	243	1	\N	\N
-75	3	2016-10-14 18:30:06.957	Arguments are not correctly displayed in the decision list. They mix together. 	Fixed decision list	0	2	Fix bug in decision arguments display	1	1	4	234	1	\N	\N
-77	5	2016-10-18 14:50:23.299	GoalTags are not beenf filled correctly in new contribution	updated CbtionNewPage	0	2	Fix bug in goaltag in new contribution	1	1	4	244	1	\N	\N
-78	100	2016-10-19 20:51:28.066	Start contribution	\N	0	2	Create project datasketch	5	5	\N	\N	3	\N	\N
-79	0	2016-10-19 21:08:31.577		data sets	0	1	Prepare initial public data sets	\N	5	23	259	3	\N	\N
-80	1	2016-10-19 21:13:30.346		nodejs repo	0	2	create webpage	5	5	24	264	3	\N	\N
-72	0	2016-10-07 22:22:22.623	Use a screen video recorder to create a short video showing the typical use of the CollectiveOne web application	HD video file	1	5	Save screen while using the webapp	\N	1	11	216	1	\N	\N
-69	10	2016-10-06 10:44:45.314	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	0	2	Setup markdown basic infrastructure	1	1	12	204	1	\N	\N
-90	0	2016-10-24 19:35:00.54	Prepare a roadmap for the project so that new contributors can have an idea of which is are current expectations 	roadmap document	0	4	Prepare a roadmap for collectiveone	\N	1	7	285	1	\N	\N
-81	5	2016-10-20 13:20:04.689	ActiveProject selection automatically redraw the current page. While this is ok for pages of list of objects, it is not working ok for user and project pages, since some elements are duplicated. 	updated pages and/or active project logic 	0	2	BUG FIX Active project selection wrong redraw	1	1	4	270	1	\N	\N
-95	0	2016-10-26 15:59:06.725	Pay for one moth heroku hobby hosting. Current price is 7 dollars maximum.	credit card payment	0	6	Pay for one moth heroku hobby hosting	\N	1	6	300	1	2016-10-26 15:59:38.976	301
-91	0	2016-10-25 10:48:50.46	Dummy contribution to be deleted	none	0	6	Test to be deleted	\N	1	\N	286	1	2016-10-25 10:49:37.709	287
-82	10	2016-10-20 13:22:18.629	Allow contributions to be deleted by its creator (if they have not been yet accepted) or by a collective decision (if they have)	update contribution lifecycle and ui	1	2	Allow contributions to be deleted	1	1	3	271	1	\N	\N
-85	0	2016-10-23 12:26:16.853	See if other domains that could be used by CollectiveOne are free and aquire them	domain control	0	4	Look for and acquire other domains	\N	1	7	279	1	\N	\N
-84	0	2016-10-21 18:25:59.693	Use an native english speaking person if possible	audio file	0	5	Improve the welcome video audio	\N	1	8	277	1	\N	\N
-87	0	2016-10-23 22:47:24.759	Prepare a presentation email starting from email from esteban to introduce selected people to the project.	email draft	0	4	Prepare presentation email	\N	1	7	282	1	\N	\N
-88	0	2016-10-24 15:26:45.566	Currently all decisions duration is set to 36 hours. This is considered a temporary solution. Decision duration should follow some criteria which could be related to the decision creator (new users, or users whose decisions are usually rejected require more time), the decision impact (decisions affecting more pps should require more time) or the decision level (decisions at higher order goals should require more time and those at lower level specific goals)	document (or reddit post) with the proposal	0	4	Propose an stratergy to handle decision duration	\N	1	1	283	1	\N	\N
-89	0	2016-10-24 15:33:45.623	Update argumentation method to allow arguments to be a reply to another argument. Perhaps consider using standard replies like (this is true but ...) or (this is not true since...) etc...\n	Updated argument strategy and UI	0	4	Review arguments structure to allow replies	\N	1	3	284	1	\N	\N
-96	5	2016-10-26 16:00:18.436	Current price is 7 dollars	heroku one month payment	0	2	Pay for one moth heroku hobby hosting	4	1	6	302	1	\N	303
-86	50	2016-10-23 21:42:33.991	The video should describe the collectiveone concept and the current features of the webapp 	Video file 	0	2	Prepare video for Welcome page  	1	1	8	281	1	\N	290
-93	0	2016-10-26 10:46:30.535	Text below the video is ugly. Find a better way to display this info and links.	updated welcom page	0	4	Update the welcome page	\N	1	7	298	1	\N	\N
-92	5	2016-10-26 09:37:40.668	Prepare the first version of the CollectiveOne lean canvas.	lean canvas in google draw	0	2	Prepare the CollectiveOne lean canvas	1	1	1	294	1	\N	295
-94	0	2016-10-26 11:01:47.017	Current goals structure is not well organized nor planed for the work ahead. Prepare a better starting point.	propose a goal architecture	0	4	Preare goals structure	\N	1	1	299	1	\N	\N
-6	900	2016-08-10 10:59:43.963	Develop the CoProjects web page prototype	Web application prototype in JAVAEE using Struts2, Spring and Hibernate frameworks	0	2	Web App	1	1	10	\N	1	\N	\N
-97	0	2016-10-26 16:45:58.063	Add loading animation (gif) when loading list results	updated UI	0	4	Loading animation	\N	1	4	306	1	\N	\N
-98	0	2016-10-27 09:49:59.232	Current list and subgoals expansion is confusing and hard to read. Improve it.	updated goals list page	0	4	Improve Goals browser	\N	1	4	323	1	\N	\N
+COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, product, relevance, state, title, contributor_id, creator_id, delete_dec_id, goal_id, open_dec_id, project_id) FROM stdin;
+1	100	2016-08-08 14:36:40.335	\N	Start contribution	\N	0	2	Create project CoProjects	1	1	\N	1	\N	1
+4	20	2016-08-08 16:31:23.877	\N	Support preparation of white paper	White paper sections and editions 	0	2	Support white paper draft	3	1	\N	1	\N	1
+5	500	2016-08-10 10:58:24.39	\N	Propose the CoProjects idea as a way of creating economic value decentralizedly	First CoProjects concept	0	2	CoProjects First Proposal	1	1	\N	1	\N	1
+7	100	2016-08-10 11:00:36.643	\N	Migrate the contents of the Wiki and Reddit to Basecamp summarizing the key points to be discussed	First set of basecamp messages and docs	0	2	Status Summary in Basecamp	1	1	\N	1	\N	1
+9	60	2016-08-10 11:02:34.493	\N	Review the CoProjects business model and find critical points. In particular, analyze how should the CoProjects platform relation with the projects should be.	Feedback and analysis report	0	2	Study CoProjects Business Model Alternatives	3	1	\N	1	\N	1
+15	40	2016-08-20 15:31:38.967	\N	Further contributions to white paper	White paper updated	0	2	Contributions to white paper	3	1	\N	1	\N	1
+16	0	2016-08-20 15:44:57.06	\N	Update the diagram of the white paper using, as basis, the old diagram and the text included in the white paper.	Diagram file (editable)	0	0	Update White Paper Diagram	\N	1	\N	1	\N	1
+12	10	2016-08-10 11:09:36.933	\N	Update bids to have a delivery date and udpate new bid form to request delivery date. Basic functionality needed. Style to be added on another contribution	Updated Bid entity and new bid form	0	2	Add delivery date to bids	1	1	\N	3	\N	1
+18	10	2016-08-20 16:00:05.469	\N	Add IP and licensing sections to white paper	White paper updated	0	2	IP and Licensing in White Paper	1	1	\N	1	\N	1
+21	5	2016-08-23 22:10:35.014	\N	Select a new set of three colors to update the current user interface. Olive is just hard to read.	Three hex codes	0	2	New UI colors	1	1	\N	4	\N	1
+8	100	2016-08-10 11:02:08.133	\N	Review the Decision Mechanism concept, formulate it and propose improvements and alternatives	Feedback and analysis report	0	2	Review Decision Mechanism	3	1	\N	2	\N	1
+19	10	2016-08-20 16:02:02.831	\N	Prepare a google spreadsheet to track the contribution items from the beginning so that the CoProjects method is applied from the beginning	Google sheet	0	2	Contribution Tracker Google Sheet	1	1	\N	1	\N	1
+20	0	2016-08-20 16:32:22.509	\N	Add LiquidBase to the webapp so that updates to the database can be done cleanly	Updated webapp	0	0	Add LiquidBase	\N	1	\N	3	\N	1
+24	10	2016-08-26 18:54:55.83	\N	Change the type of the description of the entities to allow larger descriptions. Current limit of 255 characters is too low.	Updated DB schema and data	0	2	Extend description size	1	1	\N	3	\N	1
+22	7	2016-08-24 22:16:35.843	\N	Prepare an email to invite collaborators to join project and help develop the CoProjects platform	Email draft	0	2	Prepare invitation email 	3	1	\N	1	\N	1
+23	20	2016-08-26 08:47:41.154	\N	Simplify DecisionBox so that it focus in the state that it wants to change. E.g. Bid OFFERED->ASSIGN? yes/no | yes in 4 hr	Updated DecisionBox integration	0	2	Uptade DecisionBox	1	1	\N	4	\N	1
+3	30	2016-08-08 14:42:27.589	\N	Add Goals items to db. A goal must have a tag and a description. It must have a page to create one and a page to search goals (follow contributions structure), at least three states and and two decisions should operate on it: create, and delete.	New entity	0	2	Add Goals to DB	1	1	\N	3	\N	1
+10	10	2016-08-10 11:02:56.3	\N	Identify the key open points that shall be clarified as part of the definition of CoProjects	Basecam To-Do list	0	2	Concept Key To-Do items	4	1	\N	1	\N	1
+13	10	2016-08-10 11:11:40.77	\N	Update CbtionList page to use a separate CbtionBox class that can be reused all over the platform. Use AngularJS templates,	New CbtionBox javascript class	0	2	Create CbtionBox js object using AngularJS	1	1	\N	4	\N	1
+27	10	2016-08-29 18:03:02.037	\N	Allow arbitrary decision items to be created, listed and voted. Current decisions are only linked to actions in the platform, e.g accepting bids. General-topic decision items would allow to poll the contributors of a project about any given matter. The outcome of the decision will have no automatic effect in the platform, but will be handled by the community. For example: the decision to send an email (in behalf of the project) to someone.	Decision creation page and decision search page (like Contributions and goals)	0	2	Arbitary decisions	1	1	\N	3	\N	1
+26	5	2016-08-28 18:28:01.659	\N	Clean and update user interface (mainly CSS files) to abandon olive green backgrounds and fonts. Replace following the structure of the CbtionBox element just commited	Updated CSS files	0	2	Basic UI update	1	1	\N	4	\N	1
+28	5	2016-08-29 21:49:13.9	\N	Create a js+css+html independent filter element that can be reused in the pages that needs it (currently goals and contributions), but that can be used in other list pages (like decision list page)	js+css+html element integrated in GoalListPage and CbtionListPage	0	2	Create Filter Element	1	1	\N	4	\N	1
+17	80	2016-08-20 15:53:52.498	\N	Review the CoProjects concept and find critical points	Presentation	0	2	Review the CoProjects concept and find critical points	4	1	\N	1	\N	1
+29	15	2016-09-01 17:15:38.157	\N	Improve DecisionBox element. Make it nice and useful.	Updated DecisionBox html+js+css	0	2	Improve DecisionBox	1	1	\N	4	\N	1
+11	30	2016-08-10 11:07:35.129	\N	Edit decision entity to have a list of pro and against arguments and create a DecisionPage view to show the decision status, and allow the addition of arguments.	Updated decision entity and new DecisionPage view with basic functionality	0	2	Add pro and against lists of arguments to decisions	1	1	\N	3	\N	1
+30	2	2016-09-01 20:04:36.437	\N	Merge Cbtion, Goals and Decisions filtered search methods into a single one so that filter functionality can evolve cleanly	updated DbServices class and dependencies	0	2	Merge all *GetList DB service method	1	1	\N	3	\N	1
+32	5	2016-09-01 23:47:44.616	\N	Create a BaseDao superclass to concentrate all common methods to all entities Daos. This is a preliminary step to have the search functionality in a single place. Update all dependencies and Daos methods to wrap and cast the super caller methods	updated Dao Java classes	0	2	Create BaseDao superclass	1	1	\N	6	\N	1
+2	50	2016-08-08 14:37:36.535	\N	Deploy webapp in heroku as it is. 	Heroku app running	0	2	Deploy in Heroku	1	1	\N	6	\N	1
+108	15	2016-11-11 12:32:36.426	\N	72 euro	payment	0	2	Pay airplane ticket BCN Brusels	1	1	373	7	372	1
+14	10	2016-08-20 15:23:07.49	\N	Allow creators to edit a contribution description if no one has yet bid	Updated UI and API	1	2	Editable Contributions	1	1	\N	4	\N	1
+33	15	2016-09-04 15:04:51.427	\N	Add the possibility for users to review bids that have been closed, either accepted or not accepted, by adding a rate and comment. Update the BidBox so that users can add their reviews below the bid. Store the reviews in the User entity.	Updated DB and BidBox UI	0	2	Add Reviews to Bids	1	1	\N	3	\N	1
+43	4	2016-09-06 16:33:16.522	\N	Use a simple 1-5 review logic using yellow stars and revert the current method.	Updated UI and minot model updates	0	2	Updated Reviews to use Stars	1	1	\N	4	\N	1
+38	2	2016-09-05 10:17:23.588	\N	Updated Goal autocomplete in new Contribution form, to show goals of the project in which the contribution is being created. It currently shows all Goals in the DB	updated CbionNewPage and dependencies	0	2	Goal autocomplete per project	1	1	\N	4	\N	1
+34	5	2016-09-05 10:09:10.66	\N	Add "creator" as a field to Goals, Cbtions and Decisions filters. Use autocomplete to select one or more users as creators and return results for those users (and the rest of filter criteria). Try to do this in combination of the https://coprojects-hk.herokuapp.com/views/CbtionPage.action?cbtionId=30 contribution, which as to merge the filter logic in one single place.	Updated js filter element and DB services	0	2	Add creator filter	1	1	\N	4	\N	1
+35	3	2016-09-05 10:10:47.582	\N	Add "keyword" as a field to Goals, Cbtions and Decisions filters. Use a sumple %query% logic to return items with that word in their title, or description. Try to do this in combination of the https://coprojects-hk.herokuapp.com/views/CbtionPage.action?cbtionId=30 contribution, which ask to merge the filter logic in one single place.	updated filter element JS and DB services	0	2	Add keyword filter	1	1	\N	4	\N	1
+44	2	2016-09-07 09:04:54.21	\N	Add some way for the user to click in a portion of the smallDecisionBox object and go to the decision page of that decision so that he can see more details about it	updated smallDecisionBox	0	2	Add link to decision page in smallDecisionBox	1	1	\N	4	\N	1
+45	0	2016-09-07 18:13:52.233	\N	Add a filter to search elements based on their creation date (i.e. if the date is within a range). Updated filter element and DB service	updated Filter JS element and DB BaseDao get methods	0	4	Add filter by creation date	\N	1	\N	4	123	1
+47	5	2016-09-07 18:55:40.09	\N	Add relevance property to contributions as a number. Allow users to upvote or downvote contributions. Each upvote increases relevance by 1. Updated CbtionBox so that it includes to arrows at the left to allow users to upvote and downvote	updated Cbtion entity and BidBox js	0	2	Add relevance level to contributions	1	1	\N	4	125	1
+36	5	2016-09-05 10:12:12.682	\N	Allow the user to sort the results of Goals, Cbtions and Decisions list based in creation date. If possible allow for other criteria.	updated filter element JS and DB services	0	2	Add "sort by" to filter	1	1	\N	4	\N	1
+58	0	2016-09-13 10:58:14.145	\N	Configure Log4J so that it keeps a log of the web app activity. Add an example of how to add logging within the application. Another contribution(s) can be used to populate the log of events.	updated backend application	0	4	Setup Log4J	\N	1	\N	6	151	1
+41	15	2016-09-05 10:22:36.319	\N	Add hierarchy links to goals so that any goal can be marked as a sub-goal of other goal. Updated Goal search page to represent this hierarchy and allow the user to create these links. Updated GoalNewPage to allow new goals to be marked as subgoals of other.	Updated Goal entity, GoalListPage, GoalNew forma and dependencies	1	2	Add hierarchy to Goals	1	1	\N	3	\N	1
+50	10	2016-09-08 16:37:17.423	\N	Add a list of the reviews that a user has received in the platforn	updated UserPage	0	2	Add user reviews to user profile	1	1	\N	4	132	1
+39	25	2016-09-05 10:18:00.846	\N	Add the possibility to filter Contributions by goal	updated filter element	0	2	Filter Contributions by goal	1	1	\N	4	\N	1
+56	8	2016-09-10 11:45:12.991	\N	Keep a record of recent activity and add a page in which it is shown. 	Updated model and new page 	0	2	Recent activity record 	1	1	\N	3	147	1
+55	0	2016-09-08 23:05:16.268	\N	Propose new approaches to the decision mechanism, analyze and test them. If possible compare them with the current implementation of the decision algorithm. 	Analysis document 	1	1	Review of the decision mechanism	\N	1	\N	2	143	1
+54	6	2016-09-08 23:00:46.102	\N	Write a simple document to help new people have an overview of how the CoProjects webapp is structured. Describe the frameworks and the overall structure of the application. 	Google doc 	0	2	Webapp technical overview	1	1	\N	8	142	1
+57	4	2016-09-12 19:34:56.622	\N	Improve the contribution page as the current layout is rather ugly. Use CbtionBox as an example, and add the list of bids and allow the user to bid on the contribution	updated CbtionPage 	1	2	Improve Contribution Page	1	1	\N	4	148	1
+40	0	2016-09-05 10:19:09.952	\N	Allow the user to select more than one goal per contribution	updated CbtionNewPage, Cbtion entitiy and dependencies	-1	6	Allow for multiple goals per Contribution	\N	1	\N	3	\N	1
+42	0.5	2016-09-05 16:43:55.567	\N	Support pepospina to create a new remote of the CoProjects repository in github	github repository	0	2	Support pepospina to create a new remote in github	5	1	\N	10	\N	1
+46	0	2016-09-07 18:24:51.297	\N	Store the filter selections in server session and use it as initialization for the filters in other pages. This way the user does not have to update the filters every time she moves from one page to another.	updated server side and filter JS element	0	4	Store filter in server session	\N	1	\N	6	124	1
+48	0	2016-09-08 08:01:09.603	2016-10-27 15:43:12.942	Merge CbtionListPage, GoalListPage and DecisionListPage into a single page that adapts to the type of enttiy requested. Merge, as much as possible, code in the client and server side to have a single GetList process.	updated client and server side	-1	6	Merge EntityListPages	\N	1	338	6	126	1
+25	10	2016-08-27 09:21:46.317	\N	Prepare the first version of the use-cases doc by describing an example of the typical interactions that a group of people, developing collaboratively a webpage, would have.  	update https://docs.google.com/document/d/1JzFvUytj5I7IhGza-mFt8xXz9avjSiFere3cwXRhW3Q/edit	0	2	Uses-Cases Doc	1	1	\N	1	\N	1
+52	30	2016-09-08 16:48:30.339	\N	Update authentication process to use Spring to handle the authentication and the user passwords storage and encryption.	updated backend authentication approach	1	2	Use spring security to handle user authentication	1	1	365	6	134	1
+51	10	2016-09-08 16:41:08.864	\N	Improve the decision creation process (those created by the platform) to make it simpler to understand the effects of the decision. "OPEN contribution 50" is not clear at all. Moreover, allow some sort of link to the affected entity within the decision box so that the user can go and see the object that is affected by the decision	updated decisionBox and dependencies	1	2	Add affected entity informatione to DecisionBox	1	1	\N	4	133	1
+60	100	2016-09-21 15:38:54.697	\N	Start contribution	\N	0	2	Create project JieMaps	1	1	\N	\N	\N	2
+61	0	2016-09-21 15:40:53.086	\N	Updated the old prototype to use Spring/Hiberante/Struts2	updated webapp	0	0	Commit first version of the prototype	\N	1	\N	\N	163	2
+63	30	2016-09-26 06:34:34.08	\N	Add the possibility for users to add comments and answer to those comments (following a tree approach) in a contribution	new comment entity and updated UI (CbtionBox)	1	2	Add comments to contributions	1	1	\N	3	167	1
+49	15	2016-09-08 16:35:53.726	\N	Add a list of the contributions accepted to a user in its profile page.	updated UserPage	0	2	Add accepted contributions list to user profile page	1	1	\N	4	131	1
+64	10	2016-09-29 17:54:34.229	\N	Take the original R scripts with the current decision algorithm and reorganize them so that it is easy to compare multiple algorithms	R code	0	2	Prepare R code to test decision algorithms	1	1	\N	2	176	1
+62	10	2016-09-21 17:02:07.975	\N	Current is version is dummy. Improve it, at least add a list of contributors and their ownership.	updated ProjectPage	0	2	Improve Project Page	1	1	\N	4	166	1
+53	35	2016-09-08 22:51:51.221	\N	The name CoProjects is not considered good enough. Think of another one that is more catchy. Elements like points"participation points", "goals", "contributions" and "decisions" could also be renamed.  The new name should be accompanied from a free (and reasonably cheap) domain name.	Presentation of the names	2	2	Catchy names	3	1	\N	7	139	1
+67	10	2016-10-04 17:49:09.021	\N	Allow users to change the goal hierarchy (set Goal parents and subgoals) with Decision items	Updated goal modification process	0	2	Allow Goal hierarchy to be edited with decisions	1	1	\N	4	195	1
+37	15	2016-09-05 10:15:39.715	\N	Add the possibility for users to mark that they are reviewing a Bid but cannot provide a Bid price yet as its not clear how much work is needed. This way other users can contact them in case they are also interested in Bidding to that contribution. This could be added as a new Bid state in which the bid value is not mandatory	updated Bid entity and all dependencies	0	2	Add "under review" marks to Contributions	1	1	\N	3	\N	1
+71	5	2016-10-07 21:53:37.745	\N	Update webapp and overall project support tools like slack, github, docs in Google Drive, white paper, etc to use the new name of the project: "CollectiveOne"	Updated names all arround	0	2	Remove CoProjects and use CollectiveOne	1	1	\N	7	213	1
+68	15	2016-10-05 09:25:26.816	\N	Create a basic slides presentation to be used as the starting point of a video presentation (separate contribution)	Google Drive Slides	0	2	Slides Presentation	1	1	\N	11	198	1
+70	5	2016-10-07 14:35:56.187	\N	Create a namecheap account to the name of CollectiveOne and buy the domain	Domain assignation	0	2	Buy the collectiveone.org domain	4	1	\N	7	209	1
+31	15	2016-09-01 20:14:46.486	\N	Create a bar with the Platform projects in which the user can select one or more projects and the web app will automatically filter its interaction in the platform to those projects. For example, if the user select the project "CoProjects" and them search for contributions, only the contributions of the "CoProjects" projects will be shown. The bar can be located just below the Coprojects logo	Updated UI with bar	1	2	Active Project Bar	1	1	\N	4	\N	1
+66	5	2016-10-03 15:11:10.568	\N	Update all DIV buttons to ANCHOS so that they are identified by the browser as links, allowing the user to interact with them as links (open them in a new tab etc)	updated user interface (JS, CSS and HTML)	0	2	Update DIV buttons to ANCHORS	1	1	\N	4	182	1
+73	10	2016-10-10 20:08:58.375	\N	Remove properties in User and Project entities (mostly lists of contributions) to avoid redundancies. Store all data in one single place	updated data model	0	2	Refactor model to avoid redundancies	1	1	\N	3	217	1
+59	5	2016-09-15 14:47:23.821	\N	Create a welcome page which provides an appealing overview of CoProjects and invites visitors to get engaged	new page	0	2	Welcome page 	1	1	\N	4	158	1
+74	10	2016-10-10 20:29:16.714	\N	Allow for goal_tags to be the same in two projects. Add the project to the GoalBox	updated webapp db service	0	2	Goal tags	1	1	\N	6	222	1
+75	3	2016-10-14 18:30:06.957	\N	Arguments are not correctly displayed in the decision list. They mix together. 	Fixed decision list	0	2	Fix bug in decision arguments display	1	1	\N	4	234	1
+77	5	2016-10-18 14:50:23.299	\N	goal_tags are not beenf filled correctly in new contribution	updated CbtionNewPage	0	2	Fix bug in goal_tag in new contribution	1	1	\N	4	244	1
+78	100	2016-10-19 20:51:28.066	\N	Start contribution	\N	0	2	Create project datasketch	5	5	\N	\N	\N	3
+79	0	2016-10-19 21:08:31.577	\N		data sets	0	1	Prepare initial public data sets	\N	5	\N	23	259	3
+80	1	2016-10-19 21:13:30.346	\N		nodejs repo	0	2	create webpage	5	5	\N	24	264	3
+72	0	2016-10-07 22:22:22.623	\N	Use a screen video recorder to create a short video showing the typical use of the CollectiveOne web application	HD video file	1	5	Save screen while using the webapp	\N	1	\N	11	216	1
+69	10	2016-10-06 10:44:45.314	\N	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	0	2	Setup markdown basic infrastructure	1	1	\N	12	204	1
+65	20	2016-10-01 20:17:58.03	\N	Setup the infrastructure to send emails from the application. Include a simple example. Separate contributions will be dedicated to construct and configure the emails	Example service that sends email from webapp	0	2	Add email notification infrastructure	1	1	364	6	181	1
+76	0	2016-10-18 14:48:48.587	\N	Decisions are not independent one of each other. If one is accepted, perhaps another should be rejected. Or maybe a decision should be accepted only if three other decisions are also accepted, otherwise none should be accepted at all. Propose a method to group decisions together (create plans?) so that the decision process is able to handle these scenarios.\n	decision grouping approach	0	0	Group decisions	\N	1	361	2	243	1
+81	5	2016-10-20 13:20:04.689	\N	ActiveProject selection automatically redraw the current page. While this is ok for pages of list of objects, it is not working ok for user and project pages, since some elements are duplicated. 	updated pages and/or active project logic 	0	2	BUG FIX Active project selection wrong redraw	1	1	\N	4	270	1
+87	0	2016-10-23 22:47:24.759	\N	Prepare a presentation email starting from email from esteban to introduce selected people to the project.	email draft	1	0	Prepare presentation email	\N	1	336	7	282	1
+95	0	2016-10-26 15:59:06.725	2016-10-26 15:59:38.976	Pay for one moth heroku hobby hosting. Current price is 7 dollars maximum.	credit card payment	0	6	Pay for one moth heroku hobby hosting	\N	1	301	6	300	1
+91	0	2016-10-25 10:48:50.46	2016-10-25 10:49:37.709	Dummy contribution to be deleted	none	0	6	Test to be deleted	\N	1	287	\N	286	1
+82	10	2016-10-20 13:22:18.629	\N	Allow contributions to be deleted by its creator (if they have not been yet accepted) or by a collective decision (if they have)	update contribution lifecycle and ui	1	2	Allow contributions to be deleted	1	1	\N	3	271	1
+89	0	2016-10-24 15:33:45.623	\N	Update argumentation method to allow arguments to be a reply to another argument. Perhaps consider using standard replies like (this is true but ...) or (this is not true since...) etc...\n	Updated argument strategy and UI	0	0	Review arguments structure to allow replies	\N	1	362	3	284	1
+84	0	2016-10-21 18:25:59.693	\N	Use an native english speaking person if possible	audio file	0	5	Improve the welcome video audio	\N	1	\N	8	277	1
+98	5	2016-10-27 09:49:59.232	\N	Current list and subgoals expansion is confusing and hard to read. Improve it.	updated goals list page	0	2	Improve Goals browser	1	1	324	4	323	1
+96	5	2016-10-26 16:00:18.436	\N	Current price is 7 dollars	heroku one month payment	0	2	Pay for one moth heroku hobby hosting	4	1	303	6	302	1
+86	50	2016-10-23 21:42:33.991	\N	The video should describe the collectiveone concept and the current features of the webapp 	Video file 	0	2	Prepare video for Welcome page  	1	1	290	8	281	1
+94	5	2016-10-26 11:01:47.017	\N	Current goals structure is not well organized nor planed for the work ahead. Prepare a better starting point.	propose a goal architecture	0	2	Prepare goals structure	1	1	325	1	299	1
+88	0	2016-10-24 15:26:45.566	\N	Currently all decisions duration is set to 36 hours. This is considered a temporary solution. Decision duration should follow some criteria which could be related to the decision creator (new users, or users whose decisions are usually rejected require more time), the decision impact (decisions affecting more pps should require more time) or the decision level (decisions at higher order goals should require more time and those at lower level specific goals)	document (or reddit post) with the proposal	0	0	Propose an strategy to handle decision duration	\N	1	360	1	283	1
+92	5	2016-10-26 09:37:40.668	\N	Prepare the first version of the CollectiveOne lean canvas.	lean canvas in google draw	0	2	Prepare the CollectiveOne lean canvas	1	1	295	1	294	1
+85	0	2016-10-23 12:26:16.853	\N	See if other domains that could be used by CollectiveOne are free and aquire them	domain control	0	0	Look for and acquire other domains	\N	1	359	7	279	1
+93	2	2016-10-26 10:46:30.535	\N	Text below the video is ugly. Find a better way to display this info and links.	updated welcom page	0	2	Update the welcome page	1	1	326	7	298	1
+6	900	2016-08-10 10:59:43.963	\N	Develop the CoProjects web page prototype	Web application prototype in JAVAEE using Struts2, Spring and Hibernate frameworks	0	2	Web App	1	1	\N	10	\N	1
+103	0	2016-11-04 10:27:46.671	\N	Create a landing page for asking and sending invitation to the project Slack. See http://rauchg.com/slackin/	landing page configured and tested	0	0	Add Slackin to slack channel	\N	1	356	7	345	1
+97	5	2016-10-26 16:45:58.063	\N	Add loading animation (gif) when loading list results	updated UI	0	2	Loading animation	1	1	333	4	306	1
+90	0	2016-10-24 19:35:00.54	\N	Prepare a roadmap for the project so that new contributors can have an idea of which are the current expectations 	roadmap document	0	0	Prepare a roadmap for CollectiveOne	\N	1	363	7	285	1
+101	0	2016-10-31 11:44:42.674	\N	Promote CollectiveOne to get other people involved though the proposal and/or execution of contribution items.	new contributor to CollectiveOne	0	0	Evangelize - Get other people onboard	\N	1	357	7	341	1
+102	0	2016-11-01 23:14:53.504	\N	Prepare a temporary (yet good enough to be used) version of the use-case in Google Slides to be used as "method example" while a more sophisticated intro video is prepared.	google slides	0	2	Prepare animated slides with use-case	1	1	344	7	343	1
+105	15	2016-11-11 10:19:25.587	\N	Pay 31 dollars to Fiverr narrator.	fiverr payment and narration file	0	2	Pay for Fiverr voice narration	1	1	349	7	348	1
+104	0	2016-11-07 22:50:20.99	2016-11-11 10:30:24.918	Review the script of the video and fix grammatical errors if any. 	Revisions to drive file 	0	6	Review use-case video script 	\N	1	347	7	346	1
+107	20	2016-11-11 12:00:01.666	\N	95 euro	registration payment	0	2	Pay registration to http://crowdsourcingweek.com/	1	1	369	7	368	1
+99	150	2016-10-27 15:19:35.477	\N	Update API to use spring-boot instead of struts2 to handle and redirect requests	updated backend	1	2	Abandon Struts2 and migrate to Spring	1	1	358	6	337	1
+106	10	2016-11-11 10:23:08.88	\N	Re-edit use-case video to include the narration voice. Synchronize the audio with the video but add pauses on both to make it more pleasant.	video edition project file and 1080p video file	0	2	Add narration to use-case video	1	1	353	7	352	1
+112	5	2016-11-17 22:20:38.15	\N	It's not working on chrome mobile. It also didn't work on other browsers. 	Updated FilterElement	1	2	Fix orderby select box 	1	1	388	4	387	1
+111	0	2016-11-17 22:18:39.34	2016-11-18 15:37:59.968	As state filters and hide closed decisions by default. Check the order as it seem old decisions are being shown first 	Updated decisionListPageR	0	6	Fix decision browser 	\N	1	391	4	386	1
+113	0	2016-11-18 17:11:21.919	\N	So far the decision algorithm programmed in the web application has net be thoughtfully tested with multiple voters. Design a unit test of the algorithm to verify it behaves as expected. 	updated unit test	0	4	Test the decision algorithm	\N	1	\N	6	392	1
+114	0	2016-11-18 20:27:41.837	\N	Goals are expected to work as a "requirements specification". The contribution consist on reviewing the current goals structure under the +webapp goal and propose an improvement to it, trying to identify the key sub-goals (or milestones) that are to be achieved to reach the +webapp goal. Each sub-goal can be decomposed into sub-goals multiple times if needed.	document with a proposal of a decomposition in a sub-goals tree of the +webapp goal	1	0	Review the goal substructure of the +webapp goal	\N	1	394	10	393	1
+109	5	2016-11-17 19:46:01.699	\N	Add a user specific page by migrating and updating the old userpage, which is missing from last refactoring process	new userPage.html and associated resources	0	2	Migrate userPage from old webapp	1	1	396	4	384	1
+110	8	2016-11-17 19:47:55.846	\N	Bid rate and review functionality is missing from last webapp refactoring. Include it in the current application version using as basis the old functionality	updated bid rate and review process	0	2	Migrate bids rating process	1	1	399	10	385	1
+100	0	2016-10-31 08:57:38.615	2016-11-20 17:51:31.534	Heroku is continuously notifying R14 (Memory quota exceeded). Make an overview of the problem cause and identify possible solutions.	description of the problem and solutions identification	0	6	Check memory issue in heroku	\N	1	340	6	339	1
+116	0	2016-11-21 10:30:59.665	\N	setup the basic infrastructure for unit testing	unit test abstract class and test example	0	0	Prepare unit test infrastructure	\N	1	403	6	402	1
 \.
 
 
 ALTER TABLE cbtions ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3204 (class 0 OID 959840)
--- Dependencies: 194
+-- TOC entry 3291 (class 0 OID 1402232)
+-- Dependencies: 202
 -- Data for Name: decision_realms; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -258,14 +291,14 @@ COPY decision_realms (id, project_id) FROM stdin;
 ALTER TABLE decision_realms ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3206 (class 0 OID 959846)
--- Dependencies: 196
+-- TOC entry 3294 (class 0 OID 1402240)
+-- Dependencies: 205
 -- Data for Name: decisions; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE decisions DISABLE TRIGGER ALL;
 
-COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, elapsedfactor, fromstate, l0, l1, n, n_min_stab, opendate, pest, ppscum, ppstot, stab_ratio, stability, state, tostate, type, verdict, verdicthours, bid_id, cbtion_id, creator_id, decisionrealm_id, goal_id, project_id) FROM stdin;
+COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description, elapsed_factor, from_state, l0, l1, n, n_min_stab, open_date, pest, pps_cum, pps_tot, stab_ratio, stability, state, to_state, type, verdict, verdict_hours, bid_id, cbtion_id, creator_id, decision_realm_id, goal_id, project_id) FROM stdin;
 2	\N	0.949999999999999956	0	2016-08-08 14:36:40.339	accept bid 1 of cbtion:0 to:pepospina	0	\N	1	0	0	8	\N	0	0	0	0.5	0	2	\N	\N	1	36	\N	\N	6	1	\N	1
 4	\N	0.949999999999999956	1	2016-08-08 14:37:52.101	Assign cbtion 2 to pepospina	0	\N	0	1	1	8	\N	1	100	100	0.5	0	2	\N	\N	1	36	\N	\N	6	1	\N	1
 5	\N	0.949999999999999956	1	2016-08-08 14:37:52.101	Accept cbtion 2 to pepospina	0	\N	0	1	1	8	\N	1	100	100	0.5	0	2	\N	\N	1	36	\N	\N	6	1	\N	1
@@ -327,7 +360,6 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 102	2016-09-01 23:48:28.032	0.949999999999999956	1	2016-09-01 23:48:03.517	Accept cbtion 32 to pepospina	0	ASSIGNED	0	1	1	8	2016-09-01 23:48:28.03	1	1790	2107	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
 103	2016-09-04 12:58:19.385	0.949999999999999956	1	2016-09-04 12:57:56.514	Assign cbtion 11 to pepospina	0	OFFERED	0	1	1	8	2016-09-04 12:58:19.376	1	1795	2112	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
 104	2016-09-04 12:58:24.606	0.949999999999999956	1	2016-09-04 12:57:56.514	Accept cbtion 11 to pepospina	0	ASSIGNED	0	1	1	8	2016-09-04 12:58:24.603	1	1795	2112	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
-105	\N	0.949999999999999956	0	2016-09-05 16:00:54.118	Assign cbtion 25 to pepospina	0	OFFERED	1	0	0	8	\N	0	0	0	0.5	0	0	ASSIGNED	\N	0	36	\N	\N	6	1	\N	1
 106	\N	0.949999999999999956	0	2016-09-05 16:00:54.118	Accept cbtion 25 to pepospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	\N	0	36	\N	\N	6	1	\N	1
 107	2016-09-05 17:12:21.627	0.949999999999999956	1	2016-09-05 17:02:21.388	Assign cbtion 42 to jpmarindiaz	0	OFFERED	0	1	1	8	2016-09-05 17:12:21.625	1	1825	2142	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
 108	2016-09-05 17:12:26.755	0.949999999999999956	1	2016-09-05 17:02:21.388	Accept cbtion 42 to jpmarindiaz	0	ASSIGNED	0	1	1	8	2016-09-05 17:12:26.751	1	1825	2142	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
@@ -353,13 +385,11 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 122	2016-09-07 18:09:23.974	0.949999999999999956	1	2016-09-07 18:09:12.393	Accept cbtion 44 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-07 18:09:23.972	1	1856	2173.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
 123	\N	0.949999999999999956	0	2016-09-07 18:13:52.24	OPEN contribution 45	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	\N	0	36	\N	\N	6	1	\N	1
 124	\N	0.949999999999999956	0	2016-09-07 18:24:51.315	OPEN contribution 46	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	\N	0	36	\N	\N	6	1	\N	1
-126	\N	0.949999999999999956	0	2016-09-08 08:01:09.624	OPEN contribution 48	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	\N	0	36	\N	\N	6	1	\N	1
 125	2016-09-08 16:26:23.799	0.949999999999999956	1	2016-09-07 18:55:40.115	OPEN contribution 47	0	PROPOSED	0	1	1	8	2016-09-08 16:26:23.797	1	1858	2175.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 127	2016-09-08 16:27:46.659	0.949999999999999956	1	2016-09-08 16:27:32.549	Assign cbtion 47 to pepoospina	0	OFFERED	0	1	1	8	2016-09-08 16:27:46.649	1	1858	2175.5	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
 128	2016-09-08 16:28:02.01	0.949999999999999956	1	2016-09-08 16:27:32.579	Accept cbtion 47 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-08 16:28:02.006	1	1858	2175.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
 129	2016-09-08 16:29:34.383	0.949999999999999956	1	2016-09-08 16:29:24.959	Assign cbtion 36 to pepoospina	0	OFFERED	0	1	1	8	2016-09-08 16:29:34.38	1	1863	2180.5	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
 130	2016-09-08 16:29:54.923	0.949999999999999956	1	2016-09-08 16:29:24.964	Accept cbtion 36 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-08 16:29:54.919	1	1863	2180.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
-134	\N	0.949999999999999956	0	2016-09-08 16:48:30.344	OPEN contribution 52	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	\N	0	36	\N	\N	6	1	\N	1
 136	\N	0.949999999999999956	0	2016-09-08 18:36:09.413	Accept cbtion 31 to pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	\N	0	36	\N	\N	6	1	\N	1
 138	\N	0.949999999999999956	0	2016-09-08 22:46:47.418	Delete goal marketing	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	\N	0	36	\N	\N	6	1	\N	1
 137	2016-09-08 22:50:51.924	0.949999999999999956	1	2016-09-08 22:46:47.417	Create goal marketing	0	PROPOSED	0	1	1	8	2016-09-08 22:50:51.922	1	1868	2185.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
@@ -371,6 +401,7 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 139	2016-09-28 16:44:17.849	0.949999999999999956	1	2016-09-08 22:51:51.23	OPEN contribution 53	0	PROPOSED	0	1	1	8	2016-09-28 16:44:17.846	1	1966	2283.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 145	2016-09-09 18:27:53.392	0.949999999999999956	1	2016-09-09 18:27:37.405	Accept cbtion 54 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-09 18:27:53.39	1	1868	2185.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
 146	2016-10-20 13:12:30.707	0.949999999999999956	1	2016-09-10 11:26:27.247	Goals should be renamed to milestones	0	\N	1	0	1	8	2016-10-20 13:12:30.705	0	2109	2466.5	0.5	0	3	\N	\N	0	36	\N	\N	1	1	\N	1
+134	2016-11-11 10:35:08.285	0.949999999999999956	1	2016-09-08 16:48:30.344	OPEN contribution 52	0	PROPOSED	0	1	1	8	2016-11-11 10:35:08.283	1	2231	2593.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 148	2016-09-12 19:35:42.465	0.949999999999999956	1	2016-09-12 19:34:56.635	OPEN contribution 57	0	PROPOSED	0	1	1	8	2016-09-12 19:35:42.456	1	1874	2191.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 149	2016-09-12 19:35:53.023	0.949999999999999956	1	2016-09-12 19:35:43.555	Assign cbtion 57 to pepoospina	0	OFFERED	0	1	1	8	2016-09-12 19:35:53.015	1	1874	2191.5	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
 150	2016-09-12 19:35:58.429	0.949999999999999956	1	2016-09-12 19:35:43.556	Accept cbtion 57 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-12 19:35:58.424	1	1874	2191.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
@@ -402,7 +433,6 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 178	2016-09-29 17:55:43.476	0.949999999999999956	1	2016-09-29 17:55:22.907	accept contribution 'Prepare R code to test decision algorithms' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-09-29 17:55:43.463	1	1966	2283.5	0.5	0	2	ACCEPTED	3	1	36	54	\N	6	1	\N	1
 179	2016-09-30 15:43:36.356	0.949999999999999956	1	2016-09-30 15:43:30.294	assign contribution 'Improve Project Page' to pepoospina	0	OFFERED	0	1	1	8	2016-09-30 15:43:36.353	1	1976	2293.5	0.5	0	2	ASSIGNED	3	1	36	55	\N	6	1	\N	1
 180	2016-09-30 15:43:42.888	0.949999999999999956	1	2016-09-30 15:43:30.3	accept contribution 'Improve Project Page' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-09-30 15:43:42.886	1	1976	2293.5	0.5	0	2	ACCEPTED	3	1	36	55	\N	6	1	\N	1
-181	\N	0.949999999999999956	0	2016-10-01 20:17:58.049	open contribution 'Add email notification infrastructuer'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	65	6	1	\N	1
 183	2016-10-03 15:14:17.642	0.949999999999999956	1	2016-10-03 15:14:08.819	assign contribution 'Filter Contributions by goal' to pepoospina	0	OFFERED	0	1	1	8	2016-10-03 15:14:17.641	1	1986	2303.5	0.5	0	2	ASSIGNED	3	1	36	56	\N	6	1	\N	1
 184	2016-10-03 15:14:36.107	0.949999999999999956	1	2016-10-03 15:14:08.839	accept contribution 'Filter Contributions by goal' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-03 15:14:36.106	1	1986	2303.5	0.5	0	2	ACCEPTED	3	1	36	56	\N	6	1	\N	1
 187	\N	0.949999999999999956	0	2016-10-04 17:33:18.537	delete goal 'webapp'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	10	1
@@ -425,6 +455,7 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 202	2016-10-06 10:44:33.317	0.949999999999999956	1	2016-10-06 10:43:58.959	create goal 'webapp-markdown'	0	PROPOSED	0	1	1	8	2016-10-06 10:44:33.311	1	2036	2353.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	12	1
 204	2016-10-06 10:49:22.689	0.949999999999999956	1	2016-10-06 10:44:45.349	open contribution 'Add markdown syntax'	0	PROPOSED	0	1	1	8	2016-10-06 10:49:22.685	1	2036	2353.5	0.5	0	2	OPEN	1	1	36	\N	69	6	1	\N	1
 206	2016-10-07 14:26:54.894	0.949999999999999956	1	2016-10-07 14:24:50.093	assign contribution 'Catchy names' to estebanortizospina	0	OFFERED	0	1	1	8	2016-10-07 14:26:54.894	1	2036	2353.5	0.5	0	2	ASSIGNED	3	1	36	60	\N	6	1	\N	1
+181	2016-11-11 10:34:22.54	0.949999999999999956	1	2016-10-01 20:17:58.049	open contribution 'Add email notification infrastructuer'	0	PROPOSED	0	1	1	8	2016-11-11 10:34:22.538	1	2231	2593.5	0.5	0	2	OPEN	1	1	36	\N	65	6	1	\N	1
 207	2016-10-07 14:27:15.384	0.949999999999999956	1	2016-10-07 14:26:55.567	accept contribution 'Catchy names' as delivered by estebanortizospina	0	ASSIGNED	0	1	1	8	2016-10-07 14:27:15.384	1	2036	2353.5	0.5	0	2	ACCEPTED	3	1	36	60	\N	6	1	\N	1
 174	\N	0.949999999999999956	1	2016-09-28 16:44:24.5	assign contribution 'Catchy names' to pepoospina	0.00382804012345679037	OFFERED	1	0	1	8	2016-10-07 14:18:59.221	0	227	2353.5	0.5	0	4	ASSIGNED	3	0	36	53	\N	6	1	\N	1
 208	2016-10-07 16:11:25.785	0.949999999999999956	1	2016-10-07 14:33:08.715	assign contribution 'Review of the decision mechanism' to estebanortizospina	0	OFFERED	0	1	1	8	2016-10-07 16:11:25.784	1	2036	2388.5	0.5	0	2	ASSIGNED	3	1	36	61	\N	6	1	\N	1
@@ -452,9 +483,11 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 229	2016-10-11 21:37:54.588	0.949999999999999956	1	2016-10-11 21:37:41.75	accept contribution 'Goal tags' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-11 21:37:54.586	1	2086	2443.5	0.5	0	2	ACCEPTED	3	1	36	66	\N	6	1	\N	1
 182	2016-10-11 21:38:09.129	0.949999999999999956	1	2016-10-03 15:11:10.604	open contribution 'Update DIV buttons to ANCHORS'	0	PROPOSED	0	1	1	8	2016-10-11 21:38:09.128	1	2096	2453.5	0.5	0	2	OPEN	1	1	36	\N	66	6	1	\N	1
 230	2016-10-11 21:38:42.864	0.949999999999999956	1	2016-10-11 21:38:36.627	assign contribution 'Update DIV buttons to ANCHORS' to pepoospina	0	OFFERED	0	1	1	8	2016-10-11 21:38:42.862	1	2096	2453.5	0.5	0	2	ASSIGNED	3	1	36	67	\N	6	1	\N	1
+308	\N	0.949999999999999956	0	2016-10-26 19:57:18.555	delete goal 'vision'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	25	1
 216	2016-10-23 21:43:25.074	0.949999999999999956	1	2016-10-07 22:22:22.649	open contribution 'Save screen while using the webapp'	0	PROPOSED	1	0	1	8	2016-10-23 21:43:25.073	0	2124	2481.5	0.5	0	3	OPEN	1	0	36	\N	72	6	1	\N	1
 231	2016-10-11 21:38:56.497	0.949999999999999956	1	2016-10-11 21:38:43.569	accept contribution 'Update DIV buttons to ANCHORS' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-11 21:38:56.495	1	2096	2453.5	0.5	0	2	ACCEPTED	3	1	36	67	\N	6	1	\N	1
 234	2016-10-14 18:30:26.708	0.949999999999999956	1	2016-10-14 18:30:06.987	open contribution 'Fix bug in decision arguments display'	0	PROPOSED	0	1	1	8	2016-10-14 18:30:26.705	1	2101	2458.5	0.5	0	2	OPEN	1	1	36	\N	75	6	1	\N	1
+243	2016-11-11 10:34:12.958	0.949999999999999956	1	2016-10-18 14:48:48.613	open contribution 'Group decisions'	0	PROPOSED	0	1	1	8	2016-11-11 10:34:12.958	1	2231	2593.5	0.5	0	2	OPEN	1	1	36	\N	76	6	1	\N	1
 235	2016-10-16 10:23:11.227	0.949999999999999956	1	2016-10-16 10:23:01.368	assign contribution 'Fix bug in decision arguments display' to pepoospina	0	OFFERED	0	1	1	8	2016-10-16 10:23:11.226	1	2101	2458.5	0.5	0	2	ASSIGNED	3	1	36	68	\N	6	1	\N	1
 236	2016-10-16 10:23:31.335	0.949999999999999956	1	2016-10-16 10:23:11.932	accept contribution 'Fix bug in decision arguments display' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-16 10:23:31.334	1	2101	2458.5	0.5	0	2	ACCEPTED	3	1	36	68	\N	6	1	\N	1
 238	\N	0.949999999999999956	0	2016-10-17 16:04:44.596	delete goal 'jiemap'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	2	14	2
@@ -463,10 +496,9 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 237	2016-10-17 16:06:02.977	0.949999999999999956	1	2016-10-17 16:04:44.594	create goal 'jiemap'	0	PROPOSED	0	1	1	8	2016-10-17 16:06:02.977	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	2	14	2
 242	\N	0.949999999999999956	0	2016-10-17 16:10:30.668	delete goal 'filtered-query'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	2	18	2
 241	2016-10-17 16:10:53.783	0.949999999999999956	1	2016-10-17 16:10:30.666	create goal 'filtered-query'	0	PROPOSED	0	1	1	8	2016-10-17 16:10:53.781	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	2	18	2
-243	\N	0.949999999999999956	0	2016-10-18 14:48:48.613	open contribution 'Group decisions'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	76	6	1	\N	1
-244	2016-10-18 14:50:34.615	0.949999999999999956	1	2016-10-18 14:50:23.304	open contribution 'Fix bug in goaltag in new contribution'	0	PROPOSED	0	1	1	8	2016-10-18 14:50:34.613	1	2104	2461.5	0.5	0	2	OPEN	1	1	36	\N	77	6	1	\N	1
-245	2016-10-18 14:52:21.267	0.949999999999999956	1	2016-10-18 14:51:58.858	assign contribution 'Fix bug in goaltag in new contribution' to pepoospina	0	OFFERED	0	1	1	8	2016-10-18 14:52:21.26	1	2104	2461.5	0.5	0	2	ASSIGNED	3	1	36	69	\N	6	1	\N	1
-246	2016-10-18 14:52:42.808	0.949999999999999956	1	2016-10-18 14:52:24.111	accept contribution 'Fix bug in goaltag in new contribution' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-18 14:52:42.804	1	2104	2461.5	0.5	0	2	ACCEPTED	3	1	36	69	\N	6	1	\N	1
+244	2016-10-18 14:50:34.615	0.949999999999999956	1	2016-10-18 14:50:23.304	open contribution 'Fix bug in goal_tag in new contribution'	0	PROPOSED	0	1	1	8	2016-10-18 14:50:34.613	1	2104	2461.5	0.5	0	2	OPEN	1	1	36	\N	77	6	1	\N	1
+245	2016-10-18 14:52:21.267	0.949999999999999956	1	2016-10-18 14:51:58.858	assign contribution 'Fix bug in goal_tag in new contribution' to pepoospina	0	OFFERED	0	1	1	8	2016-10-18 14:52:21.26	1	2104	2461.5	0.5	0	2	ASSIGNED	3	1	36	69	\N	6	1	\N	1
+246	2016-10-18 14:52:42.808	0.949999999999999956	1	2016-10-18 14:52:24.111	accept contribution 'Fix bug in goal_tag in new contribution' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-18 14:52:42.804	1	2104	2461.5	0.5	0	2	ACCEPTED	3	1	36	69	\N	6	1	\N	1
 248	\N	0.949999999999999956	0	2016-10-18 21:10:52.823	delete goal 'user-manipulation'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	2	19	2
 247	2016-10-18 21:11:09.31	0.949999999999999956	1	2016-10-18 21:10:52.822	create goal 'user-manipulation'	0	PROPOSED	0	1	1	8	2016-10-18 21:11:09.308	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	2	19	2
 250	\N	0.949999999999999956	0	2016-10-18 21:13:41.679	delete goal 'custom-jiemaps'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	2	20	2
@@ -480,6 +512,7 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 258	\N	0.949999999999999956	0	2016-10-19 21:04:51.572	delete goal 'data-management'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	5	23	3
 257	2016-10-19 21:05:35.952	0.949999999999999956	1	2016-10-19 21:04:51.568	create goal 'data-management'	0	PROPOSED	0	1	1	8	2016-10-19 21:05:35.95	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	5	23	3
 259	2016-10-19 21:09:08.473	0.949999999999999956	1	2016-10-19 21:08:31.583	open contribution 'Prepare initial public data sets'	0	PROPOSED	0	1	1	8	2016-10-19 21:09:08.473	1	100	100	0.5	0	2	OPEN	1	1	36	\N	79	6	5	\N	3
+310	\N	0.949999999999999956	0	2016-10-27 09:16:49.241	delete goal 'tools'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	26	1
 232	2016-10-20 13:12:23.168	0.949999999999999956	1	2016-10-12 23:10:52.872	CollectiveOne should share its prototype and concept (white paper) through Reddit (or relevant slack channels) to get feedback from other people and try to get other people involved in the development of the project? 	0	\N	1	0	1	8	2016-10-20 13:12:23.166	0	2109	2466.5	0.5	0	3	\N	0	0	36	\N	\N	1	1	\N	1
 260	2016-10-19 21:11:24.623	0.949999999999999956	1	2016-10-19 21:10:56.471	assign contribution 'Prepare initial public data sets' to jpmarindiaz	0	OFFERED	0	1	1	8	2016-10-19 21:11:24.621	1	100	100	0.5	0	2	ASSIGNED	3	1	36	71	\N	6	5	\N	3
 261	\N	0.949999999999999956	0	2016-10-19 21:11:25.436	accept contribution 'Prepare initial public data sets' as delivered by jpmarindiaz	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	71	\N	6	5	\N	3
@@ -489,8 +522,6 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 266	2016-10-19 21:14:59.487	0.949999999999999956	1	2016-10-19 21:14:37.728	accept contribution 'create webpage' as delivered by jpmarindiaz	0	ASSIGNED	0	1	1	8	2016-10-19 21:14:59.485	1	100	100	0.5	0	2	ACCEPTED	3	1	36	72	\N	6	5	\N	3
 263	\N	0.949999999999999956	0	2016-10-19 21:12:37.058	delete goal 'webpage'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	5	24	3
 267	\N	0.949999999999999956	0	2016-10-19 21:17:29.082	Usar neo4j	0	\N	1	0	0	8	\N	0	0	0	0.5	0	0	\N	0	0	36	\N	\N	5	2	\N	2
-268	\N	0.949999999999999956	0	2016-10-20 13:08:55.818	CollectiveOne should send emails to people selected a priori. These people may not be personally acquaintances of current contributors and should have experience relevant for the development of the CollectiveOne concept and platform. Names on the list will be proposed by any contributor and approved through dedicated decisions.	0	\N	1	0	0	8	\N	0	0	0	0.5	0	0	\N	0	0	36	\N	\N	1	1	\N	1
-269	\N	0.949999999999999956	0	2016-10-20 13:12:00.94	CollectiveOne should start opening the whitepaper and the prototype gradually over public forums (slack and reddit) so that potentially interested people can get involved with the project.	0	\N	1	0	0	8	\N	0	0	0	0.5	0	0	\N	0	0	36	\N	\N	1	1	\N	1
 233	2016-10-20 13:12:15.77	0.949999999999999956	1	2016-10-14 10:11:26.806	CollectiveOne should prepare and launch a kickstarter campaign asking for cash (around $15k) and use that money to pay for professional developers. Kickstarter contributors would receive participation points in exchange.	0	\N	1	0	1	8	2016-10-20 13:12:15.768	0	2109	2466.5	0.5	0	3	\N	0	0	36	\N	\N	1	1	\N	1
 270	2016-10-21 14:05:57.299	0.949999999999999956	1	2016-10-20 13:20:04.697	open contribution 'BUG FIX Active project selection wrong redraw'	0	PROPOSED	0	1	1	8	2016-10-21 14:05:57.296	1	2109	2466.5	0.5	0	2	OPEN	1	1	36	\N	81	6	1	\N	1
 272	2016-10-21 14:06:50.91	0.949999999999999956	1	2016-10-21 14:06:41.138	assign contribution 'BUG FIX Active project selection wrong redraw' to pepoospina	0	OFFERED	0	1	1	8	2016-10-21 14:06:50.907	1	2109	2466.5	0.5	0	2	ASSIGNED	3	1	36	73	\N	6	1	\N	1
@@ -498,13 +529,8 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 274	2016-10-21 18:06:18.307	0.949999999999999956	1	2016-10-21 18:06:05.13	assign contribution 'Setup markdown basic infrastructure' to pepoospina	0	OFFERED	0	1	1	8	2016-10-21 18:06:18.305	1	2114	2471.5	0.5	0	2	ASSIGNED	3	1	36	74	\N	6	1	\N	1
 275	2016-10-21 18:06:33.481	0.949999999999999956	1	2016-10-21 18:06:19.335	accept contribution 'Setup markdown basic infrastructure' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-21 18:06:33.48	1	2114	2471.5	0.5	0	2	ACCEPTED	3	1	36	74	\N	6	1	\N	1
 278	\N	0.949999999999999956	0	2016-10-21 18:41:25.899	Should CollectiveOne create a new decision to reject a bid from a user, even after it has been accepted, and get the pps back?	0	\N	1	0	0	8	\N	0	0	0	0.5	0	0	\N	0	0	36	\N	\N	1	1	\N	1
-279	\N	0.949999999999999956	0	2016-10-23 12:26:16.869	open contribution 'Look and aquire other domains'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	85	6	1	\N	1
 280	2016-10-23 21:39:44.383	0.949999999999999956	1	2016-10-23 21:38:12.451	Should the video created by pepoospina be placed in the welcome page? 	0	\N	1	0	1	8	2016-10-23 21:39:44.382	0	2124	2481.5	0.5	0	3	\N	0	0	36	\N	\N	1	1	\N	1
 277	2016-10-23 21:43:03.801	0.949999999999999956	1	2016-10-21 18:25:59.699	open contribution 'Improve the welcome video audio'	0	PROPOSED	1	0	1	8	2016-10-23 21:43:03.799	0	2124	2481.5	0.5	0	3	OPEN	1	0	36	\N	84	6	1	\N	1
-282	\N	0.949999999999999956	0	2016-10-23 22:47:24.764	open contribution 'Prepare presentation email'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	87	6	1	\N	1
-283	\N	0.949999999999999956	0	2016-10-24 15:26:45.61	open contribution 'Propose an stratergy to handle decision duration'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	88	6	1	\N	1
-284	\N	0.949999999999999956	0	2016-10-24 15:33:45.627	open contribution 'Review arguments structure to allow replies'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	89	6	1	\N	1
-285	\N	0.949999999999999956	0	2016-10-24 19:35:00.577	open contribution 'Prepare a roadmap for collectiveone'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	90	6	1	\N	1
 271	2016-10-25 08:41:25.117	0.949999999999999956	1	2016-10-20 13:22:18.634	open contribution 'Allow contributions to be deleted'	0	PROPOSED	0	1	1	8	2016-10-25 08:41:25.109	1	2124	2481.5	0.5	0	2	OPEN	1	1	36	\N	82	6	1	\N	1
 287	2016-10-25 10:49:36.087	0.949999999999999956	1	2016-10-25 10:49:11.471	delete contribution 'Test to be deleted'	0	OPEN	0	1	1	8	2016-10-25 10:49:36.085	1	2124	2481.5	0.5	0	2	DELETED	1	1	36	\N	91	6	1	\N	1
 286	2016-10-25 10:49:09.34	0.949999999999999956	1	2016-10-25 10:48:50.528	open contribution 'Test to be deleted'	0	PROPOSED	0	1	1	8	2016-10-25 10:49:09.335	1	2124	2481.5	0.5	0	4	OPEN	1	1	36	\N	91	6	1	\N	1
@@ -512,10 +538,18 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 289	2016-10-25 10:52:53.559	0.949999999999999956	1	2016-10-25 10:52:36.992	accept contribution 'Allow contributions to be deleted' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-25 10:52:53.557	1	2124	2481.5	0.5	0	2	ACCEPTED	3	1	36	75	\N	6	1	\N	1
 281	2016-10-25 15:08:38.013	0.949999999999999956	1	2016-10-23 21:42:34.021	open contribution 'Prepare video for Welcome page  '	0	PROPOSED	0	1	1	8	2016-10-25 15:08:38.008	1	2134	2491.5	0.5	0	2	OPEN	1	1	36	\N	86	6	1	\N	1
 290	\N	0.949999999999999956	0	2016-10-25 15:08:39.958	delete contribution 'Prepare video for Welcome page  '	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	86	6	1	\N	1
+282	2016-10-27 13:35:59.425	0.949999999999999956	1	2016-10-23 22:47:24.764	open contribution 'Prepare presentation email'	0	PROPOSED	0	1	1	8	2016-10-27 13:35:59.423	1	2206	2568.5	0.5	0	2	OPEN	1	1	36	\N	87	6	1	\N	1
+309	2016-10-27 09:16:59.969	0.949999999999999956	1	2016-10-27 09:16:49.24	create goal 'tools'	0	PROPOSED	0	1	1	8	2016-10-27 09:16:59.967	1	2189	2551.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	26	1
+269	2016-10-28 21:49:01.916	0.949999999999999956	1	2016-10-20 13:12:00.94	CollectiveOne should start opening the whitepaper and the prototype gradually over public forums (slack and reddit) so that potentially interested people can get involved with the project.	0	\N	0	1	1	8	2016-10-28 21:49:01.912	1	2206	2568.5	0.5	0	2	\N	0	1	36	\N	\N	1	1	\N	1
+268	2016-10-28 21:49:21.184	0.949999999999999956	1	2016-10-20 13:08:55.818	CollectiveOne should send emails to people selected a priori. These people may not be personally acquaintances of current contributors and should have experience relevant for the development of the CollectiveOne concept and platform. Names on the list will be proposed by any contributor and approved through dedicated decisions.	0	\N	0	1	1	8	2016-10-28 21:49:21.183	1	2206	2568.5	0.5	0	2	\N	0	1	36	\N	\N	1	1	\N	1
+283	2016-11-11 10:34:03.825	0.949999999999999956	1	2016-10-24 15:26:45.61	open contribution 'Propose an stratergy to handle decision duration'	0	PROPOSED	0	1	1	8	2016-11-11 10:34:03.823	1	2231	2593.5	0.5	0	2	OPEN	1	1	36	\N	88	6	1	\N	1
+279	2016-11-11 10:34:03.847	0.949999999999999956	1	2016-10-23 12:26:16.869	open contribution 'Look and aquire other domains'	0	PROPOSED	0	1	1	8	2016-11-11 10:34:03.847	1	2231	2593.5	0.5	0	2	OPEN	1	1	36	\N	85	6	1	\N	1
+285	2016-11-11 10:34:12.781	0.949999999999999956	1	2016-10-24 19:35:00.577	open contribution 'Prepare a roadmap for collectiveone'	0	PROPOSED	0	1	1	8	2016-11-11 10:34:12.779	1	2231	2593.5	0.5	0	2	OPEN	1	1	36	\N	90	6	1	\N	1
+284	2016-11-11 10:34:12.798	0.949999999999999956	1	2016-10-24 15:33:45.627	open contribution 'Review arguments structure to allow replies'	0	PROPOSED	0	1	1	8	2016-11-11 10:34:12.798	1	2231	2593.5	0.5	0	2	OPEN	1	1	36	\N	89	6	1	\N	1
 291	2016-10-25 16:01:52.817	0.949999999999999956	1	2016-10-25 15:10:34.392	assign contribution 'Prepare video for Welcome page  ' to pepoospina	0	OFFERED	0	1	1	8	2016-10-25 16:01:52.815	1	2134	2491.5	0.5	0	2	ASSIGNED	3	1	36	76	\N	6	1	\N	1
 293	2016-10-25 16:02:03.399	0.949999999999999956	1	2016-10-25 16:01:53.574	accept contribution 'Prepare video for Welcome page  ' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-25 16:02:03.397	1	2134	2491.5	0.5	0	2	ACCEPTED	3	1	36	76	\N	6	1	\N	1
-298	\N	0.949999999999999956	0	2016-10-26 10:46:30.542	open contribution 'Update the welcome page'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	93	6	1	\N	1
-299	\N	0.949999999999999956	0	2016-10-26 11:01:47.025	open contribution 'Preare goals structure'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	94	6	1	\N	1
+299	2016-10-27 11:08:19.956	0.949999999999999956	1	2016-10-26 11:01:47.025	open contribution 'Preare goals structure'	0	PROPOSED	0	1	1	8	2016-10-27 11:08:19.954	1	2189	2551.5	0.5	0	2	OPEN	1	1	36	\N	94	6	1	\N	1
+298	2016-10-27 11:08:29.362	0.949999999999999956	1	2016-10-26 10:46:30.542	open contribution 'Update the welcome page'	0	PROPOSED	0	1	1	8	2016-10-27 11:08:29.36	1	2189	2551.5	0.5	0	2	OPEN	1	1	36	\N	93	6	1	\N	1
 297	2016-10-26 10:51:53.749	0.949999999999999956	1	2016-10-26 10:43:10.308	accept contribution 'Prepare the CollectiveOne lean canvas' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-26 10:51:53.749	1	2184	2541.5	0.5	0	2	ACCEPTED	3	1	36	77	\N	6	1	\N	1
 294	2016-10-26 10:42:22.084	0.949999999999999956	1	2016-10-26 09:37:40.725	open contribution 'Prepare the CollectiveOne lean canvas'	0	PROPOSED	0	1	1	8	2016-10-26 10:42:22.084	1	2184	2541.5	0.5	0	2	OPEN	1	1	36	\N	92	6	1	\N	1
 295	\N	0.949999999999999956	0	2016-10-26 10:42:23.812	delete contribution 'Prepare the CollectiveOne lean canvas'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	92	6	1	\N	1
@@ -525,7 +559,6 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 312	2016-10-27 09:17:55.948	0.949999999999999956	1	2016-10-27 09:17:50.744	set vision as parent goal	0	\N	0	1	1	8	2016-10-27 09:17:55.947	1	2189	2551.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	7	1
 301	2016-10-26 15:59:36.784	0.949999999999999956	1	2016-10-26 15:59:22.541	delete contribution 'Pay for one moth heroku hobby hosting'	0	OPEN	0	1	1	8	2016-10-26 15:59:36.784	1	2189	2546.5	0.5	0	2	DELETED	1	1	36	\N	95	6	1	\N	1
 300	2016-10-26 15:59:20.005	0.949999999999999956	1	2016-10-26 15:59:06.739	open contribution 'Pay for one moth heroku hobby hosting'	0	PROPOSED	0	1	1	8	2016-10-26 15:59:20.005	1	2189	2546.5	0.5	0	4	OPEN	1	1	36	\N	95	6	1	\N	1
-306	\N	0.949999999999999956	0	2016-10-26 16:45:58.072	open contribution 'Loading animation'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	97	6	1	\N	1
 314	\N	0.949999999999999956	0	2016-10-27 09:19:02.024	delete goal 'method-definition'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	27	1
 313	2016-10-27 09:19:18.165	0.949999999999999956	1	2016-10-27 09:19:02.023	create goal 'method-definition'	0	PROPOSED	0	1	1	8	2016-10-27 09:19:18.164	1	2189	2551.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	27	1
 316	2016-10-27 09:20:08.345	0.949999999999999956	1	2016-10-27 09:19:57.916	set method-definition as parent goal	0	\N	0	1	1	8	2016-10-27 09:20:08.344	1	2189	2551.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	1	1
@@ -534,9 +567,6 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 315	2016-10-27 09:20:08.362	0.949999999999999956	1	2016-10-27 09:19:49.875	set method-definition as parent goal	0	\N	0	1	1	8	2016-10-27 09:20:08.362	1	2189	2551.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	2	1
 318	\N	0.949999999999999956	0	2016-10-27 09:24:20.375	delete goal 'marketing'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	28	1
 292	2016-10-27 02:15:13.763	0.949999999999999956	1	2016-10-25 16:01:01.716	Should the new version (V1) of the welcome video be placed in the welcome page to replace the current google slides?	0.942800401234567875	\N	0	1	1	8	2016-10-25 16:18:46.831	1	262	2551.5	0.5	0	2	\N	0	1	36	\N	\N	1	1	\N	1
-308	\N	0.949999999999999956	0	2016-10-26 19:57:18.555	delete goal 'vision'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	25	1
-310	\N	0.949999999999999956	0	2016-10-27 09:16:49.241	delete goal 'tools'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	26	1
-309	2016-10-27 09:16:59.969	0.949999999999999956	1	2016-10-27 09:16:49.24	create goal 'tools'	0	PROPOSED	0	1	1	8	2016-10-27 09:16:59.967	1	2189	2551.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	26	1
 307	2016-10-26 19:57:34.191	0.949999999999999956	1	2016-10-26 19:57:18.551	create goal 'vision'	0	PROPOSED	0	1	1	8	2016-10-26 19:57:34.191	1	2189	2551.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	25	1
 311	2016-10-27 09:17:23.727	0.949999999999999956	1	2016-10-27 09:17:18.997	set tools as parent goal	0	\N	0	1	1	8	2016-10-27 09:17:23.726	1	2189	2551.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	10	1
 320	\N	0.949999999999999956	0	2016-10-27 09:26:45.84	delete goal 'public-relations'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	29	1
@@ -544,21 +574,103 @@ COPY decisions (id, actualverdictdate, ci, clarity, creationdate, description, e
 317	2016-10-27 09:27:03.026	0.949999999999999956	1	2016-10-27 09:24:20.374	create goal 'marketing'	0	PROPOSED	0	1	1	8	2016-10-27 09:27:03.026	1	2189	2551.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	28	1
 322	\N	0.949999999999999956	0	2016-10-27 09:43:57.792	delete goal 'integration'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	30	1
 321	2016-10-27 09:44:12.987	0.949999999999999956	1	2016-10-27 09:43:57.791	create goal 'integration'	0	PROPOSED	0	1	1	8	2016-10-27 09:44:12.985	1	2189	2551.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	30	1
-323	\N	0.949999999999999956	0	2016-10-27 09:49:59.237	open contribution 'Improve Goals browser'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	98	6	1	\N	1
+323	2016-10-27 11:08:00.189	0.949999999999999956	1	2016-10-27 09:49:59.237	open contribution 'Improve Goals browser'	0	PROPOSED	0	1	1	8	2016-10-27 11:08:00.186	1	2189	2551.5	0.5	0	2	OPEN	1	1	36	\N	98	6	1	\N	1
+324	\N	0.949999999999999956	0	2016-10-27 11:08:03.296	delete contribution 'Improve Goals browser'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	98	6	1	\N	1
+325	\N	0.949999999999999956	0	2016-10-27 11:08:22.89	delete contribution 'Prepare goals structure'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	94	6	1	\N	1
+326	\N	0.949999999999999956	0	2016-10-27 11:08:32.174	delete contribution 'Update the welcome page'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	93	6	1	\N	1
+327	2016-10-27 11:09:47.604	0.949999999999999956	1	2016-10-27 11:09:34.12	assign contribution 'Improve Goals browser' to pepoospina	0	OFFERED	0	1	1	8	2016-10-27 11:09:47.602	1	2189	2551.5	0.5	0	2	ASSIGNED	3	1	36	79	\N	6	1	\N	1
+328	2016-10-27 11:10:09.054	0.949999999999999956	1	2016-10-27 11:09:49.574	accept contribution 'Improve Goals browser' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-27 11:10:09.052	1	2189	2551.5	0.5	0	2	ACCEPTED	3	1	36	79	\N	6	1	\N	1
+306	2016-10-27 11:35:39.739	0.949999999999999956	1	2016-10-26 16:45:58.072	open contribution 'Loading animation'	0	PROPOSED	0	1	1	8	2016-10-27 11:35:39.737	1	2201	2563.5	0.5	0	2	OPEN	1	1	36	\N	97	6	1	\N	1
+329	2016-10-27 11:11:31.333	0.949999999999999956	1	2016-10-27 11:10:51.204	assign contribution 'Prepare goals structure' to pepoospina	0	OFFERED	0	1	1	8	2016-10-27 11:11:31.33	1	2194	2556.5	0.5	0	2	ASSIGNED	3	1	36	80	\N	6	1	\N	1
+330	2016-10-27 11:11:41.048	0.949999999999999956	1	2016-10-27 11:11:33.239	accept contribution 'Prepare goals structure' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-27 11:11:41.038	1	2194	2556.5	0.5	0	2	ACCEPTED	3	1	36	80	\N	6	1	\N	1
+331	2016-10-27 11:12:51.611	0.949999999999999956	1	2016-10-27 11:12:26.746	assign contribution 'Update the welcome page' to pepoospina	0	OFFERED	0	1	1	8	2016-10-27 11:12:51.608	1	2199	2561.5	0.5	0	2	ASSIGNED	3	1	36	81	\N	6	1	\N	1
+332	2016-10-27 11:13:01.057	0.949999999999999956	1	2016-10-27 11:12:53.447	accept contribution 'Update the welcome page' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-27 11:13:01.055	1	2199	2561.5	0.5	0	2	ACCEPTED	3	1	36	81	\N	6	1	\N	1
+333	\N	0.949999999999999956	0	2016-10-27 11:35:42.189	delete contribution 'Loading animation'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	97	6	1	\N	1
+334	2016-10-27 11:36:24.621	0.949999999999999956	1	2016-10-27 11:36:16.577	assign contribution 'Loading animation' to pepoospina	0	OFFERED	0	1	1	8	2016-10-27 11:36:24.62	1	2201	2563.5	0.5	0	2	ASSIGNED	3	1	36	82	\N	6	1	\N	1
+335	2016-10-27 11:36:42.848	0.949999999999999956	1	2016-10-27 11:36:26.071	accept contribution 'Loading animation' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-27 11:36:42.844	1	2201	2563.5	0.5	0	2	ACCEPTED	3	1	36	82	\N	6	1	\N	1
+336	\N	0.949999999999999956	0	2016-10-27 13:36:02.121	delete contribution 'Prepare presentation email'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	87	6	1	\N	1
+338	2016-10-27 15:43:09.557	0.949999999999999956	1	2016-10-27 15:43:03.127	delete contribution 'Merge EntityListPages'	0	OPEN	0	1	1	8	2016-10-27 15:43:09.555	1	2206	2568.5	0.5	0	2	DELETED	1	1	36	\N	48	6	1	\N	1
+126	2016-10-27 15:43:00.987	0.949999999999999956	1	2016-09-08 08:01:09.624	OPEN contribution 48	0	PROPOSED	0	1	1	8	2016-10-27 15:43:00.985	1	2206	2568.5	0.5	0	4	OPEN	\N	1	36	\N	\N	6	1	\N	1
+105	2016-11-01 23:10:31.252	0.949999999999999956	1	2016-09-05 16:00:54.118	Assign cbtion 25 to pepospina	0	OFFERED	0	1	1	8	2016-11-01 23:10:31.25	1	2206	2568.5	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
+342	2016-11-01 23:11:23.258	0.949999999999999956	1	2016-11-01 23:10:31.674	accept contribution 'Uses-Cases Doc' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-01 23:11:23.256	1	2206	2568.5	0.5	0	2	ACCEPTED	3	1	36	31	\N	6	1	\N	1
+343	2016-11-01 23:15:00.111	0.949999999999999956	1	2016-11-01 23:14:53.512	open contribution 'Prepare animated slides with use-case'	0	PROPOSED	0	1	1	8	2016-11-01 23:15:00.104	1	2216	2578.5	0.5	0	2	OPEN	1	1	36	\N	102	6	1	\N	1
+339	2016-10-31 08:57:47.34	0.949999999999999956	1	2016-10-31 08:57:38.641	open contribution 'Check memory issue in heroku'	0	PROPOSED	0	1	1	8	2016-10-31 08:57:47.339	1	2206	2568.5	0.5	0	4	OPEN	1	1	36	\N	100	6	1	\N	1
+344	\N	0.949999999999999956	0	2016-11-01 23:15:03.001	delete contribution 'Prepare animated slides with use-case'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	102	6	1	\N	1
+348	2016-11-11 10:19:35.067	0.949999999999999956	1	2016-11-11 10:19:25.613	open contribution 'Pay for Fiverr voice narration'	0	PROPOSED	0	1	1	8	2016-11-11 10:19:35.064	1	2216	2578.5	0.5	0	2	OPEN	1	1	36	\N	105	6	1	\N	1
+349	\N	0.949999999999999956	0	2016-11-11 10:19:38.192	delete contribution 'Pay for Fiverr voice narration'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	105	6	1	\N	1
+350	2016-11-11 10:20:22.216	0.949999999999999956	1	2016-11-11 10:20:13.185	assign contribution 'Pay for Fiverr voice narration' to pepoospina	0	OFFERED	0	1	1	8	2016-11-11 10:20:22.215	1	2216	2578.5	0.5	0	2	ASSIGNED	3	1	36	83	\N	6	1	\N	1
+351	2016-11-11 10:20:31.672	0.949999999999999956	1	2016-11-11 10:20:23.812	accept contribution 'Pay for Fiverr voice narration' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-11 10:20:31.669	1	2216	2578.5	0.5	0	2	ACCEPTED	3	1	36	83	\N	6	1	\N	1
+352	2016-11-11 10:23:20.494	0.949999999999999956	1	2016-11-11 10:23:08.885	open contribution 'Add narration to use-case video'	0	PROPOSED	0	1	1	8	2016-11-11 10:23:20.492	1	2231	2593.5	0.5	0	2	OPEN	1	1	36	\N	106	6	1	\N	1
+353	\N	0.949999999999999956	0	2016-11-11 10:23:22.88	delete contribution 'Add narration to use-case video'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	106	6	1	\N	1
+347	2016-11-11 10:30:22.354	0.949999999999999956	1	2016-11-07 22:50:37.17	delete contribution 'Review use-case video script '	0	OPEN	0	1	1	8	2016-11-11 10:30:22.352	1	2231	2593.5	0.5	0	2	DELETED	1	1	36	\N	104	6	1	\N	1
+346	2016-11-07 22:50:33.746	0.949999999999999956	1	2016-11-07 22:50:21.009	open contribution 'Review use-case video script '	0	PROPOSED	0	1	1	8	2016-11-07 22:50:33.744	1	2216	2578.5	0.5	0	4	OPEN	1	1	36	\N	104	6	1	\N	1
+354	2016-11-11 10:33:00.638	0.949999999999999956	1	2016-11-11 10:32:54.981	assign contribution 'Prepare animated slides with use-case' to pepoospina	0	OFFERED	0	1	1	8	2016-11-11 10:33:00.637	1	2231	2593.5	0.5	0	2	ASSIGNED	3	1	36	84	\N	6	1	\N	1
+345	2016-11-11 10:33:29.093	0.949999999999999956	1	2016-11-04 10:27:46.719	open contribution 'Add Slackin to slack channel'	0	PROPOSED	0	1	1	8	2016-11-11 10:33:29.091	1	2231	2593.5	0.5	0	2	OPEN	1	1	36	\N	103	6	1	\N	1
+341	2016-11-11 10:33:37.74	0.949999999999999956	1	2016-10-31 11:44:42.684	open contribution 'Evangelize - Get other people onboard'	0	PROPOSED	0	1	1	8	2016-11-11 10:33:37.738	1	2231	2593.5	0.5	0	2	OPEN	1	1	36	\N	101	6	1	\N	1
+337	2016-11-11 10:33:46.283	0.949999999999999956	1	2016-10-27 15:19:35.502	open contribution 'Abandon Struts2 and migrate to Spring'	0	PROPOSED	0	1	1	8	2016-11-11 10:33:46.282	1	2231	2593.5	0.5	0	2	OPEN	1	1	36	\N	99	6	1	\N	1
+355	2016-11-11 10:33:09.642	0.949999999999999956	1	2016-11-11 10:33:01.893	accept contribution 'Prepare animated slides with use-case' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-11 10:33:09.64	1	2231	2593.5	0.5	0	2	ACCEPTED	3	1	36	84	\N	6	1	\N	1
+356	\N	0.949999999999999956	0	2016-11-11 10:33:31.493	delete contribution 'Add Slackin to slack channel'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	103	6	1	\N	1
+357	\N	0.949999999999999956	0	2016-11-11 10:33:40.041	delete contribution 'Evangelize - Get other people onboard'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	101	6	1	\N	1
+358	\N	0.949999999999999956	0	2016-11-11 10:33:48.698	delete contribution 'Abandon Struts2 and migrate to Spring'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	99	6	1	\N	1
+359	\N	0.949999999999999956	0	2016-11-11 10:34:05.931	delete contribution 'Look for and acquire other domains'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	85	6	1	\N	1
+360	\N	0.949999999999999956	0	2016-11-11 10:34:05.935	delete contribution 'Propose an strategy to handle decision duration'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	88	6	1	\N	1
+361	\N	0.949999999999999956	0	2016-11-11 10:34:14.96	delete contribution 'Group decisions'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	76	6	1	\N	1
+362	\N	0.949999999999999956	0	2016-11-11 10:34:14.964	delete contribution 'Review arguments structure to allow replies'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	89	6	1	\N	1
+363	\N	0.949999999999999956	0	2016-11-11 10:34:14.968	delete contribution 'Prepare a roadmap for CollectiveOne'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	90	6	1	\N	1
+364	\N	0.949999999999999956	0	2016-11-11 10:34:25.047	delete contribution 'Add email notification infrastructure'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	65	6	1	\N	1
+365	\N	0.949999999999999956	0	2016-11-11 10:35:09.87	delete contribution 'Use spring security to handle user authentication'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	52	6	1	\N	1
+366	2016-11-11 10:36:10.138	0.949999999999999956	1	2016-11-11 10:35:56.941	assign contribution 'Editable Contributions' to pepoospina	0	OFFERED	0	1	1	8	2016-11-11 10:36:10.135	1	2231	2593.5	0.5	0	2	ASSIGNED	3	1	36	85	\N	6	1	\N	1
+367	2016-11-11 10:36:19.34	0.949999999999999956	1	2016-11-11 10:36:11.562	accept contribution 'Editable Contributions' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-11 10:36:19.339	1	2231	2593.5	0.5	0	2	ACCEPTED	3	1	36	85	\N	6	1	\N	1
+368	2016-11-11 12:00:05.264	0.949999999999999956	1	2016-11-11 12:00:01.672	open contribution 'Pay registration to http://crowdsourcingweek.com/'	0	PROPOSED	0	1	1	8	2016-11-11 12:00:05.262	1	2241	2603.5	0.5	0	2	OPEN	1	1	36	\N	107	6	1	\N	1
+369	\N	0.949999999999999956	0	2016-11-11 12:00:07.739	delete contribution 'Pay registration to http://crowdsourcingweek.com/'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	107	6	1	\N	1
+370	2016-11-11 12:00:58.271	0.949999999999999956	1	2016-11-11 12:00:44.289	assign contribution 'Pay registration to http://crowdsourcingweek.com/' to pepoospina	0	OFFERED	0	1	1	8	2016-11-11 12:00:58.268	1	2241	2603.5	0.5	0	2	ASSIGNED	3	1	36	86	\N	6	1	\N	1
+371	2016-11-11 12:01:07.363	0.949999999999999956	1	2016-11-11 12:00:59.842	accept contribution 'Pay registration to http://crowdsourcingweek.com/' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-11 12:01:07.362	1	2241	2603.5	0.5	0	2	ACCEPTED	3	1	36	86	\N	6	1	\N	1
+372	2016-11-11 12:32:54.993	0.949999999999999956	1	2016-11-11 12:32:36.431	open contribution 'Pay airplane ticket BCN Brusels'	0	PROPOSED	0	1	1	8	2016-11-11 12:32:54.989	1	2261	2623.5	0.5	0	2	OPEN	1	1	36	\N	108	6	1	\N	1
+373	\N	0.949999999999999956	0	2016-11-11 12:32:58.334	delete contribution 'Pay airplane ticket BCN Brusels'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	108	6	1	\N	1
+374	2016-11-11 12:34:05.129	0.949999999999999956	1	2016-11-11 12:33:50.587	assign contribution 'Pay airplane ticket BCN Brusels' to pepoospina	0	OFFERED	0	1	1	8	2016-11-11 12:34:05.127	1	2261	2623.5	0.5	0	2	ASSIGNED	3	1	36	87	\N	6	1	\N	1
+375	2016-11-11 12:34:15.146	0.949999999999999956	1	2016-11-11 12:34:06.886	accept contribution 'Pay airplane ticket BCN Brusels' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-11 12:34:15.144	1	2261	2623.5	0.5	0	2	ACCEPTED	3	1	36	87	\N	6	1	\N	1
+376	2016-11-17 19:22:50.655	0.949999999999999956	1	2016-11-17 19:22:46.822	assign contribution 'Add narration to use-case video' to pepoospina	0	OFFERED	0	1	1	8	2016-11-17 19:22:50.653	1	2276	2638.5	0.5	0	2	ASSIGNED	3	1	36	88	\N	6	1	\N	1
+377	2016-11-17 19:22:56.793	0.949999999999999956	1	2016-11-17 19:22:51.002	accept contribution 'Add narration to use-case video' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-17 19:22:56.791	1	2276	2638.5	0.5	0	2	ACCEPTED	3	1	36	88	\N	6	1	\N	1
+378	2016-11-17 19:34:56.664	0.949999999999999956	1	2016-11-17 19:34:48.275	assign contribution 'Abandon Struts2 and migrate to Spring' to pepoospina	0	OFFERED	0	1	1	8	2016-11-17 19:34:56.663	1	2276	2638.5	0.5	0	2	ASSIGNED	3	1	36	89	\N	6	1	\N	1
+379	2016-11-17 19:35:28.522	0.949999999999999956	1	2016-11-17 19:34:57.108	accept contribution 'Abandon Struts2 and migrate to Spring' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-17 19:35:28.52	1	2276	2638.5	0.5	0	2	ACCEPTED	3	1	36	89	\N	6	1	\N	1
+380	2016-11-17 19:38:12.358	0.949999999999999956	1	2016-11-17 19:38:04.909	assign contribution 'Add email notification infrastructure' to pepoospina	0	OFFERED	0	1	1	8	2016-11-17 19:38:12.356	1	2286	2648.5	0.5	0	2	ASSIGNED	3	1	36	90	\N	6	1	\N	1
+381	2016-11-17 19:39:43.505	0.949999999999999956	1	2016-11-17 19:38:12.811	accept contribution 'Add email notification infrastructure' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-17 19:39:43.468	1	2286	2648.5	0.5	0	2	ACCEPTED	3	1	36	90	\N	6	1	\N	1
+382	2016-11-17 19:40:57.277	0.949999999999999956	1	2016-11-17 19:40:49.437	assign contribution 'Use spring security to handle user authentication' to pepoospina	0	OFFERED	0	1	1	8	2016-11-17 19:40:57.275	1	2436	2798.5	0.5	0	2	ASSIGNED	3	1	36	91	\N	6	1	\N	1
+383	2016-11-17 19:42:36.922	0.949999999999999956	1	2016-11-17 19:40:57.74	accept contribution 'Use spring security to handle user authentication' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-17 19:42:36.919	1	2436	2798.5	0.5	0	2	ACCEPTED	3	1	36	91	\N	6	1	\N	1
+387	2016-11-18 09:18:40.929	0.949999999999999956	1	2016-11-17 22:20:38.177	open contribution 'Fix orderby select box '	0	PROPOSED	0	1	1	8	2016-11-18 09:18:40.924	1	2456	2818.5	0.5	0	2	OPEN	1	1	36	\N	112	6	1	\N	1
+388	\N	0.949999999999999956	0	2016-11-18 09:18:41.599	delete contribution 'Fix orderby select box '	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	112	6	1	\N	1
+389	2016-11-18 09:20:18.542	0.949999999999999956	1	2016-11-18 09:20:01.147	assign contribution 'Fix orderby select box ' to pepoospina	0	OFFERED	0	1	1	8	2016-11-18 09:20:18.541	1	2456	2818.5	0.5	0	2	ASSIGNED	3	1	36	92	\N	6	1	\N	1
+390	2016-11-18 09:21:46.932	0.949999999999999956	1	2016-11-18 09:20:19.062	accept contribution 'Fix orderby select box ' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-18 09:21:46.93	1	2456	2818.5	0.5	0	2	ACCEPTED	3	1	36	92	\N	6	1	\N	1
+391	2016-11-18 15:37:59.561	0.949999999999999956	1	2016-11-18 15:37:48.44	delete contribution 'Fix decision browser '	0	OPEN	0	1	1	8	2016-11-18 15:37:59.56	1	2486	2848.5	0.5	0	2	DELETED	1	1	36	\N	111	6	1	\N	1
+386	2016-11-18 15:37:47.944	0.949999999999999956	1	2016-11-17 22:18:39.437	open contribution 'Fix decision browser '	0	PROPOSED	0	1	1	8	2016-11-18 15:37:47.943	1	2486	2848.5	0.5	0	4	OPEN	1	1	36	\N	111	6	1	\N	1
+392	\N	0.949999999999999956	0	2016-11-18 17:11:21.925	open contribution 'Test the decision algorithm'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	113	6	1	\N	1
+393	2016-11-18 20:27:52.009	0.949999999999999956	1	2016-11-18 20:27:41.848	open contribution 'Review the goal substructure of the +webapp goal'	0	PROPOSED	0	1	1	8	2016-11-18 20:27:52.007	1	2486	2848.5	0.5	0	2	OPEN	1	1	36	\N	114	6	1	\N	1
+394	\N	0.949999999999999956	0	2016-11-18 20:27:52.495	delete contribution 'Review the goal substructure of the +webapp goal'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	114	6	1	\N	1
+384	2016-11-20 17:39:18.006	0.949999999999999956	1	2016-11-17 19:46:01.711	open contribution 'Migrate userPage from old webapp'	0	PROPOSED	0	1	1	8	2016-11-20 17:39:18.004	1	2486	2848.5	0.5	0	2	OPEN	1	1	36	\N	109	6	1	\N	1
+396	\N	0.949999999999999956	0	2016-11-20 17:39:18.56	delete contribution 'Migrate userPage from old webapp'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	109	6	1	\N	1
+385	2016-11-20 17:40:19.86	0.949999999999999956	1	2016-11-17 19:47:55.853	open contribution 'Migrate bids rating process'	0	PROPOSED	0	1	1	8	2016-11-20 17:40:19.858	1	2496	2858.5	0.5	0	2	OPEN	1	1	36	\N	110	6	1	\N	1
+397	2016-11-20 17:39:54.468	0.949999999999999956	1	2016-11-20 17:39:52.296	assign contribution 'Migrate userPage from old webapp' to pepoospina	0	OFFERED	0	1	1	8	2016-11-20 17:39:54.466	1	2486	2848.5	0.5	0	2	ASSIGNED	3	1	36	94	\N	6	1	\N	1
+398	2016-11-20 17:40:00.756	0.949999999999999956	1	2016-11-20 17:39:54.916	accept contribution 'Migrate userPage from old webapp' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-20 17:40:00.751	1	2486	2848.5	0.5	0	2	ACCEPTED	3	1	36	94	\N	6	1	\N	1
+399	\N	0.949999999999999956	0	2016-11-20 17:40:20.436	delete contribution 'Migrate bids rating process'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	110	6	1	\N	1
+400	2016-11-20 17:40:44.679	0.949999999999999956	1	2016-11-20 17:40:41.357	assign contribution 'Migrate bids rating process' to pepoospina	0	OFFERED	0	1	1	8	2016-11-20 17:40:44.677	1	2496	2858.5	0.5	0	2	ASSIGNED	3	1	36	95	\N	6	1	\N	1
+401	2016-11-20 17:40:50.92	0.949999999999999956	1	2016-11-20 17:40:44.909	accept contribution 'Migrate bids rating process' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-20 17:40:50.918	1	2496	2858.5	0.5	0	2	ACCEPTED	3	1	36	95	\N	6	1	\N	1
+340	2016-11-20 17:51:31.03	0.949999999999999956	1	2016-10-31 08:57:50.058	delete contribution 'Check memory issue in heroku'	0	OPEN	0	1	1	8	2016-11-20 17:51:31.028	1	2504	2866.5	0.5	0	2	DELETED	1	1	36	\N	100	6	1	\N	1
+402	2016-11-21 10:31:08.129	0.949999999999999956	1	2016-11-21 10:30:59.68	open contribution 'Prepare unit test infrastructure'	0	PROPOSED	0	1	1	8	2016-11-21 10:31:08.128	1	2504	2866.5	0.5	0	2	OPEN	1	1	36	\N	116	6	1	\N	1
+403	\N	0.949999999999999956	0	2016-11-21 10:31:08.601	delete contribution 'Prepare unit test infrastructure'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	116	6	1	\N	1
 \.
 
 
 ALTER TABLE decisions ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3194 (class 0 OID 959798)
--- Dependencies: 184
+-- TOC entry 3275 (class 0 OID 1402177)
+-- Dependencies: 186
 -- Data for Name: arguments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE arguments DISABLE TRIGGER ALL;
 
-COPY arguments (id, creationdate, description, tendency, creator_id, decision_id) FROM stdin;
+COPY arguments (id, creation_date, description, tendency, creator_id, decision_id) FROM stdin;
 1	2016-09-04 12:55:13.786	This is a general tag that is useful to group the activity related to the conceptual analysis of CoProjects	1	1	71
 2	2016-09-05 16:03:11.799	He makes a lot of english typos	1	1	105
 3	2016-09-05 16:03:27.427	He dont have time now	1	1	105
@@ -596,15 +708,14 @@ COPY arguments (id, creationdate, description, tendency, creator_id, decision_id
 ALTER TABLE arguments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3209 (class 0 OID 959858)
--- Dependencies: 199
+-- TOC entry 3298 (class 0 OID 1402254)
+-- Dependencies: 209
 -- Data for Name: goal; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE goal DISABLE TRIGGER ALL;
 
-COPY goal (id, creationdate, description, goaltag, parentstate, state, createdec_id, creator_id, deletedec_id, parent_id, project_id, proposeparent_id, proposedparent_id) FROM stdin;
-7	2016-09-08 22:46:47.411	Spread and attract high quality projects and users who create an thriving ecosystem of creators and open collaborative projects	adoption	0	1	137	1	138	25	1	312	25
+COPY goal (id, creation_date, description, goal_tag, parent_state, state, create_dec_id, creator_id, delete_dec_id, parent_id, project_id, propose_parent_id, proposed_parent_id) FROM stdin;
 23	2016-10-19 21:04:51.518	Manage data	data-management	\N	1	257	5	258	\N	3	\N	\N
 13	2016-10-11 21:06:27.145	Develop a web application in which users can create, browse, visualize and edit Jies.	webapp	\N	1	223	1	224	\N	2	\N	\N
 24	2016-10-19 21:12:37.023		webpage	\N	1	262	5	263	\N	3	\N	\N
@@ -630,20 +741,21 @@ COPY goal (id, creationdate, description, goaltag, parentstate, state, createdec
 29	2016-10-27 09:26:45.691	Present the CollectiveOne project at different forums to improve its visibility and extend its reach	public-relations	\N	1	319	1	320	7	1	\N	\N
 28	2016-10-27 09:24:20.217	Promote the CollectiveOne platform spread by attracting new projects and users	marketing	\N	1	317	1	318	7	1	\N	\N
 30	2016-10-27 09:43:57.604	Integrate the web application with other services like cloud storage, git repositories or messaging apps	integration	\N	1	321	1	322	6	1	\N	\N
+7	2016-09-08 22:46:47.411	Spread and attract high quality projects and users who create a thriving ecosystem of creators and open collaborative projects	adoption	0	1	137	1	138	25	1	312	25
 \.
 
 
 ALTER TABLE goal ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3192 (class 0 OID 959786)
+-- TOC entry 3271 (class 0 OID 1402160)
 -- Dependencies: 181
 -- Data for Name: activity; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE activity DISABLE TRIGGER ALL;
 
-COPY activity (id, creationdate, event, type, argument_id, bid_id, cbtion_id, decision_id, goal_id, project_id) FROM stdin;
+COPY activity (id, creation_date, event, type, argument_id, bid_id, cbtion_id, decision_id, goal_id, project_id) FROM stdin;
 1	2016-09-13 22:05:17.894	opened for bidding	0	\N	\N	56	\N	\N	1
 2	2016-09-13 22:07:02.064	created	1	\N	45	\N	\N	\N	1
 3	2016-09-13 22:07:22.284	assigned	1	\N	45	\N	\N	\N	1
@@ -919,14 +1031,140 @@ COPY activity (id, creationdate, event, type, argument_id, bid_id, cbtion_id, de
 282	2016-10-27 09:43:57.792	proposed	2	\N	\N	\N	\N	30	1
 283	2016-10-27 09:44:15.471	accepted	2	\N	\N	\N	\N	30	1
 284	2016-10-27 09:49:59.237	created	0	\N	\N	98	\N	\N	1
+285	2016-10-27 11:08:03.29	opened for bidding	0	\N	\N	98	\N	\N	1
+286	2016-10-27 11:08:22.885	opened for bidding	0	\N	\N	94	\N	\N	1
+287	2016-10-27 11:08:32.169	opened for bidding	0	\N	\N	93	\N	\N	1
+288	2016-10-27 11:09:33.787	created	1	\N	79	\N	\N	\N	1
+289	2016-10-27 11:09:49.571	assigned	1	\N	79	\N	\N	\N	1
+290	2016-10-27 11:09:56.98	marked done	1	\N	79	\N	\N	\N	1
+291	2016-10-27 11:10:11.619	accepted	1	\N	79	\N	\N	\N	1
+292	2016-10-27 11:10:50.874	created	1	\N	80	\N	\N	\N	1
+293	2016-10-27 11:11:20.981	marked done	1	\N	80	\N	\N	\N	1
+294	2016-10-27 11:11:33.237	assigned	1	\N	80	\N	\N	\N	1
+295	2016-10-27 11:11:43.144	accepted	1	\N	80	\N	\N	\N	1
+296	2016-10-27 11:12:26.536	created	1	\N	81	\N	\N	\N	1
+297	2016-10-27 11:12:42.316	marked done	1	\N	81	\N	\N	\N	1
+298	2016-10-27 11:12:53.439	assigned	1	\N	81	\N	\N	\N	1
+299	2016-10-27 11:13:03.067	accepted	1	\N	81	\N	\N	\N	1
+300	2016-10-27 11:35:42.18	opened for bidding	0	\N	\N	97	\N	\N	1
+301	2016-10-27 11:36:16.088	created	1	\N	82	\N	\N	\N	1
+302	2016-10-27 11:36:26.069	assigned	1	\N	82	\N	\N	\N	1
+303	2016-10-27 11:36:39.063	marked done	1	\N	82	\N	\N	\N	1
+304	2016-10-27 11:36:44.498	accepted	1	\N	82	\N	\N	\N	1
+305	2016-10-27 13:36:02.117	opened for bidding	0	\N	\N	87	\N	\N	1
+306	2016-10-27 15:19:35.504	created	0	\N	\N	99	\N	\N	1
+307	2016-10-27 15:43:03.122	opened for bidding	0	\N	\N	48	\N	\N	1
+308	2016-10-27 15:43:12.942	deleted	0	\N	\N	48	\N	\N	1
+309	2016-10-28 21:49:01.916	accepted	3	\N	\N	\N	269	\N	1
+310	2016-10-28 21:49:21.184	accepted	3	\N	\N	\N	268	\N	1
+311	2016-10-31 08:57:38.643	created	0	\N	\N	100	\N	\N	1
+312	2016-10-31 08:57:50.053	opened for bidding	0	\N	\N	100	\N	\N	1
+313	2016-10-31 11:44:42.685	created	0	\N	\N	101	\N	\N	1
+314	2016-11-01 23:10:31.669	assigned	1	\N	31	\N	\N	\N	1
+315	2016-11-01 23:11:03.914	marked done	1	\N	31	\N	\N	\N	1
+316	2016-11-01 23:11:24.588	accepted	1	\N	31	\N	\N	\N	1
+317	2016-11-01 23:14:53.514	created	0	\N	\N	102	\N	\N	1
+318	2016-11-01 23:15:02.987	opened for bidding	0	\N	\N	102	\N	\N	1
+319	2016-11-04 10:27:46.721	created	0	\N	\N	103	\N	\N	1
+320	2016-11-07 22:50:21.01	created	0	\N	\N	104	\N	\N	1
+321	2016-11-07 22:50:37.162	opened for bidding	0	\N	\N	104	\N	\N	1
+322	2016-11-11 10:19:25.615	created	0	\N	\N	105	\N	\N	1
+323	2016-11-11 10:19:38.186	opened for bidding	0	\N	\N	105	\N	\N	1
+324	2016-11-11 10:20:12.975	created	1	\N	83	\N	\N	\N	1
+325	2016-11-11 10:20:23.81	assigned	1	\N	83	\N	\N	\N	1
+326	2016-11-11 10:20:33.305	accepted	1	\N	83	\N	\N	\N	1
+327	2016-11-11 10:23:08.885	created	0	\N	\N	106	\N	\N	1
+328	2016-11-11 10:23:22.876	opened for bidding	0	\N	\N	106	\N	\N	1
+329	2016-11-11 10:30:24.918	deleted	0	\N	\N	104	\N	\N	1
+330	2016-11-11 10:32:54.848	created	1	\N	84	\N	\N	\N	1
+331	2016-11-11 10:33:01.891	assigned	1	\N	84	\N	\N	\N	1
+332	2016-11-11 10:33:10.995	accepted	1	\N	84	\N	\N	\N	1
+333	2016-11-11 10:33:31.485	opened for bidding	0	\N	\N	103	\N	\N	1
+334	2016-11-11 10:33:40.037	opened for bidding	0	\N	\N	101	\N	\N	1
+335	2016-11-11 10:33:48.694	opened for bidding	0	\N	\N	99	\N	\N	1
+336	2016-11-11 10:34:05.927	opened for bidding	0	\N	\N	85	\N	\N	1
+337	2016-11-11 10:34:05.931	opened for bidding	0	\N	\N	88	\N	\N	1
+338	2016-11-11 10:34:14.956	opened for bidding	0	\N	\N	76	\N	\N	1
+339	2016-11-11 10:34:14.96	opened for bidding	0	\N	\N	89	\N	\N	1
+340	2016-11-11 10:34:14.964	opened for bidding	0	\N	\N	90	\N	\N	1
+341	2016-11-11 10:34:25.043	opened for bidding	0	\N	\N	65	\N	\N	1
+342	2016-11-11 10:35:09.866	opened for bidding	0	\N	\N	52	\N	\N	1
+343	2016-11-11 10:35:56.749	created	1	\N	85	\N	\N	\N	1
+344	2016-11-11 10:36:11.561	assigned	1	\N	85	\N	\N	\N	1
+345	2016-11-11 10:36:20.662	accepted	1	\N	85	\N	\N	\N	1
+346	2016-11-11 12:00:01.672	created	0	\N	\N	107	\N	\N	1
+347	2016-11-11 12:00:07.736	opened for bidding	0	\N	\N	107	\N	\N	1
+348	2016-11-11 12:00:44.166	created	1	\N	86	\N	\N	\N	1
+349	2016-11-11 12:00:59.84	assigned	1	\N	86	\N	\N	\N	1
+350	2016-11-11 12:01:08.65	accepted	1	\N	86	\N	\N	\N	1
+351	2016-11-11 12:32:36.431	created	0	\N	\N	108	\N	\N	1
+352	2016-11-11 12:32:58.329	opened for bidding	0	\N	\N	108	\N	\N	1
+353	2016-11-11 12:33:50.433	created	1	\N	87	\N	\N	\N	1
+354	2016-11-11 12:34:06.884	assigned	1	\N	87	\N	\N	\N	1
+355	2016-11-11 12:34:16.821	accepted	1	\N	87	\N	\N	\N	1
+356	2016-11-17 19:22:46.739	created	1	\N	88	\N	\N	\N	1
+357	2016-11-17 19:22:50.999	assigned	1	\N	88	\N	\N	\N	1
+358	2016-11-17 19:22:57.098	accepted	1	\N	88	\N	\N	\N	1
+359	2016-11-17 19:34:48.141	created	1	\N	89	\N	\N	\N	1
+360	2016-11-17 19:34:57.105	assigned	1	\N	89	\N	\N	\N	1
+361	2016-11-17 19:35:24.976	marked done	1	\N	89	\N	\N	\N	1
+362	2016-11-17 19:35:28.92	accepted	1	\N	89	\N	\N	\N	1
+363	2016-11-17 19:38:04.791	created	1	\N	90	\N	\N	\N	1
+364	2016-11-17 19:38:12.809	assigned	1	\N	90	\N	\N	\N	1
+365	2016-11-17 19:39:43.955	accepted	1	\N	90	\N	\N	\N	1
+366	2016-11-17 19:40:49.335	created	1	\N	91	\N	\N	\N	1
+367	2016-11-17 19:40:57.737	assigned	1	\N	91	\N	\N	\N	1
+368	2016-11-17 19:42:37.422	accepted	1	\N	91	\N	\N	\N	1
+369	2016-11-17 19:46:01.711	created	0	\N	\N	109	\N	\N	1
+370	2016-11-17 19:47:55.853	created	0	\N	\N	110	\N	\N	1
+371	2016-11-17 22:18:39.496	created	0	\N	\N	111	\N	\N	1
+372	2016-11-17 22:20:38.181	created	0	\N	\N	112	\N	\N	1
+373	2016-11-18 09:18:41.596	opened for bidding	0	\N	\N	112	\N	\N	1
+374	2016-11-18 09:20:01.031	created	1	\N	92	\N	\N	\N	1
+375	2016-11-18 09:20:19.059	assigned	1	\N	92	\N	\N	\N	1
+376	2016-11-18 09:21:47.565	accepted	1	\N	92	\N	\N	\N	1
+377	2016-11-18 15:37:48.437	opened for bidding	0	\N	\N	111	\N	\N	1
+378	2016-11-18 15:37:59.967	deleted	0	\N	\N	111	\N	\N	1
+379	2016-11-18 17:11:21.927	created	0	\N	\N	113	\N	\N	1
+380	2016-11-18 20:27:41.848	created	0	\N	\N	114	\N	\N	1
+381	2016-11-18 20:27:52.493	opened for bidding	0	\N	\N	114	\N	\N	1
+383	2016-11-20 17:39:18.555	opened for bidding	0	\N	\N	109	\N	\N	1
+384	2016-11-20 17:39:52.16	created	1	\N	94	\N	\N	\N	1
+385	2016-11-20 17:39:54.911	assigned	1	\N	94	\N	\N	\N	1
+386	2016-11-20 17:40:01.202	accepted	1	\N	94	\N	\N	\N	1
+387	2016-11-20 17:40:20.431	opened for bidding	0	\N	\N	110	\N	\N	1
+388	2016-11-20 17:40:41.258	created	1	\N	95	\N	\N	\N	1
+389	2016-11-20 17:40:44.904	assigned	1	\N	95	\N	\N	\N	1
+390	2016-11-20 17:40:51.074	accepted	1	\N	95	\N	\N	\N	1
+391	2016-11-20 17:51:31.534	deleted	0	\N	\N	100	\N	\N	1
+392	2016-11-21 10:30:59.685	created	0	\N	\N	116	\N	\N	1
+393	2016-11-21 10:31:08.6	opened for bidding	0	\N	\N	116	\N	\N	1
 \.
 
 
 ALTER TABLE activity ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3193 (class 0 OID 959795)
--- Dependencies: 183
+-- TOC entry 3320 (class 0 OID 0)
+-- Dependencies: 182
+-- Name: activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('activity_id_seq', 393, true);
+
+
+--
+-- TOC entry 3321 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: app_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('app_users_id_seq', 8, true);
+
+
+--
+-- TOC entry 3274 (class 0 OID 1402174)
+-- Dependencies: 185
 -- Data for Name: argument_backers; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -961,14 +1199,56 @@ COPY argument_backers (argument_id, backers_id) FROM stdin;
 ALTER TABLE argument_backers ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3212 (class 0 OID 959873)
--- Dependencies: 202
+-- TOC entry 3322 (class 0 OID 0)
+-- Dependencies: 187
+-- Name: arguments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('arguments_id_seq', 32, true);
+
+
+--
+-- TOC entry 3277 (class 0 OID 1402185)
+-- Dependencies: 188
+-- Data for Name: authorized_emails; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+ALTER TABLE authorized_emails DISABLE TRIGGER ALL;
+
+COPY authorized_emails (id, authorized, email) FROM stdin;
+1	t	chris@milieu.us
+\.
+
+
+ALTER TABLE authorized_emails ENABLE TRIGGER ALL;
+
+--
+-- TOC entry 3323 (class 0 OID 0)
+-- Dependencies: 189
+-- Name: authorized_emails_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('authorized_emails_id_seq', 2, true);
+
+
+--
+-- TOC entry 3324 (class 0 OID 0)
+-- Dependencies: 191
+-- Name: bids_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('bids_id_seq', 95, true);
+
+
+--
+-- TOC entry 3306 (class 0 OID 1402280)
+-- Dependencies: 217
 -- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE reviews DISABLE TRIGGER ALL;
 
-COPY reviews (id, creationdate, description, rate, creator_id, reviewee_id) FROM stdin;
+COPY reviews (id, creation_date, description, rate, creator_id, reviewee_id) FROM stdin;
 1	2016-09-06 20:12:28.748	The white paper prepared by Esteban greatly helped distilling the CoProjects concept to its key concepts. The white paper he prepared transmits the CoProjects concept elegantly and clearly.	4	1	3
 2	2016-09-26 08:31:01.244	pepoospina made a good effort to reach a functioning prototype	3	1	1
 3	2016-09-28 15:48:22.501	Support from JP was very useful.	4	1	5
@@ -979,8 +1259,8 @@ COPY reviews (id, creationdate, description, rate, creator_id, reviewee_id) FROM
 ALTER TABLE reviews ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3196 (class 0 OID 959810)
--- Dependencies: 186
+-- TOC entry 3281 (class 0 OID 1402198)
+-- Dependencies: 192
 -- Data for Name: bids_reviews; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -997,8 +1277,8 @@ COPY bids_reviews (bid_id, reviews_id) FROM stdin;
 ALTER TABLE bids_reviews ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3198 (class 0 OID 959819)
--- Dependencies: 188
+-- TOC entry 3283 (class 0 OID 1402207)
+-- Dependencies: 194
 -- Data for Name: cbtions_bids; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1080,20 +1360,36 @@ COPY cbtions_bids (cbtion_id, bids_id) FROM stdin;
 86	76
 92	77
 96	78
+98	79
+94	80
+93	81
+97	82
+105	83
+102	84
+14	85
+107	86
+108	87
+106	88
+99	89
+65	90
+52	91
+112	92
+109	94
+110	95
 \.
 
 
 ALTER TABLE cbtions_bids ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3201 (class 0 OID 959828)
--- Dependencies: 191
+-- TOC entry 3287 (class 0 OID 1402218)
+-- Dependencies: 198
 -- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE comments DISABLE TRIGGER ALL;
 
-COPY comments (id, content, creationdate, relevance, cbtion_id, creator_id, parent_id) FROM stdin;
+COPY comments (id, content, creation_date, relevance, cbtion_id, creator_id, parent_id) FROM stdin;
 1	This comment was added after completing the contribution	2016-09-27 17:40:21.011	0	63	1	\N
 2	and so this reply to the comment. Would it work?	2016-09-27 17:40:43.698	0	63	1	1
 3	yes!	2016-09-27 17:40:57.131	0	63	1	2
@@ -1102,14 +1398,16 @@ COPY comments (id, content, creationdate, relevance, cbtion_id, creator_id, pare
 6	Perhaps we should keep this contribution limited to a first draft that clearly conveys the message and shows the key features of the application and use other contributions to improve it, and eventually convert it into a welcome video	2016-10-06 17:16:33.338	0	68	1	\N
 7	This is a significant (and quite fundamental) contribution by @estenanortizospina, however I suggest we consider it closed once it has been tested to include non-homogeneous pps distributions, and when a time bound mechanism, similar to the one already in place, has been specified and tested in R.	2016-10-07 16:13:33.935	0	55	1	\N
 8	Another option is to be able to link arguments applying these relation after they have been created. This seems more complex though	2016-10-24 15:33:51.589	0	89	1	\N
+9	I can share the edition file of the older version to be used as a starting point. It already includes a lot of cuts and extensions. The narration file is in https://drive.google.com/drive/u/0/folders/0B6HEie5ZN03bMnFyaWtEcHYxMzQ	2016-11-11 10:28:00.243	0	106	1	\N
+11	This is no longer an issue after migrating to spring boot	2016-11-20 17:51:25.966	0	100	1	\N
 \.
 
 
 ALTER TABLE comments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3199 (class 0 OID 959822)
--- Dependencies: 189
+-- TOC entry 3284 (class 0 OID 1402210)
+-- Dependencies: 195
 -- Data for Name: cbtions_comments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1122,21 +1420,31 @@ COPY cbtions_comments (cbtion_id, comments_id) FROM stdin;
 68	6
 55	7
 89	8
+106	9
+100	11
 \.
 
 
 ALTER TABLE cbtions_comments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3211 (class 0 OID 959870)
--- Dependencies: 201
+-- TOC entry 3325 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: cbtions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('cbtions_id_seq', 116, true);
+
+
+--
+-- TOC entry 3304 (class 0 OID 1402275)
+-- Dependencies: 215
 -- Data for Name: promoters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE promoters DISABLE TRIGGER ALL;
 
-COPY promoters (id, creationdate, promoteup, user_id) FROM stdin;
-2	2016-09-08 16:30:44.309	t	1
+COPY promoters (id, creation_date, promote_up, user_id) FROM stdin;
 3	2016-09-08 16:31:18.261	t	1
 5	2016-09-08 16:31:31.918	t	1
 6	2016-09-08 16:31:37.868	t	1
@@ -1153,14 +1461,20 @@ COPY promoters (id, creationdate, promoteup, user_id) FROM stdin;
 15	2016-10-07 16:13:38.445	t	1
 16	2016-10-12 20:17:12.625	t	1
 17	2016-10-23 21:44:10.199	t	1
+18	2016-10-27 11:38:29.465	t	1
+19	2016-10-27 15:41:50.993	t	1
+20	2016-10-27 15:42:48.829	t	1
+2	2016-10-27 15:43:30.258	f	1
+21	2016-11-18 09:19:30.999	t	1
+22	2016-11-18 20:27:52.84	t	1
 \.
 
 
 ALTER TABLE promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3200 (class 0 OID 959825)
--- Dependencies: 190
+-- TOC entry 3286 (class 0 OID 1402215)
+-- Dependencies: 197
 -- Data for Name: cbtions_promoters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1184,14 +1498,19 @@ COPY cbtions_promoters (cbtion_id, promoters_id) FROM stdin;
 55	15
 72	16
 82	17
+87	18
+99	19
+52	20
+112	21
+114	22
 \.
 
 
 ALTER TABLE cbtions_promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3202 (class 0 OID 959834)
--- Dependencies: 192
+-- TOC entry 3288 (class 0 OID 1402224)
+-- Dependencies: 199
 -- Data for Name: comments_answers; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1206,8 +1525,17 @@ COPY comments_answers (comment_id, replies_id) FROM stdin;
 ALTER TABLE comments_answers ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3203 (class 0 OID 959837)
--- Dependencies: 193
+-- TOC entry 3326 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('comments_id_seq', 11, true);
+
+
+--
+-- TOC entry 3290 (class 0 OID 1402229)
+-- Dependencies: 201
 -- Data for Name: comments_promoters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1220,34 +1548,43 @@ COPY comments_promoters (comment_id, promoters_id) FROM stdin;
 ALTER TABLE comments_promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3214 (class 0 OID 959882)
--- Dependencies: 204
+-- TOC entry 3327 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: decision_realms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('decision_realms_id_seq', 8, true);
+
+
+--
+-- TOC entry 3314 (class 0 OID 1402306)
+-- Dependencies: 225
 -- Data for Name: voters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE voters DISABLE TRIGGER ALL;
 
-COPY voters (id, weight, voteruser_id) FROM stdin;
+COPY voters (id, weight, voter_user_id) FROM stdin;
 4	0.5	5
 5	100	1
 2	262	3
 6	101	5
-1	2189	1
 3	100	4
+1	2504	1
 \.
 
 
 ALTER TABLE voters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3205 (class 0 OID 959843)
--- Dependencies: 195
+-- TOC entry 3293 (class 0 OID 1402237)
+-- Dependencies: 204
 -- Data for Name: decision_realms_voters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE decision_realms_voters DISABLE TRIGGER ALL;
 
-COPY decision_realms_voters (decisionrealm_id, voters_id) FROM stdin;
+COPY decision_realms_voters (decision_realm_id, voters_id) FROM stdin;
 1	2
 1	3
 1	1
@@ -1260,8 +1597,8 @@ COPY decision_realms_voters (decisionrealm_id, voters_id) FROM stdin;
 ALTER TABLE decision_realms_voters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3207 (class 0 OID 959852)
--- Dependencies: 197
+-- TOC entry 3295 (class 0 OID 1402246)
+-- Dependencies: 206
 -- Data for Name: decisions_args; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1305,14 +1642,23 @@ COPY decisions_args (decision_id, arguments_id) FROM stdin;
 ALTER TABLE decisions_args ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3213 (class 0 OID 959879)
--- Dependencies: 203
+-- TOC entry 3328 (class 0 OID 0)
+-- Dependencies: 207
+-- Name: decisions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('decisions_id_seq', 403, true);
+
+
+--
+-- TOC entry 3310 (class 0 OID 1402296)
+-- Dependencies: 221
 -- Data for Name: theses; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE theses DISABLE TRIGGER ALL;
 
-COPY theses (id, castdate, value, weight, author_id, decision_id) FROM stdin;
+COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 1	2016-08-08 14:37:57.779	1	100	1	4
 2	2016-08-08 14:38:08.538	1	100	1	5
 3	2016-08-10 10:58:45.57	1	150	1	9
@@ -1531,20 +1877,89 @@ COPY theses (id, castdate, value, weight, author_id, decision_id) FROM stdin;
 217	2016-10-27 09:26:58.37	1	2189	1	317
 218	2016-10-27 09:27:00.781	1	2189	1	319
 219	2016-10-27 09:44:03.926	1	2189	1	321
+220	2016-10-27 11:07:58.895	1	2189	1	323
+221	2016-10-27 11:08:14.592	1	2189	1	299
+222	2016-10-27 11:08:23.78	1	2189	1	298
+223	2016-10-27 11:09:38.973	1	2189	1	327
+224	2016-10-27 11:10:00.095	1	2189	1	328
+225	2016-10-27 11:11:31.919	1	2194	1	329
+226	2016-10-27 11:11:38.265	1	2194	1	330
+227	2016-10-27 11:12:52.4	1	2199	1	331
+228	2016-10-27 11:12:58.821	1	2199	1	332
+229	2016-10-27 11:35:39.348	1	2201	1	306
+230	2016-10-27 11:36:21.664	1	2201	1	334
+231	2016-10-27 11:36:42.003	1	2201	1	335
+232	2016-10-27 13:35:55.619	1	2206	1	282
+233	2016-10-27 15:42:58.709	1	2206	1	126
+234	2016-10-27 15:43:08.082	1	2206	1	338
+235	2016-10-28 21:48:52.807	1	2206	1	269
+236	2016-10-28 21:49:13.649	1	2206	1	268
+237	2016-10-31 08:57:45.86	1	2206	1	339
+238	2016-11-01 23:10:28.973	1	2206	1	105
+239	2016-11-01 23:11:22.447	1	2206	1	342
+240	2016-11-01 23:14:57.198	1	2216	1	343
+241	2016-11-07 22:50:28.525	1	2216	1	346
+242	2016-11-11 10:19:30.374	1	2216	1	348
+243	2016-11-11 10:20:18.997	1	2216	1	350
+244	2016-11-11 10:20:26.681	1	2216	1	351
+245	2016-11-11 10:23:12.31	1	2231	1	352
+246	2016-11-11 10:30:21.999	1	2231	1	347
+247	2016-11-11 10:32:58.766	1	2231	1	354
+248	2016-11-11 10:33:05.866	1	2231	1	355
+249	2016-11-11 10:33:27.536	1	2231	1	345
+250	2016-11-11 10:33:31.513	1	2231	1	341
+251	2016-11-11 10:33:40.984	1	2231	1	337
+252	2016-11-11 10:33:58.108	1	2231	1	279
+253	2016-11-11 10:34:01.957	1	2231	1	283
+254	2016-11-11 10:34:05.758	1	2231	1	284
+255	2016-11-11 10:34:07.237	1	2231	1	285
+256	2016-11-11 10:34:12.192	1	2231	1	243
+257	2016-11-11 10:34:13.475	1	2231	1	181
+258	2016-11-11 10:35:06.345	1	2231	1	134
+259	2016-11-11 10:36:01.137	1	2231	1	366
+260	2016-11-11 10:36:18.284	1	2231	1	367
+261	2016-11-11 12:00:05.216	1	2241	1	368
+262	2016-11-11 12:00:50.04	1	2241	1	370
+263	2016-11-11 12:01:05.178	1	2241	1	371
+264	2016-11-11 12:32:45.705	1	2261	1	372
+265	2016-11-11 12:33:56.143	1	2261	1	374
+266	2016-11-11 12:34:13.594	1	2261	1	375
+267	2016-11-17 19:22:49.017	1	2276	1	376
+268	2016-11-17 19:22:56.644	1	2276	1	377
+269	2016-11-17 19:34:51.027	1	2276	1	378
+270	2016-11-17 19:35:28.049	1	2276	1	379
+271	2016-11-17 19:38:07.237	1	2286	1	380
+272	2016-11-17 19:39:42.08	1	2286	1	381
+273	2016-11-17 19:40:52.138	1	2436	1	382
+274	2016-11-17 19:42:36.55	1	2436	1	383
+275	2016-11-18 09:18:34.826	1	2456	1	387
+276	2016-11-18 09:20:18.388	1	2456	1	389
+277	2016-11-18 09:21:45.021	1	2456	1	390
+278	2016-11-18 15:37:44.989	1	2486	1	386
+279	2016-11-18 15:37:54.837	1	2486	1	391
+280	2016-11-18 20:27:47.986	1	2486	1	393
+282	2016-11-20 17:39:13.467	1	2486	1	384
+283	2016-11-20 17:39:54.422	1	2486	1	397
+284	2016-11-20 17:39:59.529	1	2486	1	398
+285	2016-11-20 17:40:14.448	1	2496	1	385
+286	2016-11-20 17:40:43.38	1	2496	1	400
+287	2016-11-20 17:40:50.212	1	2496	1	401
+288	2016-11-20 17:51:27.713	1	2504	1	340
+289	2016-11-21 10:31:04.367	1	2504	1	402
 \.
 
 
 ALTER TABLE theses ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3208 (class 0 OID 959855)
--- Dependencies: 198
+-- TOC entry 3297 (class 0 OID 1402251)
+-- Dependencies: 208
 -- Data for Name: decisions_thesescast; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE decisions_thesescast DISABLE TRIGGER ALL;
 
-COPY decisions_thesescast (decision_id, thesescast_id) FROM stdin;
+COPY decisions_thesescast (decision_id, theses_cast_id) FROM stdin;
 4	1
 5	2
 9	3
@@ -1759,12 +2174,211 @@ COPY decisions_thesescast (decision_id, thesescast_id) FROM stdin;
 317	217
 319	218
 321	219
+323	220
+299	221
+298	222
+327	223
+328	224
+329	225
+330	226
+331	227
+332	228
+306	229
+334	230
+335	231
+282	232
+126	233
+338	234
+269	235
+268	236
+339	237
+105	238
+342	239
+343	240
+346	241
+348	242
+350	243
+351	244
+352	245
+347	246
+354	247
+355	248
+345	249
+341	250
+337	251
+279	252
+283	253
+284	254
+285	255
+243	256
+181	257
+134	258
+366	259
+367	260
+368	261
+370	262
+371	263
+372	264
+374	265
+375	266
+376	267
+377	268
+378	269
+379	270
+380	271
+381	272
+382	273
+383	274
+387	275
+389	276
+390	277
+386	278
+391	279
+393	280
+384	282
+397	283
+398	284
+385	285
+400	286
+401	287
+340	288
+402	289
 \.
 
 
 ALTER TABLE decisions_thesescast ENABLE TRIGGER ALL;
 
--- Completed on 2016-10-27 11:51:27 CEST
+--
+-- TOC entry 3329 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('goal_id_seq', 31, true);
+
+
+--
+-- TOC entry 3330 (class 0 OID 0)
+-- Dependencies: 211
+-- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('hibernate_sequence', 1, false);
+
+
+--
+-- TOC entry 3301 (class 0 OID 1402264)
+-- Dependencies: 212
+-- Data for Name: password_recovery_token; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+ALTER TABLE password_recovery_token DISABLE TRIGGER ALL;
+
+COPY password_recovery_token (id, expiry_date, token, user_id) FROM stdin;
+1	2016-11-18 19:04:04.034	d0b1945d-b43f-4b8b-8447-c6a42cc5db0f	1
+2	2016-11-18 19:09:41.426	1ea0fda3-0134-458e-9af5-5da3cfb4613e	1
+\.
+
+
+ALTER TABLE password_recovery_token ENABLE TRIGGER ALL;
+
+--
+-- TOC entry 3331 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('projects_id_seq', 4, true);
+
+
+--
+-- TOC entry 3332 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: promoters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('promoters_id_seq', 23, true);
+
+
+--
+-- TOC entry 3333 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: reviews_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('reviews_id_seq', 5, true);
+
+
+--
+-- TOC entry 3308 (class 0 OID 1402288)
+-- Dependencies: 219
+-- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+ALTER TABLE roles DISABLE TRIGGER ALL;
+
+COPY roles (id, role, username) FROM stdin;
+1	ROLE_USER	pepoospina
+2	ROLE_USER	quiquin
+3	ROLE_USER	jpmarindiaz
+4	ROLE_USER	mospina
+5	ROLE_USER	estebanortizospina
+\.
+
+
+ALTER TABLE roles ENABLE TRIGGER ALL;
+
+--
+-- TOC entry 3334 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('roles_id_seq', 6, true);
+
+
+--
+-- TOC entry 3335 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: theses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('theses_id_seq', 289, true);
+
+
+--
+-- TOC entry 3312 (class 0 OID 1402301)
+-- Dependencies: 223
+-- Data for Name: verification_token; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+ALTER TABLE verification_token DISABLE TRIGGER ALL;
+
+COPY verification_token (id, expiry_date, token, user_id) FROM stdin;
+\.
+
+
+ALTER TABLE verification_token ENABLE TRIGGER ALL;
+
+--
+-- TOC entry 3336 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: verification_token_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('verification_token_id_seq', 1, false);
+
+
+--
+-- TOC entry 3337 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: voters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('voters_id_seq', 7, true);
+
+
+-- Completed on 2016-11-21 11:58:23 CET
 
 --
 -- PostgreSQL database dump complete

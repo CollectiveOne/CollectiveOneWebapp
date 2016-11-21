@@ -13,6 +13,7 @@ import org.collectiveone.web.dto.CommentDto;
 import org.collectiveone.web.dto.ObjectPromote;
 import org.collectiveone.web.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,9 +81,12 @@ public class CbtionsController {
 	public @ResponseBody Boolean commentNew(@RequestBody CommentDto commentDto) {
 		/* creator is the logged user */
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		commentDto.setCreatorUsername(auth.getName()); 
-		dbServices.commentCbtionCreate(commentDto);
-		return true;
+		if(auth.isAuthenticated()) {
+			commentDto.setCreatorUsername(auth.getName());
+			dbServices.commentCbtionCreate(commentDto);
+			return true;
+		}
+		return false;
 	}
 	
 	@RequestMapping(value="/commentGetReplies/{commentId}", method = RequestMethod.POST)
@@ -104,5 +108,15 @@ public class CbtionsController {
 	@RequestMapping(value="/getReviews/{id}", method = RequestMethod.POST)
 	public @ResponseBody List<ReviewDto> getReviews(@PathVariable Long id) {
 		return dbServices.cbtionGetReviewsDtos(id);
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/edit", method = RequestMethod.POST)
+	public @ResponseBody boolean edit(@RequestBody CbtionDto cbtionDto) {
+		/* creator is the logged user */
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		cbtionDto.setCreatorUsername(auth.getName()); 
+		dbServices.cbtionEdit(cbtionDto);
+		return true;
 	}
 }

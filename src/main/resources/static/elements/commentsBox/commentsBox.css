@@ -9,6 +9,7 @@
 	width: 100px;
 	float: left;
 	clear:both;
+	display: none;
 }
 
 #comments_div #new_comment_form {

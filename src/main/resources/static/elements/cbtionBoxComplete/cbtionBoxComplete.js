@@ -29,7 +29,7 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	$("#title_div",this.container).append("<a href=/views/cbtionPageR/"+ this.cbtion.id+">"+this.cbtion.title+"</a>");
 	$("#description_div",this.container).append(this.cbtion.description);
 	
-	$("#product_div",this.container).append(this.cbtion.product);
+	$("#product_text",this.container).append(this.cbtion.product);
 	
 	if(this.cbtion.parentGoalsTags) {
 		var nparents = this.cbtion.parentGoalsTags.length;
@@ -72,8 +72,6 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 			break;
 
 	}
-	
-	
 
 	$("#new_bid_btn",this.container).click(this.newBidClick.bind(this));
 
@@ -101,8 +99,7 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	}
 
 	this.updateBids();
-
-
+	
 }
 
 CbtionBoxComplete.prototype.editClick = function () {
@@ -112,20 +109,20 @@ CbtionBoxComplete.prototype.editClick = function () {
 	$("#edit_cbtion_save_btn",this.container).click(this.editSaveClick.bind(this));
 
 	var currentTitle = $("#title_div a", this.container).html();
-	var currentDescription = $("#description_div p", this.container).html();
-	var currentProduct = $("#product_div #product_text", this.container).html();
+	var currentDescription = $("#description_div", this.container).html();
+	var currentProduct = $("#product_text", this.container).html();
 
 	$("#title_div", this.container).empty();
 	$("#description_div", this.container).empty();
-	$("#product_div", this.container).empty();
+	$("#product_text", this.container).empty();
 
-	$("#title_div", this.container).append("<input type=text id=title_edit_input></input");
+	$("#title_div", this.container).append("<input type=text id=title_edit_input class=form-control></input");
 	$("#title_edit_input", this.container).val(currentTitle);
 
-	$("#description_div", this.container).append("<textarea id=description_edit_input></textarea>");
+	$("#description_div", this.container).append("<textarea id=description_edit_input rows=5 class=form-control></textarea>");
 	$("#description_edit_input", this.container).val(currentDescription);
 
-	$("#product_div", this.container).append("<input type=text id=product_edit_input></input");
+	$("#product_div", this.container).append("<input type=text id=product_edit_input class=form-control></input");
 	$("#product_edit_input", this.container).val(currentProduct);
 
 }
@@ -141,9 +138,8 @@ CbtionBoxComplete.prototype.editSaveClick = function () {
 	GLOBAL.serverComm.cbtionEdit(cbtionEditData,this.editedCallback,this);
 }
 
-CbtionBoxComplete.prototype.editedCallback = function (data) { 
-	this.cbtion = data.cbtionDto;
-	this.draw();
+CbtionBoxComplete.prototype.editedCallback = function () { 
+	this.update();
 }
 
 CbtionBoxComplete.prototype.newBidClick = function () {
@@ -194,7 +190,6 @@ CbtionBoxComplete.prototype.bidNew = function (){
 		cbtionId:this.cbtion.id,
 		description:$("#newbid_description_in",this.container).val(),
 		offer: this.bidOffer
-		
 	}; 
 
 	if($("#newbid_datepicker",this.container).val() == "") bidData.deliveryDate = 0;

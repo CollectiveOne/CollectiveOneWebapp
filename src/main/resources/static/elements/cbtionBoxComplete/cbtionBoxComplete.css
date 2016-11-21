@@ -39,15 +39,14 @@
 	width: calc(100% - 220px);
 	float:left;
 	overflow:auto;
-	min-width: 328px;
+	min-width: 306px;
 }
 
 #cbtion_div #cbtion_data_div #cb_left_div {
-	width: calc(100% - 25px - 220px - 10px);
+	width: calc(100% - 25px);
 	float:left;
 	margin-top: 0px;
 	padding-right: 10px;
-	min-width: 285px;
 }
 
 #cbtion_div #cbtion_data_div #cb_center_div {
@@ -61,6 +60,7 @@
 	width: 220px;
 	float:left;
 	margin-top: 0px;
+	padding-top: 10px;
 }
 
 #cbtion_div #cbtion_data_div #title_div {
@@ -120,9 +120,20 @@
 }
 
 #cbtion_div #product_div {
+	display:block;
 	float:left;
 	width: calc(50%);
 	font-size: 12px;
+}
+
+#cbtion_div #product_div label {
+	float:left;
+}
+
+#cbtion_div #product_text {
+	display:block;
+	float: left;
+	margin-left:3px;
 }
 
 #cbtion_div #product_div input {

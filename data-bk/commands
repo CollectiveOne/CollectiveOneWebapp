@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------------------------
 
 > BACKUP DATA FROM HEROKU WITH COPY no triggers (update file name!)
-/usr/bin/pg_dump --host ec2-54-225-64-254.compute-1.amazonaws.com --port 5432 --username "dkzzgsrfdufobg" --no-password  --format plain --data-only --disable-triggers --verbose --file "/home/pepo/workspace/coprojects-hk-db-bk/bk021-data.backup" "d1a0o64celerd3"
+/usr/bin/pg_dump --host ec2-54-225-64-254.compute-1.amazonaws.com --port 5432 --username "dkzzgsrfdufobg" --no-password  --format plain --data-only --disable-triggers --verbose --file "/home/pepo/workspace-sts/CollectiveOne-hk-db-bk/bk044-data.backup" "d1a0o64celerd3"
 
 > Drop all tables in local DB
 

@@ -54,52 +54,17 @@ ServerComm.prototype = {
 			});
 		},
 
-		cbtionNew : function(cbtionData,callbackFunction,callbackObj) {
-			//TODO: update
-			var data = {
-					'cbtionDtoIn' : cbtionData
-			};
-			var datastr = JSON.stringify(data);
-
-			$.ajax({
-				type : 'POST',
-				url : '../json/CbtionNew',
-				data : datastr,
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					if (data.cbtionDto) {
-						callbackFunction.call(callbackObj,data.cbtionDto);
-					} else {
-						showOutput(data);
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-				}
-			});
-		},
-
 		cbtionEdit : function(cbtionEditData,callbackFunction,callbackObj) {
-			//TODO: update
-			var data = {
-					'cbtionDtoIn' : cbtionEditData
-			};
-
-			var datastr = JSON.stringify(data);
-
+			var datastr = JSON.stringify(cbtionEditData);
 			$.ajax({
 				type : 'POST',
-				url : '../json/CbtionEdit',
+				url : '/rest/cbtions/edit',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
 					if (data) {
-						showReqOutput(data.resStatus);
 						callbackFunction.call(callbackObj,data);
-					} else {
-						showOutput(data);
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {

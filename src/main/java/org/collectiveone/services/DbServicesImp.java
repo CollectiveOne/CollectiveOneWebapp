@@ -71,7 +71,7 @@ public class DbServicesImp {
 
 	/* global variable to store the status */
 	private ResStatus status = new ResStatus();
-
+	
 	@Autowired
 	protected CbtionRepository cbtionDao;
 
@@ -120,26 +120,11 @@ public class DbServicesImp {
 	public void setStatus(ResStatus status) {
 		this.status = status;
 	}
-
+	
+	
 	@Transactional
 	public void userSave(User user) {
 		userDao.save(user);
-	}
-
-	@Transactional
-	public String userCreate(String username, String password) {
-		User userInDB = userDao.get(username);
-		if(userInDB == null) {
-			User user = new User();
-			user.setUsername(username);
-			user.setJoindate(new Timestamp(System.currentTimeMillis()));
-			user.setPassword(password);
-			userDao.save(user);
-			return "user created";
-		} else {
-			return "username already exists";
-		}
-
 	}
 
 	@Transactional
@@ -165,16 +150,6 @@ public class DbServicesImp {
 	@Transactional
 	public List<User> userGetAll(Integer max) {
 		return userDao.getAll(max);
-	}
-
-	@Transactional
-	public UserDto userLoginDto(String username, String password) {
-		User user = userDao.get(username);
-		if(user.getPassword().equals(password)) {
-			return user.toDto();
-		} else {
-			return null;
-		}
 	}
 
 	@Transactional
