@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2016-11-21 11:57:21 CET
+-- Started on 2016-11-21 19:06:11 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1400,6 +1400,7 @@ COPY comments (id, content, creation_date, relevance, cbtion_id, creator_id, par
 8	Another option is to be able to link arguments applying these relation after they have been created. This seems more complex though	2016-10-24 15:33:51.589	0	89	1	\N
 9	I can share the edition file of the older version to be used as a starting point. It already includes a lot of cuts and extensions. The narration file is in https://drive.google.com/drive/u/0/folders/0B6HEie5ZN03bMnFyaWtEcHYxMzQ	2016-11-11 10:28:00.243	0	106	1	\N
 11	This is no longer an issue after migrating to spring boot	2016-11-20 17:51:25.966	0	100	1	\N
+12	The basic test infrastructure should include an example of creating users in the database using a test-only method, and perform other operations on the database using the formal application services. The entire operations in the database shall be valid within the test, but rolled back when it finishes.	2016-11-21 12:30:34.175	0	116	\N	\N
 \.
 
 
@@ -1422,6 +1423,7 @@ COPY cbtions_comments (cbtion_id, comments_id) FROM stdin;
 89	8
 106	9
 100	11
+116	12
 \.
 
 
@@ -1530,7 +1532,7 @@ ALTER TABLE comments_answers ENABLE TRIGGER ALL;
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('comments_id_seq', 11, true);
+SELECT pg_catalog.setval('comments_id_seq', 12, true);
 
 
 --
@@ -2378,7 +2380,7 @@ SELECT pg_catalog.setval('verification_token_id_seq', 1, false);
 SELECT pg_catalog.setval('voters_id_seq', 7, true);
 
 
--- Completed on 2016-11-21 11:58:23 CET
+-- Completed on 2016-11-21 19:07:12 CET
 
 --
 -- PostgreSQL database dump complete
