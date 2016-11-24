@@ -1,5 +1,6 @@
 package org.collectiveone.web.controllers.rest;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +95,7 @@ public class DecisionsController {
 	}
 
 	@RequestMapping(value="/newArgument", method = RequestMethod.POST)
-	public @ResponseBody boolean newArgument(@RequestBody ArgumentDto argumentDto) {
+	public @ResponseBody boolean newArgument(@RequestBody ArgumentDto argumentDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = dbServices.userGet(auth.getName());
 		if(logged != null) {

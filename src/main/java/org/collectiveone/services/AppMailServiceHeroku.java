@@ -1,6 +1,8 @@
 package org.collectiveone.services;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -22,26 +24,34 @@ public class AppMailServiceHeroku {
 	private Environment env;
 
 	public void sendMail(String to, String subject, String body) throws IOException {
-		SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-		sg.addRequestHeader("X-Mock", "true");
+		List<String> tos = new ArrayList<String>();
+		tos.add(to);
+		sendMail(tos, subject, body);
+	}
+	
+	public void sendMail(List<String> tos, String subject, String body) throws IOException {
+		if(tos.size() > 0) {
+			SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+			sg.addRequestHeader("X-Mock", "true");
 
-		Request request = new Request();
-		Mail mail = prepareMail(to, subject, body);
-		
-		try {
-			request.method = Method.POST;
-			request.endpoint = "mail/send";
-			request.body = mail.build();
-			Response response = sg.api(request);
-			System.out.println(response.statusCode);
-			System.out.println(response.body);
-			System.out.println(response.headers);
-		} catch (IOException ex) {
-			throw ex;
+			Request request = new Request();
+			Mail mail = prepareMail(tos, subject, body);
+			
+			try {
+				request.method = Method.POST;
+				request.endpoint = "mail/send";
+				request.body = mail.build();
+				Response response = sg.api(request);
+				System.out.println(response.statusCode);
+				System.out.println(response.body);
+				System.out.println(response.headers);
+			} catch (IOException ex) {
+				throw ex;
+			}
 		}
 	}
 
-	public Mail prepareMail(String to, String subject, String body) 
+	public Mail prepareMail(List<String> tos, String subject, String body) 
 	{
 		Mail mail = new Mail();
 
@@ -51,12 +61,14 @@ public class AppMailServiceHeroku {
 		mail.setFrom(fromEmail);
 		mail.setSubject(subject);
 
-		Personalization personalization = new Personalization();
-		Email toEmail = new Email();
-		toEmail.setEmail(to);
-		personalization.addTo(toEmail);
-		mail.addPersonalization(personalization);
-
+		for(String to : tos) {
+			Email toEmail = new Email();
+			Personalization personalization = new Personalization();
+			toEmail.setEmail(to);
+			personalization.addTo(toEmail);
+			mail.addPersonalization(personalization);
+		}
+		
 		Content content = new Content();
 		content.setType("text/plain");
 		content.setValue("some text here");

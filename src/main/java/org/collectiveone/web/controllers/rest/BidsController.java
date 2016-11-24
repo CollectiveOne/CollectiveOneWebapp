@@ -1,5 +1,6 @@
 package org.collectiveone.web.controllers.rest;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.collectiveone.services.DbServicesImp;
@@ -38,7 +39,7 @@ public class BidsController {
 	
 	
 	@RequestMapping(value="/new", method = RequestMethod.POST)
-	public @ResponseBody boolean newBid(@RequestBody BidNewDto bidNewDto) {
+	public @ResponseBody boolean newBid(@RequestBody BidNewDto bidNewDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		bidNewDto.setCreatorUsername(auth.getName());
 		Long id = dbServices.bidCreate(bidNewDto);
@@ -59,7 +60,7 @@ public class BidsController {
 	}
 	
 	@RequestMapping(value="/markDone", method = RequestMethod.POST)
-	public @ResponseBody boolean markDone(@RequestBody DoneDto doneDto) {
+	public @ResponseBody boolean markDone(@RequestBody DoneDto doneDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		doneDto.setUsername(auth.getName());
 		dbServices.bidMarkDone(doneDto);

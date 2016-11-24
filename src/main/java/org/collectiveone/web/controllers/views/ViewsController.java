@@ -1,5 +1,7 @@
 package org.collectiveone.web.controllers.views;
 
+import java.io.IOException;
+
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
@@ -91,7 +93,7 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/cbtionNewSubmit", method = RequestMethod.POST)
-	public String cbtionNewSubmit(@Valid CbtionDto cbtionDto) {
+	public String cbtionNewSubmit(@Valid CbtionDto cbtionDto) throws IOException {
 		
 		/* creator is the logged user */
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -109,7 +111,7 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/goalNewSubmit", method = RequestMethod.POST)
-	public String goalNewSubmit(@Valid GoalDto goalDto) {
+	public String goalNewSubmit(@Valid GoalDto goalDto) throws IOException {
 		
 		/* creator is the logged user */
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -128,7 +130,7 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/decisionNewSubmit", method = RequestMethod.POST)
-	public String decisionNewSubmit(@Valid DecisionDto decisionDto) {
+	public String decisionNewSubmit(@Valid DecisionDto decisionDto) throws IOException {
 		
 		/* creator is the logged user */
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

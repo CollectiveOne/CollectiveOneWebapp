@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2016-11-21 19:06:11 CET
+-- Started on 2016-11-23 23:26:07 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -18,7 +18,7 @@ SET row_security = off;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 3279 (class 0 OID 1402190)
+-- TOC entry 3288 (class 0 OID 1402190)
 -- Dependencies: 190
 -- Data for Name: bids; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -119,13 +119,15 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 92	2016-11-18 09:20:01.026	\N	2016-11-18 23:00:00	I will do it this afternoon	\N	\N	\N	5	3	390	389	112	1
 94	2016-11-20 17:39:52.133	\N	2016-11-20 23:00:00	Already done. UserPage is exactly as it was before	\N	\N	\N	5	3	398	397	109	1
 95	2016-11-20 17:40:41.238	\N	2016-11-20 23:00:00	Updated the bid elements and the API	\N	\N	\N	8	3	401	400	110	1
+96	2016-11-21 18:23:04.707	\N	2016-11-21 23:00:00	I will attend the presentation and make as many contacts as possible	\N	\N	\N	25	1	407	406	117	1
+97	2016-11-21 18:29:35.644	\N	2016-11-21 23:00:00	Pay 25 euro for 100 presentation cards	\N	\N	\N	6	3	411	410	118	1
 \.
 
 
 ALTER TABLE bids ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3302 (class 0 OID 1402267)
+-- TOC entry 3311 (class 0 OID 1402267)
 -- Dependencies: 213
 -- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -135,14 +137,14 @@ ALTER TABLE projects DISABLE TRIGGER ALL;
 COPY projects (id, creation_date, description, name, pps_tot, creator_id) FROM stdin;
 2	2016-09-21 15:38:54.641	With JieMaps, you can create and share your navigation experience, and find the navigation experiences of others.\n\nIn JieMaps, a navigation experience is represented by a path (a sequence and group of links). This paths are called Jies. That's all. 	JieMaps	100	1
 3	2016-10-19 20:51:28.032	Data journalism tools	datasketch	101	5
-1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2866.5	1
+1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2872.5	1
 \.
 
 
 ALTER TABLE projects ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3282 (class 0 OID 1402201)
+-- TOC entry 3291 (class 0 OID 1402201)
 -- Dependencies: 193
 -- Data for Name: cbtions; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -264,13 +266,15 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 110	8	2016-11-17 19:47:55.846	\N	Bid rate and review functionality is missing from last webapp refactoring. Include it in the current application version using as basis the old functionality	updated bid rate and review process	0	2	Migrate bids rating process	1	1	399	10	385	1
 100	0	2016-10-31 08:57:38.615	2016-11-20 17:51:31.534	Heroku is continuously notifying R14 (Memory quota exceeded). Make an overview of the problem cause and identify possible solutions.	description of the problem and solutions identification	0	6	Check memory issue in heroku	\N	1	340	6	339	1
 116	0	2016-11-21 10:30:59.665	\N	setup the basic infrastructure for unit testing	unit test abstract class and test example	0	0	Prepare unit test infrastructure	\N	1	403	6	402	1
+117	0	2016-11-21 18:21:48.187	\N	Attend crowdsourcingweek.com and pitch the CollectiveOne project to potentially interested people.	new contacts and new participants	0	1	Public Relations at @CrowdWeek	\N	1	405	7	404	1
+118	6	2016-11-21 18:27:32.77	\N	Pay for 100 CollectiveOne presentation cards	100 presentation cards	0	2	Pay for 100 presentation cards	1	1	409	7	408	1
 \.
 
 
 ALTER TABLE cbtions ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3291 (class 0 OID 1402232)
+-- TOC entry 3300 (class 0 OID 1402232)
 -- Dependencies: 202
 -- Data for Name: decision_realms; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -291,7 +295,7 @@ COPY decision_realms (id, project_id) FROM stdin;
 ALTER TABLE decision_realms ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3294 (class 0 OID 1402240)
+-- TOC entry 3303 (class 0 OID 1402240)
 -- Dependencies: 205
 -- Data for Name: decisions; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -657,13 +661,21 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 340	2016-11-20 17:51:31.03	0.949999999999999956	1	2016-10-31 08:57:50.058	delete contribution 'Check memory issue in heroku'	0	OPEN	0	1	1	8	2016-11-20 17:51:31.028	1	2504	2866.5	0.5	0	2	DELETED	1	1	36	\N	100	6	1	\N	1
 402	2016-11-21 10:31:08.129	0.949999999999999956	1	2016-11-21 10:30:59.68	open contribution 'Prepare unit test infrastructure'	0	PROPOSED	0	1	1	8	2016-11-21 10:31:08.128	1	2504	2866.5	0.5	0	2	OPEN	1	1	36	\N	116	6	1	\N	1
 403	\N	0.949999999999999956	0	2016-11-21 10:31:08.601	delete contribution 'Prepare unit test infrastructure'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	116	6	1	\N	1
+404	2016-11-21 18:22:06.771	0.949999999999999956	1	2016-11-21 18:21:48.252	open contribution 'Public Relations at @CrowdWeek'	0	PROPOSED	0	1	1	8	2016-11-21 18:22:06.768	1	2504	2866.5	0.5	0	2	OPEN	1	1	36	\N	117	6	1	\N	1
+405	\N	0.949999999999999956	0	2016-11-21 18:22:07.821	delete contribution 'Public Relations at @CrowdWeek'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	117	6	1	\N	1
+406	2016-11-21 18:23:11.64	0.949999999999999956	1	2016-11-21 18:23:04.864	assign contribution 'Public Relations at @CrowdWeek' to pepoospina	0	OFFERED	0	1	1	8	2016-11-21 18:23:11.638	1	2504	2866.5	0.5	0	2	ASSIGNED	3	1	36	96	\N	6	1	\N	1
+407	\N	0.949999999999999956	0	2016-11-21 18:23:12.112	accept contribution 'Public Relations at @CrowdWeek' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	96	\N	6	1	\N	1
+408	2016-11-21 18:27:39.171	0.949999999999999956	1	2016-11-21 18:27:32.779	open contribution 'Pay for 100 presentation cards'	0	PROPOSED	0	1	1	8	2016-11-21 18:27:39.17	1	2504	2866.5	0.5	0	2	OPEN	1	1	36	\N	118	6	1	\N	1
+409	\N	0.949999999999999956	0	2016-11-21 18:27:39.891	delete contribution 'Pay for 100 presentation cards'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	118	6	1	\N	1
+410	2016-11-21 18:29:39.705	0.949999999999999956	1	2016-11-21 18:29:35.733	assign contribution 'Pay for 100 presentation cards' to pepoospina	0	OFFERED	0	1	1	8	2016-11-21 18:29:39.703	1	2504	2866.5	0.5	0	2	ASSIGNED	3	1	36	97	\N	6	1	\N	1
+411	2016-11-21 18:29:45.835	0.949999999999999956	1	2016-11-21 18:29:39.891	accept contribution 'Pay for 100 presentation cards' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-21 18:29:45.833	1	2504	2866.5	0.5	0	2	ACCEPTED	3	1	36	97	\N	6	1	\N	1
 \.
 
 
 ALTER TABLE decisions ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3275 (class 0 OID 1402177)
+-- TOC entry 3284 (class 0 OID 1402177)
 -- Dependencies: 186
 -- Data for Name: arguments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -708,7 +720,7 @@ COPY arguments (id, creation_date, description, tendency, creator_id, decision_i
 ALTER TABLE arguments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3298 (class 0 OID 1402254)
+-- TOC entry 3307 (class 0 OID 1402254)
 -- Dependencies: 209
 -- Data for Name: goal; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -748,7 +760,7 @@ COPY goal (id, creation_date, description, goal_tag, parent_state, state, create
 ALTER TABLE goal ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3271 (class 0 OID 1402160)
+-- TOC entry 3280 (class 0 OID 1402160)
 -- Dependencies: 181
 -- Data for Name: activity; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1139,31 +1151,40 @@ COPY activity (id, creation_date, event, type, argument_id, bid_id, cbtion_id, d
 391	2016-11-20 17:51:31.534	deleted	0	\N	\N	100	\N	\N	1
 392	2016-11-21 10:30:59.685	created	0	\N	\N	116	\N	\N	1
 393	2016-11-21 10:31:08.6	opened for bidding	0	\N	\N	116	\N	\N	1
+394	2016-11-21 18:21:48.273	created	0	\N	\N	117	\N	\N	1
+395	2016-11-21 18:22:07.812	opened for bidding	0	\N	\N	117	\N	\N	1
+396	2016-11-21 18:23:04.733	created	1	\N	96	\N	\N	\N	1
+397	2016-11-21 18:23:12.101	assigned	1	\N	96	\N	\N	\N	1
+398	2016-11-21 18:27:32.783	created	0	\N	\N	118	\N	\N	1
+399	2016-11-21 18:27:39.886	opened for bidding	0	\N	\N	118	\N	\N	1
+400	2016-11-21 18:29:35.665	created	1	\N	97	\N	\N	\N	1
+401	2016-11-21 18:29:39.886	assigned	1	\N	97	\N	\N	\N	1
+402	2016-11-21 18:29:46.313	accepted	1	\N	97	\N	\N	\N	1
 \.
 
 
 ALTER TABLE activity ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3320 (class 0 OID 0)
+-- TOC entry 3331 (class 0 OID 0)
 -- Dependencies: 182
 -- Name: activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('activity_id_seq', 393, true);
+SELECT pg_catalog.setval('activity_id_seq', 402, true);
 
 
 --
--- TOC entry 3321 (class 0 OID 0)
+-- TOC entry 3332 (class 0 OID 0)
 -- Dependencies: 184
 -- Name: app_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('app_users_id_seq', 8, true);
+SELECT pg_catalog.setval('app_users_id_seq', 9, true);
 
 
 --
--- TOC entry 3274 (class 0 OID 1402174)
+-- TOC entry 3283 (class 0 OID 1402174)
 -- Dependencies: 185
 -- Data for Name: argument_backers; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1199,7 +1220,7 @@ COPY argument_backers (argument_id, backers_id) FROM stdin;
 ALTER TABLE argument_backers ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3322 (class 0 OID 0)
+-- TOC entry 3333 (class 0 OID 0)
 -- Dependencies: 187
 -- Name: arguments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1208,7 +1229,7 @@ SELECT pg_catalog.setval('arguments_id_seq', 32, true);
 
 
 --
--- TOC entry 3277 (class 0 OID 1402185)
+-- TOC entry 3286 (class 0 OID 1402185)
 -- Dependencies: 188
 -- Data for Name: authorized_emails; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1223,7 +1244,7 @@ COPY authorized_emails (id, authorized, email) FROM stdin;
 ALTER TABLE authorized_emails ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3323 (class 0 OID 0)
+-- TOC entry 3334 (class 0 OID 0)
 -- Dependencies: 189
 -- Name: authorized_emails_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1232,16 +1253,39 @@ SELECT pg_catalog.setval('authorized_emails_id_seq', 2, true);
 
 
 --
--- TOC entry 3324 (class 0 OID 0)
+-- TOC entry 3326 (class 0 OID 1404662)
+-- Dependencies: 228
+-- Data for Name: authorized_projects; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+ALTER TABLE authorized_projects DISABLE TRIGGER ALL;
+
+COPY authorized_projects (id, authorized, project_name) FROM stdin;
+\.
+
+
+ALTER TABLE authorized_projects ENABLE TRIGGER ALL;
+
+--
+-- TOC entry 3335 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: authorized_projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('authorized_projects_id_seq', 1, false);
+
+
+--
+-- TOC entry 3336 (class 0 OID 0)
 -- Dependencies: 191
 -- Name: bids_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('bids_id_seq', 95, true);
+SELECT pg_catalog.setval('bids_id_seq', 97, true);
 
 
 --
--- TOC entry 3306 (class 0 OID 1402280)
+-- TOC entry 3315 (class 0 OID 1402280)
 -- Dependencies: 217
 -- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1259,7 +1303,7 @@ COPY reviews (id, creation_date, description, rate, creator_id, reviewee_id) FRO
 ALTER TABLE reviews ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3281 (class 0 OID 1402198)
+-- TOC entry 3290 (class 0 OID 1402198)
 -- Dependencies: 192
 -- Data for Name: bids_reviews; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1277,7 +1321,7 @@ COPY bids_reviews (bid_id, reviews_id) FROM stdin;
 ALTER TABLE bids_reviews ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3283 (class 0 OID 1402207)
+-- TOC entry 3292 (class 0 OID 1402207)
 -- Dependencies: 194
 -- Data for Name: cbtions_bids; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1376,13 +1420,15 @@ COPY cbtions_bids (cbtion_id, bids_id) FROM stdin;
 112	92
 109	94
 110	95
+117	96
+118	97
 \.
 
 
 ALTER TABLE cbtions_bids ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3287 (class 0 OID 1402218)
+-- TOC entry 3296 (class 0 OID 1402218)
 -- Dependencies: 198
 -- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1407,7 +1453,7 @@ COPY comments (id, content, creation_date, relevance, cbtion_id, creator_id, par
 ALTER TABLE comments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3284 (class 0 OID 1402210)
+-- TOC entry 3293 (class 0 OID 1402210)
 -- Dependencies: 195
 -- Data for Name: cbtions_comments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1430,16 +1476,16 @@ COPY cbtions_comments (cbtion_id, comments_id) FROM stdin;
 ALTER TABLE cbtions_comments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3325 (class 0 OID 0)
+-- TOC entry 3337 (class 0 OID 0)
 -- Dependencies: 196
 -- Name: cbtions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('cbtions_id_seq', 116, true);
+SELECT pg_catalog.setval('cbtions_id_seq', 118, true);
 
 
 --
--- TOC entry 3304 (class 0 OID 1402275)
+-- TOC entry 3313 (class 0 OID 1402275)
 -- Dependencies: 215
 -- Data for Name: promoters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1475,7 +1521,7 @@ COPY promoters (id, creation_date, promote_up, user_id) FROM stdin;
 ALTER TABLE promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3286 (class 0 OID 1402215)
+-- TOC entry 3295 (class 0 OID 1402215)
 -- Dependencies: 197
 -- Data for Name: cbtions_promoters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1511,7 +1557,7 @@ COPY cbtions_promoters (cbtion_id, promoters_id) FROM stdin;
 ALTER TABLE cbtions_promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3288 (class 0 OID 1402224)
+-- TOC entry 3297 (class 0 OID 1402224)
 -- Dependencies: 199
 -- Data for Name: comments_answers; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1527,7 +1573,7 @@ COPY comments_answers (comment_id, replies_id) FROM stdin;
 ALTER TABLE comments_answers ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3326 (class 0 OID 0)
+-- TOC entry 3338 (class 0 OID 0)
 -- Dependencies: 200
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1536,7 +1582,7 @@ SELECT pg_catalog.setval('comments_id_seq', 12, true);
 
 
 --
--- TOC entry 3290 (class 0 OID 1402229)
+-- TOC entry 3299 (class 0 OID 1402229)
 -- Dependencies: 201
 -- Data for Name: comments_promoters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1550,7 +1596,7 @@ COPY comments_promoters (comment_id, promoters_id) FROM stdin;
 ALTER TABLE comments_promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3327 (class 0 OID 0)
+-- TOC entry 3339 (class 0 OID 0)
 -- Dependencies: 203
 -- Name: decision_realms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1559,7 +1605,7 @@ SELECT pg_catalog.setval('decision_realms_id_seq', 8, true);
 
 
 --
--- TOC entry 3314 (class 0 OID 1402306)
+-- TOC entry 3323 (class 0 OID 1402306)
 -- Dependencies: 225
 -- Data for Name: voters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1572,14 +1618,14 @@ COPY voters (id, weight, voter_user_id) FROM stdin;
 2	262	3
 6	101	5
 3	100	4
-1	2504	1
+1	2510	1
 \.
 
 
 ALTER TABLE voters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3293 (class 0 OID 1402237)
+-- TOC entry 3302 (class 0 OID 1402237)
 -- Dependencies: 204
 -- Data for Name: decision_realms_voters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1599,7 +1645,7 @@ COPY decision_realms_voters (decision_realm_id, voters_id) FROM stdin;
 ALTER TABLE decision_realms_voters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3295 (class 0 OID 1402246)
+-- TOC entry 3304 (class 0 OID 1402246)
 -- Dependencies: 206
 -- Data for Name: decisions_args; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1644,16 +1690,16 @@ COPY decisions_args (decision_id, arguments_id) FROM stdin;
 ALTER TABLE decisions_args ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3328 (class 0 OID 0)
+-- TOC entry 3340 (class 0 OID 0)
 -- Dependencies: 207
 -- Name: decisions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('decisions_id_seq', 403, true);
+SELECT pg_catalog.setval('decisions_id_seq', 411, true);
 
 
 --
--- TOC entry 3310 (class 0 OID 1402296)
+-- TOC entry 3319 (class 0 OID 1402296)
 -- Dependencies: 221
 -- Data for Name: theses; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1948,13 +1994,18 @@ COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 287	2016-11-20 17:40:50.212	1	2496	1	401
 288	2016-11-20 17:51:27.713	1	2504	1	340
 289	2016-11-21 10:31:04.367	1	2504	1	402
+290	2016-11-21 18:22:00.064	1	2504	1	404
+291	2016-11-21 18:23:11.057	1	2504	1	406
+292	2016-11-21 18:27:36.356	1	2504	1	408
+293	2016-11-21 18:29:37.557	1	2504	1	410
+294	2016-11-21 18:29:43.805	1	2504	1	411
 \.
 
 
 ALTER TABLE theses ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3297 (class 0 OID 1402251)
+-- TOC entry 3306 (class 0 OID 1402251)
 -- Dependencies: 208
 -- Data for Name: decisions_thesescast; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2245,13 +2296,18 @@ COPY decisions_thesescast (decision_id, theses_cast_id) FROM stdin;
 401	287
 340	288
 402	289
+404	290
+406	291
+408	292
+410	293
+411	294
 \.
 
 
 ALTER TABLE decisions_thesescast ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3329 (class 0 OID 0)
+-- TOC entry 3341 (class 0 OID 0)
 -- Dependencies: 210
 -- Name: goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2260,7 +2316,7 @@ SELECT pg_catalog.setval('goal_id_seq', 31, true);
 
 
 --
--- TOC entry 3330 (class 0 OID 0)
+-- TOC entry 3342 (class 0 OID 0)
 -- Dependencies: 211
 -- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2269,7 +2325,7 @@ SELECT pg_catalog.setval('hibernate_sequence', 1, false);
 
 
 --
--- TOC entry 3301 (class 0 OID 1402264)
+-- TOC entry 3310 (class 0 OID 1402264)
 -- Dependencies: 212
 -- Data for Name: password_recovery_token; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2285,7 +2341,7 @@ COPY password_recovery_token (id, expiry_date, token, user_id) FROM stdin;
 ALTER TABLE password_recovery_token ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3331 (class 0 OID 0)
+-- TOC entry 3343 (class 0 OID 0)
 -- Dependencies: 214
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2294,7 +2350,7 @@ SELECT pg_catalog.setval('projects_id_seq', 4, true);
 
 
 --
--- TOC entry 3332 (class 0 OID 0)
+-- TOC entry 3344 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: promoters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2303,7 +2359,7 @@ SELECT pg_catalog.setval('promoters_id_seq', 23, true);
 
 
 --
--- TOC entry 3333 (class 0 OID 0)
+-- TOC entry 3345 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: reviews_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2312,7 +2368,7 @@ SELECT pg_catalog.setval('reviews_id_seq', 5, true);
 
 
 --
--- TOC entry 3308 (class 0 OID 1402288)
+-- TOC entry 3317 (class 0 OID 1402288)
 -- Dependencies: 219
 -- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2325,31 +2381,32 @@ COPY roles (id, role, username) FROM stdin;
 3	ROLE_USER	jpmarindiaz
 4	ROLE_USER	mospina
 5	ROLE_USER	estebanortizospina
+7	ROLE_USER	milieu
 \.
 
 
 ALTER TABLE roles ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3334 (class 0 OID 0)
+-- TOC entry 3346 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('roles_id_seq', 6, true);
+SELECT pg_catalog.setval('roles_id_seq', 7, true);
 
 
 --
--- TOC entry 3335 (class 0 OID 0)
+-- TOC entry 3347 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: theses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('theses_id_seq', 289, true);
+SELECT pg_catalog.setval('theses_id_seq', 294, true);
 
 
 --
--- TOC entry 3312 (class 0 OID 1402301)
+-- TOC entry 3321 (class 0 OID 1402301)
 -- Dependencies: 223
 -- Data for Name: verification_token; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2357,22 +2414,23 @@ SELECT pg_catalog.setval('theses_id_seq', 289, true);
 ALTER TABLE verification_token DISABLE TRIGGER ALL;
 
 COPY verification_token (id, expiry_date, token, user_id) FROM stdin;
+1	2016-11-22 21:32:44.012	9c9a32f2-c63d-4f8c-893e-b2aac37933dc	9
 \.
 
 
 ALTER TABLE verification_token ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3336 (class 0 OID 0)
+-- TOC entry 3348 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: verification_token_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('verification_token_id_seq', 1, false);
+SELECT pg_catalog.setval('verification_token_id_seq', 1, true);
 
 
 --
--- TOC entry 3337 (class 0 OID 0)
+-- TOC entry 3349 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: voters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2380,7 +2438,7 @@ SELECT pg_catalog.setval('verification_token_id_seq', 1, false);
 SELECT pg_catalog.setval('voters_id_seq', 7, true);
 
 
--- Completed on 2016-11-21 19:07:12 CET
+-- Completed on 2016-11-23 23:27:12 CET
 
 --
 -- PostgreSQL database dump complete

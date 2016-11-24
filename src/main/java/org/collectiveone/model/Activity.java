@@ -50,6 +50,7 @@ public class Activity {
 		dto.setProjectName(project.getName());
 		dto.setCreationDate(creationDate.getTime());
 		dto.setEvent(event);
+		dto.setEventPretty(this.getPrettyMessage(""));
 		dto.setType(type.toString());
 		if(cbtion != null) dto.setCbtionDto(cbtion.toDto());
 		if(bid != null) dto.setBidDto(bid.toDto());
@@ -58,6 +59,91 @@ public class Activity {
 		if(argument != null) dto.setArgumentDto(argument.toDto());
 		
 		return dto;
+	}
+	
+	public String getUserPageLink(String baseUrl, String username) {
+		return "<a href="+baseUrl+"/views/userPageR/"+username+">"+username+"</a>";
+	}
+	
+	public String getGoalPageLink(String baseUrl, String goalTag, String projectName) {
+		return "<a href="+baseUrl+"/views/goalPageR?projectName="+projectName+"&goalTag="+goalTag+"><b>+</b>"+goalTag+"</a>";
+	}
+	
+	public String limitStrSize(String strIn, int size) {
+		if(strIn.length() > size) {
+			return strIn.substring(0,size)+" ...";
+		} else {
+			return strIn;
+		}
+	}
+	
+	public String getPrettyMessage(String baseUrl) {
+		String eventPretty = "";
+		
+		switch(this.type) {
+			case CBTION:
+				eventPretty = "contribution <a href="+baseUrl+"/views/cbtionPageR/"+this.cbtion.getId()+">"+this.cbtion.getTitle()+"</a> was "+this.event;
+				break;
+	
+			case BID:
+				switch(this.event) {
+					case "created":
+						eventPretty = getUserPageLink(baseUrl,this.bid.getCreator().getUsername())+
+							" made a new bid on <a href="+baseUrl+"/views/cbtionPageR/"+this.bid.getCbtion().getId()+">"+this.bid.getCbtion().getTitle()+"</a>";
+						break;
+	
+					case "assigned":
+					case "accepted":
+						
+						eventPretty = "bid from "+getUserPageLink(baseUrl,this.bid.getCreator().getUsername())+
+							" to <a href="+baseUrl+"/views/cbtionPageR/"+this.bid.getCbtion().getId()+">"+this.bid.getCbtion().getTitle()+"</a> was "+this.event;
+						break;
+	
+					case "marked done":
+						eventPretty = getUserPageLink(baseUrl,this.bid.getCreator().getUsername())+
+							" marked bid on <a href="+baseUrl+"/views/cbtionPageR/"+this.bid.getCbtion().getId()+">"+this.bid.getCbtion().getTitle()+"</a> as done";
+						break;
+				}
+				
+				break;
+	
+			case GOAL:
+				String goalLinkStr = getGoalPageLink(baseUrl,this.goal.getGoalTag(),this.goal.getProject().getName());
+				switch(this.event) {
+					case "proposed":
+						eventPretty = "goal "+goalLinkStr+" was "+this.event+" by "+getUserPageLink(baseUrl,this.goal.getCreator().getUsername());
+						break;
+					default:
+						eventPretty = "goal "+goalLinkStr+" - "+this.event;
+						break;
+				}
+				break;
+	
+			case DECISION:
+				switch(this.event) {
+					case "created":	
+						eventPretty = "decision <a href="+baseUrl+"/views/decisionPageR/"+this.decision.getId()+">"+limitStrSize(this.decision.getDescription(),70)+"</a> was "+this.event+" by "+getUserPageLink(baseUrl,this.decision.getCreator().getUsername());
+						break;
+	
+					case "opened":
+					case "accepted":
+					case "rejected":
+						eventPretty = "decision <a href="+baseUrl+"/views/decisionPageR/"+this.decision.getId()+">"+limitStrSize(this.decision.getDescription(),70)+"</a> was "+this.event;
+						break;
+				}
+				break;
+	
+			case ARGUMENT:
+				switch(this.event) {
+					case "created":	
+							eventPretty = getUserPageLink(baseUrl,this.argument.getCreator().getUsername())+" added an argument to decision '<a href="+baseUrl+"/views/decisionPageR/"+
+							this.argument.getDecision().getId()+">"+limitStrSize(this.argument.getDecision().getDescription(),70)+"</a>'";
+							break;
+				}
+				break;
+		}
+		
+		return eventPretty;
 	}
 	
 	public Long getId() {

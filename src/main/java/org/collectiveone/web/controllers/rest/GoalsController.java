@@ -1,5 +1,6 @@
 package org.collectiveone.web.controllers.rest;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +38,7 @@ public class GoalsController {
 	}
 	
 	@RequestMapping("/new")
-	public @ResponseBody boolean newGoal(@RequestBody GoalDto goalDto) {
+	public @ResponseBody boolean newGoal(@RequestBody GoalDto goalDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = dbServices.userGet(auth.getName());
 		goalDto.setCreatorUsername(logged.getUsername());
@@ -89,7 +90,7 @@ public class GoalsController {
 	}
 	
 	@RequestMapping(value="/proposeParent", method = RequestMethod.POST)
-	public @ResponseBody boolean proposeParent(@RequestBody GoalParentDto goalParentDto) {
+	public @ResponseBody boolean proposeParent(@RequestBody GoalParentDto goalParentDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = dbServices.userGet(auth.getName());
 		if(logged != null) {

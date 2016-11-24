@@ -1,5 +1,6 @@
 package org.collectiveone.services;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ import org.collectiveone.repositories.CommentDao;
 import org.collectiveone.repositories.DecisionDao;
 import org.collectiveone.repositories.DecisionRealmDao;
 import org.collectiveone.repositories.GoalDao;
+import org.collectiveone.repositories.MailSubscriptionRepository;
 import org.collectiveone.repositories.ProjectDao;
 import org.collectiveone.repositories.PromoterDao;
 import org.collectiveone.repositories.ReviewDao;
@@ -64,6 +66,7 @@ import org.collectiveone.web.dto.ThesisDto;
 import org.collectiveone.web.dto.UserDto;
 import org.collectiveone.web.dto.UsernameAndPps;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,6 +122,17 @@ public class DbServicesImp {
 	
 	@Autowired
 	protected AuthorizedProjectDao authorizedProjectDao;
+	
+	@Autowired
+	protected MailSubscriptionRepository mailSubscriptionRepository;
+	
+	@Autowired
+    private AppMailServiceHeroku mailService;
+	
+	@Autowired
+	private Environment env;
+	
+	
 
 	public ResStatus getStatus() {
 		return status;
@@ -423,7 +437,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public Long goalCreate(GoalDto goalDto) {
+	public Long goalCreate(GoalDto goalDto) throws IOException {
 		Goal goal = new Goal();
 		Project project = projectDao.get(goalDto.getProjectName());
 		projectDao.save(project);
@@ -488,8 +502,8 @@ public class DbServicesImp {
 
 		act.setGoal(goal);
 		act.setType(ActivityType.GOAL);
-		activityDao.save(act);
-
+		activitySaveAndNotify(act);
+		
 		return id;
 	}
 
@@ -553,7 +567,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void goalsUpdateState() {
+	public void goalsUpdateState() throws IOException {
 		/* Update state of all not closed bids */
 		List<Goal> goalsNotDeleted = goalDao.getNotDeleted();
 		for(Goal goal : goalsNotDeleted) {
@@ -562,14 +576,14 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void goalUpdateState(Long goalId) {
+	public void goalUpdateState(Long goalId) throws IOException {
 		goalFromProposedToAccepted(goalId);
 		goalFromAcceptedToDeleted(goalId);
 		goalUpdateNewParent(goalId);
 	}
 
 	@Transactional
-	public void goalFromProposedToAccepted(Long goalId) {
+	public void goalFromProposedToAccepted(Long goalId) throws IOException {
 		Goal goal = goalDao.get(goalId);
 		goalDao.save(goal);
 
@@ -593,7 +607,7 @@ public class DbServicesImp {
 			case PROPOSED:
 				goal.setState(GoalState.NOT_ACCEPTED);
 				act.setEvent("not accepted");
-				activityDao.save(act);
+				activitySaveAndNotify(act);
 				break;
 
 			default:
@@ -607,7 +621,7 @@ public class DbServicesImp {
 			case PROPOSED:
 				goal.setState(GoalState.ACCEPTED);
 				act.setEvent("accepted");
-				activityDao.save(act);
+				activitySaveAndNotify(act);
 				break;
 			default:
 				break;
@@ -619,7 +633,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void goalFromAcceptedToDeleted(Long goalId) {
+	public void goalFromAcceptedToDeleted(Long goalId) throws IOException {
 		Goal goal = goalDao.get(goalId);
 		goalDao.save(goal);
 
@@ -657,13 +671,13 @@ public class DbServicesImp {
 			case PROPOSED:
 				goal.setState(GoalState.DELETED);
 				act.setEvent("deleted");
-				activityDao.save(act);
+				activitySaveAndNotify(act);
 				break;
 
 			case ACCEPTED:
 				goal.setState(GoalState.DELETED);
 				act.setEvent("deleted");
-				activityDao.save(act);
+				activitySaveAndNotify(act);
 				break;				
 
 			default:
@@ -678,7 +692,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void goalUpdateNewParent(Long goalId) {
+	public void goalUpdateNewParent(Long goalId) throws IOException {
 		Goal goal = goalDao.get(goalId);
 		goalDao.save(goal);
 
@@ -703,7 +717,7 @@ public class DbServicesImp {
 					case PROPOSED:
 						goal.setParentState(GoalParentState.ACCEPTED);
 						act.setEvent(goal.getProposedParent().getGoalTag()+" not accepted as parent");
-						activityDao.save(act);
+						activitySaveAndNotify(act);
 						break;
 
 					default:
@@ -718,7 +732,7 @@ public class DbServicesImp {
 						goal.setParentState(GoalParentState.ACCEPTED);
 						goal.setParent(goal.getProposedParent());
 						act.setEvent(goal.getProposedParent().getGoalTag()+" accepted as parent");
-						activityDao.save(act);
+						activitySaveAndNotify(act);
 						break;
 					default:
 						break;
@@ -732,7 +746,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void goalProposeParent(Long goalId, String parentTag) {
+	public void goalProposeParent(Long goalId, String parentTag) throws IOException {
 		Goal goal = goalDao.get(goalId);
 		Goal proposedParent = goalDao.get(parentTag,goal.getProject().getName());
 
@@ -765,7 +779,7 @@ public class DbServicesImp {
 				act.setGoal(goal);
 				act.setType(ActivityType.GOAL);
 				act.setEvent(proposedParent.getGoalTag()+" proposed as parent");
-				activityDao.save(act);
+				activitySaveAndNotify(act);
 
 				status.setMsg(proposedParent.getGoalTag()+" proposed as parent");
 				status.setSuccess(true);
@@ -798,7 +812,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public Long cbtionCreate(CbtionDto cbtionDto) {
+	public Long cbtionCreate(CbtionDto cbtionDto) throws IOException {
 		Cbtion cbtion = new Cbtion();
 		Project project = projectDao.get(cbtionDto.getProjectName());
 		projectDao.save(project);
@@ -841,7 +855,7 @@ public class DbServicesImp {
 
 		act.setCbtion(cbtion);
 		act.setType(ActivityType.CBTION);
-		activityDao.save(act);
+		activitySaveAndNotify(act);
 
 		return id;
 	}
@@ -930,7 +944,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void cbtionsUpdateState() {
+	public void cbtionsUpdateState() throws IOException {
 		/* Update state of all not closed bids */
 		List<Cbtion> cbtionsProposed = cbtionDao.getWithStates(Arrays.asList(CbtionState.PROPOSED, CbtionState.OPEN));
 		for(Cbtion cbtion : cbtionsProposed) {
@@ -939,7 +953,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void cbtionUpdateState(Long cbtionId) {
+	public void cbtionUpdateState(Long cbtionId) throws IOException {
 		Cbtion cbtion = cbtionDao.get(cbtionId);
 		
 		Activity act = new Activity();
@@ -954,53 +968,55 @@ public class DbServicesImp {
 		case PROPOSED:
 			Decision open = cbtion.getOpenDec();
 			
-			switch(open.getState()){
-			
-				case OPEN: 
-					break;
+			if(open != null) {
+				switch(open.getState()){
+				
+					case OPEN: 
+						break;
+		
+					case CLOSED_DENIED :
+						cbtion.setState(CbtionState.NOTOPENED);
+						cbtionDao.save(cbtion);
 	
-				case CLOSED_DENIED :
-					cbtion.setState(CbtionState.NOTOPENED);
-					cbtionDao.save(cbtion);
-
-					act.setEvent("proposal refused");
-					activityDao.save(act);
-					break;
+						act.setEvent("proposal refused");
+						activitySaveAndNotify(act);
+						break;
+		
+					case CLOSED_ACCEPTED: 
+						cbtion.setState(CbtionState.OPEN);
+						
+						DecisionRealm realm = decisionRealmDao.getFromProjectId(cbtion.getProject().getId());
+						decisionRealmDao.save(realm);
+		
+						Decision delete = new Decision();
+		
+						delete.setCreator(userDao.get("collectiveone"));
+						delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
+						delete.setDecisionRealm(realm);
+						delete.setDescription("delete contribution '"+cbtion.getTitle()+"'");
+						delete.setFromState(CbtionState.OPEN.toString());		
+						delete.setToState(CbtionState.DELETED.toString());
+						delete.setProject(cbtion.getProject());
+						delete.setState(DecisionState.IDLE);
+						delete.setVerdictHours(36);
+						delete.setType(DecisionType.CBTION);
+						delete.setCbtion(cbtion);
+						
+						decisionDao.save(delete);
+						
+						cbtion.setDeleteDec(delete);
+						cbtionDao.save(cbtion);
 	
-				case CLOSED_ACCEPTED: 
-					cbtion.setState(CbtionState.OPEN);
-					
-					DecisionRealm realm = decisionRealmDao.getFromProjectId(cbtion.getProject().getId());
-					decisionRealmDao.save(realm);
-	
-					Decision delete = new Decision();
-	
-					delete.setCreator(userDao.get("collectiveone"));
-					delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
-					delete.setDecisionRealm(realm);
-					delete.setDescription("delete contribution '"+cbtion.getTitle()+"'");
-					delete.setFromState(CbtionState.OPEN.toString());		
-					delete.setToState(CbtionState.DELETED.toString());
-					delete.setProject(cbtion.getProject());
-					delete.setState(DecisionState.IDLE);
-					delete.setVerdictHours(36);
-					delete.setType(DecisionType.CBTION);
-					delete.setCbtion(cbtion);
-					
-					decisionDao.save(delete);
-					
-					cbtion.setDeleteDec(delete);
-					cbtionDao.save(cbtion);
-
-					act.setEvent("opened for bidding");
-					activityDao.save(act);
-					
-					break;
-	
-				default:
-					break;
+						act.setEvent("opened for bidding");
+						activitySaveAndNotify(act);
+						
+						break;
+		
+					default:
+						break;
+				}	
 			}
-
+			
 			break;
 			
 		case OPEN:
@@ -1018,7 +1034,7 @@ public class DbServicesImp {
 						cbtionDao.remove(cbtion.getId());
 						
 						act.setEvent("deleted");
-						activityDao.save(act);
+						activitySaveAndNotify(act);
 						
 						break;
 					
@@ -1137,7 +1153,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public Long bidCreate(BidNewDto bidDtoIn) {
+	public Long bidCreate(BidNewDto bidDtoIn) throws IOException {
 
 		Long cbtionId = bidDtoIn.getCbtionId();
 		User user = userDao.get(bidDtoIn.getCreatorUsername());
@@ -1175,7 +1191,7 @@ public class DbServicesImp {
 				act.setBid(bid);
 				act.setType(ActivityType.BID);
 				act.setEvent("created");
-				activityDao.save(act);
+				activitySaveAndNotify(act);
 				
 				return bid.getId();
 			} 
@@ -1222,7 +1238,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void bidMarkDone(DoneDto doneDto) {
+	public void bidMarkDone(DoneDto doneDto) throws IOException {
 		
 		Bid bid = bidDao.get(doneDto.getBidId());
 		
@@ -1238,7 +1254,7 @@ public class DbServicesImp {
 			act.setBid(bid);
 			act.setType(ActivityType.BID);
 			act.setEvent("marked done");
-			activityDao.save(act);
+			activitySaveAndNotify(act);
 		}
 	}
 
@@ -1263,7 +1279,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void bidsUpdateState() {
+	public void bidsUpdateState() throws IOException {
 		/* Update state of all not closed bids */
 		List<Bid> bidsNotClosed = bidDao.getNotClosed();
 		for(Bid bid : bidsNotClosed) {
@@ -1288,7 +1304,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void bidUpdateState(Long bidId) {
+	public void bidUpdateState(Long bidId) throws IOException {
 		Bid bid = bidDao.get(bidId);
 		Cbtion cbtion = bid.getCbtion();
 
@@ -1311,13 +1327,13 @@ public class DbServicesImp {
 			case CLOSED_DENIED : 
 				bid.setState(BidState.NOT_ASSIGNED);
 				act.setEvent("not assigned");
-				activityDao.save(act);
+				activitySaveAndNotify(act);
 				break;
 
 			case CLOSED_ACCEPTED: 
 				bid.setState(BidState.ASSIGNED);
 				act.setEvent("assigned");
-				activityDao.save(act);
+				activitySaveAndNotify(act);
 				cbtion.setState(CbtionState.ASSIGNED);
 
 				Project project = bid.getCbtion().getProject();
@@ -1357,7 +1373,7 @@ public class DbServicesImp {
 				case CLOSED_DENIED: 
 					bid.setState(BidState.NOT_ACCEPTED);
 					act.setEvent("not accepted");
-					activityDao.save(act);
+					activitySaveAndNotify(act);
 					break;
 
 				case CLOSED_ACCEPTED: 
@@ -1394,7 +1410,7 @@ public class DbServicesImp {
 
 
 					act.setEvent("accepted");
-					activityDao.save(act);
+					activitySaveAndNotify(act);
 
 					break;
 
@@ -1482,7 +1498,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void decisionsUpdateState() {
+	public void decisionsUpdateState() throws IOException {
 
 		List<DecisionState> states = new ArrayList<DecisionState>();
 		states.add(DecisionState.IDLE);
@@ -1514,22 +1530,22 @@ public class DbServicesImp {
 
 					case OPEN:
 						act.setEvent("opened");
-						activityDao.save(act);	
+						activitySaveAndNotify(act);
 						break;
 
 					case CLOSED_ACCEPTED:
 						act.setEvent("accepted");
-						activityDao.save(act);	
+						activitySaveAndNotify(act);
 						break;
 
 					case CLOSED_DENIED:
 						act.setEvent("rejected");
-						activityDao.save(act);	
+						activitySaveAndNotify(act);
 						break;
 
 					case CLOSED_EXTERNALLY:
 						act.setEvent("closed externally");
-						activityDao.save(act);	
+						activitySaveAndNotify(act);
 						break;
 					}		
 
@@ -1539,7 +1555,7 @@ public class DbServicesImp {
 					switch(dec.getState()) {
 					case IDLE:
 						act.setEvent("back to idle");
-						activityDao.save(act);
+						activitySaveAndNotify(act);
 						break;
 
 					case OPEN:
@@ -1547,17 +1563,17 @@ public class DbServicesImp {
 
 					case CLOSED_ACCEPTED:
 						act.setEvent("accepted");
-						activityDao.save(act);	
+						activitySaveAndNotify(act);
 						break;
 
 					case CLOSED_DENIED:
 						act.setEvent("rejected");
-						activityDao.save(act);	
+						activitySaveAndNotify(act);
 						break;
 
 					case CLOSED_EXTERNALLY:
 						act.setEvent("closed externally");
-						activityDao.save(act);	
+						activitySaveAndNotify(act);
 						break;
 					}	
 					break;
@@ -1589,7 +1605,7 @@ public class DbServicesImp {
 	}	
 
 	@Transactional
-	public Long decisionCreate(DecisionDto decisionDto) {
+	public Long decisionCreate(DecisionDto decisionDto) throws IOException {
 		Decision decision = new Decision();
 		Project project = projectDao.get(decisionDto.getProjectName());
 		projectDao.save(project);
@@ -1614,7 +1630,7 @@ public class DbServicesImp {
 			act.setType(ActivityType.DECISION);
 			act.setProject(project);
 			act.setEvent("created");
-			activityDao.save(act);	
+			activitySaveAndNotify(act);
 		}
 
 		status.setMsg("decision created");
@@ -1645,7 +1661,7 @@ public class DbServicesImp {
 
 
 	@Transactional
-	public String argumentCreate(ArgumentDto argumentDto) {
+	public String argumentCreate(ArgumentDto argumentDto) throws IOException {
 
 		User creator = userDao.get(argumentDto.getCreatorUsername());
 		Decision decision = decisionDao.get(argumentDto.getDecisionId());
@@ -1668,7 +1684,7 @@ public class DbServicesImp {
 		act.setType(ActivityType.ARGUMENT);
 		act.setProject(argument.getDecision().getProject());
 		act.setEvent("created");
-		activityDao.save(act);
+		activitySaveAndNotify(act);
 
 		return "argument created";
 	}
@@ -1739,6 +1755,22 @@ public class DbServicesImp {
 
 		return activityDtosRes;
 	}
+	
+	@Transactional
+	public void activitySaveAndNotify(Activity act) throws IOException {
+		activityDao.save(act);
+		
+		String subject = "CollectiveOne - "+act.getProject().getName()+" activity";
+	    String body = act.getPrettyMessage(env.getProperty("collectiveone.webapp.baseurl"));
+	    
+	    List<String> subscribedUsers = mailSubscriptionRepository.getSubscribedAddresses(act.getProject().getId());
+	    
+	    mailService.sendMail(
+	    		subscribedUsers, 
+	    		subject, 
+	    		body);
+	}
+
 
 	@Transactional
 	public ResStatus commentCbtionCreate(CommentDto commentDto) {

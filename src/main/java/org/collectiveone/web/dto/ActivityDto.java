@@ -4,6 +4,7 @@ public class ActivityDto {
 	private Long id;
 	private long creationDate;
 	private String event;
+	private String eventPretty;
 	private String projectName;
 	private String type;
 	private CbtionDto cbtionDto;
@@ -29,6 +30,12 @@ public class ActivityDto {
 	}
 	public void setEvent(String event) {
 		this.event = event;
+	}
+	public String getEventPretty() {
+		return eventPretty;
+	}
+	public void setEventPretty(String eventPretty) {
+		this.eventPretty = eventPretty;
 	}
 	public String getProjectName() {
 		return projectName;
