@@ -5,12 +5,15 @@ import java.io.IOException;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.collectiveone.services.AppMailServiceHeroku;
 import org.collectiveone.services.DbServicesImp;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.DecisionDto;
 import org.collectiveone.web.dto.GoalDto;
+import org.collectiveone.web.dto.InvRequest;
 import org.collectiveone.web.dto.ProjectNewDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +29,13 @@ public class ViewsController {
 	
 	@Autowired
 	DbServicesImp dbServices;
+	
+	@Autowired
+    private AppMailServiceHeroku mailService;
+	
+	@Autowired
+	private Environment env;
+
 	
 	@RequestMapping("/userPageR/{username}")
 	public String userPage(@PathVariable("username") String username, Model model) {
@@ -64,6 +74,28 @@ public class ViewsController {
 		model.addAttribute("projectName",projectName);
 		
 		return "views/goalPage";
+	}
+	
+	@RequestMapping("/slackPageR")
+	public String slackPage(Model model) {
+		model.addAttribute("invRequest",new InvRequest());
+		return "views/slackPage";
+	}
+	
+	@RequestMapping("/slackInvSubmit")
+	public String slackInvSubmit(@Valid InvRequest invRequest, Model model) throws IOException {
+		
+        String subject = "Slack invitation request";
+        String body = "Requested invitation by "+invRequest.getEmail();
+        
+        mailService.sendMail(
+        		env.getProperty("collectiveone.webapp.admin-email"),
+        		subject, 
+        		body);
+        
+        model.addAttribute("message","Your request for an invitation has been received "+invRequest.getEmail()+". We will process it as soon as possible.");
+        
+        return "views/slackPage";
 	}
 	
 	@RequestMapping("/projectPageR/{projectName}")
