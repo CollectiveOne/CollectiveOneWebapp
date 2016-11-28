@@ -132,8 +132,16 @@ public class DbServicesImp {
 	@Autowired
 	private Environment env;
 	
+	@Autowired
+	private TimeServiceIf timeService;
 	
-
+	public TimeServiceIf getTimeService() {
+		return timeService;
+	}
+	public void setTimeService(TimeServiceIf timeService) {
+		this.timeService = timeService;
+	}
+	
 	public ResStatus getStatus() {
 		return status;
 	}
@@ -809,6 +817,11 @@ public class DbServicesImp {
 	@Transactional
 	public void cbtionSave(Cbtion cbtion) {
 		cbtionDao.save(cbtion);
+	}
+	
+	@Transactional
+	public void cbtionUpdate(Cbtion cbtion) {
+		cbtionDao.update(cbtion);
 	}
 
 	@Transactional
@@ -1506,84 +1519,90 @@ public class DbServicesImp {
 
 		List<Decision> decsIdle = decisionDao.getWithStates(states);
 		for(Decision dec : decsIdle) {
+			decisionUpdateState(dec.getId());
+		}
+	}
+	
+	@Transactional
+	public void decisionUpdateState(Long id) throws IOException {
+		Decision dec = decisionDao.get(id);
+		
+		/* Update the decision */
+		DecisionState before = dec.getState();
+		dec.updateState(timeService.getNow());
+		decisionDao.save(dec);
 
-			/* Update the decision */
-			DecisionState before = dec.getState();
-			dec.updateState();
-			decisionDao.save(dec);
+		/* store activity only for custom decisions (automatic decisions activity 
+		 * is recorded based on the element it changes).
+		 * Activity is recorded if the decision switch state */
+		if(!dec.getCreator().getUsername().equals("collectiveone")) {
+			Activity act = new Activity();
+			act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+			act.setDecision(dec);
+			act.setType(ActivityType.DECISION);
+			act.setProject(dec.getProject());
 
-			/* store activity only for custom decisions (automatic decisions activity 
-			 * is recorded based on the element it changes).
-			 * Activity is recorded if the decision switch state */
-			if(!dec.getCreator().getUsername().equals("collectiveone")) {
-				Activity act = new Activity();
-				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				act.setDecision(dec);
-				act.setType(ActivityType.DECISION);
-				act.setProject(dec.getProject());
-
-				switch(before) {
+			switch(before) {
+			case IDLE:
+				switch(dec.getState()) {
 				case IDLE:
-					switch(dec.getState()) {
-					case IDLE:
-						break;
-
-					case OPEN:
-						act.setEvent("opened");
-						activitySaveAndNotify(act);
-						break;
-
-					case CLOSED_ACCEPTED:
-						act.setEvent("accepted");
-						activitySaveAndNotify(act);
-						break;
-
-					case CLOSED_DENIED:
-						act.setEvent("rejected");
-						activitySaveAndNotify(act);
-						break;
-
-					case CLOSED_EXTERNALLY:
-						act.setEvent("closed externally");
-						activitySaveAndNotify(act);
-						break;
-					}		
-
 					break;
 
 				case OPEN:
-					switch(dec.getState()) {
-					case IDLE:
-						act.setEvent("back to idle");
-						activitySaveAndNotify(act);
-						break;
-
-					case OPEN:
-						break;
-
-					case CLOSED_ACCEPTED:
-						act.setEvent("accepted");
-						activitySaveAndNotify(act);
-						break;
-
-					case CLOSED_DENIED:
-						act.setEvent("rejected");
-						activitySaveAndNotify(act);
-						break;
-
-					case CLOSED_EXTERNALLY:
-						act.setEvent("closed externally");
-						activitySaveAndNotify(act);
-						break;
-					}	
+					act.setEvent("opened");
+					activitySaveAndNotify(act);
 					break;
 
 				case CLOSED_ACCEPTED:
-				case CLOSED_DENIED:
-				case CLOSED_EXTERNALLY:
+					act.setEvent("accepted");
+					activitySaveAndNotify(act);
 					break;
 
-				}
+				case CLOSED_DENIED:
+					act.setEvent("rejected");
+					activitySaveAndNotify(act);
+					break;
+
+				case CLOSED_EXTERNALLY:
+					act.setEvent("closed externally");
+					activitySaveAndNotify(act);
+					break;
+				}		
+
+				break;
+
+			case OPEN:
+				switch(dec.getState()) {
+				case IDLE:
+					act.setEvent("back to idle");
+					activitySaveAndNotify(act);
+					break;
+
+				case OPEN:
+					break;
+
+				case CLOSED_ACCEPTED:
+					act.setEvent("accepted");
+					activitySaveAndNotify(act);
+					break;
+
+				case CLOSED_DENIED:
+					act.setEvent("rejected");
+					activitySaveAndNotify(act);
+					break;
+
+				case CLOSED_EXTERNALLY:
+					act.setEvent("closed externally");
+					activitySaveAndNotify(act);
+					break;
+				}	
+				break;
+
+			case CLOSED_ACCEPTED:
+			case CLOSED_DENIED:
+			case CLOSED_EXTERNALLY:
+				break;
+
 			}
 		}
 	}
@@ -1639,6 +1658,12 @@ public class DbServicesImp {
 		return decision.getId();
 	}
 
+
+	@Transactional
+	public Decision decisionGet(Long id) {
+		return decisionDao.get(id);
+	}
+	
 	@Transactional
 	public DecisionDto decisionGetDto(Long id) {
 		return decisionDao.get(id).toDto();
