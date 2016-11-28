@@ -1,4 +1,4 @@
-package org.collectiveone.test.services;
+package org.collectiveone.services;
 
 import org.collectiveone.model.Role;
 import org.collectiveone.model.User;

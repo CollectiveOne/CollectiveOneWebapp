@@ -8,4 +8,3 @@ bin/
 pom-eclipse.xml
 src/main/resources/rebel.xml
 src/main/webapp/WEB-INF/beans-eclipse.xml
-*.springBeans
