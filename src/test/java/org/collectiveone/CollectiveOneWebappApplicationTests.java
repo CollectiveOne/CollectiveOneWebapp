@@ -1,33 +1,83 @@
+
 package org.collectiveone;
 
-import javax.transaction.Transactional;
+import java.util.Locale;
 
-import org.collectiveone.services.DbServicesTest;
+import javax.servlet.http.HttpServletRequest;
+
+import org.collectiveone.model.User;
+import org.collectiveone.services.UserServiceIm;
+import org.collectiveone.web.controllers.BaseController;
+import org.collectiveone.web.controllers.rest.UsersController;
+import org.collectiveone.web.controllers.views.ViewsController;
+import org.collectiveone.web.dto.ProjectNewDto;
+import org.collectiveone.web.dto.UserNewDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.ui.Model;
+import org.springframework.validation.support.BindingAwareModelMap;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @TestPropertySource(locations="classpath:test.properties")
-@Transactional
 public class CollectiveOneWebappApplicationTests {
 
+	
 	@Autowired
-	DbServicesTest dbService;
+	BaseController baseController;
+	
+	@Autowired
+	UsersController usersController;
+	
+	@Autowired
+	ViewsController viewsController;
+	
+	@Autowired
+	UserServiceIm userService;
 	
 	@Test
-	public void testDecisionAlgoruthm() {
+	public void testDecisionAlgorithm() {
+		/* request environment  */
+		Model model = new BindingAwareModelMap();
+		HttpServletRequest request = new MockHttpServletRequest();
+		Locale locale = new Locale("US");
 		
-		dbService.createUser("pepoospina", 			"pepo.ospina@gmail.com", 	"pepoospina1", 		true);
-		dbService.createUser("estebanortizospina", 	"temp1@gmail.com", 			"Esteban1017", 		true);
-		dbService.createUser("mospina", 			"temp2@gmail.com", 			"amoajose", 		true);
-		dbService.createUser("jpmarindiaz", 		"temp3@gmail.com", 			"jpmarindiazx", 	true);
-		dbService.createUser("quiquin", 			"temp4@gmail.com", 			"quiquines", 		true);
-		dbService.createUser("collectiveone", 		"temp5@gmail.com", 			"collectiveone", 	false);
+		/* security mockup */
+		
+		
+		/* Create users */
+		int nusers = 10;
+		for(int ix=0; ix < nusers; ix++) {
+			UserNewDto userNew = new UserNewDto();
+			
+			userNew.setPassword("user"+ix);
+			userNew.setPasswordConfirm("user"+ix);
+			userNew.setUsername("user"+ix);
+			userNew.setEmail("temp"+ix+"@gmail.com");
+			
+			userService.emailAuthorize(userNew.getEmail());
+			baseController.signupSubmit(locale, userNew, model, request);
+		}
+		
+		/* Activate users s*/
+		for(User user : userService.findAll()) {
+			userService.enableUser(user.getId());
+		}
+		
+		/* Create project */
+		ProjectNewDto projectNew = new ProjectNewDto();
+		
+		projectNew.setName("testProject");
+		projectNew.setCreatorUsername("user1");
+		projectNew.setDescription("Dummy description");
+		projectNew.setPpsInitial(100);
+				
+		viewsController.projectNewSubmit(projectNew, model);
 		
 	}
 
