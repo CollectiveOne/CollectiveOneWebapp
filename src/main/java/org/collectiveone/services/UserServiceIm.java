@@ -3,6 +3,7 @@ package org.collectiveone.services;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import org.collectiveone.model.AuthorizedEmail;
 import org.collectiveone.model.PasswordRecoveryToken;
 import org.collectiveone.model.User;
 import org.collectiveone.model.VerificationToken;
@@ -62,6 +63,11 @@ public class UserServiceIm implements UserServiceIf, UserDetailsService {
 	}
 
 	@Override
+	public Iterable<User> findAll() {
+		return userRepository.findAll();
+	}
+	
+	@Override
 	public User findByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
@@ -116,16 +122,25 @@ public class UserServiceIm implements UserServiceIf, UserDetailsService {
 		
 	}
 	
-	private boolean usernameExist(final String username) {
+	public boolean usernameExist(final String username) {
         return userRepository.findByUsername(username) != null;
     }
 	
-	private boolean emailExist(final String email) {
+	public boolean emailExist(final String email) {
         return userRepository.findByEmail(email) != null;
     }
 	
-	private boolean emailAuthorized(final String email) {
+	public boolean emailAuthorized(final String email) {
         return authorizedEmailRepository.findByEmailAndAuthorized(email, true) != null;
+    }
+	
+	public void emailAuthorize(final String email) {
+		if(!emailAuthorized(email)) {
+			AuthorizedEmail authEmail = new AuthorizedEmail();
+			authEmail.setEmail(email);
+			authEmail.setAuthorized(true);
+		    authorizedEmailRepository.save(authEmail);	
+		}
     }
 	
 	
@@ -161,6 +176,12 @@ public class UserServiceIm implements UserServiceIf, UserDetailsService {
         return TOKEN_VALID;
     }
 	
+	@Override
+    public void enableUser(Long id) {
+		User user = userRepository.findOne(id); 
+		user.setEnabled(true);
+        userRepository.save(user);
+	}
 	
 	@Override
     public String validatePasswordRecoveryToken(long id, String token) {
