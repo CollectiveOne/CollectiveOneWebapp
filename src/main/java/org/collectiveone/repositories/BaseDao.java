@@ -31,11 +31,6 @@ public class BaseDao {
 		Long id = (Long) session.save(object);
 		return id;
 	}
-	
-	public void update(Object object) {
-		Session session = sessionFactory.getCurrentSession();
-		session.update(object);
-	}
 
 	public void delete(Object object) {
 		Session session = sessionFactory.getCurrentSession();
