@@ -23,7 +23,11 @@ public interface UserServiceIf {
 
 	String validatePasswordRecoveryToken(long id, String token);
 
-	void changeUserPassword(User user, PasswordDto passwordDto);	
+	void changeUserPassword(User user, PasswordDto passwordDto);
+
+	void enableUser(Long id);
+
+	Iterable<User> findAll();	
 	
 	
 }
