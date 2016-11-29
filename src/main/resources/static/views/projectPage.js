@@ -61,7 +61,7 @@ ProjectPage.prototype.contributorsOfProjectGetReceivedCallback = function(data) 
 	
 	var ctx =  $("#contributors_chart");
 	var myDoughnutChart = new Chart(ctx, {
-	    type: 'doughnut',
+	    type: 'bar',
 	    data: {	datasets: [{
 	    			data: chartData,
 	    			backgroundColor: chartColors
@@ -69,6 +69,9 @@ ProjectPage.prototype.contributorsOfProjectGetReceivedCallback = function(data) 
 	    		labels: chartLabels 
 	    },
 	    options: {
+	    		legend: {
+	    			display: false
+	    		},
 	    		cutoutPercentage: 50
 	    		}
 	});
