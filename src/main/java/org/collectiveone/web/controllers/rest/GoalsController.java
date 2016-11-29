@@ -81,10 +81,17 @@ public class GoalsController {
 	@RequestMapping(value="/getOfProject/{projectName}", method = RequestMethod.POST)
 	public @ResponseBody List<GoalDto> get(@PathVariable("projectName") String projectName) {
 		Filters filters = new Filters();
+		
 		List<String> projectNames = new ArrayList<String>();
 		projectNames.add(projectName);
 		filters.setProjectNames(projectNames);
 		filters.setOnlyParents(true);
+		
+		List<String> states = new ArrayList<String>();
+		states.add(GoalState.PROPOSED.toString());
+		states.add(GoalState.ACCEPTED.toString());
+		filters.setStateNames(states);
+		
 		GoalDtoListRes goalDtos = dbServices.goalDtoGetFiltered(filters);
 		return goalDtos.getGoalDtos();
 	}
