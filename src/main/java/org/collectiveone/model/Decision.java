@@ -14,6 +14,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.collectiveone.web.dto.DecisionDto;
@@ -92,13 +93,21 @@ public class Decision {
 	public double elapsedFactor = 0.0;
 	
 	/* Veridc tirggering thresholds */
+	@Transient
 	public double p_to_flip = 0.5;
+	@Transient
 	public double pc_ci_low = 0.0;
+	@Transient
 	public double pc_ci_high = 1.0;
+	@Transient
 	public double pc_ci_low_ext = 0.0;
+	@Transient
 	public double pc_ci_high_ext = 1.0;
+	@Transient
 	public double pc_ci_low_ext_time = 0.0;
+	@Transient
 	public double pc_ci_high_ext_time = 1.0;
+	@Transient
 	public double extFactor = 0.0;
 
 	/* ============================== */

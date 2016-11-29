@@ -558,11 +558,20 @@ public class DbServicesImp {
 	@Transactional
 	public void goalAddParentsAndSubgoals(GoalDto goalDto) {
 		List<String> parentGoalsTags = new ArrayList<String>();
-		for(Goal parent : goalDao.getAllParents(goalDto.getId())) { parentGoalsTags.add(parent.getGoalTag()); }
+		for(Goal parent : goalDao.getAllParents(goalDto.getId())) { 
+			parentGoalsTags.add(parent.getGoalTag()); 
+		}
 		goalDto.setParentGoalsTags(parentGoalsTags);
 
 		List<String> subGoalsTags = new ArrayList<String>();
-		for(Goal subgoal : goalDao.getSubgoals(goalDto.getId())) { subGoalsTags.add(subgoal.getGoalTag()); }
+		
+		List<GoalState> states = new ArrayList<GoalState>();
+		states.add(GoalState.PROPOSED);
+		states.add(GoalState.ACCEPTED);
+		
+		for(Goal subgoal : goalDao.getSubgoals(goalDto.getId(),states)) { 
+			subGoalsTags.add(subgoal.getGoalTag()); 
+		}
 		goalDto.setSubGoalsTags(subGoalsTags);
 	}
 

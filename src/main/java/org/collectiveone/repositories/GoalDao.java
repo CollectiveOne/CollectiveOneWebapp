@@ -131,6 +131,27 @@ public class GoalDao extends BaseDao {
 		return res;
 	}
 	
+	public List<Goal> getSubgoals(Long goalId, List<GoalState> states) {
+		
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class,"go");
+		
+		if(states != null) {
+			Disjunction stateDisj = Restrictions.disjunction();
+			for(GoalState state:states) {	
+				stateDisj.add( Restrictions.eq("state", state));
+			}	
+			query.add(stateDisj);
+		}
+		
+		query.createAlias("go.parent","pa")
+			.add(Restrictions.eq("pa.id", goalId));
+		
+		@SuppressWarnings("unchecked")
+		List<Goal> res = (List<Goal>) query.list();
+		
+		return res;
+	}
+	
 	public List<Goal> getAllParents(Long goalId) {
 		
 		List<Goal> parents = new ArrayList<Goal>();
