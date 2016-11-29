@@ -25,6 +25,8 @@ GoalNewPage.prototype = {
 		projectSelectorDrawn: function() {
 			$('#parentGoalTag',this.container).autocomplete({
 				serviceUrl: '/rest/goals/getSuggestions',
+				minChars: 0,
+				maxHeight: 200,
 				params: {projectName: $("#project_select", this.container).val()}
 			});
 		},

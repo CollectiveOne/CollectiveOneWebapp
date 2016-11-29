@@ -27,12 +27,14 @@ FilterElement.prototype.init = function() {
 
 			$('#filter_goal_input',this.container).autocomplete({
 				serviceUrl: '/rest/goals/getSuggestions',
+				minChars: 0,
 				params: {projectName: ""},
 				maxHeight: 100
 			});
 
 			$('#filter_contributor_input',this.container).autocomplete({
 				serviceUrl: '/rest/users/getSuggestions',
+				minChars: 0,
 				maxHeight: 100
 			});
 
@@ -56,7 +58,8 @@ FilterElement.prototype.init = function() {
 	
 	$('#filter_creator_input').autocomplete({
 	    serviceUrl: '/rest/users/getSuggestions',
-	    maxHeight: 100
+	    minChars: 0,
+		maxHeight: 100
 	});
 	
 	for(ix in this.possibleSortBy) {
