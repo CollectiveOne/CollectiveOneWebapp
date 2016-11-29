@@ -21,9 +21,10 @@
 					<input type="text" class="form-control" th:field="*{goalTag}"></input>
 					<span th:if="${#fields.hasErrors('goalTag')}" th:errors="*{goalTag}" th:class="help-block">Title Errors</span>
 				</div>
-				<div class="form-group">
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('parentGoalTag')}? 'has-error'">
 					<label for="title">Parent Goal:</label> 
 					<input type="text" class="form-control" th:field="*{parentGoalTag}" placeholder="parent goal is optional"></input>
+					<span th:if="${#fields.hasErrors('parentGoalTag')}" th:errors="*{parentGoalTag}" th:class="help-block">Title Errors</span>
 				</div>
 				<div th:class="form-group" th:classappend="${#fields.hasErrors('description')}? 'has-error'">
 					<label for="description">Description:</label>

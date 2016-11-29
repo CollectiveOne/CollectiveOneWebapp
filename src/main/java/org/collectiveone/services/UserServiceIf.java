@@ -27,7 +27,13 @@ public interface UserServiceIf {
 
 	void enableUser(Long id);
 
-	Iterable<User> findAll();	
+	Iterable<User> findAll();
+
+	boolean usernameExist(String username);
+
+	boolean emailExist(String email);
+
+	boolean emailAuthorized(String email);	
 	
 	
 }

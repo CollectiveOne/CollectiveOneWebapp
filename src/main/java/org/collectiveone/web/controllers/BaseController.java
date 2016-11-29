@@ -13,10 +13,10 @@ import org.collectiveone.registration.OnRegistrationCompleteEvent;
 import org.collectiveone.services.UserServiceIf;
 import org.collectiveone.web.dto.PasswordDto;
 import org.collectiveone.web.dto.UserNewDto;
+import org.collectiveone.web.error.PasswordNotAccepted;
 import org.collectiveone.web.error.PasswordsNotEqualException;
 import org.collectiveone.web.error.UserAlreadyExistException;
 import org.collectiveone.web.error.UserNotAuthorizedException;
-import org.collectiveone.web.error.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -24,7 +24,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -60,11 +62,37 @@ public class BaseController {
 	}
 	
 	@RequestMapping("/user/signupSubmit")
-	public String signupSubmit(Locale locale, @Valid UserNewDto userNewDto,  Model model, final HttpServletRequest request) {
-		final User registered = userService.registerNewUserAccount(userNewDto);
-		eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
-		model.addAttribute("message", messages.getMessage("message.signupSuccess", null, locale));
-		return "auth/login";
+	public String signupSubmit(Locale locale, @Valid @ModelAttribute("user") UserNewDto userNewDto, BindingResult result, Model model, final HttpServletRequest request) {
+		if(result.hasErrors()) {
+			return "auth/signup";
+		} else {
+			boolean error = false;
+			if(userService.usernameExist(userNewDto.getUsername())) {
+				result.rejectValue("username", "user.username", "username '"+userNewDto.getUsername()+"' already exist.");
+				error = true;
+		    } 
+			if(userService.emailExist(userNewDto.getEmail())) {
+				result.rejectValue("email", "user.email", "email '"+userNewDto.getEmail()+"' already registered.");
+				error = true;
+		    }
+			if(!userService.emailAuthorized(userNewDto.getEmail())) {
+				result.rejectValue("email", "user.email", "email '"+userNewDto.getEmail()+"' not authorized. Please contact us.");
+				error = true;
+		    }
+			if(!userNewDto.getPassword().equals(userNewDto.getPasswordConfirm())) {
+				result.rejectValue("passwordConfirm", "user.passwordConfirm", "passwords do not match");
+				error = true;
+			}
+			
+			if(!error) {
+				final User registered = userService.registerNewUserAccount(userNewDto);
+				eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
+				model.addAttribute("message", messages.getMessage("message.signupSuccess", null, locale));
+				return "auth/login";
+			} else {
+				return "auth/signup";
+			}
+		}
 	}
 	
 	@RequestMapping("/user/signupConfirm")
@@ -84,12 +112,17 @@ public class BaseController {
 	}
 	
 	@RequestMapping("/user/forgotPasswordSubmit")
-    public String forgotPasswordSubmit(final HttpServletRequest request, @RequestParam("email") final String userEmail, Model model) {
-        final User user = userService.findByEmail(userEmail);
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
-        eventPublisher.publishEvent(new OnPasswordRecoveryAsked(user, request.getLocale(), getAppUrl(request)));
+    public String forgotPasswordSubmit(@RequestParam("email") final String userEmail, Model model, final HttpServletRequest request) {
+        if(userEmail.trim().length() == 0) {
+			model.addAttribute("message", "email cannot be empty");
+			return "auth/forgotPassword";
+	    }
+        User user = userService.findByEmail(userEmail);
+        if(user == null) {
+			model.addAttribute("message", "we were not able to find a user with the email "+userEmail);
+			return "auth/forgotPassword";
+	    }
+		eventPublisher.publishEvent(new OnPasswordRecoveryAsked(user, request.getLocale(), getAppUrl(request)));
         model.addAttribute("message", messages.getMessage("message.forgotPasswordLinkSent", null, request.getLocale()));
         return "auth/login";
     }
@@ -107,24 +140,42 @@ public class BaseController {
 	
     @RequestMapping("/user/savePassword")
     @PreAuthorize("hasRole('READ_PRIVILEGE')")
-    public String savePassword(final Locale locale, @Valid PasswordDto passwordDto, Model model) {
-        final User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        userService.changeUserPassword(user, passwordDto);
-        model.addAttribute("message", messages.getMessage("auth.pswdUpdateSuccess", null, locale));
-        return "auth/login";
+    public String savePassword(final Locale locale, @Valid @ModelAttribute("passwordDto") PasswordDto passwordDto, BindingResult result, Model model) {
+    	if(result.hasErrors()) {
+    		return "auth/updatePassword";
+		} else {
+			boolean error = false;
+			if(!passwordDto.getNewPassword().equals(passwordDto.getNewPasswordConfirm())) {
+				result.rejectValue("newPasswordConfirm", "passwordDto.newPasswordConfirm", "passwords do not match");
+				error = true;
+			}
+			
+			if(!error) {
+				final User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		        userService.changeUserPassword(user, passwordDto);
+		        model.addAttribute("message", messages.getMessage("auth.pswdUpdateSuccess", null, locale));
+		        return "auth/login";	
+			} else {
+				return "auth/updatePassword";
+			}
+		}
     }
-	
-	
+
+    
 	/* support */
-	
 	private String getAppUrl(HttpServletRequest request) {
         return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 	
 	/* errors */
+	@ExceptionHandler(PasswordNotAccepted.class)
+	public String handleErrorPswd(PasswordNotAccepted exception, Model model , Locale locale) throws IOException {
+		model.addAttribute("message", exception.getMessage());
+		return "error";
+	}
 	
 	@ExceptionHandler(PasswordsNotEqualException.class)
-	public String handleErrorPswd(PasswordsNotEqualException exception, Model model , Locale locale) throws IOException {
+	public String handleErrorPswdNeq(PasswordsNotEqualException exception, Model model , Locale locale) throws IOException {
 		model.addAttribute("message", exception.getMessage());
 		return "error";
 	}

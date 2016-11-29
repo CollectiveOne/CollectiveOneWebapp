@@ -160,12 +160,23 @@ public class ViewsController {
 		} else {
 			/* check goal-tag is new in that project */
 			if(!dbServices.goalExist(goalDto.getGoalTag(),goalDto.getProjectName())) {
+				/* if parent goal is provided, check that it exist*/
+				if(goalDto.getParentGoalTag() != null) {
+					if(goalDto.getParentGoalTag().length() > 0) {
+						if(!dbServices.goalExist(goalDto.getParentGoalTag(),goalDto.getProjectName(),GoalState.ACCEPTED)) {
+							result.rejectValue("parentGoalTag", "goal.parentGoalTag", "'"+goalDto.getParentGoalTag()+"' was not found, or is not yet accepted");
+							return "views/goalNewPage";
+						}
+					}
+				}
+				
 				/* creator is the logged user */
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				goalDto.setCreatorUsername(auth.getName()); 
-				
 				dbServices.goalCreate(goalDto);
-				return "redirect:/views/goalListPageR";
+				
+				return "redirect:/views/goalPageR?projectName="+goalDto.getProjectName()+"&goalTag="+goalDto.getGoalTag();
+				
 			} else {
 				result.rejectValue("goalTag", "goal.goalTag", "'"+goalDto.getGoalTag()+"' goal tag already exist. It must be unique within the project.");
 				return "views/goalNewPage";

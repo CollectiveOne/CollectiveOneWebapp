@@ -13,6 +13,7 @@ import org.collectiveone.repositories.UserRepository;
 import org.collectiveone.repositories.VerificationTokenRepository;
 import org.collectiveone.web.dto.PasswordDto;
 import org.collectiveone.web.dto.UserNewDto;
+import org.collectiveone.web.error.PasswordNotAccepted;
 import org.collectiveone.web.error.PasswordsNotEqualException;
 import org.collectiveone.web.error.UserAlreadyExistException;
 import org.collectiveone.web.error.UserNotAuthorizedException;
@@ -91,6 +92,9 @@ public class UserServiceIm implements UserServiceIf, UserDetailsService {
 	
 	@Override
     public User registerNewUserAccount(final UserNewDto accountDto) {
+		if(accountDto.getPassword().length() < 8) {
+			throw new PasswordNotAccepted("Password should have at leat 8 characters");
+		}
 		if(accountDto.getPassword().compareTo(accountDto.getPasswordConfirm()) != 0) {
 			throw new PasswordsNotEqualException("Passwords are not equal");
 		}
@@ -122,14 +126,17 @@ public class UserServiceIm implements UserServiceIf, UserDetailsService {
 		
 	}
 	
+	@Override
 	public boolean usernameExist(final String username) {
         return userRepository.findByUsername(username) != null;
     }
 	
+	@Override
 	public boolean emailExist(final String email) {
         return userRepository.findByEmail(email) != null;
     }
 	
+	@Override
 	public boolean emailAuthorized(final String email) {
         return authorizedEmailRepository.findByEmailAndAuthorized(email, true) != null;
     }
@@ -205,6 +212,9 @@ public class UserServiceIm implements UserServiceIf, UserDetailsService {
 	
 	@Override
     public void changeUserPassword(final User user, final PasswordDto passwordDto) {
+		if(passwordDto.getNewPassword().length() < 8) {
+			throw new PasswordNotAccepted("Password should have at leat 8 characters");
+		}
 		if(!passwordDto.getNewPassword().equals(passwordDto.getNewPasswordConfirm())) {
 			 throw new PasswordsNotEqualException("Passwords are not equal"); 
         }
