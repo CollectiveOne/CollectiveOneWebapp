@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2016-11-23 23:26:07 CET
+-- Started on 2016-11-28 20:58:56 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -18,7 +18,7 @@ SET row_security = off;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 3288 (class 0 OID 1402190)
+-- TOC entry 3299 (class 0 OID 1402190)
 -- Dependencies: 190
 -- Data for Name: bids; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -117,17 +117,23 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 90	2016-11-17 19:38:04.771	\N	2016-11-17 23:00:00	I have added SendGrid integration to send signup confirmation and password recovry emails	\N	\N	\N	20	3	381	380	65	1
 91	2016-11-17 19:40:49.322	\N	2016-11-17 23:00:00	I have added Spring security to handle application access, and encrypted users passwords	\N	\N	\N	30	3	383	382	52	1
 92	2016-11-18 09:20:01.026	\N	2016-11-18 23:00:00	I will do it this afternoon	\N	\N	\N	5	3	390	389	112	1
+99	2016-11-24 17:08:27.3	\N	2016-11-24 23:00:00	I have added a simple per project subscription table so that all new activity items created on a project is sent to subscribed users. Subscription is made manually by admin	\N	\N	\N	10	3	420	419	120	1
 94	2016-11-20 17:39:52.133	\N	2016-11-20 23:00:00	Already done. UserPage is exactly as it was before	\N	\N	\N	5	3	398	397	109	1
 95	2016-11-20 17:40:41.238	\N	2016-11-20 23:00:00	Updated the bid elements and the API	\N	\N	\N	8	3	401	400	110	1
-96	2016-11-21 18:23:04.707	\N	2016-11-21 23:00:00	I will attend the presentation and make as many contacts as possible	\N	\N	\N	25	1	407	406	117	1
+100	2016-11-25 11:36:26.947	\N	2016-11-25 23:00:00	Just did that	2016-11-25 11:36:43.327	http://www.collectiveone.org/views/slackPageR	1	5	3	431	430	122	1
 97	2016-11-21 18:29:35.644	\N	2016-11-21 23:00:00	Pay 25 euro for 100 presentation cards	\N	\N	\N	6	3	411	410	118	1
+101	2016-11-25 13:59:04.378	\N	2016-11-25 23:00:00	I can prepare a first draft	2016-11-25 19:42:28.204	https://drive.google.com/drive/u/0/folders/0B6HEie5ZN03bZ0RSaExIU0tCMHc	1	5	3	435	434	123	1
+98	2016-11-24 09:47:19.58	\N	2016-11-24 23:00:00	For some reason the SendGrid API key was not within the SendGrid CollectiveOne account. I have created a new key and updated the env variable in heroku. Tested for signup and pwd recovery	\N	\N	\N	2	3	415	414	119	1
+96	2016-11-21 18:23:04.707	\N	2016-11-21 23:00:00	I will attend the presentation and make as many contacts as possible	2016-11-24 09:17:55.952	https://docs.google.com/document/d/19kRCzv86tkF8RiMlV_Hdtju9xGvQpi51Z-jTpMemsCE/edit?usp=drive_web	1	25	3	407	406	117	1
+102	2016-11-27 11:21:43.05	\N	2016-11-30 23:00:00	I am willing to cover this at a 4 euros per pp	\N	\N	\N	42.5	0	\N	445	126	1
+103	2016-11-28 09:32:18.918	\N	\N	I will devote some time today to this and try to come with a solution. The priority is to test the decision mechanism.	\N	\N	\N	0	6	\N	\N	116	1
 \.
 
 
 ALTER TABLE bids ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3311 (class 0 OID 1402267)
+-- TOC entry 3322 (class 0 OID 1402267)
 -- Dependencies: 213
 -- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -137,14 +143,14 @@ ALTER TABLE projects DISABLE TRIGGER ALL;
 COPY projects (id, creation_date, description, name, pps_tot, creator_id) FROM stdin;
 2	2016-09-21 15:38:54.641	With JieMaps, you can create and share your navigation experience, and find the navigation experiences of others.\n\nIn JieMaps, a navigation experience is represented by a path (a sequence and group of links). This paths are called Jies. That's all. 	JieMaps	100	1
 3	2016-10-19 20:51:28.032	Data journalism tools	datasketch	101	5
-1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2872.5	1
+1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2919.5	1
 \.
 
 
 ALTER TABLE projects ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3291 (class 0 OID 1402201)
+-- TOC entry 3302 (class 0 OID 1402201)
 -- Dependencies: 193
 -- Data for Name: cbtions; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -262,19 +268,27 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 111	0	2016-11-17 22:18:39.34	2016-11-18 15:37:59.968	As state filters and hide closed decisions by default. Check the order as it seem old decisions are being shown first 	Updated decisionListPageR	0	6	Fix decision browser 	\N	1	391	4	386	1
 113	0	2016-11-18 17:11:21.919	\N	So far the decision algorithm programmed in the web application has net be thoughtfully tested with multiple voters. Design a unit test of the algorithm to verify it behaves as expected. 	updated unit test	0	4	Test the decision algorithm	\N	1	\N	6	392	1
 114	0	2016-11-18 20:27:41.837	\N	Goals are expected to work as a "requirements specification". The contribution consist on reviewing the current goals structure under the +webapp goal and propose an improvement to it, trying to identify the key sub-goals (or milestones) that are to be achieved to reach the +webapp goal. Each sub-goal can be decomposed into sub-goals multiple times if needed.	document with a proposal of a decomposition in a sub-goals tree of the +webapp goal	1	0	Review the goal substructure of the +webapp goal	\N	1	394	10	393	1
+121	0	2016-11-24 17:14:36.845	\N	Currently authorized signups of users and projects is made by manually entering the records in the database tables. Create an admin page to which only CollectiveOne admins will have access to add and remove records to these tables.	new admin section	0	0	Create admin page to control authorized users and projects	\N	1	422	6	421	1
 109	5	2016-11-17 19:46:01.699	\N	Add a user specific page by migrating and updating the old userpage, which is missing from last refactoring process	new userPage.html and associated resources	0	2	Migrate userPage from old webapp	1	1	396	4	384	1
+119	2	2016-11-24 09:22:15.543	\N	It seems account verification emails are not being sent. Review the SendGrid configuration and check that it works for confirmation emails, but also for password reset	problem fixed	0	2	Review account verification email not being sent	1	1	413	6	412	1
 110	8	2016-11-17 19:47:55.846	\N	Bid rate and review functionality is missing from last webapp refactoring. Include it in the current application version using as basis the old functionality	updated bid rate and review process	0	2	Migrate bids rating process	1	1	399	10	385	1
 100	0	2016-10-31 08:57:38.615	2016-11-20 17:51:31.534	Heroku is continuously notifying R14 (Memory quota exceeded). Make an overview of the problem cause and identify possible solutions.	description of the problem and solutions identification	0	6	Check memory issue in heroku	\N	1	340	6	339	1
+117	25	2016-11-21 18:21:48.187	\N	Attend crowdsourcingweek.com and pitch the CollectiveOne project to potentially interested people.	new contacts and new participants	0	2	Public Relations at @CrowdWeek	1	1	405	7	404	1
 116	0	2016-11-21 10:30:59.665	\N	setup the basic infrastructure for unit testing	unit test abstract class and test example	0	0	Prepare unit test infrastructure	\N	1	403	6	402	1
-117	0	2016-11-21 18:21:48.187	\N	Attend crowdsourcingweek.com and pitch the CollectiveOne project to potentially interested people.	new contacts and new participants	0	1	Public Relations at @CrowdWeek	\N	1	405	7	404	1
+124	0	2016-11-25 14:03:31.935	\N	The "CollectiveOne Web Application Technical Overview" document is outdated and should be updated to the new app architecture. 	updated document	0	4	Update the webapp technical overview document	\N	1	\N	8	436	1
+122	5	2016-11-25 11:35:57.045	\N	Create a page to request for a slack invitation and send an email to C1 admin for every request.	new form and email notification	0	2	Create a Slack invitation request form	1	1	429	7	428	1
+120	10	2016-11-24 10:38:03.317	\N	Send recent activity as an email to the users that are subscribe to it. This is a very first baby step towards a notification service which should be much more configurable.	email sent to subscribed users at each new activity registration	0	2	Send recent activity as emails to subscribed users	1	1	417	6	416	1
 118	6	2016-11-21 18:27:32.77	\N	Pay for 100 CollectiveOne presentation cards	100 presentation cards	0	2	Pay for 100 presentation cards	1	1	409	7	408	1
+123	5	2016-11-25 13:58:13.353	\N	Prepare a document summarizing the status of the decision mechanism to be used as entry point for people who might be interested in contributing to it.	google doc	0	2	Decision mechanism status document	1	1	433	1	432	1
+126	0	2016-11-27 11:20:09.189	\N	Pay 170 euros for the airplane tickets to attend the event at Berlin. http://www.supermarkt-berlin.net/event/platform-coops-start-your-own/	payment 	0	0	Pay for BCN to Berlin tickets 	\N	1	444	7	443	1
+125	0	2016-11-26 20:31:54.501	\N	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	0	0	Setup markdown basic infrastructure	\N	1	438	12	437	1
 \.
 
 
 ALTER TABLE cbtions ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3300 (class 0 OID 1402232)
+-- TOC entry 3311 (class 0 OID 1402232)
 -- Dependencies: 202
 -- Data for Name: decision_realms; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -295,7 +309,7 @@ COPY decision_realms (id, project_id) FROM stdin;
 ALTER TABLE decision_realms ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3303 (class 0 OID 1402240)
+-- TOC entry 3314 (class 0 OID 1402240)
 -- Dependencies: 205
 -- Data for Name: decisions; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -664,18 +678,52 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 404	2016-11-21 18:22:06.771	0.949999999999999956	1	2016-11-21 18:21:48.252	open contribution 'Public Relations at @CrowdWeek'	0	PROPOSED	0	1	1	8	2016-11-21 18:22:06.768	1	2504	2866.5	0.5	0	2	OPEN	1	1	36	\N	117	6	1	\N	1
 405	\N	0.949999999999999956	0	2016-11-21 18:22:07.821	delete contribution 'Public Relations at @CrowdWeek'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	117	6	1	\N	1
 406	2016-11-21 18:23:11.64	0.949999999999999956	1	2016-11-21 18:23:04.864	assign contribution 'Public Relations at @CrowdWeek' to pepoospina	0	OFFERED	0	1	1	8	2016-11-21 18:23:11.638	1	2504	2866.5	0.5	0	2	ASSIGNED	3	1	36	96	\N	6	1	\N	1
-407	\N	0.949999999999999956	0	2016-11-21 18:23:12.112	accept contribution 'Public Relations at @CrowdWeek' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	96	\N	6	1	\N	1
 408	2016-11-21 18:27:39.171	0.949999999999999956	1	2016-11-21 18:27:32.779	open contribution 'Pay for 100 presentation cards'	0	PROPOSED	0	1	1	8	2016-11-21 18:27:39.17	1	2504	2866.5	0.5	0	2	OPEN	1	1	36	\N	118	6	1	\N	1
 409	\N	0.949999999999999956	0	2016-11-21 18:27:39.891	delete contribution 'Pay for 100 presentation cards'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	118	6	1	\N	1
 410	2016-11-21 18:29:39.705	0.949999999999999956	1	2016-11-21 18:29:35.733	assign contribution 'Pay for 100 presentation cards' to pepoospina	0	OFFERED	0	1	1	8	2016-11-21 18:29:39.703	1	2504	2866.5	0.5	0	2	ASSIGNED	3	1	36	97	\N	6	1	\N	1
 411	2016-11-21 18:29:45.835	0.949999999999999956	1	2016-11-21 18:29:39.891	accept contribution 'Pay for 100 presentation cards' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-21 18:29:45.833	1	2504	2866.5	0.5	0	2	ACCEPTED	3	1	36	97	\N	6	1	\N	1
+412	2016-11-24 09:22:26.382	0.949999999999999956	1	2016-11-24 09:22:15.566	open contribution 'Review account verification email not being sent'	0	PROPOSED	0	1	1	8	2016-11-24 09:22:26.38	1	2510	2872.5	0.5	0	2	OPEN	1	1	36	\N	119	6	1	\N	1
+413	\N	0.949999999999999956	0	2016-11-24 09:22:26.915	delete contribution 'Review account verification email not being sent'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	119	6	1	\N	1
+414	2016-11-24 09:47:26.488	0.949999999999999956	1	2016-11-24 09:47:19.702	assign contribution 'Review account verification email not being sent' to pepoospina	0	OFFERED	0	1	1	8	2016-11-24 09:47:26.484	1	2510	2872.5	0.5	0	2	ASSIGNED	3	1	36	98	\N	6	1	\N	1
+415	2016-11-24 09:47:39.189	0.949999999999999956	1	2016-11-24 09:47:26.966	accept contribution 'Review account verification email not being sent' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-24 09:47:39.188	1	2510	2872.5	0.5	0	2	ACCEPTED	3	1	36	98	\N	6	1	\N	1
+407	2016-11-24 09:50:50.379	0.949999999999999956	1	2016-11-21 18:23:12.112	accept contribution 'Public Relations at @CrowdWeek' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-24 09:50:50.379	1	2512	2874.5	0.5	0	2	ACCEPTED	3	1	36	96	\N	6	1	\N	1
+416	2016-11-24 10:38:08.976	0.949999999999999956	1	2016-11-24 10:38:03.323	open contribution 'Send recent activity as emails to subscribed users'	0	PROPOSED	0	1	1	8	2016-11-24 10:38:08.975	1	2537	2899.5	0.5	0	2	OPEN	1	1	36	\N	120	6	1	\N	1
+417	\N	0.949999999999999956	0	2016-11-24 10:38:09.406	delete contribution 'Send recent activity as emails to subscribed users'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	120	6	1	\N	1
+419	2016-11-24 17:08:35.907	0.949999999999999956	1	2016-11-24 17:08:28.677	assign contribution 'Send recent activity as emails to subscribed users' to pepoospina	0	OFFERED	0	1	1	8	2016-11-24 17:08:35.9	1	2537	2899.5	0.5	0	2	ASSIGNED	3	1	36	99	\N	6	1	\N	1
+420	2016-11-24 17:08:43.618	0.949999999999999956	1	2016-11-24 17:08:36.357	accept contribution 'Send recent activity as emails to subscribed users' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-24 17:08:43.605	1	2537	2899.5	0.5	0	2	ACCEPTED	3	1	36	99	\N	6	1	\N	1
+418	2016-11-27 23:35:52.276	0.949999999999999956	1	2016-11-24 12:08:59.158	Should CollectiveOne contact the team at sensorica.co and invite them to a video-conference in which the two approaches to "open projects" can be discussed?	0	\N	0	1	1	8	2016-11-27 23:35:52.274	1	2557	2919.5	0.5	0	2	\N	0	1	36	\N	\N	1	1	\N	1
+421	2016-11-24 17:14:48.932	0.949999999999999956	1	2016-11-24 17:14:36.854	open contribution 'Create admin page to control authorized users and projects'	0	PROPOSED	0	1	1	8	2016-11-24 17:14:48.925	1	2547	2909.5	0.5	0	2	OPEN	1	1	36	\N	121	6	1	\N	1
+422	\N	0.949999999999999956	0	2016-11-24 17:14:49.776	delete contribution 'Create admin page to control authorized users and projects'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	121	6	1	\N	1
+423	\N	0.949999999999999956	0	2016-11-25 09:11:24.084	create goal 'projects-promotion'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	2	0	36	\N	\N	6	1	32	1
+424	\N	0.949999999999999956	0	2016-11-25 09:11:24.085	delete goal 'projects-promotion'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	32	1
+425	\N	0.949999999999999956	0	2016-11-25 09:17:02.001	create goal 'cute-little-project'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	2	0	36	\N	\N	6	1	33	1
+426	\N	0.949999999999999956	0	2016-11-25 09:17:02.002	delete goal 'cute-little-project'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	33	1
+427	2016-11-25 09:18:16.185	0.949999999999999956	1	2016-11-25 09:18:05.417	set marketing as parent goal	0	\N	0	1	1	8	2016-11-25 09:18:16.183	1	2547	2909.5	0.5	0	2	\N	2	1	36	\N	\N	6	1	32	1
+428	2016-11-25 11:36:05.166	0.949999999999999956	1	2016-11-25 11:35:57.13	open contribution 'Create a Slack invitation request form'	0	PROPOSED	0	1	1	8	2016-11-25 11:36:05.163	1	2547	2909.5	0.5	0	2	OPEN	1	1	36	\N	122	6	1	\N	1
+429	\N	0.949999999999999956	0	2016-11-25 11:36:06.09	delete contribution 'Create a Slack invitation request form'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	122	6	1	\N	1
+430	2016-11-25 11:36:36.503	0.949999999999999956	1	2016-11-25 11:36:27.24	assign contribution 'Create a Slack invitation request form' to pepoospina	0	OFFERED	0	1	1	8	2016-11-25 11:36:36.5	1	2547	2909.5	0.5	0	2	ASSIGNED	3	1	36	100	\N	6	1	\N	1
+431	2016-11-25 11:36:53.681	0.949999999999999956	1	2016-11-25 11:36:37.364	accept contribution 'Create a Slack invitation request form' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-25 11:36:53.679	1	2547	2909.5	0.5	0	2	ACCEPTED	3	1	36	100	\N	6	1	\N	1
+432	2016-11-25 13:58:21.675	0.949999999999999956	1	2016-11-25 13:58:13.366	open contribution 'Decision mechanism status document'	0	PROPOSED	0	1	1	8	2016-11-25 13:58:21.674	1	2552	2914.5	0.5	0	2	OPEN	1	1	36	\N	123	6	1	\N	1
+433	\N	0.949999999999999956	0	2016-11-25 13:58:22.444	delete contribution 'Decision mechanism status document'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	123	6	1	\N	1
+434	2016-11-25 13:59:13.346	0.949999999999999956	1	2016-11-25 13:59:04.54	assign contribution 'Decision mechanism status document' to pepoospina	0	OFFERED	0	1	1	8	2016-11-25 13:59:13.342	1	2552	2914.5	0.5	0	2	ASSIGNED	3	1	36	101	\N	6	1	\N	1
+436	\N	0.949999999999999956	0	2016-11-25 14:03:31.949	open contribution 'Update the webapp technical overview document'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	124	6	1	\N	1
+435	2016-11-25 19:42:35.577	0.949999999999999956	1	2016-11-25 13:59:13.924	accept contribution 'Decision mechanism status document' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-25 19:42:35.575	1	2552	2914.5	0.5	0	2	ACCEPTED	3	1	36	101	\N	6	1	\N	1
+437	2016-11-26 20:32:05.747	0.949999999999999956	1	2016-11-26 20:31:54.511	open contribution 'Setup markdown basic infrastructure'	0	PROPOSED	0	1	1	8	2016-11-26 20:32:05.746	1	2557	2919.5	0.5	0	2	OPEN	1	1	36	\N	125	6	1	\N	1
+438	\N	0.949999999999999956	0	2016-11-26 20:32:06.385	delete contribution 'Setup markdown basic infrastructure'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	125	6	1	\N	1
+439	\N	0.949999999999999956	0	2016-11-26 20:37:39.933	create goal 'project-page'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	2	0	36	\N	\N	6	1	34	1
+440	\N	0.949999999999999956	0	2016-11-26 20:37:39.934	delete goal 'project-page'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	34	1
+441	\N	0.949999999999999956	0	2016-11-26 20:41:53.785	create goal 'project-description'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	2	0	36	\N	\N	6	1	35	1
+442	\N	0.949999999999999956	0	2016-11-26 20:41:53.786	delete goal 'project-description'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	35	1
+443	2016-11-27 11:20:18.788	0.949999999999999956	1	2016-11-27 11:20:09.197	open contribution 'Pay for BCN to Berlin tickets '	0	PROPOSED	0	1	1	8	2016-11-27 11:20:18.786	1	2557	2919.5	0.5	0	2	OPEN	1	1	36	\N	126	6	1	\N	1
+444	\N	0.949999999999999956	0	2016-11-27 11:20:19.389	delete contribution 'Pay for BCN to Berlin tickets '	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	126	6	1	\N	1
+445	\N	0.949999999999999956	0	2016-11-27 11:21:43.14	assign contribution 'Pay for BCN to Berlin tickets ' to pepoospina	0	OFFERED	1	0	0	8	\N	0	0	0	0.5	0	0	ASSIGNED	3	0	36	102	\N	6	1	\N	1
 \.
 
 
 ALTER TABLE decisions ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3284 (class 0 OID 1402177)
+-- TOC entry 3295 (class 0 OID 1402177)
 -- Dependencies: 186
 -- Data for Name: arguments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -714,13 +762,16 @@ COPY arguments (id, creation_date, description, tendency, creator_id, decision_i
 29	2016-10-21 18:42:16.131	It could help as a red button to protect CollectiveOne from abuses.	0	1	278
 30	2016-10-23 21:39:34.492	Sound is too amateurish and it could scare people out more that what it actually invite in. (by Esteban) 	1	1	280
 31	2016-10-25 16:01:37.66	It includes more information than what the slides do.	0	1	292
+33	2016-11-24 12:12:32.63	The team at Sensorica has been working on open projects for a few years now (seems from 2011 or so). I would like to know their overall impression on the method proposed by CollectiveOne.	0	1	418
+34	2016-11-24 12:15:05.87	Although their platform seems quite oriented to the products developed at their lab, and there seems to be significant differences within the two approaches, we could explore the option of merging efforts instead of duplicating them.	0	1	418
+35	2016-11-25 01:15:20.473	Reaching out to them seems very much in the spirit of open collaboration. Both projects should benefit, and you never know what a conversation might spark even if it may be only at some point in the future.	0	9	418
 \.
 
 
 ALTER TABLE arguments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3307 (class 0 OID 1402254)
+-- TOC entry 3318 (class 0 OID 1402254)
 -- Dependencies: 209
 -- Data for Name: goal; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -754,13 +805,17 @@ COPY goal (id, creation_date, description, goal_tag, parent_state, state, create
 28	2016-10-27 09:24:20.217	Promote the CollectiveOne platform spread by attracting new projects and users	marketing	\N	1	317	1	318	7	1	\N	\N
 30	2016-10-27 09:43:57.604	Integrate the web application with other services like cloud storage, git repositories or messaging apps	integration	\N	1	321	1	322	6	1	\N	\N
 7	2016-09-08 22:46:47.411	Spread and attract high quality projects and users who create a thriving ecosystem of creators and open collaborative projects	adoption	0	1	137	1	138	25	1	312	25
+35	2016-11-26 20:41:53.69	Allow projects to define and update the content of the description pane at their project page with  basic html + css code. Allow for updates to this description to be proposed by any participant and accepted using a decision item. 	project-description	\N	0	441	1	442	34	1	\N	\N
+34	2016-11-26 20:37:39.849	Create an attractive project page which is useful to summarize project information and can be used by projects to promote themselves 	project-page	\N	0	439	1	440	4	1	\N	\N
+32	2016-11-25 09:11:24.027	Promote active participation of users in projects stored in the platform.	projects-promotion	0	0	423	1	424	28	1	427	28
+33	2016-11-25 09:17:01.887	Design a relatively simple project to be created and promoted actively by CollectiveOne. This project should help testing the method and promoting the platform.\n\nThe project should be\n\n- Time limited, so that the CollectiveOne method can be tested from the beginning and up to the conclusion.\n\n- On an attractive subject, such that it grabs the attention of a wide variety of  participants.	cool-little-project	\N	0	425	1	426	32	1	\N	\N
 \.
 
 
 ALTER TABLE goal ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3280 (class 0 OID 1402160)
+-- TOC entry 3291 (class 0 OID 1402160)
 -- Dependencies: 181
 -- Data for Name: activity; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1160,31 +1215,75 @@ COPY activity (id, creation_date, event, type, argument_id, bid_id, cbtion_id, d
 400	2016-11-21 18:29:35.665	created	1	\N	97	\N	\N	\N	1
 401	2016-11-21 18:29:39.886	assigned	1	\N	97	\N	\N	\N	1
 402	2016-11-21 18:29:46.313	accepted	1	\N	97	\N	\N	\N	1
+403	2016-11-24 09:17:55.952	marked done	1	\N	96	\N	\N	\N	1
+404	2016-11-24 09:22:15.582	created	0	\N	\N	119	\N	\N	1
+405	2016-11-24 09:22:26.912	opened for bidding	0	\N	\N	119	\N	\N	1
+406	2016-11-24 09:47:19.6	created	1	\N	98	\N	\N	\N	1
+407	2016-11-24 09:47:26.962	assigned	1	\N	98	\N	\N	\N	1
+408	2016-11-24 09:47:39.33	accepted	1	\N	98	\N	\N	\N	1
+409	2016-11-24 09:50:50.616	accepted	1	\N	96	\N	\N	\N	1
+410	2016-11-24 10:38:03.326	created	0	\N	\N	120	\N	\N	1
+411	2016-11-24 10:38:09.404	opened for bidding	0	\N	\N	120	\N	\N	1
+412	2016-11-24 12:08:59.163	created	3	\N	\N	\N	418	\N	1
+413	2016-11-24 12:12:32.636	created	4	33	\N	\N	\N	\N	1
+414	2016-11-24 12:15:05.875	created	4	34	\N	\N	\N	\N	1
+415	2016-11-24 17:08:27.356	created	1	\N	99	\N	\N	\N	1
+416	2016-11-24 17:08:36.222	assigned	1	\N	99	\N	\N	\N	1
+417	2016-11-24 17:08:43.932	accepted	1	\N	99	\N	\N	\N	1
+418	2016-11-24 17:14:36.858	created	0	\N	\N	121	\N	\N	1
+419	2016-11-24 17:14:49.772	opened for bidding	0	\N	\N	121	\N	\N	1
+420	2016-11-25 01:15:20.481	created	4	35	\N	\N	\N	\N	1
+421	2016-11-25 09:11:24.093	proposed	2	\N	\N	\N	\N	32	1
+422	2016-11-25 09:17:02.01	proposed	2	\N	\N	\N	\N	33	1
+423	2016-11-25 09:18:05.437	marketing proposed as parent	2	\N	\N	\N	\N	32	1
+424	2016-11-25 09:18:16.73	marketing accepted as parent	2	\N	\N	\N	\N	32	1
+425	2016-11-25 11:35:57.168	created	0	\N	\N	122	\N	\N	1
+426	2016-11-25 11:36:06.084	opened for bidding	0	\N	\N	122	\N	\N	1
+427	2016-11-25 11:36:27.034	created	1	\N	100	\N	\N	\N	1
+428	2016-11-25 11:36:37.07	assigned	1	\N	100	\N	\N	\N	1
+429	2016-11-25 11:36:43.327	marked done	1	\N	100	\N	\N	\N	1
+430	2016-11-25 11:36:54.319	accepted	1	\N	100	\N	\N	\N	1
+431	2016-11-25 13:58:13.37	created	0	\N	\N	123	\N	\N	1
+432	2016-11-25 13:58:22.436	opened for bidding	0	\N	\N	123	\N	\N	1
+433	2016-11-25 13:59:04.387	created	1	\N	101	\N	\N	\N	1
+434	2016-11-25 13:59:13.792	assigned	1	\N	101	\N	\N	\N	1
+435	2016-11-25 14:03:31.954	created	0	\N	\N	124	\N	\N	1
+436	2016-11-25 19:42:28.204	marked done	1	\N	101	\N	\N	\N	1
+437	2016-11-25 19:42:35.704	accepted	1	\N	101	\N	\N	\N	1
+438	2016-11-26 20:31:54.515	created	0	\N	\N	125	\N	\N	1
+439	2016-11-26 20:32:06.382	opened for bidding	0	\N	\N	125	\N	\N	1
+440	2016-11-26 20:37:39.941	proposed	2	\N	\N	\N	\N	34	1
+441	2016-11-26 20:41:53.792	proposed	2	\N	\N	\N	\N	35	1
+442	2016-11-27 11:20:09.2	created	0	\N	\N	126	\N	\N	1
+443	2016-11-27 11:20:19.385	opened for bidding	0	\N	\N	126	\N	\N	1
+444	2016-11-27 11:21:43.057	created	1	\N	102	\N	\N	\N	1
+445	2016-11-27 23:35:52.276	accepted	3	\N	\N	\N	418	\N	1
+446	2016-11-28 09:32:18.938	created	1	\N	103	\N	\N	\N	1
 \.
 
 
 ALTER TABLE activity ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3331 (class 0 OID 0)
+-- TOC entry 3344 (class 0 OID 0)
 -- Dependencies: 182
 -- Name: activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('activity_id_seq', 402, true);
+SELECT pg_catalog.setval('activity_id_seq', 446, true);
 
 
 --
--- TOC entry 3332 (class 0 OID 0)
+-- TOC entry 3345 (class 0 OID 0)
 -- Dependencies: 184
 -- Name: app_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('app_users_id_seq', 9, true);
+SELECT pg_catalog.setval('app_users_id_seq', 11, true);
 
 
 --
--- TOC entry 3283 (class 0 OID 1402174)
+-- TOC entry 3294 (class 0 OID 1402174)
 -- Dependencies: 185
 -- Data for Name: argument_backers; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1214,22 +1313,25 @@ COPY argument_backers (argument_id, backers_id) FROM stdin;
 16	3
 30	1
 31	3
+34	1
+33	1
+33	9
 \.
 
 
 ALTER TABLE argument_backers ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3333 (class 0 OID 0)
+-- TOC entry 3346 (class 0 OID 0)
 -- Dependencies: 187
 -- Name: arguments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('arguments_id_seq', 32, true);
+SELECT pg_catalog.setval('arguments_id_seq', 35, true);
 
 
 --
--- TOC entry 3286 (class 0 OID 1402185)
+-- TOC entry 3297 (class 0 OID 1402185)
 -- Dependencies: 188
 -- Data for Name: authorized_emails; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1238,22 +1340,23 @@ ALTER TABLE authorized_emails DISABLE TRIGGER ALL;
 
 COPY authorized_emails (id, authorized, email) FROM stdin;
 1	t	chris@milieu.us
+3	t	pepo.ospina@gmail.com
 \.
 
 
 ALTER TABLE authorized_emails ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3334 (class 0 OID 0)
+-- TOC entry 3347 (class 0 OID 0)
 -- Dependencies: 189
 -- Name: authorized_emails_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('authorized_emails_id_seq', 2, true);
+SELECT pg_catalog.setval('authorized_emails_id_seq', 3, true);
 
 
 --
--- TOC entry 3326 (class 0 OID 1404662)
+-- TOC entry 3337 (class 0 OID 1404662)
 -- Dependencies: 228
 -- Data for Name: authorized_projects; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1267,7 +1370,7 @@ COPY authorized_projects (id, authorized, project_name) FROM stdin;
 ALTER TABLE authorized_projects ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3335 (class 0 OID 0)
+-- TOC entry 3348 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: authorized_projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1276,16 +1379,16 @@ SELECT pg_catalog.setval('authorized_projects_id_seq', 1, false);
 
 
 --
--- TOC entry 3336 (class 0 OID 0)
+-- TOC entry 3349 (class 0 OID 0)
 -- Dependencies: 191
 -- Name: bids_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('bids_id_seq', 97, true);
+SELECT pg_catalog.setval('bids_id_seq', 103, true);
 
 
 --
--- TOC entry 3315 (class 0 OID 1402280)
+-- TOC entry 3326 (class 0 OID 1402280)
 -- Dependencies: 217
 -- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1303,7 +1406,7 @@ COPY reviews (id, creation_date, description, rate, creator_id, reviewee_id) FRO
 ALTER TABLE reviews ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3290 (class 0 OID 1402198)
+-- TOC entry 3301 (class 0 OID 1402198)
 -- Dependencies: 192
 -- Data for Name: bids_reviews; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1321,7 +1424,7 @@ COPY bids_reviews (bid_id, reviews_id) FROM stdin;
 ALTER TABLE bids_reviews ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3292 (class 0 OID 1402207)
+-- TOC entry 3303 (class 0 OID 1402207)
 -- Dependencies: 194
 -- Data for Name: cbtions_bids; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1422,13 +1525,19 @@ COPY cbtions_bids (cbtion_id, bids_id) FROM stdin;
 110	95
 117	96
 118	97
+119	98
+120	99
+122	100
+123	101
+126	102
+116	103
 \.
 
 
 ALTER TABLE cbtions_bids ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3296 (class 0 OID 1402218)
+-- TOC entry 3307 (class 0 OID 1402218)
 -- Dependencies: 198
 -- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1447,13 +1556,14 @@ COPY comments (id, content, creation_date, relevance, cbtion_id, creator_id, par
 9	I can share the edition file of the older version to be used as a starting point. It already includes a lot of cuts and extensions. The narration file is in https://drive.google.com/drive/u/0/folders/0B6HEie5ZN03bMnFyaWtEcHYxMzQ	2016-11-11 10:28:00.243	0	106	1	\N
 11	This is no longer an issue after migrating to spring boot	2016-11-20 17:51:25.966	0	100	1	\N
 12	The basic test infrastructure should include an example of creating users in the database using a test-only method, and perform other operations on the database using the formal application services. The entire operations in the database shall be valid within the test, but rolled back when it finishes.	2016-11-21 12:30:34.175	0	116	\N	\N
+13	This is not mandatory now since there is a form in at collectiveone.org to provide the email and ask for an invitation	2016-11-26 12:56:29.163	0	103	1	\N
 \.
 
 
 ALTER TABLE comments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3293 (class 0 OID 1402210)
+-- TOC entry 3304 (class 0 OID 1402210)
 -- Dependencies: 195
 -- Data for Name: cbtions_comments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1470,22 +1580,23 @@ COPY cbtions_comments (cbtion_id, comments_id) FROM stdin;
 106	9
 100	11
 116	12
+103	13
 \.
 
 
 ALTER TABLE cbtions_comments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3337 (class 0 OID 0)
+-- TOC entry 3350 (class 0 OID 0)
 -- Dependencies: 196
 -- Name: cbtions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('cbtions_id_seq', 118, true);
+SELECT pg_catalog.setval('cbtions_id_seq', 126, true);
 
 
 --
--- TOC entry 3313 (class 0 OID 1402275)
+-- TOC entry 3324 (class 0 OID 1402275)
 -- Dependencies: 215
 -- Data for Name: promoters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1521,7 +1632,7 @@ COPY promoters (id, creation_date, promote_up, user_id) FROM stdin;
 ALTER TABLE promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3295 (class 0 OID 1402215)
+-- TOC entry 3306 (class 0 OID 1402215)
 -- Dependencies: 197
 -- Data for Name: cbtions_promoters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1557,7 +1668,7 @@ COPY cbtions_promoters (cbtion_id, promoters_id) FROM stdin;
 ALTER TABLE cbtions_promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3297 (class 0 OID 1402224)
+-- TOC entry 3308 (class 0 OID 1402224)
 -- Dependencies: 199
 -- Data for Name: comments_answers; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1573,16 +1684,16 @@ COPY comments_answers (comment_id, replies_id) FROM stdin;
 ALTER TABLE comments_answers ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3338 (class 0 OID 0)
+-- TOC entry 3351 (class 0 OID 0)
 -- Dependencies: 200
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('comments_id_seq', 12, true);
+SELECT pg_catalog.setval('comments_id_seq', 13, true);
 
 
 --
--- TOC entry 3299 (class 0 OID 1402229)
+-- TOC entry 3310 (class 0 OID 1402229)
 -- Dependencies: 201
 -- Data for Name: comments_promoters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1596,7 +1707,7 @@ COPY comments_promoters (comment_id, promoters_id) FROM stdin;
 ALTER TABLE comments_promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3339 (class 0 OID 0)
+-- TOC entry 3352 (class 0 OID 0)
 -- Dependencies: 203
 -- Name: decision_realms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1605,7 +1716,7 @@ SELECT pg_catalog.setval('decision_realms_id_seq', 8, true);
 
 
 --
--- TOC entry 3323 (class 0 OID 1402306)
+-- TOC entry 3334 (class 0 OID 1402306)
 -- Dependencies: 225
 -- Data for Name: voters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1618,14 +1729,14 @@ COPY voters (id, weight, voter_user_id) FROM stdin;
 2	262	3
 6	101	5
 3	100	4
-1	2510	1
+1	2557	1
 \.
 
 
 ALTER TABLE voters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3302 (class 0 OID 1402237)
+-- TOC entry 3313 (class 0 OID 1402237)
 -- Dependencies: 204
 -- Data for Name: decision_realms_voters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1645,7 +1756,7 @@ COPY decision_realms_voters (decision_realm_id, voters_id) FROM stdin;
 ALTER TABLE decision_realms_voters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3304 (class 0 OID 1402246)
+-- TOC entry 3315 (class 0 OID 1402246)
 -- Dependencies: 206
 -- Data for Name: decisions_args; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1684,22 +1795,25 @@ COPY decisions_args (decision_id, arguments_id) FROM stdin;
 278	29
 280	30
 292	31
+418	33
+418	34
+418	35
 \.
 
 
 ALTER TABLE decisions_args ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3340 (class 0 OID 0)
+-- TOC entry 3353 (class 0 OID 0)
 -- Dependencies: 207
 -- Name: decisions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('decisions_id_seq', 411, true);
+SELECT pg_catalog.setval('decisions_id_seq', 445, true);
 
 
 --
--- TOC entry 3319 (class 0 OID 1402296)
+-- TOC entry 3330 (class 0 OID 1402296)
 -- Dependencies: 221
 -- Data for Name: theses; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1999,13 +2113,31 @@ COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 292	2016-11-21 18:27:36.356	1	2504	1	408
 293	2016-11-21 18:29:37.557	1	2504	1	410
 294	2016-11-21 18:29:43.805	1	2504	1	411
+295	2016-11-24 09:22:20.702	1	2510	1	412
+296	2016-11-24 09:47:23.18	1	2510	1	414
+297	2016-11-24 09:47:32.789	1	2510	1	415
+298	2016-11-24 09:50:48.142	1	2512	1	407
+299	2016-11-24 10:38:07.588	1	2537	1	416
+300	2016-11-24 17:08:34.575	1	2537	1	419
+301	2016-11-24 17:08:41.389	1	2537	1	420
+302	2016-11-24 17:14:44.028	1	2547	1	421
+303	2016-11-25 09:18:13.309	1	2547	1	427
+304	2016-11-25 11:36:01.364	1	2547	1	428
+305	2016-11-25 11:36:29.521	1	2547	1	430
+306	2016-11-25 11:36:47.275	1	2547	1	431
+307	2016-11-25 13:58:18.047	1	2552	1	432
+308	2016-11-25 13:59:07.289	1	2552	1	434
+309	2016-11-25 19:42:31.051	1	2552	1	435
+310	2016-11-26 20:32:01.739	1	2557	1	437
+311	2016-11-27 11:20:14.504	1	2557	1	443
+312	2016-11-27 23:35:46.88	1	2557	1	418
 \.
 
 
 ALTER TABLE theses ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3306 (class 0 OID 1402251)
+-- TOC entry 3317 (class 0 OID 1402251)
 -- Dependencies: 208
 -- Data for Name: decisions_thesescast; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2301,31 +2433,73 @@ COPY decisions_thesescast (decision_id, theses_cast_id) FROM stdin;
 408	292
 410	293
 411	294
+412	295
+414	296
+415	297
+407	298
+416	299
+419	300
+420	301
+421	302
+427	303
+428	304
+430	305
+431	306
+432	307
+434	308
+435	309
+437	310
+443	311
+418	312
 \.
 
 
 ALTER TABLE decisions_thesescast ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3341 (class 0 OID 0)
+-- TOC entry 3354 (class 0 OID 0)
 -- Dependencies: 210
 -- Name: goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('goal_id_seq', 31, true);
+SELECT pg_catalog.setval('goal_id_seq', 35, true);
 
 
 --
--- TOC entry 3342 (class 0 OID 0)
+-- TOC entry 3355 (class 0 OID 0)
 -- Dependencies: 211
 -- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('hibernate_sequence', 1, false);
+SELECT pg_catalog.setval('hibernate_sequence', 1, true);
 
 
 --
--- TOC entry 3310 (class 0 OID 1402264)
+-- TOC entry 3339 (class 0 OID 1414133)
+-- Dependencies: 230
+-- Data for Name: mail_subscriptions; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+ALTER TABLE mail_subscriptions DISABLE TRIGGER ALL;
+
+COPY mail_subscriptions (id, subscribed, project_id, user_id) FROM stdin;
+1	t	1	1
+\.
+
+
+ALTER TABLE mail_subscriptions ENABLE TRIGGER ALL;
+
+--
+-- TOC entry 3356 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: mail_subscriptions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+SELECT pg_catalog.setval('mail_subscriptions_id_seq', 1, true);
+
+
+--
+-- TOC entry 3321 (class 0 OID 1402264)
 -- Dependencies: 212
 -- Data for Name: password_recovery_token; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2335,13 +2509,14 @@ ALTER TABLE password_recovery_token DISABLE TRIGGER ALL;
 COPY password_recovery_token (id, expiry_date, token, user_id) FROM stdin;
 1	2016-11-18 19:04:04.034	d0b1945d-b43f-4b8b-8447-c6a42cc5db0f	1
 2	2016-11-18 19:09:41.426	1ea0fda3-0134-458e-9af5-5da3cfb4613e	1
+100	2016-11-25 09:44:42.917	49e3aaf9-3ad8-47d4-9a0d-8a54a4509d9d	1
 \.
 
 
 ALTER TABLE password_recovery_token ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3343 (class 0 OID 0)
+-- TOC entry 3357 (class 0 OID 0)
 -- Dependencies: 214
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2350,7 +2525,7 @@ SELECT pg_catalog.setval('projects_id_seq', 4, true);
 
 
 --
--- TOC entry 3344 (class 0 OID 0)
+-- TOC entry 3358 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: promoters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2359,7 +2534,7 @@ SELECT pg_catalog.setval('promoters_id_seq', 23, true);
 
 
 --
--- TOC entry 3345 (class 0 OID 0)
+-- TOC entry 3359 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: reviews_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2368,7 +2543,7 @@ SELECT pg_catalog.setval('reviews_id_seq', 5, true);
 
 
 --
--- TOC entry 3317 (class 0 OID 1402288)
+-- TOC entry 3328 (class 0 OID 1402288)
 -- Dependencies: 219
 -- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2382,31 +2557,32 @@ COPY roles (id, role, username) FROM stdin;
 4	ROLE_USER	mospina
 5	ROLE_USER	estebanortizospina
 7	ROLE_USER	milieu
+8	ROLE_USER	test
 \.
 
 
 ALTER TABLE roles ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3346 (class 0 OID 0)
+-- TOC entry 3360 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('roles_id_seq', 7, true);
+SELECT pg_catalog.setval('roles_id_seq', 8, true);
 
 
 --
--- TOC entry 3347 (class 0 OID 0)
+-- TOC entry 3361 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: theses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('theses_id_seq', 294, true);
+SELECT pg_catalog.setval('theses_id_seq', 312, true);
 
 
 --
--- TOC entry 3321 (class 0 OID 1402301)
+-- TOC entry 3332 (class 0 OID 1402301)
 -- Dependencies: 223
 -- Data for Name: verification_token; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2421,16 +2597,16 @@ COPY verification_token (id, expiry_date, token, user_id) FROM stdin;
 ALTER TABLE verification_token ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3348 (class 0 OID 0)
+-- TOC entry 3362 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: verification_token_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('verification_token_id_seq', 1, true);
+SELECT pg_catalog.setval('verification_token_id_seq', 3, true);
 
 
 --
--- TOC entry 3349 (class 0 OID 0)
+-- TOC entry 3363 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: voters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -2438,7 +2614,7 @@ SELECT pg_catalog.setval('verification_token_id_seq', 1, true);
 SELECT pg_catalog.setval('voters_id_seq', 7, true);
 
 
--- Completed on 2016-11-23 23:27:12 CET
+-- Completed on 2016-11-28 21:00:01 CET
 
 --
 -- PostgreSQL database dump complete
