@@ -1,16 +1,26 @@
 package org.collectiveone.web.dto;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class ProjectNewDto {
+	@NotEmpty
+	@Pattern(regexp="^((?!\\s).)*$", message="may not contain white spaces")
 	private String name;
+	@NotEmpty
 	private String description;
 	private String creatorUsername;
+	
+	@Min(10)
 	private double ppsInitial;
 	
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
-		this.name = name;
+		this.name = name.trim();
 	}
 	public String getCreatorUsername() {
 		return creatorUsername;

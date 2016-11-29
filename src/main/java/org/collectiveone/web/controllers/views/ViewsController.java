@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
+import org.collectiveone.model.GoalState;
 import org.collectiveone.services.AppMailServiceHeroku;
 import org.collectiveone.services.DbServicesImp;
 import org.collectiveone.web.dto.CbtionDto;
@@ -19,6 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -125,13 +128,21 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/cbtionNewSubmit", method = RequestMethod.POST)
-	public String cbtionNewSubmit(@Valid CbtionDto cbtionDto) throws IOException {
-		
-		/* creator is the logged user */
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		cbtionDto.setCreatorUsername(auth.getName()); 
-		Long cbtionId = dbServices.cbtionCreate(cbtionDto);
-		return "redirect:/views/cbtionPageR/"+cbtionId;
+	public String cbtionNewSubmit(@Valid @ModelAttribute("cbtion") CbtionDto cbtionDto, BindingResult result) throws IOException {
+		if(result.hasErrors()) {
+			return "views/cbtionNewPage";
+		} else {
+			if(dbServices.goalExist(cbtionDto.getGoalTag(),cbtionDto.getProjectName(), GoalState.ACCEPTED)) {
+				/* creator is the logged user */
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+				cbtionDto.setCreatorUsername(auth.getName()); 
+				Long cbtionId = dbServices.cbtionCreate(cbtionDto);
+				return "redirect:/views/cbtionPageR/"+cbtionId;
+			} else {
+				result.rejectValue("goalTag", "goal.goalTag", "'"+cbtionDto.getGoalTag()+"' goal tag wast not found or has not been accepted yet");
+				return "views/cbtionNewPage";
+			}
+		}
 	}
 	
 	@Secured("ROLE_USER")
@@ -143,14 +154,23 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/goalNewSubmit", method = RequestMethod.POST)
-	public String goalNewSubmit(@Valid GoalDto goalDto) throws IOException {
-		
-		/* creator is the logged user */
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		goalDto.setCreatorUsername(auth.getName()); 
-		
-		dbServices.goalCreate(goalDto);
-		return "redirect:/views/goalListPageR";
+	public String goalNewSubmit(@Valid @ModelAttribute("goal") GoalDto goalDto, BindingResult result) throws IOException {
+		if(result.hasErrors()) {
+			return "views/goalNewPage";
+		} else {
+			/* check goal-tag is new in that project */
+			if(!dbServices.goalExist(goalDto.getGoalTag(),goalDto.getProjectName())) {
+				/* creator is the logged user */
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+				goalDto.setCreatorUsername(auth.getName()); 
+				
+				dbServices.goalCreate(goalDto);
+				return "redirect:/views/goalListPageR";
+			} else {
+				result.rejectValue("goalTag", "goal.goalTag", "'"+goalDto.getGoalTag()+"' goal tag already exist. It must be unique within the project.");
+				return "views/goalNewPage";
+			}
+		}
 	}
 	
 	@Secured("ROLE_USER")
@@ -162,42 +182,47 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/decisionNewSubmit", method = RequestMethod.POST)
-	public String decisionNewSubmit(@Valid DecisionDto decisionDto) throws IOException {
-		
-		/* creator is the logged user */
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		decisionDto.setCreatorUsername(auth.getName()); 
-		
-		Long decisionId = dbServices.decisionCreate(decisionDto);
-		return "redirect:/views/decisionPageR/"+decisionId;
+	public String decisionNewSubmit(@Valid @ModelAttribute("decision") DecisionDto decisionDto, BindingResult result) throws IOException {
+		if(result.hasErrors()) {
+			return "views/decisionNewPage";
+		} else {
+			/* creator is the logged user */
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			decisionDto.setCreatorUsername(auth.getName()); 
+			
+			Long decisionId = dbServices.decisionCreate(decisionDto);
+			return "redirect:/views/decisionPageR/"+decisionId;
+		}
 	}
 	
 	@Secured("ROLE_USER")
 	@RequestMapping("/projectNewPageR")
 	public String projectNewPage(Model model) {
-		model.addAttribute("project",new ProjectNewDto());
+		ProjectNewDto project = new ProjectNewDto();
+		/* use 100 pps as default, minimum was set to 10 in validation*/
+		project.setPpsInitial(100.0);
+		model.addAttribute("project",project);
 		return "views/projectNewPage";
 	}
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/projectNewSubmit", method = RequestMethod.POST)
-	public String projectNewSubmit(ProjectNewDto projectDto, Model model) {
-		/* creator is the logged user */
-		
-		if(dbServices.isProjectAuthorized(projectDto.getName())) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			projectDto.setCreatorUsername(auth.getName()); 
-			
-			dbServices.projectCreate(projectDto);
-			dbServices.projectStart(projectDto.getName(),projectDto.getPpsInitial());
-			return "redirect:/views/projectPageR/"+projectDto.getName();
-		} else {
-			model.addAttribute("error_msg","Sorry, project creation needs authorization, plase contact us.");
-			model.addAttribute("project",projectDto);
+	public String projectNewSubmit(@Valid @ModelAttribute("project") ProjectNewDto projectDto, BindingResult result) {
+		if(result.hasErrors()) {
 			return "views/projectNewPage";
+		} else {
+			/* creator is the logged user */
+			if(dbServices.isProjectAuthorized(projectDto.getName())) {
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+				projectDto.setCreatorUsername(auth.getName()); 
+				
+				dbServices.projectCreate(projectDto);
+				dbServices.projectStart(projectDto.getName(),projectDto.getPpsInitial());
+				return "redirect:/views/projectPageR/"+projectDto.getName();
+			} else {
+				result.rejectValue("name", "project.name", "'"+projectDto.getName()+"' is not authorized as a project name. Sorry, project creation requires authorization for the moment, plase contact us.");
+				return "views/projectNewPage";
+			}
 		}
-		
-		
 	}
-	
 }

@@ -35,6 +35,16 @@ public class GoalDao extends BaseDao {
 		return (Goal) query.uniqueResult();
 	}
 	
+	public Goal get(String goalTag, String projectName, GoalState state) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class);
+		query.add(Restrictions.eq("goalTag", goalTag))
+			.createAlias("project", "prj")
+			.add(Restrictions.eq("prj.name", projectName))
+			.add(Restrictions.eq("state", state));
+		
+		return (Goal) query.uniqueResult();
+	}
+	
 	public List<Goal> getAll(Integer max) {
 		return (List<Goal>) super.getAll(max,Goal.class);
 	}

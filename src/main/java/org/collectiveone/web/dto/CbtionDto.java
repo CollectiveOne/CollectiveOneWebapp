@@ -5,14 +5,18 @@ import java.util.List;
 import org.collectiveone.model.Cbtion;
 import org.collectiveone.model.Project;
 import org.collectiveone.model.User;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class CbtionDto {
 	
 	private Long id;
+	@NotEmpty
 	private String projectName;
 	private String creatorUsername;
 	private Long creationDate;
+	@NotEmpty
 	private String title;
+	@NotEmpty
 	private String description;
 	private String product;
 	private Integer relevance;
@@ -20,6 +24,7 @@ public class CbtionDto {
 	private int nBids;
 	private String contributorUsername;
 	private List<String> parentGoalsTags;
+	@NotEmpty
 	private String goalTag;
 	private double assignedPpoints;	
 	private DecisionDto openDec;
@@ -113,7 +118,7 @@ public class CbtionDto {
 		this.parentGoalsTags = parentGoalsTags;
 	}
 	public void setGoalTag(String goalTag) {
-		this.goalTag = goalTag;
+		this.goalTag = goalTag.trim();
 	}
 	public double getAssignedPpoints() {
 		return assignedPpoints;

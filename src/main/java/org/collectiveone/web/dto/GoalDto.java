@@ -4,17 +4,26 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class GoalDto {
 	
 	private Long id;
+	@NotEmpty
 	private String projectName;
 	private String creatorUsername;
 	private Timestamp creationDate;
+	@NotEmpty
+	@Pattern(regexp="^((?!\\s).)*$", message="may not contain white spaces")
 	private String goalTag;
 	private String parentGoalTag;
+	@NotEmpty
+	private String description;
+	
 	private List<String> parentGoalsTags = new ArrayList<String>();
 	private List<String> subGoalsTags = new ArrayList<String>();
-	private String description;
 	private String state;
 	private DecisionDto createDec;
 	private DecisionDto deleteDec;
@@ -50,13 +59,13 @@ public class GoalDto {
 		return parentGoalTag;
 	}
 	public void setParentGoalTag(String parentGoalTag) {
-		this.parentGoalTag = parentGoalTag;
+		this.parentGoalTag = parentGoalTag.trim();
 	}
 	public String getGoalTag() {
 		return goalTag;
 	}
 	public void setGoalTag(String goalTag) {
-		this.goalTag = goalTag;
+		this.goalTag = goalTag.trim();
 	}
 	public String getDescription() {
 		return description;

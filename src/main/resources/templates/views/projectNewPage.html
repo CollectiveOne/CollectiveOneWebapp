@@ -10,18 +10,21 @@
 				<h2>Create a new project</h2>
 				<br />
 	
-				<div th:if="${error_msg != null}" th:text="${error_msg}" class="alert alert-info" ></div>
-				<div class="form-group">
+				<div class="alert alert-info" >New projects require to be pre-authorized, please contact us if you are interested in creating one</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('name')}? 'has-error'">
 					<label for="title">Name:</label> 
 					<input type="text" class="form-control" th:field="*{name}"></input>
+					<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" th:class="help-block">Title Errors</span>
 				</div>
-				<div class="form-group">
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('description')}? 'has-error'">
 					<label for="description">Description:</label>
 					<textarea type="text" class="form-control" rows="5" th:field="*{description}"></textarea>
+					<span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" th:class="help-block">Title Errors</span>
 				</div>
-				<div class="form-group">
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('ppsInitial')}? 'has-error'">
 					<label for="title">Initial pp's:</label> 
 					<input type="number" class="form-control" th:field="*{ppsInitial}"></input>
+					<span th:if="${#fields.hasErrors('ppsInitial')}" th:errors="*{ppsInitial}" th:class="help-block">Title Errors</span>
 					(assigned to project creator)
 				</div>
 				

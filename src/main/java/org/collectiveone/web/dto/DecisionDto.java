@@ -1,8 +1,11 @@
 package org.collectiveone.web.dto;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class DecisionDto {
 	
 	protected Long id;
+	@NotEmpty
 	protected String description;
 	protected long creationDate;
 	protected long openDate;
