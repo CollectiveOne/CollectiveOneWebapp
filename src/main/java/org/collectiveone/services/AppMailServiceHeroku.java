@@ -30,23 +30,25 @@ public class AppMailServiceHeroku {
 	}
 	
 	public void sendMail(List<String> tos, String subject, String body) throws IOException {
-		if(tos.size() > 0) {
-			SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-			sg.addRequestHeader("X-Mock", "true");
-
-			Request request = new Request();
-			Mail mail = prepareMail(tos, subject, body);
-			
-			try {
-				request.method = Method.POST;
-				request.endpoint = "mail/send";
-				request.body = mail.build();
-				Response response = sg.api(request);
-				System.out.println(response.statusCode);
-				System.out.println(response.body);
-				System.out.println(response.headers);
-			} catch (IOException ex) {
-				throw ex;
+		if(env.getProperty("collectiveone.webapp.send-email-enabled").equalsIgnoreCase("true")) {
+			if(tos.size() > 0) {
+				SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+				sg.addRequestHeader("X-Mock", "true");
+	
+				Request request = new Request();
+				Mail mail = prepareMail(tos, subject, body);
+				
+				try {
+					request.method = Method.POST;
+					request.endpoint = "mail/send";
+					request.body = mail.build();
+					Response response = sg.api(request);
+					System.out.println(response.statusCode);
+					System.out.println(response.body);
+					System.out.println(response.headers);
+				} catch (IOException ex) {
+					throw ex;
+				}
 			}
 		}
 	}
