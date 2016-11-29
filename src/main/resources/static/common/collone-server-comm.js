@@ -109,8 +109,6 @@ ServerComm.prototype = {
 				success : function(data, textStatus, jqXHR) {
 					if (data) {
 						callbackFunction.call(callbackObj,data);
-					} else {
-						showOutput(data);
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
@@ -137,6 +135,29 @@ ServerComm.prototype = {
 					if (data) {
 						callbackFunction.call(callbackObj,data);
 					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					showOutput("error getting goal","DarkRed");
+				}
+			});
+		},
+
+		goalExist : function(goalTag,projectName,callbackFunction,callbackObj) {
+
+			var data = {
+				'goalTag' : goalTag,
+				'projectName' : projectName
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '/rest/goals/exist',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					callbackFunction.call(callbackObj,data);
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
 					showOutput("error getting goal","DarkRed");

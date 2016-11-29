@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
+import org.collectiveone.model.GoalState;
 import org.collectiveone.model.User;
 import org.collectiveone.services.DbServicesImp;
 import org.collectiveone.services.Filters;
@@ -16,6 +19,7 @@ import org.collectiveone.web.dto.GoalParentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,13 +41,27 @@ public class GoalsController {
 		return dbServices.goalGetDto(goalGetDto.getGoalTag(),goalGetDto.getProjectName());
 	}
 	
+	@RequestMapping(value="/exist", method = RequestMethod.POST)
+	public @ResponseBody boolean exist(@RequestBody GoalGetDto goalGetDto) {
+		return dbServices.goalExist(goalGetDto.getGoalTag(),goalGetDto.getProjectName(), GoalState.ACCEPTED);
+	}
+	
 	@RequestMapping("/new")
-	public @ResponseBody boolean newGoal(@RequestBody GoalDto goalDto) throws IOException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = dbServices.userGet(auth.getName());
-		goalDto.setCreatorUsername(logged.getUsername());
-		dbServices.goalCreate(goalDto);
-		return true;
+	public @ResponseBody boolean newGoal(@Valid @RequestBody GoalDto goalDto, BindingResult result) throws IOException {
+		if(result.hasErrors()) {
+			return false;
+		} else {
+			/* check goal-tag is new in that project */
+			if(!dbServices.goalExist(goalDto.getGoalTag(),goalDto.getProjectName())) {
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+				User logged = dbServices.userGet(auth.getName());
+				goalDto.setCreatorUsername(logged.getUsername());
+				dbServices.goalCreate(goalDto);
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 	
 	@RequestMapping(value="/getSuggestions", method = RequestMethod.GET)

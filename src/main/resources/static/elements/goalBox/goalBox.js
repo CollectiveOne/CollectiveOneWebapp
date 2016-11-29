@@ -3,6 +3,7 @@ function GoalBox(container_id,goalData) {
 	this.container = $(container_id);
 	this.goal = goalData;
 	this.subgoals_expanded = false;
+	this.showSubgoalsAfterDraw = false;
 	this.prependPath = true;
 	if(goalData) {
 		this.draw();
@@ -110,7 +111,10 @@ GoalBox.prototype.goalBoxLoaded = function() {
 			$("#propose_parent_save_btn",this.container).click(this.proposeSaveBtnClicked.bind(this));	
 		}
 	}
-	
+
+	if(this.showSubgoalsAfterDraw) {
+		this.showSubGoals();
+	}
 }
 
 GoalBox.prototype.newSubgoalBtnClicked = function() {
@@ -135,17 +139,65 @@ GoalBox.prototype.goalProposedSendCallback = function() {
 }
 
 GoalBox.prototype.newSubgoalSaveBtnClicked = function() {
-	var newGoalData = { 
-		projectName: this.goal.projectName,
-		parentGoalTag: this.goal.goalTag,
-		goalTag: $("#new_subgoal_tag_input",this.container).val(),
-		description: $("#new_subgoal_description_input",this.container).val()
+	var goalTag = $("#new_subgoal_tag_input",this.container).val().trim();
+	var description = $("#new_subgoal_description_input",this.container).val();
+
+	GLOBAL.serverComm.goalExist(goalTag,this.goal.projectName,this.checkGoalExistCallback,this)
+}
+
+GoalBox.prototype.checkGoalExistCallback = function(exist) {
+
+	var goalTag = $("#new_subgoal_tag_input",this.container).val().trim();
+	var description = $("#new_subgoal_description_input",this.container).val();
+
+	/* validation */
+	var errors = false;
+	var errorContainer = $("#new_subgoal_error_div",this.container);
+
+	errorContainer.empty();
+	
+	if(exist) {
+		errorContainer.show();
+		if(errors) errorContainer.append("<br \>")
+		errorContainer.append("goal +"+goalTag+" already exist in this project");
+		errors = true;
+	}
+	
+	if(!goalTag) {
+		errorContainer.show();
+		if(errors) errorContainer.append("<br \>")
+		errorContainer.append("subgoal tag cannot be empty");
+		errors = true;
 	}
 
-	GLOBAL.serverComm.goalNew(newGoalData,this.newSubgoalCreatedCallback,this);
+	if(goalTag.indexOf(' ') != -1) {
+		errorContainer.show();
+		if(errors) errorContainer.append("<br \>")
+		errorContainer.append("subgoal tag cannot contain spaces");
+		errors = true;
+	}
+	
+	if(!description) {
+		 errorContainer.show();
+		 if(errors) errorContainer.append("<br \>")
+		 errorContainer.append("description cannot be empty");
+		 errors = true;
+	}
+	
+	if(!errors) {
+		var newGoalData = { 
+			projectName: this.goal.projectName,
+			parentGoalTag: this.goal.goalTag,
+			goalTag: goalTag,
+			description: description
+		}
+
+		GLOBAL.serverComm.goalNew(newGoalData,this.newSubgoalCreatedCallback,this);
+	}
 }
 
 GoalBox.prototype.newSubgoalCreatedCallback = function() {
+	this.showSubgoalsAfterDraw = true;
 	this.updateGoal();
 }
 
