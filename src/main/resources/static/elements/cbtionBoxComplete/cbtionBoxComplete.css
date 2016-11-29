@@ -253,8 +253,9 @@
 
 #cbtion_div #new_bid_form_container {
 	display:none;
-	width: 360px;
+	max-width: 450px;
 	clear:both;
+	margin: 0 auto;
 	margin-bottom: 3px;
 	margin-top: 10px;
 	overflow: auto;
@@ -360,10 +361,12 @@
 
 #cbtion_div #bids_div .bid_div {
 	clear:none;
-	float: left;
+	margin: 0 auto;
 	margin-bottom: 10px;
-	max-width: calc(50%);
 	min-width: 274px;
+	overflow: auto;
+	width: calc(100%);
+	max-width: 450px;
 }
 
 #cbtion_div #bids_div .bid_div_spacer {

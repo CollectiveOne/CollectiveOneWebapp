@@ -222,9 +222,6 @@ CbtionBoxComplete.prototype.drawBids = function() {
 	
 	for(var ix=0; ix<nb ; ix++ ) {
 		
-		/* specific to show two bids in a row */
-		if(ix % 2 == 1) $("#bids_div",this.container).append($("<div class=bid_div_spacer></div>"));
-		
 		$("#bids_div",this.container).append($("<div class=bid_div id=bid_"+ix+"_div></div>"));
 		
 		var bidBox = new BidBox("#bid_"+ix+"_div",this.cbtion.bids[ix], this.cbtion.projectName);
