@@ -3,6 +3,7 @@ function CbtionBoxComplete(container_id,cbtionData) {
 	this.container = $(container_id);
 	this.cbtion = cbtionData;
 	this.bidOffer = false;
+	this.showComments = false;
 }
 
 CbtionBoxComplete.prototype.update = function() {
@@ -96,6 +97,10 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 				$("#edit_cbtion_btn",this.container).click(this.editClick.bind(this));	
 			}
 		}
+	}
+
+	if(this.showComments) {
+		this.showCommentsClick();
 	}
 
 	this.updateBids();

@@ -1,6 +1,8 @@
 function DecisionBox(container_id,decisionData, voter) {
 	DecisionBase.call(this,container_id,decisionData, voter);
 	this.argumentsExpanded = false;
+	this.titleAsLink = true;
+	this.expandArguments = false;
 };
 
 DecisionBox.prototype = DecisionBase.prototype;
@@ -21,8 +23,12 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 	
 	this.updateVoteStatus();
 	
-	$("#description",this.container).append("<a href=/views/decisionPageR/"+ this.decision.id+">"+this.decision.description+"</a>");
-	
+	if(this.titleAsLink) {
+		$("#description",this.container).append("<a href=/views/decisionPageR/"+ this.decision.id+">"+this.decision.description+"</a>");	
+	} else {
+		$("#description",this.container).append(this.decision.description);	
+	}
+		
 	switch(this.decision.type) {
 		case "GENERAL":
 			$("#from_to_state",this.container).hide();
@@ -132,6 +138,10 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 
 	$("#arg_no_new_save",this.container).click(this.argumentNoSave.bind(this));
 	$("#arg_yes_new_save",this.container).click(this.argumentYesSave.bind(this));
+
+	if(this.expandArguments) {
+		this.argumentsExpandClick();
+	}
 }
 
 DecisionBox.prototype.argumentsExpandClick = function() {

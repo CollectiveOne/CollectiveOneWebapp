@@ -37,6 +37,7 @@
 		$(document).ready(function() {
 			var cbtionDto = {id: [[${cbtionId}]]};
 			var cbtionBoxComplete = new CbtionBoxComplete("#cbtion_container",cbtionDto);
+			cbtionBoxComplete.showComments = true;
 			cbtionBoxComplete.update();
 		});
 	/*]]>*/

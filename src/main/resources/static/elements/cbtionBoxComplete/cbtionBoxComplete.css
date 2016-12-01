@@ -261,6 +261,14 @@
 	overflow: auto;
 }
 
+#cbtion_div #bids_title {
+	overflow: auto;
+}
+
+#cbtion_div #bids_title label {
+
+}
+
 #cbtion_div #new_bid_form_container #new_bid_form {
 	width: 100%;
 	overflow: auto;
