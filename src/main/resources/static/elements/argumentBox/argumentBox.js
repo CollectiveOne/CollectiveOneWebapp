@@ -23,9 +23,12 @@ ArgumentBox.prototype.argumentBoxLoaded = function() {
 	$("#description_div",this.container).append(this.argument.description);
 	$("#creator_div",this.container).append("...by "+getUserPageLink(this.argument.creatorUsername));
 	$("#backers_div",this.container).append(""+this.argument.nbackers+" backers");
-	$("#back_btn",this.container).click(this.backThis.bind(this));
 	
-	this.updateBacked();
+	if(isUserLogged()) {
+		$("#back_btn",this.container).click(this.backThis.bind(this));
+		$("#back_btn",this.container).show();
+		this.updateBacked();	
+	}
 }
 
 ArgumentBox.prototype.updateBacked = function() {

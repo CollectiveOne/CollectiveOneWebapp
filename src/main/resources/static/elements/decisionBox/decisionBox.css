@@ -77,7 +77,8 @@
 }
 
 #decision_div .progress-group {
-	clear: both;
+	
+clear: both;
 }
 
 #decision_div .progress-group label {
@@ -115,6 +116,14 @@
 	margin-left: 8px;
 	overflow: auto;
 	min-width:300px;
+}
+
+#discussion_div #arguments_yes_new_btn {
+	display: none;
+}
+
+#discussion_div #arguments_no_new_btn {
+	display: none;
 }
 
 #discussion_div .arg_new_form {

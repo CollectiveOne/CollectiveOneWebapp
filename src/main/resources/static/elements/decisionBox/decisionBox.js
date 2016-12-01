@@ -185,6 +185,11 @@ DecisionBox.prototype.drawArguments = function() {
 		var argumentBox = new ArgumentBox($("#argument_yes"+ix,this.container),this.decision.argumentsYes[ix]);
 		argumentBox.draw();
 	}	
+
+	if(isUserLogged()) {
+		$("#arguments_yes_new_btn", this.container).show();
+		$("#arguments_no_new_btn", this.container).show();
+	}
 }
 
 DecisionBox.prototype.argumentNoExpand = function() {
