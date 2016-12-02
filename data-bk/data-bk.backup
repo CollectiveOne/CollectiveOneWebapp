@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2016-12-01 01:31:55 CET
+-- Started on 2016-12-02 19:04:11 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -136,6 +136,11 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 107	2016-11-29 10:55:04.88	\N	2016-11-29 23:00:00	This was also very easy. Just changed the char type to "bar" in Chart.js.	\N	\N	\N	1	3	465	464	129	1
 109	2016-11-30 11:31:30.509	\N	2016-11-30 23:00:00	I will make a first draft version and pollish it with other contributions	2016-11-30 16:46:29.016	https://docs.google.com/presentation/d/11AUv64WQXDppnxCIiK63HDEOIIRweHdSBb_MDd2ug_E/edit	1	5	3	480	479	135	1
 112	2016-12-01 00:30:47.603	\N	2016-12-01 23:00:00	It was a bit harder than I thought	2016-12-01 00:30:58.882		1	10	3	501	500	142	1
+113	2016-12-01 10:32:57.185	\N	2016-12-01 23:00:00	Easy fix	\N	\N	\N	1	3	504	503	137	1
+114	2016-12-01 12:26:29.433	\N	2016-12-02 00:00:00	I have produced a proposal, available under the required specifications at: https://docs.google.com/document/d/1aFz7eeFY8j_SrNfzvke8E_n7W_1K0Zynb8onLOLo2Ss/edit?usp=sharing 	2016-12-01 12:26:49.51	https://docs.google.com/document/d/1aFz7eeFY8j_SrNfzvke8E_n7W_1K0Zynb8onLOLo2Ss/edit?usp=sharing	1	15	3	508	505	134	3
+115	2016-12-01 12:28:49.525	\N	\N	Create project CollectiveSunrise	\N	\N	\N	100	3	507	506	143	3
+116	2016-12-02 10:56:36.973	\N	2016-12-02 23:00:00	I will take a look at this. 	\N	\N	\N	3	1	527	526	145	1
+117	2016-12-02 15:30:29.082	\N	2016-12-02 23:00:00	I will answer them with some details about the project.	\N	\N	\N	5	1	531	530	146	1
 \.
 
 
@@ -152,7 +157,8 @@ ALTER TABLE projects DISABLE TRIGGER ALL;
 COPY projects (id, creation_date, description, name, pps_tot, creator_id) FROM stdin;
 2	2016-09-21 15:38:54.641	With JieMaps, you can create and share your navigation experience, and find the navigation experiences of others.\n\nIn JieMaps, a navigation experience is represented by a path (a sequence and group of links). This paths are called Jies. That's all. 	JieMaps	100	1
 3	2016-10-19 20:51:28.032	Data journalism tools	datasketch	101	5
-1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2959.5	1
+5	2016-12-01 12:28:49.362	Every minute of the day, the sun is rising somewhere in the world. This project aims to capture a global sunrise: a visual collection of the sun rising across the globe’s time zones. \r\n\r\nProject CollectiveSunrise hopes to produce a video by assembling visual recordings, taken on the same day, by professional artists and amateurs in all corners of the world. \r\n	CollectiveSunrise	100	3
+1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2975.5	1
 \.
 
 
@@ -252,7 +258,6 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 95	0	2016-10-26 15:59:06.725	2016-10-26 15:59:38.976	Pay for one moth heroku hobby hosting. Current price is 7 dollars maximum.	credit card payment	0	6	Pay for one moth heroku hobby hosting	\N	1	301	6	300	1
 91	0	2016-10-25 10:48:50.46	2016-10-25 10:49:37.709	Dummy contribution to be deleted	none	0	6	Test to be deleted	\N	1	287	\N	286	1
 82	10	2016-10-20 13:22:18.629	\N	Allow contributions to be deleted by its creator (if they have not been yet accepted) or by a collective decision (if they have)	update contribution lifecycle and ui	1	2	Allow contributions to be deleted	1	1	\N	3	271	1
-89	0	2016-10-24 15:33:45.623	\N	Update argumentation method to allow arguments to be a reply to another argument. Perhaps consider using standard replies like (this is true but ...) or (this is not true since...) etc...\n	Updated argument strategy and UI	0	0	Review arguments structure to allow replies	\N	1	362	3	284	1
 84	0	2016-10-21 18:25:59.693	\N	Use an native english speaking person if possible	audio file	0	5	Improve the welcome video audio	\N	1	\N	8	277	1
 98	5	2016-10-27 09:49:59.232	\N	Current list and subgoals expansion is confusing and hard to read. Improve it.	updated goals list page	0	2	Improve Goals browser	1	1	324	4	323	1
 96	5	2016-10-26 16:00:18.436	\N	Current price is 7 dollars	heroku one month payment	0	2	Pay for one moth heroku hobby hosting	4	1	303	6	302	1
@@ -291,22 +296,28 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 123	5	2016-11-25 13:58:13.353	\N	Prepare a document summarizing the status of the decision mechanism to be used as entry point for people who might be interested in contributing to it.	google doc	0	2	Decision mechanism status document	1	1	433	1	432	1
 129	1	2016-11-29 09:54:45.467	\N	It would be better to display ownership participation in projects through a simple set of bar charts showing percentages by person, rather than a pie chart. Clearly not a priority, but convenient to do if it doesn't take much effort (this is not only data-via pedantry – here's why pie charts are generally bad to convey info: http://www.businessinsider.com/pie-charts-are-the-worst-2013-6?IR=T)	Code implemented and running	0	2	Change ppoint distribution from pie chart to bar chart	1	3	455	10	452	1
 126	0	2016-11-27 11:20:09.189	\N	Pay 170 euros for the airplane tickets to attend the event at Berlin. http://www.supermarkt-berlin.net/event/platform-coops-start-your-own/	payment 	0	0	Pay for BCN to Berlin tickets 	\N	1	444	7	443	1
-125	0	2016-11-26 20:31:54.501	\N	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	0	0	Setup markdown basic infrastructure	\N	1	438	12	437	1
+125	0	2016-11-26 20:31:54.501	\N	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	1	0	Setup markdown basic infrastructure	\N	1	438	12	437	1
 127	1	2016-11-29 09:47:54.112	\N	It would be helpful to have basic information displayed when hovering mouse over action icons (arrow,plus, triangle). To begin, just a name for the action would do.	Code implemented and running	0	2	Add mouse-hovering info for basic actions	1	3	453	10	450	1
 130	4	2016-11-29 10:21:46.436	\N	Use the C1 prototype and document glitches and potential improvements	Document (1 page)	0	2	Basic usability review	3	3	457	10	456	1
 128	1	2016-11-29 09:49:59.772	\N	Currently, when creating a new contribution, the user has to fill in the goal. The space is free text, but it auto-fills with info from existing goals. It should be a drop-down list to choose from (and even better, one where typing takes drop-down position to the right place in the list)	code implemented and running	0	2	Allow drop-down goals in contribution creation	1	3	454	10	451	1
-134	0	2016-11-30 08:53:20.77	\N	Design the broad features of a project aimed at (i) allowing a minimal test of the C1 platform and (ii) producing a tangible example of a project that carries the C1 trademark.\n\nThe contribution at this stage consists only on setting out the idea for the purpose of improving C1 – the actual development of the new project will deliver points in the new project's currency.	Document with project idea (1 page)	0	0	Design short project to test platform and deliver sample output for marketing 	\N	3	491	7	475	1
+132	0	2016-11-29 18:33:26.962	\N	Allow the specification of a "expected cost" to a contribution when it is created. It should help clarifying the extent of the contribution as intended by its creator and help other users during the bidding process	updated front end and backend (and DB migration and back compatiblity if needed)	1	0	Add an "expected cost" value to contribution requests	\N	1	473	3	472	1
 131	10	2016-11-29 13:11:39.021	\N	Add notempty and no blank spaces validations to new goal, decision, contribution and project forms	updated forms and backend logic	0	2	Add validation to forms	1	1	469	4	466	1
 136	0	2016-11-30 11:34:23.439	\N	Add metadata to the site layout so that urls shared on slack, facebook and twitter are shown nicely\r\n\r\nhttps://api.slack.com/docs/message-attachments#unfurling	updated layout	0	0	Updated site metadata to help twitter, facebook and slack unfurling	\N	1	482	4	481	1
-132	0	2016-11-29 18:33:26.962	\N	Allow the specification of a "expected cost" to a contribution when it is created. It should help clarifying the extent of the contribution as intended by its creator and help other users during the bidding process	updated front end and backend (and DB migration and back compatiblity if needed)	0	0	Add an "expected cost" value to contribution requests	\N	1	473	3	472	1
 133	0	2016-11-30 08:25:43.955	\N	This contribution has two related parts:\r\n1) Change the current top menu structure, such that the "Contributions" link takes the user to the tree-like structure that is currently available when navigating via project -> Goals. \r\n2) Create a "New Contribution" button such that users can add contributions directly inside a subgoal	Updated frontend and backend	0	4	Update contribution menu structure	\N	3	\N	10	474	1
-137	0	2016-11-30 11:38:09.414	\N	Expand comments and arguments by default when visiting the contribution or decision page.	updated js	0	0	Expand comments and arguments by default	\N	1	484	4	483	1
+89	0	2016-10-24 15:33:45.623	\N	Update argumentation method to allow arguments to be a reply to another argument. Perhaps consider using standard replies like (this is true but ...) or (this is not true since...) etc...\n	Updated argument strategy and UI	1	0	Review arguments structure to allow replies	\N	1	362	3	284	1
+137	1	2016-11-30 11:38:09.414	\N	Expand comments and arguments by default when visiting the contribution or decision page.	updated js	0	2	Expand comments and arguments by default	1	1	484	4	483	1
+143	100	2016-12-01 12:28:49.474	\N	Start contribution	\N	0	2	Create project CollectiveSunrise	3	3	\N	\N	\N	5
 138	0	2016-11-30 12:23:54.138	\N	Update getOfDecision method of ArgumentDao class to sort the results by number of backers.	updated method	0	0	Sort arguments by backers	\N	1	486	6	485	1
 135	5	2016-11-30 11:15:10.532	\N	Prepare a pitch deck presentation for CollectiveOne to be used in the application to the SU startup accelerator program.\r\n\r\nhttps://pitchdeck.improvepresentation.com/what-is-a-pitch-deck	12 slides	0	2	Prepare the Pitch Deck presentation of CollectiveOne	1	1	478	7	477	1
 140	4	2016-11-30 23:16:29.188	\N	Study, motivate and support the application process to the SU accelerator call.	ethereal	0	2	Moral support during the application to SU accelerator	4	1	493	7	492	1
 139	4	2016-11-30 17:38:52.349	\N	Prepare the first draf of the application form to SU Startup Accelerator	edit https://docs.google.com/document/d/1SWayYHzkDQ6lOa5_IjARjmza4Uq5BoGS3Ys6-GZjiTA/edit	0	2	Application form to SU Startup Accelerator call	1	1	488	7	487	1
 141	0	2016-11-30 23:54:15.069	\N	Proofread and suggest comments to SU application	comments	0	0	Proofread and suggest comments to SU application	\N	1	497	7	496	1
+134	15	2016-11-30 08:53:20.77	\N	Design the broad features of a project aimed at (i) allowing a minimal test of the C1 platform and (ii) producing a tangible example of a project that carries the C1 trademark.\n\nThe contribution at this stage consists only on setting out the idea for the purpose of improving C1 – the actual development of the new project will deliver points in the new project's currency.	Document with project idea (1 page)	0	2	Design short project to test platform and deliver sample output for marketing 	3	3	491	7	475	1
+144	0	2016-12-01 12:52:10.344	\N	Currently, when a new project is created, the filters (The "Show Only" buttons on the top of the page) do not update. Similarly, the "Projects" drop-down menu in the top banner does not update.	Fixed frontend and backend	0	4	Update filters and project drop-down tab when new project is created	\N	3	\N	10	519	1
 142	10	2016-12-01 00:30:19.908	\N	Review and update the application	udpated applicatino	0	2	Final sprint to prepare SU accelerator application	1	1	499	7	498	1
+145	0	2016-12-02 10:55:45.833	\N	Project selector resets if a form field is not valid and the form page is returned. This is dangerous as it results on the user creating objects in the wrong project	fix it	0	1	Bug fix - Project selector resets if form is not valid	\N	1	525	4	524	1
+146	0	2016-12-02 15:29:48.571	\N	Answer emails from people interested in the project from Alberta and Barcelona	public relations	0	1	Handle requests from Alberta and Barcelona	\N	1	529	7	528	1
+147	0	2016-12-02 17:49:47.125	\N	Create a PSQL script similar to https://github.com/CollectiveOne/CollectiveOneWebapp/blob/master/data-bk/delete-goal.pgs but to delete an entire project, including all its related elements at all degrees.\r\n\r\n	PSQ script	0	4	Create PSQ script to delete entire project	\N	1	\N	6	533	1
 \.
 
 
@@ -328,6 +339,9 @@ COPY decision_realms (id, project_id) FROM stdin;
 5	3
 6	\N
 7	\N
+9	5
+10	\N
+11	\N
 \.
 
 
@@ -502,7 +516,6 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 207	2016-10-07 14:27:15.384	0.949999999999999956	1	2016-10-07 14:26:55.567	accept contribution 'Catchy names' as delivered by estebanortizospina	0	ASSIGNED	0	1	1	8	2016-10-07 14:27:15.384	1	2036	2353.5	0.5	0	2	ACCEPTED	3	1	36	60	\N	6	1	\N	1
 174	\N	0.949999999999999956	1	2016-09-28 16:44:24.5	assign contribution 'Catchy names' to pepoospina	0.00382804012345679037	OFFERED	1	0	1	8	2016-10-07 14:18:59.221	0	227	2353.5	0.5	0	4	ASSIGNED	3	0	36	53	\N	6	1	\N	1
 208	2016-10-07 16:11:25.785	0.949999999999999956	1	2016-10-07 14:33:08.715	assign contribution 'Review of the decision mechanism' to estebanortizospina	0	OFFERED	0	1	1	8	2016-10-07 16:11:25.784	1	2036	2388.5	0.5	0	2	ASSIGNED	3	1	36	61	\N	6	1	\N	1
-212	\N	0.949999999999999956	0	2016-10-07 16:11:26.463	accept contribution 'Review of the decision mechanism' as delivered by estebanortizospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	61	\N	6	1	\N	1
 211	2016-10-07 21:00:24.704	0.949999999999999956	1	2016-10-07 16:03:57.308	accept contribution 'Buy the collectiveone.org domain' as delivered by mospina	0	ASSIGNED	0	1	1	8	2016-10-07 21:00:24.701	1	2036	2388.5	0.5	0	2	ACCEPTED	3	1	36	62	\N	6	1	\N	1
 213	2016-10-07 21:53:46.695	0.949999999999999956	1	2016-10-07 21:53:37.75	open contribution 'Remove CoProjects and use CollectiveOne'	0	PROPOSED	0	1	1	8	2016-10-07 21:53:46.694	1	2036	2393.5	0.5	0	2	OPEN	1	1	36	\N	71	6	1	\N	1
 214	2016-10-07 21:54:52.617	0.949999999999999956	1	2016-10-07 21:54:42.953	assign contribution 'Remove CoProjects and use CollectiveOne' to pepoospina	0	OFFERED	0	1	1	8	2016-10-07 21:54:52.615	1	2036	2393.5	0.5	0	2	ASSIGNED	3	1	36	63	\N	6	1	\N	1
@@ -798,6 +811,41 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 499	\N	0.949999999999999956	0	2016-12-01 00:30:29.648	delete contribution 'Final sprint to prepare SU accelerator application'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	142	6	1	\N	1
 500	2016-12-01 00:31:08.243	0.949999999999999956	1	2016-12-01 00:30:47.724	assign contribution 'Final sprint to prepare SU accelerator application' to pepoospina	0	OFFERED	0	1	1	8	2016-12-01 00:31:08.241	1	2579	2949.5	0.5	0	2	ASSIGNED	3	1	36	112	\N	6	1	\N	1
 501	2016-12-01 00:31:21.737	0.949999999999999956	1	2016-12-01 00:31:09.033	accept contribution 'Final sprint to prepare SU accelerator application' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-12-01 00:31:21.735	1	2579	2949.5	0.5	0	2	ACCEPTED	3	1	36	112	\N	6	1	\N	1
+503	2016-12-01 10:33:02.899	0.949999999999999956	1	2016-12-01 10:32:58.129	assign contribution 'Expand comments and arguments by default' to pepoospina	0	OFFERED	0	1	1	8	2016-12-01 10:33:02.896	1	2589	2959.5	0.5	0	2	ASSIGNED	3	1	36	113	\N	6	1	\N	1
+504	2016-12-01 10:33:09.479	0.949999999999999956	1	2016-12-01 10:33:03.327	accept contribution 'Expand comments and arguments by default' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-12-01 10:33:09.476	1	2589	2959.5	0.5	0	2	ACCEPTED	3	1	36	113	\N	6	1	\N	1
+506	\N	0.949999999999999956	0	2016-12-01 12:28:49.596	assign bid to cbtion:Create project CollectiveSunrise by:eortizospina	0	OFFERED	1	0	0	8	\N	0	0	0	0.5	0	2	ASSIGNED	3	1	36	115	\N	6	9	\N	5
+507	\N	0.949999999999999956	0	2016-12-01 12:28:49.596	accept bid to cbtion:Create project CollectiveSunrise by:eortizospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	2	ACCEPTED	3	1	36	115	\N	6	9	\N	5
+505	2016-12-01 12:31:47.149	0.949999999999999956	1	2016-12-01 12:26:29.848	assign contribution 'Design short project to test platform and deliver sample output for marketing ' to eortizospina	0	OFFERED	0	1	1	8	2016-12-01 12:31:47.146	1	2590	2960.5	0.5	0	2	ASSIGNED	3	1	36	114	\N	6	1	\N	1
+508	2016-12-01 12:32:00.572	0.949999999999999956	1	2016-12-01 12:31:47.899	accept contribution 'Design short project to test platform and deliver sample output for marketing ' as delivered by eortizospina	0	ASSIGNED	0	1	1	8	2016-12-01 12:32:00.571	1	2590	2960.5	0.5	0	2	ACCEPTED	3	1	36	114	\N	6	1	\N	1
+510	\N	0.949999999999999956	0	2016-12-01 12:34:48.1	delete goal 'Planning'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	39	1
+515	2016-12-01 12:46:22.812	0.949999999999999956	1	2016-12-01 12:44:15.414	create goal 'Input_Specs'	0	PROPOSED	0	1	1	8	2016-12-01 12:46:22.808	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	9	42	5
+517	2016-12-01 12:46:22.818	0.949999999999999956	1	2016-12-01 12:45:54.201	create goal 'Visuals'	0	PROPOSED	0	1	1	8	2016-12-01 12:46:22.818	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	9	43	5
+512	\N	0.949999999999999956	0	2016-12-01 12:41:32.561	delete goal 'Planning'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	9	40	5
+514	\N	0.949999999999999956	0	2016-12-01 12:43:29.046	delete goal 'Video_Specs'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	9	41	5
+511	2016-12-01 12:41:49.936	0.949999999999999956	1	2016-12-01 12:41:32.56	create goal 'Planning'	0	PROPOSED	0	1	1	8	2016-12-01 12:41:49.934	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	9	40	5
+522	2016-12-01 12:56:36.631	0.949999999999999956	1	2016-12-01 12:56:17.72	create goal 'Recruitment'	0	PROPOSED	0	1	1	8	2016-12-01 12:56:36.629	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	9	45	5
+509	2016-12-01 13:31:53.057	0.949999999999999956	0.646817082049309211	2016-12-01 12:34:48.098	create goal 'Planning'	0.02624650462962963	PROPOSED	0.370815438306574596	0.110714316319138958	2	8	2016-12-01 12:35:03.545	0.0978753047718564917	2871	2975.5	0.5	0	3	ACCEPTED	2	0	36	\N	\N	6	1	39	1
+502	2016-12-02 09:08:01.723	0.949999999999999956	1	2016-12-01 09:50:22.575	Should we post https://docs.google.com/document/d/1o8HfrlhtD9WaBKcE3LBOY2Fw_uOhFfcwULzENpNaEXY at the platform coop event facebook page https://www.facebook.com/events/223128514784620/?active_tab=discussion ?	0	\N	0	1	1	8	2016-12-02 09:08:01.72	1	2590	2975.5	0.5	0	2	\N	0	1	36	\N	\N	1	1	\N	1
+516	\N	0.949999999999999956	0	2016-12-01 12:44:15.416	delete goal 'Input_Specs'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	9	42	5
+518	\N	0.949999999999999956	0	2016-12-01 12:45:54.202	delete goal 'Visuals'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	9	43	5
+524	2016-12-02 10:56:05.035	0.949999999999999956	1	2016-12-02 10:55:45.888	open contribution 'Bug fix - Project selector resets if form is not valid'	0	PROPOSED	0	1	1	8	2016-12-02 10:56:05.034	1	2590	2975.5	0.5	0	2	OPEN	1	1	36	\N	145	6	1	\N	1
+525	\N	0.949999999999999956	0	2016-12-02 10:56:05.901	delete contribution 'Bug fix - Project selector resets if form is not valid'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	145	6	1	\N	1
+521	\N	0.949999999999999956	0	2016-12-01 12:55:06.685	delete goal 'Music/Audio'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	9	44	5
+513	2016-12-01 12:46:14.876	0.949999999999999956	1	2016-12-01 12:43:29.044	create goal 'Video_Specs'	0	PROPOSED	0	1	1	8	2016-12-01 12:46:14.874	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	9	41	5
+526	2016-12-02 10:56:50.782	0.949999999999999956	1	2016-12-02 10:56:37.19	assign contribution 'Bug fix - Project selector resets if form is not valid' to pepoospina	0	OFFERED	0	1	1	8	2016-12-02 10:56:50.78	1	2590	2975.5	0.5	0	2	ASSIGNED	3	1	36	116	\N	6	1	\N	1
+519	\N	0.949999999999999956	0	2016-12-01 12:52:10.412	open contribution 'Update filters and project drop-down tab when new project is created'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	144	6	1	\N	1
+523	\N	0.949999999999999956	0	2016-12-01 12:56:17.722	delete goal 'Recruitment'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	9	45	5
+520	2016-12-01 12:55:20.041	0.949999999999999956	1	2016-12-01 12:55:06.68	create goal 'Music/Audio'	0	PROPOSED	0	1	1	8	2016-12-01 12:55:20.039	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	9	44	5
+527	\N	0.949999999999999956	0	2016-12-02 10:56:51.485	accept contribution 'Bug fix - Project selector resets if form is not valid' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	116	\N	6	1	\N	1
+528	2016-12-02 15:29:56.459	0.949999999999999956	1	2016-12-02 15:29:48.58	open contribution 'Handle requests from Alberta and Barcelona'	0	PROPOSED	0	1	1	8	2016-12-02 15:29:56.459	1	2590	2975.5	0.5	0	2	OPEN	1	1	36	\N	146	6	1	\N	1
+529	\N	0.949999999999999956	0	2016-12-02 15:29:57.248	delete contribution 'Handle requests from Alberta and Barcelona'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	146	6	1	\N	1
+530	2016-12-02 15:30:35.439	0.949999999999999956	1	2016-12-02 15:30:29.285	assign contribution 'Handle requests from Alberta and Barcelona' to pepoospina	0	OFFERED	0	1	1	8	2016-12-02 15:30:35.437	1	2590	2975.5	0.5	0	2	ASSIGNED	3	1	36	117	\N	6	1	\N	1
+531	\N	0.949999999999999956	0	2016-12-02 15:30:35.969	accept contribution 'Handle requests from Alberta and Barcelona' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	117	\N	6	1	\N	1
+212	\N	0.949999999999999956	1	2016-10-07 16:11:26.463	accept contribution 'Review of the decision mechanism' as delivered by estebanortizospina	0.0939663811728395082	ASSIGNED	1	0	1	8	2016-12-02 14:41:10.17	0	281	2975.5	0.5	0	1	ACCEPTED	3	0	36	61	\N	6	1	\N	1
+534	\N	0.949999999999999956	0	2016-12-02 17:55:35.841	create goal 'navigation'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	2	0	36	\N	\N	6	1	46	1
+533	\N	0.949999999999999956	0	2016-12-02 17:49:47.211	open contribution 'Create PSQ script to delete entire project'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	147	6	1	\N	1
+535	\N	0.949999999999999956	0	2016-12-02 17:55:35.842	delete goal 'navigation'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	46	1
+532	2016-12-02 16:35:56.493	0.949999999999999956	1	2016-12-02 15:46:56.982	Send answer, as prepared by pepoospina to Jason from Alberta?	0	\N	0	1	1	8	2016-12-02 16:35:56.493	1	2590	2975.5	0.5	0	2	\N	0	1	36	\N	\N	1	1	\N	1
 \.
 
 
@@ -897,6 +945,14 @@ COPY goal (id, creation_date, description, goal_tag, parent_state, state, create
 37	2016-11-29 08:47:17.884	Implement a hierarchical structure in the "contributions" page. Ideally, this could be done so that the hierarchical structure project->Goal->Subgoal-> Contributions is immediately clear (similar to what we have in the "objectives" page)	Collapsing contributions by goal	\N	3	448	3	449	4	1	\N	\N
 36	2016-11-29 08:36:44.382	Add mouse-pointer information when hovering over action icons (arrow,plus, triangle)		\N	2	446	3	447	4	1	\N	\N
 38	2016-11-29 16:07:24.493			\N	2	467	1	468	\N	1	\N	\N
+39	2016-12-01 12:34:48.088	Define the characteristics of the final project output (video) and outline the minimum inputs required (technical specifications of required inputs and communication plan to attract contributors)	Planning	\N	2	509	3	510	\N	1	\N	\N
+40	2016-12-01 12:41:32.551	Define the characteristics of the final project output (video) and outline the minimum inputs required (technical specifications of required inputs and communication plan to attract contributors)	Planning	\N	1	511	3	512	\N	5	\N	\N
+41	2016-12-01 12:43:29.011	Define the characteristics of the video	Video_Specs	\N	1	513	3	514	40	5	\N	\N
+42	2016-12-01 12:44:15.374	Define the characteristics of the inputs required to produce the video	Input_Specs	\N	1	515	3	516	40	5	\N	\N
+43	2016-12-01 12:45:54.174	Define characteristics and guidelines for producing the visual inputs (individual video contributions)	Visuals	\N	1	517	3	518	42	5	\N	\N
+44	2016-12-01 12:55:06.625	Define characteristics and guidelines for producing the visual inputs (e.g. soundtrack)	Music/Audio	\N	1	520	3	521	42	5	\N	\N
+45	2016-12-01 12:56:17.684	Set out recruitment strategy to ensure that there are contributors effectively willing to provide the planned inputs	Recruitment	\N	1	522	3	523	42	5	\N	\N
+46	2016-12-02 17:55:35.754	Redesign the navigation structure of the site to have a navigation pane separated from a view pane. \n\nIn the navigation pane, create a tree-like expandable structure which starts at the projects, and then goes into their goals, and sub-goals. \n\nOn the content pane show the contributions filtered based on the current project or goal that is selected. Allow further filtering criteria too as is currently done.\n\nThen, on the view pane, allow the user to switch from contributions to see the decisions related to that project or goal. (Decisions will eventually be at goal level too)	navigation	\N	0	534	1	535	4	1	\N	\N
 \.
 
 
@@ -1422,6 +1478,42 @@ COPY activity (id, creation_date, event, type, argument_id, bid_id, cbtion_id, d
 519	2016-12-01 00:30:58.882	marked done	1	\N	112	\N	\N	\N	1
 520	2016-12-01 00:31:08.957	assigned	1	\N	112	\N	\N	\N	1
 521	2016-12-01 00:31:22.318	accepted	1	\N	112	\N	\N	\N	1
+522	2016-12-01 09:50:22.585	created	3	\N	\N	\N	502	\N	1
+523	2016-12-01 10:32:57.227	created	1	\N	113	\N	\N	\N	1
+524	2016-12-01 10:33:03.252	assigned	1	\N	113	\N	\N	\N	1
+525	2016-12-01 10:33:10.026	accepted	1	\N	113	\N	\N	\N	1
+526	2016-12-01 12:26:29.476	created	1	\N	114	\N	\N	\N	1
+527	2016-12-01 12:26:49.51	marked done	1	\N	114	\N	\N	\N	1
+528	2016-12-01 12:31:47.762	assigned	1	\N	114	\N	\N	\N	1
+529	2016-12-01 12:32:00.991	accepted	1	\N	114	\N	\N	\N	1
+530	2016-12-01 12:34:48.108	proposed	2	\N	\N	\N	\N	39	1
+531	2016-12-01 12:41:32.568	proposed	2	\N	\N	\N	\N	40	5
+532	2016-12-01 12:41:50.544	accepted	2	\N	\N	\N	\N	40	5
+533	2016-12-01 12:43:29.06	proposed	2	\N	\N	\N	\N	41	5
+534	2016-12-01 12:44:15.423	proposed	2	\N	\N	\N	\N	42	5
+535	2016-12-01 12:45:54.209	proposed	2	\N	\N	\N	\N	43	5
+536	2016-12-01 12:46:15.948	accepted	2	\N	\N	\N	\N	41	5
+537	2016-12-01 12:46:23.804	accepted	2	\N	\N	\N	\N	42	5
+538	2016-12-01 12:46:23.835	accepted	2	\N	\N	\N	\N	43	5
+539	2016-12-01 12:52:10.455	created	0	\N	\N	144	\N	\N	1
+540	2016-12-01 12:55:06.701	proposed	2	\N	\N	\N	\N	44	5
+541	2016-12-01 12:55:21.009	accepted	2	\N	\N	\N	\N	44	5
+542	2016-12-01 12:56:17.735	proposed	2	\N	\N	\N	\N	45	5
+543	2016-12-01 12:56:37.596	accepted	2	\N	\N	\N	\N	45	5
+544	2016-12-01 13:31:54.124	not accepted	2	\N	\N	\N	\N	39	1
+545	2016-12-02 09:08:01.723	accepted	3	\N	\N	\N	502	\N	1
+546	2016-12-02 10:55:45.893	created	0	\N	\N	145	\N	\N	1
+547	2016-12-02 10:56:05.897	opened for bidding	0	\N	\N	145	\N	\N	1
+548	2016-12-02 10:56:37.003	created	1	\N	116	\N	\N	\N	1
+549	2016-12-02 10:56:51.443	assigned	1	\N	116	\N	\N	\N	1
+550	2016-12-02 15:29:48.584	created	0	\N	\N	146	\N	\N	1
+551	2016-12-02 15:29:57.245	opened for bidding	0	\N	\N	146	\N	\N	1
+552	2016-12-02 15:30:29.113	created	1	\N	117	\N	\N	\N	1
+553	2016-12-02 15:30:35.917	assigned	1	\N	117	\N	\N	\N	1
+554	2016-12-02 15:46:56.987	created	3	\N	\N	\N	532	\N	1
+555	2016-12-02 16:35:56.493	accepted	3	\N	\N	\N	532	\N	1
+556	2016-12-02 17:49:47.22	created	0	\N	\N	147	\N	\N	1
+557	2016-12-02 17:55:35.849	proposed	2	\N	\N	\N	\N	46	1
 \.
 
 
@@ -1433,7 +1525,7 @@ ALTER TABLE activity ENABLE TRIGGER ALL;
 -- Name: activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('activity_id_seq', 521, true);
+SELECT pg_catalog.setval('activity_id_seq', 557, true);
 
 
 --
@@ -1508,6 +1600,7 @@ COPY authorized_emails (id, authorized, email) FROM stdin;
 1	t	chris@milieu.us
 3	t	pepo.ospina@gmail.com
 4	t	monicanavasr@gmail.com
+5	t	jason@roundtablelaw.ca
 \.
 
 
@@ -1532,6 +1625,7 @@ ALTER TABLE authorized_projects DISABLE TRIGGER ALL;
 
 COPY authorized_projects (id, authorized, project_name) FROM stdin;
 1	t	CollectiveSunrise
+2	t	Demo
 \.
 
 
@@ -1552,7 +1646,7 @@ SELECT pg_catalog.setval('authorized_projects_id_seq', 1, false);
 -- Name: bids_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('bids_id_seq', 112, true);
+SELECT pg_catalog.setval('bids_id_seq', 117, true);
 
 
 --
@@ -1708,6 +1802,11 @@ COPY cbtions_bids (cbtion_id, bids_id) FROM stdin;
 139	110
 140	111
 142	112
+137	113
+134	114
+143	115
+145	116
+146	117
 \.
 
 
@@ -1728,7 +1827,6 @@ COPY comments (id, content, creation_date, relevance, cbtion_id, creator_id, par
 4	A dummy version of the welcome page is already there but should be improved	2016-09-28 15:59:26.363	0	59	1	\N
 5	After making an update of goals, now I think that perhaps we should try to stick with the single goal per contribution approach. Since goal have parent goals, it can be assumed that a contribution applies to its goal, and also to all its parents. Users can then discuss and agree on the goals structure, rather than on the assigning multiple goals to one contribution 	2016-10-03 14:51:02.765	0	40	1	\N
 6	Perhaps we should keep this contribution limited to a first draft that clearly conveys the message and shows the key features of the application and use other contributions to improve it, and eventually convert it into a welcome video	2016-10-06 17:16:33.338	0	68	1	\N
-7	This is a significant (and quite fundamental) contribution by @estenanortizospina, however I suggest we consider it closed once it has been tested to include non-homogeneous pps distributions, and when a time bound mechanism, similar to the one already in place, has been specified and tested in R.	2016-10-07 16:13:33.935	0	55	1	\N
 8	Another option is to be able to link arguments applying these relation after they have been created. This seems more complex though	2016-10-24 15:33:51.589	0	89	1	\N
 9	I can share the edition file of the older version to be used as a starting point. It already includes a lot of cuts and extensions. The narration file is in https://drive.google.com/drive/u/0/folders/0B6HEie5ZN03bMnFyaWtEcHYxMzQ	2016-11-11 10:28:00.243	0	106	1	\N
 11	This is no longer an issue after migrating to spring boot	2016-11-20 17:51:25.966	0	100	1	\N
@@ -1743,6 +1841,9 @@ COPY comments (id, content, creation_date, relevance, cbtion_id, creator_id, par
 21	I am working here: Feel free to come and visit\nhttps://docs.google.com/presentation/d/11AUv64WQXDppnxCIiK63HDEOIIRweHdSBb_MDd2ug_E/edit	2016-11-30 11:49:59.233	0	135	1	\N
 18	This is a short term solution to the tree structure proposed in  http://www.collectiveone.org/views/cbtionPageR/130 \n	2016-11-30 08:26:45.351	1	133	3	\N
 22	The problem is that the link should point to the contributions of one project in particular. Should it point to the contributions of CollectiveOne only?	2016-11-30 18:14:44.641	0	133	1	18
+23	This is related to the http session. Projects at show only are updated at session start. Project creation is for the moment very sporadic, this should be reviewed and fixed but perhaps is not a priority.	2016-12-02 09:44:19.894	0	144	1	\N
+24	I agree that for the new algorithm to be a real alternative, we need to allow for a non-homogeneous distribution of pps. Having said that, the proposal that I have is informative about how to conceptualise the statistical inference problem. Indeed, I think that it is the first step, and it is the best way to present the decision mechanism to a general audience. I believe this adds value to the project even if it is not implemented.\n\nBased on the above, I think that I am willing to revise the number of pps that I requested. I believe that the model and algorithm with homogeneous distribution of pps should be worth 75 points.	2016-12-02 14:47:56.977	0	55	3	7
+7	This is a significant (and quite fundamental) contribution by @estenanortizospina, however I suggest we consider it closed once it has been tested to include non-homogeneous pps distributions, and when a time bound mechanism, similar to the one already in place, has been specified and tested in R.	2016-10-07 16:13:33.935	1	55	1	\N
 \.
 
 
@@ -1774,6 +1875,7 @@ COPY cbtions_comments (cbtion_id, comments_id) FROM stdin;
 133	18
 136	20
 135	21
+144	23
 \.
 
 
@@ -1785,7 +1887,7 @@ ALTER TABLE cbtions_comments ENABLE TRIGGER ALL;
 -- Name: cbtions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('cbtions_id_seq', 142, true);
+SELECT pg_catalog.setval('cbtions_id_seq', 147, true);
 
 
 --
@@ -1820,6 +1922,10 @@ COPY promoters (id, creation_date, promote_up, user_id) FROM stdin;
 22	2016-11-18 20:27:52.84	t	1
 11	2016-11-29 10:37:21.252	t	1
 24	2016-11-30 18:12:13.216	t	1
+25	2016-12-02 10:18:27.382	t	1
+26	2016-12-02 10:18:30.577	t	1
+27	2016-12-02 10:18:45.003	t	1
+28	2016-12-02 14:48:16.138	t	3
 \.
 
 
@@ -1856,6 +1962,9 @@ COPY cbtions_promoters (cbtion_id, promoters_id) FROM stdin;
 52	20
 112	21
 114	22
+125	25
+132	26
+89	27
 \.
 
 
@@ -1874,6 +1983,7 @@ COPY comments_answers (comment_id, replies_id) FROM stdin;
 2	3
 15	19
 18	22
+7	24
 \.
 
 
@@ -1885,7 +1995,7 @@ ALTER TABLE comments_answers ENABLE TRIGGER ALL;
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('comments_id_seq', 22, true);
+SELECT pg_catalog.setval('comments_id_seq', 24, true);
 
 
 --
@@ -1898,6 +2008,7 @@ ALTER TABLE comments_promoters DISABLE TRIGGER ALL;
 
 COPY comments_promoters (comment_id, promoters_id) FROM stdin;
 18	24
+7	28
 \.
 
 
@@ -1909,7 +2020,7 @@ ALTER TABLE comments_promoters ENABLE TRIGGER ALL;
 -- Name: decision_realms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('decision_realms_id_seq', 8, true);
+SELECT pg_catalog.setval('decision_realms_id_seq', 11, true);
 
 
 --
@@ -1924,9 +2035,10 @@ COPY voters (id, weight, voter_user_id) FROM stdin;
 4	0.5	5
 5	100	1
 6	101	5
-2	266	3
 3	104	4
-1	2589	1
+1	2590	1
+8	100	3
+2	281	3
 \.
 
 
@@ -1947,6 +2059,7 @@ COPY decision_realms_voters (decision_realm_id, voters_id) FROM stdin;
 1	4
 2	5
 5	6
+9	8
 \.
 
 
@@ -2010,7 +2123,7 @@ ALTER TABLE decisions_args ENABLE TRIGGER ALL;
 -- Name: decisions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('decisions_id_seq', 501, true);
+SELECT pg_catalog.setval('decisions_id_seq', 535, true);
 
 
 --
@@ -2372,6 +2485,25 @@ COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 350	2016-12-01 00:30:23.444	1	2579	1	498
 351	2016-12-01 00:31:05.457	1	2579	1	500
 352	2016-12-01 00:31:15.288	1	2579	1	501
+353	2016-12-01 10:33:02.756	1	2589	1	503
+354	2016-12-01 10:33:08.567	1	2589	1	504
+355	2016-12-01 12:31:45.91	1	2590	1	505
+356	2016-12-01 12:31:56.397	1	2590	1	508
+357	2016-12-01 12:35:01.84	1	281	3	509
+358	2016-12-01 12:41:49.6	1	100	3	511
+359	2016-12-01 12:46:11.095	1	100	3	513
+360	2016-12-01 12:46:16.312	1	100	3	515
+361	2016-12-01 12:46:18.588	1	100	3	517
+362	2016-12-01 12:55:13.419	1	100	3	520
+363	2016-12-01 12:56:36.053	1	100	3	522
+364	2016-12-01 13:31:50.341	0	2590	1	509
+365	2016-12-02 09:07:56.176	1	2590	1	502
+366	2016-12-02 10:55:59.782	1	2590	1	524
+367	2016-12-02 10:56:47.104	1	2590	1	526
+368	2016-12-02 14:41:03.773	0	281	3	212
+369	2016-12-02 15:29:55.998	1	2590	1	528
+370	2016-12-02 15:30:31.379	1	2590	1	530
+371	2016-12-02 16:35:53.325	1	2590	1	532
 \.
 
 
@@ -2732,6 +2864,25 @@ COPY decisions_thesescast (decision_id, theses_cast_id) FROM stdin;
 498	350
 500	351
 501	352
+503	353
+504	354
+505	355
+508	356
+511	358
+513	359
+515	360
+517	361
+520	362
+522	363
+509	357
+509	364
+502	365
+524	366
+526	367
+212	368
+528	369
+530	370
+532	371
 \.
 
 
@@ -2743,7 +2894,7 @@ ALTER TABLE decisions_thesescast ENABLE TRIGGER ALL;
 -- Name: goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('goal_id_seq', 38, true);
+SELECT pg_catalog.setval('goal_id_seq', 46, true);
 
 
 --
@@ -2802,7 +2953,7 @@ ALTER TABLE password_recovery_token ENABLE TRIGGER ALL;
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('projects_id_seq', 4, true);
+SELECT pg_catalog.setval('projects_id_seq', 5, true);
 
 
 --
@@ -2811,7 +2962,7 @@ SELECT pg_catalog.setval('projects_id_seq', 4, true);
 -- Name: promoters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('promoters_id_seq', 24, true);
+SELECT pg_catalog.setval('promoters_id_seq', 28, true);
 
 
 --
@@ -2859,7 +3010,7 @@ SELECT pg_catalog.setval('roles_id_seq', 8, true);
 -- Name: theses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('theses_id_seq', 352, true);
+SELECT pg_catalog.setval('theses_id_seq', 371, true);
 
 
 --
@@ -2892,10 +3043,10 @@ SELECT pg_catalog.setval('verification_token_id_seq', 3, true);
 -- Name: voters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('voters_id_seq', 7, true);
+SELECT pg_catalog.setval('voters_id_seq', 8, true);
 
 
--- Completed on 2016-12-01 01:33:02 CET
+-- Completed on 2016-12-02 19:05:18 CET
 
 --
 -- PostgreSQL database dump complete
