@@ -3,6 +3,11 @@
 <head>
 	<title>CollectiveOne - Create Goal</title>
 	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		GLOBAL.projectSelected = [[${projectSelected}]];
+	/*]]>*/
+	</script>
 	<script type="text/javascript" th:src="@{/views/decisionNewPage.js}"></script>
 </head>
 <body>

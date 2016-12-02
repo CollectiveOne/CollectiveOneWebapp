@@ -128,8 +128,9 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/cbtionNewSubmit", method = RequestMethod.POST)
-	public String cbtionNewSubmit(@Valid @ModelAttribute("cbtion") CbtionDto cbtionDto, BindingResult result) throws IOException {
+	public String cbtionNewSubmit(@Valid @ModelAttribute("cbtion") CbtionDto cbtionDto, BindingResult result, Model model) throws IOException {
 		if(result.hasErrors()) {
+			model.addAttribute("projectSelected",cbtionDto.getProjectName());
 			return "views/cbtionNewPage";
 		} else {
 			if(dbServices.goalExist(cbtionDto.getGoalTag(),cbtionDto.getProjectName(), GoalState.ACCEPTED)) {
@@ -139,6 +140,7 @@ public class ViewsController {
 				Long cbtionId = dbServices.cbtionCreate(cbtionDto);
 				return "redirect:/views/cbtionPageR/"+cbtionId;
 			} else {
+				model.addAttribute("projectSelected",cbtionDto.getProjectName());
 				result.rejectValue("goalTag", "goal.goalTag", "'"+cbtionDto.getGoalTag()+"' goal tag wast not found or has not been accepted yet");
 				return "views/cbtionNewPage";
 			}
@@ -154,8 +156,9 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/goalNewSubmit", method = RequestMethod.POST)
-	public String goalNewSubmit(@Valid @ModelAttribute("goal") GoalDto goalDto, BindingResult result) throws IOException {
+	public String goalNewSubmit(@Valid @ModelAttribute("goal") GoalDto goalDto, BindingResult result, Model model) throws IOException {
 		if(result.hasErrors()) {
+			model.addAttribute("projectSelected",goalDto.getProjectName());
 			return "views/goalNewPage";
 		} else {
 			/* check goal-tag is new in that project */
@@ -164,6 +167,7 @@ public class ViewsController {
 				if(goalDto.getParentGoalTag() != null) {
 					if(goalDto.getParentGoalTag().length() > 0) {
 						if(!dbServices.goalExist(goalDto.getParentGoalTag(),goalDto.getProjectName(),GoalState.ACCEPTED)) {
+							model.addAttribute("projectSelected",goalDto.getProjectName());
 							result.rejectValue("parentGoalTag", "goal.parentGoalTag", "'"+goalDto.getParentGoalTag()+"' was not found, or is not yet accepted");
 							return "views/goalNewPage";
 						}
@@ -178,6 +182,7 @@ public class ViewsController {
 				return "redirect:/views/goalPageR?projectName="+goalDto.getProjectName()+"&goalTag="+goalDto.getGoalTag();
 				
 			} else {
+				model.addAttribute("projectSelected",goalDto.getProjectName());
 				result.rejectValue("goalTag", "goal.goalTag", "'"+goalDto.getGoalTag()+"' goal tag already exist. It must be unique within the project.");
 				return "views/goalNewPage";
 			}
@@ -193,8 +198,9 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/decisionNewSubmit", method = RequestMethod.POST)
-	public String decisionNewSubmit(@Valid @ModelAttribute("decision") DecisionDto decisionDto, BindingResult result) throws IOException {
+	public String decisionNewSubmit(@Valid @ModelAttribute("decision") DecisionDto decisionDto, BindingResult result, Model model) throws IOException {
 		if(result.hasErrors()) {
+			model.addAttribute("projectSelected",decisionDto.getProjectName());
 			return "views/decisionNewPage";
 		} else {
 			/* creator is the logged user */

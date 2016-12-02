@@ -14,7 +14,7 @@ ProjectSelector.prototype.fill = function() {
 	if(activeProjects.length > 0) {
 		this.projectListReceivedCallback(activeProjects)
 	} else {
-		GLOBAL.serverComm.projectListGet(this.projectListReceivedCallback,this);	
+		GLOBAL.serverComm.projectListGet(this.projectListReceivedCallback,this);		
 	}
 	
 }
@@ -25,6 +25,11 @@ ProjectSelector.prototype.projectListReceivedCallback = function(projectList) {
 	for(var ix in projectList) {
 		this.container.append($("<option value="+projectList[ix]+">"+projectList[ix]+"</option>"));
 	} 
+
+	/* automatically select if GLOBAL set (this allows for server to choose selected project)*/
+	if(GLOBAL.projectSelected) {
+		this.container.val(GLOBAL.projectSelected);
+	}		
 
 	this.projectsReceivedCallBackFun.call(this.projectsReceivedCallBackObj);
 

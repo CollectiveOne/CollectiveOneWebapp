@@ -3,6 +3,11 @@
 <head>
 	<title>CollectiveOne - Create Contribution</title>
 	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		GLOBAL.projectSelected = [[${projectSelected}]];
+	/*]]>*/
+	</script>
 	<script type="text/javascript" th:src="@{/views/cbtionNewPage.js}"></script>
 </head>
 <body>
