@@ -18,6 +18,7 @@ import org.collectiveone.web.error.PasswordsNotEqualException;
 import org.collectiveone.web.error.UserAlreadyExistException;
 import org.collectiveone.web.error.UserNotAuthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,6 +53,12 @@ public class UserServiceIm implements UserServiceIf, UserDetailsService {
 	
 	@Autowired
     private UserDetailsService userDetailsService;
+	
+	@Autowired
+    private AppMailServiceHeroku mailService;
+	
+	@Autowired
+	private Environment env;
 
 	
     public static final String TOKEN_INVALID = "invalidToken";
@@ -118,7 +125,20 @@ public class UserServiceIm implements UserServiceIf, UserDetailsService {
         user.setJoindate(new Timestamp(System.currentTimeMillis()));
         roleService.addRoleTo(user.getUsername(),"ROLE_USER");
         
-        return userRepository.save(user);
+        User userSaved = userRepository.save(user);
+        
+        try {
+        	String subject = user.getUsername()+" user signed-up";
+            String body = user.getUsername()+" user signed-up";
+            
+            mailService.sendMail(
+            		env.getProperty("collectiveone.webapp.admin-email"),
+            		subject, 
+            		body);
+        } catch(Exception e) {}
+        
+        
+        return userSaved;
     }
 	
 	public User save(User user) {

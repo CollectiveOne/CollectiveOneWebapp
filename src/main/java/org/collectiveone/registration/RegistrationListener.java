@@ -39,9 +39,10 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         final String token = UUID.randomUUID().toString();
         userService.createVerificationTokenForUser(user, token);
 
+        String activationUrl =  event.getAppUrl() + "/user/signupConfirm?token=" + token;
         String subject = messages.getMessage("message.confMailSubject", null, event.getLocale());
         String body = messages.getMessage("message.confMailBody", null, event.getLocale()) + 
-        		" \r\n" + event.getAppUrl() + "/user/signupConfirm?token=" + token;
+        		" \r\n<a href='"+activationUrl+"'>"+activationUrl+"</a>";
         
         mailService.sendMail(
         		user.getEmail(), 
