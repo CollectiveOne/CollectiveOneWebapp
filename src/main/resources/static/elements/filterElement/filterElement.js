@@ -45,7 +45,7 @@ FilterElement.prototype.init = function() {
 			break;
 
 		case "decisions":
-			$("#new_btn",this.container).show();
+			$("#filter_inputs_decision",this.container).show();
 			break;
 			
 		case "goals":
