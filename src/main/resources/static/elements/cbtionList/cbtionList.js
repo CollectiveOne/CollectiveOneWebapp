@@ -63,13 +63,31 @@ CbtionList.prototype.boxLoaded = function(data) {
 		filters.stateNames = this.conf.stateNames;
 	}
 	
+	var showFilterBtn = true;
+	if(this.conf.showFilterBtn != null) {
+		showFilterBtn = this.conf.showFilterBtn; 
+	}
+	
+	var showNewBtn = true;
+	if(this.conf.showNewBtn != null) {
+		showNewBtn = this.conf.showNewBtn; 
+	}
+	
+	var newBtnLink = "/views/cbtionNewPageR";
+	if(this.conf.newBtnLink != null) {
+		newBtnLink = this.conf.newBtnLink; 
+	}
+	
 	this.filter = new FilterElement($("#filter_container",this.container), 
 			GLOBAL.serverComm.cbtionListGet, 
 			this.CbtionsReceivedCallback, 
 			this, 
 			customElements, 
 			filters,
-			"cbtions");
+			"cbtions",
+			showFilterBtn, 
+			showNewBtn, 
+			newBtnLink);
 
 	this.updateData();
 }

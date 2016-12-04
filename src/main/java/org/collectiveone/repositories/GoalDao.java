@@ -13,10 +13,14 @@ import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class GoalDao extends BaseDao {
+	
+	@Autowired
+	private ProjectDao projectDao;
 	
 	public GoalDao() {
 		super();
@@ -87,7 +91,7 @@ public class GoalDao extends BaseDao {
 	
 	public ObjectListRes<Goal> get(Filters filters) {
 		
-		Criteria q = applyGeneralFilters(filters, Goal.class);
+		Criteria q = applyGeneralFilters(filters, projectDao.getListEnabled(), Goal.class);
 		
 		/* State names are entity specific and I was not able to put these
 		 * disjunction in a common function */

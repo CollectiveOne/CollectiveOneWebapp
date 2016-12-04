@@ -6,12 +6,16 @@ import org.collectiveone.model.Activity;
 import org.collectiveone.services.Filters;
 import org.collectiveone.services.ObjectListRes;
 import org.hibernate.Criteria;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 
 @Repository
 public class ActivityDao extends BaseDao {
 
+	@Autowired
+	private ProjectDao projectDao;
+	
 	public ActivityDao() {
 		super();
 	}
@@ -25,7 +29,7 @@ public class ActivityDao extends BaseDao {
 	}
 	
 	public ObjectListRes<Activity> get(Filters filters) {
-		Criteria q = applyGeneralFilters(filters, Activity.class);
+		Criteria q = applyGeneralFilters(filters, projectDao.getListEnabled(), Activity.class);
 		return getObjectsAndResSet(q, filters, Activity.class);
 	}
 	

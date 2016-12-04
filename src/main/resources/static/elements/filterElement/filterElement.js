@@ -1,4 +1,4 @@
-function FilterElement(container_id, getDataCall, callBack, callObject, customElements, filters, type) {
+function FilterElement(container_id, getDataCall, callBack, callObject, customElements, filters, type, showFilterBtn, showNewBtn, newBtnLink) {
 	
 	this.container = $(container_id);
 	this.getDataCall = getDataCall;
@@ -9,7 +9,11 @@ function FilterElement(container_id, getDataCall, callBack, callObject, customEl
 	this.possibleStateNames = customElements.stateNames;
 	this.possibleSortBy = customElements.sortBy;
 	this.filters = filters;
+	
 	this.type = type;
+	this.showFilterBtn = showFilterBtn;
+	this.showNewBtn = showNewBtn;
+	this.newBtnLink = newBtnLink;
 	
 	this.filters_expanded = false;
 	
@@ -41,15 +45,28 @@ FilterElement.prototype.init = function() {
 			break;
 
 		case "decisions":
-			$("#filter_inputs_decision",this.container).show();
+			$("#new_btn",this.container).show();
 			break;
+			
+		case "goals":
+			break;
+			
 		default: 
 			break; 	
 
 	}
-
-	$("#filter_btn", this.container).click(this.filterClick.bind(this));
-	$("#filter_update", this.container).click(this.filterClick.bind(this));
+	
+	if(this.showFilterBtn) {
+		$("#filter_btn", this.container).show();
+		$("#filter_btn", this.container).click(this.filterClick.bind(this));
+		$("#filter_update", this.container).click(this.filterClick.bind(this));
+	}
+	
+	if(this.showNewBtn) {
+		$("#new_btn_div", this.container).show();
+		$("#new_btn", this.container).attr("href",this.newBtnLink);
+	}
+	
 	$("#next_page", this.container).click(this.nextPageClick.bind(this));
 	$("#back_page", this.container).click(this.backPageClick.bind(this));
 

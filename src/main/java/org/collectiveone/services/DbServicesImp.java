@@ -395,7 +395,7 @@ public class DbServicesImp {
 
 	@Transactional
 	public List<String> projectGetList() {
-		return projectDao.getList();
+		return projectDao.getListEnabled();
 	}
 
 	@Transactional
@@ -604,7 +604,7 @@ public class DbServicesImp {
 	@Transactional
 	public List<String> goalGetSuggestions(String query, List<String> projectNames) {
 		if(projectNames.size() == 0) {
-			projectNames = projectDao.getList();
+			projectNames = projectDao.getListEnabled();
 		}
 		return goalDao.getSuggestions(query, projectNames);
 	}

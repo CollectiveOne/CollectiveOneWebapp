@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/views")
@@ -121,8 +122,12 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping("/cbtionNewPageR")
-	public String cbtionNewPage(Model model) {
-		model.addAttribute("cbtion",new CbtionDto());
+	public String cbtionNewPage(Model model, @RequestParam(value="goalTag", required = false) String goalTag) {
+		CbtionDto cbtionDto = new CbtionDto();
+		if(goalTag != null) {
+			cbtionDto.setGoalTag(goalTag);
+		}
+		model.addAttribute("cbtion",cbtionDto);
 		return "views/cbtionNewPage";
 	}
 	

@@ -6,10 +6,24 @@
 	width: 100%;
 }
 
-#filter_bar #filter_btn{
+#filter_bar #filter_btn {
 	width: 120px;
 	margin-left: 5px;
 	margin-bottom: 10px;
+	float: left;
+	display: none;
+}
+
+#filter_bar #new_btn_div {
+	display: none;
+	width: 120px;
+	margin-left: 5px;
+	margin-bottom: 10px;
+	float: left;
+}
+
+#filter_bar #new_btn_div a {
+	width: 100%;
 }
 
 #filter_bar #page_btns {

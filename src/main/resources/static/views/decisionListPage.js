@@ -33,7 +33,10 @@ DecisionListPage.prototype.draw = function() {
 			this, 
 			customElements, 
 			filters,
-			"decisions");
+			"decisions",
+			true, 
+			true, 
+			"/views/decisionNewPageR");
 
 	this.filter.updateData();
 }
@@ -49,11 +52,18 @@ DecisionListPage.prototype.drawDecisions = function() {
 
 	this.filter.updateResSet();
 	$("#list_of_elements", this.container).empty();
-
-	for ( var ix in this.decisions) {
-		$("#list_of_elements", this.container).append("<div class=decisionbox_div id=decisionbox"+ix+"_div></div>");
-		var decisionBox = new DecisionBox($("#decisionbox"+ix+"_div"),this.decisions[ix]);
-		decisionBox.draw();
+	
+	if(this.decisions.length > 0) {
+		for ( var ix in this.decisions) {
+			$("#list_of_elements", this.container).append("<div class=decisionbox_div id=decisionbox"+ix+"_div></div>");
+			var decisionBox = new DecisionBox($("#decisionbox"+ix+"_div"),this.decisions[ix]);
+			decisionBox.draw();
+		}
+	} else {
+		$("#list_of_elements", this.container).append(
+		"<div class='alert alert-info'>"+
+  			"No results found"+
+		"</div>");
 	}
 }
 

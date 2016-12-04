@@ -28,6 +28,9 @@ public class CbtionRepository extends BaseDao {
 	@Autowired
 	GoalDao	goalDao;
 	
+	@Autowired
+	private ProjectDao projectDao;
+	
 	public CbtionRepository() {
 		super();
 	}
@@ -79,7 +82,7 @@ public class CbtionRepository extends BaseDao {
 	
 	public ObjectListRes<Cbtion> get(Filters filters) {
 		
-		Criteria q = applyGeneralFilters(filters, Cbtion.class);
+		Criteria q = applyGeneralFilters(filters, projectDao.getListEnabled(), Cbtion.class);
 		
 		/* State names are entity specific and I was not able to put these
 		 * disjunction in a common function*/

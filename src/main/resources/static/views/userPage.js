@@ -46,16 +46,16 @@ UserPage.prototype.userProjectsContributedCallback = function(projectsContribute
 		$("#projects_contributed_div",this.container).append(
 		$("<p class=project_contributed>"+percentage+"% of "+getProjectLink(projectContributed.projectName)+" with "+ppsContributed+ " of "+ppsTot+" pp's</p>"));	
 	}
-
-
-	
 }
 
 UserPage.prototype.updateContributionsAccepted = function() {
 	var cbtionList = new CbtionList("#contributions_list", {
 		contributorUsername: this.user.username, 
 		maxheight: "600px",
-		stateNames: ["ACCEPTED"]
+		stateNames: ["ACCEPTED"],
+		showFilterBtn: true,
+		showNewBtn: false,
+		newBtnLink: ""
 		});
 
 	cbtionList.init();

@@ -36,7 +36,11 @@ GoalListPage.prototype.draw = function() {
 			this.GoalsReceivedCallback, 
 			this, 
 			customElements, 
-			filters);
+			filters,
+			"goals",
+			true, 
+			true, 
+			"/views/goalNewPageR");
 
 	this.filter.updateData();
 

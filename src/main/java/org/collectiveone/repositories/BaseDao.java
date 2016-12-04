@@ -22,7 +22,7 @@ public class BaseDao {
 
 	@Autowired
 	protected SessionFactory sessionFactory;
-		
+	
 	public BaseDao() {
 	}
 
@@ -78,23 +78,48 @@ public class BaseDao {
 		return res;
 	}
 
-	public <T> Criteria applyGeneralFilters(Filters filters, Class<T> clazz) {
+	public <T> Criteria applyGeneralFilters(Filters filters, List<String> enabledProjects, Class<T> clazz) {
 
 		Session session = sessionFactory.getCurrentSession();
 		Criteria q = session.createCriteria(clazz);
 
+		
+		/* Project filter */
+		
+		boolean allEnabledProjects = false;
 		if(filters.getProjectNames() != null) {
 			if(filters.getProjectNames().size() > 0) {
-				q.createAlias("project", "proj");
-				List<String> projectNames = filters.getProjectNames();
-				Disjunction projDisj = Restrictions.disjunction();
-				for(String projectName:projectNames) {
-					projDisj.add( Restrictions.eq("proj.name", projectName));
-				}
-				q.add(projDisj);
+				/* appy filter per project if they are provided */
+				allEnabledProjects = false;
+			} else {
+				/* otherwise filter using all enabled projects */
+				allEnabledProjects = true;
 			}
+		} else {
+			/* otherwise filter using all enabled projects */
+			allEnabledProjects = true;
 		}
-
+		
+		q.createAlias("project", "proj");
+		List<String> projectNames; 
+		
+		if(allEnabledProjects) {
+			projectNames = enabledProjects;
+		} else {
+			projectNames = filters.getProjectNames();
+		}
+		
+		Disjunction projDisj = Restrictions.disjunction();
+		for(String projectName:projectNames) {
+			projDisj.add( Restrictions.eq("proj.name", projectName));
+		}
+		q.add(projDisj);
+		
+		
+		/* ------------------ */
+		/* filter by creator  */
+		/* ------------------ */
+		
 		if(filters.getCreatorUsernames() != null) {
 			if(filters.getCreatorUsernames().size() > 0) {
 				q.createAlias("creator", "crea");

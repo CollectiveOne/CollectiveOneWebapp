@@ -45,14 +45,15 @@ public class ProjectDao extends BaseDao {
 		return project;
 	}
 
-	public List<String> getList() {
+	public List<String> getListEnabled() {
 		Session session = sessionFactory.getCurrentSession();
 
 		@SuppressWarnings("unchecked")
 		List<String> res = (List<String>) session.createCriteria(Project.class)
-		.setProjection(Projections.property("name"))
-		.addOrder(Order.desc("ppsTot"))
-		.list();
+			.add(Restrictions.eq("enabled", true))
+			.setProjection(Projections.property("name"))
+			.addOrder(Order.desc("ppsTot"))
+			.list();
 
 		return res;
 	}

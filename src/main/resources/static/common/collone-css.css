@@ -251,6 +251,12 @@ textarea.form-control {
 	padding-right: 10px;
 }
 
+#container #list_of_elements {
+	float:left;
+	clear:both;
+	width:100%;
+}
+
 
 /* page specific goalList*/
 #content_pane #list_of_elements .goalBox_div {

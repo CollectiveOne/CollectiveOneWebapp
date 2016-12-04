@@ -31,7 +31,11 @@ ActivityListPage.prototype.init = function() {
 			this.activityItemsReceivedCallback, 
 			this, 
 			customElements, 
-			filters);
+			filters,
+			"activities",
+			true, 
+			false, 
+			"");
 
 	this.filter.updateData();
 }

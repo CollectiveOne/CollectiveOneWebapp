@@ -22,6 +22,8 @@ public class Project {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	private boolean enabled;
+	
 	private String name;
 	@Lob
 	@Type(type = "org.hibernate.type.TextType")
@@ -51,6 +53,12 @@ public class Project {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public boolean getEnabled() {
+		return enabled;
+	}
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 	public String getName() {
 		return name;

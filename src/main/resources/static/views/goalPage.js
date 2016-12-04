@@ -27,7 +27,10 @@ GoalPage.prototype.updateCbtions = function(goalDto) {
 	this.cbtionList = new CbtionList($("#cbtions_container",this.container),{ 
 			goalTag: this.goal.goalTag,
 			projectNames: [this.goal.projectName],
-			maxheight: "600px"
+			maxheight: "600px",
+			showFilterBtn: false,
+			showNewBtn: true,
+			newBtnLink: "/views/cbtionNewPageR?goalTag="+this.goal.goalTag
 		});
 
 	this.cbtionList.init();
