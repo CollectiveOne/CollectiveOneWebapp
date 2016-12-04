@@ -1,5 +1,6 @@
 package org.collectiveone.web.controllers.rest;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,7 @@ public class CbtionsController {
 	}
 	
 	@RequestMapping(value="/commentNew", method = RequestMethod.POST)
-	public @ResponseBody Boolean commentNew(@RequestBody CommentDto commentDto) {
+	public @ResponseBody Boolean commentNew(@RequestBody CommentDto commentDto) throws IOException {
 		/* creator is the logged user */
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth.isAuthenticated()) {

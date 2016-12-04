@@ -2,6 +2,7 @@ function CommentItem(container_id,data) {
 	// Parent constructor
 	this.container = $(container_id);
 	this.comment = data;
+	this.expandReplies = false;
 	this.replies_expanded = false;
 };
 
@@ -40,6 +41,10 @@ CommentItem.prototype.commentBoxLoaded = function() {
 	$("#comment_promotion_center_div",this.container).append(this.comment.relevance);
 	$("#comment_promotion_up_div",this.container).click(this.promoteUpClick.bind(this));
 	$("#comment_promotion_down_div",this.container).click(this.promoteDownClick.bind(this));
+	
+	if(this.expandReplies) {
+		this.showRepliesClicked();
+	}
 
 }
 
@@ -65,7 +70,8 @@ CommentItem.prototype.newReplySaveClicked = function() {
 }
 
 CommentItem.prototype.replyNewCallback = function() {
-	this.updateReplies();	
+	this.expandReplies = true;
+	this.updateData();	
 }
 
 CommentItem.prototype.showRepliesClicked = function() {

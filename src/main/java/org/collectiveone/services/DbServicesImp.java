@@ -1836,7 +1836,7 @@ public class DbServicesImp {
 
 
 	@Transactional
-	public ResStatus commentCbtionCreate(CommentDto commentDto) {
+	public ResStatus commentCbtionCreate(CommentDto commentDto) throws IOException {
 
 		User creator = userDao.get(commentDto.getCreatorUsername());
 		Cbtion cbtion = cbtionDao.get(commentDto.getCbtionId());
@@ -1867,6 +1867,14 @@ public class DbServicesImp {
 		cbtionDao.save(cbtion);
 		commentDao.save(comment);
 
+		Activity act = new Activity();
+		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		act.setComment(comment);
+		act.setType(ActivityType.COMMENT);
+		act.setProject(cbtion.getProject());
+		act.setEvent("new");
+		activitySaveAndNotify(act);
+		
 		ResStatus resStatus = new ResStatus();
 
 		resStatus.setSuccess(true);

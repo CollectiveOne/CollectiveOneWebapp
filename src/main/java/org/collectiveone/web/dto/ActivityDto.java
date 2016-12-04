@@ -12,6 +12,7 @@ public class ActivityDto {
 	private GoalDto goalDto;
 	private DecisionDto decisionDto;
 	private ArgumentDto argumentDto;
+	private CommentDto commentDto;
 	
 	public Long getId() {
 		return id;
@@ -78,6 +79,12 @@ public class ActivityDto {
 	}
 	public void setArgumentDto(ArgumentDto argumentDto) {
 		this.argumentDto = argumentDto;
+	}
+	public CommentDto getCommentDto() {
+		return commentDto;
+	}
+	public void setCommentDto(CommentDto commentDto) {
+		this.commentDto = commentDto;
 	}
 	
 }

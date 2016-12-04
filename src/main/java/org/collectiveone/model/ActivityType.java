@@ -5,5 +5,6 @@ public enum ActivityType {
 	BID,
 	GOAL,
 	DECISION,
-	ARGUMENT
+	ARGUMENT,
+	COMMENT
 }

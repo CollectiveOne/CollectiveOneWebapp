@@ -33,6 +33,8 @@ public class Activity {
 	private Decision decision;
 	@ManyToOne
 	private Argument argument;
+	@ManyToOne
+	private Comment comment;
 	
 	public Activity() {
 	}
@@ -57,6 +59,7 @@ public class Activity {
 		if(goal != null) dto.setGoalDto(goal.toDto());
 		if(decision != null) dto.setDecisionDto(decision.toDto());
 		if(argument != null) dto.setArgumentDto(argument.toDto());
+		if(comment != null)  dto.setCommentDto(comment.toDto());
 		
 		return dto;
 	}
@@ -67,6 +70,10 @@ public class Activity {
 	
 	public String getGoalPageLink(String baseUrl, String goalTag, String projectName) {
 		return "<a href="+baseUrl+"/views/goalPageR?projectName="+projectName+"&goalTag="+goalTag+"><b>+</b>"+goalTag+"</a>";
+	}
+	
+	public String getCbtionPageLink(String baseUrl, Long id, String title) {
+		return "<a href="+baseUrl+"/views/cbtionPageR/"+id+">"+title+"</a>";
 	}
 	
 	public String limitStrSize(String strIn, int size) {
@@ -82,14 +89,14 @@ public class Activity {
 		
 		switch(this.type) {
 			case CBTION:
-				eventPretty = "contribution <a href="+baseUrl+"/views/cbtionPageR/"+this.cbtion.getId()+">"+this.cbtion.getTitle()+"</a> was "+this.event;
+				eventPretty = "contribution "+getCbtionPageLink(baseUrl,this.cbtion.getId(),this.cbtion.getTitle())+" was "+this.event;
 				break;
 	
 			case BID:
 				switch(this.event) {
 					case "created":
 						eventPretty = getUserPageLink(baseUrl,this.bid.getCreator().getUsername())+
-							" made a new bid on <a href="+baseUrl+"/views/cbtionPageR/"+this.bid.getCbtion().getId()+">"+this.bid.getCbtion().getTitle()+"</a>";
+							" made a new bid on "+getCbtionPageLink(baseUrl,this.bid.getCbtion().getId(),this.bid.getCbtion().getTitle());
 						break;
 	
 					case "assigned":
@@ -97,12 +104,12 @@ public class Activity {
 					case "not accepted":
 						
 						eventPretty = "bid from "+getUserPageLink(baseUrl,this.bid.getCreator().getUsername())+
-							" to <a href="+baseUrl+"/views/cbtionPageR/"+this.bid.getCbtion().getId()+">"+this.bid.getCbtion().getTitle()+"</a> was "+this.event;
+							" to "+getCbtionPageLink(baseUrl,this.bid.getCbtion().getId(),this.bid.getCbtion().getTitle())+" was "+this.event;
 						break;
 	
 					case "marked done":
 						eventPretty = getUserPageLink(baseUrl,this.bid.getCreator().getUsername())+
-							" marked bid on <a href="+baseUrl+"/views/cbtionPageR/"+this.bid.getCbtion().getId()+">"+this.bid.getCbtion().getTitle()+"</a> as done";
+							" marked bid on "+getCbtionPageLink(baseUrl,this.bid.getCbtion().getId(),this.bid.getCbtion().getTitle())+" as done";
 						break;
 				}
 				
@@ -142,6 +149,16 @@ public class Activity {
 							break;
 				}
 				break;
+				
+			case COMMENT:
+				switch(this.event) {
+				case "new":	
+						eventPretty = getUserPageLink(baseUrl,this.comment.getCreator().getUsername())+" added a new comment to contribution "+
+						getCbtionPageLink(baseUrl,this.comment.getCbtion().getId(),this.comment.getCbtion().getTitle());
+						break;
+				}
+				break;
+
 		}
 		
 		return eventPretty;
@@ -207,5 +224,12 @@ public class Activity {
 	public void setArgument(Argument argument) {
 		this.argument = argument;
 	}
+	public Comment getComment() {
+		return comment;
+	}
+	public void setComment(Comment comment) {
+		this.comment = comment;
+	}
+	
 	
 }
