@@ -54,16 +54,20 @@ BidBox.prototype.bidBoxLoaded = function() {
 			$("#bid_value_div",this.container).show();
 			this.enableBidderControl();
 			this.enableDone();
-			var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),this.bid.assignDec, GLOBAL.sessionData.userLogged);
-			decBox.updateVoteAndDraw();
+			if(isUserLogged()) {
+				var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),this.bid.assignDec, GLOBAL.sessionData.userLogged);
+				decBox.updateVoteAndDraw();	
+			}
 			break;
 			
 		case "ASSIGNED":
 			$("#bid_value_div",this.container).show();
 			this.enableBidderControl();
 			this.enableDone();
-			var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),this.bid.acceptDec, GLOBAL.sessionData.userLogged);
-			decBox.updateVoteAndDraw();
+			if(isUserLogged()) {
+				var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),this.bid.acceptDec, GLOBAL.sessionData.userLogged);
+				decBox.updateVoteAndDraw();
+			}
 			break;
 
 		case "NOT_ASSIGNED":

@@ -94,6 +94,7 @@ public class Activity {
 	
 					case "assigned":
 					case "accepted":
+					case "not accepted":
 						
 						eventPretty = "bid from "+getUserPageLink(baseUrl,this.bid.getCreator().getUsername())+
 							" to <a href="+baseUrl+"/views/cbtionPageR/"+this.bid.getCbtion().getId()+">"+this.bid.getCbtion().getTitle()+"</a> was "+this.event;
