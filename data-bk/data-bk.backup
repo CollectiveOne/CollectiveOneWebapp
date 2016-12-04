@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2016-12-02 19:04:11 CET
+-- Started on 2016-12-04 01:55:21 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -79,7 +79,6 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 55	2016-09-30 15:43:30.258	\N	2016-09-30 22:00:00	I have updated the page and added a new function to the API to return the list of users and their pps of a project	\N	\N	\N	10	3	180	179	62	1
 56	2016-10-03 15:14:08.76	\N	2016-10-03 22:00:00	I have updated the filters to get all Cbtions from goal, updated the goalPage  to include a CbtionList element, and updated the CbtionBox and CbtionBoxComplete to show goals and parent goals of a contribution	\N	\N	\N	25	3	184	183	39	1
 57	2016-10-04 17:49:54.698	\N	2016-10-04 22:00:00	I have already done this.\n\nAllowed decisions to create/change the parent of a goal\nRefactored goals hierachy in database to mark only the parent goal\nUpdated GoalBox in several ways\nCreated new subgoal creation option from within a goalBox\n\nhttps://github.com/JoseOspina/CoProjects-Webapp/commit/f7d7b4b8650600a2c209375e558808902174a1b2	\N	\N	\N	10	3	197	196	67	1
-61	2016-10-07 14:33:08.592	\N	2016-07-11 05:00:00	I propose a new algorithm based on a bayesian inference approach.	\N	\N	\N	150	1	212	208	55	3
 62	2016-10-07 15:27:35.755	\N	2016-10-12 05:00:00	I will do it for 5 pos	\N	\N	\N	5	3	211	210	70	4
 59	2016-10-06 10:36:29.916	\N	2016-10-06 22:00:00	I have updated the Bid creation and update process by allowing users to mark the Bid as "under consideration" before having to place a pp value and a delivery date. In addition, bidder can mark the bid as done and add a description (hopefully with a proof of what he did)	2016-10-06 10:37:53.68	Commits from https://github.com/JoseOspina/CoProjects-Webapp/commit/11cbb525326c6334d2715f656acdda9e3f0d646f up to https://github.com/JoseOspina/CoProjects-Webapp/commit/13f056ec1d681025f2ba27c14bb24c5ae863e8ca	1	15	3	201	200	37	1
 63	2016-10-07 21:54:42.867	\N	2016-10-07 22:00:00	I have updated slack, created a new reddit, updated the logo, updated the file names in the Google Drive folder, updated the White Paper	\N	\N	\N	5	3	215	214	71	1
@@ -140,6 +139,7 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 114	2016-12-01 12:26:29.433	\N	2016-12-02 00:00:00	I have produced a proposal, available under the required specifications at: https://docs.google.com/document/d/1aFz7eeFY8j_SrNfzvke8E_n7W_1K0Zynb8onLOLo2Ss/edit?usp=sharing 	2016-12-01 12:26:49.51	https://docs.google.com/document/d/1aFz7eeFY8j_SrNfzvke8E_n7W_1K0Zynb8onLOLo2Ss/edit?usp=sharing	1	15	3	508	505	134	3
 115	2016-12-01 12:28:49.525	\N	\N	Create project CollectiveSunrise	\N	\N	\N	100	3	507	506	143	3
 116	2016-12-02 10:56:36.973	\N	2016-12-02 23:00:00	I will take a look at this. 	\N	\N	\N	3	1	527	526	145	1
+61	2016-10-07 14:33:08.592	\N	2016-07-11 05:00:00	I propose a new algorithm based on a bayesian inference approach.	\N	\N	\N	150	4	212	208	55	3
 117	2016-12-02 15:30:29.082	\N	2016-12-02 23:00:00	I will answer them with some details about the project.	\N	\N	\N	5	1	531	530	146	1
 \.
 
@@ -841,7 +841,7 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 529	\N	0.949999999999999956	0	2016-12-02 15:29:57.248	delete contribution 'Handle requests from Alberta and Barcelona'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	146	6	1	\N	1
 530	2016-12-02 15:30:35.439	0.949999999999999956	1	2016-12-02 15:30:29.285	assign contribution 'Handle requests from Alberta and Barcelona' to pepoospina	0	OFFERED	0	1	1	8	2016-12-02 15:30:35.437	1	2590	2975.5	0.5	0	2	ASSIGNED	3	1	36	117	\N	6	1	\N	1
 531	\N	0.949999999999999956	0	2016-12-02 15:30:35.969	accept contribution 'Handle requests from Alberta and Barcelona' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	117	\N	6	1	\N	1
-212	\N	0.949999999999999956	1	2016-10-07 16:11:26.463	accept contribution 'Review of the decision mechanism' as delivered by estebanortizospina	0.0939663811728395082	ASSIGNED	1	0	1	8	2016-12-02 14:41:10.17	0	281	2975.5	0.5	0	1	ACCEPTED	3	0	36	61	\N	6	1	\N	1
+212	2016-12-04 00:48:34.719	0.949999999999999956	1	2016-10-07 16:11:26.463	accept contribution 'Review of the decision mechanism' as delivered by estebanortizospina	0.947874567901234588	ASSIGNED	1	0	1	8	2016-12-02 14:41:10.17	0	281	2975.5	0.5	0	3	ACCEPTED	3	0	36	61	\N	6	1	\N	1
 534	\N	0.949999999999999956	0	2016-12-02 17:55:35.841	create goal 'navigation'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	2	0	36	\N	\N	6	1	46	1
 533	\N	0.949999999999999956	0	2016-12-02 17:49:47.211	open contribution 'Create PSQ script to delete entire project'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	147	6	1	\N	1
 535	\N	0.949999999999999956	0	2016-12-02 17:55:35.842	delete goal 'navigation'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	46	1
@@ -1514,6 +1514,7 @@ COPY activity (id, creation_date, event, type, argument_id, bid_id, cbtion_id, d
 555	2016-12-02 16:35:56.493	accepted	3	\N	\N	\N	532	\N	1
 556	2016-12-02 17:49:47.22	created	0	\N	\N	147	\N	\N	1
 557	2016-12-02 17:55:35.849	proposed	2	\N	\N	\N	\N	46	1
+558	2016-12-04 00:48:35.307	not accepted	1	\N	61	\N	\N	\N	1
 \.
 
 
@@ -1525,7 +1526,7 @@ ALTER TABLE activity ENABLE TRIGGER ALL;
 -- Name: activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('activity_id_seq', 557, true);
+SELECT pg_catalog.setval('activity_id_seq', 558, true);
 
 
 --
@@ -1844,6 +1845,7 @@ COPY comments (id, content, creation_date, relevance, cbtion_id, creator_id, par
 23	This is related to the http session. Projects at show only are updated at session start. Project creation is for the moment very sporadic, this should be reviewed and fixed but perhaps is not a priority.	2016-12-02 09:44:19.894	0	144	1	\N
 24	I agree that for the new algorithm to be a real alternative, we need to allow for a non-homogeneous distribution of pps. Having said that, the proposal that I have is informative about how to conceptualise the statistical inference problem. Indeed, I think that it is the first step, and it is the best way to present the decision mechanism to a general audience. I believe this adds value to the project even if it is not implemented.\n\nBased on the above, I think that I am willing to revise the number of pps that I requested. I believe that the model and algorithm with homogeneous distribution of pps should be worth 75 points.	2016-12-02 14:47:56.977	0	55	3	7
 7	This is a significant (and quite fundamental) contribution by @estenanortizospina, however I suggest we consider it closed once it has been tested to include non-homogeneous pps distributions, and when a time bound mechanism, similar to the one already in place, has been specified and tested in R.	2016-10-07 16:13:33.935	1	55	1	\N
+25	Consider how this is different from the use case where history is desired but the project should be "retired".	2016-12-02 20:20:22.192	0	147	9	\N
 \.
 
 
@@ -1876,6 +1878,7 @@ COPY cbtions_comments (cbtion_id, comments_id) FROM stdin;
 136	20
 135	21
 144	23
+147	25
 \.
 
 
@@ -1995,7 +1998,7 @@ ALTER TABLE comments_answers ENABLE TRIGGER ALL;
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('comments_id_seq', 24, true);
+SELECT pg_catalog.setval('comments_id_seq', 25, true);
 
 
 --
@@ -3046,7 +3049,7 @@ SELECT pg_catalog.setval('verification_token_id_seq', 3, true);
 SELECT pg_catalog.setval('voters_id_seq', 8, true);
 
 
--- Completed on 2016-12-02 19:05:18 CET
+-- Completed on 2016-12-04 01:56:30 CET
 
 --
 -- PostgreSQL database dump complete
