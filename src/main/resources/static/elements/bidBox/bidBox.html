@@ -34,7 +34,15 @@
 		</div>
 	</div>
 	<div id="mark_done_form">
-		<textarea type="text" placeholder="proof" id="bid_markdone_in" rows="4" class="form-control"></textarea>
+		<div id="done_value_form" class="form-group" data-toggle="tooltip" title="ask for less pps in case you partially fulfilled the contribution and explain why">
+			<label>Review pps requested:</label>
+			<input type="number" id=done_ppoints_in placeholder="pps" class="form-control"></input>
+			<span id="done_value_error" class="help-block">New value should be lower or equal to original bid</span>
+		</div>
+		<div class="form-group">
+			<label>Proof of work and/or comments</label>
+			<textarea type="text" id="bid_markdone_in" rows="4" class="form-control"></textarea>
+		</div>
 		<div id="bid_markdone_save_btn" class="btn btn-xs btn-info">
 			save
 		</div>

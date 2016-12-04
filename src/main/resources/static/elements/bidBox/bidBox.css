@@ -172,6 +172,15 @@
 	margin-top:0px;
 }
 
+#bidBox_div #mark_done_form #done_value_form {
+	width: 100%;
+	margin-bottom: 5px;
+}
+
+#bidBox_div #mark_done_form #done_value_error {
+	display: none;
+}
+
 #bidBox_div #mark_done_form #bid_markdone_in {
 	width:100%;
 	float:left;

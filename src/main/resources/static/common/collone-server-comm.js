@@ -471,13 +471,9 @@ ServerComm.prototype = {
 			})
 		},
 
-		bidMarkDone : function(bidId,description,callbackFunction,callbackObj) {
+		bidMarkDone : function(doneData,callbackFunction,callbackObj) {
 
-			var data = {
-					'bidId' : bidId,
-					'description': description
-			};
-			var datastr = JSON.stringify(data);
+			var datastr = JSON.stringify(doneData);
 
 			$.ajax({
 				type : 'POST',

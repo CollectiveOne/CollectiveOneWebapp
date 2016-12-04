@@ -104,16 +104,41 @@ BidBox.prototype.enableDone = function() {
 	if(this.bid.doneState != "DONE") {
 		$("#bidder_done_btn",this.container).show();
 		$("#bidder_done_btn",this.container).click(this.markDoneClick.bind(this));
-		$("#bid_markdone_save_btn",this.container).click(this.doneSaveClick.bind(this));	
+		$("#bid_markdone_save_btn",this.container).click(this.doneSaveClick.bind(this));
+		$("#done_ppoints_in",this.container).change(this.donePpsChanged.bind(this));
 	}
 }
 
 BidBox.prototype.markDoneClick = function() {
 	$("#mark_done_form",this.container).toggle();
+	$("#done_ppoints_in",this.container).val(this.bid.ppoints);
+}
+
+BidBox.prototype.donePpsChanged = function() {
+	var newPps = $("#done_ppoints_in",this.container).val();
+
+	if(newPps > this.bid.ppoints) {
+		$("#done_value_form",this.container).addClass("has-error");
+		$("#done_value_error",this.container).show();
+	} else {
+		$("#done_value_form",this.container).removeClass("has-error");
+		$("#done_value_error",this.container).hide();
+	}
 }
 
 BidBox.prototype.doneSaveClick = function() {
-	GLOBAL.serverComm.bidMarkDone(this.bid.id, $("#bid_markdone_in",this.container).val(),this.markDoneSaveCallback,this);
+	
+	var newPps = $("#done_ppoints_in",this.container).val();
+
+	if(newPps < this.bid.ppoints) {
+		var doneData = {
+			bidId: this.bid.id,
+			newPps: newPps,
+			description: $("#bid_markdone_in",this.container).val()
+		}
+		
+		GLOBAL.serverComm.bidMarkDone(doneData, this.markDoneSaveCallback,this);
+	}
 }
 
 BidBox.prototype.markDoneSaveCallback = function() {

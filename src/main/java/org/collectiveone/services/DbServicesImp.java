@@ -1291,18 +1291,21 @@ public class DbServicesImp {
 		Bid bid = bidDao.get(doneDto.getBidId());
 		
 		if(bid.getCreator().getUsername().equals(doneDto.getUsername())) {
-			bid.setDoneState(BidDoneState.DONE);
-			bid.setDoneDescription(doneDto.getDescription());
-			bid.setDoneDate(new Timestamp(System.currentTimeMillis()));
-			bidDao.save(bid);	
+			if(doneDto.getNewPps() <= bid.getPpoints()) {
+				bid.setPpoints(doneDto.getNewPps());
+				bid.setDoneState(BidDoneState.DONE);
+				bid.setDoneDescription(doneDto.getDescription());
+				bid.setDoneDate(new Timestamp(System.currentTimeMillis()));
+				bidDao.save(bid);	
 
-			Activity act = new Activity();
-			act.setCreationDate(new Timestamp(System.currentTimeMillis()));
-			act.setProject(bid.getCbtion().getProject());
-			act.setBid(bid);
-			act.setType(ActivityType.BID);
-			act.setEvent("marked done");
-			activitySaveAndNotify(act);
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setProject(bid.getCbtion().getProject());
+				act.setBid(bid);
+				act.setType(ActivityType.BID);
+				act.setEvent("marked done");
+				activitySaveAndNotify(act);
+			}
 		}
 	}
 
