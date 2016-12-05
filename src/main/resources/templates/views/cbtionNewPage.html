@@ -21,6 +21,11 @@
 					<label for="sel1">Project:</label>
 					<select id="project_select" class="form-control" th:field="*{projectName}"></select>
 				</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('goalTag')}? 'has-error'">
+					<label for="goalTag">Goal:</label>
+					<input id="goalTag_selector" type="text" class="form-control" th:field="*{goalTag}"></input>
+					<span th:if="${#fields.hasErrors('goalTag')}" th:errors="*{goalTag}" th:class="help-block">Title Errors</span>
+				</div>
 				<div th:class="form-group" th:classappend="${#fields.hasErrors('title')}? 'has-error'">
 					<label for="title">Title:</label> 
 					<input type="text" class="form-control" th:field="*{title}"></input>
@@ -35,12 +40,7 @@
 					<label for="product">Product:</label>
 					<input type="text" class="form-control" th:field="*{product}"></input>
 				</div>
-				<div th:class="form-group" th:classappend="${#fields.hasErrors('goalTag')}? 'has-error'">
-					<label for="goalTag">Goal:</label>
-					<input id="goalTag_selector" type="text" class="form-control" th:field="*{goalTag}"></input>
-					<span th:if="${#fields.hasErrors('goalTag')}" th:errors="*{goalTag}" th:class="help-block">Title Errors</span>
-				</div>
-	
+				
 				<button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
 			</form>
 		</div>
