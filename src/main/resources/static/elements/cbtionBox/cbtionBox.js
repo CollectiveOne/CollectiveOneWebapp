@@ -26,9 +26,14 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 	$("#promotion_down_div",this.container).click(this.promoteDownClick.bind(this));
 
 	$("#title_div",this.container).append("<a href=/views/cbtionPageR/"+ this.cbtion.id+">"+this.cbtion.title+"</a>");
-	$("#description_div",this.container).append(markdown.toHTML(this.cbtion.description));
 	
-	$("#product_div",this.container).append(markdown.toHTML(this.cbtion.product));
+	if(this.cbtion.description) {
+		$("#description_div",this.container).append(markdown.toHTML(this.cbtion.description));
+	}
+	
+	if(this.cbtion.product) {
+		$("#product_text",this.container).append(markdown.toHTML(this.cbtion.product));
+	}	
 	
 	if(this.cbtion.parentGoalsTags) {
 		var nparents = this.cbtion.parentGoalsTags.length;
