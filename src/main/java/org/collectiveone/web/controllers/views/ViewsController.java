@@ -235,12 +235,17 @@ public class ViewsController {
 		} else {
 			/* creator is the logged user */
 			if(dbServices.isProjectAuthorized(projectDto.getName())) {
-				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				projectDto.setCreatorUsername(auth.getName()); 
-				
-				dbServices.projectCreate(projectDto);
-				dbServices.projectStart(projectDto.getName(),projectDto.getPpsInitial());
-				return "redirect:/views/projectPageR/"+projectDto.getName();
+				if(dbServices.projectGet(projectDto.getName()) == null) {
+					Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+					projectDto.setCreatorUsername(auth.getName()); 
+					
+					dbServices.projectCreate(projectDto);
+					dbServices.projectStart(projectDto.getName(),projectDto.getPpsInitial());
+					return "redirect:/views/projectPageR/"+projectDto.getName();	
+				} else {
+					result.rejectValue("name", "project.name", "'"+projectDto.getName()+"' already exist.");
+					return "views/projectNewPage";
+				}
 			} else {
 				result.rejectValue("name", "project.name", "'"+projectDto.getName()+"' is not authorized as a project name. Sorry, project creation requires authorization for the moment, plase contact us.");
 				return "views/projectNewPage";

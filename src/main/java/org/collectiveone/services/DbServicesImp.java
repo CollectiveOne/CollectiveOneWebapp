@@ -272,21 +272,22 @@ public class DbServicesImp {
 	
 	@Transactional
 	public void projectCreate(ProjectNewDto projectDto) {
+		if(projectGet(projectDto.getName()) == null) {
+			Project project = new Project();
+			projectDao.save(project);
 
-		Project project = new Project();
-		projectDao.save(project);
+			User creator = userDao.get(projectDto.getCreatorUsername());
 
-		User creator = userDao.get(projectDto.getCreatorUsername());
+			project.setName(projectDto.getName());
+			project.setCreator(creator);
+			project.setCreationDate(new Timestamp(System.currentTimeMillis()));
+			project.setDescription(projectDto.getDescription());
 
-		project.setName(projectDto.getName());
-		project.setCreator(creator);
-		project.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		project.setDescription(projectDto.getDescription());
-
-		/* Each project has its own decision realm */
-		DecisionRealm realm = new DecisionRealm();
-		decisionRealmDao.save(realm);
-		realm.setProject(project);
+			/* Each project has its own decision realm */
+			DecisionRealm realm = new DecisionRealm();
+			decisionRealmDao.save(realm);
+			realm.setProject(project);
+		}
 	}
 
 	@Transactional
