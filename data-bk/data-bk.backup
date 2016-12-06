@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2016-12-06 20:02:59 CET
+-- Started on 2016-12-06 20:14:09 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -146,6 +146,7 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 120	2016-12-04 17:57:49.208	\N	2016-12-04 23:00:00	Done, added Comment relation to the Activity entity	\N	\N	\N	3	3	550	549	151	1
 121	2016-12-05 08:35:57.582	\N	2016-12-05 23:00:00	I will get in contact with them and keep all you updated through slack	\N	\N	\N	15	1	554	553	152	1
 122	2016-12-06 11:13:42.312	\N	2016-12-06 23:00:00	I will provide a first proposal	\N	\N	\N	20	1	560	559	154	1
+123	2016-12-06 19:10:39.863	\N	2016-12-06 23:00:00	I have added markdown to the creation of contributions, goals, decisions and projects. It has to be added to bids and to goals when created as subgoals	\N	\N	\N	10	3	568	567	125	1
 \.
 
 
@@ -163,7 +164,7 @@ COPY projects (id, creation_date, description, enabled, name, pps_tot, creator_i
 2	2016-09-21 15:38:54.641	With JieMaps, you can create and share your navigation experience, and find the navigation experiences of others.\n\nIn JieMaps, a navigation experience is represented by a path (a sequence and group of links). This paths are called Jies. That's all. 	f	JieMaps	100	1
 3	2016-10-19 20:51:28.032	Data journalism tools	f	datasketch	101	5
 5	2016-12-01 12:28:49.362	Every minute of the day, the sun is rising somewhere in the world. This project aims to capture a global sunrise: a visual collection of the sun rising across the globe’s time zones. \r\n\r\nProject CollectiveSunrise hopes to produce a video by assembling visual recordings, taken on the same day, by professional artists and amateurs in all corners of the world. \r\n	t	CollectiveSunrise	100	3
-1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	t	CollectiveOne	2991.5	1
+1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	t	CollectiveOne	3001.5	1
 \.
 
 
@@ -301,7 +302,6 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 129	1	2016-11-29 09:54:45.467	\N	It would be better to display ownership participation in projects through a simple set of bar charts showing percentages by person, rather than a pie chart. Clearly not a priority, but convenient to do if it doesn't take much effort (this is not only data-via pedantry – here's why pie charts are generally bad to convey info: http://www.businessinsider.com/pie-charts-are-the-worst-2013-6?IR=T)	Code implemented and running	0	2	Change ppoint distribution from pie chart to bar chart	1	3	455	10	452	1
 126	0	2016-11-27 11:20:09.189	\N	Pay 170 euros for the airplane tickets to attend the event at Berlin. http://www.supermarkt-berlin.net/event/platform-coops-start-your-own/	payment 	0	0	Pay for BCN to Berlin tickets 	\N	1	444	7	443	1
 124	0	2016-11-25 14:03:31.935	\N	The "CollectiveOne Web Application Technical Overview" document is outdated and should be updated to the new app architecture. 	updated document	0	0	Update the webapp technical overview document	\N	1	544	8	436	1
-125	0	2016-11-26 20:31:54.501	\N	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	1	0	Setup markdown basic infrastructure	\N	1	438	12	437	1
 127	1	2016-11-29 09:47:54.112	\N	It would be helpful to have basic information displayed when hovering mouse over action icons (arrow,plus, triangle). To begin, just a name for the action would do.	Code implemented and running	0	2	Add mouse-hovering info for basic actions	1	3	453	10	450	1
 130	4	2016-11-29 10:21:46.436	\N	Use the C1 prototype and document glitches and potential improvements	Document (1 page)	0	2	Basic usability review	3	3	457	10	456	1
 128	1	2016-11-29 09:49:59.772	\N	Currently, when creating a new contribution, the user has to fill in the goal. The space is free text, but it auto-fills with info from existing goals. It should be a drop-down list to choose from (and even better, one where typing takes drop-down position to the right place in the list)	code implemented and running	0	2	Allow drop-down goals in contribution creation	1	3	454	10	451	1
@@ -316,14 +316,12 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 138	0	2016-11-30 12:23:54.138	\N	Update getOfDecision method of ArgumentDao class to sort the results by number of backers.	updated method	0	0	Sort arguments by backers	\N	1	486	6	485	1
 135	5	2016-11-30 11:15:10.532	\N	Prepare a pitch deck presentation for CollectiveOne to be used in the application to the SU startup accelerator program.\r\n\r\nhttps://pitchdeck.improvepresentation.com/what-is-a-pitch-deck	12 slides	0	2	Prepare the Pitch Deck presentation of CollectiveOne	1	1	478	7	477	1
 140	4	2016-11-30 23:16:29.188	\N	Study, motivate and support the application process to the SU accelerator call.	ethereal	0	2	Moral support during the application to SU accelerator	4	1	493	7	492	1
-139	4	2016-11-30 17:38:52.349	\N	Prepare the first draf of the application form to SU Startup Accelerator	edit https://docs.google.com/document/d/1SWayYHzkDQ6lOa5_IjARjmza4Uq5BoGS3Ys6-GZjiTA/edit	0	2	Application form to SU Startup Accelerator call	1	1	488	7	487	1
 141	0	2016-11-30 23:54:15.069	\N	Proofread and suggest comments to SU application	comments	0	0	Proofread and suggest comments to SU application	\N	1	497	7	496	1
 134	15	2016-11-30 08:53:20.77	\N	Design the broad features of a project aimed at (i) allowing a minimal test of the C1 platform and (ii) producing a tangible example of a project that carries the C1 trademark.\n\nThe contribution at this stage consists only on setting out the idea for the purpose of improving C1 – the actual development of the new project will deliver points in the new project's currency.	Document with project idea (1 page)	0	2	Design short project to test platform and deliver sample output for marketing 	3	3	491	7	475	1
 142	10	2016-12-01 00:30:19.908	\N	Review and update the application	udpated applicatino	0	2	Final sprint to prepare SU accelerator application	1	1	499	7	498	1
 148	0	2016-12-04 01:13:13.352	\N	Default error page is resulting in an error itself. Something related to "#authentication.name" property not found. Fix this and show a gracefull error page	updated error management	0	0	Fix default error page	\N	1	541	6	536	1
 144	0	2016-12-01 12:52:10.344	\N	Currently, when a new project is created, the filters (The "Show Only" buttons on the top of the page) do not update. Similarly, the "Projects" drop-down menu in the top banner does not update.	Fixed frontend and backend	-1	4	Update filters and project drop-down tab when new project is created	\N	3	\N	10	519	1
 145	3	2016-12-02 10:55:45.833	\N	Project selector resets if a form field is not valid and the form page is returned. This is dangerous as it results on the user creating objects in the wrong project	fix it	0	2	Bug fix - Project selector resets if form is not valid	1	1	525	4	524	1
-147	0	2016-12-02 17:49:47.125	\N	Create a PSQL script similar to https://github.com/CollectiveOne/CollectiveOneWebapp/blob/master/data-bk/delete-goal.pgs but to delete an entire project, including all its related elements at all degrees.\r\n\r\n	PSQ script	0	4	Create PSQ script to delete entire project	\N	1	\N	6	533	1
 146	5	2016-12-02 15:29:48.571	\N	Answer emails from people interested in the project from Alberta and Barcelona	public relations	0	2	Handle requests from Alberta and Barcelona	1	1	529	7	528	1
 149	5	2016-12-04 12:42:42.674	\N	Instead of having to delete a project, add a "enabled" property which can be disabled to hide all their data from the frontend 	updated model and filters	0	2	Add "enabled" property to projects to hide their data when "disabled"	1	1	538	6	537	1
 132	0	2016-11-29 18:33:26.962	\N	Allow the specification of a "expected cost" to a contribution when it is created. It should help clarifying the extent of the contribution as intended by its creator and help other users during the bidding process	updated front end and backend (and DB migration and back compatiblity if needed)	1	1	Add an "expected cost" value to contribution requests	\N	1	473	3	472	1
@@ -331,8 +329,12 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 151	3	2016-12-04 13:01:27.107	\N	Comments are not being recorded as recent activity and are very hard to track. Add them as recent activity items.	updated comment creation service	0	2	Add activity record for each comment to any contribution	1	1	546	6	543	1
 153	0	2016-12-06 10:56:21.156	\N	Provide feedback, in general, on the CollectiveOne initiative in a conversation of one hour.	1-hour skype video conference	0	0	General feedback	\N	1	556	1	555	1
 154	0	2016-12-06 11:07:42.232	\N	Suggest and describe a method to define the decision realms based on the goal in which the decision is framed. This should allow decisions to be taken faster, more focused, and by those directly involved	proposed extension of the white-paper	0	1	Decision making per goal realms	\N	1	558	1	557	1
-155	0	2016-12-06 11:28:00.132	\N	Pay 87,54 euros to cover flight BCN PARIS to attend https://www.eventbrite.co.nz/e/enspiral-and-ouishare-learnings-from-participatory-networks-paris-tickets-29045025453?utm_source=eb_email&amp;utm_medium=email&amp;utm_campaign=order_confirmation_email&amp;utm_term=eventname&amp;ref=eemailordconf	payment 	0	0	Pay BCN Paris Flight	\N	1	565	7	561	1
-157	0	2016-12-06 11:40:00.032	\N	Pay 62 euros for the event: https://www.eventbrite.co.nz/e/enspiral-and-ouishare-learnings-from-participatory-networks-paris-tickets-29045025453?utm_source=eb_email&utm_medium=email&utm_campaign=order_confirmation_email&utm_term=eventname&ref=eemailordconf	payment 	0	0	Pay Enspiral-Ouishare event subscription	\N	1	566	7	564	1
+139	4	2016-11-30 17:38:52.349	\N	Prepare the first draf of the application form to SU Startup Accelerator	edit [this doc](https://docs.google.com/document/d/1SWayYHzkDQ6lOa5_IjARjmza4Uq5BoGS3Ys6-GZjiTA/edit)	0	2	Application form to SU Startup Accelerator call	1	1	488	7	487	1
+147	0	2016-12-02 17:49:47.125	\N	Create a PSQL script similar to [this](https://github.com/CollectiveOne/CollectiveOneWebapp/blob/master/data-bk/delete-goal.pgs) but to delete an entire project, including all its related elements at all degrees.\r\n\r\n	PSQ script	0	4	Create PSQ script to delete entire project	\N	1	\N	6	533	1
+155	0	2016-12-06 11:28:00.132	\N	Pay 87,54 euros to cover flight BCN PARIS to attend [this event](https://www.eventbrite.co.nz/e/enspiral-and-ouishare-learnings-from-participatory-networks-paris-tickets-29045025453?utm_source=eb_email&amp;utm_medium=email&amp;utm_campaign=order_confirmation_email&amp;utm_term=eventname&amp;ref=eemailordconf)	payment 	0	0	Pay BCN Paris Flight	\N	1	565	7	561	1
+157	0	2016-12-06 11:40:00.032	\N	Pay 62 euros for [this event](https://www.eventbrite.co.nz/e/enspiral-and-ouishare-learnings-from-participatory-networks-paris-tickets-29045025453?utm_source=eb_email&utm_medium=email&utm_campaign=order_confirmation_email&utm_term=eventname&ref=eemailordconf)	payment 	0	0	Pay Enspiral-Ouishare event subscription	\N	1	566	7	564	1
+125	10	2016-11-26 20:31:54.501	\N	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	1	2	Setup markdown basic infrastructure	1	1	438	12	437	1
+158	0	2016-12-06 19:12:46.745	\N	Markdown was added to new goals, contributions, decisions and projects. It should be added to the creation of bids, the marking of bids as done, and the creation of arguments.	updated frontend code for the elements listed above	0	0	Extend and markdown to bids, arguments and comments	\N	1	570	4	569	1
 \.
 
 
@@ -892,6 +894,10 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 564	2016-12-06 11:40:18.585	0.949999999999999956	1	2016-12-06 11:40:00.048	open contribution 'Pay Enspiral-Ouishare event subscription'	0	PROPOSED	0	1	1	8	2016-12-06 11:40:18.585	1	2606	2991.5	0.5	0	2	OPEN	1	1	36	\N	157	6	1	\N	1
 565	\N	0.949999999999999956	0	2016-12-06 11:40:19.631	delete contribution 'Pay BCN Paris Flight'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	155	6	1	\N	1
 566	\N	0.949999999999999956	0	2016-12-06 11:40:19.744	delete contribution 'Pay Enspiral-Ouishare event subscription'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	157	6	1	\N	1
+567	2016-12-06 19:10:50.259	0.949999999999999956	1	2016-12-06 19:10:43.729	assign contribution 'Setup markdown basic infrastructure' to pepoospina	0	OFFERED	0	1	1	8	2016-12-06 19:10:50.256	1	2606	2991.5	0.5	0	2	ASSIGNED	3	1	36	123	\N	6	1	\N	1
+568	2016-12-06 19:10:59.555	0.949999999999999956	1	2016-12-06 19:10:51.598	accept contribution 'Setup markdown basic infrastructure' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-12-06 19:10:59.544	1	2606	2991.5	0.5	0	2	ACCEPTED	3	1	36	123	\N	6	1	\N	1
+569	2016-12-06 19:13:02.761	0.949999999999999956	1	2016-12-06 19:12:46.766	open contribution 'Extend and markdown to bids, arguments and comments'	0	PROPOSED	0	1	1	8	2016-12-06 19:13:02.76	1	2616	3001.5	0.5	0	2	OPEN	1	1	36	\N	158	6	1	\N	1
+570	\N	0.949999999999999956	0	2016-12-06 19:13:04.672	delete contribution 'Extend and markdown to bids, arguments and comments'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	158	6	1	\N	1
 \.
 
 
@@ -1642,6 +1648,11 @@ COPY activity (id, creation_date, event, type, argument_id, bid_id, cbtion_id, d
 597	2016-12-06 11:40:00.051	created	0	\N	\N	157	\N	\N	1	\N
 598	2016-12-06 11:40:19.623	opened for bidding	0	\N	\N	155	\N	\N	1	\N
 599	2016-12-06 11:40:19.74	opened for bidding	0	\N	\N	157	\N	\N	1	\N
+600	2016-12-06 19:10:39.945	created	1	\N	123	\N	\N	\N	1	\N
+601	2016-12-06 19:10:51.43	assigned	1	\N	123	\N	\N	\N	1	\N
+602	2016-12-06 19:11:00.683	accepted	1	\N	123	\N	\N	\N	1	\N
+603	2016-12-06 19:12:46.774	created	0	\N	\N	158	\N	\N	1	\N
+604	2016-12-06 19:13:04.659	opened for bidding	0	\N	\N	158	\N	\N	1	\N
 \.
 
 
@@ -1653,7 +1664,7 @@ ALTER TABLE activity ENABLE TRIGGER ALL;
 -- Name: activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('activity_id_seq', 599, true);
+SELECT pg_catalog.setval('activity_id_seq', 604, true);
 
 
 --
@@ -1775,7 +1786,7 @@ SELECT pg_catalog.setval('authorized_projects_id_seq', 1, false);
 -- Name: bids_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('bids_id_seq', 122, true);
+SELECT pg_catalog.setval('bids_id_seq', 123, true);
 
 
 --
@@ -1941,6 +1952,7 @@ COPY cbtions_bids (cbtion_id, bids_id) FROM stdin;
 151	120
 152	121
 154	122
+125	123
 \.
 
 
@@ -1986,7 +1998,7 @@ ALTER TABLE cbtions_comments ENABLE TRIGGER ALL;
 -- Name: cbtions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('cbtions_id_seq', 157, true);
+SELECT pg_catalog.setval('cbtions_id_seq', 158, true);
 
 
 --
@@ -2140,7 +2152,7 @@ COPY voters (id, weight, voter_user_id) FROM stdin;
 3	104	4
 8	100	3
 2	281	3
-1	2606	1
+1	2616	1
 \.
 
 
@@ -2225,7 +2237,7 @@ ALTER TABLE decisions_args ENABLE TRIGGER ALL;
 -- Name: decisions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('decisions_id_seq', 566, true);
+SELECT pg_catalog.setval('decisions_id_seq', 570, true);
 
 
 --
@@ -2627,6 +2639,9 @@ COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 390	2016-12-06 11:38:42.358	1	2606	1	562
 391	2016-12-06 11:40:13.301	1	2606	1	564
 392	2016-12-06 11:40:14.148	1	2606	1	561
+393	2016-12-06 19:10:48.086	1	2606	1	567
+394	2016-12-06 19:10:55.465	1	2606	1	568
+395	2016-12-06 19:12:57.1	1	2616	1	569
 \.
 
 
@@ -3027,6 +3042,9 @@ COPY decisions_thesescast (decision_id, theses_cast_id) FROM stdin;
 562	390
 564	391
 561	392
+567	393
+568	394
+569	395
 \.
 
 
@@ -3155,7 +3173,7 @@ SELECT pg_catalog.setval('roles_id_seq', 9, true);
 -- Name: theses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('theses_id_seq', 392, true);
+SELECT pg_catalog.setval('theses_id_seq', 395, true);
 
 
 --
@@ -3192,7 +3210,7 @@ SELECT pg_catalog.setval('verification_token_id_seq', 4, true);
 SELECT pg_catalog.setval('voters_id_seq', 8, true);
 
 
--- Completed on 2016-12-06 20:04:08 CET
+-- Completed on 2016-12-06 20:15:17 CET
 
 --
 -- PostgreSQL database dump complete
