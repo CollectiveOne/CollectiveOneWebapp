@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2016-12-04 01:55:21 CET
+-- Started on 2016-12-06 20:02:59 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -18,8 +18,8 @@ SET row_security = off;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 3299 (class 0 OID 1402190)
--- Dependencies: 190
+-- TOC entry 3302 (class 0 OID 1601492)
+-- Dependencies: 192
 -- Data for Name: bids; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -138,35 +138,40 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 113	2016-12-01 10:32:57.185	\N	2016-12-01 23:00:00	Easy fix	\N	\N	\N	1	3	504	503	137	1
 114	2016-12-01 12:26:29.433	\N	2016-12-02 00:00:00	I have produced a proposal, available under the required specifications at: https://docs.google.com/document/d/1aFz7eeFY8j_SrNfzvke8E_n7W_1K0Zynb8onLOLo2Ss/edit?usp=sharing 	2016-12-01 12:26:49.51	https://docs.google.com/document/d/1aFz7eeFY8j_SrNfzvke8E_n7W_1K0Zynb8onLOLo2Ss/edit?usp=sharing	1	15	3	508	505	134	3
 115	2016-12-01 12:28:49.525	\N	\N	Create project CollectiveSunrise	\N	\N	\N	100	3	507	506	143	3
-116	2016-12-02 10:56:36.973	\N	2016-12-02 23:00:00	I will take a look at this. 	\N	\N	\N	3	1	527	526	145	1
+116	2016-12-02 10:56:36.973	\N	2016-12-02 23:00:00	I will take a look at this. 	2016-12-04 12:46:47.615	This was a relatively easy fix	1	3	3	527	526	145	1
 61	2016-10-07 14:33:08.592	\N	2016-07-11 05:00:00	I propose a new algorithm based on a bayesian inference approach.	\N	\N	\N	150	4	212	208	55	3
-117	2016-12-02 15:30:29.082	\N	2016-12-02 23:00:00	I will answer them with some details about the project.	\N	\N	\N	5	1	531	530	146	1
+117	2016-12-02 15:30:29.082	\N	2016-12-02 23:00:00	I will answer them with some details about the project.	2016-12-04 12:45:34.952	I have answer to both contacts	1	5	3	531	530	146	1
+118	2016-12-04 12:44:07.723	\N	2016-12-05 23:00:00	I will update the project entity and all the data retrieval methods to filter all data from not-enabled projects	2016-12-04 17:18:27.273	It was done faster than I though...\nhttps://github.com/CollectiveOne/CollectiveOneWebapp/commit/a0a5d9e9c3d0d4cbbfd5671fc241f65534fa665a	1	5	3	540	539	149	1
+119	2016-12-04 17:20:36.989	\N	2016-12-04 23:00:00	I will add this as an optional filed in the cbtionNewPageR form and make sure it is shown in the CbtionBox and CbtionBoxComplete elements.	\N	\N	\N	5	1	548	547	132	1
+120	2016-12-04 17:57:49.208	\N	2016-12-04 23:00:00	Done, added Comment relation to the Activity entity	\N	\N	\N	3	3	550	549	151	1
+121	2016-12-05 08:35:57.582	\N	2016-12-05 23:00:00	I will get in contact with them and keep all you updated through slack	\N	\N	\N	15	1	554	553	152	1
+122	2016-12-06 11:13:42.312	\N	2016-12-06 23:00:00	I will provide a first proposal	\N	\N	\N	20	1	560	559	154	1
 \.
 
 
 ALTER TABLE bids ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3322 (class 0 OID 1402267)
--- Dependencies: 213
+-- TOC entry 3327 (class 0 OID 1601574)
+-- Dependencies: 217
 -- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE projects DISABLE TRIGGER ALL;
 
-COPY projects (id, creation_date, description, name, pps_tot, creator_id) FROM stdin;
-2	2016-09-21 15:38:54.641	With JieMaps, you can create and share your navigation experience, and find the navigation experiences of others.\n\nIn JieMaps, a navigation experience is represented by a path (a sequence and group of links). This paths are called Jies. That's all. 	JieMaps	100	1
-3	2016-10-19 20:51:28.032	Data journalism tools	datasketch	101	5
-5	2016-12-01 12:28:49.362	Every minute of the day, the sun is rising somewhere in the world. This project aims to capture a global sunrise: a visual collection of the sun rising across the globe’s time zones. \r\n\r\nProject CollectiveSunrise hopes to produce a video by assembling visual recordings, taken on the same day, by professional artists and amateurs in all corners of the world. \r\n	CollectiveSunrise	100	3
-1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	CollectiveOne	2975.5	1
+COPY projects (id, creation_date, description, enabled, name, pps_tot, creator_id) FROM stdin;
+2	2016-09-21 15:38:54.641	With JieMaps, you can create and share your navigation experience, and find the navigation experiences of others.\n\nIn JieMaps, a navigation experience is represented by a path (a sequence and group of links). This paths are called Jies. That's all. 	f	JieMaps	100	1
+3	2016-10-19 20:51:28.032	Data journalism tools	f	datasketch	101	5
+5	2016-12-01 12:28:49.362	Every minute of the day, the sun is rising somewhere in the world. This project aims to capture a global sunrise: a visual collection of the sun rising across the globe’s time zones. \r\n\r\nProject CollectiveSunrise hopes to produce a video by assembling visual recordings, taken on the same day, by professional artists and amateurs in all corners of the world. \r\n	t	CollectiveSunrise	100	3
+1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	t	CollectiveOne	2991.5	1
 \.
 
 
 ALTER TABLE projects ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3302 (class 0 OID 1402201)
--- Dependencies: 193
+-- TOC entry 3305 (class 0 OID 1601503)
+-- Dependencies: 195
 -- Data for Name: cbtions; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -252,6 +257,7 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 72	0	2016-10-07 22:22:22.623	\N	Use a screen video recorder to create a short video showing the typical use of the CollectiveOne web application	HD video file	1	5	Save screen while using the webapp	\N	1	\N	11	216	1
 69	10	2016-10-06 10:44:45.314	\N	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	0	2	Setup markdown basic infrastructure	1	1	\N	12	204	1
 65	20	2016-10-01 20:17:58.03	\N	Setup the infrastructure to send emails from the application. Include a simple example. Separate contributions will be dedicated to construct and configure the emails	Example service that sends email from webapp	0	2	Add email notification infrastructure	1	1	364	6	181	1
+113	0	2016-11-18 17:11:21.919	\N	So far the decision algorithm programmed in the web application has net be thoughtfully tested with multiple voters. Design a unit test of the algorithm to verify it behaves as expected. 	updated unit test	0	4	Test the decision algorithm	\N	1	\N	6	392	1
 76	0	2016-10-18 14:48:48.587	\N	Decisions are not independent one of each other. If one is accepted, perhaps another should be rejected. Or maybe a decision should be accepted only if three other decisions are also accepted, otherwise none should be accepted at all. Propose a method to group decisions together (create plans?) so that the decision process is able to handle these scenarios.\n	decision grouping approach	0	0	Group decisions	\N	1	361	2	243	1
 81	5	2016-10-20 13:20:04.689	\N	ActiveProject selection automatically redraw the current page. While this is ok for pages of list of objects, it is not working ok for user and project pages, since some elements are duplicated. 	updated pages and/or active project logic 	0	2	BUG FIX Active project selection wrong redraw	1	1	\N	4	270	1
 87	0	2016-10-23 22:47:24.759	\N	Prepare a presentation email starting from email from esteban to introduce selected people to the project.	email draft	1	0	Prepare presentation email	\N	1	336	7	282	1
@@ -280,7 +286,6 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 106	10	2016-11-11 10:23:08.88	\N	Re-edit use-case video to include the narration voice. Synchronize the audio with the video but add pauses on both to make it more pleasant.	video edition project file and 1080p video file	0	2	Add narration to use-case video	1	1	353	7	352	1
 112	5	2016-11-17 22:20:38.15	\N	It's not working on chrome mobile. It also didn't work on other browsers. 	Updated FilterElement	1	2	Fix orderby select box 	1	1	388	4	387	1
 111	0	2016-11-17 22:18:39.34	2016-11-18 15:37:59.968	As state filters and hide closed decisions by default. Check the order as it seem old decisions are being shown first 	Updated decisionListPageR	0	6	Fix decision browser 	\N	1	391	4	386	1
-113	0	2016-11-18 17:11:21.919	\N	So far the decision algorithm programmed in the web application has net be thoughtfully tested with multiple voters. Design a unit test of the algorithm to verify it behaves as expected. 	updated unit test	0	4	Test the decision algorithm	\N	1	\N	6	392	1
 114	0	2016-11-18 20:27:41.837	\N	Goals are expected to work as a "requirements specification". The contribution consist on reviewing the current goals structure under the +webapp goal and propose an improvement to it, trying to identify the key sub-goals (or milestones) that are to be achieved to reach the +webapp goal. Each sub-goal can be decomposed into sub-goals multiple times if needed.	document with a proposal of a decomposition in a sub-goals tree of the +webapp goal	1	0	Review the goal substructure of the +webapp goal	\N	1	394	10	393	1
 121	0	2016-11-24 17:14:36.845	\N	Currently authorized signups of users and projects is made by manually entering the records in the database tables. Create an admin page to which only CollectiveOne admins will have access to add and remove records to these tables.	new admin section	0	0	Create admin page to control authorized users and projects	\N	1	422	6	421	1
 109	5	2016-11-17 19:46:01.699	\N	Add a user specific page by migrating and updating the old userpage, which is missing from last refactoring process	new userPage.html and associated resources	0	2	Migrate userPage from old webapp	1	1	396	4	384	1
@@ -289,20 +294,21 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 100	0	2016-10-31 08:57:38.615	2016-11-20 17:51:31.534	Heroku is continuously notifying R14 (Memory quota exceeded). Make an overview of the problem cause and identify possible solutions.	description of the problem and solutions identification	0	6	Check memory issue in heroku	\N	1	340	6	339	1
 117	25	2016-11-21 18:21:48.187	\N	Attend crowdsourcingweek.com and pitch the CollectiveOne project to potentially interested people.	new contacts and new participants	0	2	Public Relations at @CrowdWeek	1	1	405	7	404	1
 116	0	2016-11-21 10:30:59.665	\N	setup the basic infrastructure for unit testing	unit test abstract class and test example	0	0	Prepare unit test infrastructure	\N	1	403	6	402	1
-124	0	2016-11-25 14:03:31.935	\N	The "CollectiveOne Web Application Technical Overview" document is outdated and should be updated to the new app architecture. 	updated document	0	4	Update the webapp technical overview document	\N	1	\N	8	436	1
 122	5	2016-11-25 11:35:57.045	\N	Create a page to request for a slack invitation and send an email to C1 admin for every request.	new form and email notification	0	2	Create a Slack invitation request form	1	1	429	7	428	1
 120	10	2016-11-24 10:38:03.317	\N	Send recent activity as an email to the users that are subscribe to it. This is a very first baby step towards a notification service which should be much more configurable.	email sent to subscribed users at each new activity registration	0	2	Send recent activity as emails to subscribed users	1	1	417	6	416	1
 118	6	2016-11-21 18:27:32.77	\N	Pay for 100 CollectiveOne presentation cards	100 presentation cards	0	2	Pay for 100 presentation cards	1	1	409	7	408	1
 123	5	2016-11-25 13:58:13.353	\N	Prepare a document summarizing the status of the decision mechanism to be used as entry point for people who might be interested in contributing to it.	google doc	0	2	Decision mechanism status document	1	1	433	1	432	1
 129	1	2016-11-29 09:54:45.467	\N	It would be better to display ownership participation in projects through a simple set of bar charts showing percentages by person, rather than a pie chart. Clearly not a priority, but convenient to do if it doesn't take much effort (this is not only data-via pedantry – here's why pie charts are generally bad to convey info: http://www.businessinsider.com/pie-charts-are-the-worst-2013-6?IR=T)	Code implemented and running	0	2	Change ppoint distribution from pie chart to bar chart	1	3	455	10	452	1
 126	0	2016-11-27 11:20:09.189	\N	Pay 170 euros for the airplane tickets to attend the event at Berlin. http://www.supermarkt-berlin.net/event/platform-coops-start-your-own/	payment 	0	0	Pay for BCN to Berlin tickets 	\N	1	444	7	443	1
+124	0	2016-11-25 14:03:31.935	\N	The "CollectiveOne Web Application Technical Overview" document is outdated and should be updated to the new app architecture. 	updated document	0	0	Update the webapp technical overview document	\N	1	544	8	436	1
 125	0	2016-11-26 20:31:54.501	\N	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	1	0	Setup markdown basic infrastructure	\N	1	438	12	437	1
 127	1	2016-11-29 09:47:54.112	\N	It would be helpful to have basic information displayed when hovering mouse over action icons (arrow,plus, triangle). To begin, just a name for the action would do.	Code implemented and running	0	2	Add mouse-hovering info for basic actions	1	3	453	10	450	1
 130	4	2016-11-29 10:21:46.436	\N	Use the C1 prototype and document glitches and potential improvements	Document (1 page)	0	2	Basic usability review	3	3	457	10	456	1
 128	1	2016-11-29 09:49:59.772	\N	Currently, when creating a new contribution, the user has to fill in the goal. The space is free text, but it auto-fills with info from existing goals. It should be a drop-down list to choose from (and even better, one where typing takes drop-down position to the right place in the list)	code implemented and running	0	2	Allow drop-down goals in contribution creation	1	3	454	10	451	1
-132	0	2016-11-29 18:33:26.962	\N	Allow the specification of a "expected cost" to a contribution when it is created. It should help clarifying the extent of the contribution as intended by its creator and help other users during the bidding process	updated front end and backend (and DB migration and back compatiblity if needed)	1	0	Add an "expected cost" value to contribution requests	\N	1	473	3	472	1
+150	0	2016-12-04 12:56:37.507	\N	Reopen a contribution when a preassigned bid is not accepted	updated bid update state routine	0	0	Reopen contribution when a bid is not accepted	\N	1	545	3	542	1
 131	10	2016-11-29 13:11:39.021	\N	Add notempty and no blank spaces validations to new goal, decision, contribution and project forms	updated forms and backend logic	0	2	Add validation to forms	1	1	469	4	466	1
 136	0	2016-11-30 11:34:23.439	\N	Add metadata to the site layout so that urls shared on slack, facebook and twitter are shown nicely\r\n\r\nhttps://api.slack.com/docs/message-attachments#unfurling	updated layout	0	0	Updated site metadata to help twitter, facebook and slack unfurling	\N	1	482	4	481	1
+156	0	2016-12-06 11:38:17.568	\N	Pay 99.99 euros for the flight Paris - Berlin	payment 	0	0	Pay for Paris Berlin Flight	\N	1	563	7	562	1
 133	0	2016-11-30 08:25:43.955	\N	This contribution has two related parts:\r\n1) Change the current top menu structure, such that the "Contributions" link takes the user to the tree-like structure that is currently available when navigating via project -> Goals. \r\n2) Create a "New Contribution" button such that users can add contributions directly inside a subgoal	Updated frontend and backend	0	4	Update contribution menu structure	\N	3	\N	10	474	1
 89	0	2016-10-24 15:33:45.623	\N	Update argumentation method to allow arguments to be a reply to another argument. Perhaps consider using standard replies like (this is true but ...) or (this is not true since...) etc...\n	Updated argument strategy and UI	1	0	Review arguments structure to allow replies	\N	1	362	3	284	1
 137	1	2016-11-30 11:38:09.414	\N	Expand comments and arguments by default when visiting the contribution or decision page.	updated js	0	2	Expand comments and arguments by default	1	1	484	4	483	1
@@ -313,19 +319,28 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 139	4	2016-11-30 17:38:52.349	\N	Prepare the first draf of the application form to SU Startup Accelerator	edit https://docs.google.com/document/d/1SWayYHzkDQ6lOa5_IjARjmza4Uq5BoGS3Ys6-GZjiTA/edit	0	2	Application form to SU Startup Accelerator call	1	1	488	7	487	1
 141	0	2016-11-30 23:54:15.069	\N	Proofread and suggest comments to SU application	comments	0	0	Proofread and suggest comments to SU application	\N	1	497	7	496	1
 134	15	2016-11-30 08:53:20.77	\N	Design the broad features of a project aimed at (i) allowing a minimal test of the C1 platform and (ii) producing a tangible example of a project that carries the C1 trademark.\n\nThe contribution at this stage consists only on setting out the idea for the purpose of improving C1 – the actual development of the new project will deliver points in the new project's currency.	Document with project idea (1 page)	0	2	Design short project to test platform and deliver sample output for marketing 	3	3	491	7	475	1
-144	0	2016-12-01 12:52:10.344	\N	Currently, when a new project is created, the filters (The "Show Only" buttons on the top of the page) do not update. Similarly, the "Projects" drop-down menu in the top banner does not update.	Fixed frontend and backend	0	4	Update filters and project drop-down tab when new project is created	\N	3	\N	10	519	1
 142	10	2016-12-01 00:30:19.908	\N	Review and update the application	udpated applicatino	0	2	Final sprint to prepare SU accelerator application	1	1	499	7	498	1
-145	0	2016-12-02 10:55:45.833	\N	Project selector resets if a form field is not valid and the form page is returned. This is dangerous as it results on the user creating objects in the wrong project	fix it	0	1	Bug fix - Project selector resets if form is not valid	\N	1	525	4	524	1
-146	0	2016-12-02 15:29:48.571	\N	Answer emails from people interested in the project from Alberta and Barcelona	public relations	0	1	Handle requests from Alberta and Barcelona	\N	1	529	7	528	1
+148	0	2016-12-04 01:13:13.352	\N	Default error page is resulting in an error itself. Something related to "#authentication.name" property not found. Fix this and show a gracefull error page	updated error management	0	0	Fix default error page	\N	1	541	6	536	1
+144	0	2016-12-01 12:52:10.344	\N	Currently, when a new project is created, the filters (The "Show Only" buttons on the top of the page) do not update. Similarly, the "Projects" drop-down menu in the top banner does not update.	Fixed frontend and backend	-1	4	Update filters and project drop-down tab when new project is created	\N	3	\N	10	519	1
+145	3	2016-12-02 10:55:45.833	\N	Project selector resets if a form field is not valid and the form page is returned. This is dangerous as it results on the user creating objects in the wrong project	fix it	0	2	Bug fix - Project selector resets if form is not valid	1	1	525	4	524	1
 147	0	2016-12-02 17:49:47.125	\N	Create a PSQL script similar to https://github.com/CollectiveOne/CollectiveOneWebapp/blob/master/data-bk/delete-goal.pgs but to delete an entire project, including all its related elements at all degrees.\r\n\r\n	PSQ script	0	4	Create PSQ script to delete entire project	\N	1	\N	6	533	1
+146	5	2016-12-02 15:29:48.571	\N	Answer emails from people interested in the project from Alberta and Barcelona	public relations	0	2	Handle requests from Alberta and Barcelona	1	1	529	7	528	1
+149	5	2016-12-04 12:42:42.674	\N	Instead of having to delete a project, add a "enabled" property which can be disabled to hide all their data from the frontend 	updated model and filters	0	2	Add "enabled" property to projects to hide their data when "disabled"	1	1	538	6	537	1
+132	0	2016-11-29 18:33:26.962	\N	Allow the specification of a "expected cost" to a contribution when it is created. It should help clarifying the extent of the contribution as intended by its creator and help other users during the bidding process	updated front end and backend (and DB migration and back compatiblity if needed)	1	1	Add an "expected cost" value to contribution requests	\N	1	473	3	472	1
+152	0	2016-12-05 08:35:19.723	\N	Get in contact with the P2P Foundation to get feedback from them, attract potential contributors to CollectiveOne and potential projects to be hosted	public relations	0	1	Contact the P2P Foundation	\N	1	552	7	551	1
+151	3	2016-12-04 13:01:27.107	\N	Comments are not being recorded as recent activity and are very hard to track. Add them as recent activity items.	updated comment creation service	0	2	Add activity record for each comment to any contribution	1	1	546	6	543	1
+153	0	2016-12-06 10:56:21.156	\N	Provide feedback, in general, on the CollectiveOne initiative in a conversation of one hour.	1-hour skype video conference	0	0	General feedback	\N	1	556	1	555	1
+154	0	2016-12-06 11:07:42.232	\N	Suggest and describe a method to define the decision realms based on the goal in which the decision is framed. This should allow decisions to be taken faster, more focused, and by those directly involved	proposed extension of the white-paper	0	1	Decision making per goal realms	\N	1	558	1	557	1
+155	0	2016-12-06 11:28:00.132	\N	Pay 87,54 euros to cover flight BCN PARIS to attend https://www.eventbrite.co.nz/e/enspiral-and-ouishare-learnings-from-participatory-networks-paris-tickets-29045025453?utm_source=eb_email&amp;utm_medium=email&amp;utm_campaign=order_confirmation_email&amp;utm_term=eventname&amp;ref=eemailordconf	payment 	0	0	Pay BCN Paris Flight	\N	1	565	7	561	1
+157	0	2016-12-06 11:40:00.032	\N	Pay 62 euros for the event: https://www.eventbrite.co.nz/e/enspiral-and-ouishare-learnings-from-participatory-networks-paris-tickets-29045025453?utm_source=eb_email&utm_medium=email&utm_campaign=order_confirmation_email&utm_term=eventname&ref=eemailordconf	payment 	0	0	Pay Enspiral-Ouishare event subscription	\N	1	566	7	564	1
 \.
 
 
 ALTER TABLE cbtions ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3311 (class 0 OID 1402232)
--- Dependencies: 202
+-- TOC entry 3314 (class 0 OID 1601534)
+-- Dependencies: 204
 -- Data for Name: decision_realms; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -348,8 +363,8 @@ COPY decision_realms (id, project_id) FROM stdin;
 ALTER TABLE decision_realms ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3314 (class 0 OID 1402240)
--- Dependencies: 205
+-- TOC entry 3317 (class 0 OID 1601542)
+-- Dependencies: 207
 -- Data for Name: decisions; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -584,7 +599,6 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 273	2016-10-21 14:06:58.575	0.949999999999999956	1	2016-10-21 14:06:52	accept contribution 'BUG FIX Active project selection wrong redraw' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-21 14:06:58.571	1	2109	2466.5	0.5	0	2	ACCEPTED	3	1	36	73	\N	6	1	\N	1
 274	2016-10-21 18:06:18.307	0.949999999999999956	1	2016-10-21 18:06:05.13	assign contribution 'Setup markdown basic infrastructure' to pepoospina	0	OFFERED	0	1	1	8	2016-10-21 18:06:18.305	1	2114	2471.5	0.5	0	2	ASSIGNED	3	1	36	74	\N	6	1	\N	1
 275	2016-10-21 18:06:33.481	0.949999999999999956	1	2016-10-21 18:06:19.335	accept contribution 'Setup markdown basic infrastructure' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-10-21 18:06:33.48	1	2114	2471.5	0.5	0	2	ACCEPTED	3	1	36	74	\N	6	1	\N	1
-278	\N	0.949999999999999956	0	2016-10-21 18:41:25.899	Should CollectiveOne create a new decision to reject a bid from a user, even after it has been accepted, and get the pps back?	0	\N	1	0	0	8	\N	0	0	0	0.5	0	0	\N	0	0	36	\N	\N	1	1	\N	1
 280	2016-10-23 21:39:44.383	0.949999999999999956	1	2016-10-23 21:38:12.451	Should the video created by pepoospina be placed in the welcome page? 	0	\N	1	0	1	8	2016-10-23 21:39:44.382	0	2124	2481.5	0.5	0	3	\N	0	0	36	\N	\N	1	1	\N	1
 277	2016-10-23 21:43:03.801	0.949999999999999956	1	2016-10-21 18:25:59.699	open contribution 'Improve the welcome video audio'	0	PROPOSED	1	0	1	8	2016-10-23 21:43:03.799	0	2124	2481.5	0.5	0	3	OPEN	1	0	36	\N	84	6	1	\N	1
 271	2016-10-25 08:41:25.117	0.949999999999999956	1	2016-10-20 13:22:18.634	open contribution 'Allow contributions to be deleted'	0	PROPOSED	0	1	1	8	2016-10-25 08:41:25.109	1	2124	2481.5	0.5	0	2	OPEN	1	1	36	\N	82	6	1	\N	1
@@ -744,7 +758,6 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 432	2016-11-25 13:58:21.675	0.949999999999999956	1	2016-11-25 13:58:13.366	open contribution 'Decision mechanism status document'	0	PROPOSED	0	1	1	8	2016-11-25 13:58:21.674	1	2552	2914.5	0.5	0	2	OPEN	1	1	36	\N	123	6	1	\N	1
 433	\N	0.949999999999999956	0	2016-11-25 13:58:22.444	delete contribution 'Decision mechanism status document'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	123	6	1	\N	1
 434	2016-11-25 13:59:13.346	0.949999999999999956	1	2016-11-25 13:59:04.54	assign contribution 'Decision mechanism status document' to pepoospina	0	OFFERED	0	1	1	8	2016-11-25 13:59:13.342	1	2552	2914.5	0.5	0	2	ASSIGNED	3	1	36	101	\N	6	1	\N	1
-436	\N	0.949999999999999956	0	2016-11-25 14:03:31.949	open contribution 'Update the webapp technical overview document'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	124	6	1	\N	1
 435	2016-11-25 19:42:35.577	0.949999999999999956	1	2016-11-25 13:59:13.924	accept contribution 'Decision mechanism status document' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-25 19:42:35.575	1	2552	2914.5	0.5	0	2	ACCEPTED	3	1	36	101	\N	6	1	\N	1
 437	2016-11-26 20:32:05.747	0.949999999999999956	1	2016-11-26 20:31:54.511	open contribution 'Setup markdown basic infrastructure'	0	PROPOSED	0	1	1	8	2016-11-26 20:32:05.746	1	2557	2919.5	0.5	0	2	OPEN	1	1	36	\N	125	6	1	\N	1
 438	\N	0.949999999999999956	0	2016-11-26 20:32:06.385	delete contribution 'Setup markdown basic infrastructure'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	125	6	1	\N	1
@@ -836,23 +849,56 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 519	\N	0.949999999999999956	0	2016-12-01 12:52:10.412	open contribution 'Update filters and project drop-down tab when new project is created'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	144	6	1	\N	1
 523	\N	0.949999999999999956	0	2016-12-01 12:56:17.722	delete goal 'Recruitment'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	9	45	5
 520	2016-12-01 12:55:20.041	0.949999999999999956	1	2016-12-01 12:55:06.68	create goal 'Music/Audio'	0	PROPOSED	0	1	1	8	2016-12-01 12:55:20.039	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	9	44	5
-527	\N	0.949999999999999956	0	2016-12-02 10:56:51.485	accept contribution 'Bug fix - Project selector resets if form is not valid' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	116	\N	6	1	\N	1
 528	2016-12-02 15:29:56.459	0.949999999999999956	1	2016-12-02 15:29:48.58	open contribution 'Handle requests from Alberta and Barcelona'	0	PROPOSED	0	1	1	8	2016-12-02 15:29:56.459	1	2590	2975.5	0.5	0	2	OPEN	1	1	36	\N	146	6	1	\N	1
+527	2016-12-04 12:46:55.583	0.949999999999999956	1	2016-12-02 10:56:51.485	accept contribution 'Bug fix - Project selector resets if form is not valid' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-12-04 12:46:55.581	1	2595	2980.5	0.5	0	2	ACCEPTED	3	1	36	116	\N	6	1	\N	1
 529	\N	0.949999999999999956	0	2016-12-02 15:29:57.248	delete contribution 'Handle requests from Alberta and Barcelona'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	146	6	1	\N	1
+539	2016-12-04 12:44:21.21	0.949999999999999956	1	2016-12-04 12:44:07.927	assign contribution 'Add "enabled" property to projects to hide their data when "disabled"' to pepoospina	0	OFFERED	0	1	1	8	2016-12-04 12:44:21.208	1	2590	2975.5	0.5	0	2	ASSIGNED	3	1	36	118	\N	6	1	\N	1
+536	2016-12-04 12:45:06.068	0.949999999999999956	1	2016-12-04 01:13:13.373	open contribution 'Fixed default error page'	0	PROPOSED	0	1	1	8	2016-12-04 12:45:06.055	1	2590	2975.5	0.5	0	2	OPEN	1	1	36	\N	148	6	1	\N	1
+541	\N	0.949999999999999956	0	2016-12-04 12:45:07.373	delete contribution 'Fix default error page'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	148	6	1	\N	1
+531	2016-12-04 12:45:41.763	0.949999999999999956	1	2016-12-02 15:30:35.969	accept contribution 'Handle requests from Alberta and Barcelona' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-12-04 12:45:41.761	1	2590	2975.5	0.5	0	2	ACCEPTED	3	1	36	117	\N	6	1	\N	1
 530	2016-12-02 15:30:35.439	0.949999999999999956	1	2016-12-02 15:30:29.285	assign contribution 'Handle requests from Alberta and Barcelona' to pepoospina	0	OFFERED	0	1	1	8	2016-12-02 15:30:35.437	1	2590	2975.5	0.5	0	2	ASSIGNED	3	1	36	117	\N	6	1	\N	1
-531	\N	0.949999999999999956	0	2016-12-02 15:30:35.969	accept contribution 'Handle requests from Alberta and Barcelona' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	117	\N	6	1	\N	1
+436	2016-12-04 13:02:12.152	0.949999999999999956	1	2016-11-25 14:03:31.949	open contribution 'Update the webapp technical overview document'	0	PROPOSED	0	1	1	8	2016-12-04 13:02:12.148	1	2598	2983.5	0.5	0	2	OPEN	1	1	36	\N	124	6	1	\N	1
+544	\N	0.949999999999999956	0	2016-12-04 13:02:13.371	delete contribution 'Update the webapp technical overview document'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	124	6	1	\N	1
+542	2016-12-04 13:07:09.346	0.949999999999999956	1	2016-12-04 12:56:37.519	open contribution 'Reopen contribution when a bid is not accepted'	0	PROPOSED	0	1	1	8	2016-12-04 13:07:09.344	1	2598	2983.5	0.5	0	2	OPEN	1	1	36	\N	150	6	1	\N	1
 212	2016-12-04 00:48:34.719	0.949999999999999956	1	2016-10-07 16:11:26.463	accept contribution 'Review of the decision mechanism' as delivered by estebanortizospina	0.947874567901234588	ASSIGNED	1	0	1	8	2016-12-02 14:41:10.17	0	281	2975.5	0.5	0	3	ACCEPTED	3	0	36	61	\N	6	1	\N	1
 534	\N	0.949999999999999956	0	2016-12-02 17:55:35.841	create goal 'navigation'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	2	0	36	\N	\N	6	1	46	1
 533	\N	0.949999999999999956	0	2016-12-02 17:49:47.211	open contribution 'Create PSQ script to delete entire project'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	147	6	1	\N	1
 535	\N	0.949999999999999956	0	2016-12-02 17:55:35.842	delete goal 'navigation'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	46	1
 532	2016-12-02 16:35:56.493	0.949999999999999956	1	2016-12-02 15:46:56.982	Send answer, as prepared by pepoospina to Jason from Alberta?	0	\N	0	1	1	8	2016-12-02 16:35:56.493	1	2590	2975.5	0.5	0	2	\N	0	1	36	\N	\N	1	1	\N	1
+537	2016-12-04 12:42:47.427	0.949999999999999956	1	2016-12-04 12:42:42.689	open contribution 'Add "enabled" property to projects to hide their data when "disabled"'	0	PROPOSED	0	1	1	8	2016-12-04 12:42:47.422	1	2590	2975.5	0.5	0	2	OPEN	1	1	36	\N	149	6	1	\N	1
+543	2016-12-04 13:07:09.35	0.949999999999999956	1	2016-12-04 13:01:27.124	open contribution 'Add activity record for each comment to any contribution'	0	PROPOSED	0	1	1	8	2016-12-04 13:07:09.35	1	2598	2983.5	0.5	0	2	OPEN	1	1	36	\N	151	6	1	\N	1
+538	\N	0.949999999999999956	0	2016-12-04 12:42:48.492	delete contribution 'Add "enabled" property to projects to hide their data when "disabled"'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	149	6	1	\N	1
+545	\N	0.949999999999999956	0	2016-12-04 13:07:10.086	delete contribution 'Reopen contribution when a bid is not accepted'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	150	6	1	\N	1
+546	\N	0.949999999999999956	0	2016-12-04 13:07:10.144	delete contribution 'Add activity record for each comment to any contribution'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	151	6	1	\N	1
+278	2016-12-04 16:15:50.783	0.949999999999999956	1	2016-10-21 18:41:25.899	Should CollectiveOne create a new decision to reject a bid from a user, even after it has been accepted, and get the pps back?	0	\N	1	0	1	8	2016-12-04 16:15:50.781	0	2598	2983.5	0.5	0	3	\N	0	0	36	\N	\N	1	1	\N	1
+540	2016-12-04 17:18:36.845	0.949999999999999956	1	2016-12-04 12:44:22.134	accept contribution 'Add "enabled" property to projects to hide their data when "disabled"' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-12-04 17:18:36.843	1	2598	2983.5	0.5	0	2	ACCEPTED	3	1	36	118	\N	6	1	\N	1
+547	2016-12-04 17:20:45.983	0.949999999999999956	1	2016-12-04 17:20:37.13	assign contribution 'Add an "expected cost" value to contribution requests' to pepoospina	0	OFFERED	0	1	1	8	2016-12-04 17:20:45.981	1	2603	2988.5	0.5	0	2	ASSIGNED	3	1	36	119	\N	6	1	\N	1
+548	\N	0.949999999999999956	0	2016-12-04 17:20:46.774	accept contribution 'Add an "expected cost" value to contribution requests' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	119	\N	6	1	\N	1
+549	2016-12-04 22:39:05.186	0.949999999999999956	1	2016-12-04 17:57:49.485	assign contribution 'Add activity record for each comment to any contribution' to pepoospina	0	OFFERED	0	1	1	8	2016-12-04 22:39:05.184	1	2603	2988.5	0.5	0	2	ASSIGNED	3	1	36	120	\N	6	1	\N	1
+550	2016-12-04 22:39:25.826	0.949999999999999956	1	2016-12-04 22:39:05.64	accept contribution 'Add activity record for each comment to any contribution' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-12-04 22:39:25.824	1	2603	2988.5	0.5	0	2	ACCEPTED	3	1	36	120	\N	6	1	\N	1
+551	2016-12-05 08:35:24.401	0.949999999999999956	1	2016-12-05 08:35:19.734	open contribution 'Contact the P2P Foundation'	0	PROPOSED	0	1	1	8	2016-12-05 08:35:24.399	1	2606	2991.5	0.5	0	2	OPEN	1	1	36	\N	152	6	1	\N	1
+552	\N	0.949999999999999956	0	2016-12-05 08:35:24.987	delete contribution 'Contact the P2P Foundation'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	152	6	1	\N	1
+553	2016-12-05 08:36:03.81	0.949999999999999956	1	2016-12-05 08:35:57.75	assign contribution 'Contact the P2P Foundation' to pepoospina	0	OFFERED	0	1	1	8	2016-12-05 08:36:03.809	1	2606	2991.5	0.5	0	2	ASSIGNED	3	1	36	121	\N	6	1	\N	1
+554	\N	0.949999999999999956	0	2016-12-05 08:36:04.19	accept contribution 'Contact the P2P Foundation' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	121	\N	6	1	\N	1
+555	2016-12-06 11:04:46.986	0.949999999999999956	1	2016-12-06 10:56:21.189	open contribution 'General feedback'	0	PROPOSED	0	1	1	8	2016-12-06 11:04:46.984	1	2606	2991.5	0.5	0	2	OPEN	1	1	36	\N	153	6	1	\N	1
+556	\N	0.949999999999999956	0	2016-12-06 11:04:47.908	delete contribution 'General feedback'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	153	6	1	\N	1
+557	2016-12-06 11:08:36.086	0.949999999999999956	1	2016-12-06 11:07:42.24	open contribution 'Decision making per goal realms'	0	PROPOSED	0	1	1	8	2016-12-06 11:08:36.084	1	2606	2991.5	0.5	0	2	OPEN	1	1	36	\N	154	6	1	\N	1
+558	\N	0.949999999999999956	0	2016-12-06 11:08:37.09	delete contribution 'Decision making per goal realms'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	154	6	1	\N	1
+559	2016-12-06 11:13:50.154	0.949999999999999956	1	2016-12-06 11:13:42.547	assign contribution 'Decision making per goal realms' to pepoospina	0	OFFERED	0	1	1	8	2016-12-06 11:13:50.152	1	2606	2991.5	0.5	0	2	ASSIGNED	3	1	36	122	\N	6	1	\N	1
+560	\N	0.949999999999999956	0	2016-12-06 11:13:50.789	accept contribution 'Decision making per goal realms' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	122	\N	6	1	\N	1
+562	2016-12-06 11:38:43.38	0.949999999999999956	1	2016-12-06 11:38:17.583	open contribution 'Pay for Paris Berlin Flight'	0	PROPOSED	0	1	1	8	2016-12-06 11:38:43.372	1	2606	2991.5	0.5	0	2	OPEN	1	1	36	\N	156	6	1	\N	1
+563	\N	0.949999999999999956	0	2016-12-06 11:38:44.195	delete contribution 'Pay for Paris Berlin Flight'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	156	6	1	\N	1
+561	2016-12-06 11:40:18.575	0.949999999999999956	1	2016-12-06 11:28:00.156	open contribution 'Pay BCN PAR FLight'	0	PROPOSED	0	1	1	8	2016-12-06 11:40:18.569	1	2606	2991.5	0.5	0	2	OPEN	1	1	36	\N	155	6	1	\N	1
+564	2016-12-06 11:40:18.585	0.949999999999999956	1	2016-12-06 11:40:00.048	open contribution 'Pay Enspiral-Ouishare event subscription'	0	PROPOSED	0	1	1	8	2016-12-06 11:40:18.585	1	2606	2991.5	0.5	0	2	OPEN	1	1	36	\N	157	6	1	\N	1
+565	\N	0.949999999999999956	0	2016-12-06 11:40:19.631	delete contribution 'Pay BCN Paris Flight'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	155	6	1	\N	1
+566	\N	0.949999999999999956	0	2016-12-06 11:40:19.744	delete contribution 'Pay Enspiral-Ouishare event subscription'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	157	6	1	\N	1
 \.
 
 
 ALTER TABLE decisions ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3295 (class 0 OID 1402177)
+-- TOC entry 3296 (class 0 OID 1601474)
 -- Dependencies: 186
 -- Data for Name: arguments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -904,8 +950,48 @@ COPY arguments (id, creation_date, description, tendency, creator_id, decision_i
 ALTER TABLE arguments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3318 (class 0 OID 1402254)
--- Dependencies: 209
+-- TOC entry 3310 (class 0 OID 1601520)
+-- Dependencies: 200
+-- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
+--
+
+ALTER TABLE comments DISABLE TRIGGER ALL;
+
+COPY comments (id, content, creation_date, relevance, cbtion_id, creator_id, parent_id) FROM stdin;
+1	This comment was added after completing the contribution	2016-09-27 17:40:21.011	0	63	1	\N
+2	and so this reply to the comment. Would it work?	2016-09-27 17:40:43.698	0	63	1	1
+3	yes!	2016-09-27 17:40:57.131	0	63	1	2
+4	A dummy version of the welcome page is already there but should be improved	2016-09-28 15:59:26.363	0	59	1	\N
+5	After making an update of goals, now I think that perhaps we should try to stick with the single goal per contribution approach. Since goal have parent goals, it can be assumed that a contribution applies to its goal, and also to all its parents. Users can then discuss and agree on the goals structure, rather than on the assigning multiple goals to one contribution 	2016-10-03 14:51:02.765	0	40	1	\N
+6	Perhaps we should keep this contribution limited to a first draft that clearly conveys the message and shows the key features of the application and use other contributions to improve it, and eventually convert it into a welcome video	2016-10-06 17:16:33.338	0	68	1	\N
+8	Another option is to be able to link arguments applying these relation after they have been created. This seems more complex though	2016-10-24 15:33:51.589	0	89	1	\N
+9	I can share the edition file of the older version to be used as a starting point. It already includes a lot of cuts and extensions. The narration file is in https://drive.google.com/drive/u/0/folders/0B6HEie5ZN03bMnFyaWtEcHYxMzQ	2016-11-11 10:28:00.243	0	106	1	\N
+11	This is no longer an issue after migrating to spring boot	2016-11-20 17:51:25.966	0	100	1	\N
+12	The basic test infrastructure should include an example of creating users in the database using a test-only method, and perform other operations on the database using the formal application services. The entire operations in the database shall be valid within the test, but rolled back when it finishes.	2016-11-21 12:30:34.175	0	116	\N	\N
+13	This is not mandatory now since there is a form in at collectiveone.org to provide the email and ask for an invitation	2016-11-26 12:56:29.163	0	103	1	\N
+14	First Google result seems promising : http://www.codingdrama.com/bootstrap-markdown/	2016-11-29 08:39:37.439	0	125	1	\N
+15	This implies to configure, replace or extend the current autocomplete functionality to show all the possible suggestions when the text-box is empty. Currently, suggestions are shown only after the first letter is typed	2016-11-29 10:20:29.055	0	128	1	\N
+16	The contributions created and the comments on the slack are considered enough. Go on and Bid!	2016-11-29 10:24:50.666	0	130	1	\N
+17	I think this is called tooltips. We could directly use bootstrap plugin http://www.w3schools.com/bootstrap/bootstrap_tooltip.asp	2016-11-29 10:26:12.575	0	127	1	\N
+19	Not quite sure how the plugin chooses the options in the dropdown menu. But I have the impression that it is choosing goals at the lowest level (the leaves in the goal tree). Maybe we could try to have these displayed with the name of the parent goal? E.g. frontend (webapp)\nMight require changing the plugin though...	2016-11-30 08:30:46.77	0	128	3	15
+20	For twitter, there is this site https://dev.twitter.com/cards/types/summary	2016-11-30 11:36:24.798	0	136	1	\N
+21	I am working here: Feel free to come and visit\nhttps://docs.google.com/presentation/d/11AUv64WQXDppnxCIiK63HDEOIIRweHdSBb_MDd2ug_E/edit	2016-11-30 11:49:59.233	0	135	1	\N
+18	This is a short term solution to the tree structure proposed in  http://www.collectiveone.org/views/cbtionPageR/130 \n	2016-11-30 08:26:45.351	1	133	3	\N
+22	The problem is that the link should point to the contributions of one project in particular. Should it point to the contributions of CollectiveOne only?	2016-11-30 18:14:44.641	0	133	1	18
+23	This is related to the http session. Projects at show only are updated at session start. Project creation is for the moment very sporadic, this should be reviewed and fixed but perhaps is not a priority.	2016-12-02 09:44:19.894	0	144	1	\N
+24	I agree that for the new algorithm to be a real alternative, we need to allow for a non-homogeneous distribution of pps. Having said that, the proposal that I have is informative about how to conceptualise the statistical inference problem. Indeed, I think that it is the first step, and it is the best way to present the decision mechanism to a general audience. I believe this adds value to the project even if it is not implemented.\n\nBased on the above, I think that I am willing to revise the number of pps that I requested. I believe that the model and algorithm with homogeneous distribution of pps should be worth 75 points.	2016-12-02 14:47:56.977	0	55	3	7
+7	This is a significant (and quite fundamental) contribution by @estenanortizospina, however I suggest we consider it closed once it has been tested to include non-homogeneous pps distributions, and when a time bound mechanism, similar to the one already in place, has been specified and tested in R.	2016-10-07 16:13:33.935	1	55	1	\N
+25	Consider how this is different from the use case where history is desired but the project should be "retired".	2016-12-02 20:20:22.192	0	147	9	\N
+26	This comment will prove it works... hopefully	2016-12-04 18:00:30.05	0	151	1	\N
+27	yes!	2016-12-04 18:00:49.759	0	151	1	26
+\.
+
+
+ALTER TABLE comments ENABLE TRIGGER ALL;
+
+--
+-- TOC entry 3321 (class 0 OID 1601556)
+-- Dependencies: 211
 -- Data for Name: goal; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -959,587 +1045,628 @@ COPY goal (id, creation_date, description, goal_tag, parent_state, state, create
 ALTER TABLE goal ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3291 (class 0 OID 1402160)
+-- TOC entry 3292 (class 0 OID 1601458)
 -- Dependencies: 181
 -- Data for Name: activity; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 ALTER TABLE activity DISABLE TRIGGER ALL;
 
-COPY activity (id, creation_date, event, type, argument_id, bid_id, cbtion_id, decision_id, goal_id, project_id) FROM stdin;
-1	2016-09-13 22:05:17.894	opened for bidding	0	\N	\N	56	\N	\N	1
-2	2016-09-13 22:07:02.064	created	1	\N	45	\N	\N	\N	1
-3	2016-09-13 22:07:22.284	assigned	1	\N	45	\N	\N	\N	1
-4	2016-09-13 22:07:22.285	assigned	0	\N	\N	56	\N	\N	1
-5	2016-09-13 22:07:27.422	accepted	1	\N	45	\N	\N	\N	1
-6	2016-09-13 22:07:27.478	accepted	0	\N	\N	56	\N	\N	1
-9	2016-09-15 14:23:21.834	created	1	\N	46	\N	\N	\N	1
-10	2016-09-15 14:23:36.469	assigned	1	\N	46	\N	\N	\N	1
-11	2016-09-15 14:23:36.469	assigned	0	\N	\N	41	\N	\N	1
-12	2016-09-15 14:23:42.287	accepted	1	\N	46	\N	\N	\N	1
-13	2016-09-15 14:23:42.453	accepted	0	\N	\N	41	\N	\N	1
-14	2016-09-15 14:47:23.833	created	0	\N	\N	59	\N	\N	1
-15	2016-09-18 18:21:57.523	opened for bidding	0	\N	\N	51	\N	\N	1
-16	2016-09-18 18:22:02.042	created	1	\N	47	\N	\N	\N	1
-17	2016-09-18 18:22:18.082	assigned	1	\N	47	\N	\N	\N	1
-18	2016-09-18 18:22:18.082	assigned	0	\N	\N	51	\N	\N	1
-19	2016-09-18 18:22:25.5	accepted	1	\N	47	\N	\N	\N	1
-20	2016-09-18 18:22:25.976	accepted	0	\N	\N	51	\N	\N	1
-21	2016-09-21 15:40:53.093	created	0	\N	\N	61	\N	\N	2
-22	2016-09-21 16:57:11.948	opened for bidding	0	\N	\N	61	\N	\N	2
-23	2016-09-21 16:58:23.155	created	1	\N	49	\N	\N	\N	2
-24	2016-09-21 17:02:07.987	created	0	\N	\N	62	\N	\N	1
-25	2016-09-26 06:34:34.095	created	0	\N	\N	63	\N	\N	1
-26	2016-09-26 08:29:38.088	opened for bidding	0	\N	\N	62	\N	\N	1
-27	2016-09-27 17:41:24.767	opened for bidding	0	\N	\N	63	\N	\N	1
-28	2016-09-27 17:43:14.918	created	1	\N	50	\N	\N	\N	1
-29	2016-09-27 17:43:32.052	assigned	1	\N	50	\N	\N	\N	1
-30	2016-09-27 17:43:32.053	assigned	0	\N	\N	63	\N	\N	1
-31	2016-09-27 17:43:52.82	accepted	1	\N	50	\N	\N	\N	1
-32	2016-09-27 17:43:53.123	accepted	0	\N	\N	63	\N	\N	1
-33	2016-09-28 15:42:10.819	opened for bidding	0	\N	\N	49	\N	\N	1
-34	2016-09-28 15:43:07.425	created	1	\N	51	\N	\N	\N	1
-35	2016-09-28 15:43:43.736	assigned	1	\N	51	\N	\N	\N	1
-36	2016-09-28 15:43:43.736	assigned	0	\N	\N	49	\N	\N	1
-37	2016-09-28 15:43:55.697	accepted	1	\N	51	\N	\N	\N	1
-38	2016-09-28 15:43:55.944	accepted	0	\N	\N	49	\N	\N	1
-39	2016-09-28 15:44:44.386	opened for bidding	0	\N	\N	50	\N	\N	1
-40	2016-09-28 15:44:49.357	created	1	\N	52	\N	\N	\N	1
-41	2016-09-28 15:45:16.205	assigned	1	\N	52	\N	\N	\N	1
-42	2016-09-28 15:45:16.205	assigned	0	\N	\N	50	\N	\N	1
-43	2016-09-28 15:45:22.804	accepted	1	\N	52	\N	\N	\N	1
-44	2016-09-28 15:45:23.186	accepted	0	\N	\N	50	\N	\N	1
-45	2016-09-28 16:44:18.581	opened for bidding	0	\N	\N	53	\N	\N	1
-46	2016-09-28 16:44:24.503	created	1	\N	53	\N	\N	\N	1
-47	2016-09-29 17:54:34.26	created	0	\N	\N	64	\N	\N	1
-48	2016-09-29 17:54:43.367	opened for bidding	0	\N	\N	64	\N	\N	1
-49	2016-09-29 17:55:22.911	created	1	\N	54	\N	\N	\N	1
-50	2016-09-29 17:55:30.871	assigned	1	\N	54	\N	\N	\N	1
-51	2016-09-29 17:55:44.347	accepted	1	\N	54	\N	\N	\N	1
-52	2016-09-30 15:43:30.302	created	1	\N	55	\N	\N	\N	1
-53	2016-09-30 15:43:37.125	assigned	1	\N	55	\N	\N	\N	1
-54	2016-09-30 15:43:43.385	accepted	1	\N	55	\N	\N	\N	1
-55	2016-10-01 20:17:58.051	created	0	\N	\N	65	\N	\N	1
-56	2016-10-03 15:11:10.608	created	0	\N	\N	66	\N	\N	1
-57	2016-10-03 15:14:08.84	created	1	\N	56	\N	\N	\N	1
-58	2016-10-03 15:14:18.123	assigned	1	\N	56	\N	\N	\N	1
-59	2016-10-03 15:14:36.503	accepted	1	\N	56	\N	\N	\N	1
-62	2016-10-04 17:33:18.537	proposed	2	\N	\N	\N	\N	10	1
-63	2016-10-04 17:33:34.758	accepted	2	\N	\N	\N	\N	10	1
-64	2016-10-04 17:34:08.481	webapp proposed as parent	2	\N	\N	\N	\N	6	1
-65	2016-10-04 17:34:57.849	webapp accepted as parent	2	\N	\N	\N	\N	6	1
-68	2016-10-04 17:35:47.643	webapp proposed as parent	2	\N	\N	\N	\N	4	1
-69	2016-10-04 17:35:57.377	webapp proposed as parent	2	\N	\N	\N	\N	3	1
-70	2016-10-04 17:35:57.844	webapp accepted as parent	2	\N	\N	\N	\N	4	1
-71	2016-10-04 17:36:04.293	webapp accepted as parent	2	\N	\N	\N	\N	3	1
-72	2016-10-04 17:36:11.611	marketing proposed as parent	2	\N	\N	\N	\N	8	1
-73	2016-10-04 17:36:17.362	marketing accepted as parent	2	\N	\N	\N	\N	8	1
-74	2016-10-04 17:40:30.209	proposed	2	\N	\N	\N	\N	11	1
-75	2016-10-04 17:49:09.042	created	0	\N	\N	67	\N	\N	1
-76	2016-10-04 17:49:23.227	opened for bidding	0	\N	\N	67	\N	\N	1
-77	2016-10-04 17:49:54.717	created	1	\N	57	\N	\N	\N	1
-78	2016-10-04 17:50:12.037	assigned	1	\N	57	\N	\N	\N	1
-79	2016-10-04 17:50:28.198	accepted	1	\N	57	\N	\N	\N	1
-80	2016-10-05 09:24:16.552	accepted	2	\N	\N	\N	\N	11	1
-81	2016-10-05 09:25:26.843	created	0	\N	\N	68	\N	\N	1
-82	2016-10-05 09:25:56.369	opened for bidding	0	\N	\N	68	\N	\N	1
-83	2016-10-06 10:25:09.246	created	1	\N	58	\N	\N	\N	1
-84	2016-10-06 10:36:30.076	created	1	\N	59	\N	\N	\N	1
-85	2016-10-06 10:37:53.68	marked done	1	\N	59	\N	\N	\N	1
-86	2016-10-06 10:38:10.687	assigned	1	\N	59	\N	\N	\N	1
-87	2016-10-06 10:38:27.744	accepted	1	\N	59	\N	\N	\N	1
-88	2016-10-06 10:43:58.969	proposed	2	\N	\N	\N	\N	12	1
-89	2016-10-06 10:44:34.695	accepted	2	\N	\N	\N	\N	12	1
-90	2016-10-06 10:44:45.349	created	0	\N	\N	69	\N	\N	1
-91	2016-10-06 10:49:24.606	opened for bidding	0	\N	\N	69	\N	\N	1
-92	2016-10-06 16:44:28.27	created	4	8	\N	\N	\N	\N	1
-93	2016-10-06 16:45:41.397	created	4	9	\N	\N	\N	\N	1
-94	2016-10-06 16:47:38.128	created	4	10	\N	\N	\N	\N	1
-95	2016-10-06 17:20:47.916	assigned	1	\N	58	\N	\N	\N	1
-96	2016-10-07 14:23:20.202	created	1	\N	60	\N	\N	\N	1
-97	2016-10-07 14:26:55.565	assigned	1	\N	60	\N	\N	\N	1
-98	2016-10-07 14:27:16.07	accepted	1	\N	60	\N	\N	\N	1
-99	2016-10-07 14:28:47.904	opened for bidding	0	\N	\N	55	\N	\N	1
-100	2016-10-07 14:33:08.616	created	1	\N	61	\N	\N	\N	1
-101	2016-10-07 14:35:56.194	created	0	\N	\N	70	\N	\N	1
-102	2016-10-07 15:00:42.477	opened for bidding	0	\N	\N	70	\N	\N	1
-103	2016-10-07 15:27:35.77	created	1	\N	62	\N	\N	\N	1
-104	2016-10-07 16:03:57.307	assigned	1	\N	62	\N	\N	\N	1
-105	2016-10-07 16:11:26.461	assigned	1	\N	61	\N	\N	\N	1
-106	2016-10-07 21:00:25.461	accepted	1	\N	62	\N	\N	\N	1
-107	2016-10-07 21:53:37.751	created	0	\N	\N	71	\N	\N	1
-108	2016-10-07 21:53:47.896	opened for bidding	0	\N	\N	71	\N	\N	1
-109	2016-10-07 21:54:42.882	created	1	\N	63	\N	\N	\N	1
-110	2016-10-07 21:54:53.604	assigned	1	\N	63	\N	\N	\N	1
-111	2016-10-07 21:55:08.193	accepted	1	\N	63	\N	\N	\N	1
-112	2016-10-07 21:55:36.281	accepted	1	\N	58	\N	\N	\N	1
-113	2016-10-07 22:22:22.65	created	0	\N	\N	72	\N	\N	1
-114	2016-10-10 20:08:58.407	created	0	\N	\N	73	\N	\N	1
-115	2016-10-10 20:09:09.531	opened for bidding	0	\N	\N	73	\N	\N	1
-116	2016-10-10 20:09:51.451	created	1	\N	64	\N	\N	\N	1
-117	2016-10-10 20:10:05.69	marked done	1	\N	64	\N	\N	\N	1
-118	2016-10-10 20:10:13.381	assigned	1	\N	64	\N	\N	\N	1
-119	2016-10-10 20:10:34.334	accepted	1	\N	64	\N	\N	\N	1
-198	2016-10-20 13:08:55.829	created	3	\N	\N	\N	268	\N	1
-199	2016-10-20 13:12:00.941	created	3	\N	\N	\N	269	\N	1
-122	2016-10-10 20:29:16.718	created	0	\N	\N	74	\N	\N	1
-123	2016-10-10 20:29:26.959	opened for bidding	0	\N	\N	74	\N	\N	1
-124	2016-10-11 21:06:27.322	proposed	2	\N	\N	\N	\N	13	2
-125	2016-10-11 21:06:45.271	accepted	2	\N	\N	\N	\N	13	2
-126	2016-10-11 21:32:05.365	assigned	1	\N	42	\N	\N	\N	1
-127	2016-10-11 21:34:38.815	accepted	1	\N	42	\N	\N	\N	1
-128	2016-10-11 21:35:38.441	opened for bidding	0	\N	\N	59	\N	\N	1
-129	2016-10-11 21:36:06.825	created	1	\N	65	\N	\N	\N	1
-130	2016-10-11 21:36:18.351	assigned	1	\N	65	\N	\N	\N	1
-131	2016-10-11 21:36:25.353	accepted	1	\N	65	\N	\N	\N	1
-132	2016-10-11 21:37:31.542	created	1	\N	66	\N	\N	\N	1
-133	2016-10-11 21:37:41.749	assigned	1	\N	66	\N	\N	\N	1
-134	2016-10-11 21:37:55.659	accepted	1	\N	66	\N	\N	\N	1
-135	2016-10-11 21:38:10.292	opened for bidding	0	\N	\N	66	\N	\N	1
-136	2016-10-11 21:38:36.301	created	1	\N	67	\N	\N	\N	1
-137	2016-10-11 21:38:43.567	assigned	1	\N	67	\N	\N	\N	1
-138	2016-10-11 21:38:57.261	accepted	1	\N	67	\N	\N	\N	1
-139	2016-10-12 23:10:52.915	created	3	\N	\N	\N	232	\N	1
-140	2016-10-13 14:33:14.565	created	4	11	\N	\N	\N	\N	1
-141	2016-10-14 10:11:26.816	created	3	\N	\N	\N	233	\N	1
-142	2016-10-14 10:24:00.274	created	4	12	\N	\N	\N	\N	1
-143	2016-10-14 10:34:02.292	created	4	13	\N	\N	\N	\N	1
-144	2016-10-14 10:41:25.251	created	4	14	\N	\N	\N	\N	1
-145	2016-10-14 10:47:49.793	created	4	15	\N	\N	\N	\N	1
-146	2016-10-14 18:30:06.989	created	0	\N	\N	75	\N	\N	1
-147	2016-10-14 18:30:28.724	opened for bidding	0	\N	\N	75	\N	\N	1
-148	2016-10-14 18:52:56.51	created	4	16	\N	\N	\N	\N	1
-149	2016-10-14 18:56:24.285	created	4	17	\N	\N	\N	\N	1
-150	2016-10-14 19:09:24.73	created	4	18	\N	\N	\N	\N	1
-151	2016-10-16 10:23:01.241	created	1	\N	68	\N	\N	\N	1
-152	2016-10-16 10:23:11.922	assigned	1	\N	68	\N	\N	\N	1
-153	2016-10-16 10:23:27.303	marked done	1	\N	68	\N	\N	\N	1
-154	2016-10-16 10:23:31.933	accepted	1	\N	68	\N	\N	\N	1
-155	2016-10-17 16:04:44.598	proposed	2	\N	\N	\N	\N	14	2
-156	2016-10-17 16:05:49.44	proposed	2	\N	\N	\N	\N	15	2
-157	2016-10-17 16:06:03.874	accepted	2	\N	\N	\N	\N	15	2
-158	2016-10-17 16:06:03.874	accepted	2	\N	\N	\N	\N	14	2
-159	2016-10-17 16:10:30.668	proposed	2	\N	\N	\N	\N	18	2
-160	2016-10-17 16:10:56.455	accepted	2	\N	\N	\N	\N	18	2
-161	2016-10-18 08:37:02.409	created	4	19	\N	\N	\N	\N	1
-162	2016-10-18 08:45:09.5	created	4	20	\N	\N	\N	\N	1
-163	2016-10-18 14:48:48.614	created	0	\N	\N	76	\N	\N	1
-164	2016-10-18 14:50:23.304	created	0	\N	\N	77	\N	\N	1
-165	2016-10-18 14:50:36.672	opened for bidding	0	\N	\N	77	\N	\N	1
-166	2016-10-18 14:51:58.348	created	1	\N	69	\N	\N	\N	1
-167	2016-10-18 14:52:24.105	assigned	1	\N	69	\N	\N	\N	1
-168	2016-10-18 14:52:31.142	marked done	1	\N	69	\N	\N	\N	1
-169	2016-10-18 14:52:45.075	accepted	1	\N	69	\N	\N	\N	1
-170	2016-10-18 21:10:52.825	proposed	2	\N	\N	\N	\N	19	2
-171	2016-10-18 21:11:10.59	accepted	2	\N	\N	\N	\N	19	2
-172	2016-10-18 21:13:41.68	proposed	2	\N	\N	\N	\N	20	2
-173	2016-10-18 21:13:58.327	accepted	2	\N	\N	\N	\N	20	2
-174	2016-10-18 21:16:10.404	proposed	2	\N	\N	\N	\N	21	2
-175	2016-10-18 21:16:26.231	accepted	2	\N	\N	\N	\N	21	2
-176	2016-10-18 21:18:11.71	proposed	2	\N	\N	\N	\N	22	2
-177	2016-10-18 21:18:26.638	accepted	2	\N	\N	\N	\N	22	2
-178	2016-10-19 13:57:56.779	created	4	21	\N	\N	\N	\N	1
-179	2016-10-19 14:04:14.015	created	4	22	\N	\N	\N	\N	1
-180	2016-10-19 14:10:03.712	created	4	23	\N	\N	\N	\N	1
-181	2016-10-19 14:12:45.937	created	4	24	\N	\N	\N	\N	1
-182	2016-10-19 21:04:51.578	proposed	2	\N	\N	\N	\N	23	3
-183	2016-10-19 21:05:37.343	accepted	2	\N	\N	\N	\N	23	3
-184	2016-10-19 21:08:31.583	created	0	\N	\N	79	\N	\N	3
-185	2016-10-19 21:09:09.909	opened for bidding	0	\N	\N	79	\N	\N	3
-186	2016-10-19 21:10:56.238	created	1	\N	71	\N	\N	\N	3
-187	2016-10-19 21:11:25.434	assigned	1	\N	71	\N	\N	\N	3
-188	2016-10-19 21:12:37.058	proposed	2	\N	\N	\N	\N	24	3
-189	2016-10-19 21:13:00.799	accepted	2	\N	\N	\N	\N	24	3
-190	2016-10-19 21:13:30.35	created	0	\N	\N	80	\N	\N	3
-191	2016-10-19 21:13:44.705	opened for bidding	0	\N	\N	80	\N	\N	3
-192	2016-10-19 21:14:11.32	created	1	\N	72	\N	\N	\N	3
-193	2016-10-19 21:14:37.721	assigned	1	\N	72	\N	\N	\N	3
-194	2016-10-19 21:14:54.202	marked done	1	\N	72	\N	\N	\N	3
-195	2016-10-19 21:15:00.217	accepted	1	\N	72	\N	\N	\N	3
-196	2016-10-19 21:17:29.084	created	3	\N	\N	\N	267	\N	2
-197	2016-10-19 21:18:04.47	created	4	25	\N	\N	\N	\N	2
-200	2016-10-20 13:12:15.77	rejected	3	\N	\N	\N	233	\N	1
-201	2016-10-20 13:12:23.168	rejected	3	\N	\N	\N	232	\N	1
-202	2016-10-20 13:12:30.707	rejected	3	\N	\N	\N	146	\N	1
-203	2016-10-20 13:20:04.698	created	0	\N	\N	81	\N	\N	1
-204	2016-10-20 13:22:18.637	created	0	\N	\N	82	\N	\N	1
-205	2016-10-20 14:48:14.242	created	4	26	\N	\N	\N	\N	2
-206	2016-10-20 14:50:57.255	created	4	27	\N	\N	\N	\N	2
-207	2016-10-21 14:05:59.287	opened for bidding	0	\N	\N	81	\N	\N	1
-208	2016-10-21 14:06:40.967	created	1	\N	73	\N	\N	\N	1
-209	2016-10-21 14:06:51.998	assigned	1	\N	73	\N	\N	\N	1
-210	2016-10-21 14:06:59.56	accepted	1	\N	73	\N	\N	\N	1
-211	2016-10-21 18:06:04.845	created	1	\N	74	\N	\N	\N	1
-212	2016-10-21 18:06:19.332	assigned	1	\N	74	\N	\N	\N	1
-213	2016-10-21 18:06:28.198	marked done	1	\N	74	\N	\N	\N	1
-214	2016-10-21 18:06:34.474	accepted	1	\N	74	\N	\N	\N	1
-216	2016-10-21 18:25:59.699	created	0	\N	\N	84	\N	\N	1
-217	2016-10-21 18:41:25.9	created	3	\N	\N	\N	278	\N	1
-218	2016-10-21 18:41:38.62	created	4	28	\N	\N	\N	\N	1
-219	2016-10-21 18:42:16.145	created	4	29	\N	\N	\N	\N	1
-220	2016-10-23 12:26:16.87	created	0	\N	\N	85	\N	\N	1
-221	2016-10-23 21:38:12.468	created	3	\N	\N	\N	280	\N	1
-222	2016-10-23 21:39:34.507	created	4	30	\N	\N	\N	\N	1
-223	2016-10-23 21:39:44.383	rejected	3	\N	\N	\N	280	\N	1
-224	2016-10-23 21:42:34.021	created	0	\N	\N	86	\N	\N	1
-225	2016-10-23 21:43:05.285	proposal refused	0	\N	\N	84	\N	\N	1
-226	2016-10-23 21:43:26.278	proposal refused	0	\N	\N	72	\N	\N	1
-227	2016-10-23 22:47:24.765	created	0	\N	\N	87	\N	\N	1
-228	2016-10-24 15:26:45.612	created	0	\N	\N	88	\N	\N	1
-229	2016-10-24 15:33:45.627	created	0	\N	\N	89	\N	\N	1
-230	2016-10-24 19:35:00.583	created	0	\N	\N	90	\N	\N	1
-231	2016-10-25 08:41:26.584	opened for bidding	0	\N	\N	82	\N	\N	1
-232	2016-10-25 10:48:50.53	created	0	\N	\N	91	\N	\N	1
-233	2016-10-25 10:49:11.295	opened for bidding	0	\N	\N	91	\N	\N	1
-234	2016-10-25 10:49:37.709	deleted	0	\N	\N	91	\N	\N	1
-235	2016-10-25 10:51:34.307	created	1	\N	75	\N	\N	\N	1
-236	2016-10-25 10:52:24.228	marked done	1	\N	75	\N	\N	\N	1
-237	2016-10-25 10:52:36.989	assigned	1	\N	75	\N	\N	\N	1
-238	2016-10-25 10:52:54.067	accepted	1	\N	75	\N	\N	\N	1
-239	2016-10-25 15:08:39.915	opened for bidding	0	\N	\N	86	\N	\N	1
-240	2016-10-25 15:10:34.126	created	1	\N	76	\N	\N	\N	1
-241	2016-10-25 16:01:01.734	created	3	\N	\N	\N	292	\N	1
-242	2016-10-25 16:01:37.692	created	4	31	\N	\N	\N	\N	1
-243	2016-10-25 16:01:53.54	assigned	1	\N	76	\N	\N	\N	1
-244	2016-10-25 16:02:04.62	accepted	1	\N	76	\N	\N	\N	1
-245	2016-10-25 16:18:46.929	opened	3	\N	\N	\N	292	\N	1
-246	2016-10-26 09:37:40.726	created	0	\N	\N	92	\N	\N	1
-247	2016-10-26 10:42:23.806	opened for bidding	0	\N	\N	92	\N	\N	1
-248	2016-10-26 10:42:55.593	created	1	\N	77	\N	\N	\N	1
-249	2016-10-26 10:43:01.678	marked done	1	\N	77	\N	\N	\N	1
-250	2016-10-26 10:43:10.301	assigned	1	\N	77	\N	\N	\N	1
-251	2016-10-26 10:46:30.542	created	0	\N	\N	93	\N	\N	1
-252	2016-10-26 10:51:54.042	accepted	1	\N	77	\N	\N	\N	1
-253	2016-10-26 11:01:47.026	created	0	\N	\N	94	\N	\N	1
-254	2016-10-26 15:59:06.741	created	0	\N	\N	95	\N	\N	1
-255	2016-10-26 15:59:22.535	opened for bidding	0	\N	\N	95	\N	\N	1
-256	2016-10-26 15:59:38.976	deleted	0	\N	\N	95	\N	\N	1
-257	2016-10-26 16:00:18.441	created	0	\N	\N	96	\N	\N	1
-258	2016-10-26 16:00:34.995	opened for bidding	0	\N	\N	96	\N	\N	1
-259	2016-10-26 16:42:54.751	created	1	\N	78	\N	\N	\N	1
-260	2016-10-26 16:43:17.558	assigned	1	\N	78	\N	\N	\N	1
-261	2016-10-26 16:43:27.049	accepted	1	\N	78	\N	\N	\N	1
-262	2016-10-26 16:45:58.072	created	0	\N	\N	97	\N	\N	1
-263	2016-10-26 19:57:18.556	proposed	2	\N	\N	\N	\N	25	1
-264	2016-10-26 19:57:38.552	accepted	2	\N	\N	\N	\N	25	1
-265	2016-10-27 02:15:13.763	accepted	3	\N	\N	\N	292	\N	1
-266	2016-10-27 09:16:49.241	proposed	2	\N	\N	\N	\N	26	1
-267	2016-10-27 09:17:01.395	accepted	2	\N	\N	\N	\N	26	1
-268	2016-10-27 09:17:19	tools proposed as parent	2	\N	\N	\N	\N	10	1
-269	2016-10-27 09:17:25.285	tools accepted as parent	2	\N	\N	\N	\N	10	1
-270	2016-10-27 09:17:50.747	vision proposed as parent	2	\N	\N	\N	\N	7	1
-271	2016-10-27 09:17:57.46	vision accepted as parent	2	\N	\N	\N	\N	7	1
-272	2016-10-27 09:19:02.025	proposed	2	\N	\N	\N	\N	27	1
-273	2016-10-27 09:19:19.973	accepted	2	\N	\N	\N	\N	27	1
-274	2016-10-27 09:19:49.879	method-definition proposed as parent	2	\N	\N	\N	\N	2	1
-275	2016-10-27 09:19:57.919	method-definition proposed as parent	2	\N	\N	\N	\N	1	1
-276	2016-10-27 09:20:10.014	method-definition accepted as parent	2	\N	\N	\N	\N	1	1
-277	2016-10-27 09:20:10.014	method-definition accepted as parent	2	\N	\N	\N	\N	2	1
-278	2016-10-27 09:24:20.376	proposed	2	\N	\N	\N	\N	28	1
-279	2016-10-27 09:26:45.84	proposed	2	\N	\N	\N	\N	29	1
-280	2016-10-27 09:27:05.217	accepted	2	\N	\N	\N	\N	29	1
-281	2016-10-27 09:27:05.217	accepted	2	\N	\N	\N	\N	28	1
-282	2016-10-27 09:43:57.792	proposed	2	\N	\N	\N	\N	30	1
-283	2016-10-27 09:44:15.471	accepted	2	\N	\N	\N	\N	30	1
-284	2016-10-27 09:49:59.237	created	0	\N	\N	98	\N	\N	1
-285	2016-10-27 11:08:03.29	opened for bidding	0	\N	\N	98	\N	\N	1
-286	2016-10-27 11:08:22.885	opened for bidding	0	\N	\N	94	\N	\N	1
-287	2016-10-27 11:08:32.169	opened for bidding	0	\N	\N	93	\N	\N	1
-288	2016-10-27 11:09:33.787	created	1	\N	79	\N	\N	\N	1
-289	2016-10-27 11:09:49.571	assigned	1	\N	79	\N	\N	\N	1
-290	2016-10-27 11:09:56.98	marked done	1	\N	79	\N	\N	\N	1
-291	2016-10-27 11:10:11.619	accepted	1	\N	79	\N	\N	\N	1
-292	2016-10-27 11:10:50.874	created	1	\N	80	\N	\N	\N	1
-293	2016-10-27 11:11:20.981	marked done	1	\N	80	\N	\N	\N	1
-294	2016-10-27 11:11:33.237	assigned	1	\N	80	\N	\N	\N	1
-295	2016-10-27 11:11:43.144	accepted	1	\N	80	\N	\N	\N	1
-296	2016-10-27 11:12:26.536	created	1	\N	81	\N	\N	\N	1
-297	2016-10-27 11:12:42.316	marked done	1	\N	81	\N	\N	\N	1
-298	2016-10-27 11:12:53.439	assigned	1	\N	81	\N	\N	\N	1
-299	2016-10-27 11:13:03.067	accepted	1	\N	81	\N	\N	\N	1
-300	2016-10-27 11:35:42.18	opened for bidding	0	\N	\N	97	\N	\N	1
-301	2016-10-27 11:36:16.088	created	1	\N	82	\N	\N	\N	1
-302	2016-10-27 11:36:26.069	assigned	1	\N	82	\N	\N	\N	1
-303	2016-10-27 11:36:39.063	marked done	1	\N	82	\N	\N	\N	1
-304	2016-10-27 11:36:44.498	accepted	1	\N	82	\N	\N	\N	1
-305	2016-10-27 13:36:02.117	opened for bidding	0	\N	\N	87	\N	\N	1
-306	2016-10-27 15:19:35.504	created	0	\N	\N	99	\N	\N	1
-307	2016-10-27 15:43:03.122	opened for bidding	0	\N	\N	48	\N	\N	1
-308	2016-10-27 15:43:12.942	deleted	0	\N	\N	48	\N	\N	1
-309	2016-10-28 21:49:01.916	accepted	3	\N	\N	\N	269	\N	1
-310	2016-10-28 21:49:21.184	accepted	3	\N	\N	\N	268	\N	1
-311	2016-10-31 08:57:38.643	created	0	\N	\N	100	\N	\N	1
-312	2016-10-31 08:57:50.053	opened for bidding	0	\N	\N	100	\N	\N	1
-313	2016-10-31 11:44:42.685	created	0	\N	\N	101	\N	\N	1
-314	2016-11-01 23:10:31.669	assigned	1	\N	31	\N	\N	\N	1
-315	2016-11-01 23:11:03.914	marked done	1	\N	31	\N	\N	\N	1
-316	2016-11-01 23:11:24.588	accepted	1	\N	31	\N	\N	\N	1
-317	2016-11-01 23:14:53.514	created	0	\N	\N	102	\N	\N	1
-318	2016-11-01 23:15:02.987	opened for bidding	0	\N	\N	102	\N	\N	1
-319	2016-11-04 10:27:46.721	created	0	\N	\N	103	\N	\N	1
-320	2016-11-07 22:50:21.01	created	0	\N	\N	104	\N	\N	1
-321	2016-11-07 22:50:37.162	opened for bidding	0	\N	\N	104	\N	\N	1
-322	2016-11-11 10:19:25.615	created	0	\N	\N	105	\N	\N	1
-323	2016-11-11 10:19:38.186	opened for bidding	0	\N	\N	105	\N	\N	1
-324	2016-11-11 10:20:12.975	created	1	\N	83	\N	\N	\N	1
-325	2016-11-11 10:20:23.81	assigned	1	\N	83	\N	\N	\N	1
-326	2016-11-11 10:20:33.305	accepted	1	\N	83	\N	\N	\N	1
-327	2016-11-11 10:23:08.885	created	0	\N	\N	106	\N	\N	1
-328	2016-11-11 10:23:22.876	opened for bidding	0	\N	\N	106	\N	\N	1
-329	2016-11-11 10:30:24.918	deleted	0	\N	\N	104	\N	\N	1
-330	2016-11-11 10:32:54.848	created	1	\N	84	\N	\N	\N	1
-331	2016-11-11 10:33:01.891	assigned	1	\N	84	\N	\N	\N	1
-332	2016-11-11 10:33:10.995	accepted	1	\N	84	\N	\N	\N	1
-333	2016-11-11 10:33:31.485	opened for bidding	0	\N	\N	103	\N	\N	1
-334	2016-11-11 10:33:40.037	opened for bidding	0	\N	\N	101	\N	\N	1
-335	2016-11-11 10:33:48.694	opened for bidding	0	\N	\N	99	\N	\N	1
-336	2016-11-11 10:34:05.927	opened for bidding	0	\N	\N	85	\N	\N	1
-337	2016-11-11 10:34:05.931	opened for bidding	0	\N	\N	88	\N	\N	1
-338	2016-11-11 10:34:14.956	opened for bidding	0	\N	\N	76	\N	\N	1
-339	2016-11-11 10:34:14.96	opened for bidding	0	\N	\N	89	\N	\N	1
-340	2016-11-11 10:34:14.964	opened for bidding	0	\N	\N	90	\N	\N	1
-341	2016-11-11 10:34:25.043	opened for bidding	0	\N	\N	65	\N	\N	1
-342	2016-11-11 10:35:09.866	opened for bidding	0	\N	\N	52	\N	\N	1
-343	2016-11-11 10:35:56.749	created	1	\N	85	\N	\N	\N	1
-344	2016-11-11 10:36:11.561	assigned	1	\N	85	\N	\N	\N	1
-345	2016-11-11 10:36:20.662	accepted	1	\N	85	\N	\N	\N	1
-346	2016-11-11 12:00:01.672	created	0	\N	\N	107	\N	\N	1
-347	2016-11-11 12:00:07.736	opened for bidding	0	\N	\N	107	\N	\N	1
-348	2016-11-11 12:00:44.166	created	1	\N	86	\N	\N	\N	1
-349	2016-11-11 12:00:59.84	assigned	1	\N	86	\N	\N	\N	1
-350	2016-11-11 12:01:08.65	accepted	1	\N	86	\N	\N	\N	1
-351	2016-11-11 12:32:36.431	created	0	\N	\N	108	\N	\N	1
-352	2016-11-11 12:32:58.329	opened for bidding	0	\N	\N	108	\N	\N	1
-353	2016-11-11 12:33:50.433	created	1	\N	87	\N	\N	\N	1
-354	2016-11-11 12:34:06.884	assigned	1	\N	87	\N	\N	\N	1
-355	2016-11-11 12:34:16.821	accepted	1	\N	87	\N	\N	\N	1
-356	2016-11-17 19:22:46.739	created	1	\N	88	\N	\N	\N	1
-357	2016-11-17 19:22:50.999	assigned	1	\N	88	\N	\N	\N	1
-358	2016-11-17 19:22:57.098	accepted	1	\N	88	\N	\N	\N	1
-359	2016-11-17 19:34:48.141	created	1	\N	89	\N	\N	\N	1
-360	2016-11-17 19:34:57.105	assigned	1	\N	89	\N	\N	\N	1
-361	2016-11-17 19:35:24.976	marked done	1	\N	89	\N	\N	\N	1
-362	2016-11-17 19:35:28.92	accepted	1	\N	89	\N	\N	\N	1
-363	2016-11-17 19:38:04.791	created	1	\N	90	\N	\N	\N	1
-364	2016-11-17 19:38:12.809	assigned	1	\N	90	\N	\N	\N	1
-365	2016-11-17 19:39:43.955	accepted	1	\N	90	\N	\N	\N	1
-366	2016-11-17 19:40:49.335	created	1	\N	91	\N	\N	\N	1
-367	2016-11-17 19:40:57.737	assigned	1	\N	91	\N	\N	\N	1
-368	2016-11-17 19:42:37.422	accepted	1	\N	91	\N	\N	\N	1
-369	2016-11-17 19:46:01.711	created	0	\N	\N	109	\N	\N	1
-370	2016-11-17 19:47:55.853	created	0	\N	\N	110	\N	\N	1
-371	2016-11-17 22:18:39.496	created	0	\N	\N	111	\N	\N	1
-372	2016-11-17 22:20:38.181	created	0	\N	\N	112	\N	\N	1
-373	2016-11-18 09:18:41.596	opened for bidding	0	\N	\N	112	\N	\N	1
-374	2016-11-18 09:20:01.031	created	1	\N	92	\N	\N	\N	1
-375	2016-11-18 09:20:19.059	assigned	1	\N	92	\N	\N	\N	1
-376	2016-11-18 09:21:47.565	accepted	1	\N	92	\N	\N	\N	1
-377	2016-11-18 15:37:48.437	opened for bidding	0	\N	\N	111	\N	\N	1
-378	2016-11-18 15:37:59.967	deleted	0	\N	\N	111	\N	\N	1
-379	2016-11-18 17:11:21.927	created	0	\N	\N	113	\N	\N	1
-380	2016-11-18 20:27:41.848	created	0	\N	\N	114	\N	\N	1
-381	2016-11-18 20:27:52.493	opened for bidding	0	\N	\N	114	\N	\N	1
-383	2016-11-20 17:39:18.555	opened for bidding	0	\N	\N	109	\N	\N	1
-384	2016-11-20 17:39:52.16	created	1	\N	94	\N	\N	\N	1
-385	2016-11-20 17:39:54.911	assigned	1	\N	94	\N	\N	\N	1
-386	2016-11-20 17:40:01.202	accepted	1	\N	94	\N	\N	\N	1
-387	2016-11-20 17:40:20.431	opened for bidding	0	\N	\N	110	\N	\N	1
-388	2016-11-20 17:40:41.258	created	1	\N	95	\N	\N	\N	1
-389	2016-11-20 17:40:44.904	assigned	1	\N	95	\N	\N	\N	1
-390	2016-11-20 17:40:51.074	accepted	1	\N	95	\N	\N	\N	1
-391	2016-11-20 17:51:31.534	deleted	0	\N	\N	100	\N	\N	1
-392	2016-11-21 10:30:59.685	created	0	\N	\N	116	\N	\N	1
-393	2016-11-21 10:31:08.6	opened for bidding	0	\N	\N	116	\N	\N	1
-394	2016-11-21 18:21:48.273	created	0	\N	\N	117	\N	\N	1
-395	2016-11-21 18:22:07.812	opened for bidding	0	\N	\N	117	\N	\N	1
-396	2016-11-21 18:23:04.733	created	1	\N	96	\N	\N	\N	1
-397	2016-11-21 18:23:12.101	assigned	1	\N	96	\N	\N	\N	1
-398	2016-11-21 18:27:32.783	created	0	\N	\N	118	\N	\N	1
-399	2016-11-21 18:27:39.886	opened for bidding	0	\N	\N	118	\N	\N	1
-400	2016-11-21 18:29:35.665	created	1	\N	97	\N	\N	\N	1
-401	2016-11-21 18:29:39.886	assigned	1	\N	97	\N	\N	\N	1
-402	2016-11-21 18:29:46.313	accepted	1	\N	97	\N	\N	\N	1
-403	2016-11-24 09:17:55.952	marked done	1	\N	96	\N	\N	\N	1
-404	2016-11-24 09:22:15.582	created	0	\N	\N	119	\N	\N	1
-405	2016-11-24 09:22:26.912	opened for bidding	0	\N	\N	119	\N	\N	1
-406	2016-11-24 09:47:19.6	created	1	\N	98	\N	\N	\N	1
-407	2016-11-24 09:47:26.962	assigned	1	\N	98	\N	\N	\N	1
-408	2016-11-24 09:47:39.33	accepted	1	\N	98	\N	\N	\N	1
-409	2016-11-24 09:50:50.616	accepted	1	\N	96	\N	\N	\N	1
-410	2016-11-24 10:38:03.326	created	0	\N	\N	120	\N	\N	1
-411	2016-11-24 10:38:09.404	opened for bidding	0	\N	\N	120	\N	\N	1
-412	2016-11-24 12:08:59.163	created	3	\N	\N	\N	418	\N	1
-413	2016-11-24 12:12:32.636	created	4	33	\N	\N	\N	\N	1
-414	2016-11-24 12:15:05.875	created	4	34	\N	\N	\N	\N	1
-415	2016-11-24 17:08:27.356	created	1	\N	99	\N	\N	\N	1
-416	2016-11-24 17:08:36.222	assigned	1	\N	99	\N	\N	\N	1
-417	2016-11-24 17:08:43.932	accepted	1	\N	99	\N	\N	\N	1
-418	2016-11-24 17:14:36.858	created	0	\N	\N	121	\N	\N	1
-419	2016-11-24 17:14:49.772	opened for bidding	0	\N	\N	121	\N	\N	1
-420	2016-11-25 01:15:20.481	created	4	35	\N	\N	\N	\N	1
-421	2016-11-25 09:11:24.093	proposed	2	\N	\N	\N	\N	32	1
-422	2016-11-25 09:17:02.01	proposed	2	\N	\N	\N	\N	33	1
-423	2016-11-25 09:18:05.437	marketing proposed as parent	2	\N	\N	\N	\N	32	1
-424	2016-11-25 09:18:16.73	marketing accepted as parent	2	\N	\N	\N	\N	32	1
-425	2016-11-25 11:35:57.168	created	0	\N	\N	122	\N	\N	1
-426	2016-11-25 11:36:06.084	opened for bidding	0	\N	\N	122	\N	\N	1
-427	2016-11-25 11:36:27.034	created	1	\N	100	\N	\N	\N	1
-428	2016-11-25 11:36:37.07	assigned	1	\N	100	\N	\N	\N	1
-429	2016-11-25 11:36:43.327	marked done	1	\N	100	\N	\N	\N	1
-430	2016-11-25 11:36:54.319	accepted	1	\N	100	\N	\N	\N	1
-431	2016-11-25 13:58:13.37	created	0	\N	\N	123	\N	\N	1
-432	2016-11-25 13:58:22.436	opened for bidding	0	\N	\N	123	\N	\N	1
-433	2016-11-25 13:59:04.387	created	1	\N	101	\N	\N	\N	1
-434	2016-11-25 13:59:13.792	assigned	1	\N	101	\N	\N	\N	1
-435	2016-11-25 14:03:31.954	created	0	\N	\N	124	\N	\N	1
-436	2016-11-25 19:42:28.204	marked done	1	\N	101	\N	\N	\N	1
-437	2016-11-25 19:42:35.704	accepted	1	\N	101	\N	\N	\N	1
-438	2016-11-26 20:31:54.515	created	0	\N	\N	125	\N	\N	1
-439	2016-11-26 20:32:06.382	opened for bidding	0	\N	\N	125	\N	\N	1
-440	2016-11-26 20:37:39.941	proposed	2	\N	\N	\N	\N	34	1
-441	2016-11-26 20:41:53.792	proposed	2	\N	\N	\N	\N	35	1
-442	2016-11-27 11:20:09.2	created	0	\N	\N	126	\N	\N	1
-443	2016-11-27 11:20:19.385	opened for bidding	0	\N	\N	126	\N	\N	1
-444	2016-11-27 11:21:43.057	created	1	\N	102	\N	\N	\N	1
-445	2016-11-27 23:35:52.276	accepted	3	\N	\N	\N	418	\N	1
-446	2016-11-28 09:32:18.938	created	1	\N	103	\N	\N	\N	1
-447	2016-11-29 08:36:44.51	proposed	2	\N	\N	\N	\N	36	1
-448	2016-11-29 08:47:17.959	proposed	2	\N	\N	\N	\N	37	1
-449	2016-11-29 09:28:25.47	not accepted	2	\N	\N	\N	\N	36	1
-450	2016-11-29 09:29:20.92	accepted	2	\N	\N	\N	\N	37	1
-451	2016-11-29 09:29:33.609	deleted	2	\N	\N	\N	\N	37	1
-452	2016-11-29 09:47:54.123	created	0	\N	\N	127	\N	\N	1
-453	2016-11-29 09:49:59.78	created	0	\N	\N	128	\N	\N	1
-454	2016-11-29 09:54:45.474	created	0	\N	\N	129	\N	\N	1
-455	2016-11-29 10:18:22.443	opened for bidding	0	\N	\N	127	\N	\N	1
-456	2016-11-29 10:18:29.931	opened for bidding	0	\N	\N	128	\N	\N	1
-457	2016-11-29 10:18:36.584	opened for bidding	0	\N	\N	129	\N	\N	1
-458	2016-11-29 10:21:46.465	created	0	\N	\N	130	\N	\N	1
-459	2016-11-29 10:23:51.162	opened for bidding	0	\N	\N	130	\N	\N	1
-460	2016-11-29 10:30:29.046	created	1	\N	104	\N	\N	\N	1
-461	2016-11-29 10:31:13.451	assigned	1	\N	104	\N	\N	\N	1
-462	2016-11-29 10:31:56.646	accepted	1	\N	104	\N	\N	\N	1
-463	2016-11-29 10:35:58.765	created	1	\N	105	\N	\N	\N	1
-464	2016-11-29 10:36:08.207	assigned	1	\N	105	\N	\N	\N	1
-465	2016-11-29 10:36:15.118	accepted	1	\N	105	\N	\N	\N	1
-466	2016-11-29 10:46:12.682	created	1	\N	106	\N	\N	\N	1
-467	2016-11-29 10:46:15.442	assigned	1	\N	106	\N	\N	\N	1
-468	2016-11-29 10:46:21.823	accepted	1	\N	106	\N	\N	\N	1
-469	2016-11-29 10:55:04.886	created	1	\N	107	\N	\N	\N	1
-470	2016-11-29 10:55:08.313	assigned	1	\N	107	\N	\N	\N	1
-471	2016-11-29 10:55:14.766	accepted	1	\N	107	\N	\N	\N	1
-472	2016-11-29 13:11:39.305	created	0	\N	\N	131	\N	\N	1
-473	2016-11-29 16:07:24.512	proposed	2	\N	\N	\N	\N	38	1
-474	2016-11-29 16:07:39.034	not accepted	2	\N	\N	\N	\N	38	1
-475	2016-11-29 17:25:15.577	opened for bidding	0	\N	\N	131	\N	\N	1
-476	2016-11-29 17:25:43.69	created	1	\N	108	\N	\N	\N	1
-477	2016-11-29 18:28:54.888	assigned	1	\N	108	\N	\N	\N	1
-478	2016-11-29 18:29:41.948	marked done	1	\N	108	\N	\N	\N	1
-479	2016-11-29 18:29:47.536	accepted	1	\N	108	\N	\N	\N	1
-480	2016-11-29 18:33:26.99	created	0	\N	\N	132	\N	\N	1
-481	2016-11-29 18:33:40.824	opened for bidding	0	\N	\N	132	\N	\N	1
-482	2016-11-30 08:25:44.026	created	0	\N	\N	133	\N	\N	1
-483	2016-11-30 08:53:20.778	created	0	\N	\N	134	\N	\N	1
-484	2016-11-30 11:08:27.445	created	3	\N	\N	\N	476	\N	1
-485	2016-11-30 11:10:13.359	created	4	36	\N	\N	\N	\N	1
-486	2016-11-30 11:11:11.684	created	4	37	\N	\N	\N	\N	1
-487	2016-11-30 11:11:55.333	created	4	38	\N	\N	\N	\N	1
-488	2016-11-30 11:15:10.54	created	0	\N	\N	135	\N	\N	1
-489	2016-11-30 11:30:59.575	opened for bidding	0	\N	\N	135	\N	\N	1
-490	2016-11-30 11:31:30.515	created	1	\N	109	\N	\N	\N	1
-491	2016-11-30 11:31:36.299	assigned	1	\N	109	\N	\N	\N	1
-492	2016-11-30 11:34:23.447	created	0	\N	\N	136	\N	\N	1
-493	2016-11-30 11:34:32.065	opened for bidding	0	\N	\N	136	\N	\N	1
-494	2016-11-30 11:38:09.421	created	0	\N	\N	137	\N	\N	1
-495	2016-11-30 11:38:17.672	opened for bidding	0	\N	\N	137	\N	\N	1
-496	2016-11-30 12:23:54.152	created	0	\N	\N	138	\N	\N	1
-497	2016-11-30 12:24:00.929	opened for bidding	0	\N	\N	138	\N	\N	1
-498	2016-11-30 16:46:25.529	marked done	1	\N	109	\N	\N	\N	1
-499	2016-11-30 16:46:29.016	marked done	1	\N	109	\N	\N	\N	1
-500	2016-11-30 16:46:41.487	accepted	1	\N	109	\N	\N	\N	1
-501	2016-11-30 17:38:52.376	created	0	\N	\N	139	\N	\N	1
-502	2016-11-30 17:38:58.405	opened for bidding	0	\N	\N	139	\N	\N	1
-503	2016-11-30 17:39:56.446	created	1	\N	110	\N	\N	\N	1
-504	2016-11-30 17:40:11.785	assigned	1	\N	110	\N	\N	\N	1
-505	2016-11-30 17:40:18.458	accepted	1	\N	110	\N	\N	\N	1
-506	2016-11-30 18:11:36.64	opened for bidding	0	\N	\N	134	\N	\N	1
-507	2016-11-30 22:16:07.13	created	4	39	\N	\N	\N	\N	1
-508	2016-11-30 22:54:59.492	accepted	3	\N	\N	\N	476	\N	1
-509	2016-11-30 23:16:29.203	created	0	\N	\N	140	\N	\N	1
-510	2016-11-30 23:16:38.827	opened for bidding	0	\N	\N	140	\N	\N	1
-511	2016-11-30 23:17:48.093	created	1	\N	111	\N	\N	\N	1
-512	2016-11-30 23:18:10.809	assigned	1	\N	111	\N	\N	\N	1
-513	2016-11-30 23:18:18.393	accepted	1	\N	111	\N	\N	\N	1
-514	2016-11-30 23:54:15.084	created	0	\N	\N	141	\N	\N	1
-515	2016-11-30 23:54:36.338	opened for bidding	0	\N	\N	141	\N	\N	1
-516	2016-12-01 00:30:19.921	created	0	\N	\N	142	\N	\N	1
-517	2016-12-01 00:30:29.644	opened for bidding	0	\N	\N	142	\N	\N	1
-518	2016-12-01 00:30:47.609	created	1	\N	112	\N	\N	\N	1
-519	2016-12-01 00:30:58.882	marked done	1	\N	112	\N	\N	\N	1
-520	2016-12-01 00:31:08.957	assigned	1	\N	112	\N	\N	\N	1
-521	2016-12-01 00:31:22.318	accepted	1	\N	112	\N	\N	\N	1
-522	2016-12-01 09:50:22.585	created	3	\N	\N	\N	502	\N	1
-523	2016-12-01 10:32:57.227	created	1	\N	113	\N	\N	\N	1
-524	2016-12-01 10:33:03.252	assigned	1	\N	113	\N	\N	\N	1
-525	2016-12-01 10:33:10.026	accepted	1	\N	113	\N	\N	\N	1
-526	2016-12-01 12:26:29.476	created	1	\N	114	\N	\N	\N	1
-527	2016-12-01 12:26:49.51	marked done	1	\N	114	\N	\N	\N	1
-528	2016-12-01 12:31:47.762	assigned	1	\N	114	\N	\N	\N	1
-529	2016-12-01 12:32:00.991	accepted	1	\N	114	\N	\N	\N	1
-530	2016-12-01 12:34:48.108	proposed	2	\N	\N	\N	\N	39	1
-531	2016-12-01 12:41:32.568	proposed	2	\N	\N	\N	\N	40	5
-532	2016-12-01 12:41:50.544	accepted	2	\N	\N	\N	\N	40	5
-533	2016-12-01 12:43:29.06	proposed	2	\N	\N	\N	\N	41	5
-534	2016-12-01 12:44:15.423	proposed	2	\N	\N	\N	\N	42	5
-535	2016-12-01 12:45:54.209	proposed	2	\N	\N	\N	\N	43	5
-536	2016-12-01 12:46:15.948	accepted	2	\N	\N	\N	\N	41	5
-537	2016-12-01 12:46:23.804	accepted	2	\N	\N	\N	\N	42	5
-538	2016-12-01 12:46:23.835	accepted	2	\N	\N	\N	\N	43	5
-539	2016-12-01 12:52:10.455	created	0	\N	\N	144	\N	\N	1
-540	2016-12-01 12:55:06.701	proposed	2	\N	\N	\N	\N	44	5
-541	2016-12-01 12:55:21.009	accepted	2	\N	\N	\N	\N	44	5
-542	2016-12-01 12:56:17.735	proposed	2	\N	\N	\N	\N	45	5
-543	2016-12-01 12:56:37.596	accepted	2	\N	\N	\N	\N	45	5
-544	2016-12-01 13:31:54.124	not accepted	2	\N	\N	\N	\N	39	1
-545	2016-12-02 09:08:01.723	accepted	3	\N	\N	\N	502	\N	1
-546	2016-12-02 10:55:45.893	created	0	\N	\N	145	\N	\N	1
-547	2016-12-02 10:56:05.897	opened for bidding	0	\N	\N	145	\N	\N	1
-548	2016-12-02 10:56:37.003	created	1	\N	116	\N	\N	\N	1
-549	2016-12-02 10:56:51.443	assigned	1	\N	116	\N	\N	\N	1
-550	2016-12-02 15:29:48.584	created	0	\N	\N	146	\N	\N	1
-551	2016-12-02 15:29:57.245	opened for bidding	0	\N	\N	146	\N	\N	1
-552	2016-12-02 15:30:29.113	created	1	\N	117	\N	\N	\N	1
-553	2016-12-02 15:30:35.917	assigned	1	\N	117	\N	\N	\N	1
-554	2016-12-02 15:46:56.987	created	3	\N	\N	\N	532	\N	1
-555	2016-12-02 16:35:56.493	accepted	3	\N	\N	\N	532	\N	1
-556	2016-12-02 17:49:47.22	created	0	\N	\N	147	\N	\N	1
-557	2016-12-02 17:55:35.849	proposed	2	\N	\N	\N	\N	46	1
-558	2016-12-04 00:48:35.307	not accepted	1	\N	61	\N	\N	\N	1
+COPY activity (id, creation_date, event, type, argument_id, bid_id, cbtion_id, decision_id, goal_id, project_id, comment_id) FROM stdin;
+1	2016-09-13 22:05:17.894	opened for bidding	0	\N	\N	56	\N	\N	1	\N
+2	2016-09-13 22:07:02.064	created	1	\N	45	\N	\N	\N	1	\N
+3	2016-09-13 22:07:22.284	assigned	1	\N	45	\N	\N	\N	1	\N
+4	2016-09-13 22:07:22.285	assigned	0	\N	\N	56	\N	\N	1	\N
+5	2016-09-13 22:07:27.422	accepted	1	\N	45	\N	\N	\N	1	\N
+6	2016-09-13 22:07:27.478	accepted	0	\N	\N	56	\N	\N	1	\N
+9	2016-09-15 14:23:21.834	created	1	\N	46	\N	\N	\N	1	\N
+10	2016-09-15 14:23:36.469	assigned	1	\N	46	\N	\N	\N	1	\N
+11	2016-09-15 14:23:36.469	assigned	0	\N	\N	41	\N	\N	1	\N
+12	2016-09-15 14:23:42.287	accepted	1	\N	46	\N	\N	\N	1	\N
+13	2016-09-15 14:23:42.453	accepted	0	\N	\N	41	\N	\N	1	\N
+14	2016-09-15 14:47:23.833	created	0	\N	\N	59	\N	\N	1	\N
+15	2016-09-18 18:21:57.523	opened for bidding	0	\N	\N	51	\N	\N	1	\N
+16	2016-09-18 18:22:02.042	created	1	\N	47	\N	\N	\N	1	\N
+17	2016-09-18 18:22:18.082	assigned	1	\N	47	\N	\N	\N	1	\N
+18	2016-09-18 18:22:18.082	assigned	0	\N	\N	51	\N	\N	1	\N
+19	2016-09-18 18:22:25.5	accepted	1	\N	47	\N	\N	\N	1	\N
+20	2016-09-18 18:22:25.976	accepted	0	\N	\N	51	\N	\N	1	\N
+21	2016-09-21 15:40:53.093	created	0	\N	\N	61	\N	\N	2	\N
+22	2016-09-21 16:57:11.948	opened for bidding	0	\N	\N	61	\N	\N	2	\N
+23	2016-09-21 16:58:23.155	created	1	\N	49	\N	\N	\N	2	\N
+24	2016-09-21 17:02:07.987	created	0	\N	\N	62	\N	\N	1	\N
+25	2016-09-26 06:34:34.095	created	0	\N	\N	63	\N	\N	1	\N
+26	2016-09-26 08:29:38.088	opened for bidding	0	\N	\N	62	\N	\N	1	\N
+27	2016-09-27 17:41:24.767	opened for bidding	0	\N	\N	63	\N	\N	1	\N
+28	2016-09-27 17:43:14.918	created	1	\N	50	\N	\N	\N	1	\N
+29	2016-09-27 17:43:32.052	assigned	1	\N	50	\N	\N	\N	1	\N
+30	2016-09-27 17:43:32.053	assigned	0	\N	\N	63	\N	\N	1	\N
+31	2016-09-27 17:43:52.82	accepted	1	\N	50	\N	\N	\N	1	\N
+32	2016-09-27 17:43:53.123	accepted	0	\N	\N	63	\N	\N	1	\N
+33	2016-09-28 15:42:10.819	opened for bidding	0	\N	\N	49	\N	\N	1	\N
+34	2016-09-28 15:43:07.425	created	1	\N	51	\N	\N	\N	1	\N
+35	2016-09-28 15:43:43.736	assigned	1	\N	51	\N	\N	\N	1	\N
+36	2016-09-28 15:43:43.736	assigned	0	\N	\N	49	\N	\N	1	\N
+37	2016-09-28 15:43:55.697	accepted	1	\N	51	\N	\N	\N	1	\N
+38	2016-09-28 15:43:55.944	accepted	0	\N	\N	49	\N	\N	1	\N
+39	2016-09-28 15:44:44.386	opened for bidding	0	\N	\N	50	\N	\N	1	\N
+40	2016-09-28 15:44:49.357	created	1	\N	52	\N	\N	\N	1	\N
+41	2016-09-28 15:45:16.205	assigned	1	\N	52	\N	\N	\N	1	\N
+42	2016-09-28 15:45:16.205	assigned	0	\N	\N	50	\N	\N	1	\N
+43	2016-09-28 15:45:22.804	accepted	1	\N	52	\N	\N	\N	1	\N
+44	2016-09-28 15:45:23.186	accepted	0	\N	\N	50	\N	\N	1	\N
+45	2016-09-28 16:44:18.581	opened for bidding	0	\N	\N	53	\N	\N	1	\N
+46	2016-09-28 16:44:24.503	created	1	\N	53	\N	\N	\N	1	\N
+47	2016-09-29 17:54:34.26	created	0	\N	\N	64	\N	\N	1	\N
+48	2016-09-29 17:54:43.367	opened for bidding	0	\N	\N	64	\N	\N	1	\N
+49	2016-09-29 17:55:22.911	created	1	\N	54	\N	\N	\N	1	\N
+50	2016-09-29 17:55:30.871	assigned	1	\N	54	\N	\N	\N	1	\N
+51	2016-09-29 17:55:44.347	accepted	1	\N	54	\N	\N	\N	1	\N
+52	2016-09-30 15:43:30.302	created	1	\N	55	\N	\N	\N	1	\N
+53	2016-09-30 15:43:37.125	assigned	1	\N	55	\N	\N	\N	1	\N
+54	2016-09-30 15:43:43.385	accepted	1	\N	55	\N	\N	\N	1	\N
+55	2016-10-01 20:17:58.051	created	0	\N	\N	65	\N	\N	1	\N
+56	2016-10-03 15:11:10.608	created	0	\N	\N	66	\N	\N	1	\N
+57	2016-10-03 15:14:08.84	created	1	\N	56	\N	\N	\N	1	\N
+58	2016-10-03 15:14:18.123	assigned	1	\N	56	\N	\N	\N	1	\N
+59	2016-10-03 15:14:36.503	accepted	1	\N	56	\N	\N	\N	1	\N
+62	2016-10-04 17:33:18.537	proposed	2	\N	\N	\N	\N	10	1	\N
+63	2016-10-04 17:33:34.758	accepted	2	\N	\N	\N	\N	10	1	\N
+64	2016-10-04 17:34:08.481	webapp proposed as parent	2	\N	\N	\N	\N	6	1	\N
+65	2016-10-04 17:34:57.849	webapp accepted as parent	2	\N	\N	\N	\N	6	1	\N
+68	2016-10-04 17:35:47.643	webapp proposed as parent	2	\N	\N	\N	\N	4	1	\N
+69	2016-10-04 17:35:57.377	webapp proposed as parent	2	\N	\N	\N	\N	3	1	\N
+70	2016-10-04 17:35:57.844	webapp accepted as parent	2	\N	\N	\N	\N	4	1	\N
+71	2016-10-04 17:36:04.293	webapp accepted as parent	2	\N	\N	\N	\N	3	1	\N
+72	2016-10-04 17:36:11.611	marketing proposed as parent	2	\N	\N	\N	\N	8	1	\N
+73	2016-10-04 17:36:17.362	marketing accepted as parent	2	\N	\N	\N	\N	8	1	\N
+74	2016-10-04 17:40:30.209	proposed	2	\N	\N	\N	\N	11	1	\N
+75	2016-10-04 17:49:09.042	created	0	\N	\N	67	\N	\N	1	\N
+76	2016-10-04 17:49:23.227	opened for bidding	0	\N	\N	67	\N	\N	1	\N
+77	2016-10-04 17:49:54.717	created	1	\N	57	\N	\N	\N	1	\N
+78	2016-10-04 17:50:12.037	assigned	1	\N	57	\N	\N	\N	1	\N
+79	2016-10-04 17:50:28.198	accepted	1	\N	57	\N	\N	\N	1	\N
+80	2016-10-05 09:24:16.552	accepted	2	\N	\N	\N	\N	11	1	\N
+81	2016-10-05 09:25:26.843	created	0	\N	\N	68	\N	\N	1	\N
+82	2016-10-05 09:25:56.369	opened for bidding	0	\N	\N	68	\N	\N	1	\N
+83	2016-10-06 10:25:09.246	created	1	\N	58	\N	\N	\N	1	\N
+84	2016-10-06 10:36:30.076	created	1	\N	59	\N	\N	\N	1	\N
+85	2016-10-06 10:37:53.68	marked done	1	\N	59	\N	\N	\N	1	\N
+86	2016-10-06 10:38:10.687	assigned	1	\N	59	\N	\N	\N	1	\N
+87	2016-10-06 10:38:27.744	accepted	1	\N	59	\N	\N	\N	1	\N
+88	2016-10-06 10:43:58.969	proposed	2	\N	\N	\N	\N	12	1	\N
+89	2016-10-06 10:44:34.695	accepted	2	\N	\N	\N	\N	12	1	\N
+90	2016-10-06 10:44:45.349	created	0	\N	\N	69	\N	\N	1	\N
+91	2016-10-06 10:49:24.606	opened for bidding	0	\N	\N	69	\N	\N	1	\N
+92	2016-10-06 16:44:28.27	created	4	8	\N	\N	\N	\N	1	\N
+93	2016-10-06 16:45:41.397	created	4	9	\N	\N	\N	\N	1	\N
+94	2016-10-06 16:47:38.128	created	4	10	\N	\N	\N	\N	1	\N
+95	2016-10-06 17:20:47.916	assigned	1	\N	58	\N	\N	\N	1	\N
+96	2016-10-07 14:23:20.202	created	1	\N	60	\N	\N	\N	1	\N
+97	2016-10-07 14:26:55.565	assigned	1	\N	60	\N	\N	\N	1	\N
+98	2016-10-07 14:27:16.07	accepted	1	\N	60	\N	\N	\N	1	\N
+99	2016-10-07 14:28:47.904	opened for bidding	0	\N	\N	55	\N	\N	1	\N
+100	2016-10-07 14:33:08.616	created	1	\N	61	\N	\N	\N	1	\N
+101	2016-10-07 14:35:56.194	created	0	\N	\N	70	\N	\N	1	\N
+102	2016-10-07 15:00:42.477	opened for bidding	0	\N	\N	70	\N	\N	1	\N
+103	2016-10-07 15:27:35.77	created	1	\N	62	\N	\N	\N	1	\N
+104	2016-10-07 16:03:57.307	assigned	1	\N	62	\N	\N	\N	1	\N
+105	2016-10-07 16:11:26.461	assigned	1	\N	61	\N	\N	\N	1	\N
+106	2016-10-07 21:00:25.461	accepted	1	\N	62	\N	\N	\N	1	\N
+107	2016-10-07 21:53:37.751	created	0	\N	\N	71	\N	\N	1	\N
+108	2016-10-07 21:53:47.896	opened for bidding	0	\N	\N	71	\N	\N	1	\N
+109	2016-10-07 21:54:42.882	created	1	\N	63	\N	\N	\N	1	\N
+110	2016-10-07 21:54:53.604	assigned	1	\N	63	\N	\N	\N	1	\N
+111	2016-10-07 21:55:08.193	accepted	1	\N	63	\N	\N	\N	1	\N
+112	2016-10-07 21:55:36.281	accepted	1	\N	58	\N	\N	\N	1	\N
+113	2016-10-07 22:22:22.65	created	0	\N	\N	72	\N	\N	1	\N
+114	2016-10-10 20:08:58.407	created	0	\N	\N	73	\N	\N	1	\N
+115	2016-10-10 20:09:09.531	opened for bidding	0	\N	\N	73	\N	\N	1	\N
+116	2016-10-10 20:09:51.451	created	1	\N	64	\N	\N	\N	1	\N
+117	2016-10-10 20:10:05.69	marked done	1	\N	64	\N	\N	\N	1	\N
+118	2016-10-10 20:10:13.381	assigned	1	\N	64	\N	\N	\N	1	\N
+119	2016-10-10 20:10:34.334	accepted	1	\N	64	\N	\N	\N	1	\N
+198	2016-10-20 13:08:55.829	created	3	\N	\N	\N	268	\N	1	\N
+199	2016-10-20 13:12:00.941	created	3	\N	\N	\N	269	\N	1	\N
+122	2016-10-10 20:29:16.718	created	0	\N	\N	74	\N	\N	1	\N
+123	2016-10-10 20:29:26.959	opened for bidding	0	\N	\N	74	\N	\N	1	\N
+124	2016-10-11 21:06:27.322	proposed	2	\N	\N	\N	\N	13	2	\N
+125	2016-10-11 21:06:45.271	accepted	2	\N	\N	\N	\N	13	2	\N
+126	2016-10-11 21:32:05.365	assigned	1	\N	42	\N	\N	\N	1	\N
+127	2016-10-11 21:34:38.815	accepted	1	\N	42	\N	\N	\N	1	\N
+128	2016-10-11 21:35:38.441	opened for bidding	0	\N	\N	59	\N	\N	1	\N
+129	2016-10-11 21:36:06.825	created	1	\N	65	\N	\N	\N	1	\N
+130	2016-10-11 21:36:18.351	assigned	1	\N	65	\N	\N	\N	1	\N
+131	2016-10-11 21:36:25.353	accepted	1	\N	65	\N	\N	\N	1	\N
+132	2016-10-11 21:37:31.542	created	1	\N	66	\N	\N	\N	1	\N
+133	2016-10-11 21:37:41.749	assigned	1	\N	66	\N	\N	\N	1	\N
+134	2016-10-11 21:37:55.659	accepted	1	\N	66	\N	\N	\N	1	\N
+135	2016-10-11 21:38:10.292	opened for bidding	0	\N	\N	66	\N	\N	1	\N
+136	2016-10-11 21:38:36.301	created	1	\N	67	\N	\N	\N	1	\N
+137	2016-10-11 21:38:43.567	assigned	1	\N	67	\N	\N	\N	1	\N
+138	2016-10-11 21:38:57.261	accepted	1	\N	67	\N	\N	\N	1	\N
+139	2016-10-12 23:10:52.915	created	3	\N	\N	\N	232	\N	1	\N
+140	2016-10-13 14:33:14.565	created	4	11	\N	\N	\N	\N	1	\N
+141	2016-10-14 10:11:26.816	created	3	\N	\N	\N	233	\N	1	\N
+142	2016-10-14 10:24:00.274	created	4	12	\N	\N	\N	\N	1	\N
+143	2016-10-14 10:34:02.292	created	4	13	\N	\N	\N	\N	1	\N
+144	2016-10-14 10:41:25.251	created	4	14	\N	\N	\N	\N	1	\N
+145	2016-10-14 10:47:49.793	created	4	15	\N	\N	\N	\N	1	\N
+146	2016-10-14 18:30:06.989	created	0	\N	\N	75	\N	\N	1	\N
+147	2016-10-14 18:30:28.724	opened for bidding	0	\N	\N	75	\N	\N	1	\N
+148	2016-10-14 18:52:56.51	created	4	16	\N	\N	\N	\N	1	\N
+149	2016-10-14 18:56:24.285	created	4	17	\N	\N	\N	\N	1	\N
+150	2016-10-14 19:09:24.73	created	4	18	\N	\N	\N	\N	1	\N
+151	2016-10-16 10:23:01.241	created	1	\N	68	\N	\N	\N	1	\N
+152	2016-10-16 10:23:11.922	assigned	1	\N	68	\N	\N	\N	1	\N
+153	2016-10-16 10:23:27.303	marked done	1	\N	68	\N	\N	\N	1	\N
+154	2016-10-16 10:23:31.933	accepted	1	\N	68	\N	\N	\N	1	\N
+155	2016-10-17 16:04:44.598	proposed	2	\N	\N	\N	\N	14	2	\N
+156	2016-10-17 16:05:49.44	proposed	2	\N	\N	\N	\N	15	2	\N
+157	2016-10-17 16:06:03.874	accepted	2	\N	\N	\N	\N	15	2	\N
+158	2016-10-17 16:06:03.874	accepted	2	\N	\N	\N	\N	14	2	\N
+159	2016-10-17 16:10:30.668	proposed	2	\N	\N	\N	\N	18	2	\N
+160	2016-10-17 16:10:56.455	accepted	2	\N	\N	\N	\N	18	2	\N
+161	2016-10-18 08:37:02.409	created	4	19	\N	\N	\N	\N	1	\N
+162	2016-10-18 08:45:09.5	created	4	20	\N	\N	\N	\N	1	\N
+163	2016-10-18 14:48:48.614	created	0	\N	\N	76	\N	\N	1	\N
+164	2016-10-18 14:50:23.304	created	0	\N	\N	77	\N	\N	1	\N
+165	2016-10-18 14:50:36.672	opened for bidding	0	\N	\N	77	\N	\N	1	\N
+166	2016-10-18 14:51:58.348	created	1	\N	69	\N	\N	\N	1	\N
+167	2016-10-18 14:52:24.105	assigned	1	\N	69	\N	\N	\N	1	\N
+168	2016-10-18 14:52:31.142	marked done	1	\N	69	\N	\N	\N	1	\N
+169	2016-10-18 14:52:45.075	accepted	1	\N	69	\N	\N	\N	1	\N
+170	2016-10-18 21:10:52.825	proposed	2	\N	\N	\N	\N	19	2	\N
+171	2016-10-18 21:11:10.59	accepted	2	\N	\N	\N	\N	19	2	\N
+172	2016-10-18 21:13:41.68	proposed	2	\N	\N	\N	\N	20	2	\N
+173	2016-10-18 21:13:58.327	accepted	2	\N	\N	\N	\N	20	2	\N
+174	2016-10-18 21:16:10.404	proposed	2	\N	\N	\N	\N	21	2	\N
+175	2016-10-18 21:16:26.231	accepted	2	\N	\N	\N	\N	21	2	\N
+176	2016-10-18 21:18:11.71	proposed	2	\N	\N	\N	\N	22	2	\N
+177	2016-10-18 21:18:26.638	accepted	2	\N	\N	\N	\N	22	2	\N
+178	2016-10-19 13:57:56.779	created	4	21	\N	\N	\N	\N	1	\N
+179	2016-10-19 14:04:14.015	created	4	22	\N	\N	\N	\N	1	\N
+180	2016-10-19 14:10:03.712	created	4	23	\N	\N	\N	\N	1	\N
+181	2016-10-19 14:12:45.937	created	4	24	\N	\N	\N	\N	1	\N
+182	2016-10-19 21:04:51.578	proposed	2	\N	\N	\N	\N	23	3	\N
+183	2016-10-19 21:05:37.343	accepted	2	\N	\N	\N	\N	23	3	\N
+184	2016-10-19 21:08:31.583	created	0	\N	\N	79	\N	\N	3	\N
+185	2016-10-19 21:09:09.909	opened for bidding	0	\N	\N	79	\N	\N	3	\N
+186	2016-10-19 21:10:56.238	created	1	\N	71	\N	\N	\N	3	\N
+187	2016-10-19 21:11:25.434	assigned	1	\N	71	\N	\N	\N	3	\N
+188	2016-10-19 21:12:37.058	proposed	2	\N	\N	\N	\N	24	3	\N
+189	2016-10-19 21:13:00.799	accepted	2	\N	\N	\N	\N	24	3	\N
+190	2016-10-19 21:13:30.35	created	0	\N	\N	80	\N	\N	3	\N
+191	2016-10-19 21:13:44.705	opened for bidding	0	\N	\N	80	\N	\N	3	\N
+192	2016-10-19 21:14:11.32	created	1	\N	72	\N	\N	\N	3	\N
+193	2016-10-19 21:14:37.721	assigned	1	\N	72	\N	\N	\N	3	\N
+194	2016-10-19 21:14:54.202	marked done	1	\N	72	\N	\N	\N	3	\N
+195	2016-10-19 21:15:00.217	accepted	1	\N	72	\N	\N	\N	3	\N
+196	2016-10-19 21:17:29.084	created	3	\N	\N	\N	267	\N	2	\N
+197	2016-10-19 21:18:04.47	created	4	25	\N	\N	\N	\N	2	\N
+200	2016-10-20 13:12:15.77	rejected	3	\N	\N	\N	233	\N	1	\N
+201	2016-10-20 13:12:23.168	rejected	3	\N	\N	\N	232	\N	1	\N
+202	2016-10-20 13:12:30.707	rejected	3	\N	\N	\N	146	\N	1	\N
+203	2016-10-20 13:20:04.698	created	0	\N	\N	81	\N	\N	1	\N
+204	2016-10-20 13:22:18.637	created	0	\N	\N	82	\N	\N	1	\N
+205	2016-10-20 14:48:14.242	created	4	26	\N	\N	\N	\N	2	\N
+206	2016-10-20 14:50:57.255	created	4	27	\N	\N	\N	\N	2	\N
+207	2016-10-21 14:05:59.287	opened for bidding	0	\N	\N	81	\N	\N	1	\N
+208	2016-10-21 14:06:40.967	created	1	\N	73	\N	\N	\N	1	\N
+209	2016-10-21 14:06:51.998	assigned	1	\N	73	\N	\N	\N	1	\N
+210	2016-10-21 14:06:59.56	accepted	1	\N	73	\N	\N	\N	1	\N
+211	2016-10-21 18:06:04.845	created	1	\N	74	\N	\N	\N	1	\N
+212	2016-10-21 18:06:19.332	assigned	1	\N	74	\N	\N	\N	1	\N
+213	2016-10-21 18:06:28.198	marked done	1	\N	74	\N	\N	\N	1	\N
+214	2016-10-21 18:06:34.474	accepted	1	\N	74	\N	\N	\N	1	\N
+216	2016-10-21 18:25:59.699	created	0	\N	\N	84	\N	\N	1	\N
+217	2016-10-21 18:41:25.9	created	3	\N	\N	\N	278	\N	1	\N
+218	2016-10-21 18:41:38.62	created	4	28	\N	\N	\N	\N	1	\N
+219	2016-10-21 18:42:16.145	created	4	29	\N	\N	\N	\N	1	\N
+220	2016-10-23 12:26:16.87	created	0	\N	\N	85	\N	\N	1	\N
+221	2016-10-23 21:38:12.468	created	3	\N	\N	\N	280	\N	1	\N
+222	2016-10-23 21:39:34.507	created	4	30	\N	\N	\N	\N	1	\N
+223	2016-10-23 21:39:44.383	rejected	3	\N	\N	\N	280	\N	1	\N
+224	2016-10-23 21:42:34.021	created	0	\N	\N	86	\N	\N	1	\N
+225	2016-10-23 21:43:05.285	proposal refused	0	\N	\N	84	\N	\N	1	\N
+226	2016-10-23 21:43:26.278	proposal refused	0	\N	\N	72	\N	\N	1	\N
+227	2016-10-23 22:47:24.765	created	0	\N	\N	87	\N	\N	1	\N
+228	2016-10-24 15:26:45.612	created	0	\N	\N	88	\N	\N	1	\N
+229	2016-10-24 15:33:45.627	created	0	\N	\N	89	\N	\N	1	\N
+230	2016-10-24 19:35:00.583	created	0	\N	\N	90	\N	\N	1	\N
+231	2016-10-25 08:41:26.584	opened for bidding	0	\N	\N	82	\N	\N	1	\N
+232	2016-10-25 10:48:50.53	created	0	\N	\N	91	\N	\N	1	\N
+233	2016-10-25 10:49:11.295	opened for bidding	0	\N	\N	91	\N	\N	1	\N
+234	2016-10-25 10:49:37.709	deleted	0	\N	\N	91	\N	\N	1	\N
+235	2016-10-25 10:51:34.307	created	1	\N	75	\N	\N	\N	1	\N
+236	2016-10-25 10:52:24.228	marked done	1	\N	75	\N	\N	\N	1	\N
+237	2016-10-25 10:52:36.989	assigned	1	\N	75	\N	\N	\N	1	\N
+238	2016-10-25 10:52:54.067	accepted	1	\N	75	\N	\N	\N	1	\N
+239	2016-10-25 15:08:39.915	opened for bidding	0	\N	\N	86	\N	\N	1	\N
+240	2016-10-25 15:10:34.126	created	1	\N	76	\N	\N	\N	1	\N
+241	2016-10-25 16:01:01.734	created	3	\N	\N	\N	292	\N	1	\N
+242	2016-10-25 16:01:37.692	created	4	31	\N	\N	\N	\N	1	\N
+243	2016-10-25 16:01:53.54	assigned	1	\N	76	\N	\N	\N	1	\N
+244	2016-10-25 16:02:04.62	accepted	1	\N	76	\N	\N	\N	1	\N
+245	2016-10-25 16:18:46.929	opened	3	\N	\N	\N	292	\N	1	\N
+246	2016-10-26 09:37:40.726	created	0	\N	\N	92	\N	\N	1	\N
+247	2016-10-26 10:42:23.806	opened for bidding	0	\N	\N	92	\N	\N	1	\N
+248	2016-10-26 10:42:55.593	created	1	\N	77	\N	\N	\N	1	\N
+249	2016-10-26 10:43:01.678	marked done	1	\N	77	\N	\N	\N	1	\N
+250	2016-10-26 10:43:10.301	assigned	1	\N	77	\N	\N	\N	1	\N
+251	2016-10-26 10:46:30.542	created	0	\N	\N	93	\N	\N	1	\N
+252	2016-10-26 10:51:54.042	accepted	1	\N	77	\N	\N	\N	1	\N
+253	2016-10-26 11:01:47.026	created	0	\N	\N	94	\N	\N	1	\N
+254	2016-10-26 15:59:06.741	created	0	\N	\N	95	\N	\N	1	\N
+255	2016-10-26 15:59:22.535	opened for bidding	0	\N	\N	95	\N	\N	1	\N
+256	2016-10-26 15:59:38.976	deleted	0	\N	\N	95	\N	\N	1	\N
+257	2016-10-26 16:00:18.441	created	0	\N	\N	96	\N	\N	1	\N
+258	2016-10-26 16:00:34.995	opened for bidding	0	\N	\N	96	\N	\N	1	\N
+259	2016-10-26 16:42:54.751	created	1	\N	78	\N	\N	\N	1	\N
+260	2016-10-26 16:43:17.558	assigned	1	\N	78	\N	\N	\N	1	\N
+261	2016-10-26 16:43:27.049	accepted	1	\N	78	\N	\N	\N	1	\N
+262	2016-10-26 16:45:58.072	created	0	\N	\N	97	\N	\N	1	\N
+263	2016-10-26 19:57:18.556	proposed	2	\N	\N	\N	\N	25	1	\N
+264	2016-10-26 19:57:38.552	accepted	2	\N	\N	\N	\N	25	1	\N
+265	2016-10-27 02:15:13.763	accepted	3	\N	\N	\N	292	\N	1	\N
+266	2016-10-27 09:16:49.241	proposed	2	\N	\N	\N	\N	26	1	\N
+267	2016-10-27 09:17:01.395	accepted	2	\N	\N	\N	\N	26	1	\N
+268	2016-10-27 09:17:19	tools proposed as parent	2	\N	\N	\N	\N	10	1	\N
+269	2016-10-27 09:17:25.285	tools accepted as parent	2	\N	\N	\N	\N	10	1	\N
+270	2016-10-27 09:17:50.747	vision proposed as parent	2	\N	\N	\N	\N	7	1	\N
+271	2016-10-27 09:17:57.46	vision accepted as parent	2	\N	\N	\N	\N	7	1	\N
+272	2016-10-27 09:19:02.025	proposed	2	\N	\N	\N	\N	27	1	\N
+273	2016-10-27 09:19:19.973	accepted	2	\N	\N	\N	\N	27	1	\N
+274	2016-10-27 09:19:49.879	method-definition proposed as parent	2	\N	\N	\N	\N	2	1	\N
+275	2016-10-27 09:19:57.919	method-definition proposed as parent	2	\N	\N	\N	\N	1	1	\N
+276	2016-10-27 09:20:10.014	method-definition accepted as parent	2	\N	\N	\N	\N	1	1	\N
+277	2016-10-27 09:20:10.014	method-definition accepted as parent	2	\N	\N	\N	\N	2	1	\N
+278	2016-10-27 09:24:20.376	proposed	2	\N	\N	\N	\N	28	1	\N
+279	2016-10-27 09:26:45.84	proposed	2	\N	\N	\N	\N	29	1	\N
+280	2016-10-27 09:27:05.217	accepted	2	\N	\N	\N	\N	29	1	\N
+281	2016-10-27 09:27:05.217	accepted	2	\N	\N	\N	\N	28	1	\N
+282	2016-10-27 09:43:57.792	proposed	2	\N	\N	\N	\N	30	1	\N
+283	2016-10-27 09:44:15.471	accepted	2	\N	\N	\N	\N	30	1	\N
+284	2016-10-27 09:49:59.237	created	0	\N	\N	98	\N	\N	1	\N
+285	2016-10-27 11:08:03.29	opened for bidding	0	\N	\N	98	\N	\N	1	\N
+286	2016-10-27 11:08:22.885	opened for bidding	0	\N	\N	94	\N	\N	1	\N
+287	2016-10-27 11:08:32.169	opened for bidding	0	\N	\N	93	\N	\N	1	\N
+288	2016-10-27 11:09:33.787	created	1	\N	79	\N	\N	\N	1	\N
+289	2016-10-27 11:09:49.571	assigned	1	\N	79	\N	\N	\N	1	\N
+290	2016-10-27 11:09:56.98	marked done	1	\N	79	\N	\N	\N	1	\N
+291	2016-10-27 11:10:11.619	accepted	1	\N	79	\N	\N	\N	1	\N
+292	2016-10-27 11:10:50.874	created	1	\N	80	\N	\N	\N	1	\N
+293	2016-10-27 11:11:20.981	marked done	1	\N	80	\N	\N	\N	1	\N
+294	2016-10-27 11:11:33.237	assigned	1	\N	80	\N	\N	\N	1	\N
+295	2016-10-27 11:11:43.144	accepted	1	\N	80	\N	\N	\N	1	\N
+296	2016-10-27 11:12:26.536	created	1	\N	81	\N	\N	\N	1	\N
+297	2016-10-27 11:12:42.316	marked done	1	\N	81	\N	\N	\N	1	\N
+298	2016-10-27 11:12:53.439	assigned	1	\N	81	\N	\N	\N	1	\N
+299	2016-10-27 11:13:03.067	accepted	1	\N	81	\N	\N	\N	1	\N
+300	2016-10-27 11:35:42.18	opened for bidding	0	\N	\N	97	\N	\N	1	\N
+301	2016-10-27 11:36:16.088	created	1	\N	82	\N	\N	\N	1	\N
+302	2016-10-27 11:36:26.069	assigned	1	\N	82	\N	\N	\N	1	\N
+303	2016-10-27 11:36:39.063	marked done	1	\N	82	\N	\N	\N	1	\N
+304	2016-10-27 11:36:44.498	accepted	1	\N	82	\N	\N	\N	1	\N
+305	2016-10-27 13:36:02.117	opened for bidding	0	\N	\N	87	\N	\N	1	\N
+306	2016-10-27 15:19:35.504	created	0	\N	\N	99	\N	\N	1	\N
+307	2016-10-27 15:43:03.122	opened for bidding	0	\N	\N	48	\N	\N	1	\N
+308	2016-10-27 15:43:12.942	deleted	0	\N	\N	48	\N	\N	1	\N
+309	2016-10-28 21:49:01.916	accepted	3	\N	\N	\N	269	\N	1	\N
+310	2016-10-28 21:49:21.184	accepted	3	\N	\N	\N	268	\N	1	\N
+311	2016-10-31 08:57:38.643	created	0	\N	\N	100	\N	\N	1	\N
+312	2016-10-31 08:57:50.053	opened for bidding	0	\N	\N	100	\N	\N	1	\N
+313	2016-10-31 11:44:42.685	created	0	\N	\N	101	\N	\N	1	\N
+314	2016-11-01 23:10:31.669	assigned	1	\N	31	\N	\N	\N	1	\N
+315	2016-11-01 23:11:03.914	marked done	1	\N	31	\N	\N	\N	1	\N
+316	2016-11-01 23:11:24.588	accepted	1	\N	31	\N	\N	\N	1	\N
+317	2016-11-01 23:14:53.514	created	0	\N	\N	102	\N	\N	1	\N
+318	2016-11-01 23:15:02.987	opened for bidding	0	\N	\N	102	\N	\N	1	\N
+319	2016-11-04 10:27:46.721	created	0	\N	\N	103	\N	\N	1	\N
+320	2016-11-07 22:50:21.01	created	0	\N	\N	104	\N	\N	1	\N
+321	2016-11-07 22:50:37.162	opened for bidding	0	\N	\N	104	\N	\N	1	\N
+322	2016-11-11 10:19:25.615	created	0	\N	\N	105	\N	\N	1	\N
+323	2016-11-11 10:19:38.186	opened for bidding	0	\N	\N	105	\N	\N	1	\N
+324	2016-11-11 10:20:12.975	created	1	\N	83	\N	\N	\N	1	\N
+325	2016-11-11 10:20:23.81	assigned	1	\N	83	\N	\N	\N	1	\N
+326	2016-11-11 10:20:33.305	accepted	1	\N	83	\N	\N	\N	1	\N
+327	2016-11-11 10:23:08.885	created	0	\N	\N	106	\N	\N	1	\N
+328	2016-11-11 10:23:22.876	opened for bidding	0	\N	\N	106	\N	\N	1	\N
+329	2016-11-11 10:30:24.918	deleted	0	\N	\N	104	\N	\N	1	\N
+330	2016-11-11 10:32:54.848	created	1	\N	84	\N	\N	\N	1	\N
+331	2016-11-11 10:33:01.891	assigned	1	\N	84	\N	\N	\N	1	\N
+332	2016-11-11 10:33:10.995	accepted	1	\N	84	\N	\N	\N	1	\N
+333	2016-11-11 10:33:31.485	opened for bidding	0	\N	\N	103	\N	\N	1	\N
+334	2016-11-11 10:33:40.037	opened for bidding	0	\N	\N	101	\N	\N	1	\N
+335	2016-11-11 10:33:48.694	opened for bidding	0	\N	\N	99	\N	\N	1	\N
+336	2016-11-11 10:34:05.927	opened for bidding	0	\N	\N	85	\N	\N	1	\N
+337	2016-11-11 10:34:05.931	opened for bidding	0	\N	\N	88	\N	\N	1	\N
+338	2016-11-11 10:34:14.956	opened for bidding	0	\N	\N	76	\N	\N	1	\N
+339	2016-11-11 10:34:14.96	opened for bidding	0	\N	\N	89	\N	\N	1	\N
+340	2016-11-11 10:34:14.964	opened for bidding	0	\N	\N	90	\N	\N	1	\N
+341	2016-11-11 10:34:25.043	opened for bidding	0	\N	\N	65	\N	\N	1	\N
+342	2016-11-11 10:35:09.866	opened for bidding	0	\N	\N	52	\N	\N	1	\N
+343	2016-11-11 10:35:56.749	created	1	\N	85	\N	\N	\N	1	\N
+344	2016-11-11 10:36:11.561	assigned	1	\N	85	\N	\N	\N	1	\N
+345	2016-11-11 10:36:20.662	accepted	1	\N	85	\N	\N	\N	1	\N
+346	2016-11-11 12:00:01.672	created	0	\N	\N	107	\N	\N	1	\N
+347	2016-11-11 12:00:07.736	opened for bidding	0	\N	\N	107	\N	\N	1	\N
+348	2016-11-11 12:00:44.166	created	1	\N	86	\N	\N	\N	1	\N
+349	2016-11-11 12:00:59.84	assigned	1	\N	86	\N	\N	\N	1	\N
+350	2016-11-11 12:01:08.65	accepted	1	\N	86	\N	\N	\N	1	\N
+351	2016-11-11 12:32:36.431	created	0	\N	\N	108	\N	\N	1	\N
+352	2016-11-11 12:32:58.329	opened for bidding	0	\N	\N	108	\N	\N	1	\N
+353	2016-11-11 12:33:50.433	created	1	\N	87	\N	\N	\N	1	\N
+354	2016-11-11 12:34:06.884	assigned	1	\N	87	\N	\N	\N	1	\N
+355	2016-11-11 12:34:16.821	accepted	1	\N	87	\N	\N	\N	1	\N
+356	2016-11-17 19:22:46.739	created	1	\N	88	\N	\N	\N	1	\N
+357	2016-11-17 19:22:50.999	assigned	1	\N	88	\N	\N	\N	1	\N
+358	2016-11-17 19:22:57.098	accepted	1	\N	88	\N	\N	\N	1	\N
+359	2016-11-17 19:34:48.141	created	1	\N	89	\N	\N	\N	1	\N
+360	2016-11-17 19:34:57.105	assigned	1	\N	89	\N	\N	\N	1	\N
+361	2016-11-17 19:35:24.976	marked done	1	\N	89	\N	\N	\N	1	\N
+362	2016-11-17 19:35:28.92	accepted	1	\N	89	\N	\N	\N	1	\N
+363	2016-11-17 19:38:04.791	created	1	\N	90	\N	\N	\N	1	\N
+364	2016-11-17 19:38:12.809	assigned	1	\N	90	\N	\N	\N	1	\N
+365	2016-11-17 19:39:43.955	accepted	1	\N	90	\N	\N	\N	1	\N
+366	2016-11-17 19:40:49.335	created	1	\N	91	\N	\N	\N	1	\N
+367	2016-11-17 19:40:57.737	assigned	1	\N	91	\N	\N	\N	1	\N
+368	2016-11-17 19:42:37.422	accepted	1	\N	91	\N	\N	\N	1	\N
+369	2016-11-17 19:46:01.711	created	0	\N	\N	109	\N	\N	1	\N
+370	2016-11-17 19:47:55.853	created	0	\N	\N	110	\N	\N	1	\N
+371	2016-11-17 22:18:39.496	created	0	\N	\N	111	\N	\N	1	\N
+372	2016-11-17 22:20:38.181	created	0	\N	\N	112	\N	\N	1	\N
+373	2016-11-18 09:18:41.596	opened for bidding	0	\N	\N	112	\N	\N	1	\N
+374	2016-11-18 09:20:01.031	created	1	\N	92	\N	\N	\N	1	\N
+375	2016-11-18 09:20:19.059	assigned	1	\N	92	\N	\N	\N	1	\N
+376	2016-11-18 09:21:47.565	accepted	1	\N	92	\N	\N	\N	1	\N
+377	2016-11-18 15:37:48.437	opened for bidding	0	\N	\N	111	\N	\N	1	\N
+378	2016-11-18 15:37:59.967	deleted	0	\N	\N	111	\N	\N	1	\N
+379	2016-11-18 17:11:21.927	created	0	\N	\N	113	\N	\N	1	\N
+380	2016-11-18 20:27:41.848	created	0	\N	\N	114	\N	\N	1	\N
+381	2016-11-18 20:27:52.493	opened for bidding	0	\N	\N	114	\N	\N	1	\N
+383	2016-11-20 17:39:18.555	opened for bidding	0	\N	\N	109	\N	\N	1	\N
+384	2016-11-20 17:39:52.16	created	1	\N	94	\N	\N	\N	1	\N
+385	2016-11-20 17:39:54.911	assigned	1	\N	94	\N	\N	\N	1	\N
+386	2016-11-20 17:40:01.202	accepted	1	\N	94	\N	\N	\N	1	\N
+387	2016-11-20 17:40:20.431	opened for bidding	0	\N	\N	110	\N	\N	1	\N
+388	2016-11-20 17:40:41.258	created	1	\N	95	\N	\N	\N	1	\N
+389	2016-11-20 17:40:44.904	assigned	1	\N	95	\N	\N	\N	1	\N
+390	2016-11-20 17:40:51.074	accepted	1	\N	95	\N	\N	\N	1	\N
+391	2016-11-20 17:51:31.534	deleted	0	\N	\N	100	\N	\N	1	\N
+392	2016-11-21 10:30:59.685	created	0	\N	\N	116	\N	\N	1	\N
+393	2016-11-21 10:31:08.6	opened for bidding	0	\N	\N	116	\N	\N	1	\N
+394	2016-11-21 18:21:48.273	created	0	\N	\N	117	\N	\N	1	\N
+395	2016-11-21 18:22:07.812	opened for bidding	0	\N	\N	117	\N	\N	1	\N
+396	2016-11-21 18:23:04.733	created	1	\N	96	\N	\N	\N	1	\N
+397	2016-11-21 18:23:12.101	assigned	1	\N	96	\N	\N	\N	1	\N
+398	2016-11-21 18:27:32.783	created	0	\N	\N	118	\N	\N	1	\N
+399	2016-11-21 18:27:39.886	opened for bidding	0	\N	\N	118	\N	\N	1	\N
+400	2016-11-21 18:29:35.665	created	1	\N	97	\N	\N	\N	1	\N
+401	2016-11-21 18:29:39.886	assigned	1	\N	97	\N	\N	\N	1	\N
+402	2016-11-21 18:29:46.313	accepted	1	\N	97	\N	\N	\N	1	\N
+403	2016-11-24 09:17:55.952	marked done	1	\N	96	\N	\N	\N	1	\N
+404	2016-11-24 09:22:15.582	created	0	\N	\N	119	\N	\N	1	\N
+405	2016-11-24 09:22:26.912	opened for bidding	0	\N	\N	119	\N	\N	1	\N
+406	2016-11-24 09:47:19.6	created	1	\N	98	\N	\N	\N	1	\N
+407	2016-11-24 09:47:26.962	assigned	1	\N	98	\N	\N	\N	1	\N
+408	2016-11-24 09:47:39.33	accepted	1	\N	98	\N	\N	\N	1	\N
+409	2016-11-24 09:50:50.616	accepted	1	\N	96	\N	\N	\N	1	\N
+410	2016-11-24 10:38:03.326	created	0	\N	\N	120	\N	\N	1	\N
+411	2016-11-24 10:38:09.404	opened for bidding	0	\N	\N	120	\N	\N	1	\N
+412	2016-11-24 12:08:59.163	created	3	\N	\N	\N	418	\N	1	\N
+413	2016-11-24 12:12:32.636	created	4	33	\N	\N	\N	\N	1	\N
+414	2016-11-24 12:15:05.875	created	4	34	\N	\N	\N	\N	1	\N
+415	2016-11-24 17:08:27.356	created	1	\N	99	\N	\N	\N	1	\N
+416	2016-11-24 17:08:36.222	assigned	1	\N	99	\N	\N	\N	1	\N
+417	2016-11-24 17:08:43.932	accepted	1	\N	99	\N	\N	\N	1	\N
+418	2016-11-24 17:14:36.858	created	0	\N	\N	121	\N	\N	1	\N
+419	2016-11-24 17:14:49.772	opened for bidding	0	\N	\N	121	\N	\N	1	\N
+420	2016-11-25 01:15:20.481	created	4	35	\N	\N	\N	\N	1	\N
+421	2016-11-25 09:11:24.093	proposed	2	\N	\N	\N	\N	32	1	\N
+422	2016-11-25 09:17:02.01	proposed	2	\N	\N	\N	\N	33	1	\N
+423	2016-11-25 09:18:05.437	marketing proposed as parent	2	\N	\N	\N	\N	32	1	\N
+424	2016-11-25 09:18:16.73	marketing accepted as parent	2	\N	\N	\N	\N	32	1	\N
+425	2016-11-25 11:35:57.168	created	0	\N	\N	122	\N	\N	1	\N
+426	2016-11-25 11:36:06.084	opened for bidding	0	\N	\N	122	\N	\N	1	\N
+427	2016-11-25 11:36:27.034	created	1	\N	100	\N	\N	\N	1	\N
+428	2016-11-25 11:36:37.07	assigned	1	\N	100	\N	\N	\N	1	\N
+429	2016-11-25 11:36:43.327	marked done	1	\N	100	\N	\N	\N	1	\N
+430	2016-11-25 11:36:54.319	accepted	1	\N	100	\N	\N	\N	1	\N
+431	2016-11-25 13:58:13.37	created	0	\N	\N	123	\N	\N	1	\N
+432	2016-11-25 13:58:22.436	opened for bidding	0	\N	\N	123	\N	\N	1	\N
+433	2016-11-25 13:59:04.387	created	1	\N	101	\N	\N	\N	1	\N
+434	2016-11-25 13:59:13.792	assigned	1	\N	101	\N	\N	\N	1	\N
+435	2016-11-25 14:03:31.954	created	0	\N	\N	124	\N	\N	1	\N
+436	2016-11-25 19:42:28.204	marked done	1	\N	101	\N	\N	\N	1	\N
+437	2016-11-25 19:42:35.704	accepted	1	\N	101	\N	\N	\N	1	\N
+438	2016-11-26 20:31:54.515	created	0	\N	\N	125	\N	\N	1	\N
+439	2016-11-26 20:32:06.382	opened for bidding	0	\N	\N	125	\N	\N	1	\N
+440	2016-11-26 20:37:39.941	proposed	2	\N	\N	\N	\N	34	1	\N
+441	2016-11-26 20:41:53.792	proposed	2	\N	\N	\N	\N	35	1	\N
+442	2016-11-27 11:20:09.2	created	0	\N	\N	126	\N	\N	1	\N
+443	2016-11-27 11:20:19.385	opened for bidding	0	\N	\N	126	\N	\N	1	\N
+444	2016-11-27 11:21:43.057	created	1	\N	102	\N	\N	\N	1	\N
+445	2016-11-27 23:35:52.276	accepted	3	\N	\N	\N	418	\N	1	\N
+446	2016-11-28 09:32:18.938	created	1	\N	103	\N	\N	\N	1	\N
+447	2016-11-29 08:36:44.51	proposed	2	\N	\N	\N	\N	36	1	\N
+448	2016-11-29 08:47:17.959	proposed	2	\N	\N	\N	\N	37	1	\N
+449	2016-11-29 09:28:25.47	not accepted	2	\N	\N	\N	\N	36	1	\N
+450	2016-11-29 09:29:20.92	accepted	2	\N	\N	\N	\N	37	1	\N
+451	2016-11-29 09:29:33.609	deleted	2	\N	\N	\N	\N	37	1	\N
+452	2016-11-29 09:47:54.123	created	0	\N	\N	127	\N	\N	1	\N
+453	2016-11-29 09:49:59.78	created	0	\N	\N	128	\N	\N	1	\N
+454	2016-11-29 09:54:45.474	created	0	\N	\N	129	\N	\N	1	\N
+455	2016-11-29 10:18:22.443	opened for bidding	0	\N	\N	127	\N	\N	1	\N
+456	2016-11-29 10:18:29.931	opened for bidding	0	\N	\N	128	\N	\N	1	\N
+457	2016-11-29 10:18:36.584	opened for bidding	0	\N	\N	129	\N	\N	1	\N
+458	2016-11-29 10:21:46.465	created	0	\N	\N	130	\N	\N	1	\N
+459	2016-11-29 10:23:51.162	opened for bidding	0	\N	\N	130	\N	\N	1	\N
+460	2016-11-29 10:30:29.046	created	1	\N	104	\N	\N	\N	1	\N
+461	2016-11-29 10:31:13.451	assigned	1	\N	104	\N	\N	\N	1	\N
+462	2016-11-29 10:31:56.646	accepted	1	\N	104	\N	\N	\N	1	\N
+463	2016-11-29 10:35:58.765	created	1	\N	105	\N	\N	\N	1	\N
+464	2016-11-29 10:36:08.207	assigned	1	\N	105	\N	\N	\N	1	\N
+465	2016-11-29 10:36:15.118	accepted	1	\N	105	\N	\N	\N	1	\N
+466	2016-11-29 10:46:12.682	created	1	\N	106	\N	\N	\N	1	\N
+467	2016-11-29 10:46:15.442	assigned	1	\N	106	\N	\N	\N	1	\N
+468	2016-11-29 10:46:21.823	accepted	1	\N	106	\N	\N	\N	1	\N
+469	2016-11-29 10:55:04.886	created	1	\N	107	\N	\N	\N	1	\N
+470	2016-11-29 10:55:08.313	assigned	1	\N	107	\N	\N	\N	1	\N
+471	2016-11-29 10:55:14.766	accepted	1	\N	107	\N	\N	\N	1	\N
+472	2016-11-29 13:11:39.305	created	0	\N	\N	131	\N	\N	1	\N
+473	2016-11-29 16:07:24.512	proposed	2	\N	\N	\N	\N	38	1	\N
+474	2016-11-29 16:07:39.034	not accepted	2	\N	\N	\N	\N	38	1	\N
+475	2016-11-29 17:25:15.577	opened for bidding	0	\N	\N	131	\N	\N	1	\N
+476	2016-11-29 17:25:43.69	created	1	\N	108	\N	\N	\N	1	\N
+477	2016-11-29 18:28:54.888	assigned	1	\N	108	\N	\N	\N	1	\N
+478	2016-11-29 18:29:41.948	marked done	1	\N	108	\N	\N	\N	1	\N
+479	2016-11-29 18:29:47.536	accepted	1	\N	108	\N	\N	\N	1	\N
+480	2016-11-29 18:33:26.99	created	0	\N	\N	132	\N	\N	1	\N
+481	2016-11-29 18:33:40.824	opened for bidding	0	\N	\N	132	\N	\N	1	\N
+482	2016-11-30 08:25:44.026	created	0	\N	\N	133	\N	\N	1	\N
+483	2016-11-30 08:53:20.778	created	0	\N	\N	134	\N	\N	1	\N
+484	2016-11-30 11:08:27.445	created	3	\N	\N	\N	476	\N	1	\N
+485	2016-11-30 11:10:13.359	created	4	36	\N	\N	\N	\N	1	\N
+486	2016-11-30 11:11:11.684	created	4	37	\N	\N	\N	\N	1	\N
+487	2016-11-30 11:11:55.333	created	4	38	\N	\N	\N	\N	1	\N
+488	2016-11-30 11:15:10.54	created	0	\N	\N	135	\N	\N	1	\N
+489	2016-11-30 11:30:59.575	opened for bidding	0	\N	\N	135	\N	\N	1	\N
+490	2016-11-30 11:31:30.515	created	1	\N	109	\N	\N	\N	1	\N
+491	2016-11-30 11:31:36.299	assigned	1	\N	109	\N	\N	\N	1	\N
+492	2016-11-30 11:34:23.447	created	0	\N	\N	136	\N	\N	1	\N
+493	2016-11-30 11:34:32.065	opened for bidding	0	\N	\N	136	\N	\N	1	\N
+494	2016-11-30 11:38:09.421	created	0	\N	\N	137	\N	\N	1	\N
+495	2016-11-30 11:38:17.672	opened for bidding	0	\N	\N	137	\N	\N	1	\N
+496	2016-11-30 12:23:54.152	created	0	\N	\N	138	\N	\N	1	\N
+497	2016-11-30 12:24:00.929	opened for bidding	0	\N	\N	138	\N	\N	1	\N
+498	2016-11-30 16:46:25.529	marked done	1	\N	109	\N	\N	\N	1	\N
+499	2016-11-30 16:46:29.016	marked done	1	\N	109	\N	\N	\N	1	\N
+500	2016-11-30 16:46:41.487	accepted	1	\N	109	\N	\N	\N	1	\N
+501	2016-11-30 17:38:52.376	created	0	\N	\N	139	\N	\N	1	\N
+502	2016-11-30 17:38:58.405	opened for bidding	0	\N	\N	139	\N	\N	1	\N
+503	2016-11-30 17:39:56.446	created	1	\N	110	\N	\N	\N	1	\N
+504	2016-11-30 17:40:11.785	assigned	1	\N	110	\N	\N	\N	1	\N
+505	2016-11-30 17:40:18.458	accepted	1	\N	110	\N	\N	\N	1	\N
+506	2016-11-30 18:11:36.64	opened for bidding	0	\N	\N	134	\N	\N	1	\N
+507	2016-11-30 22:16:07.13	created	4	39	\N	\N	\N	\N	1	\N
+508	2016-11-30 22:54:59.492	accepted	3	\N	\N	\N	476	\N	1	\N
+509	2016-11-30 23:16:29.203	created	0	\N	\N	140	\N	\N	1	\N
+510	2016-11-30 23:16:38.827	opened for bidding	0	\N	\N	140	\N	\N	1	\N
+511	2016-11-30 23:17:48.093	created	1	\N	111	\N	\N	\N	1	\N
+512	2016-11-30 23:18:10.809	assigned	1	\N	111	\N	\N	\N	1	\N
+513	2016-11-30 23:18:18.393	accepted	1	\N	111	\N	\N	\N	1	\N
+514	2016-11-30 23:54:15.084	created	0	\N	\N	141	\N	\N	1	\N
+515	2016-11-30 23:54:36.338	opened for bidding	0	\N	\N	141	\N	\N	1	\N
+516	2016-12-01 00:30:19.921	created	0	\N	\N	142	\N	\N	1	\N
+517	2016-12-01 00:30:29.644	opened for bidding	0	\N	\N	142	\N	\N	1	\N
+518	2016-12-01 00:30:47.609	created	1	\N	112	\N	\N	\N	1	\N
+519	2016-12-01 00:30:58.882	marked done	1	\N	112	\N	\N	\N	1	\N
+520	2016-12-01 00:31:08.957	assigned	1	\N	112	\N	\N	\N	1	\N
+521	2016-12-01 00:31:22.318	accepted	1	\N	112	\N	\N	\N	1	\N
+522	2016-12-01 09:50:22.585	created	3	\N	\N	\N	502	\N	1	\N
+523	2016-12-01 10:32:57.227	created	1	\N	113	\N	\N	\N	1	\N
+524	2016-12-01 10:33:03.252	assigned	1	\N	113	\N	\N	\N	1	\N
+525	2016-12-01 10:33:10.026	accepted	1	\N	113	\N	\N	\N	1	\N
+526	2016-12-01 12:26:29.476	created	1	\N	114	\N	\N	\N	1	\N
+527	2016-12-01 12:26:49.51	marked done	1	\N	114	\N	\N	\N	1	\N
+528	2016-12-01 12:31:47.762	assigned	1	\N	114	\N	\N	\N	1	\N
+529	2016-12-01 12:32:00.991	accepted	1	\N	114	\N	\N	\N	1	\N
+530	2016-12-01 12:34:48.108	proposed	2	\N	\N	\N	\N	39	1	\N
+531	2016-12-01 12:41:32.568	proposed	2	\N	\N	\N	\N	40	5	\N
+532	2016-12-01 12:41:50.544	accepted	2	\N	\N	\N	\N	40	5	\N
+533	2016-12-01 12:43:29.06	proposed	2	\N	\N	\N	\N	41	5	\N
+534	2016-12-01 12:44:15.423	proposed	2	\N	\N	\N	\N	42	5	\N
+535	2016-12-01 12:45:54.209	proposed	2	\N	\N	\N	\N	43	5	\N
+536	2016-12-01 12:46:15.948	accepted	2	\N	\N	\N	\N	41	5	\N
+537	2016-12-01 12:46:23.804	accepted	2	\N	\N	\N	\N	42	5	\N
+538	2016-12-01 12:46:23.835	accepted	2	\N	\N	\N	\N	43	5	\N
+539	2016-12-01 12:52:10.455	created	0	\N	\N	144	\N	\N	1	\N
+540	2016-12-01 12:55:06.701	proposed	2	\N	\N	\N	\N	44	5	\N
+541	2016-12-01 12:55:21.009	accepted	2	\N	\N	\N	\N	44	5	\N
+542	2016-12-01 12:56:17.735	proposed	2	\N	\N	\N	\N	45	5	\N
+543	2016-12-01 12:56:37.596	accepted	2	\N	\N	\N	\N	45	5	\N
+544	2016-12-01 13:31:54.124	not accepted	2	\N	\N	\N	\N	39	1	\N
+545	2016-12-02 09:08:01.723	accepted	3	\N	\N	\N	502	\N	1	\N
+546	2016-12-02 10:55:45.893	created	0	\N	\N	145	\N	\N	1	\N
+547	2016-12-02 10:56:05.897	opened for bidding	0	\N	\N	145	\N	\N	1	\N
+548	2016-12-02 10:56:37.003	created	1	\N	116	\N	\N	\N	1	\N
+549	2016-12-02 10:56:51.443	assigned	1	\N	116	\N	\N	\N	1	\N
+550	2016-12-02 15:29:48.584	created	0	\N	\N	146	\N	\N	1	\N
+551	2016-12-02 15:29:57.245	opened for bidding	0	\N	\N	146	\N	\N	1	\N
+552	2016-12-02 15:30:29.113	created	1	\N	117	\N	\N	\N	1	\N
+553	2016-12-02 15:30:35.917	assigned	1	\N	117	\N	\N	\N	1	\N
+554	2016-12-02 15:46:56.987	created	3	\N	\N	\N	532	\N	1	\N
+555	2016-12-02 16:35:56.493	accepted	3	\N	\N	\N	532	\N	1	\N
+556	2016-12-02 17:49:47.22	created	0	\N	\N	147	\N	\N	1	\N
+557	2016-12-02 17:55:35.849	proposed	2	\N	\N	\N	\N	46	1	\N
+558	2016-12-04 00:48:35.307	not accepted	1	\N	61	\N	\N	\N	1	\N
+559	2016-12-04 01:13:13.383	created	0	\N	\N	148	\N	\N	1	\N
+560	2016-12-04 12:42:42.695	created	0	\N	\N	149	\N	\N	1	\N
+561	2016-12-04 12:42:48.487	opened for bidding	0	\N	\N	149	\N	\N	1	\N
+562	2016-12-04 12:44:07.746	created	1	\N	118	\N	\N	\N	1	\N
+563	2016-12-04 12:44:21.976	assigned	1	\N	118	\N	\N	\N	1	\N
+564	2016-12-04 12:45:07.369	opened for bidding	0	\N	\N	148	\N	\N	1	\N
+565	2016-12-04 12:45:34.952	marked done	1	\N	117	\N	\N	\N	1	\N
+566	2016-12-04 12:45:42.351	accepted	1	\N	117	\N	\N	\N	1	\N
+567	2016-12-04 12:46:47.615	marked done	1	\N	116	\N	\N	\N	1	\N
+568	2016-12-04 12:46:55.893	accepted	1	\N	116	\N	\N	\N	1	\N
+569	2016-12-04 12:56:37.527	created	0	\N	\N	150	\N	\N	1	\N
+570	2016-12-04 13:01:27.129	created	0	\N	\N	151	\N	\N	1	\N
+571	2016-12-04 13:02:13.363	opened for bidding	0	\N	\N	124	\N	\N	1	\N
+572	2016-12-04 13:07:10.083	opened for bidding	0	\N	\N	150	\N	\N	1	\N
+573	2016-12-04 13:07:10.14	opened for bidding	0	\N	\N	151	\N	\N	1	\N
+574	2016-12-04 16:15:50.783	rejected	3	\N	\N	\N	278	\N	1	\N
+575	2016-12-04 17:18:27.273	marked done	1	\N	118	\N	\N	\N	1	\N
+576	2016-12-04 17:18:37.057	accepted	1	\N	118	\N	\N	\N	1	\N
+577	2016-12-04 17:20:36.994	created	1	\N	119	\N	\N	\N	1	\N
+578	2016-12-04 17:20:46.699	assigned	1	\N	119	\N	\N	\N	1	\N
+579	2016-12-04 17:57:49.228	created	1	\N	120	\N	\N	\N	1	\N
+580	2016-12-04 18:00:30.087	new	5	\N	\N	\N	\N	\N	1	26
+581	2016-12-04 18:00:49.819	new	5	\N	\N	\N	\N	\N	1	27
+582	2016-12-04 22:39:05.475	assigned	1	\N	120	\N	\N	\N	1	\N
+583	2016-12-04 22:39:26.089	accepted	1	\N	120	\N	\N	\N	1	\N
+584	2016-12-05 08:35:19.74	created	0	\N	\N	152	\N	\N	1	\N
+585	2016-12-05 08:35:24.984	opened for bidding	0	\N	\N	152	\N	\N	1	\N
+586	2016-12-05 08:35:57.613	created	1	\N	121	\N	\N	\N	1	\N
+587	2016-12-05 08:36:04.144	assigned	1	\N	121	\N	\N	\N	1	\N
+588	2016-12-06 10:56:21.195	created	0	\N	\N	153	\N	\N	1	\N
+589	2016-12-06 11:04:47.904	opened for bidding	0	\N	\N	153	\N	\N	1	\N
+590	2016-12-06 11:07:42.244	created	0	\N	\N	154	\N	\N	1	\N
+591	2016-12-06 11:08:37.086	opened for bidding	0	\N	\N	154	\N	\N	1	\N
+592	2016-12-06 11:13:42.323	created	1	\N	122	\N	\N	\N	1	\N
+593	2016-12-06 11:13:50.757	assigned	1	\N	122	\N	\N	\N	1	\N
+594	2016-12-06 11:28:00.164	created	0	\N	\N	155	\N	\N	1	\N
+595	2016-12-06 11:38:17.588	created	0	\N	\N	156	\N	\N	1	\N
+596	2016-12-06 11:38:44.191	opened for bidding	0	\N	\N	156	\N	\N	1	\N
+597	2016-12-06 11:40:00.051	created	0	\N	\N	157	\N	\N	1	\N
+598	2016-12-06 11:40:19.623	opened for bidding	0	\N	\N	155	\N	\N	1	\N
+599	2016-12-06 11:40:19.74	opened for bidding	0	\N	\N	157	\N	\N	1	\N
 \.
 
 
 ALTER TABLE activity ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3344 (class 0 OID 0)
+-- TOC entry 3345 (class 0 OID 0)
 -- Dependencies: 182
 -- Name: activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('activity_id_seq', 558, true);
+SELECT pg_catalog.setval('activity_id_seq', 599, true);
 
 
 --
--- TOC entry 3345 (class 0 OID 0)
+-- TOC entry 3346 (class 0 OID 0)
 -- Dependencies: 184
 -- Name: app_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('app_users_id_seq', 11, true);
+SELECT pg_catalog.setval('app_users_id_seq', 12, true);
 
 
 --
--- TOC entry 3294 (class 0 OID 1402174)
+-- TOC entry 3295 (class 0 OID 1601471)
 -- Dependencies: 185
 -- Data for Name: argument_backers; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1581,7 +1708,7 @@ COPY argument_backers (argument_id, backers_id) FROM stdin;
 ALTER TABLE argument_backers ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3346 (class 0 OID 0)
+-- TOC entry 3347 (class 0 OID 0)
 -- Dependencies: 187
 -- Name: arguments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1590,7 +1717,7 @@ SELECT pg_catalog.setval('arguments_id_seq', 39, true);
 
 
 --
--- TOC entry 3297 (class 0 OID 1402185)
+-- TOC entry 3298 (class 0 OID 1601482)
 -- Dependencies: 188
 -- Data for Name: authorized_emails; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1602,13 +1729,14 @@ COPY authorized_emails (id, authorized, email) FROM stdin;
 3	t	pepo.ospina@gmail.com
 4	t	monicanavasr@gmail.com
 5	t	jason@roundtablelaw.ca
+6	t	rosapuigmore@gmail.com
 \.
 
 
 ALTER TABLE authorized_emails ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3347 (class 0 OID 0)
+-- TOC entry 3348 (class 0 OID 0)
 -- Dependencies: 189
 -- Name: authorized_emails_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
@@ -1617,8 +1745,8 @@ SELECT pg_catalog.setval('authorized_emails_id_seq', 3, true);
 
 
 --
--- TOC entry 3337 (class 0 OID 1404662)
--- Dependencies: 228
+-- TOC entry 3300 (class 0 OID 1601487)
+-- Dependencies: 190
 -- Data for Name: authorized_projects; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1633,8 +1761,8 @@ COPY authorized_projects (id, authorized, project_name) FROM stdin;
 ALTER TABLE authorized_projects ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3348 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 3349 (class 0 OID 0)
+-- Dependencies: 191
 -- Name: authorized_projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1642,17 +1770,17 @@ SELECT pg_catalog.setval('authorized_projects_id_seq', 1, false);
 
 
 --
--- TOC entry 3349 (class 0 OID 0)
--- Dependencies: 191
+-- TOC entry 3350 (class 0 OID 0)
+-- Dependencies: 193
 -- Name: bids_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('bids_id_seq', 117, true);
+SELECT pg_catalog.setval('bids_id_seq', 122, true);
 
 
 --
--- TOC entry 3326 (class 0 OID 1402280)
--- Dependencies: 217
+-- TOC entry 3331 (class 0 OID 1601587)
+-- Dependencies: 221
 -- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1669,8 +1797,8 @@ COPY reviews (id, creation_date, description, rate, creator_id, reviewee_id) FRO
 ALTER TABLE reviews ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3301 (class 0 OID 1402198)
--- Dependencies: 192
+-- TOC entry 3304 (class 0 OID 1601500)
+-- Dependencies: 194
 -- Data for Name: bids_reviews; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1687,8 +1815,8 @@ COPY bids_reviews (bid_id, reviews_id) FROM stdin;
 ALTER TABLE bids_reviews ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3303 (class 0 OID 1402207)
--- Dependencies: 194
+-- TOC entry 3306 (class 0 OID 1601509)
+-- Dependencies: 196
 -- Data for Name: cbtions_bids; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1808,52 +1936,19 @@ COPY cbtions_bids (cbtion_id, bids_id) FROM stdin;
 143	115
 145	116
 146	117
+149	118
+132	119
+151	120
+152	121
+154	122
 \.
 
 
 ALTER TABLE cbtions_bids ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3307 (class 0 OID 1402218)
--- Dependencies: 198
--- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
---
-
-ALTER TABLE comments DISABLE TRIGGER ALL;
-
-COPY comments (id, content, creation_date, relevance, cbtion_id, creator_id, parent_id) FROM stdin;
-1	This comment was added after completing the contribution	2016-09-27 17:40:21.011	0	63	1	\N
-2	and so this reply to the comment. Would it work?	2016-09-27 17:40:43.698	0	63	1	1
-3	yes!	2016-09-27 17:40:57.131	0	63	1	2
-4	A dummy version of the welcome page is already there but should be improved	2016-09-28 15:59:26.363	0	59	1	\N
-5	After making an update of goals, now I think that perhaps we should try to stick with the single goal per contribution approach. Since goal have parent goals, it can be assumed that a contribution applies to its goal, and also to all its parents. Users can then discuss and agree on the goals structure, rather than on the assigning multiple goals to one contribution 	2016-10-03 14:51:02.765	0	40	1	\N
-6	Perhaps we should keep this contribution limited to a first draft that clearly conveys the message and shows the key features of the application and use other contributions to improve it, and eventually convert it into a welcome video	2016-10-06 17:16:33.338	0	68	1	\N
-8	Another option is to be able to link arguments applying these relation after they have been created. This seems more complex though	2016-10-24 15:33:51.589	0	89	1	\N
-9	I can share the edition file of the older version to be used as a starting point. It already includes a lot of cuts and extensions. The narration file is in https://drive.google.com/drive/u/0/folders/0B6HEie5ZN03bMnFyaWtEcHYxMzQ	2016-11-11 10:28:00.243	0	106	1	\N
-11	This is no longer an issue after migrating to spring boot	2016-11-20 17:51:25.966	0	100	1	\N
-12	The basic test infrastructure should include an example of creating users in the database using a test-only method, and perform other operations on the database using the formal application services. The entire operations in the database shall be valid within the test, but rolled back when it finishes.	2016-11-21 12:30:34.175	0	116	\N	\N
-13	This is not mandatory now since there is a form in at collectiveone.org to provide the email and ask for an invitation	2016-11-26 12:56:29.163	0	103	1	\N
-14	First Google result seems promising : http://www.codingdrama.com/bootstrap-markdown/	2016-11-29 08:39:37.439	0	125	1	\N
-15	This implies to configure, replace or extend the current autocomplete functionality to show all the possible suggestions when the text-box is empty. Currently, suggestions are shown only after the first letter is typed	2016-11-29 10:20:29.055	0	128	1	\N
-16	The contributions created and the comments on the slack are considered enough. Go on and Bid!	2016-11-29 10:24:50.666	0	130	1	\N
-17	I think this is called tooltips. We could directly use bootstrap plugin http://www.w3schools.com/bootstrap/bootstrap_tooltip.asp	2016-11-29 10:26:12.575	0	127	1	\N
-19	Not quite sure how the plugin chooses the options in the dropdown menu. But I have the impression that it is choosing goals at the lowest level (the leaves in the goal tree). Maybe we could try to have these displayed with the name of the parent goal? E.g. frontend (webapp)\nMight require changing the plugin though...	2016-11-30 08:30:46.77	0	128	3	15
-20	For twitter, there is this site https://dev.twitter.com/cards/types/summary	2016-11-30 11:36:24.798	0	136	1	\N
-21	I am working here: Feel free to come and visit\nhttps://docs.google.com/presentation/d/11AUv64WQXDppnxCIiK63HDEOIIRweHdSBb_MDd2ug_E/edit	2016-11-30 11:49:59.233	0	135	1	\N
-18	This is a short term solution to the tree structure proposed in  http://www.collectiveone.org/views/cbtionPageR/130 \n	2016-11-30 08:26:45.351	1	133	3	\N
-22	The problem is that the link should point to the contributions of one project in particular. Should it point to the contributions of CollectiveOne only?	2016-11-30 18:14:44.641	0	133	1	18
-23	This is related to the http session. Projects at show only are updated at session start. Project creation is for the moment very sporadic, this should be reviewed and fixed but perhaps is not a priority.	2016-12-02 09:44:19.894	0	144	1	\N
-24	I agree that for the new algorithm to be a real alternative, we need to allow for a non-homogeneous distribution of pps. Having said that, the proposal that I have is informative about how to conceptualise the statistical inference problem. Indeed, I think that it is the first step, and it is the best way to present the decision mechanism to a general audience. I believe this adds value to the project even if it is not implemented.\n\nBased on the above, I think that I am willing to revise the number of pps that I requested. I believe that the model and algorithm with homogeneous distribution of pps should be worth 75 points.	2016-12-02 14:47:56.977	0	55	3	7
-7	This is a significant (and quite fundamental) contribution by @estenanortizospina, however I suggest we consider it closed once it has been tested to include non-homogeneous pps distributions, and when a time bound mechanism, similar to the one already in place, has been specified and tested in R.	2016-10-07 16:13:33.935	1	55	1	\N
-25	Consider how this is different from the use case where history is desired but the project should be "retired".	2016-12-02 20:20:22.192	0	147	9	\N
-\.
-
-
-ALTER TABLE comments ENABLE TRIGGER ALL;
-
---
--- TOC entry 3304 (class 0 OID 1402210)
--- Dependencies: 195
+-- TOC entry 3307 (class 0 OID 1601512)
+-- Dependencies: 197
 -- Data for Name: cbtions_comments; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1879,23 +1974,24 @@ COPY cbtions_comments (cbtion_id, comments_id) FROM stdin;
 135	21
 144	23
 147	25
+151	26
 \.
 
 
 ALTER TABLE cbtions_comments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3350 (class 0 OID 0)
--- Dependencies: 196
+-- TOC entry 3351 (class 0 OID 0)
+-- Dependencies: 198
 -- Name: cbtions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('cbtions_id_seq', 147, true);
+SELECT pg_catalog.setval('cbtions_id_seq', 157, true);
 
 
 --
--- TOC entry 3324 (class 0 OID 1402275)
--- Dependencies: 215
+-- TOC entry 3329 (class 0 OID 1601582)
+-- Dependencies: 219
 -- Data for Name: promoters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1926,17 +2022,18 @@ COPY promoters (id, creation_date, promote_up, user_id) FROM stdin;
 11	2016-11-29 10:37:21.252	t	1
 24	2016-11-30 18:12:13.216	t	1
 25	2016-12-02 10:18:27.382	t	1
-26	2016-12-02 10:18:30.577	t	1
 27	2016-12-02 10:18:45.003	t	1
 28	2016-12-02 14:48:16.138	t	3
+29	2016-12-04 12:47:21.339	f	1
+26	2016-12-04 13:01:51.909	t	1
 \.
 
 
 ALTER TABLE promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3306 (class 0 OID 1402215)
--- Dependencies: 197
+-- TOC entry 3309 (class 0 OID 1601517)
+-- Dependencies: 199
 -- Data for Name: cbtions_promoters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1968,14 +2065,15 @@ COPY cbtions_promoters (cbtion_id, promoters_id) FROM stdin;
 125	25
 132	26
 89	27
+144	29
 \.
 
 
 ALTER TABLE cbtions_promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3308 (class 0 OID 1402224)
--- Dependencies: 199
+-- TOC entry 3311 (class 0 OID 1601526)
+-- Dependencies: 201
 -- Data for Name: comments_answers; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -1987,23 +2085,24 @@ COPY comments_answers (comment_id, replies_id) FROM stdin;
 15	19
 18	22
 7	24
+26	27
 \.
 
 
 ALTER TABLE comments_answers ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3351 (class 0 OID 0)
--- Dependencies: 200
+-- TOC entry 3352 (class 0 OID 0)
+-- Dependencies: 202
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('comments_id_seq', 25, true);
+SELECT pg_catalog.setval('comments_id_seq', 27, true);
 
 
 --
--- TOC entry 3310 (class 0 OID 1402229)
--- Dependencies: 201
+-- TOC entry 3313 (class 0 OID 1601531)
+-- Dependencies: 203
 -- Data for Name: comments_promoters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2018,8 +2117,8 @@ COPY comments_promoters (comment_id, promoters_id) FROM stdin;
 ALTER TABLE comments_promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3352 (class 0 OID 0)
--- Dependencies: 203
+-- TOC entry 3353 (class 0 OID 0)
+-- Dependencies: 205
 -- Name: decision_realms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2027,8 +2126,8 @@ SELECT pg_catalog.setval('decision_realms_id_seq', 11, true);
 
 
 --
--- TOC entry 3334 (class 0 OID 1402306)
--- Dependencies: 225
+-- TOC entry 3339 (class 0 OID 1601613)
+-- Dependencies: 229
 -- Data for Name: voters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2039,17 +2138,17 @@ COPY voters (id, weight, voter_user_id) FROM stdin;
 5	100	1
 6	101	5
 3	104	4
-1	2590	1
 8	100	3
 2	281	3
+1	2606	1
 \.
 
 
 ALTER TABLE voters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3313 (class 0 OID 1402237)
--- Dependencies: 204
+-- TOC entry 3316 (class 0 OID 1601539)
+-- Dependencies: 206
 -- Data for Name: decision_realms_voters; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2069,8 +2168,8 @@ COPY decision_realms_voters (decision_realm_id, voters_id) FROM stdin;
 ALTER TABLE decision_realms_voters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3315 (class 0 OID 1402246)
--- Dependencies: 206
+-- TOC entry 3318 (class 0 OID 1601548)
+-- Dependencies: 208
 -- Data for Name: decisions_args; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2121,17 +2220,17 @@ COPY decisions_args (decision_id, arguments_id) FROM stdin;
 ALTER TABLE decisions_args ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3353 (class 0 OID 0)
--- Dependencies: 207
+-- TOC entry 3354 (class 0 OID 0)
+-- Dependencies: 209
 -- Name: decisions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('decisions_id_seq', 535, true);
+SELECT pg_catalog.setval('decisions_id_seq', 566, true);
 
 
 --
--- TOC entry 3330 (class 0 OID 1402296)
--- Dependencies: 221
+-- TOC entry 3335 (class 0 OID 1601603)
+-- Dependencies: 225
 -- Data for Name: theses; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2507,14 +2606,35 @@ COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 369	2016-12-02 15:29:55.998	1	2590	1	528
 370	2016-12-02 15:30:31.379	1	2590	1	530
 371	2016-12-02 16:35:53.325	1	2590	1	532
+372	2016-12-04 12:42:46.751	1	2590	1	537
+373	2016-12-04 12:44:15.951	1	2590	1	539
+374	2016-12-04 12:45:02.684	1	2590	1	536
+375	2016-12-04 12:45:37.317	1	2590	1	531
+376	2016-12-04 12:46:49.78	1	2595	1	527
+377	2016-12-04 13:02:05.671	1	2598	1	436
+378	2016-12-04 13:07:04.009	1	2598	1	542
+379	2016-12-04 13:07:04.694	1	2598	1	543
+380	2016-12-04 16:15:48.783	0	2598	1	278
+381	2016-12-04 17:18:34.378	1	2598	1	540
+382	2016-12-04 17:20:44.031	1	2603	1	547
+383	2016-12-04 22:39:02.98	1	2603	1	549
+384	2016-12-04 22:39:22.443	1	2603	1	550
+385	2016-12-05 08:35:23.062	1	2606	1	551
+386	2016-12-05 08:36:00.735	1	2606	1	553
+387	2016-12-06 11:04:43.555	1	2606	1	555
+388	2016-12-06 11:08:32.886	1	2606	1	557
+389	2016-12-06 11:13:44.833	1	2606	1	559
+390	2016-12-06 11:38:42.358	1	2606	1	562
+391	2016-12-06 11:40:13.301	1	2606	1	564
+392	2016-12-06 11:40:14.148	1	2606	1	561
 \.
 
 
 ALTER TABLE theses ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3317 (class 0 OID 1402251)
--- Dependencies: 208
+-- TOC entry 3320 (class 0 OID 1601553)
+-- Dependencies: 210
 -- Data for Name: decisions_thesescast; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2886,14 +3006,35 @@ COPY decisions_thesescast (decision_id, theses_cast_id) FROM stdin;
 528	369
 530	370
 532	371
+537	372
+539	373
+536	374
+531	375
+527	376
+436	377
+542	378
+543	379
+278	380
+540	381
+547	382
+549	383
+550	384
+551	385
+553	386
+555	387
+557	388
+559	389
+562	390
+564	391
+561	392
 \.
 
 
 ALTER TABLE decisions_thesescast ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3354 (class 0 OID 0)
--- Dependencies: 210
+-- TOC entry 3355 (class 0 OID 0)
+-- Dependencies: 212
 -- Name: goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2901,8 +3042,8 @@ SELECT pg_catalog.setval('goal_id_seq', 46, true);
 
 
 --
--- TOC entry 3355 (class 0 OID 0)
--- Dependencies: 211
+-- TOC entry 3356 (class 0 OID 0)
+-- Dependencies: 213
 -- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2910,8 +3051,8 @@ SELECT pg_catalog.setval('hibernate_sequence', 1, true);
 
 
 --
--- TOC entry 3339 (class 0 OID 1414133)
--- Dependencies: 230
+-- TOC entry 3324 (class 0 OID 1601566)
+-- Dependencies: 214
 -- Data for Name: mail_subscriptions; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2925,8 +3066,8 @@ COPY mail_subscriptions (id, subscribed, project_id, user_id) FROM stdin;
 ALTER TABLE mail_subscriptions ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3356 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 3357 (class 0 OID 0)
+-- Dependencies: 215
 -- Name: mail_subscriptions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2934,8 +3075,8 @@ SELECT pg_catalog.setval('mail_subscriptions_id_seq', 1, true);
 
 
 --
--- TOC entry 3321 (class 0 OID 1402264)
--- Dependencies: 212
+-- TOC entry 3326 (class 0 OID 1601571)
+-- Dependencies: 216
 -- Data for Name: password_recovery_token; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2951,8 +3092,8 @@ COPY password_recovery_token (id, expiry_date, token, user_id) FROM stdin;
 ALTER TABLE password_recovery_token ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3357 (class 0 OID 0)
--- Dependencies: 214
+-- TOC entry 3358 (class 0 OID 0)
+-- Dependencies: 218
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2960,17 +3101,17 @@ SELECT pg_catalog.setval('projects_id_seq', 5, true);
 
 
 --
--- TOC entry 3358 (class 0 OID 0)
--- Dependencies: 216
+-- TOC entry 3359 (class 0 OID 0)
+-- Dependencies: 220
 -- Name: promoters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('promoters_id_seq', 28, true);
+SELECT pg_catalog.setval('promoters_id_seq', 29, true);
 
 
 --
--- TOC entry 3359 (class 0 OID 0)
--- Dependencies: 218
+-- TOC entry 3360 (class 0 OID 0)
+-- Dependencies: 222
 -- Name: reviews_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2978,8 +3119,8 @@ SELECT pg_catalog.setval('reviews_id_seq', 5, true);
 
 
 --
--- TOC entry 3328 (class 0 OID 1402288)
--- Dependencies: 219
+-- TOC entry 3333 (class 0 OID 1601595)
+-- Dependencies: 223
 -- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -2993,32 +3134,33 @@ COPY roles (id, role, username) FROM stdin;
 7	ROLE_USER	milieu
 8	ROLE_USER	test
 5	ROLE_USER	eortizospina
+9	ROLE_USER	rosapm
 \.
 
 
 ALTER TABLE roles ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3360 (class 0 OID 0)
--- Dependencies: 220
+-- TOC entry 3361 (class 0 OID 0)
+-- Dependencies: 224
 -- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('roles_id_seq', 8, true);
+SELECT pg_catalog.setval('roles_id_seq', 9, true);
 
 
 --
--- TOC entry 3361 (class 0 OID 0)
--- Dependencies: 222
+-- TOC entry 3362 (class 0 OID 0)
+-- Dependencies: 226
 -- Name: theses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('theses_id_seq', 371, true);
+SELECT pg_catalog.setval('theses_id_seq', 392, true);
 
 
 --
--- TOC entry 3332 (class 0 OID 1402301)
--- Dependencies: 223
+-- TOC entry 3337 (class 0 OID 1601608)
+-- Dependencies: 227
 -- Data for Name: verification_token; Type: TABLE DATA; Schema: public; Owner: dkzzgsrfdufobg
 --
 
@@ -3026,30 +3168,31 @@ ALTER TABLE verification_token DISABLE TRIGGER ALL;
 
 COPY verification_token (id, expiry_date, token, user_id) FROM stdin;
 1	2016-11-22 21:32:44.012	9c9a32f2-c63d-4f8c-893e-b2aac37933dc	9
+4	2016-12-07 10:44:25.874	dff0aaa2-f609-4b32-aadf-bafebb741bd1	12
 \.
 
 
 ALTER TABLE verification_token ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3362 (class 0 OID 0)
--- Dependencies: 224
+-- TOC entry 3363 (class 0 OID 0)
+-- Dependencies: 228
 -- Name: verification_token_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('verification_token_id_seq', 3, true);
+SELECT pg_catalog.setval('verification_token_id_seq', 4, true);
 
 
 --
--- TOC entry 3363 (class 0 OID 0)
--- Dependencies: 226
+-- TOC entry 3364 (class 0 OID 0)
+-- Dependencies: 230
 -- Name: voters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
 SELECT pg_catalog.setval('voters_id_seq', 8, true);
 
 
--- Completed on 2016-12-04 01:56:30 CET
+-- Completed on 2016-12-06 20:04:08 CET
 
 --
 -- PostgreSQL database dump complete
