@@ -15,6 +15,13 @@ GoalNewPage.prototype = {
 			/* Link the project selector with the goalTag autocomplete so that the suggested goals are coherent with the project selected */
 			this.projectSelector = new ProjectSelector($("#project_select",this.container),this.projectSelectorDrawn,this,this.projectSelectorUpdated);
 			this.projectSelector.fill();
+			
+			$('#description_editor',this.container).markdown({
+				autofocus:false,
+				savable:false,
+				hiddenButtons: ["cmdHeading", "cmdImage"],
+				resize: "vertical"
+			});
 		},
 
 }

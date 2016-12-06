@@ -33,12 +33,12 @@
 				</div>
 				<div th:class="form-group" th:classappend="${#fields.hasErrors('description')}? 'has-error'">
 					<label for="description">Description:</label>
-					<textarea type="text" class="form-control" rows="5" th:field="*{description}"></textarea>
+					<textarea id="description_editor" type="text" class="form-control" rows="6" th:field="*{description}"></textarea>
 					<span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" th:class="help-block">Title Errors</span>
 				</div>
 				<div class="form-group">
 					<label for="product">Product:</label>
-					<input type="text" class="form-control" th:field="*{product}"></input>
+					<textarea id="product_editor" type="text" class="form-control" rows="2" th:field="*{product}"></textarea>
 				</div>
 				
 				<button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>

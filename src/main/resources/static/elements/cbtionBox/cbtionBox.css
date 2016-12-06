@@ -92,6 +92,7 @@
 	clear:both;
 	overflow-y: auto;
 	font-size: 12px;
+	width: 100%;
 }
 
 .cbtion_div #description_div p {

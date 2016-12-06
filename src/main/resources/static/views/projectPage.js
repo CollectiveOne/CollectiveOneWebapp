@@ -22,7 +22,7 @@ ProjectPage.prototype.ProjectReceivedCallback = function(projectDto) {
 
 ProjectPage.prototype.fillProject = function() {
 	$("#project_name h2",this.container).append(this.project.name);
-	$("#project_description",this.container).append(this.project.description);
+	$("#project_description",this.container).append(markdown.toHTML(this.project.description));
 	
 	this.updateGoals();
 	this.updateContributors();

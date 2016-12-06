@@ -49,7 +49,11 @@ GoalBox.prototype.goalBoxLoaded = function() {
 	}
 	
 	$("#goaltag",this.container).append(getGoalPageLink(this.goal.goalTag,this.goal.projectName)+""+tagSuffix);
-	$("#description",this.container).append(this.goal.description);
+	
+	if(this.goal.description) {
+		$("#description",this.container).append(markdown.toHTML(this.goal.description));	
+	}
+	
 
 	if(isUserLogged()) {
 

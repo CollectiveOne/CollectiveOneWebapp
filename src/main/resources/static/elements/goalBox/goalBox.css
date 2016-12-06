@@ -32,10 +32,6 @@
 	width: 100%;
 }
 
-#goal_div #new_subgoal_form p {
-	font-size: 10px;
-}
-
 #goal_div #top_div #goaltag {
 	width:100%;
 }
@@ -60,24 +56,9 @@
 	width:100%;
 }
 
-#goal_div #center_div #description p {
-	margin-left:5px;
-	text-align:left;
-	font-size: 10pt;
-	font-style:normal;
-}
-
 #goal_div #goal_control_div #state {
 	height:100%;
 	width:100%;	
-}
-
-#goal_div #goal_control_div #state p {
-	margin-left:5px;
-	text-align:left;
-	color:red;
-	font-size:10px;		
-	font-style:normal;
 }
 
 #goal_div #show_subgoals_btn {

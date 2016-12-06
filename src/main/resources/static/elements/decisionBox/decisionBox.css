@@ -47,6 +47,11 @@
 	
 }
 
+#decision_div #right_div #dedicated_page {
+	float:right;
+	
+}
+
 #decision_div #right_div #right-bottom {
 	margin-top:10px;
 	text-align:center;

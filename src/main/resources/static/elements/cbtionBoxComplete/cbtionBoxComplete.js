@@ -28,9 +28,11 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	$("#promotion_down_div",this.container).click(this.promoteDownClick.bind(this));
 
 	$("#title_div",this.container).append("<a href=/views/cbtionPageR/"+ this.cbtion.id+">"+this.cbtion.title+"</a>");
-	$("#description_div",this.container).append(this.cbtion.description);
+	$("#description_div",this.container).append(markdown.toHTML(this.cbtion.description));
 	
-	$("#product_text",this.container).append(this.cbtion.product);
+	if(this.cbtion.product) {
+		$("#product_text",this.container).append(markdown.toHTML(this.cbtion.product));	
+	}
 	
 	if(this.cbtion.parentGoalsTags) {
 		var nparents = this.cbtion.parentGoalsTags.length;
@@ -113,22 +115,18 @@ CbtionBoxComplete.prototype.editClick = function () {
 	$("#edit_cbtion_save_btn",this.container).show();	
 	$("#edit_cbtion_save_btn",this.container).click(this.editSaveClick.bind(this));
 
-	var currentTitle = $("#title_div a", this.container).html();
-	var currentDescription = $("#description_div", this.container).html();
-	var currentProduct = $("#product_text", this.container).html();
-
 	$("#title_div", this.container).empty();
 	$("#description_div", this.container).empty();
 	$("#product_text", this.container).empty();
 
 	$("#title_div", this.container).append("<input type=text id=title_edit_input class=form-control></input");
-	$("#title_edit_input", this.container).val(currentTitle);
+	$("#title_edit_input", this.container).val(this.cbtion.title);
 
 	$("#description_div", this.container).append("<textarea id=description_edit_input rows=5 class=form-control></textarea>");
-	$("#description_edit_input", this.container).val(currentDescription);
+	$("#description_edit_input", this.container).val(this.cbtion.description);
 
 	$("#product_div", this.container).append("<input type=text id=product_edit_input class=form-control></input");
-	$("#product_edit_input", this.container).val(currentProduct);
+	$("#product_edit_input", this.container).val(this.cbtion.product);
 
 }
 

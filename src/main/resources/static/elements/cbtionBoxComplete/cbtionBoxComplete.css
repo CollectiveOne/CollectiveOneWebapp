@@ -113,7 +113,10 @@
 	float: left;
 }
 
-#cbtion_div #left_bottom_div a {display: block;float: left;}
+#cbtion_div #left_bottom_div #goal_div a {
+	display: block;
+	float: left;
+}
 
 #cbtion_div #left_bottom_div p {
 	display: inline;
@@ -124,16 +127,18 @@
 	float:left;
 	width: calc(50%);
 	font-size: 12px;
+	min-width: 250px;
 }
 
 #cbtion_div #product_div label {
 	float:left;
+	width: 50px;
 }
 
 #cbtion_div #product_text {
-	display:block;
-	float: left;
 	margin-left:3px;
+	float: left;
+	width: calc(100% - 55px);
 }
 
 #cbtion_div #product_div input {
@@ -144,6 +149,7 @@
 #cbtion_div #goal_div {
 	float: left;
 	width: calc(50% - 10px);
+	min-width: 250px;
 }
 
 

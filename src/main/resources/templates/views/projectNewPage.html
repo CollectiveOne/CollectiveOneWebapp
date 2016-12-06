@@ -2,6 +2,19 @@
 <html lang="en" layout:decorator="layouts/main">
 <head>
 	<title>CollectiveOne - Create Project</title>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(document).ready(function() {
+			$('#description_editor',this.container).markdown({
+				autofocus:false,
+				savable:false,
+				hiddenButtons: ["cmdHeading", "cmdImage"],
+				resize: "vertical"
+			});
+		});
+	/*]]>*/
+	</script>
 </head>
 <body>
 	<div layout:fragment="content_pane">
@@ -18,7 +31,7 @@
 				</div>
 				<div th:class="form-group" th:classappend="${#fields.hasErrors('description')}? 'has-error'">
 					<label for="description">Description:</label>
-					<textarea type="text" class="form-control" rows="5" th:field="*{description}"></textarea>
+					<textarea id="description_editor" type="text" class="form-control" rows="5" th:field="*{description}"></textarea>
 					<span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" th:class="help-block">Title Errors</span>
 				</div>
 				<div th:class="form-group" th:classappend="${#fields.hasErrors('ppsInitial')}? 'has-error'">

@@ -24,10 +24,13 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 	this.updateVoteStatus();
 	
 	if(this.titleAsLink) {
-		$("#description",this.container).append("<a href=/views/decisionPageR/"+ this.decision.id+">"+this.decision.description+"</a>");	
+		$("#dedicated_page",this.container).show();
+		$("#dedicated_page",this.container).attr("href","/views/decisionPageR/"+ this.decision.id);	
 	} else {
-		$("#description",this.container).append(this.decision.description);	
+		$("#dedicated_page",this.container).hide();
 	}
+	
+	$("#description",this.container).html(markdown.toHTML(this.decision.description));	
 		
 	switch(this.decision.type) {
 		case "GENERAL":
