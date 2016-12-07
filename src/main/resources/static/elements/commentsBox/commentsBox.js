@@ -36,6 +36,13 @@ CommentsBox.prototype.commentsBoxLoaded = function() {
 		commentItem.draw();
 	}
 
+	$("#new_comment_content", this.container).markdown({
+			autofocus:false,
+			savable:false,
+			hiddenButtons: ["cmdHeading", "cmdImage"],
+			resize: "vertical"
+	});
+
 }
 
 CommentsBox.prototype.newCommentClicked = function() {

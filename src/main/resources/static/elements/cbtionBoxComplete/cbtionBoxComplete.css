@@ -348,6 +348,10 @@
 	display:none;
 }
 
+#cbtion_div #new_bid_form_container #new_bid_form #newbid_delivery_date_div #bid_delivery_date_error {
+	display: none;
+}
+
 #cbtion_div #new_bid_form_container #new_bid_form #newbid_delivery_date_div input {
 	width:100px;
 	text-align:center;

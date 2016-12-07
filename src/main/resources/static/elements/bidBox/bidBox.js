@@ -34,13 +34,21 @@ BidBox.prototype.bidBoxLoaded = function() {
 	$("#bid_state_div",this.container).append(this.bid.state);
 	
 	$("#bid_times_created_div",this.container).append("created "+getTimeStrSince(this.bid.creationDate)+" ago");
-	$("#bid_description_div",this.container).append(this.bid.description);
 
+	if(this.bid.description) {
+		$("#bid_description_div",this.container).append(markdown.toHTML(this.bid.description));	
+	}
+	
 	if(this.bid.doneState == "DONE") {
-		$("#bid_delivered_div",this.container).append("done "+getTimeStrSince(this.bid.doneDate)+" ago");
-		$("#bid_done_description",this.container).append(this.bid.doneDescription);
+		$("#bid_delivered_div",this.container).append("<label class='label label-default'> marked done "+getTimeStrSince(this.bid.doneDate)+" ago</label>");
+		if(this.bid.doneDescription) {
+			$("#bid_done_description",this.container).append(markdown.toHTML(this.bid.doneDescription));
+		}
+		
 	} else {
-		$("#bid_delivered_div",this.container).append($("to be delivered in "+getTimeStrUntil(this.bid.deliveryDate)));
+		if(this.bid.state != "CONSIDERING") {
+			$("#bid_delivered_div",this.container).append($("<label class='label label-default'> to be delivered in "+getTimeStrUntil(this.bid.deliveryDate)+"</label>"));	
+		}
 	}
 		
 	
@@ -55,7 +63,7 @@ BidBox.prototype.bidBoxLoaded = function() {
 			this.enableBidderControl();
 			this.enableDone();
 			if(isUserLogged()) {
-				var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),this.bid.assignDec, GLOBAL.sessionData.userLogged);
+				var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),this.bid.assignDec, getLoggedUsername());
 				decBox.updateVoteAndDraw();	
 			}
 			break;
@@ -65,7 +73,7 @@ BidBox.prototype.bidBoxLoaded = function() {
 			this.enableBidderControl();
 			this.enableDone();
 			if(isUserLogged()) {
-				var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),this.bid.acceptDec, GLOBAL.sessionData.userLogged);
+				var decBox = new DecisionBoxSmall($("#bid_decision_div",this.container),this.bid.acceptDec, getLoggedUsername());
 				decBox.updateVoteAndDraw();
 			}
 			break;
@@ -112,6 +120,13 @@ BidBox.prototype.enableDone = function() {
 BidBox.prototype.markDoneClick = function() {
 	$("#mark_done_form",this.container).toggle();
 	$("#done_ppoints_in",this.container).val(this.bid.ppoints);
+
+	$("#bid_markdone_in",this.container).markdown({
+		autofocus:false,
+		savable:false,
+		hiddenButtons: ["cmdHeading", "cmdImage","cmdList", "cmdListO", "cmdCode", "cmdQuote"],
+		resize: "vertical"
+	});
 }
 
 BidBox.prototype.donePpsChanged = function() {
@@ -130,7 +145,7 @@ BidBox.prototype.doneSaveClick = function() {
 	
 	var newPps = $("#done_ppoints_in",this.container).val();
 
-	if(newPps < this.bid.ppoints) {
+	if(newPps <= this.bid.ppoints) {
 		var doneData = {
 			bidId: this.bid.id,
 			newPps: newPps,
@@ -158,6 +173,13 @@ BidBox.prototype.offerNowClick = function() {
 	$("#bidder_offer_save_btn",this.container).show();
 
 	$("#bidder_offer_save_btn",this.container).click(this.offerSave.bind(this));
+
+	$("#offer_description_in",this.container).markdown({
+		autofocus:false,
+		savable:false,
+		hiddenButtons: ["cmdHeading", "cmdImage","cmdList", "cmdListO", "cmdCode", "cmdQuote"],
+		resize: "vertical"
+	});
 }
 
 BidBox.prototype.offerSave = function() {
@@ -166,14 +188,18 @@ BidBox.prototype.offerSave = function() {
 		description:$("#offer_description_in",this.container).val(),
 	}; 
 
-	if($("#offer_delivery_date_in",this.container).val() == "") bidData.deliveryDate = 0;
-	else bidData.deliveryDate = deliveryDate = Date.parse($("#offer_delivery_date_in",this.container).val());
+	if($("#offer_delivery_date_in",this.container).val() != "") {
+		bidData.deliveryDate = Date.parse($("#offer_delivery_date_in",this.container).val());
 
-	if($("#offer_ppoints_in",this.container).val() == "") bidData.ppoints = 0;
-	else bidData.ppoints = $("#offer_ppoints_in",this.container).val();
+		if($("#offer_ppoints_in",this.container).val() == "") bidData.ppoints = 0;
+		else bidData.ppoints = $("#offer_ppoints_in",this.container).val();
 
-	GLOBAL.serverComm.bidOffer(bidData,this.offerSentCallback,this);
+		GLOBAL.serverComm.bidOffer(bidData,this.offerSentCallback,this);
 
+	} else {
+		$("#bid_delivery_date_error",this.container).show();
+		$("#offer_delivery_date_in",this.container).addClass("has-error");
+	}
 }
 
 BidBox.prototype.offerSentCallback = function() {

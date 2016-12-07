@@ -192,6 +192,20 @@ DecisionBox.prototype.drawArguments = function() {
 	if(isUserLogged()) {
 		$("#arguments_yes_new_btn", this.container).show();
 		$("#arguments_no_new_btn", this.container).show();
+
+		$("#arg_yes_new_description", this.container).markdown({
+			autofocus:false,
+			savable:false,
+			hiddenButtons: ["cmdHeading", "cmdImage"],
+			resize: "vertical"
+		});
+
+		$("#arg_no_new_description", this.container).markdown({
+			autofocus:false,
+			savable:false,
+			hiddenButtons: ["cmdHeading", "cmdImage"],
+			resize: "vertical"
+		});
 	}
 }
 

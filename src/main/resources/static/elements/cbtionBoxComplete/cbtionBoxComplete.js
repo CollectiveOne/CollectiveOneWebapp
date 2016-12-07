@@ -81,6 +81,9 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	$("#newbid_just_considering_btn",this.container).click(this.bidConsideringClick.bind(this));
 	$("#newbid_offer_now_btn",this.container).click(this.bidOfferClick.bind(this));
 	
+	/*default offer */
+	this.bidOfferClick();
+
 	$("#newbid_submit_div",this.container).click(this.bidNew.bind(this));
 	$("#newbid_datepicker",this.container).datepicker();
 		
@@ -148,7 +151,15 @@ CbtionBoxComplete.prototype.editedCallback = function () {
 CbtionBoxComplete.prototype.newBidClick = function () {
 	if(this.cbtion.state == "OPEN") {
 		$("#new_bid_form_container",this.container).toggle();
-		$("#newbid_username_div",this.container).html(("bidder: "+GLOBAL.sessionData.userLogged.username));	
+		$("#newbid_username_div",this.container).html("bidder: "+getLoggedUsername());	
+
+		$("#newbid_description_in",this.container).markdown({
+			autofocus:false,
+			savable:false,
+			hiddenButtons: ["cmdHeading", "cmdImage","cmdList", "cmdListO", "cmdCode", "cmdQuote"],
+			resize: "vertical"
+		});
+
 	} else {
 		showOutput("contribution is not open");
 	}
@@ -189,19 +200,33 @@ CbtionBoxComplete.prototype.promoteDownClick = function() {
 }
 
 CbtionBoxComplete.prototype.bidNew = function (){
+	
+	var hasErrors = false;
+
 	var bidData = { 
 		cbtionId:this.cbtion.id,
 		description:$("#newbid_description_in",this.container).val(),
 		offer: this.bidOffer
 	}; 
 
-	if($("#newbid_datepicker",this.container).val() == "") bidData.deliveryDate = 0;
-	else bidData.deliveryDate = deliveryDate = Date.parse($("#newbid_datepicker",this.container).val());
+	if(this.bidOffer) {
+		if($("#newbid_datepicker",this.container).val() != "") {
+			bidData.deliveryDate = Date.parse($("#newbid_datepicker",this.container).val());
 
-	if($("#newbid_ppoints_in",this.container).val() == "") bidData.ppoints = 0;
-	else bidData.ppoints = $("#newbid_ppoints_in",this.container).val();
+			if($("#newbid_ppoints_in",this.container).val() == "") bidData.ppoints = 0;
+			else bidData.ppoints = $("#newbid_ppoints_in",this.container).val();
 
-	GLOBAL.serverComm.bidNew(bidData,this.newBidSavedCallback,this);
+		} else {
+			hasErrors = true;
+			$("#bid_delivery_date_error",this.container).show();
+			$("#newbid_datepicker",this.container).addClass("has-error");
+
+		}
+	}
+
+	if(!hasErrors) {
+		GLOBAL.serverComm.bidNew(bidData,this.newBidSavedCallback,this);	
+	}
 }
 
 CbtionBoxComplete.prototype.newBidSavedCallback = function() {

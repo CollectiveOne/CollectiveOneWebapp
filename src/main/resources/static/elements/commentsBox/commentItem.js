@@ -22,7 +22,9 @@ CommentItem.prototype.draw = function() {
 
 CommentItem.prototype.commentBoxLoaded = function() {
 	
-	$("#comment_content", this.container).append(this.comment.content);
+	if(this.comment.content) {
+		$("#comment_content", this.container).append(markdown.toHTML(this.comment.content));	
+	}
 	
 	var creationDate = new Date(this.comment.creationDate);
 	$("#comment_creator", this.container).append("by "+getUserPageLink(this.comment.creatorUsername)+" "+getTimeStrSince(creationDate)+" ago");
@@ -45,6 +47,13 @@ CommentItem.prototype.commentBoxLoaded = function() {
 	if(this.expandReplies) {
 		this.showRepliesClicked();
 	}
+
+	$("#new_comment_content", this.container).markdown({
+			autofocus:false,
+			savable:false,
+			hiddenButtons: ["cmdHeading", "cmdImage"],
+			resize: "vertical"
+	});
 
 }
 
