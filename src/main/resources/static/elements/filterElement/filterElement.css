@@ -1,9 +1,11 @@
 #filter_div {
 	width: 100%;
+	overflow: auto;
 }
 
 #filter_bar {
 	width: 100%;
+	overflow: auto;
 }
 
 #filter_bar #filter_btn {
