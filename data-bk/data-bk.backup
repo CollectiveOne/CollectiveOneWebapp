@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2016-12-06 20:14:09 CET
+-- Started on 2016-12-07 20:14:45 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -147,6 +147,7 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 121	2016-12-05 08:35:57.582	\N	2016-12-05 23:00:00	I will get in contact with them and keep all you updated through slack	\N	\N	\N	15	1	554	553	152	1
 122	2016-12-06 11:13:42.312	\N	2016-12-06 23:00:00	I will provide a first proposal	\N	\N	\N	20	1	560	559	154	1
 123	2016-12-06 19:10:39.863	\N	2016-12-06 23:00:00	I have added markdown to the creation of contributions, goals, decisions and projects. It has to be added to bids and to goals when created as subgoals	\N	\N	\N	10	3	568	567	125	1
+124	2016-12-07 17:53:52.133	\N	1970-01-02 00:00:00		\N	\N	\N	10	3	572	571	153	13
 \.
 
 
@@ -164,7 +165,7 @@ COPY projects (id, creation_date, description, enabled, name, pps_tot, creator_i
 2	2016-09-21 15:38:54.641	With JieMaps, you can create and share your navigation experience, and find the navigation experiences of others.\n\nIn JieMaps, a navigation experience is represented by a path (a sequence and group of links). This paths are called Jies. That's all. 	f	JieMaps	100	1
 3	2016-10-19 20:51:28.032	Data journalism tools	f	datasketch	101	5
 5	2016-12-01 12:28:49.362	Every minute of the day, the sun is rising somewhere in the world. This project aims to capture a global sunrise: a visual collection of the sun rising across the globe’s time zones. \r\n\r\nProject CollectiveSunrise hopes to produce a video by assembling visual recordings, taken on the same day, by professional artists and amateurs in all corners of the world. \r\n	t	CollectiveSunrise	100	3
-1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	t	CollectiveOne	3001.5	1
+1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	t	CollectiveOne	3011.5	1
 \.
 
 
@@ -327,7 +328,7 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 132	0	2016-11-29 18:33:26.962	\N	Allow the specification of a "expected cost" to a contribution when it is created. It should help clarifying the extent of the contribution as intended by its creator and help other users during the bidding process	updated front end and backend (and DB migration and back compatiblity if needed)	1	1	Add an "expected cost" value to contribution requests	\N	1	473	3	472	1
 152	0	2016-12-05 08:35:19.723	\N	Get in contact with the P2P Foundation to get feedback from them, attract potential contributors to CollectiveOne and potential projects to be hosted	public relations	0	1	Contact the P2P Foundation	\N	1	552	7	551	1
 151	3	2016-12-04 13:01:27.107	\N	Comments are not being recorded as recent activity and are very hard to track. Add them as recent activity items.	updated comment creation service	0	2	Add activity record for each comment to any contribution	1	1	546	6	543	1
-153	0	2016-12-06 10:56:21.156	\N	Provide feedback, in general, on the CollectiveOne initiative in a conversation of one hour.	1-hour skype video conference	0	0	General feedback	\N	1	556	1	555	1
+153	10	2016-12-06 10:56:21.156	\N	Provide feedback, in general, on the CollectiveOne initiative in a conversation of one hour.	1-hour skype video conference	0	2	General feedback	13	1	556	1	555	1
 154	0	2016-12-06 11:07:42.232	\N	Suggest and describe a method to define the decision realms based on the goal in which the decision is framed. This should allow decisions to be taken faster, more focused, and by those directly involved	proposed extension of the white-paper	0	1	Decision making per goal realms	\N	1	558	1	557	1
 139	4	2016-11-30 17:38:52.349	\N	Prepare the first draf of the application form to SU Startup Accelerator	edit [this doc](https://docs.google.com/document/d/1SWayYHzkDQ6lOa5_IjARjmza4Uq5BoGS3Ys6-GZjiTA/edit)	0	2	Application form to SU Startup Accelerator call	1	1	488	7	487	1
 147	0	2016-12-02 17:49:47.125	\N	Create a PSQL script similar to [this](https://github.com/CollectiveOne/CollectiveOneWebapp/blob/master/data-bk/delete-goal.pgs) but to delete an entire project, including all its related elements at all degrees.\r\n\r\n	PSQ script	0	4	Create PSQ script to delete entire project	\N	1	\N	6	533	1
@@ -898,6 +899,8 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 568	2016-12-06 19:10:59.555	0.949999999999999956	1	2016-12-06 19:10:51.598	accept contribution 'Setup markdown basic infrastructure' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-12-06 19:10:59.544	1	2606	2991.5	0.5	0	2	ACCEPTED	3	1	36	123	\N	6	1	\N	1
 569	2016-12-06 19:13:02.761	0.949999999999999956	1	2016-12-06 19:12:46.766	open contribution 'Extend and markdown to bids, arguments and comments'	0	PROPOSED	0	1	1	8	2016-12-06 19:13:02.76	1	2616	3001.5	0.5	0	2	OPEN	1	1	36	\N	158	6	1	\N	1
 570	\N	0.949999999999999956	0	2016-12-06 19:13:04.672	delete contribution 'Extend and markdown to bids, arguments and comments'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	158	6	1	\N	1
+571	2016-12-07 17:55:55.675	0.949999999999999956	1	2016-12-07 17:54:23.329	assign contribution 'General feedback' to jaimeyann	0	OFFERED	0	1	1	8	2016-12-07 17:55:55.673	1	2616	3001.5	0.5	0	2	ASSIGNED	3	1	36	124	\N	6	1	\N	1
+572	2016-12-07 17:56:10.158	0.949999999999999956	1	2016-12-07 17:55:56.881	accept contribution 'General feedback' as delivered by jaimeyann	0	ASSIGNED	0	1	1	8	2016-12-07 17:56:10.158	1	2616	3001.5	0.5	0	2	ACCEPTED	3	1	36	124	\N	6	1	\N	1
 \.
 
 
@@ -1653,6 +1656,9 @@ COPY activity (id, creation_date, event, type, argument_id, bid_id, cbtion_id, d
 602	2016-12-06 19:11:00.683	accepted	1	\N	123	\N	\N	\N	1	\N
 603	2016-12-06 19:12:46.774	created	0	\N	\N	158	\N	\N	1	\N
 604	2016-12-06 19:13:04.659	opened for bidding	0	\N	\N	158	\N	\N	1	\N
+605	2016-12-07 17:53:52.149	created	1	\N	124	\N	\N	\N	1	\N
+606	2016-12-07 17:55:56.723	assigned	1	\N	124	\N	\N	\N	1	\N
+607	2016-12-07 17:56:10.682	accepted	1	\N	124	\N	\N	\N	1	\N
 \.
 
 
@@ -1664,7 +1670,7 @@ ALTER TABLE activity ENABLE TRIGGER ALL;
 -- Name: activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('activity_id_seq', 604, true);
+SELECT pg_catalog.setval('activity_id_seq', 607, true);
 
 
 --
@@ -1673,7 +1679,7 @@ SELECT pg_catalog.setval('activity_id_seq', 604, true);
 -- Name: app_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('app_users_id_seq', 12, true);
+SELECT pg_catalog.setval('app_users_id_seq', 13, true);
 
 
 --
@@ -1741,6 +1747,7 @@ COPY authorized_emails (id, authorized, email) FROM stdin;
 4	t	monicanavasr@gmail.com
 5	t	jason@roundtablelaw.ca
 6	t	rosapuigmore@gmail.com
+7	t	jaime@boldandopen.com
 \.
 
 
@@ -1786,7 +1793,7 @@ SELECT pg_catalog.setval('authorized_projects_id_seq', 1, false);
 -- Name: bids_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('bids_id_seq', 123, true);
+SELECT pg_catalog.setval('bids_id_seq', 124, true);
 
 
 --
@@ -1802,6 +1809,7 @@ COPY reviews (id, creation_date, description, rate, creator_id, reviewee_id) FRO
 2	2016-09-26 08:31:01.244	pepoospina made a good effort to reach a functioning prototype	3	1	1
 3	2016-09-28 15:48:22.501	Support from JP was very useful.	4	1	5
 4	2016-10-19 21:15:48.371	need to add visualization apps	3	5	5
+6	2016-12-07 17:59:51.477	Comments from Jaime were clear and concrete. They definitely extended our perspective for CollectiveOne and will force us to review our strategy in many ways.	5	1	13
 \.
 
 
@@ -1820,6 +1828,7 @@ COPY bids_reviews (bid_id, reviews_id) FROM stdin;
 48	2
 32	3
 72	4
+124	6
 \.
 
 
@@ -1953,6 +1962,7 @@ COPY cbtions_bids (cbtion_id, bids_id) FROM stdin;
 152	121
 154	122
 125	123
+153	124
 \.
 
 
@@ -2153,6 +2163,7 @@ COPY voters (id, weight, voter_user_id) FROM stdin;
 8	100	3
 2	281	3
 1	2616	1
+9	10	13
 \.
 
 
@@ -2167,13 +2178,14 @@ ALTER TABLE voters ENABLE TRIGGER ALL;
 ALTER TABLE decision_realms_voters DISABLE TRIGGER ALL;
 
 COPY decision_realms_voters (decision_realm_id, voters_id) FROM stdin;
+2	5
+5	6
+9	8
 1	2
 1	3
 1	1
 1	4
-2	5
-5	6
-9	8
+1	9
 \.
 
 
@@ -2237,7 +2249,7 @@ ALTER TABLE decisions_args ENABLE TRIGGER ALL;
 -- Name: decisions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('decisions_id_seq', 570, true);
+SELECT pg_catalog.setval('decisions_id_seq', 572, true);
 
 
 --
@@ -2642,6 +2654,8 @@ COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 393	2016-12-06 19:10:48.086	1	2606	1	567
 394	2016-12-06 19:10:55.465	1	2606	1	568
 395	2016-12-06 19:12:57.1	1	2616	1	569
+396	2016-12-07 17:55:53.005	1	2616	1	571
+397	2016-12-07 17:56:04.889	1	2616	1	572
 \.
 
 
@@ -3045,6 +3059,8 @@ COPY decisions_thesescast (decision_id, theses_cast_id) FROM stdin;
 567	393
 568	394
 569	395
+571	396
+572	397
 \.
 
 
@@ -3065,7 +3081,7 @@ SELECT pg_catalog.setval('goal_id_seq', 46, true);
 -- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('hibernate_sequence', 1, true);
+SELECT pg_catalog.setval('hibernate_sequence', 2, true);
 
 
 --
@@ -3104,6 +3120,7 @@ COPY password_recovery_token (id, expiry_date, token, user_id) FROM stdin;
 1	2016-11-18 19:04:04.034	d0b1945d-b43f-4b8b-8447-c6a42cc5db0f	1
 2	2016-11-18 19:09:41.426	1ea0fda3-0134-458e-9af5-5da3cfb4613e	1
 100	2016-11-25 09:44:42.917	49e3aaf9-3ad8-47d4-9a0d-8a54a4509d9d	1
+200	2016-12-08 17:52:37.274	703f8290-6e01-4e95-b78d-534a70cd0d9f	13
 \.
 
 
@@ -3133,7 +3150,7 @@ SELECT pg_catalog.setval('promoters_id_seq', 29, true);
 -- Name: reviews_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('reviews_id_seq', 5, true);
+SELECT pg_catalog.setval('reviews_id_seq', 6, true);
 
 
 --
@@ -3153,6 +3170,7 @@ COPY roles (id, role, username) FROM stdin;
 8	ROLE_USER	test
 5	ROLE_USER	eortizospina
 9	ROLE_USER	rosapm
+10	ROLE_USER	jaimeyann
 \.
 
 
@@ -3164,7 +3182,7 @@ ALTER TABLE roles ENABLE TRIGGER ALL;
 -- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('roles_id_seq', 9, true);
+SELECT pg_catalog.setval('roles_id_seq', 10, true);
 
 
 --
@@ -3173,7 +3191,7 @@ SELECT pg_catalog.setval('roles_id_seq', 9, true);
 -- Name: theses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('theses_id_seq', 395, true);
+SELECT pg_catalog.setval('theses_id_seq', 397, true);
 
 
 --
@@ -3187,6 +3205,7 @@ ALTER TABLE verification_token DISABLE TRIGGER ALL;
 COPY verification_token (id, expiry_date, token, user_id) FROM stdin;
 1	2016-11-22 21:32:44.012	9c9a32f2-c63d-4f8c-893e-b2aac37933dc	9
 4	2016-12-07 10:44:25.874	dff0aaa2-f609-4b32-aadf-bafebb741bd1	12
+5	2016-12-08 17:51:54.193	5f92dee7-bdd2-4e89-acd4-35fe6951320f	13
 \.
 
 
@@ -3198,7 +3217,7 @@ ALTER TABLE verification_token ENABLE TRIGGER ALL;
 -- Name: verification_token_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('verification_token_id_seq', 4, true);
+SELECT pg_catalog.setval('verification_token_id_seq', 5, true);
 
 
 --
@@ -3207,10 +3226,10 @@ SELECT pg_catalog.setval('verification_token_id_seq', 4, true);
 -- Name: voters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('voters_id_seq', 8, true);
+SELECT pg_catalog.setval('voters_id_seq', 9, true);
 
 
--- Completed on 2016-12-06 20:15:17 CET
+-- Completed on 2016-12-07 20:15:50 CET
 
 --
 -- PostgreSQL database dump complete
