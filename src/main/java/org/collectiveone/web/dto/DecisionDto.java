@@ -1,5 +1,7 @@
 package org.collectiveone.web.dto;
 
+import javax.validation.constraints.Min;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class DecisionDto {
@@ -27,6 +29,7 @@ public class DecisionDto {
 	
 	protected int nVoters;
 	protected double ppsTot;
+	@Min(36)
 	protected double verdictHours;
 	protected int verdict;
 	protected String state;

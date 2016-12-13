@@ -197,7 +197,10 @@ public class ViewsController {
 	@Secured("ROLE_USER")
 	@RequestMapping("/decisionNewPageR")
 	public String decisionNewPage(Model model) {
-		model.addAttribute("decision",new DecisionDto());
+		DecisionDto decisionDto = new DecisionDto();
+		decisionDto.setVerdictHours(36.0);
+		
+		model.addAttribute("decision",decisionDto);
 		return "views/decisionNewPage";
 	}
 	

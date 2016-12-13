@@ -1678,6 +1678,7 @@ public class DbServicesImp {
 		decision.setState(DecisionState.IDLE);
 		decision.setDecisionRealm(realm);
 		decision.setType(DecisionType.GENERAL);
+		decision.setVerdictHours(decisionDto.getVerdictHours());
 
 		decisionDao.save(decision);
 

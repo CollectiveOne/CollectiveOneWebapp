@@ -26,6 +26,11 @@
 					<textarea id="description_editor" type="text" class="form-control" rows="5" th:field="*{description}"></textarea>
 					<span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" th:class="help-block">Title Errors</span>
 				</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('verdictHours')}? 'has-error'">
+					<label for="maxDuration">Maximum Duration in Hours (min 36):</label>
+					<input type="number" class="form-control" th:field="*{verdictHours}"></input>
+					<span th:if="${#fields.hasErrors('verdictHours')}" th:errors="*{verdictHours}" th:class="help-block">Title Errors</span>
+				</div>
 				
 				<button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
 			</form>
