@@ -42,7 +42,7 @@
 				</div>
 				<div th:class="form-group" th:classappend="${#fields.hasErrors('suggestedBid')}? 'has-error'">
 					<label for="suggestedBid">Suggested Bid:</label>
-					<input type="number" class="form-control" th:field="*{suggestedBid}"></input>
+					<input type="number" step="any" class="form-control" th:field="*{suggestedBid}"></input>
 					<span th:if="${#fields.hasErrors('suggestedBid')}" th:errors="*{suggestedBid}" th:class="help-block">Title Errors</span>
 				</div>
 				
