@@ -19,6 +19,7 @@ public class CbtionDto {
 	@NotEmpty
 	private String description;
 	private String product;
+	private double suggestedBid;
 	private Integer relevance;
 	private String state;
 	private int nBids;
@@ -83,6 +84,12 @@ public class CbtionDto {
 	}
 	public void setProduct(String product) {
 		this.product = product;
+	}
+	public double getSuggestedBid() {
+		return suggestedBid;
+	}
+	public void setSuggestedBid(double suggestedBid) {
+		this.suggestedBid = suggestedBid;
 	}
 	public Integer getRelevance() {
 		return relevance;

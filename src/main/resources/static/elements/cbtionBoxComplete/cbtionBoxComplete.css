@@ -213,6 +213,10 @@
 	font-size:12px;
 }
 
+#cbtion_div #cbtion_data_div #cbtion_meta_data_div label {
+	font-weight:bold;	
+}
+
 #cbtion_div #cbtion_data_div #project_div {
 	float:left;
 	clear:both;

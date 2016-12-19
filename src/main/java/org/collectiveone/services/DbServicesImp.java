@@ -872,6 +872,7 @@ public class DbServicesImp {
 		cbtion.setDescription(cbtionDto.getDescription());
 		cbtion.setProject(project);
 		cbtion.setProduct(cbtionDto.getProduct());
+		cbtion.setSuggestedBid(cbtionDto.getSuggestedBid());
 		cbtion.setState(CbtionState.PROPOSED);
 		cbtion.setTitle(cbtionDto.getTitle());
 		cbtion.setGoal(goal);
@@ -919,6 +920,7 @@ public class DbServicesImp {
 				cbtion.setTitle(cbtionDto.getTitle());
 				cbtion.setDescription(cbtionDto.getDescription());
 				cbtion.setProduct(cbtionDto.getProduct());
+				cbtion.setSuggestedBid(cbtionDto.getSuggestedBid());
 				
 				cbtionDao.save(cbtion);	
 				

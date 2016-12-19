@@ -45,6 +45,7 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	
 	if(this.cbtion.goalTag)	$("#goal_div",this.container).append(getGoalPageLink(this.cbtion.goalTag,this.cbtion.projectName));
 	
+	$("#suggestedBid_lb",this.container).append(this.cbtion.suggestedBid);
 	$("#project_div",this.container).append(getProjectLink(this.cbtion.projectName));
 	$("#creator_div",this.container).append(getUserPageLink(this.cbtion.creatorUsername));
 	$("#creator_div",this.container).append(" "+getTimeStrSince(this.cbtion.creationDate)+" ago");
@@ -121,7 +122,8 @@ CbtionBoxComplete.prototype.editClick = function () {
 	$("#title_div", this.container).empty();
 	$("#description_div", this.container).empty();
 	$("#product_text", this.container).empty();
-
+	$("#suggestedBid_lb", this.container).hide();
+	
 	$("#title_div", this.container).append("<input type=text id=title_edit_input class=form-control></input");
 	$("#title_edit_input", this.container).val(this.cbtion.title);
 
@@ -131,6 +133,10 @@ CbtionBoxComplete.prototype.editClick = function () {
 	$("#product_div", this.container).append("<input type=text id=product_edit_input class=form-control></input");
 	$("#product_edit_input", this.container).val(this.cbtion.product);
 
+	$("#suggestedBid_div", this.container).append("<input type=number id=suggestedBid_edit_input class=form-control></input");
+	$("#suggestedBid_edit_input", this.container).val(this.cbtion.suggestedBid);
+	
+
 }
 
 CbtionBoxComplete.prototype.editSaveClick = function () {
@@ -138,7 +144,8 @@ CbtionBoxComplete.prototype.editSaveClick = function () {
 		id: this.cbtion.id,
 		title: $("#title_edit_input", this.container).val(),
 		description: $("#description_edit_input", this.container).val(),
-		product: $("#product_edit_input", this.container).val()
+		product: $("#product_edit_input", this.container).val(),
+		suggestedBid: $("#suggestedBid_edit_input", this.container).val()
 	}
 
 	GLOBAL.serverComm.cbtionEdit(cbtionEditData,this.editedCallback,this);
@@ -159,6 +166,8 @@ CbtionBoxComplete.prototype.newBidClick = function () {
 			hiddenButtons: ["cmdHeading", "cmdImage","cmdList", "cmdListO", "cmdCode", "cmdQuote"],
 			resize: "vertical"
 		});
+
+		$("#newbid_ppoints_in",this.container).val(this.cbtion.suggestedBid);
 
 	} else {
 		showOutput("contribution is not open");

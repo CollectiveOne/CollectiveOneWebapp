@@ -40,6 +40,11 @@
 					<label for="product">Product:</label>
 					<textarea id="product_editor" type="text" class="form-control" rows="2" th:field="*{product}"></textarea>
 				</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('suggestedBid')}? 'has-error'">
+					<label for="suggestedBid">Suggested Bid:</label>
+					<input type="number" class="form-control" th:field="*{suggestedBid}"></input>
+					<span th:if="${#fields.hasErrors('suggestedBid')}" th:errors="*{suggestedBid}" th:class="help-block">Title Errors</span>
+				</div>
 				
 				<button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
 			</form>

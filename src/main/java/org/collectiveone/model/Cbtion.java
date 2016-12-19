@@ -36,6 +36,7 @@ public class Cbtion {
 	@Type(type = "org.hibernate.type.TextType")
 	private String description;
 	private String product;
+	private double suggestedBid;
 	private CbtionState state;	
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Bid> bids = new ArrayList<Bid>();
@@ -66,6 +67,7 @@ public class Cbtion {
 		dto.setId(id);
 		dto.setDescription(description);
 		dto.setProduct(product);
+		dto.setSuggestedBid(suggestedBid);
 		dto.setCreatorUsername(creator.getUsername());
 		dto.setCreationDate(creationDate.getTime());
 		dto.setState(state.toString());
@@ -130,6 +132,12 @@ public class Cbtion {
 	}
 	public void setProduct(String product) {
 		this.product = product;
+	}
+	public double getSuggestedBid() {
+		return suggestedBid;
+	}
+	public void setSuggestedBid(double suggestedBid) {
+		this.suggestedBid = suggestedBid;
 	}
 	public CbtionState getState() {
 		return state;
