@@ -160,6 +160,11 @@ textarea.form-control {
 	margin:0 auto;
 }
 
+#container #signupRequest_form {
+	max-width:600px;
+	margin:0 auto;
+}
+
 #container #bottom {
 	position: relative;
 	width:100%;

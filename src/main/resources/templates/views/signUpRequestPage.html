@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"
+	layout:decorator="layouts/main">
+<head>
+	<title>CollectiveOne - Signup Request</title>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<br />
+		
+		<form id="signupRequest_form" action="#" th:action="@{/views/signupRequestSubmit}" th:object="${signupRequest}" method="post">
+			<h2>Signup request</h2>
+			<br />
+			<div th:if="${message}" class="alert alert-info" th:text="${message}">
+	           	message
+	        </div>
+			<div th:if="!${message}" class="alert alert-info">
+	           	Please provide your email below and we will send you an invitation to signup.
+	        </div>
+	        <div th:if="!${message}">
+				<div class="form-group">
+					<label for="email">Email:</label> 
+					<input type="text" class="form-control" th:field="*{email}"></input>
+				</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('comments')}? 'has-error'">
+					<label for="comments">Comments (optional):</label>
+					<textarea id="comments_editor" type="text" class="form-control" rows="5" th:field="*{comments}"></textarea>
+					<span th:if="${#fields.hasErrors('comments')}" th:errors="*{comments}" th:class="help-block">Title Errors</span>
+				</div>
+				
+				<button type="submit" class="btn btn-lg btn-primary btn-block">Send request</button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

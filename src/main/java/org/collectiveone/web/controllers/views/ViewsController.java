@@ -13,6 +13,7 @@ import org.collectiveone.web.dto.DecisionDto;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.InvRequest;
 import org.collectiveone.web.dto.ProjectNewDto;
+import org.collectiveone.web.dto.SignupRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.access.annotation.Secured;
@@ -100,6 +101,28 @@ public class ViewsController {
         model.addAttribute("message","Your request for an invitation has been received "+invRequest.getEmail()+". We will process it as soon as possible.");
         
         return "views/slackPage";
+	}
+	
+	@RequestMapping("/signupRequestPageR")
+	public String signupRequestPage(Model model) {
+		model.addAttribute("signupRequest",new SignupRequest());
+		return "views/signUpRequestPage";
+	}
+	
+	@RequestMapping("/signupRequestSubmit")
+	public String signupRequestSubmit(@Valid SignupRequest signupRequest, Model model) throws IOException {
+		
+        String subject = "Signup invitation request";
+        String body = "Request to signup sent by "+signupRequest.getEmail()+"\rComments:\r"+signupRequest.getComments();
+        
+        mailService.sendMail(
+        		env.getProperty("collectiveone.webapp.admin-email"),
+        		subject, 
+        		body);
+        
+        model.addAttribute("message","Thanks, your request has been received "+signupRequest.getEmail()+". We will process it as soon as possible and come back to you.");
+        
+        return "views/signUpRequestPage";
 	}
 	
 	@RequestMapping("/projectPageR/{projectName}")
