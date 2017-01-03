@@ -297,6 +297,7 @@ public class DbServicesImp {
 		userDao.save(coprojects);
 
 		Project project = projectDao.get(projectName);
+		project.setEnabled(true);
 		projectDao.save(project);
 
 		User creator = project.getCreator();
