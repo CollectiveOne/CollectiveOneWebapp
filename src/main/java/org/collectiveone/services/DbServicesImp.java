@@ -741,6 +741,8 @@ public class DbServicesImp {
 	            /* register event */
 	            act.setEvent("accepted");
 				activitySaveAndNotify(act);
+				
+				
 				break;
 				
 			default:
@@ -1535,9 +1537,6 @@ public class DbServicesImp {
 					/* -----------------------------------------------------------------------*/ 
 					/* updated voter weight - This is the only place where PPS are transacted */
 					/* -----------------------------------------------------------------------*/
-
-					// TODO review assignation logic as the current bid is not found in the list of bids accepted
-					
 					voterUpdate(bid.getCreator().getId(), bid.getCbtion().getProject().getId(),cbtion.getAssignedPpoints());
 					projectUpdatePpsTot(bid.getCbtion().getProject().getId(),cbtion.getAssignedPpoints());
 
