@@ -28,7 +28,7 @@ GoalPage.prototype.updateCbtions = function(goalDto) {
 			goalTag: this.goal.goalTag,
 			projectNames: [this.goal.projectName],
 			maxheight: "600px",
-			showFilterBtn: false,
+			showFilterBtn: true,
 			showNewBtn: true,
 			newBtnLink: "/views/cbtionNewPageR?goalTag="+this.goal.goalTag
 		});
