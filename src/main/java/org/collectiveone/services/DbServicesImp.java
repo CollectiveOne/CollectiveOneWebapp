@@ -1582,77 +1582,83 @@ public class DbServicesImp {
 		/* store activity only for custom decisions (automatic decisions activity 
 		 * is recorded based on the element it changes).
 		 * Activity is recorded if the decision switch state */
+		boolean isCustom = false;
 		if(!dec.getCreator().getUsername().equals("collectiveone")) {
-			Activity act = new Activity();
-			act.setCreationDate(new Timestamp(System.currentTimeMillis()));
-			act.setDecision(dec);
-			act.setType(ActivityType.DECISION);
-			act.setProject(dec.getProject());
+			isCustom = true;
+		}
+		
+	
+		Activity act = new Activity();
+		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		act.setDecision(dec);
+		act.setType(ActivityType.DECISION);
+		act.setProject(dec.getProject());
 
-			switch(before) {
+		switch(before) {
+		case IDLE:
+			switch(dec.getState()) {
 			case IDLE:
-				switch(dec.getState()) {
-				case IDLE:
-					break;
-
-				case OPEN:
-					act.setEvent("opened");
-					activitySaveAndNotify(act);
-					break;
-
-				case CLOSED_ACCEPTED:
-					act.setEvent("accepted");
-					activitySaveAndNotify(act);
-					break;
-
-				case CLOSED_DENIED:
-					act.setEvent("rejected");
-					activitySaveAndNotify(act);
-					break;
-
-				case CLOSED_EXTERNALLY:
-					act.setEvent("closed externally");
-					activitySaveAndNotify(act);
-					break;
-				}		
-
 				break;
 
 			case OPEN:
-				switch(dec.getState()) {
-				case IDLE:
-					act.setEvent("back to idle");
-					activitySaveAndNotify(act);
-					break;
-
-				case OPEN:
-					break;
-
-				case CLOSED_ACCEPTED:
-					act.setEvent("accepted");
-					activitySaveAndNotify(act);
-					break;
-
-				case CLOSED_DENIED:
-					act.setEvent("rejected");
-					activitySaveAndNotify(act);
-					break;
-
-				case CLOSED_EXTERNALLY:
-					act.setEvent("closed externally");
-					activitySaveAndNotify(act);
-					break;
-				}	
+				act.setEvent("opened");
+				/* decision activity from idle to open is registered for automatic decisions too */
+				activitySaveAndNotify(act);
 				break;
 
 			case CLOSED_ACCEPTED:
-			case CLOSED_DENIED:
-			case CLOSED_EXTERNALLY:
+				act.setEvent("accepted");
+				if(isCustom) activitySaveAndNotify(act);
 				break;
 
-			}
+			case CLOSED_DENIED:
+				act.setEvent("rejected");
+				if(isCustom) activitySaveAndNotify(act);
+				break;
+
+			case CLOSED_EXTERNALLY:
+				act.setEvent("closed externally");
+				if(isCustom) activitySaveAndNotify(act);
+				break;
+			}		
+
+			break;
+
+		case OPEN:
+			switch(dec.getState()) {
+			case IDLE:
+				act.setEvent("back to idle");
+				activitySaveAndNotify(act);
+				break;
+
+			case OPEN:
+				break;
+
+			case CLOSED_ACCEPTED:
+				act.setEvent("accepted");
+				if(isCustom) activitySaveAndNotify(act);
+				break;
+
+			case CLOSED_DENIED:
+				act.setEvent("rejected");
+				if(isCustom) activitySaveAndNotify(act);
+				break;
+
+			case CLOSED_EXTERNALLY:
+				act.setEvent("closed externally");
+				if(isCustom) activitySaveAndNotify(act);
+				break;
+			}	
+			break;
+
+		case CLOSED_ACCEPTED:
+		case CLOSED_DENIED:
+		case CLOSED_EXTERNALLY:
+			break;
+
 		}
 	}
+	
 
 	@Transactional
 	public DecisionDtoListRes decisionDtoGetFiltered(Filters filters) {
