@@ -101,6 +101,7 @@
 	float:right;
 	width:100px;
 	margin-right: 10px;
+	display: none;
 }
 
 #comment_item_div .reply_container {

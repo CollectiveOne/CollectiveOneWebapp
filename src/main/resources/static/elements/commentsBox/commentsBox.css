@@ -12,7 +12,7 @@
 	display: none;
 }
 
-#comments_div #new_comment_form {
+#comments_div .new_comment_form {
 	width: calc(100% - 30px);
 	float:left;
 	overflow:auto;

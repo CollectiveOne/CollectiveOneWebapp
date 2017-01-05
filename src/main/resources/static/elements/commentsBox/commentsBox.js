@@ -47,7 +47,7 @@ CommentsBox.prototype.commentsBoxLoaded = function() {
 
 CommentsBox.prototype.newCommentClicked = function() {
 	if(GLOBAL.sessionData.userLogged != null) {
-		$("#new_comment_form", this.container).toggle();	
+		$("#new_comment_form_top", this.container).toggle();	
 	} else {
 		showOutput("please login to add a comment","DarkRed")
 	}

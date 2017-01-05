@@ -965,7 +965,7 @@ public class DbServicesImp {
 	@Transactional
 	public CbtionDto cbtionGetDto(Long cbtionId) {
 		Cbtion cbtion = cbtionDao.get(cbtionId);
-		CbtionDto cbtionDto = cbtion.toDto(goalGetParentGoalsTags(cbtion.getGoal()));
+		CbtionDto cbtionDto = cbtion.toDto(goalGetParentGoalsTags(cbtion.getGoal()), cbtionGetNSubComments(cbtionId));
 		return cbtionDto;
 	}
 
@@ -1148,6 +1148,11 @@ public class DbServicesImp {
 	@Transactional
 	public CommentDto cbtionGetCommentDto(Long commentId) {
 		return commentDao.get(commentId).toDto();
+	}
+	
+	@Transactional
+	public int cbtionGetNSubComments(Long cbtionId) {
+		return cbtionDao.countSubComments(cbtionId);
 	}
 
 	@Transactional

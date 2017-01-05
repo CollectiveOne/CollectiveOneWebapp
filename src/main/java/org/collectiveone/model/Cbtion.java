@@ -90,6 +90,13 @@ public class Cbtion {
 		return dto;
 	}
 	
+	public CbtionDto toDto(List<String> parentGoalsTags, int nSubComments) {
+		CbtionDto dto = this.toDto();
+		dto.setParentGoalsTags(parentGoalsTags);
+		dto.setNcomments(nSubComments);
+		
+		return dto;
+	}
 	
 	public Long getId() {
 		return id;

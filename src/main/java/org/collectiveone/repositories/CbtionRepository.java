@@ -18,6 +18,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -212,6 +213,19 @@ public class CbtionRepository extends BaseDao {
 		Bid res = (Bid) q.uniqueResult();
 		
 		return res;
+	}
+	
+	public int countSubComments(Long cbtionId) {
+		Session session = sessionFactory.getCurrentSession();
+
+		Criteria q = session.createCriteria(Comment.class)
+				.createAlias("cbtion", "cbt")
+				.add(Restrictions.eq("cbt.id",cbtionId))
+				.setProjection(Projections.rowCount());
+						
+		Long res = (Long) q.uniqueResult();
+		
+		return (int)(res + 0);
 	}
 	
 }

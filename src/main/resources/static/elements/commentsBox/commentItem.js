@@ -36,13 +36,18 @@ CommentItem.prototype.commentBoxLoaded = function() {
 		$("#comment_show_replies", this.container).hide();
 	}
 
-	$("#comment_reply", this.container).click(this.commentReplyClick.bind(this));
-	$("#new_comment_save", this.container).click(this.newReplySaveClicked.bind(this));
+	$(".new_comment_form", this.container).attr("id","new_comment_form"+this.comment.id);
+
+	if(isUserLogged()) {
+		$("#comment_reply", this.container).show();
+		$("#comment_reply", this.container).click(this.commentReplyClick.bind(this));
+		$("#new_comment_save", this.container).click(this.newReplySaveClicked.bind(this));
+		$("#comment_promotion_up_div",this.container).click(this.promoteUpClick.bind(this));
+		$("#comment_promotion_down_div",this.container).click(this.promoteDownClick.bind(this));
+	}
+
 	$("#comment_show_replies", this.container).click(this.showRepliesClicked.bind(this));
-	
 	$("#comment_promotion_center_div",this.container).append(this.comment.relevance);
-	$("#comment_promotion_up_div",this.container).click(this.promoteUpClick.bind(this));
-	$("#comment_promotion_down_div",this.container).click(this.promoteDownClick.bind(this));
 	
 	if(this.expandReplies) {
 		this.showRepliesClicked();
@@ -59,7 +64,7 @@ CommentItem.prototype.commentBoxLoaded = function() {
 
 CommentItem.prototype.commentReplyClick = function() {
 	if(isUserLogged()) {
-		$("#new_comment_form", this.container).toggle();
+		$("#new_comment_form"+this.comment.id, this.container).toggle();
 	} else {
 		showOutput("please login to reply","DarkRed")
 	}
