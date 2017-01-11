@@ -475,8 +475,7 @@ public class DbServicesImp {
 			decisionRealmDao.save(realm);
 
 			Decision create = new Decision();
-			Decision delete = new Decision();
-
+			
 			create.setCreator(userDao.get("collectiveone"));
 			create.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			create.setDescription("create goal '"+goal.getGoalTag()+"'");
@@ -489,24 +488,10 @@ public class DbServicesImp {
 			create.setType(DecisionType.GOAL);
 			create.setGoal(goal);
 
-			delete.setCreator(userDao.get("collectiveone"));
-			delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
-			delete.setDescription("delete goal '"+goal.getGoalTag()+"'");
-			delete.setState(DecisionState.IDLE);
-			delete.setVerdictHours(36);
-			delete.setDecisionRealm(realm);
-			delete.setFromState(GoalState.ACCEPTED.toString());
-			delete.setToState(GoalState.DELETED.toString());
-			delete.setProject(project);
-			delete.setType(DecisionType.GOAL);
-			delete.setGoal(goal);
-
 			goal.setCreateDec(create);
-			goal.setDeleteDec(delete);
-
+			
 			decisionDao.save(create);
-			decisionDao.save(delete);
-
+			
 			Activity act = new Activity("proposed", 
 					new Timestamp(System.currentTimeMillis()),
 					project);
@@ -664,9 +649,32 @@ public class DbServicesImp {
 			switch(goal.getState()) {
 			case PROPOSED:
 				goal.setState(GoalState.ACCEPTED);
-				act.setEvent("accepted");
+				
+				/* create delete decision */
+	            Decision delete = new Decision();
+	            
+	            DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
+	            
+	            delete.setCreator(userDao.get("collectiveone"));
+	            delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
+	            delete.setDescription("delete goal '"+goal.getGoalTag()+"'");
+	            delete.setState(DecisionState.IDLE);
+	            delete.setVerdictHours(36);
+	            delete.setDecisionRealm(realm);
+	            delete.setFromState(GoalState.ACCEPTED.toString());
+	            delete.setToState(GoalState.DELETED.toString());
+	            delete.setProject(goal.getProject());
+	            delete.setType(DecisionType.GOAL);
+	            delete.setGoal(goal);
+	            
+	            goal.setDeleteDec(delete);
+	            decisionDao.save(delete);
+				
+	            /* register event */
+	            act.setEvent("accepted");
 				activitySaveAndNotify(act);
 				break;
+				
 			default:
 				break;
 			}
