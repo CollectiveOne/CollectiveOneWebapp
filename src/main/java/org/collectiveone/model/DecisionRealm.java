@@ -22,7 +22,7 @@ public class DecisionRealm {
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Voter> voters = new ArrayList<Voter>();
 	@OneToOne
-	private Project project;
+	private Goal goal;
 	
 	public Long getId() {
 		return id;
@@ -36,13 +36,12 @@ public class DecisionRealm {
 	public void setVoters(List<Voter> voters) {
 		this.voters = voters;
 	}
-	public Project getProject() {
-		return project;
+	public Goal getGoal() {
+		return goal;
 	}
-	public void setProject(Project project) {
-		this.project = project;
+	public void setGoal(Goal goal) {
+		this.goal = goal;
 	}
-	
 	
 	public int size() {
 		return this.getVoters().size();

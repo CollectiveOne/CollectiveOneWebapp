@@ -27,15 +27,15 @@ public class DecisionRealmDao extends BaseDao {
 		return (List<DecisionRealm>) super.getAll(max,DecisionRealm.class);
 	}
 	
-	public Long getIdFromProjectId(Long projectId) {
+	public Long getIdFromGoalId(Long goalId) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(DecisionRealm.class);
-		query.add(Restrictions.eq("project.id", projectId)).setProjection(Projections.id());
+		query.add(Restrictions.eq("goal.id", goalId)).setProjection(Projections.id());
 		return (Long) query.uniqueResult();
 	}
 	
-	public DecisionRealm getFromProjectId(Long projectId) {
+	public DecisionRealm getFromProjectId(Long goalId) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(DecisionRealm.class);
-		query.add(Restrictions.eq("project.id", projectId));
+		query.add(Restrictions.eq("goal.id", goalId));
 		return (DecisionRealm) query.uniqueResult();
 	}
 	

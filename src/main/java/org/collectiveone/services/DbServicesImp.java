@@ -38,6 +38,7 @@ import org.collectiveone.repositories.AuthorizedProjectDao;
 import org.collectiveone.repositories.BidDao;
 import org.collectiveone.repositories.CbtionRepository;
 import org.collectiveone.repositories.CommentDao;
+import org.collectiveone.repositories.ContributorDao;
 import org.collectiveone.repositories.DecisionDao;
 import org.collectiveone.repositories.DecisionRealmDao;
 import org.collectiveone.repositories.GoalDao;
@@ -104,6 +105,9 @@ public class DbServicesImp {
 
 	@Autowired 
 	protected DecisionRealmDao decisionRealmDao;
+	
+	@Autowired 
+	protected ContributorDao contributorDao;
 
 	@Autowired 
 	protected ArgumentDao argumentDao;
@@ -282,11 +286,6 @@ public class DbServicesImp {
 			project.setCreator(creator);
 			project.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			project.setDescription(projectDto.getDescription());
-
-			/* Each project has its own decision realm */
-			DecisionRealm realm = new DecisionRealm();
-			decisionRealmDao.save(realm);
-			realm.setProject(project);
 		}
 	}
 
@@ -373,8 +372,8 @@ public class DbServicesImp {
 		cbtion.setContributor(bid.getCreator());
 		cbtion.setState(CbtionState.ACCEPTED);
 
-		/* add user to decision realm */
-		decisionRealmDao.updateVoter(realm.getId(), creator.getId(), bid.getPpoints());
+		/* add user to project contributors */
+		contributorDao.updateContributor(project.getId(), creator.getId(), bid.getPpoints());
 
 	}
 
