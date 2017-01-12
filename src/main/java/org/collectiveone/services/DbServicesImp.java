@@ -275,7 +275,7 @@ public class DbServicesImp {
     }
 	
 	@Transactional
-	public void projectCreate(ProjectNewDto projectDto) {
+	public void projectCreate(ProjectNewDto projectDto) throws IOException {
 		if(projectGet(projectDto.getName()) == null) {
 			Project project = new Project();
 			projectDao.save(project);
@@ -310,7 +310,7 @@ public class DbServicesImp {
 		project.setEnabled(true);
 		projectDao.save(project);
 		
-		/* only one goal exist as the project has just created */
+		/* only one goal exist as the project was just created */
 		Goal goal = goalDao.getOne(project.getId());
 
 		User creator = project.getCreator();
