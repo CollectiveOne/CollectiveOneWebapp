@@ -286,6 +286,17 @@ public class DbServicesImp {
 			project.setCreator(creator);
 			project.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			project.setDescription(projectDto.getDescription());
+			
+			/* One goal must be created at project creation */
+			GoalDto goalDto = new GoalDto();
+			
+			goalDto.setCreationDate(new Timestamp(System.currentTimeMillis()));
+			goalDto.setCreatorUsername(projectDto.getCreatorUsername());
+			goalDto.setDescription(projectDto.getGoalDescription());
+			goalDto.setProjectName(project.getName());
+			goalDto.setGoalTag(projectDto.getGoalTag());
+			
+			goalCreate(goalDto,GoalState.ACCEPTED);
 		}
 	}
 
@@ -298,11 +309,14 @@ public class DbServicesImp {
 		Project project = projectDao.get(projectName);
 		project.setEnabled(true);
 		projectDao.save(project);
+		
+		/* only one goal exist as the project has just created */
+		Goal goal = goalDao.getOne(project.getId());
 
 		User creator = project.getCreator();
 		userDao.save(creator);
 
-		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(project.getId());
 		decisionRealmDao.save(realm);
 
 		/* An accepted cbtion is added to the project to the contributor */
@@ -446,8 +460,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public Long goalCreate(GoalDto goalDto) throws IOException {
-		
+	public Long goalCreate(GoalDto goalDto, GoalState state) throws IOException {
 		if(!goalExist(goalDto.getGoalTag(), goalDto.getProjectName())) {
 			Goal goal = new Goal();
 			Project project = projectDao.get(goalDto.getProjectName());
@@ -457,7 +470,7 @@ public class DbServicesImp {
 			goal.setCreator(userDao.get(goalDto.getCreatorUsername()));
 			goal.setDescription(goalDto.getDescription());
 			goal.setProject(project);
-			goal.setState(GoalState.PROPOSED);
+			goal.setState(state);
 			goal.setGoalTag(goalDto.getGoalTag());
 
 			Long id = goalDao.save(goal);
@@ -474,37 +487,77 @@ public class DbServicesImp {
 			DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
 			decisionRealmDao.save(realm);
 
-			Decision create = new Decision();
+			Activity act = null;
 			
-			create.setCreator(userDao.get("collectiveone"));
-			create.setCreationDate(new Timestamp(System.currentTimeMillis()));
-			create.setDescription("create goal '"+goal.getGoalTag()+"'");
-			create.setState(DecisionState.IDLE);
-			create.setVerdictHours(36);
-			create.setDecisionRealm(realm);
-			create.setFromState(GoalState.PROPOSED.toString());
-			create.setToState(GoalState.ACCEPTED.toString());
-			create.setProject(project);
-			create.setType(DecisionType.GOAL);
-			create.setGoal(goal);
+			switch(state) {
+				case PROPOSED:
+					Decision create = new Decision();
+					
+					create.setCreator(userDao.get("collectiveone"));
+					create.setCreationDate(new Timestamp(System.currentTimeMillis()));
+					create.setDescription("create goal '"+goal.getGoalTag()+"'");
+					create.setState(DecisionState.IDLE);
+					create.setVerdictHours(36);
+					create.setDecisionRealm(realm);
+					create.setFromState(GoalState.PROPOSED.toString());
+					create.setToState(GoalState.ACCEPTED.toString());
+					create.setProject(project);
+					create.setType(DecisionType.GOAL);
+					create.setGoal(goal);
 
-			goal.setCreateDec(create);
-			
-			decisionDao.save(create);
-			
-			Activity act = new Activity("proposed", 
-					new Timestamp(System.currentTimeMillis()),
-					project);
+					goal.setCreateDec(create);
+					
+					decisionDao.save(create);
+					
+					act = new Activity("proposed", 
+							new Timestamp(System.currentTimeMillis()),
+							project);
+					
+					break;
+					
+					
+				case ACCEPTED:
+		            Decision delete = new Decision();
+		            
+		            delete.setCreator(userDao.get("collectiveone"));
+		            delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		            delete.setDescription("delete goal '"+goal.getGoalTag()+"'");
+		            delete.setState(DecisionState.IDLE);
+		            delete.setVerdictHours(36);
+		            delete.setDecisionRealm(realm);
+		            delete.setFromState(GoalState.ACCEPTED.toString());
+		            delete.setToState(GoalState.DELETED.toString());
+		            delete.setProject(project);
+		            delete.setType(DecisionType.GOAL);
+		            delete.setGoal(goal);
 
+		            goal.setDeleteDec(delete);
+ 				    decisionDao.save(delete);
+					
+					act = new Activity("proposed", 
+							new Timestamp(System.currentTimeMillis()),
+							project);
+
+					break;
+				
+				default:
+					break;
+			}
+			
 			act.setGoal(goal);
 			act.setType(ActivityType.GOAL);
 			activitySaveAndNotify(act);
 			
 			return id;
+			
 		} else {
 			return (long) -1;
 		}
-		
+	}
+	
+	@Transactional
+	public Long goalCreate(GoalDto goalDto) throws IOException {
+		return goalCreate(goalDto,GoalState.PROPOSED);
 	}
 
 	@Transactional

@@ -11,6 +11,13 @@ public class ProjectNewDto {
 	private String name;
 	@NotEmpty
 	private String description;
+	
+	@NotEmpty
+	@Pattern(regexp="^((?!\\s).)*$", message="may not contain white spaces")
+	private String goalTag;
+	@NotEmpty
+	private String goalDescription;
+	
 	private String creatorUsername;
 	
 	@Min(10)
@@ -33,6 +40,18 @@ public class ProjectNewDto {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getGoalTag() {
+		return goalTag;
+	}
+	public void setGoalTag(String goalTag) {
+		this.goalTag = goalTag;
+	}
+	public String getGoalDescription() {
+		return goalDescription;
+	}
+	public void setGoalDescription(String goalDescription) {
+		this.goalDescription = goalDescription;
 	}
 	public double getPpsInitial() {
 		return ppsInitial;

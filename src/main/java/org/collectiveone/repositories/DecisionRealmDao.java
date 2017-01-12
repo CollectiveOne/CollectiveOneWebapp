@@ -33,7 +33,7 @@ public class DecisionRealmDao extends BaseDao {
 		return (Long) query.uniqueResult();
 	}
 	
-	public DecisionRealm getFromProjectId(Long goalId) {
+	public DecisionRealm getFromGoalId(Long goalId) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(DecisionRealm.class);
 		query.add(Restrictions.eq("goal.id", goalId));
 		return (DecisionRealm) query.uniqueResult();
