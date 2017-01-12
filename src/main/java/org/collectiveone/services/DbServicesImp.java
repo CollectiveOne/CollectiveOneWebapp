@@ -475,16 +475,29 @@ public class DbServicesImp {
 
 			Long id = goalDao.save(goal);
 
+			/* each goal has its own decision realm */
+			DecisionRealm realm = new DecisionRealm();
+			realm.setGoal(goal);
+			
+			/* the voters and weights of the decision realm are initialized to the parent goal realm */
+			boolean hasParent = false;
 			if(goalDto.getParentGoalTag() != null) {
 				if(goalDto.getParentGoalTag() != "") {
 					Goal parent = goalDao.get(goalDto.getParentGoalTag(), project.getName());
 					if(parent != null) {
+						hasParent = true;
 						goal.setParent(parent);
+						/* decision realm should be initialized to that of the parent goal */
+						decisionRealmCopyVoters(realm,decisionRealmDao.getFromGoalId(parent.getId()).getId());
 					}
 				}
 			}
-
-			DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
+			
+			/* or the are initialized to 1 (weights) and all project contributors are voters */
+			if(!hasParent){
+				decisionRealmInitToProject(realm, project.getId());
+			}
+				
 			decisionRealmDao.save(realm);
 
 			Activity act = null;
@@ -517,6 +530,8 @@ public class DbServicesImp {
 					
 					
 				case ACCEPTED:
+					/* one goal is created in accepted state at project creation */
+					
 		            Decision delete = new Decision();
 		            
 		            delete.setCreator(userDao.get("collectiveone"));
@@ -1783,6 +1798,41 @@ public class DbServicesImp {
 		return decisionDao.get(id).toDto();
 	}
 
+	@Transactional
+	public void decisionRealmCopyVoters(DecisionRealm destRealm,Long sourceRealmId) {
+		DecisionRealm sourceRealm = decisionRealmDao.get(sourceRealmId);
+		
+		if(destRealm.getVoters() == null) {
+			destRealm.setVoters(new ArrayList<Voter>());
+		}
+		
+		for(Voter existingVoter : sourceRealm.getVoters()) {
+			boolean voterIsInRealm = false;
+			
+			/* check if voter is already in the destination realm and, of so, simply update the weight */
+			if(destRealm.getVoters().size() > 0) {
+				for(Voter voterInRealm : destRealm.getVoters()) {
+					if(voterInRealm.getVoterUser().getId() == existingVoter.getVoterUser().getId()) {
+						voterIsInRealm = true;
+						voterInRealm.setWeight(existingVoter.getWeight());
+					}
+				}
+			}
+			
+			/* otherwise create a new voter on the destination realm */
+			if(!voterIsInRealm) {
+				Voter newVoter = new Voter();
+				
+				newVoter.setVoterUser(existingVoter.getVoterUser());
+				newVoter.setWeight(existingVoter.getWeight());
+			}
+			
+		}
+		
+	}
+	
+	
+	
 	@Transactional
 	public ArgumentDto argumentGetDto(Long id) {
 		return argumentDao.get(id).toDto();
