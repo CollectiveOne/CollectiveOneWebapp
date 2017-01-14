@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2017-01-05 14:01:14 CET
+-- Started on 2017-01-14 18:18:38 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -88,7 +88,6 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 68	2016-10-16 10:23:01.212	\N	2016-10-16 22:00:00	I have fixed bug, added a link to argument creator page and updated all links to UserPage to use a helper function	2016-10-16 10:23:27.303	https://github.com/CollectiveOne/CollectiveOne-Webapp/commit/6c4898c23f8b3b947ceb4e0008fb1812c43d5dbf	1	3	3	236	235	75	1
 64	2016-10-10 20:09:51.438	\N	2016-10-10 22:00:00	I have updated the model and removed all redundancies. Added a few methods to the API and updated a few JS elements	2016-10-10 20:10:05.69	https://github.com/CollectiveOne/CollectiveOne-Webapp/commit/9f9c4f1675bc0ecf88ffaa75c4bd43339c513480	1	10	3	219	218	73	1
 71	2016-10-19 21:10:56.196	\N	2016-10-25 05:00:00	add data sets for urbano project	\N	\N	\N	0.100000000000000006	1	261	260	79	5
-74	2016-10-21 18:06:04.799	\N	2016-10-21 22:00:00	I will do it using React.js	2016-10-21 18:06:28.198	see last commit	1	10	3	275	274	69	1
 65	2016-10-11 21:36:06.805	\N	2016-10-11 22:00:00	I have added the google drive presentation and the links to slack and reddit	\N	\N	\N	5	3	227	226	59	1
 69	2016-10-18 14:51:58.291	\N	2016-10-18 22:00:00	I have updated all the forms to abandon the dynamic writing and replaced with the form being specified directly in the JSP file. Other fixes have been done, including showing only custom decisions in the decision list page by default.	2016-10-18 14:52:31.142	https://github.com/CollectiveOne/CollectiveOne-Webapp/commit/915b827ffdd6b48f8a920e669a59254bfd47fb38	1	5	3	246	245	77	1
 66	2016-10-11 21:37:31.523	\N	2016-10-11 22:00:00	I have updated the goal methods to force projectName to be used whenever goal_tag is used	\N	\N	\N	10	3	229	228	74	1
@@ -128,7 +127,6 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 101	2016-11-25 13:59:04.378	\N	2016-11-25 23:00:00	I can prepare a first draft	2016-11-25 19:42:28.204	https://drive.google.com/drive/u/0/folders/0B6HEie5ZN03bZ0RSaExIU0tCMHc	1	5	3	435	434	123	1
 98	2016-11-24 09:47:19.58	\N	2016-11-24 23:00:00	For some reason the SendGrid API key was not within the SendGrid CollectiveOne account. I have created a new key and updated the env variable in heroku. Tested for signup and pwd recovery	\N	\N	\N	2	3	415	414	119	1
 96	2016-11-21 18:23:04.707	\N	2016-11-21 23:00:00	I will attend the presentation and make as many contacts as possible	2016-11-24 09:17:55.952	https://docs.google.com/document/d/19kRCzv86tkF8RiMlV_Hdtju9xGvQpi51Z-jTpMemsCE/edit?usp=drive_web	1	25	3	407	406	117	1
-102	2016-11-27 11:21:43.05	\N	2016-11-30 23:00:00	I am willing to cover this at a 4 euros per pp	\N	\N	\N	42.5	0	\N	445	126	1
 103	2016-11-28 09:32:18.918	\N	\N	I will devote some time today to this and try to come with a solution. The priority is to test the decision mechanism.	\N	\N	\N	0	6	\N	\N	116	1
 110	2016-11-30 17:39:56.42	\N	2016-11-30 23:00:00	I have prepared a first version. Feel free to propose editions	\N	\N	\N	4	3	490	489	139	1
 104	2016-11-29 10:30:29.036	\N	2016-11-30 00:00:00	I have produced a summary document (available in the Slack channel).	\N	\N	\N	4	3	459	458	130	3
@@ -146,7 +144,6 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 128	2016-12-12 15:59:40.309	\N	2016-12-12 23:00:00	I will update the [contact list](https://docs.google.com/spreadsheets/d/1azVGqu2Q-f-TRoJrr--ICLwChdSGTmG1MkAhbYFyhjE/edit#gid=0) and write them to follow with the iterations. 	2016-12-16 15:22:49.213	I have sent a lot of mails these week. Let's see how useful they are.	1	10	3	586	585	161	1
 133	2016-12-15 20:32:30.855	\N	2016-12-16 05:00:00	[Here](https://drive.google.com/file/d/0BxMlj6cdwdxCVjBucVJqLVQ5TU0/view?usp=sharing) is a document to kick off the discussion	\N	\N	\N	5	3	618	615	168	3
 120	2016-12-04 17:57:49.208	\N	2016-12-04 23:00:00	Done, added Comment relation to the Activity entity	\N	\N	\N	3	3	550	549	151	1
-121	2016-12-05 08:35:57.582	\N	2016-12-05 23:00:00	I will get in contact with them and keep all you updated through slack	\N	\N	\N	15	1	554	553	152	1
 129	2016-12-13 10:55:35.788	\N	2016-12-13 23:00:00	Easy fix	2016-12-13 11:18:48.532	[commit](https://github.com/CollectiveOne/CollectiveOneWebapp/commit/b0f5fa92fe312c62820cd0d751c38fe079d8f559)	1	1	3	592	591	163	1
 123	2016-12-06 19:10:39.863	\N	2016-12-06 23:00:00	I have added markdown to the creation of contributions, goals, decisions and projects. It has to be added to bids and to goals when created as subgoals	\N	\N	\N	10	3	568	567	125	1
 124	2016-12-07 17:53:52.133	\N	1970-01-02 00:00:00		\N	\N	\N	10	3	572	571	153	13
@@ -159,7 +156,6 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 119	2016-12-04 17:20:36.989	\N	2016-12-04 23:00:00	I will add this as an optional filed in the cbtionNewPageR form and make sure it is shown in the CbtionBox and CbtionBoxComplete elements.	2016-12-19 16:29:28.349	Finally, I've added a basic functionality for this. Style is probably poor. [see this commit](https://github.com/CollectiveOne/CollectiveOneWebapp/commit/70ecfa585d9160dfa6c865b194e3ce01de30d4d7)	1	5	3	548	547	132	1
 131	2016-12-13 12:59:17.453	\N	2016-12-13 23:00:00	I will prepare a new form to request sign-up to the platform similar to the one used to request an invitation to slack	2016-12-19 17:04:07.785	I have added a dedicated page and a link in the signup page	1	5	3	598	597	162	1
 137	2016-12-26 21:01:58.748	\N	2017-01-03 23:00:00	I will review the information available from the IFTF, mainly [this paper](http://www.iftf.org/fileadmin/user_upload/downloads/wfi/iftf_workablefutures_10strategies.pdf), and prepare a first draft of the application [here](https://docs.google.com/document/d/1-j2HoXc48fl37tpK0hbUnJRBqe-zzr74TYCIjUPA9ks/edit).	2017-01-03 20:19:37.766	I have updated the **[document](https://docs.google.com/document/d/1-j2HoXc48fl37tpK0hbUnJRBqe-zzr74TYCIjUPA9ks/edit#)**. Its a draft, one section is missing, but its a start.	1	10	3	643	642	173	1
-135	2016-12-19 18:23:59.187	\N	2016-12-22 23:00:00	I will review and plan the implementation tomorrow and, perhaps the day after.	\N	\N	\N	10	1	637	636	174	1
 122	2016-12-06 11:13:42.312	\N	2016-12-06 23:00:00	I will provide a first proposal	2016-12-20 18:17:42.069	After some time of thinking, this is [the proposal](https://docs.google.com/document/d/1L8djyJkLtYM_NFlM-lyt-VOH48d8pZqmGvjM8HbIt6U/edit).	1	20	3	560	559	154	1
 143	2017-01-05 09:15:30.368	\N	2017-01-16 00:00:00	Please disregard my comment on this post, the bid to contribution functionality was not showing at the time :)	\N	\N	\N	3	1	662	658	165	17
 139	2017-01-04 09:05:21.245	\N	2017-01-04 23:00:00	I will prepare a simple version that can be used by those interested in trying the platform	2017-01-04 16:07:21.594	I have created the [first draft](https://docs.google.com/document/d/1x1Vl08jHonYukIvV80iRqouqjwolhsFCWWcTPbSd9js/edit#) of the user manual. Hopefully it will be helpful enough for new users.	1	5	3	653	652	178	1
@@ -167,6 +163,21 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 142	2017-01-05 09:12:52.367	\N	2017-01-14 00:00:00	Will provide general feedback on the site. It may be more useful if provide some guidance as to what would be helpful.	\N	\N	\N	2	0	\N	657	171	17
 138	2017-01-03 20:30:36.826	\N	2017-01-05 05:00:00	Provide feedback and editing for IFTF fellowship application.	\N	\N	\N	1	3	649	648	177	9
 141	2017-01-05 09:10:01.96	\N	2017-01-13 00:00:00	Have created a project and will create goals and set up some contributions etc...	\N	\N	\N	10	1	659	656	176	17
+121	2016-12-05 08:35:57.582	\N	2016-12-05 23:00:00	I will get in contact with them and keep all you updated through slack	2017-01-05 15:40:33.151	I have contacted them. We should be able to have an entry in the P2P Wiki, and we have one contact point with them thought a Ph.D. student from the P2P Lab	1	7	3	554	553	152	1
+144	2017-01-05 15:57:49.927	\N	2017-01-05 23:00:00	I have fixed this with a patch. I hope it holds...	\N	\N	\N	3	3	668	667	181	1
+145	2017-01-09 10:22:07.122	\N	2017-01-09 23:00:00	I can fund this at 4 euros per pp	\N	\N	\N	21.8500000000000014	3	674	673	155	1
+146	2017-01-09 10:23:15.021	\N	2017-01-09 23:00:00	I can fund this at 4 euros per pp	\N	\N	\N	25	3	676	675	156	1
+147	2017-01-09 10:24:04.274	\N	2017-01-09 23:00:00	I can fund this at 4 euros per pp	\N	\N	\N	15.5	3	678	677	157	1
+102	2016-11-27 11:21:43.05	\N	2016-11-30 23:00:00	I am willing to cover this at a 4 euros per pp	\N	\N	\N	42.5	3	679	445	126	1
+148	2017-01-09 16:05:16.626	\N	2017-01-09 23:00:00	I have contacted several people during the last months. Activity is growing in the slack channel.	\N	\N	\N	20	3	682	681	101	1
+74	2016-10-21 18:06:04.799	\N	2016-10-21 22:00:00	I will do it using React.js	2016-10-21 18:06:28.198	see last commit	1	10	4	275	274	69	1
+135	2016-12-19 18:23:59.187	\N	2016-12-22 23:00:00	I will review and plan the implementation tomorrow and, perhaps the day after.	2017-01-10 16:54:59.421	I have created simple diagrams and a first overview of the changes to be done to the webapp **[here](https://drive.google.com/drive/u/0/folders/0B6HEie5ZN03bNUVNNzFNTlRoalk)**.	1	10	3	637	636	174	1
+150	2017-01-10 16:58:42.169	\N	2017-01-20 23:00:00	I will implement the changes and try to reach a basic functionality, to be tested and refined.	\N	\N	\N	40	1	693	692	183	1
+149	2017-01-09 16:20:17.276	\N	2017-01-11 23:00:00	I can review the invitation and prepare a first version of the slides	2017-01-11 17:19:29.765	Ok, I have prepared **[this ](https://docs.google.com/presentation/d/1y53o-MfsvJEngv90HCP58TZKl3TU__uoM7qRaG9Sj2E/edit#slide=id.g13c76d61ce_0_574)**with the help of Esteban. 	1	10	1	687	686	182	1
+151	2017-01-11 19:19:09.292	\N	2017-01-12 23:00:00	I can do it. 	\N	\N	\N	10	0	\N	696	184	1
+152	2017-01-12 08:42:52.196	\N	2017-01-12 23:00:00	I can do it creating a wearable technology startup examples	\N	\N	\N	5	1	700	699	185	1
+153	2017-01-12 10:57:54.593	\N	\N	Create project Lendi	\N	\N	\N	1000	3	702	701	186	18
+154	2017-01-13 11:01:24.936	\N	2017-01-13 23:00:00	I can do this	2017-01-13 11:59:04.823	I have created **[this](https://docs.google.com/spreadsheets/d/1JQJg4hLirymq2Q90UBPgurbFFZOypiF9o4yAO5e3jJk/edit#gid=0)** table. Hope it helps.	1	5	1	713	707	187	1
 \.
 
 
@@ -184,8 +195,9 @@ COPY projects (id, creation_date, description, enabled, name, pps_tot, creator_i
 2	2016-09-21 15:38:54.641	With JieMaps, you can create and share your navigation experience, and find the navigation experiences of others.\n\nIn JieMaps, a navigation experience is represented by a path (a sequence and group of links). This paths are called Jies. That's all. 	f	JieMaps	100	1
 3	2016-10-19 20:51:28.032	Data journalism tools	f	datasketch	101	5
 5	2016-12-01 12:28:49.362	Every minute of the day, the sun is rising somewhere in the world. This project aims to capture a global sunrise: a visual collection of the sun rising across the globe’s time zones. \r\n\r\nProject CollectiveSunrise hopes to produce a video by assembling visual recordings, taken on the same day, by professional artists and amateurs in all corners of the world. \r\n	t	CollectiveSunrise	100	3
+1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	t	CollectiveOne	3329.84999999999991	1
+7	2017-01-12 10:57:54.578	Lendi es una aplicación donde los usuarios pueden pedir prestado cualquier objeto que necesiten a otros vecinos de su barrio. Los usuarios son co-dueños del proyecto	t	Lendi	1000	18
 6	2017-01-04 20:50:22.511	I am the founder of www.autoebid.com a consumer champion helping consumers to save time and money and stop getting ripped off. The service is a 1st to market reverse auction marketplace that has taken over £230m in online orders. Having recently my business, I now want to do start my next venture and do something meaningful, don’t we all?\r\n\r\nMy profile is at https://uk.linkedin.com/in/amin-saleem-338b94\r\nI am looking to create a new dynamic platform that will be focused on helping businesses and individuals to work more efficiently, save time and money, enable ethically focused small business to compete with some of the large corporate organisations who are creating many problems facing society.\r\n\r\nMuch of the service will be a fermium service (fee for users) with revenues derived from collective purchasing and procurement solutions. Individuals and organizations are able to negotiate better terms with vendors, create economies of scale and even generate additional income by benefiting from the buying power of millions.\r\n\r\nGovernments, charities businesses and the general public are all under tremendous pressure to reduce their costs and become more efficient, that where we can step in. Our marketplace enables users to buy the right product from the right supplier at the best possible price.\r\n\r\nI am considering setting up my new organization under a co-operative type business model offering all employees a 10% share in the business (including all contractors) in addition to 10% going to customers. As https://www.bcorporation.net provide a good structure for an ethical transparent business, I was considering going with them.\r\n\r\nI think it’s important to be a for profit organization, however, we will be a “People before Profit” company. The solutions aim is to help drive positive change by empowering individuals and business to work and consume better. The organization will carry the same responsibilities as a, not for profit company but will have the flexibility to invest some of those profits into other projects that support our aims as well as attracting the best talent around the world.\r\n\r\nI am at the beginning stage of this exciting project and looking to create a team to get the project off the ground. The project is going to be funded by myself initially, I still need to define the project, recruit a team,  build and launch a beta version of the solution.\r\n\r\nIf you are interested in getting involved with the project get in contact, via slack - [https://smartdealmaker.slack.com](https://smartdealmaker.slack.com)\r\n\r\nRegards\r\n	t	Smartdealmaker-project	100	17
-1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	t	CollectiveOne	3195	1
 \.
 
 
@@ -208,14 +220,11 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 4	20	2016-08-08 16:31:23.877	\N	Support preparation of white paper	White paper sections and editions 	0	2	0	Support white paper draft	3	1	\N	1	\N	1
 5	500	2016-08-10 10:58:24.39	\N	Propose the CoProjects idea as a way of creating economic value decentralizedly	First CoProjects concept	0	2	0	CoProjects First Proposal	1	1	\N	1	\N	1
 7	100	2016-08-10 11:00:36.643	\N	Migrate the contents of the Wiki and Reddit to Basecamp summarizing the key points to be discussed	First set of basecamp messages and docs	0	2	0	Status Summary in Basecamp	1	1	\N	1	\N	1
-138	0	2016-11-30 12:23:54.138	\N	Update getOfDecision method of ArgumentDao class to sort the results by number of backers.	updated method	0	0	0	Sort arguments by backers	\N	1	486	6	485	1
-16	0	2016-08-20 15:44:57.06	\N	Update the diagram of the white paper using, as basis, the old diagram and the text included in the white paper.	Diagram file (editable)	0	0	0	Update White Paper Diagram	\N	1	\N	1	\N	1
 12	10	2016-08-10 11:09:36.933	\N	Update bids to have a delivery date and udpate new bid form to request delivery date. Basic functionality needed. Style to be added on another contribution	Updated Bid entity and new bid form	0	2	0	Add delivery date to bids	1	1	\N	3	\N	1
 18	10	2016-08-20 16:00:05.469	\N	Add IP and licensing sections to white paper	White paper updated	0	2	0	IP and Licensing in White Paper	1	1	\N	1	\N	1
 21	5	2016-08-23 22:10:35.014	\N	Select a new set of three colors to update the current user interface. Olive is just hard to read.	Three hex codes	0	2	0	New UI colors	1	1	\N	4	\N	1
 8	100	2016-08-10 11:02:08.133	\N	Review the Decision Mechanism concept, formulate it and propose improvements and alternatives	Feedback and analysis report	0	2	0	Review Decision Mechanism	3	1	\N	2	\N	1
 19	10	2016-08-20 16:02:02.831	\N	Prepare a google spreadsheet to track the contribution items from the beginning so that the CoProjects method is applied from the beginning	Google sheet	0	2	0	Contribution Tracker Google Sheet	1	1	\N	1	\N	1
-20	0	2016-08-20 16:32:22.509	\N	Add LiquidBase to the webapp so that updates to the database can be done cleanly	Updated webapp	0	0	0	Add LiquidBase	\N	1	\N	3	\N	1
 24	10	2016-08-26 18:54:55.83	\N	Change the type of the description of the entities to allow larger descriptions. Current limit of 255 characters is too low.	Updated DB schema and data	0	2	0	Extend description size	1	1	\N	3	\N	1
 22	7	2016-08-24 22:16:35.843	\N	Prepare an email to invite collaborators to join project and help develop the CoProjects platform	Email draft	0	2	0	Prepare invitation email 	3	1	\N	1	\N	1
 23	20	2016-08-26 08:47:41.154	\N	Simplify DecisionBox so that it focus in the state that it wants to change. E.g. Bid OFFERED->ASSIGN? yes/no | yes in 4 hr	Updated DecisionBox integration	0	2	0	Uptade DecisionBox	1	1	\N	4	\N	1
@@ -229,6 +238,8 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 29	15	2016-09-01 17:15:38.157	\N	Improve DecisionBox element. Make it nice and useful.	Updated DecisionBox html+js+css	0	2	0	Improve DecisionBox	1	1	\N	4	\N	1
 11	30	2016-08-10 11:07:35.129	\N	Edit decision entity to have a list of pro and against arguments and create a DecisionPage view to show the decision status, and allow the addition of arguments.	Updated decision entity and new DecisionPage view with basic functionality	0	2	0	Add pro and against lists of arguments to decisions	1	1	\N	3	\N	1
 79	0	2016-10-19 21:08:31.577	\N		data sets	0	1	0	Prepare initial public data sets	\N	5	\N	23	259	3
+20	0	2016-08-20 16:32:22.509	\N	Add LiquidBase to the webapp so that updates to the database can be done cleanly	Updated webapp	0	6	0	Add LiquidBase	\N	1	\N	3	\N	1
+16	0	2016-08-20 15:44:57.06	\N	Update the diagram of the white paper using, as basis, the old diagram and the text included in the white paper.	Diagram file (editable)	0	6	0	Update White Paper Diagram	\N	1	\N	1	\N	1
 30	2	2016-09-01 20:04:36.437	\N	Merge Cbtion, Goals and Decisions filtered search methods into a single one so that filter functionality can evolve cleanly	updated DbServices class and dependencies	0	2	0	Merge all *GetList DB service method	1	1	\N	3	\N	1
 32	5	2016-09-01 23:47:44.616	\N	Create a BaseDao superclass to concentrate all common methods to all entities Daos. This is a preliminary step to have the search functionality in a single place. Update all dependencies and Daos methods to wrap and cast the super caller methods	updated Dao Java classes	0	2	0	Create BaseDao superclass	1	1	\N	6	\N	1
 2	50	2016-08-08 14:37:36.535	\N	Deploy webapp in heroku as it is. 	Heroku app running	0	2	0	Deploy in Heroku	1	1	\N	6	\N	1
@@ -241,10 +252,8 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 34	5	2016-09-05 10:09:10.66	\N	Add "creator" as a field to Goals, Cbtions and Decisions filters. Use autocomplete to select one or more users as creators and return results for those users (and the rest of filter criteria). Try to do this in combination of the https://coprojects-hk.herokuapp.com/views/CbtionPage.action?cbtionId=30 contribution, which as to merge the filter logic in one single place.	Updated js filter element and DB services	0	2	0	Add creator filter	1	1	\N	4	\N	1
 35	3	2016-09-05 10:10:47.582	\N	Add "keyword" as a field to Goals, Cbtions and Decisions filters. Use a sumple %query% logic to return items with that word in their title, or description. Try to do this in combination of the https://coprojects-hk.herokuapp.com/views/CbtionPage.action?cbtionId=30 contribution, which ask to merge the filter logic in one single place.	updated filter element JS and DB services	0	2	0	Add keyword filter	1	1	\N	4	\N	1
 44	2	2016-09-07 09:04:54.21	\N	Add some way for the user to click in a portion of the smallDecisionBox object and go to the decision page of that decision so that he can see more details about it	updated smallDecisionBox	0	2	0	Add link to decision page in smallDecisionBox	1	1	\N	4	\N	1
-45	0	2016-09-07 18:13:52.233	\N	Add a filter to search elements based on their creation date (i.e. if the date is within a range). Updated filter element and DB service	updated Filter JS element and DB BaseDao get methods	0	4	0	Add filter by creation date	\N	1	\N	4	123	1
 47	5	2016-09-07 18:55:40.09	\N	Add relevance property to contributions as a number. Allow users to upvote or downvote contributions. Each upvote increases relevance by 1. Updated CbtionBox so that it includes to arrows at the left to allow users to upvote and downvote	updated Cbtion entity and BidBox js	0	2	0	Add relevance level to contributions	1	1	\N	4	125	1
 36	5	2016-09-05 10:12:12.682	\N	Allow the user to sort the results of Goals, Cbtions and Decisions list based in creation date. If possible allow for other criteria.	updated filter element JS and DB services	0	2	0	Add "sort by" to filter	1	1	\N	4	\N	1
-58	0	2016-09-13 10:58:14.145	\N	Configure Log4J so that it keeps a log of the web app activity. Add an example of how to add logging within the application. Another contribution(s) can be used to populate the log of events.	updated backend application	0	4	0	Setup Log4J	\N	1	\N	6	151	1
 41	15	2016-09-05 10:22:36.319	\N	Add hierarchy links to goals so that any goal can be marked as a sub-goal of other goal. Updated Goal search page to represent this hierarchy and allow the user to create these links. Updated GoalNewPage to allow new goals to be marked as subgoals of other.	Updated Goal entity, GoalListPage, GoalNew forma and dependencies	1	2	0	Add hierarchy to Goals	1	1	\N	3	\N	1
 50	10	2016-09-08 16:37:17.423	\N	Add a list of the reviews that a user has received in the platforn	updated UserPage	0	2	0	Add user reviews to user profile	1	1	\N	4	132	1
 39	25	2016-09-05 10:18:00.846	\N	Add the possibility to filter Contributions by goal	updated filter element	0	2	0	Filter Contributions by goal	1	1	\N	4	\N	1
@@ -254,7 +263,7 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 40	0	2016-09-05 10:19:09.952	\N	Allow the user to select more than one goal per contribution	updated CbtionNewPage, Cbtion entitiy and dependencies	-1	6	0	Allow for multiple goals per Contribution	\N	1	\N	3	\N	1
 42	0.5	2016-09-05 16:43:55.567	\N	Support pepospina to create a new remote of the CoProjects repository in github	github repository	0	2	0	Support pepospina to create a new remote in github	5	1	\N	10	\N	1
 80	1	2016-10-19 21:13:30.346	\N		nodejs repo	0	2	0	create webpage	5	5	\N	24	264	3
-46	0	2016-09-07 18:24:51.297	\N	Store the filter selections in server session and use it as initialization for the filters in other pages. This way the user does not have to update the filters every time she moves from one page to another.	updated server side and filter JS element	0	4	0	Store filter in server session	\N	1	\N	6	124	1
+58	0	2016-09-13 10:58:14.145	\N	Configure Log4J so that it keeps a log of the web app activity. Add an example of how to add logging within the application. Another contribution(s) can be used to populate the log of events.	updated backend application	0	0	0	Setup Log4J	\N	1	685	6	151	1
 48	0	2016-09-08 08:01:09.603	2016-10-27 15:43:12.942	Merge CbtionListPage, GoalListPage and DecisionListPage into a single page that adapts to the type of enttiy requested. Merge, as much as possible, code in the client and server side to have a single GetList process.	updated client and server side	-1	6	0	Merge EntityListPages	\N	1	338	6	126	1
 25	10	2016-08-27 09:21:46.317	\N	Prepare the first version of the use-cases doc by describing an example of the typical interactions that a group of people, developing collaboratively a webpage, would have.  	update https://docs.google.com/document/d/1JzFvUytj5I7IhGza-mFt8xXz9avjSiFere3cwXRhW3Q/edit	0	2	0	Uses-Cases Doc	1	1	\N	1	\N	1
 52	30	2016-09-08 16:48:30.339	\N	Update authentication process to use Spring to handle the authentication and the user passwords storage and encryption.	updated backend authentication approach	1	2	0	Use spring security to handle user authentication	1	1	365	6	134	1
@@ -280,9 +289,7 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 77	5	2016-10-18 14:50:23.299	\N	goal_tags are not beenf filled correctly in new contribution	updated CbtionNewPage	0	2	0	Fix bug in goal_tag in new contribution	1	1	\N	4	244	1
 78	100	2016-10-19 20:51:28.066	\N	Start contribution	\N	0	2	0	Create project datasketch	5	5	\N	\N	\N	3
 72	0	2016-10-07 22:22:22.623	\N	Use a screen video recorder to create a short video showing the typical use of the CollectiveOne web application	HD video file	1	5	0	Save screen while using the webapp	\N	1	\N	11	216	1
-69	10	2016-10-06 10:44:45.314	\N	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	0	2	0	Setup markdown basic infrastructure	1	1	\N	12	204	1
 65	20	2016-10-01 20:17:58.03	\N	Setup the infrastructure to send emails from the application. Include a simple example. Separate contributions will be dedicated to construct and configure the emails	Example service that sends email from webapp	0	2	0	Add email notification infrastructure	1	1	364	6	181	1
-113	0	2016-11-18 17:11:21.919	\N	So far the decision algorithm programmed in the web application has net be thoughtfully tested with multiple voters. Design a unit test of the algorithm to verify it behaves as expected. 	updated unit test	0	4	0	Test the decision algorithm	\N	1	\N	6	392	1
 76	0	2016-10-18 14:48:48.587	\N	Decisions are not independent one of each other. If one is accepted, perhaps another should be rejected. Or maybe a decision should be accepted only if three other decisions are also accepted, otherwise none should be accepted at all. Propose a method to group decisions together (create plans?) so that the decision process is able to handle these scenarios.\n	decision grouping approach	0	0	0	Group decisions	\N	1	361	2	243	1
 81	5	2016-10-20 13:20:04.689	\N	ActiveProject selection automatically redraw the current page. While this is ok for pages of list of objects, it is not working ok for user and project pages, since some elements are duplicated. 	updated pages and/or active project logic 	0	2	0	BUG FIX Active project selection wrong redraw	1	1	\N	4	270	1
 87	0	2016-10-23 22:47:24.759	\N	Prepare a presentation email starting from email from esteban to introduce selected people to the project.	email draft	1	0	0	Prepare presentation email	\N	1	336	7	282	1
@@ -298,87 +305,99 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 85	0	2016-10-23 12:26:16.853	\N	See if other domains that could be used by CollectiveOne are free and aquire them	domain control	0	0	0	Look for and acquire other domains	\N	1	359	7	279	1
 93	2	2016-10-26 10:46:30.535	\N	Text below the video is ugly. Find a better way to display this info and links.	updated welcom page	0	2	0	Update the welcome page	1	1	326	7	298	1
 6	900	2016-08-10 10:59:43.963	\N	Develop the CoProjects web page prototype	Web application prototype in JAVAEE using Struts2, Spring and Hibernate frameworks	0	2	0	Web App	1	1	\N	10	\N	1
-103	0	2016-11-04 10:27:46.671	\N	Create a landing page for asking and sending invitation to the project Slack. See http://rauchg.com/slackin/	landing page configured and tested	0	0	0	Add Slackin to slack channel	\N	1	356	7	345	1
 97	5	2016-10-26 16:45:58.063	\N	Add loading animation (gif) when loading list results	updated UI	0	2	0	Loading animation	1	1	333	4	306	1
-90	0	2016-10-24 19:35:00.54	\N	Prepare a roadmap for the project so that new contributors can have an idea of which are the current expectations 	roadmap document	0	0	0	Prepare a roadmap for CollectiveOne	\N	1	363	7	285	1
-101	0	2016-10-31 11:44:42.674	\N	Promote CollectiveOne to get other people involved though the proposal and/or execution of contribution items.	new contributor to CollectiveOne	0	0	0	Evangelize - Get other people onboard	\N	1	357	7	341	1
 102	0	2016-11-01 23:14:53.504	\N	Prepare a temporary (yet good enough to be used) version of the use-case in Google Slides to be used as "method example" while a more sophisticated intro video is prepared.	google slides	0	2	0	Prepare animated slides with use-case	1	1	344	7	343	1
 105	15	2016-11-11 10:19:25.587	\N	Pay 31 dollars to Fiverr narrator.	fiverr payment and narration file	0	2	0	Pay for Fiverr voice narration	1	1	349	7	348	1
 104	0	2016-11-07 22:50:20.99	2016-11-11 10:30:24.918	Review the script of the video and fix grammatical errors if any. 	Revisions to drive file 	0	6	0	Review use-case video script 	\N	1	347	7	346	1
+90	0	2016-10-24 19:35:00.54	\N	Prepare a roadmap for the project so that new contributors can have an idea of which are the current expectations 	roadmap document	1	0	0	Prepare a roadmap for CollectiveOne	\N	1	363	7	285	1
+113	0	2016-11-18 17:11:21.919	\N	So far the decision algorithm programmed in the web application has net be thoughtfully tested with multiple voters. Design a unit test of the algorithm to verify it behaves as expected. 	updated unit test	1	0	0	Test the decision algorithm	\N	1	680	6	392	1
+101	20	2016-10-31 11:44:42.674	\N	Promote CollectiveOne to get other people involved though the proposal and/or execution of contribution items.	new contributor to CollectiveOne	0	2	0	Evangelize - Get other people onboard	1	1	357	7	341	1
+69	10	2016-10-06 10:44:45.314	\N	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	0	6	0	Setup markdown basic infrastructure	1	1	\N	12	204	1
 107	20	2016-11-11 12:00:01.666	\N	95 euro	registration payment	0	2	0	Pay registration to http://crowdsourcingweek.com/	1	1	369	7	368	1
 99	150	2016-10-27 15:19:35.477	\N	Update API to use spring-boot instead of struts2 to handle and redirect requests	updated backend	1	2	0	Abandon Struts2 and migrate to Spring	1	1	358	6	337	1
 106	10	2016-11-11 10:23:08.88	\N	Re-edit use-case video to include the narration voice. Synchronize the audio with the video but add pauses on both to make it more pleasant.	video edition project file and 1080p video file	0	2	0	Add narration to use-case video	1	1	353	7	352	1
 112	5	2016-11-17 22:20:38.15	\N	It's not working on chrome mobile. It also didn't work on other browsers. 	Updated FilterElement	1	2	0	Fix orderby select box 	1	1	388	4	387	1
 111	0	2016-11-17 22:18:39.34	2016-11-18 15:37:59.968	As state filters and hide closed decisions by default. Check the order as it seem old decisions are being shown first 	Updated decisionListPageR	0	6	0	Fix decision browser 	\N	1	391	4	386	1
-114	0	2016-11-18 20:27:41.837	\N	Goals are expected to work as a "requirements specification". The contribution consist on reviewing the current goals structure under the +webapp goal and propose an improvement to it, trying to identify the key sub-goals (or milestones) that are to be achieved to reach the +webapp goal. Each sub-goal can be decomposed into sub-goals multiple times if needed.	document with a proposal of a decomposition in a sub-goals tree of the +webapp goal	1	0	0	Review the goal substructure of the +webapp goal	\N	1	394	10	393	1
-121	0	2016-11-24 17:14:36.845	\N	Currently authorized signups of users and projects is made by manually entering the records in the database tables. Create an admin page to which only CollectiveOne admins will have access to add and remove records to these tables.	new admin section	0	0	0	Create admin page to control authorized users and projects	\N	1	422	6	421	1
 109	5	2016-11-17 19:46:01.699	\N	Add a user specific page by migrating and updating the old userpage, which is missing from last refactoring process	new userPage.html and associated resources	0	2	0	Migrate userPage from old webapp	1	1	396	4	384	1
 119	2	2016-11-24 09:22:15.543	\N	It seems account verification emails are not being sent. Review the SendGrid configuration and check that it works for confirmation emails, but also for password reset	problem fixed	0	2	0	Review account verification email not being sent	1	1	413	6	412	1
 110	8	2016-11-17 19:47:55.846	\N	Bid rate and review functionality is missing from last webapp refactoring. Include it in the current application version using as basis the old functionality	updated bid rate and review process	0	2	0	Migrate bids rating process	1	1	399	10	385	1
 100	0	2016-10-31 08:57:38.615	2016-11-20 17:51:31.534	Heroku is continuously notifying R14 (Memory quota exceeded). Make an overview of the problem cause and identify possible solutions.	description of the problem and solutions identification	0	6	0	Check memory issue in heroku	\N	1	340	6	339	1
 117	25	2016-11-21 18:21:48.187	\N	Attend crowdsourcingweek.com and pitch the CollectiveOne project to potentially interested people.	new contacts and new participants	0	2	0	Public Relations at @CrowdWeek	1	1	405	7	404	1
-116	0	2016-11-21 10:30:59.665	\N	setup the basic infrastructure for unit testing	unit test abstract class and test example	0	0	0	Prepare unit test infrastructure	\N	1	403	6	402	1
 122	5	2016-11-25 11:35:57.045	\N	Create a page to request for a slack invitation and send an email to C1 admin for every request.	new form and email notification	0	2	0	Create a Slack invitation request form	1	1	429	7	428	1
 120	10	2016-11-24 10:38:03.317	\N	Send recent activity as an email to the users that are subscribe to it. This is a very first baby step towards a notification service which should be much more configurable.	email sent to subscribed users at each new activity registration	0	2	0	Send recent activity as emails to subscribed users	1	1	417	6	416	1
 118	6	2016-11-21 18:27:32.77	\N	Pay for 100 CollectiveOne presentation cards	100 presentation cards	0	2	0	Pay for 100 presentation cards	1	1	409	7	408	1
 123	5	2016-11-25 13:58:13.353	\N	Prepare a document summarizing the status of the decision mechanism to be used as entry point for people who might be interested in contributing to it.	google doc	0	2	0	Decision mechanism status document	1	1	433	1	432	1
 129	1	2016-11-29 09:54:45.467	\N	It would be better to display ownership participation in projects through a simple set of bar charts showing percentages by person, rather than a pie chart. Clearly not a priority, but convenient to do if it doesn't take much effort (this is not only data-via pedantry – here's why pie charts are generally bad to convey info: http://www.businessinsider.com/pie-charts-are-the-worst-2013-6?IR=T)	Code implemented and running	0	2	0	Change ppoint distribution from pie chart to bar chart	1	3	455	10	452	1
-126	0	2016-11-27 11:20:09.189	\N	Pay 170 euros for the airplane tickets to attend the event at Berlin. http://www.supermarkt-berlin.net/event/platform-coops-start-your-own/	payment 	0	0	0	Pay for BCN to Berlin tickets 	\N	1	444	7	443	1
-124	0	2016-11-25 14:03:31.935	\N	The "CollectiveOne Web Application Technical Overview" document is outdated and should be updated to the new app architecture. 	updated document	0	0	0	Update the webapp technical overview document	\N	1	544	8	436	1
 127	1	2016-11-29 09:47:54.112	\N	It would be helpful to have basic information displayed when hovering mouse over action icons (arrow,plus, triangle). To begin, just a name for the action would do.	Code implemented and running	0	2	0	Add mouse-hovering info for basic actions	1	3	453	10	450	1
 130	4	2016-11-29 10:21:46.436	\N	Use the C1 prototype and document glitches and potential improvements	Document (1 page)	0	2	0	Basic usability review	3	3	457	10	456	1
 128	1	2016-11-29 09:49:59.772	\N	Currently, when creating a new contribution, the user has to fill in the goal. The space is free text, but it auto-fills with info from existing goals. It should be a drop-down list to choose from (and even better, one where typing takes drop-down position to the right place in the list)	code implemented and running	0	2	0	Allow drop-down goals in contribution creation	1	3	454	10	451	1
-150	0	2016-12-04 12:56:37.507	\N	Reopen a contribution when a preassigned bid is not accepted	updated bid update state routine	0	0	0	Reopen contribution when a bid is not accepted	\N	1	545	3	542	1
+124	0	2016-11-25 14:03:31.935	\N	The "CollectiveOne Web Application Technical Overview" document is outdated and should be updated to the new app architecture. 	updated document	1	0	0	Update the webapp technical overview document	\N	1	544	8	436	1
+121	0	2016-11-24 17:14:36.845	\N	Currently authorized signups of users and projects is made by manually entering the records in the database tables. Create an admin page to which only CollectiveOne admins will have access to add and remove records to these tables.	new admin section	1	0	0	Create admin page to control authorized users and projects	\N	1	422	6	421	1
+116	0	2016-11-21 10:30:59.665	\N	setup the basic infrastructure for unit testing	unit test abstract class and test example	1	0	0	Prepare unit test infrastructure	\N	1	403	6	402	1
 131	10	2016-11-29 13:11:39.021	\N	Add notempty and no blank spaces validations to new goal, decision, contribution and project forms	updated forms and backend logic	0	2	0	Add validation to forms	1	1	469	4	466	1
-136	0	2016-11-30 11:34:23.439	\N	Add metadata to the site layout so that urls shared on slack, facebook and twitter are shown nicely\r\n\r\nhttps://api.slack.com/docs/message-attachments#unfurling	updated layout	0	0	0	Updated site metadata to help twitter, facebook and slack unfurling	\N	1	482	4	481	1
-156	0	2016-12-06 11:38:17.568	\N	Pay 99.99 euros for the flight Paris - Berlin	payment 	0	0	0	Pay for Paris Berlin Flight	\N	1	563	7	562	1
-133	0	2016-11-30 08:25:43.955	\N	This contribution has two related parts:\r\n1) Change the current top menu structure, such that the "Contributions" link takes the user to the tree-like structure that is currently available when navigating via project -> Goals. \r\n2) Create a "New Contribution" button such that users can add contributions directly inside a subgoal	Updated frontend and backend	0	4	0	Update contribution menu structure	\N	3	\N	10	474	1
 89	0	2016-10-24 15:33:45.623	\N	Update argumentation method to allow arguments to be a reply to another argument. Perhaps consider using standard replies like (this is true but ...) or (this is not true since...) etc...\n	Updated argument strategy and UI	1	0	0	Review arguments structure to allow replies	\N	1	362	3	284	1
 135	5	2016-11-30 11:15:10.532	\N	Prepare a pitch deck presentation for CollectiveOne to be used in the application to the SU startup accelerator program.\r\n\r\nhttps://pitchdeck.improvepresentation.com/what-is-a-pitch-deck	12 slides	0	2	0	Prepare the Pitch Deck presentation of CollectiveOne	1	1	478	7	477	1
 140	4	2016-11-30 23:16:29.188	\N	Study, motivate and support the application process to the SU accelerator call.	ethereal	0	2	0	Moral support during the application to SU accelerator	4	1	493	7	492	1
-141	0	2016-11-30 23:54:15.069	\N	Proofread and suggest comments to SU application	comments	0	0	0	Proofread and suggest comments to SU application	\N	1	497	7	496	1
 134	15	2016-11-30 08:53:20.77	\N	Design the broad features of a project aimed at (i) allowing a minimal test of the C1 platform and (ii) producing a tangible example of a project that carries the C1 trademark.\n\nThe contribution at this stage consists only on setting out the idea for the purpose of improving C1 – the actual development of the new project will deliver points in the new project's currency.	Document with project idea (1 page)	0	2	0	Design short project to test platform and deliver sample output for marketing 	3	3	491	7	475	1
 142	10	2016-12-01 00:30:19.908	\N	Review and update the application	udpated applicatino	0	2	0	Final sprint to prepare SU accelerator application	1	1	499	7	498	1
-148	0	2016-12-04 01:13:13.352	\N	Default error page is resulting in an error itself. Something related to "#authentication.name" property not found. Fix this and show a gracefull error page	updated error management	0	0	0	Fix default error page	\N	1	541	6	536	1
 145	3	2016-12-02 10:55:45.833	\N	Project selector resets if a form field is not valid and the form page is returned. This is dangerous as it results on the user creating objects in the wrong project	fix it	0	2	0	Bug fix - Project selector resets if form is not valid	1	1	525	4	524	1
 146	5	2016-12-02 15:29:48.571	\N	Answer emails from people interested in the project from Alberta and Barcelona	public relations	0	2	0	Handle requests from Alberta and Barcelona	1	1	529	7	528	1
 149	5	2016-12-04 12:42:42.674	\N	Instead of having to delete a project, add a "enabled" property which can be disabled to hide all their data from the frontend 	updated model and filters	0	2	0	Add "enabled" property to projects to hide their data when "disabled"	1	1	538	6	537	1
-152	0	2016-12-05 08:35:19.723	\N	Get in contact with the P2P Foundation to get feedback from them, attract potential contributors to CollectiveOne and potential projects to be hosted	public relations	0	1	0	Contact the P2P Foundation	\N	1	552	7	551	1
 151	3	2016-12-04 13:01:27.107	\N	Comments are not being recorded as recent activity and are very hard to track. Add them as recent activity items.	updated comment creation service	0	2	0	Add activity record for each comment to any contribution	1	1	546	6	543	1
 153	10	2016-12-06 10:56:21.156	\N	Provide feedback, in general, on the CollectiveOne initiative in a conversation of one hour.	1-hour skype video conference	0	2	0	General feedback	13	1	556	1	555	1
 139	4	2016-11-30 17:38:52.349	\N	Prepare the first draf of the application form to SU Startup Accelerator	edit [this doc](https://docs.google.com/document/d/1SWayYHzkDQ6lOa5_IjARjmza4Uq5BoGS3Ys6-GZjiTA/edit)	0	2	0	Application form to SU Startup Accelerator call	1	1	488	7	487	1
-147	0	2016-12-02 17:49:47.125	\N	Create a PSQL script similar to [this](https://github.com/CollectiveOne/CollectiveOneWebapp/blob/master/data-bk/delete-goal.pgs) but to delete an entire project, including all its related elements at all degrees.\r\n\r\n	PSQ script	0	4	0	Create PSQ script to delete entire project	\N	1	\N	6	533	1
 144	0	2016-12-01 12:52:10.344	\N	Currently, when a new project is created, the filters (The "Show Only" buttons on the top of the page) do not update. Similarly, the "Projects" drop-down menu in the top banner does not update.	Fixed frontend and backend	1	4	0	Update filters and project drop-down tab when new project is created	\N	3	\N	10	519	1
 154	20	2016-12-06 11:07:42.232	\N	Suggest and describe a method to define the decision realms based on the goal in which the decision is framed. This should allow decisions to be taken faster, more focused, and by those directly involved	proposed extension of the white-paper	0	2	0	Decision making per goal realms	1	1	558	1	557	1
-155	0	2016-12-06 11:28:00.132	\N	Pay 87,54 euros to cover flight BCN PARIS to attend [this event](https://www.eventbrite.co.nz/e/enspiral-and-ouishare-learnings-from-participatory-networks-paris-tickets-29045025453?utm_source=eb_email&amp;utm_medium=email&amp;utm_campaign=order_confirmation_email&amp;utm_term=eventname&amp;ref=eemailordconf)	payment 	0	0	0	Pay BCN Paris Flight	\N	1	565	7	561	1
+152	7	2016-12-05 08:35:19.723	\N	Get in contact with the P2P Foundation to get feedback from them, attract potential contributors to CollectiveOne and potential projects to be hosted	public relations	0	2	0	Contact the P2P Foundation	1	1	552	7	551	1
+150	0	2016-12-04 12:56:37.507	\N	Reopen a contribution when a preassigned bid is not accepted	updated bid update state routine	1	0	0	Reopen contribution when a bid is not accepted	\N	1	545	3	542	1
+156	25	2016-12-06 11:38:17.568	\N	Pay 99.99 euros for the flight Paris - Berlin	payment 	0	2	0	Pay for Paris Berlin Flight	1	1	563	7	562	1
+148	0	2016-12-04 01:13:13.352	\N	Default error page is resulting in an error itself. Something related to "#authentication.name" property not found. Fix this and show a gracefull error page	updated error management	1	0	0	Fix default error page	\N	1	541	6	536	1
+147	0	2016-12-02 17:49:47.125	\N	Create a PSQL script similar to [this](https://github.com/CollectiveOne/CollectiveOneWebapp/blob/master/data-bk/delete-goal.pgs) but to delete an entire project, including all its related elements at all degrees.\r\n\r\n	PSQ script	-1	4	0	Create PSQ script to delete entire project	\N	1	\N	6	533	1
+141	0	2016-11-30 23:54:15.069	2017-01-09 15:59:53.417	Proofread and suggest comments to SU application	comments	0	6	0	Proofread and suggest comments to SU application	\N	1	497	7	496	1
+133	0	2016-11-30 08:25:43.955	\N	This contribution has two related parts:\r\n1) Change the current top menu structure, such that the "Contributions" link takes the user to the tree-like structure that is currently available when navigating via project -> Goals. \r\n2) Create a "New Contribution" button such that users can add contributions directly inside a subgoal	Updated frontend and backend	1	4	0	Update contribution menu structure	\N	3	\N	10	474	1
+136	0	2016-11-30 11:34:23.439	\N	Add metadata to the site layout so that urls shared on slack, facebook and twitter are shown nicely\r\n\r\nhttps://api.slack.com/docs/message-attachments#unfurling	updated layout	1	0	0	Updated site metadata to help twitter, facebook and slack unfurling	\N	1	482	4	481	1
 160	25	2016-12-12 10:10:07.498	\N	Attend the Ouishare-Enspiral [event](https://www.eventbrite.co.nz/e/enspiral-and-ouishare-learnings-from-participatory-networks-paris-tickets-29045025453?utm-medium=discovery&utm-campaign=social&utm-content=attendeeshare&aff=estw&utm-source=tw&utm-term=listing#) and the [platform coops](http://www.supermarkt-berlin.net/en/event/platform-coops-start-your-own/) and make contacts with the events attendants.	Notes and list of contacts stablished	0	2	0	Attend Oiushare-Enspiral and Platformcoop events and make PR	1	1	580	7	579	1
-157	0	2016-12-06 11:40:00.032	\N	Pay 62 euros for [this event](https://www.eventbrite.co.nz/e/enspiral-and-ouishare-learnings-from-participatory-networks-paris-tickets-29045025453?utm_source=eb_email&utm_medium=email&utm_campaign=order_confirmation_email&utm_term=eventname&ref=eemailordconf)	payment 	0	0	0	Pay Enspiral-Ouishare event subscription	\N	1	566	7	564	1
 125	10	2016-11-26 20:31:54.501	\N	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	1	2	0	Setup markdown basic infrastructure	1	1	438	12	437	1
 159	0.5	2016-12-08 07:57:10.509	\N	Prepare the notes of the meeting with Jaime.	Notes	0	2	0	Prepare notes of the meeting with Jaime	1	1	574	1	573	1
-166	0	2016-12-14 11:31:57.98	\N	Similar to how is done for contributions, allow the goal creator to edit the goal description while it is in proposed state.	updated goal edition IF and backend methods	0	0	0	Allow goals to be edited while in proposed state	\N	1	606	4	605	1
 158	3	2016-12-06 19:12:46.745	\N	Markdown was added to new goals, contributions, decisions and projects. It should be added to the creation of bids, the marking of bids as done, and the creation of arguments.	updated frontend code for the elements listed above	0	2	0	Extend and markdown to bids, arguments and comments	1	1	570	4	569	1
-171	0	2016-12-15 22:09:17.051	\N	Discuss for two hours about the basic concept of CollectiveOne and provide comments and feedback on the selected approach.	conversation	0	0	0	Provide feedback on the basic concept of CollectiveOne	\N	1	622	1	621	1
 163	1	2016-12-13 10:47:50.55	\N	Allow the creator of a decision to set the maximum duration to a value different from 36 hours. This can be a partial solution to be used until a [more advanced](http://www.collectiveone.org/views/cbtionPageR/88) decision logic is prepared.	updated decision form and backend logic	0	2	0	Allow custom duration in custom solutions	1	1	590	3	589	1
-167	0	2016-12-14 11:44:00.819	\N	Record a new screen recorded video showing the features of the platform. Similar to **[this](https://drive.google.com/file/d/0B6HEie5ZN03bMk5FQVprVWJoS28/view?usp=sharing)** but using the current version of the platform. Other contributions to be created for edition and, eventually, voice recording	recorded screen video	0	0	0	Re-record platform interaction	\N	1	608	11	607	1
 169	75	2016-12-15 16:16:31.234	\N	Propose new approaches to the decision mechanism, analyze and test them. If possible compare them with the current implementation of the decision algorithm.	Analysis document	0	2	0	Review of the decision mechanism	3	1	613	2	612	1
 170	8	2016-12-15 21:28:31.066	\N	Participate in the discussions that arise in the project Slack and provide insightful comments and feedback. Share relevant information with the rest of the team.	slack participation	0	2	0	Provide comments and share views in Slack	9	1	620	7	619	1
 168	5	2016-12-14 21:31:01.254	\N	Produce a short document (one page) to structure a discussion around CollectiveOne business model, in particular, the potential distinction between 'for profit' and 'non-profit' models	Document (one page)	0	2	0	Lay out elements to structure a discussion around CollectiveOne business model	3	3	610	1	609	1
 55	0	2016-09-08 23:05:16.268	\N	Propose new approaches to the decision mechanism, analyze and test them. If possible compare them with the current implementation of the decision algorithm. 	Analysis document 	1	6	0	Review of the decision mechanism	\N	1	\N	2	143	1
 164	10	2016-12-13 11:25:57.987	\N	Prepare a first draft of the terms and conditions for the contributors of CollectiveOne. It should be intended only for direct contributors of CollectiveOne, and not to projects or other users of the platform.	document draft	0	2	0	Terms and conditions for contributors	1	1	594	1	593	1
-172	0	2016-12-15 22:41:43.256	\N	Review license alternatives for the code developed as part of CollectiveOne and propose one to be used that is inline with the basic goals of CollectiveOne. 	short analysis and proposal	0	0	0	Review license alternatives	\N	1	626	1	625	1
 161	10	2016-12-12 15:35:09.857	\N	Contact the people interested in CollectiveOne and try to explore with each one of them, how they could get help or get involved in the project.	attract new contributors and potential users of CollectiveOne	0	2	0	Public Relations	1	1	584	7	583	1
-165	0	2016-12-14 09:23:34.003	\N	Review [this document](https://docs.google.com/document/d/187TM56DmTYKP2k0OQ7-YPfrcmUoRkhgQPdbQ42imDlQ/edit) and provide some feedback that helps moving the discussion forward towards a solution of the problem.	editions or separate document	0	1	0	Review and comment discussion on CollectiveOne business model	\N	1	600	1	599	1
+172	0	2016-12-15 22:41:43.256	\N	Review license alternatives for the code developed as part of CollectiveOne and propose one to be used that is inline with the basic goals of CollectiveOne. 	short analysis and proposal	1	0	0	Review license alternatives	\N	1	626	1	625	1
+155	21.8500000000000014	2016-12-06 11:28:00.132	\N	Pay 87,54 euros to cover flight BCN PARIS to attend [this event](https://www.eventbrite.co.nz/e/enspiral-and-ouishare-learnings-from-participatory-networks-paris-tickets-29045025453?utm_source=eb_email&amp;utm_medium=email&amp;utm_campaign=order_confirmation_email&amp;utm_term=eventname&amp;ref=eemailordconf)	payment 	0	2	0	Pay BCN Paris Flight	1	1	565	7	561	1
+157	15.5	2016-12-06 11:40:00.032	\N	Pay 62 euros for [this event](https://www.eventbrite.co.nz/e/enspiral-and-ouishare-learnings-from-participatory-networks-paris-tickets-29045025453?utm_source=eb_email&utm_medium=email&utm_campaign=order_confirmation_email&utm_term=eventname&ref=eemailordconf)	payment 	0	2	0	Pay Enspiral-Ouishare event subscription	1	1	566	7	564	1
+167	0	2016-12-14 11:44:00.819	\N	Record a new screen recorded video showing the features of the platform. Similar to **[this](https://drive.google.com/file/d/0B6HEie5ZN03bMk5FQVprVWJoS28/view?usp=sharing)** but using the current version of the platform. Other contributions to be created for edition and, eventually, voice recording	recorded screen video	1	0	0	Re-record platform interaction	\N	1	608	11	607	1
+171	0	2016-12-15 22:09:17.051	\N	Discuss for two hours about the basic concept of CollectiveOne and provide comments and feedback on the selected approach.	conversation	1	0	0	Provide feedback on the basic concept of CollectiveOne	\N	1	622	1	621	1
+166	0	2016-12-14 11:31:57.98	\N	Similar to how is done for contributions, allow the goal creator to edit the goal description while it is in proposed state.	updated goal edition IF and backend methods	1	0	0	Allow goals to be edited while in proposed state	\N	1	606	4	605	1
+165	0	2016-12-14 09:23:34.003	\N	Review [this document](https://docs.google.com/document/d/187TM56DmTYKP2k0OQ7-YPfrcmUoRkhgQPdbQ42imDlQ/edit) and provide some feedback that helps moving the discussion forward towards a solution of the problem.	editions or separate document	1	1	0	Review and comment discussion on CollectiveOne business model	\N	1	600	1	599	1
 132	5	2016-11-29 18:33:26.962	\N	Allow the specification of a "expected cost" to a contribution when it is created. It should help clarifying the extent of the contribution as intended by its creator and help other users during the bidding process	updated front end and backend (and DB migration and back compatiblity if needed)	1	2	0	Add an "expected cost" value to contribution requests	1	1	473	3	472	1
 162	5	2016-12-12 20:34:07.389	\N	Add a simple form to provide the name and email for people to request signup authorization instead of having to write an email. Send an email to the admin for every request.	new signup form and backend logic	0	2	0	Sign-up request	1	1	588	7	587	1
-174	0	2016-12-19 18:22:40.995	\N	Review the webapplication and analyse the key modifications that will need to be done to implement this update.	short description of the modifications to be done	0	1	15	Perform a first assessment of technical implications	\N	1	635	50	634	1
-175	0	2016-12-23 00:05:53.062	\N	Based on the discussion about the for-vs-non-for-profit ([see thus doc](https://docs.google.com/document/d/187TM56DmTYKP2k0OQ7-YPfrcmUoRkhgQPdbQ42imDlQ/edit?usp=drivesdk)), provide a proposal which helps converging, with enough level of detail to evaluate its feasibility. 	business model definition	0	1	20	Propose a business model draft	\N	1	639	1	638	1
+181	3	2017-01-05 10:43:49.898	\N	The reply button will expand the reply editor in the current comment, but also in the answers, if they are expanded, as they are also inside the comment container.	fixed bug	0	2	5	Comments reply bug	1	1	666	4	665	1
+182	0	2017-01-09 08:58:48.734	\N	Prepare a set of slides to use at the 5 min presentation we will hold in front of the CreativeRing board. To prepare the slides, follow the **[guidelines](https://collectiveone.slack.com/files/pepoospina/F3NGXDBRS/call_for_partners_jan2017.pdf)** provided by them. This has to be done by wednesday 11th. You can make use of material from google drive, mainly from the concept and applications folders.	google slides	1	1	10	Prepare slides	\N	1	672	52	671	1
+183	0	2017-01-10 16:57:59.079	\N	Create a branch and implement the changes as described **[here](https://docs.google.com/document/d/1g3cSLFfk3omz0AvyH9sIlI-TP90ONtDI0TEQsHEBCeA/edit)**. Make a first implementation which can then be refined and tested with other contributions.	updated webapp	0	1	40	Implement the changes	\N	1	691	50	690	1
+138	0	2016-11-30 12:23:54.138	\N	Update getOfDecision method of ArgumentDao class to sort the results by number of backers.	updated method	1	0	0	Sort arguments by backers	\N	1	486	6	485	1
 178	5	2017-01-04 09:04:27.301	\N	Create a simple user manual with the features included in the web application.	user manual	0	2	5	Create user manual of the web application	1	1	651	7	650	1
 173	10	2016-12-16 08:51:45.478	\N	Prepare the first draft of the application to the fellowship following the IFTF **[guidelines](https://workablefutures.org/events/iftf-positive-platforms-design-jam-1130-121/positive-platforms-fellowship-program/)** and using, as reference, the **[documents](https://drive.google.com/drive/u/0/folders/0BzOGr5Ifc7PgWElldXlERGJ3NHc)** prepared for the SU Accelerator Program	document draft	0	2	0	Prepare first draft of the application to IFTF fellowship	1	1	628	48	627	1
 179	100	2017-01-04 20:50:22.549	\N	Start contribution	\N	0	2	0	Create project Smartdealmaker-project	17	17	\N	\N	\N	6
-176	0	2017-01-03 10:11:53.521	\N	Use the CollectiveOne platform to create a new project, try to create goals, contributions and decisions and use the tool. Provide feedback to CollectiveOne.	feedback received	0	1	10	Use the tool to create a project and provide comments	\N	1	645	4	644	1
-180	0	2017-01-05 10:24:42.666	\N	The webapp is generating the \r\n```\r\nheroku/web.1: Error R14 (Memory quota exceeded)\r\n```\r\nerror continuously. Review the issue and propose a solution.\r\n	review of problem and solution identification	0	0	6	Review memory usage in Heroku	\N	1	664	6	663	1
-181	0	2017-01-05 10:43:49.898	\N	The reply button will expand the reply editor in the current comment, but also in the answers, if they are expanded, as they are also inside the comment container.	fixed bug	0	0	5	Comments reply bug	\N	1	666	4	665	1
+174	10	2016-12-19 18:22:40.995	\N	Review the webapplication and analyse the key modifications that will need to be done to implement this update.	short description of the modifications to be done	1	2	15	Perform a first assessment of technical implications	1	1	635	50	634	1
+126	42.5	2016-11-27 11:20:09.189	\N	Pay 170 euros for the airplane tickets to attend the event at Berlin. http://www.supermarkt-berlin.net/event/platform-coops-start-your-own/	payment 	0	2	0	Pay for BCN to Berlin tickets 	1	1	444	7	443	1
+180	0	2017-01-05 10:24:42.666	\N	The webapp is generating the \r\n```\r\nheroku/web.1: Error R14 (Memory quota exceeded)\r\n```\r\nerror continuously. Review the issue and propose a solution.\r\n	review of problem and solution identification	1	0	6	Review memory usage in Heroku	\N	1	664	6	663	1
+114	0	2016-11-18 20:27:41.837	2017-01-09 16:03:44.403	Goals are expected to work as a "requirements specification". The contribution consist on reviewing the current goals structure under the +webapp goal and propose an improvement to it, trying to identify the key sub-goals (or milestones) that are to be achieved to reach the +webapp goal. Each sub-goal can be decomposed into sub-goals multiple times if needed.	document with a proposal of a decomposition in a sub-goals tree of the +webapp goal	1	6	0	Review the goal substructure of the +webapp goal	\N	1	394	10	393	1
+176	0	2017-01-03 10:11:53.521	\N	Use the CollectiveOne platform to create a new project, try to create goals, contributions and decisions and use the tool. Provide feedback to CollectiveOne.	feedback received	1	1	10	Use the tool to create a project and provide comments	\N	1	645	4	644	1
+175	0	2016-12-23 00:05:53.062	\N	Based on the discussion about the for-vs-non-for-profit ([see thus doc](https://docs.google.com/document/d/187TM56DmTYKP2k0OQ7-YPfrcmUoRkhgQPdbQ42imDlQ/edit?usp=drivesdk)), provide a proposal which helps converging, with enough level of detail to evaluate its feasibility. 	business model definition	1	1	20	Propose a business model draft	\N	1	639	1	638	1
 177	1	2017-01-03 20:22:22.395	\N	Review, proofread and provide feedback on the **[application](https://docs.google.com/document/d/1-j2HoXc48fl37tpK0hbUnJRBqe-zzr74TYCIjUPA9ks/edit#)** draft.	feedback and updated draft with suggestions	0	2	3	Review the appliction and provide feedback	9	1	647	48	646	1
+103	0	2016-11-04 10:27:46.671	\N	Create a landing page for asking and sending invitation to the project Slack. See http://rauchg.com/slackin/	landing page configured and tested	1	0	0	Add Slackin to slack channel	\N	1	356	7	345	1
+45	0	2016-09-07 18:13:52.233	\N	Add a filter to search elements based on their creation date (i.e. if the date is within a range). Updated filter element and DB service	updated Filter JS element and DB BaseDao get methods	0	0	0	Add filter by creation date	\N	1	683	4	123	1
+46	0	2016-09-07 18:24:51.297	\N	Store the filter selections in server session and use it as initialization for the filters in other pages. This way the user does not have to update the filters every time she moves from one page to another.	updated server side and filter JS element	0	0	0	Store filter in server session	\N	1	684	6	124	1
+184	0	2017-01-11 19:17:41.959	\N	Participate at the meeting with CreativeRing and make the presentation. 	participate at the meeting 	0	0	10	Prepare and make the presentation 	\N	1	695	52	694	1
+185	0	2017-01-12 08:41:32.134	\N	Create a dummy sample project (in a localhost and not online) to be used to show the features of CollectiveOne, including goals, contributions, bids, decisions and shared ownership	dummy project structure	0	1	5	Create sample project	\N	1	698	52	697	1
+186	1000	2017-01-12 10:57:54.588	\N	Start contribution	\N	0	2	0	Create project Lendi	18	18	\N	\N	\N	7
+188	0	2017-01-13 11:47:46.014	\N	Make an overview of the IPDB project to see if it could provide a solution to handle and store data in CollectiveOne.	overview results	0	0	20	Study the IPDB alternative	\N	1	712	55	711	1
+187	0	2017-01-13 11:01:00.506	\N	Make an overview of the current project goals, for each one of them:\r\n- describe the status (current and foreseen activities)\r\n- assign a priority	spreadsheet with goals overview	0	1	5	Overview of goals	\N	1	706	54	705	1
 \.
 
 
@@ -406,6 +425,9 @@ COPY decision_realms (id, project_id) FROM stdin;
 12	6
 13	\N
 14	\N
+15	7
+16	\N
+17	\N
 \.
 
 
@@ -504,8 +526,6 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 120	2016-09-07 18:08:47.892	0.949999999999999956	1	2016-09-07 18:08:35.788	Accept cbtion 38 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-07 18:08:47.889	1	1854	2171.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
 121	2016-09-07 18:09:18.817	0.949999999999999956	1	2016-09-07 18:09:12.393	Assign cbtion 44 to pepoospina	0	OFFERED	0	1	1	8	2016-09-07 18:09:18.812	1	1856	2173.5	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
 122	2016-09-07 18:09:23.974	0.949999999999999956	1	2016-09-07 18:09:12.393	Accept cbtion 44 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-07 18:09:23.972	1	1856	2173.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
-123	\N	0.949999999999999956	0	2016-09-07 18:13:52.24	OPEN contribution 45	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	\N	0	36	\N	\N	6	1	\N	1
-124	\N	0.949999999999999956	0	2016-09-07 18:24:51.315	OPEN contribution 46	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	\N	0	36	\N	\N	6	1	\N	1
 125	2016-09-08 16:26:23.799	0.949999999999999956	1	2016-09-07 18:55:40.115	OPEN contribution 47	0	PROPOSED	0	1	1	8	2016-09-08 16:26:23.797	1	1858	2175.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 127	2016-09-08 16:27:46.659	0.949999999999999956	1	2016-09-08 16:27:32.549	Assign cbtion 47 to pepoospina	0	OFFERED	0	1	1	8	2016-09-08 16:27:46.649	1	1858	2175.5	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
 128	2016-09-08 16:28:02.01	0.949999999999999956	1	2016-09-08 16:27:32.579	Accept cbtion 47 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-08 16:28:02.006	1	1858	2175.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
@@ -520,13 +540,13 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 144	2016-09-09 18:27:48.245	0.949999999999999956	1	2016-09-09 18:27:37.403	Assign cbtion 54 to pepoospina	0	OFFERED	0	1	1	8	2016-09-09 18:27:48.243	1	1868	2185.5	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
 132	2016-09-28 15:44:43.62	0.949999999999999956	1	2016-09-08 16:37:17.432	OPEN contribution 50	0	PROPOSED	0	1	1	8	2016-09-28 15:44:43.618	1	1956	2273.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 139	2016-09-28 16:44:17.849	0.949999999999999956	1	2016-09-08 22:51:51.23	OPEN contribution 53	0	PROPOSED	0	1	1	8	2016-09-28 16:44:17.846	1	1966	2283.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
+124	2017-01-09 16:08:36.553	0.949999999999999956	1	2016-09-07 18:24:51.315	OPEN contribution 46	0	PROPOSED	0	1	1	8	2017-01-09 16:08:36.551	1	2845.34999999999991	3329.84999999999991	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 145	2016-09-09 18:27:53.392	0.949999999999999956	1	2016-09-09 18:27:37.405	Accept cbtion 54 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-09 18:27:53.39	1	1868	2185.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
 146	2016-10-20 13:12:30.707	0.949999999999999956	1	2016-09-10 11:26:27.247	Goals should be renamed to milestones	0	\N	1	0	1	8	2016-10-20 13:12:30.705	0	2109	2466.5	0.5	0	3	\N	\N	0	36	\N	\N	1	1	\N	1
 134	2016-11-11 10:35:08.285	0.949999999999999956	1	2016-09-08 16:48:30.344	OPEN contribution 52	0	PROPOSED	0	1	1	8	2016-11-11 10:35:08.283	1	2231	2593.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 148	2016-09-12 19:35:42.465	0.949999999999999956	1	2016-09-12 19:34:56.635	OPEN contribution 57	0	PROPOSED	0	1	1	8	2016-09-12 19:35:42.456	1	1874	2191.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 149	2016-09-12 19:35:53.023	0.949999999999999956	1	2016-09-12 19:35:43.555	Assign cbtion 57 to pepoospina	0	OFFERED	0	1	1	8	2016-09-12 19:35:53.015	1	1874	2191.5	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
 150	2016-09-12 19:35:58.429	0.949999999999999956	1	2016-09-12 19:35:43.556	Accept cbtion 57 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-12 19:35:58.424	1	1874	2191.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
-151	\N	0.949999999999999956	0	2016-09-13 10:58:14.201	OPEN contribution 58	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	\N	0	36	\N	\N	6	1	\N	1
 147	2016-09-13 22:05:17.672	0.949999999999999956	1	2016-09-10 11:45:12.996	OPEN contribution 56	0	PROPOSED	0	1	1	8	2016-09-13 22:05:17.659	1	1878	2195.5	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
 152	2016-09-13 22:07:22.233	0.949999999999999956	1	2016-09-13 22:07:02.06	Assign cbtion 56 to pepoospina	0	OFFERED	0	1	1	8	2016-09-13 22:07:22.231	1	1878	2195.5	0.5	0	2	ASSIGNED	\N	1	36	\N	\N	6	1	\N	1
 153	2016-09-13 22:07:27.399	0.949999999999999956	1	2016-09-13 22:07:02.062	Accept cbtion 56 to pepoospina	0	ASSIGNED	0	1	1	8	2016-09-13 22:07:27.398	1	1878	2195.5	0.5	0	2	ACCEPTED	\N	1	36	\N	\N	6	1	\N	1
@@ -762,9 +782,6 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 390	2016-11-18 09:21:46.932	0.949999999999999956	1	2016-11-18 09:20:19.062	accept contribution 'Fix orderby select box ' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-18 09:21:46.93	1	2456	2818.5	0.5	0	2	ACCEPTED	3	1	36	92	\N	6	1	\N	1
 391	2016-11-18 15:37:59.561	0.949999999999999956	1	2016-11-18 15:37:48.44	delete contribution 'Fix decision browser '	0	OPEN	0	1	1	8	2016-11-18 15:37:59.56	1	2486	2848.5	0.5	0	2	DELETED	1	1	36	\N	111	6	1	\N	1
 386	2016-11-18 15:37:47.944	0.949999999999999956	1	2016-11-17 22:18:39.437	open contribution 'Fix decision browser '	0	PROPOSED	0	1	1	8	2016-11-18 15:37:47.943	1	2486	2848.5	0.5	0	4	OPEN	1	1	36	\N	111	6	1	\N	1
-392	\N	0.949999999999999956	0	2016-11-18 17:11:21.925	open contribution 'Test the decision algorithm'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	OPEN	1	0	36	\N	113	6	1	\N	1
-393	2016-11-18 20:27:52.009	0.949999999999999956	1	2016-11-18 20:27:41.848	open contribution 'Review the goal substructure of the +webapp goal'	0	PROPOSED	0	1	1	8	2016-11-18 20:27:52.007	1	2486	2848.5	0.5	0	2	OPEN	1	1	36	\N	114	6	1	\N	1
-394	\N	0.949999999999999956	0	2016-11-18 20:27:52.495	delete contribution 'Review the goal substructure of the +webapp goal'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	114	6	1	\N	1
 384	2016-11-20 17:39:18.006	0.949999999999999956	1	2016-11-17 19:46:01.711	open contribution 'Migrate userPage from old webapp'	0	PROPOSED	0	1	1	8	2016-11-20 17:39:18.004	1	2486	2848.5	0.5	0	2	OPEN	1	1	36	\N	109	6	1	\N	1
 396	\N	0.949999999999999956	0	2016-11-20 17:39:18.56	delete contribution 'Migrate userPage from old webapp'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	109	6	1	\N	1
 385	2016-11-20 17:40:19.86	0.949999999999999956	1	2016-11-17 19:47:55.853	open contribution 'Migrate bids rating process'	0	PROPOSED	0	1	1	8	2016-11-20 17:40:19.858	1	2496	2858.5	0.5	0	2	OPEN	1	1	36	\N	110	6	1	\N	1
@@ -772,6 +789,8 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 398	2016-11-20 17:40:00.756	0.949999999999999956	1	2016-11-20 17:39:54.916	accept contribution 'Migrate userPage from old webapp' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-20 17:40:00.751	1	2486	2848.5	0.5	0	2	ACCEPTED	3	1	36	94	\N	6	1	\N	1
 399	\N	0.949999999999999956	0	2016-11-20 17:40:20.436	delete contribution 'Migrate bids rating process'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	110	6	1	\N	1
 400	2016-11-20 17:40:44.679	0.949999999999999956	1	2016-11-20 17:40:41.357	assign contribution 'Migrate bids rating process' to pepoospina	0	OFFERED	0	1	1	8	2016-11-20 17:40:44.677	1	2496	2858.5	0.5	0	2	ASSIGNED	3	1	36	95	\N	6	1	\N	1
+393	2016-11-18 20:27:52.009	0.949999999999999956	1	2016-11-18 20:27:41.848	open contribution 'Review the goal substructure of the +webapp goal'	0	PROPOSED	0	1	1	8	2016-11-18 20:27:52.007	1	2486	2848.5	0.5	0	4	OPEN	1	1	36	\N	114	6	1	\N	1
+392	2017-01-09 16:04:12.171	0.949999999999999956	1	2016-11-18 17:11:21.925	open contribution 'Test the decision algorithm'	0	PROPOSED	0	1	1	8	2017-01-09 16:04:12.169	1	2825.34999999999991	3309.84999999999991	0.5	0	2	OPEN	1	1	36	\N	113	6	1	\N	1
 401	2016-11-20 17:40:50.92	0.949999999999999956	1	2016-11-20 17:40:44.909	accept contribution 'Migrate bids rating process' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-11-20 17:40:50.918	1	2496	2858.5	0.5	0	2	ACCEPTED	3	1	36	95	\N	6	1	\N	1
 340	2016-11-20 17:51:31.03	0.949999999999999956	1	2016-10-31 08:57:50.058	delete contribution 'Check memory issue in heroku'	0	OPEN	0	1	1	8	2016-11-20 17:51:31.028	1	2504	2866.5	0.5	0	2	DELETED	1	1	36	\N	100	6	1	\N	1
 402	2016-11-21 10:31:08.129	0.949999999999999956	1	2016-11-21 10:30:59.68	open contribution 'Prepare unit test infrastructure'	0	PROPOSED	0	1	1	8	2016-11-21 10:31:08.128	1	2504	2866.5	0.5	0	2	OPEN	1	1	36	\N	116	6	1	\N	1
@@ -816,7 +835,6 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 442	\N	0.949999999999999956	0	2016-11-26 20:41:53.786	delete goal 'project-description'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	35	1
 443	2016-11-27 11:20:18.788	0.949999999999999956	1	2016-11-27 11:20:09.197	open contribution 'Pay for BCN to Berlin tickets '	0	PROPOSED	0	1	1	8	2016-11-27 11:20:18.786	1	2557	2919.5	0.5	0	2	OPEN	1	1	36	\N	126	6	1	\N	1
 444	\N	0.949999999999999956	0	2016-11-27 11:20:19.389	delete contribution 'Pay for BCN to Berlin tickets '	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	126	6	1	\N	1
-445	\N	0.949999999999999956	0	2016-11-27 11:21:43.14	assign contribution 'Pay for BCN to Berlin tickets ' to pepoospina	0	OFFERED	1	0	0	8	\N	0	0	0	0.5	0	0	ASSIGNED	3	0	36	102	\N	6	1	\N	1
 447	\N	0.949999999999999956	0	2016-11-29 08:36:44.498	delete goal ''	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	36	1
 448	2016-11-29 09:29:20.513	0.949999999999999956	1	2016-11-29 08:47:17.952	create goal 'Collapsing contributions by goal'	0	PROPOSED	0	1	1	8	2016-11-29 09:29:20.51	1	2557	2919.5	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	37	1
 449	2016-11-29 09:29:33.211	0.949999999999999956	1	2016-11-29 08:47:17.953	delete goal 'Collapsing contributions by goal'	0	ACCEPTED	0	1	1	8	2016-11-29 09:29:33.21	1	2557	2919.5	0.5	0	2	DELETED	2	1	36	\N	\N	6	1	37	1
@@ -867,8 +885,6 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 493	\N	0.949999999999999956	0	2016-11-30 23:16:38.832	delete contribution 'Moral support during the application to SU accelerator'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	140	6	1	\N	1
 494	2016-11-30 23:18:10.27	0.949999999999999956	1	2016-11-30 23:17:48.698	assign contribution 'Moral support during the application to SU accelerator' to mospina	0	OFFERED	0	1	1	8	2016-11-30 23:18:10.268	1	2579	2945.5	0.5	0	2	ASSIGNED	3	1	36	111	\N	6	1	\N	1
 495	2016-11-30 23:18:17.744	0.949999999999999956	1	2016-11-30 23:18:11.325	accept contribution 'Moral support during the application to SU accelerator' as delivered by mospina	0	ASSIGNED	0	1	1	8	2016-11-30 23:18:17.738	1	2579	2945.5	0.5	0	2	ACCEPTED	3	1	36	111	\N	6	1	\N	1
-496	2016-11-30 23:54:35.35	0.949999999999999956	1	2016-11-30 23:54:15.079	open contribution 'Proofread and suggest comments to SU application'	0	PROPOSED	0	1	1	8	2016-11-30 23:54:35.348	1	2579	2949.5	0.5	0	2	OPEN	1	1	36	\N	141	6	1	\N	1
-497	\N	0.949999999999999956	0	2016-11-30 23:54:36.343	delete contribution 'Proofread and suggest comments to SU application'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	141	6	1	\N	1
 498	2016-12-01 00:30:29.02	0.949999999999999956	1	2016-12-01 00:30:19.918	open contribution 'Final sprint to prepare SU accelerator application'	0	PROPOSED	0	1	1	8	2016-12-01 00:30:29.019	1	2579	2949.5	0.5	0	2	OPEN	1	1	36	\N	142	6	1	\N	1
 499	\N	0.949999999999999956	0	2016-12-01 00:30:29.648	delete contribution 'Final sprint to prepare SU accelerator application'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	142	6	1	\N	1
 500	2016-12-01 00:31:08.243	0.949999999999999956	1	2016-12-01 00:30:47.724	assign contribution 'Final sprint to prepare SU accelerator application' to pepoospina	0	OFFERED	0	1	1	8	2016-12-01 00:31:08.241	1	2579	2949.5	0.5	0	2	ASSIGNED	3	1	36	112	\N	6	1	\N	1
@@ -880,6 +896,7 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 505	2016-12-01 12:31:47.149	0.949999999999999956	1	2016-12-01 12:26:29.848	assign contribution 'Design short project to test platform and deliver sample output for marketing ' to eortizospina	0	OFFERED	0	1	1	8	2016-12-01 12:31:47.146	1	2590	2960.5	0.5	0	2	ASSIGNED	3	1	36	114	\N	6	1	\N	1
 508	2016-12-01 12:32:00.572	0.949999999999999956	1	2016-12-01 12:31:47.899	accept contribution 'Design short project to test platform and deliver sample output for marketing ' as delivered by eortizospina	0	ASSIGNED	0	1	1	8	2016-12-01 12:32:00.571	1	2590	2960.5	0.5	0	2	ACCEPTED	3	1	36	114	\N	6	1	\N	1
 510	\N	0.949999999999999956	0	2016-12-01 12:34:48.1	delete goal 'Planning'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	39	1
+496	2016-11-30 23:54:35.35	0.949999999999999956	1	2016-11-30 23:54:15.079	open contribution 'Proofread and suggest comments to SU application'	0	PROPOSED	0	1	1	8	2016-11-30 23:54:35.348	1	2579	2949.5	0.5	0	4	OPEN	1	1	36	\N	141	6	1	\N	1
 515	2016-12-01 12:46:22.812	0.949999999999999956	1	2016-12-01 12:44:15.414	create goal 'Input_Specs'	0	PROPOSED	0	1	1	8	2016-12-01 12:46:22.808	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	9	42	5
 517	2016-12-01 12:46:22.818	0.949999999999999956	1	2016-12-01 12:45:54.201	create goal 'Visuals'	0	PROPOSED	0	1	1	8	2016-12-01 12:46:22.818	1	100	100	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	9	43	5
 512	\N	0.949999999999999956	0	2016-12-01 12:41:32.561	delete goal 'Planning'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	9	40	5
@@ -927,13 +944,13 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 551	2016-12-05 08:35:24.401	0.949999999999999956	1	2016-12-05 08:35:19.734	open contribution 'Contact the P2P Foundation'	0	PROPOSED	0	1	1	8	2016-12-05 08:35:24.399	1	2606	2991.5	0.5	0	2	OPEN	1	1	36	\N	152	6	1	\N	1
 552	\N	0.949999999999999956	0	2016-12-05 08:35:24.987	delete contribution 'Contact the P2P Foundation'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	152	6	1	\N	1
 553	2016-12-05 08:36:03.81	0.949999999999999956	1	2016-12-05 08:35:57.75	assign contribution 'Contact the P2P Foundation' to pepoospina	0	OFFERED	0	1	1	8	2016-12-05 08:36:03.809	1	2606	2991.5	0.5	0	2	ASSIGNED	3	1	36	121	\N	6	1	\N	1
-554	\N	0.949999999999999956	0	2016-12-05 08:36:04.19	accept contribution 'Contact the P2P Foundation' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	121	\N	6	1	\N	1
 555	2016-12-06 11:04:46.986	0.949999999999999956	1	2016-12-06 10:56:21.189	open contribution 'General feedback'	0	PROPOSED	0	1	1	8	2016-12-06 11:04:46.984	1	2606	2991.5	0.5	0	2	OPEN	1	1	36	\N	153	6	1	\N	1
 556	\N	0.949999999999999956	0	2016-12-06 11:04:47.908	delete contribution 'General feedback'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	153	6	1	\N	1
 557	2016-12-06 11:08:36.086	0.949999999999999956	1	2016-12-06 11:07:42.24	open contribution 'Decision making per goal realms'	0	PROPOSED	0	1	1	8	2016-12-06 11:08:36.084	1	2606	2991.5	0.5	0	2	OPEN	1	1	36	\N	154	6	1	\N	1
 558	\N	0.949999999999999956	0	2016-12-06 11:08:37.09	delete contribution 'Decision making per goal realms'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	154	6	1	\N	1
 559	2016-12-06 11:13:50.154	0.949999999999999956	1	2016-12-06 11:13:42.547	assign contribution 'Decision making per goal realms' to pepoospina	0	OFFERED	0	1	1	8	2016-12-06 11:13:50.152	1	2606	2991.5	0.5	0	2	ASSIGNED	3	1	36	122	\N	6	1	\N	1
 560	2016-12-20 18:17:51.583	0.949999999999999956	1	2016-12-06 11:13:50.789	accept contribution 'Decision making per goal realms' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2016-12-20 18:17:51.581	1	2675.5	3159	0.5	0	2	ACCEPTED	3	1	36	122	\N	6	1	\N	1
+554	2017-01-05 15:40:37.558	0.949999999999999956	1	2016-12-05 08:36:04.19	accept contribution 'Contact the P2P Foundation' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-01-05 15:40:37.556	1	2710.5	3195	0.5	0	2	ACCEPTED	3	1	36	121	\N	6	1	\N	1
 562	2016-12-06 11:38:43.38	0.949999999999999956	1	2016-12-06 11:38:17.583	open contribution 'Pay for Paris Berlin Flight'	0	PROPOSED	0	1	1	8	2016-12-06 11:38:43.372	1	2606	2991.5	0.5	0	2	OPEN	1	1	36	\N	156	6	1	\N	1
 563	\N	0.949999999999999956	0	2016-12-06 11:38:44.195	delete contribution 'Pay for Paris Berlin Flight'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	156	6	1	\N	1
 561	2016-12-06 11:40:18.575	0.949999999999999956	1	2016-12-06 11:28:00.156	open contribution 'Pay BCN PAR FLight'	0	PROPOSED	0	1	1	8	2016-12-06 11:40:18.569	1	2606	2991.5	0.5	0	2	OPEN	1	1	36	\N	155	6	1	\N	1
@@ -1010,8 +1027,8 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 634	2016-12-19 18:22:56.411	0.949999999999999956	1	2016-12-19 18:22:41.022	open contribution 'Perform a first assessment of technical implications'	0	PROPOSED	0	1	1	8	2016-12-19 18:22:56.406	1	2675.5	3159	0.5	0	2	OPEN	1	1	36	\N	174	6	1	\N	1
 635	\N	0.949999999999999956	0	2016-12-19 18:23:02.642	delete contribution 'Perform a first assessment of technical implications'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	174	6	1	\N	1
 636	2016-12-19 18:24:04.226	0.949999999999999956	1	2016-12-19 18:23:59.848	assign contribution 'Perform a first assessment of technical implications' to pepoospina	0	OFFERED	0	1	1	8	2016-12-19 18:24:04.219	1	2675.5	3159	0.5	0	2	ASSIGNED	3	1	36	135	\N	6	1	\N	1
-637	\N	0.949999999999999956	0	2016-12-19 18:24:06.175	accept contribution 'Perform a first assessment of technical implications' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	135	\N	6	1	\N	1
 631	2016-12-21 23:14:05.136	0.949999999999999956	1	2016-12-16 09:43:53.893	Should we add public "view" permission to the CollectiveOne folder in Google Drive?	0	\N	0	1	1	8	2016-12-21 23:14:05.131	1	2695.5	3179	0.5	0	2	\N	0	1	72	\N	\N	1	1	\N	1
+637	2017-01-10 16:55:11.489	0.949999999999999956	1	2016-12-19 18:24:06.175	accept contribution 'Perform a first assessment of technical implications' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-01-10 16:55:11.485	1	2845.34999999999991	3329.84999999999991	0.5	0	2	ACCEPTED	3	1	36	135	\N	6	1	\N	1
 638	2016-12-23 00:06:10.09	0.949999999999999956	1	2016-12-23 00:05:53.159	open contribution 'Propose a business model draft'	0	PROPOSED	0	1	1	8	2016-12-23 00:06:10.088	1	2695.5	3179	0.5	0	2	OPEN	1	1	36	\N	175	6	1	\N	1
 639	\N	0.949999999999999956	0	2016-12-23 00:06:11.076	delete contribution 'Propose a business model draft'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	175	6	1	\N	1
 640	2016-12-23 00:08:37.548	0.949999999999999956	1	2016-12-23 00:08:32.347	assign contribution 'Propose a business model draft' to pepoospina	0	OFFERED	0	1	1	8	2016-12-23 00:08:37.547	1	2695.5	3179	0.5	0	2	ASSIGNED	3	1	36	136	\N	6	1	\N	1
@@ -1041,6 +1058,58 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 664	\N	0.949999999999999956	0	2017-01-05 10:31:55.321	delete contribution 'Review memory usage in Heroku'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	180	6	1	\N	1
 665	2017-01-05 10:44:16.814	0.949999999999999956	1	2017-01-05 10:43:49.914	open contribution 'Comments reply bug'	0	PROPOSED	0	1	1	8	2017-01-05 10:44:16.813	1	2710.5	3194	0.5	0	2	OPEN	1	1	36	\N	181	6	1	\N	1
 666	\N	0.949999999999999956	0	2017-01-05 10:44:17.809	delete contribution 'Comments reply bug'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	181	6	1	\N	1
+667	2017-01-05 15:57:53.972	0.949999999999999956	1	2017-01-05 15:57:50.148	assign contribution 'Comments reply bug' to pepoospina	0	OFFERED	0	1	1	8	2017-01-05 15:57:53.97	1	2717.5	3202	0.5	0	2	ASSIGNED	3	1	36	144	\N	6	1	\N	1
+668	2017-01-05 15:58:02.152	0.949999999999999956	1	2017-01-05 15:57:54.982	accept contribution 'Comments reply bug' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-01-05 15:58:02.15	1	2717.5	3202	0.5	0	2	ACCEPTED	3	1	36	144	\N	6	1	\N	1
+670	\N	0.949999999999999956	0	2017-01-07 00:27:55.655	delete goal 'creative-ring-application'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	52	1
+669	2017-01-09 08:53:11.525	0.949999999999999956	1	2017-01-07 00:27:55.654	create goal 'creative-ring-application'	0	PROPOSED	0	1	1	8	2017-01-09 08:53:11.523	1	2720.5	3205	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	52	1
+671	2017-01-09 08:59:00.122	0.949999999999999956	1	2017-01-09 08:58:48.744	open contribution 'Prepare slides'	0	PROPOSED	0	1	1	8	2017-01-09 08:59:00.119	1	2720.5	3205	0.5	0	2	OPEN	1	1	36	\N	182	6	1	\N	1
+672	\N	0.949999999999999956	0	2017-01-09 08:59:01.31	delete contribution 'Prepare slides'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	182	6	1	\N	1
+673	2017-01-09 10:22:19.718	0.949999999999999956	1	2017-01-09 10:22:07.265	assign contribution 'Pay BCN Paris Flight' to pepoospina	0	OFFERED	0	1	1	8	2017-01-09 10:22:19.716	1	2720.5	3205	0.5	0	2	ASSIGNED	3	1	36	145	\N	6	1	\N	1
+674	2017-01-09 10:22:27.572	0.949999999999999956	1	2017-01-09 10:22:21.035	accept contribution 'Pay BCN Paris Flight' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-01-09 10:22:27.571	1	2720.5	3205	0.5	0	2	ACCEPTED	3	1	36	145	\N	6	1	\N	1
+675	2017-01-09 10:23:18.573	0.949999999999999956	1	2017-01-09 10:23:15.488	assign contribution 'Pay for Paris Berlin Flight' to pepoospina	0	OFFERED	0	1	1	8	2017-01-09 10:23:18.571	1	2742.34999999999991	3226.84999999999991	0.5	0	2	ASSIGNED	3	1	36	146	\N	6	1	\N	1
+676	2017-01-09 10:23:26.044	0.949999999999999956	1	2017-01-09 10:23:19.535	accept contribution 'Pay for Paris Berlin Flight' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-01-09 10:23:26.043	1	2742.34999999999991	3226.84999999999991	0.5	0	2	ACCEPTED	3	1	36	146	\N	6	1	\N	1
+677	2017-01-09 10:24:08.303	0.949999999999999956	1	2017-01-09 10:24:04.379	assign contribution 'Pay Enspiral-Ouishare event subscription' to pepoospina	0	OFFERED	0	1	1	8	2017-01-09 10:24:08.302	1	2767.34999999999991	3251.84999999999991	0.5	0	2	ASSIGNED	3	1	36	147	\N	6	1	\N	1
+678	2017-01-09 10:24:23.239	0.949999999999999956	1	2017-01-09 10:24:09.1	accept contribution 'Pay Enspiral-Ouishare event subscription' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-01-09 10:24:23.237	1	2767.34999999999991	3251.84999999999991	0.5	0	2	ACCEPTED	3	1	36	147	\N	6	1	\N	1
+497	2017-01-09 15:59:52.411	0.949999999999999956	1	2016-11-30 23:54:36.343	delete contribution 'Proofread and suggest comments to SU application'	0	OPEN	0	1	1	8	2017-01-09 15:59:52.41	1	2782.84999999999991	3267.34999999999991	0.5	0	2	DELETED	1	1	36	\N	141	6	1	\N	1
+445	2017-01-09 16:01:10.169	0.949999999999999956	1	2016-11-27 11:21:43.14	assign contribution 'Pay for BCN to Berlin tickets ' to pepoospina	0	OFFERED	0	1	1	8	2017-01-09 16:01:10.168	1	2782.84999999999991	3267.34999999999991	0.5	0	2	ASSIGNED	3	1	36	102	\N	6	1	\N	1
+679	2017-01-09 16:01:17.581	0.949999999999999956	1	2017-01-09 16:01:10.766	accept contribution 'Pay for BCN to Berlin tickets ' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-01-09 16:01:17.579	1	2782.84999999999991	3267.34999999999991	0.5	0	2	ACCEPTED	3	1	36	102	\N	6	1	\N	1
+394	2017-01-09 16:03:43.477	0.949999999999999956	1	2016-11-18 20:27:52.495	delete contribution 'Review the goal substructure of the +webapp goal'	0	OPEN	0	1	1	8	2017-01-09 16:03:43.475	1	2825.34999999999991	3309.84999999999991	0.5	0	2	DELETED	1	1	36	\N	114	6	1	\N	1
+680	\N	0.949999999999999956	0	2017-01-09 16:04:12.957	delete contribution 'Test the decision algorithm'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	113	6	1	\N	1
+681	2017-01-09 16:05:26.377	0.949999999999999956	1	2017-01-09 16:05:16.759	assign contribution 'Evangelize - Get other people onboard' to pepoospina	0	OFFERED	0	1	1	8	2017-01-09 16:05:26.374	1	2825.34999999999991	3309.84999999999991	0.5	0	2	ASSIGNED	3	1	36	148	\N	6	1	\N	1
+682	2017-01-09 16:05:33.711	0.949999999999999956	1	2017-01-09 16:05:27.413	accept contribution 'Evangelize - Get other people onboard' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-01-09 16:05:33.71	1	2825.34999999999991	3309.84999999999991	0.5	0	2	ACCEPTED	3	1	36	148	\N	6	1	\N	1
+123	2017-01-09 16:08:15.423	0.949999999999999956	1	2016-09-07 18:13:52.24	OPEN contribution 45	0	PROPOSED	0	1	1	8	2017-01-09 16:08:15.421	1	2845.34999999999991	3329.84999999999991	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
+683	\N	0.949999999999999956	0	2017-01-09 16:08:16.049	delete contribution 'Add filter by creation date'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	45	6	1	\N	1
+684	\N	0.949999999999999956	0	2017-01-09 16:08:37.326	delete contribution 'Store filter in server session'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	46	6	1	\N	1
+151	2017-01-09 16:08:43.868	0.949999999999999956	1	2016-09-13 10:58:14.201	OPEN contribution 58	0	PROPOSED	0	1	1	8	2017-01-09 16:08:43.866	1	2845.34999999999991	3329.84999999999991	0.5	0	2	OPEN	\N	1	36	\N	\N	6	1	\N	1
+685	\N	0.949999999999999956	0	2017-01-09 16:08:44.766	delete contribution 'Setup Log4J'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	58	6	1	\N	1
+686	2017-01-09 16:20:26.41	0.949999999999999956	1	2017-01-09 16:20:17.678	assign contribution 'Prepare slides' to pepoospina	0	OFFERED	0	1	1	8	2017-01-09 16:20:26.409	1	2845.34999999999991	3329.84999999999991	0.5	0	2	ASSIGNED	3	1	36	149	\N	6	1	\N	1
+687	\N	0.949999999999999956	0	2017-01-09 16:20:27.284	accept contribution 'Prepare slides' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	149	\N	6	1	\N	1
+688	\N	0.949999999999999956	0	2017-01-10 10:31:58.632	create goal 'notifications'	0	PROPOSED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	2	0	36	\N	\N	6	1	53	1
+689	\N	0.949999999999999956	0	2017-01-10 10:31:58.633	delete goal 'notifications'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	53	1
+690	2017-01-10 16:58:09.081	0.949999999999999956	1	2017-01-10 16:57:59.091	open contribution 'Implement the changes'	0	PROPOSED	0	1	1	8	2017-01-10 16:58:09.079	1	2845.34999999999991	3329.84999999999991	0.5	0	2	OPEN	1	1	36	\N	183	6	1	\N	1
+691	\N	0.949999999999999956	0	2017-01-10 16:58:10.325	delete contribution 'Implement the changes'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	183	6	1	\N	1
+692	2017-01-10 16:58:46.264	0.949999999999999956	1	2017-01-10 16:58:42.323	assign contribution 'Implement the changes' to pepoospina	0	OFFERED	0	1	1	8	2017-01-10 16:58:46.263	1	2845.34999999999991	3329.84999999999991	0.5	0	2	ASSIGNED	3	1	36	150	\N	6	1	\N	1
+693	\N	0.949999999999999956	0	2017-01-10 16:58:47.102	accept contribution 'Implement the changes' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	150	\N	6	1	\N	1
+694	2017-01-11 19:18:00.129	0.949999999999999956	1	2017-01-11 19:17:41.968	open contribution 'Prepare and make the presentation '	0	PROPOSED	0	1	1	8	2017-01-11 19:18:00.128	1	2845.34999999999991	3329.84999999999991	0.5	0	2	OPEN	1	1	36	\N	184	6	1	\N	1
+695	\N	0.949999999999999956	0	2017-01-11 19:18:01.897	delete contribution 'Prepare and make the presentation '	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	184	6	1	\N	1
+696	\N	0.949999999999999956	0	2017-01-11 19:19:09.604	assign contribution 'Prepare and make the presentation ' to pepoospina	0	OFFERED	1	0	0	8	\N	0	0	0	0.5	0	0	ASSIGNED	3	0	36	151	\N	6	1	\N	1
+697	2017-01-12 08:41:39.037	0.949999999999999956	1	2017-01-12 08:41:32.141	open contribution 'Create sample project'	0	PROPOSED	0	1	1	8	2017-01-12 08:41:39.036	1	2845.34999999999991	3329.84999999999991	0.5	0	2	OPEN	1	1	36	\N	185	6	1	\N	1
+698	\N	0.949999999999999956	0	2017-01-12 08:41:39.972	delete contribution 'Create sample project'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	185	6	1	\N	1
+699	2017-01-12 08:42:59.832	0.949999999999999956	1	2017-01-12 08:42:52.355	assign contribution 'Create sample project' to pepoospina	0	OFFERED	0	1	1	8	2017-01-12 08:42:59.831	1	2845.34999999999991	3329.84999999999991	0.5	0	2	ASSIGNED	3	1	36	152	\N	6	1	\N	1
+700	\N	0.949999999999999956	0	2017-01-12 08:43:00.531	accept contribution 'Create sample project' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	152	\N	6	1	\N	1
+701	\N	0.949999999999999956	0	2017-01-12 10:57:54.602	assign bid to cbtion:Create project Lendi by:JaviLendi	0	OFFERED	1	0	0	8	\N	0	0	0	0.5	0	2	ASSIGNED	3	1	36	153	\N	6	15	\N	7
+702	\N	0.949999999999999956	0	2017-01-12 10:57:54.602	accept bid to cbtion:Create project Lendi by:JaviLendi	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	2	ACCEPTED	3	1	36	153	\N	6	15	\N	7
+704	\N	0.949999999999999956	0	2017-01-13 10:58:36.18	delete goal 'management'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	54	1
+703	2017-01-13 10:58:53.733	0.949999999999999956	1	2017-01-13 10:58:36.178	create goal 'management'	0	PROPOSED	0	1	1	8	2017-01-13 10:58:53.731	1	2845.34999999999991	3329.84999999999991	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	54	1
+705	2017-01-13 11:01:08.557	0.949999999999999956	1	2017-01-13 11:01:00.601	open contribution 'Overview of goals'	0	PROPOSED	0	1	1	8	2017-01-13 11:01:08.555	1	2845.34999999999991	3329.84999999999991	0.5	0	2	OPEN	1	1	36	\N	187	6	1	\N	1
+706	\N	0.949999999999999956	0	2017-01-13 11:01:09.766	delete contribution 'Overview of goals'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	187	6	1	\N	1
+708	2017-01-13 11:08:24.055	0.949999999999999956	1	2017-01-13 11:08:01.703	set public-relations as parent goal	0	\N	0	1	1	8	2017-01-13 11:08:24.054	1	2845.34999999999991	3329.84999999999991	0.5	0	2	\N	2	1	36	\N	\N	6	1	52	1
+710	\N	0.949999999999999956	0	2017-01-13 11:45:27.619	delete goal 'data-management'	0	ACCEPTED	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	2	0	36	\N	\N	6	1	55	1
+709	2017-01-13 11:45:40.829	0.949999999999999956	1	2017-01-13 11:45:27.618	create goal 'data-management'	0	PROPOSED	0	1	1	8	2017-01-13 11:45:40.825	1	2845.34999999999991	3329.84999999999991	0.5	0	2	ACCEPTED	2	1	36	\N	\N	6	1	55	1
+711	2017-01-13 11:47:52.087	0.949999999999999956	1	2017-01-13 11:47:46.033	open contribution 'Study the IPDB alternative'	0	PROPOSED	0	1	1	8	2017-01-13 11:47:52.086	1	2845.34999999999991	3329.84999999999991	0.5	0	2	OPEN	1	1	36	\N	188	6	1	\N	1
+712	\N	0.949999999999999956	0	2017-01-13 11:47:53.394	delete contribution 'Study the IPDB alternative'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	188	6	1	\N	1
+707	2017-01-13 11:59:10.063	0.949999999999999956	1	2017-01-13 11:01:25.305	assign contribution 'Overview of goals' to pepoospina	0	OFFERED	0	1	1	8	2017-01-13 11:59:10.062	1	2845.34999999999991	3329.84999999999991	0.5	0	2	ASSIGNED	3	1	36	154	\N	6	1	\N	1
+713	\N	0.949999999999999956	0	2017-01-13 11:59:11.488	accept contribution 'Overview of goals' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	154	\N	6	1	\N	1
 \.
 
 
@@ -1105,6 +1174,9 @@ COPY arguments (id, creation_date, description, tendency, creator_id, decision_i
 49	2016-12-15 22:42:37.252	Lets not rush into this. Let's make an overview on the open source alternatives and decide afterwards	1	1	616
 50	2016-12-16 09:44:10.14	CollectiveOne claims to promote open access data to favor contributions from external contributors. This should be done at some point.	0	1	631
 51	2016-12-16 09:44:48.5	Keeping track of individual permissions is time consuming and not very pleasant	0	1	631
+52	2017-01-07 00:32:29.5	The CreativeRing could be a vehicle to attract new and valuable projects and users to CollectiveOne 	0	1	669
+53	2017-01-07 00:34:00.927	It's not clear how much further development will have to be done to fulfill the needs of CreativeRing 	1	1	669
+54	2017-01-07 00:35:21.467	It's not clear how much the CollectiveOne method will have to be bended to be in-line with the needs of CreativeRing 	1	1	669
 \.
 
 
@@ -1156,8 +1228,13 @@ COPY comments (id, content, creation_date, relevance, cbtion_id, creator_id, par
 36	Take into account, also, that I have prepared a business model proposal trying to converge. The document can be found **[here](https://docs.google.com/document/d/1nqxnsaSL3dlErPfeqPyCvCbJ_sqRmQdW2C0ccefMU-I/edit)**.\n\nTo provide the feedback, the best way would be though comments or suggestions in the google doc. I will give you edition rights.	2017-01-04 13:41:12.723	1	165	1	34
 38	It's only 62 euro. There is not a fixed exchange rate for this kind of contributions. For previous ones we used 4 euros -> 1 pp\n\nSuggested bid is zero because the contribution was created before the "suggested bid" feature existed. There is no a fixed exchange rate 	2017-01-05 09:36:34.966	0	157	1	37
 39	We are aware that the prototype is very basic, and there is plenty of improvements that need to be done. Esteban (@eortizospina) already made a **[first proposal](https://docs.google.com/document/d/1epKcfoc_UtzeKzA1OJmArgYenNMAqnzVDxegqygXXjk/edit?usp=sharing)** of what he feels to be the most important improvement: a navigation pane on the left that decompose projects into goals and allow the user to promptly filter the results per goal. There are other improvements which are mandatory as personalized notifications, to help people follow the activity. \n\nIn addition, there are already some individualized contributions for the webapp development. You can see them under the **[+webapp goal](http://www.collectiveone.org/views/goalPageR?projectName=CollectiveOne&goalTag=webapp)**\n\nThis contribution could be focused in identifying other key improvements, and prioritizing them. Your feedback can be either a document or a comment on the **[#webapp](https://collectiveone.slack.com/messages/webapp/details/)** Slack channel	2017-01-05 09:53:37.537	0	171	1	\N
-40	I have seen now that the link has expired. This event was held on December 8th. The contribution is still open to leave room for people interested in funding it to do it. I am willing to fund it at a 4 euros per pp.	2017-01-05 10:42:05.945	0	157	1	37
 37	Looks like it's 840 Euro ?  Why is there not a suggested Bid on something so straightforward?	2017-01-05 09:18:55.558	1	157	17	\N
+40	I have seen now that the link has expired. This event was held on December 8th. The contribution is still open to leave room for people interested in funding it to do it. I am willing to fund it at a 4 euros per pp.	2017-01-05 10:42:05.945	1	157	1	37
+41	There is already possible to disable a project, effectively hiding all its information. The script would be useful mostly to clean test projects 	2017-01-06 20:07:57.504	0	147	1	25
+42	This is relatively complex. Perhaps it would be better to create a goal and start by designing the solution 	2017-01-07 15:45:34.564	0	89	1	\N
+43	I have created also a [user manual](https://docs.google.com/document/d/1x1Vl08jHonYukIvV80iRqouqjwolhsFCWWcTPbSd9js/edit), so this contribution can be seen as a video version of the user manual.	2017-01-09 15:58:36.121	1	167	1	\N
+44	Supersede by events. 	2017-01-09 16:03:39.706	0	114	1	\N
+45	If this goes forward, it should be defined as a goal	2017-01-09 16:07:04.867	0	76	1	\N
 \.
 
 
@@ -1218,6 +1295,10 @@ COPY goal (id, creation_date, description, goal_tag, parent_state, state, create
 49	2016-12-16 09:07:27.052	Study the legal aspects of CollectiveOne, creating contracts and legal entities for supporting its activity, and finding alternatives that are compatible with its principles, methods and goals	legal	\N	1	629	1	630	25	1	\N	\N
 50	2016-12-19 18:15:43.698	The decision mechanism should be updated to use the realm-per-goal strategy as described in [this document](https://docs.google.com/document/d/1L8djyJkLtYM_NFlM-lyt-VOH48d8pZqmGvjM8HbIt6U/edit).	realm-per-goal	\N	1	632	1	633	2	1	\N	\N
 51	2017-01-05 09:30:51.398	Create an Executive Summary highlighting this opportunity	CreateExecutiveSummary	\N	0	660	17	661	\N	6	\N	\N
+53	2017-01-10 10:31:58.432	Users should be able to receive personalized notifications (both by email and in the platform) of activity on the items they are most interested, either because they subscribe to those elements, or because they are directly related to those elements (creators, bidders, previously commented, etc)	notifications	\N	0	688	1	689	4	1	\N	\N
+54	2017-01-13 10:58:36.051	Organize, describe and prioritize the activities within CollectiveOne to efficiently reach its goals	management	\N	1	703	1	704	25	1	\N	\N
+52	2017-01-07 00:27:55.621	Become one of the tools selected to be used within the [CreativeRing](http://www.creativering.eu/about/) project.	creative-ring-application	0	1	669	1	670	29	1	708	29
+55	2017-01-13 11:45:27.553	Explore the different alternatives to store, and control access to projects data, taking into account the agreed approach to data management	data-management	\N	1	709	1	710	6	1	\N	\N
 \.
 
 
@@ -1973,6 +2054,73 @@ COPY activity (id, creation_date, event, type, argument_id, bid_id, cbtion_id, c
 749	2017-01-05 10:43:49.918	created	0	\N	\N	181	\N	\N	\N	1
 750	2017-01-05 10:44:17.806	opened for bidding	0	\N	\N	181	\N	\N	\N	1
 751	2017-01-05 11:06:54.454	accepted	1	\N	138	\N	\N	\N	\N	1
+752	2017-01-05 15:40:33.151	marked done	1	\N	121	\N	\N	\N	\N	1
+753	2017-01-05 15:40:38.359	accepted	1	\N	121	\N	\N	\N	\N	1
+754	2017-01-05 15:57:49.951	created	1	\N	144	\N	\N	\N	\N	1
+755	2017-01-05 15:57:54.884	assigned	1	\N	144	\N	\N	\N	\N	1
+756	2017-01-05 15:58:02.979	accepted	1	\N	144	\N	\N	\N	\N	1
+757	2017-01-06 20:07:57.551	new	5	\N	\N	\N	41	\N	\N	1
+758	2017-01-07 00:27:55.663	proposed	2	\N	\N	\N	\N	\N	52	1
+759	2017-01-07 00:32:29.506	created	4	52	\N	\N	\N	\N	\N	1
+760	2017-01-07 00:34:00.933	created	4	53	\N	\N	\N	\N	\N	1
+761	2017-01-07 00:35:21.476	created	4	54	\N	\N	\N	\N	\N	1
+762	2017-01-07 15:45:34.591	new	5	\N	\N	\N	42	\N	\N	1
+763	2017-01-09 08:53:12.373	accepted	2	\N	\N	\N	\N	\N	52	1
+764	2017-01-09 08:58:48.753	created	0	\N	\N	182	\N	\N	\N	1
+765	2017-01-09 08:59:01.307	opened for bidding	0	\N	\N	182	\N	\N	\N	1
+766	2017-01-09 10:22:07.145	created	1	\N	145	\N	\N	\N	\N	1
+767	2017-01-09 10:22:20.883	assigned	1	\N	145	\N	\N	\N	\N	1
+768	2017-01-09 10:22:28.263	accepted	1	\N	145	\N	\N	\N	\N	1
+769	2017-01-09 10:23:15.042	created	1	\N	146	\N	\N	\N	\N	1
+770	2017-01-09 10:23:19.491	assigned	1	\N	146	\N	\N	\N	\N	1
+771	2017-01-09 10:23:26.762	accepted	1	\N	146	\N	\N	\N	\N	1
+772	2017-01-09 10:24:04.29	created	1	\N	147	\N	\N	\N	\N	1
+773	2017-01-09 10:24:09.046	assigned	1	\N	147	\N	\N	\N	\N	1
+774	2017-01-09 10:24:23.94	accepted	1	\N	147	\N	\N	\N	\N	1
+775	2017-01-09 15:58:36.129	new	5	\N	\N	\N	43	\N	\N	1
+776	2017-01-09 15:59:53.417	deleted	0	\N	\N	141	\N	\N	\N	1
+777	2017-01-09 16:01:10.693	assigned	1	\N	102	\N	\N	\N	\N	1
+778	2017-01-09 16:01:18.447	accepted	1	\N	102	\N	\N	\N	\N	1
+779	2017-01-09 16:03:39.712	new	5	\N	\N	\N	44	\N	\N	1
+780	2017-01-09 16:03:44.403	deleted	0	\N	\N	114	\N	\N	\N	1
+781	2017-01-09 16:04:12.954	opened for bidding	0	\N	\N	113	\N	\N	\N	1
+782	2017-01-09 16:05:16.635	created	1	\N	148	\N	\N	\N	\N	1
+783	2017-01-09 16:05:27.278	assigned	1	\N	148	\N	\N	\N	\N	1
+784	2017-01-09 16:05:34.344	accepted	1	\N	148	\N	\N	\N	\N	1
+785	2017-01-09 16:07:04.877	new	5	\N	\N	\N	45	\N	\N	1
+786	2017-01-09 16:08:16.046	opened for bidding	0	\N	\N	45	\N	\N	\N	1
+787	2017-01-09 16:08:37.323	opened for bidding	0	\N	\N	46	\N	\N	\N	1
+788	2017-01-09 16:08:44.762	opened for bidding	0	\N	\N	58	\N	\N	\N	1
+789	2017-01-09 16:20:17.296	created	1	\N	149	\N	\N	\N	\N	1
+790	2017-01-09 16:20:27.188	assigned	1	\N	149	\N	\N	\N	\N	1
+791	2017-01-10 10:31:58.658	proposed	2	\N	\N	\N	\N	\N	53	1
+792	2017-01-10 16:54:59.421	marked done	1	\N	135	\N	\N	\N	\N	1
+793	2017-01-10 16:55:12.958	accepted	1	\N	135	\N	\N	\N	\N	1
+794	2017-01-10 16:57:59.095	created	0	\N	\N	183	\N	\N	\N	1
+795	2017-01-10 16:58:10.319	opened for bidding	0	\N	\N	183	\N	\N	\N	1
+796	2017-01-10 16:58:42.188	created	1	\N	150	\N	\N	\N	\N	1
+797	2017-01-10 16:58:47.067	assigned	1	\N	150	\N	\N	\N	\N	1
+798	2017-01-11 17:19:29.765	marked done	1	\N	149	\N	\N	\N	\N	1
+799	2017-01-11 19:17:41.972	created	0	\N	\N	184	\N	\N	\N	1
+800	2017-01-11 19:18:01.894	opened for bidding	0	\N	\N	184	\N	\N	\N	1
+801	2017-01-11 19:19:09.321	created	1	\N	151	\N	\N	\N	\N	1
+802	2017-01-12 08:41:32.144	created	0	\N	\N	185	\N	\N	\N	1
+803	2017-01-12 08:41:39.958	opened for bidding	0	\N	\N	185	\N	\N	\N	1
+804	2017-01-12 08:42:52.202	created	1	\N	152	\N	\N	\N	\N	1
+805	2017-01-12 08:43:00.485	assigned	1	\N	152	\N	\N	\N	\N	1
+806	2017-01-13 10:58:36.224	proposed	2	\N	\N	\N	\N	\N	54	1
+807	2017-01-13 10:58:54.693	accepted	2	\N	\N	\N	\N	\N	54	1
+808	2017-01-13 11:01:00.653	created	0	\N	\N	187	\N	\N	\N	1
+809	2017-01-13 11:01:09.763	opened for bidding	0	\N	\N	187	\N	\N	\N	1
+810	2017-01-13 11:01:24.996	created	1	\N	154	\N	\N	\N	\N	1
+811	2017-01-13 11:08:01.716	public-relations proposed as parent	2	\N	\N	\N	\N	\N	52	1
+812	2017-01-13 11:08:25.073	public-relations accepted as parent	2	\N	\N	\N	\N	\N	52	1
+813	2017-01-13 11:45:27.629	proposed	2	\N	\N	\N	\N	\N	55	1
+814	2017-01-13 11:45:41.851	accepted	2	\N	\N	\N	\N	\N	55	1
+815	2017-01-13 11:47:46.045	created	0	\N	\N	188	\N	\N	\N	1
+816	2017-01-13 11:47:53.391	opened for bidding	0	\N	\N	188	\N	\N	\N	1
+817	2017-01-13 11:59:04.823	marked done	1	\N	154	\N	\N	\N	\N	1
+818	2017-01-13 11:59:11.342	assigned	1	\N	154	\N	\N	\N	\N	1
 \.
 
 
@@ -1984,7 +2132,7 @@ ALTER TABLE activity ENABLE TRIGGER ALL;
 -- Name: activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('activity_id_seq', 751, true);
+SELECT pg_catalog.setval('activity_id_seq', 818, true);
 
 
 --
@@ -1993,7 +2141,7 @@ SELECT pg_catalog.setval('activity_id_seq', 751, true);
 -- Name: app_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('app_users_id_seq', 17, true);
+SELECT pg_catalog.setval('app_users_id_seq', 18, true);
 
 
 --
@@ -2052,6 +2200,9 @@ COPY argument_backers (argument_id, backers_id) FROM stdin;
 50	3
 51	1
 51	3
+52	1
+53	1
+54	1
 \.
 
 
@@ -2063,7 +2214,7 @@ ALTER TABLE argument_backers ENABLE TRIGGER ALL;
 -- Name: arguments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('arguments_id_seq', 51, true);
+SELECT pg_catalog.setval('arguments_id_seq', 54, true);
 
 
 --
@@ -2085,6 +2236,7 @@ COPY authorized_emails (id, authorized, email) FROM stdin;
 9	t	francescapick@gmail.com
 10	t	aminisaleem@yahoo.com
 11	t	javiervelasco87@gmail.com
+12	t	philh@erisma.com
 \.
 
 
@@ -2112,6 +2264,7 @@ COPY authorized_projects (id, authorized, project_name) FROM stdin;
 2	t	Demo
 3	t	OuiShareOpenSource
 4	t	Smartdealmaker-project
+5	t	Lendi
 \.
 
 
@@ -2132,7 +2285,7 @@ SELECT pg_catalog.setval('authorized_projects_id_seq', 1, false);
 -- Name: bids_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('bids_id_seq', 143, true);
+SELECT pg_catalog.setval('bids_id_seq', 154, true);
 
 
 --
@@ -2323,6 +2476,17 @@ COPY cbtions_bids (cbtion_id, bids_id) FROM stdin;
 176	141
 171	142
 165	143
+181	144
+155	145
+156	146
+157	147
+101	148
+182	149
+183	150
+184	151
+185	152
+186	153
+187	154
 \.
 
 
@@ -2341,7 +2505,6 @@ COPY cbtions_comments (cbtion_id, comments_id) FROM stdin;
 59	4
 40	5
 68	6
-89	8
 106	9
 100	11
 116	12
@@ -2365,6 +2528,11 @@ COPY cbtions_comments (cbtion_id, comments_id) FROM stdin;
 165	34
 157	37
 171	39
+89	8
+89	42
+167	43
+114	44
+76	45
 \.
 
 
@@ -2376,7 +2544,7 @@ ALTER TABLE cbtions_comments ENABLE TRIGGER ALL;
 -- Name: cbtions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('cbtions_id_seq', 181, true);
+SELECT pg_catalog.setval('cbtions_id_seq', 188, true);
 
 
 --
@@ -2415,11 +2583,35 @@ COPY promoters (id, creation_date, promote_up, user_id) FROM stdin;
 27	2016-12-02 10:18:45.003	t	1
 28	2016-12-02 14:48:16.138	t	3
 26	2016-12-04 13:01:51.909	t	1
-29	2016-12-09 20:35:11.712	t	1
 30	2016-12-15 16:19:21.376	t	1
 31	2017-01-04 13:41:17.104	t	1
 32	2017-01-05 09:56:18.096	t	1
 33	2017-01-05 10:42:20.501	t	1
+34	2017-01-05 15:42:09.155	t	1
+35	2017-01-09 15:55:51.641	t	1
+36	2017-01-09 15:55:53.266	t	1
+37	2017-01-09 15:55:56.015	t	1
+38	2017-01-09 15:55:57.47	t	1
+39	2017-01-09 15:56:03.469	t	1
+40	2017-01-09 15:56:06.723	t	1
+41	2017-01-09 15:58:39.294	t	1
+42	2017-01-09 15:59:02.847	t	1
+43	2017-01-09 15:59:05.732	t	1
+44	2017-01-09 15:59:10.401	t	1
+45	2017-01-09 15:59:14.096	t	1
+46	2017-01-09 15:59:20.23	t	1
+47	2017-01-09 15:59:22.894	t	1
+48	2017-01-09 15:59:26.539	f	1
+29	2017-01-09 15:59:34.273	t	1
+49	2017-01-09 16:00:05.668	t	1
+50	2017-01-09 16:01:41.982	t	1
+51	2017-01-09 16:01:48.692	t	1
+52	2017-01-09 16:01:52.196	t	1
+53	2017-01-09 16:02:06.72	t	1
+54	2017-01-09 16:02:09.629	t	1
+55	2017-01-09 16:04:10.84	t	1
+56	2017-01-09 16:05:47.133	t	1
+57	2017-01-09 16:05:54.816	t	1
 \.
 
 
@@ -2460,6 +2652,28 @@ COPY cbtions_promoters (cbtion_id, promoters_id) FROM stdin;
 132	26
 89	27
 144	29
+182	35
+180	36
+176	37
+175	38
+174	39
+172	40
+167	42
+171	43
+166	44
+165	45
+150	46
+148	47
+147	48
+138	49
+124	50
+133	51
+136	52
+121	53
+116	54
+103	55
+113	56
+90	57
 \.
 
 
@@ -2485,6 +2699,7 @@ COPY comments_answers (comment_id, replies_id) FROM stdin;
 34	36
 37	38
 37	40
+25	41
 \.
 
 
@@ -2496,7 +2711,7 @@ ALTER TABLE comments_answers ENABLE TRIGGER ALL;
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('comments_id_seq', 40, true);
+SELECT pg_catalog.setval('comments_id_seq', 45, true);
 
 
 --
@@ -2514,6 +2729,8 @@ COPY comments_promoters (comment_id, promoters_id) FROM stdin;
 36	31
 34	32
 37	33
+40	34
+43	41
 \.
 
 
@@ -2525,7 +2742,7 @@ ALTER TABLE comments_promoters ENABLE TRIGGER ALL;
 -- Name: decision_realms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('decision_realms_id_seq', 14, true);
+SELECT pg_catalog.setval('decision_realms_id_seq', 17, true);
 
 
 --
@@ -2544,9 +2761,10 @@ COPY voters (id, weight, voter_user_id) FROM stdin;
 8	100	3
 9	10	13
 2	361	3
-1	2710.5	1
 11	100	17
 10	9	9
+1	2845.34999999999991	1
+12	1000	18
 \.
 
 
@@ -2571,6 +2789,7 @@ COPY decision_realms_voters (decision_realm_id, voters_id) FROM stdin;
 1	9
 1	10
 12	11
+15	12
 \.
 
 
@@ -2635,6 +2854,9 @@ COPY decisions_args (decision_id, arguments_id) FROM stdin;
 616	49
 631	50
 631	51
+669	52
+669	53
+669	54
 \.
 
 
@@ -2646,7 +2868,7 @@ ALTER TABLE decisions_args ENABLE TRIGGER ALL;
 -- Name: decisions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('decisions_id_seq', 666, true);
+SELECT pg_catalog.setval('decisions_id_seq', 713, true);
 
 
 --
@@ -3116,6 +3338,40 @@ COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 458	2017-01-05 10:31:53.954	1	2710.5	1	663
 459	2017-01-05 10:44:15.439	1	2710.5	1	665
 460	2017-01-05 11:06:48.307	1	2710.5	1	649
+461	2017-01-05 15:40:36.17	1	2710.5	1	554
+462	2017-01-05 15:57:52.139	1	2717.5	1	667
+463	2017-01-05 15:57:58.183	1	2717.5	1	668
+464	2017-01-09 08:53:05.987	1	2720.5	1	669
+465	2017-01-09 08:58:53.322	1	2720.5	1	671
+466	2017-01-09 10:22:18.296	1	2720.5	1	673
+467	2017-01-09 10:22:25.333	1	2720.5	1	674
+468	2017-01-09 10:23:17.376	1	2742.34999999999991	1	675
+469	2017-01-09 10:23:22.64	1	2742.34999999999991	1	676
+470	2017-01-09 10:24:06.085	1	2767.34999999999991	1	677
+471	2017-01-09 10:24:20.812	1	2767.34999999999991	1	678
+472	2017-01-09 15:59:47.811	1	2782.84999999999991	1	497
+473	2017-01-09 16:01:07.431	1	2782.84999999999991	1	445
+474	2017-01-09 16:01:12.459	1	2782.84999999999991	1	679
+475	2017-01-09 16:03:42.017	1	2825.34999999999991	1	394
+476	2017-01-09 16:04:04.978	1	2825.34999999999991	1	392
+477	2017-01-09 16:05:18.74	1	2825.34999999999991	1	681
+478	2017-01-09 16:05:31.666	1	2825.34999999999991	1	682
+479	2017-01-09 16:08:13.549	1	2845.34999999999991	1	123
+480	2017-01-09 16:08:33.691	1	2845.34999999999991	1	124
+481	2017-01-09 16:08:42.663	1	2845.34999999999991	1	151
+482	2017-01-09 16:20:19.945	1	2845.34999999999991	1	686
+483	2017-01-10 16:55:04.7	1	2845.34999999999991	1	637
+484	2017-01-10 16:58:04.531	1	2845.34999999999991	1	690
+485	2017-01-10 16:58:44.07	1	2845.34999999999991	1	692
+486	2017-01-11 19:17:57.51	1	2845.34999999999991	1	694
+487	2017-01-12 08:41:36.432	1	2845.34999999999991	1	697
+488	2017-01-12 08:42:55.845	1	2845.34999999999991	1	699
+489	2017-01-13 10:58:47.677	1	2845.34999999999991	1	703
+490	2017-01-13 11:01:05.475	1	2845.34999999999991	1	705
+491	2017-01-13 11:08:18.524	1	2845.34999999999991	1	708
+492	2017-01-13 11:45:37.901	1	2845.34999999999991	1	709
+493	2017-01-13 11:47:50.452	1	2845.34999999999991	1	711
+494	2017-01-13 11:59:09.052	1	2845.34999999999991	1	707
 \.
 
 
@@ -3584,6 +3840,40 @@ COPY decisions_thesescast (decision_id, theses_cast_id) FROM stdin;
 663	458
 665	459
 649	460
+554	461
+667	462
+668	463
+669	464
+671	465
+673	466
+674	467
+675	468
+676	469
+677	470
+678	471
+497	472
+445	473
+679	474
+394	475
+392	476
+681	477
+682	478
+123	479
+124	480
+151	481
+686	482
+637	483
+690	484
+692	485
+694	486
+697	487
+699	488
+703	489
+705	490
+708	491
+709	492
+711	493
+707	494
 \.
 
 
@@ -3595,7 +3885,7 @@ ALTER TABLE decisions_thesescast ENABLE TRIGGER ALL;
 -- Name: goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('goal_id_seq', 51, true);
+SELECT pg_catalog.setval('goal_id_seq', 55, true);
 
 
 --
@@ -3655,7 +3945,7 @@ ALTER TABLE password_recovery_token ENABLE TRIGGER ALL;
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('projects_id_seq', 6, true);
+SELECT pg_catalog.setval('projects_id_seq', 7, true);
 
 
 --
@@ -3664,7 +3954,7 @@ SELECT pg_catalog.setval('projects_id_seq', 6, true);
 -- Name: promoters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('promoters_id_seq', 33, true);
+SELECT pg_catalog.setval('promoters_id_seq', 57, true);
 
 
 --
@@ -3698,6 +3988,7 @@ COPY roles (id, role, username) FROM stdin;
 12	ROLE_USER	Garito
 13	ROLE_USER	francescap
 14	ROLE_USER	smartdealmaker
+15	ROLE_USER	JaviLendi
 \.
 
 
@@ -3709,7 +4000,7 @@ ALTER TABLE roles ENABLE TRIGGER ALL;
 -- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('roles_id_seq', 14, true);
+SELECT pg_catalog.setval('roles_id_seq', 15, true);
 
 
 --
@@ -3718,7 +4009,7 @@ SELECT pg_catalog.setval('roles_id_seq', 14, true);
 -- Name: theses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('theses_id_seq', 460, true);
+SELECT pg_catalog.setval('theses_id_seq', 494, true);
 
 
 --
@@ -3737,6 +4028,7 @@ COPY verification_token (id, expiry_date, token, user_id) FROM stdin;
 7	2016-12-21 15:50:46.947	ede98225-a86e-46a4-9c46-c71403bf63b0	15
 8	2017-01-01 10:36:32.085	edbc62a5-590f-40e5-81e1-8118d45d1a06	16
 9	2017-01-05 12:10:40.665	b2908e08-da72-46b0-900a-875974a3397f	17
+10	2017-01-12 15:27:56.384	49d66839-1f01-4a98-9deb-a9c70204a915	18
 \.
 
 
@@ -3748,7 +4040,7 @@ ALTER TABLE verification_token ENABLE TRIGGER ALL;
 -- Name: verification_token_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('verification_token_id_seq', 9, true);
+SELECT pg_catalog.setval('verification_token_id_seq', 10, true);
 
 
 --
@@ -3757,10 +4049,10 @@ SELECT pg_catalog.setval('verification_token_id_seq', 9, true);
 -- Name: voters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('voters_id_seq', 11, true);
+SELECT pg_catalog.setval('voters_id_seq', 12, true);
 
 
--- Completed on 2017-01-05 14:02:26 CET
+-- Completed on 2017-01-14 18:19:43 CET
 
 --
 -- PostgreSQL database dump complete
