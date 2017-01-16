@@ -364,8 +364,9 @@ public class DbServicesImp {
 		assign_bid.setFromState(BidState.OFFERED.toString());
 		assign_bid.setToState(BidState.ASSIGNED.toString());
 		assign_bid.setProject(project);
+		assign_bid.setGoal(goal);
 		assign_bid.setType(DecisionType.BID);
-		assign_bid.setBid(bid);
+		assign_bid.setAffectedBid(bid);
 
 		accept_bid.setCreator(coprojects);
 		accept_bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -376,8 +377,9 @@ public class DbServicesImp {
 		accept_bid.setFromState(BidState.ASSIGNED.toString());
 		accept_bid.setToState(BidState.ACCEPTED.toString());
 		accept_bid.setProject(project);
+		accept_bid.setGoal(goal);
 		accept_bid.setType(DecisionType.BID);
-		accept_bid.setBid(bid);
+		accept_bid.setAffectedBid(bid);
 
 		/* simulate the bid acceptance process */
 		bid.setState(BidState.ACCEPTED);
@@ -516,8 +518,9 @@ public class DbServicesImp {
 					create.setFromState(GoalState.PROPOSED.toString());
 					create.setToState(GoalState.ACCEPTED.toString());
 					create.setProject(project);
-					create.setType(DecisionType.GOAL);
 					create.setGoal(goal);
+					create.setType(DecisionType.GOAL);
+					create.setAffectedGoal(goal);
 
 					goal.setCreateDec(create);
 					
@@ -544,8 +547,9 @@ public class DbServicesImp {
 		            delete.setFromState(GoalState.ACCEPTED.toString());
 		            delete.setToState(GoalState.DELETED.toString());
 		            delete.setProject(project);
-		            delete.setType(DecisionType.GOAL);
 		            delete.setGoal(goal);
+		            delete.setType(DecisionType.GOAL);
+		            delete.setAffectedGoal(goal);
 
 		            goal.setDeleteDec(delete);
  				    decisionDao.save(delete);
@@ -733,8 +737,9 @@ public class DbServicesImp {
 	            delete.setFromState(GoalState.ACCEPTED.toString());
 	            delete.setToState(GoalState.DELETED.toString());
 	            delete.setProject(goal.getProject());
-	            delete.setType(DecisionType.GOAL);
 	            delete.setGoal(goal);
+	            delete.setType(DecisionType.GOAL);
+	            delete.setAffectedGoal(goal);
 	            
 	            goal.setDeleteDec(delete);
 	            decisionDao.save(delete);
@@ -878,14 +883,15 @@ public class DbServicesImp {
 				Project project = goal.getProject();
 				Decision proposeParent = new Decision();
 
-				proposeParent.setGoal(goal);
 				proposeParent.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				proposeParent.setCreator(userDao.get("collectiveone"));
 				proposeParent.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getId()));
 				proposeParent.setDescription("set "+proposedParent.getGoalTag()+" as parent goal");
 				proposeParent.setProject(project);
+				proposeParent.setGoal(goal);
 				proposeParent.setState(DecisionState.IDLE);
 				proposeParent.setType(DecisionType.GOAL);
+				proposeParent.setAffectedGoal(goal);
 				proposeParent.setVerdictHours(36);
 
 				decisionDao.save(proposeParent);
@@ -970,10 +976,11 @@ public class DbServicesImp {
 		open.setFromState(CbtionState.PROPOSED.toString());		
 		open.setToState(CbtionState.OPEN.toString());
 		open.setProject(project);
+		open.setGoal(goal);
 		open.setState(DecisionState.IDLE);
 		open.setVerdictHours(36);
 		open.setType(DecisionType.CBTION);
-		open.setCbtion(cbtion);
+		open.setAffectedCbtion(cbtion);
 
 		cbtion.setOpenDec(open);
 		decisionDao.save(open);
@@ -1127,10 +1134,11 @@ public class DbServicesImp {
 						delete.setFromState(CbtionState.OPEN.toString());		
 						delete.setToState(CbtionState.DELETED.toString());
 						delete.setProject(cbtion.getProject());
+						delete.setGoal(cbtion.getGoal());
 						delete.setState(DecisionState.IDLE);
 						delete.setVerdictHours(36);
 						delete.setType(DecisionType.CBTION);
-						delete.setCbtion(cbtion);
+						delete.setAffectedCbtion(cbtion);
 						
 						decisionDao.save(delete);
 						
@@ -1358,12 +1366,13 @@ public class DbServicesImp {
 		assign.setFromState(BidState.OFFERED.toString());
 		assign.setToState(BidState.ASSIGNED.toString());
 		assign.setState(DecisionState.IDLE);
-		/* TODO: Include bid duration logic */
+		/* TODO: Include bid decisions duration logic */
 		assign.setVerdictHours(36);
 		assign.setDecisionRealm(realm);
 		assign.setProject(project);
+		assign.setGoal(bid.getCbtion().getGoal());
 		assign.setType(DecisionType.BID);
-		assign.setBid(bid);
+		assign.setAffectedBid(bid);
 
 		bid.setAssign(assign);
 
@@ -1485,9 +1494,10 @@ public class DbServicesImp {
 				/* TODO: Include bid duration logic */
 				accept.setVerdictHours(36);
 				accept.setDecisionRealm(decisionRealmDao.getFromGoalId(bid.getCbtion().getGoal().getId()));
-				accept.setProject(bid.getCbtion().getProject());
+				accept.setProject(cbtion.getProject());
+				accept.setGoal(cbtion.getGoal());
 				accept.setType(DecisionType.BID);
-				accept.setBid(bid);
+				accept.setAffectedBid(bid);
 
 				bid.setAccept(accept);
 				decisionDao.save(accept);
@@ -1764,6 +1774,7 @@ public class DbServicesImp {
 		decision.setCreator(userDao.get(decisionDto.getCreatorUsername()));
 		decision.setDescription(decisionDto.getDescription());
 		decision.setProject(project);
+		decision.setGoal(goal);
 		decision.setState(DecisionState.IDLE);
 		decision.setDecisionRealm(realm);
 		decision.setType(DecisionType.GENERAL);

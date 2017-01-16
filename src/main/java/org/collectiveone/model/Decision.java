@@ -39,7 +39,10 @@ public class Decision {
 	private User creator;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	private DecisionRealm decisionRealm = new DecisionRealm();
+	private DecisionRealm decisionRealm;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Goal goal;
 
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "DECISIONS_THESESCAST")
@@ -58,11 +61,11 @@ public class Decision {
 	/* hold a reference to the affected object */
 	private DecisionType type;
 	@ManyToOne
-	private Cbtion cbtion;
+	private Cbtion affectedCbtion;
 	@ManyToOne
-	private Goal goal;
+	private Goal affectedGoal;
 	@ManyToOne
-	private Bid bid;
+	private Bid affectedBid;
 	
 	/* ============================== */
 	/* Decisions mechanics parameters */
@@ -130,25 +133,25 @@ public class Decision {
 			dto.setType(type.toString());
 			switch(type) {
 				case CBTION:
-					if(cbtion != null) {
-						dto.setCbtionId(cbtion.getId());
-						dto.setCbtionTitle(cbtion.getTitle());
+					if(affectedCbtion != null) {
+						dto.setCbtionId(affectedCbtion.getId());
+						dto.setCbtionTitle(affectedCbtion.getTitle());
 					}
 					break;
 					
 				case GOAL:
-					if(goal != null) {
-						dto.setGoalId(goal.getId());
-						dto.setGoalTag(goal.getGoalTag());
+					if(affectedGoal != null) {
+						dto.setGoalId(affectedGoal.getId());
+						dto.setGoalTag(affectedGoal.getGoalTag());
 					}
 					break;
 					
 				case BID:
-					if(bid != null) {
-						dto.setBidId(bid.getId());
-						dto.setBidCreatorUsername(bid.getCreator().getUsername());
-						dto.setCbtionId(bid.getCbtion().getId());
-						dto.setCbtionTitle(bid.getCbtion().getTitle());
+					if(affectedBid != null) {
+						dto.setBidId(affectedBid.getId());
+						dto.setBidCreatorUsername(affectedBid.getCreator().getUsername());
+						dto.setCbtionId(affectedBid.getCbtion().getId());
+						dto.setCbtionTitle(affectedBid.getCbtion().getTitle());
 					}
 					break;
 				
@@ -230,6 +233,12 @@ public class Decision {
 	public void setDecisionRealm(DecisionRealm decisionRealm) {
 		this.decisionRealm = decisionRealm;
 	}
+	public Goal getGoal() {
+		return goal;
+	}
+	public void setGoal(Goal goal) {
+		this.goal = goal;
+	}
 	public Timestamp getOpenDate() {
 		return openDate;
 	}
@@ -273,23 +282,23 @@ public class Decision {
 	public void setArguments(List<Argument> arguments) {
 		this.arguments = arguments;
 	}
-	public Cbtion getCbtion() {
-		return cbtion;
+	public Cbtion getAffectedCbtion() {
+		return affectedCbtion;
 	}
-	public void setCbtion(Cbtion cbtion) {
-		this.cbtion = cbtion;
+	public void setAffectedCbtion(Cbtion affectedCbtion) {
+		this.affectedCbtion = affectedCbtion;
 	}
-	public Goal getGoal() {
-		return goal;
+	public Goal getAffectedGoal() {
+		return affectedGoal;
 	}
-	public void setGoal(Goal goal) {
-		this.goal = goal;
+	public void setAffectedGoal(Goal affectedGoal) {
+		this.affectedGoal = affectedGoal;
 	}
-	public Bid getBid() {
-		return bid;
+	public Bid getAffectedBid() {
+		return affectedBid;
 	}
-	public void setBid(Bid bid) {
-		this.bid = bid;
+	public void setAffectedBid(Bid affectedBid) {
+		this.affectedBid = affectedBid;
 	}
 	public DecisionType getType() {
 		return type;
