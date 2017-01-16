@@ -12,7 +12,7 @@ import org.collectiveone.services.DecisionDtoListRes;
 import org.collectiveone.services.Filters;
 import org.collectiveone.web.dto.ArgumentBackDto;
 import org.collectiveone.web.dto.ArgumentDto;
-import org.collectiveone.web.dto.DecisionDto;
+import org.collectiveone.web.dto.DecisionDtoFull;
 import org.collectiveone.web.dto.ThesisDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -33,7 +33,7 @@ public class DecisionsController {
 	DbServicesImp dbServices;
 	
 	@RequestMapping(value="/get/{id}", method = RequestMethod.POST)
-	public @ResponseBody DecisionDto get(@PathVariable Long id) {
+	public @ResponseBody DecisionDtoFull get(@PathVariable Long id) {
 		return dbServices.decisionGetDto(id);
 	}
 	
@@ -44,7 +44,7 @@ public class DecisionsController {
 		
 		DecisionDtoListRes decisionsDtosRes = dbServices.decisionDtoGetFiltered(filters);
 		
-		List<DecisionDto> decisionDtos = decisionsDtosRes.getDecisionDtos();
+		List<DecisionDtoFull> decisionDtos = decisionsDtosRes.getDecisionDtos();
 		int[] resSet = decisionsDtosRes.getResSet();
 		
 		Map<String,Object> map = new HashMap<>();

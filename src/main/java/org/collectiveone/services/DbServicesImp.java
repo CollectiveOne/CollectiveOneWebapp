@@ -19,6 +19,7 @@ import org.collectiveone.model.BidState;
 import org.collectiveone.model.Cbtion;
 import org.collectiveone.model.CbtionState;
 import org.collectiveone.model.Comment;
+import org.collectiveone.model.Contributor;
 import org.collectiveone.model.Decision;
 import org.collectiveone.model.DecisionRealm;
 import org.collectiveone.model.DecisionState;
@@ -56,7 +57,8 @@ import org.collectiveone.web.dto.BidDto;
 import org.collectiveone.web.dto.BidNewDto;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.CommentDto;
-import org.collectiveone.web.dto.DecisionDto;
+import org.collectiveone.web.dto.DecisionDtoCreate;
+import org.collectiveone.web.dto.DecisionDtoFull;
 import org.collectiveone.web.dto.DoneDto;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.ProjectContributedDto;
@@ -185,9 +187,10 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void voterUpdate(Long userId, Long projectId, double lastOne) { 
-		Long realmId = decisionRealmDao.getIdFromProjectId(projectId);
-		decisionRealmDao.updateVoter(realmId,userId,userPpointsInProjectGet(userId, projectId)+lastOne);
+	public void voterUpdate(Long userId, Long goalId, double weight) {
+		/* update the voter weight, starting from the goalId */
+		Long realmId = decisionRealmDao.getIdFromGoalId(goalId);
+		decisionRealmDao.updateVoter(realmId,userId,weight);
 	}
 
 	@Transactional
@@ -211,18 +214,16 @@ public class DbServicesImp {
 		projectAndPps.setProjectName(project.getName());
 		projectAndPps.setUsername(user.getUsername());
 		projectAndPps.setPpsTot(project.getPpsTot());
-
-		Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(project.getId()),user.getId());
-		if(voter != null) {
-			projectAndPps.setPpsContributed(voter.getWeight());
-		}
+		projectAndPps.setPpsContributed(projectDao.getContributor(project.getId(), user.getId()).getPps());
 		
 		return projectAndPps;
 	}
 
 	@Transactional
 	public List<ProjectContributedDto> userProjectsContributedAndPpsGet(String username) {
-
+		/* returns a summary of the project name, total pps, and pps contributed by username 
+		 * from all the projects to which username has contributed */
+		
 		List<ProjectContributedDto> projectsAndPps = new ArrayList<ProjectContributedDto>();
 		User user = userDao.get(username);
 
@@ -232,9 +233,7 @@ public class DbServicesImp {
 			projectAndPps.setProjectName(project.getName());
 			projectAndPps.setUsername(user.getUsername());
 			projectAndPps.setPpsTot(project.getPpsTot());
-
-			Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(project.getId()),user.getId());
-			projectAndPps.setPpsContributed(voter.getWeight());
+			projectAndPps.setPpsContributed(projectDao.getContributor(project.getId(), user.getId()).getPps());
 
 			projectsAndPps.add(projectAndPps);
 		}
@@ -310,13 +309,16 @@ public class DbServicesImp {
 		project.setEnabled(true);
 		projectDao.save(project);
 		
-		/* only one goal exist as the project was just created */
-		Goal goal = goalDao.getOne(project.getId());
-
+		/* only one goal exist as the project was just created 
+		 * get one goal to use as decision realm of manual decisions
+		 * created here */
+		List<Goal> goals = goalDao.getAllOfProject(project.getId());
+		Goal goal = goals.get(0);
+		
 		User creator = project.getCreator();
 		userDao.save(creator);
 
-		DecisionRealm realm = decisionRealmDao.getFromGoalId(project.getId());
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
 		decisionRealmDao.save(realm);
 
 		/* An accepted cbtion is added to the project to the contributor */
@@ -423,12 +425,11 @@ public class DbServicesImp {
 
 		List<UsernameAndPps> usernamesAndPps = new ArrayList<UsernameAndPps>();
 
-		for(User contributor : getProjectContributors(projectId)) {
+		for(Contributor contributor : getProjectContributors(projectId)) {
 			UsernameAndPps usernameAndPps = new UsernameAndPps();
-			usernameAndPps.setUsername(contributor.getUsername());
-
-			Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(projectId),contributor.getId());
-			usernameAndPps.setPps(voter.getWeight());
+			usernameAndPps.setUsername(contributor.getContributorUser().getUsername());
+			usernameAndPps.setPps(contributor.getPps());
+			
 			usernamesAndPps.add(usernameAndPps);
 		}
 
@@ -455,7 +456,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public List<User> getProjectContributors(Long projectId) {
+	public List<Contributor> getProjectContributors(Long projectId) {
 		return projectDao.getContributors(projectId);
 	}
 
@@ -880,7 +881,7 @@ public class DbServicesImp {
 				proposeParent.setGoal(goal);
 				proposeParent.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				proposeParent.setCreator(userDao.get("collectiveone"));
-				proposeParent.setDecisionRealm(decisionRealmDao.getFromProjectId(project.getId()));
+				proposeParent.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getId()));
 				proposeParent.setDescription("set "+proposedParent.getGoalTag()+" as parent goal");
 				proposeParent.setProject(project);
 				proposeParent.setState(DecisionState.IDLE);
@@ -957,7 +958,7 @@ public class DbServicesImp {
 
 		Long id = cbtionDao.save(cbtion);
 
-		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
 		decisionRealmDao.save(realm);
 
 		Decision open = new Decision();
@@ -1114,7 +1115,7 @@ public class DbServicesImp {
 					case CLOSED_ACCEPTED: 
 						cbtion.setState(CbtionState.OPEN);
 						
-						DecisionRealm realm = decisionRealmDao.getFromProjectId(cbtion.getProject().getId());
+						DecisionRealm realm = decisionRealmDao.getFromGoalId(cbtion.getGoal().getId());
 						decisionRealmDao.save(realm);
 		
 						Decision delete = new Decision();
@@ -1348,7 +1349,7 @@ public class DbServicesImp {
 		bid.setState(BidState.OFFERED);
 
 		/* prepare assign decision */
-		DecisionRealm realm = decisionRealmDao.getFromProjectId(bid.getCbtion().getProject().getId());
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(bid.getCbtion().getGoal().getId());
 
 		Decision assign = new Decision();
 		assign.setCreator(userDao.get("collectiveone"));
@@ -1473,8 +1474,6 @@ public class DbServicesImp {
 				activitySaveAndNotify(act);
 				cbtion.setState(CbtionState.ASSIGNED);
 
-				Project project = bid.getCbtion().getProject();
-
 				/* prepare accept decision */
 				Decision accept = new Decision();
 				accept.setCreator(userDao.get("collectiveone"));
@@ -1485,8 +1484,8 @@ public class DbServicesImp {
 				accept.setState(DecisionState.IDLE);
 				/* TODO: Include bid duration logic */
 				accept.setVerdictHours(36);
-				accept.setDecisionRealm(decisionRealmDao.getFromProjectId(project.getId()));
-				accept.setProject(project);
+				accept.setDecisionRealm(decisionRealmDao.getFromGoalId(bid.getCbtion().getGoal().getId()));
+				accept.setProject(bid.getCbtion().getProject());
 				accept.setType(DecisionType.BID);
 				accept.setBid(bid);
 
@@ -1741,7 +1740,7 @@ public class DbServicesImp {
 		DecisionDtoListRes decisionsDtosRes = new DecisionDtoListRes();
 
 		decisionsDtosRes.setResSet(decisionsRes.getResSet());
-		decisionsDtosRes.setDecisionDtos(new ArrayList<DecisionDto>());
+		decisionsDtosRes.setDecisionDtos(new ArrayList<DecisionDtoFull>());
 
 		for(Decision decision : decisionsRes.getObjects()) {
 			decisionsDtosRes.getDecisionDtos().add(decision.toDto());
@@ -1751,12 +1750,14 @@ public class DbServicesImp {
 	}	
 
 	@Transactional
-	public Long decisionCreate(DecisionDto decisionDto) throws IOException {
+	public Long decisionCreate(DecisionDtoCreate decisionDto) throws IOException {
 		Decision decision = new Decision();
 		Project project = projectDao.get(decisionDto.getProjectName());
+		Goal goal = goalDao.get(project.getName(), decisionDto.getGoalTag());
+		
 		projectDao.save(project);
 
-		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
 		decisionRealmDao.save(realm);
 
 		decision.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -1793,8 +1794,42 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
-	public DecisionDto decisionGetDto(Long id) {
+	public DecisionDtoFull decisionGetDto(Long id) {
 		return decisionDao.get(id).toDto();
+	}
+	
+	@Transactional
+	public void decisionRealmInitToProject(DecisionRealm destRealm, Long projectId) {
+		
+		Project project = projectDao.get(projectId);
+		
+		if(destRealm.getVoters() == null) {
+			destRealm.setVoters(new ArrayList<Voter>());
+		}
+		
+		for(Contributor contributor : project.getContributors()) {
+			boolean contributorIsInRealm = false;
+			
+			/* check if voter is already in the destination realm and, if so, simply update the weight */
+			if(destRealm.getVoters().size() > 0) {
+				for(Voter voterInRealm : destRealm.getVoters()) {
+					if(voterInRealm.getVoterUser().getId() == contributor.getContributorUser().getId()) {
+						contributorIsInRealm = true;
+						/* by default, weight is 1 (scale by pps is done later at decision update)*/
+						voterInRealm.setWeight(1.0);
+					}
+				}
+			}
+			
+			/* otherwise create a new voter on the destination realm */
+			if(!contributorIsInRealm) {
+				Voter newVoter = new Voter();
+				
+				newVoter.setVoterUser(contributor.getContributorUser());
+				newVoter.setWeight(1.0);
+			}
+			
+		}
 	}
 
 	@Transactional

@@ -9,7 +9,8 @@ import org.collectiveone.model.GoalState;
 import org.collectiveone.services.AppMailServiceHeroku;
 import org.collectiveone.services.DbServicesImp;
 import org.collectiveone.web.dto.CbtionDto;
-import org.collectiveone.web.dto.DecisionDto;
+import org.collectiveone.web.dto.DecisionDtoCreate;
+import org.collectiveone.web.dto.DecisionDtoFull;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.InvRequest;
 import org.collectiveone.web.dto.ProjectNewDto;
@@ -133,7 +134,7 @@ public class ViewsController {
 	
 	@RequestMapping("/decisionPageR/{id}")
 	public String decisionPage(@PathVariable(value="id") Long id, Model model) {
-		DecisionDto decision = dbServices.decisionGetDto(id);  
+		DecisionDtoFull decision = dbServices.decisionGetDto(id);  
 		model.addAttribute("decisionId",decision.getId());
 		return "views/decisionPage";
 	}
@@ -220,7 +221,7 @@ public class ViewsController {
 	@Secured("ROLE_USER")
 	@RequestMapping("/decisionNewPageR")
 	public String decisionNewPage(Model model) {
-		DecisionDto decisionDto = new DecisionDto();
+		DecisionDtoFull decisionDto = new DecisionDtoFull();
 		decisionDto.setVerdictHours(36.0);
 		
 		model.addAttribute("decision",decisionDto);
@@ -229,7 +230,7 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/decisionNewSubmit", method = RequestMethod.POST)
-	public String decisionNewSubmit(@Valid @ModelAttribute("decision") DecisionDto decisionDto, BindingResult result, Model model) throws IOException {
+	public String decisionNewSubmit(@Valid @ModelAttribute("decision") DecisionDtoCreate decisionDto, BindingResult result, Model model) throws IOException {
 		if(result.hasErrors()) {
 			model.addAttribute("projectSelected",decisionDto.getProjectName());
 			return "views/decisionNewPage";
@@ -255,7 +256,7 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/projectNewSubmit", method = RequestMethod.POST)
-	public String projectNewSubmit(@Valid @ModelAttribute("project") ProjectNewDto projectDto, BindingResult result) {
+	public String projectNewSubmit(@Valid @ModelAttribute("project") ProjectNewDto projectDto, BindingResult result) throws IOException {
 		if(result.hasErrors()) {
 			return "views/projectNewPage";
 		} else {

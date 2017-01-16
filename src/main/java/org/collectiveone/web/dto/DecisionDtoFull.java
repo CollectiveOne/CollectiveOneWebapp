@@ -2,12 +2,9 @@ package org.collectiveone.web.dto;
 
 import javax.validation.constraints.Min;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
-public class DecisionDto {
+public class DecisionDtoFull {
 	
 	protected Long id;
-	@NotEmpty
 	protected String description;
 	protected long creationDate;
 	protected long openDate;

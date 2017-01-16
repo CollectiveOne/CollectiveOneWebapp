@@ -10,7 +10,7 @@ public class ActivityDto {
 	private CbtionDto cbtionDto;
 	private BidDto bidDto;
 	private GoalDto goalDto;
-	private DecisionDto decisionDto;
+	private DecisionDtoFull decisionDto;
 	private ArgumentDto argumentDto;
 	private CommentDto commentDto;
 	
@@ -68,10 +68,10 @@ public class ActivityDto {
 	public void setGoalDto(GoalDto goalDto) {
 		this.goalDto = goalDto;
 	}
-	public DecisionDto getDecisionDto() {
+	public DecisionDtoFull getDecisionDto() {
 		return decisionDto;
 	}
-	public void setDecisionDto(DecisionDto decisionDto) {
+	public void setDecisionDto(DecisionDtoFull decisionDto) {
 		this.decisionDto = decisionDto;
 	}
 	public ArgumentDto getArgumentDto() {

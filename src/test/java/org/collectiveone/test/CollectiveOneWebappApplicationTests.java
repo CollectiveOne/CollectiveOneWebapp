@@ -13,7 +13,7 @@ import org.collectiveone.services.DbServicesImp;
 import org.collectiveone.services.UserServiceIm;
 import org.collectiveone.test.services.TimeServiceTestIm;
 import org.collectiveone.web.dto.CbtionDto;
-import org.collectiveone.web.dto.DecisionDto;
+import org.collectiveone.web.dto.DecisionDtoCreate;
 import org.collectiveone.web.dto.ProjectNewDto;
 import org.collectiveone.web.dto.UserNewDto;
 import org.junit.Test;
@@ -112,7 +112,7 @@ public class CollectiveOneWebappApplicationTests {
 		}
 		 
 		/* test decision */
-		DecisionDto decisionDto = new DecisionDto();
+		DecisionDtoCreate decisionDto = new DecisionDtoCreate();
 		decisionDto.setProjectName(project.getName());
 		decisionDto.setCreatorUsername("user1");
 		decisionDto.setDescription("test decision");

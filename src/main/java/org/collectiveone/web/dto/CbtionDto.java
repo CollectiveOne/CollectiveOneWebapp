@@ -28,8 +28,8 @@ public class CbtionDto {
 	@NotEmpty
 	private String goalTag;
 	private double assignedPpoints;	
-	private DecisionDto openDec;
-	private DecisionDto deleteDec;
+	private DecisionDtoFull openDec;
+	private DecisionDtoFull deleteDec;
 	private int ncomments; 
 	
 	public Cbtion toCbtion(User creator, Project project) {
@@ -133,16 +133,16 @@ public class CbtionDto {
 	public void setAssignedPpoints(double assignedPpoints) {
 		this.assignedPpoints = assignedPpoints;
 	}
-	public DecisionDto getOpenDec() {
+	public DecisionDtoFull getOpenDec() {
 		return openDec;
 	}
-	public void setOpenDec(DecisionDto openDec) {
+	public void setOpenDec(DecisionDtoFull openDec) {
 		this.openDec = openDec;
 	}
-	public DecisionDto getDeleteDec() {
+	public DecisionDtoFull getDeleteDec() {
 		return deleteDec;
 	}
-	public void setDeleteDec(DecisionDto deleteDec) {
+	public void setDeleteDec(DecisionDtoFull deleteDec) {
 		this.deleteDec = deleteDec;
 	}
 

@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
-import org.collectiveone.web.dto.DecisionDto;
+import org.collectiveone.web.dto.DecisionDtoFull;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -111,9 +111,9 @@ public class Decision {
 	public double extFactor = 0.0;
 
 	/* ============================== */
-	public DecisionDto toDto() {
+	public DecisionDtoFull toDto() {
 
-		DecisionDto dto = new DecisionDto();
+		DecisionDtoFull dto = new DecisionDtoFull();
 
 		dto.setId(id);
 		dto.setCreatorUsername(creator.getUsername());

@@ -16,8 +16,8 @@ public class BidDto {
 	private String description;
 	private long deliveryDate;
 	private String state;
-	private DecisionDto assignDec;
-	private DecisionDto acceptDec;
+	private DecisionDtoFull assignDec;
+	private DecisionDtoFull acceptDec;
 	private String doneState;
 	private long doneDate;
 	private String doneDescription;
@@ -91,16 +91,16 @@ public class BidDto {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public DecisionDto getAssignDec() {
+	public DecisionDtoFull getAssignDec() {
 		return assignDec;
 	}
-	public void setAssignDec(DecisionDto assignDec) {
+	public void setAssignDec(DecisionDtoFull assignDec) {
 		this.assignDec = assignDec;
 	}
-	public DecisionDto getAcceptDec() {
+	public DecisionDtoFull getAcceptDec() {
 		return acceptDec;
 	}
-	public void setAcceptDec(DecisionDto acceptDec) {
+	public void setAcceptDec(DecisionDtoFull acceptDec) {
 		this.acceptDec = acceptDec;
 	}
 	public String getDoneState() {
