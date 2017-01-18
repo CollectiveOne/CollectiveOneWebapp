@@ -14,6 +14,9 @@ import org.collectiveone.web.dto.ThesisDto;
 @Entity
 @Table( name = "THESES" )
 public class Thesis {
+	/* Theses are actually votes, but are called theses to 
+	 * as in the future, perhaps, votes would be more complex
+	 * and be more like theses*/
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

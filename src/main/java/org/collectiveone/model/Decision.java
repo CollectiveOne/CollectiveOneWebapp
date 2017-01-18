@@ -44,6 +44,9 @@ public class Decision {
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Goal goal;
 
+	/* weights from decision realm are mixed with pps of the voter
+	 * in the project to get the weight of each voter. This weight
+	 * is stored in the theses (votes) elements.*/
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "DECISIONS_THESESCAST")
 	private List<Thesis> thesesCast = new ArrayList<Thesis>();

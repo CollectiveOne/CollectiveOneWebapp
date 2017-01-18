@@ -80,10 +80,11 @@ public class ProjectDao extends BaseDao {
 		Session session = sessionFactory.getCurrentSession();
 
 		Query query = session.createQuery(
-				"SELECT proj.contributors "
+				"SELECT ctrb "
 						+ "FROM Project proj "
+						+ "JOIN proj.contributors ctrb "
 						+ "WHERE proj.id = :pId "
-						+ "AND proj.contributors.id = :uId "
+						+ "AND ctrb.contributorUser.id = :uId "
 				);
 
 		query.setParameter("pId", projectId);

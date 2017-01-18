@@ -40,6 +40,16 @@
 					<span th:if="${#fields.hasErrors('ppsInitial')}" th:errors="*{ppsInitial}" th:class="help-block">Title Errors</span>
 					(assigned to project creator)
 				</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('goalTag')}? 'has-error'">
+					<label for="title">Goal Tag (each project must have, at least, one goal):</label> 
+					<input type="text" class="form-control" th:field="*{goalTag}"></input>
+					<span th:if="${#fields.hasErrors('goalTag')}" th:errors="*{goalTag}" th:class="help-block">Title Errors</span>
+				</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('goalDescription')}? 'has-error'">
+					<label for="goalDescription">Goal description:</label>
+					<textarea id="description_editor" type="text" class="form-control" rows="5" th:field="*{goalDescription}"></textarea>
+					<span th:if="${#fields.hasErrors('goalDescription')}" th:errors="*{goalDescription}" th:class="help-block">Goal Description Errors</span>
+				</div>
 				
 				<button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
 			</form>

@@ -264,6 +264,16 @@ public class DbServicesImp {
 	}
 
 	@Transactional
+	public void projectAuthorize(String projectName) throws IOException {
+		AuthorizedProject authProject = new AuthorizedProject();
+		
+		authProject.setProjectName(projectName);
+		authProject.setAuthorized(true);
+		
+		authorizedProjectDao.save(authProject);
+	}
+	
+	@Transactional
 	public boolean isProjectAuthorized(String projectName) {
 		AuthorizedProject projectAuthorized = authorizedProjectDao.get(projectName);
 		if(projectAuthorized != null) {
@@ -285,18 +295,21 @@ public class DbServicesImp {
 			project.setCreator(creator);
 			project.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			project.setDescription(projectDto.getDescription());
-			
-			/* One goal must be created at project creation */
-			GoalDto goalDto = new GoalDto();
-			
-			goalDto.setCreationDate(new Timestamp(System.currentTimeMillis()));
-			goalDto.setCreatorUsername(projectDto.getCreatorUsername());
-			goalDto.setDescription(projectDto.getGoalDescription());
-			goalDto.setProjectName(project.getName());
-			goalDto.setGoalTag(projectDto.getGoalTag());
-			
-			goalCreate(goalDto,GoalState.ACCEPTED);
 		}
+	}
+	
+	@Transactional
+	public void projectCreateFirstGoal(ProjectNewDto projectDto) throws IOException {
+		/* One goal must be created at project creation */
+		GoalDto goalDto = new GoalDto();
+		
+		goalDto.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		goalDto.setCreatorUsername(projectDto.getCreatorUsername());
+		goalDto.setDescription(projectDto.getGoalDescription());
+		goalDto.setProjectName(projectDto.getName());
+		goalDto.setGoalTag(projectDto.getGoalTag());
+		
+		goalCreate(goalDto,GoalState.ACCEPTED);
 	}
 
 	@Transactional
@@ -392,7 +405,8 @@ public class DbServicesImp {
 
 		/* add user to project contributors */
 		contributorDao.updateContributor(project.getId(), creator.getId(), bid.getPpoints());
-
+		decisionRealmDao.updateVoter(realm.getId(), creator.getId(), 1.0);
+		
 	}
 
 	@Transactional
@@ -700,64 +714,66 @@ public class DbServicesImp {
 		act.setGoal(goal);
 		act.setType(ActivityType.GOAL);
 
-		switch(create.getState()){
-		case OPEN: 
-			break;
-
-		case CLOSED_DENIED : 
-			switch(goal.getState()) {
-			case PROPOSED:
-				goal.setState(GoalState.NOT_ACCEPTED);
-				act.setEvent("not accepted");
-				activitySaveAndNotify(act);
+		if(create != null) {
+			switch(create.getState()){
+			case OPEN: 
 				break;
-
+	
+			case CLOSED_DENIED : 
+				switch(goal.getState()) {
+				case PROPOSED:
+					goal.setState(GoalState.NOT_ACCEPTED);
+					act.setEvent("not accepted");
+					activitySaveAndNotify(act);
+					break;
+	
+				default:
+					break;
+				}
+	
+				break;
+	
+			case CLOSED_ACCEPTED: 
+				switch(goal.getState()) {
+				case PROPOSED:
+					goal.setState(GoalState.ACCEPTED);
+					
+					/* create delete decision */
+		            Decision delete = new Decision();
+		            
+		            DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
+		            
+		            delete.setCreator(userDao.get("collectiveone"));
+		            delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		            delete.setDescription("delete goal '"+goal.getGoalTag()+"'");
+		            delete.setState(DecisionState.IDLE);
+		            delete.setVerdictHours(36);
+		            delete.setDecisionRealm(realm);
+		            delete.setFromState(GoalState.ACCEPTED.toString());
+		            delete.setToState(GoalState.DELETED.toString());
+		            delete.setProject(goal.getProject());
+		            delete.setGoal(goal);
+		            delete.setType(DecisionType.GOAL);
+		            delete.setAffectedGoal(goal);
+		            
+		            goal.setDeleteDec(delete);
+		            decisionDao.save(delete);
+					
+		            /* register event */
+		            act.setEvent("accepted");
+					activitySaveAndNotify(act);
+					
+					
+					break;
+					
+				default:
+					break;
+				}
+	
 			default:
 				break;
 			}
-
-			break;
-
-		case CLOSED_ACCEPTED: 
-			switch(goal.getState()) {
-			case PROPOSED:
-				goal.setState(GoalState.ACCEPTED);
-				
-				/* create delete decision */
-	            Decision delete = new Decision();
-	            
-	            DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
-	            
-	            delete.setCreator(userDao.get("collectiveone"));
-	            delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
-	            delete.setDescription("delete goal '"+goal.getGoalTag()+"'");
-	            delete.setState(DecisionState.IDLE);
-	            delete.setVerdictHours(36);
-	            delete.setDecisionRealm(realm);
-	            delete.setFromState(GoalState.ACCEPTED.toString());
-	            delete.setToState(GoalState.DELETED.toString());
-	            delete.setProject(goal.getProject());
-	            delete.setGoal(goal);
-	            delete.setType(DecisionType.GOAL);
-	            delete.setAffectedGoal(goal);
-	            
-	            goal.setDeleteDec(delete);
-	            decisionDao.save(delete);
-				
-	            /* register event */
-	            act.setEvent("accepted");
-				activitySaveAndNotify(act);
-				
-				
-				break;
-				
-			default:
-				break;
-			}
-
-		default:
-			break;
-		} 
+		}
 	}
 
 	@Transactional
@@ -776,47 +792,49 @@ public class DbServicesImp {
 
 		/* update goal state based on delete decision */
 
-		switch(delete.getState()){
-		case OPEN: 
-			break;
-
-		case CLOSED_DENIED : 
-			switch(goal.getState()) {
-			case PROPOSED:
+		if(delete != null) {
+			switch(delete.getState()){
+			case OPEN: 
 				break;
-
-			case ACCEPTED:
-				break;				
-
+	
+			case CLOSED_DENIED : 
+				switch(goal.getState()) {
+				case PROPOSED:
+					break;
+	
+				case ACCEPTED:
+					break;				
+	
+				default:
+					break;
+				}
+	
+				break;
+	
+			case CLOSED_ACCEPTED: 
+				switch(goal.getState()) {
+				case PROPOSED:
+					goal.setState(GoalState.DELETED);
+					act.setEvent("deleted");
+					activitySaveAndNotify(act);
+					break;
+	
+				case ACCEPTED:
+					goal.setState(GoalState.DELETED);
+					act.setEvent("deleted");
+					activitySaveAndNotify(act);
+					break;				
+	
+				default:
+					break;
+				}
+	
+				break;
+	
 			default:
 				break;
-			}
-
-			break;
-
-		case CLOSED_ACCEPTED: 
-			switch(goal.getState()) {
-			case PROPOSED:
-				goal.setState(GoalState.DELETED);
-				act.setEvent("deleted");
-				activitySaveAndNotify(act);
-				break;
-
-			case ACCEPTED:
-				goal.setState(GoalState.DELETED);
-				act.setEvent("deleted");
-				activitySaveAndNotify(act);
-				break;				
-
-			default:
-				break;
-			}
-
-			break;
-
-		default:
-			break;
-		} 
+			} 
+		}
 	}
 
 	@Transactional
@@ -836,39 +854,41 @@ public class DbServicesImp {
 				act.setGoal(goal);
 				act.setType(ActivityType.GOAL);
 
-				switch(proposeParent.getState()){
-				case OPEN: 
-					break;
-
-				case CLOSED_DENIED : 
-					switch(goal.getParentState()) {
-					case PROPOSED:
-						goal.setParentState(GoalParentState.ACCEPTED);
-						act.setEvent(goal.getProposedParent().getGoalTag()+" not accepted as parent");
-						activitySaveAndNotify(act);
+				if(proposeParent != null) {
+					switch(proposeParent.getState()){
+					case OPEN: 
 						break;
-
+	
+					case CLOSED_DENIED : 
+						switch(goal.getParentState()) {
+						case PROPOSED:
+							goal.setParentState(GoalParentState.ACCEPTED);
+							act.setEvent(goal.getProposedParent().getGoalTag()+" not accepted as parent");
+							activitySaveAndNotify(act);
+							break;
+	
+						default:
+							break;
+						}
+	
+						break;
+	
+					case CLOSED_ACCEPTED: 
+						switch(goal.getParentState()) {
+						case PROPOSED:
+							goal.setParentState(GoalParentState.ACCEPTED);
+							goal.setParent(goal.getProposedParent());
+							act.setEvent(goal.getProposedParent().getGoalTag()+" accepted as parent");
+							activitySaveAndNotify(act);
+							break;
+						default:
+							break;
+						}
+	
 					default:
 						break;
-					}
-
-					break;
-
-				case CLOSED_ACCEPTED: 
-					switch(goal.getParentState()) {
-					case PROPOSED:
-						goal.setParentState(GoalParentState.ACCEPTED);
-						goal.setParent(goal.getProposedParent());
-						act.setEvent(goal.getProposedParent().getGoalTag()+" accepted as parent");
-						activitySaveAndNotify(act);
-						break;
-					default:
-						break;
-					}
-
-				default:
-					break;
-				} 
+					} 
+				}
 			}
 		}
 	}
@@ -1604,10 +1624,12 @@ public class DbServicesImp {
 				thesis.setValue(value);
 				thesis.setCastDate(new Timestamp(System.currentTimeMillis()));
 
-				/* weight of the thesis are set at the cast time */
-				thesis.setWeight(voter.getWeight());
+				/* weight of the thesis is set at cast time */
+				double ppsInProject = projectDao.getContributor(dec.getProject().getId(), author.getId()).getPps();
+				double voteWeight = voter.getWeight()*ppsInProject;
+				thesis.setWeight(voteWeight);
 
-				/* make a copy of the thesis in the cast theses list */
+				/* store the thesis in the cast theses list */
 				if(newThesis) dec.getThesesCast().add(thesis);
 				decisionDao.save(dec);
 

@@ -267,7 +267,9 @@ public class ViewsController {
 					projectDto.setCreatorUsername(auth.getName()); 
 					
 					dbServices.projectCreate(projectDto);
+					dbServices.projectCreateFirstGoal(projectDto);
 					dbServices.projectStart(projectDto.getName(),projectDto.getPpsInitial());
+					
 					return "redirect:/views/projectPageR/"+projectDto.getName();	
 				} else {
 					result.rejectValue("name", "project.name", "'"+projectDto.getName()+"' already exist.");

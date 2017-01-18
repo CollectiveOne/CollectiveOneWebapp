@@ -36,6 +36,7 @@ public class ContributorDao extends BaseDao {
 			contributor = new Contributor();
 			contributor.setPps(pps);
 			contributor.setContributorUser(session.get(User.class,contributorUserId));
+			contributor.setProject(project);
 			project.getContributors().add(contributor);
 		}
 		
@@ -49,8 +50,8 @@ public class ContributorDao extends BaseDao {
 		Session session = sessionFactory.getCurrentSession();
 
 		Query query = session.createQuery(
-				"SELECT contributor "
-						+ "FROM Project proj"
+				"SELECT contrib "
+						+ "FROM Project proj "
 						+ "JOIN proj.contributors contrib "
 						+ "WHERE proj.id = :pId "
 						+ "AND contrib.contributorUser.id = :cuId "
