@@ -192,9 +192,19 @@ public class DbServicesImp {
 		Long realmId = decisionRealmDao.getIdFromGoalId(goalId);
 		decisionRealmDao.updateVoter(realmId,userId,weight);
 	}
+	
+	@Transactional
+	public void contributorUpdate(Long projectId, Long userId, double lastOne) {
+		/* update the contributor pps in project recalculating all accepted
+		 * contributions and adding a delta (for cases in which pps are bing assigned
+		 * during the transaction)  */
+		double ppsPrev = userPpointsInProjectRecalc(userId, projectId);
+		double ppsTot = ppsPrev + lastOne;
+		contributorDao.updateContributor(projectId, userId, ppsTot);
+	}	
 
 	@Transactional
-	public double userPpointsInProjectGet(Long userId, Long projectId) {
+	public double userPpointsInProjectRecalc(Long userId, Long projectId) {
 
 		double ppoints = 0;
 		List<Cbtion> cbtionsAccepted = cbtionDao.getAcceptedOfUserInProject(userId, projectId);
@@ -214,7 +224,12 @@ public class DbServicesImp {
 		projectAndPps.setProjectName(project.getName());
 		projectAndPps.setUsername(user.getUsername());
 		projectAndPps.setPpsTot(project.getPpsTot());
-		projectAndPps.setPpsContributed(projectDao.getContributor(project.getId(), user.getId()).getPps());
+		
+		Contributor ctrb = projectDao.getContributor(project.getId(), user.getId());
+		
+		double ppsInProject = 0.0;
+		if(ctrb != null) { ctrb.getPps(); }
+		projectAndPps.setPpsContributed(ppsInProject);
 		
 		return projectAndPps;
 	}
@@ -233,7 +248,12 @@ public class DbServicesImp {
 			projectAndPps.setProjectName(project.getName());
 			projectAndPps.setUsername(user.getUsername());
 			projectAndPps.setPpsTot(project.getPpsTot());
-			projectAndPps.setPpsContributed(projectDao.getContributor(project.getId(), user.getId()).getPps());
+			
+			Contributor ctrb = projectDao.getContributor(project.getId(), user.getId());
+			
+			double ppsInPrj = 0.0;
+			if(ctrb != null) { ppsInPrj = ctrb.getPps(); }
+			projectAndPps.setPpsContributed(ppsInPrj);
 
 			projectsAndPps.add(projectAndPps);
 		}
@@ -463,8 +483,8 @@ public class DbServicesImp {
 		Project project = projectDao.get(projectId);
 
 		double ppsTot = 0.0;
-		for(Cbtion cbtion : cbtionDao.getAcceptedInProject(projectId)) {
-			ppsTot += cbtion.getAssignedPpoints();
+		for(Contributor ctrb : project.getContributors()) {
+			ppsTot += ctrb.getPps();
 		}
 
 		project.setPpsTot(ppsTot+lastOne);
@@ -1564,11 +1584,11 @@ public class DbServicesImp {
 					}
 
 					/* -----------------------------------------------------------------------*/ 
-					/* updated voter weight - This is the only place where PPS are transacted */
+					/* updated pps of user in project - This is the only place where PPS are created/updated */
 					/* -----------------------------------------------------------------------*/
-					voterUpdate(bid.getCreator().getId(), bid.getCbtion().getProject().getId(),cbtion.getAssignedPpoints());
+					contributorUpdate(bid.getCbtion().getProject().getId(), bid.getCreator().getId(), cbtion.getAssignedPpoints());
 					projectUpdatePpsTot(bid.getCbtion().getProject().getId(),cbtion.getAssignedPpoints());
-
+					
 					/* -----------------------------------------------------------------------*/
 
 

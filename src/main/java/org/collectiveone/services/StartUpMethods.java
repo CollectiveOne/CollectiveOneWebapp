@@ -42,6 +42,9 @@ public class StartUpMethods {
 		
 		createUser("collectiveone", 	"", 			"", 				false);
 		createUser("user1", 			"u1@x.com", 	"12345678", 		true);
+		createUser("user2", 			"u2@x.com", 	"12345678", 		true);
+		createUser("user3", 			"u3@x.com", 	"12345678", 		true);
+		createUser("user4", 			"u4@x.com", 	"12345678", 		true);
 		
 		dbServices.projectAuthorize("Demo");
 		
