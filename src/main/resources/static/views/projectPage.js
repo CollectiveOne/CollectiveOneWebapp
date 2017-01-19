@@ -55,12 +55,12 @@ ProjectPage.prototype.contributorsOfProjectGetReceivedCallback = function(data) 
 	
 	for(var ix in usernamesAndPpps) {
 		chartData.push(usernamesAndPpps[ix].pps);
-		chartLabels.push(usernamesAndPpps[ix].username+"("+usernamesAndPpps[ix].pps+")");
+		chartLabels.push(usernamesAndPpps[ix].username);
 		chartColors.push("#5bc0de");
 	}
 	
 	var ctx =  $("#contributors_chart");
-	var myDoughnutChart = new Chart(ctx, {
+	var ppsChart = new Chart(ctx, {
 	    type: 'bar',
 	    data: {	datasets: [{
 	    			data: chartData,
@@ -72,9 +72,24 @@ ProjectPage.prototype.contributorsOfProjectGetReceivedCallback = function(data) 
 	    		legend: {
 	    			display: false
 	    		},
-	    		cutoutPercentage: 50
+	    		cutoutPercentage: 50,
+	    		scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero:true
+						}
+					}]
 	    		}
+	    }
 	});
 
+	$("#contributors_chart").click( 
+    function(evt){
+        var activePoints = ppsChart.getElementsAtEvent(evt);
+        var clickedElementindex = activePoints[0]["_index"];
+        var username = ppsChart.data.labels[clickedElementindex]; 
+        window.location.href = "/views/userPageR/"+username;
+    }
+); 
 }
 
