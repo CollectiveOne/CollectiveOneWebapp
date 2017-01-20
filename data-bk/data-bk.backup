@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2017-01-14 18:18:38 CET
+-- Started on 2017-01-20 09:59:56 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -178,6 +178,7 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 152	2017-01-12 08:42:52.196	\N	2017-01-12 23:00:00	I can do it creating a wearable technology startup examples	\N	\N	\N	5	1	700	699	185	1
 153	2017-01-12 10:57:54.593	\N	\N	Create project Lendi	\N	\N	\N	1000	3	702	701	186	18
 154	2017-01-13 11:01:24.936	\N	2017-01-13 23:00:00	I can do this	2017-01-13 11:59:04.823	I have created **[this](https://docs.google.com/spreadsheets/d/1JQJg4hLirymq2Q90UBPgurbFFZOypiF9o4yAO5e3jJk/edit#gid=0)** table. Hope it helps.	1	5	1	713	707	187	1
+155	2017-01-14 18:01:27.413	\N	2017-01-20 23:00:00	I am already speaking with someone for this. I will try to frame the collaboration conditions with her and let you know to decide.	\N	\N	\N	10	1	717	716	189	1
 \.
 
 
@@ -398,6 +399,7 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 186	1000	2017-01-12 10:57:54.588	\N	Start contribution	\N	0	2	0	Create project Lendi	18	18	\N	\N	\N	7
 188	0	2017-01-13 11:47:46.014	\N	Make an overview of the IPDB project to see if it could provide a solution to handle and store data in CollectiveOne.	overview results	0	0	20	Study the IPDB alternative	\N	1	712	55	711	1
 187	0	2017-01-13 11:01:00.506	\N	Make an overview of the current project goals, for each one of them:\r\n- describe the status (current and foreseen activities)\r\n- assign a priority	spreadsheet with goals overview	0	1	5	Overview of goals	\N	1	706	54	705	1
+189	0	2017-01-14 18:00:06.67	\N	Contact people and find someone who is interested in providing a first overview of the legal aspects of CollectiveOne, mainly how could CollectiveOne be incorporated while, at the same time, keep its open and decentralized ambitions.\r\n\r\nLegal support can be done in exchange of pps, or through a standard paid service.	find the collaborator and set the collaboration mode	0	1	10	Find legal support	\N	1	715	49	714	1
 \.
 
 
@@ -1110,6 +1112,10 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 712	\N	0.949999999999999956	0	2017-01-13 11:47:53.394	delete contribution 'Study the IPDB alternative'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	188	6	1	\N	1
 707	2017-01-13 11:59:10.063	0.949999999999999956	1	2017-01-13 11:01:25.305	assign contribution 'Overview of goals' to pepoospina	0	OFFERED	0	1	1	8	2017-01-13 11:59:10.062	1	2845.34999999999991	3329.84999999999991	0.5	0	2	ASSIGNED	3	1	36	154	\N	6	1	\N	1
 713	\N	0.949999999999999956	0	2017-01-13 11:59:11.488	accept contribution 'Overview of goals' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	154	\N	6	1	\N	1
+714	2017-01-14 18:00:15.541	0.949999999999999956	1	2017-01-14 18:00:06.736	open contribution 'Find legal support'	0	PROPOSED	0	1	1	8	2017-01-14 18:00:15.538	1	2845.34999999999991	3329.84999999999991	0.5	0	2	OPEN	1	1	36	\N	189	6	1	\N	1
+715	\N	0.949999999999999956	0	2017-01-14 18:00:16.81	delete contribution 'Find legal support'	0	OPEN	1	0	0	8	\N	0	0	0	0.5	0	0	DELETED	1	0	36	\N	189	6	1	\N	1
+716	2017-01-14 18:01:37.536	0.949999999999999956	1	2017-01-14 18:01:27.608	assign contribution 'Find legal support' to pepoospina	0	OFFERED	0	1	1	8	2017-01-14 18:01:37.534	1	2845.34999999999991	3329.84999999999991	0.5	0	2	ASSIGNED	3	1	36	155	\N	6	1	\N	1
+717	\N	0.949999999999999956	0	2017-01-14 18:01:38.552	accept contribution 'Find legal support' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0	0.5	0	0	ACCEPTED	3	0	36	155	\N	6	1	\N	1
 \.
 
 
@@ -2121,6 +2127,10 @@ COPY activity (id, creation_date, event, type, argument_id, bid_id, cbtion_id, c
 816	2017-01-13 11:47:53.391	opened for bidding	0	\N	\N	188	\N	\N	\N	1
 817	2017-01-13 11:59:04.823	marked done	1	\N	154	\N	\N	\N	\N	1
 818	2017-01-13 11:59:11.342	assigned	1	\N	154	\N	\N	\N	\N	1
+819	2017-01-14 18:00:06.765	created	0	\N	\N	189	\N	\N	\N	1
+820	2017-01-14 18:00:16.807	opened for bidding	0	\N	\N	189	\N	\N	\N	1
+821	2017-01-14 18:01:27.444	created	1	\N	155	\N	\N	\N	\N	1
+822	2017-01-14 18:01:38.437	assigned	1	\N	155	\N	\N	\N	\N	1
 \.
 
 
@@ -2132,7 +2142,7 @@ ALTER TABLE activity ENABLE TRIGGER ALL;
 -- Name: activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('activity_id_seq', 818, true);
+SELECT pg_catalog.setval('activity_id_seq', 822, true);
 
 
 --
@@ -2141,7 +2151,7 @@ SELECT pg_catalog.setval('activity_id_seq', 818, true);
 -- Name: app_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('app_users_id_seq', 18, true);
+SELECT pg_catalog.setval('app_users_id_seq', 19, true);
 
 
 --
@@ -2237,6 +2247,8 @@ COPY authorized_emails (id, authorized, email) FROM stdin;
 10	t	aminisaleem@yahoo.com
 11	t	javiervelasco87@gmail.com
 12	t	philh@erisma.com
+13	t	benjamin@teledisko.com
+14	t	procivilization@gmail.com
 \.
 
 
@@ -2285,7 +2297,7 @@ SELECT pg_catalog.setval('authorized_projects_id_seq', 1, false);
 -- Name: bids_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('bids_id_seq', 154, true);
+SELECT pg_catalog.setval('bids_id_seq', 155, true);
 
 
 --
@@ -2487,6 +2499,7 @@ COPY cbtions_bids (cbtion_id, bids_id) FROM stdin;
 185	152
 186	153
 187	154
+189	155
 \.
 
 
@@ -2544,7 +2557,7 @@ ALTER TABLE cbtions_comments ENABLE TRIGGER ALL;
 -- Name: cbtions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('cbtions_id_seq', 188, true);
+SELECT pg_catalog.setval('cbtions_id_seq', 189, true);
 
 
 --
@@ -2868,7 +2881,7 @@ ALTER TABLE decisions_args ENABLE TRIGGER ALL;
 -- Name: decisions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('decisions_id_seq', 713, true);
+SELECT pg_catalog.setval('decisions_id_seq', 717, true);
 
 
 --
@@ -3372,6 +3385,8 @@ COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 492	2017-01-13 11:45:37.901	1	2845.34999999999991	1	709
 493	2017-01-13 11:47:50.452	1	2845.34999999999991	1	711
 494	2017-01-13 11:59:09.052	1	2845.34999999999991	1	707
+495	2017-01-14 18:00:11.849	1	2845.34999999999991	1	714
+496	2017-01-14 18:01:29.846	1	2845.34999999999991	1	716
 \.
 
 
@@ -3874,6 +3889,8 @@ COPY decisions_thesescast (decision_id, theses_cast_id) FROM stdin;
 709	492
 711	493
 707	494
+714	495
+716	496
 \.
 
 
@@ -3989,6 +4006,7 @@ COPY roles (id, role, username) FROM stdin;
 13	ROLE_USER	francescap
 14	ROLE_USER	smartdealmaker
 15	ROLE_USER	JaviLendi
+16	ROLE_USER	bujuben
 \.
 
 
@@ -4000,7 +4018,7 @@ ALTER TABLE roles ENABLE TRIGGER ALL;
 -- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('roles_id_seq', 15, true);
+SELECT pg_catalog.setval('roles_id_seq', 16, true);
 
 
 --
@@ -4009,7 +4027,7 @@ SELECT pg_catalog.setval('roles_id_seq', 15, true);
 -- Name: theses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('theses_id_seq', 494, true);
+SELECT pg_catalog.setval('theses_id_seq', 496, true);
 
 
 --
@@ -4029,6 +4047,7 @@ COPY verification_token (id, expiry_date, token, user_id) FROM stdin;
 8	2017-01-01 10:36:32.085	edbc62a5-590f-40e5-81e1-8118d45d1a06	16
 9	2017-01-05 12:10:40.665	b2908e08-da72-46b0-900a-875974a3397f	17
 10	2017-01-12 15:27:56.384	49d66839-1f01-4a98-9deb-a9c70204a915	18
+11	2017-01-19 16:47:59.339	ab7af3c2-e259-442c-8f56-febea42f16a9	19
 \.
 
 
@@ -4040,7 +4059,7 @@ ALTER TABLE verification_token ENABLE TRIGGER ALL;
 -- Name: verification_token_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dkzzgsrfdufobg
 --
 
-SELECT pg_catalog.setval('verification_token_id_seq', 10, true);
+SELECT pg_catalog.setval('verification_token_id_seq', 11, true);
 
 
 --
@@ -4052,7 +4071,7 @@ SELECT pg_catalog.setval('verification_token_id_seq', 10, true);
 SELECT pg_catalog.setval('voters_id_seq', 12, true);
 
 
--- Completed on 2017-01-14 18:19:43 CET
+-- Completed on 2017-01-20 10:01:09 CET
 
 --
 -- PostgreSQL database dump complete
