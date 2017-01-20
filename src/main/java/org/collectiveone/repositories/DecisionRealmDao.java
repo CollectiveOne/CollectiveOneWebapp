@@ -39,6 +39,15 @@ public class DecisionRealmDao extends BaseDao {
 		return (DecisionRealm) query.uniqueResult();
 	}
 	
+	public List<DecisionRealm> getAllOfProject(Long projectId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(DecisionRealm.class);
+		query.add(Restrictions.eq("project.id", projectId));
+		
+		@SuppressWarnings("unchecked")
+		List<DecisionRealm> res = (List<DecisionRealm>) query.list();
+		return res; 
+	}
+	
 	public void addOrUpdateVoter(Long realmId, Long voterUserId, double maxWeight, double scale) {
 		
 		Session session = sessionFactory.getCurrentSession();

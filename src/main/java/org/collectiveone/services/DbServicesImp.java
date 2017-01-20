@@ -193,6 +193,13 @@ public class DbServicesImp {
 		 * during the transaction)  */
 		double ppsPrev = userPpointsInProjectRecalc(userId, projectId);
 		double ppsTot = ppsPrev + lastOne;
+		
+		Contributor ctrb = contributorDao.getContributor(projectId, userId);
+		if(ctrb == null) {
+			/* new contributor in the project */
+			decisionRealmAddVoterToAll(projectId,userId,ppsTot);
+		}
+		
 		contributorDao.updateContributor(projectId, userId, ppsTot);
 	}	
 
@@ -1841,6 +1848,24 @@ public class DbServicesImp {
 	public DecisionDtoFull decisionGetDto(Long id) {
 		return decisionDao.get(id).toDto();
 	}
+	@Transactional
+	public void decisionRealmAddVoterToAll(Long projectId,Long userId,double maxWeight) {
+		/* Add a voter to all the realms of a project */
+		List<DecisionRealm> realms = decisionRealmDao.getAllOfProject(projectId);
+		for(DecisionRealm realm : realms) {
+			Voter existingVoter = decisionRealmDao.getVoter(realm.getId(), userId);
+			if(existingVoter == null) {
+				Voter newVoter = new Voter();
+				newVoter.setVoterUser(userDao.get(userId));
+				newVoter.setMaxWeight(maxWeight);
+				
+				realm.getVoters().add(newVoter);
+				
+				voterDao.save(newVoter);
+				decisionRealmDao.save(realm);
+			}
+		}
+	}
 	
 	@Transactional
 	public void decisionRealmInitAllSupergoalsToProject(Long projectId) {
@@ -1860,7 +1885,8 @@ public class DbServicesImp {
 	
 	@Transactional
 	public void decisionRealmInitToProject(DecisionRealm destRealm, Long projectId) {
-		
+		/* the realm voters are deleted and refilled to be the project contributors 
+		 * with scale 1.0 */
 		Project project = projectDao.get(projectId);
 		
 		/* make sure the realm is empty */
@@ -1889,41 +1915,21 @@ public class DbServicesImp {
 
 	@Transactional
 	public void decisionRealmDerive(DecisionRealm destRealm,Long sourceRealmId) {
-		DecisionRealm sourceRealm = decisionRealmDao.get(sourceRealmId);
+		/* the destRealm of voters is updated (max weight only) based on the sourceRealmId. 
+		 * It assumes all voters in the sourceRealmId are already in the destRealm */
 		
-		if(destRealm.getVoters() == null) {
-			destRealm.setVoters(new ArrayList<Voter>());
-		}
+		DecisionRealm sourceRealm = decisionRealmDao.get(sourceRealmId);
 		
 		/* keep track of the weight to store the sum */
 		double weightSum = 0.0;
 		
 		for(Voter existingVoter : sourceRealm.getVoters()) {
-			boolean voterIsInRealm = false;
-			
-			/* check if voter is already in the destination realm and, of so, simply update the max weight 
-			 * while keeping the scale untouched */
-			if(destRealm.getVoters().size() > 0) {
-				for(Voter voterInRealm : destRealm.getVoters()) {
-					if(voterInRealm.getVoterUser().getId() == existingVoter.getVoterUser().getId()) {
-						voterIsInRealm = true;
-						voterInRealm.setMaxWeight(existingVoter.getActualWeight());
-						weightSum += voterInRealm.getActualWeight(); 
-					}
+			for(Voter voterInRealm : destRealm.getVoters()) {
+				if(voterInRealm.getVoterUser().getId() == existingVoter.getVoterUser().getId()) {
+					/* update the max weight while keeping the scale untouched */
+					voterInRealm.setMaxWeight(existingVoter.getActualWeight());
+					weightSum += voterInRealm.getActualWeight(); 
 				}
-			}
-			
-			/* otherwise create a new voter on the destination realm */
-			if(!voterIsInRealm) {
-				Voter newVoter = new Voter();
-				
-				newVoter.setVoterUser(existingVoter.getVoterUser());
-				newVoter.setMaxWeight(existingVoter.getActualWeight());
-				newVoter.setScale(1.0);
-				
-				weightSum += newVoter.getActualWeight();
-				
-				destRealm.getVoters().add(newVoter);
 			}
 		}
 		
@@ -1933,22 +1939,23 @@ public class DbServicesImp {
 	
 	@Transactional
 	public void updateVoterInProject(Long projectId, Long userId) {
-		/* Goes all over the decision realms in a project and update the user.
-		 * It starts from the top goals (those without parent goal) and then continues
+		/* Goes all over the decision realms in a project and updates the max weight of a 
+		 * user by setting it to the user pps in the project.
+		 * It starts from the super-goals (those without parent goal) and then continues
 		 * iteratively with the sub-goals */
 		
 		List<Goal> superGoals = goalDao.getSuperGoalsOnly(projectId);
+		Contributor ctrb = projectDao.getContributor(projectId, userId);
 		
-		for(Goal superGoal:superGoals) {
-			
-			DecisionRealm realm = decisionRealmDao.getFromGoalId(superGoal.getId());
-			Voter voter = decisionRealmDao.getVoter(realm.getId(), userId);
-			
-			/* if user is in realm */
-			if(voter != null) {
+		if(ctrb != null) {
+			for(Goal superGoal:superGoals) {
+				
+				DecisionRealm realm = decisionRealmDao.getFromGoalId(superGoal.getId());
+				Voter voter = decisionRealmDao.getVoter(realm.getId(), userId);
+				
 				/* update the max weight to the user pps */
 				double originalWeight = voter.getMaxWeight();
-				double newWeight = projectDao.getContributor(projectId, userId).getPps();
+				double newWeight = ctrb.getPps();
 				
 				voter.setMaxWeight(newWeight);
 				voterDao.save(voter);
@@ -1964,13 +1971,13 @@ public class DbServicesImp {
 					thesis.setWeight(voter.getActualWeight());
 					thesisDao.save(thesis);
 				}
-			}
 			
-			/* now go over all subgoals and update realms and theses */
-			List<Goal> subGoals = goalDao.getSubgoalsIteratively(superGoal.getId());
-			
-			for(Goal subGoal : subGoals) {
-				updateVoterInGoal(subGoal.getId(), userId);
+				/* now go over all subgoals and update realms and theses */
+				List<Goal> subGoals = goalDao.getSubgoalsIteratively(superGoal.getId());
+				
+				for(Goal subGoal : subGoals) {
+					updateVoterInGoal(subGoal.getId(), userId);
+				}
 			}
 		}
 	}
@@ -1991,14 +1998,15 @@ public class DbServicesImp {
 		
 		/* if user is in realm */
 		if(voterInGoal != null) {
-			/* update the max weight to the user pps */
+			/* update the max weight to the weight of the user in the parent goal */
 			double originalWeight = voterInGoal.getMaxWeight();
 			double newWeight = voterInParent.getActualWeight();
 			
 			voterInGoal.setMaxWeight(newWeight);
 			voterDao.save(voterInGoal);
 			
-			/* update the total pps aggregate (add the delta instead of summing again, safe enough?) */
+			/* update the total weight aggregate. Adds the delta instead of summing again, 
+			 * TODO: safe enough? */
 			goalRealm.setWeightTot(goalRealm.getWeightTot() + (newWeight - originalWeight));
 			
 			/* and update the weight of the theses of that user (it will have immediate

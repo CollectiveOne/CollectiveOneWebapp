@@ -27,7 +27,9 @@ public class Thesis {
 	private User author;
 	/* weight is stored with the thesis to avoid having to
 	 * look for it every time as it is used in several places 
-	 * in the decision algorithm.*/
+	 * in the decision algorithm.
+	 * TODO: review this approach as the weight per tesis seems
+	 * really redundant.*/
 	private double weight;
 	
 	@ManyToOne
