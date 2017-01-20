@@ -16,7 +16,8 @@ public class Voter {
 	private Long id;
 	@ManyToOne
 	private User voterUser;
-	private double weight;
+	private double maxWeight;
+	private double scale;
 	
 	public Long getId() {
 		return id;
@@ -30,11 +31,21 @@ public class Voter {
 	public void setVoterUser(User voterUser) {
 		this.voterUser = voterUser;
 	}
-	public double getWeight() {
-		return weight;
+	public double getMaxWeight() {
+		return maxWeight;
 	}
-	public void setWeight(double weight) {
-		this.weight = weight;
+	public void setMaxWeight(double maxWeight) {
+		this.maxWeight = maxWeight;
 	}
+	public double getScale() {
+		return scale;
+	}
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
+	public double getActualWeight() {
+		return maxWeight*scale;
+	}
+	
 }
 

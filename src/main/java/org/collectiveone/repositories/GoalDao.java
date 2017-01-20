@@ -126,6 +126,19 @@ public class GoalDao extends BaseDao {
 		
 	}
 	
+	public List<Goal> getSuperGoalsOnly(Long projectId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class,"go");
+		
+		query
+			.add(Restrictions.eq("project.id", projectId))
+			.add(Restrictions.isNull("parent"));
+		
+		@SuppressWarnings("unchecked")
+		List<Goal> res = (List<Goal>) query.list();
+		
+		return res;
+	}
+	
 	public List<Goal> getSubgoalsIteratively(Long goalId) {
 		
 		List<Goal> subgoals = getSubgoals(goalId);

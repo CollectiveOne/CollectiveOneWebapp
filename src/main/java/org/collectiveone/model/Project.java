@@ -16,6 +16,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.ProjectDto;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -42,6 +44,7 @@ public class Project {
 	
 	@OneToMany(mappedBy="project")
 	@OrderBy("pps DESC")
+	@Fetch (FetchMode.SELECT)
 	private List<Contributor> contributors = new ArrayList<Contributor>();
 	
 	public ProjectDto toDto() {

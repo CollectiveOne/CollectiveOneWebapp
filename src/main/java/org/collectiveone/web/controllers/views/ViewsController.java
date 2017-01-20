@@ -269,6 +269,7 @@ public class ViewsController {
 					dbServices.projectCreate(projectDto);
 					dbServices.projectCreateFirstGoal(projectDto);
 					dbServices.projectStart(projectDto.getName(),projectDto.getPpsInitial());
+					dbServices.decisionRealmInitAllSupergoalsToProject(dbServices.projectGet(projectDto.getName()).getId());
 					
 					return "redirect:/views/projectPageR/"+projectDto.getName();	
 				} else {

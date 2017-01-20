@@ -25,6 +25,9 @@ public class Thesis {
 	private Timestamp castDate;
 	@ManyToOne
 	private User author;
+	/* weight is stored with the thesis to avoid having to
+	 * look for it every time as it is used in several places 
+	 * in the decision algorithm.*/
 	private double weight;
 	
 	@ManyToOne

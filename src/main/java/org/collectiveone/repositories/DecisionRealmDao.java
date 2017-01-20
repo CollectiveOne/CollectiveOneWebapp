@@ -39,7 +39,7 @@ public class DecisionRealmDao extends BaseDao {
 		return (DecisionRealm) query.uniqueResult();
 	}
 	
-	public void updateVoter(Long realmId, Long voterUserId, double weight) {
+	public void addOrUpdateVoter(Long realmId, Long voterUserId, double maxWeight, double scale) {
 		
 		Session session = sessionFactory.getCurrentSession();
 		DecisionRealm realm = session.get(DecisionRealm.class,realmId);
@@ -49,12 +49,15 @@ public class DecisionRealmDao extends BaseDao {
 		if(voter == null) {
 			/* if voter is not in the realm, then add him */
 			voter = new Voter();
-			voter.setWeight(0.0);
 			voter.setVoterUser(session.get(User.class,voterUserId));
+			voter.setMaxWeight(maxWeight);
+			voter.setScale(scale);
 			realm.getVoters().add(voter);
+			
 		}
 		
-		voter.setWeight(weight);
+		voter.setMaxWeight(maxWeight);
+		voter.setScale(scale);
 		
 		save(voter);
 		save(realm);

@@ -78,7 +78,7 @@ public class Decision {
 	/* Decisions statistics variables */
 
 	/* p-points that can vote */
-	public double ppsTot;
+	public double weightTot;
 	/* number of voters that have voted */
 	public int n;
 	/* Estimation of p */
@@ -165,7 +165,7 @@ public class Decision {
 		}
 		
 		dto.setnVoters(decisionRealm.size());
-		dto.setPpsTot(ppsTot);
+		dto.setPpsTot(weightTot);
 		dto.setVerdictHours(verdictHours);
 		dto.setVerdict(verdict);
 		dto.setState(state.toString());
@@ -328,7 +328,7 @@ public class Decision {
 			n = thesesCast.size();
 			
 			/*TODO: inefficient to compute at every update... */
-			updateTotPps();
+			weightTot = decisionRealm.getWeightTot();
 			
 			if (n > 0) {
 				
@@ -351,13 +351,6 @@ public class Decision {
 					actualVerdictDate = new Timestamp(System.currentTimeMillis());
 				}
 			}
-		}
-	}
-
-	public void updateTotPps() {
-		ppsTot = 0.0;
-		for (Voter voter : decisionRealm.getVoters()) {
-			ppsTot += voter.getWeight();
 		}
 	}
 
@@ -433,12 +426,12 @@ public class Decision {
 		 * get the value p_to_flip of p which would flip the outcome of the
 		 * decision, if it is obtained with the remaining votes
 		 */
-		double pps_left = ppsTot - ppsCum;
+		double pps_left = weightTot - ppsCum;
 
 		if(pps_left > 0) {
 			p_to_flip = -0.1;
 			if (pps_left != 0) {
-				p_to_flip = (0.5 - pest * ppsCum / ppsTot) * ppsTot / pps_left;
+				p_to_flip = (0.5 - pest * ppsCum / weightTot) * weightTot / pps_left;
 			}
 
 			if((p_to_flip >= 0) && (p_to_flip <= 1)) {

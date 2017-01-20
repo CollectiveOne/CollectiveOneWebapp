@@ -187,13 +187,6 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void voterUpdate(Long userId, Long goalId, double weight) {
-		/* update the voter weight, starting from the goalId */
-		Long realmId = decisionRealmDao.getIdFromGoalId(goalId);
-		decisionRealmDao.updateVoter(realmId,userId,weight);
-	}
-	
-	@Transactional
 	public void contributorUpdate(Long projectId, Long userId, double lastOne) {
 		/* update the contributor pps in project recalculating all accepted
 		 * contributions and adding a delta (for cases in which pps are bing assigned
@@ -425,8 +418,6 @@ public class DbServicesImp {
 
 		/* add user to project contributors */
 		contributorDao.updateContributor(project.getId(), creator.getId(), bid.getPpoints());
-		decisionRealmDao.updateVoter(realm.getId(), creator.getId(), 1.0);
-		
 	}
 
 	@Transactional
@@ -525,7 +516,7 @@ public class DbServicesImp {
 						hasParent = true;
 						goal.setParent(parent);
 						/* decision realm should be initialized to that of the parent goal */
-						decisionRealmCopyVoters(realm,decisionRealmDao.getFromGoalId(parent.getId()).getId());
+						decisionRealmDerive(realm,decisionRealmDao.getFromGoalId(parent.getId()).getId());
 					}
 				}
 			}
@@ -1584,11 +1575,12 @@ public class DbServicesImp {
 					}
 
 					/* -----------------------------------------------------------------------*/ 
-					/* updated pps of user in project - This is the only place where PPS are created/updated */
+					/* updated pps of user in project - This is the only place where PPS are created/updated
+					 * and here all the decisions weights update logic is called */
 					/* -----------------------------------------------------------------------*/
 					contributorUpdate(bid.getCbtion().getProject().getId(), bid.getCreator().getId(), cbtion.getAssignedPpoints());
 					projectUpdatePpsTot(bid.getCbtion().getProject().getId(),cbtion.getAssignedPpoints());
-					
+					updateVoterInProject(bid.getCbtion().getProject().getId(), bid.getCreator().getId());
 					/* -----------------------------------------------------------------------*/
 
 
@@ -1644,13 +1636,12 @@ public class DbServicesImp {
 				thesis.setValue(value);
 				thesis.setCastDate(new Timestamp(System.currentTimeMillis()));
 
-				/* weight of the thesis is set at cast time */
-				double ppsInProject = projectDao.getContributor(dec.getProject().getId(), author.getId()).getPps();
-				double voteWeight = voter.getWeight()*ppsInProject;
-				thesis.setWeight(voteWeight);
+				/* weight of the thesis is set at cast time, as a copy of the realm,
+				 * so theses weights need to be updated every time pps are assigned */
+				thesis.setWeight(voter.getActualWeight());
 
 				/* store the thesis in the cast theses list */
-				if(newThesis) dec.getThesesCast().add(thesis);
+				if(newThesis) { dec.getThesesCast().add(thesis); }
 				decisionDao.save(dec);
 
 				return "thesis saved";
@@ -1852,56 +1843,72 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
+	public void decisionRealmInitAllSupergoalsToProject(Long projectId) {
+		List<Goal> superGoals = goalDao.getSuperGoalsOnly(projectId);
+		for(Goal goal : superGoals) {
+			Long realmId = decisionRealmDao.getIdFromGoalId(goal.getId());
+			decisionRealmInitToProject(realmId, projectId);
+		}
+	}
+	
+	@Transactional
+	public void decisionRealmInitToProject(Long realmId, Long projectId) {
+		DecisionRealm realm = decisionRealmDao.get(realmId);
+		decisionRealmInitToProject(realm,projectId);
+		decisionRealmDao.save(realm);
+	}
+	
+	@Transactional
 	public void decisionRealmInitToProject(DecisionRealm destRealm, Long projectId) {
 		
 		Project project = projectDao.get(projectId);
 		
-		if(destRealm.getVoters() == null) {
-			destRealm.setVoters(new ArrayList<Voter>());
-		}
+		/* make sure the realm is empty */
+		if(destRealm.getVoters() == null) { destRealm.setVoters(new ArrayList<Voter>()); }
+		if(destRealm.getVoters().size() > 0) { destRealm.getVoters().clear(); }
+		
+		/* keep track of the weight to store the sum */
+		double weightSum = 0.0;
 		
 		for(Contributor contributor : project.getContributors()) {
-			boolean contributorIsInRealm = false;
+			Voter newVoter = new Voter();
 			
-			/* check if voter is already in the destination realm and, if so, simply update the weight */
-			if(destRealm.getVoters().size() > 0) {
-				for(Voter voterInRealm : destRealm.getVoters()) {
-					if(voterInRealm.getVoterUser().getId() == contributor.getContributorUser().getId()) {
-						contributorIsInRealm = true;
-						/* by default, weight is 1 (scale by pps is done later at decision update)*/
-						voterInRealm.setWeight(1.0);
-					}
-				}
-			}
+			newVoter.setVoterUser(contributor.getContributorUser());
+			newVoter.setMaxWeight(contributor.getPps());
+			newVoter.setScale(1.0);
 			
-			/* otherwise create a new voter on the destination realm */
-			if(!contributorIsInRealm) {
-				Voter newVoter = new Voter();
-				
-				newVoter.setVoterUser(contributor.getContributorUser());
-				newVoter.setWeight(1.0);
-			}
+			weightSum += newVoter.getActualWeight();
 			
+			voterDao.save(newVoter);
+			destRealm.getVoters().add(newVoter);
 		}
+		
+		destRealm.setWeightTot(weightSum);
+		decisionRealmDao.save(destRealm);
 	}
 
 	@Transactional
-	public void decisionRealmCopyVoters(DecisionRealm destRealm,Long sourceRealmId) {
+	public void decisionRealmDerive(DecisionRealm destRealm,Long sourceRealmId) {
 		DecisionRealm sourceRealm = decisionRealmDao.get(sourceRealmId);
 		
 		if(destRealm.getVoters() == null) {
 			destRealm.setVoters(new ArrayList<Voter>());
 		}
 		
+		/* keep track of the weight to store the sum */
+		double weightSum = 0.0;
+		
 		for(Voter existingVoter : sourceRealm.getVoters()) {
 			boolean voterIsInRealm = false;
 			
-			/* check if voter is already in the destination realm and, of so, simply update the weight */
+			/* check if voter is already in the destination realm and, of so, simply update the max weight 
+			 * while keeping the scale untouched */
 			if(destRealm.getVoters().size() > 0) {
 				for(Voter voterInRealm : destRealm.getVoters()) {
 					if(voterInRealm.getVoterUser().getId() == existingVoter.getVoterUser().getId()) {
 						voterIsInRealm = true;
-						voterInRealm.setWeight(existingVoter.getWeight());
+						voterInRealm.setMaxWeight(existingVoter.getActualWeight());
+						weightSum += voterInRealm.getActualWeight(); 
 					}
 				}
 			}
@@ -1911,14 +1918,106 @@ public class DbServicesImp {
 				Voter newVoter = new Voter();
 				
 				newVoter.setVoterUser(existingVoter.getVoterUser());
-				newVoter.setWeight(existingVoter.getWeight());
+				newVoter.setMaxWeight(existingVoter.getActualWeight());
+				newVoter.setScale(1.0);
+				
+				weightSum += newVoter.getActualWeight();
+				
+				destRealm.getVoters().add(newVoter);
 			}
-			
 		}
 		
+		destRealm.setWeightTot(weightSum);
+		decisionRealmDao.save(destRealm);
 	}
 	
+	@Transactional
+	public void updateVoterInProject(Long projectId, Long userId) {
+		/* Goes all over the decision realms in a project and update the user.
+		 * It starts from the top goals (those without parent goal) and then continues
+		 * iteratively with the sub-goals */
+		
+		List<Goal> superGoals = goalDao.getSuperGoalsOnly(projectId);
+		
+		for(Goal superGoal:superGoals) {
+			
+			DecisionRealm realm = decisionRealmDao.getFromGoalId(superGoal.getId());
+			Voter voter = decisionRealmDao.getVoter(realm.getId(), userId);
+			
+			/* if user is in realm */
+			if(voter != null) {
+				/* update the max weight to the user pps */
+				double originalWeight = voter.getMaxWeight();
+				double newWeight = projectDao.getContributor(projectId, userId).getPps();
+				
+				voter.setMaxWeight(newWeight);
+				voterDao.save(voter);
+				
+				/* update the total pps aggregate */
+				realm.setWeightTot(realm.getWeightTot() + (newWeight - originalWeight));
+				
+				/* and update the weight of the theses of that user (it will have immediate
+				 * effect in the decision algorithm) */
+				List<Thesis> theses = thesisDao.getOfUserInRealm(realm.getId(), userId);
+				
+				for(Thesis thesis : theses) {
+					thesis.setWeight(voter.getActualWeight());
+					thesisDao.save(thesis);
+				}
+			}
+			
+			/* now go over all subgoals and update realms and theses */
+			List<Goal> subGoals = goalDao.getSubgoalsIteratively(superGoal.getId());
+			
+			for(Goal subGoal : subGoals) {
+				updateVoterInGoal(subGoal.getId(), userId);
+			}
+		}
+	}
 	
+	@Transactional
+	public void updateVoterInGoal(Long goalId, Long userId) {
+		/* Goes all over the decision realms in a goal and subgoals (recursively) and 
+		 * update the user. It starts from the top goal and then continues recursively 
+		 * with the sub-goals */
+		
+		Goal goal = goalDao.get(goalId);
+		
+		DecisionRealm parentRealm = decisionRealmDao.getFromGoalId(goal.getParent().getId());
+		Voter voterInParent = decisionRealmDao.getVoter(parentRealm.getId(), userId);
+		
+		DecisionRealm goalRealm = decisionRealmDao.getFromGoalId(goal.getId());
+		Voter voterInGoal = decisionRealmDao.getVoter(goalRealm.getId(), userId);
+		
+		/* if user is in realm */
+		if(voterInGoal != null) {
+			/* update the max weight to the user pps */
+			double originalWeight = voterInGoal.getMaxWeight();
+			double newWeight = voterInParent.getActualWeight();
+			
+			voterInGoal.setMaxWeight(newWeight);
+			voterDao.save(voterInGoal);
+			
+			/* update the total pps aggregate (add the delta instead of summing again, safe enough?) */
+			goalRealm.setWeightTot(goalRealm.getWeightTot() + (newWeight - originalWeight));
+			
+			/* and update the weight of the theses of that user (it will have immediate
+			 * effect in the decision algorithm) */
+			List<Thesis> theses = thesisDao.getOfUserInRealm(goalRealm.getId(), userId);
+			
+			for(Thesis thesis : theses) {
+				thesis.setWeight(voterInGoal.getActualWeight());
+				thesisDao.save(thesis);
+			}
+		}
+		
+		/* now go over all subgoals and update realms and theses (RECUERSIVE) */
+		List<Goal> subGoals = goalDao.getSubgoalsIteratively(goal.getId());
+		
+		for(Goal subGoal : subGoals) {
+			updateVoterInGoal(subGoal.getId(), userId);
+		}
+	}
 	
 	@Transactional
 	public ArgumentDto argumentGetDto(Long id) {
