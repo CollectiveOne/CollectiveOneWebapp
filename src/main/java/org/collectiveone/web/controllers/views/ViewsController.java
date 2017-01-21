@@ -146,10 +146,15 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping("/cbtionNewPageR")
-	public String cbtionNewPage(Model model, @RequestParam(value="goalTag", required = false) String goalTag) {
+	public String cbtionNewPage(Model model, 
+								@RequestParam(value="goalTag", required = false) String goalTag,
+								@RequestParam(value="projectName", required = false) String projectName) {
 		CbtionDto cbtionDto = new CbtionDto();
 		if(goalTag != null) {
 			cbtionDto.setGoalTag(goalTag);
+		}
+		if(projectName != null) {
+			cbtionDto.setProjectName(projectName);
 		}
 		model.addAttribute("cbtion",cbtionDto);
 		return "views/cbtionNewPage";
