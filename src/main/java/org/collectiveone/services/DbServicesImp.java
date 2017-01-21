@@ -62,6 +62,9 @@ import org.collectiveone.web.dto.DecisionDtoCreate;
 import org.collectiveone.web.dto.DecisionDtoFull;
 import org.collectiveone.web.dto.DoneDto;
 import org.collectiveone.web.dto.GoalDto;
+import org.collectiveone.web.dto.GoalTouchDto;
+import org.collectiveone.web.dto.GoalUserWeightsDto;
+import org.collectiveone.web.dto.GoalWeightsDataDto;
 import org.collectiveone.web.dto.ProjectContributedDto;
 import org.collectiveone.web.dto.ProjectDto;
 import org.collectiveone.web.dto.ProjectNewDto;
@@ -69,6 +72,7 @@ import org.collectiveone.web.dto.ReviewDto;
 import org.collectiveone.web.dto.ThesisDto;
 import org.collectiveone.web.dto.UserDto;
 import org.collectiveone.web.dto.UsernameAndPps;
+import org.collectiveone.web.dto.VoterDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -973,6 +977,65 @@ public class DbServicesImp {
 		}
 		return parentGoalsTags;
 	}
+	
+	@Transactional
+	public GoalWeightsDataDto goalGetWeightsData(String projectName, String goalTag, String username) {
+		
+		Goal goal = goalDao.get(goalTag, projectName);
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
+		
+		GoalWeightsDataDto goalWeightsDataDto = new GoalWeightsDataDto();  
+		
+		if(!username.equals("anonymousUser")) {
+			User user = userDao.get(username);
+			
+			Voter voter = decisionRealmDao.getVoter(realm.getId(), user.getId());
+			
+			GoalUserWeightsDto userWeightsDto = new GoalUserWeightsDto();
+			userWeightsDto.setUsername(username);
+			userWeightsDto.setMaxWeight(voter.getMaxWeight());
+			userWeightsDto.setActualWeight(voter.getActualWeight());
+			userWeightsDto.setScale(voter.getScale());
+			
+			goalWeightsDataDto.setUserWeightsDto(userWeightsDto);
+		}
+		
+		List<VoterDto> votersDtos = new ArrayList<VoterDto>();
+		for(Voter otherVoter : realm.getVoters()) {
+			votersDtos.add(otherVoter.toDto());
+		}
+		
+		goalWeightsDataDto.setGoalTag(goalTag);
+		goalWeightsDataDto.setProjectName(projectName);
+		goalWeightsDataDto.setTotalWeight(realm.getWeightTot());
+		
+		goalWeightsDataDto.setVotersDtos(votersDtos);
+		
+		return goalWeightsDataDto;
+	}
+	
+	@Transactional
+	public void goalTouch(GoalTouchDto touchDto) {
+		Goal goal = goalDao.get(touchDto.getGoalTag(), touchDto.getProjectName());
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
+		User user = userDao.get(touchDto.getUsername());
+		Voter voter = decisionRealmDao.getVoter(realm.getId(), user.getId());
+		
+		double weigthBefore = voter.getActualWeight();
+		
+		if(touchDto.getTouchFlag()) {
+			voter.setScale(1.0);
+		} else {
+			voter.setScale(0.0);
+		}
+		
+		double weightAfter = voter.getActualWeight();
+		
+		realm.setWeightTot(realm.getWeightTot() + (weightAfter - weigthBefore));
+		
+		decisionRealmDao.save(realm);
+	}
+	
 
 	@Transactional
 	public void cbtionSave(Cbtion cbtion) {

@@ -16,7 +16,10 @@ import org.collectiveone.services.GoalDtoListRes;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.GoalGetDto;
 import org.collectiveone.web.dto.GoalParentDto;
+import org.collectiveone.web.dto.GoalTouchDto;
+import org.collectiveone.web.dto.GoalWeightsDataDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
@@ -94,6 +97,23 @@ public class GoalsController {
 		
 		GoalDtoListRes goalDtos = dbServices.goalDtoGetFiltered(filters);
 		return goalDtos.getGoalDtos();
+	}
+	
+	@RequestMapping(value="/getWeightData/{projectName}/{goalTag}", method = RequestMethod.POST)
+	public @ResponseBody GoalWeightsDataDto getWeightData(	@PathVariable("goalTag") String goalTag,
+															@PathVariable("projectName") String projectName ) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return dbServices.goalGetWeightsData(projectName, goalTag, auth.getName());
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/touch", method = RequestMethod.POST)
+	public boolean touch(@RequestBody GoalTouchDto touchDto) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		touchDto.setUsername(auth.getName());
+		dbServices.goalTouch(touchDto);
+		return true;
 	}
 	
 	@RequestMapping(value="/getList", method = RequestMethod.POST)

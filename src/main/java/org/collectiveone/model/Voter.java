@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.web.dto.VoterDto;
+
 @Entity
 @Table(name = "VOTERS")
 public class Voter {
@@ -21,6 +23,15 @@ public class Voter {
 	private double maxWeight;
 	private double scale;
 	
+	public VoterDto toDto() {
+		VoterDto dto = new VoterDto();
+		dto.setUsername(voterUser.getUsername());
+		dto.setMaxWeight(maxWeight);
+		dto.setActualWeight(getActualWeight());
+		dto.setScale(scale);
+		
+		return dto;
+	}
 	
 	public Long getId() {
 		return id;
