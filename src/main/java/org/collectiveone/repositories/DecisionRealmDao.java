@@ -6,7 +6,6 @@ import org.collectiveone.model.DecisionRealm;
 import org.collectiveone.model.User;
 import org.collectiveone.model.Voter;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -40,8 +39,11 @@ public class DecisionRealmDao extends BaseDao {
 	}
 	
 	public List<DecisionRealm> getAllOfProject(Long projectId) {
-		Criteria query = sessionFactory.getCurrentSession().createCriteria(DecisionRealm.class);
-		query.add(Restrictions.eq("project.id", projectId));
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(DecisionRealm.class,"realm");
+		query
+			.createAlias("realm.goal", "go")
+			.createAlias("go.project", "pr")
+			.add(Restrictions.eq("pr.id", projectId));
 		
 		@SuppressWarnings("unchecked")
 		List<DecisionRealm> res = (List<DecisionRealm>) query.list();
@@ -61,8 +63,7 @@ public class DecisionRealmDao extends BaseDao {
 			voter.setVoterUser(session.get(User.class,voterUserId));
 			voter.setMaxWeight(maxWeight);
 			voter.setScale(scale);
-			realm.getVoters().add(voter);
-			
+			voter.setRealm(realm);
 		}
 		
 		voter.setMaxWeight(maxWeight);
@@ -73,18 +74,11 @@ public class DecisionRealmDao extends BaseDao {
 	}
 	
 	public Voter getVoter(Long realmId, Long voterUserId) {
-		Session session = sessionFactory.getCurrentSession();
-
-		Query query = session.createQuery(
-				"SELECT voter "
-						+ "FROM DecisionRealm realm "
-						+ "JOIN realm.voters voter "
-						+ "WHERE realm.id = :rId "
-						+ "AND voter.voterUser.id = :vuId "
-				);
-		
-		query.setParameter("rId", realmId);
-		query.setParameter("vuId", voterUserId);
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Voter.class,"vot");
+		query
+			.createAlias("vot.voterUser", "us")
+			.add(Restrictions.eq("realm.id", realmId))
+			.add(Restrictions.eq("us.id", voterUserId));
 		
 		return (Voter)query.uniqueResult();
 	}

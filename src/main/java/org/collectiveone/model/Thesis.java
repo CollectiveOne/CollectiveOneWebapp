@@ -31,7 +31,6 @@ public class Thesis {
 	 * TODO: review this approach as the weight per tesis seems
 	 * really redundant.*/
 	private double weight;
-	
 	@ManyToOne
 	private Decision decision;
 	

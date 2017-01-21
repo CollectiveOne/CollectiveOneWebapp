@@ -1,8 +1,8 @@
 package org.collectiveone.model;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,8 +16,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.ProjectDto;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -44,8 +42,7 @@ public class Project {
 	
 	@OneToMany(mappedBy="project")
 	@OrderBy("pps DESC")
-	@Fetch (FetchMode.SELECT)
-	private List<Contributor> contributors = new ArrayList<Contributor>();
+	private Set<Contributor> contributors = new LinkedHashSet<Contributor>();
 	
 	public ProjectDto toDto() {
 		ProjectDto dto = new ProjectDto();
@@ -102,10 +99,10 @@ public class Project {
 	public void setPpsTot(double ppsTot) {
 		this.ppsTot = ppsTot;
 	}
-	public List<Contributor> getContributors() {
+	public Set<Contributor> getContributors() {
 		return contributors;
 	}
-	public void setContributors(List<Contributor> contributors) {
+	public void setContributors(Set<Contributor> contributors) {
 		this.contributors = contributors;
 	}
 }

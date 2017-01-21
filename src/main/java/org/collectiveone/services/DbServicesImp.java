@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.collectiveone.model.Activity;
 import org.collectiveone.model.ActivityType;
@@ -490,7 +491,7 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public List<Contributor> getProjectContributors(Long projectId) {
+	public Set<Contributor> getProjectContributors(Long projectId) {
 		return projectDao.getContributors(projectId);
 	}
 
@@ -1586,7 +1587,7 @@ public class DbServicesImp {
 					 * and here all the decisions weights update logic is called */
 					/* -----------------------------------------------------------------------*/
 					contributorUpdate(bid.getCbtion().getProject().getId(), bid.getCreator().getId(), cbtion.getAssignedPpoints());
-					projectUpdatePpsTot(bid.getCbtion().getProject().getId(),cbtion.getAssignedPpoints());
+					projectUpdatePpsTot(bid.getCbtion().getProject().getId(), 0.0);
 					updateVoterInProject(bid.getCbtion().getProject().getId(), bid.getCreator().getId());
 					/* -----------------------------------------------------------------------*/
 
@@ -1630,25 +1631,21 @@ public class DbServicesImp {
 				/* if voter is in the realm of the decision */
 				Thesis thesis = decisionDao.getThesisCasted(decId, author.getId());				
 
-				boolean newThesis = false;
-
 				if(thesis == null) {
 					thesis = new Thesis();
 					thesis.setAuthor(author);
 					thesis.setDecision(dec);
-					newThesis = true;
 				}
+				
 				thesisDao.save(thesis);
 
 				thesis.setValue(value);
 				thesis.setCastDate(new Timestamp(System.currentTimeMillis()));
 
 				/* weight of the thesis is set at cast time, as a copy of the realm,
-				 * so theses weights need to be updated every time pps are assigned */
+				 * so theses weights need to be updated every time voter weight changes */
 				thesis.setWeight(voter.getActualWeight());
 
-				/* store the thesis in the cast theses list */
-				if(newThesis) { dec.getThesesCast().add(thesis); }
 				decisionDao.save(dec);
 
 				return "thesis saved";
@@ -1851,15 +1848,19 @@ public class DbServicesImp {
 	@Transactional
 	public void decisionRealmAddVoterToAll(Long projectId,Long userId,double maxWeight) {
 		/* Add a voter to all the realms of a project */
+		
 		List<DecisionRealm> realms = decisionRealmDao.getAllOfProject(projectId);
+		
 		for(DecisionRealm realm : realms) {
 			Voter existingVoter = decisionRealmDao.getVoter(realm.getId(), userId);
 			if(existingVoter == null) {
 				Voter newVoter = new Voter();
 				newVoter.setVoterUser(userDao.get(userId));
 				newVoter.setMaxWeight(maxWeight);
+				newVoter.setRealm(realm);
+				newVoter.setScale(1.0);
 				
-				realm.getVoters().add(newVoter);
+				realm.setWeightTot(realm.getWeightTot() + newVoter.getActualWeight());
 				
 				voterDao.save(newVoter);
 				decisionRealmDao.save(realm);
@@ -1899,6 +1900,7 @@ public class DbServicesImp {
 		for(Contributor contributor : project.getContributors()) {
 			Voter newVoter = new Voter();
 			
+			newVoter.setRealm(destRealm);
 			newVoter.setVoterUser(contributor.getContributorUser());
 			newVoter.setMaxWeight(contributor.getPps());
 			newVoter.setScale(1.0);
@@ -1906,7 +1908,6 @@ public class DbServicesImp {
 			weightSum += newVoter.getActualWeight();
 			
 			voterDao.save(newVoter);
-			destRealm.getVoters().add(newVoter);
 		}
 		
 		destRealm.setWeightTot(weightSum);

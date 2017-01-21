@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -47,8 +46,7 @@ public class Decision {
 	/* weights from decision realm are mixed with pps of the voter
 	 * in the project to get the weight of each voter. This weight
 	 * is stored in the theses (votes) elements.*/
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "DECISIONS_THESESCAST")
+	@OneToMany(mappedBy="decision", cascade=CascadeType.ALL)
 	private List<Thesis> thesesCast = new ArrayList<Thesis>();
 	private Timestamp openDate;
 	private Timestamp actualVerdictDate;
@@ -57,8 +55,7 @@ public class Decision {
 	private int verdict;
 	private DecisionState state;
 	
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "DECISIONS_ARGS")
+	@OneToMany(mappedBy="decision", cascade=CascadeType.ALL)
 	private List<Argument> arguments = new ArrayList<Argument>();
 	
 	/* hold a reference to the affected object */

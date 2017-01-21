@@ -19,7 +19,7 @@ public class DecisionRealm {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="realm", cascade=CascadeType.ALL)
 	private List<Voter> voters = new ArrayList<Voter>();
 	private double weightTot; /* aggregation of weights to avoid recomputing it*/
 	@OneToOne

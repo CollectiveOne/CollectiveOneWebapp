@@ -1,6 +1,7 @@
 package org.collectiveone.repositories;
 
 import java.util.List;
+import java.util.Set;
 
 import org.collectiveone.model.Contributor;
 import org.collectiveone.model.Project;
@@ -68,7 +69,7 @@ public class ProjectDao extends BaseDao {
 		return res;
 	}
 
-	public List<Contributor> getContributors(Long projectId) {
+	public Set<Contributor> getContributors(Long projectId) {
 
 		Session session = sessionFactory.getCurrentSession();
 		Project project = (Project) session.get(Project.class,projectId);
