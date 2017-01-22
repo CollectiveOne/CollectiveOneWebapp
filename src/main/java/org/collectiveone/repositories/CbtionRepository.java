@@ -32,6 +32,9 @@ public class CbtionRepository extends BaseDao {
 	@Autowired
 	private ProjectDao projectDao;
 	
+	@Autowired
+	private BidDao bidDao;
+	
 	public CbtionRepository() {
 		super();
 	}
@@ -55,8 +58,6 @@ public class CbtionRepository extends BaseDao {
 		cbtion.setDeleteDate(new Timestamp(System.currentTimeMillis()));
 		
 		if(cbtion.getOpenDec() != null)	cbtion.getOpenDec().setState(DecisionState.CLOSED_EXTERNALLY);
-		
-		BidDao bidDao = new BidDao();
 		
 		for(Bid bid : cbtion.getBids()) {
 			bidDao.remove(bid.getId());
