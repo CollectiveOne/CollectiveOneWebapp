@@ -34,6 +34,7 @@ public class Goal {
 	private Decision createDec;
 	@OneToOne
 	private Decision deleteDec;
+	
 	@ManyToOne
 	private Goal parent;
 	@ManyToOne
@@ -42,6 +43,13 @@ public class Goal {
 	private Decision proposeParent;
 	private GoalParentState parentState;
 	
+	private boolean attached;
+	private double currentBudget;
+	@OneToOne
+	private Decision increaseBudget;
+	private double ppsToIncrease;
+	@OneToOne
+	private Decision reattach;
 	
 	public GoalDto toDto() {
 		GoalDto dto = new GoalDto();
@@ -140,6 +148,37 @@ public class Goal {
 	}
 	public void setParentState(GoalParentState parentState) {
 		this.parentState = parentState;
+	}
+
+	public boolean getAttached() {
+		return attached;
+	}
+	public void setAttached(boolean attached) {
+		this.attached = attached;
+	}
+	public double getCurrentBudget() {
+		return currentBudget;
+	}
+	public void setCurrentBudget(double currentBudget) {
+		this.currentBudget = currentBudget;
+	}
+	public Decision getIncreaseBudget() {
+		return increaseBudget;
+	}
+	public void setIncreaseBudget(Decision increaseBudget) {
+		this.increaseBudget = increaseBudget;
+	}
+	public double getPpsToIncrease() {
+		return ppsToIncrease;
+	}
+	public void setPpsToIncrease(double ppsToIncrease) {
+		this.ppsToIncrease = ppsToIncrease;
+	}
+	public Decision getReattach() {
+		return reattach;
+	}
+	public void setReattach(Decision reattach) {
+		this.reattach = reattach;
 	}
 	
 }

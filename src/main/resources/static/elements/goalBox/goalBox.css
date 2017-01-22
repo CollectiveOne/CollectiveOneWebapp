@@ -116,6 +116,45 @@
 	margin-top: 3px;
 }
 
+#goal_div #increase_budget_form_container {
+	width: 200px;
+	margin-right:10px;
+	float:left;
+	display:none;
+	margin-bottom: 10px;
+}
+
+#goal_div #increase_budget_decision_container {
+	margin-right:10px;
+	float:left;
+	display:none;
+	margin-bottom: 5px;
+}
+
+#goal_div #increase_budget_btn {
+	width:100%;
+	float:left;
+}
+
+#goal_div #increase_budget_form {
+	display:none;
+}
+
+#goal_div #increase_budget_input {
+	width:100%;
+	float:left;
+	margin-top: 3px;
+	text-align:center;
+}
+
+#goal_div #increase_budget_save_btn {
+	width:100%;
+	float:left;
+	margin-top: 3px;
+}
+
+
+
 #goal_div #state_decision_div {
 	float:left;
 }

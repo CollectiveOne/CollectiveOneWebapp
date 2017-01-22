@@ -116,6 +116,13 @@ GoalBox.prototype.goalBoxLoaded = function() {
 		}
 	}
 
+	if(isUserLogged()) {
+		if(this.goal.state == "ACCEPTED") {
+			$("#increase_budget_form_container",this.container).show();
+			$("#increase_budget_btn",this.container).click(this.increaseBtnClicked.bind(this));
+		}
+	}
+
 	if(this.showSubgoalsAfterDraw) {
 		this.showSubGoals();
 	}
@@ -131,6 +138,10 @@ GoalBox.prototype.showControlBtnClicked = function() {
 
 GoalBox.prototype.proposeBtnClicked = function() {
 	$("#propose_parent_form",this.container).toggle();
+}
+
+GoalBox.prototype.increaseBtnClicked = function() {
+	$("#increase_budget_form",this.container).toggle();
 }
 
 GoalBox.prototype.proposeSaveBtnClicked = function() {

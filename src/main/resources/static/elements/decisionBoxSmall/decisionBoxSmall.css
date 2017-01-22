@@ -9,6 +9,10 @@
 	font-size: 10px;
 }
 
+.dangerousDecisions {
+	border-color: red !IMPORTANT;
+}
+
 #decision_small_div #dec_left_div {
 	margin-left:5px;
 	width: 98px;

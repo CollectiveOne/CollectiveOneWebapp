@@ -330,22 +330,28 @@ public class Decision {
 			if (n > 0) {
 				
 				updatePcum();
-				updateP();
-				updateClarity();
-				updateStability();
-
-				/* determine if the decision shall be closed */
-				boolean isTime = isVerdictTime(now);
-
-				updateVerdict();
 				
-				if (isTime) {
-					if (verdict == 0)
-						state = DecisionState.CLOSED_DENIED;
-					if (verdict == 1)
-						state = DecisionState.CLOSED_ACCEPTED;
+				if(ppsCum > 0) {
+					updateP();
+					updateClarity();
+					updateStability();
+	
+					/* determine if the decision shall be closed */
+					boolean isTime = isVerdictTime(now);
+	
+					updateVerdict();
 					
-					actualVerdictDate = new Timestamp(System.currentTimeMillis());
+					if (isTime) {
+						if (verdict == 0)
+							state = DecisionState.CLOSED_DENIED;
+						if (verdict == 1)
+							state = DecisionState.CLOSED_ACCEPTED;
+						
+						actualVerdictDate = new Timestamp(System.currentTimeMillis());
+					}
+				} else {
+					/* back to idle if the voter had zero weight */
+					state = DecisionState.IDLE;
 				}
 			}
 		}
