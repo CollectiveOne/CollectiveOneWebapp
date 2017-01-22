@@ -1224,7 +1224,7 @@ public class DbServicesImp {
 						}
 					}
 					
-					/* buget is set to zero*/
+					/* budget is set to zero*/
 					goal.setCurrentBudget(0.0);
 					
 					/* increaseBudget decision is deleted to leave room for 
@@ -1236,10 +1236,19 @@ public class DbServicesImp {
 					Long parentRealmId = decisionRealmDao.getIdFromGoalId(goal.getParent().getId());
 					DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getParent().getId());
 					
-					decisionRealmInitToOther(realm, parentRealmId);
-					decisionRealmDao.save(realm);
+					decisionRealmUpdateToOther(realm, parentRealmId);
 					
 					break;
+					
+				case CLOSED_DENIED:
+				case CLOSED_EXTERNALLY:
+					delete 
+					goal.setReattach(null);
+					
+					decisionDao.save(reattach);
+					goalDao.save(goal);
+					break;
+					
 				}
 			}
 		}
@@ -2196,7 +2205,7 @@ public class DbServicesImp {
 		
 		DecisionRealm sourceRealm = decisionRealmDao.get(sourceRealmId);
 		
-		/* TODO: delete all voters before recrating them, for safety? */
+		/* TODO: delete all voters before recreating them, for safety? */
 		
 		/* keep track of the weight to store the sum */
 		double weightSum = 0.0;
@@ -2212,6 +2221,35 @@ public class DbServicesImp {
 			weightSum += newVoter.getActualWeight();
 			
 			voterDao.save(newVoter);
+		}
+		
+		destRealm.setWeightTot(weightSum);
+		decisionRealmDao.save(destRealm);
+	}
+	
+	@Transactional
+	public void decisionRealmUpdateToOther(DecisionRealm destRealm,Long sourceRealmId) {
+		/* the destRealm of voters is updated based on the sourceRealmId. It assumes that
+		 * all the voters in the dest realm are in the source realm */
+		
+		DecisionRealm sourceRealm = decisionRealmDao.get(sourceRealmId);
+		
+		/* keep track of the weight to store the sum */
+		double weightSum = 0.0;
+		
+		for(Voter sourceVoter : sourceRealm.getVoters()) {
+			for(Voter destVoter : destRealm.getVoters()) {
+				if(destVoter.getVoterUser().getId() == sourceVoter.getVoterUser().getId()) {
+					
+					destVoter.setVoterUser(sourceVoter.getVoterUser());
+					destVoter.setMaxWeight(sourceVoter.getMaxWeight());
+					destVoter.setScale(sourceVoter.getScale());
+					
+					weightSum += destVoter.getActualWeight();
+					
+					voterDao.save(destVoter);
+				}
+			}
 		}
 		
 		destRealm.setWeightTot(weightSum);
