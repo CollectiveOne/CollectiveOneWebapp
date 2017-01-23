@@ -31,6 +31,12 @@ public class GoalDto {
 	private String proposedParent;
 	private DecisionDtoFull proposeParent;
 	
+	private String attachedState;
+	private double currentBudget;
+	private DecisionDtoFull increaseBudgetDec;
+	private double ppsToIncrease;
+	private DecisionDtoFull reattachDec;
+	
 	public Long getId() {
 		return id;
 	}
@@ -121,5 +127,36 @@ public class GoalDto {
 	public void setProposeParent(DecisionDtoFull proposeParent) {
 		this.proposeParent = proposeParent;
 	}
+	public String getAttachedState() {
+		return attachedState;
+	}
+	public void setAttachedState(String attachedState) {
+		this.attachedState = attachedState;
+	}
+	public double getCurrentBudget() {
+		return currentBudget;
+	}
+	public void setCurrentBudget(double currentBudget) {
+		this.currentBudget = currentBudget;
+	}
+	public DecisionDtoFull getIncreaseBudgetDec() {
+		return increaseBudgetDec;
+	}
+	public void setIncreaseBudgetDec(DecisionDtoFull increaseBudgetDec) {
+		this.increaseBudgetDec = increaseBudgetDec;
+	}
+	public double getPpsToIncrease() {
+		return ppsToIncrease;
+	}
+	public void setPpsToIncrease(double ppsToIncrease) {
+		this.ppsToIncrease = ppsToIncrease;
+	}
+	public DecisionDtoFull getReattachDec() {
+		return reattachDec;
+	}
+	public void setReattachDec(DecisionDtoFull reattachDec) {
+		this.reattachDec = reattachDec;
+	}
+	
 }
 

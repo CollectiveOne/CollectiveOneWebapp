@@ -26,6 +26,7 @@ import org.collectiveone.model.DecisionRealm;
 import org.collectiveone.model.DecisionState;
 import org.collectiveone.model.DecisionType;
 import org.collectiveone.model.Goal;
+import org.collectiveone.model.GoalAttachState;
 import org.collectiveone.model.GoalParentState;
 import org.collectiveone.model.GoalState;
 import org.collectiveone.model.Project;
@@ -515,7 +516,7 @@ public class DbServicesImp {
 			
 			/* goal start attached, all the logic needed for when 
 			 * detached is set later */
-			goal.setAttached(true);
+			goal.setAttachedState(GoalAttachState.ATTACHED);
 			
 			Long id = goalDao.save(goal);
 
@@ -1056,28 +1057,11 @@ public class DbServicesImp {
 	public void goalDetach(Long goalId, double initialBudget) {
 		Goal goal = goalDao.get(goalId);
 		
-		if(goal.getAttached() && (goal.getParent() != null)) {
+		if(goal.getParent() != null) {
 			
-			/* check that the detaching process has not already been requested */
-			boolean goWithDetach = false;
-			if(goal.getIncreaseBudget() == null) {
-				goWithDetach = true;
-			} else {
-				switch(goal.getIncreaseBudget().getState()) {
-					case IDLE:
-					case OPEN:
-						goWithDetach = false;
-						break;
-						
-					case CLOSED_ACCEPTED:
-					case CLOSED_DENIED:
-					case CLOSED_EXTERNALLY:
-						goWithDetach = true;
-						break;
-				}
-			}
-		
-			if(goWithDetach) {
+			switch(goal.getAttachedState()) {
+			
+			case ATTACHED:
 				goal.setCurrentBudget(0.0);
 				goal.setPpsToIncrease(initialBudget);
 					
@@ -1095,6 +1079,21 @@ public class DbServicesImp {
 				increaseBudget.setType(DecisionType.GOAL);
 				increaseBudget.setAffectedGoal(goal);
 				increaseBudget.setVerdictHours(36);
+				
+				goal.setIncreaseBudget(increaseBudget);
+				goal.setAttachedState(GoalAttachState.PROPOSED_DETACH);
+			
+				goalDao.save(goal);
+				decisionDao.save(increaseBudget);
+				
+				break;
+				
+			case PROPOSED_DETACH:
+			case DETACHED:
+			case PROPOSED_REATTACH:
+				/* nop */
+				break;
+				
 			}
 		}
 	}
@@ -1109,10 +1108,17 @@ public class DbServicesImp {
 		act.setGoal(goal);
 		act.setType(ActivityType.GOAL);
 		
-		if(goal.getAttached()) {
+		switch(goal.getAttachedState()) {
+		
+		case ATTACHED:
+		case DETACHED:
+			/* nop*/
+			break;
+			
+		case PROPOSED_DETACH:
+			
 			/* the increaseBudget decision is used both as a detach decision
 			 * and as an increase budget decision */
-			
 			Decision increaseBudget = goal.getIncreaseBudget();
 			if(increaseBudget != null) {
 				switch(increaseBudget.getState()) {
@@ -1122,11 +1128,14 @@ public class DbServicesImp {
 					break;
 					
 				case CLOSED_ACCEPTED:
-					/* initialized the budget from the parent goal budget 
+					/* initialized the budget of the detached goal from the parent goal budget 
 					 * and check there is enough pps */
 					boolean goWithDetachment = false;
 					Goal parent = goal.getParent();
 					if(goal.getParent() != null) {
+						
+						... I am here... if parent is attached go to the grandPa if no grandpa then simply create the budget
+						
 						if(parent.getCurrentBudget() >= goal.getPpsToIncrease()) {
 							/* take the pps from the parent budget */
 							parent.setCurrentBudget(parent.getCurrentBudget() - goal.getPpsToIncrease());
@@ -1144,27 +1153,7 @@ public class DbServicesImp {
 						
 					if(goWithDetachment) {
 						/* the goal should be detached*/
-						goal.setAttached(false);
-						
-						/* create reattach decision */
-						Decision reattach = new Decision();
-						
-						reattach.setCreator(userDao.get("collectiveone"));
-						reattach.setCreationDate(new Timestamp(System.currentTimeMillis()));
-						reattach.setDescription("reattach goal +"+goal.getGoalTag()+" to "+goal.getParent());
-						reattach.setState(DecisionState.IDLE);
-						reattach.setVerdictHours(36);
-						reattach.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getId()));
-						reattach.setFromState(GoalState.PROPOSED.toString());
-						reattach.setToState(GoalState.ACCEPTED.toString());
-						reattach.setProject(goal.getProject());
-						reattach.setGoal(goal);
-						reattach.setType(DecisionType.GOAL);
-						reattach.setAffectedGoal(goal);
-
-						goal.setReattach(reattach);
-						
-						decisionDao.save(reattach);
+						goal.setAttachedState(GoalAttachState.DETACHED);
 						goalDao.save(goal);
 						
 						act.setEvent("detached");
@@ -1179,8 +1168,11 @@ public class DbServicesImp {
 					activitySaveAndNotify(act);
 					
 				}
+				
+				break;
 			}
-		} else {
+				
+		case PROPOSED_REATTACH:
 			
 			Decision reattach = goal.getReattach();
 			if(reattach != null) {
@@ -1190,11 +1182,11 @@ public class DbServicesImp {
 					break;
 					
 				case CLOSED_ACCEPTED:
-					goal.setAttached(true);
+					goal.setAttachedState(GoalAttachState.ATTACHED);
 					
 					/* remaining budget is returned to parent or grand parent */
 					Goal parent = goal.getParent();
-					if(!parent.getAttached()) {
+					if(parent.getAttachedState() == GoalAttachState.DETACHED) {
 						/* if parent is detached, return the pps to the parent budget */
 						parent.setCurrentBudget(parent.getCurrentBudget() + goal.getCurrentBudget());
 					} else {
@@ -1209,7 +1201,7 @@ public class DbServicesImp {
 								lookForDetachedGrandPa = false;
 								grandPaFound = false;
 							} else {
-								if(!grandPa.getAttached()) {
+								if(grandPa.getAttachedState() == GoalAttachState.DETACHED) {
 									lookForDetachedGrandPa = false;
 									grandPaFound = false;
 								} else {
@@ -1242,11 +1234,30 @@ public class DbServicesImp {
 					
 				case CLOSED_DENIED:
 				case CLOSED_EXTERNALLY:
-					delete 
-					goal.setReattach(null);
+					/* once the decision is closed create a new decision 
+					 * to allow the goal to be reattached later */
+					goal.setAttachedState(GoalAttachState.DETACHED);
 					
-					decisionDao.save(reattach);
+					Decision reattachNew = new Decision();
+					
+					reattachNew.setCreator(userDao.get("collectiveone"));
+					reattachNew.setCreationDate(new Timestamp(System.currentTimeMillis()));
+					reattachNew.setDescription("reattach goal +"+goal.getGoalTag()+" to "+goal.getParent());
+					reattachNew.setState(DecisionState.IDLE);
+					reattachNew.setVerdictHours(36);
+					reattachNew.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getId()));
+					reattachNew.setFromState(GoalState.PROPOSED.toString());
+					reattachNew.setToState(GoalState.ACCEPTED.toString());
+					reattachNew.setProject(goal.getProject());
+					reattachNew.setGoal(goal);
+					reattachNew.setType(DecisionType.GOAL);
+					reattachNew.setAffectedGoal(goal);
+
+					goal.setReattach(reattachNew);
+					
+					decisionDao.save(reattachNew);
 					goalDao.save(goal);
+					
 					break;
 					
 				}

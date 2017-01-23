@@ -43,12 +43,51 @@ GoalBox.prototype.goalBoxLoaded = function() {
 		}	
 	}	
 
-	var tagSuffix = "";
+	var labelsAppend = "";
 	if(this.goal.state == "PROPOSED") {
-		tagSuffix = " <label class='label label-info'>proposed</label>";
+		labelsAppend = " <label class='label label-info'>proposed</label>";
+	}
+
+	switch(this.goal.attachedState) {
+		case "ATTACHED":
+			labelsAppend = labelsAppend + " <label class='label label-success'>attached</label>";
+			
+			/* detach only if has a parent */
+			if(this.goal.parentGoalTag) {
+				$("#detach_form_container",this.container).show();
+
+				$("#detach_btn",this.container).click(this.detachBtnClicked.bind(this));
+				$("#detach_save_btn",this.container).click(this.detachBtnSaveClicked.bind(this));	
+			}
+			
+			break;
+
+		case "DETACHED":
+			labelsAppend = labelsAppend + " <label class='label label-warning'>detached</label>";
+			$("#detach_form_container",this.container).show();
+			$("#detach_btn",this.container).html("reattach");
+			$("#increase_budget_container",this.container).show();
+
+			$("#detach_btn",this.container).click(this.detachBtnClicked.bind(this));
+			$("#detach_save_btn",this.container).click(this.detachBtnSaveClicked.bind(this));
+
+			$("#increase_budget_btn",this.container).click(this.increaseBtnClicked.bind(this));
+			$("#increase_budget_save_btn",this.container).click(this.increaseBtnSaveClicked.bind(this));
+			break;
+
+		case "PROPOSED_DETACH":
+			labelsAppend = labelsAppend + " <label class='label label-success'>detach proposed</label>";
+			var decBox = new DecisionBoxSmall($("#increase_budget_decision_container",this.container),this.goal.increaseBudgetDec);
+			decBox.updateVoteAndDraw();
+			break;
+
+		case "PROPOSED_REATTACH":
+			labelsAppend = labelsAppend + " <label class='label label-success'>reattach proposed</label>";
+			break;
 	}
 	
-	$("#goaltag",this.container).append(getGoalPageLink(this.goal.goalTag,this.goal.projectName)+""+tagSuffix);
+	
+	$("#goaltag",this.container).append(getGoalPageLink(this.goal.goalTag,this.goal.projectName)+""+labelsAppend);
 	
 	if(this.goal.description) {
 		$("#description",this.container).append(markdown.toHTML(this.goal.description));	
@@ -85,7 +124,7 @@ GoalBox.prototype.goalBoxLoaded = function() {
 		}
 
 		if(applicable_decision.state == "IDLE" || applicable_decision.state == "OPEN") {
-			var decBox = new DecisionBoxSmall($("#state_decision_div",this.container),applicable_decision, GLOBAL.sessionData.userLogged);
+			var decBox = new DecisionBoxSmall($("#state_decision_div",this.container),applicable_decision);
 			decBox.updateVoteAndDraw();
 		}	
 	}
@@ -116,13 +155,6 @@ GoalBox.prototype.goalBoxLoaded = function() {
 		}
 	}
 
-	if(isUserLogged()) {
-		if(this.goal.state == "ACCEPTED") {
-			$("#increase_budget_form_container",this.container).show();
-			$("#increase_budget_btn",this.container).click(this.increaseBtnClicked.bind(this));
-		}
-	}
-
 	if(this.showSubgoalsAfterDraw) {
 		this.showSubGoals();
 	}
@@ -136,13 +168,38 @@ GoalBox.prototype.showControlBtnClicked = function() {
 	$("#goal_control_div",this.container).toggle();
 }
 
-GoalBox.prototype.proposeBtnClicked = function() {
-	$("#propose_parent_form",this.container).toggle();
+GoalBox.prototype.detachBtnClicked = function() {
+	$("#detach_form",this.container).toggle();
 }
 
 GoalBox.prototype.increaseBtnClicked = function() {
 	$("#increase_budget_form",this.container).toggle();
 }
+
+GoalBox.prototype.proposeBtnClicked = function() {
+	$("#propose_parent_form",this.container).toggle();
+}
+
+
+GoalBox.prototype.detachBtnSaveClicked = function() {
+	GLOBAL.serverComm.goalProposeDetach(this.goal.id, $("#detach_input",this.container).val(), this.detachSaveCallback, this);
+}
+
+GoalBox.prototype.detachSaveCallback = function() {
+	$("#detach_form",this.container).hide();
+	this.updateGoal();
+}
+
+
+GoalBox.prototype.increaseBtnSaveClicked = function() {
+	GLOBAL.serverComm.goalProposeIncreaseBudget(this.goal.id, $("#increase_budget_input",this.container).val(), this.increaseSaveCallback, this);
+}
+
+GoalBox.prototype.increaseSaveCallback = function() {
+	$("#increase_budget_form",this.container).hide();
+	this.updateGoal();
+}
+
 
 GoalBox.prototype.proposeSaveBtnClicked = function() {
 	GLOBAL.serverComm.goalProposeParent(this.goal.id, $("#parent_goal_input",this.container).val(), this.goalProposedSendCallback, this);
@@ -152,6 +209,8 @@ GoalBox.prototype.goalProposedSendCallback = function() {
 	$("#propose_parent_form",this.container).hide();
 	this.updateGoal();
 }
+
+
 
 GoalBox.prototype.newSubgoalSaveBtnClicked = function() {
 	var goalTag = $("#new_subgoal_tag_input",this.container).val().trim();

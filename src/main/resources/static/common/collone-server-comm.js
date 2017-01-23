@@ -272,6 +272,56 @@ ServerComm.prototype = {
 			});
 		},
 
+		goalProposeDetach: function(goalId, increaseBudget,callbackFunction,callbackObj) {
+			
+			var data = {
+				'goalId' : goalId,
+				'increaseBudget' : increaseBudget
+			};
+			var datastr = JSON.stringify(data);
+				
+			$.ajax({
+				type : 'POST',
+				url : '/rest/goals/proposeDetach',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
+		goalProposeIncreaseBudget: function(goalId, increaseBudget,callbackFunction,callbackObj) {
+			
+			var data = {
+				'goalId' : goalId,
+				'increaseBudget' : increaseBudget
+			};
+			var datastr = JSON.stringify(data);
+				
+			$.ajax({
+				type : 'POST',
+				url : '/rest/goals/proposeIncreaseBudget',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
 		userGet : function(username,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'POST',

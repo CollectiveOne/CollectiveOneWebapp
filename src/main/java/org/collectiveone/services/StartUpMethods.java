@@ -35,6 +35,7 @@ public class StartUpMethods {
 	public void UpdateDecisionsStatus() throws IOException {
 		System.out.println("Filling DB");
 		
+		/*
 		AuthorizedEmail authEmail = new AuthorizedEmail();
 		authEmail.setEmail("p@x.com");
 		authEmail.setAuthorized(true);
@@ -47,6 +48,7 @@ public class StartUpMethods {
 		createUser("user4", 			"u4@x.com", 	"12345678", 		true);
 		
 		dbServices.projectAuthorize("Demo");
+		*/
 		
 		System.out.println("done");
 	}

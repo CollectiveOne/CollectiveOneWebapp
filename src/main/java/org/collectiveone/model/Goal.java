@@ -43,7 +43,7 @@ public class Goal {
 	private Decision proposeParent;
 	private GoalParentState parentState;
 	
-	private boolean attached;
+	private GoalAttachState attachedState;
 	private double currentBudget;
 	@OneToOne
 	private Decision increaseBudget;
@@ -67,6 +67,12 @@ public class Goal {
 		if(proposedParent != null) dto.setProposedParent(proposedParent.getGoalTag());
 		if(proposeParent != null) dto.setProposeParent(proposeParent.toDto());
 		if(parentState != null) dto.setParentState(parentState.toString());
+		
+		dto.setAttachedState(attachedState.toString());
+		dto.setCurrentBudget(currentBudget);
+		if(increaseBudget != null) dto.setIncreaseBudgetDec(increaseBudget.toDto());
+		dto.setPpsToIncrease(ppsToIncrease);
+		if(reattach != null) dto.setReattachDec(reattach.toDto());
 		
 		return dto;
 	}
@@ -150,11 +156,11 @@ public class Goal {
 		this.parentState = parentState;
 	}
 
-	public boolean getAttached() {
-		return attached;
+	public GoalAttachState getAttachedState() {
+		return attachedState;
 	}
-	public void setAttached(boolean attached) {
-		this.attached = attached;
+	public void setAttachedState(GoalAttachState attachedState) {
+		this.attachedState = attachedState;
 	}
 	public double getCurrentBudget() {
 		return currentBudget;

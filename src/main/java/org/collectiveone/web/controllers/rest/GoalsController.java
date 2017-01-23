@@ -13,6 +13,7 @@ import org.collectiveone.model.User;
 import org.collectiveone.services.DbServicesImp;
 import org.collectiveone.services.Filters;
 import org.collectiveone.services.GoalDtoListRes;
+import org.collectiveone.web.dto.GoalDetachDto;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.GoalGetDto;
 import org.collectiveone.web.dto.GoalParentDto;
@@ -134,12 +135,24 @@ public class GoalsController {
 		return map;
 	}
 	
+	@Secured("ROLE_USER")
 	@RequestMapping(value="/proposeParent", method = RequestMethod.POST)
 	public @ResponseBody boolean proposeParent(@RequestBody GoalParentDto goalParentDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = dbServices.userGet(auth.getName());
 		if(logged != null) {
 			dbServices.goalProposeParent(goalParentDto.getGoalId(), goalParentDto.getParentTag());
+		}
+		return true;
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/proposeDetach", method = RequestMethod.POST)
+	public @ResponseBody boolean proposeToDetach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = dbServices.userGet(auth.getName());
+		if(logged != null) {
+			dbServices.goalDetach(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
 		}
 		return true;
 	}
