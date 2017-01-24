@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.collectiveone.model.Goal;
+import org.collectiveone.model.GoalAttachState;
 import org.collectiveone.model.GoalState;
 import org.collectiveone.services.Filters;
 import org.collectiveone.services.ObjectListRes;
@@ -205,6 +206,46 @@ public class GoalDao extends BaseDao {
 			count++;
 		}
 		return parents;
+	}
+	
+	public Goal getClosestDetachedParent(Long goalId) {
+		Goal goal = get(goalId);
+		Goal parent = goal.getParent();
+		
+		if(parent == null) {
+			/* goal is a supergoal, doesn not have parents*/
+			return null;		
+		} else {
+			
+			boolean lookForDetachedParent = true;
+			Goal detachedParent = null;
+			
+			Goal nextParent = parent;
+			int level = 0;
+			while(lookForDetachedParent) {
+				if(nextParent == null) {
+					/* all grand parents are attached up until the supergoal is reached */
+					return null;
+				} else {
+					if(nextParent.getAttachedState() == GoalAttachState.DETACHED) {
+						/* found detached parent */
+						detachedParent = nextParent;
+						lookForDetachedParent = false;
+					} else {
+						/* look with parent of parent */
+						nextParent = nextParent.getParent();
+					}
+				} 
+				
+				/* protection against endless loop */
+				level++;
+				if(level >= 100) {
+					lookForDetachedParent = false;
+				}
+			}
+			
+			return detachedParent;
+		}
 	}
 	
 }

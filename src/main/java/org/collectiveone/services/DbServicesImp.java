@@ -1054,7 +1054,7 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
-	public void goalDetach(Long goalId, double initialBudget) {
+	public void goalDetach(Long goalId, double initialBudget) throws IOException {
 		Goal goal = goalDao.get(goalId);
 		
 		if(goal.getParent() != null) {
@@ -1086,10 +1086,69 @@ public class DbServicesImp {
 				goalDao.save(goal);
 				decisionDao.save(increaseBudget);
 				
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setProject(goal.getProject());
+				act.setGoal(goal);
+				act.setType(ActivityType.GOAL);
+				act.setEvent("detach proposed");
+				activitySaveAndNotify(act);
+				
 				break;
 				
 			case PROPOSED_DETACH:
 			case DETACHED:
+			case PROPOSED_REATTACH:
+				/* nop */
+				break;
+				
+			}
+		}
+	}
+	
+	@Transactional
+	public void goalReattach(Long goalId) throws IOException {
+		Goal goal = goalDao.get(goalId);
+		
+		if(goal.getParent() != null) {
+			
+			switch(goal.getAttachedState()) {
+			
+			case DETACHED:
+				goal.setAttachedState(GoalAttachState.PROPOSED_REATTACH);
+				
+				Decision reattach = new Decision();
+				
+				reattach.setCreator(userDao.get("collectiveone"));
+				reattach.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				reattach.setDescription("reattach goal +"+goal.getGoalTag()+" to "+goal.getParent());
+				reattach.setState(DecisionState.IDLE);
+				reattach.setVerdictHours(36);
+				reattach.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getId()));
+				reattach.setFromState(GoalState.PROPOSED.toString());
+				reattach.setToState(GoalState.ACCEPTED.toString());
+				reattach.setProject(goal.getProject());
+				reattach.setGoal(goal);
+				reattach.setType(DecisionType.GOAL);
+				reattach.setAffectedGoal(goal);
+
+				goal.setReattach(reattach);
+				
+				decisionDao.save(reattach);
+				goalDao.save(goal);
+				
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setProject(goal.getProject());
+				act.setGoal(goal);
+				act.setType(ActivityType.GOAL);
+				act.setEvent("reattach proposed");
+				activitySaveAndNotify(act);
+				
+				break;
+				
+			case PROPOSED_DETACH:
+			case ATTACHED:
 			case PROPOSED_REATTACH:
 				/* nop */
 				break;
@@ -1128,31 +1187,30 @@ public class DbServicesImp {
 					break;
 					
 				case CLOSED_ACCEPTED:
-					/* initialized the budget of the detached goal from the parent goal budget 
-					 * and check there is enough pps */
+					/* initialized the budget of the detached goal from the closest 
+					 * parent goal budget and check there is enough pps */
 					boolean goWithDetachment = false;
-					Goal parent = goal.getParent();
-					if(goal.getParent() != null) {
-						
-						... I am here... if parent is attached go to the grandPa if no grandpa then simply create the budget
-						
+					Goal parent = goalDao.getClosestDetachedParent(goalId);
+					
+					if(parent == null) {
+						/* no parent or grandparent in detached state,
+						 * create the pps out of thin air */
+						goWithDetachment = true;
+					} else {
+						/* check parent has enough pps */
 						if(parent.getCurrentBudget() >= goal.getPpsToIncrease()) {
-							/* take the pps from the parent budget */
 							parent.setCurrentBudget(parent.getCurrentBudget() - goal.getPpsToIncrease());
-							goal.setCurrentBudget(goal.getPpsToIncrease());
-							goalDao.save(parent);
-							
 							goWithDetachment = true;
+							goalDao.save(parent);
 						} else {
+							/* no enough pps*/
 							goWithDetachment = false;
 						}
-					} else {
-						goal.setCurrentBudget(goal.getPpsToIncrease());
-						goWithDetachment = true;
 					}
-						
+					
 					if(goWithDetachment) {
 						/* the goal should be detached*/
+						goal.setCurrentBudget(goal.getPpsToIncrease());
 						goal.setAttachedState(GoalAttachState.DETACHED);
 						goalDao.save(goal);
 						
@@ -1185,37 +1243,12 @@ public class DbServicesImp {
 					goal.setAttachedState(GoalAttachState.ATTACHED);
 					
 					/* remaining budget is returned to parent or grand parent */
-					Goal parent = goal.getParent();
-					if(parent.getAttachedState() == GoalAttachState.DETACHED) {
-						/* if parent is detached, return the pps to the parent budget */
+					Goal parent = goalDao.getClosestDetachedParent(goalId);
+					if(parent != null) {
 						parent.setCurrentBudget(parent.getCurrentBudget() + goal.getCurrentBudget());
-					} else {
-						/* else look for the parent's parent iteratively until one detached is found,
-						 * if found */
-						boolean lookForDetachedGrandPa = true;
-						boolean grandPaFound = false;
-						
-						Goal grandPa = parent.getParent();
-						while(lookForDetachedGrandPa) {
-							if(grandPa == null) {
-								lookForDetachedGrandPa = false;
-								grandPaFound = false;
-							} else {
-								if(grandPa.getAttachedState() == GoalAttachState.DETACHED) {
-									lookForDetachedGrandPa = false;
-									grandPaFound = false;
-								} else {
-									grandPa = grandPa.getParent();
-								}
-							}
-						}
-						
-						/* and give the remaining pps to it */
-						if(grandPaFound) {
-							grandPa.setCurrentBudget(grandPa.getCurrentBudget() + goal.getCurrentBudget());
-						}
+						goalDao.save(parent);
 					}
-					
+											
 					/* budget is set to zero*/
 					goal.setCurrentBudget(0.0);
 					
@@ -1223,6 +1256,7 @@ public class DbServicesImp {
 					 * detachment to reoccur */
 					goal.setIncreaseBudget(null);
 					goal.setPpsToIncrease(0.0);
+					goalDao.save(goal);
 					
 					/* decision realm is reset to that of the parent */
 					Long parentRealmId = decisionRealmDao.getIdFromGoalId(goal.getParent().getId());

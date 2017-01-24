@@ -297,6 +297,31 @@ ServerComm.prototype = {
 			});
 		},
 
+		goalProposeReattach: function(goalId,callbackFunction,callbackObj) {
+			
+			var data = {
+				'goalId' : goalId,
+				'increaseBudget' : 0.0
+			};
+			var datastr = JSON.stringify(data);
+				
+			$.ajax({
+				type : 'POST',
+				url : '/rest/goals/proposeReattach',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
 		goalProposeIncreaseBudget: function(goalId, increaseBudget,callbackFunction,callbackObj) {
 			
 			var data = {

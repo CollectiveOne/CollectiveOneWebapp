@@ -156,4 +156,15 @@ public class GoalsController {
 		}
 		return true;
 	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/proposeReattach", method = RequestMethod.POST)
+	public @ResponseBody boolean proposeToReattach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = dbServices.userGet(auth.getName());
+		if(logged != null) {
+			dbServices.goalReattach(goaldetachDto.getGoalId());
+		}
+		return true;
+	}
 }

@@ -64,8 +64,11 @@ GoalBox.prototype.goalBoxLoaded = function() {
 
 		case "DETACHED":
 			labelsAppend = labelsAppend + " <label class='label label-warning'>detached</label>";
+			labelsAppend = labelsAppend + " <label class='label label-warning'>budget: "+this.goal.currentBudget+"</label>";
 			$("#detach_form_container",this.container).show();
 			$("#detach_btn",this.container).html("reattach");
+			$("#detach_input",this.container).hide();
+
 			$("#increase_budget_container",this.container).show();
 
 			$("#detach_btn",this.container).click(this.detachBtnClicked.bind(this));
@@ -182,7 +185,16 @@ GoalBox.prototype.proposeBtnClicked = function() {
 
 
 GoalBox.prototype.detachBtnSaveClicked = function() {
-	GLOBAL.serverComm.goalProposeDetach(this.goal.id, $("#detach_input",this.container).val(), this.detachSaveCallback, this);
+	switch(this.goal.attachedState) {
+		case "ATTACHED":
+			GLOBAL.serverComm.goalProposeDetach(this.goal.id, $("#detach_input",this.container).val(), this.detachSaveCallback, this);
+			break;
+
+		case "DETACHED":
+			GLOBAL.serverComm.goalProposeReattach(this.goal.id, this.detachSaveCallback, this);
+			break;
+	}
+	
 }
 
 GoalBox.prototype.detachSaveCallback = function() {
