@@ -209,6 +209,7 @@ public class GoalDao extends BaseDao {
 	}
 	
 	public Goal getClosestDetachedParent(Long goalId) {
+		/* returns the closest parent which is detached or null */
 		Goal goal = get(goalId);
 		Goal parent = goal.getParent();
 		
@@ -246,6 +247,17 @@ public class GoalDao extends BaseDao {
 			
 			return detachedParent;
 		}
+	}
+	
+	public Goal getClosestDetached(Long goalId) {
+		/* returns the goal itself or the closest parent which is detached or null */
+		Goal goal = get(goalId);
+		if(goal.getAttachedState() == GoalAttachState.DETACHED) {
+			return goal; 
+		} else {
+			return getClosestDetachedParent(goalId);
+		}
+		
 	}
 	
 }

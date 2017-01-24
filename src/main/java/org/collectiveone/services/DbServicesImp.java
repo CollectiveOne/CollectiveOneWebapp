@@ -1892,34 +1892,54 @@ public class DbServicesImp {
 
 					/* once a bid is accepted, the cbtion and all other bids on it
 					 * are closed */
-
-					/* update cbtion state */
-					cbtion.setAssignedPpoints(bid.getPpoints());
-					cbtion.setContributor(bid.getCreator());
-					cbtion.setState(CbtionState.ACCEPTED);
-
-					/* close all other bids and decisions */
-					for(Bid otherBid : cbtion.getBids()) {
-						if(otherBid.getId() != bid.getId()) {
-							otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
-							otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
-							otherBid.setState(BidState.SUPERSEEDED);
-							bidDao.save(otherBid);
+					
+					/* if under detached goal, check there is enough pps in the 
+					 * budget and if so, reduce the budget accordingly */
+					Goal applicableGoal = goalDao.getClosestDetached(cbtion.getGoal().getId());
+					
+					boolean goWithAssignment = false;
+					if(applicableGoal == null) {
+						/* all goals are attached so pps can be created out of thin air */
+						goWithAssignment = true;
+					} else {
+						if(applicableGoal.getCurrentBudget() >= bid.getPpoints()) {
+							applicableGoal.setCurrentBudget(applicableGoal.getCurrentBudget() - bid.getPpoints());
+							goalDao.save(applicableGoal);
+							goWithAssignment = true;
+						} else {
+							/* not enough pps in the budget */
+							goWithAssignment = false;
 						}
 					}
-
-					/* -----------------------------------------------------------------------*/ 
-					/* updated pps of user in project - This is the only place where PPS are created/updated
-					 * and here all the decisions weights update logic is called */
-					/* -----------------------------------------------------------------------*/
-					contributorUpdate(bid.getCbtion().getProject().getId(), bid.getCreator().getId(), cbtion.getAssignedPpoints());
-					projectUpdatePpsTot(bid.getCbtion().getProject().getId(), 0.0);
-					updateVoterInProject(bid.getCbtion().getProject().getId(), bid.getCreator().getId());
-					/* -----------------------------------------------------------------------*/
-
-
-					act.setEvent("accepted");
-					activitySaveAndNotify(act);
+						
+					if(goWithAssignment) {
+						/* update cbtion state */
+						cbtion.setAssignedPpoints(bid.getPpoints());
+						cbtion.setContributor(bid.getCreator());
+						cbtion.setState(CbtionState.ACCEPTED);
+	
+						/* close all other bids and decisions */
+						for(Bid otherBid : cbtion.getBids()) {
+							if(otherBid.getId() != bid.getId()) {
+								otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
+								otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
+								otherBid.setState(BidState.SUPERSEEDED);
+								bidDao.save(otherBid);
+							}
+						}
+	
+						/* -----------------------------------------------------------------------*/ 
+						/* updated pps of user in project - This is the only place where PPS are created/updated
+						 * and here all the decisions weights update logic is called */
+						/* -----------------------------------------------------------------------*/
+						contributorUpdate(bid.getCbtion().getProject().getId(), bid.getCreator().getId(), cbtion.getAssignedPpoints());
+						projectUpdatePpsTot(bid.getCbtion().getProject().getId(), 0.0);
+						updateVoterInProject(bid.getCbtion().getProject().getId(), bid.getCreator().getId());
+						/* -----------------------------------------------------------------------*/
+	
+						act.setEvent("accepted");
+						activitySaveAndNotify(act);
+					}
 
 					break;
 

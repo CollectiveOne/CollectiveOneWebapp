@@ -148,7 +148,7 @@ public class GoalsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/proposeDetach", method = RequestMethod.POST)
-	public @ResponseBody boolean proposeToDetach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
+	public @ResponseBody boolean proposeDetach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = dbServices.userGet(auth.getName());
 		if(logged != null) {
@@ -159,11 +159,22 @@ public class GoalsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/proposeReattach", method = RequestMethod.POST)
-	public @ResponseBody boolean proposeToReattach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
+	public @ResponseBody boolean proposeReattach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = dbServices.userGet(auth.getName());
 		if(logged != null) {
 			dbServices.goalReattach(goaldetachDto.getGoalId());
+		}
+		return true;
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/proposeIncreaseBudget", method = RequestMethod.POST)
+	public @ResponseBody boolean proposeIncreaseBudget(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = dbServices.userGet(auth.getName());
+		if(logged != null) {
+			dbServices.goalIncreaseBudget(goaldetachDto.getGoalId());
 		}
 		return true;
 	}

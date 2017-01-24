@@ -69,7 +69,7 @@ GoalBox.prototype.goalBoxLoaded = function() {
 			$("#detach_btn",this.container).html("reattach");
 			$("#detach_input",this.container).hide();
 
-			$("#increase_budget_container",this.container).show();
+			$("#increase_budget_form_container",this.container).show();
 
 			$("#detach_btn",this.container).click(this.detachBtnClicked.bind(this));
 			$("#detach_save_btn",this.container).click(this.detachBtnSaveClicked.bind(this));
