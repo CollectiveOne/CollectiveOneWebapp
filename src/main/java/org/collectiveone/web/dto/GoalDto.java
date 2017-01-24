@@ -35,6 +35,7 @@ public class GoalDto {
 	private double currentBudget;
 	private DecisionDtoFull increaseBudgetDec;
 	private double ppsToIncrease;
+	private String increaseBudgetState;
 	private DecisionDtoFull reattachDec;
 	
 	public Long getId() {
@@ -144,6 +145,12 @@ public class GoalDto {
 	}
 	public void setIncreaseBudgetDec(DecisionDtoFull increaseBudgetDec) {
 		this.increaseBudgetDec = increaseBudgetDec;
+	}
+	public String getIncreaseBudgetState() {
+		return increaseBudgetState;
+	}
+	public void setIncreaseBudgetState(String increaseBudgetState) {
+		this.increaseBudgetState = increaseBudgetState;
 	}
 	public double getPpsToIncrease() {
 		return ppsToIncrease;

@@ -174,7 +174,7 @@ public class GoalsController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = dbServices.userGet(auth.getName());
 		if(logged != null) {
-			dbServices.goalIncreaseBudget(goaldetachDto.getGoalId());
+			dbServices.goalIncreaseBudget(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
 		}
 		return true;
 	}

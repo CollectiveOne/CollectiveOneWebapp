@@ -27,6 +27,7 @@ import org.collectiveone.model.DecisionState;
 import org.collectiveone.model.DecisionType;
 import org.collectiveone.model.Goal;
 import org.collectiveone.model.GoalAttachState;
+import org.collectiveone.model.GoalIncreaseBudgetState;
 import org.collectiveone.model.GoalParentState;
 import org.collectiveone.model.GoalState;
 import org.collectiveone.model.Project;
@@ -517,6 +518,7 @@ public class DbServicesImp {
 			/* goal start attached, all the logic needed for when 
 			 * detached is set later */
 			goal.setAttachedState(GoalAttachState.ATTACHED);
+			goal.setIncreaseBudgetState(GoalIncreaseBudgetState.NOT_PROPOSED);
 			
 			Long id = goalDao.save(goal);
 
@@ -738,6 +740,7 @@ public class DbServicesImp {
 		goalFromAcceptedToDeleted(goalId);
 		goalUpdateNewParent(goalId);
 		goalUpdateAttachment(goalId);
+		goalUpdateBudget(goalId);
 	}
 
 	@Transactional
@@ -1158,6 +1161,137 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
+	public void goalIncreaseBudget(Long goalId, double increaseBudgetPps) throws IOException {
+		Goal goal = goalDao.get(goalId);
+		
+		if(goal.getParent() != null) {
+			
+			switch(goal.getAttachedState()) {
+			
+			case DETACHED:
+				/* store the pps to increase and create a decision to increase 
+				 * clearly the decision realm for the increase is that of the parent
+				 * goal */
+				goal.setPpsToIncrease(increaseBudgetPps);
+				goal.setIncreaseBudgetState(GoalIncreaseBudgetState.PROPOSED);
+					
+				Decision increaseBudget = new Decision();
+				
+				increaseBudget.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				increaseBudget.setCreator(userDao.get("collectiveone"));
+				/* increase budget decisions are taken in the supergoal realm */
+				increaseBudget.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getParent().getId()));
+				increaseBudget.setDescription("increase budget of goal +"+goal.getGoalTag()+
+						" from "+goal.getCurrentBudget()+" to "+(goal.getCurrentBudget()+increaseBudgetPps)+" pps");
+				increaseBudget.setProject(goal.getProject());
+				increaseBudget.setGoal(goal.getParent());
+				increaseBudget.setState(DecisionState.IDLE);
+				increaseBudget.setType(DecisionType.GOAL);
+				increaseBudget.setAffectedGoal(goal);
+				increaseBudget.setVerdictHours(36);
+				
+				goal.setIncreaseBudget(increaseBudget);
+				
+				goalDao.save(goal);
+				decisionDao.save(increaseBudget);
+				
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setProject(goal.getProject());
+				act.setGoal(goal);
+				act.setType(ActivityType.GOAL);
+				act.setEvent("budget increase proposed");
+				activitySaveAndNotify(act);
+				
+				break;
+				
+			case PROPOSED_DETACH:
+			case ATTACHED:
+			case PROPOSED_REATTACH:
+				/* nop */
+				break;
+				
+			}
+		}
+	}
+	
+	@Transactional
+	public void goalUpdateBudget(Long goalId) throws IOException {
+		Goal goal = goalDao.get(goalId);
+		
+		Activity act = new Activity();
+		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		act.setProject(goal.getProject());
+		act.setGoal(goal);
+		act.setType(ActivityType.GOAL);
+		
+		switch(goal.getIncreaseBudgetState()) {
+		case PROPOSED:
+			/* check the status of the increaseBudget decision */
+			Decision increaseBudget = goal.getIncreaseBudget();
+			if(increaseBudget != null) {
+				switch(increaseBudget.getState()) {
+				case IDLE:
+				case OPEN:
+					/* wait for the increase budget decision to close */
+					break;
+					
+				case CLOSED_ACCEPTED:
+					/* update the budget of the detached goal from the closest 
+					 * parent goal budget and check there is enough pps */
+					boolean goWithIncrease = false;
+					Goal parent = goalDao.getClosestDetachedParent(goalId);
+					
+					if(parent == null) {
+						/* no parent or grandparent in detached state,
+						 * create the pps out of thin air */
+						goWithIncrease = true;
+					} else {
+						/* check parent has enough pps */
+						if(parent.getCurrentBudget() >= goal.getPpsToIncrease()) {
+							parent.setCurrentBudget(parent.getCurrentBudget() - goal.getPpsToIncrease());
+							goWithIncrease = true;
+							goalDao.save(parent);
+						} else {
+							/* no enough pps*/
+							goWithIncrease = false;
+						}
+					}
+					
+					if(goWithIncrease) {
+						/* the goal should be detached*/
+						goal.setCurrentBudget(goal.getCurrentBudget() + goal.getPpsToIncrease());
+						goalDao.save(goal);
+						
+						act.setEvent("budget increased");
+						activitySaveAndNotify(act);
+					}
+					
+					/* mark as not proposed anyway, if there was not enough budget
+					 * the increase decision has to be taken again */
+					goal.setIncreaseBudgetState(GoalIncreaseBudgetState.NOT_PROPOSED);
+					
+					break;
+					
+				case CLOSED_DENIED:
+				case CLOSED_EXTERNALLY:
+					goal.setIncreaseBudgetState(GoalIncreaseBudgetState.NOT_PROPOSED);
+					
+					act.setEvent("budget increase refused");
+					activitySaveAndNotify(act);
+					break;
+				}
+			}
+			
+			break;
+			
+		case NOT_PROPOSED:
+			/* nop */
+			break;
+		}
+	}
+	
+	@Transactional
 	public void goalUpdateAttachment(Long goalId) throws IOException {
 		Goal goal = goalDao.get(goalId);
 		
@@ -1224,11 +1358,10 @@ public class DbServicesImp {
 				case CLOSED_EXTERNALLY:
 					act.setEvent("detachment refused");
 					activitySaveAndNotify(act);
-					
+					break;
 				}
-				
-				break;
 			}
+			break;
 				
 		case PROPOSED_REATTACH:
 			

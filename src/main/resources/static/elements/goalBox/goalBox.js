@@ -65,17 +65,27 @@ GoalBox.prototype.goalBoxLoaded = function() {
 		case "DETACHED":
 			labelsAppend = labelsAppend + " <label class='label label-warning'>detached</label>";
 			labelsAppend = labelsAppend + " <label class='label label-warning'>budget: "+this.goal.currentBudget+"</label>";
+			
 			$("#detach_form_container",this.container).show();
 			$("#detach_btn",this.container).html("reattach");
 			$("#detach_input",this.container).hide();
-
-			$("#increase_budget_form_container",this.container).show();
-
 			$("#detach_btn",this.container).click(this.detachBtnClicked.bind(this));
 			$("#detach_save_btn",this.container).click(this.detachBtnSaveClicked.bind(this));
 
-			$("#increase_budget_btn",this.container).click(this.increaseBtnClicked.bind(this));
-			$("#increase_budget_save_btn",this.container).click(this.increaseBtnSaveClicked.bind(this));
+			switch(this.goal.increaseBudgetState) {
+				case "NOT_PROPOSED":
+					$("#increase_budget_form_container",this.container).show();
+					$("#increase_budget_btn",this.container).click(this.increaseBtnClicked.bind(this));
+					$("#increase_budget_save_btn",this.container).click(this.increaseBtnSaveClicked.bind(this));
+					break;
+
+				case "PROPOSED":
+					$("#increase_budget_decision_container",this.container).show();
+					var decBox = new DecisionBoxSmall($("#increase_budget_decision_container",this.container),this.goal.increaseBudgetDec);
+					decBox.updateVoteAndDraw();
+					break;
+			}
+			
 			break;
 
 		case "PROPOSED_DETACH":

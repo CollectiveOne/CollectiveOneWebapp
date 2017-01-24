@@ -47,6 +47,7 @@ public class Goal {
 	private double currentBudget;
 	@OneToOne
 	private Decision increaseBudget;
+	private GoalIncreaseBudgetState increaseBudgetState;
 	private double ppsToIncrease;
 	@OneToOne
 	private Decision reattach;
@@ -72,6 +73,7 @@ public class Goal {
 		dto.setCurrentBudget(currentBudget);
 		if(increaseBudget != null) dto.setIncreaseBudgetDec(increaseBudget.toDto());
 		dto.setPpsToIncrease(ppsToIncrease);
+		dto.setIncreaseBudgetState(increaseBudgetState.toString());
 		if(reattach != null) dto.setReattachDec(reattach.toDto());
 		
 		return dto;
@@ -173,6 +175,12 @@ public class Goal {
 	}
 	public void setIncreaseBudget(Decision increaseBudget) {
 		this.increaseBudget = increaseBudget;
+	}
+	public GoalIncreaseBudgetState getIncreaseBudgetState() {
+		return increaseBudgetState;
+	}
+	public void setIncreaseBudgetState(GoalIncreaseBudgetState increaseBudgetState) {
+		this.increaseBudgetState = increaseBudgetState;
 	}
 	public double getPpsToIncrease() {
 		return ppsToIncrease;
