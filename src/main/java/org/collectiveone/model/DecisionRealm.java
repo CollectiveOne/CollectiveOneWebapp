@@ -21,7 +21,6 @@ public class DecisionRealm {
 	private Long id;
 	@OneToMany(mappedBy="realm", cascade=CascadeType.ALL)
 	private List<Voter> voters = new ArrayList<Voter>();
-	private double weightTot; /* aggregation of weights to avoid recomputing it*/
 	@OneToOne
 	private Goal goal;
 	
@@ -42,12 +41,6 @@ public class DecisionRealm {
 	}
 	public void setGoal(Goal goal) {
 		this.goal = goal;
-	}
-	public double getWeightTot() {
-		return weightTot;
-	}
-	public void setWeightTot(double weightTot) {
-		this.weightTot = weightTot;
 	}
 	
 	public int size() {

@@ -21,15 +21,14 @@ public class Voter {
 	@ManyToOne
 	private User voterUser;
 	private double maxWeight;
-	private double scale;
+	private double actualWeight;
 	
 	public VoterDto toDto() {
 		VoterDto dto = new VoterDto();
 		dto.setUsername(voterUser.getUsername());
 		dto.setMaxWeight(maxWeight);
-		dto.setActualWeight(getActualWeight());
-		dto.setScale(scale);
-		
+		dto.setActualWeight(actualWeight);
+
 		return dto;
 	}
 	
@@ -57,14 +56,11 @@ public class Voter {
 	public void setMaxWeight(double maxWeight) {
 		this.maxWeight = maxWeight;
 	}
-	public double getScale() {
-		return scale;
-	}
-	public void setScale(double scale) {
-		this.scale = scale;
-	}
 	public double getActualWeight() {
-		return maxWeight*scale;
+		return actualWeight;
+	}
+	public void setActualWeight(double actualWeight) {
+		this.actualWeight = actualWeight;
 	}
 	
 }

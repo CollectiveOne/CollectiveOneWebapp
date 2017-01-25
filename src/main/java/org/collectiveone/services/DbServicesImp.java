@@ -1017,7 +1017,6 @@ public class DbServicesImp {
 			userWeightsDto.setUsername(username);
 			userWeightsDto.setMaxWeight(voter.getMaxWeight());
 			userWeightsDto.setActualWeight(voter.getActualWeight());
-			userWeightsDto.setScale(voter.getScale());
 			
 			goalWeightsDataDto.setUserWeightsDto(userWeightsDto);
 		}
@@ -1029,7 +1028,7 @@ public class DbServicesImp {
 		
 		goalWeightsDataDto.setGoalTag(goalTag);
 		goalWeightsDataDto.setProjectName(projectName);
-		goalWeightsDataDto.setTotalWeight(realm.getWeightTot());
+		goalWeightsDataDto.setTotalWeight(decisionRealmDao.getWeightTot(realm.getId()));
 		
 		goalWeightsDataDto.setVotersDtos(votersDtos);
 		
@@ -1043,16 +1042,12 @@ public class DbServicesImp {
 		User user = userDao.get(touchDto.getUsername());
 		Voter voter = decisionRealmDao.getVoter(realm.getId(), user.getId());
 		
-		double weigthBefore = voter.getActualWeight();
-		
 		if(touchDto.getTouchFlag()) {
-			voter.setScale(1.0);
+			voter.setActualWeight(voter.getMaxWeight());
 		} else {
-			voter.setScale(0.0);
+			voter.setActualWeight(0.0);
 		}
 		
-		double weightAfter = voter.getActualWeight();
-		realm.setWeightTot(realm.getWeightTot() + (weightAfter - weigthBefore));
 		decisionRealmDao.save(realm);
 	}
 	
@@ -2021,8 +2016,6 @@ public class DbServicesImp {
 					break;
 
 				case CLOSED_ACCEPTED: 
-					bid.setState(BidState.ACCEPTED); 
-
 					/* once a bid is accepted, the cbtion and all other bids on it
 					 * are closed */
 					
@@ -2046,6 +2039,9 @@ public class DbServicesImp {
 					}
 						
 					if(goWithAssignment) {
+						/* only mark the bid as accepted when there is enough budget */
+						bid.setState(BidState.ACCEPTED); 
+						
 						/* update cbtion state */
 						cbtion.setAssignedPpoints(bid.getPpoints());
 						cbtion.setContributor(bid.getCreator());
@@ -2054,8 +2050,8 @@ public class DbServicesImp {
 						/* close all other bids and decisions */
 						for(Bid otherBid : cbtion.getBids()) {
 							if(otherBid.getId() != bid.getId()) {
-								otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
-								otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
+								if(otherBid.getAssign() != null) otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
+								if(otherBid.getAccept() != null) otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
 								otherBid.setState(BidState.SUPERSEEDED);
 								bidDao.save(otherBid);
 							}
@@ -2175,7 +2171,7 @@ public class DbServicesImp {
 		
 		/* Update the decision */
 		DecisionState before = dec.getState();
-		dec.updateState(timeService.getNow());
+		dec.updateState(timeService.getNow(),decisionRealmDao.getWeightTot(dec.getDecisionRealm().getId()));
 		decisionDao.save(dec);
 
 		/* store activity only for custom decisions (automatic decisions activity 
@@ -2326,7 +2322,8 @@ public class DbServicesImp {
 	}
 	@Transactional
 	public void decisionRealmAddVoterToAll(Long projectId,Long userId,double maxWeight) {
-		/* Add a voter to all the realms of a project */
+		/* Add a voter to all the realms of a project, this is done the first time a contributor
+		 * is added to a project */
 		
 		List<DecisionRealm> realms = decisionRealmDao.getAllOfProject(projectId);
 		
@@ -2335,11 +2332,9 @@ public class DbServicesImp {
 			if(existingVoter == null) {
 				Voter newVoter = new Voter();
 				newVoter.setVoterUser(userDao.get(userId));
-				newVoter.setMaxWeight(maxWeight);
 				newVoter.setRealm(realm);
-				newVoter.setScale(1.0);
-				
-				realm.setWeightTot(realm.getWeightTot() + newVoter.getActualWeight());
+				newVoter.setMaxWeight(maxWeight);
+				newVoter.setActualWeight(maxWeight);
 				
 				voterDao.save(newVoter);
 				decisionRealmDao.save(realm);
@@ -2373,25 +2368,17 @@ public class DbServicesImp {
 		if(destRealm.getVoters() == null) { destRealm.setVoters(new ArrayList<Voter>()); }
 		if(destRealm.getVoters().size() > 0) { destRealm.getVoters().clear(); }
 		
-		/* TODO: delete all voters before recrating them, for safety? */
-		
-		/* keep track of the weight to store the sum */
-		double weightSum = 0.0;
-		
 		for(Contributor contributor : project.getContributors()) {
 			Voter newVoter = new Voter();
 			
 			newVoter.setRealm(destRealm);
 			newVoter.setVoterUser(contributor.getContributorUser());
 			newVoter.setMaxWeight(contributor.getPps());
-			newVoter.setScale(1.0);
-			
-			weightSum += newVoter.getActualWeight();
+			newVoter.setActualWeight(contributor.getPps());
 			
 			voterDao.save(newVoter);
 		}
 		
-		destRealm.setWeightTot(weightSum);
 		decisionRealmDao.save(destRealm);
 	}
 
@@ -2405,23 +2392,17 @@ public class DbServicesImp {
 		
 		/* TODO: delete all voters before recreating them, for safety? */
 		
-		/* keep track of the weight to store the sum */
-		double weightSum = 0.0;
-		
 		for(Voter voter : sourceRealm.getVoters()) {
 			Voter newVoter = new Voter();
 			
 			newVoter.setRealm(destRealm);
 			newVoter.setVoterUser(voter.getVoterUser());
 			newVoter.setMaxWeight(voter.getMaxWeight());
-			newVoter.setScale(voter.getScale());
-			
-			weightSum += newVoter.getActualWeight();
+			newVoter.setActualWeight(voter.getActualWeight());
 			
 			voterDao.save(newVoter);
 		}
 		
-		destRealm.setWeightTot(weightSum);
 		decisionRealmDao.save(destRealm);
 	}
 	
@@ -2432,25 +2413,19 @@ public class DbServicesImp {
 		
 		DecisionRealm sourceRealm = decisionRealmDao.get(sourceRealmId);
 		
-		/* keep track of the weight to store the sum */
-		double weightSum = 0.0;
-		
 		for(Voter sourceVoter : sourceRealm.getVoters()) {
 			for(Voter destVoter : destRealm.getVoters()) {
 				if(destVoter.getVoterUser().getId() == sourceVoter.getVoterUser().getId()) {
 					
 					destVoter.setVoterUser(sourceVoter.getVoterUser());
 					destVoter.setMaxWeight(sourceVoter.getMaxWeight());
-					destVoter.setScale(sourceVoter.getScale());
-					
-					weightSum += destVoter.getActualWeight();
+					destVoter.setActualWeight(sourceVoter.getActualWeight());
 					
 					voterDao.save(destVoter);
 				}
 			}
 		}
 		
-		destRealm.setWeightTot(weightSum);
 		decisionRealmDao.save(destRealm);
 	}
 	
@@ -2470,15 +2445,12 @@ public class DbServicesImp {
 				DecisionRealm realm = decisionRealmDao.getFromGoalId(superGoal.getId());
 				Voter voter = decisionRealmDao.getVoter(realm.getId(), userId);
 				
-				/* update the max weight to the user pps */
-				double originalWeight = voter.getMaxWeight();
-				double newWeight = ctrb.getPps();
-				
-				voter.setMaxWeight(newWeight);
+				/* update the maxWeight and actualWeight keeping the proportion
+				 * in case the users has decided to manually change it */
+				double scale = voter.getActualWeight()/voter.getMaxWeight();
+				voter.setMaxWeight(ctrb.getPps());
+				voter.setActualWeight(scale*ctrb.getPps());
 				voterDao.save(voter);
-				
-				/* update the total pps aggregate */
-				realm.setWeightTot(realm.getWeightTot() + (newWeight - originalWeight));
 				
 				/* and update the weight of the theses of that user (it will have immediate
 				 * effect in the decision algorithm) */
@@ -2516,15 +2488,13 @@ public class DbServicesImp {
 		/* if user is in realm */
 		if(voterInGoal != null) {
 			/* update the max weight to the weight of the user in the parent goal */
-			double originalWeight = voterInGoal.getMaxWeight();
-			double newWeight = voterInParent.getActualWeight();
 			
-			voterInGoal.setMaxWeight(newWeight);
+			/* update the maxWeight and actualWeight keeping the proportion
+			 * in case the users has decided to manually change it. */
+			double scale = voterInGoal.getActualWeight()/voterInGoal.getMaxWeight();
+			voterInGoal.setMaxWeight(voterInParent.getMaxWeight());
+			voterInGoal.setActualWeight(scale*voterInParent.getMaxWeight());
 			voterDao.save(voterInGoal);
-			
-			/* update the total weight aggregate. Adds the delta instead of summing again, 
-			 * TODO: safe enough? */
-			goalRealm.setWeightTot(goalRealm.getWeightTot() + (newWeight - originalWeight));
 			
 			/* and update the weight of the theses of that user (it will have immediate
 			 * effect in the decision algorithm) */

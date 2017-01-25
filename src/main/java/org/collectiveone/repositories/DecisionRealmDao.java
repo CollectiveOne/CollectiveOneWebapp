@@ -50,7 +50,7 @@ public class DecisionRealmDao extends BaseDao {
 		return res; 
 	}
 	
-	public void addOrUpdateVoter(Long realmId, Long voterUserId, double maxWeight, double scale) {
+	public void addOrUpdateVoter(Long realmId, Long voterUserId, double maxWeight, double actualWeight) {
 		
 		Session session = sessionFactory.getCurrentSession();
 		DecisionRealm realm = session.get(DecisionRealm.class,realmId);
@@ -61,13 +61,11 @@ public class DecisionRealmDao extends BaseDao {
 			/* if voter is not in the realm, then add him */
 			voter = new Voter();
 			voter.setVoterUser(session.get(User.class,voterUserId));
-			voter.setMaxWeight(maxWeight);
-			voter.setScale(scale);
 			voter.setRealm(realm);
 		}
-		
+
 		voter.setMaxWeight(maxWeight);
-		voter.setScale(scale);
+		voter.setActualWeight(actualWeight);
 		
 		save(voter);
 		save(realm);
@@ -80,6 +78,15 @@ public class DecisionRealmDao extends BaseDao {
 			.add(Restrictions.eq("realm.id", realmId))
 			.add(Restrictions.eq("us.id", voterUserId));
 		
-		return (Voter)query.uniqueResult();
+		return (Voter) query.uniqueResult();
+	}
+	
+	public double getWeightTot(Long realmId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Voter.class);
+		query
+			.add(Restrictions.eq("realm.id", realmId))
+			.setProjection(Projections.sum("actualWeight"));
+		
+		return (double) query.uniqueResult();
 	}
 }

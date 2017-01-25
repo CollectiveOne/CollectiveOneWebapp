@@ -310,7 +310,7 @@ public class Decision {
 	/*
 	 * Decision Engine logic
 	 */
-	public void updateState(Timestamp now) {
+	public void updateState(Timestamp now, double weightTotIn) {
 
 		if (state == DecisionState.IDLE) {
 			// force open the decision after the first vote
@@ -324,8 +324,7 @@ public class Decision {
 			
 			n = thesesCast.size();
 			
-			/*TODO: inefficient to compute at every update... */
-			weightTot = decisionRealm.getWeightTot();
+			weightTot = weightTotIn;
 			
 			if (n > 0) {
 				

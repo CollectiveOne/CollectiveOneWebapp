@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.collectiveone.model.Bid;
 import org.collectiveone.model.BidState;
+import org.collectiveone.model.CbtionState;
 import org.collectiveone.model.DecisionState;
 import org.collectiveone.model.User;
 import org.hibernate.Criteria;
@@ -101,6 +102,20 @@ public class BidDao extends BaseDao {
 		query.setParameter("cId", creatorId);
 		
 		return (User) query.uniqueResult();
+	}
+	
+	public List<Bid> getNotPaid() {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Bid.class,"bd");
+		query
+			.createAlias("bd.cbtion", "cb")
+			.add(Restrictions.eq("cb.state", CbtionState.ASSIGNED))
+			.add(Restrictions.eq("state", BidState.ACCEPTED));
+				
+		
+		@SuppressWarnings("unchecked")
+		List<Bid> res = (List<Bid>) query.list();
+		
+		return res;
 	}
 	
 }

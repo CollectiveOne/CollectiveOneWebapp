@@ -5,7 +5,6 @@ public class GoalUserWeightsDto {
 	private String username;
 	private double maxWeight;
 	private double actualWeight;
-	private double scale;
 	
 	public String getUsername() {
 		return username;
@@ -24,12 +23,6 @@ public class GoalUserWeightsDto {
 	}
 	public void setActualWeight(double actualWeight) {
 		this.actualWeight = actualWeight;
-	}
-	public double getScale() {
-		return scale;
-	}
-	public void setScale(double scale) {
-		this.scale = scale;
 	}
 	
 }
