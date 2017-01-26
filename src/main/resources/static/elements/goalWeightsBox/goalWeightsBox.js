@@ -19,10 +19,11 @@ GoalWeightsBox.prototype.draw = function() {
 
 GoalWeightsBox.prototype.htmlLoaded = function() {
 	if(isUserLogged()) {
+		var maxWeightPerc = this.goalWeightsData.userWeightsDto.maxWeight/this.goalWeightsData.totalWeight*100;
+		var actWeightPerc = this.goalWeightsData.userWeightsDto.actualWeight/this.goalWeightsData.totalWeight*100;
+		
 		$("#left_div", this.container).show();
-		$("#total_weight", this.container).html(this.goalWeightsData.totalWeight);
-		$("#user_max_weight", this.container).html(this.goalWeightsData.userWeightsDto.maxWeight);
-		$("#user_actual_weight", this.container).html(this.goalWeightsData.userWeightsDto.actualWeight);
+		$("#user_actual_weight", this.container).html(floatToChar(actWeightPerc,1)+"%");
 		$("#touch_btn", this.container).click(this.touchClicked.bind(this));
 		$("#release_btn", this.container).click(this.releaseClicked.bind(this));
 	}
@@ -49,9 +50,9 @@ GoalWeightsBox.prototype.drawGraph = function() {
 	var chartData = []; 
 	var chartLabels = [];
 	var chartColors = [];
-	
+	var maxWeight = this.goalWeightsData.totalWeight;
 	for(var ix in votersDtos) {
-		chartData.push(votersDtos[ix].actualWeight);
+		chartData.push(floatToChar(votersDtos[ix].actualWeight/maxWeight*100,1));
 		chartLabels.push(votersDtos[ix].username);
 		chartColors.push("#5bc0de");
 	}

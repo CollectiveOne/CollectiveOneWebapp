@@ -64,7 +64,7 @@ GoalBox.prototype.goalBoxLoaded = function() {
 
 		case "DETACHED":
 			labelsAppend = labelsAppend + " <label class='label label-warning'>detached</label>";
-			labelsAppend = labelsAppend + " <label class='label label-warning'>budget: "+this.goal.currentBudget+"</label>";
+			labelsAppend = labelsAppend + " <label class='label label-warning'>available budget: "+this.goal.currentBudget+"</label>";
 			
 			$("#detach_form_container",this.container).show();
 			$("#detach_btn",this.container).html("reattach");
