@@ -51,7 +51,7 @@ public class DecisionRealmDao extends BaseDao {
 	}
 	
 	public void addOrUpdateVoter(Long realmId, Long voterUserId, double maxWeight, double actualWeight) {
-		
+		/* voter may not exist, in which is created */
 		Session session = sessionFactory.getCurrentSession();
 		DecisionRealm realm = session.get(DecisionRealm.class,realmId);
 		
@@ -64,6 +64,20 @@ public class DecisionRealmDao extends BaseDao {
 			voter.setRealm(realm);
 		}
 
+		voter.setMaxWeight(maxWeight);
+		voter.setActualWeight(actualWeight);
+		
+		save(voter);
+		save(realm);
+	}
+	
+	public void updateVoter(Long realmId, Long voterUserId, double maxWeight, double actualWeight) {
+		/* voter must exist */
+		Session session = sessionFactory.getCurrentSession();
+		DecisionRealm realm = session.get(DecisionRealm.class,realmId);
+		
+		Voter voter = getVoter(realmId,voterUserId);
+		
 		voter.setMaxWeight(maxWeight);
 		voter.setActualWeight(actualWeight);
 		

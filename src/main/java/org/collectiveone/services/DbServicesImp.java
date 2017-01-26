@@ -2182,7 +2182,8 @@ public class DbServicesImp {
 			isCustom = true;
 		}
 		
-	
+		boolean autoDecayWeights = false;
+		
 		Activity act = new Activity();
 		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		act.setDecision(dec);
@@ -2204,11 +2205,13 @@ public class DbServicesImp {
 			case CLOSED_ACCEPTED:
 				act.setEvent("accepted");
 				if(isCustom) activitySaveAndNotify(act);
+				autoDecayWeights = true;
 				break;
 
 			case CLOSED_DENIED:
 				act.setEvent("rejected");
 				if(isCustom) activitySaveAndNotify(act);
+				autoDecayWeights = true;
 				break;
 
 			case CLOSED_EXTERNALLY:
@@ -2232,11 +2235,13 @@ public class DbServicesImp {
 			case CLOSED_ACCEPTED:
 				act.setEvent("accepted");
 				if(isCustom) activitySaveAndNotify(act);
+				autoDecayWeights = true;
 				break;
 
 			case CLOSED_DENIED:
 				act.setEvent("rejected");
 				if(isCustom) activitySaveAndNotify(act);
+				autoDecayWeights = true;
 				break;
 
 			case CLOSED_EXTERNALLY:
@@ -2251,6 +2256,39 @@ public class DbServicesImp {
 		case CLOSED_EXTERNALLY:
 			break;
 
+		}
+		
+		if(autoDecayWeights) {
+			Goal goal = dec.getGoal();
+			if(goal.getAttachedState() == GoalAttachState.DETACHED) {
+				/* decay is done only if goal is detached */
+				DecisionRealm realm = dec.getDecisionRealm();
+				List<Voter> votersNotVoted = new ArrayList<Voter>();
+				
+				for(Voter voter : realm.getVoters()) {
+					/* see if the voter voted */
+					/* TODO: optimize search? */
+					boolean voterVoted = false;
+					for(Thesis thesis : dec.getThesesCast()) {
+						if(thesis.getAuthor().getId() == voter.getVoterUser().getId()) {
+							voterVoted = true;
+						}
+					}
+					
+					if(!voterVoted) {
+						/* if not voted, then add it to the list*/
+						votersNotVoted.add(voter);
+					}
+				}
+				
+				for(Voter voterNotVoted : votersNotVoted) {
+					double maxWeight = voterNotVoted.getMaxWeight();
+					/* voter weight is halved for every decision in which the voter
+					 * does not participate */
+					double actualWeight = voterNotVoted.getActualWeight()*0.5;
+					decisionRealmDao.updateVoter(realm.getId(), voterNotVoted.getVoterUser().getId(), maxWeight, actualWeight);
+				}
+			}
 		}
 	}
 	
