@@ -1,0 +1,122 @@
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
+---------------------------------------------------------
+-- Conect to other server
+---------------------------------------------------------
+CREATE EXTENSION postgres_fdw;
+CREATE SERVER master FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'localhost', dbname 'cpdb-master', port '5432');
+CREATE USER MAPPING FOR postgres SERVER master OPTIONS (user 'postgres', password 'iristra');
+IMPORT FOREIGN SCHEMA public FROM SERVER master INTO masterschema;
+
+---------------------------------------------------------
+-- COPY tables that have not changed
+---------------------------------------------------------
+SELECT * INTO activity FROM masterschema.activity;
+SELECT * INTO app_users FROM masterschema.app_users;
+SELECT * INTO argument_backers FROM masterschema.argument_backers;
+SELECT * INTO arguments FROM masterschema.arguments;
+SELECT * INTO authorized_emails FROM masterschema.authorized_emails;
+SELECT * INTO authorized_projects FROM masterschema.authorized_projects;
+SELECT * INTO bids FROM masterschema.bids;
+SELECT * INTO bids_reviews FROM masterschema.bids_reviews;
+SELECT * INTO cbtions FROM masterschema.cbtions;
+SELECT * INTO cbtions_bids FROM masterschema.cbtions_bids;
+SELECT * INTO cbtions_comments FROM masterschema.cbtions_comments;
+SELECT * INTO cbtions_promoters FROM masterschema.cbtions_promoters;
+SELECT * INTO comments FROM masterschema.comments;
+SELECT * INTO comments_answers FROM masterschema.comments_answers;
+SELECT * INTO comments_promoters FROM masterschema.comments_promoters;
+SELECT * INTO mail_subscriptions FROM masterschema.mail_subscriptions;
+SELECT * INTO password_recovery_token FROM masterschema.password_recovery_token;
+SELECT * INTO projects FROM masterschema.projects;
+SELECT * INTO promoters FROM masterschema.promoters;
+SELECT * INTO reviews FROM masterschema.reviews;
+SELECT * INTO roles FROM masterschema.roles;
+SELECT * INTO theses FROM masterschema.theses;
+SELECT * INTO verification_token FROM masterschema.verification_token;
+
+---------------------------------------------------------
+-- CREATE tables new tables (schema created by hibernate)
+---------------------------------------------------------
+CREATE TABLE contributors (
+    id bigint NOT NULL,
+    pps double precision NOT NULL,
+    contributor_user_id bigint,
+    project_id bigint
+);
+
+CREATE TABLE goals (
+    id bigint NOT NULL,
+    attached_state integer,
+    creation_date timestamp without time zone,
+    current_budget double precision NOT NULL,
+    description text,
+    goal_tag character varying(255),
+    increase_budget_state integer,
+    parent_state integer,
+    pps_to_increase double precision NOT NULL,
+    state integer,
+    create_dec_id bigint,
+    creator_id bigint,
+    delete_dec_id bigint,
+    increase_budget_id bigint,
+    parent_id bigint,
+    project_id bigint,
+    propose_parent_id bigint,
+    proposed_parent_id bigint,
+    reattach_id bigint
+);
+
+CREATE TABLE decision_realms (
+    id bigint NOT NULL,
+    goal_id bigint
+);
+
+CREATE TABLE decisions (
+    id bigint NOT NULL,
+    actual_verdict_date timestamp without time zone,
+    ci double precision NOT NULL,
+    clarity double precision NOT NULL,
+    creation_date timestamp without time zone,
+    description text,
+    elapsed_factor double precision NOT NULL,
+    from_state character varying(255),
+    l0 double precision NOT NULL,
+    l1 double precision NOT NULL,
+    n integer NOT NULL,
+    n_min_stab integer NOT NULL,
+    open_date timestamp without time zone,
+    pest double precision NOT NULL,
+    pps_cum double precision NOT NULL,
+    stab_ratio double precision NOT NULL,
+    stability double precision NOT NULL,
+    state integer,
+    to_state character varying(255),
+    type integer,
+    verdict integer NOT NULL,
+    verdict_hours double precision NOT NULL,
+    weight_tot double precision NOT NULL,
+    affected_bid_id bigint,
+    affected_cbtion_id bigint,
+    affected_goal_id bigint,
+    creator_id bigint,
+    decision_realm_id bigint,
+    goal_id bigint,
+    project_id bigint
+);
+
+CREATE TABLE voters (
+    id bigint NOT NULL,
+    actual_weight double precision NOT NULL,
+    max_weight double precision NOT NULL,
+    realm_id bigint,
+    voter_user_id bigint
+);
+
+-- contributors
+-- goals
+-- decision_realms
+-- decisions
+-- voters
+
