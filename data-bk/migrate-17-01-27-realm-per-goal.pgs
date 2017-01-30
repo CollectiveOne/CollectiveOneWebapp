@@ -39,7 +39,50 @@ SELECT * INTO verification_token FROM masterschema.verification_token;
 ---------------------------------------------------------
 -- COPY sequences that have not changed
 ---------------------------------------------------------
+CREATE SEQUENCE activity_id_seq;
+SELECT SETVAL('activity_id_seq', (SELECT max(id) FROM activity), false);
 
+CREATE SEQUENCE app_users_id_seq;
+SELECT SETVAL('app_users_id_seq', (SELECT max(id) FROM app_users), false);
+
+CREATE SEQUENCE arguments_id_seq;
+SELECT SETVAL('arguments_id_seq', (SELECT max(id) FROM arguments), false);
+
+CREATE SEQUENCE authorized_emails_id_seq;
+SELECT SETVAL('authorized_emails_id_seq', (SELECT max(id) FROM authorized_emails), false);
+
+CREATE SEQUENCE authorized_projects_id_seq;
+SELECT SETVAL('authorized_projects_id_seq', (SELECT max(id) FROM authorized_projects), false);
+
+CREATE SEQUENCE bids_id_seq;
+SELECT SETVAL('bids_id_seq', (SELECT max(id) FROM bids), false);
+
+CREATE SEQUENCE cbtions_id_seq;
+SELECT SETVAL('cbtions_id_seq', (SELECT max(id) FROM cbtions), false);
+
+CREATE SEQUENCE comments_id_seq;
+SELECT SETVAL('comments_id_seq', (SELECT max(id) FROM comments), false);
+
+CREATE SEQUENCE mail_subscriptions_id_seq;
+SELECT SETVAL('mail_subscriptions_id_seq', (SELECT max(id) FROM mail_subscriptions), false);
+
+CREATE SEQUENCE projects_id_seq;
+SELECT SETVAL('projects_id_seq', (SELECT max(id) FROM projects), false);
+
+CREATE SEQUENCE promoters_id_seq;
+SELECT SETVAL('promoters_id_seq', (SELECT max(id) FROM promoters), false);
+
+CREATE SEQUENCE reviews_id_seq;
+SELECT SETVAL('reviews_id_seq', (SELECT max(id) FROM reviews), false);
+
+CREATE SEQUENCE roles_id_seq;
+SELECT SETVAL('roles_id_seq', (SELECT max(id) FROM roles), false);
+
+CREATE SEQUENCE theses_id_seq;
+SELECT SETVAL('theses_id_seq', (SELECT max(id) FROM theses), false);
+
+CREATE SEQUENCE verification_token_id_seq;
+SELECT SETVAL('verification_token_id_seq', (SELECT max(id) FROM verification_token), false);
 
 ---------------------------------------------------------
 -- CREATE contributors table
@@ -58,6 +101,7 @@ CREATE SEQUENCE contributors_id_seq
     NO MAXVALUE
     CACHE 1;
 
+---------------------------------------------------------
 -- FILL contributors
 
 ALTER TABLE contributors ALTER COLUMN pps DROP NOT NULL;
@@ -69,12 +113,13 @@ SELECT
 	SUM(assigned_ppoints) FILTER (WHERE state=2)
 FROM cbtions
 GROUP BY 2,3;
+
 DELETE FROM contributors WHERE pps IS NULL AND contributor_user_id IS NULL;
 ALTER TABLE contributors ALTER COLUMN pps SET NOT NULL;
 
 
 ---------------------------------------------------------
--- CREATE contrinbutors table
+-- CREATE goals table
 ---------------------------------------------------------
 
 CREATE TABLE goals (
@@ -99,10 +144,61 @@ CREATE TABLE goals (
     reattach_id bigint
 );
 
+ALTER TABLE goals ALTER COLUMN current_budget DROP NOT NULL;
+ALTER TABLE goals ALTER COLUMN pps_to_increase DROP NOT NULL;
+
+INSERT INTO goals (id,creation_date,description,goal_tag,parent_state,state,create_dec_id,creator_id,delete_dec_id,parent_id,project_id,propose_parent_id,proposed_parent_id) 
+SELECT             id,creation_date,description,goal_tag,parent_state,state,create_dec_id,creator_id,delete_dec_id,parent_id,project_id,propose_parent_id,proposed_parent_id 
+FROM masterschema.goal;
+
+UPDATE goals SET attached_state=0;
+UPDATE goals SET increase_budget_state=0;
+
+UPDATE goals SET current_budget=0;
+UPDATE goals SET pps_to_increase=0;
+
+ALTER TABLE goals ALTER COLUMN current_budget SET NOT NULL;
+ALTER TABLE goals ALTER COLUMN pps_to_increase SET NOT NULL;
+
+
+CREATE SEQUENCE goal_id_seq;
+SELECT SETVAL('goal_id_seq', (SELECT max(id) FROM goals), false);
+
+
+---------------------------------------------------------
+-- CREATE goals table
+---------------------------------------------------------
+
 CREATE TABLE decision_realms (
     id bigint NOT NULL,
     goal_id bigint
 );
+
+CREATE SEQUENCE decision_realms_id_seq;
+
+-- copy existing realms with their id. For some reason there are empty decision realms. Cleanup is made by deleting those without a project.
+INSERT INTO decision_realms (id)
+SELECT id FROM masterschema.decision_realms WHERE project_id IS NOT NULL;
+
+-- now set the goal id of the existing realms to one of the super goals of each project.
+-- manually done ...
+UPDATE decision_realms SET goal_id = (SELECT id from goals WHERE goal_tag='vision' AND project_id=1) WHERE id = 1;
+UPDATE decision_realms SET goal_id = (SELECT id from goals WHERE goal_tag='webapp' AND project_id=2) WHERE id = 2;
+UPDATE decision_realms SET goal_id = (SELECT id from goals WHERE goal_tag='webpage' AND project_id=3) WHERE id = 5;
+UPDATE decision_realms SET goal_id = (SELECT id from goals WHERE goal_tag='Planning' AND project_id=5) WHERE id = 9;
+UPDATE decision_realms SET goal_id = (SELECT id from goals WHERE goal_tag='CreateExecutiveSummary' AND project_id=6) WHERE id = 12;
+
+SELECT SETVAL('decision_realms_id_seq', (SELECT max(id)+1 FROM decision_realms), false);
+
+-- then add one realm for each goal which has not yet been added
+INSERT INTO decision_realms (goal_id, id) 
+SELECT
+	(SELECT id FROM goals WHERE id NOT IN (SELECT goal_id FROM decision_realms WHERE goal_id IS NOT NULL)),
+	nextval('decision_realms_id_seq');
+
+
+
+
 
 CREATE TABLE decisions (
     id bigint NOT NULL,
@@ -137,6 +233,10 @@ CREATE TABLE decisions (
     project_id bigint
 );
 
+CREATE SEQUENCE decisions_id_seq;
+SELECT SETVAL('decisions_id_seq', (SELECT max(id) FROM decisions), false);
+
+
 CREATE TABLE voters (
     id bigint NOT NULL,
     actual_weight double precision NOT NULL,
@@ -144,6 +244,9 @@ CREATE TABLE voters (
     realm_id bigint,
     voter_user_id bigint
 );
+
+CREATE SEQUENCE voters_id_seq;
+SELECT SETVAL('voters_id_seq', (SELECT max(id) FROM voters), false);
 
 
 
