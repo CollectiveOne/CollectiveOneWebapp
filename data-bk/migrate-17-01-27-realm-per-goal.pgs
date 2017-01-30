@@ -37,7 +37,12 @@ SELECT * INTO theses FROM masterschema.theses;
 SELECT * INTO verification_token FROM masterschema.verification_token;
 
 ---------------------------------------------------------
--- CREATE tables new tables (schema created by hibernate)
+-- COPY sequences that have not changed
+---------------------------------------------------------
+
+
+---------------------------------------------------------
+-- CREATE contributors table
 ---------------------------------------------------------
 CREATE TABLE contributors (
     id bigint NOT NULL,
@@ -45,6 +50,32 @@ CREATE TABLE contributors (
     contributor_user_id bigint,
     project_id bigint
 );
+
+CREATE SEQUENCE contributors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- FILL contributors
+
+ALTER TABLE contributors ALTER COLUMN pps DROP NOT NULL;
+INSERT INTO contributors (id, project_id, contributor_user_id, pps) 
+SELECT 
+	nextval('contributors_id_seq'), 
+	project_id, 
+	contributor_id, 
+	SUM(assigned_ppoints) FILTER (WHERE state=2)
+FROM cbtions
+GROUP BY 2,3;
+DELETE FROM contributors WHERE pps IS NULL AND contributor_user_id IS NULL;
+ALTER TABLE contributors ALTER COLUMN pps SET NOT NULL;
+
+
+---------------------------------------------------------
+-- CREATE contrinbutors table
+---------------------------------------------------------
 
 CREATE TABLE goals (
     id bigint NOT NULL,
@@ -114,9 +145,5 @@ CREATE TABLE voters (
     voter_user_id bigint
 );
 
--- contributors
--- goals
--- decision_realms
--- decisions
--- voters
+
 
