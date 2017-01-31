@@ -1,5 +1,7 @@
-DROP SCHEMA public CASCADE;
+DROP SCHEMA IF EXISTS public CASCADE;
+DROP SCHEMA IF EXISTS masterschema CASCADE;
 CREATE SCHEMA public;
+CREATE SCHEMA masterschema;
 
 ---------------------------------------------------------
 -- Conect to other server
@@ -304,7 +306,9 @@ BEGIN
 	END LOOP;
 
 END
-$$
+$$;
+
+DROP SCHEMA masterschema CASCADE;
 
 
 
