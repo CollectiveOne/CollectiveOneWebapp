@@ -285,18 +285,26 @@ SELECT SETVAL('voters_id_seq', (SELECT max(id) FROM voters), false);
 -- for each realm there should be one voter for each contributor of the project
 ---------------------------------------------------------
 
-WITH 
-ctrb_ids AS (SELECT contributor_user_id FROM contributors WHERE project_id=1),
-ppsx AS (SELECT pps FROM contributors WHERE project_id=1) 
-﻿INSERT INTO voters (realm_id, voter_user_id, max_weight, actual_weight) 
-SELECT 
-	id,
-	ctrb_ids,
-	ppsx,
-	ppsx 
-FROM decision_realms;
 
+ALTER TABLE voters ALTER COLUMN id DROP NOT NULL;
+   
+DO
+$$
+DECLARE rid BIGINT;
+BEGIN
+	ALTER TABLE voters ALTER COLUMN id DROP NOT NULL;
 
+	FOR rid IN 
+		SELECT id from decision_realms WHERE id NOT IN (SELECT realm_id FROM voters WHERE realm_id IS NOT NULL) 
+	LOOP
+		INSERT INTO voters (id,realm_id,voter_user_id, max_weight, actual_weight)
+		SELECT nextval('voters_id_seq')+1,rid,contributor_user_id, pps, pps 
+		FROM contributors WHERE 
+			project_id= (SELECT project_id FROM goals WHERE id=(SELECT goal_id FROM decision_realms WHERE id=rid));
+	END LOOP;
+
+END
+$$
 
 
 
