@@ -15,7 +15,7 @@ import org.collectiveone.web.dto.GoalDto;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table( name = "GOAL" )
+@Table( name = "GOALS" )
 public class Goal {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

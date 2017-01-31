@@ -12,7 +12,16 @@
 				hiddenButtons: ["cmdHeading", "cmdImage"],
 				resize: "vertical"
 			});
+			
+			$('#goal_description_editor',this.container).markdown({
+				autofocus:false,
+				savable:false,
+				hiddenButtons: ["cmdHeading", "cmdImage"],
+				resize: "vertical"
+			});
 		});
+	
+		
 	/*]]>*/
 	</script>
 </head>
@@ -47,7 +56,7 @@
 				</div>
 				<div th:class="form-group" th:classappend="${#fields.hasErrors('goalDescription')}? 'has-error'">
 					<label for="goalDescription">Goal description:</label>
-					<textarea id="description_editor" type="text" class="form-control" rows="5" th:field="*{goalDescription}"></textarea>
+					<textarea id="goal_description_editor" type="text" class="form-control" rows="5" th:field="*{goalDescription}"></textarea>
 					<span th:if="${#fields.hasErrors('goalDescription')}" th:errors="*{goalDescription}" th:class="help-block">Goal Description Errors</span>
 				</div>
 				

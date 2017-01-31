@@ -127,6 +127,7 @@ public class Decision {
 		dto.setFromState(fromState);
 		dto.setToState(toState);
 		if(project != null) dto.setProjectName(project.getName());
+		if(goal != null) dto.setGoalTag(goal.getGoalTag());
 		if(arguments != null) dto.setNarguments(arguments.size());
 		
 		if(type != null) { 
@@ -134,24 +135,24 @@ public class Decision {
 			switch(type) {
 				case CBTION:
 					if(affectedCbtion != null) {
-						dto.setCbtionId(affectedCbtion.getId());
-						dto.setCbtionTitle(affectedCbtion.getTitle());
+						dto.setAffectedCbtionId(affectedCbtion.getId());
+						dto.setAffectedCbtionTitle(affectedCbtion.getTitle());
 					}
 					break;
 					
 				case GOAL:
 					if(affectedGoal != null) {
-						dto.setGoalId(affectedGoal.getId());
-						dto.setGoalTag(affectedGoal.getGoalTag());
+						dto.setAffectedGoalId(affectedGoal.getId());
+						dto.setAffectedGoalTag(affectedGoal.getGoalTag());
 					}
 					break;
 					
 				case BID:
 					if(affectedBid != null) {
-						dto.setBidId(affectedBid.getId());
-						dto.setBidCreatorUsername(affectedBid.getCreator().getUsername());
-						dto.setCbtionId(affectedBid.getCbtion().getId());
-						dto.setCbtionTitle(affectedBid.getCbtion().getTitle());
+						dto.setAffectedBidId(affectedBid.getId());
+						dto.setAffectedBidCreatorUsername(affectedBid.getCreator().getUsername());
+						dto.setAffectedCbtionId(affectedBid.getCbtion().getId());
+						dto.setAffectedCbtionTitle(affectedBid.getCbtion().getTitle());
 					}
 					break;
 				

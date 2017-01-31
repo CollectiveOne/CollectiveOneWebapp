@@ -38,14 +38,14 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 			break;
 		case "CBTION":
 			$("#from_to_state",this.container).append("changes the state of contribution <a href=/views/cbtionPageR/"+
-			this.decision.cbtionId+">"+this.decision.cbtionTitle+"</a> from "+this.decision.fromState+" to "+this.decision.toState+"");	
+			this.decision.affectedCbtionId+">"+this.decision.cbtionTitle+"</a> from "+this.decision.fromState+" to "+this.decision.toState+"");	
 			break;
 		case "BID":
 			$("#from_to_state",this.container).append("modifies bid to contribution <a href=/views/cbtionPageR/"+
-			this.decision.cbtionId+">"+this.decision.cbtionTitle+"</a> made by "+getUserPageLink(this.decision.bidCreatorUsername)+"");	
+			this.decision.affectedCbtionId+">"+this.decision.cbtionTitle+"</a> made by "+getUserPageLink(this.decision.affectedBidCreatorUsername)+"");	
 			break;
 		case "GOAL":
-			var goalLinkStr = getGoalPageLink(this.decision.goalTag,this.decision.projectName);
+			var goalLinkStr = getGoalPageLink(this.decision.affectedGoalTag,this.decision.projectName);
 			$("#from_to_state",this.container).append("modifies goal "+goalLinkStr);
 			break;
 	}
@@ -68,8 +68,7 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 			break;
 	}
 
-
-	$("#project_div",this.container).append("In "+getProjectLink(this.decision.projectName));
+	$("#project_div",this.container).append("In "+getProjectLink(this.decision.projectName)+" "+getGoalPageLink(this.decision.goalTag,this.decision.projectName));
 	$("#state",this.container).append(stateStr);
 
 	if(this.decision.state != "IDLE") {
