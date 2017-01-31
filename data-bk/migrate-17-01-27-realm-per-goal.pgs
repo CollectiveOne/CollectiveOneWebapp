@@ -252,6 +252,11 @@ UPDATE decisions SET goal_id = (SELECT id from goals WHERE goal_tag='Planning' A
 UPDATE decisions SET goal_id = (SELECT id from goals WHERE goal_tag='CreateExecutiveSummary' AND project_id=6) WHERE project_id = 6;
 
 
+
+---------------------------------------------------------
+-- CREATE voters table
+---------------------------------------------------------
+
 CREATE TABLE voters (
     id bigint NOT NULL,
     actual_weight double precision NOT NULL,
@@ -261,7 +266,39 @@ CREATE TABLE voters (
 );
 
 CREATE SEQUENCE voters_id_seq;
+
+
+
+-- copy the existing voters and add the realm_id
+---------------------------------------------------------
+
+INSERT INTO voters (id, voter_user_id, actual_weight, max_weight) 
+SELECT id,voter_user_id,weight,weight 
+FROM masterschema.voters;
+
+UPDATE voters SET realm_id = 
+(SELECT decision_realm_id FROM masterschema.decision_realms_voters WHERE voters_id=id);
+
 SELECT SETVAL('voters_id_seq', (SELECT max(id) FROM voters), false);
+
+-- create the new voters
+-- for each realm there should be one voter for each contributor of the project
+---------------------------------------------------------
+
+WITH 
+ctrb_ids AS (SELECT contributor_user_id FROM contributors WHERE project_id=1),
+ppsx AS (SELECT pps FROM contributors WHERE project_id=1) 
+﻿INSERT INTO voters (realm_id, voter_user_id, max_weight, actual_weight) 
+SELECT 
+	id,
+	ctrb_ids,
+	ppsx,
+	ppsx 
+FROM decision_realms;
+
+
+
+
 
 
 
