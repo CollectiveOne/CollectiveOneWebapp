@@ -166,7 +166,7 @@ SELECT SETVAL('goal_id_seq', (SELECT max(id) FROM goals), false);
 
 
 ---------------------------------------------------------
--- CREATE goals table
+-- CREATE decision_realms table
 ---------------------------------------------------------
 
 CREATE TABLE decision_realms (
@@ -191,14 +191,17 @@ UPDATE decision_realms SET goal_id = (SELECT id from goals WHERE goal_tag='Creat
 SELECT SETVAL('decision_realms_id_seq', (SELECT max(id)+1 FROM decision_realms), false);
 
 -- then add one realm for each goal which has not yet been added
-INSERT INTO decision_realms (goal_id, id) 
-SELECT
-	(SELECT id FROM goals WHERE id NOT IN (SELECT goal_id FROM decision_realms WHERE goal_id IS NOT NULL)),
-	nextval('decision_realms_id_seq');
+ALTER TABLE decision_realms ALTER COLUMN id DROP NOT NULL;
+INSERT INTO decision_realms (goal_id) 
+SELECT id FROM goals WHERE id NOT IN (SELECT goal_id FROM decision_realms WHERE goal_id IS NOT NULL);
+
+UPDATE decision_realms SET id=nextval('decision_realms_id_seq') WHERE id IS NULL;
+ALTER TABLE decision_realms ALTER COLUMN id SET NOT NULL;
 
 
-
-
+---------------------------------------------------------
+-- CREATE decisions table
+---------------------------------------------------------
 
 CREATE TABLE decisions (
     id bigint NOT NULL,
@@ -234,7 +237,19 @@ CREATE TABLE decisions (
 );
 
 CREATE SEQUENCE decisions_id_seq;
+
+INSERT INTO decisions
+	(id,actual_verdict_date,ci,clarity,creation_date,description,elapsed_factor,from_state,l0,l1,n,n_min_stab,open_date,pest,pps_cum,stab_ratio,stability,state,to_state,type,verdict,verdict_hours,weight_tot,affected_bid_id,affected_cbtion_id,affected_goal_id,creator_id,decision_realm_id,goal_id,project_id)
+SELECT   id,actual_verdict_date,ci,clarity,creation_date,description,elapsed_factor,from_state,l0,l1,n,n_min_stab,open_date,pest,pps_cum,stab_ratio,stability,state,to_state,type,verdict,verdict_hours,pps_tot,   bid_id,         cbtion_id,         goal_id,         creator_id,decision_realm_id,null,   project_id
+FROM masterschema.decisions;
+
 SELECT SETVAL('decisions_id_seq', (SELECT max(id) FROM decisions), false);
+
+UPDATE decisions SET goal_id = (SELECT id from goals WHERE goal_tag='vision' AND project_id=1) WHERE project_id = 1;
+UPDATE decisions SET goal_id = (SELECT id from goals WHERE goal_tag='webapp' AND project_id=2) WHERE project_id = 2;
+UPDATE decisions SET goal_id = (SELECT id from goals WHERE goal_tag='webpage' AND project_id=3) WHERE project_id = 3;
+UPDATE decisions SET goal_id = (SELECT id from goals WHERE goal_tag='Planning' AND project_id=5) WHERE project_id = 5;
+UPDATE decisions SET goal_id = (SELECT id from goals WHERE goal_tag='CreateExecutiveSummary' AND project_id=6) WHERE project_id = 6;
 
 
 CREATE TABLE voters (
