@@ -23,5 +23,19 @@ GoalNewPage.prototype = {
 				resize: "vertical"
 			});
 		},
+		
+		projectSelectorUpdated: function() {
+			$('#goalTag_selector',this.container).autocomplete().clear();
+			$('#goalTag_selector',this.container).autocomplete().setOptions({params: {projectName: $("#project_select", this.container).val()}});
+		},
+		
+		projectSelectorDrawn: function() {
+			$('#goalTag_selector',this.container).autocomplete({
+				serviceUrl: '/rest/goals/getSuggestions',
+				minChars: 0,
+				maxHeight: 200,
+				params: {projectName: $("#project_select", this.container).val()}
+			});
+		},
 
 }

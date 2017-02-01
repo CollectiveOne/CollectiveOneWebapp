@@ -156,6 +156,7 @@ public class ViewsController {
 		if(projectName != null) {
 			cbtionDto.setProjectName(projectName);
 		}
+		model.addAttribute("projectSelected",cbtionDto.getProjectName());
 		model.addAttribute("cbtion",cbtionDto);
 		return "views/cbtionNewPage";
 	}

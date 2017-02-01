@@ -235,7 +235,7 @@ public class DbServicesImp {
 		Contributor ctrb = projectDao.getContributor(project.getId(), user.getId());
 		
 		double ppsInProject = 0.0;
-		if(ctrb != null) { ctrb.getPps(); }
+		if(ctrb != null) { ppsInProject = ctrb.getPps(); }
 		projectAndPps.setPpsContributed(ppsInProject);
 		
 		return projectAndPps;
@@ -1009,16 +1009,20 @@ public class DbServicesImp {
 		GoalWeightsDataDto goalWeightsDataDto = new GoalWeightsDataDto();  
 		
 		if(!username.equals("anonymousUser")) {
+			/* if user is logged */
 			User user = userDao.get(username);
 			
 			Voter voter = decisionRealmDao.getVoter(realm.getId(), user.getId());
 			
-			GoalUserWeightsDto userWeightsDto = new GoalUserWeightsDto();
-			userWeightsDto.setUsername(username);
-			userWeightsDto.setMaxWeight(voter.getMaxWeight());
-			userWeightsDto.setActualWeight(voter.getActualWeight());
-			
-			goalWeightsDataDto.setUserWeightsDto(userWeightsDto);
+			if(voter != null) {
+				/* if logged user is voter in this realm */
+				GoalUserWeightsDto userWeightsDto = new GoalUserWeightsDto();
+				userWeightsDto.setUsername(username);
+				userWeightsDto.setMaxWeight(voter.getMaxWeight());
+				userWeightsDto.setActualWeight(voter.getActualWeight());
+				
+				goalWeightsDataDto.setUserWeightsDto(userWeightsDto);
+			}
 		}
 		
 		List<VoterDto> votersDtos = new ArrayList<VoterDto>();
@@ -2313,7 +2317,7 @@ public class DbServicesImp {
 	public Long decisionCreate(DecisionDtoCreate decisionDto) throws IOException {
 		Decision decision = new Decision();
 		Project project = projectDao.get(decisionDto.getProjectName());
-		Goal goal = goalDao.get(project.getName(), decisionDto.getGoalTag());
+		Goal goal = goalDao.get(decisionDto.getGoalTag(),project.getName());
 		
 		projectDao.save(project);
 

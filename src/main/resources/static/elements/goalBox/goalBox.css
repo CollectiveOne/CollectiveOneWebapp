@@ -95,6 +95,11 @@
 	display: none;
 }
 
+#goal_div #increase_budget_decision_container {
+	float:left;
+	margin-right: 10px;
+}
+
 #goal_div .control_btn {
 	width:100%;
 	float:left;

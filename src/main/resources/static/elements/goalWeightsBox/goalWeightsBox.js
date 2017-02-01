@@ -19,13 +19,15 @@ GoalWeightsBox.prototype.draw = function() {
 
 GoalWeightsBox.prototype.htmlLoaded = function() {
 	if(isUserLogged()) {
-		var maxWeightPerc = this.goalWeightsData.userWeightsDto.maxWeight/this.goalWeightsData.totalWeight*100;
-		var actWeightPerc = this.goalWeightsData.userWeightsDto.actualWeight/this.goalWeightsData.totalWeight*100;
-		
-		$("#left_div", this.container).show();
-		$("#user_actual_weight", this.container).html(floatToChar(actWeightPerc,1)+"%");
-		$("#touch_btn", this.container).click(this.touchClicked.bind(this));
-		$("#release_btn", this.container).click(this.releaseClicked.bind(this));
+		if(this.goalWeightsData.userWeightsDto) {
+			var maxWeightPerc = this.goalWeightsData.userWeightsDto.maxWeight/this.goalWeightsData.totalWeight*100;
+			var actWeightPerc = this.goalWeightsData.userWeightsDto.actualWeight/this.goalWeightsData.totalWeight*100;
+
+			$("#left_div", this.container).show();
+			$("#user_actual_weight", this.container).html(floatToChar(actWeightPerc,1)+"%");
+			$("#touch_btn", this.container).click(this.touchClicked.bind(this));
+			$("#release_btn", this.container).click(this.releaseClicked.bind(this));			
+		}
 	}
 	
 	this.drawGraph();	
