@@ -7,8 +7,8 @@ CREATE SCHEMA masterschema;
 -- Conect to other server
 ---------------------------------------------------------
 CREATE EXTENSION postgres_fdw;
-CREATE SERVER master FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'localhost', dbname 'cpdb-master', port '5432');
-CREATE USER MAPPING FOR postgres SERVER master OPTIONS (user 'postgres', password 'iristra');
+CREATE SERVER master FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'ec2-54-225-64-254.compute-1.amazonaws.com', dbname 'd1a0o64celerd3', port '5432');
+CREATE USER MAPPING FOR postgres SERVER master OPTIONS (user 'dkzzgsrfdufobg', password 'YTGA4lzg5wNMReDhEDqMtZs6m3');
 IMPORT FOREIGN SCHEMA public FROM SERVER master INTO masterschema;
 
 ---------------------------------------------------------
@@ -163,8 +163,8 @@ ALTER TABLE goals ALTER COLUMN current_budget SET NOT NULL;
 ALTER TABLE goals ALTER COLUMN pps_to_increase SET NOT NULL;
 
 
-CREATE SEQUENCE goal_id_seq;
-SELECT SETVAL('goal_id_seq', (SELECT max(id) FROM goals), false);
+CREATE SEQUENCE goals_id_seq;
+SELECT SETVAL('goals_id_seq', (SELECT max(id) FROM goals), false);
 
 
 ---------------------------------------------------------
@@ -311,6 +311,26 @@ $$;
 DROP SCHEMA masterschema CASCADE;
 
 
-
-
-
+-- advance all sequence currvalue 5 numbers to avoid problems with the is_called flag
+-- which is false from some sequences
+---------------------------------------------------------
+SELECT setval('activity_id_seq', nextval('activity_id_seq') + 5, true);
+SELECT setval('app_users_id_seq', nextval('app_users_id_seq') + 5, true);
+SELECT setval('arguments_id_seq', nextval('arguments_id_seq') + 5, true);
+SELECT setval('authorized_emails_id_seq', nextval('authorized_emails_id_seq') + 5, true);
+SELECT setval('authorized_projects_id_seq', nextval('authorized_projects_id_seq') + 5, true);
+SELECT setval('bids_id_seq', nextval('bids_id_seq') + 5, true);
+SELECT setval('cbtions_id_seq', nextval('cbtions_id_seq') + 5, true);
+SELECT setval('comments_id_seq', nextval('comments_id_seq') + 5, true);
+SELECT setval('contributors_id_seq', nextval('contributors_id_seq') + 5, true);
+SELECT setval('decision_realms_id_seq', nextval('decision_realms_id_seq') + 5, true);
+SELECT setval('decisions_id_seq', nextval('decisions_id_seq') + 5, true);
+SELECT setval('goals_id_seq', nextval('goals_id_seq') + 5, true);
+SELECT setval('mail_subscriptions_id_seq', nextval('mail_subscriptions_id_seq') + 5, true);
+SELECT setval('projects_id_seq', nextval('projects_id_seq') + 5, true);
+SELECT setval('promoters_id_seq', nextval('promoters_id_seq') + 5, true);
+SELECT setval('reviews_id_seq', nextval('reviews_id_seq') + 5, true);
+SELECT setval('roles_id_seq', nextval('roles_id_seq') + 5, true);
+SELECT setval('theses_id_seq', nextval('theses_id_seq') + 5, true);
+SELECT setval('verification_token_id_seq', nextval('verification_token_id_seq') + 5, true);
+SELECT setval('voters_id_seq', nextval('voters_id_seq') + 5, true);
