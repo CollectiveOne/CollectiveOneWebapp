@@ -14,6 +14,9 @@ import org.collectiveone.web.dto.ThesisDto;
 @Entity
 @Table( name = "THESES" )
 public class Thesis {
+	/* Theses are actually votes, but are called theses to 
+	 * as in the future, perhaps, votes would be more complex
+	 * and be more like theses*/
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -22,8 +25,12 @@ public class Thesis {
 	private Timestamp castDate;
 	@ManyToOne
 	private User author;
+	/* weight is stored with the thesis to avoid having to
+	 * look for it every time as it is used in several places 
+	 * in the decision algorithm.
+	 * TODO: review this approach as the weight per tesis seems
+	 * really redundant.*/
 	private double weight;
-	
 	@ManyToOne
 	private Decision decision;
 	

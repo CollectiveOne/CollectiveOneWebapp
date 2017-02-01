@@ -21,6 +21,9 @@ DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
 		case "OPEN":
 			if((this.decision.fromState) && (this.decision.toState)) {
 				$("#dec_left_div",this.container).append("Now <span id=state>"+this.decision.fromState+"</span>, switch to <span id=state>"+this.decision.toState+"?");
+				if(this.decision.toState == "DELETED") {
+					$("#decision_small_div",this.container).addClass("dangerousDecisions");
+				}
 			} else {
 				$("#dec_left_div",this.container).append(this.decision.description);
 			}

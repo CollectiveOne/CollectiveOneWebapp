@@ -272,28 +272,6 @@ textarea.form-control {
 	margin-top: 10px;
 }
 
-/* page specific goalPage*/
-#container #goal_container {
-	width: 100%;
-	overflow: auto;
-	margin-bottom:10px;
-}
-
-#container #cbtions_div {
-	width: 100%;
-	overflow: auto;
-}
-
-#container #cbtions_div #cbtions_label {
-	margin-bottom: 10px;
-	display: block;
-}
-
-
-#container #cbtions_container {
-	overflow: auto;
-}
-
 /* page specific decisionList*/
 #content_pane #list_of_elements .decisionbox_div {
 	width: calc(100%);

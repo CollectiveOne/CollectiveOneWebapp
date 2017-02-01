@@ -2,10 +2,15 @@
 <html lang="en"
 	layout:decorator="layouts/main">
 <head>
+	<script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.js}"></script>
 	<script type="text/javascript" th:src="@{/views/goalPage.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/views/goalPage.css}" />
+		
 	<script type="text/javascript" th:src="@{/elements/goalBox/goalBox.js}"></script>
 	<link rel="stylesheet" type="text/css" th:href="@{/elements/goalBox/goalBox.css}" />
 	
+	<script type="text/javascript" th:src="@{/elements/goalWeightsBox/goalWeightsBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/goalWeightsBox/goalWeightsBox.css}" />
 	
 	<script th:src="@{/elements/cbtionList/cbtionList.js}"></script>
 	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionList/cbtionList.css}"/>
@@ -33,6 +38,11 @@
 	<div layout:fragment="content_pane">
 		<br />
 		<div id="goal_container"></div>
+		<div id="goal_weights_div" class="cp_box_gray_thick">
+			<label id="weights_label" class="label label-default">participation</label>
+			<div id="goal_weights_container">
+			</div>
+		</div>
 		<div id="cbtions_div" class="cp_box_gray_thick">
 			<label id="cbtions_label" class="label label-default">contributions</label>
 			<div id="cbtions_container">

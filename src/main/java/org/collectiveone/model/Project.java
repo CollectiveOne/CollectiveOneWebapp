@@ -1,6 +1,8 @@
 package org.collectiveone.model;
 
 import java.sql.Timestamp;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -9,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.ProjectDto;
@@ -33,7 +37,12 @@ public class Project {
 	@ManyToOne(cascade=CascadeType.ALL)
 	private User creator;
 	
+	/* aggregated data */
 	private double ppsTot;
+	
+	@OneToMany(mappedBy="project")
+	@OrderBy("pps DESC")
+	private Set<Contributor> contributors = new LinkedHashSet<Contributor>();
 	
 	public ProjectDto toDto() {
 		ProjectDto dto = new ProjectDto();
@@ -90,5 +99,10 @@ public class Project {
 	public void setPpsTot(double ppsTot) {
 		this.ppsTot = ppsTot;
 	}
-	
+	public Set<Contributor> getContributors() {
+		return contributors;
+	}
+	public void setContributors(Set<Contributor> contributors) {
+		this.contributors = contributors;
+	}
 }

@@ -13,7 +13,7 @@ import org.collectiveone.services.DbServicesImp;
 import org.collectiveone.services.UserServiceIm;
 import org.collectiveone.test.services.TimeServiceTestIm;
 import org.collectiveone.web.dto.CbtionDto;
-import org.collectiveone.web.dto.DecisionDto;
+import org.collectiveone.web.dto.DecisionDtoCreate;
 import org.collectiveone.web.dto.ProjectNewDto;
 import org.collectiveone.web.dto.UserNewDto;
 import org.junit.Test;
@@ -36,6 +36,7 @@ public class CollectiveOneWebappApplicationTests {
 	
 	@Test
 	public void testDecisionAlgorithm() throws IOException {
+		/* TODO: This test is obsolete now. */
 		/* TODO: It would be nice to test this with http requests and not thorugh the service methods directly. 
 		*  O was not able to configure spring security for the needs of the tests though*/
 		
@@ -108,11 +109,12 @@ public class CollectiveOneWebappApplicationTests {
 		
 		/* update voter weight */
 		for(User user : userService.findAll()) {
-			dbServices.voterUpdate(user.getId(),project.getId(),0.0);
+			/* TO BE UPDATED W
+			 * dbServices.voterUpdate(user.getId(),project.getId(),0.0); */
 		}
 		 
 		/* test decision */
-		DecisionDto decisionDto = new DecisionDto();
+		DecisionDtoCreate decisionDto = new DecisionDtoCreate();
 		decisionDto.setProjectName(project.getName());
 		decisionDto.setCreatorUsername("user1");
 		decisionDto.setDescription("test decision");

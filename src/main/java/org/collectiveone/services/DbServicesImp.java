@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.collectiveone.model.Activity;
 import org.collectiveone.model.ActivityType;
@@ -19,11 +20,14 @@ import org.collectiveone.model.BidState;
 import org.collectiveone.model.Cbtion;
 import org.collectiveone.model.CbtionState;
 import org.collectiveone.model.Comment;
+import org.collectiveone.model.Contributor;
 import org.collectiveone.model.Decision;
 import org.collectiveone.model.DecisionRealm;
 import org.collectiveone.model.DecisionState;
 import org.collectiveone.model.DecisionType;
 import org.collectiveone.model.Goal;
+import org.collectiveone.model.GoalAttachState;
+import org.collectiveone.model.GoalIncreaseBudgetState;
 import org.collectiveone.model.GoalParentState;
 import org.collectiveone.model.GoalState;
 import org.collectiveone.model.Project;
@@ -38,6 +42,7 @@ import org.collectiveone.repositories.AuthorizedProjectDao;
 import org.collectiveone.repositories.BidDao;
 import org.collectiveone.repositories.CbtionRepository;
 import org.collectiveone.repositories.CommentDao;
+import org.collectiveone.repositories.ContributorDao;
 import org.collectiveone.repositories.DecisionDao;
 import org.collectiveone.repositories.DecisionRealmDao;
 import org.collectiveone.repositories.GoalDao;
@@ -55,9 +60,13 @@ import org.collectiveone.web.dto.BidDto;
 import org.collectiveone.web.dto.BidNewDto;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.CommentDto;
-import org.collectiveone.web.dto.DecisionDto;
+import org.collectiveone.web.dto.DecisionDtoCreate;
+import org.collectiveone.web.dto.DecisionDtoFull;
 import org.collectiveone.web.dto.DoneDto;
 import org.collectiveone.web.dto.GoalDto;
+import org.collectiveone.web.dto.GoalTouchDto;
+import org.collectiveone.web.dto.GoalUserWeightsDto;
+import org.collectiveone.web.dto.GoalWeightsDataDto;
 import org.collectiveone.web.dto.ProjectContributedDto;
 import org.collectiveone.web.dto.ProjectDto;
 import org.collectiveone.web.dto.ProjectNewDto;
@@ -65,6 +74,7 @@ import org.collectiveone.web.dto.ReviewDto;
 import org.collectiveone.web.dto.ThesisDto;
 import org.collectiveone.web.dto.UserDto;
 import org.collectiveone.web.dto.UsernameAndPps;
+import org.collectiveone.web.dto.VoterDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -104,6 +114,9 @@ public class DbServicesImp {
 
 	@Autowired 
 	protected DecisionRealmDao decisionRealmDao;
+	
+	@Autowired 
+	protected ContributorDao contributorDao;
 
 	@Autowired 
 	protected ArgumentDao argumentDao;
@@ -181,13 +194,24 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public void voterUpdate(Long userId, Long projectId, double lastOne) { 
-		Long realmId = decisionRealmDao.getIdFromProjectId(projectId);
-		decisionRealmDao.updateVoter(realmId,userId,userPpointsInProjectGet(userId, projectId)+lastOne);
-	}
+	public void contributorUpdate(Long projectId, Long userId, double lastOne) {
+		/* update the contributor pps in project recalculating all accepted
+		 * contributions and adding a delta (for cases in which pps are bing assigned
+		 * during the transaction)  */
+		double ppsPrev = userPpointsInProjectRecalc(userId, projectId);
+		double ppsTot = ppsPrev + lastOne;
+		
+		Contributor ctrb = contributorDao.getContributor(projectId, userId);
+		if(ctrb == null) {
+			/* new contributor in the project */
+			decisionRealmAddVoterToAll(projectId,userId,ppsTot);
+		}
+		
+		contributorDao.updateContributor(projectId, userId, ppsTot);
+	}	
 
 	@Transactional
-	public double userPpointsInProjectGet(Long userId, Long projectId) {
+	public double userPpointsInProjectRecalc(Long userId, Long projectId) {
 
 		double ppoints = 0;
 		List<Cbtion> cbtionsAccepted = cbtionDao.getAcceptedOfUserInProject(userId, projectId);
@@ -207,18 +231,21 @@ public class DbServicesImp {
 		projectAndPps.setProjectName(project.getName());
 		projectAndPps.setUsername(user.getUsername());
 		projectAndPps.setPpsTot(project.getPpsTot());
-
-		Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(project.getId()),user.getId());
-		if(voter != null) {
-			projectAndPps.setPpsContributed(voter.getWeight());
-		}
+		
+		Contributor ctrb = projectDao.getContributor(project.getId(), user.getId());
+		
+		double ppsInProject = 0.0;
+		if(ctrb != null) { ppsInProject = ctrb.getPps(); }
+		projectAndPps.setPpsContributed(ppsInProject);
 		
 		return projectAndPps;
 	}
 
 	@Transactional
 	public List<ProjectContributedDto> userProjectsContributedAndPpsGet(String username) {
-
+		/* returns a summary of the project name, total pps, and pps contributed by username 
+		 * from all the projects to which username has contributed */
+		
 		List<ProjectContributedDto> projectsAndPps = new ArrayList<ProjectContributedDto>();
 		User user = userDao.get(username);
 
@@ -228,9 +255,12 @@ public class DbServicesImp {
 			projectAndPps.setProjectName(project.getName());
 			projectAndPps.setUsername(user.getUsername());
 			projectAndPps.setPpsTot(project.getPpsTot());
-
-			Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(project.getId()),user.getId());
-			projectAndPps.setPpsContributed(voter.getWeight());
+			
+			Contributor ctrb = projectDao.getContributor(project.getId(), user.getId());
+			
+			double ppsInPrj = 0.0;
+			if(ctrb != null) { ppsInPrj = ctrb.getPps(); }
+			projectAndPps.setPpsContributed(ppsInPrj);
 
 			projectsAndPps.add(projectAndPps);
 		}
@@ -261,6 +291,16 @@ public class DbServicesImp {
 	}
 
 	@Transactional
+	public void projectAuthorize(String projectName) throws IOException {
+		AuthorizedProject authProject = new AuthorizedProject();
+		
+		authProject.setProjectName(projectName);
+		authProject.setAuthorized(true);
+		
+		authorizedProjectDao.save(authProject);
+	}
+	
+	@Transactional
 	public boolean isProjectAuthorized(String projectName) {
 		AuthorizedProject projectAuthorized = authorizedProjectDao.get(projectName);
 		if(projectAuthorized != null) {
@@ -271,7 +311,7 @@ public class DbServicesImp {
     }
 	
 	@Transactional
-	public void projectCreate(ProjectNewDto projectDto) {
+	public void projectCreate(ProjectNewDto projectDto) throws IOException {
 		if(projectGet(projectDto.getName()) == null) {
 			Project project = new Project();
 			projectDao.save(project);
@@ -282,12 +322,21 @@ public class DbServicesImp {
 			project.setCreator(creator);
 			project.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			project.setDescription(projectDto.getDescription());
-
-			/* Each project has its own decision realm */
-			DecisionRealm realm = new DecisionRealm();
-			decisionRealmDao.save(realm);
-			realm.setProject(project);
 		}
+	}
+	
+	@Transactional
+	public void projectCreateFirstGoal(ProjectNewDto projectDto) throws IOException {
+		/* One goal must be created at project creation */
+		GoalDto goalDto = new GoalDto();
+		
+		goalDto.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		goalDto.setCreatorUsername(projectDto.getCreatorUsername());
+		goalDto.setDescription(projectDto.getGoalDescription());
+		goalDto.setProjectName(projectDto.getName());
+		goalDto.setGoalTag(projectDto.getGoalTag());
+		
+		goalCreate(goalDto,GoalState.ACCEPTED);
 	}
 
 	@Transactional
@@ -299,11 +348,17 @@ public class DbServicesImp {
 		Project project = projectDao.get(projectName);
 		project.setEnabled(true);
 		projectDao.save(project);
-
+		
+		/* only one goal exist as the project was just created 
+		 * get one goal to use as decision realm of manual decisions
+		 * created here */
+		List<Goal> goals = goalDao.getAllOfProject(project.getId());
+		Goal goal = goals.get(0);
+		
 		User creator = project.getCreator();
 		userDao.save(creator);
 
-		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
 		decisionRealmDao.save(realm);
 
 		/* An accepted cbtion is added to the project to the contributor */
@@ -349,8 +404,9 @@ public class DbServicesImp {
 		assign_bid.setFromState(BidState.OFFERED.toString());
 		assign_bid.setToState(BidState.ASSIGNED.toString());
 		assign_bid.setProject(project);
+		assign_bid.setGoal(goal);
 		assign_bid.setType(DecisionType.BID);
-		assign_bid.setBid(bid);
+		assign_bid.setAffectedBid(bid);
 
 		accept_bid.setCreator(coprojects);
 		accept_bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -361,8 +417,9 @@ public class DbServicesImp {
 		accept_bid.setFromState(BidState.ASSIGNED.toString());
 		accept_bid.setToState(BidState.ACCEPTED.toString());
 		accept_bid.setProject(project);
+		accept_bid.setGoal(goal);
 		accept_bid.setType(DecisionType.BID);
-		accept_bid.setBid(bid);
+		accept_bid.setAffectedBid(bid);
 
 		/* simulate the bid acceptance process */
 		bid.setState(BidState.ACCEPTED);
@@ -373,9 +430,8 @@ public class DbServicesImp {
 		cbtion.setContributor(bid.getCreator());
 		cbtion.setState(CbtionState.ACCEPTED);
 
-		/* add user to decision realm */
-		decisionRealmDao.updateVoter(realm.getId(), creator.getId(), bid.getPpoints());
-
+		/* add user to project contributors */
+		contributorDao.updateContributor(project.getId(), creator.getId(), bid.getPpoints());
 	}
 
 	@Transactional
@@ -410,12 +466,11 @@ public class DbServicesImp {
 
 		List<UsernameAndPps> usernamesAndPps = new ArrayList<UsernameAndPps>();
 
-		for(User contributor : getProjectContributors(projectId)) {
+		for(Contributor contributor : getProjectContributors(projectId)) {
 			UsernameAndPps usernameAndPps = new UsernameAndPps();
-			usernameAndPps.setUsername(contributor.getUsername());
-
-			Voter voter = decisionRealmDao.getVoter(decisionRealmDao.getIdFromProjectId(projectId),contributor.getId());
-			usernameAndPps.setPps(voter.getWeight());
+			usernameAndPps.setUsername(contributor.getContributorUser().getUsername());
+			usernameAndPps.setPps(contributor.getPps());
+			
 			usernamesAndPps.add(usernameAndPps);
 		}
 
@@ -433,8 +488,8 @@ public class DbServicesImp {
 		Project project = projectDao.get(projectId);
 
 		double ppsTot = 0.0;
-		for(Cbtion cbtion : cbtionDao.getAcceptedInProject(projectId)) {
-			ppsTot += cbtion.getAssignedPpoints();
+		for(Contributor ctrb : project.getContributors()) {
+			ppsTot += ctrb.getPps();
 		}
 
 		project.setPpsTot(ppsTot+lastOne);
@@ -442,13 +497,12 @@ public class DbServicesImp {
 	}
 
 	@Transactional
-	public List<User> getProjectContributors(Long projectId) {
+	public Set<Contributor> getProjectContributors(Long projectId) {
 		return projectDao.getContributors(projectId);
 	}
 
 	@Transactional
-	public Long goalCreate(GoalDto goalDto) throws IOException {
-		
+	public Long goalCreate(GoalDto goalDto, GoalState state) throws IOException {
 		if(!goalExist(goalDto.getGoalTag(), goalDto.getProjectName())) {
 			Goal goal = new Goal();
 			Project project = projectDao.get(goalDto.getProjectName());
@@ -458,69 +512,129 @@ public class DbServicesImp {
 			goal.setCreator(userDao.get(goalDto.getCreatorUsername()));
 			goal.setDescription(goalDto.getDescription());
 			goal.setProject(project);
-			goal.setState(GoalState.PROPOSED);
+			goal.setState(state);
 			goal.setGoalTag(goalDto.getGoalTag());
-
+			
+			/* goal start attached, all the logic needed for when 
+			 * detached is set later */
+			goal.setAttachedState(GoalAttachState.ATTACHED);
+			goal.setIncreaseBudgetState(GoalIncreaseBudgetState.NOT_PROPOSED);
+			
 			Long id = goalDao.save(goal);
 
+			/* each goal has its own decision realm */
+			DecisionRealm realm = new DecisionRealm();
+			realm.setGoal(goal);
+			
+			/* the voters and weights of the decision realm are initialized to the parent goal realm */
+			boolean hasParent = false;
 			if(goalDto.getParentGoalTag() != null) {
 				if(goalDto.getParentGoalTag() != "") {
 					Goal parent = goalDao.get(goalDto.getParentGoalTag(), project.getName());
 					if(parent != null) {
+						hasParent = true;
 						goal.setParent(parent);
+						/* decision realm should be initialized to that of the parent goal */
+						decisionRealmInitToOther(realm, decisionRealmDao.getFromGoalId(parent.getId()).getId());
 					}
 				}
 			}
-
-			DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
+			
+			/* or the are initialized to 1 (weights) and all project contributors are voters */
+			if(!hasParent){
+				decisionRealmInitToProject(realm, project.getId());
+			}
+				
 			decisionRealmDao.save(realm);
 
-			Decision create = new Decision();
-			Decision delete = new Decision();
+			Activity act = null;
+			
+			/* if the created goal has parents, the control is taken
+			 * in the realm of the parent, otherwise it is controlled
+			 * by its own realm */
+			DecisionRealm goalControlRealm = null;
+			
+			if(hasParent) {
+				goalControlRealm = decisionRealmDao.getFromGoalId(goal.getParent().getId());
+			} else {
+				goalControlRealm = realm;
+			}
+			
+			switch(state) {
+				case PROPOSED:
+					Decision create = new Decision();
+					
+					create.setCreator(userDao.get("collectiveone"));
+					create.setCreationDate(new Timestamp(System.currentTimeMillis()));
+					create.setDescription("create goal '"+goal.getGoalTag()+"'");
+					create.setState(DecisionState.IDLE);
+					create.setVerdictHours(36);
+					create.setDecisionRealm(goalControlRealm);
+					create.setFromState(GoalState.PROPOSED.toString());
+					create.setToState(GoalState.ACCEPTED.toString());
+					create.setProject(project);
+					if(hasParent) create.setGoal(goal.getParent());
+					else create.setGoal(goal);
+					create.setType(DecisionType.GOAL);
+					create.setAffectedGoal(goal);
 
-			create.setCreator(userDao.get("collectiveone"));
-			create.setCreationDate(new Timestamp(System.currentTimeMillis()));
-			create.setDescription("create goal '"+goal.getGoalTag()+"'");
-			create.setState(DecisionState.IDLE);
-			create.setVerdictHours(36);
-			create.setDecisionRealm(realm);
-			create.setFromState(GoalState.PROPOSED.toString());
-			create.setToState(GoalState.ACCEPTED.toString());
-			create.setProject(project);
-			create.setType(DecisionType.GOAL);
-			create.setGoal(goal);
+					goal.setCreateDec(create);
+					
+					decisionDao.save(create);
+					
+					act = new Activity("proposed", 
+							new Timestamp(System.currentTimeMillis()),
+							project);
+					
+					break;
+					
+					
+				case ACCEPTED:
+					/* one goal is created in accepted state at project creation */
+					
+		            Decision delete = new Decision();
+		            
+		            delete.setCreator(userDao.get("collectiveone"));
+		            delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		            delete.setDescription("delete goal '"+goal.getGoalTag()+"'");
+		            delete.setState(DecisionState.IDLE);
+		            delete.setVerdictHours(36);
+		            delete.setDecisionRealm(goalControlRealm);
+		            delete.setFromState(GoalState.ACCEPTED.toString());
+		            delete.setToState(GoalState.DELETED.toString());
+		            delete.setProject(project);
+		            if(hasParent) delete.setGoal(goal.getParent());
+					else delete.setGoal(goal);
+		            delete.setType(DecisionType.GOAL);
+		            delete.setAffectedGoal(goal);
 
-			delete.setCreator(userDao.get("collectiveone"));
-			delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
-			delete.setDescription("delete goal '"+goal.getGoalTag()+"'");
-			delete.setState(DecisionState.IDLE);
-			delete.setVerdictHours(36);
-			delete.setDecisionRealm(realm);
-			delete.setFromState(GoalState.ACCEPTED.toString());
-			delete.setToState(GoalState.DELETED.toString());
-			delete.setProject(project);
-			delete.setType(DecisionType.GOAL);
-			delete.setGoal(goal);
+		            goal.setDeleteDec(delete);
+ 				    decisionDao.save(delete);
+					
+					act = new Activity("proposed", 
+							new Timestamp(System.currentTimeMillis()),
+							project);
 
-			goal.setCreateDec(create);
-			goal.setDeleteDec(delete);
-
-			decisionDao.save(create);
-			decisionDao.save(delete);
-
-			Activity act = new Activity("proposed", 
-					new Timestamp(System.currentTimeMillis()),
-					project);
-
+					break;
+				
+				default:
+					break;
+			}
+			
 			act.setGoal(goal);
 			act.setType(ActivityType.GOAL);
 			activitySaveAndNotify(act);
 			
 			return id;
+			
 		} else {
 			return (long) -1;
 		}
-		
+	}
+	
+	@Transactional
+	public Long goalCreate(GoalDto goalDto) throws IOException {
+		return goalCreate(goalDto,GoalState.PROPOSED);
 	}
 
 	@Transactional
@@ -625,6 +739,8 @@ public class DbServicesImp {
 		goalFromProposedToAccepted(goalId);
 		goalFromAcceptedToDeleted(goalId);
 		goalUpdateNewParent(goalId);
+		goalUpdateAttachment(goalId);
+		goalUpdateBudget(goalId);
 	}
 
 	@Transactional
@@ -643,38 +759,66 @@ public class DbServicesImp {
 		act.setGoal(goal);
 		act.setType(ActivityType.GOAL);
 
-		switch(create.getState()){
-		case OPEN: 
-			break;
-
-		case CLOSED_DENIED : 
-			switch(goal.getState()) {
-			case PROPOSED:
-				goal.setState(GoalState.NOT_ACCEPTED);
-				act.setEvent("not accepted");
-				activitySaveAndNotify(act);
+		if(create != null) {
+			switch(create.getState()){
+			case OPEN: 
 				break;
-
+	
+			case CLOSED_DENIED : 
+				switch(goal.getState()) {
+				case PROPOSED:
+					goal.setState(GoalState.NOT_ACCEPTED);
+					act.setEvent("not accepted");
+					activitySaveAndNotify(act);
+					break;
+	
+				default:
+					break;
+				}
+	
+				break;
+	
+			case CLOSED_ACCEPTED: 
+				switch(goal.getState()) {
+				case PROPOSED:
+					goal.setState(GoalState.ACCEPTED);
+					
+					/* create delete decision */
+		            Decision delete = new Decision();
+		            
+		            DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
+		            
+		            delete.setCreator(userDao.get("collectiveone"));
+		            delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		            delete.setDescription("delete goal '"+goal.getGoalTag()+"'");
+		            delete.setState(DecisionState.IDLE);
+		            delete.setVerdictHours(36);
+		            delete.setDecisionRealm(realm);
+		            delete.setFromState(GoalState.ACCEPTED.toString());
+		            delete.setToState(GoalState.DELETED.toString());
+		            delete.setProject(goal.getProject());
+		            delete.setGoal(goal);
+		            delete.setType(DecisionType.GOAL);
+		            delete.setAffectedGoal(goal);
+		            
+		            goal.setDeleteDec(delete);
+		            decisionDao.save(delete);
+					
+		            /* register event */
+		            act.setEvent("accepted");
+					activitySaveAndNotify(act);
+					
+					
+					break;
+					
+				default:
+					break;
+				}
+	
 			default:
 				break;
 			}
-
-			break;
-
-		case CLOSED_ACCEPTED: 
-			switch(goal.getState()) {
-			case PROPOSED:
-				goal.setState(GoalState.ACCEPTED);
-				act.setEvent("accepted");
-				activitySaveAndNotify(act);
-				break;
-			default:
-				break;
-			}
-
-		default:
-			break;
-		} 
+		}
 	}
 
 	@Transactional
@@ -693,47 +837,49 @@ public class DbServicesImp {
 
 		/* update goal state based on delete decision */
 
-		switch(delete.getState()){
-		case OPEN: 
-			break;
-
-		case CLOSED_DENIED : 
-			switch(goal.getState()) {
-			case PROPOSED:
+		if(delete != null) {
+			switch(delete.getState()){
+			case OPEN: 
 				break;
-
-			case ACCEPTED:
-				break;				
-
+	
+			case CLOSED_DENIED : 
+				switch(goal.getState()) {
+				case PROPOSED:
+					break;
+	
+				case ACCEPTED:
+					break;				
+	
+				default:
+					break;
+				}
+	
+				break;
+	
+			case CLOSED_ACCEPTED: 
+				switch(goal.getState()) {
+				case PROPOSED:
+					goal.setState(GoalState.DELETED);
+					act.setEvent("deleted");
+					activitySaveAndNotify(act);
+					break;
+	
+				case ACCEPTED:
+					goal.setState(GoalState.DELETED);
+					act.setEvent("deleted");
+					activitySaveAndNotify(act);
+					break;				
+	
+				default:
+					break;
+				}
+	
+				break;
+	
 			default:
 				break;
-			}
-
-			break;
-
-		case CLOSED_ACCEPTED: 
-			switch(goal.getState()) {
-			case PROPOSED:
-				goal.setState(GoalState.DELETED);
-				act.setEvent("deleted");
-				activitySaveAndNotify(act);
-				break;
-
-			case ACCEPTED:
-				goal.setState(GoalState.DELETED);
-				act.setEvent("deleted");
-				activitySaveAndNotify(act);
-				break;				
-
-			default:
-				break;
-			}
-
-			break;
-
-		default:
-			break;
-		} 
+			} 
+		}
 	}
 
 	@Transactional
@@ -753,43 +899,45 @@ public class DbServicesImp {
 				act.setGoal(goal);
 				act.setType(ActivityType.GOAL);
 
-				switch(proposeParent.getState()){
-				case OPEN: 
-					break;
-
-				case CLOSED_DENIED : 
-					switch(goal.getParentState()) {
-					case PROPOSED:
-						goal.setParentState(GoalParentState.ACCEPTED);
-						act.setEvent(goal.getProposedParent().getGoalTag()+" not accepted as parent");
-						activitySaveAndNotify(act);
+				if(proposeParent != null) {
+					switch(proposeParent.getState()){
+					case OPEN: 
 						break;
-
+	
+					case CLOSED_DENIED : 
+						switch(goal.getParentState()) {
+						case PROPOSED:
+							goal.setParentState(GoalParentState.ACCEPTED);
+							act.setEvent(goal.getProposedParent().getGoalTag()+" not accepted as parent");
+							activitySaveAndNotify(act);
+							break;
+	
+						default:
+							break;
+						}
+	
+						break;
+	
+					case CLOSED_ACCEPTED: 
+						switch(goal.getParentState()) {
+						case PROPOSED:
+							goal.setParentState(GoalParentState.ACCEPTED);
+							goal.setParent(goal.getProposedParent());
+							act.setEvent(goal.getProposedParent().getGoalTag()+" accepted as parent");
+							activitySaveAndNotify(act);
+							break;
+						default:
+							break;
+						}
+	
 					default:
 						break;
-					}
-
-					break;
-
-				case CLOSED_ACCEPTED: 
-					switch(goal.getParentState()) {
-					case PROPOSED:
-						goal.setParentState(GoalParentState.ACCEPTED);
-						goal.setParent(goal.getProposedParent());
-						act.setEvent(goal.getProposedParent().getGoalTag()+" accepted as parent");
-						activitySaveAndNotify(act);
-						break;
-					default:
-						break;
-					}
-
-				default:
-					break;
-				} 
+					} 
+				}
 			}
 		}
 	}
-
+	
 	@Transactional
 	public void goalProposeParent(Long goalId, String parentTag) throws IOException {
 		Goal goal = goalDao.get(goalId);
@@ -800,14 +948,15 @@ public class DbServicesImp {
 				Project project = goal.getProject();
 				Decision proposeParent = new Decision();
 
-				proposeParent.setGoal(goal);
 				proposeParent.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				proposeParent.setCreator(userDao.get("collectiveone"));
-				proposeParent.setDecisionRealm(decisionRealmDao.getFromProjectId(project.getId()));
+				proposeParent.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getId()));
 				proposeParent.setDescription("set "+proposedParent.getGoalTag()+" as parent goal");
 				proposeParent.setProject(project);
+				proposeParent.setGoal(goal);
 				proposeParent.setState(DecisionState.IDLE);
 				proposeParent.setType(DecisionType.GOAL);
+				proposeParent.setAffectedGoal(goal);
 				proposeParent.setVerdictHours(36);
 
 				decisionDao.save(proposeParent);
@@ -850,6 +999,438 @@ public class DbServicesImp {
 		}
 		return parentGoalsTags;
 	}
+	
+	@Transactional
+	public GoalWeightsDataDto goalGetWeightsData(String projectName, String goalTag, String username) {
+		
+		Goal goal = goalDao.get(goalTag, projectName);
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
+		
+		GoalWeightsDataDto goalWeightsDataDto = new GoalWeightsDataDto();  
+		
+		if(!username.equals("anonymousUser")) {
+			/* if user is logged */
+			User user = userDao.get(username);
+			
+			Voter voter = decisionRealmDao.getVoter(realm.getId(), user.getId());
+			
+			if(voter != null) {
+				/* if logged user is voter in this realm */
+				GoalUserWeightsDto userWeightsDto = new GoalUserWeightsDto();
+				userWeightsDto.setUsername(username);
+				userWeightsDto.setMaxWeight(voter.getMaxWeight());
+				userWeightsDto.setActualWeight(voter.getActualWeight());
+				
+				goalWeightsDataDto.setUserWeightsDto(userWeightsDto);
+			}
+		}
+		
+		List<VoterDto> votersDtos = new ArrayList<VoterDto>();
+		for(Voter otherVoter : realm.getVoters()) {
+			votersDtos.add(otherVoter.toDto());
+		}
+		
+		goalWeightsDataDto.setGoalTag(goalTag);
+		goalWeightsDataDto.setProjectName(projectName);
+		goalWeightsDataDto.setTotalWeight(decisionRealmDao.getWeightTot(realm.getId()));
+		
+		goalWeightsDataDto.setVotersDtos(votersDtos);
+		
+		return goalWeightsDataDto;
+	}
+	
+	@Transactional
+	public void goalTouch(GoalTouchDto touchDto) {
+		Goal goal = goalDao.get(touchDto.getGoalTag(), touchDto.getProjectName());
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
+		User user = userDao.get(touchDto.getUsername());
+		Voter voter = decisionRealmDao.getVoter(realm.getId(), user.getId());
+		
+		if(touchDto.getTouchFlag()) {
+			voter.setActualWeight(voter.getMaxWeight());
+		} else {
+			voter.setActualWeight(0.0);
+		}
+		
+		decisionRealmDao.save(realm);
+	}
+	
+	@Transactional
+	public void goalDetach(Long goalId, double initialBudget) throws IOException {
+		Goal goal = goalDao.get(goalId);
+		
+		if(goal.getParent() != null) {
+			
+			switch(goal.getAttachedState()) {
+			
+			case ATTACHED:
+				goal.setCurrentBudget(0.0);
+				goal.setPpsToIncrease(initialBudget);
+					
+				Decision increaseBudget = new Decision();
+				
+				increaseBudget.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				increaseBudget.setCreator(userDao.get("collectiveone"));
+				/* detach and increase budget decisions are taken in the supergoal realm */
+				increaseBudget.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getParent().getId()));
+				increaseBudget.setDescription("detach goal +"+goal.getGoalTag()+
+						" from +"+goal.getParent().getGoalTag()+" with an initial budget of "+initialBudget+" pps");
+				increaseBudget.setProject(goal.getProject());
+				increaseBudget.setGoal(goal.getParent());
+				increaseBudget.setState(DecisionState.IDLE);
+				increaseBudget.setType(DecisionType.GOAL);
+				increaseBudget.setAffectedGoal(goal);
+				increaseBudget.setVerdictHours(36);
+				
+				goal.setIncreaseBudget(increaseBudget);
+				goal.setAttachedState(GoalAttachState.PROPOSED_DETACH);
+			
+				goalDao.save(goal);
+				decisionDao.save(increaseBudget);
+				
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setProject(goal.getProject());
+				act.setGoal(goal);
+				act.setType(ActivityType.GOAL);
+				act.setEvent("detach proposed");
+				activitySaveAndNotify(act);
+				
+				break;
+				
+			case PROPOSED_DETACH:
+			case DETACHED:
+			case PROPOSED_REATTACH:
+				/* nop */
+				break;
+				
+			}
+		}
+	}
+	
+	@Transactional
+	public void goalReattach(Long goalId) throws IOException {
+		Goal goal = goalDao.get(goalId);
+		
+		if(goal.getParent() != null) {
+			
+			switch(goal.getAttachedState()) {
+			
+			case DETACHED:
+				goal.setAttachedState(GoalAttachState.PROPOSED_REATTACH);
+				
+				Decision reattach = new Decision();
+				
+				reattach.setCreator(userDao.get("collectiveone"));
+				reattach.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				reattach.setDescription("reattach goal +"+goal.getGoalTag()+" to "+goal.getParent());
+				reattach.setState(DecisionState.IDLE);
+				reattach.setVerdictHours(36);
+				reattach.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getId()));
+				reattach.setFromState(GoalState.PROPOSED.toString());
+				reattach.setToState(GoalState.ACCEPTED.toString());
+				reattach.setProject(goal.getProject());
+				reattach.setGoal(goal);
+				reattach.setType(DecisionType.GOAL);
+				reattach.setAffectedGoal(goal);
+
+				goal.setReattach(reattach);
+				
+				decisionDao.save(reattach);
+				goalDao.save(goal);
+				
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setProject(goal.getProject());
+				act.setGoal(goal);
+				act.setType(ActivityType.GOAL);
+				act.setEvent("reattach proposed");
+				activitySaveAndNotify(act);
+				
+				break;
+				
+			case PROPOSED_DETACH:
+			case ATTACHED:
+			case PROPOSED_REATTACH:
+				/* nop */
+				break;
+				
+			}
+		}
+	}
+	
+	@Transactional
+	public void goalIncreaseBudget(Long goalId, double increaseBudgetPps) throws IOException {
+		Goal goal = goalDao.get(goalId);
+		
+		if(goal.getParent() != null) {
+			
+			switch(goal.getAttachedState()) {
+			
+			case DETACHED:
+				/* store the pps to increase and create a decision to increase 
+				 * clearly the decision realm for the increase is that of the parent
+				 * goal */
+				goal.setPpsToIncrease(increaseBudgetPps);
+				goal.setIncreaseBudgetState(GoalIncreaseBudgetState.PROPOSED);
+					
+				Decision increaseBudget = new Decision();
+				
+				increaseBudget.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				increaseBudget.setCreator(userDao.get("collectiveone"));
+				/* increase budget decisions are taken in the supergoal realm */
+				increaseBudget.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getParent().getId()));
+				increaseBudget.setDescription("increase budget of goal +"+goal.getGoalTag()+
+						" from "+goal.getCurrentBudget()+" to "+(goal.getCurrentBudget()+increaseBudgetPps)+" pps");
+				increaseBudget.setProject(goal.getProject());
+				increaseBudget.setGoal(goal.getParent());
+				increaseBudget.setState(DecisionState.IDLE);
+				increaseBudget.setType(DecisionType.GOAL);
+				increaseBudget.setAffectedGoal(goal);
+				increaseBudget.setVerdictHours(36);
+				
+				goal.setIncreaseBudget(increaseBudget);
+				
+				goalDao.save(goal);
+				decisionDao.save(increaseBudget);
+				
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setProject(goal.getProject());
+				act.setGoal(goal);
+				act.setType(ActivityType.GOAL);
+				act.setEvent("budget increase proposed");
+				activitySaveAndNotify(act);
+				
+				break;
+				
+			case PROPOSED_DETACH:
+			case ATTACHED:
+			case PROPOSED_REATTACH:
+				/* nop */
+				break;
+				
+			}
+		}
+	}
+	
+	@Transactional
+	public void goalUpdateBudget(Long goalId) throws IOException {
+		Goal goal = goalDao.get(goalId);
+		
+		Activity act = new Activity();
+		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		act.setProject(goal.getProject());
+		act.setGoal(goal);
+		act.setType(ActivityType.GOAL);
+		
+		switch(goal.getIncreaseBudgetState()) {
+		case PROPOSED:
+			/* check the status of the increaseBudget decision */
+			Decision increaseBudget = goal.getIncreaseBudget();
+			if(increaseBudget != null) {
+				switch(increaseBudget.getState()) {
+				case IDLE:
+				case OPEN:
+					/* wait for the increase budget decision to close */
+					break;
+					
+				case CLOSED_ACCEPTED:
+					/* update the budget of the detached goal from the closest 
+					 * parent goal budget and check there is enough pps */
+					boolean goWithIncrease = false;
+					Goal parent = goalDao.getClosestDetachedParent(goalId);
+					
+					if(parent == null) {
+						/* no parent or grandparent in detached state,
+						 * create the pps out of thin air */
+						goWithIncrease = true;
+					} else {
+						/* check parent has enough pps */
+						if(parent.getCurrentBudget() >= goal.getPpsToIncrease()) {
+							parent.setCurrentBudget(parent.getCurrentBudget() - goal.getPpsToIncrease());
+							goWithIncrease = true;
+							goalDao.save(parent);
+						} else {
+							/* no enough pps*/
+							goWithIncrease = false;
+						}
+					}
+					
+					if(goWithIncrease) {
+						/* the goal should be detached*/
+						goal.setCurrentBudget(goal.getCurrentBudget() + goal.getPpsToIncrease());
+						goalDao.save(goal);
+						
+						act.setEvent("budget increased");
+						activitySaveAndNotify(act);
+					}
+					
+					/* mark as not proposed anyway, if there was not enough budget
+					 * the increase decision has to be taken again */
+					goal.setIncreaseBudgetState(GoalIncreaseBudgetState.NOT_PROPOSED);
+					
+					break;
+					
+				case CLOSED_DENIED:
+				case CLOSED_EXTERNALLY:
+					goal.setIncreaseBudgetState(GoalIncreaseBudgetState.NOT_PROPOSED);
+					
+					act.setEvent("budget increase refused");
+					activitySaveAndNotify(act);
+					break;
+				}
+			}
+			
+			break;
+			
+		case NOT_PROPOSED:
+			/* nop */
+			break;
+		}
+	}
+	
+	@Transactional
+	public void goalUpdateAttachment(Long goalId) throws IOException {
+		Goal goal = goalDao.get(goalId);
+		
+		Activity act = new Activity();
+		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		act.setProject(goal.getProject());
+		act.setGoal(goal);
+		act.setType(ActivityType.GOAL);
+		
+		switch(goal.getAttachedState()) {
+		
+		case ATTACHED:
+		case DETACHED:
+			/* nop*/
+			break;
+			
+		case PROPOSED_DETACH:
+			
+			/* the increaseBudget decision is used both as a detach decision
+			 * and as an increase budget decision */
+			Decision increaseBudget = goal.getIncreaseBudget();
+			if(increaseBudget != null) {
+				switch(increaseBudget.getState()) {
+				case IDLE:
+				case OPEN:
+					/* wait for the increase budget decision to close */
+					break;
+					
+				case CLOSED_ACCEPTED:
+					/* initialized the budget of the detached goal from the closest 
+					 * parent goal budget and check there is enough pps */
+					boolean goWithDetachment = false;
+					Goal parent = goalDao.getClosestDetachedParent(goalId);
+					
+					if(parent == null) {
+						/* no parent or grandparent in detached state,
+						 * create the pps out of thin air */
+						goWithDetachment = true;
+					} else {
+						/* check parent has enough pps */
+						if(parent.getCurrentBudget() >= goal.getPpsToIncrease()) {
+							parent.setCurrentBudget(parent.getCurrentBudget() - goal.getPpsToIncrease());
+							goWithDetachment = true;
+							goalDao.save(parent);
+						} else {
+							/* no enough pps*/
+							goWithDetachment = false;
+						}
+					}
+					
+					if(goWithDetachment) {
+						/* the goal should be detached*/
+						goal.setCurrentBudget(goal.getPpsToIncrease());
+						goal.setAttachedState(GoalAttachState.DETACHED);
+						goalDao.save(goal);
+						
+						act.setEvent("detached");
+						activitySaveAndNotify(act);
+					}
+					
+					break;
+					
+				case CLOSED_DENIED:
+				case CLOSED_EXTERNALLY:
+					act.setEvent("detachment refused");
+					activitySaveAndNotify(act);
+					break;
+				}
+			}
+			break;
+				
+		case PROPOSED_REATTACH:
+			
+			Decision reattach = goal.getReattach();
+			if(reattach != null) {
+				switch(reattach.getState()) {
+				case IDLE:
+				case OPEN:
+					break;
+					
+				case CLOSED_ACCEPTED:
+					goal.setAttachedState(GoalAttachState.ATTACHED);
+					
+					/* remaining budget is returned to parent or grand parent */
+					Goal parent = goalDao.getClosestDetachedParent(goalId);
+					if(parent != null) {
+						parent.setCurrentBudget(parent.getCurrentBudget() + goal.getCurrentBudget());
+						goalDao.save(parent);
+					}
+											
+					/* budget is set to zero*/
+					goal.setCurrentBudget(0.0);
+					
+					/* increaseBudget decision is deleted to leave room for 
+					 * detachment to reoccur */
+					goal.setIncreaseBudget(null);
+					goal.setPpsToIncrease(0.0);
+					goalDao.save(goal);
+					
+					/* decision realm is reset to that of the parent */
+					Long parentRealmId = decisionRealmDao.getIdFromGoalId(goal.getParent().getId());
+					DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getParent().getId());
+					
+					decisionRealmUpdateToOther(realm, parentRealmId);
+					
+					break;
+					
+				case CLOSED_DENIED:
+				case CLOSED_EXTERNALLY:
+					/* once the decision is closed create a new decision 
+					 * to allow the goal to be reattached later */
+					goal.setAttachedState(GoalAttachState.DETACHED);
+					
+					Decision reattachNew = new Decision();
+					
+					reattachNew.setCreator(userDao.get("collectiveone"));
+					reattachNew.setCreationDate(new Timestamp(System.currentTimeMillis()));
+					reattachNew.setDescription("reattach goal +"+goal.getGoalTag()+" to "+goal.getParent());
+					reattachNew.setState(DecisionState.IDLE);
+					reattachNew.setVerdictHours(36);
+					reattachNew.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getId()));
+					reattachNew.setFromState(GoalState.PROPOSED.toString());
+					reattachNew.setToState(GoalState.ACCEPTED.toString());
+					reattachNew.setProject(goal.getProject());
+					reattachNew.setGoal(goal);
+					reattachNew.setType(DecisionType.GOAL);
+					reattachNew.setAffectedGoal(goal);
+
+					goal.setReattach(reattachNew);
+					
+					decisionDao.save(reattachNew);
+					goalDao.save(goal);
+					
+					break;
+					
+				}
+			}
+		}
+	}
+
 
 	@Transactional
 	public void cbtionSave(Cbtion cbtion) {
@@ -880,7 +1461,7 @@ public class DbServicesImp {
 
 		Long id = cbtionDao.save(cbtion);
 
-		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
 		decisionRealmDao.save(realm);
 
 		Decision open = new Decision();
@@ -892,10 +1473,11 @@ public class DbServicesImp {
 		open.setFromState(CbtionState.PROPOSED.toString());		
 		open.setToState(CbtionState.OPEN.toString());
 		open.setProject(project);
+		open.setGoal(goal);
 		open.setState(DecisionState.IDLE);
 		open.setVerdictHours(36);
 		open.setType(DecisionType.CBTION);
-		open.setCbtion(cbtion);
+		open.setAffectedCbtion(cbtion);
 
 		cbtion.setOpenDec(open);
 		decisionDao.save(open);
@@ -1037,7 +1619,7 @@ public class DbServicesImp {
 					case CLOSED_ACCEPTED: 
 						cbtion.setState(CbtionState.OPEN);
 						
-						DecisionRealm realm = decisionRealmDao.getFromProjectId(cbtion.getProject().getId());
+						DecisionRealm realm = decisionRealmDao.getFromGoalId(cbtion.getGoal().getId());
 						decisionRealmDao.save(realm);
 		
 						Decision delete = new Decision();
@@ -1049,10 +1631,11 @@ public class DbServicesImp {
 						delete.setFromState(CbtionState.OPEN.toString());		
 						delete.setToState(CbtionState.DELETED.toString());
 						delete.setProject(cbtion.getProject());
+						delete.setGoal(cbtion.getGoal());
 						delete.setState(DecisionState.IDLE);
 						delete.setVerdictHours(36);
 						delete.setType(DecisionType.CBTION);
-						delete.setCbtion(cbtion);
+						delete.setAffectedCbtion(cbtion);
 						
 						decisionDao.save(delete);
 						
@@ -1271,7 +1854,7 @@ public class DbServicesImp {
 		bid.setState(BidState.OFFERED);
 
 		/* prepare assign decision */
-		DecisionRealm realm = decisionRealmDao.getFromProjectId(bid.getCbtion().getProject().getId());
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(bid.getCbtion().getGoal().getId());
 
 		Decision assign = new Decision();
 		assign.setCreator(userDao.get("collectiveone"));
@@ -1280,12 +1863,13 @@ public class DbServicesImp {
 		assign.setFromState(BidState.OFFERED.toString());
 		assign.setToState(BidState.ASSIGNED.toString());
 		assign.setState(DecisionState.IDLE);
-		/* TODO: Include bid duration logic */
+		/* TODO: Include bid decisions duration logic */
 		assign.setVerdictHours(36);
 		assign.setDecisionRealm(realm);
 		assign.setProject(project);
+		assign.setGoal(bid.getCbtion().getGoal());
 		assign.setType(DecisionType.BID);
-		assign.setBid(bid);
+		assign.setAffectedBid(bid);
 
 		bid.setAssign(assign);
 
@@ -1396,8 +1980,6 @@ public class DbServicesImp {
 				activitySaveAndNotify(act);
 				cbtion.setState(CbtionState.ASSIGNED);
 
-				Project project = bid.getCbtion().getProject();
-
 				/* prepare accept decision */
 				Decision accept = new Decision();
 				accept.setCreator(userDao.get("collectiveone"));
@@ -1408,10 +1990,11 @@ public class DbServicesImp {
 				accept.setState(DecisionState.IDLE);
 				/* TODO: Include bid duration logic */
 				accept.setVerdictHours(36);
-				accept.setDecisionRealm(decisionRealmDao.getFromProjectId(project.getId()));
-				accept.setProject(project);
+				accept.setDecisionRealm(decisionRealmDao.getFromGoalId(bid.getCbtion().getGoal().getId()));
+				accept.setProject(cbtion.getProject());
+				accept.setGoal(cbtion.getGoal());
 				accept.setType(DecisionType.BID);
-				accept.setBid(bid);
+				accept.setAffectedBid(bid);
 
 				bid.setAccept(accept);
 				decisionDao.save(accept);
@@ -1437,40 +2020,59 @@ public class DbServicesImp {
 					break;
 
 				case CLOSED_ACCEPTED: 
-					bid.setState(BidState.ACCEPTED); 
-
 					/* once a bid is accepted, the cbtion and all other bids on it
 					 * are closed */
-
-					/* update cbtion state */
-					cbtion.setAssignedPpoints(bid.getPpoints());
-					cbtion.setContributor(bid.getCreator());
-					cbtion.setState(CbtionState.ACCEPTED);
-
-					/* close all other bids and decisions */
-					for(Bid otherBid : cbtion.getBids()) {
-						if(otherBid.getId() != bid.getId()) {
-							otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
-							otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
-							otherBid.setState(BidState.SUPERSEEDED);
-							bidDao.save(otherBid);
+					
+					/* if under detached goal, check there is enough pps in the 
+					 * budget and if so, reduce the budget accordingly */
+					Goal applicableGoal = goalDao.getClosestDetached(cbtion.getGoal().getId());
+					
+					boolean goWithAssignment = false;
+					if(applicableGoal == null) {
+						/* all goals are attached so pps can be created out of thin air */
+						goWithAssignment = true;
+					} else {
+						if(applicableGoal.getCurrentBudget() >= bid.getPpoints()) {
+							applicableGoal.setCurrentBudget(applicableGoal.getCurrentBudget() - bid.getPpoints());
+							goalDao.save(applicableGoal);
+							goWithAssignment = true;
+						} else {
+							/* not enough pps in the budget */
+							goWithAssignment = false;
 						}
 					}
-
-					/* -----------------------------------------------------------------------*/ 
-					/* updated voter weight - This is the only place where PPS are transacted */
-					/* -----------------------------------------------------------------------*/
-
-					// TODO review assignation logic as the current bid is not found in the list of bids accepted
-					
-					voterUpdate(bid.getCreator().getId(), bid.getCbtion().getProject().getId(),cbtion.getAssignedPpoints());
-					projectUpdatePpsTot(bid.getCbtion().getProject().getId(),cbtion.getAssignedPpoints());
-
-					/* -----------------------------------------------------------------------*/
-
-
-					act.setEvent("accepted");
-					activitySaveAndNotify(act);
+						
+					if(goWithAssignment) {
+						/* only mark the bid as accepted when there is enough budget */
+						bid.setState(BidState.ACCEPTED); 
+						
+						/* update cbtion state */
+						cbtion.setAssignedPpoints(bid.getPpoints());
+						cbtion.setContributor(bid.getCreator());
+						cbtion.setState(CbtionState.ACCEPTED);
+	
+						/* close all other bids and decisions */
+						for(Bid otherBid : cbtion.getBids()) {
+							if(otherBid.getId() != bid.getId()) {
+								if(otherBid.getAssign() != null) otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
+								if(otherBid.getAccept() != null) otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
+								otherBid.setState(BidState.SUPERSEEDED);
+								bidDao.save(otherBid);
+							}
+						}
+	
+						/* -----------------------------------------------------------------------*/ 
+						/* updated pps of user in project - This is the only place where PPS are created/updated
+						 * and here all the decisions weights update logic is called */
+						/* -----------------------------------------------------------------------*/
+						contributorUpdate(bid.getCbtion().getProject().getId(), bid.getCreator().getId(), cbtion.getAssignedPpoints());
+						projectUpdatePpsTot(bid.getCbtion().getProject().getId(), 0.0);
+						updateVoterInProject(bid.getCbtion().getProject().getId(), bid.getCreator().getId());
+						/* -----------------------------------------------------------------------*/
+	
+						act.setEvent("accepted");
+						activitySaveAndNotify(act);
+					}
 
 					break;
 
@@ -1508,24 +2110,21 @@ public class DbServicesImp {
 				/* if voter is in the realm of the decision */
 				Thesis thesis = decisionDao.getThesisCasted(decId, author.getId());				
 
-				boolean newThesis = false;
-
 				if(thesis == null) {
 					thesis = new Thesis();
 					thesis.setAuthor(author);
 					thesis.setDecision(dec);
-					newThesis = true;
 				}
+				
 				thesisDao.save(thesis);
 
 				thesis.setValue(value);
 				thesis.setCastDate(new Timestamp(System.currentTimeMillis()));
 
-				/* weight of the thesis are set at the cast time */
-				thesis.setWeight(voter.getWeight());
+				/* weight of the thesis is set at cast time, as a copy of the realm,
+				 * so theses weights need to be updated every time voter weight changes */
+				thesis.setWeight(voter.getActualWeight());
 
-				/* make a copy of the thesis in the cast theses list */
-				if(newThesis) dec.getThesesCast().add(thesis);
 				decisionDao.save(dec);
 
 				return "thesis saved";
@@ -1576,7 +2175,7 @@ public class DbServicesImp {
 		
 		/* Update the decision */
 		DecisionState before = dec.getState();
-		dec.updateState(timeService.getNow());
+		dec.updateState(timeService.getNow(),decisionRealmDao.getWeightTot(dec.getDecisionRealm().getId()));
 		decisionDao.save(dec);
 
 		/* store activity only for custom decisions (automatic decisions activity 
@@ -1587,7 +2186,8 @@ public class DbServicesImp {
 			isCustom = true;
 		}
 		
-	
+		boolean autoDecayWeights = false;
+		
 		Activity act = new Activity();
 		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		act.setDecision(dec);
@@ -1609,11 +2209,13 @@ public class DbServicesImp {
 			case CLOSED_ACCEPTED:
 				act.setEvent("accepted");
 				if(isCustom) activitySaveAndNotify(act);
+				autoDecayWeights = true;
 				break;
 
 			case CLOSED_DENIED:
 				act.setEvent("rejected");
 				if(isCustom) activitySaveAndNotify(act);
+				autoDecayWeights = true;
 				break;
 
 			case CLOSED_EXTERNALLY:
@@ -1637,11 +2239,13 @@ public class DbServicesImp {
 			case CLOSED_ACCEPTED:
 				act.setEvent("accepted");
 				if(isCustom) activitySaveAndNotify(act);
+				autoDecayWeights = true;
 				break;
 
 			case CLOSED_DENIED:
 				act.setEvent("rejected");
 				if(isCustom) activitySaveAndNotify(act);
+				autoDecayWeights = true;
 				break;
 
 			case CLOSED_EXTERNALLY:
@@ -1657,6 +2261,39 @@ public class DbServicesImp {
 			break;
 
 		}
+		
+		if(autoDecayWeights) {
+			Goal goal = dec.getGoal();
+			if(goal.getAttachedState() == GoalAttachState.DETACHED) {
+				/* decay is done only if goal is detached */
+				DecisionRealm realm = dec.getDecisionRealm();
+				List<Voter> votersNotVoted = new ArrayList<Voter>();
+				
+				for(Voter voter : realm.getVoters()) {
+					/* see if the voter voted */
+					/* TODO: optimize search? */
+					boolean voterVoted = false;
+					for(Thesis thesis : dec.getThesesCast()) {
+						if(thesis.getAuthor().getId() == voter.getVoterUser().getId()) {
+							voterVoted = true;
+						}
+					}
+					
+					if(!voterVoted) {
+						/* if not voted, then add it to the list*/
+						votersNotVoted.add(voter);
+					}
+				}
+				
+				for(Voter voterNotVoted : votersNotVoted) {
+					double maxWeight = voterNotVoted.getMaxWeight();
+					/* voter weight is halved for every decision in which the voter
+					 * does not participate */
+					double actualWeight = voterNotVoted.getActualWeight()*0.5;
+					decisionRealmDao.updateVoter(realm.getId(), voterNotVoted.getVoterUser().getId(), maxWeight, actualWeight);
+				}
+			}
+		}
 	}
 	
 
@@ -1667,7 +2304,7 @@ public class DbServicesImp {
 		DecisionDtoListRes decisionsDtosRes = new DecisionDtoListRes();
 
 		decisionsDtosRes.setResSet(decisionsRes.getResSet());
-		decisionsDtosRes.setDecisionDtos(new ArrayList<DecisionDto>());
+		decisionsDtosRes.setDecisionDtos(new ArrayList<DecisionDtoFull>());
 
 		for(Decision decision : decisionsRes.getObjects()) {
 			decisionsDtosRes.getDecisionDtos().add(decision.toDto());
@@ -1677,18 +2314,21 @@ public class DbServicesImp {
 	}	
 
 	@Transactional
-	public Long decisionCreate(DecisionDto decisionDto) throws IOException {
+	public Long decisionCreate(DecisionDtoCreate decisionDto) throws IOException {
 		Decision decision = new Decision();
 		Project project = projectDao.get(decisionDto.getProjectName());
+		Goal goal = goalDao.get(decisionDto.getGoalTag(),project.getName());
+		
 		projectDao.save(project);
 
-		DecisionRealm realm = decisionRealmDao.getFromProjectId(project.getId());
+		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
 		decisionRealmDao.save(realm);
 
 		decision.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		decision.setCreator(userDao.get(decisionDto.getCreatorUsername()));
 		decision.setDescription(decisionDto.getDescription());
 		decision.setProject(project);
+		decision.setGoal(goal);
 		decision.setState(DecisionState.IDLE);
 		decision.setDecisionRealm(realm);
 		decision.setType(DecisionType.GENERAL);
@@ -1719,10 +2359,203 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
-	public DecisionDto decisionGetDto(Long id) {
+	public DecisionDtoFull decisionGetDto(Long id) {
 		return decisionDao.get(id).toDto();
 	}
+	@Transactional
+	public void decisionRealmAddVoterToAll(Long projectId,Long userId,double maxWeight) {
+		/* Add a voter to all the realms of a project, this is done the first time a contributor
+		 * is added to a project */
+		
+		List<DecisionRealm> realms = decisionRealmDao.getAllOfProject(projectId);
+		
+		for(DecisionRealm realm : realms) {
+			Voter existingVoter = decisionRealmDao.getVoter(realm.getId(), userId);
+			if(existingVoter == null) {
+				Voter newVoter = new Voter();
+				newVoter.setVoterUser(userDao.get(userId));
+				newVoter.setRealm(realm);
+				newVoter.setMaxWeight(maxWeight);
+				newVoter.setActualWeight(maxWeight);
+				
+				voterDao.save(newVoter);
+				decisionRealmDao.save(realm);
+			}
+		}
+	}
+	
+	@Transactional
+	public void decisionRealmInitAllSupergoalsToProject(Long projectId) {
+		List<Goal> superGoals = goalDao.getSuperGoalsOnly(projectId);
+		for(Goal goal : superGoals) {
+			Long realmId = decisionRealmDao.getIdFromGoalId(goal.getId());
+			decisionRealmInitToProject(realmId, projectId);
+		}
+	}
+	
+	@Transactional
+	public void decisionRealmInitToProject(Long realmId, Long projectId) {
+		DecisionRealm realm = decisionRealmDao.get(realmId);
+		decisionRealmInitToProject(realm,projectId);
+		decisionRealmDao.save(realm);
+	}
+	
+	@Transactional
+	public void decisionRealmInitToProject(DecisionRealm destRealm, Long projectId) {
+		/* the realm voters are deleted and refilled to be the project contributors 
+		 * with scale 1.0 */
+		Project project = projectDao.get(projectId);
+		
+		/* make sure the realm is empty */
+		if(destRealm.getVoters() == null) { destRealm.setVoters(new ArrayList<Voter>()); }
+		if(destRealm.getVoters().size() > 0) { destRealm.getVoters().clear(); }
+		
+		for(Contributor contributor : project.getContributors()) {
+			Voter newVoter = new Voter();
+			
+			newVoter.setRealm(destRealm);
+			newVoter.setVoterUser(contributor.getContributorUser());
+			newVoter.setMaxWeight(contributor.getPps());
+			newVoter.setActualWeight(contributor.getPps());
+			
+			voterDao.save(newVoter);
+		}
+		
+		decisionRealmDao.save(destRealm);
+	}
 
+	
+	
+	@Transactional
+	public void decisionRealmInitToOther(DecisionRealm destRealm,Long sourceRealmId) {
+		/* the destRealm of voters is created based on the sourceRealmId. */
+		
+		DecisionRealm sourceRealm = decisionRealmDao.get(sourceRealmId);
+		
+		/* TODO: delete all voters before recreating them, for safety? */
+		
+		for(Voter voter : sourceRealm.getVoters()) {
+			Voter newVoter = new Voter();
+			
+			newVoter.setRealm(destRealm);
+			newVoter.setVoterUser(voter.getVoterUser());
+			newVoter.setMaxWeight(voter.getMaxWeight());
+			newVoter.setActualWeight(voter.getActualWeight());
+			
+			voterDao.save(newVoter);
+		}
+		
+		decisionRealmDao.save(destRealm);
+	}
+	
+	@Transactional
+	public void decisionRealmUpdateToOther(DecisionRealm destRealm,Long sourceRealmId) {
+		/* the destRealm of voters is updated based on the sourceRealmId. It assumes that
+		 * all the voters in the dest realm are in the source realm */
+		
+		DecisionRealm sourceRealm = decisionRealmDao.get(sourceRealmId);
+		
+		for(Voter sourceVoter : sourceRealm.getVoters()) {
+			for(Voter destVoter : destRealm.getVoters()) {
+				if(destVoter.getVoterUser().getId() == sourceVoter.getVoterUser().getId()) {
+					
+					destVoter.setVoterUser(sourceVoter.getVoterUser());
+					destVoter.setMaxWeight(sourceVoter.getMaxWeight());
+					destVoter.setActualWeight(sourceVoter.getActualWeight());
+					
+					voterDao.save(destVoter);
+				}
+			}
+		}
+		
+		decisionRealmDao.save(destRealm);
+	}
+	
+	@Transactional
+	public void updateVoterInProject(Long projectId, Long userId) {
+		/* Goes all over the decision realms in a project and updates the max weight of a 
+		 * user by setting it to the user pps in the project.
+		 * It starts from the super-goals (those without parent goal) and then continues
+		 * iteratively with the sub-goals */
+		
+		List<Goal> superGoals = goalDao.getSuperGoalsOnly(projectId);
+		Contributor ctrb = projectDao.getContributor(projectId, userId);
+		
+		if(ctrb != null) {
+			for(Goal superGoal:superGoals) {
+				
+				DecisionRealm realm = decisionRealmDao.getFromGoalId(superGoal.getId());
+				Voter voter = decisionRealmDao.getVoter(realm.getId(), userId);
+				
+				/* update the maxWeight and actualWeight keeping the proportion
+				 * in case the users has decided to manually change it */
+				double scale = voter.getActualWeight()/voter.getMaxWeight();
+				voter.setMaxWeight(ctrb.getPps());
+				voter.setActualWeight(scale*ctrb.getPps());
+				voterDao.save(voter);
+				
+				/* and update the weight of the theses of that user (it will have immediate
+				 * effect in the decision algorithm) */
+				List<Thesis> theses = thesisDao.getOfUserInRealm(realm.getId(), userId);
+				
+				for(Thesis thesis : theses) {
+					thesis.setWeight(voter.getActualWeight());
+					thesisDao.save(thesis);
+				}
+			
+				/* now go over all subgoals and update realms and theses */
+				List<Goal> subGoals = goalDao.getSubgoalsIteratively(superGoal.getId());
+				
+				for(Goal subGoal : subGoals) {
+					updateVoterInGoal(subGoal.getId(), userId);
+				}
+			}
+		}
+	}
+	
+	@Transactional
+	public void updateVoterInGoal(Long goalId, Long userId) {
+		/* Goes all over the decision realms in a goal and subgoals (recursively) and 
+		 * update the user. It starts from the top goal and then continues recursively 
+		 * with the sub-goals */
+		
+		Goal goal = goalDao.get(goalId);
+		
+		DecisionRealm parentRealm = decisionRealmDao.getFromGoalId(goal.getParent().getId());
+		Voter voterInParent = decisionRealmDao.getVoter(parentRealm.getId(), userId);
+		
+		DecisionRealm goalRealm = decisionRealmDao.getFromGoalId(goal.getId());
+		Voter voterInGoal = decisionRealmDao.getVoter(goalRealm.getId(), userId);
+		
+		/* if user is in realm */
+		if(voterInGoal != null) {
+			/* update the max weight to the weight of the user in the parent goal */
+			
+			/* update the maxWeight and actualWeight keeping the proportion
+			 * in case the users has decided to manually change it. */
+			double scale = voterInGoal.getActualWeight()/voterInGoal.getMaxWeight();
+			voterInGoal.setMaxWeight(voterInParent.getMaxWeight());
+			voterInGoal.setActualWeight(scale*voterInParent.getMaxWeight());
+			voterDao.save(voterInGoal);
+			
+			/* and update the weight of the theses of that user (it will have immediate
+			 * effect in the decision algorithm) */
+			List<Thesis> theses = thesisDao.getOfUserInRealm(goalRealm.getId(), userId);
+			
+			for(Thesis thesis : theses) {
+				thesis.setWeight(voterInGoal.getActualWeight());
+				thesisDao.save(thesis);
+			}
+		}
+		
+		/* now go over all subgoals and update realms and theses (RECUERSIVE) */
+		List<Goal> subGoals = goalDao.getSubgoalsIteratively(goal.getId());
+		
+		for(Goal subGoal : subGoals) {
+			updateVoterInGoal(subGoal.getId(), userId);
+		}
+	}
+	
 	@Transactional
 	public ArgumentDto argumentGetDto(Long id) {
 		return argumentDao.get(id).toDto();

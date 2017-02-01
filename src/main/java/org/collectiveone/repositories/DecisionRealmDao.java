@@ -6,7 +6,6 @@ import org.collectiveone.model.DecisionRealm;
 import org.collectiveone.model.User;
 import org.collectiveone.model.Voter;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -27,20 +26,32 @@ public class DecisionRealmDao extends BaseDao {
 		return (List<DecisionRealm>) super.getAll(max,DecisionRealm.class);
 	}
 	
-	public Long getIdFromProjectId(Long projectId) {
+	public Long getIdFromGoalId(Long goalId) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(DecisionRealm.class);
-		query.add(Restrictions.eq("project.id", projectId)).setProjection(Projections.id());
+		query.add(Restrictions.eq("goal.id", goalId)).setProjection(Projections.id());
 		return (Long) query.uniqueResult();
 	}
 	
-	public DecisionRealm getFromProjectId(Long projectId) {
+	public DecisionRealm getFromGoalId(Long goalId) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(DecisionRealm.class);
-		query.add(Restrictions.eq("project.id", projectId));
+		query.add(Restrictions.eq("goal.id", goalId));
 		return (DecisionRealm) query.uniqueResult();
 	}
 	
-	public void updateVoter(Long realmId, Long voterUserId, double weight) {
+	public List<DecisionRealm> getAllOfProject(Long projectId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(DecisionRealm.class,"realm");
+		query
+			.createAlias("realm.goal", "go")
+			.createAlias("go.project", "pr")
+			.add(Restrictions.eq("pr.id", projectId));
 		
+		@SuppressWarnings("unchecked")
+		List<DecisionRealm> res = (List<DecisionRealm>) query.list();
+		return res; 
+	}
+	
+	public void addOrUpdateVoter(Long realmId, Long voterUserId, double maxWeight, double actualWeight) {
+		/* voter may not exist, in which is created */
 		Session session = sessionFactory.getCurrentSession();
 		DecisionRealm realm = session.get(DecisionRealm.class,realmId);
 		
@@ -49,31 +60,47 @@ public class DecisionRealmDao extends BaseDao {
 		if(voter == null) {
 			/* if voter is not in the realm, then add him */
 			voter = new Voter();
-			voter.setWeight(0.0);
 			voter.setVoterUser(session.get(User.class,voterUserId));
-			realm.getVoters().add(voter);
+			voter.setRealm(realm);
 		}
+
+		voter.setMaxWeight(maxWeight);
+		voter.setActualWeight(actualWeight);
 		
-		voter.setWeight(weight);
+		save(voter);
+		save(realm);
+	}
+	
+	public void updateVoter(Long realmId, Long voterUserId, double maxWeight, double actualWeight) {
+		/* voter must exist */
+		Session session = sessionFactory.getCurrentSession();
+		DecisionRealm realm = session.get(DecisionRealm.class,realmId);
+		
+		Voter voter = getVoter(realmId,voterUserId);
+		
+		voter.setMaxWeight(maxWeight);
+		voter.setActualWeight(actualWeight);
 		
 		save(voter);
 		save(realm);
 	}
 	
 	public Voter getVoter(Long realmId, Long voterUserId) {
-		Session session = sessionFactory.getCurrentSession();
-
-		Query query = session.createQuery(
-				"SELECT voter "
-						+ "FROM DecisionRealm realm "
-						+ "JOIN realm.voters voter "
-						+ "WHERE realm.id = :rId "
-						+ "AND voter.voterUser.id = :vuId "
-				);
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Voter.class,"vot");
+		query
+			.createAlias("vot.voterUser", "us")
+			.add(Restrictions.eq("realm.id", realmId))
+			.add(Restrictions.eq("us.id", voterUserId));
 		
-		query.setParameter("rId", realmId);
-		query.setParameter("vuId", voterUserId);
+		return (Voter) query.uniqueResult();
+	}
+	
+	public double getWeightTot(Long realmId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Voter.class);
+		query
+			.add(Restrictions.eq("realm.id", realmId))
+			.setProjection(Projections.sum("actualWeight"));
 		
-		return (Voter)query.uniqueResult();
+		return (double) query.uniqueResult();
 	}
 }

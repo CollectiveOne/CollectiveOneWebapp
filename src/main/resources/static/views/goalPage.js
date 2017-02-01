@@ -20,6 +20,9 @@ GoalPage.prototype.goalReceivedCallback = function(goalDto) {
 	var goalBox = new GoalBox($("#goal_container"),this.goal);
 	goalBox.draw();
 	
+	var goalWeightsBox = new GoalWeightsBox($("#goal_weights_container"),{ goalTag: this.goal.goalTag, projectName: this.goal.projectName });
+	goalWeightsBox.update();
+	
 	this.updateCbtions();
 }
 
@@ -30,7 +33,7 @@ GoalPage.prototype.updateCbtions = function(goalDto) {
 			maxheight: "600px",
 			showFilterBtn: true,
 			showNewBtn: true,
-			newBtnLink: "/views/cbtionNewPageR?goalTag="+this.goal.goalTag
+			newBtnLink: "/views/cbtionNewPageR?goalTag="+this.goal.goalTag+"&projectName="+this.goal.projectName
 		});
 
 	this.cbtionList.init();

@@ -79,12 +79,47 @@
 	display:none;
 }
 
-#goal_div #propose_parent_form_container {
+#goal_div .control_form_container {
 	width: 200px;
 	margin-right:10px;
 	float:left;
 	display:none;
 	margin-bottom: 10px;
+}
+
+#goal_div #detach_form_container {
+	display: none;
+}
+
+#goal_div #increase_budget_form_container {
+	display: none;
+}
+
+#goal_div #increase_budget_decision_container {
+	float:left;
+	margin-right: 10px;
+}
+
+#goal_div .control_btn {
+	width:100%;
+	float:left;
+}
+
+#goal_div .control_form {
+	display:none;
+}
+
+#goal_div .control_input {
+	width:100%;
+	float:left;
+	margin-top: 3px;
+	text-align:center;
+}
+
+#goal_div .control_save_btn {
+	width:100%;
+	float:left;
+	margin-top: 3px;
 }
 
 #goal_div #propose_parent_decision_container {
@@ -94,27 +129,7 @@
 	margin-bottom: 5px;
 }
 
-#goal_div #propose_parent_btn {
-	width:100%;
-	float:left;
-}
 
-#goal_div #propose_parent_form {
-	display:none;
-}
-
-#goal_div #parent_goal_input {
-	width:100%;
-	float:left;
-	margin-top: 3px;
-	text-align:center;
-}
-
-#goal_div #propose_parent_save_btn {
-	width:100%;
-	float:left;
-	margin-top: 3px;
-}
 
 #goal_div #state_decision_div {
 	float:left;

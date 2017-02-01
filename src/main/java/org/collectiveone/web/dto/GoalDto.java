@@ -25,11 +25,18 @@ public class GoalDto {
 	private List<String> parentGoalsTags = new ArrayList<String>();
 	private List<String> subGoalsTags = new ArrayList<String>();
 	private String state;
-	private DecisionDto createDec;
-	private DecisionDto deleteDec;
+	private DecisionDtoFull createDec;
+	private DecisionDtoFull deleteDec;
 	private String parentState;
 	private String proposedParent;
-	private DecisionDto proposeParent;
+	private DecisionDtoFull proposeParent;
+	
+	private String attachedState;
+	private double currentBudget;
+	private DecisionDtoFull increaseBudgetDec;
+	private double ppsToIncrease;
+	private String increaseBudgetState;
+	private DecisionDtoFull reattachDec;
 	
 	public Long getId() {
 		return id;
@@ -79,16 +86,16 @@ public class GoalDto {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public DecisionDto getCreateDec() {
+	public DecisionDtoFull getCreateDec() {
 		return createDec;
 	}
-	public void setCreateDec(DecisionDto createDec) {
+	public void setCreateDec(DecisionDtoFull createDec) {
 		this.createDec = createDec;
 	}
-	public DecisionDto getDeleteDec() {
+	public DecisionDtoFull getDeleteDec() {
 		return deleteDec;
 	}
-	public void setDeleteDec(DecisionDto deleteDec) {
+	public void setDeleteDec(DecisionDtoFull deleteDec) {
 		this.deleteDec = deleteDec;
 	}
 	public List<String> getParentGoalsTags() {
@@ -115,11 +122,48 @@ public class GoalDto {
 	public void setProposedParent(String proposedParent) {
 		this.proposedParent = proposedParent;
 	}
-	public DecisionDto getProposeParent() {
+	public DecisionDtoFull getProposeParent() {
 		return proposeParent;
 	}
-	public void setProposeParent(DecisionDto proposeParent) {
+	public void setProposeParent(DecisionDtoFull proposeParent) {
 		this.proposeParent = proposeParent;
 	}
+	public String getAttachedState() {
+		return attachedState;
+	}
+	public void setAttachedState(String attachedState) {
+		this.attachedState = attachedState;
+	}
+	public double getCurrentBudget() {
+		return currentBudget;
+	}
+	public void setCurrentBudget(double currentBudget) {
+		this.currentBudget = currentBudget;
+	}
+	public DecisionDtoFull getIncreaseBudgetDec() {
+		return increaseBudgetDec;
+	}
+	public void setIncreaseBudgetDec(DecisionDtoFull increaseBudgetDec) {
+		this.increaseBudgetDec = increaseBudgetDec;
+	}
+	public String getIncreaseBudgetState() {
+		return increaseBudgetState;
+	}
+	public void setIncreaseBudgetState(String increaseBudgetState) {
+		this.increaseBudgetState = increaseBudgetState;
+	}
+	public double getPpsToIncrease() {
+		return ppsToIncrease;
+	}
+	public void setPpsToIncrease(double ppsToIncrease) {
+		this.ppsToIncrease = ppsToIncrease;
+	}
+	public DecisionDtoFull getReattachDec() {
+		return reattachDec;
+	}
+	public void setReattachDec(DecisionDtoFull reattachDec) {
+		this.reattachDec = reattachDec;
+	}
+	
 }
 

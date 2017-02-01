@@ -9,7 +9,8 @@ import org.collectiveone.model.GoalState;
 import org.collectiveone.services.AppMailServiceHeroku;
 import org.collectiveone.services.DbServicesImp;
 import org.collectiveone.web.dto.CbtionDto;
-import org.collectiveone.web.dto.DecisionDto;
+import org.collectiveone.web.dto.DecisionDtoCreate;
+import org.collectiveone.web.dto.DecisionDtoFull;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.InvRequest;
 import org.collectiveone.web.dto.ProjectNewDto;
@@ -133,7 +134,7 @@ public class ViewsController {
 	
 	@RequestMapping("/decisionPageR/{id}")
 	public String decisionPage(@PathVariable(value="id") Long id, Model model) {
-		DecisionDto decision = dbServices.decisionGetDto(id);  
+		DecisionDtoFull decision = dbServices.decisionGetDto(id);  
 		model.addAttribute("decisionId",decision.getId());
 		return "views/decisionPage";
 	}
@@ -145,11 +146,17 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping("/cbtionNewPageR")
-	public String cbtionNewPage(Model model, @RequestParam(value="goalTag", required = false) String goalTag) {
+	public String cbtionNewPage(Model model, 
+								@RequestParam(value="goalTag", required = false) String goalTag,
+								@RequestParam(value="projectName", required = false) String projectName) {
 		CbtionDto cbtionDto = new CbtionDto();
 		if(goalTag != null) {
 			cbtionDto.setGoalTag(goalTag);
 		}
+		if(projectName != null) {
+			cbtionDto.setProjectName(projectName);
+		}
+		model.addAttribute("projectSelected",cbtionDto.getProjectName());
 		model.addAttribute("cbtion",cbtionDto);
 		return "views/cbtionNewPage";
 	}
@@ -220,7 +227,7 @@ public class ViewsController {
 	@Secured("ROLE_USER")
 	@RequestMapping("/decisionNewPageR")
 	public String decisionNewPage(Model model) {
-		DecisionDto decisionDto = new DecisionDto();
+		DecisionDtoFull decisionDto = new DecisionDtoFull();
 		decisionDto.setVerdictHours(36.0);
 		
 		model.addAttribute("decision",decisionDto);
@@ -229,7 +236,7 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/decisionNewSubmit", method = RequestMethod.POST)
-	public String decisionNewSubmit(@Valid @ModelAttribute("decision") DecisionDto decisionDto, BindingResult result, Model model) throws IOException {
+	public String decisionNewSubmit(@Valid @ModelAttribute("decision") DecisionDtoCreate decisionDto, BindingResult result, Model model) throws IOException {
 		if(result.hasErrors()) {
 			model.addAttribute("projectSelected",decisionDto.getProjectName());
 			return "views/decisionNewPage";
@@ -255,7 +262,7 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/projectNewSubmit", method = RequestMethod.POST)
-	public String projectNewSubmit(@Valid @ModelAttribute("project") ProjectNewDto projectDto, BindingResult result) {
+	public String projectNewSubmit(@Valid @ModelAttribute("project") ProjectNewDto projectDto, BindingResult result) throws IOException {
 		if(result.hasErrors()) {
 			return "views/projectNewPage";
 		} else {
@@ -266,7 +273,10 @@ public class ViewsController {
 					projectDto.setCreatorUsername(auth.getName()); 
 					
 					dbServices.projectCreate(projectDto);
+					dbServices.projectCreateFirstGoal(projectDto);
 					dbServices.projectStart(projectDto.getName(),projectDto.getPpsInitial());
+					dbServices.decisionRealmInitAllSupergoalsToProject(dbServices.projectGet(projectDto.getName()).getId());
+					
 					return "redirect:/views/projectPageR/"+projectDto.getName();	
 				} else {
 					result.rejectValue("name", "project.name", "'"+projectDto.getName()+"' already exist.");

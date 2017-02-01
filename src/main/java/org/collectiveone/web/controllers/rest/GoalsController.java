@@ -13,10 +13,14 @@ import org.collectiveone.model.User;
 import org.collectiveone.services.DbServicesImp;
 import org.collectiveone.services.Filters;
 import org.collectiveone.services.GoalDtoListRes;
+import org.collectiveone.web.dto.GoalDetachDto;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.GoalGetDto;
 import org.collectiveone.web.dto.GoalParentDto;
+import org.collectiveone.web.dto.GoalTouchDto;
+import org.collectiveone.web.dto.GoalWeightsDataDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
@@ -96,6 +100,23 @@ public class GoalsController {
 		return goalDtos.getGoalDtos();
 	}
 	
+	@RequestMapping(value="/getWeightData/{projectName}/{goalTag}", method = RequestMethod.POST)
+	public @ResponseBody GoalWeightsDataDto getWeightData(	@PathVariable("goalTag") String goalTag,
+															@PathVariable("projectName") String projectName ) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return dbServices.goalGetWeightsData(projectName, goalTag, auth.getName());
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/touch", method = RequestMethod.POST)
+	public boolean touch(@RequestBody GoalTouchDto touchDto) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		touchDto.setUsername(auth.getName());
+		dbServices.goalTouch(touchDto);
+		return true;
+	}
+	
 	@RequestMapping(value="/getList", method = RequestMethod.POST)
 	public @ResponseBody Map<String,Object> getList(@RequestBody Filters filters) {
 		if(filters.getPage() == 0) filters.setPage(1);
@@ -114,12 +135,46 @@ public class GoalsController {
 		return map;
 	}
 	
+	@Secured("ROLE_USER")
 	@RequestMapping(value="/proposeParent", method = RequestMethod.POST)
 	public @ResponseBody boolean proposeParent(@RequestBody GoalParentDto goalParentDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = dbServices.userGet(auth.getName());
 		if(logged != null) {
 			dbServices.goalProposeParent(goalParentDto.getGoalId(), goalParentDto.getParentTag());
+		}
+		return true;
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/proposeDetach", method = RequestMethod.POST)
+	public @ResponseBody boolean proposeDetach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = dbServices.userGet(auth.getName());
+		if(logged != null) {
+			dbServices.goalDetach(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
+		}
+		return true;
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/proposeReattach", method = RequestMethod.POST)
+	public @ResponseBody boolean proposeReattach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = dbServices.userGet(auth.getName());
+		if(logged != null) {
+			dbServices.goalReattach(goaldetachDto.getGoalId());
+		}
+		return true;
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/proposeIncreaseBudget", method = RequestMethod.POST)
+	public @ResponseBody boolean proposeIncreaseBudget(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = dbServices.userGet(auth.getName());
+		if(logged != null) {
+			dbServices.goalIncreaseBudget(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
 		}
 		return true;
 	}

@@ -1,10 +1,10 @@
 package org.collectiveone.repositories;
 
 import java.util.List;
+import java.util.Set;
 
-import org.collectiveone.model.CbtionState;
+import org.collectiveone.model.Contributor;
 import org.collectiveone.model.Project;
-import org.collectiveone.model.User;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -69,22 +69,29 @@ public class ProjectDao extends BaseDao {
 		return res;
 	}
 
-	public List<User> getContributors(Long projectId) {
+	public Set<Contributor> getContributors(Long projectId) {
 
+		Session session = sessionFactory.getCurrentSession();
+		Project project = (Project) session.get(Project.class,projectId);
+				
+		return project.getContributors();
+	}
+	
+	public Contributor getContributor(Long projectId, Long userId) {
 		Session session = sessionFactory.getCurrentSession();
 
 		Query query = session.createQuery(
-				"SELECT DISTINCT cbt.contributor "
-						+ "FROM Cbtion cbt "
-						+ "WHERE cbt.project.id = :pId "
-						+ "AND cbt.state = :cSt "
+				"SELECT ctrb "
+						+ "FROM Project proj "
+						+ "JOIN proj.contributors ctrb "
+						+ "WHERE proj.id = :pId "
+						+ "AND ctrb.contributorUser.id = :uId "
 				);
 
 		query.setParameter("pId", projectId);
-		query.setParameter("cSt", CbtionState.ACCEPTED);
-
-		@SuppressWarnings("unchecked")
-		List<User> res = (List<User>) query.list();
+		query.setParameter("uId", userId);
+		
+		Contributor res = (Contributor) query.uniqueResult();
 		
 		return res;
 	}

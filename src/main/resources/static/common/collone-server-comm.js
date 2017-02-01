@@ -227,6 +227,125 @@ ServerComm.prototype = {
 				}
 			});
 		},
+		
+		goalWeightsGet: function(projectName,goalTag,callbackFunction,callbackObj) {
+			$.ajax({
+				type : 'POST',
+				url : '/rest/goals/getWeightData/'+projectName+'/'+goalTag,
+				data : '',
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+		
+		goalRealmTouch:  function(touchFlag, projectName,goalTag,callbackFunction,callbackObj) {
+			
+			var data = {
+				'touchFlag' : touchFlag,
+				'projectName' : projectName,
+				'goalTag': goalTag
+			};
+			var datastr = JSON.stringify(data);
+				
+			$.ajax({
+				type : 'POST',
+				url : '/rest/goals/touch',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
+		goalProposeDetach: function(goalId, increaseBudget,callbackFunction,callbackObj) {
+			
+			var data = {
+				'goalId' : goalId,
+				'increaseBudget' : increaseBudget
+			};
+			var datastr = JSON.stringify(data);
+				
+			$.ajax({
+				type : 'POST',
+				url : '/rest/goals/proposeDetach',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
+		goalProposeReattach: function(goalId,callbackFunction,callbackObj) {
+			
+			var data = {
+				'goalId' : goalId,
+				'increaseBudget' : 0.0
+			};
+			var datastr = JSON.stringify(data);
+				
+			$.ajax({
+				type : 'POST',
+				url : '/rest/goals/proposeReattach',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
+		goalProposeIncreaseBudget: function(goalId, increaseBudget,callbackFunction,callbackObj) {
+			
+			var data = {
+				'goalId' : goalId,
+				'increaseBudget' : increaseBudget
+			};
+			var datastr = JSON.stringify(data);
+				
+			$.ajax({
+				type : 'POST',
+				url : '/rest/goals/proposeIncreaseBudget',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
 
 		userGet : function(username,callbackFunction,callbackObj) {
 			$.ajax({

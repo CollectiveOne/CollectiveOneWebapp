@@ -2,12 +2,9 @@ package org.collectiveone.web.dto;
 
 import javax.validation.constraints.Min;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
-public class DecisionDto {
+public class DecisionDtoFull {
 	
 	protected Long id;
-	@NotEmpty
 	protected String description;
 	protected long creationDate;
 	protected long openDate;
@@ -15,17 +12,18 @@ public class DecisionDto {
 	protected String fromState;
 	protected String toState;
 	protected String projectName;
+	protected String goalTag;
 	protected String creatorUsername;
 	
 	protected int narguments;
 	
 	protected String type;
-	protected Long cbtionId;
-	protected String cbtionTitle;
-	protected Long goalId;
-	protected String goalTag;
-	protected Long bidId;
-	protected String bidCreatorUsername;
+	protected Long affectedCbtionId;
+	protected String affectedCbtionTitle;
+	protected Long affectedGoalId;
+	protected String affectedGoalTag;
+	protected Long affectedBidId;
+	protected String affectedBidCreatorUsername;
 	
 	protected int nVoters;
 	protected double ppsTot;
@@ -89,6 +87,12 @@ public class DecisionDto {
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
 	}
+	public String getGoalTag() {
+		return goalTag;
+	}
+	public void setGoalTag(String goalTag) {
+		this.goalTag = goalTag;
+	}
 	public String getCreatorUsername() {
 		return creatorUsername;
 	}
@@ -109,42 +113,43 @@ public class DecisionDto {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public Long getCbtionId() {
-		return cbtionId;
+	public Long getAffectedCbtionId() {
+		return affectedCbtionId;
 	}
-	public void setCbtionId(Long cbtionId) {
-		this.cbtionId = cbtionId;
+	public void setAffectedCbtionId(Long affectedCbtionId) {
+		this.affectedCbtionId = affectedCbtionId;
 	}
-	public String getCbtionTitle() {
-		return cbtionTitle;
+	public String getAffectedCbtionTitle() {
+		return affectedCbtionTitle;
 	}
-	public void setCbtionTitle(String cbtionTitle) {
-		this.cbtionTitle = cbtionTitle;
+	public void setAffectedCbtionTitle(String affectedCbtionTitle) {
+		this.affectedCbtionTitle = affectedCbtionTitle;
 	}
-	public Long getGoalId() {
-		return goalId;
+	public Long getAffectedGoalId() {
+		return affectedGoalId;
 	}
-	public void setGoalId(Long goalId) {
-		this.goalId = goalId;
+	public void setAffectedGoalId(Long affectedGoalId) {
+		this.affectedGoalId = affectedGoalId;
 	}
-	public String getGoalTag() {
-		return goalTag;
+	public String getAffectedGoalTag() {
+		return affectedGoalTag;
 	}
-	public void setGoalTag(String goalTag) {
-		this.goalTag = goalTag;
+	public void setAffectedGoalTag(String affectedGoalTag) {
+		this.affectedGoalTag = affectedGoalTag;
 	}
-	public Long getBidId() {
-		return bidId;
+	public Long getAffectedBidId() {
+		return affectedBidId;
 	}
-	public void setBidId(Long bidId) {
-		this.bidId = bidId;
+	public void setAffectedBidId(Long affectedBidId) {
+		this.affectedBidId = affectedBidId;
 	}
-	public String getBidCreatorUsername() {
-		return bidCreatorUsername;
+	public String getAffectedBidCreatorUsername() {
+		return affectedBidCreatorUsername;
 	}
-	public void setBidCreatorUsername(String bidCreatorUsername) {
-		this.bidCreatorUsername = bidCreatorUsername;
+	public void setAffectedBidCreatorUsername(String affectedBidCreatorUsername) {
+		this.affectedBidCreatorUsername = affectedBidCreatorUsername;
 	}
+	
 	
 	
 	public int getnVoters() {

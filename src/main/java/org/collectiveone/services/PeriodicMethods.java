@@ -16,7 +16,12 @@ public class PeriodicMethods {
 	@Scheduled(fixedDelay = 5000)
 	public void UpdateDecisionsStatus() throws IOException {
 		// System.out.print(".");
+		
+		/* First update all open or idle decisions */
 		dbServices.decisionsUpdateState();
+		
+		/* then update all entities based on the updated
+		 * decisions */
 		dbServices.bidsUpdateState();
 		dbServices.goalsUpdateState();
 		dbServices.cbtionsUpdateState();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.collectiveone.model.Goal;
+import org.collectiveone.model.GoalAttachState;
 import org.collectiveone.model.GoalState;
 import org.collectiveone.services.Filters;
 import org.collectiveone.services.ObjectListRes;
@@ -47,6 +48,18 @@ public class GoalDao extends BaseDao {
 			.add(Restrictions.eq("state", state));
 		
 		return (Goal) query.uniqueResult();
+	}
+	
+	public List<Goal> getAllOfProject(Long projectId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class);
+		query
+			.createAlias("project", "prj")
+			.add(Restrictions.eq("prj.id", projectId));
+		
+		@SuppressWarnings("unchecked")
+		List<Goal> res = (List<Goal>) query.list();
+		
+		return res;
 	}
 	
 	public List<Goal> getAll(Integer max) {
@@ -112,6 +125,19 @@ public class GoalDao extends BaseDao {
 	
 		return getObjectsAndResSet(q, filters, Goal.class);
 		
+	}
+	
+	public List<Goal> getSuperGoalsOnly(Long projectId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class,"go");
+		
+		query
+			.add(Restrictions.eq("project.id", projectId))
+			.add(Restrictions.isNull("parent"));
+		
+		@SuppressWarnings("unchecked")
+		List<Goal> res = (List<Goal>) query.list();
+		
+		return res;
 	}
 	
 	public List<Goal> getSubgoalsIteratively(Long goalId) {
@@ -180,6 +206,58 @@ public class GoalDao extends BaseDao {
 			count++;
 		}
 		return parents;
+	}
+	
+	public Goal getClosestDetachedParent(Long goalId) {
+		/* returns the closest parent which is detached or null */
+		Goal goal = get(goalId);
+		Goal parent = goal.getParent();
+		
+		if(parent == null) {
+			/* goal is a supergoal, doesn not have parents*/
+			return null;		
+		} else {
+			
+			boolean lookForDetachedParent = true;
+			Goal detachedParent = null;
+			
+			Goal nextParent = parent;
+			int level = 0;
+			while(lookForDetachedParent) {
+				if(nextParent == null) {
+					/* all grand parents are attached up until the supergoal is reached */
+					return null;
+				} else {
+					if(nextParent.getAttachedState() == GoalAttachState.DETACHED) {
+						/* found detached parent */
+						detachedParent = nextParent;
+						lookForDetachedParent = false;
+					} else {
+						/* look with parent of parent */
+						nextParent = nextParent.getParent();
+					}
+				} 
+				
+				/* protection against endless loop */
+				level++;
+				if(level >= 100) {
+					lookForDetachedParent = false;
+				}
+			}
+			
+			return detachedParent;
+		}
+	}
+	
+	public Goal getClosestDetached(Long goalId) {
+		/* returns the goal itself or the closest parent which is detached or null */
+		Goal goal = get(goalId);
+		if(goal.getAttachedState() == GoalAttachState.DETACHED) {
+			return goal; 
+		} else {
+			return getClosestDetachedParent(goalId);
+		}
+		
 	}
 	
 }

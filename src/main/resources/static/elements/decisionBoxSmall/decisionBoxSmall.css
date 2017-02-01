@@ -1,5 +1,4 @@
 #decision_small_div {
-	height:34px;
 	width: 215px;
 	clear:none;
 	border-radius:5px;
@@ -7,6 +6,12 @@
 	border-width:2px;
 	border-color: #cccccc;
 	font-size: 10px;
+	overflow: auto;
+	min-height: 33px;
+}
+
+.dangerousDecisions {
+	border-color: red !IMPORTANT;
 }
 
 #decision_small_div #dec_left_div {
@@ -16,6 +21,8 @@
 	padding-top: 3px;
 	overflow-y: auto;
 	line-height: 11px;
+	margin-bottom: 2px;
+	display: table-cell;
 }
 
 #decision_small_div #dec_center_div {
@@ -37,7 +44,7 @@
 	float:left;
 	background-color: #cccccc;
 	padding-top: 4px;
-	height: 100%;
+	height: 29px;
 	text-align:right;
 	clear:none;
 	display:inline;

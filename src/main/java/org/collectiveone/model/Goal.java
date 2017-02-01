@@ -15,7 +15,7 @@ import org.collectiveone.web.dto.GoalDto;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table( name = "GOAL" )
+@Table( name = "GOALS" )
 public class Goal {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -34,6 +34,7 @@ public class Goal {
 	private Decision createDec;
 	@OneToOne
 	private Decision deleteDec;
+	
 	@ManyToOne
 	private Goal parent;
 	@ManyToOne
@@ -42,6 +43,14 @@ public class Goal {
 	private Decision proposeParent;
 	private GoalParentState parentState;
 	
+	private GoalAttachState attachedState;
+	private double currentBudget;
+	@OneToOne
+	private Decision increaseBudget;
+	private GoalIncreaseBudgetState increaseBudgetState;
+	private double ppsToIncrease;
+	@OneToOne
+	private Decision reattach;
 	
 	public GoalDto toDto() {
 		GoalDto dto = new GoalDto();
@@ -59,6 +68,13 @@ public class Goal {
 		if(proposedParent != null) dto.setProposedParent(proposedParent.getGoalTag());
 		if(proposeParent != null) dto.setProposeParent(proposeParent.toDto());
 		if(parentState != null) dto.setParentState(parentState.toString());
+		
+		dto.setAttachedState(attachedState.toString());
+		dto.setCurrentBudget(currentBudget);
+		if(increaseBudget != null) dto.setIncreaseBudgetDec(increaseBudget.toDto());
+		dto.setPpsToIncrease(ppsToIncrease);
+		dto.setIncreaseBudgetState(increaseBudgetState.toString());
+		if(reattach != null) dto.setReattachDec(reattach.toDto());
 		
 		return dto;
 	}
@@ -140,6 +156,43 @@ public class Goal {
 	}
 	public void setParentState(GoalParentState parentState) {
 		this.parentState = parentState;
+	}
+
+	public GoalAttachState getAttachedState() {
+		return attachedState;
+	}
+	public void setAttachedState(GoalAttachState attachedState) {
+		this.attachedState = attachedState;
+	}
+	public double getCurrentBudget() {
+		return currentBudget;
+	}
+	public void setCurrentBudget(double currentBudget) {
+		this.currentBudget = currentBudget;
+	}
+	public Decision getIncreaseBudget() {
+		return increaseBudget;
+	}
+	public void setIncreaseBudget(Decision increaseBudget) {
+		this.increaseBudget = increaseBudget;
+	}
+	public GoalIncreaseBudgetState getIncreaseBudgetState() {
+		return increaseBudgetState;
+	}
+	public void setIncreaseBudgetState(GoalIncreaseBudgetState increaseBudgetState) {
+		this.increaseBudgetState = increaseBudgetState;
+	}
+	public double getPpsToIncrease() {
+		return ppsToIncrease;
+	}
+	public void setPpsToIncrease(double ppsToIncrease) {
+		this.ppsToIncrease = ppsToIncrease;
+	}
+	public Decision getReattach() {
+		return reattach;
+	}
+	public void setReattach(Decision reattach) {
+		this.reattach = reattach;
 	}
 	
 }

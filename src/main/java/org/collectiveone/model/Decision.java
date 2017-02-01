@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -17,7 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
-import org.collectiveone.web.dto.DecisionDto;
+import org.collectiveone.web.dto.DecisionDtoFull;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -39,10 +38,15 @@ public class Decision {
 	private User creator;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	private DecisionRealm decisionRealm = new DecisionRealm();
+	private DecisionRealm decisionRealm;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Goal goal;
 
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "DECISIONS_THESESCAST")
+	/* weights from decision realm are mixed with pps of the voter
+	 * in the project to get the weight of each voter. This weight
+	 * is stored in the theses (votes) elements.*/
+	@OneToMany(mappedBy="decision", cascade=CascadeType.ALL)
 	private List<Thesis> thesesCast = new ArrayList<Thesis>();
 	private Timestamp openDate;
 	private Timestamp actualVerdictDate;
@@ -51,18 +55,17 @@ public class Decision {
 	private int verdict;
 	private DecisionState state;
 	
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "DECISIONS_ARGS")
+	@OneToMany(mappedBy="decision", cascade=CascadeType.ALL)
 	private List<Argument> arguments = new ArrayList<Argument>();
 	
 	/* hold a reference to the affected object */
 	private DecisionType type;
 	@ManyToOne
-	private Cbtion cbtion;
+	private Cbtion affectedCbtion;
 	@ManyToOne
-	private Goal goal;
+	private Goal affectedGoal;
 	@ManyToOne
-	private Bid bid;
+	private Bid affectedBid;
 	
 	/* ============================== */
 	/* Decisions mechanics parameters */
@@ -72,7 +75,7 @@ public class Decision {
 	/* Decisions statistics variables */
 
 	/* p-points that can vote */
-	public double ppsTot;
+	public double weightTot;
 	/* number of voters that have voted */
 	public int n;
 	/* Estimation of p */
@@ -111,9 +114,9 @@ public class Decision {
 	public double extFactor = 0.0;
 
 	/* ============================== */
-	public DecisionDto toDto() {
+	public DecisionDtoFull toDto() {
 
-		DecisionDto dto = new DecisionDto();
+		DecisionDtoFull dto = new DecisionDtoFull();
 
 		dto.setId(id);
 		dto.setCreatorUsername(creator.getUsername());
@@ -124,31 +127,32 @@ public class Decision {
 		dto.setFromState(fromState);
 		dto.setToState(toState);
 		if(project != null) dto.setProjectName(project.getName());
+		if(goal != null) dto.setGoalTag(goal.getGoalTag());
 		if(arguments != null) dto.setNarguments(arguments.size());
 		
 		if(type != null) { 
 			dto.setType(type.toString());
 			switch(type) {
 				case CBTION:
-					if(cbtion != null) {
-						dto.setCbtionId(cbtion.getId());
-						dto.setCbtionTitle(cbtion.getTitle());
+					if(affectedCbtion != null) {
+						dto.setAffectedCbtionId(affectedCbtion.getId());
+						dto.setAffectedCbtionTitle(affectedCbtion.getTitle());
 					}
 					break;
 					
 				case GOAL:
-					if(goal != null) {
-						dto.setGoalId(goal.getId());
-						dto.setGoalTag(goal.getGoalTag());
+					if(affectedGoal != null) {
+						dto.setAffectedGoalId(affectedGoal.getId());
+						dto.setAffectedGoalTag(affectedGoal.getGoalTag());
 					}
 					break;
 					
 				case BID:
-					if(bid != null) {
-						dto.setBidId(bid.getId());
-						dto.setBidCreatorUsername(bid.getCreator().getUsername());
-						dto.setCbtionId(bid.getCbtion().getId());
-						dto.setCbtionTitle(bid.getCbtion().getTitle());
+					if(affectedBid != null) {
+						dto.setAffectedBidId(affectedBid.getId());
+						dto.setAffectedBidCreatorUsername(affectedBid.getCreator().getUsername());
+						dto.setAffectedCbtionId(affectedBid.getCbtion().getId());
+						dto.setAffectedCbtionTitle(affectedBid.getCbtion().getTitle());
 					}
 					break;
 				
@@ -159,7 +163,7 @@ public class Decision {
 		}
 		
 		dto.setnVoters(decisionRealm.size());
-		dto.setPpsTot(ppsTot);
+		dto.setPpsTot(weightTot);
 		dto.setVerdictHours(verdictHours);
 		dto.setVerdict(verdict);
 		dto.setState(state.toString());
@@ -230,6 +234,12 @@ public class Decision {
 	public void setDecisionRealm(DecisionRealm decisionRealm) {
 		this.decisionRealm = decisionRealm;
 	}
+	public Goal getGoal() {
+		return goal;
+	}
+	public void setGoal(Goal goal) {
+		this.goal = goal;
+	}
 	public Timestamp getOpenDate() {
 		return openDate;
 	}
@@ -273,23 +283,23 @@ public class Decision {
 	public void setArguments(List<Argument> arguments) {
 		this.arguments = arguments;
 	}
-	public Cbtion getCbtion() {
-		return cbtion;
+	public Cbtion getAffectedCbtion() {
+		return affectedCbtion;
 	}
-	public void setCbtion(Cbtion cbtion) {
-		this.cbtion = cbtion;
+	public void setAffectedCbtion(Cbtion affectedCbtion) {
+		this.affectedCbtion = affectedCbtion;
 	}
-	public Goal getGoal() {
-		return goal;
+	public Goal getAffectedGoal() {
+		return affectedGoal;
 	}
-	public void setGoal(Goal goal) {
-		this.goal = goal;
+	public void setAffectedGoal(Goal affectedGoal) {
+		this.affectedGoal = affectedGoal;
 	}
-	public Bid getBid() {
-		return bid;
+	public Bid getAffectedBid() {
+		return affectedBid;
 	}
-	public void setBid(Bid bid) {
-		this.bid = bid;
+	public void setAffectedBid(Bid affectedBid) {
+		this.affectedBid = affectedBid;
 	}
 	public DecisionType getType() {
 		return type;
@@ -301,7 +311,7 @@ public class Decision {
 	/*
 	 * Decision Engine logic
 	 */
-	public void updateState(Timestamp now) {
+	public void updateState(Timestamp now, double weightTotIn) {
 
 		if (state == DecisionState.IDLE) {
 			// force open the decision after the first vote
@@ -315,37 +325,35 @@ public class Decision {
 			
 			n = thesesCast.size();
 			
-			/*TODO: inefficient to compute at every update... */
-			updateTotPps();
+			weightTot = weightTotIn;
 			
 			if (n > 0) {
 				
 				updatePcum();
-				updateP();
-				updateClarity();
-				updateStability();
-
-				/* determine if the decision shall be closed */
-				boolean isTime = isVerdictTime(now);
-
-				updateVerdict();
 				
-				if (isTime) {
-					if (verdict == 0)
-						state = DecisionState.CLOSED_DENIED;
-					if (verdict == 1)
-						state = DecisionState.CLOSED_ACCEPTED;
+				if(ppsCum > 0) {
+					updateP();
+					updateClarity();
+					updateStability();
+	
+					/* determine if the decision shall be closed */
+					boolean isTime = isVerdictTime(now);
+	
+					updateVerdict();
 					
-					actualVerdictDate = new Timestamp(System.currentTimeMillis());
+					if (isTime) {
+						if (verdict == 0)
+							state = DecisionState.CLOSED_DENIED;
+						if (verdict == 1)
+							state = DecisionState.CLOSED_ACCEPTED;
+						
+						actualVerdictDate = new Timestamp(System.currentTimeMillis());
+					}
+				} else {
+					/* back to idle if the voter had zero weight */
+					state = DecisionState.IDLE;
 				}
 			}
-		}
-	}
-
-	public void updateTotPps() {
-		ppsTot = 0.0;
-		for (Voter voter : decisionRealm.getVoters()) {
-			ppsTot += voter.getWeight();
 		}
 	}
 
@@ -421,12 +429,12 @@ public class Decision {
 		 * get the value p_to_flip of p which would flip the outcome of the
 		 * decision, if it is obtained with the remaining votes
 		 */
-		double pps_left = ppsTot - ppsCum;
+		double pps_left = weightTot - ppsCum;
 
 		if(pps_left > 0) {
 			p_to_flip = -0.1;
 			if (pps_left != 0) {
-				p_to_flip = (0.5 - pest * ppsCum / ppsTot) * ppsTot / pps_left;
+				p_to_flip = (0.5 - pest * ppsCum / weightTot) * weightTot / pps_left;
 			}
 
 			if((p_to_flip >= 0) && (p_to_flip <= 1)) {

@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.web.dto.VoterDto;
+
 @Entity
 @Table(name = "VOTERS")
 public class Voter {
@@ -15,8 +17,20 @@ public class Voter {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	@ManyToOne
+	private DecisionRealm realm;
+	@ManyToOne
 	private User voterUser;
-	private double weight;
+	private double maxWeight;
+	private double actualWeight;
+	
+	public VoterDto toDto() {
+		VoterDto dto = new VoterDto();
+		dto.setUsername(voterUser.getUsername());
+		dto.setMaxWeight(maxWeight);
+		dto.setActualWeight(actualWeight);
+
+		return dto;
+	}
 	
 	public Long getId() {
 		return id;
@@ -24,17 +38,30 @@ public class Voter {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	public DecisionRealm getRealm() {
+		return realm;
+	}
+	public void setRealm(DecisionRealm realm) {
+		this.realm = realm;
+	}
 	public User getVoterUser() {
 		return voterUser;
 	}
 	public void setVoterUser(User voterUser) {
 		this.voterUser = voterUser;
 	}
-	public double getWeight() {
-		return weight;
+	public double getMaxWeight() {
+		return maxWeight;
 	}
-	public void setWeight(double weight) {
-		this.weight = weight;
+	public void setMaxWeight(double maxWeight) {
+		this.maxWeight = maxWeight;
 	}
+	public double getActualWeight() {
+		return actualWeight;
+	}
+	public void setActualWeight(double actualWeight) {
+		this.actualWeight = actualWeight;
+	}
+	
 }
 
