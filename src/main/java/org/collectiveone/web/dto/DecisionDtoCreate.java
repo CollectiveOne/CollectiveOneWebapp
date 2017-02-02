@@ -14,7 +14,7 @@ public class DecisionDtoCreate {
 	private String projectName;
 	private String creatorUsername;
 	@NotEmpty
-	@Pattern(regexp="^((?!\\s).)*$", message="may not contain white spaces")
+	@Pattern(regexp="^[0-9a-zA-z-]+$", message="only letters, numbers or bars '-'")
 	private String goalTag;
 	@Min(36)
 	protected double verdictHours;

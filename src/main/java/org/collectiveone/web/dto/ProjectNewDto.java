@@ -7,13 +7,13 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 public class ProjectNewDto {
 	@NotEmpty
-	@Pattern(regexp="^((?!\\s).)*$", message="may not contain white spaces")
+	@Pattern(regexp="^[0-9a-zA-z-]+$", message="only letters, numbers or bars '-'")
 	private String name;
 	@NotEmpty
 	private String description;
 	
 	@NotEmpty
-	@Pattern(regexp="^((?!\\s).)*$", message="may not contain white spaces")
+	@Pattern(regexp="^[0-9a-zA-z-]+$", message="only letters, numbers or bars '-'")
 	private String goalTag;
 	@NotEmpty
 	private String goalDescription;
