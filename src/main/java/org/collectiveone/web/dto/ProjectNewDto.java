@@ -23,6 +23,9 @@ public class ProjectNewDto {
 	
 	private List<UsernameAndPps> usernamesAndPps;
 	
+	public ProjectNewDto(){
+	}
+	
 	public String getName() {
 		return name;
 	}

@@ -4,6 +4,10 @@ public class UsernameAndPps {
 	private String username;
 	private double pps;
 	
+	public UsernameAndPps() {
+		
+	}
+	
 	public UsernameAndPps(String username, double pps) {
 		this.username = username;
 		this.pps = pps;

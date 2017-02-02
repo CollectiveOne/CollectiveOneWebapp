@@ -19,6 +19,13 @@
 				hiddenButtons: ["cmdHeading", "cmdImage"],
 				resize: "vertical"
 			});
+			
+			$('.user-input',this.container).autocomplete({
+				serviceUrl: '/rest/users/getSuggestions',
+				minChars: 0,
+				maxHeight: 100
+			});
+			
 		});
 	
 		
@@ -58,18 +65,27 @@
 					<span th:if="${#fields.hasErrors('goalDescription')}" th:errors="*{goalDescription}" th:class="help-block">Goal Description Errors</span>
 				</div>
 				
-				<div th:each="usernameAndPps : ${project.usernamesAndPps}" th:class="form-group" th:classappend="${#fields.hasErrors('usernamesAndPps')}? 'has-error'">
-					<div class="col-md-5">
-						<input class="form-control" type="text" th:field="*{usernamesAndPps.username}" th:value="${usernameAndPps.username}"></input>
+				<div id="contributors_container" class="form-group">
+					<label>Initial Contributors:</label>
+					<div th:each="usernameAndPps, rowStat : ${project.usernamesAndPps}" th:class="form-group" th:classappend="${#fields.hasErrors('usernamesAndPps')}? 'has-error'">
+						<div class="col-md-5">
+							<input class="user-input form-control" type="text" th:field="*{usernamesAndPps[__${rowStat.index}__].username}" th:value="${usernameAndPps.username}"></input>
+						</div>
+						<div class="col-md-3">
+							<input class="form-control" type="number" th:field="*{usernamesAndPps[__${rowStat.index}__].pps}" th:value="${usernameAndPps.pps}"></input>
+						</div>
+						<span th:if="${#fields.hasErrors('usernamesAndPps')}" th:errors="*{usernamesAndPps}" th:class="help-block">UsernamesAndPps Errors</span>
 					</div>
-					<div class="col-md-3">
-						<input class="form-control" type="number" th:field="*{usernamesAndPps.pps}" th:value="${usernameAndPps.pps}"></input>
-					</div>
-					<span th:if="${#fields.hasErrors('usernamesAndPps')}" th:errors="*{usernamesAndPps}" th:class="help-block">UsernamesAndPps Errors</span>
 				</div>
-				<button type="submit" name="addContributor" class="btn btn-lg btn-primary btn-block">Add contributor</button>
+				<div class="form-group">
+					<div class="col-md-6">
+						<button type="submit" name="addContributor" class="btn btn-default btn-block">add initial contributor</button>
+						<button type="submit" name="removeContributor" class="btn btn-default btn-block">remove last contributor</button>
+					</div>
+				</div>
+				
 			
-				<button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
+				<button type="submit" class="btn btn-lg btn-primary btn-block">Create Project</button>
 				
 			</form>
 		</div>

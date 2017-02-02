@@ -321,11 +321,17 @@ public class ViewsController {
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/projectNewSubmit", params = {"addContributor"})
-	public String projectNewPageContributor(@ModelAttribute("project") ProjectNewDto projectDto, Model model) {
-		
+	public String projectNewPageAddContributor(@ModelAttribute("project") ProjectNewDto projectDto, Model model) {
 		projectDto.getUsernamesAndPps().add(new UsernameAndPps("",100));
 		model.addAttribute("project",projectDto);
-		
+		return "views/projectNewPage";
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/projectNewSubmit", params = {"removeContributor"})
+	public String projectNewPageRmContributor(@ModelAttribute("project") ProjectNewDto projectDto, Model model) {
+		projectDto.getUsernamesAndPps().remove(projectDto.getUsernamesAndPps().size()-1);
+		model.addAttribute("project",projectDto);
 		return "views/projectNewPage";
 	}
 	
