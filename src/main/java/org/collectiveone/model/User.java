@@ -24,6 +24,7 @@ public class User {
 	private String password;
 	private Boolean enabled;
 	private Timestamp joindate;
+	private Boolean isReferrer;
 	
 	public User() {
         super();
@@ -76,7 +77,12 @@ public class User {
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
-	
+	public Boolean getIsReferrer() {
+		return isReferrer;
+	}
+	public void setIsReferrer(Boolean isReferrer) {
+		this.isReferrer = isReferrer;
+	}
 	
 	
 }

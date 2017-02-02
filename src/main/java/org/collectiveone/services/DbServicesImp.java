@@ -13,6 +13,7 @@ import org.collectiveone.model.Activity;
 import org.collectiveone.model.ActivityType;
 import org.collectiveone.model.Argument;
 import org.collectiveone.model.ArgumentTendency;
+import org.collectiveone.model.AuthorizedEmail;
 import org.collectiveone.model.AuthorizedProject;
 import org.collectiveone.model.Bid;
 import org.collectiveone.model.BidDoneState;
@@ -38,6 +39,7 @@ import org.collectiveone.model.User;
 import org.collectiveone.model.Voter;
 import org.collectiveone.repositories.ActivityDao;
 import org.collectiveone.repositories.ArgumentDao;
+import org.collectiveone.repositories.AuthorizedEmailRepository;
 import org.collectiveone.repositories.AuthorizedProjectDao;
 import org.collectiveone.repositories.BidDao;
 import org.collectiveone.repositories.CbtionRepository;
@@ -134,6 +136,9 @@ public class DbServicesImp {
 	protected CommentDao commentDao;
 	
 	@Autowired
+	protected AuthorizedEmailRepository authorizedEmailRepository;
+	
+	@Autowired
 	protected AuthorizedProjectDao authorizedProjectDao;
 	
 	@Autowired
@@ -192,7 +197,32 @@ public class DbServicesImp {
 	public List<User> userGetAll(Integer max) {
 		return userDao.getAll(max);
 	}
+	
+	@Transactional
+	public void authorizedEmailAdd(String email, Long referralId, String token) {
+		AuthorizedEmail authorizedEmail = new AuthorizedEmail();
+		
+		authorizedEmail.setEmail(email);
+		authorizedEmail.setReferral(referralId);
+		authorizedEmail.setToken(token);
+		authorizedEmail.setDateRequested(new Timestamp(System.currentTimeMillis()));
+		authorizedEmail.setAuthorized(false);
+		
+		authorizedEmailRepository.save(authorizedEmail);
+	}
 
+	@Transactional
+	public boolean authorizedEmailValidate(String email, String token) {
+		AuthorizedEmail authorizedEmail = authorizedEmailRepository.findByEmailAndToken(email, token);
+		if(authorizedEmail != null) {
+			authorizedEmail.setAuthorized(true);
+			authorizedEmailRepository.save(authorizedEmail);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	@Transactional
 	public void contributorUpdate(Long projectId, Long userId, double lastOne) {
 		/* update the contributor pps in project recalculating all accepted
@@ -283,6 +313,11 @@ public class DbServicesImp {
 	@Transactional
 	public List<String> usernameGetSuggestions(String query) {
 		return userDao.getSuggestions(query);
+	}
+	
+	@Transactional
+	public List<String> usernameGetSuggestionsReferrer(String query) {
+		return userDao.getSuggestionsReferrer(query);
 	}
 
 	@Transactional

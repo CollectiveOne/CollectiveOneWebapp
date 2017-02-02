@@ -9,4 +9,6 @@ public interface AuthorizedEmailRepository extends CrudRepository<AuthorizedEmai
 
 	public AuthorizedEmail findByEmailAndAuthorized(String email, Boolean authorized);
 	
+	public AuthorizedEmail findByEmailAndToken(String email, String token);
+	
 }

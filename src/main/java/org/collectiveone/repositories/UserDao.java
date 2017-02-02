@@ -73,4 +73,19 @@ public class UserDao extends BaseDao {
 		
 		return res;
 	}
+	
+	public List<String> getSuggestionsReferrer(String query) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		@SuppressWarnings("unchecked")
+		List<String> res = (List<String>) session.createCriteria(User.class)
+				.add(Restrictions.ilike("username", query, MatchMode.ANYWHERE))
+				.add(Restrictions.eq("isReferrer", true))
+				.setProjection(Projections.property("username"))
+				.list();
+		
+		return res;
+	}
+	
+	
 }

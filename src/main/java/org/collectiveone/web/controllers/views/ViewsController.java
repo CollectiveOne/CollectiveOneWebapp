@@ -1,11 +1,15 @@
 package org.collectiveone.web.controllers.views;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 import org.collectiveone.model.GoalState;
+import org.collectiveone.model.User;
 import org.collectiveone.services.AppMailServiceHeroku;
 import org.collectiveone.services.DbServicesImp;
 import org.collectiveone.web.dto.CbtionDto;
@@ -111,20 +115,67 @@ public class ViewsController {
 	}
 	
 	@RequestMapping("/signupRequestSubmit")
-	public String signupRequestSubmit(@Valid SignupRequest signupRequest, Model model) throws IOException {
+	public String signupRequestSubmit(@Valid SignupRequest signupRequest, Model model, final HttpServletRequest request) throws IOException {
 		
-        String subject = "Signup invitation request";
-        String body = "Request to signup sent by "+signupRequest.getEmail()+"\rComments:\r"+signupRequest.getComments();
-        
-        mailService.sendMail(
-        		env.getProperty("collectiveone.webapp.admin-email"),
-        		subject, 
-        		body);
-        
-        model.addAttribute("message","Thanks, your request has been received "+signupRequest.getEmail()+". We will process it as soon as possible and come back to you.");
-        
-        return "views/signUpRequestPage";
+		User referral = dbServices.userGet(signupRequest.getReferral());
+		
+		if(referral != null) {
+			if(referral.getIsReferrer() != null) {			
+				if(referral.getIsReferrer()) {
+					String token = UUID.randomUUID().toString();
+					
+					dbServices.authorizedEmailAdd(signupRequest.getEmail(), referral.getId(), token);
+					
+					String authUrl = getAppUrl(request)+"/views/authorizeSignup?email="+signupRequest.getEmail()+"&token="+token;
+					
+					String subject = "Signup invitation request";
+			        String body = "Request to signup sent by "+signupRequest.getEmail()+"."
+			        				+"\n\nCollectiveOne wants to keep one real person behind each user."
+			        				+ "\n\nIf you know this is the case for this request, please authorize it by visiting this link:"
+			        				+ authUrl
+			        				+"\n\nComments:"+signupRequest.getComments();
+			        
+			        mailService.sendMail(
+			        		referral.getEmail(),
+			        		subject, 
+			        		body);
+			        
+			        model.addAttribute("message","Thanks, your request has been received "+signupRequest.getEmail()+"."+
+			        		" An email has been sent to '"+referral.getUsername()+"' with a link to authorize your signup.");
+			        return "views/signUpRequestPage";
+				} else {
+					model.addAttribute("message","Referral not found");
+					return "views/signUpRequestPage";
+				}
+			} else {
+				model.addAttribute("message","Referral not found");
+				return "views/signUpRequestPage";
+			}
+		} else {
+			model.addAttribute("message","Referral not found");
+	        return "views/signUpRequestPage";
+		}
 	}
+	
+	@RequestMapping("/authorizeSignup")
+    public String passwordRecovery(final Locale locale, final Model model, @RequestParam("email") String email, @RequestParam("token") String token, final HttpServletRequest request) throws IOException {
+        if(dbServices.authorizedEmailValidate(email, token)) {
+        	
+        	String subject = "Signup request accepted";
+	        String body = "Request to signup accepted to "+email+"."
+	        				+"\n\nYou can now signup by visiting:"+getAppUrl(request)+"/user/signup";
+	        
+	        mailService.sendMail(
+	        		email,
+	        		subject, 
+	        		body);
+        	
+        	model.addAttribute("message","Email '"+email+"' has been authorized");	
+        } else {
+        	model.addAttribute("message","There was a problem authorizing'"+email+"'");
+        }
+        return "auth/login";
+    }
 	
 	@RequestMapping("/projectPageR/{projectName}")
 	public String projectPageR(@PathVariable("projectName") String projectName, Model model) {
@@ -288,4 +339,10 @@ public class ViewsController {
 			}
 		}
 	}
+	
+	/* support */
+	private String getAppUrl(HttpServletRequest request) {
+        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+    }
+	
 }

@@ -3,6 +3,17 @@
 	layout:decorator="layouts/main">
 <head>
 	<title>CollectiveOne - Signup Request</title>
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(document).ready(function() {
+			$('#referral_in',this.container).autocomplete({
+				serviceUrl: '/rest/users/getSuggestionsReferrer',
+				minChars: 0,
+				maxHeight: 100
+			});
+		});
+	/*]]>*/
+	</script>
 </head>
 <body>
 	<div layout:fragment="content_pane">
@@ -15,12 +26,18 @@
 	           	message
 	        </div>
 			<div th:if="!${message}" class="alert alert-info">
-	           	Please provide your email below and we will send you an invitation to signup.
+	           	<p>We would like to keep one real person behind each user. </p>
+	           	<p>Please provide your email below and the user of CollectiveOne that can refer you. That user will receive an email to authorize your sign-up and you will receive a notification afterwards.</p>
+	           	<p>If you have any doubt, just select 'collectiveone' as referral.</p> 
 	        </div>
 	        <div th:if="!${message}">
 				<div class="form-group">
-					<label for="email">Email:</label> 
+					<label for="email">Your email:</label> 
 					<input type="text" class="form-control" th:field="*{email}"></input>
+				</div>
+				<div class="form-group">
+					<label for="referral">Referred by:</label> 
+					<input type="text" id="referral_in" class="form-control" th:field="*{referral}"></input>
 				</div>
 				<div th:class="form-group" th:classappend="${#fields.hasErrors('comments')}? 'has-error'">
 					<label for="comments">Comments (optional):</label>

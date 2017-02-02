@@ -85,8 +85,11 @@ public class BaseController {
 			}
 			
 			if(!error) {
+				userService.registerNewUserAccount(userNewDto);
+ 				/* Email confirmation not necessary as now signup works on request.
 				final User registered = userService.registerNewUserAccount(userNewDto);
 				eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
+				*/
 				model.addAttribute("message", messages.getMessage("message.signupSuccess", null, locale));
 				return "auth/login";
 			} else {

@@ -1,5 +1,7 @@
 package org.collectiveone.model;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +16,9 @@ public class AuthorizedEmail {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String email;
+	private Long referralId;
+	private String token;
+	private Timestamp dateRequested;
 	private Boolean authorized;
 
 	public Long getId() {
@@ -28,12 +33,28 @@ public class AuthorizedEmail {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public Long getReferral() {
+		return referralId;
+	}
+	public void setReferral(Long referralId) {
+		this.referralId = referralId;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
+	}
+	public Timestamp getDateRequested() {
+		return dateRequested;
+	}
+	public void setDateRequested(Timestamp dateRequested) {
+		this.dateRequested = dateRequested;
+	}
 	public Boolean getAuthorized() {
 		return authorized;
 	}
 	public void setAuthorized(Boolean authorized) {
 		this.authorized = authorized;
 	}
-	
-
 }

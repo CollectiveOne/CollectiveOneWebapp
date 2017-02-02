@@ -121,7 +121,8 @@ public class UserServiceIm implements UserServiceIf, UserDetailsService {
         user.setUsername(accountDto.getUsername());
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setEmail(accountDto.getEmail());
-        user.setEnabled(false);
+        /* email confirmation is not necessary as it works though signup request*/
+        user.setEnabled(true);
         user.setJoindate(new Timestamp(System.currentTimeMillis()));
         roleService.addRoleTo(user.getUsername(),"ROLE_USER");
         

@@ -42,6 +42,13 @@ public class UsersController {
 		return map;
 	}
 	
+	@RequestMapping(value="/getSuggestionsReferrer", method = RequestMethod.GET)
+	public Map<String,List<String>> getListReferrers(@RequestParam("query") String query) {
+		Map<String,List<String>> map = new HashMap<>();
+		map.put("suggestions", dbServices.usernameGetSuggestionsReferrer(query));
+		return map;
+	}
+	
 	@RequestMapping(value="/getProjectsContributed/{username}", method = RequestMethod.POST)
 	public @ResponseBody List<ProjectContributedDto> getProjectsContributed(@PathVariable String username) {
 		return dbServices.userProjectsContributedAndPpsGet(username);
