@@ -90,12 +90,16 @@ GoalBox.prototype.goalBoxLoaded = function() {
 
 		case "PROPOSED_DETACH":
 			labelsAppend = labelsAppend + " <label class='label label-success'>detach proposed</label>";
+			$("#increase_budget_decision_container",this.container).show();
 			var decBox = new DecisionBoxSmall($("#increase_budget_decision_container",this.container),this.goal.increaseBudgetDec);
 			decBox.updateVoteAndDraw();
 			break;
 
 		case "PROPOSED_REATTACH":
 			labelsAppend = labelsAppend + " <label class='label label-success'>reattach proposed</label>";
+			$("#reattach_decision_container",this.container).show();
+			var decBox = new DecisionBoxSmall($("#reattach_decision_container",this.container),this.goal.reattachDec);
+			decBox.updateVoteAndDraw();
 			break;
 	}
 	
@@ -266,10 +270,10 @@ GoalBox.prototype.checkGoalExistCallback = function(exist) {
 		errors = true;
 	}
 
-	if(goalTag.indexOf(' ') != -1) {
+	if(!/^[a-zA-Z0-9-]+$/.test(goalTag)) {
 		errorContainer.show();
 		if(errors) errorContainer.append("<br \>")
-		errorContainer.append("subgoal tag cannot contain spaces");
+		errorContainer.append("subgoal tag can contain only characters, numbers or bars '-'");
 		errors = true;
 	}
 	

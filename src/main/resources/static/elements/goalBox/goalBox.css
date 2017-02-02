@@ -96,6 +96,13 @@
 }
 
 #goal_div #increase_budget_decision_container {
+	display: none;
+	float:left;
+	margin-right: 10px;
+}
+
+#goal_div #reattach_decision_container {
+	display: none;
 	float:left;
 	margin-right: 10px;
 }

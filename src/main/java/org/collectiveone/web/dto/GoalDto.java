@@ -16,7 +16,7 @@ public class GoalDto {
 	private String creatorUsername;
 	private Timestamp creationDate;
 	@NotEmpty
-	@Pattern(regexp="^((?!\\s).)*$", message="may not contain white spaces")
+	@Pattern(regexp="^[0-9a-zA-z-]+$", message="only letters, numbers or bars '-'")
 	private String goalTag;
 	private String parentGoalTag;
 	@NotEmpty

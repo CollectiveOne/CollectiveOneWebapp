@@ -1123,12 +1123,10 @@ public class DbServicesImp {
 				
 				reattach.setCreator(userDao.get("collectiveone"));
 				reattach.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				reattach.setDescription("reattach goal +"+goal.getGoalTag()+" to "+goal.getParent());
+				reattach.setDescription("reattach goal +"+goal.getGoalTag()+" to "+goal.getParent().getGoalTag());
 				reattach.setState(DecisionState.IDLE);
 				reattach.setVerdictHours(36);
 				reattach.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getId()));
-				reattach.setFromState(GoalState.PROPOSED.toString());
-				reattach.setToState(GoalState.ACCEPTED.toString());
 				reattach.setProject(goal.getProject());
 				reattach.setGoal(goal);
 				reattach.setType(DecisionType.GOAL);
