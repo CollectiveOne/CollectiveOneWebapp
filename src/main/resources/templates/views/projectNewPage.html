@@ -28,7 +28,11 @@
 <body>
 	<div layout:fragment="content_pane">
 		<div sec:authorize="isAuthenticated()">
-			<form id="new_project_form" action="#" th:action="@{/views/projectNewSubmit}" th:object="${project}" method="post">
+			
+			
+			
+			<form class="col-md-8" id="new_project_form" action="#" th:action="@{/views/projectNewSubmit}" th:object="${project}" method="post">
+				
 				<h2>Create a new project</h2>
 				<br />
 	
@@ -43,12 +47,6 @@
 					<textarea id="description_editor" type="text" class="form-control" rows="5" th:field="*{description}"></textarea>
 					<span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" th:class="help-block">Title Errors</span>
 				</div>
-				<div th:class="form-group" th:classappend="${#fields.hasErrors('ppsInitial')}? 'has-error'">
-					<label for="title">Initial pp's:</label> 
-					<input type="number" class="form-control" th:field="*{ppsInitial}"></input>
-					<span th:if="${#fields.hasErrors('ppsInitial')}" th:errors="*{ppsInitial}" th:class="help-block">Title Errors</span>
-					(assigned to project creator)
-				</div>
 				<div th:class="form-group" th:classappend="${#fields.hasErrors('goalTag')}? 'has-error'">
 					<label for="title">Goal Tag (each project must have, at least, one goal):</label> 
 					<input type="text" class="form-control" th:field="*{goalTag}"></input>
@@ -60,7 +58,19 @@
 					<span th:if="${#fields.hasErrors('goalDescription')}" th:errors="*{goalDescription}" th:class="help-block">Goal Description Errors</span>
 				</div>
 				
+				<div th:each="usernameAndPps : ${project.usernamesAndPps}" th:class="form-group" th:classappend="${#fields.hasErrors('usernamesAndPps')}? 'has-error'">
+					<div class="col-md-5">
+						<input class="form-control" type="text" th:field="*{usernamesAndPps.username}" th:value="${usernameAndPps.username}"></input>
+					</div>
+					<div class="col-md-3">
+						<input class="form-control" type="number" th:field="*{usernamesAndPps.pps}" th:value="${usernameAndPps.pps}"></input>
+					</div>
+					<span th:if="${#fields.hasErrors('usernamesAndPps')}" th:errors="*{usernamesAndPps}" th:class="help-block">UsernamesAndPps Errors</span>
+				</div>
+				<button type="submit" name="addContributor" class="btn btn-lg btn-primary btn-block">Add contributor</button>
+			
 				<button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
+				
 			</form>
 		</div>
 	</div>

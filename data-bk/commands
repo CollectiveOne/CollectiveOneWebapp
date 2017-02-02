@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------------------------
 
 > BACKUP DATA FROM HEROKU WITH COPY no triggers (update file name!)
-/usr/bin/pg_dump --host ec2-54-225-64-254.compute-1.amazonaws.com --port 5432 --username "dkzzgsrfdufobg" --no-password  --format plain --data-only --disable-triggers --verbose --file "/home/pepo/workspace-sts/CollectiveOne-hk-db-bk/bk044-data.backup" "d1a0o64celerd3"
+/usr/bin/pg_dump --host ec2-54-225-64-254.compute-1.amazonaws.com --port 5432 --username "vvlafvtvaqjmna" --no-password  --format plain --data-only --disable-triggers --verbose --file "/home/pepo/workspace-sts/CollectiveOne-hk-db-bk/bk044-data.backup" "d1a0o64celerd3"
 
 > Drop all tables in local DB
 
@@ -24,8 +24,8 @@ heroku ps:scale web=1
 
 > Drop all tables in heroku (again!)
 
-> Restore date in heroku with (update file name!)
-/usr/bin/pg_restore --host ec2-54-225-64-254.compute-1.amazonaws.com --port 5432 --username "dkzzgsrfdufobg" --dbname "d1a0o64celerd3" --no-password --no-owner  --verbose "/home/pepo/workspace/coprojects-hk-db-bk/bk031-data-ed-custom.backup"
+> Restore data in heroku with (update file name!)
+/usr/bin/pg_restore --host ec2-54-225-64-254.compute-1.amazonaws.com --port 5432 --username "vvlafvtvaqjmna" --dbname "d1a0o64celerd3" --no-password --no-owner  --verbose "/home/pepo/workspace/coprojects-hk-db-bk/bk031-data-ed-custom.backup"
 
 > !!! Push updated code with hibernate.hbm2ddl.auto update 
 
@@ -35,6 +35,6 @@ heroku ps:scale web=1
 ------------------------------------------------------------------------------------------
 --------------------- Steps to update repository copy of database ------------------------
 ------------------------------------------------------------------------------------------
-/usr/bin/pg_dump --host ec2-54-225-64-254.compute-1.amazonaws.com --port 5432 --username "dkzzgsrfdufobg" --no-password  --format plain --data-only --disable-triggers --verbose --exclude-table=app_users  --file "/home/pepo/workspace/coprojects-hk/data-bk/data-bk.backup" "d1a0o64celerd3"
+/usr/bin/pg_dump --host ec2-54-225-64-254.compute-1.amazonaws.com --port 5432 --username "vvlafvtvaqjmna" --no-password  --format plain --data-only --disable-triggers --verbose --exclude-table=app_users  --file "/home/pepo/workspace/coprojects-hk/data-bk/data-bk.backup" "d1a0o64celerd3"
 
 

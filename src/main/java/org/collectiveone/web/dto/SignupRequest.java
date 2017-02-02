@@ -10,13 +10,13 @@ public class SignupRequest {
 		return email;
 	}
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = email.trim();
 	}
 	public String getReferral() {
 		return referral;
 	}
 	public void setReferral(String referral) {
-		this.referral = referral;
+		this.referral = referral.trim();
 	}
 	public String getComments() {
 		return comments;
