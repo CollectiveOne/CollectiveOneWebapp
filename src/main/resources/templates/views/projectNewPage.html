@@ -65,7 +65,7 @@
 					<span th:if="${#fields.hasErrors('goalDescription')}" th:errors="*{goalDescription}" th:class="help-block">Goal Description Errors</span>
 				</div>
 				
-				<div id="contributors_container" class="form-group">
+				<div class="form-group from-group-force-of">
 					<label>Initial Contributors:</label>
 					<div th:each="usernameAndPps, rowStat : ${project.usernamesAndPps}" th:class="form-group" th:classappend="${#fields.hasErrors('usernamesAndPps')}? 'has-error'">
 						<div class="col-md-5">
@@ -77,7 +77,7 @@
 						<span th:if="${#fields.hasErrors('usernamesAndPps')}" th:errors="*{usernamesAndPps}" th:class="help-block">UsernamesAndPps Errors</span>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group from-group-force-of">
 					<div class="col-md-6">
 						<button type="submit" name="addContributor" class="btn btn-default btn-block">add initial contributor</button>
 						<button type="submit" name="removeContributor" class="btn btn-default btn-block">remove last contributor</button>

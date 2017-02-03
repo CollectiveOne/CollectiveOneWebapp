@@ -155,9 +155,8 @@ textarea.form-control {
 	margin:0 auto;
 }
 
-#container #new_project_form #contributors_container {
-	/*dont understand what is going on*/
-	/* overflow:auto; */
+#container #new_project_form .from-group-force-of {
+	overflow:auto;
 }
 
 #container #signupRequest_form {
