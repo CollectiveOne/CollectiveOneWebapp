@@ -1,6 +1,7 @@
 package org.collectiveone.web.controllers.views;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -19,6 +20,7 @@ import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.InvRequest;
 import org.collectiveone.web.dto.ProjectNewDto;
 import org.collectiveone.web.dto.SignupRequest;
+import org.collectiveone.web.dto.UsernameAndPps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.access.annotation.Secured;
@@ -304,10 +306,32 @@ public class ViewsController {
 	@Secured("ROLE_USER")
 	@RequestMapping("/projectNewPageR")
 	public String projectNewPage(Model model) {
-		ProjectNewDto project = new ProjectNewDto();
-		/* use 100 pps as default, minimum was set to 10 in validation*/
-		project.setPpsInitial(100.0);
-		model.addAttribute("project",project);
+		if(!model.containsAttribute("project")) {
+			ProjectNewDto project = new ProjectNewDto();
+			project.setUsernamesAndPps(new ArrayList<UsernameAndPps>());
+			
+			/* by default project creator is assigned 100 pps */
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			project.getUsernamesAndPps().add(new UsernameAndPps(auth.getName(),100.0));
+			model.addAttribute("project",project);
+		}
+	
+		return "views/projectNewPage";
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/projectNewSubmit", params = {"addContributor"})
+	public String projectNewPageAddContributor(@ModelAttribute("project") ProjectNewDto projectDto, Model model) {
+		projectDto.getUsernamesAndPps().add(new UsernameAndPps("",100));
+		model.addAttribute("project",projectDto);
+		return "views/projectNewPage";
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/projectNewSubmit", params = {"removeContributor"})
+	public String projectNewPageRmContributor(@ModelAttribute("project") ProjectNewDto projectDto, Model model) {
+		projectDto.getUsernamesAndPps().remove(projectDto.getUsernamesAndPps().size()-1);
+		model.addAttribute("project",projectDto);
 		return "views/projectNewPage";
 	}
 	
@@ -325,7 +349,7 @@ public class ViewsController {
 					
 					dbServices.projectCreate(projectDto);
 					dbServices.projectCreateFirstGoal(projectDto);
-					dbServices.projectStart(projectDto.getName(),projectDto.getPpsInitial());
+					dbServices.projectStart(projectDto.getName(),projectDto.getUsernamesAndPps());
 					dbServices.decisionRealmInitAllSupergoalsToProject(dbServices.projectGet(projectDto.getName()).getId());
 					
 					return "redirect:/views/projectPageR/"+projectDto.getName();	

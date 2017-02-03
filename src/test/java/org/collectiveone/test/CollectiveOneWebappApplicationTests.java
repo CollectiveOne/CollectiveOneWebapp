@@ -75,10 +75,8 @@ public class CollectiveOneWebappApplicationTests {
 		projectNew.setName("testProject");
 		projectNew.setCreatorUsername("user0");
 		projectNew.setDescription("Dummy description");
-		projectNew.setPpsInitial(100);
 				
 		dbServices.projectCreate(projectNew);
-		dbServices.projectStart(projectNew.getName(), projectNew.getPpsInitial());
 		
 		Project project = dbServices.projectGet(projectNew.getName()); 
 		
