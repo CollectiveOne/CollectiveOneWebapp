@@ -36,11 +36,24 @@
 			<div id="username_div">
 				<h2></h2>
 			</div>
-			<div id="projects_contributed_div" class="cp_box_gray_slim">
-				Projects
+			<div id="user_profile_div" class="panel panel-info">
+				<div class="panel-heading"><b>Profile</b></div>
+				<div id="user_profile_container">
+					<div id="user_profile_html"></div>
+					<form id="edit_profile_form">
+						<div class="form-group">
+							<textarea id="user_profile_textarea" class="form-control"></textarea>
+							<div id="edit_profile_save" class="btn btn-xs btn-info">save</div>
+						</div>
+					</form>
+					<div id="edit_profile_btn" class="btn btn-xs btn-info">edit</div>
+				</div>
 			</div>
-			<div id="accepted_contributions_div" class="cp_box_gray_slim">
-				Contributions
+			<div id="projects_contributed_div" class="panel panel-info">
+				<div class="panel-heading"><b>Contributor of Projects</b></div>
+			</div>
+			<div id="accepted_contributions_div" class="panel panel-info">
+				<div class="panel-heading"><b>Accepted Contributions</b></div>
 				<div id="contributions_list"></div>
 			</div>
 		</div>
