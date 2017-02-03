@@ -199,6 +199,13 @@ public class DbServicesImp {
 	}
 	
 	@Transactional
+	public void userUpdateProfile(UserDto userDto) {
+		User user = userDao.get(userDto.getUsername());
+		user.setProfile(userDto.getProfile());
+		userDao.save(user);
+	}
+	
+	@Transactional
 	public void authorizedEmailAdd(String email, Long referralId, String token) {
 		AuthorizedEmail authorizedEmail = new AuthorizedEmail();
 		

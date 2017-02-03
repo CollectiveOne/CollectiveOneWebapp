@@ -10,6 +10,12 @@
 	margin-bottom:10px;
 }
 
+#container #goal_weights_div #goal_weights_container {
+	margin-top:10px;
+	margin-bottom:10px;
+	overflow: auto;
+}
+
 #container #goal_weights_div #weights_label {
 	margin-bottom: 10px;
 	display: block;
@@ -29,4 +35,5 @@
 
 #container #cbtions_container {
 	overflow: auto;
+	margin-top: 10px;
 }

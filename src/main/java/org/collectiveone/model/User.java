@@ -7,9 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.UserDto;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table( name = "APP_USERS" )
@@ -22,6 +24,9 @@ public class User {
 	private String username;
 	@Column(length = 60)
 	private String password;
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")
+	private String profile;
 	private Boolean enabled;
 	private Timestamp joindate;
 	private Boolean isReferrer;
@@ -36,6 +41,7 @@ public class User {
 		
 		dto.setId(id);
 		dto.setUsername(username);
+		dto.setProfile(profile);
 		
 		return dto;
 	}
@@ -65,6 +71,12 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public String getProfile() {
+		return profile;
+	}
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
 	public Timestamp getJoindate() {
 		return joindate;
 	}
@@ -83,6 +95,5 @@ public class User {
 	public void setIsReferrer(Boolean isReferrer) {
 		this.isReferrer = isReferrer;
 	}
-	
 	
 }

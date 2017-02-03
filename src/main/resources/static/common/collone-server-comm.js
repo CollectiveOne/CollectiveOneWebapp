@@ -365,6 +365,30 @@ ServerComm.prototype = {
 			});
 		},
 
+		userUpdateProfile : function(username,profile,callbackFunction,callbackObj) {
+			var data = {
+				'username' : username,
+				'profile' : profile
+			};
+			var datastr = JSON.stringify(data);
+
+			$.ajax({
+				type : 'POST',
+				url : '/rest/users/updateProfile',
+				data : datastr,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
 		userGetProjectsContributed : function(username,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'POST',

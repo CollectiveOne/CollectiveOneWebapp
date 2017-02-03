@@ -19,6 +19,37 @@
 	font-style:normal;
 }
 
+#user_container #user_profile_div #user_profile_container {
+	margin-top:10px;
+	padding-left:10px;
+	padding-right:10px;
+	margin-bottom:10px;
+}
+
+#user_container #user_profile_div #user_profile_html {
+	margin-bottom:10px;
+}
+
+#user_container #user_profile_div #edit_profile_form {
+	display:none;
+}
+
+#user_container #user_profile_div #user_profile_textarea {
+	width:100%;
+}
+
+#user_container #user_profile_div #edit_profile_btn {
+	width:100px;
+	display: none;
+}
+
+#user_container #user_profile_div #edit_profile_save {
+	margin-top:5px;
+	width:100px;
+	float:right;
+}
+
+
 #user_container #projects_contributed_div {
 	margin-top: 20px;
 	margin-bottom: 0;
