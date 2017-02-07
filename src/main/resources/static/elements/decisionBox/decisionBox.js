@@ -38,11 +38,11 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 			break;
 		case "CBTION":
 			$("#from_to_state",this.container).append("changes the state of contribution <a href=/views/cbtionPageR/"+
-			this.decision.affectedCbtionId+">"+this.decision.cbtionTitle+"</a> from "+this.decision.fromState+" to "+this.decision.toState+"");	
+			this.decision.affectedCbtionId+">"+this.decision.affectedCbtionTitle+"</a> from "+this.decision.fromState+" to "+this.decision.toState+"");	
 			break;
 		case "BID":
 			$("#from_to_state",this.container).append("modifies bid to contribution <a href=/views/cbtionPageR/"+
-			this.decision.affectedCbtionId+">"+this.decision.cbtionTitle+"</a> made by "+getUserPageLink(this.decision.affectedBidCreatorUsername)+"");	
+			this.decision.affectedCbtionId+">"+this.decision.affectedCbtionTitle+"</a> made by "+getUserPageLink(this.decision.affectedBidCreatorUsername)+"");	
 			break;
 		case "GOAL":
 			var goalLinkStr = getGoalPageLink(this.decision.affectedGoalTag,this.decision.projectName);
