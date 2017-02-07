@@ -1,11 +1,13 @@
 package org.collectiveone.web.dto;
 
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class UserNewDto {
 	@Size(min=4, max=30, message="username must longer than 4 characters")
+	@Pattern(regexp="^[0-9a-zA-z-]+$", message="only letters, numbers or bars '-'")
 	private String username;
 	@NotEmpty(message="a valid email must be provided")
 	private String email;

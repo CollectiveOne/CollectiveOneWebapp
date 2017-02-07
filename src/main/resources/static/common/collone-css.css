@@ -37,6 +37,12 @@
 	-webkit-user-select: none;
 }
 
+#container #error-msg {
+	margin-top:20px;
+	margin-left:15px;
+	margin-right:15px;
+}
+
 .navbar-brand {
 	padding-top:0px;
 	padding-bottom: 0px;

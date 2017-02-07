@@ -1,10 +1,14 @@
 <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	layout:decorator="layouts/main">
 <head>
-	<title>CollectiveOne - Error</title>
+	<title>CollectiveOne - Unexpected Error</title>
 </head>
 <body>
-
-	<h1>Unexpected Error</h1>
-	
+	<div layout:fragment="content_pane">
+		<div id="error-msg" class="alert alert-danger">
+	    	Sorry, there was an error processing your request
+	    </div>
+	</div>
 </body>
 </html>
