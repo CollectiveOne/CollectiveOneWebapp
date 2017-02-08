@@ -197,6 +197,11 @@ public class ViewsController {
 		return "views/decisionListPage";
 	}
 	
+	@RequestMapping("/projectListPageR")
+	public String projectListPage(Model model) {
+		return "views/projectListPage";
+	}
+	
 	@Secured("ROLE_USER")
 	@RequestMapping("/cbtionNewPageR")
 	public String cbtionNewPage(Model model, 

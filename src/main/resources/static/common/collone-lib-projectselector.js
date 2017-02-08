@@ -14,7 +14,7 @@ ProjectSelector.prototype.fill = function() {
 	if(activeProjects.length > 0) {
 		this.projectListReceivedCallback(activeProjects)
 	} else {
-		GLOBAL.serverComm.projectListGet(this.projectListReceivedCallback,this);		
+		GLOBAL.serverComm.projectNamesListGet(this.projectListReceivedCallback,this);		
 	}
 	
 }

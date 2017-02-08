@@ -59,13 +59,7 @@
 				
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
-						<li class="dropdown"><a class="dropdown-toggle"
-							data-toggle="dropdown" href="#">projects <span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li><a th:href="@{/views/projectPageR/CollectiveOne}">CollectiveOne</a></li>
-								<li><a th:href="@{/views/projectPageR/CollectiveSunrise}">CollectiveSunrise</a></li>
-							</ul>
-						</li>
+						<li><a th:href="@{/views/projectListPageR}" data-toggle="tooltip" title="browse all projects">projects</a></li>
 						<li><a th:href="@{/views/cbtionListPageR}" data-toggle="tooltip" title="browse all contribution items">contributions</a></li>
 						<li><a th:href="@{/views/decisionListPageR}" data-toggle="tooltip" title="browse all decision items">decisions</a></li>
 						<li><a th:href="@{/views/activityListPageR}">recent activity</a></li>

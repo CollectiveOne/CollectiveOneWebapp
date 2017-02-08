@@ -136,7 +136,7 @@ FilterElement.prototype.updateFilterContents = function() {
 	}
 			
 	// Filter by project
-	GLOBAL.serverComm.projectListGet(this.projectListReceivedCallback,this);
+	GLOBAL.serverComm.projectNamesListGet(this.projectListReceivedCallback,this);
 }
 
 FilterElement.prototype.getSelectedProjects = function() {

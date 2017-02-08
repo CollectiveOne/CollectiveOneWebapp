@@ -496,16 +496,36 @@ ServerComm.prototype = {
 			});
 		},
 
-		projectListGet : function(callbackFunction,callbackObj) {
+		projectNamesListGet : function(callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'GET',
-				url : '/rest/projects/getList',
+				url : '/rest/projects/getNamesList',
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
 					if (data.projectList) {
 						callbackFunction.call(callbackObj,data.projectList);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+		
+		projectListGet : function(filters,callbackFunction,callbackObj) {
+			var datastr = JSON.stringify(filters);
+
+			$.ajax({
+				type : 'POST',
+				url : '/rest/projects/getList',
+				data : datastr,
+				dataType : "json",
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {

@@ -79,41 +79,47 @@ public class BaseDao {
 	}
 
 	public <T> Criteria applyGeneralFilters(Filters filters, List<String> enabledProjects, Class<T> clazz) {
+		return applyGeneralFilters(filters, enabledProjects, clazz, true);
+	}
+	
+	public <T> Criteria applyGeneralFilters(Filters filters, List<String> enabledProjects, Class<T> clazz, boolean projectFilter) {
 
 		Session session = sessionFactory.getCurrentSession();
 		Criteria q = session.createCriteria(clazz);
 
-		
+		/* ------------------ */
 		/* Project filter */
-		
-		boolean allEnabledProjects = false;
-		if(filters.getProjectNames() != null) {
-			if(filters.getProjectNames().size() > 0) {
-				/* appy filter per project if they are provided */
-				allEnabledProjects = false;
+		/* ------------------ */
+		if(projectFilter) {
+			boolean allEnabledProjects = false;
+			if(filters.getProjectNames() != null) {
+				if(filters.getProjectNames().size() > 0) {
+					/* apply filter per project if they are provided */
+					allEnabledProjects = false;
+				} else {
+					/* otherwise filter using all enabled projects */
+					allEnabledProjects = true;
+				}
 			} else {
 				/* otherwise filter using all enabled projects */
 				allEnabledProjects = true;
 			}
-		} else {
-			/* otherwise filter using all enabled projects */
-			allEnabledProjects = true;
+			
+			q.createAlias("project", "proj");
+			List<String> projectNames; 
+			
+			if(allEnabledProjects) {
+				projectNames = enabledProjects;
+			} else {
+				projectNames = filters.getProjectNames();
+			}
+			
+			Disjunction projDisj = Restrictions.disjunction();
+			for(String projectName:projectNames) {
+				projDisj.add( Restrictions.eq("proj.name", projectName));
+			}
+			q.add(projDisj);
 		}
-		
-		q.createAlias("project", "proj");
-		List<String> projectNames; 
-		
-		if(allEnabledProjects) {
-			projectNames = enabledProjects;
-		} else {
-			projectNames = filters.getProjectNames();
-		}
-		
-		Disjunction projDisj = Restrictions.disjunction();
-		for(String projectName:projectNames) {
-			projDisj.add( Restrictions.eq("proj.name", projectName));
-		}
-		q.add(projDisj);
 		
 		
 		/* ------------------ */
@@ -134,6 +140,10 @@ public class BaseDao {
 			}
 		}
 
+		/* ------------------ */
+		/* filter by project  */
+		/* ------------------ */
+		
 		if(filters.getKeyw() != null) {
 			String keyw = filters.getKeyw();
 			if(keyw.length() > 0) {
@@ -159,6 +169,11 @@ public class BaseDao {
 				
 				if(clazzName.equals("Activity")) { 
 					keyWordCrit = Restrictions.ilike("event",keyw, MatchMode.ANYWHERE);
+				}
+				
+				if(clazzName.equals("Project")) {
+					keywInDescRestr = Restrictions.ilike("description",keyw, MatchMode.ANYWHERE);
+					keyWordCrit = Restrictions.or(keywInDescRestr,Restrictions.ilike("name",keyw, MatchMode.ANYWHERE));
 				}
 
 				q.add(keyWordCrit);
