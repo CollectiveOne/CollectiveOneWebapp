@@ -13,10 +13,10 @@
 
 	
 	<title>CollectiveOne - Decision</title>
-	<meta property="og:title" th:content="'CollectiveOne Decision" />
+	<meta property="og:title" th:content="'CollectiveOne Decision'" />
 	<meta property="og:description" th:content="${decisionDescription}" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="'http://http://www.collectiveone.org/views/decisionPageR/'+${decisionId}" />
+	<meta property="og:url" th:content="'http://www.collectiveone.org/views/decisionPageR/'+${decisionId}" />
 	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
 	
 	<script th:inline="javascript">

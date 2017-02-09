@@ -76,6 +76,7 @@ public class ViewsController {
 		
 		model.addAttribute("cbtionTitle",ctionDto.getTitle());
 		model.addAttribute("cbtionId",ctionDto.getId());
+		model.addAttribute("cbtionDescription",ctionDto.getDescription());
 		
 		return "views/cbtionPage";
 	}
@@ -189,6 +190,8 @@ public class ViewsController {
 	public String decisionPage(@PathVariable(value="id") Long id, Model model) {
 		DecisionDtoFull decision = dbServices.decisionGetDto(id);  
 		model.addAttribute("decisionId",decision.getId());
+		model.addAttribute("decisionDescription",decision.getDescription());
+		
 		return "views/decisionPage";
 	}
 	
