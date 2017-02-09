@@ -364,6 +364,7 @@ public class DbServicesImp {
 			project.setCreator(creator);
 			project.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			project.setDescription(projectDto.getDescription());
+			project.setPpsTot(0.0);
 		}
 	}
 	
@@ -468,7 +469,7 @@ public class DbServicesImp {
 			/* simulate the bid acceptance process */
 			bid.setState(BidState.ACCEPTED);
 
-			project.setPpsTot(bid.getPpoints());
+			project.setPpsTot(project.getPpsTot() + bid.getPpoints());
 
 			cbtion.setAssignedPpoints(bid.getPpoints());
 			cbtion.setContributor(bid.getCreator());
@@ -542,6 +543,22 @@ public class DbServicesImp {
 	public Set<Contributor> getProjectContributors(Long projectId) {
 		return projectDao.getContributors(projectId);
 	}
+	
+	@Transactional
+	public ProjectDtoListRes projectDtoGetFiltered(Filters filters) {
+		ObjectListRes<Project> projectsRes = projectDao.get(filters);
+
+		ProjectDtoListRes projectsDtosRes = new ProjectDtoListRes();
+
+		projectsDtosRes.setResSet(projectsRes.getResSet());
+		projectsDtosRes.setProjectDtos(new ArrayList<ProjectDto>());
+
+		for(Project project : projectsRes.getObjects()) {
+			projectsDtosRes.getProjectDtos().add(project.toDto());
+		}
+
+		return projectsDtosRes;
+	}	
 
 	@Transactional
 	public Long goalCreate(GoalDto goalDto, GoalState state) throws IOException {

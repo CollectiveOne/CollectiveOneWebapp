@@ -23,6 +23,11 @@
 	<link rel="stylesheet" type="text/css" th:href="@{/elements/filterElement/filterElement.css}"/>
 	
 	<title th:text="'CollectiveOne - ' + ${projectName}">CollectiveOne - Project</title>
+	<meta property="og:title" th:content="'CollectiveOne - ' + ${projectName}" />
+	<meta property="og:description" th:content="${projectDescription}" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" th:content="'http://http://www.collectiveone.org/views/projectPageR/'+${projectName}" />
+	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
 	
 	<script th:inline="javascript">
 	/*<![CDATA[*/

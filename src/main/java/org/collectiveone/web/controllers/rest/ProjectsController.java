@@ -6,10 +6,13 @@ import java.util.Map;
 
 import org.collectiveone.model.Project;
 import org.collectiveone.services.DbServicesImp;
+import org.collectiveone.services.Filters;
+import org.collectiveone.services.ProjectDtoListRes;
 import org.collectiveone.web.dto.ProjectContributorsDto;
 import org.collectiveone.web.dto.ProjectDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -40,8 +43,8 @@ public class ProjectsController {
 		return projectContributorsDto;
 	}
 	
-	@RequestMapping("/getList")
-	public Map<String,Object> getList() {
+	@RequestMapping("/getNamesList")
+	public Map<String,Object> getNamesList() {
 		
 		List<String> projectList = dbServices.projectGetList();
 		
@@ -50,4 +53,23 @@ public class ProjectsController {
 		
 		return map;
 	}
+	
+	@RequestMapping(value="/getList", method = RequestMethod.POST)
+	public @ResponseBody Map<String,Object> getList(@RequestBody Filters filters) {
+		if(filters.getPage() == 0) filters.setPage(1);
+		if(filters.getNperpage() == 0) filters.setNperpage(15);
+		
+		ProjectDtoListRes projectsDtosRes = dbServices.projectDtoGetFiltered(filters);
+		
+		List<ProjectDto> projectDtos = projectsDtosRes.getProjectDtos();
+		int[] resSet = projectsDtosRes.getResSet();
+		
+		Map<String,Object> map = new HashMap<>();
+		
+		map.put("projectDtos", projectDtos);
+		map.put("resSet", resSet);
+		
+		return map;
+	}
+	
 }

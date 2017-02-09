@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.collectiveone.model.Contributor;
 import org.collectiveone.model.Project;
+import org.collectiveone.services.Filters;
+import org.collectiveone.services.ObjectListRes;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -94,6 +96,17 @@ public class ProjectDao extends BaseDao {
 		Contributor res = (Contributor) query.uniqueResult();
 		
 		return res;
+	}
+	
+	public ObjectListRes<Project> get(Filters filters) {
+		
+		Criteria q = applyGeneralFilters(filters, null, Project.class, false);
+		
+		/* hide disabled projects */
+		q.add(Restrictions.eq("enabled",true));
+		
+		return getObjectsAndResSet(q, filters, Project.class);
+		
 	}
 
 }

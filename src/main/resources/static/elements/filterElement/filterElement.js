@@ -50,6 +50,9 @@ FilterElement.prototype.init = function() {
 			
 		case "goals":
 			break;
+
+		case "projects":
+			break;
 			
 		default: 
 			break; 	
@@ -135,8 +138,17 @@ FilterElement.prototype.updateFilterContents = function() {
 			break;
 	}
 			
-	// Filter by project
-	GLOBAL.serverComm.projectListGet(this.projectListReceivedCallback,this);
+	switch(this.type) {
+		case "cbtions":	
+		case "decisions":	
+		case "goals":	
+			// Filter by project
+			GLOBAL.serverComm.projectNamesListGet(this.projectListReceivedCallback,this);
+			break
+
+		case "projects":
+			break
+	}
 }
 
 FilterElement.prototype.getSelectedProjects = function() {

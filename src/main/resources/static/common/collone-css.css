@@ -288,3 +288,8 @@ textarea.form-control {
 }
 
 
+#content_pane #list_of_elements .projectbox_div {
+	width: calc(100%);
+	overflow: auto;
+	margin-top: 10px;
+}
