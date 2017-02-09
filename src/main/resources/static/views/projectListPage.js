@@ -15,15 +15,15 @@ ProjectListPage.prototype.draw = function() {
 			stateNames: [],
 			creatorUsernames: [],
 			keyw : '',
-			sortBy: "CREATIONDATEDESC",
+			sortBy: "CREATIONDATEASC",
 			page : 1,
 			nperpage : 10
 	};
 	
 	var customElements = { 
 			stateNames: [],
-			sortBy: [ { text:"New first", value:"CREATIONDATEDESC" },
-			          { text:"Old first", value:"CREATIONDATEASC" },
+			sortBy: [ { text:"Old first", value:"CREATIONDATEASC" },
+					  { text:"New first", value:"CREATIONDATEDESC" },
 			]
 	};
 	
