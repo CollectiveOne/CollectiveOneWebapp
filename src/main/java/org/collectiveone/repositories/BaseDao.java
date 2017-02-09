@@ -141,7 +141,7 @@ public class BaseDao {
 		}
 
 		/* ------------------ */
-		/* filter by project  */
+		/* filter by keyword  */
 		/* ------------------ */
 		
 		if(filters.getKeyw() != null) {

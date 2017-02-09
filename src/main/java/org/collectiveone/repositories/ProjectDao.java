@@ -101,6 +101,10 @@ public class ProjectDao extends BaseDao {
 	public ObjectListRes<Project> get(Filters filters) {
 		
 		Criteria q = applyGeneralFilters(filters, null, Project.class, false);
+		
+		/* hide disabled projects */
+		q.add(Restrictions.eq("enabled",true));
+		
 		return getObjectsAndResSet(q, filters, Project.class);
 		
 	}
