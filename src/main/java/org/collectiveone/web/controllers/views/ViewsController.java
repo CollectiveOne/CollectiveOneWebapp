@@ -89,6 +89,7 @@ public class ViewsController {
 		model.addAttribute("goalTag",goalDto.getGoalTag());
 		model.addAttribute("projectName",goalDto.getProjectName());
 		model.addAttribute("goalId",goalDto.getId());
+		model.addAttribute("goalDescription",goalDto.getDescription());
 		
 		return "views/goalPage";
 	}
@@ -97,9 +98,10 @@ public class ViewsController {
 	public String goalPage(@PathParam("goalTag") String goalTag, @PathParam("projectName") String projectName, Model model) {
 		GoalDto goalDto = dbServices.goalGetDto(goalTag,projectName);  
 		
-		model.addAttribute("goalTag",goalTag);
-		model.addAttribute("projectName",projectName);
+		model.addAttribute("goalTag",goalDto.getGoalTag());
+		model.addAttribute("projectName",goalDto.getProjectName());
 		model.addAttribute("goalId",goalDto.getId());
+		model.addAttribute("goalDescription",goalDto.getDescription());
 		
 		return "views/goalPage";
 	}
