@@ -25,11 +25,11 @@
 	<link rel="stylesheet" type="text/css" th:href="@{/elements/filterElement/filterElement.css}"/>
 	
 	
-	<title th:text="'CollectiveOne | '${projectName} + '+' + ${goalTag}">CollectiveOne - Goal</title>
-	<meta property="og:title" th:content="'CollectiveOne | '${projectName} + '+' + ${goalTag}" />
+	<title th:text="'CollectiveOne | ' + ${projectName} + ' +' + ${goalTag}">CollectiveOne - Goal</title>
+	<meta property="og:title" th:content="'CollectiveOne | ' + ${projectName} + '+' + ${goalTag}" />
 	<meta property="og:description" th:content="${goalDescription}" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" th:content="'http://http://www.collectiveone.org/views/goalPageR/'+${goalId}" />
+	<meta property="og:url" th:content="'http://www.collectiveone.org/views/goalPageR/'+${goalId}" />
 	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
 	
 	<script th:inline="javascript">

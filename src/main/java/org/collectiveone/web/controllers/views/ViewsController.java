@@ -18,6 +18,7 @@ import org.collectiveone.web.dto.DecisionDtoCreate;
 import org.collectiveone.web.dto.DecisionDtoFull;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.InvRequest;
+import org.collectiveone.web.dto.ProjectDto;
 import org.collectiveone.web.dto.ProjectNewDto;
 import org.collectiveone.web.dto.SignupRequest;
 import org.collectiveone.web.dto.UsernameAndPps;
@@ -81,10 +82,24 @@ public class ViewsController {
 		return "views/cbtionPage";
 	}
 	
+	@RequestMapping("/goalPageR/{goalId}")
+	public String goalPageId(@PathVariable("goalId") Long goalId, Model model) {
+		GoalDto goalDto = dbServices.goalGetDto(goalId);  
+		
+		model.addAttribute("goalTag",goalDto.getGoalTag());
+		model.addAttribute("projectName",goalDto.getProjectName());
+		model.addAttribute("goalId",goalDto.getId());
+		
+		return "views/goalPage";
+	}
+	
 	@RequestMapping("/goalPageR")
 	public String goalPage(@PathParam("goalTag") String goalTag, @PathParam("projectName") String projectName, Model model) {
+		GoalDto goalDto = dbServices.goalGetDto(goalTag,projectName);  
+		
 		model.addAttribute("goalTag",goalTag);
 		model.addAttribute("projectName",projectName);
+		model.addAttribute("goalId",goalDto.getId());
 		
 		return "views/goalPage";
 	}
@@ -182,7 +197,11 @@ public class ViewsController {
 	
 	@RequestMapping("/projectPageR/{projectName}")
 	public String projectPageR(@PathVariable("projectName") String projectName, Model model) {
+		ProjectDto projectDto = dbServices.projectGetDto(projectName);
+		
 		model.addAttribute("projectName",projectName);
+		model.addAttribute("projectDescription",projectDto.getDescription());
+		
 		return "views/projectPage";
 	}
 	
