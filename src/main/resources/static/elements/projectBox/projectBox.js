@@ -23,7 +23,7 @@ ProjectBox.prototype = {
 
 		projectBoxLoaded: function() {
 			$("#projectname_div",this.container).html(getProjectLink(this.project.name));	
-			$("#description_div",this.container).html(this.project.description);
+			$("#description_div",this.container).html(markdown.toHTML(this.project.description));
 		}
 	
 }
