@@ -31,6 +31,11 @@
 	<link rel="stylesheet" type="text/css" th:href="@{/elements/commentsBox/commentItem.css}" />
 	
 	<title th:text="'CollectiveOne | ' + ${cbtionTitle}">CollectiveOne - Contribution</title>
+	<meta property="og:title" th:content="'CollectiveOne | ' + ${cbtionTitle}" />
+	<meta property="og:description" th:content="${cbtionDescription}" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="'http://http://www.collectiveone.org/views/cbtionPageR/'+${cbtionId}" />
+	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
 	
 	<script th:inline="javascript">
 	/*<![CDATA[*/
