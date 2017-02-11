@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 
-import org.collectiveone.model.AuthorizedEmail;
 import org.collectiveone.model.Role;
 import org.collectiveone.model.User;
 import org.collectiveone.repositories.AuthorizedEmailRepository;
@@ -33,6 +32,7 @@ public class StartUpMethods {
 	
 	@PostConstruct
 	public void UpdateDecisionsStatus() throws IOException {
+		
 		System.out.println("Filling DB");
 		
 		/*

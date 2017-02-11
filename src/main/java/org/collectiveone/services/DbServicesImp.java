@@ -55,6 +55,7 @@ import org.collectiveone.repositories.ReviewDao;
 import org.collectiveone.repositories.ThesisDao;
 import org.collectiveone.repositories.UserDao;
 import org.collectiveone.repositories.VoterDao;
+import org.collectiveone.slack.OnSlackPublishAsked;
 import org.collectiveone.web.controllers.rest.ResStatus;
 import org.collectiveone.web.dto.ActivityDto;
 import org.collectiveone.web.dto.ArgumentDto;
@@ -78,6 +79,7 @@ import org.collectiveone.web.dto.UserDto;
 import org.collectiveone.web.dto.UsernameAndPps;
 import org.collectiveone.web.dto.VoterDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -149,6 +151,9 @@ public class DbServicesImp {
 	
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+    ApplicationEventPublisher eventPublisher;
 	
 	@Autowired
 	private TimeServiceIf timeService;
@@ -2729,6 +2734,7 @@ public class DbServicesImp {
 	public void activitySaveAndNotify(Activity act) throws IOException {
 		activityDao.save(act);
 		
+		/* send emails */
 		String subject = "CollectiveOne - "+act.getProject().getName()+" activity";
 	    String body = act.getPrettyMessage(env.getProperty("collectiveone.webapp.baseurl"));
 	    
@@ -2738,6 +2744,13 @@ public class DbServicesImp {
 	    		subscribedUsers, 
 	    		subject, 
 	    		body);
+	    
+	    /* send slack message*/
+	    if(env.getProperty("collectiveone.webapp.send-slack-enabled").equalsIgnoreCase("true")) {
+	    	eventPublisher.publishEvent(
+	    			new OnSlackPublishAsked(userGet("collectiveone"), act.getPrettyMessage(env.getProperty("collectiveone.webapp.baseurl")))
+	    			);
+	    }
 	}
 
 
