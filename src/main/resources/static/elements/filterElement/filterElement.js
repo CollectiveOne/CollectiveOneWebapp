@@ -53,6 +53,10 @@ FilterElement.prototype.init = function() {
 
 		case "projects":
 			break;
+	
+		case "activities":
+			$("#filter_creators",this.container).hide();
+			break;
 			
 		default: 
 			break; 	
