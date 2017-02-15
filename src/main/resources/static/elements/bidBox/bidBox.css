@@ -201,6 +201,7 @@
 	margin-top: 6px;
 	margin-left: 0px;
 	text-align: right;
+	min-height: 21px;
 }
 
 #bidBox_div #bid_div #right_div #bid_done_description {

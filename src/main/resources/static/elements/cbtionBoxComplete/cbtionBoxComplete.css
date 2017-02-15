@@ -273,6 +273,7 @@
 
 #cbtion_div #bids_title {
 	overflow: auto;
+	min-height: 22px;
 }
 
 #cbtion_div #bids_title label {
