@@ -74,7 +74,7 @@
 					</ul>
 					<div class="navbar-text navbar-right cp_navbar-right">
 						<div sec:authorize="isAuthenticated()">
-							Welcome <span sec:authentication="name">Guest</span> |
+							Welcome <a th:href="'/views/userPageR/'+${#authentication.getName()}" th:text="${#authentication.getName()}">Guest</a> |
 							<form sec:authorize="isAuthenticated()" id="frmlogout"
 								th:action="@{/logout}" method="post" class="form-inline">
 								<a href="javascript:{}"
