@@ -10,6 +10,9 @@ function ActivityListPage(container_id) {
 };
 
 ActivityListPage.prototype.init = function() {
+	
+	$("#recact-nav-btn").addClass("active");
+	
 	var filters = {
 			projectNames : GLOBAL.sessionData.activeProjectsController.getActiveProjectsNames(),
 			stateNames: [],

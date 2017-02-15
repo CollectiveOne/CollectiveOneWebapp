@@ -10,6 +10,8 @@ function DecisionListPage(container_id) {
 
 DecisionListPage.prototype.draw = function() {
 	
+	$("#decisions-nav-btn").addClass("active");
+	
 	var filters = {
 			projectNames : GLOBAL.sessionData.activeProjectsController.getActiveProjectsNames(),
 			stateNames: ["IDLE","OPEN"],

@@ -10,6 +10,8 @@ function ProjectListPage(container_id) {
 
 ProjectListPage.prototype.draw = function() {
 	
+	$("#projects-nav-btn").addClass("active");
+	
 	var filters = {
 			projectNames : [],
 			stateNames: [],
