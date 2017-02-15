@@ -112,6 +112,11 @@ public class ViewsController {
 		return "views/slackPage";
 	}
 	
+	@RequestMapping("/helpPageR")
+	public String helpPage(Model model) {
+		return "views/helpPage";
+	}
+	
 	@RequestMapping("/slackInvSubmit")
 	public String slackInvSubmit(@Valid InvRequest invRequest, Model model) throws IOException {
 		

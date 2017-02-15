@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en"
+	layout:decorator="layouts/main">
+<head>
+	<title>CollectiveOne - Request Slack Signup</title>
+	<meta property="og:title" content="CollectiveOne - Help" />
+	<meta property="og:description" content="User manual of CollectiveOne" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://www.collectiveone.org/views/helpPageR" />
+	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(document).ready(function() {
+			$("#help-nav-btn").addClass("active");
+		});
+	/*]]>*/
+	</script>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<br />
+		<iframe src="https://docs.google.com/document/preview?authuser=0&amp;hgd=1&amp;id=1x1Vl08jHonYukIvV80iRqouqjwolhsFCWWcTPbSd9js" width="100%" height="600" title="CollectiveOne White Paper Draft" frameborder="0"></iframe>
+		
+		
+	</div>
+</body>
+</html>
