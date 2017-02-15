@@ -53,7 +53,7 @@
 	padding-right:10px;
 }
 
-@media (max-width: 907px) {
+@media (max-width: 1000px) {
   .navbar-header {
       float: none;
   }
@@ -225,11 +225,49 @@ textarea.form-control {
 	width: calc(100% - 115px);
 }
 
+#container .footer {
+	width: 100%;
+}
+
 #container #contact_footnote {
-	clear:both;
-	font-size: 14px;
-	margin-top: 15px;
-	text-align: center;
+	float: right;
+	width: 106px;
+	margin-right: 20px;
+}
+
+#container #contact_footnote img {
+	height:100%;
+	width:100%;
+}
+
+#container #link_to_slack_container {
+	width: 30px;
+	display: inline-block;
+	float: left;
+	margin: 0 auto;
+	margin-top: 0px;
+}
+
+#container #link_to_github_container {
+	width: 90px;
+	display: inline-block;
+	margin: 0 auto;
+	margin-top: 11px;
+	margin-left: 7px;
+}
+
+#container #link_to_email_container {
+	width: 28px;
+	display: inline-block;
+	margin: 0 auto;
+	margin-left: 10px;
+}
+
+#container #link_to_twitter_container {
+	width: 26px;
+	display: inline-block;
+	margin: 0 auto;
+	margin-left: 8px;
 }
 
 #container #output_div {
@@ -259,6 +297,8 @@ textarea.form-control {
 	min-height: 600px;
 	padding-left: 5px;
 	padding-right: 5px;
+	margin-bottom: 50px;
+	background-color: white;
 }
 
 #container #list_of_elements {
