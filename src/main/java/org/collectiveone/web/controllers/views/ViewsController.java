@@ -36,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ullink.slack.simpleslackapi.SlackSession;
+
 @Controller
 @RequestMapping("/views")
 public class ViewsController {
@@ -48,7 +50,11 @@ public class ViewsController {
 	
 	@Autowired
 	private Environment env;
-
+	
+	@Autowired
+	private SlackSession slackSession;
+	
+	
 	
 	@RequestMapping("/userPageR/{username}")
 	public String userPage(@PathVariable("username") String username, Model model) {
@@ -120,15 +126,17 @@ public class ViewsController {
 	@RequestMapping("/slackInvSubmit")
 	public String slackInvSubmit(@Valid InvRequest invRequest, Model model) throws IOException {
 		
-        String subject = "Slack invitation request";
-        String body = "Requested invitation by "+invRequest.getEmail();
+		slackSession.inviteUser(invRequest.getEmail(), "", true);
+		
+		String subject = "Slack invitation request";
+        String body = "Slack invitation sent to "+invRequest.getEmail();
         
         mailService.sendMail(
         		env.getProperty("collectiveone.webapp.admin-email"),
         		subject, 
         		body);
         
-        model.addAttribute("message","Your request for an invitation has been received "+invRequest.getEmail()+". We will process it as soon as possible.");
+        model.addAttribute("message","An invitation has been sent to you at "+invRequest.getEmail()+"");
         
         return "views/slackPage";
 	}

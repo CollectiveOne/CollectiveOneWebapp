@@ -2730,7 +2730,6 @@ public class DbServicesImp {
 		return activityDtosRes;
 	}
 	
-	@Transactional
 	public void activitySaveAndNotify(Activity act) throws IOException {
 		activityDao.save(act);
 		
@@ -2744,15 +2743,16 @@ public class DbServicesImp {
 	    		subscribedUsers, 
 	    		subject, 
 	    		body);
-	    
-	    /* send slack message*/
+	  
+	    sendToSlack(act.getPrettyMessage(env.getProperty("collectiveone.webapp.baseurl")));
+	}
+	
+	public void sendToSlack(String msg) {
+		/* send slack message*/
 	    if(env.getProperty("collectiveone.webapp.send-slack-enabled").equalsIgnoreCase("true")) {
-	    	eventPublisher.publishEvent(
-	    			new OnSlackPublishAsked(userGet("collectiveone"), act.getPrettyMessage(env.getProperty("collectiveone.webapp.baseurl")))
-	    			);
+	    	eventPublisher.publishEvent(new OnSlackPublishAsked(userGet("collectiveone"), msg));
 	    }
 	}
-
 
 	@Transactional
 	public ResStatus commentCbtionCreate(CommentDto commentDto) throws IOException {

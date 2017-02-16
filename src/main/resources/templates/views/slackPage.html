@@ -14,21 +14,18 @@
 		<br />
 		
 		<form id="new_cbtion_form" action="#" th:action="@{/views/slackInvSubmit}" th:object="${invRequest}" method="post">
-			<h2>Invitation request to <a href="https://collectiveone.slack.com/">collectiveone.slack.com</a></h2>
+			<h2>Get my invitation to <a href="https://collectiveone.slack.com/">collectiveone.slack.com</a></h2>
 			<br />
 			<div th:if="${message}" class="alert alert-info" th:text="${message}">
 	           	message
 	        </div>
-			<div th:if="!${message}" class="alert alert-info">
-	           	Please insert your email below and we will send you an invitation to our slack channel.
-	        </div>
-	        <div th:if="!${message}">
+			<div th:if="!${message}">
 				<div class="form-group">
 					<label for="email">Email:</label> 
 					<input type="text" class="form-control" th:field="*{email}"></input>
 				</div>
 				
-				<button type="submit" class="btn btn-lg btn-primary btn-block">Request invitation</button>
+				<button type="submit" class="btn btn-lg btn-primary btn-block">Send Invitation</button>
 			</div>
 		</form>
 	</div>

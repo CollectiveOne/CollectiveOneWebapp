@@ -32,7 +32,8 @@ public class AppMailServiceHeroku {
 	public void sendMail(List<String> tos, String subject, String body) throws IOException {
 		if(env.getProperty("collectiveone.webapp.send-email-enabled").equalsIgnoreCase("true")) {
 			if(tos.size() > 0) {
-				SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+				String key = System.getenv("SENDGRID_API_KEY");
+				SendGrid sg = new SendGrid(key);
 				sg.addRequestHeader("X-Mock", "true");
 	
 				Request request = new Request();
