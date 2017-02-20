@@ -1,4 +1,4 @@
-package org.collectiveone.services;
+package org.collectiveone.web.dto;
 
 import java.util.List;
 

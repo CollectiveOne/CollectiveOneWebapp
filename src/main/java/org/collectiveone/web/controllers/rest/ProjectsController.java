@@ -6,10 +6,10 @@ import java.util.Map;
 
 import org.collectiveone.model.Project;
 import org.collectiveone.services.DbServicesImp;
-import org.collectiveone.services.Filters;
-import org.collectiveone.services.ProjectDtoListRes;
+import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.ProjectContributorsDto;
 import org.collectiveone.web.dto.ProjectDto;
+import org.collectiveone.web.dto.ProjectDtoListRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;

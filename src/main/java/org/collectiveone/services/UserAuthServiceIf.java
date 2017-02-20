@@ -5,7 +5,7 @@ import org.collectiveone.web.dto.PasswordDto;
 import org.collectiveone.web.dto.UserNewDto;
 import org.collectiveone.web.error.UserAlreadyExistException;
 
-public interface UserServiceIf {
+public interface UserAuthServiceIf {
 
 	User findByUsername(String username);
 	

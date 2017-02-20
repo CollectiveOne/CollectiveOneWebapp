@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service("userDetailsService")
 @Transactional
-public class UserServiceIm implements UserServiceIf, UserDetailsService {
+public class UserAuthServiceImp implements UserAuthServiceIf, UserDetailsService {
 
 	@Autowired
 	UserRepository userRepository;
@@ -66,7 +66,7 @@ public class UserServiceIm implements UserServiceIf, UserDetailsService {
     public static final String TOKEN_VALID = "valid";
 	
 	@Autowired
-	public UserServiceIm(UserRepository userRepository){
+	public UserAuthServiceImp(UserRepository userRepository){
 		this.userRepository = userRepository;
 	}
 

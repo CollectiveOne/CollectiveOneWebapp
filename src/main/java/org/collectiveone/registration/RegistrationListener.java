@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.collectiveone.model.User;
 import org.collectiveone.services.AppMailServiceHeroku;
-import org.collectiveone.services.UserServiceIf;
+import org.collectiveone.services.UserAuthServiceIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
     @Autowired
-    private UserServiceIf userService;
+    private UserAuthServiceIf userService;
 
     @Autowired
     private MessageSource messages;

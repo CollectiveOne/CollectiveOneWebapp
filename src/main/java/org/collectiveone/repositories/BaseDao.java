@@ -2,8 +2,8 @@ package org.collectiveone.repositories;
 
 import java.util.List;
 
-import org.collectiveone.services.Filters;
-import org.collectiveone.services.ObjectListRes;
+import org.collectiveone.web.dto.Filters;
+import org.collectiveone.web.dto.ObjectListRes;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

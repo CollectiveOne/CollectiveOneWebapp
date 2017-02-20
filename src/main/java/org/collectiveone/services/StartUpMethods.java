@@ -19,7 +19,7 @@ public class StartUpMethods {
 	DbServicesImp dbServices;
 	
 	@Autowired
-	UserServiceIf userService;
+	UserAuthServiceIf userService;
 
 	@Autowired
 	RoleServiceIf roleService;

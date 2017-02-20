@@ -1,8 +1,6 @@
-package org.collectiveone.services;
+package org.collectiveone.web.dto;
 
 import java.util.List;
-
-import org.collectiveone.web.dto.ProjectDto;
 
 public class ProjectDtoListRes {
 	private List<ProjectDto> projectDtos;

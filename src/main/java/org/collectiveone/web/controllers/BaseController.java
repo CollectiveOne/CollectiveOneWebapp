@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import org.collectiveone.model.User;
 import org.collectiveone.registration.OnPasswordRecoveryAsked;
 import org.collectiveone.registration.OnRegistrationCompleteEvent;
-import org.collectiveone.services.UserServiceIf;
+import org.collectiveone.services.UserAuthServiceIf;
 import org.collectiveone.web.dto.PasswordDto;
 import org.collectiveone.web.dto.UserNewDto;
 import org.collectiveone.web.error.PasswordNotAccepted;
@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class BaseController {
 	
     @Autowired
-    private UserServiceIf userService;
+    private UserAuthServiceIf userService;
     
     @Autowired
     private MessageSource messages;

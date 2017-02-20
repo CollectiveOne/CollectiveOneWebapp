@@ -10,7 +10,7 @@ import org.collectiveone.model.Decision;
 import org.collectiveone.model.Project;
 import org.collectiveone.model.User;
 import org.collectiveone.services.DbServicesImp;
-import org.collectiveone.services.UserServiceIm;
+import org.collectiveone.services.UserAuthServiceImp;
 import org.collectiveone.test.services.TimeServiceTestIm;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.DecisionDtoCreate;
@@ -32,7 +32,7 @@ public class CollectiveOneWebappApplicationTests {
 	DbServicesImp dbServices;
 	
 	@Autowired
-	UserServiceIm userService;
+	UserAuthServiceImp userService;
 	
 	@Test
 	public void testDecisionAlgorithm() throws IOException {

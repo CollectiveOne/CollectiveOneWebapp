@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.collectiveone.services.ActivityDtoListRes;
 import org.collectiveone.services.DbServicesImp;
-import org.collectiveone.services.Filters;
 import org.collectiveone.web.dto.ActivityDto;
+import org.collectiveone.web.dto.ActivityDtoListRes;
+import org.collectiveone.web.dto.Filters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

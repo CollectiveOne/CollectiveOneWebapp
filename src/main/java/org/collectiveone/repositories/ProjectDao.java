@@ -5,8 +5,8 @@ import java.util.Set;
 
 import org.collectiveone.model.Contributor;
 import org.collectiveone.model.Project;
-import org.collectiveone.services.Filters;
-import org.collectiveone.services.ObjectListRes;
+import org.collectiveone.web.dto.Filters;
+import org.collectiveone.web.dto.ObjectListRes;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
