@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.collectiveone.services.DbServicesImp;
+import org.collectiveone.services.ProjectServiceImp;
 import org.collectiveone.web.dto.ActiveProject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class SessionController {
 	
 	@Autowired
-	DbServicesImp dbServices;
+	ProjectServiceImp projectService;
 	
 	@ModelAttribute("activeProjects")
 	public List<ActiveProject> getActiveProjects () {
 		
 		List<ActiveProject> activeProjects = new ArrayList<ActiveProject>();
-		List<String> projectNames = dbServices.projectGetList();
+		List<String> projectNames = projectService.projectGetList();
 		
 		for(String projectName : projectNames) {
 			ActiveProject activeProject = new ActiveProject();

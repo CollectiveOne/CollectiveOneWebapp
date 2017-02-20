@@ -16,9 +16,6 @@ import org.springframework.stereotype.Component;
 public class StartUpMethods {
 
 	@Autowired
-	DbServicesImp dbServices;
-	
-	@Autowired
 	UserAuthServiceIf userService;
 
 	@Autowired

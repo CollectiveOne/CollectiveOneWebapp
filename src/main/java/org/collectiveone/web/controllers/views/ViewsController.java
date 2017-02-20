@@ -12,7 +12,13 @@ import javax.websocket.server.PathParam;
 import org.collectiveone.model.GoalState;
 import org.collectiveone.model.User;
 import org.collectiveone.services.AppMailServiceHeroku;
-import org.collectiveone.services.DbServicesImp;
+import org.collectiveone.services.AuthorizedEmailServiceImp;
+import org.collectiveone.services.CbtionServiceImp;
+import org.collectiveone.services.DecisionRealmServiceImp;
+import org.collectiveone.services.DecisionServiceImp;
+import org.collectiveone.services.GoalServiceImp;
+import org.collectiveone.services.ProjectServiceImp;
+import org.collectiveone.services.UserServiceImp;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.DecisionDtoCreate;
 import org.collectiveone.web.dto.DecisionDtoFull;
@@ -43,7 +49,25 @@ import com.ullink.slack.simpleslackapi.SlackSession;
 public class ViewsController {
 	
 	@Autowired
-	DbServicesImp dbServices;
+	UserServiceImp userService;
+	
+	@Autowired
+	ProjectServiceImp projectService;
+	
+	@Autowired
+	CbtionServiceImp cbtionService;
+	
+	@Autowired
+	GoalServiceImp goalService;
+	
+	@Autowired
+	DecisionServiceImp decisionService;
+	
+	@Autowired
+	DecisionRealmServiceImp decisionRealmService;
+	
+	@Autowired
+	AuthorizedEmailServiceImp authorizedEmailService;
 	
 	@Autowired
     private AppMailServiceHeroku mailService;
@@ -79,7 +103,7 @@ public class ViewsController {
 	
 	@RequestMapping("/cbtionPageR/{id}")
 	public String cbtionPage(@PathVariable(value="id") Long id, Model model) {
-		CbtionDto ctionDto = dbServices.cbtionGetDto(id);  
+		CbtionDto ctionDto = cbtionService.cbtionGetDto(id);  
 		
 		model.addAttribute("cbtionTitle",ctionDto.getTitle());
 		model.addAttribute("cbtionId",ctionDto.getId());
@@ -90,7 +114,7 @@ public class ViewsController {
 	
 	@RequestMapping("/goalPageR/{goalId}")
 	public String goalPageId(@PathVariable("goalId") Long goalId, Model model) {
-		GoalDto goalDto = dbServices.goalGetDto(goalId);  
+		GoalDto goalDto = goalService.goalGetDto(goalId);  
 		
 		model.addAttribute("goalTag",goalDto.getGoalTag());
 		model.addAttribute("projectName",goalDto.getProjectName());
@@ -102,7 +126,7 @@ public class ViewsController {
 	
 	@RequestMapping("/goalPageR")
 	public String goalPage(@PathParam("goalTag") String goalTag, @PathParam("projectName") String projectName, Model model) {
-		GoalDto goalDto = dbServices.goalGetDto(goalTag,projectName);  
+		GoalDto goalDto = goalService.goalGetDto(goalTag,projectName);  
 		
 		model.addAttribute("goalTag",goalDto.getGoalTag());
 		model.addAttribute("projectName",goalDto.getProjectName());
@@ -150,14 +174,14 @@ public class ViewsController {
 	@RequestMapping("/signupRequestSubmit")
 	public String signupRequestSubmit(@Valid SignupRequest signupRequest, Model model, final HttpServletRequest request) throws IOException {
 		
-		User referral = dbServices.userGet(signupRequest.getReferral());
+		User referral = userService.userGet(signupRequest.getReferral());
 		
 		if(referral != null) {
 			if(referral.getIsReferrer() != null) {			
 				if(referral.getIsReferrer()) {
 					String token = UUID.randomUUID().toString();
 					
-					dbServices.authorizedEmailAdd(signupRequest.getEmail(), referral.getId(), token);
+					authorizedEmailService.authorizedEmailAdd(signupRequest.getEmail(), referral.getId(), token);
 					
 					String authUrl = getAppUrl(request)+"/views/authorizeSignup?email="+signupRequest.getEmail()+"&token="+token;
 					
@@ -192,7 +216,7 @@ public class ViewsController {
 	
 	@RequestMapping("/authorizeSignup")
     public String passwordRecovery(final Locale locale, final Model model, @RequestParam("email") String email, @RequestParam("token") String token, final HttpServletRequest request) throws IOException {
-        if(dbServices.authorizedEmailValidate(email, token)) {
+        if(authorizedEmailService.authorizedEmailValidate(email, token)) {
         	
         	String subject = "Signup request accepted";
 	        String body = "Request to signup accepted to "+email+"."
@@ -212,7 +236,7 @@ public class ViewsController {
 	
 	@RequestMapping("/projectPageR/{projectName}")
 	public String projectPageR(@PathVariable("projectName") String projectName, Model model) {
-		ProjectDto projectDto = dbServices.projectGetDto(projectName);
+		ProjectDto projectDto = projectService.projectGetDto(projectName);
 		
 		model.addAttribute("projectName",projectName);
 		model.addAttribute("projectDescription",projectDto.getDescription());
@@ -222,7 +246,7 @@ public class ViewsController {
 	
 	@RequestMapping("/decisionPageR/{id}")
 	public String decisionPage(@PathVariable(value="id") Long id, Model model) {
-		DecisionDtoFull decision = dbServices.decisionGetDto(id);  
+		DecisionDtoFull decision = decisionService.decisionGetDto(id);  
 		model.addAttribute("decisionId",decision.getId());
 		model.addAttribute("decisionDescription",decision.getDescription());
 		
@@ -263,11 +287,11 @@ public class ViewsController {
 			model.addAttribute("projectSelected",cbtionDto.getProjectName());
 			return "views/cbtionNewPage";
 		} else {
-			if(dbServices.goalExist(cbtionDto.getGoalTag(),cbtionDto.getProjectName(), GoalState.ACCEPTED)) {
+			if(goalService.goalExist(cbtionDto.getGoalTag(),cbtionDto.getProjectName(), GoalState.ACCEPTED)) {
 				/* creator is the logged user */
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				cbtionDto.setCreatorUsername(auth.getName()); 
-				Long cbtionId = dbServices.cbtionCreate(cbtionDto);
+				Long cbtionId = cbtionService.cbtionCreate(cbtionDto);
 				return "redirect:/views/cbtionPageR/"+cbtionId;
 			} else {
 				model.addAttribute("projectSelected",cbtionDto.getProjectName());
@@ -292,11 +316,11 @@ public class ViewsController {
 			return "views/goalNewPage";
 		} else {
 			/* check goal-tag is new in that project */
-			if(!dbServices.goalExist(goalDto.getGoalTag(),goalDto.getProjectName())) {
+			if(!goalService.goalExist(goalDto.getGoalTag(),goalDto.getProjectName())) {
 				/* if parent goal is provided, check that it exist*/
 				if(goalDto.getParentGoalTag() != null) {
 					if(goalDto.getParentGoalTag().length() > 0) {
-						if(!dbServices.goalExist(goalDto.getParentGoalTag(),goalDto.getProjectName(),GoalState.ACCEPTED)) {
+						if(!goalService.goalExist(goalDto.getParentGoalTag(),goalDto.getProjectName(),GoalState.ACCEPTED)) {
 							model.addAttribute("projectSelected",goalDto.getProjectName());
 							result.rejectValue("parentGoalTag", "goal.parentGoalTag", "'"+goalDto.getParentGoalTag()+"' was not found, or is not yet accepted");
 							return "views/goalNewPage";
@@ -307,7 +331,7 @@ public class ViewsController {
 				/* creator is the logged user */
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				goalDto.setCreatorUsername(auth.getName()); 
-				dbServices.goalCreate(goalDto);
+				goalService.goalCreate(goalDto);
 				
 				return "redirect:/views/goalPageR?projectName="+goalDto.getProjectName()+"&goalTag="+goalDto.getGoalTag();
 				
@@ -340,7 +364,7 @@ public class ViewsController {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			decisionDto.setCreatorUsername(auth.getName()); 
 			
-			Long decisionId = dbServices.decisionCreate(decisionDto);
+			Long decisionId = decisionService.decisionCreate(decisionDto);
 			return "redirect:/views/decisionPageR/"+decisionId;
 		}
 	}
@@ -384,15 +408,15 @@ public class ViewsController {
 			return "views/projectNewPage";
 		} else {
 			/* creator is the logged user */
-			if(dbServices.isProjectAuthorized(projectDto.getName())) {
-				if(dbServices.projectGet(projectDto.getName()) == null) {
+			if(projectService.isProjectAuthorized(projectDto.getName())) {
+				if(projectService.projectGet(projectDto.getName()) == null) {
 					Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 					projectDto.setCreatorUsername(auth.getName()); 
 					
-					dbServices.projectCreate(projectDto);
-					dbServices.projectCreateFirstGoal(projectDto);
-					dbServices.projectStart(projectDto.getName(),projectDto.getUsernamesAndPps());
-					dbServices.decisionRealmInitAllSupergoalsToProject(dbServices.projectGet(projectDto.getName()).getId());
+					projectService.projectCreate(projectDto);
+					projectService.projectCreateFirstGoal(projectDto);
+					projectService.projectStart(projectDto.getName(),projectDto.getUsernamesAndPps());
+					decisionRealmService.decisionRealmInitAllSupergoalsToProject(projectService.projectGet(projectDto.getName()).getId());
 					
 					return "redirect:/views/projectPageR/"+projectDto.getName();	
 				} else {

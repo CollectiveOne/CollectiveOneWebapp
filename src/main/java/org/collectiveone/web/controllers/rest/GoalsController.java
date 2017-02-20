@@ -10,7 +10,8 @@ import javax.validation.Valid;
 
 import org.collectiveone.model.GoalState;
 import org.collectiveone.model.User;
-import org.collectiveone.services.DbServicesImp;
+import org.collectiveone.services.GoalServiceImp;
+import org.collectiveone.services.UserServiceImp;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.GoalDetachDto;
 import org.collectiveone.web.dto.GoalDto;
@@ -38,16 +39,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class GoalsController {
 	
 	@Autowired
-	DbServicesImp dbServices;
+	GoalServiceImp goalService;
+	
+	@Autowired
+	UserServiceImp userService;
 	
 	@RequestMapping(value="/get", method = RequestMethod.POST)
 	public @ResponseBody GoalDto get(@RequestBody GoalGetDto goalGetDto) {
-		return dbServices.goalGetDto(goalGetDto.getGoalTag(),goalGetDto.getProjectName());
+		return goalService.goalGetDto(goalGetDto.getGoalTag(),goalGetDto.getProjectName());
 	}
 	
 	@RequestMapping(value="/exist", method = RequestMethod.POST)
 	public @ResponseBody boolean exist(@RequestBody GoalGetDto goalGetDto) {
-		return dbServices.goalExist(goalGetDto.getGoalTag(),goalGetDto.getProjectName(), GoalState.ACCEPTED);
+		return goalService.goalExist(goalGetDto.getGoalTag(),goalGetDto.getProjectName(), GoalState.ACCEPTED);
 	}
 	
 	@RequestMapping("/new")
@@ -56,11 +60,11 @@ public class GoalsController {
 			return false;
 		} else {
 			/* check goal-tag is new in that project */
-			if(!dbServices.goalExist(goalDto.getGoalTag(),goalDto.getProjectName())) {
+			if(!goalService.goalExist(goalDto.getGoalTag(),goalDto.getProjectName())) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				User logged = dbServices.userGet(auth.getName());
+				User logged = userService.userGet(auth.getName());
 				goalDto.setCreatorUsername(logged.getUsername());
-				dbServices.goalCreate(goalDto);
+				goalService.goalCreate(goalDto);
 				return true;
 			} else {
 				return false;
@@ -78,7 +82,7 @@ public class GoalsController {
 			}
 		}
 		Map<String,List<String>> map = new HashMap<>();
-		map.put("suggestions", dbServices.goalGetSuggestions(query, projectNames));
+		map.put("suggestions", goalService.goalGetSuggestions(query, projectNames));
 		return map;
 	}
 	
@@ -96,7 +100,7 @@ public class GoalsController {
 		states.add(GoalState.ACCEPTED.toString());
 		filters.setStateNames(states);
 		
-		GoalDtoListRes goalDtos = dbServices.goalDtoGetFiltered(filters);
+		GoalDtoListRes goalDtos = goalService.goalDtoGetFiltered(filters);
 		return goalDtos.getGoalDtos();
 	}
 	
@@ -105,7 +109,7 @@ public class GoalsController {
 															@PathVariable("projectName") String projectName ) {
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return dbServices.goalGetWeightsData(projectName, goalTag, auth.getName());
+		return goalService.goalGetWeightsData(projectName, goalTag, auth.getName());
 	}
 	
 	@Secured("ROLE_USER")
@@ -113,7 +117,7 @@ public class GoalsController {
 	public boolean touch(@RequestBody GoalTouchDto touchDto) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		touchDto.setUsername(auth.getName());
-		dbServices.goalTouch(touchDto);
+		goalService.goalTouch(touchDto);
 		return true;
 	}
 	
@@ -122,7 +126,7 @@ public class GoalsController {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);
 		
-		GoalDtoListRes goalsDtosRes = dbServices.goalDtoGetFiltered(filters);
+		GoalDtoListRes goalsDtosRes = goalService.goalDtoGetFiltered(filters);
 		
 		List<GoalDto> goalDtos = goalsDtosRes.getGoalDtos();
 		int[] resSet = goalsDtosRes.getResSet();
@@ -139,9 +143,9 @@ public class GoalsController {
 	@RequestMapping(value="/proposeParent", method = RequestMethod.POST)
 	public @ResponseBody boolean proposeParent(@RequestBody GoalParentDto goalParentDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = dbServices.userGet(auth.getName());
+		User logged = userService.userGet(auth.getName());
 		if(logged != null) {
-			dbServices.goalProposeParent(goalParentDto.getGoalId(), goalParentDto.getParentTag());
+			goalService.goalProposeParent(goalParentDto.getGoalId(), goalParentDto.getParentTag());
 		}
 		return true;
 	}
@@ -150,9 +154,9 @@ public class GoalsController {
 	@RequestMapping(value="/proposeDetach", method = RequestMethod.POST)
 	public @ResponseBody boolean proposeDetach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = dbServices.userGet(auth.getName());
+		User logged = userService.userGet(auth.getName());
 		if(logged != null) {
-			dbServices.goalDetach(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
+			goalService.goalDetach(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
 		}
 		return true;
 	}
@@ -161,9 +165,9 @@ public class GoalsController {
 	@RequestMapping(value="/proposeReattach", method = RequestMethod.POST)
 	public @ResponseBody boolean proposeReattach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = dbServices.userGet(auth.getName());
+		User logged = userService.userGet(auth.getName());
 		if(logged != null) {
-			dbServices.goalReattach(goaldetachDto.getGoalId());
+			goalService.goalReattach(goaldetachDto.getGoalId());
 		}
 		return true;
 	}
@@ -172,9 +176,9 @@ public class GoalsController {
 	@RequestMapping(value="/proposeIncreaseBudget", method = RequestMethod.POST)
 	public @ResponseBody boolean proposeIncreaseBudget(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = dbServices.userGet(auth.getName());
+		User logged = userService.userGet(auth.getName());
 		if(logged != null) {
-			dbServices.goalIncreaseBudget(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
+			goalService.goalIncreaseBudget(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
 		}
 		return true;
 	}

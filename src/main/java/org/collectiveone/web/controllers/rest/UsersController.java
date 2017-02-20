@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.collectiveone.services.DbServicesImp;
+import org.collectiveone.services.UserServiceImp;
 import org.collectiveone.web.dto.ProjectAndUsername;
 import org.collectiveone.web.dto.ProjectContributedDto;
 import org.collectiveone.web.dto.UserDto;
@@ -27,35 +27,35 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsersController {
 	
 	@Autowired
-	DbServicesImp dbServices;
+	UserServiceImp userService;
 	
 	@RequestMapping(value="/get/{username}", method = RequestMethod.POST)
 	public @ResponseBody UserDto get(@PathVariable String username) {
-		return dbServices.userGetDto(username);
+		return userService.userGetDto(username);
 	}
 	
 	@RequestMapping(value="/ppsInProjectGet", method = RequestMethod.POST)
 	public @ResponseBody ProjectContributedDto offer(@RequestBody ProjectAndUsername projectAndUsername) {
-		return dbServices.userProjectPpsGet(projectAndUsername.getUsername(),projectAndUsername.getProjectName());
+		return userService.userProjectPpsGet(projectAndUsername.getUsername(),projectAndUsername.getProjectName());
 	}
 	
 	@RequestMapping(value="/getSuggestions", method = RequestMethod.GET)
 	public Map<String,List<String>> getList(@RequestParam("query") String query) {
 		Map<String,List<String>> map = new HashMap<>();
-		map.put("suggestions", dbServices.usernameGetSuggestions(query));
+		map.put("suggestions", userService.usernameGetSuggestions(query));
 		return map;
 	}
 	
 	@RequestMapping(value="/getSuggestionsReferrer", method = RequestMethod.GET)
 	public Map<String,List<String>> getListReferrers(@RequestParam("query") String query) {
 		Map<String,List<String>> map = new HashMap<>();
-		map.put("suggestions", dbServices.usernameGetSuggestionsReferrer(query));
+		map.put("suggestions", userService.usernameGetSuggestionsReferrer(query));
 		return map;
 	}
 	
 	@RequestMapping(value="/getProjectsContributed/{username}", method = RequestMethod.POST)
 	public @ResponseBody List<ProjectContributedDto> getProjectsContributed(@PathVariable String username) {
-		return dbServices.userProjectsContributedAndPpsGet(username);
+		return userService.userProjectsContributedAndPpsGet(username);
 	}
 	
 	@Secured("ROLE_USER")
@@ -65,7 +65,7 @@ public class UsersController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth.isAuthenticated()) {
 			if(userDto.getUsername().equals(auth.getName())) {
-				dbServices.userUpdateProfile(userDto);
+				userService.userUpdateProfile(userDto);
 				return true;
 			}
 		}

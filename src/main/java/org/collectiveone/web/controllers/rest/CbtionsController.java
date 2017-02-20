@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.collectiveone.model.User;
-import org.collectiveone.services.DbServicesImp;
+import org.collectiveone.services.CbtionServiceImp;
+import org.collectiveone.services.CommentServiceImp;
+import org.collectiveone.services.UserServiceImp;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.CbtionDtoListRes;
 import org.collectiveone.web.dto.CommentDto;
@@ -30,14 +32,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class CbtionsController {
 	
 	@Autowired
-	DbServicesImp dbServices;
+	CbtionServiceImp cbtionService;
+	
+	@Autowired
+	UserServiceImp userService;
+	
+	@Autowired
+	CommentServiceImp commentService;
 	
 	@RequestMapping(value="/getList", method = RequestMethod.POST)
 	public @ResponseBody Map<String,Object> getList(@RequestBody Filters filters) {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);
 		
-		CbtionDtoListRes cbtionsDtosRes = dbServices.cbtionDtoGetFiltered(filters);
+		CbtionDtoListRes cbtionsDtosRes = cbtionService.cbtionDtoGetFiltered(filters);
 		
 		List<CbtionDto> cbtionDtos = cbtionsDtosRes.getCbtionsDtos();
 		int[] resSet = cbtionsDtosRes.getResSet();
@@ -52,29 +60,29 @@ public class CbtionsController {
 
 	@RequestMapping(value="/get/{id}", method = RequestMethod.POST)
 	public @ResponseBody CbtionDto get(@PathVariable Long id) {
-		return dbServices.cbtionGetDto(id);
+		return cbtionService.cbtionGetDto(id);
 	}
 	
 	@RequestMapping(value="/promote", method = RequestMethod.POST)
 	public @ResponseBody Boolean promote(@RequestBody ObjectPromote cbtionPromote) {
 		/* creator is the logged user */
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = dbServices.userGet(auth.getName());
+		User logged = userService.userGet(auth.getName());
 		if(logged != null) {
-			dbServices.cbtionPromote(cbtionPromote.getElementId(), logged.getId(), cbtionPromote.getPromoteUp());
+			cbtionService.cbtionPromote(cbtionPromote.getElementId(), logged.getId(), cbtionPromote.getPromoteUp());
 		}
 		return true;
 	}
 	
 	@RequestMapping(value="/getComment/{commentId}", method = RequestMethod.POST)
 	public @ResponseBody CommentDto getComment(@PathVariable Long commentId) {
-		CommentDto commentsDto = dbServices.cbtionGetCommentDto(commentId);
+		CommentDto commentsDto = cbtionService.cbtionGetCommentDto(commentId);
 		return commentsDto;
 	}
 	
 	@RequestMapping(value="/getComments/{id}", method = RequestMethod.POST)
 	public @ResponseBody List<CommentDto> getComments(@PathVariable Long id) {
-		List<CommentDto> commentsDtos = dbServices.cbtionGetCommentsDtos(id);
+		List<CommentDto> commentsDtos = cbtionService.cbtionGetCommentsDtos(id);
 		return commentsDtos;
 	}
 	
@@ -84,7 +92,7 @@ public class CbtionsController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth.isAuthenticated()) {
 			commentDto.setCreatorUsername(auth.getName());
-			dbServices.commentCbtionCreate(commentDto);
+			commentService.commentCbtionCreate(commentDto);
 			return true;
 		}
 		return false;
@@ -92,23 +100,23 @@ public class CbtionsController {
 	
 	@RequestMapping(value="/commentGetReplies/{commentId}", method = RequestMethod.POST)
 	public @ResponseBody  List<CommentDto> commentNew(@PathVariable Long commentId) {
-		return dbServices.commentGetRepliesDtos(commentId);
+		return commentService.commentGetRepliesDtos(commentId);
 	}
 	
 	@RequestMapping(value="/commentPromote", method = RequestMethod.POST)
 	public @ResponseBody Boolean commentPromote(@RequestBody ObjectPromote commentPromote) {
 		/* creator is the logged user */
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = dbServices.userGet(auth.getName());
+		User logged = userService.userGet(auth.getName());
 		if(logged != null) {
-			dbServices.commentPromote(commentPromote.getElementId(), logged.getId(), commentPromote.getPromoteUp());
+			commentService.commentPromote(commentPromote.getElementId(), logged.getId(), commentPromote.getPromoteUp());
 		}
 		return true;
 	}
 	
 	@RequestMapping(value="/getReviews/{id}", method = RequestMethod.POST)
 	public @ResponseBody List<ReviewDto> getReviews(@PathVariable Long id) {
-		return dbServices.cbtionGetReviewsDtos(id);
+		return cbtionService.cbtionGetReviewsDtos(id);
 	}
 	
 	@Secured("ROLE_USER")
@@ -117,7 +125,7 @@ public class CbtionsController {
 		/* creator is the logged user */
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		cbtionDto.setCreatorUsername(auth.getName()); 
-		dbServices.cbtionEdit(cbtionDto);
+		cbtionService.cbtionEdit(cbtionDto);
 		return true;
 	}
 }

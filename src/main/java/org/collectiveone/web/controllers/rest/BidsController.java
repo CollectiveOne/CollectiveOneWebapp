@@ -3,7 +3,8 @@ package org.collectiveone.web.controllers.rest;
 import java.io.IOException;
 import java.util.List;
 
-import org.collectiveone.services.DbServicesImp;
+import org.collectiveone.services.BidServiceImp;
+import org.collectiveone.services.ReviewServiceImp;
 import org.collectiveone.web.dto.BidDto;
 import org.collectiveone.web.dto.BidNewDto;
 import org.collectiveone.web.dto.DoneDto;
@@ -24,16 +25,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class BidsController {
 	
 	@Autowired
-	DbServicesImp dbServices;
+	BidServiceImp bidService;
+	
+	@Autowired
+	ReviewServiceImp reviewService;
 	
 	@RequestMapping(value="/get/{id}", method = RequestMethod.POST)
 	public @ResponseBody BidDto get(@PathVariable Long id) {
-		return dbServices.bidGetDto(id);
+		return bidService.bidGetDto(id);
 	}
 	
 	@RequestMapping(value="/getOfCbtion/{cbtionId}", method = RequestMethod.POST)
 	public @ResponseBody List<BidDto> getList(@PathVariable("cbtionId") Long cbtionId) {
-		List<BidDto> bidDtos = dbServices.bidGetOfCbtionDto(cbtionId);
+		List<BidDto> bidDtos = bidService.bidGetOfCbtionDto(cbtionId);
 		return bidDtos;
 	}
 	
@@ -42,11 +46,11 @@ public class BidsController {
 	public @ResponseBody boolean newBid(@RequestBody BidNewDto bidNewDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		bidNewDto.setCreatorUsername(auth.getName());
-		Long id = dbServices.bidCreate(bidNewDto);
+		Long id = bidService.bidCreate(bidNewDto);
 		
 		bidNewDto.setId(id);
 		if(bidNewDto.getOffer()) {
-			dbServices.bidFromConsideringToOffered(bidNewDto);
+			bidService.bidFromConsideringToOffered(bidNewDto);
 		}
 		return true;
 	}
@@ -55,7 +59,7 @@ public class BidsController {
 	public @ResponseBody boolean offer(@RequestBody BidNewDto bidNewDto) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		bidNewDto.setCreatorUsername(auth.getName());
-		dbServices.bidFromConsideringToOffered(bidNewDto);
+		bidService.bidFromConsideringToOffered(bidNewDto);
 		return true;
 	}
 	
@@ -63,13 +67,13 @@ public class BidsController {
 	public @ResponseBody boolean markDone(@RequestBody DoneDto doneDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		doneDto.setUsername(auth.getName());
-		dbServices.bidMarkDone(doneDto);
+		bidService.bidMarkDone(doneDto);
 		return true;
 	}
 	
 	@RequestMapping(value="/getReviews/{id}", method = RequestMethod.POST)
 	public @ResponseBody List<ReviewDto> getReviews(@PathVariable Long id) {
-		return dbServices.bidGetReviewsDtos(id);
+		return bidService.bidGetReviewsDtos(id);
 	}
 	
 	@RequestMapping(value="/newReview", method = RequestMethod.POST)
@@ -77,7 +81,7 @@ public class BidsController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth.isAuthenticated()) {
 			reviewDto.setCreatorUsername(auth.getName());
-			dbServices.reviewBidCreate(reviewDto);
+			reviewService.reviewBidCreate(reviewDto);
 			return true;
 		}
 		return false;

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.collectiveone.model.Project;
-import org.collectiveone.services.DbServicesImp;
+import org.collectiveone.services.ProjectServiceImp;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.ProjectContributorsDto;
 import org.collectiveone.web.dto.ProjectDto;
@@ -24,20 +24,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProjectsController {
 	
 	@Autowired
-	DbServicesImp dbServices;
+	ProjectServiceImp projectService;
 	
 	@RequestMapping(value="/get/{projectName}", method = RequestMethod.POST)
 	public @ResponseBody ProjectDto get(@PathVariable("projectName") String projectName) {
-		return dbServices.projectGetDto(projectName);
+		return projectService.projectGetDto(projectName);
 	}
 	
 	@RequestMapping(value="/getContributors/{projectName}", method = RequestMethod.POST)
 	public @ResponseBody ProjectContributorsDto getContributors(@PathVariable("projectName") String projectName) {
 			
-		Project project = dbServices.projectGet(projectName);
+		Project project = projectService.projectGet(projectName);
 		
 		ProjectContributorsDto projectContributorsDto = new ProjectContributorsDto();
-		projectContributorsDto.setUsernamesAndPps(dbServices.projectContributorsAndPpsGet(project.getId()));
+		projectContributorsDto.setUsernamesAndPps(projectService.projectContributorsAndPpsGet(project.getId()));
 		projectContributorsDto.setPpsTot(project.getPpsTot());
 		
 		return projectContributorsDto;
@@ -46,7 +46,7 @@ public class ProjectsController {
 	@RequestMapping("/getNamesList")
 	public Map<String,Object> getNamesList() {
 		
-		List<String> projectList = dbServices.projectGetList();
+		List<String> projectList = projectService.projectGetList();
 		
 		Map<String,Object> map = new HashMap<>();
 		map.put("projectList", projectList);
@@ -59,7 +59,7 @@ public class ProjectsController {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);
 		
-		ProjectDtoListRes projectsDtosRes = dbServices.projectDtoGetFiltered(filters);
+		ProjectDtoListRes projectsDtosRes = projectService.projectDtoGetFiltered(filters);
 		
 		List<ProjectDto> projectDtos = projectsDtosRes.getProjectDtos();
 		int[] resSet = projectsDtosRes.getResSet();

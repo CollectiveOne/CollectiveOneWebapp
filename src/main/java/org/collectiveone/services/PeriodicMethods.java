@@ -11,20 +11,29 @@ public class PeriodicMethods {
 
 	/* Services  */
 	@Autowired
-	DbServicesImp dbServices;
+	protected DecisionServiceImp decisionService;
+	
+	@Autowired
+	protected BidServiceImp bidService;
+	
+	@Autowired
+	protected GoalServiceImp goalService;
+	
+	@Autowired
+	protected CbtionServiceImp cbtionService;
 		
 	@Scheduled(fixedDelay = 5000)
 	public void UpdateDecisionsStatus() throws IOException {
 		// System.out.print(".");
 		
 		/* First update all open or idle decisions */
-		dbServices.decisionsUpdateState();
+		decisionService.decisionsUpdateState();
 		
 		/* then update all entities based on the updated
 		 * decisions */
-		dbServices.bidsUpdateState();
-		dbServices.goalsUpdateState();
-		dbServices.cbtionsUpdateState();
+		bidService.bidsUpdateState();
+		goalService.goalsUpdateState();
+		cbtionService.cbtionsUpdateState();
 		// System.out.print("-");
 	}
 }
