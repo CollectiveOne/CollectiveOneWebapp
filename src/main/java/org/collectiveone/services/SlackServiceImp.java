@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class SlackServiceImp extends BaseService {
 	
-	public void sendToSlack(String msg) {
+	public void send(String msg) {
 		/* send slack message*/
 	    if(env.getProperty("collectiveone.webapp.send-slack-enabled").equalsIgnoreCase("true")) {
-	    	eventPublisher.publishEvent(new OnSlackPublishAsked(userService.userGet("collectiveone"), msg));
+	    	eventPublisher.publishEvent(new OnSlackPublishAsked(userService.get("collectiveone"), msg));
 	    }
 	}
 

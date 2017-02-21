@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ActivityServiceImp extends BaseService {
 		
 	@Transactional
-	public ActivityDtoListRes activityDtoGetFiltered(Filters filters) {
+	public ActivityDtoListRes getFilteredDto(Filters filters) {
 		ObjectListRes<Activity> activityRes = activityRepository.get(filters);
 
 		ActivityDtoListRes activityDtosRes = new ActivityDtoListRes();
@@ -31,7 +31,7 @@ public class ActivityServiceImp extends BaseService {
 		return activityDtosRes;
 	}
 	
-	public void activitySaveAndNotify(Activity act) throws IOException {
+	public void saveAndNotify(Activity act) throws IOException {
 		activityRepository.save(act);
 		
 		/* send emails */
@@ -45,7 +45,7 @@ public class ActivityServiceImp extends BaseService {
 	    		subject, 
 	    		body);
 	  
-	    slackService.sendToSlack(act.getPrettyMessage(env.getProperty("collectiveone.webapp.baseurl")));
+	    slackService.send(act.getPrettyMessage(env.getProperty("collectiveone.webapp.baseurl")));
 	}
 
 }

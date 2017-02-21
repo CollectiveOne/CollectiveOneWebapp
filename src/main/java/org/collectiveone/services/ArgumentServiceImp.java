@@ -19,12 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArgumentServiceImp extends BaseService {
 	
 	@Transactional
-	public ArgumentDto argumentGetDto(Long id) {
+	public ArgumentDto getDto(Long id) {
 		return argumentRepository.get(id).toDto();
 	}
 
 	@Transactional
-	public List<ArgumentDto> argumentGetOfDecisionDto(Long decisionId, ArgumentTendency tendency) {
+	public List<ArgumentDto> getOfDecisionDto(Long decisionId, ArgumentTendency tendency) {
 		List<Argument> arguments = argumentRepository.getOfDecision(decisionId,tendency);
 		List<ArgumentDto> argumentDtos = new ArrayList<ArgumentDto>();
 		for (Argument argument : arguments) {
@@ -35,7 +35,7 @@ public class ArgumentServiceImp extends BaseService {
 
 
 	@Transactional
-	public String argumentCreate(ArgumentDto argumentDto) throws IOException {
+	public String create(ArgumentDto argumentDto) throws IOException {
 
 		User creator = userRepository.get(argumentDto.getCreatorUsername());
 		Decision decision = decisionRepository.get(argumentDto.getDecisionId());
@@ -58,25 +58,25 @@ public class ArgumentServiceImp extends BaseService {
 		act.setType(ActivityType.ARGUMENT);
 		act.setProject(argument.getDecision().getProject());
 		act.setEvent("created");
-		activityService.activitySaveAndNotify(act);
+		activityService.saveAndNotify(act);
 
 		return "argument created";
 	}
 
 	@Transactional
-	public String argumentBack(Long argId, Long userId) {
+	public String back(Long argId, Long userId) {
 		User user = userRepository.get(userId);
 		return argumentRepository.back(argId,user);
 	}
 
 	@Transactional
-	public String argumentUnBack(Long argId, Long userId) {
+	public String unBack(Long argId, Long userId) {
 		User user = userRepository.get(userId);
 		return argumentRepository.unBack(argId,user);
 	}
 
 	@Transactional
-	public boolean argumentIsBacked(Long argId, Long userId) {
+	public boolean isBacked(Long argId, Long userId) {
 		if(argumentRepository.getBacker(argId,userId) == null) {
 			return false;
 		} else {

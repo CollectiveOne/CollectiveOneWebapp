@@ -27,13 +27,13 @@ public class PeriodicMethods {
 		// System.out.print(".");
 		
 		/* First update all open or idle decisions */
-		decisionService.decisionsUpdateState();
+		decisionService.updateStateAll();
 		
 		/* then update all entities based on the updated
 		 * decisions */
-		bidService.bidsUpdateState();
-		goalService.goalsUpdateState();
-		cbtionService.cbtionsUpdateState();
+		bidService.updateStateAll();
+		goalService.updateStateAll();
+		cbtionService.updateStateAll();
 		// System.out.print("-");
 	}
 }

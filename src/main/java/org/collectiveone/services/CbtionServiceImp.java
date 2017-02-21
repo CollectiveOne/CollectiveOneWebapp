@@ -34,17 +34,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class CbtionServiceImp extends BaseService {
 
 	@Transactional
-	public void cbtionSave(Cbtion cbtion) {
+	public void save(Cbtion cbtion) {
 		cbtionRepository.save(cbtion);
 	}
 	
 	@Transactional
-	public void cbtionUpdate(Cbtion cbtion) {
+	public void update(Cbtion cbtion) {
 		cbtionRepository.update(cbtion);
 	}
 
 	@Transactional
-	public Long cbtionCreate(CbtionDto cbtionDto) throws IOException {
+	public Long create(CbtionDto cbtionDto) throws IOException {
 		Cbtion cbtion = new Cbtion();
 		Project project = projectRepository.get(cbtionDto.getProjectName());
 		projectRepository.save(project);
@@ -89,13 +89,13 @@ public class CbtionServiceImp extends BaseService {
 
 		act.setCbtion(cbtion);
 		act.setType(ActivityType.CBTION);
-		activityService.activitySaveAndNotify(act);
+		activityService.saveAndNotify(act);
 
 		return id;
 	}
 	
 	@Transactional
-	public Long cbtionEdit(CbtionDto cbtionDto) {
+	public Long edit(CbtionDto cbtionDto) {
 		Cbtion cbtion = cbtionRepository.get(cbtionDto.getId());
 		
 		if(cbtion != null) {
@@ -123,29 +123,29 @@ public class CbtionServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public Cbtion cbtionGet(Long id) {
+	public Cbtion get(Long id) {
 		return cbtionRepository.get(id);
 	}
 
 	@Transactional
-	public List<Cbtion> cbtionGet(Cbtion refCbtion) {
+	public List<Cbtion> get(Cbtion refCbtion) {
 		return cbtionRepository.get(refCbtion);
 	}
 	
 	@Transactional
-	public User cbtionGetCreator(Long id) {
+	public User getCreator(Long id) {
 		return cbtionRepository.get(id).getCreator();
 	}
 
 	@Transactional
-	public CbtionDto cbtionGetDto(Long cbtionId) {
+	public CbtionDto getDto(Long cbtionId) {
 		Cbtion cbtion = cbtionRepository.get(cbtionId);
-		CbtionDto cbtionDto = cbtion.toDto(goalService.goalGetParentGoalsTags(cbtion.getGoal()), cbtionGetNSubComments(cbtionId));
+		CbtionDto cbtionDto = cbtion.toDto(goalService.getParentGoalsTags(cbtion.getGoal()), getNSubComments(cbtionId));
 		return cbtionDto;
 	}
 
 	@Transactional
-	public List<CbtionDto> cbtionGetDto(Cbtion refCbtion) {
+	public List<CbtionDto> getDto(Cbtion refCbtion) {
 		List<Cbtion> cbtions = cbtionRepository.get(refCbtion);
 		List<CbtionDto> cbtionDtos = new ArrayList<CbtionDto>();
 		for(Cbtion cbtion : cbtions) {
@@ -155,7 +155,7 @@ public class CbtionServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public CbtionDtoListRes cbtionDtoGetFiltered(Filters filters) {
+	public CbtionDtoListRes getFilteredDto(Filters filters) {
 		ObjectListRes<Cbtion> cbtionsRes = cbtionRepository.get(filters);
 
 		CbtionDtoListRes cbtionsDtosRes = new CbtionDtoListRes();
@@ -164,23 +164,23 @@ public class CbtionServiceImp extends BaseService {
 		cbtionsDtosRes.setCbtionsDtos(new ArrayList<CbtionDto>());
 
 		for(Cbtion cbtion : cbtionsRes.getObjects()) {
-			cbtionsDtosRes.getCbtionsDtos().add(cbtion.toDto(goalService.goalGetParentGoalsTags(cbtion.getGoal())));
+			cbtionsDtosRes.getCbtionsDtos().add(cbtion.toDto(goalService.getParentGoalsTags(cbtion.getGoal())));
 		}
 
 		return cbtionsDtosRes;
 	}
 
 	@Transactional
-	public void cbtionsUpdateState() throws IOException {
+	public void updateStateAll() throws IOException {
 		/* Update state of all not closed bids */
 		List<Cbtion> cbtionsProposed = cbtionRepository.getWithStates(Arrays.asList(CbtionState.PROPOSED, CbtionState.OPEN));
 		for(Cbtion cbtion : cbtionsProposed) {
-			cbtionUpdateState(cbtion.getId());
+			updateState(cbtion.getId());
 		}	
 	}
 
 	@Transactional
-	public void cbtionUpdateState(Long cbtionId) throws IOException {
+	public void updateState(Long cbtionId) throws IOException {
 		Cbtion cbtion = cbtionRepository.get(cbtionId);
 		
 		Activity act = new Activity();
@@ -206,7 +206,7 @@ public class CbtionServiceImp extends BaseService {
 						cbtionRepository.save(cbtion);
 	
 						act.setEvent("proposal refused");
-						activityService.activitySaveAndNotify(act);
+						activityService.saveAndNotify(act);
 						break;
 		
 					case CLOSED_ACCEPTED: 
@@ -236,7 +236,7 @@ public class CbtionServiceImp extends BaseService {
 						cbtionRepository.save(cbtion);
 	
 						act.setEvent("opened for bidding");
-						activityService.activitySaveAndNotify(act);
+						activityService.saveAndNotify(act);
 						
 						break;
 		
@@ -262,7 +262,7 @@ public class CbtionServiceImp extends BaseService {
 						cbtionRepository.remove(cbtion.getId());
 						
 						act.setEvent("deleted");
-						activityService.activitySaveAndNotify(act);
+						activityService.saveAndNotify(act);
 						
 						break;
 					
@@ -280,7 +280,7 @@ public class CbtionServiceImp extends BaseService {
 
 
 	@Transactional
-	public ResStatus cbtionPromote(Long cbtionId, Long userId, boolean promoteUp) {
+	public ResStatus promote(Long cbtionId, Long userId, boolean promoteUp) {
 		ResStatus resStatus = new ResStatus();
 
 		Cbtion cbtion = cbtionRepository.get(cbtionId);
@@ -322,17 +322,17 @@ public class CbtionServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public CommentDto cbtionGetCommentDto(Long commentId) {
+	public CommentDto getCommentDto(Long commentId) {
 		return commentDao.get(commentId).toDto();
 	}
 	
 	@Transactional
-	public int cbtionGetNSubComments(Long cbtionId) {
+	public int getNSubComments(Long cbtionId) {
 		return cbtionRepository.countSubComments(cbtionId);
 	}
 
 	@Transactional
-	public List<CommentDto> cbtionGetCommentsDtos(Long cbtionId) {
+	public List<CommentDto> getCommentsDtos(Long cbtionId) {
 		List<Comment> comments = cbtionRepository.getCommentsSorted(cbtionId);
 		List<CommentDto> commentsDtos = new ArrayList<CommentDto>();
 		for (Comment comment : comments) {
@@ -342,9 +342,9 @@ public class CbtionServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public List<ReviewDto> cbtionGetReviewsDtos(Long cbtionId) {
+	public List<ReviewDto> getReviewsDtos(Long cbtionId) {
 		Bid bid = cbtionRepository.getAcceptedBid(cbtionId);
-		return bidService.bidGetReviewsDtos(bid.getId());
+		return bidService.getReviewsDtos(bid.getId());
 	}
 
 }

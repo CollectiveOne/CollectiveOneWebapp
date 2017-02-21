@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class VoterServiceImp extends BaseService {
 	
 	@Transactional
-	public void updateVoterInProject(Long projectId, Long userId) {
+	public void updateInProject(Long projectId, Long userId) {
 		/* Goes all over the decision realms in a project and updates the max weight of a 
 		 * user by setting it to the user pps in the project.
 		 * It starts from the super-goals (those without parent goal) and then continues
@@ -49,14 +49,14 @@ public class VoterServiceImp extends BaseService {
 				List<Goal> subGoals = goalRepository.getSubgoalsIteratively(superGoal.getId());
 				
 				for(Goal subGoal : subGoals) {
-					updateVoterInGoal(subGoal.getId(), userId);
+					updateInGoal(subGoal.getId(), userId);
 				}
 			}
 		}
 	}
 	
 	@Transactional
-	public void updateVoterInGoal(Long goalId, Long userId) {
+	public void updateInGoal(Long goalId, Long userId) {
 		/* Goes all over the decision realms in a goal and subgoals (recursively) and 
 		 * update the user. It starts from the top goal and then continues recursively 
 		 * with the sub-goals */
@@ -94,7 +94,7 @@ public class VoterServiceImp extends BaseService {
 		List<Goal> subGoals = goalRepository.getSubgoalsIteratively(goal.getId());
 		
 		for(Goal subGoal : subGoals) {
-			updateVoterInGoal(subGoal.getId(), userId);
+			updateInGoal(subGoal.getId(), userId);
 		}
 	}
 

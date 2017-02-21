@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ThesisServiceImp extends BaseService {
 	
 	@Transactional
-	public ThesisDto thesisOfUser(Long decId, Long userId) {
+	public ThesisDto getOfUserDto(Long decId, Long userId) {
 		Thesis thesis = thesisRepository.getOfUserInDec(decId, userId);
 		ThesisDto thesisDto = null;
 		if(thesis != null) thesisDto = thesis.toDto();
@@ -26,7 +26,7 @@ public class ThesisServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public String thesisOfDecSave(User author, int value, Long decId) {
+	public String save(User author, int value, Long decId) {
 
 		Decision dec = decisionRepository.get(decId);
 
@@ -65,22 +65,22 @@ public class ThesisServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void thesisAssignOfBidSave(User author, int value, Long bidId) {
+	public void saveAssignOfBid(User author, int value, Long bidId) {
 		Bid bid = bidRepository.get(bidId);
 		Cbtion cbtion = bid.getCbtion();
 		if((cbtion.getState() == CbtionState.OPEN) || 
 				(cbtion.getState() == CbtionState.ASSIGNED)) {
 
-			thesisOfDecSave(author, value, bid.getAssign().getId());	
+			save(author, value, bid.getAssign().getId());	
 		}
 	}
 
 	@Transactional
-	public void thesisAcceptOfBidSave(User author, int value, Long bidId) {
+	public void saveAcceptOfBid(User author, int value, Long bidId) {
 		Bid bid = bidRepository.get(bidId);
 		Cbtion cbtion = bid.getCbtion();
 		if(cbtion.getState() == CbtionState.ASSIGNED) {
-			thesisOfDecSave(author, value, bid.getAccept().getId());	
+			save(author, value, bid.getAccept().getId());	
 		}
 	}
 

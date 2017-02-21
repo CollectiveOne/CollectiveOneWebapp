@@ -22,7 +22,7 @@ public class CommentServiceImp extends BaseService {
 	
 	
 	@Transactional
-	public ResStatus commentCbtionCreate(CommentDto commentDto) throws IOException {
+	public ResStatus cbtionCreate(CommentDto commentDto) throws IOException {
 
 		User creator = userRepository.get(commentDto.getCreatorUsername());
 		Cbtion cbtion = cbtionRepository.get(commentDto.getCbtionId());
@@ -59,7 +59,7 @@ public class CommentServiceImp extends BaseService {
 		act.setType(ActivityType.COMMENT);
 		act.setProject(cbtion.getProject());
 		act.setEvent("new");
-		activityService.activitySaveAndNotify(act);
+		activityService.saveAndNotify(act);
 		
 		ResStatus resStatus = new ResStatus();
 
@@ -70,7 +70,7 @@ public class CommentServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public List<CommentDto> commentGetRepliesDtos(Long commentId) {
+	public List<CommentDto> getRepliesDtos(Long commentId) {
 		List<Comment> replies = commentDao.getRepliesSorted(commentId);
 		List<CommentDto> repliesDtos = new ArrayList<CommentDto>();
 		for (Comment comment : replies) {
@@ -81,7 +81,7 @@ public class CommentServiceImp extends BaseService {
 
 
 	@Transactional
-	public ResStatus commentPromote(Long commentId, Long userId, boolean promoteUp) {
+	public ResStatus promote(Long commentId, Long userId, boolean promoteUp) {
 		ResStatus resStatus = new ResStatus();
 
 		Comment comment = commentDao.get(commentId);

@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewServiceImp extends BaseService {
 	
 	@Transactional
-	public String reviewBidCreate(ReviewDto reviewDto) {
+	public String bidCreate(ReviewDto reviewDto) {
 
 		User creator = userRepository.get(reviewDto.getCreatorUsername());
 		Bid bid = bidRepository.get(reviewDto.getBidId());

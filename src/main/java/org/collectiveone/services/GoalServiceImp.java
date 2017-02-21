@@ -34,8 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class GoalServiceImp extends BaseService {
 	
 	@Transactional
-	public Long goalCreate(GoalDto goalDto, GoalState state) throws IOException {
-		if(!goalExist(goalDto.getGoalTag(), goalDto.getProjectName())) {
+	public Long create(GoalDto goalDto, GoalState state) throws IOException {
+		if(!exist(goalDto.getGoalTag(), goalDto.getProjectName())) {
 			Goal goal = new Goal();
 			Project project = projectRepository.get(goalDto.getProjectName());
 			projectRepository.save(project);
@@ -155,7 +155,7 @@ public class GoalServiceImp extends BaseService {
 			
 			act.setGoal(goal);
 			act.setType(ActivityType.GOAL);
-			activityService.activitySaveAndNotify(act);
+			activityService.saveAndNotify(act);
 			
 			return id;
 			
@@ -165,21 +165,21 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public Long goalCreate(GoalDto goalDto) throws IOException {
-		return goalCreate(goalDto,GoalState.PROPOSED);
+	public Long create(GoalDto goalDto) throws IOException {
+		return create(goalDto,GoalState.PROPOSED);
 	}
 
 	@Transactional
-	public GoalDto goalGetDto(Long goalId) {
+	public GoalDto getDto(Long goalId) {
 		Goal goal = goalRepository.get(goalId);
 		GoalDto dto = goal.toDto();
-		goalAddParentsAndSubgoals(dto);
+		addParentsAndSubgoals(dto);
 
 		return dto;
 	}
 
 	@Transactional
-	public boolean goalExist(String goalTag, String projectName) {
+	public boolean exist(String goalTag, String projectName) {
 		Goal goal = goalRepository.get(goalTag, projectName);
 		if(goal != null) {
 			return true;
@@ -189,7 +189,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public boolean goalExist(String goalTag, String projectName, GoalState state) {
+	public boolean exist(String goalTag, String projectName, GoalState state) {
 		Goal goal = goalRepository.get(goalTag, projectName, state);
 		if(goal != null) {
 			return true;
@@ -199,19 +199,19 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public GoalDto goalGetDto(String goalTag, String projectName) {
+	public GoalDto getDto(String goalTag, String projectName) {
 		Goal goal = goalRepository.get(goalTag, projectName);
 		GoalDto dto = null;
 		if(goal != null) {
 			dto = goal.toDto();
-			goalAddParentsAndSubgoals(dto);
+			addParentsAndSubgoals(dto);
 		}
 
 		return dto;
 	}
 
 	@Transactional
-	public GoalDtoListRes goalDtoGetFiltered(Filters filters) {
+	public GoalDtoListRes getFilteredDto(Filters filters) {
 		ObjectListRes<Goal> goalsRes = goalRepository.get(filters);
 
 		GoalDtoListRes goalsDtosRes = new GoalDtoListRes();
@@ -221,7 +221,7 @@ public class GoalServiceImp extends BaseService {
 
 		for(Goal goal : goalsRes.getObjects()) {
 			GoalDto dto = goal.toDto();
-			goalAddParentsAndSubgoals(dto);
+			addParentsAndSubgoals(dto);
 
 			goalsDtosRes.getGoalDtos().add(dto);
 		}
@@ -230,7 +230,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void goalAddParentsAndSubgoals(GoalDto goalDto) {
+	public void addParentsAndSubgoals(GoalDto goalDto) {
 		List<String> parentGoalsTags = new ArrayList<String>();
 		for(Goal parent : goalRepository.getAllParents(goalDto.getId())) { 
 			parentGoalsTags.add(parent.getGoalTag()); 
@@ -250,7 +250,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public List<String> goalGetSuggestions(String query, List<String> projectNames) {
+	public List<String> getSuggestions(String query, List<String> projectNames) {
 		if(projectNames.size() == 0) {
 			projectNames = projectRepository.getListEnabled();
 		}
@@ -258,25 +258,25 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void goalsUpdateState() throws IOException {
+	public void updateStateAll() throws IOException {
 		/* Update state of all not closed bids */
 		List<Goal> goalsNotDeleted = goalRepository.getNotDeleted();
 		for(Goal goal : goalsNotDeleted) {
-			goalUpdateState(goal.getId());
+			updateState(goal.getId());
 		}	
 	}
 
 	@Transactional
-	public void goalUpdateState(Long goalId) throws IOException {
-		goalFromProposedToAccepted(goalId);
-		goalFromAcceptedToDeleted(goalId);
-		goalUpdateNewParent(goalId);
-		goalUpdateAttachment(goalId);
-		goalUpdateBudget(goalId);
+	public void updateState(Long goalId) throws IOException {
+		fromProposedToAccepted(goalId);
+		fromAcceptedToDeleted(goalId);
+		updateNewParent(goalId);
+		updateAttachment(goalId);
+		updateBudget(goalId);
 	}
 
 	@Transactional
-	public void goalFromProposedToAccepted(Long goalId) throws IOException {
+	public void fromProposedToAccepted(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		goalRepository.save(goal);
 
@@ -301,7 +301,7 @@ public class GoalServiceImp extends BaseService {
 				case PROPOSED:
 					goal.setState(GoalState.NOT_ACCEPTED);
 					act.setEvent("not accepted");
-					activityService.activitySaveAndNotify(act);
+					activityService.saveAndNotify(act);
 					break;
 	
 				default:
@@ -338,7 +338,7 @@ public class GoalServiceImp extends BaseService {
 					
 		            /* register event */
 		            act.setEvent("accepted");
-		            activityService.activitySaveAndNotify(act);
+		            activityService.saveAndNotify(act);
 					
 					
 					break;
@@ -354,7 +354,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void goalFromAcceptedToDeleted(Long goalId) throws IOException {
+	public void fromAcceptedToDeleted(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		goalRepository.save(goal);
 
@@ -393,13 +393,13 @@ public class GoalServiceImp extends BaseService {
 				case PROPOSED:
 					goal.setState(GoalState.DELETED);
 					act.setEvent("deleted");
-					activityService.activitySaveAndNotify(act);
+					activityService.saveAndNotify(act);
 					break;
 	
 				case ACCEPTED:
 					goal.setState(GoalState.DELETED);
 					act.setEvent("deleted");
-					activityService.activitySaveAndNotify(act);
+					activityService.saveAndNotify(act);
 					break;				
 	
 				default:
@@ -415,7 +415,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void goalUpdateNewParent(Long goalId) throws IOException {
+	public void updateNewParent(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		goalRepository.save(goal);
 
@@ -441,7 +441,7 @@ public class GoalServiceImp extends BaseService {
 						case PROPOSED:
 							goal.setParentState(GoalParentState.ACCEPTED);
 							act.setEvent(goal.getProposedParent().getGoalTag()+" not accepted as parent");
-							activityService.activitySaveAndNotify(act);
+							activityService.saveAndNotify(act);
 							break;
 	
 						default:
@@ -456,7 +456,7 @@ public class GoalServiceImp extends BaseService {
 							goal.setParentState(GoalParentState.ACCEPTED);
 							goal.setParent(goal.getProposedParent());
 							act.setEvent(goal.getProposedParent().getGoalTag()+" accepted as parent");
-							activityService.activitySaveAndNotify(act);
+							activityService.saveAndNotify(act);
 							break;
 						default:
 							break;
@@ -471,7 +471,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void goalProposeParent(Long goalId, String parentTag) throws IOException {
+	public void proposeParent(Long goalId, String parentTag) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		Goal proposedParent = goalRepository.get(parentTag,goal.getProject().getName());
 
@@ -505,7 +505,7 @@ public class GoalServiceImp extends BaseService {
 				act.setGoal(goal);
 				act.setType(ActivityType.GOAL);
 				act.setEvent(proposedParent.getGoalTag()+" proposed as parent");
-				activityService.activitySaveAndNotify(act);
+				activityService.saveAndNotify(act);
 			} else {
 			}
 		} else {
@@ -513,7 +513,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public List<String> goalGetParentGoalsTags(Goal goal) {
+	public List<String> getParentGoalsTags(Goal goal) {
 		/* Add parent goals too */
 		List<String> parentGoalsTags = new ArrayList<String>();
 		if(goal!= null) {
@@ -524,7 +524,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public GoalWeightsDataDto goalGetWeightsData(String projectName, String goalTag, String username) {
+	public GoalWeightsDataDto getWeightsData(String projectName, String goalTag, String username) {
 		
 		Goal goal = goalRepository.get(goalTag, projectName);
 		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
@@ -563,7 +563,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void goalTouch(GoalTouchDto touchDto) {
+	public void touch(GoalTouchDto touchDto) {
 		Goal goal = goalRepository.get(touchDto.getGoalTag(), touchDto.getProjectName());
 		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
 		User user = userRepository.get(touchDto.getUsername());
@@ -579,7 +579,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void goalDetach(Long goalId, double initialBudget) throws IOException {
+	public void detach(Long goalId, double initialBudget) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		
 		if(goal.getParent() != null) {
@@ -617,7 +617,7 @@ public class GoalServiceImp extends BaseService {
 				act.setGoal(goal);
 				act.setType(ActivityType.GOAL);
 				act.setEvent("detach proposed");
-				activityService.activitySaveAndNotify(act);
+				activityService.saveAndNotify(act);
 				
 				break;
 				
@@ -632,7 +632,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void goalReattach(Long goalId) throws IOException {
+	public void reattach(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		
 		if(goal.getParent() != null) {
@@ -666,7 +666,7 @@ public class GoalServiceImp extends BaseService {
 				act.setGoal(goal);
 				act.setType(ActivityType.GOAL);
 				act.setEvent("reattach proposed");
-				activityService.activitySaveAndNotify(act);
+				activityService.saveAndNotify(act);
 				
 				break;
 				
@@ -681,7 +681,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void goalIncreaseBudget(Long goalId, double increaseBudgetPps) throws IOException {
+	public void increaseBudget(Long goalId, double increaseBudgetPps) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		
 		if(goal.getParent() != null) {
@@ -721,7 +721,7 @@ public class GoalServiceImp extends BaseService {
 				act.setGoal(goal);
 				act.setType(ActivityType.GOAL);
 				act.setEvent("budget increase proposed");
-				activityService.activitySaveAndNotify(act);
+				activityService.saveAndNotify(act);
 				
 				break;
 				
@@ -736,7 +736,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void goalUpdateBudget(Long goalId) throws IOException {
+	public void updateBudget(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		
 		Activity act = new Activity();
@@ -784,7 +784,7 @@ public class GoalServiceImp extends BaseService {
 						goalRepository.save(goal);
 						
 						act.setEvent("budget increased");
-						activityService.activitySaveAndNotify(act);
+						activityService.saveAndNotify(act);
 					}
 					
 					/* mark as not proposed anyway, if there was not enough budget
@@ -798,7 +798,7 @@ public class GoalServiceImp extends BaseService {
 					goal.setIncreaseBudgetState(GoalIncreaseBudgetState.NOT_PROPOSED);
 					
 					act.setEvent("budget increase refused");
-					activityService.activitySaveAndNotify(act);
+					activityService.saveAndNotify(act);
 					break;
 				}
 			}
@@ -812,7 +812,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void goalUpdateAttachment(Long goalId) throws IOException {
+	public void updateAttachment(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		
 		Activity act = new Activity();
@@ -869,7 +869,7 @@ public class GoalServiceImp extends BaseService {
 						goalRepository.save(goal);
 						
 						act.setEvent("detached");
-						activityService.activitySaveAndNotify(act);
+						activityService.saveAndNotify(act);
 					}
 					
 					break;
@@ -877,7 +877,7 @@ public class GoalServiceImp extends BaseService {
 				case CLOSED_DENIED:
 				case CLOSED_EXTERNALLY:
 					act.setEvent("detachment refused");
-					activityService.activitySaveAndNotify(act);
+					activityService.saveAndNotify(act);
 					break;
 				}
 			}

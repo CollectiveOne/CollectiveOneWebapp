@@ -36,12 +36,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectServiceImp extends BaseService {
 
 	@Transactional
-	public void projectSave(Project project) {
+	public void save(Project project) {
 		projectRepository.save(project);
 	}
 
 	@Transactional
-	public void projectAuthorize(String projectName) throws IOException {
+	public void authorize(String projectName) throws IOException {
 		AuthorizedProject authProject = new AuthorizedProject();
 		
 		authProject.setProjectName(projectName);
@@ -51,7 +51,7 @@ public class ProjectServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public boolean isProjectAuthorized(String projectName) {
+	public boolean isAuthorized(String projectName) {
 		AuthorizedProject projectAuthorized = authorizedProjectDao.get(projectName);
 		if(projectAuthorized != null) {
 			return true;
@@ -61,8 +61,8 @@ public class ProjectServiceImp extends BaseService {
     }
 	
 	@Transactional
-	public void projectCreate(ProjectNewDto projectDto) throws IOException {
-		if(projectGet(projectDto.getName()) == null) {
+	public void create(ProjectNewDto projectDto) throws IOException {
+		if(get(projectDto.getName()) == null) {
 			Project project = new Project();
 			projectRepository.save(project);
 
@@ -77,7 +77,7 @@ public class ProjectServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void projectCreateFirstGoal(ProjectNewDto projectDto) throws IOException {
+	public void createFirstGoal(ProjectNewDto projectDto) throws IOException {
 		/* One goal must be created at project creation */
 		GoalDto goalDto = new GoalDto();
 		
@@ -87,11 +87,11 @@ public class ProjectServiceImp extends BaseService {
 		goalDto.setProjectName(projectDto.getName());
 		goalDto.setGoalTag(projectDto.getGoalTag());
 		
-		goalService.goalCreate(goalDto,GoalState.ACCEPTED);
+		goalService.create(goalDto,GoalState.ACCEPTED);
 	}
 
 	@Transactional
-	public void projectStart(String projectName, List<UsernameAndPps> usernamesAndPps) {
+	public void start(String projectName, List<UsernameAndPps> usernamesAndPps) {
 
 		User coprojects = userRepository.get("collectiveone");
 		userRepository.save(coprojects);
@@ -189,38 +189,38 @@ public class ProjectServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public Project projectGet(Long id) {
+	public Project get(Long id) {
 		return projectRepository.get(id);
 	}
 
 	@Transactional
-	public Project projectGet(String project_name) {
+	public Project get(String project_name) {
 		return projectRepository.get(project_name);
 	}
 
 	@Transactional
-	public ProjectDto projectGetDto(String project_name) {
+	public ProjectDto getDto(String project_name) {
 		Project project = projectRepository.get(project_name);
 		ProjectDto dto = project.toDto();
 		return dto;
 	}
 
 	@Transactional
-	public List<String> projectGetList() {
+	public List<String> getList() {
 		return projectRepository.getListEnabled();
 	}
 
 	@Transactional
-	public List<Project> projectGetAll(Integer max) {
+	public List<Project> getAll(Integer max) {
 		return projectRepository.getFromRef(new Project(), max);
 	}
 
 	@Transactional
-	public List<UsernameAndPps> projectContributorsAndPpsGet(Long projectId) {
+	public List<UsernameAndPps> getContributorsAndPps(Long projectId) {
 
 		List<UsernameAndPps> usernamesAndPps = new ArrayList<UsernameAndPps>();
 
-		for(Contributor contributor : getProjectContributors(projectId)) {
+		for(Contributor contributor : getContributors(projectId)) {
 			UsernameAndPps usernameAndPps = new UsernameAndPps(contributor.getContributorUser().getUsername(),contributor.getPps());
 			usernamesAndPps.add(usernameAndPps);
 		}
@@ -235,7 +235,7 @@ public class ProjectServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void projectUpdatePpsTot(Long projectId, double lastOne) {
+	public void updatePpsTot(Long projectId, double lastOne) {
 		Project project = projectRepository.get(projectId);
 
 		double ppsTot = 0.0;
@@ -248,12 +248,12 @@ public class ProjectServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public Set<Contributor> getProjectContributors(Long projectId) {
+	public Set<Contributor> getContributors(Long projectId) {
 		return projectRepository.getContributors(projectId);
 	}
 	
 	@Transactional
-	public ProjectDtoListRes projectDtoGetFiltered(Filters filters) {
+	public ProjectDtoListRes getFilteredDto(Filters filters) {
 		ObjectListRes<Project> projectsRes = projectRepository.get(filters);
 
 		ProjectDtoListRes projectsDtosRes = new ProjectDtoListRes();

@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BidServiceImp extends BaseService {
 	
 	@Transactional
-	public void bidSave(Bid bid, Long cbtionId) {
+	public void save(Bid bid, Long cbtionId) {
 		Cbtion cbtion = cbtionRepository.get(cbtionId);
 		bid.setCbtion(cbtion);
 		cbtion.getBids().add(bid);
@@ -42,34 +42,34 @@ public class BidServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public Bid bidGet(Long id) {
+	public Bid get(Long id) {
 		return bidRepository.get(id);
 	}
 	
 	@Transactional
-	public BidDto bidGetDto(Long id) {
+	public BidDto getDto(Long id) {
 		return bidRepository.get(id).toDto();
 	}
 
 	@Transactional
-	public User bidGetCreator(Long id) {
+	public User getCreator(Long id) {
 		return bidRepository.get(id).getCreator();
 	}
 
 	@Transactional
-	public void bidSave(Bid bid) {
+	public void save(Bid bid) {
 		bidRepository.save(bid);
 	}
 
 	@Transactional
-	public void bidSaveState(Long bidId, BidState state) {
+	public void saveState(Long bidId, BidState state) {
 		Bid bid = bidRepository.get(bidId);
 		bid.setState(state);
 		bidRepository.save(bid);
 	}
 
 	@Transactional
-	public Long bidCreate(BidNewDto bidDtoIn) throws IOException {
+	public Long create(BidNewDto bidDtoIn) throws IOException {
 
 		Long cbtionId = bidDtoIn.getCbtionId();
 		User user = userRepository.get(bidDtoIn.getCreatorUsername());
@@ -107,7 +107,7 @@ public class BidServiceImp extends BaseService {
 				act.setBid(bid);
 				act.setType(ActivityType.BID);
 				act.setEvent("created");
-				activityService.activitySaveAndNotify(act);
+				activityService.saveAndNotify(act);
 				
 				return bid.getId();
 			} 
@@ -118,7 +118,7 @@ public class BidServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void bidFromConsideringToOffered(BidNewDto bidDto) {
+	public void fromConsideringToOffered(BidNewDto bidDto) {
 		Bid bid = bidRepository.get(bidDto.getId());
 
 		Project project = bid.getCbtion().getProject();
@@ -155,7 +155,7 @@ public class BidServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void bidMarkDone(DoneDto doneDto) throws IOException {
+	public void markDone(DoneDto doneDto) throws IOException {
 		
 		Bid bid = bidRepository.get(doneDto.getBidId());
 		
@@ -173,13 +173,13 @@ public class BidServiceImp extends BaseService {
 				act.setBid(bid);
 				act.setType(ActivityType.BID);
 				act.setEvent("marked done");
-				activityService.activitySaveAndNotify(act);
+				activityService.saveAndNotify(act);
 			}
 		}
 	}
 
 	@Transactional
-	public List<BidDto> bidGetOfUserDto(Long userId) {
+	public List<BidDto> getOfUserDto(Long userId) {
 		List<Bid> bids = bidRepository.getOfUser(userId);
 		List<BidDto> bidDtos = new ArrayList<BidDto>();
 		for (Bid bid : bids) {
@@ -189,7 +189,7 @@ public class BidServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public List<BidDto> bidGetOfCbtionDto(Long cbtionId) {
+	public List<BidDto> getOfCbtionDto(Long cbtionId) {
 		List<Bid> bids = bidRepository.getOfCbtion(cbtionId);
 		List<BidDto> bidDtos = new ArrayList<BidDto>();
 		for (Bid bid : bids) {
@@ -199,22 +199,22 @@ public class BidServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void bidsUpdateState() throws IOException {
+	public void updateStateAll() throws IOException {
 		/* Update state of all not closed bids */
 		List<Bid> bidsNotClosed = bidRepository.getNotClosed();
 		for(Bid bid : bidsNotClosed) {
-			bidUpdateState(bid.getId());
+			updateState(bid.getId());
 		}	
 	}
 
 	@Transactional
-	public List<Bid> bidGetAll() {
+	public List<Bid> getAll() {
 		List<Bid> bids = bidRepository.getAll(100000);
 		return bids;
 	}
 
 	@Transactional
-	public List<ReviewDto> bidGetReviewsDtos(Long bidId) {
+	public List<ReviewDto> getReviewsDtos(Long bidId) {
 		List<Review> reviews = bidRepository.get(bidId).getReviews();
 		List<ReviewDto> reviewsDtos = new ArrayList<ReviewDto>();
 		for (Review review : reviews) {
@@ -224,7 +224,7 @@ public class BidServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void bidUpdateState(Long bidId) throws IOException {
+	public void updateState(Long bidId) throws IOException {
 		Bid bid = bidRepository.get(bidId);
 		Cbtion cbtion = bid.getCbtion();
 
@@ -247,13 +247,13 @@ public class BidServiceImp extends BaseService {
 			case CLOSED_DENIED : 
 				bid.setState(BidState.NOT_ASSIGNED);
 				act.setEvent("not assigned");
-				activityService.activitySaveAndNotify(act);
+				activityService.saveAndNotify(act);
 				break;
 
 			case CLOSED_ACCEPTED: 
 				bid.setState(BidState.ASSIGNED);
 				act.setEvent("assigned");
-				activityService.activitySaveAndNotify(act);
+				activityService.saveAndNotify(act);
 				cbtion.setState(CbtionState.ASSIGNED);
 
 				/* prepare accept decision */
@@ -292,7 +292,7 @@ public class BidServiceImp extends BaseService {
 				case CLOSED_DENIED: 
 					bid.setState(BidState.NOT_ACCEPTED);
 					act.setEvent("not accepted");
-					activityService.activitySaveAndNotify(act);
+					activityService.saveAndNotify(act);
 					break;
 
 				case CLOSED_ACCEPTED: 
@@ -341,13 +341,13 @@ public class BidServiceImp extends BaseService {
 						/* updated pps of user in project - This is the only place where PPS are created/updated
 						 * and here all the decisions weights update logic is called */
 						/* -----------------------------------------------------------------------*/
-						contributorService.contributorUpdate(bid.getCbtion().getProject().getId(), bid.getCreator().getId(), cbtion.getAssignedPpoints());
-						projectService.projectUpdatePpsTot(bid.getCbtion().getProject().getId(), 0.0);
-						voterService.updateVoterInProject(bid.getCbtion().getProject().getId(), bid.getCreator().getId());
+						contributorService.update(bid.getCbtion().getProject().getId(), bid.getCreator().getId(), cbtion.getAssignedPpoints());
+						projectService.updatePpsTot(bid.getCbtion().getProject().getId(), 0.0);
+						voterService.updateInProject(bid.getCbtion().getProject().getId(), bid.getCreator().getId());
 						/* -----------------------------------------------------------------------*/
 	
 						act.setEvent("accepted");
-						activityService.activitySaveAndNotify(act);
+						activityService.saveAndNotify(act);
 					}
 
 					break;

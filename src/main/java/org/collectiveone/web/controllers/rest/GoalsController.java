@@ -46,12 +46,12 @@ public class GoalsController {
 	
 	@RequestMapping(value="/get", method = RequestMethod.POST)
 	public @ResponseBody GoalDto get(@RequestBody GoalGetDto goalGetDto) {
-		return goalService.goalGetDto(goalGetDto.getGoalTag(),goalGetDto.getProjectName());
+		return goalService.getDto(goalGetDto.getGoalTag(),goalGetDto.getProjectName());
 	}
 	
 	@RequestMapping(value="/exist", method = RequestMethod.POST)
 	public @ResponseBody boolean exist(@RequestBody GoalGetDto goalGetDto) {
-		return goalService.goalExist(goalGetDto.getGoalTag(),goalGetDto.getProjectName(), GoalState.ACCEPTED);
+		return goalService.exist(goalGetDto.getGoalTag(),goalGetDto.getProjectName(), GoalState.ACCEPTED);
 	}
 	
 	@RequestMapping("/new")
@@ -60,11 +60,11 @@ public class GoalsController {
 			return false;
 		} else {
 			/* check goal-tag is new in that project */
-			if(!goalService.goalExist(goalDto.getGoalTag(),goalDto.getProjectName())) {
+			if(!goalService.exist(goalDto.getGoalTag(),goalDto.getProjectName())) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				User logged = userService.userGet(auth.getName());
+				User logged = userService.get(auth.getName());
 				goalDto.setCreatorUsername(logged.getUsername());
-				goalService.goalCreate(goalDto);
+				goalService.create(goalDto);
 				return true;
 			} else {
 				return false;
@@ -82,7 +82,7 @@ public class GoalsController {
 			}
 		}
 		Map<String,List<String>> map = new HashMap<>();
-		map.put("suggestions", goalService.goalGetSuggestions(query, projectNames));
+		map.put("suggestions", goalService.getSuggestions(query, projectNames));
 		return map;
 	}
 	
@@ -100,7 +100,7 @@ public class GoalsController {
 		states.add(GoalState.ACCEPTED.toString());
 		filters.setStateNames(states);
 		
-		GoalDtoListRes goalDtos = goalService.goalDtoGetFiltered(filters);
+		GoalDtoListRes goalDtos = goalService.getFilteredDto(filters);
 		return goalDtos.getGoalDtos();
 	}
 	
@@ -109,7 +109,7 @@ public class GoalsController {
 															@PathVariable("projectName") String projectName ) {
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return goalService.goalGetWeightsData(projectName, goalTag, auth.getName());
+		return goalService.getWeightsData(projectName, goalTag, auth.getName());
 	}
 	
 	@Secured("ROLE_USER")
@@ -117,7 +117,7 @@ public class GoalsController {
 	public boolean touch(@RequestBody GoalTouchDto touchDto) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		touchDto.setUsername(auth.getName());
-		goalService.goalTouch(touchDto);
+		goalService.touch(touchDto);
 		return true;
 	}
 	
@@ -126,7 +126,7 @@ public class GoalsController {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);
 		
-		GoalDtoListRes goalsDtosRes = goalService.goalDtoGetFiltered(filters);
+		GoalDtoListRes goalsDtosRes = goalService.getFilteredDto(filters);
 		
 		List<GoalDto> goalDtos = goalsDtosRes.getGoalDtos();
 		int[] resSet = goalsDtosRes.getResSet();
@@ -143,9 +143,9 @@ public class GoalsController {
 	@RequestMapping(value="/proposeParent", method = RequestMethod.POST)
 	public @ResponseBody boolean proposeParent(@RequestBody GoalParentDto goalParentDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.userGet(auth.getName());
+		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			goalService.goalProposeParent(goalParentDto.getGoalId(), goalParentDto.getParentTag());
+			goalService.proposeParent(goalParentDto.getGoalId(), goalParentDto.getParentTag());
 		}
 		return true;
 	}
@@ -154,9 +154,9 @@ public class GoalsController {
 	@RequestMapping(value="/proposeDetach", method = RequestMethod.POST)
 	public @ResponseBody boolean proposeDetach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.userGet(auth.getName());
+		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			goalService.goalDetach(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
+			goalService.detach(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
 		}
 		return true;
 	}
@@ -165,9 +165,9 @@ public class GoalsController {
 	@RequestMapping(value="/proposeReattach", method = RequestMethod.POST)
 	public @ResponseBody boolean proposeReattach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.userGet(auth.getName());
+		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			goalService.goalReattach(goaldetachDto.getGoalId());
+			goalService.reattach(goaldetachDto.getGoalId());
 		}
 		return true;
 	}
@@ -176,9 +176,9 @@ public class GoalsController {
 	@RequestMapping(value="/proposeIncreaseBudget", method = RequestMethod.POST)
 	public @ResponseBody boolean proposeIncreaseBudget(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.userGet(auth.getName());
+		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			goalService.goalIncreaseBudget(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
+			goalService.increaseBudget(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
 		}
 		return true;
 	}

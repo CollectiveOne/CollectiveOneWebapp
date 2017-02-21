@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthorizedEmailServiceImp extends BaseService {
 	
 	@Transactional
-	public void authorizedEmailAdd(String email, Long referralId, String token) {
+	public void add(String email, Long referralId, String token) {
 		AuthorizedEmail authorizedEmail = new AuthorizedEmail();
 		
 		authorizedEmail.setEmail(email);
@@ -23,7 +23,7 @@ public class AuthorizedEmailServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public boolean authorizedEmailValidate(String email, String token) {
+	public boolean validate(String email, String token) {
 		AuthorizedEmail authorizedEmail = authorizedEmailRepository.findByEmailAndToken(email, token);
 		if(authorizedEmail != null) {
 			authorizedEmail.setAuthorized(true);

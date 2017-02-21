@@ -28,7 +28,7 @@ public class ActivityController {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);
 		
-		ActivityDtoListRes actDtosRes = activityService.activityDtoGetFiltered(filters);
+		ActivityDtoListRes actDtosRes = activityService.getFilteredDto(filters);
 		
 		List<ActivityDto> actDtos = actDtosRes.getActivityDtos();
 		int[] resSet = actDtosRes.getResSet();

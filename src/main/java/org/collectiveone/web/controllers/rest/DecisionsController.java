@@ -46,7 +46,7 @@ public class DecisionsController {
 	
 	@RequestMapping(value="/get/{id}", method = RequestMethod.POST)
 	public @ResponseBody DecisionDtoFull get(@PathVariable Long id) {
-		return decisionService.decisionGetDto(id);
+		return decisionService.getDto(id);
 	}
 	
 	@RequestMapping(value="/getList", method = RequestMethod.POST)
@@ -54,7 +54,7 @@ public class DecisionsController {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);
 		
-		DecisionDtoListRes decisionsDtosRes = decisionService.decisionDtoGetFiltered(filters);
+		DecisionDtoListRes decisionsDtosRes = decisionService.getFilteredDto(filters);
 		
 		List<DecisionDtoFull> decisionDtos = decisionsDtosRes.getDecisionDtos();
 		int[] resSet = decisionsDtosRes.getResSet();
@@ -70,9 +70,9 @@ public class DecisionsController {
 	@RequestMapping(value="/vote", method = RequestMethod.POST)
 	public @ResponseBody boolean vote(@RequestBody ThesisDto thesisDto) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.userGet(auth.getName());
+		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			thesisService.thesisOfDecSave(logged, thesisDto.getValue(), thesisDto.getDecisionId());
+			thesisService.save(logged, thesisDto.getValue(), thesisDto.getDecisionId());
 			return true;
 		}
 		return false;
@@ -82,9 +82,9 @@ public class DecisionsController {
 	@RequestMapping(value="/getVote/{id}", method = RequestMethod.POST)
 	public @ResponseBody ThesisDto getVote(@PathVariable Long id) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.userGet(auth.getName());
+		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			ThesisDto thesisDto = thesisService.thesisOfUser(id, logged.getId());
+			ThesisDto thesisDto = thesisService.getOfUserDto(id, logged.getId());
 			if(thesisDto != null){
 				return thesisDto;
 			} 
@@ -95,8 +95,8 @@ public class DecisionsController {
 	@RequestMapping(value="/getArguments/{id}", method = RequestMethod.POST)
 	public @ResponseBody Map<String,List<ArgumentDto>> getArguments(@PathVariable Long id) {
 		
-		List<ArgumentDto> argumentYesDtos = argumentService.argumentGetOfDecisionDto(id, ArgumentTendency.FORYES);
-		List<ArgumentDto> argumentNoDtos = argumentService.argumentGetOfDecisionDto(id, ArgumentTendency.FORNO);
+		List<ArgumentDto> argumentYesDtos = argumentService.getOfDecisionDto(id, ArgumentTendency.FORYES);
+		List<ArgumentDto> argumentNoDtos = argumentService.getOfDecisionDto(id, ArgumentTendency.FORNO);
 		
 		Map<String,List<ArgumentDto>> map = new HashMap<>();
 		
@@ -109,10 +109,10 @@ public class DecisionsController {
 	@RequestMapping(value="/newArgument", method = RequestMethod.POST)
 	public @ResponseBody boolean newArgument(@RequestBody ArgumentDto argumentDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.userGet(auth.getName());
+		User logged = userService.get(auth.getName());
 		if(logged != null) {
 			argumentDto.setCreatorUsername(logged.getUsername());
-			argumentService.argumentCreate(argumentDto);
+			argumentService.create(argumentDto);
 			return true;
 		}
 		return false;
@@ -121,15 +121,15 @@ public class DecisionsController {
 	
 	@RequestMapping(value="/getArgument/{id}", method = RequestMethod.POST)
 	public @ResponseBody ArgumentDto argumentGet(@PathVariable Long id) {
-		return argumentService.argumentGetDto(id);
+		return argumentService.getDto(id);
 	}
 	
 	@RequestMapping(value="/argumentIsBacked/{id}", method = RequestMethod.POST)
 	public @ResponseBody boolean argumentIsBacked(@PathVariable Long id) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.userGet(auth.getName());
+		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			return argumentService.argumentIsBacked(id,logged.getId());	 
+			return argumentService.isBacked(id,logged.getId());	 
 		}
 		return false;
 	}
@@ -138,12 +138,12 @@ public class DecisionsController {
 	public @ResponseBody boolean argumentBacked(@RequestBody ArgumentBackDto argumentBackDto) {
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.userGet(auth.getName());
+		User logged = userService.get(auth.getName());
 		if(logged != null) {
 			if(argumentBackDto.getBack()) {
-				argumentService.argumentBack(argumentBackDto.getArgId(),logged.getId());
+				argumentService.back(argumentBackDto.getArgId(),logged.getId());
 			} else {
-				argumentService.argumentUnBack(argumentBackDto.getArgId(),logged.getId());
+				argumentService.unBack(argumentBackDto.getArgId(),logged.getId());
 			}
 			return true;
 		}

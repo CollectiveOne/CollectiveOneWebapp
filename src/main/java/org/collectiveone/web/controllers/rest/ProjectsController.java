@@ -28,16 +28,16 @@ public class ProjectsController {
 	
 	@RequestMapping(value="/get/{projectName}", method = RequestMethod.POST)
 	public @ResponseBody ProjectDto get(@PathVariable("projectName") String projectName) {
-		return projectService.projectGetDto(projectName);
+		return projectService.getDto(projectName);
 	}
 	
 	@RequestMapping(value="/getContributors/{projectName}", method = RequestMethod.POST)
 	public @ResponseBody ProjectContributorsDto getContributors(@PathVariable("projectName") String projectName) {
 			
-		Project project = projectService.projectGet(projectName);
+		Project project = projectService.get(projectName);
 		
 		ProjectContributorsDto projectContributorsDto = new ProjectContributorsDto();
-		projectContributorsDto.setUsernamesAndPps(projectService.projectContributorsAndPpsGet(project.getId()));
+		projectContributorsDto.setUsernamesAndPps(projectService.getContributorsAndPps(project.getId()));
 		projectContributorsDto.setPpsTot(project.getPpsTot());
 		
 		return projectContributorsDto;
@@ -46,7 +46,7 @@ public class ProjectsController {
 	@RequestMapping("/getNamesList")
 	public Map<String,Object> getNamesList() {
 		
-		List<String> projectList = projectService.projectGetList();
+		List<String> projectList = projectService.getList();
 		
 		Map<String,Object> map = new HashMap<>();
 		map.put("projectList", projectList);
@@ -59,7 +59,7 @@ public class ProjectsController {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);
 		
-		ProjectDtoListRes projectsDtosRes = projectService.projectDtoGetFiltered(filters);
+		ProjectDtoListRes projectsDtosRes = projectService.getFilteredDto(filters);
 		
 		List<ProjectDto> projectDtos = projectsDtosRes.getProjectDtos();
 		int[] resSet = projectsDtosRes.getResSet();

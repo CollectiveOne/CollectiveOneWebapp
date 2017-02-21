@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DecisionServiceImp extends BaseService {
 	
 	@Transactional
-	public void decisionsUpdateState() throws IOException {
+	public void updateStateAll() throws IOException {
 
 		List<DecisionState> states = new ArrayList<DecisionState>();
 		states.add(DecisionState.IDLE);
@@ -36,12 +36,12 @@ public class DecisionServiceImp extends BaseService {
 
 		List<Decision> decsIdle = decisionRepository.getWithStates(states);
 		for(Decision dec : decsIdle) {
-			decisionUpdateState(dec.getId());
+			updateState(dec.getId());
 		}
 	}
 	
 	@Transactional
-	public void decisionUpdateState(Long id) throws IOException {
+	public void updateState(Long id) throws IOException {
 		Decision dec = decisionRepository.get(id);
 		
 		/* Update the decision */
@@ -74,24 +74,24 @@ public class DecisionServiceImp extends BaseService {
 			case OPEN:
 				act.setEvent("opened");
 				/* decision activity from idle to open is registered for automatic decisions too */
-				activityService.activitySaveAndNotify(act);
+				activityService.saveAndNotify(act);
 				break;
 
 			case CLOSED_ACCEPTED:
 				act.setEvent("accepted");
-				if(isCustom) activityService.activitySaveAndNotify(act);
+				if(isCustom) activityService.saveAndNotify(act);
 				autoDecayWeights = true;
 				break;
 
 			case CLOSED_DENIED:
 				act.setEvent("rejected");
-				if(isCustom) activityService.activitySaveAndNotify(act);
+				if(isCustom) activityService.saveAndNotify(act);
 				autoDecayWeights = true;
 				break;
 
 			case CLOSED_EXTERNALLY:
 				act.setEvent("closed externally");
-				if(isCustom) activityService.activitySaveAndNotify(act);
+				if(isCustom) activityService.saveAndNotify(act);
 				break;
 			}		
 
@@ -101,7 +101,7 @@ public class DecisionServiceImp extends BaseService {
 			switch(dec.getState()) {
 			case IDLE:
 				act.setEvent("back to idle");
-				activityService.activitySaveAndNotify(act);
+				activityService.saveAndNotify(act);
 				break;
 
 			case OPEN:
@@ -109,19 +109,19 @@ public class DecisionServiceImp extends BaseService {
 
 			case CLOSED_ACCEPTED:
 				act.setEvent("accepted");
-				if(isCustom) activityService.activitySaveAndNotify(act);
+				if(isCustom) activityService.saveAndNotify(act);
 				autoDecayWeights = true;
 				break;
 
 			case CLOSED_DENIED:
 				act.setEvent("rejected");
-				if(isCustom) activityService.activitySaveAndNotify(act);
+				if(isCustom) activityService.saveAndNotify(act);
 				autoDecayWeights = true;
 				break;
 
 			case CLOSED_EXTERNALLY:
 				act.setEvent("closed externally");
-				if(isCustom) activityService.activitySaveAndNotify(act);
+				if(isCustom) activityService.saveAndNotify(act);
 				break;
 			}	
 			break;
@@ -169,7 +169,7 @@ public class DecisionServiceImp extends BaseService {
 	
 
 	@Transactional
-	public DecisionDtoListRes decisionDtoGetFiltered(Filters filters) {
+	public DecisionDtoListRes getFilteredDto(Filters filters) {
 		ObjectListRes<Decision> decisionsRes = decisionRepository.get(filters);
 
 		DecisionDtoListRes decisionsDtosRes = new DecisionDtoListRes();
@@ -185,7 +185,7 @@ public class DecisionServiceImp extends BaseService {
 	}	
 
 	@Transactional
-	public Long decisionCreate(DecisionDtoCreate decisionDto) throws IOException {
+	public Long create(DecisionDtoCreate decisionDto) throws IOException {
 		Decision decision = new Decision();
 		Project project = projectRepository.get(decisionDto.getProjectName());
 		Goal goal = goalRepository.get(decisionDto.getGoalTag(),project.getName());
@@ -214,7 +214,7 @@ public class DecisionServiceImp extends BaseService {
 			act.setType(ActivityType.DECISION);
 			act.setProject(project);
 			act.setEvent("created");
-			activityService.activitySaveAndNotify(act);
+			activityService.saveAndNotify(act);
 		}
 
 		return decision.getId();
@@ -222,12 +222,12 @@ public class DecisionServiceImp extends BaseService {
 
 
 	@Transactional
-	public Decision decisionGet(Long id) {
+	public Decision get(Long id) {
 		return decisionRepository.get(id);
 	}
 	
 	@Transactional
-	public DecisionDtoFull decisionGetDto(Long id) {
+	public DecisionDtoFull getDto(Long id) {
 		return decisionRepository.get(id).toDto();
 	}
 

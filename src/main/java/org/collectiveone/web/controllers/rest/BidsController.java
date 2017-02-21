@@ -32,12 +32,12 @@ public class BidsController {
 	
 	@RequestMapping(value="/get/{id}", method = RequestMethod.POST)
 	public @ResponseBody BidDto get(@PathVariable Long id) {
-		return bidService.bidGetDto(id);
+		return bidService.getDto(id);
 	}
 	
 	@RequestMapping(value="/getOfCbtion/{cbtionId}", method = RequestMethod.POST)
 	public @ResponseBody List<BidDto> getList(@PathVariable("cbtionId") Long cbtionId) {
-		List<BidDto> bidDtos = bidService.bidGetOfCbtionDto(cbtionId);
+		List<BidDto> bidDtos = bidService.getOfCbtionDto(cbtionId);
 		return bidDtos;
 	}
 	
@@ -46,11 +46,11 @@ public class BidsController {
 	public @ResponseBody boolean newBid(@RequestBody BidNewDto bidNewDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		bidNewDto.setCreatorUsername(auth.getName());
-		Long id = bidService.bidCreate(bidNewDto);
+		Long id = bidService.create(bidNewDto);
 		
 		bidNewDto.setId(id);
 		if(bidNewDto.getOffer()) {
-			bidService.bidFromConsideringToOffered(bidNewDto);
+			bidService.fromConsideringToOffered(bidNewDto);
 		}
 		return true;
 	}
@@ -59,7 +59,7 @@ public class BidsController {
 	public @ResponseBody boolean offer(@RequestBody BidNewDto bidNewDto) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		bidNewDto.setCreatorUsername(auth.getName());
-		bidService.bidFromConsideringToOffered(bidNewDto);
+		bidService.fromConsideringToOffered(bidNewDto);
 		return true;
 	}
 	
@@ -67,13 +67,13 @@ public class BidsController {
 	public @ResponseBody boolean markDone(@RequestBody DoneDto doneDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		doneDto.setUsername(auth.getName());
-		bidService.bidMarkDone(doneDto);
+		bidService.markDone(doneDto);
 		return true;
 	}
 	
 	@RequestMapping(value="/getReviews/{id}", method = RequestMethod.POST)
 	public @ResponseBody List<ReviewDto> getReviews(@PathVariable Long id) {
-		return bidService.bidGetReviewsDtos(id);
+		return bidService.getReviewsDtos(id);
 	}
 	
 	@RequestMapping(value="/newReview", method = RequestMethod.POST)
@@ -81,7 +81,7 @@ public class BidsController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth.isAuthenticated()) {
 			reviewDto.setCreatorUsername(auth.getName());
-			reviewService.reviewBidCreate(reviewDto);
+			reviewService.bidCreate(reviewDto);
 			return true;
 		}
 		return false;

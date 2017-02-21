@@ -31,31 +31,31 @@ public class UsersController {
 	
 	@RequestMapping(value="/get/{username}", method = RequestMethod.POST)
 	public @ResponseBody UserDto get(@PathVariable String username) {
-		return userService.userGetDto(username);
+		return userService.getDto(username);
 	}
 	
 	@RequestMapping(value="/ppsInProjectGet", method = RequestMethod.POST)
 	public @ResponseBody ProjectContributedDto offer(@RequestBody ProjectAndUsername projectAndUsername) {
-		return userService.userProjectPpsGet(projectAndUsername.getUsername(),projectAndUsername.getProjectName());
+		return userService.projectPpsGet(projectAndUsername.getUsername(),projectAndUsername.getProjectName());
 	}
 	
 	@RequestMapping(value="/getSuggestions", method = RequestMethod.GET)
 	public Map<String,List<String>> getList(@RequestParam("query") String query) {
 		Map<String,List<String>> map = new HashMap<>();
-		map.put("suggestions", userService.usernameGetSuggestions(query));
+		map.put("suggestions", userService.getSuggestions(query));
 		return map;
 	}
 	
 	@RequestMapping(value="/getSuggestionsReferrer", method = RequestMethod.GET)
 	public Map<String,List<String>> getListReferrers(@RequestParam("query") String query) {
 		Map<String,List<String>> map = new HashMap<>();
-		map.put("suggestions", userService.usernameGetSuggestionsReferrer(query));
+		map.put("suggestions", userService.getSuggestionsReferrer(query));
 		return map;
 	}
 	
 	@RequestMapping(value="/getProjectsContributed/{username}", method = RequestMethod.POST)
 	public @ResponseBody List<ProjectContributedDto> getProjectsContributed(@PathVariable String username) {
-		return userService.userProjectsContributedAndPpsGet(username);
+		return userService.projectsContributedAndPpsGet(username);
 	}
 	
 	@Secured("ROLE_USER")
@@ -65,7 +65,7 @@ public class UsersController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth.isAuthenticated()) {
 			if(userDto.getUsername().equals(auth.getName())) {
-				userService.userUpdateProfile(userDto);
+				userService.updateProfile(userDto);
 				return true;
 			}
 		}

@@ -18,44 +18,44 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImp extends BaseService {
 	
 	@Transactional
-	public void userSave(User user) {
+	public void save(User user) {
 		userRepository.save(user);
 	}
 
 	@Transactional
-	public User userGet(Long id) {
+	public User get(Long id) {
 		return userRepository.get(id);
 	}
 
 	@Transactional
-	public Long userGetN() {
+	public Long getN() {
 		return userRepository.getN();
 	}
 
 	@Transactional
-	public User userGet(String username) {
+	public User get(String username) {
 		return userRepository.get(username);
 	}
 
 	@Transactional
-	public UserDto userGetDto(String username) {
+	public UserDto getDto(String username) {
 		return userRepository.get(username).toDto();
 	}
 
 	@Transactional
-	public List<User> userGetAll(Integer max) {
+	public List<User> getAll(Integer max) {
 		return userRepository.getAll(max);
 	}
 	
 	@Transactional
-	public void userUpdateProfile(UserDto userDto) {
+	public void updateProfile(UserDto userDto) {
 		User user = userRepository.get(userDto.getUsername());
 		user.setProfile(userDto.getProfile());
 		userRepository.save(user);
 	}
 
 	@Transactional
-	public double userPpointsInProjectRecalc(Long userId, Long projectId) {
+	public double ppointsInProjectRecalc(Long userId, Long projectId) {
 
 		double ppoints = 0;
 		List<Cbtion> cbtionsAccepted = cbtionRepository.getAcceptedOfUserInProject(userId, projectId);
@@ -66,7 +66,7 @@ public class UserServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public ProjectContributedDto  userProjectPpsGet(String username, String projectName) {
+	public ProjectContributedDto  projectPpsGet(String username, String projectName) {
 		Project project = projectRepository.get(projectName);
 		User user = userRepository.get(username);
 
@@ -86,14 +86,14 @@ public class UserServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public List<ProjectContributedDto> userProjectsContributedAndPpsGet(String username) {
+	public List<ProjectContributedDto> projectsContributedAndPpsGet(String username) {
 		/* returns a summary of the project name, total pps, and pps contributed by username 
 		 * from all the projects to which username has contributed */
 		
 		List<ProjectContributedDto> projectsAndPps = new ArrayList<ProjectContributedDto>();
 		User user = userRepository.get(username);
 
-		for(Project project : userProjectsContributedGet(user.getId())) {
+		for(Project project : projectsContributedGet(user.getId())) {
 			ProjectContributedDto projectAndPps = new ProjectContributedDto();
 
 			projectAndPps.setProjectName(project.getName());
@@ -120,17 +120,17 @@ public class UserServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public List<Project> userProjectsContributedGet(Long userId) {
+	public List<Project> projectsContributedGet(Long userId) {
 		return userRepository.getProjectsContributed(userId);
 	}
 
 	@Transactional
-	public List<String> usernameGetSuggestions(String query) {
+	public List<String> getSuggestions(String query) {
 		return userRepository.getSuggestions(query);
 	}
 	
 	@Transactional
-	public List<String> usernameGetSuggestionsReferrer(String query) {
+	public List<String> getSuggestionsReferrer(String query) {
 		return userRepository.getSuggestionsReferrer(query);
 	}
 	

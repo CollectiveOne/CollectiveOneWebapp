@@ -9,7 +9,6 @@ public class TimeServiceImp implements TimeServiceIf {
 	
 	public Timestamp getNow() {
 		return new Timestamp(System.currentTimeMillis());
-		
 	}
 
 	@Override
