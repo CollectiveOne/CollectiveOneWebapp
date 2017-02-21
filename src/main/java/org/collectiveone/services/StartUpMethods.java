@@ -50,6 +50,7 @@ public class StartUpMethods {
 		System.out.println("done");
 	}
 	
+	@SuppressWarnings("unused")
 	private void createUser(String username, String email, String password, boolean enable) throws IOException {
 		User user = new User();
 		user.setEnabled(enable);

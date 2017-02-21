@@ -9,7 +9,6 @@ import javax.validation.Valid;
 
 import org.collectiveone.model.User;
 import org.collectiveone.registration.OnPasswordRecoveryAsked;
-import org.collectiveone.registration.OnRegistrationCompleteEvent;
 import org.collectiveone.services.UserAuthServiceIf;
 import org.collectiveone.web.dto.PasswordDto;
 import org.collectiveone.web.dto.UserNewDto;

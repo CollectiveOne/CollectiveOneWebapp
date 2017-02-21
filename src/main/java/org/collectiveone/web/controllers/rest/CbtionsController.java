@@ -92,7 +92,7 @@ public class CbtionsController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth.isAuthenticated()) {
 			commentDto.setCreatorUsername(auth.getName());
-			commentService.cbtionCreate(commentDto);
+			commentService.create(commentDto);
 			return true;
 		}
 		return false;

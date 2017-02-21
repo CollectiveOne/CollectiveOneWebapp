@@ -22,7 +22,7 @@ public class CommentServiceImp extends BaseService {
 	
 	
 	@Transactional
-	public ResStatus cbtionCreate(CommentDto commentDto) throws IOException {
+	public ResStatus create(CommentDto commentDto) throws IOException {
 
 		User creator = userRepository.get(commentDto.getCreatorUsername());
 		Cbtion cbtion = cbtionRepository.get(commentDto.getCbtionId());
