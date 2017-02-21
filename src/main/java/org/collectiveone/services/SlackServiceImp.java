@@ -1,20 +1,10 @@
 package org.collectiveone.services;
 
 import org.collectiveone.slack.OnSlackPublishAsked;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
 
-public class SlackServiceImp {
-	
-	@Autowired
-    ApplicationEventPublisher eventPublisher;
-	
-	@Autowired
-	private Environment env;
-	
-	@Autowired
-	private UserServiceImp userService;
+@Service
+public class SlackServiceImp extends BaseService {
 	
 	public void sendToSlack(String msg) {
 		/* send slack message*/

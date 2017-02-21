@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public class MailSubscriptionRepository extends BaseDao {
+public class MailSubscriptionRepository extends BaseRepository {
 
 	public MailSubscriptionRepository() {
 		super();

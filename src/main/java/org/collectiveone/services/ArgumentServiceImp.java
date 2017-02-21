@@ -11,26 +11,12 @@ import org.collectiveone.model.Argument;
 import org.collectiveone.model.ArgumentTendency;
 import org.collectiveone.model.Decision;
 import org.collectiveone.model.User;
-import org.collectiveone.repositories.ArgumentDao;
-import org.collectiveone.repositories.DecisionDao;
-import org.collectiveone.repositories.UserDao;
 import org.collectiveone.web.dto.ArgumentDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class ArgumentServiceImp {
-	
-	@Autowired 
-	protected ArgumentDao argumentDao;
-	
-	@Autowired
-	protected UserDao userDao;
-	
-	@Autowired
-	protected DecisionDao decisionDao;
-	
-	@Autowired
-	protected ActivityServiceImp activityService;
+@Service
+public class ArgumentServiceImp extends BaseService {
 	
 	@Transactional
 	public ArgumentDto argumentGetDto(Long id) {

@@ -12,7 +12,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class DecisionRealmDao extends BaseDao {
+public class DecisionRealmDao extends BaseRepository {
 
 	public DecisionRealmDao() {
 		super();

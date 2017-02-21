@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public class AuthorizedProjectDao extends BaseDao {
+public class AuthorizedProjectRepository extends BaseRepository {
 
-	public AuthorizedProjectDao() {
+	public AuthorizedProjectRepository() {
 		super();
 	}
 

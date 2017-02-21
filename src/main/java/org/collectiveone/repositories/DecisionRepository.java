@@ -16,12 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class DecisionDao extends BaseDao {
+public class DecisionRepository extends BaseRepository {
 
 	@Autowired
-	private ProjectDao projectDao;
+	private ProjectRepository projectDao;
 	
-	public DecisionDao() {
+	public DecisionRepository() {
 		super();
 	}
 

@@ -3,14 +3,11 @@ package org.collectiveone.services;
 import java.sql.Timestamp;
 
 import org.collectiveone.model.AuthorizedEmail;
-import org.collectiveone.repositories.AuthorizedEmailRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class AuthorizedEmailServiceImp {
-	
-	@Autowired
-	protected AuthorizedEmailRepository authorizedEmailRepository;
+@Service
+public class AuthorizedEmailServiceImp extends BaseService {
 	
 	@Transactional
 	public void authorizedEmailAdd(String email, Long referralId, String token) {

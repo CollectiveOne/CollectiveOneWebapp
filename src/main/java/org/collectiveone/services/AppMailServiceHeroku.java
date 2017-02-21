@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.sendgrid.Content;
@@ -18,10 +16,7 @@ import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 
 @Service("mailService")
-public class AppMailServiceHeroku {
-
-	@Autowired
-	private Environment env;
+public class AppMailServiceHeroku extends BaseService {
 
 	public void sendMail(String to, String subject, String body) throws IOException {
 		List<String> tos = new ArrayList<String>();

@@ -24,16 +24,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CbtionRepository extends BaseDao {
+public class CbtionRepository extends BaseRepository {
 	
 	@Autowired
-	GoalDao	goalDao;
+	GoalRepository	goalDao;
 	
 	@Autowired
-	private ProjectDao projectDao;
+	private ProjectRepository projectDao;
 	
 	@Autowired
-	private BidDao bidDao;
+	private BidRepository bidDao;
 	
 	public CbtionRepository() {
 		super();

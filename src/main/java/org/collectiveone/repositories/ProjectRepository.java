@@ -17,9 +17,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ProjectDao extends BaseDao {
+public class ProjectRepository extends BaseRepository {
 
-	public ProjectDao() {
+	public ProjectRepository() {
 		super();
 	}
 

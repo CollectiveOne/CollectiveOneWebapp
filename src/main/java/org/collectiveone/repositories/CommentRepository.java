@@ -8,9 +8,9 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CommentDao extends BaseDao {
+public class CommentRepository extends BaseRepository {
 
-	public CommentDao() {
+	public CommentRepository() {
 		super();
 	}
 

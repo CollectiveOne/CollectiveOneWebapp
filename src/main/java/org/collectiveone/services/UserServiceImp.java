@@ -9,24 +9,13 @@ import org.collectiveone.model.Cbtion;
 import org.collectiveone.model.Contributor;
 import org.collectiveone.model.Project;
 import org.collectiveone.model.User;
-import org.collectiveone.repositories.CbtionRepository;
-import org.collectiveone.repositories.ProjectDao;
-import org.collectiveone.repositories.UserDao;
 import org.collectiveone.web.dto.ProjectContributedDto;
 import org.collectiveone.web.dto.UserDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class UserServiceImp {
-	
-	@Autowired
-	protected UserDao userDao;
-	
-	@Autowired
-	protected CbtionRepository cbtionDao;
-	
-	@Autowired
-	protected ProjectDao projectDao;
+@Service
+public class UserServiceImp extends BaseService {
 	
 	@Transactional
 	public void userSave(User user) {

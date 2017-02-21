@@ -9,9 +9,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ThesisDao extends BaseDao {
+public class ThesisRepository extends BaseRepository {
 
-	public ThesisDao() {
+	public ThesisRepository() {
 		super();
 	}
 

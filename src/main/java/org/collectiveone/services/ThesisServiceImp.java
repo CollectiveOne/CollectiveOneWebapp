@@ -10,28 +10,13 @@ import org.collectiveone.model.DecisionState;
 import org.collectiveone.model.Thesis;
 import org.collectiveone.model.User;
 import org.collectiveone.model.Voter;
-import org.collectiveone.repositories.BidDao;
-import org.collectiveone.repositories.DecisionDao;
-import org.collectiveone.repositories.DecisionRealmDao;
-import org.collectiveone.repositories.ThesisDao;
 import org.collectiveone.web.dto.ThesisDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class ThesisServiceImp {
+@Service
+public class ThesisServiceImp extends BaseService {
 	
-	@Autowired
-	protected ThesisDao thesisDao;
-	
-	@Autowired
-	protected DecisionDao decisionDao;
-	
-	@Autowired 
-	protected DecisionRealmDao decisionRealmDao;
-	
-	@Autowired
-	protected BidDao bidDao;
-
 	@Transactional
 	public ThesisDto thesisOfUser(Long decId, Long userId) {
 		Thesis thesis = thesisDao.getOfUserInDec(decId, userId);

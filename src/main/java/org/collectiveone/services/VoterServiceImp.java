@@ -7,30 +7,11 @@ import org.collectiveone.model.DecisionRealm;
 import org.collectiveone.model.Goal;
 import org.collectiveone.model.Thesis;
 import org.collectiveone.model.Voter;
-import org.collectiveone.repositories.DecisionRealmDao;
-import org.collectiveone.repositories.GoalDao;
-import org.collectiveone.repositories.ProjectDao;
-import org.collectiveone.repositories.ThesisDao;
-import org.collectiveone.repositories.VoterDao;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class VoterServiceImp {
-	
-	@Autowired
-	protected GoalDao goalDao;
-
-	@Autowired
-	protected ProjectDao projectDao;
-	
-	@Autowired
-	protected ThesisDao thesisDao;
-
-	@Autowired 
-	protected VoterDao voterDao;
-	
-	@Autowired 
-	protected DecisionRealmDao decisionRealmDao;
+@Service
+public class VoterServiceImp extends BaseService {
 	
 	@Transactional
 	public void updateVoterInProject(Long projectId, Long userId) {

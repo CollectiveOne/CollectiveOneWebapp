@@ -11,12 +11,12 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public class ActivityDao extends BaseDao {
+public class ActivityRepository extends BaseRepository {
 
 	@Autowired
-	private ProjectDao projectDao;
+	private ProjectRepository projectDao;
 	
-	public ActivityDao() {
+	public ActivityRepository() {
 		super();
 	}
 

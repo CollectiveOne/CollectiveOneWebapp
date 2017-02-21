@@ -9,7 +9,7 @@ import org.collectiveone.model.User;
 import org.collectiveone.model.VerificationToken;
 import org.collectiveone.repositories.AuthorizedEmailRepository;
 import org.collectiveone.repositories.PasswordRecoveryTokenRepository;
-import org.collectiveone.repositories.UserRepository;
+import org.collectiveone.repositories.UserRepositoryAuth;
 import org.collectiveone.repositories.VerificationTokenRepository;
 import org.collectiveone.web.dto.PasswordDto;
 import org.collectiveone.web.dto.UserNewDto;
@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserAuthServiceImp implements UserAuthServiceIf, UserDetailsService {
 
 	@Autowired
-	UserRepository userRepository;
+	UserRepositoryAuth userRepository;
 	
 	@Autowired
 	AuthorizedEmailRepository authorizedEmailRepository;
@@ -66,7 +66,7 @@ public class UserAuthServiceImp implements UserAuthServiceIf, UserDetailsService
     public static final String TOKEN_VALID = "valid";
 	
 	@Autowired
-	public UserAuthServiceImp(UserRepository userRepository){
+	public UserAuthServiceImp(UserRepositoryAuth userRepository){
 		this.userRepository = userRepository;
 	}
 

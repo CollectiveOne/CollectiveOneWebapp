@@ -3,7 +3,7 @@ package org.collectiveone.test.services;
 import org.collectiveone.model.Role;
 import org.collectiveone.model.User;
 import org.collectiveone.repositories.RoleRepository;
-import org.collectiveone.repositories.UserRepository;
+import org.collectiveone.repositories.UserRepositoryAuth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class DbServicesTest {
 	
 	@Autowired
-	UserRepository userRepository;
+	UserRepositoryAuth userRepository;
 
 	@Autowired
 	RoleRepository roleRepository;

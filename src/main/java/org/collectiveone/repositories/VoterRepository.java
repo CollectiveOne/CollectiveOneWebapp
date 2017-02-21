@@ -4,9 +4,9 @@ import org.collectiveone.model.Voter;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class VoterDao extends BaseDao {
+public class VoterRepository extends BaseRepository {
 
-	public VoterDao() {
+	public VoterRepository() {
 		super();
 	}
 

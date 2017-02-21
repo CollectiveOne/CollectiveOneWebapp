@@ -19,11 +19,6 @@ import org.collectiveone.model.GoalState;
 import org.collectiveone.model.Project;
 import org.collectiveone.model.User;
 import org.collectiveone.model.Voter;
-import org.collectiveone.repositories.DecisionDao;
-import org.collectiveone.repositories.DecisionRealmDao;
-import org.collectiveone.repositories.GoalDao;
-import org.collectiveone.repositories.ProjectDao;
-import org.collectiveone.repositories.UserDao;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.GoalDtoListRes;
@@ -32,32 +27,11 @@ import org.collectiveone.web.dto.GoalUserWeightsDto;
 import org.collectiveone.web.dto.GoalWeightsDataDto;
 import org.collectiveone.web.dto.ObjectListRes;
 import org.collectiveone.web.dto.VoterDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class GoalServiceImp {
-
-	@Autowired
-	protected GoalDao goalDao;
-	
-	@Autowired
-	protected ProjectDao projectDao;
-	
-	@Autowired
-	protected UserDao userDao;
-	
-	@Autowired 
-	protected DecisionRealmDao decisionRealmDao;
-	
-	@Autowired
-	protected DecisionDao decisionDao;
-	
-	
-	@Autowired 
-	protected DecisionRealmServiceImp decisionRealmService;
-	
-	@Autowired
-	protected ActivityServiceImp activityService;
+@Service
+public class GoalServiceImp extends BaseService {
 	
 	@Transactional
 	public Long goalCreate(GoalDto goalDto, GoalState state) throws IOException {

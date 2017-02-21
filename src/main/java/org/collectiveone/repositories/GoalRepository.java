@@ -18,12 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class GoalDao extends BaseDao {
+public class GoalRepository extends BaseRepository {
 	
 	@Autowired
-	private ProjectDao projectDao;
+	private ProjectRepository projectDao;
 	
-	public GoalDao() {
+	public GoalRepository() {
 		super();
 	}
 

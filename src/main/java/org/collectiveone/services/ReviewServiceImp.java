@@ -5,23 +5,12 @@ import java.sql.Timestamp;
 import org.collectiveone.model.Bid;
 import org.collectiveone.model.Review;
 import org.collectiveone.model.User;
-import org.collectiveone.repositories.BidDao;
-import org.collectiveone.repositories.ReviewDao;
-import org.collectiveone.repositories.UserDao;
 import org.collectiveone.web.dto.ReviewDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class ReviewServiceImp {
-	
-	@Autowired
-	protected UserDao userDao;
-	
-	@Autowired
-	protected BidDao bidDao;
-	
-	@Autowired 
-	protected ReviewDao reviewDao;
+@Service
+public class ReviewServiceImp extends BaseService {
 	
 	@Transactional
 	public String reviewBidCreate(ReviewDto reviewDto) {

@@ -8,30 +8,11 @@ import org.collectiveone.model.DecisionRealm;
 import org.collectiveone.model.Goal;
 import org.collectiveone.model.Project;
 import org.collectiveone.model.Voter;
-import org.collectiveone.repositories.DecisionRealmDao;
-import org.collectiveone.repositories.GoalDao;
-import org.collectiveone.repositories.ProjectDao;
-import org.collectiveone.repositories.UserDao;
-import org.collectiveone.repositories.VoterDao;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class DecisionRealmServiceImp {
-
-	@Autowired 
-	protected DecisionRealmDao decisionRealmDao;
-	
-	@Autowired
-	protected UserDao userDao;
-	
-	@Autowired 
-	protected VoterDao voterDao;
-	
-	@Autowired
-	protected GoalDao goalDao;
-	
-	@Autowired
-	protected ProjectDao projectDao;
+@Service
+public class DecisionRealmServiceImp extends BaseService {
 
 	@Transactional
 	public void decisionRealmAddVoterToAll(Long projectId,Long userId,double maxWeight) {

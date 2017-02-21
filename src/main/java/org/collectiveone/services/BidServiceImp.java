@@ -20,54 +20,15 @@ import org.collectiveone.model.Goal;
 import org.collectiveone.model.Project;
 import org.collectiveone.model.Review;
 import org.collectiveone.model.User;
-import org.collectiveone.repositories.BidDao;
-import org.collectiveone.repositories.CbtionRepository;
-import org.collectiveone.repositories.DecisionDao;
-import org.collectiveone.repositories.DecisionRealmDao;
-import org.collectiveone.repositories.GoalDao;
-import org.collectiveone.repositories.ProjectDao;
-import org.collectiveone.repositories.UserDao;
 import org.collectiveone.web.dto.BidDto;
 import org.collectiveone.web.dto.BidNewDto;
 import org.collectiveone.web.dto.DoneDto;
 import org.collectiveone.web.dto.ReviewDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class BidServiceImp {
-	
-	@Autowired
-	protected CbtionRepository cbtionDao;
-	
-	@Autowired
-	protected BidDao bidDao;
-	
-	@Autowired
-	protected UserDao userDao;
-	
-	@Autowired
-	protected ProjectDao projectDao;
-	
-	@Autowired 
-	protected DecisionRealmDao decisionRealmDao;
-	
-	@Autowired
-	protected DecisionDao decisionDao;
-	
-	@Autowired
-	protected GoalDao goalDao;
-	
-	@Autowired
-	protected ContributorServiceImp contributorService;
-	
-	@Autowired
-	protected ProjectServiceImp projectService;
-	
-	@Autowired
-	protected VoterServiceImp voterService;
-	
-	@Autowired
-	protected ActivityServiceImp activityService;
+@Service
+public class BidServiceImp extends BaseService {
 	
 	@Transactional
 	public void bidSave(Bid bid, Long cbtionId) {

@@ -8,9 +8,9 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PromoterDao extends BaseDao {
+public class PromoterRepository extends BaseRepository {
 
-	public PromoterDao() {
+	public PromoterRepository() {
 		super();
 	}
 

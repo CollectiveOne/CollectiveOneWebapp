@@ -20,14 +20,6 @@ import org.collectiveone.model.Goal;
 import org.collectiveone.model.Project;
 import org.collectiveone.model.Promoter;
 import org.collectiveone.model.User;
-import org.collectiveone.repositories.CbtionRepository;
-import org.collectiveone.repositories.CommentDao;
-import org.collectiveone.repositories.DecisionDao;
-import org.collectiveone.repositories.DecisionRealmDao;
-import org.collectiveone.repositories.GoalDao;
-import org.collectiveone.repositories.ProjectDao;
-import org.collectiveone.repositories.PromoterDao;
-import org.collectiveone.repositories.UserDao;
 import org.collectiveone.web.controllers.rest.ResStatus;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.CbtionDtoListRes;
@@ -35,46 +27,12 @@ import org.collectiveone.web.dto.CommentDto;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.ObjectListRes;
 import org.collectiveone.web.dto.ReviewDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class CbtionServiceImp {
+@Service
+public class CbtionServiceImp extends BaseService {
 
-	@Autowired
-	protected CbtionRepository cbtionDao;
-	
-	@Autowired
-	protected ProjectDao projectDao;
-	
-	@Autowired
-	protected GoalDao goalDao;
-	
-	@Autowired
-	protected UserDao userDao;
-	
-	@Autowired 
-	protected DecisionRealmDao decisionRealmDao;
-	
-	@Autowired
-	protected DecisionDao decisionDao;
-	
-	@Autowired 
-	protected PromoterDao promoterDao;
-	
-	@Autowired 
-	protected CommentDao commentDao;
-	
-	
-	
-	@Autowired
-	protected GoalServiceImp goalService;
-	
-	@Autowired
-	protected BidServiceImp bidService;
-		
-	@Autowired
-	protected ActivityServiceImp activityService;
-	
 	@Transactional
 	public void cbtionSave(Cbtion cbtion) {
 		cbtionDao.save(cbtion);

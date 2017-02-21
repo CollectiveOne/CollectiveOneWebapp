@@ -6,9 +6,9 @@ import org.collectiveone.model.Review;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ReviewDao extends BaseDao {
+public class ReviewRepository extends BaseRepository {
 
-	public ReviewDao() {
+	public ReviewRepository() {
 		super();
 	}
 

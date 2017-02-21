@@ -10,9 +10,9 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ContributorDao extends BaseDao {
+public class ContributorRepository extends BaseRepository {
 
-	public ContributorDao() {
+	public ContributorRepository() {
 		super();
 	}
 

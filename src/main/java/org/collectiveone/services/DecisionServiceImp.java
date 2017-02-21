@@ -16,42 +16,17 @@ import org.collectiveone.model.GoalAttachState;
 import org.collectiveone.model.Project;
 import org.collectiveone.model.Thesis;
 import org.collectiveone.model.Voter;
-import org.collectiveone.repositories.DecisionDao;
-import org.collectiveone.repositories.DecisionRealmDao;
-import org.collectiveone.repositories.GoalDao;
-import org.collectiveone.repositories.ProjectDao;
-import org.collectiveone.repositories.UserDao;
 import org.collectiveone.web.dto.DecisionDtoCreate;
 import org.collectiveone.web.dto.DecisionDtoFull;
 import org.collectiveone.web.dto.DecisionDtoListRes;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.ObjectListRes;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class DecisionServiceImp {
+@Service
+public class DecisionServiceImp extends BaseService {
 	
-	@Autowired
-	protected DecisionDao decisionDao;
-
-	@Autowired
-	protected ProjectDao projectDao;
-	
-	@Autowired 
-	protected DecisionRealmDao decisionRealmDao;
-	
-	@Autowired
-	protected GoalDao goalDao;
-	
-	@Autowired
-	protected UserDao userDao;
-	
-	@Autowired
-	protected TimeServiceImp timeService;
-	
-	@Autowired
-	protected ActivityServiceImp activityService;
-
 	@Transactional
 	public void decisionsUpdateState() throws IOException {
 

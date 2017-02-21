@@ -11,32 +11,15 @@ import org.collectiveone.model.Cbtion;
 import org.collectiveone.model.Comment;
 import org.collectiveone.model.Promoter;
 import org.collectiveone.model.User;
-import org.collectiveone.repositories.CbtionRepository;
-import org.collectiveone.repositories.CommentDao;
-import org.collectiveone.repositories.PromoterDao;
-import org.collectiveone.repositories.UserDao;
 import org.collectiveone.web.controllers.rest.ResStatus;
 import org.collectiveone.web.dto.CommentDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class CommentServiceImp {
-	
-	@Autowired
-	protected UserDao userDao;
-	
-	@Autowired
-	protected CbtionRepository cbtionDao;
-	
-	@Autowired
-	protected CommentDao commentDao;
-	
-	@Autowired
-	protected PromoterDao promoterDao;
+@Service
+public class CommentServiceImp extends BaseService {
 	
 	
-	@Autowired
-	protected ActivityServiceImp activityService;
 	
 	@Transactional
 	public ResStatus commentCbtionCreate(CommentDto commentDto) throws IOException {

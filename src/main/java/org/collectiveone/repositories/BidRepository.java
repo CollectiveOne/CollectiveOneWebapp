@@ -15,9 +15,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BidDao extends BaseDao {
+public class BidRepository extends BaseRepository {
 	
-	public BidDao() {
+	public BidRepository() {
 		super();
 	}
 	

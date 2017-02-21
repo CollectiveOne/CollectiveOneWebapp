@@ -18,12 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BaseDao {
+public class BaseRepository {
 
 	@Autowired
 	protected SessionFactory sessionFactory;
 	
-	public BaseDao() {
+	public BaseRepository() {
 	}
 
 	public Long save(Object object) {

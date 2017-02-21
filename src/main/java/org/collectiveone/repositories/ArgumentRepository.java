@@ -12,9 +12,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ArgumentDao extends BaseDao {
+public class ArgumentRepository extends BaseRepository {
 
-	public ArgumentDao() {
+	public ArgumentRepository() {
 		super();
 	}
 
