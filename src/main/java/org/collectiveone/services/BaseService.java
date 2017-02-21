@@ -27,40 +27,37 @@ public class BaseService {
 	/* REPOSITORIES */
 	
 	@Autowired
-	protected GoalRepository goalDao;
+	protected GoalRepository goalRepository;
 
 	@Autowired
-	protected ProjectRepository projectDao;
+	protected ProjectRepository projectRepository;
 	
 	@Autowired
-	protected ThesisRepository thesisDao;
+	protected ThesisRepository thesisRepository;
 
 	@Autowired 
-	protected VoterRepository voterDao;
+	protected VoterRepository voterRepository;
 	
 	@Autowired 
-	protected DecisionRealmDao decisionRealmDao;
+	protected DecisionRealmDao decisionRealmRepository;
 	
 	@Autowired
-	protected ActivityRepository activityDao;
+	protected ActivityRepository activityRepository;
 	
 	@Autowired 
-	protected ArgumentRepository argumentDao;
+	protected ArgumentRepository argumentRepository;
 	
 	@Autowired
-	protected UserRepository userDao;
+	protected UserRepository userRepository;
 	
 	@Autowired
-	protected DecisionRepository decisionDao;
+	protected DecisionRepository decisionRepository;
 	
 	@Autowired
-	protected CbtionRepository cbtionDao;
+	protected CbtionRepository cbtionRepository;
 	
 	@Autowired
-	protected BidRepository bidDao;
-	
-	
-	
+	protected BidRepository bidRepository;
 	
 	@Autowired
 	protected MailSubscriptionRepository mailSubscriptionRepository;

@@ -20,33 +20,33 @@ public class VoterServiceImp extends BaseService {
 		 * It starts from the super-goals (those without parent goal) and then continues
 		 * iteratively with the sub-goals */
 		
-		List<Goal> superGoals = goalDao.getSuperGoalsOnly(projectId);
-		Contributor ctrb = projectDao.getContributor(projectId, userId);
+		List<Goal> superGoals = goalRepository.getSuperGoalsOnly(projectId);
+		Contributor ctrb = projectRepository.getContributor(projectId, userId);
 		
 		if(ctrb != null) {
 			for(Goal superGoal:superGoals) {
 				
-				DecisionRealm realm = decisionRealmDao.getFromGoalId(superGoal.getId());
-				Voter voter = decisionRealmDao.getVoter(realm.getId(), userId);
+				DecisionRealm realm = decisionRealmRepository.getFromGoalId(superGoal.getId());
+				Voter voter = decisionRealmRepository.getVoter(realm.getId(), userId);
 				
 				/* update the maxWeight and actualWeight keeping the proportion
 				 * in case the users has decided to manually change it */
 				double scale = voter.getActualWeight()/voter.getMaxWeight();
 				voter.setMaxWeight(ctrb.getPps());
 				voter.setActualWeight(scale*ctrb.getPps());
-				voterDao.save(voter);
+				voterRepository.save(voter);
 				
 				/* and update the weight of the theses of that user (it will have immediate
 				 * effect in the decision algorithm) */
-				List<Thesis> theses = thesisDao.getOfUserInRealm(realm.getId(), userId);
+				List<Thesis> theses = thesisRepository.getOfUserInRealm(realm.getId(), userId);
 				
 				for(Thesis thesis : theses) {
 					thesis.setWeight(voter.getActualWeight());
-					thesisDao.save(thesis);
+					thesisRepository.save(thesis);
 				}
 			
 				/* now go over all subgoals and update realms and theses */
-				List<Goal> subGoals = goalDao.getSubgoalsIteratively(superGoal.getId());
+				List<Goal> subGoals = goalRepository.getSubgoalsIteratively(superGoal.getId());
 				
 				for(Goal subGoal : subGoals) {
 					updateVoterInGoal(subGoal.getId(), userId);
@@ -61,13 +61,13 @@ public class VoterServiceImp extends BaseService {
 		 * update the user. It starts from the top goal and then continues recursively 
 		 * with the sub-goals */
 		
-		Goal goal = goalDao.get(goalId);
+		Goal goal = goalRepository.get(goalId);
 		
-		DecisionRealm parentRealm = decisionRealmDao.getFromGoalId(goal.getParent().getId());
-		Voter voterInParent = decisionRealmDao.getVoter(parentRealm.getId(), userId);
+		DecisionRealm parentRealm = decisionRealmRepository.getFromGoalId(goal.getParent().getId());
+		Voter voterInParent = decisionRealmRepository.getVoter(parentRealm.getId(), userId);
 		
-		DecisionRealm goalRealm = decisionRealmDao.getFromGoalId(goal.getId());
-		Voter voterInGoal = decisionRealmDao.getVoter(goalRealm.getId(), userId);
+		DecisionRealm goalRealm = decisionRealmRepository.getFromGoalId(goal.getId());
+		Voter voterInGoal = decisionRealmRepository.getVoter(goalRealm.getId(), userId);
 		
 		/* if user is in realm */
 		if(voterInGoal != null) {
@@ -78,20 +78,20 @@ public class VoterServiceImp extends BaseService {
 			double scale = voterInGoal.getActualWeight()/voterInGoal.getMaxWeight();
 			voterInGoal.setMaxWeight(voterInParent.getMaxWeight());
 			voterInGoal.setActualWeight(scale*voterInParent.getMaxWeight());
-			voterDao.save(voterInGoal);
+			voterRepository.save(voterInGoal);
 			
 			/* and update the weight of the theses of that user (it will have immediate
 			 * effect in the decision algorithm) */
-			List<Thesis> theses = thesisDao.getOfUserInRealm(goalRealm.getId(), userId);
+			List<Thesis> theses = thesisRepository.getOfUserInRealm(goalRealm.getId(), userId);
 			
 			for(Thesis thesis : theses) {
 				thesis.setWeight(voterInGoal.getActualWeight());
-				thesisDao.save(thesis);
+				thesisRepository.save(thesis);
 			}
 		}
 		
 		/* now go over all subgoals and update realms and theses (RECUERSIVE) */
-		List<Goal> subGoals = goalDao.getSubgoalsIteratively(goal.getId());
+		List<Goal> subGoals = goalRepository.getSubgoalsIteratively(goal.getId());
 		
 		for(Goal subGoal : subGoals) {
 			updateVoterInGoal(subGoal.getId(), userId);

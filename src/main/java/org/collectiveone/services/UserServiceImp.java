@@ -19,46 +19,46 @@ public class UserServiceImp extends BaseService {
 	
 	@Transactional
 	public void userSave(User user) {
-		userDao.save(user);
+		userRepository.save(user);
 	}
 
 	@Transactional
 	public User userGet(Long id) {
-		return userDao.get(id);
+		return userRepository.get(id);
 	}
 
 	@Transactional
 	public Long userGetN() {
-		return userDao.getN();
+		return userRepository.getN();
 	}
 
 	@Transactional
 	public User userGet(String username) {
-		return userDao.get(username);
+		return userRepository.get(username);
 	}
 
 	@Transactional
 	public UserDto userGetDto(String username) {
-		return userDao.get(username).toDto();
+		return userRepository.get(username).toDto();
 	}
 
 	@Transactional
 	public List<User> userGetAll(Integer max) {
-		return userDao.getAll(max);
+		return userRepository.getAll(max);
 	}
 	
 	@Transactional
 	public void userUpdateProfile(UserDto userDto) {
-		User user = userDao.get(userDto.getUsername());
+		User user = userRepository.get(userDto.getUsername());
 		user.setProfile(userDto.getProfile());
-		userDao.save(user);
+		userRepository.save(user);
 	}
 
 	@Transactional
 	public double userPpointsInProjectRecalc(Long userId, Long projectId) {
 
 		double ppoints = 0;
-		List<Cbtion> cbtionsAccepted = cbtionDao.getAcceptedOfUserInProject(userId, projectId);
+		List<Cbtion> cbtionsAccepted = cbtionRepository.getAcceptedOfUserInProject(userId, projectId);
 
 		for(Cbtion cbtion : cbtionsAccepted) {	ppoints += cbtion.getAssignedPpoints();	}
 
@@ -67,8 +67,8 @@ public class UserServiceImp extends BaseService {
 
 	@Transactional
 	public ProjectContributedDto  userProjectPpsGet(String username, String projectName) {
-		Project project = projectDao.get(projectName);
-		User user = userDao.get(username);
+		Project project = projectRepository.get(projectName);
+		User user = userRepository.get(username);
 
 		ProjectContributedDto projectAndPps = new ProjectContributedDto();
 
@@ -76,7 +76,7 @@ public class UserServiceImp extends BaseService {
 		projectAndPps.setUsername(user.getUsername());
 		projectAndPps.setPpsTot(project.getPpsTot());
 		
-		Contributor ctrb = projectDao.getContributor(project.getId(), user.getId());
+		Contributor ctrb = projectRepository.getContributor(project.getId(), user.getId());
 		
 		double ppsInProject = 0.0;
 		if(ctrb != null) { ppsInProject = ctrb.getPps(); }
@@ -91,7 +91,7 @@ public class UserServiceImp extends BaseService {
 		 * from all the projects to which username has contributed */
 		
 		List<ProjectContributedDto> projectsAndPps = new ArrayList<ProjectContributedDto>();
-		User user = userDao.get(username);
+		User user = userRepository.get(username);
 
 		for(Project project : userProjectsContributedGet(user.getId())) {
 			ProjectContributedDto projectAndPps = new ProjectContributedDto();
@@ -100,7 +100,7 @@ public class UserServiceImp extends BaseService {
 			projectAndPps.setUsername(user.getUsername());
 			projectAndPps.setPpsTot(project.getPpsTot());
 			
-			Contributor ctrb = projectDao.getContributor(project.getId(), user.getId());
+			Contributor ctrb = projectRepository.getContributor(project.getId(), user.getId());
 			
 			double ppsInPrj = 0.0;
 			if(ctrb != null) { ppsInPrj = ctrb.getPps(); }
@@ -121,17 +121,17 @@ public class UserServiceImp extends BaseService {
 
 	@Transactional
 	public List<Project> userProjectsContributedGet(Long userId) {
-		return userDao.getProjectsContributed(userId);
+		return userRepository.getProjectsContributed(userId);
 	}
 
 	@Transactional
 	public List<String> usernameGetSuggestions(String query) {
-		return userDao.getSuggestions(query);
+		return userRepository.getSuggestions(query);
 	}
 	
 	@Transactional
 	public List<String> usernameGetSuggestionsReferrer(String query) {
-		return userDao.getSuggestionsReferrer(query);
+		return userRepository.getSuggestionsReferrer(query);
 	}
 	
 }

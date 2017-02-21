@@ -24,8 +24,8 @@ public class CommentServiceImp extends BaseService {
 	@Transactional
 	public ResStatus commentCbtionCreate(CommentDto commentDto) throws IOException {
 
-		User creator = userDao.get(commentDto.getCreatorUsername());
-		Cbtion cbtion = cbtionDao.get(commentDto.getCbtionId());
+		User creator = userRepository.get(commentDto.getCreatorUsername());
+		Cbtion cbtion = cbtionRepository.get(commentDto.getCbtionId());
 
 		Comment parent = null;
 
@@ -50,7 +50,7 @@ public class CommentServiceImp extends BaseService {
 
 		comment.setCbtion(cbtion);
 
-		cbtionDao.save(cbtion);
+		cbtionRepository.save(cbtion);
 		commentDao.save(comment);
 
 		Activity act = new Activity();
@@ -97,7 +97,7 @@ public class CommentServiceImp extends BaseService {
 		
 		if(promoter == null) {
 			promoter = new Promoter();
-			promoter.setUser(userDao.get(userId));
+			promoter.setUser(userRepository.get(userId));
 			comment.getPromoters().add(promoter);
 			if(promoteUp) {
 				newRelevance = newRelevance + 1;

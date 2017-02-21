@@ -20,12 +20,12 @@ public class ArgumentServiceImp extends BaseService {
 	
 	@Transactional
 	public ArgumentDto argumentGetDto(Long id) {
-		return argumentDao.get(id).toDto();
+		return argumentRepository.get(id).toDto();
 	}
 
 	@Transactional
 	public List<ArgumentDto> argumentGetOfDecisionDto(Long decisionId, ArgumentTendency tendency) {
-		List<Argument> arguments = argumentDao.getOfDecision(decisionId,tendency);
+		List<Argument> arguments = argumentRepository.getOfDecision(decisionId,tendency);
 		List<ArgumentDto> argumentDtos = new ArrayList<ArgumentDto>();
 		for (Argument argument : arguments) {
 			argumentDtos.add(argument.toDto());
@@ -37,8 +37,8 @@ public class ArgumentServiceImp extends BaseService {
 	@Transactional
 	public String argumentCreate(ArgumentDto argumentDto) throws IOException {
 
-		User creator = userDao.get(argumentDto.getCreatorUsername());
-		Decision decision = decisionDao.get(argumentDto.getDecisionId());
+		User creator = userRepository.get(argumentDto.getCreatorUsername());
+		Decision decision = decisionRepository.get(argumentDto.getDecisionId());
 		Argument argument = new Argument();
 
 		argument.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -49,8 +49,8 @@ public class ArgumentServiceImp extends BaseService {
 
 		decision.getArguments().add(argument);
 
-		argumentDao.save(argument);
-		decisionDao.save(decision);
+		argumentRepository.save(argument);
+		decisionRepository.save(decision);
 
 		Activity act = new Activity();
 		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -65,19 +65,19 @@ public class ArgumentServiceImp extends BaseService {
 
 	@Transactional
 	public String argumentBack(Long argId, Long userId) {
-		User user = userDao.get(userId);
-		return argumentDao.back(argId,user);
+		User user = userRepository.get(userId);
+		return argumentRepository.back(argId,user);
 	}
 
 	@Transactional
 	public String argumentUnBack(Long argId, Long userId) {
-		User user = userDao.get(userId);
-		return argumentDao.unBack(argId,user);
+		User user = userRepository.get(userId);
+		return argumentRepository.unBack(argId,user);
 	}
 
 	@Transactional
 	public boolean argumentIsBacked(Long argId, Long userId) {
-		if(argumentDao.getBacker(argId,userId) == null) {
+		if(argumentRepository.getBacker(argId,userId) == null) {
 			return false;
 		} else {
 			return true;

@@ -19,7 +19,7 @@ public class ThesisServiceImp extends BaseService {
 	
 	@Transactional
 	public ThesisDto thesisOfUser(Long decId, Long userId) {
-		Thesis thesis = thesisDao.getOfUserInDec(decId, userId);
+		Thesis thesis = thesisRepository.getOfUserInDec(decId, userId);
 		ThesisDto thesisDto = null;
 		if(thesis != null) thesisDto = thesis.toDto();
 		return thesisDto;
@@ -28,15 +28,15 @@ public class ThesisServiceImp extends BaseService {
 	@Transactional
 	public String thesisOfDecSave(User author, int value, Long decId) {
 
-		Decision dec = decisionDao.get(decId);
+		Decision dec = decisionRepository.get(decId);
 
 		if(dec.getState() == DecisionState.IDLE || dec.getState() == DecisionState.OPEN) {
 			/* if decision is still open */
-			Voter voter = decisionRealmDao.getVoter(dec.getDecisionRealm().getId(),author.getId());
+			Voter voter = decisionRealmRepository.getVoter(dec.getDecisionRealm().getId(),author.getId());
 
 			if(voter != null) {
 				/* if voter is in the realm of the decision */
-				Thesis thesis = decisionDao.getThesisCasted(decId, author.getId());				
+				Thesis thesis = decisionRepository.getThesisCasted(decId, author.getId());				
 
 				if(thesis == null) {
 					thesis = new Thesis();
@@ -44,7 +44,7 @@ public class ThesisServiceImp extends BaseService {
 					thesis.setDecision(dec);
 				}
 				
-				thesisDao.save(thesis);
+				thesisRepository.save(thesis);
 
 				thesis.setValue(value);
 				thesis.setCastDate(new Timestamp(System.currentTimeMillis()));
@@ -53,7 +53,7 @@ public class ThesisServiceImp extends BaseService {
 				 * so theses weights need to be updated every time voter weight changes */
 				thesis.setWeight(voter.getActualWeight());
 
-				decisionDao.save(dec);
+				decisionRepository.save(dec);
 
 				return "thesis saved";
 			} else {
@@ -66,7 +66,7 @@ public class ThesisServiceImp extends BaseService {
 
 	@Transactional
 	public void thesisAssignOfBidSave(User author, int value, Long bidId) {
-		Bid bid = bidDao.get(bidId);
+		Bid bid = bidRepository.get(bidId);
 		Cbtion cbtion = bid.getCbtion();
 		if((cbtion.getState() == CbtionState.OPEN) || 
 				(cbtion.getState() == CbtionState.ASSIGNED)) {
@@ -77,7 +77,7 @@ public class ThesisServiceImp extends BaseService {
 
 	@Transactional
 	public void thesisAcceptOfBidSave(User author, int value, Long bidId) {
-		Bid bid = bidDao.get(bidId);
+		Bid bid = bidRepository.get(bidId);
 		Cbtion cbtion = bid.getCbtion();
 		if(cbtion.getState() == CbtionState.ASSIGNED) {
 			thesisOfDecSave(author, value, bid.getAccept().getId());	

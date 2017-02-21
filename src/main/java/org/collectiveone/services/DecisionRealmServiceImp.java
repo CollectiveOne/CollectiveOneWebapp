@@ -19,44 +19,44 @@ public class DecisionRealmServiceImp extends BaseService {
 		/* Add a voter to all the realms of a project, this is done the first time a contributor
 		 * is added to a project */
 		
-		List<DecisionRealm> realms = decisionRealmDao.getAllOfProject(projectId);
+		List<DecisionRealm> realms = decisionRealmRepository.getAllOfProject(projectId);
 		
 		for(DecisionRealm realm : realms) {
-			Voter existingVoter = decisionRealmDao.getVoter(realm.getId(), userId);
+			Voter existingVoter = decisionRealmRepository.getVoter(realm.getId(), userId);
 			if(existingVoter == null) {
 				Voter newVoter = new Voter();
-				newVoter.setVoterUser(userDao.get(userId));
+				newVoter.setVoterUser(userRepository.get(userId));
 				newVoter.setRealm(realm);
 				newVoter.setMaxWeight(maxWeight);
 				newVoter.setActualWeight(maxWeight);
 				
-				voterDao.save(newVoter);
-				decisionRealmDao.save(realm);
+				voterRepository.save(newVoter);
+				decisionRealmRepository.save(realm);
 			}
 		}
 	}
 	
 	@Transactional
 	public void decisionRealmInitAllSupergoalsToProject(Long projectId) {
-		List<Goal> superGoals = goalDao.getSuperGoalsOnly(projectId);
+		List<Goal> superGoals = goalRepository.getSuperGoalsOnly(projectId);
 		for(Goal goal : superGoals) {
-			Long realmId = decisionRealmDao.getIdFromGoalId(goal.getId());
+			Long realmId = decisionRealmRepository.getIdFromGoalId(goal.getId());
 			decisionRealmInitToProject(realmId, projectId);
 		}
 	}
 	
 	@Transactional
 	public void decisionRealmInitToProject(Long realmId, Long projectId) {
-		DecisionRealm realm = decisionRealmDao.get(realmId);
+		DecisionRealm realm = decisionRealmRepository.get(realmId);
 		decisionRealmInitToProject(realm,projectId);
-		decisionRealmDao.save(realm);
+		decisionRealmRepository.save(realm);
 	}
 	
 	@Transactional
 	public void decisionRealmInitToProject(DecisionRealm destRealm, Long projectId) {
 		/* the realm voters are deleted and refilled to be the project contributors 
 		 * with scale 1.0 */
-		Project project = projectDao.get(projectId);
+		Project project = projectRepository.get(projectId);
 		
 		/* make sure the realm is empty */
 		if(destRealm.getVoters() == null) { destRealm.setVoters(new ArrayList<Voter>()); }
@@ -70,10 +70,10 @@ public class DecisionRealmServiceImp extends BaseService {
 			newVoter.setMaxWeight(contributor.getPps());
 			newVoter.setActualWeight(contributor.getPps());
 			
-			voterDao.save(newVoter);
+			voterRepository.save(newVoter);
 		}
 		
-		decisionRealmDao.save(destRealm);
+		decisionRealmRepository.save(destRealm);
 	}
 
 	
@@ -82,7 +82,7 @@ public class DecisionRealmServiceImp extends BaseService {
 	public void decisionRealmInitToOther(DecisionRealm destRealm,Long sourceRealmId) {
 		/* the destRealm of voters is created based on the sourceRealmId. */
 		
-		DecisionRealm sourceRealm = decisionRealmDao.get(sourceRealmId);
+		DecisionRealm sourceRealm = decisionRealmRepository.get(sourceRealmId);
 		
 		/* TODO: delete all voters before recreating them, for safety? */
 		
@@ -94,10 +94,10 @@ public class DecisionRealmServiceImp extends BaseService {
 			newVoter.setMaxWeight(voter.getMaxWeight());
 			newVoter.setActualWeight(voter.getActualWeight());
 			
-			voterDao.save(newVoter);
+			voterRepository.save(newVoter);
 		}
 		
-		decisionRealmDao.save(destRealm);
+		decisionRealmRepository.save(destRealm);
 	}
 	
 	@Transactional
@@ -105,7 +105,7 @@ public class DecisionRealmServiceImp extends BaseService {
 		/* the destRealm of voters is updated based on the sourceRealmId. It assumes that
 		 * all the voters in the dest realm are in the source realm */
 		
-		DecisionRealm sourceRealm = decisionRealmDao.get(sourceRealmId);
+		DecisionRealm sourceRealm = decisionRealmRepository.get(sourceRealmId);
 		
 		for(Voter sourceVoter : sourceRealm.getVoters()) {
 			for(Voter destVoter : destRealm.getVoters()) {
@@ -115,12 +115,12 @@ public class DecisionRealmServiceImp extends BaseService {
 					destVoter.setMaxWeight(sourceVoter.getMaxWeight());
 					destVoter.setActualWeight(sourceVoter.getActualWeight());
 					
-					voterDao.save(destVoter);
+					voterRepository.save(destVoter);
 				}
 			}
 		}
 		
-		decisionRealmDao.save(destRealm);
+		decisionRealmRepository.save(destRealm);
 	}
 
 }

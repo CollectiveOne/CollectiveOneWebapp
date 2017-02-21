@@ -37,7 +37,7 @@ public class ProjectServiceImp extends BaseService {
 
 	@Transactional
 	public void projectSave(Project project) {
-		projectDao.save(project);
+		projectRepository.save(project);
 	}
 
 	@Transactional
@@ -64,9 +64,9 @@ public class ProjectServiceImp extends BaseService {
 	public void projectCreate(ProjectNewDto projectDto) throws IOException {
 		if(projectGet(projectDto.getName()) == null) {
 			Project project = new Project();
-			projectDao.save(project);
+			projectRepository.save(project);
 
-			User creator = userDao.get(projectDto.getCreatorUsername());
+			User creator = userRepository.get(projectDto.getCreatorUsername());
 
 			project.setName(projectDto.getName());
 			project.setCreator(creator);
@@ -93,28 +93,28 @@ public class ProjectServiceImp extends BaseService {
 	@Transactional
 	public void projectStart(String projectName, List<UsernameAndPps> usernamesAndPps) {
 
-		User coprojects = userDao.get("collectiveone");
-		userDao.save(coprojects);
+		User coprojects = userRepository.get("collectiveone");
+		userRepository.save(coprojects);
 
-		Project project = projectDao.get(projectName);
+		Project project = projectRepository.get(projectName);
 		project.setEnabled(true);
-		projectDao.save(project);
+		projectRepository.save(project);
 		
 		/* only one goal exist as the project was just created 
 		 * get one goal to use as decision realm of manual decisions
 		 * created here */
-		List<Goal> goals = goalDao.getAllOfProject(project.getId());
+		List<Goal> goals = goalRepository.getAllOfProject(project.getId());
 		Goal goal = goals.get(0);
 		
 		User creator = project.getCreator();
-		userDao.save(creator);
+		userRepository.save(creator);
 
-		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
-		decisionRealmDao.save(realm);
+		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
+		decisionRealmRepository.save(realm);
 
 		/* An accepted cbtion is added to the project for each contributor */
 		for(UsernameAndPps usernameAndPps : usernamesAndPps) {
-			User ctrb = userDao.get(usernameAndPps.getUsername());
+			User ctrb = userRepository.get(usernameAndPps.getUsername());
 			
 			Cbtion cbtion = new Cbtion();
 
@@ -124,11 +124,11 @@ public class ProjectServiceImp extends BaseService {
 			cbtion.setDescription("Start contribution");
 			cbtion.setProject(project);
 
-			cbtionDao.save(cbtion);
+			cbtionRepository.save(cbtion);
 
 			/* Bids and decisions are created for consistency */
 			Bid bid = new Bid();
-			bidDao.save(bid);
+			bidRepository.save(bid);
 
 			bid.setCbtion(cbtion);
 			cbtion.getBids().add(bid);
@@ -140,10 +140,10 @@ public class ProjectServiceImp extends BaseService {
 			bid.setState(BidState.OFFERED);
 
 			Decision assign_bid = new Decision();
-			decisionDao.save(assign_bid);
+			decisionRepository.save(assign_bid);
 
 			Decision accept_bid = new Decision();
-			decisionDao.save(accept_bid);
+			decisionRepository.save(accept_bid);
 
 			bid.setAssign(assign_bid);
 			bid.setAccept(accept_bid);
@@ -190,29 +190,29 @@ public class ProjectServiceImp extends BaseService {
 
 	@Transactional
 	public Project projectGet(Long id) {
-		return projectDao.get(id);
+		return projectRepository.get(id);
 	}
 
 	@Transactional
 	public Project projectGet(String project_name) {
-		return projectDao.get(project_name);
+		return projectRepository.get(project_name);
 	}
 
 	@Transactional
 	public ProjectDto projectGetDto(String project_name) {
-		Project project = projectDao.get(project_name);
+		Project project = projectRepository.get(project_name);
 		ProjectDto dto = project.toDto();
 		return dto;
 	}
 
 	@Transactional
 	public List<String> projectGetList() {
-		return projectDao.getListEnabled();
+		return projectRepository.getListEnabled();
 	}
 
 	@Transactional
 	public List<Project> projectGetAll(Integer max) {
-		return projectDao.getFromRef(new Project(), max);
+		return projectRepository.getFromRef(new Project(), max);
 	}
 
 	@Transactional
@@ -236,7 +236,7 @@ public class ProjectServiceImp extends BaseService {
 
 	@Transactional
 	public void projectUpdatePpsTot(Long projectId, double lastOne) {
-		Project project = projectDao.get(projectId);
+		Project project = projectRepository.get(projectId);
 
 		double ppsTot = 0.0;
 		for(Contributor ctrb : project.getContributors()) {
@@ -244,17 +244,17 @@ public class ProjectServiceImp extends BaseService {
 		}
 
 		project.setPpsTot(ppsTot+lastOne);
-		projectDao.save(project);
+		projectRepository.save(project);
 	}
 
 	@Transactional
 	public Set<Contributor> getProjectContributors(Long projectId) {
-		return projectDao.getContributors(projectId);
+		return projectRepository.getContributors(projectId);
 	}
 	
 	@Transactional
 	public ProjectDtoListRes projectDtoGetFiltered(Filters filters) {
-		ObjectListRes<Project> projectsRes = projectDao.get(filters);
+		ObjectListRes<Project> projectsRes = projectRepository.get(filters);
 
 		ProjectDtoListRes projectsDtosRes = new ProjectDtoListRes();
 

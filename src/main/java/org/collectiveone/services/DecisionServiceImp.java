@@ -34,7 +34,7 @@ public class DecisionServiceImp extends BaseService {
 		states.add(DecisionState.IDLE);
 		states.add(DecisionState.OPEN);
 
-		List<Decision> decsIdle = decisionDao.getWithStates(states);
+		List<Decision> decsIdle = decisionRepository.getWithStates(states);
 		for(Decision dec : decsIdle) {
 			decisionUpdateState(dec.getId());
 		}
@@ -42,12 +42,12 @@ public class DecisionServiceImp extends BaseService {
 	
 	@Transactional
 	public void decisionUpdateState(Long id) throws IOException {
-		Decision dec = decisionDao.get(id);
+		Decision dec = decisionRepository.get(id);
 		
 		/* Update the decision */
 		DecisionState before = dec.getState();
-		dec.updateState(timeService.getNow(),decisionRealmDao.getWeightTot(dec.getDecisionRealm().getId()));
-		decisionDao.save(dec);
+		dec.updateState(timeService.getNow(),decisionRealmRepository.getWeightTot(dec.getDecisionRealm().getId()));
+		decisionRepository.save(dec);
 
 		/* store activity only for custom decisions (automatic decisions activity 
 		 * is recorded based on the element it changes).
@@ -161,7 +161,7 @@ public class DecisionServiceImp extends BaseService {
 					/* voter weight is halved for every decision in which the voter
 					 * does not participate */
 					double actualWeight = voterNotVoted.getActualWeight()*0.5;
-					decisionRealmDao.updateVoter(realm.getId(), voterNotVoted.getVoterUser().getId(), maxWeight, actualWeight);
+					decisionRealmRepository.updateVoter(realm.getId(), voterNotVoted.getVoterUser().getId(), maxWeight, actualWeight);
 				}
 			}
 		}
@@ -170,7 +170,7 @@ public class DecisionServiceImp extends BaseService {
 
 	@Transactional
 	public DecisionDtoListRes decisionDtoGetFiltered(Filters filters) {
-		ObjectListRes<Decision> decisionsRes = decisionDao.get(filters);
+		ObjectListRes<Decision> decisionsRes = decisionRepository.get(filters);
 
 		DecisionDtoListRes decisionsDtosRes = new DecisionDtoListRes();
 
@@ -187,16 +187,16 @@ public class DecisionServiceImp extends BaseService {
 	@Transactional
 	public Long decisionCreate(DecisionDtoCreate decisionDto) throws IOException {
 		Decision decision = new Decision();
-		Project project = projectDao.get(decisionDto.getProjectName());
-		Goal goal = goalDao.get(decisionDto.getGoalTag(),project.getName());
+		Project project = projectRepository.get(decisionDto.getProjectName());
+		Goal goal = goalRepository.get(decisionDto.getGoalTag(),project.getName());
 		
-		projectDao.save(project);
+		projectRepository.save(project);
 
-		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
-		decisionRealmDao.save(realm);
+		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
+		decisionRealmRepository.save(realm);
 
 		decision.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		decision.setCreator(userDao.get(decisionDto.getCreatorUsername()));
+		decision.setCreator(userRepository.get(decisionDto.getCreatorUsername()));
 		decision.setDescription(decisionDto.getDescription());
 		decision.setProject(project);
 		decision.setGoal(goal);
@@ -205,7 +205,7 @@ public class DecisionServiceImp extends BaseService {
 		decision.setType(DecisionType.GENERAL);
 		decision.setVerdictHours(decisionDto.getVerdictHours());
 
-		decisionDao.save(decision);
+		decisionRepository.save(decision);
 
 		if(!decision.getCreator().getUsername().equals("collectiveone"))  {
 			Activity act = new Activity();
@@ -223,12 +223,12 @@ public class DecisionServiceImp extends BaseService {
 
 	@Transactional
 	public Decision decisionGet(Long id) {
-		return decisionDao.get(id);
+		return decisionRepository.get(id);
 	}
 	
 	@Transactional
 	public DecisionDtoFull decisionGetDto(Long id) {
-		return decisionDao.get(id).toDto();
+		return decisionRepository.get(id).toDto();
 	}
 
 }

@@ -35,23 +35,23 @@ public class CbtionServiceImp extends BaseService {
 
 	@Transactional
 	public void cbtionSave(Cbtion cbtion) {
-		cbtionDao.save(cbtion);
+		cbtionRepository.save(cbtion);
 	}
 	
 	@Transactional
 	public void cbtionUpdate(Cbtion cbtion) {
-		cbtionDao.update(cbtion);
+		cbtionRepository.update(cbtion);
 	}
 
 	@Transactional
 	public Long cbtionCreate(CbtionDto cbtionDto) throws IOException {
 		Cbtion cbtion = new Cbtion();
-		Project project = projectDao.get(cbtionDto.getProjectName());
-		projectDao.save(project);
-		Goal goal = goalDao.get(cbtionDto.getGoalTag(), project.getName());
+		Project project = projectRepository.get(cbtionDto.getProjectName());
+		projectRepository.save(project);
+		Goal goal = goalRepository.get(cbtionDto.getGoalTag(), project.getName());
 
 		cbtion.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		cbtion.setCreator(userDao.get(cbtionDto.getCreatorUsername()));
+		cbtion.setCreator(userRepository.get(cbtionDto.getCreatorUsername()));
 		cbtion.setDescription(cbtionDto.getDescription());
 		cbtion.setProject(project);
 		cbtion.setProduct(cbtionDto.getProduct());
@@ -60,14 +60,14 @@ public class CbtionServiceImp extends BaseService {
 		cbtion.setTitle(cbtionDto.getTitle());
 		cbtion.setGoal(goal);
 
-		Long id = cbtionDao.save(cbtion);
+		Long id = cbtionRepository.save(cbtion);
 
-		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
-		decisionRealmDao.save(realm);
+		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
+		decisionRealmRepository.save(realm);
 
 		Decision open = new Decision();
 
-		open.setCreator(userDao.get("collectiveone"));
+		open.setCreator(userRepository.get("collectiveone"));
 		open.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		open.setDecisionRealm(realm);
 		open.setDescription("open contribution '"+cbtion.getTitle()+"'");
@@ -81,7 +81,7 @@ public class CbtionServiceImp extends BaseService {
 		open.setAffectedCbtion(cbtion);
 
 		cbtion.setOpenDec(open);
-		decisionDao.save(open);
+		decisionRepository.save(open);
 
 		Activity act = new Activity("created", 
 				new Timestamp(System.currentTimeMillis()),
@@ -96,7 +96,7 @@ public class CbtionServiceImp extends BaseService {
 	
 	@Transactional
 	public Long cbtionEdit(CbtionDto cbtionDto) {
-		Cbtion cbtion = cbtionDao.get(cbtionDto.getId());
+		Cbtion cbtion = cbtionRepository.get(cbtionDto.getId());
 		
 		if(cbtion != null) {
 			switch(cbtion.getState()) {
@@ -105,7 +105,7 @@ public class CbtionServiceImp extends BaseService {
 				cbtion.setDescription(cbtionDto.getDescription());
 				cbtion.setProduct(cbtionDto.getProduct());
 				cbtion.setSuggestedBid(cbtionDto.getSuggestedBid());
-				cbtionDao.save(cbtion);
+				cbtionRepository.save(cbtion);
 				
 				break;
 			
@@ -124,29 +124,29 @@ public class CbtionServiceImp extends BaseService {
 
 	@Transactional
 	public Cbtion cbtionGet(Long id) {
-		return cbtionDao.get(id);
+		return cbtionRepository.get(id);
 	}
 
 	@Transactional
 	public List<Cbtion> cbtionGet(Cbtion refCbtion) {
-		return cbtionDao.get(refCbtion);
+		return cbtionRepository.get(refCbtion);
 	}
 	
 	@Transactional
 	public User cbtionGetCreator(Long id) {
-		return cbtionDao.get(id).getCreator();
+		return cbtionRepository.get(id).getCreator();
 	}
 
 	@Transactional
 	public CbtionDto cbtionGetDto(Long cbtionId) {
-		Cbtion cbtion = cbtionDao.get(cbtionId);
+		Cbtion cbtion = cbtionRepository.get(cbtionId);
 		CbtionDto cbtionDto = cbtion.toDto(goalService.goalGetParentGoalsTags(cbtion.getGoal()), cbtionGetNSubComments(cbtionId));
 		return cbtionDto;
 	}
 
 	@Transactional
 	public List<CbtionDto> cbtionGetDto(Cbtion refCbtion) {
-		List<Cbtion> cbtions = cbtionDao.get(refCbtion);
+		List<Cbtion> cbtions = cbtionRepository.get(refCbtion);
 		List<CbtionDto> cbtionDtos = new ArrayList<CbtionDto>();
 		for(Cbtion cbtion : cbtions) {
 			cbtionDtos.add(cbtion.toDto());
@@ -156,7 +156,7 @@ public class CbtionServiceImp extends BaseService {
 
 	@Transactional
 	public CbtionDtoListRes cbtionDtoGetFiltered(Filters filters) {
-		ObjectListRes<Cbtion> cbtionsRes = cbtionDao.get(filters);
+		ObjectListRes<Cbtion> cbtionsRes = cbtionRepository.get(filters);
 
 		CbtionDtoListRes cbtionsDtosRes = new CbtionDtoListRes();
 
@@ -173,7 +173,7 @@ public class CbtionServiceImp extends BaseService {
 	@Transactional
 	public void cbtionsUpdateState() throws IOException {
 		/* Update state of all not closed bids */
-		List<Cbtion> cbtionsProposed = cbtionDao.getWithStates(Arrays.asList(CbtionState.PROPOSED, CbtionState.OPEN));
+		List<Cbtion> cbtionsProposed = cbtionRepository.getWithStates(Arrays.asList(CbtionState.PROPOSED, CbtionState.OPEN));
 		for(Cbtion cbtion : cbtionsProposed) {
 			cbtionUpdateState(cbtion.getId());
 		}	
@@ -181,7 +181,7 @@ public class CbtionServiceImp extends BaseService {
 
 	@Transactional
 	public void cbtionUpdateState(Long cbtionId) throws IOException {
-		Cbtion cbtion = cbtionDao.get(cbtionId);
+		Cbtion cbtion = cbtionRepository.get(cbtionId);
 		
 		Activity act = new Activity();
 		act.setProject(cbtion.getProject());
@@ -203,7 +203,7 @@ public class CbtionServiceImp extends BaseService {
 		
 					case CLOSED_DENIED :
 						cbtion.setState(CbtionState.NOTOPENED);
-						cbtionDao.save(cbtion);
+						cbtionRepository.save(cbtion);
 	
 						act.setEvent("proposal refused");
 						activityService.activitySaveAndNotify(act);
@@ -212,12 +212,12 @@ public class CbtionServiceImp extends BaseService {
 					case CLOSED_ACCEPTED: 
 						cbtion.setState(CbtionState.OPEN);
 						
-						DecisionRealm realm = decisionRealmDao.getFromGoalId(cbtion.getGoal().getId());
-						decisionRealmDao.save(realm);
+						DecisionRealm realm = decisionRealmRepository.getFromGoalId(cbtion.getGoal().getId());
+						decisionRealmRepository.save(realm);
 		
 						Decision delete = new Decision();
 		
-						delete.setCreator(userDao.get("collectiveone"));
+						delete.setCreator(userRepository.get("collectiveone"));
 						delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
 						delete.setDecisionRealm(realm);
 						delete.setDescription("delete contribution '"+cbtion.getTitle()+"'");
@@ -230,10 +230,10 @@ public class CbtionServiceImp extends BaseService {
 						delete.setType(DecisionType.CBTION);
 						delete.setAffectedCbtion(cbtion);
 						
-						decisionDao.save(delete);
+						decisionRepository.save(delete);
 						
 						cbtion.setDeleteDec(delete);
-						cbtionDao.save(cbtion);
+						cbtionRepository.save(cbtion);
 	
 						act.setEvent("opened for bidding");
 						activityService.activitySaveAndNotify(act);
@@ -259,7 +259,7 @@ public class CbtionServiceImp extends BaseService {
 						break;
 						
 					case CLOSED_ACCEPTED:
-						cbtionDao.remove(cbtion.getId());
+						cbtionRepository.remove(cbtion.getId());
 						
 						act.setEvent("deleted");
 						activityService.activitySaveAndNotify(act);
@@ -283,19 +283,19 @@ public class CbtionServiceImp extends BaseService {
 	public ResStatus cbtionPromote(Long cbtionId, Long userId, boolean promoteUp) {
 		ResStatus resStatus = new ResStatus();
 
-		Cbtion cbtion = cbtionDao.get(cbtionId);
-		cbtionDao.save(cbtion);
+		Cbtion cbtion = cbtionRepository.get(cbtionId);
+		cbtionRepository.save(cbtion);
 
 		Promoter promoter = promoterDao.getOfCbtion(cbtionId, userId);
 
 		/* countPromotersDiff will doesn't include the current transaction so this logic 
 		 * is used to solve the problem*/
-		int currentRelevance = cbtionDao.countPromotersDiff(cbtionId);
+		int currentRelevance = cbtionRepository.countPromotersDiff(cbtionId);
 		int newRelevance = currentRelevance;
 		
 		if(promoter == null) {
 			promoter = new Promoter();
-			promoter.setUser(userDao.get(userId));
+			promoter.setUser(userRepository.get(userId));
 			cbtion.getPromoters().add(promoter);
 			if(promoteUp) {
 				newRelevance = newRelevance + 1;
@@ -328,12 +328,12 @@ public class CbtionServiceImp extends BaseService {
 	
 	@Transactional
 	public int cbtionGetNSubComments(Long cbtionId) {
-		return cbtionDao.countSubComments(cbtionId);
+		return cbtionRepository.countSubComments(cbtionId);
 	}
 
 	@Transactional
 	public List<CommentDto> cbtionGetCommentsDtos(Long cbtionId) {
-		List<Comment> comments = cbtionDao.getCommentsSorted(cbtionId);
+		List<Comment> comments = cbtionRepository.getCommentsSorted(cbtionId);
 		List<CommentDto> commentsDtos = new ArrayList<CommentDto>();
 		for (Comment comment : comments) {
 			commentsDtos.add(comment.toDto());
@@ -343,7 +343,7 @@ public class CbtionServiceImp extends BaseService {
 
 	@Transactional
 	public List<ReviewDto> cbtionGetReviewsDtos(Long cbtionId) {
-		Bid bid = cbtionDao.getAcceptedBid(cbtionId);
+		Bid bid = cbtionRepository.getAcceptedBid(cbtionId);
 		return bidService.bidGetReviewsDtos(bid.getId());
 	}
 

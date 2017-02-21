@@ -37,11 +37,11 @@ public class GoalServiceImp extends BaseService {
 	public Long goalCreate(GoalDto goalDto, GoalState state) throws IOException {
 		if(!goalExist(goalDto.getGoalTag(), goalDto.getProjectName())) {
 			Goal goal = new Goal();
-			Project project = projectDao.get(goalDto.getProjectName());
-			projectDao.save(project);
+			Project project = projectRepository.get(goalDto.getProjectName());
+			projectRepository.save(project);
 
 			goal.setCreationDate(new Timestamp(System.currentTimeMillis()));
-			goal.setCreator(userDao.get(goalDto.getCreatorUsername()));
+			goal.setCreator(userRepository.get(goalDto.getCreatorUsername()));
 			goal.setDescription(goalDto.getDescription());
 			goal.setProject(project);
 			goal.setState(state);
@@ -52,7 +52,7 @@ public class GoalServiceImp extends BaseService {
 			goal.setAttachedState(GoalAttachState.ATTACHED);
 			goal.setIncreaseBudgetState(GoalIncreaseBudgetState.NOT_PROPOSED);
 			
-			Long id = goalDao.save(goal);
+			Long id = goalRepository.save(goal);
 
 			/* each goal has its own decision realm */
 			DecisionRealm realm = new DecisionRealm();
@@ -62,12 +62,12 @@ public class GoalServiceImp extends BaseService {
 			boolean hasParent = false;
 			if(goalDto.getParentGoalTag() != null) {
 				if(goalDto.getParentGoalTag() != "") {
-					Goal parent = goalDao.get(goalDto.getParentGoalTag(), project.getName());
+					Goal parent = goalRepository.get(goalDto.getParentGoalTag(), project.getName());
 					if(parent != null) {
 						hasParent = true;
 						goal.setParent(parent);
 						/* decision realm should be initialized to that of the parent goal */
-						decisionRealmService.decisionRealmInitToOther(realm, decisionRealmDao.getFromGoalId(parent.getId()).getId());
+						decisionRealmService.decisionRealmInitToOther(realm, decisionRealmRepository.getFromGoalId(parent.getId()).getId());
 					}
 				}
 			}
@@ -77,7 +77,7 @@ public class GoalServiceImp extends BaseService {
 				decisionRealmService.decisionRealmInitToProject(realm, project.getId());
 			}
 				
-			decisionRealmDao.save(realm);
+			decisionRealmRepository.save(realm);
 
 			Activity act = null;
 			
@@ -87,7 +87,7 @@ public class GoalServiceImp extends BaseService {
 			DecisionRealm goalControlRealm = null;
 			
 			if(hasParent) {
-				goalControlRealm = decisionRealmDao.getFromGoalId(goal.getParent().getId());
+				goalControlRealm = decisionRealmRepository.getFromGoalId(goal.getParent().getId());
 			} else {
 				goalControlRealm = realm;
 			}
@@ -96,7 +96,7 @@ public class GoalServiceImp extends BaseService {
 				case PROPOSED:
 					Decision create = new Decision();
 					
-					create.setCreator(userDao.get("collectiveone"));
+					create.setCreator(userRepository.get("collectiveone"));
 					create.setCreationDate(new Timestamp(System.currentTimeMillis()));
 					create.setDescription("create goal '"+goal.getGoalTag()+"'");
 					create.setState(DecisionState.IDLE);
@@ -112,7 +112,7 @@ public class GoalServiceImp extends BaseService {
 
 					goal.setCreateDec(create);
 					
-					decisionDao.save(create);
+					decisionRepository.save(create);
 					
 					act = new Activity("proposed", 
 							new Timestamp(System.currentTimeMillis()),
@@ -126,7 +126,7 @@ public class GoalServiceImp extends BaseService {
 					
 		            Decision delete = new Decision();
 		            
-		            delete.setCreator(userDao.get("collectiveone"));
+		            delete.setCreator(userRepository.get("collectiveone"));
 		            delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		            delete.setDescription("delete goal '"+goal.getGoalTag()+"'");
 		            delete.setState(DecisionState.IDLE);
@@ -141,7 +141,7 @@ public class GoalServiceImp extends BaseService {
 		            delete.setAffectedGoal(goal);
 
 		            goal.setDeleteDec(delete);
- 				    decisionDao.save(delete);
+ 				    decisionRepository.save(delete);
 					
 					act = new Activity("proposed", 
 							new Timestamp(System.currentTimeMillis()),
@@ -171,7 +171,7 @@ public class GoalServiceImp extends BaseService {
 
 	@Transactional
 	public GoalDto goalGetDto(Long goalId) {
-		Goal goal = goalDao.get(goalId);
+		Goal goal = goalRepository.get(goalId);
 		GoalDto dto = goal.toDto();
 		goalAddParentsAndSubgoals(dto);
 
@@ -180,7 +180,7 @@ public class GoalServiceImp extends BaseService {
 
 	@Transactional
 	public boolean goalExist(String goalTag, String projectName) {
-		Goal goal = goalDao.get(goalTag, projectName);
+		Goal goal = goalRepository.get(goalTag, projectName);
 		if(goal != null) {
 			return true;
 		} else {
@@ -190,7 +190,7 @@ public class GoalServiceImp extends BaseService {
 	
 	@Transactional
 	public boolean goalExist(String goalTag, String projectName, GoalState state) {
-		Goal goal = goalDao.get(goalTag, projectName, state);
+		Goal goal = goalRepository.get(goalTag, projectName, state);
 		if(goal != null) {
 			return true;
 		} else {
@@ -200,7 +200,7 @@ public class GoalServiceImp extends BaseService {
 	
 	@Transactional
 	public GoalDto goalGetDto(String goalTag, String projectName) {
-		Goal goal = goalDao.get(goalTag, projectName);
+		Goal goal = goalRepository.get(goalTag, projectName);
 		GoalDto dto = null;
 		if(goal != null) {
 			dto = goal.toDto();
@@ -212,7 +212,7 @@ public class GoalServiceImp extends BaseService {
 
 	@Transactional
 	public GoalDtoListRes goalDtoGetFiltered(Filters filters) {
-		ObjectListRes<Goal> goalsRes = goalDao.get(filters);
+		ObjectListRes<Goal> goalsRes = goalRepository.get(filters);
 
 		GoalDtoListRes goalsDtosRes = new GoalDtoListRes();
 
@@ -232,7 +232,7 @@ public class GoalServiceImp extends BaseService {
 	@Transactional
 	public void goalAddParentsAndSubgoals(GoalDto goalDto) {
 		List<String> parentGoalsTags = new ArrayList<String>();
-		for(Goal parent : goalDao.getAllParents(goalDto.getId())) { 
+		for(Goal parent : goalRepository.getAllParents(goalDto.getId())) { 
 			parentGoalsTags.add(parent.getGoalTag()); 
 		}
 		goalDto.setParentGoalsTags(parentGoalsTags);
@@ -243,7 +243,7 @@ public class GoalServiceImp extends BaseService {
 		states.add(GoalState.PROPOSED);
 		states.add(GoalState.ACCEPTED);
 		
-		for(Goal subgoal : goalDao.getSubgoals(goalDto.getId(),states)) { 
+		for(Goal subgoal : goalRepository.getSubgoals(goalDto.getId(),states)) { 
 			subGoalsTags.add(subgoal.getGoalTag()); 
 		}
 		goalDto.setSubGoalsTags(subGoalsTags);
@@ -252,15 +252,15 @@ public class GoalServiceImp extends BaseService {
 	@Transactional
 	public List<String> goalGetSuggestions(String query, List<String> projectNames) {
 		if(projectNames.size() == 0) {
-			projectNames = projectDao.getListEnabled();
+			projectNames = projectRepository.getListEnabled();
 		}
-		return goalDao.getSuggestions(query, projectNames);
+		return goalRepository.getSuggestions(query, projectNames);
 	}
 
 	@Transactional
 	public void goalsUpdateState() throws IOException {
 		/* Update state of all not closed bids */
-		List<Goal> goalsNotDeleted = goalDao.getNotDeleted();
+		List<Goal> goalsNotDeleted = goalRepository.getNotDeleted();
 		for(Goal goal : goalsNotDeleted) {
 			goalUpdateState(goal.getId());
 		}	
@@ -277,8 +277,8 @@ public class GoalServiceImp extends BaseService {
 
 	@Transactional
 	public void goalFromProposedToAccepted(Long goalId) throws IOException {
-		Goal goal = goalDao.get(goalId);
-		goalDao.save(goal);
+		Goal goal = goalRepository.get(goalId);
+		goalRepository.save(goal);
 
 		/* Create decision */ 
 		Decision create = goal.getCreateDec();
@@ -318,9 +318,9 @@ public class GoalServiceImp extends BaseService {
 					/* create delete decision */
 		            Decision delete = new Decision();
 		            
-		            DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
+		            DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
 		            
-		            delete.setCreator(userDao.get("collectiveone"));
+		            delete.setCreator(userRepository.get("collectiveone"));
 		            delete.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		            delete.setDescription("delete goal '"+goal.getGoalTag()+"'");
 		            delete.setState(DecisionState.IDLE);
@@ -334,7 +334,7 @@ public class GoalServiceImp extends BaseService {
 		            delete.setAffectedGoal(goal);
 		            
 		            goal.setDeleteDec(delete);
-		            decisionDao.save(delete);
+		            decisionRepository.save(delete);
 					
 		            /* register event */
 		            act.setEvent("accepted");
@@ -355,8 +355,8 @@ public class GoalServiceImp extends BaseService {
 
 	@Transactional
 	public void goalFromAcceptedToDeleted(Long goalId) throws IOException {
-		Goal goal = goalDao.get(goalId);
-		goalDao.save(goal);
+		Goal goal = goalRepository.get(goalId);
+		goalRepository.save(goal);
 
 		/* Update accept decision */ 
 		Decision delete = goal.getDeleteDec();
@@ -416,8 +416,8 @@ public class GoalServiceImp extends BaseService {
 
 	@Transactional
 	public void goalUpdateNewParent(Long goalId) throws IOException {
-		Goal goal = goalDao.get(goalId);
-		goalDao.save(goal);
+		Goal goal = goalRepository.get(goalId);
+		goalRepository.save(goal);
 
 		if(goal.getParentState() == GoalParentState.PROPOSED) {
 			/* Create decision */ 
@@ -472,8 +472,8 @@ public class GoalServiceImp extends BaseService {
 	
 	@Transactional
 	public void goalProposeParent(Long goalId, String parentTag) throws IOException {
-		Goal goal = goalDao.get(goalId);
-		Goal proposedParent = goalDao.get(parentTag,goal.getProject().getName());
+		Goal goal = goalRepository.get(goalId);
+		Goal proposedParent = goalRepository.get(parentTag,goal.getProject().getName());
 
 		if(proposedParent != null) {
 			if(goal.getParentState() != GoalParentState.PROPOSED) {
@@ -481,8 +481,8 @@ public class GoalServiceImp extends BaseService {
 				Decision proposeParent = new Decision();
 
 				proposeParent.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				proposeParent.setCreator(userDao.get("collectiveone"));
-				proposeParent.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getId()));
+				proposeParent.setCreator(userRepository.get("collectiveone"));
+				proposeParent.setDecisionRealm(decisionRealmRepository.getFromGoalId(goal.getId()));
 				proposeParent.setDescription("set "+proposedParent.getGoalTag()+" as parent goal");
 				proposeParent.setProject(project);
 				proposeParent.setGoal(goal);
@@ -491,13 +491,13 @@ public class GoalServiceImp extends BaseService {
 				proposeParent.setAffectedGoal(goal);
 				proposeParent.setVerdictHours(36);
 
-				decisionDao.save(proposeParent);
+				decisionRepository.save(proposeParent);
 
 				goal.setProposeParent(proposeParent);
 				goal.setProposedParent(proposedParent);
 				goal.setParentState(GoalParentState.PROPOSED);
 
-				goalDao.save(goal);
+				goalRepository.save(goal);
 
 				Activity act = new Activity();
 				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -517,7 +517,7 @@ public class GoalServiceImp extends BaseService {
 		/* Add parent goals too */
 		List<String> parentGoalsTags = new ArrayList<String>();
 		if(goal!= null) {
-			List<Goal> parentGoals = goalDao.getAllParents(goal.getId());
+			List<Goal> parentGoals = goalRepository.getAllParents(goal.getId());
 			for(Goal parent : parentGoals) { parentGoalsTags.add(parent.getGoalTag()); }
 		}
 		return parentGoalsTags;
@@ -526,16 +526,16 @@ public class GoalServiceImp extends BaseService {
 	@Transactional
 	public GoalWeightsDataDto goalGetWeightsData(String projectName, String goalTag, String username) {
 		
-		Goal goal = goalDao.get(goalTag, projectName);
-		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
+		Goal goal = goalRepository.get(goalTag, projectName);
+		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
 		
 		GoalWeightsDataDto goalWeightsDataDto = new GoalWeightsDataDto();  
 		
 		if(!username.equals("anonymousUser")) {
 			/* if user is logged */
-			User user = userDao.get(username);
+			User user = userRepository.get(username);
 			
-			Voter voter = decisionRealmDao.getVoter(realm.getId(), user.getId());
+			Voter voter = decisionRealmRepository.getVoter(realm.getId(), user.getId());
 			
 			if(voter != null) {
 				/* if logged user is voter in this realm */
@@ -555,7 +555,7 @@ public class GoalServiceImp extends BaseService {
 		
 		goalWeightsDataDto.setGoalTag(goalTag);
 		goalWeightsDataDto.setProjectName(projectName);
-		goalWeightsDataDto.setTotalWeight(decisionRealmDao.getWeightTot(realm.getId()));
+		goalWeightsDataDto.setTotalWeight(decisionRealmRepository.getWeightTot(realm.getId()));
 		
 		goalWeightsDataDto.setVotersDtos(votersDtos);
 		
@@ -564,10 +564,10 @@ public class GoalServiceImp extends BaseService {
 	
 	@Transactional
 	public void goalTouch(GoalTouchDto touchDto) {
-		Goal goal = goalDao.get(touchDto.getGoalTag(), touchDto.getProjectName());
-		DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getId());
-		User user = userDao.get(touchDto.getUsername());
-		Voter voter = decisionRealmDao.getVoter(realm.getId(), user.getId());
+		Goal goal = goalRepository.get(touchDto.getGoalTag(), touchDto.getProjectName());
+		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
+		User user = userRepository.get(touchDto.getUsername());
+		Voter voter = decisionRealmRepository.getVoter(realm.getId(), user.getId());
 		
 		if(touchDto.getTouchFlag()) {
 			voter.setActualWeight(voter.getMaxWeight());
@@ -575,12 +575,12 @@ public class GoalServiceImp extends BaseService {
 			voter.setActualWeight(0.0);
 		}
 		
-		decisionRealmDao.save(realm);
+		decisionRealmRepository.save(realm);
 	}
 	
 	@Transactional
 	public void goalDetach(Long goalId, double initialBudget) throws IOException {
-		Goal goal = goalDao.get(goalId);
+		Goal goal = goalRepository.get(goalId);
 		
 		if(goal.getParent() != null) {
 			
@@ -593,9 +593,9 @@ public class GoalServiceImp extends BaseService {
 				Decision increaseBudget = new Decision();
 				
 				increaseBudget.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				increaseBudget.setCreator(userDao.get("collectiveone"));
+				increaseBudget.setCreator(userRepository.get("collectiveone"));
 				/* detach and increase budget decisions are taken in the supergoal realm */
-				increaseBudget.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getParent().getId()));
+				increaseBudget.setDecisionRealm(decisionRealmRepository.getFromGoalId(goal.getParent().getId()));
 				increaseBudget.setDescription("detach goal +"+goal.getGoalTag()+
 						" from +"+goal.getParent().getGoalTag()+" with an initial budget of "+initialBudget+" pps");
 				increaseBudget.setProject(goal.getProject());
@@ -608,8 +608,8 @@ public class GoalServiceImp extends BaseService {
 				goal.setIncreaseBudget(increaseBudget);
 				goal.setAttachedState(GoalAttachState.PROPOSED_DETACH);
 			
-				goalDao.save(goal);
-				decisionDao.save(increaseBudget);
+				goalRepository.save(goal);
+				decisionRepository.save(increaseBudget);
 				
 				Activity act = new Activity();
 				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -633,7 +633,7 @@ public class GoalServiceImp extends BaseService {
 	
 	@Transactional
 	public void goalReattach(Long goalId) throws IOException {
-		Goal goal = goalDao.get(goalId);
+		Goal goal = goalRepository.get(goalId);
 		
 		if(goal.getParent() != null) {
 			
@@ -644,12 +644,12 @@ public class GoalServiceImp extends BaseService {
 				
 				Decision reattach = new Decision();
 				
-				reattach.setCreator(userDao.get("collectiveone"));
+				reattach.setCreator(userRepository.get("collectiveone"));
 				reattach.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				reattach.setDescription("reattach goal +"+goal.getGoalTag()+" to "+goal.getParent().getGoalTag());
 				reattach.setState(DecisionState.IDLE);
 				reattach.setVerdictHours(36);
-				reattach.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getId()));
+				reattach.setDecisionRealm(decisionRealmRepository.getFromGoalId(goal.getId()));
 				reattach.setProject(goal.getProject());
 				reattach.setGoal(goal);
 				reattach.setType(DecisionType.GOAL);
@@ -657,8 +657,8 @@ public class GoalServiceImp extends BaseService {
 
 				goal.setReattach(reattach);
 				
-				decisionDao.save(reattach);
-				goalDao.save(goal);
+				decisionRepository.save(reattach);
+				goalRepository.save(goal);
 				
 				Activity act = new Activity();
 				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -682,7 +682,7 @@ public class GoalServiceImp extends BaseService {
 	
 	@Transactional
 	public void goalIncreaseBudget(Long goalId, double increaseBudgetPps) throws IOException {
-		Goal goal = goalDao.get(goalId);
+		Goal goal = goalRepository.get(goalId);
 		
 		if(goal.getParent() != null) {
 			
@@ -698,9 +698,9 @@ public class GoalServiceImp extends BaseService {
 				Decision increaseBudget = new Decision();
 				
 				increaseBudget.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				increaseBudget.setCreator(userDao.get("collectiveone"));
+				increaseBudget.setCreator(userRepository.get("collectiveone"));
 				/* increase budget decisions are taken in the supergoal realm */
-				increaseBudget.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getParent().getId()));
+				increaseBudget.setDecisionRealm(decisionRealmRepository.getFromGoalId(goal.getParent().getId()));
 				increaseBudget.setDescription("increase budget of goal +"+goal.getGoalTag()+
 						" from "+goal.getCurrentBudget()+" to "+(goal.getCurrentBudget()+increaseBudgetPps)+" pps");
 				increaseBudget.setProject(goal.getProject());
@@ -712,8 +712,8 @@ public class GoalServiceImp extends BaseService {
 				
 				goal.setIncreaseBudget(increaseBudget);
 				
-				goalDao.save(goal);
-				decisionDao.save(increaseBudget);
+				goalRepository.save(goal);
+				decisionRepository.save(increaseBudget);
 				
 				Activity act = new Activity();
 				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -737,7 +737,7 @@ public class GoalServiceImp extends BaseService {
 	
 	@Transactional
 	public void goalUpdateBudget(Long goalId) throws IOException {
-		Goal goal = goalDao.get(goalId);
+		Goal goal = goalRepository.get(goalId);
 		
 		Activity act = new Activity();
 		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -760,7 +760,7 @@ public class GoalServiceImp extends BaseService {
 					/* update the budget of the detached goal from the closest 
 					 * parent goal budget and check there is enough pps */
 					boolean goWithIncrease = false;
-					Goal parent = goalDao.getClosestDetachedParent(goalId);
+					Goal parent = goalRepository.getClosestDetachedParent(goalId);
 					
 					if(parent == null) {
 						/* no parent or grandparent in detached state,
@@ -771,7 +771,7 @@ public class GoalServiceImp extends BaseService {
 						if(parent.getCurrentBudget() >= goal.getPpsToIncrease()) {
 							parent.setCurrentBudget(parent.getCurrentBudget() - goal.getPpsToIncrease());
 							goWithIncrease = true;
-							goalDao.save(parent);
+							goalRepository.save(parent);
 						} else {
 							/* no enough pps*/
 							goWithIncrease = false;
@@ -781,7 +781,7 @@ public class GoalServiceImp extends BaseService {
 					if(goWithIncrease) {
 						/* the goal should be detached*/
 						goal.setCurrentBudget(goal.getCurrentBudget() + goal.getPpsToIncrease());
-						goalDao.save(goal);
+						goalRepository.save(goal);
 						
 						act.setEvent("budget increased");
 						activityService.activitySaveAndNotify(act);
@@ -813,7 +813,7 @@ public class GoalServiceImp extends BaseService {
 	
 	@Transactional
 	public void goalUpdateAttachment(Long goalId) throws IOException {
-		Goal goal = goalDao.get(goalId);
+		Goal goal = goalRepository.get(goalId);
 		
 		Activity act = new Activity();
 		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -844,7 +844,7 @@ public class GoalServiceImp extends BaseService {
 					/* initialized the budget of the detached goal from the closest 
 					 * parent goal budget and check there is enough pps */
 					boolean goWithDetachment = false;
-					Goal parent = goalDao.getClosestDetachedParent(goalId);
+					Goal parent = goalRepository.getClosestDetachedParent(goalId);
 					
 					if(parent == null) {
 						/* no parent or grandparent in detached state,
@@ -855,7 +855,7 @@ public class GoalServiceImp extends BaseService {
 						if(parent.getCurrentBudget() >= goal.getPpsToIncrease()) {
 							parent.setCurrentBudget(parent.getCurrentBudget() - goal.getPpsToIncrease());
 							goWithDetachment = true;
-							goalDao.save(parent);
+							goalRepository.save(parent);
 						} else {
 							/* no enough pps*/
 							goWithDetachment = false;
@@ -866,7 +866,7 @@ public class GoalServiceImp extends BaseService {
 						/* the goal should be detached*/
 						goal.setCurrentBudget(goal.getPpsToIncrease());
 						goal.setAttachedState(GoalAttachState.DETACHED);
-						goalDao.save(goal);
+						goalRepository.save(goal);
 						
 						act.setEvent("detached");
 						activityService.activitySaveAndNotify(act);
@@ -896,10 +896,10 @@ public class GoalServiceImp extends BaseService {
 					goal.setAttachedState(GoalAttachState.ATTACHED);
 					
 					/* remaining budget is returned to parent or grand parent */
-					Goal parent = goalDao.getClosestDetachedParent(goalId);
+					Goal parent = goalRepository.getClosestDetachedParent(goalId);
 					if(parent != null) {
 						parent.setCurrentBudget(parent.getCurrentBudget() + goal.getCurrentBudget());
-						goalDao.save(parent);
+						goalRepository.save(parent);
 					}
 											
 					/* budget is set to zero*/
@@ -909,11 +909,11 @@ public class GoalServiceImp extends BaseService {
 					 * detachment to reoccur */
 					goal.setIncreaseBudget(null);
 					goal.setPpsToIncrease(0.0);
-					goalDao.save(goal);
+					goalRepository.save(goal);
 					
 					/* decision realm is reset to that of the parent */
-					Long parentRealmId = decisionRealmDao.getIdFromGoalId(goal.getParent().getId());
-					DecisionRealm realm = decisionRealmDao.getFromGoalId(goal.getParent().getId());
+					Long parentRealmId = decisionRealmRepository.getIdFromGoalId(goal.getParent().getId());
+					DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getParent().getId());
 					
 					decisionRealmService.decisionRealmUpdateToOther(realm, parentRealmId);
 					
@@ -927,12 +927,12 @@ public class GoalServiceImp extends BaseService {
 					
 					Decision reattachNew = new Decision();
 					
-					reattachNew.setCreator(userDao.get("collectiveone"));
+					reattachNew.setCreator(userRepository.get("collectiveone"));
 					reattachNew.setCreationDate(new Timestamp(System.currentTimeMillis()));
 					reattachNew.setDescription("reattach goal +"+goal.getGoalTag()+" to "+goal.getParent());
 					reattachNew.setState(DecisionState.IDLE);
 					reattachNew.setVerdictHours(36);
-					reattachNew.setDecisionRealm(decisionRealmDao.getFromGoalId(goal.getId()));
+					reattachNew.setDecisionRealm(decisionRealmRepository.getFromGoalId(goal.getId()));
 					reattachNew.setFromState(GoalState.PROPOSED.toString());
 					reattachNew.setToState(GoalState.ACCEPTED.toString());
 					reattachNew.setProject(goal.getProject());
@@ -942,8 +942,8 @@ public class GoalServiceImp extends BaseService {
 
 					goal.setReattach(reattachNew);
 					
-					decisionDao.save(reattachNew);
-					goalDao.save(goal);
+					decisionRepository.save(reattachNew);
+					goalRepository.save(goal);
 					
 					break;
 					

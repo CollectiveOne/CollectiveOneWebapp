@@ -15,10 +15,10 @@ public class ReviewServiceImp extends BaseService {
 	@Transactional
 	public String reviewBidCreate(ReviewDto reviewDto) {
 
-		User creator = userDao.get(reviewDto.getCreatorUsername());
-		Bid bid = bidDao.get(reviewDto.getBidId());
+		User creator = userRepository.get(reviewDto.getCreatorUsername());
+		Bid bid = bidRepository.get(reviewDto.getBidId());
 
-		if(bidDao.getReviewer(reviewDto.getBidId(), creator.getId()) == null) {
+		if(bidRepository.getReviewer(reviewDto.getBidId(), creator.getId()) == null) {
 			User reviewee = bid.getCreator();
 
 			Review review = new Review();
@@ -31,7 +31,7 @@ public class ReviewServiceImp extends BaseService {
 
 			bid.getReviews().add(review);
 
-			bidDao.save(bid);
+			bidRepository.save(bid);
 			reviewDao.save(review);
 
 			return "review created";

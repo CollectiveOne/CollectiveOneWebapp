@@ -17,7 +17,7 @@ public class ActivityServiceImp extends BaseService {
 		
 	@Transactional
 	public ActivityDtoListRes activityDtoGetFiltered(Filters filters) {
-		ObjectListRes<Activity> activityRes = activityDao.get(filters);
+		ObjectListRes<Activity> activityRes = activityRepository.get(filters);
 
 		ActivityDtoListRes activityDtosRes = new ActivityDtoListRes();
 
@@ -32,7 +32,7 @@ public class ActivityServiceImp extends BaseService {
 	}
 	
 	public void activitySaveAndNotify(Activity act) throws IOException {
-		activityDao.save(act);
+		activityRepository.save(act);
 		
 		/* send emails */
 		String subject = "CollectiveOne - "+act.getProject().getName()+" activity";

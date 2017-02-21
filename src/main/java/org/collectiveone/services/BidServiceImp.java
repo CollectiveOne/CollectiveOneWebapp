@@ -32,59 +32,59 @@ public class BidServiceImp extends BaseService {
 	
 	@Transactional
 	public void bidSave(Bid bid, Long cbtionId) {
-		Cbtion cbtion = cbtionDao.get(cbtionId);
+		Cbtion cbtion = cbtionRepository.get(cbtionId);
 		bid.setCbtion(cbtion);
 		cbtion.getBids().add(bid);
 
-		bidDao.save(bid);
-		cbtionDao.save(cbtion);
+		bidRepository.save(bid);
+		cbtionRepository.save(cbtion);
 
 	}
 
 	@Transactional
 	public Bid bidGet(Long id) {
-		return bidDao.get(id);
+		return bidRepository.get(id);
 	}
 	
 	@Transactional
 	public BidDto bidGetDto(Long id) {
-		return bidDao.get(id).toDto();
+		return bidRepository.get(id).toDto();
 	}
 
 	@Transactional
 	public User bidGetCreator(Long id) {
-		return bidDao.get(id).getCreator();
+		return bidRepository.get(id).getCreator();
 	}
 
 	@Transactional
 	public void bidSave(Bid bid) {
-		bidDao.save(bid);
+		bidRepository.save(bid);
 	}
 
 	@Transactional
 	public void bidSaveState(Long bidId, BidState state) {
-		Bid bid = bidDao.get(bidId);
+		Bid bid = bidRepository.get(bidId);
 		bid.setState(state);
-		bidDao.save(bid);
+		bidRepository.save(bid);
 	}
 
 	@Transactional
 	public Long bidCreate(BidNewDto bidDtoIn) throws IOException {
 
 		Long cbtionId = bidDtoIn.getCbtionId();
-		User user = userDao.get(bidDtoIn.getCreatorUsername());
+		User user = userRepository.get(bidDtoIn.getCreatorUsername());
 
-		Cbtion cbtion = cbtionDao.get(cbtionId);
-		Bid bid = bidDao.getOfCbtionAndUser(cbtionId, user.getId());
+		Cbtion cbtion = cbtionRepository.get(cbtionId);
+		Bid bid = bidRepository.getOfCbtionAndUser(cbtionId, user.getId());
 
 		if(bid == null) {
 			if(cbtion.getState() == CbtionState.OPEN) {
 				Project project = cbtion.getProject();
-				projectDao.save(project);
+				projectRepository.save(project);
 	
 				bid = new Bid();
 				
-				bid.setCreator(userDao.get(user.getId()));
+				bid.setCreator(userRepository.get(user.getId()));
 				bid.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				bid.setDescription(bidDtoIn.getDescription());
 				bid.setCbtion(cbtion);
@@ -96,10 +96,10 @@ public class BidServiceImp extends BaseService {
 					bid.setState(BidState.CONSIDERING);
 				}
 				
-				bidDao.save(bid);
+				bidRepository.save(bid);
 	
 				cbtion.getBids().add(bid);
-				cbtionDao.save(cbtion);
+				cbtionRepository.save(cbtion);
 	
 				Activity act = new Activity();
 				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -119,7 +119,7 @@ public class BidServiceImp extends BaseService {
 	
 	@Transactional
 	public void bidFromConsideringToOffered(BidNewDto bidDto) {
-		Bid bid = bidDao.get(bidDto.getId());
+		Bid bid = bidRepository.get(bidDto.getId());
 
 		Project project = bid.getCbtion().getProject();
 
@@ -130,10 +130,10 @@ public class BidServiceImp extends BaseService {
 		bid.setState(BidState.OFFERED);
 
 		/* prepare assign decision */
-		DecisionRealm realm = decisionRealmDao.getFromGoalId(bid.getCbtion().getGoal().getId());
+		DecisionRealm realm = decisionRealmRepository.getFromGoalId(bid.getCbtion().getGoal().getId());
 
 		Decision assign = new Decision();
-		assign.setCreator(userDao.get("collectiveone"));
+		assign.setCreator(userRepository.get("collectiveone"));
 		assign.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		assign.setDescription("assign contribution '"+bid.getCbtion().getTitle()+"' to "+bid.getCreator().getUsername());
 		assign.setFromState(BidState.OFFERED.toString());
@@ -149,15 +149,15 @@ public class BidServiceImp extends BaseService {
 
 		bid.setAssign(assign);
 
-		decisionDao.save(assign);
-		bidDao.save(bid);
+		decisionRepository.save(assign);
+		bidRepository.save(bid);
 
 	}
 
 	@Transactional
 	public void bidMarkDone(DoneDto doneDto) throws IOException {
 		
-		Bid bid = bidDao.get(doneDto.getBidId());
+		Bid bid = bidRepository.get(doneDto.getBidId());
 		
 		if(bid.getCreator().getUsername().equals(doneDto.getUsername())) {
 			if(doneDto.getNewPps() <= bid.getPpoints()) {
@@ -165,7 +165,7 @@ public class BidServiceImp extends BaseService {
 				bid.setDoneState(BidDoneState.DONE);
 				bid.setDoneDescription(doneDto.getDescription());
 				bid.setDoneDate(new Timestamp(System.currentTimeMillis()));
-				bidDao.save(bid);	
+				bidRepository.save(bid);	
 
 				Activity act = new Activity();
 				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -180,7 +180,7 @@ public class BidServiceImp extends BaseService {
 
 	@Transactional
 	public List<BidDto> bidGetOfUserDto(Long userId) {
-		List<Bid> bids = bidDao.getOfUser(userId);
+		List<Bid> bids = bidRepository.getOfUser(userId);
 		List<BidDto> bidDtos = new ArrayList<BidDto>();
 		for (Bid bid : bids) {
 			bidDtos.add(bid.toDto());
@@ -190,7 +190,7 @@ public class BidServiceImp extends BaseService {
 
 	@Transactional
 	public List<BidDto> bidGetOfCbtionDto(Long cbtionId) {
-		List<Bid> bids = bidDao.getOfCbtion(cbtionId);
+		List<Bid> bids = bidRepository.getOfCbtion(cbtionId);
 		List<BidDto> bidDtos = new ArrayList<BidDto>();
 		for (Bid bid : bids) {
 			bidDtos.add(bid.toDto());
@@ -201,7 +201,7 @@ public class BidServiceImp extends BaseService {
 	@Transactional
 	public void bidsUpdateState() throws IOException {
 		/* Update state of all not closed bids */
-		List<Bid> bidsNotClosed = bidDao.getNotClosed();
+		List<Bid> bidsNotClosed = bidRepository.getNotClosed();
 		for(Bid bid : bidsNotClosed) {
 			bidUpdateState(bid.getId());
 		}	
@@ -209,13 +209,13 @@ public class BidServiceImp extends BaseService {
 
 	@Transactional
 	public List<Bid> bidGetAll() {
-		List<Bid> bids = bidDao.getAll(100000);
+		List<Bid> bids = bidRepository.getAll(100000);
 		return bids;
 	}
 
 	@Transactional
 	public List<ReviewDto> bidGetReviewsDtos(Long bidId) {
-		List<Review> reviews = bidDao.get(bidId).getReviews();
+		List<Review> reviews = bidRepository.get(bidId).getReviews();
 		List<ReviewDto> reviewsDtos = new ArrayList<ReviewDto>();
 		for (Review review : reviews) {
 			reviewsDtos.add(review.toDto());
@@ -225,11 +225,11 @@ public class BidServiceImp extends BaseService {
 
 	@Transactional
 	public void bidUpdateState(Long bidId) throws IOException {
-		Bid bid = bidDao.get(bidId);
+		Bid bid = bidRepository.get(bidId);
 		Cbtion cbtion = bid.getCbtion();
 
-		bidDao.save(bid);
-		cbtionDao.save(cbtion);
+		bidRepository.save(bid);
+		cbtionRepository.save(cbtion);
 
 		Activity act = new Activity();
 		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -258,7 +258,7 @@ public class BidServiceImp extends BaseService {
 
 				/* prepare accept decision */
 				Decision accept = new Decision();
-				accept.setCreator(userDao.get("collectiveone"));
+				accept.setCreator(userRepository.get("collectiveone"));
 				accept.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				accept.setDescription("accept contribution '"+bid.getCbtion().getTitle()+"' as delivered by "+bid.getCreator().getUsername());
 				accept.setFromState(BidState.ASSIGNED.toString());
@@ -266,14 +266,14 @@ public class BidServiceImp extends BaseService {
 				accept.setState(DecisionState.IDLE);
 				/* TODO: Include bid duration logic */
 				accept.setVerdictHours(36);
-				accept.setDecisionRealm(decisionRealmDao.getFromGoalId(bid.getCbtion().getGoal().getId()));
+				accept.setDecisionRealm(decisionRealmRepository.getFromGoalId(bid.getCbtion().getGoal().getId()));
 				accept.setProject(cbtion.getProject());
 				accept.setGoal(cbtion.getGoal());
 				accept.setType(DecisionType.BID);
 				accept.setAffectedBid(bid);
 
 				bid.setAccept(accept);
-				decisionDao.save(accept);
+				decisionRepository.save(accept);
 
 				break;
 
@@ -301,7 +301,7 @@ public class BidServiceImp extends BaseService {
 					
 					/* if under detached goal, check there is enough pps in the 
 					 * budget and if so, reduce the budget accordingly */
-					Goal applicableGoal = goalDao.getClosestDetached(cbtion.getGoal().getId());
+					Goal applicableGoal = goalRepository.getClosestDetached(cbtion.getGoal().getId());
 					
 					boolean goWithAssignment = false;
 					if(applicableGoal == null) {
@@ -310,7 +310,7 @@ public class BidServiceImp extends BaseService {
 					} else {
 						if(applicableGoal.getCurrentBudget() >= bid.getPpoints()) {
 							applicableGoal.setCurrentBudget(applicableGoal.getCurrentBudget() - bid.getPpoints());
-							goalDao.save(applicableGoal);
+							goalRepository.save(applicableGoal);
 							goWithAssignment = true;
 						} else {
 							/* not enough pps in the budget */
@@ -333,7 +333,7 @@ public class BidServiceImp extends BaseService {
 								if(otherBid.getAssign() != null) otherBid.getAssign().setState(DecisionState.CLOSED_EXTERNALLY);
 								if(otherBid.getAccept() != null) otherBid.getAccept().setState(DecisionState.CLOSED_EXTERNALLY);
 								otherBid.setState(BidState.SUPERSEEDED);
-								bidDao.save(otherBid);
+								bidRepository.save(otherBid);
 							}
 						}
 	
