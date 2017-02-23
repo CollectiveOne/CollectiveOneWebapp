@@ -134,4 +134,14 @@ public class UserServiceImp extends BaseService {
 		return userRepository.getSuggestionsReferrer(query);
 	}
 	
+	@Transactional
+	public boolean isProjectStarred(Long projectId, Long userId) {
+		return userRepository.isProjectStarred(projectId,userId);
+	}
+	
+	@Transactional
+	public boolean isProjectWatched(Long projectId, Long userId) {
+		return userRepository.isProjectWatched(projectId,userId);
+	}
+	
 }
