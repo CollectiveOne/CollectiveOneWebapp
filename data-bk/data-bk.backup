@@ -3,9 +3,9 @@
 --
 
 -- Dumped from database version 9.5.4
--- Dumped by pg_dump version 9.5.4
+-- Dumped by pg_dump version 9.5.6
 
--- Started on 2017-02-07 22:15:53 CET
+-- Started on 2017-02-23 13:04:25 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -18,7 +18,7 @@ SET row_security = off;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 3294 (class 0 OID 1686940)
+-- TOC entry 3297 (class 0 OID 1706164)
 -- Dependencies: 192
 -- Data for Name: bids; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -161,7 +161,6 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 140	2017-01-04 20:50:22.573	\N	\N	Create project Smartdealmaker-project	\N	\N	\N	100	3	655	654	179	17
 142	2017-01-05 09:12:52.367	\N	2017-01-14 00:00:00	Will provide general feedback on the site. It may be more useful if provide some guidance as to what would be helpful.	\N	\N	\N	2	0	\N	657	171	17
 138	2017-01-03 20:30:36.826	\N	2017-01-05 05:00:00	Provide feedback and editing for IFTF fellowship application.	\N	\N	\N	1	3	649	648	177	9
-141	2017-01-05 09:10:01.96	\N	2017-01-13 00:00:00	Have created a project and will create goals and set up some contributions etc...	\N	\N	\N	10	1	659	656	176	17
 121	2016-12-05 08:35:57.582	\N	2016-12-05 23:00:00	I will get in contact with them and keep all you updated through slack	2017-01-05 15:40:33.151	I have contacted them. We should be able to have an entry in the P2P Wiki, and we have one contact point with them thought a Ph.D. student from the P2P Lab	1	7	3	554	553	152	1
 144	2017-01-05 15:57:49.927	\N	2017-01-05 23:00:00	I have fixed this with a patch. I hope it holds...	\N	\N	\N	3	3	668	667	181	1
 145	2017-01-09 10:22:07.122	\N	2017-01-09 23:00:00	I can fund this at 4 euros per pp	\N	\N	\N	21.8500000000000014	3	674	673	155	1
@@ -169,6 +168,7 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 147	2017-01-09 10:24:04.274	\N	2017-01-09 23:00:00	I can fund this at 4 euros per pp	\N	\N	\N	15.5	3	678	677	157	1
 102	2016-11-27 11:21:43.05	\N	2016-11-30 23:00:00	I am willing to cover this at a 4 euros per pp	\N	\N	\N	42.5	3	679	445	126	1
 168	2017-02-02 04:31:29.85	\N	\N	Create project OuiShareOpenSource	\N	\N	\N	100	3	765	764	204	16
+141	2017-01-05 09:10:01.96	\N	2017-01-13 00:00:00	Have created a project and will create goals and set up some contributions etc...	\N	\N	\N	10	3	659	656	176	17
 149	2017-01-09 16:20:17.276	\N	2017-01-11 23:00:00	I can review the invitation and prepare a first version of the slides	2017-01-11 17:19:29.765	Ok, I have prepared **[this ](https://docs.google.com/presentation/d/1y53o-MfsvJEngv90HCP58TZKl3TU__uoM7qRaG9Sj2E/edit#slide=id.g13c76d61ce_0_574)**with the help of Esteban. 	1	10	3	687	686	182	1
 148	2017-01-09 16:05:16.626	\N	2017-01-09 23:00:00	I have contacted several people during the last months. Activity is growing in the slack channel.	\N	\N	\N	20	3	682	681	101	1
 150	2017-01-10 16:58:42.169	\N	2017-01-20 23:00:00	I will implement the changes and try to reach a basic functionality, to be tested and refined.	2017-01-24 17:29:56.177	I made a [significant advancement](https://github.com/CollectiveOne/CollectiveOneWebapp/commit/516d22832aab36d85e758735f13b300c4cfda831), but its not ready. It was harder than I though. Currently missing to take from pps from the goal budget if detached, and to autodecay the voting weights on detached goals.	1	40	3	693	692	183	1
@@ -193,17 +193,31 @@ COPY bids (id, creation_date, delete_date, delivery_date, description, done_date
 152	2017-01-12 08:42:52.196	\N	2017-01-12 23:00:00	I can do it creating a wearable technology startup examples	\N	\N	\N	5	3	700	699	185	1
 136	2016-12-23 00:08:32.157	\N	2016-12-23 23:00:00	I have prepared [**this**](https://docs.google.com/document/d/1nqxnsaSL3dlErPfeqPyCvCbJ_sqRmQdW2C0ccefMU-I/edit?usp=drivesdk) draft. It concentrates some time of reflection about the subject. 	\N	\N	\N	20	3	641	640	175	1
 171	2017-02-02 17:22:21.372	\N	2017-02-03 23:00:00	Let me guess. I will do it.	\N	\N	\N	10	3	785	784	206	1
-172	2017-02-04 16:11:34.116	\N	2017-02-10 23:00:00	I would like to devote some time to this.	\N	\N	\N	20	1	792	791	210	1
+185	2017-02-13 20:56:45.525	\N	\N	Create project ArtSociety	\N	\N	\N	10000	3	857	856	228	19
+178	2017-02-08 09:23:07.099	\N	2017-02-12 23:00:00	I can make a basic implementation of this	2017-02-09 19:55:59.173	Added a basic functionality with title and description, nothing more.	1	10	3	826	825	212	1
 174	2017-02-05 21:21:30.032	\N	2017-02-05 23:00:00	Done and implemented, see my profile 	\N	\N	\N	6	3	804	803	209	1
 177	2017-02-07 20:14:46.545	\N	2017-02-14 00:00:00	I will constrain this to about a day's worth of work (approximately 5 to 8 units of complexity). The result of the contribution will be a map of activities specific to CollectiveOne's current state of development.	\N	\N	\N	10	1	824	823	216	9
+179	2017-02-08 15:06:20.496	\N	\N	Create project freeftopia	\N	\N	\N	50	3	829	828	220	31
+180	2017-02-08 15:06:20.574	\N	\N	Create project freeftopia	\N	\N	\N	50	3	831	830	221	32
+181	2017-02-08 16:47:18.149	\N	2017-02-09 23:00:00	i bid 10	\N	\N	\N	10	1	840	837	222	32
+182	2017-02-09 21:06:28.422	\N	2017-02-09 23:00:00	I have made a first pass and tested it in slack. For some reason the image does not work well in facebook. Perhaps is a mater of cache. 	2017-02-09 21:06:40.017		1	10	3	843	842	136	1
+183	2017-02-10 08:54:55.237	\N	2017-02-11 23:00:00	I will do this	\N	\N	\N	15	1	849	848	213	1
+172	2017-02-04 16:11:34.116	\N	2017-02-10 23:00:00	I would like to devote some time to this.	2017-02-11 18:54:35.52	I updated the R scripts to have better benchmark metrics and prepared **[this doc](https://docs.google.com/document/d/1RmzdMHlm0IbMl_PL-gaACn27KzttjN5W_La8QJ7ZGp0/edit)**.	1	20	3	792	791	210	1
+184	2017-02-11 18:57:44.064	\N	2017-02-11 23:00:00	I have already prepared this [here](https://docs.google.com/document/d/1kjqYHC4iNGmctThZTkL9v_4_iGxPKF7pLO5877pZUrk/edit#).	\N	\N	\N	30	3	854	853	227	1
+186	2017-02-15 13:23:18.655	\N	2017-02-16 23:00:00	I will do my best to implement something by tomorrow 	\N	\N	\N	15	3	872	871	233	1
+187	2017-02-19 18:18:26.565	\N	2017-02-19 23:00:00	[This draft](https://medium.com/@pepoospina/collectiveone-call-for-contributions-5f8918c854d7) is what I propose. Perhaps it could be reviewed further with other contributions.	\N	\N	\N	25	3	876	875	218	1
+188	2017-02-20 07:37:31.026	\N	2017-02-20 23:00:00	I will prepare a short post with a link to the webpage and to the medium post	\N	\N	\N	5	1	878	877	217	1
+189	2017-02-20 10:10:54.263	\N	2017-02-20 23:00:00	I can do this 	\N	\N	\N	8	1	882	881	235	1
+190	2017-02-21 15:08:27.606	\N	2017-02-22 23:00:00	I will prepare this document to start framing the activities, I will try not to make proposals but to leave the design open.	2017-02-23 09:08:33.311	I have created [this doc](https://docs.google.com/document/d/1vEsOulc_fOUyznpOS5rRoE5SIrQLJlYU25eSjxd0tz8/edit#).	1	10	3	886	885	236	1
+191	2017-02-23 09:29:29.917	\N	2017-02-24 23:00:00	I will prepare this as a proposal with some level of detail	\N	\N	\N	15	1	890	889	237	1
 \.
 
 
 ALTER TABLE bids ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3318 (class 0 OID 1687018)
--- Dependencies: 216
+-- TOC entry 3322 (class 0 OID 1706244)
+-- Dependencies: 217
 -- Data for Name: projects; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
 
@@ -216,15 +230,17 @@ COPY projects (id, creation_date, description, enabled, name, pps_tot, creator_i
 6	2017-01-04 20:50:22.511	I am the founder of www.autoebid.com a consumer champion helping consumers to save time and money and stop getting ripped off. The service is a 1st to market reverse auction marketplace that has taken over £230m in online orders. Having recently my business, I now want to do start my next venture and do something meaningful, don’t we all?\r\n\r\nMy profile is at https://uk.linkedin.com/in/amin-saleem-338b94\r\nI am looking to create a new dynamic platform that will be focused on helping businesses and individuals to work more efficiently, save time and money, enable ethically focused small business to compete with some of the large corporate organisations who are creating many problems facing society.\r\n\r\nMuch of the service will be a fermium service (fee for users) with revenues derived from collective purchasing and procurement solutions. Individuals and organizations are able to negotiate better terms with vendors, create economies of scale and even generate additional income by benefiting from the buying power of millions.\r\n\r\nGovernments, charities businesses and the general public are all under tremendous pressure to reduce their costs and become more efficient, that where we can step in. Our marketplace enables users to buy the right product from the right supplier at the best possible price.\r\n\r\nI am considering setting up my new organization under a co-operative type business model offering all employees a 10% share in the business (including all contractors) in addition to 10% going to customers. As https://www.bcorporation.net provide a good structure for an ethical transparent business, I was considering going with them.\r\n\r\nI think it’s important to be a for profit organization, however, we will be a “People before Profit” company. The solutions aim is to help drive positive change by empowering individuals and business to work and consume better. The organization will carry the same responsibilities as a, not for profit company but will have the flexibility to invest some of those profits into other projects that support our aims as well as attracting the best talent around the world.\r\n\r\nI am at the beginning stage of this exciting project and looking to create a team to get the project off the ground. The project is going to be funded by myself initially, I still need to define the project, recruit a team,  build and launch a beta version of the solution.\r\n\r\nIf you are interested in getting involved with the project get in contact, via slack - [https://smartdealmaker.slack.com](https://smartdealmaker.slack.com)\r\n\r\nRegards\r\n	t	Smartdealmaker-project	100	17
 7	2017-01-12 10:57:54.578	Lendi es una aplicación donde los usuarios pueden pedir prestado cualquier objeto que necesiten a otros vecinos de su barrio. Los usuarios son co-dueños del proyecto	f	Lendi	1000	18
 8	2017-01-30 14:46:31.857	Test project with test users to play. 	t	Sandbox	410	20
+16	2017-02-13 20:56:45.31	ArtSociety is a disruptive effort for the art industry and gears to change the way art is evaluated to reward the artists for their work.	t	ArtSociety	10000	19
 14	2017-02-02 04:31:29.413	OuiShare Open Source is a project that aims to put the OuiShare values transparency and openness into action and help fulfill the organizations mission of building and nurturing a collaborative culture beyond our own network. It will enable knowledge to circulate more easily within our commuity and inspire others to copy, fork and build upon what we do.\r\n\r\nIn a first step this project consists of creating easy to read documentation and resources that show and explain how OuiShare works. \r\n	t	OuiShareOpenSource	104	16
-1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	t	CollectiveOne	3490.84999999999991	1
+15	2017-02-08 15:06:20.311	This is the C1 test project for freeftopia	t	freeftopia	50	31
+1	2016-08-08 14:36:40.329	CollectiveOne scope is to develop the CollectiveOne method itself, promote its adoption, and develop tools that allow collective open projects to grow.	t	CollectiveOne	3620.84999999999991	1
 \.
 
 
 ALTER TABLE projects ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3297 (class 0 OID 1686951)
+-- TOC entry 3300 (class 0 OID 1706175)
 -- Dependencies: 195
 -- Data for Name: cbtions; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -372,16 +388,16 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 152	7	2016-12-05 08:35:19.723	\N	Get in contact with the P2P Foundation to get feedback from them, attract potential contributors to CollectiveOne and potential projects to be hosted	public relations	0	2	0	Contact the P2P Foundation	1	1	552	7	551	1
 150	0	2016-12-04 12:56:37.507	\N	Reopen a contribution when a preassigned bid is not accepted	updated bid update state routine	1	0	0	Reopen contribution when a bid is not accepted	\N	1	545	3	542	1
 156	25	2016-12-06 11:38:17.568	\N	Pay 99.99 euros for the flight Paris - Berlin	payment 	0	2	0	Pay for Paris Berlin Flight	1	1	563	7	562	1
-147	0	2016-12-02 17:49:47.125	\N	Create a PSQL script similar to [this](https://github.com/CollectiveOne/CollectiveOneWebapp/blob/master/data-bk/delete-goal.pgs) but to delete an entire project, including all its related elements at all degrees.\r\n\r\n	PSQ script	-1	4	0	Create PSQ script to delete entire project	\N	1	\N	6	533	1
 141	0	2016-11-30 23:54:15.069	2017-01-09 15:59:53.417	Proofread and suggest comments to SU application	comments	0	6	0	Proofread and suggest comments to SU application	\N	1	497	7	496	1
 133	0	2016-11-30 08:25:43.955	\N	This contribution has two related parts:\r\n1) Change the current top menu structure, such that the "Contributions" link takes the user to the tree-like structure that is currently available when navigating via project -> Goals. \r\n2) Create a "New Contribution" button such that users can add contributions directly inside a subgoal	Updated frontend and backend	1	4	0	Update contribution menu structure	\N	3	\N	10	474	1
-136	0	2016-11-30 11:34:23.439	\N	Add metadata to the site layout so that urls shared on slack, facebook and twitter are shown nicely\r\n\r\nhttps://api.slack.com/docs/message-attachments#unfurling	updated layout	1	0	0	Updated site metadata to help twitter, facebook and slack unfurling	\N	1	482	4	481	1
 160	25	2016-12-12 10:10:07.498	\N	Attend the Ouishare-Enspiral [event](https://www.eventbrite.co.nz/e/enspiral-and-ouishare-learnings-from-participatory-networks-paris-tickets-29045025453?utm-medium=discovery&utm-campaign=social&utm-content=attendeeshare&aff=estw&utm-source=tw&utm-term=listing#) and the [platform coops](http://www.supermarkt-berlin.net/en/event/platform-coops-start-your-own/) and make contacts with the events attendants.	Notes and list of contacts stablished	0	2	0	Attend Oiushare-Enspiral and Platformcoop events and make PR	1	1	580	7	579	1
 125	10	2016-11-26 20:31:54.501	\N	Setup a basic markdown infrastructure that is able to handle at least new lines, links and bold/italic text. Another contribution can be used to extend the markdown allover the application.	updated front and backend	1	2	0	Setup markdown basic infrastructure	1	1	438	12	437	1
 159	0.5	2016-12-08 07:57:10.509	\N	Prepare the notes of the meeting with Jaime.	Notes	0	2	0	Prepare notes of the meeting with Jaime	1	1	574	1	573	1
 158	3	2016-12-06 19:12:46.745	\N	Markdown was added to new goals, contributions, decisions and projects. It should be added to the creation of bids, the marking of bids as done, and the creation of arguments.	updated frontend code for the elements listed above	0	2	0	Extend and markdown to bids, arguments and comments	1	1	570	4	569	1
 163	1	2016-12-13 10:47:50.55	\N	Allow the creator of a decision to set the maximum duration to a value different from 36 hours. This can be a partial solution to be used until a [more advanced](http://www.collectiveone.org/views/cbtionPageR/88) decision logic is prepared.	updated decision form and backend logic	0	2	0	Allow custom duration in custom solutions	1	1	590	3	589	1
 169	75	2016-12-15 16:16:31.234	\N	Propose new approaches to the decision mechanism, analyze and test them. If possible compare them with the current implementation of the decision algorithm.	Analysis document	0	2	0	Review of the decision mechanism	3	1	613	2	612	1
+136	10	2016-11-30 11:34:23.439	\N	Add metadata to the site layout so that urls shared on slack, facebook and twitter are shown nicely\r\n\r\nhttps://api.slack.com/docs/message-attachments#unfurling	updated layout	1	2	0	Updated site metadata to help twitter, facebook and slack unfurling	1	1	482	4	481	1
+147	0	2016-12-02 17:49:47.125	\N	Create a PSQL script similar to [this](https://github.com/CollectiveOne/CollectiveOneWebapp/blob/master/data-bk/delete-goal.pgs) but to delete an entire project, including all its related elements at all degrees.\r\n\r\n	PSQ script	0	4	0	Create PSQ script to delete entire project	\N	1	\N	6	533	1
 170	8	2016-12-15 21:28:31.066	\N	Participate in the discussions that arise in the project Slack and provide insightful comments and feedback. Share relevant information with the rest of the team.	slack participation	0	2	0	Provide comments and share views in Slack	9	1	620	7	619	1
 168	5	2016-12-14 21:31:01.254	\N	Produce a short document (one page) to structure a discussion around CollectiveOne business model, in particular, the potential distinction between 'for profit' and 'non-profit' models	Document (one page)	0	2	0	Lay out elements to structure a discussion around CollectiveOne business model	3	3	610	1	609	1
 55	0	2016-09-08 23:05:16.268	\N	Propose new approaches to the decision mechanism, analyze and test them. If possible compare them with the current implementation of the decision algorithm. 	Analysis document 	1	6	0	Review of the decision mechanism	\N	1	\N	2	143	1
@@ -404,9 +420,9 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 179	100	2017-01-04 20:50:22.549	\N	Start contribution	\N	0	2	0	Create project Smartdealmaker-project	17	17	\N	\N	\N	6
 174	10	2016-12-19 18:22:40.995	\N	Review the webapplication and analyse the key modifications that will need to be done to implement this update.	short description of the modifications to be done	1	2	15	Perform a first assessment of technical implications	1	1	635	50	634	1
 126	42.5	2016-11-27 11:20:09.189	\N	Pay 170 euros for the airplane tickets to attend the event at Berlin. http://www.supermarkt-berlin.net/event/platform-coops-start-your-own/	payment 	0	2	0	Pay for BCN to Berlin tickets 	1	1	444	7	443	1
+217	0	2017-02-07 15:06:24.322	\N	Prepare a post to be published in Reddit with the scope of funding more contributors to CollectiveOne. Select which (or which ones) subreddits to use. 	Reddit post 	0	1	10	Prepare Reddit post	\N	1	816	7	815	1
 180	0	2017-01-05 10:24:42.666	\N	The webapp is generating the \r\n```\r\nheroku/web.1: Error R14 (Memory quota exceeded)\r\n```\r\nerror continuously. Review the issue and propose a solution.\r\n	review of problem and solution identification	1	0	6	Review memory usage in Heroku	\N	1	664	6	663	1
 114	0	2016-11-18 20:27:41.837	2017-01-09 16:03:44.403	Goals are expected to work as a "requirements specification". The contribution consist on reviewing the current goals structure under the +webapp goal and propose an improvement to it, trying to identify the key sub-goals (or milestones) that are to be achieved to reach the +webapp goal. Each sub-goal can be decomposed into sub-goals multiple times if needed.	document with a proposal of a decomposition in a sub-goals tree of the +webapp goal	1	6	0	Review the goal substructure of the +webapp goal	\N	1	394	10	393	1
-176	0	2017-01-03 10:11:53.521	\N	Use the CollectiveOne platform to create a new project, try to create goals, contributions and decisions and use the tool. Provide feedback to CollectiveOne.	feedback received	1	1	10	Use the tool to create a project and provide comments	\N	1	645	4	644	1
 177	1	2017-01-03 20:22:22.395	\N	Review, proofread and provide feedback on the **[application](https://docs.google.com/document/d/1-j2HoXc48fl37tpK0hbUnJRBqe-zzr74TYCIjUPA9ks/edit#)** draft.	feedback and updated draft with suggestions	0	2	3	Review the appliction and provide feedback	9	1	647	48	646	1
 103	0	2016-11-04 10:27:46.671	\N	Create a landing page for asking and sending invitation to the project Slack. See http://rauchg.com/slackin/	landing page configured and tested	1	0	0	Add Slackin to slack channel	\N	1	356	7	345	1
 45	0	2016-09-07 18:13:52.233	\N	Add a filter to search elements based on their creation date (i.e. if the date is within a range). Updated filter element and DB service	updated Filter JS element and DB BaseDao get methods	0	0	0	Add filter by creation date	\N	1	683	4	123	1
@@ -427,30 +443,50 @@ COPY cbtions (id, assigned_ppoints, creation_date, delete_date, description, pro
 187	5	2017-01-13 11:01:00.506	\N	Make an overview of the current project goals, for each one of them:\r\n- describe the status (current and foreseen activities)\r\n- assign a priority	spreadsheet with goals overview	0	2	5	Overview of goals	1	1	706	54	705	1
 185	5	2017-01-12 08:41:32.134	\N	Create a dummy sample project (in a localhost and not online) to be used to show the features of CollectiveOne, including goals, contributions, bids, decisions and shared ownership	dummy project structure	0	2	5	Create sample project	1	1	698	52	697	1
 175	20	2016-12-23 00:05:53.062	\N	Based on the discussion about the for-vs-non-for-profit ([see thus doc](https://docs.google.com/document/d/187TM56DmTYKP2k0OQ7-YPfrcmUoRkhgQPdbQ42imDlQ/edit?usp=drivesdk)), provide a proposal which helps converging, with enough level of detail to evaluate its feasibility. 	business model definition	1	2	20	Propose a business model draft	1	1	639	1	638	1
-213	0	2017-02-05 18:02:04.029	\N	Allow users to star projects so that only stared projects are shown in the ActiveProjectsList and results of contribution and decision browsers is automatically filtered to the user stared projects.	updated webapp	0	0	20	Allow users to star projects	\N	1	797	10	796	1
-212	0	2017-02-05 17:59:12.39	\N	Create a project browser page in which the list of enabled projects are shown. \n\n- Use the FilterElement element to allow project list to be searched/filtered.\n- Create a ProjectBox element to show the main project data and provide a link to the project page.	updated webapp	0	0	20	Project browser page	\N	1	798	10	795	1
-210	0	2017-02-04 16:10:36.488	\N	Its been a while since the decision mechanism is not analyzed in some detail. Review the current implementation assuming 20 people can vote and identify the key features (is the verdict time shorter for clear decisions, by how much, does it works ok in all cases?)	analysis document of decision mechanism	0	1	20	Review the decision mechanism for 20 votes	\N	1	790	2	789	1
+176	10	2017-01-03 10:11:53.521	\N	Use the CollectiveOne platform to create a new project, try to create goals, contributions and decisions and use the tool. Provide feedback to CollectiveOne.	feedback received	1	2	10	Use the tool to create a project and provide comments	17	1	645	4	644	1
+212	10	2017-02-05 17:59:12.39	\N	Create a project browser page in which the list of enabled projects are shown. \n\n- Use the FilterElement element to allow project list to be searched/filtered.\n- Create a ProjectBox element to show the main project data and provide a link to the project page.	updated webapp	0	2	20	Project browser page	1	1	798	10	795	1
+213	0	2017-02-05 18:02:04.029	\N	Allow users to star projects so that only stared projects are shown in the ActiveProjectsList and results of contribution and decision browsers is automatically filtered to the user stared projects.	updated webapp	0	1	20	Allow users to star projects	\N	1	797	10	796	1
 207	3	2017-02-02 12:03:37.777	\N	Update the user manual including the features now available after the activities on +realm-per-goal.	updated [user manual](https://docs.google.com/document/d/1x1Vl08jHonYukIvV80iRqouqjwolhsFCWWcTPbSd9js/edit#).	0	2	6	Updated user manual with realm-per-goal	1	1	777	8	776	1
 211	0	2017-02-04 22:41:14.316	\N	Update the white paper to include the current version of the tool (mostly the decision real per goals) and update the colony related section to make it more generic. 	updated [white paper](https://docs.google.com/document/d/1C9dCnPbKEZzCqaLYjmhsYIv0t0ehlaRbzwRaMZtzNNA/edit?usp=drivesdk)	0	0	10	Update white paper	\N	1	794	1	793	1
 208	5	2017-02-02 14:10:59.461	\N	Update the signup process to select one existing user as referral and send the signup authorization to that user's email. When the referral authorizes the signup (visiting a link), store the referral together with the authorized email and send an email to the user requesting the authorization for they to sign up.	updated webapp	0	2	10	Update signup logic to send email to referral	1	1	781	10	780	1
 189	0	2017-01-14 18:00:06.67	\N	Contact people and find someone who is interested in providing a first overview of the legal aspects of CollectiveOne, mainly how could CollectiveOne be incorporated while, at the same time, keep its open and decentralized ambitions.\r\n\r\nLegal support can be done in exchange of pps, or through a standard paid service.	find the collaborator and set the collaboration mode	1	1	10	Find legal support	\N	1	715	49	714	1
+210	20	2017-02-04 16:10:36.488	\N	Its been a while since the decision mechanism is not analyzed in some detail. Review the current implementation assuming 20 people can vote and identify the key features (is the verdict time shorter for clear decisions, by how much, does it works ok in all cases?)	analysis document of decision mechanism	0	2	20	Review the decision mechanism for 20 votes	1	1	790	2	789	1
 206	10	2017-02-02 12:02:38.843	\N	Let the user select more than one initial owner of pps at project creation and the pps distribution among them.\t	updated project form and backend logic	1	2	10	Multiple initial owners at project creation	1	1	775	10	774	1
 214	3	2017-02-05 19:31:58.01	\N	Update the R benchmark tool to include time as now it assumes that 1 vote arrives each hour. Keep the same functionalities and results.	updated scripts and plots.	0	2	3	Updated R benchmark tool to incluide time	1	1	800	2	799	1
 209	6	2017-02-03 10:28:52.995	\N	Add a simple text+markdown space within the user page with a text that each user can use to describe him/herself. The description should be updatable at any time.	updated user page and backend	0	2	6	Add user personal description in user page	1	1	788	4	787	1
 205	4	2017-02-02 04:48:40.638	\N	Create chapters and subchapters of the handbook	Draft structure on gitbook.com	0	2	4	Create basic structure of the finance handbook	16	16	773	68	772	14
 215	0	2017-02-07 14:28:13.608	\N	Allow each user to select their avatar instead of using Bob for all. 	updated user page	0	0	10	Allow users to select avatar 	\N	1	809	10	808	1
-217	0	2017-02-07 15:06:24.322	\N	Prepare a post to be published in Reddit with the scope of funding more contributors to CollectiveOne. Select which (or which ones) subreddits to use. 	Reddit post 	0	0	10	Prepare Reddit post	\N	1	816	7	815	1
-218	0	2017-02-07 15:24:46.248	\N	Prepare and publish a high quality post on medium describing CollectiveOne in some detail and inviting people to come and contribute. 	Medium post 	0	0	30	Medium post 	\N	1	818	7	817	1
-219	0	2017-02-07 17:16:09.322	\N	Allow users to partially release a goal by setting their voting weight to a precise value (only below its maximum weight). This will change if the weights of other users change, but that's ok.	updated goal release logic	0	4	5	Allow users to set the desired voting weight within goal	\N	4	\N	4	819	1
 148	4	2016-12-04 01:13:13.352	\N	Default error page is resulting in an error itself. Something related to "#authentication.name" property not found. Fix this and show a gracefull error page	updated error management	1	2	0	Fix default error page	1	1	541	6	536	1
 216	0	2017-02-07 14:54:37.787	\N	Provide a first overview and description of the activities (steps) that should be followed to achieve the goal. 	Google Doc under [this folder](https://drive.google.com/folderview?id=0B6HEie5ZN03bY3E4T3BpRzdrSms)	1	1	10	First planning of activities 	\N	1	820	69	814	1
+219	0	2017-02-07 17:16:09.322	\N	Allow users to partially release a goal by setting their voting weight to a precise value (only below its maximum weight). This will change if the weights of other users change, but that's ok.	updated goal release logic	0	0	5	Allow users to set the desired voting weight within goal	\N	4	841	4	819	1
+220	50	2017-02-08 15:06:20.482	\N	Start contribution	\N	0	2	0	Create project freeftopia	31	31	\N	\N	\N	15
+227	30	2017-02-11 18:56:56.11	\N	Based on the review of the decision mechanism 01, proposed a new simplified version. Implement in R and benchmark it relative to the current version.	description doc and R implementation	0	2	30	Simplified version of the decision mechanism	1	1	852	2	851	1
+221	50	2017-02-08 15:06:20.567	\N	Start contribution	\N	1	2	0	Create project freeftopia	32	31	\N	\N	\N	15
+228	10000	2017-02-13 20:56:45.517	\N	Start contribution	\N	0	2	0	Create project ArtSociety	19	19	\N	\N	\N	16
+230	0	2017-02-13 21:11:57.852	\N	based on the facts outlined in the whitepaper a game should be created in which about 20 people can simulate the idea in small and check for mayor obstacles and to verify the logic.	Simulation game	0	0	100	Create feasability study came based on Whitepaper	\N	19	860	73	859	16
+223	0	2017-02-08 16:42:50.179	\N	Tester les smartcontracts de Minnie\r\n\r\nPour faire encore un test sur les contributions\r\nObjectif de mon  test : voir où est ce que je peux modifier les seuils de vote, date de fin du vote etc etc		0	0	10	Tester les smartcontracts de Minnie	\N	32	839	71	836	15
+222	0	2017-02-08 16:27:36.063	\N	Pour contribuer au "goal" Operate-ftopia\r\nceci est un test	Client xyz support	1	1	10	test de contribution	\N	32	835	70	833	15
+224	0	2017-02-08 18:30:22.211	\N	Review the proposal of CollectiveOne and share insights and overal impressions.	overview document	0	5	10	Review the overal proposal of C1 and share insights	\N	1	\N	1	838	1
+229	0	2017-02-13 21:01:48.216	\N	Make the existing draft of the idea look like something of this kind needs to look like.		0	0	200	Refine, Rewrite, and Structure White Paper	\N	19	861	73	858	16
+218	25	2017-02-07 15:24:46.248	\N	Prepare and publish a high quality post on medium describing CollectiveOne in some detail and inviting people to come and contribute. 	Medium post 	0	2	30	Medium post 	1	1	818	7	817	1
+237	0	2017-02-23 09:21:00.44	\N	Prepare a draft version of how the C1 interface could look.	set of drawings	0	1	20	Prepare a draft proposal of how it could look	\N	1	888	69	887	1
+225	0	2017-02-09 21:10:08.218	\N	Udpated meta tags to include data to build a twitter card as the current ones work for slack and facebook, but not for twitter. See **[this](https://dev.twitter.com/cards/types/summary)**	udpated all views metadata	0	0	5	Update open graph for twitter	\N	1	845	4	844	1
+226	0	2017-02-09 21:14:24.837	\N	Find a better image to be used for open graph as facebook cuts the current one and it cant be read.\r\n\r\n**updated all references in the views!**	new image file and updated references	0	0	5	Fix image in open graph for facebook	\N	1	847	4	846	1
+231	0	2017-02-14 10:36:16.75	\N	Pay ~140 euros for the [entry ticket](https://2017.open.coop/tickets/).	payment	0	0	35	Pay for the inscription	\N	1	866	74	864	1
+233	15	2017-02-15 13:22:27.835	\N	Add help information to the website, preferably contextual to the page or element. Try to transfer the information from the users manual into the site. \r\n\r\nThis has to be ready by tomorrow's morning 	updated frontend 	0	2	15	Add help info	1	1	870	4	869	1
+232	0	2017-02-14 22:55:51.404	\N	Participate at the two days event and pitch CollectiveOne around. The main scope is to:\r\n\r\n- let people know about its existence and invite them to Slack. \r\n- discuss with projects interested in implementing decentralized ownership and governance about the possibility of giving CollectiveOne a try. \r\n- explore potential partnerships, in which other platforms could offer CollectiveOne as part of their services to the communities they host. 	summary of leads status and contacts details 	0	0	40	Participate at the event	\N	1	868	74	867	1
+238	0	2017-02-23 10:10:34.074	\N	Remove the bar plot showing the participation points of the different contributors with a table that shows, beside the participation points, other metrics like the total number of contributions created and accepted and the mean value of pps per contribution	updated project page	0	0	10	Change graph for table in project contributors	\N	1	892	4	891	1
+234	0	2017-02-19 17:54:19.607	\N	Review [The Crowd Found Hub](https://docs.google.com/document/d/1bKUv0Ylna-XFAt8hKTwsmkfI5hDOUAsCACkR2PplTlc/edit#heading=h.4f81tsth3y0h) document and identify:\r\n\r\n- The key commonalities with CollectiveOne\r\n- The key differences and an analysis of them\r\n- A list of possible modifications/improvements to CollectiveOne based on the Crowd Found Hub design	document	0	0	10	Review The Crowd Found Hub	\N	1	874	1	873	1
+235	0	2017-02-20 10:10:02.385	\N	Non functional update of the webapp file and objects structure\r\n\r\n- Reorganize the classes structure to have a dedicated service class per entity\r\n- Add minimal documentation (as comments) to each method.\r\n	updated codebase	0	1	8	Clean code	\N	1	880	10	879	1
+239	0	2017-02-23 10:30:17.053	\N	Expand the filter functionality to get contributions assigned to a user. Add that list as a new cbtion list to the user page.	updated filter and userpage	0	0	10	Add "assigned to me" list of contributions in user page	\N	1	894	4	893	1
+236	10	2017-02-21 15:05:25.682	\N	Prepare a short document summarizing the information available to redesign the user experience. Condense the key considerations and feedbacks so far received and identify some alternatives.	google doc	0	2	10	Summary inputs and alternatives	1	1	884	69	883	1
 \.
 
 
 ALTER TABLE cbtions ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3308 (class 0 OID 1686987)
+-- TOC entry 3311 (class 0 OID 1706211)
 -- Dependencies: 206
 -- Data for Name: decision_realms; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -519,13 +555,18 @@ COPY decision_realms (id, goal_id) FROM stdin;
 76	67
 77	68
 78	69
+79	70
+80	71
+81	72
+82	73
+83	74
 \.
 
 
 ALTER TABLE decision_realms ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3310 (class 0 OID 1686992)
+-- TOC entry 3313 (class 0 OID 1706216)
 -- Dependencies: 208
 -- Data for Name: decisions; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -1155,7 +1196,6 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 653	2017-01-04 16:07:31.797	0.949999999999999956	1	2017-01-04 09:05:31.651	accept contribution 'Create user manual of the web application' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-01-04 16:07:31.796	1	2705.5	0.5	0	2	ACCEPTED	3	1	36	3189	139	\N	\N	6	1	25	1
 657	\N	0.949999999999999956	0	2017-01-05 09:12:52.557	assign contribution 'Provide feedback on the basic concept of CollectiveOne' to smartdealmaker	0	OFFERED	1	0	0	8	\N	0	0	0.5	0	0	ASSIGNED	3	0	36	0	142	\N	\N	6	1	25	1
 656	2017-01-05 09:30:28.302	0.949999999999999956	1	2017-01-05 09:10:04.247	assign contribution 'Use the tool to create a project and provide comments' to smartdealmaker	0	OFFERED	0	1	1	8	2017-01-05 09:30:28.298	1	2710.5	0.5	0	2	ASSIGNED	3	1	36	3194	141	\N	\N	6	1	25	1
-659	\N	0.949999999999999956	0	2017-01-05 09:30:29.32	accept contribution 'Use the tool to create a project and provide comments' as delivered by smartdealmaker	0	ASSIGNED	1	0	0	8	\N	0	0	0.5	0	0	ACCEPTED	3	0	36	0	141	\N	\N	6	1	25	1
 658	2017-01-05 09:39:13.618	0.949999999999999956	1	2017-01-05 09:15:31.156	assign contribution 'Review and comment discussion on CollectiveOne business model' to smartdealmaker	0	OFFERED	0	1	1	8	2017-01-05 09:39:13.617	1	2710.5	0.5	0	2	ASSIGNED	3	1	36	3194	143	\N	\N	6	1	25	1
 662	\N	0.949999999999999956	0	2017-01-05 09:39:14.381	accept contribution 'Review and comment discussion on CollectiveOne business model' as delivered by smartdealmaker	0	ASSIGNED	1	0	0	8	\N	0	0	0.5	0	0	ACCEPTED	3	0	36	0	143	\N	\N	6	1	25	1
 649	2017-01-05 11:06:53.78	0.949999999999999956	1	2017-01-03 20:31:23.179	accept contribution 'Review the appliction and provide feedback' as delivered by milieu	0	ASSIGNED	0	1	1	8	2017-01-05 11:06:53.779	1	2710.5	0.5	0	2	ACCEPTED	3	1	36	3194	138	\N	\N	6	1	25	1
@@ -1165,6 +1205,7 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 666	\N	0.949999999999999956	0	2017-01-05 10:44:17.809	delete contribution 'Comments reply bug'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	181	\N	6	1	25	1
 667	2017-01-05 15:57:53.972	0.949999999999999956	1	2017-01-05 15:57:50.148	assign contribution 'Comments reply bug' to pepoospina	0	OFFERED	0	1	1	8	2017-01-05 15:57:53.97	1	2717.5	0.5	0	2	ASSIGNED	3	1	36	3202	144	\N	\N	6	1	25	1
 668	2017-01-05 15:58:02.152	0.949999999999999956	1	2017-01-05 15:57:54.982	accept contribution 'Comments reply bug' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-01-05 15:58:02.15	1	2717.5	0.5	0	2	ACCEPTED	3	1	36	3202	144	\N	\N	6	1	25	1
+659	2017-02-10 14:07:37.602	0.949999999999999956	1	2017-01-05 09:30:29.32	accept contribution 'Use the tool to create a project and provide comments' as delivered by smartdealmaker	0	ASSIGNED	0	1	1	8	2017-02-10 14:07:37.602	1	3026.34999999999991	0.5	0	2	ACCEPTED	3	1	36	3510.84999999999991	141	\N	\N	6	1	25	1
 670	\N	0.949999999999999956	0	2017-01-07 00:27:55.655	delete goal 'creative-ring-application'	0	ACCEPTED	1	0	0	8	\N	0	0	0.5	0	0	DELETED	2	0	36	0	\N	\N	52	6	1	25	1
 669	2017-01-09 08:53:11.525	0.949999999999999956	1	2017-01-07 00:27:55.654	create goal 'creative-ring-application'	0	PROPOSED	0	1	1	8	2017-01-09 08:53:11.523	1	2720.5	0.5	0	2	ACCEPTED	2	1	36	3205	\N	\N	52	6	1	25	1
 671	2017-01-09 08:59:00.122	0.949999999999999956	1	2017-01-09 08:58:48.744	open contribution 'Prepare slides'	0	PROPOSED	0	1	1	8	2017-01-09 08:59:00.119	1	2720.5	0.5	0	2	OPEN	1	1	36	3205	\N	182	\N	6	1	25	1
@@ -1275,7 +1316,6 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 810	2017-02-07 14:37:58.26	0.949999999999999956	1	2017-02-07 14:37:35.473	create goal 'design-ux'	0	PROPOSED	0	1	1	8	2017-02-07 14:37:58.26	1	3002.34999999999991	0.5	0	2	ACCEPTED	2	1	36	3486.84999999999991	\N	\N	69	6	27	10	1
 811	\N	0.949999999999999956	0	2017-02-07 14:37:58.944	delete goal 'design-ux'	0	ACCEPTED	1	0	0	8	\N	0	0	0.5	0	0	DELETED	2	0	36	0	\N	\N	69	6	78	69	1
 791	2017-02-04 16:11:39.499	0.949999999999999956	1	2017-02-04 16:11:34.424	assign contribution 'Review the decision mechanism for 20 votes' to pepoospina	0	OFFERED	0	1	1	8	2017-02-04 16:11:39.499	1	2993.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3477.84999999999991	172	\N	\N	6	23	2	1
-792	\N	0.949999999999999956	0	2017-02-04 16:11:40.096	accept contribution 'Review the decision mechanism for 20 votes' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0.5	0	0	ACCEPTED	3	0	36	0	172	\N	\N	6	23	2	1
 793	2017-02-04 22:41:40.437	0.949999999999999956	1	2017-02-04 22:41:14.388	open contribution 'Update white paper'	0	PROPOSED	0	1	1	8	2017-02-04 22:41:40.437	1	2993.34999999999991	0.5	0	2	OPEN	1	1	36	3477.84999999999991	\N	211	\N	6	36	1	1
 794	\N	0.949999999999999956	0	2017-02-04 22:41:42.681	delete contribution 'Update white paper'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	211	\N	6	36	1	1
 796	2017-02-05 18:02:17.308	0.949999999999999956	1	2017-02-05 18:02:04.065	open contribution 'Allow users to star projects'	0	PROPOSED	0	1	1	8	2017-02-05 18:02:17.308	1	2993.34999999999991	0.5	0	2	OPEN	1	1	36	3477.84999999999991	\N	213	\N	6	27	10	1
@@ -1294,26 +1334,97 @@ COPY decisions (id, actual_verdict_date, ci, clarity, creation_date, description
 773	2017-02-07 10:24:23.458	0.949999999999999956	1	2017-02-02 04:49:05.838	delete contribution 'Create basic structure of the finance handbook'	0	OPEN	0	1	1	8	2017-02-07 10:24:23.458	1	104	0.5	0	2	DELETED	1	1	36	104	\N	205	\N	6	77	68	14
 808	2017-02-07 14:28:20.753	0.949999999999999956	1	2017-02-07 14:28:13.642	open contribution 'Allow users to select avatar '	0	PROPOSED	0	1	1	8	2017-02-07 14:28:20.753	1	3002.34999999999991	0.5	0	2	OPEN	1	1	36	3486.84999999999991	\N	215	\N	6	27	10	1
 809	\N	0.949999999999999956	0	2017-02-07 14:28:22.356	delete contribution 'Allow users to select avatar '	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	215	\N	6	27	10	1
+792	2017-02-11 18:54:45.38	0.949999999999999956	1	2017-02-04 16:11:40.096	accept contribution 'Review the decision mechanism for 20 votes' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-02-11 18:54:45.38	1	3026.34999999999991	0.5	0	2	ACCEPTED	3	1	36	3520.84999999999991	172	\N	\N	6	23	2	1
 812	2017-02-07 14:39:04.9	0.949999999999999956	1	2017-02-07 14:38:50.975	detach goal +design-ux from +webapp with an initial budget of 200.0 pps	0	\N	0	1	1	8	2017-02-07 14:39:04.9	1	3002.34999999999991	0.5	0	2	\N	2	1	36	3486.84999999999991	\N	\N	69	6	27	10	1
 813	2017-02-07 14:45:06.062	0.949999999999999956	1	2017-02-07 14:44:59.519	increase budget of goal +design-ux from 200.0 to 250.0 pps	0	\N	0	1	1	8	2017-02-07 14:45:06.062	1	3002.34999999999991	0.5	0	2	\N	2	1	36	3486.84999999999991	\N	\N	69	6	27	10	1
 815	2017-02-07 15:06:33.883	0.949999999999999956	1	2017-02-07 15:06:24.378	open contribution 'Prepare Reddit post'	0	PROPOSED	0	1	1	8	2017-02-07 15:06:33.883	1	3002.34999999999991	0.5	0	2	OPEN	1	1	36	3486.84999999999991	\N	217	\N	6	42	7	1
 816	\N	0.949999999999999956	0	2017-02-07 15:06:35.805	delete contribution 'Prepare Reddit post'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	217	\N	6	42	7	1
 817	2017-02-07 15:24:56.029	0.949999999999999956	1	2017-02-07 15:24:46.391	open contribution 'Medium post '	0	PROPOSED	0	1	1	8	2017-02-07 15:24:56.029	1	3002.34999999999991	0.5	0	2	OPEN	1	1	36	3486.84999999999991	\N	218	\N	6	42	7	1
 818	\N	0.949999999999999956	0	2017-02-07 15:25:00.333	delete contribution 'Medium post '	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	218	\N	6	42	7	1
-819	\N	0.949999999999999956	0	2017-02-07 17:16:09.357	open contribution 'Allow users to set the desired voting weight within goal'	0	PROPOSED	1	0	0	8	\N	0	0	0.5	0	0	OPEN	1	0	36	0	\N	219	\N	6	38	4	1
+828	\N	0.949999999999999956	0	2017-02-08 15:06:20.518	assign bid to cbtion:Create project freeftopia by:philh	0	OFFERED	1	0	0	8	\N	0	0	0.5	0	2	ASSIGNED	3	1	36	0	179	\N	\N	6	79	70	15
+829	\N	0.949999999999999956	0	2017-02-08 15:06:20.518	accept bid to cbtion:Create project freeftopia by:philh	0	ASSIGNED	1	0	0	8	\N	0	0	0.5	0	2	ACCEPTED	3	1	36	0	179	\N	\N	6	79	70	15
+830	\N	0.949999999999999956	0	2017-02-08 15:06:20.592	assign bid to cbtion:Create project freeftopia by:Karine	0	OFFERED	1	0	0	8	\N	0	0	0.5	0	2	ASSIGNED	3	1	36	0	180	\N	\N	6	79	70	15
 814	2017-02-07 19:16:40.451	0.949999999999999956	1	2017-02-07 14:54:37.826	open contribution 'First planning of activities '	0.0182381712962962975	PROPOSED	0.000744940123614751064	0.500744940123614701	2	8	2017-02-07 18:37:05.173	1	3011.34999999999991	0.5	0	2	OPEN	1	1	36	3382.84999999999991	\N	216	\N	6	78	69	1
 820	\N	0.949999999999999956	0	2017-02-07 19:16:43.033	delete contribution 'First planning of activities '	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	216	\N	6	78	69	1
 821	2017-02-07 19:23:43.192	0.949999999999999956	1	2017-02-07 19:23:20.275	assign contribution 'Fix default error page' to pepoospina	0	OFFERED	0	1	1	8	2017-02-07 19:23:43.192	1	3002.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3486.84999999999991	176	\N	\N	6	25	6	1
 822	2017-02-07 19:23:56.191	0.949999999999999956	1	2017-02-07 19:23:45.552	accept contribution 'Fix default error page' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-02-07 19:23:56.191	1	3002.34999999999991	0.5	0	2	ACCEPTED	3	1	36	3486.84999999999991	176	\N	\N	6	25	6	1
 823	2017-02-07 21:12:05.912	0.949999999999999956	1	2017-02-07 20:14:47.371	assign contribution 'First planning of activities ' to chrismoyer	0	OFFERED	0	1	1	8	2017-02-07 21:12:05.912	1	3006.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3201.09999999999991	177	\N	\N	6	78	69	1
 824	\N	0.949999999999999956	0	2017-02-07 21:12:07.674	accept contribution 'First planning of activities ' as delivered by chrismoyer	0	ASSIGNED	1	0	0	8	\N	0	0	0.5	0	0	ACCEPTED	3	0	36	0	177	\N	\N	6	78	69	1
+825	2017-02-08 09:23:14.215	0.949999999999999956	1	2017-02-08 09:23:07.731	assign contribution 'Project browser page' to pepoospina	0	OFFERED	0	1	1	8	2017-02-08 09:23:14.215	1	3006.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3490.84999999999991	178	\N	\N	6	27	10	1
+827	\N	0.949999999999999956	0	2017-02-08 15:06:20.367	delete goal 'Operate-ftopia'	0	ACCEPTED	1	0	0	8	\N	0	0	0.5	0	0	DELETED	2	0	36	0	\N	\N	70	6	79	70	15
+831	\N	0.949999999999999956	0	2017-02-08 15:06:20.592	accept bid to cbtion:Create project freeftopia by:Karine	0	ASSIGNED	1	0	0	8	\N	0	0	0.5	0	2	ACCEPTED	3	1	36	0	180	\N	\N	6	79	70	15
+832	2017-02-08 16:36:55.732	0.949999999999999956	1	2017-02-08 15:23:11.636	create goal 'Blockchain'	0.0302884722222222201	PROPOSED	0.0625	0.5625	2	8	2017-02-08 15:31:20.542	1	100	0.5	0	2	ACCEPTED	2	1	36	100	\N	\N	71	6	80	71	15
+834	\N	0.949999999999999956	0	2017-02-08 16:36:56.712	delete goal 'Blockchain'	0	ACCEPTED	1	0	0	8	\N	0	0	0.5	0	0	DELETED	2	0	36	0	\N	\N	71	6	80	71	15
+835	\N	0.949999999999999956	0	2017-02-08 16:41:29.656	delete contribution 'test de contribution'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	222	\N	6	79	70	15
+833	2017-02-08 16:41:27.98	0.949999999999999956	1	2017-02-08 16:27:36.114	open contribution 'test de contribution'	0.00610128858024691287	PROPOSED	0.0625	0.5625	2	8	2017-02-08 16:28:07.627	1	100	0.5	0	2	OPEN	1	1	36	100	\N	222	\N	6	79	70	15
+838	2017-02-09 19:40:56.541	0.949999999999999956	1	2017-02-08 18:30:22.272	open contribution 'Review the overal proposal and share insights'	0	PROPOSED	1	0	1	8	2017-02-09 19:40:56.541	0	3006.34999999999991	0.5	0	3	OPEN	1	0	36	3490.84999999999991	\N	224	\N	6	36	1	1
+819	2017-02-09 19:41:31.146	0.949999999999999956	1	2017-02-07 17:16:09.357	open contribution 'Allow users to set the desired voting weight within goal'	0	PROPOSED	0	1	1	8	2017-02-09 19:41:31.146	1	3006.34999999999991	0.5	0	2	OPEN	1	1	36	3490.84999999999991	\N	219	\N	6	38	4	1
+826	2017-02-09 19:56:02.986	0.949999999999999956	1	2017-02-08 09:23:16.12	accept contribution 'Project browser page' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-02-09 19:56:02.986	1	3006.34999999999991	0.5	0	2	ACCEPTED	3	1	36	3490.84999999999991	178	\N	\N	6	27	10	1
+853	2017-02-11 18:57:47.422	0.949999999999999956	1	2017-02-11 18:57:44.254	assign contribution 'Simplified version of the decision mechanism' to pepoospina	0	OFFERED	0	1	1	8	2017-02-11 18:57:47.422	1	3046.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3540.84999999999991	184	\N	\N	6	23	2	1
+837	2017-02-09 10:47:53.35	0.949999999999999956	1	2017-02-08 16:47:18.267	assign contribution 'test de contribution' to Karine	0.500053858024691378	OFFERED	0	1	1	8	2017-02-08 16:47:46.369	1	50	0.5	0	2	ASSIGNED	3	1	36	100	181	\N	\N	6	79	70	15
+840	\N	0.949999999999999956	0	2017-02-09 10:47:54.009	accept contribution 'test de contribution' as delivered by Karine	0	ASSIGNED	1	0	0	8	\N	0	0	0.5	0	0	ACCEPTED	3	0	36	0	181	\N	\N	6	79	70	15
+841	\N	0.949999999999999956	0	2017-02-09 19:41:32.309	delete contribution 'Allow users to set the desired voting weight within goal'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	219	\N	6	38	4	1
+842	2017-02-09 21:06:47.973	0.949999999999999956	1	2017-02-09 21:06:30.897	assign contribution 'Updated site metadata to help twitter, facebook and slack unfurling' to pepoospina	0	OFFERED	0	1	1	8	2017-02-09 21:06:47.973	1	3016.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3500.84999999999991	182	\N	\N	6	38	4	1
+843	2017-02-09 21:07:02.186	0.949999999999999956	1	2017-02-09 21:06:51.006	accept contribution 'Updated site metadata to help twitter, facebook and slack unfurling' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-02-09 21:07:02.186	1	3016.34999999999991	0.5	0	2	ACCEPTED	3	1	36	3500.84999999999991	182	\N	\N	6	38	4	1
+844	2017-02-09 21:10:19.446	0.949999999999999956	1	2017-02-09 21:10:08.268	open contribution 'Update open graph for twitter'	0	PROPOSED	0	1	1	8	2017-02-09 21:10:19.443	1	3026.34999999999991	0.5	0	2	OPEN	1	1	36	3510.84999999999991	\N	225	\N	6	38	4	1
+845	\N	0.949999999999999956	0	2017-02-09 21:10:22.439	delete contribution 'Update open graph for twitter'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	225	\N	6	38	4	1
+836	2017-02-09 10:43:20.383	0.949999999999999956	1	2017-02-08 16:42:50.228	open contribution 'Tester les smartcontracts de Minnie'	0.500054050925925919	PROPOSED	0	1	1	8	2017-02-08 16:43:13.372	1	50	0.5	0	2	OPEN	1	1	36	100	\N	223	\N	6	80	71	15
+839	\N	0.949999999999999956	0	2017-02-09 10:43:21.922	delete contribution 'Tester les smartcontracts de Minnie'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	223	\N	6	80	71	15
+846	2017-02-09 21:14:40.79	0.949999999999999956	1	2017-02-09 21:14:24.9	open contribution 'Fix image in open graph for facebook'	0	PROPOSED	0	1	1	8	2017-02-09 21:14:40.79	1	3026.34999999999991	0.5	0	2	OPEN	1	1	36	3510.84999999999991	\N	226	\N	6	38	4	1
+847	\N	0.949999999999999956	0	2017-02-09 21:14:45.019	delete contribution 'Fix image in open graph for facebook'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	226	\N	6	38	4	1
+848	2017-02-10 08:55:13.908	0.949999999999999956	1	2017-02-10 08:54:55.635	assign contribution 'Allow users to star projects' to pepoospina	0	OFFERED	0	1	1	8	2017-02-10 08:55:13.908	1	3026.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3510.84999999999991	183	\N	\N	6	27	10	1
+849	\N	0.949999999999999956	0	2017-02-10 08:55:16.28	accept contribution 'Allow users to star projects' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0.5	0	0	ACCEPTED	3	0	36	0	183	\N	\N	6	27	10	1
+850	\N	0.949999999999999956	0	2017-02-10 17:14:21.298	create goal 'attach'	0	PROPOSED	1	0	0	8	\N	0	0	0.5	0	0	ACCEPTED	2	0	36	0	\N	\N	72	6	12	51	6
+851	2017-02-11 18:57:22.133	0.949999999999999956	1	2017-02-11 18:56:56.153	open contribution 'Simplified version of the decision mechanism'	0	PROPOSED	0	1	1	8	2017-02-11 18:57:22.133	1	3046.34999999999991	0.5	0	2	OPEN	1	1	36	3540.84999999999991	\N	227	\N	6	23	2	1
+852	\N	0.949999999999999956	0	2017-02-11 18:57:23.645	delete contribution 'Simplified version of the decision mechanism'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	227	\N	6	23	2	1
+854	2017-02-11 18:57:55.987	0.949999999999999956	1	2017-02-11 18:57:48.469	accept contribution 'Simplified version of the decision mechanism' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-02-11 18:57:55.987	1	3046.34999999999991	0.5	0	2	ACCEPTED	3	1	36	3540.84999999999991	184	\N	\N	6	23	2	1
+855	\N	0.949999999999999956	0	2017-02-13 20:56:45.355	delete goal 'White-Paper'	0	ACCEPTED	1	0	0	8	\N	0	0	0.5	0	0	DELETED	2	0	36	0	\N	\N	73	6	82	73	16
+856	\N	0.949999999999999956	0	2017-02-13 20:56:45.532	assign bid to cbtion:Create project ArtSociety by:bujuben	0	OFFERED	1	0	0	8	\N	0	0	0.5	0	2	ASSIGNED	3	1	36	0	185	\N	\N	6	82	73	16
+857	\N	0.949999999999999956	0	2017-02-13 20:56:45.532	accept bid to cbtion:Create project ArtSociety by:bujuben	0	ASSIGNED	1	0	0	8	\N	0	0	0.5	0	2	ACCEPTED	3	1	36	0	185	\N	\N	6	82	73	16
+859	2017-02-13 21:12:43.016	0.949999999999999956	1	2017-02-13 21:11:57.908	open contribution 'Create feasability study came based on Whitepaper'	0	PROPOSED	0	1	1	8	2017-02-13 21:12:43.016	1	10000	0.5	0	2	OPEN	1	1	36	10000	\N	230	\N	6	82	73	16
+860	\N	0.949999999999999956	0	2017-02-13 21:12:44.715	delete contribution 'Create feasability study came based on Whitepaper'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	230	\N	6	82	73	16
+858	2017-02-13 21:13:06.002	0.949999999999999956	1	2017-02-13 21:01:48.284	open contribution 'Refine, Rewrite, and Structure White Paper'	0	PROPOSED	0	1	1	8	2017-02-13 21:13:06.001	1	10000	0.5	0	2	OPEN	1	1	36	10000	\N	229	\N	6	82	73	16
+861	\N	0.949999999999999956	0	2017-02-13 21:13:07.822	delete contribution 'Refine, Rewrite, and Structure White Paper'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	229	\N	6	82	73	16
+862	2017-02-14 10:36:07.618	0.949999999999999956	1	2017-02-14 10:33:25.299	create goal 'london-coop-event'	0	PROPOSED	0	1	1	8	2017-02-14 10:36:07.618	1	3076.34999999999991	0.5	0	2	ACCEPTED	2	1	36	3570.84999999999991	\N	\N	74	6	28	29	1
+863	\N	0.949999999999999956	0	2017-02-14 10:36:08.756	delete goal 'london-coop-event'	0	ACCEPTED	1	0	0	8	\N	0	0	0.5	0	0	DELETED	2	0	36	0	\N	\N	74	6	83	74	1
+865	2017-02-14 10:41:07.796	0.949999999999999956	1	2017-02-14 10:40:47.273	detach goal +london-coop-event from +public-relations with an initial budget of 120.0 pps	0	\N	0	1	1	8	2017-02-14 10:41:07.796	1	3076.34999999999991	0.5	0	2	\N	2	1	36	3570.84999999999991	\N	\N	74	6	28	29	1
+864	2017-02-14 10:46:15.472	0.949999999999999956	1	2017-02-14 10:36:16.797	open contribution 'Pay for the inscription'	0	PROPOSED	0	1	1	8	2017-02-14 10:46:15.472	1	3076.34999999999991	0.5	0	2	OPEN	1	1	36	3570.84999999999991	\N	231	\N	6	83	74	1
+866	\N	0.949999999999999956	0	2017-02-14 10:46:19.132	delete contribution 'Pay for the inscription'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	231	\N	6	83	74	1
+867	2017-02-15 13:12:32.297	0.949999999999999956	1	2017-02-14 22:55:51.509	open contribution 'Participate at the event'	0	PROPOSED	0	1	1	8	2017-02-15 13:12:32.296	1	3076.34999999999991	0.5	0	2	OPEN	1	1	36	3323.59999999999991	\N	232	\N	6	83	74	1
+868	\N	0.949999999999999956	0	2017-02-15 13:12:34.387	delete contribution 'Participate at the event'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	232	\N	6	83	74	1
+869	2017-02-15 13:22:43.768	0.949999999999999956	1	2017-02-15 13:22:27.882	open contribution 'Add help info'	0	PROPOSED	0	1	1	8	2017-02-15 13:22:43.768	1	3076.34999999999991	0.5	0	2	OPEN	1	1	36	3570.84999999999991	\N	233	\N	6	38	4	1
+870	\N	0.949999999999999956	0	2017-02-15 13:22:45.408	delete contribution 'Add help info'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	233	\N	6	38	4	1
+871	2017-02-15 13:23:24.428	0.949999999999999956	1	2017-02-15 13:23:19.02	assign contribution 'Add help info' to pepoospina	0	OFFERED	0	1	1	8	2017-02-15 13:23:24.428	1	3076.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3570.84999999999991	186	\N	\N	6	38	4	1
+872	2017-02-16 13:34:34.313	0.949999999999999956	1	2017-02-15 13:23:26.224	accept contribution 'Add help info' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-02-16 13:34:34.312	1	3076.34999999999991	0.5	0	2	ACCEPTED	3	1	36	3570.84999999999991	186	\N	\N	6	38	4	1
+873	2017-02-19 17:54:26.033	0.949999999999999956	1	2017-02-19 17:54:19.666	open contribution 'Review The Crowd Found Hub'	0	PROPOSED	0	1	1	8	2017-02-19 17:54:26.033	1	3091.34999999999991	0.5	0	2	OPEN	1	1	36	3585.84999999999991	\N	234	\N	6	36	1	1
+874	\N	0.949999999999999956	0	2017-02-19 17:54:27.303	delete contribution 'Review The Crowd Found Hub'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	234	\N	6	36	1	1
+875	2017-02-19 18:18:33.08	0.949999999999999956	1	2017-02-19 18:18:26.916	assign contribution 'Medium post ' to pepoospina	0	OFFERED	0	1	1	8	2017-02-19 18:18:33.08	1	3091.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3585.84999999999991	187	\N	\N	6	42	7	1
+876	2017-02-19 18:18:42.103	0.949999999999999956	1	2017-02-19 18:18:34.127	accept contribution 'Medium post ' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-02-19 18:18:42.103	1	3091.34999999999991	0.5	0	2	ACCEPTED	3	1	36	3585.84999999999991	187	\N	\N	6	42	7	1
+877	2017-02-20 07:37:49.173	0.949999999999999956	1	2017-02-20 07:37:31.268	assign contribution 'Prepare Reddit post' to pepoospina	0	OFFERED	0	1	1	8	2017-02-20 07:37:49.173	1	3116.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3610.84999999999991	188	\N	\N	6	42	7	1
+878	\N	0.949999999999999956	0	2017-02-20 07:37:50.168	accept contribution 'Prepare Reddit post' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0.5	0	0	ACCEPTED	3	0	36	0	188	\N	\N	6	42	7	1
+881	2017-02-20 10:11:04.65	0.949999999999999956	1	2017-02-20 10:10:54.483	assign contribution 'Clean code' to pepoospina	0	OFFERED	0	1	1	8	2017-02-20 10:11:04.65	1	3116.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3610.84999999999991	189	\N	\N	6	27	10	1
+879	2017-02-20 10:10:13.91	0.949999999999999956	1	2017-02-20 10:10:02.418	open contribution 'Clean code'	0	PROPOSED	0	1	1	8	2017-02-20 10:10:13.91	1	3116.34999999999991	0.5	0	2	OPEN	1	1	36	3610.84999999999991	\N	235	\N	6	27	10	1
+880	\N	0.949999999999999956	0	2017-02-20 10:10:15.548	delete contribution 'Clean code'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	235	\N	6	27	10	1
+882	\N	0.949999999999999956	0	2017-02-20 10:11:05.605	accept contribution 'Clean code' as delivered by pepoospina	0	ASSIGNED	1	0	0	8	\N	0	0	0.5	0	0	ACCEPTED	3	0	36	0	189	\N	\N	6	27	10	1
+889	2017-02-23 09:29:36.435	0.949999999999999956	1	2017-02-23 09:29:30.206	assign contribution 'Prepare a draft proposal of how it could look' to pepo	0	OFFERED	0	1	1	8	2017-02-23 09:29:36.435	1	3126.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3133.06093749999991	191	\N	\N	6	78	69	1
+890	\N	0.949999999999999956	0	2017-02-23 09:29:37.286	accept contribution 'Prepare a draft proposal of how it could look' as delivered by pepo	0	ASSIGNED	1	0	0	8	\N	0	0	0.5	0	0	ACCEPTED	3	0	36	0	191	\N	\N	6	78	69	1
+891	2017-02-23 10:10:39.775	0.949999999999999956	1	2017-02-23 10:10:34.126	open contribution 'Change graph for table in project contributors'	0	PROPOSED	0	1	1	8	2017-02-23 10:10:39.775	1	3126.34999999999991	0.5	0	2	OPEN	1	1	36	3620.84999999999991	\N	238	\N	6	38	4	1
+892	\N	0.949999999999999956	0	2017-02-23 10:10:41.186	delete contribution 'Change graph for table in project contributors'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	238	\N	6	38	4	1
+893	2017-02-23 10:30:21.092	0.949999999999999956	1	2017-02-23 10:30:17.084	open contribution 'Add "assigned to me" list of contributions in user page'	0	PROPOSED	0	1	1	8	2017-02-23 10:30:21.092	1	3126.34999999999991	0.5	0	2	OPEN	1	1	36	3620.84999999999991	\N	239	\N	6	38	4	1
+894	\N	0.949999999999999956	0	2017-02-23 10:30:22.436	delete contribution 'Add "assigned to me" list of contributions in user page'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	239	\N	6	38	4	1
+883	2017-02-21 15:06:59.583	0.949999999999999956	1	2017-02-21 15:05:25.794	open contribution 'Summary inputs and alternatives'	0	PROPOSED	0	1	1	8	2017-02-21 15:06:59.583	1	3116.34999999999991	0.5	0	2	OPEN	1	1	36	3223.72499999999991	\N	236	\N	6	78	69	1
+884	\N	0.949999999999999956	0	2017-02-21 15:07:01.471	delete contribution 'Summary inputs and alternatives'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	236	\N	6	78	69	1
+885	2017-02-21 15:09:06.014	0.949999999999999956	1	2017-02-21 15:08:27.951	assign contribution 'Summary inputs and alternatives' to pepoospina	0	OFFERED	0	1	1	8	2017-02-21 15:09:06.014	1	3116.34999999999991	0.5	0	2	ASSIGNED	3	1	36	3170.03749999999991	190	\N	\N	6	78	69	1
+886	2017-02-23 09:08:44.13	0.949999999999999956	1	2017-02-21 15:09:07.175	accept contribution 'Summary inputs and alternatives' as delivered by pepoospina	0	ASSIGNED	0	1	1	8	2017-02-23 09:08:44.13	1	3116.34999999999991	0.5	0	2	ACCEPTED	3	1	36	3143.19374999999991	190	\N	\N	6	78	69	1
+887	2017-02-23 09:21:08.563	0.949999999999999956	1	2017-02-23 09:21:00.488	open contribution 'Prepare a draft proposal of how it could look'	0	PROPOSED	0	1	1	8	2017-02-23 09:21:08.562	1	3126.34999999999991	0.5	0	2	OPEN	1	1	36	3139.77187499999991	\N	237	\N	6	78	69	1
+888	\N	0.949999999999999956	0	2017-02-23 09:21:10.224	delete contribution 'Prepare a draft proposal of how it could look'	0	OPEN	1	0	0	8	\N	0	0	0.5	0	0	DELETED	1	0	36	0	\N	237	\N	6	78	69	1
 \.
 
 
 ALTER TABLE decisions ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3288 (class 0 OID 1686922)
+-- TOC entry 3291 (class 0 OID 1706143)
 -- Dependencies: 186
 -- Data for Name: arguments; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -1377,13 +1488,20 @@ COPY arguments (id, creation_date, description, tendency, creator_id, decision_i
 60	2017-02-06 20:15:37.935	It's not clear to which extent the analysis from Astrid will converge to a design that is compatible with the requirements of C1	1	1	805
 61	2017-02-07 09:07:54.314	We can wait a little bit before starting this process. Try to develop the need. 	1	1	805
 62	2017-02-07 18:38:33.859	Same as my comment. This sounds like a perfect start. We will be engaging more participants throughout the process. This contribution will provide a lightweight roadmap to help guide us.	0	9	814
+63	2017-02-08 15:35:16.346	because winter is coming, this need to be discussed	0	32	832
+64	2017-02-08 15:36:41.486	I don't understand this goal quite well - sorry	1	32	832
+65	2017-02-08 15:47:36.885	fixing the description:\n\nAgreeing on how to decide when a Minnie features should be implemented using a blockchain, with respect to privacy issues\n\nWriting something on the blockchain has a privacy cost.\n\nAs we are building Minnie we see two different approach : the maximalist one (everything we can code with a smart contract should be coded with a smart contract) or the minimalist one (opting for a smart contract should be balanced against standard Web implementation, in the light of the expected benefits and the privacy cost).	0	31	832
+66	2017-02-08 15:51:54.442	Goals are tree-like structures. I don't think this one should be at the root. I set an initial goal as "operate-ftopia". Obviously you're dealing here with "freeftopia". Maybe we could start with a macro-goal that would be "building-DAO" or "Minnie", and then within that "implementation-strategy", and then within that "when-to-use-blockchain".\n\nHow about that?	1	31	832
+67	2017-02-08 16:28:38.533	pour pouvoir tester la suite du workflow je vote yes	0	32	833
+68	2017-02-08 16:33:04.286	@philh\nen réponse de "How about that?"\nthose goal are not goal, it's more some tag to make a tree like a file directory. What's the aim of that ?	1	32	832
+69	2017-02-08 16:49:43.555	pour voir la suite du workflow je vote oui	0	32	837
 \.
 
 
 ALTER TABLE arguments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3302 (class 0 OID 1686968)
+-- TOC entry 3305 (class 0 OID 1706192)
 -- Dependencies: 200
 -- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -1441,13 +1559,19 @@ COPY comments (id, content, creation_date, relevance, cbtion_id, creator_id, par
 54	There is a lot of work to be done here. I will make significant updates to the algorithm benchmark [R code](https://github.com/CollectiveOne/CollectiveOne-R).	2017-02-04 19:43:51.442	0	210	1	\N
 55	This contribution is in preparation to an escenario in which project creation becomes much more common.	2017-02-05 18:00:06.77	0	212	1	\N
 56	This sounds like the perfect start. We will be engaging more participants throughout the process.	2017-02-07 18:36:46.496	1	216	9	\N
+57	test de commentaire	2017-02-08 16:46:44.42	0	222	32	\N
+58	so i did create the project at the time so should this not now close?	2017-02-10 17:11:19.62	0	176	17	\N
+59	Yes, it's closed now (the state is ACCEPTED), and the pps have been assigned to you. You can see it in your user page.	2017-02-10 19:39:02.96	0	176	1	58
+61	Nice! you can now bid to this contribution to formalize it.	2017-02-15 08:48:44.953	0	231	1	60
+60	Purchased the ticket :)	2017-02-14 14:14:13.642	1	231	17	\N
+62	|Ok, will do	2017-02-15 12:49:55.906	0	232	17	\N
 \.
 
 
 ALTER TABLE comments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3312 (class 0 OID 1687000)
+-- TOC entry 3315 (class 0 OID 1706224)
 -- Dependencies: 210
 -- Data for Name: goals; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -1513,14 +1637,19 @@ COPY goals (id, attached_state, creation_date, current_budget, description, goal
 67	0	2017-02-02 04:43:15.014	0	the completed Open Source Fest handbook as an example of a finished OuiShare project report	Festtoolkit	0	\N	0	1	768	16	769	\N	65	14	\N	\N	\N
 65	0	2017-02-02 04:31:29.524	0	Website: a landing page called open.ouishare.net that will outward face of the project for communication and aggregate all materials	OuiShareOpenSource-com	0	\N	0	1	\N	16	763	\N	\N	14	\N	\N	\N
 68	0	2017-02-02 04:44:00.998	0	Gitbook that gives an overview of OuiShare's financials per year	Financereporting	0	\N	0	1	770	16	771	\N	65	14	\N	\N	\N
-69	2	2017-02-07 14:37:35.34	250	Re-design and improve the user experience of the platform, reviewing and reconsidering the current approach and gathering and interpreting inputs from early adopters	design-ux	0	\N	50	1	810	1	811	813	10	1	\N	\N	\N
+70	0	2017-02-08 15:06:20.341	0	Operating sales, support and product dev for ftopia, as an open community	Operate-ftopia	0	\N	0	1	\N	31	827	\N	\N	15	\N	\N	\N
+71	0	2017-02-08 15:23:11.601	0	**Collective choose between two different blockchain approach**\r\n\r\nWrite something on the blockchain has a privacy cost.\r\n\r\nAs we are building Minnie we see too different approach : the maximalist one (all the thing that we can code on a smartcontract will be code on a smartcontract) or the minimalist one (we code a smartcontract for a specific and well define need with, each time, an analyse of the privacy cost).\r\n\r\nDo we need to choose one over the other ? Why ?\r\n\r\nWhat is the purpose of writing on a blockchain (code / data) and when is it usefull for us ?\r\n	Blockchain	0	\N	0	1	832	32	834	\N	\N	15	\N	\N	\N
+72	0	2017-02-10 17:14:21.16	0	how do i attach the executive summary?	attach	0	\N	0	0	850	17	\N	\N	51	6	\N	\N	\N
+73	0	2017-02-13 20:56:45.343	0	Formulate and refine a whitepaper so it can serve as a guide to create a simulation game to assess feasbility.	White-Paper	0	\N	0	1	\N	19	855	\N	\N	16	\N	\N	\N
+74	2	2017-02-14 10:33:25.042	120	Pitch CollectiveOne at the London [Platform Coop](https://2017.open.coop/) Event.	london-coop-event	0	\N	120	1	862	1	863	865	29	1	\N	\N	\N
+69	2	2017-02-07 14:37:35.34	240	Re-design and improve the user experience of the platform, reviewing and reconsidering the current approach and gathering and interpreting inputs from early adopters	design-ux	0	\N	50	1	810	1	811	813	10	1	\N	\N	\N
 \.
 
 
 ALTER TABLE goals ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3284 (class 0 OID 1686906)
+-- TOC entry 3287 (class 0 OID 1706127)
 -- Dependencies: 181
 -- Data for Name: activity; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -2479,31 +2608,126 @@ COPY activity (id, creation_date, event, type, argument_id, bid_id, cbtion_id, c
 964	2017-02-07 19:23:57.721	accepted	1	\N	176	\N	\N	\N	\N	1
 965	2017-02-07 20:14:46.566	created	1	\N	177	\N	\N	\N	\N	1
 966	2017-02-07 21:12:07.073	assigned	1	\N	177	\N	\N	\N	\N	1
+967	2017-02-08 09:23:07.118	created	1	\N	178	\N	\N	\N	\N	1
+968	2017-02-08 09:23:15.981	assigned	1	\N	178	\N	\N	\N	\N	1
+969	2017-02-08 15:06:20.371	proposed	2	\N	\N	\N	\N	\N	70	15
+970	2017-02-08 15:23:11.648	proposed	2	\N	\N	\N	\N	\N	71	15
+971	2017-02-08 15:31:20.705	opened	3	\N	\N	\N	\N	832	\N	15
+972	2017-02-08 15:35:16.368	created	4	63	\N	\N	\N	\N	\N	15
+973	2017-02-08 15:36:41.491	created	4	64	\N	\N	\N	\N	\N	15
+974	2017-02-08 15:47:36.892	created	4	65	\N	\N	\N	\N	\N	15
+975	2017-02-08 15:51:54.448	created	4	66	\N	\N	\N	\N	\N	15
+976	2017-02-08 16:27:36.119	created	0	\N	\N	222	\N	\N	\N	15
+977	2017-02-08 16:28:07.627	opened	3	\N	\N	\N	\N	833	\N	15
+978	2017-02-08 16:28:38.538	created	4	67	\N	\N	\N	\N	\N	15
+979	2017-02-08 16:33:04.294	created	4	68	\N	\N	\N	\N	\N	15
+980	2017-02-08 16:36:56.685	accepted	2	\N	\N	\N	\N	\N	71	15
+981	2017-02-08 16:41:29.625	opened for bidding	0	\N	\N	222	\N	\N	\N	15
+982	2017-02-08 16:42:50.234	created	0	\N	\N	223	\N	\N	\N	15
+983	2017-02-08 16:43:13.372	opened	3	\N	\N	\N	\N	836	\N	15
+984	2017-02-08 16:46:44.514	new	5	\N	\N	\N	57	\N	\N	15
+985	2017-02-08 16:47:18.157	created	1	\N	181	\N	\N	\N	\N	15
+986	2017-02-08 16:47:46.37	opened	3	\N	\N	\N	\N	837	\N	15
+987	2017-02-08 16:49:43.562	created	4	69	\N	\N	\N	\N	\N	15
+988	2017-02-08 18:30:22.279	created	0	\N	\N	224	\N	\N	\N	1
+989	2017-02-09 10:43:21.892	opened for bidding	0	\N	\N	223	\N	\N	\N	15
+990	2017-02-09 10:47:54.003	assigned	1	\N	181	\N	\N	\N	\N	15
+991	2017-02-09 19:40:57.855	proposal refused	0	\N	\N	224	\N	\N	\N	1
+992	2017-02-09 19:41:32.284	opened for bidding	0	\N	\N	219	\N	\N	\N	1
+993	2017-02-09 19:55:59.173	marked done	1	\N	178	\N	\N	\N	\N	1
+994	2017-02-09 19:56:04.681	accepted	1	\N	178	\N	\N	\N	\N	1
+995	2017-02-09 21:06:28.531	created	1	\N	182	\N	\N	\N	\N	1
+996	2017-02-09 21:06:40.017	marked done	1	\N	182	\N	\N	\N	\N	1
+997	2017-02-09 21:06:50.825	assigned	1	\N	182	\N	\N	\N	\N	1
+998	2017-02-09 21:07:04.635	accepted	1	\N	182	\N	\N	\N	\N	1
+999	2017-02-09 21:10:08.283	created	0	\N	\N	225	\N	\N	\N	1
+1000	2017-02-09 21:10:22.432	opened for bidding	0	\N	\N	225	\N	\N	\N	1
+1001	2017-02-09 21:14:24.913	created	0	\N	\N	226	\N	\N	\N	1
+1002	2017-02-09 21:14:44.983	opened for bidding	0	\N	\N	226	\N	\N	\N	1
+1003	2017-02-10 08:54:55.269	created	1	\N	183	\N	\N	\N	\N	1
+1004	2017-02-10 08:55:16.1	assigned	1	\N	183	\N	\N	\N	\N	1
+1005	2017-02-10 14:07:38.679	accepted	1	\N	141	\N	\N	\N	\N	1
+1006	2017-02-10 17:11:19.631	new	5	\N	\N	\N	58	\N	\N	1
+1007	2017-02-10 17:14:21.306	proposed	2	\N	\N	\N	\N	\N	72	6
+1008	2017-02-10 19:39:02.985	new	5	\N	\N	\N	59	\N	\N	1
+1009	2017-02-11 18:54:35.52	marked done	1	\N	172	\N	\N	\N	\N	1
+1010	2017-02-11 18:54:46.271	accepted	1	\N	172	\N	\N	\N	\N	1
+1011	2017-02-11 18:56:56.16	created	0	\N	\N	227	\N	\N	\N	1
+1012	2017-02-11 18:57:23.639	opened for bidding	0	\N	\N	227	\N	\N	\N	1
+1013	2017-02-11 18:57:44.09	created	1	\N	184	\N	\N	\N	\N	1
+1014	2017-02-11 18:57:48.429	assigned	1	\N	184	\N	\N	\N	\N	1
+1015	2017-02-11 18:57:56.809	accepted	1	\N	184	\N	\N	\N	\N	1
+1016	2017-02-13 20:56:45.362	proposed	2	\N	\N	\N	\N	\N	73	16
+1017	2017-02-13 21:01:48.307	created	0	\N	\N	229	\N	\N	\N	16
+1018	2017-02-13 21:11:57.923	created	0	\N	\N	230	\N	\N	\N	16
+1019	2017-02-13 21:12:44.683	opened for bidding	0	\N	\N	230	\N	\N	\N	16
+1020	2017-02-13 21:13:07.771	opened for bidding	0	\N	\N	229	\N	\N	\N	16
+1021	2017-02-14 10:33:25.306	proposed	2	\N	\N	\N	\N	\N	74	1
+1022	2017-02-14 10:36:08.728	accepted	2	\N	\N	\N	\N	\N	74	1
+1023	2017-02-14 10:36:16.802	created	0	\N	\N	231	\N	\N	\N	1
+1024	2017-02-14 10:40:47.324	detach proposed	2	\N	\N	\N	\N	\N	74	1
+1025	2017-02-14 10:41:09.861	detached	2	\N	\N	\N	\N	\N	74	1
+1026	2017-02-14 10:46:19.083	opened for bidding	0	\N	\N	231	\N	\N	\N	1
+1027	2017-02-14 14:14:13.682	new	5	\N	\N	\N	60	\N	\N	1
+1028	2017-02-14 22:55:51.522	created	0	\N	\N	232	\N	\N	\N	1
+1029	2017-02-15 08:48:45.002	new	5	\N	\N	\N	61	\N	\N	1
+1030	2017-02-15 12:49:55.939	new	5	\N	\N	\N	62	\N	\N	1
+1031	2017-02-15 13:12:34.358	opened for bidding	0	\N	\N	232	\N	\N	\N	1
+1032	2017-02-15 13:22:27.894	created	0	\N	\N	233	\N	\N	\N	1
+1033	2017-02-15 13:22:45.38	opened for bidding	0	\N	\N	233	\N	\N	\N	1
+1034	2017-02-15 13:23:18.723	created	1	\N	186	\N	\N	\N	\N	1
+1035	2017-02-15 13:23:26.055	assigned	1	\N	186	\N	\N	\N	\N	1
+1036	2017-02-16 13:34:34.621	accepted	1	\N	186	\N	\N	\N	\N	1
+1037	2017-02-19 17:54:19.673	created	0	\N	\N	234	\N	\N	\N	1
+1038	2017-02-19 17:54:27.277	opened for bidding	0	\N	\N	234	\N	\N	\N	1
+1039	2017-02-19 18:18:26.591	created	1	\N	187	\N	\N	\N	\N	1
+1040	2017-02-19 18:18:34.086	assigned	1	\N	187	\N	\N	\N	\N	1
+1041	2017-02-19 18:18:43.063	accepted	1	\N	187	\N	\N	\N	\N	1
+1042	2017-02-20 07:37:31.039	created	1	\N	188	\N	\N	\N	\N	1
+1043	2017-02-20 07:37:50.131	assigned	1	\N	188	\N	\N	\N	\N	1
+1044	2017-02-20 10:10:02.427	created	0	\N	\N	235	\N	\N	\N	1
+1045	2017-02-20 10:10:15.523	opened for bidding	0	\N	\N	235	\N	\N	\N	1
+1046	2017-02-20 10:10:54.269	created	1	\N	189	\N	\N	\N	\N	1
+1047	2017-02-20 10:11:05.554	assigned	1	\N	189	\N	\N	\N	\N	1
+1048	2017-02-21 15:05:25.822	created	0	\N	\N	236	\N	\N	\N	1
+1049	2017-02-21 15:07:01.435	opened for bidding	0	\N	\N	236	\N	\N	\N	1
+1050	2017-02-21 15:08:27.637	created	1	\N	190	\N	\N	\N	\N	1
+1051	2017-02-21 15:09:07.136	assigned	1	\N	190	\N	\N	\N	\N	1
+1052	2017-02-23 09:08:33.311	marked done	1	\N	190	\N	\N	\N	\N	1
+1053	2017-02-23 09:08:44.978	accepted	1	\N	190	\N	\N	\N	\N	1
+1054	2017-02-23 09:21:00.499	created	0	\N	\N	237	\N	\N	\N	1
+1055	2017-02-23 09:21:10.199	opened for bidding	0	\N	\N	237	\N	\N	\N	1
+1056	2017-02-23 09:29:29.938	created	1	\N	191	\N	\N	\N	\N	1
+1057	2017-02-23 09:29:37.207	assigned	1	\N	191	\N	\N	\N	\N	1
+1058	2017-02-23 10:10:34.134	created	0	\N	\N	238	\N	\N	\N	1
+1059	2017-02-23 10:10:41.158	opened for bidding	0	\N	\N	238	\N	\N	\N	1
+1060	2017-02-23 10:30:17.09	created	0	\N	\N	239	\N	\N	\N	1
+1061	2017-02-23 10:30:22.413	opened for bidding	0	\N	\N	239	\N	\N	\N	1
 \.
 
 
 ALTER TABLE activity ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3336 (class 0 OID 0)
+-- TOC entry 3340 (class 0 OID 0)
 -- Dependencies: 182
 -- Name: activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('activity_id_seq', 966, true);
+SELECT pg_catalog.setval('activity_id_seq', 1061, true);
 
 
 --
--- TOC entry 3337 (class 0 OID 0)
+-- TOC entry 3341 (class 0 OID 0)
 -- Dependencies: 184
 -- Name: app_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('app_users_id_seq', 30, true);
+SELECT pg_catalog.setval('app_users_id_seq', 33, true);
 
 
 --
--- TOC entry 3287 (class 0 OID 1686919)
+-- TOC entry 3290 (class 0 OID 1706140)
 -- Dependencies: 185
 -- Data for Name: argument_backers; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -2562,72 +2786,79 @@ COPY argument_backers (argument_id, backers_id) FROM stdin;
 53	1
 54	1
 62	1
+63	32
+64	32
+67	32
+66	32
+69	32
 \.
 
 
 ALTER TABLE argument_backers ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3338 (class 0 OID 0)
+-- TOC entry 3342 (class 0 OID 0)
 -- Dependencies: 187
 -- Name: arguments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('arguments_id_seq', 62, true);
+SELECT pg_catalog.setval('arguments_id_seq', 69, true);
 
 
 --
--- TOC entry 3290 (class 0 OID 1686930)
+-- TOC entry 3293 (class 0 OID 1706151)
 -- Dependencies: 188
 -- Data for Name: authorized_emails; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
 
 ALTER TABLE authorized_emails DISABLE TRIGGER ALL;
 
-COPY authorized_emails (id, authorized, email, date_requested, referral_id, token) FROM stdin;
-1	t	chris@milieu.us	\N	\N	\N
-3	t	pepo.ospina@gmail.com	\N	\N	\N
-4	t	monicanavasr@gmail.com	\N	\N	\N
-5	t	jason@roundtablelaw.ca	\N	\N	\N
-6	t	rosapuigmore@gmail.com	\N	\N	\N
-7	t	jaime@boldandopen.com	\N	\N	\N
-8	t	garito@gmail.com	\N	\N	\N
-9	t	francescapick@gmail.com	\N	\N	\N
-10	t	aminisaleem@yahoo.com	\N	\N	\N
-11	t	javiervelasco87@gmail.com	\N	\N	\N
-12	t	philh@erisma.com	\N	\N	\N
-13	t	benjamin@teledisko.com	\N	\N	\N
-14	t	procivilization@gmail.com	\N	\N	\N
-15	t	chadrickm@gmail.com	\N	\N	\N
-16	t	chusobadenas@gmail.com	\N	\N	\N
-17	t	u1@x.com	\N	\N	\N
-18	t	u2@x.com	\N	\N	\N
-19	t	u3@x.com	\N	\N	\N
-20	t	u4@x.com	\N	\N	\N
-21	t	u5@x.com	\N	\N	\N
-22	t	phiasko1@gmail.com	\N	\N	\N
-23	t	juliana@getmucho.com	\N	\N	\N
-24	t	wouter@freeknowledge.eu	\N	\N	\N
-25	t	jessy@jessykate.com	\N	\N	\N
-30	t	rousipuig@gmail.com	2017-02-02 16:48:06.161	1	7a591e52-eb64-42d3-b681-f7ffdfa84c90
-31	t	dr.chabrak@gmail.com	2017-02-03 21:16:41.329	1	5dc0fcdb-984b-4cd9-b17a-82449ecbce1b
-32	t	sashka@gmail.com	2017-02-07 10:15:38.827	6	0fdfbd82-8d13-4051-8316-270f587dcce2
+COPY authorized_emails (id, authorized, date_requested, email, referral_id, token) FROM stdin;
+1	t	\N	chris@milieu.us	\N	\N
+3	t	\N	pepo.ospina@gmail.com	\N	\N
+4	t	\N	monicanavasr@gmail.com	\N	\N
+5	t	\N	jason@roundtablelaw.ca	\N	\N
+6	t	\N	rosapuigmore@gmail.com	\N	\N
+7	t	\N	jaime@boldandopen.com	\N	\N
+8	t	\N	garito@gmail.com	\N	\N
+9	t	\N	francescapick@gmail.com	\N	\N
+10	t	\N	aminisaleem@yahoo.com	\N	\N
+11	t	\N	javiervelasco87@gmail.com	\N	\N
+12	t	\N	philh@erisma.com	\N	\N
+13	t	\N	benjamin@teledisko.com	\N	\N
+14	t	\N	procivilization@gmail.com	\N	\N
+15	t	\N	chadrickm@gmail.com	\N	\N
+16	t	\N	chusobadenas@gmail.com	\N	\N
+17	t	\N	u1@x.com	\N	\N
+18	t	\N	u2@x.com	\N	\N
+19	t	\N	u3@x.com	\N	\N
+20	t	\N	u4@x.com	\N	\N
+21	t	\N	u5@x.com	\N	\N
+22	t	\N	phiasko1@gmail.com	\N	\N
+23	t	\N	juliana@getmucho.com	\N	\N
+24	t	\N	wouter@freeknowledge.eu	\N	\N
+25	t	\N	jessy@jessykate.com	\N	\N
+30	t	2017-02-02 16:48:06.161	rousipuig@gmail.com	1	7a591e52-eb64-42d3-b681-f7ffdfa84c90
+31	t	2017-02-03 21:16:41.329	dr.chabrak@gmail.com	1	5dc0fcdb-984b-4cd9-b17a-82449ecbce1b
+32	t	2017-02-07 10:15:38.827	sashka@gmail.com	6	0fdfbd82-8d13-4051-8316-270f587dcce2
+33	t	2017-02-08 14:57:00.08	alizee59@gmail.com	31	462a1b86-7440-484e-b935-0e11e17e0769
+34	t	2017-02-10 08:58:47.878	alexandre.narbonne@yahoo.fr	31	7d1da193-4404-4d5c-a65b-2b61ee14c7b6
 \.
 
 
 ALTER TABLE authorized_emails ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3339 (class 0 OID 0)
+-- TOC entry 3343 (class 0 OID 0)
 -- Dependencies: 189
 -- Name: authorized_emails_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('authorized_emails_id_seq', 32, true);
+SELECT pg_catalog.setval('authorized_emails_id_seq', 34, true);
 
 
 --
--- TOC entry 3292 (class 0 OID 1686935)
+-- TOC entry 3295 (class 0 OID 1706159)
 -- Dependencies: 190
 -- Data for Name: authorized_projects; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -2641,13 +2872,15 @@ COPY authorized_projects (id, authorized, project_name) FROM stdin;
 4	t	Smartdealmaker-project
 5	t	Lendi
 6	t	Sandbox
+7	t	freeftopia
+8	t	ArtSociety
 \.
 
 
 ALTER TABLE authorized_projects ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3340 (class 0 OID 0)
+-- TOC entry 3344 (class 0 OID 0)
 -- Dependencies: 191
 -- Name: authorized_projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -2656,17 +2889,17 @@ SELECT pg_catalog.setval('authorized_projects_id_seq', 11, true);
 
 
 --
--- TOC entry 3341 (class 0 OID 0)
+-- TOC entry 3345 (class 0 OID 0)
 -- Dependencies: 193
 -- Name: bids_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('bids_id_seq', 177, true);
+SELECT pg_catalog.setval('bids_id_seq', 191, true);
 
 
 --
--- TOC entry 3322 (class 0 OID 1687031)
--- Dependencies: 220
+-- TOC entry 3326 (class 0 OID 1706257)
+-- Dependencies: 221
 -- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
 
@@ -2685,7 +2918,7 @@ COPY reviews (id, creation_date, description, rate, creator_id, reviewee_id) FRO
 ALTER TABLE reviews ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3296 (class 0 OID 1686948)
+-- TOC entry 3299 (class 0 OID 1706172)
 -- Dependencies: 194
 -- Data for Name: bids_reviews; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -2705,7 +2938,7 @@ COPY bids_reviews (bid_id, reviews_id) FROM stdin;
 ALTER TABLE bids_reviews ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3298 (class 0 OID 1686957)
+-- TOC entry 3301 (class 0 OID 1706181)
 -- Dependencies: 196
 -- Data for Name: cbtions_bids; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -2881,13 +3114,27 @@ COPY cbtions_bids (cbtion_id, bids_id) FROM stdin;
 205	175
 148	176
 216	177
+212	178
+220	179
+221	180
+222	181
+136	182
+213	183
+227	184
+228	185
+233	186
+218	187
+217	188
+235	189
+236	190
+237	191
 \.
 
 
 ALTER TABLE cbtions_bids ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3299 (class 0 OID 1686960)
+-- TOC entry 3302 (class 0 OID 1706184)
 -- Dependencies: 197
 -- Data for Name: cbtions_comments; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -2918,7 +3165,6 @@ COPY cbtions_comments (cbtion_id, comments_id) FROM stdin;
 55	7
 55	30
 169	31
-176	32
 165	34
 157	37
 171	39
@@ -2932,23 +3178,28 @@ COPY cbtions_comments (cbtion_id, comments_id) FROM stdin;
 210	54
 212	55
 216	56
+222	57
+176	32
+176	58
+231	60
+232	62
 \.
 
 
 ALTER TABLE cbtions_comments ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3342 (class 0 OID 0)
+-- TOC entry 3346 (class 0 OID 0)
 -- Dependencies: 198
 -- Name: cbtions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('cbtions_id_seq', 219, true);
+SELECT pg_catalog.setval('cbtions_id_seq', 239, true);
 
 
 --
--- TOC entry 3320 (class 0 OID 1687026)
--- Dependencies: 218
+-- TOC entry 3324 (class 0 OID 1706252)
+-- Dependencies: 219
 -- Data for Name: promoters; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
 
@@ -3016,13 +3267,17 @@ COPY promoters (id, creation_date, promote_up, user_id) FROM stdin;
 65	2017-02-02 17:08:03.372	t	1
 66	2017-02-07 19:07:46.721	t	1
 67	2017-02-07 19:07:50.157	t	1
+68	2017-02-08 15:30:31.014	t	32
+69	2017-02-08 16:46:28.012	t	32
+70	2017-02-10 11:09:30.194	t	17
+71	2017-02-15 08:48:49.833	t	1
 \.
 
 
 ALTER TABLE promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3301 (class 0 OID 1686965)
+-- TOC entry 3304 (class 0 OID 1706189)
 -- Dependencies: 199
 -- Data for Name: cbtions_promoters; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -3068,7 +3323,6 @@ COPY cbtions_promoters (cbtion_id, promoters_id) FROM stdin;
 165	45
 150	46
 148	47
-147	48
 138	49
 124	50
 133	51
@@ -3082,13 +3336,17 @@ COPY cbtions_promoters (cbtion_id, promoters_id) FROM stdin;
 189	64
 188	65
 216	67
+221	68
+222	69
+147	48
+147	70
 \.
 
 
 ALTER TABLE cbtions_promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3303 (class 0 OID 1686974)
+-- TOC entry 3306 (class 0 OID 1706198)
 -- Dependencies: 201
 -- Data for Name: comments_answers; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -3109,22 +3367,24 @@ COPY comments_answers (comment_id, replies_id) FROM stdin;
 37	40
 25	41
 51	52
+58	59
+60	61
 \.
 
 
 ALTER TABLE comments_answers ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3343 (class 0 OID 0)
+-- TOC entry 3347 (class 0 OID 0)
 -- Dependencies: 202
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('comments_id_seq', 56, true);
+SELECT pg_catalog.setval('comments_id_seq', 62, true);
 
 
 --
--- TOC entry 3305 (class 0 OID 1686979)
+-- TOC entry 3308 (class 0 OID 1706203)
 -- Dependencies: 203
 -- Data for Name: comments_promoters; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -3141,13 +3401,14 @@ COPY comments_promoters (comment_id, promoters_id) FROM stdin;
 40	34
 43	41
 56	66
+60	71
 \.
 
 
 ALTER TABLE comments_promoters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3306 (class 0 OID 1686982)
+-- TOC entry 3309 (class 0 OID 1706206)
 -- Dependencies: 204
 -- Data for Name: contributors; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -3169,59 +3430,63 @@ COPY contributors (id, pps, contributor_user_id, project_id) FROM stdin;
 15	160	20	8
 7	160	22	8
 24	104	16	14
-2	3006.34999999999991	1	1
+25	50	31	15
+26	50	32	15
+27	10	17	1
+28	10000	19	16
+2	3126.34999999999991	1	1
 \.
 
 
 ALTER TABLE contributors ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3344 (class 0 OID 0)
+-- TOC entry 3348 (class 0 OID 0)
 -- Dependencies: 205
 -- Name: contributors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('contributors_id_seq', 24, true);
+SELECT pg_catalog.setval('contributors_id_seq', 28, true);
 
 
 --
--- TOC entry 3345 (class 0 OID 0)
+-- TOC entry 3349 (class 0 OID 0)
 -- Dependencies: 207
 -- Name: decision_realms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('decision_realms_id_seq', 78, true);
+SELECT pg_catalog.setval('decision_realms_id_seq', 83, true);
 
 
 --
--- TOC entry 3346 (class 0 OID 0)
+-- TOC entry 3350 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: decisions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('decisions_id_seq', 824, true);
+SELECT pg_catalog.setval('decisions_id_seq', 894, true);
 
 
 --
--- TOC entry 3347 (class 0 OID 0)
+-- TOC entry 3351 (class 0 OID 0)
 -- Dependencies: 211
 -- Name: goals_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('goals_id_seq', 69, true);
+SELECT pg_catalog.setval('goals_id_seq', 74, true);
 
 
 --
--- TOC entry 3348 (class 0 OID 0)
+-- TOC entry 3352 (class 0 OID 0)
 -- Dependencies: 212
 -- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('hibernate_sequence', 1, false);
+SELECT pg_catalog.setval('hibernate_sequence', 2, true);
 
 
 --
--- TOC entry 3315 (class 0 OID 1687010)
+-- TOC entry 3318 (class 0 OID 1706234)
 -- Dependencies: 213
 -- Data for Name: mail_subscriptions; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -3237,7 +3502,7 @@ COPY mail_subscriptions (id, subscribed, project_id, user_id) FROM stdin;
 ALTER TABLE mail_subscriptions ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3349 (class 0 OID 0)
+-- TOC entry 3353 (class 0 OID 0)
 -- Dependencies: 214
 -- Name: mail_subscriptions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -3246,7 +3511,7 @@ SELECT pg_catalog.setval('mail_subscriptions_id_seq', 7, true);
 
 
 --
--- TOC entry 3317 (class 0 OID 1687015)
+-- TOC entry 3320 (class 0 OID 1706239)
 -- Dependencies: 215
 -- Data for Name: password_recovery_token; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
@@ -3258,32 +3523,45 @@ COPY password_recovery_token (id, expiry_date, token, user_id) FROM stdin;
 2	2016-11-18 19:09:41.426	1ea0fda3-0134-458e-9af5-5da3cfb4613e	1
 100	2016-11-25 09:44:42.917	49e3aaf9-3ad8-47d4-9a0d-8a54a4509d9d	1
 200	2016-12-08 17:52:37.274	703f8290-6e01-4e95-b78d-534a70cd0d9f	13
+101	2017-02-11 10:29:44.668	7c3f49da-8af5-493e-91da-213bdf524e1a	17
+201	2017-02-14 20:46:40.864	62a1cffa-ae9e-4307-9138-9410bef479a2	19
+251	2017-02-19 13:44:02.89	693a881f-93a4-4ccd-96e9-c8cfaa4c5cda	1
+252	2017-02-19 13:45:56.958	cc435c37-3784-492f-acb5-48324337b6d2	1
 \.
 
 
 ALTER TABLE password_recovery_token ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3350 (class 0 OID 0)
--- Dependencies: 217
+-- TOC entry 3354 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: password_recovery_token_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
+--
+
+SELECT pg_catalog.setval('password_recovery_token_id_seq', 252, true);
+
+
+--
+-- TOC entry 3355 (class 0 OID 0)
+-- Dependencies: 218
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('projects_id_seq', 14, true);
+SELECT pg_catalog.setval('projects_id_seq', 16, true);
 
 
 --
--- TOC entry 3351 (class 0 OID 0)
--- Dependencies: 219
+-- TOC entry 3356 (class 0 OID 0)
+-- Dependencies: 220
 -- Name: promoters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('promoters_id_seq', 67, true);
+SELECT pg_catalog.setval('promoters_id_seq', 71, true);
 
 
 --
--- TOC entry 3352 (class 0 OID 0)
--- Dependencies: 221
+-- TOC entry 3357 (class 0 OID 0)
+-- Dependencies: 222
 -- Name: reviews_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
@@ -3291,18 +3569,16 @@ SELECT pg_catalog.setval('reviews_id_seq', 12, true);
 
 
 --
--- TOC entry 3324 (class 0 OID 1687039)
--- Dependencies: 222
+-- TOC entry 3328 (class 0 OID 1706265)
+-- Dependencies: 223
 -- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
 
 ALTER TABLE roles DISABLE TRIGGER ALL;
 
 COPY roles (id, role, username) FROM stdin;
-1	ROLE_USER	pepoospina
 2	ROLE_USER	quiquin
 3	ROLE_USER	jpmarindiaz
-4	ROLE_USER	mospina
 8	ROLE_USER	test
 5	ROLE_USER	eortizospina
 9	ROLE_USER	rosapm
@@ -3320,23 +3596,28 @@ COPY roles (id, role, username) FROM stdin;
 21	ROLE_USER	tuser5
 27	ROLE_USER	wtebbens
 7	ROLE_USER	chrismoyer
+28	ROLE_USER	philh
+29	ROLE_USER	Karine
+30	ROLE_USER	AlexN
+1	ROLE_USER	pepo
+4	ROLE_USER	martin
 \.
 
 
 ALTER TABLE roles ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3353 (class 0 OID 0)
--- Dependencies: 223
+-- TOC entry 3358 (class 0 OID 0)
+-- Dependencies: 224
 -- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('roles_id_seq', 27, true);
+SELECT pg_catalog.setval('roles_id_seq', 30, true);
 
 
 --
--- TOC entry 3326 (class 0 OID 1687047)
--- Dependencies: 224
+-- TOC entry 3330 (class 0 OID 1706273)
+-- Dependencies: 225
 -- Data for Name: theses; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
 
@@ -3351,86 +3632,6 @@ COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 151	2016-10-11 21:06:38.01	1	100	1	223
 165	2016-10-17 16:05:55.418	1	100	1	237
 166	2016-10-17 16:05:58.698	1	100	1	239
-81	2016-09-08 23:00:28.669	1	3006.34999999999991	1	140
-80	2016-09-08 22:50:46.943	1	3006.34999999999991	1	137
-79	2016-09-08 16:29:52.282	1	3006.34999999999991	1	130
-76	2016-09-08 16:27:44.276	1	3006.34999999999991	1	127
-75	2016-09-08 16:26:19.556	1	3006.34999999999991	1	125
-74	2016-09-07 18:09:22.135	1	3006.34999999999991	1	122
-72	2016-09-07 18:08:46.952	1	3006.34999999999991	1	120
-70	2016-09-07 18:07:48.437	1	3006.34999999999991	1	118
-69	2016-09-07 18:07:42.195	1	3006.34999999999991	1	117
-65	2016-09-07 09:02:06.982	1	3006.34999999999991	1	113
-64	2016-09-06 20:07:55.807	1	3006.34999999999991	1	112
-36	2016-08-28 18:36:31.791	1	3006.34999999999991	1	68
-25	2016-08-26 18:55:25.997	1	3006.34999999999991	1	66
-11	2016-08-10 15:24:02.016	1	3006.34999999999991	1	31
-56	2016-09-01 23:48:23.712	1	3006.34999999999991	1	102
-52	2016-09-01 17:16:02.489	1	3006.34999999999991	1	97
-51	2016-09-01 17:15:53.866	1	3006.34999999999991	1	96
-49	2016-08-31 17:06:58.422	1	3006.34999999999991	1	95
-48	2016-08-31 16:36:07.101	1	3006.34999999999991	1	94
-50	2016-09-01 17:14:10.226	1	3006.34999999999991	1	93
-47	2016-08-29 18:37:02.241	1	3006.34999999999991	1	92
-46	2016-08-29 17:48:56.422	1	3006.34999999999991	1	91
-45	2016-08-29 17:48:49.866	1	3006.34999999999991	1	90
-44	2016-08-29 17:44:38.759	1	3006.34999999999991	1	89
-43	2016-08-29 17:44:27.968	1	3006.34999999999991	1	88
-40	2016-08-28 22:24:33.42	1	3006.34999999999991	1	87
-39	2016-08-28 22:24:21.057	1	3006.34999999999991	1	86
-42	2016-08-28 22:25:02.707	1	3006.34999999999991	1	85
-41	2016-08-28 22:24:54.335	1	3006.34999999999991	1	84
-38	2016-08-28 19:53:34.503	1	3006.34999999999991	1	83
-37	2016-08-28 18:38:35.148	1	3006.34999999999991	1	82
-34	2016-08-28 18:26:01.955	1	3006.34999999999991	1	81
-33	2016-08-28 16:19:20.447	1	3006.34999999999991	1	80
-53	2016-09-01 19:42:38.836	1	3006.34999999999991	1	98
-30	2016-08-28 13:18:35.898	1	3006.34999999999991	1	76
-29	2016-08-28 13:16:33.757	1	3006.34999999999991	1	74
-28	2016-08-28 13:14:45.251	1	3006.34999999999991	1	72
-27	2016-08-28 13:10:37.599	1	3006.34999999999991	1	70
-26	2016-08-26 18:55:29.809	1	3006.34999999999991	1	67
-24	2016-08-26 18:44:30.603	1	3006.34999999999991	1	62
-23	2016-08-26 18:44:25.044	1	3006.34999999999991	1	61
-22	2016-08-23 23:23:33.373	1	3006.34999999999991	1	51
-21	2016-08-23 23:05:31.559	1	3006.34999999999991	1	49
-32	2016-08-28 13:20:24.96	1	3006.34999999999991	1	47
-19	2016-08-20 17:54:13.403	1	3006.34999999999991	1	46
-18	2016-08-20 16:03:08.627	1	3006.34999999999991	1	44
-17	2016-08-20 16:03:03.294	1	3006.34999999999991	1	43
-15	2016-08-20 16:00:17.944	1	3006.34999999999991	1	40
-16	2016-08-20 16:00:25.187	1	3006.34999999999991	1	41
-14	2016-08-10 15:30:59.252	1	3006.34999999999991	1	34
-13	2016-08-10 15:30:54.146	1	3006.34999999999991	1	33
-8	2016-08-10 11:01:21.645	1	3006.34999999999991	1	16
-7	2016-08-10 11:01:16.719	1	3006.34999999999991	1	15
-6	2016-08-10 11:00:06.066	1	3006.34999999999991	1	13
-5	2016-08-10 11:00:01.909	1	3006.34999999999991	1	12
-4	2016-08-10 10:58:51.123	1	3006.34999999999991	1	10
-3	2016-08-10 10:58:45.57	1	3006.34999999999991	1	9
-2	2016-08-08 14:38:08.538	1	3006.34999999999991	1	5
-1	2016-08-08 14:37:57.779	1	3006.34999999999991	1	4
-12	2016-08-10 15:24:24.053	1	3006.34999999999991	1	32
-10	2016-08-10 15:06:59.931	1	3006.34999999999991	1	24
-96	2016-09-18 18:22:22.553	1	3006.34999999999991	1	160
-102	2016-09-28 15:42:06.56	1	3006.34999999999991	1	131
-99	2016-09-27 17:41:22.295	1	3006.34999999999991	1	167
-98	2016-09-26 08:29:31.368	1	3006.34999999999991	1	166
-94	2016-09-18 18:21:48.633	1	3006.34999999999991	1	133
-90	2016-09-13 22:07:27.234	1	3006.34999999999991	1	153
-86	2016-09-12 19:35:51.176	1	3006.34999999999991	1	149
-85	2016-09-12 19:35:40.368	1	3006.34999999999991	1	148
-84	2016-09-09 18:27:52.751	1	3006.34999999999991	1	145
-108	2016-09-28 16:44:15.63	1	3006.34999999999991	1	139
-105	2016-09-28 15:44:40.265	1	3006.34999999999991	1	132
-83	2016-09-09 18:27:47.136	1	3006.34999999999991	1	144
-82	2016-09-09 18:26:16.269	1	3006.34999999999991	1	142
-77	2016-09-08 16:27:58.486	1	3006.34999999999991	1	128
-73	2016-09-07 18:09:17.397	1	3006.34999999999991	1	121
-68	2016-09-07 18:06:40.058	1	3006.34999999999991	1	116
-54	2016-09-01 23:47:29.441	1	3006.34999999999991	1	99
-35	2016-08-28 18:29:34.571	1	3006.34999999999991	1	69
-67	2016-09-07 18:06:33.385	1	3006.34999999999991	1	115
 167	2016-10-17 16:10:51.23	1	100	1	241
 171	2016-10-18 21:11:06.315	1	100	1	247
 172	2016-10-18 21:13:55.216	1	100	1	249
@@ -3448,78 +3649,82 @@ COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 119	2016-10-04 17:35:38.761	1	2011	1	\N
 313	2016-11-29 09:12:24.897	0	262	3	446
 320	2016-11-29 10:22:02.299	1	262	3	456
-164	2016-10-16 10:23:29.733	1	3006.34999999999991	1	236
-163	2016-10-16 10:23:06.773	1	3006.34999999999991	1	235
-112	2016-09-30 15:43:36.128	1	3006.34999999999991	1	179
-132	2016-10-06 17:20:40.545	1	3006.34999999999991	1	199
-130	2016-10-06 10:44:28.361	1	3006.34999999999991	1	202
-170	2016-10-18 14:52:34.928	1	3006.34999999999991	1	246
-137	2016-10-07 14:28:45.384	1	3006.34999999999991	1	143
-203	2016-10-26 10:43:04.463	1	3006.34999999999991	1	296
-204	2016-10-26 10:51:46.524	1	3006.34999999999991	1	297
-142	2016-10-07 21:53:42.388	1	3006.34999999999991	1	213
-209	2016-10-26 16:43:25.612	1	3006.34999999999991	1	305
-127	2016-10-05 09:25:47.886	1	3006.34999999999991	1	198
-208	2016-10-26 16:43:08.78	1	3006.34999999999991	1	304
-248	2016-11-11 10:33:05.866	1	3006.34999999999991	1	355
-247	2016-11-11 10:32:58.766	1	3006.34999999999991	1	354
-126	2016-10-05 09:24:13.574	1	3006.34999999999991	1	193
-140	2016-10-07 16:11:21.132	1	3006.34999999999991	1	208
-210	2016-10-26 19:57:25.562	1	3006.34999999999991	1	307
-215	2016-10-27 09:20:01.433	1	3006.34999999999991	1	315
-191	2016-10-23 21:43:03.756	0	3006.34999999999991	1	277
-207	2016-10-26 16:00:27.055	1	3006.34999999999991	1	302
-214	2016-10-27 09:19:14.836	1	3006.34999999999991	1	313
-205	2016-10-26 15:59:16.682	1	3006.34999999999991	1	300
-212	2016-10-27 09:17:23.192	1	3006.34999999999991	1	311
-211	2016-10-27 09:16:53.222	1	3006.34999999999991	1	309
-198	2016-10-25 15:08:37.431	1	3006.34999999999991	1	281
-194	2016-10-25 10:49:07.598	1	3006.34999999999991	1	286
-195	2016-10-25 10:49:33.9	1	3006.34999999999991	1	287
-193	2016-10-25 08:41:18.802	1	3006.34999999999991	1	271
-190	2016-10-23 21:39:40.215	0	3006.34999999999991	1	280
-148	2016-10-10 20:10:20.484	1	3006.34999999999991	1	219
-185	2016-10-21 14:05:52.342	1	3006.34999999999991	1	270
-147	2016-10-10 20:10:08.011	1	3006.34999999999991	1	218
-182	2016-10-20 13:12:13.871	0	3006.34999999999991	1	233
-183	2016-10-20 13:12:17.829	0	3006.34999999999991	1	232
-168	2016-10-18 14:50:28.667	1	3006.34999999999991	1	244
-162	2016-10-14 18:30:22.356	1	3006.34999999999991	1	234
-192	2016-10-23 21:43:20.608	0	3006.34999999999991	1	216
-159	2016-10-11 21:38:07.672	1	3006.34999999999991	1	182
-152	2016-10-11 21:32:04.045	1	3006.34999999999991	1	135
-146	2016-10-10 20:09:03.364	1	3006.34999999999991	1	217
-138	2016-10-07 15:00:36.088	1	3006.34999999999991	1	209
-131	2016-10-06 10:49:21.418	1	3006.34999999999991	1	204
-123	2016-10-04 17:49:21.453	1	3006.34999999999991	1	195
-122	2016-10-04 17:36:14.184	1	3006.34999999999991	1	192
-117	2016-10-04 17:33:28.16	1	3006.34999999999991	1	186
-184	2016-10-20 13:12:26.174	0	3006.34999999999991	1	146
-223	2016-10-27 11:09:38.973	1	3006.34999999999991	1	327
-226	2016-10-27 11:11:38.265	1	3006.34999999999991	1	330
-225	2016-10-27 11:11:31.919	1	3006.34999999999991	1	329
-228	2016-10-27 11:12:58.821	1	3006.34999999999991	1	332
-227	2016-10-27 11:12:52.4	1	3006.34999999999991	1	331
-231	2016-10-27 11:36:42.003	1	3006.34999999999991	1	335
-169	2016-10-18 14:52:20.694	1	3006.34999999999991	1	245
-153	2016-10-11 21:34:36.752	1	3006.34999999999991	1	225
-156	2016-10-11 21:36:21.758	1	3006.34999999999991	1	227
-187	2016-10-21 14:06:56.42	1	3006.34999999999991	1	273
-186	2016-10-21 14:06:51.253	1	3006.34999999999991	1	272
-189	2016-10-21 18:06:30.85	1	3006.34999999999991	1	275
-188	2016-10-21 18:06:15.149	1	3006.34999999999991	1	274
-230	2016-10-27 11:36:21.664	1	3006.34999999999991	1	334
-239	2016-11-01 23:11:22.447	1	3006.34999999999991	1	342
-115	2016-10-03 15:14:32.043	1	3006.34999999999991	1	184
-114	2016-10-03 15:14:14.752	1	3006.34999999999991	1	183
-125	2016-10-04 17:50:22.423	1	3006.34999999999991	1	197
-124	2016-10-04 17:50:07.652	1	3006.34999999999991	1	196
-143	2016-10-07 21:54:48.973	1	3006.34999999999991	1	214
-145	2016-10-07 21:55:34.66	1	3006.34999999999991	1	205
-155	2016-10-11 21:36:11.405	1	3006.34999999999991	1	226
-158	2016-10-11 21:37:48.324	1	3006.34999999999991	1	229
-157	2016-10-11 21:37:36.216	1	3006.34999999999991	1	228
-161	2016-10-11 21:38:50.673	1	3006.34999999999991	1	231
+1	2016-08-08 14:37:57.779	1	3126.34999999999991	1	4
+2	2016-08-08 14:38:08.538	1	3126.34999999999991	1	5
+3	2016-08-10 10:58:45.57	1	3126.34999999999991	1	9
+4	2016-08-10 10:58:51.123	1	3126.34999999999991	1	10
+5	2016-08-10 11:00:01.909	1	3126.34999999999991	1	12
+6	2016-08-10 11:00:06.066	1	3126.34999999999991	1	13
+7	2016-08-10 11:01:16.719	1	3126.34999999999991	1	15
+8	2016-08-10 11:01:21.645	1	3126.34999999999991	1	16
+13	2016-08-10 15:30:54.146	1	3126.34999999999991	1	33
+14	2016-08-10 15:30:59.252	1	3126.34999999999991	1	34
+16	2016-08-20 16:00:25.187	1	3126.34999999999991	1	41
+15	2016-08-20 16:00:17.944	1	3126.34999999999991	1	40
+17	2016-08-20 16:03:03.294	1	3126.34999999999991	1	43
+18	2016-08-20 16:03:08.627	1	3126.34999999999991	1	44
+19	2016-08-20 17:54:13.403	1	3126.34999999999991	1	46
+21	2016-08-23 23:05:31.559	1	3126.34999999999991	1	49
+22	2016-08-23 23:23:33.373	1	3126.34999999999991	1	51
+23	2016-08-26 18:44:25.044	1	3126.34999999999991	1	61
+24	2016-08-26 18:44:30.603	1	3126.34999999999991	1	62
+26	2016-08-26 18:55:29.809	1	3126.34999999999991	1	67
+27	2016-08-28 13:10:37.599	1	3126.34999999999991	1	70
+29	2016-08-28 13:16:33.757	1	3126.34999999999991	1	74
+30	2016-08-28 13:18:35.898	1	3126.34999999999991	1	76
+53	2016-09-01 19:42:38.836	1	3126.34999999999991	1	98
+33	2016-08-28 16:19:20.447	1	3126.34999999999991	1	80
+34	2016-08-28 18:26:01.955	1	3126.34999999999991	1	81
+37	2016-08-28 18:38:35.148	1	3126.34999999999991	1	82
+38	2016-08-28 19:53:34.503	1	3126.34999999999991	1	83
+41	2016-08-28 22:24:54.335	1	3126.34999999999991	1	84
+42	2016-08-28 22:25:02.707	1	3126.34999999999991	1	85
+39	2016-08-28 22:24:21.057	1	3126.34999999999991	1	86
+40	2016-08-28 22:24:33.42	1	3126.34999999999991	1	87
+44	2016-08-29 17:44:38.759	1	3126.34999999999991	1	89
+45	2016-08-29 17:48:49.866	1	3126.34999999999991	1	90
+46	2016-08-29 17:48:56.422	1	3126.34999999999991	1	91
+47	2016-08-29 18:37:02.241	1	3126.34999999999991	1	92
+50	2016-09-01 17:14:10.226	1	3126.34999999999991	1	93
+48	2016-08-31 16:36:07.101	1	3126.34999999999991	1	94
+49	2016-08-31 17:06:58.422	1	3126.34999999999991	1	95
+51	2016-09-01 17:15:53.866	1	3126.34999999999991	1	96
+52	2016-09-01 17:16:02.489	1	3126.34999999999991	1	97
+56	2016-09-01 23:48:23.712	1	3126.34999999999991	1	102
+67	2016-09-07 18:06:33.385	1	3126.34999999999991	1	115
+11	2016-08-10 15:24:02.016	1	3126.34999999999991	1	31
+25	2016-08-26 18:55:25.997	1	3126.34999999999991	1	66
+36	2016-08-28 18:36:31.791	1	3126.34999999999991	1	68
+35	2016-08-28 18:29:34.571	1	3126.34999999999991	1	69
+54	2016-09-01 23:47:29.441	1	3126.34999999999991	1	99
+64	2016-09-06 20:07:55.807	1	3126.34999999999991	1	112
+65	2016-09-07 09:02:06.982	1	3126.34999999999991	1	113
+69	2016-09-07 18:07:42.195	1	3126.34999999999991	1	117
+70	2016-09-07 18:07:48.437	1	3126.34999999999991	1	118
+72	2016-09-07 18:08:46.952	1	3126.34999999999991	1	120
+73	2016-09-07 18:09:17.397	1	3126.34999999999991	1	121
+74	2016-09-07 18:09:22.135	1	3126.34999999999991	1	122
+75	2016-09-08 16:26:19.556	1	3126.34999999999991	1	125
+76	2016-09-08 16:27:44.276	1	3126.34999999999991	1	127
+77	2016-09-08 16:27:58.486	1	3126.34999999999991	1	128
+79	2016-09-08 16:29:52.282	1	3126.34999999999991	1	130
+80	2016-09-08 22:50:46.943	1	3126.34999999999991	1	137
+81	2016-09-08 23:00:28.669	1	3126.34999999999991	1	140
+82	2016-09-09 18:26:16.269	1	3126.34999999999991	1	142
+83	2016-09-09 18:27:47.136	1	3126.34999999999991	1	144
+105	2016-09-28 15:44:40.265	1	3126.34999999999991	1	132
+108	2016-09-28 16:44:15.63	1	3126.34999999999991	1	139
+84	2016-09-09 18:27:52.751	1	3126.34999999999991	1	145
+85	2016-09-12 19:35:40.368	1	3126.34999999999991	1	148
+86	2016-09-12 19:35:51.176	1	3126.34999999999991	1	149
+94	2016-09-18 18:21:48.633	1	3126.34999999999991	1	133
+96	2016-09-18 18:22:22.553	1	3126.34999999999991	1	160
+98	2016-09-26 08:29:31.368	1	3126.34999999999991	1	166
+99	2016-09-27 17:41:22.295	1	3126.34999999999991	1	167
+102	2016-09-28 15:42:06.56	1	3126.34999999999991	1	131
+155	2016-10-11 21:36:11.405	1	3126.34999999999991	1	226
+190	2016-10-23 21:39:40.215	0	3126.34999999999991	1	280
+12	2016-08-10 15:24:24.053	1	3126.34999999999991	1	32
 357	2016-12-01 12:35:01.84	1	281	3	509
 358	2016-12-01 12:41:49.6	1	100	3	511
 359	2016-12-01 12:46:11.095	1	100	3	513
@@ -3531,78 +3736,93 @@ COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 419	2016-12-14 20:53:44.736	1	281	3	603
 420	2016-12-14 21:31:26.246	1	281	3	609
 423	2016-12-15 20:30:22.705	1	281	3	614
-301	2016-11-24 17:08:41.389	1	3006.34999999999991	1	420
-305	2016-11-25 11:36:29.521	1	3006.34999999999991	1	430
-308	2016-11-25 13:59:07.289	1	3006.34999999999991	1	434
-326	2016-11-29 10:46:14.802	1	3006.34999999999991	1	462
-242	2016-11-11 10:19:30.374	1	3006.34999999999991	1	348
-329	2016-11-29 10:55:12.177	1	3006.34999999999991	1	465
-237	2016-10-31 08:57:45.86	1	3006.34999999999991	1	339
-328	2016-11-29 10:55:07.652	1	3006.34999999999991	1	464
-323	2016-11-29 10:31:48.889	1	3006.34999999999991	1	459
-336	2016-11-30 11:31:32.396	1	3006.34999999999991	1	479
-322	2016-11-29 10:31:12.098	1	3006.34999999999991	1	458
-279	2016-11-18 15:37:54.837	1	3006.34999999999991	1	391
-325	2016-11-29 10:36:14.291	1	3006.34999999999991	1	461
-340	2016-11-30 16:46:35.781	1	3006.34999999999991	1	480
-324	2016-11-29 10:36:01.366	1	3006.34999999999991	1	460
-275	2016-11-18 09:18:34.826	1	3006.34999999999991	1	387
-240	2016-11-01 23:14:57.198	1	3006.34999999999991	1	343
-264	2016-11-11 12:32:45.705	1	3006.34999999999991	1	372
-321	2016-11-29 10:23:45.594	1	3006.34999999999991	1	456
-251	2016-11-11 10:33:40.984	1	3006.34999999999991	1	337
-318	2016-11-29 10:18:28.095	1	3006.34999999999991	1	451
-250	2016-11-11 10:33:31.513	1	3006.34999999999991	1	341
-317	2016-11-29 10:18:17.991	1	3006.34999999999991	1	450
-303	2016-11-25 09:18:13.309	1	3006.34999999999991	1	427
-314	2016-11-29 09:28:22.391	0	3006.34999999999991	1	446
-316	2016-11-29 09:29:29.733	1	3006.34999999999991	1	449
-315	2016-11-29 09:29:15.194	1	3006.34999999999991	1	448
-302	2016-11-24 17:14:44.028	1	3006.34999999999991	1	421
-312	2016-11-27 23:35:46.88	1	3006.34999999999991	1	418
-299	2016-11-24 10:38:07.588	1	3006.34999999999991	1	416
-295	2016-11-24 09:22:20.702	1	3006.34999999999991	1	412
-296	2016-11-24 09:47:23.18	1	3006.34999999999991	1	414
-292	2016-11-21 18:27:36.356	1	3006.34999999999991	1	408
-310	2016-11-26 20:32:01.739	1	3006.34999999999991	1	437
-285	2016-11-20 17:40:14.448	1	3006.34999999999991	1	385
-282	2016-11-20 17:39:13.467	1	3006.34999999999991	1	384
-278	2016-11-18 15:37:44.989	1	3006.34999999999991	1	386
-307	2016-11-25 13:58:18.047	1	3006.34999999999991	1	432
-249	2016-11-11 10:33:27.536	1	3006.34999999999991	1	345
-241	2016-11-07 22:50:28.525	1	3006.34999999999991	1	346
-304	2016-11-25 11:36:01.364	1	3006.34999999999991	1	428
-246	2016-11-11 10:30:21.999	1	3006.34999999999991	1	347
-245	2016-11-11 10:23:12.31	1	3006.34999999999991	1	352
-238	2016-11-01 23:10:28.973	1	3006.34999999999991	1	105
-233	2016-10-27 15:42:58.709	1	3006.34999999999991	1	126
-229	2016-10-27 11:35:39.348	1	3006.34999999999991	1	306
-333	2016-11-29 18:29:46.782	1	3006.34999999999991	1	471
-332	2016-11-29 18:28:51.507	1	3006.34999999999991	1	470
-220	2016-10-27 11:07:58.895	1	3006.34999999999991	1	323
-219	2016-10-27 09:44:03.926	1	3006.34999999999991	1	321
-217	2016-10-27 09:26:58.37	1	3006.34999999999991	1	317
-218	2016-10-27 09:27:00.781	1	3006.34999999999991	1	319
-216	2016-10-27 09:20:02.853	1	3006.34999999999991	1	316
-300	2016-11-24 17:08:34.575	1	3006.34999999999991	1	419
-298	2016-11-24 09:50:48.142	1	3006.34999999999991	1	407
-222	2016-10-27 11:08:23.78	1	3006.34999999999991	1	298
-255	2016-11-11 10:34:07.237	1	3006.34999999999991	1	285
-252	2016-11-11 10:33:58.108	1	3006.34999999999991	1	279
-253	2016-11-11 10:34:01.957	1	3006.34999999999991	1	283
-236	2016-10-28 21:49:13.649	1	3006.34999999999991	1	268
-235	2016-10-28 21:48:52.807	1	3006.34999999999991	1	269
-232	2016-10-27 13:35:55.619	1	3006.34999999999991	1	282
-256	2016-11-11 10:34:12.192	1	3006.34999999999991	1	243
-257	2016-11-11 10:34:13.475	1	3006.34999999999991	1	181
-258	2016-11-11 10:35:06.345	1	3006.34999999999991	1	134
-259	2016-11-11 10:36:01.137	1	3006.34999999999991	1	366
-291	2016-11-21 18:23:11.057	1	3006.34999999999991	1	406
-306	2016-11-25 11:36:47.275	1	3006.34999999999991	1	431
-263	2016-11-11 12:01:05.178	1	3006.34999999999991	1	371
-262	2016-11-11 12:00:50.04	1	3006.34999999999991	1	370
-266	2016-11-11 12:34:13.594	1	3006.34999999999991	1	375
-265	2016-11-11 12:33:56.143	1	3006.34999999999991	1	374
+112	2016-09-30 15:43:36.128	1	3126.34999999999991	1	179
+114	2016-10-03 15:14:14.752	1	3126.34999999999991	1	183
+115	2016-10-03 15:14:32.043	1	3126.34999999999991	1	184
+117	2016-10-04 17:33:28.16	1	3126.34999999999991	1	186
+122	2016-10-04 17:36:14.184	1	3126.34999999999991	1	192
+123	2016-10-04 17:49:21.453	1	3126.34999999999991	1	195
+124	2016-10-04 17:50:07.652	1	3126.34999999999991	1	196
+125	2016-10-04 17:50:22.423	1	3126.34999999999991	1	197
+127	2016-10-05 09:25:47.886	1	3126.34999999999991	1	198
+132	2016-10-06 17:20:40.545	1	3126.34999999999991	1	199
+130	2016-10-06 10:44:28.361	1	3126.34999999999991	1	202
+131	2016-10-06 10:49:21.418	1	3126.34999999999991	1	204
+257	2016-11-11 10:34:13.475	1	3126.34999999999991	1	181
+140	2016-10-07 16:11:21.132	1	3126.34999999999991	1	208
+142	2016-10-07 21:53:42.388	1	3126.34999999999991	1	213
+143	2016-10-07 21:54:48.973	1	3126.34999999999991	1	214
+145	2016-10-07 21:55:34.66	1	3126.34999999999991	1	205
+137	2016-10-07 14:28:45.384	1	3126.34999999999991	1	143
+138	2016-10-07 15:00:36.088	1	3126.34999999999991	1	209
+146	2016-10-10 20:09:03.364	1	3126.34999999999991	1	217
+147	2016-10-10 20:10:08.011	1	3126.34999999999991	1	218
+148	2016-10-10 20:10:20.484	1	3126.34999999999991	1	219
+152	2016-10-11 21:32:04.045	1	3126.34999999999991	1	135
+153	2016-10-11 21:34:36.752	1	3126.34999999999991	1	225
+156	2016-10-11 21:36:21.758	1	3126.34999999999991	1	227
+157	2016-10-11 21:37:36.216	1	3126.34999999999991	1	228
+159	2016-10-11 21:38:07.672	1	3126.34999999999991	1	182
+192	2016-10-23 21:43:20.608	0	3126.34999999999991	1	216
+161	2016-10-11 21:38:50.673	1	3126.34999999999991	1	231
+162	2016-10-14 18:30:22.356	1	3126.34999999999991	1	234
+256	2016-11-11 10:34:12.192	1	3126.34999999999991	1	243
+163	2016-10-16 10:23:06.773	1	3126.34999999999991	1	235
+164	2016-10-16 10:23:29.733	1	3126.34999999999991	1	236
+168	2016-10-18 14:50:28.667	1	3126.34999999999991	1	244
+169	2016-10-18 14:52:20.694	1	3126.34999999999991	1	245
+170	2016-10-18 14:52:34.928	1	3126.34999999999991	1	246
+183	2016-10-20 13:12:17.829	0	3126.34999999999991	1	232
+182	2016-10-20 13:12:13.871	0	3126.34999999999991	1	233
+185	2016-10-21 14:05:52.342	1	3126.34999999999991	1	270
+186	2016-10-21 14:06:51.253	1	3126.34999999999991	1	272
+187	2016-10-21 14:06:56.42	1	3126.34999999999991	1	273
+188	2016-10-21 18:06:15.149	1	3126.34999999999991	1	274
+189	2016-10-21 18:06:30.85	1	3126.34999999999991	1	275
+191	2016-10-23 21:43:03.756	0	3126.34999999999991	1	277
+195	2016-10-25 10:49:33.9	1	3126.34999999999991	1	287
+194	2016-10-25 10:49:07.598	1	3126.34999999999991	1	286
+198	2016-10-25 15:08:37.431	1	3126.34999999999991	1	281
+232	2016-10-27 13:35:55.619	1	3126.34999999999991	1	282
+211	2016-10-27 09:16:53.222	1	3126.34999999999991	1	309
+235	2016-10-28 21:48:52.807	1	3126.34999999999991	1	269
+212	2016-10-27 09:17:23.192	1	3126.34999999999991	1	311
+223	2016-10-27 11:09:38.973	1	3126.34999999999991	1	327
+204	2016-10-26 10:51:46.524	1	3126.34999999999991	1	297
+203	2016-10-26 10:43:04.463	1	3126.34999999999991	1	296
+214	2016-10-27 09:19:14.836	1	3126.34999999999991	1	313
+216	2016-10-27 09:20:02.853	1	3126.34999999999991	1	316
+207	2016-10-26 16:00:27.055	1	3126.34999999999991	1	302
+215	2016-10-27 09:20:01.433	1	3126.34999999999991	1	315
+210	2016-10-26 19:57:25.562	1	3126.34999999999991	1	307
+218	2016-10-27 09:27:00.781	1	3126.34999999999991	1	319
+217	2016-10-27 09:26:58.37	1	3126.34999999999991	1	317
+219	2016-10-27 09:44:03.926	1	3126.34999999999991	1	321
+225	2016-10-27 11:11:31.919	1	3126.34999999999991	1	329
+226	2016-10-27 11:11:38.265	1	3126.34999999999991	1	330
+227	2016-10-27 11:12:52.4	1	3126.34999999999991	1	331
+228	2016-10-27 11:12:58.821	1	3126.34999999999991	1	332
+230	2016-10-27 11:36:21.664	1	3126.34999999999991	1	334
+231	2016-10-27 11:36:42.003	1	3126.34999999999991	1	335
+233	2016-10-27 15:42:58.709	1	3126.34999999999991	1	126
+238	2016-11-01 23:10:28.973	1	3126.34999999999991	1	105
+239	2016-11-01 23:11:22.447	1	3126.34999999999991	1	342
+240	2016-11-01 23:14:57.198	1	3126.34999999999991	1	343
+237	2016-10-31 08:57:45.86	1	3126.34999999999991	1	339
+242	2016-11-11 10:19:30.374	1	3126.34999999999991	1	348
+247	2016-11-11 10:32:58.766	1	3126.34999999999991	1	354
+248	2016-11-11 10:33:05.866	1	3126.34999999999991	1	355
+265	2016-11-11 12:33:56.143	1	3126.34999999999991	1	374
+279	2016-11-18 15:37:54.837	1	3126.34999999999991	1	391
+278	2016-11-18 15:37:44.989	1	3126.34999999999991	1	386
+282	2016-11-20 17:39:13.467	1	3126.34999999999991	1	384
+296	2016-11-24 09:47:23.18	1	3126.34999999999991	1	414
+326	2016-11-29 10:46:14.802	1	3126.34999999999991	1	462
+328	2016-11-29 10:55:07.652	1	3126.34999999999991	1	464
+329	2016-11-29 10:55:12.177	1	3126.34999999999991	1	465
+322	2016-11-29 10:31:12.098	1	3126.34999999999991	1	458
+323	2016-11-29 10:31:48.889	1	3126.34999999999991	1	459
+258	2016-11-11 10:35:06.345	1	3126.34999999999991	1	134
 497	2017-01-20 11:25:06.193	1	100	17	660
 507	2017-01-30 14:50:15.716	1	100	20	731
 508	2017-01-30 14:51:01.316	1	100	20	733
@@ -3621,312 +3841,415 @@ COPY theses (id, cast_date, value, weight, author_id, decision_id) FROM stdin;
 522	2017-02-01 20:11:02.912	1	160	22	751
 523	2017-02-01 20:11:49.474	1	160	22	752
 524	2017-02-01 20:13:17.27	1	160	22	754
-394	2016-12-06 19:10:55.465	1	3006.34999999999991	1	568
-393	2016-12-06 19:10:48.086	1	3006.34999999999991	1	567
-224	2016-10-27 11:10:00.095	1	3006.34999999999991	1	328
-243	2016-11-11 10:20:18.997	1	3006.34999999999991	1	350
-334	2016-11-29 18:33:33.763	1	3006.34999999999991	1	472
-397	2016-12-07 17:56:04.889	1	3006.34999999999991	1	572
-400	2016-12-09 21:34:42.052	1	3006.34999999999991	1	576
-382	2016-12-04 17:20:44.031	1	3006.34999999999991	1	547
-399	2016-12-08 07:58:46.183	1	3006.34999999999991	1	575
-414	2016-12-13 12:59:19.938	1	3006.34999999999991	1	597
-402	2016-12-09 21:36:03.662	1	3006.34999999999991	1	578
-331	2016-11-29 17:25:12.152	1	3006.34999999999991	1	466
-429	2016-12-15 22:10:09.452	1	3006.34999999999991	1	621
-428	2016-12-15 21:28:36.352	1	3006.34999999999991	1	619
-339	2016-11-30 12:23:59.088	1	3006.34999999999991	1	485
-338	2016-11-30 11:38:12.841	1	3006.34999999999991	1	483
-422	2016-12-15 16:16:48.142	1	3006.34999999999991	1	612
-411	2016-12-13 11:26:08.227	1	3006.34999999999991	1	593
-337	2016-11-30 11:34:27.172	1	3006.34999999999991	1	481
-365	2016-12-02 09:07:56.176	1	3006.34999999999991	1	502
-377	2016-12-04 13:02:05.671	1	3006.34999999999991	1	436
-418	2016-12-14 11:44:05.616	1	3006.34999999999991	1	607
-387	2016-12-06 11:04:43.555	1	3006.34999999999991	1	555
-417	2016-12-14 11:32:01.732	1	3006.34999999999991	1	605
-416	2016-12-14 11:28:30.74	1	3006.34999999999991	1	601
-380	2016-12-04 16:15:48.783	0	3006.34999999999991	1	278
-415	2016-12-14 09:23:38.779	1	3006.34999999999991	1	599
-379	2016-12-04 13:07:04.694	1	3006.34999999999991	1	543
-409	2016-12-13 10:47:54.314	1	3006.34999999999991	1	589
-398	2016-12-08 07:57:21.511	1	3006.34999999999991	1	573
-408	2016-12-12 20:34:12.489	1	3006.34999999999991	1	587
-406	2016-12-12 15:58:34.314	1	3006.34999999999991	1	583
-403	2016-12-12 10:10:17.646	1	3006.34999999999991	1	579
-395	2016-12-06 19:12:57.1	1	3006.34999999999991	1	569
-391	2016-12-06 11:40:13.301	1	3006.34999999999991	1	564
-284	2016-11-20 17:39:59.529	1	3006.34999999999991	1	398
-390	2016-12-06 11:38:42.358	1	3006.34999999999991	1	562
-388	2016-12-06 11:08:32.886	1	3006.34999999999991	1	557
-371	2016-12-02 16:35:53.325	1	3006.34999999999991	1	532
-378	2016-12-04 13:07:04.009	1	3006.34999999999991	1	542
-374	2016-12-04 12:45:02.684	1	3006.34999999999991	1	536
-369	2016-12-02 15:29:55.998	1	3006.34999999999991	1	528
-366	2016-12-02 10:55:59.782	1	3006.34999999999991	1	524
-364	2016-12-01 13:31:50.341	0	3006.34999999999991	1	509
-349	2016-11-30 23:54:30.357	1	3006.34999999999991	1	496
-344	2016-11-30 18:11:33.785	1	3006.34999999999991	1	475
-341	2016-11-30 17:38:57.022	1	3006.34999999999991	1	487
-345	2016-11-30 22:54:58.189	1	3006.34999999999991	1	476
-335	2016-11-30 11:30:57.303	1	3006.34999999999991	1	477
-385	2016-12-05 08:35:23.062	1	3006.34999999999991	1	551
-531	2017-02-01 21:28:58.975	1	3006.34999999999991	1	762
-111	2016-09-29 17:55:37.583	1	3006.34999999999991	1	178
-401	2016-12-09 21:35:54.224	1	3006.34999999999991	1	577
-405	2016-12-12 15:26:36.005	1	3006.34999999999991	1	582
-327	2016-11-29 10:46:19.291	1	3006.34999999999991	1	463
-342	2016-11-30 17:40:09.95	1	3006.34999999999991	1	489
-348	2016-11-30 23:18:14.933	1	3006.34999999999991	1	495
-404	2016-12-12 10:11:09.635	1	3006.34999999999991	1	581
-410	2016-12-13 11:18:18.953	1	3006.34999999999991	1	591
-412	2016-12-13 11:26:36.819	1	3006.34999999999991	1	595
-425	2016-12-15 21:22:44.893	1	3006.34999999999991	1	617
-430	2016-12-15 22:24:25.962	1	3006.34999999999991	1	623
-141	2016-10-07 21:00:18.124	1	3006.34999999999991	1	211
-347	2016-11-30 23:18:05.576	1	3006.34999999999991	1	494
-352	2016-12-01 00:31:15.288	1	3006.34999999999991	1	501
-351	2016-12-01 00:31:05.457	1	3006.34999999999991	1	500
-354	2016-12-01 10:33:08.567	1	3006.34999999999991	1	504
-353	2016-12-01 10:33:02.756	1	3006.34999999999991	1	503
-356	2016-12-01 12:31:56.397	1	3006.34999999999991	1	508
-20	2016-08-22 21:11:06.232	1	3006.34999999999991	1	48
-431	2016-12-15 22:24:46.62	1	3006.34999999999991	1	624
-443	2016-12-19 18:24:03.074	1	3006.34999999999991	1	636
-234	2016-10-27 15:43:08.082	1	3006.34999999999991	1	338
-319	2016-11-29 10:18:31.058	1	3006.34999999999991	1	452
-346	2016-11-30 23:16:34.438	1	3006.34999999999991	1	492
-476	2017-01-09 16:04:04.978	1	3006.34999999999991	1	392
-468	2017-01-09 10:23:17.376	1	3006.34999999999991	1	675
-392	2016-12-06 11:40:14.148	1	3006.34999999999991	1	561
-434	2016-12-15 22:42:40.036	0	3006.34999999999991	1	616
-436	2016-12-16 09:00:07.051	1	3006.34999999999991	1	627
-474	2017-01-09 16:01:12.459	1	3006.34999999999991	1	679
-441	2016-12-19 18:22:30.9	1	3006.34999999999991	1	632
-440	2016-12-19 18:07:50.128	1	3006.34999999999991	1	629
-504	2017-01-26 18:10:36.206	1	3006.34999999999991	1	724
-473	2017-01-09 16:01:07.431	1	3006.34999999999991	1	445
-433	2016-12-15 22:41:48.02	1	3006.34999999999991	1	625
-503	2017-01-24 17:34:36.983	1	3006.34999999999991	1	723
-451	2017-01-03 20:22:56.765	1	3006.34999999999991	1	646
-494	2017-01-13 11:59:09.052	1	3006.34999999999991	1	707
-435	2016-12-15 22:50:13.46	1	3006.34999999999991	1	611
-447	2016-12-23 00:08:36.519	1	3006.34999999999991	1	640
-458	2017-01-05 10:31:53.954	1	3006.34999999999991	1	663
-506	2017-01-30 14:49:10.881	0	3006.34999999999991	1	729
-479	2017-01-09 16:08:13.549	1	3006.34999999999991	1	123
-481	2017-01-09 16:08:42.663	1	3006.34999999999991	1	151
-453	2017-01-04 09:04:34.564	1	3006.34999999999991	1	650
-502	2017-01-24 17:32:44.384	1	3006.34999999999991	1	721
-350	2016-12-01 00:30:23.444	1	3006.34999999999991	1	498
-495	2017-01-14 18:00:11.849	1	3006.34999999999991	1	714
-493	2017-01-13 11:47:50.452	1	3006.34999999999991	1	711
-492	2017-01-13 11:45:37.901	1	3006.34999999999991	1	709
-475	2017-01-09 16:03:42.017	1	3006.34999999999991	1	394
-491	2017-01-13 11:08:18.524	1	3006.34999999999991	1	708
-490	2017-01-13 11:01:05.475	1	3006.34999999999991	1	705
-489	2017-01-13 10:58:47.677	1	3006.34999999999991	1	703
+253	2016-11-11 10:34:01.957	1	3126.34999999999991	1	283
+252	2016-11-11 10:33:58.108	1	3126.34999999999991	1	279
+222	2016-10-27 11:08:23.78	1	3126.34999999999991	1	298
+220	2016-10-27 11:07:58.895	1	3126.34999999999991	1	323
+224	2016-10-27 11:10:00.095	1	3126.34999999999991	1	328
+243	2016-11-11 10:20:18.997	1	3126.34999999999991	1	350
+241	2016-11-07 22:50:28.525	1	3126.34999999999991	1	346
+249	2016-11-11 10:33:27.536	1	3126.34999999999991	1	345
+250	2016-11-11 10:33:31.513	1	3126.34999999999991	1	341
+251	2016-11-11 10:33:40.984	1	3126.34999999999991	1	337
+259	2016-11-11 10:36:01.137	1	3126.34999999999991	1	366
+262	2016-11-11 12:00:50.04	1	3126.34999999999991	1	370
+263	2016-11-11 12:01:05.178	1	3126.34999999999991	1	371
+275	2016-11-18 09:18:34.826	1	3126.34999999999991	1	387
+285	2016-11-20 17:40:14.448	1	3126.34999999999991	1	385
+385	2016-12-05 08:35:23.062	1	3126.34999999999991	1	551
+291	2016-11-21 18:23:11.057	1	3126.34999999999991	1	406
+292	2016-11-21 18:27:36.356	1	3126.34999999999991	1	408
+295	2016-11-24 09:22:20.702	1	3126.34999999999991	1	412
+298	2016-11-24 09:50:48.142	1	3126.34999999999991	1	407
+299	2016-11-24 10:38:07.588	1	3126.34999999999991	1	416
+300	2016-11-24 17:08:34.575	1	3126.34999999999991	1	419
+301	2016-11-24 17:08:41.389	1	3126.34999999999991	1	420
+312	2016-11-27 23:35:46.88	1	3126.34999999999991	1	418
+302	2016-11-24 17:14:44.028	1	3126.34999999999991	1	421
+303	2016-11-25 09:18:13.309	1	3126.34999999999991	1	427
+304	2016-11-25 11:36:01.364	1	3126.34999999999991	1	428
+305	2016-11-25 11:36:29.521	1	3126.34999999999991	1	430
+306	2016-11-25 11:36:47.275	1	3126.34999999999991	1	431
+307	2016-11-25 13:58:18.047	1	3126.34999999999991	1	432
+308	2016-11-25 13:59:07.289	1	3126.34999999999991	1	434
+310	2016-11-26 20:32:01.739	1	3126.34999999999991	1	437
+315	2016-11-29 09:29:15.194	1	3126.34999999999991	1	448
+316	2016-11-29 09:29:29.733	1	3126.34999999999991	1	449
+314	2016-11-29 09:28:22.391	0	3126.34999999999991	1	446
+317	2016-11-29 10:18:17.991	1	3126.34999999999991	1	450
+318	2016-11-29 10:18:28.095	1	3126.34999999999991	1	451
+321	2016-11-29 10:23:45.594	1	3126.34999999999991	1	456
+324	2016-11-29 10:36:01.366	1	3126.34999999999991	1	460
+325	2016-11-29 10:36:14.291	1	3126.34999999999991	1	461
+331	2016-11-29 17:25:12.152	1	3126.34999999999991	1	466
+332	2016-11-29 18:28:51.507	1	3126.34999999999991	1	470
+333	2016-11-29 18:29:46.782	1	3126.34999999999991	1	471
+340	2016-11-30 16:46:35.781	1	3126.34999999999991	1	480
+345	2016-11-30 22:54:58.189	1	3126.34999999999991	1	476
+336	2016-11-30 11:31:32.396	1	3126.34999999999991	1	479
+337	2016-11-30 11:34:27.172	1	3126.34999999999991	1	481
+338	2016-11-30 11:38:12.841	1	3126.34999999999991	1	483
+342	2016-11-30 17:40:09.95	1	3126.34999999999991	1	489
+344	2016-11-30 18:11:33.785	1	3126.34999999999991	1	475
+347	2016-11-30 23:18:05.576	1	3126.34999999999991	1	494
+348	2016-11-30 23:18:14.933	1	3126.34999999999991	1	495
+351	2016-12-01 00:31:05.457	1	3126.34999999999991	1	500
+352	2016-12-01 00:31:15.288	1	3126.34999999999991	1	501
+353	2016-12-01 10:33:02.756	1	3126.34999999999991	1	503
+354	2016-12-01 10:33:08.567	1	3126.34999999999991	1	504
+356	2016-12-01 12:31:56.397	1	3126.34999999999991	1	508
+349	2016-11-30 23:54:30.357	1	3126.34999999999991	1	496
+364	2016-12-01 13:31:50.341	0	3126.34999999999991	1	509
+365	2016-12-02 09:07:56.176	1	3126.34999999999991	1	502
+366	2016-12-02 10:55:59.782	1	3126.34999999999991	1	524
+369	2016-12-02 15:29:55.998	1	3126.34999999999991	1	528
+374	2016-12-04 12:45:02.684	1	3126.34999999999991	1	536
+377	2016-12-04 13:02:05.671	1	3126.34999999999991	1	436
+371	2016-12-02 16:35:53.325	1	3126.34999999999991	1	532
+379	2016-12-04 13:07:04.694	1	3126.34999999999991	1	543
+380	2016-12-04 16:15:48.783	0	3126.34999999999991	1	278
+382	2016-12-04 17:20:44.031	1	3126.34999999999991	1	547
+387	2016-12-06 11:04:43.555	1	3126.34999999999991	1	555
+393	2016-12-06 19:10:48.086	1	3126.34999999999991	1	567
+394	2016-12-06 19:10:55.465	1	3126.34999999999991	1	568
+397	2016-12-07 17:56:04.889	1	3126.34999999999991	1	572
+400	2016-12-09 21:34:42.052	1	3126.34999999999991	1	576
+405	2016-12-12 15:26:36.005	1	3126.34999999999991	1	582
+408	2016-12-12 20:34:12.489	1	3126.34999999999991	1	587
+409	2016-12-13 10:47:54.314	1	3126.34999999999991	1	589
+411	2016-12-13 11:26:08.227	1	3126.34999999999991	1	593
+414	2016-12-13 12:59:19.938	1	3126.34999999999991	1	597
+417	2016-12-14 11:32:01.732	1	3126.34999999999991	1	605
+418	2016-12-14 11:44:05.616	1	3126.34999999999991	1	607
+430	2016-12-15 22:24:25.962	1	3126.34999999999991	1	623
+531	2017-02-01 21:28:58.975	1	3126.34999999999991	1	762
+236	2016-10-28 21:49:13.649	1	3126.34999999999991	1	268
 532	2017-02-02 04:36:06.531	0	104	16	763
-472	2017-01-09 15:59:47.811	1	3006.34999999999991	1	497
-486	2017-01-11 19:17:57.51	1	3006.34999999999991	1	694
-465	2017-01-09 08:58:53.322	1	3006.34999999999991	1	671
-464	2017-01-09 08:53:05.987	1	3006.34999999999991	1	669
-206	2016-10-26 15:59:34.034	1	3006.34999999999991	1	301
-213	2016-10-27 09:17:55.324	1	3006.34999999999991	1	312
-484	2017-01-10 16:58:04.531	1	3006.34999999999991	1	690
-202	2016-10-26 10:42:18.758	1	3006.34999999999991	1	294
-449	2017-01-03 10:12:09.3	1	3006.34999999999991	1	644
-254	2016-11-11 10:34:05.758	1	3006.34999999999991	1	284
-109	2016-09-29 17:54:38.339	1	3006.34999999999991	1	176
-480	2017-01-09 16:08:33.691	1	3006.34999999999991	1	124
-505	2017-01-26 18:12:35.417	1	3006.34999999999991	1	725
-487	2017-01-12 08:41:36.432	1	3006.34999999999991	1	697
-78	2016-09-08 16:29:33.896	1	3006.34999999999991	1	129
-66	2016-09-07 09:02:11.984	1	3006.34999999999991	1	114
-446	2016-12-23 00:06:03.939	1	3006.34999999999991	1	638
-55	2016-09-01 23:48:13.332	1	3006.34999999999991	1	101
-478	2017-01-09 16:05:31.666	1	3006.34999999999991	1	682
-9	2016-08-10 15:06:21.827	1	3006.34999999999991	1	23
-488	2017-01-12 08:42:55.845	1	3006.34999999999991	1	699
-445	2016-12-21 23:14:00.768	1	3006.34999999999991	1	631
-530	2017-02-01 21:28:40.722	1	3006.34999999999991	1	761
-537	2017-02-02 12:02:46.881	1	3006.34999999999991	1	774
-471	2017-01-09 10:24:20.812	1	3006.34999999999991	1	678
-538	2017-02-02 12:03:42.152	1	3006.34999999999991	1	776
-448	2016-12-26 21:02:03.821	1	3006.34999999999991	1	642
-450	2017-01-03 20:19:43.912	1	3006.34999999999991	1	643
-455	2017-01-04 16:07:24.649	1	3006.34999999999991	1	653
-470	2017-01-09 10:24:06.085	1	3006.34999999999991	1	677
-539	2017-02-02 12:04:47.321	1	3006.34999999999991	1	778
-540	2017-02-02 12:04:56.861	1	3006.34999999999991	1	779
 533	2017-02-02 04:42:45.512	1	104	16	766
-444	2016-12-20 18:17:45.197	1	3006.34999999999991	1	560
-461	2017-01-05 15:40:36.17	1	3006.34999999999991	1	554
-432	2016-12-15 22:39:11.925	1	3006.34999999999991	1	596
-407	2016-12-12 15:59:42.527	1	3006.34999999999991	1	585
-438	2016-12-19 16:29:33.113	1	3006.34999999999991	1	548
-439	2016-12-19 17:03:41.532	1	3006.34999999999991	1	598
-454	2017-01-04 09:05:25.644	1	3006.34999999999991	1	652
-477	2017-01-09 16:05:18.74	1	3006.34999999999991	1	681
-500	2017-01-21 23:06:03.786	1	3006.34999999999991	1	687
-442	2016-12-19 18:22:48.578	1	3006.34999999999991	1	634
+66	2016-09-07 09:02:11.984	1	3126.34999999999991	1	114
+78	2016-09-08 16:29:33.896	1	3126.34999999999991	1	129
+480	2017-01-09 16:08:33.691	1	3126.34999999999991	1	124
+92	2016-09-15 14:23:31.46	1	3126.34999999999991	1	156
+93	2016-09-15 14:23:40.298	1	3126.34999999999991	1	157
+109	2016-09-29 17:54:38.339	1	3126.34999999999991	1	176
+111	2016-09-29 17:55:37.583	1	3126.34999999999991	1	178
+254	2016-11-11 10:34:05.758	1	3126.34999999999991	1	284
+234	2016-10-27 15:43:08.082	1	3126.34999999999991	1	338
+284	2016-11-20 17:39:59.529	1	3126.34999999999991	1	398
+476	2017-01-09 16:04:04.978	1	3126.34999999999991	1	392
+327	2016-11-29 10:46:19.291	1	3126.34999999999991	1	463
+319	2016-11-29 10:18:31.058	1	3126.34999999999991	1	452
+334	2016-11-29 18:33:33.763	1	3126.34999999999991	1	472
+335	2016-11-30 11:30:57.303	1	3126.34999999999991	1	477
+339	2016-11-30 12:23:59.088	1	3126.34999999999991	1	485
+341	2016-11-30 17:38:57.022	1	3126.34999999999991	1	487
+346	2016-11-30 23:16:34.438	1	3126.34999999999991	1	492
+350	2016-12-01 00:30:23.444	1	3126.34999999999991	1	498
+378	2016-12-04 13:07:04.009	1	3126.34999999999991	1	542
+386	2016-12-05 08:36:00.735	1	3126.34999999999991	1	553
+388	2016-12-06 11:08:32.886	1	3126.34999999999991	1	557
+444	2016-12-20 18:17:45.197	1	3126.34999999999991	1	560
+461	2017-01-05 15:40:36.17	1	3126.34999999999991	1	554
+390	2016-12-06 11:38:42.358	1	3126.34999999999991	1	562
+392	2016-12-06 11:40:14.148	1	3126.34999999999991	1	561
+395	2016-12-06 19:12:57.1	1	3126.34999999999991	1	569
+398	2016-12-08 07:57:21.511	1	3126.34999999999991	1	573
+399	2016-12-08 07:58:46.183	1	3126.34999999999991	1	575
+401	2016-12-09 21:35:54.224	1	3126.34999999999991	1	577
+402	2016-12-09 21:36:03.662	1	3126.34999999999991	1	578
+403	2016-12-12 10:10:17.646	1	3126.34999999999991	1	579
+404	2016-12-12 10:11:09.635	1	3126.34999999999991	1	581
+406	2016-12-12 15:58:34.314	1	3126.34999999999991	1	583
+407	2016-12-12 15:59:42.527	1	3126.34999999999991	1	585
+410	2016-12-13 11:18:18.953	1	3126.34999999999991	1	591
+412	2016-12-13 11:26:36.819	1	3126.34999999999991	1	595
+415	2016-12-14 09:23:38.779	1	3126.34999999999991	1	599
+416	2016-12-14 11:28:30.74	1	3126.34999999999991	1	601
+435	2016-12-15 22:50:13.46	1	3126.34999999999991	1	611
+432	2016-12-15 22:39:11.925	1	3126.34999999999991	1	596
+436	2016-12-16 09:00:07.051	1	3126.34999999999991	1	627
+425	2016-12-15 21:22:44.893	1	3126.34999999999991	1	617
+428	2016-12-15 21:28:36.352	1	3126.34999999999991	1	619
+431	2016-12-15 22:24:46.62	1	3126.34999999999991	1	624
+433	2016-12-15 22:41:48.02	1	3126.34999999999991	1	625
+434	2016-12-15 22:42:40.036	0	3126.34999999999991	1	616
+438	2016-12-19 16:29:33.113	1	3126.34999999999991	1	548
+439	2016-12-19 17:03:41.532	1	3126.34999999999991	1	598
+440	2016-12-19 18:07:50.128	1	3126.34999999999991	1	629
+441	2016-12-19 18:22:30.9	1	3126.34999999999991	1	632
+442	2016-12-19 18:22:48.578	1	3126.34999999999991	1	634
+443	2016-12-19 18:24:03.074	1	3126.34999999999991	1	636
+445	2016-12-21 23:14:00.768	1	3126.34999999999991	1	631
+483	2017-01-10 16:55:04.7	1	3126.34999999999991	1	637
+446	2016-12-23 00:06:03.939	1	3126.34999999999991	1	638
+447	2016-12-23 00:08:36.519	1	3126.34999999999991	1	640
+448	2016-12-26 21:02:03.821	1	3126.34999999999991	1	642
+449	2017-01-03 10:12:09.3	1	3126.34999999999991	1	644
+450	2017-01-03 20:19:43.912	1	3126.34999999999991	1	643
+451	2017-01-03 20:22:56.765	1	3126.34999999999991	1	646
+453	2017-01-04 09:04:34.564	1	3126.34999999999991	1	650
+455	2017-01-04 16:07:24.649	1	3126.34999999999991	1	653
+456	2017-01-05 09:30:22.708	1	3126.34999999999991	1	656
+458	2017-01-05 10:31:53.954	1	3126.34999999999991	1	663
+464	2017-01-09 08:53:05.987	1	3126.34999999999991	1	669
+465	2017-01-09 08:58:53.322	1	3126.34999999999991	1	671
+468	2017-01-09 10:23:17.376	1	3126.34999999999991	1	675
+471	2017-01-09 10:24:20.812	1	3126.34999999999991	1	678
+472	2017-01-09 15:59:47.811	1	3126.34999999999991	1	497
+473	2017-01-09 16:01:07.431	1	3126.34999999999991	1	445
+474	2017-01-09 16:01:12.459	1	3126.34999999999991	1	679
+475	2017-01-09 16:03:42.017	1	3126.34999999999991	1	394
+477	2017-01-09 16:05:18.74	1	3126.34999999999991	1	681
+478	2017-01-09 16:05:31.666	1	3126.34999999999991	1	682
+479	2017-01-09 16:08:13.549	1	3126.34999999999991	1	123
+481	2017-01-09 16:08:42.663	1	3126.34999999999991	1	151
+482	2017-01-09 16:20:19.945	1	3126.34999999999991	1	686
+484	2017-01-10 16:58:04.531	1	3126.34999999999991	1	690
+486	2017-01-11 19:17:57.51	1	3126.34999999999991	1	694
+488	2017-01-12 08:42:55.845	1	3126.34999999999991	1	699
+489	2017-01-13 10:58:47.677	1	3126.34999999999991	1	703
+490	2017-01-13 11:01:05.475	1	3126.34999999999991	1	705
+491	2017-01-13 11:08:18.524	1	3126.34999999999991	1	708
+492	2017-01-13 11:45:37.901	1	3126.34999999999991	1	709
+493	2017-01-13 11:47:50.452	1	3126.34999999999991	1	711
+494	2017-01-13 11:59:09.052	1	3126.34999999999991	1	707
+500	2017-01-21 23:06:03.786	1	3126.34999999999991	1	687
+501	2017-01-24 17:30:07.3	1	3126.34999999999991	1	693
+495	2017-01-14 18:00:11.849	1	3126.34999999999991	1	714
+504	2017-01-26 18:10:36.206	1	3126.34999999999991	1	724
+505	2017-01-26 18:12:35.417	1	3126.34999999999991	1	725
+506	2017-01-30 14:49:10.881	0	3126.34999999999991	1	729
+530	2017-02-01 21:28:40.722	1	3126.34999999999991	1	761
+537	2017-02-02 12:02:46.881	1	3126.34999999999991	1	774
+538	2017-02-02 12:03:42.152	1	3126.34999999999991	1	776
+539	2017-02-02 12:04:47.321	1	3126.34999999999991	1	778
+540	2017-02-02 12:04:56.861	1	3126.34999999999991	1	779
 534	2017-02-02 04:43:28.298	1	104	16	768
 535	2017-02-02 04:44:10.642	1	104	16	770
 536	2017-02-02 04:48:56.326	1	104	16	772
-93	2016-09-15 14:23:40.298	1	3006.34999999999991	1	157
-92	2016-09-15 14:23:31.46	1	3006.34999999999991	1	156
-386	2016-12-05 08:36:00.735	1	3006.34999999999991	1	553
-483	2017-01-10 16:55:04.7	1	3006.34999999999991	1	637
-456	2017-01-05 09:30:22.708	1	3006.34999999999991	1	656
-482	2017-01-09 16:20:19.945	1	3006.34999999999991	1	686
-501	2017-01-24 17:30:07.3	1	3006.34999999999991	1	693
-469	2017-01-09 10:23:22.64	1	3006.34999999999991	1	676
-545	2017-02-02 17:08:24.434	1	3006.34999999999991	1	700
-544	2017-02-02 17:08:08.821	1	3006.34999999999991	1	713
-546	2017-02-02 17:09:25.147	1	3006.34999999999991	1	641
-541	2017-02-02 14:11:04.574	1	3006.34999999999991	1	780
-515	2017-02-01 16:33:44.629	1	3006.34999999999991	1	743
-459	2017-01-05 10:44:15.439	1	3006.34999999999991	1	665
-421	2016-12-14 22:54:12.116	1	3006.34999999999991	1	609
-372	2016-12-04 12:42:46.751	1	3006.34999999999991	1	537
-330	2016-11-29 16:07:36.239	0	3006.34999999999991	1	467
-542	2017-02-02 14:23:39.635	1	3006.34999999999991	1	782
-311	2016-11-27 11:20:14.504	1	3006.34999999999991	1	443
-547	2017-02-02 17:23:26.389	1	3006.34999999999991	1	784
-548	2017-02-03 10:23:11.413	1	3006.34999999999991	1	785
-553	2017-02-05 18:02:09.303	1	3006.34999999999991	1	796
-290	2016-11-21 18:22:00.064	1	3006.34999999999991	1	404
-289	2016-11-21 10:31:04.367	1	3006.34999999999991	1	402
-221	2016-10-27 11:08:14.592	1	3006.34999999999991	1	299
-121	2016-10-04 17:36:00.84	1	3006.34999999999991	1	191
-120	2016-10-04 17:35:50.724	1	3006.34999999999991	1	190
-89	2016-09-13 22:07:21.285	1	3006.34999999999991	1	152
-88	2016-09-13 22:05:17.078	1	3006.34999999999991	1	147
-564	2017-02-07 14:28:19.127	1	3006.34999999999991	1	808
-197	2016-10-25 10:52:49.75	1	3006.34999999999991	1	289
-196	2016-10-25 10:52:36.515	1	3006.34999999999991	1	288
-200	2016-10-25 16:02:02.844	1	3006.34999999999991	1	293
-199	2016-10-25 16:01:46.766	1	3006.34999999999991	1	291
-260	2016-11-11 10:36:18.284	1	3006.34999999999991	1	367
-267	2016-11-17 19:22:49.017	1	3006.34999999999991	1	376
-272	2016-11-17 19:39:42.08	1	3006.34999999999991	1	381
-309	2016-11-25 19:42:31.051	1	3006.34999999999991	1	435
-343	2016-11-30 17:40:14.288	1	3006.34999999999991	1	490
-375	2016-12-04 12:45:37.317	1	3006.34999999999991	1	531
-381	2016-12-04 17:18:34.378	1	3006.34999999999991	1	540
-373	2016-12-04 12:44:15.951	1	3006.34999999999991	1	539
-384	2016-12-04 22:39:22.443	1	3006.34999999999991	1	550
-383	2016-12-04 22:39:02.98	1	3006.34999999999991	1	549
-389	2016-12-06 11:13:44.833	1	3006.34999999999991	1	559
-396	2016-12-07 17:55:53.005	1	3006.34999999999991	1	571
-413	2016-12-13 12:37:02.179	1	3006.34999999999991	1	592
-288	2016-11-20 17:51:27.713	1	3006.34999999999991	1	340
-61	2016-09-06 16:32:16.259	1	3006.34999999999991	1	109
-60	2016-09-05 17:12:24.566	1	3006.34999999999991	1	108
-59	2016-09-05 17:12:18.656	1	3006.34999999999991	1	107
-280	2016-11-18 20:27:47.986	1	3006.34999999999991	1	393
-144	2016-10-07 21:55:03.477	1	3006.34999999999991	1	215
-437	2016-12-16 15:46:17.635	1	3006.34999999999991	1	586
-558	2017-02-05 21:22:03.354	1	3006.34999999999991	1	803
-568	2017-02-07 15:06:30.594	1	3006.34999999999991	1	815
-569	2017-02-07 15:24:52.842	1	3006.34999999999991	1	817
-457	2017-01-05 09:39:09.775	1	3006.34999999999991	1	658
 562	2017-02-07 10:23:58.548	1	104	16	807
-460	2017-01-05 11:06:48.307	1	3006.34999999999991	1	649
-261	2016-11-11 12:00:05.216	1	3006.34999999999991	1	368
-154	2016-10-11 21:35:30.253	1	3006.34999999999991	1	158
-150	2016-10-10 20:29:22.724	1	3006.34999999999991	1	222
-118	2016-10-04 17:34:54.09	1	3006.34999999999991	1	188
-87	2016-09-12 19:35:57.839	1	3006.34999999999991	1	150
-71	2016-09-07 18:08:40.996	1	3006.34999999999991	1	119
-452	2017-01-03 20:31:22.237	1	3006.34999999999991	1	648
-463	2017-01-05 15:57:58.183	1	3006.34999999999991	1	668
-462	2017-01-05 15:57:52.139	1	3006.34999999999991	1	667
-467	2017-01-09 10:22:25.333	1	3006.34999999999991	1	674
 561	2017-02-07 10:22:59.54	1	104	16	806
-466	2017-01-09 10:22:18.296	1	3006.34999999999991	1	673
-63	2016-09-06 20:07:48.062	1	3006.34999999999991	1	111
-62	2016-09-06 16:32:20.552	1	3006.34999999999991	1	110
-58	2016-09-04 12:58:22.416	1	3006.34999999999991	1	104
-57	2016-09-04 12:58:15.307	1	3006.34999999999991	1	103
-550	2017-02-04 16:10:41.375	1	3006.34999999999991	1	789
-551	2017-02-04 16:11:36.444	1	3006.34999999999991	1	791
-555	2017-02-05 19:32:03.685	1	3006.34999999999991	1	799
-556	2017-02-05 19:41:47.814	1	3006.34999999999991	1	801
-557	2017-02-05 19:41:58.932	1	3006.34999999999991	1	802
-552	2017-02-04 22:41:32.577	1	3006.34999999999991	1	793
-554	2017-02-05 18:02:21.857	1	3006.34999999999991	1	795
-543	2017-02-02 17:07:24.667	1	3006.34999999999991	1	783
-565	2017-02-07 14:37:54.543	1	3006.34999999999991	1	810
-566	2017-02-07 14:39:00.957	1	3006.34999999999991	1	812
-567	2017-02-07 14:45:03.575	1	3006.34999999999991	1	813
-572	2017-02-07 19:23:37.839	1	3006.34999999999991	1	821
-549	2017-02-03 10:28:58.538	1	3006.34999999999991	1	787
-559	2017-02-05 21:22:26.871	1	3006.34999999999991	1	804
-571	2017-02-07 19:16:38.865	1	0	1	814
-560	2017-02-07 09:45:48.301	0	3006.34999999999991	1	805
 563	2017-02-07 10:24:19.804	1	104	16	773
 570	2017-02-07 18:36:59.432	1	9	9	814
-95	2016-09-18 18:22:15.719	1	3006.34999999999991	1	159
-101	2016-09-27 17:43:46.015	1	3006.34999999999991	1	169
-100	2016-09-27 17:43:24.993	1	3006.34999999999991	1	168
-104	2016-09-28 15:43:50.264	1	3006.34999999999991	1	171
-103	2016-09-28 15:43:42.745	1	3006.34999999999991	1	170
-106	2016-09-28 15:45:12.656	1	3006.34999999999991	1	172
-107	2016-09-28 15:45:20.935	1	3006.34999999999991	1	173
-110	2016-09-29 17:55:28.587	1	3006.34999999999991	1	177
-113	2016-09-30 15:43:42.249	1	3006.34999999999991	1	180
-129	2016-10-06 10:38:24.015	1	3006.34999999999991	1	201
-128	2016-10-06 10:38:05.633	1	3006.34999999999991	1	200
-136	2016-10-07 14:27:08.326	1	3006.34999999999991	1	207
-134	2016-10-07 14:26:52.437	1	3006.34999999999991	1	206
-139	2016-10-07 16:03:55.084	1	3006.34999999999991	1	210
-160	2016-10-11 21:38:41.887	1	3006.34999999999991	1	230
-244	2016-11-11 10:20:26.681	1	3006.34999999999991	1	351
-268	2016-11-17 19:22:56.644	1	3006.34999999999991	1	377
-270	2016-11-17 19:35:28.049	1	3006.34999999999991	1	379
-269	2016-11-17 19:34:51.027	1	3006.34999999999991	1	378
-271	2016-11-17 19:38:07.237	1	3006.34999999999991	1	380
-274	2016-11-17 19:42:36.55	1	3006.34999999999991	1	383
-273	2016-11-17 19:40:52.138	1	3006.34999999999991	1	382
-277	2016-11-18 09:21:45.021	1	3006.34999999999991	1	390
-276	2016-11-18 09:20:18.388	1	3006.34999999999991	1	389
-283	2016-11-20 17:39:54.422	1	3006.34999999999991	1	397
-287	2016-11-20 17:40:50.212	1	3006.34999999999991	1	401
-286	2016-11-20 17:40:43.38	1	3006.34999999999991	1	400
-294	2016-11-21 18:29:43.805	1	3006.34999999999991	1	411
-293	2016-11-21 18:29:37.557	1	3006.34999999999991	1	410
-297	2016-11-24 09:47:32.789	1	3006.34999999999991	1	415
-355	2016-12-01 12:31:45.91	1	3006.34999999999991	1	505
-376	2016-12-04 12:46:49.78	1	3006.34999999999991	1	527
-367	2016-12-02 10:56:47.104	1	3006.34999999999991	1	526
-370	2016-12-02 15:30:31.379	1	3006.34999999999991	1	530
-424	2016-12-15 21:22:27.522	1	3006.34999999999991	1	614
-427	2016-12-15 21:23:46.164	1	3006.34999999999991	1	618
-426	2016-12-15 21:23:37.326	1	3006.34999999999991	1	615
-485	2017-01-10 16:58:44.07	1	3006.34999999999991	1	692
-496	2017-01-14 18:01:29.846	1	3006.34999999999991	1	716
-499	2017-01-21 23:05:23.461	1	3006.34999999999991	1	720
-498	2017-01-21 23:03:29.618	1	3006.34999999999991	1	696
-573	2017-02-07 19:23:55.896	1	3006.34999999999991	1	822
-574	2017-02-07 21:11:57.032	1	3006.34999999999991	1	823
+576	2017-02-08 15:31:18.282	1	50	32	832
+578	2017-02-08 16:36:50.886	1	50	31	832
+577	2017-02-08 16:40:13.278	1	50	32	833
+58	2016-09-04 12:58:22.416	1	3126.34999999999991	1	104
+59	2016-09-05 17:12:18.656	1	3126.34999999999991	1	107
+60	2016-09-05 17:12:24.566	1	3126.34999999999991	1	108
+61	2016-09-06 16:32:16.259	1	3126.34999999999991	1	109
+62	2016-09-06 16:32:20.552	1	3126.34999999999991	1	110
+63	2016-09-06 20:07:48.062	1	3126.34999999999991	1	111
+71	2016-09-07 18:08:40.996	1	3126.34999999999991	1	119
+87	2016-09-12 19:35:57.839	1	3126.34999999999991	1	150
+89	2016-09-13 22:07:21.285	1	3126.34999999999991	1	152
+95	2016-09-18 18:22:15.719	1	3126.34999999999991	1	159
+118	2016-10-04 17:34:54.09	1	3126.34999999999991	1	188
+120	2016-10-04 17:35:50.724	1	3126.34999999999991	1	190
+121	2016-10-04 17:36:00.84	1	3126.34999999999991	1	191
+144	2016-10-07 21:55:03.477	1	3126.34999999999991	1	215
+150	2016-10-10 20:29:22.724	1	3126.34999999999991	1	222
+154	2016-10-11 21:35:30.253	1	3126.34999999999991	1	158
+196	2016-10-25 10:52:36.515	1	3126.34999999999991	1	288
+197	2016-10-25 10:52:49.75	1	3126.34999999999991	1	289
+199	2016-10-25 16:01:46.766	1	3126.34999999999991	1	291
+202	2016-10-26 10:42:18.758	1	3126.34999999999991	1	294
+213	2016-10-27 09:17:55.324	1	3126.34999999999991	1	312
+260	2016-11-11 10:36:18.284	1	3126.34999999999991	1	367
+261	2016-11-11 12:00:05.216	1	3126.34999999999991	1	368
+267	2016-11-17 19:22:49.017	1	3126.34999999999991	1	376
+272	2016-11-17 19:39:42.08	1	3126.34999999999991	1	381
+286	2016-11-20 17:40:43.38	1	3126.34999999999991	1	400
+280	2016-11-18 20:27:47.986	1	3126.34999999999991	1	393
+288	2016-11-20 17:51:27.713	1	3126.34999999999991	1	340
+289	2016-11-21 10:31:04.367	1	3126.34999999999991	1	402
+290	2016-11-21 18:22:00.064	1	3126.34999999999991	1	404
+293	2016-11-21 18:29:37.557	1	3126.34999999999991	1	410
+294	2016-11-21 18:29:43.805	1	3126.34999999999991	1	411
+297	2016-11-24 09:47:32.789	1	3126.34999999999991	1	415
+309	2016-11-25 19:42:31.051	1	3126.34999999999991	1	435
+311	2016-11-27 11:20:14.504	1	3126.34999999999991	1	443
+330	2016-11-29 16:07:36.239	0	3126.34999999999991	1	467
+343	2016-11-30 17:40:14.288	1	3126.34999999999991	1	490
+373	2016-12-04 12:44:15.951	1	3126.34999999999991	1	539
+375	2016-12-04 12:45:37.317	1	3126.34999999999991	1	531
+372	2016-12-04 12:42:46.751	1	3126.34999999999991	1	537
+381	2016-12-04 17:18:34.378	1	3126.34999999999991	1	540
+383	2016-12-04 22:39:02.98	1	3126.34999999999991	1	549
+384	2016-12-04 22:39:22.443	1	3126.34999999999991	1	550
+389	2016-12-06 11:13:44.833	1	3126.34999999999991	1	559
+396	2016-12-07 17:55:53.005	1	3126.34999999999991	1	571
+413	2016-12-13 12:37:02.179	1	3126.34999999999991	1	592
+421	2016-12-14 22:54:12.116	1	3126.34999999999991	1	609
+437	2016-12-16 15:46:17.635	1	3126.34999999999991	1	586
+452	2017-01-03 20:31:22.237	1	3126.34999999999991	1	648
+457	2017-01-05 09:39:09.775	1	3126.34999999999991	1	658
+460	2017-01-05 11:06:48.307	1	3126.34999999999991	1	649
+459	2017-01-05 10:44:15.439	1	3126.34999999999991	1	665
+462	2017-01-05 15:57:52.139	1	3126.34999999999991	1	667
+463	2017-01-05 15:57:58.183	1	3126.34999999999991	1	668
+466	2017-01-09 10:22:18.296	1	3126.34999999999991	1	673
+467	2017-01-09 10:22:25.333	1	3126.34999999999991	1	674
+469	2017-01-09 10:23:22.64	1	3126.34999999999991	1	676
+470	2017-01-09 10:24:06.085	1	3126.34999999999991	1	677
+502	2017-01-24 17:32:44.384	1	3126.34999999999991	1	721
+503	2017-01-24 17:34:36.983	1	3126.34999999999991	1	723
+545	2017-02-02 17:08:24.434	1	3126.34999999999991	1	700
+515	2017-02-01 16:33:44.629	1	3126.34999999999991	1	743
+546	2017-02-02 17:09:25.147	1	3126.34999999999991	1	641
+557	2017-02-05 19:41:58.932	1	3126.34999999999991	1	802
+552	2017-02-04 22:41:32.577	1	3126.34999999999991	1	793
+551	2017-02-04 16:11:36.444	1	3126.34999999999991	1	791
+556	2017-02-05 19:41:47.814	1	3126.34999999999991	1	801
+550	2017-02-04 16:10:41.375	1	3126.34999999999991	1	789
+555	2017-02-05 19:32:03.685	1	3126.34999999999991	1	799
+543	2017-02-02 17:07:24.667	1	3126.34999999999991	1	783
+572	2017-02-07 19:23:37.839	1	3126.34999999999991	1	821
+565	2017-02-07 14:37:54.543	1	3126.34999999999991	1	810
+564	2017-02-07 14:28:19.127	1	3126.34999999999991	1	808
+547	2017-02-02 17:23:26.389	1	3126.34999999999991	1	784
+567	2017-02-07 14:45:03.575	1	3126.34999999999991	1	813
+566	2017-02-07 14:39:00.957	1	3126.34999999999991	1	812
+589	2017-02-10 08:55:05.71	1	3126.34999999999991	1	848
+553	2017-02-05 18:02:09.303	1	3126.34999999999991	1	796
+548	2017-02-03 10:23:11.413	1	3126.34999999999991	1	785
+554	2017-02-05 18:02:21.857	1	3126.34999999999991	1	795
+542	2017-02-02 14:23:39.635	1	3126.34999999999991	1	782
+541	2017-02-02 14:11:04.574	1	3126.34999999999991	1	780
+573	2017-02-07 19:23:55.896	1	3126.34999999999991	1	822
+549	2017-02-03 10:28:58.538	1	3126.34999999999991	1	787
+558	2017-02-05 21:22:03.354	1	3126.34999999999991	1	803
+559	2017-02-05 21:22:26.871	1	3126.34999999999991	1	804
+571	2017-02-07 19:16:38.865	1	3126.34999999999991	1	814
+569	2017-02-07 15:24:52.842	1	3126.34999999999991	1	817
+560	2017-02-07 09:45:48.301	0	3126.34999999999991	1	805
+57	2016-09-04 12:58:15.307	1	3126.34999999999991	1	103
+568	2017-02-07 15:06:30.594	1	3126.34999999999991	1	815
+579	2017-02-08 16:41:25.406	1	50	31	833
+581	2017-02-08 16:49:48.851	1	50	32	837
+580	2017-02-08 16:50:53.813	1	50	32	836
+595	2017-02-13 21:12:42.633	1	10000	19	859
+596	2017-02-13 21:13:04.65	1	10000	19	858
+607	2017-02-20 07:37:41.585	1	3126.34999999999991	1	877
+598	2017-02-14 10:40:53.699	1	3126.34999999999991	1	865
+101	2016-09-27 17:43:46.015	1	3126.34999999999991	1	169
+103	2016-09-28 15:43:42.745	1	3126.34999999999991	1	170
+104	2016-09-28 15:43:50.264	1	3126.34999999999991	1	171
+107	2016-09-28 15:45:20.935	1	3126.34999999999991	1	173
+106	2016-09-28 15:45:12.656	1	3126.34999999999991	1	172
+110	2016-09-29 17:55:28.587	1	3126.34999999999991	1	177
+113	2016-09-30 15:43:42.249	1	3126.34999999999991	1	180
+126	2016-10-05 09:24:13.574	1	3126.34999999999991	1	193
+129	2016-10-06 10:38:24.015	1	3126.34999999999991	1	201
+134	2016-10-07 14:26:52.437	1	3126.34999999999991	1	206
+136	2016-10-07 14:27:08.326	1	3126.34999999999991	1	207
+141	2016-10-07 21:00:18.124	1	3126.34999999999991	1	211
+158	2016-10-11 21:37:48.324	1	3126.34999999999991	1	229
+193	2016-10-25 08:41:18.802	1	3126.34999999999991	1	271
+246	2016-11-11 10:30:21.999	1	3126.34999999999991	1	347
+269	2016-11-17 19:34:51.027	1	3126.34999999999991	1	378
+270	2016-11-17 19:35:28.049	1	3126.34999999999991	1	379
+271	2016-11-17 19:38:07.237	1	3126.34999999999991	1	380
+273	2016-11-17 19:40:52.138	1	3126.34999999999991	1	382
+274	2016-11-17 19:42:36.55	1	3126.34999999999991	1	383
+276	2016-11-18 09:20:18.388	1	3126.34999999999991	1	389
+277	2016-11-18 09:21:45.021	1	3126.34999999999991	1	390
+283	2016-11-20 17:39:54.422	1	3126.34999999999991	1	397
+287	2016-11-20 17:40:50.212	1	3126.34999999999991	1	401
+355	2016-12-01 12:31:45.91	1	3126.34999999999991	1	505
+367	2016-12-02 10:56:47.104	1	3126.34999999999991	1	526
+376	2016-12-04 12:46:49.78	1	3126.34999999999991	1	527
+370	2016-12-02 15:30:31.379	1	3126.34999999999991	1	530
+391	2016-12-06 11:40:13.301	1	3126.34999999999991	1	564
+424	2016-12-15 21:22:27.522	1	3126.34999999999991	1	614
+427	2016-12-15 21:23:46.164	1	3126.34999999999991	1	618
+429	2016-12-15 22:10:09.452	1	3126.34999999999991	1	621
+485	2017-01-10 16:58:44.07	1	3126.34999999999991	1	692
+487	2017-01-12 08:41:36.432	1	3126.34999999999991	1	697
+496	2017-01-14 18:01:29.846	1	3126.34999999999991	1	716
+499	2017-01-21 23:05:23.461	1	3126.34999999999991	1	720
+544	2017-02-02 17:08:08.821	1	3126.34999999999991	1	713
+592	2017-02-11 18:57:16.938	1	3126.34999999999991	1	851
+594	2017-02-11 18:57:51.669	1	3126.34999999999991	1	854
+593	2017-02-11 18:57:46.263	1	3126.34999999999991	1	853
+582	2017-02-09 19:40:50.032	0	3126.34999999999991	1	838
+604	2017-02-19 17:54:24.998	1	3126.34999999999991	1	873
+575	2017-02-08 09:23:10.122	1	3126.34999999999991	1	825
+584	2017-02-09 19:56:02.794	1	3126.34999999999991	1	826
+585	2017-02-09 21:06:44.186	1	3126.34999999999991	1	842
+586	2017-02-09 21:06:54.971	1	3126.34999999999991	1	843
+587	2017-02-09 21:10:12.796	1	3126.34999999999991	1	844
+588	2017-02-09 21:14:30.334	1	3126.34999999999991	1	846
+601	2017-02-15 13:22:37.061	1	3126.34999999999991	1	869
+602	2017-02-15 13:23:23.25	1	3126.34999999999991	1	871
+603	2017-02-16 13:34:28.442	1	3126.34999999999991	1	872
+574	2017-02-07 21:11:57.032	1	3126.34999999999991	1	823
+606	2017-02-19 18:18:36.478	1	3126.34999999999991	1	876
+599	2017-02-14 10:46:14.293	1	3126.34999999999991	1	864
+600	2017-02-15 13:12:31.41	1	3126.34999999999991	1	867
+597	2017-02-14 10:36:04.606	1	3126.34999999999991	1	862
+583	2017-02-09 19:41:25.895	1	3126.34999999999991	1	819
+608	2017-02-20 10:10:07.512	1	3126.34999999999991	1	879
+611	2017-02-21 15:08:58.931	1	3126.34999999999991	1	885
+612	2017-02-23 09:08:36.459	1	3126.34999999999991	1	886
+605	2017-02-19 18:18:28.808	1	3126.34999999999991	1	875
+9	2016-08-10 15:06:21.827	1	3126.34999999999991	1	23
+10	2016-08-10 15:06:59.931	1	3126.34999999999991	1	24
+32	2016-08-28 13:20:24.96	1	3126.34999999999991	1	47
+20	2016-08-22 21:11:06.232	1	3126.34999999999991	1	48
+55	2016-09-01 23:48:13.332	1	3126.34999999999991	1	101
+68	2016-09-07 18:06:40.058	1	3126.34999999999991	1	116
+184	2016-10-20 13:12:26.174	0	3126.34999999999991	1	146
+88	2016-09-13 22:05:17.078	1	3126.34999999999991	1	147
+90	2016-09-13 22:07:27.234	1	3126.34999999999991	1	153
+100	2016-09-27 17:43:24.993	1	3126.34999999999991	1	168
+128	2016-10-06 10:38:05.633	1	3126.34999999999991	1	200
+139	2016-10-07 16:03:55.084	1	3126.34999999999991	1	210
+160	2016-10-11 21:38:41.887	1	3126.34999999999991	1	230
+255	2016-11-11 10:34:07.237	1	3126.34999999999991	1	285
+200	2016-10-25 16:02:02.844	1	3126.34999999999991	1	293
+221	2016-10-27 11:08:14.592	1	3126.34999999999991	1	299
+208	2016-10-26 16:43:08.78	1	3126.34999999999991	1	304
+209	2016-10-26 16:43:25.612	1	3126.34999999999991	1	305
+206	2016-10-26 15:59:34.034	1	3126.34999999999991	1	301
+205	2016-10-26 15:59:16.682	1	3126.34999999999991	1	300
+229	2016-10-27 11:35:39.348	1	3126.34999999999991	1	306
+244	2016-11-11 10:20:26.681	1	3126.34999999999991	1	351
+264	2016-11-11 12:32:45.705	1	3126.34999999999991	1	372
+266	2016-11-11 12:34:13.594	1	3126.34999999999991	1	375
+268	2016-11-17 19:22:56.644	1	3126.34999999999991	1	377
+422	2016-12-15 16:16:48.142	1	3126.34999999999991	1	612
+426	2016-12-15 21:23:37.326	1	3126.34999999999991	1	615
+454	2017-01-04 09:05:25.644	1	3126.34999999999991	1	652
+590	2017-02-10 14:07:32.652	1	3126.34999999999991	1	659
+498	2017-01-21 23:03:29.618	1	3126.34999999999991	1	696
+591	2017-02-11 18:54:39.715	1	3126.34999999999991	1	792
+609	2017-02-20 10:10:57.393	1	3126.34999999999991	1	881
+610	2017-02-21 15:06:57.041	1	3126.34999999999991	1	883
+28	2016-08-28 13:14:45.251	1	3126.34999999999991	1	72
+43	2016-08-29 17:44:27.968	1	3126.34999999999991	1	88
+245	2016-11-11 10:23:12.31	1	3126.34999999999991	1	352
+613	2017-02-23 09:21:04.988	1	3126.34999999999991	1	887
+614	2017-02-23 09:29:32.644	1	3126.34999999999991	1	889
+615	2017-02-23 10:10:39.485	1	3126.34999999999991	1	891
+616	2017-02-23 10:30:20.987	1	3126.34999999999991	1	893
 \.
 
 
 ALTER TABLE theses ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3354 (class 0 OID 0)
--- Dependencies: 225
+-- TOC entry 3359 (class 0 OID 0)
+-- Dependencies: 226
 -- Name: theses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('theses_id_seq', 574, true);
+SELECT pg_catalog.setval('theses_id_seq', 616, true);
 
 
 --
--- TOC entry 3328 (class 0 OID 1687052)
--- Dependencies: 226
+-- TOC entry 3332 (class 0 OID 1706278)
+-- Dependencies: 227
 -- Data for Name: verification_token; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
 
@@ -3954,8 +4277,8 @@ COPY verification_token (id, expiry_date, token, user_id) FROM stdin;
 ALTER TABLE verification_token ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3355 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 3360 (class 0 OID 0)
+-- Dependencies: 228
 -- Name: verification_token_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
@@ -3963,8 +4286,8 @@ SELECT pg_catalog.setval('verification_token_id_seq', 22, true);
 
 
 --
--- TOC entry 3330 (class 0 OID 1687057)
--- Dependencies: 228
+-- TOC entry 3334 (class 0 OID 1706283)
+-- Dependencies: 229
 -- Data for Name: voters; Type: TABLE DATA; Schema: public; Owner: vvlafvtvaqjmna
 --
 
@@ -4075,22 +4398,20 @@ COPY voters (id, actual_weight, max_weight, realm_id, voter_user_id) FROM stdin;
 120	0.5	0.5	43	5
 122	10	10	44	13
 123	9	9	44	9
-115	3006.34999999999991	3006.34999999999991	43	1
-97	3006.34999999999991	3006.34999999999991	40	1
-25	3006.34999999999991	3006.34999999999991	23	1
-43	3006.34999999999991	3006.34999999999991	26	1
-37	3006.34999999999991	3006.34999999999991	25	1
-103	3006.34999999999991	3006.34999999999991	41	1
-84	3006.34999999999991	3006.34999999999991	37	1
-90	3006.34999999999991	3006.34999999999991	38	1
-70	3006.34999999999991	3006.34999999999991	33	1
-121	3006.34999999999991	3006.34999999999991	44	1
-55	3006.34999999999991	3006.34999999999991	28	1
 124	361	361	44	3
 125	104	104	44	4
 126	0.5	0.5	44	5
 128	10	10	45	13
 129	9	9	45	9
+37	3126.34999999999991	3126.34999999999991	25	1
+84	3126.34999999999991	3126.34999999999991	37	1
+90	3126.34999999999991	3126.34999999999991	38	1
+70	3126.34999999999991	3126.34999999999991	33	1
+121	3126.34999999999991	3126.34999999999991	44	1
+115	3126.34999999999991	3126.34999999999991	43	1
+55	3126.34999999999991	3126.34999999999991	28	1
+97	3126.34999999999991	3126.34999999999991	40	1
+43	3126.34999999999991	3126.34999999999991	26	1
 130	361	361	45	3
 131	104	104	45	4
 132	0.5	0.5	45	5
@@ -4180,54 +4501,104 @@ COPY voters (id, actual_weight, max_weight, realm_id, voter_user_id) FROM stdin;
 229	0	160	66	20
 228	160	160	66	22
 231	160	160	67	22
-127	3006.34999999999991	3006.34999999999991	45	1
-133	3006.34999999999991	3006.34999999999991	46	1
-186	3006.34999999999991	3006.34999999999991	59	1
 239	104	104	74	16
 240	104	104	75	16
 241	104	104	76	16
 242	104	104	77	16
-1	3006.34999999999991	3006.34999999999991	1	1
-19	3006.34999999999991	3006.34999999999991	22	1
-198	3006.34999999999991	3006.34999999999991	61	1
-49	3006.34999999999991	3006.34999999999991	27	1
-216	3006.34999999999991	3006.34999999999991	64	1
-140	3006.34999999999991	3006.34999999999991	48	1
-152	3006.34999999999991	3006.34999999999991	50	1
-164	3006.34999999999991	3006.34999999999991	52	1
-222	3006.34999999999991	3006.34999999999991	65	1
-174	3006.34999999999991	3006.34999999999991	57	1
-180	3006.34999999999991	3006.34999999999991	58	1
-210	3006.34999999999991	3006.34999999999991	63	1
+256	10	10	38	17
+257	10	10	25	17
+258	10	10	42	17
+259	10	10	24	17
+260	10	10	27	17
+261	10	10	31	17
+262	10	10	33	17
+263	10	10	26	17
+264	10	10	22	17
+265	10	10	1	17
+266	10	10	28	17
+267	10	10	40	17
+198	3126.34999999999991	3126.34999999999991	61	1
+216	3126.34999999999991	3126.34999999999991	64	1
+140	3126.34999999999991	3126.34999999999991	48	1
+152	3126.34999999999991	3126.34999999999991	50	1
+174	3126.34999999999991	3126.34999999999991	57	1
+180	3126.34999999999991	3126.34999999999991	58	1
+210	3126.34999999999991	3126.34999999999991	63	1
+127	3126.34999999999991	3126.34999999999991	45	1
+133	3126.34999999999991	3126.34999999999991	46	1
+186	3126.34999999999991	3126.34999999999991	59	1
+164	3126.34999999999991	3126.34999999999991	52	1
+222	3126.34999999999991	3126.34999999999991	65	1
+19	3126.34999999999991	3126.34999999999991	22	1
+268	10	10	41	17
+269	10	10	45	17
+270	10	10	49	17
+271	10	10	44	17
+272	10	10	43	17
+273	10	10	50	17
+274	10	10	48	17
+275	10	10	51	17
+276	10	10	52	17
+277	10	10	58	17
+278	10	10	46	17
+279	10	10	59	17
+280	10	10	60	17
+281	10	10	61	17
+282	10	10	63	17
+283	10	10	57	17
+284	10	10	62	17
+285	10	10	64	17
+286	10	10	65	17
+288	100	100	81	17
 245	0	104	78	4
-78	3006.34999999999991	3006.34999999999991	36	1
-109	3006.34999999999991	3006.34999999999991	42	1
-31	3006.34999999999991	3006.34999999999991	24	1
-63	3006.34999999999991	3006.34999999999991	31	1
-146	3006.34999999999991	3006.34999999999991	49	1
-192	3006.34999999999991	3006.34999999999991	60	1
-204	3006.34999999999991	3006.34999999999991	62	1
-158	3006.34999999999991	3006.34999999999991	51	1
-244	4.5	9	78	9
-243	90.25	361	78	3
-246	0.125	0.5	78	5
-247	2.5	10	78	13
-248	0	3006.34999999999991	78	1
+289	10000	10000	82	19
+249	50	50	79	31
+250	50	50	79	32
+251	50	50	80	31
+252	50	50	80	32
+253	10	10	36	17
+254	10	10	23	17
+255	10	10	37	17
+290	90.25	361	83	3
+291	0.125	0.5	83	5
+292	2.5	10	83	13
+293	26	104	83	4
+294	2.25	9	83	9
+295	2.5	10	83	17
+1	3126.34999999999991	3126.34999999999991	1	1
+25	3126.34999999999991	3126.34999999999991	23	1
+78	3126.34999999999991	3126.34999999999991	36	1
+49	3126.34999999999991	3126.34999999999991	27	1
+103	3126.34999999999991	3126.34999999999991	41	1
+109	3126.34999999999991	3126.34999999999991	42	1
+31	3126.34999999999991	3126.34999999999991	24	1
+63	3126.34999999999991	3126.34999999999991	31	1
+296	3126.34999999999991	3126.34999999999991	83	1
+146	3126.34999999999991	3126.34999999999991	49	1
+192	3126.34999999999991	3126.34999999999991	60	1
+204	3126.34999999999991	3126.34999999999991	62	1
+158	3126.34999999999991	3126.34999999999991	51	1
+243	2.8203125	361	78	3
+246	0.00390625	0.5	78	5
+247	0.078125	10	78	13
+244	0.140625	9	78	9
+287	0.3125	10	78	17
+248	3126.34999999999991	3126.34999999999991	78	1
 \.
 
 
 ALTER TABLE voters ENABLE TRIGGER ALL;
 
 --
--- TOC entry 3356 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 3361 (class 0 OID 0)
+-- Dependencies: 230
 -- Name: voters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vvlafvtvaqjmna
 --
 
-SELECT pg_catalog.setval('voters_id_seq', 248, true);
+SELECT pg_catalog.setval('voters_id_seq', 296, true);
 
 
--- Completed on 2017-02-07 22:17:04 CET
+-- Completed on 2017-02-23 13:05:36 CET
 
 --
 -- PostgreSQL database dump complete
