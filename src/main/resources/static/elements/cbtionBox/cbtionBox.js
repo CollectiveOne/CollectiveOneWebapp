@@ -59,6 +59,12 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 			}
 			break;
 
+		case "ASSIGNED":
+			$("#status_desc_div",this.container).append("to "+
+					getUserPageLink(this.cbtion.assigneeUsername)+
+					" for "+this.cbtion.assigneePpoints+" pps");
+			break;
+			
 		case "ACCEPTED":
 			$("#status_desc_div",this.container).append("contributed by "+
 				getUserPageLink(this.cbtion.contributorUsername)+"<br />"+

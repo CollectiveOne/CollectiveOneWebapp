@@ -58,11 +58,26 @@
 	clear:both;
 }
 
+#user_container #assigned_contributions_div {
+	margin-top: 20px;
+	clear:both;
+	overflow: auto;
+}
+
+#user_container #assigned_contributions_div .panel-heading {
+	cursor: pointer;
+}
+
 #user_container #accepted_contributions_div {
 	margin-top: 20px;
 	clear:both;
 	overflow: auto;
 }
+
+#user_container #accepted_contributions_div .panel-heading {
+	cursor: pointer;
+}
+
 
 #user_container .project_contributed {
 	clear:both;
@@ -71,10 +86,18 @@
 	margin-left:10px
 }
 
-#user_container #contributions_list {
+#user_container #accepted_contributions_list {
 	clear:both;
 	margin-top:10px;
+	display:none;
 }
+
+#user_container #assigned_contributions_list {
+	clear:both;
+	margin-top:10px;
+	display:none;
+}
+
 
 
 

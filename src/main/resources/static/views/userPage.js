@@ -25,6 +25,9 @@ UserPage.prototype.init = function() {
 	}
 
 	GLOBAL.userPage.updateUser(GLOBAL.REQ_username);
+	
+	$("#assigned_contributions_head").click(function () { $("#assigned_contributions_list").toggle()})
+	$("#accepted_contributions_head").click(function () { $("#accepted_contributions_list").toggle()})
 }
 
 UserPage.prototype.updateUser = function(username) {
@@ -100,7 +103,7 @@ UserPage.prototype.userProjectsContributedCallback = function(projectsContribute
 }
 
 UserPage.prototype.updateContributionsAccepted = function() {
-	var cbtionList = new CbtionList("#contributions_list", {
+	var cbtionList = new CbtionList("#accepted_contributions_list", {
 		contributorUsername: this.user.username, 
 		maxheight: "600px",
 		stateNames: ["ACCEPTED"],
@@ -110,6 +113,17 @@ UserPage.prototype.updateContributionsAccepted = function() {
 		});
 
 	cbtionList.init();
+	
+	var assignedCbtionList = new CbtionList("#assigned_contributions_list", {
+		assigneeUsername: this.user.username, 
+		maxheight: "600px",
+		stateNames: ["ASSIGNED"],
+		showFilterBtn: true,
+		showNewBtn: false,
+		newBtnLink: ""
+		});
+
+	assignedCbtionList.init();
 }
 
 

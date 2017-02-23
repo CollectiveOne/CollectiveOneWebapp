@@ -24,10 +24,12 @@ public class CbtionDto {
 	private String state;
 	private int nBids;
 	private String contributorUsername;
+	private String assigneeUsername;
+	private double assigneePpoints;
 	private List<String> parentGoalsTags;
 	@NotEmpty
 	private String goalTag;
-	private double assignedPpoints;	
+	private double assignedPpoints;
 	private DecisionDtoFull openDec;
 	private DecisionDtoFull deleteDec;
 	private int ncomments; 
@@ -115,6 +117,12 @@ public class CbtionDto {
 	public void setContributorUsername(String contributorUsername) {
 		this.contributorUsername = contributorUsername;
 	}
+	public String getAssigneeUsername() {
+		return assigneeUsername;
+	}
+	public void setAssigneeUsername(String assigneeUsername) {
+		this.assigneeUsername = assigneeUsername;
+	}
 	public String getGoalTag() {
 		return goalTag;
 	}
@@ -132,6 +140,12 @@ public class CbtionDto {
 	}
 	public void setAssignedPpoints(double assignedPpoints) {
 		this.assignedPpoints = assignedPpoints;
+	}
+	public double getAssigneePpoints() {
+		return assigneePpoints;
+	}
+	public void setAssigneePpoints(double assigneePpoints) {
+		this.assigneePpoints = assigneePpoints;
 	}
 	public DecisionDtoFull getOpenDec() {
 		return openDec;

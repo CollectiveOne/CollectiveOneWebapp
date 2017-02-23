@@ -10,6 +10,7 @@ public class Filters {
 	private List<String> stateNames;
 	private List<String> creatorUsernames;
 	private String contributorUsername;
+	private String assigneeUsername;
 	private String keyw;
 	private String goalTag;
 	private boolean goalSubgoalsFlag;
@@ -60,6 +61,12 @@ public class Filters {
 	}
 	public void setContributorUsername(String contributorUsername) {
 		this.contributorUsername = contributorUsername;
+	}
+	public String getAssigneeUsername() {
+		return assigneeUsername;
+	}
+	public void setAssigneeUsername(String assigneeUsername) {
+		this.assigneeUsername = assigneeUsername;
 	}
 	public String getKeyw() {
 		return keyw;

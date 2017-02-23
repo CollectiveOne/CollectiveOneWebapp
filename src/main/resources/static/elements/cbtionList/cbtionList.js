@@ -51,6 +51,10 @@ CbtionList.prototype.boxLoaded = function(data) {
 		filters.contributorUsername = this.conf.contributorUsername;
 	}
 	
+	if(this.conf.assigneeUsername) {
+		filters.assigneeUsername = this.conf.assigneeUsername;
+	}
+	
 	if(this.conf.goalTag) {
 		filters.goalTag = this.conf.goalTag;
 	}
@@ -111,7 +115,7 @@ CbtionList.prototype.drawCbtions = function() {
 	if(this.cbtions.length > 0) {
 		for ( var ix in this.cbtions) {
 			$("#list_of_elements", this.container).append("<div id=cbtionbox"+ix+"></div>");
-			var cbtionBox = new CbtionBox("#cbtionbox"+ix,this.cbtions[ix]);
+			var cbtionBox = new CbtionBox($("#cbtionbox"+ix,this.container),this.cbtions[ix]);
 			cbtionBox.draw();
 		}
 	} else {

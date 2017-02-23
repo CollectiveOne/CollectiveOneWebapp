@@ -55,6 +55,7 @@ ProjectPage.prototype.contributorsOfProjectGetReceivedCallback = function(data) 
 				"<tr>" +
 				"	<td>"+getUserPageLink(thisUserData.username)+"</td>"+
 				"	<td>"+thisUserData.pps+"</td>"+
+				"	<td>"+floatToChar(thisUserData.pps/ppsTot*100,2)+"</td>"+
 				"	<td>"+thisUserData.nCbtionsCreated+"</td>"+
 				"	<td>"+thisUserData.nCbtionsDone+"</td>"+
 				"	<td>"+thisUserData.nCbtionsDoneRecently+"</td>"+

@@ -325,6 +325,7 @@ public class BidServiceImp extends BaseService {
 						/* update cbtion state */
 						cbtion.setAssignedPpoints(bid.getPpoints());
 						cbtion.setContributor(bid.getCreator());
+						cbtion.setAcceptedDate(new Timestamp(System.currentTimeMillis()));
 						cbtion.setState(CbtionState.ACCEPTED);
 	
 						/* close all other bids and decisions */

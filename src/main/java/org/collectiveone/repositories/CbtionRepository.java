@@ -106,6 +106,19 @@ public class CbtionRepository extends BaseRepository {
 			}
 		}
 		
+		/* if assigneeUsername requested */
+		String assigneeUsername = filters.getAssigneeUsername();
+		if(assigneeUsername != null) {
+			if(!assigneeUsername.equals("")) {
+				q
+					.add(Restrictions.eq("state",CbtionState.ASSIGNED))
+					.createAlias("bids","bds")
+					.add(Restrictions.eq("bds.state",BidState.ASSIGNED))
+					.createAlias("bds.creator","bdcreator")
+					.add(Restrictions.eq("bdcreator.username",assigneeUsername));
+			}
+		}
+		
 		/* if goalTag requested */
 		if(filters.getProjectNames().size() == 1) {
 			String projectName = filters.getProjectNames().get(0);
