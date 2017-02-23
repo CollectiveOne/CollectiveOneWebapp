@@ -229,4 +229,43 @@ public class CbtionRepository extends BaseRepository {
 		return (int)(res + 0);
 	}
 	
+	public int getNCreatedByUserInProject(Long projectId, Long userId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
+		
+		query.add(Restrictions.eq("creator.id", userId))
+			.add(Restrictions.eq("project.id", projectId))
+			.setProjection(Projections.rowCount());
+		
+		Long res = (Long) query.uniqueResult();
+		
+		return (int)(res + 0);
+	}
+	
+	public int getNAcceptedOfUserInProject(Long projectId, Long userId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
+		
+		query.add(Restrictions.eq("state", CbtionState.ACCEPTED))
+			.add(Restrictions.eq("project.id", projectId))
+			.add(Restrictions.eq("contributor.id", userId))
+			.setProjection(Projections.rowCount());
+		
+		Long res = (Long) query.uniqueResult();
+		
+		return (int)(res + 0);
+	}
+	
+	public int getNAcceptedOfUserInProjectRecently(Long projectId, Long userId, Timestamp afterDate) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
+		
+		query.add(Restrictions.eq("state", CbtionState.ACCEPTED))
+			.add(Restrictions.eq("project.id", projectId))
+			.add(Restrictions.eq("contributor.id", userId))
+			.add(Restrictions.ge("creationDate", afterDate))
+			.setProjection(Projections.rowCount());
+		
+		Long res = (Long) query.uniqueResult();
+		
+		return (int)(res + 0);
+	}
+	
 }

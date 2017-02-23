@@ -46,50 +46,20 @@ ProjectPage.prototype.updateContributors = function() {
 
 ProjectPage.prototype.contributorsOfProjectGetReceivedCallback = function(data) {
 
-	var usernamesAndPpps = data.usernamesAndPps;
+	var usernamesAndData = data.usernamesAndData;
 	var ppsTot = data.ppsTot;
 	
-	var chartData = []; 
-	var chartLabels = [];
-	var chartColors = [];
-	
-	for(var ix in usernamesAndPpps) {
-		chartData.push(usernamesAndPpps[ix].pps);
-		chartLabels.push(usernamesAndPpps[ix].username);
-		chartColors.push("#5bc0de");
+	for(var ix in usernamesAndData) {
+		var thisUserData = usernamesAndData[ix];
+		$("#contributors_table_body").append(
+				"<tr>" +
+				"	<td>"+getUserPageLink(thisUserData.username)+"</td>"+
+				"	<td>"+thisUserData.pps+"</td>"+
+				"	<td>"+thisUserData.nCbtionsCreated+"</td>"+
+				"	<td>"+thisUserData.nCbtionsDone+"</td>"+
+				"	<td>"+thisUserData.nCbtionsDoneRecently+"</td>"+
+				"	<td>"+floatToChar(thisUserData.pps/thisUserData.nCbtionsDone,2)+"</td>"+
+				"</tr>");
 	}
-	
-	var ctx =  $("#contributors_chart");
-	var ppsChart = new Chart(ctx, {
-	    type: 'bar',
-	    data: {	datasets: [{
-	    			data: chartData,
-	    			backgroundColor: chartColors
-	    		}],
-	    		labels: chartLabels 
-	    },
-	    options: {
-	    		legend: {
-	    			display: false
-	    		},
-	    		cutoutPercentage: 50,
-	    		scales: {
-					yAxes: [{
-						ticks: {
-							beginAtZero:true
-						}
-					}]
-	    		}
-	    }
-	});
-
-	$("#contributors_chart").click( 
-    function(evt){
-        var activePoints = ppsChart.getElementsAtEvent(evt);
-        var clickedElementindex = activePoints[0]["_index"];
-        var username = ppsChart.data.labels[clickedElementindex]; 
-        window.location.href = "/views/userPageR/"+username;
-    }
-); 
 }
 

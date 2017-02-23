@@ -56,7 +56,20 @@
 			<div id="contributors_panel" class="panel panel-info">
 				<div class="panel-heading"><b>Contributors</b></div>
 			 	<div id="contributors_chart_container" class="cp_box_gray_slim">
-					<canvas id="contributors_chart" width="100%" height="100%"></canvas>
+			 		<table id="contributors_table" class="table table-striped">
+						<thead>
+							<tr>
+								<th>username</th>
+								<th>pps</th>
+								<th># contrib. <br /> created</th>
+								<th># contrib. <br /> done</th>
+								<th># done <br />(recently)</th>
+								<th>mean pps <br />per contrib.</th>
+							</tr>
+						</thead>
+						<tbody id="contributors_table_body">
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>

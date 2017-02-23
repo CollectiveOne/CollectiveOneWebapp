@@ -37,7 +37,7 @@ public class ProjectsController {
 		Project project = projectService.get(projectName);
 		
 		ProjectContributorsDto projectContributorsDto = new ProjectContributorsDto();
-		projectContributorsDto.setUsernamesAndPps(projectService.getContributorsAndPps(project.getId()));
+		projectContributorsDto.setUsernamesAndData(projectService.getContributorsAndData(project.getId()));
 		projectContributorsDto.setPpsTot(project.getPpsTot());
 		
 		return projectContributorsDto;

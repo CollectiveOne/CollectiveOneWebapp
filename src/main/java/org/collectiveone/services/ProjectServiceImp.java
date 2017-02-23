@@ -28,6 +28,7 @@ import org.collectiveone.web.dto.ObjectListRes;
 import org.collectiveone.web.dto.ProjectDto;
 import org.collectiveone.web.dto.ProjectDtoListRes;
 import org.collectiveone.web.dto.ProjectNewDto;
+import org.collectiveone.web.dto.UsernameAndData;
 import org.collectiveone.web.dto.UsernameAndPps;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -216,22 +217,34 @@ public class ProjectServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public List<UsernameAndPps> getContributorsAndPps(Long projectId) {
+	public List<UsernameAndData> getContributorsAndData(Long projectId) {
 
-		List<UsernameAndPps> usernamesAndPps = new ArrayList<UsernameAndPps>();
+		List<UsernameAndData> usernamesAndData = new ArrayList<UsernameAndData>();
 
 		for(Contributor contributor : getContributors(projectId)) {
-			UsernameAndPps usernameAndPps = new UsernameAndPps(contributor.getContributorUser().getUsername(),contributor.getPps());
-			usernamesAndPps.add(usernameAndPps);
+			UsernameAndData usernameAndData = new UsernameAndData();
+			
+			usernameAndData.setUsername(contributor.getContributorUser().getUsername());
+			usernameAndData.setPps(contributor.getPps());
+			
+			Long cbtId = contributor.getContributorUser().getId();
+			usernameAndData.setnCbtionsCreated(cbtionRepository.getNCreatedByUserInProject(projectId,cbtId));
+			usernameAndData.setnCbtionsDone(cbtionRepository.getNAcceptedOfUserInProject(projectId,cbtId));
+			
+			Long monthsToMs = 2678400000L;
+			usernameAndData.setnCbtionsDoneRecently(
+					cbtionRepository.getNAcceptedOfUserInProjectRecently(projectId,cbtId, new Timestamp(System.currentTimeMillis() - 2*monthsToMs)));
+			
+			usernamesAndData.add(usernameAndData);
 		}
 
-		Collections.sort(usernamesAndPps, new Comparator<UsernameAndPps>(){
-			public int compare(UsernameAndPps o1, UsernameAndPps o2){
+		Collections.sort(usernamesAndData, new Comparator<UsernameAndData>(){
+			public int compare(UsernameAndData o1, UsernameAndData o2){
 				return Double.compare(o2.getPps(), o1.getPps());
 			}
 		});
 
-		return usernamesAndPps;
+		return usernamesAndData;
 	}
 
 	@Transactional
