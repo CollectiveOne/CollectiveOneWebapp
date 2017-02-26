@@ -92,7 +92,8 @@ public class UserRepository extends BaseRepository {
 		
 		Criteria query = session.createCriteria(User.class)
 				.add(Restrictions.eq("id", userId))
-				.add(Restrictions.eq("projectsStarred.id", projectId));
+				.createAlias("projectsStarred","prCr")
+				.add(Restrictions.eq("prCr.id", projectId));
 				
 		User res = (User) query.uniqueResult();
 		
@@ -105,7 +106,8 @@ public class UserRepository extends BaseRepository {
 		
 		Criteria query = session.createCriteria(User.class)
 				.add(Restrictions.eq("id", userId))
-				.add(Restrictions.eq("projectsWatched.id", projectId));
+				.createAlias("projectsWatched","prWt")
+				.add(Restrictions.eq("prWt.id", projectId));
 				
 		User res = (User) query.uniqueResult();
 		

@@ -25,9 +25,6 @@ UserPage.prototype.init = function() {
 	}
 
 	GLOBAL.userPage.updateUser(GLOBAL.REQ_username);
-	
-	$("#assigned_contributions_head").click(function () { $("#assigned_contributions_list").toggle()})
-	$("#accepted_contributions_head").click(function () { $("#accepted_contributions_list").toggle()})
 }
 
 UserPage.prototype.updateUser = function(username) {

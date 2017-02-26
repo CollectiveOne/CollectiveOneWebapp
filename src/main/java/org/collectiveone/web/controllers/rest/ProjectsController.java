@@ -13,6 +13,7 @@ import org.collectiveone.web.dto.ProjectContributorsDto;
 import org.collectiveone.web.dto.ProjectDto;
 import org.collectiveone.web.dto.ProjectDtoListRes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,17 @@ public class ProjectsController {
 	
 	@RequestMapping(value="/get/{projectName}", method = RequestMethod.POST)
 	public @ResponseBody ProjectDto get(@PathVariable("projectName") String projectName) {
-		return projectService.getDto(projectName);
+		ProjectDto projectDto = projectService.getDto(projectName);
+		
+		/* if user logged, check all projects and fill the starred and watched flags */
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get(auth.getName()); 
+		if(logged != null) {
+			projectDto.setIsStarred(userService.isProjectStarred(projectDto.getId(),logged.getId()));
+			projectDto.setIsWatched(userService.isProjectWatched(projectDto.getId(),logged.getId()));
+		}
+		
+		return projectDto;
 	}
 	
 	@RequestMapping(value="/getContributors/{projectName}", method = RequestMethod.POST)
@@ -88,6 +99,50 @@ public class ProjectsController {
 		map.put("resSet", resSet);
 		
 		return map;
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/star/{projectId}", method = RequestMethod.POST)
+	public @ResponseBody Boolean star(@PathVariable("projectId") Long projectId) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get(auth.getName());
+		if(logged != null) {
+			projectService.star(projectId, logged.getId());
+		}
+		return true;
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/unStar/{projectId}", method = RequestMethod.POST)
+	public @ResponseBody Boolean unStar(@PathVariable("projectId") Long projectId) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get(auth.getName());
+		if(logged != null) {
+			projectService.unStar(projectId, logged.getId());
+		}
+		return true;
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/watch/{projectId}", method = RequestMethod.POST)
+	public @ResponseBody Boolean watch(@PathVariable("projectId") Long projectId) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get(auth.getName());
+		if(logged != null) {
+			projectService.watch(projectId, logged.getId());
+		}
+		return true;
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/unWatch/{projectId}", method = RequestMethod.POST)
+	public @ResponseBody Boolean unWatch(@PathVariable("projectId") Long projectId) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get(auth.getName());
+		if(logged != null) {
+			projectService.unWatch(projectId, logged.getId());
+		}
+		return true;
 	}
 	
 }

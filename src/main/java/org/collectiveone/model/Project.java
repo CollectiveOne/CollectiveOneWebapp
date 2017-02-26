@@ -114,4 +114,17 @@ public class Project {
 	public void setContributors(Set<Contributor> contributors) {
 		this.contributors = contributors;
 	}
+	public List<User> getUsersThatStarred() {
+		return usersThatStarred;
+	}
+	public void setUsersThatStarred(List<User> usersThatStarred) {
+		this.usersThatStarred = usersThatStarred;
+	}
+	public List<User> getUsersThatWatched() {
+		return usersThatWatched;
+	}
+	public void setUsersThatWatched(List<User> usersThatWatched) {
+		this.usersThatWatched = usersThatWatched;
+	}
+	
 }
