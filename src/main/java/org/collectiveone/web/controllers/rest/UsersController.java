@@ -9,6 +9,7 @@ import org.collectiveone.services.UserServiceImp;
 import org.collectiveone.web.dto.ProjectAndUsername;
 import org.collectiveone.web.dto.ProjectContributedDto;
 import org.collectiveone.web.dto.UserDto;
+import org.collectiveone.web.dto.UserMyDataDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -70,6 +71,20 @@ public class UsersController {
 			}
 		}
 		return false;
+	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/getMyData/{username}", method = RequestMethod.POST)
+	public @ResponseBody UserMyDataDto getMyData(@PathVariable String username) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(auth.isAuthenticated()) {
+			if(username.equals(auth.getName())) {
+				return userService.getMyData(username);
+			}
+		}
+		
+		return null;
 	}
 		
 }
