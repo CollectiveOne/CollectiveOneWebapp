@@ -108,5 +108,5 @@ public class ProjectRepository extends BaseRepository {
 		return getObjectsAndResSet(q, filters, Project.class);
 		
 	}
-
+	
 }

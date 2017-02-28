@@ -331,5 +331,19 @@ public class ProjectServiceImp extends BaseService {
 		
 		userRepository.save(user);
 	}
+	
+	
+	@Transactional
+	public List<String> getWatchedUsersEmails(Long projectId) {
+		Project project = projectRepository.get(projectId);
+		
+		List<String> subscribedUsers = new ArrayList<String>();
+	    for(User user : project.getUsersThatWatched()) {
+	    	subscribedUsers.add(user.getEmail());
+	    }
+	    
+		return subscribedUsers;
+	}
+	
 
 }
