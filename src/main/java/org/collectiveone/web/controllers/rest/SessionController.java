@@ -28,7 +28,7 @@ public class SessionController {
 	public List<ActiveProject> getActiveProjects () {
 		
 		List<ActiveProject> activeProjects = new ArrayList<ActiveProject>();
-		List<String> projectNames = projectService.getList();
+		List<String> projectNames = projectService.getFeaturedList();
 		
 		for(String projectName : projectNames) {
 			ActiveProject activeProject = new ActiveProject();

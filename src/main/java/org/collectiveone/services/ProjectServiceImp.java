@@ -211,6 +211,12 @@ public class ProjectServiceImp extends BaseService {
 	public List<String> getList() {
 		return projectRepository.getListEnabled();
 	}
+	
+	@Transactional
+	public List<String> getFeaturedList() {
+		return projectRepository.getFeaturedList();
+	}
+
 
 	@Transactional
 	public List<Project> getAll(Integer max) {

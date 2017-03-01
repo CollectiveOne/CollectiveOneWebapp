@@ -59,6 +59,22 @@ public class ProjectRepository extends BaseRepository {
 
 		return res;
 	}
+	
+	public List<String> getFeaturedList() {
+		Session session = sessionFactory.getCurrentSession();
+
+		@SuppressWarnings("unchecked")
+		List<String> res = (List<String>) session.createCriteria(Project.class)
+			.add(Restrictions.eq("enabled", true))
+			.setProjection(Projections.property("name"))
+			.addOrder(Order.desc("ppsTot"))
+			.setMaxResults(10)
+			.list();
+
+		return res;
+	}
+	
+	
 
 	public List<Project> getFromRef(Project refProject, Integer max) {
 		Session session = sessionFactory.getCurrentSession();
