@@ -74,8 +74,6 @@ public class ProjectRepository extends BaseRepository {
 		return res;
 	}
 	
-	
-
 	public List<Project> getFromRef(Project refProject, Integer max) {
 		Session session = sessionFactory.getCurrentSession();
 

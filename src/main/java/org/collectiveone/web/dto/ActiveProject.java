@@ -4,6 +4,15 @@ public class ActiveProject {
 	private String projectName;
 	private boolean active;
 	
+	public ActiveProject() {
+		
+	}
+	
+	public ActiveProject(String _projectName, boolean _active) {
+		projectName = _projectName;
+		active = _active;
+	}
+	
 	public String getProjectName() {
 		return projectName;
 	}
@@ -16,6 +25,5 @@ public class ActiveProject {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-	
-	
 }
+

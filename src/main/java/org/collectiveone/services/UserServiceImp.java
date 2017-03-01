@@ -174,4 +174,19 @@ public class UserServiceImp extends BaseService {
 		return myDataDto;
 	}
 	
+	@Transactional
+	public List<String> getProjectsStarredNames(Long userId) {
+		
+		User user = userRepository.get(userId);
+				
+		List<String> projectsStarredNames = new ArrayList<String>();
+		
+		for(Project project : user.getProjectsStarred()) {
+			projectsStarredNames.add(project.getName());
+		}
+		
+		return projectsStarredNames;
+	}
+	
+	
 }

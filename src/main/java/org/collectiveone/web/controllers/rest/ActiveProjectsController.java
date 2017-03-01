@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @RestController
 @RequestMapping("/rest/session")
 @SessionAttributes("activeProjects")
-public class SessionController {
+public class ActiveProjectsController {
 	
 	@Autowired
 	ProjectServiceImp projectService;
