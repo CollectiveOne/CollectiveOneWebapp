@@ -15,6 +15,8 @@
 	<link rel="stylesheet" type="text/css" th:href="@{/elements/decisionBoxSmall/decisionBoxSmall.css}"/>
 	<script th:src="@{/elements/filterElement/filterElement.js}"></script>
 	<link rel="stylesheet" type="text/css" th:href="@{/elements/filterElement/filterElement.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/projectBox/projectBox.css}" />
+	<script type="text/javascript" th:src="@{/elements/projectBox/projectBox.js}"></script>
 	
 	<script type="text/javascript" th:src="@{/elements/reviewsElement/reviewItem.js}"></script>
 	<link rel="stylesheet" type="text/css" th:href="@{/elements/reviewsElement/reviewItem.css}" />
@@ -42,28 +44,72 @@
 				<h2></h2>
 			</div>
 			<div id="user_profile_div" class="panel panel-info">
-				<div class="panel-heading"><b>Profile</b></div>
-				<div id="user_profile_container">
-					<div id="user_profile_html"></div>
-					<form id="edit_profile_form">
-						<div class="form-group">
-							<textarea id="user_profile_textarea" class="form-control"></textarea>
-							<div id="edit_profile_save" class="btn btn-xs btn-info">save</div>
-						</div>
-					</form>
-					<div id="edit_profile_btn" class="btn btn-xs btn-info">edit</div>
+				<div class="panel-heading">
+					<h3 class="panel-title">Profile</h3>
+					<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class="panel-body">
+					<div id="user_profile_container">
+						<div id="user_profile_html"></div>
+						<form id="edit_profile_form">
+							<div class="form-group">
+								<textarea id="user_profile_textarea" class="form-control"></textarea>
+								<div id="edit_profile_save" class="btn btn-xs btn-info">save</div>
+							</div>
+						</form>
+						<div id="edit_profile_btn" class="btn btn-xs btn-info">edit</div>
+					</div>
 				</div>
 			</div>
+			
+			<div id="mydata_div" style="display:none">
+				<div id="projects_starred_div" class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">Projects Starred <br />(only you can see this)</h3>
+						<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+					</div>
+					<div class="panel-body" style="display:none">
+						<div id="projects_starred_container"></div>
+					</div>
+				</div>
+				<div id="projects_watched_div" class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">Projects Watched <br />(only you can see this)</h3>
+						<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+					</div>
+					<div class="panel-body" style="display:none">
+						<div id="projects_watched_container"></div>
+					</div>
+				</div>
+			</div>
+			
 			<div id="projects_contributed_div" class="panel panel-info">
-				<div class="panel-heading"><b>Contributor of Projects</b></div>
+				<div class="panel-heading">
+					<h3 class="panel-title">Contributor of Projects</h3>
+					<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class="panel-body">
+					<ul class="list-group">
+					</ul>
+				</div>
 			</div>
 			<div id="assigned_contributions_div" class="panel panel-info">
-				<div id="assigned_contributions_head" class="panel-heading"><b>Assigned Contributions (click to expand)</b></div>
-				<div id="assigned_contributions_list"></div>
+				<div id="assigned_contributions_head" class="panel-heading">
+					<h3 class="panel-title">Assigned Contributions</h3>
+					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+				</div>
+				<div class="panel-body" style="display:none">
+					<div id="assigned_contributions_list"></div>
+				</div>
 			</div>
 			<div id="accepted_contributions_div" class="panel panel-info">
-				<div id="accepted_contributions_head" class="panel-heading"><b>Accepted Contributions (click to expand)</b></div>
-				<div id="accepted_contributions_list"></div>
+				<div id="accepted_contributions_head" class="panel-heading">
+					<h3 class="panel-title">Accepted Contributions</h3>
+					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+				</div>
+				<div class="panel-body" style="display:none">
+					<div id="accepted_contributions_list"></div>
+				</div>
 			</div>
 		</div>
 	</div>
