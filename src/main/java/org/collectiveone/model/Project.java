@@ -2,7 +2,6 @@ package org.collectiveone.model;
 
 import java.sql.Timestamp;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -45,13 +43,6 @@ public class Project {
 	@OneToMany(mappedBy="project")
 	@OrderBy("pps DESC")
 	private Set<Contributor> contributors = new LinkedHashSet<Contributor>();
-	
-	@ManyToMany(mappedBy="projectsStarred")
-	private List<User> usersThatStarred;
-	
-	@ManyToMany(mappedBy="projectsWatched")
-	private List<User> usersThatWatched;
-	
 	
 	public ProjectDto toDto() {
 		ProjectDto dto = new ProjectDto();
@@ -114,17 +105,4 @@ public class Project {
 	public void setContributors(Set<Contributor> contributors) {
 		this.contributors = contributors;
 	}
-	public List<User> getUsersThatStarred() {
-		return usersThatStarred;
-	}
-	public void setUsersThatStarred(List<User> usersThatStarred) {
-		this.usersThatStarred = usersThatStarred;
-	}
-	public List<User> getUsersThatWatched() {
-		return usersThatWatched;
-	}
-	public void setUsersThatWatched(List<User> usersThatWatched) {
-		this.usersThatWatched = usersThatWatched;
-	}
-	
 }

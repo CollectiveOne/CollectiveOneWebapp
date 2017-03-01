@@ -38,7 +38,7 @@ public class ActivityServiceImp extends BaseService {
 		String subject = "CollectiveOne - "+act.getProject().getName()+" activity";
 	    String body = act.getPrettyMessage(env.getProperty("collectiveone.webapp.baseurl"));
 	    
-	    List<String> subscribedUsers = projectService.getWatchedUsersEmails(act.getProject().getId());
+	    List<String> subscribedUsers = mailSubscriptionRepository.getSubscribedAddresses(act.getProject().getId());
 	    
 	    mailService.sendMail(
 	    		subscribedUsers, 

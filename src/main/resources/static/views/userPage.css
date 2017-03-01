@@ -19,9 +19,11 @@
 	font-style:normal;
 }
 
-#user_container #user_profile_div .panel-body {
-	max-height:300px;
-	overflow:auto;
+#user_container #user_profile_div #user_profile_container {
+	margin-top:10px;
+	padding-left:10px;
+	padding-right:10px;
+	margin-bottom:10px;
 }
 
 #user_container #user_profile_div #user_profile_html {
@@ -87,17 +89,16 @@
 #user_container #accepted_contributions_list {
 	clear:both;
 	margin-top:10px;
+	display:none;
 }
 
 #user_container #assigned_contributions_list {
 	clear:both;
 	margin-top:10px;
+	display:none;
 }
 
 
-#user_container .projectbox_div {
-	margin-bottom:10px;
-}
 
 
 

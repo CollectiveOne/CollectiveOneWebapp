@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,12 +52,6 @@ public class BaseController {
 	@RequestMapping("/login")
 	public String login(Model model) {
 		return "auth/login";
-	}
-	
-	@RequestMapping("/myhome")
-	public String myhome() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return "redirect:/views/userPageR/"+auth.getName();
 	}
 	
 	@RequestMapping("/user/signup")

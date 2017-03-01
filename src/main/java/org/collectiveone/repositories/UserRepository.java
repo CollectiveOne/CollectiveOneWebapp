@@ -87,32 +87,5 @@ public class UserRepository extends BaseRepository {
 		return res;
 	}
 	
-	public boolean isProjectStarred(Long projectId, Long userId) {
-		Session session = sessionFactory.getCurrentSession();
-		
-		Criteria query = session.createCriteria(User.class)
-				.add(Restrictions.eq("id", userId))
-				.createAlias("projectsStarred","prCr")
-				.add(Restrictions.eq("prCr.id", projectId));
-				
-		User res = (User) query.uniqueResult();
-		
-		if(res != null) return true;
-		else return false;
-	}
-	
-	public boolean isProjectWatched(Long projectId, Long userId) {
-		Session session = sessionFactory.getCurrentSession();
-		
-		Criteria query = session.createCriteria(User.class)
-				.add(Restrictions.eq("id", userId))
-				.createAlias("projectsWatched","prWt")
-				.add(Restrictions.eq("prWt.id", projectId));
-				
-		User res = (User) query.uniqueResult();
-		
-		if(res != null) return true;
-		else return false;
-	}
 	
 }

@@ -1,17 +1,13 @@
 package org.collectiveone.model;
 
 import java.sql.Timestamp;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.UserDto;
@@ -34,16 +30,6 @@ public class User {
 	private Boolean enabled;
 	private Timestamp joindate;
 	private Boolean isReferrer;
-	
-	@ManyToMany(cascade = CascadeType.ALL)
-		@JoinTable(name = "app_users_projects_starred")
-	private List<Project> projectsStarred;
-	
-	@ManyToMany(cascade = CascadeType.ALL)
-		@JoinTable(name = "app_users_projects_watched")
-	private List<Project> projectsWatched;
-	
-	
 	
 	public User() {
         super();
@@ -109,18 +95,5 @@ public class User {
 	public void setIsReferrer(Boolean isReferrer) {
 		this.isReferrer = isReferrer;
 	}
-	public List<Project> getProjectsStarred() {
-		return projectsStarred;
-	}
-	public void setProjectsStarred(List<Project> projectsStarred) {
-		this.projectsStarred = projectsStarred;
-	}
-	public List<Project> getProjectsWatched() {
-		return projectsWatched;
-	}
-	public void setProjectsWatched(List<Project> projectsWatched) {
-		this.projectsWatched = projectsWatched;
-	}
-	
 	
 }

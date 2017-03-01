@@ -388,24 +388,6 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
-		userMyDataGet : function(username,callbackFunction,callbackObj) {
-			$.ajax({
-				type : 'POST',
-				url : '/rest/users/getMyData/'+username,
-				data : '',
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					if (data) {
-						callbackFunction.call(callbackObj,data);
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-				}
-			});
-		},
 
 		userGetProjectsContributed : function(username,callbackFunction,callbackObj) {
 			$.ajax({
@@ -569,79 +551,6 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
-		projectStar : function(projectId,callbackFunction,callbackObj) {
-			$.ajax({
-				type : 'POST',
-				url : '/rest/projects/star/'+projectId,
-				data : '',
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					if (data) {
-						callbackFunction.call(callbackObj,data);
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-				}
-			});
-		},
-		
-		projectUnStar : function(projectId,callbackFunction,callbackObj) {
-			$.ajax({
-				type : 'POST',
-				url : '/rest/projects/unStar/'+projectId,
-				data : '',
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					if (data) {
-						callbackFunction.call(callbackObj,data);
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-				}
-			});
-		},
-		
-		projectWatch : function(projectId,callbackFunction,callbackObj) {
-			$.ajax({
-				type : 'POST',
-				url : '/rest/projects/watch/'+projectId,
-				data : '',
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					if (data) {
-						callbackFunction.call(callbackObj,data);
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-				}
-			});
-		},
-		
-		projectUnWatch: function(projectId,callbackFunction,callbackObj) {
-			$.ajax({
-				type : 'POST',
-				url : '/rest/projects/unWatch/'+projectId,
-				data : '',
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					if (data) {
-						callbackFunction.call(callbackObj,data);
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-				}
-			});
-		},
-
 
 		bidsOfCbtionGet : function(cbtion_id,callbackFunction,callbackObj) {
 
