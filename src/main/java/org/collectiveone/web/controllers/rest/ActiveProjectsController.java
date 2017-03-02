@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @RestController
 @RequestMapping("/rest/session")
 @SessionAttributes("activeProjects")
-public class SessionController {
+public class ActiveProjectsController {
 	
 	@Autowired
 	ProjectServiceImp projectService;
@@ -28,7 +28,7 @@ public class SessionController {
 	public List<ActiveProject> getActiveProjects () {
 		
 		List<ActiveProject> activeProjects = new ArrayList<ActiveProject>();
-		List<String> projectNames = projectService.getList();
+		List<String> projectNames = projectService.getFeaturedList();
 		
 		for(String projectName : projectNames) {
 			ActiveProject activeProject = new ActiveProject();

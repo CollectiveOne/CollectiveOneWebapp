@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -210,6 +211,12 @@ public class ProjectServiceImp extends BaseService {
 	public List<String> getList() {
 		return projectRepository.getListEnabled();
 	}
+	
+	@Transactional
+	public List<String> getFeaturedList() {
+		return projectRepository.getFeaturedList();
+	}
+
 
 	@Transactional
 	public List<Project> getAll(Integer max) {
@@ -280,5 +287,69 @@ public class ProjectServiceImp extends BaseService {
 
 		return projectsDtosRes;
 	}	
+	
+	@Transactional
+	public void star(Long projectId, Long userId) {
+		Project project = projectRepository.get(projectId);
+		User user = userRepository.get(userId);
+		
+		user.getProjectsStarred().add(project);
+				
+		userRepository.save(user);
+	}
+	
+	@Transactional
+	public void unStar(Long projectId, Long userId) {
+		User user = userRepository.get(userId);
+		
+		Iterator<Project> prIt = user.getProjectsStarred().iterator();
+		while(prIt.hasNext()){
+		    Project thisProject = prIt.next();
+	         if (thisProject.getId() == projectId) {
+	        	 prIt.remove();
+	         }
+		}
+		
+		userRepository.save(user);
+	}
+	
+	@Transactional
+	public void watch(Long projectId, Long userId) {
+		Project project = projectRepository.get(projectId);
+		User user = userRepository.get(userId);
+		
+		user.getProjectsWatched().add(project);
+				
+		userRepository.save(user);
+	}
+	
+	@Transactional
+	public void unWatch(Long projectId, Long userId) {
+		User user = userRepository.get(userId);
+		
+		Iterator<Project> prIt = user.getProjectsWatched().iterator();
+		while(prIt.hasNext()){
+		    Project thisProject = prIt.next();
+	         if (thisProject.getId() == projectId) {
+	        	 prIt.remove();
+	         }
+		}
+		
+		userRepository.save(user);
+	}
+	
+	
+	@Transactional
+	public List<String> getWatchedUsersEmails(Long projectId) {
+		Project project = projectRepository.get(projectId);
+		
+		List<String> subscribedUsers = new ArrayList<String>();
+	    for(User user : project.getUsersThatWatched()) {
+	    	subscribedUsers.add(user.getEmail());
+	    }
+	    
+		return subscribedUsers;
+	}
+	
 
 }
