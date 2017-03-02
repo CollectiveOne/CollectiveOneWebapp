@@ -33,7 +33,7 @@ GoalPage.prototype.updateCbtions = function(goalDto) {
 			maxheight: "600px",
 			showFilterBtn: true,
 			showNewBtn: true,
-			newBtnLink: "/views/cbtionNewPageR?goalTag="+this.goal.goalTag+"&projectName="+this.goal.projectName
+			newBtnLink: "/v/cbtionNew?goalTag="+this.goal.goalTag+"&projectName="+this.goal.projectName
 		});
 
 	this.cbtionList.init();

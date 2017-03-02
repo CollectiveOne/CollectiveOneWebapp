@@ -58,7 +58,7 @@ public class BaseController {
 	@RequestMapping("/myhome")
 	public String myhome() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return "redirect:/views/userPageR/"+auth.getName();
+		return "redirect:/v/u/"+auth.getName();
 	}
 	
 	@RequestMapping("/user/signup")

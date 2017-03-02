@@ -2,8 +2,8 @@
 <html lang="en"
 	layout:decorator="layouts/main">
 <head>
-	<script type="text/javascript" th:src="@{/views/userPage.js}"></script>
-	<link rel="stylesheet" type="text/css" th:href="@{/views/userPage.css}"/>
+	<script type="text/javascript" th:src="@{/v/userPage.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/v/userPage.css}"/>
 	
 	<script th:src="@{/elements/cbtionList/cbtionList.js}"></script>
 	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionList/cbtionList.css}"/>
@@ -27,7 +27,7 @@
 	<meta property="og:title" th:content="'CollectiveOne - ' + ${username}" />
 	<meta property="og:description" th:content="'Profile page of ' + ${username} + ' in CollectiveOne'" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" th:content="'http://www.collectiveone.org/views/userPageR/'+${username}" />
+	<meta property="og:url" th:content="'http://www.collectiveone.org/v/u/'+${username}" />
 	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
 	
 	<script th:inline="javascript">

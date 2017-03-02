@@ -23,7 +23,7 @@ public class ActivityController {
 	@Autowired
 	ActivityServiceImp activityService;
 	
-	@RequestMapping(value="/getList", method = RequestMethod.POST)
+	@RequestMapping(value="/list", method = RequestMethod.POST)
 	public @ResponseBody Map<String,Object> getList(@RequestBody Filters filters) {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);

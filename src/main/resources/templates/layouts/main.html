@@ -86,24 +86,24 @@
 				
 				<div class="collapse navbar-collapse" id="myNavbar">
 					<ul class="nav navbar-nav">
-						<li id="projects-nav-btn"><a th:href="@{/views/projectListPageR}" data-toggle="tooltip" title="browse all projects">projects</a></li>
-						<li id="cbtions-nav-btn"><a th:href="@{/views/cbtionListPageR}" data-toggle="tooltip" title="browse all contribution items">contributions</a></li>
-						<li id="decisions-nav-btn"><a th:href="@{/views/decisionListPageR}" data-toggle="tooltip" title="browse all decision items">decisions</a></li>
-						<li id="recact-nav-btn"><a th:href="@{/views/activityListPageR}">recent activity</a></li>
-						<li id="help-nav-btn"><a th:href="@{/views/helpPageR}">help</a></li>
+						<li id="projects-nav-btn"><a th:href="@{/v/projectList}" data-toggle="tooltip" title="browse all projects">projects</a></li>
+						<li id="cbtions-nav-btn"><a th:href="@{/v//cbtionList}" data-toggle="tooltip" title="browse all contribution items">contributions</a></li>
+						<li id="decisions-nav-btn"><a th:href="@{/v/decisionList}" data-toggle="tooltip" title="browse all decision items">decisions</a></li>
+						<li id="recact-nav-btn"><a th:href="@{/v/activityList}">recent activity</a></li>
+						<li id="help-nav-btn"><a th:href="@{/v/help}">help</a></li>
 						<li id="new-nav-btn" class="dropdown"><a class="dropdown-toggle"
 							data-toggle="dropdown" href="#">new <span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a th:href="@{/views/cbtionNewPageR}">Contribution</a></li>
-								<li><a th:href="@{/views/goalNewPageR}">Goal</a></li>
-								<li><a th:href="@{/views/decisionNewPageR}">Decision</a></li>
-								<li><a th:href="@{/views/projectNewPageR}">Project</a></li>
+								<li><a th:href="@{/v/cbtionNew}">Contribution</a></li>
+								<li><a th:href="@{/v/goalNew}">Goal</a></li>
+								<li><a th:href="@{/v/decisionNew}">Decision</a></li>
+								<li><a th:href="@{/v/projectNew}">Project</a></li>
 							</ul>
 						</li>
 					</ul>
 					<div class="navbar-text navbar-right cp_navbar-right">
 						<div sec:authorize="isAuthenticated()">
-							Welcome <a th:href="'/views/userPageR/'+${#authentication.getName()}" th:text="${#authentication.getName()}">Guest</a> |
+							Welcome <a th:href="'/v/u/'+${#authentication.getName()}" th:text="${#authentication.getName()}">Guest</a> |
 							<form sec:authorize="isAuthenticated()" id="frmlogout"
 								th:action="@{/logout}" method="post" class="form-inline">
 								<a href="javascript:{}"
@@ -137,7 +137,7 @@
 		<div class="footer">
 			<div id="contact_footnote">
 				<a id="link_to_slack_container"
-						th:href="@{/views/slackPageR}"> <img
+						th:href="@{/v//slack}"> <img
 						id="logo" src="/images/slack-512.png"></img>
 				</a>
 				<a id="link_to_email_container"

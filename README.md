@@ -5,4 +5,4 @@ CollectiveOne is a method (and a platform) to develop open, decentralized and co
 
 ## **Contributions are welcome**
  
-CollectiveOne wants to become a decentralized project itself, using the method it promotes. The best way to get involved is by getting in touch through [Slack](http://www.collectiveone.org/views/slackPageR).
+CollectiveOne wants to become a decentralized project itself, using the method it promotes. The best way to get involved is by getting in touch through [Slack](http://www.collectiveone.org/v//slack).

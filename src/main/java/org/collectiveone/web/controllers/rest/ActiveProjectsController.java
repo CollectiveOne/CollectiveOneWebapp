@@ -41,12 +41,12 @@ public class ActiveProjectsController {
         return activeProjects;
     }
 	
-	@RequestMapping(value="/activeProjectsGet", method = RequestMethod.POST)
+	@RequestMapping(value="/activeProjects", method = RequestMethod.GET)
 	public List<ActiveProject> activeProjectsGet(@ModelAttribute("activeProjects") ArrayList<ActiveProject> activeProjects, HttpSession session) {
 		return activeProjects;
 	}
 	
-	@RequestMapping(value="/activeProjectChange", method = RequestMethod.POST)
+	@RequestMapping(value="/activeProjects", method = RequestMethod.POST)
 	public List<ActiveProject> activeProjectsChange(
 			@ModelAttribute("activeProjects") ArrayList<ActiveProject> activeProjects,
 			@RequestBody ActiveProject activeProjectInput) {

@@ -12,7 +12,7 @@
 				<h2 th:text="#{label.form.title}">form</h2>
 				<br />
 				<div class="alert alert-info" >New users require to be pre-authorized, please request an invitation by clicking below</div>
-				<a href="/views/signupRequestPageR" class="btn btn-lg btn-primary btn-block">Request invitation</a>
+				<a href="/v/signupRequest" class="btn btn-lg btn-primary btn-block">Request invitation</a>
 				<br />
 				<div class="alert alert-info" >If you have been pre-authorized, please submit the form below</div>
 				<div th:class="form-group" th:classappend="${#fields.hasErrors('username')}? 'has-error'">

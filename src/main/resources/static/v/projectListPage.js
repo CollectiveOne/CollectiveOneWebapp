@@ -38,7 +38,7 @@ ProjectListPage.prototype.draw = function() {
 			"projects",
 			true, 
 			true, 
-			"/views/projectNewPageR");
+			"/v/projectNew");
 
 	this.filter.updateData();
 }

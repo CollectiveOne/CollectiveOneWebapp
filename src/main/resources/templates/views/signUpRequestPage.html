@@ -6,7 +6,7 @@
 	<meta property="og:title" content="CollectiveOne - Request Signup" />
 	<meta property="og:description" content="Request signup to CollectiveOne" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="http://www.collectiveone.org/views/signUpRequestPageR" />
+	<meta property="og:url" content="http://www.collectiveone.org/v/signupRequest" />
 	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
 	
 	<script th:inline="javascript">
@@ -25,7 +25,7 @@
 	<div layout:fragment="content_pane">
 		<br />
 		
-		<form id="signupRequest_form" action="#" th:action="@{/views/signupRequestSubmit}" th:object="${signupRequest}" method="post">
+		<form id="signupRequest_form" action="#" th:action="@{/v/signupRequestSubmit}" th:object="${signupRequest}" method="post">
 			<h2>Signup request</h2>
 			<br />
 			<div th:if="${message}" class="alert alert-info" th:text="${message}">

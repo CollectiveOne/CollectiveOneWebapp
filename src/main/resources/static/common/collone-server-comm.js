@@ -451,8 +451,8 @@ ServerComm.prototype = {
 			var datastr = JSON.stringify(data);
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/session/activeProjectsGet',
+				type : 'GET',
+				url : '/rest/session/activeProjects',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
@@ -478,7 +478,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'POST',
-				url : '/rest/session/activeProjectChange',
+				url : '/rest/session/activeProjects',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
@@ -1097,7 +1097,7 @@ ServerComm.prototype = {
 			var datastr = JSON.stringify(filters);
 			$.ajax({
 				type : 'POST',
-				url : '/rest/activity/getList',
+				url : '/rest/activity/list',
 				data : datastr,
 				dataType : "json",
 				contentType : 'application/json',

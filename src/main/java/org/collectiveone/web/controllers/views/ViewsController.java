@@ -45,7 +45,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.ullink.slack.simpleslackapi.SlackSession;
 
 @Controller
-@RequestMapping("/views")
+@RequestMapping("/v")
 public class ViewsController {
 	
 	@Autowired
@@ -80,28 +80,28 @@ public class ViewsController {
 	
 	
 	
-	@RequestMapping("/userPageR/{username}")
+	@RequestMapping("/u/{username}")
 	public String userPage(@PathVariable("username") String username, Model model) {
 		model.addAttribute("username",username);
 		return "views/userPage";
 	}
 	
-	@RequestMapping("/activityListPageR")
+	@RequestMapping("/activityList")
 	public String activityList(Model model) {
 		return "views/activityListPage";
 	}
 	
-	@RequestMapping("/cbtionListPageR")
+	@RequestMapping("/cbtionList")
 	public String cbtionListPage(Model model) {
 		return "views/cbtionListPage";
 	}
 	
-	@RequestMapping("/goalListPageR")
+	@RequestMapping("/goalList")
 	public String goalListPageR(Model model) {
 		return "views/goalListPage";
 	}
 	
-	@RequestMapping("/cbtionPageR/{id}")
+	@RequestMapping("/cbtion/{id}")
 	public String cbtionPage(@PathVariable(value="id") Long id, Model model) {
 		CbtionDto ctionDto = cbtionService.getDto(id);  
 		
@@ -112,7 +112,7 @@ public class ViewsController {
 		return "views/cbtionPage";
 	}
 	
-	@RequestMapping("/goalPageR/{goalId}")
+	@RequestMapping("/goal/{goalId}")
 	public String goalPageId(@PathVariable("goalId") Long goalId, Model model) {
 		GoalDto goalDto = goalService.getDto(goalId);  
 		
@@ -124,7 +124,7 @@ public class ViewsController {
 		return "views/goalPage";
 	}
 	
-	@RequestMapping("/goalPageR")
+	@RequestMapping("/goal")
 	public String goalPage(@PathParam("goalTag") String goalTag, @PathParam("projectName") String projectName, Model model) {
 		GoalDto goalDto = goalService.getDto(goalTag,projectName);  
 		
@@ -136,13 +136,13 @@ public class ViewsController {
 		return "views/goalPage";
 	}
 	
-	@RequestMapping("/slackPageR")
+	@RequestMapping("/slack")
 	public String slackPage(Model model) {
 		model.addAttribute("invRequest",new InvRequest());
 		return "views/slackPage";
 	}
 	
-	@RequestMapping("/helpPageR")
+	@RequestMapping("/help")
 	public String helpPage(Model model) {
 		return "views/helpPage";
 	}
@@ -165,7 +165,7 @@ public class ViewsController {
         return "views/slackPage";
 	}
 	
-	@RequestMapping("/signupRequestPageR")
+	@RequestMapping("/signupRequest")
 	public String signupRequestPage(Model model) {
 		model.addAttribute("signupRequest",new SignupRequest());
 		return "views/signUpRequestPage";
@@ -183,7 +183,7 @@ public class ViewsController {
 					
 					authorizedEmailService.add(signupRequest.getEmail(), referral.getId(), token);
 					
-					String authUrl = getAppUrl(request)+"/views/authorizeSignup?email="+signupRequest.getEmail()+"&token="+token;
+					String authUrl = getAppUrl(request)+"/v/authorizeSignup?email="+signupRequest.getEmail()+"&token="+token;
 					
 					String subject = "Signup invitation request";
 			        String body = "Request to signup sent by "+signupRequest.getEmail()+"."
@@ -215,7 +215,7 @@ public class ViewsController {
 	}
 	
 	@RequestMapping("/authorizeSignup")
-    public String passwordRecovery(final Locale locale, final Model model, @RequestParam("email") String email, @RequestParam("token") String token, final HttpServletRequest request) throws IOException {
+    public String authorizeSignup(final Locale locale, final Model model, @RequestParam("email") String email, @RequestParam("token") String token, final HttpServletRequest request) throws IOException {
         if(authorizedEmailService.validate(email, token)) {
         	
         	String subject = "Signup request accepted";
@@ -234,7 +234,7 @@ public class ViewsController {
         return "auth/login";
     }
 	
-	@RequestMapping("/projectPageR/{projectName}")
+	@RequestMapping("/project/{projectName}")
 	public String projectPageR(@PathVariable("projectName") String projectName, Model model) {
 		ProjectDto projectDto = projectService.getDto(projectName);
 		
@@ -244,7 +244,7 @@ public class ViewsController {
 		return "views/projectPage";
 	}
 	
-	@RequestMapping("/decisionPageR/{id}")
+	@RequestMapping("/decision/{id}")
 	public String decisionPage(@PathVariable(value="id") Long id, Model model) {
 		DecisionDtoFull decision = decisionService.getDto(id);  
 		model.addAttribute("decisionId",decision.getId());
@@ -253,18 +253,18 @@ public class ViewsController {
 		return "views/decisionPage";
 	}
 	
-	@RequestMapping("/decisionListPageR")
+	@RequestMapping("/decisionList")
 	public String decisionListPage(Model model) {
 		return "views/decisionListPage";
 	}
 	
-	@RequestMapping("/projectListPageR")
+	@RequestMapping("/projectList")
 	public String projectListPage(Model model) {
 		return "views/projectListPage";
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping("/cbtionNewPageR")
+	@RequestMapping("/cbtionNew")
 	public String cbtionNewPage(Model model, 
 								@RequestParam(value="goalTag", required = false) String goalTag,
 								@RequestParam(value="projectName", required = false) String projectName) {
@@ -292,7 +292,7 @@ public class ViewsController {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				cbtionDto.setCreatorUsername(auth.getName()); 
 				Long cbtionId = cbtionService.create(cbtionDto);
-				return "redirect:/views/cbtionPageR/"+cbtionId;
+				return "redirect:/v/cbtion/"+cbtionId;
 			} else {
 				model.addAttribute("projectSelected",cbtionDto.getProjectName());
 				result.rejectValue("goalTag", "goal.goalTag", "'"+cbtionDto.getGoalTag()+"' goal tag wast not found or has not been accepted yet");
@@ -302,7 +302,7 @@ public class ViewsController {
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping("/goalNewPageR")
+	@RequestMapping("/goalNew")
 	public String goalNewPage(Model model) {
 		model.addAttribute("goal",new GoalDto());
 		return "views/goalNewPage";
@@ -333,7 +333,7 @@ public class ViewsController {
 				goalDto.setCreatorUsername(auth.getName()); 
 				goalService.create(goalDto);
 				
-				return "redirect:/views/goalPageR?projectName="+goalDto.getProjectName()+"&goalTag="+goalDto.getGoalTag();
+				return "redirect:/v/goal?projectName="+goalDto.getProjectName()+"&goalTag="+goalDto.getGoalTag();
 				
 			} else {
 				model.addAttribute("projectSelected",goalDto.getProjectName());
@@ -344,7 +344,7 @@ public class ViewsController {
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping("/decisionNewPageR")
+	@RequestMapping("/decisionNew")
 	public String decisionNewPage(Model model) {
 		DecisionDtoFull decisionDto = new DecisionDtoFull();
 		decisionDto.setVerdictHours(36.0);
@@ -365,12 +365,12 @@ public class ViewsController {
 			decisionDto.setCreatorUsername(auth.getName()); 
 			
 			Long decisionId = decisionService.create(decisionDto);
-			return "redirect:/views/decisionPageR/"+decisionId;
+			return "redirect:/v/decision/"+decisionId;
 		}
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping("/projectNewPageR")
+	@RequestMapping("/projectNew")
 	public String projectNewPage(Model model) {
 		if(!model.containsAttribute("project")) {
 			ProjectNewDto project = new ProjectNewDto();
@@ -418,7 +418,7 @@ public class ViewsController {
 					projectService.start(projectDto.getName(),projectDto.getUsernamesAndPps());
 					decisionRealmService.decisionRealmInitAllSupergoalsToProject(projectService.get(projectDto.getName()).getId());
 					
-					return "redirect:/views/projectPageR/"+projectDto.getName();	
+					return "redirect:/v/project/"+projectDto.getName();	
 				} else {
 					result.rejectValue("name", "project.name", "'"+projectDto.getName()+"' already exist.");
 					return "views/projectNewPage";

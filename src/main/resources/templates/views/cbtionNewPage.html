@@ -5,7 +5,7 @@
 	<meta property="og:title" content="CollectiveOne - Create Contribution" />
 	<meta property="og:description" content="Create a new contribution item in CollectiveOne" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="http://www.collectiveone.org/views/cbtionNewPageR" />
+	<meta property="og:url" content="http://www.collectiveone.org/v/cbtionNew" />
 	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
 	
 	<script th:inline="javascript">
@@ -13,12 +13,12 @@
 		GLOBAL.projectSelected = [[${projectSelected}]];
 	/*]]>*/
 	</script>
-	<script type="text/javascript" th:src="@{/views/cbtionNewPage.js}"></script>
+	<script type="text/javascript" th:src="@{/v/cbtionNewPage.js}"></script>
 </head>
 <body>
 	<div layout:fragment="content_pane">
 		<div sec:authorize="isAuthenticated()">
-			<form id="new_cbtion_form" action="#" th:action="@{/views/cbtionNewSubmit}" th:object="${cbtion}" method="post">
+			<form id="new_cbtion_form" action="#" th:action="@{/v/cbtionNewSubmit}" th:object="${cbtion}" method="post">
 				<h2>Create a new contribution request</h2>
 				<br />
 	

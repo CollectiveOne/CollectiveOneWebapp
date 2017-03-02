@@ -5,7 +5,7 @@
 	<meta property="og:title" content="CollectiveOne - Create Decision" />
 	<meta property="og:description" content="Create a new decision item in CollectiveOne" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="http://www.collectiveone.org/views/decisionNewPageR" />
+	<meta property="og:url" content="http://www.collectiveone.org/v/decisionNew" />
 	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
 	
 	<script th:inline="javascript">
@@ -13,12 +13,12 @@
 		GLOBAL.projectSelected = [[${projectSelected}]];
 	/*]]>*/
 	</script>
-	<script type="text/javascript" th:src="@{/views/decisionNewPage.js}"></script>
+	<script type="text/javascript" th:src="@{/v/decisionNewPage.js}"></script>
 </head>
 <body>
 	<div layout:fragment="content_pane">
 		<div sec:authorize="isAuthenticated()">
-			<form id="new_cbtion_form" action="#" th:action="@{/views/decisionNewSubmit}" th:object="${decision}" method="post">
+			<form id="new_cbtion_form" action="#" th:action="@{/v/decisionNewSubmit}" th:object="${decision}" method="post">
 				<h2>Create a new decision</h2>
 				<br />
 	

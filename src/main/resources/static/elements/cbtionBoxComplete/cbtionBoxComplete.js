@@ -27,7 +27,7 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 	$("#promotion_up_div",this.container).click(this.promoteUpClick.bind(this));
 	$("#promotion_down_div",this.container).click(this.promoteDownClick.bind(this));
 
-	$("#title_div",this.container).append("<a href=/views/cbtionPageR/"+ this.cbtion.id+">"+this.cbtion.title+"</a>");
+	$("#title_div",this.container).append("<a href=/v/cbtion/"+ this.cbtion.id+">"+this.cbtion.title+"</a>");
 	$("#description_div",this.container).append(markdown.toHTML(this.cbtion.description));
 	
 	if(this.cbtion.product) {

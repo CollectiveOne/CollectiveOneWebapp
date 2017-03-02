@@ -40,7 +40,7 @@ GoalListPage.prototype.draw = function() {
 			"goals",
 			true, 
 			true, 
-			"/views/goalNewPageR");
+			"/v/goalNew");
 
 	this.filter.updateData();
 

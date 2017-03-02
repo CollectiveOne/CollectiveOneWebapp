@@ -82,15 +82,15 @@ function getSecondsSince(timestamp) {
 }
 
 function getGoalPageLink(goalTag,projectName) {
-	return "<a href=/views/goalPageR?projectName="+projectName+"&goalTag="+goalTag+"><b>+</b>"+goalTag+"</a>";
+	return "<a href=/v/goal?projectName="+projectName+"&goalTag="+goalTag+"><b>+</b>"+goalTag+"</a>";
 }
 
 function getUserPageLink(username) {
-	return "<a href=/views/userPageR/"+username+">"+username+"</a>";
+	return "<a href=/v/u/"+username+">"+username+"</a>";
 }
 
 function getProjectLink(projectName) {
-	return "<a href=/views/projectPageR/"+projectName+">"+projectName+"</a>";
+	return "<a href=/v/project/"+projectName+">"+projectName+"</a>";
 }
 
 function LimitStrSize(strIn, size) {

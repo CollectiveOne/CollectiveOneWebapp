@@ -77,7 +77,7 @@ CbtionList.prototype.boxLoaded = function(data) {
 		showNewBtn = this.conf.showNewBtn; 
 	}
 	
-	var newBtnLink = "/views/cbtionNewPageR";
+	var newBtnLink = "/v/cbtionNew";
 	if(this.conf.newBtnLink != null) {
 		newBtnLink = this.conf.newBtnLink; 
 	}
