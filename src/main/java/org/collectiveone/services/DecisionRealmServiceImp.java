@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class DecisionRealmServiceImp extends BaseService {
 
-	@Transactional
-	public void decisionRealmAddVoterToAll(Long projectId,Long userId,double maxWeight) {
+	@Transactional 
+	void decisionRealmAddVoterToAll(Long projectId,Long userId,double maxWeight) {
 		/* Add a voter to all the realms of a project, this is done the first time a contributor
 		 * is added to a project */
 		
@@ -46,14 +46,14 @@ public class DecisionRealmServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void decisionRealmInitToProject(Long realmId, Long projectId) {
+	private void decisionRealmInitToProject(Long realmId, Long projectId) {
 		DecisionRealm realm = decisionRealmRepository.get(realmId);
 		decisionRealmInitToProject(realm,projectId);
 		decisionRealmRepository.save(realm);
 	}
 	
-	@Transactional
-	public void decisionRealmInitToProject(DecisionRealm destRealm, Long projectId) {
+	@Transactional 
+	void decisionRealmInitToProject(DecisionRealm destRealm, Long projectId) {
 		/* the realm voters are deleted and refilled to be the project contributors 
 		 * with scale 1.0 */
 		Project project = projectRepository.get(projectId);
@@ -78,8 +78,8 @@ public class DecisionRealmServiceImp extends BaseService {
 
 	
 	
-	@Transactional
-	public void decisionRealmInitToOther(DecisionRealm destRealm,Long sourceRealmId) {
+	@Transactional 
+	void decisionRealmInitToOther(DecisionRealm destRealm,Long sourceRealmId) {
 		/* the destRealm of voters is created based on the sourceRealmId. */
 		
 		DecisionRealm sourceRealm = decisionRealmRepository.get(sourceRealmId);
@@ -100,8 +100,8 @@ public class DecisionRealmServiceImp extends BaseService {
 		decisionRealmRepository.save(destRealm);
 	}
 	
-	@Transactional
-	public void decisionRealmUpdateToOther(DecisionRealm destRealm,Long sourceRealmId) {
+	@Transactional 
+	void decisionRealmUpdateToOther(DecisionRealm destRealm,Long sourceRealmId) {
 		/* the destRealm of voters is updated based on the sourceRealmId. It assumes that
 		 * all the voters in the dest realm are in the source realm */
 		

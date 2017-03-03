@@ -17,7 +17,7 @@ public class DecisionDtoCreate {
 	@Pattern(regexp="^[0-9a-zA-z-]+$", message="only letters, numbers or bars '-'")
 	private String goalTag;
 	@Min(36)
-	protected double verdictHours;
+	private double verdictHours;
 	
 	public Long getId() {
 		return id;

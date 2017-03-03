@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.collectiveone.model.Role;
 
-public interface RoleServiceIf {
+interface RoleServiceIf {
 
 	public List<Role> getRolesOf(String username);
 	

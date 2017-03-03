@@ -18,17 +18,12 @@ public class CommentRepository extends BaseRepository {
 		return (Comment) super.get(id,Comment.class);
 	}
 
-	public List<Comment> getAll(Integer max) {
-		return (List<Comment>) super.getAll(max,Comment.class);
-	}
-	
-
 	public int countPromotersDiff(Long commentId) {
 		return countPromoters(commentId, true) - countPromoters(commentId, false); 
 	}
 	
 	
-	public int countPromoters(Long commentId, boolean promoteUp) {
+	private int countPromoters(Long commentId, boolean promoteUp) {
 		
 		Session session = sessionFactory.getCurrentSession();
 

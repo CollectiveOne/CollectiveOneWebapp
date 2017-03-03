@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/1")
-public class DecisionsController {
+public class DecisionsController { // NO_UCD (unused code)
 	
 	@Autowired
 	DecisionServiceImp decisionService;

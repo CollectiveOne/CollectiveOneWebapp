@@ -5,21 +5,19 @@ import java.util.Locale;
 import org.collectiveone.model.User;
 import org.springframework.context.ApplicationEvent;
 
-@SuppressWarnings("serial")
-public class OnRegistrationCompleteEvent extends ApplicationEvent {
+@SuppressWarnings("serial") 
+class OnRegistrationCompleteEvent extends ApplicationEvent {
 
     private final String appUrl;
     private final Locale locale;
     private final User user;
 
-    public OnRegistrationCompleteEvent(final User user, final Locale locale, final String appUrl) {
+    public OnRegistrationCompleteEvent(final User user, final Locale locale, final String appUrl) { // NO_UCD (unused code)
         super(user);
         this.user = user;
         this.locale = locale;
         this.appUrl = appUrl;
     }
-
-    //
 
     public String getAppUrl() {
         return appUrl;

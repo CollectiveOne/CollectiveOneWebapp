@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
-public class AppConfig {
+public class AppConfig { // NO_UCD (unused code)
 
 	@Bean
 	public HibernateJpaSessionFactoryBean sessionFactory() {

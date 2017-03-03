@@ -12,7 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PasswordRecoveryListener implements ApplicationListener<OnPasswordRecoveryAsked> {
+public class PasswordRecoveryListener implements ApplicationListener<OnPasswordRecoveryAsked> { // NO_UCD (unused code)
     @Autowired
     private UserAuthServiceIf userService;
 

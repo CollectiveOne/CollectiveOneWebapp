@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PeriodicMethods {
+public class PeriodicMethods { // NO_UCD (unused code)
 
 	/* Services  */
 	@Autowired
