@@ -12,16 +12,11 @@ ProjectSelector.prototype.fill = function() {
 	
 	var activeProjects = GLOBAL.sessionData.activeProjectsController.getActiveProjectsNames();
 	if(activeProjects.length > 0) {
-		/* if one or more projects is selected as active */
 		this.projectListReceivedCallback(activeProjects)
 	} else {
-		if(isUserLogged()) {
-			/* if user is logged, use active projects */
-			this.projectListReceivedCallback(GLOBAL.sessionData.activeProjectsController.getPossibleActiveProjectsNames());
-		} else {
-			GLOBAL.serverComm.projectNamesListGet(this.projectListReceivedCallback,this);
-		}
+		GLOBAL.serverComm.projectNamesListGet(this.projectListReceivedCallback,this);		
 	}
+	
 }
 
 ProjectSelector.prototype.projectListReceivedCallback = function(projectList) {

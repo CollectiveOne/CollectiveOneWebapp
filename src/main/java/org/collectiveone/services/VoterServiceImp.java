@@ -10,11 +10,11 @@ import org.collectiveone.model.Voter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-public class VoterServiceImp extends BaseService {
+@Service 
+class VoterServiceImp extends BaseService {
 	
-	@Transactional
-	public void updateInProject(Long projectId, Long userId) {
+	@Transactional 
+	void updateInProject(Long projectId, Long userId) {
 		/* Goes all over the decision realms in a project and updates the max weight of a 
 		 * user by setting it to the user pps in the project.
 		 * It starts from the super-goals (those without parent goal) and then continues
@@ -56,7 +56,7 @@ public class VoterServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void updateInGoal(Long goalId, Long userId) {
+	private void updateInGoal(Long goalId, Long userId) {
 		/* Goes all over the decision realms in a goal and subgoals (recursively) and 
 		 * update the user. It starts from the top goal and then continues recursively 
 		 * with the sub-goals */

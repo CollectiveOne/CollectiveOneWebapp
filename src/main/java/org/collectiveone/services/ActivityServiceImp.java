@@ -31,7 +31,7 @@ public class ActivityServiceImp extends BaseService {
 		return activityDtosRes;
 	}
 	
-	public void saveAndNotify(Activity act) throws IOException {
+	void saveAndNotify(Activity act) throws IOException {
 		activityRepository.save(act);
 		
 		/* send emails */

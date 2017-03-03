@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/")
-public class BaseController {
+public class BaseController {  // NO_UCD (unused code)
 	
     @Autowired
     private UserAuthServiceIf userService;

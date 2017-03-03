@@ -8,16 +8,8 @@ public final class UserNotAuthorizedException extends RuntimeException {
         super();
     }
 
-    public UserNotAuthorizedException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
-
     public UserNotAuthorizedException(final String message) {
         super(message);
-    }
-
-    public UserNotAuthorizedException(final Throwable cause) {
-        super(cause);
     }
 
 }

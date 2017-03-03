@@ -4,7 +4,7 @@ public enum CbtionState {
 	OPEN,
 	ASSIGNED,
 	ACCEPTED,
-	CLOSED,
+	CLOSED, // NO_UCD (unused code)
 	PROPOSED,
 	NOTOPENED,
 	DELETED
