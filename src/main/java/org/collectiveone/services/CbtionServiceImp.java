@@ -133,8 +133,8 @@ public class CbtionServiceImp extends BaseService {
 		return cbtionsDtosRes;
 	}
 
-	@Transactional 
-	void updateStateAll() throws IOException {
+	@Transactional
+	public void updateStateAll() throws IOException {
 		/* Update state of all not closed bids */
 		List<Cbtion> cbtionsProposed = cbtionRepository.getWithStates(Arrays.asList(CbtionState.PROPOSED, CbtionState.OPEN));
 		for(Cbtion cbtion : cbtionsProposed) {
@@ -143,7 +143,7 @@ public class CbtionServiceImp extends BaseService {
 	}
 
 	@Transactional
-	private void updateState(Long cbtionId) throws IOException {
+	public void updateState(Long cbtionId) throws IOException {
 		Cbtion cbtion = cbtionRepository.get(cbtionId);
 		
 		Activity act = new Activity();

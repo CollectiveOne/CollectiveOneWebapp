@@ -155,8 +155,8 @@ public class BidServiceImp extends BaseService {
 		return bidDtos;
 	}
 
-	@Transactional 
-	void updateStateAll() throws IOException {
+	@Transactional
+	public void updateStateAll() throws IOException {
 		/* Update state of all not closed bids */
 		List<Bid> bidsNotClosed = bidRepository.getNotClosed();
 		for(Bid bid : bidsNotClosed) {
@@ -181,7 +181,7 @@ public class BidServiceImp extends BaseService {
 	}
 
 	@Transactional
-	private void updateState(Long bidId) throws IOException {
+	public void updateState(Long bidId) throws IOException {
 		Bid bid = bidRepository.get(bidId);
 		Cbtion cbtion = bid.getCbtion();
 

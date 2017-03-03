@@ -27,8 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class DecisionServiceImp extends BaseService {
 	
-	@Transactional 
-	void updateStateAll() throws IOException {
+	@Transactional
+	public void updateStateAll() throws IOException {
 
 		List<DecisionState> states = new ArrayList<DecisionState>();
 		states.add(DecisionState.IDLE);
@@ -41,7 +41,7 @@ public class DecisionServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	private void updateState(Long id) throws IOException {
+	public void updateState(Long id) throws IOException {
 		Decision dec = decisionRepository.get(id);
 		
 		/* Update the decision */

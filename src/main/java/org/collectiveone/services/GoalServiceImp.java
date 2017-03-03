@@ -257,7 +257,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional 
-	void updateStateAll() throws IOException {
+	public void updateStateAll() throws IOException {
 		/* Update state of all not closed bids */
 		List<Goal> goalsNotDeleted = goalRepository.getNotDeleted();
 		for(Goal goal : goalsNotDeleted) {
@@ -266,7 +266,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	private void updateState(Long goalId) throws IOException {
+	public void updateState(Long goalId) throws IOException {
 		fromProposedToAccepted(goalId);
 		fromAcceptedToDeleted(goalId);
 		updateNewParent(goalId);

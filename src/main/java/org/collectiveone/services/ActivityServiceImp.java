@@ -31,7 +31,8 @@ public class ActivityServiceImp extends BaseService {
 		return activityDtosRes;
 	}
 	
-	void saveAndNotify(Activity act) throws IOException {
+	@Transactional
+	public void saveAndNotify(Activity act) throws IOException {
 		activityRepository.save(act);
 		
 		/* send emails */
