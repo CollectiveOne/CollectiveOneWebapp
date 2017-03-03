@@ -74,6 +74,18 @@ ActiveProjectsController.prototype = {
 		this.activeProjectsGetCallback(activeProjects);
 	},
 	
+	getPossibleActiveProjectsNames: function() {
+		/* helper function to return the list of current active projects */
+		var activeProjectsNames = [];
+		var activeProjects = GLOBAL.sessionData.activeProjectsController.activeProjects;
+
+		for(var ix in activeProjects) {
+			activeProjectsNames.push(activeProjects[ix].projectName);
+		}	
+
+		return activeProjectsNames;
+	},
+	
 	getActiveProjectsNames: function() {
 		/* helper function to return the list of current active projects */
 		var activeProjectsNames = [];
