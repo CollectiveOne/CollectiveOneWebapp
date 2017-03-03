@@ -31,20 +31,20 @@ FilterElement.prototype.init = function() {
 			$('#filter_assignee_input', this.container).keydown(this.inputEnterKey.bind(this));
 
 			$('#filter_goal_input',this.container).autocomplete({
-				serviceUrl: '/rest/goals/getSuggestions',
+				serviceUrl: '/1/goals/suggestions',
 				minChars: 0,
 				params: {projectName: ""},
 				maxHeight: 100
 			});
 
 			$('#filter_contributor_input',this.container).autocomplete({
-				serviceUrl: '/rest/users/getSuggestions',
+				serviceUrl: '/1/users/suggestions',
 				minChars: 0,
 				maxHeight: 100
 			});
 
 			$('#filter_assignee_input',this.container).autocomplete({
-				serviceUrl: '/rest/users/getSuggestions',
+				serviceUrl: '/1/users/suggestions',
 				minChars: 0,
 				maxHeight: 100
 			});
@@ -88,7 +88,7 @@ FilterElement.prototype.init = function() {
 	$('#filter_keyword_input', this.container).keydown(this.inputEnterKey.bind(this));
 	
 	$('#filter_creator_input').autocomplete({
-	    serviceUrl: '/rest/users/getSuggestions',
+	    serviceUrl: '/1/users/suggestions',
 	    minChars: 0,
 		maxHeight: 100
 	});

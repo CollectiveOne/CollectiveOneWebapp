@@ -38,7 +38,7 @@ CbtionNewPage.prototype = {
 		
 		projectSelectorDrawn: function() {
 			$('#goalTag_selector',this.container).autocomplete({
-				serviceUrl: '/rest/goals/getSuggestions',
+				serviceUrl: '/1/goals/suggestions',
 				minChars: 0,
 				maxHeight: 200,
 				params: {projectName: $("#project_select", this.container).val()}

@@ -251,7 +251,7 @@ public class GoalServiceImp extends BaseService {
 	@Transactional
 	public List<String> getSuggestions(String query, List<String> projectNames) {
 		if(projectNames.size() == 0) {
-			projectNames = projectRepository.getListEnabled();
+			projectNames = projectRepository.getNamesEnabled();
 		}
 		return goalRepository.getSuggestions(query, projectNames);
 	}

@@ -29,7 +29,7 @@ public class ActivityRepository extends BaseRepository {
 	}
 	
 	public ObjectListRes<Activity> get(Filters filters) {
-		Criteria q = applyGeneralFilters(filters, projectDao.getListEnabled(), Activity.class);
+		Criteria q = applyGeneralFilters(filters, projectDao.getNamesEnabled(), Activity.class);
 		return getObjectsAndResSet(q, filters, Activity.class);
 	}
 	

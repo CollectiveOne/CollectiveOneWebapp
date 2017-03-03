@@ -20,7 +20,6 @@ import org.collectiveone.model.Goal;
 import org.collectiveone.model.Project;
 import org.collectiveone.model.Promoter;
 import org.collectiveone.model.User;
-import org.collectiveone.web.controllers.rest.ResStatus;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.CbtionDtoListRes;
 import org.collectiveone.web.dto.CommentDto;
@@ -280,9 +279,7 @@ public class CbtionServiceImp extends BaseService {
 
 
 	@Transactional
-	public ResStatus promote(Long cbtionId, Long userId, boolean promoteUp) {
-		ResStatus resStatus = new ResStatus();
-
+	public void promote(Long cbtionId, Long userId, boolean promoteUp) {
 		Cbtion cbtion = cbtionRepository.get(cbtionId);
 		cbtionRepository.save(cbtion);
 
@@ -317,8 +314,6 @@ public class CbtionServiceImp extends BaseService {
 		promoterDao.save(promoter);
 		
 		cbtion.setRelevance(newRelevance);
-
-		return resStatus;		
 	}
 	
 	@Transactional

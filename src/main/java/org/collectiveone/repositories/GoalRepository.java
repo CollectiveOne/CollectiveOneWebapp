@@ -104,7 +104,7 @@ public class GoalRepository extends BaseRepository {
 	
 	public ObjectListRes<Goal> get(Filters filters) {
 		
-		Criteria q = applyGeneralFilters(filters, projectDao.getListEnabled(), Goal.class);
+		Criteria q = applyGeneralFilters(filters, projectDao.getNamesEnabled(), Goal.class);
 		
 		/* State names are entity specific and I was not able to put these
 		 * disjunction in a common function */

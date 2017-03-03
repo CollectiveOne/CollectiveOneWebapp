@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 
 @RestController
-@RequestMapping("/rest/projects")
+@RequestMapping("/1")
 @SessionAttributes("activeProjects")
 public class ProjectsController {
 	
@@ -40,7 +40,7 @@ public class ProjectsController {
 	@Autowired
 	UserServiceImp userService;
 	
-	@RequestMapping(value="/get/{projectName}", method = RequestMethod.POST)
+	@RequestMapping(value="/project/{projectName}", method = RequestMethod.GET)
 	public @ResponseBody ProjectDto get(@PathVariable("projectName") String projectName) {
 		ProjectDto projectDto = projectService.getDto(projectName);
 		
@@ -55,7 +55,7 @@ public class ProjectsController {
 		return projectDto;
 	}
 	
-	@RequestMapping(value="/getContributors/{projectName}", method = RequestMethod.POST)
+	@RequestMapping(value="/project/{projectName}/contributors", method = RequestMethod.GET)
 	public @ResponseBody ProjectContributorsDto getContributors(@PathVariable("projectName") String projectName) {
 			
 		Project project = projectService.get(projectName);
@@ -67,10 +67,10 @@ public class ProjectsController {
 		return projectContributorsDto;
 	}
 	
-	@RequestMapping("/getNamesList")
-	public Map<String,Object> getNamesList() {
+	@RequestMapping(value="/projects/getNamesEnabled", method = RequestMethod.GET)
+	public Map<String,Object> getNamesEnabled() {
 		
-		List<String> projectList = projectService.getList();
+		List<String> projectList = projectService.getNamesEnabled();
 		
 		Map<String,Object> map = new HashMap<>();
 		map.put("projectList", projectList);
@@ -78,7 +78,7 @@ public class ProjectsController {
 		return map;
 	}
 	
-	@RequestMapping(value="/getList", method = RequestMethod.POST)
+	@RequestMapping(value="/projects", method = RequestMethod.POST)
 	public @ResponseBody Map<String,Object> getList(@RequestBody Filters filters) {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);
@@ -108,7 +108,7 @@ public class ProjectsController {
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping(value="/star/{projectId}", method = RequestMethod.POST)
+	@RequestMapping(value="/project/{projectId}/star", method = RequestMethod.PUT)
 	public @ResponseBody Boolean star(	@PathVariable("projectId") Long projectId, 
 										@ModelAttribute("activeProjects") ArrayList<ActiveProject> activeProjects) {
 		
@@ -124,7 +124,7 @@ public class ProjectsController {
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping(value="/unStar/{projectId}", method = RequestMethod.POST)
+	@RequestMapping(value="/project/{projectId}/unStar", method = RequestMethod.PUT)
 	public @ResponseBody Boolean unStar(@PathVariable("projectId") Long projectId,
 										@ModelAttribute("activeProjects") ArrayList<ActiveProject> activeProjects) {
 		
@@ -152,7 +152,7 @@ public class ProjectsController {
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping(value="/watch/{projectId}", method = RequestMethod.POST)
+	@RequestMapping(value="/project/{projectId}/watch", method = RequestMethod.PUT)
 	public @ResponseBody Boolean watch(@PathVariable("projectId") Long projectId) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
@@ -163,7 +163,7 @@ public class ProjectsController {
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping(value="/unWatch/{projectId}", method = RequestMethod.POST)
+	@RequestMapping(value="/project/{projectId}/unWatch", method = RequestMethod.PUT)
 	public @ResponseBody Boolean unWatch(@PathVariable("projectId") Long projectId) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());

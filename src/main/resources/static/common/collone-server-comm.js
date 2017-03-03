@@ -297,8 +297,8 @@ ServerComm.prototype = {
 
 		userGet : function(username,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/users/get/'+username,
+				type : 'GET',
+				url : '/1/user/'+username,
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -321,8 +321,8 @@ ServerComm.prototype = {
 			var datastr = JSON.stringify(data);
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/users/updateProfile',
+				type : 'PUT',
+				url : '/1/user',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
@@ -339,8 +339,8 @@ ServerComm.prototype = {
 		
 		userMyDataGet : function(username,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/users/getMyData/'+username,
+				type : 'GET',
+				url : '/1/user/'+username+'/myData',
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -357,8 +357,8 @@ ServerComm.prototype = {
 
 		userGetProjectsContributed : function(username,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/users/getProjectsContributed/'+username,
+				type : 'GET',
+				url : '/1/user/'+username+'/projectsContributed',
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -372,16 +372,10 @@ ServerComm.prototype = {
 		},
 
 		userProjectPpsGet : function(username,projectName,callbackFunction,callbackObj) {
-			var data = {
-				'username' : username,
-				'projectName' : projectName
-			};
-			var datastr = JSON.stringify(data);
-
 			$.ajax({
-				type : 'POST',
-				url : '/rest/users/ppsInProjectGet',
-				data : datastr,
+				type : 'GET',
+				url : '/1/user/'+username+'/ppsInProjectGet?projectName='+projectName,
+				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
@@ -446,8 +440,8 @@ ServerComm.prototype = {
 
 		projectGet : function(projectName,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/projects/get/'+projectName,
+				type : 'GET',
+				url : '/1/project/'+projectName,
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -465,7 +459,7 @@ ServerComm.prototype = {
 		projectNamesListGet : function(callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'GET',
-				url : '/rest/projects/getNamesList',
+				url : '/1/projects/getNamesEnabled',
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -485,7 +479,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'POST',
-				url : '/rest/projects/getList',
+				url : '/1/projects',
 				data : datastr,
 				dataType : "json",
 				contentType : 'application/json',
@@ -502,8 +496,8 @@ ServerComm.prototype = {
 
 		projectContributorsGet : function(projectName,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/projects/getContributors/'+projectName,
+				type : 'GET',
+				url : '/1/project/'+projectName+'/contributors',
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -520,8 +514,8 @@ ServerComm.prototype = {
 		
 		projectStar : function(projectId,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/projects/star/'+projectId,
+				type : 'PUT',
+				url : '/1/project/'+projectId+'/star',
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -538,8 +532,8 @@ ServerComm.prototype = {
 		
 		projectUnStar : function(projectId,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/projects/unStar/'+projectId,
+				type : 'PUT',
+				url : '/1/project/'+projectId+'/unStar',
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -556,8 +550,8 @@ ServerComm.prototype = {
 		
 		projectWatch : function(projectId,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/projects/watch/'+projectId,
+				type : 'PUT',
+				url : '/1/project/'+projectId+'/watch',
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -574,8 +568,8 @@ ServerComm.prototype = {
 		
 		projectUnWatch: function(projectId,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/projects/unWatch/'+projectId,
+				type : 'PUT',
+				url : '/1/project/'+projectId+'/unWatch',
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',

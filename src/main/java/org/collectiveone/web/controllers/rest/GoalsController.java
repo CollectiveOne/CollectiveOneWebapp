@@ -13,7 +13,6 @@ import org.collectiveone.model.User;
 import org.collectiveone.services.GoalServiceImp;
 import org.collectiveone.services.UserServiceImp;
 import org.collectiveone.web.dto.Filters;
-import org.collectiveone.web.dto.GoalDetachDto;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.GoalDtoListRes;
 import org.collectiveone.web.dto.GoalWeightsDataDto;

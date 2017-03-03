@@ -84,7 +84,7 @@ public class CbtionRepository extends BaseRepository {
 	
 	public ObjectListRes<Cbtion> get(Filters filters) {
 		
-		Criteria q = applyGeneralFilters(filters, projectDao.getListEnabled(), Cbtion.class);
+		Criteria q = applyGeneralFilters(filters, projectDao.getNamesEnabled(), Cbtion.class);
 		
 		/* State names are entity specific and I was not able to put these
 		 * disjunction in a common function*/

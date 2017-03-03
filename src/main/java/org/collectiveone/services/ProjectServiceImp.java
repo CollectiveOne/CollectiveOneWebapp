@@ -208,13 +208,13 @@ public class ProjectServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public List<String> getList() {
-		return projectRepository.getListEnabled();
+	public List<String> getNamesEnabled() {
+		return projectRepository.getNamesEnabled();
 	}
 	
 	@Transactional
 	public List<String> getFeaturedList() {
-		return projectRepository.getFeaturedList();
+		return projectRepository.getNaemsFeatured();
 	}
 
 

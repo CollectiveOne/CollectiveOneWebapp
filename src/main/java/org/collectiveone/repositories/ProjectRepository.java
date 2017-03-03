@@ -47,7 +47,7 @@ public class ProjectRepository extends BaseRepository {
 		return project;
 	}
 
-	public List<String> getListEnabled() {
+	public List<String> getNamesEnabled() {
 		Session session = sessionFactory.getCurrentSession();
 
 		@SuppressWarnings("unchecked")
@@ -60,7 +60,7 @@ public class ProjectRepository extends BaseRepository {
 		return res;
 	}
 	
-	public List<String> getFeaturedList() {
+	public List<String> getNaemsFeatured() {
 		Session session = sessionFactory.getCurrentSession();
 
 		@SuppressWarnings("unchecked")
