@@ -374,7 +374,7 @@ ServerComm.prototype = {
 		userProjectPpsGet : function(username,projectName,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'GET',
-				url : '/1/user/'+username+'/ppsInProjectGet?projectName='+projectName,
+				url : '/1/user/'+username+'/ppsInProject?projectName='+projectName,
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -630,7 +630,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'POST',
-				url : '/rest/bid',
+				url : '/1/bid',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
