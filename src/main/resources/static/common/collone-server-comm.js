@@ -19,7 +19,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'POST',
-				url : '/rest/cbtions/getList',
+				url : '/1/cbtions',
 				data : datastr,
 				dataType : "json",
 				contentType : 'application/json',
@@ -37,8 +37,8 @@ ServerComm.prototype = {
 		cbtionGet : function(cbtionId,callbackFunction,callbackObj) {
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/cbtions/get/'+cbtionId,
+				type : 'GET',
+				url : '/1/cbtion/'+cbtionId,
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -57,8 +57,8 @@ ServerComm.prototype = {
 		cbtionEdit : function(cbtionEditData,callbackFunction,callbackObj) {
 			var datastr = JSON.stringify(cbtionEditData);
 			$.ajax({
-				type : 'POST',
-				url : '/rest/cbtions/edit',
+				type : 'PUT',
+				url : '/1/cbtion',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
@@ -74,17 +74,10 @@ ServerComm.prototype = {
 		},
 
 		cbtionPromote : function(cbtionId,promoteUp,callbackFunction,callbackObj) {
-			//TODO: update
-			var data = {
-					'elementId' : cbtionId,
-					'promoteUp' : promoteUp
-			};
-			var datastr = JSON.stringify(data);
-
 			$.ajax({
-				type : 'POST',
-				url : '/rest/cbtions/promote',
-				data : datastr,
+				type : 'PUT',
+				url : '/1/cbtion/'+cbtionId+'/promote?up='+promoteUp,
+				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
@@ -102,7 +95,7 @@ ServerComm.prototype = {
 			var datastr = JSON.stringify(goalData);
 			$.ajax({
 				type : 'POST',
-				url : '/rest/goals/new',
+				url : '/1/goal',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
@@ -118,17 +111,10 @@ ServerComm.prototype = {
 		},
 		
 		goalGet : function(goalTag,projectName,callbackFunction,callbackObj) {
-
-			var data = {
-					'goalTag' : goalTag,
-					'projectName' : projectName
-			};
-			var datastr = JSON.stringify(data);
-
 			$.ajax({
-				type : 'POST',
-				url : '/rest/goals/get',
-				data : datastr,
+				type : 'GET',
+				url : '/1/goal?projectName='+projectName+'&goalTag='+goalTag,
+				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
@@ -144,16 +130,10 @@ ServerComm.prototype = {
 
 		goalExist : function(goalTag,projectName,callbackFunction,callbackObj) {
 
-			var data = {
-				'goalTag' : goalTag,
-				'projectName' : projectName
-			};
-			var datastr = JSON.stringify(data);
-
 			$.ajax({
-				type : 'POST',
-				url : '/rest/goals/exist',
-				data : datastr,
+				type : 'GET',
+				url : '/goalExist?projectName='+projectName+'&goalTag='+goalTag,
+				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
@@ -171,7 +151,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'POST',
-				url : '/rest/goals/getList',
+				url : '/1/goals',
 				data : datastr,
 				dataType : "json",
 				contentType : 'application/json',
@@ -188,8 +168,8 @@ ServerComm.prototype = {
 
 		goalsOfProjectGet : function(projectName,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/goals/getOfProject/'+projectName,
+				type : 'GET',
+				url : '/1/project/'+projectName+'/goals',
 				data : '',
 				dataType : "json",
 				contentType : 'application/json',
@@ -205,33 +185,9 @@ ServerComm.prototype = {
 		},
 
 		goalProposeParent : function(goalId,parentTag,callbackFunction,callbackObj) {
-			var data = {
-				'goalId' : goalId,
-				'parentTag' : parentTag
-			};
-			var datastr = JSON.stringify(data);
-
 			$.ajax({
-				type : 'POST',
-				url : '/rest/goals/proposeParent',
-				data : datastr,
-				dataType : 'json',
-				contentType : 'application/json',
-				success : function(data, textStatus, jqXHR) {
-					if (data) {
-						callbackFunction.call(callbackObj,data);
-					}
-				},
-				error : function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
-				}
-			});
-		},
-		
-		goalWeightsGet: function(projectName,goalTag,callbackFunction,callbackObj) {
-			$.ajax({
-				type : 'POST',
-				url : '/rest/goals/getWeightData/'+projectName+'/'+goalTag,
+				type : 'PUT',
+				url : '/1/goal/'+goalId+'/proposeParent',
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -246,19 +202,30 @@ ServerComm.prototype = {
 			});
 		},
 		
-		goalRealmTouch:  function(touchFlag, projectName,goalTag,callbackFunction,callbackObj) {
-			
-			var data = {
-				'touchFlag' : touchFlag,
-				'projectName' : projectName,
-				'goalTag': goalTag
-			};
-			var datastr = JSON.stringify(data);
-				
+		goalWeightsGet: function(goalId,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/goals/touch',
-				data : datastr,
+				type : 'GET',
+				url : '/1/goal/'+goalId+'/weights',
+				data : '',
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+		
+		goalRealmTouch:  function(touchFlag, goalId, callbackFunction,callbackObj) {
+			
+			$.ajax({
+				type : 'PUT',
+				url : '/1/goal/'+goalId+'/touch?touch='+touchFlag,
+				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
@@ -274,16 +241,10 @@ ServerComm.prototype = {
 
 		goalProposeDetach: function(goalId, increaseBudget,callbackFunction,callbackObj) {
 			
-			var data = {
-				'goalId' : goalId,
-				'increaseBudget' : increaseBudget
-			};
-			var datastr = JSON.stringify(data);
-				
 			$.ajax({
-				type : 'POST',
-				url : '/rest/goals/proposeDetach',
-				data : datastr,
+				type : 'PUT',
+				url : '/1/goal/'+goalId+'/proposeDetach?increaseBudget='+increaseBudget,
+				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
@@ -299,16 +260,10 @@ ServerComm.prototype = {
 
 		goalProposeReattach: function(goalId,callbackFunction,callbackObj) {
 			
-			var data = {
-				'goalId' : goalId,
-				'increaseBudget' : 0.0
-			};
-			var datastr = JSON.stringify(data);
-				
 			$.ajax({
-				type : 'POST',
-				url : '/rest/goals/proposeReattach',
-				data : datastr,
+				type : 'PUT',
+				url : '/1/goal/'+goalId+'/proposeReattach',
+				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
@@ -323,17 +278,10 @@ ServerComm.prototype = {
 		},
 
 		goalProposeIncreaseBudget: function(goalId, increaseBudget,callbackFunction,callbackObj) {
-			
-			var data = {
-				'goalId' : goalId,
-				'increaseBudget' : increaseBudget
-			};
-			var datastr = JSON.stringify(data);
-				
 			$.ajax({
-				type : 'POST',
-				url : '/rest/goals/proposeIncreaseBudget',
-				data : datastr,
+				type : 'PUT',
+				url : '/1/goal/'+goalId+'/proposeIncreaseBudget?increaseBudget='+increaseBudget,
+				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
@@ -452,7 +400,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'GET',
-				url : '/rest/session/activeProjects',
+				url : '/1/session/activeProjects',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
@@ -477,8 +425,8 @@ ServerComm.prototype = {
 			var datastr = JSON.stringify(data);
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/session/activeProjects',
+				type : 'PUT',
+				url : '/1/session/activeProjects',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
@@ -646,8 +594,8 @@ ServerComm.prototype = {
 		bidsOfCbtionGet : function(cbtion_id,callbackFunction,callbackObj) {
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/bids/getOfCbtion/'+cbtion_id,
+				type : 'GET',
+				url : '/1/cbtion/'+cbtion_id+'/bids',
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -666,8 +614,8 @@ ServerComm.prototype = {
 		bidGet : function(bidId,callbackFunction,callbackObj) {
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/bids/get/'+bidId,
+				type : 'GET',
+				url : '/1/bid/'+bidId,
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -688,7 +636,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'POST',
-				url : '/rest/bids/new',
+				url : '/rest/bid',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
@@ -708,8 +656,8 @@ ServerComm.prototype = {
 			var datastr = JSON.stringify(bidData);
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/bids/offer',
+				type : 'PUT',
+				url : '/1/bid/offer',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
@@ -730,8 +678,8 @@ ServerComm.prototype = {
 			var datastr = JSON.stringify(doneData);
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/bids/markDone',
+				type : 'PUT',
+				url : '/1/bid/done',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
@@ -750,8 +698,8 @@ ServerComm.prototype = {
 		decisionGet : function(decisionId,callbackFunction,callbackObj) {
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/decisions/get/'+decisionId,
+				type : 'GET',
+				url : '/1/decision/'+decisionId,
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -778,7 +726,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'POST',
-				url : '/rest/decisions/vote',
+				url : '/1/decision/vote',
 				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
@@ -796,8 +744,8 @@ ServerComm.prototype = {
 		decisionGetVote : function(decId, callbackFunction, callbackObj) {
 			
 			$.ajax({
-				type : 'POST',
-				url : '/rest/decisions/getVote/'+decId,
+				type : 'GET',
+				url : '/1/decision/'+decId+'/vote',
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -816,7 +764,7 @@ ServerComm.prototype = {
 			var datastr = JSON.stringify(filters);
 			$.ajax({
 				type : 'POST',
-				url : '/rest/decisions/getList',
+				url : '/1/decisions',
 				data : datastr,
 				dataType : "json",
 				contentType : 'application/json',
@@ -834,8 +782,8 @@ ServerComm.prototype = {
 		argumentGet : function(argumentId,callbackFunction,callbackObj) {
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/decisions/getArgument/'+argumentId,
+				type : 'GET',
+				url : '/1/argument/'+argumentId,
 				data : '',
 				dataType : "json",
 				contentType : 'application/json',
@@ -853,8 +801,8 @@ ServerComm.prototype = {
 		argumentsGetOfDecision : function(decisionId,callbackFunction,callbackObj) {
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/decisions/getArguments/'+decisionId,
+				type : 'GET',
+				url : '/1/decision/'+decisionId+'/arguments',
 				data : '',
 				dataType : "json",
 				contentType : 'application/json',
@@ -875,7 +823,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'POST',
-				url : '/rest/decisions/newArgument',
+				url : '/1/argument',
 				data : datastr,
 				dataType : "json",
 				contentType : 'application/json',
@@ -894,7 +842,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'POST',
-				url : '/rest/decisions/argumentIsBacked/'+argumentId,
+				url : '/1/argument/'+argumentId+'/isBacked',
 				data : '',
 				dataType : "json",
 				contentType : 'application/json',
@@ -909,16 +857,10 @@ ServerComm.prototype = {
 
 		argumentBack : function(argumentId,backFlag,callbackFunction,callbackObj) {
 
-			var data = {
-				'argId' : argumentId,
-				'back' : backFlag
-			};
-			var datastr = JSON.stringify(data);
-
 			$.ajax({
-				type : 'POST',
-				url : '/rest/decisions/argumentBack',
-				data : datastr,
+				type : 'PUT',
+				url : '/1/argument/'+argumentId+'/back?back='+backFlag,
+				data : '',
 				dataType : "json",
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
@@ -937,7 +879,7 @@ ServerComm.prototype = {
 			var datastr = JSON.stringify(reviewDto);
 			$.ajax({
 				type : 'POST',
-				url : '/rest/bids/newReview',
+				url : '/1/review',
 				data : datastr,
 				dataType : "json",
 				contentType : 'application/json',
@@ -956,8 +898,8 @@ ServerComm.prototype = {
 
 		reviewsGetOfBid : function(bidId,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/bids/getReviews/'+bidId,
+				type : 'GET',
+				url : '/1/bid/'+bidId+'/reviews',
 				data : '',
 				dataType : "json",
 				contentType : 'application/json',
@@ -974,8 +916,8 @@ ServerComm.prototype = {
 		
 		reviewsGetOfCbtion : function(cbtionId,callbackFunction,callbackObj) {
 			$.ajax({
-				type : 'POST',
-				url : '/rest/cbtions/getReviews/'+cbtionId,
+				type : 'GET',
+				url : '/1/cbtion/'+cbtionId+'/reviews',
 				data : '',
 				dataType : "json",
 				contentType : 'application/json',
@@ -993,8 +935,8 @@ ServerComm.prototype = {
 		commentGet : function(commentId,callbackFunction,callbackObj) {
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/cbtions/getComment/'+commentId,
+				type : 'GET',
+				url : '/1/comment/'+commentId,
 				data : '',
 				dataType : "json",
 				contentType : 'application/json',
@@ -1012,8 +954,8 @@ ServerComm.prototype = {
 		commentsGetOfCbtion : function(cbtionId,callbackFunction,callbackObj) {
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/cbtions/getComments/'+cbtionId,
+				type : 'GET',
+				url : '/1/cbtion/'+cbtionId+'/comments',
 				data : '',
 				dataType : "json",
 				contentType : 'application/json',
@@ -1034,7 +976,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'POST',
-				url : '/rest/cbtions/commentNew',
+				url : '/1/comment',
 				data : datastr,
 				dataType : "json",
 				contentType : 'application/json',
@@ -1052,8 +994,8 @@ ServerComm.prototype = {
 		commentGetReplies : function(commentId,callbackFunction,callbackObj) {
 
 			$.ajax({
-				type : 'POST',
-				url : '/rest/cbtions/commentGetReplies/'+commentId,
+				type : 'GET',
+				url : '/1/comment/'+commentId+'/replies',
 				data : '',
 				dataType : "json",
 				contentType : 'application/json',
@@ -1069,17 +1011,10 @@ ServerComm.prototype = {
 		},
 		
 		commentPromote : function(commentId,promoteUp,callbackFunction,callbackObj) {
-			//TODO: update
-			var data = {
-				'elementId' : commentId,
-				'promoteUp' : promoteUp
-			};
-			var datastr = JSON.stringify(data);
-
 			$.ajax({
-				type : 'POST',
-				url : '/rest/cbtions/commentPromote',
-				data : datastr,
+				type : 'PUT',
+				url : '/1/comment/'+commentId+'/promote?up='+promoteUp,
+				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
@@ -1097,7 +1032,7 @@ ServerComm.prototype = {
 			var datastr = JSON.stringify(filters);
 			$.ajax({
 				type : 'POST',
-				url : '/rest/activity/list',
+				url : '/1/activities',
 				data : datastr,
 				dataType : "json",
 				contentType : 'application/json',

@@ -16,9 +16,6 @@ import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.GoalDetachDto;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.GoalDtoListRes;
-import org.collectiveone.web.dto.GoalGetDto;
-import org.collectiveone.web.dto.GoalParentDto;
-import org.collectiveone.web.dto.GoalTouchDto;
 import org.collectiveone.web.dto.GoalWeightsDataDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -35,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/rest/goals")
+@RequestMapping("/1")
 public class GoalsController {
 	
 	@Autowired
@@ -44,17 +41,26 @@ public class GoalsController {
 	@Autowired
 	UserServiceImp userService;
 	
-	@RequestMapping(value="/get", method = RequestMethod.POST)
-	public @ResponseBody GoalDto get(@RequestBody GoalGetDto goalGetDto) {
-		return goalService.getDto(goalGetDto.getGoalTag(),goalGetDto.getProjectName());
+	@RequestMapping(value="/goal/{goalId}", method = RequestMethod.GET)
+	public @ResponseBody GoalDto get(	@PathVariable("goalId") Long goalId ) {
+		return goalService.getDto(goalId);
 	}
 	
-	@RequestMapping(value="/exist", method = RequestMethod.POST)
-	public @ResponseBody boolean exist(@RequestBody GoalGetDto goalGetDto) {
-		return goalService.exist(goalGetDto.getGoalTag(),goalGetDto.getProjectName(), GoalState.ACCEPTED);
+	@RequestMapping(value="/goal", method = RequestMethod.GET)
+	public @ResponseBody GoalDto get(	@RequestParam("projectName") String projectName,
+										@RequestParam("goalTag") String goalTag) {
+		
+		return goalService.getDto(goalTag ,projectName);
 	}
 	
-	@RequestMapping("/new")
+	@RequestMapping(value="/goalExist", method = RequestMethod.GET)
+	public @ResponseBody boolean exist(	@RequestParam("projectName") String projectName,
+										@RequestParam("goalTag") String goalTag) {
+		
+		return goalService.exist(goalTag, projectName, GoalState.ACCEPTED);
+	}
+	
+	@RequestMapping(value="/goal", method = RequestMethod.POST)
 	public @ResponseBody boolean newGoal(@Valid @RequestBody GoalDto goalDto, BindingResult result) throws IOException {
 		if(result.hasErrors()) {
 			return false;
@@ -72,8 +78,9 @@ public class GoalsController {
 		}
 	}
 	
-	@RequestMapping(value="/getSuggestions", method = RequestMethod.GET)
-	public Map<String,List<String>> getList(@RequestParam("projectName") String projectName, @RequestParam("query") String query) {
+	@RequestMapping(value="/goals/suggestions", method = RequestMethod.GET)
+	public Map<String,List<String>> getList(@RequestParam("projectName") String projectName, 
+											@RequestParam("query") String query) {
 		
 		List<String> projectNames = new ArrayList<String>();
 		if(projectName != null) {
@@ -86,7 +93,7 @@ public class GoalsController {
 		return map;
 	}
 	
-	@RequestMapping(value="/getOfProject/{projectName}", method = RequestMethod.POST)
+	@RequestMapping(value="/project/{projectName}/goals", method = RequestMethod.GET)
 	public @ResponseBody List<GoalDto> get(@PathVariable("projectName") String projectName) {
 		Filters filters = new Filters();
 		
@@ -104,24 +111,23 @@ public class GoalsController {
 		return goalDtos.getGoalDtos();
 	}
 	
-	@RequestMapping(value="/getWeightData/{projectName}/{goalTag}", method = RequestMethod.POST)
-	public @ResponseBody GoalWeightsDataDto getWeightData(	@PathVariable("goalTag") String goalTag,
-															@PathVariable("projectName") String projectName ) {
+	@RequestMapping(value="/goal/{goalId}/weights", method = RequestMethod.GET)
+	public @ResponseBody GoalWeightsDataDto getWeightData(@PathVariable("goalId") Long goalId) {
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return goalService.getWeightsData(projectName, goalTag, auth.getName());
+		return goalService.getWeightsData(goalId, auth.getName());
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping(value="/touch", method = RequestMethod.POST)
-	public boolean touch(@RequestBody GoalTouchDto touchDto) {
+	@RequestMapping(value="/goal/{goalId}/touch", method = RequestMethod.PUT)
+	public boolean touch(@PathVariable("goalId") Long goalId, @RequestParam("touch") boolean touch) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		touchDto.setUsername(auth.getName());
-		goalService.touch(touchDto);
+		User logged = userService.get(auth.getName());
+		goalService.touch(goalId,logged.getId(),touch);
 		return true;
 	}
 	
-	@RequestMapping(value="/getList", method = RequestMethod.POST)
+	@RequestMapping(value="/goals", method = RequestMethod.POST)
 	public @ResponseBody Map<String,Object> getList(@RequestBody Filters filters) {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);
@@ -140,45 +146,45 @@ public class GoalsController {
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping(value="/proposeParent", method = RequestMethod.POST)
-	public @ResponseBody boolean proposeParent(@RequestBody GoalParentDto goalParentDto) throws IOException {
+	@RequestMapping(value="/goal/{goalId}/proposeParent", method = RequestMethod.PUT)
+	public @ResponseBody boolean proposeParent(@PathVariable("goalId") Long goalId, @RequestParam("parentTag") String parentTag) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			goalService.proposeParent(goalParentDto.getGoalId(), goalParentDto.getParentTag());
+			goalService.proposeParent(goalId, parentTag) ;
 		}
 		return true;
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping(value="/proposeDetach", method = RequestMethod.POST)
-	public @ResponseBody boolean proposeDetach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
+	@RequestMapping(value="/goal/{goalId}/proposeDetach", method = RequestMethod.PUT)
+	public @ResponseBody boolean proposeDetach(@PathVariable("goalId") Long goalId, @RequestParam("increaseBudget") double increaseBudget) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			goalService.detach(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
+			goalService.detach(goalId, increaseBudget);
 		}
 		return true;
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping(value="/proposeReattach", method = RequestMethod.POST)
-	public @ResponseBody boolean proposeReattach(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
+	@RequestMapping(value="/goal/{goalId}/proposeReattach", method = RequestMethod.PUT)
+	public @ResponseBody boolean proposeReattach(@PathVariable("goalId") Long goalId) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			goalService.reattach(goaldetachDto.getGoalId());
+			goalService.reattach(goalId);
 		}
 		return true;
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping(value="/proposeIncreaseBudget", method = RequestMethod.POST)
-	public @ResponseBody boolean proposeIncreaseBudget(@RequestBody GoalDetachDto goaldetachDto) throws IOException {
+	@RequestMapping(value="/goal/{goalId}/proposeIncreaseBudget", method = RequestMethod.PUT)
+	public @ResponseBody boolean proposeIncreaseBudget(@PathVariable("goalId") Long goalId, @RequestParam("increaseBudget") double increaseBudget) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			goalService.increaseBudget(goaldetachDto.getGoalId(), goaldetachDto.getIncreaseBudget());
+			goalService.increaseBudget(goalId, increaseBudget);
 		}
 		return true;
 	}

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/rest/bids")
+@RequestMapping("/1")
 public class BidsController {
 	
 	@Autowired
@@ -30,19 +30,19 @@ public class BidsController {
 	@Autowired
 	ReviewServiceImp reviewService;
 	
-	@RequestMapping(value="/get/{id}", method = RequestMethod.POST)
+	@RequestMapping(value="/bid/{id}", method = RequestMethod.GET)
 	public @ResponseBody BidDto get(@PathVariable Long id) {
 		return bidService.getDto(id);
 	}
 	
-	@RequestMapping(value="/getOfCbtion/{cbtionId}", method = RequestMethod.POST)
+	@RequestMapping(value="/cbtion/{cbtionId}/bids", method = RequestMethod.GET)
 	public @ResponseBody List<BidDto> getList(@PathVariable("cbtionId") Long cbtionId) {
 		List<BidDto> bidDtos = bidService.getOfCbtionDto(cbtionId);
 		return bidDtos;
 	}
 	
 	
-	@RequestMapping(value="/new", method = RequestMethod.POST)
+	@RequestMapping(value="/bid", method = RequestMethod.POST)
 	public @ResponseBody boolean newBid(@RequestBody BidNewDto bidNewDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		bidNewDto.setCreatorUsername(auth.getName());
@@ -55,15 +55,20 @@ public class BidsController {
 		return true;
 	}
 	
-	@RequestMapping(value="/offer", method = RequestMethod.POST)
+	/* 	TODO: all bid editions could go under PUT /bid and then internal logic would
+	 	understand which action to execute */
+	
+	@RequestMapping(value="/bid/offer", method = RequestMethod.PUT)
 	public @ResponseBody boolean offer(@RequestBody BidNewDto bidNewDto) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		bidNewDto.setCreatorUsername(auth.getName());
-		bidService.fromConsideringToOffered(bidNewDto);
+		if(auth.isAuthenticated()) {
+			bidNewDto.setCreatorUsername(auth.getName());
+			bidService.fromConsideringToOffered(bidNewDto);	
+		}
 		return true;
 	}
 	
-	@RequestMapping(value="/markDone", method = RequestMethod.POST)
+	@RequestMapping(value="/bid/done", method = RequestMethod.PUT)
 	public @ResponseBody boolean markDone(@RequestBody DoneDto doneDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		doneDto.setUsername(auth.getName());
@@ -71,12 +76,12 @@ public class BidsController {
 		return true;
 	}
 	
-	@RequestMapping(value="/getReviews/{id}", method = RequestMethod.POST)
+	@RequestMapping(value="/bid/{id}/reviews", method = RequestMethod.GET)
 	public @ResponseBody List<ReviewDto> getReviews(@PathVariable Long id) {
 		return bidService.getReviewsDtos(id);
 	}
 	
-	@RequestMapping(value="/newReview", method = RequestMethod.POST)
+	@RequestMapping(value="/review", method = RequestMethod.POST)
 	public @ResponseBody boolean newReview(@RequestBody ReviewDto reviewDto) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth.isAuthenticated()) {

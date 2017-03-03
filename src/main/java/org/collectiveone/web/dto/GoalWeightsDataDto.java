@@ -4,12 +4,19 @@ import java.util.List;
 
 public class GoalWeightsDataDto {
 	
+	private Long goalId;
 	private String projectName;
 	private String goalTag;
 	private double totalWeight;
 	private GoalUserWeightsDto userWeightsDto;
 	private List<VoterDto> votersDtos;
 	
+	public Long getGoalId() {
+		return goalId;
+	}
+	public void setGoalId(Long goalId) {
+		this.goalId = goalId;
+	}
 	public String getProjectName() {
 		return projectName;
 	}

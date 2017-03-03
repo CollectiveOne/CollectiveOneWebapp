@@ -20,7 +20,7 @@ GoalPage.prototype.goalReceivedCallback = function(goalDto) {
 	var goalBox = new GoalBox($("#goal_container"),this.goal);
 	goalBox.draw();
 	
-	var goalWeightsBox = new GoalWeightsBox($("#goal_weights_container"),{ goalTag: this.goal.goalTag, projectName: this.goal.projectName });
+	var goalWeightsBox = new GoalWeightsBox($("#goal_weights_container"),{ goalId: this.goal.id });
 	goalWeightsBox.update();
 	
 	this.updateCbtions();

@@ -13,7 +13,6 @@ import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.CbtionDtoListRes;
 import org.collectiveone.web.dto.CommentDto;
 import org.collectiveone.web.dto.Filters;
-import org.collectiveone.web.dto.ObjectPromote;
 import org.collectiveone.web.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -23,12 +22,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/rest/cbtions")
+@RequestMapping("/1")
 public class CbtionsController {
 	
 	@Autowired
@@ -40,7 +40,7 @@ public class CbtionsController {
 	@Autowired
 	CommentServiceImp commentService;
 	
-	@RequestMapping(value="/getList", method = RequestMethod.POST)
+	@RequestMapping(value="/cbtions", method = RequestMethod.POST)
 	public @ResponseBody Map<String,Object> getList(@RequestBody Filters filters) {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);
@@ -58,35 +58,37 @@ public class CbtionsController {
 		return map;
 	}
 
-	@RequestMapping(value="/get/{id}", method = RequestMethod.POST)
+	@RequestMapping(value="/cbtion/{id}", method = RequestMethod.GET)
 	public @ResponseBody CbtionDto get(@PathVariable Long id) {
 		return cbtionService.getDto(id);
 	}
 	
-	@RequestMapping(value="/promote", method = RequestMethod.POST)
-	public @ResponseBody Boolean promote(@RequestBody ObjectPromote cbtionPromote) {
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/cbtion/{cbtionId}/promote", method = RequestMethod.PUT)
+	public @ResponseBody Boolean promote(@PathVariable Long cbtionId, @RequestParam("up") boolean up) {
 		/* creator is the logged user */
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			cbtionService.promote(cbtionPromote.getElementId(), logged.getId(), cbtionPromote.getPromoteUp());
+			cbtionService.promote(cbtionId, logged.getId(), up);
 		}
 		return true;
 	}
 	
-	@RequestMapping(value="/getComment/{commentId}", method = RequestMethod.POST)
+	@RequestMapping(value="/comment/{commentId}", method = RequestMethod.GET)
 	public @ResponseBody CommentDto getComment(@PathVariable Long commentId) {
 		CommentDto commentsDto = cbtionService.getCommentDto(commentId);
 		return commentsDto;
 	}
 	
-	@RequestMapping(value="/getComments/{id}", method = RequestMethod.POST)
-	public @ResponseBody List<CommentDto> getComments(@PathVariable Long id) {
-		List<CommentDto> commentsDtos = cbtionService.getCommentsDtos(id);
+	@RequestMapping(value="/cbtion/{cbtionId}/comments", method = RequestMethod.GET)
+	public @ResponseBody List<CommentDto> getComments(@PathVariable Long cbtionId) {
+		List<CommentDto> commentsDtos = cbtionService.getCommentsDtos(cbtionId);
 		return commentsDtos;
 	}
 	
-	@RequestMapping(value="/commentNew", method = RequestMethod.POST)
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/comment", method = RequestMethod.POST)
 	public @ResponseBody Boolean commentNew(@RequestBody CommentDto commentDto) throws IOException {
 		/* creator is the logged user */
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -98,29 +100,30 @@ public class CbtionsController {
 		return false;
 	}
 	
-	@RequestMapping(value="/commentGetReplies/{commentId}", method = RequestMethod.POST)
+	@RequestMapping(value="/comment/{commentId}/replies", method = RequestMethod.GET)
 	public @ResponseBody  List<CommentDto> commentNew(@PathVariable Long commentId) {
 		return commentService.getRepliesDtos(commentId);
 	}
 	
-	@RequestMapping(value="/commentPromote", method = RequestMethod.POST)
-	public @ResponseBody Boolean commentPromote(@RequestBody ObjectPromote commentPromote) {
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/comment/{commentId}/promote", method = RequestMethod.PUT)
+	public @ResponseBody Boolean commentPromote(@PathVariable Long commentId, @RequestParam("up") boolean up) {
 		/* creator is the logged user */
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			commentService.promote(commentPromote.getElementId(), logged.getId(), commentPromote.getPromoteUp());
+			commentService.promote(commentId, logged.getId(), up);
 		}
 		return true;
 	}
 	
-	@RequestMapping(value="/getReviews/{id}", method = RequestMethod.POST)
-	public @ResponseBody List<ReviewDto> getReviews(@PathVariable Long id) {
-		return cbtionService.getReviewsDtos(id);
+	@RequestMapping(value="/cbtion/{cbtionId}/reviews", method = RequestMethod.GET)
+	public @ResponseBody List<ReviewDto> getReviews(@PathVariable Long cbtionId) {
+		return cbtionService.getReviewsDtos(cbtionId);
 	}
 	
 	@Secured("ROLE_USER")
-	@RequestMapping(value="/edit", method = RequestMethod.POST)
+	@RequestMapping(value="/cbtion", method = RequestMethod.PUT)
 	public @ResponseBody boolean edit(@RequestBody CbtionDto cbtionDto) {
 		/* creator is the logged user */
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

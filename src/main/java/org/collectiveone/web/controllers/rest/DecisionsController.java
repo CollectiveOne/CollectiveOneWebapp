@@ -11,25 +11,26 @@ import org.collectiveone.services.ArgumentServiceImp;
 import org.collectiveone.services.DecisionServiceImp;
 import org.collectiveone.services.ThesisServiceImp;
 import org.collectiveone.services.UserServiceImp;
-import org.collectiveone.web.dto.ArgumentBackDto;
 import org.collectiveone.web.dto.ArgumentDto;
 import org.collectiveone.web.dto.DecisionDtoFull;
 import org.collectiveone.web.dto.DecisionDtoListRes;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.ThesisDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/rest/decisions")
+@RequestMapping("/1")
 public class DecisionsController {
 	
 	@Autowired
@@ -44,12 +45,12 @@ public class DecisionsController {
 	@Autowired
 	UserServiceImp userService;
 	
-	@RequestMapping(value="/get/{id}", method = RequestMethod.POST)
+	@RequestMapping(value="/decision/{id}", method = RequestMethod.GET)
 	public @ResponseBody DecisionDtoFull get(@PathVariable Long id) {
 		return decisionService.getDto(id);
 	}
 	
-	@RequestMapping(value="/getList", method = RequestMethod.POST)
+	@RequestMapping(value="/decisions", method = RequestMethod.POST)
 	public @ResponseBody Map<String,Object> getList(@RequestBody Filters filters) {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);
@@ -67,7 +68,8 @@ public class DecisionsController {
 		return map;
 	}
 	
-	@RequestMapping(value="/vote", method = RequestMethod.POST)
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/decision/vote", method = RequestMethod.POST)
 	public @ResponseBody boolean vote(@RequestBody ThesisDto thesisDto) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
@@ -79,12 +81,12 @@ public class DecisionsController {
 		
 	}
 	
-	@RequestMapping(value="/getVote/{id}", method = RequestMethod.POST)
-	public @ResponseBody ThesisDto getVote(@PathVariable Long id) {
+	@RequestMapping(value="/decision/{decisionId}/vote", method = RequestMethod.GET)
+	public @ResponseBody ThesisDto getVote(@PathVariable Long decisionId) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			ThesisDto thesisDto = thesisService.getOfUserDto(id, logged.getId());
+			ThesisDto thesisDto = thesisService.getOfUserDto(decisionId, logged.getId());
 			if(thesisDto != null){
 				return thesisDto;
 			} 
@@ -92,11 +94,11 @@ public class DecisionsController {
 		return new ThesisDto();
 	}
 	
-	@RequestMapping(value="/getArguments/{id}", method = RequestMethod.POST)
-	public @ResponseBody Map<String,List<ArgumentDto>> getArguments(@PathVariable Long id) {
+	@RequestMapping(value="/decision/{decisionId}/arguments", method = RequestMethod.GET)
+	public @ResponseBody Map<String,List<ArgumentDto>> getArguments(@PathVariable Long decisionId) {
 		
-		List<ArgumentDto> argumentYesDtos = argumentService.getOfDecisionDto(id, ArgumentTendency.FORYES);
-		List<ArgumentDto> argumentNoDtos = argumentService.getOfDecisionDto(id, ArgumentTendency.FORNO);
+		List<ArgumentDto> argumentYesDtos = argumentService.getOfDecisionDto(decisionId, ArgumentTendency.FORYES);
+		List<ArgumentDto> argumentNoDtos = argumentService.getOfDecisionDto(decisionId, ArgumentTendency.FORNO);
 		
 		Map<String,List<ArgumentDto>> map = new HashMap<>();
 		
@@ -106,7 +108,8 @@ public class DecisionsController {
 		return map;
 	}
 
-	@RequestMapping(value="/newArgument", method = RequestMethod.POST)
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/argument", method = RequestMethod.POST)
 	public @ResponseBody boolean newArgument(@RequestBody ArgumentDto argumentDto) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
@@ -119,31 +122,32 @@ public class DecisionsController {
 		
 	}
 	
-	@RequestMapping(value="/getArgument/{id}", method = RequestMethod.POST)
+	@RequestMapping(value="/argument/{id}", method = RequestMethod.GET)
 	public @ResponseBody ArgumentDto argumentGet(@PathVariable Long id) {
 		return argumentService.getDto(id);
 	}
 	
-	@RequestMapping(value="/argumentIsBacked/{id}", method = RequestMethod.POST)
-	public @ResponseBody boolean argumentIsBacked(@PathVariable Long id) {
+	@RequestMapping(value="/argument/{argId}/isBacked", method = RequestMethod.GET)
+	public @ResponseBody boolean argumentIsBacked(@PathVariable Long argId) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			return argumentService.isBacked(id,logged.getId());	 
+			return argumentService.isBacked(argId,logged.getId());	 
 		}
 		return false;
 	}
 	
-	@RequestMapping(value="/argumentBack", method = RequestMethod.POST)
-	public @ResponseBody boolean argumentBacked(@RequestBody ArgumentBackDto argumentBackDto) {
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/argument/{argId}/back", method = RequestMethod.PUT)
+	public @ResponseBody boolean argumentBacked(@PathVariable Long argId, @RequestParam("back") boolean back) {
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
 		if(logged != null) {
-			if(argumentBackDto.getBack()) {
-				argumentService.back(argumentBackDto.getArgId(),logged.getId());
+			if(back) {
+				argumentService.back(argId,logged.getId());
 			} else {
-				argumentService.unBack(argumentBackDto.getArgId(),logged.getId());
+				argumentService.unBack(argId,logged.getId());
 			}
 			return true;
 		}

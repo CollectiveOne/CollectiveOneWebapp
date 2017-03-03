@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 
 @RestController
-@RequestMapping("/rest/session")
+@RequestMapping("/1/session")
 @SessionAttributes("activeProjects")
 public class ActiveProjectsController {
 	
@@ -46,7 +46,7 @@ public class ActiveProjectsController {
 		return activeProjects;
 	}
 	
-	@RequestMapping(value="/activeProjects", method = RequestMethod.POST)
+	@RequestMapping(value="/activeProjects", method = RequestMethod.PUT)
 	public List<ActiveProject> activeProjectsChange(
 			@ModelAttribute("activeProjects") ArrayList<ActiveProject> activeProjects,
 			@RequestBody ActiveProject activeProjectInput) {

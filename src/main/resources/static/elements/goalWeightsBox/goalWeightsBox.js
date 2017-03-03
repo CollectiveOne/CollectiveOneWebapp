@@ -5,7 +5,7 @@ function GoalWeightsBox(container_id,goalWeightsData) {
 };
 
 GoalWeightsBox.prototype.update = function() {
-	GLOBAL.serverComm.goalWeightsGet(this.goalWeightsData.projectName, this.goalWeightsData.goalTag, this.dataReceivedCallback, this);
+	GLOBAL.serverComm.goalWeightsGet(this.goalWeightsData.goalId, this.dataReceivedCallback, this);
 }
 
 GoalWeightsBox.prototype.dataReceivedCallback = function(data) {

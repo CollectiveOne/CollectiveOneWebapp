@@ -22,7 +22,6 @@ import org.collectiveone.model.Voter;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.GoalDtoListRes;
-import org.collectiveone.web.dto.GoalTouchDto;
 import org.collectiveone.web.dto.GoalUserWeightsDto;
 import org.collectiveone.web.dto.GoalWeightsDataDto;
 import org.collectiveone.web.dto.ObjectListRes;
@@ -524,9 +523,9 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public GoalWeightsDataDto getWeightsData(String projectName, String goalTag, String username) {
+	public GoalWeightsDataDto getWeightsData(Long goalId, String username) {
 		
-		Goal goal = goalRepository.get(goalTag, projectName);
+		Goal goal = goalRepository.get(goalId);
 		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
 		
 		GoalWeightsDataDto goalWeightsDataDto = new GoalWeightsDataDto();  
@@ -553,8 +552,9 @@ public class GoalServiceImp extends BaseService {
 			votersDtos.add(otherVoter.toDto());
 		}
 		
-		goalWeightsDataDto.setGoalTag(goalTag);
-		goalWeightsDataDto.setProjectName(projectName);
+		goalWeightsDataDto.setGoalId(goal.getId());
+		goalWeightsDataDto.setGoalTag(goal.getGoalTag());
+		goalWeightsDataDto.setProjectName(goal.getProject().getName());
 		goalWeightsDataDto.setTotalWeight(decisionRealmRepository.getWeightTot(realm.getId()));
 		
 		goalWeightsDataDto.setVotersDtos(votersDtos);
@@ -563,13 +563,13 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void touch(GoalTouchDto touchDto) {
-		Goal goal = goalRepository.get(touchDto.getGoalTag(), touchDto.getProjectName());
+	public void touch(Long goalId, Long userId, boolean touch) {
+		Goal goal = goalRepository.get(goalId);
 		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
-		User user = userRepository.get(touchDto.getUsername());
+		User user = userRepository.get(userId);
 		Voter voter = decisionRealmRepository.getVoter(realm.getId(), user.getId());
 		
-		if(touchDto.getTouchFlag()) {
+		if(touch) {
 			voter.setActualWeight(voter.getMaxWeight());
 		} else {
 			voter.setActualWeight(0.0);
