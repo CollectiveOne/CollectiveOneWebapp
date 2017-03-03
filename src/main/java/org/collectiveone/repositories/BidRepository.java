@@ -29,7 +29,7 @@ public class BidRepository extends BaseRepository {
 		return (List<Bid>) super.getAll(max,Bid.class);
 	}
 	
-	public void remove(Long id) {
+	void remove(Long id) {
 		Bid bid = get(id);
 		
 		bid.setState(BidState.DELETED);
@@ -69,17 +69,6 @@ public class BidRepository extends BaseRepository {
 		
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Bid.class);
 		query.add(Restrictions.eq("cbtion.id", cbtionId));
-		
-		@SuppressWarnings("unchecked")
-		List<Bid> bids = (List<Bid>) query.list();
-		
-		return bids;
-	}
-	
-	public List<Bid> getOfUser(Long userId) {
-		
-		Criteria query = sessionFactory.getCurrentSession().createCriteria(Bid.class);
-		query.add(Restrictions.eq("creator.id", userId));
 		
 		@SuppressWarnings("unchecked")
 		List<Bid> bids = (List<Bid>) query.list();

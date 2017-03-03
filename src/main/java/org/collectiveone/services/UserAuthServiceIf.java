@@ -25,9 +25,7 @@ public interface UserAuthServiceIf {
 
 	void changeUserPassword(User user, PasswordDto passwordDto);
 
-	void enableUser(Long id);
-
-	Iterable<User> findAll();
+	void enableUser(Long id); // NO_UCD (unused code)
 
 	boolean usernameExist(String username);
 

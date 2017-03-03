@@ -61,7 +61,7 @@ public class Cbtion {
 	@JoinTable(name = "CBTIONS_COMMENTS")
 	private List<Comment> comments = new ArrayList<Comment>();
 	
-	public CbtionDto toDto() {
+	CbtionDto toDto() {
 		CbtionDto dto = new CbtionDto();
 		
 		dto.setTitle(title);

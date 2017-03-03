@@ -16,7 +16,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Component
-public class LoggedUserListener implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
+public class LoggedUserListener implements ApplicationListener<InteractiveAuthenticationSuccessEvent> { // NO_UCD (unused code)
 
 	@Autowired
 	UserServiceImp userService;

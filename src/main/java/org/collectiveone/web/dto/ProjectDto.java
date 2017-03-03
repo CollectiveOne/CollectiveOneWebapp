@@ -2,9 +2,6 @@ package org.collectiveone.web.dto;
 
 import java.sql.Timestamp;
 
-import org.collectiveone.model.Project;
-import org.collectiveone.model.User;
-
 public class ProjectDto {
 	
 	private Long id;
@@ -18,16 +15,6 @@ public class ProjectDto {
 	private boolean isStarred;
 	private boolean isWatched;
 	
-	public Project toProject(User creator) {
-		Project project = new Project();
-		
-		project.setName(name);
-		project.setDescription(description);
-		project.setCreator(creator);
-		
-		return project;
-	}
-
 	public Long getId() {
 		return id;
 	}

@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/1")
-public class CbtionsController {
+public class CbtionsController { // NO_UCD (unused code)
 	
 	@Autowired
 	CbtionServiceImp cbtionService;

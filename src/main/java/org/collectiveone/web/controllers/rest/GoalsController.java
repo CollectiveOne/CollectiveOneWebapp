@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/1")
-public class GoalsController {
+public class GoalsController { // NO_UCD (unused code)
 	
 	@Autowired
 	GoalServiceImp goalService;

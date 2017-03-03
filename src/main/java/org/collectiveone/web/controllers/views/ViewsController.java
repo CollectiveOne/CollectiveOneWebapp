@@ -46,7 +46,7 @@ import com.ullink.slack.simpleslackapi.SlackSession;
 
 @Controller
 @RequestMapping("/v")
-public class ViewsController {
+public class ViewsController { // NO_UCD (unused code)
 	
 	@Autowired
 	UserServiceImp userService;

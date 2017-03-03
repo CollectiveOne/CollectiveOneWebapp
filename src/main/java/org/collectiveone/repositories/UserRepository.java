@@ -24,14 +24,6 @@ public class UserRepository extends BaseRepository {
 		return (User) super.get(id,User.class);
 	}
 	
-	public List<User> getAll(Integer max) {
-		return (List<User>) super.getAll(max,User.class);
-	}
-	
-	public List<User> getFromRef(User refUser) {
-		return (List<User>) super.get(refUser,User.class);
-	}
-	
 	public Long getN() {
 		return super.getN(User.class);
 	}

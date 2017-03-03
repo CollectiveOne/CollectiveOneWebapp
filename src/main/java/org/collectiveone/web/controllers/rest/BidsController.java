@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/1")
-public class BidsController {
+public class BidsController {  // NO_UCD (unused code)
 	
 	@Autowired
 	BidServiceImp bidService;
