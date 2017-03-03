@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/1")
-public class ActivityController {  // NO_UCD (unused code)
+public class ActivityController {
 	
 	@Autowired
 	ActivityServiceImp activityService;

@@ -64,19 +64,19 @@ public class Activity {
 		return dto;
 	}
 	
-	private String getUserPageLink(String baseUrl, String username) {
+	public String getUserPageLink(String baseUrl, String username) {
 		return "<a href="+baseUrl+"/v/u/"+username+">"+username+"</a>";
 	}
 	
-	private String getGoalPageLink(String baseUrl, String goalTag, String projectName) {
+	public String getGoalPageLink(String baseUrl, String goalTag, String projectName) {
 		return "<a href="+baseUrl+"/v/goal?projectName="+projectName+"&goalTag="+goalTag+"><b>+</b>"+goalTag+"</a>";
 	}
 	
-	private String getCbtionPageLink(String baseUrl, Long id, String title) {
+	public String getCbtionPageLink(String baseUrl, Long id, String title) {
 		return "<a href="+baseUrl+"/v/cbtion/"+id+">"+title+"</a>";
 	}
 	
-	private String limitStrSize(String strIn, int size) {
+	public String limitStrSize(String strIn, int size) {
 		if(strIn.length() > size) {
 			return strIn.substring(0,size)+" ...";
 		} else {

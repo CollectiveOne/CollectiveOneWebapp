@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service("userDetailsService")
 @Transactional
-public class UserAuthServiceImp implements UserAuthServiceIf, UserDetailsService { // NO_UCD (unused code)
+public class UserAuthServiceImp implements UserAuthServiceIf, UserDetailsService {
 
 	@Autowired
 	UserRepositoryAuth userRepository;
@@ -70,6 +70,11 @@ public class UserAuthServiceImp implements UserAuthServiceIf, UserDetailsService
 		this.userRepository = userRepository;
 	}
 
+	@Override
+	public Iterable<User> findAll() {
+		return userRepository.findAll();
+	}
+	
 	@Override
 	public User findByUsername(String username) {
 		return userRepository.findByUsername(username);

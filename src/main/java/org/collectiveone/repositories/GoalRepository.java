@@ -62,6 +62,10 @@ public class GoalRepository extends BaseRepository {
 		return res;
 	}
 	
+	public List<Goal> getAll(Integer max) {
+		return (List<Goal>) super.getAll(max,Goal.class);
+	}
+	
 	public List<Goal> getNotDeleted() {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class);
 		query.add(Restrictions.or(
@@ -154,7 +158,7 @@ public class GoalRepository extends BaseRepository {
 		return subgoals;
 	}
 	
-	private List<Goal> getSubgoals(Long goalId) {
+	public List<Goal> getSubgoals(Long goalId) {
 		
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class,"go");
 		

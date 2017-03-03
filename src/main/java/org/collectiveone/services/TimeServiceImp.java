@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import org.springframework.stereotype.Service;
 
 @Service
-class TimeServiceImp implements TimeServiceIf {
+public class TimeServiceImp implements TimeServiceIf {
 	
 	public Timestamp getNow() {
 		return new Timestamp(System.currentTimeMillis());

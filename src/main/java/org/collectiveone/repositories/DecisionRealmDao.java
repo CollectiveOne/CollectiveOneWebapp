@@ -3,6 +3,7 @@ package org.collectiveone.repositories;
 import java.util.List;
 
 import org.collectiveone.model.DecisionRealm;
+import org.collectiveone.model.User;
 import org.collectiveone.model.Voter;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -19,6 +20,10 @@ public class DecisionRealmDao extends BaseRepository {
 
 	public DecisionRealm get(Long id) {
 		return (DecisionRealm) super.get(id,DecisionRealm.class);
+	}
+	
+	public List<DecisionRealm> getAll(Integer max) {
+		return (List<DecisionRealm>) super.getAll(max,DecisionRealm.class);
 	}
 	
 	public Long getIdFromGoalId(Long goalId) {
@@ -43,6 +48,27 @@ public class DecisionRealmDao extends BaseRepository {
 		@SuppressWarnings("unchecked")
 		List<DecisionRealm> res = (List<DecisionRealm>) query.list();
 		return res; 
+	}
+	
+	public void addOrUpdateVoter(Long realmId, Long voterUserId, double maxWeight, double actualWeight) {
+		/* voter may not exist, in which is created */
+		Session session = sessionFactory.getCurrentSession();
+		DecisionRealm realm = session.get(DecisionRealm.class,realmId);
+		
+		Voter voter = getVoter(realmId,voterUserId);
+		
+		if(voter == null) {
+			/* if voter is not in the realm, then add him */
+			voter = new Voter();
+			voter.setVoterUser(session.get(User.class,voterUserId));
+			voter.setRealm(realm);
+		}
+
+		voter.setMaxWeight(maxWeight);
+		voter.setActualWeight(actualWeight);
+		
+		save(voter);
+		save(realm);
 	}
 	
 	public void updateVoter(Long realmId, Long voterUserId, double maxWeight, double actualWeight) {

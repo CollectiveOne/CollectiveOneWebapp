@@ -7,10 +7,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoleRepository extends CrudRepository<Role, Long> { // NO_UCD (test only)
+public interface RoleRepository extends CrudRepository<Role, Long> {
 
-	List<Role> findByUsername(String username); // NO_UCD (unused code)
+	List<Role> findByUsername(String username);
 	
-    Role findByUsernameAndRole(String username, String role); // NO_UCD (unused code)
+    Role findByUsernameAndRole(String username, String role);
 
 }

@@ -32,8 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GoalServiceImp extends BaseService {
 	
-	@Transactional 
-	Long create(GoalDto goalDto, GoalState state) throws IOException {
+	@Transactional
+	public Long create(GoalDto goalDto, GoalState state) throws IOException {
 		if(!exist(goalDto.getGoalTag(), goalDto.getProjectName())) {
 			Goal goal = new Goal();
 			Project project = projectRepository.get(goalDto.getProjectName());
@@ -229,7 +229,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	private void addParentsAndSubgoals(GoalDto goalDto) {
+	public void addParentsAndSubgoals(GoalDto goalDto) {
 		List<String> parentGoalsTags = new ArrayList<String>();
 		for(Goal parent : goalRepository.getAllParents(goalDto.getId())) { 
 			parentGoalsTags.add(parent.getGoalTag()); 
@@ -256,8 +256,8 @@ public class GoalServiceImp extends BaseService {
 		return goalRepository.getSuggestions(query, projectNames);
 	}
 
-	@Transactional 
-	void updateStateAll() throws IOException {
+	@Transactional
+	public void updateStateAll() throws IOException {
 		/* Update state of all not closed bids */
 		List<Goal> goalsNotDeleted = goalRepository.getNotDeleted();
 		for(Goal goal : goalsNotDeleted) {
@@ -266,7 +266,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	private void updateState(Long goalId) throws IOException {
+	public void updateState(Long goalId) throws IOException {
 		fromProposedToAccepted(goalId);
 		fromAcceptedToDeleted(goalId);
 		updateNewParent(goalId);
@@ -275,7 +275,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	private void fromProposedToAccepted(Long goalId) throws IOException {
+	public void fromProposedToAccepted(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		goalRepository.save(goal);
 
@@ -353,7 +353,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	private void fromAcceptedToDeleted(Long goalId) throws IOException {
+	public void fromAcceptedToDeleted(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		goalRepository.save(goal);
 
@@ -414,7 +414,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	private void updateNewParent(Long goalId) throws IOException {
+	public void updateNewParent(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		goalRepository.save(goal);
 
@@ -511,8 +511,8 @@ public class GoalServiceImp extends BaseService {
 		}
 	}
 	
-	@Transactional 
-	List<String> getParentGoalsTags(Goal goal) {
+	@Transactional
+	public List<String> getParentGoalsTags(Goal goal) {
 		/* Add parent goals too */
 		List<String> parentGoalsTags = new ArrayList<String>();
 		if(goal!= null) {
@@ -736,7 +736,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	private void updateBudget(Long goalId) throws IOException {
+	public void updateBudget(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		
 		Activity act = new Activity();
@@ -812,7 +812,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	private void updateAttachment(Long goalId) throws IOException {
+	public void updateAttachment(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		
 		Activity act = new Activity();

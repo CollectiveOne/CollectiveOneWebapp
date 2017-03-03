@@ -24,7 +24,7 @@ public class AppMailServiceHeroku extends BaseService {
 		sendMail(tos, subject, body);
 	}
 	
-	void sendMail(List<String> tos, String subject, String body) throws IOException {
+	public void sendMail(List<String> tos, String subject, String body) throws IOException {
 		if(env.getProperty("collectiveone.webapp.send-email-enabled").equalsIgnoreCase("true")) {
 			if(tos.size() > 0) {
 				String key = System.getenv("SENDGRID_API_KEY");
@@ -49,7 +49,7 @@ public class AppMailServiceHeroku extends BaseService {
 		}
 	}
 
-	private Mail prepareMail(List<String> tos, String subject, String body) 
+	public Mail prepareMail(List<String> tos, String subject, String body) 
 	{
 		Mail mail = new Mail();
 

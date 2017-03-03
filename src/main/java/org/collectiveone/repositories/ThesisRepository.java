@@ -15,6 +15,10 @@ public class ThesisRepository extends BaseRepository {
 		super();
 	}
 
+	public Thesis get(Long id) {
+		return (Thesis) super.get(id,Thesis.class);
+	}
+	
 	public Thesis getOfUserInDec(Long decId, Long userId) {
 		Session session = sessionFactory.getCurrentSession();
 

@@ -13,11 +13,17 @@ public class AuthorizedProjectRepository extends BaseRepository {
 		super();
 	}
 
+	public AuthorizedProject get(Integer id) {
+		return (AuthorizedProject) super.get(id,AuthorizedProject.class);
+	}
+	
 	public AuthorizedProject get(String projectName) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(AuthorizedProject.class);
 		query.add(Restrictions.eq("projectName", projectName));
 		AuthorizedProject res = (AuthorizedProject) query.uniqueResult();
 		return res;
 	}
+
+	
 	
 }

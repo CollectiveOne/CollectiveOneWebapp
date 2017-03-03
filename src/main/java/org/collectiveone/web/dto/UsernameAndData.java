@@ -19,19 +19,19 @@ public class UsernameAndData {
 	public void setPps(double pps) {
 		this.pps = pps;
 	}
-	public double getnCbtionsCreated() { // NO_UCD (unused code)
+	public double getnCbtionsCreated() {
 		return nCbtionsCreated;
 	}
 	public void setnCbtionsCreated(double nCbtionsCreated) {
 		this.nCbtionsCreated = nCbtionsCreated;
 	}
-	public double getnCbtionsDone() { // NO_UCD (unused code)
+	public double getnCbtionsDone() {
 		return nCbtionsDone;
 	}
 	public void setnCbtionsDone(double nCbtionsDone) {
 		this.nCbtionsDone = nCbtionsDone;
 	}
-	public double getnCbtionsDoneRecently() { // NO_UCD (unused code)
+	public double getnCbtionsDoneRecently() {
 		return nCbtionsDoneRecently;
 	}
 	public void setnCbtionsDoneRecently(double nCbtionsDoneRecently) {

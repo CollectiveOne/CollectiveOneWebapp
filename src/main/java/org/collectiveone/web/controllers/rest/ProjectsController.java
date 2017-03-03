@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @RestController
 @RequestMapping("/1")
 @SessionAttributes("activeProjects")
-public class ProjectsController { // NO_UCD (unused code)
+public class ProjectsController {
 	
 	@Autowired
 	ProjectServiceImp projectService;

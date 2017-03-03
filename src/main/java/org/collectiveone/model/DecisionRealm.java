@@ -43,7 +43,7 @@ public class DecisionRealm {
 		this.goal = goal;
 	}
 	
-	int size() {
+	public int size() {
 		return this.getVoters().size();
 	}
 	

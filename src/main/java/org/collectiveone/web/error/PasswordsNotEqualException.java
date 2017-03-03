@@ -8,8 +8,16 @@ public final class PasswordsNotEqualException extends RuntimeException {
         super();
     }
 
+    public PasswordsNotEqualException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
     public PasswordsNotEqualException(final String message) {
         super(message);
     }
-    
+
+    public PasswordsNotEqualException(final Throwable cause) {
+        super(cause);
+    }
+
 }

@@ -38,6 +38,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectServiceImp extends BaseService {
 
 	@Transactional
+	public void save(Project project) {
+		projectRepository.save(project);
+	}
+
+	@Transactional
+	public void authorize(String projectName) throws IOException {
+		AuthorizedProject authProject = new AuthorizedProject();
+		
+		authProject.setProjectName(projectName);
+		authProject.setAuthorized(true);
+		
+		authorizedProjectDao.save(authProject);
+	}
+	
+	@Transactional
 	public boolean isAuthorized(String projectName) {
 		AuthorizedProject projectAuthorized = authorizedProjectDao.get(projectName);
 		if(projectAuthorized != null) {
@@ -202,6 +217,12 @@ public class ProjectServiceImp extends BaseService {
 		return projectRepository.getNaemsFeatured();
 	}
 
+
+	@Transactional
+	public List<Project> getAll(Integer max) {
+		return projectRepository.getFromRef(new Project(), max);
+	}
+
 	@Transactional
 	public List<UsernameAndData> getContributorsAndData(Long projectId) {
 
@@ -233,8 +254,8 @@ public class ProjectServiceImp extends BaseService {
 		return usernamesAndData;
 	}
 
-	@Transactional 
-	void updatePpsTot(Long projectId, double lastOne) {
+	@Transactional
+	public void updatePpsTot(Long projectId, double lastOne) {
 		Project project = projectRepository.get(projectId);
 
 		double ppsTot = 0.0;
@@ -247,7 +268,7 @@ public class ProjectServiceImp extends BaseService {
 	}
 
 	@Transactional
-	private Set<Contributor> getContributors(Long projectId) {
+	public Set<Contributor> getContributors(Long projectId) {
 		return projectRepository.getContributors(projectId);
 	}
 	
@@ -318,8 +339,8 @@ public class ProjectServiceImp extends BaseService {
 	}
 	
 	
-	@Transactional 
-	List<String> getWatchedUsersEmails(Long projectId) {
+	@Transactional
+	public List<String> getWatchedUsersEmails(Long projectId) {
 		Project project = projectRepository.get(projectId);
 		
 		List<String> subscribedUsers = new ArrayList<String>();

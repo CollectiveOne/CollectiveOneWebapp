@@ -19,6 +19,7 @@ import org.collectiveone.model.DecisionType;
 import org.collectiveone.model.Goal;
 import org.collectiveone.model.Project;
 import org.collectiveone.model.Promoter;
+import org.collectiveone.model.User;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.CbtionDtoListRes;
 import org.collectiveone.web.dto.CommentDto;
@@ -30,6 +31,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CbtionServiceImp extends BaseService {
+
+	@Transactional
+	public void save(Cbtion cbtion) {
+		cbtionRepository.save(cbtion);
+	}
+	
+	@Transactional
+	public void update(Cbtion cbtion) {
+		cbtionRepository.update(cbtion);
+	}
 
 	@Transactional
 	public Long create(CbtionDto cbtionDto) throws IOException {
@@ -111,10 +122,35 @@ public class CbtionServiceImp extends BaseService {
 	}
 
 	@Transactional
+	public Cbtion get(Long id) {
+		return cbtionRepository.get(id);
+	}
+
+	@Transactional
+	public List<Cbtion> get(Cbtion refCbtion) {
+		return cbtionRepository.get(refCbtion);
+	}
+	
+	@Transactional
+	public User getCreator(Long id) {
+		return cbtionRepository.get(id).getCreator();
+	}
+
+	@Transactional
 	public CbtionDto getDto(Long cbtionId) {
 		Cbtion cbtion = cbtionRepository.get(cbtionId);
 		CbtionDto cbtionDto = cbtion.toDto(goalService.getParentGoalsTags(cbtion.getGoal()), getNSubComments(cbtionId));
 		return cbtionDto;
+	}
+
+	@Transactional
+	public List<CbtionDto> getDto(Cbtion refCbtion) {
+		List<Cbtion> cbtions = cbtionRepository.get(refCbtion);
+		List<CbtionDto> cbtionDtos = new ArrayList<CbtionDto>();
+		for(Cbtion cbtion : cbtions) {
+			cbtionDtos.add(cbtion.toDto());
+		}
+		return cbtionDtos;
 	}
 
 	@Transactional
@@ -133,8 +169,8 @@ public class CbtionServiceImp extends BaseService {
 		return cbtionsDtosRes;
 	}
 
-	@Transactional 
-	void updateStateAll() throws IOException {
+	@Transactional
+	public void updateStateAll() throws IOException {
 		/* Update state of all not closed bids */
 		List<Cbtion> cbtionsProposed = cbtionRepository.getWithStates(Arrays.asList(CbtionState.PROPOSED, CbtionState.OPEN));
 		for(Cbtion cbtion : cbtionsProposed) {
@@ -143,7 +179,7 @@ public class CbtionServiceImp extends BaseService {
 	}
 
 	@Transactional
-	private void updateState(Long cbtionId) throws IOException {
+	public void updateState(Long cbtionId) throws IOException {
 		Cbtion cbtion = cbtionRepository.get(cbtionId);
 		
 		Activity act = new Activity();
@@ -286,7 +322,7 @@ public class CbtionServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	private int getNSubComments(Long cbtionId) {
+	public int getNSubComments(Long cbtionId) {
 		return cbtionRepository.countSubComments(cbtionId);
 	}
 

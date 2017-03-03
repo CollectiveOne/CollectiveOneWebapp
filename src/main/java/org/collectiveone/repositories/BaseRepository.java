@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Example;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -17,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-class BaseRepository {
+public class BaseRepository {
 
 	@Autowired
 	protected SessionFactory sessionFactory;
@@ -31,7 +32,17 @@ class BaseRepository {
 		return id;
 	}
 	
-	<T> Long getN(Class<T> clazz) {
+	public void update(Object object) {
+		Session session = sessionFactory.getCurrentSession();
+		session.update(object);
+	}
+
+	public void delete(Object object) {
+		Session session = sessionFactory.getCurrentSession();
+		session.delete(object);
+	}
+
+	public <T> Long getN(Class<T> clazz) {
 		Session session = sessionFactory.getCurrentSession();
 
 		Long count = (Long) session.createCriteria(clazz)
@@ -40,13 +51,13 @@ class BaseRepository {
 		return count;
 	}
 
-	<T> Object get(Long id, Class<T> clazz) {
+	public <T> Object get(Long id, Class<T> clazz) {
 		Session session = sessionFactory.getCurrentSession();
 		T object = session.get(clazz,id);
 		return object;
 	}
 
-	<T> List<T> getAll(Integer max, Class<T> clazz) {
+	public <T> List<T> getAll(Integer max, Class<T> clazz) {
 		Session session = sessionFactory.getCurrentSession();
 
 		@SuppressWarnings("unchecked")
@@ -56,11 +67,22 @@ class BaseRepository {
 		return res;
 	}
 
-	<T> Criteria applyGeneralFilters(Filters filters, List<String> enabledProjects, Class<T> clazz) {
+	public <T> List<T> get(Object refObject, Class<T> clazz) {
+
+		Session session = sessionFactory.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<T> res = (List<T>) session.createCriteria(clazz)
+		.add(Example.create(refObject))
+		.list();
+
+		return res;
+	}
+
+	public <T> Criteria applyGeneralFilters(Filters filters, List<String> enabledProjects, Class<T> clazz) {
 		return applyGeneralFilters(filters, enabledProjects, clazz, true);
 	}
 	
-	<T> Criteria applyGeneralFilters(Filters filters, List<String> enabledProjects, Class<T> clazz, boolean projectFilter) {
+	public <T> Criteria applyGeneralFilters(Filters filters, List<String> enabledProjects, Class<T> clazz, boolean projectFilter) {
 
 		Session session = sessionFactory.getCurrentSession();
 		Criteria q = session.createCriteria(clazz);
@@ -162,7 +184,7 @@ class BaseRepository {
 
 	}
 
-	<T> ObjectListRes<T> getObjectsAndResSet(Criteria q, Filters filter, Class<T> clazz) {
+	public <T> ObjectListRes<T> getObjectsAndResSet(Criteria q, Filters filter, Class<T> clazz) {
 
 		Long count = (Long) q.setProjection(Projections.rowCount()).uniqueResult();
 

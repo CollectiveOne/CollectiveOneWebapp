@@ -12,7 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> { // NO_UCD (unused code)
+public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
     @Autowired
     private UserAuthServiceIf userService;
 

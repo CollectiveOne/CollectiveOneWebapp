@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StartUpMethods { // NO_UCD (unused code)
+public class StartUpMethods {
 
 	@Autowired
 	UserAuthServiceIf userService;

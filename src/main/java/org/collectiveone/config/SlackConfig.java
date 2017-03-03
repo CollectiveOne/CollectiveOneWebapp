@@ -13,7 +13,7 @@ import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 
 @Configuration
-public class SlackConfig { // NO_UCD (unused code)
+public class SlackConfig {
 
 	@Value("${slack.channel}")
     String channel;

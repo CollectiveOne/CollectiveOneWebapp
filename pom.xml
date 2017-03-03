@@ -72,7 +72,7 @@
 		<dependency>
 		    <groupId>com.sendgrid</groupId>
 		    <artifactId>sendgrid-java</artifactId>
-		    <version>3.0.9</version><!--$NO-MVN-MAN-VER$-->
+		    <version>3.0.9</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/com.ullink.slack/simpleslackapi -->

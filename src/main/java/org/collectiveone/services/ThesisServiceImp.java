@@ -2,6 +2,9 @@ package org.collectiveone.services;
 
 import java.sql.Timestamp;
 
+import org.collectiveone.model.Bid;
+import org.collectiveone.model.Cbtion;
+import org.collectiveone.model.CbtionState;
 import org.collectiveone.model.Decision;
 import org.collectiveone.model.DecisionState;
 import org.collectiveone.model.Thesis;
@@ -58,6 +61,26 @@ public class ThesisServiceImp extends BaseService {
 			}
 		} else {
 			return "decision is not open";
+		}
+	}
+
+	@Transactional
+	public void saveAssignOfBid(User author, int value, Long bidId) {
+		Bid bid = bidRepository.get(bidId);
+		Cbtion cbtion = bid.getCbtion();
+		if((cbtion.getState() == CbtionState.OPEN) || 
+				(cbtion.getState() == CbtionState.ASSIGNED)) {
+
+			save(author, value, bid.getAssign().getId());	
+		}
+	}
+
+	@Transactional
+	public void saveAcceptOfBid(User author, int value, Long bidId) {
+		Bid bid = bidRepository.get(bidId);
+		Cbtion cbtion = bid.getCbtion();
+		if(cbtion.getState() == CbtionState.ASSIGNED) {
+			save(author, value, bid.getAccept().getId());	
 		}
 	}
 

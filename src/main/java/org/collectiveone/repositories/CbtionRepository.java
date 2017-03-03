@@ -27,7 +27,7 @@ import org.springframework.stereotype.Repository;
 public class CbtionRepository extends BaseRepository {
 	
 	@Autowired
-	private GoalRepository	goalDao;
+	GoalRepository	goalDao;
 	
 	@Autowired
 	private ProjectRepository projectDao;
@@ -41,6 +41,14 @@ public class CbtionRepository extends BaseRepository {
 	
 	public Cbtion get(Long id) {
 		return (Cbtion) super.get(id,Cbtion.class);
+	}
+	
+	public List<Cbtion> getAll(Integer max) {
+		return (List<Cbtion>) super.getAll(max,Cbtion.class);
+	}
+	
+	public List<Cbtion> get(Cbtion refCbtion) {
+		return (List<Cbtion>) super.get(refCbtion,Cbtion.class);
 	}
 	
 	public void remove(Long id) {
@@ -139,6 +147,18 @@ public class CbtionRepository extends BaseRepository {
 		return getObjectsAndResSet(q, filters, Cbtion.class);
 	}
 	
+	public List<Cbtion> getAcceptedInProject(Long projectId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
+		
+		query.add(Restrictions.eq("state", CbtionState.ACCEPTED))
+			.add(Restrictions.eq("project.id", projectId));
+		
+		@SuppressWarnings("unchecked")
+		List<Cbtion> res = (List<Cbtion>) query.list();
+		
+		return res;
+	}
+	
 	public List<Cbtion> getAcceptedOfUserInProject(Long contributorId, Long projectId) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
 		
@@ -157,7 +177,7 @@ public class CbtionRepository extends BaseRepository {
 	}
 	
 	
-	private Long countPromoters(Long cbtionId, boolean promoteUp) {
+	public Long countPromoters(Long cbtionId, boolean promoteUp) {
 		
 		Session session = sessionFactory.getCurrentSession();
 

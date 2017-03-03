@@ -8,8 +8,16 @@ public final class PasswordNotAccepted extends RuntimeException {
         super();
     }
 
+    public PasswordNotAccepted(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
     public PasswordNotAccepted(final String message) {
         super(message);
+    }
+
+    public PasswordNotAccepted(final Throwable cause) {
+        super(cause);
     }
 
 }

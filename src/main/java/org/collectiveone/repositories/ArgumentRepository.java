@@ -22,6 +22,10 @@ public class ArgumentRepository extends BaseRepository {
 		return (Argument) super.get(id,Argument.class);
 	}
 
+	public List<Argument> getAll(Integer max) {
+		return (List<Argument>) super.getAll(max,Argument.class);
+	}
+
 	public List<Argument> getOfDecision(Long decId, ArgumentTendency tendency) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Argument.class);
 		

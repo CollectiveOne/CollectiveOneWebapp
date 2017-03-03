@@ -1,5 +1,7 @@
 package org.collectiveone.repositories;
 
+import java.util.List;
+
 import org.collectiveone.model.Promoter;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -10,6 +12,14 @@ public class PromoterRepository extends BaseRepository {
 
 	public PromoterRepository() {
 		super();
+	}
+
+	public Promoter get(Integer id) {
+		return (Promoter) super.get(id,Promoter.class);
+	}
+
+	public List<Promoter> getAll(Integer max) {
+		return (List<Promoter>) super.getAll(max,Promoter.class);
 	}
 
 	public Promoter getOfCbtion(Long cbtionId, Long userId) {

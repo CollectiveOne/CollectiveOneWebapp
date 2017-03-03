@@ -20,6 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImp extends BaseService {
 	
 	@Transactional
+	public void save(User user) {
+		userRepository.save(user);
+	}
+
+	@Transactional
+	public User get(Long id) {
+		return userRepository.get(id);
+	}
+
+	@Transactional
 	public Long getN() {
 		return userRepository.getN();
 	}
@@ -35,13 +45,19 @@ public class UserServiceImp extends BaseService {
 	}
 
 	@Transactional
+	public List<User> getAll(Integer max) {
+		return userRepository.getAll(max);
+	}
+	
+	@Transactional
 	public void updateProfile(UserDto userDto) {
 		User user = userRepository.get(userDto.getUsername());
 		user.setProfile(userDto.getProfile());
 		userRepository.save(user);
 	}
 
-	@Transactional double ppointsInProjectRecalc(Long userId, Long projectId) {
+	@Transactional
+	public double ppointsInProjectRecalc(Long userId, Long projectId) {
 
 		double ppoints = 0;
 		List<Cbtion> cbtionsAccepted = cbtionRepository.getAcceptedOfUserInProject(userId, projectId);
@@ -106,7 +122,7 @@ public class UserServiceImp extends BaseService {
 	}
 
 	@Transactional
-	private List<Project> projectsContributedGet(Long userId) {
+	public List<Project> projectsContributedGet(Long userId) {
 		return userRepository.getProjectsContributed(userId);
 	}
 
