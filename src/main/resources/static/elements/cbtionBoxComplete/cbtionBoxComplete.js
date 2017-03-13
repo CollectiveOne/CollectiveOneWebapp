@@ -69,7 +69,7 @@ CbtionBoxComplete.prototype.cbtionBoxLoaded = function() {
 
 		case "ACCEPTED":
 			$("#status_desc_div",this.container).append("contributed by "+
-				getUserPageLink(this.cbtion.creatorUsername)+
+				getUserPageLink(this.cbtion.contributorUsername)+
 				" for "+this.cbtion.assignedPpoints+" pps");
 
 			$("#cbtion_div #status_desc_div p",this.container).css("font-size","10px");
