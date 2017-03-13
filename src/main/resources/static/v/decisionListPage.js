@@ -38,7 +38,7 @@ DecisionListPage.prototype.draw = function() {
 			"decisions",
 			true, 
 			true, 
-			"/views/decisionNewPageR");
+			"/v/decisionNew");
 
 	this.filter.updateData();
 }

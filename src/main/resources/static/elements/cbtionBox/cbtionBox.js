@@ -25,7 +25,7 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 	$("#promotion_up_div",this.container).click(this.promoteUpClick.bind(this));
 	$("#promotion_down_div",this.container).click(this.promoteDownClick.bind(this));
 
-	$("#title_div",this.container).append("<a href=/views/cbtionPageR/"+ this.cbtion.id+">"+this.cbtion.title+"</a>");
+	$("#title_div",this.container).append("<a href=/v/cbtion/"+ this.cbtion.id+">"+this.cbtion.title+"</a>");
 	
 	if(this.cbtion.description) {
 		$("#description_div",this.container).append(markdown.toHTML(this.cbtion.description));
@@ -59,6 +59,12 @@ CbtionBox.prototype.CbtionBoxLoaded = function() {
 			}
 			break;
 
+		case "ASSIGNED":
+			$("#status_desc_div",this.container).append("to "+
+					getUserPageLink(this.cbtion.assigneeUsername)+
+					" for "+this.cbtion.assigneePpoints+" pps");
+			break;
+			
 		case "ACCEPTED":
 			$("#status_desc_div",this.container).append("contributed by "+
 				getUserPageLink(this.cbtion.contributorUsername)+"<br />"+

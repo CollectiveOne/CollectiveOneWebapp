@@ -162,7 +162,7 @@ GoalBox.prototype.goalBoxLoaded = function() {
 			$("#propose_parent_btn",this.container).click(this.proposeBtnClicked.bind(this));
 			
 			$("#parent_goal_input",this.container).autocomplete({
-						serviceUrl: '/rest/goals/getSuggestions',
+						serviceUrl: '/1/goals/suggestions',
 						minChars: 0,
 						maxHeight: 200,
 						params: { projectName:  this.goal.projectName } 

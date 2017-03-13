@@ -52,6 +52,13 @@ UserPage.prototype.fillUserNameAndProfile = function() {
 }
 
 UserPage.prototype.fillUserProjectsAndCbtions = function() {
+	if(isUserLogged()) {
+		if(getLoggedUsername() == this.user.username) {
+			$("#mydata_div").show();
+			this.updateMyData();
+		}
+	}
+
 	this.updateProjectsContributed();
 	this.updateContributionsAccepted();
 }
@@ -84,6 +91,43 @@ UserPage.prototype.updateProjectsContributed = function() {
 	GLOBAL.serverComm.userGetProjectsContributed(this.user.username,this.userProjectsContributedCallback,this);
 }
 
+UserPage.prototype.updateMyData = function() {
+	GLOBAL.serverComm.userMyDataGet(this.user.username, this.myDataReceived, this);
+}
+
+UserPage.prototype.myDataReceived = function(data) {
+	this.projectsStarred = data.projectsStarred;
+	this.drawProjectsStarred();
+	
+	this.projectsWatched = data.projectsWatched;
+	this.drawProjectsWatched();
+}
+
+UserPage.prototype.drawProjectsStarred = function() {
+	var this_container = $("#projects_starred_container");
+	var this_projects = this.projectsStarred;
+	
+	for(var ix in this_projects) {
+		var project = this_projects[ix];
+		this_container.append("<div class=projectbox_div id=projectbox"+ix+"_div></div>");
+		var projectBox = new ProjectBox($("#projectbox"+ix+"_div",this_container),project);
+		projectBox.draw();
+	}
+}
+
+UserPage.prototype.drawProjectsWatched = function() {
+	var this_container = $("#projects_watched_container");
+	var this_projects = this.projectsWatched;
+	
+	for(var ix in this_projects) {
+		var project = this_projects[ix];
+		this_container.append("<div class=projectbox_div id=projectbox"+ix+"_div></div>");
+		var projectBox = new ProjectBox($("#projectbox"+ix+"_div",this_container),project);
+		projectBox.draw();
+	}
+}
+
+
 UserPage.prototype.userProjectsContributedCallback = function(projectsContributed) {
 	
 	for(var ix in projectsContributed) {
@@ -94,13 +138,13 @@ UserPage.prototype.userProjectsContributedCallback = function(projectsContribute
 
 		var percentage = floatToChar(ppsContributed/ppsTot*100, 2);
 		
-		$("#projects_contributed_div",this.container).append(
-		$("<p class=project_contributed>"+percentage+"% of "+getProjectLink(projectContributed.projectName)+" with "+ppsContributed+ " of "+ppsTot+" pp's</p>"));	
+		$("#projects_contributed_div .list-group",this.container).append(
+				"<li class=list-group-item>"+percentage+"% of "+getProjectLink(projectContributed.projectName)+" with "+ppsContributed+ " of "+ppsTot+" pp's</li>");	
 	}
 }
 
 UserPage.prototype.updateContributionsAccepted = function() {
-	var cbtionList = new CbtionList("#contributions_list", {
+	var cbtionList = new CbtionList("#accepted_contributions_list", {
 		contributorUsername: this.user.username, 
 		maxheight: "600px",
 		stateNames: ["ACCEPTED"],
@@ -110,6 +154,17 @@ UserPage.prototype.updateContributionsAccepted = function() {
 		});
 
 	cbtionList.init();
+	
+	var assignedCbtionList = new CbtionList("#assigned_contributions_list", {
+		assigneeUsername: this.user.username, 
+		maxheight: "600px",
+		stateNames: ["ASSIGNED"],
+		showFilterBtn: true,
+		showNewBtn: false,
+		newBtnLink: ""
+		});
+
+	assignedCbtionList.init();
 }
 
 

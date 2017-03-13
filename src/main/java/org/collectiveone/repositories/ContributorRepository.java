@@ -1,7 +1,5 @@
 package org.collectiveone.repositories;
 
-import java.util.List;
-
 import org.collectiveone.model.Contributor;
 import org.collectiveone.model.Project;
 import org.collectiveone.model.User;
@@ -16,14 +14,6 @@ public class ContributorRepository extends BaseRepository {
 		super();
 	}
 
-	public Contributor get(Long id) {
-		return (Contributor) super.get(id,Contributor.class);
-	}
-	
-	public List<Contributor> getAll(Integer max) {
-		return (List<Contributor>) super.getAll(max,Contributor.class);
-	}
-	
 	public void updateContributor(Long projectId, Long contributorUserId, double pps) {
 		
 		Session session = sessionFactory.getCurrentSession();

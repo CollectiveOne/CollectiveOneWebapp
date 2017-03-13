@@ -2,9 +2,6 @@ package org.collectiveone.web.dto;
 
 import java.util.List;
 
-import org.collectiveone.model.Cbtion;
-import org.collectiveone.model.Project;
-import org.collectiveone.model.User;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class CbtionDto {
@@ -24,24 +21,15 @@ public class CbtionDto {
 	private String state;
 	private int nBids;
 	private String contributorUsername;
+	private String assigneeUsername;
+	private double assigneePpoints;
 	private List<String> parentGoalsTags;
 	@NotEmpty
 	private String goalTag;
-	private double assignedPpoints;	
+	private double assignedPpoints;
 	private DecisionDtoFull openDec;
 	private DecisionDtoFull deleteDec;
 	private int ncomments; 
-	
-	public Cbtion toCbtion(User creator, Project project) {
-		Cbtion cbtion = new Cbtion();
-		
-		cbtion.setCreator(creator);
-		cbtion.setProject(project);
-		cbtion.setTitle(title);
-		cbtion.setDescription(description);
-		
-		return cbtion;
-	}
 	
 	public Long getId() {
 		return id;
@@ -103,7 +91,7 @@ public class CbtionDto {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public int getnBids() {
+	public int getnBids() { // NO_UCD (unused code)
 		return nBids;
 	}
 	public void setnBids(int nBids) {
@@ -114,6 +102,12 @@ public class CbtionDto {
 	}
 	public void setContributorUsername(String contributorUsername) {
 		this.contributorUsername = contributorUsername;
+	}
+	public String getAssigneeUsername() {
+		return assigneeUsername;
+	}
+	public void setAssigneeUsername(String assigneeUsername) {
+		this.assigneeUsername = assigneeUsername;
 	}
 	public String getGoalTag() {
 		return goalTag;
@@ -132,6 +126,12 @@ public class CbtionDto {
 	}
 	public void setAssignedPpoints(double assignedPpoints) {
 		this.assignedPpoints = assignedPpoints;
+	}
+	public double getAssigneePpoints() {
+		return assigneePpoints;
+	}
+	public void setAssigneePpoints(double assigneePpoints) {
+		this.assigneePpoints = assigneePpoints;
 	}
 	public DecisionDtoFull getOpenDec() {
 		return openDec;

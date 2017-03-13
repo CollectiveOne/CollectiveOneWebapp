@@ -4,40 +4,40 @@ import javax.validation.constraints.Min;
 
 public class DecisionDtoFull {
 	
-	protected Long id;
-	protected String description;
-	protected long creationDate;
-	protected long openDate;
-	protected long actualVerdictDate;
-	protected String fromState;
-	protected String toState;
-	protected String projectName;
-	protected String goalTag;
-	protected String creatorUsername;
+	private Long id;
+	private String description;
+	private long creationDate;
+	private long openDate;
+	private long actualVerdictDate;
+	private String fromState;
+	private String toState;
+	private String projectName;
+	private String goalTag;
+	private String creatorUsername;
 	
-	protected int narguments;
+	private int narguments;
 	
-	protected String type;
-	protected Long affectedCbtionId;
-	protected String affectedCbtionTitle;
-	protected Long affectedGoalId;
-	protected String affectedGoalTag;
-	protected Long affectedBidId;
-	protected String affectedBidCreatorUsername;
+	private String type;
+	private Long affectedCbtionId;
+	private String affectedCbtionTitle;
+	private Long affectedGoalId;
+	private String affectedGoalTag;
+	private Long affectedBidId;
+	private String affectedBidCreatorUsername;
 	
-	protected int nVoters;
-	protected double ppsTot;
+	private int nVoters;
+	private double ppsTot;
 	@Min(36)
-	protected double verdictHours;
-	protected int verdict;
-	protected String state;
-	protected int nVotesCasted;
-	protected double ppsCum;
-	protected double pest;
-	protected double stability;
-	protected double clarity;
-	protected double log_l1l0;
-	protected double elapsedFactor;
+	private double verdictHours;
+	private int verdict;
+	private String state;
+	private int nVotesCasted;
+	private double ppsCum;
+	private double pest;
+	private double stability;
+	private double clarity;
+	private double log_l1l0;
+	private double elapsedFactor;
 		
 	public Long getId() {
 		return id;
@@ -152,7 +152,7 @@ public class DecisionDtoFull {
 	
 	
 	
-	public int getnVoters() {
+	public int getnVoters() { // NO_UCD (unused code)
 		return nVoters;
 	}
 	public void setnVoters(int nVoters) {
@@ -182,7 +182,7 @@ public class DecisionDtoFull {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public int getnVotesCasted() {
+	public int getnVotesCasted() { // NO_UCD (unused code)
 		return nVotesCasted;
 	}
 	public void setnVotesCasted(int nVotesCasted) {

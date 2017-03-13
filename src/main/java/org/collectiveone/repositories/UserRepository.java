@@ -24,14 +24,6 @@ public class UserRepository extends BaseRepository {
 		return (User) super.get(id,User.class);
 	}
 	
-	public List<User> getAll(Integer max) {
-		return (List<User>) super.getAll(max,User.class);
-	}
-	
-	public List<User> getFromRef(User refUser) {
-		return (List<User>) super.get(refUser,User.class);
-	}
-	
 	public Long getN() {
 		return super.getN(User.class);
 	}
@@ -87,5 +79,32 @@ public class UserRepository extends BaseRepository {
 		return res;
 	}
 	
+	public boolean isProjectStarred(Long projectId, Long userId) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		Criteria query = session.createCriteria(User.class)
+				.add(Restrictions.eq("id", userId))
+				.createAlias("projectsStarred","prCr")
+				.add(Restrictions.eq("prCr.id", projectId));
+				
+		User res = (User) query.uniqueResult();
+		
+		if(res != null) return true;
+		else return false;
+	}
+	
+	public boolean isProjectWatched(Long projectId, Long userId) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		Criteria query = session.createCriteria(User.class)
+				.add(Restrictions.eq("id", userId))
+				.createAlias("projectsWatched","prWt")
+				.add(Restrictions.eq("prWt.id", projectId));
+				
+		User res = (User) query.uniqueResult();
+		
+		if(res != null) return true;
+		else return false;
+	}
 	
 }

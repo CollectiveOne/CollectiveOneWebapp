@@ -28,16 +28,23 @@ FilterElement.prototype.init = function() {
 			$("#filter_inputs_cbtion",this.container).show();
 			$('#filter_goal_input', this.container).keydown(this.inputEnterKey.bind(this));
 			$('#filter_contributor_input', this.container).keydown(this.inputEnterKey.bind(this));
+			$('#filter_assignee_input', this.container).keydown(this.inputEnterKey.bind(this));
 
 			$('#filter_goal_input',this.container).autocomplete({
-				serviceUrl: '/rest/goals/getSuggestions',
+				serviceUrl: '/1/goals/suggestions',
 				minChars: 0,
 				params: {projectName: ""},
 				maxHeight: 100
 			});
 
 			$('#filter_contributor_input',this.container).autocomplete({
-				serviceUrl: '/rest/users/getSuggestions',
+				serviceUrl: '/1/users/suggestions',
+				minChars: 0,
+				maxHeight: 100
+			});
+
+			$('#filter_assignee_input',this.container).autocomplete({
+				serviceUrl: '/1/users/suggestions',
 				minChars: 0,
 				maxHeight: 100
 			});
@@ -81,7 +88,7 @@ FilterElement.prototype.init = function() {
 	$('#filter_keyword_input', this.container).keydown(this.inputEnterKey.bind(this));
 	
 	$('#filter_creator_input').autocomplete({
-	    serviceUrl: '/rest/users/getSuggestions',
+	    serviceUrl: '/1/users/suggestions',
 	    minChars: 0,
 		maxHeight: 100
 	});
@@ -135,6 +142,7 @@ FilterElement.prototype.updateFilterContents = function() {
 			if(this.filters.goalTag != "") $("#filter_goal_input", this.container).val(this.filters.goalTag);
 			if(this.filters.goalSubgoalsFlag != null) $("#filter_subgoals_input").attr('checked', this.filters.goalSubgoalsFlag);
 			if(this.filters.contributorUsername != "") $("#filter_contributor_input", this.container).val(this.filters.contributorUsername);
+			if(this.filters.assigneeUsername != "") $("#filter_assignee_input", this.container).val(this.filters.assigneeUsername);
 			break;
 
 		case "decisions":
@@ -209,7 +217,21 @@ FilterElement.prototype.getFiltersAndUpdateData = function() {
 
 			this.filters.goalTag = $("#filter_goal_input", this.container).val();
 			this.filters.goalSubgoalsFlag = $("#filter_subgoals_input").is(":checked");
+			if($("#filter_contributor_input", this.container).val() != "") {
+				/* make sure ACCEPTED is selected as state otherwise it does not makes sense */
+				if(this.filters.stateNames.indexOf("ACCEPTED") == -1) {
+					this.filters.stateNames.push("ACCEPTED");
+				}
+			}
 			this.filters.contributorUsername = $("#filter_contributor_input", this.container).val();
+			
+			if($("#filter_assignee_input", this.container).val() != "") {
+				/* make sure ACCEPTED is selected as state otherwise it does not makes sense */
+				if(this.filters.stateNames.indexOf("ASSIGNED") == -1) {
+					this.filters.stateNames.push("ASSIGNED");
+				}
+			}
+			this.filters.assigneeUsername = $("#filter_assignee_input", this.container).val();
 			break;
 
 		case "decisions":

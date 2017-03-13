@@ -1,15 +1,15 @@
 $(document).ready(function() {
 
-	GLOBAL.cbtionNewPage = new CbtionNewPage("#content_pane");
-	docReadyCommon(GLOBAL.cbtionNewPage.init,GLOBAL.cbtionNewPage,true);
+	GLOBAL.goalNewPage = new GoalNewPage("#content_pane");
+	docReadyCommon(GLOBAL.goalNewPage.init,GLOBAL.goalNewPage,true);
 	
 });
 
-function CbtionNewPage(container_id) {
+function GoalNewPage(container_id) {
 	this.container = $(container_id);
 };
 
-CbtionNewPage.prototype = {
+GoalNewPage.prototype = {
 		
 		init: function() {
 			/* Link the project selector with the goalTag autocomplete so that the suggested goals are coherent with the project selected */
@@ -22,23 +22,16 @@ CbtionNewPage.prototype = {
 				hiddenButtons: ["cmdHeading", "cmdImage"],
 				resize: "vertical"
 			});
-			
-			$('#product_editor',this.container).markdown({
-				autofocus:false,
-				savable:false,
-				hiddenButtons: ["cmdHeading", "cmdImage","cmdList", "cmdListO", "cmdCode", "cmdQuote"],
-				resize: "vertical"
-			});
 		},
 		
 		projectSelectorUpdated: function() {
-			$('#goalTag_selector',this.container).autocomplete().clear();
-			$('#goalTag_selector',this.container).autocomplete().setOptions({params: {projectName: $("#project_select", this.container).val()}});
+			$('#parentGoalTag',this.container).autocomplete().clear();
+			$('#parentGoalTag',this.container).autocomplete().setOptions({params: {projectName: $("#project_select", this.container).val()}});
 		},
 		
 		projectSelectorDrawn: function() {
-			$('#goalTag_selector',this.container).autocomplete({
-				serviceUrl: '/rest/goals/getSuggestions',
+			$('#parentGoalTag',this.container).autocomplete({
+				serviceUrl: '/1/goals/suggestions',
 				minChars: 0,
 				maxHeight: 200,
 				params: {projectName: $("#project_select", this.container).val()}

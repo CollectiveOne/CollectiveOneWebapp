@@ -33,13 +33,6 @@ public class VerificationToken {
         super();
     }
 
-    public VerificationToken(final String token) {
-        super();
-
-        this.token = token;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
-    }
-
     public VerificationToken(final String token, final User user) {
         super();
 
@@ -82,13 +75,6 @@ public class VerificationToken {
         cal.add(Calendar.MINUTE, expiryTimeInMinutes);
         return new Date(cal.getTime().getTime());
     }
-
-    public void updateToken(final String token) {
-        this.token = token;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
-    }
-
-    //
 
     @Override
     public int hashCode() {

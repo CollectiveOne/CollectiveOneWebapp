@@ -31,41 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class BidServiceImp extends BaseService {
 	
 	@Transactional
-	public void save(Bid bid, Long cbtionId) {
-		Cbtion cbtion = cbtionRepository.get(cbtionId);
-		bid.setCbtion(cbtion);
-		cbtion.getBids().add(bid);
-
-		bidRepository.save(bid);
-		cbtionRepository.save(cbtion);
-
-	}
-
-	@Transactional
-	public Bid get(Long id) {
-		return bidRepository.get(id);
-	}
-	
-	@Transactional
 	public BidDto getDto(Long id) {
 		return bidRepository.get(id).toDto();
-	}
-
-	@Transactional
-	public User getCreator(Long id) {
-		return bidRepository.get(id).getCreator();
-	}
-
-	@Transactional
-	public void save(Bid bid) {
-		bidRepository.save(bid);
-	}
-
-	@Transactional
-	public void saveState(Long bidId, BidState state) {
-		Bid bid = bidRepository.get(bidId);
-		bid.setState(state);
-		bidRepository.save(bid);
 	}
 
 	@Transactional
@@ -176,16 +143,6 @@ public class BidServiceImp extends BaseService {
 				activityService.saveAndNotify(act);
 			}
 		}
-	}
-
-	@Transactional
-	public List<BidDto> getOfUserDto(Long userId) {
-		List<Bid> bids = bidRepository.getOfUser(userId);
-		List<BidDto> bidDtos = new ArrayList<BidDto>();
-		for (Bid bid : bids) {
-			bidDtos.add(bid.toDto());
-		}
-		return bidDtos;
 	}
 
 	@Transactional
@@ -325,6 +282,7 @@ public class BidServiceImp extends BaseService {
 						/* update cbtion state */
 						cbtion.setAssignedPpoints(bid.getPpoints());
 						cbtion.setContributor(bid.getCreator());
+						cbtion.setAcceptedDate(new Timestamp(System.currentTimeMillis()));
 						cbtion.setState(CbtionState.ACCEPTED);
 	
 						/* close all other bids and decisions */

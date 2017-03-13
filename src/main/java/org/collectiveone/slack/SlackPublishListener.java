@@ -10,7 +10,7 @@ import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackSession;
 
 @Component
-public class SlackPublishListener implements ApplicationListener<OnSlackPublishAsked> {
+public class SlackPublishListener implements ApplicationListener<OnSlackPublishAsked> { // NO_UCD (unused code)
 	
 	@Autowired
 	private SlackSession slackSession;

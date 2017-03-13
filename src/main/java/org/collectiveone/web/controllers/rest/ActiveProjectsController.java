@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 
 @RestController
-@RequestMapping("/rest/session")
+@RequestMapping("/1/session")
 @SessionAttributes("activeProjects")
-public class SessionController {
+public class ActiveProjectsController { // NO_UCD (unused code)
 	
 	@Autowired
 	ProjectServiceImp projectService;
@@ -28,7 +28,7 @@ public class SessionController {
 	public List<ActiveProject> getActiveProjects () {
 		
 		List<ActiveProject> activeProjects = new ArrayList<ActiveProject>();
-		List<String> projectNames = projectService.getList();
+		List<String> projectNames = projectService.getFeaturedList();
 		
 		for(String projectName : projectNames) {
 			ActiveProject activeProject = new ActiveProject();
@@ -41,12 +41,12 @@ public class SessionController {
         return activeProjects;
     }
 	
-	@RequestMapping(value="/activeProjectsGet", method = RequestMethod.POST)
+	@RequestMapping(value="/activeProjects", method = RequestMethod.GET)
 	public List<ActiveProject> activeProjectsGet(@ModelAttribute("activeProjects") ArrayList<ActiveProject> activeProjects, HttpSession session) {
 		return activeProjects;
 	}
 	
-	@RequestMapping(value="/activeProjectChange", method = RequestMethod.POST)
+	@RequestMapping(value="/activeProjects", method = RequestMethod.PUT)
 	public List<ActiveProject> activeProjectsChange(
 			@ModelAttribute("activeProjects") ArrayList<ActiveProject> activeProjects,
 			@RequestBody ActiveProject activeProjectInput) {

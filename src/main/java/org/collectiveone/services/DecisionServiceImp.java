@@ -220,12 +220,6 @@ public class DecisionServiceImp extends BaseService {
 		return decision.getId();
 	}
 
-
-	@Transactional
-	public Decision get(Long id) {
-		return decisionRepository.get(id);
-	}
-	
 	@Transactional
 	public DecisionDtoFull getDto(Long id) {
 		return decisionRepository.get(id).toDto();

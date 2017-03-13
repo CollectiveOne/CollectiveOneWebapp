@@ -3,14 +3,14 @@ package org.collectiveone.web.dto;
 import java.util.List;
 
 public class ProjectContributorsDto {
-	private List<UsernameAndPps> usernamesAndPps;
+	private List<UsernameAndData> usernamesAndData;
 	private double ppsTot;
 	
-	public List<UsernameAndPps> getUsernamesAndPps() {
-		return usernamesAndPps;
+	public List<UsernameAndData> getUsernamesAndData() {
+		return usernamesAndData;
 	}
-	public void setUsernamesAndPps(List<UsernameAndPps> usernamesAndPps) {
-		this.usernamesAndPps = usernamesAndPps;
+	public void setUsernamesAndData(List<UsernameAndData> usernamesAndData) {
+		this.usernamesAndData = usernamesAndData;
 	}
 	public double getPpsTot() {
 		return ppsTot;

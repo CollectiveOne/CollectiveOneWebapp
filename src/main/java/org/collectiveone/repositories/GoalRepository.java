@@ -62,10 +62,6 @@ public class GoalRepository extends BaseRepository {
 		return res;
 	}
 	
-	public List<Goal> getAll(Integer max) {
-		return (List<Goal>) super.getAll(max,Goal.class);
-	}
-	
 	public List<Goal> getNotDeleted() {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class);
 		query.add(Restrictions.or(
@@ -104,7 +100,7 @@ public class GoalRepository extends BaseRepository {
 	
 	public ObjectListRes<Goal> get(Filters filters) {
 		
-		Criteria q = applyGeneralFilters(filters, projectDao.getListEnabled(), Goal.class);
+		Criteria q = applyGeneralFilters(filters, projectDao.getNamesEnabled(), Goal.class);
 		
 		/* State names are entity specific and I was not able to put these
 		 * disjunction in a common function */
@@ -158,7 +154,7 @@ public class GoalRepository extends BaseRepository {
 		return subgoals;
 	}
 	
-	public List<Goal> getSubgoals(Long goalId) {
+	private List<Goal> getSubgoals(Long goalId) {
 		
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Goal.class,"go");
 		

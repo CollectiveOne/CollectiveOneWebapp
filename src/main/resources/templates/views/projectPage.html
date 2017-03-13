@@ -4,8 +4,8 @@
 <head>
 
 	<script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.js}"></script>
-	<script type="text/javascript" th:src="@{/views/projectPage.js}"></script>
-	<link rel="stylesheet" type="text/css" th:href="@{/views/projectPage.css}"/>
+	<script type="text/javascript" th:src="@{/v/projectPage.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/v/projectPage.css}"/>
 	
 	<script type="text/javascript" th:src="@{/elements/goalBox/goalBox.js}"></script>
 	<link rel="stylesheet" type="text/css" th:href="@{/elements/goalBox/goalBox.css}" />
@@ -26,7 +26,7 @@
 	<meta property="og:title" th:content="'CollectiveOne - ' + ${projectName}" />
 	<meta property="og:description" th:content="${projectDescription}" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" th:content="'http://www.collectiveone.org/views/projectPageR/'+${projectName}" />
+	<meta property="og:url" th:content="'http://www.collectiveone.org/v/project/'+${projectName}" />
 	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
 	
 	<script th:inline="javascript">
@@ -56,7 +56,21 @@
 			<div id="contributors_panel" class="panel panel-info">
 				<div class="panel-heading"><b>Contributors</b></div>
 			 	<div id="contributors_chart_container" class="cp_box_gray_slim">
-					<canvas id="contributors_chart" width="100%" height="100%"></canvas>
+			 		<table id="contributors_table" class="table table-striped">
+						<thead>
+							<tr>
+								<th>username</th>
+								<th>pps</th>
+								<th>%</th>
+								<th># contrib. <br /> created</th>
+								<th># contrib. <br /> done</th>
+								<th># done <br />(recently)</th>
+								<th>mean pps <br />per contrib.</th>
+							</tr>
+						</thead>
+						<tbody id="contributors_table_body">
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>

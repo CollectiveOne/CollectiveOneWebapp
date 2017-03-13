@@ -10,23 +10,15 @@ import org.collectiveone.model.Contributor;
 import org.collectiveone.model.Project;
 import org.collectiveone.model.User;
 import org.collectiveone.web.dto.ProjectContributedDto;
+import org.collectiveone.web.dto.ProjectDto;
 import org.collectiveone.web.dto.UserDto;
+import org.collectiveone.web.dto.UserMyDataDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImp extends BaseService {
 	
-	@Transactional
-	public void save(User user) {
-		userRepository.save(user);
-	}
-
-	@Transactional
-	public User get(Long id) {
-		return userRepository.get(id);
-	}
-
 	@Transactional
 	public Long getN() {
 		return userRepository.getN();
@@ -43,19 +35,13 @@ public class UserServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public List<User> getAll(Integer max) {
-		return userRepository.getAll(max);
-	}
-	
-	@Transactional
 	public void updateProfile(UserDto userDto) {
 		User user = userRepository.get(userDto.getUsername());
 		user.setProfile(userDto.getProfile());
 		userRepository.save(user);
 	}
 
-	@Transactional
-	public double ppointsInProjectRecalc(Long userId, Long projectId) {
+	@Transactional double ppointsInProjectRecalc(Long userId, Long projectId) {
 
 		double ppoints = 0;
 		List<Cbtion> cbtionsAccepted = cbtionRepository.getAcceptedOfUserInProject(userId, projectId);
@@ -120,7 +106,7 @@ public class UserServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public List<Project> projectsContributedGet(Long userId) {
+	private List<Project> projectsContributedGet(Long userId) {
 		return userRepository.getProjectsContributed(userId);
 	}
 
@@ -133,5 +119,58 @@ public class UserServiceImp extends BaseService {
 	public List<String> getSuggestionsReferrer(String query) {
 		return userRepository.getSuggestionsReferrer(query);
 	}
+	
+	@Transactional
+	public boolean isProjectStarred(Long projectId, Long userId) {
+		return userRepository.isProjectStarred(projectId,userId);
+	}
+	
+	@Transactional
+	public boolean isProjectWatched(Long projectId, Long userId) {
+		return userRepository.isProjectWatched(projectId,userId);
+	}
+	
+	@Transactional
+	public UserMyDataDto getMyData(String username) {
+		User user = userRepository.get(username);
+		
+		UserMyDataDto myDataDto = new UserMyDataDto();
+		
+		myDataDto.setProjectsStarred(new ArrayList<ProjectDto>());
+		myDataDto.setProjectsWatched(new ArrayList<ProjectDto>());
+		
+		for(Project project : user.getProjectsStarred()) {
+			ProjectDto projectDto = project.toDto();
+			projectDto.setIsStarred(isProjectStarred(projectDto.getId(),user.getId()));
+			projectDto.setIsWatched(isProjectWatched(projectDto.getId(),user.getId()));
+			
+			myDataDto.getProjectsStarred().add(projectDto);
+		}
+		
+		for(Project project : user.getProjectsWatched()) {
+			ProjectDto projectDto = project.toDto();
+			projectDto.setIsStarred(isProjectStarred(projectDto.getId(),user.getId()));
+			projectDto.setIsWatched(isProjectWatched(projectDto.getId(),user.getId()));
+			
+			myDataDto.getProjectsWatched().add(projectDto);
+		}
+		
+		return myDataDto;
+	}
+	
+	@Transactional
+	public List<String> getProjectsStarredNames(Long userId) {
+		
+		User user = userRepository.get(userId);
+				
+		List<String> projectsStarredNames = new ArrayList<String>();
+		
+		for(Project project : user.getProjectsStarred()) {
+			projectsStarredNames.add(project.getName());
+		}
+		
+		return projectsStarredNames;
+	}
+	
 	
 }

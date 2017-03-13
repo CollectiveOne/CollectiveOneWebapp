@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import org.collectiveone.web.dto.ObjectListRes;
 import org.collectiveone.web.dto.ProjectDto;
 import org.collectiveone.web.dto.ProjectDtoListRes;
 import org.collectiveone.web.dto.ProjectNewDto;
+import org.collectiveone.web.dto.UsernameAndData;
 import org.collectiveone.web.dto.UsernameAndPps;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,21 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProjectServiceImp extends BaseService {
 
-	@Transactional
-	public void save(Project project) {
-		projectRepository.save(project);
-	}
-
-	@Transactional
-	public void authorize(String projectName) throws IOException {
-		AuthorizedProject authProject = new AuthorizedProject();
-		
-		authProject.setProjectName(projectName);
-		authProject.setAuthorized(true);
-		
-		authorizedProjectDao.save(authProject);
-	}
-	
 	@Transactional
 	public boolean isAuthorized(String projectName) {
 		AuthorizedProject projectAuthorized = authorizedProjectDao.get(projectName);
@@ -206,36 +193,48 @@ public class ProjectServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public List<String> getList() {
-		return projectRepository.getListEnabled();
+	public List<String> getNamesEnabled() {
+		return projectRepository.getNamesEnabled();
+	}
+	
+	@Transactional
+	public List<String> getFeaturedList() {
+		return projectRepository.getNaemsFeatured();
 	}
 
 	@Transactional
-	public List<Project> getAll(Integer max) {
-		return projectRepository.getFromRef(new Project(), max);
-	}
+	public List<UsernameAndData> getContributorsAndData(Long projectId) {
 
-	@Transactional
-	public List<UsernameAndPps> getContributorsAndPps(Long projectId) {
-
-		List<UsernameAndPps> usernamesAndPps = new ArrayList<UsernameAndPps>();
+		List<UsernameAndData> usernamesAndData = new ArrayList<UsernameAndData>();
 
 		for(Contributor contributor : getContributors(projectId)) {
-			UsernameAndPps usernameAndPps = new UsernameAndPps(contributor.getContributorUser().getUsername(),contributor.getPps());
-			usernamesAndPps.add(usernameAndPps);
+			UsernameAndData usernameAndData = new UsernameAndData();
+			
+			usernameAndData.setUsername(contributor.getContributorUser().getUsername());
+			usernameAndData.setPps(contributor.getPps());
+			
+			Long cbtId = contributor.getContributorUser().getId();
+			usernameAndData.setnCbtionsCreated(cbtionRepository.getNCreatedByUserInProject(projectId,cbtId));
+			usernameAndData.setnCbtionsDone(cbtionRepository.getNAcceptedOfUserInProject(projectId,cbtId));
+			
+			Long monthsToMs = 2678400000L;
+			usernameAndData.setnCbtionsDoneRecently(
+					cbtionRepository.getNAcceptedOfUserInProjectRecently(projectId,cbtId, new Timestamp(System.currentTimeMillis() - 2*monthsToMs)));
+			
+			usernamesAndData.add(usernameAndData);
 		}
 
-		Collections.sort(usernamesAndPps, new Comparator<UsernameAndPps>(){
-			public int compare(UsernameAndPps o1, UsernameAndPps o2){
+		Collections.sort(usernamesAndData, new Comparator<UsernameAndData>(){
+			public int compare(UsernameAndData o1, UsernameAndData o2){
 				return Double.compare(o2.getPps(), o1.getPps());
 			}
 		});
 
-		return usernamesAndPps;
+		return usernamesAndData;
 	}
 
-	@Transactional
-	public void updatePpsTot(Long projectId, double lastOne) {
+	@Transactional 
+	void updatePpsTot(Long projectId, double lastOne) {
 		Project project = projectRepository.get(projectId);
 
 		double ppsTot = 0.0;
@@ -248,7 +247,7 @@ public class ProjectServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public Set<Contributor> getContributors(Long projectId) {
+	private Set<Contributor> getContributors(Long projectId) {
 		return projectRepository.getContributors(projectId);
 	}
 	
@@ -267,5 +266,69 @@ public class ProjectServiceImp extends BaseService {
 
 		return projectsDtosRes;
 	}	
+	
+	@Transactional
+	public void star(Long projectId, Long userId) {
+		Project project = projectRepository.get(projectId);
+		User user = userRepository.get(userId);
+		
+		user.getProjectsStarred().add(project);
+				
+		userRepository.save(user);
+	}
+	
+	@Transactional
+	public void unStar(Long projectId, Long userId) {
+		User user = userRepository.get(userId);
+		
+		Iterator<Project> prIt = user.getProjectsStarred().iterator();
+		while(prIt.hasNext()){
+		    Project thisProject = prIt.next();
+	         if (thisProject.getId() == projectId) {
+	        	 prIt.remove();
+	         }
+		}
+		
+		userRepository.save(user);
+	}
+	
+	@Transactional
+	public void watch(Long projectId, Long userId) {
+		Project project = projectRepository.get(projectId);
+		User user = userRepository.get(userId);
+		
+		user.getProjectsWatched().add(project);
+				
+		userRepository.save(user);
+	}
+	
+	@Transactional
+	public void unWatch(Long projectId, Long userId) {
+		User user = userRepository.get(userId);
+		
+		Iterator<Project> prIt = user.getProjectsWatched().iterator();
+		while(prIt.hasNext()){
+		    Project thisProject = prIt.next();
+	         if (thisProject.getId() == projectId) {
+	        	 prIt.remove();
+	         }
+		}
+		
+		userRepository.save(user);
+	}
+	
+	
+	@Transactional 
+	List<String> getWatchedUsersEmails(Long projectId) {
+		Project project = projectRepository.get(projectId);
+		
+		List<String> subscribedUsers = new ArrayList<String>();
+	    for(User user : project.getUsersThatWatched()) {
+	    	subscribedUsers.add(user.getEmail());
+	    }
+	    
+		return subscribedUsers;
+	}
+	
 
 }

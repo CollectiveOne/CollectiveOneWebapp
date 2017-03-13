@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class UserDetailsIm implements UserDetails {
+class UserDetailsIm implements UserDetails {
 
 	/**
 	 * 
@@ -38,7 +38,7 @@ public class UserDetailsIm implements UserDetails {
 	public UserDetailsIm(){
 	}
 	
-	public UserDetailsIm(User user){
+	UserDetailsIm(User user){
 		this.user = user;
 	}
 

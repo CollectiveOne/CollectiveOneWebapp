@@ -48,6 +48,6 @@ DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
 }
 
 DecisionBoxSmall.prototype.decMoreClick = function() {
-	window.open('/views/decisionPageR/'+this.decision.id,'_blank');
+	window.open('/v/decision/'+this.decision.id,'_blank');
 }
 

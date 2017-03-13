@@ -1,11 +1,5 @@
 package org.collectiveone.web.dto;
 
-import java.sql.Timestamp;
-
-import org.collectiveone.model.Bid;
-import org.collectiveone.model.Cbtion;
-import org.collectiveone.model.User;
-
 public class BidDto {
 	private Long id;
 	private Long cbtionId;
@@ -23,20 +17,6 @@ public class BidDto {
 	private String doneDescription;
 	
 	
-	public Bid toBid(User creator, Cbtion cbtion) {
-		Bid bid = new Bid();
-		
-		bid.setId(id);
-		bid.setCbtion(cbtion);
-		bid.setCreator(creator);
-		bid.setPpoints(ppoints);
-		bid.setCreationDate(new Timestamp(creationDate));
-		bid.setDescription(description);
-		bid.setDeliveryDate(new Timestamp(deliveryDate));
-		
-		return bid;
-	}
-
 	public Long getId() {
 		return id;
 	}

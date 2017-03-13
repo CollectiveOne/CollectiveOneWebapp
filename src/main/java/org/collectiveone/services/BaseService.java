@@ -11,7 +11,6 @@ import org.collectiveone.repositories.ContributorRepository;
 import org.collectiveone.repositories.DecisionRealmDao;
 import org.collectiveone.repositories.DecisionRepository;
 import org.collectiveone.repositories.GoalRepository;
-import org.collectiveone.repositories.MailSubscriptionRepository;
 import org.collectiveone.repositories.ProjectRepository;
 import org.collectiveone.repositories.PromoterRepository;
 import org.collectiveone.repositories.ReviewRepository;
@@ -22,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 
-public class BaseService {
+class BaseService {
 	
 	/* REPOSITORIES */
 	
@@ -58,9 +57,6 @@ public class BaseService {
 	
 	@Autowired
 	protected BidRepository bidRepository;
-	
-	@Autowired
-	protected MailSubscriptionRepository mailSubscriptionRepository;
 	
 	@Autowired
 	protected AuthorizedEmailRepository authorizedEmailRepository;

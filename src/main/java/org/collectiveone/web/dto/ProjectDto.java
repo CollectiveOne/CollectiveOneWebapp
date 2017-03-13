@@ -2,9 +2,6 @@ package org.collectiveone.web.dto;
 
 import java.sql.Timestamp;
 
-import org.collectiveone.model.Project;
-import org.collectiveone.model.User;
-
 public class ProjectDto {
 	
 	private Long id;
@@ -14,16 +11,10 @@ public class ProjectDto {
 	private String creatorUsername;
 	private double ppsTot;
 	
-	public Project toProject(User creator) {
-		Project project = new Project();
-		
-		project.setName(name);
-		project.setDescription(description);
-		project.setCreator(creator);
-		
-		return project;
-	}
-
+	/* for user logged*/
+	private boolean isStarred;
+	private boolean isWatched;
+	
 	public Long getId() {
 		return id;
 	}
@@ -59,6 +50,18 @@ public class ProjectDto {
 	}
 	public void setPpsTot(double ppsTot) {
 		this.ppsTot = ppsTot;
+	}
+	public boolean getIsStarred() {
+		return isStarred;
+	}
+	public void setIsStarred(boolean isStarred) {
+		this.isStarred = isStarred;
+	}
+	public boolean getIsWatched() {
+		return isWatched;
+	}
+	public void setIsWatched(boolean isWatched) {
+		this.isWatched = isWatched;
 	}
 		
 }

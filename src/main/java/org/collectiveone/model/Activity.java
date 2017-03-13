@@ -64,19 +64,19 @@ public class Activity {
 		return dto;
 	}
 	
-	public String getUserPageLink(String baseUrl, String username) {
-		return "<a href="+baseUrl+"/views/userPageR/"+username+">"+username+"</a>";
+	private String getUserPageLink(String baseUrl, String username) {
+		return "<a href="+baseUrl+"/v/u/"+username+">"+username+"</a>";
 	}
 	
-	public String getGoalPageLink(String baseUrl, String goalTag, String projectName) {
-		return "<a href="+baseUrl+"/views/goalPageR?projectName="+projectName+"&goalTag="+goalTag+"><b>+</b>"+goalTag+"</a>";
+	private String getGoalPageLink(String baseUrl, String goalTag, String projectName) {
+		return "<a href="+baseUrl+"/v/goal?projectName="+projectName+"&goalTag="+goalTag+"><b>+</b>"+goalTag+"</a>";
 	}
 	
-	public String getCbtionPageLink(String baseUrl, Long id, String title) {
-		return "<a href="+baseUrl+"/views/cbtionPageR/"+id+">"+title+"</a>";
+	private String getCbtionPageLink(String baseUrl, Long id, String title) {
+		return "<a href="+baseUrl+"/v/cbtion/"+id+">"+title+"</a>";
 	}
 	
-	public String limitStrSize(String strIn, int size) {
+	private String limitStrSize(String strIn, int size) {
 		if(strIn.length() > size) {
 			return strIn.substring(0,size)+" ...";
 		} else {
@@ -130,13 +130,13 @@ public class Activity {
 			case DECISION:
 				switch(this.event) {
 					case "created":	
-						eventPretty = "decision <a href="+baseUrl+"/views/decisionPageR/"+this.decision.getId()+">"+limitStrSize(this.decision.getDescription(),70)+"</a> was "+this.event+" by "+getUserPageLink(baseUrl,this.decision.getCreator().getUsername());
+						eventPretty = "decision <a href="+baseUrl+"/v/decision/"+this.decision.getId()+">"+limitStrSize(this.decision.getDescription(),70)+"</a> was "+this.event+" by "+getUserPageLink(baseUrl,this.decision.getCreator().getUsername());
 						break;
 	
 					case "opened":
 					case "accepted":
 					case "rejected":
-						eventPretty = "decision <a href="+baseUrl+"/views/decisionPageR/"+this.decision.getId()+">"+limitStrSize(this.decision.getDescription(),70)+"</a> was "+this.event;
+						eventPretty = "decision <a href="+baseUrl+"/v/decision/"+this.decision.getId()+">"+limitStrSize(this.decision.getDescription(),70)+"</a> was "+this.event;
 						break;
 				}
 				break;
@@ -144,7 +144,7 @@ public class Activity {
 			case ARGUMENT:
 				switch(this.event) {
 					case "created":	
-							eventPretty = getUserPageLink(baseUrl,this.argument.getCreator().getUsername())+" added an argument to decision '<a href="+baseUrl+"/views/decisionPageR/"+
+							eventPretty = getUserPageLink(baseUrl,this.argument.getCreator().getUsername())+" added an argument to decision '<a href="+baseUrl+"/v/decision/"+
 							this.argument.getDecision().getId()+">"+limitStrSize(this.argument.getDecision().getDescription(),70)+"</a>'";
 							break;
 				}

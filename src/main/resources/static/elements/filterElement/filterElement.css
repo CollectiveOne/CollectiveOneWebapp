@@ -66,7 +66,7 @@
 	display: none;
 	padding-bottom: 10px;
 	padding-top: 10px;
-	max-width: 678px;
+	max-width: 734px;
 }
 
 #loading_gif {
@@ -91,13 +91,13 @@
 }
 
 #filter_contents #filter_inputs {
-	width: 130px;
+	width: 190px;
 	margin-left: 15px;
 	float:left;
 }
 
 #filter_contents #filter_inputs_cbtion {
-	width: 130px;
+	width: 190px;
 	margin-left: 15px;
 	float:left;
 	display:none;

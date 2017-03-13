@@ -22,7 +22,6 @@ import org.collectiveone.model.Voter;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.GoalDtoListRes;
-import org.collectiveone.web.dto.GoalTouchDto;
 import org.collectiveone.web.dto.GoalUserWeightsDto;
 import org.collectiveone.web.dto.GoalWeightsDataDto;
 import org.collectiveone.web.dto.ObjectListRes;
@@ -33,8 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GoalServiceImp extends BaseService {
 	
-	@Transactional
-	public Long create(GoalDto goalDto, GoalState state) throws IOException {
+	@Transactional 
+	Long create(GoalDto goalDto, GoalState state) throws IOException {
 		if(!exist(goalDto.getGoalTag(), goalDto.getProjectName())) {
 			Goal goal = new Goal();
 			Project project = projectRepository.get(goalDto.getProjectName());
@@ -230,7 +229,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void addParentsAndSubgoals(GoalDto goalDto) {
+	private void addParentsAndSubgoals(GoalDto goalDto) {
 		List<String> parentGoalsTags = new ArrayList<String>();
 		for(Goal parent : goalRepository.getAllParents(goalDto.getId())) { 
 			parentGoalsTags.add(parent.getGoalTag()); 
@@ -252,12 +251,12 @@ public class GoalServiceImp extends BaseService {
 	@Transactional
 	public List<String> getSuggestions(String query, List<String> projectNames) {
 		if(projectNames.size() == 0) {
-			projectNames = projectRepository.getListEnabled();
+			projectNames = projectRepository.getNamesEnabled();
 		}
 		return goalRepository.getSuggestions(query, projectNames);
 	}
 
-	@Transactional
+	@Transactional 
 	public void updateStateAll() throws IOException {
 		/* Update state of all not closed bids */
 		List<Goal> goalsNotDeleted = goalRepository.getNotDeleted();
@@ -276,7 +275,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void fromProposedToAccepted(Long goalId) throws IOException {
+	private void fromProposedToAccepted(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		goalRepository.save(goal);
 
@@ -354,7 +353,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void fromAcceptedToDeleted(Long goalId) throws IOException {
+	private void fromAcceptedToDeleted(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		goalRepository.save(goal);
 
@@ -415,7 +414,7 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
-	public void updateNewParent(Long goalId) throws IOException {
+	private void updateNewParent(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		goalRepository.save(goal);
 
@@ -512,8 +511,8 @@ public class GoalServiceImp extends BaseService {
 		}
 	}
 	
-	@Transactional
-	public List<String> getParentGoalsTags(Goal goal) {
+	@Transactional 
+	List<String> getParentGoalsTags(Goal goal) {
 		/* Add parent goals too */
 		List<String> parentGoalsTags = new ArrayList<String>();
 		if(goal!= null) {
@@ -524,9 +523,9 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public GoalWeightsDataDto getWeightsData(String projectName, String goalTag, String username) {
+	public GoalWeightsDataDto getWeightsData(Long goalId, String username) {
 		
-		Goal goal = goalRepository.get(goalTag, projectName);
+		Goal goal = goalRepository.get(goalId);
 		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
 		
 		GoalWeightsDataDto goalWeightsDataDto = new GoalWeightsDataDto();  
@@ -553,8 +552,9 @@ public class GoalServiceImp extends BaseService {
 			votersDtos.add(otherVoter.toDto());
 		}
 		
-		goalWeightsDataDto.setGoalTag(goalTag);
-		goalWeightsDataDto.setProjectName(projectName);
+		goalWeightsDataDto.setGoalId(goal.getId());
+		goalWeightsDataDto.setGoalTag(goal.getGoalTag());
+		goalWeightsDataDto.setProjectName(goal.getProject().getName());
 		goalWeightsDataDto.setTotalWeight(decisionRealmRepository.getWeightTot(realm.getId()));
 		
 		goalWeightsDataDto.setVotersDtos(votersDtos);
@@ -563,13 +563,13 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void touch(GoalTouchDto touchDto) {
-		Goal goal = goalRepository.get(touchDto.getGoalTag(), touchDto.getProjectName());
+	public void touch(Long goalId, Long userId, boolean touch) {
+		Goal goal = goalRepository.get(goalId);
 		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
-		User user = userRepository.get(touchDto.getUsername());
+		User user = userRepository.get(userId);
 		Voter voter = decisionRealmRepository.getVoter(realm.getId(), user.getId());
 		
-		if(touchDto.getTouchFlag()) {
+		if(touch) {
 			voter.setActualWeight(voter.getMaxWeight());
 		} else {
 			voter.setActualWeight(0.0);
@@ -736,7 +736,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void updateBudget(Long goalId) throws IOException {
+	private void updateBudget(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		
 		Activity act = new Activity();
@@ -812,7 +812,7 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
-	public void updateAttachment(Long goalId) throws IOException {
+	private void updateAttachment(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		
 		Activity act = new Activity();

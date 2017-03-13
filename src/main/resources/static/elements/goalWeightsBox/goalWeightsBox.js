@@ -5,7 +5,7 @@ function GoalWeightsBox(container_id,goalWeightsData) {
 };
 
 GoalWeightsBox.prototype.update = function() {
-	GLOBAL.serverComm.goalWeightsGet(this.goalWeightsData.projectName, this.goalWeightsData.goalTag, this.dataReceivedCallback, this);
+	GLOBAL.serverComm.goalWeightsGet(this.goalWeightsData.goalId, this.dataReceivedCallback, this);
 }
 
 GoalWeightsBox.prototype.dataReceivedCallback = function(data) {
@@ -87,7 +87,7 @@ GoalWeightsBox.prototype.drawGraph = function() {
 		    var activePoints = ppsChart.getElementsAtEvent(evt);
 		    var clickedElementindex = activePoints[0]["_index"];
 		    var username = ppsChart.data.labels[clickedElementindex]; 
-		    window.location.href = "/views/userPageR/"+username;
+		    window.location.href = "/v/u/"+username;
 	});
 }
 

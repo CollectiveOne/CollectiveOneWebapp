@@ -3,8 +3,8 @@
 	layout:decorator="layouts/main">
 <head>
 	<script type="text/javascript" th:src="@{//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.js}"></script>
-	<script type="text/javascript" th:src="@{/views/goalPage.js}"></script>
-	<link rel="stylesheet" type="text/css" th:href="@{/views/goalPage.css}" />
+	<script type="text/javascript" th:src="@{/v/goalPage.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/v/goalPage.css}" />
 		
 	<script type="text/javascript" th:src="@{/elements/goalBox/goalBox.js}"></script>
 	<link rel="stylesheet" type="text/css" th:href="@{/elements/goalBox/goalBox.css}" />
@@ -29,7 +29,7 @@
 	<meta property="og:title" th:content="'CollectiveOne | ' + ${projectName} + '+' + ${goalTag}" />
 	<meta property="og:description" th:content="${goalDescription}" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" th:content="'http://www.collectiveone.org/views/goalPageR/'+${goalId}" />
+	<meta property="og:url" th:content="'http://www.collectiveone.org/v/goal/'+${goalId}" />
 	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
 	
 	<script th:inline="javascript">

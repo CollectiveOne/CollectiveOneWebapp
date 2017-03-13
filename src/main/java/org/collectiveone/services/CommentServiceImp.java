@@ -11,7 +11,6 @@ import org.collectiveone.model.Cbtion;
 import org.collectiveone.model.Comment;
 import org.collectiveone.model.Promoter;
 import org.collectiveone.model.User;
-import org.collectiveone.web.controllers.rest.ResStatus;
 import org.collectiveone.web.dto.CommentDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,7 @@ public class CommentServiceImp extends BaseService {
 	
 	
 	@Transactional
-	public ResStatus create(CommentDto commentDto) throws IOException {
+	public void create(CommentDto commentDto) throws IOException {
 
 		User creator = userRepository.get(commentDto.getCreatorUsername());
 		Cbtion cbtion = cbtionRepository.get(commentDto.getCbtionId());
@@ -61,12 +60,6 @@ public class CommentServiceImp extends BaseService {
 		act.setEvent("new");
 		activityService.saveAndNotify(act);
 		
-		ResStatus resStatus = new ResStatus();
-
-		resStatus.setSuccess(true);
-		resStatus.setMsg("comment saved");
-
-		return resStatus;
 	}
 
 	@Transactional
@@ -81,9 +74,7 @@ public class CommentServiceImp extends BaseService {
 
 
 	@Transactional
-	public ResStatus promote(Long commentId, Long userId, boolean promoteUp) {
-		ResStatus resStatus = new ResStatus();
-
+	public void promote(Long commentId, Long userId, boolean promoteUp) {
 		Comment comment = commentDao.get(commentId);
 		commentDao.save(comment);
 
@@ -119,15 +110,8 @@ public class CommentServiceImp extends BaseService {
 		
 		promoterDao.save(promoter);
 
-		if(promoteUp) resStatus.setMsg("comment promoted up");
-		else resStatus.setMsg("comment promoted down");
-
 		/* update relevance to order results */
 		comment.setRelevance(newRelevance);
-
-		resStatus.setSuccess(true);
-
-		return resStatus;		
 	}
 
 }

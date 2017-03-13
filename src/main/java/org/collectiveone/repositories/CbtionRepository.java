@@ -27,7 +27,7 @@ import org.springframework.stereotype.Repository;
 public class CbtionRepository extends BaseRepository {
 	
 	@Autowired
-	GoalRepository	goalDao;
+	private GoalRepository	goalDao;
 	
 	@Autowired
 	private ProjectRepository projectDao;
@@ -41,14 +41,6 @@ public class CbtionRepository extends BaseRepository {
 	
 	public Cbtion get(Long id) {
 		return (Cbtion) super.get(id,Cbtion.class);
-	}
-	
-	public List<Cbtion> getAll(Integer max) {
-		return (List<Cbtion>) super.getAll(max,Cbtion.class);
-	}
-	
-	public List<Cbtion> get(Cbtion refCbtion) {
-		return (List<Cbtion>) super.get(refCbtion,Cbtion.class);
 	}
 	
 	public void remove(Long id) {
@@ -84,7 +76,7 @@ public class CbtionRepository extends BaseRepository {
 	
 	public ObjectListRes<Cbtion> get(Filters filters) {
 		
-		Criteria q = applyGeneralFilters(filters, projectDao.getListEnabled(), Cbtion.class);
+		Criteria q = applyGeneralFilters(filters, projectDao.getNamesEnabled(), Cbtion.class);
 		
 		/* State names are entity specific and I was not able to put these
 		 * disjunction in a common function*/
@@ -103,6 +95,19 @@ public class CbtionRepository extends BaseRepository {
 			if(!contributorUsername.equals("")) {
 				q.createAlias("contributor","cont")
 					.add(Restrictions.eq("cont.username",contributorUsername));
+			}
+		}
+		
+		/* if assigneeUsername requested */
+		String assigneeUsername = filters.getAssigneeUsername();
+		if(assigneeUsername != null) {
+			if(!assigneeUsername.equals("")) {
+				q
+					.add(Restrictions.eq("state",CbtionState.ASSIGNED))
+					.createAlias("bids","bds")
+					.add(Restrictions.eq("bds.state",BidState.ASSIGNED))
+					.createAlias("bds.creator","bdcreator")
+					.add(Restrictions.eq("bdcreator.username",assigneeUsername));
 			}
 		}
 		
@@ -134,18 +139,6 @@ public class CbtionRepository extends BaseRepository {
 		return getObjectsAndResSet(q, filters, Cbtion.class);
 	}
 	
-	public List<Cbtion> getAcceptedInProject(Long projectId) {
-		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
-		
-		query.add(Restrictions.eq("state", CbtionState.ACCEPTED))
-			.add(Restrictions.eq("project.id", projectId));
-		
-		@SuppressWarnings("unchecked")
-		List<Cbtion> res = (List<Cbtion>) query.list();
-		
-		return res;
-	}
-	
 	public List<Cbtion> getAcceptedOfUserInProject(Long contributorId, Long projectId) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
 		
@@ -164,7 +157,7 @@ public class CbtionRepository extends BaseRepository {
 	}
 	
 	
-	public Long countPromoters(Long cbtionId, boolean promoteUp) {
+	private Long countPromoters(Long cbtionId, boolean promoteUp) {
 		
 		Session session = sessionFactory.getCurrentSession();
 
@@ -225,6 +218,45 @@ public class CbtionRepository extends BaseRepository {
 				.setProjection(Projections.rowCount());
 						
 		Long res = (Long) q.uniqueResult();
+		
+		return (int)(res + 0);
+	}
+	
+	public int getNCreatedByUserInProject(Long projectId, Long userId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
+		
+		query.add(Restrictions.eq("creator.id", userId))
+			.add(Restrictions.eq("project.id", projectId))
+			.setProjection(Projections.rowCount());
+		
+		Long res = (Long) query.uniqueResult();
+		
+		return (int)(res + 0);
+	}
+	
+	public int getNAcceptedOfUserInProject(Long projectId, Long userId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
+		
+		query.add(Restrictions.eq("state", CbtionState.ACCEPTED))
+			.add(Restrictions.eq("project.id", projectId))
+			.add(Restrictions.eq("contributor.id", userId))
+			.setProjection(Projections.rowCount());
+		
+		Long res = (Long) query.uniqueResult();
+		
+		return (int)(res + 0);
+	}
+	
+	public int getNAcceptedOfUserInProjectRecently(Long projectId, Long userId, Timestamp afterDate) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(Cbtion.class);
+		
+		query.add(Restrictions.eq("state", CbtionState.ACCEPTED))
+			.add(Restrictions.eq("project.id", projectId))
+			.add(Restrictions.eq("contributor.id", userId))
+			.add(Restrictions.ge("creationDate", afterDate))
+			.setProjection(Projections.rowCount());
+		
+		Long res = (Long) query.uniqueResult();
 		
 		return (int)(res + 0);
 	}

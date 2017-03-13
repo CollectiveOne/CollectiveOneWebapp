@@ -38,11 +38,13 @@ public class Cbtion {
 	private String product;
 	private double suggestedBid;
 	private CbtionState state;	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="cbtion",cascade=CascadeType.ALL)
 	private List<Bid> bids = new ArrayList<Bid>();
 	@ManyToOne
 	private User contributor;
 	private double assignedPpoints;
+	private Timestamp acceptedDate;
+	
 	@ManyToOne
 	private Goal goal;
 	@OneToOne
@@ -59,7 +61,7 @@ public class Cbtion {
 	@JoinTable(name = "CBTIONS_COMMENTS")
 	private List<Comment> comments = new ArrayList<Comment>();
 	
-	public CbtionDto toDto() {
+	CbtionDto toDto() {
 		CbtionDto dto = new CbtionDto();
 		
 		dto.setTitle(title);
@@ -73,6 +75,16 @@ public class Cbtion {
 		dto.setState(state.toString());
 		if(bids != null) dto.setnBids(bids.size());
 		if(contributor != null) dto.setContributorUsername(contributor.getUsername());
+		if(state == CbtionState.ASSIGNED) {
+			for(Bid bid : bids) {
+				if(bid.getState() == BidState.ASSIGNED) {
+					dto.setAssigneeUsername(bid.getCreator().getUsername());
+					dto.setAssigneePpoints(bid.getPpoints());
+					break;
+				}
+			}
+		}
+		 
 		if(goal != null) dto.setGoalTag(goal.getGoalTag());
 		dto.setAssignedPpoints(assignedPpoints);
 		if(openDec != null) dto.setOpenDec(openDec.toDto());
@@ -157,6 +169,12 @@ public class Cbtion {
 	}
 	public void setContributor(User contributor) {
 		this.contributor = contributor;
+	}
+	public Timestamp getAcceptedDate() {
+		return acceptedDate;
+	}
+	public void setAcceptedDate(Timestamp acceptedDate) {
+		this.acceptedDate = acceptedDate;
 	}
 	public List<Bid> getBids() {
 		return bids;

@@ -20,8 +20,13 @@
 
 #project_container #contributors_chart_container {
 	width: 100%;
-	max-width:400px;
+	max-width: 670px;
 	margin: 0 auto;
 	margin-top:10px;
 	margin-bottom:10px;
+}
+
+#project_container #contributors_chart_container #contributors_table {
+	width: 100%;
+	/* text-align:center; */
 }
