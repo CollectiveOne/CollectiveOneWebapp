@@ -77,14 +77,6 @@ DecisionBox.prototype.decisionBoxLoaded = function() {
 		$("#verdictTime_div",this.container).show();
 		$("#verdict_div",this.container).show();
 		
-		var clarityRatio = floatToChar(this.decision.clarity*100,1);
-		$("#clarity",this.container).append(clarityRatio);
-		$("#clarity_bar",this.container).css('width', clarityRatio+'%').attr('aria-valuenow', clarityRatio);  
-		
-		var stabilityRatio = floatToChar(this.decision.stability*100,1);
-		$("#stability",this.container).append(stabilityRatio);
-		$("#stability_bar",this.container).css('width', stabilityRatio+'%').attr('aria-valuenow', stabilityRatio);  
-
 		var yesRatio = floatToChar(this.decision.pest*100,1);
 		$("#yesRatio",this.container).append(yesRatio+"%");
 		$("#yesRatio_bar",this.container).css('width', yesRatio+'%').attr('aria-valuenow', yesRatio);  

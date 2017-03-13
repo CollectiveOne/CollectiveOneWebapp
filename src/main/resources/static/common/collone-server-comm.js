@@ -110,10 +110,28 @@ ServerComm.prototype = {
 			});
 		},
 		
-		goalGet : function(goalTag,projectName,callbackFunction,callbackObj) {
+		goalGetFromTag : function(goalTag,projectName,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'GET',
 				url : '/1/goal?projectName='+projectName+'&goalTag='+goalTag,
+				data : '',
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					showOutput("error getting goal","DarkRed");
+				}
+			});
+		},
+		
+		goalGet : function(goalId,callbackFunction,callbackObj) {
+			$.ajax({
+				type : 'GET',
+				url : '/1/goal/'+goalId,
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -132,7 +150,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'GET',
-				url : '/goalExist?projectName='+projectName+'&goalTag='+goalTag,
+				url : '/1/goalExist?projectName='+projectName+'&goalTag='+goalTag,
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -184,10 +202,10 @@ ServerComm.prototype = {
 			});
 		},
 
-		goalProposeParent : function(goalId,parentTag,callbackFunction,callbackObj) {
+		goalProposeParent : function(goalId,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'PUT',
-				url : '/1/goal/'+goalId+'/proposeParent',
+				url : '/1/goal/'+goalId+'/proposeParent?parentTag='+parentTag,
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',

@@ -17,7 +17,13 @@ ProjectSelector.prototype.fill = function() {
 	} else {
 		if(isUserLogged()) {
 			/* if user is logged, use active projects */
-			this.projectListReceivedCallback(GLOBAL.sessionData.activeProjectsController.getPossibleActiveProjectsNames());
+			var projectsStarred = GLOBAL.sessionData.activeProjectsController.getPossibleActiveProjectsNames();
+			if(projectsStarred.length > 0) {
+				this.projectListReceivedCallback(projectsStarred);
+			} else {
+				GLOBAL.serverComm.projectNamesListGet(this.projectListReceivedCallback,this)
+			}
+			
 		} else {
 			GLOBAL.serverComm.projectNamesListGet(this.projectListReceivedCallback,this);
 		}
