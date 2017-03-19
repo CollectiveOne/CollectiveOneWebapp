@@ -28,6 +28,10 @@ public class UserRepository extends BaseRepository {
 		return super.getN(User.class);
 	}
 	
+	public List<User> getAll(int max) {
+		return super.getAll(max,User.class);
+	}
+	
 	public User get(String username) {
 		Criteria query = sessionFactory.getCurrentSession().createCriteria(User.class);
 		query.add(Restrictions.eq("username", username));

@@ -32,7 +32,7 @@ public class ReviewServiceImp extends BaseService {
 			bid.getReviews().add(review);
 
 			bidRepository.save(bid);
-			reviewDao.save(review);
+			reviewRepository.save(review);
 
 			return "review created";
 		} else {

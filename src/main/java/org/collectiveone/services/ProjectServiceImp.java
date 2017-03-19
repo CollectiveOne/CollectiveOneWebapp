@@ -38,8 +38,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectServiceImp extends BaseService {
 
 	@Transactional
+	public void authorize(String projectName) {
+		AuthorizedProject authorizedProject = new AuthorizedProject();
+	    authorizedProject.setProjectName(projectName);
+	    authorizedProject.setAuthorized(true);
+	    
+	    authorizedProjectRepository.save(authorizedProject);
+    }
+	
+	@Transactional
 	public boolean isAuthorized(String projectName) {
-		AuthorizedProject projectAuthorized = authorizedProjectDao.get(projectName);
+		AuthorizedProject projectAuthorized = authorizedProjectRepository.get(projectName);
 		if(projectAuthorized != null) {
 			return true;
 		} else {
@@ -171,7 +180,7 @@ public class ProjectServiceImp extends BaseService {
 			cbtion.setState(CbtionState.ACCEPTED);
 
 			/* add user to project contributors */
-			contributorDao.updateContributor(project.getId(), ctrb.getId(), bid.getPpoints());
+			contributorRepository.updateContributor(project.getId(), ctrb.getId(), bid.getPpoints());
 		}
 	}
 

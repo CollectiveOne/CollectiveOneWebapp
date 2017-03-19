@@ -247,7 +247,7 @@ public class CbtionServiceImp extends BaseService {
 		Cbtion cbtion = cbtionRepository.get(cbtionId);
 		cbtionRepository.save(cbtion);
 
-		Promoter promoter = promoterDao.getOfCbtion(cbtionId, userId);
+		Promoter promoter = promoterRepository.getOfCbtion(cbtionId, userId);
 
 		/* countPromotersDiff will doesn't include the current transaction so this logic 
 		 * is used to solve the problem*/
@@ -275,14 +275,14 @@ public class CbtionServiceImp extends BaseService {
 
 		promoter.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		promoter.setPromoteUp(promoteUp);
-		promoterDao.save(promoter);
+		promoterRepository.save(promoter);
 		
 		cbtion.setRelevance(newRelevance);
 	}
 	
 	@Transactional
 	public CommentDto getCommentDto(Long commentId) {
-		return commentDao.get(commentId).toDto();
+		return commentRepository.get(commentId).toDto();
 	}
 	
 	@Transactional

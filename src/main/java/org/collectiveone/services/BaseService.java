@@ -62,19 +62,19 @@ class BaseService {
 	protected AuthorizedEmailRepository authorizedEmailRepository;
 	
 	@Autowired 
-	protected PromoterRepository promoterDao;
+	protected PromoterRepository promoterRepository;
 	
 	@Autowired 
-	protected CommentRepository commentDao;
+	protected CommentRepository commentRepository;
 	
 	@Autowired 
-	protected ContributorRepository contributorDao;
+	protected ContributorRepository contributorRepository;
 	
 	@Autowired
-	protected AuthorizedProjectRepository authorizedProjectDao;
+	protected AuthorizedProjectRepository authorizedProjectRepository;
 	
 	@Autowired 
-	protected ReviewRepository reviewDao;
+	protected ReviewRepository reviewRepository;
 	
 	
 	/* SERVICES */
