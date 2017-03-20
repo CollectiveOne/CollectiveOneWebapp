@@ -238,6 +238,24 @@ ServerComm.prototype = {
 				}
 			});
 		},
+		
+		goalRealmSetWeight: function(goalId, weight, callbackFunction,callbackObj) {
+			$.ajax({
+				type : 'PUT',
+				url : '/1/goal/'+goalId+'/setWeight?weight='+weight,
+				data : '',
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
 
 		goalProposeDetach: function(goalId, increaseBudget,callbackFunction,callbackObj) {
 			

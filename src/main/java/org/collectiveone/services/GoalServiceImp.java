@@ -579,6 +579,28 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
+	public void setWeight(Long goalId, Long userId, double weight) {
+		Goal goal = goalRepository.get(goalId);
+		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());
+		User user = userRepository.get(userId);
+		Voter voter = decisionRealmRepository.getVoter(realm.getId(), user.getId());
+		
+		double newWeight = 0.0;
+		if( (0 <= weight) && (weight <= voter.getMaxWeight()) ) {
+			newWeight = weight;
+		} else if (weight < 0) {
+			newWeight = 0;
+		} else {
+			newWeight = voter.getMaxWeight();
+		}
+		
+		voter.setActualWeight(newWeight);
+		
+		decisionRealmRepository.save(realm);
+	}
+	
+	
+	@Transactional
 	public void detach(Long goalId, double initialBudget) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		

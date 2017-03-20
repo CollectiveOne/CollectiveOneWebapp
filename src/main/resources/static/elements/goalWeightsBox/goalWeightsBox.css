@@ -16,6 +16,21 @@
 	margin-bottom: 10px;
 }
 
+#goal_weight_div #left_div #manual_set {
+	margin-top:10px;
+}
+
+#goal_weight_div #left_div #manual_set input {
+	width: 90px;
+	float: left;
+}
+
+#goal_weight_div #left_div #manual_set #set_btn {
+	width: 50px;
+	float: left;
+	margin-left: 5px;
+}
+
 #goal_weight_div #right_div {
 	width: 300px;
 	float: left;
