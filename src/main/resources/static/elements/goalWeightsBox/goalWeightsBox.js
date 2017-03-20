@@ -25,7 +25,7 @@ GoalWeightsBox.prototype.htmlLoaded = function() {
 
 			$("#left_div", this.container).show();
 			$("#user_max_weight", this.container).html(floatToChar(this.goalWeightsData.userWeightsDto.maxWeight,1)+" ("+floatToChar(maxWeightPerc,1)+"%)");
-			$("#user_actual_weight", this.container).html(floatToChar(actWeightPerc,1)+"%");
+			$("#user_actual_weight", this.container).html(floatToChar(this.goalWeightsData.userWeightsDto.actualWeight,1)+" ("+floatToChar(actWeightPerc,1)+"%)");
 			$("#touch_btn", this.container).click(this.touchClicked.bind(this));
 			$("#release_btn", this.container).click(this.releaseClicked.bind(this));
 			
