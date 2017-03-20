@@ -34,11 +34,11 @@ GoalWeightsBox.prototype.htmlLoaded = function() {
 }
 
 GoalWeightsBox.prototype.touchClicked = function() {
-	GLOBAL.serverComm.goalRealmTouch(true, this.goalWeightsData.projectName, this.goalWeightsData.goalTag, this.afterClickCallback, this);
+	GLOBAL.serverComm.goalRealmTouch(true, this.goalWeightsData.goalId, this.afterClickCallback, this);
 }
 
 GoalWeightsBox.prototype.releaseClicked = function() {
-	GLOBAL.serverComm.goalRealmTouch(false, this.goalWeightsData.projectName, this.goalWeightsData.goalTag, this.afterClickCallback, this);
+	GLOBAL.serverComm.goalRealmTouch(false, this.goalWeightsData.goalId, this.afterClickCallback, this);
 }
 
 GoalWeightsBox.prototype.afterClickCallback = function() {

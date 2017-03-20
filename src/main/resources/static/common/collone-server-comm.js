@@ -132,7 +132,7 @@ ServerComm.prototype = {
 
 			$.ajax({
 				type : 'GET',
-				url : '/goalExist?projectName='+projectName+'&goalTag='+goalTag,
+				url : '/1/goalExist?projectName='+projectName+'&goalTag='+goalTag,
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
@@ -184,10 +184,10 @@ ServerComm.prototype = {
 			});
 		},
 
-		goalProposeParent : function(goalId,parentTag,callbackFunction,callbackObj) {
+		goalProposeParent : function(goalId,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'PUT',
-				url : '/1/goal/'+goalId+'/proposeParent',
+				url : '/1/goal/'+goalId+'/proposeParent?parentTag='+parentTag,
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
