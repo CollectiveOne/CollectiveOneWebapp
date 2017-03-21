@@ -1,7 +1,7 @@
 ﻿---------------------------------------------------------
 -- This script will only fill the contents of the decisions
 -- table. All other tables and all other sequences are generated
--- using the DB dump.
+-- using a DB dump which excludes the decisions table data.
 ---------------------------------------------------------
 
 DROP SCHEMA IF EXISTS masterschema CASCADE;
@@ -23,3 +23,6 @@ INSERT INTO decisions
 SELECT 
 id, actual_verdict_date, creation_date, description, elapsed_factor, from_state, n, open_date, pest, state, to_state, type, verdict, verdict_hours, pps_cum, weight_tot, affected_bid_id, affected_cbtion_id, affected_goal_id, creator_id, decision_realm_id, goal_id, project_id
 FROM masterschema.decisions;
+
+DROP SCHEMA masterschema CASCADE;
+DROP EXTENSION postgres_fdw CASCADE;
