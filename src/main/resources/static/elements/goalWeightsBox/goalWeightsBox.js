@@ -24,9 +24,13 @@ GoalWeightsBox.prototype.htmlLoaded = function() {
 			var actWeightPerc = this.goalWeightsData.userWeightsDto.actualWeight/this.goalWeightsData.totalWeight*100;
 
 			$("#left_div", this.container).show();
-			$("#user_actual_weight", this.container).html(floatToChar(actWeightPerc,1)+"%");
+			$("#user_max_weight", this.container).html(floatToChar(this.goalWeightsData.userWeightsDto.maxWeight,1)+" ("+floatToChar(maxWeightPerc,1)+"%)");
+			$("#user_actual_weight", this.container).html(floatToChar(this.goalWeightsData.userWeightsDto.actualWeight,1)+" ("+floatToChar(actWeightPerc,1)+"%)");
 			$("#touch_btn", this.container).click(this.touchClicked.bind(this));
-			$("#release_btn", this.container).click(this.releaseClicked.bind(this));			
+			$("#release_btn", this.container).click(this.releaseClicked.bind(this));
+			
+			$("#set_btn", this.container).click(this.setClicked.bind(this));
+			$("#manual_set_input",this.container).val(this.goalWeightsData.userWeightsDto.actualWeight);
 		}
 	}
 	
@@ -39,6 +43,10 @@ GoalWeightsBox.prototype.touchClicked = function() {
 
 GoalWeightsBox.prototype.releaseClicked = function() {
 	GLOBAL.serverComm.goalRealmTouch(false, this.goalWeightsData.goalId, this.afterClickCallback, this);
+}
+
+GoalWeightsBox.prototype.setClicked = function() {
+	GLOBAL.serverComm.goalRealmSetWeight(this.goalWeightsData.goalId, $("#manual_set_input",this.container).val(), this.afterClickCallback, this);
 }
 
 GoalWeightsBox.prototype.afterClickCallback = function() {

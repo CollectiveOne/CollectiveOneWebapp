@@ -126,6 +126,15 @@ public class GoalsController { // NO_UCD (unused code)
 		return true;
 	}
 	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/goal/{goalId}/setWeight", method = RequestMethod.PUT)
+	public boolean setWeight(@PathVariable("goalId") Long goalId, @RequestParam("weight") double weight) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get(auth.getName());
+		goalService.setWeight(goalId,logged.getId(),weight);
+		return true;
+	}
+	
 	@RequestMapping(value="/goals", method = RequestMethod.POST)
 	public @ResponseBody Map<String,Object> getList(@RequestBody Filters filters) {
 		if(filters.getPage() == 0) filters.setPage(1);
