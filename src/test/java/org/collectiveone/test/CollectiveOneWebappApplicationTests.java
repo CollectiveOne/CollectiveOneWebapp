@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -17,6 +18,7 @@ import org.collectiveone.services.PeriodicMethods;
 import org.collectiveone.services.ProjectServiceImp;
 import org.collectiveone.services.UserAuthServiceImp;
 import org.collectiveone.test.config.TestConfig;
+import org.collectiveone.test.services.TimeServiceTestIm;
 import org.collectiveone.web.controllers.BaseController;
 import org.collectiveone.web.controllers.rest.DecisionsController;
 import org.collectiveone.web.controllers.views.ViewsController;
@@ -72,6 +74,10 @@ public class CollectiveOneWebappApplicationTests {
 	private String projectName = "test-project";
 	private String goalTag = "test-goal";
 	private int nusers = 10;
+	
+	private double verdictHours = 100;
+	private Long timeStepMs = 10L*60L*60L*1000L;
+	private double hoursToMs = 60.0*60*1000;
 	
 	@Before
 	public void setup() throws IOException {
@@ -136,7 +142,9 @@ public class CollectiveOneWebappApplicationTests {
 	}
 	
 	@Test
-	public void testDecisionAlgorithm() throws IOException {
+	public void testDecisionAlgorithm01() throws IOException {
+		
+		System.out.println("---------------TEST 01-----------------");
 		
 		/* Mockups */
 		BindingResult result = mock(BindingResult.class);
@@ -148,14 +156,13 @@ public class CollectiveOneWebappApplicationTests {
 	    decisionDto.setDescription("Test decision");
 	    decisionDto.setGoalTag(goalTag);
 	    decisionDto.setProjectName(projectName);
-	    decisionDto.setVerdictHours(100);
+	    decisionDto.setVerdictHours(verdictHours);
 	    
 	    String returned = viewsController.decisionNewSubmit(decisionDto, result, model);
 	    String[] parts = returned.split("/");
 	    Long decisionId = Long.parseLong(parts[3]);
 	    
 	    /* Login one user*/
-	    
 	    for(int ix=0; ix < nusers; ix++) {
 	    	UserDetails userDetails = userAuthService.loadUserByUsername("user"+ix);
 			Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername (),userDetails.getPassword (),userDetails.getAuthorities ());
@@ -192,6 +199,57 @@ public class CollectiveOneWebappApplicationTests {
 		System.out.println("pc_low: "+decision.pc_low);
 		System.out.println("pc_high: "+decision.pc_high);
 	} 
+	
+	@Test
+	public void testDecisionAlgorithm02() throws IOException {
+		
+		System.out.println("---------------TEST 02-----------------");
+		
+		/* Mockups */
+		BindingResult result = mock(BindingResult.class);
+	    when(result.hasErrors()).thenReturn(false);
+	    Model model = mock(Model.class);
+	    
+		/* Create a new decision */
+	    DecisionDtoCreate decisionDto = new DecisionDtoCreate();
+	    decisionDto.setDescription("Test decision");
+	    decisionDto.setGoalTag(goalTag);
+	    decisionDto.setProjectName(projectName);
+	    decisionDto.setVerdictHours(verdictHours);
+	    
+	    String returned = viewsController.decisionNewSubmit(decisionDto, result, model);
+	    String[] parts = returned.split("/");
+	    Long decisionId = Long.parseLong(parts[3]);
+	    Decision decision = decisionService.get(decisionId);
+	    Timestamp creationDate = decision.getCreationDate();
+	    
+	    /* one user vote and time passes by*/
+    	UserDetails userDetails = userAuthService.loadUserByUsername("user0");
+		Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername (),userDetails.getPassword (),userDetails.getAuthorities ());
+		SecurityContextHolder.getContext().setAuthentication(auth);
+		
+		ThesisDto thesisDto = new ThesisDto();
+		thesisDto.setDecisionId(decisionId);
+		thesisDto.setValue(1);
+		decisionController.vote(thesisDto);
+		
+		/* zero time has passed */
+		decisionService.setTimeService(new TimeServiceTestIm());
+		decisionService.getTimeService().setNow(creationDate);
+		
+		UpdatedDecisionAndDisplay(decisionId);
+		
+		Long timePassedMs = 0L;
+		
+		while(timePassedMs <= ((verdictHours*1.1)*hoursToMs)) {
+			timePassedMs += timeStepMs;
+			decisionService.getTimeService().setNow(new Timestamp(creationDate.getTime() + timePassedMs));
+			
+			UpdatedDecisionAndDisplay(decisionId);
+		}
+		
+	
+	}
 }
 
 

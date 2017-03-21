@@ -110,18 +110,30 @@ class BaseService {
 	protected DecisionRealmServiceImp decisionRealmService;
 	
 	@Autowired
-	protected TimeServiceImp timeService;
+	protected TimeServiceIf timeService;
 	
 	
 	
 	
 	/* SYSTEM */
-	
 	@Autowired
 	protected Environment env;
 	
 	@Autowired
 	protected ApplicationEventPublisher eventPublisher;
+
+	
+	
+	/* */
+	public TimeServiceIf getTimeService() {
+		return timeService;
+	}
+
+	public void setTimeService(TimeServiceIf timeService) {
+		this.timeService = timeService;
+	}
+	
+	
 	
 
 }
