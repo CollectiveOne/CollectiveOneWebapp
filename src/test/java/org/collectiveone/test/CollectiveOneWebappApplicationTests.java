@@ -16,6 +16,7 @@ import org.collectiveone.services.DecisionServiceImp;
 import org.collectiveone.services.PeriodicMethods;
 import org.collectiveone.services.ProjectServiceImp;
 import org.collectiveone.services.UserAuthServiceImp;
+import org.collectiveone.test.config.TestConfig;
 import org.collectiveone.web.controllers.BaseController;
 import org.collectiveone.web.controllers.rest.DecisionsController;
 import org.collectiveone.web.controllers.views.ViewsController;
@@ -33,6 +34,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ui.Model;
@@ -41,6 +43,7 @@ import org.springframework.validation.BindingResult;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @TestPropertySource(locations="classpath:test.properties")
+@ContextConfiguration(classes={TestConfig.class})
 public class CollectiveOneWebappApplicationTests {
 	
 	@Autowired
@@ -68,7 +71,7 @@ public class CollectiveOneWebappApplicationTests {
 	
 	private String projectName = "test-project";
 	private String goalTag = "test-goal";
-	
+	private int nusers = 10;
 	
 	@Before
 	public void setup() throws IOException {
@@ -93,7 +96,6 @@ public class CollectiveOneWebappApplicationTests {
 		Locale locale = new Locale("EN-US");
 		
 		/* Create users */
-		int nusers = 10;
 		for(int ix=0; ix < nusers; ix++) {
 			UserNewDto userNewDto = new UserNewDto();
 	
@@ -153,33 +155,43 @@ public class CollectiveOneWebappApplicationTests {
 	    Long decisionId = Long.parseLong(parts[3]);
 	    
 	    /* Login one user*/
-	    UserDetails userDetails = userAuthService.loadUserByUsername("user0");
-		Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername (),userDetails.getPassword (),userDetails.getAuthorities ());
-		SecurityContextHolder.getContext().setAuthentication(auth);
+	    
+	    for(int ix=0; ix < nusers; ix++) {
+	    	UserDetails userDetails = userAuthService.loadUserByUsername("user"+ix);
+			Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername (),userDetails.getPassword (),userDetails.getAuthorities ());
+			SecurityContextHolder.getContext().setAuthentication(auth);
+			
+			ThesisDto thesisDto = new ThesisDto();
+			thesisDto.setDecisionId(decisionId);
+			thesisDto.setValue(1);
+			decisionController.vote(thesisDto);
+			
+			UpdatedDecisionAndDisplay(decisionId);
+		}
+	}
+	
+	private void UpdatedDecisionAndDisplay(Long decisionId) throws IOException {
+		Decision decision = null;
+		decision = decisionService.get(decisionId);
 		
-		ThesisDto thesisDto = new ThesisDto();
-		thesisDto.setDecisionId(decisionId);
-		thesisDto.setValue(1);
-		decisionController.vote(thesisDto);
+		System.out.println("----------------------------------------------");
+		System.out.println("state before: "+decision.getState().toString());
 		
-		
-		/* Update state */
 		periodicMethods.updateState();
 		
-		/* show state */
-		Decision decision = decisionService.get(decisionId);
+		decision = decisionService.get(decisionId);
 		
-		System.out.println(decision.n);
-		System.out.println(decision.pest);
-		System.out.println(decision.weightTot);
-		System.out.println(decision.weightCum);
-		System.out.println(decision.elapsedFactor);
-		System.out.println(decision.shrinkFactor);
-		System.out.println(decision.pc_low);
-		System.out.println(decision.pc_high);
-		
-		
-	}
+		System.out.println("verdict: "+decision.getVerdict());
+		System.out.println("state after: "+decision.getState().toString());
+		System.out.println("n: "+decision.n);
+		System.out.println("pest: "+decision.pest);
+		System.out.println("weightTot: "+decision.weightTot);
+		System.out.println("weightCum: "+decision.weightCum);
+		System.out.println("elapsedFactor: "+decision.elapsedFactor);
+		System.out.println("shrinkFactor: "+decision.shrinkFactor);
+		System.out.println("pc_low: "+decision.pc_low);
+		System.out.println("pc_high: "+decision.pc_high);
+	} 
 }
 
 
