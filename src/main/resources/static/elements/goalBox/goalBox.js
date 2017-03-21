@@ -12,11 +12,11 @@ function GoalBox(container_id,goalData) {
 
 //Inheritance
 GoalBox.prototype.getGoal = function(goalTag, projectName) {
-	GLOBAL.serverComm.goalGet(goalTag,projectName,this.goalReceivedCallback,this);
+	GLOBAL.serverComm.goalGetFromTag(goalTag,projectName,this.goalReceivedCallback,this);
 }
 
 GoalBox.prototype.updateGoal = function() {
-	GLOBAL.serverComm.goalGet(this.goal.goalTag,this.goal.projectName,this.goalReceivedCallback,this);
+	GLOBAL.serverComm.goalGet(this.goal.id,this.goalReceivedCallback,this);
 }
 
 GoalBox.prototype.goalReceivedCallback = function(goalDto) {

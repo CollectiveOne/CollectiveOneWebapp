@@ -28,6 +28,11 @@ public class UserServiceImp extends BaseService {
 	public User get(String username) {
 		return userRepository.get(username);
 	}
+	
+	@Transactional
+	public List<User> getAll(int max) {
+		return userRepository.getAll(max);
+	}
 
 	@Transactional
 	public UserDto getDto(String username) {

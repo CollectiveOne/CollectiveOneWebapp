@@ -12,7 +12,7 @@ GoalPage.prototype.init = function() {
 }
 
 GoalPage.prototype.updateGoal = function(goalTag, projectName) {
-	GLOBAL.serverComm.goalGet(goalTag,projectName,this.goalReceivedCallback,this);
+	GLOBAL.serverComm.goalGetFromTag(goalTag,projectName,this.goalReceivedCallback,this);
 }
 
 GoalPage.prototype.goalReceivedCallback = function(goalDto) {

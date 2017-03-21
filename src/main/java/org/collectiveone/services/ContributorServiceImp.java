@@ -15,12 +15,12 @@ class ContributorServiceImp extends BaseService {
 		double ppsPrev = userService.ppointsInProjectRecalc(userId, projectId);
 		double ppsTot = ppsPrev + lastOne;
 		
-		Contributor ctrb = contributorDao.getContributor(projectId, userId);
+		Contributor ctrb = contributorRepository.getContributor(projectId, userId);
 		if(ctrb == null) {
 			/* new contributor in the project */
 			decisionRealmService.decisionRealmAddVoterToAll(projectId,userId,ppsTot);
 		}
 		
-		contributorDao.updateContributor(projectId, userId, ppsTot);
+		contributorRepository.updateContributor(projectId, userId, ppsTot);
 	}
 }

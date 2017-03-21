@@ -23,7 +23,7 @@ public class PeriodicMethods { // NO_UCD (unused code)
 	protected CbtionServiceImp cbtionService;
 		
 	@Scheduled(fixedDelay = 5000)
-	public void UpdateDecisionsStatus() throws IOException {
+	public void updateState() throws IOException {
 		// System.out.print(".");
 		
 		/* First update all open or idle decisions */

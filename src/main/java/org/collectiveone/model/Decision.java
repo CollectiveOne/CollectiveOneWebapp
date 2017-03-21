@@ -15,7 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.commons.math3.distribution.NormalDistribution;
 import org.collectiveone.web.dto.DecisionDtoFull;
 import org.hibernate.annotations.Type;
 
@@ -43,9 +42,6 @@ public class Decision {
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Goal goal;
 
-	/* weights from decision realm are mixed with pps of the voter
-	 * in the project to get the weight of each voter. This weight
-	 * is stored in the theses (votes) elements.*/
 	@OneToMany(mappedBy="decision", cascade=CascadeType.ALL)
 	private List<Thesis> thesesCast = new ArrayList<Thesis>();
 	private Timestamp openDate;
@@ -68,12 +64,6 @@ public class Decision {
 	private Bid affectedBid;
 	
 	/* ============================== */
-	/* Decisions mechanics parameters */
-	public double ci = 0.95;
-	public double stab_ratio = 0.5;
-
-	/* Decisions statistics variables */
-
 	/* p-points that can vote */
 	public double weightTot;
 	/* number of voters that have voted */
@@ -81,37 +71,19 @@ public class Decision {
 	/* Estimation of p */
 	public double pest;
 	/* p-points that have voted */
-	public double ppsCum;
-	/* Stability of the decision */
-	public double stability;
-	/* Clarity of the decision */
-	public double clarity;
-	/* Minimum  number of votes neeeded to compute the stabilty */
-	public int n_min_stab = 8;
-	/* Likelihood that should be rejected */
-	public double l0 = 1.0;
-	/* Likelihood that should be accepted */
-	public double l1 = 0.0;
+	public double weightCum;
 	/* Time elapsed factor */
 	public double elapsedFactor = 0.0;
 	
-	/* Veridc tirggering thresholds */
+	/* Verdict triggering thresholds */
 	@Transient
 	public double p_to_flip = 0.5;
 	@Transient
-	public double pc_ci_low = 0.0;
+	public double pc_low = 0.0;
 	@Transient
-	public double pc_ci_high = 1.0;
+	public double pc_high = 1.0;
 	@Transient
-	public double pc_ci_low_ext = 0.0;
-	@Transient
-	public double pc_ci_high_ext = 1.0;
-	@Transient
-	public double pc_ci_low_ext_time = 0.0;
-	@Transient
-	public double pc_ci_high_ext_time = 1.0;
-	@Transient
-	public double extFactor = 0.0;
+	public double shrinkFactor = 0.0;
 
 	/* ============================== */
 	public DecisionDtoFull toDto() {
@@ -168,18 +140,8 @@ public class Decision {
 		dto.setVerdict(verdict);
 		dto.setState(state.toString());
 		dto.setnVotesCasted(thesesCast.size());
-		dto.setPpsCum(ppsCum);
+		dto.setPpsCum(weightCum);
 		dto.setPest(pest);
-		dto.setStability(stability);
-		dto.setClarity(clarity);
-		
-		double log_l1l0 = 0.0;
-		if((l1 == 0) && (l0 != 0)) log_l1l0 = -111.0; 
-		if((l1 != 0) && (l0 == 0)) log_l1l0 = +111.0;
-		if((l1 == 0) && (l0 != 0)) log_l1l0 = 0;
-		if((l1 != 0) && (l0 != 0)) log_l1l0 = Math.log10(l1)-Math.log10(l0);
-			
-		dto.setLog_l1l0(log_l1l0);
 		dto.setElapsedFactor(elapsedFactor);
 		
 		return dto;
@@ -331,17 +293,12 @@ public class Decision {
 				
 				updatePcum();
 				
-				if(ppsCum > 0) {
+				if(weightCum > 0) {
+					
 					updateP();
-					updateClarity();
-					updateStability();
-	
-					/* determine if the decision shall be closed */
-					boolean isTime = isVerdictTime(now);
-	
 					updateVerdict();
 					
-					if (isTime) {
+					if (isVerdictTime(now)) {
 						if (verdict == 0)
 							state = DecisionState.CLOSED_DENIED;
 						if (verdict == 1)
@@ -358,9 +315,9 @@ public class Decision {
 	}
 
 	public void updatePcum() {
-		ppsCum = 0.0;
+		weightCum = 0.0;
 		for (Thesis thesis : thesesCast) {
-			ppsCum += thesis.getWeight();
+			weightCum += thesis.getWeight();
 		}
 	}
 
@@ -393,103 +350,70 @@ public class Decision {
 		pest = estimateP();
 	}
 
-	public void updateClarity() {
-		/* inverse and scaled function of the variance, 
-		 * 0 when variance is max p = 0.5 and var = 0.25
-		 * 1 when variance is min p = 1 or p = 0 and var = 0 */ 
-		clarity = 1-4*pest*(1-pest);
-	}
-	
-	public void updateStability() {
-
-		if(n >= n_min_stab) {
-		
-			int n_base = (int) Math.round(n * stab_ratio);
-			int n_cmp = n - n_base;
-	
-			int[] ixs_base = new int[n_base];
-			int[] ixs_cmp = new int[n_cmp];
-	
-			for (int ix = 0; ix < n_base; ix++)
-				ixs_base[ix] = ix;
-			for (int ix = 0; ix < n_cmp; ix++)
-				ixs_cmp[ix] = ix;
-	
-			double pest_base = estimateP(ixs_base);
-			double pest_cmp = estimateP(ixs_cmp);
-	
-			stability = pest_cmp - pest_base;
-		} else {
-			stability = 0.0;
-		} 
-	}
-
 	public boolean isVerdictTime(Timestamp now) {
 		/*
 		 * get the value p_to_flip of p which would flip the outcome of the
 		 * decision, if it is obtained with the remaining votes
 		 */
-		double pps_left = weightTot - ppsCum;
+		double pps_left = weightTot - weightCum;
 
 		if(pps_left > 0) {
 			p_to_flip = -0.1;
 			if (pps_left != 0) {
-				p_to_flip = (0.5 - pest * ppsCum / weightTot) * weightTot / pps_left;
+				p_to_flip = (0.5 - pest * weightCum / weightTot) * weightTot / pps_left;
 			}
 
 			if((p_to_flip >= 0) && (p_to_flip <= 1)) {
 				/*
-				 * find the probability that p_to_flip will in fact be obtained fron the
-				 * rest of votes, assuming they are iid Bernoulli trials with p = pest
+				 * 	# confidence interval for p_est is assumed to have the
+    				# size of the proportion of pps_left/pps_tot
 				 */
-				NormalDistribution ndist = new NormalDistribution(0.0, 1.0);
-
-				double a = 1 - ci;
-				pc_ci_low = pest - ndist.inverseCumulativeProbability(1 - a / 2)
-						* Math.sqrt(pest * (1 - pest) / n);
-				pc_ci_high = pest
-						- ndist.inverseCumulativeProbability(a - a / 2)
-						* Math.sqrt(pest * (1 - pest) / n);
-
-				// protection for pest = 1 or pest = 0
-				if (pc_ci_low == pc_ci_high) {
-					pc_ci_low = 0;
-					pc_ci_high = 1;
-				}
-
-				/* extend the confidence intervals based on the instability of the votes */
-				pc_ci_low_ext = pc_ci_low - pc_ci_low * Math.abs(stability);
-				pc_ci_high_ext = pc_ci_high + (1 - pc_ci_high)
-						* Math.abs(stability);
-
+				
+				double pc_range_sz = pps_left/weightTot;
+				
 				/* extend/contract the confidence intervals based on the time passed */
 				double elapsedHours = (now.getTime() - openDate.getTime())
 						/ (1000.0 * 60.0 * 60.0);
+				
 				elapsedFactor = elapsedHours / verdictHours;
 
 				/*
 				 * extFactor goes from 1 to -1, passing through 0 when elapsedFactor is
 				 * 0.5 which is when elapsedHours are half the verdictHours
 				 */
-				extFactor = 2 * (1 - elapsedFactor) - 1;
+				shrinkFactor = (1 - elapsedFactor/2);
 
-				if (extFactor > 0) {
-					/* expand towards the [0,1] borders */
-					pc_ci_low_ext_time = pc_ci_low_ext - pc_ci_low_ext * extFactor;
-					pc_ci_high_ext_time = pc_ci_high_ext + (1 - pc_ci_high_ext)
-							* extFactor;
-				} else {
-					/* contract towards the center of the interval */
-					double ci_mean = (pc_ci_low_ext + pc_ci_high_ext) / 2;
-					double low = (ci_mean - pc_ci_low_ext) * (1 + extFactor);
-					double high = (pc_ci_high_ext - ci_mean) * (1 + extFactor);
-					pc_ci_low_ext_time = ci_mean - low;
-					pc_ci_high_ext_time = ci_mean + high;
-				}
+				double pc_range_sz_time = pc_range_sz*shrinkFactor;
+				
+				/*
+				# it should be centered in the current value of p_est, but stopts
+			    # at the [0,1] edges
+			    */
+				
+				pc_low =  0.0;
+				pc_high =  1.0;
+				
+			    if(1-pest < pc_range_sz_time/2) {
+			      /* # touches upper edge */
+			      pc_low = 1 - pc_range_sz_time;
+			      pc_high = 1;
+			        
+			    } else {
+			      if(pest < pc_range_sz_time/2) {
+			        /* # touches lower edge */
+			        pc_low = 0;
+			        pc_high = pc_range_sz_time;
+			        
+			      } else {
+			        /* # does not touces any edge */
+			        pc_low = pest - pc_range_sz_time/2;
+			        pc_high = pest + pc_range_sz_time/2;
+			      }
+			    }
 
 				/* make the test on p_to_flip */
-				if ((p_to_flip < pc_ci_low_ext_time)
-						|| (pc_ci_high_ext_time < p_to_flip)) {
+				if ((p_to_flip < pc_low)
+						|| (pc_high < p_to_flip)) {
 					return true;
 				} else {
 					return false;
@@ -506,35 +430,10 @@ public class Decision {
 	}
 
 	public void updateVerdict() {
-
-		l0 = 1.0;
-		l1 = 1.0;
-
-		for (int ix = 0; ix < n; ix++) {
-			Thesis thesis = thesesCast.get(ix);
-
-			/*
-			 * compute the probability for this thesis of being correct
-			 */
-			double p0 = 0.5 * (1 + thesis.getWeight() / ppsCum);
-			double p = 0.5 + clarity * (p0 - 0.5);
-
-			/* update the likelihood for both outcomes */
-			if (thesis.getValue() == 0) {
-				l0 *= p;
-				l1 *= (1 - p);
-			} else {
-				l0 *= 1 - p;
-				l1 *= p;
-			}
-		}
-
-		/* chose the outcome with higher likelihood */
-		if (l1 > l0) {
+		if (pest > 0.5) {
 			verdict = 1;
 		} else {
 			verdict = 0;
 		}
-
 	}
 }

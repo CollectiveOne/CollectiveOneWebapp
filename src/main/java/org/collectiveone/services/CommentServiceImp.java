@@ -29,7 +29,7 @@ public class CommentServiceImp extends BaseService {
 		Comment parent = null;
 
 		if(commentDto.getParentId() != null) {
-			parent = commentDao.get(commentDto.getParentId());
+			parent = commentRepository.get(commentDto.getParentId());
 		}
 		
 		Comment comment = new Comment();
@@ -42,7 +42,7 @@ public class CommentServiceImp extends BaseService {
 		if(parent != null) {
 			parent.getReplies().add(comment);
 			comment.setParent(parent);
-			commentDao.save(parent);
+			commentRepository.save(parent);
 		} else {
 			cbtion.getComments().add(comment);
 		}
@@ -50,7 +50,7 @@ public class CommentServiceImp extends BaseService {
 		comment.setCbtion(cbtion);
 
 		cbtionRepository.save(cbtion);
-		commentDao.save(comment);
+		commentRepository.save(comment);
 
 		Activity act = new Activity();
 		act.setCreationDate(new Timestamp(System.currentTimeMillis()));
@@ -64,7 +64,7 @@ public class CommentServiceImp extends BaseService {
 
 	@Transactional
 	public List<CommentDto> getRepliesDtos(Long commentId) {
-		List<Comment> replies = commentDao.getRepliesSorted(commentId);
+		List<Comment> replies = commentRepository.getRepliesSorted(commentId);
 		List<CommentDto> repliesDtos = new ArrayList<CommentDto>();
 		for (Comment comment : replies) {
 			repliesDtos.add(comment.toDto());
@@ -75,15 +75,15 @@ public class CommentServiceImp extends BaseService {
 
 	@Transactional
 	public void promote(Long commentId, Long userId, boolean promoteUp) {
-		Comment comment = commentDao.get(commentId);
-		commentDao.save(comment);
+		Comment comment = commentRepository.get(commentId);
+		commentRepository.save(comment);
 
-		Promoter promoter = promoterDao.getOfComment(commentId, userId);
+		Promoter promoter = promoterRepository.getOfComment(commentId, userId);
 
 		/* countPromotersDiff will not include the current transaction so this logic 
 		 * is used to solve the problem*/
 		
-		int currentRelevance = commentDao.countPromotersDiff(commentId);
+		int currentRelevance = commentRepository.countPromotersDiff(commentId);
 		int newRelevance = currentRelevance;
 		
 		if(promoter == null) {
@@ -108,7 +108,7 @@ public class CommentServiceImp extends BaseService {
 		promoter.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		promoter.setPromoteUp(promoteUp);
 		
-		promoterDao.save(promoter);
+		promoterRepository.save(promoter);
 
 		/* update relevance to order results */
 		comment.setRelevance(newRelevance);

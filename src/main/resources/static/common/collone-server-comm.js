@@ -110,10 +110,28 @@ ServerComm.prototype = {
 			});
 		},
 		
-		goalGet : function(goalTag,projectName,callbackFunction,callbackObj) {
+		goalGetFromTag : function(goalTag,projectName,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'GET',
 				url : '/1/goal?projectName='+projectName+'&goalTag='+goalTag,
+				data : '',
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					showOutput("error getting goal","DarkRed");
+				}
+			});
+		},
+		
+		goalGet : function(goalId,callbackFunction,callbackObj) {
+			$.ajax({
+				type : 'GET',
+				url : '/1/goal/'+goalId,
 				data : '',
 				dataType : 'json',
 				contentType : 'application/json',
