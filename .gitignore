@@ -1,8 +1,6 @@
 .env
 target
-.project
 bin/
-.classpath
 .settings/
 .tern-project
 pom-eclipse.xml
