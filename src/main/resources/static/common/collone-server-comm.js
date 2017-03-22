@@ -871,7 +871,7 @@ ServerComm.prototype = {
 		argumentIsBacked : function(argumentId,callbackFunction,callbackObj) {
 
 			$.ajax({
-				type : 'POST',
+				type : 'GET',
 				url : '/1/argument/'+argumentId+'/isBacked',
 				data : '',
 				dataType : "json",
