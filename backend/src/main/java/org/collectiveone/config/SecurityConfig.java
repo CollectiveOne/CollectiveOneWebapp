@@ -26,12 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // NO_UCD (un
 		http
 		.csrf().disable()
 		.authorizeRequests()
-			.antMatchers("/**").permitAll()
-			.and()
-		.formLogin()
-			.loginPage("/login")
-			.defaultSuccessUrl("/myhome")
-			.permitAll();	
+			.antMatchers("/**").permitAll();	
 	}
 	
 	@Autowired
