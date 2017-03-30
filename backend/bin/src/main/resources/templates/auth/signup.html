@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	layout:decorator="layouts/main">
+<head>
+<title th:text="#{label.form.title}">form</title>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<div>
+			<form id="signup_form" action="#" th:action="@{/user/signupSubmit}" th:object="${user}"
+				method="post">
+				<h2 th:text="#{label.form.title}">form</h2>
+				<br />
+				<div class="alert alert-info" >New users require to be pre-authorized, please request an invitation by clicking below</div>
+				<a href="/v/signupRequest" class="btn btn-lg btn-primary btn-block">Request invitation</a>
+				<br />
+				<div class="alert alert-info" >If you have been pre-authorized, please submit the form below</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('username')}? 'has-error'">
+					<label for="username">Username:</label> 
+					<input type="text" class="form-control" th:field="*{username}"></input>
+					<span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" th:class="help-block">Title Errors</span>
+				</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('email')}? 'has-error'">
+					<label for="email">Email:</label> 
+					<input type="email" class="form-control" th:field="*{email}"></input>
+					<span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" th:class="help-block">Title Errors</span>
+				</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('password')}? 'has-error'">
+					<label for="pwd">Password:</label>
+					<input type="password" class="form-control" th:field="*{password}"></input>
+					<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" th:class="help-block">Title Errors</span>
+				</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('passwordConfirm')}? 'has-error'">
+					<label for="pwd">Confirm Password:</label>
+					<input type="password" class="form-control" th:field="*{passwordConfirm}"></input>
+					<span th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}" th:class="help-block">Title Errors</span>
+				</div>
+				<br /> 
+				<button type="submit" class="btn btn-lg btn-primary btn-block">Submit</button>
+				<br /> <a th:href="@{/login}" th:text="#{label.form.loginLink}">login</a>
+			</form>
+			
+		</div>
+	</div>
+</body>
+
+</html>

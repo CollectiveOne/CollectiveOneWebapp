@@ -1,9 +1,0 @@
-.env
-target
-bin/
-.settings/
-.tern-project
-pom-eclipse.xml
-src/main/resources/rebel.xml
-src/main/webapp/WEB-INF/beans-eclipse.xml
-*.springBeans

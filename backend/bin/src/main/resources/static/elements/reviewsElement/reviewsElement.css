@@ -1,0 +1,125 @@
+#reviews_div {
+	width: calc(100%);
+	clear:none;
+	overflow: auto;
+	min-height: 80px;
+	padding-top: 5px;
+}
+
+#reviews_div #reviews_summary_div {
+	width:100%;
+}
+
+#reviews_div #new_btn_div {
+	width: calc(100% - 20px);
+	float:left;
+	margin-left:10px;
+	display: none;
+}
+
+#reviews_div #review_new_form {
+	width: calc(100%);
+	float:left;
+	overflow:auto;
+	margin-bottom: 10px;
+	display: none;
+}
+
+#reviews_div #reviews_list_div {
+	width: 100%;
+	float: left;
+	padding-bottom: 5px;
+	max-height: 500px;
+	overflow-y: visible;
+}
+
+#reviews_div .review_item_div {	
+	width: 100%;
+	float: left;
+}
+
+
+#reviews_div #review_new_rater {
+	width: 100%;
+	float:left;
+	overflow:auto;
+	margin-bottom: -1px;
+	height: 45px;
+}
+
+#reviews_div #review_new_rater .rate_subbox_container {
+	width: 20%;
+	height:100%;
+	float: left;
+}
+
+#reviews_div .rate_subbox {
+	height: 100%;
+	width: calc(100% - 6px);
+	margin-left: 3px;
+	float:left;
+	text-align:center;
+	border-radius:5px;
+}
+
+#reviews_div .rate_subbox p {
+	font-size:10px;
+	font-weight: bolder;
+	color: white;
+}
+
+#reviews_div #review_new_rater #review_rate_text {
+}
+
+#reviews_div #review_new_rater #review_rate_text p {
+}
+
+#reviews_div #review_new_rater #review_rate_stars_selector {
+	width:100%;
+	margin-bottom: 5px;
+}
+
+#reviews_div #review_new_rater #review_rate_stars {
+	float: left;
+	clear: none;
+	margin-top: 5px;
+}
+
+#reviews_div #review_new_rater #review_rate_status {
+	float: left;
+	width: calc(100% - 170px);
+	clear: none;
+}
+
+#reviews_div #review_new_rater #stars_status_num {
+	display:block;
+	float:left;
+	width: 20px;
+	clear: none;
+	margin-left: 25px;
+	font-size:22px;
+	margin-top: 7px;
+}
+
+#reviews_div #review_new_rater #stars_status_txt {
+	display:block;
+	float: right;
+	width: 70px;
+	clear: none;
+	margin-left: 5px;
+	font-size:10px;
+	margin-top: 9px;
+	text-align: center;
+	margin-right: 15px;
+}
+
+#reviews_div #review_new_description {
+	width: 100%;
+	float:left;
+}
+
+#reviews_div #review_new_save {
+	width: 120px;
+	float:right;
+	margin-top: 5px;
+}

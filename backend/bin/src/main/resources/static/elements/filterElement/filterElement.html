@@ -1,0 +1,58 @@
+<div id="filter_div">
+	<div id="filter_bar">
+		<button id="filter_btn" class="btn btn-info">filter</button>
+		<div id="new_btn_div" >
+			<a href="#" id="new_btn" class="btn btn-info">new</a>
+		</div>
+		<div id="page_btns">
+			<button id="next_page"  class="btn btn-info">next</button>
+			<button id="back_page" class="btn btn-info">prev</button>
+			<div id="page_set" class="label label-info"></div>
+			<select id="sort_by_sel" class="form-control"></select>
+		</div>
+	</div>
+	<form id="filter_contents" class="jumbotron">
+		<div id="filter_projects"></div>
+		<div id="filter_states"></div>
+		<div id="filter_inputs">
+			<div id="filter_keyword" class="form-group">
+				<label>keyword:</label>
+				<input id=filter_keyword_input class="form-control" placeholder="keyword"></input>
+			</div>
+			<div id="filter_creators" class="form-group">
+				<label>creator:</label>
+				<input id=filter_creator_input class="form-control" placeholder="creator"></input>
+			</div>
+		</div>
+		<div id="filter_inputs_cbtion">
+			<div id="filter_goal" class="form-group">
+				<label>goal<br />
+				(select one project):</label>
+				<input id=filter_goal_input class="form-control" placeholder="goal-tag"></input>
+			</div>
+			<div class="checkbox">
+			  	<label><input id=filter_subgoals_input type="checkbox" value="">and subgoals</label>
+			</div>
+			<div id="filter_contributor" class="form-group">
+				<label>contributor:</label>
+				<input id=filter_contributor_input class="form-control" placeholder="contributor"></input>
+			</div>
+			<div id="filter_assignee" class="form-group">
+				<label>assignee:</label>
+				<input id=filter_assignee_input class="form-control" placeholder="assignee"></input>
+			</div>
+		</div>
+		<div id="filter_inputs_decision">
+			<div class="checkbox">
+				<label>
+					<input type='checkbox' class=filter_checkbox id=filter_automatic_decisions>show automatic decisions</input>
+				</label>
+				
+			</div>
+		</div>
+		<div id="filter_update" class="btn btn-info">update results</div>
+	</form>
+	<div id="loading_gif">
+		<img src="/images/ajax-loader.gif">	
+	</div>
+</div>

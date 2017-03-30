@@ -1,0 +1,56 @@
+<div id="goal_div" class="cp_box_gray_thick">
+	<div id="top_div">
+		<div id="goaltag">
+		</div>	
+	</div>
+	<div id="center_div">
+		<div id="description">
+		</div>	
+	</div>
+	<div id="show_subgoals_btn" class="cp_btn_icon" data-toggle="tooltip" title="show subgoals">
+		<img src="/images/sort.png">
+	</div>
+	<div id="new_subgoal_btn" class="cp_btn_icon" data-toggle="tooltip" title="create new subgoal">
+		<img src="/images/add.png">
+	</div>
+	<div id="show_control_btn" class="cp_btn_icon" data-toggle="tooltip" title="edit this goal">
+		<img src="/images/triangle.png">
+	</div>
+	<div id="goal_control_div" class="cp_box_gray_slim">
+		<div id="detach_form_container" class="control_form_container">
+			<div id="detach_btn" class ="btn btn-xs btn-info control_btn">detach</div>
+			<div id="detach_form" class="control_form">
+				<input type="number" placeholder="budget" id="detach_input" class="form-control control_input"></input> 
+				<div id="detach_save_btn" class="btn btn-xs btn-info control_save_btn">go</div>
+			</div>
+		</div>
+		<div id="reattach_decision_container"></div>
+		<div id="increase_budget_form_container" class="control_form_container">
+			<div id="increase_budget_btn" class ="btn btn-xs btn-info control_btn">increase budget</div>
+			<div id="increase_budget_form" class="control_form">
+				<input type="number" placeholder="amount" id="increase_budget_input" class="form-control control_input"></input> 
+				<div id="increase_budget_save_btn" class="btn btn-xs btn-info control_save_btn">go</div>
+			</div>
+		</div>
+		<div id="increase_budget_decision_container"></div>
+		<div id="propose_parent_form_container" class="control_form_container">
+			<div id="propose_parent_btn" class ="btn btn-xs btn-info control_btn">propose parent</div>
+			<div id="propose_parent_form" class="control_form">
+				<input type="text" placeholder="parent" id="parent_goal_input" class="form-control control_input"></input> 
+				<div id="propose_parent_save_btn" class="btn btn-xs btn-info control_save_btn">go</div>
+			</div>
+		</div>
+		<div id="propose_parent_decision_container"></div>
+		<div id="state_decision_div"></div>
+	</div>
+	<div id="new_subgoal_form" class="cp_box_gray_slim">
+		<label>Subgoal Tag:</label><input type="text" id="new_subgoal_tag_input" class="form-control"></input>
+		<label>Description:</label><textarea type="text" id="new_subgoal_description_input" class="form-control"></textarea>
+		<div id="new_subgoal_save_btn" class="btn btn-xs btn-info">
+			save
+		</div>
+		<div id="new_subgoal_error_div" class="alert alert-danger"></div>
+	</div>
+	<div id="subgoals_div"></div>
+	
+</div>

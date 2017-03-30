@@ -1,0 +1,34 @@
+﻿DECLARE @I;
+SET @I = 9;
+BEGIN
+   
+UPDATE theses SET decision_id = NULL WHERE decision_id IN (
+   SELECT decisions.id FROM decisions 
+   INNER JOIN goal
+   ON decisions.id = goal.createdec_id OR decisions.id = goal.deletedec_id OR decisions.id = goal.proposeparent_id
+   WHERE goal.id = @I
+);
+
+DELETE FROM theses WHERE decision_id IN (
+   SELECT decisions.id FROM decisions 
+   INNER JOIN goal
+   ON decisions.id = goal.createdec_id OR decisions.id = goal.deletedec_id OR decisions.id = goal.proposeparent_id
+   WHERE goal.id = @I
+);
+
+DELETE FROM decisions_thesescast WHERE decision_id IN (
+   SELECT decisions.id FROM decisions 
+   INNER JOIN goal
+   ON decisions.id = goal.createdec_id OR decisions.id = goal.deletedec_id OR decisions.id = goal.proposeparent_id
+   WHERE goal.id = @I
+);
+
+UPDATE goal SET createdec_id = NULL, deletedec_id=NULL, proposeparent_id=NULL WHERE id = @I;
+DELETE FROM decisions WHERE goal_id = @I;
+
+UPDATE cbtions SET goal_id = NULL WHERE goal_id = @I;
+
+DELETE FROM activity WHERE goal_id=@I;
+DELETE FROM goal WHERE id = @I;
+   
+END

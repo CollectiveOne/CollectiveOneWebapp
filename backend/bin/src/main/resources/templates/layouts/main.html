@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+	
+	<script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
+	
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" />
+	<script	src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	<script th:src="@{//cdnjs.cloudflare.com/ajax/libs/markdown.js/0.5.0/markdown.min.js}"></script>
+	<script th:src="@{/external/bootstrap-markdown.js}"></script>
+	<link rel="stylesheet" th:href="@{/external/bootstrap-markdown.min.css}" />
+	
+	<script th:src="@{/external/jquery.autocomplete.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/external/autocomplete.css}" />
+	
+	
+	<script th:src="@{/common/collone-lib.js}"></script>
+	<script th:src="@{/common/collone-lib-projectselector.js}"></script>
+	<script th:src="@{/common/collone-lib-activeproject.js}"></script>
+	<script th:src="@{/common/collone-lib.js}"></script>
+	<script th:src="@{/common/collone-server-comm.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/common/collone-css.css}" />
+	
+	<link rel="icon" type="image/ico" th:href="@{/images/favicon.ico}" />
+	
+	<!-- GOOGLE ANALYTICS -->	
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	
+	  ga('create', 'UA-92543820-1', 'auto');
+	  ga('send', 'pageview');
+	
+	</script>
+	
+	<!-- EXPANSIBLE PANELS -->	
+	<script>
+	$(document).on('click', '.panel-heading span.clickable', function(e){
+	    var $this = $(this);
+		if(!$this.hasClass('panel-collapsed')) {
+			$this.parents('.panel').find('.panel-body').slideUp();
+			$this.addClass('panel-collapsed');
+			$this.find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+		} else {
+			$this.parents('.panel').find('.panel-body').slideDown();
+			$this.removeClass('panel-collapsed');
+			$this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+		}
+	})
+	</script>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		GLOBAL = new Object();
+		
+		GLOBAL.serverComm = new ServerComm();	
+		GLOBAL.sessionData = {};
+		
+		/* prepare session data */
+		GLOBAL.sessionData.userLogged = /*[[${#authentication} != null? ${#authentication.name}]]*/;
+		
+	/*]]>*/
+	</script>
+</head>
+
+<body>
+	<div id="container">
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse"
+						data-target="#myNavbar">
+						<span class="icon-bar"></span> 
+						<span class="icon-bar"></span> 
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" th:href="@{/}"><img id="logo"
+						th:src="@{/images/Logo-Light.png}"></img></a>
+				</div>
+				
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav">
+						<li id="projects-nav-btn"><a th:href="@{/v/projectList}" data-toggle="tooltip" title="browse all projects">projects</a></li>
+						<li id="cbtions-nav-btn"><a th:href="@{/v/cbtionList}" data-toggle="tooltip" title="browse all contribution items">contributions</a></li>
+						<li id="decisions-nav-btn"><a th:href="@{/v/decisionList}" data-toggle="tooltip" title="browse all decision items">decisions</a></li>
+						<li id="recact-nav-btn"><a th:href="@{/v/activityList}">recent activity</a></li>
+						<li id="help-nav-btn"><a th:href="@{/v/help}">help</a></li>
+						<li id="new-nav-btn" class="dropdown"><a class="dropdown-toggle"
+							data-toggle="dropdown" href="#">new <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a th:href="@{/v/cbtionNew}">Contribution</a></li>
+								<li><a th:href="@{/v/goalNew}">Goal</a></li>
+								<li><a th:href="@{/v/decisionNew}">Decision</a></li>
+								<li><a th:href="@{/v/projectNew}">Project</a></li>
+							</ul>
+						</li>
+					</ul>
+					<div class="navbar-text navbar-right cp_navbar-right">
+						<div sec:authorize="isAuthenticated()">
+							Welcome <a th:href="'/v/u/'+${#authentication.getName()}" th:text="${#authentication.getName()}">Guest</a> |
+							<form sec:authorize="isAuthenticated()" id="frmlogout"
+								th:action="@{/logout}" method="post" class="form-inline">
+								<a href="javascript:{}"
+									onclick="document.getElementById('frmlogout').submit(); return false;">logout</a>
+							</form>
+						</div>
+						<div sec:authorize="!isAuthenticated()">
+							<!-- Using this form approach redirects to login?error   
+							<form sec:authorize="!isAuthenticated()" id="frmlogin" th:action="@{/login}" method="post" class="form-inline">
+					    		<a href="javascript:{}" onclick="document.getElementById('frmlogin').submit(); return false;">login</a>
+					    	</form>
+					    	-->
+							<a th:href="@{/login}">login</a> or
+							<form sec:authorize="!isAuthenticated()" id="frmsignup"
+								th:action="@{/user/signup}" method="post" class="form-inline">
+								<a href="javascript:{}"
+									onclick="document.getElementById('frmsignup').submit(); return false;">signup</a>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<div id="behind_nav"></div>
+		<div id="active_projects">
+			<label id="active_projects_label" class="label label-default" data-toggle="tooltip" title="enable one or more projects to show data of those projects only">show only: </label>
+			<div id="active_projects_list"></div>
+		</div>
+		<div layout:fragment="content_pane" id="content_pane"></div>
+
+		<div class="footer">
+			<div id="contact_footnote">
+				<a id="link_to_slack_container"
+						th:href="@{/v//slack}"> <img
+						id="logo" src="/images/slack-512.png"></img>
+				</a>
+				<a id="link_to_email_container"
+					href="mailto:contact@collectiveone.org">
+					<img id="logo" src="/images/iconmonstr-email-4-icon-27.png"></img>
+				</a>
+				<a id="link_to_twitter_container"
+					href="https://twitter.com/collectiveonepr" target='_blank'>
+					<img id="logo" src="/images/43-twitter-512.png"></img>
+				</a>
+				<a id="link_to_github_container"
+					href="https://github.com/CollectiveOne" target='_blank'>
+					<img id="logo" src="/images/GitHub-Mark-120px-plus.png"></img>
+				</a>
+			</div>
+		</div>
+
+	</div>
+</body>
+
+</html>

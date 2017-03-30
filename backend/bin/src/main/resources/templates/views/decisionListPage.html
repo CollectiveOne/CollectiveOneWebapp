@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+	layout:decorator="layouts/main">
+<head>
+	<script type="text/javascript" th:src="@{/v/decisionListPage.js}"></script>
+	<script type="text/javascript" th:src="@{/elements/decisionBase/decisionBase.js}"></script>
+	<script type="text/javascript" th:src="@{/elements/decisionBox/decisionBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/decisionBox/decisionBox.css}" />
+	<script type="text/javascript" th:src="@{/elements/argumentBox/argumentBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/argumentBox/argumentBox.css}" />
+	
+	<script type="text/javascript" th:src="@{/elements/filterElement/filterElement.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/filterElement/filterElement.css}"/>
+	
+	<title>CollectiveOne - Browse Decisions</title>
+	<meta property="og:title" content="CollectiveOne - Browse Decisions" />
+	<meta property="og:description" content="Browse decisions within CollectiveOne" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://www.collectiveone.org/v/decisionList" />
+	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
+	
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<br />
+		<div class="alert alert-info">
+		  <strong>Tip</strong><br />
+		  Here you can browse all decisions of all projects. If one or more projects are selected from the "show only" list, above, only elements from these will be shown by default.
+		</div>
+		<div class="alert alert-info">
+		  <strong>Tip</strong><br />
+		  By default, only "custom" decisions are shown. To show also "automatic decisions" select 
+		  "show automatic decisions" from the filters below.
+		</div>
+		<div id="filter_container"></div>
+		<div id="list_of_elements"></div>
+	</div>
+</body>
+</html>

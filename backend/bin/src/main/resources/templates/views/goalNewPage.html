@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorator="layouts/main">
+<head>
+	<title>CollectiveOne - Create Goal</title>
+	<meta property="og:title" content="CollectiveOne - Create Goal" />
+	<meta property="og:description" content="Create a new goal in CollectiveOne" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://www.collectiveone.org/v/cbtionNew" />
+	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		GLOBAL.projectSelected = [[${projectSelected}]];
+	/*]]>*/
+	</script>
+	<script type="text/javascript" th:src="@{/v/goalNewPage.js}"></script>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<div sec:authorize="isAuthenticated()">
+			<form id="new_cbtion_form" action="#" th:action="@{/v/goalNewSubmit}" th:object="${goal}" method="post">
+				<h2>Create a new goal</h2>
+				<br />
+	
+				<div class="form-group">
+					<label for="sel1">Project:</label>
+					<select id="project_select" class="form-control" th:field="*{projectName}"></select>
+				</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('goalTag')}? 'has-error'">
+					<label for="title">New Goal Tag:</label> 
+					<input type="text" class="form-control" th:field="*{goalTag}"></input>
+					<span th:if="${#fields.hasErrors('goalTag')}" th:errors="*{goalTag}" th:class="help-block">Title Errors</span>
+				</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('parentGoalTag')}? 'has-error'">
+					<label for="title">Parent Goal:</label> 
+					<input type="text" class="form-control" th:field="*{parentGoalTag}" placeholder="parent goal is optional"></input>
+					<span th:if="${#fields.hasErrors('parentGoalTag')}" th:errors="*{parentGoalTag}" th:class="help-block">Title Errors</span>
+				</div>
+				<div th:class="form-group" th:classappend="${#fields.hasErrors('description')}? 'has-error'">
+					<label for="description">Description:</label>
+					<textarea id="description_editor" type="text" class="form-control" rows="5" th:field="*{description}"></textarea>
+					<span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" th:class="help-block">Title Errors</span>
+				</div>
+				
+				<button type="submit" class="btn btn-lg btn-primary btn-block">Create</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

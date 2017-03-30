@@ -1,0 +1,12 @@
+#cbtion_list_div {
+}
+
+#filter_container {
+}
+
+#list_of_elements {
+	float:left;
+	overflow:auto;
+	width: 100%;
+}
+

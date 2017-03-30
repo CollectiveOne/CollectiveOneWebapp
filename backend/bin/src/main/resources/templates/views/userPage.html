@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"
+	layout:decorator="layouts/main">
+<head>
+	<script type="text/javascript" th:src="@{/v/userPage.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/v/userPage.css}"/>
+	
+	<script th:src="@{/elements/cbtionList/cbtionList.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionList/cbtionList.css}"/>
+	<!-- TODO these dependencies should be loaded dynamically when cbtionList is needed -->
+	<script type="text/javascript" th:src="@{/elements/cbtionBox/cbtionBox.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/cbtionBox/cbtionBox.css}"/>
+	<script type="text/javascript" th:src="@{/elements/decisionBase/decisionBase.js}"></script>
+	<script type="text/javascript" th:src="@{/elements/decisionBoxSmall/decisionBoxSmall.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/decisionBoxSmall/decisionBoxSmall.css}"/>
+	<script th:src="@{/elements/filterElement/filterElement.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/filterElement/filterElement.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/projectBox/projectBox.css}" />
+	<script type="text/javascript" th:src="@{/elements/projectBox/projectBox.js}"></script>
+	
+	<script type="text/javascript" th:src="@{/elements/reviewsElement/reviewItem.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/elements/reviewsElement/reviewItem.css}" />
+	<link rel="stylesheet" th:href="@{/external/jquery.rateyo.css}"/>
+	<script type="text/javascript" th:src="@{/external/jquery.rateyo.js}"></script>
+	
+	<title th:text="'CollectiveOne - ' + ${username}">CollectiveOne - User</title>
+	<meta property="og:title" th:content="'CollectiveOne - ' + ${username}" />
+	<meta property="og:description" th:content="'Profile page of ' + ${username} + ' in CollectiveOne'" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" th:content="'http://www.collectiveone.org/v/u/'+${username}" />
+	<meta property="og:image" content="http://www.collectiveone.org/images/Logo.png" />
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		/* request parameters are sent back to JS by thymeleaf model */
+		GLOBAL.REQ_username = [[${username}]];
+	/*]]>*/
+	</script>
+</head>
+<body>
+	<div layout:fragment="content_pane">
+		<div id="user_container" class="cp_box_gray_thick">
+			<div id="username_div">
+				<h2></h2>
+			</div>
+			<div id="user_profile_div" class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">Profile</h3>
+					<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class="panel-body">
+					<div id="user_profile_container">
+						<div id="user_profile_html"></div>
+						<form id="edit_profile_form">
+							<div class="form-group">
+								<textarea id="user_profile_textarea" class="form-control"></textarea>
+								<div id="edit_profile_save" class="btn btn-xs btn-info">save</div>
+							</div>
+						</form>
+						<div id="edit_profile_btn" class="btn btn-xs btn-info">edit</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="mydata_div" style="display:none">
+				<div id="projects_starred_div" class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">Projects Starred <br />(only you can see this)</h3>
+						<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+					</div>
+					<div class="panel-body" style="display:none">
+						<div id="projects_starred_container"></div>
+					</div>
+				</div>
+				<div id="projects_watched_div" class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">Projects Watched <br />(only you can see this)</h3>
+						<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+					</div>
+					<div class="panel-body" style="display:none">
+						<div id="projects_watched_container"></div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="projects_contributed_div" class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">Contributor of Projects</h3>
+					<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class="panel-body">
+					<ul class="list-group">
+					</ul>
+				</div>
+			</div>
+			<div id="assigned_contributions_div" class="panel panel-info">
+				<div id="assigned_contributions_head" class="panel-heading">
+					<h3 class="panel-title">Assigned Contributions</h3>
+					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+				</div>
+				<div class="panel-body" style="display:none">
+					<div id="assigned_contributions_list"></div>
+				</div>
+			</div>
+			<div id="accepted_contributions_div" class="panel panel-info">
+				<div id="accepted_contributions_head" class="panel-heading">
+					<h3 class="panel-title">Accepted Contributions</h3>
+					<span class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+				</div>
+				<div class="panel-body" style="display:none">
+					<div id="accepted_contributions_list"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,336 @@
+DROP SCHEMA IF EXISTS public CASCADE;
+DROP SCHEMA IF EXISTS masterschema CASCADE;
+CREATE SCHEMA public;
+CREATE SCHEMA masterschema;
+
+---------------------------------------------------------
+-- Conect to other server
+---------------------------------------------------------
+CREATE EXTENSION postgres_fdw;
+CREATE SERVER master FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'ec2-54-225-64-254.compute-1.amazonaws.com', dbname 'd1a0o64celerd3', port '5432');
+CREATE USER MAPPING FOR postgres SERVER master OPTIONS (user 'dkzzgsrfdufobg', password 'YTGA4lzg5wNMReDhEDqMtZs6m3');
+IMPORT FOREIGN SCHEMA public FROM SERVER master INTO masterschema;
+
+---------------------------------------------------------
+-- COPY tables that have not changed
+---------------------------------------------------------
+SELECT * INTO activity FROM masterschema.activity;
+SELECT * INTO app_users FROM masterschema.app_users;
+SELECT * INTO argument_backers FROM masterschema.argument_backers;
+SELECT * INTO arguments FROM masterschema.arguments;
+SELECT * INTO authorized_emails FROM masterschema.authorized_emails;
+SELECT * INTO authorized_projects FROM masterschema.authorized_projects;
+SELECT * INTO bids FROM masterschema.bids;
+SELECT * INTO bids_reviews FROM masterschema.bids_reviews;
+SELECT * INTO cbtions FROM masterschema.cbtions;
+SELECT * INTO cbtions_bids FROM masterschema.cbtions_bids;
+SELECT * INTO cbtions_comments FROM masterschema.cbtions_comments;
+SELECT * INTO cbtions_promoters FROM masterschema.cbtions_promoters;
+SELECT * INTO comments FROM masterschema.comments;
+SELECT * INTO comments_answers FROM masterschema.comments_answers;
+SELECT * INTO comments_promoters FROM masterschema.comments_promoters;
+SELECT * INTO mail_subscriptions FROM masterschema.mail_subscriptions;
+SELECT * INTO password_recovery_token FROM masterschema.password_recovery_token;
+SELECT * INTO projects FROM masterschema.projects;
+SELECT * INTO promoters FROM masterschema.promoters;
+SELECT * INTO reviews FROM masterschema.reviews;
+SELECT * INTO roles FROM masterschema.roles;
+SELECT * INTO theses FROM masterschema.theses;
+SELECT * INTO verification_token FROM masterschema.verification_token;
+
+---------------------------------------------------------
+-- COPY sequences that have not changed
+---------------------------------------------------------
+CREATE SEQUENCE activity_id_seq;
+SELECT SETVAL('activity_id_seq', (SELECT max(id) FROM activity), false);
+
+CREATE SEQUENCE app_users_id_seq;
+SELECT SETVAL('app_users_id_seq', (SELECT max(id) FROM app_users), false);
+
+CREATE SEQUENCE arguments_id_seq;
+SELECT SETVAL('arguments_id_seq', (SELECT max(id) FROM arguments), false);
+
+CREATE SEQUENCE authorized_emails_id_seq;
+SELECT SETVAL('authorized_emails_id_seq', (SELECT max(id) FROM authorized_emails), false);
+
+CREATE SEQUENCE authorized_projects_id_seq;
+SELECT SETVAL('authorized_projects_id_seq', (SELECT max(id) FROM authorized_projects), false);
+
+CREATE SEQUENCE bids_id_seq;
+SELECT SETVAL('bids_id_seq', (SELECT max(id) FROM bids), false);
+
+CREATE SEQUENCE cbtions_id_seq;
+SELECT SETVAL('cbtions_id_seq', (SELECT max(id) FROM cbtions), false);
+
+CREATE SEQUENCE comments_id_seq;
+SELECT SETVAL('comments_id_seq', (SELECT max(id) FROM comments), false);
+
+CREATE SEQUENCE mail_subscriptions_id_seq;
+SELECT SETVAL('mail_subscriptions_id_seq', (SELECT max(id) FROM mail_subscriptions), false);
+
+CREATE SEQUENCE projects_id_seq;
+SELECT SETVAL('projects_id_seq', (SELECT max(id) FROM projects), false);
+
+CREATE SEQUENCE promoters_id_seq;
+SELECT SETVAL('promoters_id_seq', (SELECT max(id) FROM promoters), false);
+
+CREATE SEQUENCE reviews_id_seq;
+SELECT SETVAL('reviews_id_seq', (SELECT max(id) FROM reviews), false);
+
+CREATE SEQUENCE roles_id_seq;
+SELECT SETVAL('roles_id_seq', (SELECT max(id) FROM roles), false);
+
+CREATE SEQUENCE theses_id_seq;
+SELECT SETVAL('theses_id_seq', (SELECT max(id) FROM theses), false);
+
+CREATE SEQUENCE verification_token_id_seq;
+SELECT SETVAL('verification_token_id_seq', (SELECT max(id) FROM verification_token), false);
+
+---------------------------------------------------------
+-- CREATE contributors table
+---------------------------------------------------------
+CREATE TABLE contributors (
+    id bigint NOT NULL,
+    pps double precision NOT NULL,
+    contributor_user_id bigint,
+    project_id bigint
+);
+
+CREATE SEQUENCE contributors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+---------------------------------------------------------
+-- FILL contributors
+
+ALTER TABLE contributors ALTER COLUMN pps DROP NOT NULL;
+INSERT INTO contributors (id, project_id, contributor_user_id, pps) 
+SELECT 
+	nextval('contributors_id_seq'), 
+	project_id, 
+	contributor_id, 
+	SUM(assigned_ppoints) FILTER (WHERE state=2)
+FROM cbtions
+GROUP BY 2,3;
+
+DELETE FROM contributors WHERE pps IS NULL AND contributor_user_id IS NULL;
+ALTER TABLE contributors ALTER COLUMN pps SET NOT NULL;
+
+
+---------------------------------------------------------
+-- CREATE goals table
+---------------------------------------------------------
+
+CREATE TABLE goals (
+    id bigint NOT NULL,
+    attached_state integer,
+    creation_date timestamp without time zone,
+    current_budget double precision NOT NULL,
+    description text,
+    goal_tag character varying(255),
+    increase_budget_state integer,
+    parent_state integer,
+    pps_to_increase double precision NOT NULL,
+    state integer,
+    create_dec_id bigint,
+    creator_id bigint,
+    delete_dec_id bigint,
+    increase_budget_id bigint,
+    parent_id bigint,
+    project_id bigint,
+    propose_parent_id bigint,
+    proposed_parent_id bigint,
+    reattach_id bigint
+);
+
+ALTER TABLE goals ALTER COLUMN current_budget DROP NOT NULL;
+ALTER TABLE goals ALTER COLUMN pps_to_increase DROP NOT NULL;
+
+INSERT INTO goals (id,creation_date,description,goal_tag,parent_state,state,create_dec_id,creator_id,delete_dec_id,parent_id,project_id,propose_parent_id,proposed_parent_id) 
+SELECT             id,creation_date,description,goal_tag,parent_state,state,create_dec_id,creator_id,delete_dec_id,parent_id,project_id,propose_parent_id,proposed_parent_id 
+FROM masterschema.goal;
+
+UPDATE goals SET attached_state=0;
+UPDATE goals SET increase_budget_state=0;
+
+UPDATE goals SET current_budget=0;
+UPDATE goals SET pps_to_increase=0;
+
+ALTER TABLE goals ALTER COLUMN current_budget SET NOT NULL;
+ALTER TABLE goals ALTER COLUMN pps_to_increase SET NOT NULL;
+
+
+CREATE SEQUENCE goals_id_seq;
+SELECT SETVAL('goals_id_seq', (SELECT max(id) FROM goals), false);
+
+
+---------------------------------------------------------
+-- CREATE decision_realms table
+---------------------------------------------------------
+
+CREATE TABLE decision_realms (
+    id bigint NOT NULL,
+    goal_id bigint
+);
+
+CREATE SEQUENCE decision_realms_id_seq;
+
+-- copy existing realms with their id. For some reason there are empty decision realms. Cleanup is made by deleting those without a project.
+INSERT INTO decision_realms (id)
+SELECT id FROM masterschema.decision_realms WHERE project_id IS NOT NULL;
+
+-- now set the goal id of the existing realms to one of the super goals of each project.
+-- manually done ...
+UPDATE decision_realms SET goal_id = (SELECT id from goals WHERE goal_tag='vision' AND project_id=1) WHERE id = 1;
+UPDATE decision_realms SET goal_id = (SELECT id from goals WHERE goal_tag='webapp' AND project_id=2) WHERE id = 2;
+UPDATE decision_realms SET goal_id = (SELECT id from goals WHERE goal_tag='webpage' AND project_id=3) WHERE id = 5;
+UPDATE decision_realms SET goal_id = (SELECT id from goals WHERE goal_tag='Planning' AND project_id=5) WHERE id = 9;
+UPDATE decision_realms SET goal_id = (SELECT id from goals WHERE goal_tag='CreateExecutiveSummary' AND project_id=6) WHERE id = 12;
+
+SELECT SETVAL('decision_realms_id_seq', (SELECT max(id)+1 FROM decision_realms), false);
+
+-- then add one realm for each goal which has not yet been added
+ALTER TABLE decision_realms ALTER COLUMN id DROP NOT NULL;
+INSERT INTO decision_realms (goal_id) 
+SELECT id FROM goals WHERE id NOT IN (SELECT goal_id FROM decision_realms WHERE goal_id IS NOT NULL);
+
+UPDATE decision_realms SET id=nextval('decision_realms_id_seq') WHERE id IS NULL;
+ALTER TABLE decision_realms ALTER COLUMN id SET NOT NULL;
+
+
+---------------------------------------------------------
+-- CREATE decisions table
+---------------------------------------------------------
+
+CREATE TABLE decisions (
+    id bigint NOT NULL,
+    actual_verdict_date timestamp without time zone,
+    ci double precision NOT NULL,
+    clarity double precision NOT NULL,
+    creation_date timestamp without time zone,
+    description text,
+    elapsed_factor double precision NOT NULL,
+    from_state character varying(255),
+    l0 double precision NOT NULL,
+    l1 double precision NOT NULL,
+    n integer NOT NULL,
+    n_min_stab integer NOT NULL,
+    open_date timestamp without time zone,
+    pest double precision NOT NULL,
+    pps_cum double precision NOT NULL,
+    stab_ratio double precision NOT NULL,
+    stability double precision NOT NULL,
+    state integer,
+    to_state character varying(255),
+    type integer,
+    verdict integer NOT NULL,
+    verdict_hours double precision NOT NULL,
+    weight_tot double precision NOT NULL,
+    affected_bid_id bigint,
+    affected_cbtion_id bigint,
+    affected_goal_id bigint,
+    creator_id bigint,
+    decision_realm_id bigint,
+    goal_id bigint,
+    project_id bigint
+);
+
+CREATE SEQUENCE decisions_id_seq;
+
+INSERT INTO decisions
+	(id,actual_verdict_date,ci,clarity,creation_date,description,elapsed_factor,from_state,l0,l1,n,n_min_stab,open_date,pest,pps_cum,stab_ratio,stability,state,to_state,type,verdict,verdict_hours,weight_tot,affected_bid_id,affected_cbtion_id,affected_goal_id,creator_id,decision_realm_id,goal_id,project_id)
+SELECT   id,actual_verdict_date,ci,clarity,creation_date,description,elapsed_factor,from_state,l0,l1,n,n_min_stab,open_date,pest,pps_cum,stab_ratio,stability,state,to_state,type,verdict,verdict_hours,pps_tot,   bid_id,         cbtion_id,         goal_id,         creator_id,decision_realm_id,null,   project_id
+FROM masterschema.decisions;
+
+SELECT SETVAL('decisions_id_seq', (SELECT max(id) FROM decisions), false);
+
+UPDATE decisions SET goal_id = (SELECT id from goals WHERE goal_tag='vision' AND project_id=1) WHERE project_id = 1;
+UPDATE decisions SET goal_id = (SELECT id from goals WHERE goal_tag='webapp' AND project_id=2) WHERE project_id = 2;
+UPDATE decisions SET goal_id = (SELECT id from goals WHERE goal_tag='webpage' AND project_id=3) WHERE project_id = 3;
+UPDATE decisions SET goal_id = (SELECT id from goals WHERE goal_tag='Planning' AND project_id=5) WHERE project_id = 5;
+UPDATE decisions SET goal_id = (SELECT id from goals WHERE goal_tag='CreateExecutiveSummary' AND project_id=6) WHERE project_id = 6;
+
+
+
+---------------------------------------------------------
+-- CREATE voters table
+---------------------------------------------------------
+
+CREATE TABLE voters (
+    id bigint NOT NULL,
+    actual_weight double precision NOT NULL,
+    max_weight double precision NOT NULL,
+    realm_id bigint,
+    voter_user_id bigint
+);
+
+CREATE SEQUENCE voters_id_seq;
+
+
+
+-- copy the existing voters and add the realm_id
+---------------------------------------------------------
+
+INSERT INTO voters (id, voter_user_id, actual_weight, max_weight) 
+SELECT id,voter_user_id,weight,weight 
+FROM masterschema.voters;
+
+UPDATE voters SET realm_id = 
+(SELECT decision_realm_id FROM masterschema.decision_realms_voters WHERE voters_id=id);
+
+SELECT SETVAL('voters_id_seq', (SELECT max(id) FROM voters), false);
+
+-- create the new voters
+-- for each realm there should be one voter for each contributor of the project
+---------------------------------------------------------
+
+
+ALTER TABLE voters ALTER COLUMN id DROP NOT NULL;
+   
+DO
+$$
+DECLARE rid BIGINT;
+BEGIN
+	ALTER TABLE voters ALTER COLUMN id DROP NOT NULL;
+
+	FOR rid IN 
+		SELECT id from decision_realms WHERE id NOT IN (SELECT realm_id FROM voters WHERE realm_id IS NOT NULL) 
+	LOOP
+		INSERT INTO voters (id,realm_id,voter_user_id, max_weight, actual_weight)
+		SELECT nextval('voters_id_seq')+1,rid,contributor_user_id, pps, pps 
+		FROM contributors WHERE 
+			project_id= (SELECT project_id FROM goals WHERE id=(SELECT goal_id FROM decision_realms WHERE id=rid));
+	END LOOP;
+
+END
+$$;
+
+DROP SCHEMA masterschema CASCADE;
+
+
+-- advance all sequence currvalue 5 numbers to avoid problems with the is_called flag
+-- which is false from some sequences
+---------------------------------------------------------
+SELECT setval('activity_id_seq', nextval('activity_id_seq') + 5, true);
+SELECT setval('app_users_id_seq', nextval('app_users_id_seq') + 5, true);
+SELECT setval('arguments_id_seq', nextval('arguments_id_seq') + 5, true);
+SELECT setval('authorized_emails_id_seq', nextval('authorized_emails_id_seq') + 5, true);
+SELECT setval('authorized_projects_id_seq', nextval('authorized_projects_id_seq') + 5, true);
+SELECT setval('bids_id_seq', nextval('bids_id_seq') + 5, true);
+SELECT setval('cbtions_id_seq', nextval('cbtions_id_seq') + 5, true);
+SELECT setval('comments_id_seq', nextval('comments_id_seq') + 5, true);
+SELECT setval('contributors_id_seq', nextval('contributors_id_seq') + 5, true);
+SELECT setval('decision_realms_id_seq', nextval('decision_realms_id_seq') + 5, true);
+SELECT setval('decisions_id_seq', nextval('decisions_id_seq') + 5, true);
+SELECT setval('goals_id_seq', nextval('goals_id_seq') + 5, true);
+SELECT setval('mail_subscriptions_id_seq', nextval('mail_subscriptions_id_seq') + 5, true);
+SELECT setval('projects_id_seq', nextval('projects_id_seq') + 5, true);
+SELECT setval('promoters_id_seq', nextval('promoters_id_seq') + 5, true);
+SELECT setval('reviews_id_seq', nextval('reviews_id_seq') + 5, true);
+SELECT setval('roles_id_seq', nextval('roles_id_seq') + 5, true);
+SELECT setval('theses_id_seq', nextval('theses_id_seq') + 5, true);
+SELECT setval('verification_token_id_seq', nextval('verification_token_id_seq') + 5, true);
+SELECT setval('voters_id_seq', nextval('voters_id_seq') + 5, true);
