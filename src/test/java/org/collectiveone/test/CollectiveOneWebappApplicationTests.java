@@ -22,6 +22,7 @@ import org.collectiveone.test.services.TimeServiceTestIm;
 import org.collectiveone.web.controllers.BaseController;
 import org.collectiveone.web.controllers.rest.DecisionsController;
 import org.collectiveone.web.controllers.views.ViewsController;
+import org.collectiveone.web.dto.ActiveProject;
 import org.collectiveone.web.dto.DecisionDtoCreate;
 import org.collectiveone.web.dto.ProjectNewDto;
 import org.collectiveone.web.dto.ThesisDto;
@@ -138,7 +139,7 @@ public class CollectiveOneWebappApplicationTests {
 		projectDto.setUsernamesAndPps(contributorNamesAndPps);
 		
 		projectService.authorize(projectDto.getName());
-	    viewsController.projectNewSubmit(projectDto, result);
+	    viewsController.projectNewSubmit(projectDto, new ArrayList<ActiveProject>(), result);
 	}
 	
 	@Test

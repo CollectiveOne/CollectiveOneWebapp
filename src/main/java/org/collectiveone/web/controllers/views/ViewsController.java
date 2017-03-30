@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 import org.collectiveone.model.GoalState;
+import org.collectiveone.model.Project;
 import org.collectiveone.model.User;
 import org.collectiveone.services.AppMailServiceHeroku;
 import org.collectiveone.services.AuthorizedEmailServiceImp;
@@ -19,6 +20,7 @@ import org.collectiveone.services.DecisionServiceImp;
 import org.collectiveone.services.GoalServiceImp;
 import org.collectiveone.services.ProjectServiceImp;
 import org.collectiveone.services.UserServiceImp;
+import org.collectiveone.web.dto.ActiveProject;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.DecisionDtoCreate;
 import org.collectiveone.web.dto.DecisionDtoFull;
@@ -41,11 +43,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.ullink.slack.simpleslackapi.SlackSession;
 
 @Controller
 @RequestMapping("/v")
+@SessionAttributes("activeProjects")
 public class ViewsController { // NO_UCD (unused code)
 	
 	@Autowired
@@ -403,7 +407,10 @@ public class ViewsController { // NO_UCD (unused code)
 	
 	@Secured("ROLE_USER")
 	@RequestMapping(value="/projectNewSubmit", method = RequestMethod.POST)
-	public String projectNewSubmit(@Valid @ModelAttribute("project") ProjectNewDto projectDto, BindingResult result) throws IOException {
+	public String projectNewSubmit(@Valid @ModelAttribute("project") ProjectNewDto projectDto, 
+			@ModelAttribute("activeProjects") ArrayList<ActiveProject> activeProjects,
+			BindingResult result) throws IOException {
+		
 		if(result.hasErrors()) {
 			return "views/projectNewPage";
 		} else {
@@ -416,7 +423,18 @@ public class ViewsController { // NO_UCD (unused code)
 					projectService.create(projectDto);
 					projectService.createFirstGoal(projectDto);
 					projectService.start(projectDto.getName(),projectDto.getUsernamesAndPps());
-					decisionRealmService.decisionRealmInitAllSupergoalsToProject(projectService.get(projectDto.getName()).getId());
+					
+					Project project = projectService.get(projectDto.getName());
+					User creator = userService.get(projectDto.getCreatorUsername());
+					
+					decisionRealmService.decisionRealmInitAllSupergoalsToProject(project.getId());
+					
+					/* set as starred and watched by default */
+					projectService.star(project.getId(), creator.getId());
+					projectService.watch(project.getId(), creator.getId());
+					
+					/* update active projects */
+					if(activeProjects != null) activeProjects.add(new ActiveProject(project.getName(), false));
 					
 					return "redirect:/v/project/"+projectDto.getName();	
 				} else {
