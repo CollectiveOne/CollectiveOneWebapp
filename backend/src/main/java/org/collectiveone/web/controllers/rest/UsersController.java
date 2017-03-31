@@ -1,6 +1,7 @@
 package org.collectiveone.web.controllers.rest;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,12 @@ public class UsersController { // NO_UCD (unused code)
 	
 	@Autowired
 	UserServiceImp userService;
+	
+	@RequestMapping("/user")
+	public Principal user(Principal user) {
+		System.out.println(user);
+		return user;
+	}
 	
 	@RequestMapping(value="/user/{username}", method = RequestMethod.GET)
 	public @ResponseBody UserDto get(@PathVariable String username) {

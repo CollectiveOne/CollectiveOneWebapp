@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 
+import org.collectiveone.model.AuthorizedEmail;
 import org.collectiveone.model.Role;
 import org.collectiveone.model.User;
 import org.collectiveone.repositories.AuthorizedEmailRepository;
@@ -22,6 +23,9 @@ public class StartUpMethods { // NO_UCD (unused code)
 	RoleServiceIf roleService;
 	
 	@Autowired
+	ProjectServiceImp projectService;
+	
+	@Autowired
 	AuthorizedEmailRepository authorizedEmailRepository;
 	
 	@Autowired
@@ -32,7 +36,7 @@ public class StartUpMethods { // NO_UCD (unused code)
 		
 		System.out.println("Filling DB");
 		
-		/*
+		
 		AuthorizedEmail authEmail = new AuthorizedEmail();
 		authEmail.setEmail("p@x.com");
 		authEmail.setAuthorized(true);
@@ -44,13 +48,12 @@ public class StartUpMethods { // NO_UCD (unused code)
 		createUser("user3", 			"u3@x.com", 	"12345678", 		true);
 		createUser("user4", 			"u4@x.com", 	"12345678", 		true);
 		
-		dbServices.projectAuthorize("Demo");
-		*/
+		projectService.authorize("Demo");
+		
 		
 		System.out.println("done");
 	}
 	
-	@SuppressWarnings("unused")
 	private void createUser(String username, String email, String password, boolean enable) throws IOException {
 		User user = new User();
 		user.setEnabled(enable);
