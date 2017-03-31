@@ -12,7 +12,7 @@ Vue.use(VueHead)
 Vue.use(VueResource)
 
 Vue.config.productionTip = false
-Vue.http.options.root = 'https://test-api-3cea7.firebaseio.com/'
+Vue.http.options.root = 'http://localhost:8080/1'
 
 /* eslint-disable no-new */
 new Vue({

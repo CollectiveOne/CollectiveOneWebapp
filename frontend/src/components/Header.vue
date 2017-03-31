@@ -16,7 +16,7 @@
       <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav">
 
-          <li><router-link to="/projectList" data-toggle="tooltip" title="browse all projects">projects</router-link></li>
+          <li><router-link to="/projectList" data-toggle="tooltip" title="browse all projects">projectsXX</router-link></li>
           <li><router-link to="/cbtionList" data-toggle="tooltip" title="browse all contribution items">contributions</router-link></li>
           <li><router-link to="/decisionList" data-toggle="tooltip" title="browse all decision items">decisions</router-link></li>
           <li><router-link to="/activityList" data-toggle="tooltip" title="browse recent activity">recent activity</router-link></li>
@@ -33,13 +33,13 @@
           </li>
         </ul>
 
-        <div class="navbar-text navbar-right cp_navbar-right">
+        <div class="navbar-text navbar-right">
           <div v-if="isUserLogged">
             Welcome username |
-            <a href="./logout">logout</a>
+            <router-link to="/logout">logout</router-link>
           </div>
           <div v-else>
-            <a href="./login">login</a>
+            <router-link to="/login">login</router-link>
           </div>
         </div>
       </div>
@@ -73,6 +73,10 @@ export default {
 .navbar {
 	margin-bottom: 0px;
 	padding-right:10px;
+}
+
+.navbar a {
+	color:#cccccc;
 }
 
 @media (max-width: 1000px) {
