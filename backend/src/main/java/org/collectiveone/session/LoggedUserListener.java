@@ -36,13 +36,16 @@ public class LoggedUserListener implements ApplicationListener<InteractiveAuthen
         activeProjects.clear();
         
         User logged = userService.get(event.getAuthentication().getName());
-        List<String> projectsStarredNames = userService.getProjectsStarredNames(logged.getId());
-        
-        for(String projectName : projectsStarredNames) {
-        	activeProjects.add(new ActiveProject(projectName, false)); 
+        if(logged != null) {
+        	List<String> projectsStarredNames = userService.getProjectsStarredNames(logged.getId());
+            
+            for(String projectName : projectsStarredNames) {
+            	activeProjects.add(new ActiveProject(projectName, false)); 
+            }
+            
+            session().setAttribute("activeProjects",activeProjects);
         }
         
-        session().setAttribute("activeProjects",activeProjects);
     }
 }
 
