@@ -15,9 +15,6 @@ import org.collectiveone.web.dto.CommentDto;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,12 +60,12 @@ public class CbtionsController { // NO_UCD (unused code)
 		return cbtionService.getDto(id);
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/cbtion/{cbtionId}/promote", method = RequestMethod.PUT)
 	public @ResponseBody Boolean promote(@PathVariable Long cbtionId, @RequestParam("up") boolean up) {
 		/* creator is the logged user */
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			cbtionService.promote(cbtionId, logged.getId(), up);
 		}
@@ -87,17 +84,17 @@ public class CbtionsController { // NO_UCD (unused code)
 		return commentsDtos;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/comment", method = RequestMethod.POST)
 	public @ResponseBody Boolean commentNew(@RequestBody CommentDto commentDto) throws IOException {
 		/* creator is the logged user */
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if(auth.isAuthenticated()) {
-			commentDto.setCreatorUsername(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		// if(auth.isAuthenticated()) {
+			commentDto.setCreatorUsername("");
 			commentService.create(commentDto);
 			return true;
-		}
-		return false;
+		// }
+		// return false;
 	}
 	
 	@RequestMapping(value="/comment/{commentId}/replies", method = RequestMethod.GET)
@@ -105,12 +102,12 @@ public class CbtionsController { // NO_UCD (unused code)
 		return commentService.getRepliesDtos(commentId);
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/comment/{commentId}/promote", method = RequestMethod.PUT)
 	public @ResponseBody Boolean commentPromote(@PathVariable Long commentId, @RequestParam("up") boolean up) {
 		/* creator is the logged user */
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			commentService.promote(commentId, logged.getId(), up);
 		}
@@ -122,12 +119,12 @@ public class CbtionsController { // NO_UCD (unused code)
 		return cbtionService.getReviewsDtos(cbtionId);
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/cbtion", method = RequestMethod.PUT)
 	public @ResponseBody boolean edit(@RequestBody CbtionDto cbtionDto) {
 		/* creator is the logged user */
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		cbtionDto.setCreatorUsername(auth.getName()); 
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		cbtionDto.setCreatorUsername(""); 
 		cbtionService.edit(cbtionDto);
 		return true;
 	}

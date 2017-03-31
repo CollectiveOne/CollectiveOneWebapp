@@ -17,9 +17,6 @@ import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.GoalDtoListRes;
 import org.collectiveone.web.dto.GoalWeightsDataDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -66,8 +63,8 @@ public class GoalsController { // NO_UCD (unused code)
 		} else {
 			/* check goal-tag is new in that project */
 			if(!goalService.exist(goalDto.getGoalTag(),goalDto.getProjectName())) {
-				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				User logged = userService.get(auth.getName());
+				// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+				User logged = userService.get("");
 				goalDto.setCreatorUsername(logged.getUsername());
 				goalService.create(goalDto);
 				return true;
@@ -113,24 +110,24 @@ public class GoalsController { // NO_UCD (unused code)
 	@RequestMapping(value="/goal/{goalId}/weights", method = RequestMethod.GET)
 	public @ResponseBody GoalWeightsDataDto getWeightData(@PathVariable("goalId") Long goalId) {
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return goalService.getWeightsData(goalId, auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return goalService.getWeightsData(goalId, "");
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/goal/{goalId}/touch", method = RequestMethod.PUT)
 	public boolean touch(@PathVariable("goalId") Long goalId, @RequestParam("touch") boolean touch) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		goalService.touch(goalId,logged.getId(),touch);
 		return true;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/goal/{goalId}/setWeight", method = RequestMethod.PUT)
 	public boolean setWeight(@PathVariable("goalId") Long goalId, @RequestParam("weight") double weight) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		goalService.setWeight(goalId,logged.getId(),weight);
 		return true;
 	}
@@ -153,44 +150,44 @@ public class GoalsController { // NO_UCD (unused code)
 		return map;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/goal/{goalId}/proposeParent", method = RequestMethod.PUT)
 	public @ResponseBody boolean proposeParent(@PathVariable("goalId") Long goalId, @RequestParam("parentTag") String parentTag) throws IOException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			goalService.proposeParent(goalId, parentTag) ;
 		}
 		return true;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/goal/{goalId}/proposeDetach", method = RequestMethod.PUT)
 	public @ResponseBody boolean proposeDetach(@PathVariable("goalId") Long goalId, @RequestParam("increaseBudget") double increaseBudget) throws IOException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			goalService.detach(goalId, increaseBudget);
 		}
 		return true;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/goal/{goalId}/proposeReattach", method = RequestMethod.PUT)
 	public @ResponseBody boolean proposeReattach(@PathVariable("goalId") Long goalId) throws IOException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			goalService.reattach(goalId);
 		}
 		return true;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/goal/{goalId}/proposeIncreaseBudget", method = RequestMethod.PUT)
 	public @ResponseBody boolean proposeIncreaseBudget(@PathVariable("goalId") Long goalId, @RequestParam("increaseBudget") double increaseBudget) throws IOException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			goalService.increaseBudget(goalId, increaseBudget);
 		}

@@ -17,9 +17,6 @@ import org.collectiveone.web.dto.DecisionDtoListRes;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.ThesisDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,11 +65,11 @@ public class DecisionsController { // NO_UCD (unused code)
 		return map;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/decision/vote", method = RequestMethod.POST)
 	public @ResponseBody boolean vote(@RequestBody ThesisDto thesisDto) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			thesisService.save(logged, thesisDto.getValue(), thesisDto.getDecisionId());
 			return true;
@@ -83,8 +80,8 @@ public class DecisionsController { // NO_UCD (unused code)
 	
 	@RequestMapping(value="/decision/{decisionId}/vote", method = RequestMethod.GET)
 	public @ResponseBody ThesisDto getVote(@PathVariable Long decisionId) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			ThesisDto thesisDto = thesisService.getOfUserDto(decisionId, logged.getId());
 			if(thesisDto != null){
@@ -108,11 +105,11 @@ public class DecisionsController { // NO_UCD (unused code)
 		return map;
 	}
 
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/argument", method = RequestMethod.POST)
 	public @ResponseBody boolean newArgument(@RequestBody ArgumentDto argumentDto) throws IOException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			argumentDto.setCreatorUsername(logged.getUsername());
 			argumentService.create(argumentDto);
@@ -129,20 +126,20 @@ public class DecisionsController { // NO_UCD (unused code)
 	
 	@RequestMapping(value="/argument/{argId}/isBacked", method = RequestMethod.GET)
 	public @ResponseBody boolean argumentIsBacked(@PathVariable Long argId) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			return argumentService.isBacked(argId,logged.getId());	 
 		}
 		return false;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/argument/{argId}/back", method = RequestMethod.PUT)
 	public @ResponseBody boolean argumentBacked(@PathVariable Long argId, @RequestParam("back") boolean back) {
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			if(back) {
 				argumentService.back(argId,logged.getId());

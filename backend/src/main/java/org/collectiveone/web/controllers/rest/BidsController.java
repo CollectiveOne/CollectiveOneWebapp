@@ -10,8 +10,6 @@ import org.collectiveone.web.dto.BidNewDto;
 import org.collectiveone.web.dto.DoneDto;
 import org.collectiveone.web.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,8 +42,8 @@ public class BidsController {  // NO_UCD (unused code)
 	
 	@RequestMapping(value="/bid", method = RequestMethod.POST)
 	public @ResponseBody boolean newBid(@RequestBody BidNewDto bidNewDto) throws IOException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		bidNewDto.setCreatorUsername(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		bidNewDto.setCreatorUsername("");
 		Long id = bidService.create(bidNewDto);
 		
 		bidNewDto.setId(id);
@@ -60,18 +58,18 @@ public class BidsController {  // NO_UCD (unused code)
 	
 	@RequestMapping(value="/bid/offer", method = RequestMethod.PUT)
 	public @ResponseBody boolean offer(@RequestBody BidNewDto bidNewDto) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if(auth.isAuthenticated()) {
-			bidNewDto.setCreatorUsername(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		// if(auth.isAuthenticated()) {
+			bidNewDto.setCreatorUsername("");
 			bidService.fromConsideringToOffered(bidNewDto);	
-		}
+		// }
 		return true;
 	}
 	
 	@RequestMapping(value="/bid/done", method = RequestMethod.PUT)
 	public @ResponseBody boolean markDone(@RequestBody DoneDto doneDto) throws IOException {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		doneDto.setUsername(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		doneDto.setUsername("");
 		bidService.markDone(doneDto);
 		return true;
 	}
@@ -83,13 +81,13 @@ public class BidsController {  // NO_UCD (unused code)
 	
 	@RequestMapping(value="/review", method = RequestMethod.POST)
 	public @ResponseBody boolean newReview(@RequestBody ReviewDto reviewDto) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if(auth.isAuthenticated()) {
-			reviewDto.setCreatorUsername(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		// if(auth.isAuthenticated()) {
+			reviewDto.setCreatorUsername("");
 			reviewService.bidCreate(reviewDto);
 			return true;
-		}
-		return false;
+		// }
+		// return false;
 	}
 	
 	

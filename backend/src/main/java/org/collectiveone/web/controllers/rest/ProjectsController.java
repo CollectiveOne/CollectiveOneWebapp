@@ -16,9 +16,6 @@ import org.collectiveone.web.dto.ProjectContributorsDto;
 import org.collectiveone.web.dto.ProjectDto;
 import org.collectiveone.web.dto.ProjectDtoListRes;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,8 +42,8 @@ public class ProjectsController { // NO_UCD (unused code)
 		ProjectDto projectDto = projectService.getDto(projectName);
 		
 		/* if user logged, check all projects and fill the starred and watched flags */
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName()); 
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get(""); 
 		if(logged != null) {
 			projectDto.setIsStarred(userService.isProjectStarred(projectDto.getId(),logged.getId()));
 			projectDto.setIsWatched(userService.isProjectWatched(projectDto.getId(),logged.getId()));
@@ -89,8 +86,8 @@ public class ProjectsController { // NO_UCD (unused code)
 		int[] resSet = projectsDtosRes.getResSet();
 		
 		/* if user logged, check all projects and fill the starred and watched flags */
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName()); 
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get(""); 
 		
 		if(logged != null) {
 			for(ProjectDto projectDto : projectDtos) {
@@ -107,13 +104,13 @@ public class ProjectsController { // NO_UCD (unused code)
 		return map;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/project/{projectId}/star", method = RequestMethod.PUT)
 	public @ResponseBody Boolean star(	@PathVariable("projectId") Long projectId, 
 										@ModelAttribute("activeProjects") ArrayList<ActiveProject> activeProjects) {
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			projectService.star(projectId, logged.getId());
 			
@@ -123,13 +120,13 @@ public class ProjectsController { // NO_UCD (unused code)
 		return true;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/project/{projectId}/unStar", method = RequestMethod.PUT)
 	public @ResponseBody Boolean unStar(@PathVariable("projectId") Long projectId,
 										@ModelAttribute("activeProjects") ArrayList<ActiveProject> activeProjects) {
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			projectService.unStar(projectId, logged.getId());
 			
@@ -151,22 +148,22 @@ public class ProjectsController { // NO_UCD (unused code)
 		return true;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/project/{projectId}/watch", method = RequestMethod.PUT)
 	public @ResponseBody Boolean watch(@PathVariable("projectId") Long projectId) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			projectService.watch(projectId, logged.getId());
 		}
 		return true;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/project/{projectId}/unWatch", method = RequestMethod.PUT)
 	public @ResponseBody Boolean unWatch(@PathVariable("projectId") Long projectId) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User logged = userService.get(auth.getName());
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get("");
 		if(logged != null) {
 			projectService.unWatch(projectId, logged.getId());
 		}

@@ -11,9 +11,6 @@ import org.collectiveone.web.dto.ProjectContributedDto;
 import org.collectiveone.web.dto.UserDto;
 import org.collectiveone.web.dto.UserMyDataDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,30 +64,30 @@ public class UsersController { // NO_UCD (unused code)
 		return userService.projectsContributedAndPpsGet(username);
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/user", method = RequestMethod.PUT)
 	public @ResponseBody Boolean udpateProfile(@RequestBody UserDto userDto) throws IOException {
 		/* creator is the logged user */
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if(auth.isAuthenticated()) {
-			if(userDto.getUsername().equals(auth.getName())) {
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		// if(auth.isAuthenticated()) {
+			if(userDto.getUsername().equals("")) {
 				userService.updateProfile(userDto);
 				return true;
 			}
-		}
+		// }
 		return false;
 	}
 	
-	@Secured("ROLE_USER")
+	// @Secured("ROLE_USER")
 	@RequestMapping(value="/user/{username}/myData", method = RequestMethod.GET)
 	public @ResponseBody UserMyDataDto getMyData(@PathVariable String username) {
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if(auth.isAuthenticated()) {
-			if(username.equals(auth.getName())) {
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		// if(auth.isAuthenticated()) {
+			if(username.equals("")) {
 				return userService.getMyData(username);
 			}
-		}
+		//}
 		
 		return null;
 	}
