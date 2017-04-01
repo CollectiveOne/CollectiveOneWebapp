@@ -31,6 +31,9 @@ public class GoalDto {
 	private String proposedParent;
 	private DecisionDtoFull proposeParent;
 	
+	private List<GoalEditionProposalDto> editionProps= new ArrayList<GoalEditionProposalDto>();
+	private List<GoalEditionProposalDto> editionsHistory= new ArrayList<GoalEditionProposalDto>();
+	
 	private String attachedState;
 	private double currentBudget;
 	private DecisionDtoFull increaseBudgetDec;
@@ -85,6 +88,18 @@ public class GoalDto {
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	public List<GoalEditionProposalDto> getEditionProps() {
+		return editionProps;
+	}
+	public void setEditionProps(List<GoalEditionProposalDto> editionProps) {
+		this.editionProps = editionProps;
+	}
+	public List<GoalEditionProposalDto> getEditionsHistory() {
+		return editionsHistory;
+	}
+	public void setEditionsHistory(List<GoalEditionProposalDto> editionsHistory) {
+		this.editionsHistory = editionsHistory;
 	}
 	public DecisionDtoFull getCreateDec() {
 		return createDec;

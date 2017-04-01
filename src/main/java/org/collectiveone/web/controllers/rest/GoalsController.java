@@ -154,6 +154,18 @@ public class GoalsController { // NO_UCD (unused code)
 	}
 	
 	@Secured("ROLE_USER")
+	@RequestMapping(value="/goal/{goalId}/proposeEdit", method = RequestMethod.PUT)
+	public @ResponseBody boolean proposeEdit(@PathVariable("goalId") Long goalId, @RequestParam("newDescription") String newDescription) throws IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get(auth.getName());
+		if(logged != null) {
+			goalService.proposeEdition(goalId, logged.getId(),newDescription) ;
+		}
+		return true;
+	}
+	
+	
+	@Secured("ROLE_USER")
 	@RequestMapping(value="/goal/{goalId}/proposeParent", method = RequestMethod.PUT)
 	public @ResponseBody boolean proposeParent(@PathVariable("goalId") Long goalId, @RequestParam("parentTag") String parentTag) throws IOException {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

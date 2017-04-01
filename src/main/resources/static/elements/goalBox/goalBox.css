@@ -23,8 +23,23 @@
 	width: 100%;
 }
 
+#goal_div #edition_proposals_decisions {
+	display:none;
+	overflow:auto;
+}
+
+#goal_div #edition_proposals_decisions label {
+	float:left;
+	margin-right:10px;
+}
+
+
+#goal_div #goal_control_inside_div {
+	clear:both;
+}
+
 #goal_div #new_subgoal_form {
-	max-width: 300px;
+	max-width: 400px;
 	float:left;
 	display: none;
 	margin-top: 10px;
@@ -67,6 +82,24 @@
 	display:none;
 }
 
+#goal_div #n_subgoals_label {
+	float:left;
+	margin-top: 4px;
+	margin-left:10px;
+	display:none;
+	margin-bottom: 0px;
+	cursor:pointer;
+}
+
+#goal_div #edition_proposed_label {
+	float:left;
+	margin-top: 4px;
+	margin-left:10px;
+	display:none;
+	margin-bottom: 0px;
+}
+
+
 #goal_div #new_subgoal_btn {
 	float:left;
 	margin-left:10px;
@@ -85,6 +118,17 @@
 	float:left;
 	display:none;
 	margin-bottom: 10px;
+}
+
+#goal_div .edition_proposal_dec {
+	margin-bottom:10px;
+	margin-right:10px;
+	float:left;
+}
+
+#goal_div .control_form_container_large {
+	width: 300px;
+	text-align: left;
 }
 
 #goal_div #detach_form_container {
@@ -123,6 +167,11 @@
 	text-align:center;
 }
 
+#goal_div #edit_input {
+	text-align:left;	
+	min-height:150px;
+}
+
 #goal_div .control_save_btn {
 	width:100%;
 	float:left;
@@ -136,10 +185,17 @@
 	margin-bottom: 5px;
 }
 
+#goal_div #edition_history_btn_container {
+	margin-right:10px;
+	float:left;
+	display:none;
+	margin-bottom: 5px;
+}
 
 
 #goal_div #state_decision_div {
 	float:left;
+	margin-bottom: 10px;
 }
 
 #goal_div #new_subgoal_form #new_subgoal_tag_input {
@@ -181,6 +237,17 @@
 	float:left;
 	margin-left: 0px;
 	margin-top: 10px;
+}
+
+#goal_div #edition_history_container {
+	display:none;
+	overflow:auto;
+	clear:both;
+}
+
+#goal_div #edition_history_container hr {
+	margin-top:10px;
+	margin-bottom:10px;
 }
 
 

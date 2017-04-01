@@ -13,10 +13,12 @@ import org.collectiveone.model.DecisionState;
 import org.collectiveone.model.DecisionType;
 import org.collectiveone.model.Goal;
 import org.collectiveone.model.GoalAttachState;
+import org.collectiveone.model.GoalEditionProposal;
 import org.collectiveone.model.GoalIncreaseBudgetState;
 import org.collectiveone.model.GoalParentState;
 import org.collectiveone.model.GoalState;
 import org.collectiveone.model.Project;
+import org.collectiveone.model.ProposalState;
 import org.collectiveone.model.User;
 import org.collectiveone.model.Voter;
 import org.collectiveone.web.dto.Filters;
@@ -173,6 +175,7 @@ public class GoalServiceImp extends BaseService {
 		Goal goal = goalRepository.get(goalId);
 		GoalDto dto = goal.toDto();
 		addParentsAndSubgoals(dto);
+		addEditionProposals(dto);
 
 		return dto;
 	}
@@ -204,6 +207,7 @@ public class GoalServiceImp extends BaseService {
 		if(goal != null) {
 			dto = goal.toDto();
 			addParentsAndSubgoals(dto);
+			addEditionProposals(dto);
 		}
 
 		return dto;
@@ -247,6 +251,28 @@ public class GoalServiceImp extends BaseService {
 		}
 		goalDto.setSubGoalsTags(subGoalsTags);
 	}
+	
+
+	@Transactional
+	private void addEditionProposals(GoalDto goalDto) {
+		
+		/* open editions */
+		List<GoalEditionProposal> editionProposals = goalRepository.getEditionsProposed(goalDto.getId());
+		if(editionProposals != null) {
+			for(GoalEditionProposal editionProposal : editionProposals) {
+				goalDto.getEditionProps().add(editionProposal.toDto());
+			}
+		} 
+		
+		/* history of editions */
+		List<GoalEditionProposal> editionsHistory = goalRepository.getEditionsClosed(goalDto.getId());
+		if(editionsHistory != null) {
+			for(GoalEditionProposal edition : editionsHistory) {
+				goalDto.getEditionsHistory().add(edition.toDto());
+			}
+		} 
+	}
+	
 
 	@Transactional
 	public List<String> getSuggestions(String query, List<String> projectNames) {
@@ -272,6 +298,7 @@ public class GoalServiceImp extends BaseService {
 		updateNewParent(goalId);
 		updateAttachment(goalId);
 		updateBudget(goalId);
+		updateEdition(goalId);
 	}
 
 	@Transactional
@@ -414,6 +441,160 @@ public class GoalServiceImp extends BaseService {
 	}
 
 	@Transactional
+	public void proposeEdition(Long goalId, Long userId, String newDescription) throws IOException {
+		Goal goal = goalRepository.get(goalId);
+		User user = userRepository.get(userId);
+		
+		if(goal.getCreator().getId() == user.getId()) {
+			if(goal.getState() == GoalState.PROPOSED) {
+				if(goal.getCreateDec().getState() == DecisionState.IDLE) {
+					if(goal.getCreateDec().getArguments().size() == 0) {
+						/* if the goal creator propose an edition before 
+						 * anyone else vote or added arguments, just accept it*/
+						
+						goal.setDescription(newDescription);
+						goalRepository.save(goal);
+						return;
+					}
+				}
+			}
+		}
+			
+		if((goal.getState() != GoalState.NOT_ACCEPTED) && (goal.getState() != GoalState.DELETED)) {
+			
+			GoalEditionProposal editionProposal = new GoalEditionProposal();
+			
+			editionProposal.setGoal(goal);
+			editionProposal.setProposer(user);
+			editionProposal.setEdition(newDescription);
+			editionProposal.setState(ProposalState.PROPOSED);
+			editionProposal.setCreationDate(new Timestamp(System.currentTimeMillis()));
+			
+			Project project = goal.getProject();
+			Decision acceptDec = new Decision();
+
+			acceptDec.setCreationDate(new Timestamp(System.currentTimeMillis()));
+			acceptDec.setCreator(userRepository.get("collectiveone"));
+			acceptDec.setDecisionRealm(decisionRealmRepository.getFromGoalId(goal.getId()));
+			acceptDec.setDescription("update goal description \n\nfrom: '"+goal.getDescription()+"'\n\nto: '"+editionProposal.getEdition()+"'");
+			acceptDec.setProject(project);
+			acceptDec.setGoal(goal);
+			acceptDec.setState(DecisionState.IDLE);
+			acceptDec.setType(DecisionType.GOAL);
+			acceptDec.setAffectedGoal(goal);
+			acceptDec.setVerdictHours(36);
+
+			decisionRepository.save(acceptDec);
+
+			editionProposal.setAcceptDec(acceptDec);
+			
+			goal.getEditionProposals().add(editionProposal);
+			goalRepository.save(goal);
+
+			Activity act = new Activity();
+			act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+			act.setProject(project);
+			act.setGoal(goal);
+			act.setType(ActivityType.GOAL);
+			act.setEvent("edition proposed");
+			activityService.saveAndNotify(act);
+		}
+	}
+	
+	@Transactional
+	private void updateEdition(Long goalId) throws IOException {
+		Goal goal = goalRepository.get(goalId);
+		
+		List<GoalEditionProposal> editionProposals = goalRepository.getEditionsProposed(goal.getId());
+		
+		for(GoalEditionProposal editionProposal : editionProposals) {
+			/* TODO: if two editions are accepted at the same time, the last one in 
+			 * the list (arbitrary) is the one that prevails */
+			
+			Decision acceptEdition = editionProposal.getAcceptDec();
+
+			if(acceptEdition != null) {
+				/* update goal description based on edition proposal */
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setProject(goal.getProject());
+				act.setGoal(goal);
+				act.setType(ActivityType.GOAL);
+
+				if(acceptEdition != null) {
+					switch(acceptEdition.getState()){
+					case OPEN: 
+						break;
+	
+					case CLOSED_DENIED : 
+						editionProposal.setState(ProposalState.REJECTED);
+						editionProposalRepository.save(editionProposal);
+						
+						act.setEvent("edition not accepted");
+						activityService.saveAndNotify(act);
+						break;
+	
+					case CLOSED_ACCEPTED: 
+						goal.setDescription(editionProposal.getEdition());
+						editionProposal.setState(ProposalState.ACCEPTED);
+						goalRepository.save(goal);
+						editionProposalRepository.save(editionProposal);
+						
+						act.setEvent("edition accepted");
+						activityService.saveAndNotify(act);
+						break;
+					
+					default:
+						break;
+					} 
+				}
+			}
+		}
+	}
+	
+	@Transactional
+	public void proposeParent(Long goalId, String parentTag) throws IOException {
+		Goal goal = goalRepository.get(goalId);
+		Goal proposedParent = goalRepository.get(parentTag,goal.getProject().getName());
+
+		if(proposedParent != null) {
+			if(goal.getParentState() != GoalParentState.PROPOSED) {
+				Project project = goal.getProject();
+				Decision proposeParent = new Decision();
+
+				proposeParent.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				proposeParent.setCreator(userRepository.get("collectiveone"));
+				proposeParent.setDecisionRealm(decisionRealmRepository.getFromGoalId(goal.getId()));
+				proposeParent.setDescription("set "+proposedParent.getGoalTag()+" as parent goal");
+				proposeParent.setProject(project);
+				proposeParent.setGoal(goal);
+				proposeParent.setState(DecisionState.IDLE);
+				proposeParent.setType(DecisionType.GOAL);
+				proposeParent.setAffectedGoal(goal);
+				proposeParent.setVerdictHours(36);
+
+				decisionRepository.save(proposeParent);
+
+				goal.setProposeParent(proposeParent);
+				goal.setProposedParent(proposedParent);
+				goal.setParentState(GoalParentState.PROPOSED);
+
+				goalRepository.save(goal);
+
+				Activity act = new Activity();
+				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				act.setProject(project);
+				act.setGoal(goal);
+				act.setType(ActivityType.GOAL);
+				act.setEvent(proposedParent.getGoalTag()+" proposed as parent");
+				activityService.saveAndNotify(act);
+			} else {
+			}
+		} else {
+		}
+	}
+	
+	@Transactional
 	private void updateNewParent(Long goalId) throws IOException {
 		Goal goal = goalRepository.get(goalId);
 		goalRepository.save(goal);
@@ -466,48 +647,6 @@ public class GoalServiceImp extends BaseService {
 					} 
 				}
 			}
-		}
-	}
-	
-	@Transactional
-	public void proposeParent(Long goalId, String parentTag) throws IOException {
-		Goal goal = goalRepository.get(goalId);
-		Goal proposedParent = goalRepository.get(parentTag,goal.getProject().getName());
-
-		if(proposedParent != null) {
-			if(goal.getParentState() != GoalParentState.PROPOSED) {
-				Project project = goal.getProject();
-				Decision proposeParent = new Decision();
-
-				proposeParent.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				proposeParent.setCreator(userRepository.get("collectiveone"));
-				proposeParent.setDecisionRealm(decisionRealmRepository.getFromGoalId(goal.getId()));
-				proposeParent.setDescription("set "+proposedParent.getGoalTag()+" as parent goal");
-				proposeParent.setProject(project);
-				proposeParent.setGoal(goal);
-				proposeParent.setState(DecisionState.IDLE);
-				proposeParent.setType(DecisionType.GOAL);
-				proposeParent.setAffectedGoal(goal);
-				proposeParent.setVerdictHours(36);
-
-				decisionRepository.save(proposeParent);
-
-				goal.setProposeParent(proposeParent);
-				goal.setProposedParent(proposedParent);
-				goal.setParentState(GoalParentState.PROPOSED);
-
-				goalRepository.save(goal);
-
-				Activity act = new Activity();
-				act.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				act.setProject(project);
-				act.setGoal(goal);
-				act.setType(ActivityType.GOAL);
-				act.setEvent(proposedParent.getGoalTag()+" proposed as parent");
-				activityService.saveAndNotify(act);
-			} else {
-			}
-		} else {
 		}
 	}
 	

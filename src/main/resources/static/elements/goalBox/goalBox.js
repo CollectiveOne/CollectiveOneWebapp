@@ -30,6 +30,21 @@ GoalBox.prototype.draw = function() {
 
 GoalBox.prototype.goalBoxLoaded = function() {
 	
+	$('#new_subgoal_description_input',this.container).markdown({
+		autofocus:false,
+		savable:false,
+		hiddenButtons: ["cmdHeading", "cmdImage"],
+		resize: "vertical"
+	});
+	
+	$('#edit_input',this.container).markdown({
+		autofocus:false,
+		savable:false,
+		hiddenButtons: ["cmdHeading", "cmdImage"],
+		resize: "vertical"
+	});
+	
+	/* TITLE */
 	if(this.prependPath) {
 		$("#goaltag",this.container).append(getProjectLink(this.goal.projectName));
 
@@ -48,6 +63,7 @@ GoalBox.prototype.goalBoxLoaded = function() {
 		labelsAppend = " <label class='label label-info'>proposed</label>";
 	}
 
+	/* ATTACHMENT/DETACHMENT LOGIC */
 	switch(this.goal.attachedState) {
 		case "ATTACHED":
 			labelsAppend = labelsAppend + " <label class='label label-success'>attached</label>";
@@ -111,6 +127,7 @@ GoalBox.prototype.goalBoxLoaded = function() {
 	}
 	
 
+	/* NEW SUBGOALS AND CONTROL */
 	if(isUserLogged()) {
 
 		$("#new_subgoal_btn",this.container).show();
@@ -146,15 +163,57 @@ GoalBox.prototype.goalBoxLoaded = function() {
 		}	
 	}
 	
+	/* SUBGOALS */
 	if(this.goal.subGoalsTags.length > 0) {
 		$("#show_subgoals_btn",this.container).show();
+		$("#n_subgoals_label",this.container).show();
+		$("#n_subgoals_label",this.container).html(this.goal.subGoalsTags.length+" subgoals");
+		
 		$("#show_subgoals_btn",this.container).click(this.showSubGoals.bind(this));
+		$("#n_subgoals_label",this.container).click(this.showSubGoals.bind(this));
+	}
+	
+	/* EDITION PROPOSALS */
+	if(isUserLogged()) {
+		if(this.goal.editionProps.length > 0) {
+			$("#edition_proposals_decisions", this.container).show();
+			$("#edition_proposed_label", this.container).show();
+			for(var ix in this.goal.editionProps) {
+				$("#edition_proposals_decisions", this.container).append("<div class=edition_proposal_dec id=edition_proposal_dec"+ix+"_div></div>");
+				var editDecBox = new DecisionBoxSmall($("#edition_proposal_dec"+ix+"_div",this.container),this.goal.editionProps[ix].acceptDec, getLoggedUsername());
+				editDecBox.updateVoteAndDraw();
+			}
+		}
+		
+		$("#edit_form_container",this.container).show();
+		$("#edit_input",this.container).val(this.goal.description);	
+		$("#edit_btn",this.container).click(this.editBtnClicked.bind(this));
+		$("#edit_save_btn",this.container).click(this.editBtnSaveClicked.bind(this));
+	}
+	
+	/* EDITION HISTORY */
+	if(this.goal.editionsHistory.length > 0) {
+		$("#edition_history_btn_container",this.container).show();
+		$("#edition_history_btn_container",this.container).click(this.editionHistoryBtnClicked.bind(this));
+		
+		for(var ix in this.goal.editionsHistory) {
+			var thisEdition = this.goal.editionsHistory[ix];
+			$("#edition_history_container", this.container).append("<hr>");
+			$("#edition_history_container", this.container).append(
+				"<div class=edition_history>"+
+					getUserPageLink(thisEdition.proposerUsername)+
+					" proposed '"+LimitStrSize(thisEdition.edition,80)+"' "+
+					getTimeStrSince(thisEdition.creationDate)+" ago"+
+					" and it was "+thisEdition.state+". <a href='/v/decision/"+thisEdition.acceptDec.id+"'>(see decision)</a></div>");
+		}
 	}
 
+
+	/* PARENT PROPOSALS */
 	if(isUserLogged()) {
 		if(this.goal.parentState == "PROPOSED") {
 			$("#propose_parent_decision_container",this.container).show();
-			var propDecBox = new DecisionBoxSmall($("#propose_parent_decision_container",this.container),this.goal.proposeParent, GLOBAL.sessionData.userLogged);
+			var propDecBox = new DecisionBoxSmall($("#propose_parent_decision_container",this.container),this.goal.proposeParent, getLoggedUsername());
 			propDecBox.updateVoteAndDraw();
 			
 		} else {
@@ -185,6 +244,11 @@ GoalBox.prototype.showControlBtnClicked = function() {
 	$("#goal_control_div",this.container).toggle();
 }
 
+GoalBox.prototype.editBtnClicked = function() {
+	$("#edit_form_container",this.container).addClass("control_form_container_large");
+	$("#edit_form",this.container).toggle();
+}
+
 GoalBox.prototype.detachBtnClicked = function() {
 	$("#detach_form",this.container).toggle();
 }
@@ -197,6 +261,15 @@ GoalBox.prototype.proposeBtnClicked = function() {
 	$("#propose_parent_form",this.container).toggle();
 }
 
+GoalBox.prototype.editionHistoryBtnClicked = function() {
+	$("#edition_history_container",this.container).toggle();
+}
+
+
+
+GoalBox.prototype.editBtnSaveClicked = function() {
+	GLOBAL.serverComm.goalProposeEdit(this.goal.id, $("#edit_input",this.container).val(), this.detachSaveCallback, this);
+}
 
 GoalBox.prototype.detachBtnSaveClicked = function() {
 	switch(this.goal.attachedState) {

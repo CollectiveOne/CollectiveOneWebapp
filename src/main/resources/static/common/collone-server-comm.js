@@ -201,6 +201,24 @@ ServerComm.prototype = {
 				}
 			});
 		},
+		
+		goalProposeEdit : function(goalId,newDescription,callbackFunction,callbackObj) {
+			$.ajax({
+				type : 'PUT',
+				url : '/1/goal/'+goalId+'/proposeEdit?newDescription='+newDescription,
+				data : '',
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
 
 		goalProposeParent : function(goalId,callbackFunction,callbackObj) {
 			$.ajax({
