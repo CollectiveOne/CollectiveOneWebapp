@@ -196,6 +196,7 @@
 #goal_div #state_decision_div {
 	float:left;
 	margin-bottom: 10px;
+	margin-right: 10px;
 }
 
 #goal_div #new_subgoal_form #new_subgoal_tag_input {
