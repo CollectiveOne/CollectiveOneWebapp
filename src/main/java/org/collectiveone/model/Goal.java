@@ -1,13 +1,17 @@
 package org.collectiveone.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -34,6 +38,16 @@ public class Goal {
 	private Decision createDec;
 	@OneToOne
 	private Decision deleteDec;
+	
+	@OneToMany(mappedBy="decision")
+	private List<Argument> arguments = new ArrayList<Argument>();
+	
+	@OneToMany(mappedBy="goal", cascade = CascadeType.ALL)
+	private List<GoalEditionProposal> editionProposals = new ArrayList<GoalEditionProposal>();
+	
+	@OneToMany(mappedBy="goal", cascade = CascadeType.ALL)
+	private List<GoalEditionProposal> editionsHistory = new ArrayList<GoalEditionProposal>();
+	
 	
 	@ManyToOne
 	private Goal parent;
@@ -132,6 +146,24 @@ public class Goal {
 	}
 	public void setDeleteDec(Decision deleteDec) {
 		this.deleteDec = deleteDec;
+	}
+	public List<Argument> getArguments() {
+		return arguments;
+	}
+	public void setArguments(List<Argument> arguments) {
+		this.arguments = arguments;
+	}
+	public List<GoalEditionProposal> getEditionProposals() {
+		return editionProposals;
+	}
+	public void setEditionProposals(List<GoalEditionProposal> editionProposals) {
+		this.editionProposals = editionProposals;
+	}
+	public List<GoalEditionProposal> getEditionsHistory() {
+		return editionsHistory;
+	}
+	public void setEditionsHistory(List<GoalEditionProposal> editionsHistory) {
+		this.editionsHistory = editionsHistory;
 	}
 	public Goal getParent() {
 		return parent;

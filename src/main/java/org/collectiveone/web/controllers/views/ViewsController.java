@@ -132,12 +132,7 @@ public class ViewsController { // NO_UCD (unused code)
 	public String goalPage(@PathParam("goalTag") String goalTag, @PathParam("projectName") String projectName, Model model) {
 		GoalDto goalDto = goalService.getDto(goalTag,projectName);  
 		
-		model.addAttribute("goalTag",goalDto.getGoalTag());
-		model.addAttribute("projectName",goalDto.getProjectName());
-		model.addAttribute("goalId",goalDto.getId());
-		model.addAttribute("goalDescription",goalDto.getDescription());
-		
-		return "views/goalPage";
+		return "redirect:goal/"+goalDto.getId();
 	}
 	
 	@RequestMapping("/slack")

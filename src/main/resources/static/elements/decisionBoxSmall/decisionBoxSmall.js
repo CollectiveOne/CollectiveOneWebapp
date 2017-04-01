@@ -12,7 +12,7 @@ DecisionBoxSmall.prototype.draw = function() {
 DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
 	this.drawVoteStatus();
 	
-	$("#dec_more_div",this.container).click(this.decMoreClick.bind(this));
+	$("#dec_more_div",this.container).attr('href','/v/decision/'+this.decision.id);
 	
 	var verdictStr = [];
 
@@ -25,7 +25,7 @@ DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
 					$("#decision_small_div",this.container).addClass("dangerousDecisions");
 				}
 			} else {
-				$("#dec_left_div",this.container).append(this.decision.description);
+				$("#dec_left_div",this.container).append(LimitStrSize(this.decision.description,80));
 			}
 			$("#dec_center_div #vote_div",this.container).show();
 
@@ -46,8 +46,3 @@ DecisionBoxSmall.prototype.DecisionBoxSmallLoaded = function() {
 		
 	}
 }
-
-DecisionBoxSmall.prototype.decMoreClick = function() {
-	window.open('/v/decision/'+this.decision.id,'_blank');
-}
-

@@ -10,6 +10,7 @@ import org.collectiveone.repositories.CommentRepository;
 import org.collectiveone.repositories.ContributorRepository;
 import org.collectiveone.repositories.DecisionRealmDao;
 import org.collectiveone.repositories.DecisionRepository;
+import org.collectiveone.repositories.EditionProposalRepository;
 import org.collectiveone.repositories.GoalRepository;
 import org.collectiveone.repositories.ProjectRepository;
 import org.collectiveone.repositories.PromoterRepository;
@@ -75,6 +76,9 @@ class BaseService {
 	
 	@Autowired 
 	protected ReviewRepository reviewRepository;
+	
+	@Autowired 
+	protected EditionProposalRepository editionProposalRepository;
 	
 	
 	/* SERVICES */

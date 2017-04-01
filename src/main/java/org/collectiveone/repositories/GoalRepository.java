@@ -5,13 +5,16 @@ import java.util.List;
 
 import org.collectiveone.model.Goal;
 import org.collectiveone.model.GoalAttachState;
+import org.collectiveone.model.GoalEditionProposal;
 import org.collectiveone.model.GoalState;
+import org.collectiveone.model.ProposalState;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.ObjectListRes;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,7 +183,8 @@ public class GoalRepository extends BaseRepository {
 		}
 		
 		query.createAlias("go.parent","pa")
-			.add(Restrictions.eq("pa.id", goalId));
+			.add(Restrictions.eq("pa.id", goalId))
+			.addOrder(Order.asc("goalTag"));
 		
 		@SuppressWarnings("unchecked")
 		List<Goal> res = (List<Goal>) query.list();
@@ -255,5 +259,35 @@ public class GoalRepository extends BaseRepository {
 		}
 		
 	}
+	
+	public List<GoalEditionProposal> getEditionsProposed(Long goalId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(GoalEditionProposal.class,"edp");
+		
+		query
+			.add(Restrictions.eq("edp.goal.id", goalId))
+			.add(Restrictions.eq("edp.state", ProposalState.PROPOSED));
+		
+		@SuppressWarnings("unchecked")
+		List<GoalEditionProposal> res = (List<GoalEditionProposal>) query.list();
+		
+		return res;
+	}
+	
+	public List<GoalEditionProposal> getEditionsClosed(Long goalId) {
+		Criteria query = sessionFactory.getCurrentSession().createCriteria(GoalEditionProposal.class,"edp");
+		
+		query
+			.add(Restrictions.eq("edp.goal.id", goalId))
+			.add(Restrictions.or(
+					Restrictions.eq("edp.state", ProposalState.ACCEPTED),
+					Restrictions.eq("edp.state", ProposalState.REJECTED)));
+		
+		@SuppressWarnings("unchecked")
+		List<GoalEditionProposal> res = (List<GoalEditionProposal>) query.list();
+		
+		return res;
+	}
+	
+	
 	
 }
