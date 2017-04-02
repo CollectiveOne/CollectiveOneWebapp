@@ -248,6 +248,7 @@ public class BidServiceImp extends BaseService {
 
 				case CLOSED_DENIED: 
 					bid.setState(BidState.NOT_ACCEPTED);
+					cbtion.setState(CbtionState.OPEN);
 					act.setEvent("not accepted");
 					activityService.saveAndNotify(act);
 					break;
