@@ -3,14 +3,14 @@
 ------------------------------------------------------------------------------------------
 
 > BACKUP DATA FROM HEROKU WITH COPY no triggers (update file name!)
-/usr/bin/pg_dump --host ec2-54-225-64-254.compute-1.amazonaws.com --port 5432 --username "vvlafvtvaqjmna" --no-password  --format plain --data-only --disable-triggers --verbose --file "/home/pepo/workspace-sts/CollectiveOne-hk-db-bk/bk044-data.backup" "d1a0o64celerd3"
+/usr/bin/pg_dump --host ec2-54-225-64-254.compute-1.amazonaws.com --port 5432 --username "vvlafvtvaqjmna" --no-password  --format plain --data-only --disable-triggers --verbose --file "/home/pepo/workspace/c1-data/c1-bk-091" "d1a0o64celerd3"
 
 > Drop all tables in local DB
 
 > Recreate them with current code and fill them with use \i and the file saved above from PSQL command line
 
 > Create BINARY COPY from local using (update file name!)
-/usr/bin/pg_dump --host localhost --port 5432 --username "postgres" --no-password  --format custom --blobs --no-privileges --no-tablespaces --verbose --file "/home/pepo/workspace-sts/CollectiveOne-hk-db-bk/bk041-data-custom.backup" "cpdb"
+/usr/bin/pg_dump --host localhost --port 5432 --username "postgres" --no-password  --format custom --blobs --no-privileges --no-tablespaces --verbose --file "/home/pepo/workspace/c1-data/c1-bk-091-custom" "cpdb
 
 > Stop heroku with 
 heroku ps:scale web=0

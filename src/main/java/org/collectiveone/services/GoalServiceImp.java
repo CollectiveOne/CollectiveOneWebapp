@@ -718,6 +718,16 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
+	public void setWeightIteratively(Long goalId, Long userId, double weight) {
+		setWeight(goalId, userId, weight);
+		
+		List<Goal> subgoals = goalRepository.getSubgoalsIteratively(goalId);
+		for(Goal subgoal : subgoals) {
+			setWeight(subgoal.getId(), userId, weight);
+		}
+	}
+	
+	@Transactional
 	public void setWeight(Long goalId, Long userId, double weight) {
 		Goal goal = goalRepository.get(goalId);
 		DecisionRealm realm = decisionRealmRepository.getFromGoalId(goal.getId());

@@ -131,7 +131,7 @@ public class GoalsController { // NO_UCD (unused code)
 	public boolean setWeight(@PathVariable("goalId") Long goalId, @RequestParam("weight") double weight) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User logged = userService.get(auth.getName());
-		goalService.setWeight(goalId,logged.getId(),weight);
+		goalService.setWeightIteratively(goalId,logged.getId(),weight);
 		return true;
 	}
 	

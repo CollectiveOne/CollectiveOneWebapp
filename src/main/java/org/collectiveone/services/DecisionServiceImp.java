@@ -80,13 +80,15 @@ public class DecisionServiceImp extends BaseService {
 			case CLOSED_ACCEPTED:
 				act.setEvent("accepted");
 				if(isCustom) activityService.saveAndNotify(act);
-				autoDecayWeights = true;
+//				autoDecayWeights = true;
+				autoDecayWeights = false;
 				break;
 
 			case CLOSED_DENIED:
 				act.setEvent("rejected");
 				if(isCustom) activityService.saveAndNotify(act);
-				autoDecayWeights = true;
+//				autoDecayWeights = true;
+				autoDecayWeights = false;
 				break;
 
 			case CLOSED_EXTERNALLY:
@@ -110,13 +112,15 @@ public class DecisionServiceImp extends BaseService {
 			case CLOSED_ACCEPTED:
 				act.setEvent("accepted");
 				if(isCustom) activityService.saveAndNotify(act);
-				autoDecayWeights = true;
+//				autoDecayWeights = true;
+				autoDecayWeights = false;
 				break;
 
 			case CLOSED_DENIED:
 				act.setEvent("rejected");
 				if(isCustom) activityService.saveAndNotify(act);
-				autoDecayWeights = true;
+//				autoDecayWeights = true;
+				autoDecayWeights = false;
 				break;
 
 			case CLOSED_EXTERNALLY:
