@@ -1,7 +1,6 @@
 package org.collectiveone.web.controllers.rest;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,7 @@ import org.collectiveone.web.dto.ProjectContributedDto;
 import org.collectiveone.web.dto.UserDto;
 import org.collectiveone.web.dto.UserMyDataDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,11 +27,6 @@ public class UsersController { // NO_UCD (unused code)
 	@Autowired
 	UserServiceImp userService;
 	
-	@RequestMapping("/user")
-	public Principal user(Principal user) {
-		System.out.println(user);
-		return user;
-	}
 	
 	@RequestMapping(value="/user/{username}", method = RequestMethod.GET)
 	public @ResponseBody UserDto get(@PathVariable String username) {
@@ -45,6 +40,7 @@ public class UsersController { // NO_UCD (unused code)
 		return userService.projectPpsGet(username,projectName);
 	}
 	
+	@Secured("ROLE_USER")
 	@RequestMapping(value="/users/suggestions", method = RequestMethod.GET)
 	public Map<String,List<String>> getList(@RequestParam("query") String query) {
 		Map<String,List<String>> map = new HashMap<>();
