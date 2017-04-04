@@ -1,13 +1,8 @@
 <template>
   <div>
-    <div class="preferred_browser_div cp_box_gray_slim">
-      The preferred browsers for visiting this page are Google
-      Chrome or Mozilla Firefox
-    </div>
-
     <div class="presentation_container">
       <div class="video_container">
-        <iframe class="video_iframe" src="https://www.youtube.com/embed/qka1zP_GQaI" frameborder="0" allowfullscreen="true"></iframe>
+        <!-- <iframe class="video_iframe" src="https://www.youtube.com/embed/qka1zP_GQaI" frameborder="0" allowfullscreen="true"></iframe> -->
       </div>
     </div>
 
@@ -125,6 +120,7 @@ export default {
 	padding-top:0px;
 	height:0;
 	overflow:hidden;
+  background-color: gray;
 }
 
 .video_iframe {

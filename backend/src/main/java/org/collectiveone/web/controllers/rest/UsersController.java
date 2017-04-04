@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.collectiveone.services.UserServiceImp;
+import org.collectiveone.web.dto.CredentialsDto;
 import org.collectiveone.web.dto.ProjectContributedDto;
 import org.collectiveone.web.dto.UserDto;
 import org.collectiveone.web.dto.UserMyDataDto;
@@ -22,11 +23,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/1")
-public class UsersController { // NO_UCD (unused code)
+public class UsersController {
 	
 	@Autowired
 	UserServiceImp userService;
 	
+	@RequestMapping(value="/user/login", method = RequestMethod.POST)
+	public @ResponseBody UserDto login(@RequestBody CredentialsDto credentials) {
+		return userService.getDto(credentials.getUsername());
+	}	
 	
 	@RequestMapping(value="/user/{username}", method = RequestMethod.GET)
 	public @ResponseBody UserDto get(@PathVariable String username) {

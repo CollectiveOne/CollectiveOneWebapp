@@ -36,7 +36,9 @@ public class UserServiceImp extends BaseService {
 
 	@Transactional
 	public UserDto getDto(String username) {
-		return userRepository.get(username).toDto();
+		User user = userRepository.get(username);
+		if(user != null) return user.toDto();
+		else return null;
 	}
 
 	@Transactional
