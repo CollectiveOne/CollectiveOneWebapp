@@ -2,7 +2,7 @@
   <div id="app">
     <div class="container-fluid">
         <app-header></app-header>
-        <router-view></router-view>
+        <router-view class="view"></router-view>
       </div>
   </div>
 </template>
@@ -34,8 +34,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.container-fluid {
-  padding-left: 0px;
-  padding-right: 0px;
+.view {
+  margin-top: 10px;
 }
+
 </style>

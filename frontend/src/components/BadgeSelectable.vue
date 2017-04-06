@@ -50,8 +50,9 @@ export default {
 
 .badge {
 
-  font-size: 12px;
   float: left;
+  padding-top: 5px;
+  padding-bottom: 5px;
 
   cursor: pointer;
 

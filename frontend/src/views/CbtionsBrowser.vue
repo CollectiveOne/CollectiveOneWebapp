@@ -1,9 +1,6 @@
 <template lang="html">
   <div class="row">
-    <b-alert state="info" dismissible :show="true">
-		  <strong>Tip:</strong> Here you can browse contributions from all projects. Use the filter to narrow or expand your search.
-		</b-alert>
-		<app-filter
+    <app-filter class="col"
       :stateOptions="['PROPOSED', 'OPEN', 'ASSIGNED', 'ACCEPTED']"
       :projectNameOptions="allProjects()"
       ></app-filter>
