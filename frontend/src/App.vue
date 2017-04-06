@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div>
+    <div class="container-fluid">
         <app-header></app-header>
         <router-view></router-view>
       </div>
@@ -8,12 +8,21 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import AppHeader from '@/components/Header.vue'
 
 export default {
   name: 'app',
   components: {
     appHeader: AppHeader
+  },
+
+  methods: {
+    ...mapActions(['updateProjects'])
+  },
+
+  created () {
+    this.updateProjects()
   }
 }
 </script>
@@ -23,6 +32,10 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+}
+
+.container-fluid {
+  padding-left: 0px;
+  padding-right: 0px;
 }
 </style>
