@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
     <div class="row header">
-      <div class="col">
+      <div class="col left-btns">
         <div>
           <b-button variant="info" v-if="showFilterBtn" @click="toggleFilter">show filters</b-button>
           <b-button variant="info" v-if="showNewBtn">new element</b-button>
@@ -44,7 +44,7 @@
       				<input class="form-control" placeholder="goal-tag"></input>
       			</div>
       			<div class="form-group">
-      			  	<app-badge-selectable>and subgoals</app-badge-selectable>
+      			  	<app-badge-selectable class="badgeSelectable">and subgoals</app-badge-selectable>
                 <br>
       			</div>
       			<div class="form-group">
@@ -59,7 +59,7 @@
       		<div class="col" v-if="type === 'decisions'">
       			<div class="checkbox">
       				<label>
-                <app-badge-selectable text="hide automatic decisions"></app-badge-selectable>
+                <app-badge-selectable class="badgeSelectable">hide automatic decisions</app-badge-selectable>
       				</label>
       			</div>
       		</div>
@@ -187,6 +187,20 @@ export default {
 
 <style scoped>
 
+@media (max-width: 768px) {
+  .left-btns button {
+    margin-bottom: 10px;
+  }
+
+  .rigth-btns button,select {
+    margin-bottom: 10px;
+  }
+}
+
+.left-btns button {
+  width: 150px;
+}
+
 .rigth-btns button,select {
   float: right;
   margin-right: 5px;
@@ -195,7 +209,7 @@ export default {
 .badgeSelectable {
   width: 100%;
   margin-bottom: 10px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .header {
@@ -204,6 +218,7 @@ export default {
 
 .body {
   margin-top: 10px;
+  font-size: 12px;
 }
 
 .bottom-btns {
