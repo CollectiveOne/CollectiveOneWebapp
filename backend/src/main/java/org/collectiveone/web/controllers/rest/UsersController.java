@@ -1,11 +1,13 @@
 package org.collectiveone.web.controllers.rest;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.collectiveone.services.UserServiceImp;
+import org.collectiveone.web.dto.AutocompleteDto;
 import org.collectiveone.web.dto.CredentialsDto;
 import org.collectiveone.web.dto.ProjectContributedDto;
 import org.collectiveone.web.dto.UserDto;
@@ -45,12 +47,14 @@ public class UsersController {
 		return userService.projectPpsGet(username,projectName);
 	}
 	
-	@Secured("ROLE_USER")
 	@RequestMapping(value="/users/suggestions", method = RequestMethod.GET)
-	public Map<String,List<String>> getList(@RequestParam("query") String query) {
-		Map<String,List<String>> map = new HashMap<>();
-		map.put("suggestions", userService.getSuggestions(query));
-		return map;
+	public List<AutocompleteDto> getList(@RequestParam("q") String query) {
+		List<AutocompleteDto> res = new ArrayList<AutocompleteDto>();
+		
+		for(String suggestion : userService.getSuggestions(query)) {
+			res.add(new AutocompleteDto(suggestion,suggestion));
+		}
+		return res;
 	}
 	
 	@RequestMapping(value="/users/suggestionsReferrer", method = RequestMethod.GET)

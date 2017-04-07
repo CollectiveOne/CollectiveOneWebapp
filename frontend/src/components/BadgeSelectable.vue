@@ -3,7 +3,7 @@
     @click="clicked()"
     class="badge"
     :class="{
-       'badge-default': !selected,
+       'badge-info': !selected,
        'badge-success': selected
       }"
     >
@@ -35,8 +35,8 @@ export default {
     clicked () {
       this.selected = !this.selected
 
-      if (this.selected) this.$emit('selected')
-      else this.$emit('unselected')
+      if (this.selected) this.$emit('selected', {selected: true, id: this.id})
+      else this.$emit('selected', {selected: false, id: this.id})
     }
   },
 

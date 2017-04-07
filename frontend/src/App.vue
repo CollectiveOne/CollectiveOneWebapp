@@ -38,4 +38,8 @@ export default {
   margin-top: 10px;
 }
 
+button {
+  cursor: pointer;
+}
+
 </style>

@@ -3,82 +3,125 @@
     <div class="row header">
       <div class="col left-btns">
         <div>
-          <b-button variant="info" v-if="showFilterBtn" @click="toggleFilter">show filters</b-button>
-          <b-button variant="info" v-if="showNewBtn">new element</b-button>
+          <b-button variant="primary" v-if="showFilterBtn" @click="toggleFilter"> {{ this.show ? 'hide and update' : 'show filters' }} </b-button>
+          <b-button variant="primary" v-if="showNewBtn">new element</b-button>
         </div>
       </div>
-  		<div class="col rigth-btns">
-        <b-button variant="info" >next</b-button>
-  			<b-button variant="info" >prev</b-button>
-  			<b-form-select v-model="sortBy" :options="orderByOptions"></b-form-select>
-  		</div>
+      <div class="col rigth-btns">
+        <b-button variant="primary" @click="nextPage">next</b-button>
+        <b-button variant="primary" @click="prevPage">prev</b-button>
+        <div class="badge badge-primary res-set" v-if="resSet.length > 0">
+          {{ this.resSet[0] + '-' + this.resSet[1] + ' of ' + this.resSet[2] }}
+        </div>
+        <b-form-select v-model="sortBy" :options="orderByOptions"></b-form-select>
+      </div>
     </div>
-    <form v-if="show" class="row body jumbotron">
-      <div class="col">
-        <div class="row">
-          <div class="col">
-            <app-badge-selectable v-for="name in projectNameOptions" :key="name"
-              :selectedInit="false" class="badgeSelectable">
+    <div class="container body">
+      <form v-if="show" @submit.prevent class="row jumbotron">
+        <div class="col">
+          <div class="row">
+            <div class="col">
+              <p>projects:</p>
+              <app-badge-selectable v-for="name in projectNameOptions" :key="name"
+              :selectedInit="projectNamesSelected.indexOf(name) !== -1"
+              class="badgeSelectable"
+              :id="name" @selected="projectNameSelected">
               {{ name }}
             </app-badge-selectable>
           </div>
-      		<div class="col">
-            <app-badge-selectable v-for="state in stateOptions" :key="state"
-              :selectedInit="false" class="badgeSelectable">
-              {{ state }}
-            </app-badge-selectable>
-          </div>
-      		<div class="col">
-      			<div class="form-group">
-      				<label>keyword:</label>
-      				<input class="form-control" placeholder="keyword"></input>
-      			</div>
-      			<div class="form-group">
-      				<label>creator:</label>
-      				<input class="form-control" placeholder="creator"></input>
-      			</div>
-      		</div>
-      		<div class="col" v-if="type === 'cbtions'">
-      			<div class="form-group">
-      				<label>goal (select one project):</label>
-      				<input class="form-control" placeholder="goal-tag"></input>
-      			</div>
-      			<div class="form-group">
-      			  	<app-badge-selectable class="badgeSelectable">and subgoals</app-badge-selectable>
-                <br>
-      			</div>
-      			<div class="form-group">
-      				<label>contributor:</label>
-      				<input class="form-control" placeholder="contributor"></input>
-      			</div>
-      			<div class="form-group">
-      				<label>assignee:</label>
-      				<input id=filter_assignee_input class="form-control" placeholder="assignee"></input>
-      			</div>
-      		</div>
-      		<div class="col" v-if="type === 'decisions'">
-      			<div class="checkbox">
-      				<label>
-                <app-badge-selectable class="badgeSelectable">hide automatic decisions</app-badge-selectable>
-      				</label>
-      			</div>
-      		</div>
-        </div>
-        <div class="row bottom-btns">
           <div class="col">
-            <b-button variant="info">update</b-button>
+            <p>state:</p>
+            <app-badge-selectable v-for="state in stateOptions" :key="state"
+            :selectedInit="stateNames.indexOf(state) !== -1"
+            class="badgeSelectable"
+            :id="state" @selected="stateSelected">
+            {{ state }}
+          </app-badge-selectable>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label>keyword:</label>
+            <input v-model="keyw" class="form-control" placeholder="keyword"></input>
           </div>
+          <div class="form-group">
+            <label>creator:</label>
+            <app-input-autocomplete
+            :initValue="creatorUsernames[0]"
+            :onSelect="(val) => {creatorUsernames = [val.anchor]}"
+            anchor="anchor" placeholder="creator"
+            url="/1/users/suggestions">
+          </app-input-autocomplete>
         </div>
       </div>
-  	</form>
-  	<div v-if="loading" class="loading_gif">
-  		<img src="../assets/images/ajax-loader.gif">
-  	</div>
+      <div class="col" v-if="type === 'cbtions'">
+        <div class="form-group">
+          <label>goal:</label>
+          <app-input-autocomplete
+          :initValue="goalTag"
+          :onSelect="(val) => {goalTag = val.anchor}"
+          :onFocus="() => { projectNamesSelected.length != 1 ? goalSelectorError = true :  goalSelectorError = false }"
+          anchor="anchor" placeholder="goal-tag"
+          url="/1/goals/suggestions" :customParams="{projectName: projectNamesSelected[0]}">
+        </app-input-autocomplete>
+        <b-alert variant="danger" :show="goalSelectorError">select one project</b-alert>
+      </div>
+      <div class="form-group">
+        <app-badge-selectable class="badgeSelectable"
+        :selectedInit="goalSubgoalsFlag"
+        @selected="(data) => { goalSubgoalsFlag = data.selected }" >
+        and subgoals
+      </app-badge-selectable>
+      <br>
+    </div>
+    <div class="form-group">
+      <label>contributor:</label>
+      <app-input-autocomplete
+      :initValue="contributorUsername"
+      :onSelect="(val) => {contributorUsername = val.anchor}"
+      anchor="anchor" placeholder="contributor"
+      url="/1/users/suggestions">
+    </app-input-autocomplete>
   </div>
+  <div class="form-group">
+    <label>assignee:</label>
+    <app-input-autocomplete
+    :initValue="assigneeUsername"
+    :onSelect="assigneeSelected"
+    anchor="anchor" placeholder="assignee"
+    url="/1/users/suggestions">
+  </app-input-autocomplete>
+</div>
+</div>
+<div class="col" v-if="type === 'decisions'">
+  <div class="checkbox">
+    <label>
+      <app-badge-selectable
+      :selectedInit: "goalSubgoalsFlag"
+      class="badgeSelectable">
+      show automatic decisions</app-badge-selectable>
+    </label>
+  </div>
+</div>
+</div>
+<div class="row bottom-btns">
+  <div class="col">
+    <b-button variant="primary" @click="toggleFilter">update</b-button>
+  </div>
+</div>
+</div>
+</form>
+</div>
+<div v-if="loading" class="loading_gif">
+  <img src="../assets/images/ajax-loader.gif">
+</div>
+</div>
 </template>
 
 <script>
+import Autocomplete from '@/components/external/Autocomplete.vue'
+
 import BadgeSelectable from '@/components/BadgeSelectable.vue'
+import { remove } from '@/services/common'
 
 export default {
   props: {
@@ -125,62 +168,135 @@ export default {
       }
     },
 
+    statesSelected: {
+      type: Array,
+      default: () => {
+        return ['State1']
+      }
+    },
+
     projectNameOptions: {
       type: Array,
       default: () => {
         return ['Project1', 'Project2']
+      }
+    },
+
+    resSet: {
+      type: Array,
+      default: () => {
+        return []
       }
     }
   },
 
   data () {
     return {
-      show: true,
+      show: false,
       loading: false,
-      sortBy: 'NEWFIRST',
-      projectsNamesOptions: [],
-      filters: {}
-    }
-  },
 
-  watch: {
-    sortBy () {
-      this.updateData()
+      sortBy: 'CREATIONDATEDESC',
+      page: 1,
+      nperpage: 15,
+      projectNamesSelected: [],
+      keyw: '',
+      stateNames: [],
+      creatorUsernames: [],
+      goalTag: '',
+      goalSubgoalsFlag: true,
+      goalSelectorError: false,
+      contributorUsername: '',
+      assigneeUsername: ''
     }
   },
 
   methods: {
     toggleFilter () {
-      // if (this.show) {
-      //   this.updateData()
-      // }
+      if (this.show) {
+        this.updateData()
+      }
+
       this.show = !this.show
+    },
+
+    updateData () {
+      this.$emit('updateData', {
+        sortBy: this.sortBy,
+        page: this.page,
+        nperpage: this.nperpage,
+        projectNames: this.projectNamesSelected,
+        stateNames: this.stateNames,
+        creatorUsernames: this.creatorUsernames,
+        contributorUsername: this.contributorUsername,
+        assigneeUsernam: this.assigneeUsername,
+        keyw: this.keyw,
+        goalTag: this.goalTag,
+        goalSubgoalsFlag: this.goalSubgoalsFlag,
+        showInternalDecisions: this.showInternalDecisions
+      })
+    },
+
+    projectNameSelected (data) {
+      if (data.selected) {
+        if (!this.projectNamesSelected.includes(data.id)) {
+          this.projectNamesSelected.push(data.id)
+        }
+      } else {
+        if (this.projectNamesSelected.includes(data.id)) {
+          remove(this.projectNamesSelected, data.id)
+        }
+      }
+    },
+
+    stateSelected (data) {
+      if (data.selected) {
+        if (!this.stateNames.includes(data.id)) {
+          this.stateNames.push(data.id)
+        }
+      } else {
+        if (this.stateNames.includes(data.id)) {
+          remove(this.stateNames, data.id)
+        }
+      }
+    },
+
+    assigneeSelected (val) {
+      if (!this.stateNames.includes('ASSIGNED')) {
+        this.stateNames.push('ASSIGNED')
+      }
+      this.contributorUsername = val.anchor
+    },
+
+    nextPage () {
+      this.page++
+      var pageMax = Math.ceil(this.resSet[2] / this.nperpage)
+      if (this.page > pageMax) {
+        this.page = pageMax
+      }
+
+      this.updateData()
+    },
+
+    prevPage () {
+      this.page--
+      if (this.page < 1) {
+        this.page = 1
+      }
+
+      this.updateData()
     }
+
   },
 
   components: {
-    AppBadgeSelectable: BadgeSelectable
+    AppBadgeSelectable: BadgeSelectable,
+    AppInputAutocomplete: Autocomplete
   },
 
   created () {
-    // $('#filter_goal_input',this.container).autocomplete({
-    //   serviceUrl: '/1/goals/suggestions',
-    //   minChars: 0,
-    //   params: {projectName: ""},
-    //   maxHeight: 100
-    // })
-    //
-    // $('#filter_contributor_input',this.container).autocomplete({
-    //   serviceUrl: '/1/users/suggestions',
-    //   minChars: 0,
-    //   maxHeight: 100
-    // })
-    //
-    // $('#filter_assignee_input',this.container).autocomplete({
-    //   serviceUrl: '/1/users/suggestions',
-    //   minChars: 0,
-    //   maxHeight: 100
-    // })
+    this.stateNames = this.statesSelected
+
+    this.updateData()
   }
 }
 </script>
@@ -204,6 +320,14 @@ export default {
 .rigth-btns button,select {
   float: right;
   margin-right: 5px;
+}
+
+.res-set {
+  width: 100px;
+  height: 100%;
+  float: right;
+  margin-right: 10px;
+  padding-top: 14px;
 }
 
 .badgeSelectable {

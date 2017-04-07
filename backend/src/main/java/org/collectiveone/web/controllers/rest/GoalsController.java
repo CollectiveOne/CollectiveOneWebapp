@@ -12,6 +12,7 @@ import org.collectiveone.model.GoalState;
 import org.collectiveone.model.User;
 import org.collectiveone.services.GoalServiceImp;
 import org.collectiveone.services.UserServiceImp;
+import org.collectiveone.web.dto.AutocompleteDto;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.GoalDto;
 import org.collectiveone.web.dto.GoalDtoListRes;
@@ -75,8 +76,8 @@ public class GoalsController { // NO_UCD (unused code)
 	}
 	
 	@RequestMapping(value="/goals/suggestions", method = RequestMethod.GET)
-	public Map<String,List<String>> getList(@RequestParam("projectName") String projectName, 
-											@RequestParam("query") String query) {
+	public List<AutocompleteDto> getList(@RequestParam("projectName") String projectName, 
+											@RequestParam("q") String query) {
 		
 		List<String> projectNames = new ArrayList<String>();
 		if(projectName != null) {
@@ -84,9 +85,13 @@ public class GoalsController { // NO_UCD (unused code)
 				projectNames.add(projectName);
 			}
 		}
-		Map<String,List<String>> map = new HashMap<>();
-		map.put("suggestions", goalService.getSuggestions(query, projectNames));
-		return map;
+		
+		List<AutocompleteDto> res = new ArrayList<AutocompleteDto>();
+		
+		for(String suggestion : goalService.getSuggestions(query, projectNames)) {
+			res.add(new AutocompleteDto(suggestion,suggestion));
+		}
+		return res;
 	}
 	
 	@RequestMapping(value="/project/{projectName}/goals", method = RequestMethod.GET)

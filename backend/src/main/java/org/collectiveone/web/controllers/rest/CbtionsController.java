@@ -37,7 +37,7 @@ public class CbtionsController { // NO_UCD (unused code)
 	@Autowired
 	CommentServiceImp commentService;
 	
-	@RequestMapping(value="/cbtions", method = RequestMethod.POST)
+	@RequestMapping(value="/cbtions", method = RequestMethod.PUT)
 	public @ResponseBody Map<String,Object> getList(@RequestBody Filters filters) {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);

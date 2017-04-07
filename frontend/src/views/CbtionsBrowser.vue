@@ -1,10 +1,18 @@
 <template lang="html">
-  <div class="row">
-    <app-filter class="col"
-      :stateOptions="['PROPOSED', 'OPEN', 'ASSIGNED', 'ACCEPTED']"
-      :projectNameOptions="allProjects()"
-      ></app-filter>
-    <app-project-box v-for="project in projects" :key="project.id" :project-data="project"></app-project-box>
+  <div class="">
+    <div class="row">
+      <app-filter class="col"
+        :orderByOptions="orderByOptions"
+        :projectNameOptions="allProjects()"
+        :stateOptions="stateOptions"
+        :statesSelected="statesSelected"
+        :resSet="resSet"
+        @updateData="updateCbtions">
+      </app-filter>
+    </div>
+    <div class="row">
+        <app-cbtion-box v-for="cbtion in cbtions" :key="cbtion.id" :cbtion-data="cbtion"></app-cbtion-box>
+    </div>
   </div>
 </template>
 
@@ -16,18 +24,35 @@ import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      projects: []
+      cbtions: [],
+      stateOptions: ['PROPOSED', 'OPEN', 'ASSIGNED', 'ACCEPTED', 'NOTOPENED', 'DELETED'],
+      statesSelected: ['PROPOSED', 'OPEN', 'ASSIGNED'],
+      orderByOptions: [
+        { text: 'New first', value: 'CREATIONDATEDESC' },
+        { text: 'Old first', value: 'CREATIONDATEASC' },
+        { text: 'More relevant', value: 'RELEVANCEDESC' },
+        { text: 'Less relevant', value: 'RELEVANCEASC' }
+      ],
+      resSet: []
     }
   },
 
   methods: {
-    ...mapGetters(['allProjects'])
+    ...mapGetters(['allProjects']),
+
+    updateCbtions (filters) {
+      this.axios.put('/1/cbtions', filters).then((response) => {
+        this.cbtions = response.data.cbtionDtos
+        this.resSet = response.data.resSet
+      })
+    }
   },
 
   components: {
     AppFilter: Filter,
     AppCbtionBox: CbtionBox
   }
+
 }
 </script>
 

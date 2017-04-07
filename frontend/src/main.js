@@ -8,7 +8,6 @@ import VueHead from 'vue-head'
 import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import 'jquery/dist/jquery.min.js'
 
 import App from './App'
 import { router } from './router/router'
