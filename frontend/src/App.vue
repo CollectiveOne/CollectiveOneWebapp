@@ -1,9 +1,11 @@
 <template>
   <div id="app">
     <div class="container-fluid">
-        <app-header></app-header>
+      <app-header></app-header>
+      <div class="row">
         <router-view class="view"></router-view>
       </div>
+    </div>
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="">
+  <div class="col">
     <div class="row">
-      <app-filter class="col"
+      <app-filter
         :orderByOptions="orderByOptions"
         :projectNameOptions="allProjects()"
         :stateOptions="stateOptions"
@@ -11,7 +11,7 @@
       </app-filter>
     </div>
     <div class="row">
-        <app-cbtion-box v-for="cbtion in cbtions" :key="cbtion.id" :cbtion-data="cbtion"></app-cbtion-box>
+        <app-cbtion-box class="col-12 col-md-6 col-lg-4" v-for="cbtion in cbtions" :key="cbtion.id" :cbtion-data="cbtion"></app-cbtion-box>
     </div>
   </div>
 </template>
