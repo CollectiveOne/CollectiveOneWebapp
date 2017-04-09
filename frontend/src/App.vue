@@ -44,4 +44,8 @@ button {
   cursor: pointer;
 }
 
+a {
+  cursor: pointer;
+}
+
 </style>

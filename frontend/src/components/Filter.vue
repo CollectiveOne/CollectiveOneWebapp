@@ -3,14 +3,14 @@
 
     <div class="row header">
 
-      <div class="col left-btns">
+      <div class="col-6 left-btns">
         <div>
           <b-button variant="primary" v-if="showFilterBtn" @click="toggleFilter"> {{ this.show ? 'hide and update' : 'show filters' }} </b-button>
           <b-button variant="primary" v-if="showNewBtn">new element</b-button>
         </div>
       </div>
 
-      <div class="col rigth-btns">
+      <div class="col-6 rigth-btns">
         <b-button variant="primary" class="last" @click="nextPage">next</b-button>
         <b-button variant="primary" @click="prevPage">prev</b-button>
         <div class="badge badge-primary res-set" v-if="resSet.length > 0">
@@ -21,103 +21,110 @@
 
     </div>
 
-    <form @submit.prevent class="jumbotron body">
-      <div class="row inputs">
-        <div class="col projects-col">
-          <p>projects:</p>
-          <app-badge-selectable v-for="name in projectNameOptions" :key="name"
-            :selectedInit="projectNamesSelected.indexOf(name) !== -1"
-            class="badgeSelectable"
-            :id="name" @selected="projectNameSelected">
-            {{ name }}
-          </app-badge-selectable>
-        </div>
+    <transition
+       appear
+       enter-class=""
+       enter-active-class="animated flipInX"
+       leave-class=""
+       leave-active-class="animated flipOutX">
 
-        <div class="col states-col">
-          <p>state:</p>
-          <app-badge-selectable v-for="state in stateOptions" :key="state"
-            :selectedInit="stateNames.indexOf(state) !== -1"
-            class="badgeSelectable"
-            :id="state" @selected="stateSelected">
-            {{ state }}
-          </app-badge-selectable>
-        </div>
-
-        <div class="col gen-inputs-col">
-          <div class="form-group">
-            <label>keyword:</label>
-            <input v-model="keyw" class="form-control" placeholder="keyword"></input>
-          </div>
-          <div class="form-group">
-            <label>creator:</label>
-            <app-input-autocomplete
-              :initValue="creatorUsernames[0]"
-              :onSelect="(val) => {creatorUsernames = [val.anchor]}"
-              anchor="anchor" placeholder="creator"
-              url="/1/users/suggestions">
-            </app-input-autocomplete>
-          </div>
-        </div>
-
-        <div class="col cbtion-inputs-col" v-if="type === 'cbtions'">
-          <div class="form-group">
-            <label>goal:</label>
-            <app-input-autocomplete
-              :initValue="goalTag"
-              :onSelect="(val) => {goalTag = val.anchor}"
-              :onFocus="() => { projectNamesSelected.length != 1 ? goalSelectorError = true :  goalSelectorError = false }"
-              anchor="anchor" placeholder="goal-tag"
-              url="/1/goals/suggestions" :customParams="{projectName: projectNamesSelected[0]}">
-            </app-input-autocomplete>
-            <b-alert variant="danger" :show="goalSelectorError">select one project</b-alert>
-          </div>
-          <div class="form-group">
-            <app-badge-selectable class="badgeSelectable"
-              :selectedInit="goalSubgoalsFlag"
-              @selected="(data) => { goalSubgoalsFlag = data.selected }" >
-              and subgoals
-            </app-badge-selectable>
-            <br>
-          </div>
-          <div class="form-group">
-            <label>contributor:</label>
-            <app-input-autocomplete
-              :initValue="contributorUsername"
-              :onSelect="(val) => {contributorUsername = val.anchor}"
-              anchor="anchor" placeholder="contributor"
-              url="/1/users/suggestions">
-            </app-input-autocomplete>
-          </div>
-          <div class="form-group">
-            <label>assignee:</label>
-            <app-input-autocomplete
-              :initValue="assigneeUsername"
-              :onSelect="assigneeSelected"
-              anchor="anchor" placeholder="assignee"
-              url="/1/users/suggestions">
-            </app-input-autocomplete>
-          </div>
-        </div>
-
-        <div class="col decisions-input-col" v-if="type === 'decisions'">
-          <div class="checkbox">
-            <app-badge-selectable
-              :selectedInit: "goalSubgoalsFlag"
-              class="badgeSelectable">
-              show automatic decisions
+       <form @submit.prevent v-if="show" class="jumbotron body">
+        <div class="row inputs">
+          <div class="col projects-col">
+            <p>projects:</p>
+            <app-badge-selectable v-for="name in projectNameOptions" :key="name"
+              :selectedInit="projectNamesSelected.indexOf(name) !== -1"
+              class="badgeSelectable"
+              :id="name" @selected="projectNameSelected">
+              {{ name }}
             </app-badge-selectable>
           </div>
+
+          <div class="col states-col">
+            <p>state:</p>
+            <app-badge-selectable v-for="state in stateOptions" :key="state"
+              :selectedInit="stateNames.indexOf(state) !== -1"
+              class="badgeSelectable"
+              :id="state" @selected="stateSelected">
+              {{ state }}
+            </app-badge-selectable>
+          </div>
+
+          <div class="col gen-inputs-col">
+            <div class="form-group">
+              <label>keyword:</label>
+              <input v-model="keyw" class="form-control" placeholder="keyword"></input>
+            </div>
+            <div class="form-group">
+              <label>creator:</label>
+              <app-input-autocomplete
+                :initValue="creatorUsernames[0]"
+                :onSelect="(val) => {creatorUsernames = [val.anchor]}"
+                anchor="anchor" placeholder="creator"
+                url="/1/users/suggestions">
+              </app-input-autocomplete>
+            </div>
+          </div>
+
+          <div class="col cbtion-inputs-col" v-if="type === 'cbtions'">
+            <div class="form-group">
+              <label>goal:</label>
+              <app-input-autocomplete
+                :initValue="goalTag"
+                :onSelect="(val) => {goalTag = val.anchor}"
+                :onFocus="() => { projectNamesSelected.length != 1 ? goalSelectorError = true :  goalSelectorError = false }"
+                anchor="anchor" placeholder="goal-tag"
+                url="/1/goals/suggestions" :customParams="{projectName: projectNamesSelected[0]}">
+              </app-input-autocomplete>
+              <b-alert variant="danger" :show="goalSelectorError">select one project</b-alert>
+            </div>
+            <div class="form-group">
+              <app-badge-selectable class="badgeSelectable"
+                :selectedInit="goalSubgoalsFlag"
+                @selected="(data) => { goalSubgoalsFlag = data.selected }" >
+                and subgoals
+              </app-badge-selectable>
+              <br>
+            </div>
+            <div class="form-group">
+              <label>contributor:</label>
+              <app-input-autocomplete
+                :initValue="contributorUsername"
+                :onSelect="(val) => {contributorUsername = val.anchor}"
+                anchor="anchor" placeholder="contributor"
+                url="/1/users/suggestions">
+              </app-input-autocomplete>
+            </div>
+            <div class="form-group">
+              <label>assignee:</label>
+              <app-input-autocomplete
+                :initValue="assigneeUsername"
+                :onSelect="assigneeSelected"
+                anchor="anchor" placeholder="assignee"
+                url="/1/users/suggestions">
+              </app-input-autocomplete>
+            </div>
+          </div>
+
+          <div class="col decisions-input-col" v-if="type === 'decisions'">
+            <div class="checkbox">
+              <app-badge-selectable
+                :selectedInit: "goalSubgoalsFlag"
+                class="badgeSelectable">
+                show automatic decisions
+              </app-badge-selectable>
+            </div>
+          </div>
+
         </div>
 
-      </div>
-
-      <div class="row bottom-btns">
-        <div class="col">
-          <b-button variant="primary" @click="toggleFilter">update</b-button>
+        <div class="row bottom-btns">
+          <div class="col">
+            <b-button variant="primary" @click="toggleFilter">update</b-button>
+          </div>
         </div>
-      </div>
-    </form>
-
+      </form>
+    </transition>
   </div>
 
 </template>
@@ -333,9 +340,9 @@ export default {
 
 .res-set {
   width: 100px;
-  height: 100%;
+  height: 36.9px;
   float: right;
-  margin-right: 10px;
+  margin-right: 5px;
   padding-top: 14px;
 }
 
@@ -352,6 +359,7 @@ export default {
 .body {
   margin-top: 10px;
   font-size: 12px;
+  -webkit-animation-duration: 0.8s;
 }
 
 .bottom-btns {

@@ -10,9 +10,14 @@
         @updateData="updateCbtions">
       </app-filter>
     </div>
-    <div class="row">
-        <app-cbtion-box class="col-12 col-md-6 col-lg-4" v-for="cbtion in cbtions" :key="cbtion.id" :cbtion-data="cbtion"></app-cbtion-box>
-    </div>
+    <!--  TODO: Add animation to slide up when filters are hidden -->
+    <transition name="slide">
+      <div class="row data">
+        <div class="col-12 col-md-6 col-lg-4 cb-placeholder" v-for="cbtion in cbtions" >
+          <app-cbtion-box :key="cbtion.id" :cbtion="cbtion"></app-cbtion-box>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -56,5 +61,14 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style scoped>
+
+.data {
+  margin-top: 20px;
+}
+
+.cb-placeholder {
+  margin-bottom: 20px;
+}
+
 </style>
