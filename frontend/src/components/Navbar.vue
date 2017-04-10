@@ -67,4 +67,8 @@ export default {
   width: 200px;
 }
 
+.navbar {
+  background-color: rgb(61, 61, 61) !important
+}
+
 </style>
