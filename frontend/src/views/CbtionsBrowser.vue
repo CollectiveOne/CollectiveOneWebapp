@@ -71,6 +71,8 @@ export default {
 
 .data {
   margin-top: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 .el-placeholder {

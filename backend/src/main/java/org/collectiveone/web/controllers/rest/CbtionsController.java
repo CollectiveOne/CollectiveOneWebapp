@@ -5,9 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
+import org.collectiveone.model.GoalState;
 import org.collectiveone.model.User;
 import org.collectiveone.services.CbtionServiceImp;
 import org.collectiveone.services.CommentServiceImp;
+import org.collectiveone.services.GoalServiceImp;
 import org.collectiveone.services.UserServiceImp;
 import org.collectiveone.web.dto.CbtionDto;
 import org.collectiveone.web.dto.CbtionDtoListRes;
@@ -15,6 +19,9 @@ import org.collectiveone.web.dto.CommentDto;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +40,9 @@ public class CbtionsController { // NO_UCD (unused code)
 	
 	@Autowired
 	UserServiceImp userService;
+	
+	@Autowired
+	GoalServiceImp goalService;
 	
 	@Autowired
 	CommentServiceImp commentService;
@@ -60,7 +70,30 @@ public class CbtionsController { // NO_UCD (unused code)
 		return cbtionService.getDto(id);
 	}
 	
-	// @Secured("ROLE_USER")
+	@RequestMapping(value="/cbtion", method = RequestMethod.POST)
+	public Long create(@RequestBody @Valid CbtionDto cbtionDto, BindingResult result) throws IOException {
+		if(!result.hasErrors()) {
+			if(goalService.exist(cbtionDto.getGoalTag(),cbtionDto.getProjectName(), GoalState.ACCEPTED)) {
+				/* creator is the logged user */
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+				cbtionDto.setCreatorUsername(auth.getName()); 
+				Long cbtionId = cbtionService.create(cbtionDto);
+				return cbtionId;
+			}
+		}
+		
+		return -1L;
+	}
+	
+	@RequestMapping(value="/cbtion", method = RequestMethod.PUT)
+	public @ResponseBody boolean edit(@RequestBody CbtionDto cbtionDto) {
+		/* creator is the logged user */
+		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		cbtionDto.setCreatorUsername(""); 
+		cbtionService.edit(cbtionDto);
+		return true;
+	}
+	
 	@RequestMapping(value="/cbtion/{cbtionId}/promote", method = RequestMethod.PUT)
 	public @ResponseBody Boolean promote(@PathVariable Long cbtionId, @RequestParam("up") boolean up) {
 		/* creator is the logged user */
@@ -119,13 +152,4 @@ public class CbtionsController { // NO_UCD (unused code)
 		return cbtionService.getReviewsDtos(cbtionId);
 	}
 	
-	// @Secured("ROLE_USER")
-	@RequestMapping(value="/cbtion", method = RequestMethod.PUT)
-	public @ResponseBody boolean edit(@RequestBody CbtionDto cbtionDto) {
-		/* creator is the logged user */
-		// Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		cbtionDto.setCreatorUsername(""); 
-		cbtionService.edit(cbtionDto);
-		return true;
-	}
 }

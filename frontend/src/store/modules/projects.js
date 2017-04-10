@@ -12,6 +12,10 @@ const getters = {
 
   allProjects: state => {
     return state.allProjects
+  },
+
+  activeProject: state => {
+    return state.allProjects[0]
   }
 }
 

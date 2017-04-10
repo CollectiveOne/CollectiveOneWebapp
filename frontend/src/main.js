@@ -5,6 +5,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueHead from 'vue-head'
 import VueMarkdown from 'vue-markdown'
+import VueSimplemde from 'vue-simplemde'
 
 import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -18,6 +19,7 @@ import { store } from './store/store'
 Vue.use(VueHead)
 Vue.use(VueAxios, axios)
 Vue.use(BootstrapVue)
+Vue.use(VueSimplemde)
 
 Vue.component('vueMarkdown', VueMarkdown)
 

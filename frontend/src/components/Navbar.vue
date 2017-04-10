@@ -15,7 +15,7 @@
         <b-nav-item to="/help">help</b-nav-item>
 
         <b-nav-item-dropdown text="new">
-          <b-dropdown-item to="/cbtionNew">Contribution</b-dropdown-item>
+          <b-dropdown-item v-b-modal="'cbtionNewModal'">Contribution</b-dropdown-item>
           <b-dropdown-item to="/goalNew">Goal</b-dropdown-item>
           <b-dropdown-item to="/decisionNew">Decision</b-dropdown-item>
           <b-dropdown-item to="/projectNew">Project</b-dropdown-item>

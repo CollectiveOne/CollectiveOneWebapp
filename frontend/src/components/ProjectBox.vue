@@ -3,9 +3,9 @@
 
     <div class="card-block">
 
-      <h5 class="card-title"><a href="#">
+      <h4 class="card-title"><a href="#">
         {{ project.name }}
-      </a></h5>
+      </a></h4>
 
       <p class="card-text">
         <vue-markdown>{{ project.description }}</vue-markdown>
