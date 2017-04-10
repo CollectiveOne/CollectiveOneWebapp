@@ -1,4 +1,4 @@
- FilterElement(container_id, getDataCall, callBack, callObject, customElements, filters, type, showFilterBtn, showNewBtn, newBtnLink) {
+function FilterElement(container_id, getDataCall, callBack, callObject, customElements, filters, type, showFilterBtn, showNewBtn, newBtnLink) {
 
 	this.container = $(container_id);
 	this.getDataCall = getDataCall;

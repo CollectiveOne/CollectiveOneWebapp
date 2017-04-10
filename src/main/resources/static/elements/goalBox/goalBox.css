@@ -97,6 +97,20 @@
 	margin-left:10px;
 	display:none;
 	margin-bottom: 0px;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+#goal_div #edition_proposals {
+	float: left;
+	clear: both;
+	width: 100%;
+	margin-top: 10px;
+	display: none;
+}
+
+#goal_div .edition_proposal {
+	margin-bottom: 5px;
 }
 
 

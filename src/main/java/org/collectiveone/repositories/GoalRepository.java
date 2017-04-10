@@ -265,7 +265,8 @@ public class GoalRepository extends BaseRepository {
 		
 		query
 			.add(Restrictions.eq("edp.goal.id", goalId))
-			.add(Restrictions.eq("edp.state", ProposalState.PROPOSED));
+			.add(Restrictions.eq("edp.state", ProposalState.PROPOSED))
+			.addOrder(Order.desc("creationDate"));
 		
 		@SuppressWarnings("unchecked")
 		List<GoalEditionProposal> res = (List<GoalEditionProposal>) query.list();
@@ -280,7 +281,8 @@ public class GoalRepository extends BaseRepository {
 			.add(Restrictions.eq("edp.goal.id", goalId))
 			.add(Restrictions.or(
 					Restrictions.eq("edp.state", ProposalState.ACCEPTED),
-					Restrictions.eq("edp.state", ProposalState.REJECTED)));
+					Restrictions.eq("edp.state", ProposalState.REJECTED)))
+			.addOrder(Order.desc("creationDate"));
 		
 		@SuppressWarnings("unchecked")
 		List<GoalEditionProposal> res = (List<GoalEditionProposal>) query.list();

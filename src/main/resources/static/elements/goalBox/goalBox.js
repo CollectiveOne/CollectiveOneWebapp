@@ -174,17 +174,18 @@ GoalBox.prototype.goalBoxLoaded = function() {
 	}
 	
 	/* EDITION PROPOSALS */
-	if(isUserLogged()) {
-		if(this.goal.editionProps.length > 0) {
-			$("#edition_proposals_decisions", this.container).show();
-			$("#edition_proposed_label", this.container).show();
-			for(var ix in this.goal.editionProps) {
-				$("#edition_proposals_decisions", this.container).append("<div class=edition_proposal_dec id=edition_proposal_dec"+ix+"_div></div>");
-				var editDecBox = new DecisionBoxSmall($("#edition_proposal_dec"+ix+"_div",this.container),this.goal.editionProps[ix].acceptDec, getLoggedUsername());
-				editDecBox.updateVoteAndDraw();
-			}
+	if(this.goal.editionProps.length > 0) {
+		$("#edition_proposed_label", this.container).html("show " + this.goal.editionProps.length + " editions proposed");
+		$("#edition_proposed_label", this.container).show();
+		$("#edition_proposed_label", this.container).click(this.showEditionProposals.bind(this));
+		for(var ix in this.goal.editionProps) {
+			$("#edition_proposals", this.container).append("<div class=edition_proposal id=edition_proposal"+ix+"_div></div>");
+			var editProp = new EditionProposalBox($("#edition_proposal"+ix+"_div",this.container),this.goal.editionProps[ix]);
 		}
-		
+	}
+	
+	/* CREATE EDITION PROPOSAL */
+	if(isUserLogged()) {
 		$("#edit_form_container",this.container).show();
 		$("#edit_input",this.container).val(this.goal.description);	
 		$("#edit_btn",this.container).click(this.editBtnClicked.bind(this));
@@ -242,6 +243,10 @@ GoalBox.prototype.newSubgoalBtnClicked = function() {
 
 GoalBox.prototype.showControlBtnClicked = function() {
 	$("#goal_control_div",this.container).toggle();
+}
+
+GoalBox.prototype.showEditionProposals = function() {
+	$("#edition_proposals",this.container).toggle();
 }
 
 GoalBox.prototype.editBtnClicked = function() {
