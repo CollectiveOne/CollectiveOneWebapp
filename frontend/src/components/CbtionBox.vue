@@ -2,38 +2,47 @@
 
   <div class="col cb-container card">
 
-    <div class="row">
+    <div class="header">
 
-      <div class="col-1 promotion">
-        <div class="promotion_up_div">&#x25B2;</div>
-        <div class="promotion_center_div"></div>
-        <div class="promotion_down_div">&#x25BC;</div>
+      <div class="badge badge-default state" :class="{'state-open': isOpen, 'state-assigned': isAssigned}">{{cbtion.state}}</div>
+
+      <div class="promotion">
+        <div class="arrow">&#x25B2;</div>
+        <div class="relevance">{{ cbtion.relevance }}</div>
+        <div class="arrow">&#x25BC;</div>
       </div>
 
-      <div class="col-11 card-block">
-        <p>
-          <a href="#">{{cbtion.projectName}}</a>
-          <a class="" href="#">+{{cbtion.goalTag}}</a>
-          <div class="parent-goals">
-            <span v-if="cbtion.parentGoalsTags.length > 0">under </span>
-            <a class="" href="#" v-for="parent in cbtion.parentGoalsTags.reverse()">+{{parent}}</a>
-          </div>
-        </p>
-        <h4 class="card-title"><a href="#">
-          {{ cbtion.title }}
-        </a></h4>
+      <div class="location">
+        <a href="#">{{cbtion.projectName}}</a>
+        <a class="" href="#">+{{cbtion.goalTag}}</a>
+        <div class="parent-goals">
+          <span v-if="cbtion.parentGoalsTags.length > 0">in</span>
+          <a class="" href="#" v-for="parent in cbtion.parentGoalsTags"> +{{parent}}</a>
+        </div>
+      </div>
 
-        <p :id="'cbtion-' + cbtion.id + '-text'" class="card-text card-text-hidden">
+    </div>
+
+    <div class="row">
+
+      <div class="col card-block">
+
+        <h5 class="card-title"><a href="#">
+          {{ cbtion.title }}
+        </a></h5>
+
+        <p :id="'cbtion-' + cbtion.id + '-text'" class="card-text card-text-hidden" :class="{'card-text-expanded': descriptionExpand}">
           <vue-markdown>{{ cbtion.description }}</vue-markdown>
         </p>
 
-        <button v-if="showTextExpand">expand</button>
+        <img src="../assets/images/arrow-down.png" class="expand-icon" @click="descriptionExpand = true" v-if="showTextExpand && !descriptionExpand"></img>
+        <img src="../assets/images/arrow-up.png" class="expand-icon" @click="descriptionExpand = false" v-if="descriptionExpand"></img>
 
-        <div class="badge badge-success">{{cbtion.state}}</div>
       </div>
     </div>
-
   </div>
+
+
 </template>
 
 <script>
@@ -55,7 +64,18 @@ export default {
 
   data () {
     return {
-      showTextExpand: false
+      showTextExpand: false,
+      descriptionExpand: false
+    }
+  },
+
+  computed: {
+    isOpen () {
+      return this.cbtion.state === 'OPEN'
+    },
+
+    isAssigned () {
+      return this.cbtion.state === 'ASSIGNED'
     }
   },
 
@@ -69,15 +89,59 @@ export default {
     if (textDiv.clientHeight > maxHeight) {
       this.showTextExpand = true
     }
+
+    // parent goals ordered from goal to super goals
+    this.cbtion.parentGoalsTags = this.cbtion.parentGoalsTags.reverse()
   }
 }
 </script>
 
 <style scoped>
 
+.state {
+  position: absolute;
+  margin-left: auto;
+  right: 15px;
+}
+
+.state-open {
+  background-color: rgb(107, 184, 149)
+}
+
+.state-assigned {
+  background-color: rgb(159, 119, 0)
+}
+
 .promotion {
-  padding-top: 20px;
-  color: #cccccc;
+  color: #9d9d9d;
+  width: 10%;
+  float: left;
+  text-align: center;
+  padding-top: 3px;
+}
+
+.promotion .arrow {
+  height: 15px;
+  line-height: 15px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.arrow:hover {
+  color: rgb(66, 190, 190)
+}
+
+
+.promotion .relevance {
+  font-size: 10px;
+  height: 10px;
+  line-height: 10px;
+  padding-top: 1px;
+}
+
+.location {
+  width: 90% ;
+  float: left;
 }
 
 .parent-goals {
@@ -91,6 +155,14 @@ export default {
   color: #9d9d9d;
 }
 
+.card {
+  padding-top: 10px;
+}
+
+.card-block {
+  padding-top: 10px;
+}
+
 .card-block .badge {
   font-size: 14px;
 }
@@ -102,6 +174,19 @@ export default {
 .card-text-hidden {
   max-height: 50px;
   overflow: hidden;
+}
+
+.card-text-expanded {
+  max-height: none;
+}
+
+.expand-icon {
+  cursor: pointer;
+  width: 20px;
+  position: relative;
+  float: right;
+  margin-top: -20px;
+  margin-right: 0px;
 }
 
 </style>

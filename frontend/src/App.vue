@@ -36,6 +36,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.container-fluid {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
 .view {
   margin-top: 10px;
 }

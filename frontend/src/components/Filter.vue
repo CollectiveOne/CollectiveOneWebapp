@@ -320,7 +320,7 @@ export default {
     margin-bottom: 10px;
   }
 
-  .rigth-btns button,select {
+  .rigth-btns button,select,.badge {
     margin-bottom: 10px;
   }
 }
