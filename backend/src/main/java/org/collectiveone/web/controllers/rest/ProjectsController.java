@@ -75,7 +75,7 @@ public class ProjectsController { // NO_UCD (unused code)
 		return map;
 	}
 	
-	@RequestMapping(value="/projects", method = RequestMethod.POST)
+	@RequestMapping(value="/projects", method = RequestMethod.PUT)
 	public @ResponseBody Map<String,Object> getList(@RequestBody Filters filters) {
 		if(filters.getPage() == 0) filters.setPage(1);
 		if(filters.getNperpage() == 0) filters.setNperpage(15);

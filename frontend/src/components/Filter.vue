@@ -16,7 +16,10 @@
         <div class="badge badge-primary res-set" v-if="resSet.length > 0">
           {{ this.resSet[0] + '-' + this.resSet[1] + ' of ' + this.resSet[2] }}
         </div>
-        <b-form-select v-model="sortBy" :options="orderByOptions"></b-form-select>
+
+        <select class="form-control" v-model="sortBy" @change="updateData()">
+          <option v-for="order in orderByOptions" :value="order.value">{{ order.text}}</option>
+        </select>
       </div>
 
     </div>
@@ -123,6 +126,10 @@
             <b-button variant="primary" @click="toggleFilter">update</b-button>
           </div>
         </div>
+
+        <div v-if="loading" class="row loading">
+          <img src="../assets/images/ajax-loader.gif">
+        </div>
       </form>
     </transition>
   </div>
@@ -173,6 +180,11 @@ export default {
       }
     },
 
+    orderBySelected: {
+      type: String,
+      default: 'CREATIONDATEDESC'
+    },
+
     stateOptions: {
       type: Array,
       default: () => {
@@ -199,14 +211,17 @@ export default {
       default: () => {
         return []
       }
+    },
+
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
 
   data () {
     return {
       show: false,
-      loading: false,
-
       sortBy: 'CREATIONDATEDESC',
       page: 1,
       nperpage: 15,
@@ -306,6 +321,7 @@ export default {
   },
 
   created () {
+    this.sortBy = this.orderBySelected
     this.stateNames = this.statesSelected
 
     this.updateData()
@@ -332,6 +348,10 @@ export default {
 .rigth-btns button,select {
   float: right;
   margin-right: 5px;
+}
+
+.rigth-btns select {
+  width: 150px;
 }
 
 .rigth-btns .last {

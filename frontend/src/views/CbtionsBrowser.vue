@@ -6,14 +6,16 @@
         :projectNameOptions="allProjects()"
         :stateOptions="stateOptions"
         :statesSelected="statesSelected"
+        :orderBySelected="orderBySelected"
         :resSet="resSet"
-        @updateData="updateCbtions">
+        @updateData="updateCbtions"
+        :loading="loading">
       </app-filter>
     </div>
-    <!--  TODO: Add animation to slide up when filters are hidden -->
+
     <transition name="slide">
       <div class="row data">
-        <div class="col-12 col-md-6 col-lg-4 cb-placeholder" v-for="cbtion in cbtions" >
+        <div class="col-12 col-md-6 col-lg-4 el-placeholder" v-for="cbtion in cbtions" >
           <app-cbtion-box :key="cbtion.id" :cbtion="cbtion"></app-cbtion-box>
         </div>
       </div>
@@ -38,7 +40,9 @@ export default {
         { text: 'More relevant', value: 'RELEVANCEDESC' },
         { text: 'Less relevant', value: 'RELEVANCEASC' }
       ],
-      resSet: []
+      orderBySelected: 'CREATIONDATEDESC',
+      resSet: [],
+      loading: false
     }
   },
 
@@ -46,7 +50,9 @@ export default {
     ...mapGetters(['allProjects']),
 
     updateCbtions (filters) {
+      this.loading = true
       this.axios.put('/1/cbtions', filters).then((response) => {
+        this.loading = false
         this.cbtions = response.data.cbtionDtos
         this.resSet = response.data.resSet
       })
@@ -67,7 +73,7 @@ export default {
   margin-top: 20px;
 }
 
-.cb-placeholder {
+.el-placeholder {
   margin-bottom: 20px;
 }
 
