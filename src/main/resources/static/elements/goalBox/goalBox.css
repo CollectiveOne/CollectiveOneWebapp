@@ -89,6 +89,7 @@
 	display:none;
 	margin-bottom: 0px;
 	cursor:pointer;
+	font-size: 12px;
 }
 
 #goal_div #edition_proposed_label {

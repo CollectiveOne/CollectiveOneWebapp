@@ -13,11 +13,20 @@
 
 #goal_weight_div #left_div #metadata_div {
 	font-size: 12px;
+	margin-top: 10px;
+	float: left;
+}
+
+#goal_weight_div #metadata_div .label{
+	font-size: 12px;
+}
+
+#goal_weight_div #metadata_div #user_max_weight_div {
 	margin-bottom: 10px;
 }
 
 #goal_weight_div #left_div #manual_set {
-	margin-top:10px;
+	margin-bottom:10px;
 }
 
 #goal_weight_div #left_div #manual_set input {
