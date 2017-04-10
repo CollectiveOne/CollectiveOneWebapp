@@ -44,7 +44,7 @@ ServerComm.prototype = {
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
 					if (data) {
-						callbackFunction.call(callbackObj,data);	
+						callbackFunction.call(callbackObj,data);
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
@@ -109,7 +109,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		goalGetFromTag : function(goalTag,projectName,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'GET',
@@ -127,7 +127,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		goalGet : function(goalId,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'GET',
@@ -201,7 +201,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		goalProposeEdit : function(goalId,newDescription,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'PUT',
@@ -237,7 +237,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		goalWeightsGet: function(goalId,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'GET',
@@ -255,9 +255,9 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		goalRealmTouch:  function(touchFlag, goalId, callbackFunction,callbackObj) {
-			
+
 			$.ajax({
 				type : 'PUT',
 				url : '/1/goal/'+goalId+'/touch?touch='+touchFlag,
@@ -274,7 +274,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		goalRealmSetWeight: function(goalId, weight, callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'PUT',
@@ -294,7 +294,7 @@ ServerComm.prototype = {
 		},
 
 		goalProposeDetach: function(goalId, increaseBudget,callbackFunction,callbackObj) {
-			
+
 			$.ajax({
 				type : 'PUT',
 				url : '/1/goal/'+goalId+'/proposeDetach?increaseBudget='+increaseBudget,
@@ -313,7 +313,7 @@ ServerComm.prototype = {
 		},
 
 		goalProposeReattach: function(goalId,callbackFunction,callbackObj) {
-			
+
 			$.ajax({
 				type : 'PUT',
 				url : '/1/goal/'+goalId+'/proposeReattach',
@@ -390,7 +390,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		userMyDataGet : function(username,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'GET',
@@ -527,7 +527,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		projectListGet : function(filters,callbackFunction,callbackObj) {
 			var datastr = JSON.stringify(filters);
 
@@ -565,7 +565,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		projectStar : function(projectId,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'PUT',
@@ -583,7 +583,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		projectUnStar : function(projectId,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'PUT',
@@ -601,7 +601,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		projectWatch : function(projectId,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'PUT',
@@ -619,7 +619,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		projectUnWatch: function(projectId,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'PUT',
@@ -790,7 +790,7 @@ ServerComm.prototype = {
 		},
 
 		decisionGetVote : function(decId, callbackFunction, callbackObj) {
-			
+
 			$.ajax({
 				type : 'GET',
 				url : '/1/decision/'+decId+'/vote',
@@ -877,7 +877,7 @@ ServerComm.prototype = {
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
 					if (data) {
-						callbackFunction.call(callbackObj,data); 
+						callbackFunction.call(callbackObj,data);
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
@@ -922,7 +922,7 @@ ServerComm.prototype = {
 			});
 		},
 
-		
+
 		reviewNew : function(reviewDto,callbackFunction,callbackObj) {
 			var datastr = JSON.stringify(reviewDto);
 			$.ajax({
@@ -934,7 +934,7 @@ ServerComm.prototype = {
 				success : function(data, textStatus, jqXHR) {
 					if (data) {
 						if (data.res) {
-							callbackFunction.call(callbackObj,data); 
+							callbackFunction.call(callbackObj,data);
 						}
 					}
 				},
@@ -961,7 +961,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		reviewsGetOfCbtion : function(cbtionId,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'GET',
@@ -990,7 +990,7 @@ ServerComm.prototype = {
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
 					if (data) {
-						callbackFunction.call(callbackObj,data); 
+						callbackFunction.call(callbackObj,data);
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
@@ -1030,7 +1030,7 @@ ServerComm.prototype = {
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
 					if (data) {
-						callbackFunction.call(callbackObj,data); 
+						callbackFunction.call(callbackObj,data);
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
@@ -1057,7 +1057,7 @@ ServerComm.prototype = {
 				}
 			});
 		},
-		
+
 		commentPromote : function(commentId,promoteUp,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'PUT',
