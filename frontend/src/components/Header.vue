@@ -22,8 +22,6 @@ export default {
     },
 
     cbtionSubmitted (cbtion) {
-      this.$root.$emit('hide::modal', 'cbtionNewModal')
-      console.log(cbtion)
     }
   },
 

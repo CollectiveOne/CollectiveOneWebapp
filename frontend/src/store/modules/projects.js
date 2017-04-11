@@ -1,13 +1,14 @@
 import Vue from 'vue'
 
 const state = {
-  followingProjects: [],
-  allProjects: []
+  activeProjects: [],
+  allProjects: [],
+  activeProject: ''
 }
 
 const getters = {
-  followingProjects: state => {
-    return state.followingProjects
+  activeProjects: state => {
+    return state.activeProjects
   },
 
   allProjects: state => {
@@ -15,17 +16,21 @@ const getters = {
   },
 
   activeProject: state => {
-    return state.allProjects[0]
+    return state.activeProject
   }
 }
 
 const mutations = {
-  setFollowingProjects: (state, followingProjets) => {
-    state.followingProjets = followingProjets
+  setActiveProjects: (state, activeProjects) => {
+    state.activeProjects = activeProjects
   },
 
-  setAllProjects: (state, allProjets) => {
-    state.allProjects = allProjets
+  setAllProjects: (state, allProjects) => {
+    state.allProjects = allProjects
+  },
+
+  setActiveProject: (state, activeProject) => {
+    state.activeProject = activeProject
   }
 }
 
@@ -35,6 +40,8 @@ const actions = {
     already populated */
     Vue.axios.get('/1/projects/getNamesEnabled').then((response) => {
       context.commit('setAllProjects', response.data.projectList)
+      context.commit('setActiveProjects', response.data.projectList)
+      context.commit('setActiveProject', response.data.projectList[0])
     })
   }
 }

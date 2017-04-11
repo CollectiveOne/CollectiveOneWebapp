@@ -1,11 +1,11 @@
 <template lang="html">
-  <select class="form-control" v-model="projectName" @change="$emit('input',projectName)">
-    <option v-for="project in allProjects()">{{ project }}</option>
+  <select class="form-control" :value="value" @input="selected">
+    <option v-for="project in activeProjects()">{{ project }}</option>
   </select>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
 
@@ -18,14 +18,20 @@ export default {
 
   data () {
     return {
-      projectName: '',
-      projectNameOptions: []
     }
   },
 
   methods: {
-    ...mapGetters(['allProjects', 'activeProject'])
+    ...mapGetters(['activeProjects']),
+    ...mapMutations(['setActiveProject']),
+
+    selected (e) {
+      var projectName = e.target.value
+      this.$emit('input', projectName)
+      this.setActiveProject(projectName)
+    }
   }
+
 }
 </script>
 

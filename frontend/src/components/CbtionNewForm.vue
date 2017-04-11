@@ -13,7 +13,6 @@
       <app-input-autocomplete
         :initValue="goalTag"
         :onSelect="(val) => {goalTag = val.anchor}"
-        :onFocus="() => { projectName !== '' ? goalSelectorError = true :  goalSelectorError = false }"
         anchor="anchor"
         url="/1/goals/suggestions" :customParams="{'projectName': projectName}">
       </app-input-autocomplete>
@@ -53,6 +52,7 @@
 
 <script>
 
+import { mapGetters } from 'vuex'
 import ProjectSelector from '@/components/ProjectSelector.vue'
 import Autocomplete from '@/components/external/Autocomplete.vue'
 
@@ -88,6 +88,8 @@ export default {
   },
 
   methods: {
+    ...mapGetters(['activeProject']),
+
     cancel () {
       this.$emit('cancel')
     },
@@ -105,6 +107,14 @@ export default {
       this.axios.post('/1/cbtion', cbtion).then((response) => {
       })
     }
+  },
+
+  created () {
+    this.$root.$on('show::modal', (id) => {
+      if (id === 'cbtionNewModal') {
+        this.projectName = this.activeProject()
+      }
+    })
   }
 
 }

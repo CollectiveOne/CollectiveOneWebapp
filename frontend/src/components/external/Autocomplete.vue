@@ -205,7 +205,7 @@
         this.onFocus ? this.onFocus(e) : null
 
         // Show when seleceted
-        this.input("")
+        this.showAll()
       },
 
       mousemove(i){
