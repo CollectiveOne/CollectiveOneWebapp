@@ -203,10 +203,14 @@ ServerComm.prototype = {
 		},
 
 		goalProposeEdit : function(goalId,newDescription,callbackFunction,callbackObj) {
+			var goalDto = {
+				'description': newDescription
+			}
+			var datastr = JSON.stringify(goalDto);
 			$.ajax({
 				type : 'PUT',
-				url : '/1/goal/'+goalId+'/proposeEdit?newDescription='+newDescription,
-				data : '',
+				url : '/1/goal/'+goalId+'/proposeEdit',
+				data : datastr,
 				dataType : 'json',
 				contentType : 'application/json',
 				success : function(data, textStatus, jqXHR) {
