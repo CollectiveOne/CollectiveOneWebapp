@@ -381,7 +381,10 @@ public class Decision {
 				 * extFactor goes from 1 to -1, passing through 0 when elapsedFactor is
 				 * 0.5 which is when elapsedHours are half the verdictHours
 				 */
-				shrinkFactor = (1 - elapsedFactor/2);
+				shrinkFactor = (1 - elapsedFactor);
+				if(shrinkFactor < 0) {
+					shrinkFactor = 0;
+				}
 
 				double pc_range_sz_time = pc_range_sz*shrinkFactor;
 				
@@ -412,8 +415,8 @@ public class Decision {
 			    }
 
 				/* make the test on p_to_flip */
-				if ((p_to_flip < pc_low)
-						|| (pc_high < p_to_flip)) {
+				if ((p_to_flip <= pc_low)
+						|| (pc_high <= p_to_flip)) {
 					return true;
 				} else {
 					return false;
