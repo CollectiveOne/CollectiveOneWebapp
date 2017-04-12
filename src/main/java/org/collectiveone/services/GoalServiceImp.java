@@ -476,7 +476,7 @@ public class GoalServiceImp extends BaseService {
 			acceptDec.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			acceptDec.setCreator(userRepository.get("collectiveone"));
 			acceptDec.setDecisionRealm(decisionRealmRepository.getFromGoalId(goal.getId()));
-			acceptDec.setDescription("update goal description \n\nfrom: '"+goal.getDescription()+"'\n\nto: '"+editionProposal.getEdition()+"'");
+			acceptDec.setDescription("update goal description \n\n **from:** \n\n'"+goal.getDescription()+"'\n\n **to:** \n\n'"+editionProposal.getEdition()+"'");
 			acceptDec.setProject(project);
 			acceptDec.setGoal(goal);
 			acceptDec.setState(DecisionState.IDLE);
