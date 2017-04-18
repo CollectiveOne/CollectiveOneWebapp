@@ -224,7 +224,7 @@ ServerComm.prototype = {
 			});
 		},
 
-		goalProposeParent : function(goalId,callbackFunction,callbackObj) {
+		goalProposeParent : function(goalId,parentTag,callbackFunction,callbackObj) {
 			$.ajax({
 				type : 'PUT',
 				url : '/1/goal/'+goalId+'/proposeParent?parentTag='+parentTag,
