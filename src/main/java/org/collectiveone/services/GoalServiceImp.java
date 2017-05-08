@@ -47,6 +47,7 @@ public class GoalServiceImp extends BaseService {
 			goal.setProject(project);
 			goal.setState(state);
 			goal.setGoalTag(goalDto.getGoalTag());
+			goal.setSubGoalPosition(0);
 			
 			/* goal start attached, all the logic needed for when 
 			 * detached is set later */
