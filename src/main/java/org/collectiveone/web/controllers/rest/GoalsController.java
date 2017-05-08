@@ -208,4 +208,15 @@ public class GoalsController { // NO_UCD (unused code)
 		}
 		return true;
 	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/goal/{goalId}/proposeOrder", method = RequestMethod.PUT)
+	public @ResponseBody boolean proposeOrder(@PathVariable("goalId") Long goalId, @RequestParam("order") int order) throws IOException {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User logged = userService.get(auth.getName());
+		if(logged != null) {
+			goalService.setOrder(goalId, order);
+		}
+		return true;
+	}
 }

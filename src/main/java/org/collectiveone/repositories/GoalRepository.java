@@ -11,6 +11,7 @@ import org.collectiveone.model.ProposalState;
 import org.collectiveone.web.dto.Filters;
 import org.collectiveone.web.dto.ObjectListRes;
 import org.hibernate.Criteria;
+import org.hibernate.NullPrecedence;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -184,6 +185,7 @@ public class GoalRepository extends BaseRepository {
 		
 		query.createAlias("go.parent","pa")
 			.add(Restrictions.eq("pa.id", goalId))
+			.addOrder(Order.asc("subGoalPosition").nulls(NullPrecedence.LAST))
 			.addOrder(Order.asc("goalTag"));
 		
 		@SuppressWarnings("unchecked")

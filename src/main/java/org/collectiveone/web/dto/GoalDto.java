@@ -19,6 +19,7 @@ public class GoalDto {
 	@Pattern(regexp="^[0-9a-zA-z-]+$", message="only letters, numbers or bars '-'")
 	private String goalTag;
 	private String parentGoalTag;
+	private int subGoalPosition;
 	@NotEmpty
 	private String description;
 	
@@ -70,6 +71,12 @@ public class GoalDto {
 	}
 	public void setParentGoalTag(String parentGoalTag) {
 		this.parentGoalTag = parentGoalTag.trim();
+	}
+	public int getSubGoalPosition() {
+		return subGoalPosition;
+	}
+	public void setSubGoalPosition(int subGoalPosition) {
+		this.subGoalPosition = subGoalPosition;
 	}
 	public String getGoalTag() {
 		return goalTag;

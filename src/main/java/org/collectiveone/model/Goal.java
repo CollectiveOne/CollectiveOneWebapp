@@ -51,6 +51,8 @@ public class Goal {
 	
 	@ManyToOne
 	private Goal parent;
+	private int subGoalPosition;
+	
 	@ManyToOne
 	private Goal proposedParent;
 	@OneToOne
@@ -79,6 +81,7 @@ public class Goal {
 		if(createDec != null) dto.setCreateDec(createDec.toDto());
 		if(deleteDec != null) dto.setDeleteDec(deleteDec.toDto());
 		if(parent != null) dto.setParentGoalTag(parent.getGoalTag());
+		dto.setSubGoalPosition(subGoalPosition);
 		if(proposedParent != null) dto.setProposedParent(proposedParent.getGoalTag());
 		if(proposeParent != null) dto.setProposeParent(proposeParent.toDto());
 		if(parentState != null) dto.setParentState(parentState.toString());
@@ -171,6 +174,13 @@ public class Goal {
 	public void setParent(Goal parent) {
 		this.parent = parent;
 	}
+	public int getSubGoalPosition() {
+		return subGoalPosition;
+	}
+	public void setSubGoalPosition(int subGoalPosition) {
+		this.subGoalPosition = subGoalPosition;
+	}
+
 	public Goal getProposedParent() {
 		return proposedParent;
 	}

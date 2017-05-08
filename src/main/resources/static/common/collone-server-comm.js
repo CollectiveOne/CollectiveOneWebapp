@@ -352,6 +352,26 @@ ServerComm.prototype = {
 				}
 			});
 		},
+		
+		goalProposeOrder: function(goalId, order, callbackFunction,callbackObj) {
+
+			$.ajax({
+				type : 'PUT',
+				url : '/1/goal/'+goalId+'/proposeOrder?order='+order,
+				data : '',
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(data, textStatus, jqXHR) {
+					if (data) {
+						callbackFunction.call(callbackObj,data);
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
+		},
+
 
 		userGet : function(username,callbackFunction,callbackObj) {
 			$.ajax({

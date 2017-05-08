@@ -718,6 +718,13 @@ public class GoalServiceImp extends BaseService {
 	}
 	
 	@Transactional
+	public void setOrder(Long goalId, int subGoalPosition) {
+		Goal goal = goalRepository.get(goalId);
+		goal.setSubGoalPosition(subGoalPosition);
+		goalRepository.save(goal);
+	}
+	
+	@Transactional
 	public void setWeightIteratively(Long goalId, Long userId, double weight) {
 		setWeight(goalId, userId, weight);
 		

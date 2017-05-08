@@ -212,6 +212,11 @@ GoalBox.prototype.goalBoxLoaded = function() {
 
 	/* PARENT PROPOSALS */
 	if(isUserLogged()) {
+		$("#order_form_container",this.container).show();
+		$("#order_input",this.container).val(this.goal.subGoalPosition);	
+		$("#order_btn",this.container).click(this.orderBtnClicked.bind(this));
+		$("#order_save_btn",this.container).click(this.orderBtnSaveClicked.bind(this));
+		
 		if(this.goal.parentState == "PROPOSED") {
 			$("#propose_parent_decision_container",this.container).show();
 			var propDecBox = new DecisionBoxSmall($("#propose_parent_decision_container",this.container),this.goal.proposeParent, getLoggedUsername());
@@ -270,10 +275,22 @@ GoalBox.prototype.editionHistoryBtnClicked = function() {
 	$("#edition_history_container",this.container).toggle();
 }
 
+GoalBox.prototype.orderBtnClicked = function() {
+	$("#order_form",this.container).toggle();
+}
+
+GoalBox.prototype.increaseBtnClicked = function() {
+	$("#increase_budget_form",this.container).toggle();
+}
+
 
 
 GoalBox.prototype.editBtnSaveClicked = function() {
 	GLOBAL.serverComm.goalProposeEdit(this.goal.id, $("#edit_input",this.container).val(), this.detachSaveCallback, this);
+}
+
+GoalBox.prototype.orderBtnSaveClicked = function() {
+	GLOBAL.serverComm.goalProposeOrder(this.goal.id, $("#order_input",this.container).val(), this.orderSaveCallback, this);
 }
 
 GoalBox.prototype.detachBtnSaveClicked = function() {
@@ -286,14 +303,17 @@ GoalBox.prototype.detachBtnSaveClicked = function() {
 			GLOBAL.serverComm.goalProposeReattach(this.goal.id, this.detachSaveCallback, this);
 			break;
 	}
-	
 }
 
-GoalBox.prototype.detachSaveCallback = function() {
+GoalBox.prototype.orderSaveCallback = function() {
 	$("#detach_form",this.container).hide();
 	this.updateGoal();
 }
 
+GoalBox.prototype.detachSaveCallback = function() {
+	$("#order_form",this.container).hide();
+	this.updateGoal();
+}
 
 GoalBox.prototype.increaseBtnSaveClicked = function() {
 	GLOBAL.serverComm.goalProposeIncreaseBudget(this.goal.id, $("#increase_budget_input",this.container).val(), this.increaseSaveCallback, this);
