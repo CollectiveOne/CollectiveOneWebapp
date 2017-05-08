@@ -1,0 +1,32 @@
+﻿---------------------------------------------------------
+-- This script will only fill the contents of the goals
+-- table. All other tables and all other sequences are generated
+-- using a DB dump which excludes the decisions table data.
+---------------------------------------------------------
+
+DROP SCHEMA IF EXISTS masterschema CASCADE;
+CREATE SCHEMA masterschema;
+
+---------------------------------------------------------
+-- Conect to other server
+---------------------------------------------------------
+CREATE EXTENSION postgres_fdw;
+CREATE SERVER master FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'localhost', dbname 'cpdb-master', port '5432');
+CREATE USER MAPPING FOR postgres SERVER master OPTIONS (user 'postgres', password 'postgres');
+IMPORT FOREIGN SCHEMA public FROM SERVER master INTO masterschema;
+
+--------------------------------------------------------
+-- FILL DECISIONS
+---------------------------------------------------------
+INSERT INTO goals 
+  (id,  attached_state,  creation_date,  current_budget,  description,  goal_tag,  increase_budget_state,  parent_state,  pps_to_increase,
+  state,  create_dec_id,  creator_id,  delete_dec_id,  increase_budget_id,  parent_id,  sub_goal_position,  project_id,
+  propose_parent_id,  proposed_parent_id,  reattach_id)
+SELECT 
+  id,  attached_state,  creation_date,  current_budget,  description,  goal_tag,  increase_budget_state,  parent_state,  pps_to_increase,
+  state,  create_dec_id,  creator_id,  delete_dec_id,  increase_budget_id,  parent_id,  1,  project_id,
+  propose_parent_id,  proposed_parent_id,  reattach_id
+FROM masterschema.goals;
+
+DROP SCHEMA masterschema CASCADE;
+DROP EXTENSION postgres_fdw CASCADE;
