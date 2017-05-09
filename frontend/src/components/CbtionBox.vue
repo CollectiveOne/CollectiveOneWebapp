@@ -4,7 +4,7 @@
 
     <div class="header">
 
-      <div class="badge badge-default state" :class="{'state-open': isOpen, 'state-assigned': isAssigned}">{{cbtion.state}}</div>
+      <div class="badge badge-default state" :class="{'state-proposed': isProposed, 'state-open': isOpen, 'state-assigned': isAssigned}">{{cbtion.state}}</div>
 
       <div class="promotion">
         <div class="arrow">&#x25B2;</div>
@@ -70,6 +70,10 @@ export default {
   },
 
   computed: {
+    isProposed () {
+      return this.cbtion.state === 'PROPOSED'
+    },
+
     isOpen () {
       return this.cbtion.state === 'OPEN'
     },
@@ -104,12 +108,16 @@ export default {
   right: 15px;
 }
 
+.state-proposed {
+  background-color: rgba(106, 158, 184, 0.8)
+}
+
 .state-open {
-  background-color: rgb(107, 184, 149)
+  background-color: rgba(107, 184, 149, 0.8)
 }
 
 .state-assigned {
-  background-color: rgb(159, 119, 0)
+  background-color: rgba(159, 119, 0, 0.8)
 }
 
 .promotion {

@@ -91,7 +91,7 @@ export default {
     ...mapGetters(['activeProject']),
 
     cancel () {
-      this.$emit('cancel')
+      this.$root.$emit('hide::modal', 'cbtionNewModal')
     },
 
     create () {
@@ -110,6 +110,8 @@ export default {
   },
 
   created () {
+    /* Current project is forced to be the current global
+       active project */
     this.$root.$on('show::modal', (id) => {
       if (id === 'cbtionNewModal') {
         this.projectName = this.activeProject()

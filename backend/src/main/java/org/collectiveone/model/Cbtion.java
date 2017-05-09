@@ -70,7 +70,7 @@ public class Cbtion {
 		dto.setDescription(description);
 		dto.setProduct(product);
 		dto.setSuggestedBid(suggestedBid);
-		dto.setCreatorUsername(creator.getUsername());
+		if(creator != null) dto.setCreatorUsername(creator.getUsername());
 		dto.setCreationDate(creationDate.getTime());
 		dto.setState(state.toString());
 		if(bids != null) dto.setnBids(bids.size());
