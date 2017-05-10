@@ -9,8 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 import com.auth0.spring.security.api.JwtWebSecurityConfigurer;
 
-@EnableWebSecurity(debug = false)
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableWebSecurity(debug = true)
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -25,9 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JwtWebSecurityConfigurer.forHS256(audience, issuer, secret.getBytes())
-                .configure(http)
-                .authorizeRequests()
-                .antMatchers("/**").permitAll();
+    	 JwtWebSecurityConfigurer.forHS256(audience, issuer, secret.getBytes())
+         .configure(http)
+         .authorizeRequests()
+         .antMatchers("/**").fullyAuthenticated();
     }
 }
