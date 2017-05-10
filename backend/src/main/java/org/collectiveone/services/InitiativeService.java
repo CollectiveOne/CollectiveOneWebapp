@@ -20,13 +20,18 @@ public class InitiativeService {
 	public PostResult create(String auth0Id, NewInitiativeDto initiativeDto) {
 		
 		AppUser creator = appUserRepository.findByAuth0Id(auth0Id);
-		Initiative initiative = new Initiative();
-		initiative.setCreator(creator);
-		initiative.setDriver(initiativeDto.getDriver());
-		initiative.setEnabled(true);
-		initiative.setName(initiativeDto.getName());
 		
-		return new PostResult(true, "initiative created");
+		if (creator != null) {
+			Initiative initiative = new Initiative();
+			initiative.setCreator(creator);
+			initiative.setDriver(initiativeDto.getDriver());
+			initiative.setEnabled(true);
+			initiative.setName(initiativeDto.getName());
+
+			return new PostResult("success", "initiative created");
+		} else {		
+			return new PostResult("error", "user not found");
+		}
 	}
 	
 }

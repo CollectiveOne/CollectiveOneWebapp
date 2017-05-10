@@ -5,7 +5,6 @@ import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.NewInitiativeDto;
 import org.collectiveone.web.dto.PostResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,17 +21,21 @@ public class InitiativesController {
 	@Autowired
 	InitiativeService initiativeService;
 	
-	@RequestMapping(path = "initiative", method = RequestMethod.POST)
+	@RequestMapping(path = "/secured/initiative", method = RequestMethod.POST)
 	public PostResult postInitiative(@RequestBody NewInitiativeDto initiativeDto) {
-		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    	
 		return initiativeService.create(auth.getName(), initiativeDto);
 	}
 	
-	@RequestMapping(path = "initiative/{id}", method = RequestMethod.GET)
+	@RequestMapping(path = "/public/initiative/{id}", method = RequestMethod.GET)
 	public GetResult<String> getInitiative(@PathVariable("id") String id) {
-		return new GetResult<String>();
+		GetResult<String> result = new GetResult<String>();
+		
+		result.setData("data string");
+		result.setMessage("success");
+		result.setResult("success");
+		
+		return result;
 	}
 	
 }
