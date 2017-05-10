@@ -3,7 +3,7 @@
     ["env", { "modules": false }],
     "stage-2"
   ],
-  "plugins": ["transform-runtime", "transform-object-rest-spread"],
+  "plugins": ["transform-runtime"],
   "comments": false,
   "env": {
     "test": {

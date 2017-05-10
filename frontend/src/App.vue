@@ -1,31 +1,13 @@
 <template>
   <div id="app">
-    <div class="container-fluid">
-      <app-header></app-header>
-      <div class="row">
-        <router-view class="view"></router-view>
-      </div>
-    </div>
+    <img src="./assets/logo.png">
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-import AppHeader from '@/components/Header.vue'
-
 export default {
-  name: 'app',
-  components: {
-    appHeader: AppHeader
-  },
-
-  methods: {
-    ...mapActions(['updateProjects'])
-  },
-
-  created () {
-    this.updateProjects()
-  }
+  name: 'app'
 }
 </script>
 
@@ -34,23 +16,8 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
 }
-
-.container-fluid {
-  padding-left: 2px;
-  padding-right: 2px;
-}
-
-.view {
-  margin-top: 10px;
-}
-
-button {
-  cursor: pointer;
-}
-
-a {
-  cursor: pointer;
-}
-
 </style>

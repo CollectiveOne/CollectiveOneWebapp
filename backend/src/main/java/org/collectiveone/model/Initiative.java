@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -20,7 +21,7 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table( name = "PROJECTS" )
+@Table( name = "initiatives" )
 public class Initiative {
 	
 	@Id
@@ -48,6 +49,7 @@ public class Initiative {
 	private AppUser creator;
 	
 	@ManyToMany
+	@JoinTable(name = "initiatives_contributors")
 	private Set<AppUser> contributors = new LinkedHashSet<AppUser>();
 	
 	public InitiativeDto toDto() {

@@ -1,6 +1,6 @@
-# c1-client
+# c1-frontend
 
-> CollectiveOne web application client
+> CollectiveOne Official Client
 
 ## Build Setup
 
