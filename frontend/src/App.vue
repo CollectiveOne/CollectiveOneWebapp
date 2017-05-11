@@ -39,26 +39,9 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Roboto', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #026AA7;
+
+#app html,body,h1,h2,h3,h4,h5 {
+  font-family: "Open Sans", sans-serif;
 }
 
-#app h1, h2, h3, h4 {
-  font-family: 'Open Sans', sans-serif;
-}
-
-#app p {
-  font-family: 'Roboto', sans-serif;
-}
-
-#app button {
-  cursor: pointer;
-}
-
-#app a {
-  cursor: pointer;
-}
 </style>

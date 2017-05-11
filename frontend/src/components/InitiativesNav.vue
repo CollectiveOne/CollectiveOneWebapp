@@ -1,9 +1,8 @@
 <template lang="html">
-  <div class="row this-container">
-    <div class="col">
-      <h3 class="section-title">My Initiatives</h3>
-      <p v-for="initiative in initiatives"></p>
-      <button class="btn btn-primary">create new initiative</button>
+  <div class="w3-card-2 w3-round w3-white">
+    <div class="w3-container w3-padding">
+      <h4 class="w3-opacity">My Initiatives</h4>
+      <button type="button" class="w3-button w3-theme w3-round"><i class="fa fa-plus-circle"></i>  create new</button>
     </div>
   </div>
 </template>
@@ -26,20 +25,5 @@ export default {
 </script>
 
 <style scoped>
-
-.section-title {
-  font-weight: bold;
-}
-
-.this-container {
-  padding-top: 15px;
-  padding-left: 5px;
-  /*text-align: center;*/
-}
-
-.this-container .btn {
-  margin-top: 10px;
-  float: right;
-}
 
 </style>
