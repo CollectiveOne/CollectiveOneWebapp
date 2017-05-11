@@ -1,7 +1,10 @@
-package org.collectiveone.web.controllers.rest;
+package org.collectiveone.web.controllers;
+
+import java.util.List;
 
 import org.collectiveone.services.InitiativeService;
 import org.collectiveone.web.dto.GetResult;
+import org.collectiveone.web.dto.InitiativeDto;
 import org.collectiveone.web.dto.NewInitiativeDto;
 import org.collectiveone.web.dto.PostResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +32,13 @@ public class InitiativesController {
 	
 	@RequestMapping(path = "/public/initiative/{id}", method = RequestMethod.GET)
 	public GetResult<String> getInitiative(@PathVariable("id") String id) {
-		GetResult<String> result = new GetResult<String>();
-		
-		result.setData("data string");
-		result.setMessage("success");
-		result.setResult("success");
-		
-		return result;
+		return new GetResult<String>("success", "initiative retrieved", "data");
+	}
+	
+	@RequestMapping(path = "/secured/initiatives/mines", method = RequestMethod.GET)
+	public GetResult<List<InitiativeDto>> myInitiatives() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return initiativeService.getOfUser(auth.getName());
 	}
 	
 }

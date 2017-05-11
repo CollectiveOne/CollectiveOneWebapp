@@ -1,0 +1,23 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/home/pepo/.nvm/versions/node/v7.7.4/bin/node',
+1 verbose cli   '/home/pepo/.nvm/versions/node/v7.7.4/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'dev' ]
+2 info using npm@4.1.2
+3 info using node@v7.7.4
+4 verbose config Skipping project config: /home/pepo/.npmrc. (matches userconfig)
+5 verbose stack Error: ENOENT: no such file or directory, open '/home/pepo/package.json'
+6 verbose cwd /home/pepo/workspace/c1-vue
+7 error Linux 4.8.0-51-generic
+8 error argv "/home/pepo/.nvm/versions/node/v7.7.4/bin/node" "/home/pepo/.nvm/versions/node/v7.7.4/bin/npm" "run" "dev"
+9 error node v7.7.4
+10 error npm  v4.1.2
+11 error path /home/pepo/package.json
+12 error code ENOENT
+13 error errno -2
+14 error syscall open
+15 error enoent ENOENT: no such file or directory, open '/home/pepo/package.json'
+16 error enoent ENOENT: no such file or directory, open '/home/pepo/package.json'
+16 error enoent This is most likely not a problem with npm itself
+16 error enoent and is related to npm not being able to find a file.
+17 verbose exit [ -2, true ]

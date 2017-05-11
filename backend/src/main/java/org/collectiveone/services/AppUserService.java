@@ -4,6 +4,8 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.model.AppUser;
 import org.collectiveone.repositories.AppUserRepositoryIf;
+import org.collectiveone.web.dto.AppUserDto;
+import org.collectiveone.web.dto.GetResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,11 @@ public class AppUserService {
 		}
     	
     	return appUser;
+	}
+	
+	@Transactional
+	public GetResult<AppUserDto> getDto(String auth0Id) {
+		return new GetResult<AppUserDto>("success", "user profile retrieved", get(auth0Id).toDto());
 	}
 	
 	@Transactional

@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.collectiveone.web.dto.AppUserDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -29,6 +30,18 @@ public class AppUser {
 	private String email;
 	@Column(name = "pitcure_url")
 	private String pictureUrl;
+	
+	public AppUserDto toDto() {
+		AppUserDto dto = new AppUserDto();
+		
+		dto.setC1Id(c1Id.toString());
+		dto.setAuth0Id(auth0Id);
+		dto.setNickname(nickname);
+		dto.setEmail(email);
+		dto.setPictureUrl(pictureUrl);
+		
+		return dto;
+	}
 	
 	public UUID getC1Id() {
 		return c1Id;

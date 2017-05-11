@@ -5,6 +5,12 @@ public class GetResult<T> {
 	String message;
 	T data;
 	
+	public GetResult(String _result, String _message, T _data) {
+		result = _result;
+		message = _message;
+		data = _data;
+	}
+	
 	public String isResult() {
 		return result;
 	}
