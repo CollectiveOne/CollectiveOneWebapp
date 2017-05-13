@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table( name = "tokens_holders" )
+@Table(name = "token_holders")
 public class TokenHolder {
 	
 	@Id
@@ -24,13 +24,12 @@ public class TokenHolder {
 	private UUID id;
 	
 	@ManyToOne
-	private AppUser user;
-	
-	@ManyToOne
 	private TokenType tokenType;
 	
 	@Column(name = "tokens")
 	private double tokens;
+	
+	private UUID holderId;
 
 	
 	public UUID getId() {
@@ -56,5 +55,17 @@ public class TokenHolder {
 	public void setTokens(double tokens) {
 		this.tokens = tokens;
 	}
+
+	public UUID getHolderId() {
+		return holderId;
+	}
+
+	public void setHolderId(UUID holderId) {
+		this.holderId = holderId;
+	}
+
+	
+	
+	
 	
 }
