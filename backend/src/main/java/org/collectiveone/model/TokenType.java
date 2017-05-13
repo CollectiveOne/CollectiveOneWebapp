@@ -35,6 +35,7 @@ public class TokenType {
 	@OneToMany(mappedBy="tokenType")
 	@OrderBy("tokens DESC")
 	private Set<TokenHolder> holders = new LinkedHashSet<TokenHolder>();
+	
 
 	public UUID getId() {
 		return id;

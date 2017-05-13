@@ -8,7 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID> {
+
+	Initiative findById(UUID id);
 	
-	@Query("SELECT init FROM Initiative init JOIN init.contributors ctr WHERE ctr.id = ?1")
+	@Query("SELECT init FROM Initiative init JOIN init.contributors ctr WHERE ctr.c1Id = ?1")
 	List<Initiative> findOfContributor(UUID contributorId);
+	
 }

@@ -1,9 +1,9 @@
 <template lang="html">
-  <div class="w3-row">
-    <div class="w3-col m4 w3-row-padding">
+  <div class="w3-row-padding">
+    <div class="w3-col m4 w3-hide-small">
       <app-initiatives-nav></app-initiatives-nav>
     </div>
-    <div class="w3-col m8 w3-row-padding">
+    <div class="w3-col m8">
       <app-initiatives-content></app-initiatives-content>
     </div>
   </div>

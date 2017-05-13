@@ -10,10 +10,6 @@ public class InitiativeDto {
 	private Timestamp creationDate;
 	private String creatorC1Id;
 	
-	/* for user logged*/
-	private boolean isStarred;
-	private boolean isWatched;
-	
 	public String getId() {
 		return id;
 	}
@@ -44,18 +40,5 @@ public class InitiativeDto {
 	public void setCreatorC1Id(String creatorC1Id) {
 		this.creatorC1Id = creatorC1Id;
 	}
-	public boolean isStarred() {
-		return isStarred;
-	}
-	public void setStarred(boolean isStarred) {
-		this.isStarred = isStarred;
-	}
-	public boolean isWatched() {
-		return isWatched;
-	}
-	public void setWatched(boolean isWatched) {
-		this.isWatched = isWatched;
-	}
-	
 	
 }

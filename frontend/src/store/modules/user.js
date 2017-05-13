@@ -8,20 +8,6 @@ const state = {
 }
 
 const getters = {
-  loggedUserImage: state => {
-    if (state.profile) {
-      return state.profile.pictureUrl
-    } else {
-      return ''
-    }
-  },
-  loggedUserNickname: state => {
-    if (state.profile) {
-      return state.profile.nickname
-    } else {
-      return ''
-    }
-  }
 }
 
 const mutations = {
@@ -74,6 +60,7 @@ const actions = {
     if (context.state.authenticated) {
       Vue.axios.get('/1/secured/user/myProfile').then((response) => {
         context.commit('setProfile', response.data.data)
+        context.dispatch('updateUserInitiatives')
       }).catch(function (error) {
         console.log(error)
       })
@@ -81,7 +68,6 @@ const actions = {
   },
 
   logoutUser: (context) => {
-    debugger
     localStorage.removeItem('access_token')
     localStorage.removeItem('id_token')
     context.commit('authenticate', false)

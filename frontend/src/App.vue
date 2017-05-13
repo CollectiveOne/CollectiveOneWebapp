@@ -1,5 +1,8 @@
 <template>
   <div id="app" class="container-fluid">
+    <template v-if="">
+      <component :is="modal"></component>
+    </template>
     <component :is="view"></component>
   </div>
 </template>
@@ -9,6 +12,7 @@ import { mapActions } from 'vuex'
 
 import LandingView from '@/components/LandingView.vue'
 import LoggedView from '@/components/LoggedView.vue'
+import NewInitiativeModal from '@/components/NewInitiativeModal.vue'
 
 export default {
   name: 'app',
@@ -24,12 +28,19 @@ export default {
       } else {
         return 'app-landing-view'
       }
+    },
+
+    modal () {
+      if (this.$store.state.modals.showNewInitiative) {
+        return 'app-new-initiative-modal'
+      }
     }
   },
 
   components: {
     AppLandingView: LandingView,
-    AppLoggedView: LoggedView
+    AppLoggedView: LoggedView,
+    AppNewInitiativeModal: NewInitiativeModal
   },
 
   mounted () {

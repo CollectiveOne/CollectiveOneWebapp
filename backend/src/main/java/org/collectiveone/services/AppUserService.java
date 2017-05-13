@@ -1,5 +1,7 @@
 package org.collectiveone.services;
 
+import java.util.UUID;
+
 import javax.transaction.Transactional;
 
 import org.collectiveone.model.AppUser;
@@ -24,7 +26,7 @@ public class AppUserService {
 	ManagementAPI mgmt;
 
 	@Transactional
-	public AppUser get(String auth0Id) {
+	public AppUser getOrCreateFromAuth0Id(String auth0Id) {
 		
 		AppUser appUser = appUserRepository.findByAuth0Id(auth0Id);
 		
@@ -38,8 +40,18 @@ public class AppUserService {
 	}
 	
 	@Transactional
-	public GetResult<AppUserDto> getDto(String auth0Id) {
-		return new GetResult<AppUserDto>("success", "user profile retrieved", get(auth0Id).toDto());
+	public AppUser getFromAuth0Id(String auth0Id) {
+    	return appUserRepository.findByAuth0Id(auth0Id);
+	}
+	
+	@Transactional
+	public AppUser getFromC1Id(UUID c1Id) {
+		return appUserRepository.findByC1Id(c1Id);
+	}
+	
+	@Transactional
+	public GetResult<AppUserDto> getDto(UUID c1Id) {
+		return new GetResult<AppUserDto>("success", "user profile retrieved", getFromC1Id(c1Id).toDto());
 	}
 	
 	@Transactional

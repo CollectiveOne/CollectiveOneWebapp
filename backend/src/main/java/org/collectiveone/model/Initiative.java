@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.web.dto.InitiativeDto;
@@ -51,6 +52,9 @@ public class Initiative {
 	@ManyToMany
 	@JoinTable(name = "initiatives_contributors")
 	private Set<AppUser> contributors = new LinkedHashSet<AppUser>();
+	
+	@OneToOne
+	private TokenType tokenType;
 	
 	public InitiativeDto toDto() {
 		InitiativeDto dto = new InitiativeDto();
@@ -107,5 +111,12 @@ public class Initiative {
 	public void setContributors(Set<AppUser> contributors) {
 		this.contributors = contributors;
 	}
+	public TokenType getTokenType() {
+		return tokenType;
+	}
+	public void setTokenType(TokenType tokenType) {
+		this.tokenType = tokenType;
+	}
+	
 	
 }

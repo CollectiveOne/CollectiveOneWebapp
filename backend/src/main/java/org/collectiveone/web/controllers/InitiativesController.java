@@ -2,6 +2,8 @@ package org.collectiveone.web.controllers;
 
 import java.util.List;
 
+import org.collectiveone.model.AppUser;
+import org.collectiveone.services.AppUserService;
 import org.collectiveone.services.InitiativeService;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
@@ -24,10 +26,12 @@ public class InitiativesController {
 	@Autowired
 	InitiativeService initiativeService;
 	
+	@Autowired
+	AppUserService appUserService;
+	
 	@RequestMapping(path = "/secured/initiative", method = RequestMethod.POST)
 	public PostResult postInitiative(@RequestBody NewInitiativeDto initiativeDto) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return initiativeService.create(auth.getName(), initiativeDto);
+		return initiativeService.init(getLoggedUser().getC1Id(), initiativeDto);
 	}
 	
 	@RequestMapping(path = "/public/initiative/{id}", method = RequestMethod.GET)
@@ -37,8 +41,13 @@ public class InitiativesController {
 	
 	@RequestMapping(path = "/secured/initiatives/mines", method = RequestMethod.GET)
 	public GetResult<List<InitiativeDto>> myInitiatives() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return initiativeService.getOfUser(auth.getName());
+		return initiativeService.getOfUser(getLoggedUser().getC1Id());
 	}
+	
+	private AppUser getLoggedUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return appUserService.getFromAuth0Id(auth.getName());
+	}
+	
 	
 }
