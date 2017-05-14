@@ -82,6 +82,10 @@ public class InitiativeService {
 		}
 	}
 	
+	public InitiativeDto get(UUID id) {
+		return initiativeRepository.findById(id).toDto();
+	}
+	
 	@Transactional
 	public GetResult<List<InitiativeDto>> getOfUser(UUID userC1Id) {
 		/* return the initiatives of a user but inserting initiatives that are 

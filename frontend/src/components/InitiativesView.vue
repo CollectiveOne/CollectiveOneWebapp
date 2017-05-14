@@ -4,19 +4,17 @@
       <app-initiatives-nav></app-initiatives-nav>
     </div>
     <div class="w3-col m8">
-      <app-initiatives-content></app-initiatives-content>
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
 import InitiativesNav from './InitiativesNav.vue'
-import InitiativesContent from './InitiativesContent.vue'
 
 export default {
   components: {
-    AppInitiativesNav: InitiativesNav,
-    AppInitiativesContent: InitiativesContent
+    AppInitiativesNav: InitiativesNav
   }
 }
 </script>

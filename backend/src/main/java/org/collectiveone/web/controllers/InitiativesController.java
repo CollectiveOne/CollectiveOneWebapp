@@ -1,6 +1,7 @@
 package org.collectiveone.web.controllers;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.collectiveone.model.AppUser;
 import org.collectiveone.services.AppUserService;
@@ -34,9 +35,9 @@ public class InitiativesController {
 		return initiativeService.init(getLoggedUser().getC1Id(), initiativeDto);
 	}
 	
-	@RequestMapping(path = "/public/initiative/{id}", method = RequestMethod.GET)
-	public GetResult<String> getInitiative(@PathVariable("id") String id) {
-		return new GetResult<String>("success", "initiative retrieved", "data");
+	@RequestMapping(path = "/secured/initiative/{id}", method = RequestMethod.GET)
+	public GetResult<InitiativeDto> getInitiative(@PathVariable("id") String id) {
+		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeService.get(UUID.fromString(id)));
 	}
 	
 	@RequestMapping(path = "/secured/initiatives/mines", method = RequestMethod.GET)

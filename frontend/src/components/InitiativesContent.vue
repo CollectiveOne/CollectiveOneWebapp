@@ -7,6 +7,9 @@
         <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Actions</div>
         <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Activity</div>
       </div>
+      <div class=" w3-row">
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -15,15 +18,27 @@
 export default {
   data () {
     return {
-      name: 'Ouishare FEST BCN 2017',
-      subInitiativesNames: ['Primera Fase', 'Producción']
+      initiative: {
+        name: 'InitiativeName',
+        subInitiatives: []
+      }
     }
   },
 
   computed: {
     initiativePath () {
-      return this.name + ' - ' + this.subInitiativesNames.join(' - ')
+      var subInitiativesTitle = ''
+      for (var subInitiative in this.initiative.subInitiatives) {
+        subInitiativesTitle = subInitiativesTitle + ' - ' + subInitiative.name
+      }
+      return this.initiative.name + subInitiativesTitle
     }
+  },
+
+  mounted () {
+    this.axios.get('/1/secured/initiative/' + this.$route.params.id).then((response) => {
+      this.initiative = response.data.data
+    })
   }
 }
 </script>

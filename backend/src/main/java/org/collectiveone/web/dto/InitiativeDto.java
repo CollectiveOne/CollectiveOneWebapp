@@ -1,6 +1,8 @@
 package org.collectiveone.web.dto;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InitiativeDto {
 	
@@ -9,6 +11,7 @@ public class InitiativeDto {
 	private String driver;
 	private Timestamp creationDate;
 	private String creatorC1Id;
+	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
 	
 	public String getId() {
 		return id;
@@ -40,5 +43,12 @@ public class InitiativeDto {
 	public void setCreatorC1Id(String creatorC1Id) {
 		this.creatorC1Id = creatorC1Id;
 	}
+	public List<InitiativeDto> getSubInitiatives() {
+		return subInitiatives;
+	}
+	public void setSubInitiatives(List<InitiativeDto> subInitiatives) {
+		this.subInitiatives = subInitiatives;
+	}
+	
 	
 }
