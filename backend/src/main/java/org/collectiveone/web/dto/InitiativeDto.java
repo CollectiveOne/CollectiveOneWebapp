@@ -11,6 +11,7 @@ public class InitiativeDto {
 	private String driver;
 	private Timestamp creationDate;
 	private String creatorC1Id;
+	private String creatorNickname;
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
 	
 	public String getId() {
@@ -42,6 +43,12 @@ public class InitiativeDto {
 	}
 	public void setCreatorC1Id(String creatorC1Id) {
 		this.creatorC1Id = creatorC1Id;
+	}
+	public String getCreatorNickname() {
+		return creatorNickname;
+	}
+	public void setCreatorNickname(String creatorNickname) {
+		this.creatorNickname = creatorNickname;
 	}
 	public List<InitiativeDto> getSubInitiatives() {
 		return subInitiatives;

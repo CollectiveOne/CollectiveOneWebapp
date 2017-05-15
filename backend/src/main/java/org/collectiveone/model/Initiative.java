@@ -62,6 +62,7 @@ public class Initiative {
 		dto.setId(id.toString());
 		dto.setName(name);
 		dto.setCreatorC1Id(creator.getC1Id().toString());
+		dto.setCreatorNickname(creator.getNickname());
 		dto.setCreationDate(creationDate);
 		dto.setDriver(driver);
 		

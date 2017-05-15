@@ -14,4 +14,7 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 	@Query("SELECT init FROM Initiative init JOIN init.contributors ctr WHERE ctr.c1Id = ?1")
 	List<Initiative> findOfContributor(UUID contributorId);
 	
+	@Query("select init from Initiative init where init.name like %?1%")
+	List<Initiative> searchBy(String q);
+	
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -43,6 +44,11 @@ public class InitiativesController {
 	@RequestMapping(path = "/secured/initiatives/mines", method = RequestMethod.GET)
 	public GetResult<List<InitiativeDto>> myInitiatives() {
 		return initiativeService.getOfUser(getLoggedUser().getC1Id());
+	}
+	
+	@RequestMapping(path = "/secured/initiatives/search", method = RequestMethod.GET)
+	public GetResult<List<InitiativeDto>> search(@RequestParam("q") String query) {
+		return initiativeService.searchBy(query);
 	}
 	
 	private AppUser getLoggedUser() {

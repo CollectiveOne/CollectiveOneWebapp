@@ -103,5 +103,16 @@ public class InitiativeService {
 				
 	}
 	
-	
+	@Transactional
+	public GetResult<List<InitiativeDto>> searchBy(String q) {
+		List<Initiative> initiatives = initiativeRepository.searchBy(q);
+		List<InitiativeDto> initiativesDtos = new ArrayList<InitiativeDto>();
+		
+		for(Initiative initiative : initiatives) {
+			initiativesDtos.add(initiative.toDto());
+		}
+		
+		return new GetResult<List<InitiativeDto>>("succes", "initiatives returned", initiativesDtos);
+		
+	}
 }
