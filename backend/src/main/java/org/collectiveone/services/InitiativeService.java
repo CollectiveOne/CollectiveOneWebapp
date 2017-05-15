@@ -34,6 +34,9 @@ public class InitiativeService {
 	
 	@Autowired
 	InitiativeRepositoryIf initiativeRepository;
+	
+	@Autowired
+	
 
 	public PostResult init(UUID c1Id, NewInitiativeDto initiativeDto) {
 		/* create the initiative */
@@ -109,7 +112,10 @@ public class InitiativeService {
 		List<InitiativeDto> initiativesDtos = new ArrayList<InitiativeDto>();
 		
 		for(Initiative initiative : initiatives) {
-			initiativesDtos.add(initiative.toDto());
+			InitiativeDto dto = initiative.toDto();
+			double remainingTokens = tokenService.getHolder(initiative.getTokenType().getId(), initiative.getId()).getTokens();
+			dto.setRemainingTokens(remainingTokens);
+			initiativesDtos.add(dto);
 		}
 		
 		return new GetResult<List<InitiativeDto>>("succes", "initiatives returned", initiativesDtos);

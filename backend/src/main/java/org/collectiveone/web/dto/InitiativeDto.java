@@ -12,6 +12,8 @@ public class InitiativeDto {
 	private Timestamp creationDate;
 	private String creatorC1Id;
 	private String creatorNickname;
+	private double remainingTokens;
+	
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
 	
 	public String getId() {
@@ -56,6 +58,13 @@ public class InitiativeDto {
 	public void setSubInitiatives(List<InitiativeDto> subInitiatives) {
 		this.subInitiatives = subInitiatives;
 	}
+	public double getRemainingTokens() {
+		return remainingTokens;
+	}
+	public void setRemainingTokens(double remainingTokens) {
+		this.remainingTokens = remainingTokens;
+	}
+	
 	
 	
 }

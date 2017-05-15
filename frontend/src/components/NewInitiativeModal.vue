@@ -3,6 +3,10 @@
     <div class="w3-modal-content">
       <div class="w3-card-4">
 
+        <div class="close-div w3-display-topright w3-xlarge" @click="cancel()">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </div>
+
         <div class="w3-container w3-theme">
           <h2>New Initiative</h2>
         </div>
@@ -13,7 +17,10 @@
             <div class="w3-row">
               <div class="w3-col m9">
                 <label class="w3-text-indigo"><b>Create as Sub-Initiative of</b></label>
-                <app-initiative-selector anchor="id" label="name" url="/1/secured/initiatives/search"></app-initiative-selector>
+                <app-initiative-selector
+                  anchor="id" label="name" :init="parentInitiative"
+                  url="/1/secured/initiatives/search"
+                  @select="parentInitiativeSelected($event)"></app-initiative-selector>
               </div>
               <div class="w3-col m3">
                 <button type="button" class="cancel-btn w3-button w3-teal w3-round" @click="asSubinitiative = false">Remove</button>
@@ -60,7 +67,10 @@
           <br>
 
           <hr>
-          <div class="w3-row-padding">
+          <div v-if="asSubinitiative" class="w3-row-padding">
+            {{ this.parentInitiative }}
+          </div>
+          <div v-else class="w3-row-padding">
             <div class="w3-col m3">
               <label class="w3-text-indigo"><b>Number of Tokens</b></label>
               <input v-model="nTokens" class="w3-input w3-border w3-hover-light-gray" type="number">
@@ -115,6 +125,15 @@ export default {
     ...mapMutations(['showNewInitiativeModal']),
     ...mapActions(['showOutputMessage', 'updateUserInitiatives']),
 
+    parentInitiativeSelected (initiative) {
+      this.parentInitiative = initiative
+      this.asSubinitiative = true
+
+      this.axios.get('/1/secured/initiative/tokens').then((response) => {
+        this.parentInitiativeTokensData = response.data.data
+      })
+    },
+
     cancel () {
       this.showNewInitiativeModal(false)
     },
@@ -163,6 +182,19 @@ export default {
 </script>
 
 <style scoped>
+
+.close-div {
+  width: 70px;
+  height: 100%;
+  cursor: pointer;
+  text-align: right;
+}
+
+.fa-times {
+  color: rgb(255, 255, 255);
+  margin-right: 20px;
+  margin-top: 20px;
+}
 
 form {
   padding-top: 35px;

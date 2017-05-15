@@ -75,9 +75,9 @@
       placeholder: String,
 
       // Intial Value
-      initValue: {
-        type: String,
-        default: ""
+      init: {
+        type: Object,
+        default: () => { return null }
       },
 
       // Anchor of list
@@ -282,7 +282,8 @@
 
     created(){
       // Sync parent model with initValue Props
-      this.type = this.initValue ? this.initValue : null
+      this.json = this.init ? [this.init] : []
+      this.type = this.init.name
     }
 
   }
