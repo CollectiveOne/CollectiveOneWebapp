@@ -67,13 +67,40 @@
           <br>
 
           <hr>
-          <div v-if="asSubinitiative" class="w3-row-padding">
-            {{ this.parentInitiative }}
+          <div v-if="asSubinitiative" class="tokens-div w3-row-padding">
+            <h4>Assign tokens from {{ parentInitiative.name }}</h4>
+            <div class="w3-col m3">
+              <label class="w3-row w3-text-indigo"><b>Total Existing Tokens</b></label>
+              <p><span class="w3-row w3-tag w3-large w3-round w3-theme">{{ parentInitiative.totalExistingTokens }}</span></p>
+            </div>
+            <div class="w3-col m3">
+              <label class="w3-row w3-text-indigo"><b>Available Tokens</b></label>
+              <p><span class="w3-row w3-tag w3-large w3-round w3-theme">{{ parentInitiative.remainingTokens }}</span></p>
+            </div>
+            <div class="w3-col m6">
+              <label class="w3-text-indigo"><b>Assign</b></label>
+              <div class="w3-row-padding tokens-selector">
+                <div class="w3-col m6">
+                  <input v-model.number="tokens" class="w3-input w3-border w3-hover-light-gray" type="number">
+                </div>
+                <div class="w3-col m6">
+                  <div class="w3-row">
+                    <div class="w3-col s10">
+                      <input v-model.number="percentage" class="w3-input w3-border w3-hover-light-gray" type="text">
+                    </div>
+                    <div class="w3-col s2">
+                      <i class="fa fa-percent" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div v-else class="w3-row-padding">
+            <h4>Create a new token</h4>
             <div class="w3-col m3">
               <label class="w3-text-indigo"><b>Number of Tokens</b></label>
-              <input v-model="nTokens" class="w3-input w3-border w3-hover-light-gray" type="number">
+              <input v-model="tokens" class="w3-input w3-border w3-hover-light-gray" type="number">
             </div>
             <div class="w3-col m4">
               <label class="w3-text-indigo"><b>Token Name</b></label>
@@ -116,8 +143,20 @@ export default {
       name: '',
       driver: '',
       contributors: [],
-      nTokens: 1000,
-      tokenName: 'tokens'
+      tokens: 1000,
+      tokenName: 'tokens',
+      percentage: 100
+    }
+  },
+
+  watch: {
+    tokens () {
+      let perc = this.tokens / this.parentInitiative.totalExistingTokens * 100
+      this.percentage = Math.round(perc * 1000) / 1000
+    },
+    percentage () {
+      let toks = this.percentage / 100 * this.parentInitiative.totalExistingTokens
+      this.tokens = Math.round(toks * 1000) / 1000
     }
   },
 
@@ -144,22 +183,14 @@ export default {
         name: this.name,
         driver: this.driver,
         contributors: this.contributors,
-        nTokens: this.ntokens,
-        tokenName: this.tokenName
+        tokenName: this.tokenName,
+        tokens: this.tokens
       }
 
       this.axios.post('/1/secured/initiative', intitiatveDto).then((response) => {
-        if (response.status === 200) {
-          if (response.data.result === 'success') {
-            this.showOutputMessage(response.data.message)
-            this.updateUserInitiatives()
-            this.showNewInitiativeModal(false)
-          } else {
-            this.showOutputMessage(response.data.message)
-          }
-        } else {
-          this.showOutputMessage(response.data.message)
-        }
+        this.showOutputMessage(response.data.message)
+        this.updateUserInitiatives()
+        this.showNewInitiativeModal(false)
       }).catch((error) => {
         console.log(error)
       })
@@ -185,7 +216,7 @@ export default {
 
 .close-div {
   width: 70px;
-  height: 100%;
+  height: 70px;
   cursor: pointer;
   text-align: right;
 }
@@ -226,6 +257,21 @@ form {
 .remove-btn {
   margin-top: 10px;
   width: 100%;
+}
+
+.tokens-div {
+  text-align: center;
+}
+
+.tokens-selector {
+  margin-top: 10px;
+}
+
+.fa-percent {
+  color: #607d8b;
+  font-size: 22px;
+  margin-top: 7.5px;
+  margin-left: 5px;
 }
 
 .bottom-btns-row button {

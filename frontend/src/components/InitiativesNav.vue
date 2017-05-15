@@ -36,9 +36,10 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['showNewInitiativeModal']),
+    ...mapMutations(['showNewInitiativeModal', 'setNewInitiativeParent']),
 
     newInitiative () {
+      this.setNewInitiativeParent(null)
       this.showNewInitiativeModal(true)
     }
   }

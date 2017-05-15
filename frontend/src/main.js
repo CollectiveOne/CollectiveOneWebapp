@@ -22,6 +22,17 @@ axios.interceptors.request.use(
   }
 )
 
+// axios.interceptors.response.use(function (response) {
+//   if (response.status !== 200) {
+//     // Vue.$store.dispatch('showOutputMessage', response.message)
+//   }
+//   return response
+// }, function (error) {
+//   // Do something with response error
+//   debugger
+//   Vue.$store.dispatch('showOutputMessage', error.message)
+// })
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

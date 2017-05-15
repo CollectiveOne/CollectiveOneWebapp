@@ -35,9 +35,7 @@ public class InitiativeService {
 	@Autowired
 	InitiativeRepositoryIf initiativeRepository;
 	
-	@Autowired
 	
-
 	public PostResult init(UUID c1Id, NewInitiativeDto initiativeDto) {
 		/* create the initiative */
 		Initiative initiative = create(c1Id, initiativeDto);
@@ -46,6 +44,9 @@ public class InitiativeService {
 		if (initiativeDto.getParentInitiativeId() == null) {
 			/* create a token for this initiative */
 			token = tokenService.create(initiativeDto.getTokenName(), "T");
+			initiative.setTokenType(token);
+			initiative = initiativeRepository.save(initiative);
+			
 		} else {
 			/* TODO
 			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
@@ -53,7 +54,7 @@ public class InitiativeService {
 			*/
 		}
 		
-		tokenService.mintToInitiative(token.getId(), initiative.getId(), initiativeDto.getnTokens());
+		tokenService.mintToInitiative(token.getId(), initiative.getId(), initiativeDto.getTokens());
 		
 		return new PostResult("success", "initiative created and tokens assigned");
 	}
@@ -86,7 +87,16 @@ public class InitiativeService {
 	}
 	
 	public InitiativeDto get(UUID id) {
-		return initiativeRepository.findById(id).toDto();
+		Initiative initiative = initiativeRepository.findById(id); 
+		
+		InitiativeDto initiativeDto = initiative.toDto();
+		double remainingTokens = tokenService.getHolder(initiative.getTokenType().getId(), initiative.getId()).getTokens();
+		initiativeDto.setRemainingTokens(remainingTokens);
+		
+		double existingTokens = tokenService.getTotalExisting(initiative.getTokenType().getId());
+		initiativeDto.setTotalExistingTokens(existingTokens);
+		
+		return initiativeDto;
 	}
 	
 	@Transactional
@@ -112,10 +122,7 @@ public class InitiativeService {
 		List<InitiativeDto> initiativesDtos = new ArrayList<InitiativeDto>();
 		
 		for(Initiative initiative : initiatives) {
-			InitiativeDto dto = initiative.toDto();
-			double remainingTokens = tokenService.getHolder(initiative.getTokenType().getId(), initiative.getId()).getTokens();
-			dto.setRemainingTokens(remainingTokens);
-			initiativesDtos.add(dto);
+			initiativesDtos.add(initiative.toDto());
 		}
 		
 		return new GetResult<List<InitiativeDto>>("succes", "initiatives returned", initiativesDtos);

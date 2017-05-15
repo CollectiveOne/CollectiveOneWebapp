@@ -12,7 +12,8 @@ public class InitiativeDto {
 	private Timestamp creationDate;
 	private String creatorC1Id;
 	private String creatorNickname;
-	private double remainingTokens;
+	private double remainingTokens = 0.0;
+	private double totalExistingTokens = 0.0;
 	
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
 	
@@ -64,7 +65,12 @@ public class InitiativeDto {
 	public void setRemainingTokens(double remainingTokens) {
 		this.remainingTokens = remainingTokens;
 	}
-	
+	public double getTotalExistingTokens() {
+		return totalExistingTokens;
+	}
+	public void setTotalExistingTokens(double totalExistingTokens) {
+		this.totalExistingTokens = totalExistingTokens;
+	}
 	
 	
 }

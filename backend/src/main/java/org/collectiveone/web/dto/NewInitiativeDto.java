@@ -8,7 +8,7 @@ public class NewInitiativeDto {
 	private String name;
 	private String driver;
 	private List<AppUserWithRoleDto> contributors;
-	private double nTokens;
+	private double tokens;
 	private String tokenName;
 	
 	
@@ -36,11 +36,11 @@ public class NewInitiativeDto {
 	public void setContributors(List<AppUserWithRoleDto> contributors) {
 		this.contributors = contributors;
 	}
-	public double getnTokens() {
-		return nTokens;
+	public double getTokens() {
+		return tokens;
 	}
-	public void setnTokens(double nTokens) {
-		this.nTokens = nTokens;
+	public void setTokens(double tokens) {
+		this.tokens = tokens;
 	}
 	public String getTokenName() {
 		return tokenName;

@@ -72,4 +72,9 @@ public class TokenService {
 		
 	}
 	
+	@Transactional
+	public double getTotalExisting(UUID tokenId) {
+		return tokenTypeRepository.totalExisting(tokenId);
+	}
+	
 }
