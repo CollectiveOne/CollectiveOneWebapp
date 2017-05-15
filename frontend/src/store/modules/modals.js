@@ -1,5 +1,6 @@
 const state = {
-  showNewInitiative: false
+  showNewInitiative: false,
+  newInitiativeParent: null
 }
 
 const getters = {
@@ -8,7 +9,11 @@ const getters = {
 const mutations = {
   showNewInitiativeModal: (state, payload) => {
     state.showNewInitiative = payload
+  },
+  setNewInitiativeParent: (state, payload) => {
+    state.newInitiativeParent = payload
   }
+
 }
 
 const actions = {

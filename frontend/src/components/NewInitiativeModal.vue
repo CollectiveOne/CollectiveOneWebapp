@@ -13,7 +13,7 @@
             <div class="w3-row">
               <div class="w3-col m9">
                 <label class="w3-text-indigo"><b>Create as Sub-Initiative of</b></label>
-                <app-initiative-selector></app-initiative-selector>
+                <app-initiative-selector :init="parentInitiative" ></app-initiative-selector>
               </div>
               <div class="w3-col m3">
                 <button type="button" class="cancel-btn w3-button w3-teal w3-round" @click="asSubinitiative = false">Remove</button>
@@ -60,7 +60,6 @@
           <br>
 
           <hr>
-
           <div class="w3-row-padding">
             <div class="w3-col m3">
               <label class="w3-text-indigo"><b>Number of Tokens</b></label>
@@ -71,7 +70,6 @@
               <input v-model="tokenName" class="w3-input w3-border w3-hover-light-gray" type="text">
             </div>
           </div>
-
           <hr>
 
           <div class="bottom-btns-row w3-row-padding">
@@ -123,7 +121,7 @@ export default {
 
     accept () {
       let intitiatveDto = {
-        parentInitiative: this.parentInitiative,
+        parentInitiative: this.asSubinitiative ? this.parentInitiative : null,
         name: this.name,
         driver: this.driver,
         contributors: this.contributors,
@@ -141,7 +139,7 @@ export default {
             this.showOutputMessage(response.data.message)
           }
         } else {
-          response.message
+          this.showOutputMessage(response.data.message)
         }
       }).catch((error) => {
         console.log(error)
@@ -149,11 +147,16 @@ export default {
     }
   },
 
-  created () {
+  mounted () {
     var loggedUser = this.$store.state.user.profile
     loggedUser.role = 'admin'
     if (loggedUser) {
       this.contributors.push(loggedUser)
+    }
+
+    if (this.$store.state.modals.newInitiativeParent) {
+      this.parentInitiative = this.$store.state.modals.newInitiativeParent
+      this.asSubinitiative = true
     }
   }
 }

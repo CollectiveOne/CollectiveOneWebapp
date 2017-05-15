@@ -20,10 +20,17 @@
 import { mapMutations } from 'vuex'
 
 export default {
+  computed: {
+    initiative () {
+      return this.$store.state.activeInitiative.initiative
+    }
+  },
+
   methods: {
-    ...mapMutations(['showNewInitiativeModal']),
+    ...mapMutations(['showNewInitiativeModal', 'setNewInitiativeParent']),
 
     newSubInitiative () {
+      this.setNewInitiativeParent(this.initiative)
       this.showNewInitiativeModal(true)
     }
   }
