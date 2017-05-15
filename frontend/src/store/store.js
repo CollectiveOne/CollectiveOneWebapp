@@ -5,6 +5,7 @@ import user from './modules/user'
 import modals from './modules/modals'
 import messages from './modules/messages'
 import userElements from './modules/userElements'
+import activeInitiative from './modules/activeInitiative'
 
 Vue.use(Vuex)
 
@@ -15,6 +16,7 @@ export const store = new Vuex.Store({
     user,
     modals,
     messages,
-    userElements
+    userElements,
+    activeInitiative
   }
 })

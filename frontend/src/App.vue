@@ -1,8 +1,6 @@
 <template>
   <div id="app" class="container-fluid">
-    <template v-if="">
-      <component :is="modal"></component>
-    </template>
+    <component :is="modal"></component>
     <component :is="view"></component>
   </div>
 </template>
