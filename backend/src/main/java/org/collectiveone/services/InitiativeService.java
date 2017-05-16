@@ -118,17 +118,19 @@ public class InitiativeService {
 		
 		InitiativeDto initiativeDto = initiative.toDto();
 		
-		double existingTokens = tokenService.getTotalExisting(initiative.getTokenType().getId());
-		initiativeDto.setTotalExistingTokens(existingTokens);
-		
-		double remainingTokens = tokenService.getHolder(initiative.getTokenType().getId(), initiative.getId()).getTokens();
-		initiativeDto.setRemainingTokens(remainingTokens);
-		
-		double tokensAssignedToInitiatives = tokenService.getTotalAssignedToOtherInitiatives(initiative.getTokenType().getId(), initiative.getId());
-		initiativeDto.setTotalAssignedToOtherInitiatives(tokensAssignedToInitiatives);
-		
-		double tokensAssignedToUsers = tokenService.getTotalAssignedToUsers(initiative.getTokenType().getId());
+		if(initiative.getTokenType() != null) {
+			double existingTokens = tokenService.getTotalExisting(initiative.getTokenType().getId());
+			initiativeDto.setTotalExistingTokens(existingTokens);
+			
+			double remainingTokens = tokenService.getHolder(initiative.getTokenType().getId(), initiative.getId()).getTokens();
+			initiativeDto.setRemainingTokens(remainingTokens);
+			
+			double tokensAssignedToInitiatives = tokenService.getTotalAssignedToOtherInitiatives(initiative.getTokenType().getId(), initiative.getId());
+			initiativeDto.setTotalAssignedToOtherInitiatives(tokensAssignedToInitiatives);
+			
+			double tokensAssignedToUsers = tokenService.getTotalAssignedToUsers(initiative.getTokenType().getId());
 		initiativeDto.setTotalAssignedToUsers(tokensAssignedToUsers);
+		}
 		
 		return initiativeDto;
 	}

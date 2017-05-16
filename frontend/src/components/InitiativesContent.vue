@@ -41,6 +41,12 @@ export default {
 
   mounted () {
     this.setActiveInitiative(this.$route.params.id)
+  },
+
+  watch: {
+    '$route' (to, from) {
+      this.setActiveInitiative(this.$route.params.id)
+    }
   }
 }
 </script>
