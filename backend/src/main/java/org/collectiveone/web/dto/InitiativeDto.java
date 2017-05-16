@@ -12,8 +12,12 @@ public class InitiativeDto {
 	private Timestamp creationDate;
 	private String creatorC1Id;
 	private String creatorNickname;
+	private String tokenId;
+	private String tokenName;
 	private double remainingTokens = 0.0;
 	private double totalExistingTokens = 0.0;
+	private double totalAssignedToOtherInitiatives = 0.0;
+	private double totalAssignedToUsers = 0.0;
 	
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
 	
@@ -59,6 +63,18 @@ public class InitiativeDto {
 	public void setSubInitiatives(List<InitiativeDto> subInitiatives) {
 		this.subInitiatives = subInitiatives;
 	}
+	public String getTokenId() {
+		return tokenId;
+	}
+	public void setTokenId(String tokenId) {
+		this.tokenId = tokenId;
+	}
+	public String getTokenName() {
+		return tokenName;
+	}
+	public void setTokenName(String tokenName) {
+		this.tokenName = tokenName;
+	}
 	public double getRemainingTokens() {
 		return remainingTokens;
 	}
@@ -71,6 +87,17 @@ public class InitiativeDto {
 	public void setTotalExistingTokens(double totalExistingTokens) {
 		this.totalExistingTokens = totalExistingTokens;
 	}
-	
+	public double getTotalAssignedToOtherInitiatives() {
+		return totalAssignedToOtherInitiatives;
+	}
+	public void setTotalAssignedToOtherInitiatives(double totalAssignedToOtherInitiatives) {
+		this.totalAssignedToOtherInitiatives = totalAssignedToOtherInitiatives;
+	}
+	public double getTotalAssignedToUsers() {
+		return totalAssignedToUsers;
+	}
+	public void setTotalAssignedToUsers(double totalAssignedToUsers) {
+		this.totalAssignedToUsers = totalAssignedToUsers;
+	}
 	
 }

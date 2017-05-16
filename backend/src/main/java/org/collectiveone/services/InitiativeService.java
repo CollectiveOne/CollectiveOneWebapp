@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.collectiveone.model.AppUser;
 import org.collectiveone.model.Initiative;
 import org.collectiveone.model.TokenType;
+import org.collectiveone.model.enums.TokenHolderType;
 import org.collectiveone.repositories.AppUserRepositoryIf;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
 import org.collectiveone.web.dto.AppUserWithRoleDto;
@@ -46,17 +47,15 @@ public class InitiativeService {
 			token = tokenService.create(initiativeDto.getTokenName(), "T");
 			initiative.setTokenType(token);
 			initiative = initiativeRepository.save(initiative);
+			tokenService.mintToHolder(token.getId(), initiative.getId(), initiativeDto.getTokens(), TokenHolderType.INITIATIVE);
+			return new PostResult("success", "initiative created and tokens created");
 			
 		} else {
-			/* TODO
 			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
 			token = parent.getTokenType();
-			*/
+			tokenService.transfer(token.getId(), parent.getId(), initiative.getId(), initiativeDto.getTokens(), TokenHolderType.INITIATIVE);
+			return new PostResult("success", "sub initiative created and tokens transferred");
 		}
-		
-		tokenService.mintToInitiative(token.getId(), initiative.getId(), initiativeDto.getTokens());
-		
-		return new PostResult("success", "initiative created and tokens assigned");
 	}
 	
 	@Transactional
@@ -90,11 +89,18 @@ public class InitiativeService {
 		Initiative initiative = initiativeRepository.findById(id); 
 		
 		InitiativeDto initiativeDto = initiative.toDto();
-		double remainingTokens = tokenService.getHolder(initiative.getTokenType().getId(), initiative.getId()).getTokens();
-		initiativeDto.setRemainingTokens(remainingTokens);
 		
 		double existingTokens = tokenService.getTotalExisting(initiative.getTokenType().getId());
 		initiativeDto.setTotalExistingTokens(existingTokens);
+		
+		double remainingTokens = tokenService.getHolder(initiative.getTokenType().getId(), initiative.getId()).getTokens();
+		initiativeDto.setRemainingTokens(remainingTokens);
+		
+		double tokensAssignedToInitiatives = tokenService.getTotalAssignedToOtherInitiatives(initiative.getTokenType().getId(), initiative.getId());
+		initiativeDto.setTotalAssignedToOtherInitiatives(tokensAssignedToInitiatives);
+		
+		double tokensAssignedToUsers = tokenService.getTotalAssignedToUsers(initiative.getTokenType().getId());
+		initiativeDto.setTotalAssignedToUsers(tokensAssignedToUsers);
 		
 		return initiativeDto;
 	}

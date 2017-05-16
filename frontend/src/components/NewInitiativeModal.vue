@@ -143,9 +143,9 @@ export default {
       name: '',
       driver: '',
       contributors: [],
-      tokens: 1000,
+      tokens: 0,
       tokenName: 'tokens',
-      percentage: 100
+      percentage: 0
     }
   },
 
@@ -179,7 +179,7 @@ export default {
 
     accept () {
       let intitiatveDto = {
-        parentInitiative: this.asSubinitiative ? this.parentInitiative : null,
+        parentInitiativeId: this.asSubinitiative ? this.parentInitiative.id : null,
         name: this.name,
         driver: this.driver,
         contributors: this.contributors,
