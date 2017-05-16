@@ -9,9 +9,12 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.model.AppUser;
 import org.collectiveone.model.Initiative;
+import org.collectiveone.model.InitiativeRelationship;
 import org.collectiveone.model.TokenType;
+import org.collectiveone.model.enums.InitiativeRelationshipType;
 import org.collectiveone.model.enums.TokenHolderType;
 import org.collectiveone.repositories.AppUserRepositoryIf;
+import org.collectiveone.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
 import org.collectiveone.web.dto.AppUserWithRoleDto;
 import org.collectiveone.web.dto.GetResult;
@@ -36,6 +39,9 @@ public class InitiativeService {
 	@Autowired
 	InitiativeRepositoryIf initiativeRepository;
 	
+	@Autowired
+	InitiativeRelationshipRepositoryIf initiativeRelationshipRepository;
+	
 	
 	public PostResult init(UUID c1Id, NewInitiativeDto initiativeDto) {
 		/* create the initiative */
@@ -52,6 +58,11 @@ public class InitiativeService {
 			
 		} else {
 			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
+			
+			/* link to parent initiative */
+			link(initiative.getId(), parent.getId(), InitiativeRelationshipType.IS_DETACHED_SUB);
+			
+			/* transfer tokens from parent to child */
 			token = parent.getTokenType();
 			tokenService.transfer(token.getId(), parent.getId(), initiative.getId(), initiativeDto.getTokens(), TokenHolderType.INITIATIVE);
 			return new PostResult("success", "sub initiative created and tokens transferred");
@@ -85,6 +96,23 @@ public class InitiativeService {
 		}
 	}
 	
+	@Transactional
+	public String link(UUID initaitiveId, UUID otherInitaitiveId, InitiativeRelationshipType type) {
+		Initiative initiative = initiativeRepository.findById(initaitiveId); 
+		Initiative otherInitaitive = initiativeRepository.findById(otherInitaitiveId); 
+		
+		InitiativeRelationship relationship = new InitiativeRelationship();
+		relationship.setInitiative(initiative);
+		relationship.setType(type);
+		relationship.setOfInitiative(otherInitaitive);
+		relationship = initiativeRelationshipRepository.save(relationship);
+		
+		initiative.getRelationships().add(relationship);
+		initiativeRepository.save(initiative);
+		
+		return "success";
+	}
+	
 	public InitiativeDto get(UUID id) {
 		Initiative initiative = initiativeRepository.findById(id); 
 		
@@ -111,15 +139,42 @@ public class InitiativeService {
 		 * sub-initiatives as sub-elements */
 		
 		AppUser user = appUserRepository.findByC1Id(userC1Id);
-		List<Initiative> initiatives = initiativeRepository.findOfContributor(user.getC1Id());
-			
+		List<Initiative> superInitiatives = initiativeRepository.findSuperInitiativesOfContributor(user.getC1Id());
+		
+		/* get all initiatives in which the user is a contributor */
 		List<InitiativeDto> initiativesDtos = new ArrayList<InitiativeDto>();
-		for (Initiative initiative : initiatives) {
-			initiativesDtos.add(initiative.toDto());
+		for (Initiative initiative : superInitiatives) {
+			InitiativeDto dto = initiative.toDto();
+			
+			/* look for the full sub-initiative tree of each super initiative */
+			List<InitiativeDto> subInitiatives = getSubinitiativesTree(initiative.getId());
+			dto.setSubInitiatives(subInitiatives);
+			
+			initiativesDtos.add(dto);
 		}
 		
 		return new GetResult<List<InitiativeDto>>("success", "initiatives retrieved", initiativesDtos);
 				
+	}
+	
+	@Transactional
+	public List<InitiativeDto> getSubinitiativesTree(UUID initiativeId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId); 
+		List<Initiative> subIniatiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_DETACHED_SUB);
+		
+		List<InitiativeDto> subinitiativeDtos = new ArrayList<InitiativeDto>();
+		
+		for (Initiative subinitiative : subIniatiatives) {
+			InitiativeDto subinitiativeDto = subinitiative.toDto();
+			
+			/* recursively call this for its own sub-initiatives */
+			List<InitiativeDto> subsubIniatiativesDto = getSubinitiativesTree(subinitiative.getId());
+			subinitiativeDto.setSubInitiatives(subsubIniatiativesDto);
+			
+			subinitiativeDtos.add(subinitiativeDto);
+		}
+		
+		return subinitiativeDtos;
 	}
 	
 	@Transactional

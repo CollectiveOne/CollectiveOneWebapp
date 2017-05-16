@@ -71,11 +71,11 @@
             <h4>Assign tokens from {{ parentInitiative.name }}</h4>
             <div class="w3-col m3">
               <label class="w3-row w3-text-indigo"><b>Total Existing Tokens</b></label>
-              <p><span class="w3-row w3-tag w3-large w3-round w3-theme">{{ parentInitiative.totalExistingTokens }}</span></p>
+              <p><span class="w3-row w3-tag w3-large w3-round w3-theme">{{ totalTokens }}</span></p>
             </div>
             <div class="w3-col m3">
               <label class="w3-row w3-text-indigo"><b>Available Tokens</b></label>
-              <p><span class="w3-row w3-tag w3-large w3-round w3-theme">{{ parentInitiative.remainingTokens }}</span></p>
+              <p><span class="w3-row w3-tag w3-large w3-round w3-theme">{{ remainingTokens }}</span></p>
             </div>
             <div class="w3-col m6">
               <label class="w3-text-indigo"><b>Assign</b></label>
@@ -128,6 +128,7 @@ import { mapMutations, mapActions } from 'vuex'
 import InitiativeSelector from '@/components/InitiativeSelector.vue'
 import UserSelector from '@/components/UserSelector.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
+import { tokensString } from '@/lib/common'
 
 export default {
   components: {
@@ -146,6 +147,15 @@ export default {
       tokens: 0,
       tokenName: 'tokens',
       percentage: 0
+    }
+  },
+
+  computed: {
+    totalTokens () {
+      return tokensString(this.parentInitiative.totalExistingTokens)
+    },
+    remainingTokens () {
+      return tokensString(this.parentInitiative.remainingTokens)
     }
   },
 

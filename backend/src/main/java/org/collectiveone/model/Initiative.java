@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -55,6 +56,9 @@ public class Initiative {
 	
 	@OneToOne
 	private TokenType tokenType;
+	
+	@OneToMany(mappedBy = "initiative")
+	private Set<InitiativeRelationship> relationships = new LinkedHashSet<InitiativeRelationship>();
 	
 	public InitiativeDto toDto() {
 		InitiativeDto dto = new InitiativeDto();
@@ -122,6 +126,13 @@ public class Initiative {
 	public void setTokenType(TokenType tokenType) {
 		this.tokenType = tokenType;
 	}
+	public Set<InitiativeRelationship> getRelationships() {
+		return relationships;
+	}
+	public void setRelationships(Set<InitiativeRelationship> relationships) {
+		this.relationships = relationships;
+	}
+	
 	
 	
 }

@@ -4,7 +4,7 @@
     <div class="w3-container w3-padding">
       <h4 class="w3-opacity">My Initiatives</h4>
       <app-initiative-menu-item v-for="initiative in initiatives" :initiative="initiative" :key="initiative.id"></app-initiative-menu-item>
-      <button type="button" class="w3-button w3-teal w3-round" @click="newInitiative()"><i class="fa fa-plus-circle"></i>  create new</button>
+      <button type="button" class="new-initiative-btn w3-button w3-teal w3-round" @click="newInitiative()"><i class="fa fa-plus-circle"></i>  create new</button>
     </div>
   </div>
 </template>
@@ -48,6 +48,10 @@ export default {
 </script>
 
 <style scoped>
+
+.new-initiative-btn {
+  margin-top: 20px;
+}
 
 .w3-display-topright {
   width: 80px;
