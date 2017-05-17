@@ -19,5 +19,5 @@ public interface TokenTypeRepositoryIf extends CrudRepository<TokenType, UUID> {
 	
 	@Query("SELECT SUM(holder.tokens) FROM TokenHolder holder WHERE (holder.tokenType.id = ?1 AND holder.holderType = ?2)" )
 	Double getTotalAssignedToHolderType(UUID tokenId, TokenHolderType type);
-	
+
 }

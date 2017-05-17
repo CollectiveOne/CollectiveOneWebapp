@@ -69,10 +69,7 @@ public class Initiative {
 		dto.setCreatorNickname(creator.getNickname());
 		dto.setCreationDate(creationDate);
 		dto.setDriver(driver);
-		if(tokenType != null) {
-			dto.setTokenId(tokenType.getId().toString());
-			dto.setTokenName(tokenType.getName());
-		}
+
 		
 		return dto;
 	}

@@ -12,12 +12,9 @@ public class InitiativeDto {
 	private Timestamp creationDate;
 	private String creatorC1Id;
 	private String creatorNickname;
-	private String tokenId;
-	private String tokenName;
-	private double remainingTokens = 0.0;
-	private double totalExistingTokens = 0.0;
-	private double totalAssignedToOtherInitiatives = 0.0;
-	private double totalAssignedToUsers = 0.0;
+	
+	private AssetsDto ownTokens;
+	private List<AssetsDto> otherAssets = new ArrayList<AssetsDto>();
 	
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
 	
@@ -63,41 +60,18 @@ public class InitiativeDto {
 	public void setSubInitiatives(List<InitiativeDto> subInitiatives) {
 		this.subInitiatives = subInitiatives;
 	}
-	public String getTokenId() {
-		return tokenId;
+	public AssetsDto getOwnTokens() {
+		return ownTokens;
 	}
-	public void setTokenId(String tokenId) {
-		this.tokenId = tokenId;
+	public void setOwnTokens(AssetsDto ownTokens) {
+		this.ownTokens = ownTokens;
 	}
-	public String getTokenName() {
-		return tokenName;
+	public List<AssetsDto> getOtherAssets() {
+		return otherAssets;
 	}
-	public void setTokenName(String tokenName) {
-		this.tokenName = tokenName;
+	public void setOtherAssets(List<AssetsDto> otherAssets) {
+		this.otherAssets = otherAssets;
 	}
-	public double getRemainingTokens() {
-		return remainingTokens;
-	}
-	public void setRemainingTokens(double remainingTokens) {
-		this.remainingTokens = remainingTokens;
-	}
-	public double getTotalExistingTokens() {
-		return totalExistingTokens;
-	}
-	public void setTotalExistingTokens(double totalExistingTokens) {
-		this.totalExistingTokens = totalExistingTokens;
-	}
-	public double getTotalAssignedToOtherInitiatives() {
-		return totalAssignedToOtherInitiatives;
-	}
-	public void setTotalAssignedToOtherInitiatives(double totalAssignedToOtherInitiatives) {
-		this.totalAssignedToOtherInitiatives = totalAssignedToOtherInitiatives;
-	}
-	public double getTotalAssignedToUsers() {
-		return totalAssignedToUsers;
-	}
-	public void setTotalAssignedToUsers(double totalAssignedToUsers) {
-		this.totalAssignedToUsers = totalAssignedToUsers;
-	}
+	
 	
 }

@@ -11,10 +11,15 @@
     <br>
     <div class="w3-card">
       <header class="w3-container w3-theme">
-        <h4>Tokens Distribution</h4>
+        <h4>Assets</h4>
       </header>
-      <div class="">
-        <app-initiative-ecosystem-tokens></app-initiative-ecosystem-tokens>
+      <div v-if="hasOwnTokens" class="w3-container">
+        <h5>asset name: <b>{{ this.initiative.ownTokens.assetName }}</b></h5>
+        <app-tokens-distribution-chart :tokenData="this.initiative.ownTokens"></app-tokens-distribution-chart>
+      </div>
+      <div v-if="hasOtherAssets" class="w3-container">
+        <h5>asset name: <b>{{ this.initiative.otherAssets[0].assetName }}</b></h5>
+        <app-tokens-distribution-chart :tokenData="this.initiative.otherAssets[0]"></app-tokens-distribution-chart>
       </div>
     </div>
     <br>
@@ -22,16 +27,31 @@
 </template>
 
 <script>
-import InitiativeEcosystemTokens from './InitiativeEcosystemTokens.vue'
+import TokensDistributionChart from './TokensDistributionChart.vue'
 
 export default {
   components: {
-    AppInitiativeEcosystemTokens: InitiativeEcosystemTokens
+    AppTokensDistributionChart: TokensDistributionChart
   },
 
   computed: {
     initiative () {
       return this.$store.state.activeInitiative.initiative
+    },
+    hasOwnTokens () {
+      if (this.initiative.ownTokens) {
+        return true
+      } else {
+        return false
+      }
+    },
+    hasOtherAssets () {
+      if (this.initiative.otherAssets) {
+        if (this.initiative.otherAssets.length > 0) {
+          return true
+        }
+      }
+      return false
     }
   }
 }

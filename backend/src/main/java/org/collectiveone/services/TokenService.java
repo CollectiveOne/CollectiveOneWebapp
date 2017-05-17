@@ -1,5 +1,6 @@
 package org.collectiveone.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -10,6 +11,7 @@ import org.collectiveone.model.enums.TokenHolderType;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
 import org.collectiveone.repositories.TokenHolderRepositoryIf;
 import org.collectiveone.repositories.TokenTypeRepositoryIf;
+import org.collectiveone.web.dto.AssetsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,7 +79,6 @@ public class TokenService {
 		
 	}
 	
-
 	@Transactional
 	public String transfer(UUID tokenId, UUID fromHolderId, UUID toHolderId, double value, TokenHolderType holderType) {
 		/* and assign a pool of its own tokens to this initiative */
@@ -102,7 +103,6 @@ public class TokenService {
 		
 	}
 
-	
 	@Transactional
 	public double getTotalExisting(UUID tokenId) {
 		Double res = tokenTypeRepository.totalExisting(tokenId);
@@ -133,7 +133,33 @@ public class TokenService {
 		}
 	}
 	
+	public List<TokenType> getTokenTypesHeldBy(UUID holderId) {
+		return tokenHolderRepository.getTokenTypesHeldBy(holderId);
+	}
 	
+	public List<TokenType> getTokenTypesHeldByOtherThan(UUID holderId, UUID tokenId) {
+		return tokenHolderRepository.getTokenTypesHeldByOtherThan(holderId, tokenId);
+	}
 	
+	@Transactional
+	public AssetsDto getTokenDto(UUID tokenTypeId, UUID initiativeId) {
+		
+		TokenType token = tokenTypeRepository.findById(tokenTypeId);
+		AssetsDto assetsDto = new AssetsDto();
+		
+		/* token info */
+		assetsDto.setAssetId(token.getId().toString());
+		assetsDto.setAssetName(token.getName());
+		
+		/* Total amount of tokens in circulation */
+		double existingTokens = getTotalExisting(token.getId());
+		assetsDto.setTotalExistingTokens(existingTokens);
+		
+		/* Amount of tokens held by the input initiative */
+		assetsDto.setOwnedByThisInitiative(getHolder(token.getId(), initiativeId).getTokens());
+		
+		return assetsDto;
+	}
+
 	
 }

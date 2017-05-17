@@ -17,6 +17,7 @@ import org.collectiveone.repositories.AppUserRepositoryIf;
 import org.collectiveone.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
 import org.collectiveone.web.dto.AppUserWithRoleDto;
+import org.collectiveone.web.dto.AssetsDto;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.collectiveone.web.dto.NewInitiativeDto;
@@ -113,26 +114,44 @@ public class InitiativeService {
 		return "success";
 	}
 	
+	@Transactional
 	public InitiativeDto get(UUID id) {
 		Initiative initiative = initiativeRepository.findById(id); 
 		
 		InitiativeDto initiativeDto = initiative.toDto();
 		
+		/* set own assets data */
 		if(initiative.getTokenType() != null) {
-			double existingTokens = tokenService.getTotalExisting(initiative.getTokenType().getId());
-			initiativeDto.setTotalExistingTokens(existingTokens);
-			
-			double remainingTokens = tokenService.getHolder(initiative.getTokenType().getId(), initiative.getId()).getTokens();
-			initiativeDto.setRemainingTokens(remainingTokens);
-			
-			double tokensAssignedToInitiatives = tokenService.getTotalAssignedToOtherInitiatives(initiative.getTokenType().getId(), initiative.getId());
-			initiativeDto.setTotalAssignedToOtherInitiatives(tokensAssignedToInitiatives);
-			
-			double tokensAssignedToUsers = tokenService.getTotalAssignedToUsers(initiative.getTokenType().getId());
-		initiativeDto.setTotalAssignedToUsers(tokensAssignedToUsers);
+			initiativeDto.setOwnTokens(getAssetsOfType(initiative.getTokenType().getId(), initiative.getId()));
+		}
+		
+		/* set other assets data */
+		List<TokenType> otherTokens = null;
+		if(initiative.getTokenType() != null) {
+			otherTokens = tokenService.getTokenTypesHeldByOtherThan(initiative.getId(), initiative.getTokenType().getId());
+		} else {
+			otherTokens = tokenService.getTokenTypesHeldBy(initiative.getId());
+		}
+		
+		for (TokenType otherToken : otherTokens) {
+			initiativeDto.getOtherAssets().add(getAssetsOfType(otherToken.getId(), initiative.getId()));
 		}
 		
 		return initiativeDto;
+	}
+	
+	@Transactional
+	public AssetsDto getAssetsOfType(UUID tokenId, UUID initiativeId) {
+		
+		/* owned by this initiative */
+		AssetsDto assetsDto = tokenService.getTokenDto(tokenId, initiativeId);
+		
+		/* owned by sub-initiatives */
+		for (Initiative subinitiative : initiativeRepository.findInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_DETACHED_SUB)) {
+			assetsDto.getOwnedBySubinitiatives().add(tokenService.getTokenDto(tokenId, subinitiative.getId()));
+		}
+		
+		return assetsDto;
 	}
 	
 	@Transactional
@@ -156,7 +175,6 @@ public class InitiativeService {
 		}
 		
 		return new GetResult<List<InitiativeDto>>("success", "initiatives retrieved", initiativesDtos);
-				
 	}
 	
 	@Transactional
