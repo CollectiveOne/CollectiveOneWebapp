@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import InitiativesNav from './InitiativesNav.vue'
+import InitiativesNav from './initiative/InitiativesNav.vue'
 
 export default {
   components: {

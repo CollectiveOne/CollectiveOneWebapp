@@ -18,7 +18,7 @@ export default {
         return {
           c1Id: 'id',
           nickname: 'nickname',
-          pictureUrl: require('../assets/male-avatar-50x50.png')
+          pictureUrl: require('../../assets/male-avatar-50x50.png')
         }
       }
     }

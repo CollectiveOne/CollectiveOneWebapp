@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import InitiativeEcosystemTokens from '@/components/InitiativeEcosystemTokens.vue'
+import InitiativeEcosystemTokens from './InitiativeEcosystemTokens.vue'
 
 export default {
   components: {

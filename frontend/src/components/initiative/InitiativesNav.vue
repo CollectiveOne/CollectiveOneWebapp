@@ -12,7 +12,7 @@
 <script>
 import { mapMutations } from 'vuex'
 
-import InitiativeMenuItem from '@/components/InitiativeMenuItem.vue'
+import InitiativeMenuItem from './InitiativeMenuItem.vue'
 
 export default {
 

@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import InitiativesView from '../components/InitiativesView.vue'
-import InitiativesContent from '../components/InitiativesContent.vue'
-import InitiativeOverview from '../components/InitiativeOverview.vue'
+import InitiativesContent from '../components/initiative/InitiativesContent.vue'
+import InitiativeOverview from '../components/initiative/InitiativeOverview.vue'
 
 Vue.use(Router)
 

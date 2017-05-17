@@ -10,7 +10,7 @@ import { mapActions } from 'vuex'
 
 import LandingView from '@/components/LandingView.vue'
 import LoggedView from '@/components/LoggedView.vue'
-import NewInitiativeModal from '@/components/NewInitiativeModal.vue'
+import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
 
 export default {
   name: 'app',

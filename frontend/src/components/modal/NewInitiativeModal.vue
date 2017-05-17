@@ -125,10 +125,10 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
-import InitiativeSelector from '@/components/InitiativeSelector.vue'
-import UserSelector from '@/components/UserSelector.vue'
-import UserAvatar from '@/components/UserAvatar.vue'
-import { tokensString } from '@/lib/common'
+import InitiativeSelector from '../initiative/InitiativeSelector.vue'
+import UserSelector from '../user/UserSelector.vue'
+import UserAvatar from '../user/UserAvatar.vue'
+import { tokensString } from '../../lib/common'
 
 export default {
   components: {
