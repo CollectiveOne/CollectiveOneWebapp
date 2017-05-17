@@ -1,18 +1,21 @@
 <template lang="html">
-  <div class="">
-    <div class="w3-bar w3-theme-d1 w3-left-align w3-large">
-      <div class="w3-bar-item">{{ ownedByThisInitiative }} {{ name }} owned by this initiative</div>
-      <div class="w3-bar-item w3-right w3-button" @click="mintMore()">add</div>
+  <div class="w3-col m12">
+    <div class="w3-row w3-theme-d3 w3-large">
+      <div class="w3-col s9 w3-padding">{{ ownedByThisInitiative }} {{ name }} available</div>
+      <div class="w3-col s3 w3-button" @click="mintMore()">add</div>
     </div>
-    <div v-if="hasSubinitiatives" class="w3-bar w3-theme-d1 w3-left-align w3-large">
-      <div class="w3-bar-item">{{ ownedBySubinitiatives }} {{ name }} owned by sub-initiatives</div>
+    <div class="w3-row w3-theme-d2 w3-large" v-if="hasSubinitiatives">
+      <div class="w3-col s12 w3-padding">{{ ownedBySubinitiativesStr }} {{ name }} transferred to sub-initiatives</div>
+      <div class="w3-col s12 w3-padding w3-theme-d1" v-for="subinitiative in subinitiatives" >
+        {{ subinitiativePortion(subinitiative) }} in {{ subinitiative.initiativeName }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { mapMutations } from 'vuex'
-import { tokensString } from '@/lib/common'
+import { tokensString, amountAndPerc } from '@/lib/common'
 
 const sumOfSubinitiatives = function (subInitiativesTokenData) {
   debugger
@@ -51,8 +54,14 @@ export default {
     hasSubinitiatives () {
       return (this.tokenData.ownedBySubinitiatives.length > 0)
     },
-    ownedBySubinitiatives () {
+    ownedBySubinitiativesVal () {
       return sumOfSubinitiatives(this.tokenData.ownedBySubinitiatives)
+    },
+    ownedBySubinitiativesStr () {
+      return tokensString(this.ownedBySubinitiativesVal)
+    },
+    subinitiatives () {
+      return this.tokenData.ownedBySubinitiatives
     }
   },
 
@@ -62,6 +71,10 @@ export default {
     newSubInitiative () {
       this.setNewInitiativeParent(this.initiative)
       this.showNewInitiativeModal(true)
+    },
+
+    subinitiativePortion (thisSubinitiative) {
+      return amountAndPerc(thisSubinitiative.ownedByThisInitiative, this.ownedBySubinitiativesVal)
     }
   }
 }

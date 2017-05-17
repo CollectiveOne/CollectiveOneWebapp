@@ -14,11 +14,11 @@
         <h4>Assets</h4>
       </header>
       <div v-if="hasOwnTokens" class="w3-container">
-        <h5>asset name: <b>{{ this.initiative.ownTokens.assetName }}</b></h5>
+        <h5><b>{{ this.initiative.ownTokens.assetName }}</b></h5>
         <app-tokens-distribution-chart :tokenData="this.initiative.ownTokens"></app-tokens-distribution-chart>
       </div>
       <div v-if="hasOtherAssets" class="w3-container">
-        <h5>asset name: <b>{{ this.initiative.otherAssets[0].assetName }}</b></h5>
+        <h5><b>{{ this.initiative.otherAssets[0].assetName }}</b></h5>
         <app-tokens-distribution-chart :tokenData="this.initiative.otherAssets[0]"></app-tokens-distribution-chart>
       </div>
     </div>

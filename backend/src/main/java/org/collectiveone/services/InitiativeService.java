@@ -117,7 +117,6 @@ public class InitiativeService {
 	@Transactional
 	public InitiativeDto get(UUID id) {
 		Initiative initiative = initiativeRepository.findById(id); 
-		
 		InitiativeDto initiativeDto = initiative.toDto();
 		
 		/* set own assets data */
@@ -143,12 +142,20 @@ public class InitiativeService {
 	@Transactional
 	public AssetsDto getAssetsOfType(UUID tokenId, UUID initiativeId) {
 		
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		
 		/* owned by this initiative */
 		AssetsDto assetsDto = tokenService.getTokenDto(tokenId, initiativeId);
+		assetsDto.setInitiativeId(initiative.getId().toString());
+		assetsDto.setInitiativeName(initiative.getName());
 		
 		/* owned by sub-initiatives */
 		for (Initiative subinitiative : initiativeRepository.findInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_DETACHED_SUB)) {
-			assetsDto.getOwnedBySubinitiatives().add(tokenService.getTokenDto(tokenId, subinitiative.getId()));
+			AssetsDto subInitiativeAssetsDto = tokenService.getTokenDto(tokenId, subinitiative.getId());
+			subInitiativeAssetsDto.setInitiativeId(subinitiative.getId().toString());
+			subInitiativeAssetsDto.setInitiativeName(subinitiative.getName());
+			
+			assetsDto.getOwnedBySubinitiatives().add(subInitiativeAssetsDto);
 		}
 		
 		return assetsDto;
