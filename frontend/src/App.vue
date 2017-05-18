@@ -1,6 +1,5 @@
 <template>
   <div id="app" class="container-fluid">
-    <component :is="modal"></component>
     <component :is="view"></component>
   </div>
 </template>
@@ -25,12 +24,6 @@ export default {
         return 'app-logged-view'
       } else {
         return 'app-landing-view'
-      }
-    },
-
-    modal () {
-      if (this.$store.state.modals.showNewInitiative) {
-        return 'app-new-initiative-modal'
       }
     }
   },

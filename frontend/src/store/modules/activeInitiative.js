@@ -23,7 +23,11 @@ const actions = {
     context.dispatch('updateActiveInitiative')
   },
   updateActiveInitiative: (context) => {
-    Vue.axios.get('/1/secured/initiative/' + context.state.id).then((response) => {
+    Vue.axios.get('/1/secured/initiative/' + context.state.id, {
+      params: {
+        full: true
+      }
+    }).then((response) => {
       context.commit('setInitiative', response.data.data)
     }).catch((error) => {
       console.log(error)

@@ -115,6 +115,11 @@ public class InitiativeService {
 	}
 	
 	@Transactional
+	public InitiativeDto getLight(UUID id) {
+		return  initiativeRepository.findById(id).toDto();
+	}
+	
+	@Transactional
 	public InitiativeDto get(UUID id) {
 		Initiative initiative = initiativeRepository.findById(id); 
 		InitiativeDto initiativeDto = initiative.toDto();

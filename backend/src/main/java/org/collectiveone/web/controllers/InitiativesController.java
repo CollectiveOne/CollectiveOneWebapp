@@ -37,8 +37,12 @@ public class InitiativesController {
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{id}", method = RequestMethod.GET)
-	public GetResult<InitiativeDto> getInitiative(@PathVariable("id") String id) {
-		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeService.get(UUID.fromString(id)));
+	public GetResult<InitiativeDto> getInitiative(
+			@PathVariable("id") String id, 
+			@RequestParam(name = "full", defaultValue = "false") boolean full) {
+		
+		InitiativeDto initiativeDto = full ? initiativeService.get(UUID.fromString(id)) : initiativeService.getLight(UUID.fromString(id));
+		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeDto);
 	}
 	
 	@RequestMapping(path = "/secured/initiatives/mines", method = RequestMethod.GET)

@@ -5,20 +5,26 @@
       <div class="w3-col s3 w3-button" @click="mintMore()">add</div>
     </div>
     <div class="w3-row w3-theme-d2 w3-large" v-if="hasSubinitiatives">
-      <div class="w3-col s12 w3-padding">{{ ownedBySubinitiativesStr }} {{ name }} transferred to sub-initiatives</div>
-      <div class="w3-col s12 w3-padding w3-theme-d1" v-for="subinitiative in subinitiatives" >
-        {{ subinitiativePortion(subinitiative) }} in {{ subinitiative.initiativeName }}
+      <div class="w3-col s12">
+        <div class="w3-row">
+            <div class="w3-col s9 w3-padding">{{ ownedBySubinitiativesStr }} {{ name }} transferred to sub-initiatives</div>
+            <div class="w3-col s3 w3-button" @click="newSubInitiative()">new</div>
+        </div>
+
+        <div class="w3-col s12 w3-padding w3-theme-d1" v-for="subinitiative in subinitiatives" >
+          {{ subinitiativePortion(subinitiative) }} in {{ subinitiative.initiativeName }}
+        </div>
       </div>
+
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 import { tokensString, amountAndPerc } from '@/lib/common'
 
 const sumOfSubinitiatives = function (subInitiativesTokenData) {
-  debugger
   var tot = 0.0
   for (var ix in subInitiativesTokenData) {
     tot += subInitiativesTokenData[ix].ownedByThisInitiative + sumOfSubinitiatives(subInitiativesTokenData[ix].ownedBySubinitiatives)
@@ -66,10 +72,11 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['showNewInitiativeModal', 'setNewInitiativeParent']),
+    ...mapMutations(['showNewInitiativeModal']),
+    ...mapActions(['getNewInitiativeParent']),
 
     newSubInitiative () {
-      this.setNewInitiativeParent(this.initiative)
+      this.getNewInitiativeParent(this.tokenData.initiativeId)
       this.showNewInitiativeModal(true)
     },
 

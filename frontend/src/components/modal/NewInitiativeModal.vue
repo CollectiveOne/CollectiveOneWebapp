@@ -12,7 +12,6 @@
         </div>
 
         <form class="w3-container">
-
           <div v-if="asSubinitiative">
             <div class="w3-row">
               <div class="w3-col m9">
@@ -212,11 +211,6 @@ export default {
     loggedUser.role = 'admin'
     if (loggedUser) {
       this.contributors.push(loggedUser)
-    }
-
-    if (this.$store.state.modals.newInitiativeParent) {
-      this.parentInitiative = this.$store.state.modals.newInitiativeParent
-      this.asSubinitiative = true
     }
   }
 }
