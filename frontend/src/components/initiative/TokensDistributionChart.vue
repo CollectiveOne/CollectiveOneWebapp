@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex'
 import { tokensString, amountAndPerc } from '@/lib/common'
 
 const sumOfSubinitiatives = function (subInitiativesTokenData) {
@@ -72,12 +71,8 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['showNewInitiativeModal']),
-    ...mapActions(['getNewInitiativeParent']),
-
     newSubInitiative () {
-      this.getNewInitiativeParent(this.tokenData.initiativeId)
-      this.showNewInitiativeModal(true)
+      this.$emit('new-subinitiative', this.tokenData.initiativeId)
     },
 
     subinitiativePortion (thisSubinitiative) {

@@ -36,12 +36,27 @@ public class InitiativesController {
 		return initiativeService.init(getLoggedUser().getC1Id(), initiativeDto);
 	}
 	
+	/* level: 0, light, 1 ownAssets, 2 ownAssets and subinitiatives assets*/
 	@RequestMapping(path = "/secured/initiative/{id}", method = RequestMethod.GET)
 	public GetResult<InitiativeDto> getInitiative(
 			@PathVariable("id") String id, 
-			@RequestParam(name = "full", defaultValue = "false") boolean full) {
+			@RequestParam(defaultValue = "light") String level) {
 		
-		InitiativeDto initiativeDto = full ? initiativeService.get(UUID.fromString(id)) : initiativeService.getLight(UUID.fromString(id));
+		InitiativeDto initiativeDto = null;
+		switch (level) {
+		case "light": 
+			initiativeDto = initiativeService.getLight(UUID.fromString(id));
+			break;
+		
+		case "withAssets": 
+			initiativeDto = initiativeService.getWithOwnAssets(UUID.fromString(id));
+			break;
+			
+		case "withSubinitiativesAssets": 
+			initiativeDto = initiativeService.getWithSubInitiativesAssets(UUID.fromString(id));
+			break;
+		}
+		
 		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeDto);
 	}
 	

@@ -3,30 +3,56 @@
     <div class="w3-modal-content">
       <div class="w3-card-4">
 
-        <div class="close-div w3-display-topright w3-xlarge" @click="cancel()">
+        <div class="close-div w3-display-topright w3-xlarge" @click="closeThis()">
           <i class="fa fa-times" aria-hidden="true"></i>
         </div>
 
         <div class="w3-container w3-theme">
-          <h2>New Initiative</h2>
+          <div v-if="asSubinitiative">
+            <h2>New Subinitiative of {{ parentInitiative.name }}</h2>
+          </div>
+          <div v-else>
+            <h2>New Initiative</h2>
+          </div>
         </div>
 
         <form class="w3-container">
           <div v-if="asSubinitiative">
+            <!-- If as subinitiative, select the initiative and the amount of tokens or other assets
+                 to be take from it -->
             <div class="w3-row">
               <div class="w3-col m9">
                 <label class="w3-text-indigo"><b>Create as Sub-Initiative of</b></label>
                 <app-initiative-selector
                   anchor="id" label="name" :init="parentInitiative"
                   url="/1/secured/initiatives/search"
-                  @select="parentInitiativeSelected($event)"></app-initiative-selector>
+                  @select="parentInitiativeSelected($event)">
+                </app-initiative-selector>
               </div>
               <div class="w3-col m3">
                 <button type="button" class="cancel-btn w3-button w3-teal w3-round" @click="asSubinitiative = false">Remove</button>
               </div>
             </div>
+            <div class="w3-row">
+              <app-assets-assigner :assetsData="parentInitiative.ownTokens"></app-assets-assigner>
+            </div>
           </div>
-          <button v-else type="button" class="new-parent-btn w3-button w3-teal w3-round" @click="asSubinitiative = true">Set Parent (optional)</button>
+          <div v-else class="">
+            <div class="w3-row">
+              <button type="button" class="new-parent-btn w3-button w3-teal w3-round" @click="asSubinitiative = true">Set Parent (optional)</button>
+            </div>
+            <div class="w3-row">
+              <h4>Create a new token</h4>
+              <div class="w3-col m3">
+                <label class="w3-text-indigo"><b>Number of Tokens</b></label>
+                <input v-model="tokens" class="w3-input w3-border w3-hover-light-gray" type="number">
+              </div>
+              <div class="w3-col m4">
+                <label class="w3-text-indigo"><b>Token Name</b></label>
+                <input v-model="tokenName" class="w3-input w3-border w3-hover-light-gray" type="text">
+              </div>
+            </div>
+          </div>
           <br>
 
           <label class="w3-text-indigo"><b>Name</b></label>
@@ -66,51 +92,10 @@
           <br>
 
           <hr>
-          <div v-if="asSubinitiative" class="tokens-div w3-row-padding">
-            <h4>Assign tokens from {{ parentInitiative.name }}</h4>
-            <div class="w3-col m3">
-              <label class="w3-row w3-text-indigo"><b>Total Existing Tokens</b></label>
-              <p><span class="w3-row w3-tag w3-large w3-round w3-theme">{{ totalTokens }}</span></p>
-            </div>
-            <div class="w3-col m3">
-              <label class="w3-row w3-text-indigo"><b>Available Tokens</b></label>
-              <p><span class="w3-row w3-tag w3-large w3-round w3-theme">{{ remainingTokens }}</span></p>
-            </div>
-            <div class="w3-col m6">
-              <label class="w3-text-indigo"><b>Assign</b></label>
-              <div class="w3-row-padding tokens-selector">
-                <div class="w3-col m6">
-                  <input v-model.number="tokens" class="w3-input w3-border w3-hover-light-gray" type="number">
-                </div>
-                <div class="w3-col m6">
-                  <div class="w3-row">
-                    <div class="w3-col s10">
-                      <input v-model.number="percentage" class="w3-input w3-border w3-hover-light-gray" type="text">
-                    </div>
-                    <div class="w3-col s2">
-                      <i class="fa fa-percent" aria-hidden="true"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-else class="w3-row-padding">
-            <h4>Create a new token</h4>
-            <div class="w3-col m3">
-              <label class="w3-text-indigo"><b>Number of Tokens</b></label>
-              <input v-model="tokens" class="w3-input w3-border w3-hover-light-gray" type="number">
-            </div>
-            <div class="w3-col m4">
-              <label class="w3-text-indigo"><b>Token Name</b></label>
-              <input v-model="tokenName" class="w3-input w3-border w3-hover-light-gray" type="text">
-            </div>
-          </div>
-          <hr>
 
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-light-gray w3-round" @click="cancel()">Cancel</button>
+              <button type="button" class="w3-button w3-light-gray w3-round" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
               <button type="button" class="w3-button w3-teal w3-round" @click="accept()">Accept</button>
@@ -123,13 +108,21 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import InitiativeSelector from '../initiative/InitiativeSelector.vue'
+import AssetsAssigner from '../initiative/AssetsAssigner.vue'
 import UserSelector from '../user/UserSelector.vue'
 import UserAvatar from '../user/UserAvatar.vue'
 import { tokensString } from '../../lib/common'
 
 export default {
+  props: {
+    parentInitId: {
+      type: String,
+      default: ''
+    }
+  },
+
   components: {
     AppInitiativeSelector: InitiativeSelector,
     AppUserSelector: UserSelector,
@@ -149,15 +142,6 @@ export default {
     }
   },
 
-  computed: {
-    totalTokens () {
-      return tokensString(this.parentInitiative.totalExistingTokens)
-    },
-    remainingTokens () {
-      return tokensString(this.parentInitiative.remainingTokens)
-    }
-  },
-
   watch: {
     tokens () {
       let perc = this.tokens / this.parentInitiative.totalExistingTokens * 100
@@ -170,7 +154,6 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['showNewInitiativeModal']),
     ...mapActions(['showOutputMessage', 'updateUserInitiatives']),
 
     parentInitiativeSelected (initiative) {
@@ -182,8 +165,8 @@ export default {
       })
     },
 
-    cancel () {
-      this.showNewInitiativeModal(false)
+    closeThis () {
+      this.$emit('close-this')
     },
 
     accept () {
@@ -199,7 +182,7 @@ export default {
       this.axios.post('/1/secured/initiative', intitiatveDto).then((response) => {
         this.showOutputMessage(response.data.message)
         this.updateUserInitiatives()
-        this.showNewInitiativeModal(false)
+        this.closeThis()
       }).catch((error) => {
         console.log(error)
       })
@@ -211,6 +194,17 @@ export default {
     loggedUser.role = 'admin'
     if (loggedUser) {
       this.contributors.push(loggedUser)
+    }
+
+    if (this.parentInitId !== '') {
+      this.axios.get('/1/secured/initiative/' + this.parentInitId, {
+        params: {
+          level: 'withAssets'
+        }
+      }).then((response) => {
+        this.parentInitiative = response.data.data
+        this.asSubinitiative = true
+      })
     }
   }
 }

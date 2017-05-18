@@ -25,7 +25,7 @@ const actions = {
   updateActiveInitiative: (context) => {
     Vue.axios.get('/1/secured/initiative/' + context.state.id, {
       params: {
-        full: true
+        level: 'withSubinitiativesAssets'
       }
     }).then((response) => {
       context.commit('setInitiative', response.data.data)

@@ -1,6 +1,6 @@
 <template lang="html">
   <div v-if="initiative" class="this-container w3-container w3-padding">
-    <app-new-initiative-modal v-if="showNewInitiativeModal" :parent=""></app-new-initiative-modal>
+    <app-new-initiative-modal v-if="showNewInitiativeModal" :parentInitId="parentInitiativeIdForModal" @close-this="showNewInitiativeModal = false"></app-new-initiative-modal>
     <div class="w3-card">
       <header class="w3-container w3-theme">
         <h4>Driver</h4>
@@ -16,7 +16,7 @@
       </header>
       <div v-if="hasOwnTokens" class="w3-container">
         <h5><b>{{ this.initiative.ownTokens.assetName }}</b></h5>
-        <app-tokens-distribution-chart :tokenData="this.initiative.ownTokens"></app-tokens-distribution-chart>
+        <app-tokens-distribution-chart :tokenData="this.initiative.ownTokens" @new-subinitiative="newSubInitiativeClicked($event)"></app-tokens-distribution-chart>
       </div>
       <div v-if="hasOtherAssets" class="w3-container">
         <h5><b>{{ this.initiative.otherAssets[0].assetName }}</b></h5>
@@ -40,7 +40,7 @@ export default {
   data () {
     return {
       showNewInitiativeModal: false,
-      parentInitiativeForModal: null
+      parentInitiativeIdForModal: null
     }
   },
 
@@ -62,6 +62,13 @@ export default {
         }
       }
       return false
+    }
+  },
+
+  methods: {
+    newSubInitiativeClicked (initiativeId) {
+      this.parentInitiativeIdForModal = initiativeId
+      this.showNewInitiativeModal = true
     }
   }
 }

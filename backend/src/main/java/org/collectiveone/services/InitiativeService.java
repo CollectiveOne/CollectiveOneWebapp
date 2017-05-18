@@ -120,14 +120,22 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	public InitiativeDto get(UUID id) {
+	public InitiativeDto getWithOwnAssets(UUID id) {
 		Initiative initiative = initiativeRepository.findById(id); 
-		InitiativeDto initiativeDto = initiative.toDto();
+		InitiativeDto initiativeDto = getLight(initiative.getId());
 		
 		/* set own assets data */
 		if(initiative.getTokenType() != null) {
 			initiativeDto.setOwnTokens(getAssetsOfType(initiative.getTokenType().getId(), initiative.getId()));
 		}
+		
+		return initiativeDto;
+	}
+	
+	@Transactional
+	public InitiativeDto getWithSubInitiativesAssets(UUID id) {
+		Initiative initiative = initiativeRepository.findById(id); 
+		InitiativeDto initiativeDto = getWithOwnAssets(initiative.getId());
 		
 		/* set other assets data */
 		List<TokenType> otherTokens = null;
