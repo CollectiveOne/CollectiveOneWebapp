@@ -14,7 +14,7 @@ export default new Router({
       name: 'Initiatives',
       component: InitiativesView,
       children: [
-        { path: ':id',
+        { path: ':initiativeId',
           name: 'Initiative',
           component: InitiativesContent,
           children: [

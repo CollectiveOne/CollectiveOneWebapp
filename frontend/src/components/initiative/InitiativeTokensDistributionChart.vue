@@ -23,27 +23,40 @@
 <script>
 import { tokensString, amountAndPerc } from '@/lib/common'
 
-const sumOfSubinitiatives = function (subInitiativesTokenData) {
+const sumOfSubinitiatives = function (subInitiatives, tokenId) {
   var tot = 0.0
-  for (var ix in subInitiativesTokenData) {
-    tot += subInitiativesTokenData[ix].ownedByThisInitiative + sumOfSubinitiatives(subInitiativesTokenData[ix].ownedBySubinitiatives)
+
+  for (var ixSub in subInitiatives) {
+    /* Look on the assets held by the subinitiatives and sum those that
+    corresponds to the this initiative tokens */
+    var thisSub = subInitiatives[ixSub]
+    var heldByThis = 0.0
+    for (var ixAsset in this.otherAssets) {
+      var thisAsset = this.otherAssets[ixAsset]
+      if (thisAsset.id === tokenId) {
+        heldByThis = thisAsset.tokens
+      }
+    }
+
+    tot += heldByThis + sumOfSubinitiatives(thisSub.subInitiatives, tokenId)
   }
   return tot
 }
 
 export default {
   props: {
-    tokenData: {
+    initiativeData: {
       type: Object,
       default: () => {
         return {
-          assetId: '',
-          assetName: 'token',
-          totalExistingTokens: 1.0,
-          initiativeId: '',
-          initiativeName: 'Initiative Name',
-          ownedByThisInitiative: 0.0,
-          ownedBySubinitiatives: []
+          id: '',
+          name: 'Initiative Name',
+          ownTokens: {
+            assetId: '',
+            assetName: 'tokens',
+            ownedByThisHolder: 0.0
+          },
+          subInitiatives: []
         }
       }
     }
@@ -54,25 +67,25 @@ export default {
       return this.tokenData.name
     },
     ownedByThisInitiative () {
-      return tokensString(this.tokenData.ownedByThisInitiative)
+      return tokensString(this.initiativeData.ownTokens.ownedByThisHolder)
     },
     hasSubinitiatives () {
-      return (this.tokenData.ownedBySubinitiatives.length > 0)
+      return (this.initiativeData.subInitiatives.length > 0)
     },
     ownedBySubinitiativesVal () {
-      return sumOfSubinitiatives(this.tokenData.ownedBySubinitiatives)
+      return sumOfSubinitiatives(this.initiativeData.subInitiatives)
     },
     ownedBySubinitiativesStr () {
       return tokensString(this.ownedBySubinitiativesVal)
     },
     subinitiatives () {
-      return this.tokenData.ownedBySubinitiatives
+      return this.initiativeData.subinitiatives
     }
   },
 
   methods: {
     newSubInitiative () {
-      this.$emit('new-subinitiative', this.tokenData.initiativeId)
+      this.$emit('new-subinitiative', this.initiativeData.id)
     },
 
     subinitiativePortion (thisSubinitiative) {

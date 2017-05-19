@@ -2,7 +2,7 @@
   <div v-if="initiative" class="w3-row">
     <div class="w3-white">
       <header class="w3-container w3-theme">
-        <h3>{{ initiativePath }}</h3>
+        <h3>{{ initiative.name }}</h3>
       </header>
 
       <div class=" w3-row">
@@ -11,42 +11,38 @@
         <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Activity</div>
       </div>
       <div class="w3-row">
-        <router-view></router-view>
+        <router-view :initiative="initiative"></router-view>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-
 export default {
-  computed: {
-    initiative () {
-      return this.$store.state.activeInitiative.initiative
-    },
 
-    initiativePath () {
-      var subInitiativesTitle = ''
-      for (var subInitiative in this.initiative.subInitiatives) {
-        subInitiativesTitle = subInitiativesTitle + ' - ' + subInitiative.name
-      }
-      return this.initiative.name + subInitiativesTitle
+  data () {
+    return {
+      initiative: null
     }
   },
 
   methods: {
-    ...mapActions(['setActiveInitiative'])
+    updateInitiative (id) {
+      this.axios.get('/1/secured/initiative/' + id, {
+        params: {
+          addAssets: true,
+          addSubinitiatives: true
+        }
+      }).then((response) => {
+        this.initiative = response.data.data
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
   },
 
   mounted () {
-    this.setActiveInitiative(this.$route.params.id)
-  },
-
-  watch: {
-    '$route' (to, from) {
-      this.setActiveInitiative(this.$route.params.id)
-    }
+    this.updateInitiative(this.$route.params.initiativeId)
   }
 }
 </script>

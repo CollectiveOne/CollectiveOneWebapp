@@ -291,6 +291,12 @@
 
 <style scoped>
 
+.autocomplete-wrapper input {
+  font-size: 18px;
+  padding-top: 10.3px;
+  padding-bottom: 0px;
+}
+
 .transition, .autocomplete, .showAll-transition, .autocomplete ul, .autocomplete ul li a{
   transition:all 0.3s ease-out;
   -moz-transition:all 0.3s ease-out;

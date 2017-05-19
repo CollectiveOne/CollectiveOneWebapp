@@ -17,43 +17,6 @@
         </div>
 
         <form class="w3-container">
-          <div v-if="asSubinitiative">
-            <!-- If as subinitiative, select the initiative and the amount of tokens or other assets
-                 to be take from it -->
-            <div class="w3-row sub-initiative-first-row">
-              <div class="w3-col m12">
-                <h4 class="w3-text-indigo">Create as subinitiative or
-                  <button type="button" class="inline-btn w3-button w3-teal w3-round" @click="asSubinitiative = false">create new token</button>
-                </h4>
-                <app-initiative-selector class="initiative-selector"
-                  anchor="id" label="name" :init="parentInitiative"
-                  url="/1/secured/initiatives/search"
-                  @select="parentInitiativeSelected($event)">
-                </app-initiative-selector>
-              </div>
-            </div>
-            <div class="w3-row assigner-div">
-              <app-assets-assigner :assetsData="parentInitiative.ownTokens"></app-assets-assigner>
-            </div>
-          </div>
-          <div v-else class="">
-            <div class="w3-row">
-              <h4 class="w3-text-indigo">Create a new token or
-                <button type="button" class="inline-btn w3-button w3-teal w3-round" @click="asSubinitiative = true">set parent</button>
-              </h4>
-            </div>
-            <div class="w3-row-padding new-token-inputs">
-              <div class="w3-col m4">
-                <label class="w3-text-indigo"><b>Number of Tokens</b></label>
-                <input v-model="tokens" class="w3-input w3-border w3-hover-light-gray" type="number">
-              </div>
-              <div class="w3-col m4"  :style="{'margin-bottom': '15px'}">
-                <label class="w3-text-indigo"><b>Token Name</b></label>
-                <input v-model="tokenName" class="w3-input w3-border w3-hover-light-gray" type="text">
-              </div>
-            </div>
-          </div>
-          <br>
 
           <label class="w3-text-indigo"><b>Initiative Name</b></label>
           <input v-model="name" class="w3-input w3-hover-light-gray" type="text">
@@ -61,7 +24,39 @@
 
           <label class="w3-text-indigo"><b>Initiative Driver</b></label>
           <textarea v-model="driver" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
-          <br>
+
+          <hr>
+
+          <div class="token-type-tabs w3-row">
+            <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
+              :class="{'w3-border-blue': asSubinitiative}"
+              @click="asSubinitiative = true">
+              <h5 class="w3-text-indigo" :class="{'bold-text': asSubinitiative}">Create as subinitiative</h5>
+            </div>
+            <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
+              :class="{'w3-border-blue': !asSubinitiative}"
+              @click="asSubinitiative = false">
+              <h5 class="w3-text-indigo" :class="{'bold-text': !asSubinitiative}">Create as independent</h5>
+            </div>
+          </div>
+          <div class="w3-container assets-selector-div">
+            <keep-alive>
+              <app-subinitiative-of v-if="asSubinitiative" :parentInitiative="parentInitiative"
+                @selected="parentAssetsSelected($event)" @parent-initiative-updated="parentInitiativeUpdated($event)"
+                ></app-subinitiative-of>
+            </keep-alive>
+            <keep-alive>
+              <app-new-token v-if="!asSubinitiative" @updated="ownTokensSelected($event)"></app-new-token>
+            </keep-alive>
+          </div>
+
+          <div v-if="assetsSelected" class="w3-container">
+            <hr>
+            <label class="init-contr-label w3-text-indigo"><b>Summary</b></label>
+            <p v-if="asSubinitiative">This initiative will receive <span v-for="asset in otherAssets"><b>{{ tokensString(asset.tokens) }} {{ asset.name }}</b> from {{ parentInitiative.name }}</span></p>
+            <p v-else>A token named <b>{{ ownTokens.tokenName }}</b> will be created and this initiative will have <b>{{ tokensString(ownTokens.tokens) }} units</b></p>
+          </div>
+          <hr>
 
           <label class="init-contr-label w3-text-indigo"><b>Initial Contributors</b></label>
           <div class="w3-border w3-round w3-padding contributors-container">
@@ -69,11 +64,15 @@
               <div class="w3-col m7">
                 <app-user-avatar :userData="contributor"></app-user-avatar>
               </div>
-              <div class="w3-col m2">
-                <p><span class="w3-tag w3-large w3-round w3-theme">{{ contributor.role }}</span></p>
-              </div>
-              <div class="w3-col m3">
-                <button type="button" class="remove-btn w3-button w3-teal w3-round" @click="removeContributor(contributor)">Remove</button>
+              <div class="w3-col m5">
+                <div class="w3-row-padding">
+                  <div class="w3-col s8">
+                    <p><span class="w3-tag w3-large w3-round w3-theme">{{ contributor.role }}</span></p>
+                  </div>
+                  <div class="w3-col s4 w3-xxlarge w3-button">
+                    <div @click="removeContributor(contributor)"><i class="fa fa-times-circle-o" aria-hidden="true"></i></div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -89,8 +88,6 @@
               </div>
             </div>
           </div>
-          <br>
-
           <hr>
 
           <div class="bottom-btns-row w3-row-padding">
@@ -109,10 +106,14 @@
 
 <script>
 import { mapActions } from 'vuex'
-import InitiativeSelector from '../initiative/InitiativeSelector.vue'
-import AssetsAssigner from '../initiative/AssetsAssigner.vue'
 import UserSelector from '../user/UserSelector.vue'
 import UserAvatar from '../user/UserAvatar.vue'
+import SubinitiativeOf from './SubinitiativeOf.vue'
+import NewToken from './NewToken.vue'
+
+/* eslint-disable no-unused-vars */
+import { tokensString } from '../../lib/common'
+/* eslint-enable no-unused-vars */
 
 export default {
   props: {
@@ -123,10 +124,10 @@ export default {
   },
 
   components: {
-    AppInitiativeSelector: InitiativeSelector,
     AppUserSelector: UserSelector,
     AppUserAvatar: UserAvatar,
-    AppAssetsAssigner: AssetsAssigner
+    AppSubinitiativeOf: SubinitiativeOf,
+    AppNewToken: NewToken
   },
 
   data () {
@@ -136,22 +137,51 @@ export default {
       name: '',
       driver: '',
       contributors: [],
-      tokens: 0,
-      tokenName: 'tokens',
-      percentage: 0
+      ownTokens: {
+        tokens: 0,
+        tokenName: 'token'
+      },
+      otherAssets: {
+        assetsDto: []
+      }
+    }
+  },
+
+  computed: {
+    assetsSelected () {
+      if (this.asSubinitiative) {
+        if (this.otherAssets) {
+          if (this.otherAssets.length > 0) {
+            return true
+          }
+        }
+      } else {
+        if (this.ownTokens.tokens > 0) {
+          return true
+        }
+      }
+
+      return false
     }
   },
 
   methods: {
-    ...mapActions(['showOutputMessage', 'updateUserInitiatives']),
+    ...mapActions(['showOutputMessage']),
 
-    parentInitiativeSelected (initiative) {
+    tokensString (v) {
+      return tokensString(v)
+    },
+
+    parentAssetsSelected (assets) {
+      this.otherAssets = assets
+    },
+
+    ownTokensSelected (tokensData) {
+      this.ownTokens = tokensData
+    },
+
+    parentInitiativeUpdated (initiative) {
       this.parentInitiative = initiative
-      this.asSubinitiative = true
-
-      this.axios.get('/1/secured/initiative/tokens').then((response) => {
-        this.parentInitiativeTokensData = response.data.data
-      })
     },
 
     closeThis () {
@@ -170,7 +200,6 @@ export default {
 
       this.axios.post('/1/secured/initiative', intitiatveDto).then((response) => {
         this.showOutputMessage(response.data.message)
-        this.updateUserInitiatives()
         this.closeThis()
       }).catch((error) => {
         console.log(error)
@@ -219,32 +248,19 @@ form {
   padding-bottom: 35px;
 }
 
-.inline-btn {
-  height: 30px;
-  padding: 0px 20px 0px 20px;
-}
-
-.initiative-selector {
-  font-size: 20px;
-}
-
-.new-token-inputs {
-  margin-top: 10px;
+.token-type-tabs {
   text-align: center;
+  user-select: none;
+  cursor: pointer;
 }
 
-.new-token-inputs input {
-  max-width: 150px;
-  margin: 0 auto;
+.bold-text {
+  font-weight: bold;
 }
 
-.sub-initiative-first-row {
-  margin-bottom: 15px;
-}
-
-.sub-initiative-right-col {
-  text-align: center;
-  padding-top: 15px;
+.assets-selector-div {
+  padding-top: 10px;
+  padding-bottom: 0px;
 }
 
 .contributors-container {
@@ -254,6 +270,10 @@ form {
 
 .new-contr-row {
   margin-top: 20px;
+}
+
+.fa-times-circle-o {
+  color: #607d8b;
 }
 
 .add-btn {

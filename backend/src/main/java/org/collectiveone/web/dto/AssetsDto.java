@@ -7,11 +7,12 @@ public class AssetsDto {
 	private String assetId;
 	private String assetName;
 	private double totalExistingTokens;
-	private String initiativeId;
-	private String initiativeName;
-	private double ownedByThisInitiative;
+	private String holderId;
+	private String holderName;
+	private double ownedByThisHolder;
+
 	private List<AssetsDto> ownedBySubinitiatives = new ArrayList<AssetsDto>();
-	
+
 	public String getAssetId() {
 		return assetId;
 	}
@@ -30,23 +31,23 @@ public class AssetsDto {
 	public void setTotalExistingTokens(double totalExistingTokens) {
 		this.totalExistingTokens = totalExistingTokens;
 	}
-	public String getInitiativeId() {
-		return initiativeId;
+	public String getHolderId() {
+		return holderId;
 	}
-	public void setInitiativeId(String initiativeId) {
-		this.initiativeId = initiativeId;
+	public void setHolderId(String initiativeId) {
+		this.holderId = initiativeId;
 	}
-	public String getInitiativeName() {
-		return initiativeName;
+	public String getHolderName() {
+		return holderName;
 	}
-	public void setInitiativeName(String initiativeName) {
-		this.initiativeName = initiativeName;
+	public void setHolderName(String initiativeName) {
+		this.holderName = initiativeName;
 	}
-	public double getOwnedByThisInitiative() {
-		return ownedByThisInitiative;
+	public double getOwnedByThisHolder() {
+		return ownedByThisHolder;
 	}
-	public void setOwnedByThisInitiative(double ownedByThisInitiative) {
-		this.ownedByThisInitiative = ownedByThisInitiative;
+	public void setOwnedByThisHolder(double ownedByThisHolder) {
+		this.ownedByThisHolder = ownedByThisHolder;
 	}
 	public List<AssetsDto> getOwnedBySubinitiatives() {
 		return ownedBySubinitiatives;
@@ -54,4 +55,5 @@ public class AssetsDto {
 	public void setOwnedBySubinitiatives(List<AssetsDto> ownedBySubinitiatives) {
 		this.ownedBySubinitiatives = ownedBySubinitiatives;
 	}
+	
 }

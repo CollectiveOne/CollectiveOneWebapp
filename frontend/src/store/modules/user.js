@@ -60,7 +60,6 @@ const actions = {
     if (context.state.authenticated) {
       Vue.axios.get('/1/secured/user/myProfile').then((response) => {
         context.commit('setProfile', response.data.data)
-        context.dispatch('updateUserInitiatives')
       }).catch(function (error) {
         console.log(error)
       })

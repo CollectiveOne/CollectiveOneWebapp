@@ -114,28 +114,26 @@ public class InitiativeService {
 		return "success";
 	}
 	
+	/** Get key data from an initiative: id, name and driver but no
+	 * data from its assets */
 	@Transactional
 	public InitiativeDto getLight(UUID id) {
 		return  initiativeRepository.findById(id).toDto();
 	}
 	
+	/** Get the light data by calling getLight, and then add data
+	 * about the assets held by an initiative */
 	@Transactional
 	public InitiativeDto getWithOwnAssets(UUID id) {
 		Initiative initiative = initiativeRepository.findById(id); 
 		InitiativeDto initiativeDto = getLight(initiative.getId());
-		
-		/* set own assets data */
+
+		/* set own tokens data */
 		if(initiative.getTokenType() != null) {
-			initiativeDto.setOwnTokens(getAssetsOfType(initiative.getTokenType().getId(), initiative.getId()));
+			AssetsDto ownTokens = tokenService.getTokensOfHolderDto(initiative.getTokenType().getId(), initiative.getId());
+			ownTokens.setHolderName(initiative.getName());
+			initiativeDto.setOwnTokens(ownTokens);
 		}
-		
-		return initiativeDto;
-	}
-	
-	@Transactional
-	public InitiativeDto getWithSubInitiativesAssets(UUID id) {
-		Initiative initiative = initiativeRepository.findById(id); 
-		InitiativeDto initiativeDto = getWithOwnAssets(initiative.getId());
 		
 		/* set other assets data */
 		List<TokenType> otherTokens = null;
@@ -146,32 +144,35 @@ public class InitiativeService {
 		}
 		
 		for (TokenType otherToken : otherTokens) {
-			initiativeDto.getOtherAssets().add(getAssetsOfType(otherToken.getId(), initiative.getId()));
+			AssetsDto otherAsset = tokenService.getTokensOfHolderDto(otherToken.getId(), initiative.getId());
+			otherAsset.setHolderName(initiative.getName());
+			initiativeDto.getOtherAssets().add(otherAsset);
 		}
 		
 		return initiativeDto;
 	}
 	
+	
+
+	/** Get the distribution of an asset starting from a given initiative
+	 * and going though its sub-initiatives */
 	@Transactional
-	public AssetsDto getAssetsOfType(UUID tokenId, UUID initiativeId) {
+	public AssetsDto getTokenDistribution(UUID tokenId, UUID initiativeId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId); 
 		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		
-		/* owned by this initiative */
-		AssetsDto assetsDto = tokenService.getTokenDto(tokenId, initiativeId);
-		assetsDto.setInitiativeId(initiative.getId().toString());
-		assetsDto.setInitiativeName(initiative.getName());
-		
-		/* owned by sub-initiatives */
-		for (Initiative subinitiative : initiativeRepository.findInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_DETACHED_SUB)) {
-			AssetsDto subInitiativeAssetsDto = tokenService.getTokenDto(tokenId, subinitiative.getId());
-			subInitiativeAssetsDto.setInitiativeId(subinitiative.getId().toString());
-			subInitiativeAssetsDto.setInitiativeName(subinitiative.getName());
+		AssetsDto assetDto = tokenService.getTokensOfHolderDto(tokenId, initiative.getId());
+		assetDto.setHolderName(initiative.getName());
 			
-			assetsDto.getOwnedBySubinitiatives().add(subInitiativeAssetsDto);
+		/* get of sub-initiatives */
+		List<Initiative> subinitiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_DETACHED_SUB);
+		for (Initiative subinitiative : subinitiatives) {
+			AssetsDto subInitiativeAssetsDto = tokenService.getTokensOfHolderDto(tokenId, subinitiative.getId());
+			subInitiativeAssetsDto.setHolderName(subinitiative.getName());
+			
+			assetDto.getOwnedBySubinitiatives().add(subInitiativeAssetsDto);
 		}
 		
-		return assetsDto;
+		return assetDto;
 	}
 	
 	@Transactional
