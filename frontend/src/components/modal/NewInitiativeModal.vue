@@ -9,10 +9,10 @@
 
         <div class="w3-container w3-theme">
           <div v-if="asSubinitiative">
-            <h2>New Subinitiative of {{ parentInitiative.name }}</h2>
+            <h2>New subinitiative of {{ parentInitiative.name }}</h2>
           </div>
           <div v-else>
-            <h2>New Initiative</h2>
+            <h2>New initiative</h2>
           </div>
         </div>
 
@@ -20,34 +20,34 @@
           <div v-if="asSubinitiative">
             <!-- If as subinitiative, select the initiative and the amount of tokens or other assets
                  to be take from it -->
-            <div class="w3-row">
-              <div class="w3-col m9">
-                <label class="w3-text-indigo"><b>Create as Sub-Initiative of</b></label>
-                <app-initiative-selector
+            <div class="w3-row sub-initiative-first-row">
+              <div class="w3-col m12">
+                <h4 class="w3-text-indigo">Create as subinitiative or
+                  <button type="button" class="inline-btn w3-button w3-teal w3-round" @click="asSubinitiative = false">create new token</button>
+                </h4>
+                <app-initiative-selector class="initiative-selector"
                   anchor="id" label="name" :init="parentInitiative"
                   url="/1/secured/initiatives/search"
                   @select="parentInitiativeSelected($event)">
                 </app-initiative-selector>
               </div>
-              <div class="w3-col m3">
-                <button type="button" class="cancel-btn w3-button w3-teal w3-round" @click="asSubinitiative = false">Remove</button>
-              </div>
             </div>
-            <div class="w3-row">
+            <div class="w3-row assigner-div">
               <app-assets-assigner :assetsData="parentInitiative.ownTokens"></app-assets-assigner>
             </div>
           </div>
           <div v-else class="">
             <div class="w3-row">
-              <button type="button" class="new-parent-btn w3-button w3-teal w3-round" @click="asSubinitiative = true">Set Parent (optional)</button>
+              <h4 class="w3-text-indigo">Create a new token or
+                <button type="button" class="inline-btn w3-button w3-teal w3-round" @click="asSubinitiative = true">set parent</button>
+              </h4>
             </div>
-            <div class="w3-row">
-              <h4>Create a new token</h4>
-              <div class="w3-col m3">
+            <div class="w3-row-padding new-token-inputs">
+              <div class="w3-col m4">
                 <label class="w3-text-indigo"><b>Number of Tokens</b></label>
                 <input v-model="tokens" class="w3-input w3-border w3-hover-light-gray" type="number">
               </div>
-              <div class="w3-col m4">
+              <div class="w3-col m4"  :style="{'margin-bottom': '15px'}">
                 <label class="w3-text-indigo"><b>Token Name</b></label>
                 <input v-model="tokenName" class="w3-input w3-border w3-hover-light-gray" type="text">
               </div>
@@ -55,11 +55,11 @@
           </div>
           <br>
 
-          <label class="w3-text-indigo"><b>Name</b></label>
+          <label class="w3-text-indigo"><b>Initiative Name</b></label>
           <input v-model="name" class="w3-input w3-hover-light-gray" type="text">
           <br>
 
-          <label class="w3-text-indigo"><b>Driver</b></label>
+          <label class="w3-text-indigo"><b>Initiative Driver</b></label>
           <textarea v-model="driver" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
           <br>
 
@@ -113,7 +113,6 @@ import InitiativeSelector from '../initiative/InitiativeSelector.vue'
 import AssetsAssigner from '../initiative/AssetsAssigner.vue'
 import UserSelector from '../user/UserSelector.vue'
 import UserAvatar from '../user/UserAvatar.vue'
-import { tokensString } from '../../lib/common'
 
 export default {
   props: {
@@ -126,7 +125,8 @@ export default {
   components: {
     AppInitiativeSelector: InitiativeSelector,
     AppUserSelector: UserSelector,
-    AppUserAvatar: UserAvatar
+    AppUserAvatar: UserAvatar,
+    AppAssetsAssigner: AssetsAssigner
   },
 
   data () {
@@ -139,17 +139,6 @@ export default {
       tokens: 0,
       tokenName: 'tokens',
       percentage: 0
-    }
-  },
-
-  watch: {
-    tokens () {
-      let perc = this.tokens / this.parentInitiative.totalExistingTokens * 100
-      this.percentage = Math.round(perc * 1000) / 1000
-    },
-    percentage () {
-      let toks = this.percentage / 100 * this.parentInitiative.totalExistingTokens
-      this.tokens = Math.round(toks * 1000) / 1000
     }
   },
 
@@ -226,12 +215,36 @@ export default {
 }
 
 form {
-  padding-top: 35px;
+  padding-top: 15px;
   padding-bottom: 35px;
 }
 
-.new-parent-btn {
+.inline-btn {
+  height: 30px;
+  padding: 0px 20px 0px 20px;
+}
+
+.initiative-selector {
+  font-size: 20px;
+}
+
+.new-token-inputs {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.new-token-inputs input {
+  max-width: 150px;
+  margin: 0 auto;
+}
+
+.sub-initiative-first-row {
   margin-bottom: 15px;
+}
+
+.sub-initiative-right-col {
+  text-align: center;
+  padding-top: 15px;
 }
 
 .contributors-container {
@@ -243,33 +256,8 @@ form {
   margin-top: 20px;
 }
 
-.cancel-btn {
-  margin-top: 23px;
-  float: right;
-}
-
 .add-btn {
   width: 100%;
-}
-
-.remove-btn {
-  margin-top: 10px;
-  width: 100%;
-}
-
-.tokens-div {
-  text-align: center;
-}
-
-.tokens-selector {
-  margin-top: 10px;
-}
-
-.fa-percent {
-  color: #607d8b;
-  font-size: 22px;
-  margin-top: 7.5px;
-  margin-left: 5px;
 }
 
 .bottom-btns-row button {
