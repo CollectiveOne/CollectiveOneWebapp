@@ -1,17 +1,17 @@
 <template lang="html">
   <div class="w3-col m12">
     <div class="w3-row w3-theme-d3 w3-large">
-      <div class="w3-col s9 w3-padding">{{ ownedByThisInitiative }} {{ name }} available</div>
-      <div class="w3-col s3 w3-button" @click="mintMore()">add</div>
+      <div class="w3-col s12 w3-padding">{{ totalExisting }} {{ name }} existing</div>
+    </div>
+    <div class="w3-row w3-theme-d3 w3-large">
+      <div class="w3-col s12 w3-padding">{{ ownedByThisInitiative }} {{ name }} held by this initiative</div>
     </div>
     <div class="w3-row w3-theme-d2 w3-large" v-if="hasSubinitiatives">
       <div class="w3-col s12">
         <div class="w3-row">
-            <div class="w3-col s9 w3-padding">{{ ownedBySubinitiativesStr }} {{ name }} transferred to sub-initiatives</div>
-            <div class="w3-col s3 w3-button" @click="newSubInitiative()">new</div>
+            <div class="w3-col s12 w3-padding">{{ ownedBySubinitiativesStr }} {{ name }} transferred to sub-initiatives</div>
         </div>
-
-        <div class="w3-col s12 w3-padding w3-theme-d1" v-for="subinitiative in subinitiatives" >
+        <div class="w3-col s12 w3-padding w3-theme-d1" v-for="subinitiative in assetData.ownedBySubinitiatives" >
           {{ subinitiativePortion(subinitiative) }} in {{ subinitiative.initiativeName }}
         </div>
       </div>
@@ -23,74 +23,71 @@
 <script>
 import { tokensString, amountAndPerc } from '@/lib/common'
 
-const sumOfSubinitiatives = function (subInitiatives, tokenId) {
+const sumOfSubinitiatives = function (subInitiativesAssets) {
   var tot = 0.0
-
-  for (var ixSub in subInitiatives) {
-    /* Look on the assets held by the subinitiatives and sum those that
-    corresponds to the this initiative tokens */
-    var thisSub = subInitiatives[ixSub]
-    var heldByThis = 0.0
-    for (var ixAsset in this.otherAssets) {
-      var thisAsset = this.otherAssets[ixAsset]
-      if (thisAsset.id === tokenId) {
-        heldByThis = thisAsset.tokens
-      }
-    }
-
-    tot += heldByThis + sumOfSubinitiatives(thisSub.subInitiatives, tokenId)
+  for (var ixAss in subInitiativesAssets) {
+    tot += subInitiativesAssets[ixAss].ownedByThisHolder
   }
   return tot
 }
 
 export default {
   props: {
-    initiativeData: {
-      type: Object,
-      default: () => {
-        return {
-          id: '',
-          name: 'Initiative Name',
-          ownTokens: {
-            assetId: '',
-            assetName: 'tokens',
-            ownedByThisHolder: 0.0
-          },
-          subInitiatives: []
-        }
+    assetId: {
+      type: String
+    },
+    initiativeId: {
+      type: String
+    }
+  },
+
+  data () {
+    return {
+      assetData: {
+        assetName: '',
+        totalExistingTokens: 100,
+        holderName: 'holder name',
+        ownedByThisHolder: 10,
+        ownedBySubinitiatives: []
       }
     }
   },
 
   computed: {
     name () {
-      return this.tokenData.name
+      return this.assetData.assetName
+    },
+    totalExisting () {
+      return tokensString(this.assetData.totalExistingTokens)
     },
     ownedByThisInitiative () {
-      return tokensString(this.initiativeData.ownTokens.ownedByThisHolder)
+      return tokensString(this.assetData.ownedByThisHolder)
     },
     hasSubinitiatives () {
-      return (this.initiativeData.subInitiatives.length > 0)
+      return (this.assetData.ownedBySubinitiatives.length > 0)
     },
     ownedBySubinitiativesVal () {
-      return sumOfSubinitiatives(this.initiativeData.subInitiatives)
+      return sumOfSubinitiatives(this.assetData.ownedBySubinitiatives)
     },
     ownedBySubinitiativesStr () {
-      return tokensString(this.ownedBySubinitiativesVal)
-    },
-    subinitiatives () {
-      return this.initiativeData.subinitiatives
+      return tokensString(this.assetData.ownedBySubinitiativesVal)
     }
   },
 
   methods: {
-    newSubInitiative () {
-      this.$emit('new-subinitiative', this.initiativeData.id)
-    },
-
     subinitiativePortion (thisSubinitiative) {
       return amountAndPerc(thisSubinitiative.ownedByThisInitiative, this.ownedBySubinitiativesVal)
     }
+  },
+
+  mounted () {
+    this.axios.get('/1/secured/token/' + this.assetId, {
+      params: {
+        initiativeId: this.initiativeId
+      }
+    }).then((response) => {
+      this.assetData = response.data.data
+    })
   }
 }
 </script>

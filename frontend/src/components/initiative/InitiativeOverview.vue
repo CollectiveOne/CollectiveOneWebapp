@@ -18,11 +18,11 @@
       </header>
       <div v-if="hasOwnTokens" class="w3-container">
         <h5><b>{{ this.initiative.ownTokens.assetName }}</b></h5>
-        <!-- <app-tokens-distribution-chart :initiativeData="this.initiative" @new-subinitiative="newSubInitiativeClicked($event)"></app-tokens-distribution-chart> -->
+        <app-tokens-distribution-chart :assetId="this.initiative.ownTokens.assetId" :initiativeId="this.initiative.id"></app-tokens-distribution-chart>
       </div>
       <div v-if="hasOtherAssets" class="w3-container">
         <h5><b>{{ this.initiative.otherAssets[0].assetName }}</b></h5>
-        <!-- <app-tokens-distribution-chart :initiativeData="this.initiative.otherAssets[0]"></app-tokens-distribution-chart> -->
+        <app-tokens-distribution-chart :assetId="this.initiative.otherAssets[0].assetId" :initiativeId="this.initiative.id"></app-tokens-distribution-chart>
       </div>
     </div>
     <br>
