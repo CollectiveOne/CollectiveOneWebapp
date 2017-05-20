@@ -16,6 +16,11 @@
     <div v-if="parentInitiative.ownTokens" class="w3-row assigner-div">
       <app-assets-assigner :assetsData="parentInitiative.ownTokens" @updated="parentOwnTokensSelected"></app-assets-assigner>
     </div>
+    <div v-if="parentInitiative.otherAssets.length > 0" class="w3-row assigner-div">
+      <div v-for="asset in parentInitiative.otherAssets" class="">
+        <app-assets-assigner :assetsData="asset" @updated="parentOtherAssetSelected"></app-assets-assigner>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -47,6 +52,10 @@ export default {
     },
 
     parentOwnTokensSelected (data) {
+      this.$emit('selected', [data])
+    },
+
+    parentOtherAssetSelected (data) {
       this.$emit('selected', [data])
     }
   }

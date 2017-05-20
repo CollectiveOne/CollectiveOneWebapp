@@ -13,6 +13,20 @@
 
         <form class="w3-container">
 
+          <div class="token-type-tabs w3-row">
+            <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
+              :class="{'w3-border-blue': !asSubinitiative}"
+              @click="asSubinitiative = false">
+              <h5 class="w3-text-indigo" :class="{'bold-text': !asSubinitiative}">Create as independent</h5>
+            </div>
+            <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
+              :class="{'w3-border-blue': asSubinitiative}"
+              @click="asSubinitiative = true">
+              <h5 class="w3-text-indigo" :class="{'bold-text': asSubinitiative}">Create as subinitiative</h5>
+            </div>
+          </div>
+          <br>
+
           <label class="w3-text-indigo"><b>{{ asSubinitiative ? 'Subinitiative' : 'Initiative'}} Name</b></label>
           <input v-model="name" class="w3-input w3-hover-light-gray" type="text">
           <br>
@@ -22,18 +36,6 @@
 
           <hr>
 
-          <div class="token-type-tabs w3-row">
-            <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
-              :class="{'w3-border-blue': asSubinitiative}"
-              @click="asSubinitiative = true">
-              <h5 class="w3-text-indigo" :class="{'bold-text': asSubinitiative}">Create as subinitiative</h5>
-            </div>
-            <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
-              :class="{'w3-border-blue': !asSubinitiative}"
-              @click="asSubinitiative = false">
-              <h5 class="w3-text-indigo" :class="{'bold-text': !asSubinitiative}">Create as independent</h5>
-            </div>
-          </div>
           <div class="w3-container assets-selector-div">
             <keep-alive>
               <app-subinitiative-of v-if="asSubinitiative" :parentInitiative="parentInitiative"
@@ -255,7 +257,7 @@ export default {
 }
 
 form {
-  padding-top: 15px;
+  padding-top: 0px;
   padding-bottom: 35px;
 }
 
@@ -270,8 +272,6 @@ form {
 }
 
 .assets-selector-div {
-  padding-top: 10px;
-  padding-bottom: 0px;
 }
 
 .contributors-container {
