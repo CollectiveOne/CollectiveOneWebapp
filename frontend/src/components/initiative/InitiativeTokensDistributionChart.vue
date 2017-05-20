@@ -11,8 +11,8 @@
         <div class="w3-row">
             <div class="w3-col s12 w3-padding">{{ ownedBySubinitiativesStr }} {{ name }} transferred to sub-initiatives</div>
         </div>
-        <div class="w3-col s12 w3-padding w3-theme-d1" v-for="subinitiative in assetData.ownedBySubinitiatives" >
-          {{ subinitiativePortion(subinitiative) }} in {{ subinitiative.initiativeName }}
+        <div class="w3-col s12 w3-padding w3-theme-d1" v-for="subinitiativeAssets in assetData.ownedBySubinitiatives" >
+          {{ subinitiativePortion(subinitiativeAssets) }} in {{ subinitiativeAssets.holderName }}
         </div>
       </div>
 
@@ -70,24 +70,36 @@ export default {
       return sumOfSubinitiatives(this.assetData.ownedBySubinitiatives)
     },
     ownedBySubinitiativesStr () {
-      return tokensString(this.assetData.ownedBySubinitiativesVal)
+      return tokensString(this.ownedBySubinitiativesVal)
     }
   },
 
   methods: {
-    subinitiativePortion (thisSubinitiative) {
-      return amountAndPerc(thisSubinitiative.ownedByThisInitiative, this.ownedBySubinitiativesVal)
+    subinitiativePortion (subinitiativeAssets) {
+      return amountAndPerc(subinitiativeAssets.ownedByThisHolder, this.ownedBySubinitiativesVal)
+    },
+    updateTokenData () {
+      this.axios.get('/1/secured/token/' + this.assetId, {
+        params: {
+          initiativeId: this.initiativeId
+        }
+      }).then((response) => {
+        this.assetData = response.data.data
+      })
+    }
+  },
+
+  watch: {
+    assetId () {
+      this.updateTokenData()
+    },
+    initiativeId () {
+      this.updateTokenData()
     }
   },
 
   mounted () {
-    this.axios.get('/1/secured/token/' + this.assetId, {
-      params: {
-        initiativeId: this.initiativeId
-      }
-    }).then((response) => {
-      this.assetData = response.data.data
-    })
+    this.updateTokenData()
   }
 }
 </script>

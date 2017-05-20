@@ -1,8 +1,5 @@
 <template lang="html">
   <div v-if="initiative" class="this-container w3-container w3-padding">
-    <keep-alive>
-      <app-new-initiative-modal v-if="showNewInitiativeModal" :parentInitId="parentInitiativeIdForModal" @close-this="showNewInitiativeModal = false"></app-new-initiative-modal>
-    </keep-alive>
     <div class="w3-card">
       <header class="w3-container w3-theme">
         <h4>Driver</h4>
@@ -30,12 +27,10 @@
 </template>
 
 <script>
-import NewInitiativeModal from '../modal/NewInitiativeModal.vue'
 import InitiativeTokensDistributionChart from './InitiativeTokensDistributionChart.vue'
 
 export default {
   components: {
-    AppNewInitiativeModal: NewInitiativeModal,
     AppTokensDistributionChart: InitiativeTokensDistributionChart
   },
 

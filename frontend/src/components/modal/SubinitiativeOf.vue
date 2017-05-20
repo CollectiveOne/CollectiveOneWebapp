@@ -13,7 +13,7 @@
         </app-initiative-selector>
       </div>
     </div>
-    <div class="w3-row assigner-div">
+    <div v-if="parentInitiative.ownTokens" class="w3-row assigner-div">
       <app-assets-assigner :assetsData="parentInitiative.ownTokens" @updated="parentOwnTokensSelected"></app-assets-assigner>
     </div>
   </div>
@@ -39,7 +39,7 @@ export default {
     parentInitiativeSelected (initiative) {
       this.axios.get('/1/secured/initiative/' + initiative.id, {
         params: {
-          level: 'withAssets'
+          addAssets: true
         }
       }).then((response) => {
         this.$emit('parent-initiative-updated', response.data.data)
@@ -50,6 +50,7 @@ export default {
       this.$emit('selected', [data])
     }
   }
+
 }
 </script>
 

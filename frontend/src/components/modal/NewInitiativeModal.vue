@@ -42,8 +42,8 @@
           <div class="w3-container assets-selector-div">
             <keep-alive>
               <app-subinitiative-of v-if="asSubinitiative" :parentInitiative="parentInitiative"
-                @selected="parentAssetsSelected($event)" @parent-initiative-updated="parentInitiativeUpdated($event)"
-                ></app-subinitiative-of>
+                @selected="parentAssetsSelected($event)" @parent-initiative-updated="parentInitiativeUpdated($event)">
+              </app-subinitiative-of>
             </keep-alive>
             <keep-alive>
               <app-new-token v-if="!asSubinitiative" @updated="ownTokensSelected($event)"></app-new-token>
@@ -133,7 +133,9 @@ export default {
   data () {
     return {
       asSubinitiative: false,
-      parentInitiative: null,
+      parentInitiative: {
+        name: ''
+      },
       name: '',
       driver: '',
       contributors: [],

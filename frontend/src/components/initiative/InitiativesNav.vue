@@ -3,8 +3,8 @@
     <div class="w3-display-topright w3-xlarge" @click="$emit('close-navbar')"><i class="fa fa-times" aria-hidden="true"></i></div>
     <div class="w3-container w3-padding">
       <h4 class="w3-opacity">My Initiatives</h4>
-      <app-initiative-menu-item v-for="initiative in userInitiatives" :initiative="initiative" :key="initiative.id"></app-initiative-menu-item>
       <button type="button" class="new-initiative-btn w3-button w3-teal w3-round" @click="newInitiative()"><i class="fa fa-plus-circle"></i>  create new</button>
+      <app-initiative-menu-item v-for="initiative in userInitiatives" :initiative="initiative" :key="initiative.id"></app-initiative-menu-item>
     </div>
   </div>
 </template>
@@ -26,7 +26,9 @@ export default {
 
   methods: {
     newInitiative () {
+      this.$emit('new-initiative', '')
     },
+
     updatedMyInitiatives () {
       this.axios.get('/1/secured/initiatives/mines').then((response) => {
         this.userInitiatives = response.data.data

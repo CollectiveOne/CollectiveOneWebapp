@@ -41,6 +41,12 @@ export default {
     }
   },
 
+  watch: {
+    '$route' () {
+      this.updateInitiative(this.$route.params.initiativeId)
+    }
+  },
+
   mounted () {
     this.updateInitiative(this.$route.params.initiativeId)
   }

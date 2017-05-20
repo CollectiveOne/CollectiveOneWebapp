@@ -61,7 +61,7 @@ export default {
       return tokensString(this.assetsData.totalExistingTokens)
     },
     ownedByThisInitiative () {
-      return tokensString(this.assetsData.ownedByThisInitiative)
+      return tokensString(this.assetsData.ownedByThisHolder)
     }
   },
 
