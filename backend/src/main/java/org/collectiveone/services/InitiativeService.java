@@ -22,6 +22,7 @@ import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.collectiveone.web.dto.NewInitiativeDto;
 import org.collectiveone.web.dto.PostResult;
+import org.collectiveone.web.dto.TransferDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,13 +49,12 @@ public class InitiativeService {
 		/* create the initiative */
 		Initiative initiative = create(c1Id, initiativeDto);
 		
-		TokenType token = null;
-		if (initiativeDto.getParentInitiativeId() == null) {
+		if (!initiativeDto.getAsSubinitiative()) {
 			/* create a token for this initiative */
-			token = tokenService.create(initiativeDto.getTokenName(), "T");
+			TokenType token = tokenService.create(initiativeDto.getOwnTokens().getAssetName(), "T");
 			initiative.setTokenType(token);
 			initiative = initiativeRepository.save(initiative);
-			tokenService.mintToHolder(token.getId(), initiative.getId(), initiativeDto.getTokens(), TokenHolderType.INITIATIVE);
+			tokenService.mintToHolder(token.getId(), initiative.getId(), initiativeDto.getOwnTokens().getOwnedByThisHolder(), TokenHolderType.INITIATIVE);
 			return new PostResult("success", "initiative created and tokens created");
 			
 		} else {
@@ -63,9 +63,12 @@ public class InitiativeService {
 			/* link to parent initiative */
 			link(initiative.getId(), parent.getId(), InitiativeRelationshipType.IS_DETACHED_SUB);
 			
-			/* transfer tokens from parent to child */
-			token = parent.getTokenType();
-			tokenService.transfer(token.getId(), parent.getId(), initiative.getId(), initiativeDto.getTokens(), TokenHolderType.INITIATIVE);
+			/* transfer parent assets to child */
+			
+			for (TransferDto thisTransfer : initiativeDto.getOtherAssetsTransfers()) {
+				tokenService.transfer(UUID.fromString(thisTransfer.getAssetId()), parent.getId(), initiative.getId(), thisTransfer.getValue(), TokenHolderType.INITIATIVE);
+			}
+			
 			return new PostResult("success", "sub initiative created and tokens transferred");
 		}
 	}

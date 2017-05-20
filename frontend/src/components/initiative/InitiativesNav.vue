@@ -3,8 +3,11 @@
     <div class="w3-display-topright w3-xlarge" @click="$emit('close-navbar')"><i class="fa fa-times" aria-hidden="true"></i></div>
     <div class="w3-container w3-padding">
       <h4 class="w3-opacity">My Initiatives</h4>
-      <button type="button" class="new-initiative-btn w3-button w3-teal w3-round" @click="newInitiative()"><i class="fa fa-plus-circle"></i>  create new</button>
-      <app-initiative-menu-item v-for="initiative in userInitiatives" :initiative="initiative" :key="initiative.id"></app-initiative-menu-item>
+      <h5 class="create-new w3-button" @click="newInitiative()"><i class="fa fa-plus-circle"></i>  create new</h5>
+      <app-initiative-menu-item v-for="initiative in userInitiatives"
+        :initiative="initiative" :key="initiative.id"
+        @new-subinitiative="$emit('new-initiative', $event)">
+      </app-initiative-menu-item>
     </div>
   </div>
 </template>
@@ -47,8 +50,10 @@ export default {
 
 <style scoped>
 
-.new-initiative-btn {
-  margin-top: 20px;
+.create-new {
+  margin: 0px;
+  color: rgb(110, 110, 110);
+  width: 100%;
 }
 
 .w3-display-topright {

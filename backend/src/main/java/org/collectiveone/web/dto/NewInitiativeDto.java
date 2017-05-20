@@ -4,14 +4,21 @@ import java.util.List;
 
 public class NewInitiativeDto {
 	
+	private boolean asSubinitiative;
 	private String parentInitiativeId;
 	private String name;
 	private String driver;
 	private List<AppUserWithRoleDto> contributors;
-	private double tokens;
-	private String tokenName;
+	private AssetsDto ownTokens;
+	private List<TransferDto> otherAssetsTransfers;
 	
 	
+	public boolean getAsSubinitiative() {
+		return asSubinitiative;
+	}
+	public void setAsSubinitiative(boolean asSubinitiative) {
+		this.asSubinitiative = asSubinitiative;
+	}
 	public String getParentInitiativeId() {
 		return parentInitiativeId;
 	}
@@ -36,17 +43,17 @@ public class NewInitiativeDto {
 	public void setContributors(List<AppUserWithRoleDto> contributors) {
 		this.contributors = contributors;
 	}
-	public double getTokens() {
-		return tokens;
+	public AssetsDto getOwnTokens() {
+		return ownTokens;
 	}
-	public void setTokens(double tokens) {
-		this.tokens = tokens;
+	public void setOwnTokens(AssetsDto ownTokens) {
+		this.ownTokens = ownTokens;
 	}
-	public String getTokenName() {
-		return tokenName;
+	public List<TransferDto> getOtherAssetsTransfers() {
+		return otherAssetsTransfers;
 	}
-	public void setTokenName(String tokenName) {
-		this.tokenName = tokenName;
+	public void setOtherAssetsTransfers(List<TransferDto> otherAssetsTransfers) {
+		this.otherAssetsTransfers = otherAssetsTransfers;
 	}
 	
 }

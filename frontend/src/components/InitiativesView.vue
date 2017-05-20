@@ -1,8 +1,6 @@
 <template lang="html">
   <div class="">
-    <keep-alive>
-      <app-new-initiative-modal v-if="showNewInitiativeModal" :parentInitId="parentInitiativeIdForModal" @close-this="showNewInitiativeModal = false"></app-new-initiative-modal>
-    </keep-alive>
+    <app-new-initiative-modal v-if="showNewInitiativeModal" :parentInitId="parentInitiativeIdForModal" @close-this="showNewInitiativeModal = false"></app-new-initiative-modal>
     <button class="expand-left-menu-btn w3-button w3-theme w3-xlarge" @click="showSideBar = !showSideBar">></button>
 
     <div v-if="showSideBar" class="w3-sidebar w3-bar-block" style="width:25%">

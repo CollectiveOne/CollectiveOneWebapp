@@ -46,4 +46,8 @@ export default {
   font-family: "Open Sans", sans-serif;
 }
 
+.w3-modal {
+  padding-top: 30px;
+}
+
 </style>

@@ -70,18 +70,18 @@ export default {
       let perc = this.tokens / this.assetsData.totalExistingTokens * 100
       this.percentage = Math.round(perc * 1000) / 1000
       this.$emit('updated', {
-        id: this.assetsData.assetId,
-        name: this.assetsData.assetName,
-        tokens: this.tokens
+        assetId: this.assetsData.assetId,
+        assetName: this.assetsData.assetName,
+        value: this.tokens
       })
     },
     percentage () {
       let toks = this.percentage / 100 * this.assetsData.totalExistingTokens
       this.tokens = Math.round(toks * 1000) / 1000
       this.$emit('updated', {
-        id: this.assetsData.assetId,
-        name: this.assetsData.assetName,
-        tokens: this.tokens
+        assetId: this.assetsData.assetId,
+        assetName: this.assetsData.assetName,
+        value: this.tokens
       })
     }
   }

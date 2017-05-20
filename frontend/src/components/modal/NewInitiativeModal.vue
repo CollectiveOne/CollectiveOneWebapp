@@ -8,21 +8,16 @@
         </div>
 
         <div class="w3-container w3-theme">
-          <div v-if="asSubinitiative">
-            <h2>New subinitiative of {{ parentInitiative.name }}</h2>
-          </div>
-          <div v-else>
-            <h2>New initiative</h2>
-          </div>
+          <h2>{{ asSubinitiative ? 'New subinitiative of ' + parentInitiative.name : 'New Initiative' }}</h2>
         </div>
 
         <form class="w3-container">
 
-          <label class="w3-text-indigo"><b>Initiative Name</b></label>
+          <label class="w3-text-indigo"><b>{{ asSubinitiative ? 'Subinitiative' : 'Initiative'}} Name</b></label>
           <input v-model="name" class="w3-input w3-hover-light-gray" type="text">
           <br>
 
-          <label class="w3-text-indigo"><b>Initiative Driver</b></label>
+          <label class="w3-text-indigo"><b>{{ asSubinitiative ? 'Subinitiative' : 'Initiative'}} Driver</b></label>
           <textarea v-model="driver" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
 
           <hr>
@@ -53,8 +48,8 @@
           <div v-if="assetsSelected" class="w3-container">
             <hr>
             <label class="init-contr-label w3-text-indigo"><b>Summary</b></label>
-            <p v-if="asSubinitiative">This initiative will receive <span v-for="asset in otherAssets"><b>{{ tokensString(asset.tokens) }} {{ asset.name }}</b> from {{ parentInitiative.name }}</span></p>
-            <p v-else>A token named <b>{{ ownTokens.tokenName }}</b> will be created and this initiative will have <b>{{ tokensString(ownTokens.tokens) }} units</b></p>
+            <p v-if="asSubinitiative">This initiative will receive <span v-for="transfer in otherAssetsTransfers"><b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ parentInitiative.name }}</span></p>
+            <p v-else>A token named <b>{{ ownTokens.assetName }}</b> will be created and this initiative will have <b>{{ tokensString(ownTokens.ownedByThisHolder) }} units</b></p>
           </div>
           <hr>
 
@@ -140,10 +135,10 @@ export default {
       driver: '',
       contributors: [],
       ownTokens: {
-        tokens: 0,
-        tokenName: 'token'
+        ownedByThisHolder: 0,
+        assetName: 'token'
       },
-      otherAssets: {
+      otherAssetsTransfers: {
         assetsDto: []
       }
     }
@@ -152,18 +147,24 @@ export default {
   computed: {
     assetsSelected () {
       if (this.asSubinitiative) {
-        if (this.otherAssets) {
-          if (this.otherAssets.length > 0) {
+        if (this.otherAssetsTransfers) {
+          if (this.otherAssetsTransfers.length > 0) {
             return true
           }
         }
       } else {
-        if (this.ownTokens.tokens > 0) {
+        if (this.ownTokens.ownedByThisHolder > 0) {
           return true
         }
       }
 
       return false
+    }
+  },
+
+  watch: {
+    parentId () {
+      this.updateParent
     }
   },
 
@@ -175,11 +176,12 @@ export default {
     },
 
     parentAssetsSelected (assets) {
-      this.otherAssets = assets
+      this.otherAssetsTransfers = assets
     },
 
     ownTokensSelected (tokensData) {
-      this.ownTokens = tokensData
+      this.ownTokens.ownedByThisHolder = tokensData.tokens
+      this.ownTokens.assetName = tokensData.tokenName
     },
 
     parentInitiativeUpdated (initiative) {
@@ -192,12 +194,13 @@ export default {
 
     accept () {
       let intitiatveDto = {
+        asSubinitiative: this.asSubinitiative,
         parentInitiativeId: this.asSubinitiative ? this.parentInitiative.id : null,
         name: this.name,
         driver: this.driver,
         contributors: this.contributors,
-        tokenName: this.tokenName,
-        tokens: this.tokens
+        ownTokens: this.ownTokens,
+        otherAssetsTransfers: this.otherAssetsTransfers
       }
 
       this.axios.post('/1/secured/initiative', intitiatveDto).then((response) => {
@@ -206,6 +209,21 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
+    },
+
+    updateParent () {
+      if (this.parentInitId !== '') {
+        this.axios.get('/1/secured/initiative/' + this.parentInitId, {
+          params: {
+            addAssets: true
+          }
+        }).then((response) => {
+          this.parentInitiative = response.data.data
+          this.asSubinitiative = true
+        })
+      } else {
+        this.asSubinitiative = false
+      }
     }
   },
 
@@ -216,16 +234,7 @@ export default {
       this.contributors.push(loggedUser)
     }
 
-    if (this.parentInitId !== '') {
-      this.axios.get('/1/secured/initiative/' + this.parentInitId, {
-        params: {
-          level: 'withAssets'
-        }
-      }).then((response) => {
-        this.parentInitiative = response.data.data
-        this.asSubinitiative = true
-      })
-    }
+    this.updateParent()
   }
 }
 </script>

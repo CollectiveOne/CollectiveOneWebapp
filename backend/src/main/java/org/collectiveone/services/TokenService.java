@@ -39,6 +39,11 @@ public class TokenService {
 	}
 	
 	@Transactional
+	public TokenType getTokenType(UUID tokenId) {
+		return tokenTypeRepository.findById(tokenId);
+	}
+	
+	@Transactional
 	public TokenHolder getHolder(UUID tokenTypeId, UUID holderId) {
 		/* get TokenHolder row in token holders database */
 		return tokenHolderRepository.findByTokenTypeIdAndHolderId(tokenTypeId, holderId);
