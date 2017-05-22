@@ -3,8 +3,8 @@ package org.collectiveone.repositories;
 import java.util.List;
 import java.util.UUID;
 
-import org.collectiveone.model.TokenHolder;
-import org.collectiveone.model.TokenType;
+import org.collectiveone.model.basic.TokenHolder;
+import org.collectiveone.model.basic.TokenType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

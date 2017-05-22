@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
-import org.collectiveone.model.AppUser;
+import org.collectiveone.model.basic.AppUser;
 import org.collectiveone.repositories.AppUserRepositoryIf;
 import org.collectiveone.web.dto.AppUserDto;
 import org.collectiveone.web.dto.GetResult;

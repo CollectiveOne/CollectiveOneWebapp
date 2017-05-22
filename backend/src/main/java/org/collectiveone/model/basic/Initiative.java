@@ -1,4 +1,4 @@
-package org.collectiveone.model;
+package org.collectiveone.model.basic;
 
 import java.sql.Timestamp;
 import java.util.LinkedHashSet;
@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.model.extensions.InitiativeContributor;
+import org.collectiveone.model.extensions.InitiativeRelationship;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -52,7 +54,7 @@ public class Initiative {
 	
 	@ManyToMany
 	@JoinTable(name = "initiatives_contributors")
-	private Set<AppUser> contributors = new LinkedHashSet<AppUser>();
+	private Set<InitiativeContributor> contributors = new LinkedHashSet<InitiativeContributor>();
 	
 	@OneToOne
 	private TokenType tokenType;
@@ -111,10 +113,10 @@ public class Initiative {
 	public void setCreator(AppUser creator) {
 		this.creator = creator;
 	}
-	public Set<AppUser> getContributors() {
+	public Set<InitiativeContributor> getContributors() {
 		return contributors;
 	}
-	public void setContributors(Set<AppUser> contributors) {
+	public void setContributors(Set<InitiativeContributor> contributors) {
 		this.contributors = contributors;
 	}
 	public TokenType getTokenType() {

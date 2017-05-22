@@ -1,4 +1,4 @@
-package org.collectiveone.model;
+package org.collectiveone.model.extensions;
 
 import java.util.UUID;
 
@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.model.basic.Initiative;
 import org.collectiveone.model.enums.InitiativeRelationshipType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

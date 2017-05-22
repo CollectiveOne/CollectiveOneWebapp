@@ -1,6 +1,6 @@
 package org.collectiveone.web.controllers;
 
-import org.collectiveone.model.AppUser;
+import org.collectiveone.model.basic.AppUser;
 import org.collectiveone.services.AppUserService;
 import org.collectiveone.web.dto.AppUserDto;
 import org.collectiveone.web.dto.GetResult;

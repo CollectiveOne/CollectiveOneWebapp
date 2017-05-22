@@ -7,12 +7,14 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
-import org.collectiveone.model.AppUser;
-import org.collectiveone.model.Initiative;
-import org.collectiveone.model.InitiativeRelationship;
-import org.collectiveone.model.TokenType;
+import org.collectiveone.model.basic.AppUser;
+import org.collectiveone.model.basic.Initiative;
+import org.collectiveone.model.basic.TokenType;
+import org.collectiveone.model.enums.ContributorRole;
 import org.collectiveone.model.enums.InitiativeRelationshipType;
 import org.collectiveone.model.enums.TokenHolderType;
+import org.collectiveone.model.extensions.InitiativeContributor;
+import org.collectiveone.model.extensions.InitiativeRelationship;
 import org.collectiveone.repositories.AppUserRepositoryIf;
 import org.collectiveone.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
@@ -90,7 +92,12 @@ public class InitiativeService {
 			
 			/* List of Contributors */
 			for (AppUserWithRoleDto user : initiativeDto.getContributors()) {
-				initiative.getContributors().add(appUserRepository.findByC1Id(UUID.fromString(user.getC1Id())));
+				InitiativeContributor contributor = new InitiativeContributor();
+				
+				contributor.setUser(creator);
+				contributor.setRole(ContributorRole.ADMIN);
+				
+				initiative.getContributors().add();
 			}
 			
 			return initiativeRepository.save(initiative);
@@ -234,4 +241,12 @@ public class InitiativeService {
 		return new GetResult<List<InitiativeDto>>("succes", "initiatives returned", initiativesDtos);
 		
 	}
+	
+//	@Transactional
+//	public List<AppUserWithRoleDto> getContributors(UUID initiativeId) {
+//		Initiative initiative = initiativeRepository.findById(initiativeId); 
+//		
+//		
+//		return subinitiativeDtos;
+//	}
 }

@@ -3,7 +3,7 @@ package org.collectiveone.repositories;
 import java.util.List;
 import java.util.UUID;
 
-import org.collectiveone.model.AppUser;
+import org.collectiveone.model.basic.AppUser;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

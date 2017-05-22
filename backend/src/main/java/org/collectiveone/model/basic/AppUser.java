@@ -1,4 +1,4 @@
-package org.collectiveone.model;
+package org.collectiveone.model.basic;
 
 import java.util.UUID;
 

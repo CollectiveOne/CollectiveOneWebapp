@@ -3,7 +3,7 @@ package org.collectiveone.web.controllers;
 import java.util.List;
 import java.util.UUID;
 
-import org.collectiveone.model.AppUser;
+import org.collectiveone.model.basic.AppUser;
 import org.collectiveone.services.AppUserService;
 import org.collectiveone.services.InitiativeService;
 import org.collectiveone.web.dto.GetResult;
@@ -40,7 +40,8 @@ public class InitiativesController {
 	public GetResult<InitiativeDto> getInitiative(
 			@PathVariable("id") String id, 
 			@RequestParam(defaultValue = "false") boolean addAssets,
-			@RequestParam(defaultValue = "false") boolean addSubinitiatives ) {
+			@RequestParam(defaultValue = "false") boolean addSubinitiatives,
+			@RequestParam(defaultValue = "false") boolean addContributors) {
 		
 		InitiativeDto initiativeDto = null;
 		
@@ -52,6 +53,10 @@ public class InitiativesController {
 		
 		if(addSubinitiatives) {
 			initiativeDto.setSubInitiatives(initiativeService.getSubinitiativesTree(UUID.fromString(id)));
+		}
+		
+		if(addContributors) {
+//			initiativeDto.setContributors(initiativeService.getContributors(UUID.fromString(id)));
 		}
 		
 		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeDto);

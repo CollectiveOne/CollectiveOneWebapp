@@ -21,15 +21,26 @@
       </div>
     </div>
     <br>
+    <div class="w3-card">
+      <header class="w3-container w3-theme">
+        <h4>Members</h4>
+      </header>
+      <div>
+        <app-user-avatar v-for="user in this.initiative.contributors" :key="user.c1Id"></app-user-avatar>
+      </div>
+    </div>
+    <br>
   </div>
 </template>
 
 <script>
 import InitiativeTokensDistributionChart from './InitiativeTokensDistributionChart.vue'
+import UserAvatar from '../user/UserAvatar.vue'
 
 export default {
   components: {
-    AppTokensDistributionChart: InitiativeTokensDistributionChart
+    AppTokensDistributionChart: InitiativeTokensDistributionChart,
+    AppUserAvatar: UserAvatar
   },
 
   props: {

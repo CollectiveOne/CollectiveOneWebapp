@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
-import org.collectiveone.model.TokenHolder;
-import org.collectiveone.model.TokenType;
+import org.collectiveone.model.basic.TokenHolder;
+import org.collectiveone.model.basic.TokenType;
 import org.collectiveone.model.enums.TokenHolderType;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
 import org.collectiveone.repositories.TokenHolderRepositoryIf;

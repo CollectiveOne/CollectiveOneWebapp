@@ -1,4 +1,4 @@
-package org.collectiveone.model;
+package org.collectiveone.model.extensions;
 
 import java.util.UUID;
 
@@ -11,14 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.model.enums.TokenHolderType;
+import org.collectiveone.model.basic.AppUser;
+import org.collectiveone.model.enums.ContributorRole;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "token_holders")
-public class TokenHolder {
-	
+@Table( name = "initiative_contributors" )
+public class InitiativeContributor {
+
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -27,16 +28,11 @@ public class TokenHolder {
 	private UUID id;
 	
 	@ManyToOne
-	private TokenType tokenType;
-	
-	@Column(name = "tokens")
-	private double tokens;
+	private AppUser user;
 	
 	@Enumerated(EnumType.STRING)
-	private TokenHolderType holderType;
-	private UUID holderId;
+	private ContributorRole role;
 
-	
 	public UUID getId() {
 		return id;
 	}
@@ -45,36 +41,20 @@ public class TokenHolder {
 		this.id = id;
 	}
 
-	public TokenType getTokenType() {
-		return tokenType;
+	public AppUser getUser() {
+		return user;
 	}
 
-	public void setTokenType(TokenType tokenType) {
-		this.tokenType = tokenType;
+	public void setUser(AppUser user) {
+		this.user = user;
 	}
 
-	public double getTokens() {
-		return tokens;
+	public ContributorRole getRole() {
+		return role;
 	}
 
-	public void setTokens(double tokens) {
-		this.tokens = tokens;
+	public void setRole(ContributorRole role) {
+		this.role = role;
 	}
-
-	public UUID getHolderId() {
-		return holderId;
-	}
-
-	public void setHolderId(UUID holderId) {
-		this.holderId = holderId;
-	}
-
-	public TokenHolderType getHolderType() {
-		return holderType;
-	}
-
-	public void setHolderType(TokenHolderType holderType) {
-		this.holderType = holderType;
-	}
-	
+		
 }

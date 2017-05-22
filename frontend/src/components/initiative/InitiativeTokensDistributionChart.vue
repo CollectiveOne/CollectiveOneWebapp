@@ -4,7 +4,7 @@
     <div class="w3-row w3-padding w3-theme-d3">{{ ownedByThisInitiativeAndSubinitiativesStr }} held by "{{ assetData.holderName }}"{{ assetData.ownedBySubinitiatives.length > 0 ? ' and subinitiatives' : '' }}, of which:</div>
     <div class="first-level-distr w3-row w3-padding w3-theme-d2">{{ ownedByThisInitiative }} are still available {{ assetData.ownedBySubinitiatives.length > 0 ? 'and' : '' }}</div>
     <div class="first-level-distr w3-row w3-padding w3-theme-d2" v-if=" assetData.ownedBySubinitiatives.length > 0">{{ ownedBySubinitiativesStr }} were transferred to subinitiatives, of which:</div>
-    <div class="second-level-distr w3-col s12 w3-padding w3-theme-d1" v-for="subinitiativeAssets in assetData.ownedBySubinitiatives" >
+    <div class="second-level-distr w3-row w3-padding w3-theme-d1" v-for="subinitiativeAssets in assetData.ownedBySubinitiatives" >
       {{ subinitiativePortion(subinitiativeAssets) }} to "{{ subinitiativeAssets.holderName }}"
     </div>
   </div>
