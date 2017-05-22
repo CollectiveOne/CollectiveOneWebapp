@@ -158,7 +158,7 @@ public class InitiativeService {
 	
 
 	/** Get the distribution of an asset starting from a given initiative
-	 * and going though its sub-initiatives */
+	 * and going though all its sub-initiatives recursively */
 	@Transactional
 	public AssetsDto getTokenDistribution(UUID tokenId, UUID initiativeId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId); 
@@ -169,7 +169,8 @@ public class InitiativeService {
 		/* get of sub-initiatives */
 		List<Initiative> subinitiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_DETACHED_SUB);
 		for (Initiative subinitiative : subinitiatives) {
-			AssetsDto subInitiativeAssetsDto = tokenService.getTokensOfHolderDto(tokenId, subinitiative.getId());
+			/* recursively call on all sub-initiatives */
+			AssetsDto subInitiativeAssetsDto = getTokenDistribution(tokenId, subinitiative.getId());
 			subInitiativeAssetsDto.setHolderName(subinitiative.getName());
 			
 			assetDto.getOwnedBySubinitiatives().add(subInitiativeAssetsDto);

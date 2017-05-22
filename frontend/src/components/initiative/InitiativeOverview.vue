@@ -13,12 +13,10 @@
       <header class="w3-container w3-theme">
         <h4>Assets</h4>
       </header>
-      <div v-if="hasOwnTokens" class="w3-container">
-        <h5><b>{{ this.initiative.ownTokens.assetName }}</b></h5>
+      <div v-if="hasOwnTokens">
         <app-tokens-distribution-chart :assetId="this.initiative.ownTokens.assetId" :initiativeId="this.initiative.id"></app-tokens-distribution-chart>
       </div>
-      <div v-if="hasOtherAssets" class="w3-container">
-        <h5><b>{{ this.initiative.otherAssets[0].assetName }}</b></h5>
+      <div v-if="hasOtherAssets">
         <app-tokens-distribution-chart :assetId="this.initiative.otherAssets[0].assetId" :initiativeId="this.initiative.id"></app-tokens-distribution-chart>
       </div>
     </div>
