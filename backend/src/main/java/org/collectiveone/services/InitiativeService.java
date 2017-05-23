@@ -93,11 +93,10 @@ public class InitiativeService {
 			/* List of Contributors */
 			for (AppUserWithRoleDto user : initiativeDto.getContributors()) {
 				InitiativeContributor contributor = new InitiativeContributor();
-				
-				contributor.setUser(creator);
+				contributor.setUser(appUserRepository.findByC1Id(UUID.fromString(user.getC1Id())));
 				contributor.setRole(ContributorRole.ADMIN);
 				
-				initiative.getContributors().add();
+				initiative.getContributors().add(contributor);
 			}
 			
 			return initiativeRepository.save(initiative);
@@ -241,12 +240,4 @@ public class InitiativeService {
 		return new GetResult<List<InitiativeDto>>("succes", "initiatives returned", initiativesDtos);
 		
 	}
-	
-//	@Transactional
-//	public List<AppUserWithRoleDto> getContributors(UUID initiativeId) {
-//		Initiative initiative = initiativeRepository.findById(initiativeId); 
-//		
-//		
-//		return subinitiativeDtos;
-//	}
 }
