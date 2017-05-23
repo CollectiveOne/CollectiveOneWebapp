@@ -5,11 +5,6 @@
         <h3>{{ initiative.name }}</h3>
       </header>
 
-      <div class=" w3-row">
-        <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding w3-border-blue">Overview</div>
-        <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Actions</div>
-        <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Activity</div>
-      </div>
       <div class="w3-row">
         <router-view :initiative="initiative"></router-view>
       </div>
