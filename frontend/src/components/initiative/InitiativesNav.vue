@@ -18,7 +18,7 @@ import InitiativeMenuItem from './InitiativeMenuItem.vue'
 export default {
 
   components: {
-    AppInitiativeMenuItem: InitiativeMenuItem
+    'app-initiative-menu-item': InitiativeMenuItem
   },
 
   data () {

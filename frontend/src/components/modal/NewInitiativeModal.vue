@@ -59,7 +59,7 @@
           <div class="w3-border w3-round w3-padding contributors-container">
             <div class="w3-row-padding" v-for="contributor in contributors" :key="contributor.auth0Id">
               <div class="w3-col m7">
-                <app-user-avatar :userData="contributor"></app-user-avatar>
+                <app-user-avatar :userData="contributor.user"></app-user-avatar>
               </div>
               <div class="w3-col m5">
                 <div class="w3-row-padding">
@@ -121,10 +121,10 @@ export default {
   },
 
   components: {
-    AppUserSelector: UserSelector,
-    AppUserAvatar: UserAvatar,
-    AppSubinitiativeOf: SubinitiativeOf,
-    AppNewToken: NewToken
+    'app-user-selector': UserSelector,
+    'app-user-avatar': UserAvatar,
+    'app-subinitiative-of': SubinitiativeOf,
+    'app-new-token': NewToken
   },
 
   data () {
@@ -140,9 +140,8 @@ export default {
         ownedByThisHolder: 0,
         assetName: 'token'
       },
-      otherAssetsTransfers: {
-        assetsDto: []
-      }
+      otherAssetsTransfers: []
+
     }
   },
 
@@ -230,10 +229,11 @@ export default {
   },
 
   mounted () {
-    var loggedUser = this.$store.state.user.profile
-    loggedUser.role = 'admin'
-    if (loggedUser) {
-      this.contributors.push(loggedUser)
+    if (this.$store.state.user.profile) {
+      var contributor = {}
+      contributor.user = this.$store.state.user.profile
+      contributor.role = 'ADMIN'
+      this.contributors.push(contributor)
     }
 
     this.updateParent()

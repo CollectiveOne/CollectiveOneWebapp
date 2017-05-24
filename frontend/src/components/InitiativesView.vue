@@ -13,7 +13,7 @@
     </div>
 
     <div :class="{'expanded-menu': showSideBar}">
-      <router-view></router-view>
+      <router-view @new-initiative="newInitiative($event)"></router-view>
     </div>
   </div>
 </template>

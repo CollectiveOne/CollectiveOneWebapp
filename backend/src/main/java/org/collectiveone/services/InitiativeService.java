@@ -13,13 +13,14 @@ import org.collectiveone.model.basic.TokenType;
 import org.collectiveone.model.enums.ContributorRole;
 import org.collectiveone.model.enums.InitiativeRelationshipType;
 import org.collectiveone.model.enums.TokenHolderType;
-import org.collectiveone.model.extensions.InitiativeContributor;
+import org.collectiveone.model.extensions.Contributor;
 import org.collectiveone.model.extensions.InitiativeRelationship;
 import org.collectiveone.repositories.AppUserRepositoryIf;
+import org.collectiveone.repositories.InitiativeContributorRepositoryIf;
 import org.collectiveone.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
-import org.collectiveone.web.dto.AppUserWithRoleDto;
 import org.collectiveone.web.dto.AssetsDto;
+import org.collectiveone.web.dto.ContributorDto;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.collectiveone.web.dto.NewInitiativeDto;
@@ -45,6 +46,9 @@ public class InitiativeService {
 	
 	@Autowired
 	InitiativeRelationshipRepositoryIf initiativeRelationshipRepository;
+	
+	@Autowired
+	InitiativeContributorRepositoryIf initiativeContributorRepository;
 	
 	
 	public PostResult init(UUID c1Id, NewInitiativeDto initiativeDto) {
@@ -90,16 +94,20 @@ public class InitiativeService {
 			initiative.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			initiative.setEnabled(true);
 			
+			initiative = initiativeRepository.save(initiative);
+			
 			/* List of Contributors */
-			for (AppUserWithRoleDto user : initiativeDto.getContributors()) {
-				InitiativeContributor contributor = new InitiativeContributor();
-				contributor.setUser(appUserRepository.findByC1Id(UUID.fromString(user.getC1Id())));
-				contributor.setRole(ContributorRole.ADMIN);
+			for (ContributorDto contributorDto : initiativeDto.getContributors()) {
+				Contributor contributor = new Contributor();
+				contributor.setInitiative(initiative);
+				contributor.setUser(appUserRepository.findByC1Id(UUID.fromString(contributorDto.getUser().getC1Id())));
+				contributor.setRole(ContributorRole.valueOf(contributorDto.getRole()));
 				
+				contributor = initiativeContributorRepository.save(contributor);
 				initiative.getContributors().add(contributor);
 			}
 			
-			return initiativeRepository.save(initiative);
+			return initiative;
 			
 		} else {		
 			return null;
@@ -240,4 +248,20 @@ public class InitiativeService {
 		return new GetResult<List<InitiativeDto>>("succes", "initiatives returned", initiativesDtos);
 		
 	}
+	@Transactional
+	public List<ContributorDto> getContributors(UUID initiativeId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId); 
+		
+		List<ContributorDto> contributorsDtos = new ArrayList<ContributorDto>();
+		for (Contributor contributor : initiative.getContributors()) {
+			ContributorDto contributorDto = new ContributorDto();
+			contributorDto.setUser(contributor.getUser().toDto());
+			contributorDto.setRole(contributor.getRole().toString());
+		
+			contributorsDtos.add(contributorDto);
+		}
+		
+		return contributorsDtos;
+	}
+	
 }

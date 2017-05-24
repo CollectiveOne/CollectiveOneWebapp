@@ -8,7 +8,7 @@ public class NewInitiativeDto {
 	private String parentInitiativeId;
 	private String name;
 	private String driver;
-	private List<AppUserWithRoleDto> contributors;
+	private List<ContributorDto> contributors;
 	private AssetsDto ownTokens;
 	private List<TransferDto> otherAssetsTransfers;
 	
@@ -37,10 +37,10 @@ public class NewInitiativeDto {
 	public void setDriver(String driver) {
 		this.driver = driver;
 	}
-	public List<AppUserWithRoleDto> getContributors() {
+	public List<ContributorDto> getContributors() {
 		return contributors;
 	}
-	public void setContributors(List<AppUserWithRoleDto> contributors) {
+	public void setContributors(List<ContributorDto> contributors) {
 		this.contributors = contributors;
 	}
 	public AssetsDto getOwnTokens() {

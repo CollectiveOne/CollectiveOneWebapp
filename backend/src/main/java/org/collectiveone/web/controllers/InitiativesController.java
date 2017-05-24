@@ -56,7 +56,7 @@ public class InitiativesController {
 		}
 		
 		if(addContributors) {
-//			initiativeDto.setContributors(initiativeService.getContributors(UUID.fromString(id)));
+			initiativeDto.setContributors(initiativeService.getContributors(UUID.fromString(id)));
 		}
 		
 		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeDto);

@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -17,7 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.model.extensions.InitiativeContributor;
+import org.collectiveone.model.extensions.Contributor;
 import org.collectiveone.model.extensions.InitiativeRelationship;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.hibernate.annotations.GenericGenerator;
@@ -52,9 +51,8 @@ public class Initiative {
 	@ManyToOne
 	private AppUser creator;
 	
-	@ManyToMany
-	@JoinTable(name = "initiatives_contributors")
-	private Set<InitiativeContributor> contributors = new LinkedHashSet<InitiativeContributor>();
+	@ManyToMany(mappedBy = "initiative")
+	private Set<Contributor> contributors = new LinkedHashSet<Contributor>();
 	
 	@OneToOne
 	private TokenType tokenType;
@@ -71,7 +69,6 @@ public class Initiative {
 		dto.setCreatorNickname(creator.getNickname());
 		dto.setCreationDate(creationDate);
 		dto.setDriver(driver);
-
 		
 		return dto;
 	}
@@ -113,10 +110,10 @@ public class Initiative {
 	public void setCreator(AppUser creator) {
 		this.creator = creator;
 	}
-	public Set<InitiativeContributor> getContributors() {
+	public Set<Contributor> getContributors() {
 		return contributors;
 	}
-	public void setContributors(Set<InitiativeContributor> contributors) {
+	public void setContributors(Set<Contributor> contributors) {
 		this.contributors = contributors;
 	}
 	public TokenType getTokenType() {

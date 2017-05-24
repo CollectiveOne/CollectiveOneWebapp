@@ -12,12 +12,12 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 
 	Initiative findById(UUID id);
 	
-	@Query("SELECT init FROM Initiative init JOIN init.contributors ctr WHERE ctr.c1Id = ?1")
+	@Query("SELECT init FROM Initiative init JOIN init.contributors ctr WHERE ctr.user.c1Id = ?1")
 	List<Initiative> findOfContributor(UUID contributorId);
 	
 	@Query("SELECT init FROM Initiative init "
 			+ "JOIN init.contributors ctr "
-			+ "WHERE ctr.c1Id = ?1 "
+			+ "WHERE ctr.user.c1Id = ?1 "
 			+ "AND init.id NOT IN "
 			+ "(SELECT childInit.id FROM Initiative childInit "
 			+ "JOIN childInit.relationships childRels "

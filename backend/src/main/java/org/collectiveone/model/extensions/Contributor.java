@@ -12,13 +12,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.model.basic.AppUser;
+import org.collectiveone.model.basic.Initiative;
 import org.collectiveone.model.enums.ContributorRole;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table( name = "initiative_contributors" )
-public class InitiativeContributor {
+@Table( name = "contributors" )
+public class Contributor {
 
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -26,6 +27,9 @@ public class InitiativeContributor {
 		parameters = { @Parameter( name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
+	
+	@ManyToOne
+	private Initiative initiative;
 	
 	@ManyToOne
 	private AppUser user;
@@ -39,6 +43,14 @@ public class InitiativeContributor {
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public Initiative getInitiative() {
+		return initiative;
+	}
+
+	public void setInitiative(Initiative initiative) {
+		this.initiative = initiative;
 	}
 
 	public AppUser getUser() {

@@ -1,23 +1,36 @@
 <template lang="html">
-  <div v-if="initiative" class="w3-row">
-    <div class="w3-white">
-      <header class="w3-container w3-theme">
-        <h3>{{ initiative.name }}</h3>
-      </header>
+  <div class="">
+    <app-new-member-modal v-if="showNewMemberModal" :initId="initiativeIdForModal" @close-this="showNewMemberModal = false"></app-new-member-modal>
+    <div v-if="initiative" class="w3-row">
+      <div class="w3-white">
+        <header class="w3-container w3-theme">
+          <h3>{{ initiative.name }}</h3>
+        </header>
 
-      <div class="w3-row">
-        <router-view :initiative="initiative"></router-view>
+        <div class="w3-row">
+          <router-view :initiative="initiative"
+            @new-initiative="$emit('new-initiative', $event)"
+            @new-member="newMember($event)">
+          </router-view>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import NewMemberModal from '../modal/NewMemberModal.vue'
+
 export default {
+
+  components: {
+    'app-new-member-modal': NewMemberModal
+  },
 
   data () {
     return {
-      initiative: null
+      initiative: null,
+      showNewMemberModal: false
     }
   },
 
@@ -26,13 +39,17 @@ export default {
       this.axios.get('/1/secured/initiative/' + id, {
         params: {
           addAssets: true,
-          addSubinitiatives: true
+          addSubinitiatives: true,
+          addContributors: true
         }
       }).then((response) => {
         this.initiative = response.data.data
       }).catch((error) => {
         console.log(error)
       })
+    },
+    newMember () {
+      this.showNewMemberModal = true
     }
   },
 

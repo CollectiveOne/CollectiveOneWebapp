@@ -50,6 +50,10 @@ export default {
   padding-top: 30px;
 }
 
+.l3-color {
+  color: #b1b8e3 !important; /* w3-indigo l3*/
+}
+
 .l2-color {
   color: #8995d6 !important; /* w3-indigo l2*/
 }
