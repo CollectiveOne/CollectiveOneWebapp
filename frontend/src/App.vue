@@ -58,6 +58,10 @@ export default {
   color: #8995d6 !important; /* w3-indigo l2*/
 }
 
+.l1-color {
+  color: #8995d6 !important
+}
+
 .d2-color {
   color: #334191 !important;  /* w3-indigo d2*/
 }

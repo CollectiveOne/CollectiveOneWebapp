@@ -16,7 +16,7 @@ import org.collectiveone.model.enums.TokenHolderType;
 import org.collectiveone.model.extensions.Contributor;
 import org.collectiveone.model.extensions.InitiativeRelationship;
 import org.collectiveone.repositories.AppUserRepositoryIf;
-import org.collectiveone.repositories.InitiativeContributorRepositoryIf;
+import org.collectiveone.repositories.ContributorRepositoryIf;
 import org.collectiveone.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
 import org.collectiveone.web.dto.AssetsDto;
@@ -48,7 +48,7 @@ public class InitiativeService {
 	InitiativeRelationshipRepositoryIf initiativeRelationshipRepository;
 	
 	@Autowired
-	InitiativeContributorRepositoryIf initiativeContributorRepository;
+	ContributorRepositoryIf contributorRepository;
 	
 	
 	public PostResult init(UUID c1Id, NewInitiativeDto initiativeDto) {
@@ -103,7 +103,7 @@ public class InitiativeService {
 				contributor.setUser(appUserRepository.findByC1Id(UUID.fromString(contributorDto.getUser().getC1Id())));
 				contributor.setRole(ContributorRole.valueOf(contributorDto.getRole()));
 				
-				contributor = initiativeContributorRepository.save(contributor);
+				contributor = contributorRepository.save(contributor);
 				initiative.getContributors().add(contributor);
 			}
 			
@@ -169,8 +169,6 @@ public class InitiativeService {
 		return initiativeDto;
 	}
 	
-	
-
 	/** Get the distribution of an asset starting from a given initiative
 	 * and going though all its sub-initiatives recursively */
 	@Transactional
@@ -248,6 +246,7 @@ public class InitiativeService {
 		return new GetResult<List<InitiativeDto>>("succes", "initiatives returned", initiativesDtos);
 		
 	}
+	
 	@Transactional
 	public List<ContributorDto> getContributors(UUID initiativeId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId); 
@@ -255,6 +254,9 @@ public class InitiativeService {
 		List<ContributorDto> contributorsDtos = new ArrayList<ContributorDto>();
 		for (Contributor contributor : initiative.getContributors()) {
 			ContributorDto contributorDto = new ContributorDto();
+			
+			contributorDto.setId(contributor.getId().toString());
+			contributorDto.setIntiativeId(initiative.getId().toString());
 			contributorDto.setUser(contributor.getUser().toDto());
 			contributorDto.setRole(contributor.getRole().toString());
 		
@@ -264,4 +266,27 @@ public class InitiativeService {
 		return contributorsDtos;
 	}
 	
+	@Transactional
+	public PostResult addContributor(UUID c1Id, ContributorDto contributorDto) {
+		Initiative initiative = initiativeRepository.findById(UUID.fromString(contributorDto.getIntiativeId()));
+		
+		Contributor contributor = new Contributor();
+		contributor.setInitiative(initiative);
+		contributor.setUser(appUserRepository.findByC1Id(UUID.fromString(contributorDto.getUser().getC1Id())));
+		contributor.setRole(ContributorRole.valueOf(contributorDto.getRole()));
+		
+		contributor = contributorRepository.save(contributor);
+		initiative.getContributors().add(contributor);
+		
+		initiativeRepository.save(initiative);
+		
+		return new PostResult("success", "contributor added");
+	}
+	
+	@Transactional
+	public PostResult deleteContributor(UUID c1Id, UUID contributorId) {
+		Contributor contributor = contributorRepository.findById(contributorId);
+		contributorRepository.delete(contributor);
+		return new PostResult("success", "contributor added");
+	}
 }

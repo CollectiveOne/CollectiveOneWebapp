@@ -8,7 +8,7 @@
       <div class="w3-col m8">
         <app-initiative-selector class="initiative-selector"
           anchor="id" label="name" :init="parentInitiative"
-          url="/1/secured/initiatives/search"
+          url="/1/secured/initiatives/suggestions"
           @select="parentInitiativeSelected($event)">
         </app-initiative-selector>
       </div>

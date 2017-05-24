@@ -1,13 +1,13 @@
 <template lang="html">
-  <div class="w3-container this-container">
+  <div class="this-container">
 
-    <div class="w3-row">
-      <div class="w3-col m3 w3-center">
+    <div class="w3-row-padding">
+      <div class="w3-col m4 w3-center">
         <div class="w3-display-container total-container">
           <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
           <div class="w3-display-middle d2-color" style="width: 100%">
             <div class="w3-row">
-              <b class="w3-xxlarge ">{{ ownedByThisInitiativeAndSubinitiativesStr }} {{ assetData.assetName }}</b>
+              <b class="w3-xlarge ">{{ ownedByThisInitiativeAndSubinitiativesStr }} {{ assetData.assetName }}</b>
             </div>
             <div class="w3-row">
               <b class="w3-large">{{ ownedByThisInitiativeAndSubinitiativesPercent }}% of existing</b>

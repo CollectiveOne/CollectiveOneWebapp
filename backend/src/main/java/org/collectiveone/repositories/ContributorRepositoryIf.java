@@ -5,5 +5,7 @@ import java.util.UUID;
 import org.collectiveone.model.extensions.Contributor;
 import org.springframework.data.repository.CrudRepository;
 
-public interface InitiativeContributorRepositoryIf extends CrudRepository<Contributor, UUID> {
+public interface ContributorRepositoryIf extends CrudRepository<Contributor, UUID> {
+	
+	Contributor findById(UUID id);
 }

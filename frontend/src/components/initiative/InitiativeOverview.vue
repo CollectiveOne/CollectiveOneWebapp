@@ -29,22 +29,20 @@
     <br>
     <div class="w3-card">
       <header class="w3-container w3-theme-l2">
-        <div class="w3-row">
-          <div class="w3-col s10">
-            <h4>Members</h4>
-          </div>
-          <div class="w3-col s2" style="padding-top: 6px;">
-            <button type="button" class="w3-button w3-right w3-theme-l1 w3-round"
-              @click="$emit('new-member', initiative.id)">add / edit</button>
-          </div>
-        </div>
-
-
+        <h4>Members</h4>
       </header>
-      <div class="w3-container">
-        <div v-for="contributor in this.initiative.contributors" :key="contributor.user.c1Id">
-          <app-user-avatar :userData="contributor.user"></app-user-avatar>
+
+      <div class="w3-container members-div">
+        <app-initiative-contributor
+          v-for="contributor in initiative.contributors"
+          :key="contributor.user.c1Id"
+          :contributor="contributor"
+          @remove="removeContributor($event)">
+        </app-initiative-contributor>
+        <div class="w3-row" :style="{'margin-bottom': '5px'}">
+          <label class="w3-text-indigo" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
         </div>
+        <app-initiative-new-contributor @add="addContributor($event)"></app-initiative-new-contributor>
       </div>
 
     </div>
@@ -53,13 +51,16 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import InitiativeTokensDistributionChart from './InitiativeTokensDistributionChart.vue'
-import UserAvatar from '../user/UserAvatar.vue'
+import InitiativeNewContributor from './InitiativeNewContributor.vue'
+import InitiativeContributor from './InitiativeContributor.vue'
 
 export default {
   components: {
     'app-tokens-distribution-chart': InitiativeTokensDistributionChart,
-    'app-user-avatar': UserAvatar
+    'app-initiative-contributor': InitiativeContributor,
+    'app-initiative-new-contributor': InitiativeNewContributor
   },
 
   props: {
@@ -94,9 +95,39 @@ export default {
   },
 
   methods: {
+    ...mapActions(['showOutputMessage']),
+
     newSubInitiativeClicked (initiativeId) {
       this.parentInitiativeIdForModal = initiativeId
       this.showNewInitiativeModal = true
+    },
+
+    addContributor (contributor) {
+      var index = this.indexOfContributor(contributor.user.c1Id)
+      if (index === -1) {
+        this.axios.post('/1/secured/initiative/' + this.intiative.id + '/contributor').then((response) => {
+        })
+      } else {
+        this.showOutputMessage('user has been already included')
+      }
+    },
+
+    removeContributor (contributor) {
+      var index = this.indexOfContributor(contributor.user.c1Id)
+      if (index > -1) {
+        this.axios.delete('/1/secured/initiative/' + this.initiative.id + '/contributor/' + contributor.id,
+        ).then((response) => {
+        })
+      }
+    },
+
+    indexOfContributor (c1Id) {
+      for (var ix in this.initiative.contributors) {
+        if (this.initiative.contributors[ix].user.c1Id === c1Id) {
+          return ix
+        }
+      }
+      return -1
     }
   }
 }
@@ -106,6 +137,11 @@ export default {
 
 .this-container {
   padding-top: 25px !important;
+}
+
+.members-div {
+  padding-top: 15px;
+  padding-bottom: 30px;
 }
 
 </style>

@@ -1,5 +1,7 @@
 package org.collectiveone.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -53,6 +55,20 @@ public class AppUserService {
 	public GetResult<AppUserDto> getDto(UUID c1Id) {
 		return new GetResult<AppUserDto>("success", "user profile retrieved", getFromC1Id(c1Id).toDto());
 	}
+
+	@Transactional
+	public GetResult<List<AppUserDto>> searchBy(String q) {
+		List<AppUser> appUsers = appUserRepository.searchByNickname(q);
+		
+		List<AppUserDto> appUserDtos = new ArrayList<AppUserDto>();
+		
+		for(AppUser appUser : appUsers) {
+			appUserDtos.add(appUser.toDto());
+		}
+		
+		return new GetResult<List<AppUserDto>>("succes", "initiatives returned", appUserDtos);
+	}
+	
 	
 	@Transactional
 	private AppUser addUserToLocalDB(String auth0Id) {
@@ -79,5 +95,5 @@ public class AppUserService {
 		
 		return appUser;
 	} 
-	
+
 }

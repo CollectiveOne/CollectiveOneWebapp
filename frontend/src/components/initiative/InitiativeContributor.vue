@@ -1,0 +1,50 @@
+<template lang="html">
+  <div class="w3-row">
+    <div class="w3-col m7">
+      <app-user-avatar :user="contributor.user"></app-user-avatar>
+    </div>
+    <div class="w3-col m5">
+      <div class="w3-row-padding">
+        <div class="w3-col s8 w3-center">
+          <p><span class="role-tag w3-tag w3-large w3-round" :class="getRoleClasses(contributor)">{{ contributor.role }}</span></p>
+        </div>
+        <div class="w3-col s4 w3-xxlarge w3-button w3-center">
+          <div @click="$emit('remove', contributor)"><i class="fa fa-times-circle-o l1-color" aria-hidden="true"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import UserAvatar from '../user/UserAvatar.vue'
+
+export default {
+  components: {
+    'app-user-avatar': UserAvatar
+  },
+
+  props: {
+    contributor: {
+      type: Object
+    }
+  },
+
+  methods: {
+    getRoleClasses (contributor) {
+      return {
+        'w3-theme': contributor.role === 'ADMIN',
+        'w3-theme-l2': contributor.role !== 'ADMIN'
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+.role-tag {
+  width: 120px;
+}
+
+</style>

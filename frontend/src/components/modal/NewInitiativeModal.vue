@@ -57,33 +57,17 @@
 
           <label class="init-contr-label w3-text-indigo"><b>Initial Contributors</b></label>
           <div class="w3-border w3-round w3-padding contributors-container">
-            <div class="w3-row-padding" v-for="contributor in contributors" :key="contributor.auth0Id">
-              <div class="w3-col m7">
-                <app-user-avatar :userData="contributor.user"></app-user-avatar>
-              </div>
-              <div class="w3-col m5">
-                <div class="w3-row-padding">
-                  <div class="w3-col s8">
-                    <p><span class="w3-tag w3-large w3-round w3-theme">{{ contributor.role }}</span></p>
-                  </div>
-                  <div class="w3-col s4 w3-xxlarge w3-button">
-                    <div @click="removeContributor(contributor)"><i class="fa fa-times-circle-o" aria-hidden="true"></i></div>
-                  </div>
-                </div>
-              </div>
+            <app-initiative-contributor
+              v-for="contributor in contributors"
+              :key="contributor.user.c1Id"
+              :contributor="contributor"
+              @remove="removeContributor($event)">
+            </app-initiative-contributor>
+            <div class="w3-row" :style="{'margin-bottom': '5px'}">
+              <label class="w3-text-indigo" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
             </div>
+            <app-initiative-new-contributor class="new-contr-row" @select="addContributor($event)"></app-initiative-new-contributor>
 
-            <div class="new-contr-row w3-row-padding">
-              <div class="w3-col m7">
-                <app-user-selector></app-user-selector>
-              </div>
-              <div class="w3-col m2">
-                <input class="w3-input w3-border w3-hover-light-gray" type="text" placeholder="role">
-              </div>
-              <div class="w3-col m3">
-                <button type="button" class="add-btn w3-button w3-teal w3-round" @click="addContributor()">Add</button>
-              </div>
-            </div>
           </div>
           <hr>
 
@@ -103,10 +87,10 @@
 
 <script>
 import { mapActions } from 'vuex'
-import UserSelector from '../user/UserSelector.vue'
-import UserAvatar from '../user/UserAvatar.vue'
 import SubinitiativeOf from './SubinitiativeOf.vue'
 import NewToken from './NewToken.vue'
+import InitiativeNewContributor from '../initiative/InitiativeNewContributor.vue'
+import InitiativeContributor from '../initiative/InitiativeContributor.vue'
 
 /* eslint-disable no-unused-vars */
 import { tokensString } from '../../lib/common'
@@ -121,10 +105,10 @@ export default {
   },
 
   components: {
-    'app-user-selector': UserSelector,
-    'app-user-avatar': UserAvatar,
     'app-subinitiative-of': SubinitiativeOf,
-    'app-new-token': NewToken
+    'app-new-token': NewToken,
+    'app-initiative-contributor': InitiativeContributor,
+    'app-initiative-new-contributor': InitiativeNewContributor
   },
 
   data () {
@@ -135,12 +119,12 @@ export default {
       },
       name: '',
       driver: '',
-      contributors: [],
       ownTokens: {
         ownedByThisHolder: 0,
         assetName: 'token'
       },
-      otherAssetsTransfers: []
+      otherAssetsTransfers: [],
+      contributors: []
 
     }
   },
@@ -187,6 +171,31 @@ export default {
 
     parentInitiativeUpdated (initiative) {
       this.parentInitiative = initiative
+    },
+
+    addContributor (contributor) {
+      var index = this.indexOfContributor(contributor.user.c1Id)
+      if (index === -1) {
+        this.contributors.push(contributor)
+      } else {
+        this.showOutputMessage('user has been already included')
+      }
+    },
+
+    removeContributor (contributor) {
+      var index = this.indexOfContributor(contributor.user.c1Id)
+      if (index > -1) {
+        this.contributors.splice(index, 1)
+      }
+    },
+
+    indexOfContributor (c1Id) {
+      for (var ix in this.contributors) {
+        if (this.contributors[ix].user.c1Id === c1Id) {
+          return ix
+        }
+      }
+      return -1
     },
 
     closeThis () {

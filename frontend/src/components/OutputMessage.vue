@@ -1,6 +1,6 @@
 <template lang="html">
-  <div v-if="showOutput" class="message-container w3-panel w3-teal w3-card-4 w3-display-topmiddle">
-    <h5>{{ outputMessage }}</h5>
+  <div v-if="showOutput" class="message-container w3-tag w3-theme-l2 w3-display-topmiddle">
+    <p>{{ outputMessage }}</p>
   </div>
 </template>
 
