@@ -2,7 +2,7 @@ package org.collectiveone.web.dto;
 
 public class ContributorDto {
 	private String id;
-	private String intiativeId;
+	private String initiativeId;
 	private AppUserDto user;
 	private String role;
 	
@@ -14,12 +14,12 @@ public class ContributorDto {
 		this.id = id;
 	}
 
-	public String getIntiativeId() {
-		return intiativeId;
+	public String getInitiativeId() {
+		return initiativeId;
 	}
 
-	public void setIntiativeId(String intiativeId) {
-		this.intiativeId = intiativeId;
+	public void setInitiativeId(String intiativeId) {
+		this.initiativeId = intiativeId;
 	}
 
 	public AppUserDto getUser() {

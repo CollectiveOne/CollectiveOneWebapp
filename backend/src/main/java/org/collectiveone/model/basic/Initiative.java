@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.collectiveone.model.extensions.Contributor;
@@ -52,6 +53,7 @@ public class Initiative {
 	private AppUser creator;
 	
 	@ManyToMany(mappedBy = "initiative")
+	@OrderBy("role ASC")
 	private Set<Contributor> contributors = new LinkedHashSet<Contributor>();
 	
 	@OneToOne

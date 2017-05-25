@@ -230,6 +230,7 @@ export default {
 .sub-initiatives {
   padding-top: 15px;
   padding-left: 30px;
+  padding-right: 30px;
 }
 
 

@@ -104,8 +104,10 @@ export default {
 
     addContributor (contributor) {
       var index = this.indexOfContributor(contributor.user.c1Id)
+      contributor.initiativeId = this.initiative.id
+
       if (index === -1) {
-        this.axios.post('/1/secured/initiative/' + this.intiative.id + '/contributor').then((response) => {
+        this.axios.post('/1/secured/initiative/' + this.initiative.id + '/contributor', contributor).then((response) => {
         })
       } else {
         this.showOutputMessage('user has been already included')

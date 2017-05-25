@@ -256,7 +256,7 @@ public class InitiativeService {
 			ContributorDto contributorDto = new ContributorDto();
 			
 			contributorDto.setId(contributor.getId().toString());
-			contributorDto.setIntiativeId(initiative.getId().toString());
+			contributorDto.setInitiativeId(initiative.getId().toString());
 			contributorDto.setUser(contributor.getUser().toDto());
 			contributorDto.setRole(contributor.getRole().toString());
 		
@@ -268,7 +268,7 @@ public class InitiativeService {
 	
 	@Transactional
 	public PostResult addContributor(UUID c1Id, ContributorDto contributorDto) {
-		Initiative initiative = initiativeRepository.findById(UUID.fromString(contributorDto.getIntiativeId()));
+		Initiative initiative = initiativeRepository.findById(UUID.fromString(contributorDto.getInitiativeId()));
 		
 		Contributor contributor = new Contributor();
 		contributor.setInitiative(initiative);

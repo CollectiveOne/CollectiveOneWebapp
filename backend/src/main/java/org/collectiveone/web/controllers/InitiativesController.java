@@ -74,7 +74,7 @@ public class InitiativesController {
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{id}/contributor", method = RequestMethod.POST) 
-	public PostResult addContributor(@PathVariable("id") String id, ContributorDto contributorDto) {
+	public PostResult addContributor(@PathVariable("id") String id, @RequestBody ContributorDto contributorDto) {
 		return initiativeService.addContributor(getLoggedUser().getC1Id(), contributorDto);
 	}
 	

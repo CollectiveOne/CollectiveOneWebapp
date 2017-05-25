@@ -66,7 +66,7 @@
             <div class="w3-row" :style="{'margin-bottom': '5px'}">
               <label class="w3-text-indigo" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
             </div>
-            <app-initiative-new-contributor class="new-contr-row" @select="addContributor($event)"></app-initiative-new-contributor>
+            <app-initiative-new-contributor class="new-contr-row" @add="addContributor($event)"></app-initiative-new-contributor>
 
           </div>
           <hr>
