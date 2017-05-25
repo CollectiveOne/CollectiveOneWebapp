@@ -1,15 +1,18 @@
 <template lang="html">
-  <div class="w3-white">
-    <div class="w3-display-topright w3-xlarge" @click="$emit('close-navbar')"><i class="fa fa-times" aria-hidden="true"></i></div>
+  <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;">
+    <div class="w3-display-topright d2-color w3-xlarge" @click="$emit('close-navbar')"><i class="fa fa-times" aria-hidden="true"></i></div>
     <div class="w3-container w3-padding">
-      <h4 class="w3-opacity">My Initiatives</h4>
-      <h5 class="create-new w3-button" @click="newInitiative()"><i class="fa fa-plus-circle"></i>  create new</h5>
-      <app-initiative-menu-item v-for="initiative in userInitiatives"
-        :initiative="initiative" :key="initiative.id"
-        @new-subinitiative="$emit('new-initiative', $event)">
-      </app-initiative-menu-item>
+      <h4 class="d2-color"><b>My Initiatives</b></h4>
+      <h5 class="create-new l2-color w3-button" @click="newInitiative()"><i class="fa fa-plus-circle"></i>  create new</h5>
+      <div class="w3-card-2">
+        <app-initiative-menu-item v-for="initiative in userInitiatives"
+          :initiative="initiative" :key="initiative.id"
+          @new-subinitiative="$emit('new-initiative', $event)">
+        </app-initiative-menu-item>
+      </div>
+
     </div>
-  </div>
+  </nav>
 </template>
 
 <script>
@@ -21,30 +24,17 @@ export default {
     'app-initiative-menu-item': InitiativeMenuItem
   },
 
-  data () {
-    return {
-      userInitiatives: null
+  props: {
+    userInitiatives: {
+      type: Array
     }
   },
 
   methods: {
     newInitiative () {
       this.$emit('new-initiative', '')
-    },
-
-    updatedMyInitiatives () {
-      this.axios.get('/1/secured/initiatives/mines').then((response) => {
-        this.userInitiatives = response.data.data
-      }).catch((error) => {
-        console.log(error)
-      })
     }
-  },
-
-  mounted () {
-    this.updatedMyInitiatives()
   }
-
 }
 </script>
 
@@ -52,7 +42,6 @@ export default {
 
 .create-new {
   margin: 0px;
-  color: rgb(110, 110, 110);
   width: 100%;
 }
 
@@ -65,7 +54,6 @@ export default {
 }
 
 .fa-times {
-  color: #607d8b;
   margin-right: 10px;
 }
 

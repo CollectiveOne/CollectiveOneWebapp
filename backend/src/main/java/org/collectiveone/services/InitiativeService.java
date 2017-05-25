@@ -61,7 +61,7 @@ public class InitiativeService {
 			initiative.setTokenType(token);
 			initiative = initiativeRepository.save(initiative);
 			tokenService.mintToHolder(token.getId(), initiative.getId(), initiativeDto.getOwnTokens().getOwnedByThisHolder(), TokenHolderType.INITIATIVE);
-			return new PostResult("success", "initiative created and tokens created");
+			return new PostResult("success", "initiative created and tokens created", initiative.getId().toString());
 			
 		} else {
 			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
@@ -75,7 +75,7 @@ public class InitiativeService {
 				tokenService.transfer(UUID.fromString(thisTransfer.getAssetId()), parent.getId(), initiative.getId(), thisTransfer.getValue(), TokenHolderType.INITIATIVE);
 			}
 			
-			return new PostResult("success", "sub initiative created and tokens transferred");
+			return new PostResult("success", "sub initiative created and tokens transferred",  initiative.getId().toString());
 		}
 	}
 	
@@ -280,13 +280,13 @@ public class InitiativeService {
 		
 		initiativeRepository.save(initiative);
 		
-		return new PostResult("success", "contributor added");
+		return new PostResult("success", "contributor added",  contributor.getId().toString());
 	}
 	
 	@Transactional
 	public PostResult deleteContributor(UUID c1Id, UUID contributorId) {
 		Contributor contributor = contributorRepository.findById(contributorId);
 		contributorRepository.delete(contributor);
-		return new PostResult("success", "contributor added");
+		return new PostResult("success", "contributor added", "");
 	}
 }

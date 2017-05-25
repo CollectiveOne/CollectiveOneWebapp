@@ -214,8 +214,13 @@ export default {
       }
 
       this.axios.post('/1/secured/initiative', intitiatveDto).then((response) => {
-        this.showOutputMessage(response.data.message)
-        this.closeThis()
+        if (response.data.result === 'success') {
+          this.showOutputMessage(response.data.message)
+          this.closeThis()
+          this.$emit('initiative-created', response.data.elementId)
+        } else {
+          this.showOutputMessage(response.data.message)
+        }
       }).catch((error) => {
         console.log(error)
       })

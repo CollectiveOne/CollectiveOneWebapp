@@ -108,6 +108,11 @@ export default {
 
       if (index === -1) {
         this.axios.post('/1/secured/initiative/' + this.initiative.id + '/contributor', contributor).then((response) => {
+          if (response.data.result === 'success') {
+            this.$emit('please-update')
+          } else {
+            this.showOutputMessage(response.data.message)
+          }
         })
       } else {
         this.showOutputMessage('user has been already included')
@@ -119,6 +124,11 @@ export default {
       if (index > -1) {
         this.axios.delete('/1/secured/initiative/' + this.initiative.id + '/contributor/' + contributor.id,
         ).then((response) => {
+          if (response.data.result === 'success') {
+            this.$emit('please-update')
+          } else {
+            this.showOutputMessage(response.data.message)
+          }
         })
       }
     },

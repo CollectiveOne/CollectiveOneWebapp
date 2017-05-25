@@ -10,7 +10,8 @@
         <div class="w3-row">
           <router-view :initiative="initiative"
             @new-initiative="$emit('new-initiative', $event)"
-            @new-member="newMember($event)">
+            @new-member="newMember($event)"
+            @please-update="updateInitiative(initiative.id)">
           </router-view>
         </div>
       </div>

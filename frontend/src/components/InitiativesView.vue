@@ -1,11 +1,16 @@
 <template lang="html">
   <div class="">
-    <app-new-initiative-modal v-if="showNewInitiativeModal" :parentInitId="parentInitiativeIdForModal" @close-this="showNewInitiativeModal = false"></app-new-initiative-modal>
+    <app-new-initiative-modal
+      v-if="showNewInitiativeModal" :parentInitId="parentInitiativeIdForModal"
+      @close-this="showNewInitiativeModal = false"
+      @initiative-created="initiativeCreated($event)">
+    </app-new-initiative-modal>
     <button class="expand-left-menu-btn w3-button w3-theme w3-xlarge" @click="showSideBar = !showSideBar">></button>
 
-    <div v-if="showSideBar" class="w3-sidebar w3-bar-block" style="width:25%">
+    <div v-if="showSideBar" class="" style="width:300px">
       <keep-alive>
         <app-initiatives-nav
+          :userInitiatives="userInitiatives"
           @close-navbar="showSideBar = false"
           @new-initiative="newInitiative($event)">
         </app-initiatives-nav>
@@ -31,7 +36,8 @@ export default {
   data () {
     return {
       showNewInitiativeModal: false,
-      showSideBar: true
+      showSideBar: true,
+      userInitiatives: null
     }
   },
 
@@ -39,7 +45,22 @@ export default {
     newInitiative (parentId) {
       this.parentInitiativeIdForModal = parentId
       this.showNewInitiativeModal = true
+    },
+    initiativeCreated (initiativeId) {
+      this.updatedMyInitiatives()
+      this.$router.push('/inits/' + initiativeId + '/overview')
+    },
+    updatedMyInitiatives () {
+      this.axios.get('/1/secured/initiatives/mines').then((response) => {
+        this.userInitiatives = response.data.data
+      }).catch((error) => {
+        console.log(error)
+      })
     }
+  },
+
+  mounted () {
+    this.updatedMyInitiatives()
   }
 }
 </script>
@@ -51,7 +72,7 @@ export default {
 }
 
 .expanded-menu {
-  margin-left:25%;
+  margin-left: 300px;
 }
 
 </style>
