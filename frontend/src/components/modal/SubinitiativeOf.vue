@@ -14,19 +14,24 @@
       </div>
     </div>
     <div v-if="parentInitiative.ownTokens" class="w3-row assigner-div">
-      <app-assets-assigner :assetsData="parentInitiative.ownTokens" @updated="parentOwnTokensSelected"></app-assets-assigner>
+      <app-tokens-distribution-chart
+        :assetId="parentInitiative.ownTokens.assetId" :initiativeId="parentInitiative.id"
+        :type="'assigner'">
+      </app-tokens-distribution-chart>
     </div>
     <div v-if="parentInitiative.otherAssets" class="w3-row assigner-div">
-      <div v-for="asset in parentInitiative.otherAssets" class="">
-        <app-assets-assigner :assetsData="asset" @updated="parentOtherAssetSelected"></app-assets-assigner>
-      </div>
+      <app-tokens-distribution-chart v-for="asset in parentInitiative.otherAssets"
+        :key="asset.assetId" :assetId="asset.assetId" :initiativeId="parentInitiative.id"
+        :type="'assigner'">
+      </app-tokens-distribution-chart>
     </div>
+
   </div>
 </template>
 
 <script>
 import InitiativeSelector from '../initiative/InitiativeSelector.vue'
-import AssetsAssigner from './AssetsAssigner.vue'
+import TokensDistributionChart from '../initiative/InitiativeTokensDistributionChart.vue'
 
 export default {
   props: {
@@ -36,8 +41,8 @@ export default {
   },
 
   components: {
-    AppInitiativeSelector: InitiativeSelector,
-    AppAssetsAssigner: AssetsAssigner
+    'app-initiative-selector': InitiativeSelector,
+    'app-tokens-distribution-chart': TokensDistributionChart
   },
 
   methods: {

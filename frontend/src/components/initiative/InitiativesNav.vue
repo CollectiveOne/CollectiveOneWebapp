@@ -1,14 +1,21 @@
 <template lang="html">
-  <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;">
+  <nav class="w3-sidebar w3-white" style="width:300px;">
     <div class="w3-display-topright d2-color w3-xlarge" @click="$emit('close-navbar')"><i class="fa fa-times" aria-hidden="true"></i></div>
     <div class="w3-container w3-padding">
-      <h4 class="d2-color"><b>My Initiatives</b></h4>
-      <h5 class="create-new l2-color w3-button" @click="newInitiative()"><i class="fa fa-plus-circle"></i>  create new</h5>
-      <div class="w3-card-2">
-        <app-initiative-menu-item v-for="initiative in userInitiatives"
-          :initiative="initiative" :key="initiative.id"
-          @new-subinitiative="$emit('new-initiative', $event)">
-        </app-initiative-menu-item>
+      <h4 class="d2-color"><b>Initiatives</b></h4>
+      <div class="create-new w3-button w3-theme-l1" @click="newInitiative()"><i class="fa fa-plus-circle"></i>  create new</div>
+
+      <div class="w3-row section-header">
+        <h6 class="section-header l2-color w3-center"><i>top-level</i></h6>
+      </div>
+      <app-initiative-menu-item v-for="initiative in userInitiatives"
+        :initiative="initiative" :key="initiative.id"
+        :level="0" class="top-menu-item"
+        @new-subinitiative="$emit('new-initiative', $event)">
+      </app-initiative-menu-item>
+
+      <div class="w3-row section-header">
+        <h6 class=" l2-color w3-center"><i>my favorites</i></h6>
       </div>
 
     </div>
@@ -41,8 +48,14 @@ export default {
 <style scoped>
 
 .create-new {
-  margin: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
   width: 100%;
+  text-align: left;
+}
+
+.section-header {
+  margin-top: 10px;
 }
 
 .w3-display-topright {
@@ -55,6 +68,10 @@ export default {
 
 .fa-times {
   margin-right: 10px;
+}
+
+.top-menu-item {
+  margin-bottom: 10px;
 }
 
 </style>

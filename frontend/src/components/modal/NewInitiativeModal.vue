@@ -76,7 +76,7 @@
               <button type="button" class="w3-button w3-light-gray w3-round" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-teal w3-round" @click="accept()">Accept</button>
+              <button type="button" class="w3-button w3-theme w3-round" @click="accept()">Accept</button>
             </div>
           </div>
         </form>

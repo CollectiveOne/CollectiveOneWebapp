@@ -2,7 +2,7 @@
   <div v-if="initiative" class="this-container w3-container w3-padding">
     <div class="w3-card">
       <header class="w3-container w3-theme-l2">
-        <h4>Overview</h4>
+        <h4>Driver</h4>
       </header>
       <div class="w3-container">
         <p>{{ initiative.driver }}</p>
@@ -11,17 +11,17 @@
     <br>
     <div class="w3-card">
       <header class="w3-container w3-theme-l2">
-        <h4>Tokens</h4>
+        <h4>Assets</h4>
       </header>
       <div v-if="hasOwnTokens">
         <app-tokens-distribution-chart
-          :assetId="this.initiative.ownTokens.assetId" :initiativeId="this.initiative.id"
+          :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
           @new-initiative="$emit('new-initiative', $event)">
         </app-tokens-distribution-chart>
       </div>
       <div v-if="hasOtherAssets">
-        <app-tokens-distribution-chart
-          :assetId="this.initiative.otherAssets[0].assetId" :initiativeId="this.initiative.id"
+        <app-tokens-distribution-chart v-for="asset in initiative.otherAssets"
+          :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
           @new-initiative="$emit('new-initiative', $event)">
         </app-tokens-distribution-chart>
       </div>

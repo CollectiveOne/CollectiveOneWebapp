@@ -1,28 +1,34 @@
 <template lang="html">
-  <div class="w3-container d2-color">
+  <div :class="topClass" class="d2-color">
     <div class="w3-row">
-      <div v-if="hasSubinitiatives" class="w3-col s3 w3-center expand-container">
-        <i v-if="!showSubinitiatives" @click="showSubinitiatives = true" class="fa fa-chevron-circle-down w3-button" aria-hidden="true"></i>
-        <i v-else @click="showSubinitiatives = false" class="fa fa-chevron-circle-up w3-button" aria-hidden="true"></i>
+      <div v-if="this.level > 0" class="space-col" :class="leftSpaceClass">
+        x
       </div>
-      <div class="w3-col s7">
-        <h5>
-          <router-link :to="'/inits/'+initiative.id+'/overview'" class="w3-left">
-            {{ initiative.name }}
-          </router-link>
-        </h5>
+      <div class="w3-col s2 l2-color" :class="{'w3-button': hasSubinitiatives, 'w3-padding': !hasSubinitiatives}"
+        @click="showSubinitiatives = !showSubinitiatives">
+
+        <div v-if="hasSubinitiatives">
+          <i v-if="!showSubinitiatives"class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+          <i v-else class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+        </div>
+        <div v-else>
+          <i class="fa fa-minus" aria-hidden="true"></i>
+        </div>
       </div>
-      <div class="w3-col s2 btns l2-color w3-button" @click="$emit('new-subinitiative', initiative.id)">
+      <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize">
+        <router-link :to="'/inits/'+initiative.id+'/overview'" class="w3-left">
+          {{ initiative.name }}
+        </router-link>
+      </div>
+      <div class="w3-col s2 l2-color w3-button" @click="$emit('new-subinitiative', initiative.id)">
         <i class="fa fa-external-link" aria-hidden="true"></i>
       </div>
     </div>
     <div class="w3-row" v-if="showSubinitiatives" v-for="subinitiative in initiative.subInitiatives">
-      <div class="w3-col s10">
-        <app-initiative-menu-item
-          class="sub-initiative-element" :initiative="subinitiative" :key="subinitiative.id"
-          @new-subinitiative="$emit('new-subinitiative', $event)">
-        </app-initiative-menu-item>
-      </div>
+      <app-initiative-menu-item
+        class="sub-initiative-element" :initiative="subinitiative" :key="subinitiative.id"
+        :level="level + 1" @new-subinitiative="$emit('new-subinitiative', $event)">
+      </app-initiative-menu-item>
     </div>
   </div>
 </template>
@@ -41,10 +47,42 @@ export default {
           subInitiatives: []
         }
       }
+    },
+    level: {
+      type: Number
     }
   },
 
   computed: {
+    topClass () {
+      if (this.level === 0) {
+        return {'w3-card-2': true}
+      } else {
+        return {}
+      }
+    },
+    leftSpaceClass () {
+      if (this.level > 0) {
+        var name = 's' + (this.level < 5 ? this.level : 5)
+        var classObject = {}
+        classObject[name] = true
+        classObject['w3-col'] = true
+        return classObject
+      } else {
+        return {}
+      }
+    },
+    nameSpaceClass () {
+      var leftSpace = this.level < 5 ? this.level : 5
+      var name = 's' + (8 - leftSpace)
+      var classObject = {}
+      classObject[name] = true
+      return classObject
+    },
+    nameColFontSize () {
+      var fontsize = this.level < 5 ? 16 - this.level : 11
+      return {'font-size': fontsize + 'px'}
+    },
     hasSubinitiatives () {
       return this.initiative.subInitiatives.length > 0
     }
@@ -59,5 +97,15 @@ export default {
 </script>
 
 <style scoped>
+
+.space-col {
+  visibility: hidden;
+}
+
+.name-col {
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 8px;
+}
 
 </style>
