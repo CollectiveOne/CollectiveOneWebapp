@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="this-container">
     <div class="w3-row">
-      <div class="w3-col" :class="{'s8': isAssigner, 's12': !isAssigner}">
+      <div class="w3-col distribution-container" :class="{'m8': isAssigner, 'm12': !isAssigner}">
         <div class="w3-row-padding">
           <div class="w3-col m4 w3-center">
             <div class="w3-display-container" :class="{tall: !isAssigner, short: isAssigner}">
@@ -98,13 +98,13 @@
           </div>
         </div>
       </div>
-      <div v-if="isAssigner" class="assigner-container w3-col s4 d2-color">
+      <div v-if="isAssigner" class="assigner-container w3-col m4 w3-container d2-color">
         <div class="w3-row label-row">
           <label class="w3-text-indigo"><b>Select amount</b></label>
         </div>
         <div class="w3-row-padding">
           <div class="w3-col s6">
-            <input v-model.number="tokens" class="w3-input w3-border w3-hover-light-gray w3-round" type="number">
+            <input v-model.number="value" class="w3-input w3-border w3-hover-light-gray w3-round" type="number">
           </div>
           <div class="w3-col s6">
             <div class="w3-row">
@@ -116,10 +116,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <br>
-        <div class="w3-row w3-center">
-          <button class="w3-button w3-theme w3-round">assign</button>
         </div>
       </div>
     </div>
@@ -162,7 +158,7 @@ export default {
         ownedBySubinitiatives: []
       },
       showSubinitiatives: false,
-      tokens: 0,
+      value: 0,
       percentage: 0
     }
   },
@@ -224,6 +220,17 @@ export default {
       }).then((response) => {
         this.assetData = response.data.data
       })
+    },
+    assign () {
+      var transferData = {
+        assetId: this.assetData.assetId,
+        assetName: this.assetData.assetName,
+        senderId: this.assetData.holderId,
+        senderName: this.assetData.holderName,
+        value: this.value
+      }
+
+      this.$emit('assigned', transferData)
     }
   },
 
@@ -234,13 +241,14 @@ export default {
     initiativeId () {
       this.updateTokenData()
     },
-    tokens () {
-      let perc = this.tokens / this.ownedByThisInitiativeAndSubinitiativesVal * 100
+    value () {
+      let perc = this.value / this.ownedByThisInitiativeAndSubinitiativesVal * 100
       this.percentage = Math.round(perc * 1000) / 1000
+      this.assign()
     },
     percentage () {
       let toks = this.percentage / 100 * this.ownedByThisInitiativeAndSubinitiativesVal
-      this.tokens = Math.round(toks * 1000) / 1000
+      this.value = Math.round(toks * 1000) / 1000
     }
 
   },
@@ -254,7 +262,7 @@ export default {
 <style scoped>
 
 .this-container {
-  padding-bottom: 30px;
+  padding-bottom: 10px;
 }
 
 .fa-certificate {
@@ -269,8 +277,11 @@ export default {
   height: 100px;
 }
 
+.distribution-container {
+  margin-bottom: 10px;
+}
+
 .assigner-container {
-  padding-top: 0px;
 }
 
 .label-row {

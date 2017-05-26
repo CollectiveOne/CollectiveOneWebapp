@@ -2,8 +2,8 @@
   <div class="this-container">
     <div class="w3-row sub-initiative-first-row">
       <div class="w3-col m4">
-        <h5 class="w3-text-indigo w3-hide-medium w3-hide-large">Subinitiative of</h5>
-        <h5 class="w3-text-indigo w3-hide-small w3-right">Subinitiative of</h5>
+        <h5 class="w3-text-indigo w3-hide-medium w3-hide-large"><b>Subinitiative of</b></h5>
+        <h5 class="w3-text-indigo w3-hide-small w3-right"><b>Subinitiative of</b></h5>
       </div>
       <div class="w3-col m8">
         <app-initiative-selector class="initiative-selector"
@@ -16,13 +16,13 @@
     <div v-if="parentInitiative.ownTokens" class="w3-row assigner-div">
       <app-tokens-distribution-chart
         :assetId="parentInitiative.ownTokens.assetId" :initiativeId="parentInitiative.id"
-        :type="'assigner'">
+        :type="'assigner'" @assigned="newAssignment($event)">
       </app-tokens-distribution-chart>
     </div>
     <div v-if="parentInitiative.otherAssets" class="w3-row assigner-div">
       <app-tokens-distribution-chart v-for="asset in parentInitiative.otherAssets"
         :key="asset.assetId" :assetId="asset.assetId" :initiativeId="parentInitiative.id"
-        :type="'assigner'">
+        :type="'assigner'" @assigned="newAssignment($event)">
       </app-tokens-distribution-chart>
     </div>
 
@@ -37,6 +37,12 @@ export default {
   props: {
     parentInitiative: {
       type: Object
+    }
+  },
+
+  data () {
+    return {
+      assetsTransfers: []
     }
   },
 
@@ -55,13 +61,25 @@ export default {
         this.$emit('parent-initiative-updated', response.data.data)
       })
     },
+    indexOfAsset (assetId) {
+      for (var ix in this.assetsTransfers) {
+        if (this.assetsTransfers[ix].assetId === assetId) {
+          return ix
+        }
+      }
 
-    parentOwnTokensSelected (data) {
-      this.$emit('selected', [data])
+      return -1
     },
+    newAssignment (transferData) {
+      var transferDataClean = JSON.parse(JSON.stringify(transferData))
 
-    parentOtherAssetSelected (data) {
-      this.$emit('selected', [data])
+      var ix = this.indexOfAsset(transferData.assetId)
+      if (ix === -1) {
+        this.assetsTransfers.push(transferDataClean)
+      } else {
+        this.assetsTransfers[ix] = transferDataClean
+      }
+      this.$emit('updated', this.assetsTransfers)
     }
   }
 
@@ -69,5 +87,9 @@ export default {
 </script>
 
 <style scoped>
+
+.sub-initiative-first-row {
+  margin-bottom: 20px;
+}
 
 </style>

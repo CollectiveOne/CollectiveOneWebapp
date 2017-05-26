@@ -10,7 +10,7 @@
     <div class="w3-col m5">
       <div class="w3-row-padding">
         <div class="w3-col s8 w3-center">
-          <select class="role-select w3-select" v-model="contributor.role">
+          <select class="role-select w3-select w3-round" v-model="contributor.role">
             <option value="" disabled>Choose role</option>
             <option value="ADMIN">ADMIN</option>
             <option value="MEMBER" selected>MEMBER</option>
@@ -48,6 +48,10 @@ export default {
 </script>
 
 <style scoped>
+
+.user-selector {
+  margin-bottom: 10px;
+}
 
 .role-select {
   width: 120px;

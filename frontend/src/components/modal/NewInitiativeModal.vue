@@ -39,7 +39,7 @@
           <div class="w3-container assets-selector-div">
             <keep-alive>
               <app-subinitiative-of v-if="asSubinitiative" :parentInitiative="parentInitiative"
-                @selected="parentAssetsSelected($event)" @parent-initiative-updated="parentInitiativeUpdated($event)">
+                @updated="parentAssetsSelected($event)" @parent-initiative-updated="parentInitiativeUpdated($event)">
               </app-subinitiative-of>
             </keep-alive>
             <keep-alive>
@@ -47,10 +47,16 @@
             </keep-alive>
           </div>
 
-          <div v-if="assetsSelected" class="w3-container">
-            <hr>
-            <label class="init-contr-label w3-text-indigo"><b>Summary</b></label>
-            <p v-if="asSubinitiative">This initiative will receive <span v-for="transfer in otherAssetsTransfers"><b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ parentInitiative.name }}</span></p>
+          <div v-if="assetsSelected" class="w3-panel w3-theme">
+            <h5><b>Summary</b></h5>
+            <p v-if="asSubinitiative">
+              This initiative will receive
+              <span v-for="transfer in otherAssetsTransfers">
+                <span v-if="transfer.value ">
+                  <b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ parentInitiative.name }}
+                </span>
+              </span>
+            </p>
             <p v-else>A token named <b>{{ ownTokens.assetName }}</b> will be created and this initiative will have <b>{{ tokensString(ownTokens.ownedByThisHolder) }} units</b></p>
           </div>
           <hr>
@@ -134,6 +140,13 @@ export default {
       if (this.asSubinitiative) {
         if (this.otherAssetsTransfers) {
           if (this.otherAssetsTransfers.length > 0) {
+            for (var ix in this.otherAssetsTransfers) {
+              if (this.otherAssetsTransfers[ix].value > 0) {
+                return true
+              } else {
+                return false
+              }
+            }
             return true
           }
         }
@@ -161,7 +174,7 @@ export default {
     },
 
     parentAssetsSelected (assets) {
-      this.otherAssetsTransfers = assets
+      this.otherAssetsTransfers = JSON.parse(JSON.stringify(assets))
     },
 
     ownTokensSelected (tokensData) {
