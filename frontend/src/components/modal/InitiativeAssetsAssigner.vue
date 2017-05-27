@@ -7,22 +7,22 @@
       </div>
       <div class="w3-col m8">
         <app-initiative-selector class="initiative-selector"
-          anchor="id" label="name" :init="parentInitiative"
+          anchor="id" label="name" :init="initiative"
           url="/1/secured/initiatives/suggestions"
-          @select="parentInitiativeSelected($event)">
+          @select="initiativeSelected($event)">
         </app-initiative-selector>
       </div>
     </div>
-    <div v-if="parentInitiative.ownTokens" class="w3-row assigner-div">
+    <div v-if="initiative.ownTokens" class="w3-row assigner-div">
       <app-tokens-distribution-chart
-        :assetId="parentInitiative.ownTokens.assetId" :initiativeId="parentInitiative.id"
-        :type="'assigner'" @assigned="newAssignment($event)">
+        :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
+        :type="type" @assigned="newAssignment($event)">
       </app-tokens-distribution-chart>
     </div>
-    <div v-if="parentInitiative.otherAssets" class="w3-row assigner-div">
-      <app-tokens-distribution-chart v-for="asset in parentInitiative.otherAssets"
-        :key="asset.assetId" :assetId="asset.assetId" :initiativeId="parentInitiative.id"
-        :type="'assigner'" @assigned="newAssignment($event)">
+    <div v-if="initiative.otherAssets" class="w3-row assigner-div">
+      <app-tokens-distribution-chart v-for="asset in initiative.otherAssets"
+        :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
+        :type="type" @assigned="newAssignment($event)">
       </app-tokens-distribution-chart>
     </div>
 
@@ -35,8 +35,12 @@ import TokensDistributionChart from '../initiative/InitiativeTokensDistributionC
 
 export default {
   props: {
-    parentInitiative: {
+    initiative: {
       type: Object
+    },
+    type: {
+      type: String,
+      default: 'assigner'
     }
   },
 
@@ -52,7 +56,7 @@ export default {
   },
 
   methods: {
-    parentInitiativeSelected (initiative) {
+    initiativeSelected (initiative) {
       this.axios.get('/1/secured/initiative/' + initiative.id, {
         params: {
           addAssets: true

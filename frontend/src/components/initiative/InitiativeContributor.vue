@@ -6,7 +6,7 @@
     <div class="w3-col m5">
       <div class="w3-row-padding">
         <div class="w3-col s8 w3-center">
-          <p><span class="role-tag w3-tag w3-large w3-round" :class="getRoleClasses(contributor)">{{ contributor.role }}</span></p>
+          <p><span class="role-tag w3-tag w3-round" :class="getRoleClasses(contributor)">{{ contributor.role }}</span></p>
         </div>
         <div class="w3-col s4 w3-xxlarge w3-button w3-center">
           <div @click="$emit('remove', contributor)"><i class="fa fa-times-circle-o l1-color" aria-hidden="true"></i></div>

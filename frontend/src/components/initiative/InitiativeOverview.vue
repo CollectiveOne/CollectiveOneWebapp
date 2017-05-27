@@ -1,5 +1,11 @@
 <template lang="html">
-  <div v-if="initiative" class="this-container w3-container w3-padding">
+  <div class="">
+    <app-new-assignation-modal
+      v-if="showNewAssignationModal"
+      :initiativeId="initiative.id"
+      @close-this="showNewAssignationModal = false">
+    </app-new-assignation-modal>
+    <div v-if="initiative" class="this-container w3-container w3-padding">
     <div class="w3-card">
       <header class="w3-container w3-theme-l2">
         <h4>Driver</h4>
@@ -16,13 +22,15 @@
       <div v-if="hasOwnTokens">
         <app-tokens-distribution-chart
           :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
-          @new-initiative="$emit('new-initiative', $event)">
+          @new-initiative="$emit('new-initiative', $event)"
+          @new-assignment="newAssignment($event)">
         </app-tokens-distribution-chart>
       </div>
       <div v-if="hasOtherAssets">
         <app-tokens-distribution-chart v-for="asset in initiative.otherAssets"
           :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
-          @new-initiative="$emit('new-initiative', $event)">
+          @new-initiative="$emit('new-initiative', $event)"
+          @new-assignment="newAssignment($event)">
         </app-tokens-distribution-chart>
       </div>
     </div>
@@ -48,6 +56,7 @@
     </div>
     <br>
   </div>
+  </div>
 </template>
 
 <script>
@@ -55,12 +64,14 @@ import { mapActions } from 'vuex'
 import InitiativeTokensDistributionChart from './InitiativeTokensDistributionChart.vue'
 import InitiativeNewContributor from './InitiativeNewContributor.vue'
 import InitiativeContributor from './InitiativeContributor.vue'
+import NewAssignationModal from '../modal/NewAssignationModal.vue'
 
 export default {
   components: {
     'app-tokens-distribution-chart': InitiativeTokensDistributionChart,
     'app-initiative-contributor': InitiativeContributor,
-    'app-initiative-new-contributor': InitiativeNewContributor
+    'app-initiative-new-contributor': InitiativeNewContributor,
+    'app-new-assignation-modal': NewAssignationModal
   },
 
   props: {
@@ -71,7 +82,7 @@ export default {
 
   data () {
     return {
-      showNewInitiativeModal: false,
+      showNewAssignationModal: false,
       parentInitiativeIdForModal: null
     }
   },
@@ -97,9 +108,8 @@ export default {
   methods: {
     ...mapActions(['showOutputMessage']),
 
-    newSubInitiativeClicked (initiativeId) {
-      this.parentInitiativeIdForModal = initiativeId
-      this.showNewInitiativeModal = true
+    newAssignment (data) {
+      this.showNewAssignationModal = true
     },
 
     addContributor (contributor) {

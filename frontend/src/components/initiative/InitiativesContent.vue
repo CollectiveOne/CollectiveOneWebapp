@@ -1,6 +1,5 @@
 <template lang="html">
   <div class="">
-    <app-new-member-modal v-if="showNewMemberModal" :initId="initiativeIdForModal" @close-this="showNewMemberModal = false"></app-new-member-modal>
     <div v-if="initiative" class="w3-row">
       <div class="w3-white">
         <header class="w3-container w3-theme">
@@ -20,18 +19,14 @@
 </template>
 
 <script>
-import NewMemberModal from '../modal/NewMemberModal.vue'
-
 export default {
 
   components: {
-    'app-new-member-modal': NewMemberModal
   },
 
   data () {
     return {
-      initiative: null,
-      showNewMemberModal: false
+      initiative: null
     }
   },
 

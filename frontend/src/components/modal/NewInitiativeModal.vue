@@ -13,7 +13,7 @@
 
         <form class="w3-container">
 
-          <div class="token-type-tabs w3-row">
+          <div class="section-tabs w3-row">
             <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'w3-border-blue': !asSubinitiative}"
               @click="asSubinitiative = false">
@@ -38,9 +38,9 @@
 
           <div class="w3-container assets-selector-div">
             <keep-alive>
-              <app-subinitiative-of v-if="asSubinitiative" :parentInitiative="parentInitiative"
+              <app-initiative-assets-assigner v-if="asSubinitiative" :initiative="parentInitiative"
                 @updated="parentAssetsSelected($event)" @parent-initiative-updated="parentInitiativeUpdated($event)">
-              </app-subinitiative-of>
+              </app-initiative-assets-assigner>
             </keep-alive>
             <keep-alive>
               <app-new-token v-if="!asSubinitiative" @updated="ownTokensSelected($event)"></app-new-token>
@@ -93,7 +93,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import SubinitiativeOf from './SubinitiativeOf.vue'
+import InitiativeAssetsAssigner from './InitiativeAssetsAssigner.vue'
 import NewToken from './NewToken.vue'
 import InitiativeNewContributor from '../initiative/InitiativeNewContributor.vue'
 import InitiativeContributor from '../initiative/InitiativeContributor.vue'
@@ -111,7 +111,7 @@ export default {
   },
 
   components: {
-    'app-subinitiative-of': SubinitiativeOf,
+    'app-initiative-assets-assigner': InitiativeAssetsAssigner,
     'app-new-token': NewToken,
     'app-initiative-contributor': InitiativeContributor,
     'app-initiative-new-contributor': InitiativeNewContributor
@@ -162,7 +162,7 @@ export default {
 
   watch: {
     parentId () {
-      this.updateParent
+      this.updateParent()
     }
   },
 
@@ -270,6 +270,10 @@ export default {
 
 <style scoped>
 
+.w3-modal {
+  display: block;
+}
+
 .close-div {
   width: 70px;
   height: 70px;
@@ -288,7 +292,7 @@ form {
   padding-bottom: 35px;
 }
 
-.token-type-tabs {
+.section-tabs {
   text-align: center;
   user-select: none;
   cursor: pointer;
@@ -320,10 +324,6 @@ form {
 
 .bottom-btns-row button {
   width: 100%;
-}
-
-.w3-modal {
-  display: block;
 }
 
 </style>

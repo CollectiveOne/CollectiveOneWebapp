@@ -40,15 +40,15 @@
                 </div>
               </div>
 
-              <div v-if="!isAssigner" class="w3-col m2 w3-center" style="padding-top: 15px !important;">
+              <div v-if="isGraph" class="w3-col m2 w3-center" style="padding-top: 15px !important;">
                 <button type="button" class="w3-button w3-theme-l1 w3-round w3-small"
-                  @click="newSubInitiativeClicked">
+                  @click="newSubInitiativeClicked()">
                   new
                 </button>
               </div>
             </div>
 
-            <div v-if="!isAssigner" class="w3-row">
+            <div v-if="isMemberAssigner" class="w3-row">
               <div class="w3-col m10">
                 <label class="d2-color">
                   <b>Transferred to members</b>
@@ -62,7 +62,7 @@
 
               <div class="w3-col m2 w3-center" style="padding-top: 15px !important;">
                 <button type="button" class="w3-button w3-theme-l1 w3-round w3-small"
-                  @click="newSubInitiativeClicked">
+                  @click="newAssignmentClicked()">
                   new
                 </button>
               </div>
@@ -167,6 +167,12 @@ export default {
     isAssigner () {
       return this.type === 'assigner'
     },
+    isMemberAssigner () {
+      return this.type === 'member-assigner'
+    },
+    isGraph () {
+      return this.type === 'graph'
+    },
     name () {
       return this.assetData.assetName
     },
@@ -211,6 +217,9 @@ export default {
     },
     newSubInitiativeClicked () {
       this.$emit('new-initiative', this.assetData.holderId)
+    },
+    newAssignmentClicked () {
+      this.$emit('new-assignment', this.assetData.holderId)
     },
     updateTokenData () {
       this.axios.get('/1/secured/token/' + this.assetId, {
