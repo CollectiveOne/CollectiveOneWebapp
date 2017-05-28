@@ -9,7 +9,14 @@
     <div class="w3-top">
      <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
       <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4">Logo</a>
+      <div
+        class="w3-bar-item w3-button w3-left w3-padding-large w3-large w3-theme-d2"
+        @click="$emit('expand-nav')">
+        <i class="fa fa-bars"></i>
+      </div>
+      <a href="#" class="w3-display-middle left w3-bar-item">
+        <img class="logo" src="../assets/Logo-Light.png" alt="">
+      </a>
 
       <div class="w3-dropdown-hover w3-hide-small w3-right">
         <div class="avatar-img-container">
@@ -66,6 +73,10 @@ export default {
 </script>
 
 <style scoped>
+
+.logo {
+  height: 20px;
+}
 
 .avatar-img-container {
   margin-right: 15px;

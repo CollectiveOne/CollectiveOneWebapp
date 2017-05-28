@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="">
-    <app-header></app-header>
-    <div class="" style="margin-top:50px">
-      <router-view></router-view>
+    <app-header @expand-nav="expandNav = !expandNav"></app-header>
+    <div class="" style="margin-top:51px">
+      <router-view :expandNav="expandNav"></router-view>
     </div>
   </div>
 </template>
@@ -17,6 +17,7 @@ export default {
 
   data () {
     return {
+      expandNav: false
     }
   },
 

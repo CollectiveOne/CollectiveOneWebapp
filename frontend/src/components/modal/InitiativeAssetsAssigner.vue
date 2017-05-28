@@ -1,11 +1,10 @@
 <template lang="html">
   <div class="this-container">
     <div class="w3-row sub-initiative-first-row">
-      <div class="w3-col m4">
-        <h5 class="w3-text-indigo w3-hide-medium w3-hide-large"><b>Subinitiative of</b></h5>
-        <h5 class="w3-text-indigo w3-hide-small w3-right"><b>Subinitiative of</b></h5>
+      <div class="w3-left">
+        <h5 class="w3-text-indigo w3-left"><b>Transfer from </b></h5>
       </div>
-      <div class="w3-col m8">
+      <div class="w3-left">
         <app-initiative-selector class="initiative-selector"
           anchor="id" label="name" :init="initiative"
           url="/1/secured/initiatives/suggestions"
@@ -40,7 +39,7 @@ export default {
     },
     type: {
       type: String,
-      default: 'assigner'
+      default: 'initiative-assigner'
     }
   },
 

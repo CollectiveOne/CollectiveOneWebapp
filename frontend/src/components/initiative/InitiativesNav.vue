@@ -1,6 +1,5 @@
 <template lang="html">
-  <nav class="w3-sidebar w3-white" style="width:300px;">
-    <div class="w3-display-topright d2-color w3-xlarge" @click="$emit('close-navbar')"><i class="fa fa-times" aria-hidden="true"></i></div>
+  <nav class="w3-sidebar w3-white w3-border-right" style="width:300px;">
     <div class="w3-container w3-padding">
       <h4 class="d2-color"><b>Initiatives</b></h4>
       <div class="create-new w3-button w3-theme-l1" @click="newInitiative()"><i class="fa fa-plus-circle"></i>  create new</div>

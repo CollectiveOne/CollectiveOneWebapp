@@ -25,10 +25,49 @@
           </div>
           <br>
 
-          <app-initiative-assets-assigner
-            v-if="initiative" :initiative="initiative" type='member-assigner'
-            @updated="parentAssetsSelected($event)" @parent-initiative-updated="parentInitiativeUpdated($event)">
-          </app-initiative-assets-assigner>
+          <div class="w3-row">
+            <div class="w3-col m8 assset-assigner">
+              <app-initiative-assets-assigner
+                v-if="initiative" :initiative="initiative" type='member-assigner'
+                @updated="assetsSelected($event)">
+              </app-initiative-assets-assigner>
+            </div>
+            <div class="w3-col m4">
+              <div class="w3-left">
+                <h5 class="w3-text-indigo w3-left"><b>Transfer to </b></h5>
+              </div>
+              <app-user-selector class="w3-left"
+                anchor="c1Id" label="nickname"
+                url="/1/secured/users/suggestions"
+                @select="receiver = $event">
+              </app-user-selector>
+            </div>
+          </div>
+
+          <div class="w3-row">
+            <div v-if="transferReady" class="w3-panel w3-theme w3-round-xlarge">
+              <h5><b>Summary</b></h5>
+              <p>
+                {{ receiver.nickname }} will receive <span v-for="transfer in assetsTransfers">
+                <span v-if="transfer.value ">
+                  <b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ initiative.name }}
+                </span>
+              </span>
+              </p>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="bottom-btns-row w3-row-padding">
+            <div class="w3-col m6">
+              <button type="button" class="w3-button w3-light-gray w3-round" @click="closeThis()">Cancel</button>
+            </div>
+            <div class="w3-col m6">
+              <button type="button" class="w3-button w3-theme w3-round" @click="accept()">Accept</button>
+            </div>
+          </div>
+
         </form>
 
       </div>
@@ -38,10 +77,17 @@
 
 <script>
 import InitiativeAssetsAssigner from './InitiativeAssetsAssigner.vue'
+import UserSelector from '../user/UserSelector.vue'
+
+/* eslint-disable no-unused-vars */
+import { tokensString } from '../../lib/common'
+/* eslint-enable no-unused-vars */
+
 export default {
 
   components: {
-    'app-initiative-assets-assigner': InitiativeAssetsAssigner
+    'app-initiative-assets-assigner': InitiativeAssetsAssigner,
+    'app-user-selector': UserSelector
   },
 
   props: {
@@ -53,13 +99,41 @@ export default {
   data () {
     return {
       peerReview: false,
-      initiative: null
+      initiative: null,
+      receiver: null,
+      assetsTransfers: []
+    }
+  },
+
+  computed: {
+    transferReady () {
+      if (this.receiver != null) {
+        if (this.assetsTransfers.length > 0) {
+          for (var ix in this.assetsTransfers) {
+            if (this.assetsTransfers[ix].value > 0) {
+              return true
+            } else {
+              return false
+            }
+          }
+        }
+      }
+      return false
     }
   },
 
   methods: {
+    tokensString (v) {
+      return tokensString(v)
+    },
     closeThis () {
       this.$emit('close-this')
+    },
+    assetsSelected (assetsTransfers) {
+      this.assetsTransfers = JSON.parse(JSON.stringify(assetsTransfers))
+    },
+    accept () {
+      this.closeThis()
     },
     updateInitiative () {
       this.axios.get('/1/secured/initiative/' + this.initiativeId, {
@@ -107,6 +181,14 @@ form {
   text-align: center;
   user-select: none;
   cursor: pointer;
+}
+
+.assset-assigner {
+  margin-bottom: 10px;
+}
+
+.bottom-btns-row button {
+  width: 100%;
 }
 
 </style>

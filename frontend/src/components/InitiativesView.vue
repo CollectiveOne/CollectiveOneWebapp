@@ -1,23 +1,21 @@
 <template lang="html">
-  <div class="">
+  <div class="w3-row">
     <app-new-initiative-modal
       v-if="showNewInitiativeModal" :parentInitId="parentInitiativeIdForModal"
       @close-this="showNewInitiativeModal = false"
       @initiative-created="initiativeCreated($event)">
     </app-new-initiative-modal>
-    <button class="expand-left-menu-btn w3-button w3-theme w3-xlarge" @click="showSideBar = !showSideBar">></button>
 
-    <div v-if="showSideBar" class="" style="width:300px">
+    <div v-if="expandNav" class="" style="width:300px">
       <keep-alive>
         <app-initiatives-nav
           :userInitiatives="userInitiatives"
-          @close-navbar="showSideBar = false"
           @new-initiative="newInitiative($event)">
         </app-initiatives-nav>
       </keep-alive>
     </div>
 
-    <div :class="{'expanded-menu': showSideBar}">
+    <div v-if="showContent" :class="{'expanded-menu': expandNav}">
       <router-view @new-initiative="newInitiative($event)"></router-view>
     </div>
   </div>
@@ -33,11 +31,28 @@ export default {
     AppNewInitiativeModal: NewInitiativeModal
   },
 
+  props: {
+    expandNav: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   data () {
     return {
       showNewInitiativeModal: false,
-      showSideBar: true,
       userInitiatives: null
+    }
+  },
+
+  computed: {
+    showContent () {
+      if (document.body.clientWidth < 601) {
+        if (this.expandNav) {
+          return false
+        }
+      }
+      return true
     }
   },
 

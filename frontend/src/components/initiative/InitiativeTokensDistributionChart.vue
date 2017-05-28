@@ -1,10 +1,10 @@
 <template lang="html">
   <div class="this-container">
     <div class="w3-row">
-      <div class="w3-col distribution-container" :class="{'m8': isAssigner, 'm12': !isAssigner}">
+      <div class="w3-col distribution-container" :class="{'m8': showAssigner, 'm12': !showAssigner}">
         <div class="w3-row-padding">
           <div class="w3-col m4 w3-center">
-            <div class="w3-display-container" :class="{tall: !isAssigner, short: isAssigner}">
+            <div class="w3-display-container" :class="{tall: isOverview, short: !isOverview}">
               <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
               <div class="w3-display-middle d2-color" style="width: 100%">
                 <div class="w3-row">
@@ -28,7 +28,7 @@
               </div>
             </div>
 
-            <div class="w3-row">
+            <div v-if="isInitiativeAssigner || isOverview" class="w3-row">
               <div class="w3-col m10">
                 <label class="d2-color">
                   <b>Transferred to sub-initiatives</b>
@@ -40,7 +40,7 @@
                 </div>
               </div>
 
-              <div v-if="isGraph" class="w3-col m2 w3-center" style="padding-top: 15px !important;">
+              <div v-if="isOverview" class="w3-col m2 w3-center" style="padding-top: 15px !important;">
                 <button type="button" class="w3-button w3-theme-l1 w3-round w3-small"
                   @click="newSubInitiativeClicked()">
                   new
@@ -48,7 +48,7 @@
               </div>
             </div>
 
-            <div v-if="isMemberAssigner" class="w3-row">
+            <div v-if="isOverview || isMemberAssigner" class="w3-row">
               <div class="w3-col m10">
                 <label class="d2-color">
                   <b>Transferred to members</b>
@@ -60,7 +60,7 @@
                 </div>
               </div>
 
-              <div class="w3-col m2 w3-center" style="padding-top: 15px !important;">
+              <div v-if="isOverview" class="w3-col m2 w3-center" style="padding-top: 15px !important;">
                 <button type="button" class="w3-button w3-theme-l1 w3-round w3-small"
                   @click="newAssignmentClicked()">
                   new
@@ -70,7 +70,7 @@
           </div>
         </div>
 
-        <div class="w3-row">
+        <div v-if="isOverview || isInitiativeAssigner" class="w3-row">
           <div v-if="hasSubinitiatives" class="sub-initiatives">
             <div class="" v-if="showSubinitiatives">
               <div class="w3-row" v-for="subinitiativeAssets in assetData.ownedBySubinitiatives" >
@@ -98,9 +98,9 @@
           </div>
         </div>
       </div>
-      <div v-if="isAssigner" class="assigner-container w3-col m4 w3-container d2-color">
+      <div v-if="showAssigner" class="assigner-container w3-col m4 w3-container d2-color">
         <div class="w3-row label-row">
-          <label class="w3-text-indigo"><b>Select amount</b></label>
+          <label class="w3-text-indigo"><b>Amount to be transfered</b></label>
         </div>
         <div class="w3-row-padding">
           <div class="w3-col s6">
@@ -144,7 +144,8 @@ export default {
       type: String
     },
     type: {
-      type: String
+      type: String,
+      default: 'overview'
     }
   },
 
@@ -164,14 +165,17 @@ export default {
   },
 
   computed: {
-    isAssigner () {
-      return this.type === 'assigner'
+    showAssigner () {
+      return this.isInitiativeAssigner || this.isMemberAssigner
+    },
+    isInitiativeAssigner () {
+      return this.type === 'initiative-assigner'
     },
     isMemberAssigner () {
       return this.type === 'member-assigner'
     },
-    isGraph () {
-      return this.type === 'graph'
+    isOverview () {
+      return this.type === 'overview'
     },
     name () {
       return this.assetData.assetName

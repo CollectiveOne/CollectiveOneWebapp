@@ -38,7 +38,7 @@
 
           <div class="w3-container assets-selector-div">
             <keep-alive>
-              <app-initiative-assets-assigner v-if="asSubinitiative" :initiative="parentInitiative"
+              <app-initiative-assets-assigner v-if="asSubinitiative" :initiative="parentInitiative" type='initiative-assigner'
                 @updated="parentAssetsSelected($event)" @parent-initiative-updated="parentInitiativeUpdated($event)">
               </app-initiative-assets-assigner>
             </keep-alive>
