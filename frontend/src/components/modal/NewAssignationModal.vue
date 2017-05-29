@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import InitiativeAssetsAssigner from './InitiativeAssetsAssigner.vue'
 import UserSelector from '../user/UserSelector.vue'
 
@@ -123,6 +124,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(['showOutputMessage']),
+
     tokensString (v) {
       return tokensString(v)
     },
@@ -133,7 +136,19 @@ export default {
       this.assetsTransfers = JSON.parse(JSON.stringify(assetsTransfers))
     },
     accept () {
-      this.closeThis()
+      if (this.transferReady) {
+        /* complete the transfer information */
+        for (var ix in this.assetsTransfers) {
+          this.assetsTransfers[ix].receiverId = this.receiver.c1Id
+          this.assetsTransfers[ix].receiverName = this.receiver.nickname
+        }
+        this.axios.post('/1/secured/initiative/' + this.initiative.id + '/transferAssets', this.assetsTransfers)
+        .then((response) => {
+
+        })
+      } else {
+        this.showOutputMessage('missing data')
+      }
     },
     updateInitiative () {
       this.axios.get('/1/secured/initiative/' + this.initiativeId, {

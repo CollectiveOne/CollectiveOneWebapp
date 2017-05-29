@@ -11,7 +11,8 @@ public class AssetsDto {
 	private String holderName;
 	private double ownedByThisHolder;
 
-	private List<AssetsDto> ownedBySubinitiatives = new ArrayList<AssetsDto>();
+	private List<TransferDto> transferredToSubinitiatives = new ArrayList<TransferDto>();
+	private List<TransferDto> transferredToUsers = new ArrayList<TransferDto>();
 
 	public String getAssetId() {
 		return assetId;
@@ -49,11 +50,17 @@ public class AssetsDto {
 	public void setOwnedByThisHolder(double ownedByThisHolder) {
 		this.ownedByThisHolder = ownedByThisHolder;
 	}
-	public List<AssetsDto> getOwnedBySubinitiatives() {
-		return ownedBySubinitiatives;
+	public List<TransferDto> getTransferredToSubinitiatives() {
+		return transferredToSubinitiatives;
 	}
-	public void setOwnedBySubinitiatives(List<AssetsDto> ownedBySubinitiatives) {
-		this.ownedBySubinitiatives = ownedBySubinitiatives;
+	public void setTransferredToSubinitiatives(List<TransferDto> transferredToSubinitiatives) {
+		this.transferredToSubinitiatives = transferredToSubinitiatives;
 	}
-	
+	public List<TransferDto> getTransferredToUsers() {
+		return transferredToUsers;
+	}
+	public void setTransferredToUsers(List<TransferDto> transferredToUsers) {
+		this.transferredToUsers = transferredToUsers;
+	}
+		
 }

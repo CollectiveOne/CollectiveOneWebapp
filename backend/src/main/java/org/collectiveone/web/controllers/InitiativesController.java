@@ -11,6 +11,7 @@ import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.collectiveone.web.dto.NewInitiativeDto;
 import org.collectiveone.web.dto.PostResult;
+import org.collectiveone.web.dto.TransferDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -82,6 +83,11 @@ public class InitiativesController {
 	public PostResult deleteContributor(@PathVariable("initiativeId") String initiativeId, @PathVariable("contributorId") String contributorId) {
 		return initiativeService.deleteContributor(getLoggedUser().getC1Id(), UUID.fromString(contributorId));
 	}
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/transferAssets", method = RequestMethod.POST)
+	public PostResult transferAssets(@PathVariable("initiativeId") String initiativeId, @RequestBody List<TransferDto> transfersDtos) {
+		return initiativeService.transferAssets(UUID.fromString(initiativeId), transfersDtos);
+	} 
 	
 	private AppUser getLoggedUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

@@ -79,5 +79,4 @@ public class InitiativeDto {
 		this.contributors = contributors;
 	}
 	
-	
 }

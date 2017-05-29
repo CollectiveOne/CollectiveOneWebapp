@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.model.basic.AppUser;
 import org.collectiveone.model.basic.Initiative;
+import org.collectiveone.model.basic.TokenTransaction;
 import org.collectiveone.model.basic.TokenType;
 import org.collectiveone.model.enums.ContributorRole;
 import org.collectiveone.model.enums.InitiativeRelationshipType;
@@ -169,28 +170,6 @@ public class InitiativeService {
 		return initiativeDto;
 	}
 	
-	/** Get the distribution of an asset starting from a given initiative
-	 * and going though all its sub-initiatives recursively */
-	@Transactional
-	public AssetsDto getTokenDistribution(UUID tokenId, UUID initiativeId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId); 
-		
-		AssetsDto assetDto = tokenService.getTokensOfHolderDto(tokenId, initiative.getId());
-		assetDto.setHolderName(initiative.getName());
-			
-		/* get of sub-initiatives */
-		List<Initiative> subinitiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_DETACHED_SUB);
-		for (Initiative subinitiative : subinitiatives) {
-			/* recursively call on all sub-initiatives */
-			AssetsDto subInitiativeAssetsDto = getTokenDistribution(tokenId, subinitiative.getId());
-			subInitiativeAssetsDto.setHolderName(subinitiative.getName());
-			
-			assetDto.getOwnedBySubinitiatives().add(subInitiativeAssetsDto);
-		}
-		
-		return assetDto;
-	}
-	
 	@Transactional
 	public GetResult<List<InitiativeDto>> getOfUser(UUID userC1Id) {
 		/* return the initiatives of a user but inserting initiatives that are 
@@ -289,4 +268,48 @@ public class InitiativeService {
 		contributorRepository.delete(contributor);
 		return new PostResult("success", "contributor added", "");
 	}
+
+	@Transactional
+	public PostResult transferAssets(UUID initiativeId, List<TransferDto> transfersDtos) {
+		for (TransferDto transfer : transfersDtos) {
+			tokenService.transfer(
+					UUID.fromString(transfer.getAssetId()), 
+					UUID.fromString(transfer.getSenderId()), 
+					UUID.fromString(transfer.getReceiverId()), 
+					transfer.getValue(), 
+					TokenHolderType.USER);
+			
+		}
+		
+		return new PostResult("success", "assets transferred successfully", "");
+	}
+	
+	/** Get the distribution of an asset starting from a given initiative
+	 * and including the tokens transferred to other initiatives and to users */
+	@Transactional
+	public AssetsDto getTokenDistribution(UUID tokenId, UUID intiativeId) {
+		
+		TokenType token = tokenService.getTokenType(tokenId);
+		AssetsDto assetDto = tokenService.getTokensOfHolderDto(tokenId, intiativeId);
+				
+		/* get transferred to other initiatives */
+		for (UUID receieverId : tokenService.findReceiverInitiativesIds(tokenId, intiativeId)) {
+			Initiative fromInitiative = initiativeRepository.findById(intiativeId);
+			Initiative toInitiative = initiativeRepository.findById(receieverId);
+			
+			TransferDto transferDto = new TransferDto();
+			
+			transferDto.setAssetId(token.getId().toString());
+			transferDto.setAssetName(token.getName());
+			transferDto.setSenderId(fromInitiative.getId().toString());
+			transferDto.setSenderName(fromInitiative.getName());
+			transferDto.setReceiverId(toInitiative.getId().toString());
+			transferDto.setReceiverName(toInitiative.getName());
+			
+			assetDto.getTransferredToSubinitiatives().add(transferDto);
+		}
+		
+		return assetDto;
+	}
+
 }
