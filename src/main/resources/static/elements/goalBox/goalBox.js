@@ -30,7 +30,7 @@ GoalBox.prototype.draw = function() {
 
 GoalBox.prototype.goalBoxLoaded = function() {
 	
-	$('#new_subgoal_description_input').markdown({
+	$('#new_subgoal_description_input',this.container).markdown({
 		autofocus:false,
 		savable:false,
 		hiddenButtons: ["cmdHeading", "cmdImage"],
