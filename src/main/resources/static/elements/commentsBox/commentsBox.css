@@ -3,6 +3,7 @@
 	clear:none;
 	overflow: auto;
 	padding-top: 5px;
+	text-align: left;
 }
 
 #comments_div #new_comment_btn {

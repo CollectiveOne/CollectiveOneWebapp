@@ -4,6 +4,10 @@
 	overflow: hidden;
 }
 
+#cbtion_div #cbtion_data_div #first-row {
+	clear: both;
+}
+
 #cbtion_div #cbtion_data_div #promotion_div {
 	width:25px;
 	height: 100px;
@@ -60,6 +64,7 @@
 	width: 220px;
 	float:left;
 	margin-top: 0px;
+	margin-bottom: 10px;
 	padding-top: 10px;
 }
 
@@ -223,11 +228,11 @@
 	clear:both;
 }
 
-
 #cbtion_div #cbtion_data_div #show_comments_btn {
 	clear: both;
-	width: calc(100%);
-	margin-top: 5px;
+	width: 100%;
+	max-width: 250px;
+	margin: 0 auto;
 }
 
 #cbtion_div #cbtion_data_div #comments_box_container {
@@ -239,10 +244,9 @@
 }
 
 #cbtion_div #cbtion_data_div #comments_container {
-	float: left;
 	width: 100%;
+	text-align: center;
 	overflow: auto;
-	margin-top: 10px;
 }
 
 #cbtion_div #cbtion_data_div #bids_container {
@@ -254,7 +258,9 @@
 
 #cbtion_div #cbtion_data_div #new_bid_btn {
 	clear:both;
-	width: calc(100%);
+	width: 100%;
+	max-width: 250px;
+	margin: 0 auto;
 	display: none;
 }
 
