@@ -1,21 +1,21 @@
-#goal_div {
+.goal_div {
 	clear:none;
 	overflow: auto;
 }
 
-#goal_div #top_div {
+.goal_div #top_div {
 	width:100%;
 	float:left;
 }
 
-#goal_div #center_div {
+.goal_div #center_div {
 	width:100%;
 	float:left;
 	margin-top: 5px;
 	margin-bottom: 10px;
 }
 
-#goal_div #goal_control_div {
+.goal_div #goal_control_div {
 	float:left;
 	display: none;
 	margin-top: 10px;
@@ -23,22 +23,22 @@
 	width: 100%;
 }
 
-#goal_div #edition_proposals_decisions {
+.goal_div #edition_proposals_decisions {
 	display:none;
 	overflow:auto;
 }
 
-#goal_div #edition_proposals_decisions label {
+.goal_div #edition_proposals_decisions label {
 	float:left;
 	margin-right:10px;
 }
 
 
-#goal_div #goal_control_inside_div {
+.goal_div #goal_control_inside_div {
 	clear:both;
 }
 
-#goal_div #new_subgoal_form {
+.goal_div #new_subgoal_form {
 	max-width: 400px;
 	float:left;
 	display: none;
@@ -47,11 +47,11 @@
 	width: 100%;
 }
 
-#goal_div #top_div #goaltag {
+.goal_div #top_div #goaltag {
 	width:100%;
 }
 
-#goal_div #top_div #goaltag a {
+.goal_div #top_div #goaltag a {
 	margin-left:5px;
 	font-weight:bold;
 	text-align:left;
@@ -62,27 +62,27 @@
 	float: left;
 }
 
-#goal_div #top_div #goaltag label {
+.goal_div #top_div #goaltag label {
 	float: right;
 	margin-left:5px;
 }
 
-#goal_div #center_div #description {
+.goal_div #center_div #description {
 	width:100%;
 }
 
-#goal_div #goal_control_div #state {
+.goal_div #goal_control_div #state {
 	height:100%;
 	width:100%;	
 }
 
-#goal_div #show_subgoals_btn {
+.goal_div #show_subgoals_btn {
 	float:left;
 	margin-left:10px;
 	display:none;
 }
 
-#goal_div #n_subgoals_label {
+.goal_div #n_subgoals_label {
 	float:left;
 	margin-top: 4px;
 	margin-left:10px;
@@ -92,7 +92,7 @@
 	font-size: 12px;
 }
 
-#goal_div #edition_proposed_label {
+.goal_div #edition_proposed_label {
 	float:left;
 	margin-top: 4px;
 	margin-left:10px;
@@ -102,7 +102,7 @@
 	font-size: 12px;
 }
 
-#goal_div #edition_proposals {
+.goal_div #edition_proposals {
 	float: left;
 	clear: both;
 	width: 100%;
@@ -110,24 +110,24 @@
 	display: none;
 }
 
-#goal_div .edition_proposal {
+.goal_div .edition_proposal {
 	margin-bottom: 5px;
 }
 
 
-#goal_div #new_subgoal_btn {
+.goal_div #new_subgoal_btn {
 	float:left;
 	margin-left:10px;
 	display:none;
 }
 
-#goal_div #show_control_btn {
+.goal_div #show_control_btn {
 	float:left;
 	margin-left:10px;
 	display:none;
 }
 
-#goal_div .control_form_container {
+.goal_div .control_form_container {
 	width: 200px;
 	margin-right:10px;
 	float:left;
@@ -135,72 +135,72 @@
 	margin-bottom: 10px;
 }
 
-#goal_div .edition_proposal_dec {
+.goal_div .edition_proposal_dec {
 	margin-bottom:10px;
 	margin-right:10px;
 	float:left;
 }
 
-#goal_div .control_form_container_large {
+.goal_div .control_form_container_large {
 	width: 300px;
 	text-align: left;
 }
 
-#goal_div #detach_form_container {
+.goal_div #detach_form_container {
 	display: none;
 }
 
-#goal_div #increase_budget_form_container {
+.goal_div #increase_budget_form_container {
 	display: none;
 }
 
-#goal_div #increase_budget_decision_container {
-	display: none;
-	float:left;
-	margin-right: 10px;
-}
-
-#goal_div #reattach_decision_container {
+.goal_div #increase_budget_decision_container {
 	display: none;
 	float:left;
 	margin-right: 10px;
 }
 
-#goal_div .control_btn {
+.goal_div #reattach_decision_container {
+	display: none;
+	float:left;
+	margin-right: 10px;
+}
+
+.goal_div .control_btn {
 	width:100%;
 	float:left;
 }
 
-#goal_div .control_form {
+.goal_div .control_form {
 	display:none;
 }
 
-#goal_div .control_input {
+.goal_div .control_input {
 	width:100%;
 	float:left;
 	margin-top: 3px;
 	text-align:center;
 }
 
-#goal_div #edit_input {
+.goal_div #edit_input {
 	text-align:left;	
 	min-height:150px;
 }
 
-#goal_div .control_save_btn {
+.goal_div .control_save_btn {
 	width:100%;
 	float:left;
 	margin-top: 3px;
 }
 
-#goal_div #propose_parent_decision_container {
+.goal_div #propose_parent_decision_container {
 	margin-right:10px;
 	float:left;
 	display:none;
 	margin-bottom: 5px;
 }
 
-#goal_div #edition_history_btn_container {
+.goal_div #edition_history_btn_container {
 	margin-right:10px;
 	float:left;
 	display:none;
@@ -208,60 +208,60 @@
 }
 
 
-#goal_div #state_decision_div {
+.goal_div #state_decision_div {
 	float:left;
 	margin-bottom: 10px;
 	margin-right: 10px;
 }
 
-#goal_div #new_subgoal_form #new_subgoal_tag_input {
+.goal_div #new_subgoal_form #new_subgoal_tag_input {
 	width: 100%;
 	margin-bottom: 5px;
 }
 
-#goal_div #new_subgoal_form #new_subgoal_description_input {
+.goal_div #new_subgoal_form #new_subgoal_description_input {
 	width: 100%;
 	margin-bottom: 10px;
 	resize: vertical;
 }
 
-#goal_div #new_subgoal_form #new_subgoal_save_btn {
+.goal_div #new_subgoal_form #new_subgoal_save_btn {
 	width: 100px;
 	float: right;
 }
 
-#goal_div #new_subgoal_form #new_subgoal_error_div {
+.goal_div #new_subgoal_form #new_subgoal_error_div {
 	float:left;
 	width:100%;
 	margin-top:10px;
 	display:none;
 }
 
-#goal_div #new_subgoal_form #new_subgoal_save_btn p {
+.goal_div #new_subgoal_form #new_subgoal_save_btn p {
 	font-size:12px;
 }
 
-#goal_div #subgoals_div {
+.goal_div #subgoals_div {
 	width:100%;
 	float:left;
 	margin-left: 0px;
 	display: none;
 }
 
-#goal_div .subgoal_container {
+.goal_div .subgoal_container {
 	width: calc(100%);
 	float:left;
 	margin-left: 0px;
 	margin-top: 10px;
 }
 
-#goal_div #edition_history_container {
+.goal_div #edition_history_container {
 	display:none;
 	overflow:auto;
 	clear:both;
 }
 
-#goal_div #edition_history_container hr {
+.goal_div #edition_history_container hr {
 	margin-top:10px;
 	margin-bottom:10px;
 }
