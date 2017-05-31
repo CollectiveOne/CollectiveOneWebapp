@@ -7,6 +7,7 @@ public class AssetsDto {
 	private String assetId;
 	private String assetName;
 	private double totalExistingTokens;
+	
 	private String holderId;
 	private String holderName;
 	private double ownedByThisHolder;

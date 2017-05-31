@@ -9,17 +9,18 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.model.basic.AppUser;
 import org.collectiveone.model.basic.Initiative;
-import org.collectiveone.model.basic.TokenTransaction;
 import org.collectiveone.model.basic.TokenType;
 import org.collectiveone.model.enums.ContributorRole;
 import org.collectiveone.model.enums.InitiativeRelationshipType;
 import org.collectiveone.model.enums.TokenHolderType;
 import org.collectiveone.model.extensions.Contributor;
 import org.collectiveone.model.extensions.InitiativeRelationship;
+import org.collectiveone.model.extensions.InitiativeTransfer;
 import org.collectiveone.repositories.AppUserRepositoryIf;
 import org.collectiveone.repositories.ContributorRepositoryIf;
 import org.collectiveone.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
+import org.collectiveone.repositories.InitiativeTransferRepositoryIf;
 import org.collectiveone.web.dto.AssetsDto;
 import org.collectiveone.web.dto.ContributorDto;
 import org.collectiveone.web.dto.GetResult;
@@ -51,6 +52,9 @@ public class InitiativeService {
 	@Autowired
 	ContributorRepositoryIf contributorRepository;
 	
+	@Autowired
+	InitiativeTransferRepositoryIf initiativeTransferRepository;
+	
 	
 	public PostResult init(UUID c1Id, NewInitiativeDto initiativeDto) {
 		/* create the initiative */
@@ -68,13 +72,32 @@ public class InitiativeService {
 			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
 			
 			/* link to parent initiative */
-			link(initiative.getId(), parent.getId(), InitiativeRelationshipType.IS_DETACHED_SUB);
+			InitiativeRelationship relationship = new InitiativeRelationship();
+			relationship.setInitiative(initiative);
+			relationship.setType(InitiativeRelationshipType.IS_DETACHED_SUB);
+			relationship.setOfInitiative(parent);
 			
 			/* transfer parent assets to child */
-			
 			for (TransferDto thisTransfer : initiativeDto.getOtherAssetsTransfers()) {
-				tokenService.transfer(UUID.fromString(thisTransfer.getAssetId()), parent.getId(), initiative.getId(), thisTransfer.getValue(), TokenHolderType.INITIATIVE);
+				TokenType token = tokenService.getTokenType(UUID.fromString(thisTransfer.getAssetId()));
+				
+				tokenService.transfer(token.getId(), parent.getId(), initiative.getId(), thisTransfer.getValue(), TokenHolderType.INITIATIVE);
+				
+				/* upper layer keeping track of who transfered what to whom */
+				InitiativeTransfer transfer = new InitiativeTransfer();
+				transfer.setFromInitiative(parent);
+				transfer.setToInitiative(initiative);
+				transfer.setTokenType(token);
+				transfer.setValue(thisTransfer.getValue());
+				
+				transfer = initiativeTransferRepository.save(transfer);
+				relationship.getTokensTransfers().add(transfer);
 			}
+			
+			relationship = initiativeRelationshipRepository.save(relationship);
+			
+			initiative.getRelationships().add(relationship);
+			initiativeRepository.save(initiative);
 			
 			return new PostResult("success", "sub initiative created and tokens transferred",  initiative.getId().toString());
 		}
@@ -113,23 +136,6 @@ public class InitiativeService {
 		} else {		
 			return null;
 		}
-	}
-	
-	@Transactional
-	public String link(UUID initaitiveId, UUID otherInitaitiveId, InitiativeRelationshipType type) {
-		Initiative initiative = initiativeRepository.findById(initaitiveId); 
-		Initiative otherInitaitive = initiativeRepository.findById(otherInitaitiveId); 
-		
-		InitiativeRelationship relationship = new InitiativeRelationship();
-		relationship.setInitiative(initiative);
-		relationship.setType(type);
-		relationship.setOfInitiative(otherInitaitive);
-		relationship = initiativeRelationshipRepository.save(relationship);
-		
-		initiative.getRelationships().add(relationship);
-		initiativeRepository.save(initiative);
-		
-		return "success";
 	}
 	
 	/** Get key data from an initiative: id, name and driver but no
@@ -285,17 +291,34 @@ public class InitiativeService {
 	}
 	
 	/** Get the distribution of an asset starting from a given initiative
-	 * and including the tokens transferred to other initiatives and to users */
+	 * and including the tokens transferred to its sub-initiatives and members */
 	@Transactional
-	public AssetsDto getTokenDistribution(UUID tokenId, UUID intiativeId) {
+	public AssetsDto getTokenDistribution(UUID tokenId, UUID initiativeId) {
+
+		Initiative initiative = initiativeRepository.findById(initiativeId); 
+		AssetsDto assetDto = tokenService.getTokensOfHolderDto(tokenId, initiative.getId());
+		assetDto.setHolderName(initiative.getName());
+		assetDto.setTransferredToSubinitiatives(getTransferredToSubinitiatives(tokenId, initiative.getId()));
 		
+		return assetDto;
+	}
+	
+	/** Recursively get the tokens transferred from one initiative into its sub-initiatives */
+	@Transactional
+	public List<TransferDto> getTransferredToSubinitiatives(UUID tokenId, UUID initiativeId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId); 
 		TokenType token = tokenService.getTokenType(tokenId);
-		AssetsDto assetDto = tokenService.getTokensOfHolderDto(tokenId, intiativeId);
-				
-		/* get transferred to other initiatives */
-		for (UUID receieverId : tokenService.findReceiverInitiativesIds(tokenId, intiativeId)) {
-			Initiative fromInitiative = initiativeRepository.findById(intiativeId);
-			Initiative toInitiative = initiativeRepository.findById(receieverId);
+
+		/* get of sub-initiatives */
+		List<InitiativeRelationship> subinitiativesRelationships = 
+				initiativeRelationshipRepository.findByOfInitiativeIdAndType(initiative.getId(), InitiativeRelationshipType.IS_DETACHED_SUB);
+		
+		List<TransferDto> transferredToSubinitiatives = new ArrayList<TransferDto>();
+		
+		for (InitiativeRelationship relationship : subinitiativesRelationships) {
+			/* recursively call on all sub-initiatives */
+			Initiative fromInitiative = relationship.getOfInitiative();
+			Initiative toInitiative = relationship.getInitiative();
 			
 			TransferDto transferDto = new TransferDto();
 			
@@ -305,11 +328,13 @@ public class InitiativeService {
 			transferDto.setSenderName(fromInitiative.getName());
 			transferDto.setReceiverId(toInitiative.getId().toString());
 			transferDto.setReceiverName(toInitiative.getName());
+			transferDto.setValue(relationship.getTokensTransferred());
 			
-			assetDto.getTransferredToSubinitiatives().add(transferDto);
+			/* recursive call to get transfers of sub-initiatives */
+			transferDto.setSubtransfers(getTransferredToSubinitiatives(tokenId, toInitiative.getId()));
 		}
 		
-		return assetDto;
+		return transferredToSubinitiatives;
 	}
 
 }

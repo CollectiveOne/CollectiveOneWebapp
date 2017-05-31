@@ -6,12 +6,10 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.collectiveone.model.basic.TokenHolder;
-import org.collectiveone.model.basic.TokenTransaction;
 import org.collectiveone.model.basic.TokenType;
 import org.collectiveone.model.enums.TokenHolderType;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
 import org.collectiveone.repositories.TokenHolderRepositoryIf;
-import org.collectiveone.repositories.TokenTransactionRepositoryIf;
 import org.collectiveone.repositories.TokenTypeRepositoryIf;
 import org.collectiveone.web.dto.AssetsDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +26,6 @@ public class TokenService {
 	
 	@Autowired
 	TokenHolderRepositoryIf tokenHolderRepository;
-	
-	@Autowired
-	TokenTransactionRepositoryIf tokenTransactionRepository;
 	
 	@Transactional
 	public TokenType create(String name, String symbol) {
@@ -82,9 +77,6 @@ public class TokenService {
 		TokenType token = tokenTypeRepository.findById(tokenId);
 		TokenHolder holder = getOrCreateHolder(token.getId(), holderId, holderType);
 		holder.setTokens(holder.getTokens() + value);
-		
-		tokenTransactionRepository.save(new TokenTransaction(token.getId(), holderId, value));
-		
 		tokenHolderRepository.save(holder);
 		
 		return "success";
@@ -103,8 +95,6 @@ public class TokenService {
 		if(fromHolder.getTokens() >= value) {
 			fromHolder.setTokens(fromHolder.getTokens() - value);
 			toHolder.setTokens(toHolder.getTokens() + value);
-			
-			tokenTransactionRepository.save(new TokenTransaction(token.getId(), fromHolder.getHolderId(), toHolder.getHolderId(), value));
 			
 			tokenHolderRepository.save(fromHolder);
 			tokenHolderRepository.save(toHolder);
@@ -176,8 +166,4 @@ public class TokenService {
 		return assetsDto;
 	}
 	
-	@Transactional
-	public List<UUID> findReceiverInitiativesIds(UUID tokenId, UUID initiativeId) {
-		return tokenTransactionRepository.findReceiverIds(tokenId, initiativeId, TokenHolderType.INITIATIVE);
-	}
 }

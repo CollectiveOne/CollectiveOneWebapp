@@ -1,5 +1,6 @@
 package org.collectiveone.model.extensions;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -35,6 +36,8 @@ public class InitiativeRelationship {
 	
 	@Enumerated(EnumType.STRING)
 	private InitiativeRelationshipType type;
+	
+	private List<InitiativeTransfer> tokensTransfers;
 
 	public UUID getId() {
 		return id;
@@ -67,6 +70,13 @@ public class InitiativeRelationship {
 	public void setType(InitiativeRelationshipType type) {
 		this.type = type;
 	}
-	
+
+	public List<InitiativeTransfer> getTokensTransfers() {
+		return tokensTransfers;
+	}
+
+	public void setTokensTransfers(List<InitiativeTransfer> tokensTransfers) {
+		this.tokensTransfers = tokensTransfers;
+	}
 	
 }
