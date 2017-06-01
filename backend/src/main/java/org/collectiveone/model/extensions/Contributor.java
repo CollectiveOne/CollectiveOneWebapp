@@ -1,5 +1,7 @@
 package org.collectiveone.model.extensions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -9,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.collectiveone.model.basic.AppUser;
@@ -36,6 +39,9 @@ public class Contributor {
 	
 	@Enumerated(EnumType.STRING)
 	private ContributorRole role;
+	
+	@OneToMany(mappedBy = "contributor")
+	private List<ContributorTransfer> tokensTransfers = new ArrayList<ContributorTransfer>();
 
 	public UUID getId() {
 		return id;
@@ -67,6 +73,14 @@ public class Contributor {
 
 	public void setRole(ContributorRole role) {
 		this.role = role;
+	}
+
+	public List<ContributorTransfer> getTokensTransfers() {
+		return tokensTransfers;
+	}
+
+	public void setTokensTransfers(List<ContributorTransfer> tokensTransfers) {
+		this.tokensTransfers = tokensTransfers;
 	}
 		
 }

@@ -14,10 +14,12 @@ import org.collectiveone.model.enums.ContributorRole;
 import org.collectiveone.model.enums.InitiativeRelationshipType;
 import org.collectiveone.model.enums.TokenHolderType;
 import org.collectiveone.model.extensions.Contributor;
+import org.collectiveone.model.extensions.ContributorTransfer;
 import org.collectiveone.model.extensions.InitiativeRelationship;
 import org.collectiveone.model.extensions.InitiativeTransfer;
 import org.collectiveone.repositories.AppUserRepositoryIf;
 import org.collectiveone.repositories.ContributorRepositoryIf;
+import org.collectiveone.repositories.ContributorTransferRepositoryIf;
 import org.collectiveone.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
 import org.collectiveone.repositories.InitiativeTransferRepositoryIf;
@@ -54,6 +56,8 @@ public class InitiativeService {
 	
 	@Autowired
 	InitiativeTransferRepositoryIf initiativeTransferRepository;
+	
+	ContributorTransferRepositoryIf contributorTransferRepository;
 	
 	
 	public PostResult init(UUID c1Id, NewInitiativeDto initiativeDto) {
@@ -251,20 +255,42 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	public PostResult addContributor(UUID c1Id, ContributorDto contributorDto) {
-		Initiative initiative = initiativeRepository.findById(UUID.fromString(contributorDto.getInitiativeId()));
+	public PostResult postContributor(UUID initiativeId, UUID c1Id, ContributorRole role) {
+		Contributor contributor = addContributor(initiativeId, c1Id, role);
+		if (contributor != null) {
+			return new PostResult("success", "contributor added",  contributor.getId().toString());
+		} 
+		
+		return new PostResult("error", "contributor not added", "");
+	}
+	
+	@Transactional
+	public Contributor addContributor(UUID initiativeId, UUID c1Id, ContributorRole role) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
 		Contributor contributor = new Contributor();
 		contributor.setInitiative(initiative);
-		contributor.setUser(appUserRepository.findByC1Id(UUID.fromString(contributorDto.getUser().getC1Id())));
-		contributor.setRole(ContributorRole.valueOf(contributorDto.getRole()));
+		contributor.setUser(appUserRepository.findByC1Id(c1Id));
+		contributor.setRole(role);
 		
 		contributor = contributorRepository.save(contributor);
 		initiative.getContributors().add(contributor);
 		
 		initiativeRepository.save(initiative);
 		
-		return new PostResult("success", "contributor added",  contributor.getId().toString());
+		return contributor;
+	}
+	
+	@Transactional
+	public Contributor getOrAddContributor(UUID initiativeId, UUID userId) {
+		
+		Contributor contributor = contributorRepository.findByInitiative_IdAndUser_C1Id(initiativeId, userId);
+		
+		if(contributor == null) {
+			contributor = addContributor(initiativeId, userId, ContributorRole.MEMBER);
+		}
+		
+		return contributor;
 	}
 	
 	@Transactional
@@ -275,15 +301,30 @@ public class InitiativeService {
 	}
 
 	@Transactional
-	public PostResult transferAssets(UUID initiativeId, List<TransferDto> transfersDtos) {
+	public PostResult transferToUser(UUID initiativeId, List<TransferDto> transfersDtos) {
 		for (TransferDto transfer : transfersDtos) {
+			AppUser receiver = appUserRepository.findByC1Id(UUID.fromString(transfer.getReceiverId()));
+			TokenType tokenType = tokenService.getTokenType(UUID.fromString(transfer.getAssetId()));
+			
+			
 			tokenService.transfer(
-					UUID.fromString(transfer.getAssetId()), 
+					tokenType.getId(), 
 					UUID.fromString(transfer.getSenderId()), 
-					UUID.fromString(transfer.getReceiverId()), 
+					receiver.getC1Id(), 
 					transfer.getValue(), 
 					TokenHolderType.USER);
 			
+			/* register the transfer to the contributor  */
+			Contributor contributor = getOrAddContributor(initiativeId, receiver.getC1Id());
+			
+			ContributorTransfer thisTransfer = new ContributorTransfer();
+			thisTransfer.setContributor(contributor);
+			thisTransfer.setTokenType(tokenType);
+			thisTransfer.setValue(transfer.getValue());
+			
+			contributorTransferRepository.save(thisTransfer);
+			contributor.getTokensTransfers().add(thisTransfer);
+			contributorRepository.save(contributor);
 		}
 		
 		return new PostResult("success", "assets transferred successfully", "");

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.model.basic.AppUser;
+import org.collectiveone.model.enums.ContributorRole;
 import org.collectiveone.services.AppUserService;
 import org.collectiveone.services.InitiativeService;
 import org.collectiveone.web.dto.ContributorDto;
@@ -76,7 +77,10 @@ public class InitiativesController {
 	
 	@RequestMapping(path = "/secured/initiative/{id}/contributor", method = RequestMethod.POST) 
 	public PostResult addContributor(@PathVariable("id") String id, @RequestBody ContributorDto contributorDto) {
-		return initiativeService.addContributor(getLoggedUser().getC1Id(), contributorDto);
+		return initiativeService.postContributor(
+				UUID.fromString(contributorDto.getInitiativeId()), 
+				UUID.fromString(contributorDto.getUser().getC1Id()),
+				ContributorRole.valueOf(contributorDto.getRole()));
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/contributor/{contributorId}", method = RequestMethod.DELETE) 
@@ -84,9 +88,9 @@ public class InitiativesController {
 		return initiativeService.deleteContributor(getLoggedUser().getC1Id(), UUID.fromString(contributorId));
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/transferAssets", method = RequestMethod.POST)
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/transferToUser", method = RequestMethod.POST)
 	public PostResult transferAssets(@PathVariable("initiativeId") String initiativeId, @RequestBody List<TransferDto> transfersDtos) {
-		return initiativeService.transferAssets(UUID.fromString(initiativeId), transfersDtos);
+		return initiativeService.transferToUser(UUID.fromString(initiativeId), transfersDtos);
 	} 
 	
 	private AppUser getLoggedUser() {
