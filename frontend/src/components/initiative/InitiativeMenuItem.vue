@@ -98,6 +98,10 @@ export default {
 
 <style scoped>
 
+.w3-card-2 {
+  padding-bottom: 7px;
+}
+
 .space-col {
   visibility: hidden;
 }

@@ -1,5 +1,6 @@
 package org.collectiveone.model.extensions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.collectiveone.model.basic.Initiative;
@@ -37,7 +39,8 @@ public class InitiativeRelationship {
 	@Enumerated(EnumType.STRING)
 	private InitiativeRelationshipType type;
 	
-	private List<InitiativeTransfer> tokensTransfers;
+	@OneToMany(mappedBy = "relationship")
+	private List<InitiativeTransfer> tokensTransfers = new ArrayList<InitiativeTransfer>();
 
 	public UUID getId() {
 		return id;

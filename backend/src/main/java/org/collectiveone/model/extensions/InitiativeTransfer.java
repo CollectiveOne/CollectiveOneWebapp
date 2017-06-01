@@ -9,13 +9,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.model.basic.Initiative;
 import org.collectiveone.model.basic.TokenType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "initiative_transfers")
+@Table(name = "relationship_transfers")
 public class InitiativeTransfer {
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -25,17 +24,14 @@ public class InitiativeTransfer {
 	private UUID id;
 	
 	@ManyToOne
-	private Initiative fromInitiative;
-	
-	@ManyToOne
-	private Initiative toInitiative;
+	private InitiativeRelationship relationship;
 	
 	@ManyToOne
 	private TokenType tokenType;
 	
 	private double value;
-
 	
+		
 	public UUID getId() {
 		return id;
 	}
@@ -44,20 +40,12 @@ public class InitiativeTransfer {
 		this.id = id;
 	}
 
-	public Initiative getFromInitiative() {
-		return fromInitiative;
+	public InitiativeRelationship getRelationship() {
+		return relationship;
 	}
 
-	public void setFromInitiative(Initiative fromInitiative) {
-		this.fromInitiative = fromInitiative;
-	}
-
-	public Initiative getToInitiative() {
-		return toInitiative;
-	}
-
-	public void setToInitiative(Initiative toInitiative) {
-		this.toInitiative = toInitiative;
+	public void setRelationship(InitiativeRelationship relationship) {
+		this.relationship = relationship;
 	}
 
 	public TokenType getTokenType() {

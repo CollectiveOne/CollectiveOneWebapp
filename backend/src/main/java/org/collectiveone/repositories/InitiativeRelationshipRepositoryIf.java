@@ -10,4 +10,5 @@ import org.springframework.data.repository.CrudRepository;
 public interface InitiativeRelationshipRepositoryIf extends CrudRepository<InitiativeRelationship, UUID> {
 	
 	List<InitiativeRelationship> findByOfInitiativeIdAndType(UUID ofInitiativeId, InitiativeRelationshipType type);
+		
 }
