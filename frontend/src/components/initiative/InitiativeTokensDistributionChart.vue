@@ -8,10 +8,10 @@
               <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
               <div class="w3-display-middle d2-color" style="width: 100%">
                 <div class="w3-row">
-                  <b class="w3-xlarge ">{{ ownedByThisInitiativeAndSubinitiativesStr }} {{ assetData.assetName }}</b>
+                  <b class="w3-xlarge ">{{ underThisInitiativeStr }} {{ assetData.assetName }}</b>
                 </div>
                 <div class="w3-row">
-                  <b class="w3-large">{{ ownedByThisInitiativeAndSubinitiativesPercent }}% of existing</b>
+                  <b class="w3-large">{{ underThisInitiativePercent }}% of existing</b>
                 </div>
               </div>
             </div>
@@ -22,8 +22,8 @@
                 <b>Still Available</b>
               </label>
               <div class="w3-light-grey w3-round-xlarge w3-large">
-                <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': ownedByThisInitiativePercent +'%'}">
-                  <div class="bar-txt w3-center d2-color">{{ ownedByThisInitiative }}</div>
+                <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': availableToThisInitiativePercent +'%'}">
+                  <div class="bar-txt w3-center d2-color">{{ availableToThisInitiative }}</div>
                 </div>
               </div>
             </div>
@@ -54,8 +54,8 @@
                   <b>Transferred to members</b>
                 </label>
                 <div class="w3-light-grey w3-round-xlarge w3-large">
-                  <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': 0 +'%'}">
-                    <div class="bar-txt w3-center d2-color">0 / 0%</div>
+                  <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToContributorsPercent +'%'}">
+                    <div class="bar-txt w3-center d2-color">{{ transferredToContributorsStr }}</div>
                   </div>
                 </div>
               </div>
@@ -125,12 +125,22 @@
 <script>
 import { tokensString, amountAndPerc } from '@/lib/common'
 
+const sumOfContributors = function (asset) {
+  var tot = 0.0
+  for (var ixAss in asset.transferredToUsers) {
+    var transfer = asset.transferredToUsers[ixAss]
+    /* recurively sum the assets owned by subinitiatives */
+    tot += transfer.value
+  }
+  return tot
+}
+
 const sumOfSubinitiatives = function (asset) {
   var tot = 0.0
   for (var ixAss in asset.transferredToSubinitiatives) {
     var transfer = asset.transferredToSubinitiatives[ixAss]
     /* recurively sum the assets owned by subinitiatives */
-    tot += transfer.value + sumOfSubinitiatives(transfer)
+    tot += transfer.value
   }
   return tot
 }
@@ -183,20 +193,20 @@ export default {
     totalExisting () {
       return tokensString(this.assetData.totalExistingTokens)
     },
-    ownedByThisInitiativeAndSubinitiativesVal () {
-      return this.assetData.ownedByThisHolder + this.transferredToSubinitiativesVal
+    underThisInitiativeVal () {
+      return this.assetData.ownedByThisHolder + this.transferredToSubinitiativesVal + this.transferredToContributorsVal
     },
-    ownedByThisInitiativeAndSubinitiativesStr () {
-      return tokensString(this.ownedByThisInitiativeAndSubinitiativesVal)
+    underThisInitiativeStr () {
+      return tokensString(this.underThisInitiativeVal)
     },
-    ownedByThisInitiativeAndSubinitiativesPercent () {
-      return this.ownedByThisInitiativeAndSubinitiativesVal / this.assetData.totalExistingTokens * 100
+    underThisInitiativePercent () {
+      return this.underThisInitiativeVal / this.assetData.totalExistingTokens * 100
     },
-    ownedByThisInitiative () {
-      return amountAndPerc(this.assetData.ownedByThisHolder, this.ownedByThisInitiativeAndSubinitiativesVal)
+    availableToThisInitiative () {
+      return amountAndPerc(this.assetData.ownedByThisHolder, this.underThisInitiativeVal)
     },
-    ownedByThisInitiativePercent () {
-      return this.assetData.ownedByThisHolder / this.ownedByThisInitiativeAndSubinitiativesVal * 100
+    availableToThisInitiativePercent () {
+      return this.assetData.ownedByThisHolder / this.underThisInitiativeVal * 100
     },
     hasSubinitiatives () {
       return (this.assetData.transferredToSubinitiatives.length > 0)
@@ -205,19 +215,29 @@ export default {
       return sumOfSubinitiatives(this.assetData)
     },
     transferredToSubinitiativesPercent () {
-      return this.transferredToSubinitiativesVal / this.ownedByThisInitiativeAndSubinitiativesVal * 100
+      return this.transferredToSubinitiativesVal / this.underThisInitiativeVal * 100
     },
     transferredToSubinitiativesStr () {
-      return amountAndPerc(this.transferredToSubinitiativesVal, this.ownedByThisInitiativeAndSubinitiativesVal)
+      return amountAndPerc(this.transferredToSubinitiativesVal, this.underThisInitiativeVal)
+    },
+    transferredToContributorsVal () {
+      return sumOfContributors(this.assetData)
+    },
+    transferredToContributorsPercent () {
+      return this.transferredToContributorsVal / this.underThisInitiativeVal * 100
+    },
+    transferredToContributorsStr () {
+      return amountAndPerc(this.transferredToContributorsVal, this.underThisInitiativeVal)
     }
+
   },
 
   methods: {
     subinitiativePortion (subinitiativeAssets) {
-      return amountAndPerc(subinitiativeAssets.value + sumOfSubinitiatives(subinitiativeAssets), this.ownedByThisInitiativeAndSubinitiativesVal)
+      return amountAndPerc(subinitiativeAssets.value + sumOfSubinitiatives(subinitiativeAssets), this.underThisInitiativeVal)
     },
     subinitiativePercent (subinitiativeAssets) {
-      return (subinitiativeAssets.value + sumOfSubinitiatives(subinitiativeAssets)) / this.ownedByThisInitiativeAndSubinitiativesVal * 100
+      return (subinitiativeAssets.value + sumOfSubinitiatives(subinitiativeAssets)) / this.underThisInitiativeVal * 100
     },
     newSubInitiativeClicked () {
       this.$emit('new-initiative', this.assetData.holderId)
@@ -255,12 +275,12 @@ export default {
       this.updateTokenData()
     },
     value () {
-      let perc = this.value / this.ownedByThisInitiativeAndSubinitiativesVal * 100
+      let perc = this.value / this.underThisInitiativeVal * 100
       this.percentage = Math.round(perc * 1000) / 1000
       this.assign()
     },
     percentage () {
-      let toks = this.percentage / 100 * this.ownedByThisInitiativeAndSubinitiativesVal
+      let toks = this.percentage / 100 * this.underThisInitiativeVal
       this.value = Math.round(toks * 1000) / 1000
     }
 

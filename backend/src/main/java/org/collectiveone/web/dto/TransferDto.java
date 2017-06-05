@@ -1,8 +1,5 @@
 package org.collectiveone.web.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TransferDto {
 	private String assetId;
 	private String assetName;
@@ -11,9 +8,7 @@ public class TransferDto {
 	private String receiverId;
 	private String receiverName;
 	private double value;
-	
-	private List<TransferDto> subtransfers = new ArrayList<TransferDto>();
-	
+		
 	public String getAssetId() {
 		return assetId;
 	}
@@ -55,12 +50,6 @@ public class TransferDto {
 	}
 	public void setValue(double value) {
 		this.value = value;
-	}
-	public List<TransferDto> getSubtransfers() {
-		return subtransfers;
-	}
-	public void setSubtransfers(List<TransferDto> subtransfers) {
-		this.subtransfers = subtransfers;
 	}
 	
 }

@@ -57,6 +57,7 @@ public class InitiativeService {
 	@Autowired
 	InitiativeTransferRepositoryIf initiativeTransferRepository;
 	
+	@Autowired
 	ContributorTransferRepositoryIf contributorTransferRepository;
 	
 	
@@ -338,7 +339,9 @@ public class InitiativeService {
 		Initiative initiative = initiativeRepository.findById(initiativeId); 
 		AssetsDto assetDto = tokenService.getTokensOfHolderDto(tokenId, initiative.getId());
 		assetDto.setHolderName(initiative.getName());
+		
 		assetDto.setTransferredToSubinitiatives(getTransferredToSubinitiatives(tokenId, initiative.getId()));
+		assetDto.setTransferredToUsers(getTransferredToUsers(tokenId, initiative.getId()));
 		
 		return assetDto;
 	}
@@ -369,13 +372,42 @@ public class InitiativeService {
 			dto.setReceiverName(relationship.getInitiative().getName());
 			dto.setValue(totalTransferred);
 			
-			/* recursively get all the transfers of this token made to subinitiatives */
-			dto.setSubtransfers(getTransferredToSubinitiatives(token.getId(), relationship.getInitiative().getId()));
-
 			transferredToSubinitiatives.add(dto);
 		}
 		
 		return transferredToSubinitiatives;
+	}
+	
+	/** Recursively get the tokens transferred from one initiative into its sub-initiatives */
+	@Transactional
+	public List<TransferDto> getTransferredToUsers(UUID tokenId, UUID initiativeId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId); 
+		TokenType token = tokenService.getTokenType(tokenId);
+
+		/* get of sub-initiatives */
+		List<Contributor> subinitiativeContributors = 
+				contributorRepository.findByInitiativeId(initiative.getId());
+		
+		List<TransferDto> transferredToUsers = new ArrayList<TransferDto>();
+		
+		for (Contributor contributor : subinitiativeContributors) {
+			/* get all transfers of a given token made from an initiative to a contributor */
+			double totalTransferred = contributorTransferRepository.getTotalTransferred(tokenId, contributor.getId());
+			
+			TransferDto dto = new TransferDto();
+			
+			dto.setAssetId(token.getId().toString());
+			dto.setAssetName(token.getName());
+			dto.setSenderId(initiative.getId().toString());
+			dto.setSenderName(initiative.getName());
+			dto.setReceiverId(contributor.getUser().getC1Id().toString());
+			dto.setReceiverName(contributor.getUser().getNickname());
+			dto.setValue(totalTransferred);
+			
+			transferredToUsers.add(dto);
+		}
+		
+		return transferredToUsers;
 	}
 
 }

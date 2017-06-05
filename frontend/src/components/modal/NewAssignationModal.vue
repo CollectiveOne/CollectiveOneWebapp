@@ -142,7 +142,7 @@ export default {
           this.assetsTransfers[ix].receiverId = this.receiver.c1Id
           this.assetsTransfers[ix].receiverName = this.receiver.nickname
         }
-        this.axios.post('/1/secured/initiative/' + this.initiative.id + '/transferAssets', this.assetsTransfers)
+        this.axios.post('/1/secured/initiative/' + this.initiative.id + '/transferToUser', this.assetsTransfers)
         .then((response) => {
 
         })
