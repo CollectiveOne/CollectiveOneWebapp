@@ -7,6 +7,7 @@ import org.collectiveone.model.basic.AppUser;
 import org.collectiveone.model.enums.ContributorRole;
 import org.collectiveone.services.AppUserService;
 import org.collectiveone.services.InitiativeService;
+import org.collectiveone.web.dto.AssignationDto;
 import org.collectiveone.web.dto.ContributorDto;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
@@ -88,9 +89,19 @@ public class InitiativesController {
 		return initiativeService.deleteContributor(getLoggedUser().getC1Id(), UUID.fromString(contributorId));
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/transferToUser", method = RequestMethod.POST)
-	public PostResult transferAssets(@PathVariable("initiativeId") String initiativeId, @RequestBody List<TransferDto> transfersDtos) {
-		return initiativeService.transferToUser(UUID.fromString(initiativeId), transfersDtos);
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignation", method = RequestMethod.POST)
+	public PostResult newAssignation(@PathVariable("initiativeId") String initiativeId, @RequestBody AssignationDto assignation) {
+		
+		switch(assignation.getType()) {
+		case "direct":
+			return initiativeService.transferToUser(UUID.fromString(initiativeId), assignation.getTransfers());
+			
+		case "peer-reviewed":
+//			return initiativeService.createPeerReviewedAssignation(UUID.fromString(initiativeId), assignation);
+		}
+		
+		return new PostResult("error", "error", "");
+		
 	} 
 	
 	private AppUser getLoggedUser() {

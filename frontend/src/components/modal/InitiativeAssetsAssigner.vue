@@ -34,8 +34,8 @@ import TokensDistributionChart from '../initiative/InitiativeTokensDistributionC
 
 export default {
   props: {
-    initiative: {
-      type: Object
+    initiativeId: {
+      type: String
     },
     type: {
       type: String,
@@ -45,6 +45,7 @@ export default {
 
   data () {
     return {
+      initiative: null,
       assetsTransfers: []
     }
   },
@@ -56,7 +57,10 @@ export default {
 
   methods: {
     initiativeSelected (initiative) {
-      this.axios.get('/1/secured/initiative/' + initiative.id, {
+      this.updateInitiative(initiative.id)
+    },
+    updateInitiative (id) {
+      this.axios.get('/1/secured/initiative/' + id, {
         params: {
           addAssets: true
         }
@@ -70,7 +74,6 @@ export default {
           return ix
         }
       }
-
       return -1
     },
     newAssignment (transferData) {

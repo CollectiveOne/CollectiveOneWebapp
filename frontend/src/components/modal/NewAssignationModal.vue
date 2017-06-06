@@ -7,10 +7,10 @@
         </div>
 
         <div class="w3-container w3-theme">
-          <h2>{{ peerReview ? 'New Peer-Reviewed assignation' : 'New Direct Assignation' }}</h2>
+          <h2>{{ peerReview ? 'New Peer-Reviewed Assignation' : 'New Direct Assignation' }}</h2>
         </div>
 
-        <form class="w3-container">
+        <div class="w3-container">
           <div class="section-tabs w3-row">
             <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'w3-border-blue': !peerReview}"
@@ -25,37 +25,9 @@
           </div>
           <br>
 
-          <div class="w3-row">
-            <div class="w3-col m8 assset-assigner">
-              <app-initiative-assets-assigner
-                v-if="initiative" :initiative="initiative" type='member-assigner'
-                @updated="assetsSelected($event)">
-              </app-initiative-assets-assigner>
-            </div>
-            <div class="w3-col m4">
-              <div class="w3-left">
-                <h5 class="w3-text-indigo w3-left"><b>Transfer to </b></h5>
-              </div>
-              <app-user-selector class="w3-left"
-                anchor="c1Id" label="nickname"
-                url="/1/secured/users/suggestions"
-                @select="receiver = $event">
-              </app-user-selector>
-            </div>
-          </div>
-
-          <div class="w3-row">
-            <div v-if="transferReady" class="w3-panel w3-theme w3-round-xlarge">
-              <h5><b>Summary</b></h5>
-              <p>
-                {{ receiver.nickname }} will receive <span v-for="transfer in assetsTransfers">
-                <span v-if="transfer.value ">
-                  <b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ initiative.name }}
-                </span>
-              </span>
-              </p>
-            </div>
-          </div>
+          <app-direct-assignation-form
+            v-if="initiative" :initiative="initiative" @updated="assignationUpdated($event)">
+          </app-direct-assignation-form>
 
           <hr>
 
@@ -68,7 +40,7 @@
             </div>
           </div>
 
-        </form>
+        </div>
 
       </div>
     </div>
@@ -77,18 +49,12 @@
 
 <script>
 import { mapActions } from 'vuex'
-import InitiativeAssetsAssigner from './InitiativeAssetsAssigner.vue'
-import UserSelector from '../user/UserSelector.vue'
-
-/* eslint-disable no-unused-vars */
-import { tokensString } from '../../lib/common'
-/* eslint-enable no-unused-vars */
+import DirectAssignationForm from './DirectAssignationForm.vue'
 
 export default {
 
   components: {
-    'app-initiative-assets-assigner': InitiativeAssetsAssigner,
-    'app-user-selector': UserSelector
+    'app-direct-assignation-form': DirectAssignationForm
   },
 
   props: {
@@ -101,68 +67,24 @@ export default {
     return {
       peerReview: false,
       initiative: null,
-      receiver: null,
-      assetsTransfers: []
-    }
-  },
-
-  computed: {
-    transferReady () {
-      if (this.receiver != null) {
-        if (this.assetsTransfers.length > 0) {
-          for (var ix in this.assetsTransfers) {
-            if (this.assetsTransfers[ix].value > 0) {
-              return true
-            } else {
-              return false
-            }
-          }
-        }
-      }
-      return false
+      assignation: null
     }
   },
 
   methods: {
     ...mapActions(['showOutputMessage']),
 
-    tokensString (v) {
-      return tokensString(v)
-    },
     closeThis () {
       this.$emit('close-this')
     },
-    assetsSelected (assetsTransfers) {
-      this.assetsTransfers = JSON.parse(JSON.stringify(assetsTransfers))
+    assignationUpdated (assignation) {
+      this.assignation = assignation
     },
     accept () {
-      if (this.transferReady) {
-        /* complete the transfer information */
-        for (var ix in this.assetsTransfers) {
-          this.assetsTransfers[ix].receiverId = this.receiver.c1Id
-          this.assetsTransfers[ix].receiverName = this.receiver.nickname
-        }
-        this.axios.post('/1/secured/initiative/' + this.initiative.id + '/transferToUser', this.assetsTransfers)
-        .then((response) => {
-
-        })
-      } else {
-        this.showOutputMessage('missing data')
-      }
-    },
-    updateInitiative () {
-      this.axios.get('/1/secured/initiative/' + this.initiativeId, {
-        params: {
-          addAssets: true
-        }
-      }).then((response) => {
-        this.initiative = response.data.data
+      this.axios.post('/1/secured/initiative/' + this.initiative.id + '/assignation', this.assignation)
+      .then((response) => {
       })
     }
-  },
-
-  mounted () {
-    this.updateInitiative()
   }
 
 }
