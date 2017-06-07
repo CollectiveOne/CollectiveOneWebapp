@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="this-container">
+  <div v-if="initiative" class="this-container">
     <div class="w3-row sub-initiative-first-row">
       <div class="w3-left">
         <h5 class="w3-text-indigo w3-left"><b>Transfer from </b></h5>
@@ -65,7 +65,7 @@ export default {
           addAssets: true
         }
       }).then((response) => {
-        this.$emit('parent-initiative-updated', response.data.data)
+        this.initiative = response.data.data
       })
     },
     indexOfAsset (assetId) {
@@ -87,6 +87,10 @@ export default {
       }
       this.$emit('updated', this.assetsTransfers)
     }
+  },
+
+  mounted () {
+    this.updateInitiative(this.initiativeId)
   }
 
 }

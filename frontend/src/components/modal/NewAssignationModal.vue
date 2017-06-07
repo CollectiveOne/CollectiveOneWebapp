@@ -11,6 +11,14 @@
         </div>
 
         <div class="w3-container">
+
+          <div class="w3-row">
+            <app-initiative-assets-assigner
+              :initiativeId="initiativeId" type='member-assigner'
+              @updated="assetsSelected($event)">
+            </app-initiative-assets-assigner>
+          </div>
+
           <div class="section-tabs w3-row">
             <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'w3-border-blue': !peerReview}"
@@ -25,9 +33,32 @@
           </div>
           <br>
 
-          <app-direct-assignation-form
-            v-if="initiative" :initiative="initiative" @updated="assignationUpdated($event)">
-          </app-direct-assignation-form>
+          <div v-show="!peerReview" id="direct-assignation-div" class="w3-row">
+            <div class="w3-left">
+              <h5 class="w3-text-indigo w3-left"><b>Transfer to </b></h5>
+            </div>
+            <app-user-selector class="w3-left"
+              anchor="c1Id" label="nickname"
+              url="/1/secured/users/suggestions"
+              @select="receiver = $event">
+            </app-user-selector>
+          </div>
+          <div v-show="peerReview" class="w3-row">
+            <app-peer-reviewed-assignation class="w3-row"></app-peer-reviewed-assignation>
+          </div>
+
+          <div class="w3-row">
+            <div v-if="transferReady" class="w3-panel w3-theme w3-round-xlarge">
+              <h5><b>Summary</b></h5>
+              <p>
+                {{ receiver.nickname }} will receive <span v-for="transfer in assetsTransfers">
+                <span v-if="transfer.value ">
+                  <b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ transfer.fromHolderName }}
+                </span>
+              </span>
+              </p>
+            </div>
+          </div>
 
           <hr>
 
@@ -49,12 +80,16 @@
 
 <script>
 import { mapActions } from 'vuex'
-import DirectAssignationForm from './DirectAssignationForm.vue'
+import InitiativeAssetsAssigner from './InitiativeAssetsAssigner.vue'
+import UserSelector from '../user/UserSelector.vue'
+import PeerReviewedAssignation from './PeerReviewedAssignation.vue'
 
 export default {
 
   components: {
-    'app-direct-assignation-form': DirectAssignationForm
+    'app-initiative-assets-assigner': InitiativeAssetsAssigner,
+    'app-user-selector': UserSelector,
+    'app-peer-reviewed-assignation': PeerReviewedAssignation
   },
 
   props: {
@@ -66,8 +101,24 @@ export default {
   data () {
     return {
       peerReview: false,
-      initiative: null,
       assignation: null
+    }
+  },
+
+  computed: {
+    transferReady () {
+      if (this.receiver != null) {
+        if (this.assetsTransfers.length > 0) {
+          for (var ix in this.assetsTransfers) {
+            if (this.assetsTransfers[ix].value > 0) {
+              return true
+            } else {
+              return false
+            }
+          }
+        }
+      }
+      return false
     }
   },
 
@@ -81,7 +132,7 @@ export default {
       this.assignation = assignation
     },
     accept () {
-      this.axios.post('/1/secured/initiative/' + this.initiative.id + '/assignation', this.assignation)
+      this.axios.post('/1/secured/initiative/' + this.assignation.initiativeId + '/assignation', this.assignation)
       .then((response) => {
       })
     }
