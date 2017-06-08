@@ -14,12 +14,12 @@
         <form class="w3-container">
 
           <div class="section-tabs w3-row">
-            <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
+            <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'w3-border-blue': !asSubinitiative}"
               @click="asSubinitiative = false">
               <h5 class="w3-text-indigo" :class="{'bold-text': !asSubinitiative}">Create as independent</h5>
             </div>
-            <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
+            <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'w3-border-blue': asSubinitiative}"
               @click="asSubinitiative = true">
               <h5 class="w3-text-indigo" :class="{'bold-text': asSubinitiative}">Create as subinitiative</h5>

@@ -9,7 +9,7 @@
       </div>
     </div>
 
-    <div class="w3-row">
+    <div v-if="addUserEnabled" class="w3-row">
       <app-user-selector class="user-selector"
         anchor="c1Id" label="nickname"
         url="/1/secured/users/suggestions"
@@ -30,6 +30,10 @@ export default {
       default: () => {
         return []
       }
+    },
+    addUserEnabled: {
+      type: Boolean,
+      default: true
     }
   },
 

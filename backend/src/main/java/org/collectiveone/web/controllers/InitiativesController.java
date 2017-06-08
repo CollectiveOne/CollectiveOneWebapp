@@ -94,7 +94,7 @@ public class InitiativesController {
 		
 		switch(assignation.getType()) {
 		case "direct":
-			return initiativeService.transferToUser(UUID.fromString(initiativeId), assignation.getTransfers());
+			return initiativeService.makeDirectAssignation(UUID.fromString(initiativeId), assignation);
 			
 		case "peer-reviewed":
 //			return initiativeService.createPeerReviewedAssignation(UUID.fromString(initiativeId), assignation);

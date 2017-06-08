@@ -7,10 +7,10 @@
         </div>
 
         <div class="w3-container w3-theme">
-          <h2>{{ peerReview ? 'New Peer-Reviewed Assignation' : 'New Direct Assignation' }}</h2>
+          <h2>{{ isPeerReviewed ? 'New Peer-Reviewed Assignation' : 'New Direct Assignation' }}</h2>
         </div>
 
-        <div class="w3-container">
+        <div class="this-container w3-container">
 
           <div class="w3-row">
             <app-initiative-assets-assigner
@@ -20,44 +20,27 @@
           </div>
 
           <div class="section-tabs w3-row">
-            <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
-              :class="{'w3-border-blue': !peerReview}"
-              @click="peerReview = false">
-              <h5 class="w3-text-indigo" :class="{'bold-text': !peerReview}">Direct</h5>
+            <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
+              :class="{'w3-border-blue': isDirect}"
+              @click="assignation.type = 'direct'">
+              <h5 class="w3-text-indigo" :class="{'bold-text': isDirect}">Direct</h5>
             </div>
-            <div class="w3-half tablink w3-bottombar w3-hover-light-grey w3-padding"
-              :class="{'w3-border-blue': peerReview}"
-              @click="peerReview = true">
-              <h5 class="w3-text-indigo" :class="{'bold-text': peerReview}">Peer Reviewed</h5>
+            <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
+              :class="{'w3-border-blue': isPeerReviewed}"
+              @click="assignation.type = 'peerReviewed'">
+              <h5 class="w3-text-indigo" :class="{'bold-text': isPeerReviewed}">Peer Reviewed</h5>
             </div>
           </div>
           <br>
 
-          <div v-show="!peerReview" id="direct-assignation-div" class="w3-row">
-            <div class="w3-left">
-              <h5 class="w3-text-indigo w3-left"><b>Transfer to </b></h5>
-            </div>
-            <app-user-selector class="w3-left"
-              anchor="c1Id" label="nickname"
-              url="/1/secured/users/suggestions"
-              @select="receiver = $event">
-            </app-user-selector>
+          <div v-show="isDirect" id="direct-assignation-div" class="w3-row">
+            <app-direct-assignation @updated="directReceiversSelected($event)"></app-direct-assignation>
           </div>
-          <div v-show="peerReview" class="w3-row">
-            <app-peer-reviewed-assignation class="w3-row"></app-peer-reviewed-assignation>
+          <div v-show="isPeerReviewed" class="w3-row">
+            <app-peer-reviewed-assignation @updated="peerReviewReceiversSelected($event)"></app-peer-reviewed-assignation>
           </div>
 
           <div class="w3-row">
-            <div v-if="transferReady" class="w3-panel w3-theme w3-round-xlarge">
-              <h5><b>Summary</b></h5>
-              <p>
-                {{ receiver.nickname }} will receive <span v-for="transfer in assetsTransfers">
-                <span v-if="transfer.value ">
-                  <b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ transfer.fromHolderName }}
-                </span>
-              </span>
-              </p>
-            </div>
           </div>
 
           <hr>
@@ -81,14 +64,14 @@
 <script>
 import { mapActions } from 'vuex'
 import InitiativeAssetsAssigner from './InitiativeAssetsAssigner.vue'
-import UserSelector from '../user/UserSelector.vue'
+import DirectAssignation from './DirectAssignation.vue'
 import PeerReviewedAssignation from './PeerReviewedAssignation.vue'
 
 export default {
 
   components: {
     'app-initiative-assets-assigner': InitiativeAssetsAssigner,
-    'app-user-selector': UserSelector,
+    'app-direct-assignation': DirectAssignation,
     'app-peer-reviewed-assignation': PeerReviewedAssignation
   },
 
@@ -101,24 +84,18 @@ export default {
   data () {
     return {
       peerReview: false,
-      assignation: null
+      assignation: {
+        type: 'direct'
+      }
     }
   },
 
   computed: {
-    transferReady () {
-      if (this.receiver != null) {
-        if (this.assetsTransfers.length > 0) {
-          for (var ix in this.assetsTransfers) {
-            if (this.assetsTransfers[ix].value > 0) {
-              return true
-            } else {
-              return false
-            }
-          }
-        }
-      }
-      return false
+    isDirect () {
+      return this.assignation.type === 'direct'
+    },
+    isPeerReviewed () {
+      return this.assignation.type === 'peerReviewed'
     }
   },
 
@@ -131,8 +108,27 @@ export default {
     assignationUpdated (assignation) {
       this.assignation = assignation
     },
+    assetsSelected (assets) {
+      this.assignation.assets = assets
+    },
+    directReceiversSelected (data) {
+      this.assignation.directReceivers = data.receivers
+    },
+    peerReviewReceiversSelected (data) {
+      this.assignation.peerReviewReceivers = data.receivers
+      this.assignation.peerReviewEvaluators = data.evaluators
+    },
     accept () {
-      this.axios.post('/1/secured/initiative/' + this.assignation.initiativeId + '/assignation', this.assignation)
+      var assignationToSend = {}
+      assignationToSend.type = this.assignation.type
+      assignationToSend.assets = this.assignation.assets
+      assignationToSend.initiativeId = this.assignation.assets[0].senderId
+
+      if (this.assignation.type === 'direct') {
+        assignationToSend.receivers = this.assignation.directReceivers
+      }
+
+      this.axios.post('/1/secured/initiative/' + assignationToSend.initiativeId + '/assignation', assignationToSend)
       .then((response) => {
       })
     }
@@ -145,6 +141,11 @@ export default {
 
 .w3-modal {
   display: block;
+}
+
+.this-container {
+  padding-top: 10px;
+  padding-bottom: 30px;
 }
 
 .close-div {

@@ -24,11 +24,14 @@ import org.collectiveone.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
 import org.collectiveone.repositories.InitiativeTransferRepositoryIf;
 import org.collectiveone.web.dto.AssetsDto;
+import org.collectiveone.web.dto.AssignationDto;
+import org.collectiveone.web.dto.BillDto;
 import org.collectiveone.web.dto.ContributorDto;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.collectiveone.web.dto.NewInitiativeDto;
 import org.collectiveone.web.dto.PostResult;
+import org.collectiveone.web.dto.ReceiverDto;
 import org.collectiveone.web.dto.TransferDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -300,34 +303,55 @@ public class InitiativeService {
 		contributorRepository.delete(contributor);
 		return new PostResult("success", "contributor added", "");
 	}
+	
+	@Transactional
+	public PostResult makeDirectAssignation(UUID initiativeId, AssignationDto assignation) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		
+		for(BillDto bill : assignation.getAssets()) {
+			for(ReceiverDto receiver : assignation.getReceivers()) {
+				TransferDto transfer = new TransferDto();
+				
+				transfer.setAssetId(bill.getAssetId());
+				transfer.setAssetName(bill.getAssetName());
+				transfer.setSenderId(initiative.getId().toString());
+				transfer.setReceiverId(receiver.getUser().getC1Id());
+				
+				/* each asset type is distributed among the receviers using
+				 * the same percentage*/
+				transfer.setValue(bill.getValue() * (receiver.getPercent() / 100.0));
+				
+				transferToUser(initiative.getId(), transfer);
+			}
+		}
+		return new PostResult("success", "success", "");
+	}
 
 	@Transactional
-	public PostResult transferToUser(UUID initiativeId, List<TransferDto> transfersDtos) {
-		for (TransferDto transfer : transfersDtos) {
-			AppUser receiver = appUserRepository.findByC1Id(UUID.fromString(transfer.getReceiverId()));
-			TokenType tokenType = tokenService.getTokenType(UUID.fromString(transfer.getAssetId()));
-			
-			
-			tokenService.transfer(
-					tokenType.getId(), 
-					UUID.fromString(transfer.getSenderId()), 
-					receiver.getC1Id(), 
-					transfer.getValue(), 
-					TokenHolderType.USER);
-			
-			/* register the transfer to the contributor  */
-			Contributor contributor = getOrAddContributor(initiativeId, receiver.getC1Id());
-			
-			ContributorTransfer thisTransfer = new ContributorTransfer();
-			thisTransfer.setContributor(contributor);
-			thisTransfer.setTokenType(tokenType);
-			thisTransfer.setValue(transfer.getValue());
-			
-			contributorTransferRepository.save(thisTransfer);
-			contributor.getTokensTransfers().add(thisTransfer);
-			contributorRepository.save(contributor);
-		}
+	public PostResult transferToUser(UUID initiativeId, TransferDto transfer) {
+		AppUser receiver = appUserRepository.findByC1Id(UUID.fromString(transfer.getReceiverId()));
+		TokenType tokenType = tokenService.getTokenType(UUID.fromString(transfer.getAssetId()));
 		
+		
+		tokenService.transfer(
+				tokenType.getId(), 
+				UUID.fromString(transfer.getSenderId()), 
+				receiver.getC1Id(), 
+				transfer.getValue(), 
+				TokenHolderType.USER);
+		
+		/* register the transfer to the contributor  */
+		Contributor contributor = getOrAddContributor(initiativeId, receiver.getC1Id());
+		
+		ContributorTransfer thisTransfer = new ContributorTransfer();
+		thisTransfer.setContributor(contributor);
+		thisTransfer.setTokenType(tokenType);
+		thisTransfer.setValue(transfer.getValue());
+		
+		contributorTransferRepository.save(thisTransfer);
+		contributor.getTokensTransfers().add(thisTransfer);
+		contributorRepository.save(contributor);
+	
 		return new PostResult("success", "assets transferred successfully", "");
 	}
 	
