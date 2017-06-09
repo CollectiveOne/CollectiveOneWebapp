@@ -1,4 +1,4 @@
-package org.collectiveone.model.extensions;
+package org.collectiveone.model.support;
 
 import java.util.UUID;
 

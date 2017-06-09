@@ -3,7 +3,8 @@
     <app-new-assignation-modal
       v-if="showNewAssignationModal"
       :initiativeId="initiative.id"
-      @close-this="showNewAssignationModal = false">
+      @close-this="showNewAssignationModal = false"
+      @assignation-done="$emit('please-update')">
     </app-new-assignation-modal>
     <div v-if="initiative" class="this-container w3-container w3-padding">
     <div class="w3-card">

@@ -130,6 +130,7 @@ export default {
 
       this.axios.post('/1/secured/initiative/' + assignationToSend.initiativeId + '/assignation', assignationToSend)
       .then((response) => {
+        this.$emit('assignation-done')
       })
     }
   }

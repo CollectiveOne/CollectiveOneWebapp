@@ -17,8 +17,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import org.collectiveone.model.extensions.Contributor;
-import org.collectiveone.model.extensions.InitiativeRelationship;
+import org.collectiveone.model.support.Contributor;
+import org.collectiveone.model.support.InitiativeRelationship;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

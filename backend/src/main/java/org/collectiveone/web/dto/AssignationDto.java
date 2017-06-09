@@ -8,7 +8,7 @@ public class AssignationDto {
 	private String type;
 	private List<BillDto> assets = new ArrayList<BillDto>();
 	private List<ReceiverDto> receivers = new ArrayList<ReceiverDto>();
-	private List<AppUserDto> evaluators = new ArrayList<AppUserDto>();
+	private List<EvaluatorDto> evaluators = new ArrayList<EvaluatorDto>();
 	
 	public String getType() {
 		return type;
@@ -28,10 +28,10 @@ public class AssignationDto {
 	public void setReceivers(List<ReceiverDto> receivers) {
 		this.receivers = receivers;
 	}
-	public List<AppUserDto> getEvaluators() {
+	public List<EvaluatorDto> getEvaluators() {
 		return evaluators;
 	}
-	public void setEvaluators(List<AppUserDto> evaluators) {
+	public void setEvaluators(List<EvaluatorDto> evaluators) {
 		this.evaluators = evaluators;
 	}
 	

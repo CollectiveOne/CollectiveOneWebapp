@@ -97,7 +97,7 @@ public class InitiativesController {
 			return initiativeService.makeDirectAssignation(UUID.fromString(initiativeId), assignation);
 			
 		case "peer-reviewed":
-//			return initiativeService.createPeerReviewedAssignation(UUID.fromString(initiativeId), assignation);
+			return initiativeService.createPeerReviewedAssignation(UUID.fromString(initiativeId), assignation);
 		}
 		
 		return new PostResult("error", "error", "");

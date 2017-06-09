@@ -2,7 +2,7 @@ package org.collectiveone.repositories;
 
 import java.util.UUID;
 
-import org.collectiveone.model.extensions.InitiativeTransfer;
+import org.collectiveone.model.support.InitiativeTransfer;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

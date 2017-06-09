@@ -9,6 +9,9 @@
       </div>
     </div>
 
+    <div v-if="addUserEnabled">
+      <hr v-if="users.length > 1">
+    </div>
     <div v-if="addUserEnabled" class="w3-row">
       <app-user-selector class="user-selector"
         anchor="c1Id" label="nickname"

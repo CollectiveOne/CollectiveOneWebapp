@@ -8,25 +8,38 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.collectiveone.model.basic.AppUser;
+import org.collectiveone.model.basic.Assignation;
 import org.collectiveone.model.basic.Initiative;
 import org.collectiveone.model.basic.TokenType;
+import org.collectiveone.model.enums.AssignationState;
+import org.collectiveone.model.enums.AssignationType;
 import org.collectiveone.model.enums.ContributorRole;
+import org.collectiveone.model.enums.EvaluatorState;
 import org.collectiveone.model.enums.InitiativeRelationshipType;
+import org.collectiveone.model.enums.ReceiverState;
 import org.collectiveone.model.enums.TokenHolderType;
-import org.collectiveone.model.extensions.Contributor;
-import org.collectiveone.model.extensions.ContributorTransfer;
-import org.collectiveone.model.extensions.InitiativeRelationship;
-import org.collectiveone.model.extensions.InitiativeTransfer;
+import org.collectiveone.model.support.Bill;
+import org.collectiveone.model.support.Contributor;
+import org.collectiveone.model.support.ContributorTransfer;
+import org.collectiveone.model.support.Evaluator;
+import org.collectiveone.model.support.InitiativeRelationship;
+import org.collectiveone.model.support.InitiativeTransfer;
+import org.collectiveone.model.support.Receiver;
 import org.collectiveone.repositories.AppUserRepositoryIf;
+import org.collectiveone.repositories.AssignationRepositoryIf;
+import org.collectiveone.repositories.BillRepositoryIf;
 import org.collectiveone.repositories.ContributorRepositoryIf;
 import org.collectiveone.repositories.ContributorTransferRepositoryIf;
+import org.collectiveone.repositories.EvaluatorRepositoryIf;
 import org.collectiveone.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
 import org.collectiveone.repositories.InitiativeTransferRepositoryIf;
+import org.collectiveone.repositories.ReceiverRepositoryIf;
 import org.collectiveone.web.dto.AssetsDto;
 import org.collectiveone.web.dto.AssignationDto;
 import org.collectiveone.web.dto.BillDto;
 import org.collectiveone.web.dto.ContributorDto;
+import org.collectiveone.web.dto.EvaluatorDto;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.collectiveone.web.dto.NewInitiativeDto;
@@ -62,6 +75,18 @@ public class InitiativeService {
 	
 	@Autowired
 	ContributorTransferRepositoryIf contributorTransferRepository;
+	
+	@Autowired
+	AssignationRepositoryIf assignationRepository;
+	
+	@Autowired
+	BillRepositoryIf billRepository;
+	
+	@Autowired
+	ReceiverRepositoryIf receiverRepository;
+	
+	@Autowired
+	EvaluatorRepositoryIf evaluatorRepository;
 	
 	
 	public PostResult init(UUID c1Id, NewInitiativeDto initiativeDto) {
@@ -353,6 +378,54 @@ public class InitiativeService {
 		contributorRepository.save(contributor);
 	
 		return new PostResult("success", "assets transferred successfully", "");
+	}
+	
+	public PostResult createPeerReviewedAssignation(UUID initaitiveId, AssignationDto assignationDto) {
+		Initiative initiative = initiativeRepository.findById(initaitiveId);
+	
+		Assignation assignation = new Assignation();
+		
+		assignation.setType(AssignationType.valueOf(assignationDto.getType()));
+		assignation.setInitiative(initiative);
+		assignation.setState(AssignationState.OPEN);
+		assignation = assignationRepository.save(assignation);
+		
+		for(ReceiverDto receiverDto : assignationDto.getReceivers()) {
+			Receiver receiver = new Receiver();
+			
+			receiver.setAssignation(assignation);
+			receiver.setPercent(receiverDto.getPercent());
+			receiver.setState(ReceiverState.PENDING);
+			receiver = receiverRepository.save(receiver);
+			
+			assignation.getReceivers().add(receiver);
+		}
+		
+		if(assignation.getType() == AssignationType.PEER_REVIEWED) {
+			for(EvaluatorDto evaluatorDto : assignationDto.getEvaluators()) {
+				Evaluator evaluator = new Evaluator();
+				
+				evaluator.setAssignation(assignation);
+				evaluator.setState(EvaluatorState.OPEN);
+				evaluator.setWeight(evaluatorDto.getWeigght());
+				evaluator = evaluatorRepository.save(evaluator);
+				
+				assignation.getEvaluators().add(evaluator);
+			}
+		}
+		
+		for(BillDto billDto : assignationDto.getAssets()) {
+			TokenType tokenType = tokenService.getTokenType(UUID.fromString(billDto.getAssetId()));
+			Bill bill = new Bill();
+			
+			bill.setAssignation(assignation);
+			bill.setTokenType(tokenType);
+			bill = billRepository.save(bill);
+			
+			assignation.getBills().add(bill);
+		}
+		
+		return new PostResult("success", "success", "");
 	}
 	
 	/** Get the distribution of an asset starting from a given initiative

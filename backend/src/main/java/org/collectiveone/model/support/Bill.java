@@ -1,4 +1,4 @@
-package org.collectiveone.model.extensions;
+package org.collectiveone.model.support;
 
 import java.util.UUID;
 
@@ -9,13 +9,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.model.basic.Assignation;
 import org.collectiveone.model.basic.TokenType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "relationship_transfers")
-public class InitiativeTransfer {
+@Table( name = "assignation_bills" )
+public class Bill {
+
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -24,14 +26,15 @@ public class InitiativeTransfer {
 	private UUID id;
 	
 	@ManyToOne
-	private InitiativeRelationship relationship;
+	private Assignation assignation;
 	
 	@ManyToOne
 	private TokenType tokenType;
 	
+	@Column(name = "value")
 	private double value;
+
 	
-		
 	public UUID getId() {
 		return id;
 	}
@@ -40,12 +43,12 @@ public class InitiativeTransfer {
 		this.id = id;
 	}
 
-	public InitiativeRelationship getRelationship() {
-		return relationship;
+	public Assignation getAssignation() {
+		return assignation;
 	}
 
-	public void setRelationship(InitiativeRelationship relationship) {
-		this.relationship = relationship;
+	public void setAssignation(Assignation assignation) {
+		this.assignation = assignation;
 	}
 
 	public TokenType getTokenType() {
@@ -63,6 +66,5 @@ public class InitiativeTransfer {
 	public void setValue(double value) {
 		this.value = value;
 	}
-	
-	
+
 }

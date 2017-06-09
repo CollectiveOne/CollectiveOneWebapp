@@ -1,4 +1,4 @@
-package org.collectiveone.model.extensions;
+package org.collectiveone.model.support;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +14,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.collectiveone.model.basic.AppUser;
 import org.collectiveone.model.basic.Initiative;
-import org.collectiveone.model.enums.InitiativeRelationshipType;
+import org.collectiveone.model.enums.ContributorRole;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table( name = "initiatives_relationships" )
-public class InitiativeRelationship {
-	
+@Table( name = "contributors" )
+public class Contributor {
+
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -34,13 +35,13 @@ public class InitiativeRelationship {
 	private Initiative initiative;
 	
 	@ManyToOne
-	private Initiative ofInitiative;
+	private AppUser user;
 	
 	@Enumerated(EnumType.STRING)
-	private InitiativeRelationshipType type;
+	private ContributorRole role;
 	
-	@OneToMany(mappedBy = "relationship")
-	private List<InitiativeTransfer> tokensTransfers = new ArrayList<InitiativeTransfer>();
+	@OneToMany(mappedBy = "contributor")
+	private List<ContributorTransfer> tokensTransfers = new ArrayList<ContributorTransfer>();
 
 	public UUID getId() {
 		return id;
@@ -58,28 +59,28 @@ public class InitiativeRelationship {
 		this.initiative = initiative;
 	}
 
-	public Initiative getOfInitiative() {
-		return ofInitiative;
+	public AppUser getUser() {
+		return user;
 	}
 
-	public void setOfInitiative(Initiative ofInitiative) {
-		this.ofInitiative = ofInitiative;
+	public void setUser(AppUser user) {
+		this.user = user;
 	}
 
-	public InitiativeRelationshipType getType() {
-		return type;
+	public ContributorRole getRole() {
+		return role;
 	}
 
-	public void setType(InitiativeRelationshipType type) {
-		this.type = type;
+	public void setRole(ContributorRole role) {
+		this.role = role;
 	}
 
-	public List<InitiativeTransfer> getTokensTransfers() {
+	public List<ContributorTransfer> getTokensTransfers() {
 		return tokensTransfers;
 	}
 
-	public void setTokensTransfers(List<InitiativeTransfer> tokensTransfers) {
+	public void setTokensTransfers(List<ContributorTransfer> tokensTransfers) {
 		this.tokensTransfers = tokensTransfers;
 	}
-	
+		
 }
