@@ -2,7 +2,6 @@
   <div class="">
 
     <label class="w3-text-indigo"><b>Receivers:</b></label>
-
     <div v-for="receiver in receivers" class="w3-row">
       <div class="w3-col s6">
         <app-user-avatar :user="receiver.user"></app-user-avatar>
@@ -100,7 +99,9 @@ export default {
   watch: {
     receivers () {
       var data = {
-        receivers: this.receivers
+        receivers: this.receivers,
+        title: this.title,
+        description: this.description
       }
       this.$emit('updated', data)
     }

@@ -19,15 +19,25 @@
             </app-initiative-assets-assigner>
           </div>
 
+          <div class="w3-row">
+            <label class="w3-text-indigo"><b>Motive</b></label>
+            <input v-model="assignation.motive" class="w3-input w3-hover-light-gray" type="text">
+            <br>
+
+            <label class="w3-text-indigo"><b>Notes</b></label>
+            <textarea v-model="assignation.notes" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
+            <br>
+          </div>
+
           <div class="section-tabs w3-row">
             <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'w3-border-blue': isDirect}"
-              @click="assignation.type = 'direct'">
+              @click="assignation.type = DIRECT_ID()">
               <h5 class="w3-text-indigo" :class="{'bold-text': isDirect}">Direct</h5>
             </div>
             <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'w3-border-blue': isPeerReviewed}"
-              @click="assignation.type = 'peerReviewed'">
+              @click="assignation.type = PEER_REVIEWED_ID()">
               <h5 class="w3-text-indigo" :class="{'bold-text': isPeerReviewed}">Peer Reviewed</h5>
             </div>
           </div>
@@ -85,22 +95,32 @@ export default {
     return {
       peerReview: false,
       assignation: {
-        type: 'direct'
+        type: this.DIRECT_ID(),
+        motive: '',
+        notes: ''
       }
     }
   },
 
   computed: {
     isDirect () {
-      return this.assignation.type === 'direct'
+      return this.assignation.type === this.DIRECT_ID()
     },
     isPeerReviewed () {
-      return this.assignation.type === 'peerReviewed'
+      return this.assignation.type === this.PEER_REVIEWED_ID()
     }
   },
 
   methods: {
     ...mapActions(['showOutputMessage']),
+
+    DIRECT_ID () {
+      return 'DIRECT'
+    },
+
+    PEER_REVIEWED_ID () {
+      return 'PEER_REVIEWED'
+    },
 
     closeThis () {
       this.$emit('close-this')
@@ -123,14 +143,22 @@ export default {
       assignationToSend.type = this.assignation.type
       assignationToSend.assets = this.assignation.assets
       assignationToSend.initiativeId = this.assignation.assets[0].senderId
+      assignationToSend.motive = this.assignation.motive
+      assignationToSend.notes = this.assignation.notes
 
-      if (this.assignation.type === 'direct') {
+      if (this.assignation.type === this.DIRECT_ID()) {
         assignationToSend.receivers = this.assignation.directReceivers
+      }
+
+      if (this.assignation.type === this.PEER_REVIEWED_ID()) {
+        assignationToSend.receivers = this.assignation.peerReviewReceivers
+        assignationToSend.evaluators = this.assignation.peerReviewEvaluators
       }
 
       this.axios.post('/1/secured/initiative/' + assignationToSend.initiativeId + '/assignation', assignationToSend)
       .then((response) => {
         this.$emit('assignation-done')
+        this.closeThis()
       })
     }
   }

@@ -2,10 +2,18 @@ package org.collectiveone.web.dto;
 
 public class ReceiverDto {
 	
+	private String id;
 	private AppUserDto user;
 	private double percent;
+	private String state;
 	
 	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public AppUserDto getUser() {
 		return user;
 	}
@@ -18,5 +26,12 @@ public class ReceiverDto {
 	public void setPercent(double percent) {
 		this.percent = percent;
 	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	
 	
 }

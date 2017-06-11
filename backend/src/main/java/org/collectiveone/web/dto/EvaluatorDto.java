@@ -2,21 +2,35 @@ package org.collectiveone.web.dto;
 
 public class EvaluatorDto {
 	
+	private String id;
 	private AppUserDto user;
-	private double weigght;
+	private double weight;
+	private String state;
 	
 	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public AppUserDto getUser() {
 		return user;
 	}
 	public void setUser(AppUserDto user) {
 		this.user = user;
 	}
-	public double getWeigght() {
-		return weigght;
+	public double getWeight() {
+		return weight;
 	}
-	public void setWeigght(double weigght) {
-		this.weigght = weigght;
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
 	}
 	
 	

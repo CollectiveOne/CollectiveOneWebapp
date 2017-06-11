@@ -11,11 +11,12 @@ import javax.persistence.Table;
 
 import org.collectiveone.model.basic.Assignation;
 import org.collectiveone.model.basic.TokenType;
+import org.collectiveone.web.dto.BillDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table( name = "assignation_bills" )
+@Table( name = "bills" )
 public class Bill {
 
 	@Id
@@ -34,6 +35,16 @@ public class Bill {
 	@Column(name = "value")
 	private double value;
 
+	
+	public BillDto toDto() {
+		BillDto dto = new BillDto();
+		
+		dto.setAssetId(tokenType.getId().toString());
+		dto.setAssetName(tokenType.getName());
+		dto.setValue(value);
+		
+		return dto;
+	}
 	
 	public UUID getId() {
 		return id;

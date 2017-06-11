@@ -6,6 +6,19 @@
           <h3>{{ initiative.name }}</h3>
         </header>
 
+        <div class="section-tabs w3-row">
+          <router-link tag="div" to="overview" class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
+            :class="{'w3-border-blue': isOverview}"
+            @click="">
+            <h5 class="w3-text-indigo" :class="{'bold-text': isOverview}">Overview</h5>
+          </router-link>
+          <router-link tag="div" to="assignations" class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
+            :class="{'w3-border-blue': isAssignations}"
+            @click="">
+            <h5 class="w3-text-indigo" :class="{'bold-text': isAssignations}">Assignations</h5>
+          </router-link>
+        </div>
+
         <div class="w3-row">
           <router-view :initiative="initiative"
             @new-initiative="$emit('new-initiative', $event)"
@@ -27,6 +40,27 @@ export default {
   data () {
     return {
       initiative: null
+    }
+  },
+
+  computed: {
+    isOverview () {
+      var res = false
+      this.$route.matched.forEach((e) => {
+        if (e.name === 'InitiativeOverview') {
+          res = true
+        }
+      })
+      return res
+    },
+    isAssignations () {
+      var res = false
+      this.$route.matched.forEach((e) => {
+        if (e.name === 'InitiativeAssignations') {
+          res = true
+        }
+      })
+      return res
     }
   },
 
@@ -66,4 +100,9 @@ export default {
 .tablink {
   cursor: pointer;
 }
+
+.bold-text {
+  font-weight: bold;
+}
+
 </style>

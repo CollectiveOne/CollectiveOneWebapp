@@ -10,6 +10,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -19,8 +20,11 @@ import org.collectiveone.model.enums.AssignationType;
 import org.collectiveone.model.support.Bill;
 import org.collectiveone.model.support.Evaluator;
 import org.collectiveone.model.support.Receiver;
+import org.collectiveone.web.dto.AssignationDto;
+import org.collectiveone.web.dto.AssignationDtoLight;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table( name = "assignations" )
@@ -36,6 +40,14 @@ public class Assignation {
 	@ManyToOne
 	private Initiative initiative;
 	
+	@Column(name = "motive")
+	private String motive;
+	
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")
+	@Column(name = "notes")
+	private String notes;
+	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "type")
 	private AssignationType type;
@@ -44,15 +56,55 @@ public class Assignation {
 	@Column(name = "state")
 	private AssignationState state;
 	
-	@OneToMany
+	@OneToMany(mappedBy="assignation")
 	private List<Bill> bills = new ArrayList<Bill>();
 	
-	@OneToMany
+	@OneToMany(mappedBy="assignation")
 	private List<Receiver> receivers = new ArrayList<Receiver>();
 	
-	@OneToMany
+	@OneToMany(mappedBy="assignation")
 	private List<Evaluator> evaluators = new ArrayList<Evaluator>();
 
+	
+	public AssignationDtoLight toDtoLight() {
+		AssignationDtoLight dto = new AssignationDtoLight();
+		
+		dto.setType(type.toString());
+		dto.setMotive(motive);
+		dto.setNotes(notes);
+		dto.setState(state.toString());
+		
+		for(Bill bill : bills) {
+			dto.getAssets().add(bill.toDto());
+		}
+		
+		return dto;
+	}
+	
+	public AssignationDto toDto() {
+		AssignationDto dto = new AssignationDto();
+		
+		dto.setType(type.toString());
+		dto.setMotive(motive);
+		dto.setNotes(notes);
+		dto.setState(state.toString());
+		
+		for(Bill bill : bills) {
+			dto.getAssets().add(bill.toDto());
+		}
+		
+		for(Receiver receiver : receivers) {
+			dto.getReceivers().add(receiver.toDto());
+		}
+		
+		if(type == AssignationType.PEER_REVIEWED) {
+			for(Evaluator evaluator : evaluators) {
+				dto.getEvaluators().add(evaluator.toDto());
+			}
+		}
+		
+		return dto;
+	}
 	
 	public UUID getId() {
 		return id;
@@ -68,6 +120,22 @@ public class Assignation {
 
 	public void setInitiative(Initiative initiative) {
 		this.initiative = initiative;
+	}
+	
+	public String getMotive() {
+		return motive;
+	}
+
+	public void setMotive(String motive) {
+		this.motive = motive;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 	public AssignationType getType() {

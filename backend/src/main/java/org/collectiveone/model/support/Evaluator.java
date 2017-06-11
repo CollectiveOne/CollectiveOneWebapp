@@ -11,8 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.model.basic.AppUser;
 import org.collectiveone.model.basic.Assignation;
 import org.collectiveone.model.enums.EvaluatorState;
+import org.collectiveone.web.dto.EvaluatorDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -30,12 +32,27 @@ public class Evaluator {
 	@ManyToOne
 	private Assignation assignation;
 	
+	@ManyToOne
+	private AppUser user;
+	
 	@Column(name = "weight")
 	private double weight;
 	
 	@Enumerated(EnumType.STRING)
 	private EvaluatorState state;
 
+	
+	public EvaluatorDto toDto() {
+		EvaluatorDto dto = new EvaluatorDto();
+		
+		dto.setId(id.toString());
+		dto.setUser(user.toDto());
+		dto.setWeight(weight);
+		dto.setState(state.toString());
+		
+		return dto;
+	}
+	
 	
 	public UUID getId() {
 		return id;
@@ -51,6 +68,14 @@ public class Evaluator {
 
 	public void setAssignation(Assignation assignation) {
 		this.assignation = assignation;
+	}
+	
+	public AppUser getUser() {
+		return user;
+	}
+
+	public void setUser(AppUser user) {
+		this.user = user;
 	}
 
 	public double getWeight() {

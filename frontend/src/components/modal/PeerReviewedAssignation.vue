@@ -1,23 +1,25 @@
 <template lang="html">
-  <div class="w3-row-padding">
-    <div class="receivers-col w3-col m6">
-      <label class="w3-text-indigo"><b>Receivers:</b></label>
-      <div class="w3-row">
-        <app-users-list :users="receivers" @add-user="addReceiver($event)" @remove-user="removeReceiver($event)">
-        </app-users-list>
+  <div class="">
+    <div class="w3-row-padding">
+      <div class="receivers-col w3-col m6">
+        <label class="w3-text-indigo"><b>Receivers:</b></label>
+        <div class="w3-row">
+          <app-users-list :users="receiversUsers" @add-user="addReceiver($event)" @remove-user="removeReceiver($event)">
+          </app-users-list>
+        </div>
       </div>
-    </div>
-    <div class="w3-col m6">
-      <label class="w3-text-indigo"><b>Evaluators: {{ sameAsReceivers ? '(same as receivers)' : ''}}</b></label>
-      <div class="w3-row" :class="{'covered-div': sameAsReceivers}">
-        <app-users-list
-          :users="actualEvaluators" @add-user="addEvaluator($event)" @remove-user="removeEvaluator($event)"
-          :addUserEnabled="!sameAsReceivers">
-        </app-users-list>
-      </div>
-      <br>
-      <div class="w3-row w3-center">
-        <button @click="sameAsReceivers = !sameAsReceivers" class="w3-button w3-theme w3-round">{{ sameAsReceivers ? 'different from receivers' : 'same as receivers' }}</button>
+      <div class="w3-col m6">
+        <label class="w3-text-indigo"><b>Evaluators: {{ sameAsReceivers ? '(same as receivers)' : ''}}</b></label>
+        <div class="w3-row" :class="{'covered-div': sameAsReceivers}">
+          <app-users-list
+            :users="actualEvaluatorsUsers" @add-user="addEvaluator($event)" @remove-user="removeEvaluator($event)"
+            :addUserEnabled="!sameAsReceivers">
+          </app-users-list>
+        </div>
+        <br>
+        <div class="w3-row w3-center">
+          <button @click="sameAsReceivers = !sameAsReceivers" class="w3-button w3-theme w3-round">{{ sameAsReceivers ? 'different from receivers' : 'same as receivers' }}</button>
+        </div>
       </div>
     </div>
   </div>
@@ -40,6 +42,20 @@ export default {
   },
 
   computed: {
+    receiversUsers () {
+      var users = []
+      for (var ix in this.receivers) {
+        users.push(this.receivers[ix].user)
+      }
+      return users
+    },
+    actualEvaluatorsUsers () {
+      var users = []
+      for (var ix in this.actualEvaluators) {
+        users.push(this.actualEvaluators[ix].user)
+      }
+      return users
+    },
     actualEvaluators () {
       if (this.sameAsReceivers) {
         return this.receivers
@@ -62,40 +78,46 @@ export default {
   },
 
   methods: {
-    addReceiver (receiver) {
-      if (this.indexOfReceiver(receiver) === -1) {
-        this.receivers.push(receiver)
+    addReceiver (user) {
+      if (this.indexOfReceiver(user) === -1) {
+        this.receivers.push({
+          user: user,
+          percent: 0
+        })
       }
     },
-    addEvaluator (evaluator) {
-      if (this.indexOfEvaluator(evaluator) === -1) {
-        this.evaluators.push(evaluator)
+    addEvaluator (user) {
+      if (this.indexOfEvaluator(user) === -1) {
+        this.evaluators.push({
+          user: user,
+          weight: 0
+        })
       }
     },
-    indexOfReceiver (receiver) {
+    indexOfReceiver (user) {
       for (var ix in this.receivers) {
-        if (this.receivers[ix].c1Id === receiver.c1Id) {
+        if (this.receivers[ix].user.c1Id === user.c1Id) {
           return ix
         }
       }
       return -1
     },
-    removeReceiver (receiver) {
-      var ix = this.indexOfReceiver(receiver)
+    removeReceiver (user) {
+      var ix = this.indexOfReceiver(user)
       if (ix !== -1) {
         this.receivers.splice(ix, 1)
       }
     },
-    indexOfEvaluator (evaluator) {
+    indexOfEvaluator (user) {
       for (var ix in this.evaluators) {
-        if (this.evaluators[ix].c1Id === evaluator.c1Id) {
+        if (this.evaluators[ix].user.c1Id === user.c1Id) {
           return ix
         }
       }
       return -1
     },
-    removeEvaluator (evaluator) {
-      var ix = this.indexOfEvaluator(evaluator)
+    removeEvaluator (user) {
+      var ix = this.indexOfEvaluator(user)
       if (ix !== -1) {
         this.evaluators.splice(ix, 1)
       }

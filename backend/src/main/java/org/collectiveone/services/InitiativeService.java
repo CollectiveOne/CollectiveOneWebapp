@@ -37,6 +37,7 @@ import org.collectiveone.repositories.InitiativeTransferRepositoryIf;
 import org.collectiveone.repositories.ReceiverRepositoryIf;
 import org.collectiveone.web.dto.AssetsDto;
 import org.collectiveone.web.dto.AssignationDto;
+import org.collectiveone.web.dto.AssignationDtoLight;
 import org.collectiveone.web.dto.BillDto;
 import org.collectiveone.web.dto.ContributorDto;
 import org.collectiveone.web.dto.EvaluatorDto;
@@ -330,11 +331,20 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	public PostResult makeDirectAssignation(UUID initiativeId, AssignationDto assignation) {
+	public PostResult makeDirectAssignation(UUID initiativeId, AssignationDto assignationDto) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
-		for(BillDto bill : assignation.getAssets()) {
-			for(ReceiverDto receiver : assignation.getReceivers()) {
+		Assignation assignation = new Assignation();	
+		
+		assignation.setType(AssignationType.valueOf(assignationDto.getType()));
+		assignation.setMotive(assignationDto.getMotive());
+		assignation.setNotes(assignationDto.getNotes());
+		assignation.setInitiative(initiative);
+		assignation.setState(AssignationState.DONE);
+		assignation = assignationRepository.save(assignation);
+		
+		for(BillDto bill : assignationDto.getAssets()) {
+			for(ReceiverDto receiver : assignationDto.getReceivers()) {
 				TransferDto transfer = new TransferDto();
 				
 				transfer.setAssetId(bill.getAssetId());
@@ -386,6 +396,8 @@ public class InitiativeService {
 		Assignation assignation = new Assignation();
 		
 		assignation.setType(AssignationType.valueOf(assignationDto.getType()));
+		assignation.setMotive(assignationDto.getMotive());
+		assignation.setNotes(assignationDto.getNotes());
 		assignation.setInitiative(initiative);
 		assignation.setState(AssignationState.OPEN);
 		assignation = assignationRepository.save(assignation);
@@ -393,6 +405,7 @@ public class InitiativeService {
 		for(ReceiverDto receiverDto : assignationDto.getReceivers()) {
 			Receiver receiver = new Receiver();
 			
+			receiver.setUser(appUserRepository.findByC1Id(UUID.fromString(receiverDto.getUser().getC1Id())));
 			receiver.setAssignation(assignation);
 			receiver.setPercent(receiverDto.getPercent());
 			receiver.setState(ReceiverState.PENDING);
@@ -405,9 +418,10 @@ public class InitiativeService {
 			for(EvaluatorDto evaluatorDto : assignationDto.getEvaluators()) {
 				Evaluator evaluator = new Evaluator();
 				
+				evaluator.setUser(appUserRepository.findByC1Id(UUID.fromString(evaluatorDto.getUser().getC1Id())));
 				evaluator.setAssignation(assignation);
 				evaluator.setState(EvaluatorState.OPEN);
-				evaluator.setWeight(evaluatorDto.getWeigght());
+				evaluator.setWeight(evaluatorDto.getWeight());
 				evaluator = evaluatorRepository.save(evaluator);
 				
 				assignation.getEvaluators().add(evaluator);
@@ -420,6 +434,7 @@ public class InitiativeService {
 			
 			bill.setAssignation(assignation);
 			bill.setTokenType(tokenType);
+			bill.setValue(billDto.getValue());
 			bill = billRepository.save(bill);
 			
 			assignation.getBills().add(bill);
@@ -507,4 +522,21 @@ public class InitiativeService {
 		return transferredToUsers;
 	}
 
+	public GetResult<AssignationDto> getAssignation(UUID initiativeId, UUID assignationId) {
+		Assignation assignation = assignationRepository.findById(assignationId);
+		return new GetResult<AssignationDto>("success", "assignation found", assignation.toDto());
+	}
+	
+	public GetResult<List<AssignationDtoLight>> getAssignations(UUID initiativeId) {
+		List<Assignation> assignations = assignationRepository.findByInitiativeId(initiativeId);
+		List<AssignationDtoLight> assignationsDtos = new ArrayList<AssignationDtoLight>();
+		
+		for(Assignation assignation : assignations) {
+			assignationsDtos.add(assignation.toDtoLight());
+		}
+		
+		return new GetResult<List<AssignationDtoLight>>("success", "assignations found", assignationsDtos);
+	}
+	
+	
 }

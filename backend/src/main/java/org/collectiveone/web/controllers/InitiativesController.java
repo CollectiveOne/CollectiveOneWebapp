@@ -4,16 +4,17 @@ import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.model.basic.AppUser;
+import org.collectiveone.model.enums.AssignationType;
 import org.collectiveone.model.enums.ContributorRole;
 import org.collectiveone.services.AppUserService;
 import org.collectiveone.services.InitiativeService;
 import org.collectiveone.web.dto.AssignationDto;
+import org.collectiveone.web.dto.AssignationDtoLight;
 import org.collectiveone.web.dto.ContributorDto;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.collectiveone.web.dto.NewInitiativeDto;
 import org.collectiveone.web.dto.PostResult;
-import org.collectiveone.web.dto.TransferDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -92,17 +93,29 @@ public class InitiativesController {
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignation", method = RequestMethod.POST)
 	public PostResult newAssignation(@PathVariable("initiativeId") String initiativeId, @RequestBody AssignationDto assignation) {
 		
-		switch(assignation.getType()) {
-		case "direct":
+		AssignationType type = AssignationType.valueOf(assignation.getType());
+		
+		switch(type) {
+		case DIRECT:
 			return initiativeService.makeDirectAssignation(UUID.fromString(initiativeId), assignation);
 			
-		case "peer-reviewed":
+		case PEER_REVIEWED:
 			return initiativeService.createPeerReviewedAssignation(UUID.fromString(initiativeId), assignation);
 		}
 		
 		return new PostResult("error", "error", "");
 		
 	} 
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignation/{assignationId}", method = RequestMethod.GET)
+	public GetResult<AssignationDto> getAssignation(@PathVariable("initiativeId") String initiativeId, @PathVariable("assignationId") String assignationId) {
+		return initiativeService.getAssignation(UUID.fromString(initiativeId), UUID.fromString(assignationId));
+	}
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignations", method = RequestMethod.GET)
+	public GetResult<List<AssignationDtoLight>> getAssignations(@PathVariable("initiativeId") String initiativeId) {
+		return initiativeService.getAssignations(UUID.fromString(initiativeId));
+	}
 	
 	private AppUser getLoggedUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
