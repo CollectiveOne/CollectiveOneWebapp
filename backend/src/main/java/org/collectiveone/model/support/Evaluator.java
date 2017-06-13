@@ -1,5 +1,6 @@
 package org.collectiveone.model.support;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.collectiveone.model.basic.AppUser;
@@ -40,6 +42,9 @@ public class Evaluator {
 	
 	@Enumerated(EnumType.STRING)
 	private EvaluatorState state;
+	
+	@OneToMany(mappedBy = "evaluator")
+	private List<EvaluationGrade> grades; 
 
 	
 	public EvaluatorDto toDto() {
@@ -93,5 +98,15 @@ public class Evaluator {
 	public void setState(EvaluatorState state) {
 		this.state = state;
 	}
+
+	public List<EvaluationGrade> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(List<EvaluationGrade> grades) {
+		this.grades = grades;
+	}
+	
+	
 
 }

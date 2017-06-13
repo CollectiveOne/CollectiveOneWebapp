@@ -5,6 +5,7 @@ import java.util.List;
 
 public class AssignationDtoLight {
 	
+	private String id;
 	private String type;
 	private String motive;
 	private String notes;
@@ -12,6 +13,12 @@ public class AssignationDtoLight {
 	private List<BillDto> assets = new ArrayList<BillDto>();
 	
 	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getType() {
 		return type;
 	}

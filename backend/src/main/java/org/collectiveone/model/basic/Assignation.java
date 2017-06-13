@@ -69,6 +69,7 @@ public class Assignation {
 	public AssignationDtoLight toDtoLight() {
 		AssignationDtoLight dto = new AssignationDtoLight();
 		
+		dto.setId(id.toString());
 		dto.setType(type.toString());
 		dto.setMotive(motive);
 		dto.setNotes(notes);
@@ -84,6 +85,7 @@ public class Assignation {
 	public AssignationDto toDto() {
 		AssignationDto dto = new AssignationDto();
 		
+		dto.setId(id.toString());
 		dto.setType(type.toString());
 		dto.setMotive(motive);
 		dto.setNotes(notes);

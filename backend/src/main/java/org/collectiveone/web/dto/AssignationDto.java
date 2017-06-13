@@ -3,47 +3,12 @@ package org.collectiveone.web.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AssignationDto {
+public class AssignationDto extends AssignationDtoLight {
 	
-	private String type;
-	private String motive;
-	private String notes;
-	private String state;
-	private List<BillDto> assets = new ArrayList<BillDto>();
 	private List<ReceiverDto> receivers = new ArrayList<ReceiverDto>();
 	private List<EvaluatorDto> evaluators = new ArrayList<EvaluatorDto>();
+	private EvaluationDto thisEvaluation;
 	
-	
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public String getMotive() {
-		return motive;
-	}
-	public void setMotive(String motive) {
-		this.motive = motive;
-	}
-	public String getNotes() {
-		return notes;
-	}
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
-	public String getState() {
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
-	}
-	public List<BillDto> getAssets() {
-		return assets;
-	}
-	public void setAssets(List<BillDto> assets) {
-		this.assets = assets;
-	}
 	public List<ReceiverDto> getReceivers() {
 		return receivers;
 	}
@@ -56,6 +21,11 @@ public class AssignationDto {
 	public void setEvaluators(List<EvaluatorDto> evaluators) {
 		this.evaluators = evaluators;
 	}
-	
+	public EvaluationDto getThisEvaluation() {
+		return thisEvaluation;
+	}
+	public void setThisEvaluation(EvaluationDto thisEvaluation) {
+		this.thisEvaluation = thisEvaluation;
+	}
 	
 }

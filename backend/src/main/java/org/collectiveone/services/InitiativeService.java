@@ -21,6 +21,7 @@ import org.collectiveone.model.enums.TokenHolderType;
 import org.collectiveone.model.support.Bill;
 import org.collectiveone.model.support.Contributor;
 import org.collectiveone.model.support.ContributorTransfer;
+import org.collectiveone.model.support.EvaluationGrade;
 import org.collectiveone.model.support.Evaluator;
 import org.collectiveone.model.support.InitiativeRelationship;
 import org.collectiveone.model.support.InitiativeTransfer;
@@ -30,6 +31,7 @@ import org.collectiveone.repositories.AssignationRepositoryIf;
 import org.collectiveone.repositories.BillRepositoryIf;
 import org.collectiveone.repositories.ContributorRepositoryIf;
 import org.collectiveone.repositories.ContributorTransferRepositoryIf;
+import org.collectiveone.repositories.EvaluationGradeRepositoryIf;
 import org.collectiveone.repositories.EvaluatorRepositoryIf;
 import org.collectiveone.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
@@ -37,9 +39,9 @@ import org.collectiveone.repositories.InitiativeTransferRepositoryIf;
 import org.collectiveone.repositories.ReceiverRepositoryIf;
 import org.collectiveone.web.dto.AssetsDto;
 import org.collectiveone.web.dto.AssignationDto;
-import org.collectiveone.web.dto.AssignationDtoLight;
 import org.collectiveone.web.dto.BillDto;
 import org.collectiveone.web.dto.ContributorDto;
+import org.collectiveone.web.dto.EvaluationDto;
 import org.collectiveone.web.dto.EvaluatorDto;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
@@ -88,6 +90,9 @@ public class InitiativeService {
 	
 	@Autowired
 	EvaluatorRepositoryIf evaluatorRepository;
+	
+	@Autowired
+	EvaluationGradeRepositoryIf evaluationGradeRepository;
 	
 	
 	public PostResult init(UUID c1Id, NewInitiativeDto initiativeDto) {
@@ -522,21 +527,71 @@ public class InitiativeService {
 		return transferredToUsers;
 	}
 
-	public GetResult<AssignationDto> getAssignation(UUID initiativeId, UUID assignationId) {
+	public AssignationDto getAssignation(UUID initiativeId, UUID assignationId, UUID evaluatorAppUserId) {
 		Assignation assignation = assignationRepository.findById(assignationId);
-		return new GetResult<AssignationDto>("success", "assignation found", assignation.toDto());
-	}
-	
-	public GetResult<List<AssignationDtoLight>> getAssignations(UUID initiativeId) {
-		List<Assignation> assignations = assignationRepository.findByInitiativeId(initiativeId);
-		List<AssignationDtoLight> assignationsDtos = new ArrayList<AssignationDtoLight>();
+		AssignationDto assignationDto = assignation.toDto();
 		
-		for(Assignation assignation : assignations) {
-			assignationsDtos.add(assignation.toDtoLight());
+		/* add the evaluations of logged user */
+		Evaluator evaluator = evaluatorRepository.findByAssignationIdAndUser_C1Id(assignation.getId(), evaluatorAppUserId);
+		
+		EvaluationDto evaluation = new EvaluationDto();
+		evaluation.setId(evaluator.getGrades().toString());
+		evaluation.setEvaluationState(evaluator.getState().toString());
+		
+		for (EvaluationGrade grade : evaluator.getGrades()) {
+			ReceiverDto receiver = new ReceiverDto();
+			
+			receiver.setId(receiver.getId());
+			receiver.setUser(grade.getReceiver().getUser().toDto());
+			receiver.setPercent(grade.getPercent());
+			
+			evaluation.getReceivers().add(receiver);
 		}
 		
-		return new GetResult<List<AssignationDtoLight>>("success", "assignations found", assignationsDtos);
+		assignationDto.setThisEvaluation(evaluation);
+		
+		return assignationDto;
 	}
 	
+	public GetResult<List<AssignationDto>> getAssignations(UUID initiativeId, UUID evaluatorAppUserId) {
+		List<Assignation> assignations = assignationRepository.findByInitiativeId(initiativeId);
+		List<AssignationDto> assignationsDtos = new ArrayList<AssignationDto>();
+		
+		for(Assignation assignation : assignations) {
+			assignationsDtos.add(getAssignation(initiativeId, assignation.getId(), evaluatorAppUserId));
+		}
+		
+		return new GetResult<List<AssignationDto>>("success", "assignations found", assignationsDtos);
+	}
 	
+	public PostResult evaluateAssignation(UUID evaluatorAppUserId, UUID assignationId, EvaluationDto evaluationDto) {
+		
+		Assignation assignation = assignationRepository.findById(assignationId);
+		Evaluator evaluator = evaluatorRepository.findByAssignationIdAndUser_C1Id(assignation.getId(), evaluatorAppUserId);
+		
+		for(ReceiverDto receiverDto : evaluationDto.getReceivers()) {
+			UUID receiverUserId = UUID.fromString(receiverDto.getUser().getC1Id());
+			Receiver receiver = receiverRepository.findByAssignation_IdAndUser_C1Id(assignation.getId(), receiverUserId);
+			EvaluationGrade grade = evaluationGradeRepository.findByAssignation_IdAndReceiver_User_C1IdAndEvaluator_User_C1Id(assignation.getId(), receiverUserId, evaluatorAppUserId);
+		
+			if (grade == null) {
+				grade = new EvaluationGrade();
+				
+				grade.setAssignation(assignation);
+				grade.setEvaluator(evaluator);
+				grade.setReceiver(receiver);
+				
+				grade = evaluationGradeRepository.save(grade);
+				evaluator.getGrades().add(grade);
+			}
+			
+			grade.setPercent(receiverDto.getPercent());
+			evaluationGradeRepository.save(grade);			
+		}
+		
+		evaluator.setState(EvaluatorState.DONE);
+		evaluatorRepository.save(evaluator);
+		
+		return new PostResult("success", "evaluation saved", evaluator.getId().toString());
+	}
 }

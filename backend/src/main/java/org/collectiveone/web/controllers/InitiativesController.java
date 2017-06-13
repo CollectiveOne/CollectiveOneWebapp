@@ -9,8 +9,8 @@ import org.collectiveone.model.enums.ContributorRole;
 import org.collectiveone.services.AppUserService;
 import org.collectiveone.services.InitiativeService;
 import org.collectiveone.web.dto.AssignationDto;
-import org.collectiveone.web.dto.AssignationDtoLight;
 import org.collectiveone.web.dto.ContributorDto;
+import org.collectiveone.web.dto.EvaluationDto;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.collectiveone.web.dto.NewInitiativeDto;
@@ -107,14 +107,18 @@ public class InitiativesController {
 		
 	} 
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignation/{assignationId}", method = RequestMethod.GET)
-	public GetResult<AssignationDto> getAssignation(@PathVariable("initiativeId") String initiativeId, @PathVariable("assignationId") String assignationId) {
-		return initiativeService.getAssignation(UUID.fromString(initiativeId), UUID.fromString(assignationId));
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignations", method = RequestMethod.GET)
+	public GetResult<List<AssignationDto>> getAssignations(@PathVariable("initiativeId") String initiativeId) {
+		return initiativeService.getAssignations(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignations", method = RequestMethod.GET)
-	public GetResult<List<AssignationDtoLight>> getAssignations(@PathVariable("initiativeId") String initiativeId) {
-		return initiativeService.getAssignations(UUID.fromString(initiativeId));
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignation/{assignationId}/evaluate", method = RequestMethod.POST)
+	public PostResult evaluateAssignation(
+			@PathVariable("initiativeId") String initiativeId, 
+			@PathVariable("assignationId") String assignationId,
+			@RequestBody EvaluationDto evaluationDto) {
+		
+		return initiativeService.evaluateAssignation(getLoggedUser().getC1Id(), UUID.fromString(assignationId), evaluationDto);
 	}
 	
 	private AppUser getLoggedUser() {
