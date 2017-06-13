@@ -1,6 +1,6 @@
 package org.collectiveone.model.enums;
 
 public enum EvaluatorState {
-	OPEN,
+	PENDING,
 	DONE
 }

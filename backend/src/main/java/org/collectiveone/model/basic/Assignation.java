@@ -1,5 +1,6 @@
 package org.collectiveone.model.basic;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -55,6 +56,9 @@ public class Assignation {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "state")
 	private AssignationState state;
+	
+	@Column(name = "closure_date")
+	private Timestamp closureDate;
 	
 	@OneToMany(mappedBy="assignation")
 	private List<Bill> bills = new ArrayList<Bill>();

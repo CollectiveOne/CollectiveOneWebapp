@@ -118,7 +118,11 @@ public class InitiativesController {
 			@PathVariable("assignationId") String assignationId,
 			@RequestBody EvaluationDto evaluationDto) {
 		
-		return initiativeService.evaluateAssignation(getLoggedUser().getC1Id(), UUID.fromString(assignationId), evaluationDto);
+		PostResult result = initiativeService.evaluateAssignation(getLoggedUser().getC1Id(), UUID.fromString(assignationId), evaluationDto);
+		
+		initiativeService.updateAssignationState(UUID.fromString(assignationId));
+		
+		return result;
 	}
 	
 	private AppUser getLoggedUser() {

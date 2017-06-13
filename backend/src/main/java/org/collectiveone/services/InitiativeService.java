@@ -594,4 +594,23 @@ public class InitiativeService {
 		
 		return new PostResult("success", "evaluation saved", evaluator.getId().toString());
 	}
+
+	public void updateAssignationState(UUID assignationId) {
+		Assignation assignation = assignationRepository.findById(assignationId);
+		
+		if (assignationRepository.countPendingEvaluators(assignation.getId()) == 0) {
+			closePeerReviewedAssignation(assignation.getId());
+		}
+		
+	}
+	
+	public void closePeerReviewedAssignation(UUID assignationId) {
+		Assignation assignation = assignationRepository.findById(assignationId);
+		
+		for (Evaluator evaluator : assignation.getEvaluators()) {
+			for (EvaluationGrade grade : evaluator.getGrades()) {
+				
+			}
+		}
+	}
 }
