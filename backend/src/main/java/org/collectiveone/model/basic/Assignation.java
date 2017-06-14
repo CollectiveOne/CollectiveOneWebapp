@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -57,16 +58,19 @@ public class Assignation {
 	@Column(name = "state")
 	private AssignationState state;
 	
-	@Column(name = "closure_date")
-	private Timestamp closureDate;
+	@Column(name = "max_closure_date")
+	private Timestamp maxClosureDate;
 	
-	@OneToMany(mappedBy="assignation")
+	@Column(name = "min_closure_date")
+	private Timestamp minClosureDate;
+	
+	@OneToMany(mappedBy="assignation", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Bill> bills = new ArrayList<Bill>();
 	
-	@OneToMany(mappedBy="assignation")
+	@OneToMany(mappedBy="assignation", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Receiver> receivers = new ArrayList<Receiver>();
 	
-	@OneToMany(mappedBy="assignation")
+	@OneToMany(mappedBy="assignation", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Evaluator> evaluators = new ArrayList<Evaluator>();
 
 	
@@ -158,6 +162,22 @@ public class Assignation {
 
 	public void setState(AssignationState state) {
 		this.state = state;
+	}
+	
+	public Timestamp getMaxClosureDate() {
+		return maxClosureDate;
+	}
+
+	public void setMaxClosureDate(Timestamp maxClosureDate) {
+		this.maxClosureDate = maxClosureDate;
+	}
+
+	public Timestamp getMinClosureDate() {
+		return minClosureDate;
+	}
+
+	public void setMinClosureDate(Timestamp minClosureDate) {
+		this.minClosureDate = minClosureDate;
 	}
 
 	public List<Bill> getBills() {

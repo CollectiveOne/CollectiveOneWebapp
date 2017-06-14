@@ -49,6 +49,8 @@ import org.collectiveone.web.dto.NewInitiativeDto;
 import org.collectiveone.web.dto.PostResult;
 import org.collectiveone.web.dto.ReceiverDto;
 import org.collectiveone.web.dto.TransferDto;
+import org.collectiveone.web.evaluationlogic.PeerReviewedAssignation;
+import org.collectiveone.web.evaluationlogic.PeerReviewedAssignationState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -425,7 +427,7 @@ public class InitiativeService {
 				
 				evaluator.setUser(appUserRepository.findByC1Id(UUID.fromString(evaluatorDto.getUser().getC1Id())));
 				evaluator.setAssignation(assignation);
-				evaluator.setState(EvaluatorState.OPEN);
+				evaluator.setState(EvaluatorState.PENDING);
 				evaluator.setWeight(evaluatorDto.getWeight());
 				evaluator = evaluatorRepository.save(evaluator);
 				
@@ -595,22 +597,31 @@ public class InitiativeService {
 		return new PostResult("success", "evaluation saved", evaluator.getId().toString());
 	}
 
+	@Transactional
 	public void updateAssignationState(UUID assignationId) {
 		Assignation assignation = assignationRepository.findById(assignationId);
 		
-		if (assignationRepository.countPendingEvaluators(assignation.getId()) == 0) {
-			closePeerReviewedAssignation(assignation.getId());
-		}
+		PeerReviewedAssignation peerReviewedAssignation = new PeerReviewedAssignation();
+		peerReviewedAssignation.setAssignation(assignation);
 		
+		peerReviewedAssignation.updateState();
+		
+		if(peerReviewedAssignation.getState() == PeerReviewedAssignationState.CLOSED) {
+			/* percents already updated by peerReviewAssignation,
+			 * so just change state, transfer funds and save */
+			
+			/* transfer the assets to the receivers */
+			for(Bill bill : assignation.getBills()) {
+				for(Receiver receiver : assignation.getReceivers()) {
+					double value = bill.getValue() * receiver.getPercent();
+					tokenService.transfer(bill.getTokenType().getId(), assignation.getInitiative().getId(), receiver.getUser().getC1Id(), value, TokenHolderType.USER);
+					receiver.setState(ReceiverState.RECEIVED);
+				}
+			}
+			
+			assignation.setState(AssignationState.DONE);
+			assignationRepository.save(assignation);
+		}
 	}
 	
-	public void closePeerReviewedAssignation(UUID assignationId) {
-		Assignation assignation = assignationRepository.findById(assignationId);
-		
-		for (Evaluator evaluator : assignation.getEvaluators()) {
-			for (EvaluationGrade grade : evaluator.getGrades()) {
-				
-			}
-		}
-	}
 }

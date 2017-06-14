@@ -11,4 +11,5 @@ public interface AssignationRepositoryIf extends CrudRepository<Assignation, UUI
 	Assignation findById(UUID assignationId);
 	
 	List<Assignation> findByInitiativeId(UUID initiativeId); 
+	
 }

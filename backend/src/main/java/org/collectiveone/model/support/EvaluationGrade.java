@@ -4,12 +4,15 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.model.basic.Assignation;
+import org.collectiveone.model.enums.EvaluationGradeType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -31,6 +34,10 @@ public class EvaluationGrade {
 	
 	@ManyToOne
 	private Receiver receiver;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "type")
+	private EvaluationGradeType type;
 	
 	@Column(name = "percent")
 	private double percent;
@@ -66,6 +73,14 @@ public class EvaluationGrade {
 
 	public void setReceiver(Receiver receiver) {
 		this.receiver = receiver;
+	}
+	
+	public EvaluationGradeType getType() {
+		return type;
+	}
+
+	public void setType(EvaluationGradeType type) {
+		this.type = type;
 	}
 
 	public double getPercent() {
