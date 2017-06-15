@@ -157,7 +157,7 @@ public class PeerReviewedAssignation {
 		/* copy the normalized percents from receiversData into
 		 * assignation receivers */
 		for(ReceiverData receiverData : receiversData) {
-			this.assignation.getReceivers().get(indexOfReceiver(receiverData.receiverId)).setPercent(receiverData.normalizedPercent);
+			this.assignation.getReceivers().get(indexOfReceiver(receiverData.receiverId)).setAssignedPercent(receiverData.normalizedPercent);
 		}
 	}
 	

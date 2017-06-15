@@ -35,8 +35,8 @@ public class Receiver {
 	@ManyToOne
 	private AppUser user;
 	
-	@Column(name = "percent")
-	private double percent;
+	@Column(name = "assignedPercent")
+	private double assignedPercent;
 	
 	@Enumerated(EnumType.STRING)
 	private ReceiverState state;
@@ -46,7 +46,7 @@ public class Receiver {
 		
 		dto.setId(id.toString());
 		dto.setUser(user.toDto());
-		dto.setPercent(percent);
+		dto.setPercent(assignedPercent);
 		dto.setState(state.toString());
 		
 		return dto;
@@ -76,12 +76,12 @@ public class Receiver {
 		this.user = user;
 	}
 
-	public double getPercent() {
-		return percent;
+	public double getAssignedPercent() {
+		return assignedPercent;
 	}
 
-	public void setPercent(double percent) {
-		this.percent = percent;
+	public void setAssignedPercent(double percent) {
+		this.assignedPercent = percent;
 	}
 
 	public ReceiverState getState() {

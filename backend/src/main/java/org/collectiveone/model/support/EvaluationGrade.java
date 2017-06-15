@@ -12,7 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.model.basic.Assignation;
+import org.collectiveone.model.enums.EvaluationGradeState;
 import org.collectiveone.model.enums.EvaluationGradeType;
+import org.collectiveone.web.dto.EvaluationGradeDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -39,10 +41,27 @@ public class EvaluationGrade {
 	@Column(name = "type")
 	private EvaluationGradeType type;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "state")
+	private EvaluationGradeState state;
+	
 	@Column(name = "percent")
 	private double percent;
 		
 
+	public EvaluationGradeDto toDto() {
+		EvaluationGradeDto dto = new EvaluationGradeDto();
+		
+		dto.setId(id.toString());
+		if(evaluator != null) dto.setEvaluatorUser(evaluator.getUser().toDto());
+		if(receiver != null) dto.setReceiverUser(receiver.getUser().toDto());
+		if(type != null) dto.setType(type.toString());
+		if(state != null) dto.setState(state.toString());
+		dto.setPercent(percent);
+		
+		return dto;
+	}
+	
 	public UUID getId() {
 		return id;
 	}
@@ -75,6 +94,14 @@ public class EvaluationGrade {
 		this.receiver = receiver;
 	}
 	
+	public EvaluationGradeState getState() {
+		return state;
+	}
+
+	public void setState(EvaluationGradeState state) {
+		this.state = state;
+	}
+
 	public EvaluationGradeType getType() {
 		return type;
 	}

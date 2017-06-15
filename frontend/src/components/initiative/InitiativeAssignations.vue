@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="w3-row-padding this-container">
-    <div class="w3-col m6" v-for="assignation in assignations">
+    <div class="w3-col l6" v-for="assignation in assignations">
       <app-initiative-assignation :assignation="assignation" :initiative="initiative"
         :key="assignation.id" @please-update="update()">
       </app-initiative-assignation>

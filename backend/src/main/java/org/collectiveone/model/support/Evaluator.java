@@ -1,5 +1,6 @@
 package org.collectiveone.model.support;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,7 +45,7 @@ public class Evaluator {
 	private EvaluatorState state;
 	
 	@OneToMany(mappedBy = "evaluator")
-	private List<EvaluationGrade> grades; 
+	private List<EvaluationGrade> grades = new ArrayList<EvaluationGrade>(); 
 
 	
 	public EvaluatorDto toDto() {

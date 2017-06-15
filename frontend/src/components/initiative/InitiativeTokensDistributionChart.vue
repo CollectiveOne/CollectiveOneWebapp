@@ -104,12 +104,12 @@
         </div>
         <div class="w3-row-padding">
           <div class="w3-col s6">
-            <input v-model.number="value" class="w3-input w3-border w3-hover-light-gray w3-round" type="number">
+            <input v-model.number="value" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0">
           </div>
           <div class="w3-col s6">
             <div class="w3-row">
               <div class="w3-col s10">
-                <input v-model.number="percentage" class="w3-input w3-border w3-hover-light-gray w3-round" type="text">
+                <input v-model.number="percentage" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" step="5">
               </div>
               <div class="w3-col s2">
                 <i class="fa fa-percent" aria-hidden="true"></i>

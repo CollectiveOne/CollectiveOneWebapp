@@ -7,7 +7,7 @@ public class EvaluationDto {
 	
 	private String id;
 	private String evaluationState;
-	private List<ReceiverDto> receivers = new ArrayList<ReceiverDto>();
+	private List<EvaluationGradeDto> evaluationGrades = new ArrayList<EvaluationGradeDto>();
 	
 	
 	public String getId() {
@@ -22,11 +22,12 @@ public class EvaluationDto {
 	public void setEvaluationState(String evaluationState) {
 		this.evaluationState = evaluationState;
 	}
-	public List<ReceiverDto> getReceivers() {
-		return receivers;
+	public List<EvaluationGradeDto> getEvaluationGrades() {
+		return evaluationGrades;
 	}
-	public void setReceivers(List<ReceiverDto> receivers) {
-		this.receivers = receivers;
+	public void setEvaluationGrades(List<EvaluationGradeDto> evaluationGrades) {
+		this.evaluationGrades = evaluationGrades;
 	}
+	
 
 }

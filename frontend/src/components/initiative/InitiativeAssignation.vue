@@ -51,24 +51,29 @@
       <hr>
       <label class="w3-text-indigo"><b>Receivers:</b></label>
 
-      <div v-for="receiver in receivers" class="w3-row">
-        <div class="w3-col s8">
-          <app-user-avatar :user="receiver.user"></app-user-avatar>
+      <div v-for="grade in grades" class="w3-row">
+        <div class="w3-col s6">
+          <app-user-avatar :user="grade.receiverUser"></app-user-avatar>
         </div>
-        <div class="w3-col s4 w3-center">
+        <div class="w3-col s3 w3-center">
           <div class="w3-row w3-padding input-div">
             <div class="w3-col s10">
-              <input v-model.number="receiver.percent" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" step="5">
+              <input v-model.number="grade.percent" class="w3-input w3-border w3-hover-light-gray w3-round"
+              type="number" step="5" min="0" :disabled="isDontKnow(grade)">
             </div>
             <div class="w3-col s2 d2-color">
               <i class="fa fa-percent" aria-hidden="true"></i>
             </div>
           </div>
         </div>
+        <div class="w3-col s3 w3-center not-sure-col">
+          <button class="w3-button w3-theme w3-round" @click="toggleDontKnow(grade)">{{ isDontKnow(grade) ? 'set' : 'dont know' }}</button>
+        </div>
       </div>
 
-      <div v-if="!percentagesOk" class="w3-panel w3-theme w3-round w3-padding">
-        Percentages should sum 100%, please  {{ missingPercent < 0 ? 'remove ' + Math.abs(missingPercent) + '%' : 'add ' + Math.abs(missingPercent) + '%' }}
+      <div class="w3-panel w3-round w3-padding w3-center" :class="{'w3-theme': !arePercentagesOk, 'w3-green' : arePercentagesOk}">
+        <span v-if="!arePercentagesOk">The sum of all percentages being set must be 100%, <b>please  {{ missingPercent < 0 ? 'remove ' + Math.abs(missingPercent) + '%' : 'add ' + Math.abs(missingPercent) + '%' }}</b></span>
+        <span v-else>Well done, the current assignation is valid!</span>
       </div>
 
       <hr>
@@ -77,7 +82,7 @@
           <button type="button" class="w3-button w3-light-gray w3-round" @click="cancel()">Cancel</button>
         </div>
         <div class="w3-col m6">
-          <button type="button" class="w3-button w3-theme w3-round" @click="send()">{{ isEvaluatorNotEvaluated ? 'Send' : 'Update' }}</button>
+          <button type="button" class="w3-button w3-theme w3-round" @click="send()" :disabled="!arePercentagesOk">{{ isNotEvaluated ? 'Send' : 'Update' }}</button>
         </div>
       </div>
 
@@ -113,41 +118,39 @@ export default {
 
   computed: {
     nextAction () {
-      if (this.isEvaluatorNotEvaluated) {
+      if (this.isNotEvaluated) {
         return 'evaluate'
       }
 
-      if (this.isEvaluatorEvaluated) {
+      if (this.isEvaluated) {
         return 'review my evaluation'
       }
     },
-    isEvaluatorNotEvaluated () {
-      return this.assignation.thisEvaluation.evaluationState === 'OPEN'
+    isNotEvaluated () {
+      return this.assignation.thisEvaluation.evaluationState === 'PENDING'
     },
-    isEvaluatorEvaluated () {
+    isEvaluated () {
       return this.assignation.thisEvaluation.evaluationState === 'DONE'
     },
-    receivers () {
-      if (this.isEvaluatorNotEvaluated) {
-        return this.assignation.receivers
-      }
-      if (this.isEvaluatorEvaluated) {
-        return this.assignation.thisEvaluation.receivers
-      }
-    },
-    percentagesOk () {
-      if (this.missingPercent !== 0) {
-        return false
-      } else {
-        return true
-      }
+    grades () {
+      return this.assignation.thisEvaluation.evaluationGrades
     },
     missingPercent () {
       var sum = 0.0
-      for (var ix in this.receivers) {
-        sum += this.receivers[ix].percent
+      for (var ix in this.grades) {
+        var grade = this.grades[ix]
+        if (!this.isDontKnow(grade)) {
+          sum += grade.percent
+        }
       }
       return (100 - sum)
+    },
+    arePercentagesOk () {
+      if (this.missingPercent === 0) {
+        return true
+      } else {
+        return false
+      }
     }
   },
 
@@ -155,19 +158,34 @@ export default {
     tokensString (v) {
       return tokensString(v)
     },
-
+    isDontKnow (grade) {
+      if (grade.type) {
+        if (grade.type === 'SET') {
+          return false
+        }
+        if (grade.type === 'DONT_KNOW') {
+          return true
+        }
+      } else {
+        return false
+      }
+    },
+    toggleDontKnow (grade) {
+      if (this.isDontKnow(grade)) {
+        grade.type = 'SET'
+      } else {
+        grade.percent = 0
+        grade.type = 'DONT_KNOW'
+      }
+    },
     expand () {
       this.showExpanded = true
     },
-
     cancel () {
       this.showExpanded = false
     },
-
     send () {
-      var evaluation = {}
-      evaluation.receivers = this.receivers
-      this.axios.post('/1/secured/initiative/' + this.initiative.id + '/assignation/' + this.assignation.id + '/evaluate', evaluation)
+      this.axios.post('/1/secured/initiative/' + this.initiative.id + '/assignation/' + this.assignation.id + '/evaluate', this.assignation.thisEvaluation)
       .then((response) => {
         this.showExpanded = false
         this.$emit('please-update')
@@ -204,6 +222,10 @@ export default {
   font-size: 22px;
   margin-top: 7.5px;
   margin-left: 5px;
+}
+
+.not-sure-col {
+  padding-top: 8px;
 }
 
 .bottom-btns-row {

@@ -100,7 +100,7 @@ public class InitiativesController {
 			return initiativeService.makeDirectAssignation(UUID.fromString(initiativeId), assignation);
 			
 		case PEER_REVIEWED:
-			return initiativeService.createPeerReviewedAssignation(UUID.fromString(initiativeId), assignation);
+			return initiativeService.createAssignation(UUID.fromString(initiativeId), assignation);
 		}
 		
 		return new PostResult("error", "error", "");
@@ -118,9 +118,7 @@ public class InitiativesController {
 			@PathVariable("assignationId") String assignationId,
 			@RequestBody EvaluationDto evaluationDto) {
 		
-		PostResult result = initiativeService.evaluateAssignation(getLoggedUser().getC1Id(), UUID.fromString(assignationId), evaluationDto);
-		
-		initiativeService.updateAssignationState(UUID.fromString(assignationId));
+		PostResult result = initiativeService.evaluateAndUpdateAssignation(getLoggedUser().getC1Id(), UUID.fromString(assignationId), evaluationDto);
 		
 		return result;
 	}

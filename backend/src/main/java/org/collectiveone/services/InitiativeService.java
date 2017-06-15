@@ -14,6 +14,8 @@ import org.collectiveone.model.basic.TokenType;
 import org.collectiveone.model.enums.AssignationState;
 import org.collectiveone.model.enums.AssignationType;
 import org.collectiveone.model.enums.ContributorRole;
+import org.collectiveone.model.enums.EvaluationGradeState;
+import org.collectiveone.model.enums.EvaluationGradeType;
 import org.collectiveone.model.enums.EvaluatorState;
 import org.collectiveone.model.enums.InitiativeRelationshipType;
 import org.collectiveone.model.enums.ReceiverState;
@@ -42,6 +44,7 @@ import org.collectiveone.web.dto.AssignationDto;
 import org.collectiveone.web.dto.BillDto;
 import org.collectiveone.web.dto.ContributorDto;
 import org.collectiveone.web.dto.EvaluationDto;
+import org.collectiveone.web.dto.EvaluationGradeDto;
 import org.collectiveone.web.dto.EvaluatorDto;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
@@ -56,6 +59,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class InitiativeService {
+	
+	private long DAYS_TO_MS = 24L*60L*60L*1000L;
 	
 	@Autowired
 	AppUserService appUserService;
@@ -397,7 +402,7 @@ public class InitiativeService {
 		return new PostResult("success", "assets transferred successfully", "");
 	}
 	
-	public PostResult createPeerReviewedAssignation(UUID initaitiveId, AssignationDto assignationDto) {
+	public PostResult createAssignation(UUID initaitiveId, AssignationDto assignationDto) {
 		Initiative initiative = initiativeRepository.findById(initaitiveId);
 	
 		Assignation assignation = new Assignation();
@@ -407,6 +412,8 @@ public class InitiativeService {
 		assignation.setNotes(assignationDto.getNotes());
 		assignation.setInitiative(initiative);
 		assignation.setState(AssignationState.OPEN);
+		assignation.setMinClosureDate(new Timestamp(System.currentTimeMillis()));
+		assignation.setMaxClosureDate(new Timestamp(System.currentTimeMillis() + 7L*DAYS_TO_MS));
 		assignation = assignationRepository.save(assignation);
 		
 		for(ReceiverDto receiverDto : assignationDto.getReceivers()) {
@@ -414,7 +421,7 @@ public class InitiativeService {
 			
 			receiver.setUser(appUserRepository.findByC1Id(UUID.fromString(receiverDto.getUser().getC1Id())));
 			receiver.setAssignation(assignation);
-			receiver.setPercent(receiverDto.getPercent());
+			receiver.setAssignedPercent(receiverDto.getPercent());
 			receiver.setState(ReceiverState.PENDING);
 			receiver = receiverRepository.save(receiver);
 			
@@ -428,8 +435,24 @@ public class InitiativeService {
 				evaluator.setUser(appUserRepository.findByC1Id(UUID.fromString(evaluatorDto.getUser().getC1Id())));
 				evaluator.setAssignation(assignation);
 				evaluator.setState(EvaluatorState.PENDING);
-				evaluator.setWeight(evaluatorDto.getWeight());
+				/* Weight logic TBD */
+				evaluator.setWeight(1.0);
 				evaluator = evaluatorRepository.save(evaluator);
+				
+				/* Create the grades of all evaluators already */
+				for(Receiver receiver : assignation.getReceivers()) {
+					EvaluationGrade grade = new EvaluationGrade();
+					
+					grade.setAssignation(assignation);
+					grade.setEvaluator(evaluator);
+					grade.setReceiver(receiver);
+					grade.setPercent(0.0);
+					grade.setType(EvaluationGradeType.SET);
+					grade.setState(EvaluationGradeState.PENDING);
+					grade = evaluationGradeRepository.save(grade);
+					
+					evaluator.getGrades().add(grade);
+				}
 				
 				assignation.getEvaluators().add(evaluator);
 			}
@@ -529,6 +552,7 @@ public class InitiativeService {
 		return transferredToUsers;
 	}
 
+	@Transactional
 	public AssignationDto getAssignation(UUID initiativeId, UUID assignationId, UUID evaluatorAppUserId) {
 		Assignation assignation = assignationRepository.findById(assignationId);
 		AssignationDto assignationDto = assignation.toDto();
@@ -541,20 +565,14 @@ public class InitiativeService {
 		evaluation.setEvaluationState(evaluator.getState().toString());
 		
 		for (EvaluationGrade grade : evaluator.getGrades()) {
-			ReceiverDto receiver = new ReceiverDto();
-			
-			receiver.setId(receiver.getId());
-			receiver.setUser(grade.getReceiver().getUser().toDto());
-			receiver.setPercent(grade.getPercent());
-			
-			evaluation.getReceivers().add(receiver);
+			evaluation.getEvaluationGrades().add(grade.toDto());
 		}
 		
 		assignationDto.setThisEvaluation(evaluation);
-		
 		return assignationDto;
 	}
 	
+	@Transactional
 	public GetResult<List<AssignationDto>> getAssignations(UUID initiativeId, UUID evaluatorAppUserId) {
 		List<Assignation> assignations = assignationRepository.findByInitiativeId(initiativeId);
 		List<AssignationDto> assignationsDtos = new ArrayList<AssignationDto>();
@@ -566,28 +584,28 @@ public class InitiativeService {
 		return new GetResult<List<AssignationDto>>("success", "assignations found", assignationsDtos);
 	}
 	
-	public PostResult evaluateAssignation(UUID evaluatorAppUserId, UUID assignationId, EvaluationDto evaluationDto) {
+	/** Non-transactional to evaluate and update assignation state in different transactions */
+	public PostResult evaluateAndUpdateAssignation(UUID evaluatorAppUserId, UUID assignationId, EvaluationDto evaluationDto) {
+		PostResult result = evaluateAssignation(evaluatorAppUserId, assignationId, evaluationDto);
+		updateAssignationState(assignationId);
+		
+		return result;
+	}
+	
+	@Transactional
+	private PostResult evaluateAssignation(UUID evaluatorUserId, UUID assignationId, EvaluationDto evaluationsDto) {
 		
 		Assignation assignation = assignationRepository.findById(assignationId);
-		Evaluator evaluator = evaluatorRepository.findByAssignationIdAndUser_C1Id(assignation.getId(), evaluatorAppUserId);
+		Evaluator evaluator = evaluatorRepository.findByAssignationIdAndUser_C1Id(assignation.getId(), evaluatorUserId);
 		
-		for(ReceiverDto receiverDto : evaluationDto.getReceivers()) {
-			UUID receiverUserId = UUID.fromString(receiverDto.getUser().getC1Id());
+		for(EvaluationGradeDto evaluationGradeDto : evaluationsDto.getEvaluationGrades()) {
+			UUID receiverUserId = UUID.fromString(evaluationGradeDto.getReceiverUser().getC1Id());
 			Receiver receiver = receiverRepository.findByAssignation_IdAndUser_C1Id(assignation.getId(), receiverUserId);
-			EvaluationGrade grade = evaluationGradeRepository.findByAssignation_IdAndReceiver_User_C1IdAndEvaluator_User_C1Id(assignation.getId(), receiverUserId, evaluatorAppUserId);
-		
-			if (grade == null) {
-				grade = new EvaluationGrade();
-				
-				grade.setAssignation(assignation);
-				grade.setEvaluator(evaluator);
-				grade.setReceiver(receiver);
-				
-				grade = evaluationGradeRepository.save(grade);
-				evaluator.getGrades().add(grade);
-			}
+			EvaluationGrade grade = evaluationGradeRepository.findByAssignation_IdAndReceiver_User_C1IdAndEvaluator_User_C1Id(assignation.getId(), receiverUserId, evaluatorUserId);
+					
+			grade.setPercent(evaluationGradeDto.getPercent());
+			grade.setType(EvaluationGradeType.valueOf(evaluationGradeDto.getType()));
 			
-			grade.setPercent(receiverDto.getPercent());
 			evaluationGradeRepository.save(grade);			
 		}
 		
@@ -599,6 +617,7 @@ public class InitiativeService {
 
 	@Transactional
 	public void updateAssignationState(UUID assignationId) {
+		
 		Assignation assignation = assignationRepository.findById(assignationId);
 		
 		PeerReviewedAssignation peerReviewedAssignation = new PeerReviewedAssignation();
@@ -613,7 +632,7 @@ public class InitiativeService {
 			/* transfer the assets to the receivers */
 			for(Bill bill : assignation.getBills()) {
 				for(Receiver receiver : assignation.getReceivers()) {
-					double value = bill.getValue() * receiver.getPercent();
+					double value = bill.getValue() * receiver.getAssignedPercent();
 					tokenService.transfer(bill.getTokenType().getId(), assignation.getInitiative().getId(), receiver.getUser().getC1Id(), value, TokenHolderType.USER);
 					receiver.setState(ReceiverState.RECEIVED);
 				}
