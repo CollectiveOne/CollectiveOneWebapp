@@ -368,23 +368,22 @@ public class InitiativeService {
 				 * the same percentage*/
 				transfer.setValue(bill.getValue() * (receiver.getPercent() / 100.0));
 				
-				transferToUser(initiative.getId(), transfer);
+				transferFromInitiativeToUser(initiative.getId(), transfer);
 			}
 		}
 		return new PostResult("success", "success", "");
 	}
-
+	
 	@Transactional
-	public PostResult transferToUser(UUID initiativeId, TransferDto transfer) {
-		AppUser receiver = appUserRepository.findByC1Id(UUID.fromString(transfer.getReceiverId()));
-		TokenType tokenType = tokenService.getTokenType(UUID.fromString(transfer.getAssetId()));
-		
+	public PostResult transferFromInitiativeToUser(UUID initiativeId, UUID receiverId, UUID assetId, double value) {
+		AppUser receiver = appUserRepository.findByC1Id(receiverId);
+		TokenType tokenType = tokenService.getTokenType(assetId);
 		
 		tokenService.transfer(
 				tokenType.getId(), 
-				UUID.fromString(transfer.getSenderId()), 
+				initiativeId, 
 				receiver.getC1Id(), 
-				transfer.getValue(), 
+				value, 
 				TokenHolderType.USER);
 		
 		/* register the transfer to the contributor  */
@@ -393,13 +392,18 @@ public class InitiativeService {
 		ContributorTransfer thisTransfer = new ContributorTransfer();
 		thisTransfer.setContributor(contributor);
 		thisTransfer.setTokenType(tokenType);
-		thisTransfer.setValue(transfer.getValue());
+		thisTransfer.setValue(value);
 		
 		contributorTransferRepository.save(thisTransfer);
 		contributor.getTokensTransfers().add(thisTransfer);
 		contributorRepository.save(contributor);
 	
 		return new PostResult("success", "assets transferred successfully", "");
+	}
+
+	@Transactional
+	public PostResult transferFromInitiativeToUser(UUID initiativeId, TransferDto transfer) {
+		return transferFromInitiativeToUser(initiativeId, UUID.fromString(transfer.getReceiverId()), UUID.fromString(transfer.getAssetId()), transfer.getValue());
 	}
 	
 	public PostResult createAssignation(UUID initaitiveId, AssignationDto assignationDto) {
@@ -633,7 +637,7 @@ public class InitiativeService {
 			for(Bill bill : assignation.getBills()) {
 				for(Receiver receiver : assignation.getReceivers()) {
 					double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
-					tokenService.transfer(bill.getTokenType().getId(), assignation.getInitiative().getId(), receiver.getUser().getC1Id(), value, TokenHolderType.USER);
+					transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
 					receiver.setState(ReceiverState.RECEIVED);
 				}
 			}

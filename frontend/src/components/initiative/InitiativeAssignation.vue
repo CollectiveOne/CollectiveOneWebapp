@@ -43,49 +43,81 @@
     </div>
 
     <div class="w3-row-padding w3-padding">
-      <div @click="expand()" class="w3-tag w3-theme w3-round w3-button more-btn">
+      <div @click="showExpanded = !showExpanded" class="w3-tag w3-round w3-button more-btn" :class="{'w3-theme' : isOpen, 'w3-theme-l1' : isDone}">
         {{ nextAction }}
       </div>
     </div>
-    <div v-show="showExpanded" class="w3-container">
-      <hr>
-      <label class="w3-text-indigo"><b>Receivers:</b></label>
+    <div v-if="isOpen">
+      <div v-show="showExpanded" class="w3-container">
+        <hr>
+        <label class="w3-text-indigo"><b>Receivers:</b></label>
 
-      <div v-for="grade in grades" class="w3-row">
-        <div class="w3-col s6">
-          <app-user-avatar :user="grade.receiverUser"></app-user-avatar>
-        </div>
-        <div class="w3-col s3 w3-center">
-          <div class="w3-row w3-padding input-div">
-            <div class="w3-col s10">
-              <input v-model.number="grade.percent" class="w3-input w3-border w3-hover-light-gray w3-round"
-              type="number" step="5" min="0" :disabled="isDontKnow(grade)">
-            </div>
-            <div class="w3-col s2 d2-color">
-              <i class="fa fa-percent" aria-hidden="true"></i>
+        <div v-for="grade in grades" class="w3-row">
+          <div class="w3-col s6">
+            <app-user-avatar :user="grade.receiverUser"></app-user-avatar>
+          </div>
+          <div class="w3-col s3 w3-center">
+            <div class="w3-row w3-padding input-div">
+              <div class="w3-col s10">
+                <input v-model.number="grade.percent" class="w3-input w3-border w3-hover-light-gray w3-round"
+                type="number" step="5" min="0" :disabled="isDontKnow(grade)">
+              </div>
+              <div class="w3-col s2 d2-color">
+                <i class="fa fa-percent" aria-hidden="true"></i>
+              </div>
             </div>
           </div>
+          <div class="w3-col s3 w3-center not-sure-col">
+            <button class="w3-button w3-theme w3-round" @click="toggleDontKnow(grade)">{{ isDontKnow(grade) ? 'set' : 'dont know' }}</button>
+          </div>
         </div>
-        <div class="w3-col s3 w3-center not-sure-col">
-          <button class="w3-button w3-theme w3-round" @click="toggleDontKnow(grade)">{{ isDontKnow(grade) ? 'set' : 'dont know' }}</button>
+
+
+        <div class="w3-panel w3-round w3-padding w3-center" :class="{'w3-theme': !arePercentagesOk, 'w3-green' : arePercentagesOk}">
+          <span v-if="!arePercentagesOk">The sum of all percentages being set must be 100%, <b>please  {{ missingPercent < 0 ? 'remove ' + Math.abs(missingPercent) + '%' : 'add ' + Math.abs(missingPercent) + '%' }}</b></span>
+          <span v-else>Well done, the current assignation is valid!</span>
+        </div>
+
+        <hr>
+        <div class="bottom-btns-row w3-row-padding">
+          <div class="w3-col m6">
+            <button type="button" class="w3-button w3-light-gray w3-round" @click="showExpanded = false">Cancel</button>
+          </div>
+          <div class="w3-col m6">
+            <button type="button" class="w3-button w3-theme w3-round" @click="send()" :disabled="!arePercentagesOk">{{ isNotEvaluated ? 'Send' : 'Update' }}</button>
+          </div>
         </div>
       </div>
+    </div>
+    <div v-if="isDone">
+      <div v-show="showExpanded" class="w3-container">
+        <div class="bottom-btns-row w3-row-padding">
 
-      <div class="w3-panel w3-round w3-padding w3-center" :class="{'w3-theme': !arePercentagesOk, 'w3-green' : arePercentagesOk}">
-        <span v-if="!arePercentagesOk">The sum of all percentages being set must be 100%, <b>please  {{ missingPercent < 0 ? 'remove ' + Math.abs(missingPercent) + '%' : 'add ' + Math.abs(missingPercent) + '%' }}</b></span>
-        <span v-else>Well done, the current assignation is valid!</span>
-      </div>
+          <hr>
+          <label class="w3-text-indigo"><b>Receivers:</b></label>
 
-      <hr>
-      <div class="bottom-btns-row w3-row-padding">
-        <div class="w3-col m6">
-          <button type="button" class="w3-button w3-light-gray w3-round" @click="cancel()">Cancel</button>
+          <div v-for="receiver in assignation.receivers" class="w3-row">
+            <div class="w3-col s9">
+              <app-user-avatar :user="receiver.user"></app-user-avatar>
+            </div>
+            <div class="w3-col s3 w3-center">
+              <div class="w3-row w3-padding input-div">
+                <div class="w3-col s10">
+                  <input v-model.number="receiver.percent" class="w3-input w3-border w3-hover-light-gray w3-round"
+                  type="number" step="5" min="0" :disabled="true">
+                </div>
+                <div class="w3-col s2 d2-color">
+                  <i class="fa fa-percent" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="w3-col m12">
+            <button type="button" class="w3-button w3-light-gray w3-round" @click="showExpanded = false">Close</button>
+          </div>
         </div>
-        <div class="w3-col m6">
-          <button type="button" class="w3-button w3-theme w3-round" @click="send()" :disabled="!arePercentagesOk">{{ isNotEvaluated ? 'Send' : 'Update' }}</button>
-        </div>
       </div>
-
     </div>
 
   </div>
@@ -125,15 +157,32 @@ export default {
       if (this.isEvaluated) {
         return 'review my evaluation'
       }
+
+      if (this.isDone) {
+        return 'see results'
+      }
+
+      return 'options'
     },
     isNotEvaluated () {
-      return this.assignation.thisEvaluation.evaluationState === 'PENDING'
+      return ((this.assignation.state === 'PENDING') && (this.assignation.thisEvaluation.evaluationState === 'PENDING'))
     },
     isEvaluated () {
-      return this.assignation.thisEvaluation.evaluationState === 'DONE'
+      return ((this.assignation.state === 'PENDING') && (this.assignation.thisEvaluation.evaluationState === 'DONE'))
+    },
+    isOpen () {
+      return this.assignation.state === 'OPEN'
+    },
+    isDone () {
+      return this.assignation.state === 'DONE'
     },
     grades () {
-      return this.assignation.thisEvaluation.evaluationGrades
+      if (this.isOpen) {
+        return this.assignation.thisEvaluation.evaluationGrades
+      }
+      if (this.isClosed) {
+        return this.assignation.receivers
+      }
     },
     missingPercent () {
       var sum = 0.0
@@ -177,12 +226,6 @@ export default {
         grade.percent = 0
         grade.type = 'DONT_KNOW'
       }
-    },
-    expand () {
-      this.showExpanded = true
-    },
-    cancel () {
-      this.showExpanded = false
     },
     send () {
       this.axios.post('/1/secured/initiative/' + this.initiative.id + '/assignation/' + this.assignation.id + '/evaluate', this.assignation.thisEvaluation)
