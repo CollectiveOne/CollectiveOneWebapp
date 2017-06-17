@@ -10,14 +10,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import org.collectiveone.model.support.Contributor;
 import org.collectiveone.model.support.InitiativeRelationship;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.hibernate.annotations.GenericGenerator;
@@ -52,15 +49,12 @@ public class Initiative {
 	@ManyToOne
 	private AppUser creator;
 	
-	@ManyToMany(mappedBy = "initiative")
-	@OrderBy("role ASC")
-	private Set<Contributor> contributors = new LinkedHashSet<Contributor>();
-	
 	@OneToOne
 	private TokenType tokenType;
 	
 	@OneToMany(mappedBy = "initiative")
 	private Set<InitiativeRelationship> relationships = new LinkedHashSet<InitiativeRelationship>();
+	
 	
 	public InitiativeDto toDto() {
 		InitiativeDto dto = new InitiativeDto();
@@ -112,12 +106,6 @@ public class Initiative {
 	public void setCreator(AppUser creator) {
 		this.creator = creator;
 	}
-	public Set<Contributor> getContributors() {
-		return contributors;
-	}
-	public void setContributors(Set<Contributor> contributors) {
-		this.contributors = contributors;
-	}
 	public TokenType getTokenType() {
 		return tokenType;
 	}
@@ -130,7 +118,5 @@ public class Initiative {
 	public void setRelationships(Set<InitiativeRelationship> relationships) {
 		this.relationships = relationships;
 	}
-	
-	
 	
 }

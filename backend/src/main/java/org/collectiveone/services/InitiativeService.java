@@ -14,6 +14,7 @@ import org.collectiveone.model.basic.TokenType;
 import org.collectiveone.model.enums.AssignationState;
 import org.collectiveone.model.enums.AssignationType;
 import org.collectiveone.model.enums.ContributorRole;
+import org.collectiveone.model.enums.DecisionVerdict;
 import org.collectiveone.model.enums.EvaluationGradeState;
 import org.collectiveone.model.enums.EvaluationGradeType;
 import org.collectiveone.model.enums.EvaluatorState;
@@ -69,6 +70,10 @@ public class InitiativeService {
 	TokenService tokenService;
 	
 	@Autowired
+	DecisionService decisionService;
+	
+	
+	@Autowired
 	AppUserRepositoryIf appUserRepository;
 	
 	@Autowired
@@ -76,9 +81,6 @@ public class InitiativeService {
 	
 	@Autowired
 	InitiativeRelationshipRepositoryIf initiativeRelationshipRepository;
-	
-	@Autowired
-	ContributorRepositoryIf contributorRepository;
 	
 	@Autowired
 	InitiativeTransferRepositoryIf initiativeTransferRepository;
@@ -101,51 +103,97 @@ public class InitiativeService {
 	@Autowired
 	EvaluationGradeRepositoryIf evaluationGradeRepository;
 	
-	
+	@Transactional
 	public PostResult init(UUID c1Id, NewInitiativeDto initiativeDto) {
-		/* create the initiative */
-		Initiative initiative = create(c1Id, initiativeDto);
 		
-		if (!initiativeDto.getAsSubinitiative()) {
-			/* create a token for this initiative */
-			TokenType token = tokenService.create(initiativeDto.getOwnTokens().getAssetName(), "T");
-			initiative.setTokenType(token);
-			initiative = initiativeRepository.save(initiative);
-			tokenService.mintToHolder(token.getId(), initiative.getId(), initiativeDto.getOwnTokens().getOwnedByThisHolder(), TokenHolderType.INITIATIVE);
-			return new PostResult("success", "initiative created and tokens created", initiative.getId().toString());
+		/* create the initiative */
+		AppUser creator = appUserRepository.findByC1Id(c1Id);
+		
+		if (creator != null) {
 			
-		} else {
-			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
+			DecisionVerdict canCreate = null;
+			Initiative parent = null; 
 			
-			/* link to parent initiative */
-			InitiativeRelationship relationship = new InitiativeRelationship();
-			relationship.setInitiative(initiative);
-			relationship.setType(InitiativeRelationshipType.IS_DETACHED_SUB);
-			relationship.setOfInitiative(parent);
-			
-			relationship = initiativeRelationshipRepository.save(relationship);
-			
-			/* transfer parent assets to child */
-			for (TransferDto thisTransfer : initiativeDto.getOtherAssetsTransfers()) {
-				TokenType token = tokenService.getTokenType(UUID.fromString(thisTransfer.getAssetId()));
+			if (!initiativeDto.getAsSubinitiative()) {
+				canCreate = DecisionVerdict.APPROVED;
+			} else {
+				parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
 				
-				tokenService.transfer(token.getId(), parent.getId(), initiative.getId(), thisTransfer.getValue(), TokenHolderType.INITIATIVE);
-				
-				/* upper layer keeping track of who transfered what to whom */
-				InitiativeTransfer transfer = new InitiativeTransfer();
-				transfer.setRelationship(relationship);
-				transfer.setTokenType(token);
-				transfer.setValue(thisTransfer.getValue());
-				
-				transfer = initiativeTransferRepository.save(transfer);
-				relationship.getTokensTransfers().add(transfer);
+				canCreate = decisionService.createSubInitiative(parent.getId(), creator.getC1Id());
 			}
 			
-			initiative.getRelationships().add(relationship);
-			initiativeRepository.save(initiative);
-			
-			return new PostResult("success", "sub initiative created and tokens transferred",  initiative.getId().toString());
+			if (canCreate != DecisionVerdict.DENIED) {
+				Initiative initiative = new Initiative();
+				
+				/* Basic properties*/
+				initiative.setName(initiativeDto.getName());
+				initiative.setDriver(initiativeDto.getDriver());
+				initiative.setCreator(creator);
+				initiative.setCreationDate(new Timestamp(System.currentTimeMillis()));
+				initiative.setEnabled(true);
+				
+				initiative = initiativeRepository.save(initiative);
+				
+				/* List of Contributors */
+				for (ContributorDto contributorDto : initiativeDto.getContributors()) {
+					Contributor contributor = new Contributor();
+					contributor.setInitiative(initiative);
+					contributor.setUser(appUserRepository.findByC1Id(UUID.fromString(contributorDto.getUser().getC1Id())));
+					contributor.setRole(ContributorRole.valueOf(contributorDto.getRole()));
+					
+					contributor = contributorRepository.save(contributor);
+					initiative.getContributors().add(contributor);
+				}
+				
+				
+				if (!initiativeDto.getAsSubinitiative()) {
+					/* create a token for this initiative */
+					TokenType token = tokenService.create(initiativeDto.getOwnTokens().getAssetName(), "T");
+					initiative.setTokenType(token);
+					initiative = initiativeRepository.save(initiative);
+					tokenService.mintToHolder(token.getId(), initiative.getId(), initiativeDto.getOwnTokens().getOwnedByThisHolder(), TokenHolderType.INITIATIVE);
+					return new PostResult("success", "initiative created and tokens created", initiative.getId().toString());
+					
+				} else {
+					
+					
+					/* link to parent initiative */
+					InitiativeRelationship relationship = new InitiativeRelationship();
+					relationship.setInitiative(initiative);
+					relationship.setType(InitiativeRelationshipType.IS_DETACHED_SUB);
+					relationship.setOfInitiative(parent);
+					
+					relationship = initiativeRelationshipRepository.save(relationship);
+					
+					/* transfer parent assets to child */
+					for (TransferDto thisTransfer : initiativeDto.getOtherAssetsTransfers()) {
+						TokenType token = tokenService.getTokenType(UUID.fromString(thisTransfer.getAssetId()));
+						
+						tokenService.transfer(token.getId(), parent.getId(), initiative.getId(), thisTransfer.getValue(), TokenHolderType.INITIATIVE);
+						
+						/* upper layer keeping track of who transfered what to whom */
+						InitiativeTransfer transfer = new InitiativeTransfer();
+						transfer.setRelationship(relationship);
+						transfer.setTokenType(token);
+						transfer.setValue(thisTransfer.getValue());
+						
+						transfer = initiativeTransferRepository.save(transfer);
+						relationship.getTokensTransfers().add(transfer);
+					}
+					
+					initiative.getRelationships().add(relationship);
+					initiativeRepository.save(initiative);
+				}
+				
+				return new PostResult("success", "sub initiative created and tokens transferred",  initiative.getId().toString());
+			} else {
+				return new PostResult("error", "creation not aproved",  "");
+			}
 		}
+			
+		return new PostResult("error", "creator not found",  "");
+		
+		
 	}
 	
 	@Transactional

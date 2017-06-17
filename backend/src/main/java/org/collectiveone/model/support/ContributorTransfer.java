@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.model.basic.AppUser;
 import org.collectiveone.model.basic.TokenType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -24,7 +25,7 @@ public class ContributorTransfer {
 	private UUID id;
 	
 	@ManyToOne
-	private Contributor contributor;
+	private AppUser contributor;
 	
 	@ManyToOne
 	private TokenType tokenType;
@@ -40,11 +41,11 @@ public class ContributorTransfer {
 		this.id = id;
 	}
 
-	public Contributor getContributor() {
+	public AppUser getContributor() {
 		return contributor;
 	}
 
-	public void setContributor(Contributor contributor) {
+	public void setContributor(AppUser contributor) {
 		this.contributor = contributor;
 	}
 

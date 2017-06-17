@@ -35,6 +35,7 @@ public class TokenHolder {
 	@Enumerated(EnumType.STRING)
 	private TokenHolderType holderType;
 	
+	@Column(name = "holder_id", unique = true)
 	private UUID holderId;
 
 	

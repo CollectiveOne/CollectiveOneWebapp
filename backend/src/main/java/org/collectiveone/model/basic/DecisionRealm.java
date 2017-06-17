@@ -1,4 +1,4 @@
-package org.collectiveone.model.support;
+package org.collectiveone.model.basic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,18 +12,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
-import org.collectiveone.model.basic.AppUser;
-import org.collectiveone.model.basic.Initiative;
-import org.collectiveone.model.enums.ContributorRole;
+import org.collectiveone.model.enums.DecisionRealmType;
+import org.collectiveone.model.support.DecisionMaker;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-@Entity
-@Table( name = "contributors" )
-public class Contributor {
-
+@Entity(name = "decision_realms")
+public class DecisionRealm {
+	
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -33,15 +30,13 @@ public class Contributor {
 	
 	@ManyToOne
 	private Initiative initiative;
-	
-	@ManyToOne
-	private AppUser user;
-	
+
 	@Enumerated(EnumType.STRING)
-	private ContributorRole role;
-	
-	@OneToMany(mappedBy = "contributor")
-	private List<ContributorTransfer> tokensTransfers = new ArrayList<ContributorTransfer>();
+	@Column(name = "type")
+	private DecisionRealmType type;
+
+	@OneToMany(mappedBy = "realm")
+	private List<DecisionMaker> decisionMakers = new ArrayList<DecisionMaker>();
 
 	public UUID getId() {
 		return id;
@@ -50,7 +45,7 @@ public class Contributor {
 	public void setId(UUID id) {
 		this.id = id;
 	}
-
+	
 	public Initiative getInitiative() {
 		return initiative;
 	}
@@ -59,28 +54,20 @@ public class Contributor {
 		this.initiative = initiative;
 	}
 
-	public AppUser getUser() {
-		return user;
+	public DecisionRealmType getType() {
+		return type;
 	}
 
-	public void setUser(AppUser user) {
-		this.user = user;
+	public void setType(DecisionRealmType type) {
+		this.type = type;
 	}
 
-	public ContributorRole getRole() {
-		return role;
+	public List<DecisionMaker> getDecisionMakers() {
+		return decisionMakers;
 	}
 
-	public void setRole(ContributorRole role) {
-		this.role = role;
+	public void setDecisionMakers(List<DecisionMaker> decisionMakers) {
+		this.decisionMakers = decisionMakers;
 	}
 
-	public List<ContributorTransfer> getTokensTransfers() {
-		return tokensTransfers;
-	}
-
-	public void setTokensTransfers(List<ContributorTransfer> tokensTransfers) {
-		this.tokensTransfers = tokensTransfers;
-	}
-		
 }

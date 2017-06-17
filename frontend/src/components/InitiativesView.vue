@@ -34,7 +34,7 @@ export default {
   props: {
     expandNav: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
 
