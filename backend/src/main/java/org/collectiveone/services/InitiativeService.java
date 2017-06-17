@@ -600,11 +600,11 @@ public class InitiativeService {
 		
 		for(EvaluationGradeDto evaluationGradeDto : evaluationsDto.getEvaluationGrades()) {
 			UUID receiverUserId = UUID.fromString(evaluationGradeDto.getReceiverUser().getC1Id());
-			Receiver receiver = receiverRepository.findByAssignation_IdAndUser_C1Id(assignation.getId(), receiverUserId);
 			EvaluationGrade grade = evaluationGradeRepository.findByAssignation_IdAndReceiver_User_C1IdAndEvaluator_User_C1Id(assignation.getId(), receiverUserId, evaluatorUserId);
 					
 			grade.setPercent(evaluationGradeDto.getPercent());
 			grade.setType(EvaluationGradeType.valueOf(evaluationGradeDto.getType()));
+			grade.setState(EvaluationGradeState.DONE);
 			
 			evaluationGradeRepository.save(grade);			
 		}
@@ -632,7 +632,7 @@ public class InitiativeService {
 			/* transfer the assets to the receivers */
 			for(Bill bill : assignation.getBills()) {
 				for(Receiver receiver : assignation.getReceivers()) {
-					double value = bill.getValue() * receiver.getAssignedPercent();
+					double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
 					tokenService.transfer(bill.getTokenType().getId(), assignation.getInitiative().getId(), receiver.getUser().getC1Id(), value, TokenHolderType.USER);
 					receiver.setState(ReceiverState.RECEIVED);
 				}

@@ -5,11 +5,6 @@ public class EvaluationData {
 	public double value;
 	public double weight;
 	
-	public EvaluationData(String _evaluatorId, double _value, double _weight) {
-		evaluatorId = _evaluatorId;
-		value = _value;
-		weight = _weight;
-	}
 	
 	public String getEvaluatorId() {
 		return evaluatorId;

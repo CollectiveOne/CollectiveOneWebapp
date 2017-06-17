@@ -1,11 +1,12 @@
 package org.collectiveone.web.evaluationlogic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReceiverData {
 	
 	public String receiverId;
-	public List<EvaluationData> evaluations;
+	public List<EvaluationData> evaluations = new ArrayList<EvaluationData>();
 	public double nonNormalizedPercent;
 	public double normalizedPercent;
 	

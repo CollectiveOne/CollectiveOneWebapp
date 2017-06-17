@@ -3,6 +3,7 @@ package org.collectiveone.web.evaluationlogic;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.collectiveone.model.basic.Assignation;
 import org.collectiveone.model.enums.EvaluationGradeType;
@@ -13,22 +14,13 @@ import org.collectiveone.model.support.Receiver;
 
 public class PeerReviewedAssignation {
 	private Assignation assignation;
-	private List<ReceiverData> receiversData = new ArrayList<ReceiverData>();
 	private PeerReviewedAssignationState state = PeerReviewedAssignationState.OPEN;
+	private List<ReceiverData> receiversData = new ArrayList<ReceiverData>();
 	
-	
-	private int indexOfReceiverData(String receiverId) {
-		for(int ix = 0; ix <= receiversData.size(); ix++) {
-			if(receiversData.get(ix).getReceiverId().equals(receiverId)) {
-				return ix;
-			}
-		}
-		return -1;
-	}
 	
 	private int indexOfReceiver(String receiverId) {
-		for(int ix = 0; ix <= assignation.getReceivers().size(); ix++) {
-			if(assignation.getReceivers().get(ix).getUser().getC1Id().equals(receiverId)) {
+		for(int ix = 0; ix < assignation.getReceivers().size(); ix++) {
+			if(assignation.getReceivers().get(ix).getId().toString().equals(receiverId)) {
 				return ix;
 			}
 		}
@@ -48,11 +40,11 @@ public class PeerReviewedAssignation {
 	public void updateState() {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		
-		if(assignation.getMaxClosureDate().getTime() > now.getTime()) {
+		if(now.getTime() > assignation.getMaxClosureDate().getTime()) {
 			close();
 		} else {
 			if(countPendingEvaluators() == 0) {
-				if(assignation.getMinClosureDate().getTime() > now.getTime()) {
+				if(now.getTime() > assignation.getMinClosureDate().getTime()) {
 					close();
 				}
 			}
@@ -60,72 +52,101 @@ public class PeerReviewedAssignation {
 	}
 	
 	private void close() {
-		/* First, prepare the receivers array, then, fill it with the evaluations
+		/* First, prepare the receiversData array, then, fill it with the evaluations
 		 * and their weights, and, finally, combine all evaluations into a final
 		 * percent */
 		
-		for (Receiver receiver : assignation.getReceivers()) {
-			ReceiverData receiverComp = new ReceiverData();
-			receiverComp.setReceiverId(receiver.getUser().getC1Id().toString());
-			receiversData.add(receiverComp);
-		}
-		
-		addEvaluations();
+		addReceiversEvaluations();
 		combineEvaluations();
 		updateReceivers();
 		
 		state = PeerReviewedAssignationState.CLOSED;
 	}
 	
-	private void addEvaluations() {
-		/* go over all evaluators and add their evaluations to the 
-		 * corresponding receiver */
-		for (Evaluator evaluator : assignation.getEvaluators()) {
+	private void addReceiversEvaluations() {
+		
+		/* Update percentages  */
+		for (Receiver receiver : assignation.getReceivers()) {
+			ReceiverData receiverData = new ReceiverData();
 			
-			if(evaluator.getState() == EvaluatorState.DONE) {
+			receiverData.setReceiverId(receiver.getId().toString());
 			
-				/* count the percentage of "not-sures" */
-				double percentageSet = 0.0;
-				int nEvalsSet = 0;
+			List<EvaluationGrade> gradesSet = getReceiverGradesSet(receiver.getId()); 
+			
+			if (gradesSet.size() == 0) {
+				/* no body evaluated this receiver? */
+			} else {
+			
+				/* compute the mean of evaluations set */
+				double mean = 0.0;
+				double totalWeight = 0.0;
 				
-				for (EvaluationGrade grade : evaluator.getGrades()) {
-					if(grade.getType() == EvaluationGradeType.SET) {
-						nEvalsSet++;
-						percentageSet += grade.getPercent();
-					} 
+				for (EvaluationGrade grade : gradesSet) {
+					double thisWeight = grade.getEvaluator().getWeight(); 
+					totalWeight += thisWeight;
+					mean += grade.getPercent() * thisWeight;
 				}
 				
-				double percentNotSure = 100.0 - percentageSet;
-				int nEvalsNotSure = evaluator.getGrades().size() - nEvalsSet;
+				mean = mean / totalWeight;
 				
-				/* add the evaluations (with the corresponding weights) to the receiver */
-				for (EvaluationGrade grade : evaluator.getGrades()) {
+				
+				/* update the receiver evaluations */
+				List<EvaluationGrade> grades = getReceiverGrades(receiver.getId());
+				
+				for (EvaluationGrade grade : grades) {
+					EvaluationData evaluation = new EvaluationData();
 					
-					String receiverId = grade.getReceiver().getUser().getC1Id().toString();
+					evaluation.setEvaluatorId(grade.getEvaluator().getId().toString());
+					evaluation.setWeight(grade.getEvaluator().getWeight());
 					
-					String evaluatorId = evaluator.getUser().getC1Id().toString();
-					double weight = 0.0;
-					double percent = 0.0;
-					
-					if(grade.getType() == EvaluationGradeType.SET) {
-						percent = grade.getPercent();
-						weight = evaluator.getWeight();
+					if (grade.getType() == EvaluationGradeType.SET) {
+						evaluation.setValue(grade.getPercent());	
 					} else {
-						/* percent for not sure */
-						percent = percentNotSure / (double) nEvalsNotSure;
-						/* weight for not sure is penalized */
-						weight = evaluator.getWeight() / 3.0;
+						evaluation.setValue(mean);
 					}
 					
-					EvaluationData thisEvaluation = 
-							new EvaluationData(evaluatorId, percent, weight);
-					
-					addEvaluation(receiverId, thisEvaluation);
-					
+					receiverData.getEvaluations().add(evaluation);
+				}
+			}
+			
+			receiversData.add(receiverData);
+		}
+	}
+	
+	/** Get all the grades of a receiver */
+	private List<EvaluationGrade> getReceiverGrades(UUID receiverId) { 
+		
+		List<EvaluationGrade> grades = new ArrayList<EvaluationGrade>();
+		
+		for (Evaluator evaluator : this.assignation.getEvaluators()) {
+			for (EvaluationGrade grade : evaluator.getGrades()) {
+				if (grade.getReceiver().getId() == receiverId) {
+					grades.add(grade);
 				}
 			}
 		}
+		
+		return grades;
 	}
+	
+	/** Get all the grades of a receiver which are SET (not DONT_KNOW) */
+	private List<EvaluationGrade> getReceiverGradesSet(UUID receiverId) { 
+		
+		List<EvaluationGrade> grades = new ArrayList<EvaluationGrade>();
+		
+		for (Evaluator evaluator : this.assignation.getEvaluators()) {
+			for (EvaluationGrade grade : evaluator.getGrades()) {
+				if (grade.getReceiver().getId() == receiverId) {
+					if (grade.getType() == EvaluationGradeType.SET) {
+						grades.add(grade);
+					}
+				}
+			}
+		}
+		
+		return grades;
+	}
+	
 	
 	private void combineEvaluations() {
 		/* combine all evaluations and weights into a single percentage for each receiver */
@@ -161,9 +182,6 @@ public class PeerReviewedAssignation {
 		}
 	}
 	
-	private void addEvaluation(String receiverId, EvaluationData evaluation) {
-		receiversData.get(indexOfReceiverData(receiverId)).evaluations.add(evaluation);
-	}
 	
 	/* getter/setters */
 	
