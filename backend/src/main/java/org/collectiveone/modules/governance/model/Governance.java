@@ -1,4 +1,4 @@
-package org.collectiveone.modules.decisions.model;
+package org.collectiveone.modules.governance.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +13,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import org.collectiveone.modules.decisions.enums.DecisionRealmType;
+import org.collectiveone.modules.governance.enums.GovernanceType;
 import org.collectiveone.modules.initiatives.model.Initiative;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity(name = "decision_realms")
-public class DecisionRealm {
+public class Governance {
 	
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -33,9 +33,9 @@ public class DecisionRealm {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "type")
-	private DecisionRealmType type;
+	private GovernanceType type;
 
-	@OneToMany(mappedBy = "realm")
+	@OneToMany(mappedBy = "governance")
 	private List<DecisionMaker> decisionMakers = new ArrayList<DecisionMaker>();
 
 	public UUID getId() {
@@ -54,11 +54,11 @@ public class DecisionRealm {
 		this.initiative = initiative;
 	}
 
-	public DecisionRealmType getType() {
+	public GovernanceType getType() {
 		return type;
 	}
 
-	public void setType(DecisionRealmType type) {
+	public void setType(GovernanceType type) {
 		this.type = type;
 	}
 

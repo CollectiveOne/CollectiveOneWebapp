@@ -9,9 +9,11 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.decisions.enums.DecisionMakerRole;
-import org.collectiveone.modules.decisions.enums.DecisionVerdict;
-import org.collectiveone.modules.decisions.services.DecisionService;
+import org.collectiveone.modules.governance.enums.DecisionMakerRole;
+import org.collectiveone.modules.governance.enums.DecisionVerdict;
+import org.collectiveone.modules.governance.model.DecisionMaker;
+import org.collectiveone.modules.governance.model.Governance;
+import org.collectiveone.modules.governance.services.GovernanceService;
 import org.collectiveone.modules.initiatives.InitiativeRelationshipType;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.initiatives.dto.MemberDto;
@@ -41,7 +43,7 @@ public class InitiativeService {
 	private TokenService tokenService;
 	
 	@Autowired
-	private DecisionService decisionService;
+	private GovernanceService governanceService;
 	
 	
 	@Autowired
@@ -61,13 +63,32 @@ public class InitiativeService {
 	
 	
 	
-	@Transactional
+	/** Non-transactional method to create an initiative in multiple transactions */
 	public PostResult init(UUID c1Id, NewInitiativeDto initiativeDto) {
+	
+		GetResult<Initiative> result = create(c1Id, initiativeDto);
 		
+		if(result.getResult().equals("success")) {
+			GetResult<Initiative> result2 = addMembers(result.getData().getId(), initiativeDto.getMembers());
+			
+			if(result2.getResult().equals("success")) {
+				return transferAssets(result2.getData().getId(), initiativeDto);
+			} else {
+				return new PostResult("error", "error adding member",  "");
+			}
+		} else {
+			return new PostResult("error", "error creating",  "");
+		}
+		
+	}
+	
+	@Transactional
+	private GetResult<Initiative> create(UUID c1Id, NewInitiativeDto initiativeDto) {
+			
 		AppUser creator = appUserRepository.findByC1Id(c1Id);
 		
 		if (creator == null) {
-			return new PostResult("error", "creator not found",  "");
+			return new GetResult<Initiative>("error", "creator not found",  null);
 		}
 			
 		/* Authorization is needed if it is a subinitiative */
@@ -78,11 +99,11 @@ public class InitiativeService {
 			canCreate = DecisionVerdict.APPROVED;
 		} else {
 			parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
-			canCreate = decisionService.createSubInitiative(parent.getId(), creator.getC1Id());
+			canCreate = governanceService.createSubInitiative(parent.getId(), creator.getC1Id());
 		}
 		
 		if (canCreate == DecisionVerdict.DENIED) {
-			return new PostResult("error", "creation not aproved",  "");
+			return new GetResult<Initiative>("error", "creation not aproved",  null);
 		}
 		
 		Initiative initiative = new Initiative();
@@ -96,8 +117,21 @@ public class InitiativeService {
 		
 		initiative = initiativeRepository.save(initiative);
 		
+		/* Create the governace object of this initiative */
+		Governance governance = governanceService.create(initiative);
+		initiative.setGovernance(governance);
+		
+		initiative = initiativeRepository.save(initiative);
+		
+		return new GetResult<Initiative>("success", "initiative created", initiative);
+	}
+	
+	@Transactional
+	private GetResult<Initiative> addMembers(UUID initiativeId, List<MemberDto> initiativeMemebers) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		
 		/* List of Members */
-		for (MemberDto memberDto : initiativeDto.getMembers()) {
+		for (MemberDto memberDto : initiativeMemebers) {
 			AppUser memberUser = appUserRepository.findByC1Id(UUID.fromString(memberDto.getUser().getC1Id()));
 			
 			Member member = new Member();
@@ -107,10 +141,16 @@ public class InitiativeService {
 			initiative.getMembers().add(member);
 			
 			if (memberDto.getRole().equals(DecisionMakerRole.ADMIN.toString())) {
-				decisionService.addDecisionMaker(initiative.getId(), memberUser.getC1Id(), DecisionMakerRole.ADMIN);
+				governanceService.addDecisionMaker(initiative.getGovernance().getId(), memberUser.getC1Id(), DecisionMakerRole.ADMIN);
 			}
 		}
 		
+		return new GetResult<Initiative>("success", "initiative created", initiative);
+	}
+		
+	@Transactional
+	private PostResult transferAssets(UUID initiativeId, NewInitiativeDto initiativeDto) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
 		if (!initiativeDto.getAsSubinitiative()) {
 			/* if is not a sub-initiative, then create a token for this initiative */
@@ -122,6 +162,8 @@ public class InitiativeService {
 			return new PostResult("success", "initiative created and tokens created", initiative.getId().toString());
 			
 		} else {
+			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
+			
 			/* if it is a sub-initiative, then link to parent initiative */
 			InitiativeRelationship relationship = new InitiativeRelationship();
 			relationship.setInitiative(initiative);
@@ -245,9 +287,63 @@ public class InitiativeService {
 			memberDto.setId(member.getId().toString());
 			memberDto.setInitiativeId(initiative.getId().toString());
 			memberDto.setUser(member.getUser().toDto());
+			
+			/* governance related data */
+			DecisionMaker decisionMaker = governanceService.getDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
+			if(decisionMaker != null) {
+				if(decisionMaker.getRole() == DecisionMakerRole.ADMIN) {
+					memberDto.setRole(DecisionMakerRole.ADMIN.toString());
+				}
+			}
+			
+			members.add(memberDto);
 		}
 		
 		return members;
+	}
+	
+	
+	
+	@Transactional
+	public PostResult postMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
+		Member member = addMember(initiativeId, c1Id, role);
+		if (member != null) {
+			return new PostResult("success", "member added",  member.getId().toString());
+		} 
+		
+		return new PostResult("error", "member not added", "");
+	}
+	
+	@Transactional
+	public Member addMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		
+		AppUser memberUser = appUserRepository.findByC1Id(c1Id); 
+		
+		Member member = new Member();
+		member.setInitiative(initiative);
+		member.setUser(memberUser);
+		member = memberRepository.save(member);
+		
+		initiative.getMembers().add(member);
+		initiativeRepository.save(initiative);
+		
+		if (role.equals(DecisionMakerRole.ADMIN)) {
+			governanceService.addDecisionMaker(initiative.getGovernance().getId(), memberUser.getC1Id(), DecisionMakerRole.ADMIN);
+		}
+		
+		return member;
+	}
+	
+	@Transactional
+	public PostResult deleteMember(UUID deleterUserId, UUID initiativeId, UUID memberUserId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, memberUserId);
+		memberRepository.delete(member);
+		
+		governanceService.deleteDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
+		
+		return new PostResult("success", "contributor deleted", "");
 	}
 	
 	@Transactional

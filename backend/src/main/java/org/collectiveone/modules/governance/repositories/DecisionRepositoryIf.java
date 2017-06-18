@@ -1,4 +1,4 @@
-package org.collectiveone.modules.decisions.repositories;
+package org.collectiveone.modules.governance.repositories;
 
 import java.util.UUID;
 

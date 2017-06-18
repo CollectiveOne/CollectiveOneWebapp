@@ -1,4 +1,4 @@
-package org.collectiveone.modules.decisions.enums;
+package org.collectiveone.modules.governance.enums;
 
 public enum DecisionVerdict {
 	DENIED,

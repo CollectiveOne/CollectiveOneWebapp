@@ -17,7 +17,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity(name = "members")
-public class Member {
+public class Member implements Comparable<Member>{
 
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -36,6 +36,11 @@ public class Member {
 	private List<MemberTransfer> tokensTransfers = new ArrayList<MemberTransfer>();
 
 
+	@Override
+    public int compareTo(Member m) {
+        return user.getNickname().compareTo(m.getUser().getNickname()) ;
+    }
+	
 	public UUID getId() {
 		return id;
 	}

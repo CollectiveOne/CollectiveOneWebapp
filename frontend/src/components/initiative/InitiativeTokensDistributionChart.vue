@@ -54,8 +54,8 @@
                   <b>Transferred to members</b>
                 </label>
                 <div class="w3-light-grey w3-round-xlarge w3-large">
-                  <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToContributorsPercent +'%'}">
-                    <div class="bar-txt w3-center d2-color">{{ transferredToContributorsStr }}</div>
+                  <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToMembersPercent +'%'}">
+                    <div class="bar-txt w3-center d2-color">{{ transferredToMembersStr }}</div>
                   </div>
                 </div>
               </div>
@@ -125,7 +125,7 @@
 <script>
 import { tokensString, amountAndPerc } from '@/lib/common'
 
-const sumOfContributors = function (asset) {
+const sumOfMembers = function (asset) {
   var tot = 0.0
   for (var ixAss in asset.transferredToUsers) {
     var transfer = asset.transferredToUsers[ixAss]
@@ -194,7 +194,7 @@ export default {
       return tokensString(this.assetData.totalExistingTokens)
     },
     underThisInitiativeVal () {
-      return this.assetData.ownedByThisHolder + this.transferredToSubinitiativesVal + this.transferredToContributorsVal
+      return this.assetData.ownedByThisHolder + this.transferredToSubinitiativesVal + this.transferredToMembersVal
     },
     underThisInitiativeStr () {
       return tokensString(this.underThisInitiativeVal)
@@ -220,14 +220,14 @@ export default {
     transferredToSubinitiativesStr () {
       return amountAndPerc(this.transferredToSubinitiativesVal, this.underThisInitiativeVal)
     },
-    transferredToContributorsVal () {
-      return sumOfContributors(this.assetData)
+    transferredToMembersVal () {
+      return sumOfMembers(this.assetData)
     },
-    transferredToContributorsPercent () {
-      return this.transferredToContributorsVal / this.underThisInitiativeVal * 100
+    transferredToMembersPercent () {
+      return this.transferredToMembersVal / this.underThisInitiativeVal * 100
     },
-    transferredToContributorsStr () {
-      return amountAndPerc(this.transferredToContributorsVal, this.underThisInitiativeVal)
+    transferredToMembersStr () {
+      return amountAndPerc(this.transferredToMembersVal, this.underThisInitiativeVal)
     }
 
   },

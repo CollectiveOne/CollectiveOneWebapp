@@ -1,15 +1,15 @@
 <template lang="html">
   <div class="w3-row">
     <div class="w3-col m7">
-      <app-user-avatar :user="contributor.user"></app-user-avatar>
+      <app-user-avatar :user="member.user"></app-user-avatar>
     </div>
     <div class="w3-col m5">
       <div class="w3-row-padding">
         <div class="w3-col s8 w3-center">
-          <p><span class="role-tag w3-tag w3-round" :class="getRoleClasses(contributor)">{{ contributor.role }}</span></p>
+          <p><span class="role-tag w3-tag w3-round" :class="getRoleClasses(member)">{{ member.role ? member.role : 'MEMBER' }}</span></p>
         </div>
         <div class="w3-col s4 w3-xxlarge w3-button w3-center">
-          <div @click="$emit('remove', contributor)"><i class="fa fa-times-circle-o l1-color" aria-hidden="true"></i></div>
+          <div @click="$emit('remove', member)"><i class="fa fa-times-circle-o l1-color" aria-hidden="true"></i></div>
         </div>
       </div>
     </div>
@@ -25,16 +25,16 @@ export default {
   },
 
   props: {
-    contributor: {
+    member: {
       type: Object
     }
   },
 
   methods: {
-    getRoleClasses (contributor) {
+    getRoleClasses (member) {
       return {
-        'w3-theme': contributor.role === 'ADMIN',
-        'w3-theme-l2': contributor.role !== 'ADMIN'
+        'w3-theme': member.role === 'ADMIN',
+        'w3-theme-l2': member.role !== 'ADMIN'
       }
     }
   }

@@ -1,4 +1,4 @@
-package org.collectiveone.modules.decisions.model;
+package org.collectiveone.modules.governance.model;
 
 import java.util.UUID;
 
@@ -10,8 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import org.collectiveone.modules.decisions.dto.DecisionMakerDto;
-import org.collectiveone.modules.decisions.enums.DecisionMakerRole;
+import org.collectiveone.modules.governance.dto.DecisionMakerDto;
+import org.collectiveone.modules.governance.enums.DecisionMakerRole;
 import org.collectiveone.modules.users.model.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -27,7 +27,7 @@ public class DecisionMaker {
 	private UUID id;
 	
 	@ManyToOne
-	private DecisionRealm realm;
+	private Governance governance;
 	
 	@ManyToOne 
 	private AppUser user;
@@ -62,14 +62,14 @@ public class DecisionMaker {
 		this.user = user;
 	}
 
-	public DecisionRealm getRealm() {
-		return realm;
+	public Governance getGovernance() {
+		return governance;
 	}
 
-	public void setRealm(DecisionRealm realm) {
-		this.realm = realm;
+	public void setGovernance(Governance governance) {
+		this.governance = governance;
 	}
-	
+
 	public DecisionMakerRole getRole() {
 		return role;
 	}

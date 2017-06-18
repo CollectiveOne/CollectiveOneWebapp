@@ -61,18 +61,18 @@
           </div>
           <hr>
 
-          <label class="init-contr-label w3-text-indigo"><b>Initial Contributors</b></label>
-          <div class="w3-border w3-round w3-padding contributors-container">
-            <app-initiative-contributor
-              v-for="contributor in contributors"
-              :key="contributor.user.c1Id"
-              :contributor="contributor"
-              @remove="removeContributor($event)">
-            </app-initiative-contributor>
+          <label class="init-contr-label w3-text-indigo"><b>Initial Members</b></label>
+          <div class="w3-border w3-round w3-padding member-container">
+            <app-initiative-member
+              v-for="member in members"
+              :key="member.user.c1Id"
+              :member="member"
+              @remove="removeMember($event)">
+            </app-initiative-member>
             <div class="w3-row" :style="{'margin-bottom': '5px'}">
               <label class="w3-text-indigo" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
             </div>
-            <app-initiative-new-contributor class="new-contr-row" @add="addContributor($event)"></app-initiative-new-contributor>
+            <app-initiative-new-member class="new-contr-row" @add="addMember($event)"></app-initiative-new-member>
 
           </div>
           <hr>
@@ -95,8 +95,8 @@
 import { mapActions } from 'vuex'
 import InitiativeAssetsAssigner from './InitiativeAssetsAssigner.vue'
 import NewToken from './NewToken.vue'
-import InitiativeNewContributor from '../initiative/InitiativeNewContributor.vue'
-import InitiativeContributor from '../initiative/InitiativeContributor.vue'
+import InitiativeNewMember from '../initiative/InitiativeNewMember.vue'
+import InitiativeMember from '../initiative/InitiativeMember.vue'
 
 /* eslint-disable no-unused-vars */
 import { tokensString } from '../../lib/common'
@@ -113,8 +113,8 @@ export default {
   components: {
     'app-initiative-assets-assigner': InitiativeAssetsAssigner,
     'app-new-token': NewToken,
-    'app-initiative-contributor': InitiativeContributor,
-    'app-initiative-new-contributor': InitiativeNewContributor
+    'app-initiative-member': InitiativeMember,
+    'app-initiative-new-member': InitiativeNewMember
   },
 
   data () {
@@ -130,7 +130,7 @@ export default {
         assetName: 'token'
       },
       otherAssetsTransfers: [],
-      contributors: []
+      members: []
 
     }
   },
@@ -186,25 +186,26 @@ export default {
       this.parentInitiative = initiative
     },
 
-    addContributor (contributor) {
-      var index = this.indexOfContributor(contributor.user.c1Id)
+    addMember (member) {
+      var index = this.indexOfMember(member.user.c1Id)
       if (index === -1) {
-        this.contributors.push(contributor)
+        this.members.push(JSON.parse(JSON.stringify(member)))
       } else {
         this.showOutputMessage('user has been already included')
       }
     },
 
-    removeContributor (contributor) {
-      var index = this.indexOfContributor(contributor.user.c1Id)
+    removeMember (member) {
+      debugger
+      var index = this.indexOfMember(member.user.c1Id)
       if (index > -1) {
-        this.contributors.splice(index, 1)
+        this.members.splice(index, 1)
       }
     },
 
-    indexOfContributor (c1Id) {
-      for (var ix in this.contributors) {
-        if (this.contributors[ix].user.c1Id === c1Id) {
+    indexOfMember (c1Id) {
+      for (var ix in this.members) {
+        if (this.members[ix].user.c1Id === c1Id) {
           return ix
         }
       }
@@ -221,7 +222,7 @@ export default {
         parentInitiativeId: this.asSubinitiative ? this.parentInitiative.id : null,
         name: this.name,
         driver: this.driver,
-        contributors: this.contributors,
+        members: this.members,
         ownTokens: this.ownTokens,
         otherAssetsTransfers: this.otherAssetsTransfers
       }
@@ -257,10 +258,10 @@ export default {
 
   mounted () {
     if (this.$store.state.user.profile) {
-      var contributor = {}
-      contributor.user = this.$store.state.user.profile
-      contributor.role = 'ADMIN'
-      this.contributors.push(contributor)
+      var member = {}
+      member.user = this.$store.state.user.profile
+      member.role = 'ADMIN'
+      this.members.push(member)
     }
 
     this.updateParent()
@@ -305,7 +306,7 @@ form {
 .assets-selector-div {
 }
 
-.contributors-container {
+.members-container {
   margin-top: 10px;
   padding-bottom: 20px !important;
 }

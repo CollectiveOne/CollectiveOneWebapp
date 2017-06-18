@@ -11,7 +11,7 @@ public class GetResult<T> {
 		data = _data;
 	}
 	
-	public String isResult() {
+	public String getResult() {
 		return result;
 	}
 	public void setResult(String result) {

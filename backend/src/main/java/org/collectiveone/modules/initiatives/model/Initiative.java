@@ -3,6 +3,8 @@ package org.collectiveone.modules.initiatives.model;
 import java.sql.Timestamp;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -15,11 +17,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.governance.model.Governance;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.tokens.model.TokenType;
 import org.collectiveone.modules.users.model.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -57,7 +61,11 @@ public class Initiative {
 	private Set<InitiativeRelationship> relationships = new LinkedHashSet<InitiativeRelationship>();
 	
 	@OneToMany(mappedBy = "initiative")
-	private Set<Member> members = new LinkedHashSet<Member>();
+	@SortNatural
+	private SortedSet<Member> members = new TreeSet<Member>();
+	
+	@OneToOne
+	private Governance governance;
 	
 	
 	
@@ -123,11 +131,18 @@ public class Initiative {
 	public void setRelationships(Set<InitiativeRelationship> relationships) {
 		this.relationships = relationships;
 	}
-	public Set<Member> getMembers() {
+	public SortedSet<Member> getMembers() {
 		return members;
 	}
-	public void setMembers(Set<Member> members) {
+	public void setMembers(SortedSet<Member> members) {
 		this.members = members;
 	}
+	public Governance getGovernance() {
+		return governance;
+	}
+	public void setGovernance(Governance governance) {
+		this.governance = governance;
+	}
+	
 	
 }

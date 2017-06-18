@@ -1,4 +1,4 @@
-package org.collectiveone.modules.decisions.model;
+package org.collectiveone.modules.governance.model;
 
 import java.util.UUID;
 

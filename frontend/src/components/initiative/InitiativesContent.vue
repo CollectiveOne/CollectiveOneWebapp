@@ -7,12 +7,17 @@
         </header>
 
         <div class="section-tabs w3-row">
-          <router-link tag="div" to="overview" class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
+          <router-link tag="div" to="overview" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
             :class="{'w3-border-blue': isOverview}"
             @click="">
             <h5 class="w3-text-indigo" :class="{'bold-text': isOverview}">Overview</h5>
           </router-link>
-          <router-link tag="div" to="assignations" class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
+          <router-link tag="div" to="people" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
+            :class="{'w3-border-blue': isPeople}"
+            @click="">
+            <h5 class="w3-text-indigo" :class="{'bold-text': isPeople}">People</h5>
+          </router-link>
+          <router-link tag="div" to="assignations" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
             :class="{'w3-border-blue': isAssignations}"
             @click="">
             <h5 class="w3-text-indigo" :class="{'bold-text': isAssignations}">Assignations</h5>
@@ -53,6 +58,15 @@ export default {
       })
       return res
     },
+    isPeople () {
+      var res = false
+      this.$route.matched.forEach((e) => {
+        if (e.name === 'InitiativePeople') {
+          res = true
+        }
+      })
+      return res
+    },
     isAssignations () {
       var res = false
       this.$route.matched.forEach((e) => {
@@ -70,7 +84,7 @@ export default {
         params: {
           addAssets: true,
           addSubinitiatives: true,
-          addContributors: true
+          addMembers: true
         }
       }).then((response) => {
         this.initiative = response.data.data

@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table( name = "APP_USERS" )
+@Table( name = "app_users" )
 public class AppUser {
 
 	@Id

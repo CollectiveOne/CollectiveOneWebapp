@@ -4,20 +4,20 @@
       <app-user-selector class="user-selector"
         anchor="c1Id" label="nickname"
         url="/1/secured/users/suggestions"
-        @select="contributor.user = $event">
+        @select="member.user = $event">
       </app-user-selector>
     </div>
     <div class="w3-col m5">
       <div class="w3-row-padding">
         <div class="w3-col s8 w3-center">
-          <select class="role-select w3-select w3-round" v-model="contributor.role">
+          <select class="role-select w3-select w3-round" v-model="member.role">
             <option value="" disabled>Choose role</option>
             <option value="ADMIN">ADMIN</option>
             <option value="MEMBER" selected>MEMBER</option>
           </select>
         </div>
         <div class="w3-col s4 w3-center">
-          <button type="button" class="add-btn w3-button w3-theme-l1 w3-round" @click="$emit('add', contributor)">add</button>
+          <button type="button" class="add-btn w3-button w3-theme-l1 w3-round" @click="$emit('add', member)">add</button>
         </div>
       </div>
 
@@ -38,7 +38,7 @@ export default {
 
   data () {
     return {
-      contributor: {
+      member: {
         role: 'MEMBER',
         user: null
       }

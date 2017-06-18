@@ -1,4 +1,4 @@
-package org.collectiveone.modules.decisions.dto;
+package org.collectiveone.modules.governance.dto;
 
 import org.collectiveone.modules.users.dto.AppUserDto;
 
