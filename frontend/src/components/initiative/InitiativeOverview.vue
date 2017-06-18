@@ -24,14 +24,14 @@
         <div v-if="hasOwnTokens">
           <app-tokens-distribution-chart
             :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
-            @new-initiative="$emit('new-initiative', $event)"
+            @new-initiative="$emit('new-initiative', $event)" :canEdit="isLoggedAnAdmin"
             @new-assignment="newAssignment($event)">
           </app-tokens-distribution-chart>
         </div>
         <div v-if="hasOtherAssets">
           <app-tokens-distribution-chart v-for="asset in initiative.otherAssets"
             :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
-            @new-initiative="$emit('new-initiative', $event)"
+            @new-initiative="$emit('new-initiative', $event)" :canEdit="isLoggedAnAdmin"
             @new-assignment="newAssignment($event)">
           </app-tokens-distribution-chart>
         </div>
@@ -64,6 +64,9 @@ export default {
   },
 
   computed: {
+    isLoggedAnAdmin () {
+      return this.initiative.loggedMember.role === 'ADMIN'
+    },
     hasOwnTokens () {
       if (this.initiative.ownTokens) {
         return true

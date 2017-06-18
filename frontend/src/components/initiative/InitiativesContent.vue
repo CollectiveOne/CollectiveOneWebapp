@@ -84,7 +84,8 @@ export default {
         params: {
           addAssets: true,
           addSubinitiatives: true,
-          addMembers: true
+          addMembers: true,
+          addLoggedUser: true
         }
       }).then((response) => {
         this.initiative = response.data.data

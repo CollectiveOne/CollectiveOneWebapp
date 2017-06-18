@@ -261,6 +261,28 @@ public class InitiativeService {
 		return subinitiativeDtos;
 	}
 	
+	@Transactional
+	public MemberDto getMember(UUID initiativeId, UUID userId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, userId);
+		
+		MemberDto memberDto = new MemberDto();
+		
+		memberDto.setId(member.getId().toString());
+		memberDto.setInitiativeId(initiative.getId().toString());
+		memberDto.setUser(member.getUser().toDto());
+		
+		/* governance related data */
+		DecisionMaker decisionMaker = governanceService.getDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
+		if(decisionMaker != null) {
+			if(decisionMaker.getRole() == DecisionMakerRole.ADMIN) {
+				memberDto.setRole(DecisionMakerRole.ADMIN.toString());
+			}
+		}
+		
+		return memberDto;
+	}
+	
 	public List<MemberDto> getMembers(UUID initiativeId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		

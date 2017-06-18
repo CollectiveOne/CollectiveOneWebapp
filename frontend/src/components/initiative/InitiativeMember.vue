@@ -8,7 +8,7 @@
         <div class="w3-col s8 w3-center">
           <p><span class="role-tag w3-tag w3-round" :class="getRoleClasses(member)">{{ member.role ? member.role : 'MEMBER' }}</span></p>
         </div>
-        <div class="w3-col s4 w3-xxlarge w3-button w3-center">
+        <div v-if="canEdit" class="w3-col w3-xxlarge w3-button w3-center" :class="{'s4' : canEdit}">
           <div @click="$emit('remove', member)"><i class="fa fa-times-circle-o l1-color" aria-hidden="true"></i></div>
         </div>
       </div>
@@ -27,6 +27,10 @@ export default {
   props: {
     member: {
       type: Object
+    },
+    canEdit: {
+      type: Boolean,
+      default: false
     }
   },
 

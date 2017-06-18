@@ -38,6 +38,7 @@ public class InitiativesController {
 	@Autowired
 	private AppUserService appUserService;
 	
+	
 	@RequestMapping(path = "/secured/initiative", method = RequestMethod.POST)
 	public PostResult postInitiative(@RequestBody NewInitiativeDto initiativeDto) {
 		
@@ -57,27 +58,32 @@ public class InitiativesController {
 		return initiativeService.init(getLoggedUser().getC1Id(), initiativeDto);
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{id}", method = RequestMethod.GET)
+	@RequestMapping(path = "/secured/initiative/{initiativeId}", method = RequestMethod.GET)
 	public GetResult<InitiativeDto> getInitiative(
-			@PathVariable("id") String id, 
+			@PathVariable("initiativeId") String initiativeId, 
 			@RequestParam(defaultValue = "false") boolean addAssets,
 			@RequestParam(defaultValue = "false") boolean addSubinitiatives,
-			@RequestParam(defaultValue = "false") boolean addMembers) {
+			@RequestParam(defaultValue = "false") boolean addMembers,
+			@RequestParam(defaultValue = "false") boolean addLoggedUser) {
 		
 		InitiativeDto initiativeDto = null;
 		
 		if(!addAssets) {
-			initiativeDto = initiativeService.getLight(UUID.fromString(id));
+			initiativeDto = initiativeService.getLight(UUID.fromString(initiativeId));
 		} else {
-			initiativeDto = initiativeService.getWithOwnAssets(UUID.fromString(id));
+			initiativeDto = initiativeService.getWithOwnAssets(UUID.fromString(initiativeId));
 		}
 		
 		if(addSubinitiatives) {
-			initiativeDto.setSubInitiatives(initiativeService.getSubinitiativesTree(UUID.fromString(id)));
+			initiativeDto.setSubInitiatives(initiativeService.getSubinitiativesTree(UUID.fromString(initiativeId)));
 		}
 		
 		if(addMembers) {
-			initiativeDto.setMembers(initiativeService.getMembers(UUID.fromString(id)));
+			initiativeDto.setMembers(initiativeService.getMembers(UUID.fromString(initiativeId)));
+		}
+		
+		if(addLoggedUser) {
+			initiativeDto.setLoggedMember(initiativeService.getMember(UUID.fromString(initiativeId),  getLoggedUser().getC1Id()));
 		}
 		
 		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeDto);

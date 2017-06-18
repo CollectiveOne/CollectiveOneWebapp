@@ -29,7 +29,7 @@
             </div>
 
             <div v-if="isInitiativeAssigner || isOverview" class="w3-row">
-              <div class="w3-col m10">
+              <div class="w3-col" :class="{'m10' : canEdit, 'm12' : !canEdit}">
                 <label class="d2-color">
                   <b>Transferred to sub-initiatives</b>
                 </label>
@@ -40,16 +40,16 @@
                 </div>
               </div>
 
-              <div v-if="isOverview" class="w3-col m2 w3-center" style="padding-top: 15px !important;">
-                <button type="button" class="w3-button w3-theme-l1 w3-round w3-small"
+              <div v-if="isOverview && canEdit" class="w3-col m2 w3-center icon-div">
+                <button type="button" class="w3-button l2-color"
                   @click="newSubInitiativeClicked()">
-                  new
+                  <i class="fa fa-external-link" aria-hidden="true"></i>
                 </button>
               </div>
             </div>
 
             <div v-if="isOverview || isMemberAssigner" class="w3-row">
-              <div class="w3-col m10">
+              <div class="w3-col" :class="{'m10' : canEdit, 'm12' : !canEdit}">
                 <label class="d2-color">
                   <b>Transferred to members</b>
                 </label>
@@ -60,10 +60,10 @@
                 </div>
               </div>
 
-              <div v-if="isOverview" class="w3-col m2 w3-center" style="padding-top: 15px !important;">
-                <button type="button" class="w3-button w3-theme-l1 w3-round w3-small"
+              <div v-if="isOverview && canEdit" class="w3-col m2 w3-center icon-div">
+                <button type="button" class="w3-button l2-color"
                   @click="newAssignmentClicked()">
-                  new
+                  <i class="fa fa-external-link" aria-hidden="true"></i>
                 </button>
               </div>
             </div>
@@ -156,6 +156,10 @@ export default {
     type: {
       type: String,
       default: 'overview'
+    },
+    canEdit: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -319,6 +323,10 @@ export default {
 
 .label-row {
   margin-bottom: 10px;
+}
+
+.icon-div {
+  padding-top: 12px !important;
 }
 
 .fa-percent {

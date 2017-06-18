@@ -9,13 +9,15 @@
         <app-initiative-member
           v-for="member in initiative.members"
           :key="member.user.c1Id"
-          :member="member"
+          :member="member",
           @remove="removeMember($event)">
         </app-initiative-member>
-        <div class="w3-row" :style="{'margin-bottom': '5px'}">
-          <label class="w3-text-indigo" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
+        <div v-if="isLoggedAnAdmin">
+          <div class="w3-row" :style="{'margin-bottom': '5px'}">
+            <label class="w3-text-indigo" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
+          </div>
+          <app-initiative-new-member @add="addMember($event)"></app-initiative-new-member>
         </div>
-        <app-initiative-new-member @add="addMember($event)"></app-initiative-new-member>
       </div>
 
     </div>
@@ -36,6 +38,12 @@ export default {
   props: {
     initiative: {
       type: Object
+    }
+  },
+
+  computed: {
+    isLoggedAnAdmin () {
+      return this.initiative.loggedMember.role === 'ADMIN'
     }
   },
 
@@ -89,6 +97,11 @@ export default {
 
 .this-container {
   padding-top: 25px !important;
+}
+
+.members-div {
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 </style>
