@@ -7,16 +7,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 import org.collectiveone.model.basic.AppUser;
-import org.collectiveone.model.basic.TokenType;
+import org.collectiveone.model.basic.Initiative;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-@Entity
-@Table(name = "contributor_transfers")
-public class ContributorTransfer {
+@Entity(name = "members")
+public class Member {
+
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -25,14 +24,11 @@ public class ContributorTransfer {
 	private UUID id;
 	
 	@ManyToOne
-	private AppUser contributor;
+	private Initiative initiative;
 	
 	@ManyToOne
-	private TokenType tokenType;
-	
-	private double value;
-	
-		
+	private AppUser user;
+
 	public UUID getId() {
 		return id;
 	}
@@ -41,29 +37,20 @@ public class ContributorTransfer {
 		this.id = id;
 	}
 
-	public AppUser getContributor() {
-		return contributor;
+	public Initiative getInitiative() {
+		return initiative;
 	}
 
-	public void setContributor(AppUser contributor) {
-		this.contributor = contributor;
+	public void setInitiative(Initiative initiative) {
+		this.initiative = initiative;
 	}
 
-	public TokenType getTokenType() {
-		return tokenType;
+	public AppUser getUser() {
+		return user;
 	}
 
-	public void setTokenType(TokenType tokenType) {
-		this.tokenType = tokenType;
+	public void setUser(AppUser user) {
+		this.user = user;
 	}
 
-	public double getValue() {
-		return value;
-	}
-
-	public void setValue(double value) {
-		this.value = value;
-	}
-	
-	
 }

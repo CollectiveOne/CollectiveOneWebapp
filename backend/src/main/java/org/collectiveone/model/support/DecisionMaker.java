@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import org.collectiveone.model.basic.AppUser;
 import org.collectiveone.model.basic.DecisionRealm;
 import org.collectiveone.model.enums.DecisionMakerRole;
+import org.collectiveone.web.dto.DecisionMakerDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -23,8 +24,8 @@ public class DecisionMaker {
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
 		parameters = { @Parameter( name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
-	@Column(name = "c1Id", updatable = false, nullable = false)
-	private UUID c1Id;
+	@Column(name = "id", updatable = false, nullable = false)
+	private UUID id;
 	
 	@ManyToOne
 	private DecisionRealm realm;
@@ -36,13 +37,30 @@ public class DecisionMaker {
 	@Column(name = "role")
 	private DecisionMakerRole role;
 
+	public DecisionMakerDto toDto() {
+		DecisionMakerDto dto = new DecisionMakerDto();
+		
+		dto.setId(id.toString());
+		dto.setUser(user.toDto());
+		dto.setRole(role.toString());
 	
-	public UUID getC1Id() {
-		return c1Id;
+		return dto;
+	}
+	
+	public UUID getId() {
+		return id;
 	}
 
-	public void setC1Id(UUID c1Id) {
-		this.c1Id = c1Id;
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public AppUser getUser() {
+		return user;
+	}
+
+	public void setUser(AppUser user) {
+		this.user = user;
 	}
 
 	public DecisionRealm getRealm() {

@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.model.support.InitiativeRelationship;
+import org.collectiveone.model.support.Member;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -54,6 +55,10 @@ public class Initiative {
 	
 	@OneToMany(mappedBy = "initiative")
 	private Set<InitiativeRelationship> relationships = new LinkedHashSet<InitiativeRelationship>();
+	
+	@OneToMany(mappedBy = "initiative")
+	private Set<Member> members = new LinkedHashSet<Member>();
+	
 	
 	
 	public InitiativeDto toDto() {
@@ -117,6 +122,12 @@ public class Initiative {
 	}
 	public void setRelationships(Set<InitiativeRelationship> relationships) {
 		this.relationships = relationships;
+	}
+	public Set<Member> getMembers() {
+		return members;
+	}
+	public void setMembers(Set<Member> members) {
+		this.members = members;
 	}
 	
 }

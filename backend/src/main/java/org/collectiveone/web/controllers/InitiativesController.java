@@ -9,7 +9,7 @@ import org.collectiveone.model.enums.ContributorRole;
 import org.collectiveone.services.AppUserService;
 import org.collectiveone.services.InitiativeService;
 import org.collectiveone.web.dto.AssignationDto;
-import org.collectiveone.web.dto.ContributorDto;
+import org.collectiveone.web.dto.MemberDto;
 import org.collectiveone.web.dto.EvaluationDto;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
@@ -46,7 +46,7 @@ public class InitiativesController {
 			@PathVariable("id") String id, 
 			@RequestParam(defaultValue = "false") boolean addAssets,
 			@RequestParam(defaultValue = "false") boolean addSubinitiatives,
-			@RequestParam(defaultValue = "false") boolean addContributors) {
+			@RequestParam(defaultValue = "false") boolean addMembers) {
 		
 		InitiativeDto initiativeDto = null;
 		
@@ -60,8 +60,8 @@ public class InitiativesController {
 			initiativeDto.setSubInitiatives(initiativeService.getSubinitiativesTree(UUID.fromString(id)));
 		}
 		
-		if(addContributors) {
-			initiativeDto.setContributors(initiativeService.getContributors(UUID.fromString(id)));
+		if(addMembers) {
+			initiativeDto.setMembers(initiativeService.getMembers(UUID.fromString(id)));
 		}
 		
 		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeDto);
@@ -78,7 +78,7 @@ public class InitiativesController {
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{id}/contributor", method = RequestMethod.POST) 
-	public PostResult addContributor(@PathVariable("id") String id, @RequestBody ContributorDto contributorDto) {
+	public PostResult addContributor(@PathVariable("id") String id, @RequestBody MemberDto contributorDto) {
 		return initiativeService.postContributor(
 				UUID.fromString(contributorDto.getInitiativeId()), 
 				UUID.fromString(contributorDto.getUser().getC1Id()),

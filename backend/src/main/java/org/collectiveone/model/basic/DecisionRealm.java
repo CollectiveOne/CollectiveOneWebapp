@@ -10,8 +10,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.collectiveone.model.enums.DecisionRealmType;
 import org.collectiveone.model.support.DecisionMaker;
@@ -28,7 +28,7 @@ public class DecisionRealm {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@ManyToOne
+	@OneToOne
 	private Initiative initiative;
 
 	@Enumerated(EnumType.STRING)
