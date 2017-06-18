@@ -46,7 +46,7 @@ public class GovernanceService {
 	}
 	
 	@Transactional
-	public DecisionVerdict createSubInitiative(UUID parentInitiativeId, UUID creatorId) {
+	public DecisionVerdict canCreateSubInitiative(UUID parentInitiativeId, UUID creatorId) {
 		
 		DecisionVerdict verdict = null;
 		Governance governance = governanceRepository.findByInitiative_Id(parentInitiativeId);
@@ -63,6 +63,42 @@ public class GovernanceService {
 		
 		return verdict;
 	}
+	
+	@Transactional
+	public DecisionVerdict canDeleteMember(UUID initiativeId, UUID deleterId) {
+		DecisionVerdict verdict = null;
+		Governance governance = governanceRepository.findByInitiative_Id(initiativeId);
+		
+		switch (governance.getType()) {
+		case ROLES:
+			if (isAdmin(governance.getId(), deleterId)) {
+				verdict = DecisionVerdict.APPROVED;
+			} else {
+				verdict = DecisionVerdict.DENIED;
+			}
+			break;
+		}
+		
+		return verdict;
+	}
+	@Transactional
+	public DecisionVerdict canAddMember(UUID initiativeId, UUID adderId) {
+		DecisionVerdict verdict = null;
+		Governance governance = governanceRepository.findByInitiative_Id(initiativeId);
+		
+		switch (governance.getType()) {
+		case ROLES:
+			if (isAdmin(governance.getId(), adderId)) {
+				verdict = DecisionVerdict.APPROVED;
+			} else {
+				verdict = DecisionVerdict.DENIED;
+			}
+			break;
+		}
+		
+		return verdict;
+	}
+	
 	
 	private Boolean isAdmin(UUID governanceId, UUID userId) {
 		DecisionMaker decisionMaker = decisionMakerRepository.findByGovernance_IdAndUser_C1Id(governanceId, userId);

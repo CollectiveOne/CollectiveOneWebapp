@@ -99,7 +99,7 @@ public class InitiativeService {
 			canCreate = DecisionVerdict.APPROVED;
 		} else {
 			parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
-			canCreate = governanceService.createSubInitiative(parent.getId(), creator.getC1Id());
+			canCreate = governanceService.canCreateSubInitiative(parent.getId(), creator.getC1Id());
 		}
 		
 		if (canCreate == DecisionVerdict.DENIED) {
@@ -305,7 +305,13 @@ public class InitiativeService {
 	
 	
 	@Transactional
-	public PostResult postMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
+	public PostResult postMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role, UUID adderUserId) {
+		DecisionVerdict verdict = governanceService.canAddMember(initiativeId, adderUserId);
+		
+		if (verdict == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		} 
+		
 		Member member = addMember(initiativeId, c1Id, role);
 		if (member != null) {
 			return new PostResult("success", "member added",  member.getId().toString());
@@ -337,6 +343,13 @@ public class InitiativeService {
 	
 	@Transactional
 	public PostResult deleteMember(UUID deleterUserId, UUID initiativeId, UUID memberUserId) {
+		
+		DecisionVerdict verdict = governanceService.canDeleteMember(initiativeId, deleterUserId);
+		
+		if (verdict == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		} 
+		
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, memberUserId);
 		memberRepository.delete(member);

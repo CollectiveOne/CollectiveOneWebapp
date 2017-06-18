@@ -79,7 +79,8 @@ public class InitiativesController {
 		return initiativeService.postMember(
 				UUID.fromString(memberDto.getInitiativeId()), 
 				UUID.fromString(memberDto.getUser().getC1Id()),
-				DecisionMakerRole.valueOf(memberDto.getRole()));
+				DecisionMakerRole.valueOf(memberDto.getRole()),
+				getLoggedUser().getC1Id());
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/member/{userId}", method = RequestMethod.DELETE) 

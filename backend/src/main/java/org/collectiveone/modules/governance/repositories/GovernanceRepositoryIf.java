@@ -2,7 +2,6 @@ package org.collectiveone.modules.governance.repositories;
 
 import java.util.UUID;
 
-import org.collectiveone.modules.governance.model.DecisionMaker;
 import org.collectiveone.modules.governance.model.Governance;
 import org.springframework.data.repository.CrudRepository;
 
