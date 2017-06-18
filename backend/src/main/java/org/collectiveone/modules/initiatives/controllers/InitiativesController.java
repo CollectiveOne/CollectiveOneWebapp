@@ -6,6 +6,8 @@ import java.util.UUID;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.governance.enums.DecisionMakerRole;
+import org.collectiveone.modules.governance.enums.DecisionVerdict;
+import org.collectiveone.modules.governance.services.GovernanceService;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.initiatives.dto.MemberDto;
 import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
@@ -28,6 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class InitiativesController { 
 	
 	@Autowired
+	private GovernanceService governanceService;
+	
+	@Autowired
 	private InitiativeService initiativeService;
 	
 	@Autowired
@@ -35,6 +40,20 @@ public class InitiativesController {
 	
 	@RequestMapping(path = "/secured/initiative", method = RequestMethod.POST)
 	public PostResult postInitiative(@RequestBody NewInitiativeDto initiativeDto) {
+		
+		/* Authorization is needed if it is a subinitiative */
+		DecisionVerdict canCreate = null;
+		
+		if (!initiativeDto.getAsSubinitiative()) {
+			canCreate = DecisionVerdict.APPROVED;
+		} else {
+			canCreate = governanceService.canCreateSubInitiative(UUID.fromString(initiativeDto.getParentInitiativeId()), getLoggedUser().getC1Id());
+		}
+		
+		if (canCreate == DecisionVerdict.DENIED) {
+			return new PostResult("error", "creation not aproved",  "");
+		}
+				
 		return initiativeService.init(getLoggedUser().getC1Id(), initiativeDto);
 	}
 	
@@ -74,18 +93,29 @@ public class InitiativesController {
 		return initiativeService.searchBy(query);
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{id}/member", method = RequestMethod.POST) 
-	public PostResult addContributor(@PathVariable("id") String id, @RequestBody MemberDto memberDto) {
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/member", method = RequestMethod.POST) 
+	public PostResult addMember(@PathVariable("initiativeId") String initiativeId, @RequestBody MemberDto memberDto) {
+		DecisionVerdict verdict = governanceService.canAddMember(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
+		
+		if (verdict == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		} 
+		
 		return initiativeService.postMember(
-				UUID.fromString(memberDto.getInitiativeId()), 
+				UUID.fromString(initiativeId), 
 				UUID.fromString(memberDto.getUser().getC1Id()),
-				DecisionMakerRole.valueOf(memberDto.getRole()),
-				getLoggedUser().getC1Id());
+				DecisionMakerRole.valueOf(memberDto.getRole()));
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/member/{userId}", method = RequestMethod.DELETE) 
-	public PostResult deleteContributor(@PathVariable("initiativeId") String initiativeId, @PathVariable("userId") String userId) {
-		return initiativeService.deleteMember(getLoggedUser().getC1Id(), UUID.fromString(initiativeId), UUID.fromString(userId));
+	public PostResult deleteMember(@PathVariable("initiativeId") String initiativeId, @PathVariable("userId") String userId) {
+		DecisionVerdict verdict = governanceService.canDeleteMember(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
+		
+		if (verdict == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		} 
+		
+		return initiativeService.deleteMember(UUID.fromString(initiativeId), UUID.fromString(userId));
 	}
 	
 	private AppUser getLoggedUser() {

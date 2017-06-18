@@ -10,7 +10,6 @@ import javax.transaction.Transactional;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.governance.enums.DecisionMakerRole;
-import org.collectiveone.modules.governance.enums.DecisionVerdict;
 import org.collectiveone.modules.governance.model.DecisionMaker;
 import org.collectiveone.modules.governance.model.Governance;
 import org.collectiveone.modules.governance.services.GovernanceService;
@@ -45,7 +44,6 @@ public class InitiativeService {
 	@Autowired
 	private GovernanceService governanceService;
 	
-	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
 	
@@ -64,9 +62,9 @@ public class InitiativeService {
 	
 	
 	/** Non-transactional method to create an initiative in multiple transactions */
-	public PostResult init(UUID c1Id, NewInitiativeDto initiativeDto) {
+	public PostResult init(UUID userId, NewInitiativeDto initiativeDto) {
 	
-		GetResult<Initiative> result = create(c1Id, initiativeDto);
+		GetResult<Initiative> result = create(userId, initiativeDto);
 		
 		if(result.getResult().equals("success")) {
 			GetResult<Initiative> result2 = addMembers(result.getData().getId(), initiativeDto.getMembers());
@@ -91,21 +89,6 @@ public class InitiativeService {
 			return new GetResult<Initiative>("error", "creator not found",  null);
 		}
 			
-		/* Authorization is needed if it is a subinitiative */
-		DecisionVerdict canCreate = null;
-		Initiative parent = null; 
-		
-		if (!initiativeDto.getAsSubinitiative()) {
-			canCreate = DecisionVerdict.APPROVED;
-		} else {
-			parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
-			canCreate = governanceService.canCreateSubInitiative(parent.getId(), creator.getC1Id());
-		}
-		
-		if (canCreate == DecisionVerdict.DENIED) {
-			return new GetResult<Initiative>("error", "creation not aproved",  null);
-		}
-		
 		Initiative initiative = new Initiative();
 		
 		/* Basic properties*/
@@ -207,6 +190,7 @@ public class InitiativeService {
 	 * about the assets held by an initiative */
 	@Transactional
 	public InitiativeDto getWithOwnAssets(UUID id) {
+		
 		Initiative initiative = initiativeRepository.findById(id); 
 		InitiativeDto initiativeDto = getLight(initiative.getId());
 
@@ -305,13 +289,7 @@ public class InitiativeService {
 	
 	
 	@Transactional
-	public PostResult postMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role, UUID adderUserId) {
-		DecisionVerdict verdict = governanceService.canAddMember(initiativeId, adderUserId);
-		
-		if (verdict == DecisionVerdict.DENIED) {
-			return new PostResult("error", "not authorized", "");
-		} 
-		
+	public PostResult postMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
 		Member member = addMember(initiativeId, c1Id, role);
 		if (member != null) {
 			return new PostResult("success", "member added",  member.getId().toString());
@@ -342,14 +320,7 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	public PostResult deleteMember(UUID deleterUserId, UUID initiativeId, UUID memberUserId) {
-		
-		DecisionVerdict verdict = governanceService.canDeleteMember(initiativeId, deleterUserId);
-		
-		if (verdict == DecisionVerdict.DENIED) {
-			return new PostResult("error", "not authorized", "");
-		} 
-		
+	public PostResult deleteMember(UUID initiativeId, UUID memberUserId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, memberUserId);
 		memberRepository.delete(member);
