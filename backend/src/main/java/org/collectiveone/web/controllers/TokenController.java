@@ -2,7 +2,7 @@ package org.collectiveone.web.controllers;
 
 import java.util.UUID;
 
-import org.collectiveone.services.InitiativeService;
+import org.collectiveone.services.TokenTransferService;
 import org.collectiveone.web.dto.AssetsDto;
 import org.collectiveone.web.dto.GetResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class TokenController { 
 	
 	@Autowired
-	InitiativeService initiativeService;
+	TokenTransferService tokenTransferService;
+	
+	
 	
 	@RequestMapping(path = "/secured/token/{id}", method = RequestMethod.GET)
 	public GetResult<AssetsDto> getToken(
@@ -33,7 +35,7 @@ public class TokenController {
 			break;
 		
 		case "includeSubinitiatives": 
-			assetDto = initiativeService.getTokenDistribution(UUID.fromString(id), UUID.fromString(initiativeId));
+			assetDto = tokenTransferService.getTokenDistribution(UUID.fromString(id), UUID.fromString(initiativeId));
 			break;
 			
 		}

@@ -4,11 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.model.basic.AppUser;
-import org.collectiveone.model.enums.AssignationType;
 import org.collectiveone.services.AppUserService;
 import org.collectiveone.services.InitiativeService;
-import org.collectiveone.web.dto.AssignationDto;
-import org.collectiveone.web.dto.EvaluationDto;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
 import org.collectiveone.web.dto.NewInitiativeDto;
@@ -73,39 +70,6 @@ public class InitiativesController {
 	@RequestMapping(path = "/secured/initiatives/suggestions", method = RequestMethod.GET)
 	public GetResult<List<InitiativeDto>> suggestions(@RequestParam("q") String query) {
 		return initiativeService.searchBy(query);
-	}
-	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignation", method = RequestMethod.POST)
-	public PostResult newAssignation(@PathVariable("initiativeId") String initiativeId, @RequestBody AssignationDto assignation) {
-		
-		AssignationType type = AssignationType.valueOf(assignation.getType());
-		
-		switch(type) {
-		case DIRECT:
-			return initiativeService.makeDirectAssignation(UUID.fromString(initiativeId), assignation);
-			
-		case PEER_REVIEWED:
-			return initiativeService.createAssignation(UUID.fromString(initiativeId), assignation);
-		}
-		
-		return new PostResult("error", "error", "");
-		
-	} 
-	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignations", method = RequestMethod.GET)
-	public GetResult<List<AssignationDto>> getAssignations(@PathVariable("initiativeId") String initiativeId) {
-		return initiativeService.getAssignations(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
-	}
-	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignation/{assignationId}/evaluate", method = RequestMethod.POST)
-	public PostResult evaluateAssignation(
-			@PathVariable("initiativeId") String initiativeId, 
-			@PathVariable("assignationId") String assignationId,
-			@RequestBody EvaluationDto evaluationDto) {
-		
-		PostResult result = initiativeService.evaluateAndUpdateAssignation(getLoggedUser().getC1Id(), UUID.fromString(assignationId), evaluationDto);
-		
-		return result;
 	}
 	
 	private AppUser getLoggedUser() {
