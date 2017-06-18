@@ -99,6 +99,24 @@ public class GovernanceService {
 		return verdict;
 	}
 	
+	@Transactional
+	public DecisionVerdict canCreateAssignation(UUID initiativeId, UUID creatorId) {
+		DecisionVerdict verdict = null;
+		Governance governance = governanceRepository.findByInitiative_Id(initiativeId);
+		
+		switch (governance.getType()) {
+		case ROLES:
+			if (isAdmin(governance.getId(), creatorId)) {
+				verdict = DecisionVerdict.APPROVED;
+			} else {
+				verdict = DecisionVerdict.DENIED;
+			}
+			break;
+		}
+		
+		return verdict;
+	}
+	
 	
 	private Boolean isAdmin(UUID governanceId, UUID userId) {
 		DecisionMaker decisionMaker = decisionMakerRepository.findByGovernance_IdAndUser_C1Id(governanceId, userId);

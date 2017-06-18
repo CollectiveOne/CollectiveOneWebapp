@@ -35,7 +35,6 @@ import org.collectiveone.modules.assignations.repositories.EvaluatorRepositoryIf
 import org.collectiveone.modules.assignations.repositories.ReceiverRepositoryIf;
 import org.collectiveone.modules.initiatives.model.Initiative;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
-import org.collectiveone.modules.tokens.dto.TransferDto;
 import org.collectiveone.modules.tokens.model.TokenType;
 import org.collectiveone.modules.tokens.services.TokenService;
 import org.collectiveone.modules.tokens.services.TokenTransferService;
@@ -76,41 +75,7 @@ public class AssignationService {
 	@Autowired
 	private BillRepositoryIf billRepository;
 	
-	
-
-	
-	@Transactional
-	public PostResult makeDirectAssignation(UUID initiativeId, AssignationDto assignationDto) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
-		Assignation assignation = new Assignation();	
-		
-		assignation.setType(AssignationType.valueOf(assignationDto.getType()));
-		assignation.setMotive(assignationDto.getMotive());
-		assignation.setNotes(assignationDto.getNotes());
-		assignation.setInitiative(initiative);
-		assignation.setState(AssignationState.DONE);
-		assignation = assignationRepository.save(assignation);
-		
-		for(BillDto bill : assignationDto.getAssets()) {
-			for(ReceiverDto receiver : assignationDto.getReceivers()) {
-				TransferDto transfer = new TransferDto();
-				
-				transfer.setAssetId(bill.getAssetId());
-				transfer.setAssetName(bill.getAssetName());
-				transfer.setSenderId(initiative.getId().toString());
-				transfer.setReceiverId(receiver.getUser().getC1Id());
-				
-				/* each asset type is distributed among the receviers using
-				 * the same percentage*/
-				transfer.setValue(bill.getValue() * (receiver.getPercent() / 100.0));
-				
-				tokenTransferService.transferFromInitiativeToUser(initiative.getId(), transfer);
-			}
-		}
-		return new PostResult("success", "success", "");
-	}
-	
 	public PostResult createAssignation(UUID initaitiveId, AssignationDto assignationDto) {
 		Initiative initiative = initiativeRepository.findById(initaitiveId);
 	
@@ -123,6 +88,7 @@ public class AssignationService {
 		assignation.setState(AssignationState.OPEN);
 		assignation.setMinClosureDate(new Timestamp(System.currentTimeMillis()));
 		assignation.setMaxClosureDate(new Timestamp(System.currentTimeMillis() + 7L*DAYS_TO_MS));
+		assignation.setState(AssignationState.OPEN);
 		assignation = assignationRepository.save(assignation);
 		
 		for(ReceiverDto receiverDto : assignationDto.getReceivers()) {
@@ -137,7 +103,33 @@ public class AssignationService {
 			assignation.getReceivers().add(receiver);
 		}
 		
-		if(assignation.getType() == AssignationType.PEER_REVIEWED) {
+		for(BillDto billDto : assignationDto.getAssets()) {
+			TokenType tokenType = tokenService.getTokenType(UUID.fromString(billDto.getAssetId()));
+			Bill bill = new Bill();
+			
+			bill.setAssignation(assignation);
+			bill.setTokenType(tokenType);
+			bill.setValue(billDto.getValue());
+			bill = billRepository.save(bill);
+			
+			assignation.getBills().add(bill);
+		}
+		
+		switch (assignation.getType()) {
+		
+		case DIRECT:
+			for(Bill bill : assignation.getBills()) {
+				for(Receiver receiver : assignation.getReceivers()) {
+					double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
+					tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
+					receiver.setState(ReceiverState.RECEIVED);
+				}
+			}
+			assignation.setState(AssignationState.DONE);
+			assignationRepository.save(assignation);
+			break;
+		
+		case PEER_REVIEWED: 
 			for(EvaluatorDto evaluatorDto : assignationDto.getEvaluators()) {
 				Evaluator evaluator = new Evaluator();
 				
@@ -165,18 +157,7 @@ public class AssignationService {
 				
 				assignation.getEvaluators().add(evaluator);
 			}
-		}
-		
-		for(BillDto billDto : assignationDto.getAssets()) {
-			TokenType tokenType = tokenService.getTokenType(UUID.fromString(billDto.getAssetId()));
-			Bill bill = new Bill();
-			
-			bill.setAssignation(assignation);
-			bill.setTokenType(tokenType);
-			bill.setValue(billDto.getValue());
-			bill = billRepository.save(bill);
-			
-			assignation.getBills().add(bill);
+			break;
 		}
 		
 		return new PostResult("success", "success", "");
@@ -234,7 +215,7 @@ public class AssignationService {
 	}
 	
 	@Transactional
-	public AssignationDto getAssignation(UUID initiativeId, UUID assignationId, UUID evaluatorAppUserId) {
+	public AssignationDto getPeerReviewedAssignation(UUID initiativeId, UUID assignationId, UUID evaluatorAppUserId) {
 		Assignation assignation = assignationRepository.findById(assignationId);
 		AssignationDto assignationDto = assignation.toDto();
 		
@@ -259,7 +240,11 @@ public class AssignationService {
 		List<AssignationDto> assignationsDtos = new ArrayList<AssignationDto>();
 		
 		for(Assignation assignation : assignations) {
-			assignationsDtos.add(getAssignation(initiativeId, assignation.getId(), evaluatorAppUserId));
+			if(assignation.getType() == AssignationType.PEER_REVIEWED) {
+				assignationsDtos.add(getPeerReviewedAssignation(initiativeId, assignation.getId(), evaluatorAppUserId));
+			} else {
+				assignationsDtos.add(assignation.toDto());
+			}
 		}
 		
 		return new GetResult<List<AssignationDto>>("success", "assignations found", assignationsDtos);

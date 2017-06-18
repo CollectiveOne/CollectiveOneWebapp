@@ -9,7 +9,7 @@
       <div class="w3-col s4 w3-center">
         <div class="w3-row w3-padding input-div">
           <div class="w3-col s10">
-            <input v-model.number="receiver.percent" class="w3-input w3-border w3-hover-light-gray w3-round" type="number">
+            <input v-model.number="receiver.percent" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" step="5" min="0">
           </div>
           <div class="w3-col s2 d2-color">
             <i class="fa fa-percent" aria-hidden="true"></i>
@@ -34,7 +34,7 @@
       <div class="w3-col s3 w3-center percent-div">
         <div class="w3-row">
           <div class="w3-col s10">
-            <input v-model.number="newReceiverPercent" class="w3-input w3-border w3-hover-light-gray w3-round" type="number">
+            <input v-model.number="newReceiverPercent" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" step="5" min="0">
           </div>
           <div class="w3-col s2 d2-color">
             <i class="fa fa-percent" aria-hidden="true"></i>

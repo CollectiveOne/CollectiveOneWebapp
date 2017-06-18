@@ -9,7 +9,8 @@
         <app-initiative-member
           v-for="member in initiative.members"
           :key="member.user.c1Id"
-          :member="member",
+          :member="member"
+          :canEdit="isLoggedAnAdmin"
           @remove="removeMember($event)">
         </app-initiative-member>
         <div v-if="isLoggedAnAdmin">

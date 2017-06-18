@@ -7,8 +7,9 @@ import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.assignations.dto.AssignationDto;
 import org.collectiveone.modules.assignations.dto.EvaluationDto;
-import org.collectiveone.modules.assignations.enums.AssignationType;
 import org.collectiveone.modules.assignations.services.AssignationService;
+import org.collectiveone.modules.governance.enums.DecisionVerdict;
+import org.collectiveone.modules.governance.services.GovernanceService;
 import org.collectiveone.modules.users.model.AppUser;
 import org.collectiveone.modules.users.services.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,23 +30,21 @@ public class AssignationController {
 	
 	@Autowired
 	private AppUserService appUserService;
+	
+	@Autowired
+	private GovernanceService governanceService;
 
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignation", method = RequestMethod.POST)
 	public PostResult newAssignation(@PathVariable("initiativeId") String initiativeId, @RequestBody AssignationDto assignation) {
 		
-		AssignationType type = AssignationType.valueOf(assignation.getType());
+		DecisionVerdict canCreate = governanceService.canCreateAssignation(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
 		
-		switch(type) {
-		case DIRECT:
-			return assignationService.makeDirectAssignation(UUID.fromString(initiativeId), assignation);
-			
-		case PEER_REVIEWED:
-			return assignationService.createAssignation(UUID.fromString(initiativeId), assignation);
+		if (canCreate == DecisionVerdict.DENIED) {
+			return new PostResult("error", "creation of assignation not authorized",  "");
 		}
 		
-		return new PostResult("error", "error", "");
-		
+		return assignationService.createAssignation(UUID.fromString(initiativeId), assignation);
 	} 
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignations", method = RequestMethod.GET)

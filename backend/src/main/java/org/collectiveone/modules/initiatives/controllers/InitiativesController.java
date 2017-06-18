@@ -52,7 +52,7 @@ public class InitiativesController {
 		}
 		
 		if (canCreate == DecisionVerdict.DENIED) {
-			return new PostResult("error", "creation not aproved",  "");
+			return new PostResult("error", "creation not of subinitiative not authorized",  "");
 		}
 				
 		return initiativeService.init(getLoggedUser().getC1Id(), initiativeDto);
