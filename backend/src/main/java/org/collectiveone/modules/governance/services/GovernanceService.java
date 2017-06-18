@@ -64,8 +64,8 @@ public class GovernanceService {
 		return verdict;
 	}
 	
-	private Boolean isAdmin(UUID realmId, UUID userId) {
-		DecisionMaker decisionMaker = governanceRepository.findByIdAndDecisionMakers_User_C1Id(realmId, userId);
+	private Boolean isAdmin(UUID governanceId, UUID userId) {
+		DecisionMaker decisionMaker = decisionMakerRepository.findByGovernance_IdAndUser_C1Id(governanceId, userId);
 		
 		if (decisionMaker != null) {
 			if (decisionMaker.getRole() == DecisionMakerRole.ADMIN) {

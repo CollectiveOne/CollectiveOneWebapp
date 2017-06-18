@@ -12,6 +12,4 @@ public interface GovernanceRepositoryIf extends CrudRepository<Governance, UUID>
 	
 	Governance findByInitiative_Id(UUID initiativeId);
 	
-	DecisionMaker findByIdAndDecisionMakers_User_C1Id(UUID realmId, UUID userId);
-	
 }
