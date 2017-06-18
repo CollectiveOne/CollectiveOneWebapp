@@ -16,7 +16,7 @@ public class InitiativeDto {
 	private AssetsDto ownTokens;
 	private List<AssetsDto> otherAssets = new ArrayList<AssetsDto>();
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
-	private List<MemberDto> contributors = new ArrayList<MemberDto>();
+	private List<MemberDto> members = new ArrayList<MemberDto>();
 	
 	public String getId() {
 		return id;
@@ -72,11 +72,11 @@ public class InitiativeDto {
 	public void setOtherAssets(List<AssetsDto> otherAssets) {
 		this.otherAssets = otherAssets;
 	}
-	public List<MemberDto> getContributors() {
-		return contributors;
+	public List<MemberDto> getMembers() {
+		return members;
 	}
-	public void setContributors(List<MemberDto> contributors) {
-		this.contributors = contributors;
+	public void setMembers(List<MemberDto> members) {
+		this.members = members;
 	}
 	
 }

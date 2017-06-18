@@ -5,11 +5,9 @@ import java.util.UUID;
 
 import org.collectiveone.model.basic.AppUser;
 import org.collectiveone.model.enums.AssignationType;
-import org.collectiveone.model.enums.ContributorRole;
 import org.collectiveone.services.AppUserService;
 import org.collectiveone.services.InitiativeService;
 import org.collectiveone.web.dto.AssignationDto;
-import org.collectiveone.web.dto.MemberDto;
 import org.collectiveone.web.dto.EvaluationDto;
 import org.collectiveone.web.dto.GetResult;
 import org.collectiveone.web.dto.InitiativeDto;
@@ -75,19 +73,6 @@ public class InitiativesController {
 	@RequestMapping(path = "/secured/initiatives/suggestions", method = RequestMethod.GET)
 	public GetResult<List<InitiativeDto>> suggestions(@RequestParam("q") String query) {
 		return initiativeService.searchBy(query);
-	}
-	
-	@RequestMapping(path = "/secured/initiative/{id}/contributor", method = RequestMethod.POST) 
-	public PostResult addContributor(@PathVariable("id") String id, @RequestBody MemberDto contributorDto) {
-		return initiativeService.postContributor(
-				UUID.fromString(contributorDto.getInitiativeId()), 
-				UUID.fromString(contributorDto.getUser().getC1Id()),
-				ContributorRole.valueOf(contributorDto.getRole()));
-	}
-	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/contributor/{contributorId}", method = RequestMethod.DELETE) 
-	public PostResult deleteContributor(@PathVariable("initiativeId") String initiativeId, @PathVariable("contributorId") String contributorId) {
-		return initiativeService.deleteContributor(getLoggedUser().getC1Id(), UUID.fromString(contributorId));
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignation", method = RequestMethod.POST)

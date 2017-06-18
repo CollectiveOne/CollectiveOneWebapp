@@ -29,6 +29,7 @@ public class MemberTransfer {
 	@ManyToOne
 	private TokenType tokenType;
 	
+	@Column( name = "value")
 	private double value;
 	
 		

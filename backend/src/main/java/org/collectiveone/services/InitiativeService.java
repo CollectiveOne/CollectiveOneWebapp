@@ -13,7 +13,6 @@ import org.collectiveone.model.basic.Initiative;
 import org.collectiveone.model.basic.TokenType;
 import org.collectiveone.model.enums.AssignationState;
 import org.collectiveone.model.enums.AssignationType;
-import org.collectiveone.model.enums.ContributorRole;
 import org.collectiveone.model.enums.DecisionMakerRole;
 import org.collectiveone.model.enums.DecisionVerdict;
 import org.collectiveone.model.enums.EvaluationGradeState;
@@ -23,24 +22,23 @@ import org.collectiveone.model.enums.InitiativeRelationshipType;
 import org.collectiveone.model.enums.ReceiverState;
 import org.collectiveone.model.enums.TokenHolderType;
 import org.collectiveone.model.support.Bill;
-import org.collectiveone.model.support.Contributor;
-import org.collectiveone.model.support.MemberTransfer;
 import org.collectiveone.model.support.EvaluationGrade;
 import org.collectiveone.model.support.Evaluator;
 import org.collectiveone.model.support.InitiativeRelationship;
 import org.collectiveone.model.support.InitiativeTransfer;
 import org.collectiveone.model.support.Member;
+import org.collectiveone.model.support.MemberTransfer;
 import org.collectiveone.model.support.Receiver;
 import org.collectiveone.repositories.AppUserRepositoryIf;
 import org.collectiveone.repositories.AssignationRepositoryIf;
 import org.collectiveone.repositories.BillRepositoryIf;
-import org.collectiveone.repositories.MemberTransferRepositoryIf;
 import org.collectiveone.repositories.EvaluationGradeRepositoryIf;
 import org.collectiveone.repositories.EvaluatorRepositoryIf;
 import org.collectiveone.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.repositories.InitiativeRepositoryIf;
 import org.collectiveone.repositories.InitiativeTransferRepositoryIf;
 import org.collectiveone.repositories.MemberRepositoryIf;
+import org.collectiveone.repositories.MemberTransferRepositoryIf;
 import org.collectiveone.repositories.ReceiverRepositoryIf;
 import org.collectiveone.web.dto.AssetsDto;
 import org.collectiveone.web.dto.AssignationDto;
@@ -282,6 +280,21 @@ public class InitiativeService {
 		return subinitiativeDtos;
 	}
 	
+	public List<MemberDto> getMembers(UUID initiativeId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		
+		List<MemberDto> members = new ArrayList<MemberDto>();
+		for (Member member : initiative.getMembers()) {
+			MemberDto memberDto = new MemberDto();
+			
+			memberDto.setId(member.getId().toString());
+			memberDto.setInitiativeId(initiative.getId().toString());
+			memberDto.setUser(member.getUser().toDto());
+		}
+		
+		return members;
+	}
+	
 	@Transactional
 	public GetResult<List<InitiativeDto>> searchBy(String q) {
 		List<Initiative> initiatives = initiativeRepository.searchBy(q);
@@ -353,6 +366,24 @@ public class InitiativeService {
 		memberRepository.save(member);
 	
 		return new PostResult("success", "assets transferred successfully", "");
+	}
+	
+	@Transactional
+	public Member getOrAddMember(UUID initiativeId, UUID userId) {
+		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, userId);
+		
+		if(member == null) {
+			Initiative initiative = initiativeRepository.findById(initiativeId);
+			AppUser user = appUserRepository.findByC1Id(userId);
+			
+			member = new Member();
+			member.setInitiative(initiative);
+			member.setUser(user);
+			
+			member = memberRepository.save(member);
+		}
+		
+		return member;
 	}
 
 	@Transactional
@@ -446,7 +477,7 @@ public class InitiativeService {
 		return assetDto;
 	}
 	
-	/** Recursively get the tokens transferred from one initiative into its sub-initiatives */
+	/** Get the tokens transferred from one initiative into its sub-initiatives */
 	@Transactional
 	public List<TransferDto> getTransferredToSubinitiatives(UUID tokenId, UUID initiativeId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId); 
@@ -478,21 +509,16 @@ public class InitiativeService {
 		return transferredToSubinitiatives;
 	}
 	
-	/** Recursively get the tokens transferred from one initiative into its sub-initiatives */
+	/** Get the tokens transferred from one initiative to its members */
 	@Transactional
 	public List<TransferDto> getTransferredToUsers(UUID tokenId, UUID initiativeId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId); 
 		TokenType token = tokenService.getTokenType(tokenId);
 
-		/* get of sub-initiatives */
-		List<Contributor> subinitiativeContributors = 
-				contributorRepository.findByInitiativeId(initiative.getId());
-		
 		List<TransferDto> transferredToUsers = new ArrayList<TransferDto>();
-		
-		for (Contributor contributor : subinitiativeContributors) {
+		for (Member member : initiative.getMembers()) {
 			/* get all transfers of a given token made from an initiative to a contributor */
-			double totalTransferred = memberTransferRepository.getTotalTransferred(tokenId, contributor.getId());
+			double totalTransferred = memberTransferRepository.getTotalTransferred(tokenId, member.getId());
 			
 			TransferDto dto = new TransferDto();
 			
@@ -500,8 +526,8 @@ public class InitiativeService {
 			dto.setAssetName(token.getName());
 			dto.setSenderId(initiative.getId().toString());
 			dto.setSenderName(initiative.getName());
-			dto.setReceiverId(contributor.getUser().getC1Id().toString());
-			dto.setReceiverName(contributor.getUser().getNickname());
+			dto.setReceiverId(member.getUser().getC1Id().toString());
+			dto.setReceiverName(member.getUser().getNickname());
 			dto.setValue(totalTransferred);
 			
 			transferredToUsers.add(dto);

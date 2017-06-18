@@ -1,5 +1,7 @@
 package org.collectiveone.model.support;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -7,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.collectiveone.model.basic.AppUser;
 import org.collectiveone.model.basic.Initiative;
@@ -28,6 +31,10 @@ public class Member {
 	
 	@ManyToOne
 	private AppUser user;
+	
+	@OneToMany(mappedBy = "member")
+	private List<MemberTransfer> tokensTransfers = new ArrayList<MemberTransfer>();
+
 
 	public UUID getId() {
 		return id;
@@ -52,5 +59,15 @@ public class Member {
 	public void setUser(AppUser user) {
 		this.user = user;
 	}
+
+	public List<MemberTransfer> getTokensTransfers() {
+		return tokensTransfers;
+	}
+
+	public void setTokensTransfers(List<MemberTransfer> tokensTransfers) {
+		this.tokensTransfers = tokensTransfers;
+	}
+	
+	
 
 }
