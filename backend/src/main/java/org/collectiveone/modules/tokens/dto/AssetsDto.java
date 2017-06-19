@@ -12,6 +12,10 @@ public class AssetsDto {
 	private String holderName;
 	private double ownedByThisHolder;
 
+	private double totalTransferredToSubinitiatives;
+	private double totalTransferredToUsers;
+	private double totalUnderThisHolder;
+	
 	private List<TransferDto> transferredToSubinitiatives = new ArrayList<TransferDto>();
 	private List<TransferDto> transferredToUsers = new ArrayList<TransferDto>();
 
@@ -50,6 +54,24 @@ public class AssetsDto {
 	}
 	public void setOwnedByThisHolder(double ownedByThisHolder) {
 		this.ownedByThisHolder = ownedByThisHolder;
+	}
+	public double getTotalTransferredToSubinitiatives() {
+		return totalTransferredToSubinitiatives;
+	}
+	public void setTotalTransferredToSubinitiatives(double totalTransferredToSubinitiatives) {
+		this.totalTransferredToSubinitiatives = totalTransferredToSubinitiatives;
+	}
+	public double getTotalTransferredToUsers() {
+		return totalTransferredToUsers;
+	}
+	public void setTotalTransferredToUsers(double totalTransferredToUsers) {
+		this.totalTransferredToUsers = totalTransferredToUsers;
+	}
+	public double getTotalUnderThisHolder() {
+		return totalUnderThisHolder;
+	}
+	public void setTotalUnderThisHolder(double totalUnderThisHolder) {
+		this.totalUnderThisHolder = totalUnderThisHolder;
 	}
 	public List<TransferDto> getTransferredToSubinitiatives() {
 		return transferredToSubinitiatives;

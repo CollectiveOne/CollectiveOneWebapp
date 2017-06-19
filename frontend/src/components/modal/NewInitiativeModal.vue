@@ -67,6 +67,7 @@
               v-for="member in members"
               :key="member.user.c1Id"
               :member="member"
+              :canEdit="true"
               @remove="removeMember($event)">
             </app-initiative-member>
             <div class="w3-row" :style="{'margin-bottom': '5px'}">
@@ -196,7 +197,6 @@ export default {
     },
 
     removeMember (member) {
-      debugger
       var index = this.indexOfMember(member.user.c1Id)
       if (index > -1) {
         this.members.splice(index, 1)

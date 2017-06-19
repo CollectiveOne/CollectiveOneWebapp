@@ -68,6 +68,23 @@ public class TokenTransferService {
 		assetDto.setTransferredToSubinitiatives(getTransferredToSubinitiatives(tokenId, initiative.getId()));
 		assetDto.setTransferredToUsers(getTransferredToUsers(tokenId, initiative.getId()));
 		
+		/* sum all tranfers as additional data */
+		assetDto.setTotalTransferredToSubinitiatives(0.0);
+		for (TransferDto transfer : assetDto.getTransferredToSubinitiatives()) {
+			assetDto.setTotalTransferredToSubinitiatives(assetDto.getTotalTransferredToSubinitiatives() + transfer.getValue());
+		}
+		
+		assetDto.setTotalTransferredToUsers(0.0);
+		for (TransferDto transfer : assetDto.getTransferredToUsers()) {
+			assetDto.setTotalTransferredToUsers(assetDto.getTotalTransferredToUsers() + transfer.getValue());
+		}
+		
+		assetDto.setTotalUnderThisHolder(
+				assetDto.getOwnedByThisHolder() + 
+				assetDto.getTotalTransferredToSubinitiatives() + 
+				assetDto.getTotalTransferredToUsers());
+		
+		
 		return assetDto;
 	}
 	

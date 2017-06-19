@@ -29,7 +29,7 @@
             </div>
 
             <div v-if="isInitiativeAssigner || isOverview" class="w3-row">
-              <div class="w3-col" :class="{'m10' : canEdit, 'm12' : !canEdit}">
+              <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
                 <label class="d2-color">
                   <b>Transferred to sub-initiatives</b>
                 </label>
@@ -40,7 +40,7 @@
                 </div>
               </div>
 
-              <div v-if="isOverview && canEdit" class="w3-col m2 w3-center icon-div">
+              <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
                 <button type="button" class="w3-button l2-color"
                   @click="newSubInitiativeClicked()">
                   <i class="fa fa-external-link" aria-hidden="true"></i>
@@ -49,7 +49,7 @@
             </div>
 
             <div v-if="isOverview || isMemberAssigner" class="w3-row">
-              <div class="w3-col" :class="{'m10' : canEdit, 'm12' : !canEdit}">
+              <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
                 <label class="d2-color">
                   <b>Transferred to members</b>
                 </label>
@@ -60,7 +60,7 @@
                 </div>
               </div>
 
-              <div v-if="isOverview && canEdit" class="w3-col m2 w3-center icon-div">
+              <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
                 <button type="button" class="w3-button l2-color"
                   @click="newAssignmentClicked()">
                   <i class="fa fa-external-link" aria-hidden="true"></i>
@@ -125,26 +125,6 @@
 <script>
 import { tokensString, amountAndPerc } from '@/lib/common'
 
-const sumOfMembers = function (asset) {
-  var tot = 0.0
-  for (var ixAss in asset.transferredToUsers) {
-    var transfer = asset.transferredToUsers[ixAss]
-    /* recurively sum the assets owned by subinitiatives */
-    tot += transfer.value
-  }
-  return tot
-}
-
-const sumOfSubinitiatives = function (asset) {
-  var tot = 0.0
-  for (var ixAss in asset.transferredToSubinitiatives) {
-    var transfer = asset.transferredToSubinitiatives[ixAss]
-    /* recurively sum the assets owned by subinitiatives */
-    tot += transfer.value
-  }
-  return tot
-}
-
 export default {
   props: {
     assetId: {
@@ -198,7 +178,7 @@ export default {
       return tokensString(this.assetData.totalExistingTokens)
     },
     underThisInitiativeVal () {
-      return this.assetData.ownedByThisHolder + this.transferredToSubinitiativesVal + this.transferredToMembersVal
+      return this.assetData.totalUnderThisHolder
     },
     underThisInitiativeStr () {
       return tokensString(this.underThisInitiativeVal)
@@ -216,7 +196,7 @@ export default {
       return (this.assetData.transferredToSubinitiatives.length > 0)
     },
     transferredToSubinitiativesVal () {
-      return sumOfSubinitiatives(this.assetData)
+      return this.assetData.totalTransferredToSubinitiatives
     },
     transferredToSubinitiativesPercent () {
       return this.transferredToSubinitiativesVal / this.underThisInitiativeVal * 100
@@ -225,7 +205,7 @@ export default {
       return amountAndPerc(this.transferredToSubinitiativesVal, this.underThisInitiativeVal)
     },
     transferredToMembersVal () {
-      return sumOfMembers(this.assetData)
+      return this.assetData.totalTransferredToUsers
     },
     transferredToMembersPercent () {
       return this.transferredToMembersVal / this.underThisInitiativeVal * 100
@@ -238,10 +218,10 @@ export default {
 
   methods: {
     subinitiativePortion (subinitiativeAssets) {
-      return amountAndPerc(subinitiativeAssets.value + sumOfSubinitiatives(subinitiativeAssets), this.underThisInitiativeVal)
+      return amountAndPerc(subinitiativeAssets.value, this.underThisInitiativeVal)
     },
     subinitiativePercent (subinitiativeAssets) {
-      return (subinitiativeAssets.value + sumOfSubinitiatives(subinitiativeAssets)) / this.underThisInitiativeVal * 100
+      return (subinitiativeAssets.value) / this.underThisInitiativeVal * 100
     },
     newSubInitiativeClicked () {
       this.$emit('new-initiative', this.assetData.holderId)

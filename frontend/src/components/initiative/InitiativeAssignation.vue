@@ -5,7 +5,7 @@
     </header>
 
     <div class="w3-row-padding w3-padding">
-      <div class="w3-col m4 w3-center">
+      <div class="w3-col l4 w3-center">
         <div class="w3-container">
           <div class="w3-row" v-for="bill in assignation.assets">
             <div class="w3-display-container bill-container">
@@ -14,16 +14,13 @@
                 <div class="w3-row">
                   <b class="w3-xlarge ">{{ tokensString(bill.value) }} {{ bill.assetName }}</b>
                 </div>
-                <div class="w3-row">
-                  <b class="">(10% of {{ initiative.name }})</b>
-                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="w3-col m8 status-col">
+      <div class="w3-col l8 status-col">
         <div class="w3-row">
           <div class="w3-tag w3-theme-l2 w3-round">
             <b>{{ assignation.type }}</b>
@@ -150,25 +147,39 @@ export default {
 
   computed: {
     nextAction () {
-      if (this.isNotEvaluated) {
-        return 'evaluate'
+      if (this.isPeerReviewed) {
+        if (this.isNotEvaluated) {
+          return 'evaluate'
+        }
+
+        if (this.isEvaluated) {
+          return 'review my evaluation'
+        }
+
+        if (this.isDone) {
+          return 'see receivers'
+        }
       }
 
-      if (this.isEvaluated) {
-        return 'review my evaluation'
-      }
-
-      if (this.isDone) {
-        return 'see results'
+      if (this.isDirect) {
+        if (this.isDone) {
+          return 'see receivers'
+        }
       }
 
       return 'options'
     },
+    isDirect () {
+      return (this.assignation.type === 'DIRECT')
+    },
+    isPeerReviewed () {
+      return (this.assignation.type === 'PEER_REVIEWED')
+    },
     isNotEvaluated () {
-      return ((this.assignation.state === 'PENDING') && (this.assignation.thisEvaluation.evaluationState === 'PENDING'))
+      return ((this.assignation.state === 'OPEN') && (this.assignation.thisEvaluation.evaluationState === 'PENDING'))
     },
     isEvaluated () {
-      return ((this.assignation.state === 'PENDING') && (this.assignation.thisEvaluation.evaluationState === 'DONE'))
+      return ((this.assignation.state === 'OPEN') && (this.assignation.thisEvaluation.evaluationState === 'DONE'))
     },
     isOpen () {
       return this.assignation.state === 'OPEN'
@@ -228,7 +239,7 @@ export default {
       }
     },
     send () {
-      this.axios.post('/1/secured/initiative/' + this.initiative.id + '/assignation/' + this.assignation.id + '/evaluate', this.assignation.thisEvaluation)
+      this.axios.post('/1/secured/assignation/' + this.assignation.id + '/evaluate', this.assignation.thisEvaluation)
       .then((response) => {
         this.showExpanded = false
         this.$emit('please-update')
