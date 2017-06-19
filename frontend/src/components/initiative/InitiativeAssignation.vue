@@ -40,7 +40,7 @@
     </div>
 
     <div class="w3-row-padding w3-padding">
-      <div @click="showExpanded = !showExpanded" class="w3-tag w3-round w3-button more-btn" :class="{'w3-theme' : isOpen, 'w3-theme-l1' : isDone}">
+      <div @click="showExpanded = !showExpanded" class="w3-tag w3-round w3-button more-btn" :class="{'w3-theme' : isOpen, 'w3-theme-l3' : isDone, 'd2-color': isDone}">
         {{ nextAction }}
       </div>
     </div>

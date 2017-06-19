@@ -24,15 +24,15 @@
         <div v-if="hasOwnTokens">
           <app-tokens-distribution-chart
             :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
-            @new-initiative="$emit('new-initiative', $event)" :canEdit="isLoggedAnAdmin"
-            @new-assignment="newAssignment($event)">
+            :canMint="true" :canEdit="isLoggedAnAdmin"
+            @new-initiative="$emit('new-initiative', $event)" @new-assignment="newAssignment($event)">
           </app-tokens-distribution-chart>
         </div>
         <div v-if="hasOtherAssets">
           <app-tokens-distribution-chart v-for="asset in initiative.otherAssets"
             :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
-            @new-initiative="$emit('new-initiative', $event)" :canEdit="isLoggedAnAdmin"
-            @new-assignment="newAssignment($event)">
+            :canMint="false" :canEdit="isLoggedAnAdmin"
+            @new-initiative="$emit('new-initiative', $event)" @new-assignment="newAssignment($event)">
           </app-tokens-distribution-chart>
         </div>
       </div>
@@ -96,6 +96,7 @@ export default {
 
 .this-container {
   padding-top: 25px !important;
+  padding-bottom: 25px !important;
 }
 
 .members-div {

@@ -1,131 +1,150 @@
 <template lang="html">
-  <div class="this-container">
-    <div class="w3-row">
-      <div class="w3-col distribution-container" :class="{'m8': showAssigner, 'm12': !showAssigner}">
-        <div class="w3-row-padding">
-          <div class="w3-col m4 w3-center">
-            <div class="w3-display-container" :class="{tall: isOverview, short: !isOverview}">
-              <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
-              <div class="w3-display-middle d2-color" style="width: 100%">
-                <div class="w3-row">
-                  <b class="w3-xlarge ">{{ underThisInitiativeStr }} {{ assetData.assetName }}</b>
-                </div>
-                <div class="w3-row">
-                  <b class="w3-large">{{ underThisInitiativePercent }}% of existing</b>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="w3-col m8">
-            <div class="w3-row">
-              <label class="d2-color">
-                <b>Still Available</b>
-              </label>
-              <div class="w3-light-grey w3-round-xlarge w3-large">
-                <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': availableToThisInitiativePercent +'%'}">
-                  <div class="bar-txt w3-center d2-color">{{ availableToThisInitiative }}</div>
-                </div>
-              </div>
-            </div>
 
-            <div v-if="isInitiativeAssigner || isOverview" class="w3-row">
-              <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
-                <label class="d2-color">
-                  <b>Transferred to sub-initiatives</b>
-                </label>
-                <div class="w3-light-grey w3-round-xlarge w3-large">
-                  <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToSubinitiativesPercent +'%'}">
-                    <div class="bar-txt w3-center d2-color">{{ transferredToSubinitiativesStr }}</div>
+  <div class="">
+
+    <app-new-tokenmint-modal
+      v-if="showNewTokenMintModal"
+      :assetData="assetData"
+      @close-this="showNewTokenMintModal = false"
+      @mint-done="$emit('please-update')">
+    </app-new-tokenmint-modal>
+
+    <div class="this-container">
+      <div class="w3-row">
+        <div class="w3-col distribution-container" :class="{'m8': showAssigner, 'm12': !showAssigner}">
+          <div class="w3-row-padding">
+            <div class="w3-col m4 w3-center">
+              <div class="w3-display-container" :class="{tall: isOverview, short: !isOverview}">
+                <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
+                <div class="w3-display-middle d2-color" style="width: 100%">
+                  <div class="w3-row">
+                    <b class="w3-xlarge ">{{ underThisInitiativeStr }} {{ assetData.assetName }}</b>
+                  </div>
+                  <div class="w3-row">
+                    <b class="w3-large">{{ underThisInitiativePercent }}% of existing</b>
                   </div>
                 </div>
-              </div>
-
-              <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
-                <button type="button" class="w3-button l2-color"
-                  @click="newSubInitiativeClicked()">
-                  <i class="fa fa-external-link" aria-hidden="true"></i>
-                </button>
-              </div>
-            </div>
-
-            <div v-if="isOverview || isMemberAssigner" class="w3-row">
-              <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
-                <label class="d2-color">
-                  <b>Transferred to members</b>
-                </label>
-                <div class="w3-light-grey w3-round-xlarge w3-large">
-                  <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToMembersPercent +'%'}">
-                    <div class="bar-txt w3-center d2-color">{{ transferredToMembersStr }}</div>
-                  </div>
+                <div v-if="canEdit && canMint " class="w3-button w3-display-bottommiddle" @click="showNewTokenMintModal = true">
+                  <i class="fa fa-plus-circle d2-color" aria-hidden="true"></i>
                 </div>
               </div>
-
-              <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
-                <button type="button" class="w3-button l2-color"
-                  @click="newAssignmentClicked()">
-                  <i class="fa fa-external-link" aria-hidden="true"></i>
-                </button>
-              </div>
             </div>
-          </div>
-        </div>
-
-        <div v-if="isOverview || isInitiativeAssigner" class="w3-row">
-          <div v-if="hasSubinitiatives" class="sub-initiatives">
-            <div class="" v-if="showSubinitiatives">
-              <div class="w3-row" v-for="subinitiativeAssets in assetData.transferredToSubinitiatives" >
-                <label class="d2-color">
-                  <b>{{ subinitiativeAssets.receiverName }}</b>
-                </label>
-                <div class="w3-light-grey w3-round-xlarge w3-large">
-                  <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': subinitiativePercent(subinitiativeAssets) +'%'}">
-                    <div class="bar-txt w3-center d2-color">{{ subinitiativePortion(subinitiativeAssets) }}</div>
-                  </div>
-                </div>
-              </div>
-              <br>
+            <div class="w3-col m8">
               <div class="w3-row">
+                <label class="d2-color">
+                  <b>Still Available</b>
+                </label>
+                <div class="w3-light-grey w3-round-xlarge w3-large">
+                  <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': availableToThisInitiativePercent +'%'}">
+                    <div class="bar-txt w3-center d2-color">{{ availableToThisInitiative }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="isInitiativeAssigner || isOverview" class="w3-row">
+                <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
+                  <label class="d2-color">
+                    <b>Transferred to sub-initiatives</b>
+                  </label>
+                  <div class="w3-light-grey w3-round-xlarge w3-large">
+                    <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToSubinitiativesPercent +'%'}">
+                      <div class="bar-txt w3-center d2-color">{{ transferredToSubinitiativesStr }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
+                  <button type="button" class="w3-button l2-color"
+                    @click="newSubInitiativeClicked()">
+                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div v-if="isOverview || isMemberAssigner" class="w3-row">
+                <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
+                  <label class="d2-color">
+                    <b>Transferred to members</b>
+                  </label>
+                  <div class="w3-light-grey w3-round-xlarge w3-large">
+                    <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToMembersPercent +'%'}">
+                      <div class="bar-txt w3-center d2-color">{{ transferredToMembersStr }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
+                  <button type="button" class="w3-button l2-color"
+                    @click="newAssignmentClicked()">
+                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="isOverview || isInitiativeAssigner" class="w3-row">
+            <div v-if="hasSubinitiatives" class="sub-initiatives">
+              <div class="" v-if="showSubinitiatives">
+                <div class="w3-row" v-for="subinitiativeAssets in assetData.transferredToSubinitiatives" >
+                  <label class="d2-color">
+                    <b>{{ subinitiativeAssets.receiverName }}</b>
+                  </label>
+                  <div class="w3-light-grey w3-round-xlarge w3-large">
+                    <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': subinitiativePercent(subinitiativeAssets) +'%'}">
+                      <div class="bar-txt w3-center d2-color">{{ subinitiativePortion(subinitiativeAssets) }}</div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="w3-row">
+                  <button type="button" class="w3-button w3-theme-l4 w3-round w3-small" style="width: 100%"
+                    @click="showSubinitiatives = false">hide subinitiatives
+                  </button>
+                </div>
+              </div>
+              <div v-else>
                 <button type="button" class="w3-button w3-theme-l4 w3-round w3-small" style="width: 100%"
-                  @click="showSubinitiatives = false">hide subinitiatives
+                  @click="showSubinitiatives = true">show subinitiatives
                 </button>
               </div>
             </div>
-            <div v-else>
-              <button type="button" class="w3-button w3-theme-l4 w3-round w3-small" style="width: 100%"
-                @click="showSubinitiatives = true">show subinitiatives
-              </button>
+          </div>
+        </div>
+        <div v-if="showAssigner" class="assigner-container w3-col m4 w3-container d2-color">
+          <div class="w3-row label-row">
+            <label class="w3-text-indigo"><b>Amount to be transfered</b></label>
+          </div>
+          <div class="w3-row-padding">
+            <div class="w3-col s6">
+              <input v-model.number="value" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0">
             </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="showAssigner" class="assigner-container w3-col m4 w3-container d2-color">
-        <div class="w3-row label-row">
-          <label class="w3-text-indigo"><b>Amount to be transfered</b></label>
-        </div>
-        <div class="w3-row-padding">
-          <div class="w3-col s6">
-            <input v-model.number="value" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0">
-          </div>
-          <div class="w3-col s6">
-            <div class="w3-row">
-              <div class="w3-col s10">
-                <input v-model.number="percentage" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" step="5">
-              </div>
-              <div class="w3-col s2">
-                <i class="fa fa-percent" aria-hidden="true"></i>
+            <div class="w3-col s6">
+              <div class="w3-row">
+                <div class="w3-col s10">
+                  <input v-model.number="percentage" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" step="5">
+                </div>
+                <div class="w3-col s2">
+                  <i class="fa fa-percent" aria-hidden="true"></i>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+</div>
 </template>
 
 <script>
 import { tokensString, amountAndPerc } from '@/lib/common'
+import NewTokenMintModal from '../modal/NewTokenMintModal.vue'
 
 export default {
+  components: {
+    'app-new-tokenmint-modal': NewTokenMintModal
+  },
+
   props: {
     assetId: {
       type: String
@@ -138,6 +157,10 @@ export default {
       default: 'overview'
     },
     canEdit: {
+      type: Boolean,
+      default: false
+    },
+    canMint: {
       type: Boolean,
       default: false
     }
@@ -153,6 +176,7 @@ export default {
         transferredToSubinitiatives: []
       },
       showSubinitiatives: false,
+      showNewTokenMintModal: false,
       value: 0,
       percentage: 0
     }
@@ -286,6 +310,11 @@ export default {
   font-size: 100px;
 }
 
+.fa-plus-circle {
+  font-size: 30px;
+
+}
+
 .tall {
   height: 150px;
 }
@@ -324,8 +353,6 @@ export default {
   padding-left: 30px;
   padding-right: 30px;
 }
-
-
 
 
 </style>

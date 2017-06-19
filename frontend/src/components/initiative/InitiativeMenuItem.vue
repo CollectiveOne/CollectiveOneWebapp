@@ -1,10 +1,10 @@
 <template lang="html">
   <div :class="topClass" class="d2-color">
-    <div class="w3-row">
+    <div class="w3-row this-element" :class="{'selected': isSelected, 'w3-theme-l3': isSelected, 'd2-color': isSelected}">
       <div v-if="this.level > 0" class="space-col" :class="leftSpaceClass">
         x
       </div>
-      <div class="w3-col s2 l2-color" :class="{'w3-button': hasSubinitiatives, 'w3-padding': !hasSubinitiatives}"
+      <div class="w3-col s2 d2-color" :class="{'w3-button': hasSubinitiatives, 'w3-padding': !hasSubinitiatives}"
         @click="showSubinitiatives = !showSubinitiatives">
 
         <div v-if="hasSubinitiatives">
@@ -20,7 +20,7 @@
           {{ initiative.name }}
         </router-link>
       </div>
-      <div class="w3-col s2 l2-color w3-button" @click="$emit('new-subinitiative', initiative.id)">
+      <div class="w3-col s2 d2-color w3-button" @click="$emit('new-subinitiative', initiative.id)">
         <i class="fa fa-external-link" aria-hidden="true"></i>
       </div>
     </div>
@@ -54,9 +54,14 @@ export default {
   },
 
   computed: {
+    isSelected () {
+      return this.initiative.id === this.$route.params.initiativeId
+    },
     topClass () {
       if (this.level === 0) {
-        return {'w3-card-2': true}
+        return {
+          'w3-card-2': true
+        }
       } else {
         return {}
       }
@@ -106,6 +111,14 @@ export default {
   padding-left: 5px;
   padding-right: 5px;
   padding-top: 8px;
+}
+
+.this-element {
+  padding-bottom: 5px;
+}
+
+.selected {
+  font-weight: bold;
 }
 
 </style>

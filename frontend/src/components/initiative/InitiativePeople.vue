@@ -98,6 +98,7 @@ export default {
 
 .this-container {
   padding-top: 25px !important;
+  padding-bottom: 25px !important;
 }
 
 .members-div {
