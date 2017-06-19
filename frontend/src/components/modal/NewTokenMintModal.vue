@@ -18,6 +18,20 @@
               <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
               <div class="w3-display-middle d2-color" style="width: 100%">
                 <div class="w3-row">
+                  <b class="w3-xlarge ">{{ tokensString(this.assetData.totalUnderThisHolder) }} {{ assetData.assetName }}</b>
+                </div>
+                <div class="w3-row">
+                  <b class="w3-large">current total existing</b>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="w3-row w3-center">
+            <div class="w3-display-container amount-container">
+              <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
+              <div class="w3-display-middle d2-color" style="width: 100%">
+                <div class="w3-row">
                   <b class="w3-xlarge ">{{ newAmountStr }} {{ assetData.assetName }}</b>
                 </div>
                 <div class="w3-row">
@@ -27,16 +41,16 @@
             </div>
           </div>
           <div class="w3-row label-row">
-            <label class="w3-text-indigo"><b>Amount to be increased</b></label>
+            <label class="w3-text-indigo"><b>Amount to be created</b></label>
           </div>
           <div class="w3-row-padding">
             <div class="w3-col s6">
-              <input v-model.number="value" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" :step="assetData.totalUnderThisHolder / 100">
+              <input @focusout="valueUpdated($event)" :value="value" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" :step="assetData.totalUnderThisHolder / 100">
             </div>
             <div class="w3-col s6">
               <div class="w3-row">
                 <div class="w3-col s10">
-                  <input v-model.number="percentage" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" step="1">
+                  <input @focusout="percentageUpdated($event)" :value="percentage" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" step="1">
                 </div>
                 <div class="w3-col s2 d2-color">
                   <i class="fa fa-percent" aria-hidden="true"></i>
@@ -88,20 +102,32 @@ export default {
     }
   },
 
-  watch: {
-    value () {
+  methods: {
+    tokensString (v) {
+      return tokensString(v)
+    },
+    valueUpdated (event) {
+      this.value = Number(event.target.value)
       let perc = this.value / this.assetData.totalUnderThisHolder * 100
       this.percentage = Math.round(perc * 1000) / 1000
     },
-    percentage () {
+    percentageUpdated (event) {
+      this.percentage = Number(event.target.value)
       let toks = this.percentage / 100 * this.assetData.totalUnderThisHolder
       this.value = Math.round(toks * 1000) / 1000
-    }
-  },
-
-  methods: {
+    },
     closeThis () {
       this.$emit('close-this')
+    },
+    accept () {
+      this.axios.put('/1/secured/token/' + this.assetData.assetId + '/mint', {}, {
+        params: {
+          amount: this.value
+        }
+      }).then((response) => {
+        this.$emit('please-update')
+        this.closeThis()
+      })
     }
   }
 

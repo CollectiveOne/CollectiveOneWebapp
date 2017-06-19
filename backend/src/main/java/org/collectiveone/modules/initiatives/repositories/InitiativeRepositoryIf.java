@@ -31,4 +31,6 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 	@Query("SELECT init FROM Initiative init WHERE init.name LIKE %?1%")
 	List<Initiative> searchBy(String q);
 	
+	Initiative findByTokenType_Id(UUID tokenTypeId);
+	
 }

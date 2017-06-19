@@ -16,6 +16,7 @@ import org.collectiveone.modules.governance.model.Governance;
 import org.collectiveone.modules.governance.repositories.DecisionMakerRepositoryIf;
 import org.collectiveone.modules.governance.repositories.GovernanceRepositoryIf;
 import org.collectiveone.modules.initiatives.model.Initiative;
+import org.collectiveone.modules.initiatives.services.InitiativeService;
 import org.collectiveone.modules.users.repositories.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class GovernanceService {
 
+	@Autowired
+	private InitiativeService initiativeService;
+	
 	@Autowired
 	private GovernanceRepositoryIf governanceRepository;
 	
@@ -107,6 +111,27 @@ public class GovernanceService {
 		switch (governance.getType()) {
 		case ROLES:
 			if (isAdmin(governance.getId(), creatorId)) {
+				verdict = DecisionVerdict.APPROVED;
+			} else {
+				verdict = DecisionVerdict.DENIED;
+			}
+			break;
+		}
+		
+		return verdict;
+	}
+	
+	@Transactional
+	public DecisionVerdict canMintTokens(UUID tokenId, UUID minterId) {
+		
+		Initiative initiative = initiativeService.findByTokenType_Id(tokenId);
+		
+		DecisionVerdict verdict = null;
+		Governance governance = governanceRepository.findByInitiative_Id(initiative.getId());
+		
+		switch (governance.getType()) {
+		case ROLES:
+			if (isAdmin(governance.getId(), minterId)) {
 				verdict = DecisionVerdict.APPROVED;
 			} else {
 				verdict = DecisionVerdict.DENIED;

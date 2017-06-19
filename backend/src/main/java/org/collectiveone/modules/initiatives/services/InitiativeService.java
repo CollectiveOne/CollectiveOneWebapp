@@ -218,6 +218,10 @@ public class InitiativeService {
 		return initiativeDto;
 	}
 	
+	public Initiative findByTokenType_Id(UUID tokenTypeId) {
+		return initiativeRepository.findByTokenType_Id(tokenTypeId);
+	}
+	
 	@Transactional
 	public GetResult<List<InitiativeDto>> getOfUser(UUID userC1Id) {
 		/* return the initiatives of a user but inserting initiatives that are 

@@ -3,7 +3,10 @@
     <div v-if="initiative" class="w3-row">
       <div class="w3-white">
         <header class="w3-container w3-theme">
-          <h3>{{ initiative.name }}</h3>
+          <h3 class="w3-left">{{ initiative.name }}</h3>
+          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </div>
         </header>
 
         <div class="section-tabs w3-row">
@@ -49,6 +52,9 @@ export default {
   },
 
   computed: {
+    isLoggedAnAdmin () {
+      return this.initiative.loggedMember.role === 'ADMIN'
+    },
     isOverview () {
       var res = false
       this.$route.matched.forEach((e) => {
@@ -118,6 +124,10 @@ export default {
 
 .bold-text {
   font-weight: bold;
+}
+
+.edit-btn-div {
+  padding-top: 15px;
 }
 
 </style>

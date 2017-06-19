@@ -10,7 +10,10 @@
     <div v-if="initiative" class="this-container w3-container w3-padding">
       <div class="w3-card">
         <header class="w3-container w3-theme-l2">
-          <h4>Driver</h4>
+          <h4 class="w3-left">Driver</h4>
+          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </div>
         </header>
         <div class="w3-container">
           <p>{{ initiative.driver }}</p>
@@ -21,19 +24,23 @@
         <header class="w3-container w3-theme-l2">
           <h4>Assets</h4>
         </header>
-        <div v-if="hasOwnTokens">
-          <app-tokens-distribution-chart
-            :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
-            :canMint="true" :canEdit="isLoggedAnAdmin"
-            @new-initiative="$emit('new-initiative', $event)" @new-assignment="newAssignment($event)">
-          </app-tokens-distribution-chart>
-        </div>
-        <div v-if="hasOtherAssets">
-          <app-tokens-distribution-chart v-for="asset in initiative.otherAssets"
-            :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
-            :canMint="false" :canEdit="isLoggedAnAdmin"
-            @new-initiative="$emit('new-initiative', $event)" @new-assignment="newAssignment($event)">
-          </app-tokens-distribution-chart>
+        <div class="tokens-div">
+          <div v-if="hasOwnTokens">
+            <app-tokens-distribution-chart
+              :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
+              :canMint="true" :canEdit="isLoggedAnAdmin"
+              @new-initiative="$emit('new-initiative', $event)" @new-assignment="newAssignment($event)"
+              @please-update="$emit('please-update')">
+            </app-tokens-distribution-chart>
+          </div>
+          <div v-if="hasOtherAssets">
+            <app-tokens-distribution-chart v-for="asset in initiative.otherAssets"
+              :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
+              :canMint="false" :canEdit="isLoggedAnAdmin"
+              @new-initiative="$emit('new-initiative', $event)" @new-assignment="newAssignment($event)"
+              @please-update="$emit('please-update')">
+            </app-tokens-distribution-chart>
+          </div>
         </div>
       </div>
     </div>
@@ -99,9 +106,12 @@ export default {
   padding-bottom: 25px !important;
 }
 
-.members-div {
+.tokens-div {
   padding-top: 15px;
-  padding-bottom: 30px;
+}
+
+.edit-btn-div {
+  padding-top: 15px;
 }
 
 </style>

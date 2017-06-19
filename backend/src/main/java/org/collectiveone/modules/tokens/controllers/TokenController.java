@@ -3,9 +3,20 @@ package org.collectiveone.modules.tokens.controllers;
 import java.util.UUID;
 
 import org.collectiveone.common.dto.GetResult;
+import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.governance.enums.DecisionVerdict;
+import org.collectiveone.modules.governance.services.GovernanceService;
+import org.collectiveone.modules.initiatives.model.Initiative;
+import org.collectiveone.modules.initiatives.services.InitiativeService;
 import org.collectiveone.modules.tokens.dto.AssetsDto;
+import org.collectiveone.modules.tokens.dto.TokenHolderType;
+import org.collectiveone.modules.tokens.services.TokenService;
 import org.collectiveone.modules.tokens.services.TokenTransferService;
+import org.collectiveone.modules.users.model.AppUser;
+import org.collectiveone.modules.users.services.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,9 +28,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/1")
 public class TokenController { 
 	
+
 	@Autowired
 	private TokenTransferService tokenTransferService;
 	
+	@Autowired
+	private TokenService tokenService;
+	
+	@Autowired
+	private GovernanceService governanceService;
+	
+	@Autowired
+	private AppUserService appUserService;
+	
+	@Autowired
+	private InitiativeService initiativeService;
 	
 	
 	@RequestMapping(path = "/secured/token/{id}", method = RequestMethod.GET)
@@ -43,4 +66,29 @@ public class TokenController {
 		return new GetResult<AssetsDto>("success", "initiative retrieved", assetDto);
 	}
 	
+	@RequestMapping(path = "/secured/token/{tokenId}/mint", method = RequestMethod.PUT) 
+	public PostResult mintTokens(
+			@PathVariable("tokenId") String tokenIdStr, 
+			@RequestParam double amount) {
+		
+		UUID tokenId = UUID.fromString(tokenIdStr);
+		
+		if (governanceService.canMintTokens(tokenId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		Initiative initiative = initiativeService.findByTokenType_Id(tokenId);
+		String result = tokenService.mintToHolder(tokenId, initiative.getId(), amount, TokenHolderType.INITIATIVE);
+		
+		if(result.equals("success")) {
+			return new PostResult("success", "tokens minted", tokenId.toString());
+		} else {
+			return new PostResult("error", "error while minting tokens", "");
+		}
+	}
+	
+	private AppUser getLoggedUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return appUserService.getFromAuth0Id(auth.getName());
+	}
 }

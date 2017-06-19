@@ -6,7 +6,7 @@
       v-if="showNewTokenMintModal"
       :assetData="assetData"
       @close-this="showNewTokenMintModal = false"
-      @mint-done="$emit('please-update')">
+      @please-update="updateTokenData()">
     </app-new-tokenmint-modal>
 
     <div class="this-container">
@@ -208,7 +208,7 @@ export default {
       return tokensString(this.underThisInitiativeVal)
     },
     underThisInitiativePercent () {
-      return this.underThisInitiativeVal / this.assetData.totalExistingTokens * 100
+      return tokensString(this.underThisInitiativeVal / this.assetData.totalExistingTokens * 100)
     },
     availableToThisInitiative () {
       return amountAndPerc(this.assetData.ownedByThisHolder, this.underThisInitiativeVal)
