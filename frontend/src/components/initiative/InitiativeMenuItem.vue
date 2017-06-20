@@ -62,10 +62,12 @@ export default {
     bulletClass () {
       if (this.hasSubinitiatives) {
         return {
+          'bullet-class': true,
           'w3-button': true
         }
       } else {
         return {
+          'bullet-class': true,
           'w3-padding': true,
           'l3-color': true,
           'line-element': true
@@ -122,10 +124,15 @@ export default {
   visibility: hidden;
 }
 
+.bullet-class {
+  height: 100%;
+}
+
 .name-col {
   padding-left: 5px;
   padding-right: 5px;
   padding-top: 8px;
+  padding-bottom: 5px;
 }
 
 .name-link {
@@ -136,10 +143,6 @@ export default {
 
 .line-element {
   text-align: center;
-}
-
-.this-element {
-  padding-bottom: 5px;
 }
 
 .selected {
