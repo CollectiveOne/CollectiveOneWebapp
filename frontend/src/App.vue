@@ -46,6 +46,10 @@ export default {
   font-family: "Open Sans", sans-serif;
 }
 
+textarea {
+  resize: vertical; 
+}
+
 .w3-modal {
   padding-top: 30px;
 }

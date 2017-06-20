@@ -179,6 +179,19 @@ public class InitiativeService {
 	}
 	
 	
+	@Transactional
+	public PostResult edit(UUID initiativeId, NewInitiativeDto initiativeDto) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		
+		initiative.setName(initiativeDto.getName());
+		initiative.setDriver(initiativeDto.getDriver());
+		
+		initiativeRepository.save(initiative);
+		
+		return new PostResult("success", "initaitive updated", initiative.getId().toString());  
+	}
+	
+	
 	/** Get key data from an initiative: id, name and driver but no
 	 * data from its assets */
 	@Transactional

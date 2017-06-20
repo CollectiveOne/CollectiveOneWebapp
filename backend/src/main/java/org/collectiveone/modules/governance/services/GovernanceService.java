@@ -50,14 +50,13 @@ public class GovernanceService {
 	}
 	
 	@Transactional
-	public DecisionVerdict canCreateSubInitiative(UUID parentInitiativeId, UUID creatorId) {
-		
+	public DecisionVerdict isRolesAndAdmin(UUID initiativeId, UUID userId) {
 		DecisionVerdict verdict = null;
-		Governance governance = governanceRepository.findByInitiative_Id(parentInitiativeId);
+		Governance governance = governanceRepository.findByInitiative_Id(initiativeId);
 		
 		switch (governance.getType()) {
 		case ROLES:
-			if (isAdmin(governance.getId(), creatorId)) {
+			if (isAdmin(governance.getId(), userId)) {
 				verdict = DecisionVerdict.APPROVED;
 			} else {
 				verdict = DecisionVerdict.DENIED;
@@ -66,80 +65,35 @@ public class GovernanceService {
 		}
 		
 		return verdict;
+	}
+	
+	@Transactional
+	public DecisionVerdict canCreateSubInitiative(UUID parentInitiativeId, UUID creatorId) {
+		return isRolesAndAdmin(parentInitiativeId, creatorId);
 	}
 	
 	@Transactional
 	public DecisionVerdict canDeleteMember(UUID initiativeId, UUID deleterId) {
-		DecisionVerdict verdict = null;
-		Governance governance = governanceRepository.findByInitiative_Id(initiativeId);
-		
-		switch (governance.getType()) {
-		case ROLES:
-			if (isAdmin(governance.getId(), deleterId)) {
-				verdict = DecisionVerdict.APPROVED;
-			} else {
-				verdict = DecisionVerdict.DENIED;
-			}
-			break;
-		}
-		
-		return verdict;
+		return isRolesAndAdmin(initiativeId, deleterId);
 	}
 	@Transactional
 	public DecisionVerdict canAddMember(UUID initiativeId, UUID adderId) {
-		DecisionVerdict verdict = null;
-		Governance governance = governanceRepository.findByInitiative_Id(initiativeId);
-		
-		switch (governance.getType()) {
-		case ROLES:
-			if (isAdmin(governance.getId(), adderId)) {
-				verdict = DecisionVerdict.APPROVED;
-			} else {
-				verdict = DecisionVerdict.DENIED;
-			}
-			break;
-		}
-		
-		return verdict;
+		return isRolesAndAdmin(initiativeId, adderId);
 	}
 	
 	@Transactional
 	public DecisionVerdict canCreateAssignation(UUID initiativeId, UUID creatorId) {
-		DecisionVerdict verdict = null;
-		Governance governance = governanceRepository.findByInitiative_Id(initiativeId);
-		
-		switch (governance.getType()) {
-		case ROLES:
-			if (isAdmin(governance.getId(), creatorId)) {
-				verdict = DecisionVerdict.APPROVED;
-			} else {
-				verdict = DecisionVerdict.DENIED;
-			}
-			break;
-		}
-		
-		return verdict;
+		return isRolesAndAdmin(initiativeId, creatorId);
 	}
 	
 	@Transactional
 	public DecisionVerdict canMintTokens(UUID tokenId, UUID minterId) {
-		
-		Initiative initiative = initiativeService.findByTokenType_Id(tokenId);
-		
-		DecisionVerdict verdict = null;
-		Governance governance = governanceRepository.findByInitiative_Id(initiative.getId());
-		
-		switch (governance.getType()) {
-		case ROLES:
-			if (isAdmin(governance.getId(), minterId)) {
-				verdict = DecisionVerdict.APPROVED;
-			} else {
-				verdict = DecisionVerdict.DENIED;
-			}
-			break;
-		}
-		
-		return verdict;
+		return isRolesAndAdmin(initiativeService.findByTokenType_Id(tokenId).getId(), minterId);
+	}
+	
+	@Transactional
+	public DecisionVerdict canEdit(UUID initiativeId, UUID editorId) {
+		return isRolesAndAdmin(initiativeId, editorId);
 	}
 	
 	

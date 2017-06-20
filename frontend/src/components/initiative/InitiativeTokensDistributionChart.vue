@@ -56,7 +56,7 @@
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
                   <button type="button" class="w3-button l2-color"
                     @click="newSubInitiativeClicked()">
-                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                    <i class="fa fa-plus" aria-hidden="true"></i>
                   </button>
                 </div>
               </div>
@@ -76,7 +76,7 @@
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
                   <button type="button" class="w3-button l2-color"
                     @click="newAssignmentClicked()">
-                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                    <i class="fa fa-plus" aria-hidden="true"></i>
                   </button>
                 </div>
               </div>

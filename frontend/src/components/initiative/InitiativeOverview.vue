@@ -7,11 +7,16 @@
       @assignation-done="$emit('please-update')">
     </app-new-assignation-modal>
 
+    <app-edit-initiative-modal v-if="showEditInitiativeModal" :initiative="initiative"
+      @close-this="showEditInitiativeModal = false"
+      @initiative-updated="$emit('please-update')">
+    </app-edit-initiative-modal>
+
     <div v-if="initiative" class="this-container w3-container w3-padding">
       <div class="w3-card">
         <header class="w3-container w3-theme-l2">
           <h4 class="w3-left">Driver</h4>
-          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large">
+          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="showEditInitiativeModal = true"> 
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </div>
         </header>
@@ -50,11 +55,13 @@
 <script>
 import InitiativeTokensDistributionChart from './InitiativeTokensDistributionChart.vue'
 import NewAssignationModal from '../modal/NewAssignationModal.vue'
+import EditInitiativeModal from '../modal/EditInitiativeModal.vue'
 
 export default {
   components: {
     'app-tokens-distribution-chart': InitiativeTokensDistributionChart,
-    'app-new-assignation-modal': NewAssignationModal
+    'app-new-assignation-modal': NewAssignationModal,
+    'app-edit-initiative-modal': EditInitiativeModal
   },
 
   props: {
@@ -66,6 +73,7 @@ export default {
   data () {
     return {
       showNewAssignationModal: false,
+      showEditInitiativeModal: false,
       parentInitiativeIdForModal: null
     }
   },

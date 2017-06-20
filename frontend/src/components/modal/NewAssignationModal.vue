@@ -12,23 +12,6 @@
 
         <div class="this-container w3-container">
 
-          <div class="w3-row">
-            <app-initiative-assets-assigner
-              :initiativeId="initiativeId" type='member-assigner'
-              @updated="assetsSelected($event)">
-            </app-initiative-assets-assigner>
-          </div>
-
-          <div class="w3-row">
-            <label class="w3-text-indigo"><b>Motive</b></label>
-            <input v-model="assignation.motive" class="w3-input w3-hover-light-gray" type="text">
-            <br>
-
-            <label class="w3-text-indigo"><b>Notes</b></label>
-            <textarea v-model="assignation.notes" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
-            <br>
-          </div>
-
           <div class="section-tabs w3-row">
             <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'w3-border-blue': isDirect}"
@@ -48,6 +31,23 @@
           </div>
           <div v-show="isPeerReviewed" class="w3-row">
             <app-peer-reviewed-assignation @updated="peerReviewReceiversSelected($event)"></app-peer-reviewed-assignation>
+          </div>
+
+          <div class="w3-row">
+            <label class="w3-text-indigo"><b>Motive</b></label>
+            <input v-model="assignation.motive" class="w3-input w3-hover-light-gray" type="text">
+            <br>
+
+            <label class="w3-text-indigo"><b>Notes</b></label>
+            <textarea v-model="assignation.notes" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
+            <br>
+          </div>
+
+          <div class="w3-row">
+            <app-initiative-assets-assigner
+              :initiativeId="initiativeId" type='member-assigner'
+              @updated="assetsSelected($event)">
+            </app-initiative-assets-assigner>
           </div>
 
           <div class="w3-row">

@@ -58,6 +58,18 @@ public class InitiativesController {
 		return initiativeService.init(getLoggedUser().getC1Id(), initiativeDto);
 	}
 	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}", method = RequestMethod.PUT)
+	public PostResult putInitiative(@PathVariable("initiativeId") String initiativeIdStr, @RequestBody NewInitiativeDto initiativeDto) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		if (governanceService.canEdit(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+			
+		return initiativeService.edit(initiativeId, initiativeDto); 
+	}
+	
+	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}", method = RequestMethod.GET)
 	public GetResult<InitiativeDto> getInitiative(
 			@PathVariable("initiativeId") String initiativeId, 

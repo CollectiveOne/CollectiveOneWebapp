@@ -1,10 +1,16 @@
 <template lang="html">
   <div class="">
+
+    <app-edit-initiative-modal v-if="showEditInitiativeModal" :initiative="initiative"
+      @close-this="showEditInitiativeModal = false"
+      @initiative-updated="updateThisInitiative()">
+    </app-edit-initiative-modal>
+
     <div v-if="initiative" class="w3-row">
       <div class="w3-white">
         <header class="w3-container w3-theme">
           <h3 class="w3-left">{{ initiative.name }}</h3>
-          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large">
+          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="showEditInitiativeModal = true">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </div>
         </header>
@@ -40,14 +46,18 @@
 </template>
 
 <script>
+import EditInitiativeModal from '../modal/EditInitiativeModal.vue'
+
 export default {
 
   components: {
+    'app-edit-initiative-modal': EditInitiativeModal
   },
 
   data () {
     return {
-      initiative: null
+      initiative: null,
+      showEditInitiativeModal: false
     }
   },
 
@@ -85,6 +95,9 @@ export default {
   },
 
   methods: {
+    updateThisInitiative () {
+      this.updateInitiative(this.initiative.id)
+    },
     updateInitiative (id) {
       this.axios.get('/1/secured/initiative/' + id, {
         params: {

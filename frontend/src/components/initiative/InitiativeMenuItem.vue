@@ -20,8 +20,8 @@
           {{ initiative.name }}
         </router-link>
       </div>
-      <div class="w3-col s2 d2-color w3-button" @click="$emit('new-subinitiative', initiative.id)">
-        <i class="fa fa-external-link" aria-hidden="true"></i>
+      <div v-if="false" class="w3-col s2 d2-color w3-button" @click="$emit('new-subinitiative', initiative.id)">
+        <i class="fa fa-plus l1-color" aria-hidden="true"></i>
       </div>
     </div>
     <div class="w3-row" v-if="showSubinitiatives" v-for="subinitiative in initiative.subInitiatives">
