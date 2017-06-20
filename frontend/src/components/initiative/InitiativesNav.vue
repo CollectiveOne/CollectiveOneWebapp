@@ -1,33 +1,53 @@
 <template lang="html">
-  <nav class="w3-white w3-border-right">
-    <div class="w3-container w3-padding">
-      <h4 class="d2-color"><b>Initiatives</b></h4>
-      <div class="create-new w3-button w3-theme-l1" @click="newInitiative()"><i class="fa fa-plus-circle"></i>  create new</div>
+  <div class="">
 
-      <div class="w3-row section-header">
-        <h6 class="section-header l2-color w3-center"><i>top-level</i></h6>
+    <app-new-initiative-modal
+      v-if="showNewInitiativeModal"
+      @close-this="showNewInitiativeModal = false"
+      @initiative-created="$emit('initiative-created', $event)">
+    </app-new-initiative-modal>
+
+    <app-new-subinitiative-modal
+      v-if="showNewSubInitiativeModal" :parentInitId="parentInitiativeIdForModal"
+      @close-this="showNewSubInitiativeModal = false"
+      @initiative-created="$emit('initiative-created', $event)">
+    </app-new-subinitiative-modal>
+
+    <nav class="w3-white w3-border-right">
+      <div class="w3-container w3-padding">
+        <h4 class="d2-color"><b>Initiatives</b></h4>
+        <div class="create-new w3-button w3-theme-l1" @click="showNewInitiativeModal = true"><i class="fa fa-plus-circle"></i>  create new</div>
+
+        <div class="w3-row section-header">
+          <h6 class="section-header l2-color w3-center"><i>top-level</i></h6>
+        </div>
+        <app-initiative-menu-item v-for="initiative in userInitiatives"
+          :initiative="initiative" :key="initiative.id"
+          :level="0" class="top-menu-item"
+          @initiative-clicked="$emit('selected')"
+          @new-subinitiative="newSubInitiative($event)">
+        </app-initiative-menu-item>
+
+        <div class="w3-row section-header">
+          <h6 class=" l2-color w3-center"><i>my favorites</i></h6>
+        </div>
+
       </div>
-      <app-initiative-menu-item v-for="initiative in userInitiatives"
-        :initiative="initiative" :key="initiative.id"
-        :level="0" class="top-menu-item"
-        @initiative-clicked="$emit('selected')"
-        @new-subinitiative="$emit('new-initiative', $event)">
-      </app-initiative-menu-item>
-
-      <div class="w3-row section-header">
-        <h6 class=" l2-color w3-center"><i>my favorites</i></h6>
-      </div>
-
-    </div>
-  </nav>
+    </nav>
+  </div>
 </template>
 
 <script>
+import NewInitiativeModal from '../modal/NewInitiativeModal.vue'
+import NewSubInitiativeModal from '../modal/NewSubInitiativeModal.vue'
+
 import InitiativeMenuItem from './InitiativeMenuItem.vue'
 
 export default {
 
   components: {
+    'app-new-initiative-modal': NewInitiativeModal,
+    'app-new-subinitiative-modal': NewSubInitiativeModal,
     'app-initiative-menu-item': InitiativeMenuItem
   },
 
@@ -37,9 +57,18 @@ export default {
     }
   },
 
+  data () {
+    return {
+      showNewInitiativeModal: false,
+      showNewSubInitiativeModal: false,
+      parentInitiativeIdForModal: ''
+    }
+  },
+
   methods: {
-    newInitiative () {
-      this.$emit('new-initiative', '')
+    newSubInitiative (data) {
+      this.parentInitiativeIdForModal = data
+      this.showNewSubInitiativeModal = true
     }
   }
 }
@@ -71,7 +100,7 @@ export default {
 }
 
 .top-menu-item {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 </style>

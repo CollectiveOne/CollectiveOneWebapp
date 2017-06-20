@@ -1,17 +1,11 @@
 <template lang="html">
   <div class="w3-row">
-    <app-new-initiative-modal
-      v-if="showNewInitiativeModal" :parentInitId="parentInitiativeIdForModal"
-      @close-this="showNewInitiativeModal = false"
-      @initiative-created="initiativeCreated($event)">
-    </app-new-initiative-modal>
-
     <div v-show="expandNav" :class="navContainerClass">
       <keep-alive>
         <app-initiatives-nav
           :userInitiatives="userInitiatives"
           @selected="initiativeSelected()"
-          @new-initiative="newInitiative($event)">
+          @initiative-created="initiativeCreated($event)">
         </app-initiatives-nav>
       </keep-alive>
     </div>
@@ -23,13 +17,11 @@
 </template>
 
 <script>
-import NewInitiativeModal from './modal/NewInitiativeModal.vue'
 import InitiativesNav from './initiative/InitiativesNav.vue'
 
 export default {
   components: {
-    AppInitiativesNav: InitiativesNav,
-    AppNewInitiativeModal: NewInitiativeModal
+    AppInitiativesNav: InitiativesNav
   },
 
   props: {
@@ -86,6 +78,7 @@ export default {
     },
     newInitiative (parentId) {
       this.parentInitiativeIdForModal = parentId
+      this.asSubinitiativeForModal = (parentId !== '')
       this.showNewInitiativeModal = true
     },
     initiativeCreated (initiativeId) {

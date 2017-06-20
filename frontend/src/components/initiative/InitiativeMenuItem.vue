@@ -4,7 +4,7 @@
       <div v-if="this.level > 0" class="space-col" :class="leftSpaceClass">
         x
       </div>
-      <div class="w3-col s2 d2-color" :class="{'w3-button': hasSubinitiatives, 'w3-padding': !hasSubinitiatives}"
+      <div class="w3-col s2" :class="bulletClass"
         @click="showSubinitiatives = !showSubinitiatives">
 
         <div v-if="hasSubinitiatives">
@@ -16,11 +16,11 @@
         </div>
       </div>
       <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize" @click="$emit('initiative-clicked')">
-        <router-link :to="'/inits/'+initiative.id+'/overview'" class="w3-left">
+        <router-link tag="div" class="w3-left name-link" :to="'/inits/'+initiative.id+'/overview'">
           {{ initiative.name }}
         </router-link>
       </div>
-      <div v-if="false" class="w3-col s2 d2-color w3-button" @click="$emit('new-subinitiative', initiative.id)">
+      <div class="w3-col s2 d2-color w3-button" @click="$emit('new-subinitiative', initiative.id)">
         <i class="fa fa-plus l1-color" aria-hidden="true"></i>
       </div>
     </div>
@@ -58,6 +58,19 @@ export default {
   computed: {
     isSelected () {
       return this.initiative.id === this.$route.params.initiativeId
+    },
+    bulletClass () {
+      if (this.hasSubinitiatives) {
+        return {
+          'w3-button': true
+        }
+      } else {
+        return {
+          'w3-padding': true,
+          'l3-color': true,
+          'line-element': true
+        }
+      }
     },
     topClass () {
       if (this.level === 0) {
@@ -113,6 +126,16 @@ export default {
   padding-left: 5px;
   padding-right: 5px;
   padding-top: 8px;
+}
+
+.name-link {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.line-element {
+  text-align: center;
 }
 
 .this-element {

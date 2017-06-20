@@ -1,39 +1,46 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4">
+      <div v-if="parentInitiative" class="w3-card-4">
 
         <div class="close-div w3-display-topright w3-xlarge" @click="closeThis()">
           <i class="fa fa-times" aria-hidden="true"></i>
         </div>
 
         <div class="w3-container w3-theme">
-          <h2>New Initiative</h2>
+          <h2>New subinitiative of {{ parentInitiative.name }}</h2>
         </div>
 
         <form class="w3-container">
 
           <br>
-
-          <label class="w3-text-indigo"><b>Name</b></label>
+          <label class="w3-text-indigo"><b>Subinitiative Name</b></label>
           <input v-model="name" class="w3-input w3-hover-light-gray" type="text">
-          <br>
 
-          <label class="w3-text-indigo"><b>Driver</b></label>
+          <br>
+          <label class="w3-text-indigo"><b>Subinitiative Driver</b></label>
           <textarea v-model="driver" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
 
           <hr>
-
           <div class="w3-container assets-selector-div">
-            <app-new-token @updated="ownTokensSelected($event)"></app-new-token>
+            <app-initiative-assets-assigner :initiativeId="parentInitiative.id" type='initiative-assigner'
+              @updated="parentAssetsSelected($event)" @parent-initiative-updated="parentInitiativeUpdated($event)">
+            </app-initiative-assets-assigner>
           </div>
 
           <div v-if="assetsSelected" class="w3-panel w3-theme">
             <h5><b>Summary</b></h5>
-            <p>A token named <b>{{ ownTokens.assetName }}</b> will be created and this initiative will have <b>{{ tokensString(ownTokens.ownedByThisHolder) }} units</b></p>
+            <p>
+              This initiative will receive
+              <span v-for="transfer in otherAssetsTransfers">
+                <span v-if="transfer.value ">
+                  <b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ parentInitiative.name }}
+                </span>
+              </span>
+            </p>
           </div>
-          <hr>
 
+          <hr>
           <label class="init-contr-label w3-text-indigo"><b>Initial Members</b></label>
           <div class="w3-border w3-round w3-padding member-container">
             <app-initiative-member
@@ -49,8 +56,8 @@
             <app-initiative-new-member class="new-contr-row" @add="addMember($event)"></app-initiative-new-member>
 
           </div>
-          <hr>
 
+          <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
               <button type="button" class="w3-button w3-light-gray w3-round" @click="closeThis()">Cancel</button>
@@ -67,7 +74,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import NewToken from './NewToken.vue'
+import InitiativeAssetsAssigner from './InitiativeAssetsAssigner.vue'
 import InitiativeNewMember from '../initiative/InitiativeNewMember.vue'
 import InitiativeMember from '../initiative/InitiativeMember.vue'
 
@@ -77,10 +84,6 @@ import { tokensString } from '../../lib/common'
 
 export default {
   props: {
-    asSubinitiative: {
-      type: Boolean,
-      default: false
-    },
     parentInitId: {
       type: String,
       default: ''
@@ -88,7 +91,7 @@ export default {
   },
 
   components: {
-    'app-new-token': NewToken,
+    'app-initiative-assets-assigner': InitiativeAssetsAssigner,
     'app-initiative-member': InitiativeMember,
     'app-initiative-new-member': InitiativeNewMember
   },
@@ -110,32 +113,19 @@ export default {
 
   computed: {
     assetsSelected () {
-      if (this.asSubinitiative) {
-        if (this.otherAssetsTransfers) {
-          if (this.otherAssetsTransfers.length > 0) {
-            for (var ix in this.otherAssetsTransfers) {
-              if (this.otherAssetsTransfers[ix].value > 0) {
-                return true
-              } else {
-                return false
-              }
+      if (this.otherAssetsTransfers) {
+        if (this.otherAssetsTransfers.length > 0) {
+          for (var ix in this.otherAssetsTransfers) {
+            if (this.otherAssetsTransfers[ix].value > 0) {
+              return true
+            } else {
+              return false
             }
-            return true
           }
-        }
-      } else {
-        if (this.ownTokens.ownedByThisHolder > 0) {
           return true
         }
       }
-
       return false
-    }
-  },
-
-  watch: {
-    parentId () {
-      this.updateParent()
     }
   },
 
@@ -148,6 +138,8 @@ export default {
 
     parentAssetsSelected (assets) {
       this.otherAssetsTransfers = JSON.parse(JSON.stringify(assets))
+      this.parentId = this.otherAssetsTransfers[0].senderId
+      this.updateParent()
     },
 
     ownTokensSelected (tokensData) {
@@ -155,8 +147,9 @@ export default {
       this.ownTokens.assetName = tokensData.tokenName
     },
 
-    parentInitiativeUpdated (initiative) {
-      this.parentInitiative = initiative
+    parentInitiativeUpdated (initiativeId) {
+      this.parentId = initiativeId
+      this.updateParent()
     },
 
     addMember (member) {
@@ -190,8 +183,8 @@ export default {
 
     accept () {
       let intitiatveDto = {
-        asSubinitiative: this.asSubinitiative,
-        parentInitiativeId: this.asSubinitiative ? this.parentInitiative.id : null,
+        asSubinitiative: true,
+        parentInitiativeId: this.parentInitiative.id,
         name: this.name,
         driver: this.driver,
         members: this.members,
@@ -213,8 +206,8 @@ export default {
     },
 
     updateParent () {
-      if (this.parentInitId !== '') {
-        this.axios.get('/1/secured/initiative/' + this.parentInitId, {
+      if (this.parentId !== '') {
+        this.axios.get('/1/secured/initiative/' + this.parentId, {
           params: {
             addAssets: true
           }
@@ -233,6 +226,7 @@ export default {
       this.members.push(member)
     }
 
+    this.parentId = this.parentInitId
     this.updateParent()
   }
 }

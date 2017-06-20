@@ -1,6 +1,6 @@
 <template lang="html">
 
-  <div class="">
+  <div v-if="assetData" class="">
 
     <app-new-tokenmint-modal
       v-if="showNewTokenMintModal"
@@ -13,7 +13,7 @@
       <div class="w3-row">
         <div class="w3-col distribution-container" :class="{'m8': showAssigner, 'm12': !showAssigner}">
           <div class="w3-row-padding">
-            <div class="w3-col m4 w3-center">
+            <div class="w3-col l4 w3-center">
               <div class="w3-display-container" :class="{tall: isOverview, short: !isOverview}">
                 <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
                 <div class="w3-display-middle d2-color" style="width: 100%">
@@ -29,7 +29,7 @@
                 </div>
               </div>
             </div>
-            <div class="w3-col m8">
+            <div class="w3-col l8">
               <div class="w3-row">
                 <label class="d2-color">
                   <b>Still Available</b>
@@ -43,12 +43,31 @@
 
               <div v-if="isInitiativeAssigner || isOverview" class="w3-row">
                 <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
-                  <label class="d2-color">
-                    <b>Transferred to sub-initiatives</b>
-                  </label>
-                  <div class="w3-light-grey w3-round-xlarge w3-large">
-                    <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToSubinitiativesPercent +'%'}">
-                      <div class="bar-txt w3-center d2-color">{{ transferredToSubinitiativesStr }}</div>
+                  <div class="w3-row cursor-pointer" @click="showSubinitiatives = !showSubinitiatives">
+                    <label class="d2-color cursor-pointer">
+                      <b>Transferred to sub-initiatives</b>
+                    </label>
+                    <div class="w3-light-grey w3-round-xlarge w3-large">
+                      <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToSubinitiativesPercent +'%'}">
+                        <div class="bar-txt w3-center d2-color">{{ transferredToSubinitiativesStr }}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="w3-row" v-if="isOverview || isInitiativeAssigner">
+                    <div v-if="hasSubinitiatives">
+                      <div class="sub-elements" v-if="showSubinitiatives">
+                        <div class="w3-row" v-for="subinitiativeAssets in assetData.transferredToSubinitiatives" >
+                          <label class="d2-color">
+                            <b>{{ subinitiativeAssets.receiverName }}</b>
+                          </label>
+                          <div class="w3-light-grey w3-round-xlarge w3-large">
+                            <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': subinitiativePercent(subinitiativeAssets) +'%'}">
+                              <div class="bar-txt w3-center d2-color">{{ subinitiativePortion(subinitiativeAssets) }}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -63,14 +82,35 @@
 
               <div v-if="isOverview || isMemberAssigner" class="w3-row">
                 <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
-                  <label class="d2-color">
-                    <b>Transferred to members</b>
-                  </label>
-                  <div class="w3-light-grey w3-round-xlarge w3-large">
-                    <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToMembersPercent +'%'}">
-                      <div class="bar-txt w3-center d2-color">{{ transferredToMembersStr }}</div>
+
+                  <div class="w3-row cursor-pointer" @click="showMembers = !showMembers">
+                    <label class="d2-color cursor-pointer">
+                      <b>Transferred to members</b>
+                    </label>
+                    <div class="w3-light-grey w3-round-xlarge w3-large">
+                      <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToMembersPercent +'%'}">
+                        <div class="bar-txt w3-center d2-color">{{ transferredToMembersStr }}</div>
+                      </div>
                     </div>
                   </div>
+
+                  <div v-if="isOverview" class="w3-row">
+                    <div v-if="hasMembers">
+                      <div class="sub-elements" v-if="showMembers">
+                        <div class="w3-row" v-for="memberAssets in assetData.transferredToUsers" >
+                          <label class="d2-color">
+                            <b>{{ memberAssets.receiverName }}</b>
+                          </label>
+                          <div class="w3-light-grey w3-round-xlarge w3-large">
+                            <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': memberPercent(memberAssets) +'%'}">
+                              <div class="bar-txt w3-center d2-color">{{ memberPortion(memberAssets) }}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
@@ -83,33 +123,6 @@
             </div>
           </div>
 
-          <div v-if="isOverview || isInitiativeAssigner" class="w3-row">
-            <div v-if="hasSubinitiatives" class="sub-initiatives">
-              <div class="" v-if="showSubinitiatives">
-                <div class="w3-row" v-for="subinitiativeAssets in assetData.transferredToSubinitiatives" >
-                  <label class="d2-color">
-                    <b>{{ subinitiativeAssets.receiverName }}</b>
-                  </label>
-                  <div class="w3-light-grey w3-round-xlarge w3-large">
-                    <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': subinitiativePercent(subinitiativeAssets) +'%'}">
-                      <div class="bar-txt w3-center d2-color">{{ subinitiativePortion(subinitiativeAssets) }}</div>
-                    </div>
-                  </div>
-                </div>
-                <br>
-                <div class="w3-row">
-                  <button type="button" class="w3-button w3-theme-l4 w3-round w3-small" style="width: 100%"
-                    @click="showSubinitiatives = false">hide subinitiatives
-                  </button>
-                </div>
-              </div>
-              <div v-else>
-                <button type="button" class="w3-button w3-theme-l4 w3-round w3-small" style="width: 100%"
-                  @click="showSubinitiatives = true">show subinitiatives
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
         <div v-if="showAssigner" class="assigner-container w3-col m4 w3-container d2-color">
           <div class="w3-row label-row">
@@ -168,14 +181,9 @@ export default {
 
   data () {
     return {
-      assetData: {
-        assetName: '',
-        totalExistingTokens: 100,
-        holderName: 'holder name',
-        ownedByThisHolder: 10,
-        transferredToSubinitiatives: []
-      },
+      assetData: null,
       showSubinitiatives: false,
+      showMembers: false,
       showNewTokenMintModal: false,
       value: 0,
       percentage: 0
@@ -228,6 +236,9 @@ export default {
     transferredToSubinitiativesStr () {
       return amountAndPerc(this.transferredToSubinitiativesVal, this.underThisInitiativeVal)
     },
+    hasMembers () {
+      return (this.assetData.transferredToUsers.length > 0)
+    },
     transferredToMembersVal () {
       return this.assetData.totalTransferredToUsers
     },
@@ -246,6 +257,12 @@ export default {
     },
     subinitiativePercent (subinitiativeAssets) {
       return (subinitiativeAssets.value) / this.underThisInitiativeVal * 100
+    },
+    memberPortion (memberAssets) {
+      return amountAndPerc(memberAssets.value, this.underThisInitiativeVal)
+    },
+    memberPercent (memberAssets) {
+      return (memberAssets.value) / this.underThisInitiativeVal * 100
     },
     newSubInitiativeClicked () {
       this.$emit('new-initiative', this.assetData.holderId)
@@ -348,10 +365,14 @@ export default {
   white-space: nowrap;
 }
 
-.sub-initiatives {
-  padding-top: 15px;
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.sub-elements {
   padding-left: 30px;
-  padding-right: 30px;
+  margin-top: 4px;
+  margin-bottom: 10px;
 }
 
 
