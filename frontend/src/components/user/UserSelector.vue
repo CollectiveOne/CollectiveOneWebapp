@@ -46,6 +46,8 @@ import { AutocompleteMixin } from '../../lib/mixins'
 import UserAvatar from './UserAvatar.vue'
 
 export default {
+  name: 'user-selector',
+
   mixins: [AutocompleteMixin],
 
   components: {

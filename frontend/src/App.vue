@@ -47,7 +47,7 @@ export default {
 }
 
 textarea {
-  resize: vertical; 
+  resize: vertical;
 }
 
 .w3-modal {
@@ -68,6 +68,16 @@ textarea {
 
 .d2-color {
   color: #334191 !important;  /* w3-indigo d2*/
+}
+
+.success-panel {
+  color: white;
+  background-color:  rgb(64, 163, 109) !important;
+}
+
+.warning-panel {
+  color: white;
+  background-color:  rgb(194, 157, 0) !important;
 }
 
 </style>

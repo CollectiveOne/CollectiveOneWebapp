@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <div class="w3-row-padding">
+    <div class="w3-row">
       <div class="receivers-col w3-col m6">
         <label class="w3-text-indigo"><b>Receivers:</b></label>
         <div class="w3-row">

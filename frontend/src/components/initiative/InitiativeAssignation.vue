@@ -94,10 +94,10 @@
           <label class="w3-text-indigo"><b>Receivers:</b></label>
 
           <div v-for="receiver in assignation.receivers" class="w3-row">
-            <div class="w3-col s9">
+            <div class="w3-col s8">
               <app-user-avatar :user="receiver.user"></app-user-avatar>
             </div>
-            <div class="w3-col s3 w3-center">
+            <div class="w3-col s4 w3-center">
               <div class="w3-row w3-padding input-div">
                 <div class="w3-col s10">
                   <input v-model.number="receiver.percent" class="w3-input w3-border w3-hover-light-gray w3-round"

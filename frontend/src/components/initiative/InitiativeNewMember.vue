@@ -1,7 +1,8 @@
 <template lang="html">
   <div class="w3-row">
-    <div class="w3-col m7">
-      <app-user-selector class="user-selector"
+    <div class="w3-col m7" v-if="showSelector">
+      <app-user-selector
+        class="user-selector"
         anchor="c1Id" label="nickname"
         url="/1/secured/users/suggestions"
         @select="member.user = $event">
@@ -17,7 +18,7 @@
           </select>
         </div>
         <div class="w3-col s4 w3-center">
-          <button type="button" class="add-btn w3-button w3-theme-l1 w3-round" @click="$emit('add', member)">add</button>
+          <button type="button" class="add-btn w3-button w3-theme w3-round" @click="add()">add</button>
         </div>
       </div>
 
@@ -38,10 +39,18 @@ export default {
 
   data () {
     return {
+      showSelector: true,
       member: {
         role: 'MEMBER',
         user: null
       }
+    }
+  },
+
+  methods: {
+    add () {
+      this.$children[0].$forceUpdate()
+      this.$emit('add', this.member)
     }
   }
 }

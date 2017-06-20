@@ -53,7 +53,16 @@
             <div class="w3-row" :style="{'margin-bottom': '5px'}">
               <label class="w3-text-indigo" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
             </div>
-            <app-initiative-new-member class="new-contr-row" @add="addMember($event)"></app-initiative-new-member>
+            <app-initiative-new-member class="new-contr-row" @add="addMember($event, true)"></app-initiative-new-member>
+            <div class="w3-row" :style="{'margin-bottom': '5px'}">
+              <label class="w3-text-indigo" :style="{'margin-bottom': '10px'}"><b>or</b></label>
+              <br>
+              <button
+                class="w3-button w3-theme w3-round w3-small"
+                @click="setAllParentMembers()" type="button" name="button">
+                select all members of "{{ parentInitiative.name }}"
+              </button>
+            </div>
 
           </div>
 
@@ -152,12 +161,20 @@ export default {
       this.updateParent()
     },
 
-    addMember (member) {
+    setAllParentMembers () {
+      this.parentInitiative.members.forEach((e) => {
+        this.addMember(e, false)
+      })
+    },
+
+    addMember (member, show) {
       var index = this.indexOfMember(member.user.c1Id)
       if (index === -1) {
         this.members.push(JSON.parse(JSON.stringify(member)))
       } else {
-        this.showOutputMessage('user has been already included')
+        if (show) {
+          this.showOutputMessage('user has been already included')
+        }
       }
     },
 
@@ -209,7 +226,8 @@ export default {
       if (this.parentId !== '') {
         this.axios.get('/1/secured/initiative/' + this.parentId, {
           params: {
-            addAssets: true
+            addAssets: true,
+            addMembers: true
           }
         }).then((response) => {
           this.parentInitiative = response.data.data
