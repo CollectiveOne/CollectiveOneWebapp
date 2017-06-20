@@ -2,7 +2,7 @@
   <div class="">
     <app-header @expand-nav="expandNav = !expandNav"></app-header>
     <div class="" style="margin-top:51px">
-      <router-view :expandNav="expandNav"></router-view>
+      <router-view @hide-nav="expandNav = false" :expandNav="expandNav"></router-view>
     </div>
   </div>
 </template>

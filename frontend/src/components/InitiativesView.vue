@@ -6,16 +6,17 @@
       @initiative-created="initiativeCreated($event)">
     </app-new-initiative-modal>
 
-    <div v-if="expandNav" class="" style="width:300px">
+    <div v-show="expandNav" :class="navContainerClass">
       <keep-alive>
         <app-initiatives-nav
           :userInitiatives="userInitiatives"
+          @selected="initiativeSelected()"
           @new-initiative="newInitiative($event)">
         </app-initiatives-nav>
       </keep-alive>
     </div>
 
-    <div v-if="showContent" :class="{'expanded-menu': expandNav}">
+    <div v-show="showContent" :class="contentContainerClass">
       <router-view @new-initiative="newInitiative($event)"></router-view>
     </div>
   </div>
@@ -41,22 +42,48 @@ export default {
   data () {
     return {
       showNewInitiativeModal: false,
+      showContent: true,
       userInitiatives: null
     }
   },
 
   computed: {
-    showContent () {
-      if (document.body.clientWidth < 601) {
-        if (this.expandNav) {
-          return false
+    windowIsSmall () {
+      return window.innerWidth < 601
+    },
+    navContainerClass () {
+      if (this.windowIsSmall) {
+        return {
+          'w3-sidebar': true
+        }
+      } else {
+        return {
+          'w3-col': true,
+          's3': true
         }
       }
-      return true
+    },
+    contentContainerClass () {
+      if (this.windowIsSmall) {
+        return {
+          'w3-col': true,
+          's12': true
+        }
+      } else {
+        return {
+          'w3-col': true,
+          's9': true
+        }
+      }
     }
   },
 
   methods: {
+    initiativeSelected () {
+      if (this.windowIsSmall) {
+        this.$emit('hide-nav')
+      }
+    },
     newInitiative (parentId) {
       this.parentInitiativeIdForModal = parentId
       this.showNewInitiativeModal = true
@@ -84,10 +111,6 @@ export default {
 
 .expand-left-menu-btn {
   position: fixed;
-}
-
-.expanded-menu {
-  margin-left: 300px;
 }
 
 </style>

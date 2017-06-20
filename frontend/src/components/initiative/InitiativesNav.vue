@@ -1,5 +1,5 @@
 <template lang="html">
-  <nav class="w3-sidebar w3-white w3-border-right" style="width:300px;">
+  <nav class="w3-white w3-border-right">
     <div class="w3-container w3-padding">
       <h4 class="d2-color"><b>Initiatives</b></h4>
       <div class="create-new w3-button w3-theme-l1" @click="newInitiative()"><i class="fa fa-plus-circle"></i>  create new</div>
@@ -10,6 +10,7 @@
       <app-initiative-menu-item v-for="initiative in userInitiatives"
         :initiative="initiative" :key="initiative.id"
         :level="0" class="top-menu-item"
+        @initiative-clicked="$emit('selected')"
         @new-subinitiative="$emit('new-initiative', $event)">
       </app-initiative-menu-item>
 

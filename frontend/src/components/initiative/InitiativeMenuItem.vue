@@ -15,7 +15,7 @@
           <i class="fa fa-minus" aria-hidden="true"></i>
         </div>
       </div>
-      <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize">
+      <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize" @click="$emit('initiative-clicked')">
         <router-link :to="'/inits/'+initiative.id+'/overview'" class="w3-left">
           {{ initiative.name }}
         </router-link>
@@ -27,7 +27,9 @@
     <div class="w3-row" v-if="showSubinitiatives" v-for="subinitiative in initiative.subInitiatives">
       <app-initiative-menu-item
         class="sub-initiative-element" :initiative="subinitiative" :key="subinitiative.id"
-        :level="level + 1" @new-subinitiative="$emit('new-subinitiative', $event)">
+        :level="level + 1"
+        @initiative-clicked="$emit('initiative-clicked')"
+        @new-subinitiative="$emit('new-subinitiative', $event)">
       </app-initiative-menu-item>
     </div>
   </div>
@@ -42,8 +44,8 @@ export default {
       type: Object,
       default: () => {
         return {
-          name: 'Initiative Name',
-          driver: 'Initiative Driver',
+          name: '',
+          driver: '',
           subInitiatives: []
         }
       }
