@@ -8,8 +8,6 @@ import InitiativeOverview from '../components/initiative/InitiativeOverview.vue'
 import InitiativePeople from '../components/initiative/InitiativePeople.vue'
 import InitiativeAssignations from '../components/initiative/InitiativeAssignations.vue'
 
-import InitiativeAssignation from '../components/initiative/InitiativeAssignation.vue'
-
 Vue.use(Router)
 
 export default new Router({
@@ -25,9 +23,9 @@ export default new Router({
           children: [
             { path: 'overview', name: 'InitiativeOverview', component: InitiativeOverview },
             { path: 'people', name: 'InitiativePeople', component: InitiativePeople },
-            { path: 'assignations', name: 'InitiativeAssignations', component: InitiativeAssignations },
-            { path: 'assignation/:assignationId', name: 'InitiativeAssignation', component: InitiativeAssignation }
+            { path: 'assignations', name: 'InitiativeAssignations', component: InitiativeAssignations }
           ]}
-      ]}
+      ]
+    }
   ]
 })

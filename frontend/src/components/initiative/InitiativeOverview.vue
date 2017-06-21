@@ -16,7 +16,7 @@
       <div class="w3-card">
         <header class="w3-container w3-theme-l2">
           <h4 class="w3-left">Driver</h4>
-          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="showEditInitiativeModal = true"> 
+          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="showEditInitiativeModal = true">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </div>
         </header>
@@ -120,6 +120,13 @@ export default {
 
 .edit-btn-div {
   padding-top: 15px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0
 }
 
 </style>

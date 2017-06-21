@@ -15,10 +15,10 @@
           <i class="fa fa-minus" aria-hidden="true"></i>
         </div>
       </div>
-      <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize" @click="$emit('initiative-clicked')">
-        <router-link tag="div" class="w3-left name-link noselect" :to="'/inits/'+initiative.id+'/overview'">
+      <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize" @click="navTo()">
+        <div class="w3-left name-link noselect">
           {{ initiative.name }}
-        </router-link>
+        </div>
       </div>
       <div class="w3-col s2 d2-color w3-button" @click="$emit('new-subinitiative', initiative.id)">
         <i class="fa fa-plus l1-color" aria-hidden="true"></i>
@@ -28,7 +28,7 @@
       <app-initiative-menu-item
         class="sub-initiative-element" :initiative="subinitiative" :key="subinitiative.id"
         :level="level + 1"
-        @initiative-clicked="$emit('initiative-clicked')"
+        @initiative-clicked="$emit('initiative-clicked', $event)"
         @new-subinitiative="$emit('new-subinitiative', $event)">
       </app-initiative-menu-item>
     </div>
@@ -113,6 +113,13 @@ export default {
   data () {
     return {
       showSubinitiatives: false
+    }
+  },
+
+  methods: {
+    navTo () {
+      this.$emit('initiative-clicked', { 'level': this.level })
+      this.$router.push('/inits/' + this.initiative.id + '/overview')
     }
   }
 }

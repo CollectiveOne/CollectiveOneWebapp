@@ -29,16 +29,18 @@
           <router-link tag="div" to="assignations" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
             :class="{'w3-border-blue': isAssignations}"
             @click="">
-            <h5 class="w3-text-indigo noselect" :class="{'bold-text': isAssignations}">Assignations</h5>
+            <h5 class="w3-text-indigo noselect" :class="{'bold-text': isAssignations}">Transfers</h5>
           </router-link>
         </div>
 
-        <div class="w3-row">
-          <router-view :initiative="initiative"
-            @new-initiative="$emit('new-initiative', $event)"
-            @new-member="newMember($event)"
-            @please-update="updateInitiative(initiative.id)">
-          </router-view>
+        <div class="w3-row content-container">
+          <transition :name="animationType" mode="out-in">
+            <router-view :initiative="initiative"
+              @new-initiative="$emit('new-initiative', $event)"
+              @new-member="newMember($event)"
+              @please-update="updateInitiative(initiative.id)">
+            </router-view>
+          </transition>
         </div>
       </div>
     </div>
@@ -91,6 +93,9 @@ export default {
         }
       })
       return res
+    },
+    animationType () {
+      return this.$store.state.support.contentAnimationType
     }
   },
 
@@ -118,7 +123,7 @@ export default {
   },
 
   watch: {
-    '$route' () {
+    '$route' (to, from) {
       this.updateInitiative(this.$route.params.initiativeId)
     }
   },
@@ -131,6 +136,9 @@ export default {
 
 <style scoped>
 
+@offcanvas-transition-speed:;
+@offcanvas-transition-timing: ease;
+
 .tablink {
   cursor: pointer;
 }
@@ -141,6 +149,114 @@ export default {
 
 .edit-btn-div {
   padding-top: 15px;
+}
+
+.content-container {
+  overflow: hidden;
+}
+
+.slideToRight-enter-active {
+  animation: slideToRight-in 0.5s ease forwards;
+}
+
+.slideToRight-leave-active {
+  animation: slideToRight-out 0.5s ease forwards;
+}
+
+.slideToLeft-enter-active {
+  animation: slideToLeft-in 0.5s ease forwards;
+}
+
+.slideToLeft-leave-active {
+  animation: slideToLeft-out 0.5s ease forwards;
+}
+
+.slideToUp-enter-active {
+  animation: slideToUp-in 0.5s ease forwards;
+}
+
+.slideToUp-leave-active {
+  animation: slideToUp-out 0.5s ease forwards;
+}
+
+.slideToDown-enter-active {
+  animation: slideToDown-in 0.5s ease forwards;
+}
+
+.slideToDown-leave-active {
+  animation: slideToDown-out 0.5s ease forwards;
+}
+
+@keyframes slideToRight-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideToRight-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slideToLeft-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideToLeft-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slideToDown-in {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideToDown-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes slideToUp-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideToUp-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
 }
 
 </style>

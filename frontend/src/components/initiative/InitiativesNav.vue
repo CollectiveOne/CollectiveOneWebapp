@@ -24,7 +24,7 @@
         <app-initiative-menu-item v-for="initiative in userInitiatives"
           :initiative="initiative" :key="initiative.id"
           :level="0" class="top-menu-item"
-          @initiative-clicked="$emit('selected')"
+          @initiative-clicked="$emit('selected', $event)"
           @new-subinitiative="newSubInitiative($event)">
         </app-initiative-menu-item>
 

@@ -8,24 +8,25 @@
     </app-new-assignation-modal>
 
     <div v-if="isLoggedAnAdmin" class="w3-row">
-      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="showNewAssignationModal = true">new assignation</button>
+      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="showNewAssignationModal = true">new transfer</button>
     </div>
 
-
-    <hr>
-    <label class="w3-text-indigo"><b>Assignations of this initiative</b></label>
-    <div class="w3-row-padding assignations-container">
-      <div class="w3-col l6" v-for="assignation in assignations.assignations">
-        <app-initiative-assignation class="assignation-card"
-          :assignation="assignation" :initiative="initiative"
-          :key="assignation.id" @please-update="update()">
-        </app-initiative-assignation>
+    <div v-if="assignations.assignations.length > 0" class="">
+      <hr>
+      <label class="w3-text-indigo"><b>Transfers in this initiative</b></label>
+      <div class="w3-row-padding assignations-container">
+        <div class="w3-col l6" v-for="assignation in assignations.assignations">
+          <app-initiative-assignation class="assignation-card"
+            :assignation="assignation" :initiative="initiative"
+            :key="assignation.id" @please-update="update()">
+          </app-initiative-assignation>
+        </div>
       </div>
     </div>
 
     <div v-if="getSubassignations.length > 0" class="">
       <hr>
-      <label class="w3-text-indigo"><b>Assignations of sub-initiatives</b></label>
+      <label class="w3-text-indigo"><b>Transfers in sub-initiatives</b></label>
       <div class="w3-row-padding assignations-container">
         <div class="w3-col l6" v-for="assignationData in getSubassignations">
           <app-initiative-assignation class="assignation-card"

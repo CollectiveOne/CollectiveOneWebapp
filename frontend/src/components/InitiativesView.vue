@@ -1,22 +1,23 @@
 <template lang="html">
   <div class="w3-row">
-    <div v-show="expandNav" :class="navContainerClass">
+    <div v-show="expandNav" class="this-nav" :class="navContainerClass">
       <keep-alive>
         <app-initiatives-nav
           :userInitiatives="userInitiatives"
-          @selected="initiativeSelected()"
+          @selected="initiativeSelected($event)"
           @initiative-created="initiativeCreated($event)">
         </app-initiatives-nav>
       </keep-alive>
     </div>
 
-    <div v-show="showContent" :class="contentContainerClass">
+    <div v-show="showContent" class="this-content" :class="contentContainerClass">
       <router-view @new-initiative="newInitiative($event)"></router-view>
     </div>
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import InitiativesNav from './initiative/InitiativesNav.vue'
 
 export default {
@@ -79,7 +80,11 @@ export default {
   },
 
   methods: {
-    initiativeSelected () {
+    ...mapMutations(['setSelectedInitiativeLevel', 'setSelectedInitiativeLevelOld']),
+
+    initiativeSelected (initiative) {
+      this.setSelectedInitiativeLevelOld(this.$store.state.selectedInitiativeLevel)
+      this.setSelectedInitiativeLevel(initiative.level)
       if (this.windowIsSmall) {
         this.$emit('hide-nav')
       }
@@ -102,6 +107,19 @@ export default {
     }
   },
 
+  watch: {
+    '$route' (to, from) {
+      console.log(to)
+      console.log(from)
+      console.log(this.$store.state.support.selectedInitiativeLevel)
+
+      let newLevel = this.$store.state.support.selectedInitiativeLevel
+      let oldLevel = this.$store.state.support.selectedInitiativeLevelOld
+
+      
+    }
+  },
+
   mounted () {
     this.updatedMyInitiatives()
   }
@@ -116,6 +134,13 @@ export default {
 
 .nav-small {
   width: 90%;
+}
+
+.this-nav {
+  height: 100%;
+}
+
+.this-content {
 }
 
 </style>
