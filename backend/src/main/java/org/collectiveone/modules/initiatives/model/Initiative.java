@@ -81,8 +81,8 @@ public class Initiative {
 		
 		return dto;
 	}
-
-
+	
+	
 	public UUID getId() {
 		return id;
 	}

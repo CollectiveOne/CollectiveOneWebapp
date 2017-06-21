@@ -15,11 +15,11 @@
 
     <nav class="w3-white w3-border-right">
       <div class="w3-container w3-padding">
-        <h4 class="d2-color"><b>Initiatives</b></h4>
+        <h4 class="d2-color noselect"><b>Initiatives</b></h4>
         <div class="create-new w3-button w3-theme-l1" @click="showNewInitiativeModal = true"><i class="fa fa-plus-circle"></i>  create new</div>
 
         <div class="w3-row section-header">
-          <h6 class="section-header l2-color w3-center"><i>top-level</i></h6>
+          <h6 class="section-header l2-color w3-center noselect"><i>top-level</i></h6>
         </div>
         <app-initiative-menu-item v-for="initiative in userInitiatives"
           :initiative="initiative" :key="initiative.id"
@@ -29,7 +29,7 @@
         </app-initiative-menu-item>
 
         <div class="w3-row section-header">
-          <h6 class=" l2-color w3-center"><i>my favorites</i></h6>
+          <h6 class=" l2-color w3-center noselect"><i>my favorites</i></h6>
         </div>
 
       </div>

@@ -7,7 +7,7 @@
         </div>
 
         <div class="w3-container w3-theme">
-          <h2>{{ isPeerReviewed ? 'New Peer-Reviewed Assignation' : 'New Direct Assignation' }}</h2>
+          <h2>{{ isPeerReviewed ? 'Peer-Reviewed Transfer to Users' : 'Direct Transfer to User(s)' }}</h2>
         </div>
 
         <div class="this-container w3-container">

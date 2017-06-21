@@ -5,7 +5,7 @@
     </div>
     <div class="w3-col m5">
       <div class="w3-row-padding">
-        <div class="w3-col w3-center" :class="{'s8' : canEdit, 's12' : !canEdit}">
+        <div class="w3-col w3-center noselect" :class="{'s8' : canEdit, 's12' : !canEdit}">
           <p><span class="role-tag w3-tag w3-round" :class="getRoleClasses(member)">{{ member.role ? member.role : 'MEMBER' }}</span></p>
         </div>
         <div v-if="canEdit" class="w3-col s4 w3-xxlarge w3-button w3-center">

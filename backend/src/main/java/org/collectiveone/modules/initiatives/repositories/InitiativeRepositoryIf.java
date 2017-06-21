@@ -15,14 +15,8 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 	@Query("SELECT init FROM Initiative init JOIN init.members mem WHERE mem.user.c1Id = ?1")
 	List<Initiative> findOfMember(UUID memberId);
 	
-	@Query("SELECT init FROM Initiative init "
-			+ "JOIN init.members mem "
-			+ "WHERE mem.user.c1Id = ?1 "
-			+ "AND init.id NOT IN "
-			+ "(SELECT childInit.id FROM Initiative childInit "
-			+ "JOIN childInit.relationships childRels "
-			+ "WHERE childRels.type = 'IS_DETACHED_SUB')" )
-	List<Initiative> findSuperInitiativesOfMember(UUID memberId);
+	@Query("SELECT rels.ofInitiative from InitiativeRelationship rels WHERE rels.initiative.id = ?1 AND rels.type = ?2")
+	Initiative findOfInitiativesWithRelationship(UUID initiativeId, InitiativeRelationshipType type);
 		
 	
 	@Query("SELECT rels.initiative from InitiativeRelationship rels WHERE rels.ofInitiative.id = ?1 AND rels.type = ?2")

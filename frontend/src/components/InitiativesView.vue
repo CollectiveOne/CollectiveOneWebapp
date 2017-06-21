@@ -46,7 +46,8 @@ export default {
     navContainerClass () {
       if (this.windowIsSmall) {
         return {
-          'w3-sidebar': true
+          'w3-sidebar': true,
+          'nav-small': true
         }
       } else {
         return {
@@ -62,9 +63,16 @@ export default {
           's12': true
         }
       } else {
-        return {
-          'w3-col': true,
-          's9': true
+        if (this.expandNav) {
+          return {
+            'w3-col': true,
+            's9': true
+          }
+        } else {
+          return {
+            'w3-col': true,
+            's12': true
+          }
         }
       }
     }
@@ -104,6 +112,10 @@ export default {
 
 .expand-left-menu-btn {
   position: fixed;
+}
+
+.nav-small {
+  width: 90%;
 }
 
 </style>

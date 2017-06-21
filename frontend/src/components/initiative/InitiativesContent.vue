@@ -9,27 +9,27 @@
     <div v-if="initiative" class="w3-row">
       <div class="w3-white">
         <header class="w3-container w3-theme">
-          <h3 class="w3-left">{{ initiative.name }}</h3>
+          <h3 class="w3-left noselect">{{ initiative.name }}</h3>
           <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="showEditInitiativeModal = true">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </div>
         </header>
 
-        <div class="section-tabs w3-row">
+        <div class="section-tabs w3-row w3-center">
           <router-link tag="div" to="overview" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
             :class="{'w3-border-blue': isOverview}"
             @click="">
-            <h5 class="w3-text-indigo" :class="{'bold-text': isOverview}">Overview</h5>
+            <h5 class="w3-text-indigo noselect" :class="{'bold-text': isOverview}">Overview</h5>
           </router-link>
           <router-link tag="div" to="people" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
             :class="{'w3-border-blue': isPeople}"
             @click="">
-            <h5 class="w3-text-indigo" :class="{'bold-text': isPeople}">People</h5>
+            <h5 class="w3-text-indigo noselect" :class="{'bold-text': isPeople}">People</h5>
           </router-link>
           <router-link tag="div" to="assignations" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
             :class="{'w3-border-blue': isAssignations}"
             @click="">
-            <h5 class="w3-text-indigo" :class="{'bold-text': isAssignations}">Assignations</h5>
+            <h5 class="w3-text-indigo noselect" :class="{'bold-text': isAssignations}">Assignations</h5>
           </router-link>
         </div>
 

@@ -14,7 +14,7 @@
         @click="$emit('expand-nav')">
         <i class="fa fa-bars"></i>
       </div>
-      <a href="#" class="w3-display-middle left w3-bar-item">
+      <a href="#" class="w3-display-middle left w3-bar-item noselect">
         <img class="logo" src="../assets/Logo-Light.png" alt="">
       </a>
 

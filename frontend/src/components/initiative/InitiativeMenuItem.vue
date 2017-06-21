@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize" @click="$emit('initiative-clicked')">
-        <router-link tag="div" class="w3-left name-link" :to="'/inits/'+initiative.id+'/overview'">
+        <router-link tag="div" class="w3-left name-link noselect" :to="'/inits/'+initiative.id+'/overview'">
           {{ initiative.name }}
         </router-link>
       </div>

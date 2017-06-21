@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="w3-cell-row">
-    <div class="w3-cell w3-cell-middle" style="width:30px">
+    <div class="w3-cell w3-cell-middle noselect" style="width:30px">
       <img class="" style="width:40px" :src="user.pictureUrl"/>
     </div>
     <div class="name-container w3-cell w3-cell-middle">

@@ -15,6 +15,7 @@ import org.collectiveone.modules.governance.model.Governance;
 import org.collectiveone.modules.governance.services.GovernanceService;
 import org.collectiveone.modules.initiatives.InitiativeRelationshipType;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
+import org.collectiveone.modules.initiatives.dto.InitiativeMembersDto;
 import org.collectiveone.modules.initiatives.dto.MemberDto;
 import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
 import org.collectiveone.modules.initiatives.model.Initiative;
@@ -237,11 +238,11 @@ public class InitiativeService {
 	
 	@Transactional
 	public GetResult<List<InitiativeDto>> getOfUser(UUID userC1Id) {
-		/* return the initiatives of a user but inserting initiatives that are 
-		 * sub-initiatives as sub-elements */
+		/* return the all super-initiatives (initiatives without parent initiatives) 
+		 * and include all sub-initiativespf each of them */
 		
 		AppUser user = appUserRepository.findByC1Id(userC1Id);
-		List<Initiative> superInitiatives = initiativeRepository.findSuperInitiativesOfMember(user.getC1Id());
+		List<Initiative> superInitiatives = getSuperInitiativesOfMember(user.getC1Id());
 		
 		/* get all initiatives in which the user is a contributor */
 		List<InitiativeDto> initiativesDtos = new ArrayList<InitiativeDto>();
@@ -256,6 +257,41 @@ public class InitiativeService {
 		}
 		
 		return new GetResult<List<InitiativeDto>>("success", "initiatives retrieved", initiativesDtos);
+	}
+	
+	@Transactional
+	public List<Initiative> getSuperInitiativesOfMember(UUID userC1Id) {
+		List<Initiative> allInitiatives = initiativeRepository.findOfMember(userC1Id);
+		List<Initiative> superInitiatives = new ArrayList<Initiative>();
+		
+		for (Initiative thisInitiative : allInitiatives) {
+			Initiative superInitiative = getSuperInitiative(thisInitiative.getId());
+			
+			boolean exist = false;
+			for (Initiative existingSuperInitiative : superInitiatives) {
+				if (existingSuperInitiative.getId() == superInitiative.getId()) {
+					exist = true;
+				}
+			}
+			
+			if(!exist) {
+				superInitiatives.add(superInitiative);
+			}
+		}
+		
+		return superInitiatives;
+	}
+	
+	@Transactional
+	public Initiative getSuperInitiative(UUID initiativeId) {
+		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_DETACHED_SUB);
+		if (parent == null) {
+			return initiativeRepository.findById(initiativeId);
+		} else {
+			/* recursively loof for a parent with no parent */
+			return getSuperInitiative(parent.getId());
+		}
+		
 	}
 	
 	@Transactional
@@ -284,31 +320,41 @@ public class InitiativeService {
 		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, userId);
 		
 		MemberDto memberDto = new MemberDto();
-		
-		memberDto.setId(member.getId().toString());
-		memberDto.setInitiativeId(initiative.getId().toString());
-		memberDto.setUser(member.getUser().toDto());
-		
-		/* governance related data */
-		DecisionMaker decisionMaker = governanceService.getDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
-		if(decisionMaker != null) {
-			if(decisionMaker.getRole() == DecisionMakerRole.ADMIN) {
-				memberDto.setRole(DecisionMakerRole.ADMIN.toString());
+
+		if (member != null) {
+			memberDto.setId(member.getId().toString());
+			memberDto.setUser(member.getUser().toDto());
+			
+			/* governance related data */
+			DecisionMaker decisionMaker = governanceService.getDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
+			if(decisionMaker != null) {
+				if(decisionMaker.getRole() == DecisionMakerRole.ADMIN) {
+					memberDto.setRole(DecisionMakerRole.ADMIN.toString());
+				}
 			}
+		} else {
+			memberDto.setId("");
+			memberDto.setUser(appUserRepository.findByC1Id(userId).toDto());
+			memberDto.setRole(DecisionMakerRole.ALIEN.toString());
 		}
 		
 		return memberDto;
 	}
 	
-	public List<MemberDto> getMembers(UUID initiativeId) {
+	public InitiativeMembersDto getMembersAndSubmembers(UUID initiativeId) {
+		
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
-		List<MemberDto> members = new ArrayList<MemberDto>();
+		InitiativeMembersDto initiativeMembers = new InitiativeMembersDto();
+		initiativeMembers.setInitiativeId(initiative.getId().toString());
+		initiativeMembers.setInitiativeName(initiative.getName());
+		
+		
+		/* add members of this initiative */
 		for (Member member : initiative.getMembers()) {
 			MemberDto memberDto = new MemberDto();
 			
 			memberDto.setId(member.getId().toString());
-			memberDto.setInitiativeId(initiative.getId().toString());
 			memberDto.setUser(member.getUser().toDto());
 			
 			/* governance related data */
@@ -319,12 +365,17 @@ public class InitiativeService {
 				}
 			}
 			
-			members.add(memberDto);
+			initiativeMembers.getMembers().add(memberDto);
 		}
 		
-		return members;
+		/* add the members of all sub-initiatives too */
+		for (InitiativeDto subInitiative : getSubinitiativesTree(initiative.getId())) {
+			/* recursively call with subinitiatives */
+			initiativeMembers.getSubinitiativesMembers().add(getMembersAndSubmembers(UUID.fromString(subInitiative.getId())));
+		}
+		
+		return initiativeMembers;
 	}
-	
 	
 	
 	@Transactional

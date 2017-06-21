@@ -91,7 +91,7 @@ public class InitiativesController {
 		}
 		
 		if(addMembers) {
-			initiativeDto.setMembers(initiativeService.getMembers(UUID.fromString(initiativeId)));
+			initiativeDto.setMembers(initiativeService.getMembersAndSubmembers(UUID.fromString(initiativeId)));
 		}
 		
 		if(addLoggedUser) {
