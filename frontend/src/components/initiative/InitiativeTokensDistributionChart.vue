@@ -97,7 +97,7 @@
                   <div v-if="isOverview" class="w3-row">
                     <div v-if="hasMembers">
                       <div class="sub-elements" v-if="showMembers">
-                        <div class="w3-row" v-for="memberAssets in assetData.transferredToUsers" >
+                        <div class="w3-row" v-for="memberAssets in assetData.transferredToUsers" v-if="memberAssets.value > 0">
                           <label class="d2-color">
                             <b>{{ memberAssets.receiverName }}</b>
                           </label>

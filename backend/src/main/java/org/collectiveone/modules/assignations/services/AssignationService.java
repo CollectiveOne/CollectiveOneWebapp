@@ -1,7 +1,6 @@
 package org.collectiveone.modules.assignations.services;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +13,7 @@ import org.collectiveone.modules.assignations.dto.BillDto;
 import org.collectiveone.modules.assignations.dto.EvaluationDto;
 import org.collectiveone.modules.assignations.dto.EvaluationGradeDto;
 import org.collectiveone.modules.assignations.dto.EvaluatorDto;
+import org.collectiveone.modules.assignations.dto.InitiativeAssignationsDto;
 import org.collectiveone.modules.assignations.dto.ReceiverDto;
 import org.collectiveone.modules.assignations.enums.AssignationState;
 import org.collectiveone.modules.assignations.enums.AssignationType;
@@ -33,8 +33,10 @@ import org.collectiveone.modules.assignations.repositories.BillRepositoryIf;
 import org.collectiveone.modules.assignations.repositories.EvaluationGradeRepositoryIf;
 import org.collectiveone.modules.assignations.repositories.EvaluatorRepositoryIf;
 import org.collectiveone.modules.assignations.repositories.ReceiverRepositoryIf;
+import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.initiatives.model.Initiative;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+import org.collectiveone.modules.initiatives.services.InitiativeService;
 import org.collectiveone.modules.tokens.model.TokenType;
 import org.collectiveone.modules.tokens.services.TokenService;
 import org.collectiveone.modules.tokens.services.TokenTransferService;
@@ -49,6 +51,9 @@ public class AssignationService {
 	
 	@Autowired
 	private TokenService tokenService;
+	
+	@Autowired
+	private InitiativeService initiativeService;
 	
 	@Autowired
 	private TokenTransferService tokenTransferService;
@@ -234,20 +239,34 @@ public class AssignationService {
 		return assignationDto;
 	}
 	
+	public GetResult<InitiativeAssignationsDto> getAssignationsResult(UUID initiativeId, UUID evaluatorAppUserId) {
+		return new GetResult<InitiativeAssignationsDto>("success", "success", getAssignations(initiativeId, evaluatorAppUserId));
+	}
+	
 	@Transactional
-	public GetResult<List<AssignationDto>> getAssignations(UUID initiativeId, UUID evaluatorAppUserId) {
+	public InitiativeAssignationsDto getAssignations(UUID initiativeId, UUID evaluatorAppUserId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
 		List<Assignation> assignations = assignationRepository.findByInitiativeId(initiativeId);
-		List<AssignationDto> assignationsDtos = new ArrayList<AssignationDto>();
+		
+		InitiativeAssignationsDto initiativeAssignations = new InitiativeAssignationsDto();
+		initiativeAssignations.setInitiativeId(initiative.getId().toString());
+		initiativeAssignations.setInitiativeName(initiative.getName());
 		
 		for(Assignation assignation : assignations) {
 			if(assignation.getType() == AssignationType.PEER_REVIEWED) {
-				assignationsDtos.add(getPeerReviewedAssignation(initiativeId, assignation.getId(), evaluatorAppUserId));
+				initiativeAssignations.getAssignations().add(getPeerReviewedAssignation(initiativeId, assignation.getId(), evaluatorAppUserId));
 			} else {
-				assignationsDtos.add(assignation.toDto());
+				initiativeAssignations.getAssignations().add(assignation.toDto());
 			}
 		}
 		
-		return new GetResult<List<AssignationDto>>("success", "assignations found", assignationsDtos);
+		/* add the members of all sub-initiatives too */
+		for (InitiativeDto subInitiative : initiativeService.getSubinitiativesTree(initiative.getId())) {
+			/* recursively call with subinitiatives */
+			initiativeAssignations.getSubinitiativesAssignations().add(getAssignations(UUID.fromString(subInitiative.getId()), evaluatorAppUserId));
+		}
+		
+		return initiativeAssignations;
 	}
 	
 	/** Non-transactional to evaluate and update assignation state in different transactions */

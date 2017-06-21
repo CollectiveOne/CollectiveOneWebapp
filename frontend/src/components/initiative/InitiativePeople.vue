@@ -25,7 +25,7 @@
 
     <div class="w3-card members-panel" v-if="allSubmembers.length > 0" >
       <header class="w3-container w3-theme-l2 noselect">
-        <h4>Members of all sub-initiatives</h4>
+        <h4>Members of sub-initiatives</h4>
       </header>
 
       <div class="w3-container members-div">

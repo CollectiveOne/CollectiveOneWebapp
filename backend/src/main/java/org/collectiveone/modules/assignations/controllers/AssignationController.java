@@ -1,12 +1,12 @@
 package org.collectiveone.modules.assignations.controllers;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.assignations.dto.AssignationDto;
 import org.collectiveone.modules.assignations.dto.EvaluationDto;
+import org.collectiveone.modules.assignations.dto.InitiativeAssignationsDto;
 import org.collectiveone.modules.assignations.services.AssignationService;
 import org.collectiveone.modules.governance.enums.DecisionVerdict;
 import org.collectiveone.modules.governance.services.GovernanceService;
@@ -48,8 +48,8 @@ public class AssignationController {
 	} 
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignations", method = RequestMethod.GET)
-	public GetResult<List<AssignationDto>> getAssignations(@PathVariable("initiativeId") String initiativeId) {
-		return assignationService.getAssignations(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
+	public GetResult<InitiativeAssignationsDto> getAssignations(@PathVariable("initiativeId") String initiativeId) {
+		return assignationService.getAssignationsResult(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
 	}
 	
 	@RequestMapping(path = "/secured/assignation/{assignationId}/evaluate", method = RequestMethod.POST)
