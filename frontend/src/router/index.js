@@ -21,9 +21,9 @@ export default new Router({
           name: 'Initiative',
           component: InitiativesContent,
           children: [
-            { path: 'overview', name: 'InitiativeOverview', component: InitiativeOverview },
-            { path: 'people', name: 'InitiativePeople', component: InitiativePeople },
-            { path: 'assignations', name: 'InitiativeAssignations', component: InitiativeAssignations }
+            { path: 'overview', name: 'InitiativeOverview', component: InitiativeOverview, meta: {'column': 0} },
+            { path: 'people', name: 'InitiativePeople', component: InitiativePeople, meta: {'column': 1} },
+            { path: 'assignations', name: 'InitiativeAssignations', component: InitiativeAssignations, meta: {'column': 3} }
           ]}
       ]
     }

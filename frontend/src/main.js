@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import beforeEach from './router/beforeEach'
 import { store } from './store/store'
 
 import axios from 'axios'
@@ -30,3 +31,5 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
+
+router.beforeEach(beforeEach)

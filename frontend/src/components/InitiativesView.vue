@@ -85,7 +85,7 @@ export default {
     ...mapActions(['updatedMyInitiatives']),
 
     initiativeSelected (initiative) {
-      this.$router.push('/inits/' + initiative.id + '/overview')
+      this.$router.push('/inits/' + initiative.id)
 
       if (this.windowIsSmall) {
         this.$emit('hide-nav')
@@ -99,17 +99,6 @@ export default {
     initiativeCreated (initiativeId) {
       this.updatedMyInitiatives()
       this.$router.push('/inits/' + initiativeId + '/overview')
-    }
-  },
-
-  watch: {
-    '$route' (to, from) {
-      var fromLevel = this.$store.getters.initiativeLevel(from.params.initiativeId)
-      var toLevel = this.$store.getters.initiativeLevel(to.params.initiativeId)
-      console.log('from: ' + fromLevel)
-      console.log('to  : ' + toLevel)
-      // let newLevel = this.$store.state.support.selectedInitiativeLevel
-      // let oldLevel = this.$store.state.support.selectedInitiativeLevelOld
     }
   },
 
