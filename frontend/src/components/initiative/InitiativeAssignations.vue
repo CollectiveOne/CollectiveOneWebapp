@@ -9,14 +9,14 @@
         @assignation-done="$emit('please-update')">
       </app-new-assignation-modal>
     </transition>
-    
+
     <div v-if="isLoggedAnAdmin" class="w3-row">
       <button class="w3-button w3-theme w3-round" type="button" name="button" @click="showNewAssignationModal = true">new transfer</button>
     </div>
 
     <div v-if="assignations.assignations.length > 0" class="">
       <hr>
-      <label class="w3-text-indigo"><b>Transfers in this initiative</b></label>
+      <label class="w3-text-indigo"><b>Transfers in {{ initiative.name }}</b></label>
       <div class="w3-row-padding assignations-container">
         <div class="w3-col l6" v-for="assignation in assignations.assignations">
           <app-initiative-assignation class="assignation-card"

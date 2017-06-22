@@ -86,35 +86,37 @@
         </div>
       </div>
     </div>
-    <div v-if="isDone">
-      <div v-show="showExpanded" class="w3-container">
-        <div class="bottom-btns-row w3-row-padding">
+    <div v-if="isDone" class="slider-container">
+      <transition name="slideDownUp">
+        <div v-show="showExpanded" class="w3-container">
+          <div class="bottom-btns-row w3-row-padding">
 
-          <hr>
-          <label class="w3-text-indigo"><b>Receivers:</b></label>
+            <hr>
+            <label class="w3-text-indigo"><b>Receivers:</b></label>
 
-          <div v-for="receiver in assignation.receivers" class="w3-row">
-            <div class="w3-col s8">
-              <app-user-avatar :user="receiver.user"></app-user-avatar>
-            </div>
-            <div class="w3-col s4 w3-center">
-              <div class="w3-row w3-padding input-div">
-                <div class="w3-col s10">
-                  <input v-model.number="receiver.percent" class="w3-input w3-border w3-hover-light-gray w3-round"
-                  type="number" step="5" min="0" :disabled="true">
-                </div>
-                <div class="w3-col s2 d2-color">
-                  <i class="fa fa-percent" aria-hidden="true"></i>
+            <div v-for="receiver in assignation.receivers" class="w3-row">
+              <div class="w3-col s8">
+                <app-user-avatar :user="receiver.user"></app-user-avatar>
+              </div>
+              <div class="w3-col s4 w3-center">
+                <div class="w3-row w3-padding input-div">
+                  <div class="w3-col s10">
+                    <input v-model.number="receiver.percent" class="w3-input w3-border w3-hover-light-gray w3-round"
+                    type="number" step="5" min="0" :disabled="true">
+                  </div>
+                  <div class="w3-col s2 d2-color">
+                    <i class="fa fa-percent" aria-hidden="true"></i>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="w3-col m12">
-            <button type="button" class="w3-button w3-light-gray w3-round" @click="showExpanded = false">Close</button>
+            <div class="w3-col m12">
+              <button type="button" class="w3-button w3-light-gray w3-round" @click="showExpanded = false">Close</button>
+            </div>
           </div>
         </div>
-      </div>
+      </transition>
     </div>
 
   </div>

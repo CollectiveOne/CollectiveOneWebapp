@@ -2,12 +2,14 @@
 
   <div v-if="assetData" class="">
 
-    <app-new-tokenmint-modal
-      v-if="showNewTokenMintModal"
-      :assetData="assetData"
-      @close-this="showNewTokenMintModal = false"
-      @please-update="updateTokenData()">
-    </app-new-tokenmint-modal>
+    <transition name="slideDownUp">
+      <app-new-tokenmint-modal
+        v-if="showNewTokenMintModal"
+        :assetData="assetData"
+        @close-this="showNewTokenMintModal = false"
+        @please-update="updateTokenData()">
+      </app-new-tokenmint-modal>
+    </transition>
 
     <div class="this-container">
       <div class="w3-row">
