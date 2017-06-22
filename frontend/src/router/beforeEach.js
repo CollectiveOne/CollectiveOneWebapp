@@ -24,18 +24,42 @@ export default (to, from, next) => {
     next(to.path + '/' + subsection)
   } else {
     /** select animation based on column and level */
-
     var animation = ''
-    var fromCoord = store.getters.initiativeCoordinate(from.params.initiativeId)
-    var toCoord = store.getters.initiativeCoordinate(to.params.initiativeId)
-    console.log(fromCoord)
-    console.log(toCoord)
-    if (fromCoord.length === toCoord.length) {
+
+    /* moving within the same initiative */
+    if (from.params.initiativeId === to.params.initiativeId) {
       if (from.meta.column < to.meta.column) {
         animation = 'slideToLeft'
       } else {
         animation = 'slideToRight'
       }
+    } else {
+      var fromCoord = store.getters.initiativeCoordinate(from.params.initiativeId)
+      var toCoord = store.getters.initiativeCoordinate(to.params.initiativeId)
+
+      /* if within the same level */
+      var ixLevel = 0
+      var moveDown = true
+
+      while (true) {
+        if (fromCoord.length < ixLevel + 1) {
+          moveDown = true
+          break
+        }
+        if (toCoord.length < ixLevel + 1) {
+          moveDown = false
+          break
+        }
+        if (fromCoord[ixLevel] !== toCoord[ixLevel]) {
+          moveDown = toCoord[ixLevel] > fromCoord[ixLevel]
+          break
+        }
+        ixLevel = ixLevel + 1
+        if (ixLevel > 50) {
+          break
+        }
+      }
+      animation = moveDown ? 'slideToUp' : 'slideToDown'
     }
 
     store.commit('setContentAnimationType', animation)
