@@ -8,12 +8,17 @@
 
     <div v-if="initiative" class="w3-row">
       <div class="w3-white">
-        <header class="w3-container w3-theme">
-          <h3 class="w3-left noselect">{{ initiative.name }}</h3>
-          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="showEditInitiativeModal = true">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-          </div>
-        </header>
+
+      <div class="header-container">
+        <transition name="fade" mode="out-in">
+            <header class="w3-container w3-theme" :key="initiative.name">
+              <h3 class="w3-left noselect">{{ initiative.name }}</h3>
+              <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="showEditInitiativeModal = true">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </div>
+            </header>
+          </transition>
+        </div>
 
         <div class="section-tabs w3-row w3-center">
           <router-link tag="div" to="overview" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
@@ -135,6 +140,22 @@ export default {
 </script>
 
 <style scoped>
+
+.header-container {
+  overflow: hidden;
+}
+
+.fade-enter-active {
+  transition: opacity .9s
+}
+
+.fade-leave-active {
+  transition: opacity .1s
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0
+}
 
 @offcanvas-transition-speed:;
 @offcanvas-transition-timing: ease;
