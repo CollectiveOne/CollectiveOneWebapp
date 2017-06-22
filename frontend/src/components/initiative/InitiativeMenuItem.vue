@@ -15,7 +15,7 @@
           <i class="fa fa-minus" aria-hidden="true"></i>
         </div>
       </div>
-      <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize" @click="navTo()">
+      <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize" @click="$emit('initiative-clicked', initiative)">
         <div class="w3-left name-link noselect">
           {{ initiative.name }}
         </div>
@@ -113,13 +113,6 @@ export default {
   data () {
     return {
       showSubinitiatives: false
-    }
-  },
-
-  methods: {
-    navTo () {
-      this.$emit('initiative-clicked', { 'level': this.level })
-      this.$router.push('/inits/' + this.initiative.id + '/overview')
     }
   }
 }

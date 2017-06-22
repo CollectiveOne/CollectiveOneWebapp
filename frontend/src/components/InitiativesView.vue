@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 import InitiativesNav from './initiative/InitiativesNav.vue'
 
 export default {
@@ -35,12 +35,14 @@ export default {
   data () {
     return {
       showNewInitiativeModal: false,
-      showContent: true,
-      userInitiatives: null
+      showContent: true
     }
   },
 
   computed: {
+    userInitiatives () {
+      return this.$store.state.support.initiativesTree
+    },
     windowIsSmall () {
       return window.innerWidth < 601
     },
@@ -80,11 +82,11 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['setSelectedInitiativeLevel', 'setSelectedInitiativeLevelOld']),
+    ...mapActions(['updatedMyInitiatives']),
 
     initiativeSelected (initiative) {
-      this.setSelectedInitiativeLevelOld(this.$store.state.selectedInitiativeLevel)
-      this.setSelectedInitiativeLevel(initiative.level)
+      this.$router.push('/inits/' + initiative.id + '/overview')
+
       if (this.windowIsSmall) {
         this.$emit('hide-nav')
       }
@@ -97,26 +99,17 @@ export default {
     initiativeCreated (initiativeId) {
       this.updatedMyInitiatives()
       this.$router.push('/inits/' + initiativeId + '/overview')
-    },
-    updatedMyInitiatives () {
-      this.axios.get('/1/secured/initiatives/mines').then((response) => {
-        this.userInitiatives = response.data.data
-      }).catch((error) => {
-        console.log(error)
-      })
     }
   },
 
   watch: {
     '$route' (to, from) {
-      console.log(to)
-      console.log(from)
-      console.log(this.$store.state.support.selectedInitiativeLevel)
-
-      let newLevel = this.$store.state.support.selectedInitiativeLevel
-      let oldLevel = this.$store.state.support.selectedInitiativeLevelOld
-
-      
+      var fromLevel = this.$store.getters.initiativeLevel(from.params.initiativeId)
+      var toLevel = this.$store.getters.initiativeLevel(to.params.initiativeId)
+      console.log('from: ' + fromLevel)
+      console.log('to  : ' + toLevel)
+      // let newLevel = this.$store.state.support.selectedInitiativeLevel
+      // let oldLevel = this.$store.state.support.selectedInitiativeLevelOld
     }
   },
 
