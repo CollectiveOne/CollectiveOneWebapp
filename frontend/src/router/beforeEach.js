@@ -3,10 +3,8 @@ export default (to, from, next) => {
   /** adhock logic to handle route transitions so that the sub-section is kept
   when switching among initiatives, and the animation is selected accordingly */
 
-  // var fromLevel = this.$store.getters.initiativeLevel(from.params.initiativeId)
-  // var toLevel = this.$store.getters.initiativeLevel(to.params.initiativeId)
-
   if (to.name === 'Initiative') {
+    /** always redirect if target is base initiative */
     var subsection = 'overview'
     if (from.matched.length === 3) {
       switch (from.matched[2].name) {
@@ -24,15 +22,24 @@ export default (to, from, next) => {
       }
     }
     next(to.path + '/' + subsection)
-  }
-
-  var animation = ''
-  if (from.meta.column < to.meta.column) {
-    animation = 'slideToLeft'
   } else {
-    animation = 'slideToRight'
-  }
-  store.commit('setContentAnimationType', animation)
+    /** select animation based on column and level */
 
-  next()
+    var animation = ''
+    var fromCoord = store.getters.initiativeCoordinate(from.params.initiativeId)
+    var toCoord = store.getters.initiativeCoordinate(to.params.initiativeId)
+    console.log(fromCoord)
+    console.log(toCoord)
+    if (fromCoord.length === toCoord.length) {
+      if (from.meta.column < to.meta.column) {
+        animation = 'slideToLeft'
+      } else {
+        animation = 'slideToRight'
+      }
+    }
+
+    store.commit('setContentAnimationType', animation)
+
+    next()
+  }
 }

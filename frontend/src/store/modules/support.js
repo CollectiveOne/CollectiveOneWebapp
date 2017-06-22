@@ -5,27 +5,43 @@ const state = {
   initiativesTree: null
 }
 
-const findLevel = function (initiatives, id, level) {
+const findCoordinate = function (initiatives, id, coord) {
+  /** warning coord is a reference! */
   for (var ix in initiatives) {
-    if (initiatives[ix].id === id) {
-      return level
+    var thisInitiative = initiatives[ix]
+    var thisCoord = JSON.parse(JSON.stringify(coord))
+
+    thisCoord.push(ix)
+
+    if (thisInitiative.id === id) {
+      /* update input reference */
+      coord.length = 0
+      thisCoord.forEach((e) => {
+        coord.push(e)
+      })
+      return true
     }
 
-    if (initiatives[ix].subInitiatives.length > 0) {
-      var subLevel = level + 1
-      var foundLevel = findLevel(initiatives[ix].subInitiatives, id, subLevel)
-      if (foundLevel !== -1) {
-        /* stop searching if found in a subinitiative */
-        return foundLevel
+    if (thisInitiative.subInitiatives.length > 0) {
+      var found = findCoordinate(thisInitiative.subInitiatives, id, thisCoord)
+      if (found) {
+        /* update input reference */
+        coord.length = 0
+        thisCoord.forEach((e) => {
+          coord.push(e)
+        })
+        return true
       }
     }
   }
-  return -1
+  return false
 }
 
 const getters = {
-  initiativeLevel: (state, getters) => (id) => {
-    return findLevel(state.initiativesTree, id, 0)
+  initiativeCoordinate: (state, getters) => (id) => {
+    var coord = []
+    findCoordinate(state.initiativesTree, id, coord)
+    return coord
   }
 }
 
