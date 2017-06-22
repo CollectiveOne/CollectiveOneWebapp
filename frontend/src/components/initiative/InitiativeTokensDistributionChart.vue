@@ -55,19 +55,21 @@
                   </div>
 
                   <div class="w3-row" v-if="isOverview || isInitiativeAssigner">
-                    <div v-if="hasSubinitiatives">
-                      <div class="sub-elements" v-if="showSubinitiatives">
-                        <div class="w3-row" v-for="subinitiativeAssets in assetData.transferredToSubinitiatives" >
-                          <label class="d2-color">
-                            <b>{{ subinitiativeAssets.receiverName }}</b>
-                          </label>
-                          <div class="w3-light-grey w3-round-xlarge w3-large">
-                            <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': subinitiativePercent(subinitiativeAssets) +'%'}">
-                              <div class="bar-txt w3-center d2-color">{{ subinitiativePortion(subinitiativeAssets) }}</div>
+                    <div class="slider-container" v-if="hasSubinitiatives">
+                      <transition name="slideDownUp">
+                        <div class="sub-elements" v-if="showSubinitiatives">
+                          <div class="w3-row" v-for="subinitiativeAssets in assetData.transferredToSubinitiatives" >
+                            <label class="d2-color">
+                              <b>{{ subinitiativeAssets.receiverName }}</b>
+                            </label>
+                            <div class="w3-light-grey w3-round-xlarge w3-large">
+                              <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': subinitiativePercent(subinitiativeAssets) +'%'}">
+                                <div class="bar-txt w3-center d2-color">{{ subinitiativePortion(subinitiativeAssets) }}</div>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </transition>
                     </div>
                   </div>
                 </div>
@@ -95,22 +97,23 @@
                   </div>
 
                   <div v-if="isOverview" class="w3-row">
-                    <div v-if="hasMembers">
-                      <div class="sub-elements" v-if="showMembers">
-                        <div class="w3-row" v-for="memberAssets in assetData.transferredToUsers" v-if="memberAssets.value > 0">
-                          <label class="d2-color">
-                            <b>{{ memberAssets.receiverName }}</b>
-                          </label>
-                          <div class="w3-light-grey w3-round-xlarge w3-large">
-                            <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': memberPercent(memberAssets) +'%'}">
-                              <div class="bar-txt w3-center d2-color">{{ memberPortion(memberAssets) }}</div>
+                    <div v-if="hasMembers" class="slider-container">
+                      <transition name="slideDownUp">
+                        <div class="sub-elements" v-if="showMembers">
+                          <div class="w3-row" v-for="memberAssets in assetData.transferredToUsers" v-if="memberAssets.value > 0">
+                            <label class="d2-color">
+                              <b>{{ memberAssets.receiverName }}</b>
+                            </label>
+                            <div class="w3-light-grey w3-round-xlarge w3-large">
+                              <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': memberPercent(memberAssets) +'%'}">
+                                <div class="bar-txt w3-center d2-color">{{ memberPortion(memberAssets) }}</div>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </transition>
                     </div>
                   </div>
-
                 </div>
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
@@ -374,6 +377,5 @@ export default {
   margin-top: 4px;
   margin-bottom: 10px;
 }
-
 
 </style>

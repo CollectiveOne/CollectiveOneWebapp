@@ -1,20 +1,24 @@
 <template lang="html">
   <div class="">
-    <app-new-assignation-modal
-      v-if="showNewAssignationModal"
-      :initiativeId="initiative.id"
-      @close-this="showNewAssignationModal = false"
-      @assignation-done="$emit('please-update')">
-    </app-new-assignation-modal>
+    <transition name="slideDownUp">
+      <app-new-assignation-modal
+        v-if="showNewAssignationModal"
+        :initiativeId="initiative.id"
+        @close-this="showNewAssignationModal = false"
+        @assignation-done="$emit('please-update')">
+      </app-new-assignation-modal>
+    </transition>
 
-    <app-edit-initiative-modal v-if="showEditInitiativeModal" :initiative="initiative"
-      @close-this="showEditInitiativeModal = false"
-      @initiative-updated="$emit('please-update')">
-    </app-edit-initiative-modal>
+    <transition name="slideDownUp">
+      <app-edit-initiative-modal v-if="showEditInitiativeModal" :initiative="initiative"
+        @close-this="showEditInitiativeModal = false"
+        @initiative-updated="$emit('please-update')">
+      </app-edit-initiative-modal>
+    </transition>
 
     <div v-if="initiative" class="this-container w3-container w3-padding">
       <div class="w3-card">
-        <header class="w3-container w3-theme-l2">
+        <header class="w3-container w3-theme">
           <h4 class="w3-left">Driver</h4>
           <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="showEditInitiativeModal = true">
             <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -26,7 +30,7 @@
       </div>
       <br>
       <div class="w3-card">
-        <header class="w3-container w3-theme-l2">
+        <header class="w3-container w3-theme">
           <h4>Assets</h4>
         </header>
         <div class="tokens-div">

@@ -1,6 +1,6 @@
 <template lang="html">
   <div v-if="assignation" class="w3-card-2">
-    <header class="w3-container w3-theme-l2">
+    <header class="w3-container w3-theme">
       <h4>{{ assignation.motive }}</h4>
     </header>
 

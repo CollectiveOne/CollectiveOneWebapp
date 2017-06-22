@@ -1,12 +1,15 @@
 <template lang="html">
   <div v-if="assignations" class="w3-container this-container">
-    <app-new-assignation-modal
-      v-if="showNewAssignationModal"
-      :initiativeId="initiative.id"
-      @close-this="showNewAssignationModal = false"
-      @assignation-done="$emit('please-update')">
-    </app-new-assignation-modal>
 
+    <transition name="slideDownUp">
+      <app-new-assignation-modal
+        v-if="showNewAssignationModal"
+        :initiativeId="initiative.id"
+        @close-this="showNewAssignationModal = false"
+        @assignation-done="$emit('please-update')">
+      </app-new-assignation-modal>
+    </transition>
+    
     <div v-if="isLoggedAnAdmin" class="w3-row">
       <button class="w3-button w3-theme w3-round" type="button" name="button" @click="showNewAssignationModal = true">new transfer</button>
     </div>

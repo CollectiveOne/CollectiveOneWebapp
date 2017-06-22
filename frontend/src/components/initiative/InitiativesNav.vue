@@ -1,17 +1,21 @@
 <template lang="html">
   <div class="">
 
-    <app-new-initiative-modal
-      v-if="showNewInitiativeModal"
-      @close-this="showNewInitiativeModal = false"
-      @initiative-created="$emit('initiative-created', $event)">
-    </app-new-initiative-modal>
+    <transition name="slideDownUp">
+      <app-new-initiative-modal
+        v-if="showNewInitiativeModal"
+        @close-this="showNewInitiativeModal = false"
+        @initiative-created="$emit('initiative-created', $event)">
+      </app-new-initiative-modal>
+    </transition>
 
-    <app-new-subinitiative-modal
-      v-if="showNewSubInitiativeModal" :parentInitId="parentInitiativeIdForModal"
-      @close-this="showNewSubInitiativeModal = false"
-      @initiative-created="$emit('initiative-created', $event)">
-    </app-new-subinitiative-modal>
+    <transition name="slideDownUp">
+      <app-new-subinitiative-modal
+        v-if="showNewSubInitiativeModal" :parentInitId="parentInitiativeIdForModal"
+        @close-this="showNewSubInitiativeModal = false"
+        @initiative-created="$emit('initiative-created', $event)">
+      </app-new-subinitiative-modal>
+    </transition>
 
     <nav class="w3-white w3-border-right">
       <div class="w3-container w3-padding">

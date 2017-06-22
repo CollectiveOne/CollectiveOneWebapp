@@ -90,4 +90,128 @@ textarea {
                                   supported by Chrome and Opera */
 }
 
+.slider-container {
+  overflow: hidden;
+}
+
+.fadeenter-enter-active {
+  transition: opacity .9s
+}
+
+.fadeenter-enter {
+  opacity: 0
+}
+
+.slideToRight-enter-active {
+  animation: slideToRight-in 0.5s ease forwards;
+}
+
+.slideToRight-leave-active {
+  animation: slideToRight-out 0.5s ease forwards;
+}
+
+.slideToLeft-enter-active {
+  animation: slideToLeft-in 0.5s ease forwards;
+}
+
+.slideToLeft-leave-active {
+  animation: slideToLeft-out 0.5s ease forwards;
+}
+
+.slideToUp-enter-active {
+  animation: slideToUp-in 0.5s ease forwards;
+}
+
+.slideToUp-leave-active {
+  animation: slideToUp-out 0.5s ease forwards;
+}
+
+.slideToDown-enter-active {
+  animation: slideToDown-in 0.5s ease forwards;
+}
+
+.slideToDown-leave-active {
+  animation: slideToDown-out 0.5s ease forwards;
+}
+
+.slideDownUp-enter-active {
+  animation: slideToDown-in 0.5s ease forwards;
+}
+
+.slideDownUp-leave-active {
+  animation: slideToUp-out 0.5s ease forwards;
+}
+
+@keyframes slideToRight-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideToRight-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slideToLeft-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideToLeft-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slideToDown-in {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideToDown-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes slideToUp-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideToUp-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
 </style>

@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="w3-container this-container">
     <div class="w3-card members-panel">
-      <header class="w3-container w3-theme-l2 noselect">
+      <header class="w3-container w3-theme noselect">
         <h4>Members and roles of this initiative</h4>
       </header>
 
@@ -24,7 +24,7 @@
     </div>
 
     <div class="w3-card members-panel" v-if="allSubmembers.length > 0" >
-      <header class="w3-container w3-theme-l2 noselect">
+      <header class="w3-container w3-theme noselect">
         <h4>Members of sub-initiatives</h4>
       </header>
 

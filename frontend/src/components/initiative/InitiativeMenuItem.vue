@@ -24,6 +24,7 @@
         <i class="fa fa-plus l1-color" aria-hidden="true"></i>
       </div>
     </div>
+    
     <div class="w3-row" v-if="showSubinitiatives" v-for="subinitiative in initiative.subInitiatives">
       <app-initiative-menu-item
         class="sub-initiative-element" :initiative="subinitiative" :key="subinitiative.id"

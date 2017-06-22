@@ -1,16 +1,18 @@
 <template lang="html">
   <div class="">
 
-    <app-edit-initiative-modal v-if="showEditInitiativeModal" :initiative="initiative"
-      @close-this="showEditInitiativeModal = false"
-      @initiative-updated="updateThisInitiative()">
-    </app-edit-initiative-modal>
+    <transition name="slideDownUp">
+      <app-edit-initiative-modal v-if="showEditInitiativeModal" :initiative="initiative"
+        @close-this="showEditInitiativeModal = false"
+        @initiative-updated="updateThisInitiative()">
+      </app-edit-initiative-modal>
+    </transition>
 
     <div v-if="initiative" class="w3-row">
       <div class="w3-white">
 
       <div class="header-container">
-        <transition name="fade" mode="out-in">
+        <transition name="fadeenter" mode="out-in">
             <header class="w3-container w3-theme" :key="initiative.name">
               <h3 class="w3-left noselect">{{ initiative.name }}</h3>
               <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="showEditInitiativeModal = true">
@@ -145,21 +147,6 @@ export default {
   overflow: hidden;
 }
 
-.fade-enter-active {
-  transition: opacity .9s
-}
-
-.fade-leave-active {
-  transition: opacity .1s
-}
-
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-  opacity: 0
-}
-
-@offcanvas-transition-speed:;
-@offcanvas-transition-timing: ease;
-
 .tablink {
   cursor: pointer;
 }
@@ -176,108 +163,5 @@ export default {
   overflow: hidden;
 }
 
-.slideToRight-enter-active {
-  animation: slideToRight-in 0.5s ease forwards;
-}
-
-.slideToRight-leave-active {
-  animation: slideToRight-out 0.5s ease forwards;
-}
-
-.slideToLeft-enter-active {
-  animation: slideToLeft-in 0.5s ease forwards;
-}
-
-.slideToLeft-leave-active {
-  animation: slideToLeft-out 0.5s ease forwards;
-}
-
-.slideToUp-enter-active {
-  animation: slideToUp-in 0.5s ease forwards;
-}
-
-.slideToUp-leave-active {
-  animation: slideToUp-out 0.5s ease forwards;
-}
-
-.slideToDown-enter-active {
-  animation: slideToDown-in 0.5s ease forwards;
-}
-
-.slideToDown-leave-active {
-  animation: slideToDown-out 0.5s ease forwards;
-}
-
-@keyframes slideToRight-in {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideToRight-out {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes slideToLeft-in {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideToLeft-out {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
-
-@keyframes slideToDown-in {
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideToDown-out {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(100%);
-  }
-}
-
-@keyframes slideToUp-in {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideToUp-out {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-100%);
-  }
-}
 
 </style>
