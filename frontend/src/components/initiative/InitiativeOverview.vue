@@ -52,6 +52,13 @@
           </div>
         </div>
       </div>
+
+      <br>
+      <div class="w3-card">
+        <header class="w3-container w3-theme">
+          <h4>Notifications</h4>
+        </header>
+      </div>
     </div>
   </div>
 </template>
