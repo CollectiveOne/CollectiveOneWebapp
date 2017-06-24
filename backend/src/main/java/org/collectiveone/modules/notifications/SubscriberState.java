@@ -1,6 +1,6 @@
 package org.collectiveone.modules.notifications;
 
-public enum SubscriptionState {
+public enum SubscriberState {
 	SUBSCRIBED,
-	UNSUBSCRIBED
+	SUBSCRIPTION_DISABLED
 }

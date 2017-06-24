@@ -3,15 +3,18 @@ package org.collectiveone.modules.notifications;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-public class Subscriptor {
+@Entity
+@Table( name = "notifications" )
+public class Notification {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -19,16 +22,14 @@ public class Subscriptor {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@Column(name = "type")
-	private SubscriptionElementType type;
+	@ManyToOne
+	private Activity activity;
 	
 	@ManyToOne
-	private AppUser user;
+	private Subscriber subscriber;
 	
 	@Column(name = "state")
-	private SubscriptionState state;
-	
-	
+	private NotificationState state;
 
 	public UUID getId() {
 		return id;
@@ -38,27 +39,27 @@ public class Subscriptor {
 		this.id = id;
 	}
 
-	public SubscriptionElementType getType() {
-		return type;
+	public Activity getActivity() {
+		return activity;
 	}
 
-	public void setType(SubscriptionElementType type) {
-		this.type = type;
+	public void setActivity(Activity activity) {
+		this.activity = activity;
 	}
 
-	public AppUser getUser() {
-		return user;
+	public Subscriber getSubscriber() {
+		return subscriber;
 	}
 
-	public void setUser(AppUser user) {
-		this.user = user;
+	public void setSubscriber(Subscriber subscriber) {
+		this.subscriber = subscriber;
 	}
 
-	public SubscriptionState getState() {
+	public NotificationState getState() {
 		return state;
 	}
 
-	public void setState(SubscriptionState state) {
+	public void setState(NotificationState state) {
 		this.state = state;
 	}
 	

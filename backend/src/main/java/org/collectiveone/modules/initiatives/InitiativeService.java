@@ -13,6 +13,8 @@ import org.collectiveone.modules.governance.DecisionMaker;
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.governance.GovernanceService;
+import org.collectiveone.modules.notifications.ActivityService;
+import org.collectiveone.modules.notifications.SubscriptionElementType;
 import org.collectiveone.modules.tokens.AssetsDto;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.InitiativeTransferRepositoryIf;
@@ -33,6 +35,10 @@ public class InitiativeService {
 	
 	@Autowired
 	private GovernanceService governanceService;
+	
+	@Autowired
+	private ActivityService activityService;
+	
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
@@ -105,20 +111,34 @@ public class InitiativeService {
 		
 		/* List of Members */
 		for (MemberDto memberDto : initiativeMemebers) {
-			AppUser memberUser = appUserRepository.findByC1Id(UUID.fromString(memberDto.getUser().getC1Id()));
-			
-			Member member = new Member();
-			member.setInitiative(initiative);
-			member.setUser(memberUser);
-			member = memberRepository.save(member);
-			initiative.getMembers().add(member);
-			
-			if (memberDto.getRole().equals(DecisionMakerRole.ADMIN.toString())) {
-				governanceService.addDecisionMaker(initiative.getGovernance().getId(), memberUser.getC1Id(), DecisionMakerRole.ADMIN);
-			}
+			addMember(initiativeId, UUID.fromString(memberDto.getUser().getC1Id()), DecisionMakerRole.valueOf(memberDto.getRole()));
 		}
 		
 		return new GetResult<Initiative>("success", "initiative created", initiative);
+	}
+	
+	@Transactional
+	public Member addMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		
+		AppUser memberUser = appUserRepository.findByC1Id(c1Id); 
+		
+		Member member = new Member();
+		member.setInitiative(initiative);
+		member.setUser(memberUser);
+		member = memberRepository.save(member);
+		
+		initiative.getMembers().add(member);
+		initiativeRepository.save(initiative);
+		
+		if (role.equals(DecisionMakerRole.ADMIN)) {
+			governanceService.addDecisionMaker(initiative.getGovernance().getId(), memberUser.getC1Id(), DecisionMakerRole.ADMIN);
+		}
+		
+		/* members are subscribed to initiatives by default */
+		activityService.addSubscriber(initiativeId, memberUser.getC1Id(), SubscriptionElementType.INITIATIVE);
+		
+		return member;
 	}
 		
 	@Transactional
@@ -273,14 +293,27 @@ public class InitiativeService {
 	
 	@Transactional
 	public Initiative getSuperInitiative(UUID initiativeId) {
-		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_DETACHED_SUB);
-		if (parent == null) {
-			return initiativeRepository.findById(initiativeId);
+		List<Initiative> parents = getParentInitiatives(initiativeId);
+		if(parents.size() > 0) {
+			/* last element in the parents array is the farther relative */
+			return parents.get(parents.size() - 1);
 		} else {
-			/* recursively loof for a parent with no parent */
-			return getSuperInitiative(parent.getId());
+			return initiativeRepository.findById(initiativeId);
+		}
+	}
+	
+	@Transactional
+	public List<Initiative> getParentInitiatives(UUID initiativeId) {
+		List<Initiative> parents = new ArrayList<Initiative>();
+		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_DETACHED_SUB);
+		
+		while(parent != null) {
+			/* look upwards until an initiative with no parent is found */
+			parents.add(parent);
+			parent = initiativeRepository.findOfInitiativesWithRelationship(parent.getId(), InitiativeRelationshipType.IS_DETACHED_SUB);
 		}
 		
+		return parents;
 	}
 	
 	@Transactional
@@ -377,28 +410,6 @@ public class InitiativeService {
 		return new PostResult("error", "member not added", "");
 	}
 	
-	@Transactional
-	public Member addMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		
-		AppUser memberUser = appUserRepository.findByC1Id(c1Id); 
-		
-		Member member = new Member();
-		member.setInitiative(initiative);
-		member.setUser(memberUser);
-		member = memberRepository.save(member);
-		
-		initiative.getMembers().add(member);
-		initiativeRepository.save(initiative);
-		
-		if (role.equals(DecisionMakerRole.ADMIN)) {
-			governanceService.addDecisionMaker(initiative.getGovernance().getId(), memberUser.getC1Id(), DecisionMakerRole.ADMIN);
-		}
-		
-		return member;
-	}
-	
-	@Transactional
 	public PostResult deleteMember(UUID initiativeId, UUID memberUserId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, memberUserId);

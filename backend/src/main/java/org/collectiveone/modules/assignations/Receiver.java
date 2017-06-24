@@ -36,6 +36,7 @@ public class Receiver {
 	private double assignedPercent;
 	
 	@Enumerated(EnumType.STRING)
+	@Column(name = "state")
 	private ReceiverState state;
 
 	public ReceiverDto toDto() {
