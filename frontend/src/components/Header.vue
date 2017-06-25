@@ -28,9 +28,7 @@
       </div>
 
       <div class="w3-dropdown-hover w3-hide-small w3-right">
-        <button class="w3-button w3-padding-large" title="Notifications"><i class="fa fa-bell"></i><span class="w3-badge w3-right w3-small w3-green">0</span></button>
-        <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
-        </div>
+        <app-notifications-list></app-notifications-list>
       </div>
 
      </div>
@@ -48,11 +46,14 @@
 
 <script>
 import OutputMessage from '@/components/OutputMessage.vue'
+import NotificationsList from '@/components/user/NotificationsList.vue'
+
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {
-    AppOutputMessage: OutputMessage
+    'app-output-message': OutputMessage,
+    'app-notifications-list': NotificationsList
   },
 
   methods: {

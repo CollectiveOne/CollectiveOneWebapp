@@ -4,7 +4,8 @@ import Auth0Lock from 'auth0-lock'
 const state = {
   lock: null,
   authenticated: false,
-  profile: null
+  profile: null,
+  notifications: []
 }
 
 const getters = {
@@ -19,6 +20,9 @@ const mutations = {
   },
   setProfile: (state, payload) => {
     state.profile = payload
+  },
+  setNotifications: (state, payload) => {
+    state.notifications = payload
   }
 }
 
@@ -60,10 +64,28 @@ const actions = {
     if (context.state.authenticated) {
       Vue.axios.get('/1/secured/user/myProfile').then((response) => {
         context.commit('setProfile', response.data.data)
+        context.dispatch('updateNotifications')
       }).catch(function (error) {
         console.log(error)
       })
     }
+  },
+
+  updateNotifications: (context) => {
+    /* get notifications */
+    if (context.state.authenticated) {
+      if (context.state.profile) {
+        Vue.axios.get('/1/secured/user/' + context.state.profile.c1Id + '/notifications').then((response) => {
+          context.commit('setNotifications', response.data.data)
+        }).catch(function (error) {
+          console.log(error)
+        })
+      }
+    }
+  },
+
+  notificationsRead: (context) => {
+    /* notifications read */
   },
 
   logoutUser: (context) => {

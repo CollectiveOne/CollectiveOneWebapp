@@ -1,11 +1,13 @@
 package org.collectiveone.modules.activity;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.InitiativeService;
@@ -36,11 +38,18 @@ public class ActivityService {
 	private SubscriberRepositoryIf subscriberRepository;
 	
 	
-//	@Transactional
-//	public GetResult<List<NotificationDto>> getUserNotifications(UUID userId) {
-//		List<Notification> notificationRepository.findBySubscriber_User_C1Id(userId);
-//		
-//	}
+	@Transactional
+	public GetResult<List<NotificationDto>> getUserNotifications(UUID userId) {
+		
+		List<NotificationDto> notifications = new ArrayList<NotificationDto>();
+		
+		for(Notification notification : notificationRepository.findBySubscriber_User_C1Id(userId)) {
+			notifications.add(notification.toDto());
+		}
+		
+		return new GetResult<List<NotificationDto>>("success", "notifications found", notifications);
+		
+	}
 	
 	@Transactional
 	public void addSubscriber(UUID elementId, UUID userId, SubscriptionElementType type) {

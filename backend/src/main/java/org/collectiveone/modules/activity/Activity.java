@@ -49,6 +49,18 @@ public class Activity {
 	private Initiative subInitiative;
 	
 	
+	/* Dto */
+	
+	public ActivityDto toDto() {
+		ActivityDto dto = new ActivityDto();
+		
+		dto.setType(type.toString());
+		dto.setInitiative(initiative.toDto());
+		dto.setSubInitiative(subInitiative.toDto());
+		
+		return dto;
+	}
+	
 	/* getters and setters */
 
 	public UUID getId() {

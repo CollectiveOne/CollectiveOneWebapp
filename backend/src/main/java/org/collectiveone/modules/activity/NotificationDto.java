@@ -1,18 +1,18 @@
 package org.collectiveone.modules.activity;
 
-import org.collectiveone.modules.users.AppUser;
+import org.collectiveone.modules.users.AppUserDto;
 
 public class NotificationDto {
 
-	private AppUser subscriberUserDto;
+	private AppUserDto subscriberUserDto;
 	private String subscriberState;
 	private ActivityDto activityDto;
 	private String state;
 	
-	public AppUser getSubscriberUserDto() {
+	public AppUserDto getSubscriberUserDto() {
 		return subscriberUserDto;
 	}
-	public void setSubscriberUserDto(AppUser subscriberUserDto) {
+	public void setSubscriberUserDto(AppUserDto subscriberUserDto) {
 		this.subscriberUserDto = subscriberUserDto;
 	}
 	public String getSubscriberState() {
