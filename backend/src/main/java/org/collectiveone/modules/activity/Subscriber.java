@@ -1,9 +1,11 @@
-package org.collectiveone.modules.notifications;
+package org.collectiveone.modules.activity;
 
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -14,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table( name = "subscriptors" )
+@Table( name = "subscribers" )
 public class Subscriber {
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -23,6 +25,7 @@ public class Subscriber {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "type")
 	private SubscriptionElementType type;
 	
@@ -32,6 +35,7 @@ public class Subscriber {
 	@ManyToOne
 	private AppUser user;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "state")
 	private SubscriberState state;
 	

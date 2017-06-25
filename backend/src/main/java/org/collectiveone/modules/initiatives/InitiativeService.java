@@ -9,12 +9,12 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.ActivityService;
+import org.collectiveone.modules.activity.SubscriptionElementType;
 import org.collectiveone.modules.governance.DecisionMaker;
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.governance.GovernanceService;
-import org.collectiveone.modules.notifications.ActivityService;
-import org.collectiveone.modules.notifications.SubscriptionElementType;
 import org.collectiveone.modules.tokens.AssetsDto;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.InitiativeTransferRepositoryIf;
@@ -66,7 +66,14 @@ public class InitiativeService {
 			GetResult<Initiative> result2 = addMembers(result.getData().getId(), initiativeDto.getMembers());
 			
 			if(result2.getResult().equals("success")) {
-				return transferAssets(result2.getData().getId(), initiativeDto);
+				PostResult result3 = transferAssets(result2.getData().getId(), initiativeDto);
+				
+				if (result3.getResult().equals("success")) {
+					return result3;
+				
+				} else {
+					return new PostResult("error", "error transferring assets",  "");
+				}
 			} else {
 				return new PostResult("error", "error adding member",  "");
 			}
@@ -183,6 +190,8 @@ public class InitiativeService {
 			
 			initiative.getRelationships().add(relationship);
 			initiativeRepository.save(initiative);
+			
+			activityService.addNewSubinitiative(parent.getId(), initiative.getId());
 		}
 			
 		return new PostResult("success", "sub initiative created and tokens transferred",  initiative.getId().toString());

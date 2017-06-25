@@ -1,4 +1,4 @@
-package org.collectiveone.modules.notifications;
+package org.collectiveone.modules.activity;
 
 import java.util.List;
 import java.util.UUID;

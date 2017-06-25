@@ -1,4 +1,4 @@
-package org.collectiveone.modules.notifications;
+package org.collectiveone.modules.activity;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -35,6 +35,12 @@ public class ActivityService {
 	@Autowired
 	private SubscriberRepositoryIf subscriberRepository;
 	
+	
+//	@Transactional
+//	public GetResult<List<NotificationDto>> getUserNotifications(UUID userId) {
+//		List<Notification> notificationRepository.findBySubscriber_User_C1Id(userId);
+//		
+//	}
 	
 	@Transactional
 	public void addSubscriber(UUID elementId, UUID userId, SubscriptionElementType type) {

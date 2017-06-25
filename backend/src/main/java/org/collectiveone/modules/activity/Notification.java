@@ -1,9 +1,11 @@
-package org.collectiveone.modules.notifications;
+package org.collectiveone.modules.activity;
 
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -28,6 +30,7 @@ public class Notification {
 	@ManyToOne
 	private Subscriber subscriber;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "state")
 	private NotificationState state;
 

@@ -1,4 +1,4 @@
-package org.collectiveone.modules.notifications;
+package org.collectiveone.modules.activity;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

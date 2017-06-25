@@ -26,17 +26,17 @@
           <router-link tag="div" to="overview" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
             :class="{'w3-border-blue': isOverview, 'w3-theme-l3': isOverview}"
             @click="">
-            <h5 class="w3-text-indigo noselect" :class="{'bold-text': isOverview}">Overview</h5>
+            <h5 class="d2-color noselect" :class="{'bold-text': isOverview}">Overview</h5>
           </router-link>
           <router-link tag="div" to="people" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
             :class="{'w3-border-blue': isPeople, 'w3-theme-l3': isPeople}"
             @click="">
-            <h5 class="w3-text-indigo noselect" :class="{'bold-text': isPeople}">People</h5>
+            <h5 class="d2-color noselect" :class="{'bold-text': isPeople}">People</h5>
           </router-link>
           <router-link tag="div" to="assignations" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
             :class="{'w3-border-blue': isAssignations, 'w3-theme-l3': isAssignations}"
             @click="">
-            <h5 class="w3-text-indigo noselect" :class="{'bold-text': isAssignations}">Transfers</h5>
+            <h5 class="d2-color noselect" :class="{'bold-text': isAssignations}">Transfers</h5>
           </router-link>
         </div>
 

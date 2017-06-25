@@ -1,4 +1,4 @@
-package org.collectiveone.modules.notifications;
+package org.collectiveone.modules.activity;
 
 public enum NotificationState {
 	PENDING,
