@@ -19,7 +19,6 @@
 
     <nav class="w3-white w3-border-right">
       <div class="w3-container w3-padding">
-        <h4 class="d2-color noselect"><b>Initiatives</b></h4>
         <div class="create-new w3-button w3-theme-l1" @click="showNewInitiativeModal = true"><i class="fa fa-plus-circle"></i>  create new</div>
 
         <div class="w3-row section-header">
@@ -81,7 +80,7 @@ export default {
 <style scoped>
 
 .create-new {
-  margin-top: 0px;
+  margin-top: 20px;
   margin-bottom: 0px;
   width: 100%;
   text-align: left;

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.collectiveone.modules.tokens.AssetsDto;
+import org.collectiveone.modules.users.AppUserDto;
 
 public class InitiativeDto {
 	
@@ -12,9 +13,8 @@ public class InitiativeDto {
 	private String name;
 	private String driver;
 	private Timestamp creationDate;
-	private String creatorC1Id;
-	private String creatorNickname;
-	
+	private AppUserDto creator;
+		
 	private AssetsDto ownTokens;
 	private List<AssetsDto> otherAssets = new ArrayList<AssetsDto>();
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
@@ -45,17 +45,11 @@ public class InitiativeDto {
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
 	}
-	public String getCreatorC1Id() {
-		return creatorC1Id;
+	public AppUserDto getCreator() {
+		return creator;
 	}
-	public void setCreatorC1Id(String creatorC1Id) {
-		this.creatorC1Id = creatorC1Id;
-	}
-	public String getCreatorNickname() {
-		return creatorNickname;
-	}
-	public void setCreatorNickname(String creatorNickname) {
-		this.creatorNickname = creatorNickname;
+	public void setCreator(AppUserDto creator) {
+		this.creator = creator;
 	}
 	public List<InitiativeDto> getSubInitiatives() {
 		return subInitiatives;

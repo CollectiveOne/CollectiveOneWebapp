@@ -1,22 +1,42 @@
 <template lang="html">
   <div class="">
-    <button class="w3-button w3-padding-large" title="Notifications" @click="showNotificationsClicked()">
-      <i class="fa fa-bell"></i>
-      <span class="w3-badge w3-right w3-small w3-green">{{ numberOfUnreadNotifications }}</span>
+    <button class="w3-button w3-padding-large w3-display-container" title="Notifications"
+      @click="showNotificationsClicked()">
+      <i class="fa fa-bell w3-display-center"></i>
+      <i v-if="numberOfUnreadNotifications > 0" class="fa fa-circle w3-display-topright circle">
+        <span class="circle-text w3-display-middle">{{ numberOfUnreadNotifications }}</span>
+      </i>
     </button>
-    <div v-if="showNotifications" class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
+
+    <div v-if="show" class="notifications-container w3-white w3-card-4 w3-bar-block" style="width:300px">
+      <div class="w3-row"  v-for="(notification, ix) in notifications" :key="notification.id">
+        <app-notification-box :notification="notification"></app-notification-box>
+        <hr v-if="ix < notifications.length - 1">
+      </div>
     </div>
+
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 
+import NotificationBox from './NotificationBox.vue'
+
 export default {
+
+  components: {
+    'app-notification-box': NotificationBox
+  },
+
+  props: {
+    show: {
+      type: Boolean
+    }
+  },
 
   data () {
     return {
-      showNotifications: false
     }
   },
 
@@ -25,20 +45,54 @@ export default {
       return this.$store.state.user.notifications
     },
     numberOfUnreadNotifications () {
-      return this.notifications.length
+      return this.notifications.filter((e) => {
+        return e.state === 'PENDING'
+      }).length
     }
   },
 
   methods: {
-    ...mapActions('notificationsRead'),
+    ...mapActions(['notificationsRead']),
 
     showNotificationsClicked () {
-      this.showNotifications = true
+      this.$emit('icon-clicked')
       this.notificationsRead()
     }
   }
 }
 </script>
 
-<style lang="css">
+<style scoped>
+
+.circle {
+  margin-top: 8px;
+  margin-right: 8px;
+  color: rgb(249, 48, 48);
+  font-size: 20px;
+}
+
+.circle-text {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+}
+
+.number {
+  background-color: rgb(101, 172, 255);
+  font-weight: bold;
+}
+
+.notifications-container {
+  position: absolute;
+  margin-left: -234px;
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+}
+
+hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 </style>

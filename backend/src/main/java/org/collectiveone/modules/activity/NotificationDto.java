@@ -4,16 +4,23 @@ import org.collectiveone.modules.users.AppUserDto;
 
 public class NotificationDto {
 
-	private AppUserDto subscriberUserDto;
+	private String id;
+	private AppUserDto subscriberUser;
 	private String subscriberState;
-	private ActivityDto activityDto;
+	private ActivityDto activity;
 	private String state;
 	
-	public AppUserDto getSubscriberUserDto() {
-		return subscriberUserDto;
+	public String getId() {
+		return id;
 	}
-	public void setSubscriberUserDto(AppUserDto subscriberUserDto) {
-		this.subscriberUserDto = subscriberUserDto;
+	public void setId(String id) {
+		this.id = id;
+	}
+	public AppUserDto getSubscriberUser() {
+		return subscriberUser;
+	}
+	public void setSubscriberUser(AppUserDto subscriberUserDto) {
+		this.subscriberUser = subscriberUserDto;
 	}
 	public String getSubscriberState() {
 		return subscriberState;
@@ -21,11 +28,11 @@ public class NotificationDto {
 	public void setSubscriberState(String subscriberState) {
 		this.subscriberState = subscriberState;
 	}
-	public ActivityDto getActivityDto() {
-		return activityDto;
+	public ActivityDto getActivity() {
+		return activity;
 	}
-	public void setActivityDto(ActivityDto activityDto) {
-		this.activityDto = activityDto;
+	public void setActivity(ActivityDto activityDto) {
+		this.activity = activityDto;
 	}
 	public String getState() {
 		return state;

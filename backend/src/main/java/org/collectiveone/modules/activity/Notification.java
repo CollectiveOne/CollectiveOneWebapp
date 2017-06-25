@@ -38,9 +38,10 @@ public class Notification {
 	public NotificationDto toDto() {
 		NotificationDto dto = new NotificationDto();
 		
-		dto.setActivityDto(activity.toDto());
+		dto.setId(id.toString());
+		dto.setActivity(activity.toDto());
 		dto.setState(state.toString());
-		dto.setSubscriberUserDto(subscriber.getUser().toDto());
+		dto.setSubscriberUser(subscriber.getUser().toDto());
 		dto.setSubscriberState(subscriber.getState().toString());
 		
 		return dto;

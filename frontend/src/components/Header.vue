@@ -19,16 +19,19 @@
       </a>
 
       <div class="w3-dropdown-hover w3-hide-small w3-right">
-        <div class="avatar-img-container">
+        <div @click="userOptionsClicked()" class="avatar-img-container">
           <img :src="loggedUserPicture" class="logged-avatar w3-circle">
         </div>
-        <div class="avatar-dropdown-content w3-dropdown-content w3-card-4 w3-bar-block" style="width:200px">
+        <div v-if="showUserOptions" class="avatar-dropdown-content w3-card-4 w3-bar-block w3-white" style="width:200px">
           <div @click="logoutUser()" class="w3-bar-item w3-button">logout</div>
         </div>
       </div>
 
-      <div class="w3-dropdown-hover w3-hide-small w3-right">
-        <app-notifications-list></app-notifications-list>
+      <div class="w3-hide-small w3-right">
+        <app-notifications-list
+          :show="showActivityList"
+          @icon-clicked="activityClicked()">
+        </app-notifications-list>
       </div>
 
      </div>
@@ -58,7 +61,23 @@ export default {
 
   methods: {
     ...mapGetters(['loggedUserNickname']),
-    ...mapActions(['logoutUser'])
+    ...mapActions(['logoutUser']),
+
+    userOptionsClicked () {
+      this.showActivityList = false
+      this.showUserOptions = !this.showUserOptions
+    },
+    activityClicked () {
+      this.showUserOptions = false
+      this.showActivityList = !this.showActivityList
+    }
+  },
+
+  data () {
+    return {
+      showActivityList: false,
+      showUserOptions: false
+    }
   },
 
   computed: {
@@ -89,6 +108,7 @@ export default {
 }
 
 .avatar-dropdown-content {
+  position: absolute;
   margin-left: -130px;
 }
 

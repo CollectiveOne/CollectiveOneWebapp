@@ -86,6 +86,12 @@ const actions = {
 
   notificationsRead: (context) => {
     /* notifications read */
+    if (context.state.profile) {
+      Vue.axios.put('/1/secured/user/' + context.state.profile.c1Id + '/notifications/read', {}).then((response) => {
+      }).catch(function (error) {
+        console.log(error)
+      })
+    }
   },
 
   logoutUser: (context) => {

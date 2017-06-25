@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
+import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.InitiativeService;
@@ -49,6 +50,16 @@ public class ActivityService {
 		
 		return new GetResult<List<NotificationDto>>("success", "notifications found", notifications);
 		
+	}
+	
+	@Transactional
+	public PostResult notificationsRead(UUID userId) {
+		for(Notification notification: notificationRepository.findBySubscriber_User_C1IdAndState(userId, NotificationState.PENDING)) {
+			notification.setState(NotificationState.DELIVERED);
+			notificationRepository.save(notification);
+		}
+		
+		return new PostResult("success", "success", "");
 	}
 	
 	@Transactional
