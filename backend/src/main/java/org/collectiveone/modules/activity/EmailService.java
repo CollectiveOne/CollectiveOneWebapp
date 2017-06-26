@@ -75,7 +75,7 @@ public class EmailService {
 		Content content = new Content();
 		content.setType("text/plain");
 		content.setValue("some text here");
-
+		
 		mail.addContent(content);
 		content.setType("text/html");
 		content.setValue("<html><body>"+body+"</body></html>");

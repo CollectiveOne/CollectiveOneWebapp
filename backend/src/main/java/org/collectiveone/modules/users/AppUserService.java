@@ -19,10 +19,10 @@ import com.auth0.json.mgmt.users.User;
 public class AppUserService {
 	
 	@Autowired
-	AppUserRepositoryIf appUserRepository;
+	private AppUserRepositoryIf appUserRepository;
 	
 	@Autowired
-	ManagementAPI mgmt;
+	private ManagementAPI mgmt;
 
 	@Transactional
 	public AppUser getOrCreateFromAuth0Id(String auth0Id) {
