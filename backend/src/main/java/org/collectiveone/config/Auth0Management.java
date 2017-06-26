@@ -31,7 +31,6 @@ public class Auth0Management {
 	@Autowired
 	AuthAPI authAPI; 
 	
-	@Autowired
 	ManagementAPI mgmt; 
 	
 	@Bean
