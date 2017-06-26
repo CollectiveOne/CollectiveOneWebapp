@@ -57,13 +57,13 @@ public class EmailService {
 	private Mail prepareMail(List<String> tos, String subject, String body) 
 	{
 		Mail mail = new Mail();
-
+		
 		Email fromEmail = new Email();
 		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
 		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
 		mail.setFrom(fromEmail);
 		mail.setSubject(subject);
-
+		
 		for(String to : tos) {
 			Email toEmail = new Email();
 			Personalization personalization = new Personalization();
@@ -72,15 +72,8 @@ public class EmailService {
 			mail.addPersonalization(personalization);
 		}
 		
-		Content content = new Content();
-		content.setType("text/plain");
-		content.setValue("some text here");
+		mail.setTemplateId("aaa5565e-d53e-42e8-a11c-0e6ffb6757ee");
 		
-		mail.addContent(content);
-		content.setType("text/html");
-		content.setValue("<html><body>"+body+"</body></html>");
-		mail.addContent(content);
-
 		return mail;
 
 	}
