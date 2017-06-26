@@ -33,6 +33,10 @@ public class Notification {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "state")
 	private NotificationState state;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "email_state")
+	private NotificationEmailState emailState;
 
 	
 	public NotificationDto toDto() {
@@ -78,5 +82,15 @@ public class Notification {
 	public void setState(NotificationState state) {
 		this.state = state;
 	}
+
+	public NotificationEmailState getEmailState() {
+		return emailState;
+	}
+
+	public void setEmailState(NotificationEmailState emailState) {
+		this.emailState = emailState;
+	}
+	
+	
 	
 }

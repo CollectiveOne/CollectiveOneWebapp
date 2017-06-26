@@ -10,4 +10,6 @@ public interface NotificationRepositoryIf extends CrudRepository<Notification, U
 	List<Notification> findBySubscriber_User_C1Id(UUID userId);
 	
 	List<Notification> findBySubscriber_User_C1IdAndState(UUID userId, NotificationState state);
+	
+	List<Notification> findBySubscriber_EmailNotificationStateAndEmailState(SubscriberEmailNotificationState subscriberEmailNotificationState, NotificationEmailState notificationEmaiolState);
 }

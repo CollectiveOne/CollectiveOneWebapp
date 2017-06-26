@@ -39,6 +39,10 @@ public class Subscriber {
 	@Column(name = "state")
 	private SubscriberState state;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "email_notification_state")
+	private SubscriberEmailNotificationState emailNotificationState;
+	
 	
 	public UUID getId() {
 		return id;
@@ -79,5 +83,15 @@ public class Subscriber {
 	public void setState(SubscriberState state) {
 		this.state = state;
 	}
+
+	public SubscriberEmailNotificationState getEmailNotificationState() {
+		return emailNotificationState;
+	}
+
+	public void setEmailNotificationState(SubscriberEmailNotificationState emailNotificationState) {
+		this.emailNotificationState = emailNotificationState;
+	}
+	
+	
 	
 }

@@ -1,5 +1,6 @@
 package org.collectiveone.modules.activity;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,9 @@ public class ActivityService {
 	@Autowired
 	private InitiativeService initiativeService;
 	
+	@Autowired
+	private EmailService emailService;
+	
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
@@ -38,6 +42,24 @@ public class ActivityService {
 	@Autowired
 	private SubscriberRepositoryIf subscriberRepository;
 	
+	
+	@Transactional
+	public void sendPendingEmails() throws IOException {
+		List<Notification> notifications = 
+				notificationRepository.findBySubscriber_EmailNotificationStateAndEmailState(
+						SubscriberEmailNotificationState.SEND_NOW, NotificationEmailState.PENDING);
+		
+		for (Notification notification : notifications) {
+			emailService.sendMail(
+					notification.getSubscriber().getUser().getEmail(), 
+		    		"CollectiveOne V2 Email", 
+		    		"First test email for V2");
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
+		}
+		
+	}
 	
 	@Transactional
 	public GetResult<List<NotificationDto>> getUserNotifications(UUID userId) {
@@ -70,6 +92,7 @@ public class ActivityService {
 		subscriber.setType(type);
 		subscriber.setUser(appUserRepository.findByC1Id(userId));
 		subscriber.setState(SubscriberState.SUBSCRIBED);
+		subscriber.setEmailNotificationState(SubscriberEmailNotificationState.SEND_NOW);
 		
 		subscriberRepository.save(subscriber);
 	}
@@ -98,6 +121,7 @@ public class ActivityService {
 			notification.setActivity(activity);
 			notification.setSubscriber(subscriber);
 			notification.setState(NotificationState.PENDING);
+			notification.setEmailState(NotificationEmailState.PENDING);
 			
 			notification = notificationRepository.save(notification);
 			
