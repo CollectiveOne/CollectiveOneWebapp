@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
+import org.collectiveone.common.dto.PostResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -81,6 +82,7 @@ public class AppUserService {
 			appUser.setNickname(auth0User.getNickname());
 			appUser.setEmail(auth0User.getEmail());
 			appUser.setPictureUrl(auth0User.getPicture());
+			appUser.setEmailNotificationsEnabled(true);
 			
 			appUser = appUserRepository.save(appUser);
 			
@@ -92,5 +94,12 @@ public class AppUserService {
 		
 		return appUser;
 	} 
+	
+	@Transactional
+	public PostResult disableEmailNotifications(UUID userId) {
+		AppUser user = appUserRepository.findByC1Id(userId);
+		user.setEmailNotificationsEnabled(false);
+		return new PostResult("success", "email notifications disabled", "");
+	}
 
 }

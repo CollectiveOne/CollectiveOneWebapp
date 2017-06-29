@@ -13,6 +13,7 @@ import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.InitiativeService;
+import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,16 +46,14 @@ public class ActivityService {
 	
 	@Transactional
 	public void sendPendingEmails() throws IOException {
+		
 		List<Notification> notifications = 
 				notificationRepository.findBySubscriber_EmailNotificationStateAndEmailState(
 						SubscriberEmailNotificationState.SEND_NOW, NotificationEmailState.PENDING);
 		
+		emailService.sendNotifications(notifications);
+
 		for (Notification notification : notifications) {
-			emailService.sendMail(
-					notification.getSubscriber().getUser().getEmail(), 
-		    		"CollectiveOne V2 Email", 
-		    		"First test email for V2");
-			
 			notification.setEmailState(NotificationEmailState.DELIVERED);
 			notificationRepository.save(notification);
 		}
@@ -98,7 +97,16 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void addNewSubinitiative(UUID initiativeId, UUID subinitiativeId) {
+	public PostResult disableSubscriber(UUID elementId, UUID userId) {
+		Subscriber subscriber = subscriberRepository.findByElementIdAndUser_C1Id(elementId, userId);
+		subscriber.setState(SubscriberState.UNSUBSCRIBED);
+		subscriberRepository.save(subscriber);
+		
+		return new PostResult("success", "members unsubscribed", "");
+	}
+	
+	@Transactional
+	public void addNewSubinitiative(UUID initiativeId, UUID subinitiativeId, List<InitiativeTransfer> transfers) {
 		Activity activity = new Activity();
 		
 		activity.setType(ActivityType.SUBINITIATIVE_CREATED);
@@ -106,6 +114,10 @@ public class ActivityService {
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity.setSubInitiative(initiativeRepository.findById(subinitiativeId));
+		for (InitiativeTransfer transfer : transfers) {
+			activity.getInitiativeTransfers().add(transfer);
+		}
+		
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);

@@ -1,10 +1,13 @@
 package org.collectiveone.modules.activity;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-import org.collectiveone.modules.users.AppUser;
+import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -21,11 +24,14 @@ import com.sendgrid.SendGrid;
 public class EmailService {
 	
 	@Autowired
+	private SendGrid sg;
+	
+	@Autowired
 	protected Environment env;
 
 	List<List<Notification>> segmentedNotifications = new ArrayList<List<Notification>>();
 	
-	public String sendNotifications(List<Notification> notifications) {
+	public String sendNotifications(List<Notification> notifications) throws IOException {
 		
 		/* being global, it is kept in memory as attribute of this component */
 		segmentedNotifications.clear();
@@ -63,10 +69,6 @@ public class EmailService {
 		if(env.getProperty("collectiveone.webapp.send-email-enabled").equalsIgnoreCase("true")) {
 			if(notifications.size() > 0) {
 				
-				String key = System.getenv("SENDGRID_API_KEY");
-				SendGrid sg = new SendGrid(key);
-				sg.addRequestHeader("X-Mock", "true");
-	
 				Request request = new Request();
 				Mail mail = null;
 						
@@ -93,7 +95,7 @@ public class EmailService {
 		}
 	}
 
-	private Mail prepareSubinitaitiveCreatedEmail(List<Notification> notifications, String subject, String body) 
+	private Mail prepareSubinitaitiveCreatedEmail(List<Notification> notifications) 
 	{
 		Mail mail = new Mail();
 		
@@ -101,22 +103,51 @@ public class EmailService {
 		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
 		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
 		mail.setFrom(fromEmail);
-		mail.setSubject(subject);
-		
-		for(String to : tos) {
-			Email toEmail = new Email();
-			Personalization personalization = new Personalization();
-			toEmail.setEmail(to);
-			personalization.addTo(toEmail);
-			personalization.addSubstitution(env.getProperty("collectiveone.webapp.email-template.username_holder"), );
-			mail.addPersonalization(personalization);
+		mail.setSubject("Recent activity in CollectiveOne");
+	
+		for(Notification notification : notifications) {
+			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
+				String toEmailString = notification.getSubscriber().getUser().getEmail();
+				String triggeredByUsername = notification.getActivity().getSubInitiative().getCreator().getNickname();
+				Initiative initiative = notification.getActivity().getInitiative();
+				Initiative subInitiative = notification.getActivity().getSubInitiative();
+				String transferredAssets = getTransferString(notification.getActivity().getInitiativeTransfers());
+				
+				Personalization personalization = new Personalization();
+				
+				Email toEmail = new Email();
+				toEmail.setEmail(toEmailString);
+				
+				personalization.addTo(toEmail);
+				
+				personalization.addSubstitution("$INITIATIVE_NAME$", initiative.getName());
+				personalization.addSubstitution("$TRIGGER_USER_NICKNAME$", triggeredByUsername);
+				personalization.addSubstitution("$INITIATIVE_ANCHOR$", getInitiativeAnchor(initiative));
+				personalization.addSubstitution("$SUBINITIATIVE_ANCHOR$", getInitiativeAnchor(subInitiative));
+				personalization.addSubstitution("$TRANSFERRED_ASSETS$", transferredAssets);
+				
+				personalization.addSubstitution("$UNSUSCRIBE_FROM_INITIATIVE_ANCHOR$", transferredAssets);
+				personalization.addSubstitution("$UNSUSCRIBE_FROM_COLLECTIVEONE_NOTIFICATIONS$", transferredAssets);
+				
+				mail.addPersonalization(personalization);
+			}
 		}
 		
-		mail.setTemplateId("aaa5565e-d53e-42e8-a11c-0e6ffb6757ee");
-				
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
+		
 		return mail;
 
 	}
+	
+	private String getInitiativeAnchor(Initiative initiative) {
+		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/" + initiative.getId().toString() + "/overview>" + initiative.getName() + "</a>";
+	}
+	
+	private String getTransferString(List<InitiativeTransfer> transfers) {
+		return NumberFormat.getNumberInstance(Locale.US).format(transfers.get(0).getValue()) + " " + transfers.get(0).getTokenType().getName();
+	}
+	
+	
 
 
 

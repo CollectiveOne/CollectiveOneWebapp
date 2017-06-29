@@ -13,10 +13,15 @@
 
       <div class="header-container">
         <transition name="fadeenter" mode="out-in">
-            <header class="w3-container w3-theme" :key="initiative.name">
-              <h3 class="w3-left noselect">{{ initiative.name }}</h3>
-              <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="showEditInitiativeModal = true">
-                <i class="fa fa-pencil" aria-hidden="true"></i>
+            <header class="w3-theme" :key="initiative.name">
+              <div class="w3-row" style="height:55px">
+                <div v-if="isLoggedAnAdmin" class="w3-col w3-right edit-btn-div w3-button w3-large"
+                  style="width:55px; height:100%">
+                  <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                </div>
+                <div class="w3-rest w3-container">
+                  <h3 class="noselect">{{ initiative.name }}</h3>
+                </div>
               </div>
             </header>
           </transition>

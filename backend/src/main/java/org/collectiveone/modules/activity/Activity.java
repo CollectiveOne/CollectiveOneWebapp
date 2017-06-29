@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -48,9 +49,11 @@ public class Activity {
 	@ManyToOne
 	private Initiative subInitiative;
 	
+	@OneToMany
+	private List<InitiativeTransfer> initiativeTransfers = new ArrayList<InitiativeTransfer>();
+	
 	
 	/* Dto */
-	
 	public ActivityDto toDto() {
 		ActivityDto dto = new ActivityDto();
 		
@@ -110,5 +113,15 @@ public class Activity {
 	public void setSubInitiative(Initiative subInitiative) {
 		this.subInitiative = subInitiative;
 	}
+
+	public List<InitiativeTransfer> getInitiativeTransfers() {
+		return initiativeTransfers;
+	}
+
+	public void setInitiativeTransfers(List<InitiativeTransfer> initiativeTransfers) {
+		this.initiativeTransfers = initiativeTransfers;
+	}
+
+	
 	
 }

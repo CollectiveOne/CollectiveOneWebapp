@@ -19,16 +19,25 @@ public class AppUser {
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
 		parameters = { @Parameter( name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
+	
 	@Column(name = "c1Id", updatable = false, nullable = false)
 	private UUID c1Id;
+	
 	@Column(name = "auth0_id")
 	private String auth0Id;
+	
 	@Column(name = "nickname")
 	private String nickname;
+	
 	@Column(name = "email")
 	private String email;
+	
 	@Column(name = "pitcure_url")
 	private String pictureUrl;
+	
+	@Column(name = "email_notifications_enabled")
+	private Boolean emailNotificationsEnabled;
+	
 	
 	public AppUserDto toDto() {
 		AppUserDto dto = new AppUserDto();
@@ -72,5 +81,12 @@ public class AppUser {
 	public void setPictureUrl(String pictureUrl) {
 		this.pictureUrl = pictureUrl;
 	}
+	public Boolean getEmailNotificationsEnabled() {
+		return emailNotificationsEnabled;
+	}
+	public void setEmailNotificationsEnabled(Boolean emailNotificationsEnabled) {
+		this.emailNotificationsEnabled = emailNotificationsEnabled;
+	}
+	
 		
 }

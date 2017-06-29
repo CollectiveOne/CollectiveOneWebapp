@@ -49,9 +49,14 @@
       }
 
       .footer {
+        padding: 20px;
         margin-top: 100px;
-        height: 100px;
         background-color: #334191;
+        color: #8995d6;
+      }
+
+      .footer a {
+        font-size: 12px;
         color: #8995d6;
       }
 
@@ -66,17 +71,19 @@
         <img src="http://www.collectiveone.org/images/Logo-Light.png" class="logo-img"></img>
       </div>
       <div class="content">
-        <img src="https://www.utopicus.es/images/colabor_34.png" alt="" class="title-img"></img>
-        <h2>Recent activity in <a href="https://collectiveone-v2.herokuapp.com/#/inits/ac124486-5ce5-145d-815c-e5254f1d0000/overview">Ouishare Fest BCN 2017</a></h2>
+        <img src="$INITIATIVE_PICTURE$" alt="" class="title-img"></img>
+        <h2>Recent activity in $INITIATIVE_ANCHOR$</h2>
         <br>
         <div class="">
-          <img src="https://scontent.xx.fbcdn.net/v/t1.0-1/c12.86.297.297/s50x50/551937_10151264631077018_375605675_n.jpg?oh=7b7676c3fcec05f67118b21601130b61&oe=59C922A9" alt=""></img>
-          <p class="username">pepo.ospina </p>
+          <img src="$TRIGGER_USER_PICTURE$" alt=""></img>
+          <p class="username">$TRIGGER_USER_NICKNAME$</p>
         </div>
-        <h2>Created the <a href="https://collectiveone-v2.herokuapp.com/#/inits/ac124486-5ce5-145d-815c-e5254f1d0000/overview">Program</a> sub-initiative and transferred 5,000 ouis (10%) to it.</h2>
+        <h2>Created the $SUBINITIATIVE_ANCHOR$ sub-initiative and transferred $TRANSFERRED_ASSETS$ to it.</h2>
       </div>
       <div class="footer">
-        <p>unsuscribe</p>
+        <a href="$UNSUSCRIBE_FROM_INITIATIVE_ANCHOR$">unsuscribe from notifications from the $INITIATIVE_NAME$ initiative</a>
+        <br>
+        <a href="$UNSUSCRIBE_FROM_COLLECTIVEONE_NOTIFICATIONS$">unsuscribe from all notifications from the CollectiveOne platform</a>
       </div>
     </div>
   </body>

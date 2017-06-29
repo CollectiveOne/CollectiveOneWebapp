@@ -75,7 +75,7 @@ const actions = {
     /* get notifications */
     if (context.state.authenticated) {
       if (context.state.profile) {
-        Vue.axios.get('/1/secured/user/' + context.state.profile.c1Id + '/notifications').then((response) => {
+        Vue.axios.get('/1/secured/user/notifications').then((response) => {
           context.commit('setNotifications', response.data.data)
         }).catch(function (error) {
           console.log(error)
@@ -87,7 +87,7 @@ const actions = {
   notificationsRead: (context) => {
     /* notifications read */
     if (context.state.profile) {
-      Vue.axios.put('/1/secured/user/' + context.state.profile.c1Id + '/notifications/read', {}).then((response) => {
+      Vue.axios.put('/1/secured/user/notifications/read', {}).then((response) => {
       }).catch(function (error) {
         console.log(error)
       })

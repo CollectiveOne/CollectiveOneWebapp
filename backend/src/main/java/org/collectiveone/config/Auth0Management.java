@@ -31,8 +31,6 @@ public class Auth0Management {
 	@Autowired
 	AuthAPI authAPI; 
 	
-	ManagementAPI mgmt; 
-	
 	@Bean
 	public AuthAPI authAPI() {
 		return new AuthAPI(issuer, audience, secret);

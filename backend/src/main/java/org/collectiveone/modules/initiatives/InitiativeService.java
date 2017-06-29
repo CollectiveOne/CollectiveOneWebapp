@@ -172,6 +172,7 @@ public class InitiativeService {
 			
 			relationship = initiativeRelationshipRepository.save(relationship);
 			
+			List<InitiativeTransfer> transfers = new ArrayList<InitiativeTransfer>();
 			/* and transfer parent assets to child */
 			for (TransferDto thisTransfer : initiativeDto.getOtherAssetsTransfers()) {
 				TokenType token = tokenService.getTokenType(UUID.fromString(thisTransfer.getAssetId()));
@@ -186,12 +187,13 @@ public class InitiativeService {
 				
 				transfer = initiativeTransferRepository.save(transfer);
 				relationship.getTokensTransfers().add(transfer);
+				transfers.add(transfer);
 			}
 			
 			initiative.getRelationships().add(relationship);
 			initiativeRepository.save(initiative);
 			
-			activityService.addNewSubinitiative(parent.getId(), initiative.getId());
+			activityService.addNewSubinitiative(parent.getId(), initiative.getId(), transfers);
 		}
 			
 		return new PostResult("success", "sub initiative created and tokens transferred",  initiative.getId().toString());
