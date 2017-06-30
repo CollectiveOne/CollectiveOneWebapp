@@ -193,7 +193,7 @@ public class InitiativeService {
 			initiative.getRelationships().add(relationship);
 			initiativeRepository.save(initiative);
 			
-			activityService.addNewSubinitiative(parent.getId(), initiative.getId(), transfers);
+			activityService.addNewSubinitiative(parent.getId(), initiative.getCreator().getC1Id(), initiative.getId(), transfers);
 		}
 			
 		return new PostResult("success", "sub initiative created and tokens transferred",  initiative.getId().toString());
@@ -201,13 +201,18 @@ public class InitiativeService {
 	
 	
 	@Transactional
-	public PostResult edit(UUID initiativeId, NewInitiativeDto initiativeDto) {
+	public PostResult edit(UUID initiativeId, UUID userId, NewInitiativeDto initiativeDto) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
+		
+		String oldName = initiative.getName();
+		String oldDriver = initiative.getDriver();
 		
 		initiative.setName(initiativeDto.getName());
 		initiative.setDriver(initiativeDto.getDriver());
 		
 		initiativeRepository.save(initiative);
+		
+		activityService.initiativeEdited(initiativeId, userId, oldName, oldDriver);
 		
 		return new PostResult("success", "initaitive updated", initiative.getId().toString());  
 	}

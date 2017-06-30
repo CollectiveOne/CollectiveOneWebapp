@@ -1,18 +1,28 @@
 package org.collectiveone.modules.activity;
 
 import org.collectiveone.modules.initiatives.InitiativeDto;
+import org.collectiveone.modules.users.AppUserDto;
 
 public class ActivityDto {
 
 	private String type;
+	private AppUserDto triggerUser;
 	private InitiativeDto initiative;
 	private InitiativeDto subInitiative;
+	private String oldName;
+	private String oldDriver;
 	
 	public String getType() {
 		return type;
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public AppUserDto getTriggerUser() {
+		return triggerUser;
+	}
+	public void setTriggerUser(AppUserDto triggerUser) {
+		this.triggerUser = triggerUser;
 	}
 	public InitiativeDto getInitiative() {
 		return initiative;
@@ -26,5 +36,18 @@ public class ActivityDto {
 	public void setSubInitiative(InitiativeDto subInitiative) {
 		this.subInitiative = subInitiative;
 	}
+	public String getOldName() {
+		return oldName;
+	}
+	public void setOldName(String oldName) {
+		this.oldName = oldName;
+	}
+	public String getOldDriver() {
+		return oldDriver;
+	}
+	public void setOldDriver(String oldDriver) {
+		this.oldDriver = oldDriver;
+	}
+	
 	
 }

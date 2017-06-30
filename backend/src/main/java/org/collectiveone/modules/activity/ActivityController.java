@@ -33,7 +33,7 @@ public class ActivityController {
 	}
 	
 	@RequestMapping(path = "/secured/user/notifications/read", method = RequestMethod.PUT)
-	public PostResult notificationsRead(@PathVariable("userId") String userId) {
+	public PostResult notificationsRead() {
 		return activityService.notificationsRead(getLoggedUser().getC1Id());
 	}
 	

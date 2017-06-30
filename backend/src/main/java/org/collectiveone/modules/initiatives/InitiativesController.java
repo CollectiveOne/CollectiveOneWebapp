@@ -1,5 +1,6 @@
 package org.collectiveone.modules.initiatives;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,7 +63,7 @@ public class InitiativesController {
 			return new PostResult("error", "not authorized", "");
 		}
 			
-		return initiativeService.edit(initiativeId, initiativeDto); 
+		return initiativeService.edit(initiativeId, getLoggedUser().getC1Id(), initiativeDto); 
 	}
 	
 	
@@ -87,7 +88,7 @@ public class InitiativesController {
 		}
 		
 		if(addMembers) {
-			initiativeDto.setMembers(initiativeService.getMembersAndSubmembers(UUID.fromString(initiativeId)));
+			initiativeDto.setInitiativeMembers(initiativeService.getMembersAndSubmembers(UUID.fromString(initiativeId)));
 		}
 		
 		if(addLoggedUser) {
@@ -99,7 +100,11 @@ public class InitiativesController {
 	
 	@RequestMapping(path = "/secured/initiatives/mines", method = RequestMethod.GET)
 	public GetResult<List<InitiativeDto>> myInitiatives() {
-		return initiativeService.getOfUser(getLoggedUser().getC1Id());
+		if(getLoggedUser() != null) {
+			return initiativeService.getOfUser(getLoggedUser().getC1Id());
+		} else {
+			return new GetResult<List<InitiativeDto>>("error", "user not logged", new ArrayList<InitiativeDto>());
+		} 
 	}
 	
 	@RequestMapping(path = "/secured/initiatives/suggestions", method = RequestMethod.GET)

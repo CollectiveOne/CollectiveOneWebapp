@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
+import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -44,6 +45,9 @@ public class Activity {
 	
 	/* support columns needed depending on the type of activity */
 	@ManyToOne
+	private AppUser triggerUser;
+	
+	@ManyToOne
 	private Initiative initiative;
 	
 	@ManyToOne
@@ -52,14 +56,23 @@ public class Activity {
 	@OneToMany
 	private List<InitiativeTransfer> initiativeTransfers = new ArrayList<InitiativeTransfer>();
 	
+	@Column(name = "old_name")
+	private String oldName;
+	
+	@Column(name = "old_driver")
+	private String oldDriver;
+	
 	
 	/* Dto */
 	public ActivityDto toDto() {
 		ActivityDto dto = new ActivityDto();
 		
 		dto.setType(type.toString());
-		dto.setInitiative(initiative.toDto());
-		dto.setSubInitiative(subInitiative.toDto());
+		if(triggerUser != null) dto.setTriggerUser(triggerUser.toDto());
+		if(initiative != null) dto.setInitiative(initiative.toDto());
+		if(subInitiative != null) dto.setSubInitiative(subInitiative.toDto());
+		dto.setOldName(oldName);
+		dto.setOldDriver(oldDriver);
 		
 		return dto;
 	}
@@ -97,6 +110,14 @@ public class Activity {
 	public void setNotifications(List<Notification> notifications) {
 		this.notifications = notifications;
 	}
+	
+	public AppUser getTriggerUser() {
+		return triggerUser;
+	}
+
+	public void setTriggerUser(AppUser triggerUser) {
+		this.triggerUser = triggerUser;
+	}
 
 	public Initiative getInitiative() {
 		return initiative;
@@ -120,6 +141,22 @@ public class Activity {
 
 	public void setInitiativeTransfers(List<InitiativeTransfer> initiativeTransfers) {
 		this.initiativeTransfers = initiativeTransfers;
+	}
+
+	public String getOldName() {
+		return oldName;
+	}
+
+	public void setOldName(String oldName) {
+		this.oldName = oldName;
+	}
+
+	public String getOldDriver() {
+		return oldDriver;
+	}
+
+	public void setOldDriver(String oldDriver) {
+		this.oldDriver = oldDriver;
 	}
 
 	

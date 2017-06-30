@@ -85,15 +85,17 @@ public class ActivityService {
 	
 	@Transactional
 	public void addSubscriber(UUID elementId, UUID userId, SubscriptionElementType type) {
-		Subscriber subscriber = new Subscriber();
-		
-		subscriber.setElementId(elementId);
-		subscriber.setType(type);
-		subscriber.setUser(appUserRepository.findByC1Id(userId));
-		subscriber.setState(SubscriberState.SUBSCRIBED);
-		subscriber.setEmailNotificationState(SubscriberEmailNotificationsState.SEND_NOW);
-		
-		subscriberRepository.save(subscriber);
+		if (subscriberRepository.findByElementIdAndUser_C1Id(elementId, userId) == null) {
+			Subscriber subscriber = new Subscriber();
+			
+			subscriber.setElementId(elementId);
+			subscriber.setType(type);
+			subscriber.setUser(appUserRepository.findByC1Id(userId));
+			subscriber.setState(SubscriberState.SUBSCRIBED);
+			subscriber.setEmailNotificationState(SubscriberEmailNotificationsState.SEND_NOW);
+			
+			subscriberRepository.save(subscriber);
+		}
 	}
 	
 	@Transactional
@@ -121,11 +123,14 @@ public class ActivityService {
 	}
 	
 	
+	/* REGISTER NEW ACTIVITY */
+		
 	@Transactional
-	public void addNewSubinitiative(UUID initiativeId, UUID subinitiativeId, List<InitiativeTransfer> transfers) {
+	public void addNewSubinitiative(UUID initiativeId, UUID triggerUserId, UUID subinitiativeId, List<InitiativeTransfer> transfers) {
 		Activity activity = new Activity();
 		
 		activity.setType(ActivityType.SUBINITIATIVE_CREATED);
+		activity.setTriggerUser(appUserRepository.findByC1Id(triggerUserId));
 		activity.setInitiative(initiativeRepository.findById(initiativeId));
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
@@ -137,7 +142,25 @@ public class ActivityService {
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
-	} 
+	}
+	
+	@Transactional
+	public void initiativeEdited(UUID initiativeId, UUID triggerUserId, String oldName, String oldDriver) {
+		Activity activity = new Activity();
+		
+		activity.setType(ActivityType.INITIATIVE_EDITED);
+		activity.setTriggerUser(appUserRepository.findByC1Id(triggerUserId));
+		activity.setInitiative(initiativeRepository.findById(initiativeId));
+		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		
+		activity.setOldName(oldName);
+		activity.setOldDriver(oldDriver);
+		
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
 	
 	/** To be called within an activity transaction, modifies the notifications property of the
 	 * input activity */
@@ -145,15 +168,18 @@ public class ActivityService {
 		List<Subscriber> subscribers = getInitiativeSubscribers(activity.getInitiative().getId());
 		
 		for (Subscriber subscriber : subscribers) {
-			Notification notification = new Notification();
-			notification.setActivity(activity);
-			notification.setSubscriber(subscriber);
-			notification.setState(NotificationState.PENDING);
-			notification.setEmailState(NotificationEmailState.PENDING);
-			
-			notification = notificationRepository.save(notification);
-			
-			activity.getNotifications().add(notification);
+			if(activity.getTriggerUser().getC1Id() != subscriber.getUser().getC1Id()) {
+				/* add a notification only if the trigger user is not the subscriber */
+				Notification notification = new Notification();
+				notification.setActivity(activity);
+				notification.setSubscriber(subscriber);
+				notification.setState(NotificationState.PENDING);
+				notification.setEmailState(NotificationEmailState.PENDING);
+				
+				notification = notificationRepository.save(notification);
+				
+				activity.getNotifications().add(notification);
+			}
 		}
 	}
 	

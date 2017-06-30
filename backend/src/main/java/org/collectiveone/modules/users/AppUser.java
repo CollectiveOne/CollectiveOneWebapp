@@ -23,13 +23,13 @@ public class AppUser {
 	@Column(name = "c1Id", updatable = false, nullable = false)
 	private UUID c1Id;
 	
-	@Column(name = "auth0_id")
+	@Column(name = "auth0_id", unique = true)
 	private String auth0Id;
 	
 	@Column(name = "nickname")
 	private String nickname;
 	
-	@Column(name = "email")
+	@Column(name = "email", unique = true)
 	private String email;
 	
 	@Column(name = "pitcure_url")

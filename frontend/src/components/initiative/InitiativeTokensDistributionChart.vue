@@ -221,7 +221,7 @@ export default {
       return tokensString(this.underThisInitiativeVal)
     },
     underThisInitiativePercent () {
-      return tokensString(this.underThisInitiativeVal / this.assetData.totalExistingTokens * 100)
+      return this.assetData.totalExistingTokens > 0 ? tokensString(this.underThisInitiativeVal / this.assetData.totalExistingTokens * 100) : 0
     },
     availableToThisInitiative () {
       return amountAndPerc(this.assetData.ownedByThisHolder, this.underThisInitiativeVal)

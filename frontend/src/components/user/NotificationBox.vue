@@ -3,7 +3,9 @@
 </template>
 
 <script>
-import NotificationSubinitiativeCreated from './NotificationSubinitiativeCreated.vue'
+import NotificationSubinitiativeCreated from './notifications/NotificationSubinitiativeCreated.vue'
+import NotificationInitiativeEdited from './notifications/NotificationInitiativeEdited.vue'
+
 export default {
   props: {
     notification: {
@@ -12,7 +14,8 @@ export default {
   },
 
   components: {
-    'app-notification-subinitiative-created': NotificationSubinitiativeCreated
+    'app-notification-subinitiative-created': NotificationSubinitiativeCreated,
+    'app-notification-initiative-edited': NotificationInitiativeEdited
   },
 
   computed: {
@@ -20,6 +23,8 @@ export default {
       switch (this.notification.activity.type) {
         case 'SUBINITIATIVE_CREATED':
           return 'app-notification-subinitiative-created'
+        case 'INITIATIVE_EDITED':
+          return 'app-notification-initiative-edited'
       }
     }
   }

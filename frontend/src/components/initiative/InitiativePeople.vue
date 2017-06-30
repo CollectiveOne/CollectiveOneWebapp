@@ -7,7 +7,7 @@
 
       <div class="w3-container members-div">
         <app-initiative-member
-          v-for="member in initiative.members.members"
+          v-for="member in initiative.initiativeMembers.members"
           :key="member.user.c1Id"
           :member="member"
           :canEdit="isLoggedAnAdmin"
@@ -99,7 +99,7 @@ export default {
       return this.initiative.loggedMember.role === 'ADMIN'
     },
     allSubmembers () {
-      return getAllSubmembers(this.initiative.members.subinitiativesMembers)
+      return getAllSubmembers(this.initiative.initiativeMembers.subinitiativesMembers)
     }
   },
 
@@ -138,8 +138,8 @@ export default {
     },
 
     indexOfMember (c1Id) {
-      for (var ix in this.initiative.members) {
-        if (this.initiative.members[ix].user.c1Id === c1Id) {
+      for (var ix in this.initiative.initiativeMembers.members) {
+        if (this.initiative.initiativeMembers.members[ix].user.c1Id === c1Id) {
           return ix
         }
       }

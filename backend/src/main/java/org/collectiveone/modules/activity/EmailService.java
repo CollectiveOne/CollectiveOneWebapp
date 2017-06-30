@@ -17,7 +17,6 @@ import com.sendgrid.Mail;
 import com.sendgrid.Method;
 import com.sendgrid.Personalization;
 import com.sendgrid.Request;
-import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 
 @Service
@@ -78,18 +77,23 @@ public class EmailService {
 				case SUBINITIATIVE_CREATED:
 					mail = prepareSubinitaitiveCreatedEmail(notifications);
 					break;
+					
+				case INITIATIVE_EDITED:
+					mail = prepareInitiativeEditedEmail(notifications);
+					break;
 				}
 				
-				try {
-					request.method = Method.POST;
-					request.endpoint = "mail/send";
-					request.body = mail.build();
-					Response response = sg.api(request);
-					System.out.println(response.statusCode);
-					System.out.println(response.body);
-					System.out.println(response.headers);
-				} catch (IOException ex) {
-					throw ex;
+				if (mail != null) {
+					try {
+						request.method = Method.POST;
+						request.endpoint = "mail/send";
+						request.body = mail.build();
+						
+						sg.api(request);
+						
+					} catch (IOException ex) {
+						throw ex;
+					}
 				}
 			}
 		}
@@ -103,31 +107,17 @@ public class EmailService {
 		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
 		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
 		mail.setFrom(fromEmail);
-		mail.setSubject("Recent activity in CollectiveOne");
+		mail.setSubject("Recent activity - new subinitiative created");
 	
 		for(Notification notification : notifications) {
 			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
-				String toEmailString = notification.getSubscriber().getUser().getEmail();
-				String triggeredByUsername = notification.getActivity().getSubInitiative().getCreator().getNickname();
-				Initiative initiative = notification.getActivity().getInitiative();
+				Personalization personalization = basicInitiativePersonalization(notification);
+				
 				Initiative subInitiative = notification.getActivity().getSubInitiative();
 				String transferredAssets = getTransferString(notification.getActivity().getInitiativeTransfers());
 				
-				Personalization personalization = new Personalization();
-				
-				Email toEmail = new Email();
-				toEmail.setEmail(toEmailString);
-				
-				personalization.addTo(toEmail);
-				
-				personalization.addSubstitution("$INITIATIVE_NAME$", initiative.getName());
-				personalization.addSubstitution("$TRIGGER_USER_NICKNAME$", triggeredByUsername);
-				personalization.addSubstitution("$INITIATIVE_ANCHOR$", getInitiativeAnchor(initiative));
-				personalization.addSubstitution("$SUBINITIATIVE_ANCHOR$", getInitiativeAnchor(subInitiative));
-				personalization.addSubstitution("$TRANSFERRED_ASSETS$", transferredAssets);
-				
-				personalization.addSubstitution("$UNSUSCRIBE_FROM_INITIATIVE_ANCHOR$", transferredAssets);
-				personalization.addSubstitution("$UNSUSCRIBE_FROM_COLLECTIVEONE_NOTIFICATIONS$", transferredAssets);
+				String message = "Created the " + getInitiativeAnchor(subInitiative) + " sub-initiative and transferred " + transferredAssets + " to it.";
+				personalization.addSubstitution("$MESSAGE$", message);
 				
 				mail.addPersonalization(personalization);
 			}
@@ -139,6 +129,83 @@ public class EmailService {
 
 	}
 	
+	private Mail prepareInitiativeEditedEmail(List<Notification> notifications) {
+		Mail mail = new Mail();
+		
+		Email fromEmail = new Email();
+		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
+		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
+		mail.setFrom(fromEmail);
+		mail.setSubject("Recent activity - initiative edited");
+	
+		for(Notification notification : notifications) {
+			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
+				Personalization personalization = basicInitiativePersonalization(notification);
+				
+				Initiative initiative = notification.getActivity().getInitiative();
+				String oldName = notification.getActivity().getOldName();
+				String oldDriver = notification.getActivity().getOldDriver();
+				
+				String message = "";
+				boolean changedName = false;
+				boolean changedDriver = false;
+				
+				if(!initiative.getName().equals(oldName)) {
+					changedName = true;
+				}
+				
+				if(!initiative.getDriver().equals(oldDriver)) {
+					changedDriver = true;
+				}
+				
+				if(changedName && changedDriver) {
+					message = "Changed the initiative name from " + oldName + " to " + initiative.getName() + 
+							", and the driver from <br /><br /><i>" + oldDriver + "</i><br /><br /> to <br /><br />" + initiative.getDriver();
+				} else if (changedName) {
+					message = "Changed the initiative name from " + oldName + " to " + initiative.getName();
+				} else if (changedDriver) {
+					message = "Changed the initiative driver from <br /><br /><i>" + oldDriver + "</i><br /><br /> to <br /><br /><i>" + initiative.getDriver() + "</i>";
+				} else {
+					message = "";
+				}
+				
+				personalization.addSubstitution("$MESSAGE$", message);
+				
+				mail.addPersonalization(personalization);
+			}
+		}
+		
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
+		
+		return mail;
+
+	}
+	
+	private Personalization basicInitiativePersonalization(Notification notification) {
+		String toEmailString = notification.getSubscriber().getUser().getEmail();
+		String triggeredByUsername = notification.getActivity().getTriggerUser().getNickname();
+		String triggerUserPictureUrl = notification.getActivity().getTriggerUser().getPictureUrl();
+		Initiative initiative = notification.getActivity().getInitiative();
+		
+		Personalization personalization = new Personalization();
+		
+		Email toEmail = new Email();
+		toEmail.setEmail(toEmailString);
+		
+		personalization.addTo(toEmail);
+		personalization.addSubstitution("$INITIATIVE_NAME$", initiative.getName());
+		personalization.addSubstitution("$TRIGGER_USER_NICKNAME$", triggeredByUsername);
+		personalization.addSubstitution("$TRIGGER_USER_PICTURE$", triggerUserPictureUrl);
+		personalization.addSubstitution("$INITIATIVE_ANCHOR$", getInitiativeAnchor(initiative));
+		personalization.addSubstitution("$INITIATIVE_PICTURE$", "http://guillaumeladvie.com/wp-content/uploads/2014/04/ouishare.jpg");
+		
+		
+		personalization.addSubstitution("$UNSUSCRIBE_FROM_INITIATIVE_HREF$", getUnsuscribeFromInitiativeHref(initiative));
+		personalization.addSubstitution("$UNSUSCRIBE_FROM_ALL_HREF$", getUnsuscribeFromAllHref());
+		
+		return personalization;
+	}
+	
 	private String getInitiativeAnchor(Initiative initiative) {
 		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/" + initiative.getId().toString() + "/overview>" + initiative.getName() + "</a>";
 	}
@@ -147,8 +214,13 @@ public class EmailService {
 		return NumberFormat.getNumberInstance(Locale.US).format(transfers.get(0).getValue()) + " " + transfers.get(0).getTokenType().getName();
 	}
 	
+	private String getUnsuscribeFromInitiativeHref(Initiative initiative) {
+		return env.getProperty("collectiveone.webapp.baseurl") +"/#/unsubscribeFromInitiative/" + initiative.getId().toString();
+	}
 	
-
+	private String getUnsuscribeFromAllHref() {
+		return env.getProperty("collectiveone.webapp.baseurl") +"/#/unsubscribeFromAll";
+	}
 
 
 }
