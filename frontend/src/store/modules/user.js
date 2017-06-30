@@ -44,6 +44,7 @@ const actions = {
       localStorage.setItem('access_token', authResult.accessToken)
       localStorage.setItem('id_token', authResult.idToken)
       context.dispatch('updateAuthenticated')
+      window.location.href = '/'
     })
 
     lock.on('authorization_error', (error) => {
