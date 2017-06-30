@@ -8,6 +8,13 @@
       </app-edit-initiative-modal>
     </transition>
 
+    <transition name="slideDownUp">
+      <app-edit-notifications-modal v-if="showEditNotificationsModal" :initiative="initiative"
+        @close-this="showEditNotificationsModal = false"
+        @initiative-updated="updateThisInitiative()">
+      </app-edit-notifications-modal>
+    </transition>
+
     <div v-if="initiative" class="w3-row">
       <div class="w3-white">
 
@@ -15,9 +22,18 @@
         <transition name="fadeenter" mode="out-in">
             <header class="w3-theme" :key="initiative.name">
               <div class="w3-row" style="height:55px">
-                <div v-if="isLoggedAnAdmin" class="w3-col w3-right edit-btn-div w3-button w3-large"
-                  style="width:55px; height:100%">
-                  <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                <div v-if="isLoggedAnAdmin" class="w3-col w3-right" style="width:55px; height:100%">
+                  <div @click="showEditMenu = !showEditMenu" class="edit-btn-div w3-button w3-large" style="width:100%; height:100%">
+                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                  </div>
+                  <div v-if="showEditMenu" class="edit-menu w3-dropdown-content w3-bar-block w3-card d2-color">
+                    <div @click="showEditInitiativeModal = true; showEditMenu = false" class="w3-bar-item w3-button">
+                      <i class="fa fa-pencil" aria-hidden="true"></i>name and driver
+                    </div>
+                    <div @click="showEditNotificationsModal = true; showEditMenu = false" class="w3-bar-item w3-button">
+                      <i class="fa fa-cog" aria-hidden="true"></i>notifications
+                    </div>
+                  </div>
                 </div>
                 <div class="w3-rest w3-container">
                   <h3 class="noselect">{{ initiative.name }}</h3>
@@ -61,17 +77,21 @@
 
 <script>
 import EditInitiativeModal from '../modal/EditInitiativeModal.vue'
+import EditNotificationsModal from '../modal/EditNotificationsModal.vue'
 
 export default {
 
   components: {
-    'app-edit-initiative-modal': EditInitiativeModal
+    'app-edit-initiative-modal': EditInitiativeModal,
+    'app-edit-notifications-modal': EditNotificationsModal
   },
 
   data () {
     return {
       initiative: null,
-      showEditInitiativeModal: false
+      showEditInitiativeModal: false,
+      showEditMenu: false,
+      showEditNotificationsModal: false
     }
   },
 
@@ -150,6 +170,16 @@ export default {
 
 .header-container {
   overflow: hidden;
+}
+
+.edit-menu {
+  width: 220px;
+  display: block;
+  margin-left: -165px;
+}
+
+.edit-menu .fa {
+  margin-right: 15px;
 }
 
 .tablink {

@@ -48,8 +48,8 @@ public class ActivityService {
 	public void sendPendingEmails() throws IOException {
 		
 		List<Notification> notifications = 
-				notificationRepository.findBySubscriber_EmailNotificationStateAndEmailState(
-						SubscriberEmailNotificationState.SEND_NOW, NotificationEmailState.PENDING);
+				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(
+						SubscriberEmailNotificationsState.SEND_NOW, NotificationEmailState.PENDING);
 		
 		emailService.sendNotifications(notifications);
 
@@ -91,19 +91,35 @@ public class ActivityService {
 		subscriber.setType(type);
 		subscriber.setUser(appUserRepository.findByC1Id(userId));
 		subscriber.setState(SubscriberState.SUBSCRIBED);
-		subscriber.setEmailNotificationState(SubscriberEmailNotificationState.SEND_NOW);
+		subscriber.setEmailNotificationState(SubscriberEmailNotificationsState.SEND_NOW);
 		
 		subscriberRepository.save(subscriber);
 	}
 	
 	@Transactional
-	public PostResult disableSubscriber(UUID elementId, UUID userId) {
+	public PostResult editSubscriberState(UUID userId, UUID elementId, SubscriberState state) {
 		Subscriber subscriber = subscriberRepository.findByElementIdAndUser_C1Id(elementId, userId);
-		subscriber.setState(SubscriberState.UNSUBSCRIBED);
+		subscriber.setState(state);
 		subscriberRepository.save(subscriber);
 		
-		return new PostResult("success", "members unsubscribed", "");
+		return new PostResult("success", "member notifications changed", "");
 	}
+	
+	@Transactional
+	public PostResult editSubscriberEmailNotificationsState(UUID userId, UUID elementId, SubscriberEmailNotificationsState emailNotificationsState) {
+		Subscriber subscriber = subscriberRepository.findByElementIdAndUser_C1Id(elementId, userId);
+		subscriber.setEmailNotificationState(emailNotificationsState);
+		subscriberRepository.save(subscriber);
+		
+		return new PostResult("success", "subscriber email notifications changed", "");
+	}
+	
+	@Transactional
+	public GetResult<SubscriberDto> getSubscriber(UUID userId, UUID initiativeId) {
+		Subscriber subscriber = subscriberRepository.findByElementIdAndUser_C1Id(initiativeId, userId);
+		return new GetResult<SubscriberDto>("success", "success", subscriber.toDto());
+	}
+	
 	
 	@Transactional
 	public void addNewSubinitiative(UUID initiativeId, UUID subinitiativeId, List<InitiativeTransfer> transfers) {

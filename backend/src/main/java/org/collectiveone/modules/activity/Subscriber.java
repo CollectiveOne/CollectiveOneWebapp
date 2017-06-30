@@ -41,8 +41,19 @@ public class Subscriber {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "email_notification_state")
-	private SubscriberEmailNotificationState emailNotificationState;
+	private SubscriberEmailNotificationsState emailNotificationsState;
 	
+	
+	public SubscriberDto toDto() {
+		SubscriberDto dto = new SubscriberDto();
+		dto.setId(id.toString());
+		dto.setElementId(elementId.toString());
+		dto.setUser(user.toDto());
+		dto.setState(state.toString());
+		dto.setEmailNotificationsState(emailNotificationsState.toString());
+		
+		return dto;
+	}
 	
 	public UUID getId() {
 		return id;
@@ -84,12 +95,12 @@ public class Subscriber {
 		this.state = state;
 	}
 
-	public SubscriberEmailNotificationState getEmailNotificationState() {
-		return emailNotificationState;
+	public SubscriberEmailNotificationsState getEmailNotificationsState() {
+		return emailNotificationsState;
 	}
 
-	public void setEmailNotificationState(SubscriberEmailNotificationState emailNotificationState) {
-		this.emailNotificationState = emailNotificationState;
+	public void setEmailNotificationState(SubscriberEmailNotificationsState emailNotificationsState) {
+		this.emailNotificationsState = emailNotificationsState;
 	}
 	
 	

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,9 +37,22 @@ public class ActivityController {
 		return activityService.notificationsRead(getLoggedUser().getC1Id());
 	}
 	
+	@RequestMapping(path = "/secured/user/notifications/subscriber/{initiativeId}", method = RequestMethod.GET)
+	public GetResult<SubscriberDto> getSubscriber(@PathVariable("initiativeId") String initiativeId) {
+		return activityService.getSubscriber(getLoggedUser().getC1Id(), UUID.fromString(initiativeId));
+	}
+	
+	@RequestMapping(path = "/secured/user/notifications/subscriber/{initiativeId}", method = RequestMethod.PUT)
+	public PostResult editSubscriber(@PathVariable("initiativeId") String initiativeId, @RequestBody SubscriberDto subscriber) {
+		activityService.editSubscriberState(getLoggedUser().getC1Id(), UUID.fromString(initiativeId), SubscriberState.valueOf(subscriber.getState()));
+		activityService.editSubscriberEmailNotificationsState(getLoggedUser().getC1Id(), UUID.fromString(initiativeId), SubscriberEmailNotificationsState.valueOf(subscriber.getEmailNotificationsState()));
+		
+		return new PostResult("success", "success", "");
+	}
+	
 	@RequestMapping(path = "/secured/notifications/unsuscribeFromInitiative/{initiativeId}", method = RequestMethod.PUT)
 	public PostResult unsuscribeFromInitiative(@PathVariable("initiativeId") String initiativeId) {
-		return activityService.disableSubscriber(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
+		return activityService.editSubscriberState(getLoggedUser().getC1Id(), UUID.fromString(initiativeId), SubscriberState.UNSUBSCRIBED);
 	}
 	
 	@RequestMapping(path = "/secured/notifications/unsuscribeFromAll", method = RequestMethod.PUT)

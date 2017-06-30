@@ -1,6 +1,6 @@
 package org.collectiveone.modules.activity;
 
-public enum SubscriberEmailNotificationState {
+public enum SubscriberEmailNotificationsState {
 	DISABLED,
 	SEND_NOW,
 	SEND_ONCEADAY,
