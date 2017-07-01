@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -13,7 +14,10 @@ import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.InitiativeService;
+import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
+import org.collectiveone.modules.tokens.TokenType;
+import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -122,19 +126,40 @@ public class ActivityService {
 		return new GetResult<SubscriberDto>("success", "success", subscriber.toDto());
 	}
 	
+	/** Each user have one general purposed Susbscriber element used to send general notifications
+	 * not associated to any initiative or element */
+	@Transactional
+	private Subscriber getOrCreateCollectiveOneSubscriber(UUID userId) {
+		Subscriber subscriber = subscriberRepository.findByUser_C1IdAndType(userId, SubscriptionElementType.COLLECTIVEONE);
+	}
+	
 	
 	/* REGISTER NEW ACTIVITY */
+	
+	@Transactional
+	public void newInitiativeCreated(Initiative initiative, AppUser triggerUser, TokenType token) {
+		Activity activity = new Activity();
+		
+		activity.setType(ActivityType.INITIATIVE_CREATED);
+		activity.setTriggerUser(triggerUser);
+		activity.setInitiative(initiative);
+		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		
+		activity = activityRepository.save(activity);
+		
+		addNewInitiativeNotifications(activity);
+	}
 		
 	@Transactional
-	public void addNewSubinitiative(UUID initiativeId, UUID triggerUserId, UUID subinitiativeId, List<InitiativeTransfer> transfers) {
+	public void newSubinitiativeCreated(Initiative initiative, AppUser triggerUser, Initiative subinitiative, List<InitiativeTransfer> transfers) {
 		Activity activity = new Activity();
 		
 		activity.setType(ActivityType.SUBINITIATIVE_CREATED);
-		activity.setTriggerUser(appUserRepository.findByC1Id(triggerUserId));
-		activity.setInitiative(initiativeRepository.findById(initiativeId));
+		activity.setTriggerUser(triggerUser);
+		activity.setInitiative(initiative);
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
-		activity.setSubInitiative(initiativeRepository.findById(subinitiativeId));
+		activity.setSubInitiative(subinitiative);
 		for (InitiativeTransfer transfer : transfers) {
 			activity.getInitiativeTransfers().add(transfer);
 		}
@@ -145,12 +170,12 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void initiativeEdited(UUID initiativeId, UUID triggerUserId, String oldName, String oldDriver) {
+	public void initiativeEdited(Initiative initiative, AppUser triggerUser, String oldName, String oldDriver) {
 		Activity activity = new Activity();
 		
 		activity.setType(ActivityType.INITIATIVE_EDITED);
-		activity.setTriggerUser(appUserRepository.findByC1Id(triggerUserId));
-		activity.setInitiative(initiativeRepository.findById(initiativeId));
+		activity.setTriggerUser(triggerUser);
+		activity.setInitiative(initiative);
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity.setOldName(oldName);
@@ -159,6 +184,27 @@ public class ActivityService {
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
+	}
+	
+	private void addNewInitiativeNotifications (Activity activity) {
+		SortedSet<Member> members = activity.getInitiative().getMembers();
+		
+		for (Member member : members) {
+			if(activity.getTriggerUser().getC1Id() != member.getUser().getC1Id()) {
+				/* add a notification only if the trigger user is not the subscriber */
+				Subscriber subscriber = getOrCreateCollectiveOneSubscriber(member.getUser().getC1Id());
+				
+				Notification notification = new Notification();
+				notification.setActivity(activity);
+				notification.setSubscriber(subscriber);
+				notification.setState(NotificationState.PENDING);
+				notification.setEmailState(NotificationEmailState.PENDING);
+				
+				notification = notificationRepository.save(notification);
+				
+				activity.getNotifications().add(notification);
+			}
+		}
 	}
 	
 	

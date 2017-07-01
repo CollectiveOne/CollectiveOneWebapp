@@ -159,6 +159,8 @@ public class InitiativeService {
 			initiative = initiativeRepository.save(initiative);
 			tokenService.mintToHolder(token.getId(), initiative.getId(), initiativeDto.getOwnTokens().getOwnedByThisHolder(), TokenHolderType.INITIATIVE);
 			
+			activityService.newInitiativeCreated(initiative, initiative.getCreator(), token);
+			
 			return new PostResult("success", "initiative created and tokens created", initiative.getId().toString());
 			
 		} else {
@@ -193,7 +195,7 @@ public class InitiativeService {
 			initiative.getRelationships().add(relationship);
 			initiativeRepository.save(initiative);
 			
-			activityService.addNewSubinitiative(parent.getId(), initiative.getCreator().getC1Id(), initiative.getId(), transfers);
+			activityService.newSubinitiativeCreated(parent, initiative.getCreator(), initiative, transfers);
 		}
 			
 		return new PostResult("success", "sub initiative created and tokens transferred",  initiative.getId().toString());
@@ -212,7 +214,7 @@ public class InitiativeService {
 		
 		initiativeRepository.save(initiative);
 		
-		activityService.initiativeEdited(initiativeId, userId, oldName, oldDriver);
+		activityService.initiativeEdited(initiative, appUserRepository.findByC1Id(userId), oldName, oldDriver);
 		
 		return new PostResult("success", "initaitive updated", initiative.getId().toString());  
 	}
@@ -398,9 +400,9 @@ public class InitiativeService {
 			/* governance related data */
 			DecisionMaker decisionMaker = governanceService.getDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
 			if(decisionMaker != null) {
-				if(decisionMaker.getRole() == DecisionMakerRole.ADMIN) {
-					memberDto.setRole(DecisionMakerRole.ADMIN.toString());
-				}
+				memberDto.setRole(decisionMaker.getRole().toString());
+			} else {
+				memberDto.setRole(DecisionMakerRole.MEMBER.toString());
 			}
 			
 			initiativeMembers.getMembers().add(memberDto);

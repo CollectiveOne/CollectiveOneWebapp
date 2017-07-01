@@ -61,7 +61,7 @@ export default {
 
   methods: {
     ...mapGetters(['loggedUserNickname']),
-    ...mapActions(['logoutUser']),
+    ...mapActions(['logoutUser', 'updateNotifications']),
 
     userOptionsClicked () {
       this.showActivityList = false
@@ -69,6 +69,9 @@ export default {
     },
     activityClicked () {
       this.showUserOptions = false
+      if (this.showActivityList) {
+        this.updateNotifications()
+      }
       this.showActivityList = !this.showActivityList
     }
   },
