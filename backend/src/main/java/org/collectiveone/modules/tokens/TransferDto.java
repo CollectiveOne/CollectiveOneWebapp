@@ -7,6 +7,8 @@ public class TransferDto {
 	private String senderName;
 	private String receiverId;
 	private String receiverName;
+	private String motive;
+	private String notes;
 	private double value;
 		
 	public String getAssetId() {
@@ -44,6 +46,18 @@ public class TransferDto {
 	}
 	public void setReceiverName(String receiverName) {
 		this.receiverName = receiverName;
+	}
+	public String getMotive() {
+		return motive;
+	}
+	public void setMotive(String motive) {
+		this.motive = motive;
+	}
+	public String getNotes() {
+		return notes;
+	}
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 	public double getValue() {
 		return value;

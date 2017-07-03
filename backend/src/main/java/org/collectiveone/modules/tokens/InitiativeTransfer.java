@@ -37,6 +37,9 @@ public class InitiativeTransfer {
 	@Column ( name = "motive")
 	private String motive;
 	
+	@Column ( name = "notes")
+	private String notes;
+	
 	
 	public TransferDto toDto() {
 		TransferDto dto = new TransferDto();
@@ -47,6 +50,8 @@ public class InitiativeTransfer {
 		dto.setSenderName(from.getName());
 		dto.setReceiverId(to.getId().toString());
 		dto.setReceiverName(to.getName());
+		dto.setMotive(motive);
+		dto.setNotes(notes);
 		dto.setValue(value);
 		
 		return dto;
@@ -99,6 +104,14 @@ public class InitiativeTransfer {
 
 	public void setMotive(String motive) {
 		this.motive = motive;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 	
 	

@@ -1,6 +1,5 @@
 <template lang="html">
-  <div v-if="assignation" class="w3-card-2">
-    <h3 class="d2-color w3-padding w3-center">{{ assignation.motive }}</h3>
+  <div v-if="assignation" class="w3-card-2 this-container">
     <div class="w3-row-padding w3-padding">
       <div class="w3-col l4 w3-center">
         <div class="w3-container">
@@ -18,6 +17,7 @@
       </div>
 
       <div class="w3-col l8 status-col">
+        <h5 class="d2-color w3-padding w3-center">{{ assignation.motive }}</h5>
         <div class="w3-row">
           <div class="w3-tag w3-theme-l2 w3-round">
             <b>{{ assignation.type }}</b>
@@ -249,6 +249,10 @@ export default {
 </script>
 
 <style scoped>
+
+.this-container {
+  padding-bottom: 15px;
+}
 
 .bill-container {
   height: 100px;

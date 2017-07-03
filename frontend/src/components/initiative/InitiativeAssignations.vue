@@ -12,30 +12,35 @@
         <h4>Transfers from {{ initiative.name }}</h4>
       </header>
 
-      <label class="w3-text-indigo"><b>To users</b></label>
-      <div v-if="initiativeAssignations.assignations.length > 0" class="w3-row-padding assignations-container">
-        <div class="w3-col l6" v-for="assignation in initiativeAssignations.assignations">
-          <app-initiative-assignation class="assignation-card"
-            :assignation="assignation" :initiative="initiative"
-            :key="assignation.id" @please-update="update()">
-          </app-initiative-assignation>
+      <div class="w3-container card-content">
+        <div class="w3-row">
+          <label class="w3-text-indigo"><b>To users</b></label>
         </div>
-      </div>
-      <div v-else class="w3-padding">
-        <i>(empty)</i>
-      </div>
+        <div v-if="initiativeAssignations.assignations.length > 0" class="w3-row-padding assignations-container">
+          <div class="w3-col l6" v-for="assignation in initiativeAssignations.assignations">
+            <app-initiative-assignation class="assignation-card"
+              :assignation="assignation" :initiative="initiative"
+              :key="assignation.id" @please-update="update()">
+            </app-initiative-assignation>
+          </div>
+        </div>
+        <div v-else class="">
+          <i>(empty)</i>
+        </div>
 
-      <label class="w3-text-indigo"><b>To initiatives</b></label>
-      <div v-if="initiativeTransfers.length > 0" class="w3-row-padding">
-        <div class="w3-col l6" v-for="transfer in initiativeTransfers">
-          <app-initiative-transfer class="assignation-card"
-            :assignation="assignation" :initiative="initiative"
-            :key="assignation.id" @please-update="update()">
-          </app-initiative-transfer>
+        <div class="w3-row">
+          <label class="w3-text-indigo"><b>To initiatives</b></label>
         </div>
-      </div>
-      <div v-else class="w3-padding">
-        <i>(empty)</i>
+        <div v-if="initiativeTransfers.length > 0" class="w3-row-padding assignations-container">
+          <div class="w3-col l6" v-for="transfer in initiativeTransfers">
+            <app-initiative-transfer class="assignation-card"
+              :transfer="transfer" :key="transfer.id">
+            </app-initiative-transfer>
+          </div>
+        </div>
+        <div v-else class="">
+          <i>(empty)</i>
+        </div>
       </div>
 
     </div>
@@ -45,18 +50,20 @@
         <h4>Transfers in sub-initiatives</h4>
       </header>
 
-      <div v-if="getSubassignations.length > 0" class="w3-container">
-        <div class="w3-row-padding assignations-container">
-          <div class="w3-col l6" v-for="assignationData in getSubassignations">
-            <app-initiative-assignation class="assignation-card"
-              :assignation="assignationData.assignation" :initiative="initiative"
-              :key="assignationData.assignation.id" @please-update="update()">
-            </app-initiative-assignation>
+      <div class="w3-container card-content">
+        <div v-if="getSubassignations.length > 0" class="w3-container">
+          <div class="w3-row-padding assignations-container">
+            <div class="w3-col l6" v-for="assignationData in getSubassignations">
+              <app-initiative-assignation class="assignation-card"
+                :assignation="assignationData.assignation" :initiative="initiative"
+                :key="assignationData.assignation.id" @please-update="update()">
+              </app-initiative-assignation>
+            </div>
           </div>
         </div>
-      </div>
-      <div v-else class="w3-padding">
-        <i>(empty)</i>
+        <div v-else class="w3-padding">
+          <i>(empty)</i>
+        </div>
       </div>
     </div>
 
@@ -66,7 +73,7 @@
 
 <script>
 import InitiativeAssignation from './InitiativeAssignation.vue'
-import NewAssignationModal from '../modal/NewAssignationModal.vue'
+import InitiativeTransfer from './InitiativeTransfer.vue'
 
 const getIndexOfAssignation = function (list, id) {
   for (var ix in list) {
@@ -98,7 +105,7 @@ const getAllSubassignations = function (subinitiativesAssignations) {
 export default {
   components: {
     'app-initiative-assignation': InitiativeAssignation,
-    'app-new-assignation-modal': NewAssignationModal
+    'app-initiative-transfer': InitiativeTransfer
   },
 
   props: {
@@ -165,6 +172,10 @@ export default {
 
 .action-buttons button {
   width: 220px;
+}
+
+.card-content {
+  padding-top: 20px;
 }
 
 </style>

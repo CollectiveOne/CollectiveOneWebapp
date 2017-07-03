@@ -183,12 +183,13 @@ public class InitiativeService {
 				
 				/* upper layer keeping track of who transfered what to whom */
 				InitiativeTransfer transfer = new InitiativeTransfer();
-				transfer.setMotive("sub-initiative creation");
 				transfer.setFrom(parent);
 				transfer.setTo(initiative);
 				transfer.setTokenType(token);
 				transfer.setValue(thisTransfer.getValue());
-				
+				transfer.setMotive("sub-initiative creation");
+				transfer.setNotes("");
+								
 				transfer = initiativeTransferRepository.save(transfer);
 				transfers.add(transfer);
 			}
