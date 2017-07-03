@@ -7,7 +7,7 @@
         </div>
 
         <div class="w3-container w3-theme">
-          <h2>{{ isPeerReviewed ? 'Peer-Reviewed Transfer to Users' : 'Direct Transfer to User(s)' }}</h2>
+          <h2>{{ isPeerReviewed ? 'Peer-reviewed transfer to users' : 'Direct transfer to user(s)' }}</h2>
         </div>
 
         <div class="this-container w3-container">
@@ -90,7 +90,6 @@ export default {
 
   data () {
     return {
-      peerReview: false,
       assignation: {
         type: this.DIRECT_ID(),
         motive: '',

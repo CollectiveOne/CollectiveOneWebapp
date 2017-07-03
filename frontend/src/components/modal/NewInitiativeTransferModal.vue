@@ -78,7 +78,6 @@ export default {
 
   data () {
     return {
-      peerReview: false,
       assignation: {
         motive: '',
         notes: ''

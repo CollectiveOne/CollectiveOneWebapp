@@ -66,7 +66,6 @@ export default {
         }
       }).then((response) => {
         this.initiative = response.data.data
-        this.$emit('parent-initiative-updated', this.initiative.id)
       })
     },
     indexOfAsset (assetId) {
