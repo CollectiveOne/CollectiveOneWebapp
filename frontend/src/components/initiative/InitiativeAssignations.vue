@@ -1,22 +1,13 @@
 <template lang="html">
   <div v-if="assignations" class="w3-container this-container">
 
-    <transition name="slideDownUp">
-      <app-new-assignation-modal
-        v-if="showNewAssignationModal"
-        :initiativeId="initiative.id"
-        @close-this="showNewAssignationModal = false"
-        @assignation-done="$emit('please-update')">
-      </app-new-assignation-modal>
-    </transition>
-
-    <div v-if="isLoggedAnAdmin" class="w3-row">
-      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="showNewAssignationModal = true">new transfer</button>
+    <div v-if="isLoggedAnAdmin" class="w3-row action-buttons">
+      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$emit('new-assignation')">transfer to user(s)</button>
+      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$emit('new-transfer-to-initiative')">transfer to initiative</button>
     </div>
 
+    <label class="w3-text-indigo"><b>Transfers in {{ initiative.name }}</b></label>
     <div v-if="assignations.assignations.length > 0" class="">
-      <hr>
-      <label class="w3-text-indigo"><b>Transfers in {{ initiative.name }}</b></label>
       <div class="w3-row-padding assignations-container">
         <div class="w3-col l6" v-for="assignation in assignations.assignations">
           <app-initiative-assignation class="assignation-card"
@@ -26,10 +17,15 @@
         </div>
       </div>
     </div>
+    <div v-else class="">
+      <div class="w3-panel w3-padding warning-panel">
+        no transfers have been made in this initiative
+      </div>
+    </div>
 
+    <hr>
+    <label class="w3-text-indigo"><b>Transfers in sub-initiatives</b></label>
     <div v-if="getSubassignations.length > 0" class="">
-      <hr>
-      <label class="w3-text-indigo"><b>Transfers in sub-initiatives</b></label>
       <div class="w3-row-padding assignations-container">
         <div class="w3-col l6" v-for="assignationData in getSubassignations">
           <app-initiative-assignation class="assignation-card"
@@ -37,6 +33,11 @@
             :key="assignationData.assignation.id" @please-update="update()">
           </app-initiative-assignation>
         </div>
+      </div>
+    </div>
+    <div v-else class="">
+      <div class="w3-panel w3-padding warning-panel">
+        no transfers have been made in any sub-initiative
       </div>
     </div>
 </div>
@@ -126,6 +127,14 @@ export default {
 
 .assignations-container {
   margin-top: 10px;
+}
+
+.action-buttons {
+  text-align: center;
+}
+
+.action-buttons button {
+  width: 220px;
 }
 
 </style>

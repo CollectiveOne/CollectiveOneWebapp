@@ -21,7 +21,7 @@
         :initiativeId="initiative.id"
         :assetId="initiative.ownTokens.assetId"
         @close-this="showNewTokenMintModal = false"
-        @please-update="updateTokenData()">
+        @please-update="updateThisInitiative()">
       </app-new-tokenmint-modal>
     </transition>
 
@@ -30,7 +30,7 @@
         v-if="showNewAssignationModal"
         :initiativeId="initiative.id"
         @close-this="showNewAssignationModal = false"
-        @assignation-done="$emit('please-update')">
+        @assignation-done="updateThisInitiative()">
       </app-new-assignation-modal>
     </transition>
 
@@ -39,7 +39,7 @@
         v-if="showNewInitiativeTransferModal"
         :initiativeId="initiative.id"
         @close-this="showNewInitiativeTransferModal = false"
-        @assignation-done="$emit('please-update')">
+        @assignation-done="updateThisInitiative()">
       </app-new-initiative-transfer-modal>
     </transition>
 
@@ -72,17 +72,17 @@
         </div>
 
         <div class="section-tabs w3-row w3-center">
-          <router-link tag="div" to="overview" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
+          <router-link tag="div" to="overview" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey"
             :class="{'w3-border-blue': isOverview, 'w3-theme-l3': isOverview}"
             @click="">
             <h5 class="d2-color noselect" :class="{'bold-text': isOverview}">Overview</h5>
           </router-link>
-          <router-link tag="div" to="people" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
+          <router-link tag="div" to="people" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey"
             :class="{'w3-border-blue': isPeople, 'w3-theme-l3': isPeople}"
             @click="">
             <h5 class="d2-color noselect" :class="{'bold-text': isPeople}">People</h5>
           </router-link>
-          <router-link tag="div" to="assignations" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
+          <router-link tag="div" to="assignations" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey"
             :class="{'w3-border-blue': isAssignations, 'w3-theme-l3': isAssignations}"
             @click="">
             <h5 class="d2-color noselect" :class="{'bold-text': isAssignations}">Transfers</h5>
@@ -171,6 +171,7 @@ export default {
 
   methods: {
     updateThisInitiative () {
+      debugger
       this.updateInitiative(this.initiative.id)
     },
     updateInitiative (id) {

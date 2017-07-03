@@ -18,20 +18,6 @@
               <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
               <div class="w3-display-middle d2-color" style="width: 100%">
                 <div class="w3-row">
-                  <b class="w3-xlarge ">{{ tokensString(this.assetData.totalUnderThisHolder) }} {{ assetData.assetName }}</b>
-                </div>
-                <div class="w3-row">
-                  <b class="w3-large">current total existing</b>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="w3-row w3-center">
-            <div class="w3-display-container amount-container">
-              <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
-              <div class="w3-display-middle d2-color" style="width: 100%">
-                <div class="w3-row">
                   <b class="w3-xlarge ">{{ newAmountStr }} {{ assetData.assetName }}</b>
                 </div>
                 <div class="w3-row">
@@ -45,12 +31,12 @@
           </div>
           <div class="w3-row-padding">
             <div class="w3-col s6">
-              <input @focusout="valueUpdated($event)" :value="value" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" :step="assetData.totalUnderThisHolder / 100">
+              <input @input="valueUpdated($event)" :value="value" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" :step="assetData.totalUnderThisHolder / 100">
             </div>
             <div class="w3-col s6">
               <div class="w3-row">
                 <div class="w3-col s10">
-                  <input @focusout="percentageUpdated($event)" :value="percentage" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" step="1">
+                  <input @input="percentageUpdated($event)" :value="percentage" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" step="1">
                 </div>
                 <div class="w3-col s2 d2-color">
                   <i class="fa fa-percent" aria-hidden="true"></i>
