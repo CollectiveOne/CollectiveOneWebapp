@@ -17,6 +17,7 @@ import com.sendgrid.Mail;
 import com.sendgrid.Method;
 import com.sendgrid.Personalization;
 import com.sendgrid.Request;
+import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 
 @Service
@@ -48,11 +49,16 @@ public class EmailService {
 			}
 		}
 		
+		String result = "success";
+		
 		for (List<Notification> theseNotifications : segmentedNotifications) {
-			sendSegmentedNotifications(theseNotifications);
+			String subresult = sendSegmentedNotifications(theseNotifications);
+			if (!subresult.equals("success")) {
+				result = "error sending notifications";
+			}
 		}
 		
-		return "success";
+		return result;
 	}
 	
 	private int indexOfType(ActivityType type) {
@@ -64,7 +70,7 @@ public class EmailService {
 		return -1;
 	}
 	
-	private void sendSegmentedNotifications(List<Notification> notifications) throws IOException {
+	private String sendSegmentedNotifications(List<Notification> notifications) throws IOException {
 		if(env.getProperty("collectiveone.webapp.send-email-enabled").equalsIgnoreCase("true")) {
 			if(notifications.size() > 0) {
 				
@@ -81,6 +87,13 @@ public class EmailService {
 				case INITIATIVE_EDITED:
 					mail = prepareInitiativeEditedEmail(notifications);
 					break;
+					
+				case INITIATIVE_CREATED:
+					mail = prepareInitiativeCreatedEmail(notifications);
+					break;
+					
+				default:
+					break;
 				}
 				
 				if (mail != null) {
@@ -89,15 +102,54 @@ public class EmailService {
 						request.endpoint = "mail/send";
 						request.body = mail.build();
 						
-						sg.api(request);
+						Response response = sg.api(request);
+						
+						if(response.statusCode == 202) {
+							return "success";
+						} else {
+							return response.body;
+						}
 						
 					} catch (IOException ex) {
 						throw ex;
 					}
+				} else {
+					return "error bulding email";
 				}
 			}
 		}
+		
+		/* if email is disabled */
+		return "success";
 	}
+	
+	private Mail prepareInitiativeCreatedEmail(List<Notification> notifications) {
+		Mail mail = new Mail();
+		
+		Email fromEmail = new Email();
+		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
+		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
+		mail.setFrom(fromEmail);
+		mail.setSubject("Recent activity - new initiative created");
+	
+		for(Notification notification : notifications) {
+			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
+				Personalization personalization = basicInitiativePersonalization(notification);
+				
+				Initiative initiative = notification.getActivity().getInitiative();
+				
+				String message = "Created the " + getInitiativeAnchor(initiative) + " initiative and added you as a member.";
+				personalization.addSubstitution("$MESSAGE$", message);
+				
+				mail.addPersonalization(personalization);
+			}
+		}
+		
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
+		
+		return mail;
+	}
+	
 
 	private Mail prepareSubinitaitiveCreatedEmail(List<Notification> notifications) 
 	{

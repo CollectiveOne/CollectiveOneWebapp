@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.initiatives.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
@@ -36,9 +35,6 @@ public class ActivityService {
 	private AppUserRepositoryIf appUserRepository;
 	
 	@Autowired
-	private InitiativeRepositoryIf initiativeRepository;
-	
-	@Autowired
 	private ActivityRepositoryIf activityRepository;
 	
 	@Autowired
@@ -55,11 +51,13 @@ public class ActivityService {
 				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(
 						SubscriberEmailNotificationsState.SEND_NOW, NotificationEmailState.PENDING);
 		
-		emailService.sendNotifications(notifications);
+		String result = emailService.sendNotifications(notifications);
 
-		for (Notification notification : notifications) {
-			notification.setEmailState(NotificationEmailState.DELIVERED);
-			notificationRepository.save(notification);
+		if(result.equals("success")) {
+			for (Notification notification : notifications) {
+				notification.setEmailState(NotificationEmailState.DELIVERED);
+				notificationRepository.save(notification);
+			}
 		}
 		
 	}
@@ -131,8 +129,20 @@ public class ActivityService {
 	@Transactional
 	private Subscriber getOrCreateCollectiveOneSubscriber(UUID userId) {
 		Subscriber subscriber = subscriberRepository.findByUser_C1IdAndType(userId, SubscriptionElementType.COLLECTIVEONE);
+
+		if (subscriber != null) {
+			return subscriber;
+		}
+		
+		subscriber = new Subscriber();
+		
+		subscriber.setType(SubscriptionElementType.COLLECTIVEONE);
+		subscriber.setUser(appUserRepository.findByC1Id(userId));
+		subscriber.setState(SubscriberState.SUBSCRIBED);
+		subscriber.setEmailNotificationState(SubscriberEmailNotificationsState.SEND_NOW);
+		
+		return subscriberRepository.save(subscriber);
 	}
-	
 	
 	/* REGISTER NEW ACTIVITY */
 	
