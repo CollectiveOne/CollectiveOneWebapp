@@ -50,9 +50,6 @@
             </app-initiative-assets-assigner>
           </div>
 
-          <div class="w3-row">
-          </div>
-
           <hr>
 
           <div class="bottom-btns-row w3-row-padding">

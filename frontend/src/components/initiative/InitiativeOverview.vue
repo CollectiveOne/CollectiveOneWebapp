@@ -1,13 +1,5 @@
 <template lang="html">
   <div class="">
-    <transition name="slideDownUp">
-      <app-new-assignation-modal
-        v-if="showNewAssignationModal"
-        :initiativeId="initiative.id"
-        @close-this="showNewAssignationModal = false"
-        @assignation-done="$emit('please-update')">
-      </app-new-assignation-modal>
-    </transition>
 
     <transition name="slideDownUp">
       <app-edit-initiative-modal v-if="showEditInitiativeModal" :initiative="initiative"
@@ -38,7 +30,6 @@
             <app-tokens-distribution-chart
               :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
               :canMint="true" :canEdit="isLoggedAnAdmin"
-              @new-initiative="$emit('new-initiative', $event)" @new-assignment="newAssignment($event)"
               @please-update="$emit('please-update')">
             </app-tokens-distribution-chart>
           </div>
@@ -46,7 +37,6 @@
             <app-tokens-distribution-chart v-for="asset in initiative.otherAssets"
               :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
               :canMint="false" :canEdit="isLoggedAnAdmin"
-              @new-initiative="$emit('new-initiative', $event)" @new-assignment="newAssignment($event)"
               @please-update="$emit('please-update')">
             </app-tokens-distribution-chart>
           </div>
@@ -58,13 +48,12 @@
 
 <script>
 import InitiativeTokensDistributionChart from './InitiativeTokensDistributionChart.vue'
-import NewAssignationModal from '../modal/NewAssignationModal.vue'
+
 import EditInitiativeModal from '../modal/EditInitiativeModal.vue'
 
 export default {
   components: {
     'app-tokens-distribution-chart': InitiativeTokensDistributionChart,
-    'app-new-assignation-modal': NewAssignationModal,
     'app-edit-initiative-modal': EditInitiativeModal
   },
 
@@ -76,7 +65,6 @@ export default {
 
   data () {
     return {
-      showNewAssignationModal: false,
       showEditInitiativeModal: false,
       parentInitiativeIdForModal: null
     }

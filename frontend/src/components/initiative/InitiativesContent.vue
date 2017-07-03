@@ -64,8 +64,6 @@
         <div class="w3-row content-container">
           <transition :name="animationType" mode="out-in">
             <router-view :initiative="initiative" :key="initiative.id"
-              @new-initiative="$emit('new-initiative', $event)"
-              @new-member="newMember($event)"
               @please-update="updateInitiative(initiative.id)">
             </router-view>
           </transition>

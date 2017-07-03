@@ -93,7 +93,6 @@ export default {
   mounted () {
     this.updateInitiative(this.initiativeId)
   }
-
 }
 </script>
 

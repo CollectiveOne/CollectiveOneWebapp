@@ -11,6 +11,24 @@
       </app-new-tokenmint-modal>
     </transition>
 
+    <transition name="slideDownUp">
+      <app-new-assignation-modal
+        v-if="showNewAssignationModal"
+        :initiativeId="initiativeId"
+        @close-this="showNewAssignationModal = false"
+        @assignation-done="$emit('please-update')">
+      </app-new-assignation-modal>
+    </transition>
+
+    <transition name="slideDownUp">
+      <app-new-initiative-transfer-modal
+        v-if="showNewInitiativeTransferModal"
+        :initiativeId="initiativeId"
+        @close-this="showNewInitiativeTransferModal = false"
+        @assignation-done="$emit('please-update')">
+      </app-new-initiative-transfer-modal>
+    </transition>
+
     <div class="this-container">
       <div class="w3-row">
         <div class="w3-col distribution-container" :class="{'m8': showAssigner, 'm12': !showAssigner}">
@@ -78,7 +96,7 @@
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
                   <button type="button" class="w3-button l2-color"
-                    @click="newSubInitiativeClicked()">
+                    @click="showNewInitiativeTransferModal = true">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -120,7 +138,7 @@
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
                   <button type="button" class="w3-button l2-color"
-                    @click="newAssignmentClicked()">
+                    @click="showNewAssignationModal = true">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -151,16 +169,21 @@
         </div>
       </div>
     </div>
-</div>
+  </div>
+
 </template>
 
 <script>
 import { tokensString, amountAndPerc } from '@/lib/common'
 import NewTokenMintModal from '../modal/NewTokenMintModal.vue'
+import NewAssignationModal from '../modal/NewAssignationModal.vue'
+import NewInitiativeTransferModal from '../modal/NewInitiativeTransferModal.vue'
 
 export default {
   components: {
-    'app-new-tokenmint-modal': NewTokenMintModal
+    'app-new-tokenmint-modal': NewTokenMintModal,
+    'app-new-assignation-modal': NewAssignationModal,
+    'app-new-initiative-transfer-modal': NewInitiativeTransferModal
   },
 
   props: {
@@ -190,6 +213,8 @@ export default {
       showSubinitiatives: false,
       showMembers: false,
       showNewTokenMintModal: false,
+      showNewAssignationModal: false,
+      showNewInitiativeTransferModal: false,
       value: 0,
       percentage: 0
     }
@@ -268,12 +293,6 @@ export default {
     },
     memberPercent (memberAssets) {
       return (memberAssets.value) / this.underThisInitiativeVal * 100
-    },
-    newSubInitiativeClicked () {
-      this.$emit('new-initiative', this.assetData.holderId)
-    },
-    newAssignmentClicked () {
-      this.$emit('new-assignment', this.assetData.holderId)
     },
     updateTokenData () {
       this.axios.get('/1/secured/token/' + this.assetId, {
