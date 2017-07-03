@@ -75,7 +75,7 @@ public class InitiativeService {
 					return new PostResult("error", "error transferring assets",  "");
 				}
 			} else {
-				return new PostResult("error", "error adding member",  "");
+				return new PostResult("error", "error adding members",  "");
 			}
 		} else {
 			return new PostResult("error", "error creating",  "");
@@ -183,12 +183,13 @@ public class InitiativeService {
 				
 				/* upper layer keeping track of who transfered what to whom */
 				InitiativeTransfer transfer = new InitiativeTransfer();
-				transfer.setRelationship(relationship);
+				transfer.setMotive("sub-initiative creation");
+				transfer.setFrom(parent);
+				transfer.setTo(initiative);
 				transfer.setTokenType(token);
 				transfer.setValue(thisTransfer.getValue());
 				
 				transfer = initiativeTransferRepository.save(transfer);
-				relationship.getTokensTransfers().add(transfer);
 				transfers.add(transfer);
 			}
 			

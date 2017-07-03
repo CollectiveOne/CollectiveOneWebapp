@@ -1,7 +1,5 @@
 package org.collectiveone.modules.initiatives;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -11,10 +9,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -38,9 +34,7 @@ public class InitiativeRelationship {
 	@Enumerated(EnumType.STRING)
 	private InitiativeRelationshipType type;
 	
-	@OneToMany(mappedBy = "relationship")
-	private List<InitiativeTransfer> tokensTransfers = new ArrayList<InitiativeTransfer>();
-
+	
 	public UUID getId() {
 		return id;
 	}
@@ -71,14 +65,6 @@ public class InitiativeRelationship {
 
 	public void setType(InitiativeRelationshipType type) {
 		this.type = type;
-	}
-
-	public List<InitiativeTransfer> getTokensTransfers() {
-		return tokensTransfers;
-	}
-
-	public void setTokensTransfers(List<InitiativeTransfer> tokensTransfers) {
-		this.tokensTransfers = tokensTransfers;
 	}
 	
 }

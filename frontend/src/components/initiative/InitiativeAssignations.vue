@@ -1,45 +1,66 @@
 <template lang="html">
-  <div v-if="assignations" class="w3-container this-container">
+  <div v-if="initiativeAssignations" class="w3-container this-container">
 
     <div v-if="isLoggedAnAdmin" class="w3-row action-buttons">
-      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$emit('new-assignation')">transfer to user(s)</button>
-      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$emit('new-transfer-to-initiative')">transfer to initiative</button>
+      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$emit('new-assignation')">new transfer to user(s)</button>
+      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$emit('new-transfer-to-initiative')">new transfer to initiative</button>
+      <hr>
     </div>
 
-    <label class="w3-text-indigo"><b>Transfers in {{ initiative.name }}</b></label>
-    <div v-if="assignations.assignations.length > 0" class="">
-      <div class="w3-row-padding assignations-container">
-        <div class="w3-col l6" v-for="assignation in assignations.assignations">
+    <div class="w3-card section-card">
+      <header class="w3-container w3-theme noselect">
+        <h4>Transfers from {{ initiative.name }}</h4>
+      </header>
+
+      <label class="w3-text-indigo"><b>To users</b></label>
+      <div v-if="initiativeAssignations.assignations.length > 0" class="w3-row-padding assignations-container">
+        <div class="w3-col l6" v-for="assignation in initiativeAssignations.assignations">
           <app-initiative-assignation class="assignation-card"
             :assignation="assignation" :initiative="initiative"
             :key="assignation.id" @please-update="update()">
           </app-initiative-assignation>
         </div>
       </div>
+      <div v-else class="w3-padding">
+        <i>(empty)</i>
+      </div>
+
+      <label class="w3-text-indigo"><b>To initiatives</b></label>
+      <div v-if="initiativeTransfers.length > 0" class="w3-row-padding">
+        <div class="w3-col l6" v-for="transfer in initiativeTransfers">
+          <app-initiative-transfer class="assignation-card"
+            :assignation="assignation" :initiative="initiative"
+            :key="assignation.id" @please-update="update()">
+          </app-initiative-transfer>
+        </div>
+      </div>
+      <div v-else class="w3-padding">
+        <i>(empty)</i>
+      </div>
+
     </div>
-    <div v-else class="">
-      <div class="w3-panel w3-padding warning-panel">
-        no transfers have been made in this initiative
+
+    <div class="w3-card section-card">
+      <header class="w3-container w3-theme noselect">
+        <h4>Transfers in sub-initiatives</h4>
+      </header>
+
+      <div v-if="getSubassignations.length > 0" class="w3-container">
+        <div class="w3-row-padding assignations-container">
+          <div class="w3-col l6" v-for="assignationData in getSubassignations">
+            <app-initiative-assignation class="assignation-card"
+              :assignation="assignationData.assignation" :initiative="initiative"
+              :key="assignationData.assignation.id" @please-update="update()">
+            </app-initiative-assignation>
+          </div>
+        </div>
+      </div>
+      <div v-else class="w3-padding">
+        <i>(empty)</i>
       </div>
     </div>
 
-    <hr>
-    <label class="w3-text-indigo"><b>Transfers in sub-initiatives</b></label>
-    <div v-if="getSubassignations.length > 0" class="">
-      <div class="w3-row-padding assignations-container">
-        <div class="w3-col l6" v-for="assignationData in getSubassignations">
-          <app-initiative-assignation class="assignation-card"
-            :assignation="assignationData.assignation" :initiative="initiative"
-            :key="assignationData.assignation.id" @please-update="update()">
-          </app-initiative-assignation>
-        </div>
-      </div>
-    </div>
-    <div v-else class="">
-      <div class="w3-panel w3-padding warning-panel">
-        no transfers have been made in any sub-initiative
-      </div>
-    </div>
+
 </div>
 </template>
 
@@ -87,7 +108,8 @@ export default {
   data () {
     return {
       showNewAssignationModal: false,
-      assignations: null
+      initiativeAssignations: null,
+      initiativeTransfers: null
     }
   },
 
@@ -96,14 +118,18 @@ export default {
       return this.initiative.loggedMember.role === 'ADMIN'
     },
     getSubassignations () {
-      return getAllSubassignations(this.assignations.subinitiativesAssignations)
+      return getAllSubassignations(this.initiativeAssignations.subinitiativesAssignations)
     }
   },
 
   methods: {
     update () {
       this.axios.get('/1/secured/initiative/' + this.initiative.id + '/assignations').then((response) => {
-        this.assignations = response.data.data
+        this.initiativeAssignations = response.data.data
+      })
+
+      this.axios.get('/1/secured/initiative/' + this.initiative.id + '/transfersToInitiatives').then((response) => {
+        this.initiativeTransfers = response.data.data
       })
     }
   },
@@ -116,6 +142,10 @@ export default {
 
 <style scoped>
 
+.section-card {
+  margin-bottom: 25px;
+}
+
 .assignation-card {
   margin-bottom: 20px;
 }
@@ -126,7 +156,7 @@ export default {
 }
 
 .assignations-container {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .action-buttons {

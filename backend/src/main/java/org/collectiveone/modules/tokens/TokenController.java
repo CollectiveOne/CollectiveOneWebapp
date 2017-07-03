@@ -1,5 +1,6 @@
 package org.collectiveone.modules.tokens;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.common.dto.GetResult;
@@ -81,6 +82,15 @@ public class TokenController {
 		} else {
 			return new PostResult("error", "error while minting tokens", "");
 		}
+	}
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/transfersToInitiatives", method = RequestMethod.GET)
+ public GetResult<List<TransferDto>> getTransferToInitiatives(
+			@PathVariable("initiativeId") String initiativeId) {
+		 
+		List<TransferDto> transfers = tokenTransferService.getTransfersToOtherInitiatives(UUID.fromString(initiativeId));
+		
+		return new GetResult<List<TransferDto>>("success", "transfers retrieved", transfers);
 	}
 	
 	private AppUser getLoggedUser() {

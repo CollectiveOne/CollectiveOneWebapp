@@ -32,6 +32,9 @@ public class MemberTransfer {
 	@Column( name = "value")
 	private double value;
 	
+	@Column ( name = "motive")
+	private String motive;
+	
 		
 	public UUID getId() {
 		return id;
@@ -63,6 +66,14 @@ public class MemberTransfer {
 
 	public void setValue(double value) {
 		this.value = value;
+	}
+
+	public String getMotive() {
+		return motive;
+	}
+
+	public void setMotive(String motive) {
+		this.motive = motive;
 	}
 	
 	

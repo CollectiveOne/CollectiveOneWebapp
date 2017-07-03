@@ -9,12 +9,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.initiatives.InitiativeRelationship;
+import org.collectiveone.modules.initiatives.Initiative;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "relationship_transfers")
+@Table(name = "initiative_transfers")
 public class InitiativeTransfer {
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -24,12 +24,33 @@ public class InitiativeTransfer {
 	private UUID id;
 	
 	@ManyToOne
-	private InitiativeRelationship relationship;
+	private Initiative from;
+	
+	@ManyToOne
+	private Initiative to;
 	
 	@ManyToOne
 	private TokenType tokenType;
 	
 	private double value;
+	
+	@Column ( name = "motive")
+	private String motive;
+	
+	
+	public TransferDto toDto() {
+		TransferDto dto = new TransferDto();
+		
+		dto.setAssetId(tokenType.getId().toString());
+		dto.setAssetName(tokenType.getName());
+		dto.setSenderId(from.getId().toString());
+		dto.setSenderName(from.getName());
+		dto.setReceiverId(to.getId().toString());
+		dto.setReceiverName(to.getName());
+		dto.setValue(value);
+		
+		return dto;
+	} 
 	
 		
 	public UUID getId() {
@@ -40,12 +61,20 @@ public class InitiativeTransfer {
 		this.id = id;
 	}
 
-	public InitiativeRelationship getRelationship() {
-		return relationship;
+	public Initiative getFrom() {
+		return from;
 	}
 
-	public void setRelationship(InitiativeRelationship relationship) {
-		this.relationship = relationship;
+	public void setFrom(Initiative from) {
+		this.from = from;
+	}
+
+	public Initiative getTo() {
+		return to;
+	}
+
+	public void setTo(Initiative to) {
+		this.to = to;
 	}
 
 	public TokenType getTokenType() {
@@ -62,6 +91,14 @@ public class InitiativeTransfer {
 
 	public void setValue(double value) {
 		this.value = value;
+	}
+	
+	public String getMotive() {
+		return motive;
+	}
+
+	public void setMotive(String motive) {
+		this.motive = motive;
 	}
 	
 	

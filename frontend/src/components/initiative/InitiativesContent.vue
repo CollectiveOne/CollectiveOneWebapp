@@ -171,7 +171,6 @@ export default {
 
   methods: {
     updateThisInitiative () {
-      debugger
       this.updateInitiative(this.initiative.id)
     },
     updateInitiative (id) {
