@@ -30,14 +30,20 @@
             <app-tokens-distribution-chart
               :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
               :canMint="true" :canEdit="isLoggedAnAdmin"
-              @please-update="$emit('please-update')">
+              @please-update="$emit('please-update')"
+              @new-token-mint="$emit('new-token-mint')"
+              @new-transfer-to-initiative="$emit('new-transfer-to-initiative')"
+              @new-assignation="$emit('new-assignation')" >
             </app-tokens-distribution-chart>
           </div>
           <div v-if="hasOtherAssets">
             <app-tokens-distribution-chart v-for="asset in initiative.otherAssets"
               :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
               :canMint="false" :canEdit="isLoggedAnAdmin"
-              @please-update="$emit('please-update')">
+              @please-update="$emit('please-update')"
+              @new-token-mint="$emit('new-token-mint')"
+              @new-transfer-to-initiative="$emit('new-transfer-to-initiative')"
+              @new-assignation="$emit('new-assignation')" >
             </app-tokens-distribution-chart>
           </div>
         </div>

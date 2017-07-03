@@ -11,7 +11,7 @@
           <h2>Create brand new tokens</h2>
         </div>
 
-        <form class="w3-container">
+        <form v-if="assetData" class="w3-container">
 
           <div class="w3-row w3-center">
             <div class="w3-display-container amount-container">
@@ -81,13 +81,17 @@ import { tokensString } from '@/lib/common'
 
 export default {
   props: {
-    assetData: {
-      type: Object
+    initiativeId: {
+      type: String
+    },
+    assetId: {
+      type: String
     }
   },
 
   data () {
     return {
+      assetData: null,
       value: 0,
       percentage: 0
     }
@@ -105,6 +109,15 @@ export default {
   methods: {
     tokensString (v) {
       return tokensString(v)
+    },
+    updateTokenData () {
+      this.axios.get('/1/secured/token/' + this.assetId, {
+        params: {
+          initiativeId: this.initiativeId
+        }
+      }).then((response) => {
+        this.assetData = response.data.data
+      })
     },
     valueUpdated (event) {
       this.value = Number(event.target.value)
@@ -129,8 +142,11 @@ export default {
         this.closeThis()
       })
     }
-  }
+  },
 
+  mounted () {
+    this.updateTokenData()
+  }
 }
 </script>
 
