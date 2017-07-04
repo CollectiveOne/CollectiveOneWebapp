@@ -1,101 +1,111 @@
 <template lang="html">
-  <div v-if="assignation" class="w3-card-2 this-container">
-    <div class="w3-row-padding w3-padding">
-      <div class="w3-col l4 w3-center">
-        <div class="w3-container">
-          <div class="w3-row" v-for="bill in assignation.assets">
-            <div class="w3-display-container bill-container">
-              <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
-              <div class="w3-display-middle d2-color" style="width: 100%">
-                <div class="w3-row">
-                  <b class="w3-xlarge ">{{ tokensString(bill.value) }} {{ bill.assetName }}</b>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div v-if="assignation" class="w3-card-2 assignation-container">
+    <div class="w3-row top-container">
+      <div class="w3-col l4">
+        <app-value-seal :value="assignation.assets[0].value" :assetName="assignation.assets[0].assetName"></app-value-seal>
       </div>
 
-      <div class="w3-col l8 status-col">
-        <h5 class="d2-color w3-padding w3-center">{{ assignation.motive }}</h5>
-        <div class="w3-row">
-          <div class="w3-tag w3-theme-l2 w3-round">
-            <b>{{ assignation.type }}</b>
+      <div class="w3-col l8 w3-container">
+
+        <div class="w3-row from-row">
+          <div class="w3-left d2-color data-label">
+            <label class="noselect"><b>from:</b></label> {{ assignation.initiativeName }}
           </div>
         </div>
-        <div class="w3-row">
-          <div class="w3-tag w3-theme-l2 w3-round">
-            <b>{{ assignation.state }}</b>
+        <div class="w3-row receivers-row">
+          <div class="w3-left d2-color data-label">
+            <label class="noselect"><b>to:</b></label>
+          </div>
+          <div class="w3-left receivers-container" v-for="receiver in assignation.receivers" :key="receiver.id" >
+            <app-user-avatar :user="receiver.user"
+              class="w3-left"
+              :small="true" :showName="false">
+            </app-user-avatar>
           </div>
         </div>
-        <div class="w3-row">
-          <div class="w3-tag w3-theme-l2 w3-round">
-            CLOSES IN <b>8 DAYS</b>
+        <div class="w3-row motive-container">
+          <div class="w3-left d2-color data-label">
+            <label class="noselect"><b>motive:</b></label> {{ assignation.motive }}
+          </div>
+        </div>
+
+        <div class="w3-row-padding tags-row">
+          <div class="w3-col s6">
+            <div class="w3-tag w3-theme-l2 w3-round noselect w3-small">
+              <b>{{ assignation.type }}</b>
+            </div>
+          </div>
+          <div class="w3-col s6">
+            <div class="w3-tag w3-theme-l2 w3-round noselect w3-small">
+              <b>{{ assignation.state }}</b>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="w3-row-padding w3-padding">
-      <div @click="showExpanded = !showExpanded" class="w3-tag w3-round w3-button more-btn" :class="{'w3-theme' : isOpen, 'w3-theme-l3' : isDone, 'd2-color': isDone}">
+    <div class="w3-row-padding w3-center">
+      <div @click="showExpanded = !showExpanded" class="w3-tag w3-round w3-button action-btn" :class="{'w3-theme' : isOpen, 'w3-theme-l3' : isDone, 'd2-color': isDone}">
         {{ nextAction }}
       </div>
     </div>
-    <div v-if="isOpen">
-      <div v-show="showExpanded" class="w3-container">
-        <hr>
-        <label class="w3-text-indigo"><b>Receivers:</b></label>
+    <div v-if="isOpen" class="slider-container">
+      <transition name="slideDownUp">
+        <div v-show="showExpanded" class="w3-container">
+          <hr>
+          <label class="w3-text-indigo"><b>Receivers:</b></label>
 
-        <div v-for="grade in grades" class="w3-row">
-          <div class="w3-col s6">
-            <app-user-avatar :user="grade.receiverUser"></app-user-avatar>
-          </div>
-          <div class="w3-col s3 w3-center">
-            <div class="w3-row w3-padding input-div">
-              <div class="w3-col s10">
-                <input v-model.number="grade.percent" class="w3-input w3-border w3-hover-light-gray w3-round"
-                type="number" step="5" min="0" :disabled="isDontKnow(grade)">
-              </div>
-              <div class="w3-col s2 d2-color">
-                <i class="fa fa-percent" aria-hidden="true"></i>
+          <div v-for="grade in grades" class="w3-row">
+            <div class="w3-row">
+              <app-user-avatar :user="grade.receiverUser" class=""></app-user-avatar>
+            </div>
+            <div class="w3-row w3-center">
+              <div class="w3-row w3-padding input-div">
+                <div class="w3-left">
+                  <input v-model.number="grade.percent" class="percent-input w3-input w3-border w3-hover-light-gray w3-round"
+                    type="number" step="5" min="0" :disabled="isDontKnow(grade)">
+                </div>
+                <div class="w3-left d2-color">
+                  <i class="fa fa-percent" aria-hidden="true"></i>
+                </div>
+                <div class="w3-left w3-center not-sure-col">
+                  <button class="w3-button w3-theme w3-round" @click="toggleDontKnow(grade)">{{ isDontKnow(grade) ? 'set' : 'dont know' }}</button>
+                </div>
               </div>
             </div>
+            <hr>
           </div>
-          <div class="w3-col s3 w3-center not-sure-col">
-            <button class="w3-button w3-theme w3-round" @click="toggleDontKnow(grade)">{{ isDontKnow(grade) ? 'set' : 'dont know' }}</button>
-          </div>
-        </div>
 
 
-        <div class="w3-panel w3-round w3-padding w3-center" :class="{'w3-theme': !arePercentagesOk, 'w3-green' : arePercentagesOk}">
-          <span v-if="!arePercentagesOk">The sum of all percentages being set must be 100%, <b>please  {{ missingPercent < 0 ? 'remove ' + Math.abs(missingPercent) + '%' : 'add ' + Math.abs(missingPercent) + '%' }}</b></span>
-          <span v-else>Well done, the current assignation is valid!</span>
-        </div>
+          <div class="w3-panel w3-round w3-padding w3-center" :class="{'w3-theme': !arePercentagesOk, 'w3-green' : arePercentagesOk}">
+            <span v-if="!arePercentagesOk">The sum of all percentages being set must be 100%, <b>please  {{ missingPercent < 0 ? 'remove ' + Math.abs(missingPercent) + '%' : 'add ' + Math.abs(missingPercent) + '%' }}</b></span>
+            <span v-else>Well done, the current assignation is valid!</span>
+          </div>
 
-        <hr>
-        <div class="bottom-btns-row w3-row-padding">
-          <div class="w3-col m6">
-            <button type="button" class="w3-button w3-light-gray w3-round" @click="showExpanded = false">Cancel</button>
+          <hr>
+          <div class="bottom-btns-row w3-row-padding">
+            <div class="w3-col m6">
+              <button type="button" class="w3-button w3-light-gray w3-round" @click="showExpanded = false">Cancel</button>
+            </div>
+            <div class="w3-col m6">
+              <button type="button" class="w3-button w3-theme w3-round" @click="send()" :disabled="!arePercentagesOk">{{ isNotEvaluated ? 'Send' : 'Update' }}</button>
+            </div>
           </div>
-          <div class="w3-col m6">
-            <button type="button" class="w3-button w3-theme w3-round" @click="send()" :disabled="!arePercentagesOk">{{ isNotEvaluated ? 'Send' : 'Update' }}</button>
-          </div>
-        </div>
       </div>
+      </transition>
     </div>
     <div v-if="isDone" class="slider-container">
       <transition name="slideDownUp">
         <div v-show="showExpanded" class="w3-container">
           <div class="bottom-btns-row w3-row-padding">
 
-            <hr>
-            <label class="w3-text-indigo"><b>Receivers:</b></label>
+            <label class="d2-color"><b>Receivers:</b></label>
 
             <div v-for="receiver in assignation.receivers" class="w3-row">
-              <div class="w3-col s8">
+              <div class="w3-col m8">
                 <app-user-avatar :user="receiver.user"></app-user-avatar>
               </div>
-              <div class="w3-col s4 w3-center">
+              <div class="w3-col m4 w3-center">
                 <div class="w3-row w3-padding input-div">
                   <div class="w3-col s10">
                     <input v-model.number="receiver.percent" class="w3-input w3-border w3-hover-light-gray w3-round"
@@ -121,18 +131,15 @@
 
 <script>
 import UserAvatar from '../user/UserAvatar.vue'
-
-import { tokensString } from '@/lib/common'
+import ValueSeal from './ValueSeal.vue'
 
 export default {
   components: {
-    'app-user-avatar': UserAvatar
+    'app-user-avatar': UserAvatar,
+    'app-value-seal': ValueSeal
   },
 
   props: {
-    initiative: {
-      type: Object
-    },
     assignation: {
       type: Object
     }
@@ -214,9 +221,6 @@ export default {
   },
 
   methods: {
-    tokensString (v) {
-      return tokensString(v)
-    },
     isDontKnow (grade) {
       if (grade.type) {
         if (grade.type === 'SET') {
@@ -250,29 +254,57 @@ export default {
 
 <style scoped>
 
-.this-container {
-  padding-bottom: 15px;
+.assignation-container {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.top-container {
+  margin-bottom: 15px;
 }
 
 .bill-container {
   height: 100px;
 }
 
-.fa-certificate {
-  font-size: 100px;
-}
-
-.status-col {
+.data-label {
   padding-top: 8px;
 }
 
-.status-col .w3-tag {
+.from-row {
+  margin-bottom: 5px;
+}
+
+.receivers-row {
+  margin-bottom: 5px;
+}
+
+.receivers-container {
+  margin-left: 15px;
+}
+
+.motive-container {
+  margin-bottom: 10px;
+}
+
+.fa-certificate {
+  font-size: 80px;
+}
+
+.tags-row .w3-tag {
   width: 100%;
   margin-top: 5px;
 }
 
-.more-btn {
+.action-btn {
   width: 100%;
+  max-width: 220px;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+
+.percent-input {
+  max-width: 100px;
 }
 
 .fa-percent {
@@ -282,7 +314,7 @@ export default {
 }
 
 .not-sure-col {
-  padding-top: 8px;
+  margin-left: 20px;
 }
 
 .bottom-btns-row {

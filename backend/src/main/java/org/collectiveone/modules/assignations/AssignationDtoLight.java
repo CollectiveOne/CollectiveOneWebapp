@@ -10,6 +10,8 @@ public class AssignationDtoLight {
 	private String motive;
 	private String notes;
 	private String state;
+	private String initiativeId;
+	private String initiativeName;
 	private List<BillDto> assets = new ArrayList<BillDto>();
 	
 	
@@ -42,6 +44,18 @@ public class AssignationDtoLight {
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	public String getInitiativeId() {
+		return initiativeId;
+	}
+	public void setInitiativeId(String initiativeId) {
+		this.initiativeId = initiativeId;
+	}
+	public String getInitiativeName() {
+		return initiativeName;
+	}
+	public void setInitiativeName(String initiativeName) {
+		this.initiativeName = initiativeName;
 	}
 	public List<BillDto> getAssets() {
 		return assets;

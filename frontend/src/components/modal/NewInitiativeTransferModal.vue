@@ -25,17 +25,17 @@
 
           <div class="w3-row">
             <label class="w3-text-indigo"><b>Motive</b></label>
-            <input v-model="assignation.motive" class="w3-input w3-hover-light-gray" type="text">
+            <input v-model="transfer.motive" class="w3-input w3-hover-light-gray" type="text">
             <br>
 
             <label class="w3-text-indigo"><b>Notes</b></label>
-            <textarea v-model="assignation.notes" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
+            <textarea v-model="transfer.notes" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
             <br>
           </div>
 
           <div class="w3-row">
             <app-initiative-assets-assigner
-              :initiativeId="initiativeId">
+              :initInitiativeId="initInitiativeId"
               @updated="assetsSelected($event)">
             </app-initiative-assets-assigner>
           </div>
@@ -71,14 +71,14 @@ export default {
   },
 
   props: {
-    initiativeId: {
+    initInitiativeId: {
       type: String
     }
   },
 
   data () {
     return {
-      assignation: {
+      transfer: {
         motive: '',
         notes: ''
       }
@@ -95,13 +95,15 @@ export default {
       this.$emit('close-this')
     },
     assetsSelected (assets) {
-      this.assignation.assets = assets
+      this.transfer.assetId = assets[0].assetId
+      this.transfer.value = assets[0].value
+      this.transfer.senderId = assets[0].senderId
     },
     receiverSelected (initiative) {
-      this.assignation.receiver = initiative
+      this.transfer.receiverId = initiative.id
     },
     accept () {
-      this.axios.post('/1/secured/initiative/' + this.assignation.initiativeId + '/transferToInitiative', this.assignation)
+      this.axios.post('/1/secured/initiative/' + this.transfer.senderId + '/transferToInitiative', this.transfer)
       .then((response) => {
         this.$emit('assignation-done')
         this.closeThis()

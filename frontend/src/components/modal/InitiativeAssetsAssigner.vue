@@ -34,7 +34,7 @@ import TokensDistributionChart from '../initiative/InitiativeTokensDistributionC
 
 export default {
   props: {
-    initiativeId: {
+    initInitiativeId: {
       type: String
     },
     type: {
@@ -90,7 +90,7 @@ export default {
   },
 
   mounted () {
-    this.updateInitiative(this.initiativeId)
+    this.updateInitiative(this.initInitiativeId)
   }
 }
 </script>

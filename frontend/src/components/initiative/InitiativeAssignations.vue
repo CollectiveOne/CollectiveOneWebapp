@@ -1,10 +1,10 @@
 <template lang="html">
-  <div v-if="initiativeAssignations" class="w3-container this-container">
+  <div v-if="initiativeAssignations && initiativeTransfers" class="w3-container section-container">
 
     <div v-if="isLoggedAnAdmin" class="w3-row action-buttons">
       <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$emit('new-assignation')">new transfer to user(s)</button>
       <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$emit('new-transfer-to-initiative')">new transfer to initiative</button>
-      <hr>
+      <hr class="separator">
     </div>
 
     <div class="w3-card section-card">
@@ -12,59 +12,81 @@
         <h4>Transfers from {{ initiative.name }}</h4>
       </header>
 
-      <div class="w3-container card-content">
-        <div class="w3-row">
-          <label class="w3-text-indigo"><b>To users</b></label>
-        </div>
-        <div v-if="initiativeAssignations.assignations.length > 0" class="w3-row-padding assignations-container">
-          <div class="w3-col l6" v-for="assignation in initiativeAssignations.assignations">
-            <app-initiative-assignation class="assignation-card"
-              :assignation="assignation" :initiative="initiative"
-              :key="assignation.id" @please-update="update()">
-            </app-initiative-assignation>
+      <div v-if="hasTransfers" class="w3-container card-content">
+
+        <div v-if="initiativeAssignations.assignations.length > 0">
+          <div class="w3-row">
+            <label class="w3-text-indigo"><b>To users</b></label>
           </div>
-        </div>
-        <div v-else class="">
-          <i>(empty)</i>
-        </div>
-
-        <div class="w3-row">
-          <label class="w3-text-indigo"><b>To initiatives</b></label>
-        </div>
-        <div v-if="initiativeTransfers.length > 0" class="w3-row-padding assignations-container">
-          <div class="w3-col l6" v-for="transfer in initiativeTransfers">
-            <app-initiative-transfer class="assignation-card"
-              :transfer="transfer" :key="transfer.id">
-            </app-initiative-transfer>
-          </div>
-        </div>
-        <div v-else class="">
-          <i>(empty)</i>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="w3-card section-card">
-      <header class="w3-container w3-theme noselect">
-        <h4>Transfers in sub-initiatives</h4>
-      </header>
-
-      <div class="w3-container card-content">
-        <div v-if="getSubassignations.length > 0" class="w3-container">
           <div class="w3-row-padding assignations-container">
-            <div class="w3-col l6" v-for="assignationData in getSubassignations">
+            <div class="w3-col l6" v-for="assignation in initiativeAssignations.assignations">
               <app-initiative-assignation class="assignation-card"
-                :assignation="assignationData.assignation" :initiative="initiative"
-                :key="assignationData.assignation.id" @please-update="update()">
+                :assignation="assignation"
+                :key="assignation.id" @please-update="update()">
               </app-initiative-assignation>
             </div>
           </div>
         </div>
-        <div v-else class="w3-padding">
-          <i>(empty)</i>
+
+        <div v-if="initiativeTransfers.transfers.length > 0">
+          <div class="w3-row">
+            <label class="w3-text-indigo"><b>To initiatives</b></label>
+          </div>
+          <div v-if="initiativeTransfers.transfers.length > 0" class="w3-row-padding assignations-container">
+            <div class="w3-col l6" v-for="transfer in initiativeTransfers.transfers">
+              <app-initiative-transfer class="assignation-card"
+                :transfer="transfer" :key="transfer.id">
+              </app-initiative-transfer>
+            </div>
+          </div>
         </div>
+
       </div>
+
+    </div>
+
+    <div v-if="hasSubinitiativesTransfers" class="w3-card section-card">
+
+      <header class="w3-container w3-theme noselect">
+        <h4>Transfers from sub-initiatives of {{ initiative.name }}</h4>
+      </header>
+
+
+      <div class="w3-container card-content">
+
+        <div v-if="getSubassignations.length > 0" class="">
+          <div class="w3-row">
+            <label class="w3-text-indigo"><b>To users</b></label>
+          </div>
+          <div class="w3-container">
+            <div class="w3-row-padding assignations-container">
+              <div class="w3-col l6" v-for="assignationData in getSubassignations">
+                <app-initiative-assignation class="assignation-card"
+                  :assignation="assignationData.assignation"
+                  :key="assignationData.assignation.id" @please-update="update()">
+                </app-initiative-assignation>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="getSubtransfers.length > 0" class="">
+          <div class="w3-row">
+            <label class="w3-text-indigo"><b>To initiatives</b></label>
+          </div>
+          <div class="w3-container">
+            <div class="w3-row-padding assignations-container">
+              <div class="w3-col l6" v-for="transferData in getSubtransfers">
+                <app-initiative-transfer class="assignation-card"
+                  :transfer="transferData.transfer" :key="transferData.transfer.id">
+                </app-initiative-transfer>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
 
@@ -75,7 +97,7 @@
 import InitiativeAssignation from './InitiativeAssignation.vue'
 import InitiativeTransfer from './InitiativeTransfer.vue'
 
-const getIndexOfAssignation = function (list, id) {
+const getIndexOfElementWithId = function (list, id) {
   for (var ix in list) {
     if (list[ix].id === id) {
       return ix
@@ -88,7 +110,7 @@ const getAllSubassignations = function (subinitiativesAssignations) {
   var subassignations = []
   subinitiativesAssignations.forEach((subinitiativeAssignations) => {
     subinitiativeAssignations.assignations.forEach((assignation) => {
-      var ix = getIndexOfAssignation(subassignations, assignation.id)
+      var ix = getIndexOfElementWithId(subassignations, assignation.id)
       if (ix === -1) {
         subassignations.push({
           assignation: assignation,
@@ -100,6 +122,24 @@ const getAllSubassignations = function (subinitiativesAssignations) {
     })
   })
   return subassignations
+}
+
+const getAllSubtransfers = function (subinitiativesTransfers) {
+  var subtransfers = []
+  subinitiativesTransfers.forEach((subinitiativeTransfers) => {
+    subinitiativeTransfers.transfers.forEach((transfer) => {
+      var ix = getIndexOfElementWithId(subtransfers, transfer.id)
+      if (ix === -1) {
+        subtransfers.push({
+          transfer: transfer,
+          subinitiative: subinitiativeTransfers.initiativeName
+        })
+      } else {
+        subtransfers[ix].subinitiative = subinitiativeTransfers.initiativeName
+      }
+    })
+  })
+  return subtransfers
 }
 
 export default {
@@ -126,6 +166,15 @@ export default {
     },
     getSubassignations () {
       return getAllSubassignations(this.initiativeAssignations.subinitiativesAssignations)
+    },
+    getSubtransfers () {
+      return getAllSubtransfers(this.initiativeTransfers.subinitiativesTransfers)
+    },
+    hasTransfers () {
+      return (this.initiativeAssignations.assignations.length > 0) || (this.initiativeTransfers.transfers.length > 0)
+    },
+    hasSubinitiativesTransfers () {
+      return (this.getSubassignations.length > 0) || (this.getSubtransfers.length > 0)
     }
   },
 
@@ -149,21 +198,9 @@ export default {
 
 <style scoped>
 
-.section-card {
-  margin-bottom: 25px;
-}
-
-.assignation-card {
-  margin-bottom: 20px;
-}
-
-.this-container {
+.section-container {
   padding-top: 25px;
-  padding-bottom: 25px;
-}
-
-.assignations-container {
-  margin-top: 20px;
+  padding-bottom: 15px;
 }
 
 .action-buttons {
@@ -172,10 +209,28 @@ export default {
 
 .action-buttons button {
   width: 220px;
+  margin-bottom: 10px;
+}
+
+.separator {
+  margin-top: 10px;
+}
+
+.section-card {
+  margin-bottom: 25px;
 }
 
 .card-content {
   padding-top: 20px;
+}
+
+.assignations-container {
+  padding-top: 25px;
+  padding-bottom: 10px;
+}
+
+.assignation-card {
+  margin-bottom: 20px;
 }
 
 </style>

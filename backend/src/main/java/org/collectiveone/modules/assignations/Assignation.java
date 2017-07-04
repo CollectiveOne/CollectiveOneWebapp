@@ -76,6 +76,8 @@ public class Assignation {
 		dto.setMotive(motive);
 		dto.setNotes(notes);
 		dto.setState(state.toString());
+		dto.setInitiativeId(initiative.getId().toString());
+		dto.setInitiativeName(initiative.getName());
 		
 		for(Bill bill : bills) {
 			dto.getAssets().add(bill.toDto());
@@ -92,6 +94,8 @@ public class Assignation {
 		dto.setMotive(motive);
 		dto.setNotes(notes);
 		dto.setState(state.toString());
+		dto.setInitiativeId(initiative.getId().toString());
+		dto.setInitiativeName(initiative.getName());
 		
 		for(Bill bill : bills) {
 			dto.getAssets().add(bill.toDto());

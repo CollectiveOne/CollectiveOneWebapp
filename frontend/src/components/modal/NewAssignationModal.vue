@@ -45,7 +45,7 @@
 
           <div class="w3-row">
             <app-initiative-assets-assigner
-              :initiativeId="initiativeId" type='member-assigner'
+              :initInitiativeId="initiativeId" type='member-assigner'
               @updated="assetsSelected($event)">
             </app-initiative-assets-assigner>
           </div>

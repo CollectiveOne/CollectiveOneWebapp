@@ -1,26 +1,26 @@
 <template lang="html">
-  <div class="w3-card-2 w3-padding this-container">
-    <div class="w3-row-padding">
-      <div class="w3-col l4 w3-center">
-        <div class="w3-container">
-          <div class="w3-display-container transfer-container">
-            <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
-            <div class="w3-display-middle d2-color" style="width: 100%">
-              <div class="w3-row">
-                <b class="w3-xlarge ">{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="w3-card-2 transfer-container">
+    <div class="w3-row">
+      <div class="w3-col l4">
+        <app-value-seal :value="transfer.value" :assetName="transfer.assetName"></app-value-seal>
       </div>
 
-      <div class="w3-col l8 status-col">
+      <div class="w3-col l8 data-col w3-container">
         <div class="w3-row">
-          <div class="w3-tag w3-theme-l2 w3-round">
-            <b>{{ transfer.receiverName }}</b>
+          <div class="w3-left d2-color data-label">
+            <label class="noselect"><b>from:</b></label> {{ transfer.senderName }}
           </div>
         </div>
-        <h5 class="d2-color w3-padding w3-center">{{ transfer.motive }}</h5>
+        <div class="w3-row">
+          <div class="w3-left d2-color data-label">
+            <label class="noselect"><b>to:</b></label> {{ transfer.receiverName }}
+          </div>
+        </div>
+        <div class="w3-row">
+          <div class="w3-left d2-color data-label">
+            <label class="noselect"><b>motive:</b></label> {{ transfer.motive }}
+          </div>
+        </div>
       </div>
 
     </div>
@@ -28,18 +28,15 @@
 </template>
 
 <script>
-import { tokensString } from '@/lib/common'
+import ValueSeal from './ValueSeal.vue'
 
 export default {
+  components: {
+    'app-value-seal': ValueSeal
+  },
   props: {
     transfer: {
       type: Object
-    }
-  },
-
-  methods: {
-    tokensString (v) {
-      return tokensString(v)
     }
   }
 }
@@ -47,25 +44,12 @@ export default {
 
 <style scoped>
 
-.this-container {
-  padding-top: 20px !important;
-  padding-bottom: 15px !important;
-}
-
 .transfer-container {
-  height: 100px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
-.fa-certificate {
-  font-size: 100px;
-}
-
-.status-col {
-}
-
-.status-col .w3-tag {
-  width: 100%;
-  margin-top: 5px;
+.data-col {
 }
 
 </style>

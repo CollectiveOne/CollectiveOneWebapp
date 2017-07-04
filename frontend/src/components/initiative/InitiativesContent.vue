@@ -37,7 +37,7 @@
     <transition name="slideDownUp">
       <app-new-initiative-transfer-modal
         v-if="showNewInitiativeTransferModal"
-        :initiativeId="initiative.id"
+        :initInitiativeId="initiative.id"
         @close-this="showNewInitiativeTransferModal = false"
         @assignation-done="updateThisInitiative()">
       </app-new-initiative-transfer-modal>

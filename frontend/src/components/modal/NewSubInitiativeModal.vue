@@ -23,7 +23,7 @@
 
           <hr>
           <div class="w3-container assets-selector-div">
-            <app-initiative-assets-assigner :initiativeId="parentInitiative.id" type='initiative-assigner'
+            <app-initiative-assets-assigner :initInitiativeId="parentInitiative.id" type='initiative-assigner'
               @updated="parentAssetsSelected($event)" @parent-initiative-updated="parentInitiativeUpdated($event)">
             </app-initiative-assets-assigner>
           </div>
