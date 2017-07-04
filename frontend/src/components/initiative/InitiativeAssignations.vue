@@ -7,12 +7,12 @@
       <hr class="separator">
     </div>
 
-    <div class="w3-card section-card">
+    <div v-if="hasTransfers" class="w3-card section-card">
       <header class="w3-container w3-theme noselect">
         <h4>Transfers from {{ initiative.name }}</h4>
       </header>
 
-      <div v-if="hasTransfers" class="w3-container card-content">
+      <div class="w3-container card-content">
 
         <div v-if="initiativeAssignations.assignations.length > 0">
           <div class="w3-row">
