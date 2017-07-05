@@ -56,10 +56,10 @@
 
         <div v-if="getSubassignations.length > 0" class="">
           <div class="w3-row">
-            <label class="w3-text-indigo"><b>To users</b></label>
+            <label class="d2-color"><b>To users</b></label>
           </div>
           <div class="w3-container">
-            <div class="w3-row-padding assignations-container">
+            <div class="w3-row assignations-container">
               <div class="w3-col l6" v-for="assignationData in getSubassignations">
                 <app-initiative-assignation class="assignation-card"
                   :assignation="assignationData.assignation"

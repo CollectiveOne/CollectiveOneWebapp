@@ -17,7 +17,7 @@
       </app-new-subinitiative-modal>
     </transition>
 
-    <nav class="w3-white w3-border-right">
+    <nav class="nav-container w3-white w3-border-right">
       <div class="w3-container w3-padding">
         <div class="create-new w3-button w3-theme-l1" @click="showNewInitiativeModal = true"><i class="fa fa-plus-circle"></i>  create new</div>
 
