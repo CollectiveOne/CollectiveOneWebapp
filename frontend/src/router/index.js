@@ -23,7 +23,14 @@ export default new Router({
           children: [
             { path: 'overview', name: 'InitiativeOverview', component: InitiativeOverview, meta: {'column': 0} },
             { path: 'people', name: 'InitiativePeople', component: InitiativePeople, meta: {'column': 1} },
-            { path: 'assignations', name: 'InitiativeAssignations', component: InitiativeAssignations, meta: {'column': 3} }
+            { path: 'assignations',
+              name: 'InitiativeAssignations',
+              component: InitiativeAssignations,
+              meta: {'column': 3},
+              children: [
+                { path: '/', name: 'InitiativeAssignationsBrowse', component: InitiativeAssignationsBrowser },
+                { path: '/:assignationId', name: 'InitiativeAssignationPage', component: InitiativeAssignationsPage }
+              ]}
           ]}
       ]
     }

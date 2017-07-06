@@ -1,7 +1,7 @@
 <template lang="html">
   <div v-if="assignation" class="w3-card-2 assignation-container">
     <div class="w3-row top-container">
-      <div class="w3-col l4">
+      <div class="w3-col l4 seal-container">
         <app-value-seal :value="assignation.assets[0].value" :assetName="assignation.assets[0].assetName"></app-value-seal>
       </div>
 
@@ -70,6 +70,9 @@
                 </div>
                 <div class="w3-left w3-center not-sure-col">
                   <button class="w3-button w3-theme w3-round" @click="toggleDontKnow(grade)">{{ isDontKnow(grade) ? 'set' : 'dont know' }}</button>
+                </div>
+                <div class="w3-left w3-center not-sure-col">
+                  <button class="w3-button w3-theme w3-round">add comments</button>
                 </div>
               </div>
             </div>
@@ -261,10 +264,12 @@ export default {
 
 .top-container {
   margin-bottom: 15px;
+  display: flex;
+  align-items: center;
 }
 
-.bill-container {
-  height: 100px;
+.seal-container {
+  flex: 1 1 auto;
 }
 
 .data-label {
@@ -315,6 +320,10 @@ export default {
 
 .not-sure-col {
   margin-left: 20px;
+}
+
+.not-sure-col button {
+  width: 120px;
 }
 
 .bottom-btns-row {
