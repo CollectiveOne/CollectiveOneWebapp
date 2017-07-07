@@ -1,6 +1,13 @@
 <template lang="html">
   <div v-if="assignation" class="w3-card-2 assignation-container w3-display-container">
 
+    <div class="top-right-div w3-display-topright">
+      <router-link tag="div" :to="{ name: 'InitiativeAssignation', params: { assignationId: assignation.id } }"
+        class="w3-button w3-large d2-color">
+        <i class="fa fa-window-maximize" aria-hidden="true"></i>
+      </router-link>
+    </div>
+
     <div class="w3-row">
 
       <div class="w3-col l4 seal-container">

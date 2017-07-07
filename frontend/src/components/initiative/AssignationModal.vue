@@ -1,14 +1,12 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4">
+      <app-initiative-assignation :assignation="assignation"></app-initiative-assignation>
 
-        <div class="close-div w3-display-topright w3-xlarge" @click="$router.push({ name: 'InitiativeAssignations'})">
+      <div class="w3-card-4">
+        <div class="w3-display-topright w3-xlarge w3-button">
           <i class="fa fa-times d2-color" aria-hidden="true"></i>
         </div>
-
-        <app-initiative-assignation :assignation="assignation"></app-initiative-assignation>
-
       </div>
     </div>
   </div>
