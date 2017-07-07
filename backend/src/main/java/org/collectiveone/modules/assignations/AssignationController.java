@@ -48,6 +48,11 @@ public class AssignationController {
 		return assignationService.getAssignationsResult(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
 	}
 	
+	@RequestMapping(path = "/secured/assignation/{assignationId}", method = RequestMethod.GET)
+	public GetResult<AssignationDto> getAssignation(@PathVariable("assignationId") String assignationId) {
+		return assignationService.getAssignationDto(UUID.fromString(assignationId), getLoggedUser().getC1Id());
+	}
+	
 	@RequestMapping(path = "/secured/assignation/{assignationId}/evaluate", method = RequestMethod.POST)
 	public PostResult evaluateAssignation(
 			@PathVariable("assignationId") String assignationId,

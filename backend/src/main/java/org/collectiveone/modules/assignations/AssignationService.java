@@ -220,6 +220,20 @@ public class AssignationService {
 		return new GetResult<InitiativeAssignationsDto>("success", "success", getAssignations(initiativeId, evaluatorAppUserId));
 	}
 	
+	public GetResult<AssignationDto> getAssignationDto(UUID assignationId, UUID userId) {
+		
+		Assignation assignation = assignationRepository.findById(assignationId);
+		AssignationDto assignationDto = null;
+		
+		if(assignation.getType() == AssignationType.PEER_REVIEWED) {
+			assignationDto = getPeerReviewedAssignation(assignation.getInitiative().getId(), assignation.getId(), assignationId);
+		} else {
+			assignationDto = assignation.toDto();
+		}
+		
+		return new GetResult<AssignationDto>("success", "assignation retreived", assignationDto);
+	}
+	
 	@Transactional
 	public InitiativeAssignationsDto getAssignations(UUID initiativeId, UUID evaluatorAppUserId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);

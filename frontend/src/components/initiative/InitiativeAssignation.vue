@@ -45,88 +45,9 @@
     </div>
 
     <div class="w3-row-padding w3-center">
-      <div @click="showExpanded = !showExpanded" class="w3-tag w3-round w3-button action-btn" :class="{'w3-theme' : isOpen, 'w3-theme-l3' : isDone, 'd2-color': isDone}">
-        {{ nextAction }}
-      </div>
-    </div>
-    <div v-if="isOpen" class="slider-container">
-      <transition name="slideDownUp">
-        <div v-show="showExpanded" class="w3-container">
-          <hr>
-          <label class="w3-text-indigo"><b>Receivers:</b></label>
-
-          <div v-for="grade in grades" class="w3-row">
-            <div class="w3-row">
-              <app-user-avatar :user="grade.receiverUser" class=""></app-user-avatar>
-            </div>
-            <div class="w3-row w3-center">
-              <div class="w3-row w3-padding input-div">
-                <div class="w3-left">
-                  <input v-model.number="grade.percent" class="percent-input w3-input w3-border w3-hover-light-gray w3-round"
-                    type="number" step="5" min="0" :disabled="isDontKnow(grade)">
-                </div>
-                <div class="w3-left d2-color">
-                  <i class="fa fa-percent" aria-hidden="true"></i>
-                </div>
-                <div class="w3-left w3-center not-sure-col">
-                  <button class="w3-button w3-theme w3-round" @click="toggleDontKnow(grade)">{{ isDontKnow(grade) ? 'set' : 'dont know' }}</button>
-                </div>
-                <div class="w3-left w3-center not-sure-col">
-                  <button class="w3-button w3-theme w3-round">add comments</button>
-                </div>
-              </div>
-            </div>
-            <hr>
-          </div>
-
-
-          <div class="w3-panel w3-round w3-padding w3-center" :class="{'w3-theme': !arePercentagesOk, 'w3-green' : arePercentagesOk}">
-            <span v-if="!arePercentagesOk">The sum of all percentages being set must be 100%, <b>please  {{ missingPercent < 0 ? 'remove ' + Math.abs(missingPercent) + '%' : 'add ' + Math.abs(missingPercent) + '%' }}</b></span>
-            <span v-else>Well done, the current assignation is valid!</span>
-          </div>
-
-          <hr>
-          <div class="bottom-btns-row w3-row-padding">
-            <div class="w3-col m6">
-              <button type="button" class="w3-button w3-light-gray w3-round" @click="showExpanded = false">Cancel</button>
-            </div>
-            <div class="w3-col m6">
-              <button type="button" class="w3-button w3-theme w3-round" @click="send()" :disabled="!arePercentagesOk">{{ isNotEvaluated ? 'Send' : 'Update' }}</button>
-            </div>
-          </div>
-      </div>
-      </transition>
-    </div>
-    <div v-if="isDone" class="slider-container">
-      <transition name="slideDownUp">
-        <div v-show="showExpanded" class="w3-container">
-          <div class="bottom-btns-row w3-row-padding">
-
-            <label class="d2-color"><b>Receivers:</b></label>
-
-            <div v-for="receiver in assignation.receivers" class="w3-row">
-              <div class="w3-col m8">
-                <app-user-avatar :user="receiver.user"></app-user-avatar>
-              </div>
-              <div class="w3-col m4 w3-center">
-                <div class="w3-row w3-padding input-div">
-                  <div class="w3-col s10">
-                    <input v-model.number="receiver.percent" class="w3-input w3-border w3-hover-light-gray w3-round"
-                    type="number" step="5" min="0" :disabled="true">
-                  </div>
-                  <div class="w3-col s2 d2-color">
-                    <i class="fa fa-percent" aria-hidden="true"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="w3-col m12">
-              <button type="button" class="w3-button w3-light-gray w3-round" @click="showExpanded = false">Close</button>
-            </div>
-          </div>
-        </div>
-      </transition>
+      <router-link :to="{ name: 'InitiativeAssignation', params: { assignationId: assignation.id } }" class="w3-tag w3-round w3-button w3-theme action-btn">
+        more
+      </router-link>
     </div>
 
   </div>

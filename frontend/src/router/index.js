@@ -7,8 +7,6 @@ import InitiativesContent from '../components/initiative/InitiativesContent.vue'
 import InitiativeOverview from '../components/initiative/InitiativeOverview.vue'
 import InitiativePeople from '../components/initiative/InitiativePeople.vue'
 import InitiativeAssignations from '../components/initiative/InitiativeAssignations.vue'
-import InitiativeAssignationsBrowser from '../components/initiative/InitiativeAssignationsBrowser.vue'
-import InitiativeAssignationPage from '../components/initiative/InitiativeAssignationPage.vue'
 
 Vue.use(Router)
 
@@ -25,14 +23,10 @@ export default new Router({
           children: [
             { path: 'overview', name: 'InitiativeOverview', component: InitiativeOverview, meta: {'column': 0} },
             { path: 'people', name: 'InitiativePeople', component: InitiativePeople, meta: {'column': 1} },
-            { path: 'assignations',
-              component: InitiativeAssignations,
-              meta: {'column': 3},
-              children: [
-                { path: '/', name: 'InitiativeAssignations', component: InitiativeAssignationsBrowser, meta: {'column': 3} },
-                { path: ':assignationId', name: 'InitiativeAssignationPage', component: InitiativeAssignationPage, meta: {'column': 3} }
-              ]}
-          ]}
+            { path: 'assignations', name: 'InitiativeAssignations', component: InitiativeAssignations, meta: {'column': 3} },
+            { path: 'assignations/:assignationId', name: 'InitiativeAssignation', component: InitiativeAssignations, meta: {'column': 3} }
+          ]
+        }
       ]
     }
   ]
