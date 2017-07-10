@@ -3,7 +3,7 @@
 
     <div class="top-right-div w3-display-topright">
       <router-link tag="div" :to="{ name: 'InitiativeAssignation', params: { assignationId: assignation.id } }"
-        class="w3-button w3-large d2-color">
+        class="w3-button d2-color">
         <i class="fa fa-window-maximize" aria-hidden="true"></i>
       </router-link>
     </div>
@@ -11,17 +11,35 @@
     <div class="w3-row">
 
       <div class="w3-col l4 seal-container">
-        <app-value-seal :value="assignation.assets[0].value" :assetName="assignation.assets[0].assetName"></app-value-seal>
+        <div class="w3-row">
+          <app-value-seal :value="assignation.assets[0].value" :assetName="assignation.assets[0].assetName"></app-value-seal>
+        </div>
       </div>
 
-      <div class="w3-col l8 w3-container">
+      <div class="w3-col l8 data-container w3-container">
+        <div class="w3-row tags-row">
+          <div class="w3-left w3-tag w3-theme-l2 w3-round noselect w3-small">
+            <b>{{ assignation.type }}</b>
+          </div>
+          <div class="w3-left w3-tag w3-theme-l2 w3-round noselect w3-small">
+            <b>{{ assignation.state }}</b>
+          </div>
+        </div>
+
         <div class="w3-row from-row">
-          <div class="w3-left d2-color data-label">
+          <div class="w3-left d2-color">
             <label class="noselect"><b>from:</b></label> {{ assignation.initiativeName }}
           </div>
         </div>
-        <div class="w3-row receivers-row">
+
+        <div class="w3-row motive-row">
           <div class="w3-left d2-color data-label">
+            <label class="noselect"><b>motive:</b></label> {{ assignation.motive }}
+          </div>
+        </div>
+
+        <div class="w3-row receivers-row">
+          <div class="w3-left d2-color">
             <label class="noselect"><b>to:</b></label>
           </div>
           <div class="w3-left receivers-container" v-for="receiver in assignation.receivers" :key="receiver.id" >
@@ -31,24 +49,7 @@
             </app-user-avatar>
           </div>
         </div>
-        <div class="w3-row motive-container">
-          <div class="w3-left d2-color data-label">
-            <label class="noselect"><b>motive:</b></label> {{ assignation.motive }}
-          </div>
-        </div>
 
-        <div class="w3-row-padding tags-row">
-          <div class="w3-col s6">
-            <div class="w3-tag w3-theme-l2 w3-round noselect w3-small">
-              <b>{{ assignation.type }}</b>
-            </div>
-          </div>
-          <div class="w3-col s6">
-            <div class="w3-tag w3-theme-l2 w3-round noselect w3-small">
-              <b>{{ assignation.state }}</b>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -101,15 +102,30 @@ export default {
 }
 
 .seal-container {
-  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.data-label {
-  padding-top: 8px;
+.data-container {
+  padding-top: 5px;
+}
+
+.tags-row {
+  margin-bottom: 5px;
+}
+
+.tags-row .w3-tag {
+  width: 100px;
+  margin-right: 10px;
 }
 
 .from-row {
-  margin-bottom: 5px;
+  margin-bottom: 0px;
+}
+
+.motive-row {
+  margin-bottom: 0px;
 }
 
 .receivers-row {
@@ -118,19 +134,7 @@ export default {
 
 .receivers-container {
   margin-left: 15px;
-}
-
-.motive-container {
-  margin-bottom: 10px;
-}
-
-.fa-certificate {
-  font-size: 80px;
-}
-
-.tags-row .w3-tag {
-  width: 100%;
-  margin-top: 5px;
+  padding-top: 6px;
 }
 
 .action-btn {

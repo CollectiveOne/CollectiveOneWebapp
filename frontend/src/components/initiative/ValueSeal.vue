@@ -1,10 +1,12 @@
 <template lang="html">
-  <div class="w3-display-container seal-display-container">
-    <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
-    <div class="w3-display-middle d2-color" style="width: 100%">
-      <div class="w3-row w3-center">
-        <b class="w3-large ">{{ tokensString(value) }} {{ assetName }}</b>
-      </div>
+  <div class="seal-display-container">
+    <div class="">
+      <i class="fa fa-certificate l3-color" aria-hidden="true"></i>
+      <!-- <div class="d2-color" style="width: 100%">
+        <div class="w3-row w3-center">
+          <b class="w3-large ">{{ tokensString(value) }} {{ assetName }}</b>
+        </div>
+      </div> -->
     </div>
   </div>
 </template>
