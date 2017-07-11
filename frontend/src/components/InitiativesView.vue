@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="w3-row">
-    <div v-show="expandNav" class="this-nav" :class="navContainerClass">
+    <div v-show="expandNav" :class="navContainerClass">
       <keep-alive>
         <app-initiatives-nav
           :userInitiatives="userInitiatives"
@@ -116,13 +116,6 @@ export default {
 
 .nav-small {
   width: 90%;
-}
-
-.this-nav {
-  height: 100%;
-}
-
-.this-content {
 }
 
 </style>

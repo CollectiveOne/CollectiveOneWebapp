@@ -79,6 +79,10 @@ export default {
 
 <style scoped>
 
+.nav-container {
+  min-height: calc(100vh - 51px);
+}
+
 .create-new {
   margin-top: 20px;
   margin-bottom: 0px;

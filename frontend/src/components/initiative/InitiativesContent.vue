@@ -73,17 +73,17 @@
 
         <div class="section-tabs w3-row w3-center">
           <router-link tag="div" :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey"
-            :class="{'w3-border-blue': isOverview, 'w3-theme-l3': isOverview}"
+            :class="{'w3-border-blue': isOverview}"
             @click="">
             <h5 class="d2-color noselect" :class="{'bold-text': isOverview}">Overview</h5>
           </router-link>
           <router-link tag="div" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey"
-            :class="{'w3-border-blue': isPeople, 'w3-theme-l3': isPeople}"
+            :class="{'w3-border-blue': isPeople}"
             @click="">
             <h5 class="d2-color noselect" :class="{'bold-text': isPeople}">People</h5>
           </router-link>
           <router-link tag="div" :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey"
-            :class="{'w3-border-blue': isAssignations, 'w3-theme-l3': isAssignations}"
+            :class="{'w3-border-blue': isAssignations}"
             @click="">
             <h5 class="d2-color noselect" :class="{'bold-text': isAssignations}">Transfers</h5>
           </router-link>

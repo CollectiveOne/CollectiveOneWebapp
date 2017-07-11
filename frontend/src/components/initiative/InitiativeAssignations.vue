@@ -16,9 +16,10 @@
       <hr class="separator">
     </div>
 
-    <div v-if="hasTransfers" class="w3-card section-card">
-      <header class="w3-container w3-theme noselect">
-        <h4>Transfers from {{ initiative.name }}</h4>
+    <div v-if="hasTransfers" class="w3-card d2-color section-card">
+      <header class="w3-container noselect">
+        <h4><b>Transfers from {{ initiative.name }}</b></h4>
+        <hr>
       </header>
 
       <div class="w3-container card-content">

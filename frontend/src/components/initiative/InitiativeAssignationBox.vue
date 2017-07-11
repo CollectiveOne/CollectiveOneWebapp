@@ -11,9 +11,7 @@
     <div class="w3-row">
 
       <div class="w3-col l4 seal-container">
-        <div class="w3-row">
-          <app-value-seal :value="assignation.assets[0].value" :assetName="assignation.assets[0].assetName"></app-value-seal>
-        </div>
+        <app-value-seal :value="assignation.assets[0].value" :assetName="assignation.assets[0].assetName"></app-value-seal>
       </div>
 
       <div class="w3-col l8 data-container w3-container">
