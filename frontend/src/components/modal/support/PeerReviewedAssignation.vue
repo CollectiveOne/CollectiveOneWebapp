@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import UsersList from '../user/UsersList.vue'
+import UsersList from '@/components/user/UsersList.vue'
 
 export default {
   components: {

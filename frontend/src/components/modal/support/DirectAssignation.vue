@@ -82,8 +82,8 @@
 </template>
 
 <script>
-import UserAvatar from '../user/UserAvatar.vue'
-import UserSelector from '../user/UserSelector.vue'
+import UserAvatar from '@/components/user/UserAvatar.vue'
+import UserSelector from '@/components/user/UserSelector.vue'
 
 export default {
   components: {

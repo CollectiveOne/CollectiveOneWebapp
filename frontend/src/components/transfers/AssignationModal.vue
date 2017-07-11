@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import InitiativeAssignation from './InitiativeAssignation.vue'
+import InitiativeAssignation from '@/components/transfers/Assignation.vue'
 
 export default {
 

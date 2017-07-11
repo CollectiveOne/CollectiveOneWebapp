@@ -50,9 +50,9 @@
 
 <script>
 import { mapActions } from 'vuex'
-import InitiativeNewMember from './InitiativeNewMember.vue'
-import InitiativeMember from './InitiativeMember.vue'
-import UserAvatar from '../user/UserAvatar.vue'
+import InitiativeNewMember from '@/components/user/InitiativeNewMember.vue'
+import InitiativeMember from '@/components/user/InitiativeMember.vue'
+import UserAvatar from '@/components/user/UserAvatar.vue'
 
 const getIndexOfUser = function (list, c1Id) {
   for (var ix in list) {

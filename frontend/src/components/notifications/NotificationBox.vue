@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import NotificationSubinitiativeCreated from './notifications/NotificationSubinitiativeCreated.vue'
-import NotificationInitiativeEdited from './notifications/NotificationInitiativeEdited.vue'
+import NotificationSubinitiativeCreated from './notificationsBoxes/NotificationSubinitiativeCreated.vue'
+import NotificationInitiativeEdited from './notificationsBoxes/NotificationInitiativeEdited.vue'
 
 export default {
   props: {

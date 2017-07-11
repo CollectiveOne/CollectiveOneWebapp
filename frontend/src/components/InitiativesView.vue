@@ -18,7 +18,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import InitiativesNav from './initiative/InitiativesNav.vue'
+import InitiativesNav from '@/components/nav/InitiativesNav.vue'
 
 export default {
   components: {

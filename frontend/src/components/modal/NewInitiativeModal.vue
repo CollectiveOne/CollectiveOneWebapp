@@ -67,9 +67,9 @@
 
 <script>
 import { mapActions } from 'vuex'
-import NewToken from './NewToken.vue'
-import InitiativeNewMember from '../initiative/InitiativeNewMember.vue'
-import InitiativeMember from '../initiative/InitiativeMember.vue'
+import NewToken from './support/NewToken.vue'
+import InitiativeNewMember from '@/components/user/InitiativeNewMember.vue'
+import InitiativeMember from '@/components/user/InitiativeMember.vue'
 
 /* eslint-disable no-unused-vars */
 import { tokensString } from '../../lib/common'

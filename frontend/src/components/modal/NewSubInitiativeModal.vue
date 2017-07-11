@@ -83,9 +83,9 @@
 
 <script>
 import { mapActions } from 'vuex'
-import InitiativeAssetsAssigner from './InitiativeAssetsAssigner.vue'
-import InitiativeNewMember from '../initiative/InitiativeNewMember.vue'
-import InitiativeMember from '../initiative/InitiativeMember.vue'
+import InitiativeAssetsAssigner from './support/InitiativeAssetsAssigner.vue'
+import InitiativeNewMember from '@/components/user/InitiativeNewMember.vue'
+import InitiativeMember from '@/components/user/InitiativeMember.vue'
 
 /* eslint-disable no-unused-vars */
 import { tokensString } from '../../lib/common'

@@ -49,7 +49,7 @@
 
 <script>
 import OutputMessage from '@/components/OutputMessage.vue'
-import NotificationsList from '@/components/user/NotificationsList.vue'
+import NotificationsList from '@/components/notifications/NotificationsList.vue'
 
 import { mapGetters, mapActions } from 'vuex'
 

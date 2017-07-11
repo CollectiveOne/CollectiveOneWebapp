@@ -45,9 +45,8 @@
 </template>
 
 <script>
-import InitiativeTokensDistributionChart from './InitiativeTokensDistributionChart.vue'
-
-import EditInitiativeModal from '../modal/EditInitiativeModal.vue'
+import InitiativeTokensDistributionChart from '@/components/transfers/AssetDistributionChart.vue'
+import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
 
 export default {
   components: {

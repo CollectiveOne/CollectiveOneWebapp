@@ -101,9 +101,9 @@
 </template>
 
 <script>
-import InitiativeAssignationBox from './InitiativeAssignationBox.vue'
-import InitiativeTransfer from './InitiativeTransfer.vue'
-import AssignationModal from './AssignationModal.vue'
+import InitiativeAssignationBox from '@/components/transfers/AssignationBox.vue'
+import InitiativeTransfer from '@/components/transfers/InitiativeTransfer.vue'
+import AssignationModal from '@/components/transfers/AssignationModal.vue'
 
 const getIndexOfElementWithId = function (list, id) {
   for (var ix in list) {

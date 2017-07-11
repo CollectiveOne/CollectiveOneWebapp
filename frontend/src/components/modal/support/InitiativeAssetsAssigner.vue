@@ -13,24 +13,24 @@
       </div>
     </div>
     <div v-if="initiative.ownTokens" class="w3-row assigner-div">
-      <app-tokens-distribution-chart
+      <app-asset-distribution-chart
         :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
         :type="type" @assigned="newAssignment($event)">
-      </app-tokens-distribution-chart>
+      </app-asset-distribution-chart>
     </div>
     <div v-if="initiative.otherAssets" class="w3-row assigner-div">
-      <app-tokens-distribution-chart v-for="asset in initiative.otherAssets"
+      <app-asset-distribution-chart v-for="asset in initiative.otherAssets"
         :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
         :type="type" @assigned="newAssignment($event)">
-      </app-tokens-distribution-chart>
+      </app-asset-distribution-chart>
     </div>
 
   </div>
 </template>
 
 <script>
-import InitiativeSelector from '../initiative/InitiativeSelector.vue'
-import TokensDistributionChart from '../initiative/InitiativeTokensDistributionChart.vue'
+import InitiativeSelector from '@/components/initiative/InitiativeSelector.vue'
+import AssetDistributionChart from '@/components/transfers/AssetDistributionChart.vue'
 
 export default {
   props: {
@@ -52,7 +52,7 @@ export default {
 
   components: {
     'app-initiative-selector': InitiativeSelector,
-    'app-tokens-distribution-chart': TokensDistributionChart
+    'app-asset-distribution-chart': AssetDistributionChart
   },
 
   methods: {
