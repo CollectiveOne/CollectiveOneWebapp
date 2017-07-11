@@ -55,9 +55,6 @@ export default {
   },
 
   props: {
-    initiative: {
-      type: Object
-    }
   },
 
   data () {
@@ -68,6 +65,9 @@ export default {
   },
 
   computed: {
+    initiative () {
+      return this.$store.state.initiative.initiative
+    },
     isLoggedAnAdmin () {
       return this.initiative.loggedMember.role === 'ADMIN'
     },

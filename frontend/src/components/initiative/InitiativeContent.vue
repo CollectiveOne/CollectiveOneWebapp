@@ -91,8 +91,7 @@
 
         <div class="w3-row content-container">
           <transition :name="animationType" mode="out-in">
-            <router-view :initiative="initiative" :key="initiative.id"
-              @please-update="updateInitiative(initiative.id)"
+            <router-view :key="initiative.id"
               @new-token-mint="showNewTokenMintModal = true"
               @new-transfer-to-initiative="showNewInitiativeTransferModal = true"
               @new-assignation="showNewAssignationModal = true" >
@@ -123,7 +122,6 @@ export default {
 
   data () {
     return {
-      initiative: null,
       showEditInitiativeModal: false,
       showEditMenu: false,
       showEditNotificationsModal: false,
@@ -134,6 +132,9 @@ export default {
   },
 
   computed: {
+    initiative () {
+      return this.$store.state.initiative.initiative
+    },
     isLoggedAnAdmin () {
       return this.initiative.loggedMember.role === 'ADMIN'
     },
@@ -170,23 +171,6 @@ export default {
   },
 
   methods: {
-    updateThisInitiative () {
-      this.updateInitiative(this.initiative.id)
-    },
-    updateInitiative (id) {
-      this.axios.get('/1/secured/initiative/' + id, {
-        params: {
-          addAssets: true,
-          addSubinitiatives: true,
-          addMembers: true,
-          addLoggedUser: true
-        }
-      }).then((response) => {
-        this.initiative = response.data.data
-      }).catch((error) => {
-        console.log(error)
-      })
-    },
     newMember () {
       this.showNewMemberModal = true
     }
@@ -194,12 +178,12 @@ export default {
 
   watch: {
     '$route' (to, from) {
-      this.updateInitiative(this.$route.params.initiativeId)
+      this.$store.dispatch('updateInitiative', this.$route.params.initiativeId)
     }
   },
 
   mounted () {
-    this.updateInitiative(this.$route.params.initiativeId)
+    this.$store.dispatch('updateInitiative', this.$route.params.initiativeId)
   }
 }
 </script>

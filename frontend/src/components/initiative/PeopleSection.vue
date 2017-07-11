@@ -89,12 +89,12 @@ export default {
   },
 
   props: {
-    initiative: {
-      type: Object
-    }
   },
 
   computed: {
+    initiative () {
+      return this.$store.state.initiative.initiative
+    },
     isLoggedAnAdmin () {
       return this.initiative.loggedMember.role === 'ADMIN'
     },
