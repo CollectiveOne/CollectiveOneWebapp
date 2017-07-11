@@ -19,24 +19,24 @@
         </header>
         <div class="tokens-div">
           <div v-if="hasOwnTokens">
-            <app-tokens-distribution-chart
+            <app-asset-distribution-chart
               :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
               :canMint="true" :canEdit="isLoggedAnAdmin"
               @please-update="$emit('please-update')"
               @new-token-mint="$emit('new-token-mint')"
               @new-transfer-to-initiative="$emit('new-transfer-to-initiative')"
               @new-assignation="$emit('new-assignation')" >
-            </app-tokens-distribution-chart>
+            </app-asset-distribution-chart>
           </div>
           <div v-if="hasOtherAssets">
-            <app-tokens-distribution-chart v-for="asset in initiative.otherAssets"
+            <app-asset-distribution-chart v-for="asset in initiative.otherAssets"
               :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
               :canMint="false" :canEdit="isLoggedAnAdmin"
               @please-update="$emit('please-update')"
               @new-token-mint="$emit('new-token-mint')"
               @new-transfer-to-initiative="$emit('new-transfer-to-initiative')"
               @new-assignation="$emit('new-assignation')" >
-            </app-tokens-distribution-chart>
+            </app-asset-distribution-chart>
           </div>
         </div>
       </div>
@@ -45,12 +45,12 @@
 </template>
 
 <script>
-import InitiativeTokensDistributionChart from '@/components/transfers/AssetDistributionChart.vue'
+import AssetDistributionChart from '@/components/transfers/AssetDistributionChart.vue'
 import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
 
 export default {
   components: {
-    'app-tokens-distribution-chart': InitiativeTokensDistributionChart,
+    'app-asset-distribution-chart': AssetDistributionChart,
     'app-edit-initiative-modal': EditInitiativeModal
   },
 

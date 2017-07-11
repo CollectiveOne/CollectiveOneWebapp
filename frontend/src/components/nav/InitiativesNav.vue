@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import NewInitiativeModal from '../modal/NewInitiativeModal.vue'
-import NewSubInitiativeModal from '../modal/NewSubInitiativeModal.vue'
+import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
+import NewSubInitiativeModal from '@/components/modal/NewSubInitiativeModal.vue'
 
 import InitiativeMenuItem from './InitiativeMenuItem.vue'
 

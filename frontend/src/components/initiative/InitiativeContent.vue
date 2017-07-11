@@ -105,11 +105,11 @@
 </template>
 
 <script>
-import EditInitiativeModal from '../modal/EditInitiativeModal.vue'
-import EditNotificationsModal from '../modal/EditNotificationsModal.vue'
-import NewTokenMintModal from '../modal/NewTokenMintModal.vue'
-import NewInitiativeTransferModal from '../modal/NewInitiativeTransferModal.vue'
-import NewAssignationModal from '../modal/NewAssignationModal.vue'
+import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
+import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
+import NewTokenMintModal from '@/components/modal/NewTokenMintModal.vue'
+import NewInitiativeTransferModal from '@/components/modal/NewInitiativeTransferModal.vue'
+import NewAssignationModal from '@/components/modal/NewAssignationModal.vue'
 
 export default {
 

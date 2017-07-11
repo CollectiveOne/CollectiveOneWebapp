@@ -55,8 +55,8 @@
 </template>
 
 <script>
-import UserAvatar from '../user/UserAvatar.vue'
-import ValueSeal from './ValueSeal.vue'
+import UserAvatar from '@/components/user/UserAvatar.vue'
+import ValueSeal from '@/components/transfers/ValueSeal.vue'
 
 export default {
   components: {

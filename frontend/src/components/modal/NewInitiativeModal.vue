@@ -72,7 +72,7 @@ import InitiativeNewMember from '@/components/user/InitiativeNewMember.vue'
 import InitiativeMember from '@/components/user/InitiativeMember.vue'
 
 /* eslint-disable no-unused-vars */
-import { tokensString } from '../../lib/common'
+import { tokensString } from '@/lib/common'
 /* eslint-enable no-unused-vars */
 
 export default {

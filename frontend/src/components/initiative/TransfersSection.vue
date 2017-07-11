@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import InitiativeAssignationBox from '@/components/transfers/AssignationBox.vue'
+import AssignationBox from '@/components/transfers/AssignationBox.vue'
 import InitiativeTransfer from '@/components/transfers/InitiativeTransfer.vue'
 import AssignationModal from '@/components/transfers/AssignationModal.vue'
 
@@ -152,7 +152,7 @@ const getAllSubtransfers = function (subinitiativesTransfers) {
 
 export default {
   components: {
-    'app-initiative-assignation': InitiativeAssignationBox,
+    'app-initiative-assignation': AssignationBox,
     'app-initiative-transfer': InitiativeTransfer,
     'app-assignation-modal': AssignationModal
   },

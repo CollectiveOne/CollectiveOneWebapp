@@ -7,7 +7,9 @@
         </div>
 
         <div class="w3-container w3-theme">
-          <h2>{{ isPeerReviewed ? 'Peer-reviewed transfer to users' : 'Direct transfer to user(s)' }}</h2>
+          <transition name="fadeenter" mode="out-in">
+            <h2 :key="isPeerReviewed">{{ isPeerReviewed ? 'Peer-reviewed transfer to users' : 'Direct transfer to user(s)' }}</h2>
+          </transition>
         </div>
 
         <div class="this-container w3-container">
@@ -26,11 +28,12 @@
           </div>
           <br>
 
-          <div v-show="isDirect" id="direct-assignation-div" class="w3-row">
-            <app-direct-assignation @updated="directReceiversSelected($event)"></app-direct-assignation>
-          </div>
-          <div v-show="isPeerReviewed" class="w3-row">
-            <app-peer-reviewed-assignation @updated="peerReviewReceiversSelected($event)"></app-peer-reviewed-assignation>
+          <div class="slider-container">
+            <transition name="slideDownUp" mode="out-in">
+              <keep-alive>
+                <component @updated="receiversUpdated()" :is="isDirect ? 'app-direct-assignation' : 'app-peer-reviewed-assignation'"></component>
+              </keep-alive>
+            </transition>
           </div>
 
           <div class="w3-row">

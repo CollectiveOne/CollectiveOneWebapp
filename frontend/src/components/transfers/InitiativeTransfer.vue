@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import ValueSeal from './ValueSeal.vue'
+import ValueSeal from '@/components/transfers/ValueSeal.vue'
 
 export default {
   components: {
