@@ -4,15 +4,33 @@
     <div class="w3-row">
 
       <div class="w3-col l4 seal-container">
-        <app-value-seal :value="assignation.assets[0].value" :assetName="assignation.assets[0].assetName"></app-value-seal>
+        <div class="w3-row">
+          <app-value-seal :value="assignation.assets[0].value" :assetName="assignation.assets[0].assetName"></app-value-seal>
+        </div>
+        <div class="w3-row from-row w3-center d2-color">
+          <div class="w3-tag w3-theme w3-round noselect">
+            <b>{{ assignation.initiativeName }}</b>
+          </div>
+        </div>
       </div>
 
       <div class="w3-col l8 w3-container">
-        <div class="w3-row from-row">
-          <div class="w3-left d2-color data-label">
-            <label class="noselect"><b>from:</b></label> {{ assignation.initiativeName }}
+
+        <div class="w3-row-padding tags-row">
+          <div class="w3-tag w3-theme-l2 w3-round noselect w3-small">
+            <b>{{ assignation.type }}</b>
+          </div>
+          <div class="w3-tag w3-theme-l2 w3-round noselect w3-small">
+            <b>{{ assignation.state }}</b>
           </div>
         </div>
+
+        <div class="w3-row motive-container">
+          <div class="w3-left d2-color data-label">
+            <label class="noselect"><b>motive:</b></label> {{ assignation.motive }}
+          </div>
+        </div>
+
         <div class="w3-row receivers-row">
           <div class="w3-left d2-color data-label">
             <label class="noselect"><b>to:</b></label>
@@ -24,24 +42,7 @@
             </app-user-avatar>
           </div>
         </div>
-        <div class="w3-row motive-container">
-          <div class="w3-left d2-color data-label">
-            <label class="noselect"><b>motive:</b></label> {{ assignation.motive }}
-          </div>
-        </div>
 
-        <div class="w3-row-padding tags-row">
-          <div class="w3-col s6">
-            <div class="w3-tag w3-theme-l2 w3-round noselect w3-small">
-              <b>{{ assignation.type }}</b>
-            </div>
-          </div>
-          <div class="w3-col s6">
-            <div class="w3-tag w3-theme-l2 w3-round noselect w3-small">
-              <b>{{ assignation.state }}</b>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -94,15 +95,18 @@ export default {
 }
 
 .seal-container {
-  flex: 1 1 auto;
 }
 
-.data-label {
-  padding-top: 8px;
+.tags-row {
+  margin-bottom: 5px;
+}
+
+.tags-row .w3-tag {
+  width: 110px;;
+  margin-top: 5px;
 }
 
 .from-row {
-  margin-bottom: 5px;
 }
 
 .receivers-row {
@@ -121,10 +125,7 @@ export default {
   font-size: 80px;
 }
 
-.tags-row .w3-tag {
-  width: 100%;
-  margin-top: 5px;
-}
+
 
 .action-btn {
   width: 100%;

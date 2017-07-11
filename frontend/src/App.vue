@@ -54,6 +54,10 @@ textarea {
   padding-top: 30px;
 }
 
+.l4-color {
+  color: #e6e9fc !important; /* w3-indigo l3*/
+}
+
 .l3-color {
   color: #b1b8e3 !important; /* w3-indigo l3*/
 }

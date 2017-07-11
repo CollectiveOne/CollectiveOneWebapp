@@ -1,13 +1,5 @@
 <template lang="html">
   <div class="">
-
-    <transition name="slideDownUp">
-      <app-edit-initiative-modal v-if="showEditInitiativeModal" :initiative="initiative"
-        @close-this="showEditInitiativeModal = false"
-        @initiative-updated="$emit('please-update')">
-      </app-edit-initiative-modal>
-    </transition>
-
     <div v-if="initiative" class="this-container w3-container w3-padding">
       <div class="w3-card">
         <header class="w3-container w3-theme">

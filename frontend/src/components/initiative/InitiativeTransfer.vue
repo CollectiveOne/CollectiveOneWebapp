@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="w3-card-2 transfer-container">
+  <div class="w3-panel w3-theme-l5 transfer-container">
     <div class="w3-row">
       <div class="w3-col l4">
         <app-value-seal :value="transfer.value" :assetName="transfer.assetName"></app-value-seal>

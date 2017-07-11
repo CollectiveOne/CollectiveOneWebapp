@@ -3,11 +3,13 @@
     <div class="w3-modal-content">
       <app-initiative-assignation :assignation="assignation"></app-initiative-assignation>
 
-      <div class="w3-card-4">
-        <div class="w3-display-topright w3-xlarge w3-button">
-          <i class="fa fa-times d2-color" aria-hidden="true"></i>
-        </div>
+      <div class="w3-display-topright">
+        <router-link tag="div" :to="{ name: 'InitiativeAssignations' }"
+          class="w3-button d2-color">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </router-link>
       </div>
+
     </div>
   </div>
 </template>
@@ -54,15 +56,9 @@ export default {
 }
 
 .close-div {
-  width: 70px;
-  height: 70px;
-  cursor: pointer;
-  text-align: right;
 }
 
 .fa-times {
-  margin-right: 20px;
-  margin-top: 20px;
 }
 
 form {

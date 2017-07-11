@@ -22,7 +22,7 @@
         <div class="create-new w3-button w3-theme-l1" @click="showNewInitiativeModal = true"><i class="fa fa-plus-circle"></i>  create new</div>
 
         <div class="w3-row section-header">
-          <h6 class="section-header l2-color w3-center noselect"><i>top-level</i></h6>
+          <h6 class="section-header l2-color w3-center noselect"><i>my initiatives</i></h6>
         </div>
         <app-initiative-menu-item v-for="initiative in userInitiatives"
           :initiative="initiative" :key="initiative.id"
