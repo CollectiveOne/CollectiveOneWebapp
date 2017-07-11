@@ -1,4 +1,64 @@
 <template lang="html">
+<div class="">
+
+  <transition name="slideDownUp">
+    <app-new-initiative-modal
+      v-if="showNewInitiativeModal"
+      @close-this="showNewInitiativeModal = false"
+      @initiative-created="$emit('initiative-created', $event)">
+    </app-new-initiative-modal>
+  </transition>
+
+  <transition name="slideDownUp">
+    <app-new-subinitiative-modal
+      v-if="showNewSubInitiativeModal" :parentInitId="parentInitiativeIdForModal"
+      @close-this="showNewSubInitiativeModal = false"
+      @initiative-created="$emit('initiative-created', $event)">
+    </app-new-subinitiative-modal>
+  </transition>
+
+  <transition name="slideDownUp">
+    <app-edit-initiative-modal v-if="showEditInitiativeModal" :initiative="initiative"
+      @close-this="showEditInitiativeModal = false"
+      @initiative-updated="updateThisInitiative()">
+    </app-edit-initiative-modal>
+  </transition>
+
+  <transition name="slideDownUp">
+    <app-edit-notifications-modal v-if="showEditNotificationsModal" :initiative="initiative"
+      @close-this="showEditNotificationsModal = false"
+      @initiative-updated="updateThisInitiative()">
+    </app-edit-notifications-modal>
+  </transition>
+
+  <transition name="slideDownUp">
+    <app-new-tokenmint-modal
+      v-if="showNewTokenMintModal"
+      :initiativeId="initiative.id"
+      :assetId="initiative.ownTokens.assetId"
+      @close-this="showNewTokenMintModal = false"
+      @please-update="updateThisInitiative()">
+    </app-new-tokenmint-modal>
+  </transition>
+
+  <transition name="slideDownUp">
+    <app-new-assignation-modal
+      v-if="showNewAssignationModal"
+      :initiativeId="initiative.id"
+      @close-this="showNewAssignationModal = false"
+      @assignation-done="updateThisInitiative()">
+    </app-new-assignation-modal>
+  </transition>
+
+  <transition name="slideDownUp">
+    <app-new-initiative-transfer-modal
+      v-if="showNewInitiativeTransferModal"
+      :initInitiativeId="initiative.id"
+      @close-this="showNewInitiativeTransferModal = false"
+      @assignation-done="updateThisInitiative()">
+    </app-new-initiative-transfer-modal>
+  </transition>
+
   <div class="w3-row">
     <div v-show="expandNav" :class="navContainerClass">
       <keep-alive>
@@ -14,15 +74,26 @@
       <router-view @new-initiative="newInitiative($event)"></router-view>
     </div>
   </div>
+</div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 import InitiativesNav from '@/components/nav/InitiativesNav.vue'
+import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
+import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
+import NewTokenMintModal from '@/components/modal/NewTokenMintModal.vue'
+import NewInitiativeTransferModal from '@/components/modal/NewInitiativeTransferModal.vue'
+import NewAssignationModal from '@/components/modal/NewAssignationModal.vue'
 
 export default {
   components: {
-    AppInitiativesNav: InitiativesNav
+    'app-initiatives-nav': InitiativesNav,
+    'app-edit-initiative-modal': EditInitiativeModal,
+    'app-edit-notifications-modal': EditNotificationsModal,
+    'app-new-tokenmint-modal': NewTokenMintModal,
+    'app-new-initiative-transfer-modal': NewInitiativeTransferModal,
+    'app-new-assignation-modal': NewAssignationModal
   },
 
   props: {
@@ -34,12 +105,35 @@ export default {
 
   data () {
     return {
-      showNewInitiativeModal: false,
       showContent: true
     }
   },
 
   computed: {
+    showNewInitiativeModal () {
+      return this.$store.state.modals.showNewInitiativeModal
+    },
+    showNewSubInitiativeModal () {
+      return this.$store.state.modals.showNewSubInitiativeModal
+    },
+    showEditInitiativeModal () {
+      return this.$store.state.modals.showEditInitiativeModal
+    },
+    showEditMenu () {
+      return this.$store.state.modals.showEditMenu
+    },
+    showEditNotificationsModal () {
+      return this.$store.state.modals.showEditNotificationsModal
+    },
+    showNewTokenMintModal () {
+      return this.$store.state.modals.showNewTokenMintModal
+    },
+    showNewInitiativeTransferModal () {
+      return this.$store.state.modals.showNewInitiativeTransferModal
+    },
+    showNewAssignationModal () {
+      return this.$store.state.modals.showNewAssignationModal
+    },
     userInitiatives () {
       return this.$store.state.support.initiativesTree
     },

@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import user from './modules/user'
 import initiative from './modules/initiative'
+import modals from './modules/modals'
 import messages from './modules/messages'
 import support from './modules/support'
 
@@ -14,6 +15,7 @@ export const store = new Vuex.Store({
   modules: {
     user,
     initiative,
+    modals,
     messages,
     support
   }

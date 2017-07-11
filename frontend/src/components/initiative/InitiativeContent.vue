@@ -1,48 +1,5 @@
 <template lang="html">
   <div class="">
-
-    <transition name="slideDownUp">
-      <app-edit-initiative-modal v-if="showEditInitiativeModal" :initiative="initiative"
-        @close-this="showEditInitiativeModal = false"
-        @initiative-updated="updateThisInitiative()">
-      </app-edit-initiative-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-edit-notifications-modal v-if="showEditNotificationsModal" :initiative="initiative"
-        @close-this="showEditNotificationsModal = false"
-        @initiative-updated="updateThisInitiative()">
-      </app-edit-notifications-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-new-tokenmint-modal
-        v-if="showNewTokenMintModal"
-        :initiativeId="initiative.id"
-        :assetId="initiative.ownTokens.assetId"
-        @close-this="showNewTokenMintModal = false"
-        @please-update="updateThisInitiative()">
-      </app-new-tokenmint-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-new-assignation-modal
-        v-if="showNewAssignationModal"
-        :initiativeId="initiative.id"
-        @close-this="showNewAssignationModal = false"
-        @assignation-done="updateThisInitiative()">
-      </app-new-assignation-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-new-initiative-transfer-modal
-        v-if="showNewInitiativeTransferModal"
-        :initInitiativeId="initiative.id"
-        @close-this="showNewInitiativeTransferModal = false"
-        @assignation-done="updateThisInitiative()">
-      </app-new-initiative-transfer-modal>
-    </transition>
-
     <div v-if="initiative" class="w3-row">
       <div class="w3-white">
 
@@ -104,30 +61,13 @@
 </template>
 
 <script>
-import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
-import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
-import NewTokenMintModal from '@/components/modal/NewTokenMintModal.vue'
-import NewInitiativeTransferModal from '@/components/modal/NewInitiativeTransferModal.vue'
-import NewAssignationModal from '@/components/modal/NewAssignationModal.vue'
-
 export default {
 
   components: {
-    'app-edit-initiative-modal': EditInitiativeModal,
-    'app-edit-notifications-modal': EditNotificationsModal,
-    'app-new-tokenmint-modal': NewTokenMintModal,
-    'app-new-initiative-transfer-modal': NewInitiativeTransferModal,
-    'app-new-assignation-modal': NewAssignationModal
   },
 
   data () {
     return {
-      showEditInitiativeModal: false,
-      showEditMenu: false,
-      showEditNotificationsModal: false,
-      showNewTokenMintModal: false,
-      showNewInitiativeTransferModal: false,
-      showNewAssignationModal: false
     }
   },
 

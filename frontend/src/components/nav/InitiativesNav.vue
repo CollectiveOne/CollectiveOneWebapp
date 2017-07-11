@@ -1,22 +1,5 @@
 <template lang="html">
   <div class="">
-
-    <transition name="slideDownUp">
-      <app-new-initiative-modal
-        v-if="showNewInitiativeModal"
-        @close-this="showNewInitiativeModal = false"
-        @initiative-created="$emit('initiative-created', $event)">
-      </app-new-initiative-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-new-subinitiative-modal
-        v-if="showNewSubInitiativeModal" :parentInitId="parentInitiativeIdForModal"
-        @close-this="showNewSubInitiativeModal = false"
-        @initiative-created="$emit('initiative-created', $event)">
-      </app-new-subinitiative-modal>
-    </transition>
-
     <nav class="nav-container w3-white w3-border-right">
       <div class="w3-container w3-padding">
         <div class="create-new w3-button w3-theme-l1" @click="showNewInitiativeModal = true"><i class="fa fa-plus-circle"></i>  create new</div>
@@ -62,9 +45,6 @@ export default {
 
   data () {
     return {
-      showNewInitiativeModal: false,
-      showNewSubInitiativeModal: false,
-      parentInitiativeIdForModal: ''
     }
   },
 
