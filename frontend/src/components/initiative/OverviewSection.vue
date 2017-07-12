@@ -18,26 +18,10 @@
           <h4>Assets</h4>
         </header>
         <div class="tokens-div">
-          <div v-if="hasOwnTokens">
-            <app-asset-distribution-chart
-              :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
-              :canMint="true" :canEdit="isLoggedAnAdmin"
-              @please-update="$emit('please-update')"
-              @new-token-mint="$emit('new-token-mint')"
-              @new-transfer-to-initiative="$emit('new-transfer-to-initiative')"
-              @new-assignation="$emit('new-assignation')" >
-            </app-asset-distribution-chart>
-          </div>
-          <div v-if="hasOtherAssets">
-            <app-asset-distribution-chart v-for="asset in initiative.otherAssets"
-              :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
-              :canMint="false" :canEdit="isLoggedAnAdmin"
-              @please-update="$emit('please-update')"
-              @new-token-mint="$emit('new-token-mint')"
-              @new-transfer-to-initiative="$emit('new-transfer-to-initiative')"
-              @new-assignation="$emit('new-assignation')" >
-            </app-asset-distribution-chart>
-          </div>
+          <app-asset-distribution-chart v-for="asset in initiative.assets"
+            :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
+            :canMint="false" :canEdit="isLoggedAnAdmin">
+          </app-asset-distribution-chart>
         </div>
       </div>
     </div>
@@ -70,21 +54,6 @@ export default {
     },
     isLoggedAnAdmin () {
       return this.initiative.loggedMember.role === 'ADMIN'
-    },
-    hasOwnTokens () {
-      if (this.initiative.ownTokens) {
-        return true
-      } else {
-        return false
-      }
-    },
-    hasOtherAssets () {
-      if (this.initiative.otherAssets) {
-        if (this.initiative.otherAssets.length > 0) {
-          return true
-        }
-      }
-      return false
     }
   },
 

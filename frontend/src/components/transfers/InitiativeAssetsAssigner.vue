@@ -12,17 +12,16 @@
         </app-initiative-selector>
       </div>
     </div>
-    <div v-if="initiative.ownTokens" class="w3-row assigner-div">
-      <app-asset-distribution-chart
-        :assetId="initiative.ownTokens.assetId" :initiativeId="initiative.id"
-        :type="type" @assigned="newAssignment($event)">
-      </app-asset-distribution-chart>
-    </div>
-    <div v-if="initiative.otherAssets" class="w3-row assigner-div">
-      <app-asset-distribution-chart v-for="asset in initiative.otherAssets"
-        :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
-        :type="type" @assigned="newAssignment($event)">
-      </app-asset-distribution-chart>
+
+    <div v-if="initiative.assets" class="w3-row assigner-div">
+      <div class="slider-container">
+        <transition name="slideDownUp" mode="out-in">
+          <app-asset-distribution-chart v-for="asset in initiative.assets"
+            :key="initiative.id" :assetId="asset.assetId" :initiativeId="initiative.id"
+            :type="type" @assigned="newAssignment($event)">
+          </app-asset-distribution-chart>
+        </transition>
+      </div>
     </div>
 
   </div>
@@ -66,6 +65,7 @@ export default {
         }
       }).then((response) => {
         this.initiative = response.data.data
+        this.$emit('initiative-updated', this.initiative)
       })
     },
     indexOfAsset (assetId) {

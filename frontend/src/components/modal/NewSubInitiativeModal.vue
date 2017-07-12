@@ -24,7 +24,7 @@
           <hr>
           <div class="w3-container assets-selector-div">
             <app-initiative-assets-assigner :initInitiativeId="parentInitiative.id" type='initiative-assigner'
-              @updated="parentAssetsSelected($event)" @parent-initiative-updated="parentInitiativeUpdated($event)">
+              @updated="parentAssetsSelected($event)" @initiative-updated="parentInitiativeUpdated($event)">
             </app-initiative-assets-assigner>
           </div>
 
@@ -83,7 +83,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import InitiativeAssetsAssigner from './support/InitiativeAssetsAssigner.vue'
+import InitiativeAssetsAssigner from '@/components/transfers/InitiativeAssetsAssigner.vue'
 import InitiativeNewMember from '@/components/user/InitiativeNewMember.vue'
 import InitiativeMember from '@/components/user/InitiativeMember.vue'
 
@@ -150,8 +150,8 @@ export default {
       this.ownTokens.assetName = tokensData.tokenName
     },
 
-    parentInitiativeUpdated (initiativeId) {
-      this.parentId = initiativeId
+    parentInitiativeUpdated (initiative) {
+      this.parentId = initiative.id
       this.updateParent()
     },
 

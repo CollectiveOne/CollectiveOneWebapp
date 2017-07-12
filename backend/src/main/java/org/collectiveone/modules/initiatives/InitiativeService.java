@@ -229,36 +229,26 @@ public class InitiativeService {
 		return  initiativeRepository.findById(id).toDto();
 	}
 	
-	/** Get the light data by calling getLight, and then add data
-	 * about the assets held by an initiative */
+	/** */
 	@Transactional
-	public InitiativeDto getWithOwnAssets(UUID id) {
+	public List<AssetsDto> getInitiativeAssets(UUID id) {
 		
-		Initiative initiative = initiativeRepository.findById(id); 
-		InitiativeDto initiativeDto = getLight(initiative.getId());
-
-		/* set own tokens data */
-		if(initiative.getTokenType() != null) {
-			AssetsDto ownTokens = tokenService.getTokensOfHolderDto(initiative.getTokenType().getId(), initiative.getId());
-			ownTokens.setHolderName(initiative.getName());
-			initiativeDto.setOwnTokens(ownTokens);
+		Initiative initiative = initiativeRepository.findById(id);
+		List<TokenType> tokenTypes = tokenService.getTokenTypesHeldBy(initiative.getId());
+		
+		List<AssetsDto> assets = new ArrayList<AssetsDto>();
+		
+		for (TokenType token : tokenTypes) {
+			AssetsDto asset = new AssetsDto();
+			asset.setAssetId(token.getId().toString());
+			asset.setAssetName(token.getName());
+			asset.setOwnedByThisHolder(tokenService.getHolder(token.getId(), initiative.getId()).getTokens());
+			asset.setTotalExistingTokens(tokenService.getTotalExisting(token.getId()));
+			
+			assets.add(asset);
 		}
 		
-		/* set other assets data */
-		List<TokenType> otherTokens = null;
-		if(initiative.getTokenType() != null) {
-			otherTokens = tokenService.getTokenTypesHeldByOtherThan(initiative.getId(), initiative.getTokenType().getId());
-		} else {
-			otherTokens = tokenService.getTokenTypesHeldBy(initiative.getId());
-		}
-		
-		for (TokenType otherToken : otherTokens) {
-			AssetsDto otherAsset = tokenService.getTokensOfHolderDto(otherToken.getId(), initiative.getId());
-			otherAsset.setHolderName(initiative.getName());
-			initiativeDto.getOtherAssets().add(otherAsset);
-		}
-		
-		return initiativeDto;
+		return assets;
 	}
 	
 	public Initiative findByTokenType_Id(UUID tokenTypeId) {

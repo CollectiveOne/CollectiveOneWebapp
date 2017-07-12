@@ -77,10 +77,10 @@ public class InitiativesController {
 		
 		InitiativeDto initiativeDto = null;
 		
-		if(!addAssets) {
-			initiativeDto = initiativeService.getLight(UUID.fromString(initiativeId));
-		} else {
-			initiativeDto = initiativeService.getWithOwnAssets(UUID.fromString(initiativeId));
+		initiativeDto = initiativeService.getLight(UUID.fromString(initiativeId));
+		
+		if(addAssets) {
+			initiativeDto.setAssets(initiativeService.getInitiativeAssets(UUID.fromString(initiativeId)));
 		}
 		
 		if(addSubinitiatives) {

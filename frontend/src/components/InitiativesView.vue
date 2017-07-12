@@ -8,7 +8,7 @@
   </transition>
 
   <transition name="slideDownUp">
-    <app-new-subinitiative-modal v-if="showNewSubInitiativeModal" :parentInitId="parentInitiativeIdForModal">
+    <app-new-subinitiative-modal v-if="showNewSubInitiativeModal">
     </app-new-subinitiative-modal>
   </transition>
 

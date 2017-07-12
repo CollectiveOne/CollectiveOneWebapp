@@ -61,7 +61,7 @@
 <script>
 import { mapActions } from 'vuex'
 import InitiativeSelector from '@/components/initiative/InitiativeSelector.vue'
-import InitiativeAssetsAssigner from './support/InitiativeAssetsAssigner.vue'
+import InitiativeAssetsAssigner from '@/components/transfers/InitiativeAssetsAssigner.vue'
 
 export default {
 

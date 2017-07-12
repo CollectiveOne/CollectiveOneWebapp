@@ -16,7 +16,7 @@ public class InitiativeDto {
 	private AppUserDto creator;
 		
 	private AssetsDto ownTokens;
-	private List<AssetsDto> otherAssets = new ArrayList<AssetsDto>();
+	private List<AssetsDto> assets = new ArrayList<AssetsDto>();
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
 	private InitiativeMembersDto initiativeMembers;
 	private MemberDto loggedMember;
@@ -63,11 +63,11 @@ public class InitiativeDto {
 	public void setOwnTokens(AssetsDto ownTokens) {
 		this.ownTokens = ownTokens;
 	}
-	public List<AssetsDto> getOtherAssets() {
-		return otherAssets;
+	public List<AssetsDto> getAssets() {
+		return assets;
 	}
-	public void setOtherAssets(List<AssetsDto> otherAssets) {
-		this.otherAssets = otherAssets;
+	public void setAssets(List<AssetsDto> assets) {
+		this.assets = assets;
 	}
 	public InitiativeMembersDto getInitiativeMembers() {
 		return initiativeMembers;

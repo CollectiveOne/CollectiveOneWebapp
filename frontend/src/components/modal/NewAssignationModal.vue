@@ -73,7 +73,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import InitiativeAssetsAssigner from './support/InitiativeAssetsAssigner.vue'
+import InitiativeAssetsAssigner from '@/components/transfers/InitiativeAssetsAssigner.vue'
 import DirectAssignation from './support/DirectAssignation.vue'
 import PeerReviewedAssignation from './support/PeerReviewedAssignation.vue'
 
