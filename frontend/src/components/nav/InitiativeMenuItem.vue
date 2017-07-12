@@ -25,11 +25,17 @@
       </div>
     </div>
 
-    <div class="w3-row" v-if="showSubinitiatives" v-for="subinitiative in initiative.subInitiatives">
-      <app-initiative-menu-item
-        class="sub-initiative-element" :initiative="subinitiative" :key="subinitiative.id"
-        :level="level + 1">
-      </app-initiative-menu-item>
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <div class="sub-initiatives-container" v-if="showSubinitiatives" >
+          <div class="w3-row" v-for="subinitiative in initiative.subInitiatives">
+            <app-initiative-menu-item
+              class="sub-initiative-element" :initiative="subinitiative" :key="subinitiative.id"
+              :level="level + 1">
+            </app-initiative-menu-item>
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
 </template>

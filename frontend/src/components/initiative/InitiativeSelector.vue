@@ -24,7 +24,7 @@
           <a  href="#"
               @click.prevent="selectList(data)"
               @mousemove="mousemove(i)">
-            <span>{{ data[label] }}, created by {{ data.creatorNickname }}</span>
+            <span>{{ data[label] }}, created by {{ data.creator.nickname }}</span>
           </a>
 
         </li>

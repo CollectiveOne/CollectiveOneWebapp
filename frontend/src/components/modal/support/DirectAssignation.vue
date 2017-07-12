@@ -10,11 +10,7 @@
     </div>
     <div class="w3-row receivers-selector">
       <div class="w3-col s7">
-        <app-user-selector class="user-selector"
-          anchor="c1Id" label="nickname"
-          url="/1/secured/users/suggestions"
-          @select="newReceiverSelected($event)">
-        </app-user-selector>
+        <app-member-selector :members="members" @select="newReceiverSelected($event)"></app-member-selector>
       </div>
 
       <div v-if="multipleReceivers" class="">
@@ -83,12 +79,12 @@
 
 <script>
 import UserAvatar from '@/components/user/UserAvatar.vue'
-import UserSelector from '@/components/user/UserSelector.vue'
+import MemberSelector from '@/components/user/MemberSelector.vue'
 
 export default {
   components: {
     'app-user-avatar': UserAvatar,
-    'app-user-selector': UserSelector
+    'app-member-selector': MemberSelector
   },
 
   data () {
@@ -101,6 +97,12 @@ export default {
   },
 
   computed: {
+    initiative () {
+      return this.$store.state.initiative.initiative
+    },
+    members () {
+      return this.$store.getters.initiativeMembersUsers()
+    },
     percentagesOk () {
       if (this.receivers.length > 0) {
         if (this.missingPercent !== 0) {
@@ -124,9 +126,7 @@ export default {
   watch: {
     receivers () {
       var data = {
-        receivers: this.receivers,
-        title: this.title,
-        description: this.description
+        receivers: this.receivers
       }
       this.$emit('updated', data)
     }

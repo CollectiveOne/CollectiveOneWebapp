@@ -31,9 +31,16 @@
           <div class="slider-container">
             <transition name="slideDownUp" mode="out-in">
               <keep-alive>
-                <component @updated="receiversUpdated()" :is="isDirect ? 'app-direct-assignation' : 'app-peer-reviewed-assignation'"></component>
+                <component @updated="receiversUpdated($event)" :is="isDirect ? 'app-direct-assignation' : 'app-peer-reviewed-assignation'"></component>
               </keep-alive>
             </transition>
+          </div>
+
+          <div class="w3-row">
+            <app-initiative-assets-assigner
+              :initInitiativeId="initiative.id" type='member-assigner'
+              @updated="assetsSelected($event)">
+            </app-initiative-assets-assigner>
           </div>
 
           <div class="w3-row">
@@ -44,13 +51,6 @@
             <label class="w3-text-indigo"><b>Notes</b></label>
             <textarea v-model="assignation.notes" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
             <br>
-          </div>
-
-          <div class="w3-row">
-            <app-initiative-assets-assigner
-              :initInitiativeId="initiativeId" type='member-assigner'
-              @updated="assetsSelected($event)">
-            </app-initiative-assets-assigner>
           </div>
 
           <hr>
@@ -85,12 +85,6 @@ export default {
     'app-peer-reviewed-assignation': PeerReviewedAssignation
   },
 
-  props: {
-    initiativeId: {
-      type: String
-    }
-  },
-
   data () {
     return {
       assignation: {
@@ -102,6 +96,9 @@ export default {
   },
 
   computed: {
+    initiative () {
+      return this.$store.state.initiative.initiative
+    },
     isDirect () {
       return this.assignation.type === this.DIRECT_ID()
     },
@@ -122,13 +119,20 @@ export default {
     },
 
     closeThis () {
-      this.$emit('close-this')
+      this.$store.commit('showNewAssignationModal', false)
     },
     assignationUpdated (assignation) {
       this.assignation = assignation
     },
     assetsSelected (assets) {
       this.assignation.assets = assets
+    },
+    receiversUpdated (data) {
+      if (this.isDirect) {
+        this.directReceiversSelected(data)
+      } else {
+        this.peerReviewReceiversSelected(data)
+      }
     },
     directReceiversSelected (data) {
       this.assignation.directReceivers = data.receivers
@@ -145,18 +149,16 @@ export default {
       assignationToSend.motive = this.assignation.motive
       assignationToSend.notes = this.assignation.notes
 
-      if (this.assignation.type === this.DIRECT_ID()) {
+      if (this.isDirect) {
         assignationToSend.receivers = this.assignation.directReceivers
-      }
-
-      if (this.assignation.type === this.PEER_REVIEWED_ID()) {
+      } else {
         assignationToSend.receivers = this.assignation.peerReviewReceivers
         assignationToSend.evaluators = this.assignation.peerReviewEvaluators
       }
 
       this.axios.post('/1/secured/initiative/' + assignationToSend.initiativeId + '/assignation', assignationToSend)
       .then((response) => {
-        this.$emit('assignation-done')
+        this.$store.commit('triggerUpdateAssets')
         this.closeThis()
       })
     }

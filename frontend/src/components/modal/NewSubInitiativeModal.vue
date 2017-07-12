@@ -207,7 +207,8 @@ export default {
         if (response.data.result === 'success') {
           this.showOutputMessage(response.data.message)
           this.closeThis()
-          this.$emit('initiative-created', response.data.elementId)
+          this.$store.dispatch('updatedMyInitiatives')
+          this.$store.commit('triggerUpdateAssets')
         } else {
           this.showOutputMessage(response.data.message)
         }

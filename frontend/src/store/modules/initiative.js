@@ -5,6 +5,14 @@ const state = {
 }
 
 const getters = {
+  initiativeMembersUsers: (state) => () => {
+    let members = state.initiative.initiativeMembers.members
+    var memberUsers = []
+    for (var ix in members) {
+      memberUsers.push(members[ix].user)
+    }
+    return memberUsers
+  }
 }
 
 const mutations = {

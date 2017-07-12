@@ -14,11 +14,9 @@
 
           <div class="w3-row">
             <label class="w3-text-indigo"><b>Transfer to</b></label>
-            <app-initiative-selector class="initiative-selector"
-              anchor="id" label="name"
-              url="/1/secured/initiatives/suggestions"
-              @select="receiverSelected($event)">
-            </app-initiative-selector>
+            <select v-model="transfer.receiverId" class="w3-select initiative-selector" name="transferto">
+              <option v-for="subinitiative in subinitiatives" :value="subinitiative.id">{{ subinitiative.name }}</option>
+            </select>
           </div>
 
           <br>
@@ -35,7 +33,7 @@
 
           <div class="w3-row">
             <app-initiative-assets-assigner
-              :initInitiativeId="initInitiativeId"
+              :initInitiativeId="initiative.id"
               @updated="assetsSelected($event)">
             </app-initiative-assets-assigner>
           </div>
@@ -57,50 +55,46 @@
     </div>
   </div>
 </template>
-
+receiverId
 <script>
 import { mapActions } from 'vuex'
-import InitiativeSelector from '@/components/initiative/InitiativeSelector.vue'
 import InitiativeAssetsAssigner from '@/components/transfers/InitiativeAssetsAssigner.vue'
 
 export default {
 
   components: {
-    'app-initiative-selector': InitiativeSelector,
     'app-initiative-assets-assigner': InitiativeAssetsAssigner
-  },
-
-  props: {
-    initInitiativeId: {
-      type: String
-    }
   },
 
   data () {
     return {
       transfer: {
         motive: '',
-        notes: ''
+        notes: '',
+        receiverId: ''
       }
     }
   },
 
   computed: {
+    initiative () {
+      return this.$store.state.initiative.initiative
+    },
+    subinitiatives () {
+      return this.initiative.subInitiatives
+    }
   },
 
   methods: {
     ...mapActions(['showOutputMessage']),
 
     closeThis () {
-      this.$emit('close-this')
+      this.$store.commit('showNewInitiativeTransferModal', false)
     },
     assetsSelected (assets) {
       this.transfer.assetId = assets[0].assetId
       this.transfer.value = assets[0].value
       this.transfer.senderId = assets[0].senderId
-    },
-    receiverSelected (initiative) {
-      this.transfer.receiverId = initiative.id
     },
     accept () {
       this.axios.post('/1/secured/initiative/' + this.transfer.senderId + '/transferToInitiative', this.transfer)
@@ -113,6 +107,8 @@ export default {
 
 }
 </script>
+
+
 
 <style scoped>
 
@@ -143,10 +139,9 @@ form {
   padding-bottom: 35px;
 }
 
-.section-tabs {
-  text-align: center;
-  user-select: none;
-  cursor: pointer;
+.initiative-selector {
+  margin-top: 5px;
+  padding-left: 10px;
 }
 
 .assset-assigner {

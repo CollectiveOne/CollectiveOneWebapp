@@ -98,6 +98,16 @@ textarea {
   overflow: hidden;
 }
 
+.error-input {
+  outline: none;
+  border-color: red !important;
+  border-color: red;
+  box-shadow: 0 0 10px red;
+  background-color: rgb(250, 202, 202) !important;
+}
+
+/* Animations */
+
 .fadeenter-enter-active {
   transition: opacity .9s
 }

@@ -4,7 +4,8 @@
   <!-- All Modals in one place -->
 
   <transition name="slideDownUp">
-    <app-new-initiative-modal v-if="showNewInitiativeModal"></app-new-initiative-modal>
+    <app-new-initiative-modal v-if="showNewInitiativeModal">
+    </app-new-initiative-modal>
   </transition>
 
   <transition name="slideDownUp">
@@ -13,16 +14,12 @@
   </transition>
 
   <transition name="slideDownUp">
-    <app-edit-initiative-modal v-if="showEditInitiativeModal" :initiative="initiative"
-      @close-this="showEditInitiativeModal = false"
-      @initiative-updated="updateThisInitiative()">
+    <app-edit-initiative-modal v-if="showEditInitiativeModal">
     </app-edit-initiative-modal>
   </transition>
 
   <transition name="slideDownUp">
-    <app-edit-notifications-modal v-if="showEditNotificationsModal" :initiative="initiative"
-      @close-this="showEditNotificationsModal = false"
-      @initiative-updated="updateThisInitiative()">
+    <app-edit-notifications-modal v-if="showEditNotificationsModal">
     </app-edit-notifications-modal>
   </transition>
 
@@ -37,20 +34,12 @@
   </transition>
 
   <transition name="slideDownUp">
-    <app-new-assignation-modal
-      v-if="showNewAssignationModal"
-      :initiativeId="initiative.id"
-      @close-this="showNewAssignationModal = false"
-      @assignation-done="updateThisInitiative()">
+    <app-new-assignation-modal v-if="showNewAssignationModal">
     </app-new-assignation-modal>
   </transition>
 
   <transition name="slideDownUp">
-    <app-new-initiative-transfer-modal
-      v-if="showNewInitiativeTransferModal"
-      :initInitiativeId="initiative.id"
-      @close-this="showNewInitiativeTransferModal = false"
-      @assignation-done="updateThisInitiative()">
+    <app-new-initiative-transfer-modal v-if="showNewInitiativeTransferModal">
     </app-new-initiative-transfer-modal>
   </transition>
 

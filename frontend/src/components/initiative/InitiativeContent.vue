@@ -48,10 +48,7 @@
 
         <div class="w3-row content-container">
           <transition :name="animationType" mode="out-in">
-            <router-view :key="initiative.id"
-              @new-token-mint="showNewTokenMintModal = true"
-              @new-transfer-to-initiative="showNewInitiativeTransferModal = true"
-              @new-assignation="showNewAssignationModal = true" >
+            <router-view :key="initiative.id">
             </router-view>
           </transition>
         </div>

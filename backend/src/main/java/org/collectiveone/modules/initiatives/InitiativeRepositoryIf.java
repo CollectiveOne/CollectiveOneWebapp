@@ -20,7 +20,7 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 	@Query("SELECT rels.initiative from InitiativeRelationship rels WHERE rels.ofInitiative.id = ?1 AND rels.type = ?2")
 	List<Initiative> findInitiativesWithRelationship(UUID initiativeId, InitiativeRelationshipType type);
 	
-	@Query("SELECT init FROM Initiative init WHERE init.name LIKE %?1%")
+	@Query("SELECT init FROM Initiative init WHERE lower (init.name) LIKE %?1%")
 	List<Initiative> searchBy(String q);
 	
 	Initiative findByTokenType_Id(UUID tokenTypeId);

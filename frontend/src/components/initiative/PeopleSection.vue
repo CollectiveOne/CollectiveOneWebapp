@@ -113,7 +113,7 @@ export default {
       if (index === -1) {
         this.axios.post('/1/secured/initiative/' + this.initiative.id + '/member', member).then((response) => {
           if (response.data.result === 'success') {
-            this.$emit('please-update')
+            this.$store.dispatch('refreshInitiative')
           } else {
             this.showOutputMessage(response.data.message)
           }

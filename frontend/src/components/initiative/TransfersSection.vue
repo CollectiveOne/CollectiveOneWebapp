@@ -3,16 +3,15 @@
 <div>
 
   <transition name="slideDownUp">
-    <app-assignation-modal
-      v-if="showAssignationModal">
+    <app-assignation-modal v-if="showAssignationModal">
     </app-assignation-modal>
   </transition>
 
   <div v-if="initiativeAssignations && initiativeTransfers" class="w3-container section-container">
 
     <div v-if="isLoggedAnAdmin" class="w3-row action-buttons">
-      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$emit('new-assignation')">new transfer to user(s)</button>
-      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$emit('new-transfer-to-initiative')">new transfer to initiative</button>
+      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$store.commit('showNewAssignationModal', true)">new transfer to user(s)</button>
+      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$store.commit('showNewInitiativeTransferModal', true)">new transfer to initiative</button>
       <hr class="separator">
     </div>
 
@@ -31,8 +30,7 @@
           <div class="w3-row-padding assignations-container">
             <div class="w3-col l6" v-for="assignation in initiativeAssignations.assignations" :key="assignation.id">
               <app-initiative-assignation class="assignation-card"
-                :assignation="assignation"
-                @please-update="update()">
+                :assignation="assignation">
               </app-initiative-assignation>
             </div>
           </div>
@@ -72,8 +70,7 @@
             <div class="w3-row assignations-container">
               <div class="w3-col l6" v-for="assignationData in getSubassignations" :key="assignationData.assignation.id">
                 <app-initiative-assignation class="assignation-card"
-                  :assignation="assignationData.assignation"
-                  @please-update="update()">
+                  :assignation="assignationData.assignation">
                 </app-initiative-assignation>
               </div>
             </div>

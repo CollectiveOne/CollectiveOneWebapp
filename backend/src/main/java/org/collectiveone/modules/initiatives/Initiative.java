@@ -76,6 +76,7 @@ public class Initiative {
 		dto.setCreator(creator.toDto());
 		dto.setCreationDate(creationDate);
 		dto.setDriver(driver);
+		if(tokenType != null) dto.setOwnAssetsId(tokenType.getId().toString());
 		
 		return dto;
 	}

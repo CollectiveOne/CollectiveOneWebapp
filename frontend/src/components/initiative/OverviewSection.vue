@@ -4,7 +4,7 @@
       <div class="w3-card">
         <header class="w3-container w3-theme">
           <h4 class="w3-left">Driver</h4>
-          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="showEditInitiativeModal = true">
+          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="$store.commit('showEditInitiativeModal', true)">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </div>
         </header>
@@ -20,7 +20,7 @@
         <div class="tokens-div">
           <app-asset-distribution-chart v-for="asset in initiative.assets"
             :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
-            :canMint="false" :canEdit="isLoggedAnAdmin">
+            :canMint="initiative.ownAssetsId === asset.assetId" :canEdit="isLoggedAnAdmin">
           </app-asset-distribution-chart>
         </div>
       </div>

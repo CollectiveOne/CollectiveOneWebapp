@@ -13,18 +13,17 @@
       <hr v-if="users.length > 1">
     </div>
     <div v-if="addUserEnabled" class="w3-row">
-      <app-user-selector class="user-selector"
-        anchor="c1Id" label="nickname"
-        url="/1/secured/users/suggestions"
+      <app-member-selector class="user-selector"
+        :members="members" :resetAfterSelect="true"
         @select="userSelected($event)">
-      </app-user-selector>
+      </app-member-selector>
     </div>
   </div>
 </template>
 
 <script>
 import UserAvatar from './UserAvatar.vue'
-import UserSelector from './UserSelector.vue'
+import MemberSelector from './MemberSelector.vue'
 
 export default {
   props: {
@@ -42,7 +41,13 @@ export default {
 
   components: {
     'app-user-avatar': UserAvatar,
-    'app-user-selector': UserSelector
+    'app-member-selector': MemberSelector
+  },
+
+  computed: {
+    members () {
+      return this.$store.getters.initiativeMembersUsers()
+    }
   },
 
   methods: {

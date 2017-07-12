@@ -2,7 +2,8 @@ import Vue from 'vue'
 
 const state = {
   contentAnimationType: 'slideToDown',
-  initiativesTree: null
+  initiativesTree: null,
+  triggerUpdateAssets: false
 }
 
 const findCoordinate = function (initiatives, id, coord) {
@@ -57,6 +58,9 @@ const mutations = {
   },
   setInitiativesTree: (state, payload) => {
     state.initiativesTree = payload
+  },
+  triggerUpdateAssets: (state) => {
+    state.triggerUpdateAssets = !state.triggerUpdateAssets
   }
 }
 

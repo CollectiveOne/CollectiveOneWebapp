@@ -15,7 +15,7 @@ public class InitiativeDto {
 	private Timestamp creationDate;
 	private AppUserDto creator;
 		
-	private AssetsDto ownTokens;
+	private String ownAssetsId;
 	private List<AssetsDto> assets = new ArrayList<AssetsDto>();
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
 	private InitiativeMembersDto initiativeMembers;
@@ -57,11 +57,11 @@ public class InitiativeDto {
 	public void setSubInitiatives(List<InitiativeDto> subInitiatives) {
 		this.subInitiatives = subInitiatives;
 	}
-	public AssetsDto getOwnTokens() {
-		return ownTokens;
+	public String getOwnAssetsId() {
+		return ownAssetsId;
 	}
-	public void setOwnTokens(AssetsDto ownTokens) {
-		this.ownTokens = ownTokens;
+	public void setOwnAssetsId(String ownAssetsId) {
+		this.ownAssetsId = ownAssetsId;
 	}
 	public List<AssetsDto> getAssets() {
 		return assets;

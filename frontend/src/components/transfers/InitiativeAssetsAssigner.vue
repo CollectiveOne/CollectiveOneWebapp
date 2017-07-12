@@ -15,7 +15,7 @@
 
     <div v-if="initiative.assets" class="w3-row assigner-div">
       <div class="slider-container">
-        <transition name="slideDownUp" mode="out-in">
+        <transition name="fadeenter" mode="out-in">
           <app-asset-distribution-chart v-for="asset in initiative.assets"
             :key="initiative.id" :assetId="asset.assetId" :initiativeId="initiative.id"
             :type="type" @assigned="newAssignment($event)">

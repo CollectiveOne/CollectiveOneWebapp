@@ -50,7 +50,12 @@
                     <div class="slider-container" v-if="hasSubinitiatives">
                       <transition name="slideDownUp">
                         <div class="sub-elements" v-if="showSubinitiatives">
-                          <div class="w3-row" v-for="subinitiativeAssets in assetData.transferredToSubinitiatives" >
+                          <router-link tag="div"
+                            :to="'/inits/' + subinitiativeAssets.receiverId"
+                            class="w3-row cursor-pointer"
+                            v-for="subinitiativeAssets in assetData.transferredToSubinitiatives"
+                            :key="subinitiativeAssets.assetId">
+                            
                             <label class="d2-color">
                               <b>{{ subinitiativeAssets.receiverName }}</b>
                             </label>
@@ -59,7 +64,7 @@
                                 <div class="bar-txt w3-center d2-color">{{ subinitiativePortion(subinitiativeAssets) }}</div>
                               </div>
                             </div>
-                          </div>
+                          </router-link>
                         </div>
                       </transition>
                     </div>
@@ -68,7 +73,7 @@
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
                   <button type="button" class="w3-button l2-color"
-                    @click="$emit('new-transfer-to-initiative')">
+                    @click="$store.commit('showNewInitiativeTransferModal', true)">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -110,7 +115,7 @@
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
                   <button type="button" class="w3-button l2-color"
-                    @click="$emit('new-assignation')">
+                    @click="$store.commit('showNewAssignationModal', true)">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -125,18 +130,21 @@
           </div>
           <div class="w3-row-padding">
             <div class="w3-col s6">
-              <input v-model.number="value" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0">
+              <input v-model.number="value" class="w3-input w3-border w3-hover-light-gray w3-round" :class="{ 'error-input' : valueTooLarge }" type="number" min="0">
             </div>
             <div class="w3-col s6">
               <div class="w3-row">
                 <div class="w3-col s10">
-                  <input v-model.number="percentage" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" step="5">
+                  <input v-model.number="percentage" class="w3-input w3-border w3-hover-light-gray w3-round" :class="{ 'error-input' : valueTooLarge }" type="number" min="0" step="5">
                 </div>
                 <div class="w3-col s2">
                   <i class="fa fa-percent" aria-hidden="true"></i>
                 </div>
               </div>
             </div>
+          </div>
+          <div v-if="valueTooLarge" class="error-row w3-row w3-tag w3-red w3-round">
+            only {{ this.assetData.ownedByThisHolder }} {{ this.assetData.assetName }} available
           </div>
         </div>
       </div>
@@ -179,7 +187,8 @@ export default {
       showSubinitiatives: false,
       showMembers: false,
       value: 0,
-      percentage: 0
+      percentage: 0,
+      valueTooLarge: false
     }
   },
 
@@ -289,13 +298,20 @@ export default {
     value () {
       let perc = this.value / this.underThisInitiativeVal * 100
       this.percentage = Math.round(perc * 1000) / 1000
-      this.assign()
+      if (this.value <= this.assetData.ownedByThisHolder) {
+        this.valueTooLarge = false
+        this.assign()
+      } else {
+        this.valueTooLarge = true
+      }
     },
     percentage () {
       let toks = this.percentage / 100 * this.underThisInitiativeVal
       this.value = Math.round(toks * 1000) / 1000
+    },
+    '$store.state.support.triggerUpdateAssets' () {
+      this.updateTokenData()
     }
-
   },
 
   mounted () {
@@ -346,6 +362,11 @@ export default {
   font-size: 22px;
   margin-top: 7.5px;
   margin-left: 5px;
+}
+
+.error-row {
+  margin-top: 10px;
+  width: 100%;
 }
 
 .bar-txt {

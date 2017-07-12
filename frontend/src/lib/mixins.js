@@ -117,7 +117,6 @@ export const AutocompleteMixin = {
     clearInput() {
       this.showList = false
       this.type = ""
-      this.json = []
       this.focusList = ""
     },
 
@@ -147,13 +146,8 @@ export const AutocompleteMixin = {
     },
 
     showAll(){
-      this.json = [];
-
-      this.getData("")
-
       // Callback Event
       this.onShow ? this.onShow() : null
-
       this.showList = true;
     },
 
