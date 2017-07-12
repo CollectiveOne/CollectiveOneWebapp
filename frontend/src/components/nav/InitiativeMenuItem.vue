@@ -15,22 +15,20 @@
           <i class="fa fa-minus" aria-hidden="true"></i>
         </div>
       </div>
-      <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize" @click="$emit('initiative-clicked', initiative)">
+      <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize" @click="initiativeClicked()">
         <div class="w3-left name-link noselect">
           {{ initiative.name }}
         </div>
       </div>
-      <div class="w3-col s2 d2-color w3-button" @click="$emit('new-subinitiative', initiative.id)">
+      <div class="w3-col s2 d2-color w3-button" @click="newSubInitiative()">
         <i class="fa fa-plus l1-color" aria-hidden="true"></i>
       </div>
     </div>
-    
+
     <div class="w3-row" v-if="showSubinitiatives" v-for="subinitiative in initiative.subInitiatives">
       <app-initiative-menu-item
         class="sub-initiative-element" :initiative="subinitiative" :key="subinitiative.id"
-        :level="level + 1"
-        @initiative-clicked="$emit('initiative-clicked', $event)"
-        @new-subinitiative="$emit('new-subinitiative', $event)">
+        :level="level + 1">
       </app-initiative-menu-item>
     </div>
   </div>
@@ -114,6 +112,17 @@ export default {
   data () {
     return {
       showSubinitiatives: false
+    }
+  },
+
+  methods: {
+    initiativeClicked () {
+      this.$router.push('/inits/' + this.initiative.id)
+    },
+    newSubInitiative () {
+      this.$store.commit('showNewSubInitiativeModal', {
+        show: true,
+        parentId: this.initiative.id })
     }
   }
 }

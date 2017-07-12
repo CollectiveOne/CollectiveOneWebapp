@@ -1,19 +1,14 @@
 <template lang="html">
 <div class="">
 
+  <!-- All Modals in one place -->
+
   <transition name="slideDownUp">
-    <app-new-initiative-modal
-      v-if="showNewInitiativeModal"
-      @close-this="showNewInitiativeModal = false"
-      @initiative-created="$emit('initiative-created', $event)">
-    </app-new-initiative-modal>
+    <app-new-initiative-modal v-if="showNewInitiativeModal"></app-new-initiative-modal>
   </transition>
 
   <transition name="slideDownUp">
-    <app-new-subinitiative-modal
-      v-if="showNewSubInitiativeModal" :parentInitId="parentInitiativeIdForModal"
-      @close-this="showNewSubInitiativeModal = false"
-      @initiative-created="$emit('initiative-created', $event)">
+    <app-new-subinitiative-modal v-if="showNewSubInitiativeModal" :parentInitId="parentInitiativeIdForModal">
     </app-new-subinitiative-modal>
   </transition>
 
@@ -59,11 +54,12 @@
     </app-new-initiative-transfer-modal>
   </transition>
 
+  <!-- Initiatives View -->
+
   <div class="w3-row">
     <div v-show="expandNav" :class="navContainerClass">
       <keep-alive>
         <app-initiatives-nav
-          :userInitiatives="userInitiatives"
           @selected="initiativeSelected($event)"
           @initiative-created="initiativeCreated($event)">
         </app-initiatives-nav>
@@ -78,8 +74,10 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 import InitiativesNav from '@/components/nav/InitiativesNav.vue'
+
+import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
+import NewSubInitiativeModal from '@/components/modal/NewSubInitiativeModal.vue'
 import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
 import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
 import NewTokenMintModal from '@/components/modal/NewTokenMintModal.vue'
@@ -88,6 +86,8 @@ import NewAssignationModal from '@/components/modal/NewAssignationModal.vue'
 
 export default {
   components: {
+    'app-new-initiative-modal': NewInitiativeModal,
+    'app-new-subinitiative-modal': NewSubInitiativeModal,
     'app-initiatives-nav': InitiativesNav,
     'app-edit-initiative-modal': EditInitiativeModal,
     'app-edit-notifications-modal': EditNotificationsModal,
@@ -134,9 +134,6 @@ export default {
     showNewAssignationModal () {
       return this.$store.state.modals.showNewAssignationModal
     },
-    userInitiatives () {
-      return this.$store.state.support.initiativesTree
-    },
     windowIsSmall () {
       return window.innerWidth < 601
     },
@@ -176,28 +173,10 @@ export default {
   },
 
   methods: {
-    ...mapActions(['updatedMyInitiatives']),
-
-    initiativeSelected (initiative) {
-      this.$router.push('/inits/' + initiative.id)
-
-      if (this.windowIsSmall) {
-        this.$emit('hide-nav')
-      }
-    },
-    newInitiative (parentId) {
-      this.parentInitiativeIdForModal = parentId
-      this.asSubinitiativeForModal = (parentId !== '')
-      this.showNewInitiativeModal = true
-    },
-    initiativeCreated (initiativeId) {
-      this.updatedMyInitiatives()
-      this.$router.push('/inits/' + initiativeId + '/overview')
-    }
   },
 
   mounted () {
-    this.updatedMyInitiatives()
+    this.$store.dispatch('updatedMyInitiatives')
   }
 }
 </script>

@@ -185,7 +185,7 @@ export default {
     },
 
     closeThis () {
-      this.$emit('close-this')
+      this.$store.commit('showNewInitiativeModal', false)
     },
 
     accept () {
@@ -203,7 +203,7 @@ export default {
         if (response.data.result === 'success') {
           this.showOutputMessage(response.data.message)
           this.closeThis()
-          this.$emit('initiative-created', response.data.elementId)
+          this.$store.dispatch('refreshInitiative')
         } else {
           this.showOutputMessage(response.data.message)
         }

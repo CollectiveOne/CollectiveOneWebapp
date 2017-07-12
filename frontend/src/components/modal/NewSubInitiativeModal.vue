@@ -92,12 +92,6 @@ import { tokensString } from '../../lib/common'
 /* eslint-enable no-unused-vars */
 
 export default {
-  props: {
-    parentInitId: {
-      type: String,
-      default: ''
-    }
-  },
 
   components: {
     'app-initiative-assets-assigner': InitiativeAssetsAssigner,
@@ -195,7 +189,7 @@ export default {
     },
 
     closeThis () {
-      this.$emit('close-this')
+      this.$store.commit('showNewSubInitiativeModal', { show: false })
     },
 
     accept () {
@@ -244,7 +238,7 @@ export default {
       this.members.push(member)
     }
 
-    this.parentId = this.parentInitId
+    this.parentId = this.$store.state.modals.parentInitiativeIdForModal
     this.updateParent()
   }
 }

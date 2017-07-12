@@ -39,18 +39,18 @@
 
 <script>
 export default {
-  props: {
-    initiative: {
-      type: Object
-    }
-  },
-
   data () {
     return {
       newInitiative: {
         name: '',
         driver: ''
       }
+    }
+  },
+
+  computed: {
+    initiative () {
+      return this.$store.state.initiative.initiative
     }
   },
 
@@ -61,12 +61,12 @@ export default {
 
   methods: {
     closeThis () {
-      this.$emit('close-this')
+      this.$store.commit('showEditInitiativeModal', false)
     },
     accept () {
       this.axios.put('/1/secured/initiative/' + this.initiative.id, this.newInitiative).then((response) => {
         this.closeThis()
-        this.$emit('initiative-updated')
+        this.$store.dispatch('refreshInitiative')
       })
     }
   }

@@ -1,50 +1,41 @@
 <template lang="html">
-  <div class="">
-    <nav class="nav-container w3-white w3-border-right">
-      <div class="w3-container w3-padding">
-        <div class="create-new w3-button w3-theme-l1" @click="showNewInitiativeModal = true"><i class="fa fa-plus-circle"></i>  create new</div>
+  <nav class="nav-container w3-white w3-border-right">
+    <div class="w3-container w3-padding">
+      <div class="create-new w3-button w3-theme-l1" @click="$store.commit('showNewInitiativeModal', true)"><i class="fa fa-plus-circle"></i>  create new</div>
 
-        <div class="w3-row section-header">
-          <h6 class="section-header l2-color w3-center noselect"><i>my initiatives</i></h6>
-        </div>
-        <app-initiative-menu-item v-for="initiative in userInitiatives"
-          :initiative="initiative" :key="initiative.id"
-          :level="0" class="top-menu-item"
-          @initiative-clicked="$emit('selected', $event)"
-          @new-subinitiative="newSubInitiative($event)">
-        </app-initiative-menu-item>
-
-        <div class="w3-row section-header">
-          <h6 class=" l2-color w3-center noselect"><i>my favorites</i></h6>
-        </div>
-
+      <div class="w3-row section-header">
+        <h6 class="section-header l2-color w3-center noselect"><i>my initiatives</i></h6>
       </div>
-    </nav>
-  </div>
+      <app-initiative-menu-item v-for="initiative in userInitiatives"
+        :initiative="initiative" :key="initiative.id"
+        :level="0" class="top-menu-item">
+      </app-initiative-menu-item>
+
+      <div class="w3-row section-header">
+        <h6 class=" l2-color w3-center noselect"><i>my favorites</i></h6>
+      </div>
+
+    </div>
+  </nav>
 </template>
 
 <script>
-import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
-import NewSubInitiativeModal from '@/components/modal/NewSubInitiativeModal.vue'
-
 import InitiativeMenuItem from './InitiativeMenuItem.vue'
 
 export default {
 
   components: {
-    'app-new-initiative-modal': NewInitiativeModal,
-    'app-new-subinitiative-modal': NewSubInitiativeModal,
     'app-initiative-menu-item': InitiativeMenuItem
-  },
-
-  props: {
-    userInitiatives: {
-      type: Array
-    }
   },
 
   data () {
     return {
+    }
+  },
+
+  computed: {
+    userInitiatives () {
+      return this.$store.state.support.initiativesTree
     }
   },
 
