@@ -52,6 +52,11 @@ export const AutocompleteMixin = {
     // Label of list
     label: String,
 
+    resetAfterSelect: {
+      type: Boolean,
+      default: false
+    },
+
     // Debounce time
     debounce: Number,
 
@@ -117,6 +122,7 @@ export const AutocompleteMixin = {
     clearInput() {
       this.showList = false
       this.type = ""
+      this.json = []
       this.focusList = ""
     },
 
@@ -147,7 +153,13 @@ export const AutocompleteMixin = {
 
     showAll(){
       // Callback Event
+      this.json = [];
+
+      this.getData("")
+
+      // Callback Event
       this.onShow ? this.onShow() : null
+
       this.showList = true;
     },
 
@@ -216,8 +228,8 @@ export const AutocompleteMixin = {
       let clean = this.cleanUp(data);
 
       // Put the selected data to type (model)
-      this.type = clean[this.label];
-
+      this.type = clean[this.label]
+      
       this.showList = false;
 
       /**

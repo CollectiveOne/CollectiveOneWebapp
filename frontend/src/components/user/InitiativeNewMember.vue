@@ -5,7 +5,7 @@
         class="user-selector"
         anchor="c1Id" label="nickname"
         url="/1/secured/users/suggestions"
-        @select="member.user = $event">
+        @select="userSelected($event)">
       </app-user-selector>
     </div>
     <div class="w3-col m5">
@@ -49,8 +49,11 @@ export default {
 
   methods: {
     add () {
-      this.$children[0].$forceUpdate()
       this.$emit('add', this.member)
+    },
+    userSelected (user) {
+      this.$children[0].$destroy()
+      this.member.user = user
     }
   }
 }
