@@ -36,6 +36,7 @@ export const AutocompleteMixin = {
     id: String,
     className: String,
     placeholder: String,
+    resetTrigger: Boolean,
 
     // Intial Value
     init: {
@@ -113,6 +114,12 @@ export const AutocompleteMixin = {
       }
 
       return null
+    }
+  },
+
+  watch: {
+    resetTrigger () {
+      this.clearInput()
     }
   },
 
@@ -229,7 +236,7 @@ export const AutocompleteMixin = {
 
       // Put the selected data to type (model)
       this.type = clean[this.label]
-      
+
       this.showList = false;
 
       /**

@@ -28,10 +28,10 @@
     <div class="slider-container">
       <transition name="slideDownUp">
         <div class="sub-initiatives-container" v-if="showSubinitiatives" >
-          <div class="w3-row" v-for="subinitiative in initiative.subInitiatives">
+          <div class="w3-row" v-for="(subinitiative, ix) in initiative.subInitiatives">
             <app-initiative-menu-item
               class="sub-initiative-element" :initiative="subinitiative" :key="subinitiative.id"
-              :level="level + 1">
+              :coord="coord.concat([ix])">
             </app-initiative-menu-item>
           </div>
         </div>
@@ -55,12 +55,16 @@ export default {
         }
       }
     },
-    level: {
-      type: Number
+    coord: {
+      type: Array,
+      default: () => { return [] }
     }
   },
 
   computed: {
+    level () {
+      return this.coord.length - 1
+    },
     isSelected () {
       return this.initiative.id === this.$route.params.initiativeId
     },
@@ -129,6 +133,15 @@ export default {
       this.$store.commit('showNewSubInitiativeModal', {
         show: true,
         parentId: this.initiative.id })
+    }
+  },
+
+  mounted () {
+    var thisCoord = this.$store.getters.initiativeCoordinate(this.initiative.id)
+    var pageCoord = this.$store.getters.initiativeCoordinate(this.$route.params.initiativeId)
+
+    if (pageCoord[this.level] === thisCoord[this.level]) {
+      this.showSubinitiatives = true
     }
   }
 }

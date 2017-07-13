@@ -6,9 +6,9 @@
       <div class="w3-row section-header">
         <h6 class="section-header l2-color w3-center noselect"><i>my initiatives</i></h6>
       </div>
-      <app-initiative-menu-item v-for="initiative in userInitiatives"
+      <app-initiative-menu-item v-for="(initiative, ix) in userInitiatives"
         :initiative="initiative" :key="initiative.id"
-        :level="0" class="top-menu-item">
+        :coord="[ ix ]" class="top-menu-item">
       </app-initiative-menu-item>
 
       <div class="w3-row section-header">

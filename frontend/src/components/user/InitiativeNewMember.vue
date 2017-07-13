@@ -3,7 +3,7 @@
     <div class="w3-col m7" v-if="showSelector">
       <app-user-selector
         class="user-selector"
-        anchor="c1Id" label="nickname"
+        anchor="c1Id" label="nickname" :resetTrigger="resetUserSelector"
         url="/1/secured/users/suggestions"
         @select="userSelected($event)">
       </app-user-selector>
@@ -43,16 +43,17 @@ export default {
       member: {
         role: 'MEMBER',
         user: null
-      }
+      },
+      resetUserSelector: true
     }
   },
 
   methods: {
     add () {
+      this.resetUserSelector = !this.resetUserSelector
       this.$emit('add', this.member)
     },
     userSelected (user) {
-      this.$children[0].$destroy()
       this.member.user = user
     }
   }
