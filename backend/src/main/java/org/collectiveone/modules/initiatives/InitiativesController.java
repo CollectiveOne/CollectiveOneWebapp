@@ -72,6 +72,7 @@ public class InitiativesController {
 			@PathVariable("initiativeId") String initiativeId, 
 			@RequestParam(defaultValue = "false") boolean addAssets,
 			@RequestParam(defaultValue = "false") boolean addSubinitiatives,
+			@RequestParam(defaultValue = "false") boolean addParents,
 			@RequestParam(defaultValue = "false") boolean addMembers,
 			@RequestParam(defaultValue = "false") boolean addLoggedUser) {
 		
@@ -85,6 +86,10 @@ public class InitiativesController {
 		
 		if(addSubinitiatives) {
 			initiativeDto.setSubInitiatives(initiativeService.getSubinitiativesTree(UUID.fromString(initiativeId)));
+		}
+		
+		if(addParents) {
+			initiativeDto.setParents(initiativeService.getParentInitiativesDtos(UUID.fromString(initiativeId)));
 		}
 		
 		if(addMembers) {

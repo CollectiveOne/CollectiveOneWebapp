@@ -18,6 +18,7 @@ public class InitiativeDto {
 	private String ownAssetsId;
 	private List<AssetsDto> assets = new ArrayList<AssetsDto>();
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
+	private List<InitiativeDto> parents = new ArrayList<InitiativeDto>();
 	private InitiativeMembersDto initiativeMembers;
 	private MemberDto loggedMember;
 	
@@ -56,6 +57,12 @@ public class InitiativeDto {
 	}
 	public void setSubInitiatives(List<InitiativeDto> subInitiatives) {
 		this.subInitiatives = subInitiatives;
+	}
+	public List<InitiativeDto> getParents() {
+		return parents;
+	}
+	public void setParents(List<InitiativeDto> parents) {
+		this.parents = parents;
 	}
 	public String getOwnAssetsId() {
 		return ownAssetsId;

@@ -326,6 +326,16 @@ public class InitiativeService {
 		return parents;
 	}
 	
+	@Transactional List<InitiativeDto> getParentInitiativesDtos(UUID initiativeId) {
+		List<InitiativeDto> parentsDtos = new ArrayList<InitiativeDto>();
+		
+		for (Initiative parent : getParentInitiatives(initiativeId)) {
+			parentsDtos.add(parent.toDto());
+		}
+		
+		return parentsDtos;
+	}
+	
 	@Transactional
 	public List<InitiativeDto> getSubinitiativesTree(UUID initiativeId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId); 

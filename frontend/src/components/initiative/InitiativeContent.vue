@@ -6,7 +6,7 @@
       <div class="header-container">
         <transition name="fadeenter" mode="out-in">
             <header class="w3-theme" :key="initiative.name">
-              <div class="w3-row" style="height:55px">
+              <div class="w3-row">
                 <div v-if="isLoggedAnAdmin" class="w3-col w3-right" style="width:55px; height:100%">
                   <div @click="showEditMenu = !showEditMenu" class="edit-btn-div w3-button w3-large" style="width:100%; height:100%">
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
@@ -21,7 +21,9 @@
                   </div>
                 </div>
                 <div class="w3-rest w3-container">
-                  <h3 class="noselect">{{ initiative.name }}</h3>
+                  <h3 class="noselect">
+                    <app-initiative-path :initiative="initiative"></app-initiative-path>
+                  </h3>
                 </div>
               </div>
             </header>
@@ -58,9 +60,11 @@
 </template>
 
 <script>
+import InitiativePath from '@/components/initiative/InitiativePath.vue'
 export default {
 
   components: {
+    'app-initiative-path': InitiativePath
   },
 
   data () {
@@ -129,7 +133,11 @@ export default {
 <style scoped>
 
 .header-container {
-  overflow: hidden;
+}
+
+.title-arrow {
+  font-size: 12px;
+  margin-bottom: 10px;
 }
 
 .edit-menu {

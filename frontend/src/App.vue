@@ -106,6 +106,11 @@ textarea {
   background-color: rgb(250, 202, 202) !important;
 }
 
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+
 /* Animations */
 
 .fadeenter-enter-active {

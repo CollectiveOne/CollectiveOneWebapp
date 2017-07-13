@@ -55,7 +55,7 @@
                             class="w3-row cursor-pointer"
                             v-for="subinitiativeAssets in assetData.transferredToSubinitiatives"
                             :key="subinitiativeAssets.assetId">
-                            
+
                             <label class="d2-color">
                               <b>{{ subinitiativeAssets.receiverName }}</b>
                             </label>
@@ -371,10 +371,6 @@ export default {
 
 .bar-txt {
   white-space: nowrap;
-}
-
-.cursor-pointer {
-  cursor: pointer !important;
 }
 
 .sub-elements {

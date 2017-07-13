@@ -28,6 +28,7 @@ const actions = {
       params: {
         addAssets: true,
         addSubinitiatives: true,
+        addParents: true,
         addMembers: true,
         addLoggedUser: true
       }
