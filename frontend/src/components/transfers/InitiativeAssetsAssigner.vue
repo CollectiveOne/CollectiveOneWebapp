@@ -18,7 +18,7 @@
         <transition name="fadeenter" mode="out-in">
           <app-asset-distribution-chart v-for="asset in initiative.assets"
             :key="initiative.id" :assetId="asset.assetId" :initiativeId="initiative.id"
-            :type="type" @assigned="newAssignment($event)">
+            :type="type" @assigned="newAssignment($event)" :showError="showError">
           </app-asset-distribution-chart>
         </transition>
       </div>
@@ -39,6 +39,10 @@ export default {
     type: {
       type: String,
       default: 'initiative-assigner'
+    },
+    showError: {
+      type: Boolean,
+      default: false
     }
   },
 

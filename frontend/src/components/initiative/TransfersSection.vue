@@ -10,8 +10,14 @@
   <div v-if="initiativeAssignations && initiativeTransfers" class="w3-container section-container">
 
     <div v-if="isLoggedAnAdmin" class="w3-row action-buttons">
-      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$store.commit('showNewAssignationModal', true)">new transfer to user(s)</button>
-      <button class="w3-button w3-theme w3-round" type="button" name="button" @click="$store.commit('showNewInitiativeTransferModal', true)">new transfer to initiative</button>
+      <button class="w3-button w3-theme w3-round" type="button" name="button"
+        @click="$store.commit('showNewAssignationModal', true)">
+        transfer to member(s)
+      </button>
+      <button class="w3-button w3-theme w3-round" type="button" name="button"
+        @click="$store.commit('showNewInitiativeTransferModal', true)">
+        transfer to subinitiative
+      </button>
       <hr class="separator">
     </div>
 

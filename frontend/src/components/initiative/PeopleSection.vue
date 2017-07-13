@@ -37,9 +37,12 @@
             </app-user-avatar>
           </div>
           <div class="w3-col m8 subinitiatives-tags-container">
-            <div class="w3-tag w3-theme w3-round w3-left subinitiative-tag noselect" v-for="initiative in submember.subinitiatives">
-              {{ initiative }}
-            </div>
+            <router-link v-for="initiativeData in submember.subinitiatives"
+              :to="'/inits/' + initiativeData.id" tag="div"
+              :key="initiativeData.id"
+              class="w3-tag w3-theme w3-round w3-left subinitiative-tag noselect cursor-pointer">
+              {{ initiativeData.name }}
+            </router-link>
           </div>
         </div>
       </div>
@@ -63,20 +66,34 @@ const getIndexOfUser = function (list, c1Id) {
   return -1
 }
 
-const getAllSubmembers = function (subinitiativesMembers) {
+const appendMembersAndSubmembers = function (initiativeMembers, allmembers) {
+  allmembers = allmembers || []
+  initiativeMembers.members.forEach((member) => {
+    /* Add this initiative members */
+    var initiativeData = {
+      name: initiativeMembers.initiativeName,
+      id: initiativeMembers.initiativeId
+    }
+
+    var ix = getIndexOfUser(allmembers, member.user.c1Id)
+    if (ix === -1) {
+      allmembers.push({
+        user: member.user,
+        subinitiatives: [ initiativeData ]
+      })
+    } else {
+      allmembers[ix].subinitiatives.push(initiativeData)
+    }
+  })
+  for (var ix in initiativeMembers.subinitiativesMembers) {
+    appendMembersAndSubmembers(initiativeMembers.subinitiativesMembers[ix], allmembers)
+  }
+}
+
+const getAllSubmembers = function (initiativeMembers) {
   var submembers = []
-  subinitiativesMembers.forEach((subinitiativeMembers) => {
-    subinitiativeMembers.members.forEach((member) => {
-      var ix = getIndexOfUser(submembers, member.user.c1Id)
-      if (ix === -1) {
-        submembers.push({
-          user: member.user,
-          subinitiatives: [ subinitiativeMembers.initiativeName ]
-        })
-      } else {
-        submembers[ix].subinitiatives.push(subinitiativeMembers.initiativeName)
-      }
-    })
+  initiativeMembers.subinitiativesMembers.forEach((subinitiativeMembers) => {
+    appendMembersAndSubmembers(subinitiativeMembers, submembers)
   })
   return submembers
 }
@@ -99,7 +116,7 @@ export default {
       return this.initiative.loggedMember.role === 'ADMIN'
     },
     allSubmembers () {
-      return getAllSubmembers(this.initiative.initiativeMembers.subinitiativesMembers)
+      return getAllSubmembers(this.initiative.initiativeMembers)
     }
   },
 

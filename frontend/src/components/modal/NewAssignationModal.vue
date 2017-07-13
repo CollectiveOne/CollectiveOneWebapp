@@ -34,18 +34,33 @@
                 <component @updated="receiversUpdated($event)" :is="isDirect ? 'app-direct-assignation' : 'app-peer-reviewed-assignation'"></component>
               </keep-alive>
             </transition>
+            <div v-if="notEnoughReceivers" class="w3-row w3-tag error-tag error-row w3-round">
+              please add at least one receiver
+            </div>
+            <div v-if="notEnoughEvaluators" class="w3-row w3-tag error-tag error-row w3-round">
+              please add at least one evaluator
+            </div>
           </div>
 
           <div class="w3-row">
             <app-initiative-assets-assigner
               :initInitiativeId="initiative.id" type='member-assigner'
-              @updated="assetsSelected($event)">
+              @updated="assetsSelected($event)" :showError="assetsZeroShow">
             </app-initiative-assets-assigner>
+            <div v-if="assetsZeroShow" class="w3-row w3-tag error-tag error-row w3-round">
+              plase select how many tokens will be transferred to these members
+            </div>
           </div>
 
           <div class="w3-row">
             <label class="w3-text-indigo"><b>Motive</b></label>
-            <input v-model="assignation.motive" class="w3-input w3-hover-light-gray" type="text">
+            <input v-model="assignation.motive" class="w3-input w3-hover-light-gray" :class="{ 'error-input' : motiveErrorShow }" type="text">
+            <div v-if="motiveEmptyShow" class="w3-row w3-tag error-tag error-row w3-round">
+              please provide a motive for this transfer for future reference
+            </div>
+            <div v-if="motiveTooLarge" class="w3-row w3-tag error-tag error-row w3-round">
+              motive too large, please use the notes for long annotations
+            </div>
             <br>
 
             <label class="w3-text-indigo"><b>Notes</b></label>
@@ -91,7 +106,12 @@ export default {
         type: this.DIRECT_ID(),
         motive: '',
         notes: ''
-      }
+      },
+      motiveEmptyError: false,
+      assetsZeroError: false,
+      assetsAreZero: false,
+      notEnoughReceivers: false,
+      notEnoughEvaluators: false
     }
   },
 
@@ -104,6 +124,18 @@ export default {
     },
     isPeerReviewed () {
       return this.assignation.type === this.PEER_REVIEWED_ID()
+    },
+    motiveErrorShow () {
+      return this.motiveEmptyShow || this.motiveTooLarge
+    },
+    motiveEmptyShow () {
+      return this.motiveEmptyError && this.assignation.motive === ''
+    },
+    motiveTooLarge () {
+      return this.assignation.motive.length > 55
+    },
+    assetsZeroShow () {
+      return this.assetsZeroError && this.assetsAreZero
     }
   },
 
@@ -126,8 +158,35 @@ export default {
     },
     assetsSelected (assets) {
       this.assignation.assets = assets
+      if (this.assetsZeroShow) {
+        this.areAssetsZero()
+        if (this.assetsAreZero) {
+          this.assetsZeroError = false
+        }
+      }
+    },
+    areAssetsZero () {
+      var result = true
+      if (this.assets) {
+        for (var ix in this.assets) {
+          if (this.assets[ix].value !== 0) {
+            result = false
+          }
+        }
+      }
+      this.assetsAreZero = result
     },
     receiversUpdated (data) {
+      if (this.notEnoughReceivers) {
+        if (data.receivers.length > 0) {
+          this.notEnoughReceivers = false
+        }
+      }
+      if (this.notEnoughEvaluators) {
+        if (data.evaluators.length > 0) {
+          this.notEnoughEvaluators = false
+        }
+      }
       if (this.isDirect) {
         this.directReceiversSelected(data)
       } else {
@@ -142,25 +201,76 @@ export default {
       this.assignation.peerReviewEvaluators = data.evaluators
     },
     accept () {
-      var assignationToSend = {}
-      assignationToSend.type = this.assignation.type
-      assignationToSend.assets = this.assignation.assets
-      assignationToSend.initiativeId = this.assignation.assets[0].senderId
-      assignationToSend.motive = this.assignation.motive
-      assignationToSend.notes = this.assignation.notes
-
-      if (this.isDirect) {
-        assignationToSend.receivers = this.assignation.directReceivers
-      } else {
-        assignationToSend.receivers = this.assignation.peerReviewReceivers
-        assignationToSend.evaluators = this.assignation.peerReviewEvaluators
+      /* validation */
+      debugger
+      var ok = true
+      if (this.assignation.motive === '') {
+        this.motiveEmptyError = true
+        ok = false
       }
 
-      this.axios.post('/1/secured/initiative/' + assignationToSend.initiativeId + '/assignation', assignationToSend)
-      .then((response) => {
-        this.$store.commit('triggerUpdateAssets')
-        this.closeThis()
-      })
+      if (this.motiveTooLarge) {
+        ok = false
+      }
+
+      this.areAssetsZero()
+      if (this.assetsAreZero) {
+        this.assetsZeroError = true
+      }
+
+      if (this.isDirect) {
+        if (!this.assignation.directReceivers) {
+          this.notEnoughReceivers = true
+          ok = false
+        } else {
+          if (this.assignation.directReceivers.length === 0) {
+            this.notEnoughReceivers = true
+            ok = false
+          }
+        }
+      } else {
+        if (!this.assignation.peerReviewReceivers) {
+          this.notEnoughReceivers = true
+          ok = false
+        } else {
+          if (this.assignation.peerReviewReceivers.length === 0) {
+            this.notEnoughReceivers = true
+            ok = false
+          }
+        }
+
+        if (!this.assignation.peerReviewEvaluators) {
+          this.notEnoughEvaluators = true
+          ok = false
+        } else {
+          if (this.assignation.peerReviewEvaluators.length === 0) {
+            this.notEnoughEvaluators = true
+            ok = false
+          }
+        }
+      }
+
+      if (ok) {
+        var assignationToSend = {}
+        assignationToSend.type = this.assignation.type
+        assignationToSend.assets = this.assignation.assets
+        assignationToSend.initiativeId = this.assignation.assets[0].senderId
+        assignationToSend.motive = this.assignation.motive
+        assignationToSend.notes = this.assignation.notes
+
+        if (this.isDirect) {
+          assignationToSend.receivers = this.assignation.directReceivers
+        } else {
+          assignationToSend.receivers = this.assignation.peerReviewReceivers
+          assignationToSend.evaluators = this.assignation.peerReviewEvaluators
+        }
+
+        this.axios.post('/1/secured/initiative/' + assignationToSend.initiativeId + '/assignation', assignationToSend)
+        .then((response) => {
+          this.$store.commit('triggerUpdateAssets')
+          this.closeThis()
+        })
+      }
     }
   }
 

@@ -36,7 +36,7 @@ public class Assignation {
 	@ManyToOne
 	private Initiative initiative;
 	
-	@Column(name = "motive")
+	@Column(name = "motive", length = 55)
 	private String motive;
 	
 	@Lob

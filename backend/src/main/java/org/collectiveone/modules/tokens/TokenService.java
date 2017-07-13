@@ -140,8 +140,7 @@ public class TokenService {
 	}
 	
 	@Transactional
-	public AssetsDto getTokensOfHolderDto(UUID tokenTypeId, UUID holderId) {
-		
+	public AssetsDto getTokenDto(UUID tokenTypeId) {
 		TokenType token = tokenTypeRepository.findById(tokenTypeId);
 		AssetsDto assetsDto = new AssetsDto();
 		
@@ -153,9 +152,17 @@ public class TokenService {
 		double existingTokens = getTotalExisting(token.getId());
 		assetsDto.setTotalExistingTokens(existingTokens);
 		
+		return assetsDto;
+	}
+	
+	@Transactional
+	public AssetsDto getTokensOfHolderDto(UUID tokenTypeId, UUID holderId) {
+		
+		AssetsDto assetsDto = getTokenDto(tokenTypeId);
+		
 		/* Amount of tokens held by the input initiative */
 		assetsDto.setHolderId(holderId.toString());
-		assetsDto.setOwnedByThisHolder(getHolder(token.getId(), holderId).getTokens());
+		assetsDto.setOwnedByThisHolder(getHolder(tokenTypeId, holderId).getTokens());
 		
 		return assetsDto;
 	}

@@ -99,7 +99,7 @@ export default {
     accept () {
       this.axios.post('/1/secured/initiative/' + this.transfer.senderId + '/transferToInitiative', this.transfer)
       .then((response) => {
-        this.$emit('assignation-done')
+        this.$store.commit('triggerUpdateAssets')
         this.closeThis()
       })
     }

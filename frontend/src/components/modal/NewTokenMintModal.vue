@@ -66,14 +66,6 @@
 import { tokensString } from '@/lib/common'
 
 export default {
-  props: {
-    initiativeId: {
-      type: String
-    },
-    assetId: {
-      type: String
-    }
-  },
 
   data () {
     return {
@@ -84,8 +76,11 @@ export default {
   },
 
   computed: {
+    assetId () {
+      return this.$store.state.modals.assetIdForMint
+    },
     newAmountVal () {
-      return this.assetData.totalUnderThisHolder + this.value
+      return this.assetData.totalExistingTokens + this.value
     },
     newAmountStr () {
       return tokensString(this.newAmountVal)
@@ -97,26 +92,20 @@ export default {
       return tokensString(v)
     },
     updateTokenData () {
-      this.axios.get('/1/secured/token/' + this.assetId, {
-        params: {
-          initiativeId: this.initiativeId
-        }
-      }).then((response) => {
+      this.axios.get('/1/secured/token/' + this.assetId).then((response) => {
         this.assetData = response.data.data
       })
     },
     valueUpdated (event) {
       this.value = Number(event.target.value)
-      let perc = this.value / this.assetData.totalUnderThisHolder * 100
-      this.percentage = Math.round(perc * 1000) / 1000
+      this.percentage = this.value / this.assetData.totalExistingTokens * 100
     },
     percentageUpdated (event) {
       this.percentage = Number(event.target.value)
-      let toks = this.percentage / 100 * this.assetData.totalUnderThisHolder
-      this.value = Math.round(toks * 1000) / 1000
+      this.value = this.percentage / 100 * this.assetData.totalExistingTokens
     },
     closeThis () {
-      this.$emit('close-this')
+      this.$store.commit('showNewTokenMintModal', { show: false })
     },
     accept () {
       this.axios.put('/1/secured/token/' + this.assetData.assetId + '/mint', {}, {
@@ -124,7 +113,7 @@ export default {
           amount: this.value
         }
       }).then((response) => {
-        this.$emit('please-update')
+        this.$store.commit('triggerUpdateAssets')
         this.closeThis()
       })
     }

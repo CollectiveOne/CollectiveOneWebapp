@@ -24,12 +24,7 @@
   </transition>
 
   <transition name="slideDownUp">
-    <app-new-tokenmint-modal
-      v-if="showNewTokenMintModal"
-      :initiativeId="initiative.id"
-      :assetId="initiative.ownTokens.assetId"
-      @close-this="showNewTokenMintModal = false"
-      @please-update="updateThisInitiative()">
+    <app-new-tokenmint-modal v-if="showNewTokenMintModal">
     </app-new-tokenmint-modal>
   </transition>
 

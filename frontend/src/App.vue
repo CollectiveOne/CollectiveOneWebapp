@@ -98,6 +98,15 @@ textarea {
   overflow: hidden;
 }
 
+.error-row {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.error-tag {
+  background-color: rgb(255, 115, 115);
+}
+
 .error-input {
   outline: none;
   border-color: red !important;
@@ -118,6 +127,13 @@ textarea {
 }
 
 .fadeenter-enter {
+  opacity: 0
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .9s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
   opacity: 0
 }
 

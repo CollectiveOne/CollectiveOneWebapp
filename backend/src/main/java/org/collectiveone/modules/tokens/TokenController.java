@@ -45,19 +45,13 @@ public class TokenController {
 	@RequestMapping(path = "/secured/token/{id}", method = RequestMethod.GET)
 	public GetResult<AssetsDto> getToken(
 			@PathVariable("id") String id, 
-			@RequestParam(defaultValue = "includeSubinitiatives") String level,
+			@RequestParam(defaultValue = "false") Boolean includeSubinitiatives,
 			@RequestParam(defaultValue = "") String initiativeId) {
 		
-		AssetsDto assetDto = null;
-		switch (level) {
-		case "light": 
-			assetDto = null; // TODO: return token data in general (no need for the moment)
-			break;
+		AssetsDto assetDto = tokenService.getTokenDto(UUID.fromString(id));
 		
-		case "includeSubinitiatives": 
+		if (includeSubinitiatives) {
 			assetDto = tokenTransferService.getTokenDistribution(UUID.fromString(id), UUID.fromString(initiativeId));
-			break;
-			
 		}
 		
 		return new GetResult<AssetsDto>("success", "initiative retrieved", assetDto);

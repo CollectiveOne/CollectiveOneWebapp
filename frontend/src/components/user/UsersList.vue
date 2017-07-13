@@ -1,13 +1,15 @@
 <template lang="html">
   <div class="">
-    <div class="w3-row" v-for="user in users">
-      <div class="w3-col s10">
-        <app-user-avatar :user="user"></app-user-avatar>
+    <transition-group name="fade" tag="div">
+      <div class="w3-row" v-for="user in users" :key="user.c1Id">
+        <div class="w3-col s10">
+          <app-user-avatar :user="user"></app-user-avatar>
+        </div>
+        <div class="w3-col s2 w3-xxlarge w3-button w3-center">
+          <div @click="removeClicked(user)"><i class="fa fa-times-circle-o l1-color" aria-hidden="true"></i></div>
+        </div>
       </div>
-      <div class="w3-col s2 w3-xxlarge w3-button w3-center">
-        <div @click="removeClicked(user)"><i class="fa fa-times-circle-o l1-color" aria-hidden="true"></i></div>
-      </div>
-    </div>
+    </transition-group>
 
     <div v-if="addUserEnabled">
       <hr v-if="users.length > 1">

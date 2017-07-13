@@ -16,7 +16,7 @@
                     <b class="w3-large">{{ underThisInitiativePercent }}% of existing</b>
                   </div>
                 </div>
-                <div v-if="canEdit && canMint " class="w3-button w3-display-bottommiddle" @click="$emit('new-token-mint')">
+                <div v-if="canEdit && canMint " class="w3-button w3-display-bottommiddle" @click="mintClicked()">
                   <i class="fa fa-plus-circle d2-color" aria-hidden="true"></i>
                 </div>
               </div>
@@ -130,12 +130,14 @@
           </div>
           <div class="w3-row-padding">
             <div class="w3-col s6">
-              <input v-model.number="value" class="w3-input w3-border w3-hover-light-gray w3-round" :class="{ 'error-input' : valueTooLarge }" type="number" min="0">
+              <input @input="valueUpdated($event)" :value="value"  class="w3-input w3-border w3-hover-light-gray w3-round"
+              :class="{ 'error-input' : errorFound }" type="number" min="0">
             </div>
             <div class="w3-col s6">
               <div class="w3-row">
                 <div class="w3-col s10">
-                  <input v-model.number="percentage" class="w3-input w3-border w3-hover-light-gray w3-round" :class="{ 'error-input' : valueTooLarge }" type="number" min="0" step="5">
+                  <input @input="percentageUpdated($event)" :value="percentage" class="w3-input w3-border w3-hover-light-gray w3-round"
+                  :class="{ 'error-input' : errorFound }" type="number" min="0" step="5">
                 </div>
                 <div class="w3-col s2">
                   <i class="fa fa-percent" aria-hidden="true"></i>
@@ -143,8 +145,12 @@
               </div>
             </div>
           </div>
-          <div v-if="valueTooLarge" class="error-row w3-row w3-tag w3-red w3-round">
-            only {{ this.assetData.ownedByThisHolder }} {{ this.assetData.assetName }} available
+          <div class="slider-container error-row w3-center">
+            <transition name="slideDownUp">
+              <div v-if="valueTooLarge" class="w3-row error-tag w3-tag w3-round">
+                {{ this.assetData.ownedByThisHolder > 0 ? 'only ' : ''}} {{this.assetData.ownedByThisHolder }} {{ this.assetData.assetName }} available
+              </div>
+            </transition>
           </div>
         </div>
       </div>
@@ -176,6 +182,10 @@ export default {
       default: false
     },
     canMint: {
+      type: Boolean,
+      default: false
+    },
+    showError: {
       type: Boolean,
       default: false
     }
@@ -249,6 +259,9 @@ export default {
     },
     transferredToMembersStr () {
       return amountAndPerc(this.transferredToMembersVal, this.underThisInitiativeVal)
+    },
+    errorFound () {
+      return this.showError || this.valueTooLarge
     }
 
   },
@@ -269,6 +282,7 @@ export default {
     updateTokenData () {
       this.axios.get('/1/secured/token/' + this.assetId, {
         params: {
+          includeSubinitiatives: true,
           initiativeId: this.initiativeId
         }
       }).then((response) => {
@@ -285,6 +299,30 @@ export default {
       }
 
       this.$emit('assigned', transferData)
+    },
+    mintClicked () {
+      this.$store.commit('showNewTokenMintModal', {
+        show: true,
+        assetId: this.assetData.assetId
+      })
+    },
+    valueUpdated (event) {
+      this.value = Number(event.target.value)
+      this.percentage = this.value / this.underThisInitiativeVal * 100
+      this.checkValue()
+    },
+    percentageUpdated (event) {
+      this.percentage = Number(event.target.value)
+      this.value = this.percentage / 100 * this.underThisInitiativeVal
+      this.checkValue()
+    },
+    checkValue () {
+      if (this.value <= this.assetData.ownedByThisHolder) {
+        this.valueTooLarge = false
+        this.assign()
+      } else {
+        this.valueTooLarge = true
+      }
     }
   },
 
@@ -294,20 +332,6 @@ export default {
     },
     initiativeId () {
       this.updateTokenData()
-    },
-    value () {
-      let perc = this.value / this.underThisInitiativeVal * 100
-      this.percentage = Math.round(perc * 1000) / 1000
-      if (this.value <= this.assetData.ownedByThisHolder) {
-        this.valueTooLarge = false
-        this.assign()
-      } else {
-        this.valueTooLarge = true
-      }
-    },
-    percentage () {
-      let toks = this.percentage / 100 * this.underThisInitiativeVal
-      this.value = Math.round(toks * 1000) / 1000
     },
     '$store.state.support.triggerUpdateAssets' () {
       this.updateTokenData()
