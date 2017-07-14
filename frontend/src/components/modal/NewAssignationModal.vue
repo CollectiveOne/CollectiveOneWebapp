@@ -34,10 +34,10 @@
                 <component @updated="receiversUpdated($event)" :is="isDirect ? 'app-direct-assignation' : 'app-peer-reviewed-assignation'"></component>
               </keep-alive>
             </transition>
-            <div v-if="notEnoughReceivers" class="w3-row w3-tag error-tag error-row w3-round">
+            <div v-if="notEnoughReceivers" class="w3-row w3-tag error-panel error-row w3-round">
               please add at least one receiver
             </div>
-            <div v-if="notEnoughEvaluators" class="w3-row w3-tag error-tag error-row w3-round">
+            <div v-if="notEnoughEvaluators" class="w3-row w3-tag error-panel error-row w3-round">
               please add at least one evaluator
             </div>
           </div>
@@ -47,7 +47,7 @@
               :initInitiativeId="initiative.id" type='member-assigner'
               @updated="assetsSelected($event)" :showError="assetsZeroShow">
             </app-initiative-assets-assigner>
-            <div v-if="assetsZeroShow" class="w3-row w3-tag error-tag error-row w3-round">
+            <div v-if="assetsZeroShow" class="w3-row w3-tag error-panel error-row w3-round">
               plase select the amount of tokens that will be transferred to these members
             </div>
           </div>
@@ -55,10 +55,10 @@
           <div class="w3-row">
             <label class="d2-color"><b>Motive</b></label>
             <input v-model="assignation.motive" class="w3-input w3-hover-light-gray" :class="{ 'error-input' : motiveErrorShow }" type="text">
-            <div v-if="motiveEmptyShow" class="w3-row w3-tag error-tag error-row w3-round">
+            <div v-if="motiveEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
               please provide a motive for this transfer for future reference
             </div>
-            <div v-if="motiveTooLarge" class="w3-row w3-tag error-tag error-row w3-round">
+            <div v-if="motiveTooLarge" class="w3-row w3-tag error-panel error-row w3-round">
               motive too large, please use the notes for long annotations
             </div>
             <br>

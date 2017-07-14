@@ -103,8 +103,9 @@ textarea {
   width: 100%;
 }
 
-.error-tag {
-  background-color: rgb(255, 115, 115);
+.error-panel {
+  color: white;
+  background-color: #b50000;
 }
 
 .error-input {
@@ -112,7 +113,6 @@ textarea {
   border-color: red !important;
   border-color: red;
   box-shadow: 0 0 10px red;
-  background-color: rgb(250, 202, 202) !important;
 }
 
 .cursor-pointer {

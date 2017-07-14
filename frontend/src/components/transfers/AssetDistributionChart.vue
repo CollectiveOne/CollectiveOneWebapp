@@ -147,7 +147,7 @@
           </div>
           <div class="slider-container error-row w3-center">
             <transition name="slideDownUp">
-              <div v-if="valueTooLarge" class="w3-row error-tag w3-tag w3-round">
+              <div v-if="valueTooLarge" class="w3-row error-panel w3-tag w3-round">
                 {{ this.assetData.ownedByThisHolder > 0 ? 'only ' : ''}} {{this.assetData.ownedByThisHolder }} {{ this.assetData.assetName }} available
               </div>
             </transition>

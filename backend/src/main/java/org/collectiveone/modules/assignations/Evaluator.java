@@ -53,6 +53,10 @@ public class Evaluator {
 		dto.setWeight(weight);
 		dto.setState(state.toString());
 		
+		for (EvaluationGrade grade : grades) {
+			dto.getGrades().add(grade.toDto());
+		}
+		
 		return dto;
 	}
 	

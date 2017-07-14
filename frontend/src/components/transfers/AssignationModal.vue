@@ -54,18 +54,22 @@
         <div v-if="isDirect" class="w3-row">
         </div>
 
-        <div v-if="isPeerReviewed" class="w3-row">
-          <div v-if="isEvaluator" class="w3-col l6 my-evaluation-div">
+        <div class="w3-row">
+          <div v-if="isPeerReviewed && isEvaluator" class="w3-col l6 my-evaluation-div">
             <div class="w3-row w3-center">
               <h6 class="d2-color"><b>My evaluation</b></h6>
             </div>
             <br>
-            <app-users-percentages
-              :usersDataInit="evaluationReceivers"
-              :disable="disableEvaluations">
-            </app-users-percentages>
-            <hr>
-            <div class="bottom-btns-row w3-row-padding">
+            <transition name="fade" mode="out-in">
+              <app-users-percentages
+                :usersDataInit="evaluationReceivers"
+                userAnchor="receiverUser"
+                :disable="disableEvaluations"
+                :key="disableEvaluations">
+              </app-users-percentages>
+            </transition>
+            <div v-if="isOpen" class="bottom-btns-row w3-row-padding">
+              <hr>
               <button v-if="!disableEvaluations"
                 type="button" class="w3-button w3-theme w3-round"
                 @click="sendEvaluation()" :disabled="!arePercentagesOk">
@@ -86,8 +90,28 @@
               </div>
             </div>
           </div>
+          <div v-if="isDone" class="w3-col l6">
+            <div class="w3-row w3-center">
+              <h6 class="d2-color"><b>Results</b></h6>
+            </div>
+            <br>
+            <app-users-percentages
+              :usersDataInit="assignation.receivers"
+              :disable="true">
+            </app-users-percentages>
+          </div>
         </div>
-
+        <hr>
+        <div class="w3-row">
+          <div class="w3-row w3-center">
+            <h6 class="d2-color"><b>All Evaluations</b></h6>
+          </div>
+          <br>
+          <app-peer-reviewed-evaluations
+            :evaluators="assignation.evaluators"
+            :receivers="assignation.receivers">
+          </app-peer-reviewed-evaluations>
+        </div>
       </div>
 
       <div class="w3-display-topright">
@@ -105,13 +129,15 @@
 import UserAvatar from '@/components/user/UserAvatar.vue'
 import ValueSeal from '@/components/transfers/ValueSeal.vue'
 import UsersPercentages from '@/components/user/UsersPercentages.vue'
+import PeerReviewedEvaluations from '@/components/transfers/PeerReviewedEvaluations.vue'
 
 export default {
 
   components: {
     'app-user-avatar': UserAvatar,
     'app-value-seal': ValueSeal,
-    'app-users-percentages': UsersPercentages
+    'app-users-percentages': UsersPercentages,
+    'app-peer-reviewed-evaluations': PeerReviewedEvaluations
   },
 
   data () {
@@ -131,6 +157,12 @@ export default {
     },
     isPeerReviewed () {
       return (this.assignation.type === 'PEER_REVIEWED')
+    },
+    isOpen () {
+      return (this.assignation.state === 'OPEN')
+    },
+    isDone () {
+      return (this.assignation.state === 'DONE')
     },
     isEvaluator () {
       return this.assignation.thisEvaluation !== null
@@ -177,7 +209,11 @@ export default {
       }
     },
     updateAssignationData () {
-      this.axios.get('/1/secured/assignation/' + this.assignationId).then((response) => {
+      this.axios.get('/1/secured/assignation/' + this.assignationId, {
+        params: {
+          addAllEvaluations: true
+        }
+      }).then((response) => {
         this.assignation = response.data.data
       })
     },

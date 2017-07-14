@@ -1,5 +1,8 @@
 package org.collectiveone.modules.assignations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.collectiveone.modules.users.AppUserDto;
 
 public class EvaluatorDto {
@@ -8,7 +11,7 @@ public class EvaluatorDto {
 	private AppUserDto user;
 	private double weight;
 	private String state;
-	
+	private List<EvaluationGradeDto> grades = new ArrayList<EvaluationGradeDto>();
 	
 	public String getId() {
 		return id;
@@ -34,6 +37,11 @@ public class EvaluatorDto {
 	public void setState(String state) {
 		this.state = state;
 	}
-	
+	public List<EvaluationGradeDto> getGrades() {
+		return grades;
+	}
+	public void setGrades(List<EvaluationGradeDto> grades) {
+		this.grades = grades;
+	}
 	
 }

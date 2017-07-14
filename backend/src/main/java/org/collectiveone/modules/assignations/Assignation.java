@@ -105,12 +105,6 @@ public class Assignation {
 			dto.getReceivers().add(receiver.toDto());
 		}
 		
-		if(type == AssignationType.PEER_REVIEWED) {
-			for(Evaluator evaluator : evaluators) {
-				dto.getEvaluators().add(evaluator.toDto());
-			}
-		}
-		
 		return dto;
 	}
 	

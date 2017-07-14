@@ -43,30 +43,32 @@ export default {
     }
   },
 
-  computed: {
-    selected () {
-      return {
-        receivers: this.receivers,
-        evaluators: this.actualEvaluators
-      }
-    }
-  },
-
-  watch: {
-    selected () {
-      this.$emit('updated', this.selected)
-    }
-  },
-
   methods: {
     receiversUpdated (receivers) {
       this.receivers = receivers
       if (this.sameAsReceivers) {
         this.evaluators = receivers
       }
+      this.emitUpdated()
     },
     evaluatorsUpdated (evaluators) {
       this.evaluators = evaluators
+      this.emitUpdated()
+    },
+    emitUpdated () {
+      var selected
+      if (this.sameAsReceivers) {
+        selected = {
+          receivers: this.receivers,
+          evaluators: this.receivers
+        }
+      } else {
+        selected = {
+          receivers: this.receivers,
+          evaluators: this.evaluators
+        }
+      }
+      this.$emit('updated', selected)
     }
   }
 }

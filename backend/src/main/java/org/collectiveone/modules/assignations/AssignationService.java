@@ -197,7 +197,7 @@ public class AssignationService {
 	}
 	
 	@Transactional
-	public AssignationDto getPeerReviewedAssignation(UUID initiativeId, UUID assignationId, UUID evaluatorAppUserId) {
+	public AssignationDto getPeerReviewedAssignation(UUID initiativeId, UUID assignationId, UUID evaluatorAppUserId, Boolean addAllEvaluations) {
 		Assignation assignation = assignationRepository.findById(assignationId);
 		AssignationDto assignationDto = assignation.toDto();
 		
@@ -216,6 +216,12 @@ public class AssignationService {
 			assignationDto.setThisEvaluation(evaluation);
 		}
 		
+		if (addAllEvaluations) {
+			for (Evaluator thisEvaluator : assignation.getEvaluators()) {
+				assignationDto.getEvaluators().add(thisEvaluator.toDto());
+			}
+		}
+		
 		return assignationDto;
 	}
 	
@@ -223,13 +229,13 @@ public class AssignationService {
 		return new GetResult<InitiativeAssignationsDto>("success", "success", getAssignations(initiativeId, evaluatorAppUserId));
 	}
 	
-	public GetResult<AssignationDto> getAssignationDto(UUID assignationId, UUID userId) {
+	public GetResult<AssignationDto> getAssignationDto(UUID assignationId, UUID userId, Boolean addAllEvaluations) {
 		
 		Assignation assignation = assignationRepository.findById(assignationId);
 		AssignationDto assignationDto = null;
 		
 		if(assignation.getType() == AssignationType.PEER_REVIEWED) {
-			assignationDto = getPeerReviewedAssignation(assignation.getInitiative().getId(), assignation.getId(), userId);
+			assignationDto = getPeerReviewedAssignation(assignation.getInitiative().getId(), assignation.getId(), userId, addAllEvaluations);
 		} else {
 			assignationDto = assignation.toDto();
 		}
@@ -247,7 +253,7 @@ public class AssignationService {
 		initiativeAssignations.setInitiativeName(initiative.getName());
 		
 		for(Assignation assignation : assignations) {
-			initiativeAssignations.getAssignations().add(getAssignationDto(assignation.getId(), evaluatorAppUserId).getData());
+			initiativeAssignations.getAssignations().add(getAssignationDto(assignation.getId(), evaluatorAppUserId, false).getData());
 		}
 		
 		/* add the members of all sub-initiatives too */

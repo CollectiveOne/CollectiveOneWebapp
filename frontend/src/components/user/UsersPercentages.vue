@@ -2,11 +2,11 @@
   <div class="percentages-container">
     <div v-for="(userData, ix) in usersData" class="w3-row-padding">
       <div class="w3-col l6 w3-center">
-        <app-user-avatar :user="userData.receiverUser" class="user-container"></app-user-avatar>
+        <app-user-avatar :user="userData[userAnchor]" class="user-container"></app-user-avatar>
       </div>
       <div class="w3-col l6">
         <div class="w3-row input-div">
-          <div class="w3-col s6 w3-center">
+          <div class="w3-col w3-center" :class="{'s6': !disable, 's12': disable}">
             <div class="slider-container">
               <transition name="slideDownUp" mode="out-in">
                 <div key="1" class="w3-row" v-if="!isDontKnow(userData)">
@@ -25,8 +25,8 @@
               </transition>
             </div>
           </div>
-          <div class="w3-col s6 not-sure-col">
-            <button v-if="!disable"
+          <div v-if="!disable" class="w3-col s6 not-sure-col">
+            <button
               class="w3-button w3-theme w3-round w3-left"
               @click="toggleDontKnow(userData)">
               {{ isDontKnow(userData) ? 'set' : 'dont know' }}
@@ -35,23 +35,24 @@
         </div>
       </div>
       <div class="w3-col l12">
-        <hr>
+        <hr class="user-hr">
       </div>
     </div>
-    <div class="w3-row-padding total-row">
+    <div v-if="!disable" class="w3-row-padding total-row">
       <div class="w3-col l6">
         <div class="w3-right">
           <b>total assigned:</b>
         </div>
       </div>
-      <div class="w3-col l2">
-        <div class="w3-left">
-          <b class="d2-color">{{ sumOfPercents }}%</b>
-        </div>
+      <div class="w3-col l3 w3-center w3-round" :class="totalClass">
+        <b>{{ sumOfPercents }}%</b>
       </div>
-      <div v-if="missingPercent != 0" class="w3-col l4">
-        <div class="w3-left">
-          <b class="warning-panel">{{ missingPercent }}% {{ missingPercent > 0 ? 'missing' : 'in excess'}}</b>
+    </div>
+
+    <div v-if="!disable" class="w3-row-padding feedback-row">
+      <div v-if="missingPercent != 0" class="">
+        <div class="w3-panel warning-panel w3-center w3-round">
+          <b>{{ feedbackText }}</b>
         </div>
       </div>
     </div>
@@ -75,6 +76,10 @@ export default {
     disable: {
       type: Boolean,
       defualt: false
+    },
+    userAnchor: {
+      type: String,
+      default: 'user'
     }
   },
 
@@ -103,6 +108,26 @@ export default {
         return true
       } else {
         return false
+      }
+    },
+    feedbackText () {
+      if (Math.abs(this.missingPercent) > 0) {
+        if (this.missingPercent > 0) {
+          return this.missingPercent + '% missing'
+        } else {
+          return -this.missingPercent + '% in excess'
+        }
+      }
+    },
+    totalClass () {
+      if (this.arePercentagesOk) {
+        return {
+          'success-panel': true
+        }
+      } else {
+        return {
+          'error-panel': true
+        }
       }
     }
   },
@@ -153,8 +178,13 @@ export default {
   width: 100px;
 }
 
+.user-hr {
+  margin: 5px 0px 5px 0px !important;
+}
+
 .total-row {
-  font-size: 20px;
+  margin-top: 10px;
+  font-size: 18px;
 }
 
 .bottom-btns-row {

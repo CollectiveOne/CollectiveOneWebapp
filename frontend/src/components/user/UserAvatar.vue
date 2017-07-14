@@ -10,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div v-if="showName" class="name-container w3-left">
+    <div v-if="showName" class="name-container w3-left d2-color">
       <b>{{ user.nickname }}</b>
     </div>
   </div>
