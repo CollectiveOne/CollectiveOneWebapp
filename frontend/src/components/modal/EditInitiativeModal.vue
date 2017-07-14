@@ -13,11 +13,11 @@
 
         <form class="w3-container">
 
-          <label class="w3-text-indigo"><b>Name</b></label>
+          <label class="d2-color"><b>Name</b></label>
           <input v-model="newInitiative.name" class="w3-input w3-hover-light-gray" type="text">
           <br>
 
-          <label class="w3-text-indigo"><b>Driver</b></label>
+          <label class="d2-color"><b>Driver</b></label>
           <textarea v-model="newInitiative.driver" rows="5" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
 
           <hr>

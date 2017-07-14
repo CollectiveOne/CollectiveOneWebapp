@@ -2,11 +2,11 @@
   <div class="">
 
     <div v-if="!multipleReceivers" class="w3-row receiver-label">
-      <label class="w3-text-indigo"><b>Receiver:</b></label>
+      <label class="d2-color"><b>Receiver:</b></label>
     </div>
 
     <div v-if="multipleReceivers" class="w3-row receiver-label">
-      <label class="w3-text-indigo"><b>Select and add new receiver:</b></label>
+      <label class="d2-color"><b>Select and add new receiver:</b></label>
     </div>
     <div class="w3-row receivers-selector">
       <div class="w3-col s7">
@@ -40,7 +40,7 @@
 
     <hr v-if="multipleReceivers">
     <div v-if="multipleReceivers" class="w3-row receiver-label">
-      <label class="w3-text-indigo"><b>Selected receivers are:</b></label>
+      <label class="d2-color"><b>Selected receivers are:</b></label>
     </div>
 
     <div v-if="multipleReceivers" class="receivers-list-container">

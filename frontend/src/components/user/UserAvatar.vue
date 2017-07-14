@@ -1,10 +1,17 @@
 <template lang="html">
-  <div class="w3-cell-row">
-    <div class="w3-cell w3-cell-middle noselect" style="width:30px">
+  <div class="w3-row">
+    <div class="img-div w3-left noselect"
+      @mouseover="showHoverName = true"
+      @mouseleave="showHoverName = false">
       <img :class="imgClass" :src="user.pictureUrl"/>
+      <div class="hover-name cursor-pointer">
+        <div v-if="!showName && showHoverName" class="hover-name-container w3-tag w3-theme w3-round">
+          <b>{{ user.nickname }}</b>
+        </div>
+      </div>
     </div>
-    <div v-if="showName" class="name-container w3-cell w3-cell-middle">
-      <h5 class="w3-padding"><b>{{ user.nickname }}</b></h5>
+    <div v-if="showName" class="name-container w3-left">
+      <b>{{ user.nickname }}</b>
     </div>
   </div>
 </template>
@@ -32,6 +39,12 @@ export default {
     }
   },
 
+  data () {
+    return {
+      showHoverName: false
+    }
+  },
+
   computed: {
     imgClass () {
       if (this.small) {
@@ -47,7 +60,14 @@ export default {
 <style scoped>
 
 .name-container {
+  font-size: 18px;
+  margin-left: 15px;
+  padding-top: 5px;
   text-align: left;
+}
+
+.hover-name-container {
+  position: absolute;
 }
 
 .img-style-large {

@@ -15,7 +15,7 @@
 
           <div class="w3-row">
             <div class="w3-left label-div">
-              <label class="w3-text-indigo"><b>Receive notifications:</b></label>
+              <label class="d2-color"><b>Receive notifications:</b></label>
             </div>
             <div class="w3-left w3-round button-bar">
               <button
@@ -35,7 +35,7 @@
           <br>
           <div v-show="isSubscribed" class="w3-row">
             <div class="w3-left label-div">
-              <label class="w3-text-indigo"><b>... and send an email:</b></label>
+              <label class="d2-color"><b>... and send an email:</b></label>
             </div>
             <div class="w3-left button-bar">
               <button

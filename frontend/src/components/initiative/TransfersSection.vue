@@ -31,7 +31,7 @@
 
         <div v-if="initiativeAssignations.assignations.length > 0">
           <div class="w3-row">
-            <label class="w3-text-indigo"><b>To users</b></label>
+            <label class="d2-color"><b>To users</b></label>
           </div>
           <div class="w3-row-padding assignations-container">
             <div class="w3-col l6" v-for="assignation in initiativeAssignations.assignations" :key="assignation.id">
@@ -44,7 +44,7 @@
 
         <div v-if="initiativeTransfers.transfers.length > 0">
           <div class="w3-row">
-            <label class="w3-text-indigo"><b>To initiatives</b></label>
+            <label class="d2-color"><b>To initiatives</b></label>
           </div>
           <div v-if="initiativeTransfers.transfers.length > 0" class="w3-row-padding assignations-container">
             <div class="w3-col l6" v-for="transfer in initiativeTransfers.transfers" :key="transfer.id">
@@ -85,7 +85,7 @@
 
         <div v-if="getSubtransfers.length > 0" class="">
           <div class="w3-row">
-            <label class="w3-text-indigo"><b>To initiatives</b></label>
+            <label class="d2-color"><b>To initiatives</b></label>
           </div>
           <div class="w3-container">
             <div class="w3-row-padding assignations-container">
@@ -165,14 +165,18 @@ export default {
 
   data () {
     return {
-      initiativeAssignations: null,
-      initiativeTransfers: null
     }
   },
 
   computed: {
     initiative () {
       return this.$store.state.initiative.initiative
+    },
+    initiativeAssignations () {
+      return this.$store.state.initiative.initiativeAssignations
+    },
+    initiativeTransfers () {
+      return this.$store.state.initiative.initiativeTransfers
     },
     isLoggedAnAdmin () {
       return this.initiative.loggedMember.role === 'ADMIN'
@@ -201,20 +205,8 @@ export default {
     }
   },
 
-  methods: {
-    update () {
-      this.axios.get('/1/secured/initiative/' + this.initiative.id + '/assignations').then((response) => {
-        this.initiativeAssignations = response.data.data
-      })
-
-      this.axios.get('/1/secured/initiative/' + this.initiative.id + '/transfersToInitiatives').then((response) => {
-        this.initiativeTransfers = response.data.data
-      })
-    }
-  },
-
   mounted () {
-    this.update()
+    this.$store.dispatch('refreshTransfers')
   }
 }
 </script>

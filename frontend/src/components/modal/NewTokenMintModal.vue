@@ -27,7 +27,7 @@
             </div>
           </div>
           <div class="w3-row label-row">
-            <label class="w3-text-indigo"><b>Amount to be created</b></label>
+            <label class="d2-color"><b>Amount to be created</b></label>
           </div>
           <div class="w3-row-padding">
             <div class="w3-col s6">

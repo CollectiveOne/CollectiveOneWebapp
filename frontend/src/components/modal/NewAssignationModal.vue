@@ -18,12 +18,12 @@
             <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'w3-border-blue': isDirect}"
               @click="assignation.type = DIRECT_ID()">
-              <h5 class="w3-text-indigo" :class="{'bold-text': isDirect}">Direct</h5>
+              <h5 class="d2-color" :class="{'bold-text': isDirect}">Direct</h5>
             </div>
             <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'w3-border-blue': isPeerReviewed}"
               @click="assignation.type = PEER_REVIEWED_ID()">
-              <h5 class="w3-text-indigo" :class="{'bold-text': isPeerReviewed}">Peer Reviewed</h5>
+              <h5 class="d2-color" :class="{'bold-text': isPeerReviewed}">Peer Reviewed</h5>
             </div>
           </div>
           <br>
@@ -48,12 +48,12 @@
               @updated="assetsSelected($event)" :showError="assetsZeroShow">
             </app-initiative-assets-assigner>
             <div v-if="assetsZeroShow" class="w3-row w3-tag error-tag error-row w3-round">
-              plase select how many tokens will be transferred to these members
+              plase select the amount of tokens that will be transferred to these members
             </div>
           </div>
 
           <div class="w3-row">
-            <label class="w3-text-indigo"><b>Motive</b></label>
+            <label class="d2-color"><b>Motive</b></label>
             <input v-model="assignation.motive" class="w3-input w3-hover-light-gray" :class="{ 'error-input' : motiveErrorShow }" type="text">
             <div v-if="motiveEmptyShow" class="w3-row w3-tag error-tag error-row w3-round">
               please provide a motive for this transfer for future reference
@@ -63,7 +63,7 @@
             </div>
             <br>
 
-            <label class="w3-text-indigo"><b>Notes</b></label>
+            <label class="d2-color"><b>Notes</b></label>
             <textarea v-model="assignation.notes" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
             <br>
           </div>
@@ -167,9 +167,9 @@ export default {
     },
     areAssetsZero () {
       var result = true
-      if (this.assets) {
-        for (var ix in this.assets) {
-          if (this.assets[ix].value !== 0) {
+      if (this.assignation.assets) {
+        for (var ix in this.assignation.assets) {
+          if (this.assignation.assets[ix].value !== 0) {
             result = false
           }
         }
@@ -202,7 +202,6 @@ export default {
     },
     accept () {
       /* validation */
-      debugger
       var ok = true
       if (this.assignation.motive === '') {
         this.motiveEmptyError = true
@@ -216,6 +215,7 @@ export default {
       this.areAssetsZero()
       if (this.assetsAreZero) {
         this.assetsZeroError = true
+        ok = false
       }
 
       if (this.isDirect) {
@@ -267,6 +267,7 @@ export default {
 
         this.axios.post('/1/secured/initiative/' + assignationToSend.initiativeId + '/assignation', assignationToSend)
         .then((response) => {
+          this.$store.dispatch('refreshTransfers')
           this.$store.commit('triggerUpdateAssets')
           this.closeThis()
         })

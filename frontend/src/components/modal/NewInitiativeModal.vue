@@ -15,11 +15,11 @@
 
           <br>
 
-          <label class="w3-text-indigo"><b>Name</b></label>
+          <label class="d2-color"><b>Name</b></label>
           <input v-model="name" class="w3-input w3-hover-light-gray" type="text">
           <br>
 
-          <label class="w3-text-indigo"><b>Driver</b></label>
+          <label class="d2-color"><b>Driver</b></label>
           <textarea v-model="driver" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
 
           <hr>
@@ -34,7 +34,7 @@
           </div>
           <hr>
 
-          <label class="init-contr-label w3-text-indigo"><b>Initial Members</b></label>
+          <label class="init-contr-label d2-color"><b>Initial Members</b></label>
           <div class="w3-border w3-round w3-padding member-container">
             <app-initiative-member
               v-for="member in members"
@@ -44,7 +44,7 @@
               @remove="removeMember($event)">
             </app-initiative-member>
             <div class="w3-row" :style="{'margin-bottom': '5px'}">
-              <label class="w3-text-indigo" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
+              <label class="d2-color" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
             </div>
             <app-initiative-new-member class="new-contr-row" @add="addMember($event)"></app-initiative-new-member>
 

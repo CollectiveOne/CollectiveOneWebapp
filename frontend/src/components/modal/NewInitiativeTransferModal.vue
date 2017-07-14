@@ -13,7 +13,7 @@
         <div class="this-container w3-container">
 
           <div class="w3-row">
-            <label class="w3-text-indigo"><b>Transfer to</b></label>
+            <label class="d2-color"><b>Transfer to</b></label>
             <select v-model="transfer.receiverId" class="w3-select initiative-selector" name="transferto">
               <option v-for="subinitiative in subinitiatives" :value="subinitiative.id">{{ subinitiative.name }}</option>
             </select>
@@ -22,11 +22,11 @@
           <br>
 
           <div class="w3-row">
-            <label class="w3-text-indigo"><b>Motive</b></label>
+            <label class="d2-color"><b>Motive</b></label>
             <input v-model="transfer.motive" class="w3-input w3-hover-light-gray" type="text">
             <br>
 
-            <label class="w3-text-indigo"><b>Notes</b></label>
+            <label class="d2-color"><b>Notes</b></label>
             <textarea v-model="transfer.notes" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
             <br>
           </div>

@@ -204,15 +204,18 @@ public class AssignationService {
 		/* add the evaluations of logged user */
 		Evaluator evaluator = evaluatorRepository.findByAssignationIdAndUser_C1Id(assignation.getId(), evaluatorAppUserId);
 		
-		EvaluationDto evaluation = new EvaluationDto();
-		evaluation.setId(evaluator.getGrades().toString());
-		evaluation.setEvaluationState(evaluator.getState().toString());
-		
-		for (EvaluationGrade grade : evaluator.getGrades()) {
-			evaluation.getEvaluationGrades().add(grade.toDto());
+		if (evaluator != null) {
+			EvaluationDto evaluation = new EvaluationDto();
+			evaluation.setId(evaluator.getId().toString());
+			evaluation.setEvaluationState(evaluator.getState().toString());
+			
+			for (EvaluationGrade grade : evaluator.getGrades()) {
+				evaluation.getEvaluationGrades().add(grade.toDto());
+			}
+			
+			assignationDto.setThisEvaluation(evaluation);
 		}
 		
-		assignationDto.setThisEvaluation(evaluation);
 		return assignationDto;
 	}
 	
@@ -226,7 +229,7 @@ public class AssignationService {
 		AssignationDto assignationDto = null;
 		
 		if(assignation.getType() == AssignationType.PEER_REVIEWED) {
-			assignationDto = getPeerReviewedAssignation(assignation.getInitiative().getId(), assignation.getId(), assignationId);
+			assignationDto = getPeerReviewedAssignation(assignation.getInitiative().getId(), assignation.getId(), userId);
 		} else {
 			assignationDto = assignation.toDto();
 		}
@@ -244,11 +247,7 @@ public class AssignationService {
 		initiativeAssignations.setInitiativeName(initiative.getName());
 		
 		for(Assignation assignation : assignations) {
-			if(assignation.getType() == AssignationType.PEER_REVIEWED) {
-				initiativeAssignations.getAssignations().add(getPeerReviewedAssignation(initiativeId, assignation.getId(), evaluatorAppUserId));
-			} else {
-				initiativeAssignations.getAssignations().add(assignation.toDto());
-			}
+			initiativeAssignations.getAssignations().add(getAssignationDto(assignation.getId(), evaluatorAppUserId).getData());
 		}
 		
 		/* add the members of all sub-initiatives too */

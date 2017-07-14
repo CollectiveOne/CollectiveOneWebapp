@@ -15,7 +15,7 @@
         </app-initiative-member>
         <div v-if="isLoggedAnAdmin">
           <div class="w3-row" :style="{'margin-bottom': '5px'}">
-            <label class="w3-text-indigo noselect" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
+            <label class="d2-color noselect" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
           </div>
           <app-initiative-new-member @add="addMember($event)"></app-initiative-new-member>
         </div>
