@@ -8,16 +8,21 @@
       <div class="w3-container members-div">
         <app-initiative-member
           v-for="member in initiative.initiativeMembers.members"
+          class="initiative-member-row"
           :key="member.user.c1Id"
           :member="member"
           :canEdit="isLoggedAnAdmin"
-          @remove="removeMember($event)">
+          @remove="removeMember($event)"
+          @role-updated="roleUpdated($event)">
         </app-initiative-member>
         <div v-if="isLoggedAnAdmin">
           <div class="w3-row" :style="{'margin-bottom': '5px'}">
             <label class="d2-color noselect" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
           </div>
           <app-initiative-new-member @add="addMember($event)"></app-initiative-new-member>
+        </div>
+        <div v-if="noOtherAdminError" class="w3-row w3-tag error-panel error-row w3-round">
+          there should be at least one admin per initiative
         </div>
       </div>
 
@@ -105,7 +110,10 @@ export default {
     'app-user-avatar': UserAvatar
   },
 
-  props: {
+  data () {
+    return {
+      noOtherAdminError: false
+    }
   },
 
   computed: {
@@ -154,6 +162,37 @@ export default {
       }
     },
 
+    roleUpdated (member) {
+      var index = this.indexOfMember(member.user.c1Id)
+      if (index > -1) {
+        var otherAdmin = false
+        for (var ix in this.initiative.initiativeMembers.members) {
+          if (ix !== index) {
+            if (this.initiative.initiativeMembers.members[ix].role === 'ADMIN') {
+              otherAdmin = true
+            }
+          }
+        }
+
+        if (otherAdmin) {
+          this.axios.put('/1/secured/initiative/' + this.initiative.id + '/member/' + member.user.c1Id, member
+          ).then((response) => {
+            if (response.data.result === 'success') {
+              this.$store.dispatch('refreshInitiative')
+            } else {
+              this.showOutputMessage(response.data.message)
+            }
+          })
+        } else {
+          this.noOtherAdminError = true
+          this.initiative.initiativeMembers.members[index].role = 'ADMIN'
+          setTimeout(() => {
+            this.noOtherAdminError = false
+          }, 2000)
+        }
+      }
+    },
+
     indexOfMember (c1Id) {
       for (var ix in this.initiative.initiativeMembers.members) {
         if (this.initiative.initiativeMembers.members[ix].user.c1Id === c1Id) {
@@ -180,6 +219,10 @@ export default {
 
 .members-panel {
   margin-bottom: 25px;
+}
+
+.initiative-member-row {
+  margin-bottom: 10px;
 }
 
 .subinitiatives-tags-container {

@@ -64,15 +64,18 @@
 
           <hr>
           <label class="init-contr-label d2-color"><b>Initial Members</b></label>
-          <div class="w3-border w3-round w3-padding member-container">
+          <div class="w3-border w3-round w3-padding members-container">
             <app-initiative-member
               v-for="member in members"
+              class="initiative-member-row"
               :key="member.user.c1Id"
               :member="member"
               :canEdit="true"
-              @remove="removeMember($event)">
+              @remove="removeMember($event)"
+              @role-updated="setRoleOfMember($event)">
             </app-initiative-member>
-            <div class="w3-row" :style="{'margin-bottom': '5px'}">
+            <br>
+            <div class="w3-row">
               <label class="d2-color" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
             </div>
             <app-initiative-new-member class="new-contr-row" @add="addMember($event, true)"></app-initiative-new-member>
@@ -375,7 +378,12 @@ form {
 
 .members-container {
   margin-top: 10px;
+  padding-top: 20px !important;
   padding-bottom: 20px !important;
+}
+
+.initiative-member-row {
+  margin-bottom: 10px;
 }
 
 .new-contr-row {

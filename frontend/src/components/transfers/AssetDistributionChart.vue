@@ -28,7 +28,7 @@
                 </label>
                 <div class="w3-light-grey w3-round-xlarge w3-large">
                   <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': availableToThisInitiativePercent +'%'}">
-                    <div class="bar-txt w3-center d2-color">{{ availableToThisInitiative }}</div>
+                    <div class="bar-txt w3-center d2-color noselect">{{ availableToThisInitiative }}</div>
                   </div>
                 </div>
               </div>
@@ -36,12 +36,12 @@
               <div v-if="isInitiativeAssigner || isOverview" class="w3-row">
                 <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
                   <div class="w3-row cursor-pointer" @click="showSubinitiatives = !showSubinitiatives">
-                    <label class="d2-color cursor-pointer">
+                    <label class="d2-color cursor-pointer noselect">
                       <b>Transferred to sub-initiatives</b>
                     </label>
                     <div class="w3-light-grey w3-round-xlarge w3-large">
                       <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToSubinitiativesPercent +'%'}">
-                        <div class="bar-txt w3-center d2-color">{{ transferredToSubinitiativesStr }}</div>
+                        <div class="bar-txt w3-center d2-color noselect">{{ transferredToSubinitiativesStr }}</div>
                       </div>
                     </div>
                   </div>
@@ -57,11 +57,11 @@
                             :key="subinitiativeAssets.assetId">
 
                             <label class="d2-color">
-                              <b>{{ subinitiativeAssets.receiverName }}</b>
+                              <b class="noselect">{{ subinitiativeAssets.receiverName }}</b>
                             </label>
                             <div class="w3-light-grey w3-round-xlarge w3-large">
                               <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': subinitiativePercent(subinitiativeAssets) +'%'}">
-                                <div class="bar-txt w3-center d2-color">{{ subinitiativePortion(subinitiativeAssets) }}</div>
+                                <div class="bar-txt w3-center d2-color noselect">{{ subinitiativePortion(subinitiativeAssets) }}</div>
                               </div>
                             </div>
                           </router-link>
@@ -84,11 +84,11 @@
 
                   <div class="w3-row cursor-pointer" @click="showMembers = !showMembers">
                     <label class="d2-color cursor-pointer">
-                      <b>Transferred to members</b>
+                      <b class="noselect">Transferred to members</b>
                     </label>
                     <div class="w3-light-grey w3-round-xlarge w3-large">
                       <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToMembersPercent +'%'}">
-                        <div class="bar-txt w3-center d2-color">{{ transferredToMembersStr }}</div>
+                        <div class="bar-txt w3-center d2-color noselect">{{ transferredToMembersStr }}</div>
                       </div>
                     </div>
                   </div>
@@ -99,11 +99,11 @@
                         <div class="sub-elements" v-if="showMembers">
                           <div class="w3-row" v-for="memberAssets in assetData.transferredToUsers" v-if="memberAssets.value > 0">
                             <label class="d2-color">
-                              <b>{{ memberAssets.receiverName }}</b>
+                              <b class="noselect">{{ memberAssets.receiverName }}</b>
                             </label>
                             <div class="w3-light-grey w3-round-xlarge w3-large">
                               <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': memberPercent(memberAssets) +'%'}">
-                                <div class="bar-txt w3-center d2-color">{{ memberPortion(memberAssets) }}</div>
+                                <div class="bar-txt w3-center d2-color noselect">{{ memberPortion(memberAssets) }}</div>
                               </div>
                             </div>
                           </div>

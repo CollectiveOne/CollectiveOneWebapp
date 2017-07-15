@@ -147,6 +147,19 @@ public class InitiativeService {
 		
 		return member;
 	}
+	
+	@Transactional 
+	public PostResult editMember(UUID initiativeId, UUID userId, DecisionMakerRole role) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, userId);
+		
+		if (member != null) {
+			governanceService.editOrCreateDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id(), role);
+		}
+		
+		return new PostResult("success", "member edited", member.getId().toString());
+		
+	}
 		
 	@Transactional
 	private PostResult transferAssets(UUID initiativeId, NewInitiativeDto initiativeDto) {

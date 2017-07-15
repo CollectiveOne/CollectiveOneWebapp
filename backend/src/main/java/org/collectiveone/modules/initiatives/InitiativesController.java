@@ -142,6 +142,20 @@ public class InitiativesController {
 		return initiativeService.deleteMember(UUID.fromString(initiativeId), UUID.fromString(userId));
 	}
 	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/member/{userId}", method = RequestMethod.PUT) 
+	public PostResult editMember(@PathVariable("initiativeId") String initiativeId, @RequestBody MemberDto memberDto) {
+		DecisionVerdict verdict = governanceService.canAddMember(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
+		
+		if (verdict == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		} 
+		
+		return initiativeService.editMember(
+				UUID.fromString(initiativeId), 
+				UUID.fromString(memberDto.getUser().getC1Id()),
+				DecisionMakerRole.valueOf(memberDto.getRole()));
+	}
+	
 	private AppUser getLoggedUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return appUserService.getFromAuth0Id(auth.getName());
