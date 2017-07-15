@@ -68,24 +68,28 @@
             <br>
           </div>
 
-          <div class="w3-row">
-            <div class="w3-col s12">
-              <div class="w3-row">
-                <label class="d2-color"><b>Configuration</b></label>
-              </div>
-              <div class="w3-row w3-container configuration-row">
-                <div class="w3-col m6">
-                  <input v-model="assignation.selfBiasVisible" class="w3-check" type="checkbox">
-                  <label>Self-bias visible</label>
+          <div class="slider-container">
+            <transition name="slideDownUp">
+              <div v-if="isPeerReviewed" class="w3-row">
+                <div class="w3-col s12">
+                  <div class="w3-row">
+                    <label class="d2-color"><b>Configuration</b></label>
+                  </div>
+                  <div class="w3-row w3-container configuration-row">
+                    <div class="w3-col m6">
+                      <input v-model="assignation.selfBiasVisible" class="w3-check" type="checkbox">
+                      <label>Self-bias visible</label>
+                    </div>
+                    <div class="w3-col m6">
+                      <input v-model="assignation.evaluationsVisible" class="w3-check" type="checkbox">
+                      <label>All evaluations visible</label>
+                    </div>
+                  </div>
                 </div>
-                <div class="w3-col m6">
-                  <input v-model="assignation.evaluationsVisible" class="w3-check" type="checkbox">
-                  <label>All evaluations visible</label>
-                </div>
               </div>
-            </div>
+            </transition>
           </div>
-
+          
           <hr>
 
           <div class="bottom-btns-row w3-row-padding">

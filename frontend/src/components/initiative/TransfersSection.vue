@@ -7,63 +7,36 @@
     </app-assignation-modal>
   </transition>
 
-  <div v-if="initiativeAssignations && initiativeTransfers" class="w3-container section-container">
+  <div class="section-container w3-display-container"
+    v-if="initiativeAssignations && initiativeTransfers">
 
-    <div v-if="isLoggedAnAdmin" class="w3-row action-buttons">
-      <button class="w3-button w3-theme w3-round" type="button" name="button"
-        @click="$store.commit('showNewAssignationModal', true)">
-        transfer to member(s)
-      </button>
-      <button class="w3-button w3-theme w3-round" type="button" name="button"
-        @click="$store.commit('showNewInitiativeTransferModal', true)">
-        transfer to subinitiative
-      </button>
-      <hr class="separator">
+    <div v-if="isLoggedAnAdmin" class="action-buttons w3-display-topright w3-xlarge w3-theme w3-circle w3-button">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+      <div class="action-menu w3-dropdown-content w3-bar-block w3-card d2-color">
+        <div class="w3-bar-item w3-button">
+          <i class="fa fa-pencil" aria-hidden="true"></i>name and driver
+        </div>
+        <div class="w3-bar-item w3-button">
+          <i class="fa fa-cog" aria-hidden="true"></i>notifications
+        </div>
+      </div>
     </div>
 
-    <div v-if="hasTransfers" class="w3-card d2-color section-card">
-      <header class="w3-container noselect">
-        <h4><b>Transfers from {{ initiative.name }}</b></h4>
-        <hr>
-      </header>
+    <div class="w3-row">
+      <h6>to users: </h6>
+      <app-assignations-table :assignations="initiativeAssignations.assignations"></app-assignations-table>
 
-      <div class="w3-container card-content">
-
-        <div v-if="initiativeAssignations.assignations.length > 0">
-          <div class="w3-row">
-            <label class="d2-color"><b>To users</b></label>
-          </div>
-          <div class="w3-row-padding assignations-container">
-            <div class="w3-col l6" v-for="assignation in initiativeAssignations.assignations" :key="assignation.id">
-              <app-initiative-assignation class="assignation-card"
-                :assignation="assignation">
-              </app-initiative-assignation>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="initiativeTransfers.transfers.length > 0">
-          <div class="w3-row">
-            <label class="d2-color"><b>To initiatives</b></label>
-          </div>
-          <div v-if="initiativeTransfers.transfers.length > 0" class="w3-row-padding assignations-container">
-            <div class="w3-col l6" v-for="transfer in initiativeTransfers.transfers" :key="transfer.id">
-              <app-initiative-transfer class="assignation-card"
-                :transfer="transfer">
-              </app-initiative-transfer>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
+      <h6>to initiatives: </h6>
+      <app-transfers-table :assignations="initiativeTransfers.assignations"></app-transfers-table>
     </div>
 
     <div v-if="hasSubinitiativesTransfers" class="w3-card section-card">
 
-      <header class="w3-container w3-theme noselect">
-        <h4>Transfers from sub-initiatives of {{ initiative.name }}</h4>
-      </header>
+      <h6>to users: </h6>
+      <app-assignations-table :assignations="getSubassignations"></app-assignations-table>
+
+      <h6>to initiatives: </h6>
+      <app-transfers-table :assignations="initiativeTransfers.assignations"></app-transfers-table>
 
 
       <div class="w3-container card-content">
@@ -104,9 +77,8 @@
 </template>
 
 <script>
-import AssignationBox from '@/components/transfers/AssignationBox.vue'
-import InitiativeTransfer from '@/components/transfers/InitiativeTransfer.vue'
 import AssignationModal from '@/components/transfers/AssignationModal.vue'
+import AssignationsTable from '@/components/transfers/AssignationsTable.vue'
 
 const getIndexOfElementWithId = function (list, id) {
   for (var ix in list) {
@@ -155,8 +127,7 @@ const getAllSubtransfers = function (subinitiativesTransfers) {
 
 export default {
   components: {
-    'app-initiative-assignation': AssignationBox,
-    'app-initiative-transfer': InitiativeTransfer,
+    'app-assignations-table': AssignationsTable,
     'app-assignation-modal': AssignationModal
   },
 
@@ -205,6 +176,9 @@ export default {
     }
   },
 
+  methods: {
+  },
+
   mounted () {
     this.$store.dispatch('refreshTransfers')
   }
@@ -214,38 +188,23 @@ export default {
 <style scoped>
 
 .section-container {
-  padding-top: 25px;
-  padding-bottom: 15px;
+  padding-top: 10px;
+  padding-bottom: 25px;
 }
 
 .action-buttons {
-  text-align: center;
+  padding: 6px 0px 0px 0px  !important;
+  height: 45px;
+  width: 45px;
+  margin-right: 30px;
+  margin-top: 30px;
 }
 
-.action-buttons button {
-  width: 220px;
-  margin-bottom: 10px;
+.action-menu {
+  position: absolute;
 }
 
-.separator {
-  margin-top: 10px;
-}
-
-.section-card {
-  margin-bottom: 25px;
-}
-
-.card-content {
-  padding-top: 20px;
-}
-
-.assignations-container {
-  padding-top: 25px;
-  padding-bottom: 10px;
-}
-
-.assignation-card {
-  margin-bottom: 20px;
+.table-container {
 }
 
 </style>

@@ -142,6 +142,14 @@ textarea {
   background: rgba(0, 0, 0, 0.5);
 }
 
+.open-color {
+  background-color: rgb(50, 161, 27);
+}
+
+.done-color {
+  background-color: rgb(184, 184, 184);
+}
+
 
 /* Animations */
 
