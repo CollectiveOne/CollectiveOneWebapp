@@ -52,6 +52,12 @@ textarea {
 
 .w3-modal {
   padding-top: 30px;
+  display: block;
+}
+
+.w3-modal-content {
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 .l4-color {

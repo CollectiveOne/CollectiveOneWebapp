@@ -227,9 +227,36 @@ public class AssignationService {
 			assignationDto.setThisEvaluation(evaluation);
 		}
 		
+		/* add individual biases */
+		if (assignation.getConfig().getSelfBiasVisible()) {
+			if (assignation.getState() == AssignationState.DONE) {
+				for (Receiver receiver : assignation.getReceivers()) {
+					EvaluationGrade selfEvaluation = 
+							evaluationGradeRepository.findByAssignation_IdAndReceiver_User_C1IdAndEvaluator_User_C1Id(
+									assignation.getId(), receiver.getUser().getC1Id(), receiver.getUser().getC1Id());
+					
+					if (selfEvaluation != null) {
+						/* fill the receivers dtos selfBias */
+						for (ReceiverDto receiverDto : assignationDto.getReceivers()) {
+							if (receiverDto.getUser().getC1Id().equals(receiver.getUser().getC1Id().toString())) {
+								receiverDto.setSelfBias(selfEvaluation.getPercent() - receiverDto.getPercent());
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		/* add all the evaluations */
 		if (addAllEvaluations) {
-			for (Evaluator thisEvaluator : assignation.getEvaluators()) {
-				assignationDto.getEvaluators().add(thisEvaluator.toDto());
+			if (assignation.getConfig().getEvaluationsVisible()) {
+				if (evaluator != null) {
+					if (assignation.getState() == AssignationState.DONE) {
+						for (Evaluator thisEvaluator : assignation.getEvaluators()) {
+							assignationDto.getEvaluators().add(thisEvaluator.toDto());
+						}	
+					}
+				}
 			}
 		}
 		

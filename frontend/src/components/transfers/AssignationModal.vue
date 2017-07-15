@@ -49,13 +49,12 @@
           </div>
         </div>
 
-        <hr>
-
         <div v-if="isDirect" class="w3-row">
         </div>
 
+        <hr>
         <div class="w3-row">
-          <div v-if="isPeerReviewed && isEvaluator" class="w3-col l6 my-evaluation-div">
+          <div v-if="isEvaluator" class="w3-col my-evaluation-div" :class="{'l6': isDone, '12': !isDone}">
             <div class="w3-row w3-center">
               <h6 class="d2-color"><b>My evaluation</b></h6>
             </div>
@@ -68,8 +67,7 @@
                 :key="disableEvaluations">
               </app-users-percentages>
             </transition>
-            <div v-if="isOpen" class="bottom-btns-row w3-row-padding">
-              <hr>
+            <div v-if="isOpen" class="bottom-btns-row w3-center">
               <button v-if="!disableEvaluations"
                 type="button" class="w3-button w3-theme w3-round"
                 @click="sendEvaluation()" :disabled="!arePercentagesOk">
@@ -97,12 +95,13 @@
             <br>
             <app-users-percentages
               :usersDataInit="assignation.receivers"
-              :disable="true">
+              :disable="true"
+              :showSelfBiases="assignation.selfBiasVisible">
             </app-users-percentages>
           </div>
         </div>
-        <hr>
-        <div class="w3-row">
+        <div v-if="showEvaluations" class="w3-row">
+          <hr>
           <div class="w3-row w3-center">
             <h6 class="d2-color"><b>All Evaluations</b></h6>
           </div>
@@ -169,6 +168,9 @@ export default {
     },
     evaluationReceivers () {
       return this.assignation.thisEvaluation.evaluationGrades
+    },
+    showEvaluations () {
+      return this.isDone && this.isEvaluator && this.assignation.evaluationsVisible
     },
     sumOfPercents () {
       var sum = 0.0
@@ -239,10 +241,6 @@ export default {
 </script>
 
 <style scoped>
-
-.w3-modal {
-  display: block;
-}
 
 .close-div {
   width: 70px;
@@ -322,12 +320,13 @@ export default {
 }
 
 .bottom-btns-row {
-  margin-top: 10px;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 
 .bottom-btns-row button {
   width: 100%;
+  max-width: 300px;
 }
 
 </style>

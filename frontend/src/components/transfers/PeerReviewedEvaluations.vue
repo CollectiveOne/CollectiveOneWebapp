@@ -5,7 +5,7 @@
       <div class="w3-col evaluator-col w3-center">
         <h6 class="d2-color"><i class="fa fa-arrow-down" aria-hidden="true"></i> <b>evaluators</b></h6>
       </div>
-      <div class="w3-rest">
+      <div class="w3-rest receivers-cols">
         <div class="w3-left receiver-col" v-for="receiver in receivers">
           <app-user-avatar :user="receiver.user" :showName="false"></app-user-avatar>
         </div>
@@ -20,7 +20,7 @@
           <div class="w3-col evaluator-col w3-center">
             <app-user-avatar :user="evaluator.user"></app-user-avatar>
           </div>
-          <div class="w3-rest">
+          <div class="w3-rest receivers-cols">
             <div class="w3-left receiver-col" v-for="receiver in receivers">
               <div class="evaluation-value-div d2-color">
                 {{ getEvaluationOf(evaluator, receiver) }}
@@ -49,7 +49,6 @@ export default {
 
   methods: {
     getEvaluationOf (evaluator, receiver) {
-      debugger
       /* Look for the evaluation of a given receiver */
       for (var ix in evaluator.grades) {
         let grade = evaluator.grades[ix]
@@ -72,6 +71,11 @@ export default {
 
 <style scoped>
 
+.table-container {
+  white-space: nowrap;
+  overflow: auto;
+}
+
 .evaluator-col {
   width: 250px;
 }
@@ -79,6 +83,11 @@ export default {
 .receiver-col {
   width: 50px;
   margin-left: 10px;
+}
+
+
+.receivers-cols {
+  display: inline-block;
 }
 
 .header-line {

@@ -100,6 +100,8 @@ public class Assignation {
 		dto.setState(state.toString());
 		dto.setInitiativeId(initiative.getId().toString());
 		dto.setInitiativeName(initiative.getName());
+		dto.setEvaluationsVisible(config.getEvaluationsVisible());
+		dto.setSelfBiasVisible(config.getSelfBiasVisible());
 		
 		for(Bill bill : bills) {
 			dto.getAssets().add(bill.toDto());

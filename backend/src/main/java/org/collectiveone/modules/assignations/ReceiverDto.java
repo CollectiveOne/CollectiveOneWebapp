@@ -8,6 +8,7 @@ public class ReceiverDto {
 	private AppUserDto user;
 	private double percent;
 	private String state;
+	private double selfBias;
 	
 	
 	public String getId() {
@@ -33,6 +34,12 @@ public class ReceiverDto {
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	public double getSelfBias() {
+		return selfBias;
+	}
+	public void setSelfBias(double selfBias) {
+		this.selfBias = selfBias;
 	}
 	
 	

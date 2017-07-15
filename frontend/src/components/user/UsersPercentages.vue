@@ -10,14 +10,26 @@
             <div class="slider-container">
               <transition name="slideDownUp" mode="out-in">
                 <div key="1" class="w3-row" v-if="!isDontKnow(userData)">
-                  <i class="fa fa-percent d2-color w3-right" aria-hidden="true"></i>
-                  <input
-                    v-model.number="userData.percent"
-                    class="percent-input w3-right w3-input w3-border w3-hover-light-gray w3-round"
-                    type="number" step="5" min="0"
-                    :disabled="disable">
+
+                  <div v-if="showSelfBiases" class="input-and-percent">
+                    <i class="fa fa-percent d2-color w3-right" aria-hidden="true"></i>
+                    <input
+                      :value="userData.selfBias"
+                      class="percent-input w3-right w3-input w3-border w3-hover-light-gray w3-round"
+                      type="number" step="5" min="0"
+                      :disabled="disable">
+                  </div>
+
+                  <div class="input-and-percent">
+                    <i class="fa fa-percent d2-color w3-right" aria-hidden="true"></i>
+                    <input
+                      v-model.number="userData.percent"
+                      class="percent-input w3-right w3-input w3-border w3-hover-light-gray w3-round"
+                      type="number" step="5" min="0"
+                      :disabled="disable">
+                  </div>
                 </div>
-                <div v-else key="2" class="">
+                <div v-else key="2" class="w3-row">
                   <div class="w3-tag w3-padding w3-round w3-theme noselect">
                     DK
                   </div>
@@ -44,7 +56,7 @@
           <b>total assigned:</b>
         </div>
       </div>
-      <div class="w3-col l3 w3-center w3-round" :class="totalClass">
+      <div class="w3-col l3 w3-center w3-round total-class" :class="totalClass">
         <b>{{ sumOfPercents }}%</b>
       </div>
     </div>
@@ -80,6 +92,10 @@ export default {
     userAnchor: {
       type: String,
       default: 'user'
+    },
+    showSelfBiases: {
+      type: Boolean,
+      defualt: false
     }
   },
 
@@ -178,6 +194,10 @@ export default {
   width: 100px;
 }
 
+.input-and-percent {
+  margin-left: 10px;
+}
+
 .user-hr {
   margin: 5px 0px 5px 0px !important;
 }
@@ -185,6 +205,10 @@ export default {
 .total-row {
   margin-top: 10px;
   font-size: 18px;
+}
+
+.total-class {
+  max-width: 100px;
 }
 
 .bottom-btns-row {
