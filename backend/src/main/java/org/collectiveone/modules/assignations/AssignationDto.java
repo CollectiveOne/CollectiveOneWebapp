@@ -8,6 +8,8 @@ public class AssignationDto extends AssignationDtoLight {
 	private List<ReceiverDto> receivers = new ArrayList<ReceiverDto>();
 	private List<EvaluatorDto> evaluators = new ArrayList<EvaluatorDto>();
 	private EvaluationDto thisEvaluation;
+	private Boolean selfBiasVisible;
+	private Boolean evaluationsVisible;
 	
 	public List<ReceiverDto> getReceivers() {
 		return receivers;
@@ -27,5 +29,18 @@ public class AssignationDto extends AssignationDtoLight {
 	public void setThisEvaluation(EvaluationDto thisEvaluation) {
 		this.thisEvaluation = thisEvaluation;
 	}
+	public Boolean getSelfBiasVisible() {
+		return selfBiasVisible;
+	}
+	public void setSelfBiasVisible(Boolean selfBiasVisible) {
+		this.selfBiasVisible = selfBiasVisible;
+	}
+	public Boolean getEvaluationsVisible() {
+		return evaluationsVisible;
+	}
+	public void setEvaluationsVisible(Boolean evaluationsVisible) {
+		this.evaluationsVisible = evaluationsVisible;
+	}
+	
 	
 }

@@ -15,29 +15,51 @@
 
           <br>
           <label class="d2-color"><b>Subinitiative Name</b></label>
-          <input v-model="name" class="w3-input w3-hover-light-gray" type="text">
+          <input v-model="name"
+            class="w3-input w3-hover-light-gray" type="text"
+            :class="{ 'error-input' : nameErrorShow }">
+          <div v-if="nameEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
+            please select a name for this subinitiative
+          </div>
+          <div v-if="nameTooLongShow" class="w3-row w3-tag error-panel error-row w3-round">
+            maximum number of characters reached
+          </div>
 
           <br>
           <label class="d2-color"><b>Subinitiative Driver</b></label>
-          <textarea v-model="driver" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
+          <textarea v-model="driver"
+            class="w3-input w3-border w3-round w3-hover-light-gray"
+            :class="{ 'error-input' : driverErrorShow }">
+          </textarea>
+          <div v-if="driverErrorShow" class="w3-row w3-tag error-panel error-row w3-round">
+            please include the driver of this initiative, its purpose
+          </div>
 
           <hr>
           <div class="w3-container assets-selector-div">
             <app-initiative-assets-assigner :initInitiativeId="parentInitiative.id" type='initiative-assigner'
-              @updated="parentAssetsSelected($event)" @initiative-updated="parentInitiativeUpdated($event)">
+              @updated="parentAssetsSelected($event)" @initiative-updated="parentInitiativeUpdated($event)"
+              :showError="assetsErrorShow">
             </app-initiative-assets-assigner>
           </div>
+          <div v-if="assetsErrorShow" class="w3-row w3-tag error-panel error-row w3-round">
+            please select how many tokens should be transferred to this subinitaitive
+          </div>
 
-          <div v-if="assetsSelected" class="w3-panel w3-theme">
-            <h5><b>Summary</b></h5>
-            <p>
-              This initiative will receive
-              <span v-for="transfer in otherAssetsTransfers">
-                <span v-if="transfer.value ">
-                  <b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ parentInitiative.name }}
-                </span>
-              </span>
-            </p>
+          <div class="slider-container">
+            <transition name="slideDownUp">
+              <div v-if="assetsSelected" class="w3-panel w3-theme">
+                <h5><b>Summary</b></h5>
+                <p>
+                  This initiative will receive
+                  <span v-for="transfer in assetsTransfers">
+                    <span v-if="transfer.value ">
+                      <b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ parentInitiative.name }}
+                    </span>
+                  </span>
+                </p>
+              </div>
+            </transition>
           </div>
 
           <hr>
@@ -63,7 +85,12 @@
                 select all members of "{{ parentInitiative.name }}"
               </button>
             </div>
-
+          </div>
+          <div v-if="membersEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
+            please select at least one member
+          </div>
+          <div v-if="noAdmingShow" class="w3-row w3-tag error-panel error-row w3-round">
+            there must be at least one admin
           </div>
 
           <hr>
@@ -104,27 +131,59 @@ export default {
       parentInitiative: null,
       name: '',
       driver: '',
-      ownTokens: {
-        ownedByThisHolder: 0,
-        assetName: 'token'
-      },
-      otherAssetsTransfers: [],
-      members: []
-
+      assetsTransfers: [],
+      members: [],
+      nameEmptyError: false,
+      driverEmptyError: false,
+      assetsEmptyError: false,
+      membersEmptyError: false,
+      noAdminError: false
     }
   },
 
   computed: {
+    nameErrorShow () {
+      return this.nameEmptyShow || this.nameTooLongShow
+    },
+    nameEmptyShow () {
+      return (this.nameEmptyError && (this.name === ''))
+    },
+    nameTooLongShow () {
+      return (this.nameTooLong)
+    },
+    nameTooLong () {
+      return this.name.length > 30
+    },
+    driverErrorShow () {
+      return this.driverEmptyError && (this.driver === '')
+    },
+    assetsErrorShow () {
+      return this.assetsEmptyError && !this.assetsSelected
+    },
+    membersEmptyShow () {
+      return this.membersEmptyError && (this.members.length === 0)
+    },
+    noAdmingShow () {
+      return this.noAdminError && !this.oneAdminExist
+    },
     assetsSelected () {
-      if (this.otherAssetsTransfers) {
-        if (this.otherAssetsTransfers.length > 0) {
-          for (var ix in this.otherAssetsTransfers) {
-            if (this.otherAssetsTransfers[ix].value > 0) {
+      if (this.assetsTransfers) {
+        if (this.assetsTransfers.length > 0) {
+          for (var ix in this.assetsTransfers) {
+            if (this.assetsTransfers[ix].value > 0) {
               return true
             } else {
               return false
             }
           }
+          return true
+        }
+      }
+      return false
+    },
+    oneAdminExist () {
+      for (var ix in this.members) {
+        if (this.members[ix].role === 'ADMIN') {
           return true
         }
       }
@@ -140,14 +199,9 @@ export default {
     },
 
     parentAssetsSelected (assets) {
-      this.otherAssetsTransfers = JSON.parse(JSON.stringify(assets))
-      this.parentId = this.otherAssetsTransfers[0].senderId
+      this.assetsTransfers = JSON.parse(JSON.stringify(assets))
+      this.parentId = this.assetsTransfers[0].senderId
       this.updateParent()
-    },
-
-    ownTokensSelected (tokensData) {
-      this.ownTokens.ownedByThisHolder = tokensData.tokens
-      this.ownTokens.assetName = tokensData.tokenName
     },
 
     parentInitiativeUpdated (initiative) {
@@ -156,7 +210,7 @@ export default {
     },
 
     setAllParentMembers () {
-      this.parentInitiative.members.forEach((e) => {
+      this.parentInitiative.initiativeMembers.members.forEach((e) => {
         this.addMember(e, false)
       })
     },
@@ -193,28 +247,65 @@ export default {
     },
 
     accept () {
-      let intitiatveDto = {
-        asSubinitiative: true,
-        parentInitiativeId: this.parentInitiative.id,
-        name: this.name,
-        driver: this.driver,
-        members: this.members,
-        ownTokens: this.ownTokens,
-        otherAssetsTransfers: this.otherAssetsTransfers
+      /* validation */
+
+      var ok = true
+      if (this.parentInitiative.id === '') {
+        ok = false
       }
 
-      this.axios.post('/1/secured/initiative', intitiatveDto).then((response) => {
-        if (response.data.result === 'success') {
-          this.showOutputMessage(response.data.message)
-          this.closeThis()
-          this.$store.dispatch('updatedMyInitiatives')
-          this.$store.commit('triggerUpdateAssets')
-        } else {
-          this.showOutputMessage(response.data.message)
+      if (this.name === '') {
+        ok = false
+        this.nameEmptyError = true
+      } else {
+        if (this.name.length > 30) {
+          ok = false
         }
-      }).catch((error) => {
-        console.log(error)
-      })
+      }
+
+      if (this.driver === '') {
+        ok = false
+        this.driverEmptyError = true
+      }
+
+      if (!this.assetsSelected) {
+        ok = false
+        this.assetsEmptyError = true
+      }
+
+      if (this.members.length === 0) {
+        ok = false
+        this.membersEmptyError = true
+      }
+
+      if (!this.oneAdminExist) {
+        ok = false
+        this.noAdminError = true
+      }
+
+      if (ok) {
+        let intitiatveDto = {
+          asSubinitiative: true,
+          parentInitiativeId: this.parentInitiative.id,
+          name: this.name,
+          driver: this.driver,
+          members: this.members,
+          assetsTransfers: this.assetsTransfers
+        }
+
+        this.axios.post('/1/secured/initiative', intitiatveDto).then((response) => {
+          if (response.data.result === 'success') {
+            this.showOutputMessage(response.data.message)
+            this.closeThis()
+            this.$store.dispatch('updatedMyInitiatives')
+            this.$store.commit('triggerUpdateAssets')
+          } else {
+            this.showOutputMessage(response.data.message)
+          }
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
     },
 
     updateParent () {

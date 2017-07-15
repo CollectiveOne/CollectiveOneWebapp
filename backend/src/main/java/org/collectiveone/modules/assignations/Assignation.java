@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.initiatives.Initiative;
@@ -66,6 +67,9 @@ public class Assignation {
 	
 	@OneToMany(mappedBy="assignation", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Evaluator> evaluators = new ArrayList<Evaluator>();
+	
+	@OneToOne
+	private AssignationConfig config;
 
 	
 	public AssignationDtoLight toDtoLight() {
@@ -195,6 +199,15 @@ public class Assignation {
 	public void setEvaluators(List<Evaluator> evaluators) {
 		this.evaluators = evaluators;
 	}
+
+	public AssignationConfig getConfig() {
+		return config;
+	}
+
+	public void setConfig(AssignationConfig config) {
+		this.config = config;
+	}
+	
 	
 	
 }

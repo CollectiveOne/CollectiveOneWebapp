@@ -176,7 +176,7 @@ public class InitiativeService {
 			
 			List<InitiativeTransfer> transfers = new ArrayList<InitiativeTransfer>();
 			/* and transfer parent assets to child */
-			for (TransferDto thisTransfer : initiativeDto.getOtherAssetsTransfers()) {
+			for (TransferDto thisTransfer : initiativeDto.getAssetsTransfers()) {
 				TokenType token = tokenService.getTokenType(UUID.fromString(thisTransfer.getAssetId()));
 				
 				tokenService.transfer(token.getId(), parent.getId(), initiative.getId(), thisTransfer.getValue(), TokenHolderType.INITIATIVE);

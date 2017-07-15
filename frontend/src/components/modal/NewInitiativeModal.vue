@@ -14,13 +14,26 @@
         <form class="w3-container">
 
           <br>
-
           <label class="d2-color"><b>Name</b></label>
-          <input v-model="name" class="w3-input w3-hover-light-gray" type="text">
-          <br>
+          <input v-model="name"
+            class="w3-input w3-hover-light-gray" type="text"
+            :class="{ 'error-input' : nameErrorShow }">
+          <div v-if="nameEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
+            please select a name for this subinitiative
+          </div>
+          <div v-if="nameTooLongShow" class="w3-row w3-tag error-panel error-row w3-round">
+            maximum number of characters reached
+          </div>
 
+          <br>
           <label class="d2-color"><b>Driver</b></label>
-          <textarea v-model="driver" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
+          <textarea v-model="driver"
+            class="w3-input w3-border w3-round w3-hover-light-gray"
+            :class="{ 'error-input' : driverErrorShow }">
+          </textarea>
+          <div v-if="driverErrorShow" class="w3-row w3-tag error-panel error-row w3-round">
+            please include the driver of this initiative, its purpose
+          </div>
 
           <hr>
 
@@ -49,8 +62,14 @@
             <app-initiative-new-member class="new-contr-row" @add="addMember($event)"></app-initiative-new-member>
 
           </div>
-          <hr>
+          <div v-if="membersEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
+            please select at least one member
+          </div>
+          <div v-if="noAdmingShow" class="w3-row w3-tag error-panel error-row w3-round">
+            there must be at least one admin
+          </div>
 
+          <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
               <button type="button" class="w3-button w3-light-gray w3-round" @click="closeThis()">Cancel</button>
@@ -102,33 +121,42 @@ export default {
         ownedByThisHolder: 0,
         assetName: 'token'
       },
-      otherAssetsTransfers: [],
-      members: []
-
+      members: [],
+      nameEmptyError: false,
+      driverEmptyError: false,
+      membersEmptyError: false,
+      noAdminError: false
     }
   },
 
   computed: {
-    assetsSelected () {
-      if (this.asSubinitiative) {
-        if (this.otherAssetsTransfers) {
-          if (this.otherAssetsTransfers.length > 0) {
-            for (var ix in this.otherAssetsTransfers) {
-              if (this.otherAssetsTransfers[ix].value > 0) {
-                return true
-              } else {
-                return false
-              }
-            }
-            return true
-          }
-        }
-      } else {
-        if (this.ownTokens.ownedByThisHolder > 0) {
+    nameErrorShow () {
+      return this.nameEmptyShow || this.nameTooLongShow
+    },
+    nameEmptyShow () {
+      return (this.nameEmptyError && (this.name === ''))
+    },
+    nameTooLongShow () {
+      return (this.nameTooLong)
+    },
+    nameTooLong () {
+      return this.name.length > 30
+    },
+    driverErrorShow () {
+      return this.driverEmptyError && (this.driver === '')
+    },
+    membersEmptyShow () {
+      return this.membersEmptyError && (this.members.length === 0)
+    },
+    noAdmingShow () {
+      return this.noAdminError && !this.oneAdminExist
+    },
+    oneAdminExist () {
+      for (var ix in this.members) {
+        if (this.members[ix].role === 'ADMIN') {
           return true
         }
       }
-
       return false
     }
   },
@@ -189,27 +217,55 @@ export default {
     },
 
     accept () {
-      let intitiatveDto = {
-        asSubinitiative: this.asSubinitiative,
-        parentInitiativeId: this.asSubinitiative ? this.parentInitiative.id : null,
-        name: this.name,
-        driver: this.driver,
-        members: this.members,
-        ownTokens: this.ownTokens,
-        otherAssetsTransfers: this.otherAssetsTransfers
+      var ok = true
+
+      if (this.name === '') {
+        ok = false
+        this.nameEmptyError = true
+      } else {
+        if (this.name.length > 30) {
+          ok = false
+        }
       }
 
-      this.axios.post('/1/secured/initiative', intitiatveDto).then((response) => {
-        if (response.data.result === 'success') {
-          this.showOutputMessage(response.data.message)
-          this.closeThis()
-          this.$store.dispatch('refreshInitiative')
-        } else {
-          this.showOutputMessage(response.data.message)
+      if (this.driver === '') {
+        ok = false
+        this.driverEmptyError = true
+      }
+
+      if (this.members.length === 0) {
+        ok = false
+        this.membersEmptyError = true
+      }
+
+      if (!this.oneAdminExist) {
+        ok = false
+        this.noAdminError = true
+      }
+
+      if (ok) {
+        let intitiatveDto = {
+          asSubinitiative: this.asSubinitiative,
+          parentInitiativeId: this.asSubinitiative ? this.parentInitiative.id : null,
+          name: this.name,
+          driver: this.driver,
+          members: this.members,
+          ownTokens: this.ownTokens
         }
-      }).catch((error) => {
-        console.log(error)
-      })
+
+        this.axios.post('/1/secured/initiative', intitiatveDto).then((response) => {
+          if (response.data.result === 'success') {
+            this.showOutputMessage(response.data.message)
+            this.closeThis()
+            this.$store.dispatch('updatedMyInitiatives')
+            this.$router.push('/inits/' + response.data.elementId)
+          } else {
+            this.showOutputMessage(response.data.message)
+          }
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
     },
 
     updateParent () {

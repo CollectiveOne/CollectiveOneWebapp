@@ -13,7 +13,7 @@ public class NewInitiativeDto {
 	private String driver;
 	private List<MemberDto> members;
 	private AssetsDto ownTokens;
-	private List<TransferDto> otherAssetsTransfers;
+	private List<TransferDto> assetsTransfers;
 	
 	
 	public boolean getAsSubinitiative() {
@@ -52,11 +52,11 @@ public class NewInitiativeDto {
 	public void setOwnTokens(AssetsDto ownTokens) {
 		this.ownTokens = ownTokens;
 	}
-	public List<TransferDto> getOtherAssetsTransfers() {
-		return otherAssetsTransfers;
+	public List<TransferDto> getAssetsTransfers() {
+		return assetsTransfers;
 	}
-	public void setOtherAssetsTransfers(List<TransferDto> otherAssetsTransfers) {
-		this.otherAssetsTransfers = otherAssetsTransfers;
+	public void setAssetsTransfers(List<TransferDto> assetsTransfers) {
+		this.assetsTransfers = assetsTransfers;
 	}
 	
 }

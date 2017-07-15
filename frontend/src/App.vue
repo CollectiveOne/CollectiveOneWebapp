@@ -106,6 +106,7 @@ textarea {
 .error-panel {
   color: white;
   background-color: #b50000;
+  margin-bottom: 6px;
 }
 
 .error-input {

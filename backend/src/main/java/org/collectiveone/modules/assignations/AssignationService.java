@@ -57,6 +57,9 @@ public class AssignationService {
 	@Autowired
 	private BillRepositoryIf billRepository;
 	
+	@Autowired
+	private AssignationConfigRepositoryIf assignationConfigRepository;
+	
 		
 	public PostResult createAssignation(UUID initaitiveId, AssignationDto assignationDto) {
 		Initiative initiative = initiativeRepository.findById(initaitiveId);
@@ -71,6 +74,14 @@ public class AssignationService {
 		assignation.setMinClosureDate(new Timestamp(System.currentTimeMillis()));
 		assignation.setMaxClosureDate(new Timestamp(System.currentTimeMillis() + 7L*DAYS_TO_MS));
 		assignation.setState(AssignationState.OPEN);
+		
+		AssignationConfig config = new AssignationConfig();
+		config.setSelfBiasVisible(Boolean.valueOf(assignationDto.getSelfBiasVisible()));
+		config.setEvaluationsVisible(Boolean.valueOf(assignationDto.getEvaluationsVisible()));
+		
+		config = assignationConfigRepository.save(config);
+		
+		assignation.setConfig(config);
 		assignation = assignationRepository.save(assignation);
 		
 		for(ReceiverDto receiverDto : assignationDto.getReceivers()) {
