@@ -1,28 +1,36 @@
 <template lang="html">
   <div class="this-container">
 
-
     <!--  Output Messages -->
     <app-output-message></app-output-message>
 
     <!-- Navbar -->
-    <div class="w3-top">
-     <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
-      <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+    <div class="w3-top header-div">
+     <div class="w3-bar w3-left-align w3-large">
       <div
-        class="w3-bar-item w3-button w3-left w3-padding-large w3-large w3-theme-d2"
+        class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large">
+        <i class="fa fa-bars"></i>
+      </div>
+      <div
+        class="w3-bar-item w3-button w3-left w3-padding-large w3-large"
         @click="$emit('expand-nav')">
         <i class="fa fa-bars"></i>
       </div>
       <a href="#" class="w3-display-middle left w3-bar-item noselect">
-        <img class="logo" src="../assets/Logo-Light.png" alt="">
+        <img class="logo" src="../assets/Logo-Dark.png" alt="">
       </a>
 
-      <div class="w3-dropdown-hover w3-hide-small w3-right">
-        <div @click="userOptionsClicked()" class="avatar-img-container">
-          <img :src="loggedUserPicture" class="logged-avatar w3-circle">
+      <div v-if="$store.state.user.profile" class="w3-dropdown-hover w3-hide-small w3-right">
+        <div @click="userOptionsClicked()"  class="w3-right">
+          <div class="avatar-img-container w3-left">
+            <img :src="$store.state.user.profile.pictureUrl" class="logged-avatar w3-circle noselect">
+          </div>
+          <div class="logged-nickname w3-left noselect">
+              {{ $store.state.user.profile.nickname }}
+          </div>
         </div>
         <div v-if="showUserOptions" class="avatar-dropdown-content w3-card-4 w3-bar-block w3-white" style="width:200px">
+          <div @click="goHome()" class="w3-bar-item w3-button">home</div>
           <div @click="logoutUser()" class="w3-bar-item w3-button">logout</div>
         </div>
       </div>
@@ -51,7 +59,7 @@
 import OutputMessage from '@/components/OutputMessage.vue'
 import NotificationsList from '@/components/notifications/NotificationsList.vue'
 
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -60,7 +68,6 @@ export default {
   },
 
   methods: {
-    ...mapGetters(['loggedUserNickname']),
     ...mapActions(['logoutUser', 'updateNotifications']),
 
     userOptionsClicked () {
@@ -73,6 +80,10 @@ export default {
         this.updateNotifications()
       }
       this.showActivityList = !this.showActivityList
+    },
+    goHome () {
+      this.showUserOptions = false
+      this.$router.push('/inits')
     }
   },
 
@@ -84,21 +95,26 @@ export default {
   },
 
   computed: {
-    loggedUserPicture () {
-      if (this.$store.state.user.profile) {
-        return this.$store.state.user.profile.pictureUrl
-      } else {
-        return ''
-      }
-    }
   }
 }
 </script>
 
 <style scoped>
 
+.header-div {
+  height: 65px;
+}
+
+.w3-bar {
+}
+
 .logo {
-  height: 20px;
+  height: 25px;
+}
+
+.logged-nickname {
+  padding-top: 10px;
+  margin-right: 20px;
 }
 
 .avatar-img-container {
@@ -112,7 +128,8 @@ export default {
 
 .avatar-dropdown-content {
   position: absolute;
-  margin-left: -130px;
+  margin-left: -20px;
+  margin-top: 51px;
 }
 
 .logo {

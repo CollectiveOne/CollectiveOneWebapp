@@ -34,12 +34,12 @@
     </div>
 
     <div v-if="isLoggedAnAdmin"
-      class="action-buttons w3-display-topright w3-xlarge w3-theme w3-circle w3-button"
+      class="action-buttons w3-display-topright w3-xlarge dark-gray w3-circle w3-button"
       @click="showActionMenu = !showActionMenu">
       <i class="fa fa-plus" aria-hidden="true"></i>
     </div>
 
-    <div v-if="showActionMenu" class="action-menu w3-display-topright d2-color">
+    <div v-if="showActionMenu" class="action-menu w3-display-topright">
       <div class="w3-card">
         <div class="w3-button" @click="newTransferToUser()">
           <span class="w3-left">to user</span><i class="fa fa-sign-in w3-right" aria-hidden="true"></i>

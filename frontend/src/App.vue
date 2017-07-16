@@ -60,6 +60,49 @@ textarea {
   margin-bottom: 50px;
 }
 
+.white-bg {
+  background-color: white;
+}
+
+.dark-gray {
+  background-color: #313942;
+  color: white;
+}
+
+.gray-1 {
+  background-color: #637484;
+  color: white;
+}
+
+.gray-1-color {
+  color: #637484;
+}
+
+.gray-2 {
+  background-color: #6f8294;
+}
+
+.gray-2-color {
+  color: #6f8294;
+}
+
+.light-gray {
+  background-color: #eff3f6;
+  color: black;
+}
+
+.white-text {
+  color: white;
+}
+
+.border-blue {
+  border-color: #00839a !important;
+}
+
+.black-text {
+  color: black;
+}
+
 .l4-color {
   color: #e6e9fc !important; /* w3-indigo l3*/
 }

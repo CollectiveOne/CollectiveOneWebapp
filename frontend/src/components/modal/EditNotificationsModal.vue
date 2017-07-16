@@ -84,12 +84,6 @@
 
 <script>
 export default {
-  props: {
-    initiative: {
-      type: Object
-    }
-  },
-
   data () {
     return {
       subscriber: null
@@ -97,6 +91,9 @@ export default {
   },
 
   computed: {
+    initiative () {
+      return this.$store.state.initiative.initiative
+    },
     isSubscribed () {
       return this.subscriber.state === 'SUBSCRIBED'
     },
@@ -125,12 +122,11 @@ export default {
       })
     },
     closeThis () {
-      this.$emit('close-this')
+      this.$store.commit('showEditNotificationsModal', false)
     },
     accept () {
       this.axios.put('/1/secured/user/notifications/subscriber/' + this.initiative.id, this.subscriber).then((response) => {
         this.closeThis()
-        this.$emit('subscriber-updated')
       })
     }
   }

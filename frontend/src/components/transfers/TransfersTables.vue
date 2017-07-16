@@ -4,13 +4,13 @@
       <div class="tabs-container">
         <div
           class="subtab-element w3-bottombar w3-hover-light-grey w3-padding cursor-pointer"
-          :class="{'w3-border-blue': isTransfersToUsers}"
+          :class="{'border-blue': isTransfersToUsers}"
           @click="goToAssignationsTable()">
           to users ({{ assignations.length }})
         </div>
         <div
           class="subtab-element w3-bottombar w3-hover-light-grey w3-padding cursor-pointer"
-          :class="{'w3-border-blue': isTransfersToInitiatives}"
+          :class="{'border-blue': isTransfersToInitiatives}"
           @click="goToTransfersTable()">
           to initiatives ({{ transfers.length }})
         </div>

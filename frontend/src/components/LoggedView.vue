@@ -29,7 +29,7 @@ export default {
 <style scoped>
 
 .logged-content {
-  margin-top:51px;
+  margin-top:65px;
 }
 
 </style>

@@ -7,8 +7,7 @@
           <div class="w3-row-padding">
             <div class="w3-col l4 w3-center">
               <div class="w3-display-container" :class="{tall: isOverview, short: !isOverview}">
-                <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
-                <div class="w3-display-middle d2-color" style="width: 100%">
+                <div class="w3-display-middle" style="width: 100%">
                   <div class="w3-row">
                     <b class="w3-xlarge ">{{ underThisInitiativeStr }} {{ assetData.assetName }}</b>
                   </div>
@@ -23,12 +22,12 @@
             </div>
             <div class="w3-col l8">
               <div class="w3-row">
-                <label class="d2-color">
+                <label class="">
                   <b>Still Available</b>
                 </label>
                 <div class="w3-light-grey w3-round-xlarge w3-large">
-                  <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': availableToThisInitiativePercent +'%'}">
-                    <div class="bar-txt w3-center d2-color noselect">{{ availableToThisInitiative }}</div>
+                  <div class="w3-container w3-center w3-round-xlarge gray-1" :style="{'width': availableToThisInitiativePercent +'%'}">
+                    <div class="bar-txt w3-center noselect">{{ availableToThisInitiative }}</div>
                   </div>
                 </div>
               </div>
@@ -36,12 +35,12 @@
               <div v-if="isInitiativeAssigner || isOverview" class="w3-row">
                 <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
                   <div class="w3-row cursor-pointer" @click="showSubinitiatives = !showSubinitiatives">
-                    <label class="d2-color cursor-pointer noselect">
+                    <label class="cursor-pointer noselect">
                       <b>Transferred to sub-initiatives</b>
                     </label>
                     <div class="w3-light-grey w3-round-xlarge w3-large">
-                      <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToSubinitiativesPercent +'%'}">
-                        <div class="bar-txt w3-center d2-color noselect">{{ transferredToSubinitiativesStr }}</div>
+                      <div class="w3-container w3-center w3-round-xlarge gray-1" :style="{'width': transferredToSubinitiativesPercent +'%'}">
+                        <div class="bar-txt w3-center noselect">{{ transferredToSubinitiativesStr }}</div>
                       </div>
                     </div>
                   </div>
@@ -56,12 +55,12 @@
                             v-for="subinitiativeAssets in assetData.transferredToSubinitiatives"
                             :key="subinitiativeAssets.assetId">
 
-                            <label class="d2-color">
+                            <label class="">
                               <b class="noselect">{{ subinitiativeAssets.receiverName }}</b>
                             </label>
                             <div class="w3-light-grey w3-round-xlarge w3-large">
-                              <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': subinitiativePercent(subinitiativeAssets) +'%'}">
-                                <div class="bar-txt w3-center d2-color noselect">{{ subinitiativePortion(subinitiativeAssets) }}</div>
+                              <div class="w3-container w3-center w3-round-xlarge gray-1" :style="{'width': subinitiativePercent(subinitiativeAssets) +'%'}">
+                                <div class="bar-txt w3-center noselect">{{ subinitiativePortion(subinitiativeAssets) }}</div>
                               </div>
                             </div>
                           </router-link>
@@ -72,7 +71,7 @@
                 </div>
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
-                  <button type="button" class="w3-button l2-color"
+                  <button type="button" class="w3-button"
                     @click="$store.commit('showNewInitiativeTransferModal', true)">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                   </button>
@@ -83,12 +82,12 @@
                 <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
 
                   <div class="w3-row cursor-pointer" @click="showMembers = !showMembers">
-                    <label class="d2-color cursor-pointer">
+                    <label class="cursor-pointer">
                       <b class="noselect">Transferred to members</b>
                     </label>
                     <div class="w3-light-grey w3-round-xlarge w3-large">
-                      <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': transferredToMembersPercent +'%'}">
-                        <div class="bar-txt w3-center d2-color noselect">{{ transferredToMembersStr }}</div>
+                      <div class="w3-container w3-center w3-round-xlarge gray-1" :style="{'width': transferredToMembersPercent +'%'}">
+                        <div class="bar-txt w3-center noselect">{{ transferredToMembersStr }}</div>
                       </div>
                     </div>
                   </div>
@@ -98,12 +97,12 @@
                       <transition name="slideDownUp">
                         <div class="sub-elements" v-if="showMembers">
                           <div class="w3-row" v-for="memberAssets in assetData.transferredToUsers" v-if="memberAssets.value > 0">
-                            <label class="d2-color">
+                            <label class="">
                               <b class="noselect">{{ memberAssets.receiverName }}</b>
                             </label>
                             <div class="w3-light-grey w3-round-xlarge w3-large">
-                              <div class="w3-container w3-center w3-round-xlarge w3-theme-l3" :style="{'width': memberPercent(memberAssets) +'%'}">
-                                <div class="bar-txt w3-center d2-color noselect">{{ memberPortion(memberAssets) }}</div>
+                              <div class="w3-container w3-center w3-round-xlarge gray-1" :style="{'width': memberPercent(memberAssets) +'%'}">
+                                <div class="bar-txt w3-center noselect">{{ memberPortion(memberAssets) }}</div>
                               </div>
                             </div>
                           </div>
@@ -114,7 +113,7 @@
                 </div>
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
-                  <button type="button" class="w3-button l2-color"
+                  <button type="button" class="w3-button"
                     @click="$store.commit('showNewAssignationModal', true)">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                   </button>

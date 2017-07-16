@@ -1,6 +1,6 @@
 <template lang="html">
-  <div :class="topClass" class="d2-color">
-    <div class="w3-row this-element" :class="{'selected': isSelected, 'w3-theme-l3': isSelected, 'd2-color': isSelected}">
+  <div class="white-text">
+    <div class="w3-row this-element" :class="{'selected': isSelected, 'gray-1': isSelected }">
       <div v-if="this.level > 0" class="space-col" :class="leftSpaceClass">
         x
       </div>
@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="w3-col s2 w3-button" @click="newSubInitiative()">
-        <i class="fa fa-plus l1-color" aria-hidden="true"></i>
+        <i class="fa fa-plus gray-2-color" aria-hidden="true"></i>
       </div>
     </div>
 
@@ -84,15 +84,6 @@ export default {
           'l3-color': true,
           'line-element': true
         }
-      }
-    },
-    topClass () {
-      if (this.level === 0) {
-        return {
-          'w3-card-2': true
-        }
-      } else {
-        return {}
       }
     },
     leftSpaceClass () {

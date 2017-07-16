@@ -43,16 +43,20 @@
   <div class="w3-row">
     <div v-show="expandNav" :class="navContainerClass">
       <keep-alive>
-        <app-initiatives-nav
-          @selected="initiativeSelected($event)"
-          @initiative-created="initiativeCreated($event)">
-        </app-initiatives-nav>
+        <transition>
+          <app-initiatives-nav></app-initiatives-nav>
+        </transition>
       </keep-alive>
     </div>
 
     <div v-show="showContent" class="this-content" :class="contentContainerClass">
-      <router-view @new-initiative="newInitiative($event)"></router-view>
+      <div class="slider-container">
+        <transition name="slideDownUp" mode="out-in">
+          <router-view></router-view>
+        </transition>
+      </div>
     </div>
+
   </div>
 </div>
 </template>
@@ -153,6 +157,9 @@ export default {
           }
         }
       }
+    },
+    basePage () {
+      return this.$route.name === 'Initiatives'
     }
   },
 
@@ -173,6 +180,10 @@ export default {
 
 .nav-small {
   width: 90%;
+}
+
+.base-page-div {
+
 }
 
 </style>

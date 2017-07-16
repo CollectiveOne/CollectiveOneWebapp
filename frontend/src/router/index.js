@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import InitiativesView from '@/components/InitiativesView.vue'
+import InitiativesHome from '@/components/InitiativesHome.vue'
 import InitiativesContent from '@/components/initiative/InitiativeContent.vue'
 
 import OverviewSection from '@/components/initiative/OverviewSection.vue'
@@ -14,9 +15,9 @@ export default new Router({
   routes: [
     { path: '/', redirect: '/inits' },
     { path: '/inits',
-      name: 'Initiatives',
       component: InitiativesView,
       children: [
+        { path: '/', name: 'InitiativesHome', component: InitiativesHome },
         { path: ':initiativeId',
           name: 'Initiative',
           component: InitiativesContent,

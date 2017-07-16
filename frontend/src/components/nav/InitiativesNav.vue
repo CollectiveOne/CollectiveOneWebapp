@@ -1,10 +1,17 @@
 <template lang="html">
-  <nav class="nav-container w3-white w3-border-right">
-    <div class="w3-container w3-padding">
-      <div class="create-new w3-button w3-theme-l1" @click="$store.commit('showNewInitiativeModal', true)"><i class="fa fa-plus-circle"></i>  create new</div>
+  <nav class="nav-container dark-gray">
+    <div class="">
+
+      <div class="w3-container">
+        <div
+          class="create-new w3-button light-gray w3-round-large w3-center"
+          @click="$store.commit('showNewInitiativeModal', true)">
+          <i class="fa fa-plus-circle"></i>  create new
+        </div>
+      </div>
 
       <div class="w3-row">
-        <h6 class="l2-color w3-center noselect"><i>my initiatives</i></h6>
+        <h6 class="w3-center white-text noselect"><i>my initiatives</i></h6>
       </div>
       <app-initiative-menu-item v-for="(initiative, ix) in userInitiatives"
         :initiative="initiative" :key="initiative.id"
@@ -12,7 +19,7 @@
       </app-initiative-menu-item>
 
       <div class="w3-row">
-        <h6 class=" l2-color w3-center noselect"><i>my favorites</i></h6>
+        <h6 class="white-text w3-center noselect"><i>my favorites</i></h6>
       </div>
 
     </div>

@@ -108,13 +108,11 @@ export default {
 }
 
 .table-row {
-  max-width: 500px;
   margin: 0 auto;
   margin-bottom: 25px;
 }
 
 .new-member-row {
-  max-width: 500px;
   margin: 0 auto;
 }
 

@@ -2,7 +2,7 @@
   <div class="">
     <div v-if="initiative" class="this-container w3-container w3-padding">
       <div class="w3-card">
-        <header class="w3-container w3-theme">
+        <header class="w3-container gray-1">
           <h4 class="w3-left">Driver</h4>
           <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="$store.commit('showEditInitiativeModal', true)">
             <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -14,7 +14,7 @@
       </div>
       <br>
       <div class="w3-card">
-        <header class="w3-container w3-theme">
+        <header class="w3-container gray-1">
           <h4>Assets</h4>
         </header>
         <div class="tokens-div">
