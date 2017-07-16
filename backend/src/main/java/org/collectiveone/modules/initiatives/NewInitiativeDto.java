@@ -11,6 +11,7 @@ public class NewInitiativeDto {
 	private String parentInitiativeId;
 	private String name;
 	private String driver;
+	private String color;
 	private List<MemberDto> members;
 	private AssetsDto ownTokens;
 	private List<TransferDto> assetsTransfers;
@@ -39,6 +40,12 @@ public class NewInitiativeDto {
 	}
 	public void setDriver(String driver) {
 		this.driver = driver;
+	}
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
 	}
 	public List<MemberDto> getMembers() {
 		return members;

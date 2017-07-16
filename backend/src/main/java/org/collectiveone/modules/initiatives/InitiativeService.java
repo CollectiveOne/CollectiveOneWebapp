@@ -238,6 +238,7 @@ public class InitiativeService {
 		
 		initiativeMeta.setName(initiativeDto.getName());
 		initiativeMeta.setDriver(initiativeDto.getDriver());
+		initiativeMeta.setColor(initiativeDto.getColor());
 		
 		initiativeMetaRepository.save(initiativeMeta);
 		

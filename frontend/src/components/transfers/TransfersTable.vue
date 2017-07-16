@@ -15,7 +15,11 @@
           <td>{{ dateString(transfer.orderDate) }}</td>
           <td v-if="showFrom">{{ transfer.senderName }}</td>
           <td>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</td>
-          <td>{{ transfer.receiverName }}</td>
+          <td>
+            <div class="w3-tag w3-round-large" :style="{'background-color': $store.getters.colorOfInitiative(transfer.receiverId)}">
+              {{ transfer.receiverName }}
+            </div>
+          </td>
           <td class="w3-hide-small">{{ transfer.motive }}</td>
         </tr>
       </tbody>

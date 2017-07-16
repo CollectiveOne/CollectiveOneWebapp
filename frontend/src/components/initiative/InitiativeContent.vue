@@ -13,7 +13,7 @@
                   </div>
                   <div v-if="showEditMenu" class="edit-menu w3-dropdown-content w3-bar-block w3-card d2-color">
                     <div @click="$store.commit('showEditInitiativeModal', true); showEditMenu = false" class="w3-bar-item w3-button">
-                      <i class="fa fa-pencil" aria-hidden="true"></i>name and driver
+                      <i class="fa fa-pencil" aria-hidden="true"></i>edit initiative
                     </div>
                     <div @click="$store.commit('showEditNotificationsModal', true); showEditMenu = false" class="w3-bar-item w3-button">
                       <i class="fa fa-cog" aria-hidden="true"></i>notifications

@@ -9,10 +9,10 @@
 
         <div v-if="hasSubinitiatives">
           <i v-if="!showSubinitiatives"class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-          <i v-else class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+          <i v-else class="fa fa-chevron-circle-down" aria-hidden="true" :style="{'color': color}"></i>
         </div>
         <div v-else>
-          <i class="fa fa-minus" aria-hidden="true"></i>
+          <i class="fa fa-circle" aria-hidden="true" :style="{'color': color}"></i>
         </div>
       </div>
       <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize" @click="initiativeClicked()">
@@ -20,7 +20,7 @@
           {{ initiative.meta.name }}
         </div>
       </div>
-      <div class="w3-col s2 d2-color w3-button" @click="newSubInitiative()">
+      <div class="w3-col s2 w3-button" @click="newSubInitiative()">
         <i class="fa fa-plus l1-color" aria-hidden="true"></i>
       </div>
     </div>
@@ -62,6 +62,9 @@ export default {
   },
 
   computed: {
+    color () {
+      return this.$store.getters.colorOfInitiative(this.initiative.id)
+    },
     level () {
       return this.coord.length - 1
     },
