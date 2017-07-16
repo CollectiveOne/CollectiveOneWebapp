@@ -290,7 +290,7 @@ public class AssignationService {
 		
 		InitiativeAssignationsDto initiativeAssignations = new InitiativeAssignationsDto();
 		initiativeAssignations.setInitiativeId(initiative.getId().toString());
-		initiativeAssignations.setInitiativeName(initiative.getName());
+		initiativeAssignations.setInitiativeName(initiative.getMeta().getName());
 		
 		for(Assignation assignation : assignations) {
 			initiativeAssignations.getAssignations().add(getAssignationDto(assignation.getId(), evaluatorAppUserId, false).getData());

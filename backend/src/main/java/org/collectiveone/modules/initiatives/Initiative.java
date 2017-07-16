@@ -1,6 +1,5 @@
 package org.collectiveone.modules.initiatives;
 
-import java.sql.Timestamp;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
@@ -11,7 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -23,7 +21,6 @@ import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.SortNatural;
-import org.hibernate.annotations.Type;
 
 @Entity
 @Table( name = "initiatives" )
@@ -38,17 +35,6 @@ public class Initiative {
 	
 	@Column(name = "enabled")
 	private boolean enabled;
-	
-	@Column(name = "name")
-	private String name;
-	
-	@Lob
-	@Type(type = "org.hibernate.type.TextType")
-	@Column(name = "driver")
-	private String driver;
-	
-	@Column(name = "creation_date")
-	private Timestamp creationDate;
 	
 	@ManyToOne
 	private AppUser creator;
@@ -66,16 +52,17 @@ public class Initiative {
 	@OneToOne
 	private Governance governance;
 	
+	@OneToOne
+	private InitiativeMeta meta;	
 	
 	
 	public InitiativeDto toDto() {
 		InitiativeDto dto = new InitiativeDto();
 		
 		dto.setId(id.toString());
-		dto.setName(name);
 		dto.setCreator(creator.toDto());
-		dto.setCreationDate(creationDate);
-		dto.setDriver(driver);
+		dto.setMeta(meta.toDto());
+		
 		if(tokenType != null) dto.setOwnAssetsId(tokenType.getId().toString());
 		
 		return dto;
@@ -93,24 +80,6 @@ public class Initiative {
 	}
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getDriver() {
-		return driver;
-	}
-	public void setDriver(String driver) {
-		this.driver = driver;
-	}
-	public Timestamp getCreationDate() {
-		return creationDate;
-	}
-	public void setCreationDate(Timestamp creationDate) {
-		this.creationDate = creationDate;
 	}
 	public AppUser getCreator() {
 		return creator;
@@ -142,6 +111,11 @@ public class Initiative {
 	public void setGovernance(Governance governance) {
 		this.governance = governance;
 	}
-	
+	public InitiativeMeta getMeta() {
+		return meta;
+	}
+	public void setMeta(InitiativeMeta meta) {
+		this.meta = meta;
+	}
 	
 }

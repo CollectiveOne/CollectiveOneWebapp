@@ -8,7 +8,7 @@
         </div>
 
         <div class="w3-container w3-theme">
-          <h2>New subinitiative of {{ parentInitiative.name }}</h2>
+          <h2>New subinitiative of {{ parentInitiative.meta.name }}</h2>
         </div>
 
         <form class="w3-container">
@@ -54,7 +54,7 @@
                   This initiative will receive
                   <span v-for="transfer in assetsTransfers">
                     <span v-if="transfer.value ">
-                      <b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ parentInitiative.name }}
+                      <b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ parentInitiative.meta.name }}
                     </span>
                   </span>
                 </p>
@@ -85,7 +85,7 @@
               <button
                 class="w3-button w3-theme w3-round w3-small"
                 @click="setAllParentMembers()" type="button" name="button">
-                select all members of "{{ parentInitiative.name }}"
+                select all members of "{{ parentInitiative.meta.name }}"
               </button>
             </div>
           </div>

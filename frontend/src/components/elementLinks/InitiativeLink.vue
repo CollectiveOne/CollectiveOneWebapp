@@ -1,5 +1,5 @@
 <template lang="html">
-  <router-link :to="link">{{ initiative.name }}</router-link>
+  <router-link :to="link">{{ initiative.meta.name }}</router-link>
 </template>
 
 <script>

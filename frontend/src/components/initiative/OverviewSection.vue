@@ -9,7 +9,7 @@
           </div>
         </header>
         <div class="w3-container">
-          <p>{{ initiative.driver }}</p>
+          <p>{{ initiative.meta.driver }}</p>
         </div>
       </div>
       <br>

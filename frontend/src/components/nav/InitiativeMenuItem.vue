@@ -17,7 +17,7 @@
       </div>
       <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize" @click="initiativeClicked()">
         <div class="w3-left name-link noselect">
-          {{ initiative.name }}
+          {{ initiative.meta.name }}
         </div>
       </div>
       <div class="w3-col s2 d2-color w3-button" @click="newSubInitiative()">

@@ -8,7 +8,7 @@
         </div>
 
         <div class="w3-container w3-theme">
-          <h2>Edit notifications of {{ initiative.name }}</h2>
+          <h2>Edit notifications of {{ initiative.meta.name }}</h2>
         </div>
 
         <form v-if="subscriber" class="w3-container">

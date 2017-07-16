@@ -202,21 +202,21 @@ public class EmailService {
 				boolean changedName = false;
 				boolean changedDriver = false;
 				
-				if(!initiative.getName().equals(oldName)) {
+				if(!initiative.getMeta().getName().equals(oldName)) {
 					changedName = true;
 				}
 				
-				if(!initiative.getDriver().equals(oldDriver)) {
+				if(!initiative.getMeta().getDriver().equals(oldDriver)) {
 					changedDriver = true;
 				}
 				
 				if(changedName && changedDriver) {
-					message = "Changed the initiative name from " + oldName + " to " + initiative.getName() + 
-							", and the driver from <br /><br /><i>" + oldDriver + "</i><br /><br /> to <br /><br />" + initiative.getDriver();
+					message = "Changed the initiative name from " + oldName + " to " + initiative.getMeta().getName() + 
+							", and the driver from <br /><br /><i>" + oldDriver + "</i><br /><br /> to <br /><br />" + initiative.getMeta().getDriver();
 				} else if (changedName) {
-					message = "Changed the initiative name from " + oldName + " to " + initiative.getName();
+					message = "Changed the initiative name from " + oldName + " to " + initiative.getMeta().getName();
 				} else if (changedDriver) {
-					message = "Changed the initiative driver from <br /><br /><i>" + oldDriver + "</i><br /><br /> to <br /><br /><i>" + initiative.getDriver() + "</i>";
+					message = "Changed the initiative driver from <br /><br /><i>" + oldDriver + "</i><br /><br /> to <br /><br /><i>" + initiative.getMeta().getDriver() + "</i>";
 				} else {
 					message = "";
 				}
@@ -245,7 +245,7 @@ public class EmailService {
 		toEmail.setEmail(toEmailString);
 		
 		personalization.addTo(toEmail);
-		personalization.addSubstitution("$INITIATIVE_NAME$", initiative.getName());
+		personalization.addSubstitution("$INITIATIVE_NAME$", initiative.getMeta().getName());
 		personalization.addSubstitution("$TRIGGER_USER_NICKNAME$", triggeredByUsername);
 		personalization.addSubstitution("$TRIGGER_USER_PICTURE$", triggerUserPictureUrl);
 		personalization.addSubstitution("$INITIATIVE_ANCHOR$", getInitiativeAnchor(initiative));
@@ -258,7 +258,7 @@ public class EmailService {
 	}
 	
 	private String getInitiativeAnchor(Initiative initiative) {
-		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/" + initiative.getId().toString() + "/overview>" + initiative.getName() + "</a>";
+		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/" + initiative.getId().toString() + "/overview>" + initiative.getMeta().getName() + "</a>";
 	}
 	
 	private String getTransferString(List<InitiativeTransfer> transfers) {

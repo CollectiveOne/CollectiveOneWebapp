@@ -55,8 +55,8 @@ export default {
   },
 
   mounted () {
-    this.newInitiative.name = this.initiative.name
-    this.newInitiative.driver = this.initiative.driver
+    this.newInitiative.name = this.initiative.meta.name
+    this.newInitiative.driver = this.initiative.meta.driver
   },
 
   methods: {

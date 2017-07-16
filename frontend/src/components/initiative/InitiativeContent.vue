@@ -5,7 +5,7 @@
 
       <div class="header-container">
         <transition name="fadeenter" mode="out-in">
-            <header class="w3-theme" :key="initiative.name">
+            <header class="w3-theme" :key="initiative.meta.name">
               <div class="w3-row">
                 <div v-if="isLoggedAnAdmin" class="w3-col w3-right" style="width:55px; height:100%">
                   <div @click="showEditMenu = !showEditMenu" class="edit-btn-div w3-button w3-large" style="width:100%; height:100%">

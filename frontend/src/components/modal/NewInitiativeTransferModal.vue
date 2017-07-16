@@ -15,7 +15,7 @@
           <div class="w3-row">
             <label class="d2-color"><b>Transfer to</b></label>
             <select v-model="transfer.receiverId" class="w3-select initiative-selector" name="transferto">
-              <option v-for="subinitiative in subinitiatives" :value="subinitiative.id">{{ subinitiative.name }}</option>
+              <option v-for="subinitiative in subinitiatives" :value="subinitiative.id">{{ subinitiative.meta.name }}</option>
             </select>
           </div>
 

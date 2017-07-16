@@ -2,7 +2,7 @@
   <div class="w3-container this-container">
     <div class="w3-card members-panel">
       <header class="w3-container w3-theme noselect">
-        <h4>Members and roles of {{ initiative.name }}</h4>
+        <h4>Members and roles of {{ initiative.meta.name }}</h4>
       </header>
 
       <div class="w3-container members-div">

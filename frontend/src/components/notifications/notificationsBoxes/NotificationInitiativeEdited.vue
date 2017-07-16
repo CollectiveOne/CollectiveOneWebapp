@@ -35,11 +35,11 @@ export default {
       var nameChanged = false
       var driverChanged = false
 
-      if (activity.initiative.name !== activity.oldName) {
+      if (activity.initiative.meta.name !== activity.oldName) {
         nameChanged = true
       }
 
-      if (activity.initiative.driver !== activity.oldDriver) {
+      if (activity.initiative.meta.driver !== activity.oldDriver) {
         driverChanged = true
       }
 

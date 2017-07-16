@@ -6,13 +6,13 @@
           class="subtab-element w3-bottombar w3-hover-light-grey w3-padding cursor-pointer"
           :class="{'w3-border-blue': isTransfersToUsers}"
           @click="goToAssignationsTable()">
-          to users
+          to users ({{ assignations.length }})
         </div>
         <div
           class="subtab-element w3-bottombar w3-hover-light-grey w3-padding cursor-pointer"
           :class="{'w3-border-blue': isTransfersToInitiatives}"
           @click="goToTransfersTable()">
-          to initiatives
+          to initiatives ({{ transfers.length }})
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@ export default {
 
 .subtab-element {
   display: inline-block;
-  width: 120px;
+  width: 160px;
   text-align: center;
 }
 

@@ -38,11 +38,32 @@ const findCoordinate = function (initiatives, id, coord) {
   return false
 }
 
+const findInitiative = function (initiatives, id) {
+  for (var ix in initiatives) {
+    var thisInitiative = initiatives[ix]
+    if (thisInitiative.id === id) {
+      return thisInitiative
+    }
+
+    if (thisInitiative.subInitiatives.length > 0) {
+      var foundInitiative = findInitiative(thisInitiative.subInitiatives, id)
+      if (foundInitiative !== null) {
+        return foundInitiative
+      }
+    }
+  }
+  return null
+}
+
 const getters = {
   initiativeCoordinate: (state, getters) => (id) => {
     var coord = []
     findCoordinate(state.initiativesTree, id, coord)
     return coord
+  },
+  colorOfInitiative: (state, getters) => (id) => {
+    var initiative = findInitiative(state.initiativesTree, id)
+    return initiative.meta.color
   }
 }
 

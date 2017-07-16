@@ -1,19 +1,17 @@
 package org.collectiveone.modules.initiatives;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.collectiveone.modules.assignations.InitiativeMetaDto;
 import org.collectiveone.modules.tokens.AssetsDto;
 import org.collectiveone.modules.users.AppUserDto;
 
 public class InitiativeDto {
 	
 	private String id;
-	private String name;
-	private String driver;
-	private Timestamp creationDate;
 	private AppUserDto creator;
+	private InitiativeMetaDto meta;
 		
 	private String ownAssetsId;
 	private List<AssetsDto> assets = new ArrayList<AssetsDto>();
@@ -28,23 +26,11 @@ public class InitiativeDto {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+	public InitiativeMetaDto getMeta() {
+		return meta;
 	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getDriver() {
-		return driver;
-	}
-	public void setDriver(String driver) {
-		this.driver = driver;
-	}
-	public Timestamp getCreationDate() {
-		return creationDate;
-	}
-	public void setCreationDate(Timestamp creationDate) {
-		this.creationDate = creationDate;
+	public void setMeta(InitiativeMetaDto meta) {
+		this.meta = meta;
 	}
 	public AppUserDto getCreator() {
 		return creator;

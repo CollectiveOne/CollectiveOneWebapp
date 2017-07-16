@@ -55,6 +55,9 @@ public class InitiativeService {
 	@Autowired
 	private MemberRepositoryIf memberRepository;
 	
+	@Autowired
+	private InitiativeMetaRepositoryIf initiativeMetaRepository;
+	
 	
 	
 	/** Non-transactional method to create an initiative in multiple transactions */
@@ -95,11 +98,18 @@ public class InitiativeService {
 		Initiative initiative = new Initiative();
 		
 		/* Basic properties*/
-		initiative.setName(initiativeDto.getName());
-		initiative.setDriver(initiativeDto.getDriver());
 		initiative.setCreator(creator);
-		initiative.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		initiative.setEnabled(true);
+		
+		InitiativeMeta meta = new InitiativeMeta();
+		
+		meta.setName(initiativeDto.getName());
+		meta.setDriver(initiativeDto.getDriver());
+		meta.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		meta.setColor("#009ee3");
+		
+		meta = initiativeMetaRepository.save(meta);
+		initiative.setMeta(meta);
 		
 		initiative = initiativeRepository.save(initiative);
 		
@@ -221,14 +231,15 @@ public class InitiativeService {
 	@Transactional
 	public PostResult edit(UUID initiativeId, UUID userId, NewInitiativeDto initiativeDto) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
+		InitiativeMeta initiativeMeta = initiative.getMeta();
 		
-		String oldName = initiative.getName();
-		String oldDriver = initiative.getDriver();
+		String oldName = initiativeMeta.getName();
+		String oldDriver = initiativeMeta.getDriver();
 		
-		initiative.setName(initiativeDto.getName());
-		initiative.setDriver(initiativeDto.getDriver());
+		initiativeMeta.setName(initiativeDto.getName());
+		initiativeMeta.setDriver(initiativeDto.getDriver());
 		
-		initiativeRepository.save(initiative);
+		initiativeMetaRepository.save(initiativeMeta);
 		
 		activityService.initiativeEdited(initiative, appUserRepository.findByC1Id(userId), oldName, oldDriver);
 		
@@ -403,7 +414,7 @@ public class InitiativeService {
 		
 		InitiativeMembersDto initiativeMembers = new InitiativeMembersDto();
 		initiativeMembers.setInitiativeId(initiative.getId().toString());
-		initiativeMembers.setInitiativeName(initiative.getName());
+		initiativeMembers.setInitiativeName(initiative.getMeta().getName());
 		
 		
 		/* add members of this initiative */
