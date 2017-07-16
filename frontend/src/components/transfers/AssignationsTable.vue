@@ -22,7 +22,11 @@
               {{ assignationState(assignation) }}
             </div>
           </td>
-          <td v-if="showFrom">{{ assignation.initiativeName }}</td>
+          <td v-if="showFrom">
+            <div class="w3-tag w3-round-large" :style="{'background-color': $store.getters.colorOfInitiative(assignation.initiativeId)}">
+              {{ assignation.initiativeName }}
+            </div>
+          </td>
           <td>{{ tokensString(assignation.assets[0].value) }} {{ assignation.assets[0].assetName }}</td>
           <td class="avatar-col">
             <div class="avatar-container" v-for="receiver in assignation.receivers">

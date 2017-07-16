@@ -10,7 +10,7 @@
               <app-value-seal :value="assignation.assets[0].value" :assetName="assignation.assets[0].assetName"></app-value-seal>
             </div>
             <div class="w3-row from-row w3-center d2-color">
-              <div class="w3-tag w3-theme w3-round noselect">
+              <div class="w3-tag w3-round noselect" :style="{'background-color': $store.getters.colorOfInitiative(assignation.initiativeId)}">
                 from
                 <b>{{ assignation.initiativeName }}</b>
               </div>

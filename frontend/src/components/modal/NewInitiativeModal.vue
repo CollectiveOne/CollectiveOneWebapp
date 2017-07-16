@@ -41,10 +41,6 @@
             <app-new-token @updated="ownTokensSelected($event)"></app-new-token>
           </div>
 
-          <div v-if="assetsSelected" class="w3-panel w3-theme">
-            <h5><b>Summary</b></h5>
-            <p>A token named <b>{{ ownTokens.assetName }}</b> will be created and this initiative will have <b>{{ tokensString(ownTokens.ownedByThisHolder) }} units</b></p>
-          </div>
           <hr>
 
           <label class="init-contr-label d2-color"><b>Initial Members</b></label>

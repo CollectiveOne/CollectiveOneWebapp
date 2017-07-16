@@ -106,6 +106,11 @@ public class GovernanceService {
 		return decisionMakerRepository.findByGovernance_IdAndUser_C1Id(governaceId, userId);
 	}
 	
+	@Transactional
+	public List<DecisionMaker> getDecisionMakerWithRole(UUID governaceId, DecisionMakerRole role) {
+		return decisionMakerRepository.findByGovernance_IdAndRole(governaceId, role);
+	}
+	
 	
 	@Transactional
 	public List<DecisionMakerDto> getDecisonMakers(UUID initiativeId) {
@@ -117,6 +122,11 @@ public class GovernanceService {
 		}
 		
 		return decisionMakerDtos;
+	}
+	
+	@Transactional
+	public DecisionMaker getDecisionMakersWithRole(UUID governaceId, UUID userId, DecisionMakerRole role) {
+		return decisionMakerRepository.findByGovernance_IdAndUser_C1Id(governaceId, userId);
 	}
 	
 	@Transactional

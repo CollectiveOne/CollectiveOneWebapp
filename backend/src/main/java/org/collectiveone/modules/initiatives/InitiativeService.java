@@ -459,11 +459,27 @@ public class InitiativeService {
 	public PostResult deleteMember(UUID initiativeId, UUID memberUserId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, memberUserId);
-		memberRepository.delete(member);
 		
-		governanceService.deleteDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
+		List<DecisionMaker> admins = governanceService.getDecisionMakerWithRole(initiative.getGovernance().getId(), DecisionMakerRole.ADMIN);
 		
-		return new PostResult("success", "contributor deleted", "");
+		boolean otherAdmin = false;
+		for (DecisionMaker admin :admins) {
+			if (!admin.getUser().getC1Id().equals(memberUserId)) {
+				otherAdmin = true;
+			}
+		}
+		
+		if (otherAdmin) {
+			/* delete only if another admin remains */
+			memberRepository.delete(member);
+			governanceService.deleteDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
+			
+			return new PostResult("success", "contributor deleted", "");
+		}
+		
+		return new PostResult("error", "user is the only admin, it cannot be deleted", "");
+		
+		
 	}
 	
 	@Transactional

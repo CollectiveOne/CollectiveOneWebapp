@@ -1,66 +1,32 @@
 <template lang="html">
-  <div class="w3-container this-container">
-    <div class="w3-card members-panel">
-      <header class="w3-container w3-theme noselect">
-        <h4>Members and roles of {{ initiative.meta.name }}</h4>
-      </header>
-
-      <div class="w3-container members-div">
-        <app-initiative-member
-          v-for="member in initiative.initiativeMembers.members"
-          class="initiative-member-row"
-          :key="member.user.c1Id"
-          :member="member"
-          :canEdit="isLoggedAnAdmin"
-          @remove="removeMember($event)"
-          @role-updated="roleUpdated($event)">
-        </app-initiative-member>
-        <div v-if="isLoggedAnAdmin">
-          <div class="w3-row" :style="{'margin-bottom': '5px'}">
-            <label class="d2-color noselect" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
-          </div>
-          <app-initiative-new-member @add="addMember($event)"></app-initiative-new-member>
-        </div>
-        <div v-if="noOtherAdminError" class="w3-row w3-tag error-panel error-row w3-round">
-          there should be at least one admin per initiative
-        </div>
+  <div class="this-container">
+    <div class="own-members-div">
+      <h3 class="section-header">members of {{ initiative.meta.name }}</h3>
+      <app-members-table
+        :members="initiative.initiativeMembers.members"
+        :canEdit="isLoggedAnAdmin"
+        @remove="removeMember($event)"
+        @role-updated="roleUpdated($event)"
+        @add="addMember($event)">
+      </app-members-table>
+      <div v-if="noOtherAdminError" class="w3-row w3-tag error-panel error-row w3-round">
+        there should be at least one admin per initiative
       </div>
-
+    </div>
+    <div class="sub-members-div">
+      <h3 class="section-header">members of subinitiatives of {{ initiative.meta.name }}</h3>
+      <app-submembers-table
+        :submembers="allSubmembers">
+      </app-submembers-table>
     </div>
 
-    <div class="w3-card members-panel" v-if="allSubmembers.length > 0" >
-      <header class="w3-container w3-theme noselect">
-        <h4>Members of sub-initiatives</h4>
-      </header>
-
-      <div class="w3-container members-div">
-        <div class="w3-row" v-for="submember in allSubmembers" :key="submember.c1Id">
-          <div class="w3-col m4">
-            <app-user-avatar
-              class="w3-left"
-              :user="submember.user">
-            </app-user-avatar>
-          </div>
-          <div class="w3-col m8 subinitiatives-tags-container">
-            <router-link v-for="initiativeData in submember.subinitiatives"
-              :to="'/inits/' + initiativeData.id" tag="div"
-              :key="initiativeData.id"
-              class="w3-tag w3-theme w3-round w3-left subinitiative-tag noselect cursor-pointer">
-              {{ initiativeData.name }}
-            </router-link>
-          </div>
-        </div>
-      </div>
-
-    </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import InitiativeNewMember from '@/components/user/InitiativeNewMember.vue'
-import InitiativeMember from '@/components/user/InitiativeMember.vue'
-import UserAvatar from '@/components/user/UserAvatar.vue'
+import MembersTable from '@/components/user/MembersTable.vue'
+import SubmembersTable from '@/components/user/SubmembersTable.vue'
 
 const getIndexOfUser = function (list, c1Id) {
   for (var ix in list) {
@@ -105,9 +71,8 @@ const getAllSubmembers = function (initiativeMembers) {
 
 export default {
   components: {
-    'app-initiative-member': InitiativeMember,
-    'app-initiative-new-member': InitiativeNewMember,
-    'app-user-avatar': UserAvatar
+    'app-members-table': MembersTable,
+    'app-submembers-table': SubmembersTable
   },
 
   data () {
@@ -208,7 +173,7 @@ export default {
 <style scoped>
 
 .this-container {
-  padding-top: 25px !important;
+  padding-top: 0px !important;
   padding-bottom: 25px !important;
 }
 

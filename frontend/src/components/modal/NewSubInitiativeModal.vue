@@ -46,22 +46,6 @@
             please select how many tokens should be transferred to this subinitaitive
           </div>
 
-          <div class="slider-container">
-            <transition name="slideDownUp">
-              <div v-if="assetsSelected" class="w3-panel w3-theme">
-                <h5><b>Summary</b></h5>
-                <p>
-                  This initiative will receive
-                  <span v-for="transfer in assetsTransfers">
-                    <span v-if="transfer.value ">
-                      <b>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</b> from {{ parentInitiative.meta.name }}
-                    </span>
-                  </span>
-                </p>
-              </div>
-            </transition>
-          </div>
-
           <hr>
           <label class="init-contr-label d2-color"><b>Initial Members</b></label>
           <div class="w3-border w3-round w3-padding members-container">

@@ -8,7 +8,7 @@
         @click="showSubinitiatives = !showSubinitiatives">
 
         <div v-if="hasSubinitiatives">
-          <i v-if="!showSubinitiatives"class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+          <i v-if="!showSubinitiatives"class="fa fa-chevron-circle-right" aria-hidden="true" :style="{'color': color}"></i>
           <i v-else class="fa fa-chevron-circle-down" aria-hidden="true" :style="{'color': color}"></i>
         </div>
         <div v-else>
