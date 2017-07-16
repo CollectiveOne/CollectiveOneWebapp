@@ -17,7 +17,7 @@
             </div>
           </div>
 
-          <div class="w3-col l8 w3-container">
+          <div class="w3-col l8 w3-container d2-color">
 
             <div class="w3-row w3-center">
               <h3>{{ assignation.motive }}</h3>
@@ -47,8 +47,9 @@
               </div>
             </div>
 
-            <div class="w3-center">
-              <b>({{ assignation.evaluationsPending + ' evaluations pending' }})</b>
+            <div v-if="showStatus" class="w3-row w3-center">
+              <b>{{ assignation.evaluationsPending + ' evaluations pending' }}, closes in {{ getTimeStrUntil(assignation.config.maxClosureDate) }}</b>
+
             </div>
 
           </div>
@@ -85,7 +86,7 @@
               </button>
             </div>
           </div>
-          <div v-if="isDone" class="w3-col l6">
+          <div v-if="showResults" class="w3-col l6">
             <div class="w3-row w3-center">
               <h6 class="d2-color"><b>Results</b></h6>
             </div>
@@ -126,6 +127,7 @@ import UserAvatar from '@/components/user/UserAvatar.vue'
 import ValueSeal from '@/components/transfers/ValueSeal.vue'
 import UsersPercentages from '@/components/user/UsersPercentages.vue'
 import PeerReviewedEvaluations from '@/components/transfers/PeerReviewedEvaluations.vue'
+import { getTimeStrUntil } from '@/lib/common.js'
 
 export default {
 
@@ -158,6 +160,20 @@ export default {
     },
     isDone () {
       return (this.assignation.state === 'DONE')
+    },
+    showResults () {
+      if (this.isDirect) {
+        if (this.assignation.receivers.lenth > 1) {
+          return true
+        }
+      }
+
+      if (this.isPeerReviewed) {
+        return this.isDone
+      }
+    },
+    showStatus () {
+      return this.isPeerReviewed && this.isOpen
     },
     isEvaluator () {
       return this.assignation.thisEvaluation !== null
@@ -194,6 +210,9 @@ export default {
   },
 
   methods: {
+    getTimeStrUntil (v) {
+      return getTimeStrUntil(v)
+    },
     isDontKnow (userData) {
       if (userData.type) {
         if (userData.type === 'SET') {

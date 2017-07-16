@@ -10,36 +10,46 @@
   <div class="section-container w3-display-container"
     v-if="initiativeAssignations && initiativeTransfers">
 
-    <div v-if="isLoggedAnAdmin" class="action-buttons w3-display-topright w3-xlarge w3-theme w3-circle w3-button">
+    <div class="own-transfers-div">
+      <h3 class="section-header">from {{ initiative.name }}</h3>
+      <app-transfers-tables v-if="hasTransfers"
+        :assignations="initiativeAssignations.assignations"
+        :transfers="initiativeTransfers.transfers">
+      </app-transfers-tables>
+      <div v-if="!hasTransfers" class="empty-div">
+        no transfers have been made from {{ initiative.name }}
+      </div>
+    </div>
+
+    <div class="sub-transfers-div">
+      <h3 class="section-header">from subinitiatives of {{ initiative.name }}</h3>
+      <app-transfers-tables v-if="hasSubinitiativesTransfers"
+        :assignations="getSubassignations"
+        :transfers="getSubtransfers"
+        :showFrom="true">
+      </app-transfers-tables>
+      <div v-if="!hasSubinitiativesTransfers" class="empty-div">
+        no transfers have been made from subinitiatives of {{ initiative.name }}
+      </div>
+    </div>
+
+    <div v-if="isLoggedAnAdmin"
+      class="action-buttons w3-display-topright w3-xlarge w3-theme w3-circle w3-button"
+      @click="showActionMenu = !showActionMenu">
       <i class="fa fa-plus" aria-hidden="true"></i>
-      <div class="action-menu w3-dropdown-content w3-bar-block w3-card d2-color">
-        <div class="w3-bar-item w3-button">
-          <i class="fa fa-pencil" aria-hidden="true"></i>name and driver
+    </div>
+
+    <div v-if="showActionMenu" class="action-menu w3-display-topright d2-color">
+      <div class="w3-card">
+        <div class="w3-button" @click="newTransferToUser()">
+          <span class="w3-left">to user</span><i class="fa fa-sign-in w3-right" aria-hidden="true"></i>
         </div>
-        <div class="w3-bar-item w3-button">
-          <i class="fa fa-cog" aria-hidden="true"></i>notifications
+        <div class="w3-button" @click="newTransferToInitiative()">
+          <span class="w3-left">to initiative</span><i class="fa fa-sign-in w3-right" aria-hidden="true"></i>
         </div>
       </div>
     </div>
 
-    <h3 class="section-header">from {{ initiative.name }}</h3>
-    <app-transfers-tables v-if="hasTransfers"
-      :assignations="initiativeAssignations.assignations"
-      :transfers="initiativeTransfers.transfers">
-    </app-transfers-tables>
-    <div v-if="!hasTransfers" class="empty-div">
-      no transfers have been made from {{ initiative.name }}
-    </div>
-
-    <h3 class="section-header">from subinitiatives of {{ initiative.name }}</h3>
-    <app-transfers-tables v-if="hasSubinitiativesTransfers"
-      :assignations="getSubassignations"
-      :transfers="getSubtransfers"
-      :showFrom="true">
-    </app-transfers-tables>
-    <div v-if="!hasSubinitiativesTransfers" class="empty-div">
-      no transfers have been made from subinitiatives of {{ initiative.name }}
-    </div>
   </div>
 </div>
 </template>
@@ -74,7 +84,10 @@ export default {
     'app-assignation-modal': AssignationModal
   },
 
-  props: {
+  data () {
+    return {
+      showActionMenu: false
+    }
   },
 
   computed: {
@@ -115,6 +128,14 @@ export default {
   },
 
   methods: {
+    newTransferToUser () {
+      this.showActionMenu = false
+      this.$store.commit('showNewAssignationModal', true)
+    },
+    newTransferToInitiative () {
+      this.showActionMenu = false
+      this.$store.commit('showNewInitiativeTransferModal', true)
+    }
   },
 
   mounted () {
@@ -131,19 +152,42 @@ export default {
 }
 
 .action-buttons {
-  padding: 6px 0px 0px 0px  !important;
-  height: 45px;
-  width: 45px;
-  margin-right: 30px;
-  margin-top: 30px;
+  padding: 1px 0px 0px 0px  !important;
+  height: 35px;
+  width: 35px;
+  margin-right: 20px;
+  margin-top: -5px;
+  z-index: 1;
 }
 
 .action-menu {
-  position: absolute;
+  padding: 6px 0px 0px 0px  !important;
+  height: 45px;
+  width: 45px;
+  margin-right: 125px;
+  margin-top: 35px;
+  z-index: 1;
+}
+
+.action-menu .fa {
+  margin-left: 10px;
+  padding-top: 3px;
+}
+
+.action-menu .w3-card {
+  width: 150px;
+}
+
+.action-menu .w3-button {
+  width: 100%;
 }
 
 .empty-div {
   text-align: center;
+}
+
+.own-transfers-div {
+  z-index: -1
 }
 
 </style>

@@ -3,6 +3,7 @@
     <table v-if="assignations.length > 0" class="w3-table w3-striped w3-bordered w3-centered table-element">
       <thead>
         <tr>
+          <th class="w3-hide-small">date</th>
           <th>status</th>
           <th v-if="showFrom">from</th>
           <th>value</th>
@@ -14,6 +15,7 @@
       </thead>
       <tbody>
         <tr v-for="assignation in assignations" :key="assignation.id">
+          <td class="w3-hide-small">{{ dateString(assignation.creationDate) }}</td>
           <td>
             <div class="w3-tag w3-small w3-round-large w3-padding-small noselect"
               :class="stateTagClass(assignation)">
@@ -46,7 +48,7 @@
 
 <script>
 import UserAvatar from '@/components/user/UserAvatar.vue'
-import { tokensString } from '@/lib/common.js'
+import { tokensString, dateString } from '@/lib/common.js'
 
 export default {
   name: 'assignationsTable',
@@ -66,6 +68,9 @@ export default {
   methods: {
     tokensString (v) {
       return tokensString(v)
+    },
+    dateString (v) {
+      return dateString(v)
     },
     assignationType (assignation) {
       switch (assignation.type) {

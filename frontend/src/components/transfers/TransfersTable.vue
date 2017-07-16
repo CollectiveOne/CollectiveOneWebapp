@@ -2,6 +2,7 @@
   <table v-if="transfers.length > 0" class="w3-table w3-striped w3-bordered w3-centered">
     <thead>
       <tr>
+        <th>date</th>
         <th v-if="showFrom">from</th>
         <th>value</th>
         <th>to</th>
@@ -10,6 +11,7 @@
     </thead>
     <tbody>
       <tr v-for="transfer in transfers" :key="transfer.id">
+        <td>{{ dateString(transfer.orderDate) }}</td>
         <td v-if="showFrom">{{ transfer.senderName }}</td>
         <td>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</td>
         <td>{{ transfer.receiverName }}</td>
@@ -21,7 +23,7 @@
 
 <script>
 import UserAvatar from '@/components/user/UserAvatar.vue'
-import { tokensString } from '@/lib/common.js'
+import { tokensString, dateString } from '@/lib/common.js'
 
 export default {
   name: 'transfersTable',
@@ -41,6 +43,9 @@ export default {
   methods: {
     tokensString (v) {
       return tokensString(v)
+    },
+    dateString (v) {
+      return dateString(v)
     }
   }
 }

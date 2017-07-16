@@ -3,7 +3,7 @@
   <div v-if="assetData" class="">
     <div class="this-container">
       <div class="w3-row">
-        <div class="w3-col distribution-container" :class="{'m8': showAssigner, 'm12': !showAssigner}">
+        <div class="w3-col distribution-container" :class="{'l8': showAssigner, 'l12': !showAssigner}">
           <div class="w3-row-padding">
             <div class="w3-col l4 w3-center">
               <div class="w3-display-container" :class="{tall: isOverview, short: !isOverview}">
@@ -124,7 +124,7 @@
           </div>
 
         </div>
-        <div v-if="showAssigner" class="assigner-container w3-col m4 w3-container d2-color">
+        <div v-if="showAssigner" class="assigner-container w3-col l4 w3-container d2-color">
           <div class="w3-row label-row">
             <label class="d2-color"><b>Amount to be transfered</b></label>
           </div>

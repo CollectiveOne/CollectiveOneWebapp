@@ -202,6 +202,7 @@ public class InitiativeService {
 				transfer.setValue(thisTransfer.getValue());
 				transfer.setMotive("sub-initiative creation");
 				transfer.setNotes("");
+				transfer.setOrderDate(new Timestamp(System.currentTimeMillis()));
 								
 				transfer = initiativeTransferRepository.save(transfer);
 				transfers.add(transfer);

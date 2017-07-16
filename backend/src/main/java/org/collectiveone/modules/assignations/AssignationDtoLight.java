@@ -12,6 +12,7 @@ public class AssignationDtoLight {
 	private String state;
 	private String initiativeId;
 	private String initiativeName;
+	private Long creationDate;
 	private List<BillDto> assets = new ArrayList<BillDto>();
 	
 	
@@ -56,6 +57,12 @@ public class AssignationDtoLight {
 	}
 	public void setInitiativeName(String initiativeName) {
 		this.initiativeName = initiativeName;
+	}
+	public Long getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Long creationDate) {
+		this.creationDate = creationDate;
 	}
 	public List<BillDto> getAssets() {
 		return assets;

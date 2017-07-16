@@ -7,6 +7,7 @@ public class TransferDto {
 	private String senderName;
 	private String receiverId;
 	private String receiverName;
+	private Long orderDate;
 	private String motive;
 	private String notes;
 	private double value;
@@ -46,6 +47,12 @@ public class TransferDto {
 	}
 	public void setReceiverName(String receiverName) {
 		this.receiverName = receiverName;
+	}
+	public Long getOrderDate() {
+		return orderDate;
+	}
+	public void setOrderDate(Long orderDate) {
+		this.orderDate = orderDate;
 	}
 	public String getMotive() {
 		return motive;

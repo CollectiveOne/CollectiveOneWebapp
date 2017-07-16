@@ -54,7 +54,7 @@ export default {
 
   data () {
     return {
-      transfersTableComponent: TransfersTable
+      transfersTableComponent: AssignationsTable
     }
   },
 
@@ -95,7 +95,7 @@ export default {
 
 .subtab-element {
   display: inline-block;
-  width: 150px;
+  width: 120px;
   text-align: center;
 }
 

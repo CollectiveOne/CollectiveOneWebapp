@@ -53,7 +53,7 @@ public class Assignation {
 	@Column(name = "state")
 	private AssignationState state;
 	
-	@Column(name = "min_closure_date")
+	@Column(name = "creation_date")
 	private Timestamp creationDate;
 	
 	@OneToMany(mappedBy="assignation", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -79,6 +79,7 @@ public class Assignation {
 		dto.setState(state.toString());
 		dto.setInitiativeId(initiative.getId().toString());
 		dto.setInitiativeName(initiative.getName());
+		dto.setCreationDate(creationDate.getTime());
 		
 		for(Bill bill : bills) {
 			dto.getAssets().add(bill.toDto());
@@ -97,6 +98,7 @@ public class Assignation {
 		dto.setState(state.toString());
 		dto.setInitiativeId(initiative.getId().toString());
 		dto.setInitiativeName(initiative.getName());
+		dto.setCreationDate(creationDate.getTime());
 		dto.setConfig(config.toDto());
 		
 		for(Bill bill : bills) {

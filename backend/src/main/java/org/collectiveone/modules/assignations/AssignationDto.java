@@ -8,7 +8,6 @@ public class AssignationDto extends AssignationDtoLight {
 	private List<ReceiverDto> receivers = new ArrayList<ReceiverDto>();
 	private List<EvaluatorDto> evaluators = new ArrayList<EvaluatorDto>();
 	private EvaluationDto thisEvaluation;
-	private Long creationDate;
 	private int evaluationsPending;
 	
 	private AssignationConfigDto config;
@@ -30,12 +29,6 @@ public class AssignationDto extends AssignationDtoLight {
 	}
 	public void setThisEvaluation(EvaluationDto thisEvaluation) {
 		this.thisEvaluation = thisEvaluation;
-	}
-	public Long getCreationDate() {
-		return creationDate;
-	}
-	public void setCreationDate(Long creationDate) {
-		this.creationDate = creationDate;
 	}
 	public int getEvaluationsPending() {
 		return evaluationsPending;
