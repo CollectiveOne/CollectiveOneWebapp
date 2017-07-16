@@ -150,6 +150,29 @@ textarea {
   background-color: rgb(184, 184, 184);
 }
 
+.section-header {
+  margin-top: 20px;
+  overflow: hidden;
+  text-align: center;
+}
+.section-header:before,
+.section-header:after {
+  background-color: #000;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+}
+.section-header:before {
+  right: 0.5em;
+  margin-left: -50%;
+}
+.section-header:after {
+  left: 0.5em;
+  margin-right: -50%;
+}
 
 /* Animations */
 

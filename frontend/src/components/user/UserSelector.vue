@@ -5,7 +5,7 @@
   <div class="w3-row-padding autocomplete-wrapper">
     <div v-if="selected !== null" class="w3-col s2">
       <div class="w3-cell w3-cell-middle" style="width:30px">
-        <img class="" style="width:35px" :src="selected.pictureUrl"/>
+        <img class="w3-circle" style="width:35px" :src="selected.pictureUrl"/>
       </div>
     </div>
     <div class="w3-col s10">

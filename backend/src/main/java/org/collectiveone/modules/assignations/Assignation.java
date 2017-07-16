@@ -53,11 +53,8 @@ public class Assignation {
 	@Column(name = "state")
 	private AssignationState state;
 	
-	@Column(name = "max_closure_date")
-	private Timestamp maxClosureDate;
-	
 	@Column(name = "min_closure_date")
-	private Timestamp minClosureDate;
+	private Timestamp creationDate;
 	
 	@OneToMany(mappedBy="assignation", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Bill> bills = new ArrayList<Bill>();
@@ -100,8 +97,7 @@ public class Assignation {
 		dto.setState(state.toString());
 		dto.setInitiativeId(initiative.getId().toString());
 		dto.setInitiativeName(initiative.getName());
-		dto.setEvaluationsVisible(config.getEvaluationsVisible());
-		dto.setSelfBiasVisible(config.getSelfBiasVisible());
+		dto.setConfig(config.toDto());
 		
 		for(Bill bill : bills) {
 			dto.getAssets().add(bill.toDto());
@@ -158,26 +154,18 @@ public class Assignation {
 		return state;
 	}
 
+	public Timestamp getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Timestamp creationDate) {
+		this.creationDate = creationDate;
+	}
+
 	public void setState(AssignationState state) {
 		this.state = state;
 	}
 	
-	public Timestamp getMaxClosureDate() {
-		return maxClosureDate;
-	}
-
-	public void setMaxClosureDate(Timestamp maxClosureDate) {
-		this.maxClosureDate = maxClosureDate;
-	}
-
-	public Timestamp getMinClosureDate() {
-		return minClosureDate;
-	}
-
-	public void setMinClosureDate(Timestamp minClosureDate) {
-		this.minClosureDate = minClosureDate;
-	}
-
 	public List<Bill> getBills() {
 		return bills;
 	}

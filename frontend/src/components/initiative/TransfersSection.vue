@@ -22,55 +22,23 @@
       </div>
     </div>
 
-    <div class="w3-row">
-      <h6>to users: </h6>
-      <app-assignations-table :assignations="initiativeAssignations.assignations"></app-assignations-table>
-
-      <h6>to initiatives: </h6>
-      <app-transfers-table :assignations="initiativeTransfers.assignations"></app-transfers-table>
+    <h3 class="section-header">from {{ initiative.name }}</h3>
+    <app-transfers-tables v-if="hasTransfers"
+      :assignations="initiativeAssignations.assignations"
+      :transfers="initiativeTransfers.transfers">
+    </app-transfers-tables>
+    <div v-if="!hasTransfers" class="empty-div">
+      no transfers have been made from {{ initiative.name }}
     </div>
 
-    <div v-if="hasSubinitiativesTransfers" class="w3-card section-card">
-
-      <h6>to users: </h6>
-      <app-assignations-table :assignations="getSubassignations"></app-assignations-table>
-
-      <h6>to initiatives: </h6>
-      <app-transfers-table :assignations="initiativeTransfers.assignations"></app-transfers-table>
-
-
-      <div class="w3-container card-content">
-
-        <div v-if="getSubassignations.length > 0" class="">
-          <div class="w3-row">
-            <label class="d2-color"><b>To users</b></label>
-          </div>
-          <div class="w3-container">
-            <div class="w3-row assignations-container">
-              <div class="w3-col l6" v-for="assignationData in getSubassignations" :key="assignationData.assignation.id">
-                <app-initiative-assignation class="assignation-card"
-                  :assignation="assignationData.assignation">
-                </app-initiative-assignation>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="getSubtransfers.length > 0" class="">
-          <div class="w3-row">
-            <label class="d2-color"><b>To initiatives</b></label>
-          </div>
-          <div class="w3-container">
-            <div class="w3-row-padding assignations-container">
-              <div class="w3-col l6" v-for="transferData in getSubtransfers" :key="transferData.transfer.id">
-                <app-initiative-transfer class="assignation-card"
-                  :transfer="transferData.transfer">
-                </app-initiative-transfer>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <h3 class="section-header">from subinitiatives of {{ initiative.name }}</h3>
+    <app-transfers-tables v-if="hasSubinitiativesTransfers"
+      :assignations="getSubassignations"
+      :transfers="getSubtransfers"
+      :showFrom="true">
+    </app-transfers-tables>
+    <div v-if="!hasSubinitiativesTransfers" class="empty-div">
+      no transfers have been made from subinitiatives of {{ initiative.name }}
     </div>
   </div>
 </div>
@@ -78,30 +46,13 @@
 
 <script>
 import AssignationModal from '@/components/transfers/AssignationModal.vue'
-import AssignationsTable from '@/components/transfers/AssignationsTable.vue'
-
-const getIndexOfElementWithId = function (list, id) {
-  for (var ix in list) {
-    if (list[ix].id === id) {
-      return ix
-    }
-  }
-  return -1
-}
+import TransfersTables from '@/components/transfers/TransfersTables.vue'
 
 const getAllSubassignations = function (subinitiativesAssignations) {
   var subassignations = []
   subinitiativesAssignations.forEach((subinitiativeAssignations) => {
     subinitiativeAssignations.assignations.forEach((assignation) => {
-      var ix = getIndexOfElementWithId(subassignations, assignation.id)
-      if (ix === -1) {
-        subassignations.push({
-          assignation: assignation,
-          subinitiative: subinitiativeAssignations.initiativeName
-        })
-      } else {
-        subassignations[ix].subinitiative = subinitiativeAssignations.initiativeName
-      }
+      subassignations.push(assignation)
     })
   })
   return subassignations
@@ -111,15 +62,7 @@ const getAllSubtransfers = function (subinitiativesTransfers) {
   var subtransfers = []
   subinitiativesTransfers.forEach((subinitiativeTransfers) => {
     subinitiativeTransfers.transfers.forEach((transfer) => {
-      var ix = getIndexOfElementWithId(subtransfers, transfer.id)
-      if (ix === -1) {
-        subtransfers.push({
-          transfer: transfer,
-          subinitiative: subinitiativeTransfers.initiativeName
-        })
-      } else {
-        subtransfers[ix].subinitiative = subinitiativeTransfers.initiativeName
-      }
+      subtransfers.push(transfer)
     })
   })
   return subtransfers
@@ -127,16 +70,11 @@ const getAllSubtransfers = function (subinitiativesTransfers) {
 
 export default {
   components: {
-    'app-assignations-table': AssignationsTable,
+    'app-transfers-tables': TransfersTables,
     'app-assignation-modal': AssignationModal
   },
 
   props: {
-  },
-
-  data () {
-    return {
-    }
   },
 
   computed: {
@@ -188,7 +126,7 @@ export default {
 <style scoped>
 
 .section-container {
-  padding-top: 10px;
+  padding-top: 0px;
   padding-bottom: 25px;
 }
 
@@ -204,7 +142,8 @@ export default {
   position: absolute;
 }
 
-.table-container {
+.empty-div {
+  text-align: center;
 }
 
 </style>

@@ -3,7 +3,7 @@
     <div class="img-div w3-left noselect"
       @mouseover="showHoverName = true"
       @mouseleave="showHoverName = false">
-      <img :class="imgClass" :src="user.pictureUrl"/>
+      <img class="w3-circle" :class="imgClass" :src="user.pictureUrl"/>
       <div class="hover-name cursor-pointer">
         <div v-if="!showName && showHoverName" class="hover-name-container w3-tag w3-theme w3-round">
           <b>{{ user.nickname }}</b>

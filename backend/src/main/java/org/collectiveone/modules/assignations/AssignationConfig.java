@@ -1,5 +1,6 @@
 package org.collectiveone.modules.assignations;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -22,11 +23,28 @@ public class AssignationConfig {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
+	@Column(name = "max_closure_date")
+	private Timestamp maxClosureDate;
+	
+	@Column(name = "min_closure_date")
+	private Timestamp minClosureDate;
+	
 	@Column(name = "self_bias_visible")
 	private Boolean selfBiasVisible;
 	
 	@Column(name = "evaluations_visible")
 	private Boolean evaluationsVisible;
+	
+	public AssignationConfigDto toDto() {
+		AssignationConfigDto dto = new AssignationConfigDto();
+		
+		dto.setMaxClosureDate(maxClosureDate.getTime());
+		dto.setMinClosureDate(minClosureDate.getTime());
+		dto.setSelfBiasVisible(selfBiasVisible);
+		dto.setEvaluationsVisible(evaluationsVisible);
+		
+		return dto;
+	}
 	
 	
 	public UUID getId() {
@@ -47,6 +65,17 @@ public class AssignationConfig {
 	public void setEvaluationsVisible(Boolean evaluationsVisible) {
 		this.evaluationsVisible = evaluationsVisible;
 	}
-	
+	public Timestamp getMaxClosureDate() {
+		return maxClosureDate;
+	}
+	public void setMaxClosureDate(Timestamp maxClosureDate) {
+		this.maxClosureDate = maxClosureDate;
+	}
+	public Timestamp getMinClosureDate() {
+		return minClosureDate;
+	}
+	public void setMinClosureDate(Timestamp minClosureDate) {
+		this.minClosureDate = minClosureDate;
+	}
 	
 }

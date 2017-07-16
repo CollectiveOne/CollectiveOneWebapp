@@ -8,8 +8,10 @@ public class AssignationDto extends AssignationDtoLight {
 	private List<ReceiverDto> receivers = new ArrayList<ReceiverDto>();
 	private List<EvaluatorDto> evaluators = new ArrayList<EvaluatorDto>();
 	private EvaluationDto thisEvaluation;
-	private Boolean selfBiasVisible;
-	private Boolean evaluationsVisible;
+	private Long creationDate;
+	private int evaluationsPending;
+	
+	private AssignationConfigDto config;
 	
 	public List<ReceiverDto> getReceivers() {
 		return receivers;
@@ -29,17 +31,23 @@ public class AssignationDto extends AssignationDtoLight {
 	public void setThisEvaluation(EvaluationDto thisEvaluation) {
 		this.thisEvaluation = thisEvaluation;
 	}
-	public Boolean getSelfBiasVisible() {
-		return selfBiasVisible;
+	public Long getCreationDate() {
+		return creationDate;
 	}
-	public void setSelfBiasVisible(Boolean selfBiasVisible) {
-		this.selfBiasVisible = selfBiasVisible;
+	public void setCreationDate(Long creationDate) {
+		this.creationDate = creationDate;
 	}
-	public Boolean getEvaluationsVisible() {
-		return evaluationsVisible;
+	public int getEvaluationsPending() {
+		return evaluationsPending;
 	}
-	public void setEvaluationsVisible(Boolean evaluationsVisible) {
-		this.evaluationsVisible = evaluationsVisible;
+	public void setEvaluationsPending(int evaluationsPending) {
+		this.evaluationsPending = evaluationsPending;
+	}
+	public AssignationConfigDto getConfig() {
+		return config;
+	}
+	public void setConfig(AssignationConfigDto config) {
+		this.config = config;
 	}
 	
 	

@@ -71,13 +71,13 @@ public class AssignationService {
 		assignation.setNotes(assignationDto.getNotes());
 		assignation.setInitiative(initiative);
 		assignation.setState(AssignationState.OPEN);
-		assignation.setMinClosureDate(new Timestamp(System.currentTimeMillis()));
-		assignation.setMaxClosureDate(new Timestamp(System.currentTimeMillis() + 7L*DAYS_TO_MS));
-		assignation.setState(AssignationState.OPEN);
+		assignation.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		
 		AssignationConfig config = new AssignationConfig();
-		config.setSelfBiasVisible(Boolean.valueOf(assignationDto.getSelfBiasVisible()));
-		config.setEvaluationsVisible(Boolean.valueOf(assignationDto.getEvaluationsVisible()));
+		config.setSelfBiasVisible(Boolean.valueOf(assignationDto.getConfig().getSelfBiasVisible()));
+		config.setEvaluationsVisible(Boolean.valueOf(assignationDto.getConfig().getEvaluationsVisible()));
+		config.setMinClosureDate(new Timestamp(System.currentTimeMillis()));
+		config.setMaxClosureDate(new Timestamp(System.currentTimeMillis() + assignationDto.getConfig().getMaxDuration()*DAYS_TO_MS));
 		
 		config = assignationConfigRepository.save(config);
 		
@@ -214,6 +214,8 @@ public class AssignationService {
 		
 		/* add the evaluations of logged user */
 		Evaluator evaluator = evaluatorRepository.findByAssignationIdAndUser_C1Id(assignation.getId(), evaluatorAppUserId);
+		
+		assignationDto.setEvaluationsPending(evaluatorRepository.countByAssignationIdAndState(assignation.getId(), EvaluatorState.PENDING));
 		
 		if (evaluator != null) {
 			EvaluationDto evaluation = new EvaluationDto();

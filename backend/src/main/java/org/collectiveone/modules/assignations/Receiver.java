@@ -46,7 +46,7 @@ public class Receiver {
 		dto.setUser(user.toDto());
 		dto.setPercent(assignedPercent);
 		dto.setState(state.toString());
-		
+				
 		return dto;
 	}
 	

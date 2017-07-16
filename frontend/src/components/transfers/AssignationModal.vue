@@ -11,6 +11,7 @@
             </div>
             <div class="w3-row from-row w3-center d2-color">
               <div class="w3-tag w3-theme w3-round noselect">
+                from
                 <b>{{ assignation.initiativeName }}</b>
               </div>
             </div>
@@ -26,6 +27,17 @@
               <p>{{ assignation.notes }}</p>
             </div>
 
+            <div class="w3-row w3-center">
+              <div class="receivers-container">
+                <div class="receiver-container" v-for="receiver in assignation.receivers" :key="receiver.id" >
+                  <app-user-avatar :user="receiver.user"
+                    class="w3-left"
+                    :small="true" :showName="false">
+                  </app-user-avatar>
+                </div>
+              </div>
+            </div>
+
             <div class="w3-ro tags-row w3-center">
               <div class="w3-tag w3-theme-l2 w3-round noselect w3-small">
                 <b>{{ assignation.type }}</b>
@@ -35,15 +47,8 @@
               </div>
             </div>
 
-            <div class="w3-row w3-center">
-              <div class="">
-                <div class="receivers-container w3-left" v-for="receiver in assignation.receivers" :key="receiver.id" >
-                  <app-user-avatar :user="receiver.user"
-                    class="w3-left"
-                    :small="true" :showName="false">
-                  </app-user-avatar>
-                </div>
-              </div>
+            <div class="w3-center">
+              <b>({{ assignation.evaluationsPending + ' evaluations pending' }})</b>
             </div>
 
           </div>
@@ -78,14 +83,6 @@
                 @click="updateEvaluation = true">
                 Change my evaluation
               </button>
-
-              <div class="slider-container">
-                <transition name="slideDownUp">
-                  <div v-if="evaluationSavedMessage" class="w3-panel warning-panel w3-padding w3-center">
-                    your evaluation has been saved
-                  </div>
-                </transition>
-              </div>
             </div>
           </div>
           <div v-if="isDone" class="w3-col l6">
@@ -142,8 +139,7 @@ export default {
   data () {
     return {
       assignation: null,
-      updateEvaluation: false,
-      evaluationSavedMessage: false
+      updateEvaluation: false
     }
   },
 
@@ -217,6 +213,7 @@ export default {
         }
       }).then((response) => {
         this.assignation = response.data.data
+        this.$store.dispatch('refreshTransfers')
       })
     },
     sendEvaluation () {
@@ -226,9 +223,6 @@ export default {
           this.updateEvaluation = false
           this.updateAssignationData()
           this.evaluationSavedMessage = true
-          setTimeout(() => {
-            this.evaluationSavedMessage = false
-          }, 2000)
         })
       }
     }
@@ -265,7 +259,7 @@ export default {
 }
 
 .tags-row {
-  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .tags-row .w3-tag {
@@ -273,50 +267,17 @@ export default {
   margin-top: 5px;
 }
 
-.from-row {
-}
-
-.receivers-row {
-  margin-bottom: 5px;
-}
-
-.receivers-container {
-  margin-left: 15px;
-}
-
 .motive-container {
   margin-bottom: 10px;
 }
 
-.fa-certificate {
-  font-size: 80px;
+.tags-row {
+  margin-bottom: 15px;
 }
 
-
-
-.action-btn {
-  width: 100%;
-  max-width: 220px;
-  padding-top: 2px !important;
-  padding-bottom: 2px !important;
-}
-
-.percent-input {
-  max-width: 100px;
-}
-
-.fa-percent {
-  font-size: 22px;
-  margin-top: 7.5px;
+.receiver-container {
   margin-left: 5px;
-}
-
-.not-sure-col {
-  margin-left: 20px;
-}
-
-.not-sure-col button {
-  width: 120px;
+  display: inline-block;
 }
 
 .bottom-btns-row {

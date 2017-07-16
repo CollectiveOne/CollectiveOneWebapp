@@ -75,21 +75,30 @@
                   <div class="w3-row">
                     <label class="d2-color"><b>Configuration</b></label>
                   </div>
-                  <div class="w3-row w3-container configuration-row">
+                  <div class="w3-row-padding configuration-row">
                     <div class="w3-col m6">
-                      <input v-model="assignation.selfBiasVisible" class="w3-check" type="checkbox">
-                      <label>Self-bias visible</label>
+                      <div class="w3-row">
+                        <label class="w3-left first-label">Max duration</label>
+                        <input v-model="assignation.config.maxDuration" class="w3-input w3-left input-number" type="number">
+                        <label class="w3-left">days</label>
+                      </div>
                     </div>
                     <div class="w3-col m6">
-                      <input v-model="assignation.evaluationsVisible" class="w3-check" type="checkbox">
-                      <label>All evaluations visible</label>
+                      <div class="w3-row">
+                        <input v-model="assignation.config.selfBiasVisible" class="w3-check" type="checkbox">
+                        <label>Self-bias visible</label>
+                      </div>
+                      <div class="w3-row">
+                        <input v-model="assignation.config.evaluationsVisible" class="w3-check" type="checkbox">
+                        <label>All evaluations visible</label>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </transition>
           </div>
-          
+
           <hr>
 
           <div class="bottom-btns-row w3-row-padding">
@@ -128,9 +137,12 @@ export default {
         type: this.DIRECT_ID(),
         motive: '',
         notes: '',
-        selfBiasVisible: true,
-        evaluationsVisible: false
-
+        config: {
+          selfBiasVisible: true,
+          evaluationsVisible: false,
+          maxDuration: 8,
+          minDuration: 2
+        }
       },
       motiveEmptyError: false,
       assetsZeroError: false,
@@ -283,8 +295,7 @@ export default {
         assignationToSend.motive = this.assignation.motive
         assignationToSend.notes = this.assignation.notes
 
-        assignationToSend.selfBiasVisible = this.assignation.selfBiasVisible
-        assignationToSend.evaluationsVisible = this.assignation.evaluationsVisible
+        assignationToSend.config = this.assignation.config
 
         if (this.isDirect) {
           assignationToSend.receivers = this.assignation.directReceivers
@@ -349,10 +360,30 @@ form {
   margin-top: 8px;
 }
 
+.configuration-row .w3-row {
+  height: 40px !important;
+}
+
+.configuration-row .first-label {
+  width: 100px;
+}
+
+.configuration-row .w3-col {
+  margin-bottom: 10px;
+}
+
 .configuration-row label {
   font-size: 16px;
   margin-left: 10px;
+}
 
+.configuration-row .input-number {
+  width: 70px;
+  margin-left: 8px;
+}
+
+.configuration-row label {
+  padding-top: 8px;
 }
 
 .bottom-btns-row button {
