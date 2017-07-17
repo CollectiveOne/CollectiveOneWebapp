@@ -7,14 +7,14 @@
           <i class="fa fa-times" aria-hidden="true"></i>
         </div>
 
-        <div class="w3-container w3-theme">
+        <div class="w3-container w3-border-bottom">
           <h2>New Initiative</h2>
         </div>
 
         <form class="w3-container">
 
           <br>
-          <label class="d2-color"><b>Name</b></label>
+          <label class=""><b>Name</b></label>
           <input v-model="name"
             class="w3-input w3-hover-light-gray" type="text"
             :class="{ 'error-input' : nameErrorShow }">
@@ -26,7 +26,7 @@
           </div>
 
           <br>
-          <label class="d2-color"><b>Driver</b></label>
+          <label class=""><b>Driver</b></label>
           <textarea v-model="driver"
             class="w3-input w3-border w3-round w3-hover-light-gray"
             :class="{ 'error-input' : driverErrorShow }">
@@ -43,11 +43,10 @@
 
           <hr>
 
-          <label class="init-contr-label d2-color"><b>Initial Members</b></label>
+          <label class="init-contr-label"><b>Initial Members</b></label>
           <app-members-table-container
             :members="members"
-            :canEdit="true"
-            @remove="removeMember($event)">
+            :canEdit="true">
           </app-members-table-container>
           <div v-if="membersEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
             please select at least one member
@@ -59,10 +58,10 @@
           <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-light-gray w3-round" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-theme w3-round" @click="accept()">Accept</button>
+              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
         </form>
@@ -268,7 +267,6 @@ export default {
 }
 
 .fa-times {
-  color: rgb(255, 255, 255);
   margin-right: 20px;
   margin-top: 20px;
 }
@@ -298,10 +296,6 @@ form {
 
 .new-contr-row {
   margin-top: 20px;
-}
-
-.fa-times-circle-o {
-  color: #607d8b;
 }
 
 .add-btn {

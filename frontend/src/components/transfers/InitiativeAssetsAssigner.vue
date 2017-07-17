@@ -2,7 +2,7 @@
   <div v-if="initiative" class="this-container">
     <div class="w3-row sub-initiative-first-row">
       <div class="w3-left">
-        <h5 class="d2-color w3-left"><b>Transfer from </b></h5>
+        <h5 class="w3-left"><b>Transfer from </b></h5>
       </div>
       <div class="w3-left">
         <app-initiative-selector class="initiative-selector"

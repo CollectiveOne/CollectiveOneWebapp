@@ -65,6 +65,11 @@ textarea {
 .w3-modal-content {
   margin-top: 50px;
   margin-bottom: 50px;
+  border-radius: 20px;
+}
+
+.w3-modal-content .w3-card-4 {
+  border-radius: 20px;
 }
 
 .white-bg {
@@ -114,6 +119,12 @@ textarea {
 .app-button {
   background-color: #15a5cc !important;
   color: white;
+  border-radius: 12px;
+}
+
+.app-button-light {
+  background-color: #f1f1f1 !important;
+  color: black;
   border-radius: 12px;
 }
 

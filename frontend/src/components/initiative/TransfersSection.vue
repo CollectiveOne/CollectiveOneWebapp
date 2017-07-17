@@ -38,9 +38,8 @@
       @click="showActionMenu = !showActionMenu">
       <i class="fa fa-plus" aria-hidden="true"></i>
     </div>
-
     <div v-if="showActionMenu" class="action-menu w3-display-topright">
-      <div class="w3-card">
+      <div class="w3-card w3-white w3-large">
         <div class="w3-button" @click="newTransferToUser()">
           <span class="w3-left">to user</span><i class="fa fa-sign-in w3-right" aria-hidden="true"></i>
         </div>

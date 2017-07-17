@@ -7,14 +7,14 @@
           <i class="fa fa-times" aria-hidden="true"></i>
         </div>
 
-        <div class="w3-container w3-theme">
+        <div class="w3-container w3-border-bottom">
           <h2>New subinitiative of {{ parentInitiative.meta.name }}</h2>
         </div>
 
         <form class="w3-container">
 
           <br>
-          <label class="d2-color"><b>Subinitiative Name</b></label>
+          <label class=""><b>Subinitiative Name</b></label>
           <input v-model="name"
             class="w3-input w3-hover-light-gray" type="text"
             :class="{ 'error-input' : nameErrorShow }">
@@ -26,7 +26,7 @@
           </div>
 
           <br>
-          <label class="d2-color"><b>Subinitiative Driver</b></label>
+          <label class=""><b>Subinitiative Driver</b></label>
           <textarea v-model="driver"
             class="w3-input w3-border w3-round w3-hover-light-gray"
             :class="{ 'error-input' : driverErrorShow }">
@@ -47,18 +47,16 @@
           </div>
 
           <hr>
-          <label class="init-contr-label d2-color"><b>Initial Members</b></label>
-          <app-members-table
+          <label class="init-contr-label "><b>Initial Members</b></label>
+          <app-members-table-container
             :members="members"
-            :canEdit="true"
-            @remove="removeMember($event)"
-            @role-updated="setRoleOfMember($event)">
-          </app-members-table>
+            :canEdit="true">
+          </app-members-table-container>
           <div class="w3-row" :style="{'margin-bottom': '5px'}">
-            <label class="d2-color" :style="{'margin-bottom': '10px'}"><b>or</b></label>
+            <label class="" :style="{'margin-bottom': '10px'}"><b>or</b></label>
             <br>
             <button
-              class="w3-button w3-theme w3-round w3-small"
+              class="w3-button app-button w3-small w3-margin-left"
               @click="setAllParentMembers()" type="button" name="button">
               select all members of "{{ parentInitiative.meta.name }}"
             </button>
@@ -73,10 +71,10 @@
           <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-light-gray w3-round" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-theme w3-round" @click="accept()">Accept</button>
+              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
         </form>
@@ -88,7 +86,7 @@
 <script>
 import { mapActions } from 'vuex'
 import InitiativeAssetsAssigner from '@/components/transfers/InitiativeAssetsAssigner.vue'
-import MembersTable from '@/components/user/MembersTable.vue'
+import MembersTableContainer from '@/components/user/MembersTableContainer.vue'
 
 /* eslint-disable no-unused-vars */
 import { tokensString } from '../../lib/common'
@@ -98,7 +96,7 @@ export default {
 
   components: {
     'app-initiative-assets-assigner': InitiativeAssetsAssigner,
-    'app-members-table': MembersTable
+    'app-members-table-container': MembersTableContainer
   },
 
   data () {

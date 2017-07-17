@@ -123,9 +123,9 @@
           </div>
 
         </div>
-        <div v-if="showAssigner" class="assigner-container w3-col l4 w3-container d2-color">
+        <div v-if="showAssigner" class="assigner-container w3-col l4 w3-container">
           <div class="w3-row label-row">
-            <label class="d2-color"><b>Amount to be transfered</b></label>
+            <label class=""><b>Amount to be transfered</b></label>
           </div>
           <div class="w3-row-padding">
             <div class="w3-col s6">
