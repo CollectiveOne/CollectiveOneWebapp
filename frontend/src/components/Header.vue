@@ -5,37 +5,32 @@
     <app-output-message></app-output-message>
 
     <!-- Navbar -->
-    <div class="w3-top header-div">
-     <div class="w3-bar w3-left-align w3-large">
-      <div
-        class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large">
-        <i class="fa fa-bars"></i>
-      </div>
-      <div
-        class="w3-bar-item w3-button w3-left w3-padding-large w3-large"
+    <div class="w3-top">
+     <div class="w3-bar header-div w3-border-bottom">
+      <div class="w3-bar-item w3-button w3-xlarge flex-vert bars-div"
         @click="$emit('expand-nav')">
         <i class="fa fa-bars"></i>
       </div>
-      <a href="#" class="w3-display-middle left w3-bar-item noselect">
+      <router-link :to="'/inits'" class="logo-container w3-display-middle left w3-bar-item noselect cursor-pointer">
         <img class="logo" src="../assets/Logo-Dark.png" alt="">
-      </a>
+      </router-link>
 
-      <div v-if="$store.state.user.profile" class="w3-dropdown-hover w3-hide-small w3-right">
-        <div @click="userOptionsClicked()"  class="w3-right">
+      <div v-if="$store.state.user.profile" class="w3-right w3-hide-medium w3-hide-small">
+        <div @click="userOptionsClicked()"  class="w3-bar-item w3-right w3-button">
           <div class="avatar-img-container w3-left">
             <img :src="$store.state.user.profile.pictureUrl" class="logged-avatar w3-circle noselect">
           </div>
-          <div class="logged-nickname w3-left noselect">
-              {{ $store.state.user.profile.nickname }}
+          <div class="logged-nickname noselect w3-left">
+            {{ $store.state.user.profile.nickname }}
           </div>
         </div>
-        <div v-if="showUserOptions" class="avatar-dropdown-content w3-card-4 w3-bar-block w3-white" style="width:200px">
-          <div @click="goHome()" class="w3-bar-item w3-button">home</div>
-          <div @click="logoutUser()" class="w3-bar-item w3-button">logout</div>
+        <div v-if="showUserOptions" class="avatar-dropdown-content w3-card-2 w3-bar-block w3-white w3-large">
+          <div @click="goHome()" class="w3-bar-item w3-button"><i class="fa fa-home" aria-hidden="true"></i>home</div>
+          <div @click="logoutUser()" class="w3-bar-item w3-button"><i class="fa fa-power-off" aria-hidden="true"></i>logout</div>
         </div>
       </div>
 
-      <div class="w3-hide-small w3-right">
+      <div class="nots-div w3-bar-item w3-right w3-button w3-hide-medium w3-hide-small w3-xlarge">
         <app-notifications-list
           :show="showActivityList"
           @icon-clicked="activityClicked()">
@@ -105,15 +100,31 @@ export default {
   height: 65px;
 }
 
-.w3-bar {
+.w3-bar .w3-bar-item {
+  height: 100%;
+}
+
+.bars-div {
+  width: 70px;
+}
+
+.logo-container {
+  padding-top: 17px;
 }
 
 .logo {
   height: 25px;
 }
 
+.nots-div {
+  padding-top: 3px !important;
+  padding-bottom: 0px !important;
+}
+
 .logged-nickname {
+  height: 100%;
   padding-top: 10px;
+  font-size: 18px;
   margin-right: 20px;
 }
 
@@ -128,8 +139,13 @@ export default {
 
 .avatar-dropdown-content {
   position: absolute;
-  margin-left: -20px;
-  margin-top: 51px;
+  width: 150px;
+  margin-left: 0px;
+  margin-top: 65px;
+}
+
+.avatar-dropdown-content .fa {
+  margin-right: 10px;
 }
 
 .logo {

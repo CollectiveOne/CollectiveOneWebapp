@@ -41,13 +41,11 @@
   <!-- Initiatives View -->
 
   <div class="w3-row">
-    <div v-show="expandNav" :class="navContainerClass">
-      <keep-alive>
-        <transition>
-          <app-initiatives-nav></app-initiatives-nav>
-        </transition>
-      </keep-alive>
-    </div>
+    <transition name="slideRightLeft">
+      <div v-show="expandNav" :class="navContainerClass">
+        <app-initiatives-nav @initiative-selected="initiativeSelected()"></app-initiatives-nav>
+      </div>
+    </transition>
 
     <div v-show="showContent" class="this-content" :class="contentContainerClass">
       <div class="slider-container">
@@ -164,6 +162,11 @@ export default {
   },
 
   methods: {
+    initiativeSelected () {
+      if (this.windowIsSmall) {
+        this.$emit('hide-nav')
+      }
+    }
   },
 
   mounted () {

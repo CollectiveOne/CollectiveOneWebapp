@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="white-text">
-    <div class="w3-row this-element" :class="{'selected': isSelected, 'gray-1': isSelected }">
+    <div class="w3-row this-element" :class="{'selected': isSelected, 'dark-gray-selected': isSelected }">
       <div v-if="this.level > 0" class="space-col" :class="leftSpaceClass">
         x
       </div>
@@ -31,7 +31,8 @@
           <div class="w3-row" v-for="(subinitiative, ix) in initiative.subInitiatives">
             <app-initiative-menu-item
               class="sub-initiative-element" :initiative="subinitiative" :key="subinitiative.id"
-              :coord="coord.concat([ix])">
+              :coord="coord.concat([ix])"
+              @initiative-selected="$emit('initiative-selected')">
             </app-initiative-menu-item>
           </div>
         </div>
@@ -121,6 +122,7 @@ export default {
 
   methods: {
     initiativeClicked () {
+      this.$emit('initiative-selected')
       this.$router.push('/inits/' + this.initiative.id)
     },
     newSubInitiative () {

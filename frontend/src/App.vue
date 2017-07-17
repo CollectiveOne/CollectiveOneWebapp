@@ -69,6 +69,11 @@ textarea {
   color: white;
 }
 
+.dark-gray-selected {
+  background-color: #3e464e;
+  color: white;
+}
+
 .gray-1 {
   background-color: #637484;
   color: white;
@@ -141,6 +146,12 @@ textarea {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+}
+
+.flex-vert {
+  display: flex !important;
+  justify-content: center !important;
+  flex-direction: column !important;
 }
 
 .slider-container {
@@ -272,6 +283,14 @@ textarea {
 
 .slideDownUp-leave-active {
   animation: slideToUp-out 0.5s ease forwards;
+}
+
+.slideRightLeft-enter-active {
+  animation: slideToRight-in 0.5s ease forwards;
+}
+
+.slideRightLeft-leave-active {
+  animation: slideToLeft-out 0.5s ease forwards;
 }
 
 @keyframes slideToRight-in {

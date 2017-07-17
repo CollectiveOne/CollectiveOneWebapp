@@ -2,7 +2,7 @@
   <div class="">
     <button class="w3-button w3-padding-large w3-display-container" title="Notifications"
       @click="showNotificationsClicked()">
-      <i class="fa fa-bell w3-display-center"></i>
+      <i class="fa fa-bell-o w3-display-center"></i>
       <i v-if="numberOfUnreadNotifications > 0" class="fa fa-circle w3-display-topright circle">
         <span class="circle-text w3-display-middle">{{ numberOfUnreadNotifications }}</span>
       </i>
@@ -12,6 +12,9 @@
       <div class="w3-row"  v-for="(notification, ix) in notifications" :key="notification.id">
         <app-notification-box :notification="notification"></app-notification-box>
         <hr v-if="ix < notifications.length - 1">
+      </div>
+      <div v-if="notifications.length === 0" class="w3-large">
+        no notifications
       </div>
     </div>
 
@@ -64,6 +67,10 @@ export default {
 
 <style scoped>
 
+.fa {
+  transform: rotate(30deg);
+}
+
 .circle {
   margin-top: 8px;
   margin-right: 8px;
@@ -85,7 +92,7 @@ export default {
 
 .notifications-container {
   position: absolute;
-  margin-left: -234px;
+  margin-left: -212px;
   padding-top: 20px !important;
   padding-bottom: 20px !important;
 }

@@ -10,17 +10,14 @@
         </div>
       </div>
 
-      <div class="w3-row">
+      <div class="w3-row my-initiatives-row">
         <h6 class="w3-center white-text noselect"><i>my initiatives</i></h6>
       </div>
       <app-initiative-menu-item v-for="(initiative, ix) in userInitiatives"
         :initiative="initiative" :key="initiative.id"
-        :coord="[ ix ]" class="top-menu-item">
+        :coord="[ ix ]" class="top-menu-item"
+        @initiative-selected="$emit('initiative-selected')">
       </app-initiative-menu-item>
-
-      <div class="w3-row">
-        <h6 class="white-text w3-center noselect"><i>my favorites</i></h6>
-      </div>
 
     </div>
   </nav>
@@ -86,6 +83,10 @@ export default {
 
 .top-menu-item {
   margin-bottom: 15px;
+}
+
+.my-initiatives-row {
+  margin-top: 30px;
 }
 
 </style>
