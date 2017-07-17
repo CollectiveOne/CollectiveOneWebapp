@@ -43,7 +43,14 @@ export default {
 <style>
 
 #app html,body,h1,h2,h3,h4,h5 {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Raleway', sans-serif;
+}
+tbody tr {
+  height: 80px !important;
+}
+
+td {
+  vertical-align: middle !important;
 }
 
 textarea {
@@ -101,7 +108,13 @@ textarea {
 }
 
 .border-blue {
-  border-color: #00839a !important;
+  border-color: #15a5cc !important;
+}
+
+.app-button {
+  background-color: #15a5cc !important;
+  color: white;
+  border-radius: 12px;
 }
 
 .black-text {

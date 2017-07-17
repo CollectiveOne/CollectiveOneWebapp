@@ -6,21 +6,22 @@
 
     <!-- Navbar -->
     <div class="w3-top">
-     <div class="w3-bar header-div w3-border-bottom">
+     <div class="w3-bar header-div w3-border-bottom w3-white">
       <div class="w3-bar-item w3-button w3-xlarge flex-vert bars-div"
         @click="$emit('expand-nav')">
         <i class="fa fa-bars"></i>
       </div>
-      <router-link :to="'/inits'" class="logo-container w3-display-middle left w3-bar-item noselect cursor-pointer">
-        <img class="logo" src="../assets/Logo-Dark.png" alt="">
+      <router-link :to="'/inits'" class="logo-container w3-bar-item noselect cursor-pointer">
+        <img class="logo w3-hide-small" src="../assets/Logo-Dark.png" alt="">
+        <img class="icon w3-hide-medium w3-hide-large" src="../assets/Icon.png" alt="">
       </router-link>
 
-      <div v-if="$store.state.user.profile" class="w3-right w3-hide-medium w3-hide-small">
+      <div v-if="$store.state.user.profile" class="w3-right">
         <div @click="userOptionsClicked()"  class="w3-bar-item w3-right w3-button">
           <div class="avatar-img-container w3-left">
             <img :src="$store.state.user.profile.pictureUrl" class="logged-avatar w3-circle noselect">
           </div>
-          <div class="logged-nickname noselect w3-left">
+          <div class="logged-nickname noselect w3-left  w3-hide-medium w3-hide-small">
             {{ $store.state.user.profile.nickname }}
           </div>
         </div>
@@ -30,7 +31,7 @@
         </div>
       </div>
 
-      <div class="nots-div w3-bar-item w3-right w3-button w3-hide-medium w3-hide-small w3-xlarge">
+      <div class="nots-div w3-bar-item w3-right w3-button w3-xlarge">
         <app-notifications-list
           :show="showActivityList"
           @icon-clicked="activityClicked()">
@@ -109,11 +110,17 @@ export default {
 }
 
 .logo-container {
-  padding-top: 17px;
+  padding-top: 0px;
 }
 
 .logo {
+  margin-top: 20px;
   height: 25px;
+}
+
+.icon {
+  margin-top: 18px;
+  height: 32px;
 }
 
 .nots-div {

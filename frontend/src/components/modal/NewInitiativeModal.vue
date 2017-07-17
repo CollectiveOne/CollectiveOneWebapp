@@ -44,20 +44,11 @@
           <hr>
 
           <label class="init-contr-label d2-color"><b>Initial Members</b></label>
-          <div class="w3-border w3-round w3-padding member-container">
-            <app-initiative-member
-              v-for="member in members"
-              :key="member.user.c1Id"
-              :member="member"
-              :canEdit="true"
-              @remove="removeMember($event)">
-            </app-initiative-member>
-            <div class="w3-row" :style="{'margin-bottom': '5px'}">
-              <label class="d2-color" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
-            </div>
-            <app-initiative-new-member class="new-contr-row" @add="addMember($event)"></app-initiative-new-member>
-
-          </div>
+          <app-members-table-container
+            :members="members"
+            :canEdit="true"
+            @remove="removeMember($event)">
+          </app-members-table-container>
           <div v-if="membersEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
             please select at least one member
           </div>
@@ -83,8 +74,7 @@
 <script>
 import { mapActions } from 'vuex'
 import NewToken from './support/NewToken.vue'
-import InitiativeNewMember from '@/components/user/InitiativeNewMember.vue'
-import InitiativeMember from '@/components/user/InitiativeMember.vue'
+import MembersTableContainer from '@/components/user/MembersTableContainer.vue'
 
 /* eslint-disable no-unused-vars */
 import { tokensString } from '@/lib/common'
@@ -104,8 +94,7 @@ export default {
 
   components: {
     'app-new-token': NewToken,
-    'app-initiative-member': InitiativeMember,
-    'app-initiative-new-member': InitiativeNewMember
+    'app-members-table-container': MembersTableContainer
   },
 
   data () {
@@ -181,31 +170,6 @@ export default {
 
     parentInitiativeUpdated (initiative) {
       this.parentInitiative = initiative
-    },
-
-    addMember (member) {
-      var index = this.indexOfMember(member.user.c1Id)
-      if (index === -1) {
-        this.members.push(JSON.parse(JSON.stringify(member)))
-      } else {
-        this.showOutputMessage('user has been already included')
-      }
-    },
-
-    removeMember (member) {
-      var index = this.indexOfMember(member.user.c1Id)
-      if (index > -1) {
-        this.members.splice(index, 1)
-      }
-    },
-
-    indexOfMember (c1Id) {
-      for (var ix in this.members) {
-        if (this.members[ix].user.c1Id === c1Id) {
-          return ix
-        }
-      }
-      return -1
     },
 
     closeThis () {

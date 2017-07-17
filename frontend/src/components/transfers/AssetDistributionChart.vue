@@ -8,15 +8,15 @@
             <div class="w3-col l4 w3-center">
               <div class="w3-display-container" :class="{tall: isOverview, short: !isOverview}">
                 <div class="w3-display-middle" style="width: 100%">
-                  <div class="w3-row">
-                    <b class="w3-xlarge ">{{ underThisInitiativeStr }} {{ assetData.assetName }}</b>
+                  <div class="w3-row tokens-row">
+                    {{ underThisInitiativeStr }} {{ assetData.assetName }}
                   </div>
-                  <div class="w3-row">
-                    <b class="w3-large">{{ underThisInitiativePercent }}% of existing</b>
+                  <div class="w3-row percentage-row">
+                    {{ underThisInitiativePercent }}% of existing
                   </div>
                 </div>
                 <div v-if="canEdit && canMint " class="w3-button w3-display-bottommiddle" @click="mintClicked()">
-                  <i class="fa fa-plus-circle d2-color" aria-hidden="true"></i>
+                  <i class="fa fa-plus-circle gray-1-color" aria-hidden="true"></i>
                 </div>
               </div>
             </div>
@@ -349,13 +349,8 @@ export default {
   padding-bottom: 10px;
 }
 
-.fa-certificate {
-  font-size: 100px;
-}
-
 .fa-plus-circle {
   font-size: 30px;
-
 }
 
 .tall {
@@ -364,6 +359,12 @@ export default {
 
 .short {
   height: 100px;
+}
+
+.tokens-row {
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 900;
 }
 
 .distribution-container {

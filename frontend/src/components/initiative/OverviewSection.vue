@@ -2,22 +2,24 @@
   <div class="">
     <div v-if="initiative" class="this-container w3-container w3-padding">
       <div class="w3-card">
-        <header class="w3-container gray-1">
-          <h4 class="w3-left">Driver</h4>
-          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-button w3-right w3-large" @click="$store.commit('showEditInitiativeModal', true)">
+        <header class="w3-bar gray-1 section-header-bar">
+          <h4 class="w3-bar-item w3-left">Driver</h4>
+          <div v-if="isLoggedAnAdmin"
+            class="edit-btn-div w3-bar-item w3-button w3-right w3-large"
+            @click="$store.commit('showEditInitiativeModal', true)">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </div>
         </header>
-        <div class="w3-container">
-          <p>{{ initiative.meta.driver }}</p>
+        <div class="w3-container section-content">
+          {{ initiative.meta.driver }}
         </div>
       </div>
       <br>
       <div class="w3-card">
-        <header class="w3-container gray-1">
-          <h4>Assets</h4>
+        <header class="section-header-bar w3-bar gray-1">
+          <h4 class="w3-bar-item w3-left">Assets</h4>
         </header>
-        <div class="tokens-div">
+        <div class="section-content">
           <app-asset-distribution-chart v-for="asset in initiative.assets"
             :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
             :canMint="initiative.ownAssetsId === asset.assetId" :canEdit="isLoggedAnAdmin">
@@ -72,19 +74,20 @@ export default {
   padding-bottom: 25px !important;
 }
 
-.tokens-div {
-  padding-top: 15px;
+.section-header-bar {
+  height: 65px;
+}
+
+.section-content {
+  padding-top: 25px;
+  padding-bottom: 15px;
 }
 
 .edit-btn-div {
-  padding-top: 15px;
+  padding-top: 20px;
+  width: 60px;
+  height: 100%
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-  opacity: 0
-}
 
 </style>

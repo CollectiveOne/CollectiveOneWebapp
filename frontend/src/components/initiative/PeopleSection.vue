@@ -13,6 +13,7 @@
         there should be at least one admin per initiative
       </div>
     </div>
+    <br>
     <div class="sub-members-div">
       <h3 class="section-header">members of subinitiatives of {{ initiative.meta.name }}</h3>
       <app-submembers-table

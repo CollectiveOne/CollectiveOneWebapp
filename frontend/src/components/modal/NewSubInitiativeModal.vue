@@ -48,30 +48,20 @@
 
           <hr>
           <label class="init-contr-label d2-color"><b>Initial Members</b></label>
-          <div class="w3-border w3-round w3-padding members-container">
-            <app-initiative-member
-              v-for="member in members"
-              class="initiative-member-row"
-              :key="member.user.c1Id"
-              :member="member"
-              :canEdit="true"
-              @remove="removeMember($event)"
-              @role-updated="setRoleOfMember($event)">
-            </app-initiative-member>
+          <app-members-table
+            :members="members"
+            :canEdit="true"
+            @remove="removeMember($event)"
+            @role-updated="setRoleOfMember($event)">
+          </app-members-table>
+          <div class="w3-row" :style="{'margin-bottom': '5px'}">
+            <label class="d2-color" :style="{'margin-bottom': '10px'}"><b>or</b></label>
             <br>
-            <div class="w3-row">
-              <label class="d2-color" :style="{'margin-bottom': '10px'}"><b>add member:</b></label>
-            </div>
-            <app-initiative-new-member class="new-contr-row" @add="addMember($event, true)"></app-initiative-new-member>
-            <div class="w3-row" :style="{'margin-bottom': '5px'}">
-              <label class="d2-color" :style="{'margin-bottom': '10px'}"><b>or</b></label>
-              <br>
-              <button
-                class="w3-button w3-theme w3-round w3-small"
-                @click="setAllParentMembers()" type="button" name="button">
-                select all members of "{{ parentInitiative.meta.name }}"
-              </button>
-            </div>
+            <button
+              class="w3-button w3-theme w3-round w3-small"
+              @click="setAllParentMembers()" type="button" name="button">
+              select all members of "{{ parentInitiative.meta.name }}"
+            </button>
           </div>
           <div v-if="membersEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
             please select at least one member
@@ -98,8 +88,7 @@
 <script>
 import { mapActions } from 'vuex'
 import InitiativeAssetsAssigner from '@/components/transfers/InitiativeAssetsAssigner.vue'
-import InitiativeNewMember from '@/components/user/InitiativeNewMember.vue'
-import InitiativeMember from '@/components/user/InitiativeMember.vue'
+import MembersTable from '@/components/user/MembersTable.vue'
 
 /* eslint-disable no-unused-vars */
 import { tokensString } from '../../lib/common'
@@ -109,8 +98,7 @@ export default {
 
   components: {
     'app-initiative-assets-assigner': InitiativeAssetsAssigner,
-    'app-initiative-member': InitiativeMember,
-    'app-initiative-new-member': InitiativeNewMember
+    'app-members-table': MembersTable
   },
 
   data () {
