@@ -1,5 +1,5 @@
 <template lang="html">
-  <div v-if="showOutput" class="message-container w3-tag w3-theme-l2 w3-display-topmiddle">
+  <div v-if="showOutput" class="message-container w3-tag gray-1 w3-display-topmiddle">
     <p>{{ outputMessage }}</p>
   </div>
 </template>
