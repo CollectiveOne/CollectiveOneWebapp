@@ -12,7 +12,7 @@
                 <div key="1" class="w3-row" v-if="!isDontKnow(userData)">
 
                   <div v-if="showSelfBiases" class="input-and-percent">
-                    <i class="fa fa-percent d2-color w3-right" aria-hidden="true"></i>
+                    <i class="fa fa-percent  w3-right" aria-hidden="true"></i>
                     <input
                       :value="userData.selfBias"
                       class="percent-input w3-right w3-input w3-border w3-hover-light-gray w3-round"
@@ -21,7 +21,7 @@
                   </div>
 
                   <div class="input-and-percent">
-                    <i class="fa fa-percent d2-color w3-right" aria-hidden="true"></i>
+                    <i class="fa fa-percent  w3-right" aria-hidden="true"></i>
                     <input
                       v-model.number="userData.percent"
                       class="percent-input w3-right w3-input w3-border w3-hover-light-gray w3-round"
@@ -30,7 +30,7 @@
                   </div>
                 </div>
                 <div v-else key="2" class="w3-row">
-                  <div class="w3-tag w3-padding w3-round w3-theme noselect">
+                  <div class="w3-tag w3-padding w3-round gray-1 noselect">
                     DK
                   </div>
                 </div>
@@ -39,7 +39,7 @@
           </div>
           <div v-if="!disable" class="w3-col s6 not-sure-col">
             <button
-              class="w3-button w3-theme w3-round w3-left"
+              class="w3-button app-button w3-left"
               @click="toggleDontKnow(userData)">
               {{ isDontKnow(userData) ? 'set' : 'dont know' }}
             </button>

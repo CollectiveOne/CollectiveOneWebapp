@@ -1,5 +1,6 @@
 package org.collectiveone.modules.tokens;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -147,6 +148,7 @@ public class TokenTransferService {
 		transfer.setMotive(motive);
 		transfer.setNotes(notes);
 		transfer.setValue(value);
+		transfer.setOrderDate(new Timestamp(System.currentTimeMillis()));
 		
 		transfer = initiativeTransferRepository.save(transfer);
 		

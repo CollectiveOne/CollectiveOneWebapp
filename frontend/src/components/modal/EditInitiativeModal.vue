@@ -7,26 +7,26 @@
           <i class="fa fa-times" aria-hidden="true"></i>
         </div>
 
-        <div class="w3-container w3-theme">
+        <div class="w3-container  w3-border-bottom">
           <h2>Edit Initiative</h2>
         </div>
 
         <form class="w3-container">
 
           <div class="w3-row">
-            <label class="d2-color"><b>Name</b></label>
+            <label class=""><b>Name</b></label>
             <input v-model="newInitiative.name" class="w3-input w3-hover-light-gray" type="text">
           </div>
           <br>
 
           <div class="w3-row">
-            <label class="d2-color"><b>Driver</b></label>
+            <label class=""><b>Driver</b></label>
             <textarea v-model="newInitiative.driver" rows="5" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
           </div>
           <br>
 
           <div class="w3-row">
-            <label class="d2-color"><b>Color</b></label>
+            <label class=""><b>Color</b></label>
             <div class="colors-container w3-center">
               <div
                 v-for="color in colors"
@@ -41,10 +41,10 @@
           <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-light-gray w3-round" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-theme w3-round" @click="accept()">Accept</button>
+              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
 

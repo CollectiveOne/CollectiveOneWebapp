@@ -7,7 +7,7 @@
           <i class="fa fa-times" aria-hidden="true"></i>
         </div>
 
-        <div class="w3-container w3-theme">
+        <div class="w3-container w3-border-bottom">
           <h2>Edit notifications of {{ initiative.meta.name }}</h2>
         </div>
 
@@ -15,18 +15,18 @@
 
           <div class="w3-row">
             <div class="w3-left label-div">
-              <label class="d2-color"><b>Receive notifications:</b></label>
+              <label class=""><b>Receive notifications:</b></label>
             </div>
             <div class="w3-left w3-round button-bar">
               <button
                 class="w3-bar-item w3-button w3-round"
-                :class="{'w3-theme': !isSubscribed, 'w3-light-gray': isSubscribed}"
+                :class="{'app-button': !isSubscribed, 'app-button-light': isSubscribed}"
                 @click="subscriber.state = 'UNSUBSCRIBED'">
                 No
               </button>
               <button
                 class="w3-bar-item w3-button w3-round"
-                :class="{'w3-theme': isSubscribed, 'w3-light-gray': !isSubscribed}"
+                :class="{'app-button': isSubscribed, 'app-button-light': !isSubscribed}"
                 @click="subscriber.state = 'SUBSCRIBED'">
                 Yes
               </button>
@@ -35,30 +35,30 @@
           <br>
           <div v-show="isSubscribed" class="w3-row">
             <div class="w3-left label-div">
-              <label class="d2-color"><b>... and send an email:</b></label>
+              <label class=""><b>... and send an email:</b></label>
             </div>
             <div class="w3-left button-bar">
               <button
                 class="w3-bar-item w3-button w3-round"
-                :class="{'w3-theme': isNever, 'w3-light-gray': !isNever}"
+                :class="{'app-button': isNever, 'app-button-light': !isNever}"
                 @click="subscriber.emailNotificationsState = 'DISABLED'">
                 Never
               </button>
               <button
                 class="w3-bar-item w3-button w3-round"
-                :class="{'w3-theme': isImmediate, 'w3-light-gray': !isImmediate}"
+                :class="{'app-button': isImmediate, 'app-button-light': !isImmediate}"
                 @click="subscriber.emailNotificationsState = 'SEND_NOW'">
                 Immediately
               </button>
               <button
                 class="w3-bar-item w3-button w3-round"
-                :class="{'w3-theme': isOnceADay, 'w3-light-gray': !isOnceADay}"
+                :class="{'app-button': isOnceADay, 'app-button-light': !isOnceADay}"
                 @click="subscriber.emailNotificationsState = 'SEND_ONCEADAY'">
                 Once a day
               </button>
               <button
                 class="w3-bar-item w3-button w3-round"
-                :class="{'w3-theme': isOnceAWeek, 'w3-light-gray': !isOnceAWeek}"
+                :class="{'app-button': isOnceAWeek, 'app-button-light': !isOnceAWeek}"
                 @click="subscriber.emailNotificationsState = 'SEND_ONCEAWEEK'">
                 Once a week
               </button>
@@ -68,10 +68,10 @@
           <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-light-gray w3-round" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-theme w3-round" @click="accept()">Accept</button>
+              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
 

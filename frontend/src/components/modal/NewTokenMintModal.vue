@@ -7,7 +7,7 @@
           <i class="fa fa-times" aria-hidden="true"></i>
         </div>
 
-        <div class="w3-container w3-theme">
+        <div class="w3-container w3-border-bottom">
           <h2>Create brand new tokens</h2>
         </div>
 
@@ -15,8 +15,7 @@
 
           <div class="w3-row w3-center">
             <div class="w3-display-container amount-container">
-              <i class="w3-display-middle fa fa-certificate l3-color" aria-hidden="true"></i>
-              <div class="w3-display-middle d2-color" style="width: 100%">
+              <div class="w3-display-middle " style="width: 100%">
                 <div class="w3-row">
                   <b class="w3-xlarge ">{{ newAmountStr }} {{ assetData.assetName }}</b>
                 </div>
@@ -27,7 +26,7 @@
             </div>
           </div>
           <div class="w3-row label-row">
-            <label class="d2-color"><b>Amount to be created</b></label>
+            <label class=""><b>Amount to be created</b></label>
           </div>
           <div class="w3-row-padding">
             <div class="w3-col s6">
@@ -38,7 +37,7 @@
                 <div class="w3-col s10">
                   <input @input="percentageUpdated($event)" :value="percentage" class="w3-input w3-border w3-hover-light-gray w3-round" type="number" min="0" step="1">
                 </div>
-                <div class="w3-col s2 d2-color">
+                <div class="w3-col s2 ">
                   <i class="fa fa-percent" aria-hidden="true"></i>
                 </div>
               </div>
@@ -48,10 +47,10 @@
           <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-light-gray w3-round" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-theme w3-round" @click="accept()">Accept</button>
+              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
 

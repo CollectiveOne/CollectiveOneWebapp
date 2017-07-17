@@ -2,7 +2,7 @@
   <div class="">
     <div class="w3-row">
       <div class="receivers-col w3-col m6">
-        <label class="d2-color"><b>Receivers:</b></label>
+        <label class=""><b>Receivers:</b></label>
         <div class="w3-row users-list">
           <app-users-list :usersInit="receivers" @updated="receiversUpdated($event)"
             type="receivers">
@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="w3-col m6">
-        <label class="d2-color"><b>Evaluators: {{ sameAsReceivers ? '(same as receivers)' : ''}}</b></label>
+        <label class=""><b>Evaluators: {{ sameAsReceivers ? '(same as receivers)' : ''}}</b></label>
         <div v-if="!sameAsReceivers" class="w3-row users-list" :class="{'covered-div': sameAsReceivers}">
           <app-users-list :usersInit="evaluators" @updated="evaluatorsUpdated($event)"
             type="evaluators">
@@ -18,7 +18,7 @@
         </div>
         <div class="w3-row w3-center button-evaluators">
           <button @click="sameAsReceivers = !sameAsReceivers"
-            class="w3-button w3-theme w3-round">
+            class="w3-button app-button">
             {{ sameAsReceivers ? 'different from receivers?' : 'same as receivers' }}
           </button>
         </div>

@@ -1,9 +1,8 @@
 <template lang="html">
   <div class="w3-display-container seal-display-container">
-    <i class="w3-display-middle fa fa-circle-thin l4-color" aria-hidden="true"></i>
-    <div class="w3-display-middle d2-color" style="width: 100%">
+    <div class="w3-display-middle" style="width: 100%">
       <div class="w3-row w3-center">
-        <b class="w3-large ">{{ tokensString(value) }} {{ assetName }}</b>
+        <b class="w3-xlarge ">{{ tokensString(value) }} {{ assetName }}</b>
       </div>
     </div>
   </div>

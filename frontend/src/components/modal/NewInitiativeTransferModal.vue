@@ -6,14 +6,14 @@
           <i class="fa fa-times" aria-hidden="true"></i>
         </div>
 
-        <div class="w3-container w3-theme">
+        <div class="w3-container w3-border-bottom">
           <h2>Direct transfer to another initiative</h2>
         </div>
 
         <div class="this-container w3-container">
 
           <div class="w3-row">
-            <label class="d2-color"><b>Transfer to</b></label>
+            <label class=""><b>Transfer to</b></label>
             <select v-model="transfer.receiverId" class="w3-select initiative-selector" name="transferto">
               <option v-for="subinitiative in subinitiatives" :value="subinitiative.id">{{ subinitiative.meta.name }}</option>
             </select>
@@ -22,11 +22,11 @@
           <br>
 
           <div class="w3-row">
-            <label class="d2-color"><b>Motive</b></label>
+            <label class=""><b>Motive</b></label>
             <input v-model="transfer.motive" class="w3-input w3-hover-light-gray" type="text">
             <br>
 
-            <label class="d2-color"><b>Notes</b></label>
+            <label class=""><b>Notes</b></label>
             <textarea v-model="transfer.notes" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
             <br>
           </div>
@@ -42,10 +42,10 @@
 
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-light-gray w3-round" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-theme w3-round" @click="accept()">Accept</button>
+              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
 

@@ -6,10 +6,10 @@
           <div class="w3-col w3-right user-controls w3-container">
             <div class="w3-row">
               <div class="w3-right w3-button w3-xlarge remove-button">
-                <div @click="removeUser(userData.user)"><i class="fa fa-times-circle-o l1-color" aria-hidden="true"></i></div>
+                <div @click="removeUser(userData.user)"><i class="fa fa-times-circle-o gray-1-color" aria-hidden="true"></i></div>
               </div>
               <div v-if="isReceivers" class="w3-right donate-btn-container">
-                <button @click="donorClicked(userData.user)" class="donate-button w3-button w3-small w3-round w3-theme">{{userData.isDonor ? 'receive' : 'donate'}}</button>
+                <button @click="donorClicked(userData.user)" class="donate-button w3-button w3-small app-button">{{userData.isDonor ? 'receive' : 'donate'}}</button>
               </div>
             </div>
           </div>

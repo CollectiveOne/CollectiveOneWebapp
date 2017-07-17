@@ -2,11 +2,11 @@
   <div class="">
 
     <div v-if="!multipleReceivers" class="w3-row receiver-label">
-      <label class="d2-color"><b>Receiver:</b></label>
+      <label class=""><b>Receiver:</b></label>
     </div>
 
     <div v-if="multipleReceivers" class="w3-row receiver-label">
-      <label class="d2-color"><b>Select and add new receiver:</b></label>
+      <label class=""><b>Select and add new receiver:</b></label>
     </div>
     <div class="w3-row receivers-selector">
       <div class="w3-col s7">
@@ -19,7 +19,7 @@
             <div class="w3-col s8">
               <input v-model.number="newReceiverPercent" class="w3-input w3-border w3-hover-light-gray w3-round perc-input w3-right" type="number" step="5" min="0">
             </div>
-            <div class="w3-col s4 d2-color w3-left">
+            <div class="w3-col s4 w3-left">
               <i class="fa fa-percent" aria-hidden="true"></i>
             </div>
           </div>
@@ -31,7 +31,7 @@
       </div>
       <div v-else class="">
         <button
-          class="w3-button w3-theme w3-round" @click="multipleReceivers = true"
+          class="w3-button app-button" @click="multipleReceivers = true"
           type="button" name="button">distribute among multiple receivers
         </button>
       </div>
@@ -40,7 +40,7 @@
 
     <hr v-if="multipleReceivers">
     <div v-if="multipleReceivers" class="w3-row receiver-label">
-      <label class="d2-color"><b>Selected receivers are:</b></label>
+      <label class=""><b>Selected receivers are:</b></label>
     </div>
 
     <div v-if="multipleReceivers" class="receivers-list-container">

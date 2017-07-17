@@ -54,7 +54,7 @@ public class InitiativeTransfer {
 		dto.setSenderName(from.getMeta().getName());
 		dto.setReceiverId(to.getId().toString());
 		dto.setReceiverName(to.getMeta().getName());
-		dto.setOrderDate(orderDate.getTime());
+		if (orderDate != null) dto.setOrderDate(orderDate.getTime());
 		dto.setMotive(motive);
 		dto.setNotes(notes);
 		dto.setValue(value);

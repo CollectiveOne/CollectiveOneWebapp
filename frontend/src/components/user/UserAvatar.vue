@@ -5,12 +5,12 @@
       @mouseleave="showHoverName = false">
       <img class="w3-circle" :class="imgClass" :src="user.pictureUrl"/>
       <div class="hover-name cursor-pointer">
-        <div v-if="!showName && showHoverName" class="hover-name-container w3-tag w3-theme w3-round">
+        <div v-if="!showName && showHoverName" class="hover-name-container w3-tag dark-gray w3-round">
           <b>{{ user.nickname }}</b>
         </div>
       </div>
     </div>
-    <div v-if="showName" class="name-container w3-left d2-color">
+    <div v-if="showName" class="name-container w3-left">
       <b>{{ user.nickname }}</b>
     </div>
   </div>

@@ -9,7 +9,7 @@
             <div class="w3-row">
               <app-value-seal :value="assignation.assets[0].value" :assetName="assignation.assets[0].assetName"></app-value-seal>
             </div>
-            <div class="w3-row from-row w3-center d2-color">
+            <div class="w3-row from-row w3-center ">
               <div class="w3-tag w3-round noselect" :style="{'background-color': $store.getters.colorOfInitiative(assignation.initiativeId)}">
                 from
                 <b>{{ assignation.initiativeName }}</b>
@@ -17,7 +17,7 @@
             </div>
           </div>
 
-          <div class="w3-col l8 w3-container d2-color">
+          <div class="w3-col l8 w3-container ">
 
             <div class="w3-row w3-center">
               <h3>{{ assignation.motive }}</h3>
@@ -39,10 +39,10 @@
             </div>
 
             <div class="w3-ro tags-row w3-center">
-              <div class="w3-tag w3-theme-l2 w3-round noselect w3-small">
+              <div class="w3-tag gray-1 w3-round noselect w3-small">
                 <b>{{ assignation.type }}</b>
               </div>
-              <div class="w3-tag w3-theme-l2 w3-round noselect w3-small">
+              <div class="w3-tag gray-1 w3-round noselect w3-small">
                 <b>{{ assignation.state }}</b>
               </div>
             </div>
@@ -62,7 +62,7 @@
         <div class="w3-row">
           <div v-if="isEvaluator" class="w3-col my-evaluation-div" :class="{'l6': isDone, '12': !isDone}">
             <div class="w3-row w3-center">
-              <h6 class="d2-color"><b>My evaluation</b></h6>
+              <h6 class=""><b>My evaluation</b></h6>
             </div>
             <br>
             <transition name="fade" mode="out-in">
@@ -75,12 +75,12 @@
             </transition>
             <div v-if="isOpen" class="bottom-btns-row w3-center">
               <button v-if="!disableEvaluations"
-                type="button" class="w3-button w3-theme w3-round"
+                type="button" class="w3-button app-button"
                 @click="sendEvaluation()" :disabled="!arePercentagesOk">
                 Save
               </button>
               <button v-else
-                type="button" class="w3-button w3-theme w3-round"
+                type="button" class="w3-button app-button"
                 @click="updateEvaluation = true">
                 Change my evaluation
               </button>
@@ -88,7 +88,7 @@
           </div>
           <div v-if="showResults" class="w3-col l6">
             <div class="w3-row w3-center">
-              <h6 class="d2-color"><b>Results</b></h6>
+              <h6 class=""><b>Results</b></h6>
             </div>
             <br>
             <app-users-percentages
@@ -101,7 +101,7 @@
         <div v-if="showEvaluations" class="w3-row">
           <hr>
           <div class="w3-row w3-center">
-            <h6 class="d2-color"><b>All Evaluations</b></h6>
+            <h6 class=""><b>All Evaluations</b></h6>
           </div>
           <br>
           <app-peer-reviewed-evaluations
@@ -113,7 +113,7 @@
 
       <div class="w3-display-topright">
         <router-link tag="div" :to="{ name: 'InitiativeAssignations' }"
-          class="w3-button d2-color">
+          class="w3-button ">
           <i class="fa fa-times" aria-hidden="true"></i>
         </router-link>
       </div>

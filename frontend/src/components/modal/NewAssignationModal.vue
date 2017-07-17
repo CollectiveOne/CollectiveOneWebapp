@@ -6,7 +6,7 @@
           <i class="fa fa-times" aria-hidden="true"></i>
         </div>
 
-        <div class="w3-container w3-theme">
+        <div class="w3-container w3-border-bottom">
           <transition name="fadeenter" mode="out-in">
             <h2 :key="isPeerReviewed">{{ isPeerReviewed ? 'Peer-reviewed transfer to users' : 'Direct transfer to user(s)' }}</h2>
           </transition>
@@ -16,14 +16,14 @@
 
           <div class="section-tabs w3-row">
             <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
-              :class="{'w3-border-blue': isDirect}"
+              :class="{'border-blue': isDirect}"
               @click="assignation.type = DIRECT_ID()">
-              <h5 class="d2-color" :class="{'bold-text': isDirect}">Direct</h5>
+              <h5 class="" :class="{'bold-text': isDirect}">Direct</h5>
             </div>
             <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
-              :class="{'w3-border-blue': isPeerReviewed}"
+              :class="{'border-blue': isPeerReviewed}"
               @click="assignation.type = PEER_REVIEWED_ID()">
-              <h5 class="d2-color" :class="{'bold-text': isPeerReviewed}">Peer Reviewed</h5>
+              <h5 class="" :class="{'bold-text': isPeerReviewed}">Peer Reviewed</h5>
             </div>
           </div>
           <br>
@@ -53,7 +53,7 @@
           </div>
 
           <div class="w3-row">
-            <label class="d2-color"><b>Motive</b></label>
+            <label class=""><b>Motive</b></label>
             <input v-model="assignation.motive" class="w3-input w3-hover-light-gray" :class="{ 'error-input' : motiveErrorShow }" type="text">
             <div v-if="motiveEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
               please provide a motive for this transfer for future reference
@@ -63,7 +63,7 @@
             </div>
             <br>
 
-            <label class="d2-color"><b>Notes</b></label>
+            <label class=""><b>Notes</b></label>
             <textarea v-model="assignation.notes" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
             <br>
           </div>
@@ -73,7 +73,7 @@
               <div v-if="isPeerReviewed" class="w3-row">
                 <div class="w3-col s12">
                   <div class="w3-row">
-                    <label class="d2-color"><b>Configuration</b></label>
+                    <label class=""><b>Configuration</b></label>
                   </div>
                   <div class="w3-row-padding configuration-row">
                     <div class="w3-col m6">
@@ -103,10 +103,10 @@
 
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-light-gray w3-round" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button w3-theme w3-round" @click="accept()">Accept</button>
+              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
 
@@ -350,6 +350,10 @@ form {
   text-align: center;
   user-select: none;
   cursor: pointer;
+}
+
+.bold-text {
+  font-weight: bold;
 }
 
 .assset-assigner {
