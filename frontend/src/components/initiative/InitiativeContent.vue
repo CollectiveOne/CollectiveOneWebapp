@@ -36,7 +36,7 @@
           </transition>
         </div>
 
-        <div class="section-tabs w3-row w3-center light-gray">
+        <div class="section-tabs w3-row w3-center light-grey">
           <router-link tag="div" :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
             class="w3-col s4 tablink w3-bottombar w3-hover-light-grey"
             :class="{'border-blue': isOverview}"

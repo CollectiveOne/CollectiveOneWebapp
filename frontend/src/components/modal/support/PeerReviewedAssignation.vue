@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="">
-    <div class="w3-row">
+    <div class="w3-row-padding">
       <div class="receivers-col w3-col m6">
-        <label class=""><b>Receivers:</b></label>
+        <h5>Receivers:</h5>
         <div class="w3-row users-list">
           <app-users-list :usersInit="receivers" @updated="receiversUpdated($event)"
             type="receivers">
@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="w3-col m6">
-        <label class=""><b>Evaluators: {{ sameAsReceivers ? '(same as receivers)' : ''}}</b></label>
+        <h5>Evaluators: {{ sameAsReceivers ? '(same as receivers)' : ''}}</h5>
         <div v-if="!sameAsReceivers" class="w3-row users-list" :class="{'covered-div': sameAsReceivers}">
           <app-users-list :usersInit="evaluators" @updated="evaluatorsUpdated($event)"
             type="evaluators">

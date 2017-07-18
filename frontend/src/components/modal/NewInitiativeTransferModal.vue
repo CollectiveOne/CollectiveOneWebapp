@@ -23,11 +23,11 @@
 
           <div class="w3-row">
             <label class=""><b>Motive</b></label>
-            <input v-model="transfer.motive" class="w3-input w3-hover-light-gray" type="text">
+            <input v-model="transfer.motive" class="w3-input w3-hover-light-grey" type="text">
             <br>
 
             <label class=""><b>Notes</b></label>
-            <textarea v-model="transfer.notes" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
+            <textarea v-model="transfer.notes" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
             <br>
           </div>
 

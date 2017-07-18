@@ -3,11 +3,11 @@
     <table class="w3-table w3-striped w3-bordered w3-centered">
       <thead>
         <tr>
-          <th class="avatar-col">avatar</th>
-          <th>nickname</th>
-          <th class="percent-col">percentage</th>
+          <th class="avatar-col" colspan="2">user</th>
+          <th class="percent-col">%</th>
+          <th class="bar-col w3-hide-small w3-hide-medium"></th>
           <th v-if="!disable">know / don't</th>
-          <th v-if="showSelfBiases">self-bias</th>
+          <th v-if="showSelfBiases" class="self-bias-col">self-bias</th>
         </tr><i></i>
       </thead>
       <tbody>
@@ -20,7 +20,12 @@
           </td>
           <td class="percent-col">
             <div v-if="disable" class="">
-              <b>{{ userData.percent.toFixed(1) }} %</b>
+              <div v-if="!isDontKnow(userData)" class="">
+                <b>{{ userData.percent.toFixed(1) }} %</b>
+              </div>
+              <div v-else class="">
+                <b>don't know</b>
+              </div>
             </div>
             <div v-else class="slider-container">
               <transition name="slideDownUp" mode="out-in">
@@ -29,7 +34,7 @@
                     @input="userData.percent = parseFloat($event.target.value)"
                     :value="userData.percent.toFixed(0)"
                     @focusout="checkRounding()"
-                    class="percent-input w3-input w3-border w3-hover-light-gray w3-round"
+                    class="percent-input w3-input w3-border w3-hover-light-grey w3-round"
                     type="number" step="5" min="0"
                     :disabled="disable">
                 </div>
@@ -41,6 +46,12 @@
               </transition>
             </div>
           </td>
+          <td class="bar-col w3-hide-small w3-hide-medium">
+            <div class="light-grey w3-round">
+              <div class="bar-div app-blue w3-center w3-round" :style="{'width': userData.percent +'%'}">
+              </div>
+            </div>
+          </td>
           <td v-if="!disable">
             <button
               class="w3-button app-button dont-know-button"
@@ -48,8 +59,8 @@
               {{ isDontKnow(userData) ? 'set' : 'dont know' }}
             </button>
           </td>
-          <td v-if="showSelfBiases" :class="{'self-bias-good': userData.selfBias <= 0, 'self-bias-bad': userData.selfBias > 0, }">
-            <b>{{ userData.selfBias.toFixed(1) }} %</b>
+          <td v-if="showSelfBiases" class="self-bias-col" :class="{'self-bias-good': userData.selfBias <= 0, 'self-bias-bad': userData.selfBias > 0}">
+            <b>{{ Math.abs(userData.selfBias) < 100 ? userData.selfBias.toFixed(1) + ' %' : 'DK'}}</b>
           </td>
         </tr>
       </tbody>
@@ -130,7 +141,7 @@ export default {
       return 100 - this.sumOfPercents
     },
     arePercentagesOk () {
-      if (this.sumOfPercents === 100) {
+      if (Math.abs(this.sumOfPercents - 100.0) < 0.001) {
         return true
       } else {
         return false
@@ -164,16 +175,18 @@ export default {
     },
     checkRounding () {
       if ((Math.abs(this.missingPercent) > 0) && (Math.abs(this.missingPercent) < 1)) {
-        this.autoScaled = true
         this.autoScale()
       } else {
         this.autoScaled = false
       }
     },
     autoScale () {
-      var scale = this.sumOfPercents / 100
-      for (var ix in this.usersData) {
-        this.usersData[ix].percent *= 1 / scale
+      if (this.sumOfPercents > 0) {
+        var scale = this.sumOfPercents / 100
+        for (var ix in this.usersData) {
+          this.usersData[ix].percent *= 1 / scale
+        }
+        this.autoScaled = true
       }
     },
     isDontKnow (userData) {
@@ -211,6 +224,18 @@ export default {
 }
 
 .percent-col {
+  width: 75px;
+}
+
+.bar-col {
+  width: 200px;
+}
+
+.bar-div {
+  height: 20px;
+}
+
+.self-bias-col {
   width: 100px;
 }
 

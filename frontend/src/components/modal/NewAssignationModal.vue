@@ -45,7 +45,8 @@
           <div class="w3-row">
             <app-initiative-assets-assigner
               :initInitiativeId="initiative.id" type='member-assigner'
-              @updated="assetsSelected($event)" :showError="assetsZeroShow">
+              @updated="assetsSelected($event)" :showError="assetsZeroShow"
+              :canChangeInitiative="false">
             </app-initiative-assets-assigner>
             <div v-if="assetsZeroShow" class="w3-row w3-tag error-panel error-row w3-round">
               plase select the amount of tokens that will be transferred to these members
@@ -54,7 +55,7 @@
 
           <div class="w3-row">
             <label class=""><b>Motive</b></label>
-            <input v-model="assignation.motive" class="w3-input w3-hover-light-gray" :class="{ 'error-input' : motiveErrorShow }" type="text">
+            <input v-model="assignation.motive" class="w3-input w3-hover-light-grey" :class="{ 'error-input' : motiveErrorShow }" type="text">
             <div v-if="motiveEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
               please provide a motive for this transfer for future reference
             </div>
@@ -64,7 +65,7 @@
             <br>
 
             <label class=""><b>Notes</b></label>
-            <textarea v-model="assignation.notes" class="w3-input w3-border w3-round w3-hover-light-gray"></textarea>
+            <textarea v-model="assignation.notes" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
             <br>
           </div>
 
@@ -336,7 +337,6 @@ export default {
 }
 
 .fa-times {
-  color: rgb(255, 255, 255);
   margin-right: 20px;
   margin-top: 20px;
 }

@@ -64,7 +64,7 @@
 
         <hr>
         <div class="w3-row-padding">
-          <div v-if="isEvaluator" class="w3-col my-evaluation-div" :class="{'l6': isDone, '12': !isDone}">
+          <div v-if="isEvaluator" class="w3-col my-evaluation-div w3-margin-bottom" :class="{'l6': isDone, '12': !isDone}">
             <div class="w3-row w3-center">
               <h5 class=""><b>My evaluation</b></h5>
             </div>
@@ -186,7 +186,7 @@ export default {
       return this.assignation.thisEvaluation.evaluationGrades
     },
     showEvaluations () {
-      return this.isDone && this.isEvaluator && this.assignation.evaluationsVisible
+      return this.isDone && this.isEvaluator && this.assignation.config.evaluationsVisible
     },
     sumOfPercents () {
       var sum = 0.0
@@ -199,7 +199,7 @@ export default {
       return sum
     },
     arePercentagesOk () {
-      if (this.sumOfPercents === 100) {
+      if (Math.abs(this.sumOfPercents - 100.0) < 0.001) {
         return true
       } else {
         return false

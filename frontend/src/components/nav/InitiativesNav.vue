@@ -4,7 +4,7 @@
 
       <div class="w3-container">
         <div
-          class="create-new w3-button light-gray w3-round-large w3-center"
+          class="create-new w3-button light-grey w3-round-large w3-center"
           @click="$store.commit('showNewInitiativeModal', true)">
           <i class="fa fa-plus-circle"></i>  create new
         </div>

@@ -7,7 +7,7 @@
     </div>
     <div class="w3-col s10">
       <input  type="text"
-              class="w3-input w3-hover-light-gray autocomplete-inputs"
+              class="w3-input w3-hover-light-grey autocomplete-inputs"
               placeholder="select member"
               v-model="type"
               @input="input(type)"

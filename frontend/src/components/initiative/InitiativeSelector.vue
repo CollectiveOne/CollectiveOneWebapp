@@ -5,7 +5,7 @@
   <div class="autocomplete-wrapper">
     <input  type="text"
             :id="id"
-            class="w3-input w3-hover-light-gray autocomplete-inputs"
+            class="w3-input w3-hover-light-grey autocomplete-inputs"
             :placeholder="placeholder"
             v-model="type"
             @input="input(type)"

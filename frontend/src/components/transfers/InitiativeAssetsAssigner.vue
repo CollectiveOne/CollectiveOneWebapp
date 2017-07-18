@@ -2,10 +2,11 @@
   <div v-if="initiative" class="this-container">
     <div class="w3-row sub-initiative-first-row">
       <div class="w3-left">
-        <h5 class="w3-left"><b>Transfer from </b></h5>
+        <h5 class="w3-left"><b>Transfer from {{ canChangeInitiative ? '' : initiative.meta.name }}</b></h5>
       </div>
-      <div class="w3-left">
-        <app-initiative-selector class="initiative-selector"
+      <div v-if="canChangeInitiative" class="w3-left">
+        <app-initiative-selector
+          class="initiative-selector"
           anchor="id" label="name" :init="initiative"
           url="/1/secured/initiatives/suggestions"
           @select="initiativeSelected($event)">
@@ -41,6 +42,10 @@ export default {
       default: 'initiative-assigner'
     },
     showError: {
+      type: Boolean,
+      default: false
+    },
+    canChangeInitiative: {
       type: Boolean,
       default: false
     }

@@ -1,36 +1,32 @@
 <template lang="html">
   <div class="w3-container table-container">
-    <!--  header row -->
-    <div class="w3-row">
-      <div class="w3-col evaluator-col w3-center">
-        <h6 class="d2-color"><i class="fa fa-arrow-down" aria-hidden="true"></i> <b>evaluators</b></h6>
-      </div>
-      <div class="w3-rest receivers-cols">
-        <div class="w3-left receiver-col" v-for="receiver in receivers">
-          <app-user-avatar :user="receiver.user" :showName="false"></app-user-avatar>
-        </div>
-      </div>
-    </div>
-    <hr class="header-line">
-
-    <!-- evaluators rows -->
-    <div class="w3-row evaluator-row" v-for="evaluator in evaluators">
-      <div class="w3-col s12">
-        <div class="w3-row">
-          <div class="w3-col evaluator-col w3-center">
-            <app-user-avatar :user="evaluator.user"></app-user-avatar>
-          </div>
-          <div class="w3-rest receivers-cols">
-            <div class="w3-left receiver-col" v-for="receiver in receivers">
-              <div class="evaluation-value-div d2-color">
-                {{ getEvaluationOf(evaluator, receiver) }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr class="evaluator-line">
-      </div>
-    </div>
+    <table class="w3-table w3-striped w3-bordered w3-centered table-element">
+      <thead>
+        <tr class="top-row">
+          <th colspan="2"></th>
+          <th :colspan="receivers.length">receivers</th>
+        </tr>
+        <tr class="evaluators-row">
+          <th colspan="2"><i class="fa fa-arrow-down" aria-hidden="true"></i> evaluators</th>
+          <th v-for="receiver in receivers">
+            <app-user-avatar :user="receiver.user" :showName="false"></app-user-avatar>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="evaluator in evaluators">
+          <td class="avatar-col">
+            <app-user-avatar :user="evaluator.user" class="user-container" :showName="false"></app-user-avatar>
+          </td>
+          <td>
+            {{ evaluator.user.nickname }}
+          </td>
+          <td v-for="receiver in receivers" class="w3-large">
+            {{ getEvaluationOf(evaluator, receiver) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -53,10 +49,10 @@ export default {
       for (var ix in evaluator.grades) {
         let grade = evaluator.grades[ix]
         if (grade.receiverUser.c1Id === receiver.user.c1Id) {
-          if (grade.evaluationType === 'DONT_KNOW') {
+          if (grade.type === 'DONT_KNOW') {
             return 'DK'
           } else {
-            return grade.percent
+            return grade.percent.toFixed(0) + ' %'
           }
         }
       }
@@ -85,23 +81,15 @@ export default {
   margin-left: 10px;
 }
 
-
 .receivers-cols {
   display: inline-block;
 }
 
-.header-line {
-  margin: 5px 0px 10px 0px !important;
+.top-row {
+  border-style: none !important;
 }
 
-.evaluator-line {
-  margin: 5px 0px 5px 0px !important;
+.evaluators-row th {
+  vertical-align: bottom !important;
 }
-
-.evaluation-value-div {
-  padding-top: 5px;
-  margin-left: 10px;
-  font-size: 18px;
-}
-
 </style>

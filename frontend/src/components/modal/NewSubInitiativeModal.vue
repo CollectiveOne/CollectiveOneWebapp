@@ -16,7 +16,7 @@
           <br>
           <label class=""><b>Subinitiative Name</b></label>
           <input v-model="name"
-            class="w3-input w3-hover-light-gray" type="text"
+            class="w3-input w3-hover-light-grey" type="text"
             :class="{ 'error-input' : nameErrorShow }">
           <div v-if="nameEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
             please select a name for this subinitiative
@@ -28,7 +28,7 @@
           <br>
           <label class=""><b>Subinitiative Driver</b></label>
           <textarea v-model="driver"
-            class="w3-input w3-border w3-round w3-hover-light-gray"
+            class="w3-input w3-border w3-round w3-hover-light-grey"
             :class="{ 'error-input' : driverErrorShow }">
           </textarea>
           <div v-if="driverErrorShow" class="w3-row w3-tag error-panel error-row w3-round">

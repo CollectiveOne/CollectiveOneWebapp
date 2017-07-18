@@ -21,25 +21,25 @@
               </div>
             </div>
             <div class="w3-col l8">
-              <div class="w3-row">
+              <div class="w3-row w3-margin-bottom">
                 <label class="">
                   <b>Still Available</b>
                 </label>
-                <div class="w3-light-grey w3-round-xlarge w3-large">
-                  <div class="w3-container w3-center w3-round-xlarge gray-1" :style="{'width': availableToThisInitiativePercent +'%'}">
+                <div class="light-grey w3-round-xlarge w3-large">
+                  <div class="app-blue w3-container w3-center w3-round-xlarge" :style="{'width': availableToThisInitiativePercent +'%'}">
                     <div class="bar-txt w3-center noselect">{{ availableToThisInitiative }}</div>
                   </div>
                 </div>
               </div>
 
-              <div v-if="isInitiativeAssigner || isOverview" class="w3-row">
+              <div v-if="isInitiativeAssigner || isOverview" class="w3-row w3-margin-bottom">
                 <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
                   <div class="w3-row cursor-pointer" @click="showSubinitiatives = !showSubinitiatives">
                     <label class="cursor-pointer noselect">
                       <b>Transferred to sub-initiatives</b>
                     </label>
-                    <div class="w3-light-grey w3-round-xlarge w3-large">
-                      <div class="w3-container w3-center w3-round-xlarge gray-1" :style="{'width': transferredToSubinitiativesPercent +'%'}">
+                    <div class="light-grey w3-round-xlarge w3-large">
+                      <div class="app-blue w3-container w3-center w3-round-xlarge" :style="{'width': transferredToSubinitiativesPercent +'%'}">
                         <div class="bar-txt w3-center noselect">{{ transferredToSubinitiativesStr }}</div>
                       </div>
                     </div>
@@ -56,10 +56,10 @@
                             :key="subinitiativeAssets.assetId">
 
                             <label class="">
-                              <b class="noselect">{{ subinitiativeAssets.receiverName }}</b>
+                              <b class="noselect"><i class="fa fa-circle" aria-hidden="true" :style="{'color': $store.getters.colorOfInitiative(subinitiativeAssets.receiverId)}"></i>  {{ subinitiativeAssets.receiverName }}</b>
                             </label>
-                            <div class="w3-light-grey w3-round-xlarge w3-large">
-                              <div class="w3-container w3-center w3-round-xlarge gray-1" :style="{'width': subinitiativePercent(subinitiativeAssets) +'%'}">
+                            <div class="light-grey w3-round-xlarge w3-large">
+                              <div class="app-blue w3-container w3-center w3-round-xlarge" :style="{'width': subinitiativePercent(subinitiativeAssets) +'%'}">
                                 <div class="bar-txt w3-center noselect">{{ subinitiativePortion(subinitiativeAssets) }}</div>
                               </div>
                             </div>
@@ -85,8 +85,8 @@
                     <label class="cursor-pointer">
                       <b class="noselect">Transferred to members</b>
                     </label>
-                    <div class="w3-light-grey w3-round-xlarge w3-large">
-                      <div class="w3-container w3-center w3-round-xlarge gray-1" :style="{'width': transferredToMembersPercent +'%'}">
+                    <div class="light-grey w3-round-xlarge w3-large">
+                      <div class="app-blue w3-container w3-center w3-round-xlarge" :style="{'width': transferredToMembersPercent +'%'}">
                         <div class="bar-txt w3-center noselect">{{ transferredToMembersStr }}</div>
                       </div>
                     </div>
@@ -100,8 +100,8 @@
                             <label class="">
                               <b class="noselect">{{ memberAssets.receiverName }}</b>
                             </label>
-                            <div class="w3-light-grey w3-round-xlarge w3-large">
-                              <div class="w3-container w3-center w3-round-xlarge gray-1" :style="{'width': memberPercent(memberAssets) +'%'}">
+                            <div class="light-grey w3-round-xlarge w3-large">
+                              <div class="app-blue w3-container w3-center w3-round-xlarge" :style="{'width': memberPercent(memberAssets) +'%'}">
                                 <div class="bar-txt w3-center noselect">{{ memberPortion(memberAssets) }}</div>
                               </div>
                             </div>
@@ -127,15 +127,15 @@
           <div class="w3-row label-row">
             <label class=""><b>Amount to be transfered</b></label>
           </div>
-          <div class="w3-row-padding">
+          <div class="w3-row-padding w3-large">
             <div class="w3-col s6">
-              <input @input="valueUpdated($event)" :value="value"  class="w3-input w3-border w3-hover-light-gray w3-round"
+              <input @input="valueUpdated($event)" :value="value.toFixed(1)"  class="w3-input w3-border w3-hover-light-grey w3-round"
               :class="{ 'error-input' : errorFound }" type="number" min="0">
             </div>
             <div class="w3-col s6">
               <div class="w3-row">
                 <div class="w3-col s10">
-                  <input @input="percentageUpdated($event)" :value="percentage" class="w3-input w3-border w3-hover-light-gray w3-round"
+                  <input @input="percentageUpdated($event)" :value="percentage.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round"
                   :class="{ 'error-input' : errorFound }" type="number" min="0" step="5">
                 </div>
                 <div class="w3-col s2">
@@ -147,7 +147,7 @@
           <div class="slider-container error-row w3-center">
             <transition name="slideDownUp">
               <div v-if="valueTooLarge" class="w3-row error-panel w3-tag w3-round">
-                {{ this.assetData.ownedByThisHolder > 0 ? 'only ' : ''}} {{this.assetData.ownedByThisHolder }} {{ this.assetData.assetName }} available
+                {{ this.assetData.ownedByThisHolder > 0 ? 'only ' : ''}} {{this.assetData.ownedByThisHolder.toFixed(1) }} {{ this.assetData.assetName }} available
               </div>
             </transition>
           </div>
@@ -384,7 +384,7 @@ export default {
 
 .fa-percent {
   font-size: 22px;
-  margin-top: 7.5px;
+  margin-top: 11px;
   margin-left: 5px;
 }
 

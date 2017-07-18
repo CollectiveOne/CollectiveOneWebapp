@@ -1,6 +1,6 @@
 <template lang="html">
-  <div class="w3-row">
-    <div class="img-div w3-left noselect"
+  <div class="w3-row avatar-container">
+    <div class="img-div noselect"
       @mouseover="showHoverName = true"
       @mouseleave="showHoverName = false">
       <img class="w3-circle" :class="imgClass" :src="user.pictureUrl"/>
@@ -10,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div v-if="showName" class="name-container w3-left">
+    <div v-if="showName" class="name-container">
       <b>{{ user.nickname }}</b>
     </div>
   </div>
@@ -59,10 +59,18 @@ export default {
 
 <style scoped>
 
+.avatar-container {
+  white-space: nowrap;
+}
+
+.img-div {
+  display: inline-block;
+}
+
 .name-container {
+  display: inline-block;
   font-size: 18px;
   margin-left: 15px;
-  padding-top: 5px;
   text-align: left;
 }
 

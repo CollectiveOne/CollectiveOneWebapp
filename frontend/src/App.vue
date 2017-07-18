@@ -108,7 +108,7 @@ textarea {
   color: #6f8294;
 }
 
-.light-gray {
+.light-grey {
   background-color: #eff3f6;
   color: black;
 }
@@ -119,6 +119,11 @@ textarea {
 
 .border-blue {
   border-color: #15a5cc !important;
+}
+
+.app-blue {
+  background-color: #95bad6 !important;
+  color: #313942;
 }
 
 .app-button {
@@ -135,26 +140,6 @@ textarea {
 
 .black-text {
   color: black;
-}
-
-.l4-color {
-  color: #e6e9fc !important; /* w3-indigo l3*/
-}
-
-.l3-color {
-  color: #b1b8e3 !important; /* w3-indigo l3*/
-}
-
-.l2-color {
-  color: #8995d6 !important; /* w3-indigo l2*/
-}
-
-.l1-color {
-  color: #8995d6 !important
-}
-
-.d2-color {
-  color: #334191 !important;  /* w3-indigo d2*/
 }
 
 .success-panel {
