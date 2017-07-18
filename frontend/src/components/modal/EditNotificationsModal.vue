@@ -15,7 +15,7 @@
 
           <div class="w3-row">
             <div class="w3-left label-div">
-              <label class=""><b>Receive notifications:</b></label>
+              <label class=""><b>See notifications in this page:</b></label>
             </div>
             <div class="w3-left w3-round button-bar">
               <button
@@ -42,25 +42,13 @@
                 class="w3-bar-item w3-button w3-round"
                 :class="{'app-button': isNever, 'app-button-light': !isNever}"
                 @click="subscriber.emailNotificationsState = 'DISABLED'">
-                Never
+                No
               </button>
               <button
                 class="w3-bar-item w3-button w3-round"
                 :class="{'app-button': isImmediate, 'app-button-light': !isImmediate}"
                 @click="subscriber.emailNotificationsState = 'SEND_NOW'">
-                Immediately
-              </button>
-              <button
-                class="w3-bar-item w3-button w3-round"
-                :class="{'app-button': isOnceADay, 'app-button-light': !isOnceADay}"
-                @click="subscriber.emailNotificationsState = 'SEND_ONCEADAY'">
-                Once a day
-              </button>
-              <button
-                class="w3-bar-item w3-button w3-round"
-                :class="{'app-button': isOnceAWeek, 'app-button-light': !isOnceAWeek}"
-                @click="subscriber.emailNotificationsState = 'SEND_ONCEAWEEK'">
-                Once a week
+                Yes
               </button>
             </div>
           </div>
@@ -102,12 +90,6 @@ export default {
     },
     isImmediate () {
       return this.subscriber.emailNotificationsState === 'SEND_NOW'
-    },
-    isOnceADay () {
-      return this.subscriber.emailNotificationsState === 'SEND_ONCEADAY'
-    },
-    isOnceAWeek () {
-      return this.subscriber.emailNotificationsState === 'SEND_ONCEAWEEK'
     }
   },
 
@@ -147,7 +129,6 @@ export default {
 }
 
 .fa-times {
-  color: rgb(255, 255, 255);
   margin-right: 20px;
   margin-top: 20px;
 }

@@ -13,10 +13,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
+import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -62,6 +64,9 @@ public class Activity {
 	@Column(name = "old_driver")
 	private String oldDriver;
 	
+	@OneToOne
+	private TokenMint mint;
+	
 	
 	/* Dto */
 	public ActivityDto toDto() {
@@ -73,6 +78,7 @@ public class Activity {
 		if(subInitiative != null) dto.setSubInitiative(subInitiative.toDto());
 		dto.setOldName(oldName);
 		dto.setOldDriver(oldDriver);
+		if(mint != null) dto.setMint(mint.toDto());
 		
 		return dto;
 	}
@@ -159,6 +165,13 @@ public class Activity {
 		this.oldDriver = oldDriver;
 	}
 
-	
+	public TokenMint getMint() {
+		return mint;
+	}
+
+	public void setMint(TokenMint mint) {
+		this.mint = mint;
+	}
+
 	
 }

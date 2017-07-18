@@ -15,6 +15,7 @@ import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
+import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
@@ -121,7 +122,12 @@ public class ActivityService {
 	@Transactional
 	public GetResult<SubscriberDto> getSubscriber(UUID userId, UUID initiativeId) {
 		Subscriber subscriber = subscriberRepository.findByElementIdAndUser_C1Id(initiativeId, userId);
-		return new GetResult<SubscriberDto>("success", "success", subscriber.toDto());
+		if (subscriber != null) {
+			return new GetResult<SubscriberDto>("success", "success", subscriber.toDto());	
+		} else {
+			return new GetResult<SubscriberDto>("success", "subscriber not found", null);
+		}
+		
 	}
 	
 	/** Each user have one general purposed Susbscriber element used to send general notifications
@@ -217,6 +223,22 @@ public class ActivityService {
 		}
 	}
 	
+	@Transactional
+	public void tokensMinted(Initiative initiative, TokenMint mint) {
+		Activity activity = new Activity();
+		
+		activity.setType(ActivityType.TOKENS_MINTED);
+		activity.setTriggerUser(mint.getOrderedBy());
+		activity.setInitiative(initiative);
+		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		activity.setMint(mint);
+		
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	
 	
 	/** To be called within an activity transaction, modifies the notifications property of the
 	 * input activity */
@@ -226,15 +248,17 @@ public class ActivityService {
 		for (Subscriber subscriber : subscribers) {
 			if(activity.getTriggerUser().getC1Id() != subscriber.getUser().getC1Id()) {
 				/* add a notification only if the trigger user is not the subscriber */
-				Notification notification = new Notification();
-				notification.setActivity(activity);
-				notification.setSubscriber(subscriber);
-				notification.setState(NotificationState.PENDING);
-				notification.setEmailState(NotificationEmailState.PENDING);
-				
-				notification = notificationRepository.save(notification);
-				
-				activity.getNotifications().add(notification);
+				if (subscriber.getState() == SubscriberState.SUBSCRIBED) {
+					Notification notification = new Notification();
+					notification.setActivity(activity);
+					notification.setSubscriber(subscriber);
+					notification.setState(NotificationState.PENDING);
+					notification.setEmailState(NotificationEmailState.PENDING);
+					
+					notification = notificationRepository.save(notification);
+					
+					activity.getNotifications().add(notification);
+				}
 			}
 		}
 	}

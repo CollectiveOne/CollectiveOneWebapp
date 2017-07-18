@@ -67,13 +67,13 @@ export default {
 
 <style scoped>
 
-.fa {
+.fa-bell-o {
   transform: rotate(30deg);
 }
 
 .circle {
   margin-top: 8px;
-  margin-right: 8px;
+  margin-right: 10px;
   color: rgb(249, 48, 48);
   font-size: 20px;
 }

@@ -16,9 +16,11 @@
           <td v-if="showFrom">{{ transfer.senderName }}</td>
           <td>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</td>
           <td>
-            <div class="w3-tag w3-round-large" :style="{'background-color': $store.getters.colorOfInitiative(transfer.receiverId)}">
+            <router-link tag="div" :to="'/inits/' + transfer.receiverId"
+              class="w3-tag w3-round-large cursor-pointer noselect"
+              :style="{'background-color': $store.getters.colorOfInitiative(transfer.receiverId)}">
               {{ transfer.receiverName }}
-            </div>
+            </router-link>
           </td>
           <td class="w3-hide-small">{{ transfer.motive }}</td>
         </tr>

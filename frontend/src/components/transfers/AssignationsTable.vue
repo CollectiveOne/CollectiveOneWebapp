@@ -25,9 +25,11 @@
             </router-link>
           </td>
           <td v-if="showFrom">
-            <div class="w3-tag w3-round-large" :style="{'background-color': $store.getters.colorOfInitiative(assignation.initiativeId)}">
+            <router-link tag="div" :to="'/inits/' + assignation.initiativeId"
+              class="w3-tag w3-round-large cursor-pointer noselect"
+              :style="{'background-color': $store.getters.colorOfInitiative(assignation.initiativeId)}">
               {{ assignation.initiativeName }}
-            </div>
+            </router-link>
           </td>
           <td>{{ tokensString(assignation.assets[0].value) }} {{ assignation.assets[0].assetName }}</td>
           <td class="avatar-col">

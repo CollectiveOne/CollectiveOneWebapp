@@ -43,6 +43,26 @@
               </div>
             </div>
           </div>
+          <div v-if="assetsZeroShow" class="w3-row w3-tag error-panel error-row w3-round">
+            plese select an amount larger than 0
+          </div>
+
+          <br>
+          <div class="w3-row">
+            <label class=""><b>Motive</b></label>
+            <input v-model="motive" class="w3-input w3-hover-light-grey" :class="{ 'error-input' : motiveErrorShow }" type="text">
+            <div v-if="motiveEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
+              please provide a motive for this transfer for future reference
+            </div>
+            <div v-if="motiveTooLarge" class="w3-row w3-tag error-panel error-row w3-round">
+              motive too large, please use the notes for long annotations
+            </div>
+            <br>
+
+            <label class=""><b>Notes</b></label>
+            <textarea v-model="notes" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
+            <br>
+          </div>
 
           <hr>
           <div class="bottom-btns-row w3-row-padding">
@@ -70,7 +90,11 @@ export default {
     return {
       assetData: null,
       value: 0,
-      percentage: 0
+      percentage: 0,
+      motive: '',
+      notes: '',
+      motiveEmptyError: false,
+      assetsZeroError: false
     }
   },
 
@@ -83,6 +107,21 @@ export default {
     },
     newAmountStr () {
       return tokensString(this.newAmountVal)
+    },
+    motiveErrorShow () {
+      return this.motiveEmptyShow || this.motiveTooLarge
+    },
+    motiveEmptyShow () {
+      return this.motiveEmptyError && this.motive === ''
+    },
+    motiveTooLarge () {
+      return this.motive.length > 55
+    },
+    assetsAreZero () {
+      return this.value <= 0
+    },
+    assetsZeroShow () {
+      return this.assetsZeroError && this.assetsAreZero
     }
   },
 
@@ -107,14 +146,34 @@ export default {
       this.$store.commit('showNewTokenMintModal', { show: false })
     },
     accept () {
-      this.axios.put('/1/secured/token/' + this.assetData.assetId + '/mint', {}, {
-        params: {
-          amount: this.value
+      debugger
+      var ok = true
+      if (this.assetsAreZero) {
+        ok = false
+        this.assetsZeroError = true
+      }
+
+      if (this.motive === '') {
+        this.motiveEmptyError = true
+        ok = false
+      }
+
+      if (this.motiveTooLarge) {
+        ok = false
+      }
+
+      if (ok) {
+        var mintDto = {
+          value: this.value,
+          motive: this.motive,
+          notes: this.notes
         }
-      }).then((response) => {
-        this.$store.commit('triggerUpdateAssets')
-        this.closeThis()
-      })
+        this.axios.put('/1/secured/token/' + this.assetData.assetId + '/mint', mintDto)
+        .then((response) => {
+          this.$store.commit('triggerUpdateAssets')
+          this.closeThis()
+        })
+      }
     }
   },
 

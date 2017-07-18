@@ -396,9 +396,9 @@ public class InitiativeService {
 			/* governance related data */
 			DecisionMaker decisionMaker = governanceService.getDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
 			if(decisionMaker != null) {
-				if(decisionMaker.getRole() == DecisionMakerRole.ADMIN) {
-					memberDto.setRole(DecisionMakerRole.ADMIN.toString());
-				}
+				memberDto.setRole(decisionMaker.getRole().toString());
+			} else {
+				memberDto.setRole(DecisionMakerRole.MEMBER.toString());
 			}
 		} else {
 			memberDto.setId("");

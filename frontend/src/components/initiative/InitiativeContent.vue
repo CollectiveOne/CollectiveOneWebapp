@@ -11,16 +11,16 @@
                   <b><app-initiative-path :initiative="initiative"></app-initiative-path></b>
                 </h3>
               </div>
-              <div v-if="isLoggedAnAdmin" class="w3-bar-item w3-right">
+              <div class="w3-bar-item w3-right">
                 <div class="" style="width:55px; height:100%">
-                  <div
+                  <div v-if="isLoggedAMember"
                     @click="showEditMenu = !showEditMenu"
                     class="edit-btn-div w3-button w3-large"
                     style="width:100%; height:100%">
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                   </div>
                   <div v-if="showEditMenu" class="edit-menu w3-dropdown-content w3-bar-block w3-card">
-                    <div
+                    <div v-if="isLoggedAnAdmin"
                       @click="$store.commit('showEditInitiativeModal', true); showEditMenu = false"
                       class="w3-bar-item w3-button">
                       <i class="fa fa-pencil" aria-hidden="true"></i>edit initiative
@@ -57,14 +57,15 @@
           </router-link>
         </div>
 
-        <v-touch v-on:swipeleft="onSwipeLeft()" v-on:swiperight="onSwipeRight()">
-          <div class="w3-row content-container">
-            <transition :name="animationType" mode="out-in" appear>
-              <router-view :key="initiative.id">
-              </router-view>
-            </transition>
-          </div>
-        </v-touch>
+        <!-- TODO: selecting the role on a select element with the mouse triggered the swipe  -->
+        <!-- <v-touch v-on:swipeleft="onSwipeLeft()" v-on:swiperight="onSwipeRight()"> -->
+        <div class="w3-row content-container">
+          <transition :name="animationType" mode="out-in" appear>
+            <router-view :key="initiative.id">
+            </router-view>
+          </transition>
+        </div>
+        <!-- </v-touch> -->
       </div>
     </div>
   </div>
@@ -90,6 +91,9 @@ export default {
     },
     isLoggedAnAdmin () {
       return this.initiative.loggedMember.role === 'ADMIN'
+    },
+    isLoggedAMember () {
+      return this.initiative.loggedMember.role === 'MEMBER'
     },
     isOverview () {
       var res = false
@@ -128,6 +132,7 @@ export default {
       this.showNewMemberModal = true
     },
     onSwipeLeft () {
+      console.log('swiped left')
       if (this.isOverview) {
         this.$router.push({name: 'InitiativePeople'})
         return
@@ -138,6 +143,7 @@ export default {
       }
     },
     onSwipeRight () {
+      console.log('swiped right')
       if (this.isAssignations) {
         this.$router.push({name: 'InitiativePeople'})
         return

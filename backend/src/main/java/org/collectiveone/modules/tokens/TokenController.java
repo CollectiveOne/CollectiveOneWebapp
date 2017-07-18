@@ -60,7 +60,7 @@ public class TokenController {
 	@RequestMapping(path = "/secured/token/{tokenId}/mint", method = RequestMethod.PUT) 
 	public PostResult mintTokens(
 			@PathVariable("tokenId") String tokenIdStr, 
-			@RequestParam double amount) {
+			@RequestBody TokenMintDto mintDto) {
 		
 		UUID tokenId = UUID.fromString(tokenIdStr);
 		
@@ -69,7 +69,7 @@ public class TokenController {
 		}
 		
 		Initiative initiative = initiativeService.findByTokenType_Id(tokenId);
-		String result = tokenService.mintToHolder(tokenId, initiative.getId(), amount, TokenHolderType.INITIATIVE);
+		String result = tokenTransferService.mintToInitiative(tokenId, initiative.getId(), getLoggedUser().getC1Id(), mintDto);
 		
 		if(result.equals("success")) {
 			return new PostResult("success", "tokens minted", tokenId.toString());

@@ -23,7 +23,7 @@
                 <option value="MEMBER" selected>MEMBER</option>
               </select>
               <p v-else>
-                <span class="role-tag w3-tag w3-round w3-theme">
+                <span class="role-tag w3-tag w3-round gray-1">
                   {{ member.role ? member.role : 'MEMBER' }}
                 </span>
               </p>

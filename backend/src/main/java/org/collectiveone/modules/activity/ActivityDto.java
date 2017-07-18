@@ -1,6 +1,7 @@
 package org.collectiveone.modules.activity;
 
 import org.collectiveone.modules.initiatives.InitiativeDto;
+import org.collectiveone.modules.tokens.TokenMintDto;
 import org.collectiveone.modules.users.AppUserDto;
 
 public class ActivityDto {
@@ -11,6 +12,7 @@ public class ActivityDto {
 	private InitiativeDto subInitiative;
 	private String oldName;
 	private String oldDriver;
+	private TokenMintDto mint;
 	
 	public String getType() {
 		return type;
@@ -48,6 +50,11 @@ public class ActivityDto {
 	public void setOldDriver(String oldDriver) {
 		this.oldDriver = oldDriver;
 	}
-	
+	public TokenMintDto getMint() {
+		return mint;
+	}
+	public void setMint(TokenMintDto mint) {
+		this.mint = mint;
+	}
 	
 }

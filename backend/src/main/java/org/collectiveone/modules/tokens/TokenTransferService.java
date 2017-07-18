@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeRelationship;
 import org.collectiveone.modules.initiatives.InitiativeRelationshipRepositoryIf;
@@ -23,6 +24,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TokenTransferService {
+
+	@Autowired
+	private ActivityService activityService;
 	
 	@Autowired
 	private TokenService tokenService;
@@ -47,6 +51,9 @@ public class TokenTransferService {
 	
 	@Autowired
 	private InitiativeRelationshipRepositoryIf initiativeRelationshipRepository;
+	
+	@Autowired
+	private TokenMintRepositoryIf tokenMintRespository;
 	
 	
 	
@@ -80,6 +87,31 @@ public class TokenTransferService {
 		
 		
 		return assetDto;
+	}
+	
+	@Transactional
+	public String mintToInitiative(UUID tokenId, UUID initiativeId, UUID orderByUserId, TokenMintDto mintDto) {
+		
+		String result = tokenService.mintToHolder(tokenId, initiativeId, mintDto.getValue(), TokenHolderType.INITIATIVE);
+		
+		if (result.equals("success")) {
+			AppUser orderedBy = appUserRepository.findByC1Id(orderByUserId);
+			
+			TokenMint mint = new TokenMint();
+			mint.setToken(tokenService.getTokenType(tokenId));
+			mint.setOrderedBy(orderedBy);
+			mint.setToHolder(initiativeId);
+			mint.setMotive(mintDto.getMotive());
+			mint.setNotes(mintDto.getNotes());
+			mint.setValue(mintDto.getValue());
+			
+			mint = tokenMintRespository.save(mint);
+			
+			activityService.tokensMinted(initiativeRepository.findById(initiativeId), mint);
+		}
+		
+		return result;
+		
 	}
 	
 	@Transactional
