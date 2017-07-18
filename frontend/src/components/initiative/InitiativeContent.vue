@@ -57,12 +57,14 @@
           </router-link>
         </div>
 
-        <div class="w3-row content-container">
-          <transition :name="animationType" mode="out-in" appear>
-            <router-view :key="initiative.id">
-            </router-view>
-          </transition>
-        </div>
+        <v-touch v-on:swipeleft="onSwipeLeft()" v-on:swiperight="onSwipeRight()">
+          <div class="w3-row content-container">
+            <transition :name="animationType" mode="out-in" appear>
+              <router-view :key="initiative.id">
+              </router-view>
+            </transition>
+          </div>
+        </v-touch>
       </div>
     </div>
   </div>
@@ -124,6 +126,26 @@ export default {
   methods: {
     newMember () {
       this.showNewMemberModal = true
+    },
+    onSwipeLeft () {
+      if (this.isOverview) {
+        this.$router.push({name: 'InitiativePeople'})
+        return
+      }
+      if (this.isPeople) {
+        this.$router.push({name: 'InitiativeAssignations'})
+        return
+      }
+    },
+    onSwipeRight () {
+      if (this.isAssignations) {
+        this.$router.push({name: 'InitiativePeople'})
+        return
+      }
+      if (this.isPeople) {
+        this.$router.push({name: 'InitiativeOverview'})
+        return
+      }
     }
   },
 

@@ -31,8 +31,10 @@
           </td>
           <td>{{ tokensString(assignation.assets[0].value) }} {{ assignation.assets[0].assetName }}</td>
           <td class="avatar-col">
-            <div class="avatar-container" v-for="receiver in assignation.receivers">
-              <app-user-avatar :user="receiver.user" :showName="false" :small="true"></app-user-avatar>
+            <div class="avatars-container">
+              <div class="avatar-container" v-for="receiver in assignation.receivers">
+                <app-user-avatar :user="receiver.user" :showName="false" :small="true"></app-user-avatar>
+              </div>
             </div>
           </td>
           <td class="w3-hide-small">{{ assignationType(assignation) }}</td>
@@ -132,6 +134,11 @@ export default {
 .avatar-col {
   white-space: nowrap;
   text-align: left !important;
+}
+
+.avatars-container {
+  max-width: 20vw;
+  overflow: auto;
 }
 
 .avatar-container {

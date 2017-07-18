@@ -1,12 +1,30 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style type="text/css">
+<head>
+	<title></title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+	<style type="text/css">
+
+      .top-header {
+        clear: both;
+        background-color: #eff3f6;
+        overflow: auto;
+        padding: 30px;
+      }
+
       .container {
         width: 100%;
         text-align: center;
-        font-family: sans-serif;
-        color: #334191;
+        font-family: 'Raleway', sans-serif;
+        color: #3e464e;
+      }
+
+      .logo-txt-div {
+        float: left;
+        font-size: 18px;
+        font-weight: bold;
+        clear: both;
+        margin-bottom: 10px;
       }
 
       .logo-img {
@@ -14,16 +32,6 @@
         max-width: 200px;
         float: left;
         clear: both;
-      }
-
-      .logo-txt-div {
-        float: left;
-        font-size: 18px;
-        font-weight: bold;
-        color: #8995d6;
-        padding-top: 15px;
-        clear: both;
-        margin-left: 15px;
       }
 
       .title-img {
@@ -37,56 +45,47 @@
           margin-top: 5px;
       }
 
-      .top-header {
-        clear: both;
-        background-color: #334191;
-        overflow: auto;
-      }
-
       .content {
-        margin-top: 20px;
+        padding-top: 50px;
+        padding-bottom: 100px;
         clear: both;
       }
 
       .footer {
-        padding: 20px;
-        margin-top: 100px;
-        background-color: #334191;
-        color: #8995d6;
+        padding: 30px;
+        background-color: #eff3f6;
       }
 
       .footer a {
         font-size: 12px;
-        color: #8995d6;
       }
+	</style>
+</head>
+<body>
+<div class="container" style="text-align">
+	<div class="top-header">
+		<div class="logo-txt-div">Notification from</div>
+		<span class="sg-image" data-imagelibrary="%7B%22width%22%3A0%2C%22height%22%3A0%2C%22alignment%22%3A%22center%22%2C%22border%22%3A0%2C%22src%22%3A%22http%3A//www.collectiveone.org/images/Logo-Light.png%22%2C%22classes%22%3A%7B%22sg-image%22%3A1%7D%7D" style="float: none; display: block; text-align: center;"><img class="logo-img" src="https://image.ibb.co/nt20Pa/Logo_Dark.png" /></span>
+	</div>
 
-    </style>
-  </head>
-  <body>
-    <div class="container" style="text-align">
-      <div class="top-header">
-        <div class="logo-txt-div">
-          Notification from
-        </div>
-        <img src="http://www.collectiveone.org/images/Logo-Light.png" class="logo-img"></img>
-      </div>
-      <div class="content">
-        <img src="$INITIATIVE_PICTURE$" alt="" class="title-img"></img>
-        <h2>Recent activity in $INITIATIVE_ANCHOR$</h2>
-        <br>
-        <div class="">
-          <img src="$TRIGGER_USER_PICTURE$" alt=""></img>
-          <p class="username">$TRIGGER_USER_NICKNAME$</p>
-        </div>
+	<div class="content">
+			<h2>Recent activity in $INITIATIVE_ANCHOR$</h2>
+			&nbsp;
 
-        <h2>$MESSAGE$</h2>
-        
-      </div>
-      <div class="footer">
-        <a href="$UNSUSCRIBE_FROM_INITIATIVE_ANCHOR$">unsuscribe from notifications from the $INITIATIVE_NAME$ initiative</a>
-        <br>
-        <a href="$UNSUSCRIBE_FROM_COLLECTIVEONE_NOTIFICATIONS$">unsuscribe from all notifications from the CollectiveOne platform</a>
-      </div>
-    </div>
-  </body>
+		<div>
+
+		<span class="sg-image" data-imagelibrary="%7B%22width%22%3A0%2C%22height%22%3A0%2C%22alt_text%22%3A%22%22%2C%22alignment%22%3A%22center%22%2C%22border%22%3A0%2C%22src%22%3A%22%24TRIGGER_USER_PICTURE%24%22%2C%22classes%22%3A%7B%22sg-image%22%3A1%7D%7D" style="float: none; display: block; text-align: center;"><img alt="" src="$TRIGGER_USER_PICTURE$" /></span>
+
+		<p class="username">$TRIGGER_USER_NICKNAME$</p>
+		</div>
+
+		<h2>$MESSAGE$</h2>
+	</div>
+
+	<div class="footer"><a href="$UNSUSCRIBE_FROM_INITIATIVE_HREF$">unsuscribe from email notifications from the $INITIATIVE_NAME$ initiative</a><br />
+		<a href="$UNSUSCRIBE_FROM_ALL_HREF$">unsuscribe from all email notifications from the CollectiveOne platform</a>
+	</div>
+
+</div>
+</body>
 </html>

@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import beforeEach from './router/beforeEach'
 import { store } from './store/store'
+import VueTouch from 'vue-touch'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -12,6 +13,7 @@ import VueAxios from 'vue-axios'
 Vue.config.productionTip = false
 
 Vue.use(VueAxios, axios)
+Vue.use(VueTouch, {name: 'v-touch'})
 
 axios.interceptors.request.use(
   function (config) {
