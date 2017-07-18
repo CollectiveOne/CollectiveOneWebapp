@@ -19,6 +19,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -55,6 +56,9 @@ public class Assignation {
 	
 	@Column(name = "creation_date")
 	private Timestamp creationDate;
+	
+	@ManyToOne
+	private AppUser creator;
 	
 	@OneToMany(mappedBy="assignation", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Bill> bills = new ArrayList<Bill>();
@@ -168,6 +172,14 @@ public class Assignation {
 		this.state = state;
 	}
 	
+	public AppUser getCreator() {
+		return creator;
+	}
+
+	public void setCreator(AppUser creator) {
+		this.creator = creator;
+	}
+
 	public List<Bill> getBills() {
 		return bills;
 	}

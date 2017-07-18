@@ -41,7 +41,7 @@ public class AssignationController {
 			return new PostResult("error", "creation of assignation not authorized",  "");
 		}
 		
-		return assignationService.createAssignation(UUID.fromString(initiativeId), assignation);
+		return assignationService.createAssignation(UUID.fromString(initiativeId), assignation, getLoggedUser().getC1Id());
 	} 
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignations", method = RequestMethod.GET)

@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
@@ -67,6 +68,9 @@ public class Activity {
 	@OneToOne
 	private TokenMint mint;
 	
+	@OneToOne
+	private Assignation assignation;
+	
 	
 	/* Dto */
 	public ActivityDto toDto() {
@@ -79,6 +83,7 @@ public class Activity {
 		dto.setOldName(oldName);
 		dto.setOldDriver(oldDriver);
 		if(mint != null) dto.setMint(mint.toDto());
+		if(assignation != null) dto.setAssignation(assignation.toDto()); 
 		
 		return dto;
 	}
@@ -171,6 +176,14 @@ public class Activity {
 
 	public void setMint(TokenMint mint) {
 		this.mint = mint;
+	}
+
+	public Assignation getAssignation() {
+		return assignation;
+	}
+
+	public void setAssignation(Assignation assignation) {
+		this.assignation = assignation;
 	}
 
 	

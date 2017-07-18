@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.Member;
@@ -202,6 +203,38 @@ public class ActivityService {
 		addInitiativeActivityNotifications(activity);
 	}
 	
+	@Transactional
+	public void tokensMinted(Initiative initiative, TokenMint mint) {
+		Activity activity = new Activity();
+		
+		activity.setType(ActivityType.TOKENS_MINTED);
+		activity.setTriggerUser(mint.getOrderedBy());
+		activity.setInitiative(initiative);
+		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		activity.setMint(mint);
+		
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void peerReviewedAssignationCreated(Assignation assignation, AppUser triggerUser) {
+		Activity activity = new Activity();
+		
+		activity.setType(ActivityType.PR_ASSIGNATION_CREATED);
+		activity.setTriggerUser(triggerUser);
+		activity.setInitiative(assignation.getInitiative());
+		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		activity.setAssignation(assignation);
+		
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	
+	
 	private void addNewInitiativeNotifications (Activity activity) {
 		SortedSet<Member> members = activity.getInitiative().getMembers();
 		
@@ -222,22 +255,6 @@ public class ActivityService {
 			}
 		}
 	}
-	
-	@Transactional
-	public void tokensMinted(Initiative initiative, TokenMint mint) {
-		Activity activity = new Activity();
-		
-		activity.setType(ActivityType.TOKENS_MINTED);
-		activity.setTriggerUser(mint.getOrderedBy());
-		activity.setInitiative(initiative);
-		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
-		activity.setMint(mint);
-		
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
 	
 	
 	/** To be called within an activity transaction, modifies the notifications property of the

@@ -30,12 +30,12 @@
           </div>
           <div class="w3-row-padding">
             <div class="w3-col s6">
-              <input @input="valueUpdated($event)" :value="value" class="w3-input w3-border w3-hover-light-grey w3-round" type="number" min="0" :step="assetData.totalUnderThisHolder / 100">
+              <input @input="valueUpdated($event)" :value="value.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round" type="number" min="0" :step="assetData.totalUnderThisHolder / 100">
             </div>
             <div class="w3-col s6">
               <div class="w3-row">
                 <div class="w3-col s10">
-                  <input @input="percentageUpdated($event)" :value="percentage" class="w3-input w3-border w3-hover-light-grey w3-round" type="number" min="0" step="1">
+                  <input @input="percentageUpdated($event)" :value="percentage.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round" type="number" min="0" step="1">
                 </div>
                 <div class="w3-col s2 ">
                   <i class="fa fa-percent" aria-hidden="true"></i>
@@ -52,7 +52,7 @@
             <label class=""><b>Motive</b></label>
             <input v-model="motive" class="w3-input w3-hover-light-grey" :class="{ 'error-input' : motiveErrorShow }" type="text">
             <div v-if="motiveEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
-              please provide a motive for this transfer for future reference
+              please provide a motive for minting these tokens for future reference
             </div>
             <div v-if="motiveTooLarge" class="w3-row w3-tag error-panel error-row w3-round">
               motive too large, please use the notes for long annotations
@@ -146,7 +146,6 @@ export default {
       this.$store.commit('showNewTokenMintModal', { show: false })
     },
     accept () {
-      debugger
       var ok = true
       if (this.assetsAreZero) {
         ok = false

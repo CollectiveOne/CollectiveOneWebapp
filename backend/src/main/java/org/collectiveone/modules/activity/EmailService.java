@@ -2,12 +2,18 @@ package org.collectiveone.modules.activity;
 
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.collectiveone.modules.assignations.Assignation;
+import org.collectiveone.modules.assignations.Evaluator;
+import org.collectiveone.modules.assignations.Receiver;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
+import org.collectiveone.modules.tokens.TokenMint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -92,6 +98,14 @@ public class EmailService {
 					mail = prepareInitiativeCreatedEmail(notifications);
 					break;
 					
+				case TOKENS_MINTED:
+					mail = prepareTokensMintedEmail(notifications);
+					break;
+					
+				case PR_ASSIGNATION_CREATED:
+					mail = preparePRAssignationEmail(notifications);
+					break;
+					
 				default:
 					break;
 				}
@@ -151,8 +165,7 @@ public class EmailService {
 	}
 	
 
-	private Mail prepareSubinitaitiveCreatedEmail(List<Notification> notifications) 
-	{
+	private Mail prepareSubinitaitiveCreatedEmail(List<Notification> notifications)	{
 		Mail mail = new Mail();
 		
 		Email fromEmail = new Email();
@@ -233,6 +246,107 @@ public class EmailService {
 
 	}
 	
+	private Mail prepareTokensMintedEmail(List<Notification> notifications)	{
+		Mail mail = new Mail();
+		
+		Email fromEmail = new Email();
+		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
+		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
+		mail.setFrom(fromEmail);
+		mail.setSubject("Recent activity - new subinitiative created");
+	
+		for(Notification notification : notifications) {
+			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
+				Personalization personalization = basicInitiativePersonalization(notification);
+				
+				TokenMint mint = notification.getActivity().getMint();
+				String message = "Minted " + mint.getValue() + " " + mint.getToken().getName() + " with motive: " + mint.getMotive() + ".";
+				
+				personalization.addSubstitution("$MESSAGE$", message);
+				
+				mail.addPersonalization(personalization);
+			}
+		}
+		
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
+		
+		return mail;
+	}
+	
+	
+	private Mail preparePRAssignationEmail(List<Notification> notifications)	{
+		Mail mail = new Mail();
+		
+		Email fromEmail = new Email();
+		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
+		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
+		mail.setFrom(fromEmail);
+		mail.setSubject("Recent activity - new subinitiative created");
+	
+		for(Notification notification : notifications) {
+			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
+				Personalization personalization = basicInitiativePersonalization(notification);
+				
+				Assignation assignation = notification.getActivity().getAssignation();
+				
+				Evaluator evaluator = null;
+				
+				/* check if this member is an evaluator */
+				for (Evaluator thisEvaluator : assignation.getEvaluators()) {
+					if (thisEvaluator.getUser().getC1Id() == notification.getSubscriber().getUser().getC1Id()) {
+						evaluator = thisEvaluator;
+					}
+				}
+				
+				String receiversList = "";
+				for (int ix = 0; ix < assignation.getReceivers().size(); ix++) {
+					
+					/* first element starts the string */
+					if (ix == 0) {
+						receiversList += "";	
+					}
+					
+					/* next elements add a comma or 'and' and a space */
+					if (ix > 0) {
+						if  (ix == assignation.getReceivers().size() - 1) {
+							receiversList += " and ";
+						} else {
+							receiversList += ", ";
+						}
+					}
+					
+					if (assignation.getReceivers().get(ix).getUser().getC1Id() == notification.getSubscriber().getUser().getC1Id()) {
+						receiversList += "you";
+					} else {
+						receiversList += assignation.getReceivers().get(ix).getUser().getNickname();
+					}
+					
+					
+				}
+				
+				String message = "Created a new peer-reviewed " + getAssignationAnchor(assignation) + " of " + 
+						assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +
+						" to be distributed among " + receiversList + ".\n\nThe motive is: " + assignation.getMotive() + "."; 
+				
+				if (evaluator != null) {
+					Date closeDate = assignation.getConfig().getMaxClosureDate();
+					SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, ''yy");
+					message += "\n\nYou are one evaluator of the assignation! Please visit the " + getAssignationAnchor(assignation) + " page to make your evaluation. "
+							+ "\n\nYou have until " + dateFormat.format(closeDate) + " at this time of the day to do it.";
+				}
+				
+				personalization.addSubstitution("$MESSAGE$", message);
+				
+				mail.addPersonalization(personalization);
+			}
+		}
+		
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
+		
+		return mail;
+	}
+	
+	
 	private Personalization basicInitiativePersonalization(Notification notification) {
 		String toEmailString = notification.getSubscriber().getUser().getEmail();
 		String triggeredByUsername = notification.getActivity().getTriggerUser().getNickname();
@@ -258,7 +372,13 @@ public class EmailService {
 	}
 	
 	private String getInitiativeAnchor(Initiative initiative) {
-		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/" + initiative.getId().toString() + "/overview>" + initiative.getMeta().getName() + "</a>";
+		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/" + 
+				initiative.getId().toString() + "/overview>" + initiative.getMeta().getName() + "</a>";
+	}
+	
+	private String getAssignationAnchor(Assignation assignation) {
+		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/" + 
+				assignation.getInitiative().getId().toString() + "/assignations/" + assignation.getId().toString() + ">assignation</a>";
 	}
 	
 	private String getTransferString(List<InitiativeTransfer> transfers) {

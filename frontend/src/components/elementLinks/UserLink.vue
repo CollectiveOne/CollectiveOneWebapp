@@ -1,5 +1,5 @@
 <template lang="html">
-  <router-link :to="link">{{ user.nickname }}</router-link>
+  <span>{{ user.nickname }}</span>
 </template>
 
 <script>

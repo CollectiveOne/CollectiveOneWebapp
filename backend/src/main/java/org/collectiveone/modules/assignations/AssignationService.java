@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.assignations.evaluationlogic.PeerReviewedAssignation;
 import org.collectiveone.modules.assignations.evaluationlogic.PeerReviewedAssignationState;
 import org.collectiveone.modules.initiatives.Initiative;
@@ -25,6 +26,9 @@ import org.springframework.stereotype.Service;
 public class AssignationService {
 	
 	private long DAYS_TO_MS = 24L*60L*60L*1000L;
+	
+	@Autowired
+	private ActivityService activityService;
 	
 	@Autowired
 	private TokenService tokenService;
@@ -61,8 +65,8 @@ public class AssignationService {
 	private AssignationConfigRepositoryIf assignationConfigRepository;
 	
 		
-	public PostResult createAssignation(UUID initaitiveId, AssignationDto assignationDto) {
-		Initiative initiative = initiativeRepository.findById(initaitiveId);
+	public PostResult createAssignation(UUID initiativeId, AssignationDto assignationDto, UUID creatorId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
 	
 		Assignation assignation = new Assignation();
 		
@@ -71,6 +75,7 @@ public class AssignationService {
 		assignation.setNotes(assignationDto.getNotes());
 		assignation.setInitiative(initiative);
 		assignation.setState(AssignationState.OPEN);
+		assignation.setCreator(appUserRepository.findByC1Id(creatorId));
 		assignation.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		
 		AssignationConfig config = new AssignationConfig();
@@ -150,6 +155,9 @@ public class AssignationService {
 				
 				assignation.getEvaluators().add(evaluator);
 			}
+			
+			activityService.peerReviewedAssignationCreated(assignation, appUserRepository.findByC1Id(creatorId));
+			
 			break;
 		}
 		

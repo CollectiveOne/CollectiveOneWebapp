@@ -1,22 +1,37 @@
 <template lang="html">
-  <div class="w3-row w3-small">
+  <div class="w3-row">
     <div class="w3-col s3">
       <app-user-avatar :user="notification.activity.triggerUser" :showName="false" :small="true"></app-user-avatar>
     </div>
     <div class="w3-col s9 text-div">
+      <div v-if="isInitiativeCreated" class="">
+        <app-user-link :user="notification.activity.triggerUser"></app-user-link> created the new initiative
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>
+      </div>
+
       <div v-if="isInitiativeEdited" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> edited
         <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link> {{ initiativeChanged }}
       </div>
+
       <div v-if="isSubinitiativeCreated" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> created
         <app-initiative-link :initiative="notification.activity.subInitiative"></app-initiative-link> under
         <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>
       </div>
+
       <div v-if="isTokensMinted" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> minted
-        <b>{{ notification.activity.mint.value }} {{ notification.activity.mint.tokenName }}</b>
+        <b>{{ notification.activity.mint.value }} {{ notification.activity.mint.tokenName }}</b> in
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>
       </div>
+
+      <div v-if="isNewPRAssigantionCreated" class="">
+        <app-user-link :user="notification.activity.triggerUser"></app-user-link> created a new peer-reviewed
+        assignation of <b>{{ notification.activity.assignation.assets[0].value }} {{ notification.activity.assignation.assets[0].assetName }}</b> from
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>
+      </div>
+
     </div>
   </div>
 </template>
@@ -40,6 +55,9 @@ export default {
   },
 
   computed: {
+    isInitiativeCreated () {
+      return this.notification.activity.type === 'INITIATIVE_CREATED'
+    },
     isInitiativeEdited () {
       return this.notification.activity.type === 'INITIATIVE_EDITED'
     },
@@ -48,6 +66,9 @@ export default {
     },
     isTokensMinted () {
       return this.notification.activity.type === 'TOKENS_MINTED'
+    },
+    isNewPRAssigantionCreated () {
+      return this.notification.activity.type === 'PR_ASSIGNATION_CREATED'
     },
     initiativeChanged () {
       let activity = this.notification.activity
@@ -83,7 +104,9 @@ export default {
 <style scoped>
 
 .text-div {
+  font-size: 14px;
   text-align: left;
+  padding-right: 10px;
 }
 
 </style>

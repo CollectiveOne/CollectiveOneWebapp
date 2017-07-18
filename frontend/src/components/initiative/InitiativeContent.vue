@@ -13,7 +13,8 @@
               </div>
               <div class="w3-bar-item w3-right">
                 <div class="" style="width:55px; height:100%">
-                  <div v-if="isLoggedAMember"
+                  <div
+                    v-if="isLoggedAMember || isLoggedAnAdmin"
                     @click="showEditMenu = !showEditMenu"
                     class="edit-btn-div w3-button w3-large"
                     style="width:100%; height:100%">
@@ -25,8 +26,9 @@
                       class="w3-bar-item w3-button">
                       <i class="fa fa-pencil" aria-hidden="true"></i>edit initiative
                     </div>
-                    <div @click="$store.commit('showEditNotificationsModal', true); showEditMenu = false"
-                    class="w3-bar-item w3-button">
+                    <div v-if="isLoggedAMember || isLoggedAnAdmin"
+                      @click="$store.commit('showEditNotificationsModal', true); showEditMenu = false"
+                      class="w3-bar-item w3-button">
                       <i class="fa fa-cog" aria-hidden="true"></i>notifications
                     </div>
                   </div>
