@@ -66,6 +66,7 @@ const amountAndPerc = function (val, tot) {
 }
 
 export {
+  floatToChar,
   getTimeStrUntil,
   getTimeStrSince,
   dateString,

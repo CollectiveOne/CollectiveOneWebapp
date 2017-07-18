@@ -15,6 +15,9 @@
                 <b>{{ assignation.initiativeName }}</b>
               </div>
             </div>
+            <div class="w3-row w3-center w3-margin-top">
+              {{ dateString(assignation.creationDate) }}
+            </div>
           </div>
 
           <div class="w3-col l8 w3-container ">
@@ -29,7 +32,8 @@
 
             <div class="w3-row w3-center">
               <div class="receivers-container">
-                <div class="receiver-container" v-for="receiver in assignation.receivers" :key="receiver.id" >
+                <div class="receiver-container"
+                  v-for="receiver in assignation.receivers" :key="receiver.id" >
                   <app-user-avatar :user="receiver.user"
                     class="w3-left"
                     :small="true" :showName="false">
@@ -59,10 +63,10 @@
         </div>
 
         <hr>
-        <div class="w3-row">
+        <div class="w3-row-padding">
           <div v-if="isEvaluator" class="w3-col my-evaluation-div" :class="{'l6': isDone, '12': !isDone}">
             <div class="w3-row w3-center">
-              <h6 class=""><b>My evaluation</b></h6>
+              <h5 class=""><b>My evaluation</b></h5>
             </div>
             <br>
             <transition name="fade" mode="out-in">
@@ -88,20 +92,20 @@
           </div>
           <div v-if="showResults" class="w3-col l6">
             <div class="w3-row w3-center">
-              <h6 class=""><b>Results</b></h6>
+              <h5 class=""><b>Results</b></h5>
             </div>
             <br>
             <app-users-percentages
               :usersDataInit="assignation.receivers"
               :disable="true"
-              :showSelfBiases="assignation.selfBiasVisible">
+              :showSelfBiases="assignation.config.selfBiasVisible">
             </app-users-percentages>
           </div>
         </div>
         <div v-if="showEvaluations" class="w3-row">
           <hr>
           <div class="w3-row w3-center">
-            <h6 class=""><b>All Evaluations</b></h6>
+            <h5 class=""><b>All Evaluations</b></h5>
           </div>
           <br>
           <app-peer-reviewed-evaluations
@@ -127,7 +131,7 @@ import UserAvatar from '@/components/user/UserAvatar.vue'
 import ValueSeal from '@/components/transfers/ValueSeal.vue'
 import UsersPercentages from '@/components/user/UsersPercentages.vue'
 import PeerReviewedEvaluations from '@/components/transfers/PeerReviewedEvaluations.vue'
-import { getTimeStrUntil } from '@/lib/common.js'
+import { getTimeStrUntil, dateString } from '@/lib/common.js'
 
 export default {
 
@@ -210,6 +214,9 @@ export default {
   },
 
   methods: {
+    dateString (v) {
+      return dateString(v)
+    },
     getTimeStrUntil (v) {
       return getTimeStrUntil(v)
     },

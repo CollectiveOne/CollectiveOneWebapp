@@ -1,72 +1,80 @@
 <template lang="html">
   <div class="percentages-container">
-    <div v-for="(userData, ix) in usersData" class="w3-row-padding">
-      <div class="w3-col l6 w3-center">
-        <app-user-avatar :user="userData[userAnchor]" class="user-container"></app-user-avatar>
-      </div>
-      <div class="w3-col l6">
-        <div class="w3-row input-div">
-          <div class="w3-col w3-center" :class="{'s6': !disable, 's12': disable}">
-            <div class="slider-container">
+    <table class="w3-table w3-striped w3-bordered w3-centered">
+      <thead>
+        <tr>
+          <th class="avatar-col">avatar</th>
+          <th>nickname</th>
+          <th class="percent-col">percentage</th>
+          <th v-if="!disable">know / don't</th>
+          <th v-if="showSelfBiases">self-bias</th>
+        </tr><i></i>
+      </thead>
+      <tbody>
+        <tr v-for="(userData, ix) in usersData">
+          <td class="avatar-col">
+            <app-user-avatar :user="userData[userAnchor]" class="user-container" :showName="false"></app-user-avatar>
+          </td>
+          <td>
+            {{ userData[userAnchor].nickname }}
+          </td>
+          <td class="percent-col">
+            <div v-if="disable" class="">
+              <b>{{ userData.percent.toFixed(1) }} %</b>
+            </div>
+            <div v-else class="slider-container">
               <transition name="slideDownUp" mode="out-in">
-                <div key="1" class="w3-row" v-if="!isDontKnow(userData)">
-
-                  <div v-if="showSelfBiases" class="input-and-percent">
-                    <i class="fa fa-percent  w3-right" aria-hidden="true"></i>
-                    <input
-                      :value="userData.selfBias"
-                      class="percent-input w3-right w3-input w3-border w3-hover-light-gray w3-round"
-                      type="number" step="5" min="0"
-                      :disabled="disable">
-                  </div>
-
-                  <div class="input-and-percent">
-                    <i class="fa fa-percent  w3-right" aria-hidden="true"></i>
-                    <input
-                      v-model.number="userData.percent"
-                      class="percent-input w3-right w3-input w3-border w3-hover-light-gray w3-round"
-                      type="number" step="5" min="0"
-                      :disabled="disable">
-                  </div>
+                <div key="1" v-if="!isDontKnow(userData)">
+                  <input
+                    @input="userData.percent = parseFloat($event.target.value)"
+                    :value="userData.percent.toFixed(0)"
+                    @focusout="checkRounding()"
+                    class="percent-input w3-input w3-border w3-hover-light-gray w3-round"
+                    type="number" step="5" min="0"
+                    :disabled="disable">
                 </div>
-                <div v-else key="2" class="w3-row">
+                <div v-else key="2">
                   <div class="w3-tag w3-padding w3-round gray-1 noselect">
                     DK
                   </div>
                 </div>
               </transition>
             </div>
-          </div>
-          <div v-if="!disable" class="w3-col s6 not-sure-col">
+          </td>
+          <td v-if="!disable">
             <button
-              class="w3-button app-button w3-left"
+              class="w3-button app-button dont-know-button"
               @click="toggleDontKnow(userData)">
               {{ isDontKnow(userData) ? 'set' : 'dont know' }}
             </button>
+          </td>
+          <td v-if="showSelfBiases" :class="{'self-bias-good': userData.selfBias <= 0, 'self-bias-bad': userData.selfBias > 0, }">
+            <b>{{ userData.selfBias.toFixed(1) }} %</b>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot v-if="!disable">
+        <tr>
+          <td></td>
+          <td>total assigned:</td>
+          <td>{{ sumOfPercents.toFixed() }}%</td>
+          <td>{{ autoScaled ? '( auto-rounded )' : ''}}</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div v-if="!disable" class="slider-container">
+      <transition name="slideDownUp">
+        <div v-if="!arePercentagesOk" class="w3-row missing-row">
+          <div>
+            {{ missingPercent > 0 ? 'missing' : 'excess of'}}: <b>{{ Math.abs(missingPercent.toFixed(0)) }}%</b>
+            <button
+              class="w3-button app-button w3-margin-left"
+              @click="autoScale()">
+              autoscale
+            </button>
           </div>
         </div>
-      </div>
-      <div class="w3-col l12">
-        <hr class="user-hr">
-      </div>
-    </div>
-    <div v-if="!disable" class="w3-row-padding total-row">
-      <div class="w3-col l6">
-        <div class="w3-right">
-          <b>total assigned:</b>
-        </div>
-      </div>
-      <div class="w3-col l3 w3-center w3-round total-class" :class="totalClass">
-        <b>{{ sumOfPercents }}%</b>
-      </div>
-    </div>
-
-    <div v-if="!disable" class="w3-row-padding feedback-row">
-      <div v-if="missingPercent != 0" class="">
-        <div class="w3-panel warning-panel w3-center w3-round">
-          <b>{{ feedbackText }}</b>
-        </div>
-      </div>
+      </transition>
     </div>
 
   </div>
@@ -74,6 +82,7 @@
 
 <script>
 import UserAvatar from '@/components/user/UserAvatar.vue'
+import { floatToChar } from '@/lib/common.js'
 
 export default {
   components: {
@@ -101,7 +110,8 @@ export default {
 
   data () {
     return {
-      usersData: []
+      usersData: [],
+      autoScaled: false
     }
   },
 
@@ -129,9 +139,9 @@ export default {
     feedbackText () {
       if (Math.abs(this.missingPercent) > 0) {
         if (this.missingPercent > 0) {
-          return this.missingPercent + '% missing'
+          return 'missing'
         } else {
-          return -this.missingPercent + '% in excess'
+          return 'in excess'
         }
       }
     },
@@ -149,6 +159,23 @@ export default {
   },
 
   methods: {
+    floatToChar (v) {
+      return floatToChar(v)
+    },
+    checkRounding () {
+      if ((Math.abs(this.missingPercent) > 0) && (Math.abs(this.missingPercent) < 1)) {
+        this.autoScaled = true
+        this.autoScale()
+      } else {
+        this.autoScaled = false
+      }
+    },
+    autoScale () {
+      var scale = this.sumOfPercents / 100
+      for (var ix in this.usersData) {
+        this.usersData[ix].percent *= 1 / scale
+      }
+    },
     isDontKnow (userData) {
       if (userData.type) {
         if (userData.type === 'SET') {
@@ -179,23 +206,20 @@ export default {
 
 <style scoped>
 
-.percent-input {
-  max-width: 70px;
+.avatar-col {
+  width: 50px;
 }
 
-.input-div .fa-percent {
-  margin-left: 5px;
-  margin-top: 10px;
-  font-size: 20px;
-}
-
-.not-sure-col button {
-  margin-left: 10px;
+.percent-col {
   width: 100px;
 }
 
-.input-and-percent {
-  margin-left: 10px;
+.dont-know-button {
+  width: 100px;
+}
+
+.missing-panel {
+  max-width: 100px;
 }
 
 .user-hr {
@@ -209,6 +233,23 @@ export default {
 
 .total-class {
   max-width: 100px;
+}
+
+.missing-row {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.missing-row div {
+  display: inline-block;
+}
+
+.self-bias-good {
+  color: rgb(39, 187, 131);
+}
+
+.self-bias-bad {
+  color: rgb(170, 0, 0);
 }
 
 .bottom-btns-row {

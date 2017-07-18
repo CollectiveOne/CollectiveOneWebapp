@@ -17,10 +17,12 @@
         <tr v-for="assignation in assignations" :key="assignation.id">
           <td class="w3-hide-small">{{ dateString(assignation.creationDate) }}</td>
           <td>
-            <div class="w3-tag w3-small w3-round-large w3-padding-small noselect"
+            <router-link tag="div"
+              class="w3-tag w3-small w3-round-large w3-padding-small noselect cursor-pointer"
+              :to="{ name: 'InitiativeAssignation', params: { assignationId: assignation.id } }"
               :class="stateTagClass(assignation)">
               {{ assignationState(assignation) }}
-            </div>
+            </router-link>
           </td>
           <td v-if="showFrom">
             <div class="w3-tag w3-round-large" :style="{'background-color': $store.getters.colorOfInitiative(assignation.initiativeId)}">
@@ -38,7 +40,7 @@
           <router-link
             tag="td"
             :to="{ name: 'InitiativeAssignation', params: { assignationId: assignation.id } }"
-            class="cursor-pointer d2-color w3-button">
+            class="cursor-pointer gray-1-color w3-button">
             <i class="fa fa-external-link" aria-hidden="true"></i>
           </router-link>
         </tr>

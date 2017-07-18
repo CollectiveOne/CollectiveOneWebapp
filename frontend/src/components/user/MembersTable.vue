@@ -128,6 +128,10 @@ export default {
   width: 120px;
 }
 
+.role-select {
+  max-width: 120px;
+}
+
 .user-selector-row .w3-col {
   margin-bottom: 10px;
 }

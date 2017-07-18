@@ -35,7 +35,7 @@ export default {
   },
 
   mounted () {
-    this.initUserAuthenticated()
+    this.initUserAuthenticated(this.$route.path)
   }
 }
 </script>
@@ -47,6 +47,11 @@ export default {
 }
 tbody tr {
   height: 80px !important;
+}
+
+tfoot tr {
+  height: 60px !important;
+  font-weight: bold;
 }
 
 td {

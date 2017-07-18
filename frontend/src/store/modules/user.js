@@ -28,25 +28,37 @@ const mutations = {
 
 const actions = {
 
-  initUserAuthenticated: (context) => {
+  initUserAuthenticated: (context, redirectPath) => {
     var options = {
       auth: {
+        state: redirectPath,
+        responseType: 'token',
         params: {
           connectionScopes: {
             connectionName: [ 'openid', 'user_metadata', 'app_metadata', 'picture' ]
           }
         }
+      },
+      theme: {
+        logo: 'https://image.ibb.co/d5abxv/Logo_Dark_Auth0.png',
+        primaryColor: '#15a5cc'
+      },
+      languageDictionary: {
+        title: 'welcome'
       }
     }
+
     var lock = new Auth0Lock(process.env.AUTH0_CLIENT_ID, process.env.AUTH0_DOMAIN, options)
 
     lock.on('authenticated', (authResult) => {
       localStorage.setItem('access_token', authResult.accessToken)
       localStorage.setItem('id_token', authResult.idToken)
       context.dispatch('updateAuthenticated')
-      setInterval(() => {
+      if (authResult.state.startsWith('/inits')) {
+        window.location.href = '/#' + authResult.state
+      } else {
         window.location.href = '/'
-      }, 250)
+      }
     })
 
     lock.on('authorization_error', (error) => {

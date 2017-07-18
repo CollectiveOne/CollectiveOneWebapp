@@ -2,7 +2,7 @@
   <div class="">
     <div class="welcome-header">
       <h1>Welcome to CollectiveOne</h1>
-      <button class="btn btn-primary" @click="login()">login / signup</button>
+      <button class="w3-button app-button" @click="login()">login / signup</button>
     </div>
 
   </div>
