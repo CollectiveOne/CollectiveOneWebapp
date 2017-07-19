@@ -42,6 +42,10 @@
               :show="notEnoughEvaluators"
               message="please add at least one evaluator">
             </app-error-panel>
+            <app-error-panel
+              :show="allDonorsShow"
+              message="not all receivers can be donors">
+            </app-error-panel>
           </div>
 
           <div class="w3-row">
@@ -154,7 +158,8 @@ export default {
       assetsZeroError: false,
       assetsAreZero: false,
       notEnoughReceivers: false,
-      notEnoughEvaluators: false
+      notEnoughEvaluators: false,
+      allDonorsError: false
     }
   },
 
@@ -179,6 +184,19 @@ export default {
     },
     assetsZeroShow () {
       return this.assetsZeroError && this.assetsAreZero
+    },
+    existNotDonors () {
+      if (this.assignation.peerReviewReceivers) {
+        for (var ix in this.assignation.peerReviewReceivers) {
+          if (!this.assignation.peerReviewReceivers[ix].isDonor) {
+            return true
+          }
+        }
+      }
+      return false
+    },
+    allDonorsShow () {
+      return this.allDonorsError && !this.existNotDonors
     }
   },
 
@@ -225,11 +243,19 @@ export default {
           this.notEnoughReceivers = false
         }
       }
+
       if (this.notEnoughEvaluators) {
         if (data.evaluators.length > 0) {
           this.notEnoughEvaluators = false
         }
       }
+
+      if (this.allDonorsError) {
+        if (this.existNotDonors) {
+          this.allDonorsError = false
+        }
+      }
+
       if (this.isDirect) {
         this.directReceiversSelected(data)
       } else {
@@ -278,6 +304,11 @@ export default {
         } else {
           if (this.assignation.peerReviewReceivers.length === 0) {
             this.notEnoughReceivers = true
+            ok = false
+          }
+
+          if (!this.existNotDonors) {
+            this.allDonorsError = true
             ok = false
           }
         }
