@@ -27,7 +27,7 @@
           </app-users-list>
         </div>
         <div class="w3-row w3-center button-evaluators">
-          <button @click="sameAsReceivers = !sameAsReceivers"
+          <button @click="switchSameAsReceivers()"
             class="w3-button app-button">
             {{ sameAsReceivers ? 'different from receivers?' : 'same as receivers' }}
           </button>
@@ -93,6 +93,10 @@ export default {
     },
     evaluatorsUpdated (evaluators) {
       this.evaluators = evaluators
+      this.emitUpdated()
+    },
+    switchSameAsReceivers () {
+      this.sameAsReceivers = !this.sameAsReceivers
       this.emitUpdated()
     },
     emitUpdated () {
