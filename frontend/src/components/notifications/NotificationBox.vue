@@ -37,8 +37,25 @@
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> made a direct
         <app-assignation-link :assignation="notification.activity.assignation"></app-assignation-link> of
         <b>{{ notification.activity.assignation.assets[0].value }} {{ notification.activity.assignation.assets[0].assetName }}</b> from
-        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link> to 
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link> to
         <app-user-link :user="notification.activity.assignation.receivers[0].user"></app-user-link>
+      </div>
+
+      <div v-if="isNewPRAssigantionDone" class="">
+        Peer-reviewed <app-assignation-link :assignation="notification.activity.assignation"></app-assignation-link> created by
+        <app-user-link :user="notification.activity.triggerUser"></app-user-link> for
+        <b>{{ notification.activity.assignation.assets[0].value }} {{ notification.activity.assignation.assets[0].assetName }}</b> from
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link> has been closed
+      </div>
+
+      <div v-if="isInitiativeTransfer" class="">
+        <app-user-link :user="notification.activity.triggerUser"></app-user-link> transferred
+        <b>{{ notification.activity.transfer.value }} {{ notification.activity.transfer.assetName }}</b> from
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link> to
+        <app-initiative-link
+          :initiativeId="notification.activity.transfer.receiverId"
+          :initiativeName="notification.activity.transfer.receiverName">
+        </app-initiative-link>
       </div>
 
     </div>
@@ -47,9 +64,9 @@
 
 <script>
 import UserAvatar from '@/components/user/UserAvatar.vue'
-import UserLink from '@/components/elementLinks/UserLink.vue'
-import InitiativeLink from '@/components/elementLinks/InitiativeLink.vue'
-import AssignationLink from '@/components/elementLinks/AssignationLink.vue'
+import UserLink from '@/components/global/UserLink.vue'
+import InitiativeLink from '@/components/global/InitiativeLink.vue'
+import AssignationLink from '@/components/global/AssignationLink.vue'
 
 export default {
   props: {
@@ -81,8 +98,14 @@ export default {
     isNewPRAssigantionCreated () {
       return this.notification.activity.type === 'PR_ASSIGNATION_CREATED'
     },
+    isNewPRAssigantionDone () {
+      return this.notification.activity.type === 'PR_ASSIGNATION_DONE'
+    },
     isNewDAssigantionCreated () {
       return this.notification.activity.type === 'D_ASSIGNATION_CREATED'
+    },
+    isInitiativeTransfer () {
+      return this.notification.activity.type === 'INITIATIVE_TRANSFER'
     },
     initiativeChanged () {
       let activity = this.notification.activity

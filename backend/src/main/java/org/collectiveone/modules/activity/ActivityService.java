@@ -151,7 +151,12 @@ public class ActivityService {
 		return subscriberRepository.save(subscriber);
 	}
 	
-	/* REGISTER NEW ACTIVITY */
+	/**
+	 * 
+	 * First Step
+	 * 
+	 * */
+	
 	
 	@Transactional
 	public void newInitiativeCreated(Initiative initiative, AppUser triggerUser, TokenType token) {
@@ -236,6 +241,22 @@ public class ActivityService {
 	}
 	
 	@Transactional
+	public void peerReviewedAssignationDone(Assignation assignation) {
+		Activity activity = new Activity();
+		
+		activity.setType(ActivityType.PR_ASSIGNATION_DONE);
+		activity.setTriggerUser(assignation.getCreator());
+		activity.setInitiative(assignation.getInitiative());
+		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		
+		activity.setAssignation(assignation);
+		
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
 	public void directAssignationCreated(Assignation assignation, AppUser triggerUser) {
 		Activity activity = new Activity();
 		
@@ -250,6 +271,29 @@ public class ActivityService {
 		
 		addInitiativeActivityNotifications(activity);
 	}
+	
+	@Transactional
+	public void transferToSubinitiative(InitiativeTransfer transfer) {
+		Activity activity = new Activity();
+		
+		activity.setType(ActivityType.INITIATIVE_TRANSFER);
+		activity.setTriggerUser(transfer.getOrderedBy());
+		activity.setInitiative(transfer.getFrom());
+		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		
+		activity.setInitiativeTransfer(transfer);
+		
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	
+	/**
+	 * 
+	 * Second Step
+	 * 
+	 * */
 	
 	
 	

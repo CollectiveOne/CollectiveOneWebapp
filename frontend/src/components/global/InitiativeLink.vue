@@ -1,5 +1,5 @@
 <template lang="html">
-  <router-link :to="link">{{ initiative.meta.name }}</router-link>
+  <router-link :to="link">{{ name }}</router-link>
 </template>
 
 <script>
@@ -7,11 +7,30 @@ export default {
   props: {
     initiative: {
       type: Object
+    },
+    initiativeId: {
+      type: String
+    },
+    initiativeName: {
+      type: String
     }
   },
   computed: {
+    name () {
+      if (this.initiative) {
+        return this.initiative.meta.name
+      } else {
+        return this.initiativeName
+      }
+    },
     link () {
-      return '/inits/' + this.initiative.id + '/overview'
+      var id = ''
+      if (this.initiative) {
+        id = this.initiative.id
+      } else {
+        id = this.initiativeId
+      }
+      return '/inits/' + id + '/overview'
     }
   }
 }

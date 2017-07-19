@@ -1,5 +1,7 @@
 package org.collectiveone.modules.tokens;
 
+import org.collectiveone.modules.users.AppUserDto;
+
 public class TransferDto {
 	private String assetId;
 	private String assetName;
@@ -8,6 +10,7 @@ public class TransferDto {
 	private String receiverId;
 	private String receiverName;
 	private Long orderDate;
+	private AppUserDto orderedBy;
 	private String motive;
 	private String notes;
 	private double value;
@@ -53,6 +56,12 @@ public class TransferDto {
 	}
 	public void setOrderDate(Long orderDate) {
 		this.orderDate = orderDate;
+	}
+	public AppUserDto getOrderedBy() {
+		return orderedBy;
+	}
+	public void setOrderedBy(AppUserDto orderedBy) {
+		this.orderedBy = orderedBy;
 	}
 	public String getMotive() {
 		return motive;

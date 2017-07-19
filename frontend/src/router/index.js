@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import InitiativesView from '@/components/InitiativesView.vue'
 import InitiativesHome from '@/components/InitiativesHome.vue'
 import InitiativesContent from '@/components/initiative/InitiativeContent.vue'
+import Unsubscribe from '@/components/user/Unsubscribe.vue'
 
 import OverviewSection from '@/components/initiative/OverviewSection.vue'
 import PeopleSection from '@/components/initiative/PeopleSection.vue'
@@ -17,7 +18,13 @@ export default new Router({
     { path: '/inits',
       component: InitiativesView,
       children: [
-        { path: '/', name: 'InitiativesHome', component: InitiativesHome },
+        { path: '/',
+          name: 'InitiativesHome',
+          component: InitiativesHome,
+          children: [
+            { path: 'unsubscribe', name: 'Unsubscribe', component: Unsubscribe }
+          ]
+        },
         { path: ':initiativeId',
           name: 'Initiative',
           component: InitiativesContent,

@@ -50,12 +50,12 @@ public class ActivityController {
 		return new PostResult("success", "success", "");
 	}
 	
-	@RequestMapping(path = "/secured/notifications/unsuscribeFromInitiative/{initiativeId}", method = RequestMethod.PUT)
+	@RequestMapping(path = "/secured/notifications/unsubscribeFromInitiative/{initiativeId}", method = RequestMethod.PUT)
 	public PostResult unsuscribeFromInitiative(@PathVariable("initiativeId") String initiativeId) {
 		return activityService.editSubscriberState(getLoggedUser().getC1Id(), UUID.fromString(initiativeId), SubscriberState.UNSUBSCRIBED);
 	}
 	
-	@RequestMapping(path = "/secured/notifications/unsuscribeFromAll", method = RequestMethod.PUT)
+	@RequestMapping(path = "/secured/notifications/unsubscribeFromAll", method = RequestMethod.PUT)
 	public PostResult unsuscribeFromInitiative() {
 		return appUserService.disableEmailNotifications(getLoggedUser().getC1Id());
 	}

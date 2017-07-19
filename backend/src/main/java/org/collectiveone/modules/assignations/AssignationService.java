@@ -242,6 +242,8 @@ public class AssignationService {
 				
 				assignation.setState(AssignationState.DONE);
 				
+				activityService.peerReviewedAssignationDone(assignation);
+				
 			} else {
 				assignation.setState(AssignationState.ERROR);
 			}

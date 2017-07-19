@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -36,6 +37,9 @@ public class InitiativeTransfer {
 	@Column(name = "oder_date")
 	private Timestamp orderDate;
 	
+	@ManyToOne
+	private AppUser orderedBy;
+	
 	private double value;
 	
 	@Column ( name = "motive")
@@ -55,6 +59,7 @@ public class InitiativeTransfer {
 		dto.setReceiverId(to.getId().toString());
 		dto.setReceiverName(to.getMeta().getName());
 		if (orderDate != null) dto.setOrderDate(orderDate.getTime());
+		if (orderedBy != null) dto.setOrderedBy(orderedBy.toDto());
 		dto.setMotive(motive);
 		dto.setNotes(notes);
 		dto.setValue(value);
@@ -109,6 +114,14 @@ public class InitiativeTransfer {
 
 	public void setOrderDate(Timestamp orderDate) {
 		this.orderDate = orderDate;
+	}
+	
+	public AppUser getOrderedBy() {
+		return orderedBy;
+	}
+
+	public void setOrderedBy(AppUser orderedBy) {
+		this.orderedBy = orderedBy;
 	}
 
 	public String getMotive() {

@@ -1,12 +1,16 @@
 <template lang="html">
-  <div class="w3-row-padding">
-    <div v-for="initiative in userInitiatives"
-      :key="initiative.id"
-      class="w3-col l4 m6">
-      <app-initiative-card :initiative="initiative">
-      </app-initiative-card>
+  <div class="">
+    <router-view></router-view>
+    <div class="w3-row-padding">
+      <div v-for="initiative in userInitiatives"
+        :key="initiative.id"
+        class="w3-col l4 m6">
+        <app-initiative-card :initiative="initiative">
+        </app-initiative-card>
+      </div>
     </div>
   </div>
+
 </template>
 
 <script>

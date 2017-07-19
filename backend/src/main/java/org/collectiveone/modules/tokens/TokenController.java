@@ -92,7 +92,7 @@ public class TokenController {
 			@PathVariable("initiativeId") String initiativeId,
 			@RequestBody TransferDto transferDto) {
 		 
-		return tokenTransferService.transferFromInitiativeToInitiative(UUID.fromString(initiativeId), transferDto);
+		return tokenTransferService.transferFromInitiativeToInitiative(UUID.fromString(initiativeId), transferDto, getLoggedUser().getC1Id());
 	}
 	
 	private AppUser getLoggedUser() {

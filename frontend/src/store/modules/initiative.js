@@ -48,17 +48,21 @@ const actions = {
   },
 
   refreshInitiative: (context) => {
-    context.dispatch('updateInitiative', context.state.initiative.id)
+    if (context.state.initiative) {
+      context.dispatch('updateInitiative', context.state.initiative.id)
+    }
   },
 
   refreshTransfers: (context) => {
-    Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/transfersToInitiatives').then((response) => {
-      context.commit('setTransfers', response.data.data)
-    })
+    if (context.state.initiative) {
+      Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/transfersToInitiatives').then((response) => {
+        context.commit('setTransfers', response.data.data)
+      })
 
-    Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/assignations').then((response) => {
-      context.commit('setAssignations', response.data.data)
-    })
+      Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/assignations').then((response) => {
+        context.commit('setAssignations', response.data.data)
+      })
+    }
   }
 }
 

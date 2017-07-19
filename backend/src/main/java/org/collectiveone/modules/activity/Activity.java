@@ -71,6 +71,9 @@ public class Activity {
 	@OneToOne
 	private Assignation assignation;
 	
+	@OneToOne
+	private InitiativeTransfer initiativeTransfer;
+	
 	
 	/* Dto */
 	public ActivityDto toDto() {
@@ -84,6 +87,7 @@ public class Activity {
 		dto.setOldDriver(oldDriver);
 		if(mint != null) dto.setMint(mint.toDto());
 		if(assignation != null) dto.setAssignation(assignation.toDto()); 
+		if(initiativeTransfer != null) dto.setTransfer(initiativeTransfer.toDto()); 
 		
 		return dto;
 	}
@@ -186,5 +190,12 @@ public class Activity {
 		this.assignation = assignation;
 	}
 
-	
+	public InitiativeTransfer getInitiativeTransfer() {
+		return initiativeTransfer;
+	}
+
+	public void setInitiativeTransfer(InitiativeTransfer initiativeTransfer) {
+		this.initiativeTransfer = initiativeTransfer;
+	}
+
 }

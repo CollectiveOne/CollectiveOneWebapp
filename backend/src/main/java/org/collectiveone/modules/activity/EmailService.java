@@ -102,11 +102,19 @@ public class EmailService {
 					break;
 					
 				case PR_ASSIGNATION_CREATED:
-					mail = preparePRAssignationEmail(notifications);
+					mail = preparePRAssignationCreatedEmail(notifications);
 					break;
 					
 				case D_ASSIGNATION_CREATED:
 					mail = prepareDAssignationEmail(notifications);
+					break;
+					
+				case INITIATIVE_TRANSFER:
+					mail = prepareInitiativeTransferEmail(notifications);
+					break;
+					
+				case PR_ASSIGNATION_DONE:
+					mail = preparePRAssignationDoneEmail(notifications);
 					break;
 					
 				default:
@@ -147,7 +155,7 @@ public class EmailService {
 		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
 		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
 		mail.setFrom(fromEmail);
-		mail.setSubject("Recent activity - new initiative created");
+		mail.setSubject("Initiative created");
 	
 		for(Notification notification : notifications) {
 			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
@@ -175,7 +183,7 @@ public class EmailService {
 		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
 		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
 		mail.setFrom(fromEmail);
-		mail.setSubject("Recent activity - new subinitiative created");
+		mail.setSubject("Subinitiative created");
 	
 		for(Notification notification : notifications) {
 			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
@@ -204,7 +212,7 @@ public class EmailService {
 		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
 		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
 		mail.setFrom(fromEmail);
-		mail.setSubject("Recent activity - initiative edited");
+		mail.setSubject("Initiative edited");
 	
 		for(Notification notification : notifications) {
 			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
@@ -256,7 +264,7 @@ public class EmailService {
 		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
 		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
 		mail.setFrom(fromEmail);
-		mail.setSubject("Recent activity - new subinitiative created");
+		mail.setSubject("Tokens minted");
 	
 		for(Notification notification : notifications) {
 			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
@@ -277,14 +285,14 @@ public class EmailService {
 	}
 	
 	
-	private Mail preparePRAssignationEmail(List<Notification> notifications)	{
+	private Mail preparePRAssignationCreatedEmail(List<Notification> notifications)	{
 		Mail mail = new Mail();
 		
 		Email fromEmail = new Email();
 		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
 		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
 		mail.setFrom(fromEmail);
-		mail.setSubject("Recent activity - new subinitiative created");
+		mail.setSubject("Peer-reviewed transfer created");
 	
 		for(Notification notification : notifications) {
 			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
@@ -334,10 +342,43 @@ public class EmailService {
 				if (evaluator != null) {
 					Date closeDate = assignation.getConfig().getMaxClosureDate();
 					SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, ''yy");
-					message += "<p>You are one of the evaluators of this assignation! Please visit the " + 
+					message += "<p>You are one of the evaluators of this transfer! Please visit the " + 
 							getAssignationAnchor(assignation) + " page to make your evaluation.</p>" + 
 							"<p>You have until " + dateFormat.format(closeDate) + " at this time of the day to do it.</p>";
 				}
+				
+				personalization.addSubstitution("$MESSAGE$", message);
+				
+				mail.addPersonalization(personalization);
+			}
+		}
+		
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
+		
+		return mail;
+	}
+	
+	
+	private Mail preparePRAssignationDoneEmail(List<Notification> notifications)	{
+		Mail mail = new Mail();
+		
+		Email fromEmail = new Email();
+		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
+		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
+		mail.setFrom(fromEmail);
+		mail.setSubject("Peer-reviewed transfer done");
+	
+		for(Notification notification : notifications) {
+			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
+				Personalization personalization = basicInitiativePersonalization(notification);
+				
+				Assignation assignation = notification.getActivity().getAssignation();
+				
+				String message = "<p>Peer-reviewed " + getAssignationAnchor(assignation) + " with motive: </p>"
+						+ "<p>" + assignation.getMotive() + "</p>"
+						+ "<p>has been closed.</p>"
+						+ "<p>" + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +
+						" have been transferred to its receivers.</p>";
 				
 				personalization.addSubstitution("$MESSAGE$", message);
 				
@@ -357,7 +398,7 @@ public class EmailService {
 		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
 		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
 		mail.setFrom(fromEmail);
-		mail.setSubject("Recent activity - new subinitiative created");
+		mail.setSubject("Direct transfer ordered");
 	
 		for(Notification notification : notifications) {
 			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
@@ -365,7 +406,7 @@ public class EmailService {
 				
 				Assignation assignation = notification.getActivity().getAssignation();
 				
-				String message = "<p>made a new direct " + getAssignationAnchor(assignation) + " of " + 
+				String message = "<p>made a direct " + getAssignationAnchor(assignation) + " of " + 
 						assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +
 						" to " + assignation.getReceivers().get(0).getUser().getNickname() + ", with motive: </p><p>" + assignation.getMotive() + ".</p>"; 
 
@@ -379,6 +420,38 @@ public class EmailService {
 		
 		return mail;
 	}
+	
+	private Mail prepareInitiativeTransferEmail(List<Notification> notifications)	{
+		Mail mail = new Mail();
+		
+		Email fromEmail = new Email();
+		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
+		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
+		mail.setFrom(fromEmail);
+		mail.setSubject("New transfer to intiative");
+	
+		for(Notification notification : notifications) {
+			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
+				Personalization personalization = basicInitiativePersonalization(notification);
+				
+				InitiativeTransfer transfer = notification.getActivity().getInitiativeTransfer();
+				
+				String message = "<p>made a transfer of " + 
+						transfer.getValue() + " " + transfer.getTokenType().getName() +
+						" to " + getInitiativeAnchor(transfer.getTo()) + ", with motive: </p><p>" + transfer.getMotive() + ".</p>"; 
+
+				personalization.addSubstitution("$MESSAGE$", message);
+				
+				mail.addPersonalization(personalization);
+			}
+		}
+		
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
+		
+		return mail;
+	}
+	
+	
 	
 	
 	private Personalization basicInitiativePersonalization(Notification notification) {
@@ -412,7 +485,7 @@ public class EmailService {
 	
 	private String getAssignationAnchor(Assignation assignation) {
 		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/" + 
-				assignation.getInitiative().getId().toString() + "/assignations/" + assignation.getId().toString() + ">assignation</a>";
+				assignation.getInitiative().getId().toString() + "/assignations/" + assignation.getId().toString() + ">transfer</a>";
 	}
 	
 	private String getTransferString(List<InitiativeTransfer> transfers) {
@@ -420,11 +493,12 @@ public class EmailService {
 	}
 	
 	private String getUnsuscribeFromInitiativeHref(Initiative initiative) {
-		return env.getProperty("collectiveone.webapp.baseurl") +"/#/unsubscribeFromInitiative/" + initiative.getId().toString();
+		return env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/unsubscribe?fromInitiativeId=" + 
+				initiative.getId().toString() + "&fromInitiativeName=" + initiative.getMeta().getName();
 	}
 	
 	private String getUnsuscribeFromAllHref() {
-		return env.getProperty("collectiveone.webapp.baseurl") +"/#/unsubscribeFromAll";
+		return env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/unsubscribe?fromAll=true";
 	}
 
 
