@@ -1,11 +1,16 @@
 package org.collectiveone.modules.users;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -23,8 +28,10 @@ public class AppUser {
 	@Column(name = "c1Id", updatable = false, nullable = false)
 	private UUID c1Id;
 	
-	@Column(name = "auth0_id", unique = true)
-	private String auth0Id;
+	@ElementCollection
+	@CollectionTable(name="auth_ids", joinColumns=@JoinColumn(name="user_id"))
+	@Column(name="auth0_id")
+	private List<String> auth0Ids = new ArrayList<String>();
 	
 	@Column(name = "nickname")
 	private String nickname;
@@ -43,10 +50,12 @@ public class AppUser {
 		AppUserDto dto = new AppUserDto();
 		
 		dto.setC1Id(c1Id.toString());
-		dto.setAuth0Id(auth0Id);
 		dto.setNickname(nickname);
 		dto.setEmail(email);
 		dto.setPictureUrl(pictureUrl);
+		for (String auth0Id : auth0Ids) {
+			dto.getAuth0Ids().add(auth0Id);
+		}
 		
 		return dto;
 	}
@@ -57,11 +66,11 @@ public class AppUser {
 	public void setC1Id(UUID c1Id) {
 		this.c1Id = c1Id;
 	}
-	public String getAuth0Id() {
-		return auth0Id;
+	public List<String> getAuth0Ids() {
+		return auth0Ids;
 	}
-	public void setAuth0Id(String auth0Id) {
-		this.auth0Id = auth0Id;
+	public void setAuth0Ids(List<String> auth0Ids) {
+		this.auth0Ids = auth0Ids;
 	}
 	public String getNickname() {
 		return nickname;

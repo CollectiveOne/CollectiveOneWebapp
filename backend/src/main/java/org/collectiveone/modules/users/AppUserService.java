@@ -76,13 +76,22 @@ public class AppUserService {
 		try {
 			auth0User = mgmt.users().get(auth0Id, null).execute();
 			
-			appUser = new AppUser();
+			/* check if this email is already registered. */
+			appUser = appUserRepository.findByEmail(auth0User.getEmail());
 			
-			appUser.setAuth0Id(auth0User.getId());
-			appUser.setNickname(auth0User.getName());
-			appUser.setEmail(auth0User.getEmail());
-			appUser.setPictureUrl(auth0User.getPicture());
-			appUser.setEmailNotificationsEnabled(true);
+			if (appUser == null) {
+				/* create a new user if not */
+				appUser = new AppUser();
+				
+				appUser.getAuth0Ids().add((auth0User.getId()));
+				appUser.setNickname(auth0User.getName());
+				appUser.setEmail(auth0User.getEmail());
+				appUser.setPictureUrl(auth0User.getPicture());
+				appUser.setEmailNotificationsEnabled(true);
+			} else {
+				/* just add the auth0id to the existing user */
+				appUser.getAuth0Ids().add(auth0Id); 
+			}
 			
 			appUser = appUserRepository.save(appUser);
 			

@@ -1,8 +1,11 @@
 package org.collectiveone.modules.users;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AppUserDto {
 	private String c1Id;
-	private String auth0Id;
+	private List<String> auth0Ids = new ArrayList<String>();
 	private String email;
 	private String nickname;
 	private String pictureUrl;
@@ -13,11 +16,11 @@ public class AppUserDto {
 	public void setC1Id(String c1Id) {
 		this.c1Id = c1Id;
 	}
-	public String getAuth0Id() {
-		return auth0Id;
+	public List<String> getAuth0Ids() {
+		return auth0Ids;
 	}
-	public void setAuth0Id(String auth0Id) {
-		this.auth0Id = auth0Id;
+	public void setAuth0Ids(List<String> auth0Ids) {
+		this.auth0Ids = auth0Ids;
 	}
 	public String getEmail() {
 		return email;
