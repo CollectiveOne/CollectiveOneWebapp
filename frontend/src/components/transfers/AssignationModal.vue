@@ -64,10 +64,22 @@
 
         <hr>
         <div class="w3-row-padding">
-          <div v-if="isEvaluator" class="w3-col my-evaluation-div w3-margin-bottom" :class="{'l6': isDone, '12': !isDone}">
+          <div v-if="isEvaluator && !isDone" class="w3-col l12 my-evaluation-div w3-margin-bottom">
             <div class="w3-row w3-center">
               <h5 class=""><b>My evaluation</b></h5>
             </div>
+            <div class="slider-container">
+              <transition name="slideDownUp">
+                <div v-if="!disableEvaluations" class="w3-panel light-grey">
+                  <p><b>Tip:</b> fill the values with numbers that <b>make sense relative to
+                  each other</b> and then click the "autoscale" button bellow.</p>
+                  <p>For example, evaluate three persons with 5, 10 and 12 and then click "autoscale".
+                    This will convert your evaluations to 19%, 37%, and 44% to make sure they sum 100% while keeping
+                    the relation among them the way you wanted. Dont worry about the decimal places.</p>
+                </div>
+              </transition>
+            </div>
+
             <br>
             <transition name="fade" mode="out-in">
               <app-users-percentages
@@ -90,7 +102,7 @@
               </button>
             </div>
           </div>
-          <div v-if="showResults" class="w3-col l6">
+          <div v-if="showResults" class="w3-col l12">
             <div class="w3-row w3-center">
               <h5 class=""><b>Results</b></h5>
             </div>
@@ -98,7 +110,8 @@
             <app-users-percentages
               :usersDataInit="assignation.receivers"
               :disable="true"
-              :showSelfBiases="assignation.config.selfBiasVisible">
+              :showSelfBiases="assignation.config.selfBiasVisible"
+              :myEvaluations="evaluationReceivers">
             </app-users-percentages>
           </div>
         </div>
@@ -183,7 +196,11 @@ export default {
       return this.assignation.thisEvaluation !== null
     },
     evaluationReceivers () {
-      return this.assignation.thisEvaluation.evaluationGrades
+      if (this.assignation.thisEvaluation) {
+        return this.assignation.thisEvaluation.evaluationGrades
+      } else {
+        return []
+      }
     },
     showEvaluations () {
       return this.isDone && this.isEvaluator && this.assignation.config.evaluationsVisible

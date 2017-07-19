@@ -10,7 +10,6 @@ import java.util.Locale;
 
 import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.assignations.Evaluator;
-import org.collectiveone.modules.assignations.Receiver;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
@@ -181,7 +180,7 @@ public class EmailService {
 				Initiative subInitiative = notification.getActivity().getSubInitiative();
 				String transferredAssets = getTransferString(notification.getActivity().getInitiativeTransfers());
 				
-				String message = "Created the " + getInitiativeAnchor(subInitiative) + " sub-initiative and transferred " + transferredAssets + " to it.";
+				String message = "<p>created the " + getInitiativeAnchor(subInitiative) + " sub-initiative and transferred " + transferredAssets + " to it.</p>";
 				personalization.addSubstitution("$MESSAGE$", message);
 				
 				mail.addPersonalization(personalization);
@@ -224,12 +223,12 @@ public class EmailService {
 				}
 				
 				if(changedName && changedDriver) {
-					message = "Changed the initiative name from " + oldName + " to " + initiative.getMeta().getName() + 
-							", and the driver from <br /><br /><i>" + oldDriver + "</i><br /><br /> to <br /><br />" + initiative.getMeta().getDriver();
+					message = "<p>changed the initiative name from " + oldName + " to " + initiative.getMeta().getName() + 
+							", and the driver from <br /><br /><i>" + oldDriver + "</i><br /><br /> to <br /><br />" + initiative.getMeta().getDriver() + "</p>";
 				} else if (changedName) {
-					message = "Changed the initiative name from " + oldName + " to " + initiative.getMeta().getName();
+					message = "<p>changed the initiative name from " + oldName + " to " + initiative.getMeta().getName() + "</p>";
 				} else if (changedDriver) {
-					message = "Changed the initiative driver from <br /><br /><i>" + oldDriver + "</i><br /><br /> to <br /><br /><i>" + initiative.getMeta().getDriver() + "</i>";
+					message = "<p>changed the initiative driver from <br /><br /><i>" + oldDriver + "</i><br /><br /> to <br /><br /><i>" + initiative.getMeta().getDriver() + "</i></p>";
 				} else {
 					message = "";
 				}
@@ -260,7 +259,7 @@ public class EmailService {
 				Personalization personalization = basicInitiativePersonalization(notification);
 				
 				TokenMint mint = notification.getActivity().getMint();
-				String message = "Minted " + mint.getValue() + " " + mint.getToken().getName() + " with motive: " + mint.getMotive() + ".";
+				String message = "<p>minted " + mint.getValue() + " " + mint.getToken().getName() + " with motive: " + mint.getMotive() + ".</p>";
 				
 				personalization.addSubstitution("$MESSAGE$", message);
 				
@@ -324,15 +323,16 @@ public class EmailService {
 					
 				}
 				
-				String message = "Created a new peer-reviewed " + getAssignationAnchor(assignation) + " of " + 
+				String message = "<p>created a new peer-reviewed " + getAssignationAnchor(assignation) + " of " + 
 						assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +
-						" to be distributed among " + receiversList + ".\n\nThe motive is: " + assignation.getMotive() + "."; 
+						" to be distributed among " + receiversList + ", with motive: </p><p>" + assignation.getMotive() + ".</p>"; 
 				
 				if (evaluator != null) {
 					Date closeDate = assignation.getConfig().getMaxClosureDate();
 					SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, ''yy");
-					message += "\n\nYou are one evaluator of the assignation! Please visit the " + getAssignationAnchor(assignation) + " page to make your evaluation. "
-							+ "\n\nYou have until " + dateFormat.format(closeDate) + " at this time of the day to do it.";
+					message += "<p>You are one of the evaluators of this assignation! Please visit the " + 
+							getAssignationAnchor(assignation) + " page to make your evaluation.</p>" + 
+							"<p>You have until " + dateFormat.format(closeDate) + " at this time of the day to do it.</p>";
 				}
 				
 				personalization.addSubstitution("$MESSAGE$", message);

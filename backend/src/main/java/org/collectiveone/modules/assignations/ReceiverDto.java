@@ -6,8 +6,10 @@ public class ReceiverDto {
 	
 	private String id;
 	private AppUserDto user;
+	private double evaluatedPercent;
 	private double percent;
 	private String state;
+	private boolean isDonor;
 	private double selfBias;
 	
 	
@@ -23,6 +25,12 @@ public class ReceiverDto {
 	public void setUser(AppUserDto user) {
 		this.user = user;
 	}
+	public double getEvaluatedPercent() {
+		return evaluatedPercent;
+	}
+	public void setEvaluatedPercent(double evaluatedPercent) {
+		this.evaluatedPercent = evaluatedPercent;
+	}
 	public double getPercent() {
 		return percent;
 	}
@@ -34,6 +42,12 @@ public class ReceiverDto {
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	public boolean getIsDonor() {
+		return isDonor;
+	}
+	public void setIsDonor(boolean isDonor) {
+		this.isDonor = isDonor;
 	}
 	public double getSelfBias() {
 		return selfBias;

@@ -50,7 +50,7 @@ public class ActivityService {
 	public void sendPendingEmails() throws IOException {
 		
 		List<Notification> notifications = 
-				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(
+				notificationRepository.findTop10BySubscriber_EmailNotificationsStateAndEmailState(
 						SubscriberEmailNotificationsState.SEND_NOW, NotificationEmailState.PENDING);
 		
 		String result = emailService.sendNotifications(notifications);
@@ -69,7 +69,7 @@ public class ActivityService {
 		
 		List<NotificationDto> notifications = new ArrayList<NotificationDto>();
 		
-		for(Notification notification : notificationRepository.findBySubscriber_User_C1Id(userId)) {
+		for(Notification notification : notificationRepository.findBySubscriber_User_C1IdOrderByCreationDateDesc(userId)) {
 			notifications.add(notification.toDto());
 		}
 		
@@ -244,6 +244,7 @@ public class ActivityService {
 				Subscriber subscriber = getOrCreateCollectiveOneSubscriber(member.getUser().getC1Id());
 				
 				Notification notification = new Notification();
+				notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
 				notification.setActivity(activity);
 				notification.setSubscriber(subscriber);
 				notification.setState(NotificationState.PENDING);
@@ -267,6 +268,7 @@ public class ActivityService {
 				/* add a notification only if the trigger user is not the subscriber */
 				if (subscriber.getState() == SubscriberState.SUBSCRIBED) {
 					Notification notification = new Notification();
+					notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
 					notification.setActivity(activity);
 					notification.setSubscriber(subscriber);
 					notification.setState(NotificationState.PENDING);

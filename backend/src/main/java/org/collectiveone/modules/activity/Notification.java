@@ -1,5 +1,6 @@
 package org.collectiveone.modules.activity;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -29,6 +30,9 @@ public class Notification {
 	
 	@ManyToOne
 	private Subscriber subscriber;
+	
+	@Column(name = "creation_date")
+	private Timestamp creationDate;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "state")
@@ -73,6 +77,14 @@ public class Notification {
 
 	public void setSubscriber(Subscriber subscriber) {
 		this.subscriber = subscriber;
+	}
+	
+	public Timestamp getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Timestamp creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	public NotificationState getState() {

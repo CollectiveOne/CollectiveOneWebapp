@@ -8,6 +8,16 @@
             type="receivers">
           </app-users-list>
         </div>
+        <div class="slider-container">
+          <transition name="slideDownUp">
+            <div v-if="donorUsers.length > 0" class="w3-row">
+              <div class="w3-panel">
+                <b>Warning:</b> {{ donorUsersStr }} will be part of the evaluation but the tokens they receive will be distributed
+                among the rest of receivers!
+              </div>
+            </div>
+          </transition>
+        </div>
       </div>
       <div class="w3-col m6">
         <h5>Evaluators: {{ sameAsReceivers ? '(same as receivers)' : ''}}</h5>
@@ -40,6 +50,36 @@ export default {
       receivers: [],
       evaluators: [],
       sameAsReceivers: true
+    }
+  },
+
+  computed: {
+    donorUsers () {
+      var donorUsers = []
+      for (var ix in this.receivers) {
+        var receiver = this.receivers[ix]
+        if (receiver.isDonor) {
+          donorUsers.push(receiver)
+        }
+      }
+      return donorUsers
+    },
+    donorUsersStr () {
+      var str = ''
+      for (var ix = 0; ix < this.donorUsers.length; ix++) {
+        if (ix === 0) {
+          str += ''
+        } else {
+          if (ix === this.donorUsers.length - 1) {
+            str += ' and '
+          } else {
+            str += ', '
+          }
+        }
+
+        str += this.donorUsers[ix].user.nickname
+      }
+      return str
     }
   },
 

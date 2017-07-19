@@ -5,7 +5,8 @@ const state = {
   lock: null,
   authenticated: false,
   profile: null,
-  notifications: []
+  notifications: [],
+  intervalId: null
 }
 
 const getters = {
@@ -67,6 +68,13 @@ const actions = {
 
     context.commit('setLock', lock)
     context.dispatch('updateAuthenticated')
+
+    /* set auto-update ever 5 seconds */
+    if (context.state.intervalId == null) {
+      context.state.intervalId = setInterval(() => {
+        context.dispatch('updateNotifications')
+      }, 10000)
+    }
   },
 
   updateAuthenticated: (context) => {

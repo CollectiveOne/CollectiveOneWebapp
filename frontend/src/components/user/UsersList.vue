@@ -4,14 +4,19 @@
       <tbody>
         <tr v-for="(userData, ix) in usersData" :key="userData.user.c1Id">
           <td class="avatar-col">
-            <app-user-avatar :user="userData.user" class="user-container" :showName="false"></app-user-avatar>
+            <app-user-avatar :user="userData.user"
+              class="user-container" :showName="false">
+            </app-user-avatar>
           </td>
           <td>
-            {{ userData.user.nickname }}
+            <span :class="{'striketrough': userData.isDonor}">{{ userData.user.nickname }}</span>
           </td>
           <td v-if="isReceivers">
             <div class="w3-right donate-btn-container">
-              <button @click="donorClicked(userData.user)" class="donate-button w3-button w3-small app-button">{{userData.isDonor ? 'receive' : 'donate'}}</button>
+              <button @click="donorClicked(userData.user)"
+                class="donate-button w3-button w3-small app-button">
+                {{ userData.isDonor ? 'receive' : 'donate' }}
+              </button>
             </div>
           </td>
           <td>
@@ -125,5 +130,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .striketrough {
+    text-decoration: line-through;
+  }
 </style>

@@ -79,7 +79,7 @@ public class AppUserService {
 			appUser = new AppUser();
 			
 			appUser.setAuth0Id(auth0User.getId());
-			appUser.setNickname(auth0User.getNickname());
+			appUser.setNickname(auth0User.getName());
 			appUser.setEmail(auth0User.getEmail());
 			appUser.setPictureUrl(auth0User.getPicture());
 			appUser.setEmailNotificationsEnabled(true);

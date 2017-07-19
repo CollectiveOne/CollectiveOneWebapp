@@ -28,7 +28,8 @@
 
       <div v-if="isNewPRAssigantionCreated" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> created a new peer-reviewed
-        assignation of <b>{{ notification.activity.assignation.assets[0].value }} {{ notification.activity.assignation.assets[0].assetName }}</b> from
+        <app-assignation-link :assignation="notification.activity.assignation"></app-assignation-link> of
+        <b>{{ notification.activity.assignation.assets[0].value }} {{ notification.activity.assignation.assets[0].assetName }}</b> from
         <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>
       </div>
 
@@ -40,6 +41,7 @@
 import UserAvatar from '@/components/user/UserAvatar.vue'
 import UserLink from '@/components/elementLinks/UserLink.vue'
 import InitiativeLink from '@/components/elementLinks/InitiativeLink.vue'
+import AssignationLink from '@/components/elementLinks/AssignationLink.vue'
 
 export default {
   props: {
@@ -51,7 +53,8 @@ export default {
   components: {
     'app-user-avatar': UserAvatar,
     'app-user-link': UserLink,
-    'app-initiative-link': InitiativeLink
+    'app-initiative-link': InitiativeLink,
+    'app-assignation-link': AssignationLink
   },
 
   computed: {

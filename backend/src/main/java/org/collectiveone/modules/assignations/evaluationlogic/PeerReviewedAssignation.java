@@ -11,6 +11,7 @@ import org.collectiveone.modules.assignations.EvaluationGradeType;
 import org.collectiveone.modules.assignations.Evaluator;
 import org.collectiveone.modules.assignations.EvaluatorState;
 import org.collectiveone.modules.assignations.Receiver;
+import org.collectiveone.modules.assignations.ReceiverType;
 
 public class PeerReviewedAssignation {
 	private Assignation assignation;
@@ -58,6 +59,7 @@ public class PeerReviewedAssignation {
 		
 		addReceiversEvaluations();
 		combineEvaluations();
+		removeDonors();
 		updateReceivers();
 		
 		state = PeerReviewedAssignationState.CLOSED;
@@ -69,7 +71,12 @@ public class PeerReviewedAssignation {
 		for (Receiver receiver : assignation.getReceivers()) {
 			ReceiverData receiverData = new ReceiverData();
 			
-			receiverData.setReceiverId(receiver.getId().toString());
+			receiverData.receiverId = receiver.getId().toString();
+			
+			receiverData.isDonor = false;
+			if (receiver.getType() == ReceiverType.DONOR) {
+				receiverData.isDonor = true;
+			}
 			
 			List<EvaluationGrade> gradesSet = getReceiverGradesSet(receiver.getId()); 
 			
@@ -105,7 +112,7 @@ public class PeerReviewedAssignation {
 						evaluation.setValue(mean);
 					}
 					
-					receiverData.getEvaluations().add(evaluation);
+					receiverData.evaluations.add(evaluation);
 				}
 			}
 			
@@ -174,11 +181,33 @@ public class PeerReviewedAssignation {
 		}
 	}
 	
+	private void removeDonors () {
+		double donatedPercentage = 0.0;
+		for(ReceiverData receiverData : receiversData) {
+			if (receiverData.isDonor) {
+				donatedPercentage += receiverData.normalizedPercent;
+			}
+		}
+		
+		double remainingPercent = 100.0 - donatedPercentage;
+		double scale = 100.0 / remainingPercent;
+		
+		for(ReceiverData receiverData : receiversData) {
+			if (receiverData.isDonor) {
+				receiverData.afterDonorPercent = 0.0;
+			} else {
+				receiverData.afterDonorPercent = receiverData.normalizedPercent * scale; 
+			}
+		}
+	}
+	
 	private void updateReceivers() {
 		/* copy the normalized percents from receiversData into
 		 * assignation receivers */
 		for(ReceiverData receiverData : receiversData) {
-			this.assignation.getReceivers().get(indexOfReceiver(receiverData.receiverId)).setAssignedPercent(receiverData.normalizedPercent);
+			int receiverIx = indexOfReceiver(receiverData.receiverId);
+			this.assignation.getReceivers().get(receiverIx).setEvaluatedPercent(receiverData.normalizedPercent);
+			this.assignation.getReceivers().get(receiverIx).setAssignedPercent(receiverData.afterDonorPercent);
 		}
 	}
 	

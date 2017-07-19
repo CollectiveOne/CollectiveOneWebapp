@@ -96,6 +96,13 @@ public class AssignationService {
 			receiver.setAssignation(assignation);
 			receiver.setAssignedPercent(receiverDto.getPercent());
 			receiver.setState(ReceiverState.PENDING);
+			
+			if (receiverDto.getIsDonor()) {
+				receiver.setType(ReceiverType.DONOR);	
+			} else {
+				receiver.setType(ReceiverType.NORMAL);
+			}
+						
 			receiver = receiverRepository.save(receiver);
 			
 			assignation.getReceivers().add(receiver);
@@ -194,7 +201,6 @@ public class AssignationService {
 		
 		PeerReviewedAssignation peerReviewedAssignation = new PeerReviewedAssignation();
 		peerReviewedAssignation.setAssignation(assignation);
-		
 		peerReviewedAssignation.updateState();
 		
 		if(peerReviewedAssignation.getState() == PeerReviewedAssignationState.CLOSED) {
@@ -202,15 +208,41 @@ public class AssignationService {
 			 * so just change state, transfer funds and save */
 			
 			/* transfer the assets to the receivers */
-			for(Bill bill : assignation.getBills()) {
-				for(Receiver receiver : assignation.getReceivers()) {
-					double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
-					tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
-					receiver.setState(ReceiverState.RECEIVED);
+			/* normalize once again just to be sure...*/
+			
+			boolean valid = true;
+			double sumOfPercents = 0.0;
+			for(Receiver receiver : assignation.getReceivers()) {
+				sumOfPercents += receiver.getAssignedPercent();
+				if (Double.isNaN(receiver.getAssignedPercent())) {
+					valid = false;
 				}
 			}
 			
-			assignation.setState(AssignationState.DONE);
+			if (sumOfPercents == 0) {
+				valid = false;
+			}
+			
+			if (Math.abs(100.0 - sumOfPercents) >= 1E-6) {
+				/* must sum 100 */
+				valid = false;
+			}
+			
+			if (valid) {
+				for(Bill bill : assignation.getBills()) {
+					for(Receiver receiver : assignation.getReceivers()) {
+						double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
+						tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
+						receiver.setState(ReceiverState.RECEIVED);
+					}
+				}
+				
+				assignation.setState(AssignationState.DONE);
+				
+			} else {
+				assignation.setState(AssignationState.ERROR);
+			}
+			
 			assignationRepository.save(assignation);
 		}
 	}
@@ -250,7 +282,7 @@ public class AssignationService {
 						for (ReceiverDto receiverDto : assignationDto.getReceivers()) {
 							if (receiverDto.getUser().getC1Id().equals(receiver.getUser().getC1Id().toString())) {
 								if (selfEvaluation.getType() == EvaluationGradeType.SET) {
-									receiverDto.setSelfBias(selfEvaluation.getPercent() - receiverDto.getPercent());
+									receiverDto.setSelfBias(selfEvaluation.getPercent() - receiverDto.getEvaluatedPercent());
 								} else {
 									receiverDto.setSelfBias(999.9);
 								}

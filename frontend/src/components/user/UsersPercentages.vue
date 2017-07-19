@@ -4,7 +4,10 @@
       <thead>
         <tr>
           <th class="avatar-col" colspan="2">user</th>
-          <th class="percent-col">%</th>
+          <th v-if="hasDonors">donor</th>
+          <th v-if="myEvaluations.length > 0" class="percent-col">mine</th>
+          <th v-if="hasDonors" class="percent-col">mean</th>
+          <th class="percent-col">{{ disable ? 'final' : 'mine' }}</th>
           <th class="bar-col w3-hide-small w3-hide-medium"></th>
           <th v-if="!disable">know / don't</th>
           <th v-if="showSelfBiases" class="self-bias-col">self-bias</th>
@@ -17,6 +20,13 @@
           </td>
           <td>
             {{ userData[userAnchor].nickname }}
+          </td>
+          <td v-if="hasDonors">{{ userData.isDonor ? 'yes' : 'no' }}</td>
+          <td v-if="myEvaluations.length > 0" class="percent-col">
+            {{ myEvaluationOf(userData) }} %
+          </td>
+          <td v-if="hasDonors"  class="percent-col">
+            {{ userData.evaluatedPercent.toFixed(1) }} %
           </td>
           <td class="percent-col">
             <div v-if="disable" class="">
@@ -116,6 +126,10 @@ export default {
     showSelfBiases: {
       type: Boolean,
       defualt: false
+    },
+    myEvaluations: {
+      type: Array,
+      default: () => { return [] }
     }
   },
 
@@ -127,6 +141,14 @@ export default {
   },
 
   computed: {
+    hasDonors () {
+      for (var ix in this.usersData) {
+        if (this.usersData[ix].isDonor) {
+          return true
+        }
+      }
+      return false
+    },
     sumOfPercents () {
       var sum = 0.0
       for (var ix in this.usersData) {
@@ -207,6 +229,13 @@ export default {
       } else {
         userData.percent = 0
         userData.type = 'DONT_KNOW'
+      }
+    },
+    myEvaluationOf (userData) {
+      for (var ix in this.myEvaluations) {
+        if (this.myEvaluations[ix].receiverUser.c1Id === userData.user.c1Id) {
+          return this.myEvaluations[ix].percent.toFixed(1)
+        }
       }
     }
   },

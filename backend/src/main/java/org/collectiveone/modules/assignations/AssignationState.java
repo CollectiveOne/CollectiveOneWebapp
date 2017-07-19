@@ -2,5 +2,6 @@ package org.collectiveone.modules.assignations;
 
 public enum AssignationState {
 	OPEN,
-	DONE
+	DONE,
+	ERROR
 }
