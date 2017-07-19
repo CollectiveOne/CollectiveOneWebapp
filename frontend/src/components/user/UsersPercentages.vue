@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="percentages-container">
+  <div v-if="usersData.length > 0" class="percentages-container">
     <table class="w3-table w3-striped w3-bordered w3-centered">
       <thead>
         <tr>
@@ -111,7 +111,7 @@ export default {
   },
 
   props: {
-    usersDataInit: {
+    usersData: {
       type: Array,
       default: () => { return [] }
     },
@@ -135,7 +135,6 @@ export default {
 
   data () {
     return {
-      usersData: [],
       autoScaled: false
     }
   },
@@ -238,10 +237,6 @@ export default {
         }
       }
     }
-  },
-
-  mounted () {
-    this.usersData = this.usersDataInit
   }
 }
 </script>

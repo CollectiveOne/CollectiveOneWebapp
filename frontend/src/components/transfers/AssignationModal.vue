@@ -83,12 +83,13 @@
             <br>
             <transition name="fade" mode="out-in">
               <app-users-percentages
-                :usersDataInit="evaluationReceivers"
+                :usersData="evaluationReceivers"
                 userAnchor="receiverUser"
                 :disable="disableEvaluations"
                 :key="disableEvaluations">
               </app-users-percentages>
             </transition>
+
             <div v-if="isOpen" class="bottom-btns-row w3-center">
               <button v-if="!disableEvaluations"
                 type="button" class="w3-button app-button"
@@ -108,7 +109,7 @@
             </div>
             <br>
             <app-users-percentages
-              :usersDataInit="assignation.receivers"
+              :usersData="assignation.receivers"
               :disable="true"
               :showSelfBiases="assignation.config.selfBiasVisible"
               :myEvaluations="evaluationReceivers">
