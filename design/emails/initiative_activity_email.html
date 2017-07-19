@@ -2,8 +2,7 @@
 <html>
 <head>
 	<title></title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-	<style type="text/css">
+  <style type="text/css">
 
       .top-header {
         clear: both;
@@ -15,7 +14,7 @@
       .container {
         width: 100%;
         text-align: center;
-        font-family: 'Raleway', sans-serif;
+        font-family: 'Arial', sans-serif;
         color: #3e464e;
       }
 
@@ -34,58 +33,72 @@
         clear: both;
       }
 
-      .title-img {
-        width: 80%;
-        max-width: 400px;
-      }
-
       .username {
-          font-size: 22px;
-          font-weight: bold;
-          margin-top: 5px;
+        margin-top: 5px;
       }
 
       .content {
         padding-top: 50px;
-        padding-bottom: 100px;
+        padding-bottom: 50px;
         clear: both;
       }
+
+			.user-picture {
+				width: 60px;
+			}
 
       .footer {
         padding: 30px;
         background-color: #eff3f6;
       }
 
-      .footer a {
+			.unsuscribe-links a {
         font-size: 12px;
         color: #3e464e;
       }
+
+			.twitter-link {
+				margin-bottom: 20px;
+			}
+
+			.twitter-link a {
+				font-size: 18px;
+				color: #3e464e;
+			}
+
 	</style>
 </head>
 <body>
 <div class="container" style="text-align">
 	<div class="top-header">
-		<div class="logo-txt-div">Notification from</div>
-		<span class="sg-image" data-imagelibrary="%7B%22width%22%3A0%2C%22height%22%3A0%2C%22alignment%22%3A%22center%22%2C%22border%22%3A0%2C%22src%22%3A%22http%3A//www.collectiveone.org/images/Logo-Light.png%22%2C%22classes%22%3A%7B%22sg-image%22%3A1%7D%7D" style="float: none; display: block; text-align: center;"><img class="logo-img" src="https://image.ibb.co/nt20Pa/Logo_Dark.png" /></span>
+		<a href="http://www.collectiveone.org">
+			<img class="logo-img" src="https://image.ibb.co/nt20Pa/Logo_Dark.png" />
+		</a>
 	</div>
 
 	<div class="content">
-			<h2>Recent activity in $INITIATIVE_ANCHOR$</h2>
-			&nbsp;
+		<h3>Recent activity in $INITIATIVE_ANCHOR$</h3>
 
-		<div>
-
-		<span class="sg-image" data-imagelibrary="%7B%22width%22%3A0%2C%22height%22%3A0%2C%22alt_text%22%3A%22%22%2C%22alignment%22%3A%22center%22%2C%22border%22%3A0%2C%22src%22%3A%22%24TRIGGER_USER_PICTURE%24%22%2C%22classes%22%3A%7B%22sg-image%22%3A1%7D%7D" style="float: none; display: block; text-align: center;"><img alt="" src="$TRIGGER_USER_PICTURE$" /></span>
-
+		<img class="user-picture" alt="" src="$TRIGGER_USER_PICTURE$" />
 		<p class="username">$TRIGGER_USER_NICKNAME$</p>
-		</div>
 
 		$MESSAGE$
 
 	</div>
 
-	<div class="footer"><a href="$UNSUSCRIBE_FROM_INITIATIVE_HREF$">unsuscribe from email notifications from the $INITIATIVE_NAME$ initiative</a><br />
-		<a href="$UNSUSCRIBE_FROM_ALL_HREF$">unsuscribe from all email notifications from the CollectiveOne platform</a>
+	<div class="footer">
+		<div class="twitter-link" >
+			<a href="https://twitter.com/collectiveonepr">
+				follow us in twitter!
+			</a>
+		</div>
+
+		<div class="unsuscribe-links"  >
+			<a href="$UNSUSCRIBE_FROM_INITIATIVE_HREF$">unsuscribe from email notifications from the $INITIATIVE_NAME$ initiative</a>
+			<br />
+			<a class="unsuscribe-link" href="$UNSUSCRIBE_FROM_ALL_HREF$">unsuscribe from all email notifications from CollectiveOne</a>
+			<br>
+		</div>
 	</div>
 
 </div>

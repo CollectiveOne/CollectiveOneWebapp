@@ -211,6 +211,7 @@ public class ActivityService {
 		activity.setTriggerUser(mint.getOrderedBy());
 		activity.setInitiative(initiative);
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		
 		activity.setMint(mint);
 		
 		activity = activityRepository.save(activity);
@@ -226,6 +227,23 @@ public class ActivityService {
 		activity.setTriggerUser(triggerUser);
 		activity.setInitiative(assignation.getInitiative());
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		
+		activity.setAssignation(assignation);
+		
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void directAssignationCreated(Assignation assignation, AppUser triggerUser) {
+		Activity activity = new Activity();
+		
+		activity.setType(ActivityType.D_ASSIGNATION_CREATED);
+		activity.setTriggerUser(triggerUser);
+		activity.setInitiative(assignation.getInitiative());
+		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		
 		activity.setAssignation(assignation);
 		
 		activity = activityRepository.save(activity);

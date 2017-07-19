@@ -105,6 +105,10 @@ public class EmailService {
 					mail = preparePRAssignationEmail(notifications);
 					break;
 					
+				case D_ASSIGNATION_CREATED:
+					mail = prepareDAssignationEmail(notifications);
+					break;
+					
 				default:
 					break;
 				}
@@ -335,6 +339,36 @@ public class EmailService {
 							"<p>You have until " + dateFormat.format(closeDate) + " at this time of the day to do it.</p>";
 				}
 				
+				personalization.addSubstitution("$MESSAGE$", message);
+				
+				mail.addPersonalization(personalization);
+			}
+		}
+		
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
+		
+		return mail;
+	}
+	
+	private Mail prepareDAssignationEmail(List<Notification> notifications)	{
+		Mail mail = new Mail();
+		
+		Email fromEmail = new Email();
+		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
+		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
+		mail.setFrom(fromEmail);
+		mail.setSubject("Recent activity - new subinitiative created");
+	
+		for(Notification notification : notifications) {
+			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
+				Personalization personalization = basicInitiativePersonalization(notification);
+				
+				Assignation assignation = notification.getActivity().getAssignation();
+				
+				String message = "<p>made a new direct " + getAssignationAnchor(assignation) + " of " + 
+						assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +
+						" to " + assignation.getReceivers().get(0).getUser().getNickname() + ", with motive: </p><p>" + assignation.getMotive() + ".</p>"; 
+
 				personalization.addSubstitution("$MESSAGE$", message);
 				
 				mail.addPersonalization(personalization);

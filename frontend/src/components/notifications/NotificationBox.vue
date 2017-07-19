@@ -33,6 +33,14 @@
         <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>
       </div>
 
+      <div v-if="isNewDAssigantionCreated" class="">
+        <app-user-link :user="notification.activity.triggerUser"></app-user-link> made a direct
+        <app-assignation-link :assignation="notification.activity.assignation"></app-assignation-link> of
+        <b>{{ notification.activity.assignation.assets[0].value }} {{ notification.activity.assignation.assets[0].assetName }}</b> from
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link> to 
+        <app-user-link :user="notification.activity.assignation.receivers[0].user"></app-user-link>
+      </div>
+
     </div>
   </div>
 </template>
@@ -72,6 +80,9 @@ export default {
     },
     isNewPRAssigantionCreated () {
       return this.notification.activity.type === 'PR_ASSIGNATION_CREATED'
+    },
+    isNewDAssigantionCreated () {
+      return this.notification.activity.type === 'D_ASSIGNATION_CREATED'
     },
     initiativeChanged () {
       let activity = this.notification.activity

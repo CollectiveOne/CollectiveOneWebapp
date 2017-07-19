@@ -132,6 +132,9 @@ public class AssignationService {
 			}
 			assignation.setState(AssignationState.DONE);
 			assignationRepository.save(assignation);
+			
+			activityService.directAssignationCreated(assignation, appUserRepository.findByC1Id(creatorId));
+			
 			break;
 		
 		case PEER_REVIEWED: 
