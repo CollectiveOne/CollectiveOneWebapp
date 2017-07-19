@@ -178,15 +178,14 @@ textarea {
 }
 
 .error-panel {
-  color: white;
-  background-color: #b50000;
+  color: black;
+  background-color: #f1cdcd;
   margin-bottom: 6px;
 }
 
 .error-input {
   outline: none;
-  border-color: red !important;
-  border-color: red;
+  border-color: #f1cdcd !important;
   box-shadow: 0 0 10px red;
 }
 

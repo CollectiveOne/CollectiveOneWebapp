@@ -18,35 +18,41 @@
           <input v-model="name"
             class="w3-input w3-hover-light-grey" type="text"
             :class="{ 'error-input' : nameErrorShow }">
-          <div v-if="nameEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
-            please select a name for this subinitiative
-          </div>
-          <div v-if="nameTooLongShow" class="w3-row w3-tag error-panel error-row w3-round">
-            maximum number of characters reached
-          </div>
-
+          <app-error-panel
+            :show="nameEmptyShow"
+            message="please select a name for this subinitiative">
+          </app-error-panel>
+          <app-error-panel
+            :show="nameTooLongShow"
+            message="name too long">
+          </app-error-panel>
           <br>
+
           <label class=""><b>Subinitiative Driver</b></label>
           <textarea v-model="driver"
             class="w3-input w3-border w3-round w3-hover-light-grey"
             :class="{ 'error-input' : driverErrorShow }">
           </textarea>
-          <div v-if="driverErrorShow" class="w3-row w3-tag error-panel error-row w3-round">
-            please include the driver of this initiative, its purpose
-          </div>
+          <app-error-panel
+            :show="driverErrorShow"
+            message="please include the driver of this initiative, its purpose">
+          </app-error-panel>
 
           <hr>
+
           <div class="w3-container assets-selector-div">
             <app-initiative-assets-assigner :initInitiativeId="parentInitiative.id" type='initiative-assigner'
               @updated="parentAssetsSelected($event)" @initiative-updated="parentInitiativeUpdated($event)"
               :showError="assetsErrorShow">
             </app-initiative-assets-assigner>
           </div>
-          <div v-if="assetsErrorShow" class="w3-row w3-tag error-panel error-row w3-round">
-            please select how many tokens should be transferred to this subinitaitive
-          </div>
+          <app-error-panel
+            :show="assetsErrorShow"
+            message="please select how many tokens should be transferred to this subinitaitive">
+          </app-error-panel>
 
           <hr>
+
           <label class="init-contr-label "><b>Initial Members</b></label>
           <app-members-table-container
             :members="members"
@@ -61,14 +67,17 @@
               select all members of "{{ parentInitiative.meta.name }}"
             </button>
           </div>
-          <div v-if="membersEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
-            please select at least one member
-          </div>
-          <div v-if="noAdmingShow" class="w3-row w3-tag error-panel error-row w3-round">
-            there must be at least one admin
-          </div>
+          <app-error-panel
+            :show="membersEmptyShow"
+            message="please select at least one member">
+          </app-error-panel>
+          <app-error-panel
+            :show="noAdmingShow"
+            message="there must be at least one admin">
+          </app-error-panel>
 
           <hr>
+          
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
               <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
@@ -271,6 +280,8 @@ export default {
             this.showOutputMessage(response.data.message)
             this.closeThis()
             this.$store.dispatch('updatedMyInitiatives')
+            this.$store.dispatch('updateInitiative')
+            this.$store.dispatch('refreshTransfers')
             this.$store.commit('triggerUpdateAssets')
           } else {
             this.showOutputMessage(response.data.message)

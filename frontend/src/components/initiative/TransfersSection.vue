@@ -43,7 +43,7 @@
         <div class="w3-button" @click="newTransferToUser()">
           <span class="w3-left">to user</span><i class="fa fa-sign-in w3-right" aria-hidden="true"></i>
         </div>
-        <div class="w3-button" @click="newTransferToInitiative()">
+        <div v-if="hasSubinitiatives" class="w3-button" @click="newTransferToInitiative()">
           <span class="w3-left">to initiative</span><i class="fa fa-sign-in w3-right" aria-hidden="true"></i>
         </div>
       </div>
@@ -92,6 +92,9 @@ export default {
   computed: {
     initiative () {
       return this.$store.state.initiative.initiative
+    },
+    hasSubinitiatives () {
+      return this.initiative.subInitiatives.length > 0
     },
     initiativeAssignations () {
       return this.$store.state.initiative.initiativeAssignations

@@ -56,7 +56,7 @@ public class AppUserService {
 
 	@Transactional
 	public GetResult<List<AppUserDto>> searchBy(String q) {
-		List<AppUser> appUsers = appUserRepository.searchByNickname(q);
+		List<AppUser> appUsers = appUserRepository.findTop10ByNicknameLikeIgnoreCase("%"+q+"%");
 		
 		List<AppUserDto> appUserDtos = new ArrayList<AppUserDto>();
 		

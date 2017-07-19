@@ -25,6 +25,9 @@ axios.interceptors.request.use(
   }
 )
 
+import ErrorPanel from '@/components/global/ErrorPanel.vue'
+Vue.component('app-error-panel', ErrorPanel)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

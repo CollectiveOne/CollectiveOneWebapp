@@ -14,16 +14,31 @@
 
           <div class="w3-row">
             <label class=""><b>Transfer to</b></label>
-            <select v-model="transfer.receiverId" class="w3-select initiative-selector" name="transferto">
+            <select v-model="transfer.receiverId"
+              class="w3-select initiative-selector" name="transferto"
+              :class="{ 'error-input' : subInitiativeEmptyShow }">
               <option v-for="subinitiative in subinitiatives" :value="subinitiative.id">{{ subinitiative.meta.name }}</option>
             </select>
           </div>
-
+          <app-error-panel
+            :show="subInitiativeEmptyShow"
+            message="please select a subinitiative to transfer the tokens to">
+          </app-error-panel>
           <br>
 
           <div class="w3-row">
             <label class=""><b>Motive</b></label>
-            <input v-model="transfer.motive" class="w3-input w3-hover-light-grey" type="text">
+            <input v-model="transfer.motive"
+              class="w3-input w3-hover-light-grey" type="text"
+              :class="{ 'error-input' : motiveErrorShow }">
+            <app-error-panel
+              :show="motiveEmptyShow"
+              message="please provide a motive for this transfer for future reference">
+            </app-error-panel>
+            <app-error-panel
+              :show="motiveTooLarge"
+              message="motive too large, please use the notes for long annotations">
+            </app-error-panel>
             <br>
 
             <label class=""><b>Notes</b></label>
@@ -34,9 +49,14 @@
           <div class="w3-row">
             <app-initiative-assets-assigner
               :initInitiativeId="initiative.id"
-              @updated="assetsSelected($event)">
+              @updated="assetsSelected($event)"
+              :showError="assetsErrorShow">
             </app-initiative-assets-assigner>
           </div>
+          <app-error-panel
+            :show="assetsErrorShow"
+            message="please select the amount of assets to be transfer">
+          </app-error-panel>
 
           <hr>
 
@@ -72,7 +92,10 @@ export default {
         motive: '',
         notes: '',
         receiverId: ''
-      }
+      },
+      subInitiativeEmptyError: false,
+      motiveEmptyError: false,
+      assetsError: false
     }
   },
 
@@ -82,6 +105,32 @@ export default {
     },
     subinitiatives () {
       return this.initiative.subInitiatives
+    },
+    motiveEmptyShow () {
+      return this.motiveEmptyError && this.transfer.motive === ''
+    },
+    motiveErrorShow () {
+      return this.motiveEmptyShow || this.motiveTooLarge
+    },
+    motiveTooLarge () {
+      return this.transfer.motive.length > 55
+    },
+    subInitiativeEmptyShow () {
+      return this.subInitiativeEmptyError && this.transfer.receiverId === ''
+    },
+    assetsAreZero () {
+      if (this.transfer.assetId) {
+        if (this.transfer.value > 0) {
+          return false
+        } else {
+          return true
+        }
+      } else {
+        return true
+      }
+    },
+    assetsErrorShow () {
+      return this.assetsError && this.assetsAreZero
     }
   },
 
@@ -97,11 +146,33 @@ export default {
       this.transfer.senderId = assets[0].senderId
     },
     accept () {
-      this.axios.post('/1/secured/initiative/' + this.transfer.senderId + '/transferToInitiative', this.transfer)
-      .then((response) => {
-        this.$store.commit('triggerUpdateAssets')
-        this.closeThis()
-      })
+      var ok = true
+      if (this.transfer.motive === '') {
+        this.motiveEmptyError = true
+        ok = false
+      }
+
+      if (this.motiveTooLarge) {
+        ok = false
+      }
+
+      if (this.transfer.receiverId === '') {
+        this.subInitiativeEmptyError = true
+        ok = false
+      }
+
+      if (this.assetsAreZero) {
+        this.assetsError = true
+        ok = false
+      }
+
+      if (ok) {
+        this.axios.post('/1/secured/initiative/' + this.transfer.senderId + '/transferToInitiative', this.transfer)
+        .then((response) => {
+          this.$store.commit('triggerUpdateAssets')
+          this.closeThis()
+        })
+      }
     }
   }
 

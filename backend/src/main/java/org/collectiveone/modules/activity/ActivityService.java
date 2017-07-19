@@ -50,7 +50,7 @@ public class ActivityService {
 	public void sendPendingEmails() throws IOException {
 		
 		List<Notification> notifications = 
-				notificationRepository.findTop10BySubscriber_EmailNotificationsStateAndEmailState(
+				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(
 						SubscriberEmailNotificationsState.SEND_NOW, NotificationEmailState.PENDING);
 		
 		String result = emailService.sendNotifications(notifications);
@@ -69,7 +69,7 @@ public class ActivityService {
 		
 		List<NotificationDto> notifications = new ArrayList<NotificationDto>();
 		
-		for(Notification notification : notificationRepository.findBySubscriber_User_C1IdOrderByCreationDateDesc(userId)) {
+		for(Notification notification : notificationRepository.findTop10BySubscriber_User_C1IdOrderByCreationDateDesc(userId)) {
 			notifications.add(notification.toDto());
 		}
 		

@@ -34,12 +34,14 @@
                 <component @updated="receiversUpdated($event)" :is="isDirect ? 'app-direct-assignation' : 'app-peer-reviewed-assignation'"></component>
               </keep-alive>
             </transition>
-            <div v-if="notEnoughReceivers" class="w3-row w3-tag error-panel error-row w3-round">
-              please add at least one receiver
-            </div>
-            <div v-if="notEnoughEvaluators" class="w3-row w3-tag error-panel error-row w3-round">
-              please add at least one evaluator
-            </div>
+            <app-error-panel
+              :show="notEnoughReceivers"
+              message="please add at least one receiver">
+            </app-error-panel>
+            <app-error-panel
+              :show="notEnoughEvaluators"
+              message="please add at least one evaluator">
+            </app-error-panel>
           </div>
 
           <div class="w3-row">
@@ -48,20 +50,23 @@
               @updated="assetsSelected($event)" :showError="assetsZeroShow"
               :canChangeInitiative="false">
             </app-initiative-assets-assigner>
-            <div v-if="assetsZeroShow" class="w3-row w3-tag error-panel error-row w3-round">
-              plase select the amount of tokens that will be transferred to these members
-            </div>
+            <app-error-panel
+              :show="assetsZeroShow"
+              message="please select the amount of tokens that will be transferred to these members">
+            </app-error-panel>
           </div>
 
           <div class="w3-row">
             <label class=""><b>Motive</b></label>
             <input v-model="assignation.motive" class="w3-input w3-hover-light-grey" :class="{ 'error-input' : motiveErrorShow }" type="text">
-            <div v-if="motiveEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
-              please provide a motive for this transfer for future reference
-            </div>
-            <div v-if="motiveTooLarge" class="w3-row w3-tag error-panel error-row w3-round">
-              motive too large, please use the notes for long annotations
-            </div>
+            <app-error-panel
+              :show="motiveEmptyShow"
+              message="please provide a motive for this transfer for future reference">
+            </app-error-panel>
+            <app-error-panel
+              :show="motiveTooLarge"
+              message="motive too large, please use the notes for long annotations">
+            </app-error-panel>
             <br>
 
             <label class=""><b>Notes</b></label>

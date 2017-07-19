@@ -72,7 +72,12 @@ const actions = {
     /* set auto-update ever 5 seconds */
     if (context.state.intervalId == null) {
       context.state.intervalId = setInterval(() => {
+        /* update everything every 10 s */
         context.dispatch('updateNotifications')
+        context.dispatch('updatedMyInitiatives')
+        context.dispatch('refreshInitiative')
+        context.dispatch('refreshTransfers')
+        context.commit('triggerUpdateAssets')
       }, 10000)
     }
   },

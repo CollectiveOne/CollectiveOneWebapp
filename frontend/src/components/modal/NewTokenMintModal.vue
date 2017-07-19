@@ -43,20 +43,24 @@
               </div>
             </div>
           </div>
-          <div v-if="assetsZeroShow" class="w3-row w3-tag error-panel error-row w3-round">
-            plese select an amount larger than 0
-          </div>
+          <app-error-panel
+            :show="assetsZeroShow"
+            message="please select an amount larger than 0">
+          </app-error-panel>
 
           <br>
           <div class="w3-row">
             <label class=""><b>Motive</b></label>
             <input v-model="motive" class="w3-input w3-hover-light-grey" :class="{ 'error-input' : motiveErrorShow }" type="text">
-            <div v-if="motiveEmptyShow" class="w3-row w3-tag error-panel error-row w3-round">
-              please provide a motive for minting these tokens for future reference
-            </div>
-            <div v-if="motiveTooLarge" class="w3-row w3-tag error-panel error-row w3-round">
-              motive too large, please use the notes for long annotations
-            </div>
+            <app-error-panel
+              :show="motiveEmptyShow"
+              message="please provide a motive for minting these tokens for future reference">
+            </app-error-panel>
+            <app-error-panel
+              :show="motiveTooLarge"
+              message="motive too large, please use the notes for long annotations">
+            </app-error-panel>
+
             <br>
 
             <label class=""><b>Notes</b></label>

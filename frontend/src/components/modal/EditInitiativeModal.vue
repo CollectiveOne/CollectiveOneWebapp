@@ -15,13 +15,28 @@
 
           <div class="w3-row">
             <label class=""><b>Name</b></label>
-            <input v-model="newInitiative.name" class="w3-input w3-hover-light-grey" type="text">
+            <input v-model="newInitiative.name"
+              class="w3-input w3-hover-light-grey"
+              :class="{ 'error-input' : nameErrorShow }"
+              type="text">
+            <app-error-panel
+              :show="nameEmptyShow"
+              message="please set the new name of the initiative">
+            </app-error-panel>
+            <app-error-panel
+              :show="nameTooLarge"
+              message="name too long">
+            </app-error-panel>
           </div>
           <br>
 
           <div class="w3-row">
             <label class=""><b>Driver</b></label>
             <textarea v-model="newInitiative.driver" rows="5" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
+            <app-error-panel
+              :show="driverEmptyShow"
+              message="please set a driver for the initiative">
+            </app-error-panel>
           </div>
           <br>
 
@@ -72,13 +87,27 @@ export default {
         '#ff9100',
         '#e40000',
         '#00a8a8'
-      ]
+      ],
+      nameEmptyError: false,
+      driverEmptyError: false
     }
   },
 
   computed: {
     initiative () {
       return this.$store.state.initiative.initiative
+    },
+    nameErrorShow () {
+      return this.nameEmptyShow || this.nameTooLarge
+    },
+    nameEmptyShow () {
+      return this.nameEmptyError && this.newInitiative.name === ''
+    },
+    nameTooLarge () {
+      return this.newInitiative.name.length > 30
+    },
+    driverEmptyShow () {
+      return this.driverEmptyError && this.newInitiative.driver === ''
     }
   },
 
@@ -93,11 +122,29 @@ export default {
       this.$store.commit('showEditInitiativeModal', false)
     },
     accept () {
-      this.axios.put('/1/secured/initiative/' + this.initiative.id, this.newInitiative).then((response) => {
-        this.closeThis()
-        this.$store.dispatch('refreshInitiative')
-        this.$store.dispatch('updatedMyInitiatives')
-      })
+      var ok = true
+
+      if (this.newInitiative.name === '') {
+        this.nameEmptyError = true
+        ok = false
+      }
+
+      if (this.nameTooLarge) {
+        ok = false
+      }
+
+      if (this.newInitiative.driver === '') {
+        this.driverEmptyError = true
+        ok = false
+      }
+
+      if (ok) {
+        this.axios.put('/1/secured/initiative/' + this.initiative.id, this.newInitiative).then((response) => {
+          this.closeThis()
+          this.$store.dispatch('refreshInitiative')
+          this.$store.dispatch('updatedMyInitiatives')
+        })
+      }
     }
   }
 }
