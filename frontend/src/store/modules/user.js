@@ -95,8 +95,8 @@ const actions = {
       Vue.axios.get('/1/secured/user/myProfile').then((response) => {
         context.commit('setProfile', response.data.data)
         context.dispatch('updateNotifications')
-      }).catch(function (error) {
-        console.log(error)
+      }).catch(function () {
+        context.commit('setUserEmailNotVerified', true)
       })
     }
   },

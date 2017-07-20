@@ -20,7 +20,7 @@ export default {
 
   computed: {
     view () {
-      if (this.$store.state.user.authenticated) {
+      if (this.$store.state.user.authenticated && !this.$store.state.support.userEmailNotVerified) {
         return 'app-logged-view'
       } else {
         return 'app-landing-view'

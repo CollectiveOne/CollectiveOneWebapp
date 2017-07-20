@@ -3,7 +3,8 @@ import Vue from 'vue'
 const state = {
   contentAnimationType: 'slideToDown',
   initiativesTree: null,
-  triggerUpdateAssets: false
+  triggerUpdateAssets: false,
+  userEmailNotVerified: false
 }
 
 const findCoordinate = function (initiatives, id, coord) {
@@ -82,6 +83,9 @@ const mutations = {
   },
   triggerUpdateAssets: (state) => {
     state.triggerUpdateAssets = !state.triggerUpdateAssets
+  },
+  setUserEmailNotVerified: (state, payload) => {
+    state.userEmailNotVerified = payload
   }
 }
 

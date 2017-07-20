@@ -80,14 +80,22 @@ public class AppUserService {
 			appUser = appUserRepository.findByEmail(auth0User.getEmail());
 			
 			if (appUser == null) {
-				/* create a new user if not */
-				appUser = new AppUser();
-				
-				appUser.getAuth0Ids().add((auth0User.getId()));
-				appUser.setNickname(auth0User.getName());
-				appUser.setEmail(auth0User.getEmail());
-				appUser.setPictureUrl(auth0User.getPicture());
-				appUser.setEmailNotificationsEnabled(true);
+				if (auth0User.isEmailVerified()) {
+					/* create a new user if not */
+					appUser = new AppUser();
+					
+					appUser.getAuth0Ids().add((auth0User.getId()));
+					
+					if (auth0User.getIdentities().get(0).getProvider().equals("auth0")) {
+						appUser.setNickname(auth0User.getNickname());
+					} else {
+						appUser.setNickname(auth0User.getName());
+					}
+					
+					appUser.setEmail(auth0User.getEmail());
+					appUser.setPictureUrl(auth0User.getPicture());
+					appUser.setEmailNotificationsEnabled(true);
+				} 
 			} else {
 				/* just add the auth0id to the existing user */
 				appUser.getAuth0Ids().add(auth0Id); 

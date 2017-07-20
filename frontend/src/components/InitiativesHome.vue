@@ -9,16 +9,16 @@
         </app-initiative-card>
       </div>
     </div>
-    <div v-else class="w3-row">
+    <div v-if="showEmptyMessage" class="w3-row">
       <div class="w3-panel w3-padding light-grey">
         <h4>
           <p>
             This is empty for the moment. In order to be added to an existing initiative,
-            please contact its administrator and ask them if they can add you a member.
+            please contact its administrator.
           </p>
           <p>
             If this is not the case, and you want to create your own initiative, you can
-            simply do this starting from the panel in the left.
+            simply do this from the panel in the left.
           </p>
           <p>
             We are working on an initiative's explorer feature (among several other things),
@@ -41,6 +41,12 @@ export default {
   computed: {
     userInitiatives () {
       return this.$store.state.support.initiativesTree
+    },
+    showEmptyMessage () {
+      return this.userInitiatives.length === 0
+    },
+    showVerifyEmail () {
+      return this.$store.state.support.userEmailNotVerified
     }
   }
 }

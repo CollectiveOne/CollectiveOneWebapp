@@ -1,10 +1,20 @@
 <template lang="html">
   <div class="">
     <div class="welcome-header">
-      <h1>Welcome to CollectiveOne</h1>
-      <button class="w3-button app-button" @click="login()">login / signup</button>
+      <div v-if="$store.state.support.userEmailNotVerified" class="">
+        <h4>
+          <p>
+            It seems that you have not verified your email yet. Please confirm it
+            to get access to CollectiveOne.
+          </p>
+        </h4>
+        <button class="w3-button app-button" @click="logout()">logout</button>
+      </div>
+      <div v-else class="">
+        <h1>Welcome to CollectiveOne</h1>
+        <button class="w3-button app-button" @click="login()">login / signup</button>
+      </div>
     </div>
-
   </div>
 </template>
 
@@ -14,6 +24,10 @@ export default {
   methods: {
     login () {
       this.$store.state.user.lock.show()
+    },
+    logout () {
+      this.$store.dispatch('logoutUser')
+      window.location.href = '/'
     }
   }
 }
