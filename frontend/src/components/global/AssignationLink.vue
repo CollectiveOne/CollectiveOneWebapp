@@ -1,5 +1,5 @@
 <template lang="html">
-  <router-link :to="link">assignation</router-link>
+  <router-link :to="link">transfer</router-link>
 </template>
 
 <script>
