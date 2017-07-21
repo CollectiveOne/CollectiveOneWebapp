@@ -20,7 +20,7 @@
           {{ initiative.meta.name }}
         </div>
       </div>
-      <div class="w3-col s2 w3-button" @click="newSubInitiative()">
+      <div v-if="isLoggedAnAdmin()" class="w3-col s2 w3-button" @click="newSubInitiative()">
         <i class="fa fa-plus gray-2-color" aria-hidden="true"></i>
       </div>
     </div>
@@ -129,6 +129,13 @@ export default {
       this.$store.commit('showNewSubInitiativeModal', {
         show: true,
         parentId: this.initiative.id })
+    },
+    isLoggedAnAdmin () {
+      if (this.initiative.loggedMember) {
+        return this.initiative.loggedMember.role === 'ADMIN'
+      } else {
+        return false
+      }
     }
   },
 

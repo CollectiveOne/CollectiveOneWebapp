@@ -85,7 +85,7 @@ public class InitiativesController {
 		}
 		
 		if(addSubinitiatives) {
-			initiativeDto.setSubInitiatives(initiativeService.getSubinitiativesTree(UUID.fromString(initiativeId)));
+			initiativeDto.setSubInitiatives(initiativeService.getSubinitiativesTree(UUID.fromString(initiativeId), null));
 		}
 		
 		if(addParents) {

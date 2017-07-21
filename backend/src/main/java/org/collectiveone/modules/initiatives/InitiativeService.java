@@ -287,19 +287,22 @@ public class InitiativeService {
 	
 	@Transactional
 	public GetResult<List<InitiativeDto>> getOfUser(UUID userC1Id) {
-		/* return the all super-initiatives (initiatives without parent initiatives) 
+		/* return all super-initiatives (initiatives without parent initiatives) 
 		 * and include all sub-initiativespf each of them */
 		
 		AppUser user = appUserRepository.findByC1Id(userC1Id);
-		List<Initiative> superInitiatives = getSuperInitiativesOfMember(user.getC1Id());
 		
 		/* get all initiatives in which the user is a contributor */
+		List<Initiative> superInitiatives = getSuperInitiativesOfMember(user.getC1Id());
+		
 		List<InitiativeDto> initiativesDtos = new ArrayList<InitiativeDto>();
 		for (Initiative initiative : superInitiatives) {
 			InitiativeDto dto = initiative.toDto();
+		
+			dto.setLoggedMember(getMember(initiative.getId(),  user.getC1Id()));
 			
 			/* look for the full sub-initiative tree of each super initiative */
-			List<InitiativeDto> subInitiatives = getSubinitiativesTree(initiative.getId());
+			List<InitiativeDto> subInitiatives = getSubinitiativesTree(initiative.getId(), user.getC1Id());
 			dto.setSubInitiatives(subInitiatives);
 			
 			initiativesDtos.add(dto);
@@ -367,7 +370,7 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	public List<InitiativeDto> getSubinitiativesTree(UUID initiativeId) {
+	public List<InitiativeDto> getSubinitiativesTree(UUID initiativeId, UUID userId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId); 
 		List<Initiative> subIniatiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_DETACHED_SUB);
 		
@@ -376,8 +379,12 @@ public class InitiativeService {
 		for (Initiative subinitiative : subIniatiatives) {
 			InitiativeDto subinitiativeDto = subinitiative.toDto();
 			
+			if (userId != null) {
+				subinitiativeDto.setLoggedMember(getMember(subinitiative.getId(),  userId));	
+			}
+			
 			/* recursively call this for its own sub-initiatives */
-			List<InitiativeDto> subsubIniatiativesDto = getSubinitiativesTree(subinitiative.getId());
+			List<InitiativeDto> subsubIniatiativesDto = getSubinitiativesTree(subinitiative.getId(), userId);
 			subinitiativeDto.setSubInitiatives(subsubIniatiativesDto);
 			
 			subinitiativeDtos.add(subinitiativeDto);
@@ -441,7 +448,7 @@ public class InitiativeService {
 		}
 		
 		/* add the members of all sub-initiatives too */
-		for (InitiativeDto subInitiative : getSubinitiativesTree(initiative.getId())) {
+		for (InitiativeDto subInitiative : getSubinitiativesTree(initiative.getId(), null)) {
 			/* recursively call with subinitiatives */
 			initiativeMembers.getSubinitiativesMembers().add(getMembersAndSubmembers(UUID.fromString(subInitiative.getId())));
 		}

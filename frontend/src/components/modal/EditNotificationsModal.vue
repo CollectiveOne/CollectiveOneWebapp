@@ -11,7 +11,7 @@
           <h2>Edit notifications of {{ initiative.meta.name }}</h2>
         </div>
 
-        <form v-if="subscriber" class="w3-container">
+        <div v-if="subscriber" class="w3-container form-container">
 
           <div class="w3-row">
             <div class="w3-left label-div">
@@ -63,7 +63,7 @@
             </div>
           </div>
 
-        </form>
+        </div>
 
       </div>
     </div>
@@ -133,7 +133,7 @@ export default {
   margin-top: 20px;
 }
 
-form {
+.form-container {
   padding-top: 35px;
   padding-bottom: 35px;
 }

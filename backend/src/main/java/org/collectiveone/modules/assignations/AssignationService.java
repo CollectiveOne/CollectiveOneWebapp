@@ -346,7 +346,7 @@ public class AssignationService {
 		}
 		
 		/* add the members of all sub-initiatives too */
-		for (InitiativeDto subInitiative : initiativeService.getSubinitiativesTree(initiative.getId())) {
+		for (InitiativeDto subInitiative : initiativeService.getSubinitiativesTree(initiative.getId(), null)) {
 			/* recursively call with subinitiatives */
 			initiativeAssignations.getSubinitiativesAssignations().add(getAssignations(UUID.fromString(subInitiative.getId()), evaluatorAppUserId));
 		}
