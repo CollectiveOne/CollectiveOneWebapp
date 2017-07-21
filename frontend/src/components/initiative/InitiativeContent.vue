@@ -3,16 +3,11 @@
     <div v-if="initiative" class="w3-row">
       <div class="w3-white">
 
-      <div class="header-container w3-bar">
+      <div class="header-container">
         <transition name="fadeenter" mode="out-in" appear>
-            <header class="white-bg" :key="initiative.meta.name">
-              <div class="w3-bar-item w3-left">
-                <h3 class="noselect">
-                  <b><app-initiative-path :initiative="initiative"></app-initiative-path></b>
-                </h3>
-              </div>
-              <div class="w3-bar-item w3-right">
-                <div class="" style="width:55px; height:100%">
+            <header class="white-bg w3-row" :key="initiative.meta.name">
+              <div class="w3-col w3-right" style="width:50px">
+                <div class="edit-container">
                   <div
                     v-if="isLoggedAMember || isLoggedAnAdmin"
                     @click="showEditMenu = !showEditMenu"
@@ -33,6 +28,11 @@
                     </div>
                   </div>
                 </div>
+              </div>
+              <div class="w3-rest">
+                <h3 class="initiative-path noselect">
+                  <b><app-initiative-path :initiative="initiative"></app-initiative-path></b>
+                </h3>
               </div>
             </header>
           </transition>
@@ -172,12 +172,26 @@ export default {
 <style scoped>
 
 .header-container {
-  height: 65px;
+  min-height: 65px;
+}
+
+.initiative-path {
+  padding-left: 16px;
+  padding-top: 5px;
 }
 
 .title-arrow {
   font-size: 12px;
   margin-bottom: 10px;
+}
+
+.edit-container {
+  min-height: 65px;
+}
+
+.edit-btn-div {
+  min-height: 65px;
+  padding-top: 20px;
 }
 
 .edit-menu {
@@ -203,10 +217,6 @@ export default {
 
 .bold-text {
   font-weight: bold;
-}
-
-.edit-btn-div {
-  padding-top: 15px;
 }
 
 .content-container {

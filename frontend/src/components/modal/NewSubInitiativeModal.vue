@@ -348,7 +348,6 @@ export default {
 }
 
 .fa-times {
-  color: rgb(255, 255, 255);
   margin-right: 20px;
   margin-top: 20px;
 }
