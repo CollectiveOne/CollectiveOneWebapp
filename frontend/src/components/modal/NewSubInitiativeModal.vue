@@ -48,7 +48,8 @@
           </div>
           <app-error-panel
             :show="assetsErrorShow"
-            message="please select how many tokens should be transferred to this subinitaitive">
+            message="warning: you have not selected any assets. Please confirm this is
+            ok below, or specify the amount to be transferred">
           </app-error-panel>
 
           <hr>
@@ -77,7 +78,17 @@
           </app-error-panel>
 
           <hr>
-          
+          <div v-if="assetsErrorShow" class="w3-row error-panel w3-padding w3-round w3-margin-bottom">
+            <div class="w3-col l10">
+              You will not transfer assets from {{ parentInitiative.meta.name }} to this new initiative. Please
+              confirm this is ok.
+            </div>
+            <div class="w3-col l2 w3-center">
+              <button
+                class="w3-button app-button w3-round-large" name="button"
+                @click="assetsEmptyErrorConfirmed = true">ok</button>
+            </div>
+          </div>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
               <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
@@ -119,7 +130,8 @@ export default {
       driverEmptyError: false,
       assetsEmptyError: false,
       membersEmptyError: false,
-      noAdminError: false
+      noAdminError: false,
+      assetsEmptyErrorConfirmed: false
     }
   },
 
@@ -140,7 +152,7 @@ export default {
       return this.driverEmptyError && (this.driver === '')
     },
     assetsErrorShow () {
-      return this.assetsEmptyError && !this.assetsSelected
+      return this.assetsEmptyError && !this.assetsSelected && !this.assetsEmptyErrorConfirmed
     },
     membersEmptyShow () {
       return this.membersEmptyError && (this.members.length === 0)
@@ -251,8 +263,10 @@ export default {
       }
 
       if (!this.assetsSelected) {
-        ok = false
-        this.assetsEmptyError = true
+        if (!this.assetsEmptyErrorConfirmed) {
+          ok = false
+          this.assetsEmptyError = true
+        }
       }
 
       if (this.members.length === 0) {

@@ -262,7 +262,6 @@ export default {
     errorFound () {
       return this.showError || this.valueTooLarge
     }
-
   },
 
   methods: {
@@ -276,7 +275,7 @@ export default {
       return amountAndPerc(memberAssets.value, this.underThisInitiativeVal)
     },
     memberPercent (memberAssets) {
-      return (memberAssets.value) / this.underThisInitiativeVal * 100
+      return this.underThisInitiativeVal > 0 ? (memberAssets.value) / this.underThisInitiativeVal * 100 : 0
     },
     updateTokenData () {
       this.axios.get('/1/secured/token/' + this.assetId, {
@@ -286,6 +285,7 @@ export default {
         }
       }).then((response) => {
         this.assetData = response.data.data
+        this.checkValue()
       })
     },
     assign () {

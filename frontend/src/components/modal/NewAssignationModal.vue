@@ -56,7 +56,8 @@
             </app-initiative-assets-assigner>
             <app-error-panel
               :show="assetsZeroShow"
-              message="please select the amount of tokens that will be transferred to these members">
+              message="warning: you have not selected any assets. Please confirm this is
+              ok below, or specify the amount to be transferred">
             </app-error-panel>
           </div>
 
@@ -111,6 +112,18 @@
 
           <hr>
 
+          <div v-if="assetsZeroShow" class="w3-row error-panel w3-padding w3-round w3-margin-bottom">
+            <div class="w3-col l10">
+              You will not transfer assets to this users. Please
+              confirm this is ok.
+            </div>
+            <div class="w3-col l2 w3-center">
+              <button
+                class="w3-button app-button w3-round-large" name="button"
+                @click="assetsEmptyErrorConfirmed = true">ok</button>
+            </div>
+          </div>
+
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
               <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
@@ -159,7 +172,8 @@ export default {
       assetsAreZero: false,
       notEnoughReceivers: false,
       notEnoughEvaluators: false,
-      allDonorsError: false
+      allDonorsError: false,
+      assetsEmptyErrorConfirmed: false
     }
   },
 
@@ -183,7 +197,7 @@ export default {
       return this.assignation.motive.length > 55
     },
     assetsZeroShow () {
-      return this.assetsZeroError && this.assetsAreZero
+      return this.assetsZeroError && this.assetsAreZero && !this.assetsEmptyErrorConfirmed
     },
     existNotDonors () {
       if (this.assignation.peerReviewReceivers) {
@@ -281,10 +295,13 @@ export default {
         ok = false
       }
 
+      debugger
       this.areAssetsZero()
       if (this.assetsAreZero) {
-        this.assetsZeroError = true
-        ok = false
+        if (!this.assetsEmptyErrorConfirmed) {
+          ok = false
+          this.assetsZeroError = true
+        }
       }
 
       if (this.isDirect) {
