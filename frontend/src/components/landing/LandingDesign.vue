@@ -68,7 +68,7 @@
           <div class="w3-col l3">
             <h3><b>Value Accounting</b></h3>
             <p>
-              Basic infrastructure for managing tokens and transfering them to
+              Basic infrastructure for managing tokens and transferring them to
               subinitiatives and users.
             </p>
             <div class="w3-tag w3-green w3-round">
@@ -77,8 +77,8 @@
           </div>
           <div class="w3-col l3">
             <h3><b>Task Management</b></h3>
-            <p>Kanban board to organize the tasks of an initiative and value these using
-            the initiative's tokens.
+            <p>Kanban board to organize the tasks of an initiative and value these
+              using the initiative's tokens.
             </p>
             <div class="w3-tag gray-1 w3-round">
               <b>soon</b>
@@ -86,15 +86,17 @@
           </div>
           <div class="w3-col l3">
             <h3><b>Distributed Governance</b></h3>
-            <p>Dedicated module that enables initiatives to take decisions collectively and efficiently.</p>
+            <p>A dedicated module that enables initiatives to take decisions
+              collectively and efficiently.
+            </p>
             <div class="w3-tag gray-1 w3-round">
               <b>soon</b>
             </div>
           </div>
           <div class="w3-col l3">
             <h3><b>Collective Model</b></h3>
-            <p>Dedicated module that enables initiatives to collectively influence and agree on the initiative's
-            direction.</p>
+            <p>A dedicated module that enables initiatives to collectively influence and
+              agree on the initiative's direction.</p>
             <div class="w3-tag gray-1 w3-round">
               <b>soon</b>
             </div>
@@ -107,7 +109,7 @@
             an <a href="http://old.collectiveone.org/v/project/CollectiveOne" target="_blank">alpha version</a> of the tool.
             Contributions are welcome!
             <br>Get your invitation to the project slack
-            <a href="http://old.collectiveone.org/v/slack" target="_blank">here!</a> to get involved.</h4>
+            <a href="http://old.collectiveone.org/v/slack" target="_blank">here</a> to get involved.</h4>
         </div>
       </div>
     </div>
