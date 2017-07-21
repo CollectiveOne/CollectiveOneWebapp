@@ -25,13 +25,13 @@
           </div>
           <div class="w3-col m4">
             <h3><b>Contribution record and value</b></h3>
-            Contributions are recognized and valued relative to each other, using project-specific
+            Contributions are recognized and valued relative to each other using project-specific
             tokens.
           </div>
           <div class="w3-col m4">
             <h3><b>Liquid ownership</b></h3>
             The ownership of each project is linked to contributions, and, therefore, to tokens.
-            The more you contribute, the more youn should own.
+            The more you contribute, the more you should own.
           </div>
         </div>
         <div class="w3-row-padding">
