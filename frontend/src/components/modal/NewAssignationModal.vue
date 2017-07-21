@@ -295,7 +295,6 @@ export default {
         ok = false
       }
 
-      debugger
       this.areAssetsZero()
       if (this.assetsAreZero) {
         if (!this.assetsEmptyErrorConfirmed) {
