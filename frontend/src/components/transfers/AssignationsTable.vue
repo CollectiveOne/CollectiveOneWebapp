@@ -111,14 +111,23 @@ export default {
       }
     },
     stateTagClass (assignation) {
-      if (assignation.state === 'OPEN') {
-        return {
-          'open-color': true
-        }
-      } else {
-        return {
-          'done-color': true
-        }
+      switch (assignation.state) {
+        case 'OPEN':
+          return {
+            'open-color': true
+          }
+
+        case 'DONE':
+          return {
+            'done-color': true
+          }
+
+        case 'REVERT_ORDERED':
+        case 'REVERTED':
+        case 'DELETED':
+          return {
+            'revert-color': true
+          }
       }
     }
   }

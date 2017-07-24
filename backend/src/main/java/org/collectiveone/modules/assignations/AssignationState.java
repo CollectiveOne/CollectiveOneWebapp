@@ -5,5 +5,6 @@ public enum AssignationState {
 	DONE,
 	ERROR,
 	REVERT_ORDERED,
-	REVERTED
+	REVERTED,
+	DELETED
 }

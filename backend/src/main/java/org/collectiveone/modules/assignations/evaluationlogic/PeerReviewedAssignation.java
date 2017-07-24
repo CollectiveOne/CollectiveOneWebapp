@@ -41,12 +41,14 @@ public class PeerReviewedAssignation {
 	public void updateState() {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		
-		if(now.getTime() > assignation.getConfig().getMaxClosureDate().getTime()) {
-			close();
-		} else {
-			if(countPendingEvaluators() == 0) {
-				if(now.getTime() > assignation.getConfig().getMinClosureDate().getTime()) {
-					close();
+		if (state == PeerReviewedAssignationState.OPEN) {
+			if(now.getTime() > assignation.getConfig().getMaxClosureDate().getTime()) {
+				close();
+			} else {
+				if(countPendingEvaluators() == 0) {
+					if(now.getTime() > assignation.getConfig().getMinClosureDate().getTime()) {
+						close();
+					}
 				}
 			}
 		}

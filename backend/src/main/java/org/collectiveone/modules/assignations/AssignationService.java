@@ -396,7 +396,7 @@ public class AssignationService {
 	}
 	
 	@Transactional
-	public PostResult revertAssignation(UUID assignationId) {
+	public PostResult revertAssignation(UUID assignationId, UUID userId) {
 		Assignation assignation = assignationRepository.findById(assignationId);
 		
 		if(assignation.getState() == AssignationState.DONE) {
@@ -404,12 +404,12 @@ public class AssignationService {
 				/* reset approvals */
 				receiver.setRevertApproval(false);
 				receiverRepository.save(receiver);
-				
-				// activityService.assignationRevertOrdered();
 			}
 			
 			assignation.setState(AssignationState.REVERT_ORDERED);
 			assignationRepository.save(assignation);
+			
+			activityService.assignationRevertOrdered(assignation, appUserRepository.findByC1Id(userId));
 			
 			return new PostResult("success", "revert of assignation ordered", "");
 		} else {
@@ -431,6 +431,7 @@ public class AssignationService {
 				} else {
 					/* a single receiver that rejects will cancel the revert */
 					assignation.setState(AssignationState.DONE);
+					activityService.assignationRevertCancelled(assignation);
 				}
 			}
 			
@@ -459,7 +460,26 @@ public class AssignationService {
 				
 				assignation.setState(AssignationState.REVERTED);
 				assignationRepository.save(assignation);
+				
+				activityService.assignationReverted(assignation);
 			}
+		}
+	}
+	
+	
+	@Transactional
+	public PostResult deleteAssignation(UUID assignationId, UUID userId) {
+		Assignation assignation = assignationRepository.findById(assignationId);
+		
+		if(assignation.getState() == AssignationState.OPEN) {
+			assignation.setState(AssignationState.DELETED);
+			assignationRepository.save(assignation);
+			
+			activityService.assignationDeleted(assignation, appUserRepository.findByC1Id(userId));
+			
+			return new PostResult("success", "assignation deleted", "");
+		} else {
+			return new PostResult("error", "assignation not open, cannot be deleted", "");
 		}
 	}
 	

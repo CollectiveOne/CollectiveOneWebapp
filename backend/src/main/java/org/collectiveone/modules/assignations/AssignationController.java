@@ -77,7 +77,7 @@ public class AssignationController {
 			return new PostResult("error", "revert of assignation not authorized",  "");
 		}
 		
-		PostResult result = assignationService.revertAssignation(UUID.fromString(assignationId));
+		PostResult result = assignationService.revertAssignation(UUID.fromString(assignationId), getLoggedUser().getC1Id());
 		
 		return result;
 	}
@@ -91,6 +91,21 @@ public class AssignationController {
 		
 		/* update assignation state in case all receivers have approved */
 		assignationService.checkRevertStatus(UUID.fromString(assignationId));
+		
+		return result;
+	}
+	
+	@RequestMapping(path = "/secured/assignation/{assignationId}/delete", method = RequestMethod.PUT)
+	public PostResult deleteAssignation(
+			@PathVariable("assignationId") String assignationId) {
+		
+		DecisionVerdict canDelete = governanceService.canDeleteAssignation(assignationService.getInitiativeIdOf(UUID.fromString(assignationId)), getLoggedUser().getC1Id());
+		
+		if (canDelete == DecisionVerdict.DENIED) {
+			return new PostResult("error", "delete of assignation not authorized",  "");
+		}
+		
+		PostResult result = assignationService.deleteAssignation(UUID.fromString(assignationId), getLoggedUser().getC1Id());
 		
 		return result;
 	}

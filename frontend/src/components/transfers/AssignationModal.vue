@@ -79,6 +79,34 @@
               </transition>
             </div>
 
+            <div v-if="$store.getters.isLoggedAnAdmin && isOpen" class="w3-row tags-row w3-center">
+              <button
+                class="w3-button app-button"
+                @click="deleteTransaction = true">delete
+              </button>
+            </div>
+            <div class="slider-container">
+              <transition name="slideDownUp">
+                <div v-if="deleteTransaction" class="w3-row tags-row w3-center">
+                  <div class="w3-padding w3-round light-grey w3-margin-bottom">
+                    <p>
+                      <b>Warning:</b> This will delete this assignation. All evaluations made
+                      will be lost and no tokens will be transferred. Please confirm.
+                    </p>
+                  </div>
+
+                  <button
+                    class="w3-button app-button-light button-pair"
+                    @click="deleteTransaction = false">cancel
+                  </button>
+                  <button
+                    class="w3-button app-button-danger button-pair"
+                    @click="deleteAssignation()">confirm
+                  </button>
+                </div>
+              </transition>
+            </div>
+
             <div v-if="isReceiverApproval" class="w3-center">
               <div class="w3-padding w3-round light-grey w3-margin-bottom">
                 <p>
@@ -108,18 +136,15 @@
 
         <hr>
         <div class="w3-row-padding">
-          <div v-if="isEvaluator && !isDone" class="w3-col l12 my-evaluation-div w3-margin-bottom">
+          <div v-if="isEvaluator && !isDone && !isDeleted" class="w3-col l12 my-evaluation-div w3-margin-bottom">
             <div class="w3-row w3-center">
               <h5 class=""><b>My evaluation</b></h5>
             </div>
             <div class="slider-container">
               <transition name="slideDownUp">
                 <div v-if="!disableEvaluations" class="w3-panel light-grey">
-                  <p><b>Tip:</b> fill the values with numbers that <b>make sense relative to
-                  each other</b> and then click the "autoscale" button bellow.</p>
-                  <p>For example, evaluate three persons with 5, 10 and 12 and then click "autoscale".
-                    This will convert your evaluations to 19%, 37%, and 44% to make sure they sum 100% while keeping
-                    the relation among them the way you wanted. Dont worry about the decimal places.</p>
+                  <p><b>Tip:</b> fill the values with numbers that make sense relative to
+                  each other, <b>even if they dont sum 100%</b>, and then click the "autoscale" button bellow.</p>
                 </div>
               </transition>
             </div>
@@ -204,7 +229,8 @@ export default {
     return {
       assignation: null,
       updateEvaluation: false,
-      revertTransaction: false
+      revertTransaction: false,
+      deleteTransaction: false
     }
   },
 
@@ -227,16 +253,21 @@ export default {
     isRevertOrdered () {
       return (this.assignation.state === 'REVERT_ORDERED')
     },
+    isDeleted () {
+      return (this.assignation.state === 'DELETED')
+    },
     showResults () {
       if (this.isDirect) {
-        if (this.assignation.receivers.lenth > 1) {
+        if (this.assignation.receivers.lenth > 1 && !this.isDeleted) {
           return true
         }
       }
 
-      if (this.isPeerReviewed) {
+      if (this.isPeerReviewed && !this.isDeleted) {
         return this.isDone
       }
+
+      return false
     },
     showStatus () {
       return this.isPeerReviewed && this.isOpen
@@ -260,7 +291,7 @@ export default {
       }
     },
     showEvaluations () {
-      return this.isDone && this.isEvaluator && this.assignation.config.evaluationsVisible
+      return this.isDone && this.isEvaluator && this.assignation.config.evaluationsVisible && !this.isDeleted
     },
     sumOfPercents () {
       var sum = 0.0
@@ -342,6 +373,13 @@ export default {
           approveFlag: val
         }
       }).then((response) => {
+        this.updateAssignationData()
+      })
+    },
+    deleteAssignation () {
+      this.deleteTransaction = false
+      this.axios.put('/1/secured/assignation/' + this.assignation.id + '/delete', {})
+      .then((response) => {
         this.updateAssignationData()
       })
     }

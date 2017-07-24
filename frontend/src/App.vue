@@ -216,11 +216,15 @@ textarea {
 }
 
 .open-color {
-  background-color: rgb(50, 161, 27);
+  background-color: #32a11b;
 }
 
 .done-color {
-  background-color: rgb(184, 184, 184);
+  background-color: #b8b8b8;
+}
+
+.revert-color {
+  background-color: #ff4b4b;
 }
 
 .section-header {

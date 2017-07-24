@@ -28,14 +28,14 @@
           </app-error-panel>
 
           <br>
-          <label class=""><b>Driver</b></label>
+          <label class=""><b>Purpose</b></label>
           <textarea v-model="driver"
             class="w3-input w3-border w3-round w3-hover-light-grey"
             :class="{ 'error-input' : driverErrorShow }">
           </textarea>
           <app-error-panel
             :show="driverErrorShow"
-            message="please include the driver of this initiative, its purpose">
+            message="please include the purpose of this initiative">
           </app-error-panel>
           <hr>
 

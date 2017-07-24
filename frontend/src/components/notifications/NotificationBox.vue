@@ -58,6 +58,47 @@
         </app-initiative-link>
       </div>
 
+      <div v-if="isAssignationRevertOrdered" class="">
+        <app-user-link :user="notification.activity.triggerUser"></app-user-link> ordered the revert of the
+        <app-assignation-link :assignation="notification.activity.assignation"></app-assignation-link> of
+        <b>{{ notification.activity.assignation.assets[0].value }} {{ notification.activity.assignation.assets[0].assetName }}</b>
+        with motive {{ notification.activity.assignation.motive }}
+        from
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>
+      </div>
+
+      <div v-if="isAssignationRevertCancelled" class="">
+        Revert order cancelled.
+        <app-user-link :user="notification.activity.triggerUser"></app-user-link> ordered to revert the
+        <app-assignation-link :assignation="notification.activity.assignation"></app-assignation-link> of
+        <b>{{ notification.activity.assignation.assets[0].value }} {{ notification.activity.assignation.assets[0].assetName }}</b>
+        with motive {{ notification.activity.assignation.motive }}
+        from
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>
+        , but the revert was not accepted.
+      </div>
+
+      <div v-if="isAssignationReverted" class="">
+        Revert order accepted.
+        <app-user-link :user="notification.activity.triggerUser"></app-user-link> ordered to revert the
+        <app-assignation-link :assignation="notification.activity.assignation"></app-assignation-link> of
+        <b>{{ notification.activity.assignation.assets[0].value }} {{ notification.activity.assignation.assets[0].assetName }}</b>
+        with motive {{ notification.activity.assignation.motive }}
+        from
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>,
+        and the revert has been done.
+      </div>
+
+      <div v-if="isAssignationDeleted" class="">
+        Ongoing transfer deleted. The
+        <app-assignation-link :assignation="notification.activity.assignation"></app-assignation-link> of
+        <b>{{ notification.activity.assignation.assets[0].value }} {{ notification.activity.assignation.assets[0].assetName }}</b>
+        with motive {{ notification.activity.assignation.motive }}
+        from
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>,
+        has been deleted.
+      </div>
+
     </div>
   </div>
 </template>
@@ -106,6 +147,18 @@ export default {
     },
     isInitiativeTransfer () {
       return this.notification.activity.type === 'INITIATIVE_TRANSFER'
+    },
+    isAssignationRevertOrdered () {
+      return this.notification.activity.type === 'ASSIGNATION_REVERT_ORDERED'
+    },
+    isAssignationRevertCancelled () {
+      return this.notification.activity.type === 'ASSIGNATION_REVERT_CANCELLED'
+    },
+    isAssignationReverted () {
+      return this.notification.activity.type === 'ASSIGNATION_REVERTED'
+    },
+    isAssignationDeleted () {
+      return this.notification.activity.type === 'ASSIGNATION_DELETED'
     },
     initiativeChanged () {
       let activity = this.notification.activity
