@@ -138,6 +138,7 @@ public class TokenTransferService {
 		thisTransfer.setMember(member);
 		thisTransfer.setTokenType(tokenType);
 		thisTransfer.setValue(value);
+		thisTransfer.setStatus(MemberTransferStatus.DONE);
 		
 		thisTransfer = memberTransferRepository.save(thisTransfer);
 		member.getTokensTransfers().add(thisTransfer);
