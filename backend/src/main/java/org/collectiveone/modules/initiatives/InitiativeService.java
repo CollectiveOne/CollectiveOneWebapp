@@ -99,7 +99,7 @@ public class InitiativeService {
 		
 		/* Basic properties*/
 		initiative.setCreator(creator);
-		initiative.setEnabled(true);
+		initiative.setStatus(InitiativeStatus.ENABLED);
 		
 		InitiativeMeta meta = new InitiativeMeta();
 		
@@ -247,6 +247,20 @@ public class InitiativeService {
 			activityService.initiativeEdited(initiative, appUserRepository.findByC1Id(userId), oldName, oldDriver);
 		}
 		
+		
+		return new PostResult("success", "initaitive updated", initiative.getId().toString());  
+	}
+	
+	@Transactional
+	public PostResult delete(UUID initiativeId, UUID userId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		
+		TRANSFER ASSETS!
+		
+		initiative.setStatus(InitiativeStatus.DELETED);
+		initiativeRepository.save(initiative);
+		
+		activityService.initiativeDeleted(initiative, appUserRepository.findByC1Id(userId));
 		
 		return new PostResult("success", "initaitive updated", initiative.getId().toString());  
 	}

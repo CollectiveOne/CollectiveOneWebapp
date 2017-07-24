@@ -98,6 +98,10 @@ public class GovernanceService {
 		return isRolesAndAdmin(initiativeId, creatorId);
 	}
 	
+	@Transactional
+	public DecisionVerdict canDeleteInitiative(UUID initiativeId, UUID creatorId) {
+		return isRolesAndAdmin(initiativeId, creatorId);
+	}
 	
 	private Boolean isAdmin(UUID governanceId, UUID userId) {
 		DecisionMaker decisionMaker = decisionMakerRepository.findByGovernance_IdAndUser_C1Id(governanceId, userId);

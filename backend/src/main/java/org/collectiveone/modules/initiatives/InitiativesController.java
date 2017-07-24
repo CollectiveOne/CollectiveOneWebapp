@@ -37,7 +37,7 @@ public class InitiativesController {
 	
 	
 	@RequestMapping(path = "/secured/initiative", method = RequestMethod.POST)
-	public PostResult postInitiative(@RequestBody NewInitiativeDto initiativeDto) {
+	public PostResult createInitiative(@RequestBody NewInitiativeDto initiativeDto) {
 		
 		/* Authorization is needed if it is a subinitiative */
 		DecisionVerdict canCreate = null;
@@ -56,7 +56,7 @@ public class InitiativesController {
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}", method = RequestMethod.PUT)
-	public PostResult putInitiative(@PathVariable("initiativeId") String initiativeIdStr, @RequestBody NewInitiativeDto initiativeDto) {
+	public PostResult editInitiative(@PathVariable("initiativeId") String initiativeIdStr, @RequestBody NewInitiativeDto initiativeDto) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		if (governanceService.canEdit(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
@@ -64,6 +64,21 @@ public class InitiativesController {
 		}
 			
 		return initiativeService.edit(initiativeId, getLoggedUser().getC1Id(), initiativeDto); 
+	}
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}", method = RequestMethod.DELETE)
+	public PostResult deleteInitiative(@PathVariable("initiativeId") String initiativeIdStr, @RequestBody NewInitiativeDto initiativeDto) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		DecisionVerdict canRevert = governanceService.canDeleteInitiative(initiativeId, getLoggedUser().getC1Id());
+		
+		if (canRevert == DecisionVerdict.DENIED) {
+			return new PostResult("error", "revert of assignation not authorized",  "");
+		}
+		
+		return initiativeService.delete(initiativeId, getLoggedUser().getC1Id());
+		
 	}
 	
 	

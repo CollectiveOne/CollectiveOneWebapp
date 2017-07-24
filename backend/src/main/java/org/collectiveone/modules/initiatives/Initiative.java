@@ -33,8 +33,8 @@ public class Initiative {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@Column(name = "enabled")
-	private boolean enabled;
+	@Column(name = "status")
+	private InitiativeStatus status;
 	
 	@ManyToOne
 	private AppUser creator;
@@ -75,11 +75,11 @@ public class Initiative {
 	public void setId(UUID id) {
 		this.id = id;
 	}
-	public boolean isEnabled() {
-		return enabled;
+	public InitiativeStatus getStatus() {
+		return status;
 	}
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+	public void setStatus(InitiativeStatus status) {
+		this.status = status;
 	}
 	public AppUser getCreator() {
 		return creator;
