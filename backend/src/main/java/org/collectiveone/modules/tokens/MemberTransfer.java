@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -34,6 +36,10 @@ public class MemberTransfer {
 	
 	@Column ( name = "motive")
 	private String motive;
+	
+	@Enumerated(EnumType.STRING)
+	@Column( name = "status")
+	private MemberTransferStatus status;
 	
 		
 	public UUID getId() {
@@ -75,6 +81,13 @@ public class MemberTransfer {
 	public void setMotive(String motive) {
 		this.motive = motive;
 	}
-	
+
+	public MemberTransferStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(MemberTransferStatus status) {
+		this.status = status;
+	}
 	
 }

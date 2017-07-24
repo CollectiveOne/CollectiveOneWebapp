@@ -67,6 +67,34 @@ public class AssignationController {
 		return result;
 	}
 	
+	@RequestMapping(path = "/secured/assignation/{assignationId}/revert", method = RequestMethod.PUT)
+	public PostResult revertAssignation(
+			@PathVariable("assignationId") String assignationId) {
+		
+		DecisionVerdict canRevert = governanceService.canRevertAssignation(assignationService.getInitiativeIdOf(UUID.fromString(assignationId)), getLoggedUser().getC1Id());
+		
+		if (canRevert == DecisionVerdict.DENIED) {
+			return new PostResult("error", "revert of assignation not authorized",  "");
+		}
+		
+		PostResult result = assignationService.revertAssignation(UUID.fromString(assignationId));
+		
+		return result;
+	}
+	
+	@RequestMapping(path = "/secured/assignation/{assignationId}/approveRevert", method = RequestMethod.PUT)
+	public PostResult approveRevertAssignation(
+			@PathVariable("assignationId") String assignationId, 
+			@RequestParam Boolean approveFlag) {
+		
+		PostResult result = assignationService.approveRevertAssignation(getLoggedUser().getC1Id(), UUID.fromString(assignationId), approveFlag);
+		
+		/* update assignation state in case all receivers have approved */
+		assignationService.checkRevertStatus(UUID.fromString(assignationId));
+		
+		return result;
+	}
+	
 	private AppUser getLoggedUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return appUserService.getFromAuth0Id(auth.getName());

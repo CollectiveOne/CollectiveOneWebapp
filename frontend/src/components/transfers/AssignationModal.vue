@@ -42,7 +42,7 @@
               </div>
             </div>
 
-            <div class="w3-ro tags-row w3-center">
+            <div class="w3-row tags-row w3-center">
               <div class="w3-tag gray-1 w3-round noselect w3-small">
                 <b>{{ assignation.type }}</b>
               </div>
@@ -51,9 +51,53 @@
               </div>
             </div>
 
+            <div v-if="$store.getters.isLoggedAnAdmin && isDone" class="w3-row tags-row w3-center">
+              <button
+                class="w3-button app-button"
+                @click="revertTransaction = true">revert transaction
+              </button>
+            </div>
+            <div class="slider-container">
+              <transition name="slideDownUp">
+                <div v-if="revertTransaction" class="w3-row tags-row w3-center">
+                  <div class="w3-padding w3-round light-grey w3-margin-bottom">
+                    <p>
+                      <b>Warning:</b> This will order the transfer of tokens from the receivers
+                      back to the initiative. Please confirm you would like to revert this transaction.
+                    </p>
+                  </div>
+
+                  <button
+                    class="w3-button app-button-light button-pair"
+                    @click="revertTransaction = false">cancel
+                  </button>
+                  <button
+                    class="w3-button app-button-danger button-pair"
+                    @click="orderRevert()">confirm
+                  </button>
+                </div>
+              </transition>
+            </div>
+
+            <div v-if="isReceiverApproval" class="w3-center">
+              <div class="w3-padding w3-round light-grey w3-margin-bottom">
+                <p>
+                  <b>Attention:</b> One of the admins would like to revert this
+                  transation. Do you approve this revert?
+                </p>
+              </div>
+              <button
+                class="w3-button app-button-light button-pair"
+                @click="approveRevert(false)">reject
+              </button>
+              <button
+                class="w3-button app-button button-pair"
+                @click="approveRevert(true)">approve
+              </button>
+            </div>
+
             <div v-if="showStatus" class="w3-row w3-center">
               <b>{{ assignation.evaluationsPending + ' evaluations pending' }}, closes in {{ getTimeStrUntil(assignation.config.maxClosureDate) }}</b>
-
             </div>
 
           </div>
@@ -159,7 +203,8 @@ export default {
   data () {
     return {
       assignation: null,
-      updateEvaluation: false
+      updateEvaluation: false,
+      revertTransaction: false
     }
   },
 
@@ -179,6 +224,9 @@ export default {
     isDone () {
       return (this.assignation.state === 'DONE')
     },
+    isRevertOrdered () {
+      return (this.assignation.state === 'REVERT_ORDERED')
+    },
     showResults () {
       if (this.isDirect) {
         if (this.assignation.receivers.lenth > 1) {
@@ -195,6 +243,14 @@ export default {
     },
     isEvaluator () {
       return this.assignation.thisEvaluation !== null
+    },
+    isReceiver () {
+      for (var ix in this.assignation.receivers) {
+        if (this.assignation.receivers[ix].user.c1Id === this.$store.state.user.profile.c1Id) {
+          return true
+        }
+      }
+      return false
     },
     evaluationReceivers () {
       if (this.assignation.thisEvaluation) {
@@ -228,6 +284,9 @@ export default {
     },
     disableEvaluations () {
       return this.evaluationDone && !this.updateEvaluation
+    },
+    isReceiverApproval () {
+      return this.isRevertOrdered && this.isReceiver
     }
   },
 
@@ -269,6 +328,22 @@ export default {
           this.evaluationSavedMessage = true
         })
       }
+    },
+    orderRevert () {
+      this.revertTransaction = false
+      this.axios.put('/1/secured/assignation/' + this.assignation.id + '/revert', {})
+      .then((response) => {
+        this.updateAssignationData()
+      })
+    },
+    approveRevert (val) {
+      this.axios.put('/1/secured/assignation/' + this.assignation.id + '/approveRevert', {}, {
+        params: {
+          approveFlag: val
+        }
+      }).then((response) => {
+        this.updateAssignationData()
+      })
     }
   },
 
@@ -307,7 +382,7 @@ export default {
 }
 
 .tags-row .w3-tag {
-  width: 110px;;
+  min-width: 110px;;
   margin-top: 5px;
 }
 
@@ -322,6 +397,10 @@ export default {
 .receiver-container {
   margin-left: 5px;
   display: inline-block;
+}
+
+.button-pair {
+  min-width: 120px;
 }
 
 .bottom-btns-row {

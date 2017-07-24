@@ -88,6 +88,11 @@ public class GovernanceService {
 		return isRolesAndAdmin(initiativeId, editorId);
 	}
 	
+	@Transactional
+	public DecisionVerdict canRevertAssignation(UUID initiativeId, UUID creatorId) {
+		return isRolesAndAdmin(initiativeId, creatorId);
+	}
+	
 	
 	private Boolean isAdmin(UUID governanceId, UUID userId) {
 		DecisionMaker decisionMaker = decisionMakerRepository.findByGovernance_IdAndUser_C1Id(governanceId, userId);

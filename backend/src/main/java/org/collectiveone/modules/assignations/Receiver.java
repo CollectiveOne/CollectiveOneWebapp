@@ -9,8 +9,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.tokens.MemberTransfer;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -45,6 +47,12 @@ public class Receiver {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "type")
 	private ReceiverType type;
+	
+	@OneToOne
+	private MemberTransfer transfer;
+	
+	@Column(name = "revert_approval")
+	private Boolean revertApproval; 
 	
 
 	public ReceiverDto toDto() {
@@ -114,6 +122,22 @@ public class Receiver {
 
 	public void setType(ReceiverType type) {
 		this.type = type;
+	}
+
+	public MemberTransfer getTransfer() {
+		return transfer;
+	}
+
+	public void setTransfer(MemberTransfer transfer) {
+		this.transfer = transfer;
+	}
+
+	public Boolean getRevertApproval() {
+		return revertApproval;
+	}
+
+	public void setRevertApproval(Boolean revertApproval) {
+		this.revertApproval = revertApproval;
 	}
 	
 	

@@ -138,6 +138,12 @@ textarea {
   border-radius: 12px;
 }
 
+.app-button-danger {
+  background-color: #f1cdcd !important;
+  color: black;
+  border-radius: 12px;
+}
+
 .black-text {
   color: black;
 }

@@ -15,6 +15,8 @@ import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeDto;
 import org.collectiveone.modules.initiatives.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.InitiativeService;
+import org.collectiveone.modules.tokens.MemberTransfer;
+import org.collectiveone.modules.tokens.MemberTransferRepositoryIf;
 import org.collectiveone.modules.tokens.TokenService;
 import org.collectiveone.modules.tokens.TokenTransferService;
 import org.collectiveone.modules.tokens.TokenType;
@@ -63,6 +65,10 @@ public class AssignationService {
 	
 	@Autowired
 	private AssignationConfigRepositoryIf assignationConfigRepository;
+	
+	@Autowired
+	private MemberTransferRepositoryIf memberTransferRepository;
+	
 	
 		
 	public PostResult createAssignation(UUID initiativeId, AssignationDto assignationDto, UUID creatorId) {
@@ -126,8 +132,13 @@ public class AssignationService {
 			for(Bill bill : assignation.getBills()) {
 				for(Receiver receiver : assignation.getReceivers()) {
 					double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
-					tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
-					receiver.setState(ReceiverState.RECEIVED);
+					PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
+					
+					if (result.getResult().equals("success")) {
+						receiver.setState(ReceiverState.RECEIVED);
+						receiver.setTransfer(memberTransferRepository.findById(UUID.fromString(result.getElementId())));
+						receiverRepository.save(receiver);
+					}
 				}
 			}
 			assignation.setState(AssignationState.DONE);
@@ -180,21 +191,26 @@ public class AssignationService {
 		Assignation assignation = assignationRepository.findById(assignationId);
 		Evaluator evaluator = evaluatorRepository.findByAssignationIdAndUser_C1Id(assignation.getId(), evaluatorUserId);
 		
-		for(EvaluationGradeDto evaluationGradeDto : evaluationsDto.getEvaluationGrades()) {
-			UUID receiverUserId = UUID.fromString(evaluationGradeDto.getReceiverUser().getC1Id());
-			EvaluationGrade grade = evaluationGradeRepository.findByAssignation_IdAndReceiver_User_C1IdAndEvaluator_User_C1Id(assignation.getId(), receiverUserId, evaluatorUserId);
-					
-			grade.setPercent(evaluationGradeDto.getPercent());
-			grade.setType(EvaluationGradeType.valueOf(evaluationGradeDto.getType()));
-			grade.setState(EvaluationGradeState.DONE);
+		if (evaluator != null) {
+			for(EvaluationGradeDto evaluationGradeDto : evaluationsDto.getEvaluationGrades()) {
+				UUID receiverUserId = UUID.fromString(evaluationGradeDto.getReceiverUser().getC1Id());
+				EvaluationGrade grade = evaluationGradeRepository.findByAssignation_IdAndReceiver_User_C1IdAndEvaluator_User_C1Id(assignation.getId(), receiverUserId, evaluatorUserId);
+						
+				grade.setPercent(evaluationGradeDto.getPercent());
+				grade.setType(EvaluationGradeType.valueOf(evaluationGradeDto.getType()));
+				grade.setState(EvaluationGradeState.DONE);
+				
+				evaluationGradeRepository.save(grade);			
+			}
 			
-			evaluationGradeRepository.save(grade);			
+			evaluator.setState(EvaluatorState.DONE);
+			evaluatorRepository.save(evaluator);
+			
+			return new PostResult("success", "evaluation saved", evaluator.getId().toString());
+		} else {
+			return new PostResult("error", "evaluator not found", "");
 		}
 		
-		evaluator.setState(EvaluatorState.DONE);
-		evaluatorRepository.save(evaluator);
-		
-		return new PostResult("success", "evaluation saved", evaluator.getId().toString());
 	}
 
 	@Transactional
@@ -232,17 +248,30 @@ public class AssignationService {
 			}
 			
 			if (valid) {
+				boolean errorSending = false;
 				for(Bill bill : assignation.getBills()) {
 					for(Receiver receiver : assignation.getReceivers()) {
 						double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
-						tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
-						receiver.setState(ReceiverState.RECEIVED);
+						PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
+						
+						if (result.getResult().equals("success")) {
+							receiver.setState(ReceiverState.RECEIVED);
+							receiver.setTransfer(memberTransferRepository.findById(UUID.fromString(result.getElementId())));
+							receiverRepository.save(receiver);
+							
+						} else {
+							errorSending = true;
+						}
 					}
 				}
 				
-				assignation.setState(AssignationState.DONE);
+				if (!errorSending) {
+					assignation.setState(AssignationState.DONE);
+					activityService.peerReviewedAssignationDone(assignation);
+				} else {
+					assignation.setState(AssignationState.ERROR);
+				}
 				
-				activityService.peerReviewedAssignationDone(assignation);
 				
 			} else {
 				assignation.setState(AssignationState.ERROR);
@@ -314,10 +343,22 @@ public class AssignationService {
 		return assignationDto;
 	}
 	
+	@Transactional
 	public GetResult<InitiativeAssignationsDto> getAssignationsResult(UUID initiativeId, UUID evaluatorAppUserId) {
 		return new GetResult<InitiativeAssignationsDto>("success", "success", getAssignations(initiativeId, evaluatorAppUserId));
 	}
 	
+	@Transactional
+	public UUID getInitiativeIdOf(UUID assignationId) {
+		Assignation assignation = assignationRepository.findById(assignationId);
+		if (assignation != null) {
+			return assignation.getInitiative().getId();
+		} else {
+			return null;
+		}
+	}
+	
+	@Transactional
 	public GetResult<AssignationDto> getAssignationDto(UUID assignationId, UUID userId, Boolean addAllEvaluations) {
 		
 		Assignation assignation = assignationRepository.findById(assignationId);
@@ -353,6 +394,75 @@ public class AssignationService {
 		
 		return initiativeAssignations;
 	}
+	
+	@Transactional
+	public PostResult revertAssignation(UUID assignationId) {
+		Assignation assignation = assignationRepository.findById(assignationId);
+		
+		if(assignation.getState() == AssignationState.DONE) {
+			for (Receiver receiver : assignation.getReceivers()) {
+				/* reset approvals */
+				receiver.setRevertApproval(false);
+				receiverRepository.save(receiver);
+				
+				// activityService.assignationRevertOrdered();
+			}
+			
+			assignation.setState(AssignationState.REVERT_ORDERED);
+			assignationRepository.save(assignation);
+			
+			return new PostResult("success", "revert of assignation ordered", "");
+		} else {
+			return new PostResult("error", "assignation not done, cannot be reverted", "");
+		}
+	}
+	
+	@Transactional
+	public PostResult approveRevertAssignation(UUID userId, UUID assignationId, Boolean value) {
+		Assignation assignation = assignationRepository.findById(assignationId);
+		
+		if(assignation.getState() == AssignationState.REVERT_ORDERED) {
+			Receiver receiver = receiverRepository.findByAssignation_IdAndUser_C1Id(assignationId, userId);
+			
+			if (receiver != null) {
+				if (value) {
+					receiver.setRevertApproval(true);
+					receiverRepository.save(receiver);
+				} else {
+					/* a single receiver that rejects will cancel the revert */
+					assignation.setState(AssignationState.DONE);
+				}
+			}
+			
+			return new PostResult("success", "revert of assignation approved by this receiver", "");
+		} else {
+			return new PostResult("error", "assignation not in revert, cannot be approved", "");
+		}
+	}
+	
+	public void checkRevertStatus(UUID assignationId) {
+		Assignation assignation = assignationRepository.findById(assignationId);
+		
+		if(assignation.getState() == AssignationState.REVERT_ORDERED) {
+			boolean missingApprovals = false;
+			for (Receiver receiver : assignation.getReceivers()) {
+				if (!receiver.getRevertApproval()) {
+					missingApprovals = true;
+				} 
+			}
+			
+			if (!missingApprovals) {
+				for (Receiver receiver : assignation.getReceivers()) {
+					MemberTransfer transfer = receiver.getTransfer();
+					tokenTransferService.revertTransferFromInitiativeToUser(transfer.getId());
+				}
+				
+				assignation.setState(AssignationState.REVERTED);
+				assignationRepository.save(assignation);
+			}
+		}
+	}
+	
 	
 	/** Non-transactional to evaluate and update assignation state in different transactions */
 	public PostResult evaluateAndUpdateAssignation(UUID evaluatorAppUserId, UUID assignationId, EvaluationDto evaluationDto) {

@@ -129,6 +129,7 @@ const actions = {
     localStorage.removeItem('id_token')
     context.commit('authenticate', false)
     context.commit('setProfile', null)
+    window.location.href = '/'
   }
 }
 

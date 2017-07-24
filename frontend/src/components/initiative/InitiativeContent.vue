@@ -92,10 +92,10 @@ export default {
       return this.$store.state.initiative.initiative
     },
     isLoggedAnAdmin () {
-      return this.initiative.loggedMember.role === 'ADMIN'
+      return this.$store.getters.isLoggedAnAdmin
     },
     isLoggedAMember () {
-      return this.initiative.loggedMember.role === 'MEMBER'
+      return this.$store.getters.isLoggedAMember
     },
     isOverview () {
       var res = false

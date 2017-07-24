@@ -95,9 +95,6 @@ export default {
     },
     assignationState (assignation) {
       switch (assignation.state) {
-        case 'DONE':
-          return 'DONE'
-
         case 'OPEN':
           if (assignation.thisEvaluation) {
             if (assignation.thisEvaluation.evaluationState === 'PENDING') {
@@ -108,9 +105,10 @@ export default {
           } else {
             return 'OPEN'
           }
-      }
 
-      return ''
+        default:
+          return assignation.state
+      }
     },
     stateTagClass (assignation) {
       if (assignation.state === 'OPEN') {

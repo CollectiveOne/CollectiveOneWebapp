@@ -139,12 +139,27 @@ public class TokenTransferService {
 		thisTransfer.setTokenType(tokenType);
 		thisTransfer.setValue(value);
 		
-		memberTransferRepository.save(thisTransfer);
+		thisTransfer = memberTransferRepository.save(thisTransfer);
 		member.getTokensTransfers().add(thisTransfer);
 		
 		memberRepository.save(member);
 	
-		return new PostResult("success", "assets transferred successfully", "");
+		return new PostResult("success", "assets transferred successfully", thisTransfer.getId().toString());
+	}
+	
+	@Transactional
+	public void revertTransferFromInitiativeToUser(UUID transferId) {
+		MemberTransfer transfer = memberTransferRepository.findById(transferId);
+		
+		tokenService.transfer(
+				transfer.getTokenType().getId(), 
+				transfer.getMember().getUser().getC1Id(), 
+				transfer.getMember().getInitiative().getId(), 
+				transfer.getValue(), 
+				TokenHolderType.INITIATIVE);
+		
+		
+		transfer.setStatus(MemberTransferStatus.REVERTED);
 	}
 	
 	@Transactional

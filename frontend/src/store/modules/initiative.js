@@ -14,6 +14,12 @@ const getters = {
       memberUsers.push(members[ix].user)
     }
     return memberUsers
+  },
+  isLoggedAnAdmin: (state) => {
+    return state.initiative.loggedMember.role === 'ADMIN'
+  },
+  isLoggedAMember: (state) => {
+    return state.initiative.loggedMember.role === 'MEMBER'
   }
 }
 
