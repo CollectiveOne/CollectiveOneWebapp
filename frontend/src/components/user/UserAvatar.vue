@@ -63,8 +63,16 @@ export default {
   white-space: nowrap;
 }
 
+.avatar-container:before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+}
+
 .img-div {
   display: inline-block;
+  vertical-align: middle;
 }
 
 .name-container {
@@ -72,6 +80,7 @@ export default {
   font-size: 18px;
   margin-left: 15px;
   text-align: left;
+  vertical-align: middle;
 }
 
 .hover-name-container {
