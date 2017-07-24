@@ -16,7 +16,7 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table( name = "initiatives" )
+@Table( name = "initiatives_meta" )
 public class InitiativeMeta {
 	
 	@Id
