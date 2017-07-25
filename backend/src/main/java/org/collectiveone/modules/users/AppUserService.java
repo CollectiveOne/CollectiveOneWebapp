@@ -80,7 +80,8 @@ public class AppUserService {
 			appUser = appUserRepository.findByEmail(auth0User.getEmail());
 			
 			if (appUser == null) {
-				if (auth0User.isEmailVerified()) {
+				// if (auth0User.isEmailVerified()) {
+				 if (true) {
 					/* create a new user if not */
 					appUser = new AppUser();
 					
