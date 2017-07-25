@@ -16,10 +16,18 @@ const getters = {
     return memberUsers
   },
   isLoggedAnAdmin: (state) => {
-    return state.initiative.loggedMember.role === 'ADMIN'
+    if (state.initiative) {
+      return state.initiative.loggedMember.role === 'ADMIN'
+    } else {
+      false
+    }
   },
   isLoggedAMember: (state) => {
-    return state.initiative.loggedMember.role === 'MEMBER'
+    if (state.initiative) {
+      return state.initiative.loggedMember.role === 'MEMBER'
+    } else {
+      return false
+    }
   }
 }
 

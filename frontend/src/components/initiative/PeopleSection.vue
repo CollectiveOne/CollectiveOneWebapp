@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="this-container">
     <div class="own-members-div">
-      <h3 class="section-header">members of {{ initiative.meta.name }}</h3>
+      <h3 class="section-header">Members of {{ initiative.meta.name }}:</h3>
       <app-members-table
         :members="initiative.initiativeMembers.members"
         :canEdit="isLoggedAnAdmin"
@@ -14,8 +14,9 @@
       </div>
     </div>
     <br>
-    <div class="sub-members-div">
-      <h3 class="section-header">members of subinitiatives of {{ initiative.meta.name }}</h3>
+    <div v-if="allSubmembers.length > 0" class="sub-members-div">
+      <hr>
+      <h3 class="section-header">Members of subinitiatives of {{ initiative.meta.name }}:</h3>
       <app-submembers-table
         :submembers="allSubmembers">
       </app-submembers-table>

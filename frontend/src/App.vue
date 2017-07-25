@@ -199,22 +199,6 @@ textarea {
   cursor: pointer !important;
 }
 
-.covered-div {
-  position: relative;
-}
-
-.covered-div:before {
-  content: " ";
-  z-index: 10;
-  display: block;
-  position: absolute;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-}
-
 .open-color {
   background-color: #32a11b;
 }
@@ -228,27 +212,8 @@ textarea {
 }
 
 .section-header {
-  margin-top: 20px;
-  overflow: hidden;
-  text-align: center;
-}
-.section-header:before,
-.section-header:after {
-  background-color: #000;
-  content: "";
-  display: inline-block;
-  height: 1px;
-  position: relative;
-  vertical-align: middle;
-  width: 50%;
-}
-.section-header:before {
-  right: 0.5em;
-  margin-left: -50%;
-}
-.section-header:after {
-  left: 0.5em;
-  margin-right: -50%;
+  text-align: left;
+  margin-left: 16px;
 }
 
 /* Animations */

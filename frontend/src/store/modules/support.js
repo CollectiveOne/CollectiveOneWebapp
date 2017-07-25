@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 const state = {
   contentAnimationType: 'slideToDown',
-  initiativesTree: null,
+  initiativesTree: [],
   triggerUpdateAssets: false,
   userEmailNotVerified: false
 }

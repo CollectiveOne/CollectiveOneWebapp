@@ -11,7 +11,7 @@
     v-if="initiativeAssignations && initiativeTransfers">
 
     <div class="own-transfers-div">
-      <h3 class="section-header">from {{ initiative.meta.name }}</h3>
+      <h3 class="section-header">From {{ initiative.meta.name }}:</h3>
       <app-transfers-tables v-if="hasTransfers"
         :assignations="initiativeAssignations.assignations"
         :transfers="initiativeTransfers.transfers">
@@ -21,16 +21,14 @@
       </div>
     </div>
 
-    <div class="sub-transfers-div">
-      <h3 class="section-header">from subinitiatives of {{ initiative.meta.name }}</h3>
+    <div v-if="hasSubinitiativesTransfers" class="sub-transfers-div">
+      <hr>
+      <h3 class="section-header">From subinitiatives of {{ initiative.meta.name }}:</h3>
       <app-transfers-tables v-if="hasSubinitiativesTransfers"
         :assignations="getSubassignations"
         :transfers="getSubtransfers"
         :showFrom="true">
       </app-transfers-tables>
-      <div v-if="!hasSubinitiativesTransfers" class="empty-div">
-        no transfers have been made from subinitiatives of {{ initiative.meta.name }}
-      </div>
     </div>
 
     <div v-if="isLoggedAnAdmin"
