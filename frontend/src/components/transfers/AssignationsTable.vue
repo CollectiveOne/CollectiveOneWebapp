@@ -3,13 +3,13 @@
     <table v-if="assignations.length > 0" class="w3-table w3-striped w3-bordered w3-centered table-element">
       <thead>
         <tr>
-          <th class="w3-hide-small">date</th>
-          <th>status</th>
-          <th v-if="showFrom">from</th>
-          <th>value</th>
-          <th>to</th>
-          <th class="w3-hide-small">type</th>
-          <th class="w3-hide-small">motive</th>
+          <th class="w3-hide-small">DATE</th>
+          <th>STATUS</th>
+          <th v-if="showFrom">FROM</th>
+          <th>VALUE</th>
+          <th>TO</th>
+          <th class="w3-hide-small">TYPE</th>
+          <th class="w3-hide-small">MOTIVE</th>
           <th>more</th>
         </tr>
       </thead>

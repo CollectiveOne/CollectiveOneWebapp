@@ -3,14 +3,14 @@
     <table class="w3-table w3-striped w3-bordered w3-centered">
       <thead>
         <tr>
-          <th class="avatar-col" colspan="2">user</th>
-          <th v-if="hasDonors">donor</th>
-          <th v-if="myEvaluations.length > 0" class="percent-col">mine</th>
-          <th v-if="hasDonors" class="percent-col">mean</th>
-          <th class="percent-col">{{ disable ? 'final' : 'mine' }}</th>
+          <th class="avatar-col" colspan="2">USER</th>
+          <th v-if="hasDonors">DONOR</th>
+          <th v-if="myEvaluations.length > 0" class="percent-col">MINE</th>
+          <th v-if="hasDonors" class="percent-col">MEAN</th>
+          <th class="percent-col">{{ disable ? 'FINAL' : 'MINE' }}</th>
           <th class="bar-col w3-hide-small w3-hide-medium"></th>
-          <th v-if="!disable">know / don't</th>
-          <th v-if="showSelfBiases" class="self-bias-col">self-bias</th>
+          <th v-if="!disable">KNOW / DON'T</th>
+          <th v-if="showSelfBiases" class="self-bias-col">SELF-BIAS</th>
         </tr><i></i>
       </thead>
       <tbody>

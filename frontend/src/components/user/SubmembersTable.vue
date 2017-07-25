@@ -2,9 +2,9 @@
   <table v-if="submembers.length > 0" class="w3-table w3-striped w3-bordered w3-centered table-element">
     <thead>
       <tr>
-        <th class="avatar-col">avatar</th>
-        <th>nickname</th>
-        <th class="subinitiatives-col">subinitiatives</th>
+        <th class="avatar-col">AVATAR</th>
+        <th>NICKNAME</th>
+        <th class="subinitiatives-col">SUBINITIATIVES</th>
       </tr>
     </thead>
     <tbody>

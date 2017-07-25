@@ -3,11 +3,11 @@
     <table v-if="transfers.length > 0" class="w3-table w3-striped w3-bordered w3-centered">
       <thead>
         <tr>
-          <th>date</th>
-          <th v-if="showFrom">from</th>
-          <th>value</th>
-          <th>to</th>
-          <th class="w3-hide-small">motive</th>
+          <th>DATE</th>
+          <th v-if="showFrom">FROM</th>
+          <th>VALUE</th>
+          <th>TO</th>
+          <th class="w3-hide-small">MOTIVE</th>
         </tr>
       </thead>
       <tbody>
