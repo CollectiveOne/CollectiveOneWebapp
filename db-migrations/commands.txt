@@ -1,0 +1,17 @@
+
+-- Make a dump of the current data and exclude the tables that changes
+/usr/bin/pg_dump --cluster 9.6/main --host ec2-23-21-246-11.compute-1.amazonaws.com --port 5432 --username "fiobqmzrthifdx" --no-password  --format plain --data-only --disable-triggers --verbose --file "/home/pepo/workspace/c1-data/migration-01" --exclude-table "public.initiatives" "d7lpi8u3gn8hak"
+
+-- Input that data into the local DB with pgadmin console 
+\i /home/pepo/workspace/c1-data/migration-01
+
+-- Run the miration script to fill the ramining tables
+(see migrate-17-07-24-initiatives-tables.pgs)
+
+-- Make a Binary copy of the local DB
+/usr/bin/pg_dump --cluster 9.6/main --host localhost --port 5432 --username "postgres" --no-password  --format custom --blobs --no-privileges --no-tablespaces --verbose --file "/home/pepo/workspace/c1-data/c1-migration-01-custom" "c1db-basic"
+
+-- Recreate the DB schema online and DELETE all tables. Then run
+/usr/bin/pg_restore --cluster 9.6/main --host ec2-23-21-246-11.compute-1.amazonaws.com --port 5432 --username "fiobqmzrthifdx" --dbname "d7lpi8u3gn8hak" --no-password --no-owner  --verbose "/home/pepo/workspace/c1-data/migration-01-custom"
+
+-- This will recreate the tables with the data as in the local DB
