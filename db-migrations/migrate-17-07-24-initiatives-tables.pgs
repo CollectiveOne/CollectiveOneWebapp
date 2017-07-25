@@ -27,9 +27,9 @@ FROM masterschema.initiatives
 WHERE meta_id IS NULL;
 
 INSERT INTO initiatives 
-  (id, enabled, creator_c1id, governance_id, meta_id, token_type_id)
+  (id, status, creator_c1id, governance_id, meta_id, token_type_id)
 SELECT 
-  id, enabled, creator_c1id, governance_id, meta_id, token_type_id
+  id, 'ENABLED', creator_c1id, governance_id, meta_id, token_type_id
 FROM masterschema.initiatives 
 WHERE meta_id IS NOT NULL;
 
