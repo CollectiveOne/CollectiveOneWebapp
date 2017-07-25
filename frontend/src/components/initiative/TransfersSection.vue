@@ -149,14 +149,15 @@ export default {
 .section-container {
   padding-top: 0px;
   padding-bottom: 25px;
+  min-height: 200px;
 }
 
 .action-buttons {
   padding: 1px 0px 0px 0px  !important;
   height: 35px;
   width: 35px;
-  margin-right: 20px;
-  margin-top: -5px;
+  margin-right: 25px;
+  margin-top: 15px;
   z-index: 1;
 }
 
@@ -165,7 +166,7 @@ export default {
   height: 45px;
   width: 45px;
   margin-right: 125px;
-  margin-top: 35px;
+  margin-top: 45px;
   z-index: 1;
 }
 

@@ -11,7 +11,7 @@
           <h2>Create brand new tokens</h2>
         </div>
 
-        <form v-if="assetData" class="w3-container">
+        <div v-if="assetData" class="w3-container form-container">
 
           <div class="w3-row w3-center">
             <div class="w3-display-container amount-container">
@@ -78,7 +78,7 @@
             </div>
           </div>
 
-        </form>
+        </div>
 
       </div>
     </div>
@@ -204,7 +204,7 @@ export default {
   margin-top: 20px;
 }
 
-form {
+.form-container {
   padding-top: 0px;
   padding-bottom: 35px;
 }

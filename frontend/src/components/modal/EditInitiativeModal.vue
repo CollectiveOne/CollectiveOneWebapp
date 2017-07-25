@@ -11,7 +11,7 @@
           <h2>Edit Initiative</h2>
         </div>
 
-        <form class="w3-container">
+        <div class="w3-container form-container">
 
           <div class="w3-row">
             <label class=""><b>Name</b></label>
@@ -90,7 +90,7 @@
             </transition>
           </div>
 
-        </form>
+        </div>
 
       </div>
     </div>
@@ -203,7 +203,7 @@ export default {
   margin-top: 20px;
 }
 
-form {
+.form-container {
   padding-top: 20px;
   padding-bottom: 35px;
 }

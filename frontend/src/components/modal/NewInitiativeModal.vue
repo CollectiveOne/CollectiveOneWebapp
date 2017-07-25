@@ -11,7 +11,7 @@
           <h2>New Initiative</h2>
         </div>
 
-        <form class="w3-container">
+        <div class="w3-container form-container">
 
           <br>
           <label class=""><b>Name</b></label>
@@ -69,7 +69,7 @@
               <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
@@ -276,7 +276,7 @@ export default {
   margin-top: 20px;
 }
 
-form {
+.form-container {
   padding-top: 0px;
   padding-bottom: 35px;
 }
