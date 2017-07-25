@@ -134,6 +134,10 @@ public class EmailService {
 					mail = prepareAssignationDeletedEmail(notifications);
 					break;
 					
+				case INITIATIVE_DELETED:
+					mail = prepareInitiativeDeletedEmail(notifications);
+					break;
+					
 				default:
 					break;
 				}
@@ -597,6 +601,38 @@ public class EmailService {
 		
 		return mail;
 	}
+	
+	private Mail prepareInitiativeDeletedEmail(List<Notification> notifications)	{
+		Mail mail = new Mail();
+		
+		Email fromEmail = new Email();
+		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
+		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
+		mail.setFrom(fromEmail);
+		mail.setSubject("Transfer deleted");
+	
+		for(Notification notification : notifications) {
+			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
+				Personalization personalization = basicInitiativePersonalization(notification);
+				
+				Initiative initiative = notification.getActivity().getInitiative();
+				
+				String message = "<p>deleted the initiative " + getInitiativeAnchor(initiative) + 
+						". All its assets, if any, have been transferred to its parent initiative,"
+						+ "if the parent exist.</p> ";
+				
+				personalization.addSubstitution("$MESSAGE$", message);
+				
+				mail.addPersonalization(personalization);
+			}
+		}
+		
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
+		
+		return mail;
+	}
+	
+	
 	
 	
 	private Personalization basicInitiativePersonalization(Notification notification) {

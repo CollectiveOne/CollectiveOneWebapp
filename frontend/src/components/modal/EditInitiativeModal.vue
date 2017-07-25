@@ -64,22 +64,23 @@
           </div>
 
           <hr>
-          <div class="w3-row w3-center w3-margin-bottom">
-            <button type="button" class="w3-button app-button-danger" @click="deleteInitiative = true">Delete Initiative</button>
+          <div class="w3-row w3-center w3-margin-bottom delete-row">
+            <button type="button" class="w3-left w3-button app-button-danger" @click="deleteInitiativeSelected = true">Delete Initiative</button>
           </div>
           <div class="slider-container">
             <transition name="slideDownUp">
-              <div v-if="deleteInitiative" class="w3-row tags-row w3-center">
+              <div v-if="deleteInitiativeSelected" class="w3-row tags-row w3-center">
                 <div class="w3-padding w3-round light-grey w3-margin-bottom">
                   <p>
-                    <b>Warning:</b> This will delete this initiative and transfer all its
-                    assets back to its parent. Please confirm.
+                    <b>Warning:</b> This will delete this initiative and all its
+                    subinitiatives and, if there is a parent initiative, transfer all
+                    its assets back to it. Please confirm.
                   </p>
                 </div>
 
                 <button
                   class="w3-button app-button-light button-pair"
-                  @click="revertTransaction = false">cancel
+                  @click="deleteInitiativeSelected = false">cancel
                 </button>
                 <button
                   class="w3-button app-button-danger button-pair"
@@ -116,7 +117,7 @@ export default {
       ],
       nameEmptyError: false,
       driverEmptyError: false,
-      deleteInitiative: false
+      deleteInitiativeSelected: false
     }
   },
 
@@ -175,9 +176,9 @@ export default {
     },
     deleteInitiative () {
       this.axios.delete('/1/secured/initiative/' + this.initiative.id).then((response) => {
-        this.closeThis()
         this.$store.dispatch('refreshInitiative')
         this.$store.dispatch('updatedMyInitiatives')
+        window.location.href = '/'
       })
     }
   }
@@ -232,6 +233,10 @@ form {
   border-style: solid;
   border-width: 5px;
   border-color: black;
+}
+
+.delete-row {
+  margin-top: 50px;
 }
 
 </style>

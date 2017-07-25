@@ -64,7 +64,11 @@ const getters = {
   },
   colorOfInitiative: (state, getters) => (id) => {
     var initiative = findInitiative(state.initiativesTree, id)
-    return initiative.meta.color
+    if (initiative) {
+      return initiative.meta.color
+    } else {
+      return '#637484'
+    }
   }
 }
 

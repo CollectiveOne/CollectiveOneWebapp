@@ -11,6 +11,9 @@
     <div class="w3-left initiative">
       {{ initiative.meta.name }}
     </div>
+    <div class="w3-left w3-tag w3-round w3-margin-left error-panel">
+      {{ initiative.status !== 'ENABLED' ? initiative.status : ''}}
+    </div>
   </div>
 </template>
 

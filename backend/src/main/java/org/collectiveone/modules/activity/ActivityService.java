@@ -356,6 +356,20 @@ public class ActivityService {
 		addInitiativeActivityNotifications(activity);
 	}
 	
+	@Transactional
+	public void initiativeDeleted(Initiative initiative, AppUser triggerUser) {
+		Activity activity = new Activity();
+		
+		activity.setType(ActivityType.INITIATIVE_DELETED);
+		activity.setTriggerUser(triggerUser);
+		activity.setInitiative(initiative);
+		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
 	
 	
 	/**

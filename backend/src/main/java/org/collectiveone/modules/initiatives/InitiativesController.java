@@ -67,7 +67,7 @@ public class InitiativesController {
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}", method = RequestMethod.DELETE)
-	public PostResult deleteInitiative(@PathVariable("initiativeId") String initiativeIdStr, @RequestBody NewInitiativeDto initiativeDto) {
+	public PostResult deleteInitiative(@PathVariable("initiativeId") String initiativeIdStr) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		

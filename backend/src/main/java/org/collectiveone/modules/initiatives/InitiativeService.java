@@ -20,6 +20,7 @@ import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.InitiativeTransferRepositoryIf;
 import org.collectiveone.modules.tokens.TokenHolderType;
 import org.collectiveone.modules.tokens.TokenService;
+import org.collectiveone.modules.tokens.TokenTransferService;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.tokens.TransferDto;
 import org.collectiveone.modules.users.AppUser;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class InitiativeService {
 	
+	// TODO: remove this dependency and go through the tokenTransferService
 	@Autowired
 	private TokenService tokenService;
 	
@@ -39,6 +41,8 @@ public class InitiativeService {
 	@Autowired
 	private ActivityService activityService;
 	
+	@Autowired
+	private TokenTransferService tokenTransferService;
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
@@ -58,7 +62,7 @@ public class InitiativeService {
 	@Autowired
 	private InitiativeMetaRepositoryIf initiativeMetaRepository;
 	
-	
+	  
 	
 	/** Non-transactional method to create an initiative in multiple transactions */
 	public PostResult init(UUID userId, NewInitiativeDto initiativeDto) {
@@ -255,7 +259,18 @@ public class InitiativeService {
 	public PostResult delete(UUID initiativeId, UUID userId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
-		TRANSFER ASSETS!
+		List<Initiative> subiniatiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_DETACHED_SUB);
+		
+		for (Initiative subinitiative : subiniatiatives) {
+			/* first delete all subinitiatives (recursively starting from the lower level )*/
+			delete(subinitiative.getId(), userId);
+		}
+		
+		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_DETACHED_SUB);
+		if (parent != null) {
+			/* transfer all assets back to parent */
+			tokenTransferService.transferAllFromInitiativeToInitiative(initiative.getId(), parent.getId(), userId, "initiative deleted", "");
+		}
 		
 		initiative.setStatus(InitiativeStatus.DELETED);
 		initiativeRepository.save(initiative);
@@ -311,15 +326,17 @@ public class InitiativeService {
 		
 		List<InitiativeDto> initiativesDtos = new ArrayList<InitiativeDto>();
 		for (Initiative initiative : superInitiatives) {
-			InitiativeDto dto = initiative.toDto();
-		
-			dto.setLoggedMember(getMember(initiative.getId(),  user.getC1Id()));
-			
-			/* look for the full sub-initiative tree of each super initiative */
-			List<InitiativeDto> subInitiatives = getSubinitiativesTree(initiative.getId(), user.getC1Id());
-			dto.setSubInitiatives(subInitiatives);
-			
-			initiativesDtos.add(dto);
+			if (initiative.getStatus() == InitiativeStatus.ENABLED) {
+				InitiativeDto dto = initiative.toDto();
+				
+				dto.setLoggedMember(getMember(initiative.getId(),  user.getC1Id()));
+				
+				/* look for the full sub-initiative tree of each super initiative */
+				List<InitiativeDto> subInitiatives = getSubinitiativesTree(initiative.getId(), user.getC1Id());
+				dto.setSubInitiatives(subInitiatives);
+				
+				initiativesDtos.add(dto);
+			}
 		}
 		
 		return new GetResult<List<InitiativeDto>>("success", "initiatives retrieved", initiativesDtos);
@@ -391,17 +408,19 @@ public class InitiativeService {
 		List<InitiativeDto> subinitiativeDtos = new ArrayList<InitiativeDto>();
 		
 		for (Initiative subinitiative : subIniatiatives) {
-			InitiativeDto subinitiativeDto = subinitiative.toDto();
-			
-			if (userId != null) {
-				subinitiativeDto.setLoggedMember(getMember(subinitiative.getId(),  userId));	
+			if (subinitiative.getStatus() == InitiativeStatus.ENABLED) {
+				InitiativeDto subinitiativeDto = subinitiative.toDto();
+				
+				if (userId != null) {
+					subinitiativeDto.setLoggedMember(getMember(subinitiative.getId(),  userId));	
+				}
+				
+				/* recursively call this for its own sub-initiatives */
+				List<InitiativeDto> subsubIniatiativesDto = getSubinitiativesTree(subinitiative.getId(), userId);
+				subinitiativeDto.setSubInitiatives(subsubIniatiativesDto);
+				
+				subinitiativeDtos.add(subinitiativeDto);
 			}
-			
-			/* recursively call this for its own sub-initiatives */
-			List<InitiativeDto> subsubIniatiativesDto = getSubinitiativesTree(subinitiative.getId(), userId);
-			subinitiativeDto.setSubInitiatives(subsubIniatiativesDto);
-			
-			subinitiativeDtos.add(subinitiativeDto);
 		}
 		
 		return subinitiativeDtos;

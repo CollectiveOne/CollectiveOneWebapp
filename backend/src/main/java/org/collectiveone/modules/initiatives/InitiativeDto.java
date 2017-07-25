@@ -11,6 +11,7 @@ public class InitiativeDto {
 	
 	private String id;
 	private AppUserDto creator;
+	private String status;
 	private InitiativeMetaDto meta;
 		
 	private String ownAssetsId;
@@ -37,6 +38,12 @@ public class InitiativeDto {
 	}
 	public void setCreator(AppUserDto creator) {
 		this.creator = creator;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	public List<InitiativeDto> getSubInitiatives() {
 		return subInitiatives;

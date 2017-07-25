@@ -15,13 +15,27 @@ export default {
     AppHeader: Header
   },
 
+  computed: {
+    windowIsSmall () {
+      return window.innerWidth < 601
+    }
+  },
+
   data () {
     return {
-      expandNav: true
+      expandNav: false
     }
   },
 
   methods: {
+  },
+
+  mounted () {
+    if (this.windowIsSmall) {
+      this.expandNav = false
+    } else {
+      this.expandNav = true
+    }
   }
 }
 </script>

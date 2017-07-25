@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -33,6 +35,7 @@ public class Initiative {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
 	private InitiativeStatus status;
 	
@@ -61,6 +64,7 @@ public class Initiative {
 		
 		dto.setId(id.toString());
 		dto.setCreator(creator.toDto());
+		dto.setStatus(status.toString());
 		dto.setMeta(meta.toDto());
 		
 		if(tokenType != null) dto.setOwnAssetsId(tokenType.getId().toString());
