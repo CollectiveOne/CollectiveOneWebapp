@@ -20,6 +20,11 @@
         <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>
       </div>
 
+      <div v-if="isInitiativeDeleted" class="">
+        <app-user-link :user="notification.activity.triggerUser"></app-user-link> deleted
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>
+      </div>
+
       <div v-if="isTokensMinted" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> minted
         <b>{{ notification.activity.mint.value }} {{ notification.activity.mint.tokenName }}</b> in
@@ -129,6 +134,9 @@ export default {
     },
     isInitiativeEdited () {
       return this.notification.activity.type === 'INITIATIVE_EDITED'
+    },
+    isInitiativeDeleted () {
+      return this.notification.activity.type === 'INITIATIVE_DELETED'
     },
     isSubinitiativeCreated () {
       return this.notification.activity.type === 'SUBINITIATIVE_CREATED'

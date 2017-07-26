@@ -23,7 +23,7 @@
           </td>
           <td v-if="hasDonors">{{ userData.isDonor ? 'yes' : 'no' }}</td>
           <td v-if="myEvaluations.length > 0" class="percent-col">
-            {{ myEvaluationOf(userData) }} %
+            {{ myEvaluationOf(userData) }}
           </td>
           <td v-if="hasDonors"  class="percent-col">
             {{ userData.evaluatedPercent.toFixed(1) }} %
@@ -233,7 +233,11 @@ export default {
     myEvaluationOf (userData) {
       for (var ix in this.myEvaluations) {
         if (this.myEvaluations[ix].receiverUser.c1Id === userData.user.c1Id) {
-          return this.myEvaluations[ix].percent.toFixed(1)
+          if (this.myEvaluations[ix].type === 'DONT_KNOW') {
+            return 'DK'
+          } else {
+            return this.myEvaluations[ix].percent.toFixed(1) + ' %'
+          }
         }
       }
     }

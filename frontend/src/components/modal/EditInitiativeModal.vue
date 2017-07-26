@@ -31,11 +31,11 @@
           <br>
 
           <div class="w3-row">
-            <label class=""><b>Driver</b></label>
+            <label class=""><b>Purpose</b></label>
             <textarea v-model="newInitiative.driver" rows="5" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
             <app-error-panel
               :show="driverEmptyShow"
-              message="please set a driver for the initiative">
+              message="please set a purpose for the initiative">
             </app-error-panel>
           </div>
           <br>

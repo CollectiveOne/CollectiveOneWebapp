@@ -53,15 +53,7 @@ public class ActivityService {
 				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(
 						SubscriberEmailNotificationsState.SEND_NOW, NotificationEmailState.PENDING);
 		
-		String result = emailService.sendNotifications(notifications);
-
-		if(result.equals("success")) {
-			for (Notification notification : notifications) {
-				notification.setEmailState(NotificationEmailState.DELIVERED);
-				notificationRepository.save(notification);
-			}
-		}
-		
+		emailService.sendNotifications(notifications);
 	}
 	
 	@Transactional
@@ -388,16 +380,28 @@ public class ActivityService {
 				/* add a notification only if the trigger user is not the subscriber */
 				Subscriber subscriber = getOrCreateCollectiveOneSubscriber(member.getUser().getC1Id());
 				
-				Notification notification = new Notification();
-				notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
-				notification.setActivity(activity);
-				notification.setSubscriber(subscriber);
-				notification.setState(NotificationState.PENDING);
-				notification.setEmailState(NotificationEmailState.PENDING);
+				if (subscriber.getState() != SubscriberState.UNSUBSCRIBED) {
+					/* prepare a notification only if the subscriber is subscribed */
+					
+					Notification notification = new Notification();
+					notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
+					notification.setActivity(activity);
+					notification.setSubscriber(subscriber);
+					
+					notification.setState(NotificationState.PENDING);
+					
+					/* if not unsubscribed from emails, set the email as peding */
+					if (subscriber.getEmailNotificationsState() != SubscriberEmailNotificationsState.DISABLED) {
+						notification.setEmailState(NotificationEmailState.PENDING);
+					} else {
+						notification.setEmailState(NotificationEmailState.DELIVERED);
+					}
+					
+					notification = notificationRepository.save(notification);
+					
+					activity.getNotifications().add(notification);
+				}
 				
-				notification = notificationRepository.save(notification);
-				
-				activity.getNotifications().add(notification);
 			}
 		}
 	}
@@ -409,21 +413,31 @@ public class ActivityService {
 		List<Subscriber> subscribers = getInitiativeSubscribers(activity.getInitiative().getId());
 		
 		for (Subscriber subscriber : subscribers) {
-			if(activity.getTriggerUser().getC1Id() != subscriber.getUser().getC1Id()) {
-				/* add a notification only if the trigger user is not the subscriber */
-				if (subscriber.getState() == SubscriberState.SUBSCRIBED) {
-					Notification notification = new Notification();
-					notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
-					notification.setActivity(activity);
-					notification.setSubscriber(subscriber);
-					notification.setState(NotificationState.PENDING);
-					notification.setEmailState(NotificationEmailState.PENDING);
-					
-					notification = notificationRepository.save(notification);
-					
-					activity.getNotifications().add(notification);
+			
+			if (subscriber.getState() != SubscriberState.UNSUBSCRIBED) {
+				if(activity.getTriggerUser().getC1Id() != subscriber.getUser().getC1Id()) {
+					/* add a notification only if the trigger user is not the subscriber */
+					if (subscriber.getState() == SubscriberState.SUBSCRIBED) {
+						Notification notification = new Notification();
+						notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
+						notification.setActivity(activity);
+						notification.setSubscriber(subscriber);
+						notification.setState(NotificationState.PENDING);
+						
+						/* if not unsubscribed from emails, set the email as peding */
+						if (subscriber.getEmailNotificationsState() != SubscriberEmailNotificationsState.DISABLED) {
+							notification.setEmailState(NotificationEmailState.PENDING);
+						} else {
+							notification.setEmailState(NotificationEmailState.DELIVERED);
+						}
+						
+						notification = notificationRepository.save(notification);
+						
+						activity.getNotifications().add(notification);
+					}
 				}
 			}
+			
 		}
 	}
 	

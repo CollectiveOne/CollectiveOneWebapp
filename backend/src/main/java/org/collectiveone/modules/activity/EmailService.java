@@ -30,6 +30,9 @@ import com.sendgrid.SendGrid;
 public class EmailService {
 	
 	@Autowired
+	private NotificationRepositoryIf notificationRepository;
+	
+	@Autowired
 	private SendGrid sg;
 	
 	@Autowired
@@ -188,7 +191,10 @@ public class EmailService {
 				personalization.addSubstitution("$MESSAGE$", message);
 				
 				mail.addPersonalization(personalization);
-			}
+			} 
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
@@ -218,6 +224,9 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
@@ -270,6 +279,9 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
@@ -298,6 +310,9 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
@@ -372,6 +387,9 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
@@ -405,6 +423,9 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
@@ -435,6 +456,9 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
@@ -465,6 +489,9 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
@@ -503,6 +530,9 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
@@ -533,6 +563,9 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
@@ -565,6 +598,9 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
@@ -595,6 +631,9 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
@@ -625,6 +664,9 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
