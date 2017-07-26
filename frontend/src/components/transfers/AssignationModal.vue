@@ -46,7 +46,7 @@
               <div class="w3-tag gray-1 w3-round noselect w3-small">
                 <b>{{ assignation.type }}</b>
               </div>
-              <div class="w3-tag gray-1 w3-round noselect w3-small">
+              <div class="w3-tag w3-round noselect w3-small" :class="stateClass">
                 <b>{{ assignation.state }}</b>
               </div>
             </div>
@@ -114,14 +114,20 @@
                   transation. Do you approve this revert?
                 </p>
               </div>
-              <button
-                class="w3-button app-button-light button-pair"
-                @click="approveRevert(false)">reject
-              </button>
-              <button
-                class="w3-button app-button button-pair"
-                @click="approveRevert(true)">approve
-              </button>
+              <div v-if="!this.loggedReceiver.revertApproval" class="">
+                <button
+                  class="w3-button app-button-light button-pair"
+                  @click="approveRevert(false)">reject
+                </button>
+                <button
+                  class="w3-button app-button button-pair"
+                  @click="approveRevert(true)">approve
+                </button>
+              </div>
+              <div v-else class="">
+                <div class="w3-tag w3-padding app-button button-pair noselect">approved!
+                </div>
+              </div>
             </div>
 
             <div v-if="showStatus" class="w3-row w3-center">
@@ -253,6 +259,9 @@ export default {
     isRevertOrdered () {
       return (this.assignation.state === 'REVERT_ORDERED')
     },
+    isReverted () {
+      return (this.assignation.state === 'REVERTED')
+    },
     isDeleted () {
       return (this.assignation.state === 'DELETED')
     },
@@ -275,13 +284,20 @@ export default {
     isEvaluator () {
       return this.assignation.thisEvaluation !== null
     },
-    isReceiver () {
+    loggedReceiver () {
       for (var ix in this.assignation.receivers) {
         if (this.assignation.receivers[ix].user.c1Id === this.$store.state.user.profile.c1Id) {
-          return true
+          return this.assignation.receivers[ix]
         }
       }
-      return false
+      return null
+    },
+    isReceiver () {
+      if (this.loggedReceiver) {
+        return true
+      } else {
+        return false
+      }
     },
     evaluationReceivers () {
       if (this.assignation.thisEvaluation) {
@@ -318,6 +334,29 @@ export default {
     },
     isReceiverApproval () {
       return this.isRevertOrdered && this.isReceiver
+    },
+    stateClass () {
+      if (this.isOpen) {
+        return {
+          'open-color': true
+        }
+      }
+
+      if (this.isDone) {
+        return {
+          'done-color': true
+        }
+      }
+
+      if ((this.isRevertOrdered) || (this.isReverted) || (this.isDeleted)) {
+        return {
+          'revert-color': true
+        }
+      }
+
+      return {
+        'gray-1': true
+      }
     }
   },
 

@@ -64,6 +64,7 @@ public class Receiver {
 		dto.setEvaluatedPercent(evaluatedPercent);
 		dto.setState(state.toString());
 		dto.setIsDonor(type == ReceiverType.DONOR);
+		if(revertApproval != null) dto.setRevertApproval(revertApproval);
 				
 		return dto;
 	}

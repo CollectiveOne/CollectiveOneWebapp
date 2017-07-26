@@ -42,10 +42,10 @@
       </div>
 
       <div v-if="isNewPRAssigantionDone" class="">
-        Peer-reviewed <app-assignation-link :assignation="notification.activity.assignation"></app-assignation-link> created by
+        Peer-reviewed <app-assignation-link :assignation="notification.activity.assignation"></app-assignation-link> has been done. Created by
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> for
         <b>{{ notification.activity.assignation.assets[0].value }} {{ notification.activity.assignation.assets[0].assetName }}</b> from
-        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link> has been closed
+        <app-initiative-link :initiative="notification.activity.initiative"></app-initiative-link>.
       </div>
 
       <div v-if="isInitiativeTransfer" class="">

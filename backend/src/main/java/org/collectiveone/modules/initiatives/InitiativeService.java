@@ -110,7 +110,14 @@ public class InitiativeService {
 		meta.setName(initiativeDto.getName());
 		meta.setDriver(initiativeDto.getDriver());
 		meta.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		meta.setColor("#009ee3");
+		
+		
+		if (!initiativeDto.getAsSubinitiative()) {
+			meta.setColor("#009ee3");
+		} else {
+			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
+			meta.setColor(parent.getMeta().getColor());
+		}		
 		
 		meta = initiativeMetaRepository.save(meta);
 		initiative.setMeta(meta);

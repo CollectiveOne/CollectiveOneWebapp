@@ -11,6 +11,7 @@ public class ReceiverDto {
 	private String state;
 	private boolean isDonor;
 	private double selfBias;
+	private boolean revertApproval;
 	
 	
 	public String getId() {
@@ -54,6 +55,12 @@ public class ReceiverDto {
 	}
 	public void setSelfBias(double selfBias) {
 		this.selfBias = selfBias;
+	}
+	public boolean isRevertApproval() {
+		return revertApproval;
+	}
+	public void setRevertApproval(boolean revertApproval) {
+		this.revertApproval = revertApproval;
 	}
 	
 	
