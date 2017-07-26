@@ -425,7 +425,8 @@ public class ActivityService {
 						notification.setState(NotificationState.PENDING);
 						
 						/* if not unsubscribed from emails, set the email as peding */
-						if (subscriber.getEmailNotificationsState() != SubscriberEmailNotificationsState.DISABLED) {
+						if (subscriber.getEmailNotificationsState() != SubscriberEmailNotificationsState.DISABLED 
+								&& subscriber.getUser().getEmailNotificationsEnabled()) {
 							notification.setEmailState(NotificationEmailState.PENDING);
 						} else {
 							notification.setEmailState(NotificationEmailState.DELIVERED);
