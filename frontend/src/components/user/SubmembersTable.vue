@@ -14,10 +14,13 @@
         </td>
         <td>{{ submember.user.nickname }}</td>
         <td>
-          <div v-for="subinitiative in submember.subinitiatives"
-            class="subinitiative-tag w3-tag w3-round-large" :style="{'background-color': $store.getters.colorOfInitiative(subinitiative.id)}">
+          <router-link tag="div" :to="'/inits/' + subinitiative.id"
+            v-for="subinitiative in submember.subinitiatives"
+            :key="subinitiative.id"
+            class="subinitiative-tag w3-tag w3-round-large cursor-pointer noselect"
+            :style="{'background-color': $store.getters.colorOfInitiative(subinitiative.id)}">
             {{ subinitiative.name }}
-          </div>
+          </router-link>
         </td>
       </tr>
     </tbody>

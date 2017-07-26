@@ -58,20 +58,50 @@ import TransfersTables from '@/components/transfers/TransfersTables.vue'
 const getAllSubassignations = function (subinitiativesAssignations) {
   var subassignations = []
   subinitiativesAssignations.forEach((subinitiativeAssignations) => {
-    subinitiativeAssignations.assignations.forEach((assignation) => {
-      subassignations.push(assignation)
-    })
+    subassignations = subassignations.concat(getAllAssignationsAndSubassignation(subinitiativeAssignations))
   })
+  return subassignations
+}
+
+const getAllAssignationsAndSubassignation = function (initiativeAssignations) {
+  var subassignations = []
+
+  /* add this level transfers */
+  initiativeAssignations.assignations.forEach((assignation) => {
+    subassignations.push(assignation)
+  })
+
+  /* add all sublevels recursively */
+  initiativeAssignations.subinitiativesAssignations.forEach((subinitiativeAssignations) => {
+    /* recursive call to this function with the subinitiativesTransfers elements */
+    subassignations = subassignations.concat(getAllAssignationsAndSubassignation(subinitiativeAssignations))
+  })
+
   return subassignations
 }
 
 const getAllSubtransfers = function (subinitiativesTransfers) {
   var subtransfers = []
   subinitiativesTransfers.forEach((subinitiativeTransfers) => {
-    subinitiativeTransfers.transfers.forEach((transfer) => {
-      subtransfers.push(transfer)
-    })
+    subtransfers = subtransfers.concat(getAllTransfersAndSubtransfers(subinitiativeTransfers))
   })
+  return subtransfers
+}
+
+const getAllTransfersAndSubtransfers = function (initiativeTransfers) {
+  var subtransfers = []
+
+  /* add this level transfers */
+  initiativeTransfers.transfers.forEach((transfer) => {
+    subtransfers.push(transfer)
+  })
+
+  /* add all sublevels recursively */
+  initiativeTransfers.subinitiativesTransfers.forEach((subinitiativeTransfers) => {
+    /* recursive call to this function with the subinitiativesTransfers elements */
+    subtransfers = subtransfers.concat(getAllTransfersAndSubtransfers(subinitiativeTransfers))
+  })
+
   return subtransfers
 }
 
