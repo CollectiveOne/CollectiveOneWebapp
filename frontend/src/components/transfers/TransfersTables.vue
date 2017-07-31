@@ -3,14 +3,14 @@
     <div class="tabs-row w3-row w3-center">
       <div class="tabs-container">
         <div
-          class="subtab-element w3-bottombar w3-hover-light-grey w3-padding cursor-pointer"
-          :class="{'border-blue': isTransfersToUsers}"
+          class="subtab-element w3-button"
+          :class="{'app-button': isTransfersToUsers, 'app-button-light': !isTransfersToUsers}"
           @click="goToAssignationsTable()">
           to users ({{ assignations.length }})
         </div>
         <div
-          class="subtab-element w3-bottombar w3-hover-light-grey w3-padding cursor-pointer"
-          :class="{'border-blue': isTransfersToInitiatives}"
+          class="subtab-element w3-button"
+          :class="{'app-button': isTransfersToInitiatives, 'app-button-light': !isTransfersToInitiatives}"
           @click="goToTransfersTable()">
           to initiatives ({{ transfers.length }})
         </div>
@@ -18,7 +18,7 @@
     </div>
     <div class="w3-row">
       <div class="slider-container">
-        <!-- <transition :name="transfersTableTransition" mode="out-in"> -->
+        <transition :name="transfersTableTransition" mode="out-in">
           <component
             :is="transfersTableComponent"
             :transfers="transfers"
@@ -26,7 +26,7 @@
             :showFrom="showFrom"
             :key="transfersTableComponent.name">
           </component>
-        <!-- </transition> -->
+        </transition>
       </div>
     </div>
   </div>

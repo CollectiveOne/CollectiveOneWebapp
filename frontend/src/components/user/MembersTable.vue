@@ -7,7 +7,7 @@
             <th class="avatar-col">AVATAR</th>
             <th>NICKNAME</th>
             <th class="role-col">ROLE</th>
-            <th>DELETE</th>
+            <th v-if="isLoggedAnAdmin">DELETE</th>
           </tr>
         </thead>
         <tbody>
@@ -28,8 +28,16 @@
                 </span>
               </p>
             </td>
-            <td @click="$emit('remove', member)" class="w3-button">
-              <i class="fa fa-times-circle-o w3-xlarge gray-1-color" aria-hidden="true"></i>
+            <td v-if="isLoggedAnAdmin">
+              <i v-if="!removingThisMember(member)"
+                @click="removeMember(member)"
+                class="fa fa-times-circle-o w3-xlarge gray-1-color w3-button" aria-hidden="true">
+              </i>
+              <div v-else class="">
+                <button @click="removeMemberCancelled()" class="w3-button app-button-light">Cancel Delete</button>
+                <button @click="removeMemberConfirmed()" class="w3-button app-button-danger">Confirm Delete</button>
+              </div>
+
             </td>
           </tr>
         </tbody>
@@ -94,11 +102,36 @@ export default {
         user: null,
         role: 'MEMBER'
       },
-      resetUserSelector: false
+      resetUserSelector: false,
+      memberToBeRemoved: null
+    }
+  },
+
+  computed: {
+    isLoggedAnAdmin () {
+      return this.$store.getters.isLoggedAnAdmin
     }
   },
 
   methods: {
+    removeMember (member) {
+      setTimeout(() => {
+        this.memberToBeRemoved = member
+      }, 500)
+    },
+    removingThisMember (member) {
+      if (this.memberToBeRemoved) {
+        return this.memberToBeRemoved.user.c1Id === member.user.c1Id
+      }
+      return false
+    },
+    removeMemberCancelled () {
+      this.memberToBeRemoved = null
+    },
+    removeMemberConfirmed () {
+      this.$emit('remove', JSON.parse(JSON.stringify(this.memberToBeRemoved)))
+      this.memberToBeRemoved = null
+    },
     add () {
       this.resetUserSelector = !this.resetUserSelector
       this.$emit('add', this.newMember)
@@ -121,11 +154,11 @@ export default {
 }
 
 .avatar-col {
-  width: 50px;
+  /*width: 50px;*/
 }
 
 .role-col {
-  width: 120px;
+  /*width: 120px;*/
 }
 
 .role-select {

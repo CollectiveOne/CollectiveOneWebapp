@@ -71,10 +71,12 @@ textarea {
   margin-top: 50px;
   margin-bottom: 50px;
   border-radius: 20px;
+  min-height: 200px;
 }
 
 .w3-modal-content .w3-card-4 {
   border-radius: 20px;
+  min-height: 200px;
 }
 
 .white-bg {
@@ -158,6 +160,27 @@ textarea {
   background-color:  rgb(194, 157, 0) !important;
 }
 
+.error-row {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.error-panel {
+  color: black;
+  background-color: #f1cdcd;
+  margin-bottom: 6px;
+}
+
+.error-text {
+  color: rgb(255, 64, 64);
+}
+
+.error-input {
+  outline: none;
+  border-color: #f1cdcd !important;
+  box-shadow: 0 0 10px red;
+}
+
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -178,22 +201,6 @@ textarea {
   overflow: hidden;
 }
 
-.error-row {
-  margin-top: 10px;
-  width: 100%;
-}
-
-.error-panel {
-  color: black;
-  background-color: #f1cdcd;
-  margin-bottom: 6px;
-}
-
-.error-input {
-  outline: none;
-  border-color: #f1cdcd !important;
-  box-shadow: 0 0 10px red;
-}
 
 .cursor-pointer {
   cursor: pointer !important;

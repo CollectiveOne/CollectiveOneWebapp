@@ -44,7 +44,7 @@ export default {
 <style scoped>
 
 .avatar-col {
-  width: 50px;
+  /*width: 50px;*/
 }
 
 .subinitiative-tag {

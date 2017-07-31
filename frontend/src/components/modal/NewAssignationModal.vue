@@ -62,7 +62,7 @@
           </div>
 
           <div class="w3-row">
-            <label class=""><b>Motive</b></label>
+            <label class=""><b>Motive <span class="w3-small error-text">(required)</span></b></label>
             <input v-model="assignation.motive" class="w3-input w3-hover-light-grey" :class="{ 'error-input' : motiveErrorShow }" type="text">
             <app-error-panel
               :show="motiveEmptyShow"

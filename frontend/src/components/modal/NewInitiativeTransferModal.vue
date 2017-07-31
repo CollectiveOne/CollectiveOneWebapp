@@ -7,17 +7,17 @@
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>Direct transfer to another initiative</h2>
+          <h2>Direct transfer to a parent or child initiative</h2>
         </div>
 
-        <div class="this-container w3-container">
+        <div v-if="initiativeOptions.length > 0" class="this-container w3-container">
 
           <div class="w3-row">
-            <label class=""><b>Transfer to</b></label>
+            <label class=""><b>Transfer to <span class="w3-small error-text">(required)</span></b></label>
             <select v-model="transfer.receiverId"
               class="w3-select initiative-selector" name="transferto"
               :class="{ 'error-input' : subInitiativeEmptyShow }">
-              <option v-for="subinitiative in subinitiatives" :value="subinitiative.id">{{ subinitiative.meta.name }}</option>
+              <option v-for="option in initiativeOptions" :value="option.id">{{ option.meta.name }}</option>
             </select>
           </div>
           <app-error-panel
@@ -27,7 +27,7 @@
           <br>
 
           <div class="w3-row">
-            <label class=""><b>Motive</b></label>
+            <label class=""><b>Motive <span class="w3-small error-text">(required)</span></b></label>
             <input v-model="transfer.motive"
               class="w3-input w3-hover-light-grey" type="text"
               :class="{ 'error-input' : motiveErrorShow }">
@@ -70,7 +70,11 @@
           </div>
 
         </div>
-
+        <div v-else class="w3-row w3-margin-top">
+          <div class="error-panel w3-padding">
+            {{ initiative.meta.name }} does not have parent or child initiatives
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -103,8 +107,18 @@ export default {
     initiative () {
       return this.$store.state.initiative.initiative
     },
-    subinitiatives () {
-      return this.initiative.subInitiatives
+    initiativeOptions () {
+      var options = []
+
+      if (this.initiative.parents.length > 0) {
+        options.push(this.initiative.parents[this.initiative.parents.length - 1])
+      }
+
+      for (var ix in this.initiative.subInitiatives) {
+        options.push(this.initiative.subInitiatives[ix])
+      }
+
+      return options
     },
     motiveEmptyShow () {
       return this.motiveEmptyError && this.transfer.motive === ''
@@ -183,10 +197,6 @@ export default {
 
 <style scoped>
 
-.w3-modal {
-  display: block;
-}
-
 .this-container {
   padding-top: 10px;
   padding-bottom: 30px;
@@ -200,7 +210,6 @@ export default {
 }
 
 .fa-times {
-  color: rgb(255, 255, 255);
   margin-right: 20px;
   margin-top: 20px;
 }

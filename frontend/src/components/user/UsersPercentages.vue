@@ -7,7 +7,7 @@
           <th v-if="hasDonors">DONOR</th>
           <th v-if="myEvaluations.length > 0" class="percent-col">MINE</th>
           <th v-if="hasDonors" class="percent-col">MEAN</th>
-          <th class="percent-col">{{ disable ? 'FINAL' : 'MINE' }}</th>
+          <th class="percent-col">{{ myEvaluations.length > 0 ? 'FINAL' : 'MINE' }}</th>
           <th class="bar-col w3-hide-small w3-hide-medium"></th>
           <th v-if="!disable">KNOW / DON'T</th>
           <th v-if="showSelfBiases" class="self-bias-col">SELF-BIAS</th>
@@ -248,7 +248,7 @@ export default {
 <style scoped>
 
 .avatar-col {
-  width: 50px;
+  /*width: 50px;*/
 }
 
 .percent-col {

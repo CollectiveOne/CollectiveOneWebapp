@@ -14,7 +14,7 @@
         <div class="w3-container form-container">
 
           <br>
-          <label class=""><b>Subinitiative Name</b></label>
+          <label class=""><b>Subinitiative Name <span class="w3-small error-text">(required)</span></b></label>
           <input v-model="name"
             class="w3-input w3-hover-light-grey" type="text"
             :class="{ 'error-input' : nameErrorShow }">
@@ -28,7 +28,7 @@
           </app-error-panel>
           <br>
 
-          <label class=""><b>Subinitiative Purpose</b></label>
+          <label class=""><b>Subinitiative Purpose <span class="w3-small error-text">(required)</span></b></label>
           <textarea v-model="driver"
             class="w3-input w3-border w3-round w3-hover-light-grey"
             :class="{ 'error-input' : driverErrorShow }">
