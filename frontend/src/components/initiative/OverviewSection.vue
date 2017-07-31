@@ -3,7 +3,7 @@
     <div v-if="initiative" class="this-container w3-container w3-padding">
       <div class="w3-card">
         <header class="w3-bar gray-1 section-header-bar">
-          <h4 class="w3-bar-item w3-left">Driver</h4>
+          <h4 class="w3-bar-item w3-left">Purpose</h4>
           <div v-if="isLoggedAnAdmin"
             class="edit-btn-div w3-bar-item w3-button w3-right w3-large"
             @click="$store.commit('showEditInitiativeModal', true)">

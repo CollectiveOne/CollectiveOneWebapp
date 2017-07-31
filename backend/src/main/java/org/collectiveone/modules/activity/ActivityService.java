@@ -88,11 +88,18 @@ public class ActivityService {
 			subscriber.setType(type);
 			subscriber.setUser(appUserRepository.findByC1Id(userId));
 			subscriber.setState(SubscriberState.SUBSCRIBED);
-			subscriber.setEmailNotificationState(SubscriberEmailNotificationsState.SEND_NOW);
+			subscriber.setEmailNotificationsState(SubscriberEmailNotificationsState.SEND_NOW);
 			
 			subscriberRepository.save(subscriber);
 		}
 	}
+	
+	@Transactional
+	public void removeSubscriber(UUID elementId, UUID userId) {
+		Subscriber subscriber = subscriberRepository.findByElementIdAndUser_C1Id(elementId, userId);
+		subscriberRepository.delete(subscriber);
+	}
+	
 	
 	@Transactional
 	public PostResult editSubscriberState(UUID userId, UUID elementId, SubscriberState state) {
@@ -106,7 +113,7 @@ public class ActivityService {
 	@Transactional
 	public PostResult editSubscriberEmailNotificationsState(UUID userId, UUID elementId, SubscriberEmailNotificationsState emailNotificationsState) {
 		Subscriber subscriber = subscriberRepository.findByElementIdAndUser_C1Id(elementId, userId);
-		subscriber.setEmailNotificationState(emailNotificationsState);
+		subscriber.setEmailNotificationsState(emailNotificationsState);
 		subscriberRepository.save(subscriber);
 		
 		return new PostResult("success", "subscriber email notifications changed", "");
@@ -138,7 +145,7 @@ public class ActivityService {
 		subscriber.setType(SubscriptionElementType.COLLECTIVEONE);
 		subscriber.setUser(appUserRepository.findByC1Id(userId));
 		subscriber.setState(SubscriberState.SUBSCRIBED);
-		subscriber.setEmailNotificationState(SubscriberEmailNotificationsState.SEND_NOW);
+		subscriber.setEmailNotificationsState(SubscriberEmailNotificationsState.SEND_NOW);
 		
 		return subscriberRepository.save(subscriber);
 	}

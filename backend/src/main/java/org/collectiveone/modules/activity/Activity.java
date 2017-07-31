@@ -41,9 +41,7 @@ public class Activity {
 	@Column(name = "timestamp")
 	private Timestamp timestamp;
 	
-	/* notifications, one per subscribers to keep track of
-	 * delivered */
-	@OneToMany
+	@OneToMany(mappedBy = "activity")
 	private List<Notification> notifications = new ArrayList<Notification>();
 	
 	/* support columns needed depending on the type of activity */
