@@ -14,10 +14,13 @@ public class AssetsDto {
 
 	private double totalTransferredToSubinitiatives;
 	private double totalTransferredToUsers;
+	private double totalPending;
 	private double totalUnderThisHolder;
 	
 	private List<TransferDto> transferredToSubinitiatives = new ArrayList<TransferDto>();
 	private List<TransferDto> transferredToUsers = new ArrayList<TransferDto>();
+	private List<TransferDto> transfersPending = new ArrayList<TransferDto>();
+	
 
 	public String getAssetId() {
 		return assetId;
@@ -67,6 +70,12 @@ public class AssetsDto {
 	public void setTotalTransferredToUsers(double totalTransferredToUsers) {
 		this.totalTransferredToUsers = totalTransferredToUsers;
 	}
+	public double getTotalPending() {
+		return totalPending;
+	}
+	public void setTotalPending(double totalPending) {
+		this.totalPending = totalPending;
+	}
 	public double getTotalUnderThisHolder() {
 		return totalUnderThisHolder;
 	}
@@ -85,5 +94,11 @@ public class AssetsDto {
 	public void setTransferredToUsers(List<TransferDto> transferredToUsers) {
 		this.transferredToUsers = transferredToUsers;
 	}
-		
+	public List<TransferDto> getTransfersPending() {
+		return transfersPending;
+	}
+	public void setTransfersPending(List<TransferDto> transfersPending) {
+		this.transfersPending = transfersPending;
+	}
+	
 }

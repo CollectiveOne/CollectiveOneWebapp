@@ -349,6 +349,11 @@ public class AssignationService {
 	}
 	
 	@Transactional
+	public List<Assignation> getOpenAssignations(UUID initiativeId) {
+		return  assignationRepository.findByInitiativeIdAndState(initiativeId, AssignationState.OPEN);
+	}
+	
+	@Transactional
 	public UUID getInitiativeIdOf(UUID assignationId) {
 		Assignation assignation = assignationRepository.findById(assignationId);
 		if (assignation != null) {

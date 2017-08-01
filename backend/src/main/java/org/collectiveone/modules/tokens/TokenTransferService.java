@@ -9,6 +9,9 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.ActivityService;
+import org.collectiveone.modules.assignations.Assignation;
+import org.collectiveone.modules.assignations.AssignationService;
+import org.collectiveone.modules.assignations.Bill;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeRelationship;
 import org.collectiveone.modules.initiatives.InitiativeRelationshipRepositoryIf;
@@ -33,6 +36,9 @@ public class TokenTransferService {
 	
 	@Autowired
 	private InitiativeService initiativeService;
+	
+	@Autowired
+	private AssignationService assignationService;
 	
 	@Autowired
 	private InitiativeRepositoryIf initiativeRepository;
@@ -68,6 +74,7 @@ public class TokenTransferService {
 		
 		assetDto.setTransferredToSubinitiatives(getTransferredToSubinitiatives(tokenId, initiative.getId()));
 		assetDto.setTransferredToUsers(getTransferredToUsers(tokenId, initiative.getId()));
+		assetDto.setTransfersPending(getTransfersPending(initiative.getId()));
 		
 		/* sum all tranfers as additional data */
 		assetDto.setTotalTransferredToSubinitiatives(0.0);
@@ -78,6 +85,11 @@ public class TokenTransferService {
 		assetDto.setTotalTransferredToUsers(0.0);
 		for (TransferDto transfer : assetDto.getTransferredToUsers()) {
 			assetDto.setTotalTransferredToUsers(assetDto.getTotalTransferredToUsers() + transfer.getValue());
+		}
+		
+		assetDto.setTotalPending(0.0);
+		for (TransferDto transfer : assetDto.getTransfersPending()) {
+			assetDto.setTotalPending(assetDto.getTotalPending() + transfer.getValue());
 		}
 		
 		assetDto.setTotalUnderThisHolder(
@@ -305,4 +317,29 @@ public class TokenTransferService {
 		
 		return transferredToUsers;
 	}
+	
+	@Transactional
+	public List<TransferDto> getTransfersPending(UUID initiativeId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId); 
+		
+		List<TransferDto> transfersPending = new ArrayList<TransferDto>();
+		List<Assignation> assignations = assignationService.getOpenAssignations(initiativeId);
+		
+		for (Assignation assignation : assignations) {
+			for (Bill bill : assignation.getBills()) {
+				TransferDto dto = new TransferDto();
+				
+				dto.setAssetId(bill.getTokenType().getId().toString());
+				dto.setAssetName(bill.getTokenType().getName());
+				dto.setSenderId(initiative.getId().toString());
+				dto.setSenderName(initiative.getMeta().getName());
+				dto.setValue(bill.getValue());
+				
+				transfersPending.add(dto);
+			}
+		}
+		
+		return transfersPending;
+	}
+	
 }

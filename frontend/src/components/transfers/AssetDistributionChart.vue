@@ -32,6 +32,17 @@
                 </div>
               </div>
 
+              <div v-if="hasPending" class="w3-row w3-margin-bottom">
+                <label class="">
+                  <b>Under pending peer-review transfers</b>
+                </label>
+                <div class="light-grey w3-round-xlarge w3-large">
+                  <div class="app-blue w3-container w3-center w3-round-xlarge" :style="{'width': pendingTransfersPercent +'%'}">
+                    <div class="bar-txt w3-center noselect">{{ pendingTransfers }}</div>
+                  </div>
+                </div>
+              </div>
+
               <div v-if="isInitiativeAssigner || isOverview" class="w3-row w3-margin-bottom">
                 <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
                   <div class="w3-row cursor-pointer" @click="showSubinitiatives = !showSubinitiatives">
@@ -229,11 +240,23 @@ export default {
     underThisInitiativePercent () {
       return this.assetData.totalExistingTokens > 0 ? tokensString(this.underThisInitiativeVal / this.assetData.totalExistingTokens * 100) : 0
     },
+    hasPending () {
+      return this.assetData.totalPending > 0
+    },
+    availableToThisInitiativeVal () {
+      return this.assetData.ownedByThisHolder - this.assetData.totalPending
+    },
     availableToThisInitiative () {
-      return amountAndPerc(this.assetData.ownedByThisHolder, this.underThisInitiativeVal)
+      return amountAndPerc(this.availableToThisInitiativeVal, this.underThisInitiativeVal)
     },
     availableToThisInitiativePercent () {
-      return this.assetData.ownedByThisHolder / this.underThisInitiativeVal * 100
+      return this.availableToThisInitiativeVal / this.underThisInitiativeVal * 100
+    },
+    pendingTransfers () {
+      return amountAndPerc(this.assetData.totalPending, this.underThisInitiativeVal)
+    },
+    pendingTransfersPercent () {
+      return this.assetData.totalPending / this.underThisInitiativeVal * 100
     },
     hasSubinitiatives () {
       return (this.assetData.transferredToSubinitiatives.length > 0)
