@@ -10,6 +10,8 @@ import OverviewSection from '@/components/initiative/OverviewSection.vue'
 import PeopleSection from '@/components/initiative/PeopleSection.vue'
 import TransfersSection from '@/components/initiative/TransfersSection.vue'
 
+import UserProfilePage from '@/components/user/UserProfilePage.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -36,6 +38,7 @@ export default new Router({
           ]
         }
       ]
-    }
+    },
+    { path: '/user/:userId', name: 'UserProfilePage', component: UserProfilePage }
   ]
 })

@@ -62,6 +62,10 @@ textarea {
   resize: vertical;
 }
 
+a {
+  text-decoration: none;
+}
+
 .w3-modal {
   padding-top: 30px;
   display: block;

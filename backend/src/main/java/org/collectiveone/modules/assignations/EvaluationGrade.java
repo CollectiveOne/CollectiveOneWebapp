@@ -49,8 +49,8 @@ public class EvaluationGrade {
 		EvaluationGradeDto dto = new EvaluationGradeDto();
 		
 		dto.setId(id.toString());
-		if(evaluator != null) dto.setEvaluatorUser(evaluator.getUser().toDto());
-		if(receiver != null) dto.setReceiverUser(receiver.getUser().toDto());
+		if(evaluator != null) dto.setEvaluatorUser(evaluator.getUser().toDtoLight());
+		if(receiver != null) dto.setReceiverUser(receiver.getUser().toDtoLight());
 		if(type != null) dto.setType(type.toString());
 		if(state != null) dto.setState(state.toString());
 		dto.setPercent(percent);

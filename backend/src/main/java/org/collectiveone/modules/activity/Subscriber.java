@@ -55,7 +55,7 @@ public class Subscriber {
 		SubscriberDto dto = new SubscriberDto();
 		dto.setId(id.toString());
 		dto.setElementId(elementId.toString());
-		dto.setUser(user.toDto());
+		dto.setUser(user.toDtoLight());
 		dto.setState(state.toString());
 		dto.setEmailNotificationsState(emailNotificationsState.toString());
 		

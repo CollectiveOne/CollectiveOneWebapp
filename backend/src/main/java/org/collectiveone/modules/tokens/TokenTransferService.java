@@ -309,7 +309,7 @@ public class TokenTransferService {
 			dto.setSenderId(initiative.getId().toString());
 			dto.setSenderName(initiative.getMeta().getName());
 			dto.setReceiverId(member.getUser().getC1Id().toString());
-			dto.setReceiverName(member.getUser().getNickname());
+			dto.setReceiverName(member.getUser().getProfile().getNickname());
 			dto.setValue(totalTransferred);
 			
 			transferredToUsers.add(dto);

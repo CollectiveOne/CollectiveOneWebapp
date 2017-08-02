@@ -38,7 +38,7 @@ public class Member implements Comparable<Member>{
 
 	@Override
     public int compareTo(Member m) {
-        return user.getNickname().compareTo(m.getUser().getNickname()) ;
+        return user.getC1Id().compareTo(m.getUser().getC1Id());
     }
 	
 	public UUID getId() {

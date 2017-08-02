@@ -23,6 +23,9 @@ public class AppUserService {
 	private AppUserRepositoryIf appUserRepository;
 	
 	@Autowired
+	private AppUserProfileRepositoryIf appUserProfileRepository;
+	
+	@Autowired
 	private ManagementAPI mgmt;
 
 	@Transactional
@@ -50,18 +53,60 @@ public class AppUserService {
 	}
 	
 	@Transactional
-	public GetResult<AppUserDto> getDto(UUID c1Id) {
-		return new GetResult<AppUserDto>("success", "user profile retrieved", getFromC1Id(c1Id).toDto());
+	public GetResult<AppUserDto> getUserLight(UUID c1Id) {
+		return new GetResult<AppUserDto>("success", "user profile retrieved", getFromC1Id(c1Id).toDtoLight());
 	}
+	
+	@Transactional
+	public GetResult<AppUserDto> getUserFull(UUID c1Id) {
+		return new GetResult<AppUserDto>("success", "user profile retrieved", getFromC1Id(c1Id).toDtoFull());
+	}
+	
+	@Transactional
+	public PostResult editUserProfile(UUID c1Id, AppUserDto userDto) {
+		AppUserProfile profile = appUserProfileRepository.findByUser_C1Id(c1Id);
+		
+		if (!profile.getUsername().equals(userDto.getUsername())) {
+			/* check if username exist */
+			AppUserProfile profileOfUsername = appUserProfileRepository.findByUsername(userDto.getUsername());
+			
+			if (profileOfUsername == null) {
+				profile.setUsername(userDto.getUsername());
+			} else {
+				return new PostResult("error", "username already exist", "");
+			}
+		}	
+		
+		profile.setNickname(userDto.getNickname());
+		profile.setPictureUrl(userDto.getPictureUrl());
+		profile.setShortBio(userDto.getShortBio());
+		profile.setTwitterHandle(userDto.getTwitterHandle());
+		profile.setFacebookHandle(userDto.getFacebookHandle());
+		profile.setLinkedinHandle(userDto.getLinkedinHandle());
+		
+		appUserProfileRepository.save(profile);
+		
+		return new PostResult("success", "profile edited", profile.getId().toString());
+		
+	}
+	
+	
+	@Transactional
+	public GetResult<Boolean> usernameExist(String username) {
+		AppUserProfile profile = appUserProfileRepository.findByUsername(username);
+		return new GetResult<Boolean>("success", "existance cheked", profile != null);
+	}
+	
+	
 
 	@Transactional
 	public GetResult<List<AppUserDto>> searchBy(String q) {
-		List<AppUser> appUsers = appUserRepository.findTop10ByNicknameLikeIgnoreCase("%"+q+"%");
+		List<AppUser> appUsers = appUserRepository.findTop10ByProfile_NicknameLikeIgnoreCase("%"+q+"%");
 		
 		List<AppUserDto> appUserDtos = new ArrayList<AppUserDto>();
 		
 		for(AppUser appUser : appUsers) {
-			appUserDtos.add(appUser.toDto());
+			appUserDtos.add(appUser.toDtoLight());
 		}
 		
 		return new GetResult<List<AppUserDto>>("succes", "initiatives returned", appUserDtos);
@@ -86,16 +131,23 @@ public class AppUserService {
 					appUser = new AppUser();
 					
 					appUser.getAuth0Ids().add((auth0User.getId()));
+					appUser.setEmail(auth0User.getEmail());
+					appUser.setEmailNotificationsEnabled(true);
+					
+					AppUserProfile profile = new AppUserProfile();
 					
 					if (auth0User.getIdentities().get(0).getProvider().equals("auth0")) {
-						appUser.setNickname(auth0User.getNickname());
+						profile.setNickname(auth0User.getNickname());
 					} else {
-						appUser.setNickname(auth0User.getName());
+						profile.setNickname(auth0User.getName());
 					}
 					
-					appUser.setEmail(auth0User.getEmail());
-					appUser.setPictureUrl(auth0User.getPicture());
-					appUser.setEmailNotificationsEnabled(true);
+					profile.setUser(appUser);
+					profile.setPictureUrl(auth0User.getPicture());
+					profile = appUserProfileRepository.save(profile);
+					
+					appUser.setProfile(profile);
+					
 				} 
 			} else {
 				/* just add the auth0id to the existing user */

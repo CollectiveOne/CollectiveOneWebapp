@@ -63,7 +63,7 @@ public class Initiative {
 		InitiativeDto dto = new InitiativeDto();
 		
 		dto.setId(id.toString());
-		dto.setCreator(creator.toDto());
+		dto.setCreator(creator.toDtoLight());
 		dto.setStatus(status.toString());
 		dto.setMeta(meta.toDto());
 		

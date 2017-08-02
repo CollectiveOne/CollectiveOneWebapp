@@ -59,7 +59,7 @@ public class Receiver {
 		ReceiverDto dto = new ReceiverDto();
 		
 		dto.setId(id.toString());
-		dto.setUser(user.toDto());
+		dto.setUser(user.toDtoLight());
 		dto.setPercent(assignedPercent);
 		dto.setEvaluatedPercent(evaluatedPercent);
 		dto.setState(state.toString());

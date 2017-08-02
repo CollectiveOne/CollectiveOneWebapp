@@ -78,7 +78,7 @@ public class Activity {
 		ActivityDto dto = new ActivityDto();
 		
 		dto.setType(type.toString());
-		if(triggerUser != null) dto.setTriggerUser(triggerUser.toDto());
+		if(triggerUser != null) dto.setTriggerUser(triggerUser.toDtoLight());
 		if(initiative != null) dto.setInitiative(initiative.toDto());
 		if(subInitiative != null) dto.setSubInitiative(subInitiative.toDto());
 		dto.setOldName(oldName);

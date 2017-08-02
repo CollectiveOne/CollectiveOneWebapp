@@ -49,7 +49,7 @@ public class Notification {
 		dto.setId(id.toString());
 		dto.setActivity(activity.toDto());
 		dto.setState(state.toString());
-		dto.setSubscriberUser(subscriber.getUser().toDto());
+		dto.setSubscriberUser(subscriber.getUser().toDtoLight());
 		dto.setSubscriberState(subscriber.getState().toString());
 		
 		return dto;

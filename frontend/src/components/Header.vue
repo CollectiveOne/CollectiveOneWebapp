@@ -26,6 +26,7 @@
           </div>
         </div>
         <div v-if="showUserOptions" class="avatar-dropdown-content w3-card-2 w3-bar-block w3-white w3-large">
+          <div @click="goMyProfile()" class="w3-bar-item w3-button"><i class="fa fa-user" aria-hidden="true"></i></i>profile</div>
           <div @click="goHome()" class="w3-bar-item w3-button"><i class="fa fa-home" aria-hidden="true"></i>home</div>
           <div @click="logoutUser()" class="w3-bar-item w3-button"><i class="fa fa-power-off" aria-hidden="true"></i>logout</div>
         </div>
@@ -39,14 +40,6 @@
       </div>
 
      </div>
-    </div>
-
-    <!-- Navbar on small screens -->
-    <div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium w3-large">
-      <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 1</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 2</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 3</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large">My Profile</a>
     </div>
   </div>
 </template>
@@ -76,6 +69,10 @@ export default {
         this.updateNotifications()
       }
       this.showActivityList = !this.showActivityList
+    },
+    goMyProfile () {
+      this.showUserOptions = false
+      this.$router.push('/user/' + this.$store.state.user.profile.c1Id)
     },
     goHome () {
       this.showUserOptions = false
