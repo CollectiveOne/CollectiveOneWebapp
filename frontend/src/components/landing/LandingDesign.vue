@@ -1,60 +1,86 @@
 <template lang="html">
   <div class="w3-center">
     <div class="w3-row top-div light-grey">
-      <div class="centered-block">
-        <h1 >Welcome to CollectiveOne</h1>
-        <button class="w3-button app-button w3-margin-bottom" @click="login()">login / signup</button>
+      <div class="top-div-top-div">
+          <img class="logo" src="../../assets/logo-white.png">
+          <div class="section-tabs">
+            <a href="#principles" class="section-tab">PRINCIPLES</a>
+            <a href="#vision" class="section-tab">VISION</a>
+            <a href="#roadmap" class="section-tab">ROADMAP</a>
+            <a href="#participate" class="section-tab">PARTICIPATE</a>
+          </div>
+      </div>
+      <div class="top-div-middle-div">
+        <h1>WELCOME TO<br>COLLECTIVEONE</h1>
         <div class="text-div-text">
-          <h5 >
+          <h5>
             CollectiveOne is a method (and a platform) to develop open,
             decentralized and collaborative initiatives: initiatives to which anyone can,
             potentially, contribute, and which are collectively owned and self-governed
             by their contributors.
           </h5>
         </div>
+        <button class="w3-button dark-gray w3-margin-top" @click="login()">LOG IN / SIGNUP</button>
       </div>
     </div>
-    <div class="w3-row content-div w3-padding-large dark-gray">
-      <div class="centered-block">
-        <h1><b>Principles</b></h1>
-        <div class="w3-row-padding principles-row">
-          <div class="w3-col m4">
-            <h3><b>Open collaboration</b></h3>
+
+    <div id="principles" class="w3-row principles-div w3-padding-large gray-2-color">
+      <h1>PRINCIPLES</h1>
+      <div class="w3-row-padding principles-row">
+        <div class="w3-col l4 principle">
+          <img src="../../assets/icon-open.png" alt="">
+          <h5><b>OPEN COLLABORATION</b></h5>
+          <p>
             Like open-source projects, entry barriers are kept low to allow anyone to
             contribute to an initiative in similar conditions as those of previous contributors.
-          </div>
-          <div class="w3-col m4">
-            <h3><b>Contribution record and value</b></h3>
+          </p>
+        </div>
+        <div class="w3-col l4 principle">
+          <img src="../../assets/icon-record.png" alt="">
+          <h5><b>CONTRIBUTIONS RECORD AND VALUE</b></h5>
+          <p>
             Contributions are recognized and valued relative to each other using project-specific
             tokens.
-          </div>
-          <div class="w3-col m4">
-            <h3><b>Liquid ownership</b></h3>
+          </p>
+        </div>
+        <div class="w3-col l4 principle">
+          <img src="../../assets/icon-liquid.png" alt="">
+          <h5><b>LIQUID OWNERSHIP</b></h5>
+          <p>
             The ownership of each project is linked to contributions, and, therefore, to tokens.
             The more you contribute, the more you should own.
+          </p>
+        </div>
+      </div>
+      <div class="w3-row-padding principles-row">
+        <div class="w3-col m2"></div>
+        <div class="w3-col m8">
+          <div class="w3-row-padding">
+            <div class="w3-col l6 principle">
+              <img src="../../assets/icon-governance.png" alt="">
+              <h5><b>DISTRIBUTED GOVERNANCE</b></h5>
+              <p>
+                Configurable governance at each level of an initiative enables decisions to be taken openly
+                and collectively.
+              </p>
+            </div>
+            <div class="w3-col l6 principle">
+              <img src="../../assets/icon-transparency.png" alt="">
+              <h5><b>TRANSPARENCY</b></h5>
+              <p>
+                The information of an initiative can be kept public as a mean to attract and enable people
+                to contribute.
+              </p>
+            </div>
           </div>
         </div>
-        <div class="w3-row-padding">
-          <div class="w3-col m4">
-            <h3><b>Distributed governance</b></h3>
-            Configurable governance at each level of an initiative enables decisions to be taken openly
-            and collectively.
-          </div>
-          <div class="w3-col m4">
-          </div>
-          <div class="w3-col m4">
-            <h3><b>Transparency</b></h3>
-            The information of an initiative can be kept public as a mean to attract and enable people
-            to contribute.
-          </div>
-        </div>
+        <div class="w3-col m2"></div>
       </div>
     </div>
 
-    <div class="w3-row roadmap-div w3-padding-large dark-gray">
-      <div class="centered-block">
-
-        <h1><b>Vision</b></h1>
+    <div id="vision" class="w3-row vision-div w3-padding-large dark-gray vision-div">
+      <div class="centered-block gray-1-color">
+        <h1>OUR VISION</h1>
         <div class="w3-row video-row">
           <div>
             <div class="video-container">
@@ -62,81 +88,111 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <h1><b>Roadmap</b></h1>
-        <div class="w3-row-padding principles-row">
-          <div class="w3-col l3">
-            <h3><b>Value Accounting</b></h3>
+    <div id="roadmap" class="w3-row vision-div w3-padding-large roadmap-div gray-2-color">
+      <h1>ROADMAP</h1>
+      <div class="w3-row-padding">
+        <div class="w3-col l3">
+          <div class="title-container flex-vert">
+            <h5><b>VALUE ACCOUNTING</b></h5>
+          </div>
+          <div class="text-container">
             <p>
               Basic infrastructure for managing tokens and transferring them to
               subinitiatives and users.
             </p>
-            <div class="w3-tag w3-green w3-round">
-              <b>beta</b>
-            </div>
           </div>
-          <div class="w3-col l3">
-            <h3><b>Task Management</b></h3>
-            <p>Kanban board to organize the tasks of an initiative and value these
+          <div class="w3-tag w3-green w3-round">
+            <b>beta</b>
+          </div>
+        </div>
+        <div class="w3-col l3">
+          <div class="title-container flex-vert">
+            <h5><b>TASK MANAGEMENT</b></h5>
+          </div>
+          <div class="text-container">
+            <p>
+              Kanban board to organize the tasks of an initiative and value these
               using the initiative's tokens.
             </p>
-            <div class="w3-tag gray-1 w3-round">
-              <b>soon</b>
-            </div>
           </div>
-          <div class="w3-col l3">
-            <h3><b>Distributed Governance</b></h3>
+          <div class="w3-tag gray-1 w3-round">
+            <b>soon</b>
+          </div>
+        </div>
+        <div class="w3-col l3">
+          <div class="title-container flex-vert">
+            <h5><b>DISTRIBUTED GOVERNANCE</b></h5>
+          </div>
+          <div class="text-container">
             <p>A dedicated module that enables initiatives to take decisions
               collectively and efficiently.
             </p>
-            <div class="w3-tag gray-1 w3-round">
-              <b>soon</b>
-            </div>
           </div>
-          <div class="w3-col l3">
-            <h3><b>Collective Model</b></h3>
-            <p>A dedicated module that enables initiatives to collectively influence and
-              agree on the initiative's direction.</p>
-            <div class="w3-tag gray-1 w3-round">
-              <b>soon</b>
-            </div>
+          <div class="w3-tag gray-1 w3-round">
+            <b>soon</b>
           </div>
         </div>
-
-        <h1><b>Participate</b></h1>
-        <div class="w3-row-padding principles-row">
-          <h4>CollectiveOne is an open project itself and is being managed using
-            an <a href="http://old.collectiveone.org/v/project/CollectiveOne" target="_blank">alpha version</a> of the tool.
-            Contributions are welcome!
-            <br>Get your invitation to the project slack
-            <a href="http://old.collectiveone.org/v/slack" target="_blank">here</a> to get involved.</h4>
+        <div class="w3-col l3">
+          <div class="title-container flex-vert">
+            <h5><b>COLLECTIVE MODEL</b></h5>
+          </div>
+          <div class="text-container">
+            <p>
+              A dedicated module that enables initiatives to collectively influence and
+              agree on the initiative's direction.
+            </p>
+          </div>
+          <div class="w3-tag gray-1 w3-round">
+            <b>soon</b>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="w3-row bottom-div w3-padding-large light-grey">
-      <div class="centered-block">
-        <div class="w3-row">
+    <div id="participate" class="w3-row participate-div w3-padding-large light-grey">
+      <div class="">
+        <h1 class="gray-2-color">PARTICIPATE</h1>
+        <div class="w3-row-padding participate-row">
+          <h5>CollectiveOne is an open project itself and is being managed using
+            the <b><a href="http://old.collectiveone.org/v/project/CollectiveOne" target="_blank">alpha version</a></b> of the tool.
+            Contributions are welcome!
+            <br>
+            <br>Get your invitation to the project slack
+            <b><a href="http://old.collectiveone.org/v/slack" target="_blank">here</a></b> to get involved.</h5>
+        </div>
+      </div>
+    </div>
+
+    <div class="w3-row bottom-div">
+      <div class="w3-row icons-row dark-gray w3-center">
+        <p><b>FOLLOW US!</b></p>
+        <div class="icons-container">
           <div class="w3-col s1">
           </div>
           <a class="w3-button w3-col s2 slack-link" href="https://medium.com/collectiveone" target='_blank'>
-            <img src="../../assets/medium_logo-512.png"></img>
-    			</a>
+            <i class="fa fa-medium" aria-hidden="true"></i>
+          </a>
           <a class="w3-button w3-col s2 slack-link" href="http://old.collectiveone.org/v/slack" target='_blank'>
-            <img src="../../assets/slack-512.png"></img>
-    			</a>
-    			<a class="w3-button w3-col s2 email-link" href="mailto:contact@collectiveone.org">
-    				<img src="../../assets/iconmonstr-email-4-icon-27.png"></img>
-    			</a>
-    			<a class="w3-button w3-col s2 twitter-link" href="https://twitter.com/collectiveonepr" target='_blank'>
-    				<img src="../../assets/43-twitter-512.png"></img>
-    			</a>
-    			<a class="w3-button w3-col s2 github-link" href="https://github.com/CollectiveOne" target='_blank'>
-    				<img src="../../assets/GitHub-Mark-120px-plus.png"></img>
-    			</a>
+            <i class="fa fa-slack" aria-hidden="true"></i>
+          </a>
+          <a class="w3-button w3-col s2 email-link" href="mailto:contact@collectiveone.org">
+            <i class="fa fa-envelope-o" aria-hidden="true"></i>
+          </a>
+          <a class="w3-button w3-col s2 twitter-link" href="https://twitter.com/collectiveonepr" target='_blank'>
+            <i class="fa fa-twitter" aria-hidden="true"></i>
+          </a>
+          <a class="w3-button w3-col s2 github-link" href="https://github.com/CollectiveOne" target='_blank'>
+            <i class="fa fa-github" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
-		</div>
+      <div class="w3-centered copyright-row light-grey">
+        <img src="../../assets/by-nc.eu.png" alt="">
+      </div>
+    </div>
   </div>
 </template>
 
@@ -162,15 +218,85 @@ export default {
 }
 
 .top-div {
-  height: 600px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  height: 550px;
+  color: white;
+  background: url('../../assets/home.png') center left / cover no-repeat;
 }
 
-.top-div button {
-  width: 150px;
+.top-div-top-div {
+  position: absolute;
+  height: 100px;
+  padding: 30px 0px 0px 0px;
+  width: 100%;
+}
+
+.top-div .top-div-middle-div {
+  height: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.top-div-top-div img {
+  float: left;
+  margin-bottom: 20px;
+}
+
+.top-div-top-div .logo {
+  width: 220px;
+  margin-left: 30px;
+}
+
+.top-div-top-div .section-tabs {
+  padding-top: 6px;
+  float: right;
+}
+
+.top-div-top-div .section-tab {
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  white-space: nowrap;
+  margin-right: 15px;
+}
+
+.top-div-top-div .section-tabs a {
+  text-decoration: none;
+}
+
+.top-div-top-div .section-tab:hover {
+  font-weight: bold;
+}
+
+.top-div-middle-div h1 {
+  font-weight: bolder;
+}
+
+@media all and (max-width: 601px) {
+
+  .top-div-middle-div h1 {
+    font-size: 20px !important;
+  }
+
+  .top-div-middle-div h5 {
+    font-size: 14px !important;
+  }
+
+  .top-div-top-div .section-tabs {
+    width: 100%;
+  }
+
+  .top-div-top-div .section-tab {
+    width: 24%;
+    margin: 0px;
+  }
+}
+
+.top-div-middle-div button {
+  margin: 0 auto;
+  width: 200px;
 }
 
 .text-div-text {
@@ -178,15 +304,39 @@ export default {
   padding-right: 30px;
 }
 
-.content-div {
-  padding-top: 100px !important;
+.principles-div {
+  padding-top: 50px !important;
   padding-bottom: 50px !important;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-.roadmap-div {
-  padding-bottom: 100px !important;
+.principles-div h1 {
+  margin-bottom: 50px;
 }
 
+.principles-div h5 {
+  color: black;
+}
+
+.principles-div img {
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+.principles-div p {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.principle {
+  margin-bottom: 40px;
+}
+
+.vision-div {
+  padding-top: 50px !important;
+  padding-bottom: 75px !important;
+}
 
 .video-container {
 	position:relative;
@@ -194,6 +344,7 @@ export default {
 	padding-top:0px;
 	height:0;
 	overflow:hidden;
+  margin-top: 20px;
 }
 
 .video-iframe {
@@ -205,16 +356,66 @@ export default {
 	max-width:800px;
 }
 
-.principles-row {
-  margin-bottom: 50px;
+.roadmap-div {
+  padding-top: 50px !important;
+  padding-bottom: 75px !important;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.video-row {
-  margin-bottom: 100px;
+.roadmap-div .title-container {
+  min-height: 70px;
 }
 
-.bottom-div img {
-  width: 30px;
+.roadmap-div h5 {
+  margin: 0;
+  color: black;
+}
+
+.text-container {
+  max-width: 250px;
+  margin: 0 auto;
+  min-height: 100px;
+}
+
+.text-container p {
+  margin: 0;
+}
+
+.participate-div {
+  padding-top: 50px !important;
+  min-height: 368px;
+}
+
+.participate-div h5 {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.participate-row {
+  margin-top: 30px;
+}
+
+.bottom-div .icons-row {
+  padding-top: 30px;
+  padding-bottom: 45px;
+  color: white;
+}
+
+.icons-container {
+  font-size: 22px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.copyright-row {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.copyright-row img {
+  width: 100px;
+  border-radius: 5px;
 }
 
 </style>

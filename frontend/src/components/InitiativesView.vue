@@ -43,7 +43,8 @@
 
   <!-- Initiatives View -->
 
-  <div class="w3-row">
+  <div v-if="userAuthenticated" class="w3-row">
+
     <transition name="slideRightLeft">
       <div v-show="expandNav" :class="navContainerClass">
         <app-initiatives-nav @initiative-selected="initiativeSelected()"></app-initiatives-nav>
@@ -59,6 +60,11 @@
     </div>
 
   </div>
+  <div v-else class="w3-center logged-out-content">
+    <h2>please login to continue</h2>
+    <button class="w3-button app-button" @click="login()">login</button>
+  </div>
+
 </div>
 </template>
 
@@ -94,7 +100,8 @@ export default {
 
   data () {
     return {
-      showContent: true
+      showContent: true,
+      userAuthenticated: false
     }
   },
 
@@ -169,11 +176,20 @@ export default {
       if (this.windowIsSmall) {
         this.$emit('hide-nav')
       }
+    },
+
+    login () {
+      this.$store.state.user.lock.show()
     }
   },
 
   mounted () {
     this.$store.dispatch('updatedMyInitiatives')
+    if (this.$store.state.user.authenticated) {
+      this.userAuthenticated = true
+    } else {
+      this.$store.state.user.lock.show()
+    }
   }
 }
 </script>
@@ -188,8 +204,12 @@ export default {
   width: 90%;
 }
 
-.base-page-div {
+.logged-out-content {
+  margin-top: 100px;
+}
 
+.logged-out-content button {
+  width: 250px;
 }
 
 </style>

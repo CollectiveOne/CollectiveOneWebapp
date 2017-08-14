@@ -1,14 +1,12 @@
 <template>
   <div id="app" class="container-fluid">
-    <component :is="view"></component>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
+import Auth0Lock from 'auth0-lock'
 import { mapActions } from 'vuex'
-
-import LandingView from '@/components/LandingView.vue'
-import LoggedView from '@/components/LoggedView.vue'
 import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
 
 export default {
@@ -18,24 +16,66 @@ export default {
     ...mapActions(['initUserAuthenticated'])
   },
 
-  computed: {
-    view () {
-      if (this.$store.state.user.authenticated && !this.$store.state.support.userEmailNotVerified) {
-        return 'app-logged-view'
-      } else {
-        return 'app-landing-view'
-      }
-    }
-  },
-
   components: {
-    AppLandingView: LandingView,
-    AppLoggedView: LoggedView,
     AppNewInitiativeModal: NewInitiativeModal
   },
 
-  mounted () {
-    this.initUserAuthenticated(this.$route.path)
+  created () {
+    debugger
+    var redirectPath = this.$route.path
+    var options = {
+      auth: {
+        state: redirectPath,
+        responseType: 'token',
+        params: {
+          connectionScopes: {
+            connectionName: [ 'openid', 'user_metadata', 'app_metadata', 'picture' ]
+          }
+        }
+      },
+      theme: {
+        logo: 'https://image.ibb.co/bTQ9Ev/logo_color_auth0.png',
+        primaryColor: '#15a5cc'
+      },
+      languageDictionary: {
+        title: 'welcome'
+      }
+    }
+
+    var lock = new Auth0Lock(process.env.AUTH0_CLIENT_ID, process.env.AUTH0_DOMAIN, options)
+    var context = this.$store
+
+    lock.on('authenticated', (authResult) => {
+      localStorage.setItem('access_token', authResult.accessToken)
+      localStorage.setItem('id_token', authResult.idToken)
+      context.dispatch('updateAuthenticated')
+      if (authResult.state.startsWith('/inits')) {
+        window.location.href = '/#' + authResult.state
+      } else {
+        window.location.href = '/'
+      }
+    })
+
+    lock.on('authorization_error', (error) => {
+      console.log(error)
+    })
+
+    context.commit('setLock', lock)
+    context.dispatch('updateAuthenticated')
+
+    /* set auto-update ever 5 seconds */
+    if (context.state.intervalId == null) {
+      context.state.intervalId = setInterval(() => {
+        /* update everything every 10 s */
+        if (context.state.authenticated) {
+          context.dispatch('updateNotifications')
+          context.dispatch('updatedMyInitiatives')
+          context.dispatch('refreshInitiative')
+          context.dispatch('refreshTransfers')
+          context.commit('triggerUpdateAssets')
+        }
+      }, 10000)
+    }
   }
 }
 </script>

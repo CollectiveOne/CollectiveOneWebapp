@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="logged-view">
+  <div>
     <app-header @expand-nav="expandNav = !expandNav"></app-header>
-    <div class="logged-content">
+    <div class="app-content">
       <router-view @hide-nav="expandNav = false" :expandNav="expandNav"></router-view>
     </div>
   </div>
@@ -42,7 +42,7 @@ export default {
 
 <style scoped>
 
-.logged-content {
+.app-content {
   margin-top:65px;
 }
 

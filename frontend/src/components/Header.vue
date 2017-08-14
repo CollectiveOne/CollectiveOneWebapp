@@ -12,8 +12,8 @@
         <i class="fa fa-bars"></i>
       </div>
       <router-link :to="'/inits'" class="logo-container w3-bar-item noselect cursor-pointer">
-        <img class="logo w3-hide-small" src="../assets/Logo-Dark.png" alt="">
-        <img class="icon w3-hide-medium w3-hide-large" src="../assets/Icon.png" alt="">
+        <img class="logo w3-hide-small" src="../assets/logo-color.png" alt="">
+        <img class="icon w3-hide-medium w3-hide-large" src="../assets/imago-red.png" alt="">
       </router-link>
 
       <div v-if="$store.state.user.profile" class="w3-right">
@@ -41,13 +41,6 @@
      </div>
     </div>
 
-    <!-- Navbar on small screens -->
-    <div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium w3-large">
-      <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 1</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 2</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large">Link 3</a>
-      <a href="#" class="w3-bar-item w3-button w3-padding-large">My Profile</a>
-    </div>
   </div>
 </template>
 
@@ -114,8 +107,8 @@ export default {
 }
 
 .logo {
-  margin-top: 20px;
-  height: 25px;
+  margin-top: 16px;
+  height: 28px;
 }
 
 .icon {

@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import Auth0Lock from 'auth0-lock'
 
 const state = {
   lock: null,
@@ -28,61 +27,6 @@ const mutations = {
 }
 
 const actions = {
-
-  initUserAuthenticated: (context, redirectPath) => {
-    var options = {
-      auth: {
-        state: redirectPath,
-        responseType: 'token',
-        params: {
-          connectionScopes: {
-            connectionName: [ 'openid', 'user_metadata', 'app_metadata', 'picture' ]
-          }
-        }
-      },
-      theme: {
-        logo: 'https://image.ibb.co/d5abxv/Logo_Dark_Auth0.png',
-        primaryColor: '#15a5cc'
-      },
-      languageDictionary: {
-        title: 'welcome'
-      }
-    }
-
-    var lock = new Auth0Lock(process.env.AUTH0_CLIENT_ID, process.env.AUTH0_DOMAIN, options)
-
-    lock.on('authenticated', (authResult) => {
-      localStorage.setItem('access_token', authResult.accessToken)
-      localStorage.setItem('id_token', authResult.idToken)
-      context.dispatch('updateAuthenticated')
-      if (authResult.state.startsWith('/inits')) {
-        window.location.href = '/#' + authResult.state
-      } else {
-        window.location.href = '/'
-      }
-    })
-
-    lock.on('authorization_error', (error) => {
-      console.log(error)
-    })
-
-    context.commit('setLock', lock)
-    context.dispatch('updateAuthenticated')
-
-    /* set auto-update ever 5 seconds */
-    if (context.state.intervalId == null) {
-      context.state.intervalId = setInterval(() => {
-        /* update everything every 10 s */
-        if (context.state.authenticated) {
-          context.dispatch('updateNotifications')
-          context.dispatch('updatedMyInitiatives')
-          context.dispatch('refreshInitiative')
-          context.dispatch('refreshTransfers')
-          context.commit('triggerUpdateAssets')
-        }
-      }, 10000)
-    }
-  },
 
   updateAuthenticated: (context) => {
     context.commit('authenticate', !!localStorage.getItem('id_token'))
