@@ -1,7 +1,8 @@
 <template lang="html">
   <div class="">
     <div v-for="(parent, ix) in reversedParents" class="w3-left">
-      <router-link :to="'/inits/' + parent.id" tag="div" class="w3-left cursor-pointer" :class="{ 'parent-2': ix > 0 }">
+      <router-link :to="{name: 'Initiative', params: {'initiativeId': parent.id }}"
+        tag="div" class="w3-left cursor-pointer" :class="{ 'parent-2': ix > 0 }">
         {{ parent.meta.name }}
       </router-link>
       <div class="w3-left separator">

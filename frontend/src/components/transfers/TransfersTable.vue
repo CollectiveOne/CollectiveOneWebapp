@@ -14,7 +14,7 @@
         <tr v-for="transfer in transfers" :key="transfer.id">
           <td>{{ dateString(transfer.orderDate) }}</td>
           <td v-if="showFrom">
-            <router-link tag="div" :to="'/inits/' + transfer.receiverId"
+            <router-link tag="div" :to="{name: 'Initiative', params: {'initiativeId': transfer.receiverId}}"
               class="w3-tag w3-round-large cursor-pointer noselect"
               :style="{'background-color': $store.getters.colorOfInitiative(transfer.senderId)}">
               {{ transfer.senderName }}
@@ -22,7 +22,7 @@
           </td>
           <td>{{ tokensString(transfer.value) }} {{ transfer.assetName }}</td>
           <td>
-            <router-link tag="div" :to="'/inits/' + transfer.receiverId"
+            <router-link tag="div" :to="{name: 'Initiative', params: {'initiativeId': transfer.receiverId}}"
               class="w3-tag w3-round-large cursor-pointer noselect"
               :style="{'background-color': $store.getters.colorOfInitiative(transfer.receiverId)}">
               {{ transfer.receiverName }}

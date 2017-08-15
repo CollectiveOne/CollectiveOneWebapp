@@ -25,7 +25,7 @@
             </router-link>
           </td>
           <td v-if="showFrom">
-            <router-link tag="div" :to="'/inits/' + assignation.initiativeId"
+            <router-link tag="div" :to="{name: 'Initiative', params: {'initiativeId': assignation.initiativeId}}"
               class="w3-tag w3-round-large cursor-pointer noselect"
               :style="{'background-color': $store.getters.colorOfInitiative(assignation.initiativeId)}">
               {{ assignation.initiativeName }}

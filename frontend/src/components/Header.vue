@@ -11,7 +11,7 @@
         @click="$emit('expand-nav')">
         <i class="fa fa-bars"></i>
       </div>
-      <router-link :to="'/inits'" class="logo-container w3-bar-item noselect cursor-pointer">
+      <router-link :to="{name: 'InitiativesHome'}" class="logo-container w3-bar-item noselect cursor-pointer">
         <img class="logo w3-hide-small" src="../assets/logo-color.png" alt="">
         <img class="icon w3-hide-medium w3-hide-large" src="../assets/imago-red.png" alt="">
       </router-link>
@@ -72,7 +72,7 @@ export default {
     },
     goHome () {
       this.showUserOptions = false
-      this.$router.push('/inits')
+      this.$router.push({name: 'InitiativesHome'})
     }
   },
 

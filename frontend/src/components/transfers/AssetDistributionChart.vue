@@ -61,7 +61,7 @@
                       <transition name="slideDownUp">
                         <div class="sub-elements" v-if="showSubinitiatives">
                           <router-link tag="div"
-                            :to="'/inits/' + subinitiativeAssets.receiverId"
+                            :to="{name: 'Initiative', params: {'initiativeId': subinitiativeAssets.receiverId}}"
                             class="w3-row cursor-pointer"
                             v-for="subinitiativeAssets in assetData.transferredToSubinitiatives"
                             :key="subinitiativeAssets.assetId">

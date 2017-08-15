@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="container-fluid">
+  <div class="container-fluid">
     <router-view></router-view>
   </div>
 </template>
@@ -20,8 +20,7 @@ export default {
     AppNewInitiativeModal: NewInitiativeModal
   },
 
-  created () {
-    debugger
+  mounted () {
     var redirectPath = this.$route.path
     var options = {
       auth: {
@@ -35,7 +34,7 @@ export default {
       },
       theme: {
         logo: 'https://image.ibb.co/bTQ9Ev/logo_color_auth0.png',
-        primaryColor: '#15a5cc'
+        primaryColor: '#bc1c34'
       },
       languageDictionary: {
         title: 'welcome'
@@ -43,39 +42,21 @@ export default {
     }
 
     var lock = new Auth0Lock(process.env.AUTH0_CLIENT_ID, process.env.AUTH0_DOMAIN, options)
-    var context = this.$store
 
     lock.on('authenticated', (authResult) => {
+      console.log('user authenticated')
       localStorage.setItem('access_token', authResult.accessToken)
       localStorage.setItem('id_token', authResult.idToken)
-      context.dispatch('updateAuthenticated')
-      if (authResult.state.startsWith('/inits')) {
-        window.location.href = '/#' + authResult.state
-      } else {
-        window.location.href = '/'
-      }
+      this.$store.dispatch('updateAuthenticated', { state: authResult.state })
     })
 
     lock.on('authorization_error', (error) => {
+      console.log('error authenticating')
       console.log(error)
     })
 
-    context.commit('setLock', lock)
-    context.dispatch('updateAuthenticated')
-
-    /* set auto-update ever 5 seconds */
-    if (context.state.intervalId == null) {
-      context.state.intervalId = setInterval(() => {
-        /* update everything every 10 s */
-        if (context.state.authenticated) {
-          context.dispatch('updateNotifications')
-          context.dispatch('updatedMyInitiatives')
-          context.dispatch('refreshInitiative')
-          context.dispatch('refreshTransfers')
-          context.commit('triggerUpdateAssets')
-        }
-      }, 10000)
-    }
+    this.$store.commit('setLock', lock)
+    this.$store.dispatch('updateAuthenticated', { state: '' })
   }
 }
 </script>

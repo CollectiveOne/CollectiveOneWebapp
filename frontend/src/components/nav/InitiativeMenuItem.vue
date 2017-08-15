@@ -123,7 +123,7 @@ export default {
   methods: {
     initiativeClicked () {
       this.$emit('initiative-selected')
-      this.$router.push('/inits/' + this.initiative.id)
+      this.$router.push({name: 'Initiative', params: {'initiativeId': this.initiative.id}})
     },
     newSubInitiative () {
       this.$store.commit('showNewSubInitiativeModal', {

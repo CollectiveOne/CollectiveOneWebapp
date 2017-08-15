@@ -14,7 +14,7 @@
         </td>
         <td>{{ submember.user.nickname }}</td>
         <td>
-          <router-link tag="div" :to="'/inits/' + subinitiative.id"
+          <router-link tag="div" :to="{name: 'Initiative', params: {'initiativeId': subinitiative.id}}"
             v-for="subinitiative in submember.subinitiatives"
             :key="subinitiative.id"
             class="subinitiative-tag w3-tag w3-round-large cursor-pointer noselect"

@@ -28,9 +28,46 @@ const mutations = {
 
 const actions = {
 
-  updateAuthenticated: (context) => {
+  updateAuthenticated: (context, payload) => {
+    /* check local storage */
     context.commit('authenticate', !!localStorage.getItem('id_token'))
-    context.dispatch('updateProfile')
+
+    /* if user is authenticated */
+    if (context.state.authenticated) {
+      /* read profile from C1 DB */
+      context.dispatch('updateProfile')
+
+      /* set auto-update ever 5 seconds */
+      if (context.state.intervalId == null) {
+        context.state.intervalId = setInterval(() => {
+          /* update everything every 10 s */
+          if (context.state.authenticated) {
+            context.dispatch('updateNotifications')
+            context.dispatch('updatedMyInitiatives')
+            context.dispatch('refreshInitiative')
+            context.dispatch('refreshTransfers')
+            context.commit('triggerUpdateAssets')
+          }
+        }, 10000)
+      }
+
+      // /* if user is not authenticated */
+      // var state = payload.state
+      // if (state !== '') {
+      //   if (state.startsWith('/landing')) {
+      //     /* user comes from landing and was authenticated, go to app then */
+      //     window.location.href = '/#/app/inits'
+      //   } else {
+      //     /* user comes from a custom url */
+      //     window.location.href = '/#' + state
+      //   }
+      // } else {
+      //   window.location.href = '/#/app/inits'
+      // }
+    } else {
+      // /* if user is not authenticated */
+      // window.location.href = '/#/landing'
+    }
   },
 
   updateProfile: (context) => {

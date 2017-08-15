@@ -409,7 +409,7 @@ export default {
 }
 
 .copyright-row {
-  padding-top: 15px;
+  padding-top: 17px;
   padding-bottom: 15px;
 }
 

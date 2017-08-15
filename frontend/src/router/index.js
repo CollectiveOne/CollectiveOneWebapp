@@ -18,7 +18,7 @@ Vue.use(Router)
 export default new Router({
   routes:
   [
-    { path: '/landing', name: 'LandingPage', component: LandingView },
+    { path: '/landing', name: 'Landing', component: LandingView },
     { path: '/app',
       name: 'AppView',
       component: AppView,
