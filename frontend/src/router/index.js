@@ -12,6 +12,7 @@ import Unsubscribe from '@/components/user/Unsubscribe.vue'
 import OverviewSection from '@/components/initiative/OverviewSection.vue'
 import PeopleSection from '@/components/initiative/PeopleSection.vue'
 import TransfersSection from '@/components/initiative/TransfersSection.vue'
+import ModelSection from '@/components/initiative/ModelSection.vue'
 
 Vue.use(Router)
 
@@ -41,7 +42,8 @@ export default new Router({
                 { path: 'overview', name: 'InitiativeOverview', component: OverviewSection, meta: {'column': 0} },
                 { path: 'people', name: 'InitiativePeople', component: PeopleSection, meta: {'column': 1} },
                 { path: 'assignations', name: 'InitiativeAssignations', component: TransfersSection, meta: {'column': 3} },
-                { path: 'assignations/:assignationId', name: 'InitiativeAssignation', component: TransfersSection, meta: {'column': 3} }
+                { path: 'assignations/:assignationId', name: 'InitiativeAssignation', component: TransfersSection, meta: {'column': 3} },
+                { path: 'model', name: 'InitiativeModel', component: ModelSection, meta: {'column': 4} }
               ]
             }
           ]

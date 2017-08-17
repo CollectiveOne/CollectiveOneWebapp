@@ -40,22 +40,28 @@
 
         <div class="section-tabs w3-row w3-center light-grey">
           <router-link tag="div" :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
-            class="w3-col s4 tablink w3-bottombar w3-hover-light-grey"
+            class="w3-col s3 tablink w3-bottombar w3-hover-light-grey"
             :class="{'border-blue': isOverview}"
             @click="">
             <h5 class="noselect" :class="{'bold-text': isOverview}">Overview</h5>
           </router-link>
           <router-link tag="div" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
-            class="w3-col s4 tablink w3-bottombar w3-hover-light-grey"
+            class="w3-col s3 tablink w3-bottombar w3-hover-light-grey"
             :class="{'border-blue': isPeople}"
             @click="">
             <h5 class="noselect" :class="{'bold-text': isPeople}">People</h5>
           </router-link>
           <router-link tag="div" :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
-            class="w3-col s4 tablink w3-bottombar w3-hover-light-grey"
+            class="w3-col s3 tablink w3-bottombar w3-hover-light-grey"
             :class="{'border-blue': isAssignations}"
             @click="">
             <h5 class="noselect" :class="{'bold-text': isAssignations}">Transfers</h5>
+          </router-link>
+          <router-link tag="div" :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
+            class="w3-col s3 tablink w3-bottombar w3-hover-light-grey"
+            :class="{'border-blue': isModel}"
+            @click="">
+            <h5 class="noselect" :class="{'bold-text': isModel}">Model</h5>
           </router-link>
         </div>
 
@@ -119,6 +125,15 @@ export default {
       var res = false
       this.$route.matched.forEach((e) => {
         if (e.name === 'InitiativeAssignations') {
+          res = true
+        }
+      })
+      return res
+    },
+    isModel () {
+      var res = false
+      this.$route.matched.forEach((e) => {
+        if (e.name === 'InitiativeModel') {
           res = true
         }
       })

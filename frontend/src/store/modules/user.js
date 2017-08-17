@@ -51,7 +51,7 @@ const actions = {
         }, 10000)
       }
 
-      // /* if user is not authenticated */
+      /* if user is not authenticated */
       // var state = payload.state
       // if (state !== '') {
       //   if (state.startsWith('/landing')) {
@@ -65,7 +65,7 @@ const actions = {
       //   window.location.href = '/#/app/inits'
       // }
     } else {
-      // /* if user is not authenticated */
+      /* if user is not authenticated */
       // window.location.href = '/#/landing'
     }
   },
