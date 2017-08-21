@@ -138,7 +138,53 @@ const actions = {
                     id: '',
                     title: 'Basic Module',
                     description: 'Specification of the value accounting base module',
-                    cards: [],
+                    cards: [
+                      {
+                        id: '402010',
+                        title: '',
+                        text: 'The basic module enables initiatives to do value accounting thorugh the specification of initiative assets (tokens). It also permits the subdivision of an initiative into multiple subinitiatives iteratively.'
+                      }
+                    ],
+                    subsections: [
+                      {
+                        id: '',
+                        title: 'User Experience',
+                        description: 'This sections describes the user experience of the basic module',
+                        cards: [
+                          {
+                            id: '505050',
+                            title: '',
+                            text: 'The basic module has three main features: - Create initiatives and subinitiatives, - Keep track of the members of an initiative, and - Create initiative assets in the form of tokens to be transferred to their members.'
+                          }
+                        ],
+                        subsections: []
+                      }
+                    ]
+                  },
+                  {
+                    id: '',
+                    title: 'Tasks Module',
+                    description: 'Specification of the tasks management and valuation module',
+                    cards: [
+                      {
+                        id: '402010',
+                        title: '',
+                        text: 'The tasks module enables initiatives to keep track of the work to be done, and assign it to the initiative contributors.'
+                      }
+                    ],
+                    subsections: []
+                  },
+                  {
+                    id: '',
+                    title: 'Model Module',
+                    description: 'Specification of the model module',
+                    cards: [
+                      {
+                        id: '402010',
+                        title: '',
+                        text: 'The “model” module is a module specifically designed to help the contributors of an initiative share a common understanding of what they are supposed to create together.'
+                      }
+                    ],
                     subsections: []
                   }
                 ]

@@ -60,6 +60,27 @@ public class GovernanceService {
 	}
 	
 	@Transactional
+	public DecisionVerdict isRolesAndEditor(UUID initiativeId, UUID userId) {
+		DecisionVerdict verdict = null;
+		Governance governance = governanceRepository.findByInitiative_Id(initiativeId);
+		
+		switch (governance.getType()) {
+		case ROLES:
+			if (isAdmin(governance.getId(), userId)) {
+				verdict = DecisionVerdict.APPROVED;
+			} else if (isAdmin(governance.getId(), userId)) {
+				verdict = DecisionVerdict.APPROVED;
+			} else {
+				verdict = DecisionVerdict.DENIED;
+			}
+			
+			break;
+		}
+		
+		return verdict;
+	}
+	
+	@Transactional
 	public DecisionVerdict canCreateSubInitiative(UUID parentInitiativeId, UUID creatorId) {
 		return isRolesAndAdmin(parentInitiativeId, creatorId);
 	}
@@ -102,6 +123,14 @@ public class GovernanceService {
 	public DecisionVerdict canDeleteInitiative(UUID initiativeId, UUID creatorId) {
 		return isRolesAndAdmin(initiativeId, creatorId);
 	}
+	
+	@Transactional
+	public DecisionVerdict canCreateView(UUID initiativeId, UUID creatorId) {
+		return isRolesAndEditor(initiativeId, creatorId);
+	}
+	
+	
+	/** ------------------ */
 	
 	private Boolean isAdmin(UUID governanceId, UUID userId) {
 		DecisionMaker decisionMaker = decisionMakerRepository.findByGovernance_IdAndUser_C1Id(governanceId, userId);

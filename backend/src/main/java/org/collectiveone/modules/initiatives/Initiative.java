@@ -1,6 +1,8 @@
 package org.collectiveone.modules.initiatives;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -18,6 +20,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.governance.Governance;
+import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -57,6 +60,9 @@ public class Initiative {
 	
 	@OneToOne
 	private InitiativeMeta meta;	
+	
+	@OneToMany(mappedBy = "initiative")
+	private List<ModelView> modelViews = new ArrayList<ModelView>();
 	
 	
 	public InitiativeDto toDto() {
@@ -120,6 +126,12 @@ public class Initiative {
 	}
 	public void setMeta(InitiativeMeta meta) {
 		this.meta = meta;
+	}
+	public List<ModelView> getModelViews() {
+		return modelViews;
+	}
+	public void setModelViews(List<ModelView> modelViews) {
+		this.modelViews = modelViews;
 	}
 	
 }

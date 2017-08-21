@@ -136,6 +136,10 @@ textarea {
   color: black;
 }
 
+.light-grey-color {
+  color: #eff3f6;
+}
+
 .white-text {
   color: white;
 }
@@ -222,7 +226,6 @@ textarea {
   overflow: hidden;
 }
 
-
 .cursor-pointer {
   cursor: pointer !important;
 }
@@ -244,6 +247,31 @@ textarea {
   margin-left: 16px;
 }
 
+.model-action-button {
+  background-color: rgba(239, 243, 246, 0.65) !important;
+}
+
+.div-close-modal {
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+  text-align: right;
+}
+
+.fa-close-modal {
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.div-modal-content {
+  padding-top: 20px;
+  padding-bottom: 25px;
+}
+
+.modal-bottom-btns-row button {
+  width: 100%;
+}
+
 /* Animations */
 
 .fadeenter-enter-active {
@@ -251,13 +279,6 @@ textarea {
 }
 
 .fadeenter-enter {
-  opacity: 0
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .9s
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
   opacity: 0
 }
 
