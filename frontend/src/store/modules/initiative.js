@@ -3,7 +3,8 @@ import Vue from 'vue'
 const state = {
   initiative: null,
   initiativeTransfers: null,
-  initiativeAssignations: null
+  initiativeAssignations: null,
+  initiativeModel: null
 }
 
 const getters = {

@@ -7,7 +7,8 @@
       <div class="slider-container">
         <transition name="slideDownUp">
           <app-model-new-section-modal
-            v-if="showNewSectionModal" :viewId="view.id"
+            v-if="showNewSectionModal"
+            :viewId="view.id" :initiativeId="view.initiativeId"
             :key="view.id"
             @close="showNewSectionModal = false">
           </app-model-new-section-modal>
@@ -32,6 +33,7 @@
       v-for="section in view.sections"
       :key="section.id"
       :section="section"
+      :initiativeId="view.initiativeId"
       :level="0"
       class="view-sections">
     </app-model-section>

@@ -3,10 +3,21 @@
     <div class="slider-container">
       <transition name="slideDownUp">
         <app-model-section-modal
-          v-if="showModal" :sectionId="section.id"
+          v-if="showSectionModal" :sectionId="section.id"
           :key="section.id"
-          @close="showModal = false">
+          @close="showSectionModal = false">
         </app-model-section-modal>
+      </transition>
+    </div>
+
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-new-card-modal
+          v-if="showNewCardModal"
+          :sectionId="section.id" :initiativeId="initiativeId"
+          :key="section.id"
+          @close="showNewCardModal = false">
+        </app-model-new-card-modal>
       </transition>
     </div>
 
@@ -68,12 +79,12 @@
         <div v-if="showActionButton" class="w3-display-topright action-buttons-container">
           <div
             class="w3-button model-action-button gray-1-color w3-right"
-            @click="showModal = true">
+            @click="showSectionModal = true">
             <i class="fa fa-expand" aria-hidden="true"></i>
           </div>
           <div
             class="w3-button model-action-button gray-1-color w3-right"
-            @click="showModal = true">
+            @click="showNewCardModal = true">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
           </div>
         </div>
@@ -86,19 +97,25 @@
 <script>
 import ModelCard from '@/components/model/ModelCard.vue'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
+import ModelNewCardModal from '@/components/model/modals/ModelNewCardModal.vue'
 
 export default {
   name: 'app-model-section',
 
   components: {
     'app-model-card': ModelCard,
-    'app-model-section-modal': ModelSectionModal
+    'app-model-section-modal': ModelSectionModal,
+    'app-model-new-card-modal': ModelNewCardModal
   },
 
   props: {
     section: {
       type: Object,
       default: null
+    },
+    initiativeId: {
+      type: String,
+      default: ''
     },
     level: {
       type: Number,
@@ -110,7 +127,8 @@ export default {
     return {
       showSubsections: false,
       showActionButton: false,
-      showModal: false
+      showSectionModal: false,
+      showNewCardModal: false
     }
   },
 

@@ -34,7 +34,7 @@ public class ModelController {
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/view", method = RequestMethod.POST) 
 	public PostResult createView(
-			@PathVariable String initiativeIdStr,
+			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestBody ModelViewDto viewDto) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
@@ -48,7 +48,7 @@ public class ModelController {
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section", method = RequestMethod.POST)
 	public PostResult createSection(
-			@PathVariable String initiativeIdStr,
+			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestBody ModelSectionDto sectionDto) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
@@ -62,7 +62,7 @@ public class ModelController {
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/card", method = RequestMethod.POST)
 	public PostResult createCard(
-			@PathVariable String initiativeIdStr,
+			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestBody CardDto cardDto) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
@@ -77,9 +77,8 @@ public class ModelController {
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model", method = RequestMethod.GET) 
 	public GetResult<ModelDto> getView(
-			@PathVariable String initiativeIdStr,
-			@RequestParam(defaultValue = "1") Integer level,
-			@RequestBody ModelViewDto viewDto) {
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@RequestParam(defaultValue = "1") Integer level) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		

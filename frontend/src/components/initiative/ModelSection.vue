@@ -14,8 +14,12 @@
 
   <div class="w3-container"
     v-if="initiativeModel">
-    <button @click="showNewViewModal = true" class="w3-button app-button">new</button>
-    <app-model-view :view="initiativeModel.views[showView]" :key="initiativeModel.views[showView].id"></app-model-view>
+    <div class="w3-row w3-margin-top">
+      <button @click="showNewViewModal = true" class="w3-button app-button">new</button>
+    </div>
+    <div class="w3-row w3-margin-top">
+      <app-model-view :view="initiativeModel.views[showView]" :key="showView"></app-model-view>
+    </div>
   </div>
 </div>
 
@@ -43,7 +47,7 @@ export default {
       return this.$store.state.initiative.initiative
     },
     initiativeModel () {
-      return this.initiative.initiativeModel
+      return this.$store.state.initiative.initiativeModel
     }
   },
 

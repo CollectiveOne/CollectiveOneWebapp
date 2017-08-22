@@ -8,12 +8,12 @@
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>Create new section</h2>
+          <h2>Create new card</h2>
         </div>
 
         <div class="w3-container div-modal-content">
 
-          <label class=""><b>Title <span class="w3-small error-text">(required)</span></b></label>
+          <label class=""><b>Title</b></label>
           <input v-model="title"
             class="w3-input w3-hover-light-grey" type="text"
             :class="{ 'error-input' : titleErrorShow }">
@@ -27,14 +27,14 @@
           </app-error-panel>
 
           <br>
-          <label class=""><b>Description <span class="w3-small error-text">(required)</span></b></label>
-          <textarea v-model="description"
+          <label class=""><b>Text <span class="w3-small error-text">(required)</span></b></label>
+          <textarea v-model="text"
             class="w3-input w3-border w3-round w3-hover-light-grey"
-            :class="{ 'error-input' : descriptionErrorShow }">
+            :class="{ 'error-input' : textErrorShow }">
           </textarea>
           <app-error-panel
-            :show="descriptionErrorShow"
-            message="please include a description of this section">
+            :show="textErrorShow"
+            message="please include the text of this card">
           </app-error-panel>
           <hr>
 
@@ -62,7 +62,7 @@ export default {
       type: String,
       default: ''
     },
-    viewId: {
+    sectionId: {
       type: String,
       default: ''
     }
@@ -70,11 +70,10 @@ export default {
 
   data () {
     return {
-      section: null,
       title: '',
-      description: '',
+      text: '',
       titleEmptyError: false,
-      descriptionEmptyError: false
+      textEmptyError: false
     }
   },
 
@@ -94,11 +93,11 @@ export default {
     titleTooLongShow () {
       return this.titleTooLong
     },
-    descriptionEmpty () {
-      return this.description === ''
+    textEmpty () {
+      return this.text === ''
     },
-    descriptionErrorShow () {
-      return this.descriptionEmptyError && this.descriptionEmpty
+    textErrorShow () {
+      return this.textEmptyError && this.textEmpty
     }
   },
 
@@ -110,28 +109,23 @@ export default {
     accept () {
       var ok = true
 
-      if (this.titleEmpty) {
+      if (this.titleTooLong) {
         ok = false
-        this.titleEmptyError = true
-      } else {
-        if (this.titleTooLong) {
-          ok = false
-        }
       }
 
-      if (this.descriptionEmpty) {
+      if (this.textEmpty) {
         ok = false
-        this.descriptionEmptyError = true
+        this.textEmptyError = true
       }
 
       if (ok) {
-        let sectionDto = {
-          viewId: this.viewId,
+        let cardDto = {
+          sectionId: this.sectionId,
           title: this.title,
-          description: this.description
+          text: this.text
         }
 
-        this.axios.post('/1/secured/initiative/' + this.initiativeId + '/model/section', sectionDto).then((response) => {
+        this.axios.post('/1/secured/initiative/' + this.initiativeId + '/model/card', cardDto).then((response) => {
           if (response.data.result === 'success') {
             this.closeThis()
             this.$store.dispatch('refreshModel')

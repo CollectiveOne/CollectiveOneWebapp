@@ -49,6 +49,7 @@ public class ModelView {
 		ModelViewDto viewDto = new ModelViewDto();
 		
 		viewDto.setId(id.toString());
+		viewDto.setInitiativeId(initiative.getId().toString());
 		viewDto.setTitle(title);
 		viewDto.setDescription(description);
 		

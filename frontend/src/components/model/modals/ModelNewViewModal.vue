@@ -99,34 +99,6 @@ export default {
   },
 
   methods: {
-    updateSectionData () {
-      // this.axios.get('/1/secured/token/' + this.assetId).then((response) => {
-      /* TODO: update backend to return section data */
-      this.section = {
-        id: '1010',
-        title: 'Vision',
-        description: 'Describes the vision of CollectiveOne in the long-term',
-        nCards: 1,
-        nCardsSubsections: 15,
-        nSubsections: 3,
-        comments: [
-          {
-            user: 'user 1',
-            text: 'Lorem ipsum dolor sit amet, no novum viris tempor vim. Id mel omnis animal epicuri, wisi philosophia vel eu. Ius iuvaret abhorreant ad. Vix dolor civibus ex, aeque persecuti constituam sed in. Vis id alteru'
-          },
-          {
-            user: 'user 2',
-            text: 'Sapientem corrumpit forensibus usu at. Te sed dolorem maluisset, vix stet audiam neglegentur ex. Vim id minim iudico platonem. No quaeque perpetua sententiae per, id congue veniam vix. Pro erant regione ea.'
-          },
-          {
-            user: 'user 3',
-            text: 'Clita voluptua mel no. Enim ceteros ut mea, mei percipit invenire cu. Fabulas efficiantur signiferumque vel eu. Viris tacimates id sed. Ea nec eirmod volumus.'
-          }
-        ]
-      }
-      // })
-    },
-
     closeThis () {
       this.$emit('close')
     },
@@ -149,22 +121,21 @@ export default {
       }
 
       if (ok) {
-        let sectionDto = {
+        let viewDto = {
           title: this.title,
           description: this.description
         }
 
-        console.log(sectionDto)
-        // this.axios.post('/1/secured/model', sectionDto).then((response) => {
-        //   if (response.data.result === 'success') {
-        //     this.closeThis()
-        //     this.$store.dispatch('updatedModel')
-        //   } else {
-        //     this.showOutputMessage(response.data.message)
-        //   }
-        // }).catch((error) => {
-        //   console.log(error)
-        // })
+        this.axios.post('/1/secured/initiative/' + this.initiativeId + '/model/view', viewDto).then((response) => {
+          if (response.data.result === 'success') {
+            this.closeThis()
+            this.$store.dispatch('refreshModel')
+          } else {
+            this.showOutputMessage(response.data.message)
+          }
+        }).catch((error) => {
+          console.log(error)
+        })
       }
     }
   },
