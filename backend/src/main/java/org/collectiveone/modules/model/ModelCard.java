@@ -33,6 +33,17 @@ public class ModelCard {
 	private String text;
 	
 	
+	public ModelCardDto toDto() {
+		ModelCardDto cardDto = new ModelCardDto();
+		
+		cardDto.setId(id.toString());
+		cardDto.setTitle(title);
+		cardDto.setText(text);
+		
+		return cardDto;
+	}
+	
+	
 	public UUID getId() {
 		return id;
 	}

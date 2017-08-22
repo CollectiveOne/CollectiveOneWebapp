@@ -1,11 +1,12 @@
 package org.collectiveone.modules.model;
 
-public class ViewDto {
+public class CardDto {
 
 	private String id;
 	private String initiativeId;
+	private String sectionId;
 	private String title;
-	private String description;
+	private String text;
 	
 	public String getId() {
 		return id;
@@ -19,18 +20,23 @@ public class ViewDto {
 	public void setInitiativeId(String initiativeId) {
 		this.initiativeId = initiativeId;
 	}
+	public String getSectionId() {
+		return sectionId;
+	}
+	public void setSectionId(String sectionId) {
+		this.sectionId = sectionId;
+	}
 	public String getTitle() {
 		return title;
 	}
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getDescription() {
-		return description;
+	public String getText() {
+		return text;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setText(String text) {
+		this.text = text;
 	}
-	
 	
 }

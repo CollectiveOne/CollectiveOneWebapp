@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.initiatives.Initiative;
@@ -40,7 +41,25 @@ public class ModelView {
 	private String description;
 	
 	@OneToMany
+	@OrderColumn(name = "sections_order")
 	private List<ModelSection> sections = new ArrayList<ModelSection>();
+	
+	
+	public ModelViewDto toDto(Integer level) {
+		ModelViewDto viewDto = new ModelViewDto();
+		
+		viewDto.setId(id.toString());
+		viewDto.setTitle(title);
+		viewDto.setDescription(description);
+		
+		if (level >= 1) {
+			for (ModelSection section : sections) {
+				viewDto.getSections().add(section.toDto(level - 1));
+			}
+		}
+		
+		return viewDto;
+	}
 
 	public UUID getId() {
 		return id;

@@ -38,6 +38,9 @@ const mutations = {
   setTransfers: (state, payload) => {
     state.initiativeTransfers = payload
   },
+  setModel: (state, payload) => {
+    state.initiativeModel = payload
+  },
   setAssignations: (state, payload) => {
     state.initiativeAssignations = payload
   }
@@ -55,146 +58,6 @@ const actions = {
         addLoggedUser: true
       }
     }).then((response) => {
-      /* TODO: temporary simulation of backend */
-      var initiativeModel = {
-        views: [
-          {
-            id: '10',
-            title: 'General View',
-            sections: [
-              {
-                id: '1010',
-                title: 'Vision',
-                description: 'Describes the vision of CollectiveOne in the long-term',
-                cards: [
-                  {
-                    id: '101010',
-                    title: '',
-                    text: 'CollectiveOne will enable individuals to coordinate among themselves and combine their efforts into collective endeavors in an open, participatory and transparent way, while fairly recognizing contributions and translating these into ownership and control.'
-                  }
-                ],
-                subsections: [
-                  {
-                    id: '20',
-                    title: 'Objectives',
-                    description: 'Lists the key high-level objectives of CollectiveOne',
-                    cards: [
-                      {
-                        id: '2010',
-                        title: 'Openness',
-                        text: 'CollectiveOne enables the development of initiatives to which anyone can contribute. Such equality in the opportunity to contribute should be independent of the background of the contributor, such as his/her seniority in the project, roles, previous experiences, or his/her level of commitment to the initiative.'
-                      },
-                      {
-                        id: '2020',
-                        title: 'Value Tracking',
-                        text: 'Individual or team contributions, tangible or intangible, to an initiative should be identified and valued relative to the rest of contributions in that initiative. Information about the "relative value" should then serve as input to determine the distribution of absolute value (revenue or others) that is created as a result of the initiative'
-                      },
-                      {
-                        id: '2030',
-                        title: 'Interoperability',
-                        text: 'Initiatives in CollectiveOne should be able to interact and transact in the real world with other organizations (governments, companies, and NGOs), dispose of the value and intellectual property they create at their will, and provide services to customers or the population in general and receive income from it.'
-                      },
-                      {
-                        id: '2040',
-                        title: 'Collective Gobernance',
-                        text: 'CollectiveOne should enable the contributors of an initiative to collectively control it through open, transparent, inclusive and effective decision-making processes. These processes should be compatible both with high-level strategic decisions, as long as for lower-level, every-day matters.'
-                      }
-                    ],
-                    subsections: []
-                  },
-                  {
-                    id: '30',
-                    title: 'Key Risks',
-                    description: 'Lists the key high-level objectives of CollectiveOne',
-                    cards: [
-                      {
-                        id: '3010',
-                        title: 'Early stage incentives',
-                        text: 'Individuals may not have sufficient incentive to contribute at early stages'
-                      },
-                      {
-                        id: '3020',
-                        title: 'Unclear Direction',
-                        text: 'Lacking standard leadership and hierarchies, initiatives may find very hard to agree on and share a common view of what they want to achieve. This would be mostly within the "leaders head" on a standard organization. How could leaders (more active participants) share this vision with the rest? How could this vision incorporate inputs from new participants?'
-                      }
-                    ],
-                    subsections: []
-                  }
-                ]
-              },
-              {
-                id: '40',
-                title: 'Implementation',
-                description: 'Summarize how will the vision of CollectiveOne be implemented.',
-                cards: [
-                  {
-                    id: '401010',
-                    title: '',
-                    text: 'CollectiveOne will include a web application that will enable its users to follow the CollectiveOne method to develop collaborative projects.'
-                  }
-                ],
-                subsections: [
-                  {
-                    id: '',
-                    title: 'Basic Module',
-                    description: 'Specification of the value accounting base module',
-                    cards: [
-                      {
-                        id: '402010',
-                        title: '',
-                        text: 'The basic module enables initiatives to do value accounting thorugh the specification of initiative assets (tokens). It also permits the subdivision of an initiative into multiple subinitiatives iteratively.'
-                      }
-                    ],
-                    subsections: [
-                      {
-                        id: '',
-                        title: 'User Experience',
-                        description: 'This sections describes the user experience of the basic module',
-                        cards: [
-                          {
-                            id: '505050',
-                            title: '',
-                            text: 'The basic module has three main features: - Create initiatives and subinitiatives, - Keep track of the members of an initiative, and - Create initiative assets in the form of tokens to be transferred to their members.'
-                          }
-                        ],
-                        subsections: []
-                      }
-                    ]
-                  },
-                  {
-                    id: '',
-                    title: 'Tasks Module',
-                    description: 'Specification of the tasks management and valuation module',
-                    cards: [
-                      {
-                        id: '402010',
-                        title: '',
-                        text: 'The tasks module enables initiatives to keep track of the work to be done, and assign it to the initiative contributors.'
-                      }
-                    ],
-                    subsections: []
-                  },
-                  {
-                    id: '',
-                    title: 'Model Module',
-                    description: 'Specification of the model module',
-                    cards: [
-                      {
-                        id: '402010',
-                        title: '',
-                        text: 'The “model” module is a module specifically designed to help the contributors of an initiative share a common understanding of what they are supposed to create together.'
-                      }
-                    ],
-                    subsections: []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-
-      response.data.data.initiativeModel = initiativeModel
       context.commit('setInitiative', response.data.data)
     }).catch((error) => {
       console.log(error)
@@ -215,6 +78,16 @@ const actions = {
 
       Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/assignations').then((response) => {
         context.commit('setAssignations', response.data.data)
+      })
+    }
+  },
+
+  refreshModel: (context) => {
+    if (context.state.initiative) {
+      Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/model', {
+        levels: 1
+      }).then((response) => {
+        context.commit('setModel', response.data.data)
       })
     }
   }

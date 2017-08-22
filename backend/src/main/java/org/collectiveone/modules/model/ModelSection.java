@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -26,7 +27,6 @@ public class ModelSection {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	
 	@Column(name = "title", length = 30)
 	private String title;
 	
@@ -36,7 +36,33 @@ public class ModelSection {
 	private String description;
 	
 	@OneToMany
+	@OrderColumn(name = "cards_order")
 	private List<ModelCardWrapper> cards = new ArrayList<ModelCardWrapper>();
+	
+	@OneToMany
+	@OrderColumn(name = "subsections_order")
+	private List<ModelSection> subsections = new ArrayList<ModelSection>();
+	
+	
+	public ModelSectionDto toDto(Integer level) {
+		ModelSectionDto sectionDto = new ModelSectionDto();
+		
+		sectionDto.setId(id.toString());
+		sectionDto.setTitle(title);
+		sectionDto.setDescription(description);
+		
+		for (ModelCardWrapper cardWrapper : cards) {
+			sectionDto.getCards().add(cardWrapper.getCard().toDto());
+		}
+		
+		if (level >= 1) {
+			for (ModelSection subsection : subsections) {
+				sectionDto.getSubsections().add(subsection.toDto(level - 1));
+			}
+		}
+		
+		return sectionDto;
+	}
 
 	public UUID getId() {
 		return id;

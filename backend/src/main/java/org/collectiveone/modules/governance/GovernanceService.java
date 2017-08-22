@@ -68,7 +68,7 @@ public class GovernanceService {
 		case ROLES:
 			if (isAdmin(governance.getId(), userId)) {
 				verdict = DecisionVerdict.APPROVED;
-			} else if (isAdmin(governance.getId(), userId)) {
+			} else if (isEditor(governance.getId(), userId)) {
 				verdict = DecisionVerdict.APPROVED;
 			} else {
 				verdict = DecisionVerdict.DENIED;
@@ -129,6 +129,16 @@ public class GovernanceService {
 		return isRolesAndEditor(initiativeId, creatorId);
 	}
 	
+	@Transactional
+	public DecisionVerdict canCreateSection(UUID initiativeId, UUID creatorId) {
+		return isRolesAndEditor(initiativeId, creatorId);
+	}
+	
+	@Transactional
+	public DecisionVerdict canCreateCard(UUID initiativeId, UUID creatorId) {
+		return isRolesAndEditor(initiativeId, creatorId);
+	}
+	
 	
 	/** ------------------ */
 	
@@ -137,6 +147,18 @@ public class GovernanceService {
 		
 		if (decisionMaker != null) {
 			if (decisionMaker.getRole() == DecisionMakerRole.ADMIN) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private Boolean isEditor(UUID governanceId, UUID userId) {
+		DecisionMaker decisionMaker = decisionMakerRepository.findByGovernance_IdAndUser_C1Id(governanceId, userId);
+		
+		if (decisionMaker != null) {
+			if (decisionMaker.getRole() == DecisionMakerRole.EDITOR) {
 				return true;
 			}
 		}

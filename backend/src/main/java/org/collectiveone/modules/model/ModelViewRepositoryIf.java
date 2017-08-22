@@ -6,4 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ModelViewRepositoryIf extends CrudRepository<ModelView, UUID> {
 	
+	public ModelView findById(UUID viewId);
+	
 }
