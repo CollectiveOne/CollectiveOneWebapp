@@ -86,7 +86,9 @@ const actions = {
   refreshModel: (context) => {
     if (context.state.initiative) {
       Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/model', {
-        levels: 1
+        params: {
+          level: 3
+        }
       }).then((response) => {
         context.commit('setModel', response.data.data)
       })

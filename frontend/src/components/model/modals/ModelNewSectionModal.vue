@@ -8,7 +8,7 @@
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>Create new section</h2>
+          <h2>Create new {{ isSubsection ? 'subsection of ' + parentSection.title : 'section' }}</h2>
         </div>
 
         <div class="w3-container div-modal-content">
@@ -65,12 +65,15 @@ export default {
     viewId: {
       type: String,
       default: ''
+    },
+    parentSection: {
+      type: Object,
+      default: null
     }
   },
 
   data () {
     return {
-      section: null,
       title: '',
       description: '',
       titleEmptyError: false,
@@ -79,6 +82,9 @@ export default {
   },
 
   computed: {
+    isSubsection () {
+      return this.parentSection !== null
+    },
     titleEmpty () {
       return this.title === ''
     },
@@ -125,10 +131,16 @@ export default {
       }
 
       if (ok) {
-        let sectionDto = {
+        var sectionDto = {
           viewId: this.viewId,
           title: this.title,
-          description: this.description
+          description: this.description,
+          isSubsection: false
+        }
+
+        if (this.isSubsection) {
+          sectionDto.isSubsection = true
+          sectionDto.parentSectionId = this.parentSection.id
         }
 
         this.axios.post('/1/secured/initiative/' + this.initiativeId + '/model/section', sectionDto).then((response) => {

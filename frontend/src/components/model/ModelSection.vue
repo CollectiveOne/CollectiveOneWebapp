@@ -3,7 +3,8 @@
     <div class="slider-container">
       <transition name="slideDownUp">
         <app-model-section-modal
-          v-if="showSectionModal" :sectionId="section.id"
+          v-if="showSectionModal"
+          :sectionId="section.id" :initiativeId="initiativeId"
           :key="section.id"
           @close="showSectionModal = false">
         </app-model-section-modal>
@@ -18,6 +19,17 @@
           :key="section.id"
           @close="showNewCardModal = false">
         </app-model-new-card-modal>
+      </transition>
+    </div>
+
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-new-section-modal
+          v-if="showNewSubSectionModal"
+          :parentSection="section" :initiativeId="initiativeId"
+          :key="section.id"
+          @close="showNewSubSectionModal = false">
+        </app-model-new-section-modal>
       </transition>
     </div>
 
@@ -37,6 +49,7 @@
           v-for="card in section.cards"
           :key="card.id"
           :card="card"
+          :initiativeId="initiativeId"
           class="section-card">
         </app-model-card>
       </div>
@@ -68,6 +81,7 @@
               v-for="subsection in section.subsections"
               :key="subsection.id"
               :section="subsection"
+              :initiativeId="initiativeId"
               :level="level + 1"
               class="subsection-container">
             </app-model-section>
@@ -76,7 +90,8 @@
       </div>
 
       <transition name="fadeenter">
-        <div v-if="showActionButton" class="w3-display-topright action-buttons-container">
+        <div v-if="showActionButton" class="w3-display-topright action-buttons-container"
+          @mouseleave="showSubActionButtons = false">
           <div
             class="w3-button model-action-button gray-1-color w3-right"
             @click="showSectionModal = true">
@@ -84,8 +99,16 @@
           </div>
           <div
             class="w3-button model-action-button gray-1-color w3-right"
-            @click="showNewCardModal = true">
+            @click="showSubActionButtons = !showSubActionButtons">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
+          </div>
+          <div v-if="showSubActionButtons" class="sub-action-buttons-container w3-card w3-white">
+            <div class="w3-button" @click="showNewCardModal = true">
+              <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i> new card
+            </div>
+            <div class="w3-button" @click="showNewSubSectionModal = true">
+              <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i> new sub-section
+            </div>
           </div>
         </div>
       </transition>
@@ -98,6 +121,7 @@
 import ModelCard from '@/components/model/ModelCard.vue'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelNewCardModal from '@/components/model/modals/ModelNewCardModal.vue'
+import ModelNewSectionModal from '@/components/model/modals/ModelNewSectionModal.vue'
 
 export default {
   name: 'app-model-section',
@@ -105,7 +129,8 @@ export default {
   components: {
     'app-model-card': ModelCard,
     'app-model-section-modal': ModelSectionModal,
-    'app-model-new-card-modal': ModelNewCardModal
+    'app-model-new-card-modal': ModelNewCardModal,
+    'app-model-new-section-modal': ModelNewSectionModal
   },
 
   props: {
@@ -128,7 +153,9 @@ export default {
       showSubsections: false,
       showActionButton: false,
       showSectionModal: false,
-      showNewCardModal: false
+      showNewCardModal: false,
+      showSubActionButtons: false,
+      showNewSubSectionModal: false
     }
   },
 
@@ -138,7 +165,7 @@ export default {
       return {'font-size': fontsize + 'px'}
     },
     subsectionsContainerStyle () {
-      var paddingLeft = this.level < 5 ? 20 * (this.level + 1) : 100
+      var paddingLeft = this.level < 5 ? 25 * (this.level + 1) : 100
       var marginTop = this.level < 5 ? 110 - 20 * (5 - this.level) : 10
 
       return {
@@ -168,10 +195,26 @@ export default {
 <style scoped>
 
 .section-container {
+  min-height: 100px;
 }
 
 .action-buttons-container {
   margin-top: 2px;
+}
+
+.sub-action-buttons-container {
+  position: absolute;
+  margin-top: 38px;
+  margin-left: -120px;
+}
+
+.sub-action-buttons-container .fa {
+  font-size: 12px;
+}
+
+.sub-action-buttons-container .w3-button {
+  width: 100%;
+  text-align: left !important;
 }
 
 .section-title-container {

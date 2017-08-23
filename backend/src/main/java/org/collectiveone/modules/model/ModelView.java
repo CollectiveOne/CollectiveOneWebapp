@@ -45,6 +45,10 @@ public class ModelView {
 	private List<ModelSection> sections = new ArrayList<ModelSection>();
 	
 	
+	public ModelViewDto toDto() {
+		return toDto(0);
+	}
+	
 	public ModelViewDto toDto(Integer level) {
 		ModelViewDto viewDto = new ModelViewDto();
 		

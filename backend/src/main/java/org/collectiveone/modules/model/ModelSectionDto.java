@@ -7,6 +7,8 @@ public class ModelSectionDto {
 
 	private String id;
 	private String initiativeId;
+	private Boolean isSubsection;
+	private String parentSectionId;
 	private String viewId;
 	private String title;
 	private String description;
@@ -24,6 +26,18 @@ public class ModelSectionDto {
 	}
 	public void setInitiativeId(String initiativeId) {
 		this.initiativeId = initiativeId;
+	}
+	public Boolean getIsSubsection() {
+		return isSubsection;
+	}
+	public void setIsSubsection(Boolean isSubsection) {
+		this.isSubsection = isSubsection;
+	}
+	public String getParentSectionId() {
+		return parentSectionId;
+	}
+	public void setParentSectionId(String parentSectionId) {
+		this.parentSectionId = parentSectionId;
 	}
 	public String getViewId() {
 		return viewId;

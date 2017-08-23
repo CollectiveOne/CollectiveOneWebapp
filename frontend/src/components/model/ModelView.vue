@@ -6,6 +6,17 @@
 
       <div class="slider-container">
         <transition name="slideDownUp">
+          <app-model-view-modal
+            v-if="showViewModal"
+            :viewId="view.id" :initiativeId="view.initiativeId"
+            :key="view.id"
+            @close="showViewModal = false">
+          </app-model-view-modal>
+        </transition>
+      </div>
+
+      <div class="slider-container">
+        <transition name="slideDownUp">
           <app-model-new-section-modal
             v-if="showNewSectionModal"
             :viewId="view.id" :initiativeId="view.initiativeId"
@@ -20,7 +31,7 @@
           <div @click="showViewModal = true" class="w3-button model-action-button w3-right">
             <i class="fa fa-expand" aria-hidden="true"></i>
           </div>
-          <div  @click="showNewSectionModal = true" class="w3-button model-action-button w3-right">
+          <div @click="showNewSectionModal = true" class="w3-button model-action-button w3-right">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
           </div>
         </div>
@@ -43,12 +54,14 @@
 <script>
 import ModelSection from '@/components/model/ModelSection.vue'
 import ModelNewSectionModal from '@/components/model/modals/ModelNewSectionModal.vue'
+import ModelViewModal from '@/components/model/modals/ModelViewModal.vue'
 
 export default {
   name: 'app-model-view',
 
   components: {
     'app-model-section': ModelSection,
+    'app-model-view-modal': ModelViewModal,
     'app-model-new-section-modal': ModelNewSectionModal
   },
 

@@ -141,7 +141,6 @@ export default {
   },
 
   mounted () {
-    this.updateSectionData()
   }
 }
 </script>

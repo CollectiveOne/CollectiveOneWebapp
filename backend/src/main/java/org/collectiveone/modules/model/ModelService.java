@@ -61,24 +61,76 @@ public class ModelService {
 		view.setInitiative(initiative);
 		view.setTitle(viewDto.getTitle());
 		view.setDescription(viewDto.getDescription());
+		
 		view = modelViewRepository.save(view);
 		
 		return new PostResult("success", "view created", view.getId().toString());
 	}
 	
 	@Transactional
-	public PostResult createSection(ModelSectionDto sectionDto, UUID creatorId) {
+	public PostResult editView (UUID initiativeId, ModelViewDto viewDto, UUID creatorId) {
 		
-		ModelView view = modelViewRepository.findById(UUID.fromString(sectionDto.getViewId()));
-		if (view == null) return new PostResult("error", "view not found", "");
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		if (initiative == null) return new PostResult("error", "initiative not found", "");
+		
+		ModelView view = modelViewRepository.findById(UUID.fromString(viewDto.getId()));
+		
+		view.setTitle(viewDto.getTitle());
+		view.setDescription(viewDto.getDescription());
+		view = modelViewRepository.save(view);
+		
+		return new PostResult("success", "view edited", view.getId().toString());
+	}
+	
+	@Transactional
+	public PostResult deleteView (UUID viewId, UUID creatorId) {
+		
+		ModelView view = modelViewRepository.findById(viewId);
+		modelViewRepository.delete(view);
+		
+		return new PostResult("success", "view deleted", view.getId().toString());
+	}
+	
+	@Transactional
+	public PostResult createSection(ModelSectionDto sectionDto, UUID creatorId) {
 		
 		ModelSection section = new ModelSection();
 		section.setTitle(sectionDto.getTitle());
 		section.setDescription(sectionDto.getDescription());
 		section = modelSectionRepository.save(section);
 		
-		view.getSections().add(section);
-		modelViewRepository.save(view);
+		if(sectionDto.getIsSubsection()) {
+			ModelSection parent = modelSectionRepository.findById(UUID.fromString(sectionDto.getParentSectionId()));
+			if (parent == null) return new PostResult("error", "parent section not found", "");
+			
+			parent.getSubsections().add(section);
+			modelSectionRepository.save(parent);
+			
+		} else {
+			ModelView view = modelViewRepository.findById(UUID.fromString(sectionDto.getViewId()));
+			if (view == null) return new PostResult("error", "view not found", "");
+			
+			view.getSections().add(section);
+			modelViewRepository.save(view);
+		}
+		
+		
+		return new PostResult("success", "section created", section.getId().toString());
+	}
+	
+	@Transactional
+	public PostResult createSubSection(ModelSectionDto sectionDto, UUID creatorId) {
+		
+		ModelSection parent = modelSectionRepository.findById(UUID.fromString(sectionDto.getParentSectionId()));
+		if (parent == null) return new PostResult("error", "parent section not found", "");
+		
+		ModelSection section = new ModelSection();
+		section.setTitle(sectionDto.getTitle());
+		section.setDescription(sectionDto.getDescription());
+		section = modelSectionRepository.save(section);
+		
+		parent.getSubsections().add(section);
+		modelSectionRepository.save(parent);
 		
 		return new PostResult("success", "section created", section.getId().toString());
 	}
@@ -104,5 +156,20 @@ public class ModelService {
 		modelSectionRepository.save(section);
 		
 		return new PostResult("success", "card created", card.getId().toString());
+	}
+	
+	@Transactional
+	public GetResult<ModelViewDto> getView (UUID viewId, UUID requestById) {
+		return new GetResult<ModelViewDto>("success", "view retrieved", modelViewRepository.findById(viewId).toDto());
+	}
+	
+	@Transactional
+	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById) {
+		return new GetResult<ModelSectionDto>("success", "section retrieved", modelSectionRepository.findById(sectionId).toDto());
+	}
+	
+	@Transactional
+	public GetResult<ModelCardDto> getCard(UUID cardId, UUID requestById) {
+		return new GetResult<ModelCardDto>("success", "card retrieved", modelCardRepository.findById(cardId).toDto());
 	}
 }

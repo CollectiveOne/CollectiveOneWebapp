@@ -44,6 +44,10 @@ public class ModelSection {
 	private List<ModelSection> subsections = new ArrayList<ModelSection>();
 	
 	
+	public ModelSectionDto toDto() {
+		return toDto(0);
+	}
+	
 	public ModelSectionDto toDto(Integer level) {
 		ModelSectionDto sectionDto = new ModelSectionDto();
 		
@@ -96,5 +100,13 @@ public class ModelSection {
 		this.cards = cards;
 	}
 
+	public List<ModelSection> getSubsections() {
+		return subsections;
+	}
+
+	public void setSubsections(List<ModelSection> subsections) {
+		this.subsections = subsections;
+	}
+	
 	
 }

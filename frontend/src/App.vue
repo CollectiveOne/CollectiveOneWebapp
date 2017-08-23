@@ -166,8 +166,8 @@ textarea {
 }
 
 .app-button-danger {
-  background-color: #f1cdcd !important;
-  color: black;
+  background-color: #bc1c34 !important;
+  color: white;
   border-radius: 12px;
 }
 
@@ -270,6 +270,18 @@ textarea {
 
 .modal-bottom-btns-row button {
   width: 100%;
+}
+
+.app-margin-left {
+  margin-left: 10px;
+}
+
+.app-margin-right {
+  margin-right: 10px;
+}
+
+.app-margin-bottom {
+  margin-bottom: 10px;
 }
 
 /* Animations */

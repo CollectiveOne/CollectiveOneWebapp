@@ -46,6 +46,42 @@ public class ModelController {
 		return modelService.createView(initiativeId, viewDto, getLoggedUser().getC1Id());
 	}
 	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/view/{viewId}", method = RequestMethod.GET) 
+	public GetResult<ModelViewDto> getView(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("viewId") String viewIdStr) {
+		
+		return modelService.getView(UUID.fromString(viewIdStr), getLoggedUser().getC1Id());
+	}
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/view", method = RequestMethod.PUT) 
+	public PostResult editView(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@RequestBody ModelViewDto viewDto) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.editView(initiativeId, viewDto, getLoggedUser().getC1Id());
+	}
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/view/{viewId}", method = RequestMethod.DELETE) 
+	public PostResult deleteView(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("viewId") String viewIdStr) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.deleteView(UUID.fromString(viewIdStr), getLoggedUser().getC1Id());
+	}
+	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section", method = RequestMethod.POST)
 	public PostResult createSection(
 			@PathVariable("initiativeId") String initiativeIdStr,
@@ -58,6 +94,14 @@ public class ModelController {
 		}
 		
 		return modelService.createSection(sectionDto, getLoggedUser().getC1Id());
+	}
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.GET) 
+	public GetResult<ModelSectionDto> getSection(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("sectionId") String sectionIdStr) {
+		
+		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUser().getC1Id());
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/card", method = RequestMethod.POST)
@@ -74,9 +118,17 @@ public class ModelController {
 		return modelService.createCard(cardDto, getLoggedUser().getC1Id());
 	}
 	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/card/{cardId}", method = RequestMethod.GET) 
+	public GetResult<ModelCardDto> getCard(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("cardId") String cardIdStr) {
+		
+		return modelService.getCard(UUID.fromString(cardIdStr), getLoggedUser().getC1Id());
+	}
+	
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model", method = RequestMethod.GET) 
-	public GetResult<ModelDto> getView(
+	public GetResult<ModelDto> getModel(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestParam(defaultValue = "1") Integer level) {
 		
