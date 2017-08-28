@@ -5,13 +5,13 @@
       @mouseleave="showHoverName = false">
       <img class="w3-circle" :class="imgClass" :src="user.pictureUrl"/>
       <div class="hover-name cursor-pointer">
-        <div v-if="!showName && showHoverName" class="hover-name-container w3-tag dark-gray w3-round">
-          <b>{{ user.nickname }}</b>
-        </div>
+        <router-link :to="'/user/'+user.c1Id" v-if="!showName && showHoverName" class="hover-name-container w3-tag dark-gray w3-round">
+          <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
+        </router-link>
       </div>
     </div>
     <div v-if="showName" class="name-container">
-      <b>{{ user.nickname }}</b>
+      <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
     </div>
   </div>
 </template>
@@ -52,6 +52,14 @@ export default {
       } else {
         return { 'img-style-large': true }
       }
+    },
+    hasUsername () {
+      if (this.user.username) {
+        if (this.user.username.length > 0) {
+          return true
+        }
+      }
+      return false
     }
   }
 }

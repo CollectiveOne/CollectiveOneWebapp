@@ -49,7 +49,7 @@ public class TokenMint {
 	public TokenMintDto toDto() {
 		TokenMintDto dto = new TokenMintDto();
 		
-		dto.setOrderedBy(orderedBy.toDto());
+		dto.setOrderedBy(orderedBy.toDtoLight());
 		dto.setValue(value);
 		dto.setTokenId(token.getId().toString());
 		dto.setTokenName(token.getName());

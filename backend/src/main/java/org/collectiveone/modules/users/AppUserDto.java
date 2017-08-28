@@ -7,8 +7,16 @@ public class AppUserDto {
 	private String c1Id;
 	private List<String> auth0Ids = new ArrayList<String>();
 	private String email;
+	private String username;
+	private String twitterHandle;
+	private String facebookHandle;
+	private String linkedinHandle;
+	
 	private String nickname;
 	private String pictureUrl;
+	private String shortBio;
+	private String longBio;
+	
 	
 	public String getC1Id() {
 		return c1Id;
@@ -28,6 +36,12 @@ public class AppUserDto {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
 	public String getNickname() {
 		return nickname;
 	}
@@ -39,6 +53,36 @@ public class AppUserDto {
 	}
 	public void setPictureUrl(String pictureUrl) {
 		this.pictureUrl = pictureUrl;
+	}
+	public String getTwitterHandle() {
+		return twitterHandle;
+	}
+	public void setTwitterHandle(String twitterHandle) {
+		this.twitterHandle = twitterHandle;
+	}
+	public String getFacebookHandle() {
+		return facebookHandle;
+	}
+	public void setFacebookHandle(String facebookHandle) {
+		this.facebookHandle = facebookHandle;
+	}
+	public String getLinkedinHandle() {
+		return linkedinHandle;
+	}
+	public void setLinkedinHandle(String linkedinHandle) {
+		this.linkedinHandle = linkedinHandle;
+	}
+	public String getShortBio() {
+		return shortBio;
+	}
+	public void setShortBio(String shortBio) {
+		this.shortBio = shortBio;
+	}
+	public String getLongBio() {
+		return longBio;
+	}
+	public void setLongBio(String longBio) {
+		this.longBio = longBio;
 	}
 	
 }

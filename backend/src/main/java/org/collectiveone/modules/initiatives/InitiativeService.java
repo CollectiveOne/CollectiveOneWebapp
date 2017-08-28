@@ -443,7 +443,7 @@ public class InitiativeService {
 
 		if (member != null) {
 			memberDto.setId(member.getId().toString());
-			memberDto.setUser(member.getUser().toDto());
+			memberDto.setUser(member.getUser().toDtoLight());
 			
 			/* governance related data */
 			DecisionMaker decisionMaker = governanceService.getDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
@@ -454,7 +454,7 @@ public class InitiativeService {
 			}
 		} else {
 			memberDto.setId("");
-			memberDto.setUser(appUserRepository.findByC1Id(userId).toDto());
+			memberDto.setUser(appUserRepository.findByC1Id(userId).toDtoLight());
 			memberDto.setRole(DecisionMakerRole.ALIEN.toString());
 		}
 		
@@ -475,7 +475,7 @@ public class InitiativeService {
 			MemberDto memberDto = new MemberDto();
 			
 			memberDto.setId(member.getId().toString());
-			memberDto.setUser(member.getUser().toDto());
+			memberDto.setUser(member.getUser().toDtoLight());
 			
 			/* governance related data */
 			DecisionMaker decisionMaker = governanceService.getDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());

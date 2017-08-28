@@ -38,7 +38,7 @@ public class DecisionMaker {
 		DecisionMakerDto dto = new DecisionMakerDto();
 		
 		dto.setId(id.toString());
-		dto.setUser(user.toDto());
+		dto.setUser(user.toDtoLight());
 		dto.setRole(role.toString());
 	
 		return dto;

@@ -49,7 +49,7 @@ public class Evaluator {
 		EvaluatorDto dto = new EvaluatorDto();
 		
 		dto.setId(id.toString());
-		dto.setUser(user.toDto());
+		dto.setUser(user.toDtoLight());
 		dto.setWeight(weight);
 		dto.setState(state.toString());
 		

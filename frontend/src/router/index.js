@@ -15,6 +15,8 @@ import PeopleSection from '@/components/initiative/PeopleSection.vue'
 import TransfersSection from '@/components/initiative/TransfersSection.vue'
 import ModelSection from '@/components/initiative/ModelSection.vue'
 
+import UserProfilePage from '@/components/user/UserProfilePage.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -63,6 +65,7 @@ export default new Router({
           ]
         }
       ]
-    }
+    },
+    { path: '/user/:userId', name: 'UserProfilePage', component: UserProfilePage }
   ]
 })
