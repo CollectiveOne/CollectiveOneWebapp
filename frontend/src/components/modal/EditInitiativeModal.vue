@@ -15,7 +15,7 @@
 
           <div class="w3-row">
             <label class=""><b>Name</b></label>
-            <input v-model="newInitiative.name"
+            <input v-model="newInitiative.meta.name"
               class="w3-input w3-hover-light-grey"
               :class="{ 'error-input' : nameErrorShow }"
               type="text">
@@ -32,7 +32,7 @@
 
           <div class="w3-row">
             <label class=""><b>Purpose</b></label>
-            <textarea v-model="newInitiative.driver" rows="5" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
+            <textarea v-model="newInitiative.meta.driver" rows="5" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
             <app-error-panel
               :show="driverEmptyShow"
               message="please set a purpose for the initiative">
@@ -46,9 +46,33 @@
               <div
                 v-for="color in colors"
                 class="color-picker w3-circle cursor-pointer"
-                :class="{'color-picked': newInitiative.color === color}"
+                :class="{'color-picked': newInitiative.meta.color === color}"
                 :style="{'background-color': color}"
-                @click="newInitiative.color = color">
+                @click="newInitiative.meta.color = color">
+              </div>
+            </div>
+          </div>
+
+          <hr>
+          <div class="w3-row">
+            <label class=""><b>Modules</b></label>
+            <div class="w3-col s12">
+              <div class="w3-row w3-margin-top modules-row">
+                  <div class="w3-col m4 module-tag-col">
+                    MODEL:
+                  </div>
+                  <div class="w3-col m8">
+                    <button class="w3-left w3-button"
+                      :class="{ 'app-button': !newInitiative.meta.modelEnabled, 'app-button-light': newInitiative.meta.modelEnabled }"
+                      @click="newInitiative.meta.modelEnabled = false">
+                      disable
+                    </button>
+                    <button class="w3-left w3-button app-button"
+                      :class="{ 'app-button': newInitiative.meta.modelEnabled, 'app-button-light': !newInitiative.meta.modelEnabled }"
+                      @click="newInitiative.meta.modelEnabled = true">
+                      enable
+                    </button>
+                  </div>
               </div>
             </div>
           </div>
@@ -101,11 +125,7 @@
 export default {
   data () {
     return {
-      newInitiative: {
-        name: '',
-        driver: '',
-        color: ''
-      },
+      newInitiative: null,
       colors: [
         '#009ee3',
         '#e5007d',
@@ -129,20 +149,18 @@ export default {
       return this.nameEmptyShow || this.nameTooLarge
     },
     nameEmptyShow () {
-      return this.nameEmptyError && this.newInitiative.name === ''
+      return this.nameEmptyError && this.newInitiative.meta.name === ''
     },
     nameTooLarge () {
-      return this.newInitiative.name.length > 30
+      return this.newInitiative.meta.name.length > 30
     },
     driverEmptyShow () {
-      return this.driverEmptyError && this.newInitiative.driver === ''
+      return this.driverEmptyError && this.newInitiative.meta.driver === ''
     }
   },
 
-  mounted () {
-    this.newInitiative.name = this.initiative.meta.name
-    this.newInitiative.driver = this.initiative.meta.driver
-    this.newInitiative.color = this.initiative.meta.color
+  created () {
+    this.newInitiative = JSON.parse(JSON.stringify(this.initiative))
   },
 
   methods: {
@@ -152,7 +170,7 @@ export default {
     accept () {
       var ok = true
 
-      if (this.newInitiative.name === '') {
+      if (this.newInitiative.meta.name === '') {
         this.nameEmptyError = true
         ok = false
       }
@@ -161,13 +179,13 @@ export default {
         ok = false
       }
 
-      if (this.newInitiative.driver === '') {
+      if (this.newInitiative.meta.driver === '') {
         this.driverEmptyError = true
         ok = false
       }
 
       if (ok) {
-        this.axios.put('/1/secured/initiative/' + this.initiative.id, this.newInitiative).then((response) => {
+        this.axios.put('/1/secured/initiative/' + this.initiative.id, this.newInitiative.meta).then((response) => {
           this.closeThis()
           this.$store.dispatch('refreshInitiative')
           this.$store.dispatch('updatedMyInitiatives')
@@ -233,6 +251,22 @@ export default {
   border-style: solid;
   border-width: 5px;
   border-color: black;
+}
+
+.modules-row {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.modules-row button {
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+  width: 100px;
+  margin-right: 10px;
+}
+
+.module-tag-col {
+  padding-top: 3px;
 }
 
 .delete-row {

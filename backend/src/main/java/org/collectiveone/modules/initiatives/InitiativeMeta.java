@@ -40,6 +40,11 @@ public class InitiativeMeta {
 	@Column(name = "color", length = 7)
 	private String color;
 	
+	@Column(name = "model_enabled")
+	private Boolean modelEnabled;
+	
+	
+	
 	public InitiativeMetaDto toDto() {
 		InitiativeMetaDto dto = new InitiativeMetaDto();
 		
@@ -47,6 +52,7 @@ public class InitiativeMeta {
 		dto.setCreationDate(creationDate);
 		dto.setDriver(driver);
 		dto.setColor(color);
+		dto.setModelEnabled(modelEnabled);
 		
 		return dto;
 	}
@@ -90,7 +96,13 @@ public class InitiativeMeta {
 	public void setColor(String color) {
 		this.color = color;
 	}
-	
-	
 
+	public Boolean getModelEnabled() {
+		return modelEnabled;
+	}
+
+	public void setModelEnabled(Boolean modelEnabled) {
+		this.modelEnabled = modelEnabled;
+	}
+	
 }

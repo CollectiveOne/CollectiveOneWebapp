@@ -100,12 +100,14 @@ export default {
 
   data () {
     return {
-      showContent: true,
-      userAuthenticated: false
+      showContent: true
     }
   },
 
   computed: {
+    userAuthenticated () {
+      return this.$store.state.user.authenticated
+    },
     showNewInitiativeModal () {
       return this.$store.state.modals.showNewInitiativeModal
     },
@@ -179,16 +181,18 @@ export default {
     },
 
     login () {
-      this.$store.state.user.lock.show()
+      if (this.$store.state.user.lock) {
+        this.$store.state.user.lock.show()
+      }
     }
   },
 
   mounted () {
     this.$store.dispatch('updatedMyInitiatives')
-    if (this.$store.state.user.authenticated) {
-      this.userAuthenticated = true
-    } else {
-      this.$store.state.user.lock.show()
+    if (!this.userAuthenticated) {
+      if (this.$store.state.user.lock) {
+        this.$store.state.user.lock.show()
+      }
     }
   }
 }

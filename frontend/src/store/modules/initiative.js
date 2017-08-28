@@ -3,7 +3,8 @@ import Vue from 'vue'
 const state = {
   initiative: null,
   initiativeTransfers: null,
-  initiativeAssignations: null
+  initiativeAssignations: null,
+  initiativeModel: null
 }
 
 const getters = {
@@ -37,6 +38,9 @@ const mutations = {
   },
   setTransfers: (state, payload) => {
     state.initiativeTransfers = payload
+  },
+  setModel: (state, payload) => {
+    state.initiativeModel = payload
   },
   setAssignations: (state, payload) => {
     state.initiativeAssignations = payload
@@ -75,6 +79,18 @@ const actions = {
 
       Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/assignations').then((response) => {
         context.commit('setAssignations', response.data.data)
+      })
+    }
+  },
+
+  refreshModel: (context) => {
+    if (context.state.initiative) {
+      Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/model', {
+        params: {
+          level: 3
+        }
+      }).then((response) => {
+        context.commit('setModel', response.data.data)
       })
     }
   }

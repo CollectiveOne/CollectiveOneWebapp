@@ -20,6 +20,7 @@
               <select v-if="canEdit" v-model="member.role" @change="$emit('role-updated', member)" class="role-select w3-select w3-round">
                 <option value="" disabled>Choose role</option>
                 <option value="ADMIN">ADMIN</option>
+                <option value="EDITOR">EDITOR</option>
                 <option value="MEMBER" selected>MEMBER</option>
               </select>
               <p v-else>
@@ -65,6 +66,7 @@
               <select class="role-select w3-select w3-round" v-model="newMember.role">
                 <option value="" disabled>Choose role</option>
                 <option value="ADMIN">ADMIN</option>
+                <option value="EDITOR">EDITOR</option>
                 <option value="MEMBER" selected>MEMBER</option>
               </select>
             </div>
