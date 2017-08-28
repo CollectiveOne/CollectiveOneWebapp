@@ -1,6 +1,6 @@
-package org.collectiveone.modules.model;
+package org.collectiveone.modules.model.dto;
 
-public class CardDto {
+public class ModelCardDto {
 
 	private String id;
 	private String initiativeId;

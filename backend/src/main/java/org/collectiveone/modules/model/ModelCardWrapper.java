@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -25,11 +27,41 @@ public class ModelCardWrapper {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private ModelCard card;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ModelCard> oldVersions = new ArrayList<ModelCard>();
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		
+		ModelCardWrapper other = (ModelCardWrapper) obj;
+		return id.equals(other.getId());
+	}
+	
+	public ModelCardWrapperDto toDto() {
+		ModelCardWrapperDto cardWrapperDto = new ModelCardWrapperDto();
+		
+		cardWrapperDto.setId(id.toString());
+		cardWrapperDto.setCard(card.toDto());
+		
+		return cardWrapperDto;
+	}
 	
 	
 	public UUID getId() {

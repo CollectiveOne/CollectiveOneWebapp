@@ -15,40 +15,11 @@
 
           <div class="w3-row div-modal-content">
 
-            <div class="slider-container">
-              <transition name="slideDownUp">
-                <div v-if="!editing" class="w3-row buttons-row w3-margin-bottom">
-                  <button class="w3-right w3-button app-button app-margin-left"
-                    @click="startEditing()">
-                    <i class="fa fa-pencil" aria-hidden="true"></i> edit
-                  </button>
-                  <button class="w3-right w3-button app-button app-button-danger"
-                    @click="deleteIntent = true">
-                    <i class="fa fa-trash" aria-hidden="true"></i> delete
-                  </button>
-                </div>
-              </transition>
-            </div>
-
-            <div class="slider-container">
-              <transition name="slideDownUp">
-                <div v-if="deleteIntent" class="w3-row w3-center delete-intent-div">
-                  <div class="w3-padding w3-round light-grey w3-margin-bottom">
-                    <p>
-                      <b>Warning:</b> This will delete this model view.
-                    </p>
-                  </div>
-                  <button
-                    class="w3-button app-button-light"
-                    @click="deleteIntent = false">cancel
-                  </button>
-                  <button
-                    class="w3-button app-button-danger app-margin-left"
-                    @click="deleteView()">confirm
-                  </button>
-                </div>
-              </transition>
-            </div>
+            <app-model-modal-buttons
+              :show="true"
+              @edit="startEditing()"
+              @delete="deleteView()">
+            </app-model-modal-buttons>
 
             <label class=""><b>Title:</b></label>
             <div v-if="!editing" class="w3-padding light-grey">
@@ -100,7 +71,13 @@
 </template>
 
 <script>
+import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
+
 export default {
+
+  components: {
+    'app-model-modal-buttons': ModelModalButtons
+  },
 
   props: {
     viewId: {
@@ -119,8 +96,7 @@ export default {
       editedView: null,
       editing: false,
       titleEmptyError: false,
-      descriptionEmptyError: false,
-      deleteIntent: false
+      descriptionEmptyError: false
     }
   },
 

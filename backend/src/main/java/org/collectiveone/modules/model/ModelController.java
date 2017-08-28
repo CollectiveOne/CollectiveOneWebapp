@@ -6,6 +6,10 @@ import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.governance.DecisionVerdict;
 import org.collectiveone.modules.governance.GovernanceService;
+import org.collectiveone.modules.model.dto.ModelCardDto;
+import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
+import org.collectiveone.modules.model.dto.ModelDto;
+import org.collectiveone.modules.model.dto.ModelViewDto;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,21 @@ public class ModelController {
 
 	@Autowired
 	private GovernanceService governanceService;
+	
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model", method = RequestMethod.GET) 
+	public GetResult<ModelDto> getModel(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@RequestParam(defaultValue = "1") Integer level) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new GetResult<ModelDto>("error", "not authorized", null);
+		}
+		
+		return modelService.getModel(initiativeId, level, getLoggedUser().getC1Id());
+	}
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/view", method = RequestMethod.POST) 
 	public PostResult createView(
@@ -96,6 +115,20 @@ public class ModelController {
 		return modelService.createSection(sectionDto, getLoggedUser().getC1Id());
 	}
 	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section", method = RequestMethod.PUT) 
+	public PostResult editSection(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@RequestBody ModelSectionDto sectionDto) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.editSection(initiativeId, sectionDto, getLoggedUser().getC1Id());
+	}
+	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.GET) 
 	public GetResult<ModelSectionDto> getSection(
 			@PathVariable("initiativeId") String initiativeIdStr,
@@ -104,10 +137,25 @@ public class ModelController {
 		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/card", method = RequestMethod.POST)
-	public PostResult createCard(
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.DELETE) 
+	public PostResult deleteSection(
 			@PathVariable("initiativeId") String initiativeIdStr,
-			@RequestBody CardDto cardDto) {
+			@PathVariable("sectionId") String sectionIdStr) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.deleteSection(UUID.fromString(sectionIdStr), getLoggedUser().getC1Id());
+	}
+	
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/cardWrapper", method = RequestMethod.POST)
+	public PostResult createCardWrapper(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@RequestBody ModelCardDto cardDto) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
@@ -115,30 +163,45 @@ public class ModelController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.createCard(cardDto, getLoggedUser().getC1Id());
+		return modelService.createCardWrapper(cardDto, getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/card/{cardId}", method = RequestMethod.GET) 
-	public GetResult<ModelCardDto> getCard(
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/cardWrapper/{cardWrapperId}", method = RequestMethod.GET) 
+	public GetResult<ModelCardWrapperDto> getCardWrapper(
 			@PathVariable("initiativeId") String initiativeIdStr,
-			@PathVariable("cardId") String cardIdStr) {
+			@PathVariable("cardWrapperId") String cardWrapperIdStr) {
 		
-		return modelService.getCard(UUID.fromString(cardIdStr), getLoggedUser().getC1Id());
+		return modelService.getCardWrapper(UUID.fromString(cardWrapperIdStr), getLoggedUser().getC1Id());
 	}
 	
-	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model", method = RequestMethod.GET) 
-	public GetResult<ModelDto> getModel(
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/cardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
+	public PostResult editCardWrapper(
 			@PathVariable("initiativeId") String initiativeIdStr,
-			@RequestParam(defaultValue = "1") Integer level) {
+			@PathVariable("cardWrapperId") String cardIdWrapperStr,
+			@RequestBody ModelCardDto cardDto) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
 		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
-			return new GetResult<ModelDto>("error", "not authorized", null);
+			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.getModel(initiativeId, level, getLoggedUser().getC1Id());
+		return modelService.editCardWrapper(initiativeId, UUID.fromString(cardIdWrapperStr), cardDto, getLoggedUser().getC1Id());
+	}
+	
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/cardWrapper/{cardWrapperId}", method = RequestMethod.DELETE) 
+	public PostResult deleteCardWrapper(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("cardWrapperId") String cardIdWrapperStr) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.deleteCardWrapper(UUID.fromString(cardIdWrapperStr), getLoggedUser().getC1Id());
 	}
 	
 	private AppUser getLoggedUser() {

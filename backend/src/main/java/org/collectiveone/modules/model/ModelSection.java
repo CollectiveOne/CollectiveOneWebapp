@@ -44,6 +44,27 @@ public class ModelSection {
 	private List<ModelSection> subsections = new ArrayList<ModelSection>();
 	
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		
+		ModelSection other = (ModelSection) obj;
+		return id.equals(other.getId());
+	}
+
 	public ModelSectionDto toDto() {
 		return toDto(0);
 	}
@@ -56,7 +77,7 @@ public class ModelSection {
 		sectionDto.setDescription(description);
 		
 		for (ModelCardWrapper cardWrapper : cards) {
-			sectionDto.getCards().add(cardWrapper.getCard().toDto());
+			sectionDto.getCardsWrappers().add(cardWrapper.toDto());
 		}
 		
 		if (level >= 1) {

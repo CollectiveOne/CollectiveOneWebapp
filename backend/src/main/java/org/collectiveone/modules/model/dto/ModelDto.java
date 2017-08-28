@@ -1,4 +1,4 @@
-package org.collectiveone.modules.model;
+package org.collectiveone.modules.model.dto;
 
 import java.util.ArrayList;
 import java.util.List;

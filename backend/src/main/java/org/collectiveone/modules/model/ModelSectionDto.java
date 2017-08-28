@@ -3,16 +3,19 @@ package org.collectiveone.modules.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
+
 public class ModelSectionDto {
 
 	private String id;
 	private String initiativeId;
 	private Boolean isSubsection;
 	private String parentSectionId;
+	private String parentSectionTitle;
 	private String viewId;
 	private String title;
 	private String description;
-	private List<ModelCardDto> cards = new ArrayList<ModelCardDto>();
+	private List<ModelCardWrapperDto> cardsWrappers = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelSectionDto> subsections = new ArrayList<ModelSectionDto>();
 	
 	public String getId() {
@@ -39,6 +42,12 @@ public class ModelSectionDto {
 	public void setParentSectionId(String parentSectionId) {
 		this.parentSectionId = parentSectionId;
 	}
+	public String getParentSectionTitle() {
+		return parentSectionTitle;
+	}
+	public void setParentSectionTitle(String parentSectionTitle) {
+		this.parentSectionTitle = parentSectionTitle;
+	}
 	public String getViewId() {
 		return viewId;
 	}
@@ -57,11 +66,11 @@ public class ModelSectionDto {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public List<ModelCardDto> getCards() {
-		return cards;
+	public List<ModelCardWrapperDto> getCardsWrappers() {
+		return cardsWrappers;
 	}
-	public void setCards(List<ModelCardDto> cards) {
-		this.cards = cards;
+	public void setCardsWrappers(List<ModelCardWrapperDto> cardsWrappers) {
+		this.cardsWrappers = cardsWrappers;
 	}
 	public List<ModelSectionDto> getSubsections() {
 		return subsections;

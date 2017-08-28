@@ -4,14 +4,14 @@
       <transition name="slideDownUp">
         <app-model-card-modal
           v-if="showCardModal"
-          :cardId="card.id" :initiativeId="initiativeId"
-          :key="card.id"
+          :cardWrapperId="cardWrapper.id" :initiativeId="initiativeId"
+          :key="cardWrapper.id"
           @close="showCardModal = false">
         </app-model-card-modal>
       </transition>
     </div>
 
-    <div class="card-container w3-leftbar w3-border-thik w3-display-container w3-border-top"
+    <div class="w3-card-2 card-container w3-display-container"
       @mouseover="showActionButton = true"
       @mouseleave="showActionButton = false">
 
@@ -51,8 +51,14 @@ export default {
     }
   },
 
+  computed: {
+    card () {
+      return this.cardWrapper.card
+    }
+  },
+
   props: {
-    card: {
+    cardWrapper: {
       type: Object,
       default: null
     },
@@ -67,15 +73,12 @@ export default {
 <style scoped>
 
 .card-container {
-  padding: 5px 5px 5px 16px;
-  border-top-color: #f2f2f2 !important;
+  padding: 8px 16px 16px 16px !important;
 }
 
 .card-text p {
   margin-top: 0px;
   margin-bottom: 0px;
 }
-
-
 
 </style>

@@ -125,7 +125,7 @@ export default {
           text: this.text
         }
 
-        this.axios.post('/1/secured/initiative/' + this.initiativeId + '/model/card', cardDto).then((response) => {
+        this.axios.post('/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper', cardDto).then((response) => {
           if (response.data.result === 'success') {
             this.closeThis()
             this.$store.dispatch('refreshModel')

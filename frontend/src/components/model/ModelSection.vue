@@ -44,13 +44,13 @@
         </div>
       </div>
 
-      <div class="cards-container">
+      <div class="w3-row-padding w3-leftbar cards-container">
         <app-model-card
-          v-for="card in section.cards"
-          :key="card.id"
-          :card="card"
+          v-for="cardWrapper in section.cardsWrappers"
+          :key="cardWrapper.id"
+          :cardWrapper="cardWrapper"
           :initiativeId="initiativeId"
-          class="section-card">
+          class="w3-col l4 m6 section-card">
         </app-model-card>
       </div>
 
@@ -218,7 +218,6 @@ export default {
 }
 
 .section-title-container {
-  margin-bottom: 5px;
   border-color: #637484 !important;
   border-top-width: 2px !important;
 }
@@ -232,6 +231,7 @@ export default {
 }
 
 .cards-container {
+  padding: 20px 10px 16px 10px;
 }
 
 .section-card {

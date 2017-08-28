@@ -15,6 +15,7 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.model.dto.ModelViewDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
