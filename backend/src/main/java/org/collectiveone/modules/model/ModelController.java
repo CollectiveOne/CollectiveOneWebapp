@@ -44,10 +44,6 @@ public class ModelController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
-			return new GetResult<ModelDto>("error", "not authorized", null);
-		}
-		
 		return modelService.getModel(initiativeId, level, getLoggedUser().getC1Id());
 	}
 	
