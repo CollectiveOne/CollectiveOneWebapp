@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+  <style type="text/css">
+
+      .top-header {
+        clear: both;
+        background-color: #eff3f6;
+        overflow: auto;
+        padding: 30px;
+      }
+
+      .container {
+        width: 100%;
+        text-align: center;
+        font-family: 'Arial', sans-serif;
+        color: #3e464e;
+      }
+
+      .logo-txt-div {
+        float: left;
+        font-size: 18px;
+        font-weight: bold;
+        clear: both;
+        margin-bottom: 10px;
+      }
+
+      .logo-img {
+        width: 50%;
+        max-width: 200px;
+        float: left;
+        clear: both;
+      }
+
+      .username {
+        margin-top: 5px;
+      }
+
+      .content {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        clear: both;
+      }
+
+			.user-picture {
+				border-radius: 50px;
+				width: 60px;
+			}
+
+      .footer {
+        padding: 30px;
+        background-color: #eff3f6;
+      }
+
+			.unsuscribe-links a {
+        font-size: 12px;
+        color: #3e464e;
+				text-decoration: underline;
+      }
+
+			.twitter-link {
+				margin-bottom: 20px;
+			}
+
+			.twitter-img {
+				width: 180px;
+			}
+
+	</style>
+</head>
+<body>
+<div class="container" style="text-align">
+	<div class="top-header">
+		<a href="http://www.collectiveone.org">
+			<img class="logo-img" src="https://image.ibb.co/nt20Pa/Logo_Dark.png" />
+		</a>
+	</div>
+
+	<div class="content">
+		<h3>Recent activity in $INITIATIVE_ANCHOR$</h3>
+
+		<img class="user-picture" alt="" src="$TRIGGER_USER_PICTURE$" />
+		<p class="username">$TRIGGER_USER_NICKNAME$</p>
+
+		$MESSAGE$
+
+	</div>
+
+	<div class="footer">
+		<div class="twitter-link" >
+			<a href="https://twitter.com/intent/user?screen_name=collectiveonepr">
+				<img class="twitter-img" src="https://image.ibb.co/dS7wek/t_button.png"></img>
+			</a>
+		</div>
+
+		<div class="unsuscribe-links"  >
+			<a href="$UNSUSCRIBE_FROM_INITIATIVE_HREF$">unsuscribe from email notifications from the $INITIATIVE_NAME$ initiative</a>
+			<br />
+			<a class="unsuscribe-link" href="$UNSUSCRIBE_FROM_ALL_HREF$">unsuscribe from all email notifications from CollectiveOne</a>
+			<br>
+		</div>
+	</div>
+
+</div>
+</body>
+</html>
