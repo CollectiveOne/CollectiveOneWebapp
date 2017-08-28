@@ -66,18 +66,19 @@ public class AppUserService {
 	public PostResult editUserProfile(UUID c1Id, AppUserDto userDto) {
 		AppUserProfile profile = appUserProfileRepository.findByUser_C1Id(c1Id);
 		
-		if (!profile.getUsername().equals(userDto.getUsername())) {
-			/* check if username exist */
-			AppUserProfile profileOfUsername = appUserProfileRepository.findByUsername(userDto.getUsername());
-			
-			if (profileOfUsername == null) {
-				profile.setUsername(userDto.getUsername());
-			} else {
-				return new PostResult("error", "username already exist", "");
+		if (profile.getUsername() != null) {
+			if (!profile.getUsername().equals(userDto.getUsername())) {
+				/* check if username exist */
+				AppUserProfile profileOfUsername = appUserProfileRepository.findByUsername(userDto.getUsername());
+				
+				if (profileOfUsername != null) {
+					return new PostResult("error", "username already exist", "");
+				}
 			}
-		}	
+		}
 		
 		profile.setNickname(userDto.getNickname());
+		profile.setUsername(userDto.getUsername());
 		profile.setPictureUrl(userDto.getPictureUrl());
 		profile.setShortBio(userDto.getShortBio());
 		profile.setTwitterHandle(userDto.getTwitterHandle());

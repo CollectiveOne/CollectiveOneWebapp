@@ -147,13 +147,21 @@ export default {
 
   computed: {
     nicknameTooLarge () {
-      return this.user.nickname.length > 32
+      if (this.user.nickname) {
+        return this.user.nickname.length > 32
+      }
     },
     usernameTooLarge () {
-      return this.user.username.length > 16
+      if (this.user.username) {
+        return this.user.username.length > 16
+      }
+      return false
     },
     shortBioTooLarge () {
-      return this.user.shortBio.length > 250
+      if (this.user.shortBio) {
+        return this.user.shortBio.length > 250
+      }
+      return false
     },
     usernameValid () {
       var re = new RegExp('^[a-z0-9]*$')
