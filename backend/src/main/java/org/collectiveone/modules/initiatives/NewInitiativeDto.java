@@ -12,6 +12,7 @@ public class NewInitiativeDto {
 	private String name;
 	private String driver;
 	private String color;
+	private Boolean modelEnabled;
 	private List<MemberDto> members;
 	private AssetsDto ownTokens;
 	private List<TransferDto> assetsTransfers;
@@ -46,6 +47,12 @@ public class NewInitiativeDto {
 	}
 	public void setColor(String color) {
 		this.color = color;
+	}
+	public Boolean getModelEnabled() {
+		return modelEnabled;
+	}
+	public void setModelEnabled(Boolean modelEnabled) {
+		this.modelEnabled = modelEnabled;
 	}
 	public List<MemberDto> getMembers() {
 		return members;

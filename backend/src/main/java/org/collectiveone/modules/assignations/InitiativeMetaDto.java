@@ -8,6 +8,7 @@ public class InitiativeMetaDto {
 	private String driver;
 	private Timestamp creationDate;
 	private String color;
+	private Boolean modelEnabled;
 	
 	public String getName() {
 		return name;
@@ -32,6 +33,12 @@ public class InitiativeMetaDto {
 	}
 	public void setColor(String color) {
 		this.color = color;
+	}
+	public Boolean getModelEnabled() {
+		return modelEnabled;
+	}
+	public void setModelEnabled(Boolean modelEnabled) {
+		this.modelEnabled = modelEnabled;
 	}
 	
 
