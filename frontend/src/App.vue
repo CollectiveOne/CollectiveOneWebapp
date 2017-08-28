@@ -6,25 +6,22 @@
 
 <script>
 import Auth0Lock from 'auth0-lock'
-import { mapActions } from 'vuex'
 import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
 
 export default {
   name: 'app',
 
   methods: {
-    ...mapActions(['initUserAuthenticated'])
   },
 
   components: {
     AppNewInitiativeModal: NewInitiativeModal
   },
 
-  mounted () {
-    var redirectPath = this.$route.path
+  created () {
     var options = {
       auth: {
-        state: redirectPath,
+        state: this.$route.path,
         responseType: 'token',
         params: {
           connectionScopes: {
@@ -44,10 +41,12 @@ export default {
     var lock = new Auth0Lock(process.env.AUTH0_CLIENT_ID, process.env.AUTH0_DOMAIN, options)
 
     lock.on('authenticated', (authResult) => {
-      console.log('user authenticated')
       localStorage.setItem('access_token', authResult.accessToken)
       localStorage.setItem('id_token', authResult.idToken)
-      this.$store.dispatch('updateAuthenticated', { state: authResult.state })
+      this.$store.commit('authenticate', !!localStorage.getItem('id_token'))
+      this.$store.commit('setAuth0state', authResult.state)
+      this.$store.dispatch('updateProfile')
+      this.$router.push({ name: 'Root' })
     })
 
     lock.on('authorization_error', (error) => {
@@ -55,8 +54,10 @@ export default {
       console.log(error)
     })
 
+    /* check if user is authenticated */
     this.$store.commit('setLock', lock)
-    this.$store.dispatch('updateAuthenticated', { state: '' })
+    this.$store.commit('authenticate', !!localStorage.getItem('id_token'))
+    this.$store.dispatch('updateProfile')
   }
 }
 </script>

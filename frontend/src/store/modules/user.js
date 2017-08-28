@@ -3,6 +3,7 @@ import Vue from 'vue'
 const state = {
   lock: null,
   authenticated: false,
+  auth0state: '',
   profile: null,
   notifications: [],
   intervalId: null
@@ -18,6 +19,9 @@ const mutations = {
   authenticate: (state, payload) => {
     state.authenticated = payload
   },
+  setAuth0state: (state, payload) => {
+    state.auth0state = payload
+  },
   setProfile: (state, payload) => {
     state.profile = payload
   },
@@ -28,15 +32,9 @@ const mutations = {
 
 const actions = {
 
-  updateAuthenticated: (context, payload) => {
-    /* check local storage */
-    context.commit('authenticate', !!localStorage.getItem('id_token'))
-
-    /* if user is authenticated */
+  updateProfile: (context) => {
+    /* user profile */
     if (context.state.authenticated) {
-      /* read profile from C1 DB */
-      context.dispatch('updateProfile')
-
       /* set auto-update ever 5 seconds */
       if (context.state.intervalId == null) {
         context.state.intervalId = setInterval(() => {
@@ -51,28 +49,6 @@ const actions = {
         }, 10000)
       }
 
-      /* if user is not authenticated */
-      // var state = payload.state
-      // if (state !== '') {
-      //   if (state.startsWith('/landing')) {
-      //     /* user comes from landing and was authenticated, go to app then */
-      //     window.location.href = '/#/app/inits'
-      //   } else {
-      //     /* user comes from a custom url */
-      //     window.location.href = '/#' + state
-      //   }
-      // } else {
-      //   window.location.href = '/#/app/inits'
-      // }
-    } else {
-      /* if user is not authenticated */
-      // window.location.href = '/#/landing'
-    }
-  },
-
-  updateProfile: (context) => {
-    /* user profile */
-    if (context.state.authenticated) {
       Vue.axios.get('/1/secured/user/myProfile').then((response) => {
         context.commit('setProfile', response.data.data)
         context.dispatch('updateNotifications')
@@ -110,7 +86,6 @@ const actions = {
     localStorage.removeItem('id_token')
     context.commit('authenticate', false)
     context.commit('setProfile', null)
-    window.location.href = '/'
   }
 }
 

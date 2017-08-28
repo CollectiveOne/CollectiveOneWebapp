@@ -48,8 +48,6 @@
 import OutputMessage from '@/components/OutputMessage.vue'
 import NotificationsList from '@/components/notifications/NotificationsList.vue'
 
-import { mapActions } from 'vuex'
-
 export default {
   components: {
     'app-output-message': OutputMessage,
@@ -57,8 +55,6 @@ export default {
   },
 
   methods: {
-    ...mapActions(['logoutUser', 'updateNotifications']),
-
     userOptionsClicked () {
       this.showActivityList = false
       this.showUserOptions = !this.showUserOptions
@@ -66,13 +62,17 @@ export default {
     activityClicked () {
       this.showUserOptions = false
       if (this.showActivityList) {
-        this.updateNotifications()
+        this.$store.dispatch('updateNotifications')
       }
       this.showActivityList = !this.showActivityList
     },
     goHome () {
       this.showUserOptions = false
       this.$router.push({name: 'InitiativesHome'})
+    },
+    logoutUser () {
+      this.$store.dispatch('logoutUser')
+      this.$router.push({ name: 'Landing' })
     }
   },
 

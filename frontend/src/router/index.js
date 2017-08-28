@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import RootView from '@/components/RootView.vue'
 import LandingView from '@/components/LandingView.vue'
 
 import AppView from '@/components/AppView.vue'
@@ -19,23 +20,36 @@ Vue.use(Router)
 export default new Router({
   routes:
   [
-    { path: '/landing', name: 'Landing', component: LandingView },
-    { path: '/app',
+    {
+      path: '/',
+      name: 'Root',
+      component: RootView
+    },
+    {
+      path: '/landing',
+      name: 'Landing',
+      component: LandingView
+    },
+    {
+      path: '/app',
       name: 'AppView',
       component: AppView,
       children:
       [
-        { path: 'inits',
+        {
+          path: 'inits',
           component: InitiativesView,
           children: [
-            { path: '/',
+            {
+              path: '/',
               name: 'InitiativesHome',
               component: InitiativesHome,
               children: [
                 { path: 'unsubscribe', name: 'Unsubscribe', component: Unsubscribe }
               ]
             },
-            { path: ':initiativeId',
+            {
+              path: ':initiativeId',
               name: 'Initiative',
               component: InitiativesContent,
               children: [
