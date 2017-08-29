@@ -1,1 +1,4 @@
 /backend/src/main/resources/public/
+/npm-debug.log
+/compileAndCopy.sh
+/mvnw
