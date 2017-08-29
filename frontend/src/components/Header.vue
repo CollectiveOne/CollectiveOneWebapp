@@ -68,7 +68,7 @@ export default {
     },
     goMyProfile () {
       this.showUserOptions = false
-      this.$router.push('/user/' + this.$store.state.user.profile.c1Id)
+      this.$router.push({ name: 'UserProfilePage', params: { userId: this.$store.state.user.profile.c1Id } })
     },
     goHome () {
       this.showUserOptions = false

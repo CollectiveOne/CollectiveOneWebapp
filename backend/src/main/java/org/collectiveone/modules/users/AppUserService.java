@@ -88,7 +88,6 @@ public class AppUserService {
 		appUserProfileRepository.save(profile);
 		
 		return new PostResult("success", "profile edited", profile.getId().toString());
-		
 	}
 	
 	

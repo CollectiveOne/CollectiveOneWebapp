@@ -63,9 +63,13 @@ export default new Router({
               ]
             }
           ]
+        },
+        {
+          path: 'user/:userId',
+          name: 'UserProfilePage',
+          component: UserProfilePage
         }
       ]
-    },
-    { path: '/user/:userId', name: 'UserProfilePage', component: UserProfilePage }
+    }
   ]
 })

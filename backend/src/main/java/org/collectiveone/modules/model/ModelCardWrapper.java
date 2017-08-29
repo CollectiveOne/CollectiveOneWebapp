@@ -1,5 +1,6 @@
 package org.collectiveone.modules.model;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +27,12 @@ public class ModelCardWrapper {
 		parameters = { @Parameter( name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
+	
+	@Column(name = "state")
+	private ModelCardState state;
+	
+	@Column(name = "targetDate")
+	private Timestamp targetDate;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private ModelCard card;
