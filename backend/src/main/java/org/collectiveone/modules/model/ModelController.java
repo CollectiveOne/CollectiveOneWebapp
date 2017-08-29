@@ -9,6 +9,7 @@ import org.collectiveone.modules.governance.GovernanceService;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelDto;
+import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.dto.ModelViewDto;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserService;

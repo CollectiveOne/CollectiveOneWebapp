@@ -3,7 +3,8 @@ package org.collectiveone.modules.model.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.collectiveone.modules.model.ModelSectionDto;
+import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.model.ModelView;
 
 public class ModelViewDto {
 
@@ -12,6 +13,17 @@ public class ModelViewDto {
 	private String title;
 	private String description;
 	private List<ModelSectionDto> sections = new ArrayList<ModelSectionDto>();
+	
+	public ModelView toEntity(ModelView view, ModelViewDto viewDto, Initiative initiative) {
+		
+		if (view == null) view = new ModelView();
+		
+		view.setInitiative(initiative);
+		view.setTitle(viewDto.getTitle());
+		view.setDescription(viewDto.getDescription());
+		
+		return view;
+	}
 	
 	public String getId() {
 		return id;

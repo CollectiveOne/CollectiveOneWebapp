@@ -1,5 +1,6 @@
 package org.collectiveone.modules.model;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import org.collectiveone.modules.initiatives.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelDto;
+import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.dto.ModelViewDto;
 import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
@@ -64,12 +66,7 @@ public class ModelService {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		if (initiative == null) return new PostResult("error", "initiative not found", "");
 		
-		ModelView view = new ModelView();
-		
-		view.setInitiative(initiative);
-		view.setTitle(viewDto.getTitle());
-		view.setDescription(viewDto.getDescription());
-		
+		ModelView view = viewDto.toEntity(null, viewDto, initiative);
 		view = modelViewRepository.save(view);
 		
 		return new PostResult("success", "view created", view.getId().toString());
@@ -83,8 +80,7 @@ public class ModelService {
 		
 		ModelView view = modelViewRepository.findById(UUID.fromString(viewDto.getId()));
 		
-		view.setTitle(viewDto.getTitle());
-		view.setDescription(viewDto.getDescription());
+		view = viewDto.toEntity(view, viewDto, initiative);
 		view = modelViewRepository.save(view);
 		
 		return new PostResult("success", "view edited", view.getId().toString());
@@ -108,9 +104,7 @@ public class ModelService {
 	@Transactional
 	public PostResult createSection(ModelSectionDto sectionDto, UUID creatorId) {
 		
-		ModelSection section = new ModelSection();
-		section.setTitle(sectionDto.getTitle());
-		section.setDescription(sectionDto.getDescription());
+		ModelSection section = sectionDto.toEntity(null, sectionDto);
 		section = modelSectionRepository.save(section);
 		
 		if(sectionDto.getIsSubsection()) {
@@ -140,8 +134,7 @@ public class ModelService {
 		
 		ModelSection section = modelSectionRepository.findById(UUID.fromString(sectionDto.getId()));
 		
-		section.setTitle(sectionDto.getTitle());
-		section.setDescription(sectionDto.getDescription());
+		section = sectionDto.toEntity(section, sectionDto);
 		section = modelSectionRepository.save(section);
 		
 		return new PostResult("success", "section edited", section.getId().toString());
@@ -166,10 +159,18 @@ public class ModelService {
 	@Transactional
 	public PostResult deleteSection (UUID sectionId, UUID creatorId) {
 		
-		List<ModelSection> parents = modelSectionRepository.findParentSections(sectionId);
-		
-		/* remove references */
 		ModelSection section = modelSectionRepository.findById(sectionId);
+		
+		/* remove references to views */
+		List<ModelView> views = modelSectionRepository.findParentViews(sectionId);
+		if (views.size() > 0) {
+			for (ModelView view : views) {
+				view.getSections().remove(section);
+			}
+		}
+		
+		/* remove references to parent sections */
+		List<ModelSection> parents = modelSectionRepository.findParentSections(sectionId);
 		if (parents.size() > 0) {
 			for (ModelSection parent : parents) {
 				parent.getSubsections().remove(section);
@@ -187,10 +188,7 @@ public class ModelService {
 		ModelSection section = modelSectionRepository.findById(UUID.fromString(cardDto.getSectionId()));
 		if (section == null) return new PostResult("error", "view not found", "");
 		
-		ModelCard card = new ModelCard();
-		card.setTitle(cardDto.getTitle());
-		card.setText(cardDto.getText());
-		
+		ModelCard card = cardDto.toEntity(null, cardDto);
 		card = modelCardRepository.save(card);
 		
 		ModelCardWrapper cardWrapper = new ModelCardWrapper();
@@ -198,7 +196,7 @@ public class ModelService {
 		
 		cardWrapper = modelCardWrapperRepository.save(cardWrapper);
 		
-		section.getCards().add(cardWrapper);
+		section.getCardsWrappers().add(cardWrapper);
 		modelSectionRepository.save(section);
 		
 		return new PostResult("success", "card created", card.getId().toString());
@@ -215,13 +213,12 @@ public class ModelService {
 		
 		cardWrapper.getOldVersions().add(cardWrapper.getCard());
 		
-		ModelCard card = new ModelCard();
-		card.setTitle(cardDto.getTitle());
-		card.setText(cardDto.getText());
-		
+		ModelCard card = cardDto.toEntity(null, cardDto);
 		card = modelCardRepository.save(card);
 		
 		cardWrapper.setCard(card);
+		cardWrapper.setState(ModelCardState.valueOf(cardDto.getState()));
+		cardWrapper.setTargetDate(new Timestamp(cardDto.getTargetDate()));
 		
 		return new PostResult("success", "section edited", cardWrapper.getId().toString());
 	}
@@ -240,7 +237,7 @@ public class ModelService {
 		ModelCardWrapper card = modelCardWrapperRepository.findById(cardWrapperId);
 		if (parents.size() > 0) {
 			for (ModelSection parent : parents) {
-				parent.getCards().remove(card);
+				parent.getCardsWrappers().remove(card);
 			}
 		}
 		

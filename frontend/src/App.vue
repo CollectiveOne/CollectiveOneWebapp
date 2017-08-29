@@ -88,6 +88,10 @@ a {
   text-decoration: none;
 }
 
+select {
+  padding-left: 10px !important;
+}
+
 .w3-modal {
   padding-top: 30px;
   display: block;
@@ -138,6 +142,11 @@ a {
 
 .light-grey {
   background-color: #eff3f6;
+  color: black;
+}
+
+.light-grey-d1 {
+  background-color: #dbdee0;
   color: black;
 }
 
@@ -288,6 +297,15 @@ a {
 .app-margin-bottom {
   margin-bottom: 10px;
 }
+
+.vdp-datepicker input {
+  width: 100%;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 10px;
+}
+
+
 
 /* Animations */
 

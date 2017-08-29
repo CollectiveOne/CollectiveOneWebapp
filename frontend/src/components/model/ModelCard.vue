@@ -1,26 +1,32 @@
 <template lang="html">
   <div class="">
-    <div class="slider-container">
-      <transition name="slideDownUp">
-        <app-model-card-modal
-          v-if="showCardModal"
-          :cardWrapperId="cardWrapper.id" :initiativeId="initiativeId"
-          :key="cardWrapper.id"
-          @close="showCardModal = false">
-        </app-model-card-modal>
-      </transition>
-    </div>
-
-    <div class="w3-card-2 card-container w3-display-container"
+    <div class="w3-display-container"
+      :class="{ 'w3-card-2': cardEffect }"
       @mouseover="showActionButton = true"
       @mouseleave="showActionButton = false">
 
-      <div v-if="card.title !== ''" class="">
-        <b>{{ card.title }}</b>
+      <div class="w3-row"
+        :class="{'card-container-padded': cardEffect, 'card-container-slim': !cardEffect }">
+
+        <div v-if="card.title !== ''" class="">
+          <b>{{ card.title }}</b>
+        </div>
+
+        <div class="card-text">
+          <p>{{ card.text }}</p>
+        </div>
+
       </div>
 
-      <div class="card-text">
-        <p>{{ card.text }}</p>
+      <div v-if="showDetails" class="w3-row light-grey">
+        <div class="w3-col s6">
+          <div class="w3-tag light-grey-d1">
+            {{ cardWrapper.state }}
+          </div>
+        </div>
+        <div class="w3-col s6">
+          {{ dateString(cardWrapper.targetDate) }}
+        </div>
       </div>
 
       <transition name="fadeenter">
@@ -35,26 +41,12 @@
 </template>
 
 <script>
-import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
+import { dateString } from '@/lib/common.js'
 
 export default {
   name: 'model-card',
 
   components: {
-    'app-model-card-modal': ModelCardModal
-  },
-
-  data () {
-    return {
-      showActionButton: false,
-      showCardModal: false
-    }
-  },
-
-  computed: {
-    card () {
-      return this.cardWrapper.card
-    }
   },
 
   props: {
@@ -65,15 +57,57 @@ export default {
     initiativeId: {
       type: String,
       default: ''
+    },
+    cardEffect: {
+      type: Boolean,
+      default: true
+    }
+  },
+
+  data () {
+    return {
+      showActionButton: false
+    }
+  },
+
+  computed: {
+    card () {
+      return this.cardWrapper.card
+    },
+    showDetails () {
+      if (this.cardEffect) {
+        if (this.cardWrapper.state) {
+          if (this.cardWrapper.state !== 'NONE') {
+            return true
+          }
+        }
+
+        if (this.cardWrapper.targetDate) {
+          if (this.cardWrapper.targetDate > 0) {
+            return true
+          }
+        }
+      }
+    }
+  },
+
+  methods: {
+    dateString (v) {
+      return dateString(v)
     }
   }
+
 }
 </script>
 
 <style scoped>
 
-.card-container {
-  padding: 8px 16px 16px 16px !important;
+.card-container-padded {
+  padding: 8px 16px 10px 16px !important;
+}
+
+.card-container-slim {
+  padding: 0px 0px 0px 0px !important;
 }
 
 .card-text p {

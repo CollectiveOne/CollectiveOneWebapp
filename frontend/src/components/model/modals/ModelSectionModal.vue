@@ -8,56 +8,61 @@
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>Model Section</h2>
+          <h2>{{ isNew ? 'New Section' : 'Model Section' }}</h2>
         </div>
 
-        <div v-if="section" class="w3-container div-modal-content">
+        <div class="w3-container div-modal-content">
 
           <app-model-modal-buttons
-            :show="true"
+            :show="showEditButtons"
             @edit="startEditing()"
             @delete="deleteSection()">
           </app-model-modal-buttons>
 
-          <div v-if="section.isSubsection" class="">
-            <label class=""><b>Under:</b></label>
-            {{ section.parentSectionTitle }}
+          <div v-if="isNew" class="w3-row">
+            <div v-if="!editedSection.isSubsection" class="">
+              <label class=""><b>View:</b></label>
+              <br>
+              <h4>{{ this.editedSection.viewTitle }}</h4>
+            </div>
           </div>
 
-          <br>
-          <label class=""><b>Title:</b></label>
-          <div v-if="!editing" class="w3-padding light-grey">
-            {{ section.title }}
-          </div>
-          <div v-else class="">
-            <input type="text" class="w3-input w3-hover-light-grey" v-model="editedSection.title">
-            <app-error-panel
-              :show="titleEmptyShow"
-              message="please add a title">
-            </app-error-panel>
-            <app-error-panel
-              :show="titleTooLongShow"
-              message="name too long">
-            </app-error-panel>
+          <div class="w3-row w3-margin-top">
+            <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+            <div v-if="!editing" class="w3-padding light-grey">
+              {{ section.title }}
+            </div>
+            <div v-else class="">
+              <input type="text" class="w3-input w3-hover-light-grey" v-model="editedSection.title">
+              <app-error-panel
+                :show="titleEmptyShow"
+                message="please add a title">
+              </app-error-panel>
+              <app-error-panel
+                :show="titleTooLongShow"
+                message="name too long">
+              </app-error-panel>
+            </div>
           </div>
 
-          <br>
-          <label class=""><b>Description:</b></label>
-          <div v-if="!editing" class="w3-padding light-grey">
-            {{ section.description }}
-          </div>
-          <div v-else class="">
-            <textarea type="text" class="w3-input w3-border w3-round w3-hover-light-grey" v-model="editedSection.description"></textarea>
-            <app-error-panel
-              :show="descriptionErrorShow"
-              message="please include a description of this section">
-            </app-error-panel>
+          <div class="w3-row w3-margin-top">
+            <label class=""><b>Description: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+            <div v-if="!editing" class="w3-padding light-grey">
+              {{ section.description }}
+            </div>
+            <div v-else class="">
+              <textarea type="text" class="w3-input w3-border w3-round w3-hover-light-grey" v-model="editedSection.description"></textarea>
+              <app-error-panel
+                :show="descriptionErrorShow"
+                message="please include a description of this section">
+              </app-error-panel>
+            </div>
           </div>
 
           <div v-if="editing" class="modal-bottom-btns-row w3-row-padding">
             <hr>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="editing = false">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
             </div>
             <div class="w3-col m6">
               <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
@@ -81,21 +86,22 @@ export default {
   },
 
   props: {
-    initiativeId: {
-      type: String,
-      default: ''
-    },
-    sectionId: {
-      type: String,
-      default: ''
+    pars: {
+      type: Object,
+      default: null
     }
   },
 
   data () {
     return {
-      section: null,
+      section: {
+        title: '',
+        description: ''
+      },
+      isNew: false,
       editedSection: null,
       editing: false,
+      showEditButtons: false,
       titleEmptyError: false,
       descriptionEmptyError: false,
       test: 'tests'
@@ -128,7 +134,7 @@ export default {
 
   methods: {
     updateSectionData () {
-      this.axios.get('/1/secured/initiative/' + this.initiativeId + '/model/section/' + this.sectionId).then((response) => {
+      this.axios.get('/1/secured/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
         this.section = response.data.data
       })
     },
@@ -138,6 +144,13 @@ export default {
     },
     closeThis () {
       this.$emit('close')
+    },
+    cancel () {
+      if (this.isNew) {
+        this.closeThis()
+      } else {
+        this.editing = false
+      }
     },
     accept () {
       var ok = true
@@ -157,29 +170,26 @@ export default {
       }
 
       if (ok) {
-        var sectionDto = {
-          id: this.editedSection.id,
-          viewId: this.editedSection.viewId,
-          title: this.editedSection.title,
-          description: this.editedSection.description,
-          isSubsection: false
-        }
-
-        if (this.isSubsection) {
-          sectionDto.isSubsection = true
-          sectionDto.parentSectionId = this.editedSection.parentSection.id
-        }
-
-        this.axios.put('/1/secured/initiative/' + this.initiativeId + '/model/section', sectionDto).then((response) => {
+        var sectionDto = JSON.parse(JSON.stringify(this.editedSection))
+        var url = '/1/secured/initiative/' + sectionDto.initiativeId + '/model/section'
+        var returnF = (response) => {
           if (response.data.result === 'success') {
             this.closeThis()
             this.$store.dispatch('refreshModel')
           } else {
             this.showOutputMessage(response.data.message)
           }
-        }).catch((error) => {
-          console.log(error)
-        })
+        }
+
+        if (this.isNew) {
+          this.axios.post(url, sectionDto).then(returnF).catch((error) => {
+            console.log(error)
+          })
+        } else {
+          this.axios.put(url, sectionDto).then(returnF).catch((error) => {
+            console.log(error)
+          })
+        }
       }
     },
     deleteSection () {
@@ -193,7 +203,29 @@ export default {
   },
 
   mounted () {
-    this.updateSectionData()
+    if (this.pars.new) {
+      this.isNew = true
+
+      this.editedSection = {
+        isSubsection: this.pars.isSubsection,
+        initiativeId: this.pars.initiativeId,
+        title: '',
+        description: ''
+      }
+
+      if (!this.pars.isSubsection) {
+        this.editedSection.viewId = this.pars.viewId
+        this.editedSection.viewTitle = this.pars.viewTitle
+      } else {
+        this.editedSection.parentSectionId = this.parentSectionId.viewId
+        this.editedSection.parentSectionTitle = this.pars.parentSectionTitle
+      }
+
+      this.editing = true
+    } else {
+      this.showEditButtons = true
+      this.section.id = this.pars.sectionId
+    }
   }
 }
 </script>

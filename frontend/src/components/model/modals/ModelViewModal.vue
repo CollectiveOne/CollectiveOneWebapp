@@ -7,21 +7,21 @@
           <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
         </div>
 
-        <div v-if="view" class="w3-container">
+        <div class="w3-container">
 
           <div class="w3-row w3-border-bottom">
-            <h2>Model View</h2>
+            <h2>{{ isNew ? 'New View' : 'Model View' }}</h2>
           </div>
 
           <div class="w3-row div-modal-content">
 
             <app-model-modal-buttons
-              :show="true"
+              :show="showEditButtons"
               @edit="startEditing()"
               @delete="deleteView()">
             </app-model-modal-buttons>
 
-            <label class=""><b>Title:</b></label>
+            <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
             <div v-if="!editing" class="w3-padding light-grey">
               {{ view.title }}
             </div>
@@ -38,7 +38,7 @@
             </div>
 
             <br>
-            <label class=""><b>Description:</b></label>
+            <label class=""><b>Description: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
             <div class="">
               <div v-if="!editing" class="w3-padding light-grey">
                 {{ view.description }}
@@ -55,7 +55,7 @@
             <div v-if="editing" class="modal-bottom-btns-row w3-row-padding">
               <hr>
               <div class="w3-col m6">
-                <button type="button" class="w3-button app-button-light" @click="editing = false">Cancel</button>
+                <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
               </div>
               <div class="w3-col m6">
                 <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
@@ -80,23 +80,24 @@ export default {
   },
 
   props: {
-    viewId: {
-      type: String,
-      default: ''
-    },
-    initiativeId: {
-      type: String,
-      default: ''
+    pars: {
+      type: Object,
+      default: null
     }
   },
 
   data () {
     return {
-      view: null,
+      view: {
+        title: '',
+        description: ''
+      },
       editedView: null,
       editing: false,
+      showEditButtons: false,
       titleEmptyError: false,
-      descriptionEmptyError: false
+      descriptionEmptyError: false,
+      isNew: false
     }
   },
 
@@ -126,7 +127,7 @@ export default {
 
   methods: {
     updateViewData () {
-      this.axios.get('/1/secured/initiative/' + this.initiativeId + '/model/view/' + this.viewId).then((response) => {
+      this.axios.get('/1/secured/initiative/' + this.view.initiativeId + '/model/view/' + this.view.id).then((response) => {
         this.view = response.data.data
       })
     },
@@ -136,6 +137,13 @@ export default {
     },
     closeThis () {
       this.$emit('close')
+    },
+    cancel () {
+      if (this.isNew) {
+        this.closeThis()
+      } else {
+        this.editing = false
+      }
     },
     accept () {
       var ok = true
@@ -155,27 +163,35 @@ export default {
       }
 
       if (ok) {
-        let viewDto = {
-          id: this.view.id,
-          title: this.editedView.title,
-          description: this.editedView.description
-        }
-
-        this.axios.put('/1/secured/initiative/' + this.initiativeId + '/model/view', viewDto).then((response) => {
+        var viewDto = JSON.parse(JSON.stringify(this.editedView))
+        var url = '/1/secured/initiative/' + viewDto.initiativeId + '/model/view'
+        var returnF = (response) => {
           if (response.data.result === 'success') {
-            this.updateViewData()
+            if (this.isNew) {
+              this.closeThis()
+            } else {
+              this.updateViewData()
+            }
             this.editing = false
             this.$store.dispatch('refreshModel')
           } else {
             this.showOutputMessage(response.data.message)
           }
-        }).catch((error) => {
-          console.log(error)
-        })
+        }
+
+        if (this.isNew) {
+          this.axios.post(url, viewDto).then(returnF).catch((error) => {
+            console.log(error)
+          })
+        } else {
+          this.axios.put(url, viewDto).then(returnF).catch((error) => {
+            console.log(error)
+          })
+        }
       }
     },
     deleteView () {
-      this.axios.delete('/1/secured/initiative/' + this.initiativeId + '/model/view/' + this.view.id).then((response) => {
+      this.axios.delete('/1/secured/initiative/' + this.view.initiativeId + '/model/view/' + this.view.id).then((response) => {
         this.$store.dispatch('refreshModel')
         this.closeThis()
       }).catch((error) => {
@@ -185,7 +201,21 @@ export default {
   },
 
   mounted () {
-    this.updateViewData()
+    if (this.pars.new) {
+      this.isNew = true
+      this.editedView = {
+        initiativeId: this.pars.initiativeId,
+        title: '',
+        description: ''
+      }
+      this.editing = true
+    } else {
+      this.isNew = false
+      this.showEditButtons = true
+      this.view.id = this.pars.viewId
+      this.view.initiativeId = this.pars.initiativeId
+      this.updateViewData()
+    }
   }
 }
 </script>

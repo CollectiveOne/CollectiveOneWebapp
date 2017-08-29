@@ -13,7 +13,7 @@ import Unsubscribe from '@/components/user/Unsubscribe.vue'
 import OverviewSection from '@/components/initiative/OverviewSection.vue'
 import PeopleSection from '@/components/initiative/PeopleSection.vue'
 import TransfersSection from '@/components/initiative/TransfersSection.vue'
-import ModelSection from '@/components/initiative/ModelSection.vue'
+import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
 
 import UserProfilePage from '@/components/user/UserProfilePage.vue'
 
@@ -59,7 +59,7 @@ export default new Router({
                 { path: 'people', name: 'InitiativePeople', component: PeopleSection, meta: {'column': 1} },
                 { path: 'assignations', name: 'InitiativeAssignations', component: TransfersSection, meta: {'column': 3} },
                 { path: 'assignations/:assignationId', name: 'InitiativeAssignation', component: TransfersSection, meta: {'column': 3} },
-                { path: 'model', name: 'InitiativeModel', component: ModelSection, meta: {'column': 4} }
+                { path: 'model', name: 'InitiativeModel', component: ModelSectionTab, meta: {'column': 4} }
               ]
             }
           ]

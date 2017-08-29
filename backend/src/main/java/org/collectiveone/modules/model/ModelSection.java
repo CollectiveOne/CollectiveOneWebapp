@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -37,7 +38,7 @@ public class ModelSection {
 	
 	@OneToMany
 	@OrderColumn(name = "cards_order")
-	private List<ModelCardWrapper> cards = new ArrayList<ModelCardWrapper>();
+	private List<ModelCardWrapper> cardsWrappers = new ArrayList<ModelCardWrapper>();
 	
 	@OneToMany
 	@OrderColumn(name = "subsections_order")
@@ -76,7 +77,7 @@ public class ModelSection {
 		sectionDto.setTitle(title);
 		sectionDto.setDescription(description);
 		
-		for (ModelCardWrapper cardWrapper : cards) {
+		for (ModelCardWrapper cardWrapper : cardsWrappers) {
 			sectionDto.getCardsWrappers().add(cardWrapper.toDto());
 		}
 		
@@ -113,12 +114,12 @@ public class ModelSection {
 		this.description = description;
 	}
 
-	public List<ModelCardWrapper> getCards() {
-		return cards;
+	public List<ModelCardWrapper> getCardsWrappers() {
+		return cardsWrappers;
 	}
 
-	public void setCards(List<ModelCardWrapper> cards) {
-		this.cards = cards;
+	public void setCardsWrappers(List<ModelCardWrapper> cardsWrappers) {
+		this.cardsWrappers = cardsWrappers;
 	}
 
 	public List<ModelSection> getSubsections() {

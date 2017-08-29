@@ -49,6 +49,37 @@
               </app-error-panel>
             </div>
 
+            <br>
+            <div class="w3-row-padding">
+              <div class="w3-col m6 w3-margin-bottom">
+                <label class=""><b>State:</b></label>
+                <div v-if="!editing" class="">
+                  <div class="w3-tag gray-1 w3-padding w3-round">
+                    {{ cardWrapper.state }}
+                  </div>
+                </div>
+                <div v-else class="">
+                  <select class="w3-select" v-model="editedCard.state">
+                    <option>NONE</option>
+                    <option>PLAN</option>
+                    <option>REALITY</option>
+                  </select>
+                </div>
+              </div>
+              <div class="w3-col m6">
+                <label class=""><b>Target Date:</b></label>
+                <div v-if="!editing" class="">
+                  <input class="w3-input" :value="dateString(this.cardWrapper.targetDate)" disabled>
+                </div>
+                <div v-else class="">
+                  <datepicker
+                    :value="targetDateStr"
+                    @selected="targetDateSelected($event)">
+                  </datepicker>
+                </div>
+              </div>
+            </div>
+
             <div v-if="editing" class="modal-bottom-btns-row w3-row-padding">
               <hr>
               <div class="w3-col m6">
@@ -68,12 +99,15 @@
 </template>
 
 <script>
+import { dateString } from '@/lib/common.js'
+import Datepicker from 'vuejs-datepicker'
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
 
 export default {
 
   components: {
-    'app-model-modal-buttons': ModelModalButtons
+    'app-model-modal-buttons': ModelModalButtons,
+    'datepicker': Datepicker
   },
 
   props: {
@@ -93,7 +127,8 @@ export default {
       editedCard: null,
       editing: false,
       titleEmptyError: false,
-      textEmptyError: false
+      textEmptyError: false,
+      targetDateStr: ''
     }
   },
 
@@ -125,6 +160,9 @@ export default {
   },
 
   methods: {
+    dateString (v) {
+      return dateString(v)
+    },
     updateCardData () {
       this.axios.get('/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapperId).then((response) => {
         this.cardWrapper = response.data.data
@@ -135,7 +173,23 @@ export default {
     },
     startEditing () {
       this.editedCard = JSON.parse(JSON.stringify(this.card))
+
+      this.targetDateStr = new Date()
+      if (this.cardWrapper.targetDate) {
+        if (this.cardWrapper.targetDate > 0) {
+          this.targetDateStr = new Date(this.cardWrapper.targetDate)
+        }
+      }
+
+      this.editedCard.state = this.cardWrapper.state
+      this.editedCard.targetDate = this.cardWrapper.targetDate
+
       this.editing = true
+    },
+    targetDateSelected (dateStr) {
+      this.targetDateStr = dateStr
+      var date = new Date(dateStr)
+      this.editedCard.targetDate = date.getTime()
     },
     accept () {
       var ok = true
@@ -150,12 +204,7 @@ export default {
       }
 
       if (ok) {
-        let cardDto = {
-          id: this.editedCard.id,
-          sectionId: this.editedCard.sectionId,
-          title: this.editedCard.title,
-          text: this.editedCard.text
-        }
+        let cardDto = JSON.parse(JSON.stringify(this.editedCard))
 
         this.axios.put('/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id, cardDto).then((response) => {
           if (response.data.result === 'success') {

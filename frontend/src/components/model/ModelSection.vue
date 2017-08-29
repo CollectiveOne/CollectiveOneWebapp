@@ -1,38 +1,5 @@
 <template lang="html">
   <div class="">
-    <div class="slider-container">
-      <transition name="slideDownUp">
-        <app-model-section-modal
-          v-if="showSectionModal"
-          :sectionId="section.id" :initiativeId="initiativeId"
-          :key="section.id"
-          @close="showSectionModal = false">
-        </app-model-section-modal>
-      </transition>
-    </div>
-
-    <div class="slider-container">
-      <transition name="slideDownUp">
-        <app-model-new-card-modal
-          v-if="showNewCardModal"
-          :sectionId="section.id" :initiativeId="initiativeId"
-          :key="section.id"
-          @close="showNewCardModal = false">
-        </app-model-new-card-modal>
-      </transition>
-    </div>
-
-    <div class="slider-container">
-      <transition name="slideDownUp">
-        <app-model-new-section-modal
-          v-if="showNewSubSectionModal"
-          :parentSection="section" :initiativeId="initiativeId"
-          :key="section.id"
-          @close="showNewSubSectionModal = false">
-        </app-model-new-section-modal>
-      </transition>
-    </div>
-
     <div class="section-container w3-display-container"
       @mouseover="showActionButton = true"
       @mouseleave="showActionButton = false">
@@ -50,7 +17,9 @@
           :key="cardWrapper.id"
           :cardWrapper="cardWrapper"
           :initiativeId="initiativeId"
-          class="w3-col l4 m6 section-card">
+          :cardEffect="cardsAsCards"
+          class="w3-col section-card"
+          :class="{'l4': cardsAsCards, 'm6': cardsAsCards, 's12': !cardsAsCards}">
         </app-model-card>
       </div>
 
@@ -110,6 +79,11 @@
               <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i> new sub-section
             </div>
           </div>
+          <div
+            class="w3-button model-action-button gray-1-color w3-right"
+            @click="cardsAsCards = !cardsAsCards">
+            <i class="fa" :class="{ 'fa-bars': cardsAsCards, 'fa-th': !cardsAsCards }" aria-hidden="true"></i>
+          </div>
         </div>
       </transition>
 
@@ -119,18 +93,12 @@
 
 <script>
 import ModelCard from '@/components/model/ModelCard.vue'
-import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
-import ModelNewCardModal from '@/components/model/modals/ModelNewCardModal.vue'
-import ModelNewSectionModal from '@/components/model/modals/ModelNewSectionModal.vue'
 
 export default {
   name: 'app-model-section',
 
   components: {
-    'app-model-card': ModelCard,
-    'app-model-section-modal': ModelSectionModal,
-    'app-model-new-card-modal': ModelNewCardModal,
-    'app-model-new-section-modal': ModelNewSectionModal
+    'app-model-card': ModelCard
   },
 
   props: {
@@ -152,10 +120,8 @@ export default {
     return {
       showSubsections: false,
       showActionButton: false,
-      showSectionModal: false,
-      showNewCardModal: false,
       showSubActionButtons: false,
-      showNewSubSectionModal: false
+      cardsAsCards: true
     }
   },
 

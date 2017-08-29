@@ -8,6 +8,8 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -28,6 +30,7 @@ public class ModelCardWrapper {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "state")
 	private ModelCardState state;
 	
@@ -66,6 +69,8 @@ public class ModelCardWrapper {
 		
 		cardWrapperDto.setId(id.toString());
 		cardWrapperDto.setCard(card.toDto());
+		if (state != null) cardWrapperDto.setState(state.toString());
+		if (targetDate != null) cardWrapperDto.setTargetDate(targetDate.getTime());
 		
 		return cardWrapperDto;
 	}
@@ -94,6 +99,23 @@ public class ModelCardWrapper {
 	public void setOldVersions(List<ModelCard> oldVersions) {
 		this.oldVersions = oldVersions;
 	}
+
+	public ModelCardState getState() {
+		return state;
+	}
+
+	public void setState(ModelCardState state) {
+		this.state = state;
+	}
+
+	public Timestamp getTargetDate() {
+		return targetDate;
+	}
+
+	public void setTargetDate(Timestamp targetDate) {
+		this.targetDate = targetDate;
+	}
+	
 	
 	
 }

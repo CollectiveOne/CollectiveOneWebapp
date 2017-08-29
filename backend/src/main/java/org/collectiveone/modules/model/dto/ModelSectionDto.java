@@ -1,9 +1,9 @@
-package org.collectiveone.modules.model;
+package org.collectiveone.modules.model.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
+import org.collectiveone.modules.model.ModelSection;
 
 public class ModelSectionDto {
 
@@ -17,6 +17,16 @@ public class ModelSectionDto {
 	private String description;
 	private List<ModelCardWrapperDto> cardsWrappers = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelSectionDto> subsections = new ArrayList<ModelSectionDto>();
+	
+	public ModelSection toEntity(ModelSection section, ModelSectionDto sectionDto) {
+		
+		if (section == null) section = new ModelSection();
+		
+		section.setTitle(sectionDto.getTitle());
+		section.setDescription(sectionDto.getDescription());
+		
+		return section;
+	}
 	
 	public String getId() {
 		return id;
