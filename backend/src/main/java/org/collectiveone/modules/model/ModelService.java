@@ -1,6 +1,5 @@
 package org.collectiveone.modules.model;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -87,8 +86,8 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelViewDto> getView (UUID viewId, UUID requestById) {
-		return new GetResult<ModelViewDto>("success", "view retrieved", modelViewRepository.findById(viewId).toDto());
+	public GetResult<ModelViewDto> getView (UUID viewId, UUID requestById, Integer level) {
+		return new GetResult<ModelViewDto>("success", "view retrieved", modelViewRepository.findById(viewId).toDto(level));
 	}
 	
 	
@@ -141,8 +140,8 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById) {
-		ModelSectionDto sectionDto = modelSectionRepository.findById(sectionId).toDto();
+	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById, Integer level) {
+		ModelSectionDto sectionDto = modelSectionRepository.findById(sectionId).toDto(level);
 		
 		/* set parent section data */
 		List<ModelSection> parents = modelSectionRepository.findParentSections(sectionId);

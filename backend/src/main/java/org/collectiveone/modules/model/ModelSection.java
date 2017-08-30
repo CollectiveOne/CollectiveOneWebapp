@@ -66,24 +66,41 @@ public class ModelSection {
 		return id.equals(other.getId());
 	}
 
-	public ModelSectionDto toDto() {
-		return toDto(0);
-	}
-	
-	public ModelSectionDto toDto(Integer level) {
+	public ModelSectionDto toDtoLight() {
 		ModelSectionDto sectionDto = new ModelSectionDto();
 		
 		sectionDto.setId(id.toString());
 		sectionDto.setTitle(title);
 		sectionDto.setDescription(description);
+		sectionDto.setnSubsections(subsections.size());
+		sectionDto.setnCards(cardsWrappers.size());
 		
-		for (ModelCardWrapper cardWrapper : cardsWrappers) {
-			sectionDto.getCardsWrappers().add(cardWrapper.toDto());
-		}
+		return sectionDto;
+	}
+	
+	public ModelSectionDto toDto() {
+		return toDto(0);
+	}
+	
+	public ModelSectionDto toDto(Integer level) {
 		
+		ModelSectionDto sectionDto = toDtoLight();
+		
+		/* if current level is 1 or more, keep going */
 		if (level >= 1) {
+			sectionDto.setSubElementsLoaded(true);
+			
+			for (ModelCardWrapper cardWrapper : cardsWrappers) {
+				sectionDto.getCardsWrappers().add(cardWrapper.toDto());
+			}
+			
 			for (ModelSection subsection : subsections) {
 				sectionDto.getSubsections().add(subsection.toDto(level - 1));
+			}
+		} else {
+			sectionDto.setSubElementsLoaded(false);
+			for (ModelSection subsection : subsections) {
+				sectionDto.getSubsections().add(subsection.toDtoLight());
 			}
 		}
 		

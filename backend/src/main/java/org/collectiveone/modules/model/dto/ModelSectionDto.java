@@ -15,8 +15,13 @@ public class ModelSectionDto {
 	private String viewId;
 	private String title;
 	private String description;
+	private Boolean subElementsLoaded;
+	private Integer nSubsections;
+	private Integer nCards;
+	
 	private List<ModelCardWrapperDto> cardsWrappers = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelSectionDto> subsections = new ArrayList<ModelSectionDto>();
+	
 	
 	public ModelSection toEntity(ModelSection section, ModelSectionDto sectionDto) {
 		
@@ -88,5 +93,24 @@ public class ModelSectionDto {
 	public void setSubsections(List<ModelSectionDto> subsections) {
 		this.subsections = subsections;
 	}
+	public Boolean getSubElementsLoaded() {
+		return subElementsLoaded;
+	}
+	public void setSubElementsLoaded(Boolean subElementsLoaded) {
+		this.subElementsLoaded = subElementsLoaded;
+	}
+	public Integer getnSubsections() {
+		return nSubsections;
+	}
+	public void setnSubsections(Integer nSubsections) {
+		this.nSubsections = nSubsections;
+	}
+	public Integer getnCards() {
+		return nCards;
+	}
+	public void setnCards(Integer nCards) {
+		this.nCards = nCards;
+	}
+	
 	
 }

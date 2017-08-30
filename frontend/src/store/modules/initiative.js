@@ -4,7 +4,7 @@ const state = {
   initiative: null,
   initiativeTransfers: null,
   initiativeAssignations: null,
-  initiativeModel: null
+  initiativeModelViews: null
 }
 
 const getters = {
@@ -39,8 +39,8 @@ const mutations = {
   setTransfers: (state, payload) => {
     state.initiativeTransfers = payload
   },
-  setModel: (state, payload) => {
-    state.initiativeModel = payload
+  setModelViews: (state, payload) => {
+    state.initiativeModelViews = payload
   },
   setAssignations: (state, payload) => {
     state.initiativeAssignations = payload
@@ -83,14 +83,14 @@ const actions = {
     }
   },
 
-  refreshModel: (context) => {
+  refreshModelViews: (context) => {
     if (context.state.initiative) {
       Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/model', {
         params: {
-          level: 3
+          level: 0
         }
       }).then((response) => {
-        context.commit('setModel', response.data.data)
+        context.commit('setModelViews', response.data.data)
       })
     }
   }

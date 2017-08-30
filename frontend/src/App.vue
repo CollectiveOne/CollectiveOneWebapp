@@ -132,6 +132,10 @@ select {
   color: #637484;
 }
 
+.gray-1-border {
+  border-color: #637484 !important;
+}
+
 .gray-2 {
   background-color: #6f8294;
 }

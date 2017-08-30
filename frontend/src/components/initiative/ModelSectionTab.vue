@@ -32,15 +32,15 @@
     </transition>
   </div>
 
-  <div class="w3-container"
-    v-if="initiativeModel">
-    <div class="w3-row w3-margin-top">
+  <div class="w3-container">
+    <div v-if="views" class="w3-row w3-margin-top">
       <div class="view-selector w3-left app-margin-right app-margin-bottom" v-for="view in views">
-        <button @click="viewSelected(view.id)"
+        <router-link
+          :to="{ name: 'ModelView', params: { viewId: view.id } }"
           class="w3-button w3-right"
           :class="{'app-button-light': !isViewSelected(view.id), 'app-button': isViewSelected(view.id)}">
           {{ view.title }}
-        </button>
+        </router-link>
       </div>
       <div @click="newView()" class="w3-button w3-right">
         <i class="fa fa-plus-circle" aria-hidden="true"></i>
@@ -48,12 +48,11 @@
     </div>
     <div class="w3-row w3-margin-top">
       <transition name="fadeenter">
-        <app-model-view
+        <router-view
           @show-view-modal="showViewModalFun($event)"
           @show-section-modal="showSectionModalFun($event)"
-          @show-card-modal="showCardModalFun($event)"
-          :view="views[showView]" :key="showView">
-        </app-model-view>
+          @show-card-modal="showCardModalFun($event)">
+        </router-view>
       </transition>
     </div>
   </div>
@@ -62,23 +61,12 @@
 </template>
 
 <script>
-import ModelView from '@/components/model/ModelView.vue'
 import ModelViewModal from '@/components/model/modals/ModelViewModal.vue'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 
-const getViewIndex = function (views, id) {
-  for (var ix in views) {
-    if (views[ix].id === id) {
-      return ix
-    }
-  }
-  return -1
-}
-
 export default {
   components: {
-    'app-model-view': ModelView,
     'app-model-view-modal': ModelViewModal,
     'app-model-section-modal': ModelSectionModal,
     'app-model-card-modal': ModelCardModal
@@ -101,20 +89,22 @@ export default {
     initiative () {
       return this.$store.state.initiative.initiative
     },
-    initiativeModel () {
-      return this.$store.state.initiative.initiativeModel
-    },
     views () {
-      return this.initiativeModel.views
+      if (this.$store.state.initiative.initiativeModelViews) {
+        return this.$store.state.initiative.initiativeModelViews.views
+      } else {
+        return []
+      }
     }
   },
 
   methods: {
-    viewSelected (id) {
-      this.showView = getViewIndex(this.views, id)
-    },
-    isViewSelected (id) {
-      return this.showView === getViewIndex(this.views, id)
+    isViewSelected (viewId) {
+      if (this.$route.params.viewId) {
+        if (this.$route.params.viewId === viewId) {
+          return true
+        }
+      }
     },
     showViewModalFun (event) {
       this.viewModalPars = event
@@ -137,7 +127,7 @@ export default {
   },
 
   mounted () {
-    this.$store.dispatch('refreshModel')
+    this.$store.dispatch('refreshModelViews')
   }
 }
 </script>

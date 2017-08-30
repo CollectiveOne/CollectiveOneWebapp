@@ -181,7 +181,6 @@ export default {
         var returnF = (response) => {
           if (response.data.result === 'success') {
             this.closeThis()
-            this.$store.dispatch('refreshModel')
           } else {
             this.showOutputMessage(response.data.message)
           }
@@ -200,7 +199,6 @@ export default {
     },
     deleteSection () {
       this.axios.delete('/1/secured/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
-        this.$store.dispatch('refreshModel')
         this.closeThis()
       }).catch((error) => {
         console.log(error)

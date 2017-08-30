@@ -173,7 +173,6 @@ export default {
               this.updateViewData()
             }
             this.editing = false
-            this.$store.dispatch('refreshModel')
           } else {
             this.showOutputMessage(response.data.message)
           }
@@ -192,7 +191,6 @@ export default {
     },
     deleteView () {
       this.axios.delete('/1/secured/initiative/' + this.view.initiativeId + '/model/view/' + this.view.id).then((response) => {
-        this.$store.dispatch('refreshModel')
         this.closeThis()
       }).catch((error) => {
         console.log(error)

@@ -65,9 +65,10 @@ public class ModelController {
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/view/{viewId}", method = RequestMethod.GET) 
 	public GetResult<ModelViewDto> getView(
 			@PathVariable("initiativeId") String initiativeIdStr,
-			@PathVariable("viewId") String viewIdStr) {
+			@PathVariable("viewId") String viewIdStr, 
+			@RequestParam(defaultValue = "1") Integer level) {
 		
-		return modelService.getView(UUID.fromString(viewIdStr), getLoggedUser().getC1Id());
+		return modelService.getView(UUID.fromString(viewIdStr), getLoggedUser().getC1Id(), level);
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/view", method = RequestMethod.PUT) 
@@ -129,9 +130,10 @@ public class ModelController {
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.GET) 
 	public GetResult<ModelSectionDto> getSection(
 			@PathVariable("initiativeId") String initiativeIdStr,
-			@PathVariable("sectionId") String sectionIdStr) {
+			@PathVariable("sectionId") String sectionIdStr,
+			@RequestParam(defaultValue = "1") Integer level) {
 		
-		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUser().getC1Id());
+		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUser().getC1Id(), level);
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.DELETE) 

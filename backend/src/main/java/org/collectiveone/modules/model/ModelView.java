@@ -57,11 +57,16 @@ public class ModelView {
 		viewDto.setInitiativeId(initiative.getId().toString());
 		viewDto.setTitle(title);
 		viewDto.setDescription(description);
+		viewDto.setnSections(sections.size());
 		
+		/* if current level is 1 or more, keep going */
 		if (level >= 1) {
+			viewDto.setSectionsLoaded(true);
 			for (ModelSection section : sections) {
 				viewDto.getSections().add(section.toDto(level - 1));
 			}
+		} else {
+			viewDto.setSectionsLoaded(false);
 		}
 		
 		return viewDto;

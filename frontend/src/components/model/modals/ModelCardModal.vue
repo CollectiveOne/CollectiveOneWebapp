@@ -256,7 +256,6 @@ export default {
         var responseF = (response) => {
           if (response.data.result === 'success') {
             this.closeThis()
-            this.$store.dispatch('refreshModel')
           } else {
             this.showOutputMessage(response.data.message)
           }
@@ -275,7 +274,6 @@ export default {
     },
     deleteCard () {
       this.axios.delete('/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapperId).then((response) => {
-        this.$store.dispatch('refreshModel')
         this.closeThis()
       }).catch((error) => {
         console.log(error)

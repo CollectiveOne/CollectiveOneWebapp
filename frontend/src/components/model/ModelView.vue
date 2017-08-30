@@ -24,7 +24,7 @@
       v-for="section in view.sections"
       :key="section.id"
       :section="section"
-      :initiativeId="view.initiativeId"
+      :initiativeId="initiativeId"
       :level="0"
       class="view-sections"
       @show-section-modal="$emit('show-section-modal', $event)"
@@ -44,18 +44,35 @@ export default {
 
   data () {
     return {
+      view: null,
       showActionButton: false
     }
   },
 
   props: {
-    view: {
-      type: Object,
-      default: null
+    initiativeId: {
+      type: String,
+      default: ''
+    },
+    viewId: {
+      type: String,
+      default: ''
     }
   },
 
+  computed: {
+  },
+
   methods: {
+    updateView () {
+      this.axios.get('/1/secured/initiative/' + this.initiativeId + '/model/view/' + this.viewId, {
+        params: {
+          level: 1
+        }
+      }).then((response) => {
+        this.view = response.data.data
+      })
+    },
     expandViewModal () {
       this.$emit('show-view-modal', {
         new: false,
@@ -72,6 +89,10 @@ export default {
         viewTitle: this.view.title
       })
     }
+  },
+
+  mounted () {
+    this.updateView()
   }
 }
 </script>
