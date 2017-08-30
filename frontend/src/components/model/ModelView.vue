@@ -20,13 +20,14 @@
         <h1 class="">{{ view.title }}</h1>
       </div>
     </div>
+
     <app-model-section
       v-for="section in view.sections"
       :key="section.id"
-      :section="section"
+      :sectionInit="section"
       :initiativeId="initiativeId"
       :level="0"
-      class="view-sections"
+      class="view-sections "
       @show-section-modal="$emit('show-section-modal', $event)"
       @show-card-modal="$emit('show-card-modal', $event)">
     </app-model-section>

@@ -46,14 +46,14 @@
                 </div>
               </button>
             </div>
-            <div class="slider-container">
+            <div class="slider-container w3-leftbar">
               <transition name="slideDownUp">
                 <div v-if="showSubsections" class="subsections-container" :style="subsectionsContainerStyle">
                   <app-model-section
                     v-for="subsection in section.subsections"
                     :key="subsection.id"
                     :preloaded="section.subElementsLoaded"
-                    :section="subsection"
+                    :sectionInit="subsection"
                     :initiativeId="initiativeId"
                     :level="level + 1"
                     class="subsection-container"
@@ -120,7 +120,7 @@ export default {
   },
 
   props: {
-    section: {
+    sectionInit: {
       type: Object,
       default: null
     },
@@ -140,6 +140,7 @@ export default {
 
   data () {
     return {
+      section: null,
       showSubsections: false,
       showActionButton: false,
       showSubActionButtons: false,
@@ -224,6 +225,8 @@ export default {
   created () {
     if (this.load) {
       this.update()
+    } else {
+      this.section = this.sectionInit
     }
   }
 }
