@@ -7,9 +7,14 @@
 <script>
 export default {
   mounted () {
-    console.log(this.$store.state.user.auth0state)
     if (this.$store.state.user.authenticated) {
-      this.$router.push({ name: 'InitiativesHome' })
+      var path = this.$store.state.user.auth0state
+      console.log(path)
+      if (!path.startsWith('/app')) {
+        this.$router.push({ name: 'InitiativesHome' })
+      } else {
+        this.$router.push(path)
+      }
     } else {
       this.$router.push({ name: 'Landing' })
     }

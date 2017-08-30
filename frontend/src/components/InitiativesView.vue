@@ -43,7 +43,7 @@
 
   <!-- Initiatives View -->
 
-  <div v-if="userAuthenticated" class="w3-row">
+  <div class="w3-row">
 
     <transition name="slideRightLeft">
       <div v-show="expandNav" :class="navContainerClass">
@@ -59,10 +59,6 @@
       </div>
     </div>
 
-  </div>
-  <div v-else class="w3-center logged-out-content">
-    <h2>please login to continue</h2>
-    <button class="w3-button app-button" @click="login()">login</button>
   </div>
 
 </div>
@@ -178,22 +174,11 @@ export default {
       if (this.windowIsSmall) {
         this.$emit('hide-nav')
       }
-    },
-
-    login () {
-      if (this.$store.state.user.lock) {
-        this.$store.state.user.lock.show()
-      }
     }
   },
 
   mounted () {
     this.$store.dispatch('updatedMyInitiatives')
-    if (!this.userAuthenticated) {
-      if (this.$store.state.user.lock) {
-        this.$store.state.user.lock.show()
-      }
-    }
   }
 }
 </script>
