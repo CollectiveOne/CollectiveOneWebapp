@@ -164,7 +164,7 @@ export default {
 
       if (ok) {
         var viewDto = JSON.parse(JSON.stringify(this.editedView))
-        var url = '/1/secured/initiative/' + viewDto.initiativeId + '/model/view'
+        var baseurl = '/1/secured/initiative/' + viewDto.initiativeId + '/model/view'
         var returnF = (response) => {
           if (response.data.result === 'success') {
             if (this.isNew) {
@@ -180,11 +180,11 @@ export default {
         }
 
         if (this.isNew) {
-          this.axios.post(url, viewDto).then(returnF).catch((error) => {
+          this.axios.post(baseurl, viewDto).then(returnF).catch((error) => {
             console.log(error)
           })
         } else {
-          this.axios.put(url, viewDto).then(returnF).catch((error) => {
+          this.axios.put(baseurl + '/' + viewDto.id, viewDto).then(returnF).catch((error) => {
             console.log(error)
           })
         }

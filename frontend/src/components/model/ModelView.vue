@@ -26,7 +26,9 @@
       :section="section"
       :initiativeId="view.initiativeId"
       :level="0"
-      class="view-sections">
+      class="view-sections"
+      @show-section-modal="$emit('show-section-modal', $event)"
+      @show-card-modal="$emit('show-card-modal', $event)">
     </app-model-section>
   </div>
 </template>

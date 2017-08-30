@@ -26,8 +26,7 @@
     <transition name="slideDownUp">
       <app-model-card-modal
         v-if="showCardModal"
-        :cardWrapperId="cardWrapper.id" :initiativeId="showModalInitiativeId"
-        :key="cardWrapper.id"
+        :pars="cardModalPars"
         @close="showCardModal = false">
       </app-model-card-modal>
     </transition>

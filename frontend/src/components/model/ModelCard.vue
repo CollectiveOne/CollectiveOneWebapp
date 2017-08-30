@@ -31,7 +31,7 @@
 
       <transition name="fadeenter">
         <div v-if="showActionButton"
-          @click="showCardModal = true"
+          @click="showCardModal()"
           class="w3-button model-action-button gray-2-color w3-display-topright">
           <i class="fa fa-expand" aria-hidden="true"></i>
         </div>
@@ -76,17 +76,7 @@ export default {
     },
     showDetails () {
       if (this.cardEffect) {
-        if (this.cardWrapper.state) {
-          if (this.cardWrapper.state !== 'NONE') {
-            return true
-          }
-        }
-
-        if (this.cardWrapper.targetDate) {
-          if (this.cardWrapper.targetDate > 0) {
-            return true
-          }
-        }
+        return this.cardWrapper.stateControl
       }
     }
   },
@@ -94,6 +84,13 @@ export default {
   methods: {
     dateString (v) {
       return dateString(v)
+    },
+    showCardModal () {
+      this.$emit('show-card-modal', {
+        new: false,
+        cardWrapperId: this.cardWrapper.id,
+        initiativeId: this.initiativeId
+      })
     }
   }
 

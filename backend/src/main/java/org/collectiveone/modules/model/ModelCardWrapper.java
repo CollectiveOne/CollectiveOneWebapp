@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -29,6 +30,9 @@ public class ModelCardWrapper {
 		parameters = { @Parameter( name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
+	
+	@Column(name = "state_control")
+	private Boolean stateControl;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "state")
@@ -69,10 +73,17 @@ public class ModelCardWrapper {
 		
 		cardWrapperDto.setId(id.toString());
 		cardWrapperDto.setCard(card.toDto());
+		cardWrapperDto.setStateControl(stateControl);
 		if (state != null) cardWrapperDto.setState(state.toString());
 		if (targetDate != null) cardWrapperDto.setTargetDate(targetDate.getTime());
 		
 		return cardWrapperDto;
+	}
+	
+	public void setOtherProperties(ModelCardDto cardDto) {
+		setStateControl(cardDto.getStateControl());
+		if (cardDto.getState() != null) setState(ModelCardState.valueOf(cardDto.getState()));
+		if (cardDto.getTargetDate() != null) setTargetDate(new Timestamp(cardDto.getTargetDate()));
 	}
 	
 	
@@ -98,6 +109,14 @@ public class ModelCardWrapper {
 
 	public void setOldVersions(List<ModelCard> oldVersions) {
 		this.oldVersions = oldVersions;
+	}
+	
+	public Boolean getStateControl() {
+		return stateControl;
+	}
+
+	public void setStateControl(Boolean stateControl) {
+		this.stateControl = stateControl;
 	}
 
 	public ModelCardState getState() {

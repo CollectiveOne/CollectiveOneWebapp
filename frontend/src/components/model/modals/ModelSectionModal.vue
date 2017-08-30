@@ -25,6 +25,11 @@
               <br>
               <h4>{{ this.editedSection.viewTitle }}</h4>
             </div>
+            <div v-else class="">
+              <label class=""><b>Parent Section:</b></label>
+              <br>
+              <h4>{{ this.editedSection.parentSectionTitle }}</h4>
+            </div>
           </div>
 
           <div class="w3-row w3-margin-top">
@@ -98,6 +103,7 @@ export default {
         title: '',
         description: ''
       },
+      initiativeId: '',
       isNew: false,
       editedSection: null,
       editing: false,
@@ -171,7 +177,7 @@ export default {
 
       if (ok) {
         var sectionDto = JSON.parse(JSON.stringify(this.editedSection))
-        var url = '/1/secured/initiative/' + sectionDto.initiativeId + '/model/section'
+        var baseurl = '/1/secured/initiative/' + this.initiativeId + '/model/section'
         var returnF = (response) => {
           if (response.data.result === 'success') {
             this.closeThis()
@@ -182,11 +188,11 @@ export default {
         }
 
         if (this.isNew) {
-          this.axios.post(url, sectionDto).then(returnF).catch((error) => {
+          this.axios.post(baseurl, sectionDto).then(returnF).catch((error) => {
             console.log(error)
           })
         } else {
-          this.axios.put(url, sectionDto).then(returnF).catch((error) => {
+          this.axios.put(baseurl + '/' + sectionDto.id, sectionDto).then(returnF).catch((error) => {
             console.log(error)
           })
         }
@@ -203,12 +209,13 @@ export default {
   },
 
   mounted () {
+    this.initiativeId = this.pars.initiativeId
+
     if (this.pars.new) {
       this.isNew = true
 
       this.editedSection = {
         isSubsection: this.pars.isSubsection,
-        initiativeId: this.pars.initiativeId,
         title: '',
         description: ''
       }
@@ -217,7 +224,7 @@ export default {
         this.editedSection.viewId = this.pars.viewId
         this.editedSection.viewTitle = this.pars.viewTitle
       } else {
-        this.editedSection.parentSectionId = this.parentSectionId.viewId
+        this.editedSection.parentSectionId = this.pars.parentSectionId
         this.editedSection.parentSectionTitle = this.pars.parentSectionTitle
       }
 
@@ -225,6 +232,7 @@ export default {
     } else {
       this.showEditButtons = true
       this.section.id = this.pars.sectionId
+      this.updateSectionData()
     }
   }
 }

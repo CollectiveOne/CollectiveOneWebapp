@@ -6,6 +6,7 @@ public class ModelCardWrapperDto {
 
 	private String id;
 	private ModelCardDto card;
+	private Boolean stateControl;
 	private String state;
 	private Long targetDate; 
 	private List<ModelCardDto> oldVersions;
@@ -21,6 +22,12 @@ public class ModelCardWrapperDto {
 	}
 	public void setCard(ModelCardDto card) {
 		this.card = card;
+	}
+	public Boolean getStateControl() {
+		return stateControl;
+	}
+	public void setStateControl(Boolean stateControl) {
+		this.stateControl = stateControl;
 	}
 	public String getState() {
 		return state;

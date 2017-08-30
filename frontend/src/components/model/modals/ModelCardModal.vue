@@ -7,22 +7,35 @@
           <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
         </div>
 
-        <div v-if="cardWrapper" class="">
-          <div class="w3-container w3-border-bottom">
-            <h2>Card details</h2>
+
+        <div class="w3-container w3-border-bottom">
+          <h2>{{ isNew ? 'New Card' : 'Model Card'}}</h2>
+        </div>
+
+        <div class="w3-container div-modal-content">
+
+          <app-model-modal-buttons
+            :show="showEditButtons"
+            @edit="startEditing()"
+            @delete="deleteCard()">
+          </app-model-modal-buttons>
+
+          <div v-if="isNew" class="w3-row">
+            <label class=""><b>Section:</b></label>
+            <br>
+            <h4>{{ this.editedCard.sectionTitle }}</h4>
           </div>
 
-          <div class="w3-container div-modal-content">
-
-            <app-model-modal-buttons
-              :show="true"
-              @edit="startEditing()"
-              @delete="deleteCard()">
-            </app-model-modal-buttons>
-
-            <label class=""><b>Title:</b></label>
+          <div class="w3-row">
+            <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
             <div v-if="!editing" class="w3-padding light-grey">
-              {{ card.title }}
+              <div v-if="card.title !== ''" class="">
+                {{ card.title }}
+              </div>
+              <div v-else class="">
+                <i>(empty)</i>
+              </div>
+
             </div>
             <div v-else class="">
               <input type="text" class="w3-input w3-hover-light-grey" v-model="editedCard.title">
@@ -35,9 +48,10 @@
                 message="name too long">
               </app-error-panel>
             </div>
+          </div>
 
-            <br>
-            <label class=""><b>Text:</b></label>
+          <div class="w3-row w3-margin-top">
+            <label class=""><b>Text: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
             <div v-if="!editing" class="w3-padding light-grey">
               {{ card.text }}
             </div>
@@ -48,49 +62,62 @@
                 message="please include the text of this card">
               </app-error-panel>
             </div>
+          </div>
 
-            <br>
-            <div class="w3-row-padding">
-              <div class="w3-col m6 w3-margin-bottom">
-                <label class=""><b>State:</b></label>
-                <div v-if="!editing" class="">
-                  <div class="w3-tag gray-1 w3-padding w3-round">
+          <hr>
+          <div class="">
+            <div v-if="!editing" class="">
+              <div v-if="cardWrapper.stateControl" class="w3-row-padding">
+                <div class="w3-col m6 w3-margin-bottom">
+                  <label class=""><b>State:</b></label><br>
+                  <div class="w3-tag gray-1 w3-padding w3-round state-tag">
                     {{ cardWrapper.state }}
                   </div>
                 </div>
-                <div v-else class="">
-                  <select class="w3-select" v-model="editedCard.state">
-                    <option>NONE</option>
-                    <option>PLAN</option>
-                    <option>REALITY</option>
-                  </select>
-                </div>
-              </div>
-              <div class="w3-col m6">
-                <label class=""><b>Target Date:</b></label>
-                <div v-if="!editing" class="">
+                <div class="w3-col m6">
+                  <label class=""><b>Target date:</b></label>
                   <input class="w3-input" :value="dateString(this.cardWrapper.targetDate)" disabled>
                 </div>
-                <div v-else class="">
-                  <datepicker
-                    :value="targetDateStr"
-                    @selected="targetDateSelected($event)">
-                  </datepicker>
+              </div>
+            </div>
+            <div v-else class="">
+              <button
+                @click="editedCard.stateControl = !editedCard.stateControl"
+                class="w3-button app-button state-enable-button">
+                {{ editedCard.stateControl ? 'Remove state and deadline' : 'Set state and deadline' }}
+              </button>
+              <transition name="fadeenter">
+                <div v-if="editedCard.stateControl" class="w3-row-padding w3-margin-top">
+                  <div class="w3-col m6 w3-margin-bottom">
+                    <label class=""><b>State:</b></label>
+                    <select class="w3-select" v-model="editedCard.state">
+                      <option>NONE</option>
+                      <option>PLAN</option>
+                      <option>REALITY</option>
+                    </select>
+                  </div>
+                  <div class="w3-col m6">
+                    <label class=""><b>Target date:</b></label>
+                    <datepicker
+                      :value="targetDateStr"
+                      @selected="targetDateSelected($event)">
+                    </datepicker>
+                  </div>
                 </div>
-              </div>
+              </transition>
             </div>
-
-            <div v-if="editing" class="modal-bottom-btns-row w3-row-padding">
-              <hr>
-              <div class="w3-col m6">
-                <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
-              </div>
-              <div class="w3-col m6">
-                <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
-              </div>
-            </div>
-
           </div>
+
+          <div v-if="editing" class="modal-bottom-btns-row w3-row-padding">
+            <hr>
+            <div class="w3-col m6">
+              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
+            </div>
+            <div class="w3-col m6">
+              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -111,30 +138,42 @@ export default {
   },
 
   props: {
-    initiativeId: {
-      type: String,
-      default: ''
-    },
-    cardWrapperId: {
-      type: String,
-      default: ''
+    pars: {
+      type: Object,
+      default: null
     }
   },
 
   data () {
     return {
-      cardWrapper: null,
+      cardWrapper: {
+        id: '',
+        stateControl: false,
+        card: {
+          title: '',
+          text: ''
+        }
+      },
       editedCard: null,
       editing: false,
+      showEditButtons: false,
       titleEmptyError: false,
       textEmptyError: false,
-      targetDateStr: ''
+      targetDateStr: '',
+      isNew: false
     }
   },
 
   computed: {
     card () {
       return this.cardWrapper.card
+    },
+    showStateControl () {
+      if (this.editing) {
+        return this.editedCard.stateControl
+      } else {
+        return this.cardWrapper.stateControl
+      }
     },
     titleEmpty () {
       return this.editedCard.title === ''
@@ -164,12 +203,19 @@ export default {
       return dateString(v)
     },
     updateCardData () {
-      this.axios.get('/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapperId).then((response) => {
+      this.axios.get('/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.cardWrapper = response.data.data
       })
     },
     closeThis () {
       this.$emit('close')
+    },
+    cancel () {
+      if (this.isNew) {
+        this.closeThis()
+      } else {
+        this.editing = false
+      }
     },
     startEditing () {
       this.editedCard = JSON.parse(JSON.stringify(this.card))
@@ -181,6 +227,7 @@ export default {
         }
       }
 
+      this.editedCard.stateControl = this.cardWrapper.stateControl
       this.editedCard.state = this.cardWrapper.state
       this.editedCard.targetDate = this.cardWrapper.targetDate
 
@@ -204,18 +251,26 @@ export default {
       }
 
       if (ok) {
-        let cardDto = JSON.parse(JSON.stringify(this.editedCard))
-
-        this.axios.put('/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id, cardDto).then((response) => {
+        var cardDto = JSON.parse(JSON.stringify(this.editedCard))
+        var baseurl = '/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper'
+        var responseF = (response) => {
           if (response.data.result === 'success') {
             this.closeThis()
             this.$store.dispatch('refreshModel')
           } else {
             this.showOutputMessage(response.data.message)
           }
-        }).catch((error) => {
-          console.log(error)
-        })
+        }
+
+        if (this.isNew) {
+          this.axios.post(baseurl, cardDto).then(responseF).catch((error) => {
+            console.log(error)
+          })
+        } else {
+          this.axios.put(baseurl + '/' + this.cardWrapper.id, cardDto).then(responseF).catch((error) => {
+            console.log(error)
+          })
+        }
       }
     },
     deleteCard () {
@@ -229,11 +284,38 @@ export default {
   },
 
   mounted () {
-    this.updateCardData()
+    this.initiativeId = this.pars.initiativeId
+
+    if (this.pars.new) {
+      this.isNew = true
+
+      this.editedCard = {
+        stateControl: false,
+        title: '',
+        text: ''
+      }
+
+      this.editedCard.sectionId = this.pars.sectionId
+      this.editedCard.sectionTitle = this.pars.sectionTitle
+
+      this.editing = true
+    } else {
+      this.showEditButtons = true
+      this.cardWrapper.id = this.pars.cardWrapperId
+      this.updateCardData()
+    }
   }
 }
 </script>
 
 <style scoped>
+
+.state-enable-button {
+  width: 250px;
+}
+
+.state-tag {
+  width: 100%;
+}
 
 </style>

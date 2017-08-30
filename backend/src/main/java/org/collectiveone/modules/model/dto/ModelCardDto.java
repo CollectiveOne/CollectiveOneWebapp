@@ -9,6 +9,7 @@ public class ModelCardDto {
 	private String sectionId;
 	private String title;
 	private String text;
+	private Boolean stateControl;
 	private String state;
 	private Long targetDate;
 	
@@ -51,6 +52,12 @@ public class ModelCardDto {
 	}
 	public void setText(String text) {
 		this.text = text;
+	}
+	public Boolean getStateControl() {
+		return stateControl;
+	}
+	public void setStateControl(Boolean stateControl) {
+		this.stateControl = stateControl;
 	}
 	public String getState() {
 		return state;

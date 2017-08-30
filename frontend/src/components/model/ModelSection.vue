@@ -19,7 +19,8 @@
           :initiativeId="initiativeId"
           :cardEffect="cardsAsCards"
           class="w3-col section-card"
-          :class="{'l4': cardsAsCards, 'm6': cardsAsCards, 's12': !cardsAsCards}">
+          :class="{'l4': cardsAsCards, 'm6': cardsAsCards, 's12': !cardsAsCards}"
+          @show-card-modal="$emit('show-card-modal', $event)">
         </app-model-card>
       </div>
 
@@ -33,7 +34,6 @@
             <div class="w3-left button-text">
               hide
             </div>
-
           </div>
           <div v-else>
             <i class="w3-left fa fa-caret-right" aria-hidden="true"></i>
@@ -63,7 +63,7 @@
           @mouseleave="showSubActionButtons = false">
           <div
             class="w3-button model-action-button gray-1-color w3-right"
-            @click="showSectionModal = true">
+            @click="expandSectionModal()">
             <i class="fa fa-expand" aria-hidden="true"></i>
           </div>
           <div
@@ -72,10 +72,10 @@
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
           </div>
           <div v-if="showSubActionButtons" class="sub-action-buttons-container w3-card w3-white">
-            <div class="w3-button" @click="showNewCardModal = true">
+            <div class="w3-button" @click="newCard()">
               <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i> new card
             </div>
-            <div class="w3-button" @click="showNewSubSectionModal = true">
+            <div class="w3-button" @click="newSubsection()">
               <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i> new sub-section
             </div>
           </div>
@@ -153,6 +153,33 @@ export default {
         }
       }
       return text
+    }
+  },
+
+  methods: {
+    expandSectionModal () {
+      this.$emit('show-section-modal', {
+        new: false,
+        sectionId: this.section.id,
+        initiativeId: this.initiativeId
+      })
+    },
+    newSubsection () {
+      this.$emit('show-section-modal', {
+        new: true,
+        isSubsection: true,
+        initiativeId: this.initiativeId,
+        parentSectionId: this.section.id,
+        parentSectionTitle: this.section.title
+      })
+    },
+    newCard () {
+      this.$emit('show-card-modal', {
+        new: true,
+        initiativeId: this.initiativeId,
+        sectionId: this.section.id,
+        sectionTitle: this.section.title
+      })
     }
   }
 }

@@ -193,6 +193,7 @@ public class ModelService {
 		
 		ModelCardWrapper cardWrapper = new ModelCardWrapper();
 		cardWrapper.setCard(card);
+		cardWrapper.setOtherProperties(cardDto);
 		
 		cardWrapper = modelCardWrapperRepository.save(cardWrapper);
 		
@@ -217,8 +218,7 @@ public class ModelService {
 		card = modelCardRepository.save(card);
 		
 		cardWrapper.setCard(card);
-		cardWrapper.setState(ModelCardState.valueOf(cardDto.getState()));
-		cardWrapper.setTargetDate(new Timestamp(cardDto.getTargetDate()));
+		cardWrapper.setOtherProperties(cardDto);
 		
 		return new PostResult("success", "section edited", cardWrapper.getId().toString());
 	}
