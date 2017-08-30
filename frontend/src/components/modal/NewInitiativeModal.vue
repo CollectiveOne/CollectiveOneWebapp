@@ -219,7 +219,6 @@ export default {
 
         this.axios.post('/1/secured/initiative', initiativeDto).then((response) => {
           if (response.data.result === 'success') {
-            this.showOutputMessage(response.data.message)
             this.closeThis()
             this.$store.dispatch('updatedMyInitiatives')
             this.$router.push({name: 'Initiative', params: {'initiativeId': response.data.elementId}})

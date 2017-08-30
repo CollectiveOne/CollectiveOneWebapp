@@ -52,7 +52,9 @@
               :section="subsection"
               :initiativeId="initiativeId"
               :level="level + 1"
-              class="subsection-container">
+              class="subsection-container"
+              @show-section-modal="$emit('show-section-modal', $event)"
+              @show-card-modal="$emit('show-card-modal', $event)">
             </app-model-section>
           </div>
         </transition>
