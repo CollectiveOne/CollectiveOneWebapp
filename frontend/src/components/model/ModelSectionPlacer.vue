@@ -1,7 +1,12 @@
 <template lang="html">
   <app-model-section
     :initiativeId="$route.params.initiativeId"
-    :viewId="$route.params.viewId">
+    :sectionId="$route.params.sectionId"
+    :key="$route.params.sectionId"
+    :preloaded="false"
+    @show-view-modal="$emit('show-view-modal', $event)"
+    @show-section-modal="$emit('show-section-modal', $event)"
+    @show-card-modal="$emit('show-card-modal', $event)">
   </app-model-section>
 </template>
 
@@ -15,5 +20,5 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style scoped>
 </style>

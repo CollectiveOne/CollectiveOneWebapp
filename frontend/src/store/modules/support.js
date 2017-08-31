@@ -4,6 +4,7 @@ const state = {
   contentAnimationType: 'slideToDown',
   initiativesTree: [],
   triggerUpdateAssets: false,
+  triggerUpdateModel: false,
   userEmailNotVerified: false
 }
 
@@ -87,6 +88,9 @@ const mutations = {
   },
   triggerUpdateAssets: (state) => {
     state.triggerUpdateAssets = !state.triggerUpdateAssets
+  },
+  triggerUpdateModel: (state) => {
+    state.triggerUpdateModel = !state.triggerUpdateModel
   },
   setUserEmailNotVerified: (state, payload) => {
     state.userEmailNotVerified = payload

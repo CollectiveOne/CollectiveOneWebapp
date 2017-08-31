@@ -27,7 +27,7 @@
           </div>
 
           <div class="w3-row">
-            <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+            <label class=""><b>Title:</b></label>
             <div v-if="!editing" class="w3-padding light-grey">
               <div v-if="card.title !== ''" class="">
                 {{ card.title }}
@@ -256,6 +256,7 @@ export default {
         var responseF = (response) => {
           if (response.data.result === 'success') {
             this.closeThis()
+            this.$store.commit('triggerUpdateModel')
           } else {
             this.showOutputMessage(response.data.message)
           }

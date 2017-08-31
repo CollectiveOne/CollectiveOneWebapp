@@ -24,6 +24,7 @@
     <app-model-section
       v-for="section in view.sections"
       :key="section.id"
+      :preloaded="true"
       :sectionInit="section"
       :initiativeId="initiativeId"
       :level="0"
@@ -50,6 +51,12 @@ export default {
     }
   },
 
+  watch: {
+    '$store.state.support.triggerUpdateModel' () {
+      this.update()
+    }
+  },
+
   props: {
     initiativeId: {
       type: String,
@@ -65,7 +72,7 @@ export default {
   },
 
   methods: {
-    updateView () {
+    update () {
       this.axios.get('/1/secured/initiative/' + this.initiativeId + '/model/view/' + this.viewId, {
         params: {
           level: 1
@@ -93,7 +100,7 @@ export default {
   },
 
   mounted () {
-    this.updateView()
+    this.update()
   }
 }
 </script>

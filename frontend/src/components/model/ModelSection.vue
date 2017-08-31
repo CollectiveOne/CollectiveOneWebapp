@@ -1,20 +1,25 @@
 <template lang="html">
   <div class="">
-    <div class="section-container w3-display-container"
+    <div v-if="section" class="section-container w3-display-container"
       @mouseover="showActionButton = true"
       @mouseleave="showActionButton = false">
 
-      <div class="section-title-container w3-border-top gray-1-border ">
-        <div class="w3-row section-title w3-tag gray-1" :style="sectionTitleStyle">{{ section.title }}</div>
+      <div class="section-title-container w3-border-top w3-border-right gray-1-border ">
+        <router-link tag="div" :to="{ name: 'ModelSection', params: { sectionId: section.id } }" class="w3-row section-title w3-tag gray-1 cursor-pointer" :style="sectionTitleStyle">{{ section.title }}</router-link>
         <div class="w3-row w3-leftbar gray-1-border section-description w3-small light-grey w3-padding">
           {{ section.description }}
         </div>
       </div>
 
-      <div class="slider-container">
-        <transition name="slideDownUp">
-          <div v-if="expanded" class="w3-row subelements-container">
-            <div class="w3-row-padding w3-leftbar cards-container">
+      <div class="gray-1-border" :class="{'w3-border-bottom': !showExpandButton, 'slider-container': animatingSubsections}">
+        <transition name="slideDownUp"
+          @before-enter="animatingSubsections = true"
+          @after-enter="animatingSubsections = false"
+          @before-leave="animatingSubsections = true"
+          @after-leave="animatingSubsections = false">
+
+          <div v-if="expanded" class="w3-row w3-leftbar w3-border-right subelements-container">
+            <div class="w3-row-padding w3-border-right cards-container">
               <app-model-card
                 v-for="cardWrapper in section.cardsWrappers"
                 :key="cardWrapper.id"
@@ -27,7 +32,7 @@
               </app-model-card>
             </div>
 
-            <div class="w3-leftbar bottom-bar light-grey w3-small">
+            <div class="bottom-bar light-grey w3-small">
               <button
                 v-if="section.nSubsections > 0"
                 class="w3-button model-button"
@@ -46,14 +51,21 @@
                 </div>
               </button>
             </div>
-            <div class="slider-container w3-leftbar">
-              <transition name="slideDownUp">
+
+            <div class="" :class="{'slider-container': animatingSubsections}">
+              <transition name="slideDownUp"
+                @before-enter="animatingSubsections = true"
+                @after-enter="animatingSubsections = false"
+                @before-leave="animatingSubsections = true"
+                @after-leave="animatingSubsections = false">
+
                 <div v-if="showSubsections" class="subsections-container" :style="subsectionsContainerStyle">
                   <app-model-section
                     v-for="subsection in section.subsections"
                     :key="subsection.id"
                     :preloaded="section.subElementsLoaded"
                     :sectionInit="subsection"
+                    :sectionId="section.id"
                     :initiativeId="initiativeId"
                     :level="level + 1"
                     class="subsection-container"
@@ -67,11 +79,18 @@
         </transition>
       </div>
 
-      <div class="w3-row expand-row">
+      <div v-if="showExpandButton" class="w3-row expand-row">
         <button
           class="w3-button gray-1 w3-small"
           @click="toggleExpand()">
-          <span v-if="!expanded">Expand (contains <b>{{ section.nSubsections }}</b> subsections and <b>{{ section.nCards }}</b> cards)</span>
+          <span v-if="!expanded">
+            <i class="fa fa-th-list" aria-hidden="true"></i> Expand (contains
+            <span v-if="section.nSubsections > 0 && section.nCards > 0"><b>{{ section.nSubsections }}</b> subsections and <b>{{ section.nCards }}</b> cards)</span>
+            <span v-else>
+              <span v-if="section.nSubsections > 0"><b>{{ section.nSubsections }}</b>)</span>
+              <span v-if="section.nCards > 0"><b>{{ section.nCards }}</b> cards)</span>
+            </span>
+          </span>
           <span v-else>Collapse "{{  section.title }}" section</span>
         </button>
       </div>
@@ -97,8 +116,7 @@
               <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i> new sub-section
             </div>
           </div>
-          <div
-            class="w3-button model-action-button gray-1-color w3-right"
+          <div v-if="expanded" class="w3-button model-action-button gray-1-color w3-right"
             @click="cardsAsCards = !cardsAsCards">
             <i class="fa" :class="{ 'fa-bars': cardsAsCards, 'fa-th': !cardsAsCards }" aria-hidden="true"></i>
           </div>
@@ -132,6 +150,10 @@ export default {
       type: String,
       default: ''
     },
+    sectionId: {
+      type: String,
+      default: ''
+    },
     level: {
       type: Number,
       default: 0
@@ -145,11 +167,15 @@ export default {
       showActionButton: false,
       showSubActionButtons: false,
       cardsAsCards: true,
-      expanded: false
+      expanded: false,
+      animatingSubsections: false
     }
   },
 
   computed: {
+    showExpandButton () {
+      return ((this.section.nSubsections > 0) || (this.section.nCards > 0))
+    },
     sectionTitleStyle () {
       var fontsize = this.level < 5 ? 26 - 4 * this.level : 16
       return {'font-size': fontsize + 'px'}
@@ -177,6 +203,12 @@ export default {
         }
       }
       return text
+    }
+  },
+
+  watch: {
+    '$store.state.support.triggerUpdateModel' () {
+      this.update()
     }
   },
 
@@ -223,7 +255,10 @@ export default {
   },
 
   created () {
-    if (this.load) {
+    if (!this.preloaded) {
+      this.section = {
+        id: this.sectionId
+      }
       this.update()
     } else {
       this.section = this.sectionInit
@@ -235,11 +270,12 @@ export default {
 <style scoped>
 
 .section-container {
-  min-height: 100px;
 }
 
 .action-buttons-container {
   margin-top: 2px;
+  margin-right: 1px;
+  z-index: 1100;
 }
 
 .sub-action-buttons-container {
@@ -294,6 +330,7 @@ export default {
 
 .subsections-container {
   padding-top: 20px;
+  padding-right: 10px;
 }
 
 .subsection-container {

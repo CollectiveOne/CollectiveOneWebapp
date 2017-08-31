@@ -169,6 +169,7 @@ export default {
           if (response.data.result === 'success') {
             if (this.isNew) {
               this.closeThis()
+              this.$store.commit('triggerUpdateModel')
             } else {
               this.updateViewData()
             }

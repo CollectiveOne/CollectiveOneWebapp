@@ -181,6 +181,7 @@ export default {
         var returnF = (response) => {
           if (response.data.result === 'success') {
             this.closeThis()
+            this.$store.commit('triggerUpdateModel')
           } else {
             this.showOutputMessage(response.data.message)
           }
