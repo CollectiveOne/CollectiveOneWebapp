@@ -290,13 +290,9 @@ export default {
         }
 
         this.axios.post('/1/secured/initiative', intitiatveDto).then((response) => {
-          debugger
           if (response.data.result === 'success') {
             this.closeThis()
             this.$store.dispatch('updatedMyInitiatives')
-            this.$store.dispatch('updateInitiative')
-            this.$store.dispatch('refreshTransfers')
-            this.$store.commit('triggerUpdateAssets')
             this.$router.push({ name: 'Initiative', params: { initiativeId: response.data.elementId } })
           } else {
             this.showOutputMessage(response.data.message)
@@ -337,38 +333,9 @@ export default {
 
 <style scoped>
 
-.w3-modal {
-  display: block;
-}
-
-.close-div {
-  width: 70px;
-  height: 70px;
-  cursor: pointer;
-  text-align: right;
-}
-
-.fa-times {
-  margin-right: 20px;
-  margin-top: 20px;
-}
-
 .form-container {
   padding-top: 0px;
   padding-bottom: 35px;
-}
-
-.section-tabs {
-  text-align: center;
-  user-select: none;
-  cursor: pointer;
-}
-
-.bold-text {
-  font-weight: bold;
-}
-
-.assets-selector-div {
 }
 
 .members-container {

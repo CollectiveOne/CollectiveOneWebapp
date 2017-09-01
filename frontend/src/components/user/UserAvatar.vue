@@ -1,41 +1,61 @@
 <template lang="html">
-  <div class="w3-row avatar-container">
-    <div class="img-div noselect"
-      @mouseover="showHoverName = true"
-      @mouseleave="showHoverName = false">
-      <img class="w3-circle" :class="imgClass" :src="user.pictureUrl"/>
-      <div v-if="!showName && showHoverName" class="w3-container w3-padding hover-name-container w3-tag dark-gray w3-round">
-        <router-link :to="'/user/'+user.c1Id" class="w3-row cursor-pointer">
-          <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
-        </router-link>
-        <div class="w3-row">
-          {{ user.shortBio }}
-        </div>
-        <div class="w3-row">
-          <div class="social-icons-container">
+  <div class="">
 
-            <a v-if="user.twitterHandle" :href="user.twitterHandle" target="_blank" class="w3-button social-icon">
-              <i class="fa fa-twitter" aria-hidden="true"></i>
-            </a>
-            <a v-if="user.facebookHandle" :href="user.facebookHandle" target="_blank" class="w3-button social-icon">
-              <i class="fa fa-facebook" aria-hidden="true"></i>
-            </a>
-            <a v-if="user.linkedinHandle" :href="user.linkedinHandle" target="_blank" class="w3-button social-icon">
-              <i class="fa fa-linkedin" aria-hidden="true"></i>
-            </a>
+    <transition name="slideDownUp">
+      <app-user-profile-modal
+        v-if="showProfileModal"
+        :userId="user.c1Id"
+        @close="showProfileModal = false">
+      </app-user-profile-modal>
+    </transition>
 
+    <div class="w3-row avatar-container">
+      <div class="img-div noselect"
+        @mouseover="showHoverName = true"
+        @mouseleave="showHoverName = false">
+        <img class="w3-circle" :class="imgClass" :src="user.pictureUrl"/>
+        <div v-if="!showName && showHoverName" class="w3-container w3-padding hover-name-container w3-tag dark-gray w3-round">
+          <div
+            @click="showProfileModal = true"
+            class="w3-row cursor-pointer">
+            <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
+          </div>
+          <div class="w3-row">
+            {{ user.shortBio }}
+          </div>
+          <div class="w3-row">
+            <div class="social-icons-container">
+
+              <a v-if="user.twitterHandle" :href="user.twitterHandle" target="_blank" class="w3-button social-icon">
+                <i class="fa fa-twitter" aria-hidden="true"></i>
+              </a>
+              <a v-if="user.facebookHandle" :href="user.facebookHandle" target="_blank" class="w3-button social-icon">
+                <i class="fa fa-facebook" aria-hidden="true"></i>
+              </a>
+              <a v-if="user.linkedinHandle" :href="user.linkedinHandle" target="_blank" class="w3-button social-icon">
+                <i class="fa fa-linkedin" aria-hidden="true"></i>
+              </a>
+
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div v-if="showName" class="name-container">
-      <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
+      <div v-if="showName" class="name-container">
+        <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
+      </div>
     </div>
   </div>
+
 </template>
 
 <script>
+import UserProfileModal from '@/components/modal/UserProfileModal.vue'
+
 export default {
+  components: {
+    'app-user-profile-modal': UserProfileModal
+  },
+
   props: {
     user: {
       type: Object,
@@ -59,7 +79,8 @@ export default {
 
   data () {
     return {
-      showHoverName: false
+      showHoverName: false,
+      showProfileModal: false
     }
   },
 

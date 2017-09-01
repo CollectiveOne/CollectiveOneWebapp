@@ -33,4 +33,48 @@ public class FileStored {
 	@Column(name="key")
 	private String key;
 	
+	@Column(name="url")
+	private String url;
+	
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public AppUser getUploadedBy() {
+		return uploadedBy;
+	}
+
+	public void setUploadedBy(AppUser uploadedBy) {
+		this.uploadedBy = uploadedBy;
+	}
+
+	public String getBucket() {
+		return bucket;
+	}
+
+	public void setBucket(String bucket) {
+		this.bucket = bucket;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
 }

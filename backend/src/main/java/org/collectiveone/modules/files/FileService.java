@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.collectiveone.config.aws.AmazonS3Template;
 import org.collectiveone.modules.users.AppUserProfile;
 import org.collectiveone.modules.users.AppUserProfileRepositoryIf;
+import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,25 +30,41 @@ public class FileService {
 	String baseUrl;
 	
 	@Autowired
+	FileStoredRepositoryIf fileStoredRepository;
+	
+	@Autowired
+	private AppUserRepositoryIf appUserRepository;
+	
+	@Autowired
 	private AppUserProfileRepositoryIf appUserProfileRepository;
 
-	public String handleFileUpload(String name, MultipartFile file) {
+	@Transactional
+	public FileStored handleFileUpload(UUID uploadedById, String key, MultipartFile file) {
 		if (!file.isEmpty()) {
 			try {
 				ObjectMetadata objectMetadata = new ObjectMetadata();
 				objectMetadata.setContentType(file.getContentType());
 				
 				// Upload the file for public read
-				amazonS3Template.getAmazonS3Client().putObject(new PutObjectRequest(bucketName, name, file.getInputStream(), objectMetadata)
+				amazonS3Template.getAmazonS3Client().putObject(new PutObjectRequest(bucketName, key, file.getInputStream(), objectMetadata)
 				        .withCannedAcl(CannedAccessControlList.PublicRead));
 				
-				return "success";
+				
+				FileStored fileStored = new FileStored();
+				fileStored.setBucket(bucketName);
+				fileStored.setKey(key);
+				fileStored.setUploadedBy(appUserRepository.findByC1Id(uploadedById));
+				fileStored.setUrl(baseUrl + "/" + bucketName + "/" + key);
+				
+				fileStored = fileStoredRepository.save(fileStored);
+				
+				return fileStored;
 				
 			} catch (Exception e) {
-				return "error: " + e.getMessage();
+				return null;
 			}
 		} else {
-			return "error: file is empty";
+			return null;
 		}
 		
 	}
@@ -56,11 +73,13 @@ public class FileService {
 	public void uploadImageProfile(UUID userId, MultipartFile file) {
 		
 		String key = "ProfileImages/" + userId.toString();
-		String res = handleFileUpload(key, file);
+		FileStored fileUploaded = handleFileUpload(userId, key, file);
 		
-		if (res.equals("success")) {
+		if (fileUploaded != null) {
 			AppUserProfile profile = appUserProfileRepository.findByUser_C1Id(userId);
-			profile.setPictureUrl(baseUrl + "/" + bucketName + "/" + key);
+			profile.setUploadedPicture(fileUploaded);
+			profile.setUseUploadedPicture(true);
+			
 			appUserProfileRepository.save(profile);
 		}
 		

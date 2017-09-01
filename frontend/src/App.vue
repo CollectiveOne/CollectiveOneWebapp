@@ -109,6 +109,27 @@ select {
   min-height: 200px;
 }
 
+.w3-modal .close-div {
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+  text-align: right;
+}
+
+.w3-modal .close-div:hover {
+  color: #15a5cc;
+}
+
+
+.w3-modal .fa-times {
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.w3-modal .bottom-btns-row button {
+  width: 100%;
+}
+
 .white-bg {
   background-color: white;
 }

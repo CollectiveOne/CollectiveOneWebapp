@@ -372,25 +372,9 @@ export default {
 
 <style scoped>
 
-.w3-modal {
-  display: block;
-}
-
 .this-container {
   padding-top: 10px;
   padding-bottom: 30px;
-}
-
-.close-div {
-  width: 70px;
-  height: 70px;
-  cursor: pointer;
-  text-align: right;
-}
-
-.fa-times {
-  margin-right: 20px;
-  margin-top: 20px;
 }
 
 form {

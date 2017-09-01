@@ -205,29 +205,9 @@ export default {
 
 <style scoped>
 
-.w3-modal {
-  display: block;
-}
-
-.close-div {
-  width: 70px;
-  height: 70px;
-  cursor: pointer;
-  text-align: right;
-}
-
-.fa-times {
-  margin-right: 20px;
-  margin-top: 20px;
-}
-
 .form-container {
   padding-top: 20px;
   padding-bottom: 35px;
-}
-
-.bottom-btns-row button {
-  width: 100%;
 }
 
 .colors-container {

@@ -136,6 +136,13 @@
 
 export default {
 
+  props: {
+    userId: {
+      type: String,
+      default: ''
+    }
+  },
+
   data () {
     return {
       user: null,
@@ -258,7 +265,7 @@ export default {
       }
     },
     update () {
-      this.axios.get('/1/secured/user/profile/' + this.$route.params.userId).then((response) => {
+      this.axios.get('/1/secured/user/profile/' + this.userId).then((response) => {
         this.user = response.data.data
         this.username0 = this.user.username
       })

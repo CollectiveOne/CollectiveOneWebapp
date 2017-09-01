@@ -18,7 +18,7 @@ import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
 import ModelViewPlacer from '@/components/model/ModelViewPlacer.vue'
 import ModelSectionPlacer from '@/components/model/ModelSectionPlacer.vue'
 
-import UserProfilePage from '@/components/user/UserProfilePage.vue'
+import UserProfilePage from '@/components/UserProfilePage.vue'
 
 Vue.use(Router)
 

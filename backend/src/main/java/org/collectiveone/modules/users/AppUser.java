@@ -50,10 +50,20 @@ public class AppUser {
 		dto.setUsername(getProfile().getUsername());
 		dto.setNickname(getProfile().getNickname());
 		dto.setShortBio(getProfile().getShortBio());
-		dto.setPictureUrl(getProfile().getPictureUrl());
 		dto.setFacebookHandle(getProfile().getFacebookHandle());
 		dto.setTwitterHandle(getProfile().getTwitterHandle());
 		dto.setLinkedinHandle(getProfile().getLinkedinHandle());
+		
+		if (getProfile().getUseUploadedPicture() != null) {
+			if (!getProfile().getUseUploadedPicture()) {
+				dto.setPictureUrl(getProfile().getPictureUrl());
+			} else {
+				dto.setPictureUrl(getProfile().getUploadedPicture().getUrl());
+			}
+		} else {
+			dto.setPictureUrl(getProfile().getPictureUrl());
+		}
+		
 		
 		return dto;
 	}
