@@ -51,7 +51,8 @@
 
         <div class="w3-row w3-margin-bottom">
           <div class="w3-display-container w3-button user-image user-image-upload">
-            <span class="w3-display-middle">upload image</span>
+            <input class="w3-display-middle"
+              @change="newFileSelected($event)" type="file" name="" value="">
           </div>
         </div>
 
@@ -132,6 +133,7 @@
 </template>
 
 <script>
+
 export default {
 
   data () {
@@ -223,6 +225,14 @@ export default {
       } else {
         this.linkedinLinkOk = true
       }
+    },
+    newFileSelected (event) {
+      var data = new FormData()
+      data.append('file', event.target.files[0])
+
+      this.axios.post('/1/secured/upload/profileImage', data).then((response) => {
+        console.log('file uploaded')
+      })
     },
     accept () {
       var ok = true
