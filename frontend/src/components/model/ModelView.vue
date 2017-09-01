@@ -10,6 +10,7 @@
             <i class="fa fa-expand" aria-hidden="true"></i>
           </div>
           <div
+            v-if="isLoggedAnEditor"
             @click="newSection()"
             class="w3-button model-action-button w3-right">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
@@ -24,7 +25,8 @@
     <app-model-section
       v-for="section in view.sections"
       :key="section.id"
-      :preloaded="true"
+      :preloaded="false"
+      :sectionId="section.id"
       :sectionInit="section"
       :initiativeId="initiativeId"
       :level="0"
@@ -69,6 +71,9 @@ export default {
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    }
   },
 
   methods: {

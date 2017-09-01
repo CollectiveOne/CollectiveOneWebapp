@@ -29,6 +29,13 @@ const getters = {
     } else {
       return false
     }
+  },
+  isLoggedAnEditor: (state) => {
+    if (state.initiative) {
+      return state.initiative.loggedMember.role === 'ADMIN' || state.initiative.loggedMember.role === 'EDITOR'
+    } else {
+      false
+    }
   }
 }
 

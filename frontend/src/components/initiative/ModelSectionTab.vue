@@ -42,7 +42,7 @@
           {{ view.title }}
         </router-link>
       </div>
-      <div @click="newView()" class="w3-button w3-right">
+      <div v-if="isLoggedAnEditor" @click="newView()" class="w3-xxlarge w3-button w3-right">
         <i class="fa fa-plus-circle" aria-hidden="true"></i>
       </div>
     </div>
@@ -95,6 +95,9 @@ export default {
       } else {
         return []
       }
+    },
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
     }
   },
 

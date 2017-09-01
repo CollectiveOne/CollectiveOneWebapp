@@ -32,9 +32,9 @@
     </div>
 
     <div v-if="isLoggedAnAdmin"
-      class="action-buttons w3-display-topright w3-xlarge dark-gray w3-circle w3-button"
+      class="w3-display-topright w3-xxlarge w3-button"
       @click="showActionMenu = !showActionMenu">
-      <i class="fa fa-plus" aria-hidden="true"></i>
+      <i class="fa fa-plus-circle" aria-hidden="true"></i>
     </div>
     <div v-if="showActionMenu" class="action-menu w3-display-topright">
       <div class="w3-card w3-white w3-large">

@@ -139,6 +139,7 @@ export default {
   data () {
     return {
       user: null,
+      newPictureFile: null,
       editing: false,
       usernameExist: false,
       twitterLinkOk: true,
@@ -227,12 +228,7 @@ export default {
       }
     },
     newFileSelected (event) {
-      var data = new FormData()
-      data.append('file', event.target.files[0])
-
-      this.axios.post('/1/secured/upload/profileImage', data).then((response) => {
-        console.log('file uploaded')
-      })
+      this.newPictureFile = event.target.files[0]
     },
     accept () {
       var ok = true
@@ -250,6 +246,15 @@ export default {
           this.$store.dispatch('updateProfile')
           this.editing = false
         })
+
+        if (this.newPictureFile !== null) {
+          var data = new FormData()
+          data.append('file', this.newPictureFile)
+
+          this.axios.post('/1/secured/upload/profileImage', data).then((response) => {
+            console.log('file uploaded')
+          })
+        }
       }
     },
     update () {

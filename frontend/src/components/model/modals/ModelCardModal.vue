@@ -15,6 +15,7 @@
         <div class="w3-container div-modal-content">
 
           <app-model-modal-buttons
+            v-if="isLoggedAnEditor"
             :show="showEditButtons"
             @edit="startEditing()"
             @delete="deleteCard()">
@@ -165,6 +166,9 @@ export default {
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
     card () {
       return this.cardWrapper.card
     },

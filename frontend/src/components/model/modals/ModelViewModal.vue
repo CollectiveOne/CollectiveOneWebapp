@@ -16,6 +16,7 @@
           <div class="w3-row div-modal-content">
 
             <app-model-modal-buttons
+              v-if="isLoggedAnEditor"
               :show="showEditButtons"
               @edit="startEditing()"
               @delete="deleteView()">
@@ -102,6 +103,9 @@ export default {
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
     titleEmpty () {
       return this.editedView.title === ''
     },

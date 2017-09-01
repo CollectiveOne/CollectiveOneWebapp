@@ -4,10 +4,28 @@
       @mouseover="showHoverName = true"
       @mouseleave="showHoverName = false">
       <img class="w3-circle" :class="imgClass" :src="user.pictureUrl"/>
-      <div class="hover-name cursor-pointer">
-        <router-link :to="'/user/'+user.c1Id" v-if="!showName && showHoverName" class="hover-name-container w3-tag dark-gray w3-round">
+      <div v-if="!showName && showHoverName" class="w3-container w3-padding hover-name-container w3-tag dark-gray w3-round">
+        <router-link :to="'/user/'+user.c1Id" class="w3-row cursor-pointer">
           <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
         </router-link>
+        <div class="w3-row">
+          {{ user.shortBio }}
+        </div>
+        <div class="w3-row">
+          <div class="social-icons-container">
+
+            <a v-if="user.twitterHandle" :href="user.twitterHandle" target="_blank" class="w3-button social-icon">
+              <i class="fa fa-twitter" aria-hidden="true"></i>
+            </a>
+            <a v-if="user.facebookHandle" :href="user.facebookHandle" target="_blank" class="w3-button social-icon">
+              <i class="fa fa-facebook" aria-hidden="true"></i>
+            </a>
+            <a v-if="user.linkedinHandle" :href="user.linkedinHandle" target="_blank" class="w3-button social-icon">
+              <i class="fa fa-linkedin" aria-hidden="true"></i>
+            </a>
+
+          </div>
+        </div>
       </div>
     </div>
     <div v-if="showName" class="name-container">
@@ -93,6 +111,16 @@ export default {
 
 .hover-name-container {
   position: absolute;
+}
+
+.social-icons-container {
+  margin: 0 auto;
+  font-size: 18px;
+}
+
+.social-icon {
+  display: inline-block;
+  width: 50px;
 }
 
 .img-style-large {

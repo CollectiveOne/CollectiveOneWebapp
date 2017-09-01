@@ -17,6 +17,7 @@
           @after-enter="animatingSubsections = false"
           @before-leave="animatingSubsections = true"
           @after-leave="animatingSubsections = false">
+          <!-- hooks are needed to enable overflow when not animating -->
 
           <div v-if="expanded" class="w3-row w3-leftbar w3-border-right subelements-container">
             <div class="w3-row-padding w3-border-right cards-container">
@@ -104,6 +105,7 @@
             <i class="fa fa-expand" aria-hidden="true"></i>
           </div>
           <div
+            v-if="isLoggedAnEditor"
             class="w3-button model-action-button gray-1-color w3-right"
             @click="showSubActionButtons = !showSubActionButtons">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
@@ -173,6 +175,9 @@ export default {
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
     showExpandButton () {
       return ((this.section.nSubsections > 0) || (this.section.nCards > 0))
     },

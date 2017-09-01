@@ -49,6 +49,7 @@ public class AppUser {
 		dto.setC1Id(c1Id.toString());
 		dto.setUsername(getProfile().getUsername());
 		dto.setNickname(getProfile().getNickname());
+		dto.setShortBio(getProfile().getShortBio());
 		dto.setPictureUrl(getProfile().getPictureUrl());
 		dto.setFacebookHandle(getProfile().getFacebookHandle());
 		dto.setTwitterHandle(getProfile().getTwitterHandle());
@@ -59,7 +60,6 @@ public class AppUser {
 	
 	public AppUserDto toDtoFull() {
 		AppUserDto dto = toDtoLight();
-		dto.setShortBio(getProfile().getShortBio());
 		dto.setLongBio(getProfile().getLongBio());
 		
 		return dto;
