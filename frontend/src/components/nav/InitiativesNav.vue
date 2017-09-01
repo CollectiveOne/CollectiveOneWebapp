@@ -1,5 +1,5 @@
 <template lang="html">
-  <nav class="nav-container dark-gray">
+  <nav class="nav-container">
     <div class="">
 
       <div class="w3-container">

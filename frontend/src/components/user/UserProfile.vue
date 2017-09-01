@@ -1,7 +1,7 @@
 <template lang="html">
   <div v-if="user" class="user-page-container">
     <div v-if="!editing" class="w3-display-container show-container light-grey">
-      <div class="edit-button w3-display-topright">
+      <div v-if="isLoggedUser" class="edit-button w3-display-topright">
         <div @click="editing = true" class="w3-button w3-large">
           <i class="fa fa-pencil" aria-hidden="true"></i>
         </div>
@@ -156,6 +156,9 @@ export default {
   },
 
   computed: {
+    isLoggedUser () {
+      return this.user.c1Id === this.$store.state.user.profile.c1Id
+    },
     nicknameTooLarge () {
       if (this.user.nickname) {
         return this.user.nickname.length > 32
@@ -248,7 +251,7 @@ export default {
       }
 
       if (ok) {
-        this.axios.put('/1/secured/user/profile/' + this.$route.params.userId, this.user).then((response) => {
+        this.axios.put('/1/secured/user/profile/' + this.userId, this.user).then((response) => {
           this.update()
           this.$store.dispatch('updateProfile')
           this.editing = false

@@ -154,6 +154,7 @@ public class EmailService {
 						Response response = sg.api(request);
 						
 						if(response.statusCode == 202) {
+							System.out.println("emails sent!");
 							return "success";
 						} else {
 							return response.body;

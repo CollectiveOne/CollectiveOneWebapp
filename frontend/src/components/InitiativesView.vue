@@ -43,15 +43,15 @@
 
   <!-- Initiatives View -->
 
-  <div class="w3-row">
+  <div class="w3-cell-row">
 
     <transition name="slideRightLeft">
-      <div v-show="expandNav" :class="navContainerClass">
+      <div v-show="expandNav" class="dark-gray nav-container-cell" :class="navContainerClass">
         <app-initiatives-nav @initiative-selected="initiativeSelected()"></app-initiatives-nav>
       </div>
     </transition>
 
-    <div v-show="showContent" class="this-content" :class="contentContainerClass">
+    <div v-show="showContent" class="w3-cell content-container-cell" :class="contentContainerClass">
       <div class="slider-container">
         <transition name="slideDownUp" mode="out-in">
           <router-view></router-view>
@@ -134,32 +134,24 @@ export default {
     navContainerClass () {
       if (this.windowIsSmall) {
         return {
-          'w3-sidebar': true,
-          'nav-small': true
+          'w3-sidebar': true
         }
       } else {
         return {
-          'w3-col': true,
-          's3': true
+          'w3-cell': true
         }
       }
     },
     contentContainerClass () {
       if (this.windowIsSmall) {
         return {
-          'w3-col': true,
-          's12': true
         }
       } else {
         if (this.expandNav) {
           return {
-            'w3-col': true,
-            's9': true
           }
         } else {
           return {
-            'w3-col': true,
-            's12': true
           }
         }
       }
@@ -185,20 +177,8 @@ export default {
 
 <style scoped>
 
-.expand-left-menu-btn {
-  position: fixed;
-}
-
-.nav-small {
-  width: 90%;
-}
-
-.logged-out-content {
-  margin-top: 100px;
-}
-
-.logged-out-content button {
-  width: 250px;
+.nav-container-cell {
+  width: 300px;
 }
 
 </style>

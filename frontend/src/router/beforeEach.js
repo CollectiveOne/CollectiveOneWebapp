@@ -4,10 +4,14 @@ export default (to, from, next) => {
   when switching among initiatives, and the animation is selected accordingly */
 
   if (to.name === 'Initiative') {
-    /** always redirect if target is base initiative */
+    /** always redirect if target is base initiative.
+     *  The path level 1 is 'inits' and the path level '3'
+     *  is the initaitive section
+    */
+
     var subsection = 'overview'
-    if (from.matched.length === 3) {
-      switch (from.matched[2].name) {
+    if (from.matched[1].path === '/app/inits' && from.matched.length >= 4) {
+      switch (from.matched[3].name) {
         case 'InitiativeOverview':
           subsection = 'overview'
           break
@@ -18,6 +22,10 @@ export default (to, from, next) => {
 
         case 'InitiativeAssignations':
           subsection = 'assignations'
+          break
+
+        case 'InitiativeModel':
+          subsection = 'model'
           break
       }
     }

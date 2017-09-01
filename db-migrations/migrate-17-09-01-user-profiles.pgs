@@ -1,0 +1,38 @@
+---------------------------------------------------------
+-- This script will only fill the contents of the app_users and app_users_profiles
+-- tables. All other tables and all other sequences are generated
+-- using a DB dump which excludes the app_user table data.
+-- /usr/bin/pg_dump --cluster 9.6/main --host ec2-23-21-246-11.compute-1.amazonaws.com --port 5432 --username "fiobqmzrthifdx" --no-password  --format plain --data-only --disable-triggers --verbose --file "/home/pepo/workspace/c1-data/migration-01" --exclude-table "public.app_users" "d7lpi8u3gn8hak"
+---------------------------------------------------------
+
+DROP SCHEMA IF EXISTS masterschema CASCADE;
+CREATE SCHEMA masterschema;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+---------------------------------------------------------
+-- Conect to other server
+---------------------------------------------------------
+CREATE EXTENSION postgres_fdw;
+CREATE SERVER master FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'ec2-107-22-173-160.compute-1.amazonaws.com', dbname 'dbepusk67f1j5s', port '5432');
+CREATE USER MAPPING FOR postgres SERVER master OPTIONS (user 'fennztijsjjilm', password 'XXX');
+IMPORT FOREIGN SCHEMA public FROM SERVER master INTO masterschema;
+
+--------------------------------------------------------
+-- FILL DECISIONS
+---------------------------------------------------------
+INSERT INTO app_users 
+  (c1id, email, email_notifications_enabled)
+SELECT 
+  c1id, email, email_notifications_enabled
+FROM masterschema.app_users;
+
+INSERT INTO app_users_profiles 
+  (id, nickname, pitcure_url, user_c1id)
+SELECT 
+  uuid_generate_v4(), nickname, pitcure_url, c1id
+FROM masterschema.app_users;
+
+DROP SCHEMA masterschema CASCADE;
+DROP SERVER master CASCADE;
+DROP EXTENSION postgres_fdw CASCADE;
+

@@ -1,13 +1,16 @@
 <template lang="html">
   <div>
     <app-header @expand-nav="expandNav = !expandNav"></app-header>
-    <div v-if="userAuthenticated" class="app-content">
+    <div v-if="userAuthenticated" class="w3-row app-content">
       <router-view @hide-nav="expandNav = false" :expandNav="expandNav"></router-view>
     </div>
     <div v-else class="w3-center logged-out-content">
       <h2>please login to continue</h2>
       <button class="w3-button app-button" @click="login()">login</button>
     </div>
+    <!-- <div class="w3-row light-grey w3-padding w3-center">
+      TBD
+    </div> -->
   </div>
 </template>
 
