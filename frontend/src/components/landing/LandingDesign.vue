@@ -4,10 +4,10 @@
       <div class="top-div-top-div">
           <img class="logo" src="../../assets/logo-white.png">
           <div class="section-tabs">
-            <a href="#principles" class="section-tab">PRINCIPLES</a>
-            <a href="#vision" class="section-tab">VISION</a>
-            <a href="#roadmap" class="section-tab">ROADMAP</a>
-            <a href="#participate" class="section-tab">PARTICIPATE</a>
+            <div @click="goToPrinciples()" class="section-tab">PRINCIPLES</div>
+            <div @click="goToVision()" class="section-tab">VISION</div>
+            <div @click="goToRoadmap()" class="section-tab">ROADMAP</div>
+            <div @click="goToParticipate()" class="section-tab">PARTICIPATE</div>
           </div>
       </div>
       <div class="top-div-middle-div">
@@ -201,6 +201,28 @@ export default {
   methods: {
     login () {
       this.$store.state.user.lock.show()
+    },
+    goToPrinciples () {
+      window.scroll(0, this.findPos(document.getElementById('principles')))
+    },
+    goToVision () {
+      window.scroll(0, this.findPos(document.getElementById('vision')))
+    },
+    goToRoadmap () {
+      window.scroll(0, this.findPos(document.getElementById('roadmap')))
+    },
+    goToParticipate () {
+      window.scroll(0, this.findPos(document.getElementById('participate')))
+    },
+    findPos (obj) {
+      var curtop = 0
+      if (obj.offsetParent) {
+        do {
+          curtop += obj.offsetTop
+          obj = obj.offsetParent
+        } while (obj.offsetParent)
+        return [curtop]
+      }
     }
   }
 }
@@ -220,7 +242,7 @@ export default {
 .top-div {
   height: 550px;
   color: white;
-  background: url('../../assets/home.png') center left / cover no-repeat;
+  background: url('../../assets/home.jpg') center left / cover no-repeat;
 }
 
 .top-div-top-div {
