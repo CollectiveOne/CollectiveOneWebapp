@@ -1,4 +1,4 @@
----------------------------------------------------------
+﻿---------------------------------------------------------
 -- This script will only fill the contents of the app_users and app_users_profiles
 -- tables. All other tables and all other sequences are generated
 -- using a DB dump which excludes the app_user table data.
@@ -14,7 +14,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 ---------------------------------------------------------
 CREATE EXTENSION postgres_fdw;
 CREATE SERVER master FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'ec2-107-22-173-160.compute-1.amazonaws.com', dbname 'dbepusk67f1j5s', port '5432');
-CREATE USER MAPPING FOR postgres SERVER master OPTIONS (user 'fennztijsjjilm', password 'XXX');
+CREATE USER MAPPING FOR postgres SERVER master OPTIONS (user 'fennztijsjjilm', password 'f1cff1523bdd6ef46d63fa38367a67017a66500630afcfa8d03a99fd073f304a');
 IMPORT FOREIGN SCHEMA public FROM SERVER master INTO masterschema;
 
 --------------------------------------------------------
@@ -35,4 +35,3 @@ FROM masterschema.app_users;
 DROP SCHEMA masterschema CASCADE;
 DROP SERVER master CASCADE;
 DROP EXTENSION postgres_fdw CASCADE;
-
