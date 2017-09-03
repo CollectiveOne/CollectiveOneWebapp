@@ -5,7 +5,9 @@ const state = {
   initiativesTree: [],
   triggerUpdateAssets: false,
   triggerUpdateModel: false,
-  userEmailNotVerified: false
+  userEmailNotVerified: false,
+  myInitiativesFirstLoaded: false,
+  initiativeLoaded: false
 }
 
 const findCoordinate = function (initiatives, id, coord) {
@@ -94,13 +96,21 @@ const mutations = {
   },
   setUserEmailNotVerified: (state, payload) => {
     state.userEmailNotVerified = payload
+  },
+  setMyInitiativesFirstLoaded: (state, payload) => {
+    state.myInitiativesFirstLoaded = payload
+  },
+  setInitiativeLoaded: (state, payload) => {
+    state.initiativeLoaded = payload
   }
+
 }
 
 const actions = {
   updatedMyInitiatives: (context) => {
     Vue.axios.get('/1/secured/initiatives/mines').then((response) => {
       context.commit('setInitiativesTree', response.data.data)
+      context.commit('setMyInitiativesFirstLoaded', true)
     })
   }
 }

@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <div v-if="initiative" class="w3-row">
+    <div v-if="$store.state.support.initiativeLoaded" class="w3-row">
       <div class="w3-white">
 
       <div class="header-container">
@@ -77,6 +77,9 @@
         <!-- </v-touch> -->
       </div>
     </div>
+    <div v-else class="w3-row w3-center loader-gif-container">
+      <img class="loader-gif" src="../../assets/loading.gif" alt="">
+    </div>
   </div>
 </template>
 
@@ -152,6 +155,9 @@ export default {
   },
 
   methods: {
+    updateInitiative () {
+      this.$store.dispatch('updateInitiative', this.$route.params.initiativeId)
+    },
     newMember () {
       this.showNewMemberModal = true
     },
@@ -181,12 +187,12 @@ export default {
 
   watch: {
     '$route' (to, from) {
-      this.$store.dispatch('updateInitiative', this.$route.params.initiativeId)
+      this.updateInitiative()
     }
   },
 
-  mounted () {
-    this.$store.dispatch('updateInitiative', this.$route.params.initiativeId)
+  created () {
+    this.updateInitiative()
   }
 }
 </script>

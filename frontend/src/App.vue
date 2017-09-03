@@ -330,6 +330,13 @@ select {
   padding-left: 10px;
 }
 
+.loader-gif-container {
+  padding-top: 100px;
+}
+
+.loader-gif {
+  width: 100px;
+}
 
 
 /* Animations */

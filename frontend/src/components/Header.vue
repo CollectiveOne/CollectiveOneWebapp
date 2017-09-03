@@ -16,8 +16,8 @@
         <img class="icon w3-hide-medium w3-hide-large" src="../assets/imago-red.png" alt="">
       </router-link>
 
-      <div v-if="$store.state.user.profile" class="w3-bar-item w3-right  w3-button">
-        <div @click="userOptionsClicked()"  class="">
+      <div v-if="$store.state.user.profile" @click="userOptionsClicked()" class="w3-bar-item w3-right  w3-button">
+        <div class="">
           <div class="avatar-img-container w3-left">
             <img :src="$store.state.user.profile.pictureUrl" class="logged-avatar w3-circle noselect">
           </div>

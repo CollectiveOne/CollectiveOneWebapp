@@ -57,6 +57,13 @@ const mutations = {
 const actions = {
 
   updateInitiative: (context, id) => {
+    /* show loading if new initiative */
+    if (context.state.initiative) {
+      if (context.state.initiative.id !== id) {
+        context.commit('setInitiativeLoaded', false)
+      }
+    }
+
     Vue.axios.get('/1/secured/initiative/' + id, {
       params: {
         addAssets: true,
@@ -67,6 +74,7 @@ const actions = {
       }
     }).then((response) => {
       context.commit('setInitiative', response.data.data)
+      context.commit('setInitiativeLoaded', true)
     }).catch((error) => {
       console.log(error)
     })
