@@ -337,6 +337,30 @@ select {
   width: 100px;
 }
 
+.plus-button {
+  margin-right: 25px;
+  margin-top: 15px;
+  z-index: 1;
+}
+
+.action-menu {
+  padding: 6px 0px 0px 0px  !important;
+  margin-left: -200px;
+  margin-top: 80px;
+}
+
+.action-menu .fa {
+  margin-left: 10px;
+  padding-top: 3px;
+}
+
+.action-menu .w3-card {
+  width: 250px;
+}
+
+.action-menu .w3-button {
+  width: 100%;
+}
 
 /* Animations */
 

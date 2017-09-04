@@ -126,12 +126,9 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult editSection (UUID initiativeId, ModelSectionDto sectionDto, UUID creatorId) {
+	public PostResult editSection (UUID sectionId, ModelSectionDto sectionDto, UUID creatorId) {
 		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		if (initiative == null) return new PostResult("error", "initiative not found", "");
-		
-		ModelSection section = modelSectionRepository.findById(UUID.fromString(sectionDto.getId()));
+		ModelSection section = modelSectionRepository.findById(sectionId);
 		
 		section = sectionDto.toEntity(section, sectionDto);
 		section = modelSectionRepository.save(section);

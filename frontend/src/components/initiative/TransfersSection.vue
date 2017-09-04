@@ -32,7 +32,7 @@
     </div>
 
     <div v-if="isLoggedAnAdmin"
-      class="w3-display-topright w3-xxlarge w3-button"
+      class="w3-display-topright w3-xxlarge w3-button plus-button"
       @click="showActionMenu = !showActionMenu">
       <i class="fa fa-plus-circle" aria-hidden="true"></i>
     </div>
@@ -180,37 +180,6 @@ export default {
   padding-top: 0px;
   padding-bottom: 25px;
   min-height: 200px;
-}
-
-.action-buttons {
-  padding: 1px 0px 0px 0px  !important;
-  height: 35px;
-  width: 35px;
-  margin-right: 25px;
-  margin-top: 15px;
-  z-index: 1;
-}
-
-.action-menu {
-  padding: 6px 0px 0px 0px  !important;
-  height: 45px;
-  width: 45px;
-  margin-right: 125px;
-  margin-top: 45px;
-  z-index: 1;
-}
-
-.action-menu .fa {
-  margin-left: 10px;
-  padding-top: 3px;
-}
-
-.action-menu .w3-card {
-  width: 150px;
-}
-
-.action-menu .w3-button {
-  width: 100%;
 }
 
 .empty-div {

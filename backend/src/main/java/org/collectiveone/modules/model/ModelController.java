@@ -113,9 +113,10 @@ public class ModelController {
 		return modelService.createSection(sectionDto, getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section", method = RequestMethod.PUT) 
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.PUT) 
 	public PostResult editSection(
 			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("sectionId") String sectionIdStr,
 			@RequestBody ModelSectionDto sectionDto) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
@@ -124,7 +125,7 @@ public class ModelController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.editSection(initiativeId, sectionDto, getLoggedUser().getC1Id());
+		return modelService.editSection(UUID.fromString(sectionIdStr), sectionDto, getLoggedUser().getC1Id());
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.GET) 
