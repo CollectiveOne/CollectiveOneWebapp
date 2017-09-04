@@ -136,43 +136,49 @@ public class TokenTransferService {
 		AppUser receiver = appUserRepository.findByC1Id(receiverId);
 		TokenType tokenType = tokenService.getTokenType(assetId);
 		
-		tokenService.transfer(
+		String result = tokenService.transfer(
 				tokenType.getId(), 
 				initiativeId, 
 				receiver.getC1Id(), 
 				value, 
 				TokenHolderType.USER);
 		
-		/* register the transfer to the contributor  */
-		Member member = initiativeService.getOrAddMember(initiativeId, receiver.getC1Id());
-		
-		MemberTransfer thisTransfer = new MemberTransfer();
-		thisTransfer.setMember(member);
-		thisTransfer.setTokenType(tokenType);
-		thisTransfer.setValue(value);
-		thisTransfer.setStatus(MemberTransferStatus.DONE);
-		
-		thisTransfer = memberTransferRepository.save(thisTransfer);
-		member.getTokensTransfers().add(thisTransfer);
-		
-		memberRepository.save(member);
-	
-		return new PostResult("success", "assets transferred successfully", thisTransfer.getId().toString());
+		if (result.equals("success")) {
+			/* register the transfer to the contributor  */
+			Member member = initiativeService.getOrAddMember(initiativeId, receiver.getC1Id());
+			
+			MemberTransfer thisTransfer = new MemberTransfer();
+			thisTransfer.setMember(member);
+			thisTransfer.setTokenType(tokenType);
+			thisTransfer.setValue(value);
+			thisTransfer.setStatus(MemberTransferStatus.DONE);
+			
+			thisTransfer = memberTransferRepository.save(thisTransfer);
+			member.getTokensTransfers().add(thisTransfer);
+			
+			memberRepository.save(member);
+			
+			return new PostResult("success", "assets transferred successfully", thisTransfer.getId().toString());
+		} else {
+			return new PostResult("error", "error transferring assets: " + result, "");
+		}
 	}
 	
 	@Transactional
 	public void revertTransferFromInitiativeToUser(UUID transferId) {
 		MemberTransfer transfer = memberTransferRepository.findById(transferId);
 		
-		tokenService.transfer(
+		String result = tokenService.transfer(
 				transfer.getTokenType().getId(), 
 				transfer.getMember().getUser().getC1Id(), 
 				transfer.getMember().getInitiative().getId(), 
 				transfer.getValue(), 
 				TokenHolderType.INITIATIVE);
 		
+		if (result.equals("success")) {
+			transfer.setStatus(MemberTransferStatus.REVERTED);
+		}
 		
-		transfer.setStatus(MemberTransferStatus.REVERTED);
 	}
 	
 	@Transactional
@@ -194,29 +200,33 @@ public class TokenTransferService {
 		Initiative from = initiativeRepository.findById(fromInitiativeId);
 		Initiative to = initiativeRepository.findById(toInitiativeId);
 		
-		tokenService.transfer(
+		String result = tokenService.transfer(
 				tokenType.getId(), 
 				from.getId(), 
 				to.getId(), 
 				value, 
 				TokenHolderType.INITIATIVE);
 		
-		/* register the transfer to the initiative  */
-		InitiativeTransfer transfer = new InitiativeTransfer();
-		transfer.setTokenType(tokenType);
-		transfer.setFrom(from);
-		transfer.setTo(to);
-		transfer.setMotive(motive);
-		transfer.setNotes(notes);
-		transfer.setValue(value);
-		transfer.setOrderDate(new Timestamp(System.currentTimeMillis()));
-		transfer.setOrderedBy(appUserRepository.findByC1Id(orderByUserId));
-		
-		transfer = initiativeTransferRepository.save(transfer);
-		
-		activityService.transferToSubinitiative(transfer);
-		
-		return new PostResult("success", "transfer done", transfer.getId().toString());
+		if (result.equals("success")) {
+			/* register the transfer to the initiative  */
+			InitiativeTransfer transfer = new InitiativeTransfer();
+			transfer.setTokenType(tokenType);
+			transfer.setFrom(from);
+			transfer.setTo(to);
+			transfer.setMotive(motive);
+			transfer.setNotes(notes);
+			transfer.setValue(value);
+			transfer.setOrderDate(new Timestamp(System.currentTimeMillis()));
+			transfer.setOrderedBy(appUserRepository.findByC1Id(orderByUserId));
+			
+			transfer = initiativeTransferRepository.save(transfer);
+			
+			activityService.transferToSubinitiative(transfer);
+			
+			return new PostResult("success", "transfer done", transfer.getId().toString());
+		} else {
+			return new PostResult("success", "error making the transfer:" + result, "");
+		}
 		
 	}
 	
