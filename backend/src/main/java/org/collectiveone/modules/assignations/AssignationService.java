@@ -1,5 +1,6 @@
 package org.collectiveone.modules.assignations;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +23,7 @@ import org.collectiveone.modules.tokens.TokenTransferService;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -218,66 +220,68 @@ public class AssignationService {
 		
 		Assignation assignation = assignationRepository.findById(assignationId);
 		
-		PeerReviewedAssignation peerReviewedAssignation = new PeerReviewedAssignation();
-		peerReviewedAssignation.setAssignation(assignation);
-		peerReviewedAssignation.updateState();
-		
-		if(peerReviewedAssignation.getState() == PeerReviewedAssignationState.CLOSED) {
-			/* percents already updated by peerReviewAssignation,
-			 * so just change state, transfer funds and save */
+		if (assignation.getType() == AssignationType.PEER_REVIEWED) {
+			PeerReviewedAssignation peerReviewedAssignation = new PeerReviewedAssignation();
+			peerReviewedAssignation.setAssignation(assignation);
+			peerReviewedAssignation.updateState();
 			
-			/* transfer the assets to the receivers */
-			/* normalize once again just to be sure...*/
-			
-			boolean valid = true;
-			double sumOfPercents = 0.0;
-			for(Receiver receiver : assignation.getReceivers()) {
-				sumOfPercents += receiver.getAssignedPercent();
-				if (Double.isNaN(receiver.getAssignedPercent())) {
-					valid = false;
-				}
-			}
-			
-			if (sumOfPercents == 0) {
-				valid = false;
-			}
-			
-			if (Math.abs(100.0 - sumOfPercents) >= 1E-6) {
-				/* must sum 100 */
-				valid = false;
-			}
-			
-			if (valid) {
-				boolean errorSending = false;
-				for(Bill bill : assignation.getBills()) {
-					for(Receiver receiver : assignation.getReceivers()) {
-						double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
-						PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
-						
-						if (result.getResult().equals("success")) {
-							receiver.setState(ReceiverState.RECEIVED);
-							receiver.setTransfer(memberTransferRepository.findById(UUID.fromString(result.getElementId())));
-							receiverRepository.save(receiver);
-							
-						} else {
-							errorSending = true;
-						}
+			if(peerReviewedAssignation.getState() == PeerReviewedAssignationState.CLOSED) {
+				/* percents already updated by peerReviewAssignation,
+				 * so just change state, transfer funds and save */
+				
+				/* transfer the assets to the receivers */
+				/* normalize once again just to be sure...*/
+				
+				boolean valid = true;
+				double sumOfPercents = 0.0;
+				for(Receiver receiver : assignation.getReceivers()) {
+					sumOfPercents += receiver.getAssignedPercent();
+					if (Double.isNaN(receiver.getAssignedPercent())) {
+						valid = false;
 					}
 				}
 				
-				if (!errorSending) {
-					assignation.setState(AssignationState.DONE);
-					activityService.peerReviewedAssignationDone(assignation);
+				if (sumOfPercents == 0) {
+					valid = false;
+				}
+				
+				if (Math.abs(100.0 - sumOfPercents) >= 1E-6) {
+					/* must sum 100 */
+					valid = false;
+				}
+				
+				if (valid) {
+					boolean errorSending = false;
+					for(Bill bill : assignation.getBills()) {
+						for(Receiver receiver : assignation.getReceivers()) {
+							double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
+							PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
+							
+							if (result.getResult().equals("success")) {
+								receiver.setState(ReceiverState.RECEIVED);
+								receiver.setTransfer(memberTransferRepository.findById(UUID.fromString(result.getElementId())));
+								receiverRepository.save(receiver);
+								
+							} else {
+								errorSending = true;
+							}
+						}
+					}
+					
+					if (!errorSending) {
+						assignation.setState(AssignationState.DONE);
+						activityService.peerReviewedAssignationDone(assignation);
+					} else {
+						assignation.setState(AssignationState.ERROR);
+					}
+					
+					
 				} else {
 					assignation.setState(AssignationState.ERROR);
 				}
 				
-				
-			} else {
-				assignation.setState(AssignationState.ERROR);
+				assignationRepository.save(assignation);
 			}
-			
-			assignationRepository.save(assignation);
 		}
 	}
 	
@@ -495,5 +499,16 @@ public class AssignationService {
 		updateAssignationState(assignationId);
 		
 		return result;
+	}
+	
+	@Scheduled(fixedDelay = 3600000)
+	@Transactional
+	public void periodicCheckToCloseOpenAssignations() {
+		
+		List<Assignation> assignations = assignationRepository.findByTypeAndState(AssignationType.PEER_REVIEWED, AssignationState.OPEN);
+		
+		for (Assignation assignation : assignations) {
+			updateAssignationState(assignation.getId());
+		}
 	}
 }

@@ -5,9 +5,9 @@
         <tr>
           <th class="avatar-col" colspan="2">USER</th>
           <th v-if="hasDonors">DONOR</th>
-          <th v-if="myEvaluations.length > 0" class="percent-col">MINE</th>
+          <th v-if="amEvaluator" class="percent-col">MINE</th>
           <th v-if="hasDonors" class="percent-col">MEAN</th>
-          <th class="percent-col">{{ myEvaluations.length > 0 ? 'FINAL' : 'MINE' }}</th>
+          <th class="percent-col">{{ disable ? 'FINAL' : 'MINE' }}</th>
           <th class="bar-col w3-hide-small w3-hide-medium"></th>
           <th v-if="!disable">KNOW / DON'T</th>
           <th v-if="showSelfBiases" class="self-bias-col">SELF-BIAS</th>
@@ -140,6 +140,13 @@ export default {
   },
 
   computed: {
+    amEvaluator () {
+      if (this.myEvaluations) {
+        return this.myEvaluations.length > 0
+      } else {
+        return false
+      }
+    },
     hasDonors () {
       for (var ix in this.usersData) {
         if (this.usersData[ix].isDonor) {

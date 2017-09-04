@@ -90,6 +90,13 @@ public class TokenService {
 		TokenHolder fromHolder = getHolder(token.getId(), fromHolderId);
 		TokenHolder toHolder = getOrCreateHolder(token.getId(), toHolderId, holderType);
 		
+		/* ignore numerical errors when trying to get all the
+		 * remaining tokens of an account */
+		
+		if (Math.abs(fromHolder.getTokens() - value) >= 1E-12) {
+			value = fromHolder.getTokens();
+		}
+		
 		if(fromHolder.getTokens() >= value) {
 			fromHolder.setTokens(fromHolder.getTokens() - value);
 			toHolder.setTokens(toHolder.getTokens() + value);

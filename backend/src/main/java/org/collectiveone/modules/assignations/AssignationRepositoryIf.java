@@ -11,6 +11,10 @@ public interface AssignationRepositoryIf extends CrudRepository<Assignation, UUI
 	
 	List<Assignation> findByInitiativeId(UUID initiativeId); 
 	
+	List<Assignation> findByState(AssignationState state);
+	
 	List<Assignation> findByInitiativeIdAndState(UUID initiativeId, AssignationState state);
+	
+	List<Assignation> findByTypeAndState(AssignationType type, AssignationState state);
 	
 }
