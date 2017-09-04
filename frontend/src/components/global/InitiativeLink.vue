@@ -1,5 +1,5 @@
 <template lang="html">
-  <router-link :to="{name: 'Initiative', params: { 'initiativeId': initiativeId }}">{{ name }}</router-link>
+  <router-link :to="{name: 'Initiative', params: { 'initiativeId': initiativeIdinternal }}">{{ name }}</router-link>
 </template>
 
 <script>
@@ -23,7 +23,7 @@ export default {
         return this.initiativeName
       }
     },
-    initiativeId () {
+    initiativeIdinternal () {
       if (this.initiative) {
         return this.initiative.id
       } else {

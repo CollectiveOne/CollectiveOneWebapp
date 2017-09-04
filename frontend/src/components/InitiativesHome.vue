@@ -15,7 +15,7 @@
           <h4>
             <p>
               You are not a member of any initiative for the moment.
-              You can start by creating an initiativ on the left, or
+              You can start by creating an initiative on the left, or
               ask the owner of an existing one to add you!
             </p>
           </h4>

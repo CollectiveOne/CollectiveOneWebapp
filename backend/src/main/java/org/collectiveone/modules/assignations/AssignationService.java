@@ -251,16 +251,17 @@ public class AssignationService {
 				boolean errorSending = false;
 				for(Bill bill : assignation.getBills()) {
 					for(Receiver receiver : assignation.getReceivers()) {
-						double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
-						PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
-						
-						if (result.getResult().equals("success")) {
-							receiver.setState(ReceiverState.RECEIVED);
-							receiver.setTransfer(memberTransferRepository.findById(UUID.fromString(result.getElementId())));
-							receiverRepository.save(receiver);
+						if (receiver.getState().equals(ReceiverState.PENDING)) {
+							double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
+							PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
 							
-						} else {
-							errorSending = true;
+							if (result.getResult().equals("success")) {
+								receiver.setState(ReceiverState.RECEIVED);
+								receiver.setTransfer(memberTransferRepository.findById(UUID.fromString(result.getElementId())));
+								receiverRepository.save(receiver);
+							} else {
+								errorSending = true;
+							}
 						}
 					}
 				}
@@ -330,12 +331,10 @@ public class AssignationService {
 		/* add all the evaluations */
 		if (addAllEvaluations) {
 			if (assignation.getConfig().getEvaluationsVisible()) {
-				if (evaluator != null) {
-					if (assignation.getState() == AssignationState.DONE) {
-						for (Evaluator thisEvaluator : assignation.getEvaluators()) {
-							assignationDto.getEvaluators().add(thisEvaluator.toDto());
-						}	
-					}
+				if (assignation.getState() == AssignationState.DONE) {
+					for (Evaluator thisEvaluator : assignation.getEvaluators()) {
+						assignationDto.getEvaluators().add(thisEvaluator.toDto());
+					}	
 				}
 			}
 		}

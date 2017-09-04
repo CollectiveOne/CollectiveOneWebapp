@@ -204,9 +204,9 @@
         </div>
       </div>
 
-      <div class="w3-display-topright">
+      <div class="w3-display-topright w3-xlarge close-div" >
         <router-link tag="div" :to="{ name: 'InitiativeAssignations' }"
-          class="w3-button ">
+          class="">
           <i class="fa fa-times" aria-hidden="true"></i>
         </router-link>
       </div>
@@ -307,7 +307,7 @@ export default {
       }
     },
     showEvaluations () {
-      return this.isDone && this.isEvaluator && this.assignation.config.evaluationsVisible && !this.isDeleted
+      return this.isDone && this.assignation.config.evaluationsVisible && !this.isDeleted
     },
     sumOfPercents () {
       var sum = 0.0
@@ -431,17 +431,6 @@ export default {
 </script>
 
 <style scoped>
-
-.close-div {
-  width: 70px;
-  height: 70px;
-  cursor: pointer;
-  text-align: right;
-}
-
-.fa-times {
-  font-size: 20px;
-}
 
 .assignation-container {
   padding-top: 20px;

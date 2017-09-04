@@ -120,7 +120,6 @@ select {
   color: #15a5cc;
 }
 
-
 .w3-modal .fa-times {
   margin-right: 20px;
   margin-top: 20px;
