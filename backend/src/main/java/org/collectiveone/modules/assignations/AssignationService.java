@@ -22,6 +22,7 @@ import org.collectiveone.modules.tokens.TokenTransferService;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -218,22 +219,28 @@ public class AssignationService {
 		
 		Assignation assignation = assignationRepository.findById(assignationId);
 		
-		PeerReviewedAssignation peerReviewedAssignation = new PeerReviewedAssignation();
-		peerReviewedAssignation.setAssignation(assignation);
-		peerReviewedAssignation.updateState();
-		
-		if(peerReviewedAssignation.getState() == PeerReviewedAssignationState.CLOSED) {
-			/* percents already updated by peerReviewAssignation,
-			 * so just change state, transfer funds and save */
+		if (assignation.getType() == AssignationType.PEER_REVIEWED) {
+			PeerReviewedAssignation peerReviewedAssignation = new PeerReviewedAssignation();
+			peerReviewedAssignation.setAssignation(assignation);
+			peerReviewedAssignation.updateState();
 			
-			/* transfer the assets to the receivers */
-			/* normalize once again just to be sure...*/
-			
-			boolean valid = true;
-			double sumOfPercents = 0.0;
-			for(Receiver receiver : assignation.getReceivers()) {
-				sumOfPercents += receiver.getAssignedPercent();
-				if (Double.isNaN(receiver.getAssignedPercent())) {
+			if(peerReviewedAssignation.getState() == PeerReviewedAssignationState.CLOSED) {
+				/* percents already updated by peerReviewAssignation,
+				 * so just change state, transfer funds and save */
+				
+				/* transfer the assets to the receivers */
+				/* normalize once again just to be sure...*/
+				
+				boolean valid = true;
+				double sumOfPercents = 0.0;
+				for(Receiver receiver : assignation.getReceivers()) {
+					sumOfPercents += receiver.getAssignedPercent();
+					if (Double.isNaN(receiver.getAssignedPercent())) {
+						valid = false;
+					}
+				}
+				
+				if (sumOfPercents == 0) {
 					valid = false;
 				}
 			}
@@ -264,21 +271,21 @@ public class AssignationService {
 							}
 						}
 					}
-				}
-				
-				if (!errorSending) {
-					assignation.setState(AssignationState.DONE);
-					activityService.peerReviewedAssignationDone(assignation);
+					
+					if (!errorSending) {
+						assignation.setState(AssignationState.DONE);
+						activityService.peerReviewedAssignationDone(assignation);
+					} else {
+						assignation.setState(AssignationState.ERROR);
+					}
+					
+					
 				} else {
 					assignation.setState(AssignationState.ERROR);
 				}
 				
-				
-			} else {
-				assignation.setState(AssignationState.ERROR);
+				assignationRepository.save(assignation);
 			}
-			
-			assignationRepository.save(assignation);
 		}
 	}
 	
@@ -494,5 +501,16 @@ public class AssignationService {
 		updateAssignationState(assignationId);
 		
 		return result;
+	}
+	
+	@Scheduled(fixedDelay = 3600000)
+	@Transactional
+	public void periodicCheckToCloseOpenAssignations() {
+		
+		List<Assignation> assignations = assignationRepository.findByTypeAndState(AssignationType.PEER_REVIEWED, AssignationState.OPEN);
+		
+		for (Assignation assignation : assignations) {
+			updateAssignationState(assignation.getId());
+		}
 	}
 }
