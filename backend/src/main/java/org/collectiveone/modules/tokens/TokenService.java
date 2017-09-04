@@ -93,7 +93,7 @@ public class TokenService {
 		/* ignore numerical errors when trying to get all the
 		 * remaining tokens of an account */
 		
-		if (Math.abs(fromHolder.getTokens() - value) >= 1E-12) {
+		if (Math.abs(fromHolder.getTokens() - value) <= 1E-10) {
 			value = fromHolder.getTokens();
 		}
 		
