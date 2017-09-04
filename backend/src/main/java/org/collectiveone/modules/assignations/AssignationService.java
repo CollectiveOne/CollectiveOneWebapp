@@ -243,31 +243,27 @@ public class AssignationService {
 				if (sumOfPercents == 0) {
 					valid = false;
 				}
-			}
 			
-			if (sumOfPercents == 0) {
-				valid = false;
-			}
-			
-			if (Math.abs(100.0 - sumOfPercents) >= 1E-6) {
-				/* must sum 100 */
-				valid = false;
-			}
-			
-			if (valid) {
-				boolean errorSending = false;
-				for(Bill bill : assignation.getBills()) {
-					for(Receiver receiver : assignation.getReceivers()) {
-						if (receiver.getState().equals(ReceiverState.PENDING)) {
-							double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
-							PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
-							
-							if (result.getResult().equals("success")) {
-								receiver.setState(ReceiverState.RECEIVED);
-								receiver.setTransfer(memberTransferRepository.findById(UUID.fromString(result.getElementId())));
-								receiverRepository.save(receiver);
-							} else {
-								errorSending = true;
+				if (Math.abs(100.0 - sumOfPercents) >= 1E-6) {
+					/* must sum 100 */
+					valid = false;
+				}
+				
+				if (valid) {
+					boolean errorSending = false;
+					for(Bill bill : assignation.getBills()) {
+						for(Receiver receiver : assignation.getReceivers()) {
+							if (receiver.getState().equals(ReceiverState.PENDING)) {
+								double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
+								PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
+								
+								if (result.getResult().equals("success")) {
+									receiver.setState(ReceiverState.RECEIVED);
+									receiver.setTransfer(memberTransferRepository.findById(UUID.fromString(result.getElementId())));
+									receiverRepository.save(receiver);
+								} else {
+									errorSending = true;
+								}
 							}
 						}
 					}
@@ -279,12 +275,8 @@ public class AssignationService {
 						assignation.setState(AssignationState.ERROR);
 					}
 					
-					
-				} else {
-					assignation.setState(AssignationState.ERROR);
+					assignationRepository.save(assignation);
 				}
-				
-				assignationRepository.save(assignation);
 			}
 		}
 	}
