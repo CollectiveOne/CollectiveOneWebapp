@@ -13,6 +13,9 @@ UPDATE token_holders SET tokens = 242.4370261 WHERE holder_id = 'ac11534a-5d60-1
 -- Alicia
 UPDATE token_holders SET tokens = 129.1071652 WHERE holder_id = 'ac12fa3a-5d73-191b-815d-74e4b8200000';
 
+-- Cristobal
+UPDATE token_holders SET tokens = 0 WHERE holder_id = 'ac10d68e-5d83-1046-815d-842797480006';
+
 -- Iniciativa
 UPDATE token_holders SET tokens = 324 WHERE holder_id = 'ac11534a-5d60-1195-815d-612e4d210095';
 

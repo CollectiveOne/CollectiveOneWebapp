@@ -495,7 +495,7 @@ public class AssignationService {
 		return result;
 	}
 	
-	@Scheduled(fixedDelay = 3600000)
+	@Scheduled(fixedDelay = 10000)
 	@Transactional
 	public void periodicCheckToCloseOpenAssignations() {
 		
