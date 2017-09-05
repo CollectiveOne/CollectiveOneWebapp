@@ -1,5 +1,11 @@
 <template lang="html">
-  <app-model-section
+  <div class="">
+
+    <div class="">
+      <h1 class="">Section Page</h1>
+    </div>
+
+    <app-model-section
     :initiativeId="$route.params.initiativeId"
     :sectionId="$route.params.sectionId"
     :key="$route.params.sectionId"
@@ -8,6 +14,7 @@
     @show-section-modal="$emit('show-section-modal', $event)"
     @show-card-modal="$emit('show-card-modal', $event)">
   </app-model-section>
+  </div>
 </template>
 
 <script>

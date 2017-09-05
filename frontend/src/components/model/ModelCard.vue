@@ -5,6 +5,17 @@
       @mouseover="showActionButton = true"
       @mouseleave="showActionButton = false">
 
+      <div v-if="showDetails" class="w3-row light-grey">
+        <div class="w3-col s6">
+          <div class="w3-tag" :class="stateClass">
+            {{ cardWrapper.state }}
+          </div>
+        </div>
+        <div class="w3-col s6">
+          {{ dateString(cardWrapper.targetDate) }}
+        </div>
+      </div>
+
       <div class="w3-row"
         :class="{'card-container-padded': cardEffect, 'card-container-slim': !cardEffect }">
 
@@ -16,17 +27,6 @@
           <p>{{ card.text }}</p>
         </div>
 
-      </div>
-
-      <div v-if="showDetails" class="w3-row light-grey">
-        <div class="w3-col s6">
-          <div class="w3-tag light-grey-d1">
-            {{ cardWrapper.state }}
-          </div>
-        </div>
-        <div class="w3-col s6">
-          {{ dateString(cardWrapper.targetDate) }}
-        </div>
       </div>
 
       <transition name="fadeenter">
@@ -78,6 +78,20 @@ export default {
       if (this.cardEffect) {
         return this.cardWrapper.stateControl
       }
+    },
+    stateClass () {
+      switch (this.cardWrapper.state) {
+        case 'REALITY':
+          return {
+            'success-panel': true
+          }
+
+        case 'PLAN':
+          return {
+            'warning-panel': true
+          }
+      }
+      return {}
     }
   },
 

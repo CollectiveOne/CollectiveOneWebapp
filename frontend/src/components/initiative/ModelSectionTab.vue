@@ -42,11 +42,11 @@
           {{ view.title }}
         </router-link>
       </div>
-      <div v-if="isLoggedAnEditor" @click="newView()" class="w3-xxlarge w3-button w3-right">
+      <div v-if="isLoggedAnEditor" @click="newView()" class="new-view-button w3-large w3-button w3-left app-button-color">
         <i class="fa fa-plus-circle" aria-hidden="true"></i>
       </div>
     </div>
-    <div class="w3-row w3-margin-top">
+    <div class="w3-row w3-margin-top router-container">
       <transition name="fadeenter">
         <router-view
           @show-view-modal="showViewModalFun($event)"
@@ -129,12 +129,45 @@ export default {
     }
   },
 
-  mounted () {
+  created () {
+    if (!this.initiative.meta.modelEnabled) {
+      /* redirect to overview if model is not enabled */
+      this.$router.replace({ name: 'InitiativeOverview', params: { initiativeId: this.initiative.id } })
+    }
+
+    if (this.views.length > 0) {
+      /* redirect to the first view by default */
+      this.$router.replace({ name: 'ModelView', params: { viewId: this.views[0].id } })
+    }
     this.$store.dispatch('refreshModelViews')
   }
 }
 </script>
 
 <style scoped>
+
+.new-view-button {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  border-radius: 12px;
+}
+
+.router-container {
+  font-family: 'Open Sans', sans-serif !important;
+}
+
+.router-container h1 {
+  font-size: 32px;
+}
+
+.router-container {
+  padding-bottom: 50px;
+}
+
+.router-container .model-button {
+  background-color: #eff3f6;
+  padding-top: 2px !important;
+  padding-bottom: 3px !important;
+}
 
 </style>

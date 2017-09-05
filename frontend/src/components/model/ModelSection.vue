@@ -5,7 +5,7 @@
       @mouseleave="showActionButton = false">
 
       <div class="section-title-container w3-border-top w3-border-right gray-1-border ">
-        <router-link tag="div" :to="{ name: 'ModelSection', params: { sectionId: section.id } }" class="w3-row section-title w3-tag gray-1 cursor-pointer" :style="sectionTitleStyle">{{ section.title }}</router-link>
+        <router-link tag="a" :to="{ name: 'ModelSection', params: { sectionId: section.id } }" class="w3-row section-title w3-tag gray-1 cursor-pointer" :style="sectionTitleStyle">{{ section.title }}</router-link>
         <div class="w3-row w3-leftbar gray-1-border section-description w3-small light-grey w3-padding">
           {{ section.description }}
         </div>
@@ -20,7 +20,7 @@
           <!-- hooks are needed to enable overflow when not animating -->
 
           <div v-if="expanded" class="w3-row w3-leftbar w3-border-right subelements-container">
-            <div class="w3-row-padding w3-border-right cards-container">
+            <div class="w3-row-padding cards-container">
               <app-model-card
                 v-for="cardWrapper in section.cardsWrappers"
                 :key="cardWrapper.id"
@@ -31,12 +31,20 @@
                 :class="{'l4': cardsAsCards, 'm6': cardsAsCards, 's12': !cardsAsCards}"
                 @show-card-modal="$emit('show-card-modal', $event)">
               </app-model-card>
+              <div class="w3-col" :class="{'l4': cardsAsCards, 'm6': cardsAsCards, 's12': !cardsAsCards}">
+                <div :class="{'w3-card-2': cardsAsCards}">
+                  <button class="w3-button" style="width: 100%"
+                    @click="newCard()">
+                    <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
+                    new card
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div class="bottom-bar light-grey w3-small">
-              <button
-                v-if="section.nSubsections > 0"
-                class="w3-button model-button"
+              <button v-if="section.nSubsections > 0"
+                class="w3-button model-button show-sections-button"
                 @click="showSubsections = !showSubsections">
                 <div v-if="showSubsections" >
                   <i class="w3-left fa fa-caret-up" aria-hidden="true"></i>
@@ -51,6 +59,13 @@
                   </div>
                 </div>
               </button>
+              <div v-else class="">
+                <button class="w3-button" style="width: 100%; text-align: left"
+                  @click="newSubsection()">
+                  <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
+                  new subsection
+                </button>
+              </div>
             </div>
 
             <div class="" :class="{'slider-container': animatingSubsections}">
@@ -64,15 +79,23 @@
                   <app-model-section
                     v-for="subsection in section.subsections"
                     :key="subsection.id"
-                    :preloaded="section.subElementsLoaded"
+                    :preloaded="subsection.subElementsLoaded"
                     :sectionInit="subsection"
-                    :sectionId="section.id"
+                    :sectionId="subsection.id"
                     :initiativeId="initiativeId"
                     :level="level + 1"
                     class="subsection-container"
                     @show-section-modal="$emit('show-section-modal', $event)"
                     @show-card-modal="$emit('show-card-modal', $event)">
                   </app-model-section>
+
+                  <div class="subsection-container">
+                    <button class="w3-button" style="width: 100%; text-align: left"
+                      @click="newSubsection()">
+                      <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
+                      new subsection
+                    </button>
+                  </div>
                 </div>
               </transition>
             </div>
@@ -280,7 +303,7 @@ export default {
 .action-buttons-container {
   margin-top: 2px;
   margin-right: 1px;
-  z-index: 1100;
+  z-index: 90;
 }
 
 .sub-action-buttons-container {
@@ -320,7 +343,7 @@ export default {
 
 .section-card {
   margin-top: 0px;
-  margin-bottom: 6px;
+  margin-bottom: 22px;
 }
 
 .bottom-bar .fa {
@@ -331,6 +354,10 @@ export default {
 
 .bottom-bar .button-text {
   padding-top: 5px;
+}
+
+.show-sections-button {
+  width: 180px;
 }
 
 .subsections-container {

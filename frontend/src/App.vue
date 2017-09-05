@@ -95,6 +95,7 @@ select {
 .w3-modal {
   padding-top: 30px;
   display: block;
+  z-index: 100;
 }
 
 .w3-modal-content {
@@ -197,6 +198,10 @@ select {
   border-radius: 12px;
 }
 
+.app-button-color {
+  color: #15a5cc !important;
+}
+
 .app-button-light {
   background-color: #f1f1f1 !important;
   color: black;
@@ -215,12 +220,12 @@ select {
 
 .success-panel {
   color: white;
-  background-color:  rgb(64, 163, 109) !important;
+  background-color:  #40a36d !important;
 }
 
 .warning-panel {
   color: white;
-  background-color:  rgb(194, 157, 0) !important;
+  background-color:  #c29d00 !important;
 }
 
 .error-row {

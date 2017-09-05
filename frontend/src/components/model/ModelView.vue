@@ -17,6 +17,7 @@
           </div>
         </div>
       </transition>
+
       <div class="w3-rest">
         <h1 class="">{{ view.title }}</h1>
       </div>
@@ -34,6 +35,14 @@
       @show-section-modal="$emit('show-section-modal', $event)"
       @show-card-modal="$emit('show-card-modal', $event)">
     </app-model-section>
+
+    <div class="view-sections">
+      <button class="w3-button" style="width: 100%; text-align: left"
+        @click="newSection()">
+        <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
+        new section
+      </button>
+    </div>
   </div>
 </template>
 
@@ -112,30 +121,12 @@ export default {
 
 <style scoped>
 
-.model-view-container, .model-view-container h1 {
-  font-family: 'Open Sans', sans-serif;
-}
-
-.model-view-container h1 {
-  font-size: 32px;
-}
-
-.model-view-container {
-  padding-bottom: 50px;
-}
-
-.model-button {
-  background-color: #eff3f6;
-  padding-top: 2px !important;
-  padding-bottom: 3px !important;
+.view-title .buttons-container {
+  padding-top: 15px;
 }
 
 .view-sections {
   margin-bottom: 30px;
-}
-
-.view-title .buttons-container {
-  padding-top: 15px;
 }
 
 </style>
