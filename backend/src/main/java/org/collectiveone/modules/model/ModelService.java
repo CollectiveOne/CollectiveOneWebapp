@@ -228,12 +228,13 @@ public class ModelService {
 	public PostResult deleteCardWrapper (UUID cardWrapperId, UUID creatorId) {
 		
 		List<ModelSection> parents = modelCardWrapperRepository.findParentSections(cardWrapperId);
+		ModelCardWrapper card = modelCardWrapperRepository.findById(cardWrapperId);
 		
 		/* remove references */
-		ModelCardWrapper card = modelCardWrapperRepository.findById(cardWrapperId);
 		if (parents.size() > 0) {
 			for (ModelSection parent : parents) {
 				parent.getCardsWrappers().remove(card);
+				modelSectionRepository.save(parent);
 			}
 		}
 		

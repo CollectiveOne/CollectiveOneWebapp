@@ -278,7 +278,7 @@ export default {
       }
     },
     deleteCard () {
-      this.axios.delete('/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapperId).then((response) => {
+      this.axios.delete('/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.closeThis()
       }).catch((error) => {
         console.log(error)

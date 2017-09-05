@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -36,11 +37,14 @@ public class ModelSection {
 	@Column(name = "description")
 	private String description;
 	
-	@OneToMany
+	@ManyToMany
 	@OrderColumn(name = "cards_order")
 	private List<ModelCardWrapper> cardsWrappers = new ArrayList<ModelCardWrapper>();
 	
-	@OneToMany
+	/* should be one to many but there seems to be a bug in Hibernate 
+	 * see https://stackoverflow.com/questions/4022509/constraint-violation-in-hibernate-unidirectional-onetomany-mapping-with-jointabl
+	 * */
+	@ManyToMany
 	@OrderColumn(name = "subsections_order")
 	private List<ModelSection> subsections = new ArrayList<ModelSection>();
 	
