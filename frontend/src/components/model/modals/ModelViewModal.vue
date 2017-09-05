@@ -197,6 +197,7 @@ export default {
     deleteView () {
       this.axios.delete('/1/secured/initiative/' + this.view.initiativeId + '/model/view/' + this.view.id).then((response) => {
         this.closeThis()
+        this.$store.commit('triggerUpdateModel')
       }).catch((error) => {
         console.log(error)
       })
