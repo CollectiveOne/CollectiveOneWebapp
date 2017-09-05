@@ -205,6 +205,7 @@ export default {
     deleteSection () {
       this.axios.delete('/1/secured/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
         this.closeThis()
+        this.$store.commit('triggerUpdateModel')
       }).catch((error) => {
         console.log(error)
       })
