@@ -623,4 +623,18 @@ public class InitiativeService {
 		return new PostResult("success", "tag added to initiative", initiative.getId().toString());
 	}
 	
+	
+	@Transactional
+	public GetResult<List<InitiativeTagDto>> searchTagsBy(String q) {
+		List<InitiativeTag> tags = initiativeTagRepository.findTop10ByTagTextLikeIgnoreCase("%"+q+"%");
+		
+		List<InitiativeTagDto> tagsDtos = new ArrayList<InitiativeTagDto>();
+		
+		for(InitiativeTag tag : tags) {
+			tagsDtos.add(tag.toDto());
+		}
+		
+		return new GetResult<List<InitiativeTagDto>>("succes", "initiatives returned", tagsDtos);
+	}
+	
 }

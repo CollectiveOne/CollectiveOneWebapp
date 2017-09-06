@@ -78,6 +78,33 @@
           </div> -->
 
           <hr>
+          <div class="w3-row">
+            <div class="w3-col s12">
+              <div class="w3-row">
+                <label class=""><b>Tags</b></label>
+              </div>
+              <div class="w3-row-padding w3-margin-top tags-row">
+                  <div class="w3-col m6 module-tag-col">
+                    <div class="w3-col w3-right" style="width: 70px">
+                      <button class="w3-button app-button" name="button">add</button>
+                    </div>
+                    <div class="w3-rest new-tag-input-container">
+                      <app-initiative-tag-selector-manager
+                        @selected="newTagSelected($event)">
+                      </app-initiative-tag-selector-manager>
+                    </div>
+                  </div>
+                  <div class="w3-col m6">
+                    <app-initiative-tag
+                      v-for="tag in initiative.meta.tags"
+                      :key="tag.id">
+                    </app-initiative-tag>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+          <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
               <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
@@ -122,7 +149,16 @@
 </template>
 
 <script>
+import InitiativeTag from '@/components/initiative/InitiativeTag.vue'
+import InitiativeTagSelectorManager from '@/components/initiative/InitiativeTagSelectorManager.vue'
+
 export default {
+
+  components: {
+    'app-initiative-tag': InitiativeTag,
+    'app-initiative-tag-selector-mananger': InitiativeTagSelectorManager
+  },
+
   data () {
     return {
       newInitiative: null,
@@ -137,7 +173,8 @@ export default {
       ],
       nameEmptyError: false,
       driverEmptyError: false,
-      deleteInitiativeSelected: false
+      deleteInitiativeSelected: false,
+      newTag: ''
     }
   },
 
@@ -164,6 +201,14 @@ export default {
   },
 
   methods: {
+    newTagUpdated (tagText) {
+      this.newTag = tagText
+    },
+    addTag (tagText) {
+      this.newInitiative.meta.tags.push({
+
+      })
+    },
     closeThis () {
       this.$store.commit('showEditInitiativeModal', false)
     },
@@ -247,6 +292,11 @@ export default {
 
 .module-tag-col {
   padding-top: 3px;
+}
+
+.new-tag-input-container {
+  padding-left: 0px;
+  padding-right: 10px;
 }
 
 .delete-row {

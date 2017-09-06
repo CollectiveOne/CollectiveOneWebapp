@@ -204,6 +204,11 @@ public class InitiativesController {
 		return initiativeService.deleteTagFromInitiative(initiativeId, UUID.fromString(tagIdStr));
 	}
 	
+	@RequestMapping(path = "/secured/initiative/tags/suggestions", method = RequestMethod.GET)
+	public GetResult<List<InitiativeTagDto>> tagSuggestions(@RequestParam("q") String query) {
+		return initiativeService.searchTagsBy(query);
+	}
+	
 	private AppUser getLoggedUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return appUserService.getFromAuth0Id(auth.getName());
