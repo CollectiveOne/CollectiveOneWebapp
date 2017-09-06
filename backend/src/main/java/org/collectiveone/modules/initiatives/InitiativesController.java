@@ -9,6 +9,10 @@ import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.governance.DecisionVerdict;
 import org.collectiveone.modules.governance.GovernanceService;
+import org.collectiveone.modules.initiatives.dto.InitiativeDto;
+import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
+import org.collectiveone.modules.initiatives.dto.MemberDto;
+import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,6 +173,35 @@ public class InitiativesController {
 				UUID.fromString(initiativeId), 
 				UUID.fromString(memberDto.getUser().getC1Id()),
 				DecisionMakerRole.valueOf(memberDto.getRole()));
+	}
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/tags", method = RequestMethod.POST) 
+	public PostResult addTagToInitiative(
+			@PathVariable("initiativeId") String initiativeIdStr, @RequestBody InitiativeTagDto tagDto) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		DecisionVerdict verdict = governanceService.canEdit(initiativeId, getLoggedUser().getC1Id());
+		
+		if (verdict == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		} 
+		
+		return initiativeService.addTagToInitiative(initiativeId, tagDto);
+	}
+	
+	@RequestMapping(path = "/secured/initiative/{initiativeId}/tags/{tagId}", method = RequestMethod.DELETE) 
+	public PostResult deleteTagFromInitiative(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("tagId") String tagIdStr) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		DecisionVerdict verdict = governanceService.canEdit(initiativeId, getLoggedUser().getC1Id());
+		
+		if (verdict == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		} 
+		
+		return initiativeService.deleteTagFromInitiative(initiativeId, UUID.fromString(tagIdStr));
 	}
 	
 	private AppUser getLoggedUser() {

@@ -1,6 +1,10 @@
 package org.collectiveone.modules.assignations;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
 
 public class InitiativeMetaDto {
 	
@@ -9,6 +13,7 @@ public class InitiativeMetaDto {
 	private Timestamp creationDate;
 	private String color;
 	private Boolean modelEnabled;
+	private List<InitiativeTagDto> tags = new ArrayList<InitiativeTagDto>();
 	
 	public String getName() {
 		return name;
@@ -40,6 +45,11 @@ public class InitiativeMetaDto {
 	public void setModelEnabled(Boolean modelEnabled) {
 		this.modelEnabled = modelEnabled;
 	}
+	public List<InitiativeTagDto> getTags() {
+		return tags;
+	}
+	public void setTags(List<InitiativeTagDto> tags) {
+		this.tags = tags;
+	}
 	
-
 }

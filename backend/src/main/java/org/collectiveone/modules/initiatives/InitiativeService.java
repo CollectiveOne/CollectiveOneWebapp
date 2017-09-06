@@ -15,6 +15,16 @@ import org.collectiveone.modules.governance.DecisionMaker;
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.governance.GovernanceService;
+import org.collectiveone.modules.initiatives.dto.InitiativeDto;
+import org.collectiveone.modules.initiatives.dto.InitiativeMembersDto;
+import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
+import org.collectiveone.modules.initiatives.dto.MemberDto;
+import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
+import org.collectiveone.modules.initiatives.repositories.InitiativeMetaRepositoryIf;
+import org.collectiveone.modules.initiatives.repositories.InitiativeRelationshipRepositoryIf;
+import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+import org.collectiveone.modules.initiatives.repositories.InitiativeTagRepositoryIf;
+import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
 import org.collectiveone.modules.tokens.AssetsDto;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.InitiativeTransferRepositoryIf;
@@ -62,6 +72,8 @@ public class InitiativeService {
 	@Autowired
 	private InitiativeMetaRepositoryIf initiativeMetaRepository;
 	
+	@Autowired
+	private InitiativeTagRepositoryIf initiativeTagRepository;
 	  
 	
 	/** Non-transactional method to create an initiative in multiple transactions */
@@ -567,4 +579,48 @@ public class InitiativeService {
 		
 		return member;
 	}
+
+
+	@Transactional
+	public InitiativeTag getOrCreateTag(InitiativeTagDto tagDto) {
+		InitiativeTag tag = initiativeTagRepository.findByTagText(tagDto.getTagText());
+		
+		if (tag == null) {
+			tag = new InitiativeTag();
+			
+			tag.setTagText(tagDto.getTagText());
+			tag.setDescription(tagDto.getDescription());
+			
+			tag = initiativeTagRepository.save(tag);
+		}
+		
+		return tag;
+	}
+	
+	@Transactional
+	public PostResult addTagToInitiative(UUID initiativeId, InitiativeTagDto tagDto) {
+		
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		if (initiative == null) return new PostResult("error", "initiative not found", "");
+		
+		InitiativeTag tag = getOrCreateTag(tagDto);
+		initiative.getMeta().getTags().add(tag);
+		
+		return new PostResult("success", "tag added to initiative", initiative.getId().toString());
+	}
+	
+	@Transactional
+	public PostResult deleteTagFromInitiative(UUID initiativeId, UUID tagId) {
+		
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		if (initiative == null) return new PostResult("error", "initiative not found", "");
+		
+		InitiativeTag tag = initiativeTagRepository.findById(tagId);
+		if (tag == null) return new PostResult("error", "tag not found", "");
+		
+		initiative.getMeta().getTags().remove(tag);
+		
+		return new PostResult("success", "tag added to initiative", initiative.getId().toString());
+	}
+	
 }

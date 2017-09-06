@@ -1,8 +1,10 @@
-package org.collectiveone.modules.initiatives;
+package org.collectiveone.modules.initiatives.repositories;
 
 import java.util.List;
 import java.util.UUID;
 
+import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.initiatives.InitiativeRelationshipType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

@@ -1,4 +1,4 @@
-package org.collectiveone.modules.initiatives;
+package org.collectiveone.modules.initiatives.dto;
 
 import java.util.ArrayList;
 import java.util.List;

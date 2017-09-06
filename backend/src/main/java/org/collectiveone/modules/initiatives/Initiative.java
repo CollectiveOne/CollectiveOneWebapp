@@ -20,6 +20,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.governance.Governance;
+import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;

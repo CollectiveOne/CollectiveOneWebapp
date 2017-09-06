@@ -1,4 +1,4 @@
-package org.collectiveone.modules.initiatives;
+package org.collectiveone.modules.initiatives.dto;
 
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.users.AppUserDto;

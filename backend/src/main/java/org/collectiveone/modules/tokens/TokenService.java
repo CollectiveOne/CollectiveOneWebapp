@@ -6,7 +6,7 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.collectiveone.modules.activity.ActivityService;
-import org.collectiveone.modules.initiatives.InitiativeRepositoryIf;
+import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
