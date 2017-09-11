@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.assignations.EvaluationGrade;
+import org.collectiveone.modules.assignations.EvaluationGradeState;
 import org.collectiveone.modules.assignations.EvaluationGradeType;
 import org.collectiveone.modules.assignations.Evaluator;
 import org.collectiveone.modules.assignations.EvaluatorState;
@@ -82,12 +83,18 @@ public class PeerReviewedAssignation {
 			
 			List<EvaluationGrade> gradesSet = getReceiverGradesSet(receiver.getId()); 
 			
+			double mean = 0.0;
+			boolean evaluated;
+			
 			if (gradesSet.size() == 0) {
-				/* no body evaluated this receiver? */
+				/* no body evaluated this receiver? mean is zero then */
+				mean = 0.0;
+				evaluated = false;
 			} else {
 			
+				evaluated = true;
+				
 				/* compute the mean of evaluations set */
-				double mean = 0.0;
 				double totalWeight = 0.0;
 				
 				for (EvaluationGrade grade : gradesSet) {
@@ -97,26 +104,30 @@ public class PeerReviewedAssignation {
 				}
 				
 				mean = mean / totalWeight;
+			}
 				
+			/* update the receiver evaluations */
+			List<EvaluationGrade> grades = getReceiverGrades(receiver.getId());
+			
+			for (EvaluationGrade grade : grades) {
+				EvaluationData evaluation = new EvaluationData();
 				
-				/* update the receiver evaluations */
-				List<EvaluationGrade> grades = getReceiverGrades(receiver.getId());
+				evaluation.setEvaluatorId(grade.getEvaluator().getId().toString());
+				evaluation.setWeight(grade.getEvaluator().getWeight());
 				
-				for (EvaluationGrade grade : grades) {
-					EvaluationData evaluation = new EvaluationData();
-					
-					evaluation.setEvaluatorId(grade.getEvaluator().getId().toString());
-					evaluation.setWeight(grade.getEvaluator().getWeight());
-					
+				if (evaluated) {
 					if (grade.getType() == EvaluationGradeType.SET) {
 						evaluation.setValue(grade.getPercent());	
 					} else {
 						evaluation.setValue(mean);
 					}
-					
-					receiverData.evaluations.add(evaluation);
+				} else {
+					evaluation.setValue(mean);
 				}
+				
+				receiverData.evaluations.add(evaluation);
 			}
+		
 			
 			receiversData.add(receiverData);
 		}
@@ -130,7 +141,9 @@ public class PeerReviewedAssignation {
 		for (Evaluator evaluator : this.assignation.getEvaluators()) {
 			for (EvaluationGrade grade : evaluator.getGrades()) {
 				if (grade.getReceiver().getId() == receiverId) {
-					grades.add(grade);
+					if (grade.getState() == EvaluationGradeState.DONE) {
+						grades.add(grade);
+					}
 				}
 			}
 		}
@@ -146,8 +159,10 @@ public class PeerReviewedAssignation {
 		for (Evaluator evaluator : this.assignation.getEvaluators()) {
 			for (EvaluationGrade grade : evaluator.getGrades()) {
 				if (grade.getReceiver().getId() == receiverId) {
-					if (grade.getType() == EvaluationGradeType.SET) {
-						grades.add(grade);
+					if (grade.getState() == EvaluationGradeState.DONE) {
+						if (grade.getType() == EvaluationGradeType.SET) {
+							grades.add(grade);
+						}
 					}
 				}
 			}

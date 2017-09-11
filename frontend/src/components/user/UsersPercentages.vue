@@ -70,7 +70,7 @@
             </button>
           </td>
           <td v-if="showSelfBiases" class="self-bias-col" :class="{'self-bias-good': userData.selfBias <= 0, 'self-bias-bad': userData.selfBias > 0}">
-            <b>{{ Math.abs(userData.selfBias) < 100 ? userData.selfBias.toFixed(1) + ' %' : 'DK'}}</b>
+            <b>{{ Math.abs(userData.selfBias) < 100 ? userData.selfBias.toFixed(1) + ' %' : '-'}}</b>
           </td>
         </tr>
       </tbody>

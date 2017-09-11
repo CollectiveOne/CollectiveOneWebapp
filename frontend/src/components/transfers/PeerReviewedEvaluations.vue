@@ -49,10 +49,14 @@ export default {
       for (var ix in evaluator.grades) {
         let grade = evaluator.grades[ix]
         if (grade.receiverUser.c1Id === receiver.user.c1Id) {
-          if (grade.type === 'DONT_KNOW') {
-            return 'DK'
+          if (grade.state === 'DONE') {
+            if (grade.type === 'DONT_KNOW') {
+              return 'DK'
+            } else {
+              return grade.percent.toFixed(0) + ' %'
+            }
           } else {
-            return grade.percent.toFixed(0) + ' %'
+            return '-'
           }
         }
       }

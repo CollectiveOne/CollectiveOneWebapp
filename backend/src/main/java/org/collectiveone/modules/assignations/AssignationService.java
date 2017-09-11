@@ -315,8 +315,12 @@ public class AssignationService {
 						/* fill the receivers dtos selfBias */
 						for (ReceiverDto receiverDto : assignationDto.getReceivers()) {
 							if (receiverDto.getUser().getC1Id().equals(receiver.getUser().getC1Id().toString())) {
-								if (selfEvaluation.getType() == EvaluationGradeType.SET) {
-									receiverDto.setSelfBias(selfEvaluation.getPercent() - receiverDto.getEvaluatedPercent());
+								if (selfEvaluation.getState() == EvaluationGradeState.DONE) {
+									if (selfEvaluation.getType() == EvaluationGradeType.SET) {
+										receiverDto.setSelfBias(selfEvaluation.getPercent() - receiverDto.getEvaluatedPercent());
+									} else {
+										receiverDto.setSelfBias(999.9);
+									}
 								} else {
 									receiverDto.setSelfBias(999.9);
 								}
