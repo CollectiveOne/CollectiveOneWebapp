@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="tag-container">
+  <div class="tag-container w3-center w3-round w3-border">
     {{ tag.tagText }}
   </div>
 </template>
@@ -19,8 +19,9 @@ export default {
 <style scoped>
 
 .tag-container {
-  background-color: #b12db0;
-  padding: 3px 6px;
+  padding: 3px 12px;
+  background-color: #68b628;
+  color: white;
 }
 
 </style>

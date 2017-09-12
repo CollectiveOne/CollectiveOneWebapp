@@ -1,6 +1,5 @@
 <!-- Downladed from  https://github.com/BosNaufal/vue2-autocomplete
   edited to fit the user selector of CollectiveTweet -->
-
 <template>
   <div class="w3-row-padding autocomplete-wrapper">
 
@@ -16,6 +15,12 @@
             @focus="focus"
             autocomplete="off" />
 
+    <div v-show="showList" class="w3-row w3-margin-top">
+      <button class="w3-button app-button create-button" name="button"
+        @click="$emit('create-new')">
+        create new
+      </button>
+    </div>
     <div class="w3-row" :class="(className ? className + '-list ' : '') + 'autocomplete transition autocomplete-list'" v-show="showList">
       <ul v-if="json.length > 0">
         <li v-for="(data, i) in json"
@@ -42,12 +47,10 @@ import { AutocompleteMixin } from '@/lib/mixins'
 import InitiativeTag from '@/components/initiative/InitiativeTag.vue'
 
 export default {
-  name: 'user-selector',
-
   mixins: [AutocompleteMixin],
 
   props: {
-    /* default propoerties overrides mixin */
+    /* default properties overrides mixin */
     anchor: {
       default: 'c1Id'
     },
@@ -88,7 +91,7 @@ export default {
 
 .autocomplete-list ul {
   max-height: 250px;
-  width: 60%;
+  width: 300px;
   overflow-y: auto;
   z-index: 1100;
 }
@@ -102,7 +105,7 @@ export default {
   margin: 0;
   display: inline-block;
   min-width: 15%;
-  margin-top: 10px;
+  margin-top: 0px;
 }
 
 .autocomplete ul:before{
@@ -126,9 +129,13 @@ export default {
   padding-left: 10px;
 }
 
-.autocomplete ul li a:hover, .autocomplete ul li.focus-list a{
+.create-button {
+  width: 300px;
+}
+
+.autocomplete ul li a:hover, .autocomplete ul li.focus-list a {
   color: white;
-  background: #2F9AF7;
+  background: #adadad;
 }
 
 .autocomplete ul li a span{

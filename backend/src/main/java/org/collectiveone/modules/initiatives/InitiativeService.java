@@ -606,7 +606,7 @@ public class InitiativeService {
 		InitiativeTag tag = getOrCreateTag(tagDto);
 		initiative.getMeta().getTags().add(tag);
 		
-		return new PostResult("success", "tag added to initiative", initiative.getId().toString());
+		return new PostResult("success", "tag added to initiative", tag.getId().toString());
 	}
 	
 	@Transactional
@@ -635,6 +635,17 @@ public class InitiativeService {
 		}
 		
 		return new GetResult<List<InitiativeTagDto>>("succes", "initiatives returned", tagsDtos);
+	}
+	
+	@Transactional
+	public GetResult<InitiativeTagDto> getTag(UUID tagId) {
+		InitiativeTag tag = initiativeTagRepository.findById(tagId);
+		
+		if (tag == null) {
+			return new GetResult<InitiativeTagDto>("error", "initiative tag not found", null); 
+		}
+		
+		return new GetResult<InitiativeTagDto>("success", "initiative tag returned", tag.toDto());
 	}
 	
 }

@@ -85,18 +85,16 @@
               </div>
               <div class="w3-row-padding w3-margin-top tags-row">
                   <div class="w3-col m6 module-tag-col">
-                    <div class="w3-col w3-right" style="width: 70px">
-                      <button class="w3-button app-button" name="button">add</button>
-                    </div>
-                    <div class="w3-rest new-tag-input-container">
-                      <app-initiative-tag-selector-manager
-                        @selected="newTagSelected($event)">
-                      </app-initiative-tag-selector-manager>
-                    </div>
+                    <app-initiative-tag-selector-manager
+                      :initiativeId="initiative.id"
+                      @selected="newTagSelected($event)">
+                    </app-initiative-tag-selector-manager>
                   </div>
                   <div class="w3-col m6">
                     <app-initiative-tag
+                      class="tag-container"
                       v-for="tag in initiative.meta.tags"
+                      :tag="tag"
                       :key="tag.id">
                     </app-initiative-tag>
                   </div>
@@ -156,7 +154,7 @@ export default {
 
   components: {
     'app-initiative-tag': InitiativeTag,
-    'app-initiative-tag-selector-mananger': InitiativeTagSelectorManager
+    'app-initiative-tag-selector-manager': InitiativeTagSelectorManager
   },
 
   data () {
@@ -196,18 +194,12 @@ export default {
     }
   },
 
-  created () {
-    this.newInitiative = JSON.parse(JSON.stringify(this.initiative))
-  },
-
   methods: {
-    newTagUpdated (tagText) {
-      this.newTag = tagText
+    newTagSelected (tag) {
+      this.newTag = tag
     },
     addTag (tagText) {
-      this.newInitiative.meta.tags.push({
-
-      })
+      this.newInitiative.meta.tags.push(this.newTag)
     },
     closeThis () {
       this.$store.commit('showEditInitiativeModal', false)
@@ -244,6 +236,10 @@ export default {
         window.location.href = '/'
       })
     }
+  },
+
+  created () {
+    this.newInitiative = JSON.parse(JSON.stringify(this.initiative))
   }
 }
 </script>
@@ -297,6 +293,12 @@ export default {
 .new-tag-input-container {
   padding-left: 0px;
   padding-right: 10px;
+}
+
+.tag-container {
+  display: inline-block;
+  margin-left: 5px;
+  margin-bottom: 5px;
 }
 
 .delete-row {

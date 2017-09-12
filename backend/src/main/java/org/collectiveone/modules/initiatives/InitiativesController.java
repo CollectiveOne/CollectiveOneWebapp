@@ -209,6 +209,18 @@ public class InitiativesController {
 		return initiativeService.searchTagsBy(query);
 	}
 	
+	@RequestMapping(path = "/secured/initiative/tag/{tagId}", method = RequestMethod.GET)
+	public GetResult<InitiativeTagDto> getTag(@PathVariable("tagId") String tagId) {
+		return initiativeService.getTag(UUID.fromString(tagId));
+	}
+	
+	@RequestMapping(path = "/secured/initiative/tag", method = RequestMethod.POST)
+	public PostResult newTag(@RequestBody InitiativeTagDto tagDto) {
+		InitiativeTag tag = initiativeService.getOrCreateTag(tagDto);
+		return new PostResult("success", "tag craeted", tag.getId().toString());
+	}
+	
+	
 	private AppUser getLoggedUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return appUserService.getFromAuth0Id(auth.getName());
