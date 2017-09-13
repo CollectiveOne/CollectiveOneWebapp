@@ -12,6 +12,7 @@
             <div class="w3-rest new-tag-input-container">
               <app-initiative-tag-selector
                 :init="tagInit"
+                :enableCreate="true"
                 @select="tagSelected($event)"
                 @create-new="creating = true">
               </app-initiative-tag-selector>

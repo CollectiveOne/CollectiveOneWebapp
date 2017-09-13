@@ -18,7 +18,7 @@
 
     <div class="w3-row" :class="(className ? className + '-list ' : '') + 'autocomplete transition autocomplete-list'" v-show="showList">
       <ul v-if="json.length > 0" class="w3-border">
-        <li @click="$emit('create-new')" class="w3-button w3-center" style="width: 100%"><b>create new</b></li>
+        <li v-if="enableCreate" @click="$emit('create-new')" class="w3-button w3-center" style="width: 100%"><b>create new</b></li>
         <li v-for="(data, i) in json"
             transition="showAll"
             :class="activeClass(i)">
@@ -50,6 +50,11 @@ export default {
   mixins: [AutocompleteMixin],
 
   props: {
+    enableCreate: {
+      type: Boolean,
+      default: false
+    },
+
     /* default properties overrides mixin */
     anchor: {
       default: 'c1Id'

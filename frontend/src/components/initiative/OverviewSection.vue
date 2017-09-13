@@ -19,6 +19,7 @@
             <app-initiative-tag
               v-for="tag in initiative.meta.tags"
               :tag="tag"
+              :key="tag.id"
               class="tags-containers">
             </app-initiative-tag>
           </div>
@@ -99,12 +100,6 @@ export default {
   padding-top: 20px;
   width: 60px;
   height: 100%
-}
-
-.tags-containers {
-  display: inline-block;
-  margin-left: 5px;
-  margin-bottom: 5px;
 }
 
 </style>

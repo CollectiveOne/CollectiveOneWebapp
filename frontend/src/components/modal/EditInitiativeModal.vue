@@ -311,12 +311,6 @@ export default {
   padding-right: 10px;
 }
 
-.tags-containers {
-  display: inline-block;
-  margin-left: 5px;
-  margin-bottom: 5px;
-}
-
 .delete-row {
   margin-top: 50px;
 }

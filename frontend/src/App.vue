@@ -364,6 +364,14 @@ select {
   width: 100%;
 }
 
+.tags-containers {
+  display: inline-block;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+
+
 /* Animations */
 
 .fadeenter-enter-active {

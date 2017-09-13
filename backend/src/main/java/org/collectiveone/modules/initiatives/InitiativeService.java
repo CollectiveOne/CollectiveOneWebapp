@@ -20,6 +20,7 @@ import org.collectiveone.modules.initiatives.dto.InitiativeMembersDto;
 import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
 import org.collectiveone.modules.initiatives.dto.MemberDto;
 import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
+import org.collectiveone.modules.initiatives.dto.SearchFiltersDto;
 import org.collectiveone.modules.initiatives.repositories.InitiativeMetaRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
@@ -557,7 +558,8 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	public GetResult<List<InitiativeDto>> searchBy(String q) {
+	public GetResult<List<InitiativeDto>> searchBy(SearchFiltersDto searchFilters) {
+		
 		List<Initiative> initiatives = initiativeRepository.searchBy(q.toLowerCase());
 		List<InitiativeDto> initiativesDtos = new ArrayList<InitiativeDto>();
 		

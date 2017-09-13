@@ -131,9 +131,9 @@ public class InitiativesController {
 		} 
 	}
 	
-	@RequestMapping(path = "/secured/initiatives/suggestions", method = RequestMethod.GET)
-	public GetResult<List<InitiativeDto>> suggestions(@RequestParam("q") String query) {
-		return initiativeService.searchBy(query);
+	@RequestMapping(path = "/secured/initiatives/search", method = RequestMethod.GET)
+	public GetResult<List<InitiativeDto>> search(@RequestBody SearchFiltersDto searchFilters) {
+		return initiativeService.searchBy(searchFilters);
 	}
 	
 	@RequestMapping(path = "/secured/initiative/{initiativeId}/member", method = RequestMethod.POST) 
