@@ -264,6 +264,13 @@ public class InitiativeService {
 		initiativeMeta.setColor(initiativeDto.getColor());
 		initiativeMeta.setModelEnabled(initiativeDto.getModelEnabled());
 		
+		/* remove and add all tags */
+		initiativeMeta.getTags().removeAll(initiativeMeta.getTags());
+		for (InitiativeTagDto tagDto : initiativeDto.getTags()) {
+			InitiativeTag tag = initiativeTagRepository.findById(UUID.fromString(tagDto.getId()));
+			initiativeMeta.getTags().add(tag);
+		}
+		
 		initiativeMetaRepository.save(initiativeMeta);
 		
 		if (!oldName.equals(initiativeDto.getName()) || !oldDriver.equals(initiativeDto.getDriver())) {

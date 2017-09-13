@@ -16,6 +16,7 @@ public class NewInitiativeDto {
 	private List<MemberDto> members;
 	private AssetsDto ownTokens;
 	private List<TransferDto> assetsTransfers;
+	private List<InitiativeTagDto> tags;
 	
 	
 	public boolean getAsSubinitiative() {
@@ -71,6 +72,12 @@ public class NewInitiativeDto {
 	}
 	public void setAssetsTransfers(List<TransferDto> assetsTransfers) {
 		this.assetsTransfers = assetsTransfers;
+	}
+	public List<InitiativeTagDto> getTags() {
+		return tags;
+	}
+	public void setTags(List<InitiativeTagDto> tags) {
+		this.tags = tags;
 	}
 	
 }

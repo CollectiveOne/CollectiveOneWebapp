@@ -7,7 +7,7 @@
         <transition name="fadeenter">
           <div v-if="!creating" class="w3-row">
             <div class="w3-col w3-right w3-center" style="width: 100px">
-              <button class="w3-button app-button" name="button">add</button>
+              <button @click="$emit('add', tag)" class="w3-button app-button" name="button">add</button>
             </div>
             <div class="w3-rest new-tag-input-container">
               <app-initiative-tag-selector
@@ -89,6 +89,7 @@ export default {
         description: ''
       },
       tagInit: null,
+      tag: null,
       tagDescriptionEmptyError: false,
       tagTextEmptyError: false,
       tagTextInvalidError: false
@@ -128,6 +129,7 @@ export default {
 
   methods: {
     tagSelected (tag) {
+      this.tag = tag
       this.$emit('selected', tag)
     },
     saveTag () {
@@ -158,12 +160,11 @@ export default {
 
       if (ok) {
         /* save and get it again, then emit as selected */
-        this.axios.post('/1/secured/tag', this.newTag).then((response) => {
+        this.axios.post('/1/secured/initiative/tag', this.newTag).then((response) => {
           if (response.data.result === 'success') {
             return this.axios.get('/1/secured/initiative/tag/' + response.data.elementId)
           }
         }).then((response) => {
-          debugger
           if (response.data.result === 'success') {
             this.creating = false
             this.newTag = {
@@ -171,6 +172,7 @@ export default {
               description: ''
             }
             this.tagInit = response.data.data
+            this.tag = response.data.data
             this.$emit('selected', response.data.data)
           }
         })

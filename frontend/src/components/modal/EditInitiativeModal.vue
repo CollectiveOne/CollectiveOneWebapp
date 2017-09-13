@@ -84,18 +84,20 @@
                 <label class=""><b>Tags</b></label>
               </div>
               <div class="w3-row-padding w3-margin-top tags-row">
-                  <div class="w3-col m6 module-tag-col">
+                  <div class="w3-col l6 module-tag-col w3-margin-bottom">
                     <app-initiative-tag-selector-manager
                       :initiativeId="initiative.id"
-                      @selected="newTagSelected($event)">
+                      @add="addTag($event)">
                     </app-initiative-tag-selector-manager>
                   </div>
-                  <div class="w3-col m6">
+                  <div class="w3-col l6">
                     <app-initiative-tag
-                      class="tag-container"
-                      v-for="tag in initiative.meta.tags"
+                      class="tags-containers"
+                      v-for="tag in newInitiative.meta.tags"
                       :tag="tag"
-                      :key="tag.id">
+                      :key="tag.id"
+                      @remove="removeTag($event)"
+                      :showRemove="true">
                     </app-initiative-tag>
                   </div>
               </div>
@@ -150,6 +152,15 @@
 import InitiativeTag from '@/components/initiative/InitiativeTag.vue'
 import InitiativeTagSelectorManager from '@/components/initiative/InitiativeTagSelectorManager.vue'
 
+const getIndexOfTag = function (list, id) {
+  for (var ix in list) {
+    if (list[ix].id === id) {
+      return ix
+    }
+  }
+  return -1
+}
+
 export default {
 
   components: {
@@ -195,11 +206,16 @@ export default {
   },
 
   methods: {
-    newTagSelected (tag) {
-      this.newTag = tag
+    addTag (tag) {
+      if (getIndexOfTag(this.newInitiative.meta.tags, tag.id) === -1) {
+        this.newInitiative.meta.tags.push(tag)
+      }
     },
-    addTag (tagText) {
-      this.newInitiative.meta.tags.push(this.newTag)
+    removeTag (tag) {
+      var ix = getIndexOfTag(this.newInitiative.meta.tags, tag.id)
+      if (ix !== -1) {
+        this.newInitiative.meta.tags.splice(ix, 1)
+      }
     },
     closeThis () {
       this.$store.commit('showEditInitiativeModal', false)
@@ -295,7 +311,7 @@ export default {
   padding-right: 10px;
 }
 
-.tag-container {
+.tags-containers {
   display: inline-block;
   margin-left: 5px;
   margin-bottom: 5px;

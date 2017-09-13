@@ -15,14 +15,10 @@
             @focus="focus"
             autocomplete="off" />
 
-    <div v-show="showList" class="w3-row w3-margin-top">
-      <button class="w3-button app-button create-button" name="button"
-        @click="$emit('create-new')">
-        create new
-      </button>
-    </div>
+
     <div class="w3-row" :class="(className ? className + '-list ' : '') + 'autocomplete transition autocomplete-list'" v-show="showList">
-      <ul v-if="json.length > 0">
+      <ul v-if="json.length > 0" class="w3-border">
+        <li @click="$emit('create-new')" class="w3-button w3-center" style="width: 100%"><b>create new</b></li>
         <li v-for="(data, i) in json"
             transition="showAll"
             :class="activeClass(i)">
@@ -30,7 +26,11 @@
           <a  href="#"
               @click.prevent="selectList(data)"
               @mousemove="mousemove(i)">
-            <app-initiative-tag :tag="data"></app-initiative-tag>
+            <app-initiative-tag
+              :tag="data"
+              :showRemove="false"
+              :showDescription="true">
+            </app-initiative-tag>
           </a>
 
         </li>
@@ -135,7 +135,7 @@ export default {
 
 .autocomplete ul li a:hover, .autocomplete ul li.focus-list a {
   color: white;
-  background: #adadad;
+  background: #e6e6e6;
 }
 
 .autocomplete ul li a span{

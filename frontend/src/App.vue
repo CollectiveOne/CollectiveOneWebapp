@@ -111,6 +111,8 @@ select {
 }
 
 .w3-modal .close-div {
+  margin-right: 25px;
+  margin-top: 20px;
   width: 70px;
   height: 70px;
   cursor: pointer;
@@ -119,11 +121,6 @@ select {
 
 .w3-modal .close-div:hover {
   color: #15a5cc;
-}
-
-.w3-modal .fa-times {
-  margin-right: 20px;
-  margin-top: 20px;
 }
 
 .w3-modal .bottom-btns-row button {
