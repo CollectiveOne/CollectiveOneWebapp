@@ -41,7 +41,7 @@ public class InitiativesController {
 	private AppUserService appUserService;
 	
 	
-	@RequestMapping(path = "/secured/initiative", method = RequestMethod.POST)
+	@RequestMapping(path = "/initiative", method = RequestMethod.POST)
 	public PostResult createInitiative(@RequestBody NewInitiativeDto initiativeDto) {
 		
 		/* Authorization is needed if it is a subinitiative */
@@ -60,7 +60,7 @@ public class InitiativesController {
 		return initiativeService.init(getLoggedUser().getC1Id(), initiativeDto);
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}", method = RequestMethod.PUT)
+	@RequestMapping(path = "/initiative/{initiativeId}", method = RequestMethod.PUT)
 	public PostResult editInitiative(@PathVariable("initiativeId") String initiativeIdStr, @RequestBody NewInitiativeDto initiativeDto) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
@@ -71,7 +71,7 @@ public class InitiativesController {
 		return initiativeService.edit(initiativeId, getLoggedUser().getC1Id(), initiativeDto); 
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}", method = RequestMethod.DELETE)
+	@RequestMapping(path = "/initiative/{initiativeId}", method = RequestMethod.DELETE)
 	public PostResult deleteInitiative(@PathVariable("initiativeId") String initiativeIdStr) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
@@ -87,7 +87,7 @@ public class InitiativesController {
 	}
 	
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}", method = RequestMethod.GET)
+	@RequestMapping(path = "/initiative/{initiativeId}", method = RequestMethod.GET)
 	public GetResult<InitiativeDto> getInitiative(
 			@PathVariable("initiativeId") String initiativeId, 
 			@RequestParam(defaultValue = "false") boolean addAssets,
@@ -123,7 +123,7 @@ public class InitiativesController {
 		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeDto);
 	}
 	
-	@RequestMapping(path = "/secured/initiatives/mines", method = RequestMethod.GET)
+	@RequestMapping(path = "/initiatives/mines", method = RequestMethod.GET)
 	public GetResult<List<InitiativeDto>> myInitiatives() {
 		if(getLoggedUser() != null) {
 			return initiativeService.getOfUser(getLoggedUser().getC1Id());
@@ -132,12 +132,12 @@ public class InitiativesController {
 		} 
 	}
 	
-	@RequestMapping(path = "/secured/initiatives/search", method = RequestMethod.PUT)
+	@RequestMapping(path = "/initiatives/search", method = RequestMethod.PUT)
 	public GetResult<List<InitiativeDto>> search(@RequestBody SearchFiltersDto searchFilters) {
 		return initiativeService.searchBy(searchFilters);
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/member", method = RequestMethod.POST) 
+	@RequestMapping(path = "/initiative/{initiativeId}/member", method = RequestMethod.POST) 
 	public PostResult addMember(@PathVariable("initiativeId") String initiativeId, @RequestBody MemberDto memberDto) {
 		DecisionVerdict verdict = governanceService.canAddMember(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
 		
@@ -151,7 +151,7 @@ public class InitiativesController {
 				DecisionMakerRole.valueOf(memberDto.getRole()));
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/member/{userId}", method = RequestMethod.DELETE) 
+	@RequestMapping(path = "/initiative/{initiativeId}/member/{userId}", method = RequestMethod.DELETE) 
 	public PostResult deleteMember(@PathVariable("initiativeId") String initiativeId, @PathVariable("userId") String userId) {
 		DecisionVerdict verdict = governanceService.canDeleteMember(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
 		
@@ -162,7 +162,7 @@ public class InitiativesController {
 		return initiativeService.deleteMember(UUID.fromString(initiativeId), UUID.fromString(userId));
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/member/{userId}", method = RequestMethod.PUT) 
+	@RequestMapping(path = "/initiative/{initiativeId}/member/{userId}", method = RequestMethod.PUT) 
 	public PostResult editMember(@PathVariable("initiativeId") String initiativeId, @RequestBody MemberDto memberDto) {
 		DecisionVerdict verdict = governanceService.canAddMember(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
 		
@@ -176,7 +176,7 @@ public class InitiativesController {
 				DecisionMakerRole.valueOf(memberDto.getRole()));
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/tags", method = RequestMethod.POST) 
+	@RequestMapping(path = "/initiative/{initiativeId}/tags", method = RequestMethod.POST) 
 	public PostResult addTagToInitiative(
 			@PathVariable("initiativeId") String initiativeIdStr, @RequestBody InitiativeTagDto tagDto) {
 		
@@ -190,7 +190,7 @@ public class InitiativesController {
 		return initiativeService.addTagToInitiative(initiativeId, tagDto);
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/tags/{tagId}", method = RequestMethod.DELETE) 
+	@RequestMapping(path = "/initiative/{initiativeId}/tags/{tagId}", method = RequestMethod.DELETE) 
 	public PostResult deleteTagFromInitiative(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("tagId") String tagIdStr) {
@@ -205,17 +205,17 @@ public class InitiativesController {
 		return initiativeService.deleteTagFromInitiative(initiativeId, UUID.fromString(tagIdStr));
 	}
 	
-	@RequestMapping(path = "/secured/initiative/tags/suggestions", method = RequestMethod.GET)
+	@RequestMapping(path = "/initiative/tags/suggestions", method = RequestMethod.GET)
 	public GetResult<List<InitiativeTagDto>> tagSuggestions(@RequestParam("q") String query) {
 		return initiativeService.searchTagsBy(query);
 	}
 	
-	@RequestMapping(path = "/secured/initiative/tag/{tagId}", method = RequestMethod.GET)
+	@RequestMapping(path = "/initiative/tag/{tagId}", method = RequestMethod.GET)
 	public GetResult<InitiativeTagDto> getTag(@PathVariable("tagId") String tagId) {
 		return initiativeService.getTag(UUID.fromString(tagId));
 	}
 	
-	@RequestMapping(path = "/secured/initiative/tag", method = RequestMethod.POST)
+	@RequestMapping(path = "/initiative/tag", method = RequestMethod.POST)
 	public PostResult newTag(@RequestBody InitiativeTagDto tagDto) {
 		InitiativeTag tag = initiativeService.getOrCreateTag(tagDto);
 		return new PostResult("success", "tag craeted", tag.getId().toString());

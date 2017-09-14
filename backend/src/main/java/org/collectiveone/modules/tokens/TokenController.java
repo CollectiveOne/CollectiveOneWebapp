@@ -42,7 +42,7 @@ public class TokenController {
 	private InitiativeService initiativeService;
 	
 	
-	@RequestMapping(path = "/secured/token/{id}", method = RequestMethod.GET)
+	@RequestMapping(path = "/token/{id}", method = RequestMethod.GET)
 	public GetResult<AssetsDto> getToken(
 			@PathVariable("id") String id, 
 			@RequestParam(defaultValue = "false") Boolean includeSubinitiatives,
@@ -57,7 +57,7 @@ public class TokenController {
 		return new GetResult<AssetsDto>("success", "initiative retrieved", assetDto);
 	}
 	
-	@RequestMapping(path = "/secured/token/{tokenId}/mint", method = RequestMethod.PUT) 
+	@RequestMapping(path = "/token/{tokenId}/mint", method = RequestMethod.PUT) 
 	public PostResult mintTokens(
 			@PathVariable("tokenId") String tokenIdStr, 
 			@RequestBody TokenMintDto mintDto) {
@@ -78,7 +78,7 @@ public class TokenController {
 		}
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/transfersToInitiatives", method = RequestMethod.GET)
+	@RequestMapping(path = "/initiative/{initiativeId}/transfersToInitiatives", method = RequestMethod.GET)
 	public GetResult<InitiativeTransfersDto> getTransferToInitiatives(
 			@PathVariable("initiativeId") String initiativeId) {
 		 
@@ -87,7 +87,7 @@ public class TokenController {
 		return new GetResult<InitiativeTransfersDto>("success", "transfers retrieved", transfers);
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/transferToInitiative", method = RequestMethod.POST)
+	@RequestMapping(path = "/initiative/{initiativeId}/transferToInitiative", method = RequestMethod.POST)
 	public PostResult makeTransferToInitiative(
 			@PathVariable("initiativeId") String initiativeId,
 			@RequestBody TransferDto transferDto) {

@@ -22,7 +22,7 @@ public class FilesController {
 	@Autowired
 	private AppUserService appUserService;
     
-    @RequestMapping(value = "/secured/upload/profileImage", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload/profileImage", method = RequestMethod.POST)
     public @ResponseBody String uploadProfileImage(@RequestParam("file") MultipartFile file) {
     	fileService.uploadImageProfile(getLoggedUser().getC1Id(), file);
     	return "success";

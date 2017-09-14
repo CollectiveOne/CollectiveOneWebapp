@@ -48,7 +48,7 @@ public class UsersController {
 		return new PostResult("error", "only the profile owner can edit a profile", "");
 	}
 	
-	@RequestMapping(path = "/secured/users/suggestions", method = RequestMethod.GET)
+	@RequestMapping(path = "/users/suggestions", method = RequestMethod.GET)
 	public GetResult<List<AppUserDto>> suggestions(@RequestParam("q") String query) {
 		return appUserService.searchBy(query);
 	}

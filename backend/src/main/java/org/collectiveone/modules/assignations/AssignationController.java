@@ -32,7 +32,7 @@ public class AssignationController {
 	private GovernanceService governanceService;
 
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignation", method = RequestMethod.POST)
+	@RequestMapping(path = "/initiative/{initiativeId}/assignation", method = RequestMethod.POST)
 	public PostResult newAssignation(@PathVariable("initiativeId") String initiativeId, @RequestBody AssignationDto assignation) {
 		
 		DecisionVerdict canCreate = governanceService.canCreateAssignation(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
@@ -44,12 +44,12 @@ public class AssignationController {
 		return assignationService.createAssignation(UUID.fromString(initiativeId), assignation, getLoggedUser().getC1Id());
 	} 
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/assignations", method = RequestMethod.GET)
+	@RequestMapping(path = "/initiative/{initiativeId}/assignations", method = RequestMethod.GET)
 	public GetResult<InitiativeAssignationsDto> getAssignations(@PathVariable("initiativeId") String initiativeId) {
 		return assignationService.getAssignationsResult(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/assignation/{assignationId}", method = RequestMethod.GET)
+	@RequestMapping(path = "/assignation/{assignationId}", method = RequestMethod.GET)
 	public GetResult<AssignationDto> getAssignationOfUser(
 			@PathVariable("assignationId") String assignationId, 
 			@RequestParam(defaultValue = "false") Boolean  addAllEvaluations) {
@@ -57,7 +57,7 @@ public class AssignationController {
 		return assignationService.getAssignationDto(UUID.fromString(assignationId), getLoggedUser().getC1Id(), addAllEvaluations);
 	}
 	
-	@RequestMapping(path = "/secured/assignation/{assignationId}/evaluate", method = RequestMethod.POST)
+	@RequestMapping(path = "/assignation/{assignationId}/evaluate", method = RequestMethod.POST)
 	public PostResult evaluateAssignation(
 			@PathVariable("assignationId") String assignationId,
 			@RequestBody EvaluationDto evaluationDto) {
@@ -67,7 +67,7 @@ public class AssignationController {
 		return result;
 	}
 	
-	@RequestMapping(path = "/secured/assignation/{assignationId}/revert", method = RequestMethod.PUT)
+	@RequestMapping(path = "/assignation/{assignationId}/revert", method = RequestMethod.PUT)
 	public PostResult revertAssignation(
 			@PathVariable("assignationId") String assignationId) {
 		
@@ -82,7 +82,7 @@ public class AssignationController {
 		return result;
 	}
 	
-	@RequestMapping(path = "/secured/assignation/{assignationId}/approveRevert", method = RequestMethod.PUT)
+	@RequestMapping(path = "/assignation/{assignationId}/approveRevert", method = RequestMethod.PUT)
 	public PostResult approveRevertAssignation(
 			@PathVariable("assignationId") String assignationId, 
 			@RequestParam Boolean approveFlag) {
@@ -95,7 +95,7 @@ public class AssignationController {
 		return result;
 	}
 	
-	@RequestMapping(path = "/secured/assignation/{assignationId}/delete", method = RequestMethod.PUT)
+	@RequestMapping(path = "/assignation/{assignationId}/delete", method = RequestMethod.PUT)
 	public PostResult deleteAssignation(
 			@PathVariable("assignationId") String assignationId) {
 		

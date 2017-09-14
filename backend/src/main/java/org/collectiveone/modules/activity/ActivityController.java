@@ -27,22 +27,22 @@ public class ActivityController {
 	private ActivityService activityService;
 	
 	
-	@RequestMapping(path = "/secured/user/notifications", method = RequestMethod.GET)
+	@RequestMapping(path = "/user/notifications", method = RequestMethod.GET)
 	public GetResult<List<NotificationDto>> getNotifications() {
 		return activityService.getUserNotifications(getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/user/notifications/read", method = RequestMethod.PUT)
+	@RequestMapping(path = "/user/notifications/read", method = RequestMethod.PUT)
 	public PostResult notificationsRead() {
 		return activityService.notificationsRead(getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/user/notifications/subscriber/{initiativeId}", method = RequestMethod.GET)
+	@RequestMapping(path = "/user/notifications/subscriber/{initiativeId}", method = RequestMethod.GET)
 	public GetResult<SubscriberDto> getSubscriber(@PathVariable("initiativeId") String initiativeId) {
 		return activityService.getSubscriber(getLoggedUser().getC1Id(), UUID.fromString(initiativeId));
 	}
 	
-	@RequestMapping(path = "/secured/user/notifications/subscriber/{initiativeId}", method = RequestMethod.PUT)
+	@RequestMapping(path = "/user/notifications/subscriber/{initiativeId}", method = RequestMethod.PUT)
 	public PostResult editSubscriber(@PathVariable("initiativeId") String initiativeId, @RequestBody SubscriberDto subscriber) {
 		activityService.editSubscriberState(getLoggedUser().getC1Id(), UUID.fromString(initiativeId), SubscriberState.valueOf(subscriber.getState()));
 		activityService.editSubscriberEmailNotificationsState(getLoggedUser().getC1Id(), UUID.fromString(initiativeId), SubscriberEmailNotificationsState.valueOf(subscriber.getEmailNotificationsState()));
@@ -50,12 +50,12 @@ public class ActivityController {
 		return new PostResult("success", "success", "");
 	}
 	
-	@RequestMapping(path = "/secured/notifications/unsubscribeFromInitiative/{initiativeId}", method = RequestMethod.PUT)
+	@RequestMapping(path = "/notifications/unsubscribeFromInitiative/{initiativeId}", method = RequestMethod.PUT)
 	public PostResult unsuscribeFromInitiative(@PathVariable("initiativeId") String initiativeId) {
 		return activityService.editSubscriberState(getLoggedUser().getC1Id(), UUID.fromString(initiativeId), SubscriberState.UNSUBSCRIBED);
 	}
 	
-	@RequestMapping(path = "/secured/notifications/unsubscribeFromAll", method = RequestMethod.PUT)
+	@RequestMapping(path = "/notifications/unsubscribeFromAll", method = RequestMethod.PUT)
 	public PostResult unsuscribeFromInitiative() {
 		return appUserService.disableEmailNotifications(getLoggedUser().getC1Id());
 	}

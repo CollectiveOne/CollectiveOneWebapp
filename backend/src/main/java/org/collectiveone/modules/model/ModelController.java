@@ -38,7 +38,7 @@ public class ModelController {
 	private GovernanceService governanceService;
 	
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model", method = RequestMethod.GET) 
+	@RequestMapping(path = "/initiative/{initiativeId}/model", method = RequestMethod.GET) 
 	public GetResult<ModelDto> getModel(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestParam(defaultValue = "1") Integer level) {
@@ -48,7 +48,7 @@ public class ModelController {
 		return modelService.getModel(initiativeId, level, getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/view", method = RequestMethod.POST) 
+	@RequestMapping(path = "/initiative/{initiativeId}/model/view", method = RequestMethod.POST) 
 	public PostResult createView(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestBody ModelViewDto viewDto) {
@@ -62,7 +62,7 @@ public class ModelController {
 		return modelService.createView(initiativeId, viewDto, getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/view/{viewId}", method = RequestMethod.GET) 
+	@RequestMapping(path = "/initiative/{initiativeId}/model/view/{viewId}", method = RequestMethod.GET) 
 	public GetResult<ModelViewDto> getView(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("viewId") String viewIdStr, 
@@ -71,7 +71,7 @@ public class ModelController {
 		return modelService.getView(UUID.fromString(viewIdStr), getLoggedUser().getC1Id(), level);
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/view", method = RequestMethod.PUT) 
+	@RequestMapping(path = "/initiative/{initiativeId}/model/view", method = RequestMethod.PUT) 
 	public PostResult editView(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestBody ModelViewDto viewDto) {
@@ -85,7 +85,7 @@ public class ModelController {
 		return modelService.editView(initiativeId, viewDto, getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/view/{viewId}", method = RequestMethod.DELETE) 
+	@RequestMapping(path = "/initiative/{initiativeId}/model/view/{viewId}", method = RequestMethod.DELETE) 
 	public PostResult deleteView(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("viewId") String viewIdStr) {
@@ -99,7 +99,7 @@ public class ModelController {
 		return modelService.deleteView(UUID.fromString(viewIdStr), getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section", method = RequestMethod.POST)
+	@RequestMapping(path = "/initiative/{initiativeId}/model/section", method = RequestMethod.POST)
 	public PostResult createSection(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestBody ModelSectionDto sectionDto) {
@@ -113,7 +113,7 @@ public class ModelController {
 		return modelService.createSection(sectionDto, getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.PUT) 
+	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.PUT) 
 	public PostResult editSection(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr,
@@ -128,7 +128,7 @@ public class ModelController {
 		return modelService.editSection(UUID.fromString(sectionIdStr), sectionDto, getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.GET) 
+	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.GET) 
 	public GetResult<ModelSectionDto> getSection(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr,
@@ -137,7 +137,7 @@ public class ModelController {
 		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUser().getC1Id(), level);
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.DELETE) 
+	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.DELETE) 
 	public PostResult deleteSection(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr) {
@@ -152,7 +152,7 @@ public class ModelController {
 	}
 	
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/cardWrapper", method = RequestMethod.POST)
+	@RequestMapping(path = "/initiative/{initiativeId}/model/cardWrapper", method = RequestMethod.POST)
 	public PostResult createCardWrapper(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestBody ModelCardDto cardDto) {
@@ -166,7 +166,7 @@ public class ModelController {
 		return modelService.createCardWrapper(cardDto, getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/cardWrapper/{cardWrapperId}", method = RequestMethod.GET) 
+	@RequestMapping(path = "/initiative/{initiativeId}/model/cardWrapper/{cardWrapperId}", method = RequestMethod.GET) 
 	public GetResult<ModelCardWrapperDto> getCardWrapper(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("cardWrapperId") String cardWrapperIdStr) {
@@ -174,7 +174,7 @@ public class ModelController {
 		return modelService.getCardWrapper(UUID.fromString(cardWrapperIdStr), getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/cardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
+	@RequestMapping(path = "/initiative/{initiativeId}/model/cardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
 	public PostResult editCardWrapper(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("cardWrapperId") String cardIdWrapperStr,
@@ -190,7 +190,7 @@ public class ModelController {
 	}
 	
 	
-	@RequestMapping(path = "/secured/initiative/{initiativeId}/model/cardWrapper/{cardWrapperId}", method = RequestMethod.DELETE) 
+	@RequestMapping(path = "/initiative/{initiativeId}/model/cardWrapper/{cardWrapperId}", method = RequestMethod.DELETE) 
 	public PostResult deleteCardWrapper(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("cardWrapperId") String cardIdWrapperStr) {
