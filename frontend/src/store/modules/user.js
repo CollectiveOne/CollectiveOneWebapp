@@ -40,11 +40,11 @@ const actions = {
         context.state.intervalId = setInterval(() => {
           /* update everything every 10 s */
           if (context.state.authenticated) {
-            context.dispatch('updateNotifications')
-            context.dispatch('updatedMyInitiatives')
-            context.dispatch('refreshInitiative')
-            context.dispatch('refreshTransfers')
-            context.commit('triggerUpdateAssets')
+            // context.dispatch('updateNotifications')
+            // context.dispatch('updatedMyInitiatives')
+            // context.dispatch('refreshInitiative')
+            // context.dispatch('refreshTransfers')
+            // context.commit('triggerUpdateAssets')
           }
         }, 10000)
       }

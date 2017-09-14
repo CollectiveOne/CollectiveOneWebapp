@@ -11,7 +11,18 @@
           </div>
         </header>
         <div class="w3-container section-content">
-          {{ initiative.meta.driver }}
+          <div class="w3-row">
+            {{ initiative.meta.driver }}
+          </div>
+          <hr>
+          <div class="w3-row w3-margin-top">
+            <app-initiative-tag
+              v-for="tag in initiative.meta.tags"
+              :tag="tag"
+              :key="tag.id"
+              class="tags-containers">
+            </app-initiative-tag>
+          </div>
         </div>
       </div>
       <br>
@@ -33,11 +44,13 @@
 <script>
 import AssetDistributionChart from '@/components/transfers/AssetDistributionChart.vue'
 import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
+import InitiativeTag from '@/components/initiative/InitiativeTag.vue'
 
 export default {
   components: {
     'app-asset-distribution-chart': AssetDistributionChart,
-    'app-edit-initiative-modal': EditInitiativeModal
+    'app-edit-initiative-modal': EditInitiativeModal,
+    'app-initiative-tag': InitiativeTag
   },
 
   props: {
@@ -88,6 +101,5 @@ export default {
   width: 60px;
   height: 100%
 }
-
 
 </style>

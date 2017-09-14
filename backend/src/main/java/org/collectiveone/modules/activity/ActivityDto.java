@@ -1,7 +1,7 @@
 package org.collectiveone.modules.activity;
 
 import org.collectiveone.modules.assignations.AssignationDto;
-import org.collectiveone.modules.initiatives.InitiativeDto;
+import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.tokens.TokenMintDto;
 import org.collectiveone.modules.tokens.TransferDto;
 import org.collectiveone.modules.users.AppUserDto;

@@ -139,11 +139,9 @@ export const AutocompleteMixin = {
     },
 
     input(val){
-      if(this.json.length > 0) {
-          this.showList = true;
-      } else {
-        this.hideAll()
-      }
+      this.showList = true;
+
+      this.$emit('input', val)
 
       // Callback Event
       this.onInput ? this.onInput(val) : null

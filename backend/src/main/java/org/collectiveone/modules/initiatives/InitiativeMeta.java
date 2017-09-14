@@ -1,6 +1,8 @@
 package org.collectiveone.modules.initiatives;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -8,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.assignations.InitiativeMetaDto;
@@ -43,6 +46,8 @@ public class InitiativeMeta {
 	@Column(name = "model_enabled")
 	private Boolean modelEnabled;
 	
+	@ManyToMany
+	private List<InitiativeTag> tags = new ArrayList<InitiativeTag>();
 	
 	
 	public InitiativeMetaDto toDto() {
@@ -53,6 +58,10 @@ public class InitiativeMeta {
 		dto.setDriver(driver);
 		dto.setColor(color);
 		dto.setModelEnabled(modelEnabled);
+		
+		for (InitiativeTag tag : tags) {
+			dto.getTags().add(tag.toDto());
+		}
 		
 		return dto;
 	}
@@ -103,6 +112,12 @@ public class InitiativeMeta {
 
 	public void setModelEnabled(Boolean modelEnabled) {
 		this.modelEnabled = modelEnabled;
+	}
+	public List<InitiativeTag> getTags() {
+		return tags;
+	}
+	public void setTags(List<InitiativeTag> tags) {
+		this.tags = tags;
 	}
 	
 }

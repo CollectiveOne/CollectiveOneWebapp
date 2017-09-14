@@ -1,12 +1,15 @@
-package org.collectiveone.modules.initiatives;
+package org.collectiveone.modules.initiatives.repositories;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.initiatives.InitiativeRelationshipType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID> {
+public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>, InitiativeRepositoryCustomIf {
 
 	Initiative findById(UUID id);
 	
@@ -21,7 +24,10 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 	List<Initiative> findInitiativesWithRelationship(UUID initiativeId, InitiativeRelationshipType type);
 	
 	@Query("SELECT init FROM Initiative init WHERE lower (init.meta.name) LIKE %?1%")
-	List<Initiative> searchBy(String q);
+	List<Initiative> searchByName(String q);
+	
+	@Query("SELECT init FROM Initiative init JOIN init.meta mta JOIN mta.tags tgs WHERE tgs.id IN ?1")
+	List<Initiative> searchByTagId(Collection<UUID> ids);
 	
 	Initiative findByTokenType_Id(UUID tokenTypeId);
 	

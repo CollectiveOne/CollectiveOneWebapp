@@ -15,6 +15,17 @@ import org.collectiveone.modules.governance.DecisionMaker;
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.governance.GovernanceService;
+import org.collectiveone.modules.initiatives.dto.InitiativeDto;
+import org.collectiveone.modules.initiatives.dto.InitiativeMembersDto;
+import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
+import org.collectiveone.modules.initiatives.dto.MemberDto;
+import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
+import org.collectiveone.modules.initiatives.dto.SearchFiltersDto;
+import org.collectiveone.modules.initiatives.repositories.InitiativeMetaRepositoryIf;
+import org.collectiveone.modules.initiatives.repositories.InitiativeRelationshipRepositoryIf;
+import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+import org.collectiveone.modules.initiatives.repositories.InitiativeTagRepositoryIf;
+import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
 import org.collectiveone.modules.tokens.AssetsDto;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.InitiativeTransferRepositoryIf;
@@ -62,6 +73,8 @@ public class InitiativeService {
 	@Autowired
 	private InitiativeMetaRepositoryIf initiativeMetaRepository;
 	
+	@Autowired
+	private InitiativeTagRepositoryIf initiativeTagRepository;
 	  
 	
 	/** Non-transactional method to create an initiative in multiple transactions */
@@ -251,6 +264,13 @@ public class InitiativeService {
 		initiativeMeta.setDriver(initiativeDto.getDriver());
 		initiativeMeta.setColor(initiativeDto.getColor());
 		initiativeMeta.setModelEnabled(initiativeDto.getModelEnabled());
+		
+		/* remove and add all tags */
+		initiativeMeta.getTags().removeAll(initiativeMeta.getTags());
+		for (InitiativeTagDto tagDto : initiativeDto.getTags()) {
+			InitiativeTag tag = initiativeTagRepository.findById(UUID.fromString(tagDto.getId()));
+			initiativeMeta.getTags().add(tag);
+		}
 		
 		initiativeMetaRepository.save(initiativeMeta);
 		
@@ -538,8 +558,21 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	public GetResult<List<InitiativeDto>> searchBy(String q) {
-		List<Initiative> initiatives = initiativeRepository.searchBy(q.toLowerCase());
+	public GetResult<List<InitiativeDto>> searchBy(SearchFiltersDto searchFilters) {
+		
+		List<UUID> tagIds = new ArrayList<UUID>();
+		for (InitiativeTagDto tag : searchFilters.getTags()) {
+			tagIds.add(UUID.fromString(tag.getId()));
+		}
+		
+		List<Initiative> initiatives = null;
+		
+		if (tagIds.size() > 0) {
+			initiatives = initiativeRepository.searchByTagId(tagIds);	
+		} else {
+			initiatives = (List<Initiative>) initiativeRepository.findAll();
+		}
+		
 		List<InitiativeDto> initiativesDtos = new ArrayList<InitiativeDto>();
 		
 		for(Initiative initiative : initiatives) {
@@ -567,4 +600,73 @@ public class InitiativeService {
 		
 		return member;
 	}
+
+
+	@Transactional
+	public InitiativeTag getOrCreateTag(InitiativeTagDto tagDto) {
+		InitiativeTag tag = initiativeTagRepository.findByTagText(tagDto.getTagText());
+		
+		if (tag == null) {
+			tag = new InitiativeTag();
+			
+			tag.setTagText(tagDto.getTagText());
+			tag.setDescription(tagDto.getDescription());
+			
+			tag = initiativeTagRepository.save(tag);
+		}
+		
+		return tag;
+	}
+	
+	@Transactional
+	public PostResult addTagToInitiative(UUID initiativeId, InitiativeTagDto tagDto) {
+		
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		if (initiative == null) return new PostResult("error", "initiative not found", "");
+		
+		InitiativeTag tag = getOrCreateTag(tagDto);
+		initiative.getMeta().getTags().add(tag);
+		
+		return new PostResult("success", "tag added to initiative", tag.getId().toString());
+	}
+	
+	@Transactional
+	public PostResult deleteTagFromInitiative(UUID initiativeId, UUID tagId) {
+		
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		if (initiative == null) return new PostResult("error", "initiative not found", "");
+		
+		InitiativeTag tag = initiativeTagRepository.findById(tagId);
+		if (tag == null) return new PostResult("error", "tag not found", "");
+		
+		initiative.getMeta().getTags().remove(tag);
+		
+		return new PostResult("success", "tag added to initiative", initiative.getId().toString());
+	}
+	
+	
+	@Transactional
+	public GetResult<List<InitiativeTagDto>> searchTagsBy(String q) {
+		List<InitiativeTag> tags = initiativeTagRepository.findTop10ByTagTextLikeIgnoreCase("%"+q+"%");
+		
+		List<InitiativeTagDto> tagsDtos = new ArrayList<InitiativeTagDto>();
+		
+		for(InitiativeTag tag : tags) {
+			tagsDtos.add(tag.toDto());
+		}
+		
+		return new GetResult<List<InitiativeTagDto>>("succes", "initiatives returned", tagsDtos);
+	}
+	
+	@Transactional
+	public GetResult<InitiativeTagDto> getTag(UUID tagId) {
+		InitiativeTag tag = initiativeTagRepository.findById(tagId);
+		
+		if (tag == null) {
+			return new GetResult<InitiativeTagDto>("error", "initiative tag not found", null); 
+		}
+		
+		return new GetResult<InitiativeTagDto>("success", "initiative tag returned", tag.toDto());
+	}
+	
 }

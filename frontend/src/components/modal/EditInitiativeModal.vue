@@ -78,6 +78,33 @@
           </div> -->
 
           <hr>
+          <div class="w3-row">
+            <div class="w3-col s12">
+              <div class="w3-row">
+                <label class=""><b>Tags</b></label>
+              </div>
+              <div class="w3-row-padding w3-margin-top tags-row">
+                  <div class="w3-col l6 module-tag-col w3-margin-bottom">
+                    <app-initiative-tag-selector-manager
+                      :initiativeId="initiative.id"
+                      @add="addTag($event)">
+                    </app-initiative-tag-selector-manager>
+                  </div>
+                  <div class="w3-col l6">
+                    <app-initiative-tag
+                      class="tags-containers"
+                      v-for="tag in newInitiative.meta.tags"
+                      :tag="tag"
+                      :key="tag.id"
+                      @remove="removeTag($event)"
+                      :showRemove="true">
+                    </app-initiative-tag>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+          <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
               <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
@@ -122,7 +149,25 @@
 </template>
 
 <script>
+import InitiativeTag from '@/components/initiative/InitiativeTag.vue'
+import InitiativeTagSelectorManager from '@/components/initiative/InitiativeTagSelectorManager.vue'
+
+const getIndexOfTag = function (list, id) {
+  for (var ix in list) {
+    if (list[ix].id === id) {
+      return ix
+    }
+  }
+  return -1
+}
+
 export default {
+
+  components: {
+    'app-initiative-tag': InitiativeTag,
+    'app-initiative-tag-selector-manager': InitiativeTagSelectorManager
+  },
+
   data () {
     return {
       newInitiative: null,
@@ -137,7 +182,8 @@ export default {
       ],
       nameEmptyError: false,
       driverEmptyError: false,
-      deleteInitiativeSelected: false
+      deleteInitiativeSelected: false,
+      newTag: ''
     }
   },
 
@@ -159,11 +205,18 @@ export default {
     }
   },
 
-  created () {
-    this.newInitiative = JSON.parse(JSON.stringify(this.initiative))
-  },
-
   methods: {
+    addTag (tag) {
+      if (getIndexOfTag(this.newInitiative.meta.tags, tag.id) === -1) {
+        this.newInitiative.meta.tags.push(tag)
+      }
+    },
+    removeTag (tag) {
+      var ix = getIndexOfTag(this.newInitiative.meta.tags, tag.id)
+      if (ix !== -1) {
+        this.newInitiative.meta.tags.splice(ix, 1)
+      }
+    },
     closeThis () {
       this.$store.commit('showEditInitiativeModal', false)
     },
@@ -199,6 +252,10 @@ export default {
         window.location.href = '/'
       })
     }
+  },
+
+  created () {
+    this.newInitiative = JSON.parse(JSON.stringify(this.initiative))
   }
 }
 </script>
@@ -247,6 +304,11 @@ export default {
 
 .module-tag-col {
   padding-top: 3px;
+}
+
+.new-tag-input-container {
+  padding-left: 0px;
+  padding-right: 10px;
 }
 
 .delete-row {
