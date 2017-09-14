@@ -13,6 +13,7 @@ import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
 import org.collectiveone.modules.initiatives.dto.MemberDto;
 import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
+import org.collectiveone.modules.initiatives.dto.SearchFiltersDto;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
