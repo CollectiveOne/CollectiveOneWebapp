@@ -17,8 +17,9 @@
 
 
     <div class="w3-row" :class="(className ? className + '-list ' : '') + 'autocomplete transition autocomplete-list'" v-show="showList">
-      <ul v-if="json.length > 0" class="w3-border">
+      <ul class="w3-border">
         <li v-if="enableCreate" @click="$emit('create-new')" class="w3-button w3-center" style="width: 100%"><b>create new</b></li>
+        <hr class="hrz-line">
         <li v-for="(data, i) in json"
             transition="showAll"
             :class="activeClass(i)">
@@ -32,12 +33,12 @@
               :showDescription="true">
             </app-initiative-tag>
           </a>
-
+        </li>
+        <li v-if="json.length == 0" class="w3-padding w3-center">
+          <i>no matches found</i>
         </li>
       </ul>
-      <div v-else class="w3-padding">
-        <i>no matches found</i>
-      </div>
+
     </div>
   </div>
 </template>
@@ -136,6 +137,11 @@ export default {
 
 .create-button {
   width: 300px;
+}
+
+.autocomplete hr {
+  margin-top: 5px !important;
+  margin-bottom: 5px;
 }
 
 .autocomplete ul li a:hover, .autocomplete ul li.focus-list a {

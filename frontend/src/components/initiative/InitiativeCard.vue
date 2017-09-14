@@ -1,14 +1,27 @@
 <template lang="html">
-  <router-link :to="{name: 'Initiative', params: {'initiativeId': initiative.id}}"
-    tag="div" class="w3-panel w3-round-large w3-padding cursor-pointer"
-    :style="{'background-color': $store.getters.colorOfInitiative(initiative.id)}">
-    <h4><b>{{ initiative.meta.name }}</b></h4>
+  <div class="this-card-container w3-card-2 w3-round-large w3-padding w3-border w3-leftbar" :style="{'border-left-color': initiative.meta.color + ' !important'}">
+    <router-link :to="{name: 'Initiative', params: {'initiativeId': initiative.id}}"
+      tag="a" class="">
+      <h4><b>{{ initiative.meta.name }}</b></h4>
+    </router-link>
     <p>{{ initiative.meta.driver }}</p>
-  </router-link>
+    <div class="">
+      <app-initiative-tag
+        class="tags-containers"
+        v-for="tag in initiative.meta.tags"
+        :tag="tag"
+        :key="tag.id">
+      </app-initiative-tag>
+    </div>
+  </div>
 </template>
 
 <script>
+import InitiativeTag from '@/components/initiative/InitiativeTag.vue'
 export default {
+  components: {
+    'app-initiative-tag': InitiativeTag
+  },
   props: {
     initiative: Object
   }
@@ -17,8 +30,8 @@ export default {
 
 <style scoped>
 
-.w3-panel {
-  color: white;
+.this-card-container {
+  border-left-width: 10px !important;
 }
 
 </style>

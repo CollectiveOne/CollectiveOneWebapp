@@ -132,7 +132,7 @@ public class InitiativesController {
 		} 
 	}
 	
-	@RequestMapping(path = "/secured/initiatives/search", method = RequestMethod.GET)
+	@RequestMapping(path = "/secured/initiatives/search", method = RequestMethod.PUT)
 	public GetResult<List<InitiativeDto>> search(@RequestBody SearchFiltersDto searchFilters) {
 		return initiativeService.searchBy(searchFilters);
 	}

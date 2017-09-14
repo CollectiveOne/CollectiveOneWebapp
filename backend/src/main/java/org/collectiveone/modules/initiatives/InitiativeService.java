@@ -560,7 +560,19 @@ public class InitiativeService {
 	@Transactional
 	public GetResult<List<InitiativeDto>> searchBy(SearchFiltersDto searchFilters) {
 		
-		List<Initiative> initiatives = initiativeRepository.searchBy(q.toLowerCase());
+		List<UUID> tagIds = new ArrayList<UUID>();
+		for (InitiativeTagDto tag : searchFilters.getTags()) {
+			tagIds.add(UUID.fromString(tag.getId()));
+		}
+		
+		List<Initiative> initiatives = null;
+		
+		if (tagIds.size() > 0) {
+			initiatives = initiativeRepository.searchByTagId(tagIds);	
+		} else {
+			initiatives = (List<Initiative>) initiativeRepository.findAll();
+		}
+		
 		List<InitiativeDto> initiativesDtos = new ArrayList<InitiativeDto>();
 		
 		for(Initiative initiative : initiatives) {
