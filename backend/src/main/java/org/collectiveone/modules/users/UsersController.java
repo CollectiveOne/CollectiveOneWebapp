@@ -3,10 +3,10 @@ package org.collectiveone.modules.users;
 import java.util.List;
 import java.util.UUID;
 
+import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/1")
-public class UsersController {
+public class UsersController extends BaseController {
 	
 	@Autowired
 	AppUserService appUserService;
@@ -27,7 +27,7 @@ public class UsersController {
 		
 		String auth0Id = SecurityContextHolder.getContext().getAuthentication().getName();
 		if (auth0Id.equals("anonimousUser")) {
-			return GetResult<AppUserDto>("error", "anonymous user", null);
+			return new GetResult<AppUserDto>("error", "anonymous user", null);
 		}
 		
 		AppUser user = appUserService.getOrCreateFromAuth0Id(auth0Id);
@@ -47,6 +47,10 @@ public class UsersController {
 	@RequestMapping(path = "secured/user/profile/{userId}",  method = RequestMethod.PUT)
     public PostResult editProfile(@PathVariable("userId") UUID userId, @RequestBody AppUserDto userDto) {
 		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		if (getLoggedUser().getC1Id().compareTo(userId) == 0) {
 			return appUserService.editUserProfile(userId, userDto);
 		}
@@ -57,11 +61,6 @@ public class UsersController {
 	@RequestMapping(path = "/users/suggestions", method = RequestMethod.GET)
 	public GetResult<List<AppUserDto>> suggestions(@RequestParam("q") String query) {
 		return appUserService.searchBy(query);
-	}
-	
-	private AppUser getLoggedUser() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return appUserService.getFromAuth0Id(auth.getName());
 	}
 	
 }
