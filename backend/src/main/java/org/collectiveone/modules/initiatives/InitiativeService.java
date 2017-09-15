@@ -90,10 +90,14 @@ public class InitiativeService {
 			case PUBLIC:
 				return true;
 				
+			case INHERITED:
 			default:
+				Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_DETACHED_SUB);
+				if (parent != null) {
+					return canAccess(parent.getId(), userId);
+				}				
 				return false;
 		}
-		
 	}
 
 	/** Non-transactional method to create an initiative in multiple transactions */
