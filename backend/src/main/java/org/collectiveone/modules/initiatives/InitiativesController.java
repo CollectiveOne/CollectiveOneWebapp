@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.governance.DecisionMakerRole;
@@ -14,11 +15,7 @@ import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
 import org.collectiveone.modules.initiatives.dto.MemberDto;
 import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
 import org.collectiveone.modules.initiatives.dto.SearchFiltersDto;
-import org.collectiveone.modules.users.AppUser;
-import org.collectiveone.modules.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/1")
-public class InitiativesController { 
+public class InitiativesController extends BaseController { 
 	
 	@Autowired
 	private GovernanceService governanceService;
@@ -37,12 +34,13 @@ public class InitiativesController {
 	@Autowired
 	private InitiativeService initiativeService;
 	
-	@Autowired
-	private AppUserService appUserService;
-	
 	
 	@RequestMapping(path = "/initiative", method = RequestMethod.POST)
 	public PostResult createInitiative(@RequestBody NewInitiativeDto initiativeDto) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
 		
 		/* Authorization is needed if it is a subinitiative */
 		DecisionVerdict canCreate = null;
@@ -63,6 +61,10 @@ public class InitiativesController {
 	@RequestMapping(path = "/initiative/{initiativeId}", method = RequestMethod.PUT)
 	public PostResult editInitiative(@PathVariable("initiativeId") String initiativeIdStr, @RequestBody NewInitiativeDto initiativeDto) {
 		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		if (governanceService.canEdit(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
@@ -73,6 +75,10 @@ public class InitiativesController {
 	
 	@RequestMapping(path = "/initiative/{initiativeId}", method = RequestMethod.DELETE)
 	public PostResult deleteInitiative(@PathVariable("initiativeId") String initiativeIdStr) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
@@ -117,7 +123,7 @@ public class InitiativesController {
 		}
 		
 		if(addLoggedUser) {
-			initiativeDto.setLoggedMember(initiativeService.getMember(UUID.fromString(initiativeId),  getLoggedUser().getC1Id()));
+			initiativeDto.setLoggedMember(initiativeService.getMember(UUID.fromString(initiativeId),  getLoggedUserId()));
 		}
 		
 		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeDto);
@@ -125,11 +131,11 @@ public class InitiativesController {
 	
 	@RequestMapping(path = "/initiatives/mines", method = RequestMethod.GET)
 	public GetResult<List<InitiativeDto>> myInitiatives() {
-		if(getLoggedUser() != null) {
-			return initiativeService.getOfUser(getLoggedUser().getC1Id());
-		} else {
-			return new GetResult<List<InitiativeDto>>("error", "user not logged", new ArrayList<InitiativeDto>());
-		} 
+		if (getLoggedUser() == null) {
+			return new GetResult<List<InitiativeDto>>("error", "endpoint enabled users only", null);
+		}
+		
+		return initiativeService.getOfUser(getLoggedUser().getC1Id());
 	}
 	
 	@RequestMapping(path = "/initiatives/search", method = RequestMethod.PUT)
@@ -139,6 +145,11 @@ public class InitiativesController {
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/member", method = RequestMethod.POST) 
 	public PostResult addMember(@PathVariable("initiativeId") String initiativeId, @RequestBody MemberDto memberDto) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		DecisionVerdict verdict = governanceService.canAddMember(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
 		
 		if (verdict == DecisionVerdict.DENIED) {
@@ -153,6 +164,11 @@ public class InitiativesController {
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/member/{userId}", method = RequestMethod.DELETE) 
 	public PostResult deleteMember(@PathVariable("initiativeId") String initiativeId, @PathVariable("userId") String userId) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		DecisionVerdict verdict = governanceService.canDeleteMember(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
 		
 		if (verdict == DecisionVerdict.DENIED) {
@@ -164,6 +180,11 @@ public class InitiativesController {
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/member/{userId}", method = RequestMethod.PUT) 
 	public PostResult editMember(@PathVariable("initiativeId") String initiativeId, @RequestBody MemberDto memberDto) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		DecisionVerdict verdict = governanceService.canAddMember(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
 		
 		if (verdict == DecisionVerdict.DENIED) {
@@ -180,6 +201,10 @@ public class InitiativesController {
 	public PostResult addTagToInitiative(
 			@PathVariable("initiativeId") String initiativeIdStr, @RequestBody InitiativeTagDto tagDto) {
 		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		DecisionVerdict verdict = governanceService.canEdit(initiativeId, getLoggedUser().getC1Id());
 		
@@ -194,6 +219,10 @@ public class InitiativesController {
 	public PostResult deleteTagFromInitiative(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("tagId") String tagIdStr) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		DecisionVerdict verdict = governanceService.canEdit(initiativeId, getLoggedUser().getC1Id());
@@ -217,15 +246,13 @@ public class InitiativesController {
 	
 	@RequestMapping(path = "/initiative/tag", method = RequestMethod.POST)
 	public PostResult newTag(@RequestBody InitiativeTagDto tagDto) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		InitiativeTag tag = initiativeService.getOrCreateTag(tagDto);
 		return new PostResult("success", "tag craeted", tag.getId().toString());
 	}
-	
-	
-	private AppUser getLoggedUser() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return appUserService.getFromAuth0Id(auth.getName());
-	}
-	
 	
 }

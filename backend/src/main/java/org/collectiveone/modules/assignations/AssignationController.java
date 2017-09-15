@@ -2,15 +2,12 @@ package org.collectiveone.modules.assignations;
 
 import java.util.UUID;
 
+import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.governance.DecisionVerdict;
 import org.collectiveone.modules.governance.GovernanceService;
-import org.collectiveone.modules.users.AppUser;
-import org.collectiveone.modules.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/1")
-public class AssignationController {
+public class AssignationController extends BaseController {
 	
 	@Autowired
 	private AssignationService assignationService;
-	
-	@Autowired
-	private AppUserService appUserService;
 	
 	@Autowired
 	private GovernanceService governanceService;
@@ -34,6 +28,10 @@ public class AssignationController {
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/assignation", method = RequestMethod.POST)
 	public PostResult newAssignation(@PathVariable("initiativeId") String initiativeId, @RequestBody AssignationDto assignation) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
 		
 		DecisionVerdict canCreate = governanceService.canCreateAssignation(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
 		
@@ -46,7 +44,7 @@ public class AssignationController {
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/assignations", method = RequestMethod.GET)
 	public GetResult<InitiativeAssignationsDto> getAssignations(@PathVariable("initiativeId") String initiativeId) {
-		return assignationService.getAssignationsResult(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
+		return assignationService.getAssignationsResult(UUID.fromString(initiativeId), getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/assignation/{assignationId}", method = RequestMethod.GET)
@@ -54,13 +52,17 @@ public class AssignationController {
 			@PathVariable("assignationId") String assignationId, 
 			@RequestParam(defaultValue = "false") Boolean  addAllEvaluations) {
 		
-		return assignationService.getAssignationDto(UUID.fromString(assignationId), getLoggedUser().getC1Id(), addAllEvaluations);
+		return assignationService.getAssignationDto(UUID.fromString(assignationId), getLoggedUserId(), addAllEvaluations);
 	}
 	
 	@RequestMapping(path = "/assignation/{assignationId}/evaluate", method = RequestMethod.POST)
 	public PostResult evaluateAssignation(
 			@PathVariable("assignationId") String assignationId,
 			@RequestBody EvaluationDto evaluationDto) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
 		
 		PostResult result = assignationService.evaluateAndUpdateAssignation(getLoggedUser().getC1Id(), UUID.fromString(assignationId), evaluationDto);
 		
@@ -70,6 +72,10 @@ public class AssignationController {
 	@RequestMapping(path = "/assignation/{assignationId}/revert", method = RequestMethod.PUT)
 	public PostResult revertAssignation(
 			@PathVariable("assignationId") String assignationId) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
 		
 		DecisionVerdict canRevert = governanceService.canRevertAssignation(assignationService.getInitiativeIdOf(UUID.fromString(assignationId)), getLoggedUser().getC1Id());
 		
@@ -87,6 +93,10 @@ public class AssignationController {
 			@PathVariable("assignationId") String assignationId, 
 			@RequestParam Boolean approveFlag) {
 		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		PostResult result = assignationService.approveRevertAssignation(getLoggedUser().getC1Id(), UUID.fromString(assignationId), approveFlag);
 		
 		/* update assignation state in case all receivers have approved */
@@ -99,6 +109,10 @@ public class AssignationController {
 	public PostResult deleteAssignation(
 			@PathVariable("assignationId") String assignationId) {
 		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		DecisionVerdict canDelete = governanceService.canDeleteAssignation(assignationService.getInitiativeIdOf(UUID.fromString(assignationId)), getLoggedUser().getC1Id());
 		
 		if (canDelete == DecisionVerdict.DENIED) {
@@ -108,11 +122,6 @@ public class AssignationController {
 		PostResult result = assignationService.deleteAssignation(UUID.fromString(assignationId), getLoggedUser().getC1Id());
 		
 		return result;
-	}
-	
-	private AppUser getLoggedUser() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return appUserService.getFromAuth0Id(auth.getName());
 	}
 	
 }

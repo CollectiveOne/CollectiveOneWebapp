@@ -24,7 +24,13 @@ public class UsersController {
 	
 	@RequestMapping(path = "secured/user/myProfile",  method = RequestMethod.GET)
     public GetResult<AppUserDto> myProfile() {
-		AppUser user = appUserService.getOrCreateFromAuth0Id(SecurityContextHolder.getContext().getAuthentication().getName());
+		
+		String auth0Id = SecurityContextHolder.getContext().getAuthentication().getName();
+		if (auth0Id.equals("anonimousUser")) {
+			return GetResult<AppUserDto>("error", "anonymous user", null);
+		}
+		
+		AppUser user = appUserService.getOrCreateFromAuth0Id(auth0Id);
 		return appUserService.getUserLight(user.getC1Id());
 	}
 	

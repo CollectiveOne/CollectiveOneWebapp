@@ -2,6 +2,7 @@ package org.collectiveone.modules.model;
 
 import java.util.UUID;
 
+import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.governance.DecisionVerdict;
@@ -11,11 +12,7 @@ import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.dto.ModelViewDto;
-import org.collectiveone.modules.users.AppUser;
-import org.collectiveone.modules.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/1")
-public class ModelController { 
-	
-	@Autowired
-	private AppUserService appUserService;
+public class ModelController extends BaseController { 
 	
 	@Autowired
 	private ModelService modelService;
@@ -52,6 +46,10 @@ public class ModelController {
 	public PostResult createView(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestBody ModelViewDto viewDto) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
@@ -76,6 +74,10 @@ public class ModelController {
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestBody ModelViewDto viewDto) {
 		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
 		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
@@ -89,6 +91,10 @@ public class ModelController {
 	public PostResult deleteView(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("viewId") String viewIdStr) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
@@ -104,6 +110,10 @@ public class ModelController {
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestBody ModelSectionDto sectionDto) {
 		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
 		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
@@ -118,6 +128,10 @@ public class ModelController {
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr,
 			@RequestBody ModelSectionDto sectionDto) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
@@ -142,6 +156,10 @@ public class ModelController {
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr) {
 		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
 		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
@@ -156,6 +174,10 @@ public class ModelController {
 	public PostResult createCardWrapper(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestBody ModelCardDto cardDto) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
@@ -180,6 +202,10 @@ public class ModelController {
 			@PathVariable("cardWrapperId") String cardIdWrapperStr,
 			@RequestBody ModelCardDto cardDto) {
 		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
 		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
@@ -195,6 +221,10 @@ public class ModelController {
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("cardWrapperId") String cardIdWrapperStr) {
 		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
 		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
@@ -204,8 +234,4 @@ public class ModelController {
 		return modelService.deleteCardWrapper(UUID.fromString(cardIdWrapperStr), getLoggedUser().getC1Id());
 	}
 	
-	private AppUser getLoggedUser() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return appUserService.getFromAuth0Id(auth.getName());
-	}
 }

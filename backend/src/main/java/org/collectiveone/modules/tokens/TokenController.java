@@ -2,17 +2,14 @@ package org.collectiveone.modules.tokens;
 
 import java.util.UUID;
 
+import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.governance.DecisionVerdict;
 import org.collectiveone.modules.governance.GovernanceService;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
-import org.collectiveone.modules.users.AppUser;
-import org.collectiveone.modules.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/1")
-public class TokenController { 
+public class TokenController extends BaseController { 
 	
 
 	@Autowired
@@ -34,9 +31,6 @@ public class TokenController {
 	
 	@Autowired
 	private GovernanceService governanceService;
-	
-	@Autowired
-	private AppUserService appUserService;
 	
 	@Autowired
 	private InitiativeService initiativeService;
@@ -61,6 +55,10 @@ public class TokenController {
 	public PostResult mintTokens(
 			@PathVariable("tokenId") String tokenIdStr, 
 			@RequestBody TokenMintDto mintDto) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
 		
 		UUID tokenId = UUID.fromString(tokenIdStr);
 		
@@ -91,12 +89,12 @@ public class TokenController {
 	public PostResult makeTransferToInitiative(
 			@PathVariable("initiativeId") String initiativeId,
 			@RequestBody TransferDto transferDto) {
-		 
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
 		return tokenTransferService.transferFromInitiativeToInitiative(UUID.fromString(initiativeId), transferDto, getLoggedUser().getC1Id());
 	}
 	
-	private AppUser getLoggedUser() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return appUserService.getFromAuth0Id(auth.getName());
-	}
 }
