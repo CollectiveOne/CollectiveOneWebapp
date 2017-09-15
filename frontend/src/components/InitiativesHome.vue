@@ -2,7 +2,7 @@
   <div class="">
     <router-view></router-view>
     <div class="w3-container">
-      <h1>Browse Initiatives</h1>
+      <h1>Browse Public Initiatives</h1>
       <div class="w3-row">
         <label for=""><b>Filter by tag:</b></label>
         <div class="w3-col s12">
@@ -35,6 +35,9 @@
               :initiative="initiative"
               :key="initiative.id">
             </app-initiative-card>
+          </div>
+          <div v-if="initiatives.length == 0" class="w3-center">
+            <i>no results found</i>
           </div>
         </div>
         <div v-else class="w3-row w3-center loader-gif-container">

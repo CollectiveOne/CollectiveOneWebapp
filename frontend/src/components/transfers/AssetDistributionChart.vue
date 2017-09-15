@@ -304,7 +304,7 @@ export default {
       this.axios.get('/1/token/' + this.assetId, {
         params: {
           includeSubinitiatives: true,
-          initiativeId: this.initiativeId
+          initiativeIdStr: this.initiativeId
         }
       }).then((response) => {
         this.assetData = response.data.data

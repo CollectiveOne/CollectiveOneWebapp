@@ -105,6 +105,36 @@
           </div>
 
           <hr>
+          <div class="w3-row">
+            <label class=""><b>Visibility</b></label>
+            <div class="w3-col s12">
+              <div class="w3-row w3-margin-top modules-row">
+                  <div class="w3-col s4">
+                    <button class="w3-left w3-button"
+                      :class="{ 'app-button': isPrivate, 'app-button-light': !isPrivate }"
+                      @click="newInitiative.meta.visibility = 'PRIVATE'">
+                      private
+                    </button>
+                  </div>
+                  <div v-if="isSubinitiative" class="w3-col s4">
+                    <button class="w3-left w3-button"
+                      :class="{ 'app-button': isInherited, 'app-button-light': !isInherited }"
+                      @click="newInitiative.meta.visibility = 'INHERITED'">
+                      inherited
+                    </button>
+                  </div>
+                  <div class="w3-col s4">
+                    <button class="w3-left w3-button"
+                      :class="{ 'app-button': isPublic, 'app-button-light': !isPublic }"
+                      @click="newInitiative.meta.visibility = 'PUBLIC'">
+                      public
+                    </button>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+          <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
               <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
@@ -191,6 +221,9 @@ export default {
     initiative () {
       return this.$store.state.initiative.initiative
     },
+    isSubinitiative () {
+      return this.newInitiative.parents.length !== 0
+    },
     nameErrorShow () {
       return this.nameEmptyShow || this.nameTooLarge
     },
@@ -202,6 +235,23 @@ export default {
     },
     driverEmptyShow () {
       return this.driverEmptyError && this.newInitiative.meta.driver === ''
+    },
+    isPrivate () {
+      if (!this.isSubinitiative) {
+        return this.newInitiative.meta.visibility === 'PRIVATE' || this.newInitiative.meta.visibility === 'INHERITED' || this.newInitiative.meta.visibility === null
+      } else {
+        return this.newInitiative.meta.visibility === 'PRIVATE'
+      }
+    },
+    isInherited () {
+      if (!this.isSubinitiative) {
+        return false
+      } else {
+        return this.newInitiative.meta.visibility === 'INHERITED' || this.newInitiative.meta.visibility === null
+      }
+    },
+    isPublic () {
+      return this.newInitiative.meta.visibility === 'PUBLIC'
     }
   },
 

@@ -64,6 +64,7 @@ public class InitiativeMeta {
 		dto.setDriver(driver);
 		dto.setColor(color);
 		dto.setModelEnabled(modelEnabled);
+		if (visibility != null) dto.setVisibility(visibility.toString());
 		
 		for (InitiativeTag tag : tags) {
 			dto.getTags().add(tag.toDto());
@@ -110,6 +111,14 @@ public class InitiativeMeta {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+	
+	public InitiativeVisibility getVisibility() {
+		return visibility;
+	}
+
+	public void setVisibility(InitiativeVisibility visibility) {
+		this.visibility = visibility;
 	}
 
 	public Boolean getModelEnabled() {

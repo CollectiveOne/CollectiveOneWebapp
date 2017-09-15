@@ -19,7 +19,6 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 	
 	@Query("SELECT rels.ofInitiative from InitiativeRelationship rels WHERE rels.initiative.id = ?1 AND rels.type = ?2")
 	Initiative findOfInitiativesWithRelationship(UUID initiativeId, InitiativeRelationshipType type);
-		
 	
 	@Query("SELECT rels.initiative from InitiativeRelationship rels WHERE rels.ofInitiative.id = ?1 AND rels.type = ?2")
 	List<Initiative> findInitiativesWithRelationship(UUID initiativeId, InitiativeRelationshipType type);
@@ -27,8 +26,11 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 	@Query("SELECT init FROM Initiative init WHERE lower (init.meta.name) LIKE %?1%")
 	List<Initiative> searchByName(String q);
 	
-	@Query("SELECT init FROM Initiative init JOIN init.meta mta JOIN mta.tags tgs WHERE tgs.id IN ?1")
-	List<Initiative> searchByTagId(Collection<UUID> ids);
+	@Query("SELECT init FROM Initiative init JOIN init.meta mta JOIN mta.tags tgs WHERE tgs.id IN ?1 AND mta.visibility = ?2")
+	List<Initiative> searchByTagIdAndVisibility(Collection<UUID> ids, InitiativeVisibility visibility);
+	
+	
+	List<Initiative> findByMeta_Visibility(InitiativeVisibility visibility);
 	
 	Initiative findByTokenType_Id(UUID tokenTypeId);
 	
