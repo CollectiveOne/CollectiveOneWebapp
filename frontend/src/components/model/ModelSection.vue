@@ -252,7 +252,7 @@ export default {
       }
     },
     update () {
-      this.axios.get('/1/secured/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
         this.section = response.data.data
       })
     },

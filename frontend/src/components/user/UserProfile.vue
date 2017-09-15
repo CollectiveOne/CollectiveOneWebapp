@@ -185,7 +185,7 @@ export default {
   watch: {
     'user.username' () {
       if (this.user.username !== this.username0) {
-        this.axios.get('/1/secured/user/username/exist', {
+        this.axios.get('/1/user/username/exist', {
           params: {
             username: this.user.username
           }
@@ -251,7 +251,7 @@ export default {
       }
 
       if (ok) {
-        this.axios.put('/1/secured/user/profile/' + this.userId, this.user).then((response) => {
+        this.axios.put('/1/user/profile/' + this.userId, this.user).then((response) => {
           this.update()
           this.$store.dispatch('updateProfile')
           this.editing = false
@@ -261,14 +261,14 @@ export default {
           var data = new FormData()
           data.append('file', this.newPictureFile)
 
-          this.axios.post('/1/secured/upload/profileImage', data).then((response) => {
+          this.axios.post('/1/upload/profileImage', data).then((response) => {
             console.log('file uploaded')
           })
         }
       }
     },
     update () {
-      this.axios.get('/1/secured/user/profile/' + this.userId).then((response) => {
+      this.axios.get('/1/user/profile/' + this.userId).then((response) => {
         this.user = response.data.data
         this.username0 = this.user.username
       })

@@ -64,7 +64,7 @@ export default {
       default: 'tagText'
     },
     url: {
-      default: '/1/secured/initiative/tags/suggestions'
+      default: '/1/initiative/tags/suggestions'
     }
   },
 

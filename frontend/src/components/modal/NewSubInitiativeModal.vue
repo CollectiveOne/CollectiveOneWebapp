@@ -289,7 +289,7 @@ export default {
           assetsTransfers: this.assetsTransfers
         }
 
-        this.axios.post('/1/secured/initiative', intitiatveDto).then((response) => {
+        this.axios.post('/1/initiative', intitiatveDto).then((response) => {
           if (response.data.result === 'success') {
             this.closeThis()
             this.$store.dispatch('updatedMyInitiatives')
@@ -305,7 +305,7 @@ export default {
 
     updateParent () {
       if (this.parentId !== '') {
-        this.axios.get('/1/secured/initiative/' + this.parentId, {
+        this.axios.get('/1/initiative/' + this.parentId, {
           params: {
             addAssets: true,
             addMembers: true

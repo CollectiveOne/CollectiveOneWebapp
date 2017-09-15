@@ -456,6 +456,11 @@ public class InitiativeService {
 	
 	@Transactional
 	public MemberDto getMember(UUID initiativeId, UUID userId) {
+		
+		if (userId == null) {
+			return null;
+		}
+		
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, userId);
 		

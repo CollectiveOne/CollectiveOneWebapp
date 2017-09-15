@@ -87,7 +87,7 @@ export default {
 
   methods: {
     update () {
-      this.axios.get('/1/secured/initiative/' + this.initiativeId + '/model/view/' + this.viewId, {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/model/view/' + this.viewId, {
         params: {
           level: 1
         }

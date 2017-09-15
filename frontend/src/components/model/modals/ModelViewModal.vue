@@ -131,7 +131,7 @@ export default {
 
   methods: {
     updateViewData () {
-      this.axios.get('/1/secured/initiative/' + this.view.initiativeId + '/model/view/' + this.view.id).then((response) => {
+      this.axios.get('/1/initiative/' + this.view.initiativeId + '/model/view/' + this.view.id).then((response) => {
         this.view = response.data.data
       })
     },
@@ -168,7 +168,7 @@ export default {
 
       if (ok) {
         var viewDto = JSON.parse(JSON.stringify(this.editedView))
-        var baseurl = '/1/secured/initiative/' + viewDto.initiativeId + '/model/view'
+        var baseurl = '/1/initiative/' + viewDto.initiativeId + '/model/view'
         var returnF = (response) => {
           if (response.data.result === 'success') {
             if (this.isNew) {
@@ -195,7 +195,7 @@ export default {
       }
     },
     deleteView () {
-      this.axios.delete('/1/secured/initiative/' + this.view.initiativeId + '/model/view/' + this.view.id).then((response) => {
+      this.axios.delete('/1/initiative/' + this.view.initiativeId + '/model/view/' + this.view.id).then((response) => {
         this.closeThis()
         this.$store.commit('triggerUpdateModel')
       }).catch((error) => {

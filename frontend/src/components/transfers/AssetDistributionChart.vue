@@ -301,7 +301,7 @@ export default {
       return this.underThisInitiativeVal > 0 ? (memberAssets.value) / this.underThisInitiativeVal * 100 : 0
     },
     updateTokenData () {
-      this.axios.get('/1/secured/token/' + this.assetId, {
+      this.axios.get('/1/token/' + this.assetId, {
         params: {
           includeSubinitiatives: true,
           initiativeId: this.initiativeId

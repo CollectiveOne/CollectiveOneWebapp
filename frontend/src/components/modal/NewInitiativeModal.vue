@@ -217,7 +217,7 @@ export default {
           ownTokens: this.ownTokens
         }
 
-        this.axios.post('/1/secured/initiative', initiativeDto).then((response) => {
+        this.axios.post('/1/initiative', initiativeDto).then((response) => {
           if (response.data.result === 'success') {
             this.closeThis()
             this.$store.dispatch('updatedMyInitiatives')
@@ -233,7 +233,7 @@ export default {
 
     updateParent () {
       if (this.parentInitId !== '') {
-        this.axios.get('/1/secured/initiative/' + this.parentInitId, {
+        this.axios.get('/1/initiative/' + this.parentInitId, {
           params: {
             addAssets: true
           }

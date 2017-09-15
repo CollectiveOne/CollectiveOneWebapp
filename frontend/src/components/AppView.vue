@@ -1,16 +1,9 @@
 <template lang="html">
   <div>
     <app-header @expand-nav="expandNav = !expandNav"></app-header>
-    <div v-if="userAuthenticated" class="w3-row app-content">
+    <div class="w3-row app-content">
       <router-view @hide-nav="expandNav = false" :expandNav="expandNav"></router-view>
     </div>
-    <div v-else class="w3-center logged-out-content">
-      <h2>please login to continue</h2>
-      <button class="w3-button app-button" @click="login()">login</button>
-    </div>
-    <!-- <div class="w3-row light-grey w3-padding w3-center">
-      TBD
-    </div> -->
   </div>
 </template>
 
@@ -25,9 +18,6 @@ export default {
   computed: {
     windowIsSmall () {
       return window.innerWidth < 601
-    },
-    userAuthenticated () {
-      return this.$store.state.user.authenticated
     }
   },
 
@@ -38,25 +28,16 @@ export default {
   },
 
   methods: {
-    login () {
-      if (this.$store.state.user.lock) {
-        this.$store.state.user.lock.show()
-      }
-    }
   },
 
-  mounted () {
+  created () {
     if (this.windowIsSmall) {
       this.expandNav = false
     } else {
       this.expandNav = true
     }
 
-    if (!this.userAuthenticated) {
-      if (this.$store.state.user.lock) {
-        this.$store.state.user.lock.show()
-      }
-    }
+    this.$router.replace({ name: 'InitiativesHome' })
   }
 }
 </script>

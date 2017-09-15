@@ -161,9 +161,9 @@ export default {
 
       if (ok) {
         /* save and get it again, then emit as selected */
-        this.axios.post('/1/secured/initiative/tag', this.newTag).then((response) => {
+        this.axios.post('/1/initiative/tag', this.newTag).then((response) => {
           if (response.data.result === 'success') {
-            return this.axios.get('/1/secured/initiative/tag/' + response.data.elementId)
+            return this.axios.get('/1/initiative/tag/' + response.data.elementId)
           }
         }).then((response) => {
           if (response.data.result === 'success') {

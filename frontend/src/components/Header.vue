@@ -16,8 +16,8 @@
         <img class="icon w3-hide-medium w3-hide-large" src="../assets/imago-red.png" alt="">
       </router-link>
 
-      <div v-if="$store.state.user.profile" @click="userOptionsClicked()" class="w3-bar-item w3-right  w3-button">
-        <div class="">
+      <div v-if="$store.state.user.authenticated" @click="userOptionsClicked()" class="w3-bar-item w3-right w3-button">
+        <div v-if="$store.state.user.profile" class="logged-user">
           <div class="avatar-img-container w3-left">
             <img :src="$store.state.user.profile.pictureUrl" class="logged-avatar w3-circle noselect">
           </div>
@@ -31,8 +31,14 @@
           <div @click="logoutUser()" class="w3-bar-item w3-button"><i class="fa fa-power-off" aria-hidden="true"></i>logout</div>
         </div>
       </div>
+      <div v-else class="login-button-container w3-bar-item w3-right">
+        <button @click="login()"
+          class="w3-button app-button" name="button">
+          login
+        </button>
+      </div>
 
-      <div class="nots-div w3-bar-item w3-right w3-button w3-xlarge">
+      <div v-if="$store.state.user.authenticated" class="nots-div w3-bar-item w3-right w3-button w3-xlarge">
         <app-notifications-list
           :show="showActivityList"
           @icon-clicked="activityClicked()">
@@ -55,6 +61,9 @@ export default {
   },
 
   methods: {
+    login () {
+      this.$store.state.user.lock.show()
+    },
     userOptionsClicked () {
       this.showActivityList = false
       this.showUserOptions = !this.showUserOptions
@@ -76,7 +85,6 @@ export default {
     },
     logoutUser () {
       this.$store.dispatch('logoutUser')
-      this.$router.push({ name: 'Landing' })
     }
   },
 
@@ -153,6 +161,10 @@ export default {
 }
 
 .logo {
+}
+
+.login-button-container {
+  padding-top: 13px;
 }
 
 </style>

@@ -1,10 +1,9 @@
 <template lang="html">
   <nav class="nav-container">
-    <div class="">
+    <div  v-if="$store.state.user.authenticated" class="">
 
       <div class="w3-container">
-        <div
-          class="create-new w3-button light-grey w3-round-large w3-center"
+        <div class="create-new w3-button light-grey w3-round-large w3-center"
           @click="$store.commit('showNewInitiativeModal', true)">
           <i class="fa fa-plus-circle"></i>  create new
         </div>
@@ -19,6 +18,12 @@
         @initiative-selected="$emit('initiative-selected')">
       </app-initiative-menu-item>
 
+    </div>
+    <div v-else class="w3-container">
+      <button @click="login()"
+        class="create-new w3-button light-grey w3-round-large w3-center" name="button">
+        login
+      </button>
     </div>
   </nav>
 </template>
@@ -47,6 +52,9 @@ export default {
     newSubInitiative (data) {
       this.parentInitiativeIdForModal = data
       this.showNewSubInitiativeModal = true
+    },
+    login () {
+      this.$store.state.user.lock.show()
     }
   }
 }

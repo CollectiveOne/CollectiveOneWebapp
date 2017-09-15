@@ -108,7 +108,7 @@ const mutations = {
 
 const actions = {
   updatedMyInitiatives: (context) => {
-    Vue.axios.get('/1/secured/initiatives/mines').then((response) => {
+    Vue.axios.get('/1/initiatives/mines').then((response) => {
       context.commit('setInitiativesTree', response.data.data)
       context.commit('setMyInitiativesFirstLoaded', true)
     })

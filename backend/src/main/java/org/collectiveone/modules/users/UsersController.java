@@ -22,7 +22,7 @@ public class UsersController extends BaseController {
 	@Autowired
 	AppUserService appUserService;
 	
-	@RequestMapping(path = "secured/user/myProfile",  method = RequestMethod.GET)
+	@RequestMapping(path = "/user/myProfile",  method = RequestMethod.GET)
     public GetResult<AppUserDto> myProfile() {
 		
 		String auth0Id = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -34,17 +34,17 @@ public class UsersController extends BaseController {
 		return appUserService.getUserLight(user.getC1Id());
 	}
 	
-	@RequestMapping(path = "secured/user/profile/{userId}",  method = RequestMethod.GET)
+	@RequestMapping(path = "/user/profile/{userId}",  method = RequestMethod.GET)
     public GetResult<AppUserDto> getProfile(@PathVariable("userId") UUID userId) {
 		return appUserService.getUserFull(userId);
 	}
 	
-	@RequestMapping(path = "secured/user/username/exist",  method = RequestMethod.GET)
+	@RequestMapping(path = "/user/username/exist",  method = RequestMethod.GET)
     public GetResult<Boolean> getProfile(@RequestParam String username) {
 		return appUserService.usernameExist(username);
 	}
 	
-	@RequestMapping(path = "secured/user/profile/{userId}",  method = RequestMethod.PUT)
+	@RequestMapping(path = "/user/profile/{userId}",  method = RequestMethod.PUT)
     public PostResult editProfile(@PathVariable("userId") UUID userId, @RequestBody AppUserDto userDto) {
 		
 		if (getLoggedUser() == null) {

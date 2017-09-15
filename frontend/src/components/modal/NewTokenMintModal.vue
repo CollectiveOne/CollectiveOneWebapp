@@ -134,7 +134,7 @@ export default {
       return tokensString(v)
     },
     updateTokenData () {
-      this.axios.get('/1/secured/token/' + this.assetId).then((response) => {
+      this.axios.get('/1/token/' + this.assetId).then((response) => {
         this.assetData = response.data.data
       })
     },
@@ -171,7 +171,7 @@ export default {
           motive: this.motive,
           notes: this.notes
         }
-        this.axios.put('/1/secured/token/' + this.assetData.assetId + '/mint', mintDto)
+        this.axios.put('/1/token/' + this.assetData.assetId + '/mint', mintDto)
         .then((response) => {
           this.$store.commit('triggerUpdateAssets')
           this.closeThis()

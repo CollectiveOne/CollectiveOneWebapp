@@ -207,7 +207,7 @@ export default {
       return dateString(v)
     },
     updateCardData () {
-      this.axios.get('/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.cardWrapper = response.data.data
       })
     },
@@ -256,7 +256,7 @@ export default {
 
       if (ok) {
         var cardDto = JSON.parse(JSON.stringify(this.editedCard))
-        var baseurl = '/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper'
+        var baseurl = '/1/initiative/' + this.initiativeId + '/model/cardWrapper'
         var responseF = (response) => {
           if (response.data.result === 'success') {
             this.closeThis()
@@ -278,7 +278,7 @@ export default {
       }
     },
     deleteCard () {
-      this.axios.delete('/1/secured/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+      this.axios.delete('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.closeThis()
       }).catch((error) => {
         console.log(error)

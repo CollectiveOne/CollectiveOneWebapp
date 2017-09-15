@@ -238,7 +238,7 @@ export default {
       }
 
       if (ok) {
-        this.axios.put('/1/secured/initiative/' + this.initiative.id, this.newInitiative.meta).then((response) => {
+        this.axios.put('/1/initiative/' + this.initiative.id, this.newInitiative.meta).then((response) => {
           this.closeThis()
           this.$store.dispatch('refreshInitiative')
           this.$store.dispatch('updatedMyInitiatives')
@@ -246,7 +246,7 @@ export default {
       }
     },
     deleteInitiative () {
-      this.axios.delete('/1/secured/initiative/' + this.initiative.id).then((response) => {
+      this.axios.delete('/1/initiative/' + this.initiative.id).then((response) => {
         this.$store.dispatch('refreshInitiative')
         this.$store.dispatch('updatedMyInitiatives')
         window.location.href = '/'

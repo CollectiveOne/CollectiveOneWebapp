@@ -68,7 +68,7 @@ export default {
       return this.$store.state.initiative.initiative
     },
     isLoggedAnAdmin () {
-      return this.initiative.loggedMember.role === 'ADMIN'
+      return this.$store.getters.isLoggedAnAdmin
     }
   },
 

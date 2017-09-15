@@ -18,23 +18,35 @@ const getters = {
   },
   isLoggedAnAdmin: (state) => {
     if (state.initiative) {
-      return state.initiative.loggedMember.role === 'ADMIN'
+      if (state.initiative.loggedMember) {
+        return state.initiative.loggedMember.role === 'ADMIN'
+      } else {
+        return false
+      }
     } else {
-      false
+      return false
     }
   },
   isLoggedAMember: (state) => {
     if (state.initiative) {
-      return state.initiative.loggedMember.role === 'MEMBER'
+      if (state.initiative.loggedMember) {
+        return state.initiative.loggedMember.role === 'MEMBER'
+      } else {
+        return false
+      }
     } else {
       return false
     }
   },
   isLoggedAnEditor: (state) => {
     if (state.initiative) {
-      return state.initiative.loggedMember.role === 'ADMIN' || state.initiative.loggedMember.role === 'EDITOR'
+      if (state.initiative.loggedMember) {
+        return state.initiative.loggedMember.role === 'ADMIN' || state.initiative.loggedMember.role === 'EDITOR'
+      } else {
+        return false
+      }
     } else {
-      false
+      return false
     }
   }
 }
@@ -64,7 +76,7 @@ const actions = {
       }
     }
 
-    Vue.axios.get('/1/secured/initiative/' + id, {
+    Vue.axios.get('/1/initiative/' + id, {
       params: {
         addAssets: true,
         addSubinitiatives: true,
@@ -88,11 +100,11 @@ const actions = {
 
   refreshTransfers: (context) => {
     if (context.state.initiative) {
-      Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/transfersToInitiatives').then((response) => {
+      Vue.axios.get('/1/initiative/' + context.state.initiative.id + '/transfersToInitiatives').then((response) => {
         context.commit('setTransfers', response.data.data)
       })
 
-      Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/assignations').then((response) => {
+      Vue.axios.get('/1/initiative/' + context.state.initiative.id + '/assignations').then((response) => {
         context.commit('setAssignations', response.data.data)
       })
     }
@@ -100,7 +112,7 @@ const actions = {
 
   refreshModelViews: (context) => {
     if (context.state.initiative) {
-      Vue.axios.get('/1/secured/initiative/' + context.state.initiative.id + '/model', {
+      Vue.axios.get('/1/initiative/' + context.state.initiative.id + '/model', {
         params: {
           level: 0
         }

@@ -85,7 +85,7 @@ export default {
   methods: {
     updateResults () {
       this.loaded = false
-      this.axios.put('/1/secured/initiatives/search', this.filters).then((response) => {
+      this.axios.put('/1/initiatives/search', this.filters).then((response) => {
         this.loaded = true
         this.initiatives = response.data.data
       })

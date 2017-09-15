@@ -181,7 +181,7 @@ export default {
       }
 
       if (ok) {
-        this.axios.post('/1/secured/initiative/' + this.transfer.senderId + '/transferToInitiative', this.transfer)
+        this.axios.post('/1/initiative/' + this.transfer.senderId + '/transferToInitiative', this.transfer)
         .then((response) => {
           this.$store.commit('triggerUpdateAssets')
           this.closeThis()
