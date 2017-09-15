@@ -43,9 +43,6 @@ const actions = {
           if (context.state.authenticated) {
             context.dispatch('updateNotifications')
             context.dispatch('updatedMyInitiatives')
-            // context.dispatch('refreshInitiative')
-            // context.dispatch('refreshTransfers')
-            // context.commit('triggerUpdateAssets')
           }
         }, 10000)
       }
@@ -65,12 +62,9 @@ const actions = {
       /* autoupdate for non logged user */
       if (context.state.intervalId2 == null) {
         context.state.intervalId2 = setInterval(() => {
-          /* update everything every 10 s */
-          if (context.state.authenticated) {
-            context.dispatch('refreshInitiative')
-            context.dispatch('refreshTransfers')
-            context.commit('triggerUpdateAssets')
-          }
+          context.dispatch('refreshInitiative')
+          context.dispatch('refreshTransfers')
+          context.commit('triggerUpdateAssets')
         }, 10000)
       }
     }
