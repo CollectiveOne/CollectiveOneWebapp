@@ -64,7 +64,7 @@ export default {
 
   computed: {
     color () {
-      return this.$store.getters.colorOfInitiative(this.initiative.id)
+      return this.initiative.meta.color
     },
     level () {
       return this.coord.length - 1

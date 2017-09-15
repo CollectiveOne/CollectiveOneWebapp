@@ -91,7 +91,6 @@ public class InitiativesController extends BaseController {
 		
 	}
 	
-	
 	@RequestMapping(path = "/initiative/{initiativeId}", method = RequestMethod.GET)
 	public GetResult<InitiativeDto> getInitiative(
 			@PathVariable("initiativeId") String initiativeIdStr, 

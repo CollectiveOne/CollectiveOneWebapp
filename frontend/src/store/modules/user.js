@@ -42,7 +42,7 @@ const actions = {
           /* update everything every 10 s */
           if (context.state.authenticated) {
             context.dispatch('updateNotifications')
-            context.dispatch('updatedMyInitiatives')
+            context.dispatch('updateMyInitiatives')
           }
         }, 10000)
       }

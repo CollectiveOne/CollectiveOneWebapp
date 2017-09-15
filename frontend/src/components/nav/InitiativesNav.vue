@@ -1,8 +1,7 @@
 <template lang="html">
   <nav class="nav-container">
-    <div  v-if="$store.state.user.authenticated" class="">
-
-      <div class="w3-container">
+    <div class="">
+      <div v-if="$store.state.user.authenticated" class="w3-container">
         <div class="create-new w3-button light-grey w3-round-large w3-center"
           @click="$store.commit('showNewInitiativeModal', true)">
           <i class="fa fa-plus-circle"></i>  create new
@@ -10,16 +9,19 @@
       </div>
 
       <div class="w3-row my-initiatives-row">
-        <h6 class="w3-center white-text noselect"><i>my initiatives</i></h6>
+        <h6 class="w3-center white-text noselect">
+          <span v-if="$store.state.user.authenticated"><i>my initiatives</i></span>
+          <span v-else="$store.state.user.authenticated"><i>current initiative</i></span>
+        </h6>
       </div>
-      <app-initiative-menu-item v-for="(initiative, ix) in userInitiatives"
+      <app-initiative-menu-item v-for="(initiative, ix) in menuInitiatives"
         :initiative="initiative" :key="initiative.id"
         :coord="[ ix ]" class="top-menu-item"
         @initiative-selected="$emit('initiative-selected')">
       </app-initiative-menu-item>
 
     </div>
-    <div v-else class="w3-container">
+    <div v-if="!$store.state.user.authenticated" class="w3-container">
       <button @click="login()"
         class="create-new w3-button light-grey w3-round-large w3-center" name="button">
         login
@@ -43,8 +45,8 @@ export default {
   },
 
   computed: {
-    userInitiatives () {
-      return this.$store.state.support.initiativesTree
+    menuInitiatives () {
+      return this.$store.getters.initiativesTree()
     }
   },
 

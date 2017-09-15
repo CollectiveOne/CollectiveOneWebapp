@@ -25,7 +25,10 @@
             {{ $store.state.user.profile.nickname }}
           </div>
         </div>
-        <div v-if="showUserOptions" class="avatar-dropdown-content w3-card-2 w3-bar-block w3-white w3-large">
+        <div v-if="showUserOptions"
+          class="avatar-dropdown-content w3-card-2 w3-bar-block w3-white w3-large"
+          :class="{'left-align-1': windowIsSmall, 'left-align-2': !windowIsSmall}">
+
           <div @click="goMyProfile()" class="w3-bar-item w3-button"><i class="fa fa-user" aria-hidden="true"></i></i>profile</div>
           <div @click="goHome()" class="w3-bar-item w3-button"><i class="fa fa-home" aria-hidden="true"></i>home</div>
           <div @click="logoutUser()" class="w3-bar-item w3-button"><i class="fa fa-power-off" aria-hidden="true"></i>logout</div>
@@ -96,6 +99,9 @@ export default {
   },
 
   computed: {
+    windowIsSmall () {
+      return window.innerWidth < 601
+    }
   }
 }
 </script>
@@ -152,8 +158,15 @@ export default {
 .avatar-dropdown-content {
   position: absolute;
   width: 150px;
-  margin-left: 0px;
   margin-top: 65px;
+}
+
+.left-align-1 {
+  margin-left: -80px;
+}
+
+.left-align-2 {
+  margin-left: 0px;
 }
 
 .avatar-dropdown-content .fa {

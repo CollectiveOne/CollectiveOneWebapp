@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="this-card-container w3-card-2 w3-round-large w3-padding w3-border w3-leftbar" :style="{'border-left-color': initiative.meta.color + ' !important'}">
-    <router-link :to="{name: 'Initiative', params: {'initiativeId': initiative.id}}"
-      tag="a" class="initiative-title">
+    <a class="initiative-title cursor-pointer"
+      @click="goToInitiative()">
       <h4><b>{{ initiative.meta.name }}</b></h4>
-    </router-link>
+    </a>
     <p>{{ initiative.meta.driver }}</p>
     <div class="">
       <app-initiative-tag
@@ -24,6 +24,12 @@ export default {
   },
   props: {
     initiative: Object
+  },
+  methods: {
+    goToInitiative () {
+      this.$emit('clicked', this.initiative.id)
+      this.$router.push({ name: 'Initiative', params: { 'initiativeId': this.initiative.id } })
+    }
   }
 }
 </script>

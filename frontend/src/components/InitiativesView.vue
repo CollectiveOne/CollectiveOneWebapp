@@ -170,7 +170,7 @@ export default {
   },
 
   mounted () {
-    this.$store.dispatch('updatedMyInitiatives')
+    this.$store.dispatch('updateMyInitiatives')
   }
 }
 </script>

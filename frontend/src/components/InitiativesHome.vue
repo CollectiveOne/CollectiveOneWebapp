@@ -33,7 +33,8 @@
           <div v-for="initiative in initiatives" class="initiative-card w3-col l4 m6">
             <app-initiative-card
               :initiative="initiative"
-              :key="initiative.id">
+              :key="initiative.id"
+              @clicked="updateCurrentInitiative($event)">
             </app-initiative-card>
           </div>
           <div v-if="initiatives.length == 0" class="w3-center">
@@ -106,6 +107,9 @@ export default {
         this.filters.tags.splice(ix, 1)
         this.updateResults()
       }
+    },
+    updateCurrentInitiative (id) {
+      this.$store.dispatch('updateCurrentInitiativeTree', id)
     }
   },
 
