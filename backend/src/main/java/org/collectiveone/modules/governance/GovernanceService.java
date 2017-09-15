@@ -100,6 +100,11 @@ public class GovernanceService {
 	}
 	
 	@Transactional
+	public DecisionVerdict canTransferTokens(UUID initiativeId, UUID creatorId) {
+		return isRolesAndAdmin(initiativeId, creatorId);
+	}
+	
+	@Transactional
 	public DecisionVerdict canMintTokens(UUID tokenId, UUID minterId) {
 		return isRolesAndAdmin(initiativeService.findByTokenType_Id(tokenId).getId(), minterId);
 	}
@@ -138,6 +143,7 @@ public class GovernanceService {
 	public DecisionVerdict canCreateCard(UUID initiativeId, UUID creatorId) {
 		return isRolesAndEditor(initiativeId, creatorId);
 	}
+	
 	
 	
 	/** ------------------ */

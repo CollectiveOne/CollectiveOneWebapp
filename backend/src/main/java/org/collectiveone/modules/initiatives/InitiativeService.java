@@ -77,6 +77,25 @@ public class InitiativeService {
 	private InitiativeTagRepositoryIf initiativeTagRepository;
 	  
 	
+	@Transactional
+	public Boolean canAccess(UUID initiativeId, UUID userId) {
+		InitiativeVisibility visibility = initiativeRepository.getVisiblity(initiativeId);
+		
+		switch (visibility) {
+			case PRIVATE:
+				/* if private, only members can access initiative data */
+				Boolean isMember = memberRepository.findMemberId(initiativeId, userId) != null;
+				return isMember;				
+				
+			case PUBLIC:
+				return true;
+				
+			default:
+				return false;
+		}
+		
+	}
+
 	/** Non-transactional method to create an initiative in multiple transactions */
 	public PostResult init(UUID userId, NewInitiativeDto initiativeDto) {
 	

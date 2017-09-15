@@ -187,6 +187,11 @@ public class AssignationService {
 	}
 	
 	@Transactional
+	public UUID findInitiativeId(UUID assignationId) {
+		return assignationRepository.findInitiativeId(assignationId);
+	}
+	
+	@Transactional
 	private PostResult evaluateAssignation(UUID evaluatorUserId, UUID assignationId, EvaluationDto evaluationsDto) {
 		
 		Assignation assignation = assignationRepository.findById(assignationId);

@@ -94,35 +94,41 @@ public class InitiativesController extends BaseController {
 	
 	@RequestMapping(path = "/initiative/{initiativeId}", method = RequestMethod.GET)
 	public GetResult<InitiativeDto> getInitiative(
-			@PathVariable("initiativeId") String initiativeId, 
+			@PathVariable("initiativeId") String initiativeIdStr, 
 			@RequestParam(defaultValue = "false") boolean addAssets,
 			@RequestParam(defaultValue = "false") boolean addSubinitiatives,
 			@RequestParam(defaultValue = "false") boolean addParents,
 			@RequestParam(defaultValue = "false") boolean addMembers,
 			@RequestParam(defaultValue = "false") boolean addLoggedUser) {
 		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<InitiativeDto>("error", "access denied", null);
+		}
+		
 		InitiativeDto initiativeDto = null;
 		
-		initiativeDto = initiativeService.getLight(UUID.fromString(initiativeId));
+		initiativeDto = initiativeService.getLight(initiativeId);
 		
 		if(addAssets) {
-			initiativeDto.setAssets(initiativeService.getInitiativeAssets(UUID.fromString(initiativeId)));
+			initiativeDto.setAssets(initiativeService.getInitiativeAssets(initiativeId));
 		}
 		
 		if(addSubinitiatives) {
-			initiativeDto.setSubInitiatives(initiativeService.getSubinitiativesTree(UUID.fromString(initiativeId), null));
+			initiativeDto.setSubInitiatives(initiativeService.getSubinitiativesTree(initiativeId, null));
 		}
 		
 		if(addParents) {
-			initiativeDto.setParents(initiativeService.getParentInitiativesDtos(UUID.fromString(initiativeId)));
+			initiativeDto.setParents(initiativeService.getParentInitiativesDtos(initiativeId));
 		}
 		
 		if(addMembers) {
-			initiativeDto.setInitiativeMembers(initiativeService.getMembersAndSubmembers(UUID.fromString(initiativeId)));
+			initiativeDto.setInitiativeMembers(initiativeService.getMembersAndSubmembers(initiativeId));
 		}
 		
 		if(addLoggedUser) {
-			initiativeDto.setLoggedMember(initiativeService.getMember(UUID.fromString(initiativeId),  getLoggedUserId()));
+			initiativeDto.setLoggedMember(initiativeService.getMember(initiativeId,  getLoggedUserId()));
 		}
 		
 		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeDto);
@@ -213,6 +219,7 @@ public class InitiativesController extends BaseController {
 		
 		return initiativeService.addTagToInitiative(initiativeId, tagDto);
 	}
+	
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/tags/{tagId}", method = RequestMethod.DELETE) 
 	public PostResult deleteTagFromInitiative(

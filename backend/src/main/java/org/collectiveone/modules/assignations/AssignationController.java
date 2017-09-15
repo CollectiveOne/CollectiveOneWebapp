@@ -7,6 +7,7 @@ import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.governance.DecisionVerdict;
 import org.collectiveone.modules.governance.GovernanceService;
+import org.collectiveone.modules.initiatives.InitiativeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/1")
 public class AssignationController extends BaseController {
+	
+	@Autowired
+	private InitiativeService initiativeService;
 	
 	@Autowired
 	private AssignationService assignationService;
@@ -43,16 +47,30 @@ public class AssignationController extends BaseController {
 	} 
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/assignations", method = RequestMethod.GET)
-	public GetResult<InitiativeAssignationsDto> getAssignations(@PathVariable("initiativeId") String initiativeId) {
-		return assignationService.getAssignationsResult(UUID.fromString(initiativeId), getLoggedUserId());
+	public GetResult<InitiativeAssignationsDto> getAssignations(@PathVariable("initiativeId") String initiativeIdStr) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<InitiativeAssignationsDto>("error", "access denied", null);
+		}
+		
+		return assignationService.getAssignationsResult(initiativeId, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/assignation/{assignationId}", method = RequestMethod.GET)
 	public GetResult<AssignationDto> getAssignationOfUser(
-			@PathVariable("assignationId") String assignationId, 
+			@PathVariable("assignationId") String assignationIdStr, 
 			@RequestParam(defaultValue = "false") Boolean  addAllEvaluations) {
 		
-		return assignationService.getAssignationDto(UUID.fromString(assignationId), getLoggedUserId(), addAllEvaluations);
+		UUID assignationId = UUID.fromString(assignationIdStr); 
+		UUID initiativeId = assignationService.findInitiativeId(assignationId);
+				
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<AssignationDto>("error", "access denied", null);
+		}
+		
+		return assignationService.getAssignationDto(assignationId, getLoggedUserId(), addAllEvaluations);
 	}
 	
 	@RequestMapping(path = "/assignation/{assignationId}/evaluate", method = RequestMethod.POST)

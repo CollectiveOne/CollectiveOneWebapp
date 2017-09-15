@@ -7,6 +7,7 @@ import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.governance.DecisionVerdict;
 import org.collectiveone.modules.governance.GovernanceService;
+import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelDto;
@@ -31,6 +32,9 @@ public class ModelController extends BaseController {
 	@Autowired
 	private GovernanceService governanceService;
 	
+	@Autowired
+	private InitiativeService initiativeService;
+	
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model", method = RequestMethod.GET) 
 	public GetResult<ModelDto> getModel(
@@ -38,6 +42,10 @@ public class ModelController extends BaseController {
 			@RequestParam(defaultValue = "1") Integer level) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<ModelDto>("error", "access denied", null);
+		}
 		
 		return modelService.getModel(initiativeId, level, getLoggedUser().getC1Id());
 	}
@@ -65,6 +73,12 @@ public class ModelController extends BaseController {
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("viewId") String viewIdStr, 
 			@RequestParam(defaultValue = "1") Integer level) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<ModelViewDto>("error", "access denied", null);
+		}
 		
 		return modelService.getView(UUID.fromString(viewIdStr), getLoggedUser().getC1Id(), level);
 	}
@@ -148,6 +162,12 @@ public class ModelController extends BaseController {
 			@PathVariable("sectionId") String sectionIdStr,
 			@RequestParam(defaultValue = "1") Integer level) {
 		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<ModelSectionDto>("error", "access denied", null);
+		}
+		
 		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUser().getC1Id(), level);
 	}
 	
@@ -192,6 +212,12 @@ public class ModelController extends BaseController {
 	public GetResult<ModelCardWrapperDto> getCardWrapper(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("cardWrapperId") String cardWrapperIdStr) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<ModelCardWrapperDto>("error", "access denied", null);
+		}
 		
 		return modelService.getCardWrapper(UUID.fromString(cardWrapperIdStr), getLoggedUser().getC1Id());
 	}

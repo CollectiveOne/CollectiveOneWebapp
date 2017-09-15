@@ -40,12 +40,25 @@ public class TokenController extends BaseController {
 	public GetResult<AssetsDto> getToken(
 			@PathVariable("id") String id, 
 			@RequestParam(defaultValue = "false") Boolean includeSubinitiatives,
-			@RequestParam(defaultValue = "") String initiativeId) {
+			@RequestParam(defaultValue = "") String initiativeIdStr) {
+		
+		UUID tokenTypeId = UUID.fromString(id);
+		Initiative initiative = initiativeService.findByTokenType_Id(tokenTypeId);
+		
+		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+			return new GetResult<AssetsDto>("error", "access denied", null);
+		}
 		
 		AssetsDto assetDto = tokenService.getTokenDto(UUID.fromString(id));
 		
 		if (includeSubinitiatives) {
-			assetDto = tokenTransferService.getTokenDistribution(UUID.fromString(id), UUID.fromString(initiativeId));
+			UUID initiativeContextId = UUID.fromString(initiativeIdStr);
+			
+			if (!initiativeService.canAccess(initiativeContextId, getLoggedUserId())) {
+				return new GetResult<AssetsDto>("error", "access denied", null);
+			}
+			
+			assetDto = tokenTransferService.getTokenDistribution(tokenTypeId, initiativeContextId);
 		}
 		
 		return new GetResult<AssetsDto>("success", "initiative retrieved", assetDto);
@@ -78,23 +91,35 @@ public class TokenController extends BaseController {
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/transfersToInitiatives", method = RequestMethod.GET)
 	public GetResult<InitiativeTransfersDto> getTransferToInitiatives(
-			@PathVariable("initiativeId") String initiativeId) {
+			@PathVariable("initiativeId") String initiativeIdStr) {
 		 
-		InitiativeTransfersDto transfers = tokenTransferService.getTransfersToSubInitiatives(UUID.fromString(initiativeId));
+		UUID initiativeId = UUID.fromString(initiativeIdStr);	
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<InitiativeTransfersDto>("error", "access denied", null);
+		}
+		
+		InitiativeTransfersDto transfers = tokenTransferService.getTransfersToSubInitiatives(initiativeId);
 		
 		return new GetResult<InitiativeTransfersDto>("success", "transfers retrieved", transfers);
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/transferToInitiative", method = RequestMethod.POST)
 	public PostResult makeTransferToInitiative(
-			@PathVariable("initiativeId") String initiativeId,
+			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestBody TransferDto transferDto) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
 		}
 		
-		return tokenTransferService.transferFromInitiativeToInitiative(UUID.fromString(initiativeId), transferDto, getLoggedUser().getC1Id());
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (governanceService.canTransferTokens(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return tokenTransferService.transferFromInitiativeToInitiative(initiativeId, transferDto, getLoggedUser().getC1Id());
 	}
 	
 }

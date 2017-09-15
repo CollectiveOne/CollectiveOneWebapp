@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeRelationshipType;
+import org.collectiveone.modules.initiatives.InitiativeVisibility;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -30,5 +31,8 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 	List<Initiative> searchByTagId(Collection<UUID> ids);
 	
 	Initiative findByTokenType_Id(UUID tokenTypeId);
+	
+	@Query("SELECT mta.visibility FROM Initiative init JOIN init.meta mta WHERE init.id = ?1")
+	InitiativeVisibility getVisiblity(UUID initiativeId);
 	
 }
