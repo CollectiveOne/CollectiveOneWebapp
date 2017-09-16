@@ -99,7 +99,7 @@ export default {
 
   methods: {
     updateSubscriber () {
-      this.axios.get('/1/secured/user/notifications/subscriber/' + this.initiative.id).then((response) => {
+      this.axios.get('/1/user/notifications/subscriber/' + this.initiative.id).then((response) => {
         this.subscriber = response.data.data
       })
     },
@@ -107,7 +107,7 @@ export default {
       this.$store.commit('showEditNotificationsModal', false)
     },
     accept () {
-      this.axios.put('/1/secured/user/notifications/subscriber/' + this.initiative.id, this.subscriber).then((response) => {
+      this.axios.put('/1/user/notifications/subscriber/' + this.initiative.id, this.subscriber).then((response) => {
         this.closeThis()
       })
     }

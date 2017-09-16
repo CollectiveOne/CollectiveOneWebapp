@@ -56,7 +56,7 @@ export default {
       this.updateInitiative(initiative.id)
     },
     updateInitiative (id) {
-      this.axios.get('/1/secured/initiative/' + id, {
+      this.axios.get('/1/initiative/' + id, {
         params: {
           addAssets: true
         }

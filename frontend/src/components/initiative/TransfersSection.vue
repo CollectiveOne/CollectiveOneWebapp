@@ -131,7 +131,7 @@ export default {
       return this.$store.state.initiative.initiativeTransfers
     },
     isLoggedAnAdmin () {
-      return this.initiative.loggedMember.role === 'ADMIN'
+      return this.$store.getters.isLoggedAnAdmin
     },
     getSubassignations () {
       return getAllSubassignations(this.initiativeAssignations.subinitiativesAssignations)

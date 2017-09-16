@@ -118,6 +118,11 @@ public class AppUserService {
 		/* retrieve from Auth0 */
 		AppUser appUser = null;
 		User auth0User = null;
+		
+		if (auth0Id.equals("anonymousUser")) {
+			return null;
+		}
+		
 		try {
 			auth0User = mgmt.users().get(auth0Id, null).execute();
 			

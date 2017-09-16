@@ -21,6 +21,7 @@
           </h5>
         </div>
         <button class="w3-button dark-gray w3-margin-top" @click="login()">LOG IN / SIGNUP</button>
+        <button class="w3-button dark-gray w3-margin-top" @click="explore()">EXPLORE THE APP</button>
       </div>
     </div>
 
@@ -201,6 +202,9 @@ export default {
   methods: {
     login () {
       this.$store.state.user.lock.show()
+    },
+    explore () {
+      this.$router.push({ name: 'InitiativesHome' })
     },
     goToPrinciples () {
       window.scroll(0, this.findPos(document.getElementById('principles')))

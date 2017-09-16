@@ -13,6 +13,7 @@ public class InitiativeMetaDto {
 	private Timestamp creationDate;
 	private String color;
 	private Boolean modelEnabled;
+	private String visibility;
 	private List<InitiativeTagDto> tags = new ArrayList<InitiativeTagDto>();
 	
 	public String getName() {
@@ -44,6 +45,12 @@ public class InitiativeMetaDto {
 	}
 	public void setModelEnabled(Boolean modelEnabled) {
 		this.modelEnabled = modelEnabled;
+	}
+	public String getVisibility() {
+		return visibility;
+	}
+	public void setVisibility(String visibility) {
+		this.visibility = visibility;
 	}
 	public List<InitiativeTagDto> getTags() {
 		return tags;

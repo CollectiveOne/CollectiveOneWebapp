@@ -2,11 +2,11 @@ import Vue from 'vue'
 
 const state = {
   contentAnimationType: 'slideToDown',
-  initiativesTree: [],
+  myInitiativesTree: [],
+  currentInitiativeTree: [],
   triggerUpdateAssets: false,
   triggerUpdateModel: false,
   userEmailNotVerified: false,
-  myInitiativesFirstLoaded: false,
   initiativeLoaded: false
 }
 
@@ -60,13 +60,16 @@ const findInitiative = function (initiatives, id) {
 }
 
 const getters = {
+  initiativesTree: (state, getters, rootState) => (id) => {
+    return rootState.user.authenticated ? state.myInitiativesTree : state.currentInitiativeTree
+  },
   initiativeCoordinate: (state, getters) => (id) => {
     var coord = []
-    findCoordinate(state.initiativesTree, id, coord)
+    findCoordinate(getters.initiativesTree, id, coord)
     return coord
   },
   colorOfInitiative: (state, getters) => (id) => {
-    var initiative = findInitiative(state.initiativesTree, id)
+    var initiative = findInitiative(getters.initiativesTree, id)
     if (initiative) {
       return initiative.meta.color
     } else {
@@ -85,8 +88,11 @@ const mutations = {
   selectedInitiativeLevelOld: (state, payload) => {
     state.selectedInitiativeLevelOld = payload
   },
-  setInitiativesTree: (state, payload) => {
-    state.initiativesTree = payload
+  setMyInitiativesTree: (state, payload) => {
+    state.myInitiativesTree = payload
+  },
+  setCurrentInitiativeTree: (state, payload) => {
+    state.currentInitiativeTree = payload
   },
   triggerUpdateAssets: (state) => {
     state.triggerUpdateAssets = !state.triggerUpdateAssets
@@ -97,9 +103,6 @@ const mutations = {
   setUserEmailNotVerified: (state, payload) => {
     state.userEmailNotVerified = payload
   },
-  setMyInitiativesFirstLoaded: (state, payload) => {
-    state.myInitiativesFirstLoaded = payload
-  },
   setInitiativeLoaded: (state, payload) => {
     state.initiativeLoaded = payload
   }
@@ -107,10 +110,18 @@ const mutations = {
 }
 
 const actions = {
-  updatedMyInitiatives: (context) => {
-    Vue.axios.get('/1/secured/initiatives/mines').then((response) => {
-      context.commit('setInitiativesTree', response.data.data)
-      context.commit('setMyInitiativesFirstLoaded', true)
+  updateMyInitiatives: (context) => {
+    Vue.axios.get('/1/initiatives/mines').then((response) => {
+      context.commit('setMyInitiativesTree', response.data.data)
+    })
+  },
+  updateCurrentInitiativeTree: (context, initiativeId) => {
+    Vue.axios.get('/1/initiative/' + initiativeId, {
+      params: {
+        addSubinitiatives: true
+      }
+    }).then((response) => {
+      context.commit('setCurrentInitiativeTree', [response.data.data])
     })
   }
 }

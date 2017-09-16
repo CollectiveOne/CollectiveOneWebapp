@@ -13,6 +13,7 @@ public class NewInitiativeDto {
 	private String driver;
 	private String color;
 	private Boolean modelEnabled;
+	private String visibility;
 	private List<MemberDto> members;
 	private AssetsDto ownTokens;
 	private List<TransferDto> assetsTransfers;
@@ -54,6 +55,12 @@ public class NewInitiativeDto {
 	}
 	public void setModelEnabled(Boolean modelEnabled) {
 		this.modelEnabled = modelEnabled;
+	}
+	public String getVisibility() {
+		return visibility;
+	}
+	public void setVisibility(String visibility) {
+		this.visibility = visibility;
 	}
 	public List<MemberDto> getMembers() {
 		return members;

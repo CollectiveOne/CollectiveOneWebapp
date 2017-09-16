@@ -144,7 +144,7 @@ export default {
 
   methods: {
     updateSectionData () {
-      this.axios.get('/1/secured/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
         this.section = response.data.data
       })
     },
@@ -181,7 +181,7 @@ export default {
 
       if (ok) {
         var sectionDto = JSON.parse(JSON.stringify(this.editedSection))
-        var baseurl = '/1/secured/initiative/' + this.initiativeId + '/model/section'
+        var baseurl = '/1/initiative/' + this.initiativeId + '/model/section'
         var returnF = (response) => {
           if (response.data.result === 'success') {
             this.closeThis()
@@ -203,7 +203,7 @@ export default {
       }
     },
     deleteSection () {
-      this.axios.delete('/1/secured/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
+      this.axios.delete('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
         this.closeThis()
         this.$store.commit('triggerUpdateModel')
       }).catch((error) => {

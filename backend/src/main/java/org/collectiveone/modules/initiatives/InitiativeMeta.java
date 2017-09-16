@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -43,6 +45,10 @@ public class InitiativeMeta {
 	@Column(name = "color", length = 7)
 	private String color;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "visibility")
+	private InitiativeVisibility visibility;
+	
 	@Column(name = "model_enabled")
 	private Boolean modelEnabled;
 	
@@ -58,6 +64,7 @@ public class InitiativeMeta {
 		dto.setDriver(driver);
 		dto.setColor(color);
 		dto.setModelEnabled(modelEnabled);
+		if (visibility != null) dto.setVisibility(visibility.toString());
 		
 		for (InitiativeTag tag : tags) {
 			dto.getTags().add(tag.toDto());
@@ -104,6 +111,14 @@ public class InitiativeMeta {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+	
+	public InitiativeVisibility getVisibility() {
+		return visibility;
+	}
+
+	public void setVisibility(InitiativeVisibility visibility) {
+		this.visibility = visibility;
 	}
 
 	public Boolean getModelEnabled() {

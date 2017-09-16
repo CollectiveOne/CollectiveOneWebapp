@@ -64,7 +64,7 @@ export default {
 
   computed: {
     color () {
-      return this.$store.getters.colorOfInitiative(this.initiative.id)
+      return this.initiative.meta.color
     },
     level () {
       return this.coord.length - 1
@@ -131,11 +131,7 @@ export default {
         parentId: this.initiative.id })
     },
     isLoggedAnAdmin () {
-      if (this.initiative.loggedMember) {
-        return this.initiative.loggedMember.role === 'ADMIN'
-      } else {
-        return false
-      }
+      return this.$store.getters.isLoggedAnAdmin
     }
   },
 

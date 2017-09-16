@@ -356,7 +356,7 @@ export default {
           assignationToSend.evaluators = this.assignation.peerReviewEvaluators
         }
 
-        this.axios.post('/1/secured/initiative/' + assignationToSend.initiativeId + '/assignation', assignationToSend)
+        this.axios.post('/1/initiative/' + assignationToSend.initiativeId + '/assignation', assignationToSend)
         .then((response) => {
           this.$store.dispatch('refreshTransfers')
           this.$store.commit('triggerUpdateAssets')

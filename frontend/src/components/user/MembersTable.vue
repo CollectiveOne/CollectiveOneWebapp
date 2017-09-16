@@ -56,7 +56,7 @@
           <app-user-selector
             class="user-selector"
             anchor="c1Id" label="nickname" :resetTrigger="resetUserSelector"
-            url="/1/secured/users/suggestions"
+            url="/1/users/suggestions"
             @select="userSelected($event)">
           </app-user-selector>
         </div>

@@ -26,8 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     	 JwtWebSecurityConfigurer.forHS256(audience, issuer, secret.getBytes())
          .configure(http)
          .authorizeRequests()
-         .antMatchers("/1/secured/*").fullyAuthenticated()
-    	 .antMatchers("/1/public/*").permitAll();
+         .antMatchers("/1/*").fullyAuthenticated();
     }
     
 }

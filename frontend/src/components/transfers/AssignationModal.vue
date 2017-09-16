@@ -380,7 +380,7 @@ export default {
       }
     },
     updateAssignationData () {
-      this.axios.get('/1/secured/assignation/' + this.assignationId, {
+      this.axios.get('/1/assignation/' + this.assignationId, {
         params: {
           addAllEvaluations: true
         }
@@ -391,7 +391,7 @@ export default {
     },
     sendEvaluation () {
       if (this.arePercentagesOk) {
-        this.axios.post('/1/secured/assignation/' + this.assignation.id + '/evaluate', this.assignation.thisEvaluation)
+        this.axios.post('/1/assignation/' + this.assignation.id + '/evaluate', this.assignation.thisEvaluation)
         .then((response) => {
           this.updateEvaluation = false
           this.updateAssignationData()
@@ -401,13 +401,13 @@ export default {
     },
     orderRevert () {
       this.revertTransaction = false
-      this.axios.put('/1/secured/assignation/' + this.assignation.id + '/revert', {})
+      this.axios.put('/1/assignation/' + this.assignation.id + '/revert', {})
       .then((response) => {
         this.updateAssignationData()
       })
     },
     approveRevert (val) {
-      this.axios.put('/1/secured/assignation/' + this.assignation.id + '/approveRevert', {}, {
+      this.axios.put('/1/assignation/' + this.assignation.id + '/approveRevert', {}, {
         params: {
           approveFlag: val
         }
@@ -417,7 +417,7 @@ export default {
     },
     deleteAssignation () {
       this.deleteTransaction = false
-      this.axios.put('/1/secured/assignation/' + this.assignation.id + '/delete', {})
+      this.axios.put('/1/assignation/' + this.assignation.id + '/delete', {})
       .then((response) => {
         this.updateAssignationData()
       })

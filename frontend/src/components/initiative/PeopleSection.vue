@@ -88,7 +88,7 @@ export default {
       return this.$store.state.initiative.initiative
     },
     isLoggedAnAdmin () {
-      return this.initiative.loggedMember.role === 'ADMIN'
+      return this.$store.getters.isLoggedAnAdmin
     },
     allSubmembers () {
       return getAllSubmembers(this.initiative.initiativeMembers)
@@ -103,7 +103,7 @@ export default {
       member.initiativeId = this.initiative.id
 
       if (index === -1) {
-        this.axios.post('/1/secured/initiative/' + this.initiative.id + '/member', member).then((response) => {
+        this.axios.post('/1/initiative/' + this.initiative.id + '/member', member).then((response) => {
           if (response.data.result === 'success') {
             this.$store.dispatch('refreshInitiative')
           } else {
@@ -118,7 +118,7 @@ export default {
     removeMember (member) {
       var index = this.indexOfMember(member.user.c1Id)
       if (index > -1) {
-        this.axios.delete('/1/secured/initiative/' + this.initiative.id + '/member/' + member.user.c1Id,
+        this.axios.delete('/1/initiative/' + this.initiative.id + '/member/' + member.user.c1Id,
         ).then((response) => {
           if (response.data.result === 'success') {
             this.$store.dispatch('refreshInitiative')
@@ -142,7 +142,7 @@ export default {
         }
 
         if (otherAdmin) {
-          this.axios.put('/1/secured/initiative/' + this.initiative.id + '/member/' + member.user.c1Id, member
+          this.axios.put('/1/initiative/' + this.initiative.id + '/member/' + member.user.c1Id, member
           ).then((response) => {
             if (response.data.result === 'success') {
               this.$store.dispatch('refreshInitiative')

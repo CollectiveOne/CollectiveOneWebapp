@@ -2,7 +2,7 @@
   <div class="">
     <router-view></router-view>
     <div class="w3-container">
-      <h1>Browse Initiatives</h1>
+      <h1>Browse Public Initiatives</h1>
       <div class="w3-row">
         <label for=""><b>Filter by tag:</b></label>
         <div class="w3-col s12">
@@ -33,8 +33,12 @@
           <div v-for="initiative in initiatives" class="initiative-card w3-col l4 m6">
             <app-initiative-card
               :initiative="initiative"
-              :key="initiative.id">
+              :key="initiative.id"
+              @clicked="updateCurrentInitiative($event)">
             </app-initiative-card>
+          </div>
+          <div v-if="initiatives.length == 0" class="w3-center">
+            <i>no results found</i>
           </div>
         </div>
         <div v-else class="w3-row w3-center loader-gif-container">
@@ -85,7 +89,7 @@ export default {
   methods: {
     updateResults () {
       this.loaded = false
-      this.axios.put('/1/secured/initiatives/search', this.filters).then((response) => {
+      this.axios.put('/1/initiatives/search', this.filters).then((response) => {
         this.loaded = true
         this.initiatives = response.data.data
       })
@@ -103,6 +107,9 @@ export default {
         this.filters.tags.splice(ix, 1)
         this.updateResults()
       }
+    },
+    updateCurrentInitiative (id) {
+      this.$store.dispatch('updateCurrentInitiativeTree', id)
     }
   },
 
