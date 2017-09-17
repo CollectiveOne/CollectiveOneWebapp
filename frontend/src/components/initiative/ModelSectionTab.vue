@@ -133,13 +133,11 @@ export default {
     if (!this.initiative.meta.modelEnabled) {
       /* redirect to overview if model is not enabled */
       this.$router.replace({ name: 'InitiativeOverview', params: { initiativeId: this.initiative.id } })
+    } else {
+      /* redirect only if no view or section or card is selected as sub-route */
+      var _redirect = this.$route.matched.length === 4
+      this.$store.dispatch('refreshModelViews', { router: this.$router, redirect: _redirect })
     }
-
-    if (this.views.length > 0) {
-      /* redirect to the first view by default */
-      this.$router.replace({ name: 'ModelView', params: { viewId: this.views[0].id } })
-    }
-    this.$store.dispatch('refreshModelViews')
   }
 }
 </script>

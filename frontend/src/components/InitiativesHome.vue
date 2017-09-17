@@ -30,7 +30,7 @@
       <hr>
       <div class="">
         <div v-if="loaded" class="w3-row-padding">
-          <div v-for="initiative in initiatives" class="initiative-card w3-col l4 m6">
+          <div v-for="initiative in initiatives" class="initiative-card w3-col l6">
             <app-initiative-card
               :initiative="initiative"
               :key="initiative.id"

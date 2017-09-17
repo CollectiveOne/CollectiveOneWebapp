@@ -7,7 +7,6 @@
           <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
         </div>
 
-
         <div class="w3-container w3-border-bottom">
           <h2>{{ isNew ? 'New Card' : 'Model Card'}}</h2>
         </div>
@@ -22,94 +21,125 @@
           </app-model-modal-buttons>
 
           <div v-if="isNew" class="w3-row">
-            <label class=""><b>Section:</b></label>
+            <label class=""><b>In section:</b></label>
             <br>
             <h4>{{ this.editedCard.sectionTitle }}</h4>
           </div>
 
-          <div class="w3-row">
-            <label class=""><b>Title:</b></label>
-            <div v-if="!editing" class="w3-padding light-grey">
-              <div v-if="card.title !== ''" class="">
-                {{ card.title }}
-              </div>
-              <div v-else class="">
-                <i>(empty)</i>
-              </div>
-
+          <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
+            <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
+              :class="{'border-blue': !addExisting}"
+              @click="addExisting = false">
+              <h5 class="noselect" :class="{'bold-text': !addExisting}">Create New</h5>
             </div>
-            <div v-else class="">
-              <input type="text" class="w3-input w3-hover-light-grey" v-model="editedCard.title">
-              <app-error-panel
-                :show="titleEmptyShow"
-                message="please add a title">
-              </app-error-panel>
-              <app-error-panel
-                :show="titleTooLongShow"
-                message="name too long">
-              </app-error-panel>
+            <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
+              :class="{'border-blue': addExisting}"
+              @click="addExisting = true">
+              <h5 class="noselect" :class="{'bold-text': addExisting}">Add Existing</h5>
             </div>
           </div>
 
-          <div class="w3-row w3-margin-top">
-            <label class=""><b>Text: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
-            <div v-if="!editing" class="w3-padding light-grey">
-              {{ card.text }}
-            </div>
-            <div v-else class="">
-              <textarea type="text" class="w3-input w3-border w3-round w3-hover-light-grey" v-model="editedCard.text"></textarea>
-              <app-error-panel
-                :show="textErrorShow"
-                message="please include the text of this card">
-              </app-error-panel>
-            </div>
+          <div class="slider-container">
+            <transition name="slideLeftRight">
+              <div v-if="addExisting" class="">
+                <keep-alive>
+                  <app-model-card-selector
+                    :initiativeId="initiativeId">
+                  </app-model-card-selector>
+                </keep-alive>
+              </div>
+            </transition>
           </div>
 
-          <hr>
-          <div class="">
-            <div v-if="!editing" class="">
-              <div v-if="cardWrapper.stateControl" class="w3-row-padding">
-                <div class="w3-col m6 w3-margin-bottom">
-                  <label class=""><b>State:</b></label><br>
-                  <div class="w3-tag gray-1 w3-padding w3-round state-tag">
-                    {{ cardWrapper.state }}
+          <div class="slider-container">
+            <transition name="slideRightLeft">
+              <div v-if="!addExisting" class="">
+                <div class="w3-row w3-margin-top">
+                  <label class=""><b>Title:</b></label>
+                  <div v-if="!editing" class="w3-padding light-grey">
+                    <div v-if="card.title !== ''" class="">
+                      {{ card.title }}
+                    </div>
+                    <div v-else class="">
+                      <i>(empty)</i>
+                    </div>
+                  </div>
+                  <div v-else class="">
+                    <input type="text" class="w3-input w3-hover-light-grey" v-model="editedCard.title">
+                    <app-error-panel
+                      :show="titleEmptyShow"
+                      message="please add a title">
+                    </app-error-panel>
+                    <app-error-panel
+                      :show="titleTooLongShow"
+                      message="name too long">
+                    </app-error-panel>
                   </div>
                 </div>
-                <div class="w3-col m6">
-                  <label class=""><b>Target date:</b></label>
-                  <input class="w3-input" :value="dateString(this.cardWrapper.targetDate)" disabled>
+
+                <div class="w3-row w3-margin-top">
+                  <label class=""><b>Text: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+                  <div v-if="!editing" class="w3-padding light-grey">
+                    {{ card.text }}
+                  </div>
+                  <div v-else class="">
+                    <textarea type="text" class="w3-input w3-border w3-round w3-hover-light-grey" v-model="editedCard.text"></textarea>
+                    <app-error-panel
+                      :show="textErrorShow"
+                      message="please include the text of this card">
+                    </app-error-panel>
+                  </div>
+                </div>
+
+                <hr>
+                <div class="">
+                  <div v-if="!editing" class="">
+                    <div v-if="cardWrapper.stateControl" class="w3-row-padding">
+                      <div class="w3-col m6 w3-margin-bottom">
+                        <label class=""><b>State:</b></label><br>
+                        <div class="w3-tag gray-1 w3-padding w3-round state-tag">
+                          {{ cardWrapper.state }}
+                        </div>
+                      </div>
+                      <div class="w3-col m6">
+                        <label class=""><b>Target date:</b></label>
+                        <input class="w3-input" :value="dateString(this.cardWrapper.targetDate)" disabled>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else class="">
+                    <button
+                      @click="editedCard.stateControl = !editedCard.stateControl"
+                      class="w3-button app-button state-enable-button">
+                      {{ editedCard.stateControl ? 'Remove state and deadline' : 'Set state and deadline' }}
+                    </button>
+                    <transition name="fadeenter">
+                      <div v-if="editedCard.stateControl" class="w3-row-padding w3-margin-top">
+                        <div class="w3-col m6 w3-margin-bottom">
+                          <label class=""><b>State:</b></label>
+                          <select class="w3-select" v-model="editedCard.state">
+                            <option>NONE</option>
+                            <option>PLAN</option>
+                            <option>REALITY</option>
+                          </select>
+                        </div>
+                        <div class="w3-col m6">
+                          <label class=""><b>Target date:</b></label>
+                          <datepicker
+                            :value="targetDateStr"
+                            @selected="targetDateSelected($event)">
+                          </datepicker>
+                        </div>
+                      </div>
+                    </transition>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div v-else class="">
-              <button
-                @click="editedCard.stateControl = !editedCard.stateControl"
-                class="w3-button app-button state-enable-button">
-                {{ editedCard.stateControl ? 'Remove state and deadline' : 'Set state and deadline' }}
-              </button>
-              <transition name="fadeenter">
-                <div v-if="editedCard.stateControl" class="w3-row-padding w3-margin-top">
-                  <div class="w3-col m6 w3-margin-bottom">
-                    <label class=""><b>State:</b></label>
-                    <select class="w3-select" v-model="editedCard.state">
-                      <option>NONE</option>
-                      <option>PLAN</option>
-                      <option>REALITY</option>
-                    </select>
-                  </div>
-                  <div class="w3-col m6">
-                    <label class=""><b>Target date:</b></label>
-                    <datepicker
-                      :value="targetDateStr"
-                      @selected="targetDateSelected($event)">
-                    </datepicker>
-                  </div>
-                </div>
-              </transition>
-            </div>
+            </transition>
           </div>
 
-          <div v-if="editing" class="modal-bottom-btns-row w3-row-padding">
+
+          <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
             <hr>
             <div class="w3-col m6">
               <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
@@ -130,12 +160,14 @@
 import { dateString } from '@/lib/common.js'
 import Datepicker from 'vuejs-datepicker'
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
+import ModelCardSelector from '@/components/model/ModelCardSelector.vue'
 
 export default {
 
   components: {
     'app-model-modal-buttons': ModelModalButtons,
-    'datepicker': Datepicker
+    'datepicker': Datepicker,
+    'app-model-card-selector': ModelCardSelector
   },
 
   props: {
@@ -161,7 +193,8 @@ export default {
       titleEmptyError: false,
       textEmptyError: false,
       targetDateStr: '',
-      isNew: false
+      isNew: false,
+      addExisting: false
     }
   },
 

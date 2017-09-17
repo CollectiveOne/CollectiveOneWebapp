@@ -20,6 +20,15 @@
           <!-- hooks are needed to enable overflow when not animating -->
 
           <div v-if="expanded" class="w3-row w3-leftbar w3-border-right subelements-container">
+
+            <div class="w3-row expand-row">
+              <button
+                class="w3-button gray-1 w3-small"
+                @click="toggleExpand()">
+                <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse</span>
+              </button>
+            </div>
+
             <div class="w3-row-padding cards-container">
               <app-model-card
                 v-for="cardWrapper in section.cardsWrappers"
@@ -32,11 +41,11 @@
                 @show-card-modal="$emit('show-card-modal', $event)">
               </app-model-card>
               <div class="w3-col" :class="{'l4': cardsAsCards, 'm6': cardsAsCards, 's12': !cardsAsCards}">
-                <div :class="{'w3-card-2': cardsAsCards}">
+                <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
                   <button class="w3-button" style="width: 100%"
                     @click="newCard()">
                     <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-                    new card
+                    add card
                   </button>
                 </div>
               </div>
@@ -63,7 +72,7 @@
                 <button class="w3-button" style="width: 100%; text-align: left"
                   @click="newSubsection()">
                   <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-                  new subsection
+                  add subsection
                 </button>
               </div>
             </div>
@@ -89,11 +98,11 @@
                     @show-card-modal="$emit('show-card-modal', $event)">
                   </app-model-section>
 
-                  <div class="subsection-container">
+                  <div class="subsection-container gray-1-color w3-border">
                     <button class="w3-button" style="width: 100%; text-align: left"
                       @click="newSubsection()">
                       <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-                      new subsection
+                      add subsection
                     </button>
                   </div>
                 </div>
@@ -108,14 +117,14 @@
           class="w3-button gray-1 w3-small"
           @click="toggleExpand()">
           <span v-if="!expanded">
-            <i class="fa fa-th-list" aria-hidden="true"></i> Expand (contains
+            <i class="fa fa-chevron-down" aria-hidden="true"></i> Expand (contains
             <span v-if="section.nSubsections > 0 && section.nCards > 0"><b>{{ section.nSubsections }}</b> subsections and <b>{{ section.nCards }}</b> cards)</span>
             <span v-else>
               <span v-if="section.nSubsections > 0"><b>{{ section.nSubsections }}</b>)</span>
               <span v-if="section.nCards > 0"><b>{{ section.nCards }}</b> cards)</span>
             </span>
           </span>
-          <span v-else>Collapse "{{  section.title }}" section</span>
+          <span v-else><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse "{{  section.title }}" section</span>
         </button>
       </div>
 
@@ -135,10 +144,10 @@
           </div>
           <div v-if="showSubActionButtons" class="sub-action-buttons-container w3-card w3-white">
             <div class="w3-button" @click="newCard()">
-              <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i> new card
+              <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i> add card
             </div>
             <div class="w3-button" @click="newSubsection()">
-              <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i> new sub-section
+              <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i> add sub-section
             </div>
           </div>
           <div v-if="expanded" class="w3-button model-action-button gray-1-color w3-right"

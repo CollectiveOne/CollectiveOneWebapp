@@ -430,6 +430,14 @@ select {
   animation: slideToLeft-out 0.5s ease forwards;
 }
 
+.slideLeftRight-enter-active {
+  animation: slideToLeft-in 0.5s ease forwards;
+}
+
+.slideLeftRight-leave-active {
+  animation: slideToRight-out 0.5s ease forwards;
+}
+
 @keyframes slideToRight-in {
   from {
     transform: translateX(-100%);

@@ -20,6 +20,9 @@ import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelViewRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -224,6 +227,21 @@ public class ModelService {
 		return new GetResult<ModelCardWrapperDto>("success", "card retrieved", modelCardWrapperRepository.findById(cardWrapperId).toDto());
 	}
 	
+	@Transactional
+	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(String query, PageRequest page, UUID initiativeId) {
+		Page<ModelCardWrapper> enititiesPage = modelCardWrapperRepository.searchBy("%"+query.toLowerCase()+"%", page);
+		
+		List<ModelCardWrapperDto> cardsDtos = new ArrayList<ModelCardWrapperDto>();
+		
+		for(ModelCardWrapper card : enititiesPage.getContent()) {
+			cardsDtos.add(card.toDto());
+		}
+		
+		Page<ModelCardWrapperDto> dtosPage = new PageImpl<ModelCardWrapperDto>(cardsDtos, page, enititiesPage.getNumberOfElements());
+		
+		return new GetResult<Page<ModelCardWrapperDto>>("succes", "cards returned", dtosPage);
+	}
+		
 	@Transactional
 	public PostResult deleteCardWrapper (UUID cardWrapperId, UUID creatorId) {
 		

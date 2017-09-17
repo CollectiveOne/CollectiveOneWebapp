@@ -1,5 +1,6 @@
 package org.collectiveone.modules.model;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
@@ -14,6 +15,8 @@ import org.collectiveone.modules.model.dto.ModelDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.dto.ModelViewDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -258,6 +261,22 @@ public class ModelController extends BaseController {
 		}
 		
 		return modelService.deleteCardWrapper(UUID.fromString(cardIdWrapperStr), getLoggedUser().getC1Id());
+	}
+	
+	@RequestMapping(path = "/initiative/{initiativeId}/model/cardWrapper/search", method = RequestMethod.GET) 
+	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@RequestParam("query") String query,
+			@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<Page<ModelCardWrapperDto>>("error", "access denied", null);
+		}
+		
+		return modelService.searchCardWrapper(query, new PageRequest(page, size), initiativeId);
 	}
 	
 }

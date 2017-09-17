@@ -36,11 +36,11 @@
       @show-card-modal="$emit('show-card-modal', $event)">
     </app-model-section>
 
-    <div class="view-sections">
+    <div class="view-sections gray-1-color w3-border">
       <button class="w3-button" style="width: 100%; text-align: left"
         @click="newSection()">
         <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-        new section
+        add section
       </button>
     </div>
   </div>

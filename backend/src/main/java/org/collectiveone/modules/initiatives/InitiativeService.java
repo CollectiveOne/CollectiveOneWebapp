@@ -101,7 +101,7 @@ public class InitiativeService {
 	}
 	
 	private Boolean canAccessInherited(UUID initiativeId, UUID userId) {
-		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATACHED_SUB);
+		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
 		if (parent != null) {
 			return canAccess(parent.getId(), userId);
 		} else {
@@ -249,7 +249,7 @@ public class InitiativeService {
 			/* if it is a sub-initiative, then link to parent initiative */
 			InitiativeRelationship relationship = new InitiativeRelationship();
 			relationship.setInitiative(initiative);
-			relationship.setType(InitiativeRelationshipType.IS_ATACHED_SUB);
+			relationship.setType(InitiativeRelationshipType.IS_ATTACHED_SUB);
 			relationship.setOfInitiative(parent);
 			
 			relationship = initiativeRelationshipRepository.save(relationship);
@@ -323,14 +323,14 @@ public class InitiativeService {
 	public PostResult delete(UUID initiativeId, UUID userId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
-		List<Initiative> subiniatiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_ATACHED_SUB);
+		List<Initiative> subiniatiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_ATTACHED_SUB);
 		
 		for (Initiative subinitiative : subiniatiatives) {
 			/* first delete all subinitiatives (recursively starting from the lower level )*/
 			delete(subinitiative.getId(), userId);
 		}
 		
-		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATACHED_SUB);
+		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
 		if (parent != null) {
 			/* transfer all assets back to parent */
 			tokenTransferService.transferAllFromInitiativeToInitiative(initiative.getId(), parent.getId(), userId, "initiative deleted", "");
@@ -448,12 +448,12 @@ public class InitiativeService {
 	@Transactional
 	public List<Initiative> getParentInitiatives(UUID initiativeId) {
 		List<Initiative> parents = new ArrayList<Initiative>();
-		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATACHED_SUB);
+		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
 		
 		while(parent != null) {
 			/* look upwards until an initiative with no parent is found */
 			parents.add(parent);
-			parent = initiativeRepository.findOfInitiativesWithRelationship(parent.getId(), InitiativeRelationshipType.IS_ATACHED_SUB);
+			parent = initiativeRepository.findOfInitiativesWithRelationship(parent.getId(), InitiativeRelationshipType.IS_ATTACHED_SUB);
 		}
 		
 		return parents;
@@ -472,7 +472,7 @@ public class InitiativeService {
 	@Transactional
 	public List<InitiativeDto> getSubinitiativesTree(UUID initiativeId, UUID userId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId); 
-		List<Initiative> subIniatiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_ATACHED_SUB);
+		List<Initiative> subIniatiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_ATTACHED_SUB);
 		
 		List<InitiativeDto> subinitiativeDtos = new ArrayList<InitiativeDto>();
 		

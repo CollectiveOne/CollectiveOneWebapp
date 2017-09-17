@@ -167,13 +167,15 @@ export default {
       }
 
       if (ok) {
+        debugger
         var viewDto = JSON.parse(JSON.stringify(this.editedView))
         var baseurl = '/1/initiative/' + viewDto.initiativeId + '/model/view'
         var returnF = (response) => {
           if (response.data.result === 'success') {
             if (this.isNew) {
               this.closeThis()
-              this.$store.commit('triggerUpdateModel')
+              this.$store.dispatch('refreshModelViews', { router: null, redirect: false })
+              this.$router.push({ name: 'ModelView', params: { viewId: response.data.elementId } })
             } else {
               this.updateViewData()
             }
@@ -197,7 +199,7 @@ export default {
     deleteView () {
       this.axios.delete('/1/initiative/' + this.view.initiativeId + '/model/view/' + this.view.id).then((response) => {
         this.closeThis()
-        this.$store.commit('triggerUpdateModel')
+        this.$store.dispatch('refreshModelViews', { router: this.$router, redirect: true })
       }).catch((error) => {
         console.log(error)
       })

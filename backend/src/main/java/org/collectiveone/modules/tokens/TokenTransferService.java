@@ -260,7 +260,7 @@ public class TokenTransferService {
 			initiativeTransfers.getTransfers().add(transfer.toDto());
 		}
 		
-		for (Initiative subInitiative : initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_ATACHED_SUB)) {
+		for (Initiative subInitiative : initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_ATTACHED_SUB)) {
 			/** Recursive */
 			initiativeTransfers.getSubinitiativesTransfers().add(getTransfersToSubInitiatives(subInitiative.getId()));
 		}
@@ -276,7 +276,7 @@ public class TokenTransferService {
 
 		/* get of sub-initiatives */
 		List<InitiativeRelationship> subinitiativesRelationships = 
-				initiativeRelationshipRepository.findByOfInitiativeIdAndType(initiative.getId(), InitiativeRelationshipType.IS_ATACHED_SUB);
+				initiativeRelationshipRepository.findByOfInitiativeIdAndType(initiative.getId(), InitiativeRelationshipType.IS_ATTACHED_SUB);
 		
 		List<TransferDto> transferredToSubinitiatives = new ArrayList<TransferDto>();
 		

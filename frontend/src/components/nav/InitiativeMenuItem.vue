@@ -139,8 +139,10 @@ export default {
     var thisCoord = this.$store.getters.initiativeCoordinate(this.initiative.id)
     var pageCoord = this.$store.getters.initiativeCoordinate(this.$route.params.initiativeId)
 
-    if (pageCoord[this.level] === thisCoord[this.level]) {
-      this.showSubinitiatives = true
+    if (pageCoord.length > 0 && thisCoord.length > 0) {
+      if (pageCoord[this.level] === thisCoord[this.level]) {
+        this.showSubinitiatives = true
+      }
     }
   }
 }

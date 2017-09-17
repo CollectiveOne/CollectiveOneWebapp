@@ -37,10 +37,14 @@ export default new Router({
     },
     {
       path: '/app',
-      name: 'AppView',
       component: AppView,
       children:
       [
+        {
+          path: '/',
+          name: 'AppView',
+          redirect: '/app/inits'
+        },
         {
           path: 'inits',
           component: InitiativesView,

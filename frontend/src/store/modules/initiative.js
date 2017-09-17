@@ -110,7 +110,7 @@ const actions = {
     }
   },
 
-  refreshModelViews: (context) => {
+  refreshModelViews: (context, pars) => {
     if (context.state.initiative) {
       Vue.axios.get('/1/initiative/' + context.state.initiative.id + '/model', {
         params: {
@@ -118,6 +118,12 @@ const actions = {
         }
       }).then((response) => {
         context.commit('setModelViews', response.data.data)
+        if (pars.redirect) {
+          if (context.state.initiativeModelViews.views.length > 0) {
+            /* redirect to the first view by default */
+            pars.router.replace({ name: 'ModelView', params: { viewId: context.state.initiativeModelViews.views[0].id } })
+          }
+        }
       })
     }
   }

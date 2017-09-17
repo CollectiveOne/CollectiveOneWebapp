@@ -36,8 +36,6 @@ export default {
     } else {
       this.expandNav = true
     }
-
-    this.$router.replace({ name: 'InitiativesHome' })
   }
 }
 </script>

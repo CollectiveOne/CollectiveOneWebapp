@@ -1,9 +1,9 @@
 <template lang="html">
-  <div class="">
+  <div v-if="cardWrapper" class="">
     <div class="w3-display-container"
-      :class="{ 'w3-card-2': cardEffect }"
-      @mouseover="showActionButton = true"
-      @mouseleave="showActionButton = false">
+      :class="{ 'w3-card-2': cardEffect, 'highlight': highlight }"
+      @mouseover="hoverEnter()"
+      @mouseleave="hoverLeave()">
 
       <div v-if="showDetails" class="w3-row light-grey">
         <div class="w3-col s6">
@@ -30,7 +30,7 @@
       </div>
 
       <transition name="fadeenter">
-        <div v-if="showActionButton"
+        <div v-if="showActionButton && enableExpand"
           @click="showCardModal()"
           class="w3-button model-action-button gray-2-color w3-display-topright">
           <i class="fa fa-expand" aria-hidden="true"></i>
@@ -61,12 +61,21 @@ export default {
     cardEffect: {
       type: Boolean,
       default: true
+    },
+    enableExpand: {
+      type: Boolean,
+      default: true
+    },
+    hoverHighlight: {
+      type: Boolean,
+      default: false
     }
   },
 
   data () {
     return {
-      showActionButton: false
+      showActionButton: false,
+      highlight: false
     }
   },
 
@@ -96,6 +105,16 @@ export default {
   },
 
   methods: {
+    hoverEnter () {
+      this.showActionButton = true
+      if (this.hoverHighlight) {
+        this.highlight = true
+      }
+    },
+    hoverLeave () {
+      this.showActionButton = false
+      this.highlight = false
+    },
     dateString (v) {
       return dateString(v)
     },
@@ -124,6 +143,10 @@ export default {
 .card-text p {
   margin-top: 0px;
   margin-bottom: 0px;
+}
+
+.highlight {
+  background-color: #e7e8ec !important;
 }
 
 </style>

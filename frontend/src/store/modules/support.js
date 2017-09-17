@@ -65,11 +65,11 @@ const getters = {
   },
   initiativeCoordinate: (state, getters) => (id) => {
     var coord = []
-    findCoordinate(getters.initiativesTree, id, coord)
+    findCoordinate(getters.initiativesTree(), id, coord)
     return coord
   },
   colorOfInitiative: (state, getters) => (id) => {
-    var initiative = findInitiative(getters.initiativesTree, id)
+    var initiative = findInitiative(getters.initiativesTree(), id)
     if (initiative) {
       return initiative.meta.color
     } else {
