@@ -82,30 +82,8 @@ public class ModelSection {
 	}
 	
 	public ModelSectionDto toDto() {
-		return toDto(0);
-	}
-	
-	public ModelSectionDto toDto(Integer level) {
 		
 		ModelSectionDto sectionDto = toDtoLight();
-		
-		/* if current level is 1 or more, keep going */
-		if (level >= 1) {
-			sectionDto.setSubElementsLoaded(true);
-			
-			for (ModelCardWrapper cardWrapper : cardsWrappers) {
-				sectionDto.getCardsWrappers().add(cardWrapper.toDto());
-			}
-			
-			for (ModelSection subsection : subsections) {
-				sectionDto.getSubsections().add(subsection.toDto(level - 1));
-			}
-		} else {
-			sectionDto.setSubElementsLoaded(false);
-			for (ModelSection subsection : subsections) {
-				sectionDto.getSubsections().add(subsection.toDtoLight());
-			}
-		}
 		
 		return sectionDto;
 	}

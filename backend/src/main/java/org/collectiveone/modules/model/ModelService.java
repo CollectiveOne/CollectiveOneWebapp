@@ -139,9 +139,24 @@ public class ModelService {
 		return new PostResult("success", "section edited", section.getId().toString());
 	}
 	
+	
+	@Transactional
+	public PostResult addCardToSection (UUID sectionId, UUID cardWrapperId) {
+		
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
+		
+		section.getCardsWrappers().add(cardWrapper);
+		section = modelSectionRepository.save(section);
+		
+		return new PostResult("success", "card added to section", section.getId().toString());
+	}
+	
 	@Transactional
 	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById, Integer level) {
-		ModelSectionDto sectionDto = modelSectionRepository.findById(sectionId).toDto(level);
+		ModelSectionDto sectionDto = modelSectionRepository.findById(sectionId).toDto();
+		
+		sectionDto = addSubElements(sectionDto, sectionId, level);
 		
 		/* set parent section data */
 		List<ModelSection> parents = modelSectionRepository.findParentSections(sectionId);
@@ -153,6 +168,38 @@ public class ModelService {
 		}
 		
 		return new GetResult<ModelSectionDto>("success", "section retrieved", sectionDto);
+	}
+	
+	@Transactional
+	public ModelSectionDto addSubElements(ModelSectionDto sectionDto, UUID sectionId, Integer level) {
+		
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		
+		if (level >= 1) {
+			sectionDto.setSubElementsLoaded(true);
+			
+			for (ModelCardWrapper cardWrapper : section.getCardsWrappers()) {
+				ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
+				List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapper.getId());
+				
+				for (ModelSection inSection : inSections) {
+					cardWrapperDto.getInSections().add(inSection.toDtoLight());
+				}
+				
+				sectionDto.getCardsWrappers().add(cardWrapperDto);
+			}
+			
+			for (ModelSection subsection : section.getSubsections()) {
+				sectionDto.getSubsections().add(addSubElements(subsection.toDtoLight(), subsection.getId(), level - 1));
+			}
+		} else {
+			sectionDto.setSubElementsLoaded(false);
+			for (ModelSection subsection : section.getSubsections()) {
+				sectionDto.getSubsections().add(subsection.toDtoLight());
+			}
+		}
+		
+		return sectionDto; 
 	}
 	
 	@Transactional
@@ -224,7 +271,16 @@ public class ModelService {
 	
 	@Transactional
 	public GetResult<ModelCardWrapperDto> getCardWrapper(UUID cardWrapperId, UUID requestById) {
-		return new GetResult<ModelCardWrapperDto>("success", "card retrieved", modelCardWrapperRepository.findById(cardWrapperId).toDto());
+		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
+		List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapper.getId());
+		
+		ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
+		
+		for (ModelSection section : inSections) {
+			cardWrapperDto.getInSections().add(section.toDtoLight());
+		}
+		
+		return new GetResult<ModelCardWrapperDto>("success", "card retrieved", cardWrapperDto);
 	}
 	
 	@Transactional

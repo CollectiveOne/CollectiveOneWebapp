@@ -35,6 +35,7 @@
                 :key="cardWrapper.id"
                 :cardWrapper="cardWrapper"
                 :initiativeId="initiativeId"
+                :sectionId="section.id"
                 :cardEffect="cardsAsCards"
                 class="w3-col section-card"
                 :class="{'l4': cardsAsCards, 'm6': cardsAsCards, 's12': !cardsAsCards}"

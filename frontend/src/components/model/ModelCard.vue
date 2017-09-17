@@ -29,6 +29,20 @@
 
       </div>
 
+      <div class="w3-row">
+        <div v-if="cardWrapper.inSections.length > 1" class="bottom-row light-grey">
+          <i>also in:</i>
+          <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container">
+            <div v-if="inSection.id !== sectionId" class="">
+              <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
+                class="gray-1 w3-tag w3-round">
+                {{ inSection.title }}
+              </router-link>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <transition name="fadeenter">
         <div v-if="showActionButton && enableExpand"
           @click="showCardModal()"
@@ -55,6 +69,10 @@ export default {
       default: null
     },
     initiativeId: {
+      type: String,
+      default: ''
+    },
+    sectionId: {
       type: String,
       default: ''
     },
@@ -147,6 +165,16 @@ export default {
 
 .highlight {
   background-color: #e7e8ec !important;
+}
+
+.bottom-row {
+  padding: 8px 5px 3px 5px;
+}
+
+.insection-tag-container {
+  display: inline-block;
+  margin-left: 5px;
+  margin-bottom: 5px;
 }
 
 </style>

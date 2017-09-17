@@ -23,7 +23,7 @@
           <div v-if="isNew" class="w3-row">
             <label class=""><b>In section:</b></label>
             <br>
-            <h4>{{ this.editedCard.sectionTitle }}</h4>
+            <h4>{{ this.inSection.sectionTitle }}</h4>
           </div>
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
@@ -44,7 +44,8 @@
               <div v-if="addExisting" class="">
                 <keep-alive>
                   <app-model-card-selector
-                    :initiativeId="initiativeId">
+                    :initiativeId="initiativeId"
+                    @select="cardSelected($event)">
                   </app-model-card-selector>
                 </keep-alive>
               </div>
@@ -188,13 +189,15 @@ export default {
         }
       },
       editedCard: null,
+      inSection: null,
       editing: false,
       showEditButtons: false,
       titleEmptyError: false,
       textEmptyError: false,
       targetDateStr: '',
       isNew: false,
-      addExisting: false
+      addExisting: false,
+      existingCard: null
     }
   },
 
@@ -247,6 +250,9 @@ export default {
     closeThis () {
       this.$emit('close')
     },
+    cardSelected (cardWrapper) {
+      this.existingCard = cardWrapper
+    },
     cancel () {
       if (this.isNew) {
         this.closeThis()
@@ -278,18 +284,23 @@ export default {
     accept () {
       var ok = true
 
-      if (this.titleTooLong) {
-        ok = false
-      }
+      if (!this.addExisting) {
+        if (this.titleTooLong) {
+          ok = false
+        }
 
-      if (this.textEmpty) {
-        ok = false
-        this.textEmptyError = true
+        if (this.textEmpty) {
+          ok = false
+          this.textEmptyError = true
+        }
+      } else {
+        if (!this.existingCard) {
+          ok = false
+        }
       }
 
       if (ok) {
         var cardDto = JSON.parse(JSON.stringify(this.editedCard))
-        var baseurl = '/1/initiative/' + this.initiativeId + '/model/cardWrapper'
         var responseF = (response) => {
           if (response.data.result === 'success') {
             this.closeThis()
@@ -299,10 +310,18 @@ export default {
           }
         }
 
+        var baseurl = '/1/initiative/' + this.initiativeId + '/model/cardWrapper'
         if (this.isNew) {
-          this.axios.post(baseurl, cardDto).then(responseF).catch((error) => {
-            console.log(error)
-          })
+          if (!this.addExisting) {
+            this.axios.post(baseurl, {cardDto}).then(responseF).catch((error) => {
+              console.log(error)
+            })
+          } else {
+            this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSection.sectionId + '/addCard/' + this.existingCard.id,
+              {}).then(responseF).catch((error) => {
+                console.log(error)
+              })
+          }
         } else {
           this.axios.put(baseurl + '/' + this.cardWrapper.id, cardDto).then(responseF).catch((error) => {
             console.log(error)
@@ -325,14 +344,16 @@ export default {
     if (this.pars.new) {
       this.isNew = true
 
+      this.inSection = {}
+      this.inSection.sectionId = this.pars.sectionId
+      this.inSection.sectionTitle = this.pars.sectionTitle
+
       this.editedCard = {
+        sectionId: this.inSection.sectionId,
         stateControl: false,
         title: '',
         text: ''
       }
-
-      this.editedCard.sectionId = this.pars.sectionId
-      this.editedCard.sectionTitle = this.pars.sectionTitle
 
       this.editing = true
     } else {

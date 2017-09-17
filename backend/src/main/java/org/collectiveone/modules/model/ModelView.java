@@ -63,7 +63,7 @@ public class ModelView {
 		if (level >= 1) {
 			viewDto.setSectionsLoaded(true);
 			for (ModelSection section : sections) {
-				viewDto.getSections().add(section.toDto(level - 1));
+				viewDto.getSections().add(section.toDtoLight());
 			}
 		} else {
 			viewDto.setSectionsLoaded(false);

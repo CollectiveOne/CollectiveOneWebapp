@@ -2,7 +2,7 @@
   <div class="">
     <div v-show="!cardSelected" class="">
       <div class="w3-row w3-margin-top">
-        <input @input="queryUpdate()" v-model="query" class="w3-input" type="text" name="" value="" placeholder="search card">
+        <input @input="queryUpdate()" v-model="query" class="w3-input" type="text" name="" value="" placeholder="search and select a card">
       </div>
       <div class="card-results-container w3-row-padding w3-container w3-margin-top w3-border">
         <div class="card-container cursor-pointer"
@@ -14,6 +14,9 @@
             :enableExpand="false"
             :hoverHighlight="true">
           </app-model-card>
+        </div>
+        <div v-if="cardWrappers.length == 0" class="w3-center">
+          <i>no cards found</i>
         </div>
       </div>
     </div>
@@ -61,6 +64,7 @@ export default {
     },
     cardClicked (card) {
       this.cardSelected = card
+      this.$emit('select', card)
     },
     update () {
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/search', {
@@ -87,6 +91,7 @@ export default {
   max-height: 500px;
   overflow-y: auto;
   padding-top: 16px;
+  padding-bottom: 16px;
 }
 
 .card-container {

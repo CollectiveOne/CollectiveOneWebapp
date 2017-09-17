@@ -1,6 +1,5 @@
 package org.collectiveone.modules.model;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
@@ -157,6 +156,25 @@ public class ModelController extends BaseController {
 		}
 		
 		return modelService.editSection(UUID.fromString(sectionIdStr), sectionDto, getLoggedUser().getC1Id());
+	}
+	
+	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}/addCard/{cardWrapperId}", method = RequestMethod.PUT) 
+	public PostResult addExistingCard(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("sectionId") String sectionIdStr,
+			@PathVariable("cardWrapperId") String cardWrapperIdStr) {
+	
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.addCardToSection(UUID.fromString(sectionIdStr), UUID.fromString(cardWrapperIdStr));
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.GET) 

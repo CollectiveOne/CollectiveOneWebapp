@@ -1,5 +1,6 @@
 package org.collectiveone.modules.model.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ModelCardWrapperDto {
@@ -10,6 +11,7 @@ public class ModelCardWrapperDto {
 	private String state;
 	private Long targetDate; 
 	private List<ModelCardDto> oldVersions;
+	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
 	
 	public String getId() {
 		return id;
@@ -46,6 +48,12 @@ public class ModelCardWrapperDto {
 	}
 	public void setOldVersions(List<ModelCardDto> oldVersions) {
 		this.oldVersions = oldVersions;
+	}
+	public List<ModelSectionDto> getInSections() {
+		return inSections;
+	}
+	public void setInSections(List<ModelSectionDto> inSections) {
+		this.inSections = inSections;
 	}
 	
 }

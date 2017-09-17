@@ -34,6 +34,7 @@ public class ModelCard {
 	private String text;
 	
 	
+	
 	public ModelCardDto toDto() {
 		ModelCardDto cardDto = new ModelCardDto();
 		
