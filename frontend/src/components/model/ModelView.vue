@@ -119,13 +119,12 @@ export default {
     },
     sectionDroped (onSectionId, event) {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
-
-      console.log('sectoin dropped no test')
+      var url = ''
 
       if (dragData.type === 'MOVE_SECTION') {
         console.log('section dropped')
 
-        var url = '/1/initiative/' + this.initiativeId +
+        url = '/1/initiative/' + this.initiativeId +
         '/model/view/' + this.view.id +
         '/moveSection/' + dragData.sectionId
 
@@ -137,6 +136,21 @@ export default {
           this.$store.commit('triggerUpdateModel')
         })
       }
+
+      // if (dragData.type === 'MOVE_SUBSECTION') {
+      //   url = '/1/initiative/' + this.initiativeId +
+      //   '/model/section/' + dragData.fromSectionId +
+      //   '/moveSubsection/' + dragData.subsectionId
+      //
+      //   this.axios.put(url, {}, {
+      //     params: {
+      //       onViewId: this.view.id,
+      //       onSubsectionId: onSectionId
+      //     }
+      //   }).then((response) => {
+      //     this.$store.commit('triggerUpdateModel')
+      //   })
+      // }
     }
   },
 

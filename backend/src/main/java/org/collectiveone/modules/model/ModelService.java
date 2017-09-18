@@ -141,6 +141,7 @@ public class ModelService {
 	
 	@Transactional
 	public PostResult moveSection(UUID fromViewId, UUID sectionId, UUID beforeSectionId) {
+		/* move a section within a view (it must be one of the top level sections of the view) */
 		
 		if (sectionId.equals(beforeSectionId)) {
 			return new PostResult("warning", "cannot move on itself", null);
@@ -164,7 +165,51 @@ public class ModelService {
 		return new PostResult("success", "section moved", section.getId().toString());
 	}
 	
+	@Transactional
+	public PostResult moveSubsection(UUID fromSectionId, UUID subSectionId, UUID toViewId, UUID toSectionId, UUID beforeSubsectionId) {
+		/* move a subsection to another section or subsection or, as top section, to a view */
+		
+		if (subSectionId.equals(toSectionId)) {
+			return new PostResult("warning", "cannot move on itself", null);
+		}
+				
+		ModelSection subSection = modelSectionRepository.findById(subSectionId);
+		ModelSection fromSection = modelSectionRepository.findById(fromSectionId);
+		
+		/* remove subsection from section */
+		fromSection.getSubsections().remove(subSection);
+		fromSection = modelSectionRepository.save(fromSection);
 	
+		if(toViewId == null) {
+			/* moving to another section add to section as subsection */
+			ModelSection toSection = modelSectionRepository.findById(fromSectionId);
+			
+			if (beforeSubsectionId != null) {
+				ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
+				int index = toSection.getSubsections().indexOf(beforeSubsection);
+				toSection.getSubsections().add(index, subSection);
+			} else {
+				toSection.getSubsections().add(subSection);
+			}
+			toSection = modelSectionRepository.save(toSection);
+			
+		} else {
+			/* moving as section of a view  */
+			ModelView toView = modelViewRepository.findById(toViewId);
+			
+			if (beforeSubsectionId != null) {
+				ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
+				int index = toView.getSections().indexOf(beforeSubsection);
+				toView.getSections().add(index, subSection);
+			} else {
+				toView.getSections().add(subSection);
+			}
+			toView = modelViewRepository.save(toView);
+		}
+		
+		return new PostResult("success", "subsection moved", subSection.getId().toString());
+	}
+		
 	@Transactional
 	public PostResult addCardToSection (UUID sectionId, UUID cardWrapperId) {
 		

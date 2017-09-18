@@ -49,7 +49,7 @@
                 </app-model-card>
               </div>
               <div :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
-                @dragover.prevent="dragOver($event)"
+                @dragover.prevent
                 @drop="cardDroped('', $event)">
 
                 <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
@@ -98,12 +98,15 @@
                 <div v-if="showSubsections" class="subsections-container" :style="subsectionsContainerStyle">
                   <div v-for="subsection in section.subsections"
                     :key="subsection.id"
-                    class="subsection-container">
+                    class="subsection-container"
+                    @dragover.prevent
+                    @drop="subsectionDroped(subsection.id, $event)">
 
                     <app-model-section
                       :preloaded="subsection.subElementsLoaded"
                       :sectionInit="subsection"
                       :sectionId="subsection.id"
+                      :parentSectionId="section.id"
                       :initiativeId="initiativeId"
                       :level="level + 1"
                       dragType="MOVE_SUBSECTION"
@@ -199,6 +202,10 @@ export default {
       default: ''
     },
     sectionId: {
+      type: String,
+      default: ''
+    },
+    parentSectionId: {
       type: String,
       default: ''
     },
@@ -332,9 +339,29 @@ export default {
     dragStart (event) {
       var moveSectionData = {
         type: this.dragType,
-        sectionId: this.section.id
+        sectionId: this.section.id,
+        fromSectionId: this.parentSectionId
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveSectionData))
+    },
+    subsectionDroped (onSubsectionId, event) {
+      var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
+
+      if (dragData.type === 'MOVE_SUBSECTION') {
+        console.log('subsection dropped')
+        var url = '/1/initiative/' + this.initiativeId +
+        '/model/section/' + dragData.fromSectionId +
+        '/moveSubsection/' + dragData.sectionId
+
+        this.axios.put(url, {}, {
+          params: {
+            onSectionId: this.section.id,
+            onSubsectionId: onSubsectionId
+          }
+        }).then((response) => {
+          this.$store.commit('triggerUpdateModel')
+        })
+      }
     }
   },
 

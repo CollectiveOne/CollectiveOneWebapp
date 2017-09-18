@@ -158,8 +158,44 @@ public class ModelController extends BaseController {
 		return modelService.editSection(UUID.fromString(sectionIdStr), sectionDto, getLoggedUser().getC1Id());
 	}
 	
+	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}/moveSubsection/{subsectionId}", method = RequestMethod.PUT) 
+	public PostResult moveSubsection(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("sectionId") String sectionIdStr,
+			@PathVariable("subsectionId") String subsectionIdStr,
+			@RequestParam(name = "onViewId", defaultValue="") String onViewIdStr,
+			@RequestParam(name = "onSectionId", defaultValue="") String onSectionIdStr,
+			@RequestParam(name = "onSubsectionId") String onSubsectionIdStr) {
+	
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		/* dropped on view can be empty */
+		UUID onViewId =  onViewIdStr.equals("") ? null : UUID.fromString(onViewIdStr);
+		
+		/* dropped on section can be empty */
+		UUID onSectionId =  onSectionIdStr.equals("") ? null : UUID.fromString(onSectionIdStr);
+		
+		/* dropped on subsection can be empty */
+		UUID onSubsectionId =  onSubsectionIdStr.equals("") ? null : UUID.fromString(onSubsectionIdStr);
+		
+		return modelService.moveSubsection(
+				UUID.fromString(sectionIdStr), 
+				UUID.fromString(subsectionIdStr),
+				onViewId,
+				onSectionId,
+				onSubsectionId);
+	}
+	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/view/{viewId}/moveSection/{sectionId}", method = RequestMethod.PUT) 
-	public PostResult moveExistingSection(
+	public PostResult moveViewSection(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("viewId") String viewIdStr,
 			@PathVariable("sectionId") String sectionIdStr,
