@@ -358,6 +358,7 @@ export default {
     },
     deleteCard () {
       this.axios.delete('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+        this.$store.commit('triggerUpdateModel')
         this.closeThis()
       }).catch((error) => {
         console.log(error)

@@ -37,11 +37,11 @@
                 :initiativeId="initiativeId"
                 :sectionId="section.id"
                 :cardEffect="cardsAsCards"
-                class="w3-col section-card"
-                :class="{'l4': cardsAsCards, 'm6': cardsAsCards, 's12': !cardsAsCards}"
+                class=""
+                :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
                 @show-card-modal="$emit('show-card-modal', $event)">
               </app-model-card>
-              <div class="w3-col" :class="{'l4': cardsAsCards, 'm6': cardsAsCards, 's12': !cardsAsCards}">
+              <div :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}">
                 <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
                   <button class="w3-button" style="width: 100%"
                     @click="newCard()">
@@ -351,9 +351,31 @@ export default {
   padding: 20px 10px 16px 10px;
 }
 
-.section-card {
-  margin-top: 0px;
+.section-card-col {
   margin-bottom: 22px;
+  display: inline-block;
+}
+
+@media screen and (min-width: 1200px) {
+  .section-card-col {
+    width: calc(33% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+  .section-card-col {
+    width: calc(50% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+.section-card-par {
+  margin-bottom: 16px;
 }
 
 .bottom-bar .fa {

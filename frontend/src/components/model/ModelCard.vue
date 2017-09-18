@@ -29,7 +29,7 @@
 
       </div>
 
-      <div class="w3-row">
+      <div v-if="cardEffect" class="w3-row">
         <div v-if="cardWrapper.inSections.length > 1" class="bottom-row light-grey">
           <i>also in:</i>
           <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container">
