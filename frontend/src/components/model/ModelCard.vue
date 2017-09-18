@@ -140,7 +140,8 @@ export default {
       this.$emit('show-card-modal', {
         new: false,
         cardWrapperId: this.cardWrapper.id,
-        initiativeId: this.initiativeId
+        initiativeId: this.initiativeId,
+        sectionId: this.sectionId
       })
     }
   }

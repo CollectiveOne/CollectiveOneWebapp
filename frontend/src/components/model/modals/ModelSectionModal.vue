@@ -16,6 +16,7 @@
           <app-model-modal-buttons
             v-if="isLoggedAnEditor"
             :show="showEditButtons"
+            deleteMessage="This will delete the section from all the views in which it is used. Its cards will not be deleted."
             @edit="startEditing()"
             @delete="deleteSection()">
           </app-model-modal-buttons>

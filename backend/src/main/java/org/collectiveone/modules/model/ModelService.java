@@ -153,6 +153,18 @@ public class ModelService {
 	}
 	
 	@Transactional
+	public PostResult removeCardFromSection (UUID sectionId, UUID cardWrapperId) {
+		
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
+		
+		section.getCardsWrappers().remove(cardWrapper);
+		section = modelSectionRepository.save(section);
+		
+		return new PostResult("success", "card added to section", section.getId().toString());
+	}
+	
+	@Transactional
 	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById, Integer level) {
 		ModelSectionDto sectionDto = modelSectionRepository.findById(sectionId).toDto();
 		

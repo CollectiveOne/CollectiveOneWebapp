@@ -17,7 +17,10 @@
             v-if="isLoggedAnEditor"
             :show="showEditButtons"
             @edit="startEditing()"
-            @delete="deleteCard()">
+            @delete="deleteCard()"
+            deleteMessage="This will delete the card from all the sections in which it is used."
+            @remove="removeCard()"
+            :removeMessage="'This will remove this card from this section.'">
           </app-model-modal-buttons>
 
           <div v-if="isNew" class="w3-row">
@@ -42,12 +45,14 @@
           <div class="slider-container">
             <transition name="slideLeftRight">
               <div v-if="addExisting" class="">
-                <keep-alive>
-                  <app-model-card-selector
-                    :initiativeId="initiativeId"
-                    @select="cardSelected($event)">
-                  </app-model-card-selector>
-                </keep-alive>
+                <app-model-card-selector
+                  :initiativeId="initiativeId"
+                  @select="cardSelected($event)">
+                </app-model-card-selector>
+                <app-error-panel
+                  :show="noCardSelectedShow"
+                  message="please select one card from above">
+                </app-error-panel>
               </div>
             </transition>
           </div>
@@ -197,7 +202,8 @@ export default {
       targetDateStr: '',
       isNew: false,
       addExisting: false,
-      existingCard: null
+      existingCard: null,
+      noCardSelectedError: false
     }
   },
 
@@ -235,6 +241,12 @@ export default {
     },
     textErrorShow () {
       return this.textEmptyError && this.textEmpty
+    },
+    noCardSelected () {
+      return this.existingCard === null
+    },
+    noCardSelectedShow () {
+      return this.noCardSelectedError && this.noCardSelected
     }
   },
 
@@ -294,8 +306,9 @@ export default {
           this.textEmptyError = true
         }
       } else {
-        if (!this.existingCard) {
+        if (this.noCardSelected) {
           ok = false
+          this.noCardSelectedError = true
         }
       }
 
@@ -329,6 +342,20 @@ export default {
         }
       }
     },
+    removeCard () {
+      var responseF = (response) => {
+        if (response.data.result === 'success') {
+          this.closeThis()
+          this.$store.commit('triggerUpdateModel')
+        } else {
+          this.showOutputMessage(response.data.message)
+        }
+      }
+      this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSection.sectionId + '/removeCard/' + this.cardWrapper.id,
+        {}).then(responseF).catch((error) => {
+          console.log(error)
+        })
+    },
     deleteCard () {
       this.axios.delete('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.closeThis()
@@ -340,11 +367,11 @@ export default {
 
   mounted () {
     this.initiativeId = this.pars.initiativeId
+    this.inSection = {}
 
     if (this.pars.new) {
       this.isNew = true
 
-      this.inSection = {}
       this.inSection.sectionId = this.pars.sectionId
       this.inSection.sectionTitle = this.pars.sectionTitle
 
@@ -358,6 +385,7 @@ export default {
       this.editing = true
     } else {
       this.showEditButtons = true
+      this.inSection.sectionId = this.pars.sectionId
       this.cardWrapper.id = this.pars.cardWrapperId
       this.updateCardData()
     }

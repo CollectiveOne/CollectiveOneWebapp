@@ -26,7 +26,7 @@
         :enableExpand="false">
       </app-model-card>
       <div class="delete-selected gray-1-color w3-display-topright w3-xlarge"
-        @click="cardSelected = null">
+        @click="cardDeselected()">
         <i class="fa fa-times-circle cursor-pointer" aria-hidden="true"></i>
       </div>
     </div>
@@ -65,6 +65,10 @@ export default {
     cardClicked (card) {
       this.cardSelected = card
       this.$emit('select', card)
+    },
+    cardDeselected () {
+      this.cardSelected = null
+      this.$emit('select', null)
     },
     update () {
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/search', {
