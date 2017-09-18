@@ -35,7 +35,6 @@
                 :key="cardWrapper.id"
                 @dragover.prevent="dragOver($event)"
                 @drop="cardDroped(cardWrapper.id, $event)">
-
                 <app-model-card
                   :cardWrapper="cardWrapper"
                   :initiativeId="initiativeId"
@@ -44,7 +43,10 @@
                   @show-card-modal="$emit('show-card-modal', $event)">
                 </app-model-card>
               </div>
-              <div :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}">
+              <div :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
+                @dragover.prevent="dragOver($event)"
+                @drop="cardDroped('', $event)">
+
                 <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
                   <button class="w3-button" style="width: 100%"
                     @click="newCard()">
@@ -299,9 +301,11 @@ export default {
     cardDroped (onCardWrapperId, event) {
       var moveCardData = JSON.parse(event.dataTransfer.getData('text/plain'))
 
-      this.axios.put('/1/initiative/' + this.initiativeId +
+      var url = '/1/initiative/' + this.initiativeId +
       '/model/section/' + moveCardData.fromSectionId +
-      '/moveCard/' + moveCardData.cardWrapperId, {}, {
+      '/moveCard/' + moveCardData.cardWrapperId
+
+      this.axios.put(url, {}, {
         params: {
           onSectionId: this.section.id,
           onCardWrapperId: onCardWrapperId

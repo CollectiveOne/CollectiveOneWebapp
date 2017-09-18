@@ -214,11 +214,17 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
+		/* dropped on card can be empty */
+		UUID onCardWrapperID =  null;
+		if (!onCardWrapperIdStr.equals("")) {
+			onCardWrapperID = UUID.fromString(onCardWrapperIdStr);
+		}		
+		
 		return modelService.moveCardWrapper(
 				UUID.fromString(fromSectionIdStr), 
 				UUID.fromString(cardWrapperIdStr),
 				UUID.fromString(onSectionIdStr),
-				UUID.fromString(onCardWrapperIdStr));
+				onCardWrapperID);
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.GET) 

@@ -300,8 +300,13 @@ public class ModelService {
 		ModelSection toSection = modelSectionRepository.findById(toSectionId);
 		ModelCardWrapper beforeCardWrapper = modelCardWrapperRepository.findById(beforeCardWrapperId);
 		
-		int index = toSection.getCardsWrappers().indexOf(beforeCardWrapper);
-		toSection.getCardsWrappers().add(index, cardWrapper);
+		if (beforeCardWrapperId != null) {
+			int index = toSection.getCardsWrappers().indexOf(beforeCardWrapper);
+			toSection.getCardsWrappers().add(index, cardWrapper);
+		} else {
+			toSection.getCardsWrappers().add(cardWrapper);
+		}
+		
 		modelSectionRepository.save(toSection);
 		
 		return new PostResult("success", "card moved", cardWrapper.getId().toString());

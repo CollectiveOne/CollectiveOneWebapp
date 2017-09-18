@@ -326,7 +326,7 @@ export default {
         var baseurl = '/1/initiative/' + this.initiativeId + '/model/cardWrapper'
         if (this.isNew) {
           if (!this.addExisting) {
-            this.axios.post(baseurl, {cardDto}).then(responseF).catch((error) => {
+            this.axios.post(baseurl, cardDto).then(responseF).catch((error) => {
               console.log(error)
             })
           } else {

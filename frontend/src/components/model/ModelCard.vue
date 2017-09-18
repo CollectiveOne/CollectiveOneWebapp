@@ -2,6 +2,14 @@
   <div v-if="cardWrapper" class=""
     draggable="true"
     @dragstart="dragStart($event)">
+    <!-- TODO: cannot configure a clearn dragenter dragleave sequence. They
+    are continuosly called even when dragging over.
+    @dragover.prevent
+    @dragenter.prevent="dragEnter($event)"
+    @dragleave.prevent="dragLeave()"
+    @drop="dragDrop()"> -->
+
+    <hr v-if="draggingOver">
 
     <div class="w3-display-container"
       :class="{ 'w3-card-2': cardEffect, 'highlight': highlight }"
@@ -38,7 +46,7 @@
           <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container">
             <div v-if="inSection.id !== sectionId" class="">
               <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
-                class="gray-1 w3-tag w3-round">
+                class="gray-1 w3-tag w3-round w3-small">
                 {{ inSection.title }}
               </router-link>
             </div>
@@ -96,7 +104,9 @@ export default {
   data () {
     return {
       showActionButton: false,
-      highlight: false
+      highlight: false,
+      draggingOver: false,
+      enterCounter: []
     }
   },
 
@@ -153,6 +163,15 @@ export default {
         fromSectionId: this.sectionId
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
+    },
+    dragEnter (event) {
+      this.draggingOver = true
+    },
+    dragLeave () {
+      this.draggingOver = false
+    },
+    dragDrop () {
+      this.draggingOver = false
     }
   }
 
