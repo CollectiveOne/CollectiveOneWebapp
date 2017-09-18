@@ -159,6 +159,7 @@ export default {
     },
     dragStart (event) {
       var moveCardData = {
+        type: 'MOVE_CARD',
         cardWrapperId: this.cardWrapper.id,
         fromSectionId: this.sectionId
       }

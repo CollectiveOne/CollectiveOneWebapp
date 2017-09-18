@@ -1,10 +1,14 @@
 <template lang="html">
   <div class="">
+
     <div v-if="section" class="section-container w3-display-container"
       @mouseover="showActionButton = true"
       @mouseleave="showActionButton = false">
 
-      <div class="section-title-container w3-border-top w3-border-right gray-1-border ">
+      <div class="section-title-container w3-border-top w3-border-right gray-1-border"
+        draggable="true"
+        @dragstart="dragStart($event)">
+
         <router-link tag="a" :to="{ name: 'ModelSection', params: { sectionId: section.id } }" class="w3-row section-title w3-tag gray-1 cursor-pointer" :style="sectionTitleStyle">{{ section.title }}</router-link>
         <div class="w3-row w3-leftbar gray-1-border section-description w3-small light-grey w3-padding">
           {{ section.description }}
@@ -33,8 +37,9 @@
               <div v-for="cardWrapper in section.cardsWrappers"
                 :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
                 :key="cardWrapper.id"
-                @dragover.prevent="dragOver($event)"
+                @dragover.prevent
                 @drop="cardDroped(cardWrapper.id, $event)">
+
                 <app-model-card
                   :cardWrapper="cardWrapper"
                   :initiativeId="initiativeId"
@@ -91,18 +96,21 @@
                 @after-leave="animatingSubsections = false">
 
                 <div v-if="showSubsections" class="subsections-container" :style="subsectionsContainerStyle">
-                  <app-model-section
-                    v-for="subsection in section.subsections"
+                  <div v-for="subsection in section.subsections"
                     :key="subsection.id"
-                    :preloaded="subsection.subElementsLoaded"
-                    :sectionInit="subsection"
-                    :sectionId="subsection.id"
-                    :initiativeId="initiativeId"
-                    :level="level + 1"
-                    class="subsection-container"
-                    @show-section-modal="$emit('show-section-modal', $event)"
-                    @show-card-modal="$emit('show-card-modal', $event)">
-                  </app-model-section>
+                    class="subsection-container">
+
+                    <app-model-section
+                      :preloaded="subsection.subElementsLoaded"
+                      :sectionInit="subsection"
+                      :sectionId="subsection.id"
+                      :initiativeId="initiativeId"
+                      :level="level + 1"
+                      dragType="MOVE_SUBSECTION"
+                      @show-section-modal="$emit('show-section-modal', $event)"
+                      @show-card-modal="$emit('show-card-modal', $event)">
+                    </app-model-section>
+                  </div>
 
                   <div class="subsection-container gray-1-color w3-border">
                     <button class="w3-button" style="width: 100%; text-align: left"
@@ -194,9 +202,16 @@ export default {
       type: String,
       default: ''
     },
+    viewId: {
+      type: String,
+      default: ''
+    },
     level: {
       type: Number,
       default: 0
+    },
+    dragType: {
+      type: String
     }
   },
 
@@ -295,24 +310,31 @@ export default {
         sectionTitle: this.section.title
       })
     },
-    dragOver (event) {
-      // console.log('here')
-    },
     cardDroped (onCardWrapperId, event) {
-      var moveCardData = JSON.parse(event.dataTransfer.getData('text/plain'))
+      var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
 
-      var url = '/1/initiative/' + this.initiativeId +
-      '/model/section/' + moveCardData.fromSectionId +
-      '/moveCard/' + moveCardData.cardWrapperId
+      if (dragData.type === 'MOVE_CARD') {
+        console.log('card dropped')
+        var url = '/1/initiative/' + this.initiativeId +
+        '/model/section/' + dragData.fromSectionId +
+        '/moveCard/' + dragData.cardWrapperId
 
-      this.axios.put(url, {}, {
-        params: {
-          onSectionId: this.section.id,
-          onCardWrapperId: onCardWrapperId
-        }
-      }).then((response) => {
-        this.$store.commit('triggerUpdateModel')
-      })
+        this.axios.put(url, {}, {
+          params: {
+            onSectionId: this.section.id,
+            onCardWrapperId: onCardWrapperId
+          }
+        }).then((response) => {
+          this.$store.commit('triggerUpdateModel')
+        })
+      }
+    },
+    dragStart (event) {
+      var moveSectionData = {
+        type: this.dragType,
+        sectionId: this.section.id
+      }
+      event.dataTransfer.setData('text/plain', JSON.stringify(moveSectionData))
     }
   },
 

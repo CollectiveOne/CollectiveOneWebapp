@@ -23,18 +23,24 @@
       </div>
     </div>
 
-    <app-model-section
-      v-for="section in view.sections"
+    <div v-for="section in view.sections"
       :key="section.id"
-      :preloaded="false"
-      :sectionId="section.id"
-      :sectionInit="section"
-      :initiativeId="initiativeId"
-      :level="0"
-      class="view-sections "
-      @show-section-modal="$emit('show-section-modal', $event)"
-      @show-card-modal="$emit('show-card-modal', $event)">
-    </app-model-section>
+      class="view-sections"
+      @dragover.prevent
+      @drop="sectionDroped(section.id, $event)">
+
+      <app-model-section
+        :preloaded="false"
+        :sectionId="section.id"
+        :viewId="view.id"
+        :sectionInit="section"
+        :initiativeId="initiativeId"
+        :level="0"
+        dragType="MOVE_SECTION"
+        @show-section-modal="$emit('show-section-modal', $event)"
+        @show-card-modal="$emit('show-card-modal', $event)">
+      </app-model-section>
+    </div>
 
     <div class="view-sections gray-1-color w3-border">
       <button class="w3-button" style="width: 100%; text-align: left"
@@ -110,6 +116,27 @@ export default {
         viewId: this.view.id,
         viewTitle: this.view.title
       })
+    },
+    sectionDroped (onSectionId, event) {
+      var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
+
+      console.log('sectoin dropped no test')
+
+      if (dragData.type === 'MOVE_SECTION') {
+        console.log('section dropped')
+
+        var url = '/1/initiative/' + this.initiativeId +
+        '/model/view/' + this.view.id +
+        '/moveSection/' + dragData.sectionId
+
+        this.axios.put(url, {}, {
+          params: {
+            onSectionId: onSectionId
+          }
+        }).then((response) => {
+          this.$store.commit('triggerUpdateModel')
+        })
+      }
     }
   },
 

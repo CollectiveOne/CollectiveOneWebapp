@@ -139,6 +139,31 @@ public class ModelService {
 		return new PostResult("success", "section edited", section.getId().toString());
 	}
 	
+	@Transactional
+	public PostResult moveSection(UUID fromViewId, UUID sectionId, UUID beforeSectionId) {
+		
+		if (sectionId.equals(beforeSectionId)) {
+			return new PostResult("warning", "cannot move on itself", null);
+		}
+		
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelView view = modelViewRepository.findById(fromViewId);
+		
+		view.getSections().remove(section);
+		
+		if (beforeSectionId != null) {
+			ModelSection beforeSection = modelSectionRepository.findById(beforeSectionId);
+			int index = view.getSections().indexOf(beforeSection);
+			view.getSections().add(index, section);
+		} else {
+			view.getSections().add(section);
+		}
+		
+		modelViewRepository.save(view);
+		
+		return new PostResult("success", "section moved", section.getId().toString());
+	}
+	
 	
 	@Transactional
 	public PostResult addCardToSection (UUID sectionId, UUID cardWrapperId) {
@@ -298,9 +323,9 @@ public class ModelService {
 		
 		/* add to section */
 		ModelSection toSection = modelSectionRepository.findById(toSectionId);
-		ModelCardWrapper beforeCardWrapper = modelCardWrapperRepository.findById(beforeCardWrapperId);
 		
 		if (beforeCardWrapperId != null) {
+			ModelCardWrapper beforeCardWrapper = modelCardWrapperRepository.findById(beforeCardWrapperId);
 			int index = toSection.getCardsWrappers().indexOf(beforeCardWrapper);
 			toSection.getCardsWrappers().add(index, cardWrapper);
 		} else {
