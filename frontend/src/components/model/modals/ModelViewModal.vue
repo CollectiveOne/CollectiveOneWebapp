@@ -168,7 +168,6 @@ export default {
       }
 
       if (ok) {
-        debugger
         var viewDto = JSON.parse(JSON.stringify(this.editedView))
         var baseurl = '/1/initiative/' + viewDto.initiativeId + '/model/view'
         var returnF = (response) => {

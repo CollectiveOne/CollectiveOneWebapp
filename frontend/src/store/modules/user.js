@@ -43,6 +43,9 @@ const actions = {
           if (context.state.authenticated) {
             context.dispatch('updateNotifications')
             context.dispatch('updateMyInitiatives')
+            context.dispatch('refreshInitiative')
+            context.dispatch('refreshTransfers')
+            context.commit('triggerUpdateAssets')
           }
         }, 10000)
       }
