@@ -30,17 +30,20 @@
             </div>
 
             <div class="w3-row-padding cards-container">
-              <app-model-card
-                v-for="cardWrapper in section.cardsWrappers"
-                :key="cardWrapper.id"
-                :cardWrapper="cardWrapper"
-                :initiativeId="initiativeId"
-                :sectionId="section.id"
-                :cardEffect="cardsAsCards"
-                class=""
+              <div v-for="cardWrapper in section.cardsWrappers"
                 :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
-                @show-card-modal="$emit('show-card-modal', $event)">
-              </app-model-card>
+                :key="cardWrapper.id"
+                @dragover.prevent="dragOver($event)"
+                @drop="cardDroped(cardWrapper.id, $event)">
+
+                <app-model-card
+                  :cardWrapper="cardWrapper"
+                  :initiativeId="initiativeId"
+                  :sectionId="section.id"
+                  :cardEffect="cardsAsCards"
+                  @show-card-modal="$emit('show-card-modal', $event)">
+                </app-model-card>
+              </div>
               <div :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}">
                 <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
                   <button class="w3-button" style="width: 100%"
@@ -288,6 +291,23 @@ export default {
         initiativeId: this.initiativeId,
         sectionId: this.section.id,
         sectionTitle: this.section.title
+      })
+    },
+    dragOver (event) {
+      // console.log('here')
+    },
+    cardDroped (onCardWrapperId, event) {
+      var moveCardData = JSON.parse(event.dataTransfer.getData('text/plain'))
+
+      this.axios.put('/1/initiative/' + this.initiativeId +
+      '/model/section/' + moveCardData.fromSectionId +
+      '/moveCard/' + moveCardData.cardWrapperId, {}, {
+        params: {
+          onSectionId: this.section.id,
+          onCardWrapperId: onCardWrapperId
+        }
+      }).then((response) => {
+        this.$store.commit('triggerUpdateModel')
       })
     }
   },

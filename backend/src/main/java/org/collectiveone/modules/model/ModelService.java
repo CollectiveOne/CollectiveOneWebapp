@@ -282,6 +282,32 @@ public class ModelService {
 	}
 	
 	@Transactional
+	public PostResult moveCardWrapper(UUID fromSectionId, UUID cardWrapperId, UUID toSectionId, UUID beforeCardWrapperId) {
+		
+		if (cardWrapperId.equals(beforeCardWrapperId)) {
+			return new PostResult("error", "cannot move on itself", null);
+		}
+		
+		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
+		if (cardWrapper == null) return new PostResult("error", "card wrapper not found", "");
+		
+		/* remove from section */
+		ModelSection fromSection = modelSectionRepository.findById(fromSectionId);
+		fromSection.getCardsWrappers().remove(cardWrapper);
+		modelSectionRepository.save(fromSection);
+		
+		/* add to section */
+		ModelSection toSection = modelSectionRepository.findById(toSectionId);
+		ModelCardWrapper beforeCardWrapper = modelCardWrapperRepository.findById(beforeCardWrapperId);
+		
+		int index = toSection.getCardsWrappers().indexOf(beforeCardWrapper);
+		toSection.getCardsWrappers().add(index, cardWrapper);
+		modelSectionRepository.save(toSection);
+		
+		return new PostResult("success", "card moved", cardWrapper.getId().toString());
+	}
+	
+	@Transactional
 	public GetResult<ModelCardWrapperDto> getCardWrapper(UUID cardWrapperId, UUID requestById) {
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapper.getId());

@@ -1,5 +1,8 @@
 <template lang="html">
-  <div v-if="cardWrapper" class="">
+  <div v-if="cardWrapper" class=""
+    draggable="true"
+    @dragstart="dragStart($event)">
+
     <div class="w3-display-container"
       :class="{ 'w3-card-2': cardEffect, 'highlight': highlight }"
       @mouseover="hoverEnter()"
@@ -143,6 +146,13 @@ export default {
         initiativeId: this.initiativeId,
         sectionId: this.sectionId
       })
+    },
+    dragStart (event) {
+      var moveCardData = {
+        cardWrapperId: this.cardWrapper.id,
+        fromSectionId: this.sectionId
+      }
+      event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
     }
   }
 

@@ -196,6 +196,31 @@ public class ModelController extends BaseController {
 		return modelService.removeCardFromSection(UUID.fromString(sectionIdStr), UUID.fromString(cardWrapperIdStr));
 	}
 	
+	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}/moveCard/{cardWrapperId}", method = RequestMethod.PUT) 
+	public PostResult moveExistingCard(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("sectionId") String fromSectionIdStr,
+			@PathVariable("cardWrapperId") String cardWrapperIdStr,
+			@RequestParam(name = "onSectionId") String onSectionIdStr,
+			@RequestParam(name = "onCardWrapperId") String onCardWrapperIdStr) {
+	
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.moveCardWrapper(
+				UUID.fromString(fromSectionIdStr), 
+				UUID.fromString(cardWrapperIdStr),
+				UUID.fromString(onSectionIdStr),
+				UUID.fromString(onCardWrapperIdStr));
+	}
+	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.GET) 
 	public GetResult<ModelSectionDto> getSection(
 			@PathVariable("initiativeId") String initiativeIdStr,
