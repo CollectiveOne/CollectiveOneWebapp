@@ -49,7 +49,7 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelDto>("error", "access denied", null);
 		}
 		
-		return modelService.getModel(initiativeId, level, getLoggedUser().getC1Id());
+		return modelService.getModel(initiativeId, level, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/view", method = RequestMethod.POST) 
@@ -82,7 +82,7 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelViewDto>("error", "access denied", null);
 		}
 		
-		return modelService.getView(UUID.fromString(viewIdStr), getLoggedUser().getC1Id(), level);
+		return modelService.getView(UUID.fromString(viewIdStr), getLoggedUserId(), level);
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/view", method = RequestMethod.PUT) 
@@ -311,7 +311,7 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelSectionDto>("error", "access denied", null);
 		}
 		
-		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUser().getC1Id(), level);
+		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUserId(), level);
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.DELETE) 
@@ -362,7 +362,7 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelCardWrapperDto>("error", "access denied", null);
 		}
 		
-		return modelService.getCardWrapper(UUID.fromString(cardWrapperIdStr), getLoggedUser().getC1Id());
+		return modelService.getCardWrapper(UUID.fromString(cardWrapperIdStr), getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/cardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
