@@ -140,10 +140,14 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult moveSection(UUID fromViewId, UUID sectionId, UUID beforeSectionId) {
+	public PostResult moveSection(UUID fromViewId, UUID sectionId, UUID beforeViewSectionId, UUID toSectionId, UUID beforeSubsectionId) {
 		/* move a section within a view (it must be one of the top level sections of the view) */
 		
-		if (sectionId.equals(beforeSectionId)) {
+		if (sectionId.equals(beforeViewSectionId)) {
+			return new PostResult("warning", "cannot move on itself", null);
+		}
+		
+		if (sectionId.equals(beforeSubsectionId)) {
 			return new PostResult("warning", "cannot move on itself", null);
 		}
 		
@@ -152,15 +156,26 @@ public class ModelService {
 		
 		view.getSections().remove(section);
 		
-		if (beforeSectionId != null) {
-			ModelSection beforeSection = modelSectionRepository.findById(beforeSectionId);
+		if (toSectionId == null) {
+			/* if toSectionId is null, then moving section within the same view */
+			ModelSection beforeSection = modelSectionRepository.findById(beforeViewSectionId);
 			int index = view.getSections().indexOf(beforeSection);
 			view.getSections().add(index, section);
+			modelViewRepository.save(view);
+			
 		} else {
-			view.getSections().add(section);
+			/* if toSectionId is not null, then moving section from view to section */
+			ModelSection toSection = modelSectionRepository.findById(toSectionId);
+			
+			if (beforeSubsectionId != null) {
+				ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
+				int index = toSection.getSubsections().indexOf(beforeSubsection);
+				toSection.getSubsections().add(index, section);
+			} else {
+				toSection.getSubsections().add(section);
+			}
+			toSection = modelSectionRepository.save(toSection);		
 		}
-		
-		modelViewRepository.save(view);
 		
 		return new PostResult("success", "section moved", section.getId().toString());
 	}

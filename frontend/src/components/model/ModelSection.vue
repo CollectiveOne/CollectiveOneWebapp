@@ -9,10 +9,21 @@
         draggable="true"
         @dragstart="dragStart($event)">
 
-        <router-link tag="a" :to="{ name: 'ModelSection', params: { sectionId: section.id } }" class="w3-row section-title w3-tag gray-1 cursor-pointer" :style="sectionTitleStyle">{{ section.title }}</router-link>
+        <router-link tag="a" :to="{ name: 'ModelSection', params: { sectionId: section.id } }"
+          class="w3-row section-title w3-tag gray-1 cursor-pointer" :style="sectionTitleStyle">
+          {{ section.title }}
+        </router-link>
         <div class="w3-row w3-leftbar gray-1-border section-description w3-small light-grey w3-padding">
           {{ section.description }}
         </div>
+      </div>
+
+      <div v-if="expanded" class="w3-row expand-row">
+        <button
+          class="w3-button gray-1 w3-small"
+          @click="toggleExpand()">
+          <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse</span>
+        </button>
       </div>
 
       <div class="gray-1-border" :class="{'w3-border-bottom': !showExpandButton, 'slider-container': animatingSubsections}">
@@ -25,15 +36,7 @@
 
           <div v-if="expanded" class="w3-row w3-leftbar w3-border-right subelements-container">
 
-            <div class="w3-row expand-row">
-              <button
-                class="w3-button gray-1 w3-small"
-                @click="toggleExpand()">
-                <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse</span>
-              </button>
-            </div>
-
-            <div class="w3-row-padding cards-container">
+            <div v-if="section.cardsWrappers.length > 0" class="w3-row-padding cards-container">
               <div v-for="cardWrapper in section.cardsWrappers"
                 :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
                 :key="cardWrapper.id"
@@ -62,8 +65,8 @@
               </div>
             </div>
 
-            <div class="bottom-bar light-grey w3-small">
-              <button v-if="section.nSubsections > 0"
+            <div v-if="section.nSubsections > 0 && section.cardsWrappers.length > 0" class="bottom-bar light-grey w3-small">
+              <button
                 class="w3-button model-button show-sections-button"
                 @click="showSubsections = !showSubsections">
                 <div v-if="showSubsections" >
@@ -79,13 +82,6 @@
                   </div>
                 </div>
               </button>
-              <div v-else class="">
-                <button class="w3-button" style="width: 100%; text-align: left"
-                  @click="newSubsection()">
-                  <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-                  add subsection
-                </button>
-              </div>
             </div>
 
             <div class="" :class="{'slider-container': animatingSubsections}">
@@ -226,6 +222,7 @@ export default {
     return {
       section: null,
       showSubsections: false,
+      showCards: false,
       showActionButton: false,
       showSubActionButtons: false,
       cardsAsCards: true,
@@ -291,7 +288,13 @@ export default {
     update () {
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
         this.section = response.data.data
+        this.checkExpands()
       })
+    },
+    checkExpands () {
+      if (this.section.nSubsections > 0 && this.section.cardsWrappers.length === 0) {
+        this.showSubsections = true
+      }
     },
     expandSectionModal () {
       this.$emit('show-section-modal', {
@@ -321,7 +324,6 @@ export default {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
 
       if (dragData.type === 'MOVE_CARD') {
-        console.log('card dropped')
         var url = '/1/initiative/' + this.initiativeId +
         '/model/section/' + dragData.fromSectionId +
         '/moveCard/' + dragData.cardWrapperId
@@ -340,16 +342,34 @@ export default {
       var moveSectionData = {
         type: this.dragType,
         sectionId: this.section.id,
-        fromSectionId: this.parentSectionId
+        fromSectionId: this.parentSectionId,
+        fromViewId: this.viewId
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveSectionData))
     },
     subsectionDroped (onSubsectionId, event) {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
+      var url = ''
+
+      if (dragData.type === 'MOVE_SECTION') {
+        /* move section to view section */
+        url = '/1/initiative/' + this.initiativeId +
+        '/model/view/' + dragData.fromViewId +
+        '/moveSection/' + dragData.sectionId
+
+        this.axios.put(url, {}, {
+          params: {
+            onSectionId: this.section.id,
+            onSubsectionId: onSubsectionId
+          }
+        }).then((response) => {
+          this.$store.commit('triggerUpdateModel')
+        })
+      }
 
       if (dragData.type === 'MOVE_SUBSECTION') {
-        console.log('subsection dropped')
-        var url = '/1/initiative/' + this.initiativeId +
+        /* move section to view section */
+        url = '/1/initiative/' + this.initiativeId +
         '/model/section/' + dragData.fromSectionId +
         '/moveSubsection/' + dragData.sectionId
 
@@ -373,6 +393,7 @@ export default {
       this.update()
     } else {
       this.section = this.sectionInit
+      this.checkExpands()
     }
   }
 }
@@ -446,6 +467,16 @@ export default {
     vertical-align: top;
   }
 }
+
+@media screen and (max-width: 991px) {
+  .section-card-col {
+    width: calc(100% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
 
 .section-card-par {
   margin-bottom: 16px;

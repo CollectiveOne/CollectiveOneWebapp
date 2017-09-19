@@ -1,0 +1,1 @@
+﻿UPDATE initiatives_relationships SET type = 'IS_ATTACHED_SUB' WHERE type = 'IS_DETACHED_SUB'

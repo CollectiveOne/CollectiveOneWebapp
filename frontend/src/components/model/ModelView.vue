@@ -25,9 +25,12 @@
 
     <div v-for="section in view.sections"
       :key="section.id"
-      class="view-sections"
-      @dragover.prevent
-      @drop="sectionDroped(section.id, $event)">
+      class="view-sections">
+
+      <div class="section-drop-area"
+        @dragover.prevent
+        @drop="sectionDroped(section.id, $event)">
+      </div>
 
       <app-model-section
         :preloaded="false"
@@ -42,8 +45,13 @@
       </app-model-section>
     </div>
 
-    <div class="view-sections gray-1-color w3-border">
-      <button class="w3-button" style="width: 100%; text-align: left"
+    <div class="view-sections">
+      <div class="section-drop-area"
+        @dragover.prevent
+        @drop="sectionDroped('', $event)">
+      </div>
+
+      <button class="w3-button w3-border gray-1-color" style="width: 100%; text-align: left"
         @click="newSection()">
         <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
         add section
@@ -122,35 +130,33 @@ export default {
       var url = ''
 
       if (dragData.type === 'MOVE_SECTION') {
-        console.log('section dropped')
-
         url = '/1/initiative/' + this.initiativeId +
         '/model/view/' + this.view.id +
         '/moveSection/' + dragData.sectionId
 
         this.axios.put(url, {}, {
           params: {
-            onSectionId: onSectionId
+            onViewSectionId: onSectionId
           }
         }).then((response) => {
           this.$store.commit('triggerUpdateModel')
         })
       }
 
-      // if (dragData.type === 'MOVE_SUBSECTION') {
-      //   url = '/1/initiative/' + this.initiativeId +
-      //   '/model/section/' + dragData.fromSectionId +
-      //   '/moveSubsection/' + dragData.subsectionId
-      //
-      //   this.axios.put(url, {}, {
-      //     params: {
-      //       onViewId: this.view.id,
-      //       onSubsectionId: onSectionId
-      //     }
-      //   }).then((response) => {
-      //     this.$store.commit('triggerUpdateModel')
-      //   })
-      // }
+      if (dragData.type === 'MOVE_SUBSECTION') {
+        url = '/1/initiative/' + this.initiativeId +
+        '/model/section/' + dragData.fromSectionId +
+        '/moveSubsection/' + dragData.sectionId
+
+        this.axios.put(url, {}, {
+          params: {
+            onViewId: this.view.id,
+            onSubsectionId: onSectionId
+          }
+        }).then((response) => {
+          this.$store.commit('triggerUpdateModel')
+        })
+      }
     }
   },
 
@@ -166,8 +172,17 @@ export default {
   padding-top: 15px;
 }
 
+.view-title h1 {
+  margin-bottom: 0px;
+}
+
 .view-sections {
-  margin-bottom: 30px;
+  /*margin-bottom: 30px;*/
+}
+
+.section-drop-area {
+  height: 30px;
+  width: 100%;
 }
 
 </style>
