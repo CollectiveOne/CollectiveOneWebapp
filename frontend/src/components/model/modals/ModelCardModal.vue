@@ -57,9 +57,14 @@
             </transition>
           </div>
 
-          <div class="slider-container">
-            <transition name="slideRightLeft">
-              <div v-if="!addExisting" class="">
+          <div :class="{'slider-container': animatingTab}">
+            <transition name="slideRightLeft"
+              @before-enter="animatingTab = true"
+              @after-enter="animatingTab = false"
+              @before-leave="animatingTab = true"
+              @after-leave="animatingTab = false">
+
+              <div v-if="!addExisting">
 
                 <!-- <div class="w3-row w3-margin-top image-container w3-center">
                   <img src="https://i.ytimg.com/vi/QX4j_zHAlw8/maxresdefault.jpg" alt="">
@@ -208,7 +213,8 @@ export default {
       isNew: false,
       addExisting: false,
       existingCard: null,
-      noCardSelectedError: false
+      noCardSelectedError: false,
+      animatingTab: false
     }
   },
 
@@ -400,6 +406,10 @@ export default {
 </script>
 
 <style scoped>
+
+.not-add-existing-container {
+  overflow: visible;
+}
 
 .image-container {
   height: 250px;
