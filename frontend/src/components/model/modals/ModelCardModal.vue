@@ -60,17 +60,22 @@
           <div class="slider-container">
             <transition name="slideRightLeft">
               <div v-if="!addExisting" class="">
+
+                <!-- <div class="w3-row w3-margin-top image-container w3-center">
+                  <img src="https://i.ytimg.com/vi/QX4j_zHAlw8/maxresdefault.jpg" alt="">
+                </div> -->
+
                 <div class="w3-row w3-margin-top">
-                  <label class=""><b>Title:</b></label>
                   <div v-if="!editing" class="w3-padding light-grey">
                     <div v-if="card.title !== ''" class="">
-                      {{ card.title }}
+                      <b>{{ card.title }}</b>
                     </div>
                     <div v-else class="">
                       <i>(empty)</i>
                     </div>
                   </div>
                   <div v-else class="">
+                    <label class=""><b>Title:</b></label>
                     <input type="text" class="w3-input w3-hover-light-grey" v-model="editedCard.title">
                     <app-error-panel
                       :show="titleEmptyShow"
@@ -84,11 +89,11 @@
                 </div>
 
                 <div class="w3-row w3-margin-top">
-                  <label class=""><b>Text: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
                   <div v-if="!editing" class="w3-padding light-grey">
                     {{ card.text }}
                   </div>
                   <div v-else class="">
+                    <label class=""><b>Text: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
                     <textarea type="text" class="w3-input w3-border w3-round w3-hover-light-grey" v-model="editedCard.text"></textarea>
                     <app-error-panel
                       :show="textErrorShow"
@@ -395,6 +400,17 @@ export default {
 </script>
 
 <style scoped>
+
+.image-container {
+  height: 250px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.image-container img {
+  max-height: 100%;
+  max-width: 100%;
+}
 
 .state-enable-button {
   width: 250px;
