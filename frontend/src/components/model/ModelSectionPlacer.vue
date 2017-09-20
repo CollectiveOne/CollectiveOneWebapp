@@ -11,6 +11,7 @@
       :key="$route.params.sectionId"
       :preloaded="false"
       :level="0"
+      :floating="true"
       @show-view-modal="$emit('show-view-modal', $event)"
       @show-section-modal="$emit('show-section-modal', $event)"
       @show-card-modal="$emit('show-card-modal', $event)">

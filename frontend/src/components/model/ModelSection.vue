@@ -5,17 +5,63 @@
       @mouseover="showActionButton = true"
       @mouseleave="showActionButton = false">
 
-      <div class="section-title-container w3-border-top w3-border-right gray-1-border"
+      <div class="section-title-container w3-leftbar w3-border-top w3-border-right gray-1-border light-grey"
         draggable="true"
         @dragstart="dragStart($event)">
 
-        <router-link tag="a" :to="{ name: 'ModelSection', params: { sectionId: section.id } }"
-          class="w3-row section-title w3-tag gray-1 cursor-pointer" :style="sectionTitleStyle">
-          {{ section.title }}
-        </router-link>
-        <div class="w3-row w3-leftbar gray-1-border section-description w3-small light-grey w3-padding">
+        <div class="w3-row title-row">
+          <router-link tag="a" :to="{ name: 'ModelSection', params: { sectionId: section.id } }"
+            class="section-title cursor-pointer w3-left" :style="sectionTitleStyle">
+            {{ section.title }}
+          </router-link>
+        </div>
+
+        <div v-if="floating" class="w3-row">
+          <div class="w3-left">
+            found in:
+          </div>
+          <div v-for="parentSection in section.inSections" class="in-tag-container w3-left">
+            <router-link :to="{ name: 'ModelSection', params: { sectionId: parentSection.id } }"
+              class="gray-1 w3-tag w3-round w3-small">
+              {{ parentSection.title }}
+            </router-link>
+          </div>
+          <div v-for="parentView in section.inViews" class="in-tag-container w3-left">
+            <router-link :to="{ name: 'ModelView', params: { viewId: parentView.id } }"
+              class="gray-1 w3-tag w3-round w3-small">
+              {{ parentView.title }}
+            </router-link>
+          </div>
+        </div>
+
+        <div class="w3-row gray-1-border section-description w3-small">
           {{ section.description }}
         </div>
+
+        <div v-if="!floating" class="w3-row w3-small also-in-row">
+          <div v-if="sectionIsInOtherPlaces" class="">
+            <div v-for="parentSection in section.inSections" class="in-tag-container w3-right">
+              <div v-if="parentSection.id !== parentSectionId" class="">
+                <router-link :to="{ name: 'ModelSection', params: { sectionId: parentSection.id } }"
+                  class="gray-1 w3-tag w3-round w3-small">
+                  {{ parentSection.title }}
+                </router-link>
+              </div>
+            </div>
+            <div v-for="parentView in section.inViews" class="in-tag-container w3-right">
+              <div v-if="parentView.id !== viewId" class="">
+                <router-link :to="{ name: 'ModelView', params: { viewId: parentView.id } }"
+                  class="gray-1 w3-tag w3-round w3-small">
+                  {{ parentView.title }}
+                </router-link>
+              </div>
+            </div>
+            <div class="w3-right">
+              <i>also in:</i>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <div v-if="expanded" class="w3-row expand-row">
@@ -142,7 +188,7 @@
       </div>
 
       <transition name="fadeenter">
-        <div v-if="showActionButton" class="w3-display-topright action-buttons-container"
+        <div v-if="showActionButton && !asListItem" class="w3-display-topright action-buttons-container"
           @mouseleave="showSubActionButtons = false">
           <div
             class="w3-button model-action-button gray-1-color w3-right"
@@ -215,6 +261,14 @@ export default {
     },
     dragType: {
       type: String
+    },
+    asListItem: {
+      type: Boolean,
+      default: false
+    },
+    floating: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -236,11 +290,19 @@ export default {
       return this.$store.getters.isLoggedAnEditor
     },
     showExpandButton () {
-      return ((this.section.nSubsections > 0) || (this.section.nCards > 0))
+      if (!this.asListItem) {
+        return ((this.section.nSubsections > 0) || (this.section.nCards > 0))
+      } else {
+        return false
+      }
     },
     sectionTitleStyle () {
-      var fontsize = this.level < 5 ? 26 - 4 * this.level : 16
-      return {'font-size': fontsize + 'px'}
+      var fontsize = this.level < 5 ? 22 - 4 * this.level : 12
+      if (!this.asListItem) {
+        return {'font-size': fontsize + 'px'}
+      } else {
+        return {'font-size': '22px'}
+      }
     },
     subsectionsContainerStyle () {
       var paddingLeft = this.level < 5 ? 25 * (this.level + 1) : 100
@@ -265,6 +327,22 @@ export default {
         }
       }
       return text
+    },
+    sectionIsInOtherPlaces () {
+      var ix
+      for (ix in this.section.inSections) {
+        if (this.section.inSections[ix].id !== this.parentSectionId) {
+          return true
+        }
+      }
+
+      for (ix in this.section.inViews) {
+        if (this.section.inViews[ix].id !== this.viewId) {
+          return true
+        }
+      }
+
+      return false
     }
   },
 
@@ -286,7 +364,11 @@ export default {
       }
     },
     update () {
-      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id, {
+        params: {
+          level: 1
+        }
+      }).then((response) => {
         this.section = response.data.data
         this.checkExpands()
       })
@@ -427,10 +509,28 @@ export default {
 
 .section-title-container {
   border-top-width: 2px !important;
+  padding-top: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-bottom: 4px;
 }
 
-.section-title {
-  margin-bottom: 0px;
+.title-row {
+  margin-bottom: 4px;
+}
+
+.also-in-row {
+  margin-top: 8px;
+}
+
+.section-title:hover {
+  color: #15a5cc;
+}
+
+.in-tag-container {
+  display: inline-block;
+  margin-left: 5px;
+  margin-bottom: 5px;
 }
 
 .expand-row button {

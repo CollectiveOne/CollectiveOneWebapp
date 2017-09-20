@@ -47,10 +47,6 @@ public class ModelView {
 	
 	
 	public ModelViewDto toDto() {
-		return toDto(0);
-	}
-	
-	public ModelViewDto toDto(Integer level) {
 		ModelViewDto viewDto = new ModelViewDto();
 		
 		viewDto.setId(id.toString());
@@ -58,16 +54,6 @@ public class ModelView {
 		viewDto.setTitle(title);
 		viewDto.setDescription(description);
 		viewDto.setnSections(sections.size());
-		
-		/* if current level is 1 or more, keep going */
-		if (level >= 1) {
-			viewDto.setSectionsLoaded(true);
-			for (ModelSection section : sections) {
-				viewDto.getSections().add(section.toDtoLight());
-			}
-		} else {
-			viewDto.setSectionsLoaded(false);
-		}
 		
 		return viewDto;
 	}

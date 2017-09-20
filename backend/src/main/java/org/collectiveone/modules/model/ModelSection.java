@@ -69,7 +69,7 @@ public class ModelSection {
 		return id.equals(other.getId());
 	}
 
-	public ModelSectionDto toDtoLight() {
+	public ModelSectionDto toDto() {
 		ModelSectionDto sectionDto = new ModelSectionDto();
 		
 		sectionDto.setId(id.toString());
@@ -81,13 +81,6 @@ public class ModelSection {
 		return sectionDto;
 	}
 	
-	public ModelSectionDto toDto() {
-		
-		ModelSectionDto sectionDto = toDtoLight();
-		
-		return sectionDto;
-	}
-
 	public UUID getId() {
 		return id;
 	}

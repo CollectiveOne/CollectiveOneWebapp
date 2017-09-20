@@ -270,11 +270,11 @@ export default {
         this.cardWrapper = response.data.data
       })
     },
-    closeThis () {
-      this.$emit('close')
-    },
     cardSelected (cardWrapper) {
       this.existingCard = cardWrapper
+    },
+    closeThis () {
+      this.$emit('close')
     },
     cancel () {
       if (this.isNew) {
@@ -334,20 +334,21 @@ export default {
           }
         }
 
-        var baseurl = '/1/initiative/' + this.initiativeId + '/model/cardWrapper'
         if (this.isNew) {
           if (!this.addExisting) {
-            this.axios.post(baseurl, cardDto).then(responseF).catch((error) => {
+            /* create new card */
+            this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSection.sectionId + '/cardWrapper', cardDto).then(responseF).catch((error) => {
               console.log(error)
             })
           } else {
-            this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSection.sectionId + '/addCard/' + this.existingCard.id,
+            this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSection.sectionId + '/cardWrapper/' + this.existingCard.id,
               {}).then(responseF).catch((error) => {
                 console.log(error)
               })
           }
         } else {
-          this.axios.put(baseurl + '/' + this.cardWrapper.id, cardDto).then(responseF).catch((error) => {
+          this.axios.put('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id, cardDto)
+          .then(responseF).catch((error) => {
             console.log(error)
           })
         }
@@ -388,7 +389,6 @@ export default {
       this.inSection.sectionTitle = this.pars.sectionTitle
 
       this.editedCard = {
-        sectionId: this.inSection.sectionId,
         stateControl: false,
         title: '',
         text: ''

@@ -22,6 +22,9 @@ public class ModelSectionDto {
 	private List<ModelCardWrapperDto> cardsWrappers = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelSectionDto> subsections = new ArrayList<ModelSectionDto>();
 	
+	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
+	private List<ModelViewDto> inViews = new ArrayList<ModelViewDto>();
+	
 	
 	public ModelSection toEntity(ModelSection section, ModelSectionDto sectionDto) {
 		
@@ -110,6 +113,18 @@ public class ModelSectionDto {
 	}
 	public void setnCards(Integer nCards) {
 		this.nCards = nCards;
+	}
+	public List<ModelSectionDto> getInSections() {
+		return inSections;
+	}
+	public void setInSections(List<ModelSectionDto> inSections) {
+		this.inSections = inSections;
+	}
+	public List<ModelViewDto> getInViews() {
+		return inViews;
+	}
+	public void setInViews(List<ModelViewDto> inViews) {
+		this.inViews = inViews;
 	}
 	
 	

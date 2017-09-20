@@ -53,13 +53,33 @@ public class ModelService {
 		
 		List<ModelView> views = initiative.getModelViews(); 
 		for (ModelView view : views) {
-			viewsDto.add(view.toDto(level)); 
+			ModelViewDto viewDto = view.toDto();
+			viewDto = addViewSubElements(viewDto, view.getId(), level);
+			viewsDto.add(viewDto); 
 		}
 		
 		ModelDto modelDto = new ModelDto();
 		modelDto.setViews(viewsDto);
 		
 		return new GetResult<ModelDto> ("success", "model found", modelDto);
+	}
+	
+	@Transactional
+	public ModelViewDto addViewSubElements(ModelViewDto viewDto, UUID viewId, Integer level) {
+		
+		ModelView view = modelViewRepository.findById(viewId);
+		
+		if (level >= 1) {
+			viewDto.setSectionsLoaded(true);
+			
+			for (ModelSection section : view.getSections()) {
+				viewDto.getSections().add(getSectionDto(section.getId(), level - 1));
+			}
+		} else {
+			viewDto.setSectionsLoaded(false);
+		}
+		
+		return viewDto; 
 	}
 	
 	@Transactional
@@ -90,7 +110,13 @@ public class ModelService {
 	
 	@Transactional
 	public GetResult<ModelViewDto> getView (UUID viewId, UUID requestById, Integer level) {
-		return new GetResult<ModelViewDto>("success", "view retrieved", modelViewRepository.findById(viewId).toDto(level));
+		
+		ModelView view = modelViewRepository.findById(viewId);
+		
+		ModelViewDto viewDto = view.toDto();
+		viewDto = addViewSubElements(viewDto, view.getId(), level);
+		
+		return new GetResult<ModelViewDto>("success", "view retrieved", viewDto);
 	}
 	
 	
@@ -104,20 +130,20 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult createSection(ModelSectionDto sectionDto, UUID creatorId) {
+	public PostResult createSection(ModelSectionDto sectionDto, UUID parentSectionId, UUID parentViewId , UUID creatorId) {
 		
 		ModelSection section = sectionDto.toEntity(null, sectionDto);
 		section = modelSectionRepository.save(section);
 		
-		if(sectionDto.getIsSubsection()) {
-			ModelSection parent = modelSectionRepository.findById(UUID.fromString(sectionDto.getParentSectionId()));
+		if(parentSectionId != null) {
+			ModelSection parent = modelSectionRepository.findById(parentSectionId);
 			if (parent == null) return new PostResult("error", "parent section not found", "");
 			
 			parent.getSubsections().add(section);
 			modelSectionRepository.save(parent);
 			
 		} else {
-			ModelView view = modelViewRepository.findById(UUID.fromString(sectionDto.getViewId()));
+			ModelView view = modelViewRepository.findById(parentViewId);
 			if (view == null) return new PostResult("error", "view not found", "");
 			
 			view.getSections().add(section);
@@ -126,6 +152,48 @@ public class ModelService {
 		
 		
 		return new PostResult("success", "section created", section.getId().toString());
+	}
+	
+	@Transactional
+	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById, Integer level) {
+		return new GetResult<ModelSectionDto>("success", "section retrieved",  getSectionDto(sectionId, level));
+	}
+	
+	@Transactional
+	public ModelSectionDto getSectionDto(UUID sectionId, Integer level) {
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelSectionDto sectionDto = section.toDto();
+		
+		/* set parent sections or views */
+		List<ModelSection> inSections = modelSectionRepository.findParentSections(section.getId());
+		List<ModelView> inViews = modelSectionRepository.findParentViews(section.getId());
+		
+		for (ModelSection inSection : inSections) {
+			sectionDto.getInSections().add(inSection.toDto());
+		}
+		
+		for (ModelView inView : inViews) {
+			sectionDto.getInViews().add(inView.toDto());
+		}
+		
+		sectionDto = addSectionSubElements(sectionDto, section.getId(), level);
+		
+		return sectionDto;
+	}
+	
+	@Transactional
+	public GetResult<Page<ModelSectionDto>> searchSection(String query, PageRequest page, UUID initiativeId) {
+		Page<ModelSection> enititiesPage = modelSectionRepository.searchBy("%"+query.toLowerCase()+"%", page);
+		
+		List<ModelSectionDto> sectionDtos = new ArrayList<ModelSectionDto>();
+		
+		for(ModelSection section : enititiesPage.getContent()) {
+			sectionDtos.add(section.toDto());
+		}
+		
+		Page<ModelSectionDto> dtosPage = new PageImpl<ModelSectionDto>(sectionDtos, page, enititiesPage.getNumberOfElements());
+		
+		return new GetResult<Page<ModelSectionDto>>("succes", "sections returned", dtosPage);
 	}
 	
 	@Transactional
@@ -224,6 +292,31 @@ public class ModelService {
 		
 		return new PostResult("success", "subsection moved", subSection.getId().toString());
 	}
+	
+	@Transactional
+	public PostResult addSection (UUID sectionId, UUID onSectionId, UUID onViewId, UUID userId) {
+		
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		
+		if (onSectionId != null) {
+			/* add it as subsection */
+			ModelSection onSection = modelSectionRepository.findById(onSectionId);
+			
+			onSection.getSubsections().add(section);
+			onSection = modelSectionRepository.save(onSection);
+			
+			return new PostResult("success", "section added to section", section.getId().toString());
+			
+		} else {
+			/* add on view */
+			ModelView onView = modelViewRepository.findById(onViewId);
+			
+			onView.getSections().add(section);
+			onView = modelViewRepository.save(onView);
+			
+			return new PostResult("success", "section added to view", section.getId().toString());
+		}
+	}
 		
 	@Transactional
 	public PostResult addCardToSection (UUID sectionId, UUID cardWrapperId) {
@@ -250,25 +343,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById, Integer level) {
-		ModelSectionDto sectionDto = modelSectionRepository.findById(sectionId).toDto();
-		
-		sectionDto = addSubElements(sectionDto, sectionId, level);
-		
-		/* set parent section data */
-		List<ModelSection> parents = modelSectionRepository.findParentSections(sectionId);
-		
-		if (parents.size() > 0) {
-			sectionDto.setIsSubsection(true);
-			sectionDto.setParentSectionId(parents.get(0).getId().toString());
-			sectionDto.setParentSectionTitle(parents.get(0).getTitle());
-		}
-		
-		return new GetResult<ModelSectionDto>("success", "section retrieved", sectionDto);
-	}
-	
-	@Transactional
-	public ModelSectionDto addSubElements(ModelSectionDto sectionDto, UUID sectionId, Integer level) {
+	public ModelSectionDto addSectionSubElements(ModelSectionDto sectionDto, UUID sectionId, Integer level) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		
@@ -280,19 +355,19 @@ public class ModelService {
 				List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapper.getId());
 				
 				for (ModelSection inSection : inSections) {
-					cardWrapperDto.getInSections().add(inSection.toDtoLight());
+					cardWrapperDto.getInSections().add(inSection.toDto());
 				}
 				
 				sectionDto.getCardsWrappers().add(cardWrapperDto);
 			}
 			
 			for (ModelSection subsection : section.getSubsections()) {
-				sectionDto.getSubsections().add(addSubElements(subsection.toDtoLight(), subsection.getId(), level - 1));
+				sectionDto.getSubsections().add(addSectionSubElements(subsection.toDto(), subsection.getId(), level - 1));
 			}
 		} else {
 			sectionDto.setSubElementsLoaded(false);
 			for (ModelSection subsection : section.getSubsections()) {
-				sectionDto.getSubsections().add(subsection.toDtoLight());
+				sectionDto.getSubsections().add(subsection.toDto());
 			}
 		}
 		
@@ -326,9 +401,9 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult createCardWrapper(ModelCardDto cardDto, UUID creatorId) {
+	public PostResult createCardWrapper(ModelCardDto cardDto, UUID sectionId, UUID creatorId) {
 		
-		ModelSection section = modelSectionRepository.findById(UUID.fromString(cardDto.getSectionId()));
+		ModelSection section = modelSectionRepository.findById(sectionId);
 		if (section == null) return new PostResult("error", "view not found", "");
 		
 		ModelCard card = cardDto.toEntity(null, cardDto);
@@ -405,7 +480,7 @@ public class ModelService {
 		ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
 		
 		for (ModelSection section : inSections) {
-			cardWrapperDto.getInSections().add(section.toDtoLight());
+			cardWrapperDto.getInSections().add(section.toDto());
 		}
 		
 		return new GetResult<ModelCardWrapperDto>("success", "card retrieved", cardWrapperDto);

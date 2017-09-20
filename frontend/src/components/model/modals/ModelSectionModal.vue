@@ -16,57 +16,98 @@
           <app-model-modal-buttons
             v-if="isLoggedAnEditor"
             :show="showEditButtons"
-            deleteMessage="This will delete the section from all the views in which it is used. Its cards will not be deleted."
             @edit="startEditing()"
-            @delete="deleteSection()">
+            @delete="deleteSection()"
+            deleteMessage="This will delete the section from all the views in which it is used."
+            @remove="removeSection()"
+            :removeMessage="'This will remove this subsection from this section.'">
           </app-model-modal-buttons>
 
           <div v-if="isNew" class="w3-row">
             <div v-if="!editedSection.isSubsection" class="">
-              <label class=""><b>View:</b></label>
+              <label class=""><b>In View:</b></label>
               <br>
-              <h4>{{ this.editedSection.viewTitle }}</h4>
+              <h4>{{ this.inView.viewTitle }}</h4>
             </div>
             <div v-else class="">
               <label class=""><b>Parent Section:</b></label>
               <br>
-              <h4>{{ this.editedSection.parentSectionTitle }}</h4>
+              <h4>{{ this.inSection.sectionTitle }}</h4>
             </div>
           </div>
 
-          <div class="w3-row w3-margin-top">
-            <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
-            <div v-if="!editing" class="w3-padding light-grey">
-              {{ section.title }}
+          <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
+            <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
+              :class="{'border-blue': !addExisting}"
+              @click="addExisting = false">
+              <h5 class="noselect" :class="{'bold-text': !addExisting}">Create New</h5>
             </div>
-            <div v-else class="">
-              <input type="text" class="w3-input w3-hover-light-grey" v-model="editedSection.title">
-              <app-error-panel
-                :show="titleEmptyShow"
-                message="please add a title">
-              </app-error-panel>
-              <app-error-panel
-                :show="titleTooLongShow"
-                message="name too long">
-              </app-error-panel>
+            <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
+              :class="{'border-blue': addExisting}"
+              @click="addExisting = true">
+              <h5 class="noselect" :class="{'bold-text': addExisting}">Add Existing</h5>
             </div>
           </div>
 
-          <div class="w3-row w3-margin-top">
-            <label class=""><b>Description: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
-            <div v-if="!editing" class="w3-padding light-grey">
-              {{ section.description }}
-            </div>
-            <div v-else class="">
-              <textarea type="text" class="w3-input w3-border w3-round w3-hover-light-grey" v-model="editedSection.description"></textarea>
-              <app-error-panel
-                :show="descriptionErrorShow"
-                message="please include a description of this section">
-              </app-error-panel>
-            </div>
+          <div class="slider-container">
+            <transition name="slideLeftRight">
+              <div v-if="addExisting" class="">
+                <app-model-section-selector
+                  :initiativeId="initiativeId"
+                  @select="sectionSelected($event)">
+                </app-model-section-selector>
+                <app-error-panel
+                  :show="noSectionSelectedShow"
+                  message="please select one section from above">
+                </app-error-panel>
+              </div>
+            </transition>
           </div>
 
-          <div v-if="editing" class="modal-bottom-btns-row w3-row-padding">
+          <div :class="{'slider-container': animatingTab}">
+            <transition name="slideRightLeft"
+              @before-enter="animatingTab = true"
+              @after-enter="animatingTab = false"
+              @before-leave="animatingTab = true"
+              @after-leave="animatingTab = false">
+
+              <div v-if="!addExisting">
+                <div class="w3-row w3-margin-top">
+                  <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+                  <div v-if="!editing" class="w3-padding light-grey">
+                    {{ section.title }}
+                  </div>
+                  <div v-else class="">
+                    <input type="text" class="w3-input w3-hover-light-grey" v-model="editedSection.title">
+                    <app-error-panel
+                      :show="titleEmptyShow"
+                      message="please add a title">
+                    </app-error-panel>
+                    <app-error-panel
+                      :show="titleTooLongShow"
+                      message="name too long">
+                    </app-error-panel>
+                  </div>
+                </div>
+
+                <div class="w3-row w3-margin-top">
+                  <label class=""><b>Description: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+                  <div v-if="!editing" class="w3-padding light-grey">
+                    {{ section.description }}
+                  </div>
+                  <div v-else class="">
+                    <textarea type="text" class="w3-input w3-border w3-round w3-hover-light-grey" v-model="editedSection.description"></textarea>
+                    <app-error-panel
+                      :show="descriptionErrorShow"
+                      message="please include a description of this section">
+                    </app-error-panel>
+                  </div>
+                </div>
+              </div>
+            </transition>
+          </div>
+
+          <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
             <hr>
             <div class="w3-col m6">
               <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
@@ -85,11 +126,13 @@
 
 <script>
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
+import ModelSectionSelector from '@/components/model/ModelSectionSelector.vue'
 
 export default {
 
   components: {
-    'app-model-modal-buttons': ModelModalButtons
+    'app-model-modal-buttons': ModelModalButtons,
+    'app-model-section-selector': ModelSectionSelector
   },
 
   props: {
@@ -102,6 +145,7 @@ export default {
   data () {
     return {
       section: {
+        if: '',
         title: '',
         description: ''
       },
@@ -112,7 +156,12 @@ export default {
       showEditButtons: false,
       titleEmptyError: false,
       descriptionEmptyError: false,
-      test: 'tests'
+      addExisting: false,
+      existingSection: null,
+      noSectionSelectedError: false,
+      animatingTab: false,
+      inSection: {},
+      inView: {}
     }
   },
 
@@ -140,18 +189,28 @@ export default {
     },
     descriptionErrorShow () {
       return this.descriptionEmptyError && this.descriptionEmpty
+    },
+    noSectionSelected () {
+      return this.existingSection === null
+    },
+    noSectionSelectedShow () {
+      return this.noSectionSelectedError && this.noSectionSelected
     }
   },
 
   methods: {
     updateSectionData () {
-      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
+      .then((response) => {
         this.section = response.data.data
       })
     },
     startEditing () {
       this.editedSection = JSON.parse(JSON.stringify(this.section))
       this.editing = true
+    },
+    sectionSelected (section) {
+      this.existingSection = section
     },
     closeThis () {
       this.$emit('close')
@@ -166,24 +225,30 @@ export default {
     accept () {
       var ok = true
 
-      if (this.titleEmpty) {
-        ok = false
-        this.titleEmptyError = true
-      } else {
-        if (this.titleTooLong) {
+      if (!this.addExisting) {
+        if (this.titleEmpty) {
           ok = false
+          this.titleEmptyError = true
+        } else {
+          if (this.titleTooLong) {
+            ok = false
+          }
         }
-      }
 
-      if (this.descriptionEmpty) {
-        ok = false
-        this.descriptionEmptyError = true
+        if (this.descriptionEmpty) {
+          ok = false
+          this.descriptionEmptyError = true
+        }
+      } else {
+        if (this.noSectionSelected) {
+          ok = false
+          this.noSectionSelectedError = true
+        }
       }
 
       if (ok) {
         var sectionDto = JSON.parse(JSON.stringify(this.editedSection))
-        var baseurl = '/1/initiative/' + this.initiativeId + '/model/section'
-        var returnF = (response) => {
+        var responseF = (response) => {
           if (response.data.result === 'success') {
             this.closeThis()
             this.$store.commit('triggerUpdateModel')
@@ -193,18 +258,41 @@ export default {
         }
 
         if (this.isNew) {
-          this.axios.post(baseurl, sectionDto).then(returnF).catch((error) => {
-            console.log(error)
-          })
+          var place = ''
+          var inElementId = ''
+          if (this.pars.isSubsection) {
+            place = 'section'
+            inElementId = this.inSection.sectionId
+          } else {
+            place = 'view'
+            inElementId = this.inView.viewId
+          }
+
+          if (!this.addExisting) {
+            /* create new section */
+            this.axios.post('/1/initiative/' + this.initiativeId + '/model/' + place + '/' + inElementId + '/subsection', sectionDto)
+            .then(responseF).catch((error) => {
+              console.log(error)
+            })
+          } else {
+            /* add existing section */
+            this.axios.put('/1/initiative/' + this.initiativeId + '/model/' + place + '/' + inElementId + '/subsection/' + this.existingSection.id, {})
+            .then(responseF).catch((error) => {
+              console.log(error)
+            })
+          }
         } else {
-          this.axios.put(baseurl + '/' + sectionDto.id, sectionDto).then(returnF).catch((error) => {
+          /* edit existing section */
+          this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + sectionDto.id, sectionDto)
+          .then(responseF).catch((error) => {
             console.log(error)
           })
         }
       }
     },
     deleteSection () {
-      this.axios.delete('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id).then((response) => {
+      this.axios.delete('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
+      .then((response) => {
         this.closeThis()
         this.$store.commit('triggerUpdateModel')
       }).catch((error) => {
@@ -220,17 +308,16 @@ export default {
       this.isNew = true
 
       this.editedSection = {
-        isSubsection: this.pars.isSubsection,
         title: '',
         description: ''
       }
 
       if (!this.pars.isSubsection) {
-        this.editedSection.viewId = this.pars.viewId
-        this.editedSection.viewTitle = this.pars.viewTitle
+        this.inView.viewId = this.pars.viewId
+        this.inView.viewTitle = this.pars.viewTitle
       } else {
-        this.editedSection.parentSectionId = this.pars.parentSectionId
-        this.editedSection.parentSectionTitle = this.pars.parentSectionTitle
+        this.inSection.sectionId = this.pars.parentSectionId
+        this.inSection.sectionTitle = this.pars.parentSectionTitle
       }
 
       this.editing = true
