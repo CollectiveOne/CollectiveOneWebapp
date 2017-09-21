@@ -12,9 +12,9 @@
         </header>
         <div class="w3-container section-content">
           <div class="w3-row">
-            {{ initiative.meta.driver }}
+            <vue-markdown class="marked-text" :source="initiative.meta.driver"></vue-markdown>
           </div>
-          <hr>
+          <hr v-if="initiative.meta.tags.length > 0">
           <div class="w3-row w3-margin-top">
             <app-initiative-tag
               v-for="tag in initiative.meta.tags"
@@ -92,8 +92,8 @@ export default {
 }
 
 .section-content {
-  padding-top: 25px;
-  padding-bottom: 15px;
+  padding-top: 6px;
+  padding-bottom: 0px;
 }
 
 .edit-btn-div {

@@ -10,9 +10,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -27,6 +29,9 @@ public class ModelSection {
 		parameters = { @Parameter( name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
+	
+	@ManyToOne
+	private Initiative initiative;
 	
 	@Column(name = "title", length = 30)
 	private String title;
@@ -87,6 +92,14 @@ public class ModelSection {
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public Initiative getInitiative() {
+		return initiative;
+	}
+
+	public void setInitiative(Initiative initiative) {
+		this.initiative = initiative;
 	}
 
 	public String getTitle() {

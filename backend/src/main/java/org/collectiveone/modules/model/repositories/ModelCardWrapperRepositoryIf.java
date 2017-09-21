@@ -17,6 +17,8 @@ public interface ModelCardWrapperRepositoryIf extends CrudRepository<ModelCardWr
 	@Query("SELECT section from ModelSection section JOIN section.cardsWrappers crds WHERE crds.id = ?1")
 	public List<ModelSection> findParentSections(UUID modelCardWrapperId);
 	
-	@Query("SELECT crdWrp from ModelCardWrapper crdWrp JOIN crdWrp.card crd WHERE LOWER(crd.title) LIKE ?1 OR LOWER(crd.text) LIKE ?1")
-	public Page<ModelCardWrapper> searchBy(String query, Pageable page);
+	@Query("SELECT crdWrp from ModelCardWrapper crdWrp JOIN crdWrp.card crd "
+			+ "WHERE (LOWER(crd.title) LIKE ?1 OR LOWER(crd.text) LIKE ?1) "
+			+ "AND crdWrp.initiative.id IN ?2")
+	public Page<ModelCardWrapper> searchBy(String query, List<UUID> initiativeIds, Pageable page);
 }

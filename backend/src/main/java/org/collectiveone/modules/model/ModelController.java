@@ -85,9 +85,10 @@ public class ModelController extends BaseController {
 		return modelService.getView(UUID.fromString(viewIdStr), getLoggedUserId(), level);
 	}
 	
-	@RequestMapping(path = "/initiative/{initiativeId}/model/view", method = RequestMethod.PUT) 
+	@RequestMapping(path = "/initiative/{initiativeId}/model/view/{viewId}", method = RequestMethod.PUT) 
 	public PostResult editView(
 			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("viewId") String viewIdStr,
 			@RequestBody ModelViewDto viewDto) {
 		
 		if (getLoggedUser() == null) {
@@ -100,7 +101,7 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.editView(initiativeId, viewDto, getLoggedUser().getC1Id());
+		return modelService.editView(initiativeId, UUID.fromString(viewIdStr), viewDto, getLoggedUser().getC1Id());
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/view/{viewId}", method = RequestMethod.DELETE) 

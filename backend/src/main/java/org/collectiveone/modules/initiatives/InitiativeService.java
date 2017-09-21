@@ -414,6 +414,7 @@ public class InitiativeService {
 	
 	@Transactional
 	public List<Initiative> onlySuperInitiatives(List<Initiative> allInitiatives) {
+		/* filters an initiative list to keep only those that are superinitiaitves (with no parent)*/
 		List<Initiative> superInitiatives = new ArrayList<Initiative>();
 		
 		for (Initiative thisInitiative : allInitiatives) {
@@ -436,9 +437,10 @@ public class InitiativeService {
 	
 	@Transactional
 	public Initiative getSuperInitiative(UUID initiativeId) {
+		/* get the farthest parent initiative */
 		List<Initiative> parents = getParentInitiatives(initiativeId);
 		if(parents.size() > 0) {
-			/* last element in the parents array is the farther relative */
+			/* last element in the parents array is the farthest relative */
 			return parents.get(parents.size() - 1);
 		} else {
 			return initiativeRepository.findById(initiativeId);
@@ -467,6 +469,32 @@ public class InitiativeService {
 		}
 		
 		return parentsDtos;
+	}
+	
+	@Transactional 
+	public List<UUID> findAllInitiativeEcosystemIds(UUID initiativeId) {
+		Initiative superInitiative = getSuperInitiative(initiativeId);
+		List<InitiativeDto> subinitiativesTree = getSubinitiativesTree(superInitiative.getId(), null);
+		
+		List<UUID> ecosystemIds = new ArrayList<UUID>();
+		
+		ecosystemIds.add(superInitiative.getId());
+		ecosystemIds.addAll(extractAllIdsFromInitiativesTree(subinitiativesTree, new ArrayList<UUID>()));
+		
+		return ecosystemIds;
+	}
+	
+	private List<UUID> extractAllIdsFromInitiativesTree(List<InitiativeDto> initiativeTree, List<UUID> list) {
+		
+		for (InitiativeDto initiativeDto : initiativeTree) {
+			list.add(UUID.fromString(initiativeDto.getId()));
+		}
+		
+		for (InitiativeDto initiativeDto : initiativeTree) {
+			extractAllIdsFromInitiativesTree(initiativeDto.getSubInitiatives(), list);
+		}
+		
+		return list;
 	}
 	
 	@Transactional

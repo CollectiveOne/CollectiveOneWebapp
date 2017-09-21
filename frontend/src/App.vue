@@ -64,6 +64,22 @@ export default {
 
 <style>
 
+@import '~simplemde/dist/simplemde.min.css';
+
+.CodeMirror, .CodeMirror-scroll {
+	min-height: 100px;
+  resize: vertical;
+}
+
+.marked-text a {
+  text-decoration: underline !important;
+}
+
+.marked-text p {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
 #app html,body,h1,h2,h3,h4,h5 {
   font-family: 'Raleway', sans-serif;
 }

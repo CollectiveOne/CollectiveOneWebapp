@@ -32,7 +32,7 @@
 
           <div class="w3-row">
             <label class=""><b>Purpose</b></label>
-            <textarea v-model="newInitiative.meta.driver" rows="5" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
+            <app-markdown-editor v-model="newInitiative.meta.driver"></app-markdown-editor>
             <app-error-panel
               :show="driverEmptyShow"
               message="please set a purpose for the initiative">

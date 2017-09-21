@@ -1,25 +1,24 @@
 <template lang="html">
-  <div v-if="view" class="model-view-container">
+  <div v-if="view" class="model-view-container w3-display-container">
     <div class="view-title"
       @mouseover="showActionButton = true"
       @mouseleave="showActionButton = false">
 
       <transition name="fadeenter">
-        <div v-if="showActionButton" class="w3-col w3-right buttons-container gray-1-color" style="width:100px">
+        <div v-if="showActionButton" class="w3-display-topright buttons-container gray-1-color" style="width:100px">
           <div @click="expandViewModal()" class="w3-button model-action-button w3-right">
             <i class="fa fa-expand" aria-hidden="true"></i>
-          </div>
-          <div
-            v-if="isLoggedAnEditor"
-            @click="newSection()"
-            class="w3-button model-action-button w3-right">
-            <i class="fa fa-plus-circle" aria-hidden="true"></i>
           </div>
         </div>
       </transition>
 
       <div class="w3-rest">
-        <h1 class="">{{ view.title }}</h1>
+        <div class="w3-row">
+          <h1 class="">{{ view.title }}</h1>
+        </div>
+        <div class="w3-row w3-padding light-grey">
+          <vue-markdown class="marked-text" :source="view.description"></vue-markdown>
+        </div>
       </div>
     </div>
 

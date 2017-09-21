@@ -35,7 +35,7 @@
         </div>
 
         <div class="w3-row gray-1-border section-description w3-small">
-          {{ section.description }}
+          <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
         </div>
 
         <div v-if="!floating" class="w3-row w3-small also-in-row">

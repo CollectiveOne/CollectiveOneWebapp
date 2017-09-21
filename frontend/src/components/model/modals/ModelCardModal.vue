@@ -95,11 +95,11 @@
 
                 <div class="w3-row w3-margin-top">
                   <div v-if="!editing" class="w3-padding light-grey">
-                    {{ card.text }}
+                    <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
                   </div>
                   <div v-else class="">
                     <label class=""><b>Text: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
-                    <textarea type="text" class="w3-input w3-border w3-round w3-hover-light-grey" v-model="editedCard.text"></textarea>
+                    <app-markdown-editor v-model="editedCard.text"></app-markdown-editor>
                     <app-error-panel
                       :show="textErrorShow"
                       message="please include the text of this card">

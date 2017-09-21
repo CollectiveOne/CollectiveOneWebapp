@@ -43,10 +43,10 @@
             <label class=""><b>Description: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
             <div class="">
               <div v-if="!editing" class="w3-padding light-grey">
-                {{ view.description }}
+                <vue-markdown class="marked-text" :source="view.description"></vue-markdown>
               </div>
               <div v-else class="">
-                <textarea type="text" class="w3-input w3-border w3-round w3-hover-light-grey" v-model="editedView.description"></textarea>
+                <app-markdown-editor v-model="editedView.description"></app-markdown-editor>
                 <app-error-panel
                   :show="descriptionErrorShow"
                   message="please include a description of this section">

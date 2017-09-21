@@ -192,6 +192,10 @@ export default {
   },
 
   created () {
+    if (this.$route.matched.length === 3) {
+      /* no subsection selected */
+      this.$router.push({ name: 'InitiativeOverview', params: { initiativeId: this.$route.params.initiativeId } })
+    }
     this.updateInitiative()
   }
 }

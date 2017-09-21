@@ -73,11 +73,11 @@
 
               <div v-if="!addExisting">
                 <div class="w3-row w3-margin-top">
-                  <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
                   <div v-if="!editing" class="w3-padding light-grey">
-                    {{ section.title }}
+                    <h4><b>{{ section.title }}</b></h4>
                   </div>
                   <div v-else class="">
+                    <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
                     <input type="text" class="w3-input w3-hover-light-grey" v-model="editedSection.title">
                     <app-error-panel
                       :show="titleEmptyShow"
@@ -91,12 +91,12 @@
                 </div>
 
                 <div class="w3-row w3-margin-top">
-                  <label class=""><b>Description: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
                   <div v-if="!editing" class="w3-padding light-grey">
-                    {{ section.description }}
+                    <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
                   </div>
                   <div v-else class="">
-                    <textarea type="text" class="w3-input w3-border w3-round w3-hover-light-grey" v-model="editedSection.description"></textarea>
+                    <label class=""><b>Description: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+                    <app-markdown-editor v-model="editedSection.description"></app-markdown-editor>
                     <app-error-panel
                       :show="descriptionErrorShow"
                       message="please include a description of this section">

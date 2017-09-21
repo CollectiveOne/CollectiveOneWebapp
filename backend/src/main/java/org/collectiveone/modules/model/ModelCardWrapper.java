@@ -12,10 +12,12 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.hibernate.annotations.GenericGenerator;
@@ -30,6 +32,9 @@ public class ModelCardWrapper {
 		parameters = { @Parameter( name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
+	
+	@ManyToOne
+	private Initiative initiative;
 	
 	@Column(name = "state_control")
 	private Boolean stateControl;
@@ -93,6 +98,14 @@ public class ModelCardWrapper {
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+	
+	public Initiative getInitiative() {
+		return initiative;
+	}
+
+	public void setInitiative(Initiative initiative) {
+		this.initiative = initiative;
 	}
 
 	public ModelCard getCard() {

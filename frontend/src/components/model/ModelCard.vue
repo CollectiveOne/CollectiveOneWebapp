@@ -35,7 +35,7 @@
         </div>
 
         <div class="card-text">
-          <p>{{ card.text }}</p>
+          <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
         </div>
 
       </div>

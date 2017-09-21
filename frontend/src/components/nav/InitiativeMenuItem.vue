@@ -15,11 +15,15 @@
           <i class="fa fa-circle" aria-hidden="true" :style="{'color': color}"></i>
         </div>
       </div>
-      <div class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize" @click="initiativeClicked()">
-        <div class="w3-left name-link noselect">
-          {{ initiative.meta.name }}
-        </div>
+      <div class=""  @click="$emit('initiative-selected')">
+        <router-link :to="{ name: 'Initiative', params: {'initiativeId': initiative.id } }"
+          class="w3-col name-col" :class="nameSpaceClass" :style="nameColFontSize">
+          <div class="w3-left name-link noselect">
+            {{ initiative.meta.name }}
+          </div>
+        </router-link>
       </div>
+
       <div v-if="isLoggedAnAdmin()" class="w3-col s2 w3-button" @click="newSubInitiative()">
         <i class="fa fa-plus gray-2-color" aria-hidden="true"></i>
       </div>
@@ -121,10 +125,6 @@ export default {
   },
 
   methods: {
-    initiativeClicked () {
-      this.$emit('initiative-selected')
-      this.$router.push({name: 'Initiative', params: {'initiativeId': this.initiative.id}})
-    },
     newSubInitiative () {
       this.$store.commit('showNewSubInitiativeModal', {
         show: true,

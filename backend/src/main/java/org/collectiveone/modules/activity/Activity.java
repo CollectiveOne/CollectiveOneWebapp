@@ -11,6 +11,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -23,6 +24,7 @@ import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table( name = "activity" )
@@ -57,9 +59,11 @@ public class Activity {
 	@OneToMany
 	private List<InitiativeTransfer> initiativeTransfers = new ArrayList<InitiativeTransfer>();
 	
-	@Column(name = "old_name")
+	@Column(name = "old_name", length = 30)
 	private String oldName;
 	
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")
 	@Column(name = "old_driver")
 	private String oldDriver;
 	

@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
@@ -27,6 +28,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ModelService {
+	
+	@Autowired 
+	private InitiativeService initiativeService;
 	
 	@Autowired
 	private InitiativeRepositoryIf initiativeRepository;
@@ -95,12 +99,12 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult editView (UUID initiativeId, ModelViewDto viewDto, UUID creatorId) {
+	public PostResult editView (UUID initiativeId, UUID viewId, ModelViewDto viewDto, UUID creatorId) {
 		
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		if (initiative == null) return new PostResult("error", "initiative not found", "");
 		
-		ModelView view = modelViewRepository.findById(UUID.fromString(viewDto.getId()));
+		ModelView view = modelViewRepository.findById(viewId);
 		
 		view = viewDto.toEntity(view, viewDto, initiative);
 		view = modelViewRepository.save(view);
@@ -140,6 +144,8 @@ public class ModelService {
 			if (parent == null) return new PostResult("error", "parent section not found", "");
 			
 			parent.getSubsections().add(section);
+			section.setInitiative(parent.getInitiative());
+			
 			modelSectionRepository.save(parent);
 			
 		} else {
@@ -147,6 +153,8 @@ public class ModelService {
 			if (view == null) return new PostResult("error", "view not found", "");
 			
 			view.getSections().add(section);
+			section.setInitiative(view.getInitiative());
+			
 			modelViewRepository.save(view);
 		}
 		
@@ -183,7 +191,9 @@ public class ModelService {
 	
 	@Transactional
 	public GetResult<Page<ModelSectionDto>> searchSection(String query, PageRequest page, UUID initiativeId) {
-		Page<ModelSection> enititiesPage = modelSectionRepository.searchBy("%"+query.toLowerCase()+"%", page);
+		
+		List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(initiativeId);
+		Page<ModelSection> enititiesPage = modelSectionRepository.searchBy("%"+query.toLowerCase()+"%", initiativeEcosystemIds, page);
 		
 		List<ModelSectionDto> sectionDtos = new ArrayList<ModelSectionDto>();
 		
@@ -229,7 +239,10 @@ public class ModelService {
 			ModelSection beforeSection = modelSectionRepository.findById(beforeViewSectionId);
 			int index = view.getSections().indexOf(beforeSection);
 			view.getSections().add(index, section);
+			section.setInitiative(view.getInitiative());
+			
 			modelViewRepository.save(view);
+			modelSectionRepository.save(section);
 			
 		} else {
 			/* if toSectionId is not null, then moving section from view to section */
@@ -242,7 +255,10 @@ public class ModelService {
 			} else {
 				toSection.getSubsections().add(section);
 			}
-			toSection = modelSectionRepository.save(toSection);		
+			section.setInitiative(toSection.getInitiative());
+			
+			modelSectionRepository.save(toSection);
+			modelSectionRepository.save(section);
 		}
 		
 		return new PostResult("success", "section moved", section.getId().toString());
@@ -274,7 +290,10 @@ public class ModelService {
 			} else {
 				toSection.getSubsections().add(subSection);
 			}
-			toSection = modelSectionRepository.save(toSection);
+			subSection.setInitiative(toSection.getInitiative());
+			
+			modelSectionRepository.save(toSection);
+			modelSectionRepository.save(subSection);
 			
 		} else {
 			/* moving as section of a view  */
@@ -287,7 +306,10 @@ public class ModelService {
 			} else {
 				toView.getSections().add(subSection);
 			}
-			toView = modelViewRepository.save(toView);
+			subSection.setInitiative(toView.getInitiative());
+			
+			modelViewRepository.save(toView);
+			modelSectionRepository.save(subSection);
 		}
 		
 		return new PostResult("success", "subsection moved", subSection.getId().toString());
@@ -412,6 +434,7 @@ public class ModelService {
 		ModelCardWrapper cardWrapper = new ModelCardWrapper();
 		cardWrapper.setCard(card);
 		cardWrapper.setOtherProperties(cardDto);
+		cardWrapper.setInitiative(section.getInitiative());
 		
 		cardWrapper = modelCardWrapperRepository.save(cardWrapper);
 		
@@ -463,11 +486,15 @@ public class ModelService {
 			ModelCardWrapper beforeCardWrapper = modelCardWrapperRepository.findById(beforeCardWrapperId);
 			int index = toSection.getCardsWrappers().indexOf(beforeCardWrapper);
 			toSection.getCardsWrappers().add(index, cardWrapper);
+			
 		} else {
 			toSection.getCardsWrappers().add(cardWrapper);
 		}
 		
+		cardWrapper.setInitiative(toSection.getInitiative());
+		
 		modelSectionRepository.save(toSection);
+		modelCardWrapperRepository.save(cardWrapper);
 		
 		return new PostResult("success", "card moved", cardWrapper.getId().toString());
 	}
@@ -488,7 +515,8 @@ public class ModelService {
 	
 	@Transactional
 	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(String query, PageRequest page, UUID initiativeId) {
-		Page<ModelCardWrapper> enititiesPage = modelCardWrapperRepository.searchBy("%"+query.toLowerCase()+"%", page);
+		List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(initiativeId);
+		Page<ModelCardWrapper> enititiesPage = modelCardWrapperRepository.searchBy("%"+query.toLowerCase()+"%", initiativeEcosystemIds, page);
 		
 		List<ModelCardWrapperDto> cardsDtos = new ArrayList<ModelCardWrapperDto>();
 		
