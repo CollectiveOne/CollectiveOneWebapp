@@ -46,6 +46,7 @@ const actions = {
             context.dispatch('refreshInitiative')
             context.dispatch('refreshTransfers')
             context.commit('triggerUpdateAssets')
+            context.commit('triggerUpdateModel')
           }
         }, 10000)
       }
