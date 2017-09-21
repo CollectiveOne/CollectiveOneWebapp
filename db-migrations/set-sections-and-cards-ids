@@ -1,7 +1,7 @@
-﻿UPDATE model_cards_wrapper AS crdWrp SET initiative_id = 'ac119496-5e3e-1db5-815e-3f192a890001' 
+﻿UPDATE model_cards_wrapper AS crdWrp SET initiative_id = 'ac11534a-5d60-1195-815d-60c9b3450002' 
 WHERE crdWrp.id IN (
 	SELECT cards_wrappers_id FROM model_sections_cards_wrappers 
 	AS sec_crds WHERE sec_crds.model_section_id IN (
-		SELECT id FROM model_sections AS secs WHERE secs.initiative_id = 'ac119496-5e3e-1db5-815e-3f192a890001'
+		SELECT id FROM model_sections AS secs WHERE secs.initiative_id = 'ac11534a-5d60-1195-815d-60c9b3450002'
 	)
 );

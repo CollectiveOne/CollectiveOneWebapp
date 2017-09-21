@@ -290,6 +290,21 @@ export default {
         }
       }
     },
+    removeSection () {
+      var responseF = (response) => {
+        if (response.data.result === 'success') {
+          this.closeThis()
+          this.$store.commit('triggerUpdateModel')
+        } else {
+          this.showOutputMessage(response.data.message)
+        }
+      }
+
+      this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSection.sectionId + '/removeSubsection/' + this.section.id,
+        {}).then(responseF).catch((error) => {
+          console.log(error)
+        })
+    },
     deleteSection () {
       this.axios.delete('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
       .then((response) => {
@@ -304,20 +319,19 @@ export default {
   mounted () {
     this.initiativeId = this.pars.initiativeId
 
+    if (!this.pars.isSubsection) {
+      this.inView.viewId = this.pars.viewId
+      this.inView.viewTitle = this.pars.viewTitle
+    } else {
+      this.inSection.sectionId = this.pars.parentSectionId
+      this.inSection.sectionTitle = this.pars.parentSectionTitle
+    }
+
     if (this.pars.new) {
       this.isNew = true
-
       this.editedSection = {
         title: '',
         description: ''
-      }
-
-      if (!this.pars.isSubsection) {
-        this.inView.viewId = this.pars.viewId
-        this.inView.viewTitle = this.pars.viewTitle
-      } else {
-        this.inSection.sectionId = this.pars.parentSectionId
-        this.inSection.sectionTitle = this.pars.parentSectionTitle
       }
 
       this.editing = true

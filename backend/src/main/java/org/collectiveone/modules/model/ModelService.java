@@ -218,6 +218,18 @@ public class ModelService {
 	}
 	
 	@Transactional
+	public PostResult removeSubsectionFromSection (UUID sectionId, UUID subsectionId) {
+		
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelSection subsection = modelSectionRepository.findById(subsectionId);
+		
+		section.getSubsections().remove(subsection);
+		section = modelSectionRepository.save(section);
+		
+		return new PostResult("success", "subsection removed to section", section.getId().toString());
+	}
+	
+	@Transactional
 	public PostResult moveSection(UUID fromViewId, UUID sectionId, UUID beforeViewSectionId, UUID toSectionId, UUID beforeSubsectionId) {
 		/* move a section within a view (it must be one of the top level sections of the view) */
 		

@@ -380,6 +380,8 @@ export default {
     },
     expandSectionModal () {
       this.$emit('show-section-modal', {
+        isSubsection: true,
+        parentSectionId: this.parentSectionId,
         new: false,
         sectionId: this.section.id,
         initiativeId: this.initiativeId
