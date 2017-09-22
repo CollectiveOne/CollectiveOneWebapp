@@ -18,7 +18,7 @@
 
         <div v-if="floating" class="w3-row">
           <div class="w3-left">
-            found in:
+            <i>in:</i>
           </div>
           <div v-for="parentSection in section.inSections" class="in-tag-container w3-left">
             <router-link :to="{ name: 'ModelSection', params: { sectionId: parentSection.id } }"
