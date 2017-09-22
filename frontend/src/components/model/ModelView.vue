@@ -62,8 +62,9 @@
         <app-model-section
           :preloaded="false"
           :sectionId="section.id"
-          :viewId="view.id"
-          :sectionInit="section"
+          :inView="true"
+          :inElementId="view.id"
+          :inElementTitle="view.title"
           :initiativeId="initiativeId"
           :level="0"
           dragType="MOVE_SECTION">

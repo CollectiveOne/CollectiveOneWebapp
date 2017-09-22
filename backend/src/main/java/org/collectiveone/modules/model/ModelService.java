@@ -218,7 +218,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult removeSubsectionFromSection (UUID sectionId, UUID subsectionId) {
+	public PostResult removeSubsectionFromSection(UUID sectionId, UUID subsectionId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		ModelSection subsection = modelSectionRepository.findById(subsectionId);
@@ -227,6 +227,18 @@ public class ModelService {
 		section = modelSectionRepository.save(section);
 		
 		return new PostResult("success", "subsection removed to section", section.getId().toString());
+	}
+	
+	@Transactional
+	public PostResult removeSubsectionFromView(UUID viewId, UUID sectionId) {
+		
+		ModelView view = modelViewRepository.findById(viewId);
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		
+		view.getSections().remove(section);
+		view = modelViewRepository.save(view);
+		
+		return new PostResult("success", "section removed to view", view.getId().toString());
 	}
 	
 	@Transactional

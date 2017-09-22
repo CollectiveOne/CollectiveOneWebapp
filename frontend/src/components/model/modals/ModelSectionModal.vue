@@ -20,7 +20,7 @@
             @delete="deleteSection()"
             deleteMessage="This will delete the section from all the views in which it is used."
             @remove="removeSection()"
-            :removeMessage="'This will remove this subsection from this section.'">
+            :removeMessage="'This will remove this subsection from ' + inElementTitle + '.'">
           </app-model-modal-buttons>
 
           <div v-if="isNew" class="w3-row">
@@ -307,16 +307,22 @@ export default {
         }
       }
 
-      this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/removeSubsection/' + this.section.id,
-        {}).then(responseF).catch((error) => {
-          console.log(error)
-        })
-
-      // TODO: add remove section from view
+      if (this.inView) {
+        this.axios.put('/1/initiative/' + this.initiativeId + '/model/view/' + this.inElementId + '/removeSection/' + this.section.id,
+          {}).then(responseF).catch((error) => {
+            console.log(error)
+          })
+      } else {
+        this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/removeSubsection/' + this.section.id,
+          {}).then(responseF).catch((error) => {
+            console.log(error)
+          })
+      }
     },
     deleteSection () {
       this.axios.delete('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
       .then((response) => {
+        debugger
         this.closeThis()
         this.$store.commit('triggerUpdateModel')
       }).catch((error) => {

@@ -217,6 +217,25 @@ public class ModelController extends BaseController {
 		return modelService.editSection(UUID.fromString(sectionIdStr), sectionDto, getLoggedUser().getC1Id());
 	}
 	
+	@RequestMapping(path = "/initiative/{initiativeId}/model/view/{viewId}/removeSection/{sectionId}", method = RequestMethod.PUT) 
+	public PostResult removeExistingSectionFromView(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("viewId") String viewIdStr,
+			@PathVariable("sectionId") String sectionIdStr) {
+	
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.removeSubsectionFromView(UUID.fromString(viewIdStr), UUID.fromString(sectionIdStr));
+	}
+	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}/removeSubsection/{subsectionId}", method = RequestMethod.PUT) 
 	public PostResult removeExistingSubsection(
 			@PathVariable("initiativeId") String initiativeIdStr,

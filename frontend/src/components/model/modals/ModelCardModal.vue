@@ -20,13 +20,14 @@
             @delete="deleteCard()"
             deleteMessage="This will delete the card from all the sections in which it is used."
             @remove="removeCard()"
-            :removeMessage="'This will remove this card from this section.'">
+            :removeMessage="'This will remove this card from the ' + inSectionTitle + ' section.'">
           </app-model-modal-buttons>
+
 
           <div v-if="isNew" class="w3-row">
             <label class=""><b>In section:</b></label>
             <br>
-            <h4>{{ this.inSection.sectionTitle }}</h4>
+            <h4>{{ this.inSectionTitle }}</h4>
           </div>
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
@@ -187,9 +188,25 @@ export default {
   },
 
   props: {
-    pars: {
-      type: Object,
-      default: null
+    isNew: {
+      type: Boolean,
+      default: false
+    },
+    initiativeId: {
+      type: String,
+      default: ''
+    },
+    cardWrapperId: {
+      type: String,
+      default: ''
+    },
+    inSectionId: {
+      type: String,
+      default: ''
+    },
+    inSectionTitle: {
+      type: String,
+      default: ''
     }
   },
 
@@ -204,13 +221,11 @@ export default {
         }
       },
       editedCard: null,
-      inSection: null,
       editing: false,
       showEditButtons: false,
       titleEmptyError: false,
       textEmptyError: false,
       targetDateStr: '',
-      isNew: false,
       addExisting: false,
       existingCard: null,
       noCardSelectedError: false,
@@ -265,7 +280,7 @@ export default {
     dateString (v) {
       return dateString(v)
     },
-    updateCardData () {
+    update () {
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.cardWrapper = response.data.data
       })
@@ -337,11 +352,11 @@ export default {
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
-            this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSection.sectionId + '/cardWrapper', cardDto).then(responseF).catch((error) => {
+            this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/cardWrapper', cardDto).then(responseF).catch((error) => {
               console.log(error)
             })
           } else {
-            this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSection.sectionId + '/cardWrapper/' + this.existingCard.id,
+            this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/cardWrapper/' + this.existingCard.id,
               {}).then(responseF).catch((error) => {
                 console.log(error)
               })
@@ -363,7 +378,7 @@ export default {
           this.showOutputMessage(response.data.message)
         }
       }
-      this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSection.sectionId + '/removeCard/' + this.cardWrapper.id,
+      this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/removeCard/' + this.cardWrapper.id,
         {}).then(responseF).catch((error) => {
           console.log(error)
         })
@@ -379,27 +394,17 @@ export default {
   },
 
   mounted () {
-    this.initiativeId = this.pars.initiativeId
-    this.inSection = {}
-
-    if (this.pars.new) {
-      this.isNew = true
-
-      this.inSection.sectionId = this.pars.sectionId
-      this.inSection.sectionTitle = this.pars.sectionTitle
-
+    if (this.isNew) {
       this.editedCard = {
         stateControl: false,
         title: '',
         text: ''
       }
-
       this.editing = true
     } else {
       this.showEditButtons = true
-      this.inSection.sectionId = this.pars.sectionId
-      this.cardWrapper.id = this.pars.cardWrapperId
-      this.updateCardData()
+      this.cardWrapper.id = this.cardWrapperId
+      this.update()
     }
   }
 }

@@ -1,6 +1,48 @@
 <template lang="html">
   <div class="">
 
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-section-modal
+          v-if="showSectionModal"
+          :isNew="false"
+          :initiativeId="initiativeId"
+          :sectionId="section.id"
+          :inView="inView"
+          :inElementId="inElementId"
+          :inElementTitle="inElementTitle"
+          @close="showSectionModal = false">
+        </app-model-section-modal>
+      </transition>
+    </div>
+
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-section-modal
+          v-if="showNewSubsectionModal"
+          :isNew="true"
+          :initiativeId="initiativeId"
+          :inView="false"
+          :inElementId="section.id"
+          :inElementTitle="section.title"
+          @close="showNewSubsectionModal = false">
+        </app-model-section-modal>
+      </transition>
+    </div>
+
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-card-modal
+          v-if="showNewCardModal"
+          :isNew="true"
+          :initiativeId="initiativeId"
+          :inSectionId="section.id"
+          :inSectionTitle="section.title"
+          @close="showNewCardModal = false">
+        </app-model-card-modal>
+      </transition>
+    </div>
+
     <div v-if="section" class="section-container w3-display-container"
       @mouseover="showActionButton = true"
       @mouseleave="showActionButton = false">
@@ -49,7 +91,7 @@
               </div>
             </div>
             <div v-for="parentView in section.inViews" class="in-tag-container w3-right">
-              <div v-if="parentView.id !== viewId" class="">
+              <div v-if="parentView.id !== inElementId" class="">
                 <router-link :to="{ name: 'ModelView', params: { viewId: parentView.id } }"
                   class="gray-1 w3-tag w3-round w3-small">
                   {{ parentView.title }}
@@ -92,7 +134,8 @@
                 <app-model-card
                   :cardWrapper="cardWrapper"
                   :initiativeId="initiativeId"
-                  :sectionId="section.id"
+                  :inSectionId="section.id"
+                  :inSectionTitle="section.title"
                   :cardEffect="cardsAsCards"
                   @show-card-modal="$emit('show-card-modal', $event)">
                 </app-model-card>
@@ -148,12 +191,12 @@
                       :preloaded="subsection.subElementsLoaded"
                       :sectionInit="subsection"
                       :sectionId="subsection.id"
-                      :parentSectionId="section.id"
                       :initiativeId="initiativeId"
+                      :inView="false"
+                      :inElementId="section.id"
+                      :inElementTitle="section.title"
                       :level="level + 1"
-                      dragType="MOVE_SUBSECTION"
-                      @show-section-modal="$emit('show-section-modal', $event)"
-                      @show-card-modal="$emit('show-card-modal', $event)">
+                      dragType="MOVE_SUBSECTION">
                     </app-model-section>
                   </div>
 
@@ -222,11 +265,15 @@
 
 <script>
 import ModelCard from '@/components/model/ModelCard.vue'
+import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
+import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 
 export default {
   name: 'app-model-section',
 
   components: {
+    'app-model-section-modal': ModelSectionModal,
+    'app-model-card-modal': ModelCardModal,
     'app-model-card': ModelCard
   },
 
@@ -247,11 +294,15 @@ export default {
       type: String,
       default: ''
     },
-    parentSectionId: {
+    inView: {
+      type: Boolean,
+      default: false
+    },
+    inElementId: {
       type: String,
       default: ''
     },
-    viewId: {
+    inElementTitle: {
       type: String,
       default: ''
     },
@@ -281,7 +332,10 @@ export default {
       showSubActionButtons: false,
       cardsAsCards: true,
       expanded: false,
-      animatingSubsections: false
+      animatingSubsections: false,
+      showSectionModal: false,
+      showNewSubsectionModal: false,
+      showNewCardModal: false
     }
   },
 
@@ -331,13 +385,13 @@ export default {
     sectionIsInOtherPlaces () {
       var ix
       for (ix in this.section.inSections) {
-        if (this.section.inSections[ix].id !== this.parentSectionId) {
+        if (this.section.inSections[ix].id !== this.inElementId) {
           return true
         }
       }
 
       for (ix in this.section.inViews) {
-        if (this.section.inViews[ix].id !== this.viewId) {
+        if (this.section.inViews[ix].id !== this.inElementId) {
           return true
         }
       }
@@ -379,30 +433,13 @@ export default {
       }
     },
     expandSectionModal () {
-      this.$emit('show-section-modal', {
-        isSubsection: true,
-        parentSectionId: this.parentSectionId,
-        new: false,
-        sectionId: this.section.id,
-        initiativeId: this.initiativeId
-      })
+      this.showSectionModal = true
     },
     newSubsection () {
-      this.$emit('show-section-modal', {
-        new: true,
-        isSubsection: true,
-        initiativeId: this.initiativeId,
-        parentSectionId: this.section.id,
-        parentSectionTitle: this.section.title
-      })
+      this.showNewSubsectionModal = true
     },
     newCard () {
-      this.$emit('show-card-modal', {
-        new: true,
-        initiativeId: this.initiativeId,
-        sectionId: this.section.id,
-        sectionTitle: this.section.title
-      })
+      this.showNewCardModal = true
     },
     cardDroped (onCardWrapperId, event) {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
@@ -426,8 +463,8 @@ export default {
       var moveSectionData = {
         type: this.dragType,
         sectionId: this.section.id,
-        fromSectionId: this.parentSectionId,
-        fromViewId: this.viewId
+        fromView: this.inView,
+        fromElementId: this.inElementId
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveSectionData))
     },
@@ -438,25 +475,17 @@ export default {
       if (dragData.type === 'MOVE_SECTION') {
         /* move section to view section */
         url = '/1/initiative/' + this.initiativeId +
-        '/model/view/' + dragData.fromViewId +
-        '/moveSection/' + dragData.sectionId
-
-        this.axios.put(url, {}, {
-          params: {
-            onSectionId: this.section.id,
-            onSubsectionId: onSubsectionId
-          }
-        }).then((response) => {
-          this.$store.commit('triggerUpdateModel')
-        })
+          '/model/view/' + dragData.inElementId +
+          '/moveSection/' + dragData.sectionId
       }
 
       if (dragData.type === 'MOVE_SUBSECTION') {
-        /* move section to view section */
         url = '/1/initiative/' + this.initiativeId +
-        '/model/section/' + dragData.fromSectionId +
-        '/moveSubsection/' + dragData.sectionId
+          '/model/section/' + dragData.inElementId +
+          '/moveSubsection/' + dragData.sectionId
+      }
 
+      if (url !== '') {
         this.axios.put(url, {}, {
           params: {
             onSectionId: this.section.id,
