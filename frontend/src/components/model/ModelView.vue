@@ -1,77 +1,112 @@
 <template lang="html">
-  <div v-if="view" class="model-view-container w3-display-container">
-    <div class="view-title"
-      @mouseover="showActionButton = true"
-      @mouseleave="showActionButton = false">
+  <div class="">
 
-      <transition name="fadeenter">
-        <div v-if="showActionButton" class="w3-display-topright buttons-container gray-1-color" style="width:100px">
-          <div @click="expandViewModal()" class="w3-button model-action-button w3-right">
-            <i class="fa fa-expand" aria-hidden="true"></i>
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-view-modal
+          v-if="showViewModal"
+          :isNew="isNew"
+          :viewId="view.id"
+          :initiativeId="initiativeId"
+          @close="showViewModal = false">
+        </app-model-view-modal>
+      </transition>
+    </div>
+
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-section-modal
+          v-if="showSectionModal"
+          :isNew="true"
+          :initiativeId="initiativeId"
+          :inView="true"
+          :inElementId="view.id"
+          :inElementTitle="view.title"
+          @close="showSectionModal = false">
+        </app-model-section-modal>
+      </transition>
+    </div>
+
+    <div v-if="view" class="model-view-container w3-display-container">
+      <div class="view-title"
+        @mouseover="showActionButton = true"
+        @mouseleave="showActionButton = false">
+
+        <transition name="fadeenter">
+          <div v-if="showActionButton" class="w3-display-topright buttons-container gray-1-color" style="width:100px">
+            <div @click="expandViewModal()" class="w3-button model-action-button w3-right">
+              <i class="fa fa-expand" aria-hidden="true"></i>
+            </div>
+          </div>
+        </transition>
+
+        <div class="w3-rest">
+          <div class="w3-row">
+            <h1 class="">{{ view.title }}</h1>
+          </div>
+          <div class="w3-row w3-padding light-grey">
+            <vue-markdown class="marked-text" :source="view.description"></vue-markdown>
           </div>
         </div>
-      </transition>
+      </div>
 
-      <div class="w3-rest">
-        <div class="w3-row">
-          <h1 class="">{{ view.title }}</h1>
+      <div v-for="section in view.sections"
+        :key="section.id"
+        class="view-sections">
+
+        <div class="section-drop-area"
+          @dragover.prevent
+          @drop="sectionDroped(section.id, $event)">
         </div>
-        <div class="w3-row w3-padding light-grey">
-          <vue-markdown class="marked-text" :source="view.description"></vue-markdown>
+
+        <app-model-section
+          :preloaded="false"
+          :sectionId="section.id"
+          :viewId="view.id"
+          :sectionInit="section"
+          :initiativeId="initiativeId"
+          :level="0"
+          dragType="MOVE_SECTION">
+        </app-model-section>
+      </div>
+
+      <div class="view-sections">
+        <div class="section-drop-area"
+          @dragover.prevent
+          @drop="sectionDroped('', $event)">
         </div>
+
+        <button class="w3-button w3-border gray-1-color" style="width: 100%; text-align: left"
+          @click="newSection()">
+          <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
+          add section
+        </button>
       </div>
-    </div>
-
-    <div v-for="section in view.sections"
-      :key="section.id"
-      class="view-sections">
-
-      <div class="section-drop-area"
-        @dragover.prevent
-        @drop="sectionDroped(section.id, $event)">
-      </div>
-
-      <app-model-section
-        :preloaded="false"
-        :sectionId="section.id"
-        :viewId="view.id"
-        :sectionInit="section"
-        :initiativeId="initiativeId"
-        :level="0"
-        dragType="MOVE_SECTION"
-        @show-section-modal="$emit('show-section-modal', $event)"
-        @show-card-modal="$emit('show-card-modal', $event)">
-      </app-model-section>
-    </div>
-
-    <div class="view-sections">
-      <div class="section-drop-area"
-        @dragover.prevent
-        @drop="sectionDroped('', $event)">
-      </div>
-
-      <button class="w3-button w3-border gray-1-color" style="width: 100%; text-align: left"
-        @click="newSection()">
-        <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-        add section
-      </button>
     </div>
   </div>
 </template>
 
 <script>
 import ModelSection from '@/components/model/ModelSection.vue'
+import ModelViewModal from '@/components/model/modals/ModelViewModal.vue'
+import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
+
 export default {
   name: 'app-model-view',
 
   components: {
+    'app-model-view-modal': ModelViewModal,
+    'app-model-section-modal': ModelSectionModal,
     'app-model-section': ModelSection
   },
 
   data () {
     return {
       view: null,
-      showActionButton: false
+      showActionButton: false,
+      showViewModal: false,
+      showSectionModal: false,
+      isNew: false
     }
   },
 
@@ -109,20 +144,11 @@ export default {
       })
     },
     expandViewModal () {
-      this.$emit('show-view-modal', {
-        new: false,
-        viewId: this.view.id,
-        initiativeId: this.view.initiativeId
-      })
+      this.isNew = false
+      this.showViewModal = true
     },
     newSection () {
-      this.$emit('show-section-modal', {
-        new: true,
-        initiativeId: this.view.initiativeId,
-        isSubsection: false,
-        viewId: this.view.id,
-        viewTitle: this.view.title
-      })
+      this.showSectionModal = true
     },
     sectionDroped (onSectionId, event) {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))

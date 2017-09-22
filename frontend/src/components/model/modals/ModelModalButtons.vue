@@ -7,7 +7,9 @@
             @click="$emit('edit')">
             <i class="fa fa-pencil" aria-hidden="true"></i> edit
           </button>
-          <button class="w3-right w3-button app-button app-margin-left"
+          <button
+            v-if="!hideRemove"
+            class="w3-right w3-button app-button app-margin-left"
             @click="removeIntent = true">
             <i class="fa fa-times" aria-hidden="true"></i> remove
           </button>
@@ -76,6 +78,10 @@ export default {
     removeMessage: {
       type: String,
       default: ''
+    },
+    hideRemove: {
+      type: Boolean,
+      default: false
     }
   },
 

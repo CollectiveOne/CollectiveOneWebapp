@@ -26,6 +26,7 @@ import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.Member;
+import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
@@ -373,6 +374,21 @@ public class ActivityService {
 		activity.setType(ActivityType.INITIATIVE_DELETED);
 		activity.setTriggerUser(triggerUser);
 		activity.setInitiative(initiative);
+		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelViewCreated(ModelView view, AppUser triggerUser) {
+		Activity activity = new Activity();
+		
+		activity.setType(ActivityType.MODEL_VIEW_CREATED);
+		activity.setTriggerUser(triggerUser);
+		activity.setInitiative(view.getInitiative());
+		activity.setModelView(view);
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity = activityRepository.save(activity);

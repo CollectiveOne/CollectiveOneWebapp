@@ -21,6 +21,7 @@ import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.users.AppUser;
@@ -72,11 +73,14 @@ public class Activity {
 	@OneToOne
 	private TokenMint mint;
 	
-	@OneToOne
+	@ManyToOne
 	private Assignation assignation;
 	
 	@OneToOne
 	private InitiativeTransfer initiativeTransfer;
+	
+	@ManyToOne
+	private ModelView modelView;
 	
 	
 	/* Dto */
@@ -202,4 +206,13 @@ public class Activity {
 		this.initiativeTransfer = initiativeTransfer;
 	}
 
+	public ModelView getModelView() {
+		return modelView;
+	}
+
+	public void setModelView(ModelView modelView) {
+		this.modelView = modelView;
+	}
+	
+	
 }

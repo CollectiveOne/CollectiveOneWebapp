@@ -24,16 +24,10 @@
           </app-model-modal-buttons>
 
           <div v-if="isNew" class="w3-row">
-            <div v-if="!editedSection.isSubsection" class="">
-              <label class=""><b>In View:</b></label>
-              <br>
-              <h4>{{ this.inView.viewTitle }}</h4>
-            </div>
-            <div v-else class="">
-              <label class=""><b>Parent Section:</b></label>
-              <br>
-              <h4>{{ this.inSection.sectionTitle }}</h4>
-            </div>
+            <label v-if="inView" class=""><b>In View:</b></label>
+            <label v-else class=""><b>In View:</b></label>
+            <br>
+            <h4>{{ this.inElementTitle }}</h4>
           </div>
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
@@ -136,9 +130,29 @@ export default {
   },
 
   props: {
-    pars: {
-      type: Object,
-      default: null
+    isNew: {
+      type: Boolean,
+      default: false
+    },
+    initiativeId: {
+      type: String,
+      default: ''
+    },
+    sectionId: {
+      type: String,
+      default: ''
+    },
+    inView: {
+      type: Boolean,
+      default: true
+    },
+    inElementId: {
+      type: String,
+      default: ''
+    },
+    inElementTitle: {
+      type: String,
+      default: ''
     }
   },
 
@@ -149,8 +163,6 @@ export default {
         title: '',
         description: ''
       },
-      initiativeId: '',
-      isNew: false,
       editedSection: null,
       editing: false,
       showEditButtons: false,
@@ -159,9 +171,7 @@ export default {
       addExisting: false,
       existingSection: null,
       noSectionSelectedError: false,
-      animatingTab: false,
-      inSection: {},
-      inView: {}
+      animatingTab: false
     }
   },
 
@@ -199,7 +209,7 @@ export default {
   },
 
   methods: {
-    updateSectionData () {
+    update () {
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
       .then((response) => {
         this.section = response.data.data
@@ -259,24 +269,21 @@ export default {
 
         if (this.isNew) {
           var place = ''
-          var inElementId = ''
-          if (this.pars.isSubsection) {
-            place = 'section'
-            inElementId = this.inSection.sectionId
-          } else {
+          if (this.inView) {
             place = 'view'
-            inElementId = this.inView.viewId
+          } else {
+            place = 'section'
           }
 
           if (!this.addExisting) {
             /* create new section */
-            this.axios.post('/1/initiative/' + this.initiativeId + '/model/' + place + '/' + inElementId + '/subsection', sectionDto)
+            this.axios.post('/1/initiative/' + this.initiativeId + '/model/' + place + '/' + this.inElementId + '/subsection', sectionDto)
             .then(responseF).catch((error) => {
               console.log(error)
             })
           } else {
             /* add existing section */
-            this.axios.put('/1/initiative/' + this.initiativeId + '/model/' + place + '/' + inElementId + '/subsection/' + this.existingSection.id, {})
+            this.axios.put('/1/initiative/' + this.initiativeId + '/model/' + place + '/' + this.inElementId + '/subsection/' + this.existingSection.id, {})
             .then(responseF).catch((error) => {
               console.log(error)
             })
@@ -300,10 +307,12 @@ export default {
         }
       }
 
-      this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSection.sectionId + '/removeSubsection/' + this.section.id,
+      this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/removeSubsection/' + this.section.id,
         {}).then(responseF).catch((error) => {
           console.log(error)
         })
+
+      // TODO: add remove section from view
     },
     deleteSection () {
       this.axios.delete('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
@@ -317,28 +326,16 @@ export default {
   },
 
   mounted () {
-    this.initiativeId = this.pars.initiativeId
-
-    if (!this.pars.isSubsection) {
-      this.inView.viewId = this.pars.viewId
-      this.inView.viewTitle = this.pars.viewTitle
-    } else {
-      this.inSection.sectionId = this.pars.parentSectionId
-      this.inSection.sectionTitle = this.pars.parentSectionTitle
-    }
-
-    if (this.pars.new) {
-      this.isNew = true
+    if (this.isNew) {
       this.editedSection = {
         title: '',
         description: ''
       }
-
       this.editing = true
     } else {
       this.showEditButtons = true
-      this.section.id = this.pars.sectionId
-      this.updateSectionData()
+      this.section.id = this.sectionId
+      this.update()
     }
   }
 }

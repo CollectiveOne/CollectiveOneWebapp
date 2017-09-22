@@ -18,6 +18,7 @@
             <app-model-modal-buttons
               v-if="isLoggedAnEditor"
               :show="showEditButtons"
+              :hideRemove="true"
               deleteMessage="This will delete the view. Its sections and cards will not be deleted."
               @edit="startEditing()"
               @delete="deleteView()">
@@ -82,9 +83,17 @@ export default {
   },
 
   props: {
-    pars: {
-      type: Object,
-      default: null
+    isNew: {
+      type: Boolean,
+      defaul: false
+    },
+    viewId: {
+      type: String,
+      default: ''
+    },
+    initiativeId: {
+      type: String,
+      default: ''
     }
   },
 
@@ -98,8 +107,7 @@ export default {
       editing: false,
       showEditButtons: false,
       titleEmptyError: false,
-      descriptionEmptyError: false,
-      isNew: false
+      descriptionEmptyError: false
     }
   },
 
@@ -131,8 +139,8 @@ export default {
   },
 
   methods: {
-    updateViewData () {
-      this.axios.get('/1/initiative/' + this.view.initiativeId + '/model/view/' + this.view.id).then((response) => {
+    update () {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/model/view/' + this.view.id).then((response) => {
         this.view = response.data.data
       })
     },
@@ -169,7 +177,6 @@ export default {
 
       if (ok) {
         var viewDto = JSON.parse(JSON.stringify(this.editedView))
-        var baseurl = '/1/initiative/' + viewDto.initiativeId + '/model/view'
         var returnF = (response) => {
           if (response.data.result === 'success') {
             if (this.isNew) {
@@ -177,7 +184,7 @@ export default {
               this.$store.dispatch('refreshModelViews', { router: null, redirect: false })
               this.$router.push({ name: 'ModelView', params: { viewId: response.data.elementId } })
             } else {
-              this.updateViewData()
+              this.update()
             }
             this.editing = false
           } else {
@@ -186,18 +193,18 @@ export default {
         }
 
         if (this.isNew) {
-          this.axios.post(baseurl, viewDto).then(returnF).catch((error) => {
+          this.axios.post('/1/initiative/' + this.initiativeId + '/model/view', viewDto).then(returnF).catch((error) => {
             console.log(error)
           })
         } else {
-          this.axios.put(baseurl + '/' + viewDto.id, viewDto).then(returnF).catch((error) => {
+          this.axios.put('/1/initiative/' + this.initiativeId + '/model/view/' + this.viewId, viewDto).then(returnF).catch((error) => {
             console.log(error)
           })
         }
       }
     },
     deleteView () {
-      this.axios.delete('/1/initiative/' + this.view.initiativeId + '/model/view/' + this.view.id).then((response) => {
+      this.axios.delete('/1/initiative/' + this.initiativeId + '/model/view/' + this.view.id).then((response) => {
         this.closeThis()
         this.$store.dispatch('refreshModelViews', { router: this.$router, redirect: true })
       }).catch((error) => {
@@ -207,20 +214,16 @@ export default {
   },
 
   mounted () {
-    if (this.pars.new) {
-      this.isNew = true
+    if (this.isNew) {
       this.editedView = {
-        initiativeId: this.pars.initiativeId,
         title: '',
         description: ''
       }
       this.editing = true
     } else {
-      this.isNew = false
       this.showEditButtons = true
-      this.view.id = this.pars.viewId
-      this.view.initiativeId = this.pars.initiativeId
-      this.updateViewData()
+      this.view.id = this.viewId
+      this.update()
     }
   }
 }
