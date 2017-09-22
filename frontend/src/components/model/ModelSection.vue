@@ -545,6 +545,8 @@ export default {
 
 .cards-container {
   padding: 20px 10px 16px 10px;
+  max-height: 500px;
+  overflow: auto;
 }
 
 .section-card-col {

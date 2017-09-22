@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.collectiveone.modules.activity.enums.ActivityType;
+import org.collectiveone.modules.activity.enums.NotificationEmailState;
+import org.collectiveone.modules.activity.repositories.NotificationRepositoryIf;
 import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.assignations.Evaluator;
 import org.collectiveone.modules.assignations.Receiver;

@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.ActivityService;
-import org.collectiveone.modules.activity.SubscriptionElementType;
+import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.governance.DecisionMaker;
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.governance.Governance;

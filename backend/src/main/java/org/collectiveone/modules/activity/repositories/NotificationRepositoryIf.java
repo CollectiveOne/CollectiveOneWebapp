@@ -1,8 +1,12 @@
-package org.collectiveone.modules.activity;
+package org.collectiveone.modules.activity.repositories;
 
 import java.util.List;
 import java.util.UUID;
 
+import org.collectiveone.modules.activity.Notification;
+import org.collectiveone.modules.activity.enums.NotificationEmailState;
+import org.collectiveone.modules.activity.enums.NotificationState;
+import org.collectiveone.modules.activity.enums.SubscriberEmailNotificationsState;
 import org.springframework.data.repository.CrudRepository;
 
 public interface NotificationRepositoryIf extends CrudRepository<Notification, UUID> {

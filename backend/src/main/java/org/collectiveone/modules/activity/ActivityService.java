@@ -11,6 +11,17 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.dto.NotificationDto;
+import org.collectiveone.modules.activity.dto.SubscriberDto;
+import org.collectiveone.modules.activity.enums.ActivityType;
+import org.collectiveone.modules.activity.enums.NotificationEmailState;
+import org.collectiveone.modules.activity.enums.NotificationState;
+import org.collectiveone.modules.activity.enums.SubscriberEmailNotificationsState;
+import org.collectiveone.modules.activity.enums.SubscriberState;
+import org.collectiveone.modules.activity.enums.SubscriptionElementType;
+import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
+import org.collectiveone.modules.activity.repositories.NotificationRepositoryIf;
+import org.collectiveone.modules.activity.repositories.SubscriberRepositoryIf;
 import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;

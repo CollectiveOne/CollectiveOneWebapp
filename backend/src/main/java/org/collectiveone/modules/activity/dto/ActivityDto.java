@@ -1,4 +1,4 @@
-package org.collectiveone.modules.activity;
+package org.collectiveone.modules.activity.dto;
 
 import org.collectiveone.modules.assignations.AssignationDto;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
