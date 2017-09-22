@@ -27,7 +27,19 @@
         </div>
       </div>
 
-      <div class="w3-row"
+      <div v-if="floating" class="">
+        <div class="top-row light-grey">
+          <i>in:</i>
+          <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container">
+            <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
+              class="gray-1 w3-tag w3-round w3-small">
+              {{ inSection.title }}
+            </router-link>
+          </div>
+        </div>
+      </div>
+
+      <div class="w3-row card-container"
         :class="{'card-container-padded': cardEffect, 'card-container-slim': !cardEffect }">
 
         <div v-if="card.title !== ''" class="">
@@ -41,14 +53,16 @@
       </div>
 
       <div v-if="cardEffect" class="w3-row">
-        <div v-if="cardWrapper.inSections.length > 1" class="bottom-row light-grey">
-          <i>also in:</i>
-          <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container">
-            <div v-if="inSection.id !== sectionId" class="">
-              <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
-                class="gray-1 w3-tag w3-round w3-small">
-                {{ inSection.title }}
-              </router-link>
+        <div v-if="!floating" class="">
+          <div v-if="cardWrapper.inSections.length > 1" class="bottom-row light-grey">
+            <i>also in:</i>
+            <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container">
+              <div v-if="inSection.id !== sectionId" class="">
+                <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
+                  class="gray-1 w3-tag w3-round w3-small">
+                  {{ inSection.title }}
+                </router-link>
+              </div>
             </div>
           </div>
         </div>
@@ -96,6 +110,10 @@ export default {
       default: true
     },
     hoverHighlight: {
+      type: Boolean,
+      default: false
+    },
+    floating: {
       type: Boolean,
       default: false
     }
@@ -181,12 +199,21 @@ export default {
 
 <style scoped>
 
+.card-container {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
 .card-container-padded {
   padding: 8px 16px 10px 16px !important;
 }
 
 .card-container-slim {
   padding: 0px 0px 0px 0px !important;
+}
+
+.top-row {
+  padding: 6px 3px 6px 3px;
 }
 
 .card-text p {

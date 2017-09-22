@@ -17,6 +17,7 @@ import TransfersSection from '@/components/initiative/TransfersSection.vue'
 import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
 import ModelViewPlacer from '@/components/model/ModelViewPlacer.vue'
 import ModelSectionPlacer from '@/components/model/ModelSectionPlacer.vue'
+import ModelSearch from '@/components/model/ModelSearch.vue'
 
 import UserProfilePage from '@/components/UserProfilePage.vue'
 
@@ -73,7 +74,8 @@ export default new Router({
                   meta: {'column': 4},
                   children: [
                     { path: 'view/:viewId', name: 'ModelView', component: ModelViewPlacer },
-                    { path: 'section/:sectionId', name: 'ModelSection', component: ModelSectionPlacer }
+                    { path: 'section/:sectionId', name: 'ModelSection', component: ModelSectionPlacer },
+                    { path: 'search', name: 'ModelSearch', component: ModelSearch }
                   ]
                 }
               ]

@@ -33,27 +33,40 @@
   </div>
 
   <div class="w3-container">
-    <div v-if="views" class="w3-row w3-margin-top">
-      <div class="view-selector w3-left app-margin-right app-margin-bottom" v-for="view in views">
-        <router-link
-          :to="{ name: 'ModelView', params: { viewId: view.id } }"
-          class="w3-button w3-right"
-          :class="{'app-button-light': !isViewSelected(view.id), 'app-button': isViewSelected(view.id)}">
-          {{ view.title }}
-        </router-link>
+    <div class="w3-row w3-margin-top">
+      <div v-if="views" class="view-selector">
+        <div class="w3-left app-margin-right app-margin-bottom" v-for="view in views">
+          <router-link
+            :to="{ name: 'ModelView', params: { viewId: view.id } }"
+            class="w3-button w3-right"
+            :class="{'app-button-light': !isViewSelected(view.id), 'app-button': isViewSelected(view.id)}">
+            {{ view.title }}
+          </router-link>
+        </div>
+        <div v-if="isLoggedAnEditor" @click="newView()" class="new-view-button w3-large w3-button w3-left app-button-color">
+          <i class="fa fa-plus-circle" aria-hidden="true"></i>
+        </div>
       </div>
-      <div v-if="isLoggedAnEditor" @click="newView()" class="new-view-button w3-large w3-button w3-left app-button-color">
-        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+      <div class="w3-right">
+        <router-link
+          :to="{ name: 'ModelSearch' }"
+          tag="button"
+          class="w3-button"
+          :class="{'app-button-light': !isSearch, 'app-button': isSearch}"
+          type="button" name="button">search</router-link>
       </div>
     </div>
-    <div class="w3-row w3-margin-top router-container">
-      <transition name="fadeenter">
-        <router-view
-          @show-view-modal="showViewModalFun($event)"
-          @show-section-modal="showSectionModalFun($event)"
-          @show-card-modal="showCardModalFun($event)">
-        </router-view>
-      </transition>
+
+    <div class="">
+      <div class="w3-row w3-margin-top router-container">
+        <transition name="fadeenter">
+          <router-view
+            @show-view-modal="showViewModalFun($event)"
+            @show-section-modal="showSectionModalFun($event)"
+            @show-card-modal="showCardModalFun($event)">
+          </router-view>
+        </transition>
+      </div>
     </div>
   </div>
 </div>
@@ -98,6 +111,12 @@ export default {
     },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
+    },
+    searching () {
+      return this.query !== ''
+    },
+    isSearch () {
+      return this.$route.name === 'ModelSearch'
     }
   },
 
