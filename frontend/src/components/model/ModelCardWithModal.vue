@@ -6,19 +6,17 @@ needs the model card component inside, and would crate a recursion -->
 
     <div class="slider-container">
       <transition name="slideDownUp">
-        <div v-if="showCardModal" class="">
-          <app-model-card-modal
-            :isNew="false"
-            :initiativeId="initiativeId"
-            :cardWrapperId="cardWrapper.id"
-            :inSectionId="inSectionId"
-            :inSectionTitle="inSectionTitle"
-            @close="showCardModal = false">
-          </app-model-card-modal>
-        </div>
+        <app-model-card-modal v-if="showCardModal" 
+          :isNew="false"
+          :initiativeId="initiativeId"
+          :cardWrapperId="cardWrapper.id"
+          :inSectionId="inSectionId"
+          :inSectionTitle="inSectionTitle"
+          @close="showCardModal = false">
+        </app-model-card-modal>
       </transition>
     </div>
-    
+
     <div class="w3-display-container"
       @mouseover="hoverEnter()"
       @mouseleave="hoverLeave()">

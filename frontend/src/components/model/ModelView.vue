@@ -59,7 +59,7 @@
           @drop="sectionDroped(section.id, $event)">
         </div>
 
-        <app-model-section
+        <app-model-section-with-modal
           :preloaded="false"
           :sectionId="section.id"
           :inView="true"
@@ -68,7 +68,7 @@
           :initiativeId="initiativeId"
           :level="0"
           dragType="MOVE_SECTION">
-        </app-model-section>
+        </app-model-section-with-modal>
       </div>
 
       <div class="view-sections">
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import ModelSection from '@/components/model/ModelSection.vue'
+import ModelSectionWithModal from '@/components/model/ModelSectionWithModal.vue'
 import ModelViewModal from '@/components/model/modals/ModelViewModal.vue'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 
@@ -98,7 +98,7 @@ export default {
   components: {
     'app-model-view-modal': ModelViewModal,
     'app-model-section-modal': ModelSectionModal,
-    'app-model-section': ModelSection
+    'app-model-section-with-modal': ModelSectionWithModal
   },
 
   data () {

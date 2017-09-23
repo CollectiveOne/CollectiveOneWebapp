@@ -9,11 +9,13 @@
           v-for="section in sections"
           :key="section.id"
           @click="sectionClicked(section)">
-          <app-model-section
-            :sectionInit="section"
-            :preloaded="true"
-            :asListItem="true">
-          </app-model-section>
+
+          <app-model-section-header
+            :section="section"
+            :level="0"
+            :floating="true">
+          </app-model-section-header>
+
         </div>
         <div v-if="sections.length == 0" class="w3-center">
           <i>no sections found</i>
@@ -35,12 +37,12 @@
 </template>
 
 <script>
-import ModelSection from '@/components/model/ModelSection.vue'
+import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
 
 export default {
 
   components: {
-    'app-model-section': ModelSection
+    'app-model-section-header': ModelSectionHeader
   },
 
   props: {
