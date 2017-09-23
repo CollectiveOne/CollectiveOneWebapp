@@ -131,14 +131,13 @@
                 @dragover.prevent
                 @drop="cardDroped(cardWrapper.id, $event)">
 
-                <app-model-card
+                <app-model-card-with-modal
                   :cardWrapper="cardWrapper"
                   :initiativeId="initiativeId"
                   :inSectionId="section.id"
                   :inSectionTitle="section.title"
-                  :cardEffect="cardsAsCards"
-                  @show-card-modal="$emit('show-card-modal', $event)">
-                </app-model-card>
+                  :cardEffect="cardsAsCards">
+                </app-model-card-with-modal>
               </div>
               <div :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
                 @dragover.prevent
@@ -264,7 +263,7 @@
 </template>
 
 <script>
-import ModelCard from '@/components/model/ModelCard.vue'
+import ModelCardWithModal from '@/components/model/ModelCardWithModal.vue'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 
@@ -274,7 +273,7 @@ export default {
   components: {
     'app-model-section-modal': ModelSectionModal,
     'app-model-card-modal': ModelCardModal,
-    'app-model-card': ModelCard
+    'app-model-card-with-modal': ModelCardWithModal
   },
 
   props: {
@@ -610,7 +609,6 @@ export default {
   }
 }
 
-
 .section-card-par {
   margin-bottom: 16px;
 }
@@ -626,7 +624,7 @@ export default {
 }
 
 .show-sections-button {
-  width: 180px;
+  width: 100%;
 }
 
 .subsections-container {

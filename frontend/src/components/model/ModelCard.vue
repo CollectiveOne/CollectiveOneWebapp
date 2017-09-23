@@ -1,111 +1,77 @@
 <template lang="html">
+  <div v-if="cardWrapper" class=""
+    draggable="true"
+    @dragstart="dragStart($event)">
+    <!-- TODO: cannot configure a clearn dragenter dragleave sequence. They
+    are continuosly called even when dragging over.
+    @dragover.prevent
+    @dragenter.prevent="dragEnter($event)"
+    @dragleave.prevent="dragLeave()"
+    @drop="dragDrop()"> -->
 
-  <div class="">
+    <div :class="{ 'w3-card-2': cardEffect, 'highlight': highlight }">
 
-    <div class="slider-container">
-      <transition name="slideDownUp">
-        <app-model-card-modal
-          v-if="showCardModal"
-          :isNew="false"
-          :initiativeId="initiativeId"
-          :cardWrapperId="cardWrapper.id"
-          :inSectionId="inSectionId"
-          :inSectionTitle="inSectionTitle"
-          @close="showCardModal = false">
-        </app-model-card-modal>
-      </transition>
-    </div>
-
-    <div v-if="cardWrapper" class=""
-      draggable="true"
-      @dragstart="dragStart($event)">
-      <!-- TODO: cannot configure a clearn dragenter dragleave sequence. They
-      are continuosly called even when dragging over.
-      @dragover.prevent
-      @dragenter.prevent="dragEnter($event)"
-      @dragleave.prevent="dragLeave()"
-      @drop="dragDrop()"> -->
-
-      <div class="w3-display-container"
-        :class="{ 'w3-card-2': cardEffect, 'highlight': highlight }"
-        @mouseover="hoverEnter()"
-        @mouseleave="hoverLeave()">
-
-        <div v-if="showDetails" class="w3-row light-grey">
-          <div class="w3-col s6">
-            <div class="w3-tag" :class="stateClass">
-              {{ cardWrapper.state }}
-            </div>
-          </div>
-          <div class="w3-col s6">
-            {{ dateString(cardWrapper.targetDate) }}
+      <div v-if="showDetails" class="w3-row light-grey">
+        <div class="w3-col s6">
+          <div class="w3-tag" :class="stateClass">
+            {{ cardWrapper.state }}
           </div>
         </div>
+        <div class="w3-col s6">
+          {{ dateString(cardWrapper.targetDate) }}
+        </div>
+      </div>
 
-        <div v-if="floating" class="">
-          <div class="top-row light-grey">
-            <i>in:</i>
+      <div v-if="floating" class="">
+        <div class="top-row light-grey">
+          <i>in:</i>
+          <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container">
+            <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
+              class="gray-1 w3-tag w3-round w3-small">
+              {{ inSection.title }}
+            </router-link>
+          </div>
+        </div>
+      </div>
+
+      <div class="w3-row card-container"
+        :class="{'card-container-padded': cardEffect, 'card-container-slim': !cardEffect }">
+
+        <div v-if="card.title !== ''" class="">
+          <b>{{ card.title }}</b>
+        </div>
+
+        <div class="card-text">
+          <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
+        </div>
+
+      </div>
+
+      <div v-if="cardEffect" class="w3-row">
+        <div v-if="!floating" class="">
+          <div v-if="cardWrapper.inSections.length > 1" class="bottom-row light-grey">
+            <i>also in:</i>
             <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container">
-              <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
-                class="gray-1 w3-tag w3-round w3-small">
-                {{ inSection.title }}
-              </router-link>
-            </div>
-          </div>
-        </div>
-
-        <div class="w3-row card-container"
-          :class="{'card-container-padded': cardEffect, 'card-container-slim': !cardEffect }">
-
-          <div v-if="card.title !== ''" class="">
-            <b>{{ card.title }}</b>
-          </div>
-
-          <div class="card-text">
-            <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
-          </div>
-
-        </div>
-
-        <div v-if="cardEffect" class="w3-row">
-          <div v-if="!floating" class="">
-            <div v-if="cardWrapper.inSections.length > 1" class="bottom-row light-grey">
-              <i>also in:</i>
-              <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container">
-                <div v-if="inSection.id !== sectionId" class="">
-                  <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
-                    class="gray-1 w3-tag w3-round w3-small">
-                    {{ inSection.title }}
-                  </router-link>
-                </div>
+              <div v-if="inSection.id !== inSectionId" class="">
+                <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
+                  class="gray-1 w3-tag w3-round w3-small">
+                  {{ inSection.title }}
+                </router-link>
               </div>
             </div>
           </div>
         </div>
-
-        <transition name="fadeenter">
-          <div v-if="showActionButton && enableExpand"
-            @click="showCardModal = true"
-            class="w3-button model-action-button gray-2-color w3-display-topright">
-            <i class="fa fa-expand" aria-hidden="true"></i>
-          </div>
-        </transition>
       </div>
-    </div>
 
+    </div>
   </div>
 </template>
 
 <script>
-import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 import { dateString } from '@/lib/common.js'
 
 export default {
   name: 'model-card',
-
-  components: {
-    'app-model-card-modal': ModelCardModal
-  },
 
   props: {
     cardWrapper: {
@@ -128,10 +94,6 @@ export default {
       type: Boolean,
       default: true
     },
-    enableExpand: {
-      type: Boolean,
-      default: true
-    },
     hoverHighlight: {
       type: Boolean,
       default: false
@@ -139,14 +101,10 @@ export default {
     floating: {
       type: Boolean,
       default: false
-    }
-  },
-
-  data () {
-    return {
-      showActionButton: false,
-      highlight: false,
-      showCardModal: false
+    },
+    highlight: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -176,16 +134,6 @@ export default {
   },
 
   methods: {
-    hoverEnter () {
-      this.showActionButton = true
-      if (this.hoverHighlight) {
-        this.highlight = true
-      }
-    },
-    hoverLeave () {
-      this.showActionButton = false
-      this.highlight = false
-    },
     dateString (v) {
       return dateString(v)
     },
@@ -193,7 +141,7 @@ export default {
       var moveCardData = {
         type: 'MOVE_CARD',
         cardWrapperId: this.cardWrapper.id,
-        fromSectionId: this.sectionId
+        fromSectionId: this.inSectionId
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
     }

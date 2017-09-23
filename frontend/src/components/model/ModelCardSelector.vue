@@ -38,6 +38,8 @@ import ModelCard from '@/components/model/ModelCard.vue'
 
 export default {
 
+  name: 'model-card-selector',
+
   components: {
     'app-model-card': ModelCard
   },

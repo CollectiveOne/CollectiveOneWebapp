@@ -43,8 +43,8 @@
             </div>
           </div>
 
-          <div class="slider-container">
-            <transition name="slideLeftRight">
+          <!-- <div class="slider-container">
+            <transition name="slideLeftRight"> -->
               <div v-if="addExisting" class="">
                 <app-model-card-selector
                   :initiativeId="initiativeId"
@@ -55,15 +55,15 @@
                   message="please select one card from above">
                 </app-error-panel>
               </div>
-            </transition>
-          </div>
+            <!-- </transition>
+          </div> -->
 
-          <div :class="{'slider-container': animatingTab}">
+          <!-- <div :class="{'slider-container': animatingTab}">
             <transition name="slideRightLeft"
               @before-enter="animatingTab = true"
               @after-enter="animatingTab = false"
               @before-leave="animatingTab = true"
-              @after-leave="animatingTab = false">
+              @after-leave="animatingTab = false"> -->
 
               <div v-if="!addExisting">
 
@@ -152,8 +152,8 @@
                   </div>
                 </div>
               </div>
-            </transition>
-          </div>
+            <!-- </transition>
+          </div> -->
 
 
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
