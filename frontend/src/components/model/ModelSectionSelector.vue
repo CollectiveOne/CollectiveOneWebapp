@@ -23,11 +23,12 @@
       </div>
     </div>
     <div v-if="sectionSelected !== null" class="w3-row w3-display-container w3-margin-top w3-container">
-      <app-model-section
-        :sectionInit="sectionSelected"
-        :preloaded="true"
-        :asListItem="true">
-      </app-model-section>
+      <app-model-section-header
+        :section="sectionSelected"
+        :level="0"
+        :floating="true">
+      </app-model-section-header>
+
       <div class="delete-selected gray-1-color w3-display-topright w3-xlarge"
         @click="sectionDeselected()">
         <i class="fa fa-times-circle cursor-pointer" aria-hidden="true"></i>

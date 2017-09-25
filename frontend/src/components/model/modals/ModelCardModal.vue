@@ -25,9 +25,9 @@
 
 
           <div v-if="isNew" class="w3-row">
-            <label class=""><b>In section:</b></label>
+            <label class=""><b>In Section:</b></label>
             <br>
-            <h4>{{ this.inSectionTitle }}</h4>
+            <h4>{{ this.inSectionTitleOk }}</h4>
           </div>
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
@@ -221,6 +221,7 @@ export default {
         }
       },
       editedCard: null,
+      inSectionTitleOk: '',
       editing: false,
       showEditButtons: false,
       titleEmptyError: false,
@@ -283,6 +284,12 @@ export default {
     update () {
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.cardWrapper = response.data.data
+      })
+    },
+    updateInSection () {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId)
+      .then((response) => {
+        this.inSectionTitleOk = response.data.data.title
       })
     },
     cardSelected (cardWrapper) {
@@ -394,6 +401,8 @@ export default {
   },
 
   mounted () {
+    this.inSectionTitleOk = this.inSectionTitle
+
     if (this.isNew) {
       this.editedCard = {
         stateControl: false,
@@ -401,6 +410,7 @@ export default {
         text: ''
       }
       this.editing = true
+      this.updateInSection()
     } else {
       this.showEditButtons = true
       this.cardWrapper.id = this.cardWrapperId

@@ -5,26 +5,23 @@
       <h1 class="">Section Page</h1>
     </div>
 
-    <app-model-section
+    <app-model-section-with-modal
       :initiativeId="$route.params.initiativeId"
       :sectionId="$route.params.sectionId"
       :key="$route.params.sectionId"
       :preloaded="false"
       :level="0"
-      :floating="true"
-      @show-view-modal="$emit('show-view-modal', $event)"
-      @show-section-modal="$emit('show-section-modal', $event)"
-      @show-card-modal="$emit('show-card-modal', $event)">
-    </app-model-section>
+      :floating="true">
+    </app-model-section-with-modal>
   </div>
 </template>
 
 <script>
-import ModelSection from '@/components/model/ModelSection.vue'
+import ModelSectionWithModal from '@/components/model/ModelSectionWithModal.vue'
 
 export default {
   components: {
-    'app-model-section': ModelSection
+    'app-model-section-with-modal': ModelSectionWithModal
   }
 }
 </script>

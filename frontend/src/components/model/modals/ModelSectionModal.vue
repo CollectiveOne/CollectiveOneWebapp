@@ -25,9 +25,9 @@
 
           <div v-if="isNew" class="w3-row">
             <label v-if="inView" class=""><b>In View:</b></label>
-            <label v-else class=""><b>In View:</b></label>
+            <label v-else class=""><b>In Section:</b></label>
             <br>
-            <h4>{{ this.inElementTitle }}</h4>
+            <h4>{{ this.inElementTitleOk }}</h4>
           </div>
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
@@ -163,6 +163,7 @@ export default {
         title: '',
         description: ''
       },
+      inElementTitleOk: '',
       editedSection: null,
       editing: false,
       showEditButtons: false,
@@ -214,6 +215,19 @@ export default {
       .then((response) => {
         this.section = response.data.data
       })
+    },
+    updateInElement () {
+      if (this.inView) {
+        this.axios.get('/1/initiative/' + this.initiativeId + '/model/view/' + this.inElementId)
+        .then((response) => {
+          this.inElementTitleOk = response.data.data.title
+        })
+      } else {
+        this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId)
+        .then((response) => {
+          this.inElementTitleOk = response.data.data.title
+        })
+      }
     },
     startEditing () {
       this.editedSection = JSON.parse(JSON.stringify(this.section))
@@ -332,12 +346,15 @@ export default {
   },
 
   mounted () {
+    this.inElementTitleOk = this.inElementTitle
+
     if (this.isNew) {
       this.editedSection = {
         title: '',
         description: ''
       }
       this.editing = true
+      this.updateInElement()
     } else {
       this.showEditButtons = true
       this.section.id = this.sectionId

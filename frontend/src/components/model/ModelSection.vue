@@ -7,7 +7,8 @@
       @dragstart="dragStart($event)"
       :section="section"
       :level="level"
-      :floating="floating">
+      :floating="floating"
+      :inElementId="inElementId">
     </app-model-section-header>
 
     <div v-if="expanded" class="w3-row expand-row">
@@ -49,7 +50,7 @@
 
               <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
                 <button class="w3-button" style="width: 100%"
-                  @click="newCard()">
+                  @click="$emit('new-card')">
                   <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
                   add card
                 </button>
@@ -83,14 +84,14 @@
               @before-leave="animatingSubsections = true"
               @after-leave="animatingSubsections = false">
 
-              <div v-if="showSubsections" class="subsections-container" :style="subsectionsContainerStyle">
+              <div v-if="showSubsections" class="subsections-container">
                 <div v-for="subsection in section.subsections"
                   :key="subsection.id"
                   class="subsection-container"
                   @dragover.prevent
                   @drop="subsectionDroped(subsection.id, $event)">
 
-                  <app-model-section
+                  <app-model-section-with-modal
                     :preloaded="subsection.subElementsLoaded"
                     :sectionInit="subsection"
                     :sectionId="subsection.id"
@@ -100,12 +101,12 @@
                     :inElementTitle="section.title"
                     :level="level + 1"
                     dragType="MOVE_SUBSECTION">
-                  </app-model-section>
+                  </app-model-section-with-modal>
                 </div>
 
                 <div class="subsection-container gray-1-color w3-border">
                   <button class="w3-button" style="width: 100%; text-align: left"
-                    @click="newSubsection()">
+                    @click="$emit('new-subsection')">
                     <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
                     add subsection
                   </button>
@@ -139,7 +140,6 @@
 
 <script>
 import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
-import ModelCardWithModal from '@/components/model/ModelCardWithModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 
 export default {
@@ -147,8 +147,7 @@ export default {
 
   components: {
     'app-model-section-header': ModelSectionHeader,
-    'app-model-card-modal': ModelCardModal,
-    'app-model-card-with-modal': ModelCardWithModal
+    'app-model-card-modal': ModelCardModal
   },
 
   props: {
@@ -219,15 +218,6 @@ export default {
         return false
       }
     },
-    subsectionsContainerStyle () {
-      var paddingLeft = this.level < 5 ? 25 * (this.level + 1) : 100
-      var marginTop = this.level < 5 ? 110 - 20 * (5 - this.level) : 10
-
-      return {
-        'padding-left': paddingLeft + 'px',
-        'margin-top': marginTop + ' px'
-      }
-    },
     showSubsectionsButtonContent () {
       var text = ''
       if (this.showSubsections) {
@@ -242,22 +232,6 @@ export default {
         }
       }
       return text
-    },
-    sectionIsInOtherPlaces () {
-      var ix
-      for (ix in this.section.inSections) {
-        if (this.section.inSections[ix].id !== this.inElementId) {
-          return true
-        }
-      }
-
-      for (ix in this.section.inViews) {
-        if (this.section.inViews[ix].id !== this.inElementId) {
-          return true
-        }
-      }
-
-      return false
     }
   },
 
@@ -434,6 +408,7 @@ export default {
 }
 
 .subsections-container {
+  padding-left: 20px;
   padding-top: 20px;
   padding-right: 10px;
 }

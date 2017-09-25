@@ -63,7 +63,9 @@ needs the model card component inside, and would crate a recursion -->
         :dragType="dragType"
         :asListItem="asListItem"
         :floating="floating"
-        :cardsAsCards="cardsAsCards">
+        :cardsAsCards="cardsAsCards"
+        @new-card="newCard()"
+        @new-subsection="newSubsection()">
       </app-model-section>
 
       <transition name="fadeenter">
@@ -107,6 +109,8 @@ import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 import ModelSection from '@/components/model/ModelSection.vue'
 
 export default {
+  name: 'model-section-with-modal',
+
   components: {
     'app-model-section-modal': ModelSectionModal,
     'app-model-card-modal': ModelCardModal,

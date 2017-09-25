@@ -9,7 +9,7 @@
     @dragleave.prevent="dragLeave()"
     @drop="dragDrop()"> -->
 
-    <div :class="{ 'w3-card-2': cardEffect, 'highlight': highlight }">
+    <div class="" :class="{ 'w3-card-2': cardEffect, 'highlight': highlight }">
 
       <div v-if="showDetails" class="w3-row light-grey">
         <div class="w3-col s6">
@@ -153,12 +153,10 @@ export default {
 <style scoped>
 
 .card-container {
-  max-height: 250px;
-  overflow-y: auto;
 }
 
 .card-container-padded {
-  padding: 8px 16px 10px 16px !important;
+  padding: 8px 0px 12px 12px !important;
 }
 
 .card-container-slim {
@@ -167,6 +165,11 @@ export default {
 
 .top-row {
   padding: 6px 3px 6px 3px;
+}
+
+.card-text {
+  max-height: 250px;
+  overflow-y: auto;
 }
 
 .card-text p {

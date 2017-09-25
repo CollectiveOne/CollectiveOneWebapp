@@ -34,7 +34,7 @@
     <div v-if="!floating" class="w3-row w3-small also-in-row">
       <div v-if="sectionIsInOtherPlaces" class="">
         <div v-for="parentSection in section.inSections" class="in-tag-container w3-right">
-          <div v-if="parentSection.id !== parentSectionId" class="">
+          <div v-if="parentSection.id !== inElementId" class="">
             <router-link :to="{ name: 'ModelSection', params: { sectionId: parentSection.id } }"
               class="gray-1 w3-tag w3-round w3-small">
               {{ parentSection.title }}
@@ -73,17 +73,37 @@ export default {
     floating: {
       type: Boolean,
       default: false
+    },
+    inElementId: {
+      type: String,
+      default: ''
     }
   },
 
   computed: {
     sectionTitleStyle () {
-      var fontsize = this.level < 5 ? 22 - 4 * this.level : 12
+      var fontsize = this.level < 4 ? 22 - 4 * this.level : 12
       if (!this.asListItem) {
         return {'font-size': fontsize + 'px'}
       } else {
         return {'font-size': '22px'}
       }
+    },
+    sectionIsInOtherPlaces () {
+      var ix
+      for (ix in this.section.inSections) {
+        if (this.section.inSections[ix].id !== this.inElementId) {
+          return true
+        }
+      }
+
+      for (ix in this.section.inViews) {
+        if (this.section.inViews[ix].id !== this.inElementId) {
+          return true
+        }
+      }
+
+      return false
     }
   }
 

@@ -34,6 +34,13 @@ Vue.component('app-error-panel', ErrorPanel)
 Vue.component('vue-markdown', VueMarkdown)
 Vue.component('app-markdown-editor', MarkdownEditor)
 
+/* registered globally to solve the circular reference */
+import ModelSectionWithModal from '@/components/model/ModelSectionWithModal.vue'
+import ModelCardWithModal from '@/components/model/ModelCardWithModal.vue'
+
+Vue.component('app-model-section-with-modal', ModelSectionWithModal)
+Vue.component('app-model-card-with-modal', ModelCardWithModal)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
