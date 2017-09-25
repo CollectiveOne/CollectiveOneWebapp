@@ -171,7 +171,7 @@ export default {
 
       if (dragData.type === 'MOVE_SUBSECTION') {
         url = '/1/initiative/' + this.initiativeId +
-        '/model/section/' + dragData.fromSectionId +
+        '/model/section/' + dragData.fromElementId +
         '/moveSubsection/' + dragData.sectionId
 
         this.axios.put(url, {}, {

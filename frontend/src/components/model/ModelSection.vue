@@ -15,14 +15,18 @@
       </transition>
     </div>
 
-    <app-model-section-header
+    <div class=""
       draggable="true"
-      @dragstart="dragStart($event)"
-      :section="section"
-      :level="level"
-      :floating="floating"
-      :inElementId="inElementId">
-    </app-model-section-header>
+      @dragstart="dragStart($event)">
+
+      <app-model-section-header
+        :section="section"
+        :level="level"
+        :floating="floating"
+        :inElementId="inElementId">
+      </app-model-section-header>
+    </div>
+
 
     <div v-if="expanded" class="w3-row expand-row">
       <button
@@ -319,13 +323,13 @@ export default {
       if (dragData.type === 'MOVE_SECTION') {
         /* move section to view section */
         url = '/1/initiative/' + this.initiativeId +
-          '/model/view/' + dragData.inElementId +
+          '/model/view/' + dragData.fromElementId +
           '/moveSection/' + dragData.sectionId
       }
 
       if (dragData.type === 'MOVE_SUBSECTION') {
         url = '/1/initiative/' + this.initiativeId +
-          '/model/section/' + dragData.inElementId +
+          '/model/section/' + dragData.fromElementId +
           '/moveSubsection/' + dragData.sectionId
       }
 
