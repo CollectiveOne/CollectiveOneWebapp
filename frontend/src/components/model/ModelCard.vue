@@ -156,7 +156,7 @@ export default {
 }
 
 .card-container-padded {
-  padding: 8px 0px 12px 12px !important;
+  padding: 8px 6px 12px 12px !important;
 }
 
 .card-container-slim {

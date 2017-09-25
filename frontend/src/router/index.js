@@ -74,7 +74,14 @@ export default new Router({
                   meta: {'column': 4},
                   children: [
                     { path: 'view/:viewId', name: 'ModelView', component: ModelViewPlacer },
-                    { path: 'section/:sectionId', name: 'ModelSection', component: ModelSectionPlacer },
+                    {
+                      path: 'section/:sectionId',
+                      name: 'ModelSection',
+                      component: ModelSectionPlacer,
+                      children: [
+                        { path: 'card/:cardId', name: 'ModelCardInSection' }
+                      ]
+                    },
                     { path: 'search', name: 'ModelSearch', component: ModelSearch }
                   ]
                 }

@@ -2,6 +2,19 @@
 
   <div v-if="section" class="section-container">
 
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-card-modal v-if="showCardModal"
+          :isNew="false"
+          :initiativeId="initiativeId"
+          :cardWrapperId="showCardId"
+          :inSectionId="section.id"
+          :inSectionTitle="section.Title"
+          @close="showCardModal = false">
+        </app-model-card-modal>
+      </transition>
+    </div>
+
     <app-model-section-header
       draggable="true"
       @dragstart="dragStart($event)"
@@ -206,7 +219,9 @@ export default {
       showSubsections: false,
       showCards: false,
       expanded: false,
-      animatingSubsections: false
+      animatingSubsections: false,
+      showCardModal: false,
+      showCardId: ''
     }
   },
 
@@ -238,6 +253,9 @@ export default {
   watch: {
     '$store.state.support.triggerUpdateModel' () {
       this.update()
+    },
+    '$route' () {
+      this.checkCardSubroute()
     }
   },
 
@@ -321,6 +339,19 @@ export default {
           this.$store.commit('triggerUpdateModel')
         })
       }
+    },
+    checkCardSubroute () {
+      var found = false
+      for (var ix in this.$route.matched) {
+        if (this.$route.matched[ix].name === 'ModelCardInSection') {
+          this.showCardId = this.$route.params.cardId
+          this.showCardModal = true
+          found = true
+        }
+      }
+      if (!found) {
+        this.showCardModal = false
+      }
     }
   },
 
@@ -334,6 +365,9 @@ export default {
       this.section = this.sectionInit
       this.checkExpands()
     }
+
+    /* check if open card modal */
+    this.checkCardSubroute()
   }
 }
 </script>

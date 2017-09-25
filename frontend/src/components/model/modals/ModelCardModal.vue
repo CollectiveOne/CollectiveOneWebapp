@@ -23,7 +23,6 @@
             :removeMessage="'This will remove this card from the ' + inSectionTitle + ' section.'">
           </app-model-modal-buttons>
 
-
           <div v-if="isNew" class="w3-row">
             <label class=""><b>In Section:</b></label>
             <br>
@@ -43,8 +42,8 @@
             </div>
           </div>
 
-          <!-- <div class="slider-container">
-            <transition name="slideLeftRight"> -->
+          <div class="slider-container">
+            <transition name="slideLeftRight">
               <div v-if="addExisting" class="">
                 <app-model-card-selector
                   :initiativeId="initiativeId"
@@ -55,21 +54,41 @@
                   message="please select one card from above">
                 </app-error-panel>
               </div>
-            <!-- </transition>
-          </div> -->
+            </transition>
+          </div>
 
-          <!-- <div :class="{'slider-container': animatingTab}">
+          <div :class="{'slider-container': animatingTab}">
             <transition name="slideRightLeft"
               @before-enter="animatingTab = true"
               @after-enter="animatingTab = false"
               @before-leave="animatingTab = true"
-              @after-leave="animatingTab = false"> -->
+              @after-leave="animatingTab = false">
 
               <div v-if="!addExisting">
 
                 <!-- <div class="w3-row w3-margin-top image-container w3-center">
                   <img src="https://i.ytimg.com/vi/QX4j_zHAlw8/maxresdefault.jpg" alt="">
                 </div> -->
+
+                <div v-if="!editing" class="">
+                  <div class="w3-row">
+                    <button @click="copyUrl()" class="w3-button app-button-light w3-left" type="button" name="button">
+                      <i class="fa fa-share" aria-hidden="true"></i> share
+                    </button>
+                    <div v-if="showUrl" class="w3-left w3-padding w3-tag light-grey w3-round-large w3-margin-left">
+                      url copied to clipboard
+                    </div>
+                  </div>
+
+                  <div class="slider-container">
+                    <transition name="slideDownUp">
+                      <div v-if="showUrl" class="w3-row">
+                        <input id="copy-url" class="w3-input "type="text" name="" :value="cardUrl" readonly>
+                      </div>
+                    </transition>
+                  </div>
+
+                </div>
 
                 <div class="w3-row w3-margin-top">
                   <div v-if="!editing" class="w3-padding light-grey">
@@ -152,8 +171,8 @@
                   </div>
                 </div>
               </div>
-            <!-- </transition>
-          </div> -->
+            </transition>
+          </div>
 
 
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
@@ -230,7 +249,8 @@ export default {
       addExisting: false,
       existingCard: null,
       noCardSelectedError: false,
-      animatingTab: false
+      animatingTab: false,
+      showUrl: false
     }
   },
 
@@ -274,10 +294,27 @@ export default {
     },
     noCardSelectedShow () {
       return this.noCardSelectedError && this.noCardSelected
+    },
+    cardUrl () {
+      return window.location.host + '/#/app/inits/' + this.initiativeId +
+      '/model/section/' + this.inSectionId +
+      '/card/' + this.cardWrapper.id
     }
   },
 
   methods: {
+    copyUrl () {
+      if (!this.showUrl) {
+        this.showUrl = true
+        this.$nextTick(() => {
+          var copyTextarea = document.querySelector('#copy-url')
+          copyTextarea.select()
+          document.execCommand('copy')
+        })
+      } else {
+        this.showUrl = false
+      }
+    },
     dateString (v) {
       return dateString(v)
     },

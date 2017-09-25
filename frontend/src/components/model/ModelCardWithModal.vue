@@ -6,7 +6,7 @@ needs the model card component inside, and would crate a recursion -->
 
     <div class="slider-container">
       <transition name="slideDownUp">
-        <app-model-card-modal v-if="showCardModal" 
+        <app-model-card-modal v-if="showCardModal"
           :isNew="false"
           :initiativeId="initiativeId"
           :cardWrapperId="cardWrapper.id"
@@ -35,7 +35,7 @@ needs the model card component inside, and would crate a recursion -->
 
       <transition name="fadeenter">
         <div v-if="showActionButton && enableExpand"
-          @click="showCardModal = true"
+          @click="showCard()"
           class="w3-button model-action-button gray-2-color w3-display-topright">
           <i class="fa fa-expand" aria-hidden="true"></i>
         </div>
@@ -70,6 +70,10 @@ export default {
       type: String,
       default: ''
     },
+    inView: {
+      type: Boolean,
+      default: false
+    },
     inSectionTitle: {
       type: String,
       default: ''
@@ -87,6 +91,10 @@ export default {
       default: false
     },
     enableExpand: {
+      type: Boolean,
+      default: true
+    },
+    expandLocally: {
       type: Boolean,
       default: true
     }
@@ -110,6 +118,31 @@ export default {
     hoverLeave () {
       this.showActionButton = false
       this.highlight = false
+    },
+    showCard () {
+      if (this.expandLocally) {
+        this.showCardModal = true
+      } else {
+        if (this.inView) {
+          this.$router.push({
+            name: 'ModelCardInView',
+            params: {
+              initiativeId: this.initiativeId,
+              viewId: this.inViewId,
+              cardId: this.cardWrapper.id
+            }
+          })
+        } else {
+          this.$router.push({
+            name: 'ModelCardInSection',
+            params: {
+              initiativeId: this.initiativeId,
+              sectionId: this.inSectionId,
+              cardId: this.cardWrapper.id
+            }
+          })
+        }
+      }
     }
   }
 }
