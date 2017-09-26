@@ -365,12 +365,19 @@ public class ModelService {
 	}
 		
 	@Transactional
-	public PostResult addCardToSection (UUID sectionId, UUID cardWrapperId) {
+	public PostResult addCardToSection (UUID sectionId, UUID cardWrapperId, UUID beforeCardWrapperId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		
-		section.getCardsWrappers().add(cardWrapper);
+		if (beforeCardWrapperId == null) {
+			section.getCardsWrappers().add(cardWrapper);
+		} else {
+			ModelCardWrapper beforeCardWrapper = modelCardWrapperRepository.findById(beforeCardWrapperId);
+			int index = section.getCardsWrappers().indexOf(beforeCardWrapper);
+			section.getCardsWrappers().add(index, cardWrapper);
+		}
+		
 		section = modelSectionRepository.save(section);
 		
 		return new PostResult("success", "card added to section", section.getId().toString());

@@ -61,7 +61,6 @@ needs the model card component inside, and would crate a recursion -->
         :inElementTitle="inElementTitle"
         :level="level"
         :dragType="dragType"
-        :asListItem="asListItem"
         :floating="floating"
         :cardsAsCards="cardsAsCards"
         @new-card="newCard()"
@@ -69,7 +68,7 @@ needs the model card component inside, and would crate a recursion -->
       </app-model-section>
 
       <transition name="fadeenter">
-        <div v-if="showActionButton && !asListItem" class="w3-display-topright action-buttons-container"
+        <div v-if="showActionButton" class="w3-display-topright action-buttons-container"
           @mouseleave="showSubActionButtons = false">
           <div
             class="w3-button model-action-button gray-1-color w3-right"
@@ -152,10 +151,6 @@ export default {
     },
     dragType: {
       type: String
-    },
-    asListItem: {
-      type: Boolean,
-      default: false
     },
     floating: {
       type: Boolean,

@@ -61,7 +61,12 @@
       </div>
     </div>
     <div v-else class="w3-row w3-center">
-      <i>no results found</i>
+      <div v-if="loading" class="loader-gif-container">
+        <img class="loader-gif" src="../../assets/loading.gif" alt="">
+      </div>
+      <div v-else class="loader-gif-container">
+        <i>no results found</i>
+      </div>
     </div>
   </div>
 </template>
@@ -76,6 +81,21 @@ export default {
     'app-model-card': ModelCard
   },
 
+  props: {
+    initType: {
+      type: String,
+      default: 'CARDS'
+    },
+    exclusive: {
+      type: Boolean,
+      default: false
+    },
+    queryInit: {
+      type: String,
+      default: ''
+    }
+  },
+
   data () {
     return {
       query: '',
@@ -83,7 +103,8 @@ export default {
       searchSections: true,
       searchCards: true,
       sections: [],
-      cardWrappers: []
+      cardWrappers: [],
+      loading: false
     }
   },
 
@@ -99,14 +120,23 @@ export default {
   methods: {
     searchCardsClicked () {
       this.searchCards = !this.searchCards
+      if (this.exclusive) {
+        this.searchSections = !this.searchSections
+      }
       this.queryUpdate()
     },
     searchSectionsClicked () {
       this.searchSections = !this.searchSections
+      if (this.exclusive) {
+        this.searchCards = !this.searchCards
+      }
       this.queryUpdate()
     },
     queryUpdate () {
+      this.$emit('query-updated', this.query)
+
       if (this.searchSections) {
+        this.loading = true
         this.axios.get('/1/initiative/' + this.initiative.id + '/model/section/search', {
           params: {
             query: this.query,
@@ -115,12 +145,14 @@ export default {
           }
         }).then((response) => {
           this.sections = response.data.data.content
+          this.loading = false
         })
       } else {
         this.sections = []
       }
 
       if (this.searchCards) {
+        this.loading = true
         this.axios.get('/1/initiative/' + this.initiative.id + '/model/cardWrapper/search', {
           params: {
             query: this.query,
@@ -129,6 +161,7 @@ export default {
           }
         }).then((response) => {
           this.cardWrappers = response.data.data.content
+          this.loading = false
         })
       } else {
         this.cardWrappers = []
@@ -137,6 +170,21 @@ export default {
   },
 
   created () {
+    if (this.exclusive) {
+      switch (this.initType) {
+        case 'CARDS':
+        default:
+          this.searchCards = true
+          this.searchSections = false
+          break
+
+        case 'SECTIONS':
+          this.searchCards = false
+          this.searchSections = true
+          break
+      }
+    }
+    this.query = this.queryInit
     this.queryUpdate()
   }
 }

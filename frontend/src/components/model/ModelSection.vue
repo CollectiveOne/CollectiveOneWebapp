@@ -46,7 +46,7 @@
 
         <div v-if="expanded" class="w3-row w3-leftbar w3-border-right subelements-container">
 
-          <div v-if="section.cardsWrappers.length > 0" class="w3-row-padding cards-container">
+          <div class="w3-row-padding cards-container">
             <div v-for="cardWrapper in section.cardsWrappers"
               :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
               :key="cardWrapper.id"
@@ -75,7 +75,7 @@
             </div>
           </div>
 
-          <div v-if="section.nSubsections > 0 && section.cardsWrappers.length > 0" class="bottom-bar light-grey w3-small">
+          <div class="bottom-bar light-grey w3-small">
             <button
               class="w3-button model-button show-sections-button"
               @click="showSubsections = !showSubsections">
@@ -203,10 +203,6 @@ export default {
     dragType: {
       type: String
     },
-    asListItem: {
-      type: Boolean,
-      default: false
-    },
     floating: {
       type: Boolean,
       default: false
@@ -231,11 +227,7 @@ export default {
 
   computed: {
     showExpandButton () {
-      if (!this.asListItem) {
-        return ((this.section.nSubsections > 0) || (this.section.nCards > 0))
-      } else {
-        return false
-      }
+      return true
     },
     showSubsectionsButtonContent () {
       var text = ''
@@ -293,18 +285,30 @@ export default {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
 
       if (dragData.type === 'MOVE_CARD') {
-        var url = '/1/initiative/' + this.initiativeId +
-        '/model/section/' + dragData.fromSectionId +
-        '/moveCard/' + dragData.cardWrapperId
-
-        this.axios.put(url, {}, {
-          params: {
-            onSectionId: this.section.id,
-            onCardWrapperId: onCardWrapperId
-          }
-        }).then((response) => {
-          this.$store.commit('triggerUpdateModel')
-        })
+        if (dragData.fromSectionId !== '') {
+          /* move from section */
+          this.axios.put('/1/initiative/' + this.initiativeId +
+            '/model/section/' + dragData.fromSectionId +
+            '/moveCard/' + dragData.cardWrapperId, {}, {
+              params: {
+                onSectionId: this.section.id,
+                onCardWrapperId: onCardWrapperId
+              }
+            }).then((response) => {
+              this.$store.commit('triggerUpdateModel')
+            })
+        } else {
+          /* add existing card */
+          this.axios.put('/1/initiative/' + this.initiativeId +
+            '/model/section/' + this.section.id +
+            '/cardWrapper/' + dragData.cardWrapperId, {}, {
+              params: {
+                beforeCardWrapperId: onCardWrapperId
+              }
+            }).then((response) => {
+              this.$store.commit('triggerUpdateModel')
+            })
+        }
       }
     },
     dragStart (event) {
@@ -396,7 +400,7 @@ export default {
 }
 
 .section-card-col {
-  margin-bottom: 22px;
+  margin-bottom: 16px;
   display: inline-block;
 }
 

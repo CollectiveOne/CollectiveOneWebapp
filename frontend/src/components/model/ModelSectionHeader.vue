@@ -83,11 +83,7 @@ export default {
   computed: {
     sectionTitleStyle () {
       var fontsize = this.level < 4 ? 22 - 4 * this.level : 12
-      if (!this.asListItem) {
-        return {'font-size': fontsize + 'px'}
-      } else {
-        return {'font-size': '22px'}
-      }
+      return {'font-size': fontsize + 'px'}
     },
     sectionIsInOtherPlaces () {
       var ix
