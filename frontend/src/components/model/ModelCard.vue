@@ -34,16 +34,25 @@
         </div>
       </div>
 
-      <div class="w3-row card-container"
-        :class="{'card-container-padded': cardEffect, 'card-container-slim': !cardEffect }">
+      <div class="w3-row card-container">
 
-        <div v-if="card.title !== ''" class="">
-          <b>{{ card.title }}</b>
+        <div class="w3-col s12">
+          <div v-if="card.imageFileUrl" class="w3-row image-container w3-center w3-display-container">
+            <img @click="showImageClick()" :src="card.imageFileUrl" alt="">
+          </div>
+
+          <div :class="{'card-container-padded': cardEffect, 'card-container-slim': !cardEffect }">
+            <div v-if="card.title !== ''" class="w3-row">
+              <b>{{ card.title }}</b>
+            </div>
+
+            <div class="w3-row card-text">
+              <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
+            </div>
+          </div>
+
         </div>
 
-        <div class="card-text">
-          <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
-        </div>
 
       </div>
 
@@ -165,6 +174,21 @@ export default {
 
 .top-row {
   padding: 6px 3px 6px 3px;
+}
+
+.image-container {
+  min-height: 80px;
+  max-height: 150px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-container img {
+  max-height: 100%;
+  max-width: 100%;
 }
 
 .card-text {

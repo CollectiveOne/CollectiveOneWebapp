@@ -1,5 +1,7 @@
 package org.collectiveone.modules.model.dto;
 
+import org.collectiveone.modules.files.FileStored;
+import org.collectiveone.modules.files.FileStoredDto;
 import org.collectiveone.modules.model.ModelCard;
 
 public class ModelCardDto {
@@ -9,16 +11,19 @@ public class ModelCardDto {
 	private String sectionId;
 	private String title;
 	private String text;
+	private String newImageFileId;
+	private FileStoredDto imageFile;
 	private Boolean stateControl;
 	private String state;
 	private Long targetDate;
 	
-	public ModelCard toEntity(ModelCard card, ModelCardDto cardDto) {
+	public ModelCard toEntity(ModelCard card, ModelCardDto cardDto, FileStored imageFile) {
 		
 		if (card == null) card = new ModelCard();
 		
 		card.setTitle(cardDto.getTitle());
 		card.setText(cardDto.getText());
+		if (imageFile != null) card.setImageFile(imageFile);
 				
 		return card;
 	}
@@ -52,6 +57,18 @@ public class ModelCardDto {
 	}
 	public void setText(String text) {
 		this.text = text;
+	}
+	public String getNewImageFileId() {
+		return newImageFileId;
+	}
+	public void setNewImageFileId(String newImageFileId) {
+		this.newImageFileId = newImageFileId;
+	}
+	public FileStoredDto getImageFile() {
+		return imageFile;
+	}
+	public void setImageFile(FileStoredDto imageFile) {
+		this.imageFile = imageFile;
 	}
 	public Boolean getStateControl() {
 		return stateControl;

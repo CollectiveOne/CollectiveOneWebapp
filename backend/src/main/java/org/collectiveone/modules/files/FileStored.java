@@ -1,5 +1,6 @@
 package org.collectiveone.modules.files;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -25,6 +27,9 @@ public class FileStored {
 	private UUID id;
 	
 	@ManyToOne
+	private Initiative initiative;
+	
+	@ManyToOne
 	private AppUser uploadedBy;
 	
 	@Column(name="bucket")
@@ -36,13 +41,39 @@ public class FileStored {
 	@Column(name="url")
 	private String url;
 	
-
+	@Column(name="last_updated")
+	private Timestamp lastUpdated;
+	
+	public FileStoredDto toDto() {
+		FileStoredDto dto = new FileStoredDto();
+		
+		dto.setId(id.toString());
+		dto.setInitiativeId(initiative.getId().toString());
+		dto.setInitiativeName(initiative.getMeta().getName());
+		dto.setKey(key);
+		dto.setBucket(bucket);
+		dto.setUrl(url);
+		dto.setUploadedById(uploadedBy.getC1Id().toString());
+		
+		if(lastUpdated != null) dto.setLastUpdated(lastUpdated.getTime());
+		
+		return dto;
+	}
+	
 	public UUID getId() {
 		return id;
 	}
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+	
+	public Initiative getInitiative() {
+		return initiative;
+	}
+
+	public void setInitiative(Initiative initiative) {
+		this.initiative = initiative;
 	}
 
 	public AppUser getUploadedBy() {
@@ -75,6 +106,14 @@ public class FileStored {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public Timestamp getLastUpdated() {
+		return lastUpdated;
+	}
+
+	public void setLastUpdated(Timestamp lastUpdated) {
+		this.lastUpdated = lastUpdated;
 	}
 	
 }

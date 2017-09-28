@@ -8,6 +8,8 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.files.FileStored;
+import org.collectiveone.modules.files.FileStoredRepositoryIf;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
@@ -46,6 +48,9 @@ public class ModelService {
 	
 	@Autowired
 	private ModelCardRepositoryIf modelCardRepository;
+	
+	@Autowired
+	private FileStoredRepositoryIf fileStoredRepository;
 	
 	
 	@Transactional
@@ -459,7 +464,10 @@ public class ModelService {
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		if (section == null) return new PostResult("error", "view not found", "");
 		
-		ModelCard card = cardDto.toEntity(null, cardDto);
+		UUID imageFileId = cardDto.getNewImageFileId().equals("") ? null : UUID.fromString(cardDto.getNewImageFileId());
+		FileStored imageFile = fileStoredRepository.findById(imageFileId);
+		
+		ModelCard card = cardDto.toEntity(null, cardDto, imageFile);
 		card = modelCardRepository.save(card);
 		
 		ModelCardWrapper cardWrapper = new ModelCardWrapper();
@@ -486,14 +494,25 @@ public class ModelService {
 		
 		cardWrapper.getOldVersions().add(cardWrapper.getCard());
 		
-		ModelCard card = cardDto.toEntity(null, cardDto);
+		
+		UUID imageFileId = cardDto.getNewImageFileId().equals("") ? null : UUID.fromString(cardDto.getNewImageFileId());
+		FileStored imageFile = fileStoredRepository.findById(imageFileId);
+		
+		ModelCard card = cardDto.toEntity(null, cardDto, imageFile);
+		
+		/* remove image has dirty solution */
+		if(cardDto.getNewImageFileId().equals("REMOVE")) {
+			card.setImageFile(null);
+		}
+		
 		card = modelCardRepository.save(card);
 		
 		cardWrapper.setCard(card);
 		cardWrapper.setOtherProperties(cardDto);
 		
-		return new PostResult("success", "section edited", cardWrapper.getId().toString());
+		return new PostResult("success", "card edited", cardWrapper.getId().toString());
 	}
+	
 	
 	@Transactional
 	public PostResult moveCardWrapper(UUID fromSectionId, UUID cardWrapperId, UUID toSectionId, UUID beforeCardWrapperId) {
@@ -542,6 +561,11 @@ public class ModelService {
 		}
 		
 		return new GetResult<ModelCardWrapperDto>("success", "card retrieved", cardWrapperDto);
+	}
+	
+	@Transactional
+	public Initiative getCardWrapperInitiative(UUID cardWrapperId) {
+		return modelCardWrapperRepository.findById(cardWrapperId).getInitiative();
 	}
 	
 	@Transactional

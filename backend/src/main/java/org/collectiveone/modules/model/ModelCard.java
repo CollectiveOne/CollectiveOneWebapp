@@ -7,8 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -33,6 +35,9 @@ public class ModelCard {
 	@Column(name = "description")
 	private String text;
 	
+	@ManyToOne
+	private FileStored imageFile;
+	
 	
 	
 	public ModelCardDto toDto() {
@@ -41,6 +46,8 @@ public class ModelCard {
 		cardDto.setId(id.toString());
 		cardDto.setTitle(title);
 		cardDto.setText(text);
+		
+		if (imageFile != null) cardDto.setImageFile(imageFile.toDto());
 		
 		return cardDto;
 	}
@@ -68,6 +75,14 @@ public class ModelCard {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public FileStored getImageFile() {
+		return imageFile;
+	}
+
+	public void setImageFile(FileStored imageFile) {
+		this.imageFile = imageFile;
 	}
 	
 }

@@ -66,18 +66,14 @@
 
               <div v-if="!addExisting">
 
-                <!-- <div class="w3-row w3-margin-top image-container w3-center">
-                  <img src="https://i.ytimg.com/vi/QX4j_zHAlw8/maxresdefault.jpg" alt="">
-                </div> -->
-
                 <div v-if="!editing" class="">
                   <div class="w3-row">
-                    <button @click="copyUrl()" class="w3-button app-button-light w3-left" type="button" name="button">
-                      <i class="fa fa-share" aria-hidden="true"></i> share
-                    </button>
-                    <div v-if="showUrl" class="w3-left w3-padding w3-tag light-grey w3-round-large w3-margin-left">
+                    <div v-if="showUrl" class="w3-right w3-padding w3-tag light-grey w3-round-large w3-margin-left">
                       url copied to clipboard
                     </div>
+                    <button @click="copyUrl()" class="w3-button app-button-light w3-right" type="button" name="button">
+                      <i class="fa fa-share" aria-hidden="true"></i> share
+                    </button>
                   </div>
 
                   <div class="slider-container">
@@ -87,7 +83,33 @@
                       </div>
                     </transition>
                   </div>
+                </div>
 
+                <div v-if="!editing" class="">
+                  <div v-if="card.imageFileUrl" class="w3-row w3-margin-top image-container w3-center w3-display-container w3-card-2 cursor-pointer">
+                    <img @click="showImageClick()" :src="card.imageFileUrl" alt="">
+                  </div>
+                </div>
+                <div v-if="editing" class="">
+                  <div class="w3-row w3-margin-top image-container w3-center w3-display-container w3-card-2">
+                    <img v-if="editedCard.imageFileUrl" @click="showImageClick()" :src="editedCard.imageFileUrl" alt="">
+                    <div class="w3-display-middle">
+                      <input class="inputfile" @change="newFileSelected($event)"
+                        type="file" name="imageFile" id="imageFile">
+                      <label for="imageFile" class="w3-button app-button">{{ card.imageFileUrl ? 'change' : 'upload image' }}</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="slider-container">
+                  <transition name="slideDownUp">
+                    <div v-if="showImage" class="image-display w3-display-container">
+                      <div class="w3-display-topright w3-xlarge cursor-pointer close-image-div" @click="showImage = false">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                      </div>
+                      <img v-if="card.imageFileUrl" :src="card.imageFileUrl" alt="">
+                    </div>
+                  </transition>
                 </div>
 
                 <div class="w3-row w3-margin-top">
@@ -250,11 +272,16 @@ export default {
       existingCard: null,
       noCardSelectedError: false,
       animatingTab: false,
-      showUrl: false
+      showUrl: false,
+      showImage: false,
+      imageUpdated: false
     }
   },
 
   computed: {
+    showSelectFile () {
+      return this.editing && this.changeImage
+    },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
     },
@@ -314,6 +341,18 @@ export default {
       } else {
         this.showUrl = false
       }
+    },
+    newFileSelected (event) {
+      /* upload image */
+      var data = new FormData()
+      data.append('file', event.target.files[0])
+
+      this.axios.post('/1/upload/cardImage/' + this.cardWrapper.id, data).then((response) => {
+        this.editedCard.imageFileId = response.data.elementId
+        return this.axios.get('/1/files/' + this.editedCard.imageFileId)
+      }).then((response) => {
+        this.editedCard.imageFileUrl = response.data.data.url + '?' + new Date().getTime()
+      })
     },
     dateString (v) {
       return dateString(v)
@@ -434,6 +473,11 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
+    },
+    showImageClick () {
+      if (!this.editing) {
+        this.showImage = true
+      }
     }
   },
 
@@ -463,15 +507,52 @@ export default {
   overflow: visible;
 }
 
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
 .image-container {
-  height: 250px;
-  width: 100%;
+  min-height: 80px;
+  max-height: 250px;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .image-container img {
   max-height: 100%;
   max-width: 100%;
+}
+
+.image-display {
+  position: fixed;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+}
+
+.image-display img {
+  float: right;
+  max-height: 100%;
+  max-width: 100%;
+  border-radius: 20px;
+}
+
+.close-image-div {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  width: 50px;
+  margin-top: -10px;
+  margin-right: -10px;
+  text-align: center;
 }
 
 .state-enable-button {

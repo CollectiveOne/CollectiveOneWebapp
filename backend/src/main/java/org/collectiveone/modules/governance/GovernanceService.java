@@ -130,17 +130,7 @@ public class GovernanceService {
 	}
 	
 	@Transactional
-	public DecisionVerdict canCreateView(UUID initiativeId, UUID creatorId) {
-		return isRolesAndEditor(initiativeId, creatorId);
-	}
-	
-	@Transactional
-	public DecisionVerdict canCreateSection(UUID initiativeId, UUID creatorId) {
-		return isRolesAndEditor(initiativeId, creatorId);
-	}
-	
-	@Transactional
-	public DecisionVerdict canCreateCard(UUID initiativeId, UUID creatorId) {
+	public DecisionVerdict canEditModel(UUID initiativeId, UUID creatorId) {
 		return isRolesAndEditor(initiativeId, creatorId);
 	}
 	

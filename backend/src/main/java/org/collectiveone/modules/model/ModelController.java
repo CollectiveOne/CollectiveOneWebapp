@@ -63,7 +63,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -97,7 +97,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -115,7 +115,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -134,7 +134,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -153,7 +153,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -172,7 +172,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -191,7 +191,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -210,7 +210,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -229,7 +229,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -248,7 +248,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -270,7 +270,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -306,7 +306,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -340,7 +340,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -361,7 +361,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -382,7 +382,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -425,7 +425,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -445,7 +445,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateCard(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -478,7 +478,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -497,7 +497,7 @@ public class ModelController extends BaseController {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (governanceService.canCreateView(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
