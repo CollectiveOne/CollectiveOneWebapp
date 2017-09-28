@@ -486,7 +486,7 @@ public class ActivityService {
 		List<Subscriber> allSubscribers = subscriberRepository.findByElementId(initiativeId);
 		
 		/* then add the subscribers of all parent initiatives (B and A, in that order) */
-		List<Initiative> parents = initiativeService.getParentInitiatives(initiativeId);
+		List<Initiative> parents = initiativeService.getParentGenealogyInitiatives(initiativeId);
 		
 		for (Initiative parent : parents) {
 			List<Subscriber> parentSubscribers = subscriberRepository.findByElementId(parent.getId());
