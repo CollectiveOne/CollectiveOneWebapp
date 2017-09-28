@@ -85,8 +85,21 @@ public class InitiativeService {
 			switch (visibility) {
 				case PRIVATE:
 					/* if private, only members can access initiative data */
-					Boolean isMember = memberRepository.findMemberId(initiativeId, userId) != null;
-					return isMember;				
+					return isMember(initiativeId, userId);
+				
+				case PARENTS:
+					if (isMember(initiativeId, userId)) {
+						return true;
+					} else {
+						return isMemberOfParent(initiativeId, userId);
+					}
+					
+				case ECOSYSTEM:
+					if (isMember(initiativeId, userId)) {
+						return true;
+					} else {
+						return isMemberOfEcosystem(initiativeId, userId);
+					}
 					
 				case PUBLIC:
 					return true;
@@ -100,13 +113,47 @@ public class InitiativeService {
 		}
 	}
 	
+	@Transactional
+	public Boolean isMember(UUID initiativeId, UUID userId) {
+		return memberRepository.findMemberId(initiativeId, userId) != null;
+	}
+	
+	@Transactional
+	public Boolean isMemberOfParent(UUID initiativeId, UUID userId) {
+		List<Initiative> parents = getParentGenealogyInitiatives(initiativeId);
+		
+		for (Initiative parent : parents) {
+			if (isMember(parent.getId(), userId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Transactional
+	public Boolean isMemberOfEcosystem(UUID initiativeId, UUID userId) {
+		
+		List<UUID> ecosystemIds = findAllInitiativeEcosystemIds(initiativeId);
+		
+		for (UUID thisInitiativeId : ecosystemIds) {
+			if (isMember(thisInitiativeId, userId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private Boolean canAccessInherited(UUID initiativeId, UUID userId) {
 		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
 		if (parent != null) {
 			return canAccess(parent.getId(), userId);
 		} else {
-			Boolean isMember = memberRepository.findMemberId(initiativeId, userId) != null;
-			return isMember;
+			/* default permission for inherited when no parent exist is like ecosystem */
+			if (isMember(initiativeId, userId)) {
+				return true;
+			} else {
+				return isMemberOfEcosystem(initiativeId, userId);
+			}
 		}
 	}
 
@@ -438,7 +485,7 @@ public class InitiativeService {
 	@Transactional
 	public Initiative getSuperInitiative(UUID initiativeId) {
 		/* get the farthest parent initiative */
-		List<Initiative> parents = getParentInitiatives(initiativeId);
+		List<Initiative> parents = getParentGenealogyInitiatives(initiativeId);
 		if(parents.size() > 0) {
 			/* last element in the parents array is the farthest relative */
 			return parents.get(parents.size() - 1);
@@ -448,7 +495,7 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	public List<Initiative> getParentInitiatives(UUID initiativeId) {
+	public List<Initiative> getParentGenealogyInitiatives(UUID initiativeId) {
 		List<Initiative> parents = new ArrayList<Initiative>();
 		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
 		
@@ -464,7 +511,7 @@ public class InitiativeService {
 	@Transactional List<InitiativeDto> getParentInitiativesDtos(UUID initiativeId) {
 		List<InitiativeDto> parentsDtos = new ArrayList<InitiativeDto>();
 		
-		for (Initiative parent : getParentInitiatives(initiativeId)) {
+		for (Initiative parent : getParentGenealogyInitiatives(initiativeId)) {
 			parentsDtos.add(parent.toDto());
 		}
 		

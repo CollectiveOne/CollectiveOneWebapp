@@ -116,6 +116,13 @@
                       private
                     </button>
                   </div>
+                  <div class="w3-col s4">
+                    <button class="w3-left w3-button"
+                      :class="{ 'app-button': isEcosystem, 'app-button-light': !isEcosystem }"
+                      @click="newInitiative.meta.visibility = 'ECOSYSTEM'">
+                      ecosystem
+                    </button>
+                  </div>
                   <div v-if="isSubinitiative" class="w3-col s4">
                     <button class="w3-left w3-button"
                       :class="{ 'app-button': isInherited, 'app-button-light': !isInherited }"
@@ -252,6 +259,9 @@ export default {
     },
     isPublic () {
       return this.newInitiative.meta.visibility === 'PUBLIC'
+    },
+    isEcosystem () {
+      return this.newInitiative.meta.visibility === 'ECOSYSTEM'
     }
   },
 
