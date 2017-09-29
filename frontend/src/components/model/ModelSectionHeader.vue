@@ -3,27 +3,52 @@
     class="section-title-container w3-leftbar w3-border-top w3-border-right w3-border-bottom gray-1-border light-grey">
 
     <div class="w3-row title-row">
-      <router-link tag="a" :to="{ name: 'ModelSection', params: { sectionId: section.id } }"
-        class="section-title cursor-pointer w3-left" :style="sectionTitleStyle">
-        {{ section.title }}
-      </router-link>
+        <router-link tag="a" :to="{ name: 'ModelSection', params: { sectionId: section.id } }"
+          class="section-title cursor-pointer w3-left" :style="sectionTitleStyle">
+          {{ section.title }}
+        </router-link>
     </div>
 
-    <div v-if="floating" class="w3-row">
-      <div class="w3-left">
-        <i>in:</i>
+    <div class="also-in-container">
+      <div v-if="floating" class="w3-row">
+        <div class="w3-left">
+          <i>in:</i>
+        </div>
+        <div v-for="parentSection in section.inSections" class="in-tag-container w3-left">
+          <router-link :to="{ name: 'ModelSection', params: { sectionId: parentSection.id } }"
+            class="gray-1 w3-tag w3-round w3-small">
+            {{ parentSection.title }}
+          </router-link>
+        </div>
+        <div v-for="parentView in section.inViews" class="in-tag-container w3-left">
+          <router-link :to="{ name: 'ModelView', params: { viewId: parentView.id } }"
+            class="gray-1 w3-tag w3-round w3-small">
+            {{ parentView.title }}
+          </router-link>
+        </div>
       </div>
-      <div v-for="parentSection in section.inSections" class="in-tag-container w3-left">
-        <router-link :to="{ name: 'ModelSection', params: { sectionId: parentSection.id } }"
-          class="gray-1 w3-tag w3-round w3-small">
-          {{ parentSection.title }}
-        </router-link>
-      </div>
-      <div v-for="parentView in section.inViews" class="in-tag-container w3-left">
-        <router-link :to="{ name: 'ModelView', params: { viewId: parentView.id } }"
-          class="gray-1 w3-tag w3-round w3-small">
-          {{ parentView.title }}
-        </router-link>
+      <div v-if="!floating" class="w3-row w3-small also-in-row">
+        <div v-if="sectionIsInOtherPlaces" class="">
+          <div class="w3-left">
+            <i>also in:</i>
+          </div>
+          <div v-for="parentSection in section.inSections" class="in-tag-container w3-left">
+            <div v-if="parentSection.id !== inElementId" class="">
+              <router-link :to="{ name: 'ModelSection', params: { sectionId: parentSection.id } }"
+                class="gray-1 w3-tag w3-round w3-small">
+                {{ parentSection.title }}
+              </router-link>
+            </div>
+          </div>
+          <div v-for="parentView in section.inViews" class="in-tag-container w3-left">
+            <div v-if="parentView.id !== inElementId" class="">
+              <router-link :to="{ name: 'ModelView', params: { viewId: parentView.id } }"
+                class="gray-1 w3-tag w3-round w3-small">
+                {{ parentView.title }}
+              </router-link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -33,30 +58,6 @@
           <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
         </div>
       </transition>
-    </div>
-
-    <div v-if="!floating" class="w3-row w3-small also-in-row">
-      <div v-if="sectionIsInOtherPlaces" class="">
-        <div v-for="parentSection in section.inSections" class="in-tag-container w3-right">
-          <div v-if="parentSection.id !== inElementId" class="">
-            <router-link :to="{ name: 'ModelSection', params: { sectionId: parentSection.id } }"
-              class="gray-1 w3-tag w3-round w3-small">
-              {{ parentSection.title }}
-            </router-link>
-          </div>
-        </div>
-        <div v-for="parentView in section.inViews" class="in-tag-container w3-right">
-          <div v-if="parentView.id !== inElementId" class="">
-            <router-link :to="{ name: 'ModelView', params: { viewId: parentView.id } }"
-              class="gray-1 w3-tag w3-round w3-small">
-              {{ parentView.title }}
-            </router-link>
-          </div>
-        </div>
-        <div class="w3-right">
-          <i>also in:</i>
-        </div>
-      </div>
     </div>
 
   </div>

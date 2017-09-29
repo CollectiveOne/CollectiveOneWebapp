@@ -100,10 +100,14 @@
                     </div>
                     <div v-if="!uploadingImage" class="w3-display-middle">
                       <input class="inputfile" @change="newFileSelected($event)"
-                        type="file" name="imageFile" id="imageFile">
+                        type="file" name="imageFile" id="imageFile" accept="image/*">
                       <label for="imageFile" class="w3-button app-button">{{ card.imageFile ? 'change' : 'upload image' }}</label>
                     </div>
                   </div>
+                  <app-error-panel
+                    :show="errorUploadingFile"
+                    :message="errorUploadingFileMsg">
+                  </app-error-panel>
                 </div>
 
                 <div class="slider-container">
@@ -284,7 +288,9 @@ export default {
       showImage: false,
       imageUpdated: false,
       newImageFileId: '',
-      uploadingImage: false
+      uploadingImage: false,
+      errorUploadingFile: false,
+      errorUploadingFileMsg: ''
     }
   },
 
@@ -358,11 +364,19 @@ export default {
       data.append('file', event.target.files[0])
 
       this.uploadingImage = true
+      this.errorUploadingFile = false
+
       this.axios.post('/1/upload/cardImage/' + this.cardWrapper.id, data).then((response) => {
-        this.editedCard.newImageFileId = response.data.elementId
-        return this.axios.get('/1/files/' + this.editedCard.newImageFileId)
-      }).then((response) => {
         this.uploadingImage = false
+
+        if (response.data.result === 'success') {
+          this.editedCard.newImageFileId = response.data.elementId
+          return this.axios.get('/1/files/' + this.editedCard.newImageFileId)
+        } else {
+          this.errorUploadingFile = true
+          this.errorUploadingFileMsg = response.data.message
+        }
+      }).then((response) => {
         this.editedCard.imageFile = response.data.data
       })
     },

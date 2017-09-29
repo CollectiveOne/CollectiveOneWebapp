@@ -1,8 +1,11 @@
 package org.collectiveone.modules.files;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.PostResult;
@@ -101,19 +104,51 @@ public class FileService {
 	}
 	
 	@Transactional
-	public PostResult uploadCardImage(UUID userId, UUID cardWrapperId, MultipartFile file) {
+	public PostResult uploadCardImageBeforeCreation(UUID userId, MultipartFile file) throws IOException {
 		
-		Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
-		
-		String key = "CardImages/" + cardWrapperId.toString();
-		FileStored fileUploaded = handleFileUpload(userId, key, file, initiative.getId());
-		
-		if (fileUploaded != null) {
-			return new PostResult("success", "image uploaded", fileUploaded.getId().toString());
+		try (InputStream input = file.getInputStream()) {
+		    try {
+		        ImageIO.read(input).toString();
+		        
+		        String key = "CardImagesAtCreation/" + userId;
+				FileStored fileUploaded = handleFileUpload(userId, key, file, null);
+				
+				if (fileUploaded != null) {
+					return new PostResult("success", "image uploaded", fileUploaded.getId().toString());
+				}
+				
+				return new PostResult("error", "error uploading image", "");
+		        
+		    } catch (Exception e) {
+		        // It's not an image.
+		    	return new PostResult("error", "only image files are supported", "");
+		    }
 		}
+	}
+	
+	@Transactional
+	public PostResult uploadCardImage(UUID userId, UUID cardWrapperId, MultipartFile file) throws IOException {
 		
-		return new PostResult("error", "error uploading image", "");
-		
+		try (InputStream input = file.getInputStream()) {
+		    try {
+		        ImageIO.read(input).toString();
+		        
+		        Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
+				
+				String key = "CardImages/" + cardWrapperId.toString();
+				FileStored fileUploaded = handleFileUpload(userId, key, file, initiative.getId());
+				
+				if (fileUploaded != null) {
+					return new PostResult("success", "image uploaded", fileUploaded.getId().toString());
+				}
+				
+				return new PostResult("error", "error uploading image", "");
+		        
+		    } catch (Exception e) {
+		        // It's not an image.
+		    	return new PostResult("error", "only image files are supported", "");
+		    }
+		}
 	}
 	
 	@Transactional

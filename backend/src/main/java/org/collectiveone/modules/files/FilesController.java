@@ -1,5 +1,6 @@
 package org.collectiveone.modules.files;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
@@ -47,10 +48,23 @@ public class FilesController extends BaseController {
     	return "success";
     }
     
+    @RequestMapping(value = "/upload/cardImage", method = RequestMethod.POST)
+    public @ResponseBody PostResult uploadCardImageBeforeCreation(
+    		@RequestParam("file") MultipartFile file) throws IOException {
+    	
+    	/* just upload the file under a user key*/
+    	
+    	if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", "");
+		}
+    	
+    	return fileService.uploadCardImageBeforeCreation(getLoggedUserId(), file);
+    }
+    
     @RequestMapping(value = "/upload/cardImage/{cardWrapperId}", method = RequestMethod.POST)
     public @ResponseBody PostResult uploadCardImage(
     		@PathVariable("cardWrapperId") String cardWrapperIdStr,
-    		@RequestParam("file") MultipartFile file) {
+    		@RequestParam("file") MultipartFile file) throws IOException {
     	
     	if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", "");
@@ -74,9 +88,11 @@ public class FilesController extends BaseController {
     	UUID fileId = UUID.fromString(fileIdStr);
     	Initiative initiative = fileService.getFileInitiative(fileId);
     	
-    	if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
-			return new GetResult<FileStoredDto>("error", "access denied", null);
-		}
+    	if (initiative != null) {
+    		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+    			return new GetResult<FileStoredDto>("error", "access denied", null);
+    		}
+    	}
     	
     	return new GetResult<FileStoredDto>("success", "file retrieved", fileService.getFileData(fileId));
     }

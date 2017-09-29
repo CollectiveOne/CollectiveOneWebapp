@@ -332,7 +332,7 @@ public class ModelController extends BaseController {
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr,
 			@PathVariable("cardWrapperId") String cardWrapperIdStr,
-			@RequestParam(name = "beforeCardWrapperId") String beforeCardWrapperIdStr) {
+			@RequestParam(name = "beforeCardWrapperId", defaultValue="") String beforeCardWrapperIdStr) {
 	
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);

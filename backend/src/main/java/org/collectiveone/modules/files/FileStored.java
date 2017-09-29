@@ -48,8 +48,10 @@ public class FileStored {
 		FileStoredDto dto = new FileStoredDto();
 		
 		dto.setId(id.toString());
-		dto.setInitiativeId(initiative.getId().toString());
-		dto.setInitiativeName(initiative.getMeta().getName());
+		if (initiative != null) {
+			dto.setInitiativeId(initiative.getId().toString());
+			dto.setInitiativeName(initiative.getMeta().getName());
+		}
 		dto.setKey(key);
 		dto.setBucket(bucket);
 		dto.setUrl(url);
