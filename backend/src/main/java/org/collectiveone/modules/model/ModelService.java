@@ -464,10 +464,14 @@ public class ModelService {
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		if (section == null) return new PostResult("error", "view not found", "");
 		
-		UUID imageFileId = cardDto.getNewImageFileId().equals("") ? null : UUID.fromString(cardDto.getNewImageFileId());
-		FileStored imageFile = fileStoredRepository.findById(imageFileId);
+		ModelCard card = cardDto.toEntity(null, cardDto, null);
 		
-		ModelCard card = cardDto.toEntity(null, cardDto, imageFile);
+		if (cardDto.getNewImageFileId() != null) {
+			UUID imageFileId = cardDto.getNewImageFileId().equals("") ? null : UUID.fromString(cardDto.getNewImageFileId());
+			FileStored imageFile = fileStoredRepository.findById(imageFileId);
+			card.setImageFile(imageFile);
+		}
+		
 		card = modelCardRepository.save(card);
 		
 		ModelCardWrapper cardWrapper = new ModelCardWrapper();
