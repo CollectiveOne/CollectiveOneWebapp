@@ -71,6 +71,10 @@ export default {
   resize: vertical;
 }
 
+.CodeMirror a {
+  text-decoration: underline !important;
+}
+
 .marked-text a {
   text-decoration: underline !important;
 }
