@@ -27,8 +27,12 @@
       </div>
     </div>
 
-    <div class="w3-row gray-1-border section-description w3-small">
-      <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <div v-if="expand" class="w3-row gray-1-border section-description w3-small">
+          <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
+        </div>
+      </transition>
     </div>
 
     <div v-if="!floating" class="w3-row w3-small also-in-row">
@@ -77,6 +81,10 @@ export default {
     inElementId: {
       type: String,
       default: ''
+    },
+    expand: {
+      type: Boolean,
+      default: true
     }
   },
 

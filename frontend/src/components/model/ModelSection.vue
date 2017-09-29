@@ -23,7 +23,8 @@
         :section="section"
         :level="level"
         :floating="floating"
-        :inElementId="inElementId">
+        :inElementId="inElementId"
+        :expand="expanded">
       </app-model-section-header>
     </div>
 

@@ -37,8 +37,8 @@
       <div class="w3-row card-container">
 
         <div class="w3-col s12">
-          <div v-if="card.imageFileUrl" class="w3-row image-container w3-center w3-display-container">
-            <img @click="showImageClick()" :src="card.imageFileUrl" alt="">
+          <div v-if="card.imageFile" class="w3-row image-container w3-center w3-display-container">
+            <img @click="showImageClick()" :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
           </div>
 
           <div :class="{'card-container-padded': cardEffect, 'card-container-slim': !cardEffect }">

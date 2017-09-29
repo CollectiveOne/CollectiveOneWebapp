@@ -86,28 +86,36 @@
                 </div>
 
                 <div v-if="!editing" class="">
-                  <div v-if="card.imageFileUrl" class="w3-row w3-margin-top image-container w3-center w3-display-container w3-card-2 cursor-pointer">
-                    <img @click="showImageClick()" :src="card.imageFileUrl" alt="">
+                  <div v-if="card.imageFile" class="w3-row w3-margin-top image-container w3-center w3-display-container w3-card-2 cursor-pointer">
+                    <img @click="showImageClick()" :src="card.imageFile.url + '?lastUpdated='+ card.imageFile.lastUpdated" alt="">
                   </div>
                 </div>
                 <div v-if="editing" class="">
                   <div class="w3-row w3-margin-top image-container w3-center w3-display-container w3-card-2">
-                    <img v-if="editedCard.imageFileUrl" @click="showImageClick()" :src="editedCard.imageFileUrl" alt="">
-                    <div class="w3-display-middle">
+                    <div v-if="uploadingImage" class="loader-gif-container">
+                      <img class="loader-gif" src="../../../assets/loading.gif" alt="">
+                    </div>
+                    <div v-if="!uploadingImage" class="">
+                      <img v-if="editedCard.imageFile" @click="showImageClick()" :src="editedCard.imageFile.url + '?lastUpdated='+ editedCard.imageFile.lastUpdated" alt="">
+                    </div>
+                    <div v-if="!uploadingImage" class="w3-display-middle">
                       <input class="inputfile" @change="newFileSelected($event)"
                         type="file" name="imageFile" id="imageFile">
-                      <label for="imageFile" class="w3-button app-button">{{ card.imageFileUrl ? 'change' : 'upload image' }}</label>
+                      <label for="imageFile" class="w3-button app-button">{{ card.imageFile ? 'change' : 'upload image' }}</label>
                     </div>
                   </div>
                 </div>
 
                 <div class="slider-container">
                   <transition name="slideDownUp">
-                    <div v-if="showImage" class="image-display w3-display-container">
-                      <div class="w3-display-topright w3-xlarge cursor-pointer close-image-div" @click="showImage = false">
-                        <i class="fa fa-times" aria-hidden="true"></i>
+                    <div v-if="showImage" class="image-display-modal">
+                      <div class="image-display w3-display-container">
+                        <img v-if="card.imageFile"
+                          :src="card.imageFile.url + '?lastUpdated='+ card.imageFile.lastUpdated" alt="">
+                        <div class="w3-display-topright w3-xlarge cursor-pointer close-image-div" @click="showImage = false">
+                          <i class="fa fa-times" aria-hidden="true"></i>
+                        </div>
                       </div>
-                      <img v-if="card.imageFileUrl" :src="card.imageFileUrl" alt="">
                     </div>
                   </transition>
                 </div>
@@ -274,7 +282,9 @@ export default {
       animatingTab: false,
       showUrl: false,
       showImage: false,
-      imageUpdated: false
+      imageUpdated: false,
+      newImageFileId: '',
+      uploadingImage: false
     }
   },
 
@@ -347,11 +357,13 @@ export default {
       var data = new FormData()
       data.append('file', event.target.files[0])
 
+      this.uploadingImage = true
       this.axios.post('/1/upload/cardImage/' + this.cardWrapper.id, data).then((response) => {
-        this.editedCard.imageFileId = response.data.elementId
-        return this.axios.get('/1/files/' + this.editedCard.imageFileId)
+        this.editedCard.newImageFileId = response.data.elementId
+        return this.axios.get('/1/files/' + this.editedCard.newImageFileId)
       }).then((response) => {
-        this.editedCard.imageFileUrl = response.data.data.url + '?' + new Date().getTime()
+        this.uploadingImage = false
+        this.editedCard.imageFile = response.data.data
       })
     },
     dateString (v) {
@@ -516,6 +528,11 @@ export default {
 	z-index: -1;
 }
 
+.loader-gif-container {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
 .image-container {
   min-height: 80px;
   max-height: 250px;
@@ -531,19 +548,32 @@ export default {
   max-width: 100%;
 }
 
-.image-display {
+.image-display-modal {
   position: fixed;
   top: 5%;
   left: 5%;
   width: 90%;
   height: 90%;
+  text-align: center;
+  background-color: white;
+  border-radius: 20px;
+}
+
+.image-display {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
 }
 
 .image-display img {
-  float: right;
+  zoom: 2;  //increase if you have very small images
+  display: block;
+  margin: auto;
+  height: auto;
   max-height: 100%;
+  width: auto;
   max-width: 100%;
-  border-radius: 20px;
+  border-radius: 5px;
 }
 
 .close-image-div {
