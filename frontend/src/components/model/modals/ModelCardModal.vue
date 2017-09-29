@@ -101,7 +101,10 @@
                     <div v-if="!uploadingImage" class="w3-display-middle">
                       <input class="inputfile" @change="newFileSelected($event)"
                         type="file" name="imageFile" id="imageFile" accept="image/*">
-                      <label for="imageFile" class="w3-button app-button">{{ card.imageFile ? 'change' : 'upload image' }}</label>
+                      <label for="imageFile" class="w3-button app-button">{{ editedCard.imageFile ? 'change' : 'upload image' }}</label>
+                      <button v-if="editedCard.imageFile"
+                        @click="removeImage()"
+                        class="w3-button app-button-danger">remove</button>
                     </div>
                   </div>
                   <app-error-panel
@@ -504,6 +507,10 @@ export default {
       if (!this.editing) {
         this.showImage = true
       }
+    },
+    removeImage () {
+      this.editedCard.imageFile = null
+      this.editedCard.newImageFileId = 'REMOVE'
     }
   },
 

@@ -492,18 +492,25 @@ public class ModelService {
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		if (cardWrapper == null) return new PostResult("error", "card wrapper not found", "");
 		
-		cardWrapper.getOldVersions().add(cardWrapper.getCard());
+		ModelCard originalCard = cardWrapper.getCard();
 		
+		cardWrapper.getOldVersions().add(originalCard);
 		
-		UUID imageFileId = cardDto.getNewImageFileId().equals("") ? null : UUID.fromString(cardDto.getNewImageFileId());
-		FileStored imageFile = fileStoredRepository.findById(imageFileId);
+		ModelCard card = cardDto.toEntity(null, cardDto, null);
 		
-		ModelCard card = cardDto.toEntity(null, cardDto, imageFile);
-		
-		/* remove image has dirty solution */
-		if(cardDto.getNewImageFileId().equals("REMOVE")) {
-			card.setImageFile(null);
-		}
+		/* update or remove image */
+		if (cardDto.getNewImageFileId() != null) {
+			if(!cardDto.getNewImageFileId().equals("REMOVE")) {
+				UUID imageFileId = cardDto.getNewImageFileId().equals("") ? null : UUID.fromString(cardDto.getNewImageFileId());
+				FileStored imageFile = fileStoredRepository.findById(imageFileId);
+				card.setImageFile(imageFile);
+			} else {
+				card.setImageFile(null);
+			}
+		} else {
+			/* use the same image */
+			card.setImageFile(originalCard.getImageFile());
+		} 
 		
 		card = modelCardRepository.save(card);
 		
