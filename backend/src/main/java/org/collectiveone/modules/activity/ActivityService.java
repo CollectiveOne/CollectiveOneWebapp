@@ -26,6 +26,8 @@ import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.Member;
+import org.collectiveone.modules.model.ModelCardWrapper;
+import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
@@ -383,17 +385,264 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelViewCreated(ModelView view, AppUser triggerUser) {
-		Activity activity = new Activity();
+		Activity activity = getBaseActivity(triggerUser, view.getInitiative()); 
 		
 		activity.setType(ActivityType.MODEL_VIEW_CREATED);
-		activity.setTriggerUser(triggerUser);
-		activity.setInitiative(view.getInitiative());
 		activity.setModelView(view);
-		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
-		
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelViewEdited(ModelView view, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, view.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_VIEW_EDITED);
+		activity.setModelView(view);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelViewDeleted(ModelView view, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, view.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_VIEW_DELETED);
+		activity.setModelView(view);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelSectionCreatedOnSection(ModelSection section, ModelSection onSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_CREATED);
+		activity.setModelSection(section);
+		activity.setOnSection(onSection);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelSectionCreatedOnView(ModelSection section, ModelView onView, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_CREATED);
+		activity.setModelSection(section);
+		activity.setOnView(onView);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelSectionEdited(ModelSection section, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_CREATED);
+		activity.setModelSection(section);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelSectionRemovedFromSection(ModelSection section, ModelSection fromSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_REMOVED);
+		activity.setModelSection(section);
+		activity.setFromSection(fromSection);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelSectionRemovedFromView(ModelSection section, ModelView fromView, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_REMOVED);
+		activity.setModelSection(section);
+		activity.setFromView(fromView);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelSectionMovedInView(ModelSection section, ModelView onView, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_MOVED);
+		activity.setModelSection(section);
+		activity.setFromView(onView);
+		activity.setOnView(onView);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelSectionMovedFromViewToSection(ModelSection section, ModelView fromView, ModelSection onSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_MOVED);
+		activity.setModelSection(section);
+		activity.setFromView(fromView);
+		activity.setOnSection(onSection);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelSectionMovedFromSectionToSection(ModelSection section, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_MOVED);
+		activity.setModelSection(section);
+		activity.setFromSection(fromSection);
+		activity.setOnSection(onSection);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelSectionMovedFromSectionToView(ModelSection section, ModelSection fromSection, ModelView onView, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_MOVED);
+		activity.setModelSection(section);
+		activity.setFromSection(fromSection);
+		activity.setOnView(onView);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelNewSubsection(ModelSection section, ModelSection onSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_CREATED);
+		activity.setModelSection(section);
+		activity.setOnSection(onSection);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelNewSection(ModelSection section, ModelView onView, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_CREATED);
+		activity.setModelSection(section);
+		activity.setOnView(onView);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelCardWrapperAdded(ModelCardWrapper cardWrapper, ModelSection onSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_ADDED);
+		activity.setModelCardWrapper(cardWrapper);
+		activity.setOnSection(onSection);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelCardWrapperRemoved(ModelCardWrapper cardWrapper, ModelSection fromSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_REMOVED);
+		activity.setModelCardWrapper(cardWrapper);
+		activity.setFromSection(fromSection);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelSectionDeleted(ModelSection section, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_DELETED);
+		activity.setModelSection(section);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelCardWrapperCreated(ModelCardWrapper cardWrapper, ModelSection onSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_CREATED);
+		activity.setModelCardWrapper(cardWrapper);
+		activity.setOnSection(onSection);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelCardWrapperEdited(ModelCardWrapper cardWrapper, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_EDITED);
+		activity.setModelCardWrapper(cardWrapper);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelCardWrapperMoved(ModelCardWrapper cardWrapper, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_MOVED);
+		activity.setModelCardWrapper(cardWrapper);
+		activity.setFromSection(fromSection);
+		activity.setOnSection(onSection);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelCardWrapperDeleted(ModelCardWrapper cardWrapper, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_DELETED);
+		activity.setModelCardWrapper(cardWrapper);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	
+	
+	private Activity getBaseActivity(AppUser triggerUser, Initiative initiative) {
+		Activity activity = new Activity();
+		
+		activity.setTriggerUser(triggerUser);
+		activity.setInitiative(initiative);
+		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+
+		return activity;
 	}
 	
 	

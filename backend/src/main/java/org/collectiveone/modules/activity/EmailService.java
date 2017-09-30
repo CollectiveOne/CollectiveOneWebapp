@@ -15,6 +15,9 @@ import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.assignations.Evaluator;
 import org.collectiveone.modules.assignations.Receiver;
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.model.ModelCardWrapper;
+import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,6 +145,25 @@ public class EmailService {
 					
 				case INITIATIVE_DELETED:
 					mail = prepareInitiativeDeletedEmail(notifications);
+					break;
+					
+				case MODEL_VIEW_CREATED:
+				case MODEL_VIEW_EDITED:
+				case MODEL_VIEW_DELETED:
+				case MODEL_SECTION_ADDED:
+				case MODEL_SECTION_CREATED:
+				case MODEL_SECTION_DELETED:
+				case MODEL_SECTION_EDITED:
+				case MODEL_SECTION_MOVED:
+				case MODEL_SECTION_REMOVED:
+				case MODEL_CARDWRAPPER_ADDED:
+				case MODEL_CARDWRAPPER_CREATED:
+				case MODEL_CARDWRAPPER_DELETED:
+				case MODEL_CARDWRAPPER_EDITED:
+				case MODEL_CARDWRAPPER_MOVED:
+				case MODEL_CARDWRAPPER_REMOVED:
+				
+					mail = prepareModelEditedEmail(notifications);
 					break;
 					
 				default:
@@ -678,6 +700,157 @@ public class EmailService {
 		return mail;
 	}
 	
+	private Mail prepareModelEditedEmail(List<Notification> notifications)	{
+		Mail mail = new Mail();
+		
+		Email fromEmail = new Email();
+		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
+		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
+		mail.setFrom(fromEmail);
+		mail.setSubject("Model edited");
+	
+		for(Notification notification : notifications) {
+			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
+				Personalization personalization = basicInitiativePersonalization(notification);
+				
+				ModelView modelView = notification.getActivity().getModelView();
+				ModelSection modelSection = notification.getActivity().getModelSection();
+				ModelCardWrapper modelCardWrapper = notification.getActivity().getModelCardWrapper();
+				
+				ModelSection onSection = notification.getActivity().getOnSection();
+				ModelView onView = notification.getActivity().getOnView();
+				
+				ModelSection fromSection = notification.getActivity().getFromSection();
+				ModelView fromView = notification.getActivity().getFromView();
+				
+				String message = "";
+				
+				switch(notification.getActivity().getType()) {
+				
+					case MODEL_VIEW_CREATED:
+						message = "<p>created a new model view named " + getModelViewAnchor(modelView) + "</p> ";
+						break;
+						
+					case MODEL_VIEW_EDITED:
+						message = "<p>edited the model " + getModelViewAnchor(modelView) + " view</p> ";
+						break;
+						
+					case MODEL_VIEW_DELETED:
+						message = "<p>deleted the model " + getModelViewAnchor(modelView) + " view</p> ";
+						break;
+						
+					case MODEL_SECTION_CREATED:
+						if (onSection != null) {
+							message = "<p>created a new section " + getModelSectionAnchor(modelSection) + 
+									" under section " + getModelSectionAnchor(onSection) + "</p> ";
+						} else {
+							message = "<p>created a new section " + getModelSectionAnchor(modelSection) + 
+									" under the " + getModelViewAnchor(onView) + "view</p> ";
+						}							
+						break;
+						
+					case MODEL_SECTION_EDITED:
+						message = "<p>edited the model section " + getModelSectionAnchor(modelSection) + "</p> ";
+						break;
+						
+					case MODEL_SECTION_DELETED:
+						message = "<p>deleted the model section " + getModelSectionAnchor(modelSection) + "</p> ";
+						break;
+						
+					case MODEL_CARDWRAPPER_CREATED:
+						message = "<p>created a new card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
+								" in the " + getModelSectionAnchor(onSection) + " section</p> ";
+						break;
+						
+					case MODEL_CARDWRAPPER_EDITED:
+						message = "<p>edited the model card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + "</p> ";
+						break;
+						
+					case MODEL_CARDWRAPPER_DELETED:
+						message = "<p>deleted the model card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + "</p> ";
+						break;
+						
+					case MODEL_SECTION_ADDED: 
+						if (onSection != null) {
+							message = "<p>added the section " + getModelSectionAnchor(modelSection) + 
+									" as sub-section of " + getModelSectionAnchor(onSection) + "</p> ";
+						} else {
+							message = "<p>added the section " + getModelSectionAnchor(modelSection) + 
+									" under the " + getModelViewAnchor(onView) + " view</p> ";
+						}							
+						break;
+						
+					case MODEL_SECTION_MOVED:
+						if (onSection != null) {
+							if (fromSection != null) {
+								message = "<p>moved the section " + getModelSectionAnchor(modelSection) + 
+										" from section " + getModelSectionAnchor(fromSection) + 
+										" to section " + getModelSectionAnchor(onSection) + "</p> ";
+							} else {
+								message = "<p>moved the section " + getModelSectionAnchor(modelSection) + 
+										" from view " + getModelViewAnchor(fromView) + 
+										" to section " + getModelSectionAnchor(onSection) + "</p> ";
+							}
+							
+						} else {
+							if (fromSection != null) {
+								message = "<p>moved the section " + getModelSectionAnchor(modelSection) + 
+										" from section " + getModelSectionAnchor(fromSection) + 
+										" to the " + getModelViewAnchor(onView) + "view</p> ";
+							} else {
+								message = "<p>moved the section " + getModelSectionAnchor(modelSection) + 
+										" from view " + getModelViewAnchor(fromView) + 
+										" to the " + getModelViewAnchor(onView) + " view</p> ";
+							}
+						}		
+						break;
+						
+					case MODEL_SECTION_REMOVED:
+						if (fromSection != null) {
+							message = "<p>removed the section " + getModelSectionAnchor(modelSection) + 
+									" from section " + getModelSectionAnchor(fromSection) + "</p> ";
+						} else {
+							message = "<p>removed the section " + getModelSectionAnchor(modelSection) + 
+									" from the " + getModelSectionAnchor(fromSection) + " view</p> ";
+						}
+						break;
+						
+					case MODEL_CARDWRAPPER_ADDED:
+						message = "<p>added the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
+								" under section " + getModelSectionAnchor(onSection) + "</p> ";
+						
+						break;
+						
+					case MODEL_CARDWRAPPER_MOVED:
+						message = "<p>moved the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
+								" from section " + getModelSectionAnchor(fromSection) + 
+								" to section " + getModelSectionAnchor(onSection) + "</p> ";
+						break;
+						
+					case MODEL_CARDWRAPPER_REMOVED:
+						message = "<p>removed the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
+								" from section " + getModelSectionAnchor(fromSection) + "</p> ";
+						break;
+						
+					default:
+						break;
+						
+				}
+				
+				personalization.addSubstitution("$MESSAGE$", message);
+				
+				mail.addPersonalization(personalization);
+			}
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
+		}
+		
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
+		
+		return mail;
+	}
+	
 	
 	
 	
@@ -706,12 +879,12 @@ public class EmailService {
 	}
 	
 	private String getInitiativeAnchor(Initiative initiative) {
-		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/" + 
+		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/" + 
 				initiative.getId().toString() + "/overview>" + initiative.getMeta().getName() + "</a>";
 	}
 	
 	private String getAssignationAnchor(Assignation assignation) {
-		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/" + 
+		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/" + 
 				assignation.getInitiative().getId().toString() + "/assignations/" + assignation.getId().toString() + ">transfer</a>";
 	}
 	
@@ -719,14 +892,32 @@ public class EmailService {
 		return NumberFormat.getNumberInstance(Locale.US).format(transfers.get(0).getValue()) + " " + transfers.get(0).getTokenType().getName();
 	}
 	
+	private String getModelViewAnchor(ModelView view) {
+		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
+				view.getInitiative().getId().toString() + "/mode/view/" + 
+				view.getId().toString() + ">" + view.getTitle() + "</a>";
+	}
+	
+	private String getModelSectionAnchor(ModelSection section) {
+		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
+				section.getInitiative().getId().toString() + "/mode/section/" + 
+				section.getId().toString() + ">" + section.getTitle() + "</a>";
+	}
+	
+	private String getModelCardWrapperAnchor(ModelCardWrapper cardWrapper, ModelSection onSection) {
+		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
+				cardWrapper.getInitiative().getId().toString() + "/mode/section/" + 
+				onSection.getId().toString() + "/cardWrapper/" + cardWrapper.getCard().toString() + 
+				">" + cardWrapper.getCard().getTitle() + "</a>";
+	}
+	
 	private String getUnsuscribeFromInitiativeHref(Initiative initiative) {
-		return env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/unsubscribe?fromInitiativeId=" + 
+		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/unsubscribe?fromInitiativeId=" + 
 				initiative.getId().toString() + "&fromInitiativeName=" + initiative.getMeta().getName();
 	}
 	
 	private String getUnsuscribeFromAllHref() {
-		return env.getProperty("collectiveone.webapp.baseurl") +"/#/inits/unsubscribe?fromAll=true";
+		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/unsubscribe?fromAll=true";
 	}
-
-
+	
 }

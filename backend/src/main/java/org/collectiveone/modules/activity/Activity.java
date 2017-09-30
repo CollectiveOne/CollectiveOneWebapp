@@ -21,6 +21,8 @@ import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.model.ModelCardWrapper;
+import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
@@ -82,6 +84,24 @@ public class Activity {
 	@ManyToOne
 	private ModelView modelView;
 	
+	@ManyToOne
+	private ModelSection modelSection;
+	
+	@ManyToOne
+	private ModelCardWrapper modelCardWrapper;
+	
+	@ManyToOne
+	private ModelSection onSection;
+	
+	@ManyToOne
+	private ModelView onView;
+	
+	@ManyToOne
+	private ModelSection fromSection;
+	
+	@ManyToOne
+	private ModelView fromView;
+	
 	
 	/* Dto */
 	public ActivityDto toDto() {
@@ -90,12 +110,19 @@ public class Activity {
 		dto.setType(type.toString());
 		if(triggerUser != null) dto.setTriggerUser(triggerUser.toDtoLight());
 		if(initiative != null) dto.setInitiative(initiative.toDto());
+		
 		if(subInitiative != null) dto.setSubInitiative(subInitiative.toDto());
+		
 		dto.setOldName(oldName);
 		dto.setOldDriver(oldDriver);
+		
 		if(mint != null) dto.setMint(mint.toDto());
 		if(assignation != null) dto.setAssignation(assignation.toDto()); 
 		if(initiativeTransfer != null) dto.setTransfer(initiativeTransfer.toDto()); 
+		
+		if(modelView != null) dto.setModelView(modelView.toDto());
+		if(modelSection != null) dto.setModelSection(modelSection.toDto());
+		if(modelCardWrapper != null) dto.setModelCardWrapper(modelCardWrapper.toDto());
 		
 		return dto;
 	}
@@ -213,6 +240,53 @@ public class Activity {
 	public void setModelView(ModelView modelView) {
 		this.modelView = modelView;
 	}
-	
+
+	public ModelSection getModelSection() {
+		return modelSection;
+	}
+
+	public void setModelSection(ModelSection modelSection) {
+		this.modelSection = modelSection;
+	}
+
+	public ModelCardWrapper getModelCardWrapper() {
+		return modelCardWrapper;
+	}
+
+	public void setModelCardWrapper(ModelCardWrapper modelCardWrapper) {
+		this.modelCardWrapper = modelCardWrapper;
+	}
+
+	public ModelSection getOnSection() {
+		return onSection;
+	}
+
+	public void setOnSection(ModelSection onSection) {
+		this.onSection = onSection;
+	}
+
+	public ModelView getOnView() {
+		return onView;
+	}
+
+	public void setOnView(ModelView onView) {
+		this.onView = onView;
+	}
+
+	public ModelSection getFromSection() {
+		return fromSection;
+	}
+
+	public void setFromSection(ModelSection fromSection) {
+		this.fromSection = fromSection;
+	}
+
+	public ModelView getFromView() {
+		return fromView;
+	}
+
+	public void setFromView(ModelView fromView) {
+		this.fromView = fromView;
+	}
 	
 }
