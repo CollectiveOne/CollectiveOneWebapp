@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <button class="w3-button w3-padding-large w3-display-container" title="Notifications"
+    <button class="w3-button w3-padding-large w3-display-container w3-xlarge" title="Notifications"
       @click="showNotificationsClicked()">
       <i class="fa fa-bell-o w3-display-center"></i>
       <i v-if="numberOfUnreadNotifications > 0" class="fa fa-circle w3-display-topright circle">
@@ -9,7 +9,7 @@
     </button>
 
     <div v-if="show" class="notifications-container w3-white w3-card-4 w3-bar-block" style="width:300px">
-      <div class="w3-row"  v-for="(notification, ix) in notifications" :key="notification.id">
+      <div class="w3-row" v-for="(notification, ix) in notifications" :key="notification.id">
         <app-notification-box :notification="notification"></app-notification-box>
         <hr v-if="ix < notifications.length - 1">
       </div>

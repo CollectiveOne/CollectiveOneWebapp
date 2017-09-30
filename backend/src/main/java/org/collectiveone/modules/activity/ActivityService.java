@@ -444,7 +444,7 @@ public class ActivityService {
 	public void modelSectionEdited(ModelSection section, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
 		
-		activity.setType(ActivityType.MODEL_SECTION_CREATED);
+		activity.setType(ActivityType.MODEL_SECTION_EDITED);
 		activity.setModelSection(section);
 		activity = activityRepository.save(activity);
 		

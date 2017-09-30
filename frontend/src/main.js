@@ -41,6 +41,22 @@ import ModelCardWithModal from '@/components/model/ModelCardWithModal.vue'
 Vue.component('app-model-section-with-modal', ModelSectionWithModal)
 Vue.component('app-model-card-with-modal', ModelCardWithModal)
 
+/* custom directive to detect click outside from
+https://stackoverflow.com/questions/36170425/detect-click-outside-element?answertab=votes#tab-top */
+Vue.directive('click-outside', {
+  bind: function (el, binding, vnode) {
+    Vue.event = function (event) {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event)
+      }
+    }
+    document.body.addEventListener('click', Vue.event)
+  },
+  unbind: function (el) {
+    document.body.removeEventListener('click', Vue.event)
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

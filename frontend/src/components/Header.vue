@@ -16,7 +16,10 @@
         <img class="icon w3-hide-medium w3-hide-large" src="../assets/imago-red.png" alt="">
       </router-link>
 
-      <div v-if="$store.state.user.authenticated" @click="userOptionsClicked()" class="w3-bar-item w3-right w3-button">
+      <div v-if="$store.state.user.authenticated"
+        @click="userOptionsClicked()" class="w3-bar-item w3-right w3-button"
+        v-click-outside="clickOutsideUser">
+
         <div v-if="$store.state.user.profile" class="logged-user">
           <div class="avatar-img-container w3-left">
             <img :src="$store.state.user.profile.pictureUrl" class="logged-avatar w3-circle noselect">
@@ -41,10 +44,11 @@
         </button>
       </div>
 
-      <div v-if="$store.state.user.authenticated" class="nots-div w3-bar-item w3-right w3-button w3-xlarge">
+      <div v-if="$store.state.user.authenticated" class="nots-div w3-bar-item w3-right">
         <app-notifications-list
           :show="showActivityList"
-          @icon-clicked="activityClicked()">
+          @icon-clicked="activityClicked()"
+          v-click-outside="clickOutsideNotifications">
         </app-notifications-list>
       </div>
 
@@ -77,6 +81,12 @@ export default {
         this.$store.dispatch('updateNotifications')
       }
       this.showActivityList = !this.showActivityList
+    },
+    clickOutsideUser () {
+      this.showUserOptions = false
+    },
+    clickOutsideNotifications () {
+      this.showActivityList = false
     },
     goMyProfile () {
       this.showUserOptions = false
@@ -158,7 +168,7 @@ export default {
 .avatar-dropdown-content {
   position: absolute;
   width: 150px;
-  margin-top: 65px;
+  margin-top: 58px;
 }
 
 .left-align-1 {

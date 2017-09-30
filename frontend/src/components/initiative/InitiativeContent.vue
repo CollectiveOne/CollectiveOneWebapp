@@ -11,6 +11,7 @@
                   <div
                     v-if="isLoggedAMember || isLoggedAnAdmin"
                     @click="showEditMenu = !showEditMenu"
+                    v-click-outside="clickOutsideShowMenu"
                     class="edit-btn-div w3-button w3-large"
                     style="width:100%; height:100%">
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
@@ -160,6 +161,9 @@ export default {
     },
     newMember () {
       this.showNewMemberModal = true
+    },
+    clickOutsideShowMenu () {
+      this.showEditMenu = false
     },
     onSwipeLeft () {
       console.log('swiped left')

@@ -17,7 +17,7 @@
         <div v-if="!showName && showHoverName" class="w3-container w3-padding hover-name-container w3-tag dark-gray w3-round">
           <div
             @click="showProfileModal = true"
-            class="w3-row cursor-pointer">
+            class="w3-row cursor-pointer nickname-row">
             <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
           </div>
           <div class="w3-row">
@@ -106,7 +106,7 @@ export default {
 
 <style scoped>
 
-.avatar-container {
+.nickname-row {
   white-space: nowrap;
 }
 
@@ -132,6 +132,7 @@ export default {
 
 .hover-name-container {
   position: absolute;
+  max-width: 250px;
 }
 
 .social-icons-container {

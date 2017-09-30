@@ -24,6 +24,12 @@ public class ActivityDto {
 	private ModelSectionDto modelSection;
 	private ModelCardWrapperDto modelCardWrapper;
 	
+	private ModelSectionDto onSection;
+	private ModelViewDto onView;
+	
+	private ModelSectionDto fromSection;
+	private ModelViewDto fromView;
+	
 	public String getType() {
 		return type;
 	}
@@ -95,6 +101,30 @@ public class ActivityDto {
 	}
 	public void setModelCardWrapper(ModelCardWrapperDto modelCardWrapper) {
 		this.modelCardWrapper = modelCardWrapper;
+	}
+	public ModelSectionDto getOnSection() {
+		return onSection;
+	}
+	public void setOnSection(ModelSectionDto onSection) {
+		this.onSection = onSection;
+	}
+	public ModelViewDto getOnView() {
+		return onView;
+	}
+	public void setOnView(ModelViewDto onView) {
+		this.onView = onView;
+	}
+	public ModelSectionDto getFromSection() {
+		return fromSection;
+	}
+	public void setFromSection(ModelSectionDto fromSection) {
+		this.fromSection = fromSection;
+	}
+	public ModelViewDto getFromView() {
+		return fromView;
+	}
+	public void setFromView(ModelViewDto fromView) {
+		this.fromView = fromView;
 	}
 	
 }

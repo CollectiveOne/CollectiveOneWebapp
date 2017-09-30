@@ -33,7 +33,9 @@
 
     <div v-if="isLoggedAnAdmin"
       class="w3-display-topright w3-xxlarge w3-button plus-button"
-      @click="showActionMenu = !showActionMenu">
+      @click="showActionMenu = !showActionMenu"
+      v-click-outside="clickOutsideShowMenu">
+
       <i class="fa fa-plus-circle" aria-hidden="true"></i>
     </div>
     <div v-if="showActionMenu" class="action-menu w3-display-topright">
@@ -165,6 +167,9 @@ export default {
     newTransferToInitiative () {
       this.showActionMenu = false
       this.$store.commit('showNewInitiativeTransferModal', true)
+    },
+    clickOutsideShowMenu () {
+      this.showActionMenu = false
     }
   },
 
