@@ -95,6 +95,8 @@ export default {
   margin-left: -212px;
   padding-top: 20px !important;
   padding-bottom: 20px !important;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
 }
 
 hr {

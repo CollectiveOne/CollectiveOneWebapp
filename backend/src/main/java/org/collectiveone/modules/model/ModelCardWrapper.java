@@ -36,12 +36,12 @@ public class ModelCardWrapper {
 	@ManyToOne
 	private Initiative initiative;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "element_state")
+	private ModelElementState elementState;
+	
 	@Column(name = "state_control")
 	private Boolean stateControl;
-	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "state")
-	private ModelCardState state;
 	
 	@Column(name = "targetDate")
 	private Timestamp targetDate;
@@ -51,6 +51,9 @@ public class ModelCardWrapper {
 	
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ModelCard> oldVersions = new ArrayList<ModelCard>();
+	
+	
+	
 	
 	@Override
 	public int hashCode() {
@@ -79,6 +82,7 @@ public class ModelCardWrapper {
 		cardWrapperDto.setId(id.toString());
 		cardWrapperDto.setCard(card.toDto());
 		cardWrapperDto.setStateControl(stateControl);
+		if (initiative != null) cardWrapperDto.setInitiativeId(initiative.getId().toString());
 		if (state != null) cardWrapperDto.setState(state.toString());
 		if (targetDate != null) cardWrapperDto.setTargetDate(targetDate.getTime());
 		
@@ -107,7 +111,7 @@ public class ModelCardWrapper {
 	public void setInitiative(Initiative initiative) {
 		this.initiative = initiative;
 	}
-
+	
 	public ModelCard getCard() {
 		return card;
 	}

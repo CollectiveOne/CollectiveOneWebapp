@@ -124,6 +124,12 @@ public class Activity {
 		if(modelSection != null) dto.setModelSection(modelSection.toDto());
 		if(modelCardWrapper != null) dto.setModelCardWrapper(modelCardWrapper.toDto());
 		
+		if(onSection != null) dto.setOnSection(onSection.toDto());
+		if(onView != null) dto.setOnView(onView.toDto());
+		
+		if(fromSection != null) dto.setFromSection(fromSection.toDto());
+		if(fromView != null) dto.setFromView(fromView.toDto());
+		
 		return dto;
 	}
 	

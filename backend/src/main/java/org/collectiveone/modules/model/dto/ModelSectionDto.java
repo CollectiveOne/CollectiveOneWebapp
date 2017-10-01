@@ -3,6 +3,7 @@ package org.collectiveone.modules.model.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.collectiveone.modules.model.ModelElementState;
 import org.collectiveone.modules.model.ModelSection;
 
 public class ModelSectionDto {
@@ -32,6 +33,7 @@ public class ModelSectionDto {
 		
 		section.setTitle(sectionDto.getTitle());
 		section.setDescription(sectionDto.getDescription());
+		section.setElementState(ModelElementState.ACTIVE);
 		
 		return section;
 	}

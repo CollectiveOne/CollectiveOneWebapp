@@ -2,7 +2,7 @@
   <router-link :to="{
     name: 'ModelSection',
     params: {
-      'initiativeId': this.section.initiative.id,
+      'initiativeId': this.section.initiativeId,
       'sectionId': this.section.id
       }}">
     {{ section.title }}

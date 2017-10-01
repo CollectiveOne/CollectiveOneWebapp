@@ -113,7 +113,7 @@
         <app-model-view-link :view="notification.activity.modelView"></app-model-view-link> title/description.
       </div>
       <div v-if="isModelViewDeleted" class="">
-        <app-user-link :user="notification.activity.triggerUser"></app-user-link> edited the view
+        <app-user-link :user="notification.activity.triggerUser"></app-user-link> deleted the view
         <app-model-view-link :view="notification.activity.modelView"></app-model-view-link>.
       </div>
       <div v-if="isModelSectionCreatedOnSection" class="">
@@ -124,7 +124,7 @@
       <div v-if="isModelSectionCreatedOnView" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> created the section
         <app-model-section-link :section="notification.activity.modelSection"></app-model-section-link> under
-        view <app-model-view-link :section="notification.activity.onView"></app-model-view-link>.
+        view <app-model-view-link :view="notification.activity.onView"></app-model-view-link>.
       </div>
       <div v-if="isModelSectionEdited" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> edited the section
@@ -163,24 +163,14 @@
          from section <app-model-section-link :section="notification.activity.fromSection"></app-model-section-link>
          to view <app-model-view-link :view="notification.activity.onView"></app-model-view-link>.
       </div>
-      <div v-if="isModelNewSubsection" class="">
-        <app-user-link :user="notification.activity.triggerUser"></app-user-link> created the subsection
-        <app-model-section-link :section="notification.activity.modelSection"></app-model-section-link>
-         in section <app-model-section-link :section="notification.activity.onSection"></app-model-section-link>.
-      </div>
-      <div v-if="isModelNewSection" class="">
-        <app-user-link :user="notification.activity.triggerUser"></app-user-link> created the section
-        <app-model-section-link :section="notification.activity.modelSection"></app-model-section-link>
-         in view <app-model-view-link :view="notification.activity.onView"></app-model-view-link>.
-      </div>
       <div v-if="isModelCardWrapperAdded" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> added the card
-        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :section="notification.activity.onSection"></app-model-card-link>
+        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :onSection="notification.activity.onSection"></app-model-card-link>
          in section <app-model-section-link :section="notification.activity.onSection"></app-model-section-link>.
       </div>
       <div v-if="isModelCardWrapperRemoved" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> removed the card
-        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :section="notification.activity.fromSection"></app-model-card-link>
+        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :onSection="notification.activity.fromSection"></app-model-card-link>
          from section <app-model-section-link :section="notification.activity.fromSection"></app-model-section-link>.
       </div>
       <div v-if="isModelSectionDeleted" class="">
@@ -189,22 +179,27 @@
       </div>
       <div v-if="isModelCardWrapperCreated" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> created the card
-        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :section="notification.activity.onSection"></app-model-card-link>
+        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :onSection="notification.activity.onSection"></app-model-card-link>
          on section <app-model-section-link :section="notification.activity.onSection"></app-model-section-link>.
       </div>
       <div v-if="isModelCardWrapperEdited" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> edited the card
-        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :section="notification.activity.onSection"></app-model-card-link>.
+        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :onSection="notification.activity.onSection"></app-model-card-link>.
       </div>
-      <div v-if="isModelCardWrapperMoved" class="">
+      <div v-if="isModelCardWrapperMovedSameSection" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> moved the card
-        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :section="notification.activity.onSection"></app-model-card-link>
+        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :onSection="notification.activity.onSection"></app-model-card-link>
+        within section <app-model-section-link :section="notification.activity.fromSection"></app-model-section-link>.
+      </div>
+      <div v-if="isModelCardWrapperMovedDiferentSections" class="">
+        <app-user-link :user="notification.activity.triggerUser"></app-user-link> moved the card
+        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :onSection="notification.activity.onSection"></app-model-card-link>
         from section <app-model-section-link :section="notification.activity.fromSection"></app-model-section-link>
-        to section <app-model-section-link :section="notification.activity.fromSection"></app-model-section-link>.
+        to section <app-model-section-link :section="notification.activity.onSection"></app-model-section-link>.
       </div>
       <div v-if="isModelCardWrapperDeleted" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> deleted the card
-        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :section="notification.activity.onSection"></app-model-card-link>
+        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :onSection="notification.activity.onSection"></app-model-card-link>
       </div>
 
     </div>
@@ -352,10 +347,19 @@ export default {
     isModelCardWrapperEdited () {
       return this.notification.activity.type === 'MODEL_CARDWRAPPER_EDITED'
     },
-    isModelCardWrapperMoved () {
-      return this.notification.activity.type === 'MODEL_CARDWRAPPER_MOVED' &&
-        this.notification.activity.fromSection !== null &&
-        this.notification.activity.onSection !== null
+    isModelCardWrapperMovedSameSection () {
+      if (this.notification.activity.fromSection !== null && this.notification.activity.onSection !== null) {
+        return this.notification.activity.type === 'MODEL_CARDWRAPPER_MOVED' &&
+          this.notification.activity.fromSection.id === this.notification.activity.onSection.id
+      }
+      return false
+    },
+    isModelCardWrapperMovedDiferentSections () {
+      if (this.notification.activity.fromSection !== null && this.notification.activity.onSection !== null) {
+        return this.notification.activity.type === 'MODEL_CARDWRAPPER_MOVED' &&
+          this.notification.activity.fromSection.id !== this.notification.activity.onSection.id
+      }
+      return false
     },
     isModelCardWrapperDeleted () {
       return this.notification.activity.type === 'MODEL_CARDWRAPPER_DELETED'

@@ -145,11 +145,13 @@ public class ModelService {
 	public PostResult deleteView (UUID viewId, UUID creatorId) {
 		
 		ModelView view = modelViewRepository.findById(viewId);
-		modelViewRepository.delete(view);
+		
+		view.setElementState(ModelElementState.DELETED);
+		view = modelViewRepository.save(view);
 		
 		activityService.modelViewDeleted(view, appUserRepository.findByC1Id(creatorId));
 		
-		return new PostResult("success", "view deleted", "");
+		return new PostResult("success", "view deleted", view.getId().toString());
 	}
 	
 	@Transactional
@@ -350,7 +352,7 @@ public class ModelService {
 	
 		if(toViewId == null) {
 			/* moving to another section add to section as subsection */
-			ModelSection toSection = modelSectionRepository.findById(fromSectionId);
+			ModelSection toSection = modelSectionRepository.findById(toSectionId);
 			
 			if (beforeSubsectionId != null) {
 				ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
@@ -489,27 +491,12 @@ public class ModelService {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		
-		/* remove references to views */
-		List<ModelView> views = modelSectionRepository.findParentViews(sectionId);
-		if (views.size() > 0) {
-			for (ModelView view : views) {
-				view.getSections().remove(section);
-			}
-		}
-		
-		/* remove references to parent sections */
-		List<ModelSection> parents = modelSectionRepository.findParentSections(sectionId);
-		if (parents.size() > 0) {
-			for (ModelSection parent : parents) {
-				parent.getSubsections().remove(section);
-			}
-		}
+		section.setElementState(ModelElementState.DELETED);
+		section = modelSectionRepository.save(section);
 		
 		activityService.modelSectionDeleted(section, appUserRepository.findByC1Id(creatorId));
 		
-		modelSectionRepository.delete(section);
-		
-		return new PostResult("success", "section deleted", "");
+		return new PostResult("success", "section deleted", section.getId().toString());
 	}
 	
 	@Transactional
@@ -666,22 +653,14 @@ public class ModelService {
 	@Transactional
 	public PostResult deleteCardWrapper (UUID cardWrapperId, UUID creatorId) {
 		
-		List<ModelSection> parents = modelCardWrapperRepository.findParentSections(cardWrapperId);
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		
-		/* remove references */
-		if (parents.size() > 0) {
-			for (ModelSection parent : parents) {
-				parent.getCardsWrappers().remove(cardWrapper);
-				modelSectionRepository.save(parent);
-			}
-		}
-		
-		modelCardWrapperRepository.delete(cardWrapper);
+		cardWrapper.setElementState(ModelElementState.DELETED);
+		cardWrapper = modelCardWrapperRepository.save(cardWrapper);
 		
 		activityService.modelCardWrapperDeleted(cardWrapper, appUserRepository.findByC1Id(creatorId));
 		
-		return new PostResult("success", "section deleted", "");
+		return new PostResult("success", "section deleted", cardWrapper.getId().toString());
 	}
 	
 	

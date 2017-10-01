@@ -39,7 +39,6 @@ public class ModelCard {
 	private FileStored imageFile;
 	
 	
-	
 	public ModelCardDto toDto() {
 		ModelCardDto cardDto = new ModelCardDto();
 		

@@ -27,6 +27,7 @@ import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.SortNatural;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table( name = "initiatives" )
@@ -63,6 +64,7 @@ public class Initiative {
 	private InitiativeMeta meta;	
 	
 	@OneToMany(mappedBy = "initiative")
+	@Where( clause = "element_state = 'ACTIVE'")
 	private List<ModelView> modelViews = new ArrayList<ModelView>();
 	
 	

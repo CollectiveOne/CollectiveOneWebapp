@@ -9,6 +9,7 @@ public class ModelCardWrapperDto {
 	private ModelCardDto card;
 	private Boolean stateControl;
 	private String state;
+	private String initiativeId;
 	private Long targetDate; 
 	private List<ModelCardDto> oldVersions;
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
@@ -36,6 +37,12 @@ public class ModelCardWrapperDto {
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	public String getInitiativeId() {
+		return initiativeId;
+	}
+	public void setInitiativeId(String initiativeId) {
+		this.initiativeId = initiativeId;
 	}
 	public Long getTargetDate() {
 		return targetDate;

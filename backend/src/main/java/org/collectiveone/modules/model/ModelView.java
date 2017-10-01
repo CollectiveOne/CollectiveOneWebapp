@@ -45,6 +45,9 @@ public class ModelView {
 	@OrderColumn(name = "sections_order")
 	private List<ModelSection> sections = new ArrayList<ModelSection>();
 	
+	@ManyToMany
+	private List<ModelSection> sectionsTrash = new ArrayList<ModelSection>();
+	
 	
 	public ModelViewDto toDto() {
 		ModelViewDto viewDto = new ModelViewDto();
@@ -54,6 +57,8 @@ public class ModelView {
 		viewDto.setTitle(title);
 		viewDto.setDescription(description);
 		viewDto.setnSections(sections.size());
+		
+		if (initiative != null) viewDto.setInitiativeId(initiative.getId().toString());
 		
 		return viewDto;
 	}
@@ -97,6 +102,13 @@ public class ModelView {
 	public void setSections(List<ModelSection> sections) {
 		this.sections = sections;
 	}
-	
+
+	public List<ModelSection> getSectionsTrash() {
+		return sectionsTrash;
+	}
+
+	public void setSectionsTrash(List<ModelSection> sectionsTrash) {
+		this.sectionsTrash = sectionsTrash;
+	}
 	
 }

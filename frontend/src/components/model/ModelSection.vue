@@ -122,7 +122,10 @@
                   </app-model-section-with-modal>
                 </div>
 
-                <div class="subsection-container gray-1-color w3-border">
+                <div class="subsection-container gray-1-color w3-border"
+                  @dragover.prevent
+                  @drop="subsectionDroped('', $event)">
+
                   <button class="w3-button" style="width: 100%; text-align: left"
                     @click="$emit('new-subsection')">
                     <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>

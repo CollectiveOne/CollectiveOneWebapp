@@ -1,12 +1,12 @@
 <template lang="html">
   <router-link :to="{
-    name: 'ModelSection',
+    name: 'ModelCardInSection',
     params: {
-      'initiativeId': this.cardWrapper.initiative.id,
+      'initiativeId': this.cardWrapper.initiativeId,
       'sectionId': this.onSection ? this.onSection.id : '',
-      'cardWrapperId': this.cardWrapper.id
+      'cardId': this.cardWrapper.id
       }}">
-    {{ cardWrapper.title !== '' ? cardWrapper.title : 'card' }}
+    {{ cardWrapper.card.title !== '' ? cardWrapper.card.title : 'card' }}
   </router-link>
 </template>
 
