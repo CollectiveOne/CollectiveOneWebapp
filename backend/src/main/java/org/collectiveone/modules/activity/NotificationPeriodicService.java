@@ -15,6 +15,6 @@ public class NotificationPeriodicService {
 		
 	@Scheduled(fixedDelay = 30000)
 	public void updateState() throws IOException {
-		activityService.sendPendingEmails();
+		activityService.sendEmailsSendNow();
 	}
 }

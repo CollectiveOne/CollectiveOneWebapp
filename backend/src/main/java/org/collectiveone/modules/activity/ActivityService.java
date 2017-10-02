@@ -61,13 +61,13 @@ public class ActivityService {
 	
 	
 	@Transactional
-	public void sendPendingEmails() throws IOException {
+	public void sendEmailsSendNow() throws IOException {
 		
 		List<Notification> notifications = 
 				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(
 						SubscriberEmailNotificationsState.SEND_NOW, NotificationEmailState.PENDING);
 		
-		emailService.sendNotifications(notifications);
+		emailService.sendNotificationsSendNow(notifications);
 	}
 	
 	@Transactional
