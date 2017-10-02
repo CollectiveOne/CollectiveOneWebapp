@@ -144,11 +144,11 @@
         class="w3-button gray-1 w3-small"
         @click="toggleExpand()">
         <span v-if="!expanded">
-          <i class="fa fa-chevron-down" aria-hidden="true"></i> Expand (contains
-          <span v-if="section.nSubsections > 0 && section.nCards > 0"><b>{{ section.nSubsections }}</b> subsections and <b>{{ section.nCards }}</b> cards)</span>
+          <i class="fa fa-chevron-down" aria-hidden="true"></i> Expand
+          <span v-if="section.nSubsections > 0 && section.nCards > 0"> (contains <b>{{ section.nSubsections }}</b> subsections and <b>{{ section.nCards }}</b> cards)</span>
           <span v-else>
-            <span v-if="section.nSubsections > 0"><b>{{ section.nSubsections }}</b>)</span>
-            <span v-if="section.nCards > 0"><b>{{ section.nCards }}</b> cards)</span>
+            <span v-if="section.nSubsections > 0"> (contains <b>{{ section.nSubsections }}</b> subsections)</span>
+            <span v-if="section.nCards > 0"> (contains <b>{{ section.nCards }}</b> cards)</span>
           </span>
         </span>
         <span v-else><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse "{{  section.title }}" section</span>
@@ -398,7 +398,7 @@ export default {
 }
 
 .cards-container {
-  padding: 20px 10px 16px 10px;
+  padding: 20px 10px 4px 10px;
   max-height: 500px;
   overflow: auto;
 }
@@ -408,7 +408,16 @@ export default {
   display: inline-block;
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1700px) {
+  .section-card-col {
+    width: calc(25% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1699px) {
   .section-card-col {
     width: calc(33% - 16px);
     margin-left: 8px;

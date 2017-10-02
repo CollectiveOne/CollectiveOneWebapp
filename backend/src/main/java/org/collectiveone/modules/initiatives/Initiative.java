@@ -27,7 +27,6 @@ import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.SortNatural;
-import org.hibernate.annotations.Where;
 
 @Entity
 @Table( name = "initiatives" )
@@ -64,9 +63,10 @@ public class Initiative {
 	private InitiativeMeta meta;	
 	
 	@OneToMany(mappedBy = "initiative")
-	@Where( clause = "element_state = 'ACTIVE'")
 	private List<ModelView> modelViews = new ArrayList<ModelView>();
 	
+	@OneToMany(mappedBy = "initiative")
+	private List<ModelView> modelViewsTrash = new ArrayList<ModelView>();
 	
 	public InitiativeDto toDto() {
 		InitiativeDto dto = new InitiativeDto();
@@ -135,6 +135,12 @@ public class Initiative {
 	}
 	public void setModelViews(List<ModelView> modelViews) {
 		this.modelViews = modelViews;
+	}
+	public List<ModelView> getModelViewsTrash() {
+		return modelViewsTrash;
+	}
+	public void setModelViewsTrash(List<ModelView> modelViewsTrash) {
+		this.modelViewsTrash = modelViewsTrash;
 	}
 	
 }

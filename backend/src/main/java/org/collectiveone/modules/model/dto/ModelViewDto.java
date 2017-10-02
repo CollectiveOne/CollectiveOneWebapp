@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.model.ModelElementState;
 import org.collectiveone.modules.model.ModelView;
 
 public class ModelViewDto {
@@ -24,7 +23,6 @@ public class ModelViewDto {
 		view.setInitiative(initiative);
 		view.setTitle(viewDto.getTitle());
 		view.setDescription(viewDto.getDescription());
-		view.setElementState(ModelElementState.ACTIVE);
 		
 		return view;
 	}

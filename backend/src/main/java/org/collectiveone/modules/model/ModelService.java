@@ -146,7 +146,11 @@ public class ModelService {
 		
 		ModelView view = modelViewRepository.findById(viewId);
 		
-		view.setElementState(ModelElementState.DELETED);
+		Initiative initiative = view.getInitiative();
+		
+		initiative.getModelViews().remove(view);
+		initiative.getModelViewsTrash().add(view);
+		
 		view = modelViewRepository.save(view);
 		
 		activityService.modelViewDeleted(view, appUserRepository.findByC1Id(creatorId));
@@ -251,6 +255,8 @@ public class ModelService {
 		ModelSection subsection = modelSectionRepository.findById(subsectionId);
 		
 		section.getSubsections().remove(subsection);
+		section.getSubsectionsTrash().add(subsection);
+		
 		section = modelSectionRepository.save(section);
 		
 		activityService.modelSectionRemovedFromSection(subsection, section, appUserRepository.findByC1Id(creatorId));
@@ -265,6 +271,8 @@ public class ModelService {
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		
 		view.getSections().remove(section);
+		view.getSectionsTrash().add(section);
+		
 		view = modelViewRepository.save(view);
 		
 		activityService.modelSectionRemovedFromView(section, view, appUserRepository.findByC1Id(creatorId));
@@ -447,6 +455,8 @@ public class ModelService {
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		
 		section.getCardsWrappers().remove(cardWrapper);
+		section.getCardsWrappersTrash().add(cardWrapper);
+		
 		section = modelSectionRepository.save(section);
 		
 		activityService.modelCardWrapperRemoved(cardWrapper, section, appUserRepository.findByC1Id(creatorId));
@@ -491,7 +501,25 @@ public class ModelService {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		
-		section.setElementState(ModelElementState.DELETED);
+		/* remove references to views */
+		List<ModelView> views = modelSectionRepository.findParentViews(sectionId);
+		if (views.size() > 0) {
+			for (ModelView view : views) {
+				view.getSections().remove(section);
+				view.getSectionsTrash().add(section);
+			}
+		}
+		
+		/* remove references to parent sections */
+		List<ModelSection> parents = modelSectionRepository.findParentSections(sectionId);
+		if (parents.size() > 0) {
+			for (ModelSection parent : parents) {
+				parent.getSubsections().remove(section);
+				parent.getSubsectionsTrash().add(section);
+			}
+		}
+		
+		
 		section = modelSectionRepository.save(section);
 		
 		activityService.modelSectionDeleted(section, appUserRepository.findByC1Id(creatorId));
@@ -653,10 +681,18 @@ public class ModelService {
 	@Transactional
 	public PostResult deleteCardWrapper (UUID cardWrapperId, UUID creatorId) {
 		
+		
+		List<ModelSection> parents = modelCardWrapperRepository.findParentSections(cardWrapperId);
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		
-		cardWrapper.setElementState(ModelElementState.DELETED);
-		cardWrapper = modelCardWrapperRepository.save(cardWrapper);
+		/* remove from all sections */
+		if (parents.size() > 0) {
+			for (ModelSection parent : parents) {
+				parent.getCardsWrappers().remove(cardWrapper);
+				parent.getCardsWrappersTrash().add(cardWrapper);
+				modelSectionRepository.save(parent);
+			}
+		}
 		
 		activityService.modelCardWrapperDeleted(cardWrapper, appUserRepository.findByC1Id(creatorId));
 		

@@ -6,8 +6,6 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -21,7 +19,6 @@ import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "model_sections")
@@ -36,10 +33,6 @@ public class ModelSection {
 	@ManyToOne
 	private Initiative initiative;
 	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "element_state")
-	private ModelElementState elementState;
-	
 	@Column(name = "title", length = 30)
 	private String title;
 	
@@ -50,7 +43,6 @@ public class ModelSection {
 	
 	@ManyToMany
 	@OrderColumn(name = "cards_order")
-	@Where( clause = "element_state = 'ACTIVE'")
 	private List<ModelCardWrapper> cardsWrappers = new ArrayList<ModelCardWrapper>();
 	
 	@ManyToMany
@@ -61,8 +53,10 @@ public class ModelSection {
 	 * */
 	@ManyToMany
 	@OrderColumn(name = "subsections_order")
-	@Where( clause = "element_state = 'ACTIVE'")
 	private List<ModelSection> subsections = new ArrayList<ModelSection>();
+	
+	@ManyToMany
+	private List<ModelSection> subsectionsTrash = new ArrayList<ModelSection>();
 	
 	
 	@Override
@@ -116,14 +110,6 @@ public class ModelSection {
 		this.initiative = initiative;
 	}
 
-	public ModelElementState getElementState() {
-		return elementState;
-	}
-
-	public void setElementState(ModelElementState elementState) {
-		this.elementState = elementState;
-	}
-
 	public String getTitle() {
 		return title;
 	}
@@ -147,6 +133,14 @@ public class ModelSection {
 	public void setCardsWrappers(List<ModelCardWrapper> cardsWrappers) {
 		this.cardsWrappers = cardsWrappers;
 	}
+	
+	public List<ModelCardWrapper> getCardsWrappersTrash() {
+		return cardsWrappersTrash;
+	}
+
+	public void setCardsWrappersTrash(List<ModelCardWrapper> cardsWrappersTrash) {
+		this.cardsWrappersTrash = cardsWrappersTrash;
+	}
 
 	public List<ModelSection> getSubsections() {
 		return subsections;
@@ -154,6 +148,14 @@ public class ModelSection {
 
 	public void setSubsections(List<ModelSection> subsections) {
 		this.subsections = subsections;
+	}
+
+	public List<ModelSection> getSubsectionsTrash() {
+		return subsectionsTrash;
+	}
+
+	public void setSubsectionsTrash(List<ModelSection> subsectionsTrash) {
+		this.subsectionsTrash = subsectionsTrash;
 	}
 	
 	

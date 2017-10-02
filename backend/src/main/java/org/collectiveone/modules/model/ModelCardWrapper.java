@@ -36,12 +36,12 @@ public class ModelCardWrapper {
 	@ManyToOne
 	private Initiative initiative;
 	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "element_state")
-	private ModelElementState elementState;
-	
 	@Column(name = "state_control")
 	private Boolean stateControl;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "state")
+	private ModelCardState state;
 	
 	@Column(name = "targetDate")
 	private Timestamp targetDate;
@@ -82,8 +82,8 @@ public class ModelCardWrapper {
 		cardWrapperDto.setId(id.toString());
 		cardWrapperDto.setCard(card.toDto());
 		cardWrapperDto.setStateControl(stateControl);
-		if (initiative != null) cardWrapperDto.setInitiativeId(initiative.getId().toString());
 		if (state != null) cardWrapperDto.setState(state.toString());
+		if (initiative != null) cardWrapperDto.setInitiativeId(initiative.getId().toString());
 		if (targetDate != null) cardWrapperDto.setTargetDate(targetDate.getTime());
 		
 		return cardWrapperDto;
@@ -91,7 +91,6 @@ public class ModelCardWrapper {
 	
 	public void setOtherProperties(ModelCardDto cardDto) {
 		setStateControl(cardDto.getStateControl());
-		if (cardDto.getState() != null) setState(ModelCardState.valueOf(cardDto.getState()));
 		if (cardDto.getTargetDate() != null) setTargetDate(new Timestamp(cardDto.getTargetDate()));
 	}
 	
@@ -135,7 +134,7 @@ public class ModelCardWrapper {
 	public void setStateControl(Boolean stateControl) {
 		this.stateControl = stateControl;
 	}
-
+	
 	public ModelCardState getState() {
 		return state;
 	}
