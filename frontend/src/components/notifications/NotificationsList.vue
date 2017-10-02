@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <button class="w3-button w3-padding-large w3-display-container w3-xlarge" title="Notifications"
+    <button class="bell-button w3-button w3-padding-large w3-display-container w3-xlarge" title="Notifications"
       @click="showNotificationsClicked()">
       <i class="fa fa-bell-o w3-display-center"></i>
       <i v-if="numberOfUnreadNotifications > 0" class="fa fa-circle w3-display-topright circle">
@@ -66,6 +66,10 @@ export default {
 </script>
 
 <style scoped>
+
+.bell-button {
+  height: 64px;
+}
 
 .fa-bell-o {
   transform: rotate(30deg);

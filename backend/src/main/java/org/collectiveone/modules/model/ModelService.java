@@ -151,6 +151,7 @@ public class ModelService {
 		initiative.getModelViews().remove(view);
 		initiative.getModelViewsTrash().add(view);
 		
+		initiativeRepository.save(initiative);
 		view = modelViewRepository.save(view);
 		
 		activityService.modelViewDeleted(view, appUserRepository.findByC1Id(creatorId));

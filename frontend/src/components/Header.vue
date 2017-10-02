@@ -44,7 +44,7 @@
         </button>
       </div>
 
-      <div v-if="$store.state.user.authenticated" class="nots-div w3-bar-item w3-right">
+      <div v-if="$store.state.user.authenticated" class="nots-div w3-right">
         <app-notifications-list
           :show="showActivityList"
           @icon-clicked="activityClicked()"
@@ -145,8 +145,7 @@ export default {
 }
 
 .nots-div {
-  padding-top: 3px !important;
-  padding-bottom: 0px !important;
+  height: 100% !important;
 }
 
 .logged-nickname {

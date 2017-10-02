@@ -174,7 +174,7 @@
                           {{ cardWrapper.state }}
                         </div>
                       </div>
-                      <div class="w3-col m6">
+                      <div v-if="targetDateStr !== ''" class="w3-col m6">
                         <label class=""><b>Target date:</b></label>
                         <input class="w3-input" :value="dateString(this.cardWrapper.targetDate)" disabled>
                       </div>
@@ -191,7 +191,6 @@
                         <div class="w3-col m6 w3-margin-bottom">
                           <label class=""><b>State:</b></label>
                           <select class="w3-select" v-model="editedCard.state">
-                            <option>NONE</option>
                             <option>PLAN</option>
                             <option>REALITY</option>
                           </select>
@@ -413,7 +412,6 @@ export default {
     startEditing () {
       this.editedCard = JSON.parse(JSON.stringify(this.card))
 
-      this.targetDateStr = new Date()
       if (this.cardWrapper.targetDate) {
         if (this.cardWrapper.targetDate > 0) {
           this.targetDateStr = new Date(this.cardWrapper.targetDate)

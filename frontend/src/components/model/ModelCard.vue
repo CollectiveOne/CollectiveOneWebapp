@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="w3-col s6">
-          {{ dateString(cardWrapper.targetDate) }}
+          {{ cardWrapper.targetDate > 0 ? dateString(cardWrapper.targetDate) : '' }}
         </div>
       </div>
 
@@ -52,8 +52,6 @@
           </div>
 
         </div>
-
-
       </div>
 
       <div v-if="cardEffect" class="w3-row">
