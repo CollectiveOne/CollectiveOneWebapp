@@ -179,19 +179,13 @@ public class EmailService {
 				
 				String body = "";
 				for (Notification notification : notifications) {
-					String text ="";
-					
-					switch () {
-					
-					}
-					
 					body += 
-							"<div class=\"activity-box\">"
+							"/n<div class=\"activity-box\">"
 						+ 		"<div class=\"avatar-box\">"
 						+ 			"<img class=\"avatar-img\" src=\"" + notification.getActivity().getTriggerUser().getProfile().getPictureUrl() + "\"></img>"
 						+ 		"</div> "
 						+ 		"<div class=\"activity-text\">"
-						+ 			"<p>" + text + "</p>"
+						+ 			"<p>" + getActivityMessage(notification) + "</p>"
 						+ 		"</div> "
 						+ 	"</div> ";
 				}
@@ -234,85 +228,7 @@ public class EmailService {
 			if(notifications.size() > 0) {
 				
 				Request request = new Request();
-				Mail mail = null;
-						
-				ActivityType type = notifications.get(0).getActivity().getType();
-				
-				switch (type) {
-				case SUBINITIATIVE_CREATED:
-					mail = prepareSubinitaitiveCreatedEmail(notifications);
-					break;
-					
-				case INITIATIVE_EDITED:
-					mail = prepareInitiativeEditedEmail(notifications);
-					break;
-					
-				case INITIATIVE_CREATED:
-					mail = prepareInitiativeCreatedEmail(notifications);
-					break;
-					
-				case TOKENS_MINTED:
-					mail = prepareTokensMintedEmail(notifications);
-					break;
-					
-				case PR_ASSIGNATION_CREATED:
-					mail = preparePRAssignationCreatedEmail(notifications);
-					break;
-					
-				case D_ASSIGNATION_CREATED:
-					mail = prepareDAssignationEmail(notifications);
-					break;
-					
-				case INITIATIVE_TRANSFER:
-					mail = prepareInitiativeTransferEmail(notifications);
-					break;
-					
-				case PR_ASSIGNATION_DONE:
-					mail = preparePRAssignationDoneEmail(notifications);
-					break;
-					
-				case ASSIGNATION_REVERT_ORDERED:
-					mail = prepareAssignationRevertOrderedEmail(notifications);
-					break;
-					
-				case ASSIGNATION_REVERT_CANCELLED:
-					mail = prepareAssignationRevertCancelledEmail(notifications);
-					break;
-					
-				case ASSIGNATION_REVERTED:
-					mail = prepareAssignationRevertedEmail(notifications);
-					break;
-					
-				case ASSIGNATION_DELETED:
-					mail = prepareAssignationDeletedEmail(notifications);
-					break;
-					
-				case INITIATIVE_DELETED:
-					mail = prepareInitiativeDeletedEmail(notifications);
-					break;
-					
-				case MODEL_VIEW_CREATED:
-				case MODEL_VIEW_EDITED:
-				case MODEL_VIEW_DELETED:
-				case MODEL_SECTION_ADDED:
-				case MODEL_SECTION_CREATED:
-				case MODEL_SECTION_DELETED:
-				case MODEL_SECTION_EDITED:
-				case MODEL_SECTION_MOVED:
-				case MODEL_SECTION_REMOVED:
-				case MODEL_CARDWRAPPER_ADDED:
-				case MODEL_CARDWRAPPER_CREATED:
-				case MODEL_CARDWRAPPER_DELETED:
-				case MODEL_CARDWRAPPER_EDITED:
-				case MODEL_CARDWRAPPER_MOVED:
-				case MODEL_CARDWRAPPER_REMOVED:
-				
-					mail = prepareModelEditedEmail(notifications);
-					break;
-					
-				default:
-					break;
-				}
+				Mail mail = prepareActivitySendNowEmail(notifications);
 				
 				if (mail != null) {
 					try {
@@ -340,6 +256,34 @@ public class EmailService {
 		
 		/* if email is disabled */
 		return "success";
+	}
+	
+	private Mail prepareActivitySendNowEmail(List<Notification> notifications) {
+		Mail mail = new Mail();
+		
+		Email fromEmail = new Email();
+		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
+		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
+		mail.setFrom(fromEmail);
+		mail.setSubject("Initiative created");
+	
+		for(Notification notification : notifications) {
+			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
+				Personalization personalization = basicInitiativePersonalization(notification);
+				
+				String message = getActivityMessage(notification);
+				personalization.addSubstitution("$MESSAGE$", message);
+				
+				mail.addPersonalization(personalization);
+			} 
+			
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
+		}
+		
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
+		
+		return mail;
 	}
 	
 	private String getActivityMessage(Notification notification) {
@@ -574,89 +518,7 @@ public class EmailService {
 		
 		return "";
 	}
-	
-	private Mail prepareInitiativeEmail(List<Notification> notifications) {
-		Mail mail = new Mail();
 		
-		Email fromEmail = new Email();
-		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
-		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
-		mail.setFrom(fromEmail);
-		mail.setSubject("Initiative created");
-	
-		for(Notification notification : notifications) {
-			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
-				Personalization personalization = basicInitiativePersonalization(notification);
-				
-				String message = getActivityMessage(notification);
-				personalization.addSubstitution("$MESSAGE$", message);
-				
-				mail.addPersonalization(personalization);
-			} 
-			
-			notification.setEmailState(NotificationEmailState.DELIVERED);
-			notificationRepository.save(notification);
-		}
-		
-		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
-		
-		return mail;
-	}
-	
-	
-	
-	
-	private Mail prepareModelEditedEmail(List<Notification> notifications)	{
-		Mail mail = new Mail();
-		
-		Email fromEmail = new Email();
-		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
-		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
-		mail.setFrom(fromEmail);
-		mail.setSubject("Model edited");
-	
-		for(Notification notification : notifications) {
-			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
-				Personalization personalization = basicInitiativePersonalization(notification);
-				
-				ModelView modelView = notification.getActivity().getModelView();
-				ModelSection modelSection = notification.getActivity().getModelSection();
-				ModelCardWrapper modelCardWrapper = notification.getActivity().getModelCardWrapper();
-				
-				ModelSection onSection = notification.getActivity().getOnSection();
-				ModelView onView = notification.getActivity().getOnView();
-				
-				ModelSection fromSection = notification.getActivity().getFromSection();
-				ModelView fromView = notification.getActivity().getFromView();
-				
-				String message = "";
-				
-				switch(notification.getActivity().getType()) {
-				
-					
-						
-					default:
-						break;
-						
-				}
-				
-				personalization.addSubstitution("$MESSAGE$", message);
-				
-				mail.addPersonalization(personalization);
-			}
-			
-			notification.setEmailState(NotificationEmailState.DELIVERED);
-			notificationRepository.save(notification);
-		}
-		
-		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
-		
-		return mail;
-	}
-	
-	
-	
-	
 	private Personalization basicInitiativePersonalization(Notification notification) {
 		String toEmailString = notification.getSubscriber().getUser().getEmail();
 		String triggeredByUsername = notification.getActivity().getTriggerUser().getProfile().getNickname();

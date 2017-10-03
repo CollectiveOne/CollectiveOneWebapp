@@ -33,22 +33,35 @@
         clear: both;
       }
 
-      .username {
-        margin-top: 5px;
-      }
-
       .content {
         padding-top: 50px;
         padding-bottom: 50px;
         clear: both;
       }
 
-			.user-picture {
-				border-radius: 50px;
-				width: 60px;
+			.activity-box {
+				width: 80%;
+				margin: 0 auto;
+				clear: both;
 			}
 
-      .footer {
+			.avatar-box {
+				width: 50px;
+				float: left;
+			}
+
+			.avatar-box img {
+				max-width: 100%;
+				max-heigth: 100%
+			}
+
+			.activity-text {
+				width: calc(100% - 50px);
+				text-align: left;
+				float: left;
+			}
+
+			.footer {
         padding: 30px;
         background-color: #eff3f6;
       }
@@ -78,12 +91,27 @@
 	</div>
 
 	<div class="content">
-		<h3>Recent activity in $INITIATIVE_ANCHOR$</h3>
+		<h3>Summary of recent activity in $INITIATIVE_ANCHOR$</h3>
 
-		<img class="user-picture" alt="" src="$TRIGGER_USER_PICTURE$" />
-		<p class="username">$TRIGGER_USER_NICKNAME$</p>
+		<div class="activity-box">
+			<div class="avatar-box">
+				<img class="avatar-img" src="https://lh4.googleusercontent.com/-GklJ1T6lIjc/AAAAAAAAAAI/AAAAAAAAACY/4F11RvbtP5E/photo.jpg"></img>
+			</div>
+			<div class="activity-text">
+				<p>edited the name or purpose of the Test initiative.</p>
+			</div>
+		</div>
 
-		$MESSAGE$
+		<div class="activity-box">
+			<div class="avatar-box">
+				<img class="avatar-img" src="https://lh4.googleusercontent.com/-GklJ1T6lIjc/AAAAAAAAAAI/AAAAAAAAACY/4F11RvbtP5E/photo.jpg"></img>
+			</div>
+			<div class="activity-text">
+				<p>edited the name or purpose of the Test initiative.</p>
+			</div>
+		</div>
+
+		<!-- $MESSAGE$ -->
 
 	</div>
 
@@ -95,8 +123,6 @@
 		</div>
 
 		<div class="unsuscribe-links"  >
-			<a href="$UNSUSCRIBE_FROM_INITIATIVE_HREF$">unsuscribe from email notifications from the $INITIATIVE_NAME$ initiative</a>
-			<br />
 			<a class="unsuscribe-link" href="$UNSUSCRIBE_FROM_ALL_HREF$">unsuscribe from all email notifications from CollectiveOne</a>
 			<br>
 		</div>
