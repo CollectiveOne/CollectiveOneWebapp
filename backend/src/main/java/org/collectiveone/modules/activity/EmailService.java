@@ -828,7 +828,7 @@ public class EmailService {
 						break;
 						
 					case MODEL_CARDWRAPPER_REMOVED:
-						message = "<p>removed the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
+						message = "<p>removed the card " + getModelCardWrapperAnchor(modelCardWrapper, fromSection) + 
 								" from section " + getModelSectionAnchor(fromSection) + "</p> ";
 						break;
 						
