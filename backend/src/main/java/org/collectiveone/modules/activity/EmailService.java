@@ -303,7 +303,7 @@ public class EmailService {
 		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
 		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
 		mail.setFrom(fromEmail);
-		mail.setSubject("Initiative created");
+		mail.setSubject("Activity in CollectiveOne");
 	
 		for(Notification notification : notifications) {
 			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
@@ -471,7 +471,7 @@ public class EmailService {
 						" under section " + getModelSectionAnchor(onSection) + "</p> ";
 			} else {
 				message = "<p>created a new section " + getModelSectionAnchor(modelSection) + 
-						" under the " + getModelViewAnchor(onView) + "view</p> ";
+						" under the " + getModelViewAnchor(onView) + " view</p> ";
 			}							
 			return message;
 			
@@ -486,10 +486,10 @@ public class EmailService {
 					" in the " + getModelSectionAnchor(onSection) + " section</p> ";
 			
 		case MODEL_CARDWRAPPER_EDITED:
-			return "<p>edited the model card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + "</p> ";
+			return "<p>edited the model card " + getModelCardWrapperAnchor(modelCardWrapper) + "</p> ";
 			
 		case MODEL_CARDWRAPPER_DELETED:
-			return "<p>deleted the model card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + "</p> ";
+			return "<p>deleted the model card " + getModelCardWrapperAnchor(modelCardWrapper) + "</p> ";
 			
 		case MODEL_SECTION_ADDED: 
 			if (onSection != null) {
@@ -592,7 +592,11 @@ public class EmailService {
 	}
 	
 	private String getTransferString(List<InitiativeTransfer> transfers) {
-		return NumberFormat.getNumberInstance(Locale.US).format(transfers.get(0).getValue()) + " " + transfers.get(0).getTokenType().getName();
+		if (transfers.size() > 0) {
+			return NumberFormat.getNumberInstance(Locale.US).format(transfers.get(0).getValue()) + " " + transfers.get(0).getTokenType().getName();
+		} else {
+			return "";
+		}
 	}
 	
 	private String getModelViewAnchor(ModelView view) {
@@ -612,6 +616,12 @@ public class EmailService {
 				cardWrapper.getInitiative().getId().toString() + "/mode/section/" + 
 				onSection.getId().toString() + "/cardWrapper/" + cardWrapper.getCard().toString() + 
 				">" + cardWrapper.getCard().getTitle() + "</a>";
+	}
+	
+	private String getModelCardWrapperAnchor(ModelCardWrapper cardWrapper) {
+		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
+				cardWrapper.getInitiative().getId().toString() + "/mode/card/" + 
+				cardWrapper.getId().toString() + ">" + cardWrapper.getCard().getTitle() + "</a>";
 	}
 	
 	private String getUnsuscribeFromInitiativeHref(Initiative initiative) {

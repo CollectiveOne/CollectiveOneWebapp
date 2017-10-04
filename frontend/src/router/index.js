@@ -17,6 +17,7 @@ import TransfersSection from '@/components/initiative/TransfersSection.vue'
 import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
 import ModelViewPlacer from '@/components/model/ModelViewPlacer.vue'
 import ModelSectionPlacer from '@/components/model/ModelSectionPlacer.vue'
+import ModelCardWrapperPlacer from '@/components/model/ModelCardWrapperPlacer.vue'
 import ModelSearchContainer from '@/components/model/ModelSearchContainer.vue'
 
 import UserProfilePage from '@/components/UserProfilePage.vue'
@@ -82,6 +83,7 @@ export default new Router({
                         { path: 'card/:cardId', name: 'ModelCardInSection' }
                       ]
                     },
+                    { path: 'card/:cardWrapperId', name: 'ModelCardAlone', component: ModelCardWrapperPlacer },
                     { path: 'search', name: 'ModelSearch', component: ModelSearchContainer }
                   ]
                 }

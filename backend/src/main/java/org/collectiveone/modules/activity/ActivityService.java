@@ -77,7 +77,7 @@ public class ActivityService {
 				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(
 						SubscriberEmailNotificationsState.SEND_ONCEADAY, NotificationEmailState.PENDING);
 		
-		emailService.sendNotificationsSendNow(notifications);
+		emailService.sendNotificationsGrouped(notifications);
 	}
 	
 	@Transactional

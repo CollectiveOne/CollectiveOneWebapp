@@ -12,7 +12,7 @@ needs the model card component inside, and would crate a recursion -->
           :cardWrapperId="cardWrapper.id"
           :inSectionId="inSectionId"
           :inSectionTitle="inSectionTitle"
-          @close="showCardModal = false">
+          @close="modalClosed()">
         </app-model-card-modal>
       </transition>
     </div>
@@ -109,6 +109,10 @@ export default {
   },
 
   methods: {
+    modalClosed () {
+      this.showCardModal = false
+      this.$emit('please-update')
+    },
     hoverEnter () {
       this.showActionButton = true
       if (this.hoverHighlight) {
