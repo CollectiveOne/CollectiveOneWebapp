@@ -5,8 +5,10 @@ import java.util.UUID;
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.governance.DecisionVerdict;
 import org.collectiveone.modules.governance.GovernanceService;
+import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
@@ -537,6 +539,23 @@ public class ModelController extends BaseController {
 		}
 		
 		return modelService.searchSection(query, new PageRequest(page, size), initiativeId);
+	}
+	
+	@RequestMapping(path = "/activity/model/view/{viewId}", method = RequestMethod.GET)
+	public GetResult<Page<ActivityDto>> getActivityUnderView(
+			@PathVariable("viewId") String viewIdStr,
+			@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size) {
+		
+		UUID viewId = UUID.fromString(viewIdStr);
+		
+		Initiative initiative = modelService.getViewInitiative(viewId);
+		
+		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
+		}
+		
+		return modelService.getActivityUnderView(viewId, new PageRequest(page, size));
 	}
 	
 }

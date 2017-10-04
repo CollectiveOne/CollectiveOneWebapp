@@ -8,7 +8,10 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.Activity;
 import org.collectiveone.modules.activity.ActivityService;
+import org.collectiveone.modules.activity.dto.ActivityDto;
+import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredRepositoryIf;
 import org.collectiveone.modules.initiatives.Initiative;
@@ -59,6 +62,9 @@ public class ModelService {
 	
 	@Autowired
 	private FileStoredRepositoryIf fileStoredRepository;
+	
+	@Autowired
+	private ActivityRepositoryIf activityRepository;
 	
 	
 	@Transactional
@@ -141,6 +147,11 @@ public class ModelService {
 		viewDto = addViewSubElements(viewDto, view.getId(), level);
 		
 		return new GetResult<ModelViewDto>("success", "view retrieved", viewDto);
+	}
+	
+	@Transactional
+	public Initiative getViewInitiative (UUID viewId) {
+		return modelViewRepository.findById(viewId).getInitiative();
 	}
 	
 	
@@ -701,6 +712,65 @@ public class ModelService {
 		activityService.modelCardWrapperDeleted(cardWrapper, appUserRepository.findByC1Id(creatorId));
 		
 		return new PostResult("success", "section deleted", cardWrapper.getId().toString());
+	}
+	
+	@Transactional
+	public List<UUID> getAllSectionsIdsOfView (UUID viewId) {
+		
+		List<UUID> sectionIds = modelViewRepository.getSectionIds(viewId);
+		List<UUID> allSectionIds = new ArrayList<UUID>();
+		
+		allSectionIds.addAll(sectionIds);
+		
+		for (UUID sectionId : sectionIds) {
+			List<UUID> subSectionIds = getAllSubsectionsIds(sectionId);
+			for (UUID subSectionId : subSectionIds) {
+				if(allSectionIds.indexOf(subSectionId) == -1) {
+					allSectionIds.add(subSectionId);
+				}
+			}
+		}
+		
+		return allSectionIds;
+	}
+	
+	@Transactional
+	public List<UUID> getAllSubsectionsIds (UUID sectionId) {
+		List<UUID> subsectionsIds = modelSectionRepository.getSubsectionsIds(sectionId);
+		List<UUID> allSubsectionIds = new ArrayList<UUID>();
+		
+		allSubsectionIds.addAll(subsectionsIds);
+		
+		for (UUID subsectionId : subsectionsIds) {
+			List<UUID> subsubsectionIds = getAllSubsectionsIds(subsectionId);
+			
+			for (UUID subsubsectionId : subsubsectionIds) {
+				if(allSubsectionIds.indexOf(subsubsectionId) == -1) {
+					allSubsectionIds.add(subsubsectionId);
+				}
+			}
+		}
+		
+		return subsectionsIds;
+	}
+	
+	@Transactional
+	public GetResult<Page<ActivityDto>> getActivityUnderView (UUID viewId, PageRequest page) {
+		List<UUID> sectionIds = getAllSectionsIdsOfView(viewId);
+		List<UUID> cardsIds = modelCardRepository.findAllCardsIdsOfSections(sectionIds);
+		
+		Page<Activity> activities = activityRepository.findAllOfViewSectionsAndCards(viewId, sectionIds, cardsIds, page);
+	
+		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
+		
+		for(Activity activity : activities.getContent()) {
+			activityDtos.add(activity.toDto());
+		}
+		
+		Page<ActivityDto> dtosPage = new PageImpl<ActivityDto>(activityDtos, page, activities.getNumberOfElements());
+		
+		return new GetResult<Page<ActivityDto>>("succes", "actvity returned", dtosPage);
+		
 	}
 	
 	

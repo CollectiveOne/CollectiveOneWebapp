@@ -107,7 +107,8 @@ export default {
       editing: false,
       showEditButtons: false,
       titleEmptyError: false,
-      descriptionEmptyError: false
+      descriptionEmptyError: false,
+      activity: []
     }
   },
 
@@ -142,6 +143,16 @@ export default {
     update () {
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/view/' + this.view.id).then((response) => {
         this.view = response.data.data
+      })
+    },
+    updateActivity () {
+      this.axios.get('/1/activity/model/view/' + this.view.id, {
+        params: {
+          page: 0,
+          size: 10
+        }
+      }).then((response) => {
+        this.activity = response.data.data
       })
     },
     startEditing () {
@@ -224,6 +235,7 @@ export default {
       this.showEditButtons = true
       this.view.id = this.viewId
       this.update()
+      this.updateActivity()
     }
   }
 }
