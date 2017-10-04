@@ -108,6 +108,9 @@ public class ModelService {
 		ModelView view = viewDto.toEntity(null, viewDto, initiative);
 		view = modelViewRepository.save(view);
 		
+		initiative.getModelViews().add(view);
+		initiativeRepository.save(initiative);
+		
 		activityService.modelViewCreated(view, appUserRepository.findByC1Id(creatorId));
 		
 		return new PostResult("success", "view created", view.getId().toString());
