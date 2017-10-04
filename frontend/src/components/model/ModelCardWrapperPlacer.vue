@@ -2,7 +2,7 @@
   <div class="">
 
     <div class="">
-      <h1 class="">Card</h1>
+      <h1 class="">Card Page</h1>
     </div>
 
     <app-model-card-with-modal

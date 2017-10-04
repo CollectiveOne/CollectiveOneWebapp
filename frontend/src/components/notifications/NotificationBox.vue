@@ -184,7 +184,7 @@
       </div>
       <div v-if="isModelCardWrapperEdited" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> edited the card
-        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :onSection="notification.activity.onSection"></app-model-card-link>.
+        <app-model-card-alone-link :cardWrapper="notification.activity.modelCardWrapper"></app-model-card-alone-link>.
       </div>
       <div v-if="isModelCardWrapperMovedSameSection" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> moved the card
@@ -199,7 +199,7 @@
       </div>
       <div v-if="isModelCardWrapperDeleted" class="">
         <app-user-link :user="notification.activity.triggerUser"></app-user-link> deleted the card
-        <app-model-card-link :cardWrapper="notification.activity.modelCardWrapper" :onSection="notification.activity.onSection"></app-model-card-link>
+        <app-model-card-alone-link :cardWrapper="notification.activity.modelCardWrapper"></app-model-card-alone-link>.
       </div>
 
     </div>
@@ -214,7 +214,8 @@ import AssignationLink from '@/components/global/AssignationLink.vue'
 
 import ModelViewLink from '@/components/global/ModelViewLink.vue'
 import ModelSectionLink from '@/components/global/ModelSectionLink.vue'
-import ModelCardWrapperLink from '@/components/global/ModelCardWrapperLink.vue'
+import ModelCardInSectionLink from '@/components/global/ModelCardInSectionLink.vue'
+import ModelCardAloneLink from '@/components/global/ModelCardAloneLink.vue'
 
 export default {
   props: {
@@ -230,7 +231,8 @@ export default {
     'app-assignation-link': AssignationLink,
     'app-model-view-link': ModelViewLink,
     'app-model-section-link': ModelSectionLink,
-    'app-model-card-link': ModelCardWrapperLink
+    'app-model-card-link': ModelCardInSectionLink,
+    'app-model-card-alone-link': ModelCardAloneLink
   },
 
   computed: {
