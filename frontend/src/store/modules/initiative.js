@@ -27,10 +27,10 @@ const getters = {
       return false
     }
   },
-  isLoggedAMember: (state) => {
+  isLoggedAnEditor: (state) => {
     if (state.initiative) {
       if (state.initiative.loggedMember) {
-        return state.initiative.loggedMember.role === 'MEMBER'
+        return state.initiative.loggedMember.role === 'ADMIN' || state.initiative.loggedMember.role === 'EDITOR'
       } else {
         return false
       }
@@ -38,10 +38,10 @@ const getters = {
       return false
     }
   },
-  isLoggedAnEditor: (state) => {
+  isLoggedAMember: (state) => {
     if (state.initiative) {
       if (state.initiative.loggedMember) {
-        return state.initiative.loggedMember.role === 'ADMIN' || state.initiative.loggedMember.role === 'EDITOR'
+        return state.initiative.loggedMember.role === 'ADMIN' || state.initiative.loggedMember.role === 'EDITOR' || state.initiative.loggedMember.role === 'MEMBER'
       } else {
         return false
       }

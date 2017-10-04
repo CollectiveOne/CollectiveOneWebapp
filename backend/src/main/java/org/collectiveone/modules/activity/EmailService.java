@@ -87,11 +87,23 @@ public class EmailService {
 				}
 			}
 			
+			String subresult = "";
+			try {
+				subresult = sendSegmentedPerUserAndInitiativeNotifications(
+						theseNotifications,
+						theseNotifications.get(0).getSubscriber().getUser(),
+						theseNotifications.get(0).getActivity().getInitiative());
+				
+			} catch (Exception ex) {
+				subresult = "error sending emails";
+				
+				for (Notification notification : theseNotifications) {
+					/* protection to prevent spamming */
+					notification.setEmailState(NotificationEmailState.DELIVERED);
+					notificationRepository.save(notification);
+				}
+			}
 			
-			String subresult = sendSegmentedPerUserAndInitiativeNotifications(
-					theseNotifications,
-					theseNotifications.get(0).getSubscriber().getUser(),
-					theseNotifications.get(0).getActivity().getInitiative());
 			
 			if (!subresult.equals("success")) {
 				result = "error sending notifications";
@@ -122,12 +134,31 @@ public class EmailService {
 		String result = "success";
 		
 		for (List<Notification> theseNotifications : segmentedPerActivityNotifications) {
-			String subresult = sendSegmentedPerActivityNotifications(theseNotifications);
+			
+			String subresult = ""; 
+			try {
+				subresult = sendSegmentedPerActivityNotifications(theseNotifications);
+			} catch (Exception ex) {
+				subresult = "error sending emails";
+				
+				for (Notification notification : theseNotifications) {
+					/* protection to prevent spamming */
+					notification.setEmailState(NotificationEmailState.DELIVERED);
+					notificationRepository.save(notification);
+				}
+			}
+			
 			if (!subresult.equals("success")) {
 				result = "error sending notifications";
 			}
 		}
 		
+		String subresult = "";
+		
+		if (!subresult.equals("success")) {
+			result = "error sending notifications";
+		}
+	
 		return result;
 	}
 	
@@ -141,8 +172,8 @@ public class EmailService {
 	}
 	
 	private int indexOfUser(UUID userId) {
-		for (int ix = 0; ix < segmentedPerActivityNotifications.size(); ix++) {
-			if (segmentedPerActivityNotifications.get(ix).get(0).getSubscriber().getUser().getC1Id().equals(userId)) {
+		for (int ix = 0; ix < segmentedPerUserNotifications.size(); ix++) {
+			if (segmentedPerUserNotifications.get(ix).get(0).getSubscriber().getUser().getC1Id().equals(userId)) {
 				return ix; 
 			}
 		}
@@ -150,8 +181,8 @@ public class EmailService {
 	}
 	
 	private int indexOfInitiative(UUID initiativeId) {
-		for (int ix = 0; ix < segmentedPerActivityNotifications.size(); ix++) {
-			if (segmentedPerActivityNotifications.get(ix).get(0).getActivity().getInitiative().getId().equals(initiativeId)) {
+		for (int ix = 0; ix < segmentedPerUserAndInitiativeNotifications.size(); ix++) {
+			if (segmentedPerUserAndInitiativeNotifications.get(ix).get(0).getActivity().getInitiative().getId().equals(initiativeId)) {
 				return ix; 
 			}
 		}
@@ -319,7 +350,7 @@ public class EmailService {
 			notificationRepository.save(notification);
 		}
 		
-		mail.setTemplateId(env.getProperty("collectiveone.webapp.new-subinitiative-template"));
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.initiative-activity-template"));
 		
 		return mail;
 	}
@@ -601,26 +632,26 @@ public class EmailService {
 	
 	private String getModelViewAnchor(ModelView view) {
 		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
-				view.getInitiative().getId().toString() + "/mode/view/" + 
+				view.getInitiative().getId().toString() + "/model/view/" + 
 				view.getId().toString() + ">" + view.getTitle() + "</a>";
 	}
 	
 	private String getModelSectionAnchor(ModelSection section) {
 		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
-				section.getInitiative().getId().toString() + "/mode/section/" + 
+				section.getInitiative().getId().toString() + "/model/section/" + 
 				section.getId().toString() + ">" + section.getTitle() + "</a>";
 	}
 	
 	private String getModelCardWrapperAnchor(ModelCardWrapper cardWrapper, ModelSection onSection) {
 		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
-				cardWrapper.getInitiative().getId().toString() + "/mode/section/" + 
-				onSection.getId().toString() + "/cardWrapper/" + cardWrapper.getCard().toString() + 
+				cardWrapper.getInitiative().getId().toString() + "/model/section/" + 
+				onSection.getId().toString() + "/card/" + cardWrapper.getCard().getId().toString() + 
 				">" + cardWrapper.getCard().getTitle() + "</a>";
 	}
 	
 	private String getModelCardWrapperAnchor(ModelCardWrapper cardWrapper) {
 		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
-				cardWrapper.getInitiative().getId().toString() + "/mode/card/" + 
+				cardWrapper.getInitiative().getId().toString() + "/model/card/" + 
 				cardWrapper.getId().toString() + ">" + cardWrapper.getCard().getTitle() + "</a>";
 	}
 	

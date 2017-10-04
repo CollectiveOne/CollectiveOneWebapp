@@ -97,6 +97,7 @@ public class ActivityService {
 	public PostResult notificationsRead(UUID userId) {
 		for(Notification notification: notificationRepository.findBySubscriber_User_C1IdAndState(userId, NotificationState.PENDING)) {
 			notification.setState(NotificationState.DELIVERED);
+			notification.setEmailState(NotificationEmailState.DELIVERED);
 			notificationRepository.save(notification);
 		}
 		

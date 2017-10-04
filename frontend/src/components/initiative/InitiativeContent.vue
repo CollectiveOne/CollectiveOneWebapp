@@ -9,7 +9,7 @@
               <div class="w3-col w3-right" style="width:50px">
                 <div class="edit-container">
                   <div
-                    v-if="isLoggedAMember || isLoggedAnAdmin"
+                    v-if="isLoggedAMember"
                     @click="showEditMenu = !showEditMenu"
                     v-click-outside="clickOutsideShowMenu"
                     class="edit-btn-div w3-button w3-large"

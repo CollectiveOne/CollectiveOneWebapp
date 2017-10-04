@@ -22,8 +22,6 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-
 import NotificationBox from './NotificationBox.vue'
 
 export default {
@@ -55,11 +53,9 @@ export default {
   },
 
   methods: {
-    ...mapActions(['notificationsRead']),
-
     showNotificationsClicked () {
       this.$emit('icon-clicked')
-      this.notificationsRead()
+      this.$store.dispatch('notificationsRead')
     }
   }
 }
