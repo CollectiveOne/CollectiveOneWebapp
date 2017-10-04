@@ -508,7 +508,7 @@ public class EmailService {
 					" to section " + getModelSectionAnchor(onSection) + "</p> ";
 			
 		case MODEL_CARDWRAPPER_REMOVED:
-			return "<p>removed the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
+			return "<p>removed the card " + getModelCardWrapperAnchor(modelCardWrapper, fromSection) + 
 					" from section " + getModelSectionAnchor(fromSection) + "</p> ";
 			
 		default:
