@@ -81,6 +81,16 @@ public class ActivityService {
 	}
 	
 	@Transactional
+	public void sendEmailsOnceAWeek() throws IOException {
+		
+		List<Notification> notifications = 
+				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(
+						SubscriberEmailNotificationsState.SEND_ONCEAWEEK, NotificationEmailState.PENDING);
+		
+		emailService.sendNotificationsGrouped(notifications);
+	}
+	
+	@Transactional
 	public GetResult<List<NotificationDto>> getUserNotifications(UUID userId) {
 		
 		List<NotificationDto> notifications = new ArrayList<NotificationDto>();
