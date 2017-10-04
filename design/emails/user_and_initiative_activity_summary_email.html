@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+  <style type="text/css">
+
+      .top-header {
+        clear: both;
+        background-color: #eff3f6;
+        overflow: auto;
+        padding: 30px;
+      }
+
+      .container {
+        width: 100%;
+        text-align: center;
+        font-family: 'Arial', sans-serif;
+        color: #3e464e;
+      }
+
+      .logo-txt-div {
+        float: left;
+        font-size: 18px;
+        font-weight: bold;
+        clear: both;
+        margin-bottom: 10px;
+      }
+
+      .logo-img {
+        width: 50%;
+        max-width: 200px;
+        float: left;
+        clear: both;
+      }
+
+      .content {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        clear: both;
+      }
+
+			.activity-box {
+				width: 80%;
+				margin: 0 auto;
+				clear: both;
+			}
+
+			.avatar-box {
+				width: 50px;
+				float: left;
+			}
+
+			.avatar-box img {
+				max-width: 100%;
+				max-heigth: 100%
+			}
+
+			.activity-text {
+				width: calc(100% - 50px);
+				text-align: left;
+				float: left;
+			}
+
+			.footer {
+        padding: 30px;
+        background-color: #eff3f6;
+      }
+
+			.unsuscribe-links a {
+        font-size: 12px;
+        color: #3e464e;
+				text-decoration: underline;
+      }
+
+			.twitter-link {
+				margin-bottom: 20px;
+			}
+
+			.twitter-img {
+				width: 180px;
+			}
+
+	</style>
+</head>
+<body>
+<div class="container" style="text-align">
+	<div class="top-header">
+		<a href="http://www.collectiveone.org">
+			<img class="logo-img" src="https://image.ibb.co/bTQ9Ev/logo_color_auth0.png" />
+		</a>
+	</div>
+
+	<div class="content">
+		<h3>Summary of recent activity in $INITIATIVE_ANCHOR$</h3>
+
+		<div class="activity-box">
+			<div class="avatar-box">
+				<img class="avatar-img" src="https://lh4.googleusercontent.com/-GklJ1T6lIjc/AAAAAAAAAAI/AAAAAAAAACY/4F11RvbtP5E/photo.jpg"></img>
+			</div>
+			<div class="activity-text">
+				<p>edited the name or purpose of the Test initiative.</p>
+			</div>
+		</div>
+
+		<div class="activity-box">
+			<div class="avatar-box">
+				<img class="avatar-img" src="https://lh4.googleusercontent.com/-GklJ1T6lIjc/AAAAAAAAAAI/AAAAAAAAACY/4F11RvbtP5E/photo.jpg"></img>
+			</div>
+			<div class="activity-text">
+				<p>edited the name or purpose of the Test initiative.</p>
+			</div>
+		</div>
+
+		<!-- $MESSAGE$ -->
+
+	</div>
+
+	<div class="footer">
+		<div class="twitter-link" >
+			<a href="https://twitter.com/intent/user?screen_name=collectiveonepr">
+				<img class="twitter-img" src="https://image.ibb.co/dS7wek/t_button.png"></img>
+			</a>
+		</div>
+
+		<div class="unsuscribe-links"  >
+			<a class="unsuscribe-link" href="$UNSUSCRIBE_FROM_ALL_HREF$">unsuscribe from all email notifications from CollectiveOne</a>
+			<br>
+		</div>
+	</div>
+
+</div>
+</body>
+</html>
