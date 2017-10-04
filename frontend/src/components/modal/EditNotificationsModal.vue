@@ -42,13 +42,25 @@
                 class="w3-bar-item w3-button w3-round"
                 :class="{'app-button': isNever, 'app-button-light': !isNever}"
                 @click="subscriber.emailNotificationsState = 'DISABLED'">
-                No
+                Never
               </button>
               <button
                 class="w3-bar-item w3-button w3-round"
                 :class="{'app-button': isImmediate, 'app-button-light': !isImmediate}"
                 @click="subscriber.emailNotificationsState = 'SEND_NOW'">
-                Yes
+                Immediately
+              </button>
+              <button
+                class="w3-bar-item w3-button w3-round"
+                :class="{'app-button': isOnceADay, 'app-button-light': !isOnceADay}"
+                @click="subscriber.emailNotificationsState = 'SEND_ONCEADAY'">
+                Once a day
+              </button>
+              <button
+                class="w3-bar-item w3-button w3-round"
+                :class="{'app-button': isOnceAWeek, 'app-button-light': !isOnceAWeek}"
+                @click="subscriber.emailNotificationsState = 'SEND_ONCEAWEEK'">
+                Once a week
               </button>
             </div>
           </div>
@@ -90,6 +102,12 @@ export default {
     },
     isImmediate () {
       return this.subscriber.emailNotificationsState === 'SEND_NOW'
+    },
+    isOnceADay () {
+      return this.subscriber.emailNotificationsState === 'SEND_ONCEADAY'
+    },
+    isOnceAWeek () {
+      return this.subscriber.emailNotificationsState === 'SEND_ONCEAWEEK'
     }
   },
 

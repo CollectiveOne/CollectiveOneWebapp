@@ -14,7 +14,13 @@ public class NotificationPeriodicService {
 	private ActivityService activityService;
 		
 	@Scheduled(fixedDelay = 30000)
-	public void updateState() throws IOException {
+	public void sendEmailsSendNow() throws IOException {
 		activityService.sendEmailsSendNow();
+	}
+	
+	@Scheduled(fixedDelay = 60000)
+//	@Scheduled(fixedDelay = 86400000)
+	public void sendEmailsEveryDay() throws IOException {
+		activityService.sendEmailsOnceADay();
 	}
 }

@@ -1,13 +1,19 @@
 package org.collectiveone.modules.activity;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.enums.NotificationEmailState;
@@ -177,22 +183,25 @@ public class EmailService {
 				
 				mail.addPersonalization(personalization);
 				
-				String body = "";
+				String rows = "";
 				for (Notification notification : notifications) {
-					body += 
-							"/n<div class=\"activity-box\">"
-						+ 		"<div class=\"avatar-box\">"
-						+ 			"<img class=\"avatar-img\" src=\"" + notification.getActivity().getTriggerUser().getProfile().getPictureUrl() + "\"></img>"
-						+ 		"</div> "
-						+ 		"<div class=\"activity-text\">"
-						+ 			"<p>" + getActivityMessage(notification) + "</p>"
-						+ 		"</div> "
-						+ 	"</div> ";
+					rows += 
+						"<tr>"
+					+		"<td class=\"avatar-box\">"
+					+			"<img class=\"avatar-img\" src=\"" + notification.getActivity().getTriggerUser().getProfile().getPictureUrl() + "\"></img>"
+					+		"</td>"
+					+		"<td class=\"time-box\">"
+					+			getTimeSinceStr(notification.getActivity().getTimestamp())
+					+		"</td>"
+					+		"<td class=\"activity-text\">"
+					+			getActivityMessage(notification)
+					+		"</td>"
+					+	"</tr>";
 				}
 				
-				personalization.addSubstitution("$MESSAGE$", body);
+				personalization.addSubstitution("$ROWS$", rows);
 				
-				mail.setTemplateId(env.getProperty("collectiveone.webapp.initiative-activity-template"));
+				mail.setTemplateId(env.getProperty("collectiveone.webapp.initiative-and-user-activity-template"));
 								
 				try {
 					request.method = Method.POST;
@@ -221,6 +230,35 @@ public class EmailService {
 			}
 		}
 		return "success";
+	}
+	
+	private String getTimeSinceStr(Timestamp since) {
+		Map<TimeUnit,Long> diff = computeDiff(new Date(since.getTime()) , new Date());
+		
+		if (diff.get(TimeUnit.DAYS) > 0) {
+			return diff.get(TimeUnit.DAYS) + " days ago";
+		} else {
+			if (diff.get(TimeUnit.HOURS) > 0) {
+				return diff.get(TimeUnit.HOURS) + " hours ago";
+			} else {
+				return diff.get(TimeUnit.MINUTES) + " minutes ago";
+			}
+		}
+	}
+	
+	private static Map<TimeUnit,Long> computeDiff(Date date1, Date date2) {
+	    long diffInMillies = date2.getTime() - date1.getTime();
+	    List<TimeUnit> units = new ArrayList<TimeUnit>(EnumSet.allOf(TimeUnit.class));
+	    Collections.reverse(units);
+	    Map<TimeUnit,Long> result = new LinkedHashMap<TimeUnit,Long>();
+	    long milliesRest = diffInMillies;
+	    for ( TimeUnit unit : units ) {
+	        long diff = unit.convert(milliesRest,TimeUnit.MILLISECONDS);
+	        long diffInMilliesForUnit = unit.toMillis(diff);
+	        milliesRest = milliesRest - diffInMilliesForUnit;
+	        result.put(unit,diff);
+	    }
+	    return result;
 	}
 	
 	private String sendSegmentedPerActivityNotifications(List<Notification> notifications) throws IOException {

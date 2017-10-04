@@ -39,26 +39,32 @@
         clear: both;
       }
 
-			.activity-box {
-				width: 80%;
+			.content table {
 				margin: 0 auto;
-				clear: both;
+			}
+
+			.time-box {
+				padding-left: 25px;
+			}
+
+			.activity-text {
+				padding-left: 25px;
 			}
 
 			.avatar-box {
 				width: 50px;
-				float: left;
 			}
 
 			.avatar-box img {
-				max-width: 100%;
-				max-heigth: 100%
+				width: 50px;
 			}
 
 			.activity-text {
-				width: calc(100% - 50px);
-				text-align: left;
-				float: left;
+			}
+
+			.activity-text p {
+				margin-top: 0px;
+				margin-bottom: 0px;
 			}
 
 			.footer {
@@ -92,26 +98,34 @@
 
 	<div class="content">
 		<h3>Summary of recent activity in $INITIATIVE_ANCHOR$</h3>
+		<br>
 
-		<div class="activity-box">
-			<div class="avatar-box">
-				<img class="avatar-img" src="https://lh4.googleusercontent.com/-GklJ1T6lIjc/AAAAAAAAAAI/AAAAAAAAACY/4F11RvbtP5E/photo.jpg"></img>
-			</div>
-			<div class="activity-text">
-				<p>edited the name or purpose of the Test initiative.</p>
-			</div>
-		</div>
+		<table>
+			$ROWS$
+			<!-- <tr>
+				<td class="avatar-box">
+					<img class="avatar-img" src="https://lh4.googleusercontent.com/-GklJ1T6lIjc/AAAAAAAAAAI/AAAAAAAAACY/4F11RvbtP5E/photo.jpg"></img>
+				</td>
+				<td class="time-box">
+					8 days ago
+				</td>
+				<td class="activity-text">
+					<p>Jose Ospina edited the name or purpose of the Test initiative.</p>
+				</td>
+			</tr>
 
-		<div class="activity-box">
-			<div class="avatar-box">
-				<img class="avatar-img" src="https://lh4.googleusercontent.com/-GklJ1T6lIjc/AAAAAAAAAAI/AAAAAAAAACY/4F11RvbtP5E/photo.jpg"></img>
-			</div>
-			<div class="activity-text">
-				<p>edited the name or purpose of the Test initiative.</p>
-			</div>
-		</div>
-
-		<!-- $MESSAGE$ -->
+			<tr>
+				<td class="avatar-box">
+					<img class="avatar-img" src="https://lh4.googleusercontent.com/-GklJ1T6lIjc/AAAAAAAAAAI/AAAAAAAAACY/4F11RvbtP5E/photo.jpg"></img>
+				</td>
+				<td class="time-box">
+					4 days ago
+				</td>
+				<td class="activity-text">
+					<p>Jose Ospina edited the name or purpose of the Test initiative.</p>
+				</td>
+			</tr> -->
+		</table>
 
 	</div>
 
