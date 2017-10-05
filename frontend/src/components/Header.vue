@@ -78,7 +78,7 @@ export default {
     activityClicked () {
       this.showUserOptions = false
       if (this.showActivityList) {
-        this.$store.dispatch('updateNotifications')
+        this.$store.commit('triggerUpdateNotifications')
       }
       this.showActivityList = !this.showActivityList
     },

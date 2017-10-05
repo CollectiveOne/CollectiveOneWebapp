@@ -32,13 +32,11 @@ export default {
 
   data () {
     return {
+      notifications: []
     }
   },
 
   computed: {
-    notifications () {
-      return this.$store.state.user.notifications
-    },
     activities () {
       return this.notifications.map(function (n) { return n.activity })
     },
@@ -49,10 +47,39 @@ export default {
     }
   },
 
+  watch: {
+    '$store.state.user.triggerUpdateNotifications' () {
+      this.updateNotifications()
+    }
+  },
+
   methods: {
+    updateNotifications () {
+      /* get notifications */
+      if (this.$store.state.user.authenticated) {
+        if (this.$store.state.user.profile) {
+          this.axios.get('/1/user/notifications').then((response) => {
+            this.notifications = response.data.data
+          }).catch(function (error) {
+            console.log(error)
+          })
+        }
+      }
+    },
+
+    notificationsRead () {
+      /* notifications read */
+      if (this.$store.state.user.profile) {
+        this.axios.put('/1/user/notifications/read', {}).then((response) => {
+        }).catch(function (error) {
+          console.log(error)
+        })
+      }
+    },
+
     showNotificationsClicked () {
       this.$emit('icon-clicked')
-      this.$store.dispatch('notificationsRead')
+      this.notificationsRead()
     }
   }
 }

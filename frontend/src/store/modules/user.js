@@ -5,7 +5,7 @@ const state = {
   authenticated: false,
   auth0state: '',
   profile: null,
-  notifications: [],
+  triggerUpdateNotifications: false,
   intervalId: null,
   intervalId2: null
 }
@@ -26,8 +26,8 @@ const mutations = {
   setProfile: (state, payload) => {
     state.profile = payload
   },
-  setNotifications: (state, payload) => {
-    state.notifications = payload
+  triggerUpdateNotifications: (state) => {
+    state.triggerUpdateNotifications = !state.triggerUpdateNotifications
   }
 }
 
@@ -41,10 +41,10 @@ const actions = {
         context.state.intervalId = setInterval(() => {
           /* update everything every 10 s */
           if (context.state.authenticated) {
-            context.dispatch('updateNotifications')
             context.dispatch('updateMyInitiatives')
             context.dispatch('refreshInitiative')
             context.dispatch('refreshTransfers')
+            context.commit('triggerUpdateNotifications')
             context.commit('triggerUpdateAssets')
             context.commit('triggerUpdateModel')
           }
@@ -54,7 +54,7 @@ const actions = {
       Vue.axios.get('/1/user/myProfile').then((response) => {
         if (response.data.result === 'success') {
           context.commit('setProfile', response.data.data)
-          context.dispatch('updateNotifications')
+          context.commit('triggerUpdateNotifications')
         } else {
           if (response.data.message === 'anonymous user') {
             context.commit('authenticate', false)
@@ -71,29 +71,6 @@ const actions = {
           context.commit('triggerUpdateAssets')
         }, 10000)
       }
-    }
-  },
-
-  updateNotifications: (context) => {
-    /* get notifications */
-    if (context.state.authenticated) {
-      if (context.state.profile) {
-        Vue.axios.get('/1/user/notifications').then((response) => {
-          context.commit('setNotifications', response.data.data)
-        }).catch(function (error) {
-          console.log(error)
-        })
-      }
-    }
-  },
-
-  notificationsRead: (context) => {
-    /* notifications read */
-    if (context.state.profile) {
-      Vue.axios.put('/1/user/notifications/read', {}).then((response) => {
-      }).catch(function (error) {
-        console.log(error)
-      })
     }
   },
 
