@@ -10,7 +10,7 @@
 
     <div v-if="show" class="notifications-container w3-white w3-card-4 w3-bar-block" style="width:300px">
       <div class="w3-row" v-for="(notification, ix) in notifications" :key="notification.id">
-        <app-notification-box :notification="notification"></app-notification-box>
+        <app-activity-box :activity="notification.activity"></app-activity-box>
         <hr v-if="ix < notifications.length - 1">
       </div>
       <div v-if="notifications.length === 0" class="w3-large">
@@ -22,12 +22,12 @@
 </template>
 
 <script>
-import NotificationBox from './NotificationBox.vue'
+import ActivityBox from './ActivityBox.vue'
 
 export default {
 
   components: {
-    'app-notification-box': NotificationBox
+    'app-activity-box': ActivityBox
   },
 
   props: {

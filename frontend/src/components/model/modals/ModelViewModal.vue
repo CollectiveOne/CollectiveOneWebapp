@@ -25,10 +25,10 @@
             </app-model-modal-buttons>
 
             <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
-            <div v-if="!editing" class="w3-padding light-grey">
+            <div v-if="!editing" class="w3-row w3-padding light-grey">
               {{ view.title }}
             </div>
-            <div v-else class="">
+            <div v-else class="w3-row">
               <input type="text" class="w3-input w3-hover-light-grey" v-model="editedView.title">
               <app-error-panel
                 :show="titleEmptyShow"
@@ -42,7 +42,7 @@
 
             <br>
             <label class=""><b>Description: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
-            <div class="">
+            <div class="w3-row">
               <div v-if="!editing" class="w3-padding light-grey">
                 <vue-markdown class="marked-text" :source="view.description"></vue-markdown>
               </div>
@@ -53,6 +53,11 @@
                   message="please include a description of this section">
                 </app-error-panel>
               </div>
+            </div>
+
+            <br>
+            <div class="w3-row">
+              <app-activity-list :url="'/1/activity/model/view/' + viewId"></app-activity-list>
             </div>
 
             <div v-if="editing" class="modal-bottom-btns-row w3-row-padding">
@@ -75,11 +80,13 @@
 
 <script>
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
+import ActivityList from '@/components/activity/ActivityList.vue'
 
 export default {
 
   components: {
-    'app-model-modal-buttons': ModelModalButtons
+    'app-model-modal-buttons': ModelModalButtons,
+    'app-activity-list': ActivityList
   },
 
   props: {
@@ -107,8 +114,7 @@ export default {
       editing: false,
       showEditButtons: false,
       titleEmptyError: false,
-      descriptionEmptyError: false,
-      activity: []
+      descriptionEmptyError: false
     }
   },
 
@@ -143,16 +149,6 @@ export default {
     update () {
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/view/' + this.view.id).then((response) => {
         this.view = response.data.data
-      })
-    },
-    updateActivity () {
-      this.axios.get('/1/activity/model/view/' + this.view.id, {
-        params: {
-          page: 0,
-          size: 10
-        }
-      }).then((response) => {
-        this.activity = response.data.data
       })
     },
     startEditing () {
@@ -235,7 +231,6 @@ export default {
       this.showEditButtons = true
       this.view.id = this.viewId
       this.update()
-      this.updateActivity()
     }
   }
 }
