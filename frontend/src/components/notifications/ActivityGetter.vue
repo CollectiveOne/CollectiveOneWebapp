@@ -4,7 +4,7 @@
       :activities="activities"
       :addContext="false">
     </app-activity-table>
-    <div class="w3-row w3-center w3-margin-top">
+    <div v-if="!allShown" class="w3-row w3-center w3-margin-top">
       <button
         @click="showMoreClick()"
         class="w3-button app-button-light" type="button" name="button">show more...</button>
@@ -28,7 +28,8 @@ export default {
   data () {
     return {
       activities: [],
-      currentPage: 0
+      currentPage: 0,
+      allShown: false
     }
   },
 
@@ -44,6 +45,9 @@ export default {
           size: 10
         }
       }).then((response) => {
+        if (response.data.data.content < 10) {
+          this.allShown = true
+        }
         this.activities = this.activities.concat(response.data.data.content)
       })
     }
