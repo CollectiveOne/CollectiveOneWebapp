@@ -107,7 +107,9 @@ public class Activity {
 	public ActivityDto toDto() {
 		ActivityDto dto = new ActivityDto();
 		
+		dto.setId(id.toString());
 		dto.setType(type.toString());
+		if (timestamp != null) dto.setTimestamp(timestamp.getTime());
 		if(triggerUser != null) dto.setTriggerUser(triggerUser.toDtoLight());
 		if(initiative != null) dto.setInitiative(initiative.toDto());
 		

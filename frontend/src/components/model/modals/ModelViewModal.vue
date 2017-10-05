@@ -56,8 +56,11 @@
             </div>
 
             <br>
-            <div class="w3-row">
-              <app-activity-list :url="'/1/activity/model/view/' + viewId"></app-activity-list>
+            <div class="">
+              <div class="w3-row w3-margin-bottom">
+                <b>Recent Activity:</b>
+              </div>
+              <app-activity-getter :url="'/1/activity/model/view/' + viewId"></app-activity-getter>
             </div>
 
             <div v-if="editing" class="modal-bottom-btns-row w3-row-padding">
@@ -80,13 +83,13 @@
 
 <script>
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
-import ActivityList from '@/components/activity/ActivityList.vue'
+import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
 
 export default {
 
   components: {
     'app-model-modal-buttons': ModelModalButtons,
-    'app-activity-list': ActivityList
+    'app-activity-getter': ActivityGetter
   },
 
   props: {

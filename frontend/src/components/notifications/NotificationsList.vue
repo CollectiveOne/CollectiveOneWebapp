@@ -9,25 +9,19 @@
     </button>
 
     <div v-if="show" class="notifications-container w3-white w3-card-4 w3-bar-block" style="width:300px">
-      <div class="w3-row" v-for="(notification, ix) in notifications" :key="notification.id">
-        <app-activity-box :activity="notification.activity"></app-activity-box>
-        <hr v-if="ix < notifications.length - 1">
-      </div>
-      <div v-if="notifications.length === 0" class="w3-large">
-        no notifications
-      </div>
+      <app-activity-table :activities="activities"></app-activity-table>
     </div>
 
   </div>
 </template>
 
 <script>
-import ActivityBox from './ActivityBox.vue'
+import ActivityTable from './ActivityTable.vue'
 
 export default {
 
   components: {
-    'app-activity-box': ActivityBox
+    'app-activity-table': ActivityTable
   },
 
   props: {
@@ -44,6 +38,9 @@ export default {
   computed: {
     notifications () {
       return this.$store.state.user.notifications
+    },
+    activities () {
+      return this.notifications.map(function (n) { return n.activity })
     },
     numberOfUnreadNotifications () {
       return this.notifications.filter((e) => {
@@ -93,8 +90,6 @@ export default {
 .notifications-container {
   position: absolute;
   margin-left: -212px;
-  padding-top: 20px !important;
-  padding-bottom: 20px !important;
   max-height: calc(100vh - 80px);
   overflow-y: auto;
 }

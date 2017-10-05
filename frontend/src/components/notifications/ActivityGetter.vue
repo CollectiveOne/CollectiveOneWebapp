@@ -1,12 +1,10 @@
 <template lang="html">
   <div class="">
-    <div class="w3-row">
-      <b>Activity:</b>
-    </div>
-    <div v-for="act in activity" class="w3-row">
-      <app-activity-box :activity="act"></app-activity-box>
-    </div>
-    <div class="w3-row w3-center">
+    <app-activity-table
+      :activities="activities"
+      :addContext="false">
+    </app-activity-table>
+    <div class="w3-row w3-center w3-margin-top">
       <button
         @click="showMoreClick()"
         class="w3-button app-button-light" type="button" name="button">show more...</button>
@@ -15,9 +13,12 @@
 </template>
 
 <script>
-import ActivityBox from '@/components/notifications/ActivityBox.vue'
+import ActivityTable from '@/components/notifications/ActivityTable.vue'
 
 export default {
+  components: {
+    'app-activity-table': ActivityTable
+  },
   props: {
     url: {
       type: String
@@ -26,7 +27,7 @@ export default {
 
   data () {
     return {
-      activity: [],
+      activities: [],
       currentPage: 0
     }
   },
@@ -43,7 +44,7 @@ export default {
           size: 10
         }
       }).then((response) => {
-        this.activity = this.activity.concat(response.data.data.content)
+        this.activities = this.activities.concat(response.data.data.content)
       })
     }
   },

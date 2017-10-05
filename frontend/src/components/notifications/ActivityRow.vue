@@ -1,59 +1,67 @@
 <template lang="html">
-  <div class="w3-row">
-    <div class="w3-col s3 w3-center avatar-col">
+  <tr class="">
+    <td class="avatar-col w3-center">
       <app-user-avatar :user="activity.triggerUser" :showName="false" :small="true"></app-user-avatar>
-    </div>
-    <div class="w3-col s9 text-div">
-      <div v-if="isInitiativeCreated" class="">
+    </td>
+    <td class="text-div">
+      <span v-if="addContext">
+        in <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+      </span>
+
+      <span v-if="addTime">
+         {{ getTimeStrSince(activity.timestamp) }} ago.
+      </span>
+
+      <span v-if="isInitiativeCreated" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> created the new initiative
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-      </div>
+      </span>
 
-      <div v-if="isInitiativeEdited" class="">
+      <span v-if="isInitiativeEdited" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> edited
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link> {{ initiativeChanged }}
-      </div>
+      </span>
 
-      <div v-if="isSubinitiativeCreated" class="">
+      <span v-if="isSubinitiativeCreated" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> created
         <app-initiative-link :initiative="activity.subInitiative"></app-initiative-link> under
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-      </div>
+      </span>
 
-      <div v-if="isInitiativeDeleted" class="">
+      <span v-if="isInitiativeDeleted" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> deleted
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-      </div>
+      </span>
 
-      <div v-if="isTokensMinted" class="">
+      <span v-if="isTokensMinted" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> minted
         <b>{{ activity.mint.value }} {{ activity.mint.tokenName }}</b> in
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-      </div>
+      </span>
 
-      <div v-if="isNewPRAssigantionCreated" class="">
+      <span v-if="isNewPRAssigantionCreated" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> created a new peer-reviewed
         <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
         <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b> from
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-      </div>
+      </span>
 
-      <div v-if="isNewDAssigantionCreated" class="">
+      <span v-if="isNewDAssigantionCreated" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> made a direct
         <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
         <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b> from
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
         <app-user-link :user="activity.assignation.receivers[0].user"></app-user-link>
-      </div>
+      </span>
 
-      <div v-if="isNewPRAssigantionDone" class="">
+      <span v-if="isNewPRAssigantionDone" class="">
         Peer-reviewed <app-assignation-link :assignation="activity.assignation"></app-assignation-link> has been done. Created by
         <app-user-link :user="activity.triggerUser"></app-user-link> for
         <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b> from
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link>.
-      </div>
+      </span>
 
-      <div v-if="isInitiativeTransfer" class="">
+      <span v-if="isInitiativeTransfer" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> transferred
         <b>{{ activity.transfer.value }} {{ activity.transfer.assetName }}</b> from
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
@@ -61,18 +69,18 @@
           :initiativeId="activity.transfer.receiverId"
           :initiativeName="activity.transfer.receiverName">
         </app-initiative-link>
-      </div>
+      </span>
 
-      <div v-if="isAssignationRevertOrdered" class="">
+      <span v-if="isAssignationRevertOrdered" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> ordered the revert of the
         <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
         <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b>
         with motive {{ activity.assignation.motive }}
         from
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-      </div>
+      </span>
 
-      <div v-if="isAssignationRevertCancelled" class="">
+      <span v-if="isAssignationRevertCancelled" class="">
         Revert order cancelled.
         <app-user-link :user="activity.triggerUser"></app-user-link> ordered to revert the
         <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
@@ -81,9 +89,9 @@
         from
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
         , but the revert was not accepted.
-      </div>
+      </span>
 
-      <div v-if="isAssignationReverted" class="">
+      <span v-if="isAssignationReverted" class="">
         Revert order accepted.
         <app-user-link :user="activity.triggerUser"></app-user-link> ordered to revert the
         <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
@@ -92,9 +100,9 @@
         from
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
         and the revert has been done.
-      </div>
+      </span>
 
-      <div v-if="isAssignationDeleted" class="">
+      <span v-if="isAssignationDeleted" class="">
         Ongoing transfer deleted. The
         <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
         <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b>
@@ -102,108 +110,107 @@
         from
         <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
         has been deleted.
-      </div>
+      </span>
 
-      <div v-if="isModelViewCreated" class="">
+      <span v-if="isModelViewCreated" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> created the view
         <app-model-view-link :view="activity.modelView"></app-model-view-link>.
-      </div>
-      <div v-if="isModelViewEdited" class="">
+      </span>
+      <span v-if="isModelViewEdited" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> edited the view
         <app-model-view-link :view="activity.modelView"></app-model-view-link> title/description.
-      </div>
-      <div v-if="isModelViewDeleted" class="">
+      </span>
+      <span v-if="isModelViewDeleted" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> deleted the view
         <app-model-view-link :view="activity.modelView"></app-model-view-link>.
-      </div>
-      <div v-if="isModelSectionCreatedOnSection" class="">
+      </span>
+      <span v-if="isModelSectionCreatedOnSection" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> created the subsection
         <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
         section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-      </div>
-      <div v-if="isModelSectionCreatedOnView" class="">
+      </span>
+      <span v-if="isModelSectionCreatedOnView" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> created the section
         <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
         view <app-model-view-link :view="activity.onView"></app-model-view-link>.
-      </div>
-      <div v-if="isModelSectionEdited" class="">
+      </span>
+      <span v-if="isModelSectionEdited" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> edited the section
         <app-model-section-link :section="activity.modelSection"></app-model-section-link> title/description.
-      </div>
-      <div v-if="isModelSectionRemovedFromSection" class="">
+      </span>
+      <span v-if="isModelSectionRemovedFromSection" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> removed the subsection
         <app-model-section-link :section="activity.modelSection"></app-model-section-link>
         from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
-      </div>
-      <div v-if="isModelSectionRemovedFromView" class="">
+      </span>
+      <span v-if="isModelSectionRemovedFromView" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> removed the subsection
         <app-model-section-link :section="activity.modelSection"></app-model-section-link>
         from view <app-model-view-link :section="activity.fromView"></app-model-view-link>.
-      </div>
-      <div v-if="isModelSectionMovedInView" class="">
+      </span>
+      <span v-if="isModelSectionMovedInView" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> moved the section
         <app-model-section-link :section="activity.modelSection"></app-model-section-link> in view
         <app-model-view-link :view="activity.onView"></app-model-view-link>.
-      </div>
-      <div v-if="isModelSectionMovedFromViewToSection" class="">
+      </span>
+      <span v-if="isModelSectionMovedFromViewToSection" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> moved the section
         <app-model-section-link :section="activity.modelSection"></app-model-section-link>
          from view <app-model-view-link :view="activity.fromView"></app-model-view-link>
          to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-      </div>
-      <div v-if="isModelSectionMovedFromSectionToSection" class="">
+      </span>
+      <span v-if="isModelSectionMovedFromSectionToSection" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> moved the section
         <app-model-section-link :section="activity.modelSection"></app-model-section-link>
          from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
          to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-      </div>
-      <div v-if="isModelSectionMovedFromSectionToView" class="">
+      </span>
+      <span v-if="isModelSectionMovedFromSectionToView" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> moved the section
         <app-model-section-link :section="activity.modelSection"></app-model-section-link>
          from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
          to view <app-model-view-link :view="activity.onView"></app-model-view-link>.
-      </div>
-      <div v-if="isModelCardWrapperAdded" class="">
+      </span>
+      <span v-if="isModelCardWrapperAdded" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> added the card
         <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
          in section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-      </div>
-      <div v-if="isModelCardWrapperRemoved" class="">
+      </span>
+      <span v-if="isModelCardWrapperRemoved" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> removed the card
         <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.fromSection"></app-model-card-link>
          from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
-      </div>
-      <div v-if="isModelSectionDeleted" class="">
+      </span>
+      <span v-if="isModelSectionDeleted" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> deleted the section
         <app-model-section-link :section="activity.modelSection"></app-model-section-link>
-      </div>
-      <div v-if="isModelCardWrapperCreated" class="">
+      </span>
+      <span v-if="isModelCardWrapperCreated" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> created the card
         <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
          on section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-      </div>
-      <div v-if="isModelCardWrapperEdited" class="">
+      </span>
+      <span v-if="isModelCardWrapperEdited" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> edited the card
         <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
-      </div>
-      <div v-if="isModelCardWrapperMovedSameSection" class="">
+      </span>
+      <span v-if="isModelCardWrapperMovedSameSection" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> moved the card
         <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
         within section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
-      </div>
-      <div v-if="isModelCardWrapperMovedDiferentSections" class="">
+      </span>
+      <span v-if="isModelCardWrapperMovedDiferentSections" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> moved the card
         <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
         from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
         to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-      </div>
-      <div v-if="isModelCardWrapperDeleted" class="">
+      </span>
+      <span v-if="isModelCardWrapperDeleted" class="">
         <app-user-link :user="activity.triggerUser"></app-user-link> deleted the card
         <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
-      </div>
-
-    </div>
-  </div>
+      </span>
+    </td>
+  </tr>
 </template>
 
 <script>
@@ -217,10 +224,20 @@ import ModelSectionLink from '@/components/global/ModelSectionLink.vue'
 import ModelCardInSectionLink from '@/components/global/ModelCardInSectionLink.vue'
 import ModelCardAloneLink from '@/components/global/ModelCardAloneLink.vue'
 
+import { getTimeStrSince } from '@/lib/common.js'
+
 export default {
   props: {
     activity: {
       type: Object
+    },
+    addContext: {
+      type: Boolean,
+      default: true
+    },
+    addTime: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -392,6 +409,11 @@ export default {
 
       return ''
     }
+  },
+  methods: {
+    getTimeStrSince (v) {
+      return getTimeStrSince(v)
+    }
   }
 }
 </script>
@@ -404,6 +426,7 @@ a {
 
 .avatar-col {
   padding-top: 3px;
+  width: 60px;
 }
 
 .text-div {
