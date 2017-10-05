@@ -56,7 +56,7 @@
             </div>
 
             <br>
-            <div class="">
+            <div v-if="!isNew" class="">
               <div class="w3-row w3-margin-bottom">
                 <b>Recent Activity:</b>
               </div>

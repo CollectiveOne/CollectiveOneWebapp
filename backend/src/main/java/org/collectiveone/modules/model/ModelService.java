@@ -154,6 +154,10 @@ public class ModelService {
 		return modelViewRepository.findById(viewId).getInitiative();
 	}
 	
+	@Transactional
+	public Initiative getSectionInitiative (UUID sectionId) {
+		return modelSectionRepository.findById(sectionId).getInitiative();
+	}
 	
 	@Transactional
 	public PostResult deleteView (UUID viewId, UUID creatorId) {
@@ -751,7 +755,7 @@ public class ModelService {
 			}
 		}
 		
-		return subsectionsIds;
+		return allSubsectionIds;
 	}
 	
 	@Transactional
@@ -760,6 +764,47 @@ public class ModelService {
 		List<UUID> cardsIds = modelCardRepository.findAllCardsIdsOfSections(sectionIds);
 		
 		Page<Activity> activities = activityRepository.findAllOfViewSectionsAndCards(viewId, sectionIds, cardsIds, page);
+	
+		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
+		
+		for(Activity activity : activities.getContent()) {
+			activityDtos.add(activity.toDto());
+		}
+		
+		Page<ActivityDto> dtosPage = new PageImpl<ActivityDto>(activityDtos, page, activities.getNumberOfElements());
+		
+		return new GetResult<Page<ActivityDto>>("succes", "actvity returned", dtosPage);
+		
+	}
+	
+	@Transactional
+	public GetResult<Page<ActivityDto>> getActivityUnderSection (UUID sectionId, PageRequest page) {
+		
+		List<UUID> allSectionIds = new ArrayList<UUID>();
+		
+		allSectionIds.add(sectionId);
+		allSectionIds.addAll(getAllSubsectionsIds(sectionId));
+		
+		List<UUID> cardsIds = modelCardRepository.findAllCardsIdsOfSections(allSectionIds);
+		
+		Page<Activity> activities = activityRepository.findAllOfSectionsAndCards(allSectionIds, cardsIds, page);
+	
+		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
+		
+		for(Activity activity : activities.getContent()) {
+			activityDtos.add(activity.toDto());
+		}
+		
+		Page<ActivityDto> dtosPage = new PageImpl<ActivityDto>(activityDtos, page, activities.getNumberOfElements());
+		
+		return new GetResult<Page<ActivityDto>>("succes", "actvity returned", dtosPage);
+		
+	}
+	
+	@Transactional
+	public GetResult<Page<ActivityDto>> getActivityUnderCard (UUID cardWrapperId, PageRequest page) {
+		
+		Page<Activity> activities = activityRepository.findAllOfCard(cardWrapperId, page);
 	
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		

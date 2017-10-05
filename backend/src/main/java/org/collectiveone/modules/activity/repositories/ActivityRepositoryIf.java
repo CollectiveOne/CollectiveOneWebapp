@@ -17,4 +17,10 @@ public interface ActivityRepositoryIf extends CrudRepository<Activity, UUID> {
 	@Query("SELECT act FROM Activity act WHERE act.modelView.id = ?1 OR act.modelSection.id IN ?2 OR act.modelCardWrapper.id IN ?3 ORDER BY act.timestamp DESC")
 	Page<Activity> findAllOfViewSectionsAndCards(UUID viewId, List<UUID> sectionIds, List<UUID> cardsWrappersIds, Pageable pageable);
 	
+	@Query("SELECT act FROM Activity act WHERE act.modelSection.id IN ?1 OR act.modelCardWrapper.id IN ?2 ORDER BY act.timestamp DESC")
+	Page<Activity> findAllOfSectionsAndCards(List<UUID> sectionIds, List<UUID> cardsWrappersIds, Pageable pageable);
+	
+	@Query("SELECT act FROM Activity act WHERE act.modelCardWrapper.id = ?1 ORDER BY act.timestamp DESC")
+	Page<Activity> findAllOfCard(UUID cardsWrappersId, Pageable pageable);
+	
 }

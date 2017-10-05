@@ -101,6 +101,14 @@
             </transition>
           </div>
 
+          <br>
+          <div v-if="!isNew" class="">
+            <div class="w3-row w3-margin-bottom">
+              <b>Recent Activity:</b>
+            </div>
+            <app-activity-getter :url="'/1/activity/model/section/' + sectionId"></app-activity-getter>
+          </div>
+
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
             <hr>
             <div class="w3-col m6">
@@ -121,12 +129,14 @@
 <script>
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
 import ModelSectionSelector from '@/components/model/ModelSectionSelector.vue'
+import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
 
 export default {
 
   components: {
     'app-model-modal-buttons': ModelModalButtons,
-    'app-model-section-selector': ModelSectionSelector
+    'app-model-section-selector': ModelSectionSelector,
+    'app-activity-getter': ActivityGetter
   },
 
   props: {

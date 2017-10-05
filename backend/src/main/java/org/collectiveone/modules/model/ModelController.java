@@ -558,4 +558,38 @@ public class ModelController extends BaseController {
 		return modelService.getActivityUnderView(viewId, new PageRequest(page, size));
 	}
 	
+	@RequestMapping(path = "/activity/model/section/{sectionId}", method = RequestMethod.GET)
+	public GetResult<Page<ActivityDto>> getActivityUnderSection(
+			@PathVariable("sectionId") String sectionIdStr,
+			@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size) {
+		
+		UUID sectionId = UUID.fromString(sectionIdStr);
+		
+		Initiative initiative = modelService.getSectionInitiative(sectionId);
+		
+		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
+		}
+		
+		return modelService.getActivityUnderSection(sectionId, new PageRequest(page, size));
+	}
+	
+	@RequestMapping(path = "/activity/model/card/{cardWrapperId}", method = RequestMethod.GET)
+	public GetResult<Page<ActivityDto>> getActivityUnderCard(
+			@PathVariable("cardWrapperId") String cardWrapperIdStr,
+			@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size) {
+		
+		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
+		
+		Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
+		
+		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
+		}
+		
+		return modelService.getActivityUnderCard(cardWrapperId, new PageRequest(page, size));
+	}
+	
 }

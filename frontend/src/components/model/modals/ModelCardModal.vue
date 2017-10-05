@@ -210,6 +210,13 @@
             </transition>
           </div>
 
+          <br>
+          <div v-if="!isNew" class="">
+            <div class="w3-row w3-margin-bottom">
+              <b>Recent Activity:</b>
+            </div>
+            <app-activity-getter :url="'/1/activity/model/card/' + cardWrapperId"></app-activity-getter>
+          </div>
 
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
             <hr>
@@ -233,13 +240,15 @@ import { dateString } from '@/lib/common.js'
 import Datepicker from 'vuejs-datepicker'
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
 import ModelCardSelector from '@/components/model/ModelCardSelector.vue'
+import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
 
 export default {
 
   components: {
     'app-model-modal-buttons': ModelModalButtons,
     'datepicker': Datepicker,
-    'app-model-card-selector': ModelCardSelector
+    'app-model-card-selector': ModelCardSelector,
+    'app-activity-getter': ActivityGetter
   },
 
   props: {
