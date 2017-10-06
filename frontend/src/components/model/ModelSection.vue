@@ -214,6 +214,10 @@ export default {
     cardsAsCards: {
       type: Boolean,
       default: true
+    },
+    forceUpdate: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -256,6 +260,9 @@ export default {
     },
     '$route' () {
       this.checkCardSubroute()
+    },
+    forceUpdate () {
+      this.update()
     }
   },
 
@@ -271,6 +278,7 @@ export default {
       }
     },
     update () {
+      console.log('updating')
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id, {
         params: {
           level: 1

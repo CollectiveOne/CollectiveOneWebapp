@@ -48,7 +48,7 @@ const actions = {
             // context.commit('triggerUpdateAssets')
             // context.commit('triggerUpdateModel')
           }
-        }, 10000)
+        }, 30000)
       }
 
       Vue.axios.get('/1/user/myProfile').then((response) => {

@@ -63,6 +63,7 @@ needs the model card component inside, and would crate a recursion -->
         :dragType="dragType"
         :floating="floating"
         :cardsAsCards="cardsAsCards"
+        :force-update="forceUpdate"
         @new-card="newCard()"
         @new-subsection="newSubsection()">
       </app-model-section>
@@ -92,6 +93,10 @@ needs the model card component inside, and would crate a recursion -->
           <div class="w3-button model-action-button gray-1-color w3-right"
             @click="cardsAsCards = !cardsAsCards">
             <i class="fa" :class="{ 'fa-bars': cardsAsCards, 'fa-th': !cardsAsCards }" aria-hidden="true"></i>
+          </div>
+          <div class="w3-button model-action-button gray-1-color w3-right"
+            @click="forceUpdate = !forceUpdate">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
           </div>
         </div>
       </transition>
@@ -166,7 +171,8 @@ export default {
       showActionButton: false,
       showSectionModal: false,
       showNewSubsectionModal: false,
-      showNewCardModal: false
+      showNewCardModal: false,
+      forceUpdate: false
     }
   },
 
