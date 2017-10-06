@@ -9,8 +9,11 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.Activity;
 import org.collectiveone.modules.activity.ActivityService;
+import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
+import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.governance.DecisionMaker;
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.governance.Governance;
@@ -37,6 +40,9 @@ import org.collectiveone.modules.tokens.TransferDto;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -50,10 +56,10 @@ public class InitiativeService {
 	private GovernanceService governanceService;
 	
 	@Autowired
-	private ActivityService activityService;
+	private TokenTransferService tokenTransferService;
 	
 	@Autowired
-	private TokenTransferService tokenTransferService;
+	private ActivityService activityService;
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
@@ -75,6 +81,10 @@ public class InitiativeService {
 	
 	@Autowired
 	private InitiativeTagRepositoryIf initiativeTagRepository;
+	
+	@Autowired
+	private ActivityRepositoryIf activityRepository;
+	
 	  
 	
 	@Transactional
@@ -790,6 +800,29 @@ public class InitiativeService {
 		}
 		
 		return new GetResult<InitiativeTagDto>("success", "initiative tag returned", tag.toDto());
+	}
+	
+	@Transactional
+	public GetResult<Page<ActivityDto>>  getActivityUnderInitiative(UUID initiativeId, PageRequest page) {
+
+		List<InitiativeDto> subinitiativesTree = getSubinitiativesTree(initiativeId, null);
+		
+		List<UUID> allInitiativesIds = new ArrayList<UUID>();
+		
+		allInitiativesIds.add(initiativeId);
+		allInitiativesIds.addAll(extractAllIdsFromInitiativesTree(subinitiativesTree, new ArrayList<UUID>()));
+		
+		Page<Activity> activities = activityRepository.findOfInitiatives(allInitiativesIds, page);
+		
+		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
+		
+		for(Activity activity : activities.getContent()) {
+			activityDtos.add(activity.toDto());
+		}
+		
+		Page<ActivityDto> dtosPage = new PageImpl<ActivityDto>(activityDtos, page, activities.getNumberOfElements());
+		
+		return new GetResult<Page<ActivityDto>>("succes", "actvity returned", dtosPage);
 	}
 	
 }

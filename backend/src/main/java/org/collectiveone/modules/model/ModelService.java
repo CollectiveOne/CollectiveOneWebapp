@@ -763,7 +763,7 @@ public class ModelService {
 		List<UUID> sectionIds = getAllSectionsIdsOfView(viewId);
 		List<UUID> cardsIds = modelCardRepository.findAllCardsIdsOfSections(sectionIds);
 		
-		Page<Activity> activities = activityRepository.findAllOfViewSectionsAndCards(viewId, sectionIds, cardsIds, page);
+		Page<Activity> activities = activityRepository.findOfViewSectionsAndCards(viewId, sectionIds, cardsIds, page);
 	
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		
@@ -787,7 +787,7 @@ public class ModelService {
 		
 		List<UUID> cardsIds = modelCardRepository.findAllCardsIdsOfSections(allSectionIds);
 		
-		Page<Activity> activities = activityRepository.findAllOfSectionsAndCards(allSectionIds, cardsIds, page);
+		Page<Activity> activities = activityRepository.findOfSectionsAndCards(allSectionIds, cardsIds, page);
 	
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		
@@ -804,7 +804,7 @@ public class ModelService {
 	@Transactional
 	public GetResult<Page<ActivityDto>> getActivityUnderCard (UUID cardWrapperId, PageRequest page) {
 		
-		Page<Activity> activities = activityRepository.findAllOfCard(cardWrapperId, page);
+		Page<Activity> activities = activityRepository.findOfCard(cardWrapperId, page);
 	
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		

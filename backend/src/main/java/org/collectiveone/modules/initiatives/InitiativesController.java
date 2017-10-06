@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.governance.DecisionVerdict;
 import org.collectiveone.modules.governance.GovernanceService;
@@ -15,6 +16,8 @@ import org.collectiveone.modules.initiatives.dto.MemberDto;
 import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
 import org.collectiveone.modules.initiatives.dto.SearchFiltersDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -258,6 +261,21 @@ public class InitiativesController extends BaseController {
 		
 		InitiativeTag tag = initiativeService.getOrCreateTag(tagDto);
 		return new PostResult("success", "tag craeted", tag.getId().toString());
+	}
+	
+	@RequestMapping(path = "/activity/initiative/{initiativeId}", method = RequestMethod.GET)
+	public GetResult<Page<ActivityDto>> getActivityUnderCard(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size) {
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
+		}
+		
+		return initiativeService.getActivityUnderInitiative(initiativeId, new PageRequest(page, size));
 	}
 	
 }

@@ -25,16 +25,28 @@
           </div>
         </div>
       </div>
+
       <br>
       <div class="w3-card">
         <header class="section-header-bar w3-bar gray-1">
           <h4 class="w3-bar-item w3-left">Assets</h4>
         </header>
-        <div class="section-content">
+        <div class="activity-content">
           <app-asset-distribution-chart v-for="asset in initiative.assets"
             :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
             :canMint="initiative.ownAssetsId === asset.assetId" :canEdit="isLoggedAnAdmin">
           </app-asset-distribution-chart>
+        </div>
+      </div>
+
+      <br>
+      <div class="w3-card">
+        <header class="section-header-bar w3-bar gray-1">
+          <h4 class="w3-bar-item w3-left">Recent Activity</h4>
+        </header>
+        <div class="activity-content">
+          <app-activity-getter :url="'/1/activity/initiative/' + initiative.id">
+          </app-activity-getter>
         </div>
       </div>
     </div>
@@ -45,12 +57,14 @@
 import AssetDistributionChart from '@/components/transfers/AssetDistributionChart.vue'
 import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
 import InitiativeTag from '@/components/initiative/InitiativeTag.vue'
+import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
 
 export default {
   components: {
     'app-asset-distribution-chart': AssetDistributionChart,
     'app-edit-initiative-modal': EditInitiativeModal,
-    'app-initiative-tag': InitiativeTag
+    'app-initiative-tag': InitiativeTag,
+    'app-activity-getter': ActivityGetter
   },
 
   props: {
@@ -94,6 +108,11 @@ export default {
 .section-content {
   padding-top: 6px;
   padding-bottom: 0px;
+}
+
+.activity-content {
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 
 .edit-btn-div {
