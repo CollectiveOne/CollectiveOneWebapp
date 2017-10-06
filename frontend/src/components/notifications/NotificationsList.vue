@@ -1,15 +1,22 @@
 <template lang="html">
   <div class="">
+
     <button class="bell-button w3-button w3-padding-large w3-display-container w3-xlarge" title="Notifications"
       @click="showNotificationsClicked()">
+
       <i class="fa fa-bell-o w3-display-center"></i>
       <i v-if="numberOfUnreadNotifications > 0" class="fa fa-circle w3-display-topright circle">
         <span class="circle-text w3-display-middle">{{ numberOfUnreadNotifications }}</span>
       </i>
     </button>
 
-    <div v-if="show" class="notifications-container w3-white w3-card-4 w3-bar-block" style="width:300px">
+    <div v-show="showTable"
+      v-click-outside="clickOutsideNotifications"
+      class="notifications-container w3-white w3-card-4 w3-bar-block w3-center" style="width:300px">
       <app-activity-table :activities="activities"></app-activity-table>
+      <button v-if="!allShown"
+        @click="showMore()"
+        class="w3-margin-top w3-margin-bottom w3-button app-button-light" type="button" name="button">show more...</button>
     </div>
 
   </div>
@@ -24,15 +31,14 @@ export default {
     'app-activity-table': ActivityTable
   },
 
-  props: {
-    show: {
-      type: Boolean
-    }
-  },
-
   data () {
     return {
-      notifications: []
+      showTable: false,
+      preventClickOutside: true,
+      notifications: [],
+      currentPage: 0,
+      showingMoreNotifications: false,
+      allShown: false
     }
   },
 
@@ -55,31 +61,87 @@ export default {
 
   methods: {
     updateNotifications () {
-      /* get notifications */
-      if (this.$store.state.user.authenticated) {
-        if (this.$store.state.user.profile) {
-          this.axios.get('/1/user/notifications').then((response) => {
-            this.notifications = response.data.data
-          }).catch(function (error) {
-            console.log(error)
-          })
-        }
-      }
-    },
-
-    notificationsRead () {
-      /* notifications read */
-      if (this.$store.state.user.profile) {
-        this.axios.put('/1/user/notifications/read', {}).then((response) => {
+      if (!this.showingMoreNotifications) {
+        /* dont update if the user is scrolling down de notifications */
+        this.axios.get('/1/user/notifications', {
+          params: {
+            page: 0,
+            size: 10
+          }
+        }).then((response) => {
+          /* check that new notifications arrived */
+          this.allShown = false
+          this.notifications = response.data.data
         }).catch(function (error) {
           console.log(error)
         })
       }
     },
 
+    addNotifications () {
+      this.showingMoreNotifications = true
+      this.axios.get('/1/user/notifications', {
+        params: {
+          page: this.currentPage,
+          size: 10
+        }
+      }).then((response) => {
+        /* check that new notifications arrived */
+        if (response.data.data.length < 10) {
+          this.allShown = true
+        }
+
+        this.notifications = this.notifications.concat(response.data.data)
+      }).catch(function (error) {
+        console.log(error)
+      })
+    },
+
+    notificationsRead () {
+      /* notifications read */
+      if (this.$store.state.user.profile) {
+        this.axios.put('/1/user/notifications/read', {}).then((response) => {
+          this.updateNotifications()
+        }).catch(function (error) {
+          console.log(error)
+        })
+      }
+    },
+
+    showMore () {
+      this.currentPage += 1
+      this.addNotifications()
+    },
+
+    clickOutsideNotifications () {
+      // console.log('clickOutsideNotifications')
+      if (!this.preventClickOutside) {
+        if (this.showTable) {
+          this.hide()
+        }
+      }
+    },
     showNotificationsClicked () {
-      this.$emit('icon-clicked')
-      this.notificationsRead()
+      if (!this.showTable) {
+        this.show()
+        this.preventClickOutside = true
+        setTimeout(() => {
+          this.preventClickOutside = false
+        }, 500)
+      } else {
+        this.hide()
+      }
+    },
+    hide () {
+      this.showTable = false
+      this.showingMoreNotifications = false
+      if (!this.showingMoreNotifications) {
+        this.notificationsRead()
+      }
+    },
+    show () {
+      this.showTable = true
+      this.updateNotifications()
     }
   }
 }

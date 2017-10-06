@@ -35,6 +35,7 @@ import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -91,16 +92,15 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public GetResult<List<NotificationDto>> getUserNotifications(UUID userId) {
+	public GetResult<List<NotificationDto>> getUserNotifications(UUID userId, PageRequest page) {
 		
 		List<NotificationDto> notifications = new ArrayList<NotificationDto>();
 		
-		for(Notification notification : notificationRepository.findTop10BySubscriber_User_C1IdOrderByCreationDateDesc(userId)) {
+		for(Notification notification : notificationRepository.findOfUser(userId, page)) {
 			notifications.add(notification.toDto());
 		}
 		
 		return new GetResult<List<NotificationDto>>("success", "notifications found", notifications);
-		
 	}
 	
 	@Transactional

@@ -12,10 +12,12 @@ import org.collectiveone.modules.activity.enums.SubscriberEmailNotificationsStat
 import org.collectiveone.modules.activity.enums.SubscriberState;
 import org.collectiveone.modules.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,12 +32,15 @@ public class ActivityController extends BaseController {
 	
 	
 	@RequestMapping(path = "/user/notifications", method = RequestMethod.GET)
-	public GetResult<List<NotificationDto>> getNotifications() {
+	public GetResult<List<NotificationDto>> getNotifications(
+			@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size) {
+		
 		if (getLoggedUser() == null) {
 			return new GetResult<List<NotificationDto>>("error", "endpoint enabled users only", null);
 		}
 		
-		return activityService.getUserNotifications(getLoggedUser().getC1Id());
+		return activityService.getUserNotifications(getLoggedUserId(), new PageRequest(page, size));
 	}
 	
 	@RequestMapping(path = "/user/notifications/read", method = RequestMethod.PUT)

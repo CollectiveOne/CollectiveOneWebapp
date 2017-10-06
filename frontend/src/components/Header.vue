@@ -45,11 +45,7 @@
       </div>
 
       <div v-if="$store.state.user.authenticated" class="nots-div w3-right">
-        <app-notifications-list
-          :show="showActivityList"
-          @icon-clicked="activityClicked()"
-          v-click-outside="clickOutsideNotifications">
-        </app-notifications-list>
+        <app-notifications-list></app-notifications-list>
       </div>
 
      </div>
@@ -72,21 +68,10 @@ export default {
       this.$store.state.user.lock.show()
     },
     userOptionsClicked () {
-      this.showActivityList = false
       this.showUserOptions = !this.showUserOptions
-    },
-    activityClicked () {
-      this.showUserOptions = false
-      if (this.showActivityList) {
-        this.$store.commit('triggerUpdateNotifications')
-      }
-      this.showActivityList = !this.showActivityList
     },
     clickOutsideUser () {
       this.showUserOptions = false
-    },
-    clickOutsideNotifications () {
-      this.showActivityList = false
     },
     goMyProfile () {
       this.showUserOptions = false
