@@ -123,7 +123,7 @@ public class ActivityService {
 			subscriber.setType(type);
 			subscriber.setUser(appUserRepository.findByC1Id(userId));
 			subscriber.setState(SubscriberState.SUBSCRIBED);
-			subscriber.setEmailNotificationsState(SubscriberEmailNotificationsState.SEND_NOW);
+			subscriber.setEmailNotificationsState(SubscriberEmailNotificationsState.SEND_ONCEADAY);
 			
 			subscriberRepository.save(subscriber);
 		}
