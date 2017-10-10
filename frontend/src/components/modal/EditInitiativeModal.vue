@@ -53,7 +53,7 @@
             </div>
           </div>
 
-          <!-- <hr>
+          <hr>
           <div class="w3-row">
             <label class=""><b>Modules</b></label>
             <div class="w3-col s12">
@@ -75,7 +75,7 @@
                   </div>
               </div>
             </div>
-          </div> -->
+          </div>
 
           <hr>
           <div class="w3-row">
