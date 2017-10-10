@@ -278,7 +278,6 @@ export default {
       }
     },
     update () {
-      console.log('updating')
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id, {
         params: {
           level: 1
