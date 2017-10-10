@@ -213,7 +213,7 @@ public class InitiativeService {
 		meta.setName(initiativeDto.getName());
 		meta.setDriver(initiativeDto.getDriver());
 		meta.setCreationDate(new Timestamp(System.currentTimeMillis()));
-		
+		meta.setModelEnabled(true);
 		
 		if (!initiativeDto.getAsSubinitiative()) {
 			meta.setColor("#009ee3");
