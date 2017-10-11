@@ -212,6 +212,11 @@
 
           <br>
           <div v-if="!isNew" class="">
+            <app-message-thread contextType="MODEL_CARD" :contextElementId="cardWrapperId"></app-message-thread>
+          </div>
+
+          <br>
+          <div v-if="!isNew" class="">
             <div class="w3-row w3-margin-bottom">
               <b>Recent Activity:</b>
             </div>
@@ -241,6 +246,7 @@ import Datepicker from 'vuejs-datepicker'
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
 import ModelCardSelector from '@/components/model/ModelCardSelector.vue'
 import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
+import MessageThread from '@/components/conversations/MessageThread.vue'
 
 export default {
 
@@ -248,7 +254,8 @@ export default {
     'app-model-modal-buttons': ModelModalButtons,
     'datepicker': Datepicker,
     'app-model-card-selector': ModelCardSelector,
-    'app-activity-getter': ActivityGetter
+    'app-activity-getter': ActivityGetter,
+    'app-message-thread': MessageThread
   },
 
   props: {

@@ -67,7 +67,7 @@ export default {
 @import '~simplemde/dist/simplemde.min.css';
 
 .CodeMirror, .CodeMirror-scroll {
-	min-height: 100px;
+	min-height: 30px;
   resize: vertical;
 }
 

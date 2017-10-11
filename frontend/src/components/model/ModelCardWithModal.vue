@@ -17,7 +17,8 @@ needs the model card component inside, and would crate a recursion -->
       </transition>
     </div>
 
-    <div class="w3-display-container"
+    <div class="w3-display-container cursor-pointer"
+      @click="showCard()"
       @mouseover="hoverEnter()"
       @mouseleave="hoverLeave()">
 
@@ -35,8 +36,7 @@ needs the model card component inside, and would crate a recursion -->
 
       <transition name="fadeenter">
         <div v-if="showActionButton && enableExpand"
-          @click="showCard()"
-          class="w3-button model-action-button gray-2-color w3-display-topright">
+          class="w3-padding model-action-button gray-2-color w3-display-topright">
           <i class="fa fa-expand" aria-hidden="true"></i>
         </div>
       </transition>

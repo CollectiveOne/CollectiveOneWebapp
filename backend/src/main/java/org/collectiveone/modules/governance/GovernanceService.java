@@ -134,6 +134,7 @@ public class GovernanceService {
 		return isRolesAndEditor(initiativeId, creatorId);
 	}
 	
+
 	
 	
 	/** ------------------ */

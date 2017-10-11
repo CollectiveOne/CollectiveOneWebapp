@@ -11,9 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.conversations.MessageThread;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.dto.ModelViewDto;
 import org.hibernate.annotations.GenericGenerator;
@@ -47,6 +49,9 @@ public class ModelView {
 	
 	@ManyToMany
 	private List<ModelSection> sectionsTrash = new ArrayList<ModelSection>();
+	
+	@OneToOne
+	private MessageThread messageThread;
 	
 	
 	public ModelViewDto toDto() {
@@ -109,6 +114,14 @@ public class ModelView {
 
 	public void setSectionsTrash(List<ModelSection> sectionsTrash) {
 		this.sectionsTrash = sectionsTrash;
+	}
+
+	public MessageThread getMessageThread() {
+		return messageThread;
+	}
+
+	public void setMessageThread(MessageThread messageThread) {
+		this.messageThread = messageThread;
 	}
 	
 }

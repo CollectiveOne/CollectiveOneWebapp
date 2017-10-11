@@ -20,6 +20,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.conversations.MessageThread;
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.model.ModelView;
@@ -70,6 +71,10 @@ public class Initiative {
 	@OneToMany
 	@OrderColumn(name = "views_order")
 	private List<ModelView> modelViewsTrash = new ArrayList<ModelView>();
+	
+	@OneToOne
+	private MessageThread messageThread;
+	
 	
 	public InitiativeDto toDto() {
 		InitiativeDto dto = new InitiativeDto();
@@ -145,5 +150,12 @@ public class Initiative {
 	public void setModelViewsTrash(List<ModelView> modelViewsTrash) {
 		this.modelViewsTrash = modelViewsTrash;
 	}
+	public MessageThread getMessageThread() {
+		return messageThread;
+	}
+	public void setMessageThread(MessageThread messageThread) {
+		this.messageThread = messageThread;
+	}
+	
 	
 }

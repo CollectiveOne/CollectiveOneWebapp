@@ -9,7 +9,7 @@
     @dragleave.prevent="dragLeave()"
     @drop="dragDrop()"> -->
 
-    <div class="" :class="{ 'w3-card-2': cardEffect, 'highlight': highlight }">
+    <div class="" :class="{ 'w3-card-2 w3-leftbar border-blue': cardEffect, 'highlight': highlight }">
 
       <div v-if="showDetails" class="w3-row light-grey">
         <div class="w3-col s6">
