@@ -37,6 +37,10 @@ export default {
     reverse: {
       type: Boolean,
       default: false
+    },
+    triggerUpdate: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -48,12 +52,22 @@ export default {
     }
   },
 
+  watch: {
+    triggerUpdate () {
+      this.resetElements()
+    }
+  },
+
   methods: {
+    resetElements () {
+      this.currentPage = 0
+      this.getMore(true)
+    },
     showMoreClick () {
       this.currentPage += 1
-      this.getMore()
+      this.getMore(false)
     },
-    getMore () {
+    getMore (resetF) {
       this.axios.get(this.url, {
         params: {
           page: this.currentPage,
@@ -63,13 +77,17 @@ export default {
         if (response.data.data.content < 10) {
           this.allShown = true
         }
-        this.activities = this.activities.concat(response.data.data.content)
+        if (!resetF) {
+          this.activities = this.activities.concat(response.data.data.content)
+        } else {
+          this.activities = response.data.data.content
+        }
       })
     }
   },
 
   created () {
-    this.getMore()
+    this.getMore(false)
   }
 }
 </script>

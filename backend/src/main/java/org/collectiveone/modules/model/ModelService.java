@@ -106,7 +106,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult createView (UUID initiativeId, ModelViewDto viewDto, UUID creatorId) {
+	public PostResult createView (UUID initiativeId, ModelViewDto viewDto, UUID creatorId, boolean register) {
 		
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		if (initiative == null) return new PostResult("error", "initiative not found", "");
@@ -117,7 +117,7 @@ public class ModelService {
 		initiative.getModelViews().add(view);
 		initiativeRepository.save(initiative);
 		
-		activityService.modelViewCreated(view, appUserRepository.findByC1Id(creatorId));
+		if (register) activityService.modelViewCreated(view, appUserRepository.findByC1Id(creatorId));
 		
 		return new PostResult("success", "view created", view.getId().toString());
 	}
@@ -178,7 +178,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult createSection(ModelSectionDto sectionDto, UUID parentSectionId, UUID parentViewId , UUID creatorId) {
+	public PostResult createSection(ModelSectionDto sectionDto, UUID parentSectionId, UUID parentViewId , UUID creatorId, boolean register) {
 		
 		ModelSection section = sectionDto.toEntity(null, sectionDto);
 		section = modelSectionRepository.save(section);
@@ -190,7 +190,7 @@ public class ModelService {
 			parent.getSubsections().add(section);
 			section.setInitiative(parent.getInitiative());
 			
-			activityService.modelSectionCreatedOnSection(section, parent, appUserRepository.findByC1Id(creatorId));
+			if (register) activityService.modelSectionCreatedOnSection(section, parent, appUserRepository.findByC1Id(creatorId));
 			
 			modelSectionRepository.save(parent);
 			
@@ -763,7 +763,15 @@ public class ModelService {
 		List<UUID> sectionIds = getAllSectionsIdsOfView(viewId);
 		List<UUID> cardsIds = modelCardRepository.findAllCardsIdsOfSections(sectionIds);
 		
-		Page<Activity> activities = activityRepository.findOfViewSectionsAndCards(viewId, sectionIds, cardsIds, page);
+		Page<Activity> activities = null;
+		
+		if((sectionIds.size() > 0) && (cardsIds.size() > 0)) {
+			activities = activityRepository.findOfViewSectionsAndCards(viewId, sectionIds, cardsIds, page);
+		} else if ((sectionIds.size() > 0) && (cardsIds.size() == 0)) {
+			activities = activityRepository.findOfViewAndSections(viewId, sectionIds, page);
+		} else if ((sectionIds.size() == 0) && (cardsIds.size() == 0)) {
+			activities = activityRepository.findOfView(viewId, page);
+		}
 	
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		
@@ -787,7 +795,14 @@ public class ModelService {
 		
 		List<UUID> cardsIds = modelCardRepository.findAllCardsIdsOfSections(allSectionIds);
 		
-		Page<Activity> activities = activityRepository.findOfSectionsAndCards(allSectionIds, cardsIds, page);
+		Page<Activity> activities = null;
+		
+		if (cardsIds.size() > 0) {
+			activities = activityRepository.findOfSectionsAndCards(allSectionIds, cardsIds, page);	
+		} else {
+			activities = activityRepository.findOfSections(allSectionIds, page);
+		}
+		
 	
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		

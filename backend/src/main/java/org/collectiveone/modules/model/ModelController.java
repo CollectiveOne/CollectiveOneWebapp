@@ -69,7 +69,7 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.createView(initiativeId, viewDto, getLoggedUser().getC1Id());
+		return modelService.createView(initiativeId, viewDto, getLoggedUser().getC1Id(), true);
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/view/{viewId}", method = RequestMethod.GET) 
@@ -140,7 +140,7 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.createSection(sectionDto, null, UUID.fromString(viewIdStr), getLoggedUserId());
+		return modelService.createSection(sectionDto, null, UUID.fromString(viewIdStr), getLoggedUserId(), true);
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}/subsection", method = RequestMethod.POST)
@@ -159,7 +159,7 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.createSection(sectionDto, UUID.fromString(sectionIdStr), null, getLoggedUserId());
+		return modelService.createSection(sectionDto, UUID.fromString(sectionIdStr), null, getLoggedUserId(), true);
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/view/{viewId}/subsection/{subsectionId}", method = RequestMethod.PUT)

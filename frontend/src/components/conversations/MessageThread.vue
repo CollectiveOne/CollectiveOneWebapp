@@ -1,29 +1,33 @@
 <template lang="html">
   <div class="">
-    <div class="w3-row">
-      <app-activity-getter :url="url" :reverse="reverse"></app-activity-getter>
+    <div class="w3-row history-container">
+      <app-activity-getter
+        :url="url"
+        :reverse="true"
+        :triggerUpdate="triggerUpdate">
+      </app-activity-getter>
     </div>
     <div class="w3-row w3-margin-top">
-      <app-new-message @send="send($event)"></app-new-message>
+      <app-markdown-editor
+        v-model="newMessageText"
+        placeholder="say something"
+        :showToolbar="false"
+        :showSend="true"
+        @send="send($event)">
+      </app-markdown-editor>
     </div>
   </div>
 </template>
 
 <script>
 import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
-import NewMessage from '@/components/conversations/NewMessage.vue'
 
 export default {
   components: {
-    'app-activity-getter': ActivityGetter,
-    'app-new-message': NewMessage
+    'app-activity-getter': ActivityGetter
   },
 
   props: {
-    threadId: {
-      type: String,
-      default: ''
-    },
     contextType: {
       type: String,
       default: ''
@@ -35,29 +39,41 @@ export default {
     url: {
       type: String,
       default: ''
-    },
-    reverse: {
-      type: Boolean,
-      default: false
+    }
+  },
+
+  data () {
+    return {
+      newMessageText: '',
+      triggerUpdate: true
     }
   },
 
   methods: {
-    send (message) {
-      var newMessageDto = {
-        contextType: this.contextType,
-        contextElementId: this.contextElementId,
-        text: message
+    send () {
+      var message = {
+        text: this.newMessageText
       }
-
-      if (this.threadId === '') {
-        this.axios.post('/1/messages', newMessageDto).then((response) => {
-        })
-      }
+      this.axios.post('/1/messages/' + this.contextType + '/' + this.contextElementId, message).then((response) => {
+        if (response.data.result === 'success') {
+          this.newMessageText = ''
+          this.triggerUpdate = !this.triggerUpdate
+        }
+      })
     }
   }
 }
 </script>
 
 <style scoped>
+
+.CodeMirror, .CodeMirror-scroll {
+	min-height: 50px !important;
+}
+
+.history-container {
+  max-height: 50vh;
+  overflow: auto;
+}
+
 </style>

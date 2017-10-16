@@ -29,6 +29,9 @@ import org.collectiveone.modules.initiatives.repositories.InitiativeRelationship
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeTagRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
+import org.collectiveone.modules.model.ModelService;
+import org.collectiveone.modules.model.dto.ModelSectionDto;
+import org.collectiveone.modules.model.dto.ModelViewDto;
 import org.collectiveone.modules.tokens.AssetsDto;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.InitiativeTransferRepositoryIf;
@@ -54,6 +57,9 @@ public class InitiativeService {
 	
 	@Autowired
 	private GovernanceService governanceService;
+	
+	@Autowired
+	private ModelService modelService;
 	
 	@Autowired
 	private TokenTransferService tokenTransferService;
@@ -176,10 +182,18 @@ public class InitiativeService {
 			GetResult<Initiative> result2 = addMembers(result.getData().getId(), initiativeDto.getMembers());
 			
 			if(result2.getResult().equals("success")) {
-				PostResult result3 = transferAssets(result2.getData().getId(), initiativeDto);
+				PostResult result3 = transferAssets(result.getData().getId(), initiativeDto);
 				
 				if (result3.getResult().equals("success")) {
-					return result3;
+					PostResult result4 = initializeModel(result.getData().getId(), userId);
+					
+					if (result4.getResult().equals("success")) {
+						
+						return new PostResult("success", "initiative created and initalized",  result.getData().getId().toString());
+						
+					} else {
+						return new PostResult("error", "error initializing model",  "");
+					}
 				
 				} else {
 					return new PostResult("error", "error transferring assets",  "");
@@ -339,6 +353,25 @@ public class InitiativeService {
 		}
 			
 		return new PostResult("success", "sub initiative created and tokens transferred",  initiative.getId().toString());
+	}
+	
+	@Transactional
+	private PostResult initializeModel(UUID initiativeId, UUID creatorId) {
+		
+		ModelViewDto viewDto = new ModelViewDto();
+		viewDto.setTitle("General View");
+		viewDto.setDescription("Initial auto-generated sample view. You can edit or delete it at will.");
+		
+			
+		PostResult result = modelService.createView(initiativeId, viewDto, creatorId, false);
+		
+		ModelSectionDto sectionDto = new ModelSectionDto();
+		sectionDto.setTitle("Section");
+		sectionDto.setDescription("Initial auto-generated sample section. You can edit or delete it at will.");
+		
+		PostResult result2 = modelService.createSection(sectionDto, null, UUID.fromString(result.getElementId()), creatorId, false);
+		
+		return result2;
 	}
 	
 	
