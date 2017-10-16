@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.assignations.Assignation;
+import org.collectiveone.modules.conversations.Message;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelSection;
@@ -103,6 +104,13 @@ public class Activity {
 	private ModelView fromView;
 	
 	
+	// -------
+	
+	@ManyToOne
+	private Message message;
+	
+	
+	
 	/* Dto */
 	public ActivityDto toDto() {
 		ActivityDto dto = new ActivityDto();
@@ -131,6 +139,8 @@ public class Activity {
 		
 		if(fromSection != null) dto.setFromSection(fromSection.toDto());
 		if(fromView != null) dto.setFromView(fromView.toDto());
+		
+		if(message != null) dto.setMessage(message.toDto());
 		
 		return dto;
 	}
@@ -295,6 +305,14 @@ public class Activity {
 
 	public void setFromView(ModelView fromView) {
 		this.fromView = fromView;
+	}
+
+	public Message getMessage() {
+		return message;
+	}
+
+	public void setMessage(Message message) {
+		this.message = message;
 	}
 	
 }

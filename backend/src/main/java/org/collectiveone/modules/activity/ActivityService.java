@@ -23,12 +23,19 @@ import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.activity.repositories.NotificationRepositoryIf;
 import org.collectiveone.modules.activity.repositories.SubscriberRepositoryIf;
 import org.collectiveone.modules.assignations.Assignation;
+import org.collectiveone.modules.conversations.Message;
+import org.collectiveone.modules.conversations.MessageService;
+import org.collectiveone.modules.conversations.MessageThreadContextType;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.Member;
+import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelView;
+import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
+import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
+import org.collectiveone.modules.model.repositories.ModelViewRepositoryIf;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
@@ -47,6 +54,9 @@ public class ActivityService {
 	@Autowired
 	private EmailService emailService;
 	
+	@Autowired
+	private MessageService messageService;
+	
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
@@ -59,6 +69,18 @@ public class ActivityService {
 	
 	@Autowired
 	private SubscriberRepositoryIf subscriberRepository;
+	
+	@Autowired
+	private InitiativeRepositoryIf initiativeRepository;
+	
+	@Autowired
+	private ModelViewRepositoryIf modelViewRepository;
+	
+	@Autowired
+	private ModelSectionRepositoryIf modelSectionRepository;
+	
+	@Autowired
+	private ModelCardWrapperRepositoryIf modelCardWrapperRepository;
 	
 	
 	@Transactional
@@ -652,6 +674,43 @@ public class ActivityService {
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void messagePosted(Message message, AppUser triggerUser, MessageThreadContextType contextType, UUID elementId) {
+		
+		Initiative initiative = initiativeRepository.findById(messageService.getInitiativeIdOfMessageThread(message.getThread()));
+		Activity activity = getBaseActivity(triggerUser, initiative); 
+		
+		activity.setType(ActivityType.MESSAGE_POSTED);
+		activity.setMessage(message);
+		setMessageLocation(activity, contextType, elementId);
+		
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	private void setMessageLocation(Activity activity, MessageThreadContextType contextType, UUID elementId) {
+		switch (contextType) {
+			
+			case MODEL_CARD:
+				activity.setModelCardWrapper(modelCardWrapperRepository.findById(elementId));
+				break;
+			
+			case MODEL_SECTION:
+				activity.setModelSection(modelSectionRepository.findById(elementId));
+				break;
+				
+			case MODEL_VIEW:
+				activity.setModelView(modelViewRepository.findById(elementId));
+				break;
+				
+			case INITIATIVE:
+				activity.setInitiative(initiativeRepository.findById(elementId));
+				break;
+				
+		}
 	}
 	
 	

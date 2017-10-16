@@ -46,6 +46,12 @@ public class Message {
 	private MessageThread subThread;
 	
 	
+	public MessageDto toDto() {
+		MessageDto dto = new MessageDto();
+		dto.setAuthor(author.toDtoLight());
+		dto.setText(text);
+		return dto;
+	}
 	
 
 	public UUID getId() {

@@ -1,13 +1,24 @@
 <template lang="html">
   <div class="">
+
+    <div v-if="!allShown && reverse" class="w3-row w3-center w3-margin-top">
+      <button @click="showMoreClick()"
+        class="w3-button app-button-light" type="button" name="button">
+        show older...
+      </button>
+    </div>
+
     <app-activity-table
       :activities="activities"
-      :addContext="false">
+      :addContext="false"
+      :reverse="reverse">
     </app-activity-table>
-    <div v-if="!allShown" class="w3-row w3-center w3-margin-top">
-      <button
-        @click="showMoreClick()"
-        class="w3-button app-button-light" type="button" name="button">show more...</button>
+
+    <div v-if="!allShown && !reverse" class="w3-row w3-center w3-margin-top">
+      <button @click="showMoreClick()"
+        class="w3-button app-button-light" type="button" name="button">
+        show older...
+      </button>
     </div>
   </div>
 </template>
@@ -22,6 +33,10 @@ export default {
   props: {
     url: {
       type: String
+    },
+    reverse: {
+      type: Boolean,
+      default: false
     }
   },
 

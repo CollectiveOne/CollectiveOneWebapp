@@ -209,6 +209,10 @@
         <app-user-link :user="activity.triggerUser"></app-user-link> deleted the card
         <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
       </span>
+
+      <span v-if="isMessagePosted" class="">
+        <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
+      </span>
     </td>
   </tr>
 </template>
@@ -382,6 +386,9 @@ export default {
     },
     isModelCardWrapperDeleted () {
       return this.activity.type === 'MODEL_CARDWRAPPER_DELETED'
+    },
+    isMessagePosted () {
+      return this.activity.type === 'MESSAGE_POSTED'
     },
     initiativeChanged () {
       var nameChanged = false

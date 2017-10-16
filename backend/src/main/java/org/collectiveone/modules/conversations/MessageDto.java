@@ -10,8 +10,6 @@ public class MessageDto {
 	private String id;
 	private String text;
 	private String threadId;
-	private String contextType;
-	private String contextElementId;
 	private Long timestamp;
 	private String authorId;
 	private AppUserDto author;
@@ -44,18 +42,6 @@ public class MessageDto {
 	}
 	public void setThreadId(String threadId) {
 		this.threadId = threadId;
-	}
-	public String getContextType() {
-		return contextType;
-	}
-	public void setContextType(String contextType) {
-		this.contextType = contextType;
-	}
-	public String getContextElementId() {
-		return contextElementId;
-	}
-	public void setContextElementId(String contextElementId) {
-		this.contextElementId = contextElementId;
 	}
 	public Long getTimestamp() {
 		return timestamp;

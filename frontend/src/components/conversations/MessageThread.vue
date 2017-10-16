@@ -1,18 +1,21 @@
 <template lang="html">
   <div class="">
-    <label for=""><b>Activity:</b></label>
-    <app-thread-story :threadId="threadId"></app-thread-story>
-    <app-new-message @send="send($event)"></app-new-message>
+    <div class="w3-row">
+      <app-activity-getter :url="url" :reverse="reverse"></app-activity-getter>
+    </div>
+    <div class="w3-row w3-margin-top">
+      <app-new-message @send="send($event)"></app-new-message>
+    </div>
   </div>
 </template>
 
 <script>
-import ThreadStory from '@/components/conversations/ThreadStory.vue'
+import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
 import NewMessage from '@/components/conversations/NewMessage.vue'
 
 export default {
   components: {
-    'app-thread-story': ThreadStory,
+    'app-activity-getter': ActivityGetter,
     'app-new-message': NewMessage
   },
 
@@ -28,6 +31,14 @@ export default {
     contextElementId: {
       type: String,
       default: ''
+    },
+    url: {
+      type: String,
+      default: ''
+    },
+    reverse: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -41,9 +52,6 @@ export default {
 
       if (this.threadId === '') {
         this.axios.post('/1/messages', newMessageDto).then((response) => {
-        })
-      } else {
-        this.axios.post('/1/messages/' + this.threadId, newMessageDto).then((response) => {
         })
       }
     }

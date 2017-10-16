@@ -29,9 +29,9 @@
     </div>
 
 
-    <div v-if="expanded" class="w3-row expand-row">
+    <div v-if="expanded" class="w3-row expand-row w3-leftbar">
       <button
-        class="w3-button gray-1 w3-small"
+        class="w3-button light-grey w3-small"
         @click="toggleExpand()">
         <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse</span>
       </button>
@@ -45,7 +45,7 @@
         @after-leave="animatingSubsections = false">
         <!-- hooks are needed to enable overflow when not animating -->
 
-        <div v-if="expanded" class="w3-row w3-leftbar w3-border-right subelements-container">
+        <div v-if="expanded" class="w3-row w3-leftbar subelements-container">
 
           <div class="w3-row-padding cards-container">
             <div v-for="cardWrapper in section.cardsWrappers"
@@ -139,9 +139,9 @@
       </transition>
     </div>
 
-    <div v-if="showExpandButton" class="w3-row expand-row">
+    <div v-if="showExpandButton" class="w3-row expand-row w3-leftbar">
       <button
-        class="w3-button gray-1 w3-small"
+        class="w3-button light-grey w3-small"
         @click="toggleExpand()">
         <span v-if="!expanded">
           <i class="fa fa-chevron-down" aria-hidden="true"></i> Expand
@@ -236,21 +236,6 @@ export default {
   computed: {
     showExpandButton () {
       return true
-    },
-    showSubsectionsButtonContent () {
-      var text = ''
-      if (this.showSubsections) {
-        text = ' hide subsection'
-        if (this.section.subsections.length > 1) {
-          text += 's'
-        }
-      } else {
-        text = '<i class="fa fa-caret-right" aria-hidden="true"></i><b> ' + this.section.subsections.length + '</b> subsection'
-        if (this.section.subsections.length > 1) {
-          text += 's'
-        }
-      }
-      return text
     }
   },
 

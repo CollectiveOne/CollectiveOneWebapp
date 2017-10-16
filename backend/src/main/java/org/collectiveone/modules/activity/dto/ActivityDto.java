@@ -1,6 +1,7 @@
 package org.collectiveone.modules.activity.dto;
 
 import org.collectiveone.modules.assignations.AssignationDto;
+import org.collectiveone.modules.conversations.MessageDto;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
@@ -31,6 +32,8 @@ public class ActivityDto {
 	
 	private ModelSectionDto fromSection;
 	private ModelViewDto fromView;
+	
+	private MessageDto message;
 	
 	public String getId() {
 		return id;
@@ -139,6 +142,12 @@ public class ActivityDto {
 	}
 	public void setFromView(ModelViewDto fromView) {
 		this.fromView = fromView;
+	}
+	public MessageDto getMessage() {
+		return message;
+	}
+	public void setMessage(MessageDto message) {
+		this.message = message;
 	}
 	
 }

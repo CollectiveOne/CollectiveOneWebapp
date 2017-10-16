@@ -1,6 +1,6 @@
 <template lang="html">
   <div v-if="section"
-    class="section-title-container w3-leftbar w3-border-top w3-border-right w3-border-bottom gray-1-border light-grey">
+    class="section-title-container w3-leftbar gray-1-border">
 
     <div class="w3-row title-row">
         <router-link tag="a" :to="{ name: 'ModelSection', params: { sectionId: section.id } }"
