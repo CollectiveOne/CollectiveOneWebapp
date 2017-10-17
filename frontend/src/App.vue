@@ -80,8 +80,8 @@ export default {
 }
 
 .marked-text p {
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 
 #app html,body,h1,h2,h3,h4,h5 {
@@ -388,6 +388,15 @@ select {
   display: inline-block;
   margin-left: 5px;
   margin-bottom: 5px;
+}
+
+.sending-accept {
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.sending-accept img {
+  width: 30px;
 }
 
 

@@ -105,14 +105,13 @@ export default {
           size: 10
         }
       }).then((response) => {
-        if (response.data.data.content < 10) {
+        if (response.data.data.content.length < 10) {
           this.allShown = true
         }
 
         switch (mode) {
           case 'RESET':
             this.activities = response.data.data.content
-            console.log(JSON.parse(JSON.stringify(this.activities)))
             this.$emit('updated')
 
             /* start polling after the first response */

@@ -1,7 +1,8 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4">
+      <div class="w3-card-4"
+        v-click-outside="clickOutside">
 
         <div class="div-close-modal w3-display-topright w3-xlarge" @click="closeThis()">
           <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
@@ -56,7 +57,7 @@
             </div>
 
             <br>
-            <div v-if="!isNew" class="">
+            <div v-if="!isNew && !editing" class="">
               <div class="w3-row w3-margin-bottom">
                 <b>Recent Activity:</b>
               </div>
@@ -68,8 +69,11 @@
               <div class="w3-col m6">
                 <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
               </div>
-              <div class="w3-col m6">
-                <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <div class="w3-col m6 w3-center">
+                <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept</button>
+                <div v-show="sendingData" class="sending-accept light-grey">
+                  <img class="" src="../../../assets/loading.gif" alt="">
+                </div>
               </div>
             </div>
 
@@ -117,7 +121,8 @@ export default {
       editing: false,
       showEditButtons: false,
       titleEmptyError: false,
-      descriptionEmptyError: false
+      descriptionEmptyError: false,
+      sendingData: false
     }
   },
 
@@ -158,6 +163,11 @@ export default {
       this.editedView = JSON.parse(JSON.stringify(this.view))
       this.editing = true
     },
+    clickOutside () {
+      if (this.enableClickOutside) {
+        this.$emit('close')
+      }
+    },
     closeThis () {
       this.$emit('close')
     },
@@ -188,6 +198,7 @@ export default {
       if (ok) {
         var viewDto = JSON.parse(JSON.stringify(this.editedView))
         var returnF = (response) => {
+          this.sendingData = false
           if (response.data.result === 'success') {
             if (this.isNew) {
               this.closeThis()
@@ -203,10 +214,12 @@ export default {
         }
 
         if (this.isNew) {
+          this.sendingData = true
           this.axios.post('/1/initiative/' + this.initiativeId + '/model/view', viewDto).then(returnF).catch((error) => {
             console.log(error)
           })
         } else {
+          this.sendingData = true
           this.axios.put('/1/initiative/' + this.initiativeId + '/model/view/' + this.viewId, viewDto).then(returnF).catch((error) => {
             console.log(error)
           })
@@ -235,6 +248,10 @@ export default {
       this.view.id = this.viewId
       this.update()
     }
+
+    setTimeout(() => {
+      this.enableClickOutside = true
+    }, 1000)
   }
 }
 </script>

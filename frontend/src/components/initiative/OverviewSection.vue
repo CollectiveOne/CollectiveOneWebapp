@@ -31,7 +31,7 @@
         <header class="section-header-bar w3-bar gray-1">
           <h4 class="w3-bar-item w3-left">Assets</h4>
         </header>
-        <div class="activity-content">
+        <div class="assets-content">
           <app-asset-distribution-chart v-for="asset in initiative.assets"
             :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
             :canMint="initiative.ownAssetsId === asset.assetId" :canEdit="isLoggedAnAdmin">
@@ -110,9 +110,16 @@ export default {
   padding-bottom: 0px;
 }
 
+.assets-content {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
 .activity-content {
   padding-top: 16px;
   padding-bottom: 16px;
+  max-height: 35vh;
+  overflow-y: auto;
 }
 
 .edit-btn-div {

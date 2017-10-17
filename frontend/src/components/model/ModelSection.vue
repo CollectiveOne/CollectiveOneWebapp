@@ -1,6 +1,6 @@
 <template lang="html">
 
-  <div v-if="section" class="section-container">
+  <div v-if="section" class="section-container w3-border gray-1-border w3-round">
 
     <div class="slider-container">
       <transition name="slideDownUp">
@@ -122,7 +122,7 @@
                   </app-model-section-with-modal>
                 </div>
 
-                <div class="subsection-container gray-1-color w3-border"
+                <div class="subsection-container gray-1-color w3-border w3-round"
                   @dragover.prevent
                   @drop="subsectionDroped('', $event)">
 
@@ -139,7 +139,7 @@
       </transition>
     </div>
 
-    <div v-if="showExpandButton" class="w3-row expand-row w3-leftbar">
+    <div v-if="showExpandButton" class="w3-row expand-row w3-leftbar w3-round">
       <button
         class="w3-button light-grey w3-small"
         @click="toggleExpand()">

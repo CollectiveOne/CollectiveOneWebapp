@@ -1,7 +1,8 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4">
+      <div class="w3-card-4"
+        v-click-outside="clickOutside">
 
         <div class="div-close-modal w3-display-topright w3-xlarge" @click="closeThis()">
           <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
@@ -211,7 +212,7 @@
           </div>
 
           <br>
-          <div v-if="!isNew" class="">
+          <div v-if="!isNew && !editing" class="">
             <app-message-thread
               contextType="MODEL_CARD"
               :contextElementId="cardWrapperId"
@@ -224,8 +225,11 @@
             <div class="w3-col m6">
               <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
             </div>
-            <div class="w3-col m6">
-              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+            <div class="w3-col m6 w3-center">
+              <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <div v-show="sendingData" class="sending-accept light-grey">
+                <img class="" src="../../../assets/loading.gif" alt="">
+              </div>
             </div>
           </div>
 
@@ -302,7 +306,9 @@ export default {
       newImageFileId: '',
       uploadingImage: false,
       errorUploadingFile: false,
-      errorUploadingFileMsg: ''
+      errorUploadingFileMsg: '',
+      enableClickOutside: false,
+      sendingData: false
     }
   },
 
@@ -409,6 +415,12 @@ export default {
     cardSelected (cardWrapper) {
       this.existingCard = cardWrapper
     },
+    clickOutside () {
+      console.log('clicked outside')
+      if (this.enableClickOutside) {
+        this.$emit('close')
+      }
+    },
     closeThis () {
       this.$emit('close')
     },
@@ -440,6 +452,7 @@ export default {
       this.editedCard.targetDate = date.getTime()
     },
     accept () {
+      console.log('clicked accept')
       var ok = true
 
       if (!this.addExisting) {
@@ -461,27 +474,29 @@ export default {
       if (ok) {
         var cardDto = JSON.parse(JSON.stringify(this.editedCard))
         var responseF = (response) => {
+          this.sendingData = false
           if (response.data.result === 'success') {
             this.closeThis()
             this.$store.commit('triggerUpdateModel')
-          } else {
-            this.showOutputMessage(response.data.message)
           }
         }
 
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
+            this.sendingData = true
             this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/cardWrapper', cardDto).then(responseF).catch((error) => {
               console.log(error)
             })
           } else {
+            this.sendingData = true
             this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/cardWrapper/' + this.existingCard.id,
               {}).then(responseF).catch((error) => {
                 console.log(error)
               })
           }
         } else {
+          this.sendingData = true
           this.axios.put('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id, cardDto)
           .then(responseF).catch((error) => {
             console.log(error)
@@ -538,6 +553,10 @@ export default {
       this.cardWrapper.id = this.cardWrapperId
       this.update()
     }
+
+    setTimeout(() => {
+      this.enableClickOutside = true
+    }, 1000)
   }
 }
 </script>
@@ -586,6 +605,7 @@ export default {
   text-align: center;
   background-color: white;
   border-radius: 20px;
+  z-index: 10;
 }
 
 .image-display {

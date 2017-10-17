@@ -1,7 +1,8 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4">
+      <div class="w3-card-4"
+        v-click-outside="clickOutside">
 
         <div class="div-close-modal w3-display-topright w3-xlarge" @click="closeThis()">
           <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
@@ -102,7 +103,7 @@
           </div>
 
           <br>
-          <div v-if="!isNew" class="">
+          <div v-if="!isNew && !editing" class="">
             <div class="w3-row w3-margin-bottom">
               <b>Recent Activity:</b>
             </div>
@@ -114,8 +115,11 @@
             <div class="w3-col m6">
               <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
             </div>
-            <div class="w3-col m6">
-              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+            <div class="w3-col m6 w3-center">
+              <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <div v-show="sendingData" class="sending-accept light-grey">
+                <img class="" src="../../../assets/loading.gif" alt="">
+              </div>
             </div>
           </div>
 
@@ -182,7 +186,8 @@ export default {
       addExisting: false,
       existingSection: null,
       noSectionSelectedError: false,
-      animatingTab: false
+      animatingTab: false,
+      sendingData: false
     }
   },
 
@@ -246,6 +251,11 @@ export default {
     sectionSelected (section) {
       this.existingSection = section
     },
+    clickOutside () {
+      if (this.enableClickOutside) {
+        this.$emit('close')
+      }
+    },
     closeThis () {
       this.$emit('close')
     },
@@ -283,8 +293,14 @@ export default {
       if (ok) {
         var sectionDto = JSON.parse(JSON.stringify(this.editedSection))
         var responseF = (response) => {
+          this.sendingData = false
           if (response.data.result === 'success') {
-            this.closeThis()
+            if (this.isNew) {
+              this.closeThis()
+            } else {
+              this.editing = false
+              this.update()
+            }
             this.$store.commit('triggerUpdateModel')
           } else {
             this.showOutputMessage(response.data.message)
@@ -301,12 +317,14 @@ export default {
 
           if (!this.addExisting) {
             /* create new section */
+            this.sendingData = true
             this.axios.post('/1/initiative/' + this.initiativeId + '/model/' + place + '/' + this.inElementId + '/subsection', sectionDto)
             .then(responseF).catch((error) => {
               console.log(error)
             })
           } else {
             /* add existing section */
+            this.sendingData = true
             this.axios.put('/1/initiative/' + this.initiativeId + '/model/' + place + '/' + this.inElementId + '/subsection/' + this.existingSection.id, {})
             .then(responseF).catch((error) => {
               console.log(error)
@@ -314,6 +332,7 @@ export default {
           }
         } else {
           /* edit existing section */
+          this.sendingData = true
           this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + sectionDto.id, sectionDto)
           .then(responseF).catch((error) => {
             console.log(error)
@@ -369,6 +388,10 @@ export default {
       this.section.id = this.sectionId
       this.update()
     }
+
+    setTimeout(() => {
+      this.enableClickOutside = true
+    }, 1000)
   }
 }
 </script>

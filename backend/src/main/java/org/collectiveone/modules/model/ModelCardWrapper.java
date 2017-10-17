@@ -97,6 +97,8 @@ public class ModelCardWrapper {
 			if (cardDto.getStateControl()) {
 				setStateControl(cardDto.getStateControl());
 				setState(ModelCardState.valueOf(cardDto.getState()));
+			} else {
+				setStateControl(cardDto.getStateControl());
 			}
 		}
 		
