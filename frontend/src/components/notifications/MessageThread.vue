@@ -1,10 +1,14 @@
 <template lang="html">
   <div class="">
-    <div class="w3-row history-container">
+    <div id="history-container" class="w3-row history-container w3-border">
       <app-activity-getter
         :url="url"
         :reverse="true"
-        :triggerUpdate="triggerUpdate">
+        :addBorders="false"
+        :showMessages="true"
+        :polling="true"
+        :triggerUpdate="triggerUpdate"
+        @updated="scrollToBottom()">
       </app-activity-getter>
     </div>
     <div class="w3-row w3-margin-top">
@@ -45,7 +49,8 @@ export default {
   data () {
     return {
       newMessageText: '',
-      triggerUpdate: true
+      triggerUpdate: true,
+      intervalId: 0
     }
   },
 
@@ -60,7 +65,17 @@ export default {
           this.triggerUpdate = !this.triggerUpdate
         }
       })
+    },
+    scrollToBottom () {
+      this.$nextTick(() => {
+        var container = this.$el.querySelector('#history-container')
+        container.scrollTop = container.scrollHeight
+      })
     }
+  },
+
+  mounted () {
+    this.scrollToBottom()
   }
 }
 </script>
@@ -72,7 +87,7 @@ export default {
 }
 
 .history-container {
-  max-height: 50vh;
+  max-height: 35vh;
   overflow: auto;
 }
 

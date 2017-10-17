@@ -210,9 +210,14 @@
         <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
       </span>
 
-      <span v-if="isMessagePosted" class="">
+      <span v-if="isMessagePosted && showMessages" class="">
         <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
       </span>
+      <span v-if="isMessagePosted && !showMessages" class="">
+        <app-user-link :user="activity.triggerUser"></app-user-link> commented in
+        <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
+      </span>
+
     </td>
   </tr>
 </template>
@@ -242,6 +247,10 @@ export default {
     addTime: {
       type: Boolean,
       default: true
+    },
+    showMessages: {
+      type: Boolean,
+      default: false
     }
   },
 

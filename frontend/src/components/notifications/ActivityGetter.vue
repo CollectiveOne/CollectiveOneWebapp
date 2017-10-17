@@ -11,7 +11,9 @@
     <app-activity-table
       :activities="activities"
       :addContext="false"
-      :reverse="reverse">
+      :reverse="reverse"
+      :addBorders="addBorders"
+      :showMessages="showMessages">
     </app-activity-table>
 
     <div v-if="!allShown && !reverse" class="w3-row w3-center w3-margin-top">
@@ -41,6 +43,18 @@ export default {
     triggerUpdate: {
       type: Boolean,
       default: false
+    },
+    addBorders: {
+      type: Boolean,
+      default: true
+    },
+    showMessages: {
+      type: Boolean,
+      default: false
+    },
+    polling: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -48,7 +62,8 @@ export default {
     return {
       activities: [],
       currentPage: 0,
-      allShown: false
+      allShown: false,
+      intervalId: null
     }
   },
 
@@ -60,35 +75,85 @@ export default {
 
   methods: {
     resetElements () {
-      this.currentPage = 0
-      this.getMore(true)
+      this.getActivity('RESET')
     },
     showMoreClick () {
-      this.currentPage += 1
-      this.getMore(false)
+      this.getActivity('OLDER')
     },
-    getMore (resetF) {
+    getActivity (mode) {
+      var askPage = 0
+
+      switch (mode) {
+        case 'RESET':
+          this.currentPage = 0
+          askPage = this.currentPage
+          break
+
+        case 'OLDER':
+          this.currentPage += 1
+          askPage = this.currentPage
+          break
+
+        case 'UPDATE':
+          askPage = 0
+          break
+      }
+
       this.axios.get(this.url, {
         params: {
-          page: this.currentPage,
+          page: askPage,
           size: 10
         }
       }).then((response) => {
         if (response.data.data.content < 10) {
           this.allShown = true
         }
-        if (!resetF) {
-          this.activities = this.activities.concat(response.data.data.content)
-        } else {
-          this.activities = response.data.data.content
+
+        switch (mode) {
+          case 'RESET':
+            this.activities = response.data.data.content
+            console.log(JSON.parse(JSON.stringify(this.activities)))
+            this.$emit('updated')
+
+            /* start polling after the first response */
+            if (this.polling) {
+              if (this.intervalId === null) {
+                this.intervalId = setInterval(() => {
+                  this.getActivity('UPDATE')
+                }, 5000)
+              }
+            }
+            break
+
+          case 'OLDER':
+            this.activities = this.activities.concat(response.data.data.content)
+            break
+
+          case 'UPDATE':
+            var newIx = 0
+            var latestId = this.activities[0].id
+
+            while (response.data.data.content[newIx].id !== latestId) {
+              this.activities.splice(newIx, 0, response.data.data.content[newIx])
+              newIx++
+            }
+            if (newIx > 0) {
+              this.$emit('updated')
+            }
+            break
         }
       })
     }
   },
 
   created () {
-    this.getMore(false)
+    this.getActivity('RESET')
+  },
+
+  beforeDestroy () {
+    clearInterval(this.intervalId)
   }
+
 }
 </script>
 

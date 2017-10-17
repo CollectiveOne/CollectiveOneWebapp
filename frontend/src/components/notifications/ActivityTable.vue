@@ -1,9 +1,10 @@
 <template lang="html">
-  <table class="w3-table w3-bordered">
-    <app-activity-row v-for="activity in activities"
+  <table class="w3-table" :class="{'w3-bordered': addBorders}">
+    <app-activity-row v-for="activity in activitiesOrdered"
       :key="activity.id"
       :activity="activity"
-      :addContext="addContext">
+      :addContext="addContext"
+      :showMessages="showMessages">
     </app-activity-row>
   </table>
 </template>
@@ -23,7 +24,32 @@ export default {
     addContext: {
       type: Boolean,
       default: true
+    },
+    reverse: {
+      type: Boolean,
+      default: false
+    },
+    addBorders: {
+      type: Boolean,
+      default: true
+    },
+    showMessages: {
+      type: Boolean,
+      default: false
     }
+  },
+
+  computed: {
+    activitiesOrdered () {
+      if (this.reverse) {
+        return JSON.parse(JSON.stringify(this.activities)).reverse()
+      } else {
+        return JSON.parse(JSON.stringify(this.activities))
+      }
+    }
+  },
+
+  methods: {
   }
 }
 </script>
