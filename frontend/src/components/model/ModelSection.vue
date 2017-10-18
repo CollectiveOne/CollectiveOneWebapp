@@ -139,7 +139,7 @@
       </transition>
     </div>
 
-    <div v-if="showExpandButton" class="w3-row expand-row w3-leftbar w3-round">
+    <div v-if="showExpandButton" class="w3-row expand-row w3-leftbar" :class="{'expand-row-collapsed': !expanded}">
       <button
         class="w3-button light-grey w3-small"
         @click="toggleExpand()">
@@ -379,6 +379,12 @@ export default {
 <style scoped>
 
 .section-container {
+}
+
+.expand-row-collapsed {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  overflow: hidden;
 }
 
 .expand-row button {
