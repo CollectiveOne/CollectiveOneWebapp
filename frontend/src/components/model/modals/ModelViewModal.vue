@@ -56,12 +56,12 @@
               </div>
             </div>
 
-            <br>
             <div v-if="!isNew && !editing" class="">
-              <div class="w3-row w3-margin-bottom">
-                <b>Recent Activity:</b>
-              </div>
-              <app-activity-getter :url="'/1/activity/model/view/' + viewId"></app-activity-getter>
+              <app-message-thread
+                contextType="MODEL_VIEW"
+                :contextElementId="viewId"
+                :url="'/1/activity/model/view/' + viewId">
+              </app-message-thread>
             </div>
 
             <div v-if="editing" class="modal-bottom-btns-row w3-row-padding">
@@ -87,13 +87,13 @@
 
 <script>
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
-import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
+import MessageThread from '@/components/notifications/MessageThread.vue'
 
 export default {
 
   components: {
     'app-model-modal-buttons': ModelModalButtons,
-    'app-activity-getter': ActivityGetter
+    'app-message-thread': MessageThread
   },
 
   props: {

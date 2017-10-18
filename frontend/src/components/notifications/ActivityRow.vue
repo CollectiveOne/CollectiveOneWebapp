@@ -182,17 +182,17 @@
           deleted the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
         </span>
 
-        <span v-if="isMessagePosted && showMessages" class="">
-          <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
-        </span>
-        <span v-if="isMessagePosted && !showMessages" class="">
+        <span v-if="isMessagePosted && (!showMessages || isExternalMessage)" :class="{'w3-tag w3-round gray-1': isExternalMessage}">
           commented in
           <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
           <span v-if="isMessageInSection"><app-model-section-link :section="activity.modelSection"></app-model-section-link> section.</span>
           <span v-if="isMessageInView"><app-model-view-link :view="activity.modelView"></app-model-view-link> view.</span>
           <span v-if="isMessageInInitiative"><app-initiative-link :initiative="activity.initiative"></app-initiative-link> initiative.</span>
-
         </span>
+        <span v-if="isMessagePosted && showMessages" class="">
+          <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
+        </span>
+
       </div>
     </td>
   </tr>
@@ -227,6 +227,10 @@ export default {
     showMessages: {
       type: Boolean,
       default: false
+    },
+    contextElementId: {
+      type: String,
+      default: ''
     }
   },
 
@@ -387,6 +391,21 @@ export default {
     },
     isMessageInInitiative () {
       return false
+    },
+    isExternalMessage () {
+      if (!this.isMessagePosted || !this.showMessages) {
+        return false
+      } else {
+        if (this.isMessageInCardWrapper) {
+          return this.activity.modelCardWrapper.id !== this.contextElementId
+        } else if (this.isMessageInSection) {
+          return this.activity.modelSection.id !== this.contextElementId
+        } else if (this.isMessageInView) {
+          return this.activity.modelView.id !== this.contextElementId
+        } else if (this.isMessageInInitiative) {
+          return this.activity.initiative.id !== this.contextElementId
+        }
+      }
     },
 
     initiativeChanged () {

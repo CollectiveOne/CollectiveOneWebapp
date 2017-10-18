@@ -12,7 +12,7 @@
 
     <div v-show="showTable"
       v-click-outside="clickOutsideNotifications"
-      class="notifications-container w3-white w3-card-4 w3-bar-block w3-center" style="width:300px">
+      class="notifications-container w3-white w3-card-4 w3-bar-block w3-center">
       <app-activity-table :activities="activities"></app-activity-table>
       <button v-if="!allShown"
         @click="showMore()"
@@ -177,6 +177,7 @@ export default {
 }
 
 .notifications-container {
+  max-width:420px;
   position: absolute;
   margin-left: -212px;
   max-height: calc(100vh - 80px);

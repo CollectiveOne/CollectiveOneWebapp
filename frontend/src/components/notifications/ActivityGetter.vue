@@ -13,7 +13,8 @@
       :addContext="false"
       :reverse="reverse"
       :addBorders="addBorders"
-      :showMessages="showMessages">
+      :showMessages="showMessages"
+      :contextElementId="contextElementId">
     </app-activity-table>
 
     <div v-if="!allShown && !reverse" class="w3-row w3-center w3-margin-top">
@@ -55,6 +56,10 @@ export default {
     polling: {
       type: Boolean,
       default: false
+    },
+    contextElementId: {
+      type: String,
+      default: ''
     }
   },
 

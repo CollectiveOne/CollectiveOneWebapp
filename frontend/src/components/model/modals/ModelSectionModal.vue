@@ -104,10 +104,11 @@
 
           <br>
           <div v-if="!isNew && !editing" class="">
-            <div class="w3-row w3-margin-bottom">
-              <b>Recent Activity:</b>
-            </div>
-            <app-activity-getter :url="'/1/activity/model/section/' + sectionId"></app-activity-getter>
+            <app-message-thread
+              contextType="MODEL_SECTION"
+              :contextElementId="sectionId"
+              :url="'/1/activity/model/section/' + sectionId">
+            </app-message-thread>
           </div>
 
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
@@ -133,14 +134,14 @@
 <script>
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
 import ModelSectionSelector from '@/components/model/ModelSectionSelector.vue'
-import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
+import MessageThread from '@/components/notifications/MessageThread.vue'
 
 export default {
 
   components: {
     'app-model-modal-buttons': ModelModalButtons,
     'app-model-section-selector': ModelSectionSelector,
-    'app-activity-getter': ActivityGetter
+    'app-message-thread': MessageThread
   },
 
   props: {

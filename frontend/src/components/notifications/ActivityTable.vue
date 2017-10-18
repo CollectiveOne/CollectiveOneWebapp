@@ -4,7 +4,8 @@
       :key="activity.id"
       :activity="activity"
       :addContext="addContext"
-      :showMessages="showMessages">
+      :showMessages="showMessages"
+      :contextElementId="contextElementId">
     </app-activity-row>
   </table>
 </template>
@@ -36,6 +37,10 @@ export default {
     showMessages: {
       type: Boolean,
       default: false
+    },
+    contextElementId: {
+      type: String,
+      default: ''
     }
   },
 

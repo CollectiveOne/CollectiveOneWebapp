@@ -8,6 +8,7 @@
         :showMessages="true"
         :polling="true"
         :triggerUpdate="triggerUpdate"
+        :contextElementId="contextElementId"
         @updated="scrollToBottom()">
       </app-activity-getter>
     </div>
