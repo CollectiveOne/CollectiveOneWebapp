@@ -246,7 +246,7 @@ public class ModelService {
 		List<ModelSectionDto> sectionDtos = new ArrayList<ModelSectionDto>();
 		
 		for(ModelSection section : enititiesPage.getContent()) {
-			sectionDtos.add(section.toDto());
+			sectionDtos.add(getSectionDto(section.getId(), 0));
 		}
 		
 		Page<ModelSectionDto> dtosPage = new PageImpl<ModelSectionDto>(sectionDtos, page, enititiesPage.getNumberOfElements());

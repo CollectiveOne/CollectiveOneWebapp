@@ -12,7 +12,7 @@
         @click="separate = true"
         class="w3-button app-button" type="button" name="button"
         :class="{'app-button-light': !separate, 'app-button': separate}">
-        separate queries
+        side-by-side
       </button>
     </div>
     <hr>

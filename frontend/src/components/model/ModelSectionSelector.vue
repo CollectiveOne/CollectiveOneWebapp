@@ -5,7 +5,7 @@
         <input @input="queryUpdate()" v-model="query" class="w3-input" type="text" name="" value="" placeholder="search and select a section">
       </div>
       <div class="section-results-container w3-row-padding w3-container w3-margin-top w3-border">
-        <div class="section-container cursor-pointer"
+        <div class="section-container cursor-pointer w3-border gray-1-border w3-round"
           v-for="section in sections"
           :key="section.id"
           @click="sectionClicked(section)">
@@ -22,7 +22,7 @@
         </div>
       </div>
     </div>
-    <div v-if="sectionSelected !== null" class="w3-row w3-display-container w3-margin-top w3-container">
+    <div v-show="sectionSelected !== null" class="w3-row w3-display-container w3-margin-top w3-border gray-1-border w3-round">
       <app-model-section-header
         :section="sectionSelected"
         :level="0"
@@ -118,7 +118,7 @@ export default {
 
 .delete-selected {
   position: absolute;
-  margin-right: 25px;
+  margin-right: 15px;
   margin-top: 2px;
 }
 

@@ -49,6 +49,7 @@ export default {
 
 .subinitiative-tag {
   margin-left: 5px;
+  margin-bottom: 3px;
 }
 
 </style>
