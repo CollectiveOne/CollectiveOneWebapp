@@ -14,6 +14,8 @@ import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
+import org.collectiveone.modules.files.FileStored;
+import org.collectiveone.modules.files.FileStoredRepositoryIf;
 import org.collectiveone.modules.governance.DecisionMaker;
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.governance.Governance;
@@ -72,6 +74,9 @@ public class InitiativeService {
 	
 	@Autowired
 	private InitiativeRepositoryIf initiativeRepository;
+	
+	@Autowired
+	private FileStoredRepositoryIf fileStoredRepository;
 	
 	@Autowired
 	private InitiativeRelationshipRepositoryIf initiativeRelationshipRepository;
@@ -398,12 +403,25 @@ public class InitiativeService {
 			initiativeMeta.getTags().add(tag);
 		}
 		
+		/* update or remove image */
+		if (initiativeDto.getNewImageFileId() != null) {
+			if(!initiativeDto.getNewImageFileId().equals("REMOVE")) {
+				UUID imageFileId = initiativeDto.getNewImageFileId().equals("") ? null : UUID.fromString(initiativeDto.getNewImageFileId());
+				FileStored imageFile = fileStoredRepository.findById(imageFileId);
+				initiativeMeta.setImageFile(imageFile);
+			} else {
+				initiativeMeta.setImageFile(null);
+			}
+		} 
+		
 		initiativeMetaRepository.save(initiativeMeta);
 		
 		if (!oldName.equals(initiativeDto.getName()) || !oldDriver.equals(initiativeDto.getDriver())) {
 			/* notify only if actually different */
 			activityService.initiativeEdited(initiative, appUserRepository.findByC1Id(userId), oldName, oldDriver);
 		}
+		
+		
 		
 		
 		return new PostResult("success", "initaitive updated", initiative.getId().toString());  

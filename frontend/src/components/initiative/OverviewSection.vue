@@ -1,5 +1,9 @@
 <template lang="html">
   <div class="">
+    <div v-if="initiative.meta.imageFile" class="image-container w3-center">
+      <img :src="initiative.meta.imageFile.url + '?lastUpdated=' + initiative.meta.imageFile.lastUpdated" alt="">
+    </div>
+
     <div v-if="initiative" class="this-container w3-container w3-padding">
       <div class="w3-card">
         <header class="w3-bar gray-1 section-header-bar">
@@ -108,6 +112,21 @@ export default {
 .section-content {
   padding-top: 6px;
   padding-bottom: 0px;
+}
+
+.image-container {
+  min-height: 80px;
+  max-height: 250px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-container img {
+  max-height: 100%;
+  max-width: 100%;
 }
 
 .assets-content {

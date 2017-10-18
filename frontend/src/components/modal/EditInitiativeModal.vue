@@ -13,7 +13,28 @@
 
         <div class="w3-container form-container">
 
-          <div class="w3-row">
+          <div class="w3-row image-container w3-center w3-display-container w3-card-2">
+            <div v-if="uploadingImage" class="loader-gif-container">
+              <img class="loader-gif" src="../../assets/loading.gif" alt="">
+            </div>
+            <div v-if="!uploadingImage && (newInitiative.meta.imageFile)" class="">
+              <img :src="newInitiative.meta.imageFile.url + '?lastUpdated='+ newInitiative.meta.imageFile.lastUpdated" alt="">
+            </div>
+            <div v-if="!uploadingImage" class="w3-display-middle">
+              <input class="inputfile" @change="newFileSelected($event)"
+                type="file" name="imageFile" id="imageFile" accept="image/*">
+              <label for="imageFile" class="w3-button app-button">{{ newInitiative.meta.imageFile ? 'change' : 'upload image' }}</label>
+              <button v-if="newInitiative.meta.imageFile"
+                @click="removeImage()"
+                class="w3-button app-button-danger">remove</button>
+            </div>
+          </div>
+          <app-error-panel
+            :show="errorUploadingFile"
+            :message="errorUploadingFileMsg">
+          </app-error-panel>
+
+          <div class="w3-row w3-margin-top">
             <label class=""><b>Name</b></label>
             <input v-model="newInitiative.meta.name"
               class="w3-input w3-hover-light-grey"
@@ -220,7 +241,10 @@ export default {
       nameEmptyError: false,
       driverEmptyError: false,
       deleteInitiativeSelected: false,
-      newTag: ''
+      newTag: '',
+      uploadingImage: false,
+      errorUploadingFile: false,
+      errorUploadingFileMsg: ''
     }
   },
 
@@ -266,6 +290,28 @@ export default {
   },
 
   methods: {
+    newFileSelected (event) {
+      /* upload image */
+      var data = new FormData()
+      data.append('file', event.target.files[0])
+
+      this.uploadingImage = true
+      this.errorUploadingFile = false
+
+      this.axios.post('/1/upload/initiativeImage/' + this.initiative.id, data).then((response) => {
+        this.uploadingImage = false
+
+        if (response.data.result === 'success') {
+          this.newInitiative.meta.newImageFileId = response.data.elementId
+          return this.axios.get('/1/files/' + this.newInitiative.meta.newImageFileId)
+        } else {
+          this.errorUploadingFile = true
+          this.errorUploadingFileMsg = response.data.message
+        }
+      }).then((response) => {
+        this.newInitiative.meta.imageFile = response.data.data
+      })
+    },
     addTag (tag) {
       if (getIndexOfTag(this.newInitiative.meta.tags, tag.id) === -1) {
         this.newInitiative.meta.tags.push(tag)
@@ -325,6 +371,30 @@ export default {
 .form-container {
   padding-top: 20px;
   padding-bottom: 35px;
+}
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.loader-gif-container {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.image-container {
+  min-height: 80px;
+  max-height: 250px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .colors-container {

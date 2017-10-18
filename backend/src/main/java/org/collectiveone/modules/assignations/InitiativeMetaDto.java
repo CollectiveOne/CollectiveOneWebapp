@@ -4,12 +4,14 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.collectiveone.modules.files.FileStoredDto;
 import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
 
 public class InitiativeMetaDto {
 	
 	private String name;
 	private String driver;
+	private FileStoredDto imageFile;
 	private Timestamp creationDate;
 	private String color;
 	private Boolean modelEnabled;
@@ -27,6 +29,12 @@ public class InitiativeMetaDto {
 	}
 	public void setDriver(String driver) {
 		this.driver = driver;
+	}
+	public FileStoredDto getImageFile() {
+		return imageFile;
+	}
+	public void setImageFile(FileStoredDto imageFile) {
+		this.imageFile = imageFile;
 	}
 	public Timestamp getCreationDate() {
 		return creationDate;

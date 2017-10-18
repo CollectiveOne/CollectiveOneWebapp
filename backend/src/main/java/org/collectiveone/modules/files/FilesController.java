@@ -81,6 +81,24 @@ public class FilesController extends BaseController {
     	return fileService.uploadCardImage(getLoggedUserId(), cardWrapperId, file);
     }
     
+    @RequestMapping(value = "/upload/initiativeImage/{initiativeId}", method = RequestMethod.POST)
+    public @ResponseBody PostResult uploadInitiativeImage(
+    		@PathVariable("initiativeId") String initiativeIdStr,
+    		@RequestParam("file") MultipartFile file) throws IOException {
+    	
+    	if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", "");
+		}
+    	
+    	UUID initiativeId = UUID.fromString(initiativeIdStr);
+    	if (governanceService.canEdit(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
+    		return new PostResult("error", "not authorized", "");
+		}
+    	
+    	
+    	return fileService.uploadInitiativeImage(getLoggedUserId(), initiativeId, file);
+    }
+    
     @RequestMapping(value = "/files/{fileId}", method = RequestMethod.GET)
     public @ResponseBody GetResult<FileStoredDto> getFileData (
     		@PathVariable("fileId") String fileIdStr) {

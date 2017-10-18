@@ -152,6 +152,29 @@ public class FileService {
 	}
 	
 	@Transactional
+	public PostResult uploadInitiativeImage(UUID userId, UUID initiativeId, MultipartFile file) throws IOException {
+		
+		try (InputStream input = file.getInputStream()) {
+		    try {
+		        ImageIO.read(input).toString();
+		        
+		        String key = "InitiativeImages/" + initiativeId.toString();
+				FileStored fileUploaded = handleFileUpload(userId, key, file, initiativeId);
+				
+				if (fileUploaded != null) {
+					return new PostResult("success", "image uploaded", fileUploaded.getId().toString());
+				}
+				
+				return new PostResult("error", "error uploading image", "");
+		        
+		    } catch (Exception e) {
+		        // It's not an image.
+		    	return new PostResult("error", "only image files are supported", "");
+		    }
+		}
+	}
+	
+	@Transactional
 	public Initiative getFileInitiative(UUID fileId) {
 		return fileStoredRepository.findById(fileId).getInitiative();
 	}

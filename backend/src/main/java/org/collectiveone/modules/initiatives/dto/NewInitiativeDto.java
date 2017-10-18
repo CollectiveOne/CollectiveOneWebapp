@@ -11,6 +11,7 @@ public class NewInitiativeDto {
 	private String parentInitiativeId;
 	private String name;
 	private String driver;
+	private String newImageFileId;
 	private String color;
 	private Boolean modelEnabled;
 	private String visibility;
@@ -43,6 +44,12 @@ public class NewInitiativeDto {
 	}
 	public void setDriver(String driver) {
 		this.driver = driver;
+	}
+	public String getNewImageFileId() {
+		return newImageFileId;
+	}
+	public void setNewImageFileId(String newImageFileId) {
+		this.newImageFileId = newImageFileId;
 	}
 	public String getColor() {
 		return color;

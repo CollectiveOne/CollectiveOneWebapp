@@ -13,9 +13,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.assignations.InitiativeMetaDto;
+import org.collectiveone.modules.files.FileStored;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -38,6 +40,9 @@ public class InitiativeMeta {
 	@Type(type = "org.hibernate.type.TextType")
 	@Column(name = "driver")
 	private String driver;
+	
+	@ManyToOne
+	private FileStored imageFile;
 	
 	@Column(name = "creation_date")
 	private Timestamp creationDate;
@@ -65,6 +70,7 @@ public class InitiativeMeta {
 		dto.setColor(color);
 		dto.setModelEnabled(modelEnabled);
 		if (visibility != null) dto.setVisibility(visibility.toString());
+		if (imageFile != null) dto.setImageFile(imageFile.toDto());
 		
 		for (InitiativeTag tag : tags) {
 			dto.getTags().add(tag.toDto());
@@ -95,6 +101,14 @@ public class InitiativeMeta {
 
 	public void setDriver(String driver) {
 		this.driver = driver;
+	}
+	
+	public FileStored getImageFile() {
+		return imageFile;
+	}
+
+	public void setImageFile(FileStored imageFile) {
+		this.imageFile = imageFile;
 	}
 
 	public Timestamp getCreationDate() {
