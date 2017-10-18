@@ -11,7 +11,7 @@
 
     <div class="" :class="{ 'w3-card-2 w3-topbar border-blue': cardEffect, 'highlight': highlight }">
 
-      <div v-if="showDetails" class="w3-row light-grey">
+      <div v-if="showDetails" class="w3-row light-grey details-row">
         <div class="w3-col s6">
           <div class="w3-tag" :class="stateClass">
             {{ cardWrapper.state }}
@@ -172,6 +172,10 @@ export default {
 
 .top-row {
   padding: 6px 3px 6px 3px;
+}
+
+.details-row {
+  margin-top: 3px;
 }
 
 .image-container {
