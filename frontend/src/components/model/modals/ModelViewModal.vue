@@ -56,6 +56,7 @@
               </div>
             </div>
 
+            <br>
             <div v-if="!isNew && !editing" class="">
               <app-message-thread
                 contextType="MODEL_VIEW"
