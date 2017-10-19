@@ -30,6 +30,9 @@ public class AssignationConfig {
 	@Column(name = "min_closure_date")
 	private Timestamp minClosureDate;
 	
+	@Column(name = "duration_days")
+	private Integer durationDays;
+	
 	@Column(name = "self_bias_visible")
 	private Boolean selfBiasVisible;
 	
@@ -39,8 +42,9 @@ public class AssignationConfig {
 	public AssignationConfigDto toDto() {
 		AssignationConfigDto dto = new AssignationConfigDto();
 		
-		dto.setMaxClosureDate(maxClosureDate.getTime());
-		dto.setMinClosureDate(minClosureDate.getTime());
+		if (maxClosureDate != null) dto.setMaxClosureDate(maxClosureDate.getTime());
+		if (minClosureDate != null) dto.setMinClosureDate(minClosureDate.getTime());
+		if (durationDays != null) dto.setMaxDuration(durationDays);
 		dto.setSelfBiasVisible(selfBiasVisible);
 		dto.setEvaluationsVisible(evaluationsVisible);
 		
@@ -77,6 +81,12 @@ public class AssignationConfig {
 	}
 	public void setMinClosureDate(Timestamp minClosureDate) {
 		this.minClosureDate = minClosureDate;
+	}
+	public Integer getDurationDays() {
+		return durationDays;
+	}
+	public void setDurationDays(Integer durationDays) {
+		this.durationDays = durationDays;
 	}
 	
 }

@@ -101,15 +101,19 @@ public class AssignationService {
 		assignation.setMotive(assignationDto.getMotive());
 		assignation.setNotes(assignationDto.getNotes());
 		assignation.setInitiative(initiative);
-		assignation.setState(AssignationState.OPEN);
 		assignation.setCreator(appUserRepository.findByC1Id(creatorId));
 		assignation.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		assignation.setState(AssignationState.valueOf(assignationDto.getConfig().getStartState()));
 		
 		AssignationConfig config = new AssignationConfig();
 		config.setSelfBiasVisible(Boolean.valueOf(assignationDto.getConfig().getSelfBiasVisible()));
 		config.setEvaluationsVisible(Boolean.valueOf(assignationDto.getConfig().getEvaluationsVisible()));
-		config.setMinClosureDate(new Timestamp(System.currentTimeMillis()));
-		config.setMaxClosureDate(new Timestamp(System.currentTimeMillis() + assignationDto.getConfig().getMaxDuration()*DAYS_TO_MS));
+		config.setDurationDays(assignationDto.getConfig().getMaxDuration());
+		
+		if (assignation.getState() == AssignationState.OPEN) {
+			config.setMinClosureDate(new Timestamp(System.currentTimeMillis()));
+			config.setMaxClosureDate(new Timestamp(System.currentTimeMillis() + assignationDto.getConfig().getMaxDuration()*DAYS_TO_MS));
+		}
 		
 		config = assignationConfigRepository.save(config);
 		
@@ -203,8 +207,22 @@ public class AssignationService {
 			break;
 		}
 		
-		return new PostResult("success", "success", "");
+		return new PostResult("success", "success", assignation.getId().toString());
 	}
+	
+	@Transactional
+	public PostResult openAssignation(UUID assignationId) {
+		Assignation assignation = assignationRepository.findById(assignationId);
+		
+		if (assignation.getState() == AssignationState.ON_HOLD) {
+			assignation.setState(AssignationState.OPEN);
+		}
+		
+		assignationRepository.save(assignation);
+		
+		return new PostResult("success", "success", assignation.getId().toString());
+	}
+	
 	
 	@Transactional
 	public UUID findInitiativeId(UUID assignationId) {

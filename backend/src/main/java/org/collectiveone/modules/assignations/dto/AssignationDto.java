@@ -9,7 +9,6 @@ public class AssignationDto extends AssignationDtoLight {
 	private List<EvaluatorDto> evaluators = new ArrayList<EvaluatorDto>();
 	private EvaluationDto thisEvaluation;
 	private int evaluationsPending;
-	
 	private AssignationConfigDto config;
 	
 	public List<ReceiverDto> getReceivers() {

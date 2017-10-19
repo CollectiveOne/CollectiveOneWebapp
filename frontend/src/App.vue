@@ -295,6 +295,10 @@ select {
   background-color: #32a11b;
 }
 
+.on-hold-color {
+  background-color: #1b6da1;
+}
+
 .done-color {
   background-color: #b8b8b8;
 }

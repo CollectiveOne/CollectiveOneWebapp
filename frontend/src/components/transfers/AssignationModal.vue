@@ -54,7 +54,8 @@
             <div v-if="$store.getters.isLoggedAnAdmin && isDone" class="w3-row tags-row w3-center">
               <button
                 class="w3-button app-button"
-                @click="revertTransaction = true">revert transaction
+                @click="revertTransaction = true">
+                revert transaction
               </button>
             </div>
             <div class="slider-container">
@@ -82,7 +83,8 @@
             <div v-if="$store.getters.isLoggedAnAdmin && isOpen" class="w3-row tags-row w3-center">
               <button
                 class="w3-button app-button"
-                @click="deleteTransaction = true">delete
+                @click="deleteTransaction = true">
+                delete
               </button>
             </div>
             <div class="slider-container">
@@ -102,6 +104,35 @@
                   <button
                     class="w3-button app-button-danger button-pair"
                     @click="deleteAssignation()">confirm
+                  </button>
+                </div>
+              </transition>
+            </div>
+
+            <div v-if="$store.getters.isLoggedAnAdmin && isOnHold" class="w3-row tags-row w3-center">
+              <button
+                class="w3-button app-button"
+                @click="openAssignation = true">
+                open - start evaluations
+              </button>
+            </div>
+            <div class="slider-container">
+              <transition name="slideDownUp">
+                <div v-if="openAssignation" class="w3-row tags-row w3-center">
+                  <div class="w3-padding w3-round light-grey w3-margin-bottom">
+                    <p>
+                      <b>Warning:</b> This will open the peer-review process and evaluators will have
+                      {{ assignation.config.maxDuration }} days to do provide their evaluations.
+                    </p>
+                  </div>
+
+                  <button
+                    class="w3-button app-button-light button-pair"
+                    @click="openAssignation = false">cancel
+                  </button>
+                  <button
+                    class="w3-button app-button-danger button-pair"
+                    @click="openAssignation()">confirm
                   </button>
                 </div>
               </transition>
@@ -236,7 +267,8 @@ export default {
       assignation: null,
       updateEvaluation: false,
       revertTransaction: false,
-      deleteTransaction: false
+      deleteTransaction: false,
+      openAssignation: false
     }
   },
 
@@ -249,6 +281,9 @@ export default {
     },
     isPeerReviewed () {
       return (this.assignation.type === 'PEER_REVIEWED')
+    },
+    isOnHold () {
+      return (this.assignation.state === 'ON_HOLD')
     },
     isOpen () {
       return (this.assignation.state === 'OPEN')

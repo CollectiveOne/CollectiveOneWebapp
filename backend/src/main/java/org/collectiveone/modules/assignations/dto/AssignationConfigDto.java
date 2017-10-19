@@ -7,6 +7,7 @@ public class AssignationConfigDto {
 	private Integer minDuration;
 	private Boolean selfBiasVisible;
 	private Boolean evaluationsVisible;
+	private String startState;
 	
 	
 	public Long getMaxClosureDate() {
@@ -45,5 +46,11 @@ public class AssignationConfigDto {
 	public void setEvaluationsVisible(Boolean evaluationsVisible) {
 		this.evaluationsVisible = evaluationsVisible;
 	}
-
+	public String getStartState() {
+		return startState;
+	}
+	public void setStartState(String startState) {
+		this.startState = startState;
+	}
+	
 }

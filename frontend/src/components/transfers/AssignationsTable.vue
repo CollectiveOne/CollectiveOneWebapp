@@ -112,6 +112,11 @@ export default {
     },
     stateTagClass (assignation) {
       switch (assignation.state) {
+        case 'ON_HOLD':
+          return {
+            'on-hold-color': true
+          }
+
         case 'OPEN':
           return {
             'open-color': true

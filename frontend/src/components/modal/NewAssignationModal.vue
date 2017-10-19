@@ -88,6 +88,23 @@
                   <div class="w3-row-padding configuration-row">
                     <div class="w3-col m6">
                       <div class="w3-row">
+                        <div class="w3-col l3 m12">
+                          <label class="w3-left first-label">Initial State:</label>
+                        </div>
+                        <div class="w3-col l9 m12 w3-center state-btns">
+                          <button class="w3-button"
+                            :class="{'app-button': isStartOnHold, 'app-button-light': !isStartOnHold}" name="button"
+                            @click="assignation.config.startState = 'ON_HOLD'">
+                            on-hold
+                          </button>
+                          <button class="w3-button"
+                            :class="{'app-button': isStartOpen, 'app-button-light': !isStartOpen}" name="button"
+                            @click="assignation.config.startState = 'OPEN'">
+                            open
+                          </button>
+                        </div>
+                      </div>
+                      <div class="w3-row">
                         <label class="w3-left first-label">Max duration</label>
                         <input v-model="assignation.config.maxDuration" class="w3-input w3-left input-number" type="number">
                         <label class="w3-left">days</label>
@@ -163,7 +180,8 @@ export default {
           selfBiasVisible: true,
           evaluationsVisible: false,
           maxDuration: 8,
-          minDuration: 2
+          minDuration: 2,
+          startState: 'OPEN'
         }
       },
       motiveEmptyError: false,
@@ -210,6 +228,12 @@ export default {
     },
     allDonorsShow () {
       return this.allDonorsError && !this.existNotDonors
+    },
+    isStartOnHold () {
+      return this.assignation.config.startState === 'ON_HOLD'
+    },
+    isStartOpen () {
+      return this.assignation.config.startState === 'OPEN'
     }
   },
 
@@ -397,6 +421,7 @@ form {
 
 .configuration-row {
   margin-top: 8px;
+  white-space: nowrap;
 }
 
 .configuration-row .w3-row {
@@ -419,6 +444,16 @@ form {
 .configuration-row .input-number {
   width: 70px;
   margin-left: 8px;
+}
+
+.configuration-row .state-btns {
+  padding-top: 5px;
+}
+
+.configuration-row button {
+  padding: 0px 16px;
+  width: 90px;
+  display: inline-block;
 }
 
 .configuration-row label {
