@@ -64,29 +64,30 @@ export default new Router({
               name: 'Initiative',
               component: InitiativesContent,
               children: [
-                { path: 'overview', name: 'InitiativeOverview', component: OverviewSection, meta: {'column': 0} },
-                { path: 'people', name: 'InitiativePeople', component: PeopleSection, meta: {'column': 1} },
-                { path: 'assignations', name: 'InitiativeAssignations', component: TransfersSection, meta: {'column': 3} },
-                { path: 'assignations/:assignationId', name: 'InitiativeAssignation', component: TransfersSection, meta: {'column': 3} },
+                { path: 'overview', name: 'InitiativeOverview', component: OverviewSection, meta: {'column': 1} },
                 {
                   path: 'model',
                   name: 'InitiativeModel',
                   component: ModelSectionTab,
-                  meta: {'column': 4},
+                  meta: {'column': 2},
                   children: [
-                    { path: 'view/:viewId', name: 'ModelView', component: ModelViewPlacer },
+                    { path: 'view/:viewId', name: 'ModelView', component: ModelViewPlacer, meta: {'column': 2} },
                     {
                       path: 'section/:sectionId',
                       name: 'ModelSection',
                       component: ModelSectionPlacer,
+                      meta: {'column': 2},
                       children: [
-                        { path: 'card/:cardId', name: 'ModelCardInSection' }
+                        { path: 'card/:cardId', name: 'ModelCardInSection', meta: {'column': 2} }
                       ]
                     },
-                    { path: 'card/:cardWrapperId', name: 'ModelCardAlone', component: ModelCardWrapperPlacer },
-                    { path: 'search', name: 'ModelSearch', component: ModelSearchContainer }
+                    { path: 'card/:cardWrapperId', name: 'ModelCardAlone', component: ModelCardWrapperPlacer, meta: {'column': 2} },
+                    { path: 'search', name: 'ModelSearch', component: ModelSearchContainer, meta: {'column': 2} }
                   ]
-                }
+                },
+                { path: 'people', name: 'InitiativePeople', component: PeopleSection, meta: {'column': 3} },
+                { path: 'assignations', name: 'InitiativeAssignations', component: TransfersSection, meta: {'column': 4} },
+                { path: 'assignations/:assignationId', name: 'InitiativeAssignation', component: TransfersSection, meta: {'column': 4} }
               ]
             }
           ]

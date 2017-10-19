@@ -46,6 +46,13 @@
             @click="">
             <h5 class="noselect" :class="{'bold-text': isOverview}">Overview</h5>
           </router-link>
+          <router-link v-if="this.initiative.meta.modelEnabled"
+            tag="div" :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
+            class="w3-col tablink w3-bottombar w3-hover-light-grey"
+            :class="{'border-blue': isModel, 's3': fourTabs, 's4': threeTabs}"
+            @click="">
+            <h5 class="noselect" :class="{'bold-text': isModel}">Vision</h5>
+          </router-link>
           <router-link tag="div" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
             :class="{'border-blue': isPeople, 's3': fourTabs, 's4': threeTabs}"
@@ -57,13 +64,6 @@
             :class="{'border-blue': isAssignations, 's3': fourTabs, 's4': threeTabs}"
             @click="">
             <h5 class="noselect" :class="{'bold-text': isAssignations}">Transfers</h5>
-          </router-link>
-          <router-link v-if="this.initiative.meta.modelEnabled"
-            tag="div" :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
-            class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isModel, 's3': fourTabs, 's4': threeTabs}"
-            @click="">
-            <h5 class="noselect" :class="{'bold-text': isModel}">Model</h5>
           </router-link>
         </div>
 
