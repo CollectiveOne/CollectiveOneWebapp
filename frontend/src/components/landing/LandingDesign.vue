@@ -116,7 +116,7 @@
           <div class="text-container">
             <p>
               A dedicated module that enables initiatives to collectively influence and
-              agree on the initiative's vision and next steps.
+              agree on the initiative's vision and plans.
             </p>
           </div>
           <div class="w3-tag w3-green w3-round">
