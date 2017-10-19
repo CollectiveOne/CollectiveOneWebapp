@@ -52,6 +52,7 @@ export default {
     lock.on('authorization_error', (error) => {
       console.log('error authenticating')
       console.log(error)
+      this.$store.dispatch('logoutUser')
     })
 
     /* check if user is authenticated */

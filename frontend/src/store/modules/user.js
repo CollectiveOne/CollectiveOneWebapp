@@ -61,6 +61,9 @@ const actions = {
             context.commit('setProfile', null)
           }
         }
+      }).catch((error) => {
+        console.log(error)
+        context.dispatch('logoutUser')
       })
     } else {
       /* autoupdate for non logged user */
