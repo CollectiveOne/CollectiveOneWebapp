@@ -111,6 +111,20 @@
         </div>
         <div class="w3-col l3">
           <div class="title-container flex-vert">
+            <h5><b>COLLECTIVE VISION</b></h5>
+          </div>
+          <div class="text-container">
+            <p>
+              A dedicated module that enables initiatives to collectively influence and
+              agree on the initiative's vision and next steps.
+            </p>
+          </div>
+          <div class="w3-tag w3-green w3-round">
+            <b>beta</b>
+          </div>
+        </div>
+        <div class="w3-col l3">
+          <div class="title-container flex-vert">
             <h5><b>TASK MANAGEMENT</b></h5>
           </div>
           <div class="text-container">
@@ -130,20 +144,6 @@
           <div class="text-container">
             <p>A dedicated module that enables initiatives to take decisions
               collectively and efficiently.
-            </p>
-          </div>
-          <div class="w3-tag gray-1 w3-round">
-            <b>soon</b>
-          </div>
-        </div>
-        <div class="w3-col l3">
-          <div class="title-container flex-vert">
-            <h5><b>COLLECTIVE MODEL</b></h5>
-          </div>
-          <div class="text-container">
-            <p>
-              A dedicated module that enables initiatives to collectively influence and
-              agree on the initiative's direction.
             </p>
           </div>
           <div class="w3-tag gray-1 w3-round">
