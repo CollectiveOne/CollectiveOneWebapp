@@ -7,12 +7,12 @@ import java.util.UUID;
 
 import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.assignations.EvaluationGrade;
-import org.collectiveone.modules.assignations.EvaluationGradeState;
-import org.collectiveone.modules.assignations.EvaluationGradeType;
 import org.collectiveone.modules.assignations.Evaluator;
-import org.collectiveone.modules.assignations.EvaluatorState;
 import org.collectiveone.modules.assignations.Receiver;
-import org.collectiveone.modules.assignations.ReceiverType;
+import org.collectiveone.modules.assignations.enums.EvaluationGradeState;
+import org.collectiveone.modules.assignations.enums.EvaluationGradeType;
+import org.collectiveone.modules.assignations.enums.EvaluatorState;
+import org.collectiveone.modules.assignations.enums.ReceiverType;
 
 public class PeerReviewedAssignation {
 	private Assignation assignation;

@@ -1,7 +1,9 @@
-package org.collectiveone.modules.assignations;
+package org.collectiveone.modules.assignations.repositories;
 
 import java.util.UUID;
 
+import org.collectiveone.modules.assignations.Evaluator;
+import org.collectiveone.modules.assignations.enums.EvaluatorState;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.assignations.dto.EvaluationGradeDto;
+import org.collectiveone.modules.assignations.enums.EvaluationGradeState;
+import org.collectiveone.modules.assignations.enums.EvaluationGradeType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 

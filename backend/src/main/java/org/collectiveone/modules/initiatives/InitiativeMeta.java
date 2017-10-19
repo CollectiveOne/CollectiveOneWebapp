@@ -16,7 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.assignations.InitiativeMetaDto;
+import org.collectiveone.modules.assignations.dto.InitiativeMetaDto;
 import org.collectiveone.modules.files.FileStored;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

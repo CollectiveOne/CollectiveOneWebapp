@@ -1,7 +1,8 @@
-package org.collectiveone.modules.assignations;
+package org.collectiveone.modules.assignations.repositories;
 
 import java.util.UUID;
 
+import org.collectiveone.modules.assignations.EvaluationGrade;
 import org.springframework.data.repository.CrudRepository;
 
 public interface EvaluationGradeRepositoryIf extends CrudRepository<EvaluationGrade, UUID> {

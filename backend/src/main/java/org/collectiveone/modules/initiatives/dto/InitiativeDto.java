@@ -3,7 +3,7 @@ package org.collectiveone.modules.initiatives.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.collectiveone.modules.assignations.InitiativeMetaDto;
+import org.collectiveone.modules.assignations.dto.InitiativeMetaDto;
 import org.collectiveone.modules.tokens.AssetsDto;
 import org.collectiveone.modules.users.AppUserDto;
 

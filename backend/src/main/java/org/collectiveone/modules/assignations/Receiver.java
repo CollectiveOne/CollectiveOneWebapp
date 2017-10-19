@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.assignations.dto.ReceiverDto;
+import org.collectiveone.modules.assignations.enums.ReceiverState;
+import org.collectiveone.modules.assignations.enums.ReceiverType;
 import org.collectiveone.modules.tokens.MemberTransfer;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;

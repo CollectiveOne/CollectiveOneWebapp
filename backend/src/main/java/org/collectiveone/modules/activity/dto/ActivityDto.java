@@ -1,6 +1,6 @@
 package org.collectiveone.modules.activity.dto;
 
-import org.collectiveone.modules.assignations.AssignationDto;
+import org.collectiveone.modules.assignations.dto.AssignationDto;
 import org.collectiveone.modules.conversations.MessageDto;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;

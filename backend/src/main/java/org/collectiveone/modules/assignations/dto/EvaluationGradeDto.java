@@ -1,4 +1,4 @@
-package org.collectiveone.modules.assignations;
+package org.collectiveone.modules.assignations.dto;
 
 import org.collectiveone.modules.users.AppUserDto;
 

@@ -18,6 +18,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.assignations.dto.AssignationDto;
+import org.collectiveone.modules.assignations.dto.AssignationDtoLight;
+import org.collectiveone.modules.assignations.enums.AssignationState;
+import org.collectiveone.modules.assignations.enums.AssignationType;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;

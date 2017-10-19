@@ -1,4 +1,4 @@
-package org.collectiveone.modules.assignations;
+package org.collectiveone.modules.assignations.dto;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.assignations.dto.BillDto;
 import org.collectiveone.modules.tokens.TokenType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

@@ -1,4 +1,4 @@
-package org.collectiveone.modules.assignations;
+package org.collectiveone.modules.assignations.enums;
 
 public enum EvaluationGradeState {
 	PENDING,

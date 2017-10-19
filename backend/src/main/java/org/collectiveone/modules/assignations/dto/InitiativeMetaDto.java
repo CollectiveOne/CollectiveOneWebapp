@@ -1,4 +1,4 @@
-package org.collectiveone.modules.assignations;
+package org.collectiveone.modules.assignations.dto;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
