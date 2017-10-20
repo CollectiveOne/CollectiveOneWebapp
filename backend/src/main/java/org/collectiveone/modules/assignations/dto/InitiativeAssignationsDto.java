@@ -8,7 +8,7 @@ public class InitiativeAssignationsDto {
 	private String initiativeId;
 	private String initiativeName;
 	private List<AssignationDto> assignations = new ArrayList<AssignationDto>();
-	private List<InitiativeAssignationsDto> subinitiativesAssignations = new ArrayList<InitiativeAssignationsDto>();
+	private List<AssignationDto> subinitiativesAssignations = new ArrayList<AssignationDto>();
 	
 	
 	public String getInitiativeId() {
@@ -29,10 +29,10 @@ public class InitiativeAssignationsDto {
 	public void setAssignations(List<AssignationDto> assignations) {
 		this.assignations = assignations;
 	}
-	public List<InitiativeAssignationsDto> getSubinitiativesAssignations() {
+	public List<AssignationDto> getSubinitiativesAssignations() {
 		return subinitiativesAssignations;
 	}
-	public void setSubinitiativesAssignations(List<InitiativeAssignationsDto> subinitiativesAssignations) {
+	public void setSubinitiativesAssignations(List<AssignationDto> subinitiativesAssignations) {
 		this.subinitiativesAssignations = subinitiativesAssignations;
 	}
 	

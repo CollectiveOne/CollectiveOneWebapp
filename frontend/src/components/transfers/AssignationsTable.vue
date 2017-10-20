@@ -68,14 +68,36 @@ export default {
   },
 
   props: {
-    assignations: Array,
+    url: {
+      type: String,
+      default: ''
+    },
     showFrom: {
       type: Boolean,
       default: false
     }
   },
 
+  data () {
+    return {
+      assignations: [],
+      currentPage: 0
+    }
+  },
+
   methods: {
+    getData () {
+      this.axios.get(this.url, {
+        params: {
+          page: 0,
+          size: 10,
+          sortDirection: 'DESC',
+          sortProperty: 'creationDate'
+        }
+      }).then((response) => {
+        this.assignations = response.data.data
+      })
+    },
     tokensString (v) {
       return tokensString(v)
     },
@@ -135,6 +157,10 @@ export default {
           }
       }
     }
+  },
+
+  created () {
+    this.getData()
   }
 }
 </script>

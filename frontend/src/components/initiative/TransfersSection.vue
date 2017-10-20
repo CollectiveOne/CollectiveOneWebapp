@@ -7,27 +7,22 @@
     </app-assignation-modal>
   </transition>
 
-  <div class="section-container w3-display-container"
-    v-if="initiativeAssignations && initiativeTransfers">
+  <div class="section-container w3-display-container">
 
     <div class="own-transfers-div">
       <h3 class="section-header">From {{ initiative.meta.name }}:</h3>
-      <app-transfers-tables v-if="hasTransfers"
-        :assignations="initiativeAssignations.assignations"
-        :transfers="initiativeTransfers.transfers">
+      <app-transfers-tables
+        :initiativeId="initiative.id"
+        :ofSubinitiatives="false">
       </app-transfers-tables>
-      <div v-if="!hasTransfers" class="empty-div">
-        no transfers have been made from {{ initiative.meta.name }}
-      </div>
     </div>
 
-    <div v-if="hasSubinitiativesTransfers" class="sub-transfers-div">
+    <div v-if="hasSubinitiatives" class="sub-transfers-div">
       <hr>
       <h3 class="section-header">From subinitiatives of {{ initiative.meta.name }}:</h3>
-      <app-transfers-tables v-if="hasSubinitiativesTransfers"
-        :assignations="getSubassignations"
-        :transfers="getSubtransfers"
-        :showFrom="true">
+      <app-transfers-tables
+        :initiativeId="initiative.id"
+        :ofSubinitiatives="true">
       </app-transfers-tables>
     </div>
 
@@ -57,56 +52,6 @@
 import AssignationModal from '@/components/transfers/AssignationModal.vue'
 import TransfersTables from '@/components/transfers/TransfersTables.vue'
 
-const getAllSubassignations = function (subinitiativesAssignations) {
-  var subassignations = []
-  subinitiativesAssignations.forEach((subinitiativeAssignations) => {
-    subassignations = subassignations.concat(getAllAssignationsAndSubassignation(subinitiativeAssignations))
-  })
-  return subassignations
-}
-
-const getAllAssignationsAndSubassignation = function (initiativeAssignations) {
-  var subassignations = []
-
-  /* add this level transfers */
-  initiativeAssignations.assignations.forEach((assignation) => {
-    subassignations.push(assignation)
-  })
-
-  /* add all sublevels recursively */
-  initiativeAssignations.subinitiativesAssignations.forEach((subinitiativeAssignations) => {
-    /* recursive call to this function with the subinitiativesTransfers elements */
-    subassignations = subassignations.concat(getAllAssignationsAndSubassignation(subinitiativeAssignations))
-  })
-
-  return subassignations
-}
-
-const getAllSubtransfers = function (subinitiativesTransfers) {
-  var subtransfers = []
-  subinitiativesTransfers.forEach((subinitiativeTransfers) => {
-    subtransfers = subtransfers.concat(getAllTransfersAndSubtransfers(subinitiativeTransfers))
-  })
-  return subtransfers
-}
-
-const getAllTransfersAndSubtransfers = function (initiativeTransfers) {
-  var subtransfers = []
-
-  /* add this level transfers */
-  initiativeTransfers.transfers.forEach((transfer) => {
-    subtransfers.push(transfer)
-  })
-
-  /* add all sublevels recursively */
-  initiativeTransfers.subinitiativesTransfers.forEach((subinitiativeTransfers) => {
-    /* recursive call to this function with the subinitiativesTransfers elements */
-    subtransfers = subtransfers.concat(getAllTransfersAndSubtransfers(subinitiativeTransfers))
-  })
-
-  return subtransfers
-}
-
 export default {
   components: {
     'app-transfers-tables': TransfersTables,
@@ -126,26 +71,8 @@ export default {
     hasSubinitiatives () {
       return this.initiative.subInitiatives.length > 0
     },
-    initiativeAssignations () {
-      return this.$store.state.initiative.initiativeAssignations
-    },
-    initiativeTransfers () {
-      return this.$store.state.initiative.initiativeTransfers
-    },
     isLoggedAnAdmin () {
       return this.$store.getters.isLoggedAnAdmin
-    },
-    getSubassignations () {
-      return getAllSubassignations(this.initiativeAssignations.subinitiativesAssignations)
-    },
-    getSubtransfers () {
-      return getAllSubtransfers(this.initiativeTransfers.subinitiativesTransfers)
-    },
-    hasTransfers () {
-      return (this.initiativeAssignations.assignations.length > 0) || (this.initiativeTransfers.transfers.length > 0)
-    },
-    hasSubinitiativesTransfers () {
-      return (this.getSubassignations.length > 0) || (this.getSubtransfers.length > 0)
     },
     showAssignationModal () {
       /* based on the route */
@@ -171,10 +98,6 @@ export default {
     clickOutsideShowMenu () {
       this.showActionMenu = false
     }
-  },
-
-  mounted () {
-    this.$store.dispatch('refreshTransfers')
   }
 }
 </script>

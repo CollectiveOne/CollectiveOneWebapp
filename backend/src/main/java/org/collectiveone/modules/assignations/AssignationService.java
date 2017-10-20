@@ -1,6 +1,7 @@
 package org.collectiveone.modules.assignations;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +15,6 @@ import org.collectiveone.modules.assignations.dto.BillDto;
 import org.collectiveone.modules.assignations.dto.EvaluationDto;
 import org.collectiveone.modules.assignations.dto.EvaluationGradeDto;
 import org.collectiveone.modules.assignations.dto.EvaluatorDto;
-import org.collectiveone.modules.assignations.dto.InitiativeAssignationsDto;
 import org.collectiveone.modules.assignations.dto.ReceiverDto;
 import org.collectiveone.modules.assignations.enums.AssignationState;
 import org.collectiveone.modules.assignations.enums.AssignationType;
@@ -33,7 +33,6 @@ import org.collectiveone.modules.assignations.repositories.EvaluatorRepositoryIf
 import org.collectiveone.modules.assignations.repositories.ReceiverRepositoryIf;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
-import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.tokens.MemberTransfer;
 import org.collectiveone.modules.tokens.MemberTransferRepositoryIf;
@@ -42,6 +41,7 @@ import org.collectiveone.modules.tokens.TokenTransferService;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +91,6 @@ public class AssignationService {
 	private MemberTransferRepositoryIf memberTransferRepository;
 	
 	
-		
 	public PostResult createAssignation(UUID initiativeId, AssignationDto assignationDto, UUID creatorId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 	
@@ -100,10 +99,12 @@ public class AssignationService {
 		assignation.setType(AssignationType.valueOf(assignationDto.getType()));
 		assignation.setMotive(assignationDto.getMotive());
 		assignation.setNotes(assignationDto.getNotes());
-		assignation.setInitiative(initiative);
 		assignation.setCreator(appUserRepository.findByC1Id(creatorId));
 		assignation.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		assignation.setState(AssignationState.valueOf(assignationDto.getConfig().getStartState()));
+		
+		assignation.setInitiative(initiative);
+		assignation.getAlsoInInitiatives().addAll(initiativeService.getParentGenealogyInitiatives(initiative.getId()));
 		
 		AssignationConfig config = new AssignationConfig();
 		config.setSelfBiasVisible(Boolean.valueOf(assignationDto.getConfig().getSelfBiasVisible()));
@@ -216,6 +217,8 @@ public class AssignationService {
 		
 		if (assignation.getState() == AssignationState.ON_HOLD) {
 			assignation.setState(AssignationState.OPEN);
+			assignation.getConfig().setMinClosureDate(new Timestamp(System.currentTimeMillis()));
+			assignation.getConfig().setMaxClosureDate(new Timestamp(System.currentTimeMillis() + assignation.getConfig().getDurationDays()*DAYS_TO_MS));
 		}
 		
 		assignationRepository.save(assignation);
@@ -389,11 +392,6 @@ public class AssignationService {
 	}
 	
 	@Transactional
-	public GetResult<InitiativeAssignationsDto> getAssignationsResult(UUID initiativeId, UUID evaluatorAppUserId) {
-		return new GetResult<InitiativeAssignationsDto>("success", "success", getAssignations(initiativeId, evaluatorAppUserId));
-	}
-	
-	@Transactional
 	public List<Assignation> getOpenAssignations(UUID initiativeId) {
 		return  assignationRepository.findByInitiativeIdAndState(initiativeId, AssignationState.OPEN);
 	}
@@ -424,25 +422,29 @@ public class AssignationService {
 	}
 	
 	@Transactional
-	public InitiativeAssignationsDto getAssignations(UUID initiativeId, UUID evaluatorAppUserId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		List<Assignation> assignations = assignationRepository.findByInitiativeId(initiativeId);
-		
-		InitiativeAssignationsDto initiativeAssignations = new InitiativeAssignationsDto();
-		initiativeAssignations.setInitiativeId(initiative.getId().toString());
-		initiativeAssignations.setInitiativeName(initiative.getMeta().getName());
+	public GetResult<List<AssignationDto>> getAssignationsOfInitiative(UUID initiativeId, UUID evaluatorAppUserId, PageRequest page) {
+		/* add assignations of of this initiative */
+		List<Assignation> assignations = assignationRepository.findByInitiativeId(initiativeId, page);
+		List<AssignationDto> assignationsDto = new ArrayList<AssignationDto>();
 		
 		for(Assignation assignation : assignations) {
-			initiativeAssignations.getAssignations().add(getAssignationDto(assignation.getId(), evaluatorAppUserId, false).getData());
+			assignationsDto.add(getAssignationDto(assignation.getId(), evaluatorAppUserId, false).getData());
 		}
 		
-		/* add the members of all sub-initiatives too */
-		for (InitiativeDto subInitiative : initiativeService.getSubinitiativesTree(initiative.getId(), null)) {
-			/* recursively call with subinitiatives */
-			initiativeAssignations.getSubinitiativesAssignations().add(getAssignations(UUID.fromString(subInitiative.getId()), evaluatorAppUserId));
+		return new GetResult<List<AssignationDto>>("success", "assignations retrieved", assignationsDto);
+	}
+	
+	@Transactional
+	public GetResult<List<AssignationDto>> getAssignationsOfSubinitiatives(UUID initiativeId, UUID evaluatorAppUserId, PageRequest page) {
+		/* add assignations of of this initiative */
+		List<Assignation> assignationsOfSubinitiative = assignationRepository.findByAlsoInInitiatives_Id(initiativeId, page);
+		List<AssignationDto> assignationsDto = new ArrayList<AssignationDto>();
+		
+		for(Assignation assignation : assignationsOfSubinitiative) {
+			assignationsDto.add(getAssignationDto(assignation.getId(), evaluatorAppUserId, false).getData());
 		}
 		
-		return initiativeAssignations;
+		return new GetResult<List<AssignationDto>>("success", "assignations retrieved", assignationsDto);
 	}
 	
 	@Transactional

@@ -2,8 +2,6 @@ import Vue from 'vue'
 
 const state = {
   initiative: null,
-  initiativeTransfers: null,
-  initiativeAssignations: null,
   initiativeModelViews: null
 }
 
@@ -55,14 +53,8 @@ const mutations = {
   setInitiative: (state, payload) => {
     state.initiative = payload
   },
-  setTransfers: (state, payload) => {
-    state.initiativeTransfers = payload
-  },
   setModelViews: (state, payload) => {
     state.initiativeModelViews = payload
-  },
-  setAssignations: (state, payload) => {
-    state.initiativeAssignations = payload
   }
 }
 
@@ -95,18 +87,6 @@ const actions = {
   refreshInitiative: (context) => {
     if (context.state.initiative) {
       context.dispatch('updateInitiative', context.state.initiative.id)
-    }
-  },
-
-  refreshTransfers: (context) => {
-    if (context.state.initiative) {
-      Vue.axios.get('/1/initiative/' + context.state.initiative.id + '/transfersToInitiatives').then((response) => {
-        context.commit('setTransfers', response.data.data)
-      })
-
-      Vue.axios.get('/1/initiative/' + context.state.initiative.id + '/assignations').then((response) => {
-        context.commit('setAssignations', response.data.data)
-      })
     }
   },
 

@@ -132,7 +132,7 @@
                   </button>
                   <button
                     class="w3-button app-button-danger button-pair"
-                    @click="openAssignation()">confirm
+                    @click="openAssignationClick()">confirm
                   </button>
                 </div>
               </transition>
@@ -401,6 +401,12 @@ export default {
     },
     getTimeStrUntil (v) {
       return getTimeStrUntil(v)
+    },
+    openAssignationClick () {
+      this.openAssignation = false
+      this.axios.put('/1/assignation/' + this.assignationId + '/open').then((response) => {
+        this.updateAssignationData()
+      })
     },
     isDontKnow (userData) {
       if (userData.type) {

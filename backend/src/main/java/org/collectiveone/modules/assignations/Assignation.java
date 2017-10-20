@@ -13,6 +13,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -41,6 +42,9 @@ public class Assignation {
 	
 	@ManyToOne
 	private Initiative initiative;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	private List<Initiative> alsoInInitiatives = new ArrayList<Initiative>();
 	
 	@Column(name = "motive", length = 55)
 	private String motive;
@@ -73,7 +77,7 @@ public class Assignation {
 	@OneToMany(mappedBy="assignation", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Evaluator> evaluators = new ArrayList<Evaluator>();
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private AssignationConfig config;
 
 	
@@ -136,6 +140,14 @@ public class Assignation {
 		this.initiative = initiative;
 	}
 	
+	public List<Initiative> getAlsoInInitiatives() {
+		return alsoInInitiatives;
+	}
+
+	public void setAlsoInInitiatives(List<Initiative> alsoInInitiatives) {
+		this.alsoInInitiatives = alsoInInitiatives;
+	}
+
 	public String getMotive() {
 		return motive;
 	}
@@ -215,7 +227,5 @@ public class Assignation {
 	public void setConfig(AssignationConfig config) {
 		this.config = config;
 	}
-	
-	
 	
 }

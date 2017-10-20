@@ -6,13 +6,13 @@
           class="subtab-element w3-button"
           :class="{'app-button': isTransfersToUsers, 'app-button-light': !isTransfersToUsers}"
           @click="goToAssignationsTable()">
-          to users ({{ assignations.length }})
+          to users
         </div>
         <div
           class="subtab-element w3-button"
           :class="{'app-button': isTransfersToInitiatives, 'app-button-light': !isTransfersToInitiatives}"
           @click="goToTransfersTable()">
-          to initiatives ({{ transfers.length }})
+          to initiatives
         </div>
       </div>
     </div>
@@ -21,9 +21,8 @@
         <transition :name="transfersTableTransition" mode="out-in">
           <component
             :is="transfersTableComponent"
-            :transfers="transfers"
-            :assignations="assignations"
-            :showFrom="showFrom"
+            :url="url"
+            :showFrom="ofSubinitiatives"
             :key="transfersTableComponent.name">
           </component>
         </transition>
@@ -38,15 +37,12 @@ import TransfersTable from '@/components/transfers/TransfersTable.vue'
 
 export default {
 
-  components: {
-    'app-transfers-table': TransfersTable,
-    'app-assignations-table': AssignationsTable
-  },
-
   props: {
-    assignations: Array,
-    transfers: Array,
-    showFrom: {
+    initiativeId: {
+      type: String,
+      default: ''
+    },
+    ofSubinitiatives: {
       type: Boolean,
       default: false
     }
@@ -54,11 +50,19 @@ export default {
 
   data () {
     return {
-      transfersTableComponent: AssignationsTable
+      transfersTableComponent: AssignationsTable,
+      showFrom: true
     }
   },
 
   computed: {
+    url () {
+      if (!this.ofSubinitiatives) {
+        return '/1/initiative/' + this.initiativeId + '/assignations'
+      } else {
+        return '/1/initiative/' + this.initiativeId + '/assignationsOfSubinitiatives'
+      }
+    },
     isTransfersToUsers () {
       return this.transfersTableComponent.name === 'assignationsTable'
     },

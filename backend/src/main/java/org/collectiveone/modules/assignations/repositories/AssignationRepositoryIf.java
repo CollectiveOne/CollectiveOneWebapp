@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.assignations.enums.AssignationState;
 import org.collectiveone.modules.assignations.enums.AssignationType;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -13,7 +14,9 @@ public interface AssignationRepositoryIf extends CrudRepository<Assignation, UUI
 	
 	Assignation findById(UUID assignationId);
 	
-	List<Assignation> findByInitiativeId(UUID initiativeId); 
+	List<Assignation> findByInitiativeId(UUID initiativeId, Pageable page); 
+	
+	List<Assignation> findByAlsoInInitiatives_Id(UUID initiativeId, Pageable page);
 	
 	List<Assignation> findByState(AssignationState state);
 	
