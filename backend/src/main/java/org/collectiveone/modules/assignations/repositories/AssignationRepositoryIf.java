@@ -24,7 +24,9 @@ public interface AssignationRepositoryIf extends CrudRepository<Assignation, UUI
 	
 	List<Assignation> findByTypeAndState(AssignationType type, AssignationState state);
 	
-	@Query("SELECT init.id FROM Assignation ass JOIN ass.initiative init WHERE ass.id = ?1")
+	@Query("SELECT init.id FROM Assignation ass "
+			+ "JOIN ass.initiative init "
+			+ "WHERE ass.id = ?1")
 	UUID findInitiativeId(UUID assignationId);
 	
 }

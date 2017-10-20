@@ -422,9 +422,14 @@ public class AssignationService {
 	}
 	
 	@Transactional
-	public GetResult<List<AssignationDto>> getAssignationsOfInitiative(UUID initiativeId, UUID evaluatorAppUserId, PageRequest page) {
+	public GetResult<List<AssignationDto>> getAssignationsOfInitiative(
+				UUID initiativeId, 
+				UUID evaluatorAppUserId, 
+				PageRequest page) {
+		
 		/* add assignations of of this initiative */
 		List<Assignation> assignations = assignationRepository.findByInitiativeId(initiativeId, page);
+		
 		List<AssignationDto> assignationsDto = new ArrayList<AssignationDto>();
 		
 		for(Assignation assignation : assignations) {
@@ -435,9 +440,14 @@ public class AssignationService {
 	}
 	
 	@Transactional
-	public GetResult<List<AssignationDto>> getAssignationsOfSubinitiatives(UUID initiativeId, UUID evaluatorAppUserId, PageRequest page) {
+	public GetResult<List<AssignationDto>> getAssignationsOfSubinitiatives(
+				UUID initiativeId, 
+				UUID evaluatorAppUserId, 
+				PageRequest page) {
+		
 		/* add assignations of of this initiative */
 		List<Assignation> assignationsOfSubinitiative = assignationRepository.findByAlsoInInitiatives_Id(initiativeId, page);
+				
 		List<AssignationDto> assignationsDto = new ArrayList<AssignationDto>();
 		
 		for(Assignation assignation : assignationsOfSubinitiative) {

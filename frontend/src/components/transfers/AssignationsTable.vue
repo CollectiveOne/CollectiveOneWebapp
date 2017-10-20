@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="">
+  <div class="full-table-container">
     <table v-if="assignations.length > 0" class="w3-table w3-striped w3-bordered w3-centered table-element">
       <thead>
         <tr>
@@ -53,6 +53,13 @@
     <div v-else class="empty-div">
       no transfers have been made to any user
     </div>
+    <div class="w3-row w3-center w3-margin-top">
+      <button v-if="showMore"
+       @click="showMoreClick()"
+       class="w3-button app-button-light" type="button" name="button">
+        show more...
+      </button>
+    </div>
   </div>
 </template>
 
@@ -81,7 +88,8 @@ export default {
   data () {
     return {
       assignations: [],
-      currentPage: 0
+      currentPage: 0,
+      showMore: true
     }
   },
 
@@ -89,14 +97,21 @@ export default {
     getData () {
       this.axios.get(this.url, {
         params: {
-          page: 0,
+          page: this.currentPage,
           size: 10,
           sortDirection: 'DESC',
           sortProperty: 'creationDate'
         }
       }).then((response) => {
-        this.assignations = response.data.data
+        if (response.data.data.length < 10) {
+          this.showMore = false
+        }
+        this.assignations = this.assignations.concat(response.data.data)
       })
+    },
+    showMoreClick () {
+      this.currentPage += 1
+      this.getData()
     },
     tokensString (v) {
       return tokensString(v)
@@ -166,6 +181,11 @@ export default {
 </script>
 
 <style scoped>
+
+.full-table-container {
+  max-height: 80vh;
+  overflow-y: auto;
+}
 
 .table-element {
   overflow: auto;
