@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.assignations.Assignation;
@@ -20,9 +21,17 @@ import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
+import org.collectiveone.modules.tokens.dto.TokenMintDto;
+import org.collectiveone.modules.tokens.dto.TransferDto;
+import org.collectiveone.modules.tokens.enums.MemberTransferStatus;
+import org.collectiveone.modules.tokens.enums.TokenHolderType;
+import org.collectiveone.modules.tokens.repositories.InitiativeTransferRepositoryIf;
+import org.collectiveone.modules.tokens.repositories.MemberTransferRepositoryIf;
+import org.collectiveone.modules.tokens.repositories.TokenMintRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -247,25 +256,28 @@ public class TokenTransferService {
 	
 	/** Get the tokens transfers from one initiative to any other initiatives */
 	@Transactional
-	public InitiativeTransfersDto getTransfersToSubInitiatives(UUID initiativeId) {
+	public GetResult<List<TransferDto>> getTransfersFromInitiative(UUID initiativeId, PageRequest page) {
 		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		List<TransferDto> initiativeTransfers = new ArrayList<TransferDto>();
 		
-		InitiativeTransfersDto initiativeTransfers = new InitiativeTransfersDto();
-		
-		initiativeTransfers.setInitiativeId(initiative.getId().toString());
-		initiativeTransfers.setInitiativeName(initiative.getMeta().getName());
-		
-		for (InitiativeTransfer transfer : initiativeTransferRepository.findByFrom_Id(initiativeId)) {
-			initiativeTransfers.getTransfers().add(transfer.toDto());
+		for (InitiativeTransfer transfer : initiativeTransferRepository.findByFrom_Id(initiativeId, page)) {
+			initiativeTransfers.add(transfer.toDto());
 		}
 		
-		for (Initiative subInitiative : initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_ATTACHED_SUB)) {
-			/** Recursive */
-			initiativeTransfers.getSubinitiativesTransfers().add(getTransfersToSubInitiatives(subInitiative.getId()));
+		return new GetResult<List<TransferDto>>("success", "transfers retrieved", initiativeTransfers);
+	}
+	
+	/** Get the tokens transfers from one initiative to any other initiatives */
+	@Transactional
+	public GetResult<List<TransferDto>> getTransfersFromSubinitiatives(UUID initiativeId, PageRequest page) {
+		
+		List<TransferDto> initiativeTransfers = new ArrayList<TransferDto>();
+		
+		for (InitiativeTransfer transfer : initiativeTransferRepository.findByAlsoInInitiatives_Id(initiativeId, page)) {
+			initiativeTransfers.add(transfer.toDto());
 		}
 		
-		return initiativeTransfers;
+		return new GetResult<List<TransferDto>>("success", "transfers retrieved", initiativeTransfers);
 	}
 	
 	/** Get the tokens transferred from one initiative into its sub-initiatives */

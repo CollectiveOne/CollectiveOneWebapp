@@ -3,7 +3,7 @@ package org.collectiveone.modules.initiatives.dto;
 import java.util.List;
 
 import org.collectiveone.modules.tokens.AssetsDto;
-import org.collectiveone.modules.tokens.TransferDto;
+import org.collectiveone.modules.tokens.dto.TransferDto;
 
 public class NewInitiativeDto {
 	

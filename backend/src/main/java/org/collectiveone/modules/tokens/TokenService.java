@@ -7,6 +7,9 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+import org.collectiveone.modules.tokens.enums.TokenHolderType;
+import org.collectiveone.modules.tokens.repositories.TokenHolderRepositoryIf;
+import org.collectiveone.modules.tokens.repositories.TokenTypeRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

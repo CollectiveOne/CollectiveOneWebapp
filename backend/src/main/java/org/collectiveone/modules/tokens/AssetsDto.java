@@ -3,6 +3,8 @@ package org.collectiveone.modules.tokens;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.collectiveone.modules.tokens.dto.TransferDto;
+
 public class AssetsDto {
 	private String assetId;
 	private String assetName;

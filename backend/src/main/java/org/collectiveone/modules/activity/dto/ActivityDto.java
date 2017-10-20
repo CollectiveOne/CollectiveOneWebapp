@@ -6,8 +6,8 @@ import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.dto.ModelViewDto;
-import org.collectiveone.modules.tokens.TokenMintDto;
-import org.collectiveone.modules.tokens.TransferDto;
+import org.collectiveone.modules.tokens.dto.TokenMintDto;
+import org.collectiveone.modules.tokens.dto.TransferDto;
 import org.collectiveone.modules.users.AppUserDto;
 
 public class ActivityDto {

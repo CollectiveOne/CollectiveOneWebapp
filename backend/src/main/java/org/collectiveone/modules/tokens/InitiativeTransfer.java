@@ -1,16 +1,21 @@
 package org.collectiveone.modules.tokens;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.tokens.dto.TransferDto;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -27,6 +32,9 @@ public class InitiativeTransfer {
 	
 	@ManyToOne
 	private Initiative from;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	private List<Initiative> alsoInInitiatives = new ArrayList<Initiative>();
 	
 	@ManyToOne
 	private Initiative to;
@@ -82,6 +90,14 @@ public class InitiativeTransfer {
 
 	public void setFrom(Initiative from) {
 		this.from = from;
+	}
+	
+	public List<Initiative> getAlsoInInitiatives() {
+		return alsoInInitiatives;
+	}
+
+	public void setAlsoInInitiatives(List<Initiative> alsoInInitiatives) {
+		this.alsoInInitiatives = alsoInInitiatives;
 	}
 
 	public Initiative getTo() {

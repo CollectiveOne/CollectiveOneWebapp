@@ -1,8 +1,10 @@
-package org.collectiveone.modules.tokens;
+package org.collectiveone.modules.tokens.repositories;
 
 import java.util.List;
 import java.util.UUID;
 
+import org.collectiveone.modules.tokens.InitiativeTransfer;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -18,6 +20,8 @@ public interface InitiativeTransferRepositoryIf extends CrudRepository<Initiativ
 	
 	InitiativeTransfer findById(UUID id);
 	
-	List<InitiativeTransfer> findByFrom_Id(UUID fromId);
+	List<InitiativeTransfer> findByFrom_Id(UUID fromId, Pageable page);
+	
+	List<InitiativeTransfer> findByAlsoInInitiatives_Id(UUID fromId, Pageable page);
 	
 }

@@ -1,4 +1,4 @@
-package org.collectiveone.modules.tokens;
+package org.collectiveone.modules.tokens.dto;
 
 import org.collectiveone.modules.users.AppUserDto;
 

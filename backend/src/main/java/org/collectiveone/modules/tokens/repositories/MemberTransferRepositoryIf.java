@@ -1,7 +1,9 @@
-package org.collectiveone.modules.tokens;
+package org.collectiveone.modules.tokens.repositories;
 
 import java.util.UUID;
 
+import org.collectiveone.modules.tokens.MemberTransfer;
+import org.collectiveone.modules.tokens.enums.MemberTransferStatus;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

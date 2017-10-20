@@ -1,5 +1,6 @@
 package org.collectiveone.modules.tokens;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
@@ -9,7 +10,11 @@ import org.collectiveone.modules.governance.DecisionVerdict;
 import org.collectiveone.modules.governance.GovernanceService;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
+import org.collectiveone.modules.tokens.dto.TokenMintDto;
+import org.collectiveone.modules.tokens.dto.TransferDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,18 +95,41 @@ public class TokenController extends BaseController {
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/transfersToInitiatives", method = RequestMethod.GET)
-	public GetResult<InitiativeTransfersDto> getTransferToInitiatives(
-			@PathVariable("initiativeId") String initiativeIdStr) {
+	public GetResult<List<TransferDto>> getTransferFromInitiative(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size,
+			@RequestParam("sortDirection") String sortDirection,
+			@RequestParam("sortProperty") String sortProperty ) {
 		 
 		UUID initiativeId = UUID.fromString(initiativeIdStr);	
 		
 		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
-			return new GetResult<InitiativeTransfersDto>("error", "access denied", null);
+			return new GetResult<List<TransferDto>>("error", "access denied", null);
 		}
 		
-		InitiativeTransfersDto transfers = tokenTransferService.getTransfersToSubInitiatives(initiativeId);
+		Sort sort = new Sort(Sort.Direction.valueOf(sortDirection), sortProperty);
 		
-		return new GetResult<InitiativeTransfersDto>("success", "transfers retrieved", transfers);
+		return tokenTransferService.getTransfersFromInitiative(initiativeId, new PageRequest(page, size, sort));
+	}
+	
+	@RequestMapping(path = "/initiative/{initiativeId}/transfersFromSubinitiatives", method = RequestMethod.GET)
+	public GetResult<List<TransferDto>> getTransferFromSubinitiative(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size,
+			@RequestParam("sortDirection") String sortDirection,
+			@RequestParam("sortProperty") String sortProperty ) {
+		 
+		UUID initiativeId = UUID.fromString(initiativeIdStr);	
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<List<TransferDto>>("error", "access denied", null);
+		}
+		
+		Sort sort = new Sort(Sort.Direction.valueOf(sortDirection), sortProperty);
+		
+		return tokenTransferService.getTransfersFromSubinitiatives(initiativeId, new PageRequest(page, size, sort));
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/transferToInitiative", method = RequestMethod.POST)
