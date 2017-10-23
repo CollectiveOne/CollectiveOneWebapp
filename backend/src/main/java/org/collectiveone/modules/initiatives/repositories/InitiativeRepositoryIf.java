@@ -14,7 +14,7 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 
 	Initiative findById(UUID id);
 	
-	@Query("SELECT init FROM Initiative init JOIN init.members mem WHERE mem.user.c1Id = ?1")
+	@Query("SELECT init FROM Initiative init JOIN init.members mem WHERE mem.user.c1Id = ?1 AND init.status='ENABLED'")
 	List<Initiative> findOfMember(UUID memberId);
 	
 	@Query("SELECT rels.ofInitiative from InitiativeRelationship rels WHERE rels.initiative.id = ?1 AND rels.type = ?2")
@@ -23,14 +23,14 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 	@Query("SELECT rels.initiative from InitiativeRelationship rels WHERE rels.ofInitiative.id = ?1 AND rels.type = ?2")
 	List<Initiative> findInitiativesWithRelationship(UUID initiativeId, InitiativeRelationshipType type);
 	
-	@Query("SELECT init FROM Initiative init WHERE lower (init.meta.name) LIKE %?1%")
+	@Query("SELECT init FROM Initiative init WHERE lower (init.meta.name) LIKE %?1% AND init.status='ENABLED'")
 	List<Initiative> searchByName(String q);
 	
-	@Query("SELECT init FROM Initiative init JOIN init.meta mta JOIN mta.tags tgs WHERE tgs.id IN ?1 AND mta.visibility = ?2")
+	@Query("SELECT init FROM Initiative init JOIN init.meta mta JOIN mta.tags tgs WHERE tgs.id IN ?1 AND mta.visibility = ?2 AND init.status='ENABLED'")
 	List<Initiative> searchByTagIdAndVisibility(Collection<UUID> ids, InitiativeVisibility visibility);
 	
-	
-	List<Initiative> findByMeta_Visibility(InitiativeVisibility visibility);
+	@Query("SELECT init FROM Initiative init JOIN init.meta mta WHERE mta.visibility = ?1 AND init.status='ENABLED'")
+	List<Initiative> findByVisibility(InitiativeVisibility visibility);
 	
 	Initiative findByTokenType_Id(UUID tokenTypeId);
 	

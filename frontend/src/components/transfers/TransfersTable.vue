@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="">
+  <div class="full-table-container">
     <table v-if="transfers.length > 0" class="w3-table w3-striped w3-bordered w3-centered">
       <thead>
         <tr>
@@ -35,6 +35,13 @@
     <div v-else class="empty-div">
       no transfers have been made to any initiative
     </div>
+    <div class="w3-row w3-center w3-margin-top">
+      <button v-if="showMore"
+       @click="showMoreClick()"
+       class="w3-button app-button-light" type="button" name="button">
+        show more...
+      </button>
+    </div>
   </div>
 </template>
 
@@ -50,25 +57,64 @@ export default {
   },
 
   props: {
-    transfers: Array,
+    url: {
+      type: String,
+      default: ''
+    },
     showFrom: {
       type: Boolean,
       default: false
     }
   },
 
+  data () {
+    return {
+      transfers: [],
+      currentPage: 0,
+      showMore: true
+    }
+  },
+
   methods: {
+    getData () {
+      this.axios.get(this.url, {
+        params: {
+          page: this.currentPage,
+          size: 10,
+          sortDirection: 'DESC',
+          sortProperty: 'orderDate'
+        }
+      }).then((response) => {
+        if (response.data.data.length < 10) {
+          this.showMore = false
+        }
+        this.transfers = this.transfers.concat(response.data.data)
+      })
+    },
+    showMoreClick () {
+      this.currentPage += 1
+      this.getData()
+    },
     tokensString (v) {
       return tokensString(v)
     },
     dateString (v) {
       return dateString(v)
     }
+  },
+
+  created () {
+    this.getData()
   }
 }
 </script>
 
 <style scoped>
+
+.full-table-container {
+  max-height: 80vh;
+  overflow-y: auto;
+}
 
 .avatar-col {
   white-space: nowrap;

@@ -58,9 +58,17 @@ export default {
   computed: {
     url () {
       if (!this.ofSubinitiatives) {
-        return '/1/initiative/' + this.initiativeId + '/assignations'
+        if (this.isTransfersToUsers) {
+          return '/1/initiative/' + this.initiativeId + '/assignations'
+        } else {
+          return '/1/initiative/' + this.initiativeId + '/transfersToInitiatives'
+        }
       } else {
-        return '/1/initiative/' + this.initiativeId + '/assignationsOfSubinitiatives'
+        if (this.isTransfersToUsers) {
+          return '/1/initiative/' + this.initiativeId + '/assignationsOfSubinitiatives'
+        } else {
+          return '/1/initiative/' + this.initiativeId + '/transfersFromSubinitiatives'
+        }
       }
     },
     isTransfersToUsers () {

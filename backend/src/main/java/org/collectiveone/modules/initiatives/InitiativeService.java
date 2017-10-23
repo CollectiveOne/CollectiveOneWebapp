@@ -752,7 +752,7 @@ public class InitiativeService {
 		if (tagIds.size() > 0) {
 			initiatives = initiativeRepository.searchByTagIdAndVisibility(tagIds, InitiativeVisibility.PUBLIC);	
 		} else {
-			initiatives = initiativeRepository.findByMeta_Visibility(InitiativeVisibility.PUBLIC);
+			initiatives = initiativeRepository.findByVisibility(InitiativeVisibility.PUBLIC);
 		}
 		
 		List<Initiative> superInitiatives = onlySuperInitiatives(initiatives);

@@ -232,7 +232,7 @@ export default {
       colors: [
         '#009ee3',
         '#e5007d',
-        '#ffed00',
+        '#e8d80c',
         '#68b628',
         '#ff9100',
         '#e40000',

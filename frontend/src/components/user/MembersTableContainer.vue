@@ -1,11 +1,13 @@
 <template lang="html">
-  <app-members-table
-    :members="members"
-    :canEdit="canEdit"
-    @remove="removeMember($event)"
-    @role-updated="roleUpdated($event)"
-    @add="addMember($event)">
-  </app-members-table>
+  <div class="">
+    <app-members-table
+      :members="members"
+      :canEdit="canEdit"
+      @remove="removeMember($event)"
+      @role-updated="roleUpdated($event)"
+      @add="addMember($event)">
+    </app-members-table>
+  </div>
 </template>
 
 <script>
@@ -59,4 +61,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

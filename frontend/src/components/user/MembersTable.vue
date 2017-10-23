@@ -1,5 +1,38 @@
 <template lang="html">
-  <div class="members-table-container">
+  <div class="members-table-container w3-border-bottom">
+    <div v-if="canEdit" class="new-member-row">
+      <div class="w3-row w3-container">
+        <label class="">
+          <b>add user:</b>
+        </label>
+      </div>
+
+      <div class="w3-row user-selector-row">
+        <div class="w3-col m7">
+          <app-user-selector
+            class="user-selector"
+            anchor="c1Id" label="nickname" :resetTrigger="resetUserSelector"
+            url="/1/users/suggestions"
+            @select="userSelected($event)">
+          </app-user-selector>
+        </div>
+        <div class="w3-col m5">
+          <div class="w3-row-padding">
+            <div class="w3-col s8 w3-center">
+              <select class="role-select w3-select w3-round" v-model="newMember.role">
+                <option value="" disabled>Choose role</option>
+                <option value="ADMIN">ADMIN</option>
+                <option value="EDITOR">EDITOR</option>
+                <option value="MEMBER" selected>MEMBER</option>
+              </select>
+            </div>
+            <div class="w3-col s4 w3-center">
+              <button type="button" class="add-btn w3-button app-button" @click="add()">add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="w3-row table-row">
       <table class="w3-table w3-striped w3-bordered w3-centered table-element">
         <thead>
@@ -43,39 +76,6 @@
           </tr>
         </tbody>
       </table>
-    </div>
-    <div v-if="canEdit" class="new-member-row">
-      <div class="w3-row w3-container">
-        <label class="">
-          <b>add user:</b>
-        </label>
-      </div>
-
-      <div class="w3-row user-selector-row">
-        <div class="w3-col m7">
-          <app-user-selector
-            class="user-selector"
-            anchor="c1Id" label="nickname" :resetTrigger="resetUserSelector"
-            url="/1/users/suggestions"
-            @select="userSelected($event)">
-          </app-user-selector>
-        </div>
-        <div class="w3-col m5">
-          <div class="w3-row-padding">
-            <div class="w3-col s8 w3-center">
-              <select class="role-select w3-select w3-round" v-model="newMember.role">
-                <option value="" disabled>Choose role</option>
-                <option value="ADMIN">ADMIN</option>
-                <option value="EDITOR">EDITOR</option>
-                <option value="MEMBER" selected>MEMBER</option>
-              </select>
-            </div>
-            <div class="w3-col s4 w3-center">
-              <button type="button" class="add-btn w3-button app-button" @click="add()">add</button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -148,6 +148,8 @@ export default {
 <style scoped>
 
 .members-table-container {
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .table-row {
