@@ -382,8 +382,7 @@ export default {
 
         this.axios.post('/1/initiative/' + assignationToSend.initiativeId + '/assignation', assignationToSend)
         .then((response) => {
-          this.$store.dispatch('refreshTransfers')
-          this.$store.commit('triggerUpdateAssets')
+          this.$emit('created')
           this.closeThis()
         })
       }

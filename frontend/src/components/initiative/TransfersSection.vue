@@ -13,7 +13,8 @@
       <h3 class="section-header">From {{ initiative.meta.name }}:</h3>
       <app-transfers-tables
         :initiativeId="initiative.id"
-        :ofSubinitiatives="false">
+        :ofSubinitiatives="false"
+        :triggerUpdate="triggerUpdate">
       </app-transfers-tables>
     </div>
 
@@ -60,7 +61,8 @@ export default {
 
   data () {
     return {
-      showActionMenu: false
+      showActionMenu: false,
+      triggerUpdate: false
     }
   },
 
@@ -87,6 +89,10 @@ export default {
   },
 
   methods: {
+    assignationCreated () {
+      console.log('created')
+      this.triggerUpdate = !this.triggerUpdate
+    },
     newTransferToUser () {
       this.showActionMenu = false
       this.$store.commit('showNewAssignationModal', true)

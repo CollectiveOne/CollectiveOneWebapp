@@ -82,6 +82,10 @@ export default {
     showFrom: {
       type: Boolean,
       default: false
+    },
+    triggerUpdate: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -93,7 +97,18 @@ export default {
     }
   },
 
+  watch: {
+    triggerUpdate () {
+      this.resetData()
+    }
+  },
+
   methods: {
+    resetData () {
+      this.transfers = []
+      this.currentPage = 0
+      this.getData()
+    },
     getData () {
       this.axios.get(this.url, {
         params: {
@@ -175,7 +190,7 @@ export default {
   },
 
   created () {
-    this.getData()
+    this.resetData()
   }
 }
 </script>

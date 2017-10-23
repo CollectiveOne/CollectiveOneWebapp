@@ -23,6 +23,7 @@
             :is="transfersTableComponent"
             :url="url"
             :showFrom="ofSubinitiatives"
+            :triggerUpdate="triggerUpdate"
             :key="transfersTableComponent.name">
           </component>
         </transition>
@@ -43,6 +44,10 @@ export default {
       default: ''
     },
     ofSubinitiatives: {
+      type: Boolean,
+      default: false
+    },
+    triggerUpdate: {
       type: Boolean,
       default: false
     }
