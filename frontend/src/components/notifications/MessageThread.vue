@@ -1,11 +1,12 @@
 <template lang="html">
-  <div class="">
+  <div class="w3-display-container">
     <div id="history-container" class="w3-row history-container w3-border">
       <app-activity-getter
         :url="url"
         :reverse="true"
         :addBorders="false"
         :showMessages="true"
+        :onlyMessages="showOnlyMessages"
         :polling="true"
         :triggerUpdate="triggerUpdate"
         :contextElementId="contextElementId"
@@ -20,6 +21,14 @@
         :showSend="true"
         @send="send($event)">
       </app-markdown-editor>
+    </div>
+    <div class="w3-display-topright only-messages-button">
+      <button
+        class="w3-button app-button" type="button" name="button"
+        @click="showOnlyMessagesClicked()">
+        <span v-if="!showOnlyMessages"><i class="fa fa-comment-o" aria-hidden="true"></i></span>
+        <span v-else=""><i class="fa fa-list" aria-hidden="true"></i></span>
+      </button>
     </div>
   </div>
 </template>
@@ -51,7 +60,8 @@ export default {
     return {
       newMessageText: '',
       triggerUpdate: true,
-      intervalId: 0
+      intervalId: 0,
+      showOnlyMessages: false
     }
   },
 
@@ -72,6 +82,10 @@ export default {
         var container = this.$el.querySelector('#history-container')
         container.scrollTop = container.scrollHeight
       })
+    },
+    showOnlyMessagesClicked () {
+      this.showOnlyMessages = !this.showOnlyMessages
+      this.triggerUpdate = !this.triggerUpdate
     }
   },
 
@@ -88,8 +102,14 @@ export default {
 }
 
 .history-container {
+  min-height: 60px;
   max-height: 35vh;
   overflow: auto;
+}
+
+.only-messages-button {
+  margin-right: 25px;
+  margin-top: 10px;
 }
 
 </style>

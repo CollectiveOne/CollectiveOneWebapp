@@ -7,6 +7,16 @@
     </app-assignation-modal>
   </transition>
 
+  <transition name="slideDownUp">
+    <app-new-assignation-modal v-if="showNewAssignationModal">
+    </app-new-assignation-modal>
+  </transition>
+
+  <transition name="slideDownUp">
+    <app-new-initiative-transfer-modal v-if="showNewInitiativeTransferModal">
+    </app-new-initiative-transfer-modal>
+  </transition>
+
   <div class="section-container w3-display-container">
 
     <div class="own-transfers-div">
@@ -52,16 +62,22 @@
 <script>
 import AssignationModal from '@/components/transfers/AssignationModal.vue'
 import TransfersTables from '@/components/transfers/TransfersTables.vue'
+import NewInitiativeTransferModal from '@/components/modal/NewInitiativeTransferModal.vue'
+import NewAssignationModal from '@/components/modal/NewAssignationModal.vue'
 
 export default {
   components: {
     'app-transfers-tables': TransfersTables,
-    'app-assignation-modal': AssignationModal
+    'app-assignation-modal': AssignationModal,
+    'app-new-initiative-transfer-modal': NewInitiativeTransferModal,
+    'app-new-assignation-modal': NewAssignationModal
   },
 
   data () {
     return {
       showActionMenu: false,
+      showNewAssignationModal: false,
+      showNewInitiativeTransferModal: false,
       triggerUpdate: false
     }
   },
@@ -94,12 +110,10 @@ export default {
       this.triggerUpdate = !this.triggerUpdate
     },
     newTransferToUser () {
-      this.showActionMenu = false
-      this.$store.commit('showNewAssignationModal', true)
+      this.showNewAssignationModal = true
     },
     newTransferToInitiative () {
-      this.showActionMenu = false
-      this.$store.commit('showNewInitiativeTransferModal', true)
+      this.showNewInitiativeTransferModal = true
     },
     clickOutsideShowMenu () {
       this.showActionMenu = false

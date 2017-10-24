@@ -9,7 +9,7 @@
     @dragleave.prevent="dragLeave()"
     @drop="dragDrop()"> -->
 
-    <div class="" :class="{ 'w3-card-2 w3-topbar border-blue': cardEffect, 'highlight': highlight }">
+    <div class="" :class="{ 'w3-card-4 w3-topbar border-blue w3-round-large': cardEffect, 'highlight': highlight }">
 
       <div v-if="showDetails" class="w3-row light-grey details-row">
         <div class="w3-col s6">
@@ -38,7 +38,7 @@
 
         <div class="w3-col s12">
           <div v-if="card.imageFile" class="w3-row image-container w3-center w3-display-container">
-            <img :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
+            <img class="" :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
           </div>
 
           <div :class="{'card-container-padded': cardEffect, 'card-container-slim': !cardEffect }">
@@ -46,7 +46,7 @@
               <b>{{ card.title }}</b>
             </div>
 
-            <div class="w3-row card-text">
+            <div class="w3-row card-text" :class="{'card-text-ascard': cardEffect}">
               <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
             </div>
           </div>
@@ -179,6 +179,8 @@ export default {
 }
 
 .image-container {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   min-height: 80px;
   max-height: 150px;
   overflow: hidden;
@@ -194,6 +196,9 @@ export default {
 }
 
 .card-text {
+}
+
+.card-text-ascard {
   max-height: 250px;
   overflow-y: auto;
 }

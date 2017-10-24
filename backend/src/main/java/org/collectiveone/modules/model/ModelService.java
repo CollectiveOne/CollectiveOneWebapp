@@ -11,6 +11,7 @@ import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.Activity;
 import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.dto.ActivityDto;
+import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredRepositoryIf;
@@ -759,20 +760,31 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Page<ActivityDto>> getActivityUnderView (UUID viewId, PageRequest page) {
+	public GetResult<Page<ActivityDto>> getActivityUnderView (UUID viewId, PageRequest page, Boolean onlyMessages) {
 		List<UUID> sectionIds = getAllSectionsIdsOfView(viewId);
-		List<UUID> cardsIds = modelCardRepository.findAllCardsIdsOfSections(sectionIds);
+		List<UUID> cardsIds = sectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(sectionIds) : new ArrayList<UUID>();
 		
 		Page<Activity> activities = null;
 		
-		if((sectionIds.size() > 0) && (cardsIds.size() > 0)) {
-			activities = activityRepository.findOfViewSectionsAndCards(viewId, sectionIds, cardsIds, page);
-		} else if ((sectionIds.size() > 0) && (cardsIds.size() == 0)) {
-			activities = activityRepository.findOfViewAndSections(viewId, sectionIds, page);
-		} else if ((sectionIds.size() == 0) && (cardsIds.size() == 0)) {
-			activities = activityRepository.findOfView(viewId, page);
+		/* Using dynamic queries instead of JPA should simplify this */
+		if (!onlyMessages) {
+			if((sectionIds.size() > 0) && (cardsIds.size() > 0)) {
+				activities = activityRepository.findOfViewSectionsAndCards(viewId, sectionIds, cardsIds, page);
+			} else if ((sectionIds.size() > 0) && (cardsIds.size() == 0)) {
+				activities = activityRepository.findOfViewAndSections(viewId, sectionIds, page);
+			} else if ((sectionIds.size() == 0) && (cardsIds.size() == 0)) {
+				activities = activityRepository.findOfView(viewId, page);
+			}
+		} else {
+			if((sectionIds.size() > 0) && (cardsIds.size() > 0)) {
+				activities = activityRepository.findOfViewSectionsAndCardsAndType(viewId, sectionIds, cardsIds, ActivityType.MESSAGE_POSTED, page);
+			} else if ((sectionIds.size() > 0) && (cardsIds.size() == 0)) {
+				activities = activityRepository.findOfViewAndSectionsAndType(viewId, sectionIds, ActivityType.MESSAGE_POSTED, page);
+			} else if ((sectionIds.size() == 0) && (cardsIds.size() == 0)) {
+				activities = activityRepository.findOfViewAndType(viewId, ActivityType.MESSAGE_POSTED, page);
+			}
 		}
-	
+		
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		
 		for(Activity activity : activities.getContent()) {
@@ -786,24 +798,31 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Page<ActivityDto>> getActivityUnderSection (UUID sectionId, PageRequest page) {
+	public GetResult<Page<ActivityDto>> getActivityUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages) {
 		
 		List<UUID> allSectionIds = new ArrayList<UUID>();
 		
 		allSectionIds.add(sectionId);
 		allSectionIds.addAll(getAllSubsectionsIds(sectionId));
 		
-		List<UUID> cardsIds = modelCardRepository.findAllCardsIdsOfSections(allSectionIds);
+		List<UUID> cardsIds = allSectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
 		
 		Page<Activity> activities = null;
 		
-		if (cardsIds.size() > 0) {
-			activities = activityRepository.findOfSectionsAndCards(allSectionIds, cardsIds, page);	
+		if (!onlyMessages) {
+			if (cardsIds.size() > 0) {
+				activities = activityRepository.findOfSectionsAndCards(allSectionIds, cardsIds, page);	
+			} else {
+				activities = activityRepository.findOfSections(allSectionIds, page);
+			}
 		} else {
-			activities = activityRepository.findOfSections(allSectionIds, page);
+			if (cardsIds.size() > 0) {
+				activities = activityRepository.findOfSectionsAndCardsAndType(allSectionIds, cardsIds, ActivityType.MESSAGE_POSTED, page);	
+			} else {
+				activities = activityRepository.findOfSectionsAndType(allSectionIds, ActivityType.MESSAGE_POSTED, page);
+			}
 		}
-		
-	
+			
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		
 		for(Activity activity : activities.getContent()) {
@@ -817,9 +836,14 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Page<ActivityDto>> getActivityUnderCard (UUID cardWrapperId, PageRequest page) {
+	public GetResult<Page<ActivityDto>> getActivityUnderCard (UUID cardWrapperId, PageRequest page, Boolean onlyMessages) {
 		
-		Page<Activity> activities = activityRepository.findOfCard(cardWrapperId, page);
+		Page<Activity> activities = null;
+		if (!onlyMessages) {
+			activities = activityRepository.findOfCard(cardWrapperId, page);
+		} else {
+			activities = activityRepository.findOfCardAndType(cardWrapperId, ActivityType.MESSAGE_POSTED, page);
+		}
 	
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		

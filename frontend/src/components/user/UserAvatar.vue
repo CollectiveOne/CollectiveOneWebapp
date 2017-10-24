@@ -13,11 +13,9 @@
       <div class="img-div noselect"
         @mouseover="showHoverName = true"
         @mouseleave="showHoverName = false">
-        <img class="w3-circle" :class="imgClass" :src="user.pictureUrl"/>
-        <div v-if="!showName && showHoverName" class="w3-container w3-padding hover-name-container w3-tag dark-gray w3-round">
-          <div
-            @click="showProfileModal = true"
-            class="w3-row cursor-pointer nickname-row">
+        <img @click="showProfileModal = true" class="w3-circle cursor-pointer" :class="imgClass" :src="user.pictureUrl"/>
+        <div v-if="!showName && showHoverName && enableHover" class="w3-container w3-padding hover-name-container w3-tag dark-gray w3-round">
+          <div class="w3-row cursor-pointer nickname-row">
             <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
           </div>
           <div class="w3-row">
@@ -71,6 +69,10 @@ export default {
       type: Boolean,
       default: true
     },
+    enableHover: {
+      type: Boolean,
+      default: true
+    },
     small: {
       type: Boolean,
       default: false
@@ -110,6 +112,10 @@ export default {
   white-space: nowrap;
 }
 
+.avatar-container {
+  position: relative;
+}
+
 .avatar-container:before {
   content: "";
   display: inline-block;
@@ -132,7 +138,8 @@ export default {
 
 .hover-name-container {
   position: absolute;
-  max-width: 250px;
+  width: 250px;
+  z-index: 10;
 }
 
 .social-icons-container {

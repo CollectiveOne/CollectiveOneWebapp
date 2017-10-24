@@ -35,7 +35,7 @@
           <td class="avatar-col">
             <div class="avatars-container">
               <div class="avatar-container" v-for="receiver in assignation.receivers">
-                <app-user-avatar :user="receiver.user" :showName="false" :small="true"></app-user-avatar>
+                <app-user-avatar :user="receiver.user" :showName="false" :small="true" :enableHover="false"></app-user-avatar>
               </div>
             </div>
           </td>

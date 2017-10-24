@@ -129,9 +129,9 @@
                 </div>
 
                 <div class="w3-row w3-margin-top">
-                  <div v-if="!editing" class="w3-padding light-grey">
+                  <div v-if="!editing" class="w3-padding">
                     <div v-if="card.title !== ''" class="">
-                      <b>{{ card.title }}</b>
+                      <h3><b>{{ card.title }}</b></h3>
                     </div>
                     <div v-else class="">
                       <i>(empty)</i>

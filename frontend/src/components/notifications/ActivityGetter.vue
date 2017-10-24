@@ -8,14 +8,20 @@
       </button>
     </div>
 
-    <app-activity-table
-      :activities="activities"
-      :addContext="false"
-      :reverse="reverse"
-      :addBorders="addBorders"
-      :showMessages="showMessages"
-      :contextElementId="contextElementId">
-    </app-activity-table>
+    <div v-if="activities.length > 0" class="">
+      <app-activity-table
+        :activities="activities"
+        :addContext="false"
+        :reverse="reverse"
+        :addBorders="addBorders"
+        :showMessages="showMessages"
+        :contextElementId="contextElementId">
+      </app-activity-table>
+    </div>
+    <div v-else class="w3-padding">
+      <i>no activity found</i>
+    </div>
+
 
     <div v-if="!allShown && !reverse" class="w3-row w3-center w3-margin-top">
       <button @click="showMoreClick()"
@@ -50,6 +56,10 @@ export default {
       default: true
     },
     showMessages: {
+      type: Boolean,
+      default: false
+    },
+    onlyMessages: {
       type: Boolean,
       default: false
     },
@@ -107,11 +117,15 @@ export default {
       this.axios.get(this.url, {
         params: {
           page: askPage,
-          size: 10
+          size: 10,
+          onlyMessages: this.onlyMessages
         }
       }).then((response) => {
         if (response.data.data.content.length < 10) {
           this.allShown = true
+        }
+        if (response.data.data.content.length === 10) {
+          this.allShown = false
         }
 
         switch (mode) {

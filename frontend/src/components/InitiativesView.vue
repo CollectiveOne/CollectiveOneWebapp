@@ -29,16 +29,6 @@
       </app-new-tokenmint-modal>
     </transition>
 
-    <transition name="slideDownUp">
-      <app-new-assignation-modal v-if="showNewAssignationModal">
-      </app-new-assignation-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-new-initiative-transfer-modal v-if="showNewInitiativeTransferModal">
-      </app-new-initiative-transfer-modal>
-    </transition>
-
   </div>
 
   <!-- Initiatives View -->
@@ -72,8 +62,6 @@ import NewSubInitiativeModal from '@/components/modal/NewSubInitiativeModal.vue'
 import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
 import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
 import NewTokenMintModal from '@/components/modal/NewTokenMintModal.vue'
-import NewInitiativeTransferModal from '@/components/modal/NewInitiativeTransferModal.vue'
-import NewAssignationModal from '@/components/modal/NewAssignationModal.vue'
 
 export default {
   components: {
@@ -82,9 +70,7 @@ export default {
     'app-initiatives-nav': InitiativesNav,
     'app-edit-initiative-modal': EditInitiativeModal,
     'app-edit-notifications-modal': EditNotificationsModal,
-    'app-new-tokenmint-modal': NewTokenMintModal,
-    'app-new-initiative-transfer-modal': NewInitiativeTransferModal,
-    'app-new-assignation-modal': NewAssignationModal
+    'app-new-tokenmint-modal': NewTokenMintModal
   },
 
   props: {
@@ -121,12 +107,6 @@ export default {
     },
     showNewTokenMintModal () {
       return this.$store.state.modals.showNewTokenMintModal
-    },
-    showNewInitiativeTransferModal () {
-      return this.$store.state.modals.showNewInitiativeTransferModal
-    },
-    showNewAssignationModal () {
-      return this.$store.state.modals.showNewAssignationModal
     },
     windowIsSmall () {
       return window.innerWidth < 601

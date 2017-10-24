@@ -264,10 +264,11 @@ public class InitiativesController extends BaseController {
 	}
 	
 	@RequestMapping(path = "/activity/initiative/{initiativeId}", method = RequestMethod.GET)
-	public GetResult<Page<ActivityDto>> getActivityUnderCard(
+	public GetResult<Page<ActivityDto>> getActivityUnderInitiative(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size) {
+			@RequestParam("size") Integer size, 
+			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
@@ -275,7 +276,7 @@ public class InitiativesController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return initiativeService.getActivityUnderInitiative(initiativeId, new PageRequest(page, size));
+		return initiativeService.getActivityUnderInitiative(initiativeId, new PageRequest(page, size), onlyMessages);
 	}
 	
 }

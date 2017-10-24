@@ -545,7 +545,8 @@ public class ModelController extends BaseController {
 	public GetResult<Page<ActivityDto>> getActivityUnderView(
 			@PathVariable("viewId") String viewIdStr,
 			@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size) {
+			@RequestParam("size") Integer size, 
+			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
 		
 		UUID viewId = UUID.fromString(viewIdStr);
 		
@@ -555,14 +556,15 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return modelService.getActivityUnderView(viewId, new PageRequest(page, size));
+		return modelService.getActivityUnderView(viewId, new PageRequest(page, size), onlyMessages);
 	}
 	
 	@RequestMapping(path = "/activity/model/section/{sectionId}", method = RequestMethod.GET)
 	public GetResult<Page<ActivityDto>> getActivityUnderSection(
 			@PathVariable("sectionId") String sectionIdStr,
 			@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size) {
+			@RequestParam("size") Integer size, 
+			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		
@@ -572,14 +574,15 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return modelService.getActivityUnderSection(sectionId, new PageRequest(page, size));
+		return modelService.getActivityUnderSection(sectionId, new PageRequest(page, size), onlyMessages);
 	}
 	
 	@RequestMapping(path = "/activity/model/card/{cardWrapperId}", method = RequestMethod.GET)
 	public GetResult<Page<ActivityDto>> getActivityUnderCard(
 			@PathVariable("cardWrapperId") String cardWrapperIdStr,
 			@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size) {
+			@RequestParam("size") Integer size, 
+			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
 		
@@ -589,7 +592,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return modelService.getActivityUnderCard(cardWrapperId, new PageRequest(page, size));
+		return modelService.getActivityUnderCard(cardWrapperId, new PageRequest(page, size), onlyMessages);
 	}
 	
 }

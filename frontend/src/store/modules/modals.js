@@ -3,8 +3,6 @@ const state = {
   showEditNotificationsModal: false,
   showNewTokenMintModal: false,
   assetIdForMint: '',
-  showNewInitiativeTransferModal: false,
-  showNewAssignationModal: false,
   showNewInitiativeModal: false,
   showNewSubInitiativeModal: false,
   parentInitiativeIdForModal: ''
@@ -23,12 +21,6 @@ const mutations = {
   showNewTokenMintModal: (state, payload) => {
     state.assetIdForMint = payload.assetId
     state.showNewTokenMintModal = payload.show
-  },
-  showNewInitiativeTransferModal: (state, payload) => {
-    state.showNewInitiativeTransferModal = payload
-  },
-  showNewAssignationModal: (state, payload) => {
-    state.showNewAssignationModal = payload
   },
   showNewInitiativeModal: (state, payload) => {
     state.showNewInitiativeModal = payload

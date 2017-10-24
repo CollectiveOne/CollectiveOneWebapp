@@ -12,6 +12,7 @@ import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.Activity;
 import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.dto.ActivityDto;
+import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.files.FileStored;
@@ -281,8 +282,8 @@ public class InitiativeService {
 		initiative.getMembers().add(member);
 		initiativeRepository.save(initiative);
 		
-		if (role.equals(DecisionMakerRole.ADMIN)) {
-			governanceService.addDecisionMaker(initiative.getGovernance().getId(), memberUser.getC1Id(), DecisionMakerRole.ADMIN);
+		if (role.equals(DecisionMakerRole.ADMIN) || role.equals(DecisionMakerRole.EDITOR)) {
+			governanceService.addDecisionMaker(initiative.getGovernance().getId(), memberUser.getC1Id(), role);
 		}
 		
 		/* members are subscribed to initiatives by default */
@@ -854,7 +855,7 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	public GetResult<Page<ActivityDto>>  getActivityUnderInitiative(UUID initiativeId, PageRequest page) {
+	public GetResult<Page<ActivityDto>>  getActivityUnderInitiative(UUID initiativeId, PageRequest page, Boolean onlyMessages) {
 
 		List<InitiativeDto> subinitiativesTree = getSubinitiativesTree(initiativeId, null);
 		
@@ -863,7 +864,13 @@ public class InitiativeService {
 		allInitiativesIds.add(initiativeId);
 		allInitiativesIds.addAll(extractAllIdsFromInitiativesTree(subinitiativesTree, new ArrayList<UUID>()));
 		
-		Page<Activity> activities = activityRepository.findOfInitiatives(allInitiativesIds, page);
+		Page<Activity> activities = null;
+		
+		if(!onlyMessages) {
+			activities = activityRepository.findOfInitiatives(allInitiativesIds, page);
+		} else {
+			activities = activityRepository.findOfInitiativesAndType(allInitiativesIds, ActivityType.MESSAGE_POSTED, page);
+		}
 		
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		
