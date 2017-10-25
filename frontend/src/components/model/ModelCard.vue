@@ -213,6 +213,8 @@ export default {
 }
 
 .bottom-row {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
   padding: 8px 5px 3px 5px;
 }
 

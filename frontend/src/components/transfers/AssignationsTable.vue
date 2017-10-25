@@ -105,7 +105,7 @@ export default {
 
   methods: {
     resetData () {
-      this.transfers = []
+      this.assignations = []
       this.currentPage = 0
       this.getData()
     },

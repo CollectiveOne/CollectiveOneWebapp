@@ -152,7 +152,7 @@ export default {
     ...mapActions(['showOutputMessage']),
 
     closeThis () {
-      this.$store.commit('showNewInitiativeTransferModal', false)
+      this.$emit('close')
     },
     assetsSelected (assets) {
       this.transfer.assetId = assets[0].assetId
@@ -184,6 +184,7 @@ export default {
         this.axios.post('/1/initiative/' + this.transfer.senderId + '/transferToInitiative', this.transfer)
         .then((response) => {
           this.$store.commit('triggerUpdateAssets')
+          this.$emit('created')
           this.closeThis()
         })
       }

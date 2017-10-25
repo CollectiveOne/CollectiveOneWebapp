@@ -249,7 +249,7 @@ export default {
     },
 
     closeThis () {
-      this.$store.commit('showNewAssignationModal', false)
+      this.$emit('close')
     },
     assignationUpdated (assignation) {
       this.assignation = assignation
@@ -382,6 +382,7 @@ export default {
 
         this.axios.post('/1/initiative/' + assignationToSend.initiativeId + '/assignation', assignationToSend)
         .then((response) => {
+          this.$store.commit('triggerUpdateAssets')
           this.$emit('created')
           this.closeThis()
         })

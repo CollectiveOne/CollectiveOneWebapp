@@ -8,12 +8,12 @@
   </transition>
 
   <transition name="slideDownUp">
-    <app-new-assignation-modal v-if="showNewAssignationModal">
+    <app-new-assignation-modal v-if="showNewAssignationModal" @close="showNewAssignationModal = false" @created="triggerUpdateCall()">
     </app-new-assignation-modal>
   </transition>
 
   <transition name="slideDownUp">
-    <app-new-initiative-transfer-modal v-if="showNewInitiativeTransferModal">
+    <app-new-initiative-transfer-modal v-if="showNewInitiativeTransferModal" @close="showNewInitiativeTransferModal = false" @created="triggerUpdateCall()">
     </app-new-initiative-transfer-modal>
   </transition>
 
@@ -33,7 +33,8 @@
       <h3 class="section-header">From subinitiatives of {{ initiative.meta.name }}:</h3>
       <app-transfers-tables
         :initiativeId="initiative.id"
-        :ofSubinitiatives="true">
+        :ofSubinitiatives="true"
+        :triggerUpdate="triggerUpdate">
       </app-transfers-tables>
     </div>
 
@@ -105,8 +106,7 @@ export default {
   },
 
   methods: {
-    assignationCreated () {
-      console.log('created')
+    triggerUpdateCall () {
       this.triggerUpdate = !this.triggerUpdate
     },
     newTransferToUser () {

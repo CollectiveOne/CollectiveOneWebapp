@@ -173,7 +173,7 @@
 
         <hr>
         <div class="w3-row-padding">
-          <div v-if="isEvaluator && !isDone && !isDeleted" class="w3-col l12 my-evaluation-div w3-margin-bottom">
+          <div v-if="isEvaluator && !isDone && !isDeleted && isOpen" class="w3-col l12 my-evaluation-div w3-margin-bottom">
             <div class="w3-row w3-center">
               <h5 class=""><b>My evaluation</b></h5>
             </div>

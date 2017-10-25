@@ -80,7 +80,7 @@
             <div class="w3-col s12">
               <div class="w3-row w3-margin-top modules-row">
                   <div class="w3-col m4 module-tag-col">
-                    MODEL:
+                    VISION:
                   </div>
                   <div class="w3-col m8">
                     <button class="w3-left w3-button"
