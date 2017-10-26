@@ -1,9 +1,7 @@
-package org.collectiveone.modules.tokens;
+package org.collectiveone.modules.tokens.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.collectiveone.modules.tokens.dto.TransferDto;
 
 public class AssetsDto {
 	private String assetId;

@@ -202,7 +202,7 @@ public class ModelService {
 			view.getSections().add(section);
 			section.setInitiative(view.getInitiative());
 			
-			activityService.modelSectionCreatedOnView(section, view, appUserRepository.findByC1Id(creatorId));
+			if (register) activityService.modelSectionCreatedOnView(section, view, appUserRepository.findByC1Id(creatorId));
 			
 			modelViewRepository.save(view);
 		}

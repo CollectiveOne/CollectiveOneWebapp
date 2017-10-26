@@ -70,7 +70,7 @@ const actions = {
 
     Vue.axios.get('/1/initiative/' + id, {
       params: {
-        addAssets: true,
+        addAssetsIds: true,
         addSubinitiatives: true,
         addParents: true,
         addMembers: true,
@@ -85,6 +85,7 @@ const actions = {
   },
 
   refreshInitiative: (context) => {
+    debugger
     if (context.state.initiative) {
       context.dispatch('updateInitiative', context.state.initiative.id)
     }

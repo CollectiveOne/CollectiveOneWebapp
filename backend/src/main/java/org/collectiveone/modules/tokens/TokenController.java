@@ -10,6 +10,7 @@ import org.collectiveone.modules.governance.DecisionVerdict;
 import org.collectiveone.modules.governance.GovernanceService;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
+import org.collectiveone.modules.tokens.dto.AssetsDto;
 import org.collectiveone.modules.tokens.dto.TokenMintDto;
 import org.collectiveone.modules.tokens.dto.TransferDto;
 import org.springframework.beans.factory.annotation.Autowired;

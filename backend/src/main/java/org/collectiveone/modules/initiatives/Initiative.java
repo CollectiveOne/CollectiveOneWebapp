@@ -48,8 +48,8 @@ public class Initiative {
 	@ManyToOne
 	private AppUser creator;
 	
-	@OneToOne
-	private TokenType tokenType;
+	@OneToMany
+	private List<TokenType> tokenTypes = new ArrayList<TokenType>();
 	
 	@OneToMany(mappedBy = "initiative")
 	private Set<InitiativeRelationship> relationships = new LinkedHashSet<InitiativeRelationship>();
@@ -84,7 +84,11 @@ public class Initiative {
 		dto.setStatus(status.toString());
 		dto.setMeta(meta.toDto());
 		
-		if(tokenType != null) dto.setOwnAssetsId(tokenType.getId().toString());
+		if(tokenTypes != null) {
+			for (TokenType tokenType : tokenTypes) {
+				dto.getOwnAssetsIds().add(tokenType.getId().toString());
+			}
+		}
 		
 		return dto;
 	}
@@ -108,11 +112,11 @@ public class Initiative {
 	public void setCreator(AppUser creator) {
 		this.creator = creator;
 	}
-	public TokenType getTokenType() {
-		return tokenType;
+	public List<TokenType> getTokenTypes() {
+		return tokenTypes;
 	}
-	public void setTokenType(TokenType tokenType) {
-		this.tokenType = tokenType;
+	public void setTokenTypes(List<TokenType> tokenTypes) {
+		this.tokenTypes = tokenTypes;
 	}
 	public Set<InitiativeRelationship> getRelationships() {
 		return relationships;

@@ -177,7 +177,7 @@ export default {
 }
 
 .notifications-container {
-  max-width:420px;
+  width:420px;
   position: absolute;
   margin-left: -212px;
   max-height: calc(100vh - 80px);

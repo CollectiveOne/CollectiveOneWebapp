@@ -27,6 +27,7 @@ import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
+import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -362,6 +363,7 @@ public class EmailService {
 		Initiative initiative = act.getInitiative();
 		Initiative subInitiative = act.getSubInitiative();
 		String transferredAssets = (act.getInitiativeTransfers() != null) ? getTransferString(act.getInitiativeTransfers()) : "";
+		TokenType tokenType = notification.getActivity().getTokenType();
 		TokenMint mint = notification.getActivity().getMint();
 		Assignation assignation = notification.getActivity().getAssignation();
 		InitiativeTransfer transfer = notification.getActivity().getInitiativeTransfer();
@@ -396,6 +398,10 @@ public class EmailService {
 		
 		case TOKENS_MINTED: 
 			return "<p>minted " + mint.getValue() + " " + mint.getToken().getName() + " with motive: " + mint.getMotive() + ".</p>";
+			
+			
+		case TOKEN_CREATED:
+			return "<p>created a new token type called " + tokenType.getName() + " in " + getInitiativeAnchor(initiative) + ", and minted " + mint.getValue() + " units.</p>";
 			
 		case PR_ASSIGNATION_CREATED:
 			Evaluator evaluator = null;

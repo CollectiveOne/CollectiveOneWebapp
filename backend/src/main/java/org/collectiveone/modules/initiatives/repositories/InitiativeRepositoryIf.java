@@ -32,7 +32,7 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 	@Query("SELECT init FROM Initiative init JOIN init.meta mta WHERE mta.visibility = ?1 AND init.status='ENABLED'")
 	List<Initiative> findByVisibility(InitiativeVisibility visibility);
 	
-	Initiative findByTokenType_Id(UUID tokenTypeId);
+	Initiative findByTokenTypes_Id(UUID tokenTypeId);
 	
 	@Query("SELECT mta.visibility FROM Initiative init JOIN init.meta mta WHERE init.id = ?1")
 	InitiativeVisibility getVisiblity(UUID initiativeId);

@@ -110,6 +110,12 @@ public class GovernanceService {
 	}
 	
 	@Transactional
+	public DecisionVerdict canCreateToken(UUID initiativeId, UUID creatorId) {
+		return isRolesAndAdmin(initiativeId, creatorId);
+	}	
+	
+	
+	@Transactional
 	public DecisionVerdict canEdit(UUID initiativeId, UUID editorId) {
 		return isRolesAndAdmin(initiativeId, editorId);
 	}

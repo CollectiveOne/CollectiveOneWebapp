@@ -21,6 +21,7 @@ import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
+import org.collectiveone.modules.tokens.dto.AssetsDto;
 import org.collectiveone.modules.tokens.dto.TokenMintDto;
 import org.collectiveone.modules.tokens.dto.TransferDto;
 import org.collectiveone.modules.tokens.enums.MemberTransferStatus;

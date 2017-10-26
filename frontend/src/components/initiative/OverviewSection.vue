@@ -1,5 +1,36 @@
 <template lang="html">
   <div class="">
+
+    <transition name="slideDownUp">
+      <app-new-token-modal
+        v-if="showNewTokenModal"
+        :initiativeId="initiative.id"
+        @close="showNewTokenModal = false">
+      </app-new-token-modal>
+    </transition>
+
+    <transition name="slideDownUp">
+      <app-new-tokenexchange-modal
+        v-if="showTokensExchangeModal"
+        @close="showTokensExchangeModal = false">
+      </app-new-tokenexchange-modal>
+    </transition>
+
+    <transition name="slideDownUp">
+      <app-new-assignation-modal v-if="showNewAssignationModal"
+        @close="showNewAssignationModal = false"
+        @created="triggerUpdateCall()">
+      </app-new-assignation-modal>
+    </transition>
+
+    <transition name="slideDownUp">
+      <app-new-initiative-transfer-modal
+        v-if="showNewInitiativeTransferModal"
+        @close="showNewInitiativeTransferModal = false"
+        @created="triggerUpdateCall()">
+      </app-new-initiative-transfer-modal>
+    </transition>
+
     <div v-if="initiative.meta.imageFile" class="image-container w3-center">
       <img :src="initiative.meta.imageFile.url + '?lastUpdated=' + initiative.meta.imageFile.lastUpdated" alt="">
     </div>
@@ -31,15 +62,36 @@
       </div>
 
       <br>
-      <div class="w3-card">
+      <div class="w3-card w3-display-container">
         <header class="section-header-bar w3-bar gray-1">
           <h4 class="w3-bar-item w3-left">Assets</h4>
+          <div v-if="isLoggedAnAdmin"
+            class="edit-btn-div w3-bar-item w3-button w3-right w3-large"
+            @click="showAssetsMenu = !showAssetsMenu"
+            v-click-outside="clickOutsideShowAssetsMenu">
+            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+          </div>
         </header>
+        <div v-if="showAssetsMenu" class="assets-menu w3-display-topright w3-card w3-white">
+          <div v-if="isLoggedAnAdmin"
+            @click="showNewTokenModal = true"
+            class="w3-button">
+            <i class="fa fa-plus" aria-hidden="true"></i>create new
+          </div>
+          <div v-if="isLoggedAnAdmin"
+            @click="showTokensExchangeModal = true"
+            class="w3-button">
+            <i class="fa fa-exchange" aria-hidden="true"></i>exchange/convert
+          </div>
+        </div>
         <div class="assets-content">
-          <app-asset-distribution-chart v-for="asset in initiative.assets"
-            :key="asset.assetId" :assetId="asset.assetId" :initiativeId="initiative.id"
-            :canMint="initiative.ownAssetsId === asset.assetId" :canEdit="isLoggedAnAdmin">
-          </app-asset-distribution-chart>
+          <div class="w3-row" v-for="(assetId, ix) in initiative.assetsIds" :key="assetId" >
+            <hr v-if="ix > 0">
+            <app-asset-distribution-chart
+              :assetId="assetId" :initiativeId="initiative.id"
+              :canMint="initiative.ownAssetsIds.includes(assetId)" :canEdit="isLoggedAnAdmin">
+            </app-asset-distribution-chart>
+          </div>
         </div>
       </div>
 
@@ -62,13 +114,17 @@ import AssetDistributionChart from '@/components/transfers/AssetDistributionChar
 import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
 import InitiativeTag from '@/components/initiative/InitiativeTag.vue'
 import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
+import NewTokenModal from '@/components/modal/NewTokenModal.vue'
+import NewTokenExchangeModal from '@/components/modal/NewTokenExchangeModal.vue'
 
 export default {
   components: {
     'app-asset-distribution-chart': AssetDistributionChart,
     'app-edit-initiative-modal': EditInitiativeModal,
     'app-initiative-tag': InitiativeTag,
-    'app-activity-getter': ActivityGetter
+    'app-activity-getter': ActivityGetter,
+    'app-new-token-modal': NewTokenModal,
+    'app-new-tokenexchange-modal': NewTokenExchangeModal
   },
 
   props: {
@@ -77,7 +133,10 @@ export default {
   data () {
     return {
       showEditInitiativeModal: false,
-      parentInitiativeIdForModal: null
+      showAssetsMenu: false,
+      parentInitiativeIdForModal: null,
+      showNewTokenModal: false,
+      showTokensExchangeModal: false
     }
   },
 
@@ -93,6 +152,9 @@ export default {
   methods: {
     newAssignment (data) {
       this.showNewAssignationModal = true
+    },
+    clickOutsideShowAssetsMenu () {
+      this.showAssetsMenu = false
     }
   }
 }
@@ -129,9 +191,28 @@ export default {
   max-width: 100%;
 }
 
+.assets-menu {
+  margin-top: 65px;
+  margin-right: 2px;
+  width: 220px;
+  display: block;
+  z-index: 10;
+}
+
+.assets-menu div {
+  text-align: left;
+  width: 100%;
+}
+
+.assets-menu .fa {
+  margin-right: 15px;
+}
+
 .assets-content {
   padding-top: 16px;
   padding-bottom: 16px;
+  max-height: 50vh;
+  overflow-y: auto;
 }
 
 .activity-content {

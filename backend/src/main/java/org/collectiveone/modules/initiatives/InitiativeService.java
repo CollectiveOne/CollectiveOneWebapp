@@ -35,14 +35,16 @@ import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
 import org.collectiveone.modules.model.ModelService;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.dto.ModelViewDto;
-import org.collectiveone.modules.tokens.AssetsDto;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
+import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenService;
 import org.collectiveone.modules.tokens.TokenTransferService;
 import org.collectiveone.modules.tokens.TokenType;
+import org.collectiveone.modules.tokens.dto.AssetsDto;
 import org.collectiveone.modules.tokens.dto.TransferDto;
 import org.collectiveone.modules.tokens.enums.TokenHolderType;
 import org.collectiveone.modules.tokens.repositories.InitiativeTransferRepositoryIf;
+import org.collectiveone.modules.tokens.repositories.TokenMintRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +99,8 @@ public class InitiativeService {
 	@Autowired
 	private ActivityRepositoryIf activityRepository;
 	
+	@Autowired
+	private TokenMintRepositoryIf tokenMintRespository;
 	  
 	
 	@Transactional
@@ -188,7 +192,7 @@ public class InitiativeService {
 			GetResult<Initiative> result2 = addMembers(result.getData().getId(), initiativeDto.getMembers());
 			
 			if(result2.getResult().equals("success")) {
-				PostResult result3 = transferAssets(result.getData().getId(), initiativeDto);
+				PostResult result3 = transferAssets(result.getData().getId(), initiativeDto, userId);
 				
 				if (result3.getResult().equals("success")) {
 					PostResult result4 = initializeModel(result.getData().getId(), userId);
@@ -306,17 +310,27 @@ public class InitiativeService {
 	}
 		
 	@Transactional
-	private PostResult transferAssets(UUID initiativeId, NewInitiativeDto initiativeDto) {
+	private PostResult transferAssets(UUID initiativeId, NewInitiativeDto initiativeDto, UUID creatorId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
 		if (!initiativeDto.getAsSubinitiative()) {
 			/* if is not a sub-initiative, then create a token for this initiative */
 			TokenType token = tokenService.create(initiativeDto.getOwnTokens().getAssetName(), "T");
-			initiative.setTokenType(token);
+			initiative.getTokenTypes().add(token);
 			initiative = initiativeRepository.save(initiative);
 			tokenService.mintToHolder(token.getId(), initiative.getId(), initiativeDto.getOwnTokens().getOwnedByThisHolder(), TokenHolderType.INITIATIVE);
 			
-			activityService.newInitiativeCreated(initiative, initiative.getCreator(), token);
+			TokenMint mint = new TokenMint();
+			mint.setToken(token);
+			mint.setOrderedBy(appUserRepository.findByC1Id(creatorId));
+			mint.setToHolder(initiativeId);
+			mint.setMotive("Initiative creation.");
+			mint.setNotes("");
+			mint.setValue(initiativeDto.getOwnTokens().getOwnedByThisHolder());
+			
+			mint = tokenMintRespository.save(mint);
+			
+			activityService.newInitiativeCreated(initiative, initiative.getCreator());
 			
 			return new PostResult("success", "initiative created and tokens created", initiative.getId().toString());
 			
@@ -379,6 +393,32 @@ public class InitiativeService {
 		
 		return result2;
 	}
+	
+	@Transactional
+	public PostResult createNewToken(UUID initiativeId, AssetsDto tokenDto, UUID userId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		
+		TokenType token = tokenService.create(tokenDto.getAssetName(), "T");
+		initiative.getTokenTypes().add(token);
+		initiative = initiativeRepository.save(initiative);
+		tokenService.mintToHolder(token.getId(), initiative.getId(), tokenDto.getOwnedByThisHolder(), TokenHolderType.INITIATIVE);
+		
+		AppUser orderedBy = appUserRepository.findByC1Id(userId);
+		
+		TokenMint mint = new TokenMint();
+		mint.setToken(token);
+		mint.setOrderedBy(orderedBy);
+		mint.setToHolder(initiativeId);
+		mint.setMotive("Token creation.");
+		mint.setNotes("");
+		mint.setValue(tokenDto.getOwnedByThisHolder());
+		
+		mint = tokenMintRespository.save(mint);
+		
+		activityService.newTokenCreated(initiative, orderedBy, token, mint);
+		
+		return new PostResult("success", "initiative created and tokens created", initiative.getId().toString());
+	} 
 	
 	
 	@Transactional
@@ -463,28 +503,22 @@ public class InitiativeService {
 	
 	/** */
 	@Transactional
-	public List<AssetsDto> getInitiativeAssets(UUID id) {
+	public List<UUID> getInitiativeAssetsIds(UUID id) {
 		
 		Initiative initiative = initiativeRepository.findById(id);
 		List<TokenType> tokenTypes = tokenService.getTokenTypesHeldBy(initiative.getId());
 		
-		List<AssetsDto> assets = new ArrayList<AssetsDto>();
+		List<UUID> assetsIds = new ArrayList<UUID>();
 		
 		for (TokenType token : tokenTypes) {
-			AssetsDto asset = new AssetsDto();
-			asset.setAssetId(token.getId().toString());
-			asset.setAssetName(token.getName());
-			asset.setOwnedByThisHolder(tokenService.getHolder(token.getId(), initiative.getId()).getTokens());
-			asset.setTotalExistingTokens(tokenService.getTotalExisting(token.getId()));
-			
-			assets.add(asset);
+			assetsIds.add(token.getId());
 		}
 		
-		return assets;
+		return assetsIds;
 	}
 	
 	public Initiative findByTokenType_Id(UUID tokenTypeId) {
-		return initiativeRepository.findByTokenType_Id(tokenTypeId);
+		return initiativeRepository.findByTokenTypes_Id(tokenTypeId);
 	}
 	
 	@Transactional

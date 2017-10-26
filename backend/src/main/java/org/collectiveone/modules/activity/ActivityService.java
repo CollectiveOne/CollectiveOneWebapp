@@ -215,17 +215,26 @@ public class ActivityService {
 	
 	
 	@Transactional
-	public void newInitiativeCreated(Initiative initiative, AppUser triggerUser, TokenType token) {
-		Activity activity = new Activity();
+	public void newInitiativeCreated(Initiative initiative, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, initiative); 
 		
 		activity.setType(ActivityType.INITIATIVE_CREATED);
-		activity.setTriggerUser(triggerUser);
-		activity.setInitiative(initiative);
-		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
-		
 		activity = activityRepository.save(activity);
 		
 		addNewInitiativeNotifications(activity);
+	}
+	
+	@Transactional
+	public void newTokenCreated(Initiative initiative, AppUser triggerUser, TokenType token, TokenMint mint) {
+		Activity activity = getBaseActivity(triggerUser, initiative); 
+		
+		activity.setType(ActivityType.TOKEN_CREATED);
+		activity.setTokenType(token);
+		activity.setMint(mint);
+		
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
 	}
 		
 	@Transactional

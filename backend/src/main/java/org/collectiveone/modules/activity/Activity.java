@@ -27,6 +27,7 @@ import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
+import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -72,6 +73,9 @@ public class Activity {
 	@Type(type = "org.hibernate.type.TextType")
 	@Column(name = "old_driver")
 	private String oldDriver;
+	
+	@OneToOne
+	private TokenType tokenType;
 	
 	@OneToOne
 	private TokenMint mint;
@@ -225,6 +229,14 @@ public class Activity {
 
 	public void setOldDriver(String oldDriver) {
 		this.oldDriver = oldDriver;
+	}
+
+	public TokenType getTokenType() {
+		return tokenType;
+	}
+
+	public void setTokenType(TokenType tokenType) {
+		this.tokenType = tokenType;
 	}
 
 	public TokenMint getMint() {

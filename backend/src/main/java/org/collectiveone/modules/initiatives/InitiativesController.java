@@ -1,5 +1,6 @@
 package org.collectiveone.modules.initiatives;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
 import org.collectiveone.modules.initiatives.dto.MemberDto;
 import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
 import org.collectiveone.modules.initiatives.dto.SearchFiltersDto;
+import org.collectiveone.modules.tokens.dto.AssetsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -97,7 +99,7 @@ public class InitiativesController extends BaseController {
 	@RequestMapping(path = "/initiative/{initiativeId}", method = RequestMethod.GET)
 	public GetResult<InitiativeDto> getInitiative(
 			@PathVariable("initiativeId") String initiativeIdStr, 
-			@RequestParam(defaultValue = "false") boolean addAssets,
+			@RequestParam(defaultValue = "false") boolean addAssetsIds,
 			@RequestParam(defaultValue = "false") boolean addSubinitiatives,
 			@RequestParam(defaultValue = "false") boolean addParents,
 			@RequestParam(defaultValue = "false") boolean addMembers,
@@ -113,8 +115,14 @@ public class InitiativesController extends BaseController {
 		
 		initiativeDto = initiativeService.getLight(initiativeId);
 		
-		if(addAssets) {
-			initiativeDto.setAssets(initiativeService.getInitiativeAssets(initiativeId));
+		if(addAssetsIds) {
+			List<UUID> assetsIds = initiativeService.getInitiativeAssetsIds(initiativeId);
+			List<String> assetsIdsStr = new ArrayList<String>(); 
+			for (UUID assetId : assetsIds) {
+				assetsIdsStr.add(assetId.toString());
+			}
+			initiativeDto.setAssetsIds(assetsIdsStr);
+			
 		}
 		
 		if(addSubinitiatives) {
@@ -221,8 +229,7 @@ public class InitiativesController extends BaseController {
 		
 		return initiativeService.addTagToInitiative(initiativeId, tagDto);
 	}
-	
-	
+		
 	@RequestMapping(path = "/initiative/{initiativeId}/tags/{tagId}", method = RequestMethod.DELETE) 
 	public PostResult deleteTagFromInitiative(
 			@PathVariable("initiativeId") String initiativeIdStr,
@@ -261,6 +268,25 @@ public class InitiativesController extends BaseController {
 		
 		InitiativeTag tag = initiativeService.getOrCreateTag(tagDto);
 		return new PostResult("success", "tag craeted", tag.getId().toString());
+	}
+	
+	@RequestMapping(path = "/initiative/{initiativeId}/token", method = RequestMethod.POST) 
+	public PostResult createTokenType(
+			@PathVariable("initiativeId") String initiativeId, 
+			@RequestBody AssetsDto tokenDto) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		if (governanceService.canCreateToken(UUID.fromString(initiativeId), getLoggedUserId()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		} 
+		
+		return initiativeService.createNewToken(
+				UUID.fromString(initiativeId), 
+				tokenDto,
+				getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/activity/initiative/{initiativeId}", method = RequestMethod.GET)

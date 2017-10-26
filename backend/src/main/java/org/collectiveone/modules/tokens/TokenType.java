@@ -26,10 +26,10 @@ public class TokenType {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@Column(name = "name")
+	@Column(name = "name", length = 10)
 	private String name;
 	
-	@Column(name = "symbol")
+	@Column(name = "symbol", length = 3)
 	private String symbol;
 	
 	@OneToMany(mappedBy="tokenType")

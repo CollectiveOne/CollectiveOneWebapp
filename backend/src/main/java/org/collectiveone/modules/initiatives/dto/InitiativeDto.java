@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.collectiveone.modules.assignations.dto.InitiativeMetaDto;
-import org.collectiveone.modules.tokens.AssetsDto;
+import org.collectiveone.modules.tokens.dto.AssetsDto;
 import org.collectiveone.modules.users.AppUserDto;
 
 public class InitiativeDto {
@@ -14,8 +14,9 @@ public class InitiativeDto {
 	private String status;
 	private InitiativeMetaDto meta;
 		
-	private String ownAssetsId;
+	private List<String> ownAssetsIds = new ArrayList<String>();
 	private List<AssetsDto> assets = new ArrayList<AssetsDto>();
+	private List<String> assetsIds = new ArrayList<String>();
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
 	private List<InitiativeDto> parents = new ArrayList<InitiativeDto>();
 	private InitiativeMembersDto initiativeMembers;
@@ -57,17 +58,23 @@ public class InitiativeDto {
 	public void setParents(List<InitiativeDto> parents) {
 		this.parents = parents;
 	}
-	public String getOwnAssetsId() {
-		return ownAssetsId;
+	public List<String> getOwnAssetsIds() {
+		return ownAssetsIds;
 	}
-	public void setOwnAssetsId(String ownAssetsId) {
-		this.ownAssetsId = ownAssetsId;
+	public void setOwnAssetsIds(List<String> ownAssetsIds) {
+		this.ownAssetsIds = ownAssetsIds;
 	}
 	public List<AssetsDto> getAssets() {
 		return assets;
 	}
 	public void setAssets(List<AssetsDto> assets) {
 		this.assets = assets;
+	}
+	public List<String> getAssetsIds() {
+		return assetsIds;
+	}
+	public void setAssetsIds(List<String> assetsIds) {
+		this.assetsIds = assetsIds;
 	}
 	public InitiativeMembersDto getInitiativeMembers() {
 		return initiativeMembers;

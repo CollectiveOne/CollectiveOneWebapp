@@ -2,6 +2,7 @@ package org.collectiveone.modules.activity.enums;
 
 public enum ActivityType {
 	INITIATIVE_CREATED,
+	TOKEN_CREATED,
 	SUBINITIATIVE_CREATED,
 	INITIATIVE_EDITED,
 	TOKENS_MINTED,

@@ -40,7 +40,25 @@
           <hr>
 
           <div class="w3-container assets-selector-div">
-            <app-new-token @updated="ownTokensSelected($event)"></app-new-token>
+            <div class="w3-row-padding">
+              <h4 class="">Create a new token</h4>
+              <div class="w3-col m4">
+                <label class=""><b>Number of Tokens</b></label>
+                <input v-model.number="ownTokens.ownedByThisHolder" class="w3-input w3-border w3-hover-light-grey" type="number">
+              </div>
+              <div class="w3-col m4"  :style="{'margin-bottom': '15px'}">
+                <label class=""><b>Token Name</b></label>
+                <input v-model="ownTokens.assetName" class="w3-input w3-border w3-hover-light-grey" type="text">
+              </div>
+            </div>
+            <app-error-panel
+              :show="tokenNameEmptyShow"
+              message="token name cannot be empty define the name of the token.">
+            </app-error-panel>
+            <app-error-panel
+              :show="tokenNameTooLong"
+              message="token name too long.">
+            </app-error-panel>
           </div>
 
           <hr>
@@ -114,7 +132,8 @@ export default {
       nameEmptyError: false,
       driverEmptyError: false,
       membersEmptyError: false,
-      noAdminError: false
+      noAdminError: false,
+      tokenNameEmptyError: false
     }
   },
 
@@ -133,6 +152,15 @@ export default {
     },
     driverErrorShow () {
       return this.driverEmptyError && (this.driver === '')
+    },
+    tokenNameEmpty () {
+      return this.ownTokens.assetName === ''
+    },
+    tokenNameEmptyShow () {
+      return this.tokenNameEmptyError && this.tokenNameEmpty
+    },
+    tokenNameTooLong () {
+      return this.ownTokens.assetName.length > 10
     },
     membersEmptyShow () {
       return this.membersEmptyError && (this.members.length === 0)
@@ -167,11 +195,6 @@ export default {
       this.otherAssetsTransfers = JSON.parse(JSON.stringify(assets))
     },
 
-    ownTokensSelected (tokensData) {
-      this.ownTokens.ownedByThisHolder = tokensData.tokens
-      this.ownTokens.assetName = tokensData.tokenName
-    },
-
     parentInitiativeUpdated (initiative) {
       this.parentInitiative = initiative
     },
@@ -195,6 +218,15 @@ export default {
       if (this.driver === '') {
         ok = false
         this.driverEmptyError = true
+      }
+
+      if (this.tokenNameEmpty) {
+        ok = false
+        this.tokenNameEmptyError = true
+      }
+
+      if (this.tokenNameTooLong) {
+        ok = false
       }
 
       if (this.members.length === 0) {
