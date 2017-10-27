@@ -29,7 +29,7 @@
       <h1>PRINCIPLES</h1>
       <div class="w3-row-padding principles-row">
         <div class="w3-col l4 principle">
-          <img src="../../assets/icon-open.png" alt="">
+          <img src="Web/Video2.mp4" alt="">
           <h5><b>OPEN COLLABORATION</b></h5>
           <p>
             Like open-source projects, entry barriers are kept low to allow anyone to
@@ -149,6 +149,48 @@
           <div class="w3-tag gray-1 w3-round">
             <b>soon</b>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w3-row tutorial-video-row w3-border-top light-grey">
+      <div class="w3-col m5 w3-center tutorial-title-container">
+        <h1>Create new initiatives and preallocate the value in sub-areas.</h1>
+      </div>
+      <div class="w3-col m7">
+        <div class="w3-center tutorial-video-container">
+          <video controls >
+            <source src="https://s3.us-east-2.amazonaws.com/collectiveone-b1/Web/Video1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+
+    <div class="w3-row tutorial-video-row w3-border-top">
+      <div class="w3-col m7">
+        <div class="w3-center tutorial-video-container">
+          <video controls >
+            <source src="https://s3.us-east-2.amazonaws.com/collectiveone-b1/Web/Video2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+      <div class="w3-col m5 w3-center tutorial-title-container">
+        <h1>Agree on the vision and the plans with other contributors.</h1>
+      </div>
+    </div>
+
+    <div class="w3-row tutorial-video-row w3-border-top light-grey w3-border-bottom">
+      <div class="w3-col m5 w3-center tutorial-title-container">
+        <h1>Recognize contributions directly or through peer-review.</h1>
+      </div>
+      <div class="w3-col m7">
+        <div class="w3-center tutorial-video-container">
+          <video controls >
+            <source src="https://s3.us-east-2.amazonaws.com/collectiveone-b1/Web/video3.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
         </div>
       </div>
     </div>
@@ -357,6 +399,22 @@ export default {
 
 .principle {
   margin-bottom: 40px;
+}
+
+.tutorial-video-row {
+  height: 500px;
+}
+
+.tutorial-title-container {
+  padding-top: 150px;
+}
+
+.tutorial-video-row  video {
+  height: 400px;
+}
+
+.tutorial-video-container {
+  padding-top: 50px;
 }
 
 .vision-div {
