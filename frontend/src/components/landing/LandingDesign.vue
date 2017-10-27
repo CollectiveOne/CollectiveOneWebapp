@@ -154,8 +154,8 @@
     </div>
 
     <div class="w3-row tutorial-video-row w3-border-top light-grey">
-      <div class="w3-col m5 w3-center tutorial-title-container">
-        <h1>Create new initiatives and preallocate the value in sub-areas.</h1>
+      <div class="w3-col m5 w3-center tutorial-title-container gray-2-color">
+        <h2>Create new initiatives and preallocate the value in sub-areas.</h2>
       </div>
       <div class="w3-col m7">
         <div class="w3-center tutorial-video-container">
@@ -176,14 +176,14 @@
           </video>
         </div>
       </div>
-      <div class="w3-col m5 w3-center tutorial-title-container">
-        <h1>Agree on the vision and the plans with other contributors.</h1>
+      <div class="w3-col m5 w3-center tutorial-title-container gray-2-color">
+        <h2>Agree on the vision and the plan with other contributors.</h2>
       </div>
     </div>
 
     <div class="w3-row tutorial-video-row w3-border-top light-grey w3-border-bottom">
-      <div class="w3-col m5 w3-center tutorial-title-container">
-        <h1>Recognize contributions directly or through peer-review.</h1>
+      <div class="w3-col m5 w3-center tutorial-title-container gray-2-color">
+        <h2>Recognize contributions directly or through peer-review.</h2>
       </div>
       <div class="w3-col m7">
         <div class="w3-center tutorial-video-container">
@@ -407,6 +407,8 @@ export default {
 
 .tutorial-title-container {
   padding-top: 150px;
+  padding-right: 30px;
+  padding-left: 30px;
 }
 
 .tutorial-video-row  video {
