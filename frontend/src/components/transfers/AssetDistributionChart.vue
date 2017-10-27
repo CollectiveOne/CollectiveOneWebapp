@@ -1,6 +1,22 @@
 <template lang="html">
 
   <div v-if="assetData" class="">
+
+    <transition name="slideDownUp">
+      <app-new-assignation-modal v-if="showNewAssignationModal"
+        @close="showNewAssignationModal = false"
+        @created="triggerUpdateCall()">
+      </app-new-assignation-modal>
+    </transition>
+
+    <transition name="slideDownUp">
+      <app-new-initiative-transfer-modal
+        v-if="showNewInitiativeTransferModal"
+        @close="showNewInitiativeTransferModal = false"
+        @created="triggerUpdateCall()">
+      </app-new-initiative-transfer-modal>
+    </transition>
+
     <div class="this-container">
       <div class="w3-row">
         <div class="w3-col distribution-container" :class="{'l8': showAssigner, 'l12': !showAssigner}">

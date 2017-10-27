@@ -16,21 +16,6 @@
       </app-new-tokenexchange-modal>
     </transition>
 
-    <transition name="slideDownUp">
-      <app-new-assignation-modal v-if="showNewAssignationModal"
-        @close="showNewAssignationModal = false"
-        @created="triggerUpdateCall()">
-      </app-new-assignation-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-new-initiative-transfer-modal
-        v-if="showNewInitiativeTransferModal"
-        @close="showNewInitiativeTransferModal = false"
-        @created="triggerUpdateCall()">
-      </app-new-initiative-transfer-modal>
-    </transition>
-
     <div v-if="initiative.meta.imageFile" class="image-container w3-center">
       <img :src="initiative.meta.imageFile.url + '?lastUpdated=' + initiative.meta.imageFile.lastUpdated" alt="">
     </div>
