@@ -29,7 +29,7 @@
       <h1>PRINCIPLES</h1>
       <div class="w3-row-padding principles-row">
         <div class="w3-col l4 principle">
-          <img src="Web/Video2.mp4" alt="">
+          <img src="../../assets/icon-open.png" alt="">
           <h5><b>OPEN COLLABORATION</b></h5>
           <p>
             Like open-source projects, entry barriers are kept low to allow anyone to
