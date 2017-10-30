@@ -27,6 +27,21 @@
           <br>
 
           <div class="w3-row">
+            <app-initiative-assets-assigner
+              :initiativeId="initiative.id"
+              :initiativeName="initiative.name"
+              :assetId="assetId"
+              :showSelector="true"
+              @updated="assetsSelected($event)"
+              :showError="assetsErrorShow">
+            </app-initiative-assets-assigner>
+          </div>
+          <app-error-panel
+            :show="assetsErrorShow"
+            message="please select the amount of assets to be transfer">
+          </app-error-panel>
+
+          <div class="w3-row">
             <label class=""><b>Motive <span class="w3-small error-text">(required)</span></b></label>
             <input v-model="transfer.motive"
               class="w3-input w3-hover-light-grey" type="text"
@@ -45,21 +60,6 @@
             <textarea v-model="transfer.notes" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
             <br>
           </div>
-
-          <div class="w3-row">
-            <app-initiative-assets-assigner
-              :initiativeId="initiative.id"
-              :initiativeName="initiative.name"
-              :assetId="assetId"
-              :showSelector="true"
-              @updated="assetsSelected($event)"
-              :showError="assetsErrorShow">
-            </app-initiative-assets-assigner>
-          </div>
-          <app-error-panel
-            :show="assetsErrorShow"
-            message="please select the amount of assets to be transfer">
-          </app-error-panel>
 
           <hr>
 

@@ -50,7 +50,11 @@
 
           <div class="w3-row">
             <app-initiative-assets-assigner
-              :initiativeId="initiative.id" type='member-assigner'
+              :initiativeId="initiative.id"
+              :initiativeName="initiative.name"
+              type='member-assigner'
+              :assetId="assetId"
+              :showSelector="true"
               @updated="assetsSelected($event)" :showError="assetsZeroShow">
             </app-initiative-assets-assigner>
             <app-error-panel
@@ -163,6 +167,15 @@ import DirectAssignation from './support/DirectAssignation.vue'
 import PeerReviewedAssignation from './support/PeerReviewedAssignation.vue'
 
 export default {
+
+  props: {
+    initiative: {
+      type: Object
+    },
+    assetId: {
+      type: String
+    }
+  },
 
   components: {
     'app-initiative-assets-assigner': InitiativeAssetsAssigner,

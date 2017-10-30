@@ -18,6 +18,9 @@
 
     <transition name="slideDownUp">
       <app-new-assignation-modal v-if="showNewAssignationModal"
+        :initiative="initiative"
+        :assetId="assetIdToTransfer"
+        :showSelector="true"
         @close="showNewAssignationModal = false">
       </app-new-assignation-modal>
     </transition>
