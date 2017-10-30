@@ -49,6 +49,8 @@
           <div class="w3-row">
             <app-initiative-assets-assigner
               :initiativeId="initiative.id"
+              :assetId="assetId"
+              :showSelector="true"
               @updated="assetsSelected($event)"
               :showError="assetsErrorShow">
             </app-initiative-assets-assigner>
@@ -86,6 +88,15 @@ import InitiativeAssetsAssigner from '@/components/transfers/InitiativeAssetsAss
 
 export default {
 
+  props: {
+    initiative: {
+      type: Object
+    },
+    assetId: {
+      type: String
+    }
+  },
+
   components: {
     'app-initiative-assets-assigner': InitiativeAssetsAssigner
   },
@@ -95,7 +106,7 @@ export default {
       transfer: {
         motive: '',
         notes: '',
-        receiverId: ''
+        assets: []
       },
       subInitiativeEmptyError: false,
       motiveEmptyError: false,
@@ -104,9 +115,6 @@ export default {
   },
 
   computed: {
-    initiative () {
-      return this.$store.state.initiative.initiative
-    },
     initiativeOptions () {
       var options = []
 
@@ -181,7 +189,7 @@ export default {
       }
 
       if (ok) {
-        this.axios.post('/1/initiative/' + this.transfer.senderId + '/transferToInitiative', this.transfer)
+        this.axios.post('/1/initiative/' + this.initiative.id + '/transferToInitiative', this.transfer)
         .then((response) => {
           this.$store.commit('triggerUpdateAssets')
           this.$emit('created')

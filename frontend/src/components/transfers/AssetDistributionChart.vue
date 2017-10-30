@@ -84,7 +84,7 @@
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
                   <button type="button" class="w3-button"
-                    @click="$emit('new-transfer')">
+                    @click="newTransfer()">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -126,7 +126,7 @@
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
                   <button type="button" class="w3-button"
-                    @click="$emit('new-assignation')">
+                    @click="newAssignement()">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -289,6 +289,16 @@ export default {
   },
 
   methods: {
+    newAssignement () {
+      this.$emit('new-assignation', {
+        assetId: this.assetId
+      })
+    },
+    newTransfer () {
+      this.$emit('new-transfer', {
+        assetId: this.assetId
+      })
+    },
     subinitiativePortion (subinitiativeAssets) {
       return amountAndPerc(subinitiativeAssets.value, this.underThisInitiativeVal)
     },
@@ -302,15 +312,17 @@ export default {
       return this.underThisInitiativeVal > 0 ? (memberAssets.value) / this.underThisInitiativeVal * 100 : 0
     },
     updateTokenData () {
-      this.axios.get('/1/token/' + this.assetId, {
-        params: {
-          includeSubinitiatives: true,
-          initiativeIdStr: this.initiativeId
-        }
-      }).then((response) => {
-        this.assetData = response.data.data
-        this.checkValue()
-      })
+      if (this.assetId !== '') {
+        this.axios.get('/1/token/' + this.assetId, {
+          params: {
+            includeSubinitiatives: true,
+            initiativeIdStr: this.initiativeId
+          }
+        }).then((response) => {
+          this.assetData = response.data.data
+          this.checkValue()
+        })
+      }
     },
     assign () {
       var transferData = {

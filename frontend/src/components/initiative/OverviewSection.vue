@@ -25,6 +25,9 @@
     <transition name="slideDownUp">
       <app-new-initiative-transfer-modal
         v-if="showNewInitiativeTransferModal"
+        :initiative="initiative"
+        :assetId="assetIdToTransfer"
+        :showSelector="true"
         @close="showNewInitiativeTransferModal = false">
       </app-new-initiative-transfer-modal>
     </transition>
@@ -83,13 +86,13 @@
           </div>
         </div>
         <div class="assets-content">
-          <div class="w3-row" v-for="(assetId, ix) in initiative.assetsIds" :key="assetId" >
+          <div class="w3-row" v-for="(asset, ix) in initiative.assets" :key="asset.assetId" >
             <hr v-if="ix > 0">
             <app-asset-distribution-chart
-              :assetId="assetId" :initiativeId="initiative.id"
-              :canMint="initiative.ownAssetsIds.includes(assetId)" :canEdit="isLoggedAnAdmin"
-              @new-assignation="showNewAssignationModal = true"
-              @new-transfer="showNewInitiativeTransferModal = true">
+              :assetId="asset.assetId" :initiativeId="initiative.id"
+              :canMint="initiative.ownAssetsIds.includes(asset.assetId)" :canEdit="isLoggedAnAdmin"
+              @new-assignation="newAssignation($event)"
+              @new-transfer="newTransfer($event)">
             </app-asset-distribution-chart>
           </div>
         </div>
@@ -142,7 +145,8 @@ export default {
       showNewTokenModal: false,
       showTokensExchangeModal: false,
       showNewAssignationModal: false,
-      showNewInitiativeTransferModal: false
+      showNewInitiativeTransferModal: false,
+      assetIdToTransfer: ''
     }
   },
 
@@ -158,6 +162,14 @@ export default {
   methods: {
     newAssignment (data) {
       this.showNewAssignationModal = true
+    },
+    newAssignation (assetData) {
+      this.assetIdToTransfer = assetData.assetId
+      this.showNewAssignationModal = true
+    },
+    newTransfer (assetData) {
+      this.assetIdToTransfer = assetData.assetId
+      this.showNewInitiativeTransferModal = true
     },
     clickOutsideShowAssetsMenu () {
       this.showAssetsMenu = false

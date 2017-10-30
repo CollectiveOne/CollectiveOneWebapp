@@ -85,7 +85,6 @@ const actions = {
   },
 
   refreshInitiative: (context) => {
-    debugger
     if (context.state.initiative) {
       context.dispatch('updateInitiative', context.state.initiative.id)
     }

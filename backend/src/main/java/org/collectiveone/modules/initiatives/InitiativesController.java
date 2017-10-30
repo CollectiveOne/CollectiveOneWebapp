@@ -116,12 +116,7 @@ public class InitiativesController extends BaseController {
 		initiativeDto = initiativeService.getLight(initiativeId);
 		
 		if(addAssetsIds) {
-			List<UUID> assetsIds = initiativeService.getInitiativeAssetsIds(initiativeId);
-			List<String> assetsIdsStr = new ArrayList<String>(); 
-			for (UUID assetId : assetsIds) {
-				assetsIdsStr.add(assetId.toString());
-			}
-			initiativeDto.setAssetsIds(assetsIdsStr);
+			initiativeDto.setAssets(initiativeService.getInitiativeAssetsDtoLight(initiativeId));
 			
 		}
 		

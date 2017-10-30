@@ -16,7 +16,6 @@ public class InitiativeDto {
 		
 	private List<String> ownAssetsIds = new ArrayList<String>();
 	private List<AssetsDto> assets = new ArrayList<AssetsDto>();
-	private List<String> assetsIds = new ArrayList<String>();
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
 	private List<InitiativeDto> parents = new ArrayList<InitiativeDto>();
 	private InitiativeMembersDto initiativeMembers;
@@ -69,12 +68,6 @@ public class InitiativeDto {
 	}
 	public void setAssets(List<AssetsDto> assets) {
 		this.assets = assets;
-	}
-	public List<String> getAssetsIds() {
-		return assetsIds;
-	}
-	public void setAssetsIds(List<String> assetsIds) {
-		this.assetsIds = assetsIds;
 	}
 	public InitiativeMembersDto getInitiativeMembers() {
 		return initiativeMembers;

@@ -6,12 +6,26 @@
       </div>
     </div>
 
-    <div v-if="initiative.assets" class="w3-row assigner-div">
-      <div class="slider-container">
+    <div v-if="initiative.assets.length > 0" class="w3-row assigner-div">
+      <div v-if="showSelector" class="">
+        <div class="w3-row">
+          <label for=""><b>Asset to transfer</b></label>
+          <select v-model="assetIdSelected" class="w3-input" name="">
+            <option v-for="asset in initiative.assets" :value="asset.assetId">{{ asset.assetName }}</option>
+          </select>
+        </div>
+        <br>
+        <div class="w3-row">
+          <app-asset-distribution-chart :assetId="assetIdSelected" :initiativeId="initiative.id"
+            :type="type" @assigned="newAssignment($event)" :showError="showError">
+          </app-asset-distribution-chart>
+        </div>
+      </div>
+      <div v-else class="slider-container">
         <transition-group name="fadeenter" mode="out-in">
-          <div class="" v-for="(assetId, ix) in initiative.assetsIds" :key="assetId">
+          <div class="" v-for="(asset, ix) in initiative.assets" :key="asset.assetId">
             <hr v-if="ix > 0">
-            <app-asset-distribution-chart :assetId="assetId" :initiativeId="initiative.id"
+            <app-asset-distribution-chart :assetId="asset.assetId" :initiativeId="initiative.id"
               :type="type" @assigned="newAssignment($event)" :showError="showError">
             </app-asset-distribution-chart>
           </div>
@@ -27,13 +41,27 @@ import InitiativeSelector from '@/components/initiative/InitiativeSelector.vue'
 import AssetDistributionChart from '@/components/transfers/AssetDistributionChart.vue'
 
 export default {
+
+  components: {
+    'app-initiative-selector': InitiativeSelector,
+    'app-asset-distribution-chart': AssetDistributionChart
+  },
+
   props: {
     initiativeId: {
       type: String
     },
+    assetId: {
+      type: String,
+      default: ''
+    },
     type: {
       type: String,
       default: 'initiative-assigner'
+    },
+    showSelector: {
+      type: Boolean,
+      default: false
     },
     showError: {
       type: Boolean,
@@ -44,13 +72,18 @@ export default {
   data () {
     return {
       initiative: null,
-      assetsTransfers: []
+      assetsTransfers: [],
+      assetIdSelected: ''
     }
   },
 
-  components: {
-    'app-initiative-selector': InitiativeSelector,
-    'app-asset-distribution-chart': AssetDistributionChart
+  watch: {
+    assetIdSelected () {
+      if (this.showSelector) {
+        this.assetsTransfers = []
+        this.$emit('updated', this.assetsTransfers)
+      }
+    }
   },
 
   methods: {
@@ -64,6 +97,9 @@ export default {
         }
       }).then((response) => {
         this.initiative = response.data.data
+        if (this.assetIdSelected === '') {
+          this.assetIdSelected = this.initiative.assets[0].assetId
+        }
         this.$emit('initiative-updated', this.initiative)
       })
     },
@@ -89,6 +125,9 @@ export default {
   },
 
   mounted () {
+    if (this.assetId !== '') {
+      this.assetIdSelected = this.assetId
+    }
     this.updateInitiative()
   }
 }

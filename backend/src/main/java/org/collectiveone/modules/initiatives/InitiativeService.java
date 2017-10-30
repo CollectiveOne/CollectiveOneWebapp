@@ -503,18 +503,21 @@ public class InitiativeService {
 	
 	/** */
 	@Transactional
-	public List<UUID> getInitiativeAssetsIds(UUID id) {
+	public List<AssetsDto> getInitiativeAssetsDtoLight(UUID id) {
 		
 		Initiative initiative = initiativeRepository.findById(id);
 		List<TokenType> tokenTypes = tokenService.getTokenTypesHeldBy(initiative.getId());
 		
-		List<UUID> assetsIds = new ArrayList<UUID>();
+		List<AssetsDto> assets = new ArrayList<AssetsDto>();
 		
 		for (TokenType token : tokenTypes) {
-			assetsIds.add(token.getId());
+			AssetsDto asset = new AssetsDto();
+			asset.setAssetId(token.getId().toString());
+			asset.setAssetName(token.getName());
+			assets.add(asset);
 		}
 		
-		return assetsIds;
+		return assets;
 	}
 	
 	public Initiative findByTokenType_Id(UUID tokenTypeId) {
