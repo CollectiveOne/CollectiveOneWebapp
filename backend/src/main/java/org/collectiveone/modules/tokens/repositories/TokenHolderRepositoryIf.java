@@ -12,7 +12,7 @@ public interface TokenHolderRepositoryIf extends CrudRepository<TokenHolder, UUI
 	
 	TokenHolder findByTokenTypeIdAndHolderId(UUID tokenTypeId, UUID holderId);
 	
-	@Query("SELECT holder.tokenType FROM TokenHolder holder WHERE holder.holderId = ?1")
+	@Query("SELECT holder.tokenType FROM TokenHolder holder WHERE holder.holderId = ?1 ORDER BY holder.tokenType.name ")
 	List<TokenType> getTokenTypesHeldBy(UUID holderId);
 	
 	

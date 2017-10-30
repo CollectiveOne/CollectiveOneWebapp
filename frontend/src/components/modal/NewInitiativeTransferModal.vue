@@ -48,7 +48,7 @@
 
           <div class="w3-row">
             <app-initiative-assets-assigner
-              :initInitiativeId="initiative.id"
+              :initiativeId="initiative.id"
               @updated="assetsSelected($event)"
               :showError="assetsErrorShow">
             </app-initiative-assets-assigner>

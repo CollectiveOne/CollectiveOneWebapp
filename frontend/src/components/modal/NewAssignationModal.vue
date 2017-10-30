@@ -50,7 +50,7 @@
 
           <div class="w3-row">
             <app-initiative-assets-assigner
-              :initInitiativeId="initiative.id" type='member-assigner'
+              :initiativeId="initiative.id" type='member-assigner'
               @updated="assetsSelected($event)" :showError="assetsZeroShow">
             </app-initiative-assets-assigner>
             <app-error-panel

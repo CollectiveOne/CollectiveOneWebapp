@@ -2,21 +2,6 @@
 
   <div v-if="assetData" class="">
 
-    <transition name="slideDownUp">
-      <app-new-assignation-modal v-if="showNewAssignationModal"
-        @close="showNewAssignationModal = false"
-        @created="triggerUpdateCall()">
-      </app-new-assignation-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-new-initiative-transfer-modal
-        v-if="showNewInitiativeTransferModal"
-        @close="showNewInitiativeTransferModal = false"
-        @created="triggerUpdateCall()">
-      </app-new-initiative-transfer-modal>
-    </transition>
-
     <div class="this-container">
       <div class="w3-row">
         <div class="w3-col distribution-container" :class="{'l8': showAssigner, 'l12': !showAssigner}">
@@ -99,7 +84,7 @@
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
                   <button type="button" class="w3-button"
-                    @click="$store.commit('showNewInitiativeTransferModal', true)">
+                    @click="$emit('new-transfer')">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -141,7 +126,7 @@
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
                   <button type="button" class="w3-button"
-                    @click="$store.commit('showNewAssignationModal', true)">
+                    @click="$emit('new-assignation')">
                     <i class="fa fa-plus" aria-hidden="true"></i>
                   </button>
                 </div>

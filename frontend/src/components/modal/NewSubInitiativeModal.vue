@@ -41,8 +41,8 @@
           <hr>
 
           <div class="w3-container assets-selector-div">
-            <app-initiative-assets-assigner :initInitiativeId="parentInitiative.id" type='initiative-assigner'
-              @updated="parentAssetsSelected($event)" @initiative-updated="parentInitiativeUpdated($event)"
+            <app-initiative-assets-assigner :initiativeId="parentId" type='initiative-assigner'
+              @updated="parentAssetsSelected($event)"
               :showError="assetsErrorShow">
             </app-initiative-assets-assigner>
           </div>
@@ -198,11 +198,6 @@ export default {
       this.updateParent()
     },
 
-    parentInitiativeUpdated (initiative) {
-      this.parentId = initiative.id
-      this.updateParent()
-    },
-
     setAllParentMembers () {
       this.parentInitiative.initiativeMembers.members.forEach((e) => {
         this.addMember(e, false)
@@ -307,7 +302,6 @@ export default {
       if (this.parentId !== '') {
         this.axios.get('/1/initiative/' + this.parentId, {
           params: {
-            addAssets: true,
             addMembers: true
           }
         }).then((response) => {

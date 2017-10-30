@@ -16,6 +16,19 @@
       </app-new-tokenexchange-modal>
     </transition>
 
+    <transition name="slideDownUp">
+      <app-new-assignation-modal v-if="showNewAssignationModal"
+        @close="showNewAssignationModal = false">
+      </app-new-assignation-modal>
+    </transition>
+
+    <transition name="slideDownUp">
+      <app-new-initiative-transfer-modal
+        v-if="showNewInitiativeTransferModal"
+        @close="showNewInitiativeTransferModal = false">
+      </app-new-initiative-transfer-modal>
+    </transition>
+
     <div v-if="initiative.meta.imageFile" class="image-container w3-center">
       <img :src="initiative.meta.imageFile.url + '?lastUpdated=' + initiative.meta.imageFile.lastUpdated" alt="">
     </div>
@@ -74,7 +87,9 @@
             <hr v-if="ix > 0">
             <app-asset-distribution-chart
               :assetId="assetId" :initiativeId="initiative.id"
-              :canMint="initiative.ownAssetsIds.includes(assetId)" :canEdit="isLoggedAnAdmin">
+              :canMint="initiative.ownAssetsIds.includes(assetId)" :canEdit="isLoggedAnAdmin"
+              @new-assignation="showNewAssignationModal = true"
+              @new-transfer="showNewInitiativeTransferModal = true">
             </app-asset-distribution-chart>
           </div>
         </div>
@@ -101,6 +116,8 @@ import InitiativeTag from '@/components/initiative/InitiativeTag.vue'
 import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
 import NewTokenModal from '@/components/modal/NewTokenModal.vue'
 import NewTokenExchangeModal from '@/components/modal/NewTokenExchangeModal.vue'
+import NewAssignationModal from '@/components/modal/NewAssignationModal.vue'
+import NewInitiativeTransferModal from '@/components/modal/NewInitiativeTransferModal.vue'
 
 export default {
   components: {
@@ -109,7 +126,9 @@ export default {
     'app-initiative-tag': InitiativeTag,
     'app-activity-getter': ActivityGetter,
     'app-new-token-modal': NewTokenModal,
-    'app-new-tokenexchange-modal': NewTokenExchangeModal
+    'app-new-tokenexchange-modal': NewTokenExchangeModal,
+    'app-new-assignation-modal': NewAssignationModal,
+    'app-new-initiative-transfer-modal': NewInitiativeTransferModal
   },
 
   props: {
@@ -121,7 +140,9 @@ export default {
       showAssetsMenu: false,
       parentInitiativeIdForModal: null,
       showNewTokenModal: false,
-      showTokensExchangeModal: false
+      showTokensExchangeModal: false,
+      showNewAssignationModal: false,
+      showNewInitiativeTransferModal: false
     }
   },
 

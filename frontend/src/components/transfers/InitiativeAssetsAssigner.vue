@@ -8,12 +8,14 @@
 
     <div v-if="initiative.assets" class="w3-row assigner-div">
       <div class="slider-container">
-        <transition name="fadeenter" mode="out-in">
-          <app-asset-distribution-chart v-for="asset in initiative.assets"
-            :key="initiative.id" :assetId="asset.assetId" :initiativeId="initiative.id"
-            :type="type" @assigned="newAssignment($event)" :showError="showError">
-          </app-asset-distribution-chart>
-        </transition>
+        <transition-group name="fadeenter" mode="out-in">
+          <div class="" v-for="(assetId, ix) in initiative.assetsIds" :key="assetId">
+            <hr v-if="ix > 0">
+            <app-asset-distribution-chart :assetId="assetId" :initiativeId="initiative.id"
+              :type="type" @assigned="newAssignment($event)" :showError="showError">
+            </app-asset-distribution-chart>
+          </div>
+        </transition-group>
       </div>
     </div>
 
@@ -26,7 +28,7 @@ import AssetDistributionChart from '@/components/transfers/AssetDistributionChar
 
 export default {
   props: {
-    initInitiativeId: {
+    initiativeId: {
       type: String
     },
     type: {
@@ -55,10 +57,10 @@ export default {
     initiativeSelected (initiative) {
       this.updateInitiative(initiative.id)
     },
-    updateInitiative (id) {
-      this.axios.get('/1/initiative/' + id, {
+    updateInitiative () {
+      this.axios.get('/1/initiative/' + this.initiativeId, {
         params: {
-          addAssets: true
+          addAssetsIds: true
         }
       }).then((response) => {
         this.initiative = response.data.data
@@ -87,7 +89,7 @@ export default {
   },
 
   mounted () {
-    this.updateInitiative(this.initInitiativeId)
+    this.updateInitiative()
   }
 }
 </script>
