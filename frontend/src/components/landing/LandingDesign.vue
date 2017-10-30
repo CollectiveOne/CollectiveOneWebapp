@@ -153,6 +153,48 @@
       </div>
     </div>
 
+    <div class="w3-row tutorial-video-row w3-border-top light-grey">
+      <div class="w3-col m5 w3-center tutorial-title-container gray-2-color">
+        <h2>Create new initiatives and preallocate the value in sub-areas.</h2>
+      </div>
+      <div class="w3-col m7">
+        <div class="w3-center tutorial-video-container">
+          <video controls >
+            <source src="https://s3.us-east-2.amazonaws.com/collectiveone-b1/Web/Video1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+
+    <div class="w3-row tutorial-video-row w3-border-top">
+      <div class="w3-col m7">
+        <div class="w3-center tutorial-video-container">
+          <video controls >
+            <source src="https://s3.us-east-2.amazonaws.com/collectiveone-b1/Web/Video2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+      <div class="w3-col m5 w3-center tutorial-title-container gray-2-color">
+        <h2>Agree on the vision and the plan with other contributors.</h2>
+      </div>
+    </div>
+
+    <div class="w3-row tutorial-video-row w3-border-top light-grey w3-border-bottom">
+      <div class="w3-col m5 w3-center tutorial-title-container gray-2-color">
+        <h2>Recognize contributions directly or through peer-review.</h2>
+      </div>
+      <div class="w3-col m7">
+        <div class="w3-center tutorial-video-container">
+          <video controls >
+            <source src="https://s3.us-east-2.amazonaws.com/collectiveone-b1/Web/video3.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+
     <div id="participate" class="w3-row participate-div w3-padding-large light-grey">
       <div class="">
         <h1 class="gray-2-color">PARTICIPATE</h1>
@@ -357,6 +399,24 @@ export default {
 
 .principle {
   margin-bottom: 40px;
+}
+
+.tutorial-video-row {
+  height: 500px;
+}
+
+.tutorial-title-container {
+  padding-top: 150px;
+  padding-right: 30px;
+  padding-left: 30px;
+}
+
+.tutorial-video-row  video {
+  height: 400px;
+}
+
+.tutorial-video-container {
+  padding-top: 50px;
 }
 
 .vision-div {
