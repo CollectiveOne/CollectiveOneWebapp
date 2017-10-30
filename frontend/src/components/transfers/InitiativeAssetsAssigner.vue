@@ -1,32 +1,32 @@
 <template lang="html">
-  <div v-if="initiative" class="this-container">
+  <div class="this-container">
     <div class="w3-row sub-initiative-first-row">
       <div class="w3-left">
-        <h5 class="w3-left"><b>Transfer from {{ initiative.meta.name }}</b></h5>
+        <h5 class="w3-left"><b>Transfer from {{ initiativeName }}</b></h5>
       </div>
     </div>
 
-    <div v-if="initiative.assets.length > 0" class="w3-row assigner-div">
+    <div v-if="assets.length > 0" class="w3-row assigner-div">
       <div v-if="showSelector" class="">
         <div class="w3-row">
           <label for=""><b>Asset to transfer</b></label>
           <select v-model="assetIdSelected" class="w3-input" name="">
-            <option v-for="asset in initiative.assets" :value="asset.assetId">{{ asset.assetName }}</option>
+            <option v-for="asset in assets" :value="asset.assetId">{{ asset.assetName }}</option>
           </select>
         </div>
         <br>
         <div class="w3-row">
-          <app-asset-distribution-chart :assetId="assetIdSelected" :initiativeId="initiative.id"
-            :type="type" @assigned="newAssignment($event)" :showError="showError">
+          <app-asset-distribution-chart :assetId="assetIdSelected" :initiativeId="initiativeId"
+            :type="type" @assigned="newAssignment($event)" :triggerReset="triggerReset" :showError="showError">
           </app-asset-distribution-chart>
         </div>
       </div>
       <div v-else class="slider-container">
         <transition-group name="fadeenter" mode="out-in">
-          <div class="" v-for="(asset, ix) in initiative.assets" :key="asset.assetId">
+          <div class="" v-for="(asset, ix) in assets" :key="asset.assetId">
             <hr v-if="ix > 0">
-            <app-asset-distribution-chart :assetId="asset.assetId" :initiativeId="initiative.id"
-              :type="type" @assigned="newAssignment($event)" :showError="showError">
+            <app-asset-distribution-chart :assetId="asset.assetId" :initiativeId="initiativeId"
+              :type="type" @assigned="newAssignment($event)" :triggerReset="triggerReset" :showError="showError">
             </app-asset-distribution-chart>
           </div>
         </transition-group>
@@ -51,6 +51,9 @@ export default {
     initiativeId: {
       type: String
     },
+    initiativeName: {
+      type: String
+    },
     assetId: {
       type: String,
       default: ''
@@ -71,9 +74,10 @@ export default {
 
   data () {
     return {
-      initiative: null,
+      assets: [],
       assetsTransfers: [],
-      assetIdSelected: ''
+      assetIdSelected: '',
+      triggerReset: false
     }
   },
 
@@ -81,26 +85,23 @@ export default {
     assetIdSelected () {
       if (this.showSelector) {
         this.assetsTransfers = []
+        this.triggerReset = !this.triggerReset
         this.$emit('updated', this.assetsTransfers)
       }
     }
   },
 
   methods: {
-    initiativeSelected (initiative) {
-      this.updateInitiative(initiative.id)
-    },
-    updateInitiative () {
+    updateAssets () {
       this.axios.get('/1/initiative/' + this.initiativeId, {
         params: {
           addAssetsIds: true
         }
       }).then((response) => {
-        this.initiative = response.data.data
+        this.assets = response.data.data.assets
         if (this.assetIdSelected === '') {
-          this.assetIdSelected = this.initiative.assets[0].assetId
+          this.assetIdSelected = this.assets[0].assetId
         }
-        this.$emit('initiative-updated', this.initiative)
       })
     },
     indexOfAsset (assetId) {
@@ -128,7 +129,7 @@ export default {
     if (this.assetId !== '') {
       this.assetIdSelected = this.assetId
     }
-    this.updateInitiative()
+    this.updateAssets()
   }
 }
 </script>

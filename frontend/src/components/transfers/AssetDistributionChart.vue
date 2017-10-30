@@ -141,13 +141,13 @@
           </div>
           <div class="w3-row-padding w3-large">
             <div class="w3-col s6">
-              <input @input="valueUpdated($event)" :value="value.toFixed(1)"  class="w3-input w3-border w3-hover-light-grey w3-round"
+              <input @input="valueUpdated(Number($event.target.value))" :value="value.toFixed(1)"  class="w3-input w3-border w3-hover-light-grey w3-round"
               :class="{ 'error-input' : errorFound }" type="number" min="0">
             </div>
             <div class="w3-col s6">
               <div class="w3-row">
                 <div class="w3-col s10">
-                  <input @input="percentageUpdated($event)" :value="percentage.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round"
+                  <input @input="percentageUpdated(Number($event.target.value))" :value="percentage.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round"
                   :class="{ 'error-input' : errorFound }" type="number" min="0" step="5">
                 </div>
                 <div class="w3-col s2">
@@ -197,6 +197,10 @@ export default {
       default: false
     },
     showError: {
+      type: Boolean,
+      default: false
+    },
+    triggerReset: {
       type: Boolean,
       default: false
     }
@@ -341,13 +345,13 @@ export default {
         assetId: this.assetData.assetId
       })
     },
-    valueUpdated (event) {
-      this.value = Number(event.target.value)
+    valueUpdated (value) {
+      this.value = value
       this.percentage = this.value / this.underThisInitiativeVal * 100
       this.checkValue()
     },
-    percentageUpdated (event) {
-      this.percentage = Number(event.target.value)
+    percentageUpdated (value) {
+      this.percentage = value
       this.value = this.percentage / 100 * this.underThisInitiativeVal
       this.checkValue()
     },
@@ -370,6 +374,9 @@ export default {
     },
     '$store.state.support.triggerUpdateAssets' () {
       this.updateTokenData()
+    },
+    triggerReset () {
+      this.valueUpdated(0)
     }
   },
 

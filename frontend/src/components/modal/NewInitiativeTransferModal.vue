@@ -49,6 +49,7 @@
           <div class="w3-row">
             <app-initiative-assets-assigner
               :initiativeId="initiative.id"
+              :initiativeName="initiative.name"
               :assetId="assetId"
               :showSelector="true"
               @updated="assetsSelected($event)"
@@ -163,9 +164,11 @@ export default {
       this.$emit('close')
     },
     assetsSelected (assets) {
-      this.transfer.assetId = assets[0].assetId
-      this.transfer.value = assets[0].value
-      this.transfer.senderId = assets[0].senderId
+      if (assets.length > 0) {
+        this.transfer.assetId = assets[0].assetId
+        this.transfer.value = assets[0].value
+        this.transfer.senderId = assets[0].senderId
+      }
     },
     accept () {
       var ok = true
