@@ -83,9 +83,9 @@
                 </div>
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
-                  <button type="button" class="w3-button"
+                  <button type="button" class="w3-button gray-1-color"
                     @click="newTransfer()">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
                   </button>
                 </div>
               </div>
@@ -125,9 +125,9 @@
                 </div>
 
                 <div v-if="isOverview && canEdit" class="w3-col s2 w3-center icon-div">
-                  <button type="button" class="w3-button"
+                  <button type="button" class="w3-button gray-1-color"
                     @click="newAssignement()">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
                   </button>
                 </div>
               </div>

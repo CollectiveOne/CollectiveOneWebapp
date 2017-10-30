@@ -29,7 +29,7 @@
           <div class="w3-row">
             <app-initiative-assets-assigner
               :initiativeId="initiative.id"
-              :initiativeName="initiative.name"
+              :initiativeName="initiative.meta.name"
               :assetId="assetId"
               :showSelector="true"
               @updated="assetsSelected($event)"

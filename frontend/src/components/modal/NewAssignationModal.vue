@@ -51,7 +51,7 @@
           <div class="w3-row">
             <app-initiative-assets-assigner
               :initiativeId="initiative.id"
-              :initiativeName="initiative.name"
+              :initiativeName="initiative.meta.name"
               type='member-assigner'
               :assetId="assetId"
               :showSelector="true"
@@ -208,9 +208,6 @@ export default {
   },
 
   computed: {
-    initiative () {
-      return this.$store.state.initiative.initiative
-    },
     isDirect () {
       return this.assignation.type === this.DIRECT_ID()
     },
