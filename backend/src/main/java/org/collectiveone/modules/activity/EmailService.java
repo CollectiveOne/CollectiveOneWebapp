@@ -399,7 +399,6 @@ public class EmailService {
 		case TOKENS_MINTED: 
 			return "<p>minted " + mint.getValue() + " " + mint.getToken().getName() + " with motive: " + mint.getMotive() + ".</p>";
 			
-			
 		case TOKEN_CREATED:
 			return "<p>created a new token type called " + tokenType.getName() + " in " + getInitiativeAnchor(initiative) + ", and minted " + mint.getValue() + " units.</p>";
 			

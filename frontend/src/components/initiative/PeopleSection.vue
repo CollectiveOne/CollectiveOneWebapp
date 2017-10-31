@@ -1,6 +1,37 @@
 <template lang="html">
   <div class="this-container">
-    <div class="own-members-div">
+    <div v-if="showWantToContribute" class="w3-row w3-center top-button-row">
+      <div class="w3-row">
+        <button @click="wantToContributeSelected = !wantToContributeSelected"
+          class="w3-button app-button" type="button" name="button">
+          Want to contribute?
+        </button>
+      </div>
+      <div class="w3-row w3-margin-top">
+        <div class="slider-container">
+          <transition name="slideDownUp">
+            <div v-if="wantToContributeSelected" class="w3-row tags-row w3-center">
+              <div class="w3-padding w3-round light-grey w3-margin-bottom">
+                <p>
+                  The administrators of this initiative will be notified of your
+                  interest and will be able to add you as a contributor to this initiative.
+                </p>
+              </div>
+
+              <button
+                class="w3-button app-button-light button-pair"
+                @click="wantToContributeSelected = false">cancel
+              </button>
+              <button
+                class="w3-button app-button button-pair"
+                @click="wantToContribute()">confirm
+              </button>
+            </div>
+          </transition>
+        </div>
+      </div>
+    </div>
+    <div class="w3-row own-members-div">
       <h3 class="section-header">Members of {{ initiative.meta.name }}:</h3>
       <app-members-table
         :members="initiative.initiativeMembers.members"
@@ -79,7 +110,8 @@ export default {
 
   data () {
     return {
-      noOtherAdminError: false
+      noOtherAdminError: false,
+      wantToContributeSelected: true
     }
   },
 
@@ -90,8 +122,14 @@ export default {
     isLoggedAnAdmin () {
       return this.$store.getters.isLoggedAnAdmin
     },
+    isLoggedAMember () {
+      return this.$store.getters.isLoggedAMember
+    },
     allSubmembers () {
       return getAllSubmembers(this.initiative.initiativeMembers)
+    },
+    showWantToContribute () {
+      return !this.isLoggedAMember
     }
   },
 
@@ -177,6 +215,11 @@ export default {
 .this-container {
   padding-top: 0px !important;
   padding-bottom: 25px !important;
+}
+
+.top-button-row {
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
 .members-div {

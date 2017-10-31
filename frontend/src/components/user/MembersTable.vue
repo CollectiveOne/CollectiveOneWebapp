@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="members-table-container w3-border-bottom">
+  <div class="members-table-container">
     <div v-if="canEdit" class="new-member-row">
       <div class="w3-row w3-container">
         <label class="">

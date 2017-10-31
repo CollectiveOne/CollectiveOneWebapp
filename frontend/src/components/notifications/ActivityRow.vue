@@ -32,6 +32,12 @@
           deleted <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
         </span>
 
+        <span v-if="isTokenCreated" class="">
+          created a new token type called <b>{{ activity.mint.tokenName }}</b> in
+          <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
+          and minted <b>{{ activity.mint.value }}</b> units.
+        </span>
+
         <span v-if="isTokensMinted" class="">
           minted <b>{{ activity.mint.value }} {{ activity.mint.tokenName }}</b> in
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
@@ -254,6 +260,9 @@ export default {
     },
     isInitiativeDeleted () {
       return this.activity.type === 'INITIATIVE_DELETED'
+    },
+    isTokenCreated () {
+      return this.activity.type === 'TOKEN_CREATED'
     },
     isSubinitiativeCreated () {
       return this.activity.type === 'SUBINITIATIVE_CREATED'
