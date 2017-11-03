@@ -153,12 +153,16 @@
       </div>
     </div>
 
-    <div class="w3-row tutorial-video-row w3-border-top light-grey">
-      <div class="w3-col m5 w3-center tutorial-title-container gray-2-color">
+    <div class="w3-row tutorial-videos-header-container w3-border-top light-grey">
+      <h1 class="gray-1-color">CURRENT FEATURES</h1>
+    </div>
+
+    <div class="w3-cell-row tutorial-video-row light-grey w3-border-top">
+      <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container gray-2-color">
         <h2>Create new initiatives and preallocate the value in sub-areas.</h2>
       </div>
-      <div class="w3-col m7">
-        <div class="w3-center tutorial-video-container">
+      <div class="w3-cell w3-mobile tutorial-video-container">
+        <div class="">
           <video controls >
             <source src="https://s3.us-east-2.amazonaws.com/collectiveone-b1/Web/Video1.mp4" type="video/mp4">
             Your browser does not support the video tag.
@@ -168,25 +172,28 @@
     </div>
 
     <div class="w3-row tutorial-video-row w3-border-top">
-      <div class="w3-col m7">
-        <div class="w3-center tutorial-video-container">
+      <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container tutorial-top-title-container gray-2-color">
+        <h2>Agree on the vision and the plan with other contributors.</h2>
+      </div>
+      <div class="w3-cell w3-mobile tutorial-video-container">
+        <div class="w3-center">
           <video controls >
             <source src="https://s3.us-east-2.amazonaws.com/collectiveone-b1/Web/Video2.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
         </div>
       </div>
-      <div class="w3-col m5 w3-center tutorial-title-container gray-2-color">
+      <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container tutorial-bottom-title-container gray-2-color">
         <h2>Agree on the vision and the plan with other contributors.</h2>
       </div>
     </div>
 
     <div class="w3-row tutorial-video-row w3-border-top light-grey w3-border-bottom">
-      <div class="w3-col m5 w3-center tutorial-title-container gray-2-color">
+      <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container gray-2-color">
         <h2>Recognize contributions directly or through peer-review.</h2>
       </div>
-      <div class="w3-col m7">
-        <div class="w3-center tutorial-video-container">
+      <div class="w3-cell w3-mobile tutorial-video-container">
+        <div class="w3-center ">
           <video controls >
             <source src="https://s3.us-east-2.amazonaws.com/collectiveone-b1/Web/video3.mp4" type="video/mp4">
             Your browser does not support the video tag.
@@ -195,7 +202,7 @@
       </div>
     </div>
 
-    <div id="participate" class="w3-row participate-div w3-padding-large light-grey">
+    <div id="participate" class="w3-row participate-div w3-padding-large">
       <div class="">
         <h1 class="gray-2-color">PARTICIPATE</h1>
         <div class="w3-row-padding participate-row">
@@ -401,22 +408,56 @@ export default {
   margin-bottom: 40px;
 }
 
-.tutorial-video-row {
-  height: 500px;
-}
-
-.tutorial-title-container {
-  padding-top: 150px;
-  padding-right: 30px;
-  padding-left: 30px;
-}
-
-.tutorial-video-row  video {
-  height: 400px;
-}
-
-.tutorial-video-container {
+.tutorial-videos-header-container {
   padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.tutorial-video-row {
+}
+
+@media screen and (min-width: 992px) {
+
+  .tutorial-title-container {
+    padding-left: 40px;
+    padding-right: 40px;
+    width: 50%;
+  }
+
+  .tutorial-top-title-container {
+    display: none;
+  }
+
+  .tutorial-bottom-title-container {
+    display: table-cell;
+  }
+
+  .tutorial-video-container {
+    width: 50%;
+  }
+
+  .tutorial-video-container video {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .tutorial-title-container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .tutorial-top-title-container {
+    display: table-cell;
+  }
+
+  .tutorial-bottom-title-container {
+    display: none;
+  }
+
+  .tutorial-video-container video {
+    width: 100%;
+  }
 }
 
 .vision-div {
