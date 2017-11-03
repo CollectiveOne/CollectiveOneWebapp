@@ -79,20 +79,7 @@
       </div>
     </div>
 
-    <div id="vision" class="w3-row vision-div w3-padding-large dark-gray vision-div">
-      <div class="centered-block gray-1-color">
-        <h1>OUR VISION</h1>
-        <div class="w3-row video-row">
-          <div>
-            <div class="video-container">
-              <iframe class="video-iframe" src="https://www.youtube.com/embed/qka1zP_GQaI" frameborder="0" allowfullscreen="true"></iframe>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="roadmap" class="w3-row vision-div w3-padding-large roadmap-div gray-2-color">
+    <div id="roadmap" class="w3-row vision-div w3-padding-large roadmap-div gray-2-color light-grey">
       <h1>ROADMAP</h1>
       <div class="w3-row-padding">
         <div class="w3-col l3">
@@ -153,11 +140,11 @@
       </div>
     </div>
 
-    <div class="w3-row tutorial-videos-header-container w3-border-top light-grey">
+    <div class="w3-row tutorial-videos-header-container">
       <h1 class="gray-1-color">CURRENT FEATURES</h1>
     </div>
 
-    <div class="w3-cell-row tutorial-video-row light-grey w3-border-top">
+    <div class="w3-cell-row tutorial-video-row">
       <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container gray-2-color">
         <h2>Create new initiatives and preallocate the value in sub-areas.</h2>
       </div>
@@ -171,7 +158,7 @@
       </div>
     </div>
 
-    <div class="w3-row tutorial-video-row w3-border-top">
+    <div class="w3-row tutorial-video-row w3-border-top light-grey">
       <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container tutorial-top-title-container gray-2-color">
         <h2>Agree on the vision and the plan with other contributors.</h2>
       </div>
@@ -188,7 +175,7 @@
       </div>
     </div>
 
-    <div class="w3-row tutorial-video-row w3-border-top light-grey w3-border-bottom">
+    <div class="w3-row tutorial-video-row w3-border-top w3-border-bottom">
       <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container gray-2-color">
         <h2>Recognize contributions directly or through peer-review.</h2>
       </div>
@@ -206,12 +193,25 @@
       <div class="">
         <h1 class="gray-2-color">PARTICIPATE</h1>
         <div class="w3-row-padding participate-row">
-          <h5>CollectiveOne is an open project itself and is being managed using
-            the <b><a href="http://old.collectiveone.org/v/project/CollectiveOne" target="_blank">alpha version</a></b> of the tool.
+          <h5>CollectiveOne is an open project itself and is being developed using
+            <b><a href="http://www.collectiveone.org/#/app/inits/ac119496-5e3e-1db5-815e-3f192a890001/overview">CollectiveOne itself</a></b>.
             Contributions are welcome!
             <br>
             <br>Get your invitation to the project slack
             <b><a href="http://old.collectiveone.org/v/slack" target="_blank">here</a></b> to get involved.</h5>
+        </div>
+      </div>
+    </div>
+
+    <div id="vision" class="w3-row vision-div w3-padding-large dark-gray vision-div">
+      <div class="centered-block gray-1-color">
+        <h1>OUR VISION</h1>
+        <div class="w3-row video-row">
+          <div>
+            <div class="video-container">
+              <iframe class="video-iframe" src="https://www.youtube.com/embed/qka1zP_GQaI" frameborder="0" allowfullscreen="true"></iframe>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -414,6 +414,8 @@ export default {
 }
 
 .tutorial-video-row {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 @media screen and (min-width: 992px) {
