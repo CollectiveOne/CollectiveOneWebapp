@@ -175,7 +175,7 @@
       </div>
     </div>
 
-    <div class="w3-row tutorial-video-row w3-border-top w3-border-bottom">
+    <div class="w3-row tutorial-video-row tutorial-video-last-row w3-border-top w3-border-bottom">
       <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container gray-2-color">
         <h2>Recognize contributions directly or through peer-review.</h2>
       </div>
@@ -416,6 +416,10 @@ export default {
 .tutorial-video-row {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.tutorial-video-last-row {
+  padding-bottom: 50px;
 }
 
 @media screen and (min-width: 992px) {
