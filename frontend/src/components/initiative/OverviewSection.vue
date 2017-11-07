@@ -69,7 +69,7 @@
       <div class="w3-card w3-display-container">
         <header class="section-header-bar w3-bar gray-1">
           <h4 class="w3-bar-item w3-left">Assets</h4>
-          <div v-if="isLoggedAnAdmin"
+          <div v-if="false"
             class="edit-btn-div w3-bar-item w3-button w3-right w3-large"
             @click="showAssetsMenu = !showAssetsMenu"
             v-click-outside="clickOutsideShowAssetsMenu">

@@ -9,6 +9,7 @@
 
   <transition name="slideDownUp">
     <app-new-assignation-modal v-if="showNewAssignationModal"
+      :initiative="initiative"
       @close="showNewAssignationModal = false"
       @created="triggerUpdateCall()">
     </app-new-assignation-modal>
@@ -44,7 +45,7 @@
     </div>
 
     <div v-if="isLoggedAnAdmin"
-      class="w3-display-topright w3-xxlarge w3-button plus-button"
+      class="w3-display-topright w3-xxlarge w3-button plus-button gray-1-color"
       @click="showActionMenu = !showActionMenu"
       v-click-outside="clickOutsideShowMenu">
 

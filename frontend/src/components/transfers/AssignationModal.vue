@@ -427,7 +427,7 @@ export default {
         }
       }).then((response) => {
         this.assignation = response.data.data
-        this.$store.dispatch('refreshTransfers')
+        this.$store.commit('triggerUpdateAssets')
       })
     },
     sendEvaluation () {

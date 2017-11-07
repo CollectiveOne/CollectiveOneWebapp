@@ -42,8 +42,6 @@ const actions = {
           /* update everything every 10 s */
           if (context.state.authenticated) {
             // context.dispatch('updateMyInitiatives')
-            // context.dispatch('refreshInitiative')
-            // context.dispatch('refreshTransfers')
             context.commit('triggerUpdateNotifications')
             // context.commit('triggerUpdateAssets')
             // context.commit('triggerUpdateModel')
