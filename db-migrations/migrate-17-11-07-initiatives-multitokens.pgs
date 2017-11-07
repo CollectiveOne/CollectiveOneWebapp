@@ -1,0 +1,37 @@
+﻿---------------------------------------------------------
+-- This script will only fill the contents of the initiatives and initiatives_meta
+-- tables. All other tables and all other sequences are generated
+-- using a DB dump which excludes the decisions table data.
+-- /usr/bin/pg_dump --host ec2-23-21-246-11.compute-1.amazonaws.com --port 5432 --username "fiobqmzrthifdx" --no-password  --format plain --data- only --disable-triggers --verbose --file "/home/pepo/workspace/c1-data/c1-v2-bk-000" --exclude-table "public.initiatives" "d7lpi8u3gn8hak"
+---------------------------------------------------------
+
+DROP SCHEMA IF EXISTS masterschema CASCADE;
+CREATE SCHEMA masterschema;
+
+---------------------------------------------------------
+-- Conect to other server
+---------------------------------------------------------
+CREATE EXTENSION postgres_fdw;
+CREATE SERVER master FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'ec2-107-22-173-160.compute-1.amazonaws.com', dbname 'dbepusk67f1j5s', port '5432');
+CREATE USER MAPPING FOR postgres SERVER master OPTIONS (user 'fennztijsjjilm', password 'XXX');
+IMPORT FOREIGN SCHEMA public FROM SERVER master INTO masterschema;
+
+--------------------------------------------------------
+-- FILL INITIATIVES
+---------------------------------------------------------
+INSERT INTO initiatives 
+  (id, status, creator_c1id, governance_id, message_thread_id, meta_id)
+SELECT 
+  id, status, creator_c1id, governance_id, message_thread_id, meta_id
+FROM masterschema.initiatives;
+
+INSERT INTO initiatives_token_types 
+  (initiative_id, token_types_id)
+SELECT 
+  id, token_type_id
+FROM masterschema.initiatives
+WHERE token_type_id IS NOT NULL;
+
+
+DROP SCHEMA masterschema CASCADE;
+DROP EXTENSION postgres_fdw CASCADE;
