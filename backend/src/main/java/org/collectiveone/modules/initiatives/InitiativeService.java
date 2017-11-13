@@ -539,7 +539,7 @@ public class InitiativeService {
 			if (initiative.getStatus() == InitiativeStatus.ENABLED) {
 				InitiativeDto dto = initiative.toDto();
 				
-				dto.setLoggedMember(getMember(initiative.getId(),  user.getC1Id()));
+				dto.setLoggedMembership(getMemberAndInParent(initiative.getId(),  user.getC1Id()));
 				
 				/* look for the full sub-initiative tree of each super initiative */
 				List<InitiativeDto> subInitiatives = getSubinitiativesTree(initiative.getId(), user.getC1Id());
@@ -655,7 +655,7 @@ public class InitiativeService {
 				InitiativeDto subinitiativeDto = subinitiative.toDto();
 				
 				if (userId != null) {
-					subinitiativeDto.setLoggedMember(getMember(subinitiative.getId(),  userId));	
+					subinitiativeDto.setLoggedMembership(getMemberAndInParent(subinitiative.getId(),  userId));	
 				}
 				
 				/* recursively call this for its own sub-initiatives */
@@ -669,6 +669,21 @@ public class InitiativeService {
 		return subinitiativeDtos;
 	}
 	
+	public List<MemberDto> getMemberAndInParent(UUID initiativeId, UUID userId) {
+		List<MemberDto> members = new ArrayList<MemberDto>();
+		members.add(getMember(initiativeId, userId));
+		members.add(getMemberInParent(initiativeId, userId));
+		
+		return members;
+	}
+	
+	@Transactional
+	public MemberDto getMemberInParent(UUID initiativeId, UUID userId) {
+		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
+		if (parent == null) return null;
+		else return getMember(parent.getId(), userId);
+	}
+	
 	@Transactional
 	public MemberDto getMember(UUID initiativeId, UUID userId) {
 		
@@ -676,11 +691,13 @@ public class InitiativeService {
 			return null;
 		}
 		
+		/* check in this initiative */
 		Initiative initiative = initiativeRepository.findById(initiativeId);
+		
 		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, userId);
 		
 		MemberDto memberDto = new MemberDto();
-
+		
 		if (member != null) {
 			memberDto.setId(member.getId().toString());
 			memberDto.setUser(member.getUser().toDtoLight());

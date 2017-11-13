@@ -112,6 +112,26 @@ public class AppUserService {
 		return new GetResult<List<AppUserDto>>("succes", "initiatives returned", appUserDtos);
 	}
 	
+	@Transactional
+	public Boolean updateUserDataInLocalDB(UUID c1Id) {
+		AppUser appUser = appUserRepository.findByC1Id(c1Id);
+		
+		try {
+			User auth0User = mgmt.users().get(appUser.getAuth0Ids().get(0), null).execute();
+			appUser.getProfile().setPictureUrl(auth0User.getPicture());
+			appUserRepository.save(appUser);
+			
+			return true;
+			
+		} catch (APIException exception) {
+		    System.out.println(exception.getMessage());
+		} catch (Auth0Exception exception) {
+			System.out.println(exception.getMessage());
+		}
+		
+		return false;
+		
+	}
 	
 	@Transactional
 	private AppUser addUserToLocalDB(String auth0Id) {

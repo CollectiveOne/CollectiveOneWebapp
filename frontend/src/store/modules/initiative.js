@@ -16,8 +16,19 @@ const getters = {
   },
   isLoggedAnAdmin: (state) => {
     if (state.initiative) {
-      if (state.initiative.loggedMember) {
-        return state.initiative.loggedMember.role === 'ADMIN'
+      if (state.initiative.loggedMembership[0]) {
+        return state.initiative.loggedMembership[0].role === 'ADMIN'
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
+  },
+  isLoggedAParentAdmin: (state) => {
+    if (state.initiative) {
+      if (state.initiative.loggedMembership[1]) {
+        return state.initiative.loggedMembership[1].role === 'ADMIN'
       } else {
         return false
       }
@@ -27,8 +38,8 @@ const getters = {
   },
   isLoggedAnEditor: (state) => {
     if (state.initiative) {
-      if (state.initiative.loggedMember) {
-        return state.initiative.loggedMember.role === 'ADMIN' || state.initiative.loggedMember.role === 'EDITOR'
+      if (state.initiative.loggedMembership[0]) {
+        return state.initiative.loggedMembership[0].role === 'ADMIN' || state.initiative.loggedMembership[0].role === 'EDITOR'
       } else {
         return false
       }
@@ -38,8 +49,8 @@ const getters = {
   },
   isLoggedAMember: (state) => {
     if (state.initiative) {
-      if (state.initiative.loggedMember) {
-        return state.initiative.loggedMember.role === 'ADMIN' || state.initiative.loggedMember.role === 'EDITOR' || state.initiative.loggedMember.role === 'MEMBER'
+      if (state.initiative.loggedMembership[0]) {
+        return state.initiative.loggedMembership[0].role === 'ADMIN' || state.initiative.loggedMembership[0].role === 'EDITOR' || state.initiative.loggedMembership[0].role === 'MEMBER'
       } else {
         return false
       }

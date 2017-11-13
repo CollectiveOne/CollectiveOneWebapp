@@ -19,7 +19,7 @@ public class InitiativeDto {
 	private List<InitiativeDto> subInitiatives = new ArrayList<InitiativeDto>();
 	private List<InitiativeDto> parents = new ArrayList<InitiativeDto>();
 	private InitiativeMembersDto initiativeMembers;
-	private MemberDto loggedMember;
+	private List<MemberDto> loggedMembership;
 	
 	public String getId() {
 		return id;
@@ -75,11 +75,11 @@ public class InitiativeDto {
 	public void setInitiativeMembers(InitiativeMembersDto members) {
 		this.initiativeMembers = members;
 	}
-	public MemberDto getLoggedMember() {
-		return loggedMember;
+	public List<MemberDto> getLoggedMembership() {
+		return loggedMembership;
 	}
-	public void setLoggedMember(MemberDto loggedMember) {
-		this.loggedMember = loggedMember;
+	public void setLoggedMembership(List<MemberDto> loggedMembership) {
+		this.loggedMembership = loggedMembership;
 	}
 	
 }

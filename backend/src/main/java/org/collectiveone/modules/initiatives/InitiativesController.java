@@ -1,6 +1,5 @@
 package org.collectiveone.modules.initiatives;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -117,7 +116,6 @@ public class InitiativesController extends BaseController {
 		
 		if(addAssetsIds) {
 			initiativeDto.setAssets(initiativeService.getInitiativeAssetsDtoLight(initiativeId));
-			
 		}
 		
 		if(addSubinitiatives) {
@@ -133,7 +131,7 @@ public class InitiativesController extends BaseController {
 		}
 		
 		if(addLoggedUser) {
-			initiativeDto.setLoggedMember(initiativeService.getMember(initiativeId,  getLoggedUserId()));
+			initiativeDto.setLoggedMembership(initiativeService.getMemberAndInParent(initiativeId,  getLoggedUserId()));
 		}
 		
 		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeDto);

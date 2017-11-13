@@ -135,8 +135,7 @@
           from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
         </span>
         <span v-if="isModelSectionRemovedFromView" class="">
-          removed the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link>
-          from view <app-model-view-link :section="activity.fromView"></app-model-view-link>.
+          removed the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link>.
         </span>
         <span v-if="isModelSectionMovedInView" class="">
           moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> in view

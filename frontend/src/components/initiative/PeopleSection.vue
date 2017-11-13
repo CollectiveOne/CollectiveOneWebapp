@@ -35,7 +35,7 @@
       <h3 class="section-header">Members of {{ initiative.meta.name }}:</h3>
       <app-members-table
         :members="initiative.initiativeMembers.members"
-        :canEdit="isLoggedAnAdmin"
+        :canEdit="isLoggedAnAdmin || isLoggedAParentAdmin"
         @remove="removeMember($event)"
         @role-updated="roleUpdated($event)"
         @add="addMember($event)">
@@ -122,6 +122,9 @@ export default {
     isLoggedAnAdmin () {
       return this.$store.getters.isLoggedAnAdmin
     },
+    isLoggedAParentAdmin () {
+      return this.$store.getters.isLoggedAParentAdmin
+    },
     isLoggedAMember () {
       return this.$store.getters.isLoggedAMember
     },
@@ -129,7 +132,7 @@ export default {
       return getAllSubmembers(this.initiative.initiativeMembers)
     },
     showWantToContribute () {
-      return !this.isLoggedAMember
+      return !this.isLoggedAMember && !this.isLoggedAParentAdmin
     }
   },
 

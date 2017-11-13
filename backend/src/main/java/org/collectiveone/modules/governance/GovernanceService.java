@@ -8,7 +8,9 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.initiatives.InitiativeRelationshipType;
 import org.collectiveone.modules.initiatives.InitiativeService;
+import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,9 @@ public class GovernanceService {
 	
 	@Autowired
 	AppUserRepositoryIf appUserRepository;
+	
+	@Autowired
+	private InitiativeRepositoryIf initiativeRepository;
 	
 	
 	@Transactional
@@ -60,6 +65,16 @@ public class GovernanceService {
 	}
 	
 	@Transactional
+	public DecisionVerdict isRolesAndAdminOrParentAdmin(UUID initiativeId, UUID userId) {
+		if (isRolesAndAdmin(initiativeId, userId) == DecisionVerdict.APPROVED) {
+			return DecisionVerdict.APPROVED;
+		} else {
+			Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
+			return isRolesAndAdmin(parent.getId(), userId);
+		}
+	}	
+	
+	@Transactional
 	public DecisionVerdict isRolesAndEditor(UUID initiativeId, UUID userId) {
 		DecisionVerdict verdict = null;
 		Governance governance = governanceRepository.findByInitiative_Id(initiativeId);
@@ -91,7 +106,7 @@ public class GovernanceService {
 	}
 	@Transactional
 	public DecisionVerdict canAddMember(UUID initiativeId, UUID adderId) {
-		return isRolesAndAdmin(initiativeId, adderId);
+		return isRolesAndAdminOrParentAdmin(initiativeId, adderId);
 	}
 	
 	@Transactional

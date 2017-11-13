@@ -131,8 +131,8 @@ export default {
         parentId: this.initiative.id })
     },
     isLoggedAnAdmin () {
-      if (this.initiative.loggedMember) {
-        return this.initiative.loggedMember.role === 'ADMIN'
+      if (this.initiative.loggedMembership[0]) {
+        return this.initiative.loggedMembership[0].role === 'ADMIN'
       } else {
         return false
       }
