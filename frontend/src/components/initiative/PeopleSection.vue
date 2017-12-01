@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="this-container">
-    <div v-if="showWantToContribute" class="w3-row w3-center top-button-row">
+    <div v-if="false" class="w3-row w3-center top-button-row">
       <div class="w3-row">
         <button @click="wantToContributeSelected = !wantToContributeSelected"
           class="w3-button app-button" type="button" name="button">

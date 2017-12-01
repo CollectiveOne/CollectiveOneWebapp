@@ -52,7 +52,7 @@
               :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
               :key="cardWrapper.id"
               @dragover.prevent
-              @drop="cardDroped(cardWrapper.id, $event)">
+              @drop.prevent="cardDroped(cardWrapper.id, $event)">
 
               <app-model-card-with-modal
                 :cardWrapper="cardWrapper"
@@ -64,7 +64,7 @@
             </div>
             <div :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
               @dragover.prevent
-              @drop="cardDroped('', $event)">
+              @drop.prevent="cardDroped('', $event)">
 
               <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
                 <button class="w3-button" style="width: 100%"
@@ -268,6 +268,7 @@ export default {
           level: 1
         }
       }).then((response) => {
+        console.log(response.data)
         this.section = response.data.data
         this.checkExpands()
       })

@@ -56,7 +56,7 @@
 
         <div class="section-drop-area"
           @dragover.prevent
-          @drop="sectionDroped(section.id, $event)">
+          @drop.prevent="sectionDroped(section.id, $event)">
         </div>
 
         <app-model-section-with-modal
@@ -74,7 +74,7 @@
       <div class="view-sections">
         <div class="section-drop-area"
           @dragover.prevent
-          @drop="sectionDroped('', $event)">
+          @drop.prevent="sectionDroped('', $event)">
         </div>
 
         <button class="w3-button w3-border gray-1-color" style="width: 100%; text-align: left"
