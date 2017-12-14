@@ -268,7 +268,7 @@ export default {
           level: 1
         }
       }).then((response) => {
-        console.log(response.data)
+        // console.log(response.data)
         this.section = response.data.data
         this.checkExpands()
       })

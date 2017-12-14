@@ -404,6 +404,14 @@ select {
   width: 30px;
 }
 
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
 
 
 /* Animations */

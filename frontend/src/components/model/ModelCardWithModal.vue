@@ -17,10 +17,12 @@ needs the model card component inside, and would crate a recursion -->
       </transition>
     </div>
 
-    <div class="w3-display-container cursor-pointer"
-      @click="showCard()"
+    <div class="w3-display-container"
       @mouseover="hoverEnter()"
       @mouseleave="hoverLeave()">
+
+      <div @click="showCard()" class="click-area cursor-pointer">
+      </div>
 
       <!-- forward all props  -->
       <app-model-card
@@ -31,7 +33,9 @@ needs the model card component inside, and would crate a recursion -->
         :cardEffect="cardEffect"
         :hoverHighlight="hoverHighlight"
         :floating="floating"
-        :highlight="highlight">
+        :highlight="highlight"
+        :showFull="showFull"
+        @textTooLong="textTooLong = true">
       </app-model-card>
 
       <transition name="fadeenter">
@@ -40,6 +44,13 @@ needs the model card component inside, and would crate a recursion -->
           <i class="fa fa-expand" aria-hidden="true"></i>
         </div>
       </transition>
+
+      <div v-if="textTooLong" class="">
+        <div @click="showMoreClick()" v-if="enableExpand"
+          class="w3-padding model-action-button gray-2-color w3-display-bottomright cursor-pointer">
+          <i class="fa fa-arrows-v" aria-hidden="true"></i>
+        </div>
+      </div>
 
     </div>
 
@@ -104,7 +115,9 @@ export default {
     return {
       showActionButton: false,
       showCardModal: false,
-      highlight: false
+      highlight: false,
+      textTooLong: false,
+      showFull: false
     }
   },
 
@@ -122,6 +135,9 @@ export default {
     hoverLeave () {
       this.showActionButton = false
       this.highlight = false
+    },
+    showMoreClick () {
+      this.showFull = !this.showFull
     },
     showCard () {
       if (this.expandLocally) {
@@ -152,5 +168,12 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style scoped>
+
+.click-area {
+  position: absolute;
+  height: calc(100% - 40px);
+  width: 100%;
+}
+
 </style>

@@ -46,7 +46,7 @@
               <b>{{ card.title }}</b>
             </div>
 
-            <div class="w3-row card-text" :class="{'card-text-ascard': cardEffect}">
+            <div ref="cardText" class="w3-row card-text" :class="{'card-text-ascard': cardEffect && !showFull, 'overflow-y-hidden': !showFull, 'overflow-y-auto': showFull}">
               <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
             </div>
           </div>
@@ -112,6 +112,10 @@ export default {
     highlight: {
       type: Boolean,
       default: false
+    },
+    showFull: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -137,6 +141,9 @@ export default {
           }
       }
       return {}
+    },
+    textTooLong () {
+      return this.$refs.cardText.clientHeight < this.$refs.cardText.scrollHeight
     }
   },
 
@@ -152,8 +159,13 @@ export default {
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
     }
-  }
+  },
 
+  mounted () {
+    if (this.textTooLong) {
+      this.$emit('textTooLong')
+    }
+  }
 }
 </script>
 
@@ -200,7 +212,6 @@ export default {
 
 .card-text-ascard {
   max-height: 250px;
-  overflow-y: auto;
 }
 
 .card-text p {

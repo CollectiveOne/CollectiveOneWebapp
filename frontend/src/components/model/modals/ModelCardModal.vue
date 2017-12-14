@@ -416,7 +416,7 @@ export default {
       this.existingCard = cardWrapper
     },
     clickOutside () {
-      console.log('clicked outside')
+      // console.log('clicked outside')
       if (this.enableClickOutside) {
         this.$emit('close')
       }
@@ -452,7 +452,7 @@ export default {
       this.editedCard.targetDate = date.getTime()
     },
     accept () {
-      console.log('clicked accept')
+      // console.log('clicked accept')
       var ok = true
 
       if (!this.addExisting) {
