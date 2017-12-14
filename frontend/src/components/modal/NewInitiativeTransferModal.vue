@@ -139,7 +139,12 @@ export default {
       return this.transfer.motive.length > 55
     },
     subInitiativeEmptyShow () {
-      return this.subInitiativeEmptyError && this.transfer.receiverId === ''
+      return this.subInitiativeEmptyError && this.isSubInitiativeEmpty
+    },
+    isSubInitiativeEmpty () {
+      if (typeof (this.transfer.receiverId) === 'undefined') return true
+      if (this.transfer.receiverId === '') return true
+      return false
     },
     assetsAreZero () {
       if (this.transfer.assetId) {
@@ -181,7 +186,7 @@ export default {
         ok = false
       }
 
-      if (this.transfer.receiverId === '') {
+      if (this.isSubInitiativeEmpty) {
         this.subInitiativeEmptyError = true
         ok = false
       }
