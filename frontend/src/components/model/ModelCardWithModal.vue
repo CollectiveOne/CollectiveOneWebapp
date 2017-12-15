@@ -174,7 +174,7 @@ export default {
   position: absolute;
   height: calc(100% - 40px);
   width: 100%;
-  z-index: 100;
+  z-index: 10;
 }
 
 </style>
