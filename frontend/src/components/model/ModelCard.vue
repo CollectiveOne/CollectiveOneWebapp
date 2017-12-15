@@ -1,7 +1,5 @@
 <template lang="html">
-  <div v-if="cardWrapper" class=""
-    draggable="true"
-    @dragstart="dragStart($event)">
+  <div v-if="cardWrapper" class="">
     <!-- TODO: cannot configure a clearn dragenter dragleave sequence. They
     are continuosly called even when dragging over.
     @dragover.prevent
@@ -150,14 +148,6 @@ export default {
   methods: {
     dateString (v) {
       return dateString(v)
-    },
-    dragStart (event) {
-      var moveCardData = {
-        type: 'MOVE_CARD',
-        cardWrapperId: this.cardWrapper.id,
-        fromSectionId: this.inSectionId
-      }
-      event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
     }
   },
 

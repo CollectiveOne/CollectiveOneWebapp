@@ -21,7 +21,9 @@ needs the model card component inside, and would crate a recursion -->
       @mouseover="hoverEnter()"
       @mouseleave="hoverLeave()">
 
-      <div @click="showCard()" class="click-area cursor-pointer">
+      <div @click="showCard()" class="click-area cursor-pointer"
+        draggable="true"
+        @dragstart="dragStart($event)">
       </div>
 
       <!-- forward all props  -->
@@ -163,6 +165,14 @@ export default {
           })
         }
       }
+    },
+    dragStart (event) {
+      var moveCardData = {
+        type: 'MOVE_CARD',
+        cardWrapperId: this.cardWrapper.id,
+        fromSectionId: this.inSectionId
+      }
+      event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
     }
   }
 }
