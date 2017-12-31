@@ -9,7 +9,6 @@ import { store } from './store/store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
-import VueMarkdown from 'vue-markdown'
 import VueSimplemde from 'vue-simplemde'
 
 Vue.config.productionTip = false
@@ -31,7 +30,6 @@ import ErrorPanel from '@/components/global/ErrorPanel.vue'
 import MarkdownEditor from '@/components/global/MarkdownEditor.vue'
 
 Vue.component('app-error-panel', ErrorPanel)
-Vue.component('vue-markdown', VueMarkdown)
 Vue.component('app-markdown-editor', MarkdownEditor)
 
 /* registered globally to solve the circular reference */

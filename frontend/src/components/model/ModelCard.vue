@@ -223,6 +223,7 @@ export default {
   display: inline-block;
   margin-left: 5px;
   margin-bottom: 5px;
+  z-index: 15;
 }
 
 </style>
