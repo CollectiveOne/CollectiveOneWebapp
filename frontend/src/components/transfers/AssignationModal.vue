@@ -192,7 +192,8 @@
                 :usersData="evaluationReceivers"
                 userAnchor="receiverUser"
                 :disable="disableEvaluations"
-                :key="disableEvaluations">
+                :key="disableEvaluations"
+                :totalTokens="assignation.assets[0].value">
               </app-users-percentages>
             </transition>
 
@@ -218,7 +219,8 @@
               :usersData="assignation.receivers"
               :disable="true"
               :showSelfBiases="assignation.config.selfBiasVisible"
-              :myEvaluations="evaluationReceivers">
+              :myEvaluations="evaluationReceivers"
+              :totalTokens="assignation.assets[0].value">
             </app-users-percentages>
           </div>
         </div>

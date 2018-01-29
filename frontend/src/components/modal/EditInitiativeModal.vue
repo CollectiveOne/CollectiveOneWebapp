@@ -355,7 +355,13 @@ export default {
       this.axios.delete('/1/initiative/' + this.initiative.id).then((response) => {
         this.$store.dispatch('refreshInitiative')
         this.$store.dispatch('updateMyInitiatives')
-        window.location.href = '/'
+        if (this.newInitiative.parents.length > 0) {
+          var parentId = this.newInitiative.parents[this.newInitiative.parents.length - 1].id
+          this.$router.replace({ name: 'InitiativeOverview', params: { initiativeId: parentId } })
+          this.closeThis()
+        } else {
+          window.location.href = '/'
+        }
       })
     }
   },

@@ -346,13 +346,11 @@ export default {
       })
     },
     valueUpdated (value) {
-      console.log('value updated')
       this.value = value
       this.percentage = this.value / this.underThisInitiativeVal * 100
       this.checkValue()
     },
     percentageUpdated (value) {
-      console.log('percentage updated')
       this.percentage = value
       this.value = this.percentage / 100 * this.underThisInitiativeVal
       this.checkValue()

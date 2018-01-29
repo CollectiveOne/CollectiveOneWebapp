@@ -41,10 +41,40 @@
           <hr>
 
           <div class="w3-container assets-selector-div">
-            <app-initiative-assets-assigner :initiativeId="parentId" type='initiative-assigner'
-              @updated="parentAssetsSelected($event)"
-              :showError="assetsErrorShow">
-            </app-initiative-assets-assigner>
+            <div class="w3-row-padding">
+              <div class="w3-col m4">
+                <h5><b>Transfer assets?</b></h5>
+              </div>
+              <div class="w3-col m4">
+                <button class="w3-button transfer-button"
+                  :class="{'app-button': transferAssetsFlag, 'app-button-light': !transferAssetsFlag, }"
+                  type="button" name="button"
+                  @click="transferAssetsFlag = true">
+                  yes
+                </button>
+              </div>
+              <div class="w3-col m4">
+                <button class="w3-button transfer-button"
+                  :class="{'app-button': !transferAssetsFlag, 'app-button-light': transferAssetsFlag, }"
+                  type="button" name="button"
+                  @click="transferAssetsFlag = false">
+                  no
+                </button>
+              </div>
+            </div>
+            <div class="slider-container">
+              <transition name="slideDownUp">
+                <keep-alive>
+                  <app-initiative-assets-assigner
+                    v-if="transferAssetsFlag"
+                    :initiativeId="parentId" type='initiative-assigner'
+                    :initiativeName="parentInitiative.meta.name" @updated="parentAssetsSelected($event)"
+                    :showError="assetsErrorShow">
+                  </app-initiative-assets-assigner>
+                </keep-alive>
+              </transition>
+            </div>
+
           </div>
           <app-error-panel
             :show="assetsErrorShow"
@@ -131,7 +161,8 @@ export default {
       assetsEmptyError: false,
       membersEmptyError: false,
       noAdminError: false,
-      assetsEmptyErrorConfirmed: false
+      assetsEmptyErrorConfirmed: false,
+      transferAssetsFlag: true
     }
   },
 
@@ -166,11 +197,9 @@ export default {
           for (var ix in this.assetsTransfers) {
             if (this.assetsTransfers[ix].value > 0) {
               return true
-            } else {
-              return false
             }
           }
-          return true
+          return false
         }
       }
       return false
@@ -257,10 +286,12 @@ export default {
         this.driverEmptyError = true
       }
 
-      if (!this.assetsSelected) {
-        if (!this.assetsEmptyErrorConfirmed) {
-          ok = false
-          this.assetsEmptyError = true
+      if (this.transferAssetsFlag) {
+        if (!this.assetsSelected) {
+          if (!this.assetsEmptyErrorConfirmed) {
+            ok = false
+            this.assetsEmptyError = true
+          }
         }
       }
 
@@ -281,7 +312,7 @@ export default {
           name: this.name,
           driver: this.driver,
           members: this.members,
-          assetsTransfers: this.assetsTransfers
+          assetsTransfers: this.transferAssetsFlag ? this.assetsTransfers : []
         }
 
         this.axios.post('/1/initiative', intitiatveDto).then((response) => {
@@ -330,6 +361,10 @@ export default {
 .form-container {
   padding-top: 0px;
   padding-bottom: 35px;
+}
+
+.transfer-button {
+  width: 100%;
 }
 
 .members-container {

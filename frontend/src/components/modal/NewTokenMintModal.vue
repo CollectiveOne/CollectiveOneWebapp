@@ -30,12 +30,12 @@
           </div>
           <div class="w3-row-padding">
             <div class="w3-col s6">
-              <input @input="valueUpdated($event)" :value="value.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round" type="number" min="0" :step="assetData.totalUnderThisHolder / 100">
+              <input @blur="valueUpdated($event)" :value="value.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round" type="number" min="0" :step="assetData.totalUnderThisHolder / 100">
             </div>
             <div class="w3-col s6">
               <div class="w3-row">
                 <div class="w3-col s10">
-                  <input @input="percentageUpdated($event)" :value="percentage.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round" type="number" min="0" step="1">
+                  <input @blur="percentageUpdated($event)" :value="percentage.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round" type="number" min="0" step="1">
                 </div>
                 <div class="w3-col s2 ">
                   <i class="fa fa-percent" aria-hidden="true"></i>

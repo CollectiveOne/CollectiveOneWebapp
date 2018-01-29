@@ -1,13 +1,14 @@
 <template lang="html">
   <div v-if="usersData.length > 0" class="percentages-container">
-    <table class="w3-table w3-striped w3-bordered w3-centered">
+    <table class="w3-table w3-striped w3-bordered w3-centered table-class">
       <thead>
         <tr>
-          <th class="avatar-col" colspan="2">USER</th>
+          <th class="avatar-col middle" colspan="2">USER</th>
           <th v-if="hasDonors">DONOR</th>
-          <th v-if="amEvaluator" class="percent-col">MINE</th>
-          <th v-if="hasDonors" class="percent-col">MEAN</th>
-          <th class="percent-col">{{ disable ? 'FINAL' : 'MINE' }}</th>
+          <th v-if="amEvaluator" class="percent-col">MINE %</th>
+          <th v-if="hasDonors" class="percent-col">PRE-DONOR %</th>
+          <th class="percent-col">{{ disable ? 'FINAL %' : '%' }}</th>
+          <th class="value-col">{{ disable ? 'FINAL TOKENS' : 'TOTAL' }}</th>
           <th class="bar-col w3-hide-small w3-hide-medium"></th>
           <th v-if="!disable">KNOW / DON'T</th>
           <th v-if="showSelfBiases" class="self-bias-col">SELF-BIAS</th>
@@ -41,9 +42,35 @@
               <transition name="slideDownUp" mode="out-in">
                 <div key="1" v-if="!isDontKnow(userData)">
                   <input
-                    @input="userData.percent = parseFloat($event.target.value)"
-                    :value="userData.percent.toFixed(0)"
-                    @focusout="checkRounding()"
+                    @blur="percentUpdated($event, userData)"
+                    :value="userData.percent"
+                    class="percent-input w3-input w3-border w3-hover-light-grey w3-round"
+                    type="number" step="5" min="0"
+                    :disabled="disable">
+                </div>
+                <div v-else key="2">
+                  <div class="w3-tag w3-padding w3-round gray-1 noselect">
+                    DK
+                  </div>
+                </div>
+              </transition>
+            </div>
+          </td>
+          <td class="value-col">
+            <div v-if="disable" class="">
+              <div v-if="!isDontKnow(userData)" class="">
+                <b>{{ userData.percent.toFixed(1) * totalTokens / 100}}</b>
+              </div>
+              <div v-else class="">
+                <b>don't know</b>
+              </div>
+            </div>
+            <div v-else class="slider-container">
+              <transition name="slideDownUp" mode="out-in">
+                <div key="1" v-if="!isDontKnow(userData)">
+                  <input
+                    :value="userData.percent * totalTokens / 100"
+                    @blur="valueUpdated($event, userData)"
                     class="percent-input w3-input w3-border w3-hover-light-grey w3-round"
                     type="number" step="5" min="0"
                     :disabled="disable">
@@ -79,6 +106,7 @@
           <td></td>
           <td>total assigned:</td>
           <td>{{ sumOfPercents.toFixed() }}%</td>
+          <td>{{ sumOfPercents * totalTokens / 100 }}</td>
           <td>{{ autoScaled ? '( auto-rounded )' : ''}}</td>
         </tr>
       </tfoot>
@@ -87,7 +115,7 @@
       <transition name="slideDownUp">
         <div v-if="!arePercentagesOk" class="w3-row missing-row">
           <div>
-            {{ missingPercent > 0 ? 'missing' : 'excess of'}}: <b>{{ Math.abs(missingPercent.toFixed(0)) }}%</b>
+            {{ missingPercent > 0 ? 'missing' : 'excess of'}}: <b>{{ Math.abs(missingPercent.toFixed(0)) }}% / {{ Math.abs(missingPercent/100) * totalTokens }}</b>
             <button
               class="w3-button app-button w3-margin-left"
               @click="autoScale()">
@@ -125,11 +153,15 @@ export default {
     },
     showSelfBiases: {
       type: Boolean,
-      defualt: false
+      default: false
     },
     myEvaluations: {
       type: Array,
       default: () => { return [] }
+    },
+    totalTokens: {
+      type: Number,
+      default: 1
     }
   },
 
@@ -201,6 +233,14 @@ export default {
     floatToChar (v) {
       return floatToChar(v)
     },
+    percentUpdated (event, userData) {
+      userData.percent = parseFloat(event.target.value)
+      this.checkRounding()
+    },
+    valueUpdated (event, userData) {
+      userData.percent = parseFloat(event.target.value) / this.totalTokens * 100
+      this.checkRounding()
+    },
     checkRounding () {
       if ((Math.abs(this.missingPercent) > 0) && (Math.abs(this.missingPercent) < 1)) {
         this.autoScale()
@@ -254,12 +294,20 @@ export default {
 
 <style scoped>
 
+.table-class th {
+  vertical-align: middle;
+}
+
 .avatar-col {
   /*width: 50px;*/
 }
 
 .percent-col {
-  width: 75px;
+  width: 100px;
+}
+
+.value-col {
+  width: 110px;
 }
 
 .bar-col {

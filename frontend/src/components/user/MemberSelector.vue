@@ -206,7 +206,6 @@ export default {
 
   created () {
     // Sync parent model with initValue Props
-    this.json = this.init ? [this.init] : []
     this.type = this.init ? this.init.nickname : ''
   }
 }

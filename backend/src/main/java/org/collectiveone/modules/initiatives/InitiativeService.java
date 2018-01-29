@@ -348,22 +348,25 @@ public class InitiativeService {
 			List<InitiativeTransfer> transfers = new ArrayList<InitiativeTransfer>();
 			/* and transfer parent assets to child */
 			for (TransferDto thisTransfer : initiativeDto.getAssetsTransfers()) {
-				TokenType token = tokenService.getTokenType(UUID.fromString(thisTransfer.getAssetId()));
-				
-				tokenService.transfer(token.getId(), parent.getId(), initiative.getId(), thisTransfer.getValue(), TokenHolderType.INITIATIVE);
-				
-				/* upper layer keeping track of who transfered what to whom */
-				InitiativeTransfer transfer = new InitiativeTransfer();
-				transfer.setFrom(parent);
-				transfer.setTo(initiative);
-				transfer.setTokenType(token);
-				transfer.setValue(thisTransfer.getValue());
-				transfer.setMotive("sub-initiative creation");
-				transfer.setNotes("");
-				transfer.setOrderDate(new Timestamp(System.currentTimeMillis()));
-								
-				transfer = initiativeTransferRepository.save(transfer);
-				transfers.add(transfer);
+				/* ignore zero token transfers */
+				if (thisTransfer.getValue() > 0) {
+					TokenType token = tokenService.getTokenType(UUID.fromString(thisTransfer.getAssetId()));
+					
+					tokenService.transfer(token.getId(), parent.getId(), initiative.getId(), thisTransfer.getValue(), TokenHolderType.INITIATIVE);
+					
+					/* upper layer keeping track of who transfered what to whom */
+					InitiativeTransfer transfer = new InitiativeTransfer();
+					transfer.setFrom(parent);
+					transfer.setTo(initiative);
+					transfer.setTokenType(token);
+					transfer.setValue(thisTransfer.getValue());
+					transfer.setMotive("sub-initiative creation");
+					transfer.setNotes("");
+					transfer.setOrderDate(new Timestamp(System.currentTimeMillis()));
+									
+					transfer = initiativeTransferRepository.save(transfer);
+					transfers.add(transfer);
+				}
 			}
 			
 			initiative.getRelationships().add(relationship);
