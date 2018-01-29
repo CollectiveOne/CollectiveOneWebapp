@@ -41,24 +41,50 @@
 
           <div class="w3-container assets-selector-div">
             <div class="w3-row-padding">
-              <h4 class="">Create a new token</h4>
               <div class="w3-col m4">
-                <label class=""><b>Number of Tokens</b></label>
-                <input v-model.number="ownTokens.ownedByThisHolder" class="w3-input w3-border w3-hover-light-grey" type="number">
+                <h5><b>Create a new token?</b></h5>
               </div>
-              <div class="w3-col m4"  :style="{'margin-bottom': '15px'}">
-                <label class=""><b>Token Name</b></label>
-                <input v-model="ownTokens.assetName" class="w3-input w3-border w3-hover-light-grey" type="text">
+              <div class="w3-col m4">
+                <button class="w3-button transfer-button"
+                  :class="{'app-button': createTokenFlag, 'app-button-light': !createTokenFlag, }"
+                  type="button" name="button"
+                  @click="createTokenFlag = true">
+                  yes
+                </button>
+              </div>
+              <div class="w3-col m4">
+                <button class="w3-button transfer-button"
+                  :class="{'app-button': !createTokenFlag, 'app-button-light': createTokenFlag, }"
+                  type="button" name="button"
+                  @click="createTokenFlag = false">
+                  no
+                </button>
               </div>
             </div>
-            <app-error-panel
-              :show="tokenNameEmptyShow"
-              message="token name cannot be empty define the name of the token.">
-            </app-error-panel>
-            <app-error-panel
-              :show="tokenNameTooLong"
-              message="token name too long.">
-            </app-error-panel>
+            <div class="slider-container">
+              <transition name="slideDownUp">
+                <div v-if="createTokenFlag" class="">
+                  <div class="w3-row-padding">
+                     <div class="w3-col m4">
+                       <label class=""><b>Number of Tokens</b></label>
+                       <input v-model.number="ownTokens.ownedByThisHolder" class="w3-input w3-border w3-hover-light-grey" type="number">
+                     </div>
+                     <div class="w3-col m4"  :style="{'margin-bottom': '15px'}">
+                       <label class=""><b>Token Name</b></label>
+                       <input v-model="ownTokens.assetName" class="w3-input w3-border w3-hover-light-grey" type="text">
+                     </div>
+                   </div>
+                   <app-error-panel
+                     :show="tokenNameEmptyShow"
+                     message="token name cannot be empty define the name of the token.">
+                   </app-error-panel>
+                   <app-error-panel
+                     :show="tokenNameTooLong"
+                     message="token name too long.">
+                   </app-error-panel>
+                </div>
+              </transition>
+            </div>
           </div>
 
           <hr>
@@ -126,14 +152,15 @@ export default {
       driver: '',
       ownTokens: {
         ownedByThisHolder: 0,
-        assetName: 'token'
+        assetName: 'tokens'
       },
       members: [],
       nameEmptyError: false,
       driverEmptyError: false,
       membersEmptyError: false,
       noAdminError: false,
-      tokenNameEmptyError: false
+      tokenNameEmptyError: false,
+      createTokenFlag: true
     }
   },
 
@@ -246,6 +273,7 @@ export default {
           name: this.name,
           driver: this.driver,
           members: this.members,
+          createToken: this.createTokenFlag,
           ownTokens: this.ownTokens
         }
 
@@ -294,6 +322,10 @@ export default {
 .form-container {
   padding-top: 0px;
   padding-bottom: 35px;
+}
+
+.transfer-button {
+  width: 100%;
 }
 
 .members-container {

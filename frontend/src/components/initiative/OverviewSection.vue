@@ -69,7 +69,7 @@
       <div class="w3-card w3-display-container">
         <header class="section-header-bar w3-bar gray-1">
           <h4 class="w3-bar-item w3-left">Assets</h4>
-          <div class="edit-btn-div w3-bar-item w3-button w3-right w3-large"
+          <div v-if="isLoggedAnAdmin" class="edit-btn-div w3-bar-item w3-button w3-right w3-large"
             @click="showAssetsMenu = !showAssetsMenu"
             v-click-outside="clickOutsideShowAssetsMenu">
             <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
@@ -81,13 +81,16 @@
             class="w3-button">
             <i class="fa fa-plus" aria-hidden="true"></i>create new
           </div>
-          <div v-if="isLoggedAnAdmin"
+          <!-- <div v-if="isLoggedAnAdmin"
             @click="showTokensExchangeModal = true"
             class="w3-button">
             <i class="fa fa-exchange" aria-hidden="true"></i>exchange/convert
-          </div>
+          </div> -->
         </div>
         <div class="assets-content">
+          <div v-if="initiative.assets.length === 0" class="w3-center">
+            <i>No assets are currently held by this initiative</i>
+          </div>
           <div class="w3-row" v-for="(asset, ix) in initiative.assets" :key="asset.assetId" >
             <hr v-if="ix > 0">
             <app-asset-distribution-chart

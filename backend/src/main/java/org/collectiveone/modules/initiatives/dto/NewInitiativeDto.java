@@ -16,6 +16,7 @@ public class NewInitiativeDto {
 	private Boolean modelEnabled;
 	private String visibility;
 	private List<MemberDto> members;
+	private boolean createToken;
 	private AssetsDto ownTokens;
 	private List<TransferDto> assetsTransfers;
 	private List<InitiativeTagDto> tags;
@@ -68,6 +69,12 @@ public class NewInitiativeDto {
 	}
 	public void setVisibility(String visibility) {
 		this.visibility = visibility;
+	}
+	public boolean getCreateToken() {
+		return createToken;
+	}
+	public void setCreateToken(boolean createToken) {
+		this.createToken = createToken;
 	}
 	public List<MemberDto> getMembers() {
 		return members;

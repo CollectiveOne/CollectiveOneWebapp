@@ -257,6 +257,8 @@ public class InitiativeService {
 		
 		initiative = initiativeRepository.save(initiative);
 		
+		activityService.newInitiativeCreated(initiative, initiative.getCreator());
+		
 		return new GetResult<Initiative>("success", "initiative created", initiative);
 	}
 	
@@ -315,24 +317,24 @@ public class InitiativeService {
 		
 		if (!initiativeDto.getAsSubinitiative()) {
 			/* if is not a sub-initiative, then create a token for this initiative */
-			TokenType token = tokenService.create(initiativeDto.getOwnTokens().getAssetName(), "T");
-			initiative.getTokenTypes().add(token);
-			initiative = initiativeRepository.save(initiative);
-			tokenService.mintToHolder(token.getId(), initiative.getId(), initiativeDto.getOwnTokens().getOwnedByThisHolder(), TokenHolderType.INITIATIVE);
+			if (initiativeDto.getCreateToken()) {
+				TokenType token = tokenService.create(initiativeDto.getOwnTokens().getAssetName(), "T");
+				initiative.getTokenTypes().add(token);
+				initiative = initiativeRepository.save(initiative);
+				tokenService.mintToHolder(token.getId(), initiative.getId(), initiativeDto.getOwnTokens().getOwnedByThisHolder(), TokenHolderType.INITIATIVE);
+				
+				TokenMint mint = new TokenMint();
+				mint.setToken(token);
+				mint.setOrderedBy(appUserRepository.findByC1Id(creatorId));
+				mint.setToHolder(initiativeId);
+				mint.setMotive("Initiative creation.");
+				mint.setNotes("");
+				mint.setValue(initiativeDto.getOwnTokens().getOwnedByThisHolder());
+				
+				mint = tokenMintRespository.save(mint);
+			}
 			
-			TokenMint mint = new TokenMint();
-			mint.setToken(token);
-			mint.setOrderedBy(appUserRepository.findByC1Id(creatorId));
-			mint.setToHolder(initiativeId);
-			mint.setMotive("Initiative creation.");
-			mint.setNotes("");
-			mint.setValue(initiativeDto.getOwnTokens().getOwnedByThisHolder());
-			
-			mint = tokenMintRespository.save(mint);
-			
-			activityService.newInitiativeCreated(initiative, initiative.getCreator());
-			
-			return new PostResult("success", "initiative created and tokens created", initiative.getId().toString());
+			return new PostResult("success", "initiative tokens created", initiative.getId().toString());
 			
 		} else {
 			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
