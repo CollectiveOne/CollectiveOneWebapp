@@ -13,7 +13,7 @@
       <div class="img-div noselect"
         @mouseover="showHoverName = true"
         @mouseleave="showHoverName = false">
-        <img @click="showProfileModal = true" class="w3-circle cursor-pointer" :class="imgClass" :src="user.pictureUrl"/>
+        <img @click="showProfileModal = true" class="w3-circle cursor-pointer" :class="imgClass" :src="userPictureUrl" @error="errorOnPicture"/>
         <div v-if="!showName && showHoverName && enableHover" class="w3-container w3-padding hover-name-container w3-tag dark-gray w3-round">
           <div class="w3-row cursor-pointer nickname-row">
             <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
@@ -82,7 +82,8 @@ export default {
   data () {
     return {
       showHoverName: false,
-      showProfileModal: false
+      showProfileModal: false,
+      errorOnPictureFlag: false
     }
   },
 
@@ -101,6 +102,15 @@ export default {
         }
       }
       return false
+    },
+    userPictureUrl () {
+      return this.errorOnPictureFlag ? 'https://image.ibb.co/kPc3Tb/avatar.png' : this.user.pictureUrl
+    }
+  },
+
+  methods: {
+    errorOnPicture () {
+      this.errorOnPictureFlag = true
     }
   }
 }
