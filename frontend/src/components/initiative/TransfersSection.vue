@@ -44,7 +44,7 @@
       </app-transfers-tables>
     </div>
 
-    <div v-if="isLoggedAnAdmin"
+    <div v-if="isLoggedAnAdmin && initiative.ownAssetsIds.length > 0"
       class="w3-display-topright w3-xxlarge w3-button plus-button gray-1-color"
       @click="showActionMenu = !showActionMenu"
       v-click-outside="clickOutsideShowMenu">
