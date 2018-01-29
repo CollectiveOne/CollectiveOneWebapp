@@ -104,7 +104,7 @@ export default {
       return false
     },
     userPictureUrl () {
-      return this.errorOnPictureFlag ? 'https://image.ibb.co/kPc3Tb/avatar.png' : this.user.pictureUrl
+      return this.errorOnPictureFlag ? 'https://image.ibb.co/mcnv8b/avatar.png' : this.user.pictureUrl
     }
   },
 
