@@ -84,7 +84,13 @@ public class ActivityService {
 	
 	
 	@Transactional
-	public void sendEmailsSendNow() throws IOException {
+	public void sendWantToContributeEmails() throws IOException {
+		
+		
+	}
+	
+	@Transactional
+	public void sendNotificationEmailsSendNow() throws IOException {
 		
 		List<Notification> notifications = 
 				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(
@@ -94,7 +100,7 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void sendEmailsOnceADay() throws IOException {
+	public void sendNotificationEmailsOnceADay() throws IOException {
 		
 		List<Notification> notifications = 
 				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(
@@ -104,7 +110,7 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void sendEmailsOnceAWeek() throws IOException {
+	public void sendNotificationEmailsOnceAWeek() throws IOException {
 		
 		List<Notification> notifications = 
 				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(

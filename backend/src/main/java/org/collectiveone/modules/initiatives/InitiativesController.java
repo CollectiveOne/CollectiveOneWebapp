@@ -151,6 +151,34 @@ public class InitiativesController extends BaseController {
 		return initiativeService.searchBy(searchFilters);
 	}
 	
+	@RequestMapping(path = "/initiative/{initiativeId}/wantToContribute", method = RequestMethod.POST)
+	public PostResult wantToContributeMember(@PathVariable("initiativeId") String initiativeId) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		return initiativeService.wantToContribute(UUID.fromString(initiativeId), getLoggedUserId());
+	}
+	
+	@RequestMapping(path = "/initiative/{initiativeId}/wantToContribute/{userId}", method = RequestMethod.POST)
+	public PostResult wantToContributeMemberAccept(
+			@PathVariable("initiativeId") String initiativeId,
+			@PathVariable("userId") String userId) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		DecisionVerdict verdict = governanceService.canAddMember(UUID.fromString(initiativeId), getLoggedUserId());
+		
+		if (verdict == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		} 
+		
+		return initiativeService.wantToContributeAccept(UUID.fromString(initiativeId), UUID.fromString(userId));
+	}
+	
 	@RequestMapping(path = "/initiative/{initiativeId}/member", method = RequestMethod.POST) 
 	public PostResult addMember(@PathVariable("initiativeId") String initiativeId, @RequestBody MemberDto memberDto) {
 		

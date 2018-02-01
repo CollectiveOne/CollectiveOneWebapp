@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.enums.NotificationEmailState;
 import org.collectiveone.modules.activity.repositories.NotificationRepositoryIf;
+import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
 import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.assignations.Evaluator;
 import org.collectiveone.modules.assignations.Receiver;
@@ -46,6 +47,9 @@ public class EmailService {
 	
 	@Autowired
 	private NotificationRepositoryIf notificationRepository;
+	
+	@Autowired
+	private WantToContributeRepositoryIf wantToContributeRepository;
 	
 	@Autowired
 	private SendGrid sg;
@@ -293,6 +297,40 @@ public class EmailService {
 	    return result;
 	}
 	
+	public String sendWantToContributeNotifications(List<WantToContributeNotification> notifications) throws IOException {
+//		if(env.getProperty("collectiveone.webapp.send-email-enabled").equalsIgnoreCase("true")) {
+			if(notifications.size() > 0) {
+				Request request = new Request();
+				Mail mail = prepareWantToContributeEmail(notifications);
+				
+				if (mail != null) {
+					try {
+						request.method = Method.POST;
+						request.endpoint = "mail/send";
+						request.body = mail.build();
+						
+						Response response = sg.api(request);
+						
+						if(response.statusCode == 202) {
+							System.out.println("emails sent!");
+							return "success";
+						} else {
+							return response.body;
+						}
+						
+					} catch (IOException ex) {
+						throw ex;
+					}
+				} else {
+					return "error bulding email";
+				}
+			}
+//		}
+		
+		/* if email is disabled */
+		return "success";
+	}
+	
 	private String sendSegmentedPerActivityNotifications(List<Notification> notifications) throws IOException {
 		if(env.getProperty("collectiveone.webapp.send-email-enabled").equalsIgnoreCase("true")) {
 			if(notifications.size() > 0) {
@@ -326,6 +364,46 @@ public class EmailService {
 		
 		/* if email is disabled */
 		return "success";
+	}
+	
+	private Mail prepareWantToContributeEmail(List<WantToContributeNotification> notifications) {
+		Mail mail = new Mail();
+		
+		Email fromEmail = new Email();
+		fromEmail.setName(env.getProperty("collectiveone.webapp.from-mail-name"));
+		fromEmail.setEmail(env.getProperty("collectiveone.webapp.from-mail"));
+		mail.setFrom(fromEmail);
+		mail.setSubject("Request to contribute");
+	
+		for(WantToContributeNotification notification : notifications) {
+			
+			String toEmailString = notification.getAdmin().getEmail();
+			Initiative initiative = notification.getInitiative();
+			String acceptRequestUrl = env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/" + 
+					initiative.getId().toString() + "/people/addMember/" + notification.getUser().getC1Id().toString();
+			
+			
+			Personalization personalization = new Personalization();
+			
+			Email toEmail = new Email();
+			toEmail.setEmail(toEmailString);
+			
+			personalization.addTo(toEmail);
+			personalization.addSubstitution("$INITIATIVE_ANCHOR$", getInitiativeAnchor(initiative));
+			personalization.addSubstitution("$USER_NICKNAME$", notification.getUser().getProfile().getNickname());
+			personalization.addSubstitution("$USER_PICTURE$", notification.getUser().getProfile().getPictureUrl());
+			personalization.addSubstitution("$USER_EMAIL$", notification.getUser().getEmail());
+			personalization.addSubstitution("$ACCEPT_AS_MEMBER_URL$", acceptRequestUrl);
+						
+			mail.addPersonalization(personalization);
+		
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			wantToContributeRepository.save(notification);
+		}
+		
+		mail.setTemplateId(env.getProperty("collectiveone.webapp.want-to-contribute-template"));
+		
+		return mail;
 	}
 	
 	private Mail prepareActivitySendNowEmail(List<Notification> notifications) {

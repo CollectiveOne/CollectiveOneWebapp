@@ -11,13 +11,17 @@ import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.Activity;
 import org.collectiveone.modules.activity.ActivityService;
+import org.collectiveone.modules.activity.WantToContributeNotification;
 import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
+import org.collectiveone.modules.activity.enums.NotificationEmailState;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
+import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
 import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredRepositoryIf;
 import org.collectiveone.modules.governance.DecisionMaker;
+import org.collectiveone.modules.governance.DecisionMakerRepositoryIf;
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.governance.GovernanceService;
@@ -91,6 +95,9 @@ public class InitiativeService {
 	private MemberRepositoryIf memberRepository;
 	
 	@Autowired
+	private DecisionMakerRepositoryIf decisionMakerRepository;
+	
+	@Autowired
 	private InitiativeMetaRepositoryIf initiativeMetaRepository;
 	
 	@Autowired
@@ -101,6 +108,9 @@ public class InitiativeService {
 	
 	@Autowired
 	private TokenMintRepositoryIf tokenMintRespository;
+	
+	@Autowired
+	private WantToContributeRepositoryIf wantToContributeRepository;
 	  
 	
 	@Transactional
@@ -263,22 +273,58 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	private GetResult<Initiative> addMembers(UUID initiativeId, List<MemberDto> initiativeMemebers) {
+	public PostResult wantToContribute(UUID initiativeId, UUID userId) {
+		
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+				
+		AppUser user = appUserRepository.findByC1Id(userId);
+		
+		List<DecisionMaker> admins = decisionMakerRepository.findByGovernance_IdAndRole(initiative.getGovernance().getId(), DecisionMakerRole.ADMIN);
+
+		for (DecisionMaker admin : admins) {
+			WantToContributeNotification notification = new WantToContributeNotification();
+			
+			notification.setInitiative(initiative);
+			notification.setAdmin(admin.getUser());
+			notification.setUser(user);
+			notification.setEmailState(NotificationEmailState.PENDING);
+			
+			wantToContributeRepository.save(notification);
+		}
+		
+		return new PostResult("success", "notifications recorded for sending", null);
+	}
+	
+	@Transactional
+	public PostResult wantToContributeAccept(UUID initiativeId, UUID userId) {
+		
+		Member member = addMemberOrGet(initiativeId, userId, DecisionMakerRole.MEMBER);
+		
+		return new PostResult("success", "member added sending", member.getId().toString());
+	}
+	
+	@Transactional
+	private GetResult<Initiative> addMembers(UUID initiativeId, List<MemberDto> initiativeMembers) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
 		/* List of Members */
-		for (MemberDto memberDto : initiativeMemebers) {
-			addMember(initiativeId, UUID.fromString(memberDto.getUser().getC1Id()), DecisionMakerRole.valueOf(memberDto.getRole()));
+		for (MemberDto memberDto : initiativeMembers) {
+			addMemberOrGet(initiativeId, UUID.fromString(memberDto.getUser().getC1Id()), DecisionMakerRole.valueOf(memberDto.getRole()));
 		}
 		
 		return new GetResult<Initiative>("success", "initiative created", initiative);
 	}
 	
 	@Transactional
-	public Member addMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
+	public Member addMemberOrGet(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
+		AppUser memberUser = appUserRepository.findByC1Id(c1Id);
 		
-		AppUser memberUser = appUserRepository.findByC1Id(c1Id); 
+		Member existingMember = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, c1Id);
+		
+		if (existingMember != null) {
+			return existingMember;
+		}
 		
 		Member member = new Member();
 		member.setInitiative(initiative);
@@ -762,7 +808,7 @@ public class InitiativeService {
 	
 	@Transactional
 	public PostResult postMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
-		Member member = addMember(initiativeId, c1Id, role);
+		Member member = addMemberOrGet(initiativeId, c1Id, role);
 		if (member != null) {
 			return new PostResult("success", "member added",  member.getId().toString());
 		} 

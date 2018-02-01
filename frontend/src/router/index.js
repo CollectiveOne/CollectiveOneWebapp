@@ -86,6 +86,7 @@ export default new Router({
                   ]
                 },
                 { path: 'people', name: 'InitiativePeople', component: PeopleSection, meta: {'column': 3} },
+                { path: 'people/addMember/:userId', name: 'InitiativePeopleAddMember', component: PeopleSection, meta: {'column': 3} },
                 { path: 'assignations', name: 'InitiativeAssignations', component: TransfersSection, meta: {'column': 4} },
                 { path: 'assignations/:assignationId', name: 'InitiativeAssignation', component: TransfersSection, meta: {'column': 4} }
               ]

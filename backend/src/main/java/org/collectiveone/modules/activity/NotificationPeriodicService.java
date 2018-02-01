@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import org.collectiveone.modules.activity.enums.NotificationEmailState;
 import org.collectiveone.modules.activity.enums.NotificationTrackingType;
 import org.collectiveone.modules.activity.repositories.NotificationEmailTrackingRepositoryIf;
+import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -18,15 +21,29 @@ public class NotificationPeriodicService {
 	private NotificationEmailTrackingRepositoryIf notificationEmailTrackingRepository; 
 	
 	@Autowired
+	private WantToContributeRepositoryIf wantToContributeRepository;
+	
+	@Autowired
 	private ActivityService activityService;
 	
+	@Autowired
+	private EmailService emailService;
+	
+	
 	@Scheduled(fixedDelay = 30000)
-	public void sendEmailsSendNow() throws IOException {
-		activityService.sendEmailsSendNow();
+	public void checkSendEmailsSendNow() throws IOException {
+		activityService.sendNotificationEmailsSendNow();
 	}
 	
 	@Scheduled(fixedDelay = 30000)
-	public void sendEmailsEveryDay() throws IOException {
+	public void checkWantToContributeNow() throws IOException {
+		List<WantToContributeNotification> notifications = wantToContributeRepository.findByEmailState(NotificationEmailState.PENDING);
+		
+		emailService.sendWantToContributeNotifications(notifications);
+	}
+	
+	@Scheduled(fixedDelay = 30000)
+	public void checkSendEmailsEveryDay() throws IOException {
 		
 		NotificationEmailTracking emailTracking = notificationEmailTrackingRepository.findByType(NotificationTrackingType.NEXT_ONCEADAY);
 		
@@ -42,12 +59,12 @@ public class NotificationPeriodicService {
 			emailTracking.setTimestamp(tomorrow());
 			emailTracking = notificationEmailTrackingRepository.save(emailTracking);
 			
-			activityService.sendEmailsOnceADay();
+			activityService.sendNotificationEmailsOnceADay();
 		}
 	}
 	
 	@Scheduled(fixedDelay = 30000)
-	public void sendEmailsEveryWeek() throws IOException {
+	public void checkSendEmailsEveryWeek() throws IOException {
 		NotificationEmailTracking emailTracking = notificationEmailTrackingRepository.findByType(NotificationTrackingType.NEXT_ONCEAWEEK);
 		
 		if (emailTracking == null) {
@@ -62,7 +79,7 @@ public class NotificationPeriodicService {
 			emailTracking.setTimestamp(nextWeek());
 			emailTracking = notificationEmailTrackingRepository.save(emailTracking);
 			
-			activityService.sendEmailsOnceAWeek();
+			activityService.sendNotificationEmailsOnceAWeek();
 		}
 	}
 	

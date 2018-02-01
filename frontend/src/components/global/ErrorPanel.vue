@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="slider-container">
     <transition name="slideDownUp">
-      <div v-if="show" class="w3-row w3-tag error-panel error-row w3-round">
+      <div v-if="show" class="w3-row w3-tag error-row w3-round" :class="{'error-panel': isError, 'success-panel': isSuccess}">
         {{ message }}
       </div>
     </transition>
@@ -12,7 +12,20 @@
 export default {
   props: {
     show: Boolean,
-    message: String
+    message: String,
+    panelType: {
+      type: String,
+      default: 'error'
+    }
+  },
+
+  computed: {
+    isError () {
+      return this.panelType === 'error'
+    },
+    isSuccess () {
+      return this.panelType === 'success'
+    }
   }
 }
 </script>

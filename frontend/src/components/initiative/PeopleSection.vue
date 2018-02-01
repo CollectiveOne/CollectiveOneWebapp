@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="this-container">
-    <div v-if="false" class="w3-row w3-center top-button-row">
+    <div v-if="showWantToContribute" class="w3-row w3-center top-button-row">
       <div class="w3-row">
         <button @click="wantToContributeSelected = !wantToContributeSelected"
           class="w3-button app-button" type="button" name="button">
@@ -31,6 +31,20 @@
         </div>
       </div>
     </div>
+    <app-error-panel
+      :show="requestSent"
+      message="The admins of this initiative have been notified."
+      panelType="success">
+    </app-error-panel>
+    <app-error-panel
+      :show="userAdded"
+      message="User succesfully added."
+      panelType="success">
+    </app-error-panel>
+    <app-error-panel
+      :show="requestError"
+      message="Error notifying the admins">
+    </app-error-panel>
     <div class="w3-row own-members-div">
       <h3 class="section-header">Members of {{ initiative.meta.name }}:</h3>
       <app-members-table
@@ -111,7 +125,10 @@ export default {
   data () {
     return {
       noOtherAdminError: false,
-      wantToContributeSelected: true
+      wantToContributeSelected: false,
+      userAdded: false,
+      requestSent: false,
+      requestError: false
     }
   },
 
@@ -132,12 +149,35 @@ export default {
       return getAllSubmembers(this.initiative.initiativeMembers)
     },
     showWantToContribute () {
-      return !this.isLoggedAMember && !this.isLoggedAParentAdmin
+      return !this.isLoggedAMember && !this.isLoggedAParentAdmin && !this.requestSent
+    },
+    addMemberLink () {
+      /* based on the route */
+      for (var ix in this.$route.matched) {
+        let e = this.$route.matched[ix]
+        if (e.name === 'InitiativePeopleAddMember') {
+          return true
+        }
+      }
+      return false
     }
   },
 
   methods: {
     ...mapActions(['showOutputMessage']),
+
+    wantToContribute () {
+      this.wantToContributeSelected = false
+      this.axios.post('/1/initiative/' + this.initiative.id + '/wantToContribute').then((response) => {
+        if (response.data.result === 'success') {
+          this.requestSent = true
+        } else {
+          this.requestError = true
+        }
+      }).catch(() => {
+        this.requestError = true
+      })
+    },
 
     addMember (member) {
       var index = this.indexOfMember(member.user.c1Id)
@@ -154,6 +194,12 @@ export default {
       } else {
         this.showOutputMessage('user has been already included')
       }
+
+      /* show message */
+      this.userAdded = true
+      setTimeout(() => {
+        this.userAdded = false
+      }, 3000)
     },
 
     removeMember (member) {
@@ -208,6 +254,18 @@ export default {
         }
       }
       return -1
+    }
+  },
+
+  mounted () {
+    if (this.addMemberLink) {
+      var member = {
+        user: {
+          c1Id: this.$route.params.userId,
+          role: 'MEMBER'
+        }
+      }
+      this.addMember(member)
     }
   }
 }
