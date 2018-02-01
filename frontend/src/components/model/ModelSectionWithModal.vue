@@ -160,6 +160,10 @@ export default {
     floating: {
       type: Boolean,
       default: false
+    },
+    cardsAsCardsInit: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -194,7 +198,15 @@ export default {
     }
   },
 
+  watch: {
+    cardsAsCardsInit () {
+      this.cardsAsCards = this.cardsAsCardsInit
+    }
+  },
+
   created () {
+    this.cardsAsCards = this.cardsAsCardsInit
+
     if (!this.preloaded) {
       this.section = {
         id: this.sectionId

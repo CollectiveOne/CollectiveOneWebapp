@@ -118,7 +118,8 @@
                     :inElementId="section.id"
                     :inElementTitle="section.title"
                     :level="level + 1"
-                    dragType="MOVE_SUBSECTION">
+                    dragType="MOVE_SUBSECTION"
+                    :cardsAsCardsInit="cardsAsCards" >
                   </app-model-section-with-modal>
                 </div>
 
