@@ -63,6 +63,7 @@ needs the model card component inside, and would crate a recursion -->
         :dragType="dragType"
         :floating="floating"
         :cardsAsCards="cardsAsCards"
+        :expandInit="expandInit"
         :force-update="forceUpdate"
         @new-card="newCard()"
         @new-subsection="newSubsection()">
@@ -164,6 +165,10 @@ export default {
     cardsAsCardsInit: {
       type: Boolean,
       default: true
+    },
+    expandInit: {
+      type: Boolean,
+      default: false
     }
   },
 

@@ -77,22 +77,38 @@
           </div>
 
           <div class="bottom-bar light-grey w3-small">
-            <button
+            <button v-if="!showSubsections"
               class="w3-button model-button show-sections-button"
-              @click="showSubsections = !showSubsections">
-              <div v-if="showSubsections" >
-                <i class="w3-left fa fa-caret-up" aria-hidden="true"></i>
-                <div class="w3-left button-text">
-                  hide subsections
-                </div>
-              </div>
-              <div v-else>
-                <i class="w3-left fa fa-caret-right" aria-hidden="true"></i>
-                <div class="w3-left button-text">
-                  <b>{{ section.nSubsections }}</b> subsections
-                </div>
+              @click="showSubsections =true">
+              <i class="w3-left fa fa-caret-right" aria-hidden="true"></i>
+              <div class="w3-left button-text">
+                <b>{{ section.nSubsections }}</b> subsections
               </div>
             </button>
+            <div v-else class="w3-row light-grey">
+
+              <div class="w3-left">
+                <button class="w3-button" type="button" name="button"
+                  @click="showSubsections = false">
+                  <i class="w3-left fa fa-caret-up" aria-hidden="true"></i>
+                  <div class="w3-left button-text">
+                    hide subsections
+                  </div>
+                </button>
+              </div>
+
+              <div class="w3-left w3-margin-left">
+                <button class="w3-button" type="button" name="button"
+                  @click="expandSubSubsecInit = !expandSubSubsecInit">
+                  <i class="w3-left fa fa-caret-up" aria-hidden="true"></i>
+                  <div class="w3-left button-text">
+                    <span v-if="!expandSubSubsecInit">expand all</span>
+                    <span v-else>collapse all</span>
+                  </div>
+                </button>
+              </div>
+
+            </div>
           </div>
 
           <div class="" :class="{'slider-container': animatingSubsections}">
@@ -119,7 +135,8 @@
                     :inElementTitle="section.title"
                     :level="level + 1"
                     dragType="MOVE_SUBSECTION"
-                    :cardsAsCardsInit="cardsAsCards" >
+                    :cardsAsCardsInit="cardsAsCards"
+                    :expandInit="expandSubSubsecInit">
                   </app-model-section-with-modal>
                 </div>
 
@@ -219,6 +236,10 @@ export default {
     forceUpdate: {
       type: Boolean,
       default: true
+    },
+    expandInit: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -230,7 +251,8 @@ export default {
       expanded: false,
       animatingSubsections: false,
       showCardModal: false,
-      showCardId: ''
+      showCardId: '',
+      expandSubSubsecInit: false
     }
   },
 
@@ -249,6 +271,9 @@ export default {
     },
     forceUpdate () {
       this.update()
+    },
+    expandInit () {
+      this.expanded = this.expandInit
     }
   },
 
@@ -362,6 +387,8 @@ export default {
   },
 
   created () {
+    this.expanded = this.expandInit
+
     if (!this.preloaded) {
       this.section = {
         id: this.sectionId
