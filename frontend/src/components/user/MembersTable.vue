@@ -41,6 +41,7 @@
             <th>NICKNAME</th>
             <th class="role-col">ROLE</th>
             <th v-if="isLoggedAnAdmin">DELETE</th>
+            <th v-if="isLoggedHere && !isLoggedAnAdmin">LEAVE</th>
           </tr>
         </thead>
         <tbody>
@@ -71,7 +72,16 @@
                 <button @click="removeMemberCancelled()" class="w3-button app-button-light">Cancel Delete</button>
                 <button @click="removeMemberConfirmed()" class="w3-button app-button-danger">Confirm Delete</button>
               </div>
-
+            </td>
+            <td v-if="isLoggedThis(member) && !isLoggedAnAdmin">
+              <i v-if="!leaving"
+                @click="leave(member)"
+                class="fa fa-times-circle-o w3-xlarge gray-1-color w3-button" aria-hidden="true">
+              </i>
+              <div v-else class="">
+                <button @click="removeMemberCancelled()" class="w3-button app-button-light">Cancel</button>
+                <button @click="removeMemberConfirmed()" class="w3-button app-button-danger">Confirm</button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -112,6 +122,24 @@ export default {
   computed: {
     isLoggedAnAdmin () {
       return this.$store.getters.isLoggedAnAdmin
+    },
+    isLoggedHere () {
+      if (!this.$store.state.user.profile) {
+        return false
+      }
+
+      for (var ix in this.members) {
+        if (this.members[ix].user.c1Id === this.$store.state.user.profile.c1Id) {
+          return true
+        }
+      }
+      return false
+    },
+    leaving () {
+      if (!this.memberToBeRemoved || !this.$store.state.user.profile) {
+        return false
+      }
+      return this.memberToBeRemoved.user.c1Id === this.$store.state.user.profile.c1Id
     }
   },
 
@@ -121,11 +149,26 @@ export default {
         this.memberToBeRemoved = member
       }, 500)
     },
+    leave (member) {
+      setTimeout(() => {
+        this.memberToBeRemoved = member
+      }, 500)
+    },
     removingThisMember (member) {
       if (this.memberToBeRemoved) {
         return this.memberToBeRemoved.user.c1Id === member.user.c1Id
       }
       return false
+    },
+    leaveThisConfirmed () {
+      this.$emit('remove', JSON.parse(JSON.stringify(this.memberToBeRemoved)))
+      this.memberToBeRemoved = null
+    },
+    isLoggedThis (member) {
+      if (!this.$store.state.user.profile) {
+        return false
+      }
+      return member.user.c1Id === this.$store.state.user.profile.c1Id
     },
     removeMemberCancelled () {
       this.memberToBeRemoved = null

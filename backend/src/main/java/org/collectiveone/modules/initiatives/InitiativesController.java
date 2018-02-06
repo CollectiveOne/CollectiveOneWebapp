@@ -199,19 +199,24 @@ public class InitiativesController extends BaseController {
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/member/{userId}", method = RequestMethod.DELETE) 
-	public PostResult deleteMember(@PathVariable("initiativeId") String initiativeId, @PathVariable("userId") String userId) {
+	public PostResult deleteMember(@PathVariable("initiativeId") String initiativeId, @PathVariable("userId") String userIdStr) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
 		}
 		
-		DecisionVerdict verdict = governanceService.canDeleteMember(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
+		UUID userId = UUID.fromString(userIdStr);
 		
-		if (verdict == DecisionVerdict.DENIED) {
-			return new PostResult("error", "not authorized", "");
-		} 
+		/* check permission unless its removing himself */
+		if (!getLoggedUserId().equals(userId)) {
+			DecisionVerdict verdict = governanceService.canDeleteMember(UUID.fromString(initiativeId), getLoggedUser().getC1Id());
+			
+			if (verdict == DecisionVerdict.DENIED) {
+				return new PostResult("error", "not authorized", "");
+			}
+		} 		 
 		
-		return initiativeService.deleteMember(UUID.fromString(initiativeId), UUID.fromString(userId));
+		return initiativeService.deleteMember(UUID.fromString(initiativeId), userId);
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/member/{userId}", method = RequestMethod.PUT) 
