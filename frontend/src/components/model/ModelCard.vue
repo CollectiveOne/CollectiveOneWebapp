@@ -141,6 +141,9 @@ export default {
       return {}
     },
     textTooLong () {
+      if (!this.$refs.cardText) {
+        return false
+      }
       return this.$refs.cardText.clientHeight < this.$refs.cardText.scrollHeight
     }
   },

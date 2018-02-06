@@ -87,6 +87,18 @@
                 </div>
 
                 <div v-if="!editing" class="">
+                  <div class="w3-left">
+                    <i>in:</i>
+                  </div>
+                  <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container w3-left w3-margin-left">
+                    <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
+                      class="gray-1 w3-tag w3-round w3-small">
+                      {{ inSection.title }}
+                    </router-link>
+                  </div>
+                </div>
+
+                <div v-if="!editing" class="">
                   <div v-if="card.imageFile" class="w3-row w3-margin-top image-container w3-center w3-display-container w3-card-2 cursor-pointer">
                     <img @click="showImageClick()" :src="card.imageFile.url + '?lastUpdated='+ card.imageFile.lastUpdated" alt="">
                   </div>
