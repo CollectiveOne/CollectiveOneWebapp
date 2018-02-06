@@ -126,7 +126,7 @@ select {
   min-height: 200px;
 }
 
-.w3-modal-content .w3-card-4 {
+.app-modal-card {
   border-radius: 20px;
   min-height: 200px;
 }

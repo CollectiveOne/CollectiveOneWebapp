@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4">
+      <div class="w3-card-4 app-modal-card">
 
         <div class="close-div w3-display-topright w3-xlarge" @click="closeThis()">
           <i class="fa fa-times" aria-hidden="true"></i>

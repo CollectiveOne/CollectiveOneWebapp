@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4"
+      <div class="w3-card-4 app-modal-card"
         v-click-outside="clickOutside">
 
         <div class="div-close-modal w3-display-topright w3-xlarge" @click="closeThis()">
@@ -98,8 +98,16 @@
                   </div>
                 </div>
                 <div v-if="editing" class="w3-row w3-margin-top">
-                  <button class="w3-button app-button" type="button" name="button">add to another section</button>
-                  <app-model-section-selector></app-model-section-selector>
+                  <button @click="addToSection = !addToSection"
+                    class="w3-button app-button"
+                    type="button" name="button">
+                    add to another section
+                  </button>
+                  <app-model-section-selector
+                    v-if="addToSection"
+                    :initiativeId="cardWrapper.initiativeId"
+                    @select="sectionSelected($event)">
+                  </app-model-section-selector>
                 </div>
 
                 <div v-if="!editing" class="">
@@ -264,6 +272,7 @@ import { dateString } from '@/lib/common.js'
 import Datepicker from 'vuejs-datepicker'
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
 import ModelCardSelector from '@/components/model/ModelCardSelector.vue'
+import ModelSectionSelector from '@/components/model/ModelSectionSelector.vue'
 import MessageThread from '@/components/notifications/MessageThread.vue'
 
 export default {
@@ -272,7 +281,8 @@ export default {
     'app-model-modal-buttons': ModelModalButtons,
     'datepicker': Datepicker,
     'app-model-card-selector': ModelCardSelector,
-    'app-message-thread': MessageThread
+    'app-message-thread': MessageThread,
+    'app-model-section-selector': ModelSectionSelector
   },
 
   props: {
@@ -328,7 +338,8 @@ export default {
       errorUploadingFileMsg: '',
       enableClickOutside: false,
       sendingData: false,
-      loading: false
+      loading: false,
+      addToSection: false
     }
   },
 
