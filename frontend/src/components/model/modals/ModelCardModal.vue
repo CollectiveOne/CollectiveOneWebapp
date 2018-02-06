@@ -12,7 +12,7 @@
           <h2>{{ isNew ? 'New Card' : 'Model Card'}}</h2>
         </div>
 
-        <div class="w3-container div-modal-content">
+        <div v-if="!loading" class="w3-container div-modal-content">
 
           <app-model-modal-buttons
             v-if="isLoggedAnEditor"
@@ -86,16 +86,20 @@
                   </div>
                 </div>
 
-                <div v-if="!editing" class="">
-                  <div class="w3-left">
+                <div class="w3-row">
+                  <div class="w3-left w3-margin-right">
                     <i>in:</i>
                   </div>
-                  <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container w3-left w3-margin-left">
+                  <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container w3-left">
                     <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
                       class="gray-1 w3-tag w3-round w3-small">
                       {{ inSection.title }}
                     </router-link>
                   </div>
+                </div>
+                <div v-if="editing" class="w3-row w3-margin-top">
+                  <button class="w3-button app-button" type="button" name="button">add to another section</button>
+                  <app-model-section-selector></app-model-section-selector>
                 </div>
 
                 <div v-if="!editing" class="">
@@ -246,6 +250,9 @@
           </div>
 
         </div>
+        <div v-else class="w3-row w3-center loader-gif-container">
+          <img class="loader-gif" src="../../../assets/loading.gif" alt="">
+        </div>
 
       </div>
     </div>
@@ -320,7 +327,8 @@ export default {
       errorUploadingFile: false,
       errorUploadingFileMsg: '',
       enableClickOutside: false,
-      sendingData: false
+      sendingData: false,
+      loading: false
     }
   },
 
@@ -414,8 +422,10 @@ export default {
       return dateString(v)
     },
     update () {
+      this.loading = true
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.cardWrapper = response.data.data
+        this.loading = false
       })
     },
     updateInSection () {
@@ -591,6 +601,10 @@ export default {
 .loader-gif-container {
   padding-top: 30px;
   padding-bottom: 30px;
+}
+
+.insection-tag-container {
+  margin-left: 6px;
 }
 
 .image-container {

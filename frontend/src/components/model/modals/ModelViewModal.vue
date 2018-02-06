@@ -8,7 +8,7 @@
           <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
         </div>
 
-        <div class="w3-container">
+        <div v-if="!loading" class="w3-container">
 
           <div class="w3-row w3-border-bottom">
             <h2>{{ isNew ? 'New View' : 'Model View' }}</h2>
@@ -80,7 +80,9 @@
 
           </div>
         </div>
-
+        <div v-else class="w3-row w3-center loader-gif-container">
+          <img class="loader-gif" src="../../../assets/loading.gif" alt="">
+        </div>
       </div>
     </div>
   </div>
@@ -123,7 +125,8 @@ export default {
       showEditButtons: false,
       titleEmptyError: false,
       descriptionEmptyError: false,
-      sendingData: false
+      sendingData: false,
+      loading: false
     }
   },
 
@@ -156,7 +159,9 @@ export default {
 
   methods: {
     update () {
+      this.loading = true
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/view/' + this.view.id).then((response) => {
+        this.loading = false
         this.view = response.data.data
       })
     },

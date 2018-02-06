@@ -358,10 +358,20 @@ select {
 
 .loader-gif-container {
   padding-top: 100px;
+  padding-bottom: 50px;
 }
 
 .loader-gif {
   width: 100px;
+}
+
+.loader-gif-container-small {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.loader-gif-small {
+  width: 36px;
 }
 
 .plus-button {

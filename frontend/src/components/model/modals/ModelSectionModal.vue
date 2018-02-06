@@ -12,7 +12,7 @@
           <h2>{{ isNew ? 'New Section' : 'Model Section' }}</h2>
         </div>
 
-        <div class="w3-container div-modal-content">
+        <div v-if="!loading" class="w3-container div-modal-content">
 
           <app-model-modal-buttons
             v-if="isLoggedAnEditor"
@@ -125,7 +125,9 @@
           </div>
 
         </div>
-
+        <div v-else class="w3-row w3-center loader-gif-container">
+          <img class="loader-gif" src="../../../assets/loading.gif" alt="">
+        </div>
       </div>
     </div>
   </div>
@@ -188,7 +190,8 @@ export default {
       existingSection: null,
       noSectionSelectedError: false,
       animatingTab: false,
-      sendingData: false
+      sendingData: false,
+      loading: false
     }
   },
 
@@ -227,8 +230,10 @@ export default {
 
   methods: {
     update () {
+      this.loading = true
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
       .then((response) => {
+        this.loading = false
         this.section = response.data.data
       })
     },
