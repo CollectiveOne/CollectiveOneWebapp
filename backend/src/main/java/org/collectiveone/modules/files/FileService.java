@@ -96,7 +96,6 @@ public class FileService {
 		if (fileUploaded != null) {
 			AppUserProfile profile = appUserProfileRepository.findByUser_C1Id(userId);
 			profile.setUploadedPicture(fileUploaded);
-			profile.setUseUploadedPicture(true);
 			
 			appUserProfileRepository.save(profile);
 		}

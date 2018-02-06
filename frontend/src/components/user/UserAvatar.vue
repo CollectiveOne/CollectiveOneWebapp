@@ -164,10 +164,12 @@ export default {
 
 .img-style-large {
   width: 40px;
+  height: 40px;
 }
 
 .img-style-small {
   width: 35px;
+  height: 35px;
 }
 
 </style>
