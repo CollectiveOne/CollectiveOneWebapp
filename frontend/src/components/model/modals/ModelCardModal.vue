@@ -86,7 +86,7 @@
                   </div>
                 </div>
 
-                <div class="w3-row">
+                <div v-if="!isNew" class="w3-row">
                   <div class="w3-left w3-margin-right">
                     <i>in:</i>
                   </div>
@@ -96,19 +96,20 @@
                       {{ inSection.title }}
                     </router-link>
                   </div>
+                  <div v-if="editing" class="w3-row w3-margin-top">
+                    <button @click="addToSection = !addToSection"
+                      class="w3-button w3-small w3-round "
+                      type="button" name="button">
+                      add to another section
+                    </button>
+                    <app-model-section-selector
+                      v-if="addToSection"
+                      :initiativeId="cardWrapper.initiativeId"
+                      @select="sectionSelected($event)">
+                    </app-model-section-selector>
+                  </div>
                 </div>
-                <div v-if="editing" class="w3-row w3-margin-top">
-                  <button @click="addToSection = !addToSection"
-                    class="w3-button app-button"
-                    type="button" name="button">
-                    add to another section
-                  </button>
-                  <app-model-section-selector
-                    v-if="addToSection"
-                    :initiativeId="cardWrapper.initiativeId"
-                    @select="sectionSelected($event)">
-                  </app-model-section-selector>
-                </div>
+
 
                 <div v-if="!editing" class="">
                   <div v-if="card.imageFile" class="w3-row w3-margin-top image-container w3-center w3-display-container w3-card-2 cursor-pointer">
@@ -395,6 +396,32 @@ export default {
   },
 
   methods: {
+    atKeydown (e) {
+      if (!this.editing) {
+        /* e */
+        if (e.keyCode === 69) {
+          this.startEditing()
+        }
+
+        /* esc */
+        if (e.keyCode === 27) {
+          this.closeThis()
+        }
+      }
+
+      if (this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.cancel()
+        }
+
+        /* ctr + enter */
+        if (e.keyCode === 13 && !e.ctrKey) {
+          e.preventDefault()
+          this.accept()
+        }
+      }
+    },
     copyUrl () {
       if (!this.showUrl) {
         this.showUrl = true
@@ -590,6 +617,12 @@ export default {
     setTimeout(() => {
       this.enableClickOutside = true
     }, 1000)
+
+    window.addEventListener('keydown', this.atKeydown)
+  },
+
+  destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 }
 </script>
