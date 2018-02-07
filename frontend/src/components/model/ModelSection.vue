@@ -46,122 +46,123 @@
         <!-- hooks are needed to enable overflow when not animating -->
 
         <div v-if="expanded" class="w3-row w3-leftbar subelements-container">
+          <div class="w3-col">
+            <div class="w3-row-padding cards-container">
+              <div v-for="(cardWrapper, ix) in section.cardsWrappers"
+                :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
+                :key="cardWrapper.id"
+                @dragover.prevent
+                @drop.prevent="cardDroped(cardWrapper.id, $event)">
 
-          <div class="w3-row-padding cards-container">
-            <div v-for="(cardWrapper, ix) in section.cardsWrappers"
-              :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
-              :key="cardWrapper.id"
-              @dragover.prevent
-              @drop.prevent="cardDroped(cardWrapper.id, $event)">
-
-              <div v-if="cardsAsCards"
-                @click="$emit('new-card', ix)" class="empty-div cursor-pointer w3-row w3-round">
-                <div class="w3-right">
-                  <i>add card here</i>
+                <div v-if="cardsAsCards"
+                  @click="$emit('new-card', ix)" class="empty-div cursor-pointer w3-row w3-round">
+                  <div class="w3-right">
+                    <i>add card here</i>
+                  </div>
                 </div>
-              </div>
 
-              <div class="">
-                <app-model-card-with-modal
-                  :cardWrapper="cardWrapper"
-                  :initiativeId="initiativeId"
-                  :inSectionId="section.id"
-                  :inSectionTitle="section.title"
-                  :cardEffect="cardsAsCards">
-                </app-model-card-with-modal>
-              </div>
-
-            </div>
-            <div class="last-add" :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
-              @dragover.prevent
-              @drop.prevent="cardDroped('', $event)">
-
-              <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
-                <button class="w3-button" style="width: 100%"
-                  @click="$emit('new-card')">
-                  <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-                  add card
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="bottom-bar light-grey w3-small">
-            <button v-if="!showSubsections"
-              class="w3-button model-button show-sections-button"
-              @click="showSubsections =true">
-              <i class="w3-left fa fa-caret-right" aria-hidden="true"></i>
-              <div class="w3-left button-text">
-                <b>{{ section.nSubsections }}</b> subsections
-              </div>
-            </button>
-            <div v-else class="w3-row light-grey">
-
-              <div class="w3-left">
-                <button class="w3-button" type="button" name="button"
-                  @click="showSubsections = false">
-                  <i class="w3-left fa fa-caret-up" aria-hidden="true"></i>
-                  <div class="w3-left button-text">
-                    hide subsections
-                  </div>
-                </button>
-              </div>
-
-              <div class="w3-left w3-margin-left">
-                <button class="w3-button" type="button" name="button"
-                  @click="expandSubSubsecInit = !expandSubSubsecInit">
-                  <i class="w3-left fa fa-caret-up" aria-hidden="true"></i>
-                  <div class="w3-left button-text">
-                    <span v-if="!expandSubSubsecInit">expand all</span>
-                    <span v-else>collapse all</span>
-                  </div>
-                </button>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="" :class="{'slider-container': animatingSubsections}">
-            <transition name="slideDownUp"
-              @before-enter="animatingSubsections = true"
-              @after-enter="animatingSubsections = false"
-              @before-leave="animatingSubsections = true"
-              @after-leave="animatingSubsections = false">
-
-              <div v-if="showSubsections" class="subsections-container">
-                <div v-for="subsection in section.subsections"
-                  :key="subsection.id"
-                  class="subsection-container"
-                  @dragover.prevent
-                  @drop="subsectionDroped(subsection.id, $event)">
-
-                  <app-model-section-with-modal
-                    :preloaded="subsection.subElementsLoaded"
-                    :sectionInit="subsection"
-                    :sectionId="subsection.id"
+                <div class="">
+                  <app-model-card-with-modal
+                    :cardWrapper="cardWrapper"
                     :initiativeId="initiativeId"
-                    :inView="false"
-                    :inElementId="section.id"
-                    :inElementTitle="section.title"
-                    :level="level + 1"
-                    dragType="MOVE_SUBSECTION"
-                    :cardsAsCardsInit="cardsAsCards"
-                    :expandInit="expandSubSubsecInit">
-                  </app-model-section-with-modal>
+                    :inSectionId="section.id"
+                    :inSectionTitle="section.title"
+                    :cardEffect="cardsAsCards">
+                  </app-model-card-with-modal>
                 </div>
 
-                <div class="subsection-container gray-1-color w3-border w3-round"
-                  @dragover.prevent
-                  @drop="subsectionDroped('', $event)">
+              </div>
+              <div class="last-add" :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
+                @dragover.prevent
+                @drop.prevent="cardDroped('', $event)">
 
-                  <button class="w3-button" style="width: 100%; text-align: left"
-                    @click="$emit('new-subsection')">
+                <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
+                  <button class="w3-button" style="width: 100%"
+                    @click="$emit('new-card')">
                     <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-                    add subsection
+                    add card
                   </button>
                 </div>
               </div>
-            </transition>
+            </div>
+
+            <div class="w3-row bottom-bar light-grey w3-small">
+              <button v-if="!showSubsections"
+                class="w3-button model-button show-sections-button"
+                @click="showSubsections =true">
+                <i class="w3-left fa fa-caret-right" aria-hidden="true"></i>
+                <div class="w3-left button-text">
+                  <b>{{ section.nSubsections }}</b> subsections
+                </div>
+              </button>
+              <div v-else class="w3-row light-grey">
+
+                <div class="w3-left">
+                  <button class="w3-button" type="button" name="button"
+                    @click="showSubsections = false">
+                    <i class="w3-left fa fa-caret-up" aria-hidden="true"></i>
+                    <div class="w3-left button-text">
+                      hide subsections
+                    </div>
+                  </button>
+                </div>
+
+                <div class="w3-left w3-margin-left">
+                  <button class="w3-button" type="button" name="button"
+                    @click="expandSubSubsecInit = !expandSubSubsecInit">
+                    <i class="w3-left fa fa-caret-up" aria-hidden="true"></i>
+                    <div class="w3-left button-text">
+                      <span v-if="!expandSubSubsecInit">expand all</span>
+                      <span v-else>collapse all</span>
+                    </div>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="" :class="{'slider-container': animatingSubsections}">
+              <transition name="slideDownUp"
+                @before-enter="animatingSubsections = true"
+                @after-enter="animatingSubsections = false"
+                @before-leave="animatingSubsections = true"
+                @after-leave="animatingSubsections = false">
+
+                <div v-if="showSubsections" class="subsections-container">
+                  <div v-for="subsection in section.subsections"
+                    :key="subsection.id"
+                    class="subsection-container"
+                    @dragover.prevent
+                    @drop="subsectionDroped(subsection.id, $event)">
+
+                    <app-model-section-with-modal
+                      :preloaded="subsection.subElementsLoaded"
+                      :sectionInit="subsection"
+                      :sectionId="subsection.id"
+                      :initiativeId="initiativeId"
+                      :inView="false"
+                      :inElementId="section.id"
+                      :inElementTitle="section.title"
+                      :level="level + 1"
+                      dragType="MOVE_SUBSECTION"
+                      :cardsAsCardsInit="cardsAsCards"
+                      :expandInit="expandSubSubsecInit">
+                    </app-model-section-with-modal>
+                  </div>
+
+                  <div class="subsection-container gray-1-color w3-border w3-round"
+                    @dragover.prevent
+                    @drop="subsectionDroped('', $event)">
+
+                    <button class="w3-button" style="width: 100%; text-align: left"
+                      @click="$emit('new-subsection')">
+                      <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
+                      add subsection
+                    </button>
+                  </div>
+                </div>
+              </transition>
+            </div>
           </div>
         </div>
       </transition>
@@ -435,7 +436,7 @@ export default {
 }
 
 .cards-container {
-  padding: 20px 10px 4px 10px;
+  padding: 22px 10px 22px 10px;
   max-height: 500px;
   overflow: auto;
 }
@@ -494,7 +495,6 @@ export default {
 
 .last-add {
   margin-top: 16px;
-  margin-bottom: 16px;
 }
 
 .empty-div:hover {
