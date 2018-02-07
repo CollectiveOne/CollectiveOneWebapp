@@ -72,7 +72,7 @@
               </div>
 
             </div>
-            <div :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards, 'last-add': cardsAsCards}"
+            <div class="last-add" :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
               @dragover.prevent
               @drop.prevent="cardDroped('', $event)">
 
@@ -492,13 +492,14 @@ export default {
   margin: 3px 0px;
 }
 
+.last-add {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
 .empty-div:hover {
   background-color: #bfc1c3;
   color: white;
-}
-
-.last-add {
-  padding-top: 30px;
 }
 
 .bottom-bar .fa {

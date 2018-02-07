@@ -50,6 +50,23 @@
         </div>
       </div>
 
+      <div class="w3-row">
+        <div class="control-btn w3-left w3-tag gray-1 cursor-pointer"
+          @click="expandSubSubsecInit = !expandSubSubsecInit">
+          <div class="w3-left button-text">
+            <span v-if="!expandSubSubsecInit">expand all</span>
+            <span v-else>collapse all</span>
+          </div>
+        </div>
+        <div class="control-btn w3-left w3-tag gray-1 cursor-pointer"
+          @click="cardsAsCardsInit = !cardsAsCardsInit">
+          <div class="w3-left button-text">
+            <span v-if="!cardsAsCardsInit">cards view</span>
+            <span v-else>doc view</span>
+          </div>
+        </div>
+      </div>
+
       <div v-for="section in view.sections"
         :key="section.id"
         class="view-sections">
@@ -67,7 +84,9 @@
           :inElementTitle="view.title"
           :initiativeId="initiativeId"
           :level="0"
-          dragType="MOVE_SECTION">
+          dragType="MOVE_SECTION"
+          :cardsAsCardsInit="cardsAsCardsInit"
+          :expandInit="expandSubSubsecInit">
         </app-model-section-with-modal>
       </div>
 
@@ -107,7 +126,9 @@ export default {
       showActionButton: false,
       showViewModal: false,
       showSectionModal: false,
-      isNew: false
+      isNew: false,
+      cardsAsCardsInit: true,
+      expandSubSubsecInit: false
     }
   },
 
@@ -204,6 +225,15 @@ export default {
 
 .view-sections {
   /*margin-bottom: 30px;*/
+}
+
+.control-btn {
+  padding: 2px 16px;
+}
+
+.control-btn:hover {
+  background-color: #dbdee0;
+  color: black;
 }
 
 .section-drop-area {
