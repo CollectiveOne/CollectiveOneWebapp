@@ -612,6 +612,15 @@ public class ModelService {
 		cardWrapper.setCard(card);
 		cardWrapper.setOtherProperties(cardDto);
 		
+		/* this inSections actually refer to add to new sections */
+		for (ModelSectionDto sectionDto : cardDto.getInSections()) {
+			ModelSection section = modelSectionRepository.findById(UUID.fromString(sectionDto.getId()));
+			
+			if (section != null) {
+				section.getCardsWrappers().add(cardWrapper);
+			}
+		}
+	
 		activityService.modelCardWrapperEdited(cardWrapper, appUserRepository.findByC1Id(creatorId));
 		
 		return new PostResult("success", "card edited", cardWrapper.getId().toString());

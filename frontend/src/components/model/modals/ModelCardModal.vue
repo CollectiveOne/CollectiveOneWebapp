@@ -15,7 +15,7 @@
         <div v-if="!loading" class="w3-container div-modal-content">
 
           <app-model-modal-buttons
-            v-if="isLoggedAnEditor"
+            v-if="isLoggedAnEditor && !editing"
             :show="showEditButtons"
             @edit="startEditing()"
             @delete="deleteCard()"
@@ -86,30 +86,55 @@
                   </div>
                 </div>
 
-                <div v-if="!isNew" class="w3-row">
-                  <div class="w3-left w3-margin-right">
-                    <i>in:</i>
+                <div v-if="!isNew">
+                  <div class="w3-row">
+                    <div class="w3-left w3-margin-right">
+                      <i>in:</i>
+                    </div>
+                    <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container w3-left">
+                      <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
+                        class="gray-1 w3-tag w3-round w3-small">
+                        {{ inSection.title }}
+                      </router-link>
+                    </div>
+                    <div v-if="editing" v-for="toSection in addToSections" class="insection-tag-container w3-left w3-display-container w3-margin-left">
+                      <div class="success-background w3-tag w3-round w3-small">
+                        {{ toSection.title }}
+                      </div>
+                      <div @click="removeToSection(toSection)"
+                        class="remove-tag-icon success-color w3-display-right cursor-pointer">
+                        <i class="fa fa-times-circle"></i>
+                      </div>
+                    </div>
+                    <div v-if="editing" class="w3-left w3-margin-left">
+                      <div v-if="!addToSection"
+                        @click="addToSection = !addToSection"
+                        class="w3-tag button-blue w3-small w3-round cursor-pointer">
+                        add to another section
+                      </div>
+                    </div>
                   </div>
-                  <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container w3-left">
-                    <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
-                      class="gray-1 w3-tag w3-round w3-small">
-                      {{ inSection.title }}
-                    </router-link>
-                  </div>
-                  <div v-if="editing" class="w3-row w3-margin-top">
-                    <button @click="addToSection = !addToSection"
-                      class="w3-button w3-small w3-round "
-                      type="button" name="button">
-                      add to another section
-                    </button>
-                    <app-model-section-selector
-                      v-if="addToSection"
-                      :initiativeId="cardWrapper.initiativeId"
-                      @select="sectionSelected($event)">
-                    </app-model-section-selector>
-                  </div>
-                </div>
 
+                  <div class="w3-row">
+                    <div class="slider-container">
+                      <transition name="slideDownUp">
+                        <app-model-section-selector
+                          v-if="addToSection"
+                          :initiativeId="cardWrapper.initiativeId"
+                          @select="sectionSelected($event)">
+                        </app-model-section-selector>
+                      </transition>
+                    </div>
+                  </div>
+
+                  <div v-if="addToSection" class="w3-row w3-margin-top w3-center">
+                    <button @click="addToSection = false"
+                      class="w3-button app-button" type="button" name="button">
+                      Cancel add to section
+                    </button>
+                  </div>
+
+                </div>
 
                 <div v-if="!editing" class="">
                   <div v-if="card.imageFile" class="w3-row w3-margin-top image-container w3-center w3-display-container w3-card-2 cursor-pointer">
@@ -248,10 +273,10 @@
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
             <hr>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel <span><small>(Esc)</small></span></button>
             </div>
             <div class="w3-col m6 w3-center">
-              <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept <span><small>(Ctr + Enter)</small></span></button>
               <div v-show="sendingData" class="sending-accept light-grey">
                 <img class="" src="../../../assets/loading.gif" alt="">
               </div>
@@ -340,7 +365,8 @@ export default {
       enableClickOutside: false,
       sendingData: false,
       loading: false,
-      addToSection: false
+      addToSection: false,
+      addToSections: []
     }
   },
 
@@ -398,11 +424,6 @@ export default {
   methods: {
     atKeydown (e) {
       if (!this.editing) {
-        /* e */
-        if (e.keyCode === 69) {
-          this.startEditing()
-        }
-
         /* esc */
         if (e.keyCode === 27) {
           this.closeThis()
@@ -492,6 +513,7 @@ export default {
       }
     },
     startEditing () {
+      this.addToSections = []
       this.editedCard = JSON.parse(JSON.stringify(this.card))
 
       if (this.cardWrapper.targetDate) {
@@ -533,6 +555,7 @@ export default {
 
       if (ok) {
         var cardDto = JSON.parse(JSON.stringify(this.editedCard))
+
         var responseF = (response) => {
           this.sendingData = false
           if (response.data.result === 'success') {
@@ -556,6 +579,13 @@ export default {
               })
           }
         } else {
+          /* editing */
+
+          /* add the new sections */
+          if (this.addToSections.length > 0) {
+            cardDto.inSections = this.addToSections
+          }
+
           this.sendingData = true
           this.axios.put('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id, cardDto)
           .then(responseF).catch((error) => {
@@ -594,6 +624,37 @@ export default {
     removeImage () {
       this.editedCard.imageFile = null
       this.editedCard.newImageFileId = 'REMOVE'
+    },
+    sectionSelected (section) {
+      this.addToSection = false
+
+      /* prevent adding in an existing section */
+      for (var ix1 in this.cardWrapper.inSections) {
+        if (this.cardWrapper.inSections[ix1].id === section.id) {
+          return
+        }
+      }
+
+      /* prevent adding twice the same section */
+      for (var ix2 in this.addToSections) {
+        if (this.addToSections[ix2].id === section.id) {
+          return
+        }
+      }
+
+      this.addToSections.push(section)
+    },
+    removeToSection (section) {
+      var ix = -1
+      for (var ixS in this.addToSections) {
+        if (this.addToSections[ixS].id === section.id) {
+          ix = ixS
+        }
+      }
+
+      if (ix !== -1) {
+        this.addToSections.splice(ix, 1)
+      }
     }
   },
 
@@ -710,6 +771,12 @@ export default {
 
 .state-tag {
   width: 100%;
+}
+
+.remove-tag-icon {
+  margin-top: -5px;
+  margin-right: -10px;
+  z-index: 10;
 }
 
 </style>

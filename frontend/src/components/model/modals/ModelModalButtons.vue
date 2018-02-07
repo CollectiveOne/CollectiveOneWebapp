@@ -5,13 +5,13 @@
         <div v-if="show" class="w3-row buttons-row w3-margin-bottom">
           <button class="w3-right w3-button app-button app-margin-left"
             @click="$emit('edit')">
-            <i class="fa fa-pencil" aria-hidden="true"></i> edit
+            <i class="fa fa-pencil" aria-hidden="true"></i> edit (e)
           </button>
           <button
             v-if="!hideRemove"
             class="w3-right w3-button app-button app-margin-left"
             @click="removeIntent = true">
-            <i class="fa fa-times" aria-hidden="true"></i> remove
+            <i class="fa fa-times" aria-hidden="true"></i> remove (r)
           </button>
           <button class="w3-right w3-button app-button app-button-danger"
             @click="deleteIntent = true">
@@ -90,6 +90,35 @@ export default {
       deleteIntent: false,
       removeIntent: false
     }
+  },
+
+  methods: {
+    atKeydown (e) {
+      /* e */
+      if (e.keyCode === 69) {
+        this.$emit('edit')
+      }
+
+      /* r */
+      if (e.keyCode === 82) {
+        this.removeIntent = true
+      }
+
+      if (this.removeIntent) {
+        /* enter */
+        if (e.keyCode === 13) {
+          this.$emit('remove')
+        }
+      }
+    }
+  },
+
+  mounted () {
+    window.addEventListener('keydown', this.atKeydown)
+  },
+
+  destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 
 }

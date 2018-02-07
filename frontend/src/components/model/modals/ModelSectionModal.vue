@@ -15,7 +15,7 @@
         <div v-if="!loading" class="w3-container div-modal-content">
 
           <app-model-modal-buttons
-            v-if="isLoggedAnEditor"
+            v-if="isLoggedAnEditor && !editing"
             :show="showEditButtons"
             @edit="startEditing()"
             @delete="deleteSection()"

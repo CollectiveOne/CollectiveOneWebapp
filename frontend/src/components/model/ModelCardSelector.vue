@@ -103,6 +103,7 @@ export default {
 .card-container {
   margin-bottom: 16px;
   display: inline-block;
+  width: 100%;
 }
 
 @media screen and (min-width: 992px) {

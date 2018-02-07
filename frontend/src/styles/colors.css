@@ -55,6 +55,11 @@
   border-color: #15a5cc !important;
 }
 
+.button-blue {
+  background-color: #15a5cc !important;
+  color: white;
+}
+
 .app-blue {
   background-color: #95bad6 !important;
   color: #313942;
@@ -74,4 +79,13 @@
 
 .revert-color {
   background-color: #ff4b4b;
+}
+
+.success-background {
+  background-color:  #40a36d !important;
+  color: white;
+}
+
+.success-color {
+  color: #40a36d !important;
 }
