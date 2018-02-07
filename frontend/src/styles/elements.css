@@ -1,0 +1,27 @@
+#app html,body,h1,h2,h3,h4,h5 {
+  font-family: 'Raleway', sans-serif;
+}
+tbody tr {
+  height: 80px !important;
+}
+
+tfoot tr {
+  height: 60px !important;
+  font-weight: bold;
+}
+
+td {
+  vertical-align: middle !important;
+}
+
+textarea {
+  resize: vertical;
+}
+
+a {
+  text-decoration: none;
+}
+
+select {
+  padding-left: 10px !important;
+}
