@@ -331,6 +331,10 @@ export default {
     inSectionTitle: {
       type: String,
       default: ''
+    },
+    ixInSection: {
+      type: Number,
+      default: -1
     }
   },
 
@@ -546,6 +550,8 @@ export default {
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
+            cardDto.ixInSection = this.ixInSection
+
             this.sendingData = true
             this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/cardWrapper', cardDto).then(responseF).catch((error) => {
               console.log(error)

@@ -19,6 +19,7 @@ public class ModelCardDto {
 	private Boolean stateControl;
 	private String state;
 	private Long targetDate;
+	private Integer ixInSection;
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
 	
 	public ModelCard toEntity(ModelCard card, ModelCardDto cardDto, FileStored imageFile) {
@@ -91,6 +92,12 @@ public class ModelCardDto {
 	}
 	public void setTargetDate(Long targetDate) {
 		this.targetDate = targetDate;
+	}
+	public Integer getIxInSection() {
+		return ixInSection;
+	}
+	public void setIxInSection(Integer ixInSection) {
+		this.ixInSection = ixInSection;
 	}
 	public List<ModelSectionDto> getInSections() {
 		return inSections;

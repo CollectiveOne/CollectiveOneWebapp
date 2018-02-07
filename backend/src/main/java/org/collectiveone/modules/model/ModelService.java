@@ -570,7 +570,21 @@ public class ModelService {
 		
 		cardWrapper = modelCardWrapperRepository.save(cardWrapper);
 		
-		section.getCardsWrappers().add(cardWrapper);
+		/* add location */
+		if (cardDto.getIxInSection() == null) {
+			/* at the end */
+			section.getCardsWrappers().add(cardWrapper);
+		} else {
+			if (cardDto.getIxInSection() == -1) {
+				/* at the end */
+				section.getCardsWrappers().add(cardWrapper);
+			} else {
+				/* at a given ix */
+				section.getCardsWrappers().add(cardDto.getIxInSection(), cardWrapper);
+			}
+
+		}
+		
 		modelSectionRepository.save(section);
 		
 		activityService.modelCardWrapperCreated(cardWrapper, section, appUserRepository.findByC1Id(creatorId));

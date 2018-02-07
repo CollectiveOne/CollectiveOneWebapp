@@ -54,17 +54,23 @@
               @dragover.prevent
               @drop.prevent="cardDroped(cardWrapper.id, $event)">
 
-              <app-model-card-with-modal
-                :cardWrapper="cardWrapper"
-                :initiativeId="initiativeId"
-                :inSectionId="section.id"
-                :inSectionTitle="section.title"
-                :cardEffect="cardsAsCards">
-              </app-model-card-with-modal>
-              <app-model-add-card-area
-                v-if="cardsAsCards" :index="ix"
-                @new-card="$emit('new-card', $event)">
-              </app-model-add-card-area>
+              <div v-if="cardsAsCards"
+                @click="$emit('new-card', ix)" class="empty-div cursor-pointer w3-row w3-round">
+                <div class="w3-right">
+                  <i>add card here</i>
+                </div>
+              </div>
+
+              <div class="">
+                <app-model-card-with-modal
+                  :cardWrapper="cardWrapper"
+                  :initiativeId="initiativeId"
+                  :inSectionId="section.id"
+                  :inSectionTitle="section.title"
+                  :cardEffect="cardsAsCards">
+                </app-model-card-with-modal>
+              </div>
+
             </div>
             <div :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards, 'last-add': cardsAsCards}"
               @dragover.prevent
@@ -184,15 +190,13 @@
 <script>
 import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
-import ModelAddCardArea from '@/components/model/ModelAddCardArea.vue'
 
 export default {
   name: 'app-model-section',
 
   components: {
     'app-model-section-header': ModelSectionHeader,
-    'app-model-card-modal': ModelCardModal,
-    'app-model-add-card-area': ModelAddCardArea
+    'app-model-card-modal': ModelCardModal
   },
 
   props: {
@@ -479,6 +483,18 @@ export default {
 
 .section-card-par {
   margin-bottom: 16px;
+}
+
+.empty-div {
+  min-height: 22px;
+  color: #d5d6d7;
+  padding-right: 10px;
+  margin: 3px 0px;
+}
+
+.empty-div:hover {
+  background-color: #bfc1c3;
+  color: white;
 }
 
 .last-add {

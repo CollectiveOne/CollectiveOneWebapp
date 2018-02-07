@@ -38,6 +38,7 @@ needs the model card component inside, and would crate a recursion -->
         <app-model-card-modal
           v-if="showNewCardModal"
           :isNew="true"
+          :ixInSection="ixInSection"
           :initiativeId="initiativeId"
           :inSectionId="section.id"
           :inSectionTitle="section.title"
@@ -199,7 +200,7 @@ export default {
       this.showNewSubsectionModal = true
     },
     newCard (ix) {
-      this.cardIx = ix
+      this.ixInSection = ix
       this.showNewCardModal = true
     }
   },
