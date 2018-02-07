@@ -48,7 +48,7 @@
         <div v-if="expanded" class="w3-row w3-leftbar subelements-container">
 
           <div class="w3-row-padding cards-container">
-            <div v-for="cardWrapper in section.cardsWrappers"
+            <div v-for="(cardWrapper, ix) in section.cardsWrappers"
               :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
               :key="cardWrapper.id"
               @dragover.prevent
@@ -61,8 +61,12 @@
                 :inSectionTitle="section.title"
                 :cardEffect="cardsAsCards">
               </app-model-card-with-modal>
+              <app-model-add-card-area
+                v-if="cardsAsCards" :index="ix"
+                @new-card="$emit('new-card', $event)">
+              </app-model-add-card-area>
             </div>
-            <div :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
+            <div :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards, 'last-add': cardsAsCards}"
               @dragover.prevent
               @drop.prevent="cardDroped('', $event)">
 
@@ -180,13 +184,15 @@
 <script>
 import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
+import ModelAddCardArea from '@/components/model/ModelAddCardArea.vue'
 
 export default {
   name: 'app-model-section',
 
   components: {
     'app-model-section-header': ModelSectionHeader,
-    'app-model-card-modal': ModelCardModal
+    'app-model-card-modal': ModelCardModal,
+    'app-model-add-card-area': ModelAddCardArea
   },
 
   props: {
@@ -431,7 +437,7 @@ export default {
 }
 
 .section-card-col {
-  margin-bottom: 16px;
+  margin-bottom: 0px;
   display: inline-block;
 }
 
@@ -473,6 +479,10 @@ export default {
 
 .section-card-par {
   margin-bottom: 16px;
+}
+
+.last-add {
+  padding-top: 30px;
 }
 
 .bottom-bar .fa {

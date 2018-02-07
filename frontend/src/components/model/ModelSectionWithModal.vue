@@ -65,7 +65,7 @@ needs the model card component inside, and would crate a recursion -->
         :cardsAsCards="cardsAsCards"
         :expandInit="expandInit"
         :force-update="forceUpdate"
-        @new-card="newCard()"
+        @new-card="newCard($event)"
         @new-subsection="newSubsection()">
       </app-model-section>
 
@@ -198,7 +198,8 @@ export default {
     newSubsection () {
       this.showNewSubsectionModal = true
     },
-    newCard () {
+    newCard (ix) {
+      this.cardIx = ix
       this.showNewCardModal = true
     }
   },

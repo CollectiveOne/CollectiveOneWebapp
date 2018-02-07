@@ -182,6 +182,7 @@ export default {
 
 .click-area {
   position: absolute;
+  min-height: 40px;
   height: calc(100% - 40px);
   width: 100%;
   z-index: 10;

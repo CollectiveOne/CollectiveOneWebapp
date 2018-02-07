@@ -422,27 +422,6 @@ export default {
   },
 
   methods: {
-    atKeydown (e) {
-      if (!this.editing) {
-        /* esc */
-        if (e.keyCode === 27) {
-          this.closeThis()
-        }
-      }
-
-      if (this.editing) {
-        /* esc */
-        if (e.keyCode === 27) {
-          this.cancel()
-        }
-
-        /* ctr + enter */
-        if (e.keyCode === 13 && !e.ctrKey) {
-          e.preventDefault()
-          this.accept()
-        }
-      }
-    },
     copyUrl () {
       if (!this.showUrl) {
         this.showUrl = true
@@ -654,6 +633,27 @@ export default {
 
       if (ix !== -1) {
         this.addToSections.splice(ix, 1)
+      }
+    },
+    atKeydown (e) {
+      if (!this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.closeThis()
+        }
+      }
+
+      if (this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.cancel()
+        }
+
+        /* ctr + enter */
+        if (e.keyCode === 13 && !e.ctrKey) {
+          e.preventDefault()
+          this.accept()
+        }
       }
     }
   },

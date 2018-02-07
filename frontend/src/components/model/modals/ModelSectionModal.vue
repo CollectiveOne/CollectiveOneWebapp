@@ -114,10 +114,10 @@
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
             <hr>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel <span><small>(Esc)</small></span></button>
             </div>
             <div class="w3-col m6 w3-center">
-              <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept <span><small>(Ctr + Enter)</small></span></button>
               <div v-show="sendingData" class="sending-accept light-grey">
                 <img class="" src="../../../assets/loading.gif" alt="">
               </div>
@@ -301,12 +301,7 @@ export default {
         var responseF = (response) => {
           this.sendingData = false
           if (response.data.result === 'success') {
-            if (this.isNew) {
-              this.closeThis()
-            } else {
-              this.editing = false
-              this.update()
-            }
+            this.closeThis()
             this.$store.commit('triggerUpdateModel')
           } else {
             this.showOutputMessage(response.data.message)
@@ -376,6 +371,27 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
+    },
+    atKeydown (e) {
+      if (!this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.closeThis()
+        }
+      }
+
+      if (this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.cancel()
+        }
+
+        /* ctr + enter */
+        if (e.keyCode === 13 && !e.ctrKey) {
+          e.preventDefault()
+          this.accept()
+        }
+      }
     }
   },
 
@@ -398,6 +414,12 @@ export default {
     setTimeout(() => {
       this.enableClickOutside = true
     }, 1000)
+
+    window.addEventListener('keydown', this.atKeydown)
+  },
+
+  destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 }
 </script>

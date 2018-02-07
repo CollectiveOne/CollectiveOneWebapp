@@ -17,7 +17,7 @@
           <div class="w3-row div-modal-content">
 
             <app-model-modal-buttons
-              v-if="isLoggedAnEditor"
+              v-if="isLoggedAnEditor && !editing"
               :show="showEditButtons"
               :hideRemove="true"
               deleteMessage="This will delete the view. Its sections and cards will not be deleted."
