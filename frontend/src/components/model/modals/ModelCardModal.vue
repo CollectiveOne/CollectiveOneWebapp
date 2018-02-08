@@ -656,7 +656,7 @@ export default {
         }
 
         /* ctr + enter */
-        if (e.keyCode === 13 && !e.ctrKey) {
+        if (e.keyCode === 13 && e.ctrlKey) {
           e.preventDefault()
           this.accept()
         }
