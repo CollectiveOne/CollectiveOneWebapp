@@ -1,6 +1,6 @@
 <template lang="html">
 
-  <div v-if="section" class="section-container w3-border gray-1-border w3-round">
+  <div v-if="section" class="section-container w3-border gray-1-border w3-round" ref="sectionContainer">
 
     <div class="slider-container">
       <transition name="slideDownUp">
@@ -28,105 +28,102 @@
       </app-model-section-header>
     </div>
 
-
     <div v-if="expanded" class="w3-row expand-row w3-leftbar">
-      <button
-        class="w3-button light-grey w3-small"
-        @click="toggleExpand()">
-        <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse</span>
-      </button>
+      <div class="w3-col m4">
+        <button class="w3-button light-grey w3-small"
+          @click="toggleExpand()">
+          <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse section</span>
+        </button>
+      </div>
+      <div class="w3-col m4 ">
+        <button class="w3-button light-grey w3-small"
+          @click="showCards =!showCards">
+          <span v-if="showCards"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide cards</span>
+          <span v-else="showCards"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ section.cardsWrappers.length }}</b> cards</span>
+        </button>
+      </div>
+      <div class="w3-col m4 ">
+        <button class="w3-button light-grey w3-small"
+          @click="showSubsections =!showSubsections">
+          <span v-if="showSubsections"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide subsections</span>
+          <span v-else="showSubsections"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ section.nSubsections }}</b> subsections</span>
+        </button>
+      </div>
+
     </div>
 
-    <div class="gray-1-border" :class="{'w3-border-bottom': !showExpandButton, 'slider-container': animatingSubsections}">
-      <transition name="slideDownUp"
-        @before-enter="animatingSubsections = true"
-        @after-enter="animatingSubsections = false"
-        @before-leave="animatingSubsections = true"
-        @after-leave="animatingSubsections = false">
-        <!-- hooks are needed to enable overflow when not animating -->
+    <div class="gray-1-border slider-container">
 
         <div v-if="expanded" class="w3-row w3-leftbar subelements-container">
           <div class="w3-col">
-            <div class="w3-row-padding cards-container">
-              <div v-for="(cardWrapper, ix) in section.cardsWrappers"
-                :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
-                :key="cardWrapper.id"
-                @dragover.prevent
-                @drop.prevent="cardDroped(cardWrapper.id, $event)">
 
-                <div v-if="cardsAsCards"
-                  @click="$emit('new-card', ix)" class="empty-div cursor-pointer w3-row w3-round">
-                  <div class="w3-right">
-                    <i>add card here</i>
+            <div v-if="section.cardsWrappers.length > 0 && showSubsections && !showCards" class="w3-center w3-margin-top">
+              <button class="w3-button light-grey w3-small w3-round"
+                @click="showCards =!showCards">
+                <span v-if="showCards"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide cards</span>
+                <span v-else="showCards"><b>{{ section.cardsWrappers.length }}</b> cards hidden</span>
+              </button>
+            </div>
+
+            <div class="w3-row slider-container">
+              <transition name="slideDownUp">
+                <div v-if="showCards" class="cards-container">
+                  <div v-for="(cardWrapper, ix) in section.cardsWrappers"
+                    :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
+                    :key="cardWrapper.id"
+                    @dragover.prevent
+                    @drop.prevent="cardDroped(cardWrapper.id, $event)">
+
+                    <div v-if="cardsAsCards"
+                      @click="$emit('new-card', ix)" class="empty-div cursor-pointer w3-row w3-round">
+                      <div class="w3-right">
+                        <i>add card here</i>
+                      </div>
+                    </div>
+
+                    <div class="">
+                      <app-model-card-with-modal
+                        :cardWrapper="cardWrapper"
+                        :initiativeId="initiativeId"
+                        :inSectionId="section.id"
+                        :inSectionTitle="section.title"
+                        :cardEffect="cardsAsCards">
+                      </app-model-card-with-modal>
+                    </div>
+
+                  </div>
+                  <div v-if="cardsAsCards" class="last-add section-card-col"
+                    @dragover.prevent
+                    @drop.prevent="cardDroped('', $event)">
+
+                    <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
+                      <button class="w3-button" style="width: 100%"
+                        @click="$emit('new-card')">
+                        <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
+                        add card
+                      </button>
+                    </div>
                   </div>
                 </div>
-
-                <div class="">
-                  <app-model-card-with-modal
-                    :cardWrapper="cardWrapper"
-                    :initiativeId="initiativeId"
-                    :inSectionId="section.id"
-                    :inSectionTitle="section.title"
-                    :cardEffect="cardsAsCards">
-                  </app-model-card-with-modal>
-                </div>
-
-              </div>
-              <div class="last-add" :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
-                @dragover.prevent
-                @drop.prevent="cardDroped('', $event)">
-
-                <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
-                  <button class="w3-button" style="width: 100%"
-                    @click="$emit('new-card')">
-                    <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-                    add card
-                  </button>
-                </div>
-              </div>
+              </transition>
             </div>
 
-            <div class="w3-row bottom-bar light-grey w3-small">
-              <button v-if="!showSubsections"
-                class="w3-button model-button show-sections-button"
-                @click="showSubsections =true">
-                <i class="w3-left fa fa-caret-right" aria-hidden="true"></i>
-                <div class="w3-left button-text">
-                  <b>{{ section.nSubsections }}</b> subsections
-                </div>
+            <div v-if="section.nSubsections > 0 && showCards && !showSubsections" class="w3-center w3-margin-bottom">
+              <button  class="w3-button light-grey w3-small w3-round"
+                @click="showSubsections =!showSubsections">
+                <span><b>{{ section.nSubsections }}</b> subsections hidden</span>
               </button>
-              <div v-else class="w3-row light-grey">
+            </div>
 
-                <div class="w3-left">
-                  <button class="w3-button" type="button" name="button"
-                    @click="showSubsections = false">
-                    <i class="w3-left fa fa-caret-up" aria-hidden="true"></i>
-                    <div class="w3-left button-text">
-                      hide subsections
-                    </div>
-                  </button>
-                </div>
-
-                <div class="w3-left w3-margin-left">
-                  <button class="w3-button" type="button" name="button"
-                    @click="expandSubSubsecInit = !expandSubSubsecInit">
-                    <i class="w3-left fa fa-caret-up" aria-hidden="true"></i>
-                    <div class="w3-left button-text">
-                      <span v-if="!expandSubSubsecInit">expand all</span>
-                      <span v-else>collapse all</span>
-                    </div>
-                  </button>
-                </div>
-
+            <div v-if="section.nSubsections > 0 && showSubsections" class="w3-row subsection-controls-row">
+              <div class="w3-tag gray-1 w3-small w3-left cursor-pointer"
+                @click="expandSubSubsecInit =!expandSubSubsecInit">
+                {{ expandSubSubsecInit ? 'collapse' : 'expand' }} all subsections
               </div>
             </div>
 
-            <div class="" :class="{'slider-container': animatingSubsections}">
-              <transition name="slideDownUp"
-                @before-enter="animatingSubsections = true"
-                @after-enter="animatingSubsections = false"
-                @before-leave="animatingSubsections = true"
-                @after-leave="animatingSubsections = false">
+            <div class="slider-container">
+              <transition name="slideDownUp">
 
                 <div v-if="showSubsections" class="subsections-container">
                   <div v-for="subsection in section.subsections"
@@ -168,11 +165,10 @@
       </transition>
     </div>
 
-    <div v-if="showExpandButton" class="w3-row expand-row w3-leftbar" :class="{'expand-row-collapsed': !expanded}">
-      <button
-        class="w3-button light-grey w3-small"
+    <div v-if="!expanded" class="w3-row expand-row w3-leftbar expand-row-collapsed">
+      <button class="w3-button light-grey w3-small"
         @click="toggleExpand()">
-        <span v-if="!expanded">
+        <span>
           <i class="fa fa-chevron-down" aria-hidden="true"></i> Expand
           <span v-if="section.nSubsections > 0 && section.nCards > 0"> (contains <b>{{ section.nSubsections }}</b> subsections and <b>{{ section.nCards }}</b> cards)</span>
           <span v-else>
@@ -180,8 +176,14 @@
             <span v-if="section.nCards > 0"> (contains <b>{{ section.nCards }}</b> cards)</span>
           </span>
         </span>
-        <span v-else><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse "{{  section.title }}" section</span>
       </button>
+    </div>
+    <div v-if="expanded && (showCards || showSubsections)" class="w3-row expand-row w3-leftbar">
+      <button class="w3-button light-grey w3-small"
+        @click="toggleExpand()">
+        <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse "{{  section.title }}" section</span>
+      </button>
+
     </div>
 
   </div>
@@ -205,7 +207,11 @@ export default {
       type: Object,
       default: null
     },
-    preloaded: {
+    basicPreloaded: {
+      type: Boolean,
+      default: false
+    },
+    subElementsPreloaded: {
       type: Boolean,
       default: false
     },
@@ -257,10 +263,10 @@ export default {
   data () {
     return {
       section: null,
-      showSubsections: false,
-      showCards: false,
+      loaded: false,
+      showSubsections: true,
+      showCards: true,
       expanded: false,
-      animatingSubsections: false,
       showCardModal: false,
       showCardId: '',
       expandSubSubsecInit: false
@@ -268,8 +274,16 @@ export default {
   },
 
   computed: {
-    showExpandButton () {
-      return true
+    nCardWrappers () {
+      if (this.section) {
+        if (this.section.CardWrappers) {
+          return this.section.CardWrappers.length
+        } else {
+          return 0
+        }
+      } else {
+        return 0
+      }
     }
   },
 
@@ -291,29 +305,61 @@ export default {
   methods: {
     toggleExpand () {
       if (!this.expanded) {
-        if (!this.preloaded) {
-          this.update()
+        if (!this.loaded) {
+          this.update(true)
+        } else {
+          this.startExpand()
         }
-        this.expanded = true
       } else {
-        this.expanded = false
+        this.startCollapse()
       }
     },
-    update () {
+    startExpand () {
+      this.showCards = false
+      this.showSubsections = false
+      this.expanded = true
+
+      this.$nextTick(() => {
+        if (this.nCardWrappers > 0) {
+          this.showCards = true
+          setTimeout(() => {
+            if (this.nSubsections > 0) {
+              this.showSubsections = true
+            }
+          }, 350)
+        } else {
+          this.showSubsections = true
+        }
+      })
+    },
+    startCollapse () {
+      this.showSubsections = false
+      setTimeout(() => {
+        this.showCards = false
+        setTimeout(() => {
+          this.expanded = false
+        }, 500)
+      }, 500)
+    },
+    update (expandFlag) {
+      console.log('updating')
+      console.log(expandFlag)
+      expandFlag = expandFlag || false
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id, {
         params: {
           level: 1
         }
       }).then((response) => {
         // console.log(response.data)
+        console.log('updated')
+        console.log(expandFlag)
+        this.loaded = true
         this.section = response.data.data
-        this.checkExpands()
+        if (expandFlag) {
+          console.log('expanding')
+          this.startExpand()
+        }
       })
-    },
-    checkExpands () {
-      if (this.section.nSubsections > 0 && this.section.cardsWrappers.length === 0) {
-        this.showSubsections = true
-      }
     },
     cardDroped (onCardWrapperId, event) {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
@@ -398,16 +444,22 @@ export default {
   },
 
   created () {
-    this.expanded = this.expandInit
-
-    if (!this.preloaded) {
+    if (!this.basicPreloaded) {
       this.section = {
         id: this.sectionId
       }
       this.update()
     } else {
       this.section = this.sectionInit
-      this.checkExpands()
+      if (this.subElementsPreloaded) {
+        this.loaded = true
+      } else {
+        this.update()
+      }
+    }
+
+    if (this.expandInit) {
+      this.toggleExpand()
     }
 
     /* check if open card modal */
@@ -429,16 +481,14 @@ export default {
 
 .expand-row button {
   width: 100%;
-  text-align: left;
+  text-align: center;
   padding-left: 10px;
   padding-top: 5px;
   padding-bottom: 5px;
 }
 
 .cards-container {
-  padding: 22px 10px 22px 10px;
-  max-height: 500px;
-  overflow: auto;
+  padding: 6px 10px 22px 10px;
 }
 
 .section-card-col {
@@ -516,9 +566,15 @@ export default {
   width: 100%;
 }
 
+.subsection-controls-row {
+  padding-left: 16px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
 .subsections-container {
-  padding-left: 20px;
-  padding-top: 20px;
+  padding-left: 16px;
+  padding-top: 12px;
   padding-right: 10px;
 }
 

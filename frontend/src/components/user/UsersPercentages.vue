@@ -59,7 +59,7 @@
           <td class="value-col">
             <div v-if="disable" class="">
               <div v-if="!isDontKnow(userData)" class="">
-                <b>{{ userData.percent.toFixed(1) * totalTokens / 100}}</b>
+                <b>{{ (userData.percent * totalTokens / 100).toFixed(2) }}</b>
               </div>
               <div v-else class="">
                 <b>don't know</b>

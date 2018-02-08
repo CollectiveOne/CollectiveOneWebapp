@@ -54,15 +54,10 @@
         <div class="control-btn w3-left w3-tag gray-1 cursor-pointer"
           @click="expandSubSubsecInit = !expandSubSubsecInit">
           <div class="w3-left button-text">
-            <span v-if="!expandSubSubsecInit">expand all</span>
-            <span v-else>collapse all</span>
-          </div>
-        </div>
-        <div class="control-btn w3-left w3-tag gray-1 cursor-pointer"
-          @click="cardsAsCardsInit = !cardsAsCardsInit">
-          <div class="w3-left button-text">
-            <span v-if="!cardsAsCardsInit">cards view</span>
-            <span v-else>doc view</span>
+            <small>
+              <span v-if="!expandSubSubsecInit">expand all</span>
+              <span v-else>collapse all</span>
+            </small>
           </div>
         </div>
       </div>
@@ -77,8 +72,9 @@
         </div>
 
         <app-model-section-with-modal
-          :preloaded="false"
-          :sectionId="section.id"
+          :basicPreloaded="true"
+          :subElementsPreloaded="false"
+          :sectionInit="section"
           :inView="true"
           :inElementId="view.id"
           :inElementTitle="view.title"

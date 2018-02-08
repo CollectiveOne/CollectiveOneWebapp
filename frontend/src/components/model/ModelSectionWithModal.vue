@@ -53,10 +53,11 @@ needs the model card component inside, and would crate a recursion -->
 
       <!-- forward all props  -->
       <app-model-section
-        :sectionInit="sectionInit"
-        :preloaded="preloaded"
-        :initiativeId="initiativeId"
         :sectionId="sectionId"
+        :sectionInit="sectionInit"
+        :basicPreloaded="basicPreloaded"
+        :subElementsPreloaded="subElementsPreloaded"
+        :initiativeId="initiativeId"
         :inView="inView"
         :inElementId="inElementId"
         :inElementTitle="inElementTitle"
@@ -65,6 +66,7 @@ needs the model card component inside, and would crate a recursion -->
         :floating="floating"
         :cardsAsCards="cardsAsCards"
         :expandInit="expandInit"
+        :expandSubSubsecInit="expandSubSubsecInit"
         :force-update="forceUpdate"
         @new-card="newCard($event)"
         @new-subsection="newSubsection()">
@@ -128,7 +130,11 @@ export default {
       type: Object,
       default: null
     },
-    preloaded: {
+    basicPreloaded: {
+      type: Boolean,
+      default: false
+    },
+    subElementsPreloaded: {
       type: Boolean,
       default: false
     },
@@ -168,6 +174,10 @@ export default {
       default: true
     },
     expandInit: {
+      type: Boolean,
+      default: false
+    },
+    expandSubSubsecInit: {
       type: Boolean,
       default: false
     }
@@ -213,14 +223,6 @@ export default {
 
   created () {
     this.cardsAsCards = this.cardsAsCardsInit
-
-    if (!this.preloaded) {
-      this.section = {
-        id: this.sectionId
-      }
-    } else {
-      this.section = this.sectionInit
-    }
   }
 }
 </script>

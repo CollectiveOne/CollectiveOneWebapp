@@ -508,9 +508,6 @@ public class ModelService {
 			}
 		} else {
 			sectionDto.setSubElementsLoaded(false);
-			for (ModelSection subsection : section.getSubsections()) {
-				sectionDto.getSubsections().add(subsection.toDto());
-			}
 		}
 		
 		return sectionDto; 
