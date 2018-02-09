@@ -21,6 +21,10 @@
           <span @click="cancelEdit()" class="cursor-pointer">(cancel <i class="fa fa-times"></i>)</span>
         </div>
       </div>
+      <app-error-panel
+        :show="showMembersOnly"
+        message="sorry, only members of the initiative can send messages here">
+      </app-error-panel>
       <app-markdown-editor
         v-model="newMessageText"
         placeholder="say something"
@@ -74,7 +78,14 @@ export default {
       intervalId: 0,
       showOnlyMessages: false,
       editing: false,
-      messageToEdit: null
+      messageToEdit: null,
+      showMembersOnly: false
+    }
+  },
+
+  computed: {
+    isLoggedAMember () {
+      return this.$store.getters.isLoggedAMember
     }
   },
 
@@ -97,6 +108,8 @@ export default {
           if (response.data.result === 'success') {
             this.newMessageText = ''
             this.triggerUpdate = !this.triggerUpdate
+          } else {
+            this.showMembersOnly = true
           }
         })
       } else {
