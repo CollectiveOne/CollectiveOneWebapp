@@ -363,10 +363,14 @@ export default {
       if (this.showSubsections) {
         this.showSubsections = false
         setTimeout(() => {
-          this.showCards = false
-          setTimeout(() => {
+          if (this.showCards) {
+            this.showCards = false
+            setTimeout(() => {
+              this.expanded = false
+            }, 500)
+          } else {
             this.expanded = false
-          }, 500)
+          }
         }, 500)
       } else {
         if (this.showCards) {
@@ -466,9 +470,12 @@ export default {
       var found = false
       for (var ix in this.$route.matched) {
         if (this.$route.matched[ix].name === 'ModelCardInSection') {
-          this.showCardId = this.$route.params.cardId
-          this.showCardModal = true
-          found = true
+          /* only open the model when rendering the section in the url */
+          if (this.$route.params.sectionId === this.section.id) {
+            this.showCardId = this.$route.params.cardId
+            this.showCardModal = true
+            found = true
+          }
         }
       }
       if (!found) {
