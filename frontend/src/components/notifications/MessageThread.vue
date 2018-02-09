@@ -11,12 +11,13 @@
         :triggerUpdate="triggerUpdate"
         :contextElementId="contextElementId"
         @updated="scrollToBottom()"
+        @last-activity="lastActivityReceived($event)"
         @edit-message="editMessage($event)">
       </app-activity-getter>
     </div>
     <div class="w3-row w3-margin-top">
       <div v-if="editing" class="">
-        <div class="success-panel w3-padding">
+        <div class="success-panel w3-padding w3-margin-bottom">
           Editing message
           <span @click="cancelEdit()" class="cursor-pointer">(cancel <i class="fa fa-times"></i>)</span>
         </div>
@@ -30,6 +31,8 @@
         placeholder="say something"
         :showToolbar="false"
         :showSend="true"
+        @c-focus="writting = true"
+        @c-blur="writting = false"
         @send="send($event)">
       </app-markdown-editor>
     </div>
@@ -79,7 +82,9 @@ export default {
       showOnlyMessages: false,
       editing: false,
       messageToEdit: null,
-      showMembersOnly: false
+      showMembersOnly: false,
+      writting: false,
+      lastMessage: null
     }
   },
 
@@ -90,6 +95,13 @@ export default {
   },
 
   methods: {
+    lastActivityReceived (activity) {
+      if (activity.type === 'MESSAGE_POSTED') {
+        this.lastMessage = activity.message
+      } else {
+        this.lastMessage = null
+      }
+    },
     editMessage (message) {
       this.editing = true
       this.messageToEdit = message
@@ -131,6 +143,15 @@ export default {
     showOnlyMessagesClicked () {
       this.showOnlyMessages = !this.showOnlyMessages
       this.triggerUpdate = !this.triggerUpdate
+    },
+    atKeydown (e) {
+      /* detect upkey to auto edit last message */
+      if (this.writting && this.newMessageText === '' && this.lastMessage !== null) {
+        /* esc */
+        if (e.keyCode === 38) {
+          this.editMessage(this.lastMessage)
+        }
+      }
     }
   },
 
@@ -140,18 +161,16 @@ export default {
 
   mounted () {
     this.scrollToBottom()
+    window.addEventListener('keydown', this.atKeydown)
   },
 
   destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 }
 </script>
 
 <style scoped>
-
-.CodeMirror, .CodeMirror-scroll {
-	min-height: 50px !important;
-}
 
 .history-container {
   min-height: 60px;

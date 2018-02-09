@@ -1,18 +1,39 @@
 <template lang="html">
   <div class="w3-cell-row">
     <div class="w3-cell markdown-container">
-      <markdown-editor
-        :configs="editorConfigs"
-        :value="value"
-        @input="$emit('input', $event)">
-      </markdown-editor>
+      <div class="w3-row">
+        <textarea v-if="!preview" class="this-textarea" :class="textareaClasses" ref="mdArea"
+          @focus="$emit('c-focus', $event)" @blur="$emit('c-blur', $event)"
+          v-model="text"
+          @input="textInput($event)"
+          :placeholder="placeholder">
+        </textarea>
+        <div v-if="preview || sideBySide" class="this-markdown" :class="markdownClasses">
+          <vue-markdown class="marked-text" :source="text"></vue-markdown>
+        </div>
+      </div>
     </div>
-    <div v-if="showSend" class="w3-cell send-button-column">
+    <div class="w3-cell buttons-column w3-cell-top">
+      <div @click="togglePreview()"
+        class="w3-tag cursor-pointer a-button" :class="{'gray-1': !preview, 'button-blue': preview}">
+        <i class="fa fa-eye" aria-hidden="true"></i>
+      </div>
+      <div @click="toggleSideBySide()"
+        class="w3-tag gray-1 cursor-pointer a-button" :class="{'gray-1': !sideBySide, 'button-blue': sideBySide}">
+        <i class="fa fa-columns" aria-hidden="true"></i>
+      </div>
+      <a href="https://en.support.wordpress.com/markdown-quick-reference/" target="_blank"
+        class="w3-tag gray-1 cursor-pointer a-button">
+        <i class="fa fa-question-circle" aria-hidden="true"></i>
+      </a>
+    </div>
+    <div v-if="showSend" class="w3-cell send-button-column w3-cell-top">
       <div class="send-button-container">
         <button class="w3-button app-button" name="button"
           @click="$emit('send', value)">
           <i class="fa fa-paper-plane" aria-hidden="true"></i>
-          <small>ctr + enter</small>
+          <br>
+          <small>ctr + &crarr;</small>
         </button>
       </div>
     </div>
@@ -30,10 +51,6 @@ export default {
       type: String,
       default: ''
     },
-    showToolbar: {
-      type: Boolean,
-      default: true
-    },
     showSend: {
       type: Boolean,
       default: false
@@ -42,27 +59,67 @@ export default {
 
   data () {
     return {
+      text: '',
+      preview: false,
+      sideBySide: false
+    }
+  },
+
+  watch: {
+    value () {
+      this.text = this.value
+    },
+    text () {
+      this.$emit('input', this.text)
     }
   },
 
   computed: {
-    editorConfigs () {
-      var toolbarIcons
-      if (this.showToolbar) {
-        toolbarIcons = ['bold', 'italic', 'quote', 'unordered-list', 'ordered-list', 'link', '|', 'preview', 'guide']
+    textareaClasses () {
+      if (!this.sideBySide) {
+        return {
+          'w3-input': true,
+          'w3-border': true
+        }
       } else {
-        toolbarIcons = []
+        return {
+          'w3-input': true,
+          'w3-border': true,
+          'w3-col': true,
+          'm6': true
+        }
       }
-      return {
-        spellChecker: false,
-        placeholder: this.placeholder,
-        toolbar: toolbarIcons,
-        status: false
+    },
+    markdownClasses () {
+      if (!this.sideBySide) {
+        return {
+          'w3-input': true,
+          'w3-border': true
+        }
+      } else {
+        return {
+          'w3-border': true,
+          'w3-col': true,
+          'm6': true
+        }
       }
     }
   },
 
   methods: {
+    textInput (e) {
+      /* resize text area */
+      this.$refs.mdArea.style.height = 'auto'
+      this.$refs.mdArea.style.height = (this.$refs.mdArea.scrollHeight) + 'px'
+    },
+    togglePreview () {
+      this.sideBySide = false
+      this.preview = !this.preview
+    },
+    toggleSideBySide () {
+      this.preview = false
+      this.sideBySide = !this.sideBySide
+    },
     atKeydown (e) {
       /* ctr + enter */
       if (e.keyCode === 13 && e.ctrlKey) {
@@ -73,7 +130,11 @@ export default {
   },
 
   mounted () {
+    this.text = this.value
     window.addEventListener('keydown', this.atKeydown)
+
+    /* autoresize textarea */
+    this.$refs.mdArea.setAttribute('style', 'height:' + (this.$refs.mdArea.scrollHeight) + 'px;overflow-y:hidden;')
   },
 
   destroyed () {
@@ -83,6 +144,23 @@ export default {
 </script>
 
 <style scoped>
+
+.this-textarea, .this-markdown {
+  min-height: 68px;
+}
+
+.buttons-column {
+  width: 32px;
+  height: 100%;
+  padding: 0px !important;
+}
+
+.a-button {
+  width: 32px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  margin-bottom: 1px;
+}
 
 .send-button-column {
   width: 60px;

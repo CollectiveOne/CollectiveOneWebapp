@@ -134,6 +134,8 @@ export default {
         this.loading = false
         this.loadingMore = false
 
+        this.$emit('last-activity', response.data.data.content[0])
+
         if (response.data.data.content.length < 10) {
           this.allShown = true
         }

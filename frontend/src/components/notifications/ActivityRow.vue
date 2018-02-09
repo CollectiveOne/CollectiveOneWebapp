@@ -3,7 +3,21 @@
     <td class="avatar-col w3-center">
       <app-user-avatar :user="activity.triggerUser" :showName="false" :small="true"></app-user-avatar>
     </td>
-    <td class="text-div">
+    <td class="text-div w3-display-container"
+      @mouseover="hovering = true"
+      @mouseleave="hovering = false">
+
+      <div class="" v-if="isMessagePosted && showMessages">
+        <transition name="fadeenter">
+          <div v-if="hovering && authorIsLoggedUser" class="w3-display-topright edit-btn">
+            <div @click="$emit('edit-message', activity.message)"
+              class="w3-tag w3-round light-grey cursor-pointer">
+              <i class="fa fa-pencil"></i> edit
+            </div>
+          </div>
+        </transition>
+      </div>
+
       <div class="top-line w3-small">
         <span v-if="addContext">
           in <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
@@ -195,20 +209,8 @@
           <span v-if="isMessageInInitiative"><app-initiative-link :initiative="activity.initiative"></app-initiative-link> initiative.</span>
         </span>
         <span v-if="isMessagePosted && showMessages" class="">
-          <div class="w3-display-container"
-            @mouseover="hovering = true"
-            @mouseleave="hovering = false">
-
+          <div>
             <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
-
-            <transition name="fadeenter">
-              <div v-if="hovering && authorIsLoggedUser" class="w3-display-topright">
-                <div @click="$emit('edit-message', activity.message)"
-                  class="w3-tag w3-round gray-1 cursor-pointer">
-                  <i class="fa fa-pencil"></i> edit
-                </div>
-              </div>
-            </transition>
           </div>
         </span>
       </div>
@@ -495,6 +497,10 @@ a {
   text-align: left;
   padding-right: 10px;
   padding-top: 3px;
+}
+
+.edit-btn {
+  margin-right: 4px;
 }
 
 .not-a-message {

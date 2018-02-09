@@ -9,13 +9,9 @@ import { store } from './store/store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
-import VueMarkdown from 'vue-markdown'
-import VueSimplemde from 'vue-simplemde'
-
 Vue.config.productionTip = false
 
 Vue.use(VueAxios, axios)
-Vue.use(VueSimplemde)
 
 axios.interceptors.request.use(
   function (config) {
@@ -28,6 +24,7 @@ axios.interceptors.request.use(
 )
 
 import ErrorPanel from '@/components/global/ErrorPanel.vue'
+import VueMarkdown from 'vue-markdown'
 import MarkdownEditor from '@/components/global/MarkdownEditor.vue'
 
 Vue.component('app-error-panel', ErrorPanel)
