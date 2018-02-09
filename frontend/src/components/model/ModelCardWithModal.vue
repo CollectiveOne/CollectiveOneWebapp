@@ -189,8 +189,8 @@ export default {
 }
 
 .messages-indicator {
-  margin-right: 6px;
-  margin-bottom: 2px;
+  margin-right: 46px;
+  margin-bottom: 6px;
   z-index: 11;
 }
 
