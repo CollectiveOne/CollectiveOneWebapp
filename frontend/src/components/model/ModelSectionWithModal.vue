@@ -223,6 +223,7 @@ export default {
 
   created () {
     this.cardsAsCards = this.cardsAsCardsInit
+    this.section = this.sectionInit
   }
 }
 </script>

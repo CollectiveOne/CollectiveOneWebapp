@@ -12,6 +12,7 @@
         <button class="w3-button app-button" name="button"
           @click="$emit('send', value)">
           <i class="fa fa-paper-plane" aria-hidden="true"></i>
+          <small>ctr + enter</small>
         </button>
       </div>
     </div>
@@ -62,6 +63,21 @@ export default {
   },
 
   methods: {
+    atKeydown (e) {
+      /* ctr + enter */
+      if (e.keyCode === 13 && e.ctrlKey) {
+        e.preventDefault()
+        this.$emit('send', this.value)
+      }
+    }
+  },
+
+  mounted () {
+    window.addEventListener('keydown', this.atKeydown)
+  },
+
+  destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 }
 </script>

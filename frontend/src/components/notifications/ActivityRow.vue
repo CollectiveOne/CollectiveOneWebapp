@@ -458,7 +458,8 @@ a {
 }
 
 .avatar-col {
-  padding-top: 3px;
+  padding-top: 6px;
+  vertical-align: top !important;
   width: 60px;
 }
 

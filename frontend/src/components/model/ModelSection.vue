@@ -28,28 +28,49 @@
       </app-model-section-header>
     </div>
 
-    <div v-if="expanded" class="w3-row expand-row w3-leftbar">
-      <div class="w3-col m4">
+    <div v-if="expanded" class="w3-row expand-row w3-leftbar w3-border-bottom w3-border-top">
+      <div class="w3-col l4">
         <button class="w3-button light-grey w3-small"
           @click="toggleExpand()">
           <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse section</span>
         </button>
       </div>
-      <div class="w3-col m4 ">
-        <button class="w3-button light-grey w3-small"
-          @click="showCards =!showCards">
-          <span v-if="showCards"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide cards</span>
-          <span v-else="showCards"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ section.cardsWrappers.length }}</b> cards</span>
-        </button>
+      <div class="w3-col l4 w3-border-left">
+        <div class="w3-row">
+          <div class="w3-col s6">
+            <button class="w3-button light-grey w3-small" :disabled="nCardWrappers === 0"
+              @click="showCards =!showCards">
+              <span v-if="showCards"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide cards</span>
+              <span v-if="!showCards && nCardWrappers > 0"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ nCardWrappers }}</b> cards</span>
+              <span v-if="!showCards && nCardWrappers === 0">No cards</span>
+            </button>
+          </div>
+          <div class="w3-col s6">
+            <button class="w3-button light-grey w3-small"
+              @click="newCardFromBar()">
+              <i class="fa fa-plus" aria-hidden="true"></i> new card
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="w3-col m4 ">
-        <button class="w3-button light-grey w3-small"
-          @click="showSubsections =!showSubsections">
-          <span v-if="showSubsections"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide subsections</span>
-          <span v-else="showSubsections"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ section.nSubsections }}</b> subsections</span>
-        </button>
+      <div class="w3-col l4 w3-border-left">
+        <div class="w3-row">
+          <div class="w3-col s6">
+            <button class="w3-button light-grey w3-small" :disabled="section.nSubsections === 0"
+              @click="showSubsections =!showSubsections">
+              <span v-if="showSubsections"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide subsections</span>
+              <span v-if="!showSubsections && section.nSubsections > 0"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ section.nSubsections }}</b> subsections</span>
+              <span v-if="!showSubsections && section.nSubsections === 0">no subsections</span>
+            </button>
+          </div>
+          <div class="w3-col s6">
+            <button class="w3-button light-grey w3-small"
+              @click="newSubsectionFromBar()">
+              <i class="fa fa-plus" aria-hidden="true"></i> new subsection
+            </button>
+          </div>
+        </div>
       </div>
-
     </div>
 
     <div class="gray-1-border slider-container">
@@ -276,8 +297,8 @@ export default {
   computed: {
     nCardWrappers () {
       if (this.section) {
-        if (this.section.CardWrappers) {
-          return this.section.CardWrappers.length
+        if (this.section.cardsWrappers) {
+          return this.section.cardsWrappers.length
         } else {
           return 0
         }
@@ -298,7 +319,11 @@ export default {
       this.update()
     },
     expandInit () {
-      this.expanded = this.expandInit
+      if (this.expandInit) {
+        this.startExpand()
+      } else {
+        this.startCollapse()
+      }
     }
   },
 
@@ -323,7 +348,7 @@ export default {
         if (this.nCardWrappers > 0) {
           this.showCards = true
           setTimeout(() => {
-            if (this.nSubsections > 0) {
+            if (this.section.nSubsections > 0) {
               this.showSubsections = true
             }
           }, 350)
@@ -333,17 +358,26 @@ export default {
       })
     },
     startCollapse () {
-      this.showSubsections = false
-      setTimeout(() => {
-        this.showCards = false
+      if (this.showSubsections) {
+        this.showSubsections = false
         setTimeout(() => {
-          this.expanded = false
+          this.showCards = false
+          setTimeout(() => {
+            this.expanded = false
+          }, 500)
         }, 500)
-      }, 500)
+      } else {
+        if (this.showCards) {
+          this.showCards = false
+          setTimeout(() => {
+            this.expanded = false
+          }, 500)
+        } else {
+          this.expanded = false
+        }
+      }
     },
     update (expandFlag) {
-      console.log('updating')
-      console.log(expandFlag)
       expandFlag = expandFlag || false
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id, {
         params: {
@@ -351,12 +385,9 @@ export default {
         }
       }).then((response) => {
         // console.log(response.data)
-        console.log('updated')
-        console.log(expandFlag)
         this.loaded = true
         this.section = response.data.data
         if (expandFlag) {
-          console.log('expanding')
           this.startExpand()
         }
       })
@@ -440,6 +471,14 @@ export default {
       if (!found) {
         this.showCardModal = false
       }
+    },
+    newCardFromBar () {
+      this.showCards = true
+      this.$emit('new-card')
+    },
+    newSubsectionFromBar () {
+      this.showSubsections = true
+      this.$emit('new-subsection')
     }
   },
 

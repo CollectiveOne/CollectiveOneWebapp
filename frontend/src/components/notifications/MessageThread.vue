@@ -91,6 +91,9 @@ export default {
 
   mounted () {
     this.scrollToBottom()
+  },
+
+  destroyed () {
   }
 }
 </script>
