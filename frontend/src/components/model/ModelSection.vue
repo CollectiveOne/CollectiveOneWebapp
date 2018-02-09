@@ -24,7 +24,9 @@
         :level="level"
         :floating="floating"
         :inElementId="inElementId"
-        :expand="expanded">
+        :expand="expanded"
+        :showMessagesIndicator="true"
+        @show-messages="$emit('show-messages')">
       </app-model-section-header>
     </div>
 

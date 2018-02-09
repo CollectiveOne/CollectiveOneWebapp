@@ -61,6 +61,7 @@
               <app-message-thread
                 contextType="MODEL_VIEW"
                 :contextElementId="viewId"
+                :onlyMessagesInit="onlyMessages"
                 :url="'/1/activity/model/view/' + viewId">
               </app-message-thread>
             </div>
@@ -111,6 +112,10 @@ export default {
     initiativeId: {
       type: String,
       default: ''
+    },
+    onlyMessages: {
+      type: Boolean,
+      defaul: false
     }
   },
 

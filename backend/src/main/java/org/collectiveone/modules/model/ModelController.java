@@ -541,6 +541,22 @@ public class ModelController extends BaseController {
 		return modelService.searchSection(query, new PageRequest(page, size), initiativeId);
 	}
 	
+	@RequestMapping(path = "/activity/model/view/{viewId}/count", method = RequestMethod.GET)
+	public GetResult<Long> countActivityUnderView(
+			@PathVariable("viewId") String viewIdStr, 
+			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
+		
+		UUID viewId = UUID.fromString(viewIdStr);
+		
+		Initiative initiative = modelService.getViewInitiative(viewId);
+		
+		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+			return new GetResult<Long>("error", "access denied", null);
+		}
+		
+		return modelService.countActivityUnderView(viewId, onlyMessages);
+	}
+	
 	@RequestMapping(path = "/activity/model/view/{viewId}", method = RequestMethod.GET)
 	public GetResult<Page<ActivityDto>> getActivityUnderView(
 			@PathVariable("viewId") String viewIdStr,
@@ -556,7 +572,23 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return modelService.getActivityUnderView(viewId, new PageRequest(page, size), onlyMessages);
+		return modelService.getActivityResultUnderView(viewId, new PageRequest(page, size), onlyMessages);
+	}
+	
+	@RequestMapping(path = "/activity/model/section/{sectionId}/count", method = RequestMethod.GET)
+	public GetResult<Long> countActivityUnderSection(
+			@PathVariable("sectionId") String sectionIdStr,
+			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
+		
+		UUID sectionId = UUID.fromString(sectionIdStr);
+		
+		Initiative initiative = modelService.getSectionInitiative(sectionId);
+		
+		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+			return new GetResult<Long>("error", "access denied", null);
+		}
+		
+		return modelService.countActivityUnderSection(sectionId, onlyMessages);
 	}
 	
 	@RequestMapping(path = "/activity/model/section/{sectionId}", method = RequestMethod.GET)
@@ -574,7 +606,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return modelService.getActivityUnderSection(sectionId, new PageRequest(page, size), onlyMessages);
+		return modelService.getActivityResultUnderSection(sectionId, new PageRequest(page, size), onlyMessages);
 	}
 	
 	@RequestMapping(path = "/activity/model/card/{cardWrapperId}", method = RequestMethod.GET)

@@ -60,6 +60,10 @@ export default {
     url: {
       type: String,
       default: ''
+    },
+    onlyMessagesInit: {
+      type: Boolean,
+      defaul: false
     }
   },
 
@@ -117,6 +121,10 @@ export default {
     }
   },
 
+  created () {
+    this.showOnlyMessages = this.onlyMessagesInit
+  },
+
   mounted () {
     this.scrollToBottom()
   },
@@ -134,7 +142,7 @@ export default {
 
 .history-container {
   min-height: 60px;
-  max-height: 35vh;
+  max-height: 50vh;
   overflow: auto;
 }
 

@@ -463,8 +463,11 @@ export default {
     },
     authorIsLoggedUser () {
       if (this.isMessagePosted) {
-        return this.$store.state.user.profile.c1Id === this.activity.message.author.c1Id
+        if (this.$store.state.user.profile) {
+          return this.$store.state.user.profile.c1Id === this.activity.message.author.c1Id
+        }
       }
+      return false
     }
   },
   methods: {

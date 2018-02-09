@@ -7,6 +7,14 @@
           class="section-title cursor-pointer w3-left" :style="sectionTitleStyle">
           {{ section.title }}
         </router-link>
+        <div v-if="showMessagesIndicator" class="w3-left comments-indicator cursor-pointer"
+          @click="$emit('show-messages')">
+          <app-messages-indicator
+            contextType="MODEL_SECTION"
+            :contextElementId="section.id"
+            :size="18">
+          </app-messages-indicator>
+        </div>
     </div>
 
     <div class="also-in-container">
@@ -60,7 +68,12 @@
 </template>
 
 <script>
+import MessagesIndicator from '@/components/notifications/MessagesIndicator.vue'
+
 export default {
+  components: {
+    'app-messages-indicator': MessagesIndicator
+  },
 
   props: {
     section: {
@@ -82,6 +95,10 @@ export default {
     expand: {
       type: Boolean,
       default: true
+    },
+    showMessagesIndicator: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -123,6 +140,11 @@ export default {
 
 .title-row {
   margin-bottom: 4px;
+}
+
+.comments-indicator {
+  padding-top: 0px;
+  padding-left: 16px;
 }
 
 .also-in-row {

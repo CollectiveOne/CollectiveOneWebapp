@@ -14,6 +14,7 @@ needs the model card component inside, and would crate a recursion -->
           :inView="inView"
           :inElementId="inElementId"
           :inElementTitle="inElementTitle"
+          :onlyMessages="onlyMessages"
           @close="showSectionModal = false">
         </app-model-section-modal>
       </transition>
@@ -69,7 +70,8 @@ needs the model card component inside, and would crate a recursion -->
         :expandSubSubsecInit="expandSubSubsecInit"
         :force-update="forceUpdate"
         @new-card="newCard($event)"
-        @new-subsection="newSubsection()">
+        @new-subsection="newSubsection()"
+        @show-messages="expandSectionModal(true)">
       </app-model-section>
 
       <transition name="fadeenter">
@@ -192,7 +194,8 @@ export default {
       showSectionModal: false,
       showNewSubsectionModal: false,
       showNewCardModal: false,
-      forceUpdate: false
+      forceUpdate: false,
+      onlyMessages: false
     }
   },
 
@@ -203,7 +206,8 @@ export default {
   },
 
   methods: {
-    expandSectionModal () {
+    expandSectionModal (onlyMessages) {
+      this.onlyMessages = onlyMessages || false
       this.showSectionModal = true
     },
     newSubsection () {

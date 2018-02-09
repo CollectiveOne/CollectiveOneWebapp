@@ -107,6 +107,7 @@
             <app-message-thread
               contextType="MODEL_SECTION"
               :contextElementId="sectionId"
+              :onlyMessagesInit="onlyMessages"
               :url="'/1/activity/model/section/' + sectionId">
             </app-message-thread>
           </div>
@@ -170,6 +171,10 @@ export default {
     inElementTitle: {
       type: String,
       default: ''
+    },
+    onlyMessages: {
+      type: Boolean,
+      defaul: false
     }
   },
 

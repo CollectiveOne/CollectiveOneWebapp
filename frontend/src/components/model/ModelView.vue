@@ -8,6 +8,7 @@
           :isNew="isNew"
           :viewId="view.id"
           :initiativeId="initiativeId"
+          :onlyMessages="onlyMessages"
           @close="showViewModal = false">
         </app-model-view-modal>
       </transition>
@@ -47,7 +48,16 @@
 
         <div class="w3-rest">
           <div class="w3-row">
-            <h1 class="">{{ view.title }}</h1>
+            <div class="w3-left">
+              <h1 class="">{{ view.title }}</h1>
+            </div>
+            <div class="w3-left comments-indicator cursor-pointer"
+              @click="expandViewModal(true)">
+              <app-messages-indicator
+                contextType="MODEL_VIEW"
+                :contextElementId="view.id">
+              </app-messages-indicator>
+            </div>
           </div>
           <div class="w3-row w3-padding light-grey">
             <vue-markdown class="marked-text" :source="view.description"></vue-markdown>
@@ -111,6 +121,7 @@
 import ModelSectionWithModal from '@/components/model/ModelSectionWithModal.vue'
 import ModelViewModal from '@/components/model/modals/ModelViewModal.vue'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
+import MessagesIndicator from '@/components/notifications/MessagesIndicator.vue'
 
 export default {
   name: 'app-model-view',
@@ -118,7 +129,8 @@ export default {
   components: {
     'app-model-view-modal': ModelViewModal,
     'app-model-section-modal': ModelSectionModal,
-    'app-model-section-with-modal': ModelSectionWithModal
+    'app-model-section-with-modal': ModelSectionWithModal,
+    'app-messages-indicator': MessagesIndicator
   },
 
   data () {
@@ -166,8 +178,9 @@ export default {
         this.view = response.data.data
       })
     },
-    expandViewModal () {
+    expandViewModal (onlyMessages) {
       this.isNew = false
+      this.onlyMessages = onlyMessages || false
       this.showViewModal = true
     },
     newSection () {
@@ -222,6 +235,11 @@ export default {
 
 .view-title h1 {
   margin-bottom: 0px;
+}
+
+.comments-indicator {
+  padding-top: 12px;
+  padding-left: 16px;
 }
 
 .view-sections {
