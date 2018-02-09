@@ -5,7 +5,8 @@
       :activity="activity"
       :addContext="addContext"
       :showMessages="showMessages"
-      :contextElementId="contextElementId">
+      :contextElementId="contextElementId"
+      @edit-message="$emit('edit-message', $event)">
     </app-activity-row>
   </table>
 </template>

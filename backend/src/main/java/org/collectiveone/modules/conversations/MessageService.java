@@ -133,7 +133,26 @@ public class MessageService {
 		activityService.messagePosted(message, author, contextType, elementId);
 
 		return new PostResult("success", "message posted", message.getId().toString());		 		
+	}
+	
+	@Transactional
+	public PostResult editMessage(MessageDto messageDto, UUID editorId, UUID messageId) {
 		
+		Message message = messageRepository.findById(messageId);
+		
+		if (message == null) {
+			return new PostResult("error", "message not found", null);		 		
+		}
+		
+		/* only author can edit a message */
+		if (!message.getAuthor().getC1Id().equals(editorId)) {
+			return new PostResult("error", "only author can edit a message", null);
+		}
+		
+		message.setText(messageDto.getText());
+		message = messageRepository.save(message);
+		
+		return new PostResult("success", "message edited", message.getId().toString());		 		
 	}
 		
 	

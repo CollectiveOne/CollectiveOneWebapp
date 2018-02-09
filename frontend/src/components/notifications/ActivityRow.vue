@@ -195,9 +195,22 @@
           <span v-if="isMessageInInitiative"><app-initiative-link :initiative="activity.initiative"></app-initiative-link> initiative.</span>
         </span>
         <span v-if="isMessagePosted && showMessages" class="">
-          <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
-        </span>
+          <div class="w3-display-container"
+            @mouseover="hovering = true"
+            @mouseleave="hovering = false">
 
+            <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
+
+            <transition name="fadeenter">
+              <div v-if="hovering && authorIsLoggedUser" class="w3-display-topright">
+                <div @click="$emit('edit-message', activity.message)"
+                  class="w3-tag w3-round gray-1 cursor-pointer">
+                  <i class="fa fa-pencil"></i> edit
+                </div>
+              </div>
+            </transition>
+          </div>
+        </span>
       </div>
     </td>
   </tr>
@@ -248,6 +261,12 @@ export default {
     'app-model-section-link': ModelSectionLink,
     'app-model-card-link': ModelCardInSectionLink,
     'app-model-card-alone-link': ModelCardAloneLink
+  },
+
+  data () {
+    return {
+      hovering: false
+    }
   },
 
   computed: {
@@ -441,6 +460,11 @@ export default {
       }
 
       return ''
+    },
+    authorIsLoggedUser () {
+      if (this.isMessagePosted) {
+        return this.$store.state.user.profile.c1Id === this.activity.message.author.c1Id
+      }
     }
   },
   methods: {

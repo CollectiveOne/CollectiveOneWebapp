@@ -18,7 +18,8 @@
         :reverse="reverse"
         :addBorders="addBorders"
         :showMessages="showMessages"
-        :contextElementId="contextElementId">
+        :contextElementId="contextElementId"
+        @edit-message="$emit('edit-message', $event)">
       </app-activity-table>
     </div>
     <div  v-if="activities.length === 0 && !loading" class="w3-padding">

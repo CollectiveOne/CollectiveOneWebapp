@@ -10,10 +10,17 @@
         :polling="true"
         :triggerUpdate="triggerUpdate"
         :contextElementId="contextElementId"
-        @updated="scrollToBottom()">
+        @updated="scrollToBottom()"
+        @edit-message="editMessage($event)">
       </app-activity-getter>
     </div>
     <div class="w3-row w3-margin-top">
+      <div v-if="editing" class="">
+        <div class="success-panel w3-padding">
+          Editing message
+          <span @click="cancelEdit()" class="cursor-pointer">(cancel <i class="fa fa-times"></i>)</span>
+        </div>
+      </div>
       <app-markdown-editor
         v-model="newMessageText"
         placeholder="say something"
@@ -61,21 +68,42 @@ export default {
       newMessageText: '',
       triggerUpdate: true,
       intervalId: 0,
-      showOnlyMessages: false
+      showOnlyMessages: false,
+      editing: false,
+      messageToEdit: null
     }
   },
 
   methods: {
+    editMessage (message) {
+      this.editing = true
+      this.messageToEdit = message
+      this.newMessageText = message.text
+    },
+    cancelEdit () {
+      this.editing = false
+      this.newMessageText = ''
+    },
     send () {
       var message = {
         text: this.newMessageText
       }
-      this.axios.post('/1/messages/' + this.contextType + '/' + this.contextElementId, message).then((response) => {
-        if (response.data.result === 'success') {
-          this.newMessageText = ''
-          this.triggerUpdate = !this.triggerUpdate
-        }
-      })
+      if (!this.editing) {
+        this.axios.post('/1/messages/' + this.contextType + '/' + this.contextElementId, message).then((response) => {
+          if (response.data.result === 'success') {
+            this.newMessageText = ''
+            this.triggerUpdate = !this.triggerUpdate
+          }
+        })
+      } else {
+        this.axios.put('/1/messages/' + this.contextType + '/' + this.contextElementId + '/' + this.messageToEdit.id, message).then((response) => {
+          if (response.data.result === 'success') {
+            this.editing = false
+            this.newMessageText = ''
+            this.triggerUpdate = !this.triggerUpdate
+          }
+        })
+      }
     },
     scrollToBottom () {
       this.$nextTick(() => {

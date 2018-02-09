@@ -37,6 +37,11 @@
             <div @click="expandViewModal()" class="w3-button model-action-button w3-right">
               <i class="fa fa-expand" aria-hidden="true"></i>
             </div>
+
+            <div class="w3-button model-action-button gray-1-color w3-right"
+              @click="cardsAsCardsInit = !cardsAsCardsInit">
+              <i class="fa" :class="{ 'fa-bars': cardsAsCardsInit, 'fa-th': !cardsAsCardsInit }" aria-hidden="true"></i>
+            </div>
           </div>
         </transition>
 
