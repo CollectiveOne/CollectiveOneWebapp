@@ -266,6 +266,7 @@
             <app-message-thread
               contextType="MODEL_CARD"
               :contextElementId="cardWrapperId"
+              :onlyMessagesInit="onlyMessages"
               :url="'/1/activity/model/card/' + cardWrapperId">
             </app-message-thread>
           </div>
@@ -335,6 +336,10 @@ export default {
     ixInSection: {
       type: Number,
       default: -1
+    },
+    onlyMessages: {
+      type: Boolean,
+      defaul: false
     }
   },
 

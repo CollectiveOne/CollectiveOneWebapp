@@ -12,6 +12,7 @@ needs the model card component inside, and would crate a recursion -->
           :cardWrapperId="cardWrapper.id"
           :inSectionId="inSectionId"
           :inSectionTitle="inSectionTitle"
+          :onlyMessages="onlyMessages"
           @close="modalClosed()">
         </app-model-card-modal>
       </transition>
@@ -47,6 +48,15 @@ needs the model card component inside, and would crate a recursion -->
         </div>
       </transition>
 
+      <div v-if="cardWrapper" class="w3-display-bottomright messages-indicator cursor-pointer"
+        @click="showCard(true)">
+        <app-messages-indicator
+          contextType="MODEL_CARD"
+          :contextElementId="cardWrapper.id"
+          :size="18">
+        </app-messages-indicator>
+      </div>
+
       <div v-if="textTooLong" class="">
         <div @click="showMoreClick()" v-if="enableExpand"
           class="w3-padding model-action-button gray-2-color w3-display-bottomright cursor-pointer">
@@ -63,11 +73,13 @@ needs the model card component inside, and would crate a recursion -->
 <script>
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 import ModelCard from '@/components/model/ModelCard.vue'
+import MessagesIndicator from '@/components/notifications/MessagesIndicator.vue'
 
 export default {
   components: {
     'app-model-card-modal': ModelCardModal,
-    'app-model-card': ModelCard
+    'app-model-card': ModelCard,
+    'app-messages-indicator': MessagesIndicator
   },
 
   props: {
@@ -82,10 +94,6 @@ export default {
     inSectionId: {
       type: String,
       default: ''
-    },
-    inView: {
-      type: Boolean,
-      default: false
     },
     inSectionTitle: {
       type: String,
@@ -119,7 +127,8 @@ export default {
       showCardModal: false,
       highlight: false,
       textTooLong: false,
-      showFull: false
+      showFull: false,
+      onlyMessages: false
     }
   },
 
@@ -141,29 +150,20 @@ export default {
     showMoreClick () {
       this.showFull = !this.showFull
     },
-    showCard () {
+    showCard (onlyMessages) {
       if (this.expandLocally) {
+        this.onlyMessages = onlyMessages
         this.showCardModal = true
       } else {
-        if (this.inView) {
-          this.$router.push({
-            name: 'ModelCardInView',
-            params: {
-              initiativeId: this.initiativeId,
-              viewId: this.inViewId,
-              cardId: this.cardWrapper.id
-            }
-          })
-        } else {
-          this.$router.push({
-            name: 'ModelCardInSection',
-            params: {
-              initiativeId: this.initiativeId,
-              sectionId: this.inSectionId,
-              cardId: this.cardWrapper.id
-            }
-          })
-        }
+        this.$router.push({
+          name: 'ModelCardInSection',
+          params: {
+            initiativeId: this.initiativeId,
+            sectionId: this.inSectionId,
+            cardId: this.cardWrapper.id,
+            onlyMessages: onlyMessages
+          }
+        })
       }
     },
     dragStart (event) {
@@ -186,6 +186,12 @@ export default {
   height: calc(100% - 40px);
   width: 100%;
   z-index: 10;
+}
+
+.messages-indicator {
+  margin-right: 6px;
+  margin-bottom: 2px;
+  z-index: 11;
 }
 
 </style>

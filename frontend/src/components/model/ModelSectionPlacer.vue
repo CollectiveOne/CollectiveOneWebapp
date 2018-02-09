@@ -9,7 +9,7 @@
       :initiativeId="$route.params.initiativeId"
       :sectionId="$route.params.sectionId"
       :key="$route.params.sectionId"
-      :preloaded="false"
+      :basicPreloaded="false"
       :level="0"
       :floating="true"
       :expandInit="true"

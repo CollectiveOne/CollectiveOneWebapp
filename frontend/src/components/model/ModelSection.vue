@@ -389,6 +389,7 @@ export default {
         // console.log(response.data)
         this.loaded = true
         this.section = response.data.data
+        this.$emit('updated', this.section)
         if (expandFlag) {
           this.startExpand()
         }

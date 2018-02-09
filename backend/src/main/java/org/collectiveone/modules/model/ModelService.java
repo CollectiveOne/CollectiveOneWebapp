@@ -883,14 +883,26 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Page<ActivityDto>> getActivityUnderCard (UUID cardWrapperId, PageRequest page, Boolean onlyMessages) {
-		
+	public GetResult<Long> countActivityUnderCard (UUID cardWrapperId, Boolean onlyMessages) {
+		Page<Activity> activities = getActivityUnderCard(cardWrapperId, new PageRequest(1, 1), onlyMessages);
+		return new GetResult<Long>("success", "activity counted", activities.getTotalElements());
+	}
+	
+	@Transactional
+	public Page<Activity> getActivityUnderCard (UUID cardWrapperId, PageRequest page, Boolean onlyMessages) {
 		Page<Activity> activities = null;
 		if (!onlyMessages) {
 			activities = activityRepository.findOfCard(cardWrapperId, page);
 		} else {
 			activities = activityRepository.findOfCardAndType(cardWrapperId, ActivityType.MESSAGE_POSTED, page);
 		}
+		return activities;
+	}
+	
+	@Transactional
+	public GetResult<Page<ActivityDto>> getActivityResultUnderCard (UUID cardWrapperId, PageRequest page, Boolean onlyMessages) {
+		
+		Page<Activity> activities = getActivityUnderCard(cardWrapperId, page, onlyMessages);
 	
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		

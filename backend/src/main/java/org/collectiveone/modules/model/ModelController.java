@@ -609,6 +609,22 @@ public class ModelController extends BaseController {
 		return modelService.getActivityResultUnderSection(sectionId, new PageRequest(page, size), onlyMessages);
 	}
 	
+	@RequestMapping(path = "/activity/model/card/{cardWrapperId}/count", method = RequestMethod.GET)
+	public GetResult<Long> getActivityUnderCard(
+			@PathVariable("cardWrapperId") String cardWrapperIdStr, 
+			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
+		
+		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
+		
+		Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
+		
+		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+			return new GetResult<Long>("error", "access denied", null);
+		}
+		
+		return modelService.countActivityUnderCard(cardWrapperId, onlyMessages);
+	}
+	
 	@RequestMapping(path = "/activity/model/card/{cardWrapperId}", method = RequestMethod.GET)
 	public GetResult<Page<ActivityDto>> getActivityUnderCard(
 			@PathVariable("cardWrapperId") String cardWrapperIdStr,
@@ -624,7 +640,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return modelService.getActivityUnderCard(cardWrapperId, new PageRequest(page, size), onlyMessages);
+		return modelService.getActivityResultUnderCard(cardWrapperId, new PageRequest(page, size), onlyMessages);
 	}
 	
 }

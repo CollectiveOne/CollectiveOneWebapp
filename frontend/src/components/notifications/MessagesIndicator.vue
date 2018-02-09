@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="gray-1-color" :class="">
-    <div class="w3-left">
+    <div v-if="hideWhenZero && !hide" class="w3-left">
       <div class="">
         <span :style="iconStyle"><i class="fa fa-comments"></i></span>
         <span v-if="!loading" :style="numberStyle"><i>{{ count }}</i></span>
@@ -22,6 +22,10 @@ export default {
     size: {
       type: Number,
       default: 24
+    },
+    hideWhenZero: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -41,7 +45,8 @@ export default {
   data () {
     return {
       count: 0,
-      loading: false
+      loading: false,
+      hide: false
     }
   },
 
@@ -68,6 +73,9 @@ export default {
         this.loading = false
         if (response.data.result === 'success') {
           this.count = response.data.data
+          if (this.count === 0) {
+            this.hide = true
+          }
         }
       })
     }

@@ -69,6 +69,7 @@ needs the model card component inside, and would crate a recursion -->
         :expandInit="expandInit"
         :expandSubSubsecInit="expandSubSubsecInit"
         :force-update="forceUpdate"
+        @updated="updated($event)"
         @new-card="newCard($event)"
         @new-subsection="newSubsection()"
         @show-messages="expandSectionModal(true)">
@@ -206,6 +207,9 @@ export default {
   },
 
   methods: {
+    updated (section) {
+      this.section = section
+    },
     expandSectionModal (onlyMessages) {
       this.onlyMessages = onlyMessages || false
       this.showSectionModal = true
