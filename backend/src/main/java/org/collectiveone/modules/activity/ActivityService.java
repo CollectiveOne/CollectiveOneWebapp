@@ -534,6 +534,17 @@ public class ActivityService {
 	}
 	
 	@Transactional
+	public void modelViewMoved(ModelView view, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, view.getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_VIEW_MOVED);
+		activity.setModelView(view);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
 	public void modelSectionMovedInView(ModelSection section, ModelView onView, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
 		

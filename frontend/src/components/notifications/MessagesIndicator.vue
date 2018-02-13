@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="gray-1-color" :class="">
-    <div v-if="hideWhenZero && !hide" class="w3-left">
+    <div v-if="hideWhenZero && !hide" class="w3-left noselect">
       <div class="">
         <span :style="iconStyle"><i class="fa fa-comments"></i></span>
         <span v-if="!loading" :style="numberStyle"><i>{{ count }}</i></span>
@@ -47,6 +47,12 @@ export default {
       count: 0,
       loading: false,
       hide: false
+    }
+  },
+
+  watch: {
+    contextElementId () {
+      this.update()
     }
   },
 

@@ -159,6 +159,7 @@ export default {
 
 .nav-container-cell {
   width: 300px;
+  vertical-align: top !important;
 }
 
 </style>

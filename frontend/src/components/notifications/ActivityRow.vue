@@ -133,6 +133,9 @@
         <span v-if="isModelViewDeleted" class="">
           deleted the view <app-model-view-link :view="activity.modelView"></app-model-view-link>.
         </span>
+        <span v-if="isModelViewMoved" class="">
+          moved the view <app-model-view-link :view="activity.modelView"></app-model-view-link>.
+        </span>
         <span v-if="isModelSectionCreatedOnSection" class="">
           created the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
           section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
@@ -322,6 +325,9 @@ export default {
     },
     isModelViewDeleted () {
       return this.activity.type === 'MODEL_VIEW_DELETED'
+    },
+    isModelViewMoved () {
+      return this.activity.type === 'MODEL_VIEW_MOVED'
     },
     isModelSectionCreatedOnSection () {
       return this.activity.type === 'MODEL_SECTION_CREATED' &&

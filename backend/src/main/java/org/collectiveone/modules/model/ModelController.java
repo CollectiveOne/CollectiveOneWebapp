@@ -331,6 +331,32 @@ public class ModelController extends BaseController {
 				getLoggedUserId());
 	}
 	
+	@RequestMapping(path = "/initiative/{initiativeId}/model/moveView/{viewId}", method = RequestMethod.PUT) 
+	public PostResult moveView(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("viewId") String viewIdStr,
+			@RequestParam(name = "onViewId", defaultValue = "") String onViewIdStr){
+	
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		/* dropped on viewSection can be empty*/
+		UUID onViewId =  onViewIdStr.equals("") ? null : UUID.fromString(onViewIdStr);
+		
+		return modelService.moveView(
+				initiativeId,
+				UUID.fromString(viewIdStr), 
+				onViewId,
+				getLoggedUserId());
+	}
+	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}/cardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
 	public PostResult addExistingCard(
 			@PathVariable("initiativeId") String initiativeIdStr,

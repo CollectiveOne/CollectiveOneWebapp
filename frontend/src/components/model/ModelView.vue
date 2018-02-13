@@ -66,7 +66,7 @@
       </div>
 
       <div class="w3-row">
-        <div class="control-btn w3-left w3-tag gray-1 cursor-pointer"
+        <div class="control-btn w3-left w3-tag gray-1 cursor-pointer noselect"
           @click="expandSubSubsecInit = !expandSubSubsecInit">
           <div class="w3-left button-text">
             <small>

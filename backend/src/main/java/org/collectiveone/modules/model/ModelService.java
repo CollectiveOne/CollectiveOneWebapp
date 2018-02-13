@@ -301,6 +301,36 @@ public class ModelService {
 	}
 	
 	@Transactional
+	public PostResult moveView(
+			UUID initiativeId, 
+			UUID viewId, 
+			UUID onViewId,
+			UUID creatorId) {
+		/* move a view within an initiative */
+		
+		if (onViewId.equals(viewId)) {
+			return new PostResult("warning", "cannot move on itself", null);
+		}
+		
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		ModelView view = modelViewRepository.findById(viewId);
+		ModelView beforeView = modelViewRepository.findById(onViewId);
+		
+		int index = initiative.getModelViews().indexOf(beforeView);
+		initiative.getModelViews().remove(view);
+		initiativeRepository.save(initiative);
+		
+		initiative.getModelViews().add(index, view);
+		
+		activityService.modelViewMoved(view, appUserRepository.findByC1Id(creatorId));
+		
+		modelViewRepository.save(view);
+		initiativeRepository.save(initiative);
+		
+		return new PostResult("success", "view moved", view.getId().toString());
+	}
+	
+	@Transactional
 	public PostResult moveSection(
 			UUID fromViewId, 
 			UUID sectionId, 
