@@ -32,44 +32,44 @@
     </div>
 
     <div v-if="expanded" class="w3-row expand-row w3-leftbar w3-border-bottom w3-border-top">
-      <div class="w3-col l4">
+      <div class="w3-col s4">
         <button class="w3-button light-grey w3-small"
           @click="toggleExpand()">
           <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse section</span>
         </button>
       </div>
-      <div class="w3-col l4 w3-border-left">
+      <div class="w3-col s4 w3-border-left">
         <div class="w3-row">
-          <div class="w3-col s6">
-            <button class="w3-button light-grey w3-small" :disabled="nCardWrappers === 0"
+          <div class="w3-col s8">
+            <button class="w3-button light-grey w3-small"
               @click="showCards =!showCards">
               <span v-if="showCards"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide cards</span>
               <span v-if="!showCards && nCardWrappers > 0"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ nCardWrappers }}</b> cards</span>
               <span v-if="!showCards && nCardWrappers === 0">No cards</span>
             </button>
           </div>
-          <div class="w3-col s6">
-            <button class="w3-button light-grey w3-small"
+          <div class="w3-col s4">
+            <button class="w3-button light-grey w3-small" :disabled="!isLoggedAnEditor"
               @click="newCardFromBar()">
-              <i class="fa fa-plus" aria-hidden="true"></i> new card
+              <i class="fa fa-plus" aria-hidden="true"></i><span class="w3-hide-small w3-hide-medium"> new card</span>
             </button>
           </div>
         </div>
       </div>
-      <div class="w3-col l4 w3-border-left">
+      <div class="w3-col s4 w3-border-left">
         <div class="w3-row">
-          <div class="w3-col s6">
-            <button class="w3-button light-grey w3-small" :disabled="section.nSubsections === 0"
+          <div class="w3-col s8">
+            <button class="w3-button light-grey w3-small"
               @click="showSubsections =!showSubsections">
               <span v-if="showSubsections"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide subsections</span>
               <span v-if="!showSubsections && section.nSubsections > 0"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ section.nSubsections }}</b> subsections</span>
               <span v-if="!showSubsections && section.nSubsections === 0">no subsections</span>
             </button>
           </div>
-          <div class="w3-col s6">
-            <button class="w3-button light-grey w3-small"
+          <div class="w3-col s4">
+            <button class="w3-button light-grey w3-small" :disabled="!isLoggedAnEditor"
               @click="newSubsectionFromBar()">
-              <i class="fa fa-plus" aria-hidden="true"></i> new subsection
+              <i class="fa fa-plus" aria-hidden="true"></i><span class="w3-hide-small w3-hide-medium"> new subsection</span>
             </button>
           </div>
         </div>
@@ -310,6 +310,9 @@ export default {
       } else {
         return 0
       }
+    },
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
     }
   },
 

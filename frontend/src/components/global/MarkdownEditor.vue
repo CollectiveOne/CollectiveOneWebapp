@@ -3,9 +3,8 @@
     <div class="w3-cell markdown-container">
       <div class="w3-row">
         <textarea v-if="!preview" class="this-textarea" :class="textareaClasses" ref="mdArea"
-          @focus="$emit('c-focus', $event)" @blur="$emit('c-blur', $event)"
+          @focus="atFocus($event)" @blur="$emit('c-blur', $event)"
           v-model="text"
-          @input="textInput($event)"
           :placeholder="placeholder">
         </textarea>
         <div v-if="preview || sideBySide" class="this-markdown" :class="markdownClasses">
@@ -68,9 +67,11 @@ export default {
   watch: {
     value () {
       this.text = this.value
+      setTimeout(() => { this.checkHeight() }, 500)
     },
     text () {
       this.$emit('input', this.text)
+      this.checkHeight()
     }
   },
 
@@ -107,10 +108,18 @@ export default {
   },
 
   methods: {
-    textInput (e) {
-      /* resize text area */
-      this.$refs.mdArea.style.height = 'auto'
-      this.$refs.mdArea.style.height = (this.$refs.mdArea.scrollHeight) + 'px'
+    atFocus (event) {
+      this.$emit('c-focus', event)
+      this.checkHeight()
+    },
+    checkHeight () {
+      if (this.text !== '') {
+        /* resize text area */
+        this.$refs.mdArea.style.height = 'auto'
+        this.$refs.mdArea.style.height = (this.$refs.mdArea.scrollHeight) + 'px'
+      } else {
+        this.$refs.mdArea.style.height = '0px'
+      }
     },
     togglePreview () {
       this.sideBySide = false
@@ -135,6 +144,10 @@ export default {
 
     /* autoresize textarea */
     this.$refs.mdArea.setAttribute('style', 'height:' + (this.$refs.mdArea.scrollHeight) + 'px;overflow-y:hidden;')
+
+    setTimeout(() => {
+      this.checkHeight()
+    }, 500)
   },
 
   destroyed () {
