@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="gray-1-color" :class="">
-    <div v-if="hideWhenZero && !hide" class="w3-left noselect">
+    <div v-if="show" class="w3-left noselect">
       <div class="">
-        <span :style="iconStyle"><i class="fa fa-comments"></i></span>
+        <span :style="iconStyle"><i class="fa" :class="iconClass"></i></span>
         <span v-if="!loading" :style="numberStyle"><i>{{ count }}</i></span>
         <span v-else :style="numberStyle">-</span>
       </div>
@@ -26,10 +26,36 @@ export default {
     hideWhenZero: {
       type: Boolean,
       default: true
+    },
+    type: {
+      type: String
     }
   },
 
   computed: {
+    iconClass () {
+      switch (this.type) {
+        case 'messages':
+          return 'fa-comments'
+        case 'likes':
+          return 'fa-heart'
+      }
+    },
+    requestType () {
+      switch (this.type) {
+        case 'messages':
+          return 'countMessages'
+        case 'likes':
+          return 'countLikes'
+      }
+    },
+    show () {
+      if (this.hideWhenZero) {
+        return this.count !== 0
+      } else {
+        return true
+      }
+    },
     iconStyle () {
       return {
         fontSize: this.size + 'px'
@@ -62,15 +88,15 @@ export default {
 
       switch (this.contextType) {
         case 'MODEL_VIEW':
-          url = '/1/activity/model/view/' + this.contextElementId + '/count'
+          url = '/1/activity/model/view/' + this.contextElementId + '/' + this.requestType
           break
 
         case 'MODEL_SECTION':
-          url = '/1/activity/model/section/' + this.contextElementId + '/count'
+          url = '/1/activity/model/section/' + this.contextElementId + '/' + this.requestType
           break
 
         case 'MODEL_CARD':
-          url = '/1/activity/model/card/' + this.contextElementId + '/count'
+          url = '/1/activity/model/card/' + this.contextElementId + '/' + this.requestType
           break
       }
 
@@ -79,9 +105,6 @@ export default {
         this.loading = false
         if (response.data.result === 'success') {
           this.count = response.data.data
-          if (this.count === 0) {
-            this.hide = true
-          }
         }
       })
     }

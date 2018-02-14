@@ -26,10 +26,12 @@ axios.interceptors.request.use(
 import ErrorPanel from '@/components/global/ErrorPanel.vue'
 import VueMarkdown from 'vue-markdown'
 import MarkdownEditor from '@/components/global/MarkdownEditor.vue'
+import Indicator from '@/components/notifications/Indicator.vue'
 
 Vue.component('app-error-panel', ErrorPanel)
 Vue.component('vue-markdown', VueMarkdown)
 Vue.component('app-markdown-editor', MarkdownEditor)
+Vue.component('app-indicator', Indicator)
 
 /* registered globally to solve the circular reference */
 import ModelSectionWithModal from '@/components/model/ModelSectionWithModal.vue'

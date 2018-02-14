@@ -13,6 +13,8 @@ import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
+import org.collectiveone.modules.conversations.Message;
+import org.collectiveone.modules.conversations.MessageRepositoryIf;
 import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredRepositoryIf;
 import org.collectiveone.modules.initiatives.Initiative;
@@ -66,6 +68,9 @@ public class ModelService {
 	
 	@Autowired
 	private ActivityRepositoryIf activityRepository;
+	
+	@Autowired
+	private MessageRepositoryIf messageRepository;
 	
 	
 	@Transactional
@@ -810,9 +815,28 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Long> countActivityUnderView (UUID viewId, Boolean onlyMessages) {
-		Page<Activity> activities = getActivityUnderView(viewId, new PageRequest(1, 1), onlyMessages);
-		return new GetResult<Long>("success", "activity counted", activities.getTotalElements());
+	public GetResult<Long> countMessagesUnderView (UUID viewId) {
+		Page<Message> messages = getMessagesUnderView(viewId, new PageRequest(1, 1));
+		return new GetResult<Long>("success", "activity counted", messages.getTotalElements());
+	}
+	
+	@Transactional
+	public Page<Message> getMessagesUnderView (UUID viewId, PageRequest page) {
+		
+		List<UUID> sectionIds = getAllSectionsIdsOfView(viewId);
+		List<UUID> cardsIds = sectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(sectionIds) : new ArrayList<UUID>();
+		
+		Page<Message> messages = null;
+		
+		if((sectionIds.size() > 0) && (cardsIds.size() > 0)) {
+			messages = messageRepository.findOfViewSectionsAndCards(viewId, sectionIds, cardsIds, page);
+		} else if ((sectionIds.size() > 0) && (cardsIds.size() == 0)) {
+			messages = messageRepository.findOfViewAndSections(viewId, sectionIds, page);
+		} else if ((sectionIds.size() == 0) && (cardsIds.size() == 0)) {
+			messages = messageRepository.findOfView(viewId, page);
+		}
+		
+		return messages;
 	}
 	
 	@Transactional

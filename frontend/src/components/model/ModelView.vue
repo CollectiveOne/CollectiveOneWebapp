@@ -53,10 +53,11 @@
             </div>
             <div class="w3-left comments-indicator cursor-pointer"
               @click="expandViewModal(true)">
-              <app-messages-indicator
+              <app-indicator
                 contextType="MODEL_VIEW"
-                :contextElementId="view.id">
-              </app-messages-indicator>
+                :contextElementId="view.id"
+                type="messages">
+              </app-indicator>
             </div>
           </div>
           <div class="w3-row w3-padding light-grey">
@@ -121,7 +122,6 @@
 import ModelSectionWithModal from '@/components/model/ModelSectionWithModal.vue'
 import ModelViewModal from '@/components/model/modals/ModelViewModal.vue'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
-import MessagesIndicator from '@/components/notifications/MessagesIndicator.vue'
 
 export default {
   name: 'app-model-view',
@@ -129,8 +129,7 @@ export default {
   components: {
     'app-model-view-modal': ModelViewModal,
     'app-model-section-modal': ModelSectionModal,
-    'app-model-section-with-modal': ModelSectionWithModal,
-    'app-messages-indicator': MessagesIndicator
+    'app-model-section-with-modal': ModelSectionWithModal
   },
 
   data () {

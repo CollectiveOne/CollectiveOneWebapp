@@ -9,11 +9,12 @@
         </router-link>
         <div v-if="showMessagesIndicator" class="w3-left comments-indicator cursor-pointer"
           @click="$emit('show-messages')">
-          <app-messages-indicator
+          <app-indicator
             contextType="MODEL_SECTION"
             :contextElementId="section.id"
-            :size="18">
-          </app-messages-indicator>
+            :size="18"
+            type="messages">
+          </app-indicator>
         </div>
     </div>
 
@@ -68,13 +69,7 @@
 </template>
 
 <script>
-import MessagesIndicator from '@/components/notifications/MessagesIndicator.vue'
-
 export default {
-  components: {
-    'app-messages-indicator': MessagesIndicator
-  },
-
   props: {
     section: {
       type: Object,

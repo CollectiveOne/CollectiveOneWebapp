@@ -1,29 +1,39 @@
 <template lang="html">
-  <div class="w3-display-container">
-    <router-link
-      :to="{ name: 'ModelView', params: { viewId: view.id } }"
-      class="w3-button w3-right"
-      :class="{'app-button-light': !selected, 'app-button': selected}">
-      {{ view.title }}
+  <div class="w3-row">
+    <router-link class="w3-col" :to="{ name: 'ModelView', params: { viewId: view.id } }">
+      <div class="w3-row">
+        <div class="message-indicator">
+          <app-indicator
+            contextType="MODEL_VIEW"
+            :contextElementId="view.id"
+            :size="16"
+            :hideWhenZero="false"
+            type="messages">
+          </app-indicator>
+          <!-- <app-likes-indicator
+            contextType="MODEL_VIEW"
+            :contextElementId="view.id"
+            :size="16">
+          </app-likes-indicator>
+          <app-cards-indicator
+            contextType="MODEL_VIEW"
+            :contextElementId="view.id"
+            :size="16">
+          </app-cards-indicator> -->
+        </div>
+      </div>
+      <div class="w3-row">
+        <div class="w3-button"
+          :class="{'app-button-light': !selected, 'app-button': selected}">
+          {{ view.title }}
+        </div>
+      </div>
     </router-link>
-    <div class="w3-display-topright message-indicator">
-      <app-messages-indicator
-        contextType="MODEL_VIEW"
-        :contextElementId="view.id"
-        :size="16">
-      </app-messages-indicator>
-    </div>
   </div>
 </template>
 
 <script>
-import MessagesIndicator from '@/components/notifications/MessagesIndicator.vue'
-
 export default {
-  components: {
-    'app-messages-indicator': MessagesIndicator
-  },
-
   props: {
     view: {
       type: Object
@@ -39,8 +49,6 @@ export default {
 <style scoped>
 
 .message-indicator {
-  margin-top: -10px;
-  margin-right: -15px;
 }
 
 </style>

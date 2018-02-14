@@ -580,7 +580,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Long>("error", "access denied", null);
 		}
 		
-		return modelService.countActivityUnderView(viewId, onlyMessages);
+		return modelService.countMessagesUnderView(viewId);
 	}
 	
 	@RequestMapping(path = "/activity/model/view/{viewId}", method = RequestMethod.GET)

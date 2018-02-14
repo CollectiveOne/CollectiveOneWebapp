@@ -50,11 +50,12 @@ needs the model card component inside, and would crate a recursion -->
 
       <div v-if="cardWrapper" class="w3-display-bottomright messages-indicator cursor-pointer"
         @click="showCard(true)">
-        <app-messages-indicator
+        <app-indicator
           contextType="MODEL_CARD"
           :contextElementId="cardWrapper.id"
-          :size="18">
-        </app-messages-indicator>
+          :size="18"
+          type="messages">
+        </app-indicator>
       </div>
 
       <div v-if="textTooLong" class="">
@@ -73,13 +74,11 @@ needs the model card component inside, and would crate a recursion -->
 <script>
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 import ModelCard from '@/components/model/ModelCard.vue'
-import MessagesIndicator from '@/components/notifications/MessagesIndicator.vue'
 
 export default {
   components: {
     'app-model-card-modal': ModelCardModal,
-    'app-model-card': ModelCard,
-    'app-messages-indicator': MessagesIndicator
+    'app-model-card': ModelCard
   },
 
   props: {
