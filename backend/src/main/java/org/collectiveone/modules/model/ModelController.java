@@ -567,8 +567,9 @@ public class ModelController extends BaseController {
 		return modelService.searchSection(query, new PageRequest(page, size), initiativeId);
 	}
 	
-	@RequestMapping(path = "/activity/model/view/{viewId}/count", method = RequestMethod.GET)
-	public GetResult<Long> countActivityUnderView(
+	@RequestMapping(path = "/initiative/{initiativeId}/model/view/{viewId}/countMessages", method = RequestMethod.GET)
+	public GetResult<Long> countMessagesUnderView(
+			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("viewId") String viewIdStr, 
 			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
 		
@@ -601,8 +602,9 @@ public class ModelController extends BaseController {
 		return modelService.getActivityResultUnderView(viewId, new PageRequest(page, size), onlyMessages);
 	}
 	
-	@RequestMapping(path = "/activity/model/section/{sectionId}/count", method = RequestMethod.GET)
-	public GetResult<Long> countActivityUnderSection(
+	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}/countMessages", method = RequestMethod.GET)
+	public GetResult<Long> countMessagesUnderSection(
+			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr,
 			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
 		
@@ -614,7 +616,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Long>("error", "access denied", null);
 		}
 		
-		return modelService.countActivityUnderSection(sectionId, onlyMessages);
+		return modelService.countMessagesUnderSection(sectionId);
 	}
 	
 	@RequestMapping(path = "/activity/model/section/{sectionId}", method = RequestMethod.GET)
@@ -635,8 +637,9 @@ public class ModelController extends BaseController {
 		return modelService.getActivityResultUnderSection(sectionId, new PageRequest(page, size), onlyMessages);
 	}
 	
-	@RequestMapping(path = "/activity/model/card/{cardWrapperId}/count", method = RequestMethod.GET)
+	@RequestMapping(path = "/initiative/{initiativeId}/model/card/{cardWrapperId}/countMessages", method = RequestMethod.GET)
 	public GetResult<Long> getActivityUnderCard(
+			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("cardWrapperId") String cardWrapperIdStr, 
 			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
 		
@@ -648,7 +651,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Long>("error", "access denied", null);
 		}
 		
-		return modelService.countActivityUnderCard(cardWrapperId, onlyMessages);
+		return modelService.countMessagesUnderCard(cardWrapperId, onlyMessages);
 	}
 	
 	@RequestMapping(path = "/activity/model/card/{cardWrapperId}", method = RequestMethod.GET)

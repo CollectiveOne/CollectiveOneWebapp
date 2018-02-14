@@ -6,7 +6,11 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.ActivityService;
+import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+import org.collectiveone.modules.model.ModelCardWrapper;
+import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelViewRepositoryIf;
@@ -163,22 +167,37 @@ public class MessageService {
 		if (thread == null) {
 			thread = new MessageThread();
 			thread.setContextType(contextType);
+			thread = messageThreadRepository.save(thread);
 			
 			switch (contextType) {
 				case MODEL_CARD:
-					thread.setModelCardWrapper(modelCardWrapperRepository.findById(elementId));
+					ModelCardWrapper card = modelCardWrapperRepository.findById(elementId);
+					thread.setModelCardWrapper(card);
+					card.setMessageThread(thread);
+					modelCardWrapperRepository.save(card);
+					break;
 				
 				case MODEL_SECTION:
-					thread.setModelSection(modelSectionRepository.findById(elementId));
+					ModelSection section = modelSectionRepository.findById(elementId);
+					thread.setModelSection(section);
+					section.setMessageThread(thread);
+					modelSectionRepository.save(section);
+					break;
 					
 				case MODEL_VIEW:
-					thread.setModelView(modelViewRepository.findById(elementId));
+					ModelView view = modelViewRepository.findById(elementId);
+					thread.setModelView(view);
+					view.setMessageThread(thread);
+					modelViewRepository.save(view);
+					break;
 					
 				case INITIATIVE:
-					thread.setInitiative(initiativeRepository.findById(elementId));
+					Initiative initiative = initiativeRepository.findById(elementId);
+					thread.setInitiative(initiative);
+					initiative.setMessageThread(thread);
+					initiativeRepository.save(initiative);
+					break;
 			}
-			
-			thread = messageThreadRepository.save(thread);
 		}
 		
 		return thread;

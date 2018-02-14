@@ -3,6 +3,7 @@ package org.collectiveone.modules.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import javax.transaction.Transactional;
 
@@ -71,6 +72,9 @@ public class ModelService {
 	
 	@Autowired
 	private MessageRepositoryIf messageRepository;
+	
+	/* local memory needed as protection against infinite recursive loops */
+	private List<UUID> readIds = new ArrayList<UUID>();
 	
 	
 	@Transactional
@@ -796,13 +800,24 @@ public class ModelService {
 	
 	@Transactional
 	public List<UUID> getAllSubsectionsIds (UUID sectionId) {
+		readIds.clear();
+		readIds.add(sectionId);
+		return getAllSubsectionsIdsRec(sectionId);
+	}
+	
+	@Transactional
+	public List<UUID> getAllSubsectionsIdsRec (UUID sectionId) {
 		List<UUID> subsectionsIds = modelSectionRepository.getSubsectionsIds(sectionId);
 		List<UUID> allSubsectionIds = new ArrayList<UUID>();
+		
+		/* remove those that have been already been added */
+		Predicate<UUID> isContained = e -> readIds.contains(e);
+		subsectionsIds.removeIf(isContained);
 		
 		allSubsectionIds.addAll(subsectionsIds);
 		
 		for (UUID subsectionId : subsectionsIds) {
-			List<UUID> subsubsectionIds = getAllSubsectionsIds(subsectionId);
+			List<UUID> subsubsectionIds = getAllSubsectionsIdsRec(subsectionId);
 			
 			for (UUID subsubsectionId : subsubsectionIds) {
 				if(allSubsectionIds.indexOf(subsubsectionId) == -1) {
@@ -816,7 +831,7 @@ public class ModelService {
 	
 	@Transactional
 	public GetResult<Long> countMessagesUnderView (UUID viewId) {
-		Page<Message> messages = getMessagesUnderView(viewId, new PageRequest(1, 1));
+		Page<Activity> messages = getActivityUnderView(viewId, new PageRequest(1, 1), true);
 		return new GetResult<Long>("success", "activity counted", messages.getTotalElements());
 	}
 	
@@ -886,9 +901,33 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Long> countActivityUnderSection (UUID sectionId, Boolean onlyMessages) {
-		Page<Activity> activities = getActivityUnderSection(sectionId, new PageRequest(1, 1), onlyMessages);
-		return new GetResult<Long>("success", "activity counted", activities.getTotalElements());
+	public GetResult<Long> countMessagesUnderSection (UUID sectionId) {
+		Page<Activity> activity = getActivityUnderSection(sectionId, new PageRequest(1, 1), true);
+		return new GetResult<Long>("success", "activity counted", activity.getTotalElements());
+	}
+	
+	@Transactional
+	public Page<Message> getMessagesUnderSection(UUID sectionId, PageRequest page) {
+		/* TODO: This is not actually used. Messages are being retrieved from the
+		 * activity entities they generate. That approached should be abandoned
+		 */		
+		
+		List<UUID> allSectionIds = new ArrayList<UUID>();
+		
+		allSectionIds.add(sectionId);
+		allSectionIds.addAll(getAllSubsectionsIds(sectionId));
+		
+		List<UUID> cardsIds = allSectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
+		
+		Page<Message> messages = null;
+		
+		if (cardsIds.size() > 0) {
+			messages = messageRepository.findOfSectionsAndCards(allSectionIds, cardsIds, page);	
+		} else {
+			messages = messageRepository.findOfSections(allSectionIds, page);
+		}
+		
+		return messages;
 	}
 	
 	@Transactional
@@ -937,9 +976,18 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Long> countActivityUnderCard (UUID cardWrapperId, Boolean onlyMessages) {
-		Page<Activity> activities = getActivityUnderCard(cardWrapperId, new PageRequest(1, 1), onlyMessages);
-		return new GetResult<Long>("success", "activity counted", activities.getTotalElements());
+	public GetResult<Long> countMessagesUnderCard (UUID cardWrapperId, Boolean onlyMessages) {
+		Page<Activity> messages = getActivityUnderCard(cardWrapperId, new PageRequest(1, 1), true);
+		return new GetResult<Long>("success", "activity counted", messages.getTotalElements());
+	}
+	
+	@Transactional
+	public Page<Message> getMessagesUnderCard (UUID cardWrapperId, PageRequest page) {
+		Page<Message> activities = null;
+		
+		activities = messageRepository.findOfCard(cardWrapperId, page);
+		
+		return activities;
 	}
 	
 	@Transactional

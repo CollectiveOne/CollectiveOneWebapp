@@ -4,11 +4,12 @@
       <div class="w3-row">
         <div class="message-indicator">
           <app-indicator
+            :initiativeId="view.initiativeId"
             contextType="MODEL_VIEW"
             :contextElementId="view.id"
+            type="messages"
             :size="16"
-            :hideWhenZero="false"
-            type="messages">
+            :hideWhenZero="false">
           </app-indicator>
           <!-- <app-likes-indicator
             contextType="MODEL_VIEW"

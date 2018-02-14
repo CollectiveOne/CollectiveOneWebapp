@@ -10,6 +10,7 @@
         <div v-if="showMessagesIndicator" class="w3-left comments-indicator cursor-pointer"
           @click="$emit('show-messages')">
           <app-indicator
+            :initiativeId="section.initiativeId"
             contextType="MODEL_SECTION"
             :contextElementId="section.id"
             :size="18"

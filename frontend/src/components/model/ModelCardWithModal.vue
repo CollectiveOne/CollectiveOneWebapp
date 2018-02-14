@@ -51,6 +51,7 @@ needs the model card component inside, and would crate a recursion -->
       <div v-if="cardWrapper" class="w3-display-bottomright messages-indicator cursor-pointer"
         @click="showCard(true)">
         <app-indicator
+          :initiativeId="initiativeId"
           contextType="MODEL_CARD"
           :contextElementId="cardWrapper.id"
           :size="18"

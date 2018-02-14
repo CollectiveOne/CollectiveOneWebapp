@@ -134,8 +134,9 @@ export default {
         this.loading = false
         this.loadingMore = false
 
-        this.$emit('last-activity', response.data.data.content[0])
-
+        if (response.data.data.content.length > 0) {
+          this.$emit('last-activity', response.data.data.content[0])
+        }
         if (response.data.data.content.length < 10) {
           this.allShown = true
         }
@@ -166,12 +167,16 @@ export default {
             var newIx = 0
             var latestId = this.activities[0].id
 
-            while (response.data.data.content[newIx].id !== latestId) {
-              this.activities.splice(newIx, 0, response.data.data.content[newIx])
-              newIx++
-            }
-            if (newIx > 0) {
-              this.$emit('updated')
+            if (response.data.data.content.length > 0) {
+              if (response.data.data.content[newIx].id) {
+                while (response.data.data.content[newIx].id !== latestId) {
+                  this.activities.splice(newIx, 0, response.data.data.content[newIx])
+                  newIx++
+                }
+                if (newIx > 0) {
+                  this.$emit('updated')
+                }
+              }
             }
             break
         }

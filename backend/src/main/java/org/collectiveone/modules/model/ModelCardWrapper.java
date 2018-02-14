@@ -160,7 +160,14 @@ public class ModelCardWrapper {
 	public void setTargetDate(Timestamp targetDate) {
 		this.targetDate = targetDate;
 	}
-	
+
+	public MessageThread getMessageThread() {
+		return messageThread;
+	}
+
+	public void setMessageThread(MessageThread messageThread) {
+		this.messageThread = messageThread;
+	}
 	
 	
 }

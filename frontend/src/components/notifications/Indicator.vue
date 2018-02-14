@@ -13,6 +13,9 @@
 <script>
 export default {
   props: {
+    initiativeId: {
+      type: String
+    },
     contextType: {
       type: String
     },
@@ -25,7 +28,7 @@ export default {
     },
     hideWhenZero: {
       type: Boolean,
-      default: true
+      default: false
     },
     type: {
       type: String
@@ -88,20 +91,20 @@ export default {
 
       switch (this.contextType) {
         case 'MODEL_VIEW':
-          url = '/1/activity/model/view/' + this.contextElementId + '/' + this.requestType
+          url = '/1/initiative/' + this.initiativeId + '/model/view/' + this.contextElementId + '/' + this.requestType
           break
 
         case 'MODEL_SECTION':
-          url = '/1/activity/model/section/' + this.contextElementId + '/' + this.requestType
+          url = '/1/initiative/' + this.initiativeId + '/model/section/' + this.contextElementId + '/' + this.requestType
           break
 
         case 'MODEL_CARD':
-          url = '/1/activity/model/card/' + this.contextElementId + '/' + this.requestType
+          url = '/1/initiative/' + this.initiativeId + '/model/card/' + this.contextElementId + '/' + this.requestType
           break
       }
 
       this.loading = true
-      this.axios.get(url, { params: { onlyMessages: true } }).then((response) => {
+      this.axios.get(url).then((response) => {
         this.loading = false
         if (response.data.result === 'success') {
           this.count = response.data.data

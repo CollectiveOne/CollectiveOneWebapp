@@ -54,6 +54,7 @@
             <div class="w3-left comments-indicator cursor-pointer"
               @click="expandViewModal(true)">
               <app-indicator
+                :initiativeId="view.initiativeId"
                 contextType="MODEL_VIEW"
                 :contextElementId="view.id"
                 type="messages">
