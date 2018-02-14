@@ -14,7 +14,8 @@
             contextType="MODEL_SECTION"
             :contextElementId="section.id"
             :size="18"
-            type="messages">
+            type="messages"
+            :forceUpdate="forceUpdate">
           </app-indicator>
         </div>
     </div>
@@ -93,6 +94,10 @@ export default {
       default: true
     },
     showMessagesIndicator: {
+      type: Boolean,
+      default: false
+    },
+    forceUpdate: {
       type: Boolean,
       default: false
     }

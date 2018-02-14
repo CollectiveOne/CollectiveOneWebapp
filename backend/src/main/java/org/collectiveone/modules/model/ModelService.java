@@ -18,6 +18,8 @@ import org.collectiveone.modules.conversations.Message;
 import org.collectiveone.modules.conversations.MessageRepositoryIf;
 import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredRepositoryIf;
+import org.collectiveone.modules.governance.CardLike;
+import org.collectiveone.modules.governance.CardLikeRepositoryIf;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
@@ -30,6 +32,7 @@ import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelViewRepositoryIf;
+import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -73,6 +76,10 @@ public class ModelService {
 	@Autowired
 	private MessageRepositoryIf messageRepository;
 	
+	@Autowired
+	private CardLikeRepositoryIf cardLikeRepository;
+	
+	
 	/* local memory needed as protection against infinite recursive loops */
 	private List<UUID> readIds = new ArrayList<UUID>();
 	
@@ -87,7 +94,7 @@ public class ModelService {
 		List<ModelView> views = initiative.getModelViews(); 
 		for (ModelView view : views) {
 			ModelViewDto viewDto = view.toDto();
-			viewDto = addViewSubElements(viewDto, view.getId(), level);
+			viewDto = addViewSubElements(viewDto, view.getId(), level, requestById);
 			viewsDto.add(viewDto); 
 		}
 		
@@ -98,7 +105,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public ModelViewDto addViewSubElements(ModelViewDto viewDto, UUID viewId, Integer level) {
+	public ModelViewDto addViewSubElements(ModelViewDto viewDto, UUID viewId, Integer level, UUID requestByUserId) {
 		
 		ModelView view = modelViewRepository.findById(viewId);
 		
@@ -106,7 +113,7 @@ public class ModelService {
 			viewDto.setSectionsLoaded(true);
 			
 			for (ModelSection section : view.getSections()) {
-				viewDto.getSections().add(getSectionDto(section.getId(), level - 1));
+				viewDto.getSections().add(getSectionDto(section.getId(), level - 1, requestByUserId));
 			}
 		} else {
 			viewDto.setSectionsLoaded(false);
@@ -149,12 +156,12 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelViewDto> getView (UUID viewId, UUID requestById, Integer level) {
+	public GetResult<ModelViewDto> getView (UUID viewId, UUID requestById, Integer level, UUID requestByUserId) {
 		
 		ModelView view = modelViewRepository.findById(viewId);
 		
 		ModelViewDto viewDto = view.toDto();
-		viewDto = addViewSubElements(viewDto, view.getId(), level);
+		viewDto = addViewSubElements(viewDto, view.getId(), level, requestByUserId);
 		
 		return new GetResult<ModelViewDto>("success", "view retrieved", viewDto);
 	}
@@ -221,12 +228,12 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById, Integer level) {
-		return new GetResult<ModelSectionDto>("success", "section retrieved",  getSectionDto(sectionId, level));
+	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById, Integer level, UUID requestByUserId) {
+		return new GetResult<ModelSectionDto>("success", "section retrieved",  getSectionDto(sectionId, level, requestByUserId));
 	}
 	
 	@Transactional
-	public ModelSectionDto getSectionDto(UUID sectionId, Integer level) {
+	public ModelSectionDto getSectionDto(UUID sectionId, Integer level, UUID requestByUserId) {
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		ModelSectionDto sectionDto = section.toDto();
 		
@@ -242,13 +249,13 @@ public class ModelService {
 			sectionDto.getInViews().add(inView.toDto());
 		}
 		
-		sectionDto = addSectionSubElements(sectionDto, section.getId(), level);
+		sectionDto = addSectionSubElements(sectionDto, section.getId(), level, requestByUserId);
 		
 		return sectionDto;
 	}
 	
 	@Transactional
-	public GetResult<Page<ModelSectionDto>> searchSection(String query, PageRequest page, UUID initiativeId) {
+	public GetResult<Page<ModelSectionDto>> searchSection(String query, PageRequest page, UUID initiativeId, UUID requestByUserId) {
 		
 		List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(initiativeId);
 		Page<ModelSection> enititiesPage = modelSectionRepository.searchBy("%"+query.toLowerCase()+"%", initiativeEcosystemIds, page);
@@ -256,7 +263,7 @@ public class ModelService {
 		List<ModelSectionDto> sectionDtos = new ArrayList<ModelSectionDto>();
 		
 		for(ModelSection section : enititiesPage.getContent()) {
-			sectionDtos.add(getSectionDto(section.getId(), 0));
+			sectionDtos.add(getSectionDto(section.getId(), 0, requestByUserId));
 		}
 		
 		Page<ModelSectionDto> dtosPage = new PageImpl<ModelSectionDto>(sectionDtos, page, enititiesPage.getNumberOfElements());
@@ -524,7 +531,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public ModelSectionDto addSectionSubElements(ModelSectionDto sectionDto, UUID sectionId, Integer level) {
+	public ModelSectionDto addSectionSubElements(ModelSectionDto sectionDto, UUID sectionId, Integer level, UUID requestByUserId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		
@@ -533,6 +540,11 @@ public class ModelService {
 			
 			for (ModelCardWrapper cardWrapper : section.getCardsWrappers()) {
 				ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
+				
+				if (requestByUserId != null) {
+					cardWrapperDto.setUserLiked(cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapper.getId(), requestByUserId) != null);
+				}
+				
 				List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapper.getId());
 				
 				for (ModelSection inSection : inSections) {
@@ -543,7 +555,7 @@ public class ModelService {
 			}
 			
 			for (ModelSection subsection : section.getSubsections()) {
-				sectionDto.getSubsections().add(addSectionSubElements(subsection.toDto(), subsection.getId(), level - 1));
+				sectionDto.getSubsections().add(addSectionSubElements(subsection.toDto(), subsection.getId(), level - 1, requestByUserId));
 			}
 		} else {
 			sectionDto.setSubElementsLoaded(false);
@@ -715,11 +727,15 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelCardWrapperDto> getCardWrapper(UUID cardWrapperId, UUID requestById) {
+	public GetResult<ModelCardWrapperDto> getCardWrapper(UUID cardWrapperId, UUID requestByUserId) {
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapper.getId());
 		
 		ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
+		
+		if (requestByUserId != null) {
+			cardWrapperDto.setUserLiked(cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapper.getId(), requestByUserId) != null);
+		}
 		
 		for (ModelSection section : inSections) {
 			cardWrapperDto.getInSections().add(section.toDto());
@@ -815,6 +831,7 @@ public class ModelService {
 		subsectionsIds.removeIf(isContained);
 		
 		allSubsectionIds.addAll(subsectionsIds);
+		readIds.addAll(subsectionsIds);
 		
 		for (UUID subsectionId : subsectionsIds) {
 			List<UUID> subsubsectionIds = getAllSubsectionsIdsRec(subsectionId);
@@ -1018,5 +1035,37 @@ public class ModelService {
 		
 	}
 	
+	@Transactional
+	public PostResult setLikeToCard (UUID cardWrapperId, UUID authorId, boolean likeStatus) {
+		ModelCardWrapper card = modelCardWrapperRepository.findById(cardWrapperId);
+		AppUser author = appUserRepository.findByC1Id(authorId);
+		
+		CardLike like = cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapperId, authorId);
+		
+		/* add the like*/
+		if (likeStatus == true) {
+			if (like == null) {
+				like = new CardLike();
+				like.setAuthor(author);
+				like.setCardWrapper(card);
+				cardLikeRepository.save(like);
+			} else {
+				/* nothing to do, the like is already registered */
+			}	
+		} else {
+			if (like != null) {
+				cardLikeRepository.delete(like);
+			} else {
+				/* nothing to do, the like is already absent */
+			}
+		}
+		
+		return new PostResult("success", "like status changed", null);
+	}
+	
+	@Transactional
+	public GetResult<Integer> countCardLikes (UUID cardWrapperId) {
+		return new GetResult<Integer>("success", "cards counted", cardLikeRepository.countOfCard(cardWrapperId));
+	}
 	
 }

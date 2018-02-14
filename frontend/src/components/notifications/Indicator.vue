@@ -14,7 +14,8 @@
 export default {
   props: {
     initiativeId: {
-      type: String
+      type: String,
+      default: '00000000-0000-0000-0000-000000000000'
     },
     contextType: {
       type: String
@@ -32,6 +33,14 @@ export default {
     },
     type: {
       type: String
+    },
+    selected: {
+      type: Boolean,
+      default: false
+    },
+    forceUpdate: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -39,9 +48,13 @@ export default {
     iconClass () {
       switch (this.type) {
         case 'messages':
-          return 'fa-comments'
+          return 'fa-comments-o'
         case 'likes':
-          return 'fa-heart'
+          if (this.selected) {
+            return 'fa-heart'
+          } else {
+            return 'fa-heart-o'
+          }
       }
     },
     requestType () {
@@ -82,24 +95,34 @@ export default {
   watch: {
     contextElementId () {
       this.update()
+    },
+    selected () {
+      this.update()
+    },
+    forceUpdate () {
+      this.update()
     }
   },
 
   methods: {
     update () {
       var url = ''
+      var initId = this.initiativeId
+      if (initId === '') {
+        initId = '00000000-0000-0000-0000-000000000000'
+      }
 
       switch (this.contextType) {
         case 'MODEL_VIEW':
-          url = '/1/initiative/' + this.initiativeId + '/model/view/' + this.contextElementId + '/' + this.requestType
+          url = '/1/initiative/' + initId + '/model/view/' + this.contextElementId + '/' + this.requestType
           break
 
         case 'MODEL_SECTION':
-          url = '/1/initiative/' + this.initiativeId + '/model/section/' + this.contextElementId + '/' + this.requestType
+          url = '/1/initiative/' + initId + '/model/section/' + this.contextElementId + '/' + this.requestType
           break
 
         case 'MODEL_CARD':
-          url = '/1/initiative/' + this.initiativeId + '/model/card/' + this.contextElementId + '/' + this.requestType
+          url = '/1/initiative/' + initId + '/model/card/' + this.contextElementId + '/' + this.requestType
           break
       }
 

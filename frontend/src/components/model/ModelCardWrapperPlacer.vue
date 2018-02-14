@@ -6,7 +6,7 @@
     </div>
 
     <app-model-card-with-modal
-      :cardWrapper="cardWrapper"
+      :cardWrapperInit="cardWrapper"
       :initiativeId="$route.params.initiativeId"
       inSectionId=""
       inSectionTitle=""

@@ -84,7 +84,7 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelViewDto>("error", "access denied", null);
 		}
 		
-		return modelService.getView(UUID.fromString(viewIdStr), getLoggedUserId(), level);
+		return modelService.getView(UUID.fromString(viewIdStr), getLoggedUserId(), level, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/view/{viewId}", method = RequestMethod.PUT) 
@@ -442,7 +442,7 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelSectionDto>("error", "access denied", null);
 		}
 		
-		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUserId(), level);
+		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUserId(), level, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.DELETE) 
@@ -564,7 +564,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ModelSectionDto>>("error", "access denied", null);
 		}
 		
-		return modelService.searchSection(query, new PageRequest(page, size), initiativeId);
+		return modelService.searchSection(query, new PageRequest(page, size), initiativeId, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/view/{viewId}/countMessages", method = RequestMethod.GET)
@@ -638,7 +638,7 @@ public class ModelController extends BaseController {
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/card/{cardWrapperId}/countMessages", method = RequestMethod.GET)
-	public GetResult<Long> getActivityUnderCard(
+	public GetResult<Long> countMessagesUnderCard(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("cardWrapperId") String cardWrapperIdStr, 
 			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
@@ -672,4 +672,41 @@ public class ModelController extends BaseController {
 		return modelService.getActivityResultUnderCard(cardWrapperId, new PageRequest(page, size), onlyMessages);
 	}
 	
+	@RequestMapping(path = "/initiative/{initiativeId}/model/card/{cardWrapperId}/like", method = RequestMethod.PUT)
+	public PostResult setCardLike(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("cardWrapperId") String cardWrapperIdStr,
+			@RequestParam("likeStatus") Boolean likeStatus) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		// UUID initiativeId = UUID.fromString(initiativeIdStr);
+		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
+		Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
+		
+		if (!initiativeService.isMemberOfEcosystem(initiative.getId(), getLoggedUserId())) {
+			return new PostResult("error", "not authorized", "");
+		}
+				
+		return modelService.setLikeToCard(cardWrapperId, getLoggedUserId(), likeStatus);
+	}
+	
+	@RequestMapping(path = "/initiative/{initiativeId}/model/card/{cardWrapperId}/countLikes", method = RequestMethod.GET)
+	public GetResult<Integer> countCardLikes(
+			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("cardWrapperId") String cardWrapperIdStr, 
+			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
+		
+		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
+		
+		Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
+		
+		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+			return new GetResult<Integer>("error", "access denied", null);
+		}
+		
+		return modelService.countCardLikes(cardWrapperId);
+	}
 }

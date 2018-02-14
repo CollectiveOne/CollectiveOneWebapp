@@ -18,14 +18,9 @@ needs the model card component inside, and would crate a recursion -->
       </transition>
     </div>
 
-    <div class="w3-display-container"
-      @mouseover="hoverEnter()"
-      @mouseleave="hoverLeave()">
-
-      <div @click="showCard()" class="click-area cursor-pointer"
-        draggable="true"
-        @dragstart="dragStart($event)">
-      </div>
+    <div class=""
+      draggable="true"
+      @dragstart="dragStart($event)">
 
       <!-- forward all props  -->
       <app-model-card
@@ -34,37 +29,12 @@ needs the model card component inside, and would crate a recursion -->
         :inSectionId="inSectionId"
         :inSectionTitle="inSectionTitle"
         :cardEffect="cardEffect"
-        :hoverHighlight="hoverHighlight"
         :floating="floating"
-        :highlight="highlight"
-        :showFull="showFull"
-        @textTooLong="textTooLong = true">
+        :enableExpand="enableExpand"
+        :forceUpdate="forceUpdate"
+        @please-update="update()"
+        @expand-modal="showCard($event)">
       </app-model-card>
-
-      <transition name="fadeenter">
-        <div v-if="showActionButton && enableExpand"
-          class="w3-padding model-action-button gray-2-color w3-display-topright">
-          <i class="fa fa-expand" aria-hidden="true"></i>
-        </div>
-      </transition>
-
-      <div v-if="cardWrapper" class="w3-display-bottomright messages-indicator cursor-pointer"
-        @click="showCard(true)">
-        <app-indicator
-          :initiativeId="initiativeId"
-          contextType="MODEL_CARD"
-          :contextElementId="cardWrapper.id"
-          :size="18"
-          type="messages">
-        </app-indicator>
-      </div>
-
-      <div v-if="textTooLong" class="">
-        <div @click="showMoreClick()" v-if="enableExpand"
-          class="w3-padding model-action-button gray-2-color w3-display-bottomright cursor-pointer">
-          <i class="fa fa-arrows-v" aria-hidden="true"></i>
-        </div>
-      </div>
 
     </div>
 
@@ -83,7 +53,7 @@ export default {
   },
 
   props: {
-    cardWrapper: {
+    cardWrapperInit: {
       type: Object,
       default: null
     },
@@ -103,10 +73,6 @@ export default {
       type: Boolean,
       default: true
     },
-    hoverHighlight: {
-      type: Boolean,
-      default: false
-    },
     floating: {
       type: Boolean,
       default: false
@@ -118,37 +84,30 @@ export default {
     expandLocally: {
       type: Boolean,
       default: true
+    },
+    forceUpdate: {
+      type: Boolean,
+      default: true
     }
   },
 
   data () {
     return {
-      showActionButton: false,
+      cardWrapper: null,
       showCardModal: false,
-      highlight: false,
-      textTooLong: false,
-      showFull: false,
       onlyMessages: false
     }
   },
 
   methods: {
+    update () {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+        this.cardWrapper = response.data.data
+      })
+    },
     modalClosed () {
       this.showCardModal = false
-      this.$emit('please-update')
-    },
-    hoverEnter () {
-      this.showActionButton = true
-      if (this.hoverHighlight) {
-        this.highlight = true
-      }
-    },
-    hoverLeave () {
-      this.showActionButton = false
-      this.highlight = false
-    },
-    showMoreClick () {
-      this.showFull = !this.showFull
+      this.update()
     },
     showCard (onlyMessages) {
       if (this.expandLocally) {
@@ -174,6 +133,10 @@ export default {
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
     }
+  },
+
+  created () {
+    this.cardWrapper = this.cardWrapperInit
   }
 }
 </script>

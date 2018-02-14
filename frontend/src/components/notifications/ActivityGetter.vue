@@ -165,16 +165,18 @@ export default {
 
           case 'UPDATE':
             var newIx = 0
-            var latestId = this.activities[0].id
 
-            if (response.data.data.content.length > 0) {
-              if (response.data.data.content[newIx].id) {
-                while (response.data.data.content[newIx].id !== latestId) {
-                  this.activities.splice(newIx, 0, response.data.data.content[newIx])
-                  newIx++
-                }
-                if (newIx > 0) {
-                  this.$emit('updated')
+            if (this.activities.length > 0) {
+              var latestId = this.activities[0].id
+              if (response.data.data.content.length > 0) {
+                if (response.data.data.content[newIx].id) {
+                  while (response.data.data.content[newIx].id !== latestId) {
+                    this.activities.splice(newIx, 0, response.data.data.content[newIx])
+                    newIx++
+                  }
+                  if (newIx > 0) {
+                    this.$emit('updated')
+                  }
                 }
               }
             }

@@ -26,6 +26,7 @@
         :inElementId="inElementId"
         :expand="expanded"
         :showMessagesIndicator="true"
+        :forceUpdate="forceUpdate"
         @show-messages="$emit('show-messages')">
       </app-model-section-header>
     </div>
@@ -106,11 +107,12 @@
 
                     <div class="">
                       <app-model-card-with-modal
-                        :cardWrapper="cardWrapper"
+                        :cardWrapperInit="cardWrapper"
                         :initiativeId="initiativeId"
                         :inSectionId="section.id"
                         :inSectionTitle="section.title"
-                        :cardEffect="cardsAsCards">
+                        :cardEffect="cardsAsCards"
+                        :forceUpdate="forceUpdate">
                       </app-model-card-with-modal>
                     </div>
 
@@ -166,7 +168,8 @@
                       :level="level + 1"
                       dragType="MOVE_SUBSECTION"
                       :cardsAsCardsInit="cardsAsCards"
-                      :expandInit="expandSubSubsecInit">
+                      :expandInit="expandSubSubsecInit"
+                      :forceUpdate="forceUpdate">
                     </app-model-section-with-modal>
                   </div>
 
