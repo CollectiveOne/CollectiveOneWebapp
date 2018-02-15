@@ -1,28 +1,31 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4 app-modal-card"
+      <div class="w3-card-4 app-modal-card w3-display-container"
         v-click-outside="clickOutside">
 
-        <div class="div-close-modal w3-display-topright w3-xlarge" @click="closeThis()">
-          <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
+        <div class="w3-display-topright">
+          <div class="w3-right w3-button w3-xlarge" @click="closeThis()">
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </div>
+          <div class="w3-right">
+            <app-model-modal-buttons
+              v-if="isLoggedAnEditor && !editing"
+              :show="showEditButtons"
+              @edit="startEditing()"
+              @delete="deleteSection()"
+              deleteMessage="This will delete the section from all the views in which it is used."
+              @remove="removeSection()"
+              :removeMessage="'This will remove this subsection from ' + inElementTitle + '.'">
+            </app-model-modal-buttons>
+          </div>
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>{{ isNew ? 'New Section' : 'Model Section' }}</h2>
+          <h3>{{ isNew ? 'New Section' : 'Model Section' }}</h3>
         </div>
 
         <div v-if="!loading" class="w3-container div-modal-content">
-
-          <app-model-modal-buttons
-            v-if="isLoggedAnEditor && !editing"
-            :show="showEditButtons"
-            @edit="startEditing()"
-            @delete="deleteSection()"
-            deleteMessage="This will delete the section from all the views in which it is used."
-            @remove="removeSection()"
-            :removeMessage="'This will remove this subsection from ' + inElementTitle + '.'">
-          </app-model-modal-buttons>
 
           <div v-if="isNew" class="w3-row">
             <label v-if="inView" class=""><b>In View:</b></label>
@@ -67,12 +70,12 @@
               @after-leave="animatingTab = false">
 
               <div v-if="!addExisting">
-                <div class="w3-row w3-margin-top">
-                  <div v-if="!editing" class="w3-padding light-grey">
-                    <h4><b>{{ section.title }}</b></h4>
+                <div class="w3-row">
+                  <div v-if="!editing" class="">
+                    <h3><b>{{ section.title }}</b></h3>
                   </div>
                   <div v-else class="">
-                    <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+                    <label class="w3-margin-top"><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
                     <input type="text" class="w3-input w3-hover-light-grey" v-model="editedSection.title">
                     <app-error-panel
                       :show="titleEmptyShow"
@@ -86,7 +89,7 @@
                 </div>
 
                 <div class="w3-row w3-margin-top">
-                  <div v-if="!editing" class="w3-padding light-grey">
+                  <div v-if="!editing" class="">
                     <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
                   </div>
                   <div v-else class="">
@@ -102,8 +105,8 @@
             </transition>
           </div>
 
-          <br>
           <div v-if="!isNew && !editing" class="">
+            <hr>
             <app-message-thread
               contextType="MODEL_SECTION"
               :contextElementId="sectionId"

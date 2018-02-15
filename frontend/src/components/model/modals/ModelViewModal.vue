@@ -1,21 +1,14 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4 app-modal-card"
+      <div class="w3-card-4 app-modal-card w3-display-container"
         v-click-outside="clickOutside">
 
-        <div class="div-close-modal w3-display-topright w3-xlarge" @click="closeThis()">
-          <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
-        </div>
-
-        <div v-if="!loading" class="w3-container">
-
-          <div class="w3-row w3-border-bottom">
-            <h2>{{ isNew ? 'New View' : 'Model View' }}</h2>
+        <div class="w3-display-topright">
+          <div class="w3-right w3-button w3-xlarge" @click="closeThisConfirm()">
+            <i class="fa fa-times" aria-hidden="true"></i>
           </div>
-
-          <div class="w3-row div-modal-content">
-
+          <div class="w3-right">
             <app-model-modal-buttons
               v-if="isLoggedAnEditor && !editing"
               :show="showEditButtons"
@@ -24,10 +17,19 @@
               @edit="startEditing()"
               @delete="deleteView()">
             </app-model-modal-buttons>
+          </div>
+        </div>
 
-            <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
-            <div v-if="!editing" class="w3-row w3-padding light-grey">
-              {{ view.title }}
+        <div v-if="!loading" class="w3-container">
+
+          <div class="w3-row w3-border-bottom">
+            <h3>{{ isNew ? 'New View' : 'Model View' }}</h3>
+          </div>
+
+          <div class="w3-row div-modal-content">
+
+            <div v-if="!editing" class="w3-row">
+              <h3><b>{{ view.title }}</b></h3>
             </div>
             <div v-else class="w3-row">
               <input type="text" class="w3-input w3-hover-light-grey" v-model="editedView.title">
@@ -41,13 +43,11 @@
               </app-error-panel>
             </div>
 
-            <br>
-            <label class=""><b>Description: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
             <div class="w3-row">
-              <div v-if="!editing" class="w3-padding light-grey">
+              <div v-if="!editing" class="">
                 <vue-markdown class="marked-text" :source="view.description"></vue-markdown>
               </div>
-              <div v-else class="">
+              <div v-else class="w3-margin-top">
                 <app-markdown-editor v-model="editedView.description"></app-markdown-editor>
                 <app-error-panel
                   :show="descriptionErrorShow"
@@ -84,6 +84,21 @@
         <div v-else class="w3-row w3-center loader-gif-container">
           <img class="loader-gif" src="../../../assets/loading.gif" alt="">
         </div>
+
+        <div v-if="closeIntent" class="w3-display-middle w3-card w3-white w3-padding w3-round-large w3-center">
+          You are currently editing this view. Are you sure you want to close it? Any changes would get lost.
+          <div class="w3-row w3-margin-top">
+            <button class="w3-button app-button-light" name="button"
+              @click="closeIntent = false">
+              Cancel
+            </button>
+            <button class="w3-button app-button" name="button"
+              @click="closeThis()">
+              Confirm
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -131,7 +146,8 @@ export default {
       titleEmptyError: false,
       descriptionEmptyError: false,
       sendingData: false,
-      loading: false
+      loading: false,
+      closeIntent: false
     }
   },
 
@@ -176,7 +192,14 @@ export default {
     },
     clickOutside () {
       if (this.enableClickOutside) {
-        this.$emit('close')
+        this.closeThisConfirm()
+      }
+    },
+    closeThisConfirm () {
+      if (this.editing && !this.closeIntent) {
+        this.closeIntent = true
+      } else {
+        this.closeThis()
       }
     },
     closeThis () {

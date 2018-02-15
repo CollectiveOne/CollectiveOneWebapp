@@ -1,28 +1,42 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4 app-modal-card"
+      <div class="w3-card-4 app-modal-card w3-display-container"
         v-click-outside="clickOutside">
 
-        <div class="div-close-modal w3-display-topright w3-xlarge" @click="closeThis()">
-          <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
+        <div class="w3-display-topright">
+          <div class="w3-right w3-button w3-xlarge" @click="closeThis()">
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </div>
+          <div class="w3-right">
+            <app-model-modal-buttons
+              v-if="isLoggedAnEditor && !editing"
+              :show="showEditButtons"
+              @edit="startEditing()"
+              @delete="deleteCard()"
+              deleteMessage="This will delete the card from all the sections in which it is used."
+              @remove="removeCard()"
+              :removeMessage="'This will remove this card from the ' + inSectionTitle + ' section.'">
+            </app-model-modal-buttons>
+          </div>
+          <div v-if="!editing" class="w3-right w3-button w3-xlarge" @click="copyUrl()">
+            <i class="fa fa-share-alt" aria-hidden="true"></i>
+          </div>
+          <div class="slider-container url-show">
+            <transition name="slideDownUp">
+              <div v-if="showUrl" class="">
+                <input id="copy-url" class="w3-input w3-border" type="text" name="" :value="cardUrl">
+                <div class="w3-center"><small><i>please copy/paste the link above</i></small></div>
+              </div>
+            </transition>
+          </div>
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>{{ isNew ? 'New Card' : 'Model Card'}}</h2>
+          <h3>{{ isNew ? 'New Card' : 'Model Card'}}</h3>
         </div>
 
-        <div v-if="!loading" class="w3-container div-modal-content">
-
-          <app-model-modal-buttons
-            v-if="isLoggedAnEditor && !editing"
-            :show="showEditButtons"
-            @edit="startEditing()"
-            @delete="deleteCard()"
-            deleteMessage="This will delete the card from all the sections in which it is used."
-            @remove="removeCard()"
-            :removeMessage="'This will remove this card from the ' + inSectionTitle + ' section.'">
-          </app-model-modal-buttons>
+        <div v-if="!loading" class="div-modal-content w3-container">
 
           <div v-if="isNew" class="w3-row">
             <label class=""><b>In Section:</b></label>
@@ -45,7 +59,7 @@
 
           <div class="slider-container">
             <transition name="slideLeftRight">
-              <div v-if="addExisting" class="">
+              <div v-if="addExisting && editing" class="">
                 <app-model-card-selector
                   :initiativeId="initiativeId"
                   @select="cardSelected($event)">
@@ -66,25 +80,6 @@
               @after-leave="animatingTab = false">
 
               <div v-if="!addExisting">
-
-                <div v-if="!editing" class="">
-                  <div class="w3-row">
-                    <div v-if="showUrl" class="w3-right w3-padding w3-tag light-grey w3-round-large w3-margin-left">
-                      url copied to clipboard
-                    </div>
-                    <button @click="copyUrl()" class="w3-button app-button-light w3-right" type="button" name="button">
-                      <i class="fa fa-share" aria-hidden="true"></i> share
-                    </button>
-                  </div>
-
-                  <div class="slider-container">
-                    <transition name="slideDownUp">
-                      <div v-if="showUrl" class="w3-row">
-                        <input id="copy-url" class="w3-input "type="text" name="" :value="cardUrl" readonly>
-                      </div>
-                    </transition>
-                  </div>
-                </div>
 
                 <div v-if="!isNew">
                   <div class="w3-row">
@@ -179,7 +174,7 @@
                 </div>
 
                 <div class="w3-row w3-margin-top">
-                  <div v-if="!editing" class="w3-padding">
+                  <div v-if="!editing" class="">
                     <div v-if="card.title !== ''" class="">
                       <h3><b>{{ card.title }}</b></h3>
                     </div>
@@ -201,11 +196,11 @@
                   </div>
                 </div>
 
-                <div class="w3-row w3-margin-top">
-                  <div v-if="!editing" class="w3-padding light-grey">
+                <div class="w3-row">
+                  <div v-if="!editing" class="">
                     <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
                   </div>
-                  <div v-else class="">
+                  <div v-else class="w3-margin-top">
                     <label class=""><b>Text: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
                     <app-markdown-editor v-model="editedCard.text"></app-markdown-editor>
                     <app-error-panel
@@ -216,6 +211,7 @@
                 </div>
 
                 <hr>
+
                 <div class="">
                   <div v-if="!editing" class="">
                     <div v-if="cardWrapper.stateControl" class="w3-row-padding">
@@ -438,6 +434,7 @@ export default {
           var copyTextarea = document.querySelector('#copy-url')
           copyTextarea.select()
           document.execCommand('copy')
+          console.log('copied')
         })
       } else {
         this.showUrl = false
@@ -700,6 +697,13 @@ export default {
 </script>
 
 <style scoped>
+
+.url-show {
+  position: absolute;
+  margin-top: 60px;
+  margin-left: -100px;
+  width: 250px;
+}
 
 .not-add-existing-container {
   overflow: visible;
