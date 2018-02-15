@@ -153,7 +153,7 @@
                     :key="subsection.id"
                     class="subsection-container"
                     @dragover.prevent
-                    @drop="subsectionDroped(subsection.id, $event)">
+                    @drop.prevent="subsectionDroped(subsection.id, $event)">
 
                     <app-model-section-with-modal
                       :preloaded="subsection.subElementsLoaded"
@@ -173,7 +173,7 @@
 
                   <div class="subsection-container gray-1-color w3-border w3-round"
                     @dragover.prevent
-                    @drop="subsectionDroped('', $event)">
+                    @drop.prevent="subsectionDroped('', $event)">
 
                     <button class="w3-button" style="width: 100%; text-align: left"
                       @click="$emit('new-subsection')">

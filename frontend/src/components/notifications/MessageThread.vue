@@ -12,7 +12,8 @@
         :contextElementId="contextElementId"
         @updated="scrollToBottom()"
         @last-activity="lastActivityReceived($event)"
-        @edit-message="editMessage($event)">
+        @edit-message="editMessage($event)"
+        @reply-to-message="replyToMessage($event)">
       </app-activity-getter>
     </div>
     <div class="w3-row w3-margin-top">
@@ -20,6 +21,12 @@
         <div class="success-panel w3-padding w3-margin-bottom">
           Editing message
           <span @click="cancelEdit()" class="cursor-pointer">(cancel <i class="fa fa-times"></i>)</span>
+        </div>
+      </div>
+      <div v-if="replying" class="">
+        <div class="success-panel w3-padding w3-margin-bottom">
+          Replying to message from <b>{{ replyingToActivity.message.author.nickname }}</b> directly in the <b>{{ replyToMessageContext }}</b>.
+          <span @click="cancelReply()" class="cursor-pointer">(cancel <i class="fa fa-times"></i>)</span>
         </div>
       </div>
       <app-error-panel
@@ -84,13 +91,47 @@ export default {
       messageToEdit: null,
       showMembersOnly: false,
       writting: false,
-      lastMessage: null
+      lastMessage: null,
+      replying: false,
+      replyingToActivity: null
     }
   },
 
   computed: {
     isLoggedAMember () {
       return this.$store.getters.isLoggedAMember
+    },
+    replyingToActivityInCard () {
+      if (this.replyingToActivity) {
+        return this.replyingToActivity.modelCardWrapper !== null
+      } else {
+        return false
+      }
+    },
+    replyingToActivityInSection () {
+      if (this.replyingToActivity) {
+        return this.replyingToActivity.modelSection !== null
+      } else {
+        return false
+      }
+    },
+    replyingToActivityInView () {
+      if (this.replyingToActivity) {
+        return this.replyingToActivity.modelView !== null
+      } else {
+        return false
+      }
+    },
+    replyToMessageContext () {
+      if (this.replyingToActivityInCard) {
+        return this.replyingToActivity.modelCardWrapper.card.title + ' card'
+      }
+      if (this.replyingToActivityInSection) {
+        return this.replyingToActivity.modelSection.title + ' section'
+      }
+      if (this.replyingToActivityInView) {
+        return this.replyingToActivity.modelView.title + ' view'
+      }
     }
   },
 
@@ -103,21 +144,52 @@ export default {
       }
     },
     editMessage (message) {
+      this.replying = false
       this.editing = true
       this.messageToEdit = message
       this.newMessageText = message.text
     },
+    replyToMessage (activity) {
+      this.editing = false
+      this.replying = true
+      this.replyingToActivity = activity
+    },
     cancelEdit () {
       this.editing = false
       this.newMessageText = ''
+    },
+    cancelReply () {
+      this.replying = false
     },
     send () {
       var message = {
         text: this.newMessageText
       }
       if (!this.editing) {
-        this.axios.post('/1/messages/' + this.contextType + '/' + this.contextElementId, message).then((response) => {
+        var contextType = ''
+        var contextElementId = ''
+
+        if (!this.replying) {
+          contextType = this.contextType
+          contextElementId = this.contextElementId
+        } else {
+          if (this.replyingToActivityInCard) {
+            contextType = 'MODEL_CARD'
+            contextElementId = this.replyingToActivity.modelCardWrapper.id
+          }
+          if (this.replyingToActivityInSection) {
+            contextType = 'MODEL_SECTION'
+            contextElementId = this.replyingToActivity.modelSection.id
+          }
+          if (this.replyingToActivityInView) {
+            contextType = 'MODEL_VIEW'
+            contextElementId = this.replyingToActivity.modelView.id
+          }
+        }
+
+        this.axios.post('/1/messages/' + contextType + '/' + contextElementId, message).then((response) => {
           if (response.data.result === 'success') {
+            this.replying = false
             this.newMessageText = ''
             this.triggerUpdate = !this.triggerUpdate
           } else {

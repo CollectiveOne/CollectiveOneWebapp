@@ -3,20 +3,10 @@
     <td class="avatar-col w3-center">
       <app-user-avatar :user="activity.triggerUser" :showName="false" :small="true"></app-user-avatar>
     </td>
-    <td class="text-div w3-display-container"
+    <td class="text-div cursor-pointer"
       @mouseover="hovering = true"
-      @mouseleave="hovering = false">
-
-      <div class="" v-if="isMessagePosted && showMessages">
-        <transition name="fadeenter">
-          <div v-if="hovering && authorIsLoggedUser" class="w3-display-topright edit-btn">
-            <div @click="$emit('edit-message', activity.message)"
-              class="w3-tag w3-round light-grey cursor-pointer">
-              <i class="fa fa-pencil"></i> edit
-            </div>
-          </div>
-        </transition>
-      </div>
+      @mouseleave="hovering = false"
+      @click="clicked = !clicked">
 
       <div class="top-line w3-small">
         <span v-if="addContext">
@@ -204,7 +194,7 @@
           deleted the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
         </span>
 
-        <span v-if="isMessagePosted && (!showMessages || isExternalMessage)" :class="{'w3-tag w3-round gray-1': isExternalMessage}">
+        <span v-if="isMessagePosted && (!showMessages || isExternalMessage)" :class="{'w3-tag w3-round light-grey': isExternalMessage}">
           commented in
           <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
           <span v-if="isMessageInSection"><app-model-section-link :section="activity.modelSection"></app-model-section-link> section.</span>
@@ -216,6 +206,20 @@
             <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
           </div>
         </span>
+        <div class="control-btns-row" v-if="isMessagePosted && showMessages">
+          <transition name="fadeenter">
+            <div v-if="clicked">
+              <div v-if="authorIsLoggedUser" @click="$emit('edit-message', activity.message)"
+                class="w3-button light-grey">
+                <i class="fa fa-pencil"></i> edit
+              </div>
+              <div v-if="true" @click="$emit('reply-to-message', activity)"
+                class="w3-button light-grey">
+                <i class="fa fa-reply"></i> reply
+              </div>
+            </div>
+          </transition>
+        </div>
       </div>
     </td>
   </tr>
@@ -270,7 +274,8 @@ export default {
 
   data () {
     return {
-      hovering: false
+      hovering: false,
+      clicked: false
     }
   },
 
@@ -515,6 +520,10 @@ a {
   border-radius: 6px;
   padding: 3px 6px;
   font-style: italic;
+}
+
+.control-btns-row .w3-button {
+  padding: 1px 16px !important;
 }
 
 </style>

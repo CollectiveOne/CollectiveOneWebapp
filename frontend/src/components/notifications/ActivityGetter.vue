@@ -19,7 +19,8 @@
         :addBorders="addBorders"
         :showMessages="showMessages"
         :contextElementId="contextElementId"
-        @edit-message="$emit('edit-message', $event)">
+        @edit-message="$emit('edit-message', $event)"
+        @reply-to-message="$emit('reply-to-message', $event)">
       </app-activity-table>
     </div>
     <div  v-if="activities.length === 0 && !loading" class="w3-padding">
