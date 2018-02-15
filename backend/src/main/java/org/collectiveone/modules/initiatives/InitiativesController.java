@@ -38,7 +38,7 @@ public class InitiativesController extends BaseController {
 	private InitiativeService initiativeService;
 	
 	
-	@RequestMapping(path = "/initiative", method = RequestMethod.POST)
+	@RequestMapping(path = "/initiative/create", method = RequestMethod.POST)
 	public PostResult createInitiative(@RequestBody NewInitiativeDto initiativeDto) {
 		
 		if (getLoggedUser() == null) {

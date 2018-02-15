@@ -315,7 +315,7 @@ export default {
           assetsTransfers: this.transferAssetsFlag ? this.assetsTransfers : []
         }
 
-        this.axios.post('/1/initiative', intitiatveDto).then((response) => {
+        this.axios.post('/1/initiative/create', intitiatveDto).then((response) => {
           if (response.data.result === 'success') {
             this.closeThis()
             this.$store.dispatch('updateMyInitiatives')

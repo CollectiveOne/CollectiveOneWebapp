@@ -277,7 +277,7 @@ export default {
           ownTokens: this.ownTokens
         }
 
-        this.axios.post('/1/initiative', initiativeDto).then((response) => {
+        this.axios.post('/1/initiative/create', initiativeDto).then((response) => {
           if (response.data.result === 'success') {
             this.closeThis()
             this.$store.dispatch('updateMyInitiatives')
@@ -286,7 +286,9 @@ export default {
             this.showOutputMessage(response.data.message)
           }
         }).catch((error) => {
-          console.log(error)
+          /* weird bug that unauthorizes the POST initiative endpoint only
+          *  maybe a thing with auto REST endpoints ? */
+          console.log(error.response.status === 401)
         })
       }
     },
