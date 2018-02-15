@@ -24,11 +24,12 @@
           @dragover.prevent
           @drop.prevent="viewDragDroped(view.id, $event)">
 
-          <app-view-button :view="view" :selected="isViewSelected(view.id)">
-          </app-view-button>
+          <app-model-view-button :view="view" :selected="isViewSelected(view.id)">
+          </app-model-view-button>
         </div>
-        <div v-if="isLoggedAnEditor" @click="showViewModal = true" class="new-view-button w3-large w3-button w3-left app-button-color">
+        <div v-if="isLoggedAnEditor" @click="showViewModal = true" class="new-view-button w3-xxlarge w3-button w3-left app-button-color tooltip">
           <i class="fa fa-plus-circle" aria-hidden="true"></i>
+          <span class="tooltiptext gray-1 w3-large">create new view</span>
         </div>
       </div>
       <div class="w3-right">
@@ -59,13 +60,13 @@
 <script>
 import ModelViewModal from '@/components/model/modals/ModelViewModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
-import ViewButton from '@/components/model/ViewButton.vue'
+import ModelViewButton from '@/components/model/ModelViewButton.vue'
 
 export default {
   components: {
     'app-model-view-modal': ModelViewModal,
     'app-model-card-modal': ModelCardModal,
-    'app-view-button': ViewButton
+    'app-model-view-button': ModelViewButton
   },
 
   data () {
@@ -143,6 +144,11 @@ export default {
   padding-top: 5px !important;
   padding-bottom: 5px !important;
   border-radius: 12px;
+}
+
+.tooltip .tooltiptext {
+    top: 100%;
+    left: 50%;
 }
 
 .router-container {

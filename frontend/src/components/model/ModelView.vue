@@ -35,13 +35,15 @@
 
         <transition name="fadeenter">
           <div v-if="showActionButton" class="w3-display-topright buttons-container gray-1-color" style="width:100px">
-            <div @click="expandViewModal()" class="w3-button model-action-button w3-right">
+            <div @click="expandViewModal()" class="w3-button model-action-button w3-right tooltip">
               <i class="fa fa-expand" aria-hidden="true"></i>
+              <span class="tooltiptext gray-1">expand</span>
             </div>
 
-            <div class="w3-button model-action-button gray-1-color w3-right"
+            <div class="w3-button model-action-button gray-1-color w3-right tooltip"
               @click="cardsAsCardsInit = !cardsAsCardsInit">
               <i class="fa" :class="{ 'fa-bars': cardsAsCardsInit, 'fa-th': !cardsAsCardsInit }" aria-hidden="true"></i>
+              <span class="tooltiptext gray-1">toggle card/doc view</span>
             </div>
           </div>
         </transition>
@@ -228,6 +230,11 @@ export default {
 </script>
 
 <style scoped>
+
+.tooltip .tooltiptext {
+    top: 100%;
+    right: 50%;
+}
 
 .view-title .buttons-container {
   padding-top: 15px;

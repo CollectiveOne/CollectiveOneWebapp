@@ -60,6 +60,10 @@
   color: white;
 }
 
+.blue-color {
+  color: #15a5cc !important;
+}
+
 .app-blue {
   background-color: #95bad6 !important;
   color: #313942;

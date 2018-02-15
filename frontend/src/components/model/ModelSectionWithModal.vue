@@ -83,14 +83,14 @@ needs the model card component inside, and would crate a recursion -->
             class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="expandSectionModal()">
             <i class="fa fa-expand" aria-hidden="true"></i>
-            <span class="tooltiptext gray-1">Expand</span>
+            <span class="tooltiptext gray-1">expand</span>
           </div>
           <div
             v-if="isLoggedAnEditor"
             class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="showSubActionButtons = !showSubActionButtons">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
-            <span class="tooltiptext gray-1">Add elements</span>
+            <span class="tooltiptext gray-1">add elements</span>
           </div>
           <div v-if="showSubActionButtons" class="sub-action-buttons-container w3-card w3-white">
             <div class="w3-button" @click="newCard()">
@@ -103,19 +103,19 @@ needs the model card component inside, and would crate a recursion -->
           <div class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="cardsAsCards = !cardsAsCards">
             <i class="fa" :class="{ 'fa-bars': cardsAsCards, 'fa-th': !cardsAsCards }" aria-hidden="true"></i>
-            <span class="tooltiptext gray-1">Toggle card/doc view</span>
+            <span class="tooltiptext gray-1">toggle card/doc view</span>
           </div>
           <div class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="sortByLikes = !sortByLikes">
             <i class="fa" :class="{'fa-sort-numeric-asc': sortByLikes, ' fa-heartbeat': !sortByLikes}"
               aria-hidden="true">
             </i>
-            <span class="tooltiptext gray-1">Sort by likes</span>
+            <span class="tooltiptext gray-1">sort by likes</span>
           </div>
           <div class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="forceUpdate = !forceUpdate">
             <i class="fa fa-refresh" aria-hidden="true"></i>
-            <span class="tooltiptext gray-1">Refresh contents</span>
+            <span class="tooltiptext gray-1">refresh contents</span>
           </div>
         </div>
       </transition>
@@ -254,10 +254,6 @@ export default {
 .tooltip .tooltiptext {
     top: 100%;
     right: 50%;
-}
-
-.model-action-button {
-  overflow: visible !important;
 }
 
 .action-buttons-container {

@@ -44,8 +44,7 @@
             <button class="w3-button light-grey w3-small"
               @click="showCards =!showCards">
               <span v-if="showCards"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide cards</span>
-              <span v-if="!showCards && nCardWrappers > 0"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ nCardWrappers }}</b> cards</span>
-              <span v-if="!showCards && nCardWrappers === 0">No cards</span>
+              <span v-if="!showCards"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ nCardWrappers }}</b> cards</span>
             </button>
           </div>
           <div class="w3-col s4">
@@ -62,8 +61,7 @@
             <button class="w3-button light-grey w3-small"
               @click="showSubsections =!showSubsections">
               <span v-if="showSubsections"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide subsections</span>
-              <span v-if="!showSubsections && section.nSubsections > 0"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ section.nSubsections }}</b> subsections</span>
-              <span v-if="!showSubsections && section.nSubsections === 0">no subsections</span>
+              <span v-if="!showSubsections"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ section.nSubsections }}</b> subsections</span>
             </button>
           </div>
           <div class="w3-col s4">
@@ -375,7 +373,9 @@ export default {
             }
           }, 350)
         } else {
-          this.showSubsections = true
+          if (this.section.nSubsections > 0) {
+            this.showSubsections = true
+          }
         }
       })
     },
