@@ -8,6 +8,7 @@ public class ModelCardWrapperDto {
 	private String id;
 	private ModelCardDto card;
 	private Boolean stateControl;
+	private Integer nLikes;
 	private Boolean userLiked;
 	private String state;
 	private String initiativeId;
@@ -32,6 +33,12 @@ public class ModelCardWrapperDto {
 	}
 	public void setStateControl(Boolean stateControl) {
 		this.stateControl = stateControl;
+	}
+	public Integer getnLikes() {
+		return nLikes;
+	}
+	public void setnLikes(Integer nLikes) {
+		this.nLikes = nLikes;
 	}
 	public Boolean getUserLiked() {
 		return userLiked;

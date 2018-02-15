@@ -69,6 +69,7 @@ needs the model card component inside, and would crate a recursion -->
         :expandInit="expandInit"
         :expandSubSubsecInit="expandSubSubsecInit"
         :forceUpdate="forceUpdate"
+        :sortByLikes="sortByLikes"
         @updated="updated($event)"
         @new-card="newCard($event)"
         @new-subsection="newSubsection()"
@@ -79,15 +80,17 @@ needs the model card component inside, and would crate a recursion -->
         <div v-if="showActionButton" class="w3-display-topright action-buttons-container"
           @mouseleave="showSubActionButtons = false">
           <div
-            class="w3-button model-action-button gray-1-color w3-right"
+            class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="expandSectionModal()">
             <i class="fa fa-expand" aria-hidden="true"></i>
+            <span class="tooltiptext gray-1">Expand</span>
           </div>
           <div
             v-if="isLoggedAnEditor"
-            class="w3-button model-action-button gray-1-color w3-right"
+            class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="showSubActionButtons = !showSubActionButtons">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            <span class="tooltiptext gray-1">Add elements</span>
           </div>
           <div v-if="showSubActionButtons" class="sub-action-buttons-container w3-card w3-white">
             <div class="w3-button" @click="newCard()">
@@ -97,13 +100,22 @@ needs the model card component inside, and would crate a recursion -->
               <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i> add sub-section
             </div>
           </div>
-          <div class="w3-button model-action-button gray-1-color w3-right"
+          <div class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="cardsAsCards = !cardsAsCards">
             <i class="fa" :class="{ 'fa-bars': cardsAsCards, 'fa-th': !cardsAsCards }" aria-hidden="true"></i>
+            <span class="tooltiptext gray-1">Toggle card/doc view</span>
           </div>
-          <div class="w3-button model-action-button gray-1-color w3-right"
+          <div class="w3-button model-action-button gray-1-color w3-right tooltip"
+            @click="sortByLikes = !sortByLikes">
+            <i class="fa" :class="{'fa-sort-numeric-asc': sortByLikes, ' fa-heartbeat': !sortByLikes}"
+              aria-hidden="true">
+            </i>
+            <span class="tooltiptext gray-1">Sort by likes</span>
+          </div>
+          <div class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="forceUpdate = !forceUpdate">
             <i class="fa fa-refresh" aria-hidden="true"></i>
+            <span class="tooltiptext gray-1">Refresh contents</span>
           </div>
         </div>
       </transition>
@@ -196,7 +208,8 @@ export default {
       showNewSubsectionModal: false,
       showNewCardModal: false,
       forceUpdate: false,
-      onlyMessages: false
+      onlyMessages: false,
+      sortByLikes: false
     }
   },
 
@@ -238,10 +251,18 @@ export default {
 
 <style scoped>
 
+.tooltip .tooltiptext {
+    top: 100%;
+    right: 50%;
+}
+
+.model-action-button {
+  overflow: visible !important;
+}
+
 .action-buttons-container {
   margin-top: 2px;
   margin-right: 1px;
-  z-index: 90;
 }
 
 .sub-action-buttons-container {

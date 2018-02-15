@@ -92,7 +92,7 @@
             <div class="w3-row slider-container">
               <transition name="slideDownUp">
                 <div v-if="showCards" class="cards-container">
-                  <div v-for="(cardWrapper, ix) in section.cardsWrappers"
+                  <div v-for="(cardWrapper, ix) in sortedByLikes"
                     :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
                     :key="cardWrapper.id"
                     @dragover.prevent
@@ -283,6 +283,10 @@ export default {
     expandInit: {
       type: Boolean,
       default: false
+    },
+    sortByLikes: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -300,6 +304,16 @@ export default {
   },
 
   computed: {
+    sortedByLikes () {
+      if (!this.sortByLikes) {
+        return JSON.parse(JSON.stringify(this.section.cardsWrappers))
+      } else {
+        var sortedArray = JSON.parse(JSON.stringify(this.section.cardsWrappers))
+        return sortedArray.sort((cardA, cardB) => {
+          return cardB.nLikes - cardA.nLikes
+        })
+      }
+    },
     nCardWrappers () {
       if (this.section) {
         if (this.section.cardsWrappers) {

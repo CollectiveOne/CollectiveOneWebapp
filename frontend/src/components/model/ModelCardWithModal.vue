@@ -99,6 +99,12 @@ export default {
     }
   },
 
+  watch: {
+    cardWrapperInit () {
+      this.cardWrapper = this.cardWrapperInit
+    }
+  },
+
   methods: {
     update () {
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {

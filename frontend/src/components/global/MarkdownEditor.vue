@@ -113,12 +113,14 @@ export default {
       this.checkHeight()
     },
     checkHeight () {
-      if (this.text !== '') {
-        /* resize text area */
-        this.$refs.mdArea.style.height = 'auto'
-        this.$refs.mdArea.style.height = (this.$refs.mdArea.scrollHeight) + 'px'
-      } else {
-        this.$refs.mdArea.style.height = '0px'
+      if (this.$refs.mdArea) {
+        if (this.text !== '') {
+          /* resize text area */
+          this.$refs.mdArea.style.height = 'auto'
+          this.$refs.mdArea.style.height = (this.$refs.mdArea.scrollHeight) + 'px'
+        } else {
+          this.$refs.mdArea.style.height = '0px'
+        }
       }
     },
     togglePreview () {

@@ -541,6 +541,8 @@ public class ModelService {
 			for (ModelCardWrapper cardWrapper : section.getCardsWrappers()) {
 				ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
 				
+				cardWrapperDto.setnLikes(cardLikeRepository.countOfCard(cardWrapper.getId()));
+				
 				if (requestByUserId != null) {
 					cardWrapperDto.setUserLiked(cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapper.getId(), requestByUserId) != null);
 				}
@@ -732,6 +734,8 @@ public class ModelService {
 		List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapper.getId());
 		
 		ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
+		
+		cardWrapperDto.setnLikes(cardLikeRepository.countOfCard(cardWrapper.getId()));
 		
 		if (requestByUserId != null) {
 			cardWrapperDto.setUserLiked(cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapper.getId(), requestByUserId) != null);

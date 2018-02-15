@@ -74,5 +74,6 @@ export default {
 @import 'styles/appGeneral.css';
 @import 'styles/animations.css';
 @import 'styles/mde.css';
+@import 'styles/tooltips.css';
 
 </style>

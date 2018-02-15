@@ -41,6 +41,14 @@ export default {
     forceUpdate: {
       type: Boolean,
       default: false
+    },
+    autoUpdate: {
+      type: Boolean,
+      default: true
+    },
+    countInit: {
+      type: Number,
+      default: 0
     }
   },
 
@@ -101,42 +109,48 @@ export default {
     },
     forceUpdate () {
       this.update()
+    },
+    countInit () {
+      this.count = this.countInit
     }
   },
 
   methods: {
     update () {
-      var url = ''
-      var initId = this.initiativeId
-      if (initId === '') {
-        initId = '00000000-0000-0000-0000-000000000000'
-      }
-
-      switch (this.contextType) {
-        case 'MODEL_VIEW':
-          url = '/1/initiative/' + initId + '/model/view/' + this.contextElementId + '/' + this.requestType
-          break
-
-        case 'MODEL_SECTION':
-          url = '/1/initiative/' + initId + '/model/section/' + this.contextElementId + '/' + this.requestType
-          break
-
-        case 'MODEL_CARD':
-          url = '/1/initiative/' + initId + '/model/card/' + this.contextElementId + '/' + this.requestType
-          break
-      }
-
-      this.loading = true
-      this.axios.get(url).then((response) => {
-        this.loading = false
-        if (response.data.result === 'success') {
-          this.count = response.data.data
+      if (this.autoUpdate) {
+        var url = ''
+        var initId = this.initiativeId
+        if (initId === '') {
+          initId = '00000000-0000-0000-0000-000000000000'
         }
-      })
+
+        switch (this.contextType) {
+          case 'MODEL_VIEW':
+            url = '/1/initiative/' + initId + '/model/view/' + this.contextElementId + '/' + this.requestType
+            break
+
+          case 'MODEL_SECTION':
+            url = '/1/initiative/' + initId + '/model/section/' + this.contextElementId + '/' + this.requestType
+            break
+
+          case 'MODEL_CARD':
+            url = '/1/initiative/' + initId + '/model/card/' + this.contextElementId + '/' + this.requestType
+            break
+        }
+
+        this.loading = true
+        this.axios.get(url).then((response) => {
+          this.loading = false
+          if (response.data.result === 'success') {
+            this.count = response.data.data
+          }
+        })
+      }
     }
   },
 
   mounted () {
+    this.count = this.countInit
     this.update()
   }
 }

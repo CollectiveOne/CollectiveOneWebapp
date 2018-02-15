@@ -85,7 +85,8 @@
               :size="18"
               type="likes"
               :selected="cardWrapper.userLiked"
-              :forceUpdate="forceUpdate">
+              :autoUpdate="false"
+              :countInit="cardWrapper.nLikes">
             </app-indicator>
           </div>
 
