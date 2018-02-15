@@ -5,7 +5,7 @@
         v-click-outside="clickOutside">
 
         <div class="w3-display-topright">
-          <div class="w3-right w3-button w3-xlarge" @click="closeThis()">
+          <div class="w3-right w3-button w3-xlarge" @click="closeThisConfirm()">
             <i class="fa fa-times" aria-hidden="true"></i>
           </div>
           <div class="w3-right">
@@ -132,6 +132,21 @@
         <div v-else class="w3-row w3-center loader-gif-container">
           <img class="loader-gif" src="../../../assets/loading.gif" alt="">
         </div>
+
+        <div v-if="closeIntent" class="w3-display-middle w3-card w3-white w3-padding w3-round-large w3-center">
+          You are currently editing this view. Are you sure you want to close it? Any changes would get lost.
+          <div class="w3-row w3-margin-top">
+            <button class="w3-button app-button-light" name="button"
+              @click="closeIntent = false">
+              Cancel
+            </button>
+            <button class="w3-button app-button" name="button"
+              @click="closeThis()">
+              Confirm
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -199,7 +214,8 @@ export default {
       noSectionSelectedError: false,
       animatingTab: false,
       sendingData: false,
-      loading: false
+      loading: false,
+      closeIntent: false
     }
   },
 
@@ -267,7 +283,14 @@ export default {
     },
     clickOutside () {
       if (this.enableClickOutside) {
-        this.$emit('close')
+        this.closeThisConfirm()
+      }
+    },
+    closeThisConfirm () {
+      if (this.editing && !this.closeIntent) {
+        this.closeIntent = true
+      } else {
+        this.closeThis()
       }
     },
     closeThis () {
