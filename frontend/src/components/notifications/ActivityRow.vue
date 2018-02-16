@@ -3,7 +3,7 @@
     <td class="avatar-col w3-center">
       <app-user-avatar :user="activity.triggerUser" :showName="false" :small="true"></app-user-avatar>
     </td>
-    <td class="text-div cursor-pointer"
+    <td class="text-div cursor-pointer w3-display-container"
       @mouseover="hovering = true"
       @mouseleave="hovering = false"
       @click="clicked = !clicked">
@@ -206,21 +206,23 @@
             <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
           </div>
         </span>
-        <div class="control-btns-row" v-if="isMessagePosted && showMessages">
-          <transition name="fadeenter">
-            <div v-if="clicked">
-              <div v-if="authorIsLoggedUser" @click="$emit('edit-message', activity.message)"
-                class="w3-button light-grey">
-                <i class="fa fa-pencil"></i> edit
-              </div>
-              <div v-if="true" @click="$emit('reply-to-message', activity)"
-                class="w3-button light-grey">
-                <i class="fa fa-reply"></i> reply
-              </div>
-            </div>
-          </transition>
-        </div>
       </div>
+
+      <div class="control-btns-row w3-display-topright" v-if="isMessagePosted && showMessages">
+        <transition name="fadeenter">
+          <div v-if="hovering">
+            <div v-if="authorIsLoggedUser" @click="$emit('edit-message', activity.message)"
+              class="w3-button light-grey">
+              <i class="fa fa-pencil"></i> edit
+            </div>
+            <div v-if="true" @click="$emit('reply-to-message', activity)"
+              class="w3-button light-grey">
+              <i class="fa fa-reply"></i> reply
+            </div>
+          </div>
+        </transition>
+      </div>
+
     </td>
   </tr>
 </template>

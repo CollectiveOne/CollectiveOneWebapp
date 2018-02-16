@@ -11,7 +11,7 @@
       inSectionId=""
       inSectionTitle=""
       :cardEffect="true"
-      :floating="true"
+      :floating="false"
       @please-update="update()">
     </app-model-card-with-modal>
 
