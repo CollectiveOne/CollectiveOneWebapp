@@ -139,7 +139,7 @@
               </button>
             </div>
 
-            <div v-if="section.nSubsections > 0 && showSubsections" class="w3-row subsection-controls-row">
+            <div v-if="section.nSubsections > 0 && showSubsections" class="w3-row subsection-controls-row noselect">
               <div class="w3-tag gray-1 w3-small w3-left cursor-pointer"
                 @click="expandSubSubsecInit =!expandSubSubsecInit">
                 {{ expandSubSubsecInit ? 'collapse' : 'expand' }} all subsections
