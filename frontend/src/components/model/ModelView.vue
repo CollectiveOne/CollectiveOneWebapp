@@ -63,7 +63,7 @@
               </app-indicator>
             </div>
           </div>
-          <div class="w3-row w3-padding light-grey">
+          <div v-if="view.description !== ''" class="w3-row w3-padding light-grey">
             <vue-markdown class="marked-text" :source="view.description"></vue-markdown>
           </div>
         </div>

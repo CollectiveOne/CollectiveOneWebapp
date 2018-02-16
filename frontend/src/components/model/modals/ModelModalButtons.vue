@@ -32,7 +32,7 @@
           @click="removeIntent = false">cancel
         </button>
         <button
-          class="w3-button"
+          class="w3-button error-panel"
           @click="$emit('remove')">confirm
         </button>
       </div>

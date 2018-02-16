@@ -502,7 +502,7 @@ export default {
       }
     },
     closeThisConfirm () {
-      if (this.editing && !this.closeIntent) {
+      if (this.editing && (!this.titleEmpty || !this.textEmpty)) {
         this.closeIntent = true
       } else {
         this.closeThis()

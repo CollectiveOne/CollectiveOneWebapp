@@ -93,7 +93,7 @@
                     <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
                   </div>
                   <div v-else class="">
-                    <label class=""><b>Description: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+                    <label class=""><b>Description:</b></label>
                     <app-markdown-editor v-model="editedSection.description"></app-markdown-editor>
                     <app-error-panel
                       :show="descriptionErrorShow"
@@ -287,7 +287,7 @@ export default {
       }
     },
     closeThisConfirm () {
-      if (this.editing && !this.closeIntent) {
+      if (this.editing && (!this.titleEmpty || !this.descriptionEmpty)) {
         this.closeIntent = true
       } else {
         this.closeThis()
@@ -314,11 +314,6 @@ export default {
           if (this.titleTooLong) {
             ok = false
           }
-        }
-
-        if (this.descriptionEmpty) {
-          ok = false
-          this.descriptionEmptyError = true
         }
       } else {
         if (this.noSectionSelected) {

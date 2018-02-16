@@ -32,6 +32,7 @@
               <h3><b>{{ view.title }}</b></h3>
             </div>
             <div v-else class="w3-row">
+              <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
               <input type="text" class="w3-input w3-hover-light-grey" v-model="editedView.title">
               <app-error-panel
                 :show="titleEmptyShow"
@@ -48,6 +49,7 @@
                 <vue-markdown class="marked-text" :source="view.description"></vue-markdown>
               </div>
               <div v-else class="w3-margin-top">
+                <label class=""><b>Description:</b></label>
                 <app-markdown-editor v-model="editedView.description"></app-markdown-editor>
                 <app-error-panel
                   :show="descriptionErrorShow"
@@ -196,7 +198,7 @@ export default {
       }
     },
     closeThisConfirm () {
-      if (this.editing && !this.closeIntent) {
+      if (this.editing && (!this.titleEmpty || !this.descriptionEmpty)) {
         this.closeIntent = true
       } else {
         this.closeThis()
@@ -222,11 +224,6 @@ export default {
         if (this.titleTooLong) {
           ok = false
         }
-      }
-
-      if (this.descriptionEmpty) {
-        ok = false
-        this.descriptionEmptyError = true
       }
 
       if (ok) {

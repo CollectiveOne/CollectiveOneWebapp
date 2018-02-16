@@ -421,9 +421,8 @@ export default {
     },
     cardDroped (onCardWrapperId, event) {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
-
       if (dragData.type === 'MOVE_CARD') {
-        if (dragData.fromSectionId !== '') {
+        if (dragData.fromSectionId !== '' && !event.ctrlKey) {
           /* move from section */
           this.axios.put('/1/initiative/' + this.initiativeId +
             '/model/section/' + dragData.fromSectionId +
