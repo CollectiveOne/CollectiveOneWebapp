@@ -557,7 +557,15 @@ public class InitiativeService {
 	public List<AssetsDto> getInitiativeAssetsDtoLight(UUID id) {
 		
 		Initiative initiative = initiativeRepository.findById(id);
+		List<TokenType> ownTokens = initiative.getTokenTypes();
 		List<TokenType> tokenTypes = tokenService.getTokenTypesHeldBy(initiative.getId());
+		
+		/* add own tokens even if the initiative does not have them */
+		for (TokenType own : ownTokens) {
+			if (!tokenTypes.contains(own)) {
+				tokenTypes.add(own);
+			}
+		}
 		
 		List<AssetsDto> assets = new ArrayList<AssetsDto>();
 		
