@@ -298,7 +298,7 @@ public class EmailService {
 	}
 	
 	public String sendWantToContributeNotifications(List<WantToContributeNotification> notifications) throws IOException {
-//		if(env.getProperty("collectiveone.webapp.send-email-enabled").equalsIgnoreCase("true")) {
+		if(env.getProperty("collectiveone.webapp.send-email-enabled").equalsIgnoreCase("true")) {
 			if(notifications.size() > 0) {
 				Request request = new Request();
 				Mail mail = prepareWantToContributeEmail(notifications);
@@ -325,7 +325,7 @@ public class EmailService {
 					return "error bulding email";
 				}
 			}
-//		}
+		}
 		
 		/* if email is disabled */
 		return "success";

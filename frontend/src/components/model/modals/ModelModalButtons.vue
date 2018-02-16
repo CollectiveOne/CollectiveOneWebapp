@@ -14,13 +14,13 @@
       <div
         v-if="!hideRemove"
         class="w3-button"
-        @click="removeIntent = true">
+        @click="removeIntent = !removeIntent; deleteIntent = false;">
         <i class="fa fa-times" aria-hidden="true"></i> remove <small></small>
       </div>
-      <!-- <div class="w3-button"
-        @click="deleteIntent = true">
+      <div class="w3-button danger-btn"
+        @click="deleteIntent = !deleteIntent; removeIntent = false;">
         <i class="fa fa-trash" aria-hidden="true"></i> delete
-      </div> -->
+      </div>
       <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
         <div class="w3-padding w3-round light-grey w3-margin-bottom">
           <p>
@@ -32,7 +32,7 @@
           @click="removeIntent = false">cancel
         </button>
         <button
-          class="w3-button error-panel"
+          class="w3-button button-blue"
           @click="$emit('remove')">confirm
         </button>
       </div>
@@ -48,7 +48,7 @@
           @click="deleteIntent = false">cancel
         </button>
         <button
-          class="w3-button"
+          class="w3-button danger-btn"
           @click="$emit('delete')">confirm
         </button>
       </div>

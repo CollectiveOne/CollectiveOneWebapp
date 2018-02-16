@@ -48,7 +48,8 @@
           </div>
         </transition>
 
-        <div class="w3-rest">
+        <div class="w3-rest cursor-pointer"
+          @click="expandViewModal(true)">
           <div class="w3-row">
             <div class="w3-left">
               <h1 class="">{{ view.title }}</h1>

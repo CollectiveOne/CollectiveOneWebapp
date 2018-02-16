@@ -15,9 +15,10 @@
       </transition>
     </div>
 
-    <div class=""
+    <div class="cursor-pointer"
       draggable="true"
-      @dragstart="dragStart($event)">
+      @dragstart="dragStart($event)"
+      @click="$emit('header-clicked')">
 
       <app-model-section-header
         :section="section"
@@ -67,7 +68,7 @@
           <div class="w3-col s4">
             <button class="w3-button light-grey w3-small" :disabled="!isLoggedAnEditor"
               @click="newSubsectionFromBar()">
-              <i class="fa fa-plus" aria-hidden="true"></i><span class="w3-hide-small w3-hide-medium"> new subsection</span>
+              <i class="fa fa-plus" aria-hidden="true"></i><span class="w3-hide-small w3-hide-medium"> new subsec</span>
             </button>
           </div>
         </div>
@@ -375,6 +376,9 @@ export default {
         } else {
           if (this.section.nSubsections > 0) {
             this.showSubsections = true
+          } else {
+            /* totally empty section */
+            this.showCards = true
           }
         }
       })

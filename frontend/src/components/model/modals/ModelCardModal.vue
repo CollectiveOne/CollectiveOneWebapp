@@ -179,7 +179,6 @@
                       <h3><b>{{ card.title }}</b></h3>
                     </div>
                     <div v-else class="">
-                      <i>(empty)</i>
                     </div>
                   </div>
                   <div v-else class="">

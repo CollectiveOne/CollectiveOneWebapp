@@ -73,7 +73,8 @@ needs the model card component inside, and would crate a recursion -->
         @updated="updated($event)"
         @new-card="newCard($event)"
         @new-subsection="newSubsection()"
-        @show-messages="expandSectionModal(true)">
+        @show-messages="expandSectionModal(true)"
+        @header-clicked="expandSectionModal(true)">
       </app-model-section>
 
       <transition name="fadeenter">

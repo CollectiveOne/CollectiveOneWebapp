@@ -45,10 +45,12 @@
     </div>
     <div class="w3-display-topright only-messages-button">
       <button
-        class="w3-button app-button" type="button" name="button"
+        class="w3-button app-button tooltip" type="button" name="button"
         @click="showOnlyMessagesClicked()">
         <span v-if="!showOnlyMessages"><i class="fa fa-comment-o" aria-hidden="true"></i></span>
         <span v-else=""><i class="fa fa-list" aria-hidden="true"></i></span>
+        <span v-if="showOnlyMessages" class="tooltiptext gray-1">show activity too</span>
+        <span v-else class="tooltiptext gray-1">show only messages</span>
       </button>
     </div>
   </div>
@@ -253,6 +255,11 @@ export default {
 .only-messages-button {
   margin-right: 25px;
   margin-top: 10px;
+}
+
+.tooltip .tooltiptext {
+    top: 8%;
+    right: 105%;
 }
 
 </style>

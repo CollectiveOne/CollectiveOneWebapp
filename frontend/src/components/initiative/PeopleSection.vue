@@ -149,7 +149,7 @@ export default {
       return getAllSubmembers(this.initiative.initiativeMembers)
     },
     showWantToContribute () {
-      return !this.isLoggedAMember && !this.isLoggedAParentAdmin && !this.requestSent
+      return this.$store.state.user.authenticated && !this.isLoggedAMember && !this.isLoggedAParentAdmin && !this.requestSent
     },
     addMemberLink () {
       /* based on the route */

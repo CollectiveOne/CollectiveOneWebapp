@@ -20,6 +20,16 @@
   border-radius: 12px;
 }
 
+.danger-btn {
+  background-color: #cc0000;
+  color: white;
+}
+
+.danger-btn:hover {
+  background-color: #810000 !important;
+  color: white !important;
+}
+
 .black-text {
   color: black;
 }
