@@ -7,6 +7,10 @@
   color: white;
 }
 
+.dark-gray-color {
+  color: #313942;
+}
+
 .dark-gray-selected {
   background-color: #3e464e;
   color: white;
