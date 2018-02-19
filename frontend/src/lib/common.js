@@ -62,7 +62,7 @@ const percStr = function (v, n, x) {
 }
 
 const amountAndPerc = function (val, tot) {
-  return tot > 0 ? tokensString(val) + ' / ' + percStr(val / tot * 100) + '%' : '0 / 0%'
+  return tot > 0 ? tokensString(val, 1) + ' / ' + percStr(val / tot * 100, 1) + '%' : '0 / 0%'
 }
 
 export {

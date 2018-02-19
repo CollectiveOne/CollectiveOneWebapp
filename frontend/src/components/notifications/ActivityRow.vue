@@ -39,23 +39,23 @@
         <span v-if="isTokenCreated" class="">
           created a new token type called <b>{{ activity.mint.tokenName }}</b> in
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
-          and minted <b>{{ activity.mint.value }}</b> units.
+          and minted <b>{{ activity.mint.value.toFixed(2) }}</b> units.
         </span>
 
         <span v-if="isTokensMinted" class="">
-          minted <b>{{ activity.mint.value }} {{ activity.mint.tokenName }}</b> in
+          minted <b>{{ activity.mint.value.toFixed(2) }} {{ activity.mint.tokenName }}</b> in
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
         </span>
 
         <span v-if="isNewPRAssigantionCreated" class="">
           created a new peer-reviewed <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b> from
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
         </span>
 
         <span v-if="isNewDAssigantionCreated" class="">
           made a direct <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b> from
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
           <app-user-link :user="activity.assignation.receivers[0].user"></app-user-link>
         </span>
@@ -63,12 +63,12 @@
         <span v-if="isNewPRAssigantionDone" class="">
           Peer-reviewed <app-assignation-link :assignation="activity.assignation"></app-assignation-link> has been done. Created by
           <app-user-link :user="activity.triggerUser"></app-user-link> for
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b> from
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>.
         </span>
 
         <span v-if="isInitiativeTransfer" class="">
-          transferred <b>{{ activity.transfer.value }} {{ activity.transfer.assetName }}</b> from
+          transferred <b>{{ activity.transfer.value.toFixed(2) }} {{ activity.transfer.assetName }}</b> from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
           <app-initiative-link
             :initiativeId="activity.transfer.receiverId"
@@ -78,7 +78,7 @@
 
         <span v-if="isAssignationRevertOrdered" class="">
           ordered the revert of the <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b>
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
           with motive {{ activity.assignation.motive }}
           from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
@@ -87,7 +87,7 @@
         <span v-if="isAssignationRevertCancelled" class="">
           Revert order cancelled. Order to revert the
           <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b>
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
           with motive {{ activity.assignation.motive }}
           from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
@@ -97,7 +97,7 @@
         <span v-if="isAssignationReverted" class="">
           Revert order accepted. Order to revert the
           <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b>
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
           with motive {{ activity.assignation.motive }}
           from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
@@ -107,7 +107,7 @@
         <span v-if="isAssignationDeleted" class="">
           Ongoing transfer deleted. The
           <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b>
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
           with motive {{ activity.assignation.motive }}
           from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,

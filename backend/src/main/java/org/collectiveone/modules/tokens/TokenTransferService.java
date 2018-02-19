@@ -17,6 +17,7 @@ import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeRelationship;
 import org.collectiveone.modules.initiatives.InitiativeRelationshipType;
 import org.collectiveone.modules.initiatives.InitiativeService;
+import org.collectiveone.modules.initiatives.InitiativeStatus;
 import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
@@ -289,7 +290,7 @@ public class TokenTransferService {
 
 		/* get of sub-initiatives */
 		List<InitiativeRelationship> subinitiativesRelationships = 
-				initiativeRelationshipRepository.findByOfInitiativeIdAndType(initiative.getId(), InitiativeRelationshipType.IS_ATTACHED_SUB);
+				initiativeRelationshipRepository.findByOfInitiativeIdAndInitiative_StatusAndType(initiative.getId(), InitiativeStatus.ENABLED, InitiativeRelationshipType.IS_ATTACHED_SUB);
 		
 		List<TransferDto> transferredToSubinitiatives = new ArrayList<TransferDto>();
 		
