@@ -785,6 +785,8 @@ public class InitiativeService {
 		initiativeMembers.setInitiativeId(initiative.getId().toString());
 		initiativeMembers.setInitiativeName(initiative.getMeta().getName());
 		
+		List<TokenType> tokenTypes = tokenService.getTokenTypesHeldBy(initiative.getId());
+		
 		
 		/* add members of this initiative */
 		for (Member member : initiative.getMembers()) {
@@ -799,6 +801,11 @@ public class InitiativeService {
 				memberDto.setRole(decisionMaker.getRole().toString());
 			} else {
 				memberDto.setRole(DecisionMakerRole.MEMBER.toString());
+			}
+			
+			/* assets related data */
+			for (TokenType token : tokenTypes) {
+				memberDto.getReceivedAssets().add(tokenService.getTokensOfHolderDtoLight(token.getId(), member.getUser().getC1Id()));
 			}
 			
 			initiativeMembers.getMembers().add(memberDto);

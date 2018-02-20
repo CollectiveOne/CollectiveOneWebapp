@@ -8,10 +8,11 @@
           <th v-if="amEvaluator" class="percent-col">MINE %</th>
           <th v-if="hasDonors" class="percent-col">PRE-DONOR %</th>
           <th class="percent-col">{{ disable ? 'FINAL %' : '%' }}</th>
-          <th class="value-col">{{ disable ? 'FINAL TOKENS' : 'TOTAL' }}</th>
+          <th v-if="showTotal" class="value-col">{{ disable ? 'FINAL TOKENS' : 'TOTAL' }}</th>
           <th class="bar-col w3-hide-small w3-hide-medium"></th>
-          <th v-if="!disable">KNOW / DON'T</th>
+          <th v-if="!disable && showDontKnow">KNOW / DON'T</th>
           <th v-if="showSelfBiases" class="self-bias-col">SELF-BIAS</th>
+          <th v-if="showRemove" class="self-bias-col">REMOVE</th>
         </tr><i></i>
       </thead>
       <tbody>
@@ -56,7 +57,7 @@
               </transition>
             </div>
           </td>
-          <td class="value-col">
+          <td v-if="showTotal" class="value-col">
             <div v-if="disable" class="">
               <div v-if="!isDontKnow(userData)" class="">
                 <b>{{ (userData.percent * totalTokens / 100).toFixed(2) }}</b>
@@ -89,7 +90,7 @@
               </div>
             </div>
           </td>
-          <td v-if="!disable">
+          <td v-if="!disable && showDontKnow">
             <button
               class="w3-button app-button dont-know-button"
               @click="toggleDontKnow(userData)">
@@ -99,6 +100,10 @@
           <td v-if="showSelfBiases" class="self-bias-col" :class="{'self-bias-good': userData.selfBias <= 0, 'self-bias-bad': userData.selfBias > 0}">
             <b>{{ Math.abs(userData.selfBias) < 100 ? userData.selfBias.toFixed(1) + ' %' : '-'}}</b>
           </td>
+          <td v-if="showRemove" class="w3-xlarge w3-button"
+            @click="$emit('remove', userData)">
+            <i class="fa fa-times-circle-o gray-1-color" aria-hidden="true"></i>
+          </td>
         </tr>
       </tbody>
       <tfoot v-if="!disable">
@@ -106,7 +111,7 @@
           <td></td>
           <td>total assigned:</td>
           <td>{{ sumOfPercents.toFixed() }}%</td>
-          <td>{{ sumOfPercents * totalTokens / 100 }}</td>
+          <td v-if="showTotal">{{ sumOfPercents * totalTokens / 100 }}</td>
           <td>{{ autoScaled ? '( auto-rounded )' : ''}}</td>
         </tr>
       </tfoot>
@@ -115,7 +120,7 @@
       <transition name="slideDownUp">
         <div v-if="!arePercentagesOk" class="w3-row missing-row">
           <div>
-            {{ missingPercent > 0 ? 'missing' : 'excess of'}}: <b>{{ Math.abs(missingPercent.toFixed(0)) }}% / {{ Math.abs(missingPercent/100) * totalTokens }}</b>
+            {{ missingPercent > 0 ? 'missing' : 'excess of'}}: <b>{{ Math.abs(missingPercent.toFixed(0)) }}%<span v-if="showTotal"> / {{ Math.abs(missingPercent/100) * totalTokens }}</span> </b>
             <button
               class="w3-button app-button w3-margin-left"
               @click="autoScale()">
@@ -139,6 +144,7 @@ export default {
   },
 
   props: {
+    /* WARNING: percents are updated directly in this property! */
     usersData: {
       type: Array,
       default: () => { return [] }
@@ -162,6 +168,18 @@ export default {
     totalTokens: {
       type: Number,
       default: 1
+    },
+    showDontKnow: {
+      type: Boolean,
+      default: true
+    },
+    showTotal: {
+      type: Boolean,
+      default: true
+    },
+    showRemove: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -236,10 +254,12 @@ export default {
     percentUpdated (event, userData) {
       userData.percent = parseFloat(event.target.value)
       this.checkRounding()
+      this.$emit('users-data-updated')
     },
     valueUpdated (event, userData) {
       userData.percent = parseFloat(event.target.value) / this.totalTokens * 100
       this.checkRounding()
+      this.$emit('users-data-updated')
     },
     checkRounding () {
       if ((Math.abs(this.missingPercent) > 0) && (Math.abs(this.missingPercent) < 1)) {

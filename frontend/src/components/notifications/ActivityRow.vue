@@ -57,7 +57,7 @@
           made a direct <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
           <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
-          <app-user-link :user="activity.assignation.receivers[0].user"></app-user-link>
+          <span v-for="(receiver, ix) in activity.assignation.receivers">{{ ix > 0 ? ', ' : '' }}<app-user-link :user="receiver.user"></app-user-link></span>
         </span>
 
         <span v-if="isNewPRAssigantionDone" class="">

@@ -169,6 +169,15 @@
         </div>
 
         <div v-if="isDirect" class="w3-row">
+          <div v-if="assignation.receivers.length > 1" class="">
+            <app-users-percentages
+              :usersData="assignation.receivers"
+              :disable="true"
+              :showSelfBiases="false"
+              :showTotal="true"
+              :totalTokens="assignation.assets[0].value">
+            </app-users-percentages>
+          </div>
         </div>
 
         <hr>

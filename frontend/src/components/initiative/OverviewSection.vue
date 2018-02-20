@@ -234,7 +234,6 @@ export default {
 .assets-content {
   padding-top: 16px;
   padding-bottom: 16px;
-  max-height: 50vh;
   overflow-y: auto;
 }
 

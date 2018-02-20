@@ -50,6 +50,7 @@
       <app-members-table
         :members="initiative.initiativeMembers.members"
         :canEdit="isLoggedAnAdmin || isLoggedAParentAdmin"
+        :assets="initiative.assets"
         @remove="removeMember($event)"
         @role-updated="roleUpdated($event)"
         @add="addMember($event)">
@@ -63,7 +64,8 @@
       <hr>
       <h3 class="section-header">Members of subinitiatives of {{ initiative.meta.name }}:</h3>
       <app-submembers-table
-        :submembers="allSubmembers">
+        :submembers="allSubmembers"
+        :assets="initiative.assets">
       </app-submembers-table>
     </div>
 
@@ -97,7 +99,8 @@ const appendMembersAndSubmembers = function (initiativeMembers, allmembers) {
     if (ix === -1) {
       allmembers.push({
         user: member.user,
-        subinitiatives: [ initiativeData ]
+        subinitiatives: [ initiativeData ],
+        receivedAssets: member.receivedAssets
       })
     } else {
       allmembers[ix].subinitiatives.push(initiativeData)

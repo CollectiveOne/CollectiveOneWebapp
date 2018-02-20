@@ -177,8 +177,8 @@ export default {
 }
 
 .tooltip .tooltiptext {
-  top: 10%;
-  right: 100%;
+  top: 80%;
+  right: 70%;
 }
 
 .selected {

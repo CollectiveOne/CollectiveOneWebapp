@@ -6,17 +6,21 @@
         <tr>
           <th class="avatar-col">AVATAR</th>
           <th>NICKNAME</th>
+          <th v-for="asset in assets">{{ asset.assetName }}</th>
           <th class="subinitiatives-col">SUBINITIATIVES</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="submember in submembers">
+        <tr v-for="submember in submembersSorted">
           <td class="avatar-col">
             <app-user-avatar :user="submember.user" :showName="false"></app-user-avatar>
           </td>
           <td>{{ submember.user.nickname }}</td>
+          <td v-for="asset in assets">
+            {{ ownedOfThisAsset(asset, submember) }}
+          </td>
           <td>
-            <router-link tag="div" :to="{name: 'Initiative', params: {'initiativeId': subinitiative.id}}"
+            <router-link :to="{name: 'Initiative', params: {'initiativeId': subinitiative.id}}"
               v-for="subinitiative in submember.subinitiatives"
               :key="subinitiative.id"
               class="subinitiative-tag w3-tag w3-round-large cursor-pointer noselect"
@@ -40,7 +44,31 @@ export default {
   },
 
   props: {
-    submembers: Array
+    submembers: Array,
+    assets: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    }
+  },
+
+  computed: {
+    submembersSorted () {
+      var subMembersTemp = JSON.parse(JSON.stringify(this.submembers))
+      return subMembersTemp.sort((a, b) => { return b.receivedAssets[0].ownedByThisHolder - a.receivedAssets[0].ownedByThisHolder })
+    }
+  },
+
+  methods: {
+    ownedOfThisAsset (asset, submember) {
+      for (var ix in submember.receivedAssets) {
+        if (submember.receivedAssets[ix].assetId === asset.assetId) {
+          return submember.receivedAssets[ix].ownedByThisHolder > 0 ? submember.receivedAssets[ix].ownedByThisHolder.toFixed(2) : '-'
+        }
+      }
+      return '-'
+    }
   }
 }
 </script>
