@@ -456,13 +456,21 @@ export default {
     },
     newFileSelected (event) {
       /* upload image */
+      var fileData = event.target.files[0]
+      if (fileData.size > 1048576) {
+        this.errorUploadingFile = true
+        this.errorUploadingFileMsg = 'Image file too big. Must be below 1 MB'
+        return
+      }
+
       var data = new FormData()
-      data.append('file', event.target.files[0])
+      data.append('file', fileData)
 
       this.uploadingImage = true
       this.errorUploadingFile = false
 
       this.axios.post('/1/upload/cardImage/' + this.cardWrapper.id, data).then((response) => {
+        console.log(response)
         this.uploadingImage = false
 
         if (response.data.result === 'success') {
@@ -473,7 +481,10 @@ export default {
           this.errorUploadingFileMsg = response.data.message
         }
       }).then((response) => {
-        this.editedCard.imageFile = response.data.data
+        /* to force reactivity */
+        var newEditedCard = JSON.parse(JSON.stringify(this.editedCard))
+        newEditedCard.imageFile = response.data.data
+        this.editedCard = newEditedCard
       })
     },
     dateString (v) {

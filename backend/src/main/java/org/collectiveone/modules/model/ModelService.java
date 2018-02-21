@@ -16,6 +16,7 @@ import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.conversations.Message;
 import org.collectiveone.modules.conversations.MessageRepositoryIf;
+import org.collectiveone.modules.files.FileService;
 import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredRepositoryIf;
 import org.collectiveone.modules.governance.CardLike;
@@ -48,6 +49,9 @@ public class ModelService {
 	
 	@Autowired
 	private ActivityService activityService;
+	
+	@Autowired
+	private FileService fileService;
 	
 	@Autowired
 	private InitiativeRepositoryIf initiativeRepository;
@@ -605,13 +609,19 @@ public class ModelService {
 		
 		ModelCard card = cardDto.toEntity(null, cardDto, null);
 		
+		card = modelCardRepository.save(card);
+		
 		if (cardDto.getNewImageFileId() != null) {
 			UUID imageFileId = cardDto.getNewImageFileId().equals("") ? null : UUID.fromString(cardDto.getNewImageFileId());
-			FileStored imageFile = fileStoredRepository.findById(imageFileId);
-			card.setImageFile(imageFile);
+			if (imageFileId != null) {
+				/* copy image from temporary location to card fixed location, needed the card ID for this */
+				UUID newFileId = fileService.copyImageAfterCreationToCard(creatorId, imageFileId, card.getId());
+				if (newFileId != null) {
+					FileStored newImageFile = fileStoredRepository.findById(newFileId);
+					card.setImageFile(newImageFile);	
+				}
+			}
 		}
-		
-		card = modelCardRepository.save(card);
 		
 		ModelCardWrapper cardWrapper = new ModelCardWrapper();
 		cardWrapper.setCard(card);

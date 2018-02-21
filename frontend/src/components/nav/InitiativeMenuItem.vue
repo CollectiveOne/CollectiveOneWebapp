@@ -132,7 +132,7 @@ export default {
         parentId: this.initiative.id })
     },
     isLoggedAnAdmin () {
-      return this.$store.getters.isLoggedAnAdmin
+      return this.initiative.loggedMembership[0].role === 'ADMIN'
     }
   },
 

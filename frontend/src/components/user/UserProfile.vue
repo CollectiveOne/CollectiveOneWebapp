@@ -61,6 +61,10 @@
         </div>
 
         <app-error-panel
+          :show="errorUploadingFile"
+          :message="errorUploadingFileMsg">
+        </app-error-panel>
+        <app-error-panel
           :show="showImageUpdated"
           message="Image succesfully uploaded. It will be updated once you click 'Accept' below."
           panelType="success">
@@ -162,7 +166,9 @@ export default {
       usernameExist: false,
       twitterLinkOk: true,
       facebookLinkOk: true,
-      linkedinLinkOk: true
+      linkedinLinkOk: true,
+      errorUploadingFile: false,
+      errorUploadingFileMsg: ''
     }
   },
 
@@ -258,12 +264,21 @@ export default {
       }
     },
     newFileSelected (event) {
-      if (event.target.files[0] !== null) {
+      var fileData = event.target.files[0]
+
+      if (fileData !== null) {
+        if (fileData.size > 1048576) {
+          this.errorUploadingFile = true
+          this.errorUploadingFileMsg = 'Image file too big. Must be below 1 MB'
+          return
+        }
+
         var data = new FormData()
-        data.append('file', event.target.files[0])
+        data.append('file', fileData)
 
         this.axios.post('/1/upload/profileImage', data).then((response) => {
           console.log('image uploaded')
+          this.errorUploadingFile = false
           this.showImageUpdated = true
           this.user.useUploadedPicture = true
         })
