@@ -1,10 +1,9 @@
 <template lang="html">
-  <div class="">
+  <div class="big-content-container">
     <div v-if="$store.state.support.initiativeLoaded" class="w3-row">
-      <div class="w3-white">
-
-      <div class="header-container">
-        <transition name="fadeenter" mode="out-in" appear>
+      <div class="w3-white w3-col ">
+        <div class="header-container">
+          <transition name="fadeenter" mode="out-in" appear>
             <header class="white-bg w3-row" :key="initiative.meta.name">
               <div class="w3-col w3-right" style="width:50px">
                 <div class="edit-container">
@@ -41,40 +40,53 @@
         <div class="section-tabs w3-row w3-center light-grey">
           <router-link tag="div" :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isOverview, 's3': fourTabs, 's4': threeTabs}"
+            :class="{'border-blue': isOverview, 's3': fourTabs || fiveTabs, 's4': threeTabs}"
             @click="">
             <h5 class="noselect" :class="{'bold-text': isOverview}">Overview</h5>
           </router-link>
-          <router-link v-if="this.initiative.meta.modelEnabled"
+          <router-link
             tag="div" :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isModel, 's3': fourTabs, 's4': threeTabs}"
+            :class="{'border-blue': isModel, 's3': fourTabs || fiveTabs, 's4': threeTabs}"
             @click="">
             <h5 class="noselect" :class="{'bold-text': isModel}">Vision</h5>
           </router-link>
+          <router-link v-if="this.initiative.meta.modelEnabled"
+            tag="div" :to="{ name: 'InitiativeMessages', params: { initiativeId: initiative.id } }"
+            class="w3-col tablink w3-bottombar w3-hover-light-grey"
+            :class="{'border-blue': isMessages, 's2': fiveTabs, 's3': fourTabs, 's4': threeTabs}"
+            @click="">
+            <h5 class="noselect" :class="{'bold-text': isModel}">
+              <span class="w3-hide-small">Messages</span>
+              <span class="w3-hide-medium w3-hide-large"><i class="fa fa-comments-o" aria-hidden="true"></i></span>
+            </h5>
+          </router-link>
           <router-link tag="div" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isPeople, 's3': fourTabs, 's4': threeTabs}"
+            :class="{'border-blue': isPeople, 's2': fiveTabs, 's3': fourTabs, 's4': threeTabs}"
             @click="">
-            <h5 class="noselect" :class="{'bold-text': isPeople}">People</h5>
+            <h5 class="noselect" :class="{'bold-text': isPeople}">
+              <span class="w3-hide-small">People</span>
+              <span class="w3-hide-medium w3-hide-large"><i class="fa fa-users" aria-hidden="true"></i></span>
+            </h5>
           </router-link>
           <router-link tag="div" :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isAssignations, 's3': fourTabs, 's4': threeTabs}"
+            :class="{'border-blue': isAssignations, 's2': fiveTabs, 's3': fourTabs, 's4': threeTabs}"
             @click="">
-            <h5 class="noselect" :class="{'bold-text': isAssignations}">Transfers</h5>
+            <h5 class="noselect" :class="{'bold-text': isAssignations}">
+              <span class="w3-hide-small">Transfers</span>
+              <span class="w3-hide-medium w3-hide-large"><i class="fa fa-exchange" aria-hidden="true"></i></span>
+            </h5>
           </router-link>
         </div>
 
-        <!-- TODO: selecting the role on a select element with the mouse triggered the swipe  -->
-        <!-- <v-touch v-on:swipeleft="onSwipeLeft()" v-on:swiperight="onSwipeRight()"> -->
         <div class="w3-row content-container">
           <transition :name="animationType" mode="out-in" appear>
             <router-view :key="initiative.id">
             </router-view>
           </transition>
         </div>
-        <!-- </v-touch> -->
       </div>
     </div>
     <div v-else class="w3-row w3-center loader-gif-container">
@@ -143,13 +155,25 @@ export default {
       })
       return res
     },
+    isMessages () {
+      var res = false
+      this.$route.matched.forEach((e) => {
+        if (e.name === 'InitiativeMessages') {
+          res = true
+        }
+      })
+      return res
+    },
     animationType () {
       return this.$store.state.support.contentAnimationType
     },
     threeTabs () {
-      return !this.initiative.meta.modelEnabled
+      return false
     },
     fourTabs () {
+      return !this.initiative.meta.modelEnabled
+    },
+    fiveTabs () {
       return this.initiative.meta.modelEnabled
     }
   },
@@ -206,6 +230,17 @@ export default {
 
 <style scoped>
 
+.big-content-container {
+  height: calc(100vh - 65px);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.content-container {
+  height: calc(100vh - 190px);
+}
+
 .header-container {
   min-height: 65px;
 }
@@ -253,10 +288,5 @@ export default {
 .bold-text {
   font-weight: bold;
 }
-
-.content-container {
-  overflow: hidden;
-}
-
 
 </style>

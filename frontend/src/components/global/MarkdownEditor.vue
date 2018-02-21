@@ -116,7 +116,6 @@ export default {
       if (this.$refs.mdArea) {
         if (this.text !== '') {
           /* resize text area */
-          this.$refs.mdArea.style.height = 'auto'
           this.$refs.mdArea.style.height = (this.$refs.mdArea.scrollHeight) + 'px'
         } else {
           this.$refs.mdArea.style.height = '0px'
@@ -159,6 +158,11 @@ export default {
 </script>
 
 <style scoped>
+
+.this-textarea {
+  max-height: 50vh;
+  overflow-y: auto !important;
+}
 
 .this-textarea, .this-markdown {
   min-height: 68px;

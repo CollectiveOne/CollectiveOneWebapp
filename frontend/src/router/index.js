@@ -13,6 +13,7 @@ import Unsubscribe from '@/components/user/Unsubscribe.vue'
 import OverviewSection from '@/components/initiative/OverviewSection.vue'
 import PeopleSection from '@/components/initiative/PeopleSection.vue'
 import TransfersSection from '@/components/initiative/TransfersSection.vue'
+import MessagesSection from '@/components/initiative/MessagesSection.vue'
 
 import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
 import ModelViewPlacer from '@/components/model/ModelViewPlacer.vue'
@@ -85,10 +86,11 @@ export default new Router({
                     { path: 'search', name: 'ModelSearch', component: ModelSearchContainer, meta: {'column': 2} }
                   ]
                 },
-                { path: 'people', name: 'InitiativePeople', component: PeopleSection, meta: {'column': 3} },
-                { path: 'people/addMember/:userId', name: 'InitiativePeopleAddMember', component: PeopleSection, meta: {'column': 3} },
-                { path: 'assignations', name: 'InitiativeAssignations', component: TransfersSection, meta: {'column': 4} },
-                { path: 'assignations/:assignationId', name: 'InitiativeAssignation', component: TransfersSection, meta: {'column': 4} }
+                { path: 'messages', name: 'InitiativeMessages', component: MessagesSection, meta: {'column': 3} },
+                { path: 'people', name: 'InitiativePeople', component: PeopleSection, meta: {'column': 4} },
+                { path: 'people/addMember/:userId', name: 'InitiativePeopleAddMember', component: PeopleSection, meta: {'column': 4} },
+                { path: 'assignations', name: 'InitiativeAssignations', component: TransfersSection, meta: {'column': 5} },
+                { path: 'assignations/:assignationId', name: 'InitiativeAssignation', component: TransfersSection, meta: {'column': 5} }
               ]
             }
           ]
