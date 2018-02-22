@@ -8,11 +8,11 @@
 
   "selenium" : {
     "start_process" : true,
-    "server_path" : "F:/CollectiveOne/CollectiveOneWebapp/frontend/bin/selenium-server-standalone-3.9.0.jar",
-    "log_path" : "F:/CollectiveOne/CollectiveOneWebapp/frontend/bin",
+    "server_path" : "bin/selenium-server-standalone-3.9.0.jar",
+    "log_path" : "bin",
     "port" : 4444,
     "cli_args" : {
-      "webdriver.chrome.driver" : "C:/Users/user/Downloads/chromedriver_win32/chromedriver.exe",
+      "webdriver.chrome.driver" : "bin/chromedriver.exe",
       "webdriver.gecko.driver" : "",
       "webdriver.edge.driver" : ""
     }
