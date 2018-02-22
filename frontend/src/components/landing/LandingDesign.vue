@@ -20,8 +20,8 @@
             by their contributors.
           </h5>
         </div>
-        <button class="w3-button dark-gray w3-margin-top" @click="login()">LOG IN / SIGNUP</button>
-        <button class="w3-button dark-gray w3-margin-top" @click="explore()">EXPLORE THE APP</button>
+        <button id="T_loginButton" class="w3-button dark-gray w3-margin-top" @click="login()">LOG IN / SIGNUP</button>
+        <button id="T_exploreButton" class="w3-button dark-gray w3-margin-top" @click="explore()">EXPLORE THE APP</button>
       </div>
     </div>
 
