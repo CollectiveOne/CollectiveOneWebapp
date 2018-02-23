@@ -133,8 +133,12 @@ export default {
 
   computed: {
     membersSorted () {
-      var membersTemp = JSON.parse(JSON.stringify(this.members))
-      return membersTemp.sort((a, b) => { return b.receivedAssets[0].ownedByThisHolder - a.receivedAssets[0].ownedByThisHolder })
+      if (this.assets.length > 0) {
+        var membersTemp = JSON.parse(JSON.stringify(this.members))
+        return membersTemp.sort((a, b) => { return b.receivedAssets[0].ownedByThisHolder - a.receivedAssets[0].ownedByThisHolder })
+      } else {
+        return this.members
+      }
     },
     isLoggedAnAdmin () {
       return this.$store.getters.isLoggedAnAdmin
