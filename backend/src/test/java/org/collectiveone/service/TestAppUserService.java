@@ -7,6 +7,8 @@ import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
+import org.collectiveone.modules.users.AppUser;
+import org.collectiveone.modules.users.AppUserDto;
 import org.collectiveone.modules.users.AppUserService;
 import org.junit.After;
 import org.junit.Before;
@@ -16,18 +18,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 
 @Transactional
-public class TestInitiativeService extends AbstractTest {
-	@Autowired
-    private InitiativeService service;
+public class TestAppUserService extends AbstractTest {
 	
 	@Autowired
     private AppUserService userService;
 	
 	@Value("${TEST_USER}")
 	String userId;
+	
 	
     @Before
     public void setUp() {
@@ -39,16 +41,23 @@ public class TestInitiativeService extends AbstractTest {
         // clean up after each test method
     }
     
+    
     @Test
-    public void ifCreateInitiativeIsSuccess() {
-    		//UUID c1Id=this.userService.ge
+    public void getFromC1IdTestIsSuccess() {
+    		AppUser user=this.userService.getFromC1Id(UUID.fromString(this.userId));
+    		assertTrue(user.getC1Id().toString().equals(this.userId));
+    
     }
-
+    
     @Test
-    public void ifGetTagIsSuccess() {
-    		
-    		GetResult<InitiativeTagDto> result=service.getTag(UUID.fromString("c0a80067-61b9-1590-8161-b91c6d570010"));
-    		assertThat(result.getResult().equals("success"));
-
+    public void getUserLightIsSuccess() {
+    		GetResult<AppUserDto> result=this.userService.getUserLight(UUID.fromString(this.userId));
+    		assertTrue(result.getResult().equals(this.STR_SUCCESS));
+    }
+    
+    @Test
+    public void getUserFullIsSuccess() {
+    		GetResult<AppUserDto> result=this.userService.getUserFull(UUID.fromString(this.userId));
+    		assertTrue(result.getResult().equals(this.STR_SUCCESS));
     }
 }
