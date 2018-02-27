@@ -24,7 +24,11 @@ public class AuthenticationModule {
 			driver.get("http://localhost:8080");
 		}
 
-		private boolean checkLogin() {
+		public AuthenticationModule(String string) {
+			// TODO Auto-generated constructor stub
+		}
+
+		public boolean checkLogin(String email, String password, WebDriver driver) {
 			try {
 
 			    (driver.findElement(By.id("T_loginButton"))).click();
@@ -33,19 +37,19 @@ public class AuthenticationModule {
 			    WebElement passwordInput_Modal = driver.findElement(By.name("password"));
 			    WebElement loginButton_Modal = driver.findElement(By.className("auth0-lock-submit"));
 	
-			    emailInput_Modal.sendKeys("saswat4friends@gmail.com");
-			    passwordInput_Modal.sendKeys("helloworld");
+			    emailInput_Modal.sendKeys(email);
+			    passwordInput_Modal.sendKeys(password);
 			    loginButton_Modal.click();
 			    
 			}catch(Exception exception) {
 				System.out.println("Failed : " + exception);
 				return false;
 			}
-			driver.navigate().refresh();
+			//driver.navigate().refresh();
 			return true;
 		}
 
-		private boolean checkSignUp() {
+		public boolean checkSignUp() {
 			try {
 			    (driver.findElement(By.id("T_loginButton"))).click();
 			    (driver.findElement(By.xpath("//*[contains(text(),'Sign Up')]"))).click();
@@ -74,10 +78,10 @@ public class AuthenticationModule {
 			System.out.println("Testing Authentication Modals");
 			
 			System.out.println("1. Testing Login Modal");
-			if(authmodule.checkLogin())
-				System.out.println("Login Modal Passed");
-			else
-				System.out.println("Login Modal Failed");
+//			if(authmodule.checkLogin("philh@x.com","123456", driver))
+//				System.out.println("Login Modal Passed");
+//			else
+//				System.out.println("Login Modal Failed");
 			
 			System.out.println("2. Testing Sign Up Modal");
 			if(authmodule.checkSignUp())
