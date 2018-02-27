@@ -1,9 +1,11 @@
 package org.collectiveone.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.AbstractTest;
 import org.collectiveone.common.dto.GetResult;
+import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
@@ -59,5 +61,31 @@ public class TestAppUserService extends AbstractTest {
     public void getUserFullIsSuccess() {
     		GetResult<AppUserDto> result=this.userService.getUserFull(UUID.fromString(this.userId));
     		assertTrue(result.getResult().equals(this.STR_SUCCESS));
+    }
+    
+    @Test
+    public void updateUserDataInLocalDBisSuccess() {
+    		PostResult result=this.userService.disableEmailNotifications(UUID.fromString(this.userId)); 
+    		assertTrue(result.getResult().equals("success"));	
+    }
+    
+    
+    @Test
+    public void searchBySReturnsData() {
+    		GetResult<List<AppUserDto>> result=this.userService.searchBy("s");
+    		assertTrue(result.getData().size()>0);	
+    }
+    
+
+    @Test
+    public void searchBySisSuccess() {
+    		GetResult<List<AppUserDto>> result=this.userService.searchBy("s");
+    		assertTrue(result.getResult().equals("success"));	
+    }
+    
+    @Test
+    public void usernameExistReturnsFalseInUniqueUserName() {
+    		GetResult<Boolean> result=this.userService.usernameExist("sadadad");
+    		assertTrue(result.getData()==false);	
     }
 }
