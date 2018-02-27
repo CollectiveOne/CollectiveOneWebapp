@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="big-content-container">
+  <div :class="{'big-content-container': isTimeline}">
     <div v-if="$store.state.support.initiativeLoaded" class="w3-row">
       <div class="w3-white w3-col ">
         <div class="header-container">
@@ -40,48 +40,59 @@
         <div class="section-tabs w3-row w3-center light-grey">
           <router-link tag="div" :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isOverview, 's3': fourTabs || fiveTabs, 's4': threeTabs}"
+            :class="{'border-blue': isOverview}"
+            :style="tabLinkStyle"
             @click="">
-            <h5 class="noselect" :class="{'bold-text': isOverview}">Overview</h5>
+            <h5 class="noselect" :class="{'bold-text': isOverview}">
+              <span class="w3-hide-small w3-hide-medium">Overview</span>
+              <span class="w3-hide-large"><i class="fa fa-home" aria-hidden="true"></i></span>
+            </h5>
+          </router-link>
+          <router-link v-if="this.initiative.meta.modelEnabled"
+            tag="div" :to="{ name: 'InitiativeTimeline', params: { initiativeId: initiative.id } }"
+            class="w3-col tablink w3-bottombar w3-hover-light-grey"
+            :class="{'border-blue': isTimeline}"
+            :style="tabLinkStyle"
+            @click="">
+            <h5 class="noselect" :class="{'bold-text': isTimeline}">
+              <span class="w3-hide-small w3-hide-medium">Timeline</span>
+              <span class="w3-hide-large"><i class="fa fa-comments-o" aria-hidden="true"></i></span>
+            </h5>
           </router-link>
           <router-link
             tag="div" :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isModel, 's3': fourTabs || fiveTabs, 's4': threeTabs}"
-            @click="">
-            <h5 class="noselect" :class="{'bold-text': isModel}">Vision</h5>
-          </router-link>
-          <router-link v-if="this.initiative.meta.modelEnabled"
-            tag="div" :to="{ name: 'InitiativeMessages', params: { initiativeId: initiative.id } }"
-            class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isMessages, 's2': fiveTabs, 's3': fourTabs, 's4': threeTabs}"
+            :class="{'border-blue': isModel}"
+            :style="tabLinkStyle"
             @click="">
             <h5 class="noselect" :class="{'bold-text': isModel}">
-              <span class="w3-hide-small">Messages</span>
-              <span class="w3-hide-medium w3-hide-large"><i class="fa fa-comments-o" aria-hidden="true"></i></span>
+              <span class="w3-hide-small w3-hide-medium">Vision</span>
+              <span class="w3-hide-large"><i class="fa fa-eye" aria-hidden="true"></i></span>
             </h5>
           </router-link>
           <router-link tag="div" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isPeople, 's2': fiveTabs, 's3': fourTabs, 's4': threeTabs}"
+            :class="{'border-blue': isPeople}"
+            :style="tabLinkStyle"
             @click="">
             <h5 class="noselect" :class="{'bold-text': isPeople}">
-              <span class="w3-hide-small">People</span>
-              <span class="w3-hide-medium w3-hide-large"><i class="fa fa-users" aria-hidden="true"></i></span>
+              <span class="w3-hide-small w3-hide-medium">People</span>
+              <span class="w3-hide-large"><i class="fa fa-users" aria-hidden="true"></i></span>
             </h5>
           </router-link>
           <router-link tag="div" :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isAssignations, 's2': fiveTabs, 's3': fourTabs, 's4': threeTabs}"
+            :class="{'border-blue': isAssignations}"
+            :style="tabLinkStyle"
             @click="">
             <h5 class="noselect" :class="{'bold-text': isAssignations}">
-              <span class="w3-hide-small">Transfers</span>
-              <span class="w3-hide-medium w3-hide-large"><i class="fa fa-exchange" aria-hidden="true"></i></span>
+              <span class="w3-hide-small w3-hide-medium">Transfers</span>
+              <span class="w3-hide-large"><i class="fa fa-exchange" aria-hidden="true"></i></span>
             </h5>
           </router-link>
         </div>
 
-        <div class="w3-row content-container">
+        <div class="w3-row content-container" :class="{'content-container-small': isTimeline}">
           <transition :name="animationType" mode="out-in" appear>
             <router-view :key="initiative.id">
             </router-view>
@@ -155,10 +166,10 @@ export default {
       })
       return res
     },
-    isMessages () {
+    isTimeline () {
       var res = false
       this.$route.matched.forEach((e) => {
-        if (e.name === 'InitiativeMessages') {
+        if (e.name === 'InitiativeTimeline') {
           res = true
         }
       })
@@ -167,14 +178,19 @@ export default {
     animationType () {
       return this.$store.state.support.contentAnimationType
     },
-    threeTabs () {
-      return false
+    nTabs () {
+      var n = 5
+      if (!this.initiative.meta.modelEnabled) {
+        n = n - 1
+      }
+
+      return n
     },
-    fourTabs () {
-      return !this.initiative.meta.modelEnabled
-    },
-    fiveTabs () {
-      return this.initiative.meta.modelEnabled
+    tabLinkStyle () {
+      var wdth = 100.0 / this.nTabs
+      return {
+        width: wdth + '%'
+      }
     }
   },
 
@@ -238,7 +254,11 @@ export default {
 }
 
 .content-container {
-  height: calc(100vh - 190px);
+  overflow: hidden;
+}
+
+.content-container-small {
+  height: calc(100vh - 200px);
 }
 
 .header-container {

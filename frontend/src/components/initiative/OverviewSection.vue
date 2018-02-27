@@ -103,16 +103,6 @@
         </div>
       </div>
 
-      <br>
-      <div class="w3-card">
-        <header class="section-header-bar w3-bar gray-1">
-          <h4 class="w3-bar-item w3-left">Recent Activity</h4>
-        </header>
-        <div class="activity-content">
-          <app-activity-getter :url="'/1/activity/initiative/' + initiative.id">
-          </app-activity-getter>
-        </div>
-      </div>
     </div>
   </div>
 </template>

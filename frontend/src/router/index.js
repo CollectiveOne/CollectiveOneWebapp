@@ -13,7 +13,7 @@ import Unsubscribe from '@/components/user/Unsubscribe.vue'
 import OverviewSection from '@/components/initiative/OverviewSection.vue'
 import PeopleSection from '@/components/initiative/PeopleSection.vue'
 import TransfersSection from '@/components/initiative/TransfersSection.vue'
-import MessagesSection from '@/components/initiative/MessagesSection.vue'
+import TimelineSection from '@/components/initiative/TimelineSection.vue'
 
 import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
 import ModelViewPlacer from '@/components/model/ModelViewPlacer.vue'
@@ -66,27 +66,27 @@ export default new Router({
               component: InitiativesContent,
               children: [
                 { path: 'overview', name: 'InitiativeOverview', component: OverviewSection, meta: {'column': 1} },
+                { path: 'timeline', name: 'InitiativeTimeline', component: TimelineSection, meta: {'column': 2} },
                 {
                   path: 'model',
                   name: 'InitiativeModel',
                   component: ModelSectionTab,
-                  meta: {'column': 2},
+                  meta: {'column': 3},
                   children: [
-                    { path: 'view/:viewId', name: 'ModelView', component: ModelViewPlacer, meta: {'column': 2} },
+                    { path: 'view/:viewId', name: 'ModelView', component: ModelViewPlacer, meta: {'column': 3} },
                     {
                       path: 'section/:sectionId',
                       name: 'ModelSection',
                       component: ModelSectionPlacer,
                       meta: {'column': 2},
                       children: [
-                        { path: 'card/:cardId', name: 'ModelCardInSection', meta: {'column': 2} }
+                        { path: 'card/:cardId', name: 'ModelCardInSection', meta: {'column': 3} }
                       ]
                     },
-                    { path: 'card/:cardWrapperId', name: 'ModelCardAlone', component: ModelCardWrapperPlacer, meta: {'column': 2} },
-                    { path: 'search', name: 'ModelSearch', component: ModelSearchContainer, meta: {'column': 2} }
+                    { path: 'card/:cardWrapperId', name: 'ModelCardAlone', component: ModelCardWrapperPlacer, meta: {'column': 3} },
+                    { path: 'search', name: 'ModelSearch', component: ModelSearchContainer, meta: {'column': 3} }
                   ]
                 },
-                { path: 'messages', name: 'InitiativeMessages', component: MessagesSection, meta: {'column': 3} },
                 { path: 'people', name: 'InitiativePeople', component: PeopleSection, meta: {'column': 4} },
                 { path: 'people/addMember/:userId', name: 'InitiativePeopleAddMember', component: PeopleSection, meta: {'column': 4} },
                 { path: 'assignations', name: 'InitiativeAssignations', component: TransfersSection, meta: {'column': 5} },

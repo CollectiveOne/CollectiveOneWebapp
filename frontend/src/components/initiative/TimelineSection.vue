@@ -32,6 +32,7 @@ export default {
   padding-right: 10px;
   padding-top: 10px;
   height: 100%;
+  overflow: hidden;
 }
 
 </style>
