@@ -432,7 +432,7 @@ export default {
       return this.isMessagePosted && (this.activity.modelView !== null)
     },
     isMessageInInitiative () {
-      return false
+      return this.isMessagePosted && (!this.isMessageInView && !this.isMessageInSection && !this.isMessageInCardWrapper)
     },
     isExternalMessage () {
       if (!this.isMessagePosted || !this.showMessages) {
