@@ -99,7 +99,7 @@ export default {
 
   computed: {
     windowIsSmall () {
-      return window.innerWidth < 601
+      return this.$store.state.support.windowIsSmall
     }
   }
 }

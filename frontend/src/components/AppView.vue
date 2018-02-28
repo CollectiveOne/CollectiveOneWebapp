@@ -15,27 +15,46 @@ export default {
     AppHeader: Header
   },
 
-  computed: {
-    windowIsSmall () {
-      return window.innerWidth < 601
-    }
-  },
-
   data () {
     return {
       expandNav: false
     }
   },
 
+  computed: {
+    windowIsSmall () {
+      return this.$store.state.support.windowIsSmall
+    }
+  },
+
+  watch: {
+    expandNav () {
+      this.$store.commit('setExpandNav', this.expandNav)
+    }
+  },
+
   methods: {
+    checkWindowSize () {
+      var windowIsSmallNow = window.innerWidth < 600
+
+      if (this.windowIsSmall !== windowIsSmallNow) {
+        this.$store.commit('setWindowIsSmall', windowIsSmallNow)
+      }
+    }
   },
 
   created () {
+    this.checkWindowSize()
+
     if (this.windowIsSmall) {
       this.expandNav = false
+      this.$store.commit('setWindowIsSmall', true)
     } else {
       this.expandNav = true
+      this.$store.commit('setWindowIsSmall', false)
     }
+
+    window.addEventListener('resize', this.checkWindowSize)
   }
 }
 </script>

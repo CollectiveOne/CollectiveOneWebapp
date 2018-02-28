@@ -92,7 +92,7 @@
               <transition name="slideDownUp">
                 <div v-if="showCards" class="cards-container">
                   <div v-for="(cardWrapper, ix) in sortedByLikes"
-                    :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
+                    :class="cardsContainerClasses"
                     :key="cardWrapper.id"
                     @dragover.prevent
                     @drop.prevent="cardDroped(cardWrapper.id, $event)">
@@ -326,6 +326,13 @@ export default {
     },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
+    },
+    cardsContainerClasses () {
+      return {
+        'section-card-col-with-nav': this.cardsAsCards && (this.$store.state.support.expandNav && !this.$store.state.support.windowIsSmall),
+        'section-card-col-no-nav': this.cardsAsCards && (!this.$store.state.support.expandNav || this.$store.state.support.windowIsSmall),
+        'section-card-par': !this.cardsAsCards
+      }
     }
   },
 
@@ -563,13 +570,61 @@ export default {
   padding: 6px 10px 22px 10px;
 }
 
-.section-card-col {
+.section-card-col-with-nav, .section-card-col-no-nav {
   margin-bottom: 0px;
   display: inline-block;
 }
 
 @media screen and (min-width: 1700px) {
-  .section-card-col {
+  .section-card-col-no-nav {
+    width: calc(20% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+@media screen and (min-width: 1300px) and (max-width: 1699px) {
+  .section-card-col-no-nav {
+    width: calc(25% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+@media screen and (min-width: 900px) and (max-width: 1299px) {
+  .section-card-col-no-nav {
+    width: calc(33% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 899px) {
+  .section-card-col-no-nav {
+    width: calc(50% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .section-card-col-no-nav {
+    width: calc(100% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+
+
+
+@media screen and (min-width: 1700px) {
+  .section-card-col-with-nav {
     width: calc(25% - 16px);
     margin-left: 8px;
     margin-right: 8px;
@@ -578,7 +633,7 @@ export default {
 }
 
 @media screen and (min-width: 1200px) and (max-width: 1699px) {
-  .section-card-col {
+  .section-card-col-with-nav {
     width: calc(33% - 16px);
     margin-left: 8px;
     margin-right: 8px;
@@ -586,8 +641,8 @@ export default {
   }
 }
 
-@media screen and (min-width: 992px) and (max-width: 1199px) {
-  .section-card-col {
+@media screen and (min-width: 900px) and (max-width: 1199px) {
+  .section-card-col-with-nav {
     width: calc(50% - 16px);
     margin-left: 8px;
     margin-right: 8px;
@@ -595,14 +650,15 @@ export default {
   }
 }
 
-@media screen and (max-width: 991px) {
-  .section-card-col {
+@media screen and (max-width: 899px) {
+  .section-card-col-with-nav {
     width: calc(100% - 16px);
     margin-left: 8px;
     margin-right: 8px;
     vertical-align: top;
   }
 }
+
 
 .section-card-par {
   margin-bottom: 16px;

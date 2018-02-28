@@ -7,7 +7,9 @@ const state = {
   triggerUpdateAssets: false,
   triggerUpdateModel: false,
   userEmailNotVerified: false,
-  initiativeLoaded: false
+  initiativeLoaded: false,
+  expandNav: true,
+  windowIsSmall: false
 }
 
 const findCoordinate = function (initiatives, id, coord) {
@@ -105,8 +107,13 @@ const mutations = {
   },
   setInitiativeLoaded: (state, payload) => {
     state.initiativeLoaded = payload
+  },
+  setExpandNav: (state, payload) => {
+    state.expandNav = payload
+  },
+  setWindowIsSmall: (state, payload) => {
+    state.windowIsSmall = payload
   }
-
 }
 
 const actions = {
