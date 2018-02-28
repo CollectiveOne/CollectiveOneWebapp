@@ -8,10 +8,14 @@ import { store } from './store/store'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import VueAnalytics from 'vue-analytics'
 
 Vue.config.productionTip = false
 
 Vue.use(VueAxios, axios)
+Vue.use(VueAnalytics, {
+  id: 'UA-92543820-1'
+})
 
 axios.interceptors.request.use(
   function (config) {

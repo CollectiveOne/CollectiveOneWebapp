@@ -17,6 +17,7 @@
     "auth0-lock": "^10.14.0",
     "axios": "^0.16.1",
     "vue": "^2.2.2",
+    "vue-analytics": "^5.9.0",
     "vue-axios": "^2.0.1",
     "vue-markdown": "^2.2.4",
     "vue-router": "^2.3.0",
