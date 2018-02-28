@@ -36,7 +36,7 @@
 
           <div class="w3-row w3-margin-top">
             <label class=""><b>Name</b></label>
-            <input v-model="newInitiative.meta.name"
+            <input  id="T_nameInputEdit" v-model="newInitiative.meta.name"
               class="w3-input w3-hover-light-grey"
               :class="{ 'error-input' : nameErrorShow }"
               type="text">
@@ -53,7 +53,7 @@
 
           <div class="w3-row">
             <label class=""><b>Purpose</b></label>
-            <app-markdown-editor v-model="newInitiative.meta.driver"></app-markdown-editor>
+            <app-markdown-editor id="T_purposeInputEdit" v-model="newInitiative.meta.driver"></app-markdown-editor>
             <app-error-panel
               :show="driverEmptyShow"
               message="please set a purpose for the initiative">
@@ -83,12 +83,12 @@
                     VISION:
                   </div>
                   <div class="w3-col m8">
-                    <button class="w3-left w3-button"
+                    <button id="T_disableVisionButton" class="w3-left w3-button"
                       :class="{ 'app-button': !newInitiative.meta.modelEnabled, 'app-button-light': newInitiative.meta.modelEnabled }"
                       @click="newInitiative.meta.modelEnabled = false">
                       disable
                     </button>
-                    <button class="w3-left w3-button app-button"
+                    <button id="T_enableVisionButton" class="w3-left w3-button app-button"
                       :class="{ 'app-button': newInitiative.meta.modelEnabled, 'app-button-light': !newInitiative.meta.modelEnabled }"
                       @click="newInitiative.meta.modelEnabled = true">
                       enable
@@ -168,7 +168,7 @@
               <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button type="button" id="T_acceptButtonEditInitiative" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
 

@@ -16,7 +16,7 @@ public class ModulesTesting {
 		System.setProperty("webdriver.chrome.driver", exePath);
 		
 		driver = new ChromeDriver();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 		driver.get("http://localhost:8080");
 	}
 	
@@ -38,7 +38,7 @@ public class ModulesTesting {
 		try {
 			InitiativesModule initiativeModule = new InitiativesModule();
 			System.out.println("2. Testing Initiative Modals");
-			if(initiativeModule.createInitiative(driver))
+			if(initiativeModule.editInitiative(driver))
 				return true;
 			
 		}catch(Exception exception){

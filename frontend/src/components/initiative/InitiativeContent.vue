@@ -9,6 +9,7 @@
               <div class="w3-col w3-right" style="width:50px">
                 <div class="edit-container">
                   <div
+                    id="T_editMenuButton"
                     v-if="isLoggedAMember"
                     @click="showEditMenu = !showEditMenu"
                     class="edit-btn-div w3-button w3-large"
@@ -16,7 +17,7 @@
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                   </div>
                   <div v-if="showEditMenu" class="edit-menu w3-dropdown-content w3-bar-block w3-card">
-                    <div v-if="isLoggedAnAdmin"
+                    <div id="T_editInitiativeButton" v-if="isLoggedAnAdmin"
                       @click="$store.commit('showEditInitiativeModal', true); showEditMenu = false"
                       class="w3-bar-item w3-button">
                       <i class="fa fa-pencil" aria-hidden="true"></i>edit initiative
