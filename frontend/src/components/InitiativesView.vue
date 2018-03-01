@@ -114,7 +114,7 @@ export default {
 
   methods: {
     initiativeSelected () {
-      this.$emit('hide-nav')
+      this.$store.commit('setExpandNav', false)
     }
   },
 
