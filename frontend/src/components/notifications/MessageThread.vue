@@ -284,8 +284,12 @@ export default {
 }
 
 .tooltip .tooltiptext {
-    top: 8%;
-    right: 105%;
+  top: 8%;
+  right: 105%;
+}
+
+.only-messages-button button {
+  background-color: rgba(21, 165, 204, 0.4) !important;
 }
 
 </style>

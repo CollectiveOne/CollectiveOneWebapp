@@ -36,12 +36,12 @@
   <div class="w3-cell-row">
 
     <transition name="slideRightLeft">
-      <div v-show="expandNav" class="dark-gray nav-container-cell" :class="navContainerClass">
+      <div v-show="expandNav" class="dark-gray nav-container-cell w3-sidebar">
         <app-initiatives-nav @initiative-selected="initiativeSelected()"></app-initiatives-nav>
       </div>
     </transition>
 
-    <div v-show="showContent" class="w3-cell content-container-cell" :class="contentContainerClass">
+    <div v-show="showContent" class="w3-cell content-container-cell">
       <div class="slider-container">
         <transition name="slideDownUp" mode="out-in">
           <router-view></router-view>
@@ -73,13 +73,6 @@ export default {
     'app-new-tokenmint-modal': NewTokenMintModal
   },
 
-  props: {
-    expandNav: {
-      type: Boolean,
-      default: true
-    }
-  },
-
   data () {
     return {
       showContent: true
@@ -87,6 +80,9 @@ export default {
   },
 
   computed: {
+    expandNav () {
+      return this.$store.state.support.expandNav
+    },
     userAuthenticated () {
       return this.$store.state.user.authenticated
     },
@@ -111,31 +107,6 @@ export default {
     windowIsSmall () {
       return this.$store.state.support.windowIsSmall
     },
-    navContainerClass () {
-      if (this.windowIsSmall) {
-        return {
-          'w3-sidebar': true
-        }
-      } else {
-        return {
-          'w3-cell': true
-        }
-      }
-    },
-    contentContainerClass () {
-      if (this.windowIsSmall) {
-        return {
-        }
-      } else {
-        if (this.expandNav) {
-          return {
-          }
-        } else {
-          return {
-          }
-        }
-      }
-    },
     basePage () {
       return this.$route.name === 'Initiatives'
     }
@@ -143,9 +114,7 @@ export default {
 
   methods: {
     initiativeSelected () {
-      if (this.windowIsSmall) {
-        this.$emit('hide-nav')
-      }
+      this.$emit('hide-nav')
     }
   },
 

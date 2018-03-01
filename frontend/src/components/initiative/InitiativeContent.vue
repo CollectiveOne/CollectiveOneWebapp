@@ -4,15 +4,17 @@
       <div class="w3-white w3-col ">
         <div class="header-container">
           <transition name="fadeenter" mode="out-in" appear>
-            <header class="white-bg w3-row" :key="initiative.meta.name">
-              <div class="w3-col w3-right" style="width:50px">
-                <div class="edit-container">
-                  <div
-                    v-if="isLoggedAMember"
+            <div class="w3-row white-bg w3-border-bottom" :key="initiative.meta.name">
+              <div class="w3-col m6">
+                <h3 class="w3-left initiative-path noselect">
+                  <b><app-initiative-path :initiative="initiative"></app-initiative-path></b>
+                </h3>
+                <div class="w3-right edit-container">
+                  <div v-if="isLoggedAMember"
                     @click="showEditMenu = !showEditMenu"
                     class="edit-btn-div w3-button w3-large"
-                    style="width:100%; height:100%">
-                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                    style="height:100%">
+                    <i class="fa fa-cog" aria-hidden="true"></i>
                   </div>
                   <div v-if="showEditMenu" class="edit-menu w3-dropdown-content w3-bar-block w3-card">
                     <div v-if="isLoggedAnAdmin"
@@ -23,73 +25,53 @@
                     <div v-if="isLoggedAMember || isLoggedAnAdmin"
                       @click="$store.commit('showEditNotificationsModal', true); showEditMenu = false"
                       class="w3-bar-item w3-button">
-                      <i class="fa fa-cog" aria-hidden="true"></i>notifications
+                      <i class="fa fa-bell" aria-hidden="true"></i>notifications
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="w3-rest">
-                <h3 class="initiative-path noselect">
-                  <b><app-initiative-path :initiative="initiative"></app-initiative-path></b>
-                </h3>
-              </div>
-            </header>
-          </transition>
-        </div>
 
-        <div class="section-tabs w3-row w3-center light-grey">
-          <router-link tag="div" :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
-            class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isOverview}"
-            :style="tabLinkStyle"
-            @click="">
-            <h5 class="noselect" :class="{'bold-text': isOverview}">
-              <span class="w3-hide-small w3-hide-medium">Overview</span>
-              <span class="w3-hide-large"><i class="fa fa-home" aria-hidden="true"></i></span>
-            </h5>
-          </router-link>
-          <router-link v-if="this.initiative.meta.modelEnabled"
-            tag="div" :to="{ name: 'InitiativeTimeline', params: { initiativeId: initiative.id } }"
-            class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isTimeline}"
-            :style="tabLinkStyle"
-            @click="">
-            <h5 class="noselect" :class="{'bold-text': isTimeline}">
-              <span class="w3-hide-small w3-hide-medium">Timeline</span>
-              <span class="w3-hide-large"><i class="fa fa-comments-o" aria-hidden="true"></i></span>
-            </h5>
-          </router-link>
-          <router-link
-            tag="div" :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
-            class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isModel}"
-            :style="tabLinkStyle"
-            @click="">
-            <h5 class="noselect" :class="{'bold-text': isModel}">
-              <span class="w3-hide-small w3-hide-medium">Vision</span>
-              <span class="w3-hide-large"><i class="fa fa-eye" aria-hidden="true"></i></span>
-            </h5>
-          </router-link>
-          <router-link tag="div" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
-            class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isPeople}"
-            :style="tabLinkStyle"
-            @click="">
-            <h5 class="noselect" :class="{'bold-text': isPeople}">
-              <span class="w3-hide-small w3-hide-medium">People</span>
-              <span class="w3-hide-large"><i class="fa fa-users" aria-hidden="true"></i></span>
-            </h5>
-          </router-link>
-          <router-link tag="div" :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
-            class="w3-col tablink w3-bottombar w3-hover-light-grey"
-            :class="{'border-blue': isAssignations}"
-            :style="tabLinkStyle"
-            @click="">
-            <h5 class="noselect" :class="{'bold-text': isAssignations}">
-              <span class="w3-hide-small w3-hide-medium">Transfers</span>
-              <span class="w3-hide-large"><i class="fa fa-exchange" aria-hidden="true"></i></span>
-            </h5>
-          </router-link>
+              <div class="w3-col m6 w3-right section-tabs w3-center">
+                <router-link :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
+                  class="tab-btn-space">
+                  <div class="tab-btn noselect" :class="{'bold-text': isOverview, 'button-blue': isOverview}">
+                    <span class="w3-hide-small w3-hide-medium tab-btn-text">Overview</span>
+                    <span class="w3-hide-large"><i class="fa fa-home" aria-hidden="true"></i></span>
+                  </div>
+                </router-link>
+                <router-link v-if="this.initiative.meta.modelEnabled"
+                  :to="{ name: 'InitiativeTimeline', params: { initiativeId: initiative.id } }"
+                  class="tab-btn-space">
+                  <div class="tab-btn noselect" :class="{'bold-text': isTimeline, 'button-blue': isTimeline}">
+                    <span class="w3-hide-small w3-hide-medium tab-btn-text">Timeline</span>
+                    <span class="w3-hide-large"><i class="fa fa-comments-o" aria-hidden="true"></i></span>
+                  </div>
+                </router-link>
+                <router-link :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
+                  class="tab-btn-space">
+                  <div class="tab-btn noselect" :class="{'bold-text': isModel, 'button-blue': isModel}">
+                    <span class="w3-hide-small w3-hide-medium tab-btn-text">Vision</span>
+                    <span class="w3-hide-large"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></span>
+                  </div>
+                </router-link>
+                <router-link :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
+                  class="tab-btn-space">
+                  <div class="tab-btn noselect" :class="{'bold-text': isPeople, 'button-blue': isPeople}">
+                    <span class="w3-hide-small w3-hide-medium tab-btn-text">People</span>
+                    <span class="w3-hide-large"><i class="fa fa-users" aria-hidden="true"></i></span>
+                  </div>
+                </router-link>
+                <router-link :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
+                  class="tab-btn-space">
+                  <div class="tab-btn noselect" :class="{'bold-text': isAssignations, 'button-blue': isAssignations}">
+                    <span class="w3-hide-small w3-hide-medium tab-btn-text">Transfers</span>
+                    <span class="w3-hide-large"><i class="fa fa-exchange" aria-hidden="true"></i></span>
+                  </div>
+                </router-link>
+              </div>
+
+            </div>
+          </transition>
         </div>
 
         <div class="w3-row content-container" :class="{'content-container-small': isTimeline}">
@@ -177,20 +159,6 @@ export default {
     },
     animationType () {
       return this.$store.state.support.contentAnimationType
-    },
-    nTabs () {
-      var n = 5
-      if (!this.initiative.meta.modelEnabled) {
-        n = n - 1
-      }
-
-      return n
-    },
-    tabLinkStyle () {
-      var wdth = 100.0 / this.nTabs
-      return {
-        width: wdth + '%'
-      }
     }
   },
 
@@ -258,7 +226,7 @@ export default {
 }
 
 .content-container-small {
-  height: calc(100vh - 200px);
+  height: calc(100vh - 135px);
 }
 
 .header-container {
@@ -282,13 +250,14 @@ export default {
 .edit-btn-div {
   min-height: 65px;
   padding-top: 20px;
+  width: 65px;
 }
 
 .edit-menu {
   width: 220px;
   display: block;
-  margin-left: -165px;
-  margin-top: 6px;
+  margin-left: 0px;
+  margin-top: 0px;
 }
 
 .edit-menu .fa {
@@ -297,6 +266,23 @@ export default {
 
 .section-tabs {
   height: 65px;
+  display: flex;
+  flex-direction: row;
+}
+
+.tab-btn-space {
+  display: block;
+  padding: 19px 10px 0px 10px;
+  width: 20%;
+}
+
+.tab-btn {
+  padding: 3px 6px;
+  border-radius: 6px;
+}
+
+.tab-btn-text {
+  font-size: 14px;
 }
 
 .tablink {

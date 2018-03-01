@@ -8,8 +8,9 @@
     <div class="w3-top">
      <div class="w3-bar header-div w3-border-bottom w3-white">
       <div class="w3-bar-item w3-button w3-xlarge flex-vert bars-div"
-        @click="$emit('expand-nav')">
-        <i class="fa fa-bars"></i>
+        @click="$store.commit('toggleExpandNav')">
+        <i v-if="!expandNav" class="fa fa-chevron-circle-right"></i>
+        <i v-if="expandNav" class="fa fa-chevron-circle-left"></i>
       </div>
       <router-link :to="{name: 'InitiativesHome'}" class="logo-container w3-bar-item noselect cursor-pointer">
         <img class="logo w3-hide-small" src="../assets/logo-color.png" alt="">
@@ -100,6 +101,9 @@ export default {
   computed: {
     windowIsSmall () {
       return this.$store.state.support.windowIsSmall
+    },
+    expandNav () {
+      return this.$store.state.support.expandNav
     }
   }
 }
