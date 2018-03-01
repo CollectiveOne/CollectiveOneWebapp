@@ -174,7 +174,7 @@
 
           <hr>
           <div class="w3-row w3-center w3-margin-bottom delete-row">
-            <button type="button" class="w3-left w3-button app-button-danger" @click="deleteInitiativeSelected = true">Delete Initiative</button>
+            <button  id="T_deleteInitiativeButton" type="button" class="w3-left w3-button app-button-danger" @click="deleteInitiativeSelected = true">Delete Initiative</button>
           </div>
           <div class="slider-container">
             <transition name="slideDownUp">
@@ -188,10 +188,12 @@
                 </div>
 
                 <button
+                  id="T_cancelDeleteInitiativeButton"
                   class="w3-button app-button-light button-pair"
                   @click="deleteInitiativeSelected = false">cancel
                 </button>
                 <button
+                  id="T_confirmDeleteInitiativeButton"
                   class="w3-button app-button-danger button-pair"
                   @click="deleteInitiative()">confirm
                 </button>
