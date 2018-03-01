@@ -22,7 +22,7 @@
                       class="w3-bar-item w3-button">
                       <i class="fa fa-pencil" aria-hidden="true"></i>edit initiative
                     </div>
-                    <div v-if="isLoggedAMember || isLoggedAnAdmin"
+                    <div id="T_notificationInitiativeButton" v-if="isLoggedAMember || isLoggedAnAdmin"
                       @click="$store.commit('showEditNotificationsModal', true); showEditMenu = false"
                       class="w3-bar-item w3-button">
                       <i class="fa fa-cog" aria-hidden="true"></i>notifications
@@ -53,7 +53,7 @@
             @click="">
             <h5 class="noselect" :class="{'bold-text': isModel}">Vision</h5>
           </router-link>
-          <router-link tag="div" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
+          <router-link id="T_peopleTab" tag="div" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
             :class="{'border-blue': isPeople, 's3': fourTabs, 's4': threeTabs}"
             @click="">
