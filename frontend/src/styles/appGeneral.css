@@ -164,3 +164,10 @@
 .overflow-y-auto {
   overflow-y: auto;
 }
+
+.wrap-long {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
