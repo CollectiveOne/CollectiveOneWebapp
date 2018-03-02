@@ -83,7 +83,7 @@ public class ModelService {
 	
 	
 	@Transactional
-	public GetResult<List<ModelSectionDto>> getModel(UUID initiativeId, Integer level, UUID requestById) {
+	public GetResult<List<ModelSectionDto>> getModel(UUID initiativeId, Integer level, UUID requestById, Boolean onlySections) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		if (initiative == null) return new GetResult<List<ModelSectionDto>>("error", "initiative not found", null);
 		
@@ -92,7 +92,9 @@ public class ModelService {
 		List<ModelSection> sections = initiative.getModelSections(); 
 		for (ModelSection section : sections) {
 			ModelSectionDto sectionDto = section.toDto();
-			sectionDto = addSectionSubElements(sectionDto, section.getId(), level, requestById);
+			if (level > 0) {
+				sectionDto = addSectionSubElements(sectionDto, section.getId(), level - 1, requestById, onlySections);	
+			}
 			sectionsDto.add(sectionDto); 
 		}
 		
@@ -127,12 +129,12 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById, Integer level, UUID requestByUserId) {
-		return new GetResult<ModelSectionDto>("success", "section retrieved",  getSectionDto(sectionId, level, requestByUserId));
+	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById, Integer level, UUID requestByUserId, Boolean onlySections) {
+		return new GetResult<ModelSectionDto>("success", "section retrieved",  getSectionDto(sectionId, level, requestByUserId, onlySections));
 	}
 	
 	@Transactional
-	public ModelSectionDto getSectionDto(UUID sectionId, Integer level, UUID requestByUserId) {
+	public ModelSectionDto getSectionDto(UUID sectionId, Integer level, UUID requestByUserId, Boolean onlySections) {
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		ModelSectionDto sectionDto = section.toDto();
 		
@@ -142,7 +144,9 @@ public class ModelService {
 			sectionDto.getInSections().add(inSection.toDto());
 		}
 		
-		sectionDto = addSectionSubElements(sectionDto, section.getId(), level, requestByUserId);
+		if(level > 0) {
+			sectionDto = addSectionSubElements(sectionDto, section.getId(), level - 1, requestByUserId, onlySections);
+		}
 		
 		return sectionDto;
 	}
@@ -156,7 +160,7 @@ public class ModelService {
 		List<ModelSectionDto> sectionDtos = new ArrayList<ModelSectionDto>();
 		
 		for(ModelSection section : enititiesPage.getContent()) {
-			sectionDtos.add(getSectionDto(section.getId(), 0, requestByUserId));
+			sectionDtos.add(getSectionDto(section.getId(), 0, requestByUserId, true));
 		}
 		
 		Page<ModelSectionDto> dtosPage = new PageImpl<ModelSectionDto>(sectionDtos, page, enititiesPage.getNumberOfElements());
@@ -287,13 +291,13 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public ModelSectionDto addSectionSubElements(ModelSectionDto sectionDto, UUID sectionId, Integer level, UUID requestByUserId) {
+	public ModelSectionDto addSectionSubElements(ModelSectionDto sectionDto, UUID sectionId, Integer level, UUID requestByUserId, Boolean onlySections) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		
-		if (level >= 1) {
-			sectionDto.setSubElementsLoaded(true);
-			
+		sectionDto.setSubElementsLoaded(true);
+		
+		if (!onlySections) {
 			for (ModelCardWrapper cardWrapper : section.getCardsWrappers()) {
 				ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
 				
@@ -311,13 +315,19 @@ public class ModelService {
 				
 				sectionDto.getCardsWrappers().add(cardWrapperDto);
 			}
-			
+		}
+				
+		if (level <= 0) {
+			/* add only the subsection titles and metadata */
 			for (ModelSection subsection : section.getSubsections()) {
-				sectionDto.getSubsections().add(addSectionSubElements(subsection.toDto(), subsection.getId(), level - 1, requestByUserId));
+				sectionDto.getSubsections().add(subsection.toDto());
 			}
 		} else {
-			sectionDto.setSubElementsLoaded(false);
-		}
+			/* add the subsections with their sub-elements too */
+			for (ModelSection subsection : section.getSubsections()) {
+				sectionDto.getSubsections().add(addSectionSubElements(subsection.toDto(), subsection.getId(), level - 1, requestByUserId, onlySections));
+			}
+		} 
 		
 		return sectionDto; 
 	}

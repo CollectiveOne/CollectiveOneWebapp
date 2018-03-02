@@ -1,10 +1,7 @@
 <template lang="html">
-
-<div class="">
-
   <div class="w3-cell-row">
     <div class="vision-nav light-grey w3-cell">
-      sections nav
+      <app-model-nav></app-model-nav>
     </div>
     <div class="vision-content w3-cell w3-container">
       <div class="w3-row w3-margin-top router-container">
@@ -14,18 +11,15 @@
         </transition>
       </div>
     </div>
-
   </div>
-
-</div>
 </template>
 
 <script>
-import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
+import ModelNav from '@/components/model/nav/ModelNav.vue'
 
 export default {
   components: {
-    'app-model-card-modal': ModelCardModal
+    'app-model-nav': ModelNav
   },
 
   data () {
@@ -74,6 +68,7 @@ export default {
 <style scoped>
 
 .vision-nav {
+  width: 350px;
 }
 
 .router-container {

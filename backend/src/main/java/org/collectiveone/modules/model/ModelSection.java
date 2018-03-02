@@ -83,17 +83,18 @@ public class ModelSection {
 		ModelSection other = (ModelSection) obj;
 		return id.equals(other.getId());
 	}
-
+	
+	
 	public ModelSectionDto toDto() {
 		ModelSectionDto sectionDto = new ModelSectionDto();
 		
 		sectionDto.setId(id.toString());
 		sectionDto.setTitle(title);
 		sectionDto.setDescription(description);
+		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
+		
 		sectionDto.setnSubsections(subsections.size());
 		sectionDto.setnCards(cardsWrappers.size());
-		
-		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
 		
 		return sectionDto;
 	}

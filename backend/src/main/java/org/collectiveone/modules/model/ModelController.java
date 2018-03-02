@@ -42,7 +42,8 @@ public class ModelController extends BaseController {
 	@RequestMapping(path = "/initiative/{initiativeId}/model", method = RequestMethod.GET) 
 	public GetResult<List<ModelSectionDto>> getModel(
 			@PathVariable("initiativeId") String initiativeIdStr,
-			@RequestParam(defaultValue = "1") Integer level) {
+			@RequestParam(defaultValue = "0") Integer level,
+			@RequestParam(defaultValue = "false") Boolean onlySections) {
 		
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
@@ -50,7 +51,7 @@ public class ModelController extends BaseController {
 			return new GetResult<List<ModelSectionDto>>("error", "access denied", null);
 		}
 		
-		return modelService.getModel(initiativeId, level, getLoggedUserId());
+		return modelService.getModel(initiativeId, level, getLoggedUserId(), onlySections);
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}/subsection", method = RequestMethod.POST)
@@ -246,7 +247,7 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelSectionDto>("error", "access denied", null);
 		}
 		
-		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUserId(), level, getLoggedUserId());
+		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUserId(), level, getLoggedUserId(), false);
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.DELETE) 
