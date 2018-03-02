@@ -28,7 +28,8 @@
         <div v-if="!loading" class="w3-container div-modal-content">
 
           <div v-if="isNew" class="w3-row">
-            <label class=""><b>In Section:</b></label>
+            <label v-if="inInitiative" class=""><b>As top level section under the initiative:</b></label>
+            <label v-else class=""><b>In Section:</b></label>
             <br>
             <h4>{{ this.inElementTitleOk }}</h4>
           </div>
@@ -73,9 +74,9 @@
                   <div v-if="!editing" class="">
                     <h3><b>{{ section.title }}</b></h3>
                   </div>
-                  <div v-else class="">
-                    <label class="w3-margin-top"><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
-                    <input type="text" class="w3-input w3-hover-light-grey" v-model="editedSection.title">
+                  <div v-else class="w3-margin-top">
+                    <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+                    <input ref="titleInput" type="text" class="w3-input w3-hover-light-grey" v-model="editedSection.title">
                     <app-error-panel
                       :show="titleEmptyShow"
                       message="please add a title">
@@ -177,6 +178,10 @@ export default {
       type: String,
       default: ''
     },
+    inInitiative: {
+      type: Boolean,
+      default: false
+    },
     inElementId: {
       type: String,
       default: ''
@@ -257,10 +262,12 @@ export default {
       })
     },
     updateInElement () {
-      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId)
-      .then((response) => {
-        this.inElementTitleOk = response.data.data.title
-      })
+      if (!this.inInitiative) {
+        this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId)
+        .then((response) => {
+          this.inElementTitleOk = response.data.data.title
+        })
+      }
     },
     startEditing () {
       this.editedSection = JSON.parse(JSON.stringify(this.section))
@@ -324,12 +331,20 @@ export default {
 
         if (this.isNew) {
           if (!this.addExisting) {
-            /* create new section */
-            this.sendingData = true
-            this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/subsection', sectionDto)
-            .then(responseF).catch((error) => {
-              console.log(error)
-            })
+            if (this.inInitiative) {
+              /* create new section */
+              this.sendingData = true
+              this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/', sectionDto)
+              .then(responseF).catch((error) => {
+                console.log(error)
+              })
+            } else {
+              this.sendingData = true
+              this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/subsection', sectionDto)
+              .then(responseF).catch((error) => {
+                console.log(error)
+              })
+            }
           } else {
             /* add existing section */
             this.sendingData = true
@@ -404,6 +419,9 @@ export default {
         description: ''
       }
       this.editing = true
+      this.$nextTick(() => {
+        this.$refs.titleInput.focus()
+      })
       this.updateInElement()
     } else {
       this.showEditButtons = true
