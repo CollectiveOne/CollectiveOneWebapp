@@ -2,48 +2,11 @@
 
 <div class="">
 
-  <div class="slider-container">
-    <transition name="slideDownUp">
-      <app-model-view-modal
-        v-if="showViewModal"
-        :isNew="true"
-        :initiativeId="initiative.id"
-        @close="showViewModal = false">
-      </app-model-view-modal>
-    </transition>
-  </div>
+  <div class="w3-cell-row">
+    <div class="vision-nav light-grey w3-cell">
 
-  <div class="w3-container">
-
-    <div class="w3-row w3-margin-top">
-      <div v-if="views" class="view-selector">
-        <div v-for="view in views"
-          class="w3-left w3-margin-right app-margin-bottom"
-          draggable="true"
-          @dragstart="viewDragStart($event, view.id)"
-          @dragover.prevent
-          @drop.prevent="viewDragDroped(view.id, $event)">
-
-          <app-model-view-button :view="view" :selected="isViewSelected(view.id)">
-          </app-model-view-button>
-        </div>
-        <div v-if="isLoggedAnEditor" @click="showViewModal = true" class="new-view-button w3-xxlarge w3-button w3-left app-button-color tooltip">
-          <i class="fa fa-plus-circle" aria-hidden="true"></i>
-          <span class="tooltiptext gray-1 w3-large">create new view</span>
-        </div>
-      </div>
-      <div class="w3-right">
-        <router-link
-          :to="{ name: 'ModelSearch' }"
-          tag="button"
-          class="w3-button"
-          :class="{'app-button-light': !isSearch, 'app-button': isSearch}"
-          type="button" name="button">search
-        </router-link>
-      </div>
     </div>
-
-    <div class="">
+    <div class="vision-content w3-cell w3-container">
       <div class="w3-row w3-margin-top router-container">
         <transition name="fadeenter">
           <router-view>
@@ -140,15 +103,7 @@ export default {
 
 <style scoped>
 
-.new-view-button {
-  padding-top: 5px !important;
-  padding-bottom: 5px !important;
-  border-radius: 12px;
-}
-
-.tooltip .tooltiptext {
-    top: 100%;
-    left: 50%;
+.vision-nav {
 }
 
 .router-container {
@@ -160,7 +115,7 @@ export default {
 }
 
 .router-container {
-  padding-bottom: 50px;
+  padding-bottom: 20px;
 }
 
 .router-container .model-button {

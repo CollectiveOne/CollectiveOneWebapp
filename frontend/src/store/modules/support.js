@@ -65,6 +65,17 @@ const getters = {
   initiativesTree: (state, getters, rootState) => (id) => {
     return rootState.user.authenticated ? state.myInitiativesTree : state.currentInitiativeTree
   },
+  initiativesTreeTop: (state, getters, rootState) => (id) => {
+    if (!rootState.user.authenticated) {
+      return []
+    } else {
+      var topInitiatives = []
+      for (var ix in state.myInitiativesTree) {
+        topInitiatives.push(state.myInitiativesTree[ix])
+      }
+      return topInitiatives
+    }
+  },
   initiativeCoordinate: (state, getters) => (id) => {
     var coord = []
     findCoordinate(getters.initiativesTree(), id, coord)
