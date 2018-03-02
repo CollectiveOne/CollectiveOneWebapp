@@ -24,7 +24,7 @@ import javax.persistence.Table;
 import org.collectiveone.modules.conversations.MessageThread;
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
-import org.collectiveone.modules.model.ModelView;
+import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -66,12 +66,12 @@ public class Initiative {
 	private InitiativeMeta meta;	
 	
 	@ManyToMany
-	@OrderColumn(name = "views_order")
-	private List<ModelView> modelViews = new ArrayList<ModelView>();
+	@OrderColumn(name = "sections_order")
+	private List<ModelSection> modelSections = new ArrayList<ModelSection>();
 	
 	@ManyToMany
-	@OrderColumn(name = "views_order")
-	private List<ModelView> modelViewsTrash = new ArrayList<ModelView>();
+	@OrderColumn(name = "sections_order")
+	private List<ModelSection> modelSectionsTrash = new ArrayList<ModelSection>();
 	
 	@OneToOne
 	private MessageThread messageThread;
@@ -143,17 +143,17 @@ public class Initiative {
 	public void setMeta(InitiativeMeta meta) {
 		this.meta = meta;
 	}
-	public List<ModelView> getModelViews() {
-		return modelViews;
+	public List<ModelSection> getModelSections() {
+		return modelSections;
 	}
-	public void setModelViews(List<ModelView> modelViews) {
-		this.modelViews = modelViews;
+	public void setModelSections(List<ModelSection> modelSections) {
+		this.modelSections = modelSections;
 	}
-	public List<ModelView> getModelViewsTrash() {
-		return modelViewsTrash;
+	public List<ModelSection> getModelSectionsTrash() {
+		return modelSectionsTrash;
 	}
-	public void setModelViewsTrash(List<ModelView> modelViewsTrash) {
-		this.modelViewsTrash = modelViewsTrash;
+	public void setModelSectionsTrash(List<ModelSection> modelSectionsTrash) {
+		this.modelSectionsTrash = modelSectionsTrash;
 	}
 	public MessageThread getMessageThread() {
 		return messageThread;

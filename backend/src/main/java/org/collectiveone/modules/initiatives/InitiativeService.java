@@ -36,9 +36,6 @@ import org.collectiveone.modules.initiatives.repositories.InitiativeRelationship
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeTagRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
-import org.collectiveone.modules.model.ModelService;
-import org.collectiveone.modules.model.dto.ModelSectionDto;
-import org.collectiveone.modules.model.dto.ModelViewDto;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenService;
@@ -66,9 +63,6 @@ public class InitiativeService {
 	
 	@Autowired
 	private GovernanceService governanceService;
-	
-	@Autowired
-	private ModelService modelService;
 	
 	@Autowired
 	private TokenTransferService tokenTransferService;
@@ -205,17 +199,10 @@ public class InitiativeService {
 				PostResult result3 = transferAssets(result.getData().getId(), initiativeDto, userId);
 				
 				if (result3.getResult().equals("success")) {
-					PostResult result4 = initializeModel(result.getData().getId(), userId);
+					return new PostResult("success", "initiative created and initalized",  result.getData().getId().toString());
 					
-					if (result4.getResult().equals("success")) {
-						
-						return new PostResult("success", "initiative created and initalized",  result.getData().getId().toString());
-						
-					} else {
-						return new PostResult("error", "error initializing model",  "");
-					}
-				
 				} else {
+					
 					return new PostResult("error", "error transferring assets",  "");
 				}
 			} else {
@@ -424,25 +411,6 @@ public class InitiativeService {
 		}
 			
 		return new PostResult("success", "sub initiative created and tokens transferred",  initiative.getId().toString());
-	}
-	
-	@Transactional
-	private PostResult initializeModel(UUID initiativeId, UUID creatorId) {
-		
-		ModelViewDto viewDto = new ModelViewDto();
-		viewDto.setTitle("General View");
-		viewDto.setDescription("Initial auto-generated sample view. You can edit or delete it at will.");
-		
-			
-		PostResult result = modelService.createView(initiativeId, viewDto, creatorId, false);
-		
-		ModelSectionDto sectionDto = new ModelSectionDto();
-		sectionDto.setTitle("Section");
-		sectionDto.setDescription("Initial auto-generated sample section. You can edit or delete it at will.");
-		
-		PostResult result2 = modelService.createSection(sectionDto, null, UUID.fromString(result.getElementId()), creatorId, false);
-		
-		return result2;
 	}
 	
 	@Transactional

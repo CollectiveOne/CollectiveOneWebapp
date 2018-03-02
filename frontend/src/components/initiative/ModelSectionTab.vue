@@ -4,7 +4,7 @@
 
   <div class="w3-cell-row">
     <div class="vision-nav light-grey w3-cell">
-
+      sections nav
     </div>
     <div class="vision-content w3-cell w3-container">
       <div class="w3-row w3-margin-top router-container">

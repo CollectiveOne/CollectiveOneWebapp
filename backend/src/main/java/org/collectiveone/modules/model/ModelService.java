@@ -26,13 +26,10 @@ import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
-import org.collectiveone.modules.model.dto.ModelDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
-import org.collectiveone.modules.model.dto.ModelViewDto;
 import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
-import org.collectiveone.modules.model.repositories.ModelViewRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +55,6 @@ public class ModelService {
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
-	
-	@Autowired
-	private ModelViewRepositoryIf modelViewRepository;
 	
 	@Autowired
 	private ModelSectionRepositoryIf modelSectionRepository;
@@ -89,113 +83,25 @@ public class ModelService {
 	
 	
 	@Transactional
-	public GetResult<ModelDto> getModel(UUID initiativeId, Integer level, UUID requestById) {
+	public GetResult<List<ModelSectionDto>> getModel(UUID initiativeId, Integer level, UUID requestById) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
-		if (initiative == null) return new GetResult<ModelDto>("error", "initiative not found", null);
+		if (initiative == null) return new GetResult<List<ModelSectionDto>>("error", "initiative not found", null);
 		
-		List<ModelViewDto> viewsDto = new ArrayList<ModelViewDto>();
+		List<ModelSectionDto> sectionsDto = new ArrayList<ModelSectionDto>();
 		
-		List<ModelView> views = initiative.getModelViews(); 
-		for (ModelView view : views) {
-			ModelViewDto viewDto = view.toDto();
-			viewDto = addViewSubElements(viewDto, view.getId(), level, requestById);
-			viewsDto.add(viewDto); 
+		List<ModelSection> sections = initiative.getModelSections(); 
+		for (ModelSection section : sections) {
+			ModelSectionDto sectionDto = section.toDto();
+			sectionDto = addSectionSubElements(sectionDto, section.getId(), level, requestById);
+			sectionsDto.add(sectionDto); 
 		}
 		
-		ModelDto modelDto = new ModelDto();
-		modelDto.setViews(viewsDto);
-		
-		return new GetResult<ModelDto> ("success", "model found", modelDto);
-	}
-	
-	@Transactional
-	public ModelViewDto addViewSubElements(ModelViewDto viewDto, UUID viewId, Integer level, UUID requestByUserId) {
-		
-		ModelView view = modelViewRepository.findById(viewId);
-		
-		if (level >= 1) {
-			viewDto.setSectionsLoaded(true);
-			
-			for (ModelSection section : view.getSections()) {
-				viewDto.getSections().add(getSectionDto(section.getId(), level - 1, requestByUserId));
-			}
-		} else {
-			viewDto.setSectionsLoaded(false);
-		}
-		
-		return viewDto; 
-	}
-	
-	@Transactional
-	public PostResult createView (UUID initiativeId, ModelViewDto viewDto, UUID creatorId, boolean register) {
-		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		if (initiative == null) return new PostResult("error", "initiative not found", "");
-		
-		ModelView view = viewDto.toEntity(null, viewDto, initiative);
-		view = modelViewRepository.save(view);
-		
-		initiative.getModelViews().add(view);
-		initiativeRepository.save(initiative);
-		
-		if (register) activityService.modelViewCreated(view, appUserRepository.findByC1Id(creatorId));
-		
-		return new PostResult("success", "view created", view.getId().toString());
-	}
-	
-	@Transactional
-	public PostResult editView (UUID initiativeId, UUID viewId, ModelViewDto viewDto, UUID creatorId) {
-		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		if (initiative == null) return new PostResult("error", "initiative not found", "");
-		
-		ModelView view = modelViewRepository.findById(viewId);
-		
-		view = viewDto.toEntity(view, viewDto, initiative);
-		view = modelViewRepository.save(view);
-		
-		activityService.modelViewEdited(view, appUserRepository.findByC1Id(creatorId));
-		
-		return new PostResult("success", "view edited", view.getId().toString());
-	}
-	
-	@Transactional
-	public GetResult<ModelViewDto> getView (UUID viewId, UUID requestById, Integer level, UUID requestByUserId) {
-		
-		ModelView view = modelViewRepository.findById(viewId);
-		
-		ModelViewDto viewDto = view.toDto();
-		viewDto = addViewSubElements(viewDto, view.getId(), level, requestByUserId);
-		
-		return new GetResult<ModelViewDto>("success", "view retrieved", viewDto);
-	}
-	
-	@Transactional
-	public Initiative getViewInitiative (UUID viewId) {
-		return modelViewRepository.findById(viewId).getInitiative();
+		return new GetResult<List<ModelSectionDto>> ("success", "model found", sectionsDto);
 	}
 	
 	@Transactional
 	public Initiative getSectionInitiative (UUID sectionId) {
 		return modelSectionRepository.findById(sectionId).getInitiative();
-	}
-	
-	@Transactional
-	public PostResult deleteView (UUID viewId, UUID creatorId) {
-		
-		ModelView view = modelViewRepository.findById(viewId);
-		
-		Initiative initiative = view.getInitiative();
-		
-		initiative.getModelViews().remove(view);
-		initiative.getModelViewsTrash().add(view);
-		
-		initiativeRepository.save(initiative);
-		view = modelViewRepository.save(view);
-		
-		activityService.modelViewDeleted(view, appUserRepository.findByC1Id(creatorId));
-		
-		return new PostResult("success", "view deleted", view.getId().toString());
 	}
 	
 	@Transactional
@@ -215,18 +121,7 @@ public class ModelService {
 			
 			modelSectionRepository.save(parent);
 			
-		} else {
-			ModelView view = modelViewRepository.findById(parentViewId);
-			if (view == null) return new PostResult("error", "view not found", "");
-			
-			view.getSections().add(section);
-			section.setInitiative(view.getInitiative());
-			
-			if (register) activityService.modelSectionCreatedOnView(section, view, appUserRepository.findByC1Id(creatorId));
-			
-			modelViewRepository.save(view);
-		}
-		
+		} 
 		
 		return new PostResult("success", "section created", section.getId().toString());
 	}
@@ -243,14 +138,9 @@ public class ModelService {
 		
 		/* set parent sections or views */
 		List<ModelSection> inSections = modelSectionRepository.findParentSections(section.getId());
-		List<ModelView> inViews = modelSectionRepository.findParentViews(section.getId());
 		
 		for (ModelSection inSection : inSections) {
 			sectionDto.getInSections().add(inSection.toDto());
-		}
-		
-		for (ModelView inView : inViews) {
-			sectionDto.getInViews().add(inView.toDto());
 		}
 		
 		sectionDto = addSectionSubElements(sectionDto, section.getId(), level, requestByUserId);
@@ -305,109 +195,6 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult removeSubsectionFromView(UUID viewId, UUID sectionId, UUID creatorId) {
-		
-		ModelView view = modelViewRepository.findById(viewId);
-		ModelSection section = modelSectionRepository.findById(sectionId);
-		
-		view.getSections().remove(section);
-		view.getSectionsTrash().add(section);
-		
-		view = modelViewRepository.save(view);
-		
-		activityService.modelSectionRemovedFromView(section, view, appUserRepository.findByC1Id(creatorId));
-		
-		return new PostResult("success", "section removed to view", view.getId().toString());
-	}
-	
-	@Transactional
-	public PostResult moveView(
-			UUID initiativeId, 
-			UUID viewId, 
-			UUID onViewId,
-			UUID creatorId) {
-		/* move a view within an initiative */
-		
-		if (onViewId.equals(viewId)) {
-			return new PostResult("warning", "cannot move on itself", null);
-		}
-		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		ModelView view = modelViewRepository.findById(viewId);
-		ModelView beforeView = modelViewRepository.findById(onViewId);
-		
-		int index = initiative.getModelViews().indexOf(beforeView);
-		initiative.getModelViews().remove(view);
-		initiativeRepository.save(initiative);
-		
-		initiative.getModelViews().add(index, view);
-		
-		activityService.modelViewMoved(view, appUserRepository.findByC1Id(creatorId));
-		
-		modelViewRepository.save(view);
-		initiativeRepository.save(initiative);
-		
-		return new PostResult("success", "view moved", view.getId().toString());
-	}
-	
-	@Transactional
-	public PostResult moveSection(
-			UUID fromViewId, 
-			UUID sectionId, 
-			UUID beforeViewSectionId, 
-			UUID toSectionId, 
-			UUID beforeSubsectionId,
-			UUID creatorId) {
-		/* move a section within a view (it must be one of the top level sections of the view) */
-		
-		if (sectionId.equals(beforeViewSectionId)) {
-			return new PostResult("warning", "cannot move on itself", null);
-		}
-		
-		if (sectionId.equals(beforeSubsectionId)) {
-			return new PostResult("warning", "cannot move on itself", null);
-		}
-		
-		ModelSection section = modelSectionRepository.findById(sectionId);
-		ModelView view = modelViewRepository.findById(fromViewId);
-		
-		view.getSections().remove(section);
-		
-		if (toSectionId == null) {
-			/* if toSectionId is null, then moving section within the same view */
-			ModelSection beforeSection = modelSectionRepository.findById(beforeViewSectionId);
-			int index = view.getSections().indexOf(beforeSection);
-			view.getSections().add(index, section);
-			section.setInitiative(view.getInitiative());
-			
-			modelViewRepository.save(view);
-			modelSectionRepository.save(section);
-			
-			activityService.modelSectionMovedInView(section, view, appUserRepository.findByC1Id(creatorId));
-			
-		} else {
-			/* if toSectionId is not null, then moving section from view to section */
-			ModelSection toSection = modelSectionRepository.findById(toSectionId);
-			
-			if (beforeSubsectionId != null) {
-				ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
-				int index = toSection.getSubsections().indexOf(beforeSubsection);
-				toSection.getSubsections().add(index, section);
-			} else {
-				toSection.getSubsections().add(section);
-			}
-			section.setInitiative(toSection.getInitiative());
-			
-			activityService.modelSectionMovedFromViewToSection(section, view, toSection, appUserRepository.findByC1Id(creatorId));
-			
-			modelSectionRepository.save(toSection);
-			modelSectionRepository.save(section);
-		}
-		
-		return new PostResult("success", "section moved", section.getId().toString());
-	}
-	
-	@Transactional
 	public PostResult moveSubsection(
 			UUID fromSectionId, 
 			UUID subSectionId, 
@@ -428,42 +215,22 @@ public class ModelService {
 		fromSection.getSubsections().remove(subSection);
 		fromSection = modelSectionRepository.save(fromSection);
 	
-		if(toViewId == null) {
-			/* moving to another section add to section as subsection */
-			ModelSection toSection = modelSectionRepository.findById(toSectionId);
-			
-			if (beforeSubsectionId != null) {
-				ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
-				int index = toSection.getSubsections().indexOf(beforeSubsection);
-				toSection.getSubsections().add(index, subSection);
-			} else {
-				toSection.getSubsections().add(subSection);
-			}
-			subSection.setInitiative(toSection.getInitiative());
-			
-			activityService.modelSectionMovedFromSectionToSection(subSection, fromSection, toSection, appUserRepository.findByC1Id(creatorId));
-			
-			modelSectionRepository.save(toSection);
-			modelSectionRepository.save(subSection);
-			
+		/* moving to another section add to section as subsection */
+		ModelSection toSection = modelSectionRepository.findById(toSectionId);
+		
+		if (beforeSubsectionId != null) {
+			ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
+			int index = toSection.getSubsections().indexOf(beforeSubsection);
+			toSection.getSubsections().add(index, subSection);
 		} else {
-			/* moving as section of a view  */
-			ModelView toView = modelViewRepository.findById(toViewId);
-			
-			if (beforeSubsectionId != null) {
-				ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
-				int index = toView.getSections().indexOf(beforeSubsection);
-				toView.getSections().add(index, subSection);
-			} else {
-				toView.getSections().add(subSection);
-			}
-			subSection.setInitiative(toView.getInitiative());
-			
-			activityService.modelSectionMovedFromSectionToView(subSection, fromSection, toView, appUserRepository.findByC1Id(creatorId));
-			
-			modelViewRepository.save(toView);
-			modelSectionRepository.save(subSection);
+			toSection.getSubsections().add(subSection);
 		}
+		subSection.setInitiative(toSection.getInitiative());
+		
+		activityService.modelSectionMovedFromSectionToSection(subSection, fromSection, toSection, appUserRepository.findByC1Id(creatorId));
+		
+		modelSectionRepository.save(toSection);
+		modelSectionRepository.save(subSection);
 		
 		return new PostResult("success", "subsection moved", subSection.getId().toString());
 	}
@@ -473,28 +240,15 @@ public class ModelService {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		
-		if (onSectionId != null) {
-			/* add it as subsection */
-			ModelSection onSection = modelSectionRepository.findById(onSectionId);
-			
-			onSection.getSubsections().add(section);
-			onSection = modelSectionRepository.save(onSection);
-			
-			activityService.modelNewSubsection(section, onSection, appUserRepository.findByC1Id(creatorId));
-			
-			return new PostResult("success", "section added to section", section.getId().toString());
-			
-		} else {
-			/* add on view */
-			ModelView onView = modelViewRepository.findById(onViewId);
-			
-			onView.getSections().add(section);
-			onView = modelViewRepository.save(onView);
-			
-			activityService.modelNewSection(section, onView, appUserRepository.findByC1Id(creatorId));
-			
-			return new PostResult("success", "section added to view", section.getId().toString());
-		}
+		/* add it as subsection */
+		ModelSection onSection = modelSectionRepository.findById(onSectionId);
+		
+		onSection.getSubsections().add(section);
+		onSection = modelSectionRepository.save(onSection);
+		
+		activityService.modelNewSubsection(section, onSection, appUserRepository.findByC1Id(creatorId));
+		
+		return new PostResult("success", "section added to section", section.getId().toString());
 	}
 		
 	@Transactional
@@ -574,15 +328,6 @@ public class ModelService {
 	public PostResult deleteSection (UUID sectionId, UUID creatorId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
-		
-		/* remove references to views */
-		List<ModelView> views = modelSectionRepository.findParentViews(sectionId);
-		if (views.size() > 0) {
-			for (ModelView view : views) {
-				view.getSections().remove(section);
-				view.getSectionsTrash().add(section);
-			}
-		}
 		
 		/* remove references to parent sections */
 		List<ModelSection> parents = modelSectionRepository.findParentSections(sectionId);
@@ -809,26 +554,6 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public List<UUID> getAllSectionsIdsOfView (UUID viewId) {
-		
-		List<UUID> sectionIds = modelViewRepository.getSectionIds(viewId);
-		List<UUID> allSectionIds = new ArrayList<UUID>();
-		
-		allSectionIds.addAll(sectionIds);
-		
-		for (UUID sectionId : sectionIds) {
-			List<UUID> subSectionIds = getAllSubsectionsIds(sectionId);
-			for (UUID subSectionId : subSectionIds) {
-				if(allSectionIds.indexOf(subSectionId) == -1) {
-					allSectionIds.add(subSectionId);
-				}
-			}
-		}
-		
-		return allSectionIds;
-	}
-	
-	@Transactional
 	public List<UUID> getAllSubsectionsIds (UUID sectionId) {
 		readIds.clear();
 		readIds.add(sectionId);
@@ -858,77 +583,6 @@ public class ModelService {
 		}
 		
 		return allSubsectionIds;
-	}
-	
-	@Transactional
-	public GetResult<Long> countMessagesUnderView (UUID viewId) {
-		Page<Activity> messages = getActivityUnderView(viewId, new PageRequest(1, 1), true);
-		return new GetResult<Long>("success", "activity counted", messages.getTotalElements());
-	}
-	
-	@Transactional
-	public Page<Message> getMessagesUnderView (UUID viewId, PageRequest page) {
-		
-		List<UUID> sectionIds = getAllSectionsIdsOfView(viewId);
-		List<UUID> cardsIds = sectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(sectionIds) : new ArrayList<UUID>();
-		
-		Page<Message> messages = null;
-		
-		if((sectionIds.size() > 0) && (cardsIds.size() > 0)) {
-			messages = messageRepository.findOfViewSectionsAndCards(viewId, sectionIds, cardsIds, page);
-		} else if ((sectionIds.size() > 0) && (cardsIds.size() == 0)) {
-			messages = messageRepository.findOfViewAndSections(viewId, sectionIds, page);
-		} else if ((sectionIds.size() == 0) && (cardsIds.size() == 0)) {
-			messages = messageRepository.findOfView(viewId, page);
-		}
-		
-		return messages;
-	}
-	
-	@Transactional
-	public Page<Activity> getActivityUnderView (UUID viewId, PageRequest page, Boolean onlyMessages) {
-		List<UUID> sectionIds = getAllSectionsIdsOfView(viewId);
-		List<UUID> cardsIds = sectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(sectionIds) : new ArrayList<UUID>();
-		
-		Page<Activity> activities = null;
-		
-		/* Using dynamic queries instead of JPA should simplify this */
-		if (!onlyMessages) {
-			if((sectionIds.size() > 0) && (cardsIds.size() > 0)) {
-				activities = activityRepository.findOfViewSectionsAndCards(viewId, sectionIds, cardsIds, page);
-			} else if ((sectionIds.size() > 0) && (cardsIds.size() == 0)) {
-				activities = activityRepository.findOfViewAndSections(viewId, sectionIds, page);
-			} else if ((sectionIds.size() == 0) && (cardsIds.size() == 0)) {
-				activities = activityRepository.findOfView(viewId, page);
-			}
-		} else {
-			if((sectionIds.size() > 0) && (cardsIds.size() > 0)) {
-				activities = activityRepository.findOfViewSectionsAndCardsAndType(viewId, sectionIds, cardsIds, ActivityType.MESSAGE_POSTED, page);
-			} else if ((sectionIds.size() > 0) && (cardsIds.size() == 0)) {
-				activities = activityRepository.findOfViewAndSectionsAndType(viewId, sectionIds, ActivityType.MESSAGE_POSTED, page);
-			} else if ((sectionIds.size() == 0) && (cardsIds.size() == 0)) {
-				activities = activityRepository.findOfViewAndType(viewId, ActivityType.MESSAGE_POSTED, page);
-			}
-		}
-		
-		return activities;
-	}
-	
-	@Transactional
-	public GetResult<Page<ActivityDto>> getActivityResultUnderView (UUID viewId, PageRequest page, Boolean onlyMessages) {
-		
-		Page<Activity> activities = getActivityUnderView(viewId, page, onlyMessages);
-		
-		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
-		
-		for(Activity activity : activities.getContent()) {
-			activityDtos.add(activity.toDto());
-		}
-		
-		Page<ActivityDto> dtosPage = new PageImpl<ActivityDto>(activityDtos, page, activities.getNumberOfElements());
-		
-		return new GetResult<Page<ActivityDto>>("succes", "actvity returned", dtosPage);
-		
 	}
 	
 	@Transactional

@@ -24,7 +24,6 @@ import org.collectiveone.modules.conversations.Message;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelSection;
-import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
@@ -87,9 +86,6 @@ public class Activity {
 	private InitiativeTransfer initiativeTransfer;
 	
 	@ManyToOne
-	private ModelView modelView;
-	
-	@ManyToOne
 	private ModelSection modelSection;
 	
 	@ManyToOne
@@ -99,13 +95,7 @@ public class Activity {
 	private ModelSection onSection;
 	
 	@ManyToOne
-	private ModelView onView;
-	
-	@ManyToOne
 	private ModelSection fromSection;
-	
-	@ManyToOne
-	private ModelView fromView;
 	
 	
 	// -------
@@ -134,15 +124,11 @@ public class Activity {
 		if(assignation != null) dto.setAssignation(assignation.toDto()); 
 		if(initiativeTransfer != null) dto.setTransfer(initiativeTransfer.toDto()); 
 		
-		if(modelView != null) dto.setModelView(modelView.toDto());
 		if(modelSection != null) dto.setModelSection(modelSection.toDto());
 		if(modelCardWrapper != null) dto.setModelCardWrapper(modelCardWrapper.toDto());
 		
 		if(onSection != null) dto.setOnSection(onSection.toDto());
-		if(onView != null) dto.setOnView(onView.toDto());
-		
 		if(fromSection != null) dto.setFromSection(fromSection.toDto());
-		if(fromView != null) dto.setFromView(fromView.toDto());
 		
 		if(message != null) dto.setMessage(message.toDto());
 		
@@ -263,14 +249,6 @@ public class Activity {
 		this.initiativeTransfer = initiativeTransfer;
 	}
 
-	public ModelView getModelView() {
-		return modelView;
-	}
-
-	public void setModelView(ModelView modelView) {
-		this.modelView = modelView;
-	}
-
 	public ModelSection getModelSection() {
 		return modelSection;
 	}
@@ -295,28 +273,12 @@ public class Activity {
 		this.onSection = onSection;
 	}
 
-	public ModelView getOnView() {
-		return onView;
-	}
-
-	public void setOnView(ModelView onView) {
-		this.onView = onView;
-	}
-
 	public ModelSection getFromSection() {
 		return fromSection;
 	}
 
 	public void setFromSection(ModelSection fromSection) {
 		this.fromSection = fromSection;
-	}
-
-	public ModelView getFromView() {
-		return fromView;
-	}
-
-	public void setFromView(ModelView fromView) {
-		this.fromView = fromView;
 	}
 
 	public Message getMessage() {

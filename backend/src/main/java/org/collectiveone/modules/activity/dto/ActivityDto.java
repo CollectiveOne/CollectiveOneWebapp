@@ -5,7 +5,6 @@ import org.collectiveone.modules.conversations.MessageDto;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
-import org.collectiveone.modules.model.dto.ModelViewDto;
 import org.collectiveone.modules.tokens.dto.TokenMintDto;
 import org.collectiveone.modules.tokens.dto.TransferDto;
 import org.collectiveone.modules.users.AppUserDto;
@@ -23,15 +22,11 @@ public class ActivityDto {
 	private TokenMintDto mint;
 	private AssignationDto assignation;
 	private TransferDto transfer;
-	private ModelViewDto modelView;
 	private ModelSectionDto modelSection;
 	private ModelCardWrapperDto modelCardWrapper;
 	
 	private ModelSectionDto onSection;
-	private ModelViewDto onView;
-	
 	private ModelSectionDto fromSection;
-	private ModelViewDto fromView;
 	
 	private MessageDto message;
 	
@@ -101,12 +96,6 @@ public class ActivityDto {
 	public void setTransfer(TransferDto transfer) {
 		this.transfer = transfer;
 	}
-	public ModelViewDto getModelView() {
-		return modelView;
-	}
-	public void setModelView(ModelViewDto modelView) {
-		this.modelView = modelView;
-	}
 	public ModelSectionDto getModelSection() {
 		return modelSection;
 	}
@@ -125,23 +114,11 @@ public class ActivityDto {
 	public void setOnSection(ModelSectionDto onSection) {
 		this.onSection = onSection;
 	}
-	public ModelViewDto getOnView() {
-		return onView;
-	}
-	public void setOnView(ModelViewDto onView) {
-		this.onView = onView;
-	}
 	public ModelSectionDto getFromSection() {
 		return fromSection;
 	}
 	public void setFromSection(ModelSectionDto fromSection) {
 		this.fromSection = fromSection;
-	}
-	public ModelViewDto getFromView() {
-		return fromView;
-	}
-	public void setFromView(ModelViewDto fromView) {
-		this.fromView = fromView;
 	}
 	public MessageDto getMessage() {
 		return message;
