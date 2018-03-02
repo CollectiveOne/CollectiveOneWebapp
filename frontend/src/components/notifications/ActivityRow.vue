@@ -114,25 +114,9 @@
           has been deleted.
         </span>
 
-        <span v-if="isModelViewCreated" class="">
-          created the view <app-model-view-link :view="activity.modelView"></app-model-view-link>.
-        </span>
-        <span v-if="isModelViewEdited" class="">
-          edited the view <app-model-view-link :view="activity.modelView"></app-model-view-link> title/description.
-        </span>
-        <span v-if="isModelViewDeleted" class="">
-          deleted the view <app-model-view-link :view="activity.modelView"></app-model-view-link>.
-        </span>
-        <span v-if="isModelViewMoved" class="">
-          moved the view <app-model-view-link :view="activity.modelView"></app-model-view-link>.
-        </span>
         <span v-if="isModelSectionCreatedOnSection" class="">
           created the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
           section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-        </span>
-        <span v-if="isModelSectionCreatedOnView" class="">
-          created the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
-          view <app-model-view-link :view="activity.onView"></app-model-view-link>.
         </span>
         <span v-if="isModelSectionEdited" class="">
           edited the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> title/description.
@@ -141,27 +125,10 @@
           removed the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link>
           from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
         </span>
-        <span v-if="isModelSectionRemovedFromView" class="">
-          removed the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link>.
-        </span>
-        <span v-if="isModelSectionMovedInView" class="">
-          moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> in view
-          <app-model-view-link :view="activity.onView"></app-model-view-link>.
-        </span>
-        <span v-if="isModelSectionMovedFromViewToSection" class="">
-          moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>
-           from view <app-model-view-link :view="activity.fromView"></app-model-view-link>
-           to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-        </span>
         <span v-if="isModelSectionMovedFromSectionToSection" class="">
           moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>
            from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
            to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-        </span>
-        <span v-if="isModelSectionMovedFromSectionToView" class="">
-          moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>
-           from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
-           to view <app-model-view-link :view="activity.onView"></app-model-view-link>.
         </span>
         <span v-if="isModelCardWrapperAdded" class="">
           added the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
@@ -198,7 +165,6 @@
           commented in
           <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
           <span v-if="isMessageInSection"><app-model-section-link :section="activity.modelSection"></app-model-section-link> section.</span>
-          <span v-if="isMessageInView"><app-model-view-link :view="activity.modelView"></app-model-view-link> view.</span>
           <span v-if="isMessageInInitiative"><app-initiative-link :initiative="activity.initiative"></app-initiative-link> initiative.</span>
         </span>
         <span v-if="isMessagePosted && showMessages" class="">
@@ -233,7 +199,6 @@ import UserLink from '@/components/global/UserLink.vue'
 import InitiativeLink from '@/components/global/InitiativeLink.vue'
 import AssignationLink from '@/components/global/AssignationLink.vue'
 
-import ModelViewLink from '@/components/global/ModelViewLink.vue'
 import ModelSectionLink from '@/components/global/ModelSectionLink.vue'
 import ModelCardInSectionLink from '@/components/global/ModelCardInSectionLink.vue'
 import ModelCardAloneLink from '@/components/global/ModelCardAloneLink.vue'
@@ -268,7 +233,6 @@ export default {
     'app-user-link': UserLink,
     'app-initiative-link': InitiativeLink,
     'app-assignation-link': AssignationLink,
-    'app-model-view-link': ModelViewLink,
     'app-model-section-link': ModelSectionLink,
     'app-model-card-link': ModelCardInSectionLink,
     'app-model-card-alone-link': ModelCardAloneLink
@@ -324,25 +288,9 @@ export default {
     isAssignationDeleted () {
       return this.activity.type === 'ASSIGNATION_DELETED'
     },
-    isModelViewCreated () {
-      return this.activity.type === 'MODEL_VIEW_CREATED'
-    },
-    isModelViewEdited () {
-      return this.activity.type === 'MODEL_VIEW_EDITED'
-    },
-    isModelViewDeleted () {
-      return this.activity.type === 'MODEL_VIEW_DELETED'
-    },
-    isModelViewMoved () {
-      return this.activity.type === 'MODEL_VIEW_MOVED'
-    },
     isModelSectionCreatedOnSection () {
       return this.activity.type === 'MODEL_SECTION_CREATED' &&
         this.activity.onSection !== null
-    },
-    isModelSectionCreatedOnView () {
-      return this.activity.type === 'MODEL_SECTION_CREATED' &&
-        this.activity.onView !== null
     },
     isModelSectionEdited () {
       return this.activity.type === 'MODEL_SECTION_EDITED'
@@ -351,37 +299,14 @@ export default {
       return this.activity.type === 'MODEL_SECTION_REMOVED' &&
         this.activity.fromSection !== null
     },
-    isModelSectionRemovedFromView () {
-      return this.activity.type === 'MODEL_SECTION_REMOVED' &&
-        this.activity.fromView !== null
-    },
-    isModelSectionMovedInView () {
-      return this.activity.type === 'MODEL_SECTION_MOVED' &&
-        this.activity.fromView !== null &&
-        this.activity.onView !== null
-    },
-    isModelSectionMovedFromViewToSection () {
-      return this.activity.type === 'MODEL_SECTION_MOVED' &&
-        this.activity.fromView !== null &&
-        this.activity.onSection !== null
-    },
     isModelSectionMovedFromSectionToSection () {
       return this.activity.type === 'MODEL_SECTION_MOVED' &&
         this.activity.fromSection !== null &&
         this.activity.onSection !== null
     },
-    isModelSectionMovedFromSectionToView () {
-      return this.activity.type === 'MODEL_SECTION_MOVED' &&
-        this.activity.fromSection !== null &&
-        this.activity.onView !== null
-    },
     isModelNewSubsection () {
       return this.activity.type === 'MODEL_SECTION_CREATED' &&
         this.activity.onSection !== null
-    },
-    isModelNewSection () {
-      return this.activity.type === 'MODEL_SECTION_CREATED' &&
-        this.activity.onView !== null
     },
     isModelCardWrapperAdded () {
       return this.activity.type === 'MODEL_CARDWRAPPER_ADDED' &&
@@ -428,9 +353,6 @@ export default {
     isMessageInSection () {
       return this.isMessagePosted && (this.activity.modelSection !== null)
     },
-    isMessageInView () {
-      return this.isMessagePosted && (this.activity.modelView !== null)
-    },
     isMessageInInitiative () {
       return this.isMessagePosted && (!this.isMessageInView && !this.isMessageInSection && !this.isMessageInCardWrapper)
     },
@@ -442,8 +364,6 @@ export default {
           return this.activity.modelCardWrapper.id !== this.contextElementId
         } else if (this.isMessageInSection) {
           return this.activity.modelSection.id !== this.contextElementId
-        } else if (this.isMessageInView) {
-          return this.activity.modelView.id !== this.contextElementId
         } else if (this.isMessageInInitiative) {
           return this.activity.initiative.id !== this.contextElementId
         }

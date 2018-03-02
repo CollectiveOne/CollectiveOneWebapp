@@ -11,7 +11,6 @@ needs the model card component inside, and would crate a recursion -->
           :isNew="false"
           :initiativeId="initiativeId"
           :sectionId="section.id"
-          :inView="inView"
           :inElementId="inElementId"
           :inElementTitle="inElementTitle"
           :onlyMessages="onlyMessages"
@@ -26,7 +25,6 @@ needs the model card component inside, and would crate a recursion -->
           v-if="showNewSubsectionModal"
           :isNew="true"
           :initiativeId="initiativeId"
-          :inView="false"
           :inElementId="section.id"
           :inElementTitle="section.title"
           @close="showNewSubsectionModal = false">
@@ -59,7 +57,6 @@ needs the model card component inside, and would crate a recursion -->
         :basicPreloaded="basicPreloaded"
         :subElementsPreloaded="subElementsPreloaded"
         :initiativeId="initiativeId"
-        :inView="inView"
         :inElementId="inElementId"
         :inElementTitle="inElementTitle"
         :level="level"
@@ -161,10 +158,6 @@ export default {
     sectionId: {
       type: String,
       default: ''
-    },
-    inView: {
-      type: Boolean,
-      default: false
     },
     inElementId: {
       type: String,

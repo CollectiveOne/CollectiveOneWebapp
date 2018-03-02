@@ -21,20 +21,15 @@
 </template>
 
 <script>
-import ModelViewModal from '@/components/model/modals/ModelViewModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
-import ModelViewButton from '@/components/model/ModelViewButton.vue'
 
 export default {
   components: {
-    'app-model-view-modal': ModelViewModal,
-    'app-model-card-modal': ModelCardModal,
-    'app-model-view-button': ModelViewButton
+    'app-model-card-modal': ModelCardModal
   },
 
   data () {
     return {
-      showViewModal: false
     }
   },
 
@@ -42,9 +37,9 @@ export default {
     initiative () {
       return this.$store.state.initiative.initiative
     },
-    views () {
-      if (this.$store.state.initiative.initiativeModelViews) {
-        return this.$store.state.initiative.initiativeModelViews.views
+    sections () {
+      if (this.$store.state.initiative.initiativeModelSections) {
+        return this.$store.state.initiative.initiativeModelSections.sections
       } else {
         return []
       }
@@ -61,31 +56,6 @@ export default {
   },
 
   methods: {
-    isViewSelected (viewId) {
-      if (this.$route.params.viewId) {
-        if (this.$route.params.viewId === viewId) {
-          return true
-        }
-      }
-    },
-    viewDragStart (event, viewId) {
-      var moveViewData = {
-        type: 'MOVE_VIEW',
-        viewId: viewId
-      }
-      event.dataTransfer.setData('text/plain', JSON.stringify(moveViewData))
-    },
-    viewDragDroped (onViewId, event) {
-      var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
-      this.axios.put('/1/initiative/' + this.initiative.id +
-        '/model/moveView/' + dragData.viewId, {}, {
-          params: {
-            onViewId: onViewId
-          }
-        }).then((response) => {
-          this.$store.dispatch('refreshModelViews')
-        })
-    }
   },
 
   created () {
@@ -95,7 +65,7 @@ export default {
     } else {
       /* redirect only if no view or section or card is selected as sub-route */
       var _redirect = this.$route.matched.length === 4
-      this.$store.dispatch('refreshModelViews', { router: this.$router, redirect: _redirect })
+      this.$store.dispatch('refreshModelSections', { router: this.$router, redirect: _redirect })
     }
   }
 }

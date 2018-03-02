@@ -14,7 +14,7 @@
               :show="showEditButtons"
               @edit="startEditing()"
               @delete="deleteSection()"
-              deleteMessage="This will delete the section from all the views in which it is used."
+              deleteMessage="This will delete the subsection from all the section in which it is used."
               @remove="removeSection()"
               :removeMessage="'This will remove this subsection from ' + inElementTitle + '.'">
             </app-model-modal-buttons>
@@ -28,8 +28,7 @@
         <div v-if="!loading" class="w3-container div-modal-content">
 
           <div v-if="isNew" class="w3-row">
-            <label v-if="inView" class=""><b>In View:</b></label>
-            <label v-else class=""><b>In Section:</b></label>
+            <label class=""><b>In Section:</b></label>
             <br>
             <h4>{{ this.inElementTitleOk }}</h4>
           </div>
@@ -134,7 +133,7 @@
         </div>
 
         <div v-if="closeIntent" class="w3-display-middle w3-card w3-white w3-padding w3-round-large w3-center">
-          You are currently editing this view. Are you sure you want to close it? Any changes would get lost.
+          You are currently editing this section. Are you sure you want to close it? Any changes would get lost.
           <div class="w3-row w3-margin-top">
             <button class="w3-button app-button-light" name="button"
               @click="closeIntent = false">
@@ -177,10 +176,6 @@ export default {
     sectionId: {
       type: String,
       default: ''
-    },
-    inView: {
-      type: Boolean,
-      default: true
     },
     inElementId: {
       type: String,
@@ -262,17 +257,10 @@ export default {
       })
     },
     updateInElement () {
-      if (this.inView) {
-        this.axios.get('/1/initiative/' + this.initiativeId + '/model/view/' + this.inElementId)
-        .then((response) => {
-          this.inElementTitleOk = response.data.data.title
-        })
-      } else {
-        this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId)
-        .then((response) => {
-          this.inElementTitleOk = response.data.data.title
-        })
-      }
+      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId)
+      .then((response) => {
+        this.inElementTitleOk = response.data.data.title
+      })
     },
     startEditing () {
       this.editedSection = JSON.parse(JSON.stringify(this.section))
@@ -335,24 +323,17 @@ export default {
         }
 
         if (this.isNew) {
-          var place = ''
-          if (this.inView) {
-            place = 'view'
-          } else {
-            place = 'section'
-          }
-
           if (!this.addExisting) {
             /* create new section */
             this.sendingData = true
-            this.axios.post('/1/initiative/' + this.initiativeId + '/model/' + place + '/' + this.inElementId + '/subsection', sectionDto)
+            this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/subsection', sectionDto)
             .then(responseF).catch((error) => {
               console.log(error)
             })
           } else {
             /* add existing section */
             this.sendingData = true
-            this.axios.put('/1/initiative/' + this.initiativeId + '/model/' + place + '/' + this.inElementId + '/subsection/' + this.existingSection.id, {})
+            this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/subsection/' + this.existingSection.id, {})
             .then(responseF).catch((error) => {
               console.log(error)
             })
@@ -377,17 +358,10 @@ export default {
         }
       }
 
-      if (this.inView) {
-        this.axios.put('/1/initiative/' + this.initiativeId + '/model/view/' + this.inElementId + '/removeSection/' + this.section.id,
-          {}).then(responseF).catch((error) => {
-            console.log(error)
-          })
-      } else {
-        this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/removeSubsection/' + this.section.id,
-          {}).then(responseF).catch((error) => {
-            console.log(error)
-          })
-      }
+      this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/removeSubsection/' + this.section.id,
+        {}).then(responseF).catch((error) => {
+          console.log(error)
+        })
     },
     deleteSection () {
       this.axios.delete('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)

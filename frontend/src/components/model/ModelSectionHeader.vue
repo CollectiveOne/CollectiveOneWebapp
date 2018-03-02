@@ -31,12 +31,6 @@
             {{ parentSection.title }}
           </router-link>
         </div>
-        <div v-for="parentView in section.inViews" class="in-tag-container w3-left">
-          <router-link :to="{ name: 'ModelView', params: { viewId: parentView.id } }"
-            class="gray-1 w3-tag w3-round w3-small">
-            {{ parentView.title }}
-          </router-link>
-        </div>
       </div>
       <div v-if="!floating" class="w3-row w3-small also-in-row">
         <div v-if="sectionIsInOtherPlaces" class="">
@@ -48,14 +42,6 @@
               <router-link :to="{ name: 'ModelSection', params: { sectionId: parentSection.id } }"
                 class="gray-1 w3-tag w3-round w3-small">
                 {{ parentSection.title }}
-              </router-link>
-            </div>
-          </div>
-          <div v-for="parentView in section.inViews" class="in-tag-container w3-left">
-            <div v-if="parentView.id !== inElementId" class="">
-              <router-link :to="{ name: 'ModelView', params: { viewId: parentView.id } }"
-                class="gray-1 w3-tag w3-round w3-small">
-                {{ parentView.title }}
               </router-link>
             </div>
           </div>
@@ -112,12 +98,6 @@ export default {
       var ix
       for (ix in this.section.inSections) {
         if (this.section.inSections[ix].id !== this.inElementId) {
-          return true
-        }
-      }
-
-      for (ix in this.section.inViews) {
-        if (this.section.inViews[ix].id !== this.inElementId) {
           return true
         }
       }

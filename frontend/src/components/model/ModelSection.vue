@@ -161,7 +161,6 @@
                       :sectionInit="subsection"
                       :sectionId="subsection.id"
                       :initiativeId="initiativeId"
-                      :inView="false"
                       :inElementId="section.id"
                       :inElementTitle="section.title"
                       :level="level + 1"
@@ -247,10 +246,6 @@ export default {
     sectionId: {
       type: String,
       default: ''
-    },
-    inView: {
-      type: Boolean,
-      default: false
     },
     inElementId: {
       type: String,
@@ -463,7 +458,6 @@ export default {
       var moveSectionData = {
         type: this.dragType,
         sectionId: this.section.id,
-        fromView: this.inView,
         fromElementId: this.inElementId
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveSectionData))
@@ -472,29 +466,18 @@ export default {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
       var url = ''
 
-      if (dragData.type === 'MOVE_SECTION') {
-        /* move section to view section */
-        url = '/1/initiative/' + this.initiativeId +
-          '/model/view/' + dragData.fromElementId +
-          '/moveSection/' + dragData.sectionId
-      }
+      url = '/1/initiative/' + this.initiativeId +
+        '/model/section/' + dragData.fromElementId +
+        '/moveSubsection/' + dragData.sectionId
 
-      if (dragData.type === 'MOVE_SUBSECTION') {
-        url = '/1/initiative/' + this.initiativeId +
-          '/model/section/' + dragData.fromElementId +
-          '/moveSubsection/' + dragData.sectionId
-      }
-
-      if (url !== '') {
-        this.axios.put(url, {}, {
-          params: {
-            onSectionId: this.section.id,
-            onSubsectionId: onSubsectionId
-          }
-        }).then((response) => {
-          this.$store.commit('triggerUpdateModel')
-        })
-      }
+      this.axios.put(url, {}, {
+        params: {
+          onSectionId: this.section.id,
+          onSubsectionId: onSubsectionId
+        }
+      }).then((response) => {
+        this.$store.commit('triggerUpdateModel')
+      })
     },
     checkCardSubroute () {
       var found = false

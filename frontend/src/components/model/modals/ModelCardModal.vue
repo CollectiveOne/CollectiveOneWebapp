@@ -285,7 +285,7 @@
         </div>
 
         <div v-if="closeIntent" class="w3-display-middle w3-card w3-white w3-padding w3-round-large w3-center">
-          You are currently editing this view. Are you sure you want to close it? Any changes would get lost.
+          You are currently editing this card. Are you sure you want to close it? Any changes would get lost.
           <div class="w3-row w3-margin-top">
             <button class="w3-button app-button-light" name="button"
               @click="closeIntent = false">

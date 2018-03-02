@@ -118,16 +118,9 @@ export default {
         return false
       }
     },
-    replyingToActivityInView () {
-      if (this.replyingToActivity) {
-        return this.replyingToActivity.modelView !== null
-      } else {
-        return false
-      }
-    },
     replyingToActivityInInitiative () {
       if (this.replyingToActivity) {
-        return !this.replyingToActivityInView && !this.replyingToActivityInSection && !this.replyingToActivityInCard
+        return !this.replyingToActivityInSection && !this.replyingToActivityInCard
       } else {
         return false
       }
@@ -138,9 +131,6 @@ export default {
       }
       if (this.replyingToActivityInSection) {
         return this.replyingToActivity.modelSection.title + ' section'
-      }
-      if (this.replyingToActivityInView) {
-        return this.replyingToActivity.modelView.title + ' view'
       }
       if (this.replyingToActivityInInitiative) {
         return this.replyingToActivity.initiative.meta.name + ' initiative'
@@ -193,10 +183,6 @@ export default {
           if (this.replyingToActivityInSection) {
             contextType = 'MODEL_SECTION'
             contextElementId = this.replyingToActivity.modelSection.id
-          }
-          if (this.replyingToActivityInView) {
-            contextType = 'MODEL_VIEW'
-            contextElementId = this.replyingToActivity.modelView.id
           }
           if (this.replyingToActivityInInitiative) {
             contextType = 'INITIATIVE'

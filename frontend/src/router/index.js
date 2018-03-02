@@ -16,7 +16,6 @@ import TransfersSection from '@/components/initiative/TransfersSection.vue'
 import TimelineSection from '@/components/initiative/TimelineSection.vue'
 
 import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
-import ModelViewPlacer from '@/components/model/ModelViewPlacer.vue'
 import ModelSectionPlacer from '@/components/model/ModelSectionPlacer.vue'
 import ModelCardWrapperPlacer from '@/components/model/ModelCardWrapperPlacer.vue'
 import ModelSearchContainer from '@/components/model/ModelSearchContainer.vue'
@@ -73,12 +72,11 @@ export default new Router({
                   component: ModelSectionTab,
                   meta: {'column': 3},
                   children: [
-                    { path: 'view/:viewId', name: 'ModelView', component: ModelViewPlacer, meta: {'column': 3} },
                     {
                       path: 'section/:sectionId',
                       name: 'ModelSection',
                       component: ModelSectionPlacer,
-                      meta: {'column': 2},
+                      meta: {'column': 3},
                       children: [
                         { path: 'card/:cardId', name: 'ModelCardInSection', meta: {'column': 3} }
                       ]
