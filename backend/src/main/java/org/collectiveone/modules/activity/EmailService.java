@@ -611,9 +611,6 @@ public class EmailService {
 			if (fromSection != null) {
 				message = "<p>removed the section " + getModelSectionAnchor(modelSection) + 
 						" from section " + getModelSectionAnchor(fromSection) + "</p> ";
-			} else {
-				message = "<p>removed the section " + getModelSectionAnchor(modelSection) + 
-						" from the " + getModelSectionAnchor(fromSection) + " view</p> ";
 			}
 			return message;
 			

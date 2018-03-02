@@ -69,26 +69,7 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.createSection(sectionDto, UUID.fromString(sectionIdStr), null, getLoggedUserId(), true);
-	}
-	
-	@RequestMapping(path = "/initiative/{initiativeId}/model/view/{viewId}/subsection/{subsectionId}", method = RequestMethod.PUT)
-	public PostResult addExistingViewSubsection(
-			@PathVariable("initiativeId") String initiativeIdStr,
-			@PathVariable("viewId") String viewIdStr,
-			@PathVariable("subsectionId") String subsectionIdStr) {
-		
-		if (getLoggedUser() == null) {
-			return new PostResult("error", "endpoint enabled users only", null);
-		}
-		
-		UUID initiativeId = UUID.fromString(initiativeIdStr);
-		
-		if (governanceService.canEditModel(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
-			return new PostResult("error", "not authorized", "");
-		}
-		
-		return modelService.addSection(UUID.fromString(subsectionIdStr), null, UUID.fromString(viewIdStr), getLoggedUserId());
+		return modelService.createSection(sectionDto, UUID.fromString(sectionIdStr), getLoggedUserId(), true);
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}/subsection/{subsectionId}", method = RequestMethod.PUT)
@@ -107,7 +88,7 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.addSection(UUID.fromString(subsectionIdStr), UUID.fromString(sectionIdStr), null, getLoggedUserId());
+		return modelService.addSection(UUID.fromString(subsectionIdStr), UUID.fromString(sectionIdStr), getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.PUT) 
@@ -153,7 +134,6 @@ public class ModelController extends BaseController {
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr,
 			@PathVariable("subsectionId") String subsectionIdStr,
-			@RequestParam(name = "onViewId", defaultValue="") String onViewIdStr,
 			@RequestParam(name = "onSectionId", defaultValue="") String onSectionIdStr,
 			@RequestParam(name = "onSubsectionId") String onSubsectionIdStr) {
 	
@@ -167,9 +147,6 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		/* dropped on view can be empty */
-		UUID onViewId =  onViewIdStr.equals("") ? null : UUID.fromString(onViewIdStr);
-		
 		/* dropped on section can be empty */
 		UUID onSectionId =  onSectionIdStr.equals("") ? null : UUID.fromString(onSectionIdStr);
 		
@@ -179,7 +156,6 @@ public class ModelController extends BaseController {
 		return modelService.moveSubsection(
 				UUID.fromString(sectionIdStr), 
 				UUID.fromString(subsectionIdStr),
-				onViewId,
 				onSectionId,
 				onSubsectionId,
 				getLoggedUserId());

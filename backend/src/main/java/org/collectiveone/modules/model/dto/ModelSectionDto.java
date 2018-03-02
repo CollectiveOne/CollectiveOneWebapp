@@ -12,7 +12,6 @@ public class ModelSectionDto {
 	private Boolean isSubsection;
 	private String parentSectionId;
 	private String parentSectionTitle;
-	private String viewId;
 	private String title;
 	private String description;
 	private Boolean subElementsLoaded;
@@ -63,12 +62,6 @@ public class ModelSectionDto {
 	}
 	public void setParentSectionTitle(String parentSectionTitle) {
 		this.parentSectionTitle = parentSectionTitle;
-	}
-	public String getViewId() {
-		return viewId;
-	}
-	public void setViewId(String viewId) {
-		this.viewId = viewId;
 	}
 	public String getTitle() {
 		return title;

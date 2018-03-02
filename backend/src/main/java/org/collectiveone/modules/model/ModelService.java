@@ -105,7 +105,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult createSection(ModelSectionDto sectionDto, UUID parentSectionId, UUID parentViewId , UUID creatorId, boolean register) {
+	public PostResult createSection(ModelSectionDto sectionDto, UUID parentSectionId, UUID creatorId, boolean register) {
 		
 		ModelSection section = sectionDto.toEntity(null, sectionDto);
 		section = modelSectionRepository.save(section);
@@ -136,7 +136,6 @@ public class ModelService {
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		ModelSectionDto sectionDto = section.toDto();
 		
-		/* set parent sections or views */
 		List<ModelSection> inSections = modelSectionRepository.findParentSections(section.getId());
 		
 		for (ModelSection inSection : inSections) {
@@ -198,7 +197,6 @@ public class ModelService {
 	public PostResult moveSubsection(
 			UUID fromSectionId, 
 			UUID subSectionId, 
-			UUID toViewId, 
 			UUID toSectionId, 
 			UUID beforeSubsectionId,
 			UUID creatorId) {
@@ -236,7 +234,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult addSection (UUID sectionId, UUID onSectionId, UUID onViewId, UUID creatorId) {
+	public PostResult addSection (UUID sectionId, UUID onSectionId, UUID creatorId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		
@@ -350,7 +348,7 @@ public class ModelService {
 	public PostResult createCardWrapper(ModelCardDto cardDto, UUID sectionId, UUID creatorId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
-		if (section == null) return new PostResult("error", "view not found", "");
+		if (section == null) return new PostResult("error", "section not found", "");
 		
 		ModelCard card = cardDto.toEntity(null, cardDto, null);
 		
