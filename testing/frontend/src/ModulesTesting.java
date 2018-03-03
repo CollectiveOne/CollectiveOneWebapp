@@ -74,13 +74,13 @@ public class ModulesTesting {
 
 	private List<Boolean> testPeople() {
 
-		PeopleModule notificationModule = new PeopleModule();
+		PeopleModule peopleModule = new PeopleModule();
 		List<Boolean> result = new ArrayList<Boolean>();
 
 		System.out.println("4. Testing People");
 		
 		try {
-			result.add(notificationModule.addPeople(driver));
+			result.add(peopleModule.deletePeople(driver));
 			//result.add(notificationModule.deletePeople(driver));
 		}catch(Exception exception){
 			System.out.println("Failed @ testNotifications(): " + exception);

@@ -1,7 +1,12 @@
+import java.util.List;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PeopleModule {
@@ -11,12 +16,32 @@ public class PeopleModule {
 		try {
 		    
 			WebDriverWait wait = new WebDriverWait(driver,10);
-			//waiting for the animation to finish
-			(new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'testing')]")));
+			//click on testing initiative
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'testing')]")));
 			(driver.findElement(By.xpath("//*[contains(text(),'testing')]"))).click();
-
-			(new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(By.id("T_peopleTab")));
+			//click on people tab
+			wait.until(ExpectedConditions.elementToBeClickable(By.id("T_peopleTab")));
 			(driver.findElement(By.id("T_peopleTab"))).click();
+			
+			//enter the name of user to add
+			wait.until(ExpectedConditions.elementToBeClickable(By.tagName("input")));
+		    WebElement selectUserModal = driver.findElement(By.tagName("input"));
+		    WebElement addUserButtonModal = driver.findElement(By.id("T_addButton"));
+			
+		    selectUserModal.clear();
+		    selectUserModal.sendKeys("emily");
+		    
+			//to select from the list
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'emily')]")));
+			(driver.findElement(By.xpath("//*[contains(text(),'emily')]"))).click();
+		    
+			//select the role of user
+			Select dropdown = new Select(driver.findElement(By.id("T_memberRoleDropDown")));
+			dropdown.selectByValue("EDITOR");
+			
+		    Thread.sleep(1000);
+		    addUserButtonModal.click();
+						
 			
 			return true;
 		    
@@ -30,26 +55,42 @@ public class PeopleModule {
 	public boolean deletePeople(WebDriver driver) {
 		try {
 		    
-			WebDriverWait wait = new WebDriverWait(driver,10);
-			//waiting for the animation to finish
-			(new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'testing')]")));
-			(driver.findElement(By.xpath("//*[contains(text(),'testing')]"))).click();
-
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("edit-container")));
-		    (driver.findElement(By.id("T_editMenuButton"))).click();
-		    (driver.findElement(By.id("T_notificationInitiativeButton"))).click();
-
-			wait.until(ExpectedConditions.elementToBeClickable(By.id("T_notificationNoSubscribedButton")));
-		    (driver.findElement(By.id("T_notificationNoSubscribedButton"))).click();
-		    (driver.findElement(By.id("T_notificationYesSubscribedButton"))).click();
-		    (driver.findElement(By.id("T_notificationEmailNeverButton"))).click();
-		    (driver.findElement(By.id("T_notificationEmailImmediatelyButton"))).click();
-		    (driver.findElement(By.id("T_notificationEmailDayButton"))).click();
-		    (driver.findElement(By.id("T_notificationEmailWeekButton"))).click();
+			String name = "tom"; //name of user to be deleted
 		    
-		    (driver.findElement(By.id("T_notificationAcceptButton"))).click();
+			WebDriverWait wait = new WebDriverWait(driver,10);
+			//click on testing initiative
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'testing')]")));
+			(driver.findElement(By.xpath("//*[contains(text(),'testing')]"))).click();
+			//click on people tab
+			wait.until(ExpectedConditions.elementToBeClickable(By.id("T_peopleTab")));
+			(driver.findElement(By.id("T_peopleTab"))).click();
 			
-		    return true;
+			//enter the name of user to add T_peopleDeleteIcon
+			wait.until(ExpectedConditions.elementToBeClickable(By.tagName("input")));
+		    WebElement usernameTable = driver.findElement(By.cssSelector("table tbody tr #T_username"));
+		    //System.out.println(usernameTable.getText());
+		    
+		    
+		    
+		    int rowCount = driver.findElements(By.tagName("tr")).size();
+		    
+
+		    for (int i = 1; i <= rowCount; i++) 
+		    {
+		        String sCellValue = driver.findElement(By.xpath("//table/tbody/tr["+ i +"]/td[2]")).getText();
+		        System.out.println(sCellValue);
+		        if (sCellValue.equalsIgnoreCase(name)) 
+		        {
+		        	System.out.println(driver.findElement(By.xpath("//table/tbody/tr["+ i +"]/td[4]/i")));
+		        	wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table/tbody/tr["+ i +"]/td[4]/i")));
+		            (driver.findElement(By.xpath("//table/tbody/tr["+ i +"]/td[4]/i"))).click();
+		        }
+		    }
+
+		    //deleteUserButtonModal.click();
+						
+			
+			return true;
 		    
 		}catch(Exception exception) {
 			System.out.println("Failed @ deletePeople(): " + exception);
