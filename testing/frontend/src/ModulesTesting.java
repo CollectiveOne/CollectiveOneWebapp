@@ -80,10 +80,10 @@ public class ModulesTesting {
 		System.out.println("4. Testing People");
 		
 		try {
+			result.add(peopleModule.addPeople(driver));
 			result.add(peopleModule.deletePeople(driver));
-			//result.add(notificationModule.deletePeople(driver));
 		}catch(Exception exception){
-			System.out.println("Failed @ testNotifications(): " + exception);
+			System.out.println("Failed @ testPeople(): " + exception);
 			
 		}
 		
@@ -110,21 +110,21 @@ public class ModulesTesting {
 		//Testing Initiative
 		//result_initiatives.push(moduleTesting.testInitiatives());
 		
-//		result_initiatives = moduleTesting.testInitiatives();
-//		
-//		System.out.println(" - Creating Initiative Modal " + (result_initiatives.get(0) ? "Passed" : "Failed"));
-//		System.out.println(" - Editing Initiative Modal " + (result_initiatives.get(1) ? "Passed" : "Failed"));
-//		System.out.println(" - Deleting Initiative Modal " + (result_initiatives.get(2) ? "Passed" : "Failed"));
-//		
-//		result_notifications = moduleTesting.testNotifications();
-//		
-//		System.out.println(" - Header Notifications " + (result_notifications.get(0) ? "Passed" : "Failed"));
-//		System.out.println(" - Initiative Notifications " + (result_notifications.get(1) ? "Passed" : "Failed"));
+		result_initiatives = moduleTesting.testInitiatives();
+		
+		System.out.println(" - Creating Initiative Modal " + (result_initiatives.get(0) ? "Passed" : "Failed"));
+		System.out.println(" - Editing Initiative Modal " + (result_initiatives.get(1) ? "Passed" : "Failed"));
+		System.out.println(" - Deleting Initiative Modal " + (result_initiatives.get(2) ? "Passed" : "Failed"));
+		
+		result_notifications = moduleTesting.testNotifications();
+		
+		System.out.println(" - Header Notifications " + (result_notifications.get(0) ? "Passed" : "Failed"));
+		System.out.println(" - Initiative Notifications " + (result_notifications.get(1) ? "Passed" : "Failed"));
 
 		result_people = moduleTesting.testPeople();
 		
 		System.out.println(" - Add People" + (result_people.get(0) ? "Passed" : "Failed"));
-		//System.out.println(" -  Edit People " + (result_notifications.get(1) ? "Passed" : "Failed"));
+		System.out.println(" -  Delete People " + (result_notifications.get(1) ? "Passed" : "Failed"));
 	}
 
 
