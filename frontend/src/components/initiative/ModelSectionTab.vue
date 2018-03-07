@@ -56,10 +56,6 @@ export default {
     if (!this.initiative.meta.modelEnabled) {
       /* redirect to overview if model is not enabled */
       this.$router.replace({ name: 'InitiativeOverview', params: { initiativeId: this.initiative.id } })
-    } else {
-      /* redirect only if no view or section or card is selected as sub-route */
-      var _redirect = this.$route.matched.length === 4
-      this.$store.dispatch('refreshModelSections', { router: this.$router, redirect: _redirect })
     }
   }
 }

@@ -1,6 +1,5 @@
 package org.collectiveone.modules.model;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
@@ -40,7 +39,7 @@ public class ModelController extends BaseController {
 	
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model", method = RequestMethod.GET) 
-	public GetResult<List<ModelSectionDto>> getModel(
+	public GetResult<ModelSectionDto> getModel(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@RequestParam(defaultValue = "0") Integer level,
 			@RequestParam(defaultValue = "false") Boolean onlySections) {
@@ -48,7 +47,7 @@ public class ModelController extends BaseController {
 		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
 		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
-			return new GetResult<List<ModelSectionDto>>("error", "access denied", null);
+			return new GetResult<ModelSectionDto>("error", "access denied", null);
 		}
 		
 		return modelService.getModel(initiativeId, level, getLoggedUserId(), onlySections);

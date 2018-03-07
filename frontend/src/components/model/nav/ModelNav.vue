@@ -13,38 +13,54 @@
       </app-model-section-modal>
     </transition>
 
-    <div class="model-nav-container">
-      <div class="w3-center">
+    <div class="model-nav-container w3-container">
+      <div class="w3-row">
+        <app-model-section-nav-item
+          v-for="section in sections" :key="section.id"
+          :section="section">
+        </app-model-section-nav-item>
+      </div>
+      <div class="w3-center w3-row w3-margin-top">
         <button @click="showSectionModal = true" class="w3-button app-button" type="button" name="button">new section</button>
       </div>
-      <app-model-section-nav-item
-        v-for="section in sections" :key="section.id"
-        :section="section">
-      </app-model-section-nav-item>
     </div>
   </div>
 </template>
 
 <script>
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
+import ModelSectionNavItem from '@/components/model/nav/ModelSectionNavItem.vue'
 
 export default {
   components: {
-    'app-model-section-modal': ModelSectionModal
+    'app-model-section-modal': ModelSectionModal,
+    'app-model-section-nav-item': ModelSectionNavItem
   },
   data () {
     return {
-      showSectionModal: false
+      showSectionModal: false,
+      sections: []
     }
   },
 
   computed: {
     initiative () {
       return this.$store.state.initiative.initiative
-    },
-    sections () {
-      return this.$store.state.initiative.initiativeModelSections
     }
+  },
+
+  methods: {
+    updateSections () {
+      this.axios.get('/1/initiative/' + this.initiative.id + '/model').then((response) => {
+        if (response.data.result === 'success') {
+          this.sections = response.data.data
+        }
+      })
+    }
+  },
+
+  created () {
+    this.updateSections()
   }
 }
 </script>

@@ -14,11 +14,9 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.conversations.MessageThread;
@@ -65,14 +63,9 @@ public class Initiative {
 	@OneToOne
 	private InitiativeMeta meta;	
 	
-	@ManyToMany
-	@OrderColumn(name = "sections_order")
-	private List<ModelSection> modelSections = new ArrayList<ModelSection>();
-	
-	@ManyToMany
-	@OrderColumn(name = "sections_order")
-	private List<ModelSection> modelSectionsTrash = new ArrayList<ModelSection>();
-	
+	@OneToOne
+	private ModelSection topModelSection;
+		
 	@OneToOne
 	private MessageThread messageThread;
 	
@@ -143,17 +136,11 @@ public class Initiative {
 	public void setMeta(InitiativeMeta meta) {
 		this.meta = meta;
 	}
-	public List<ModelSection> getModelSections() {
-		return modelSections;
+	public ModelSection getTopModelSection() {
+		return topModelSection;
 	}
-	public void setModelSections(List<ModelSection> modelSections) {
-		this.modelSections = modelSections;
-	}
-	public List<ModelSection> getModelSectionsTrash() {
-		return modelSectionsTrash;
-	}
-	public void setModelSectionsTrash(List<ModelSection> modelSectionsTrash) {
-		this.modelSectionsTrash = modelSectionsTrash;
+	public void setTopModelSection(ModelSection topModelSection) {
+		this.topModelSection = topModelSection;
 	}
 	public MessageThread getMessageThread() {
 		return messageThread;

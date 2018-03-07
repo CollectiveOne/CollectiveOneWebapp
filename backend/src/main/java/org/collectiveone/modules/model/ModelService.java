@@ -83,22 +83,16 @@ public class ModelService {
 	
 	
 	@Transactional
-	public GetResult<List<ModelSectionDto>> getModel(UUID initiativeId, Integer level, UUID requestById, Boolean onlySections) {
+	public GetResult<ModelSectionDto> getModel(UUID initiativeId, Integer level, UUID requestById, Boolean onlySections) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
-		if (initiative == null) return new GetResult<List<ModelSectionDto>>("error", "initiative not found", null);
+		if (initiative == null) return new GetResult<ModelSectionDto>("error", "initiative not found", null);
 		
-		List<ModelSectionDto> sectionsDto = new ArrayList<ModelSectionDto>();
-		
-		List<ModelSection> sections = initiative.getModelSections(); 
-		for (ModelSection section : sections) {
-			ModelSectionDto sectionDto = section.toDto();
-			if (level > 0) {
-				sectionDto = addSectionSubElements(sectionDto, section.getId(), level - 1, requestById, onlySections);	
-			}
-			sectionsDto.add(sectionDto); 
+		ModelSectionDto sectionDto = initiative.getTopModelSection().toDto();
+		if (level > 0) {
+			sectionDto = addSectionSubElements(sectionDto, initiative.getTopModelSection().getId(), level - 1, requestById, onlySections);	
 		}
-		
-		return new GetResult<List<ModelSectionDto>> ("success", "model found", sectionsDto);
+			
+		return new GetResult<ModelSectionDto> ("success", "model found", sectionDto);
 	}
 	
 	@Transactional
@@ -112,18 +106,15 @@ public class ModelService {
 		ModelSection section = sectionDto.toEntity(null, sectionDto);
 		section = modelSectionRepository.save(section);
 		
-		if(parentSectionId != null) {
-			ModelSection parent = modelSectionRepository.findById(parentSectionId);
-			if (parent == null) return new PostResult("error", "parent section not found", "");
-			
-			parent.getSubsections().add(section);
-			section.setInitiative(parent.getInitiative());
-			
-			if (register) activityService.modelSectionCreatedOnSection(section, parent, appUserRepository.findByC1Id(creatorId));
-			
-			modelSectionRepository.save(parent);
-			
-		} 
+		ModelSection parent = modelSectionRepository.findById(parentSectionId);
+		if (parent == null) return new PostResult("error", "parent section not found", "");
+		
+		parent.getSubsections().add(section);
+		section.setInitiative(parent.getInitiative());
+		
+		if (register) activityService.modelSectionCreatedOnSection(section, parent, appUserRepository.findByC1Id(creatorId));
+		
+		modelSectionRepository.save(parent);
 		
 		return new PostResult("success", "section created", section.getId().toString());
 	}
@@ -378,7 +369,6 @@ public class ModelService {
 		
 		ModelCardWrapper cardWrapper = new ModelCardWrapper();
 		cardWrapper.setCard(card);
-		cardWrapper.setOtherProperties(cardDto);
 		cardWrapper.setInitiative(section.getInitiative());
 		
 		cardWrapper = modelCardWrapperRepository.save(cardWrapper);
@@ -435,9 +425,8 @@ public class ModelService {
 		} 
 		
 		card = modelCardRepository.save(card);
-		
 		cardWrapper.setCard(card);
-		cardWrapper.setOtherProperties(cardDto);
+		
 		
 		/* this inSections actually refer to add to new sections */
 		for (ModelSectionDto sectionDto : cardDto.getInSections()) {

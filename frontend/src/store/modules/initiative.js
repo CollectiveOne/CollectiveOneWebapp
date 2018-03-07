@@ -1,8 +1,7 @@
 import Vue from 'vue'
 
 const state = {
-  initiative: null,
-  initiativeModelSections: null
+  initiative: null
 }
 
 const getters = {
@@ -63,9 +62,6 @@ const getters = {
 const mutations = {
   setInitiative: (state, payload) => {
     state.initiative = payload
-  },
-  setModelSections: (state, payload) => {
-    state.initiativeModelSections = payload
   }
 }
 
@@ -98,26 +94,6 @@ const actions = {
   refreshInitiative: (context) => {
     if (context.state.initiative) {
       context.dispatch('updateInitiative', context.state.initiative.id)
-    }
-  },
-
-  refreshModelSections: (context, pars) => {
-    if (context.state.initiative) {
-      Vue.axios.get('/1/initiative/' + context.state.initiative.id + '/model', {
-        params: {
-          level: 0
-        }
-      }).then((response) => {
-        context.commit('setModelSections', response.data.data)
-        if (pars) {
-          if (pars.redirect) {
-            if (context.state.initiativeModelSections.length > 0) {
-              /* redirect to the first section by default */
-              pars.router.replace({ name: 'ModelSection', params: { viewId: context.state.initiativeModelSections[0].id } })
-            }
-          }
-        }
-      })
     }
   }
 }
