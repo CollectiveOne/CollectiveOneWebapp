@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.collectiveone.modules.assignations.dto.InitiativeMetaDto;
+import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.tokens.dto.AssetsDto;
 import org.collectiveone.modules.users.AppUserDto;
 
@@ -20,6 +21,8 @@ public class InitiativeDto {
 	private List<InitiativeDto> parents = new ArrayList<InitiativeDto>();
 	private InitiativeMembersDto initiativeMembers;
 	private List<MemberDto> loggedMembership;
+	
+	private ModelSectionDto topModelSection;
 	
 	public String getId() {
 		return id;
@@ -80,6 +83,12 @@ public class InitiativeDto {
 	}
 	public void setLoggedMembership(List<MemberDto> loggedMembership) {
 		this.loggedMembership = loggedMembership;
+	}
+	public ModelSectionDto getTopModelSection() {
+		return topModelSection;
+	}
+	public void setTopModelSection(ModelSectionDto topModelSection) {
+		this.topModelSection = topModelSection;
 	}
 	
 }

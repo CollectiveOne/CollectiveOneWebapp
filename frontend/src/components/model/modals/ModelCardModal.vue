@@ -41,7 +41,7 @@
           <div v-if="isNew" class="w3-row">
             <label class=""><b>In Section:</b></label>
             <br>
-            <h4>{{ this.inSectionTitleOk }}</h4>
+            <h4>{{ this.inSectionTitle }}</h4>
           </div>
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
@@ -363,7 +363,6 @@ export default {
         }
       },
       editedCard: null,
-      inSectionTitleOk: '',
       editing: false,
       showEditButtons: false,
       titleEmptyError: false,
@@ -410,7 +409,7 @@ export default {
       return this.editedCard.title === ''
     },
     titleTooLong () {
-      return this.editedCard.title.length > 30
+      return this.editedCard.title.length > 42
     },
     titleErrorShow () {
       return this.titleEmptyShow || this.titleTooLongShow
@@ -492,15 +491,9 @@ export default {
     },
     update () {
       this.loading = true
-      this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.cardWrapper = response.data.data
         this.loading = false
-      })
-    },
-    updateInSection () {
-      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId)
-      .then((response) => {
-        this.inSectionTitleOk = response.data.data.title
       })
     },
     cardSelected (cardWrapper) {
@@ -586,12 +579,12 @@ export default {
             cardDto.ixInSection = this.ixInSection
 
             this.sendingData = true
-            this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/cardWrapper', cardDto).then(responseF).catch((error) => {
+            this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto).then(responseF).catch((error) => {
               console.log(error)
             })
           } else {
             this.sendingData = true
-            this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/cardWrapper/' + this.existingCard.id,
+            this.axios.put('/1/model/section/' + this.inSectionId + '/cardWrapper/' + this.existingCard.id,
               {}).then(responseF).catch((error) => {
                 console.log(error)
               })
@@ -698,8 +691,6 @@ export default {
   },
 
   mounted () {
-    this.inSectionTitleOk = this.inSectionTitle
-
     if (this.isNew) {
       this.editedCard = {
         stateControl: false,
@@ -707,7 +698,6 @@ export default {
         text: ''
       }
       this.editing = true
-      this.updateInSection()
     } else {
       this.showEditButtons = true
       this.cardWrapper.id = this.cardWrapperId

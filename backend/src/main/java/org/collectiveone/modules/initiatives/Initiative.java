@@ -77,6 +77,7 @@ public class Initiative {
 		dto.setCreator(creator.toDtoLight());
 		dto.setStatus(status.toString());
 		dto.setMeta(meta.toDto());
+		dto.setTopModelSection(topModelSection.toDto());
 		
 		if(tokenTypes != null) {
 			for (TokenType tokenType : tokenTypes) {

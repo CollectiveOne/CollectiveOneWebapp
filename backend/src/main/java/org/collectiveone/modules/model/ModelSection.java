@@ -35,13 +35,16 @@ public class ModelSection {
 	@ManyToOne
 	private Initiative initiative;
 	
-	@Column(name = "title", length = 30)
+	private Boolean isTopModelSection;
+	
+	@Column(name = "title", length = 42)
 	private String title;
 	
 	@Lob
 	@Type(type = "org.hibernate.type.TextType")
 	@Column(name = "description")
 	private String description;
+	
 	
 	@ManyToMany
 	@OrderColumn(name = "cards_order")
@@ -91,6 +94,7 @@ public class ModelSection {
 		sectionDto.setId(id.toString());
 		sectionDto.setTitle(title);
 		sectionDto.setDescription(description);
+		sectionDto.setIsTopModelSection(isTopModelSection);
 		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
 		
 		sectionDto.setnSubsections(subsections.size());
@@ -113,6 +117,14 @@ public class ModelSection {
 
 	public void setInitiative(Initiative initiative) {
 		this.initiative = initiative;
+	}
+	
+	public Boolean getIsTopModelSection() {
+		return isTopModelSection;
+	}
+
+	public void setIsTopModelSection(Boolean isTopModelSection) {
+		this.isTopModelSection = isTopModelSection;
 	}
 
 	public String getTitle() {

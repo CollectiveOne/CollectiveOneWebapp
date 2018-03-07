@@ -175,7 +175,7 @@ export default {
       return (this.nameTooLong)
     },
     nameTooLong () {
-      return this.name.length > 30
+      return this.name.length > 42
     },
     driverErrorShow () {
       return this.driverEmptyError && (this.driver === '')
@@ -237,7 +237,7 @@ export default {
         ok = false
         this.nameEmptyError = true
       } else {
-        if (this.name.length > 30) {
+        if (this.nameTooLong) {
           ok = false
         }
       }
@@ -280,6 +280,7 @@ export default {
         this.axios.post('/1/initiative/create', initiativeDto).then((response) => {
           if (response.data.result === 'success') {
             this.closeThis()
+            this.$store.commit('setExpandNav', false)
             this.$store.dispatch('updateMyInitiatives')
             this.$router.push({name: 'Initiative', params: {'initiativeId': response.data.elementId}})
           } else {

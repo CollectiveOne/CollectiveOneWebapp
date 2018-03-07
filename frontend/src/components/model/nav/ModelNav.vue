@@ -16,12 +16,8 @@
     <div class="model-nav-container w3-container">
       <div class="w3-row">
         <app-model-section-nav-item
-          v-for="section in sections" :key="section.id"
-          :section="section">
+          :section="initiative.topModelSection">
         </app-model-section-nav-item>
-      </div>
-      <div class="w3-center w3-row w3-margin-top">
-        <button @click="showSectionModal = true" class="w3-button app-button" type="button" name="button">new section</button>
       </div>
     </div>
   </div>
@@ -38,8 +34,7 @@ export default {
   },
   data () {
     return {
-      showSectionModal: false,
-      sections: []
+      showSectionModal: false
     }
   },
 
@@ -47,20 +42,6 @@ export default {
     initiative () {
       return this.$store.state.initiative.initiative
     }
-  },
-
-  methods: {
-    updateSections () {
-      this.axios.get('/1/initiative/' + this.initiative.id + '/model').then((response) => {
-        if (response.data.result === 'success') {
-          this.sections = response.data.data
-        }
-      })
-    }
-  },
-
-  created () {
-    this.updateSections()
   }
 }
 </script>

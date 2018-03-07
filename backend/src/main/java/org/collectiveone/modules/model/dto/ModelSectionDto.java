@@ -9,6 +9,7 @@ public class ModelSectionDto {
 
 	private String id;
 	private String initiativeId;
+	private Boolean isTopModelSection;
 	private Boolean isSubsection;
 	private String parentSectionId;
 	private String parentSectionTitle;
@@ -44,6 +45,12 @@ public class ModelSectionDto {
 	}
 	public void setInitiativeId(String initiativeId) {
 		this.initiativeId = initiativeId;
+	}
+	public Boolean getIsTopModelSection() {
+		return isTopModelSection;
+	}
+	public void setIsTopModelSection(Boolean isTopModelSection) {
+		this.isTopModelSection = isTopModelSection;
 	}
 	public Boolean getIsSubsection() {
 		return isSubsection;

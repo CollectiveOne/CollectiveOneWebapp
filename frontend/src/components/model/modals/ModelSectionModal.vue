@@ -227,7 +227,7 @@ export default {
       return this.editedSection.title === ''
     },
     titleTooLong () {
-      return this.editedSection.title.length > 30
+      return this.editedSection.title.length > 42
     },
     titleErrorShow () {
       return this.titleEmptyShow || this.titleTooLongShow

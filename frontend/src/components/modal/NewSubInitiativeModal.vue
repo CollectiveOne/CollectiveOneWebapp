@@ -177,7 +177,7 @@ export default {
       return (this.nameTooLong)
     },
     nameTooLong () {
-      return this.name.length > 30
+      return this.name.length > 42
     },
     driverErrorShow () {
       return this.driverEmptyError && (this.driver === '')
@@ -276,7 +276,7 @@ export default {
         ok = false
         this.nameEmptyError = true
       } else {
-        if (this.name.length > 30) {
+        if (this.nameTooLong) {
           ok = false
         }
       }

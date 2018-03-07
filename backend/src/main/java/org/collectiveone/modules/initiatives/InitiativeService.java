@@ -36,6 +36,8 @@ import org.collectiveone.modules.initiatives.repositories.InitiativeRelationship
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeTagRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
+import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenService;
@@ -87,6 +89,9 @@ public class InitiativeService {
 	
 	@Autowired
 	private MemberRepositoryIf memberRepository;
+	
+	@Autowired
+	private ModelSectionRepositoryIf modelSectionRepository;
 	
 	@Autowired
 	private DecisionMakerRepositoryIf decisionMakerRepository;
@@ -199,7 +204,14 @@ public class InitiativeService {
 				PostResult result3 = transferAssets(result.getData().getId(), initiativeDto, userId);
 				
 				if (result3.getResult().equals("success")) {
-					return new PostResult("success", "initiative created and initalized",  result.getData().getId().toString());
+					
+					PostResult result4 = initModel(result.getData().getId());
+					
+					if (result4.getResult().equals("success")) {
+						return new PostResult("success", "initiative created and initalized",  result.getData().getId().toString());
+					} else {
+						return new PostResult("error", "error initializing model",  "");
+					}
 					
 				} else {
 					
@@ -414,6 +426,23 @@ public class InitiativeService {
 	}
 	
 	@Transactional
+	private PostResult initModel(UUID initiativeId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		
+		ModelSection section = new ModelSection();
+		section.setTitle(initiative.getMeta().getName());
+		section.setInitiative(initiative);
+		section.setIsTopModelSection(true);
+		
+		section = modelSectionRepository.save(section);
+		
+		initiative.setTopModelSection(section);
+		initiativeRepository.save(initiative);
+		
+		return new PostResult("success", "initiative top section created",  initiative.getId().toString());
+	}
+	
+	@Transactional
 	public PostResult createNewToken(UUID initiativeId, AssetsDto tokenDto, UUID userId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
@@ -477,12 +506,14 @@ public class InitiativeService {
 		initiativeMetaRepository.save(initiativeMeta);
 		
 		if (!oldName.equals(initiativeDto.getName()) || !oldDriver.equals(initiativeDto.getDriver())) {
+			/* update topModelSection name */
+			ModelSection section = initiative.getTopModelSection();
+			section.setTitle(initiativeMeta.getName());
+			modelSectionRepository.save(section);
+			
 			/* notify only if actually different */
 			activityService.initiativeEdited(initiative, appUserRepository.findByC1Id(userId), oldName, oldDriver);
 		}
-		
-		
-		
 		
 		return new PostResult("success", "initaitive updated", initiative.getId().toString());  
 	}

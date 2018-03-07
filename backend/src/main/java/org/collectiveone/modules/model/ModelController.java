@@ -161,9 +161,8 @@ public class ModelController extends BaseController {
 				getLoggedUserId());
 	}
 	
-	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}/cardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
+	@RequestMapping(path = "/model/section/{sectionId}/cardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
 	public PostResult addExistingCard(
-			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr,
 			@PathVariable("cardWrapperId") String cardWrapperIdStr,
 			@RequestParam(name = "beforeCardWrapperId", defaultValue="") String beforeCardWrapperIdStr) {
@@ -172,7 +171,8 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "endpoint enabled users only", null);
 		}
 		
-		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
+		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
 		
 		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
@@ -180,7 +180,7 @@ public class ModelController extends BaseController {
 		
 		UUID beforeCardWrapperId = beforeCardWrapperIdStr.equals("") ? null : UUID.fromString(beforeCardWrapperIdStr);
 		
-		return modelService.addCardToSection(UUID.fromString(sectionIdStr), UUID.fromString(cardWrapperIdStr), beforeCardWrapperId, getLoggedUserId());
+		return modelService.addCardToSection(UUID.fromString(sectionIdStr), cardWrapperId, beforeCardWrapperId, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}/removeCard/{cardWrapperId}", method = RequestMethod.PUT) 
@@ -234,22 +234,22 @@ public class ModelController extends BaseController {
 				getLoggedUserId());
 	}
 	
-	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.GET) 
+	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.GET) 
 	public GetResult<ModelSectionDto> getSection(
-			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr,
 			@RequestParam(defaultValue = "1") Integer level) {
 		
-		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		UUID sectionId = UUID.fromString(sectionIdStr);
+		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
 		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
 			return new GetResult<ModelSectionDto>("error", "access denied", null);
 		}
 		
-		return modelService.getSection(UUID.fromString(sectionIdStr), getLoggedUserId(), level, getLoggedUserId(), false);
+		return modelService.getSection(sectionId, getLoggedUserId(), level, getLoggedUserId(), false);
 	}
 	
-	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}", method = RequestMethod.DELETE) 
+	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.DELETE) 
 	public PostResult deleteSection(
 			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr) {
@@ -268,9 +268,8 @@ public class ModelController extends BaseController {
 	}
 	
 	
-	@RequestMapping(path = "/initiative/{initiativeId}/model/section/{sectionId}/cardWrapper", method = RequestMethod.POST)
+	@RequestMapping(path = "/model/section/{sectionId}/cardWrapper", method = RequestMethod.POST)
 	public PostResult createCardWrapper(
-			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr,
 			@RequestBody ModelCardDto cardDto) {
 		
@@ -278,13 +277,14 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "endpoint enabled users only", null);
 		}
 		
-		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		UUID sectionId = UUID.fromString(sectionIdStr);
+		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
 		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.createCardWrapper(cardDto, UUID.fromString(sectionIdStr) ,getLoggedUser().getC1Id());
+		return modelService.createCardWrapper(cardDto, sectionId, getLoggedUser().getC1Id());
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/model/cardWrapper/{cardWrapperId}", method = RequestMethod.GET) 
