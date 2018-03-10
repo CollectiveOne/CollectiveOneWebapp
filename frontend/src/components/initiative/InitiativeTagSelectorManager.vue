@@ -7,7 +7,7 @@
         <transition name="fadeenter">
           <div v-if="!creating" class="w3-row">
             <div class="w3-col w3-right w3-center" style="width: 100px">
-              <button @click="$emit('add', tag)" class="w3-button app-button" name="button">add</button>
+              <button id="T_tagAdd_SelectTagInitiative"  @click="$emit('add', tag)" class="w3-button app-button" name="button">add</button>
             </div>
             <div class="w3-rest new-tag-input-container">
               <app-initiative-tag-selector
@@ -25,7 +25,7 @@
         <transition name="fadeenter">
           <div v-if="creating" class="w3-row">
             <label><b>Tag:</b></label>
-            <input type="text" class="w3-input" v-model.trim="newTag.tagText">
+            <input id="T_tagName_SelectTagInitiative" type="text" class="w3-input" v-model.trim="newTag.tagText">
             <app-error-panel
               :show="tagTextEmptyErrorShow"
               message="please provide a tag">
@@ -41,7 +41,7 @@
 
             <br>
             <label><b>Description:</b></label>
-            <textarea class="w3-input w3-border" rows="2" placeholder="tag description"v-model.trim="newTag.description"></textarea>
+            <textarea id="T_tagDescription_SelectTagInitiative" class="w3-input w3-border" rows="2" placeholder="tag description"v-model.trim="newTag.description"></textarea>
             <app-error-panel
               :show="tagDescriptionEmptyErrorShow"
               message="please provide a description">
@@ -56,7 +56,7 @@
                 <button type="button" class="w3-button app-button-light" @click="creating = false">Cancel</button>
               </div>
               <div class="w3-col m6">
-                <button type="button" class="w3-button app-button" @click="saveTag()">Accept</button>
+                <button id="T_buttonAccept_SelectTagInitiative" type="button" class="w3-button app-button" @click="saveTag()">Accept</button>
               </div>
             </div>
           </div>

@@ -16,7 +16,7 @@
                     {{ underThisInitiativePercent }}% of existing
                   </div>
                 </div>
-                <div v-if="canEdit && canMint " class="w3-button w3-display-bottommiddle" @click="mintClicked()">
+                <div id="T_addBrandNewTokensModal" v-if="canEdit && canMint " class="w3-button w3-display-bottommiddle" @click="mintClicked()">
                   <i class="fa fa-plus-circle gray-1-color" aria-hidden="true"></i>
                 </div>
               </div>

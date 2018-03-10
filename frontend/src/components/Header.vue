@@ -11,8 +11,8 @@
         @click="$emit('expand-nav')">
         <i class="fa fa-bars"></i>
       </div>
-      <router-link :to="{name: 'InitiativesHome'}" class="logo-container w3-bar-item noselect cursor-pointer" id="T_goToHomePage">
-        <img class="logo w3-hide-small" src="../assets/logo-color.png" alt="">
+      <router-link :to="{name: 'InitiativesHome'}" class="logo-container w3-bar-item noselect cursor-pointer" >
+        <img id="T_goToHomePage" class="logo w3-hide-small" src="../assets/logo-color.png" alt="">
         <img class="icon w3-hide-medium w3-hide-large" src="../assets/imago-red.png" alt="">
       </router-link>
 
