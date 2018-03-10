@@ -131,28 +131,36 @@
             <div class="w3-col s12">
               <div class="w3-row w3-margin-top modules-row">
                   <div class="w3-col s4">
-                    <button class="w3-left w3-button"
+                    <button 
+                      id="T_private_visibilityButton"
+                      class="w3-left w3-button"
                       :class="{ 'app-button': isPrivate, 'app-button-light': !isPrivate }"
                       @click="newInitiative.meta.visibility = 'PRIVATE'">
                       private
                     </button>
                   </div>
                   <div class="w3-col s4">
-                    <button class="w3-left w3-button"
+                    <button 
+                      id="T_ecosystem_visibilityButton"
+                      class="w3-left w3-button"
                       :class="{ 'app-button': isEcosystem, 'app-button-light': !isEcosystem }"
                       @click="newInitiative.meta.visibility = 'ECOSYSTEM'">
                       ecosystem
                     </button>
                   </div>
                   <div v-if="isSubinitiative" class="w3-col s4">
-                    <button class="w3-left w3-button"
+                    <button
+                      id="T_inherited_visibilityButton"
+                      class="w3-left w3-button"
                       :class="{ 'app-button': isInherited, 'app-button-light': !isInherited }"
                       @click="newInitiative.meta.visibility = 'INHERITED'">
                       inherited
                     </button>
                   </div>
                   <div class="w3-col s4">
-                    <button class="w3-left w3-button"
+                    <button
+                      id="T_public_visibilityButton"
+                      class="w3-left w3-button"
                       :class="{ 'app-button': isPublic, 'app-button-light': !isPublic }"
                       @click="newInitiative.meta.visibility = 'PUBLIC'">
                       public

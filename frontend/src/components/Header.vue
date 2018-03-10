@@ -11,12 +11,14 @@
         @click="$emit('expand-nav')">
         <i class="fa fa-bars"></i>
       </div>
-      <router-link :to="{name: 'InitiativesHome'}" class="logo-container w3-bar-item noselect cursor-pointer">
+      <router-link :to="{name: 'InitiativesHome'}" class="logo-container w3-bar-item noselect cursor-pointer" id="T_goToHomePage">
         <img class="logo w3-hide-small" src="../assets/logo-color.png" alt="">
         <img class="icon w3-hide-medium w3-hide-large" src="../assets/imago-red.png" alt="">
       </router-link>
 
-      <div v-if="$store.state.user.authenticated"
+      <div 
+        id="T_headerUserOptions" 
+        v-if="$store.state.user.authenticated"
         @click="userOptionsClicked()" class="w3-bar-item w3-right w3-button"
         v-click-outside="clickOutsideUser">
 
@@ -32,9 +34,9 @@
           class="avatar-dropdown-content w3-card-2 w3-bar-block w3-white w3-large"
           :class="{'left-align-1': windowIsSmall, 'left-align-2': !windowIsSmall}">
 
-          <div @click="goMyProfile()" class="w3-bar-item w3-button"><i class="fa fa-user" aria-hidden="true"></i></i>profile</div>
-          <div @click="goHome()" class="w3-bar-item w3-button"><i class="fa fa-home" aria-hidden="true"></i>home</div>
-          <div @click="logoutUser()" class="w3-bar-item w3-button"><i class="fa fa-power-off" aria-hidden="true"></i>logout</div>
+          <div id="T_profileUserOptions" @click="goMyProfile()" class="w3-bar-item w3-button"><i class="fa fa-user" aria-hidden="true"></i></i>profile</div>
+          <div id="T_homeUserOptions"  @click="goHome()" class="w3-bar-item w3-button"><i class="fa fa-home" aria-hidden="true"></i>home</div>
+          <div id="T_logoutUserOptions"  @click="logoutUser()" class="w3-bar-item w3-button"><i class="fa fa-power-off" aria-hidden="true"></i>logout</div>
         </div>
       </div>
       <div v-else class="login-button-container w3-bar-item w3-right">

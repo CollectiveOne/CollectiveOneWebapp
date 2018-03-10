@@ -59,7 +59,7 @@
             @click="">
             <h5 class="noselect" :class="{'bold-text': isPeople}">People</h5>
           </router-link>
-          <router-link tag="div" :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
+          <router-link id="T_transferTab" tag="div" :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
             :class="{'border-blue': isAssignations, 's3': fourTabs, 's4': threeTabs}"
             @click="">

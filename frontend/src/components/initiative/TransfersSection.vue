@@ -49,14 +49,14 @@
       @click="showActionMenu = !showActionMenu"
       v-click-outside="clickOutsideShowMenu">
 
-      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+      <i id="T_transferModal" class="fa fa-plus-circle" aria-hidden="true"></i>
     </div>
     <div v-if="showActionMenu" class="action-menu w3-display-topright">
       <div class="w3-card w3-white w3-large">
-        <div class="w3-button" @click="newTransferToUser()">
+        <div class="w3-button" id="T_transferModalUser" @click="newTransferToUser()">
           <span class="w3-left">to user</span><i class="fa fa-sign-in w3-right" aria-hidden="true"></i>
         </div>
-        <div v-if="hasSubinitiatives" class="w3-button" @click="newTransferToInitiative()">
+        <div v-if="hasSubinitiatives"  id="T_transferModalInitiative" class="w3-button" @click="newTransferToInitiative()">
           <span class="w3-left">to initiative</span><i class="fa fa-sign-in w3-right" aria-hidden="true"></i>
         </div>
       </div>

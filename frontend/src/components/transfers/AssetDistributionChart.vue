@@ -141,13 +141,13 @@
           </div>
           <div class="w3-row-padding w3-large">
             <div class="w3-col s6">
-              <input @blur="valueUpdated(Number($event.target.value))" :value="value.toFixed(1)"  class="w3-input w3-border w3-hover-light-grey w3-round"
+              <input id="T_amountToBeTransferred" @blur="valueUpdated(Number($event.target.value))" :value="value.toFixed(1)"  class="w3-input w3-border w3-hover-light-grey w3-round"
               :class="{ 'error-input' : errorFound }" type="number" min="0">
             </div>
             <div class="w3-col s6">
               <div class="w3-row">
                 <div class="w3-col s10">
-                  <input @blur="percentageUpdated(Number($event.target.value))" :value="percentage.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round"
+                  <input id="T_percentageToBeTransferred"  @blur="percentageUpdated(Number($event.target.value))" :value="percentage.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round"
                   :class="{ 'error-input' : errorFound }" type="number" min="0" step="5">
                 </div>
                 <div class="w3-col s2">
