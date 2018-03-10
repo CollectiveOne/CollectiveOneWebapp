@@ -4,17 +4,17 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class NotificationsModule {
-	public WebDriver driver;
+public class SearchModule {
+public WebDriver driver;
 	
-	public NotificationsModule() {
+	public SearchModule() {
 
 	}
 
 
 	public boolean checkHeaderNotification(WebDriver driver) {
 		try {
-
+			
 		    (driver.findElement(By.id("T_notificationButton"))).click();
 		    
 		    WebElement showMoreButton = driver.findElement(By.id("T_showMoreButton"));

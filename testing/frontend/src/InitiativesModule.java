@@ -42,32 +42,36 @@ public class InitiativesModule {
 
 			public boolean editInitiative(WebDriver driver) {
 				try {
+					WebDriverWait wait = new WebDriverWait(driver,10);
 					//waiting for the animation to finish
-					(new WebDriverWait(driver, 10)).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(),'Hello Test 2')]")));
+					wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(),'Hello Test 2')]")));
 					(driver.findElement(By.xpath("//*[contains(text(),'Hello Test 2')]"))).click();
 					
 					//waiting for the animation to finish
-					(new WebDriverWait(driver, 10)).until(ExpectedConditions.visibilityOfElementLocated(By.className("edit-container")));
+					wait.until(ExpectedConditions.elementToBeClickable(By.className("edit-container")));
 					
 				    (driver.findElement(By.id("T_editMenuButton"))).click();
 				    (driver.findElement(By.id("T_editInitiativeButton"))).click();
 					
 				    //waiting for the animation to finish
-					(new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(By.id("T_nameInputEdit")));
+				    wait.until(ExpectedConditions.elementToBeClickable(By.id("T_nameInputEdit")));
+				    wait.until(ExpectedConditions.elementToBeClickable(By.id("T_purposeInputEdit")));
 					
 				    WebElement nameInput_ModalEdit = driver.findElement(By.id("T_nameInputEdit"));
-				    //WebElement purposeInput_ModalEdit = driver.findElement(By.id("T_purposeInputEdit"));
-//				    WebElement numberTokensInput = driver.findElement(By.id("T_numberTokensInput"));
-//				    WebElement tokenNameInput = driver.findElement(By.id("T_tokenNameInput"));
-//				    WebElement cancelButton_Modal = driver.findElement(By.id("T_cancelButton"));
+				    WebElement disableButton_Modal = driver.findElement(By.id("T_disableVisionButton"));
+				    WebElement enableButton_Modal = driver.findElement(By.id("T_enableVisionButton"));
+				    WebElement privateButton_Modal = driver.findElement(By.id("T_private_visibilityButton"));
+				    WebElement ecosystemButton_Modal = driver.findElement(By.id("T_ecosystem_visibilityButton"));
+				    WebElement publicButton_Modal = driver.findElement(By.id("T_public_visibilityButton"));
 				    WebElement acceptButton_Modal = driver.findElement(By.id("T_acceptButtonEditInitiative"));
-		
+				    
 				    nameInput_ModalEdit.clear(); //for not appending
 				    nameInput_ModalEdit.sendKeys("Hello Test 3");
-				    //purposeInput_ModalEdit.sendKeys("omg omg");
-//				    numberTokensInput.sendKeys("1000");
-//				    tokenNameInput.clear();
-//				    tokenNameInput.sendKeys("Coins");
+				    enableButton_Modal.click();
+				    disableButton_Modal.click();
+				    privateButton_Modal.click();
+				    ecosystemButton_Modal.click();
+				    publicButton_Modal.click();
 				    acceptButton_Modal.click();
 					return true;
 				    

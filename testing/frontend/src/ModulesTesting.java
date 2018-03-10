@@ -16,23 +16,41 @@ public class ModulesTesting {
 		System.setProperty("webdriver.chrome.driver", exePath);
 		
 		driver = new ChromeDriver();
-		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(100, TimeUnit.SECONDS);
+		driver.manage().timeouts().pageLoadTimeout(100, TimeUnit.SECONDS);
+		//driver.manage().timeouts().setScriptTimeout(60, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
 		driver.get("http://localhost:8080");
 	}
 	
-	public boolean testAuthentication() {
+
+	private void pause() {
+		// TODO Auto-generated method stub
 		try {
-			AuthenticationModule authModule = new AuthenticationModule("check");
-			System.out.println("1. Testing Authentication Modal");
-			if(authModule.checkLogin("philh@x.com","123456",driver))
-				return true;
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	
+	public List<Boolean> testAuthentication() {
+
+		AuthenticationModule authModule = new AuthenticationModule();
+		List<Boolean> result = new ArrayList<Boolean>();
+		System.out.println("1. Testing Authentication");
+		try {
+			
+			result.add(authModule.checkLogin("philh@x.com","123456",driver));pause();
+			//result.add(authModule.checkSignUp("saswat4friends1@gmail.com","123456",driver));pause();
+			//result.add(authModule.checkSoialLogin(driver));pause();
 
 		}catch(Exception exception){
 			System.out.println("Failed @ testAuthentication(): " + exception);
-			return false;
+			
 		}
-		return true;
+		return result;
 	}
 	
 	public List<Boolean> testInitiatives() {
@@ -43,9 +61,9 @@ public class ModulesTesting {
 		System.out.println("2. Testing Initiative Modals");
 		
 		try {
-			result.add(initiativeModule.createInitiative(driver));
-			result.add(initiativeModule.editInitiative(driver));
-			result.add(initiativeModule.deleteInitiative(driver));
+			result.add(initiativeModule.createInitiative(driver));pause();
+			result.add(initiativeModule.editInitiative(driver));pause();
+			result.add(initiativeModule.deleteInitiative(driver));pause();
 		}catch(Exception exception){
 			System.out.println("Failed @ testInitiatives(): " + exception);
 			
@@ -62,8 +80,8 @@ public class ModulesTesting {
 		System.out.println("3. Testing Notifications");
 		
 		try {
-			result.add(notificationModule.checkHeaderNotification(driver));
-			result.add(notificationModule.checkInitiativeNotification(driver));
+			result.add(notificationModule.checkHeaderNotification(driver));pause();
+			result.add(notificationModule.checkInitiativeNotification(driver));pause();
 		}catch(Exception exception){
 			System.out.println("Failed @ testNotifications(): " + exception);
 			
@@ -80,8 +98,8 @@ public class ModulesTesting {
 		System.out.println("4. Testing People");
 		
 		try {
-			result.add(peopleModule.addPeople(driver));
-			result.add(peopleModule.deletePeople(driver));
+			result.add(peopleModule.addPeople(driver));pause();
+			result.add(peopleModule.deletePeople(driver));pause();
 		}catch(Exception exception){
 			System.out.println("Failed @ testPeople(): " + exception);
 			
@@ -90,41 +108,94 @@ public class ModulesTesting {
 		return result;
 	}
 
+	private List<Boolean> testTransfers() {
+
+		TransferModule transferModule = new TransferModule();
+		List<Boolean> result = new ArrayList<Boolean>();
+
+		System.out.println("4. Testing Transfers");
+		
+		try {
+			result.add(transferModule.transferToUsersDirect(driver));pause();
+			result.add(transferModule.transferToUsersPeer(driver));pause();
+		}catch(Exception exception){
+			System.out.println("Failed @ testTransfers(): " + exception);
+			
+		}
+		
+		return result;
+	}
+
+	private List<Boolean> testProfile() {
+		
+		ProfileModule profileModdule = new ProfileModule();
+		List<Boolean> result = new ArrayList<Boolean>();
+
+		System.out.println("4. Testing Profile");
+		
+		try {
+			result.add(profileModdule.editProfile(driver));pause();
+		}catch(Exception exception){
+			System.out.println("Failed @ testProfile(): " + exception);
+			
+		}
+		
+		return result;
+	}
+
 	public static void main(String args[]) {
 
-
+		List<Boolean> result_authentication;
 		List<Boolean> result_initiatives;
 		List<Boolean> result_notifications;
 		List<Boolean> result_people;
-		
-		ModulesTesting moduleTesting = new ModulesTesting();
-		
-		System.out.println("Testing Modules");
-		
-		if(moduleTesting.testAuthentication())
-			System.out.println("Authentication Modal Passed");
-		else {
-			System.out.println("Authentication Modal Failed");
+		List<Boolean> result_transfer;
+		List<Boolean> result_profile;
+		try {
+			ModulesTesting moduleTesting = new ModulesTesting();
+			
+			System.out.println("Testing Modules\n");
+
+			//Testing Authentication
+			result_authentication = moduleTesting.testAuthentication();
+			
+			System.out.println(" - Logging In Modal " + (result_authentication.get(0) ? "Passed" : "Failed"));
+			//System.out.println(" - Sign Up Modal " + (result_authentication.get(1) ? "Passed" : "Failed"));
+			//System.out.println(" - Social Login Modal " + (result_authentication.get(2) ? "Passed" : "Failed"));
+			
+			//Testing Initiative
+//			result_initiatives = moduleTesting.testInitiatives();
+//			
+//			System.out.println(" - Creating Initiative Modal " + (result_initiatives.get(0) ? "Passed" : "Failed"));
+//			System.out.println(" - Editing Initiative Modal " + (result_initiatives.get(1) ? "Passed" : "Failed"));
+//			System.out.println(" - Deleting Initiative Modal " + (result_initiatives.get(2) ? "Passed" : "Failed"));
+//
+//			//Testing Notifications
+//			result_notifications = moduleTesting.testNotifications();
+//			
+//			System.out.println(" - Header Notifications " + (result_notifications.get(0) ? "Passed" : "Failed"));
+//			System.out.println(" - Initiative Notifications " + (result_notifications.get(1) ? "Passed" : "Failed"));
+//	
+//			//Testing People
+//			result_people = moduleTesting.testPeople();
+//			
+//			System.out.println(" - Add People" + (result_people.get(0) ? "Passed" : "Failed"));
+//			System.out.println(" -  Delete People " + (result_notifications.get(1) ? "Passed" : "Failed"));
+//			
+//			//Testing Transfer
+//			result_transfer = moduleTesting.testTransfers();
+//			
+//			System.out.println(" - Transfering Tokens To User (Direct) " + (result_transfer.get(0) ? "Passed" : "Failed"));
+//			System.out.println(" - Transfering Tokens To User (Peer Reviewed) " + (result_transfer.get(1) ? "Passed" : "Failed"));
+//			
+//			result_profile = moduleTesting.testProfile();
+//			
+//			System.out.println(" - Editing Profile " + (result_profile.get(0) ? "Passed" : "Failed"));
+			
+		}catch(Exception exception) {
+			System.out.println("Failed @ ModuleTesting() : " + exception);
 		}
 		
-		//Testing Initiative
-		//result_initiatives.push(moduleTesting.testInitiatives());
-		
-		result_initiatives = moduleTesting.testInitiatives();
-		
-		System.out.println(" - Creating Initiative Modal " + (result_initiatives.get(0) ? "Passed" : "Failed"));
-		System.out.println(" - Editing Initiative Modal " + (result_initiatives.get(1) ? "Passed" : "Failed"));
-		System.out.println(" - Deleting Initiative Modal " + (result_initiatives.get(2) ? "Passed" : "Failed"));
-		
-		result_notifications = moduleTesting.testNotifications();
-		
-		System.out.println(" - Header Notifications " + (result_notifications.get(0) ? "Passed" : "Failed"));
-		System.out.println(" - Initiative Notifications " + (result_notifications.get(1) ? "Passed" : "Failed"));
-
-		result_people = moduleTesting.testPeople();
-		
-		System.out.println(" - Add People" + (result_people.get(0) ? "Passed" : "Failed"));
-		System.out.println(" -  Delete People " + (result_notifications.get(1) ? "Passed" : "Failed"));
 	}
 
 
