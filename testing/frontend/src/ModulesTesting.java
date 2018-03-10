@@ -77,14 +77,14 @@ public class ModulesTesting {
 		NotificationsModule notificationModule = new NotificationsModule();
 		List<Boolean> result = new ArrayList<Boolean>();
 
-		System.out.println("3. Testing Notifications");
+		System.out.println("3. Testing Notifications And Filters");
 		
 		try {
-			result.add(notificationModule.checkHeaderNotification(driver));pause();
-			result.add(notificationModule.checkInitiativeNotification(driver));pause();
+			//result.add(notificationModule.checkHeaderNotification(driver));pause();
+			//result.add(notificationModule.checkInitiativeNotification(driver));pause();
+			result.add(notificationModule.checkTagFillter(driver));pause();
 		}catch(Exception exception){
-			System.out.println("Failed @ testNotifications(): " + exception);
-			
+			System.out.println("Failed @ testNotificationsAndFilters(): " + exception);
 		}
 		
 		return result;
@@ -113,7 +113,7 @@ public class ModulesTesting {
 		TransferModule transferModule = new TransferModule();
 		List<Boolean> result = new ArrayList<Boolean>();
 
-		System.out.println("4. Testing Transfers");
+		System.out.println("5. Testing Transfers");
 		
 		try {
 			result.add(transferModule.transferToUsersDirect(driver));pause();
@@ -131,7 +131,7 @@ public class ModulesTesting {
 		ProfileModule profileModdule = new ProfileModule();
 		List<Boolean> result = new ArrayList<Boolean>();
 
-		System.out.println("4. Testing Profile");
+		System.out.println("6. Testing Profile");
 		
 		try {
 			result.add(profileModdule.editProfile(driver));pause();
@@ -143,6 +143,23 @@ public class ModulesTesting {
 		return result;
 	}
 
+
+	private List<Boolean> testTokens() {
+		
+		TokensModule tokensModule = new TokensModule();
+		List<Boolean> result = new ArrayList<Boolean>();
+
+		System.out.println("7. Testing Tokens");
+		
+		try {
+			result.add(tokensModule.createTokens(driver));pause();
+		}catch(Exception exception){
+			System.out.println("Failed @ testTokens(): " + exception);
+			 
+		}
+		
+		return result;
+	}
 	public static void main(String args[]) {
 
 		List<Boolean> result_authentication;
@@ -151,6 +168,7 @@ public class ModulesTesting {
 		List<Boolean> result_people;
 		List<Boolean> result_transfer;
 		List<Boolean> result_profile;
+		List<Boolean> result_tokens;
 		try {
 			ModulesTesting moduleTesting = new ModulesTesting();
 			
@@ -160,8 +178,8 @@ public class ModulesTesting {
 			result_authentication = moduleTesting.testAuthentication();
 			
 			System.out.println(" - Logging In Modal " + (result_authentication.get(0) ? "Passed" : "Failed"));
-			//System.out.println(" - Sign Up Modal " + (result_authentication.get(1) ? "Passed" : "Failed"));
-			//System.out.println(" - Social Login Modal " + (result_authentication.get(2) ? "Passed" : "Failed"));
+//			System.out.println(" - Sign Up Modal " + (result_authentication.get(1) ? "Passed" : "Failed"));
+//			System.out.println(" - Social Login Modal " + (result_authentication.get(2) ? "Passed" : "Failed"));
 			
 			//Testing Initiative
 			result_initiatives = moduleTesting.testInitiatives();
@@ -175,8 +193,9 @@ public class ModulesTesting {
 			
 			System.out.println(" - Header Notifications " + (result_notifications.get(0) ? "Passed" : "Failed"));
 			System.out.println(" - Initiative Notifications " + (result_notifications.get(1) ? "Passed" : "Failed"));
+			System.out.println(" - Tag Filter Search " + (result_notifications.get(0) ? "Passed" : "Failed"));
 	
-			//Testing People
+//			//Testing People
 			result_people = moduleTesting.testPeople();
 			
 			System.out.println(" - Add People" + (result_people.get(0) ? "Passed" : "Failed"));
@@ -188,15 +207,22 @@ public class ModulesTesting {
 			System.out.println(" - Transfering Tokens To User (Direct) " + (result_transfer.get(0) ? "Passed" : "Failed"));
 			System.out.println(" - Transfering Tokens To User (Peer Reviewed) " + (result_transfer.get(1) ? "Passed" : "Failed"));
 			
+			//Testing Profile
 			result_profile = moduleTesting.testProfile();
 			
 			System.out.println(" - Editing Profile " + (result_profile.get(0) ? "Passed" : "Failed"));
+			
+			//Testing Tokens
+			result_tokens = moduleTesting.testTokens();
+			
+			System.out.println(" - Creating Brand New Tokens " + (result_tokens.get(0) ? "Passed" : "Failed"));
 			
 		}catch(Exception exception) {
 			System.out.println("Failed @ ModuleTesting() : " + exception);
 		}
 		
 	}
+
 
 
 }

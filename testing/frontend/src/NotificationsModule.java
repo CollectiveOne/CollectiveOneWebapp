@@ -1,4 +1,5 @@
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -58,9 +59,24 @@ public class NotificationsModule {
 		}
 	}
 	
-	public static void main(String args[]) {
 
+	public Boolean checkTagFillter(WebDriver driver) {
+		(driver.findElement(By.id("T_goToHomePage"))).click();
+		try {
 
+			WebDriverWait wait = new WebDriverWait(driver,10);
+
+		    wait.until(ExpectedConditions.elementToBeClickable(By.name("T_selectTagInputInitiative")));
+		    WebElement selectTag_InputModal = driver.findElement(By.name("T_selectTagInputInitiative"));
+//
+		    selectTag_InputModal.sendKeys("heello");
+		    selectTag_InputModal.sendKeys(Keys.ENTER);
+
+			return true;
+		}catch(Exception exception) {
+			System.out.println("Failed @ checkTagFillter(): " + exception);
+			return false;
+		}
 	}
 
 

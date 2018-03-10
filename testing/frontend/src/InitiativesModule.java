@@ -42,6 +42,7 @@ public class InitiativesModule {
 
 			public boolean editInitiative(WebDriver driver) {
 				try {
+
 					WebDriverWait wait = new WebDriverWait(driver,10);
 					//waiting for the animation to finish
 					wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(),'Hello Test 2')]")));
@@ -52,7 +53,7 @@ public class InitiativesModule {
 					
 				    (driver.findElement(By.id("T_editMenuButton"))).click();
 				    (driver.findElement(By.id("T_editInitiativeButton"))).click();
-					
+				    
 				    //waiting for the animation to finish
 				    wait.until(ExpectedConditions.elementToBeClickable(By.id("T_nameInputEdit")));
 				    wait.until(ExpectedConditions.elementToBeClickable(By.id("T_purposeInputEdit")));
@@ -60,6 +61,7 @@ public class InitiativesModule {
 				    WebElement nameInput_ModalEdit = driver.findElement(By.id("T_nameInputEdit"));
 				    WebElement disableButton_Modal = driver.findElement(By.id("T_disableVisionButton"));
 				    WebElement enableButton_Modal = driver.findElement(By.id("T_enableVisionButton"));
+				    WebElement selectTag_InputModal = driver.findElement(By.name("T_selectTagInputInitiative"));
 				    WebElement privateButton_Modal = driver.findElement(By.id("T_private_visibilityButton"));
 				    WebElement ecosystemButton_Modal = driver.findElement(By.id("T_ecosystem_visibilityButton"));
 				    WebElement publicButton_Modal = driver.findElement(By.id("T_public_visibilityButton"));
@@ -67,6 +69,25 @@ public class InitiativesModule {
 				    
 				    nameInput_ModalEdit.clear(); //for not appending
 				    nameInput_ModalEdit.sendKeys("Hello Test 3");
+				    selectTag_InputModal.click();
+				    
+				    wait.until(ExpectedConditions.elementToBeClickable(By.id("T_createNewSelectTag")));
+				    WebElement createNewTag_Modal = driver.findElement(By.id("T_createNewSelectTag"));
+				    createNewTag_Modal.click();
+
+				    wait.until(ExpectedConditions.elementToBeClickable(By.id("T_tagName_SelectTagInitiative")));
+				    WebElement tagNameNewTag_Modal = driver.findElement(By.id("T_tagName_SelectTagInitiative"));
+				    WebElement tagDescriptionNewTag_Modal = driver.findElement(By.id("T_tagDescription_SelectTagInitiative"));
+				    WebElement buttonAcceptNewTag_Modal = driver.findElement(By.id("T_buttonAccept_SelectTagInitiative"));
+				    
+				    tagNameNewTag_Modal.sendKeys("SampleTag");
+				    tagDescriptionNewTag_Modal.sendKeys("Sampleescription");
+				    buttonAcceptNewTag_Modal.click();
+
+				    wait.until(ExpectedConditions.elementToBeClickable(By.id("T_tagAdd_SelectTagInitiative")));
+				    WebElement tagAddNewTag_Modal = driver.findElement(By.id("T_tagAdd_SelectTagInitiative"));
+				    tagAddNewTag_Modal.click();
+				    
 				    enableButton_Modal.click();
 				    disableButton_Modal.click();
 				    privateButton_Modal.click();
