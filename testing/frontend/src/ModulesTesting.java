@@ -182,41 +182,41 @@ public class ModulesTesting {
 //			System.out.println(" - Social Login Modal " + (result_authentication.get(2) ? "Passed" : "Failed"));
 			
 			//Testing Initiative
-//			result_initiatives = moduleTesting.testInitiatives();
-//			
-//			System.out.println(" - Creating Initiative Modal " + (result_initiatives.get(0) ? "Passed" : "Failed"));
-//			System.out.println(" - Editing Initiative Modal " + (result_initiatives.get(1) ? "Passed" : "Failed"));
-//			System.out.println(" - Deleting Initiative Modal " + (result_initiatives.get(2) ? "Passed" : "Failed"));
-//
-//			//Testing Notifications
-//			result_notifications = moduleTesting.testNotifications();
-//			
-//			System.out.println(" - Header Notifications " + (result_notifications.get(0) ? "Passed" : "Failed"));
-//			System.out.println(" - Initiative Notifications " + (result_notifications.get(1) ? "Passed" : "Failed"));
-//			System.out.println(" - Tag Filter Search " + (result_notifications.get(0) ? "Passed" : "Failed"));
-//	
-//			//Testing People
+			result_initiatives = moduleTesting.testInitiatives();
+			
+			System.out.println(" - Creating Initiative Modal " + (result_initiatives.get(0) ? "Passed" : "Failed"));
+			System.out.println(" - Editing Initiative Modal " + (result_initiatives.get(1) ? "Passed" : "Failed"));
+			System.out.println(" - Deleting Initiative Modal " + (result_initiatives.get(2) ? "Passed" : "Failed"));
+
+			//Testing Notifications
+			result_notifications = moduleTesting.testNotifications();
+			
+			System.out.println(" - Header Notifications " + (result_notifications.get(0) ? "Passed" : "Failed"));
+			System.out.println(" - Initiative Notifications " + (result_notifications.get(1) ? "Passed" : "Failed"));
+			System.out.println(" - Tag Filter Search " + (result_notifications.get(0) ? "Passed" : "Failed"));
+	
+			//Testing People
 			result_people = moduleTesting.testPeople();
 			
 			System.out.println(" - Add People" + (result_people.get(0) ? "Passed" : "Failed"));
 			System.out.println(" -  Delete People " + (result_people.get(1) ? "Passed" : "Failed"));
 			
 			//Testing Transfer
-//			result_transfer = moduleTesting.testTransfers();
-//			
-//			System.out.println(" - Transfering Tokens To User (Direct) " + (result_transfer.get(0) ? "Passed" : "Failed"));
-//			System.out.println(" - Transfering Tokens To User (Peer Reviewed) " + (result_transfer.get(1) ? "Passed" : "Failed"));
-//			
-//			//Testing Profile
-//			result_profile = moduleTesting.testProfile();
-//			
-//			System.out.println(" - Editing Profile " + (result_profile.get(0) ? "Passed" : "Failed"));
-//			
-//			//Testing Tokens
-//			result_tokens = moduleTesting.testTokens();
-//			
-//			System.out.println(" - Creating Brand New Tokens " + (result_tokens.get(0) ? "Passed" : "Failed"));
-//			
+			result_transfer = moduleTesting.testTransfers();
+			
+			System.out.println(" - Transfering Tokens To User (Direct) " + (result_transfer.get(0) ? "Passed" : "Failed"));
+			System.out.println(" - Transfering Tokens To User (Peer Reviewed) " + (result_transfer.get(1) ? "Passed" : "Failed"));
+			
+			//Testing Profile
+			result_profile = moduleTesting.testProfile();
+			
+			System.out.println(" - Editing Profile " + (result_profile.get(0) ? "Passed" : "Failed"));
+			
+			//Testing Tokens
+			result_tokens = moduleTesting.testTokens();
+			
+			System.out.println(" - Creating Brand New Tokens " + (result_tokens.get(0) ? "Passed" : "Failed"));
+			
 		}catch(Exception exception) {
 			System.out.println("Failed @ ModuleTesting() : " + exception);
 		}
