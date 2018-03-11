@@ -26,12 +26,11 @@ public class PeopleModule {
 		    WebElement selectUserModal = driver.findElement(By.tagName("input"));
 		    WebElement addUserButtonModal = driver.findElement(By.id("T_addButton"));
 			
-		    selectUserModal.clear();
-		    selectUserModal.sendKeys("emily");
+		    selectUserModal.click();
 		    
 			//to select from the list
-			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'emily')]")));
-			(driver.findElement(By.xpath("//*[contains(text(),'emily')]"))).click();
+			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(text(),'carla')]")));
+			(driver.findElement(By.xpath("//*[contains(text(),'carla')]"))).click();
 		    
 			//select the role of user
 			Select dropdown = new Select(driver.findElement(By.id("T_memberRoleDropDown")));
@@ -53,7 +52,7 @@ public class PeopleModule {
 	public boolean deletePeople(WebDriver driver) {
 		try {
 		    
-			String name = "tom"; //name of user to be deleted
+			String name = "carla"; //name of user to be deleted
 		    
 			WebDriverWait wait = new WebDriverWait(driver,10);
 			//click on testing initiative
@@ -82,6 +81,11 @@ public class PeopleModule {
 		        	System.out.println(driver.findElement(By.xpath("//table/tbody/tr["+ i +"]/td[4]/i")));
 		        	wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table/tbody/tr["+ i +"]/td[4]/i")));
 		            (driver.findElement(By.xpath("//table/tbody/tr["+ i +"]/td[4]/i"))).click();
+
+					Thread.sleep(1000);
+		            (driver.findElement(By.id("T_confirmButton_DeletePople"))).click();
+		            
+		            break;
 		        }
 		    }
 

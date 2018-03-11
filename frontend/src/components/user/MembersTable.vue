@@ -70,8 +70,8 @@
                 class="fa fa-times-circle-o w3-xlarge gray-1-color w3-button" aria-hidden="true">
               </i>
               <div v-else class="">
-                <button @click="removeMemberCancelled()" class="w3-button app-button-light">Cancel Delete</button>
-                <button @click="removeMemberConfirmed()" class="w3-button app-button-danger">Confirm Delete</button>
+                <button id="T_cancelButton_DeletePople" @click="removeMemberCancelled()" class="w3-button app-button-light">Cancel Delete</button>
+                <button id="T_confirmButton_DeletePople" @click="removeMemberConfirmed()" class="w3-button app-button-danger">Confirm Delete</button>
               </div>
 
             </td>
