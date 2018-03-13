@@ -33,7 +33,7 @@
           class="avatar-dropdown-content w3-card-2 w3-bar-block w3-white w3-large"
           :class="{'left-align-1': windowIsSmall, 'left-align-2': !windowIsSmall}">
 
-          <div @click="goMyProfile()" class="w3-bar-item w3-button"><i class="fa fa-user" aria-hidden="true"></i></i>profile</div>
+          <div @click="goMyProfile()" class="w3-bar-item w3-button"><i class="fa fa-user" aria-hidden="true"></i>profile</div>
           <div @click="goHome()" class="w3-bar-item w3-button"><i class="fa fa-home" aria-hidden="true"></i>home</div>
           <div @click="logoutUser()" class="w3-bar-item w3-button"><i class="fa fa-power-off" aria-hidden="true"></i>logout</div>
         </div>

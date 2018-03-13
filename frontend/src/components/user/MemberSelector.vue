@@ -123,7 +123,9 @@ export default {
       }
 
       // Callback Event
-      this.onInput ? this.onInput(val) : null
+      if (this.onInput) {
+        this.onInput(val)
+      }
     },
 
     showAll () {
@@ -138,7 +140,9 @@ export default {
 
       setTimeout(() => {
         // Callback Event
-        this.onHide ? this.onHide() : null
+        if (this.onHide) {
+          this.onHide()
+        }
 
         this.showList = false
       }, 250)
@@ -148,7 +152,9 @@ export default {
       this.focusList = 0
 
       // Callback Event
-      this.onFocus ? this.onFocus(e) : null
+      if (this.onFocus) {
+        this.onFocus(e)
+      }
 
       // Show when seleceted
       this.showAll()

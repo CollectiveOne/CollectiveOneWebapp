@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <div v-for="(parent, ix) in reversedParents" class="w3-left">
+    <div v-for="(parent, ix) in reversedParents" :key="parent.id" class="w3-left">
       <router-link :to="{name: 'Initiative', params: {'initiativeId': parent.id }}"
         tag="div" class="w3-left cursor-pointer" :class="{ 'parent-2': ix > 0 }">
         {{ parent.meta.name }}
@@ -26,7 +26,8 @@ export default {
 
   computed: {
     reversedParents () {
-      return JSON.parse(JSON.stringify(this.initiative.parents.reverse()))
+      var copy = JSON.parse(JSON.stringify(this.initiative.parents))
+      return copy.reverse()
     }
   }
 }

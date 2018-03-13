@@ -256,17 +256,17 @@ export default {
     update () {
       this.loading = true
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
-      .then((response) => {
-        this.loading = false
-        this.section = response.data.data
-      })
+        .then((response) => {
+          this.loading = false
+          this.section = response.data.data
+        })
     },
     updateInElement () {
       if (!this.inInitiative) {
         this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId)
-        .then((response) => {
-          this.inElementTitleOk = response.data.data.title
-        })
+          .then((response) => {
+            this.inElementTitleOk = response.data.data.title
+          })
       }
     },
     startEditing () {
@@ -335,31 +335,31 @@ export default {
               /* create new section */
               this.sendingData = true
               this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/', sectionDto)
-              .then(responseF).catch((error) => {
-                console.log(error)
-              })
+                .then(responseF).catch((error) => {
+                  console.log(error)
+                })
             } else {
               this.sendingData = true
               this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/subsection', sectionDto)
-              .then(responseF).catch((error) => {
-                console.log(error)
-              })
+                .then(responseF).catch((error) => {
+                  console.log(error)
+                })
             }
           } else {
             /* add existing section */
             this.sendingData = true
             this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/subsection/' + this.existingSection.id, {})
-            .then(responseF).catch((error) => {
-              console.log(error)
-            })
+              .then(responseF).catch((error) => {
+                console.log(error)
+              })
           }
         } else {
           /* edit existing section */
           this.sendingData = true
           this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + sectionDto.id, sectionDto)
-          .then(responseF).catch((error) => {
-            console.log(error)
-          })
+            .then(responseF).catch((error) => {
+              console.log(error)
+            })
         }
       }
     },
@@ -375,17 +375,17 @@ export default {
 
       this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/removeSubsection/' + this.section.id,
         {}).then(responseF).catch((error) => {
-          console.log(error)
-        })
+        console.log(error)
+      })
     },
     deleteSection () {
       this.axios.delete('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
-      .then((response) => {
-        this.closeThis()
-        this.$store.commit('triggerUpdateModel')
-      }).catch((error) => {
-        console.log(error)
-      })
+        .then((response) => {
+          this.closeThis()
+          this.$store.commit('triggerUpdateModel')
+        }).catch((error) => {
+          console.log(error)
+        })
     },
     atKeydown (e) {
       if (!this.editing) {

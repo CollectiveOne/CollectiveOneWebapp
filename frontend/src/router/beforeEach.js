@@ -31,7 +31,6 @@ export default (to, from, next) => {
         case 'InitiativeAssignations':
           subsection = 'assignations'
           break
-
       }
     }
     next(to.path + '/' + subsection)

@@ -13,7 +13,6 @@
       </transition>
     </div>
 
-
     <div class="vision-nav light-grey w3-cell">
       <app-model-nav @section-selected="sectionSelected($event)"></app-model-nav>
     </div>

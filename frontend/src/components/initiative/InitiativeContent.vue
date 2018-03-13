@@ -176,22 +176,18 @@ export default {
       console.log('swiped left')
       if (this.isOverview) {
         this.$router.push({name: 'InitiativePeople'})
-        return
       }
       if (this.isPeople) {
         this.$router.push({name: 'InitiativeAssignations'})
-        return
       }
     },
     onSwipeRight () {
       console.log('swiped right')
       if (this.isAssignations) {
         this.$router.push({name: 'InitiativePeople'})
-        return
       }
       if (this.isPeople) {
         this.$router.push({name: 'InitiativeOverview'})
-        return
       }
     }
   },

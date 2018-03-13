@@ -1,7 +1,6 @@
 <template lang="html">
 
   <div v-if="section" class="section-container w3-border gray-1-border w3-round" ref="sectionContainer">
-
     <div class="slider-container">
       <transition name="slideDownUp">
         <app-model-card-modal v-if="showCardModal"
@@ -77,60 +76,61 @@
 
     <div class="gray-1-border slider-container">
 
-        <div v-if="expanded" class="w3-row w3-leftbar subelements-container">
-          <div class="w3-col">
+      <div v-if="expanded" class="w3-row w3-leftbar subelements-container">
+        <div class="w3-col">
 
-            <div v-if="section.cardsWrappers.length > 0 && showSubsections && !showCards" class="w3-center w3-margin-top">
-              <button class="w3-button light-grey w3-small w3-round"
-                @click="showCards =!showCards">
-                <span v-if="showCards"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide cards</span>
-                <span v-else="showCards"><b>{{ section.cardsWrappers.length }}</b> cards hidden</span>
-              </button>
-            </div>
+          <div v-if="section.cardsWrappers.length > 0 && showSubsections && !showCards" class="w3-row w3-center w3-margin-top">
+            <button class="w3-button light-grey w3-small w3-round"
+              @click="showCards =!showCards">
+              <span v-if="showCards"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide cards</span>
+              <span v-else><b>{{ section.cardsWrappers.length }}</b> cards hidden</span>
+            </button>
+          </div>
 
-            <div class="w3-row slider-container">
-              <transition name="slideDownUp">
-                <div v-if="showCards" class="cards-container">
-                  <div v-for="(cardWrapper, ix) in sortedByLikes"
-                    :class="cardsContainerClasses"
-                    :key="cardWrapper.id"
-                    @dragover.prevent
-                    @drop.prevent="cardDroped(cardWrapper.id, $event)">
+          <div class="w3-row slider-container">
+            <transition name="slideDownUp">
+              <div v-if="showCards" class="cards-container">
+                <div v-for="(cardWrapper, ix) in sortedByLikes"
+                  :key="cardWrapper.id"
+                  :class="cardsContainerClasses"
+                  @dragover.prevent
+                  @drop.prevent="cardDroped(cardWrapper.id, $event)">
 
-                    <div v-if="cardsAsCards"
-                      @click="$emit('new-card', ix)" class="empty-div cursor-pointer w3-row w3-round">
-                      <div class="w3-right">
-                        <i>add card here</i>
-                      </div>
+                  <div v-if="cardsAsCards"
+                    @click="$emit('new-card', ix)"
+                    class="empty-div cursor-pointer w3-row w3-round">
+                    <div class="w3-right">
+                      <i>add card here</i>
                     </div>
-
-                    <div class="">
-                      <app-model-card-with-modal
-                        :cardWrapperInit="cardWrapper"
-                        :initiativeId="initiativeId"
-                        :inSectionId="section.id"
-                        :inSectionTitle="section.title"
-                        :cardEffect="cardsAsCards"
-                        :forceUpdate="forceUpdate">
-                      </app-model-card-with-modal>
-                    </div>
-
                   </div>
-                  <div v-if="cardsAsCards" class="last-add section-card-col"
-                    @dragover.prevent
-                    @drop.prevent="cardDroped('', $event)">
 
-                    <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
-                      <button class="w3-button" style="width: 100%"
-                        @click="$emit('new-card')">
-                        <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-                        add card
-                      </button>
-                    </div>
+                  <div class="">
+                    <app-model-card-with-modal
+                      :cardWrapperInit="cardWrapper"
+                      :initiativeId="initiativeId"
+                      :inSectionId="section.id"
+                      :inSectionTitle="section.title"
+                      :cardEffect="cardsAsCards"
+                      :forceUpdate="forceUpdate">
+                    </app-model-card-with-modal>
+                  </div>
+
+                </div>
+                <div v-if="cardsAsCards" class="last-add section-card-col"
+                  @dragover.prevent
+                  @drop.prevent="cardDroped('', $event)">
+
+                  <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
+                    <button class="w3-button" style="width: 100%"
+                      @click="$emit('new-card')">
+                      <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
+                      add card
+                    </button>
                   </div>
                 </div>
-              </transition>
-            </div>
+              </div>
+            </transition>
+          </div>
 
             <div v-if="section.nSubsections > 0 && showCards && !showSubsections" class="w3-center w3-margin-bottom">
               <button  class="w3-button light-grey w3-small w3-round"
@@ -207,7 +207,6 @@
         @click="toggleExpand()">
         <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse "{{  section.title }}" section</span>
       </button>
-
     </div>
 
   </div>
@@ -433,24 +432,24 @@ export default {
           this.axios.put('/1/initiative/' + this.initiativeId +
             '/model/section/' + dragData.fromSectionId +
             '/moveCard/' + dragData.cardWrapperId, {}, {
-              params: {
-                onSectionId: this.section.id,
-                onCardWrapperId: onCardWrapperId
-              }
-            }).then((response) => {
-              this.$store.commit('triggerUpdateModel')
-            })
+            params: {
+              onSectionId: this.section.id,
+              onCardWrapperId: onCardWrapperId
+            }
+          }).then((response) => {
+            this.$store.commit('triggerUpdateModel')
+          })
         } else {
           /* add existing card */
           this.axios.put('/1/initiative/' + this.initiativeId +
             '/model/section/' + this.section.id +
             '/cardWrapper/' + dragData.cardWrapperId, {}, {
-              params: {
-                beforeCardWrapperId: onCardWrapperId
-              }
-            }).then((response) => {
-              this.$store.commit('triggerUpdateModel')
-            })
+            params: {
+              beforeCardWrapperId: onCardWrapperId
+            }
+          }).then((response) => {
+            this.$store.commit('triggerUpdateModel')
+          })
         }
       }
     },
@@ -603,9 +602,6 @@ export default {
   }
 }
 
-
-
-
 @media screen and (min-width: 1700px) {
   .section-card-col-with-nav {
     width: calc(25% - 16px);
@@ -641,7 +637,6 @@ export default {
     vertical-align: top;
   }
 }
-
 
 .section-card-par {
   margin-bottom: 16px;

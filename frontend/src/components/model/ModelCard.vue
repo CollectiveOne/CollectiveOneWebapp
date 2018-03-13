@@ -53,7 +53,7 @@
       <div v-if="cardEffect" class="w3-row bottom-row light-grey">
 
           <div v-if="cardWrapper.inSections.length > 0" class="">
-            <div v-for="inSection in cardWrapper.inSections"
+            <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
               v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
               <div class="">
                 <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
@@ -218,7 +218,7 @@ export default {
     showThisTag (inSection) {
       /* hide current section tag */
       if (this.floating) {
-        true
+        return true
       } else {
         return inSection.id !== this.inSectionId
       }

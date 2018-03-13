@@ -86,13 +86,15 @@
                     <div class="w3-left w3-margin-right">
                       <i>in:</i>
                     </div>
-                    <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container w3-left">
+                    <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
+                      class="insection-tag-container w3-left">
                       <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
                         class="gray-1 w3-tag w3-round w3-small">
                         {{ inSection.title }}
                       </router-link>
                     </div>
-                    <div v-if="editing" v-for="toSection in addToSections" class="insection-tag-container w3-left w3-display-container w3-margin-left">
+                    <div v-if="editing" v-for="toSection in addToSections" :key="toSection.id"
+                      class="insection-tag-container w3-left w3-display-container w3-margin-left">
                       <div class="success-background w3-tag w3-round w3-small">
                         {{ toSection.title }}
                       </div>
@@ -599,9 +601,9 @@ export default {
 
           this.sendingData = true
           this.axios.put('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id, cardDto)
-          .then(responseF).catch((error) => {
-            console.log(error)
-          })
+            .then(responseF).catch((error) => {
+              console.log(error)
+            })
         }
       }
     },
@@ -616,8 +618,8 @@ export default {
       }
       this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/removeCard/' + this.cardWrapper.id,
         {}).then(responseF).catch((error) => {
-          console.log(error)
-        })
+        console.log(error)
+      })
     },
     deleteCard () {
       this.axios.delete('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
@@ -731,12 +733,12 @@ export default {
 }
 
 .inputfile {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
 }
 
 .loader-gif-container {

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="gray-1-color" :class="">
+  <div class="gray-1-color">
     <div v-if="show" class="w3-left noselect">
       <div class="">
         <span :style="iconStyle"><i class="fa" :class="iconClass"></i></span>
