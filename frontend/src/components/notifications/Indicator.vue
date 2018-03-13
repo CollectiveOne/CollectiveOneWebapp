@@ -126,11 +126,11 @@ export default {
 
         switch (this.contextType) {
           case 'MODEL_SECTION':
-            url = '/1/initiative/' + initId + '/model/section/' + this.contextElementId + '/' + this.requestType
+            url = '/1/model/section/' + this.contextElementId + '/' + this.requestType
             break
 
           case 'MODEL_CARD':
-            url = '/1/initiative/' + initId + '/model/card/' + this.contextElementId + '/' + this.requestType
+            url = '/1/model/card/' + this.contextElementId + '/' + this.requestType
             break
         }
 

@@ -21,41 +21,39 @@ const appendAllCards = function (section, cardsWrappers) {
 
 export default {
   props: {
-    sectionId: {
-      type: String
-    },
-    levels: {
-      type: Number
+    level: {
+      type: Number,
+      default: 1
+    }
+  },
+  data () {
+    return {
+      sectionContent: null,
+      allCardWrappers: []
+    }
+  },
+
+  computed: {
+    currentSection () {
+      return this.$store.state.model.currentSection
     }
   },
 
   watch: {
-    sectionId () {
+    '$store.state.model.currentSection' () {
       this.update()
-    },
-    levels () {
-      this.update()
-    }
-  },
-
-  data () {
-    return {
-      section: null,
-      allCardWrappers: []
     }
   },
 
   methods: {
     update () {
-      if (this.sectionId) {
-        if (this.sectionId !== '') {
-          this.axios.get('/1/model/section/' + this.sectionId, {params: {level: this.levels}}).then((response) => {
+      if (this.currentSection) {
+          this.axios.get('/1/model/section/' + this.currentSection.id, {params: {level: this.level}}).then((response) => {
             if (response.data.result === 'success') {
               this.section = response.data.data
               this.updateAllCardWrappers()
             }
           })
-        }
       }
     },
     updateAllCardWrappers () {

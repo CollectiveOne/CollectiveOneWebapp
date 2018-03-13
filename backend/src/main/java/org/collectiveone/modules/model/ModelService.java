@@ -27,6 +27,7 @@ import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
+import org.collectiveone.modules.model.dto.ModelSectionGenealogyDto;
 import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
@@ -140,6 +141,32 @@ public class ModelService {
 		}
 		
 		return sectionDto;
+	}
+	
+	@Transactional
+	public GetResult<ModelSectionGenealogyDto> getSectionParentGenealogy(UUID sectionId) {
+		readIds.clear();
+		return new GetResult<ModelSectionGenealogyDto>("success", "parents retrieved", getSectionParentGenealogyRec(sectionId));
+	}
+	
+	@Transactional
+	public ModelSectionGenealogyDto getSectionParentGenealogyRec(UUID sectionId) {
+		
+		ModelSectionGenealogyDto genealogy = new ModelSectionGenealogyDto();
+		genealogy.setSection(modelSectionRepository.findById(sectionId).toDtoLight());
+		
+		readIds.add(sectionId);
+		
+		List<ModelSection> inSections = modelSectionRepository.findParentSections(sectionId);
+		
+		for (ModelSection inSection : inSections) {
+			if (!readIds.contains(inSection.getId())) {
+				readIds.add(inSection.getId());
+				genealogy.getParents().add(getSectionParentGenealogyRec(inSection.getId()));	
+			}
+		}
+		
+		return genealogy;
 	}
 	
 	@Transactional

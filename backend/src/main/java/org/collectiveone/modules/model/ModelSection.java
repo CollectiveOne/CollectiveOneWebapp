@@ -87,14 +87,20 @@ public class ModelSection {
 		return id.equals(other.getId());
 	}
 	
-	
-	public ModelSectionDto toDto() {
+	public ModelSectionDto toDtoLight () {
 		ModelSectionDto sectionDto = new ModelSectionDto();
 		
 		sectionDto.setId(id.toString());
 		sectionDto.setTitle(title);
 		sectionDto.setDescription(description);
 		sectionDto.setIsTopModelSection(isTopModelSection);
+		
+		return sectionDto; 
+	}
+	
+	public ModelSectionDto toDto() {
+		ModelSectionDto sectionDto = toDtoLight();
+		
 		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
 		
 		sectionDto.setnSubsections(subsections.size());

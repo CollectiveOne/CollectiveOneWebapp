@@ -170,10 +170,6 @@ export default {
       type: Boolean,
       default: false
     },
-    initiativeId: {
-      type: String,
-      default: ''
-    },
     sectionId: {
       type: String,
       default: ''
@@ -255,7 +251,7 @@ export default {
   methods: {
     update () {
       this.loading = true
-      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
+      this.axios.get('/1/model/section/' + this.section.id)
         .then((response) => {
           this.loading = false
           this.section = response.data.data
@@ -263,7 +259,7 @@ export default {
     },
     updateInElement () {
       if (!this.inInitiative) {
-        this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId)
+        this.axios.get('/1/model/section/' + this.inElementId)
           .then((response) => {
             this.inElementTitleOk = response.data.data.title
           })
@@ -334,13 +330,13 @@ export default {
             if (this.inInitiative) {
               /* create new section */
               this.sendingData = true
-              this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/', sectionDto)
+              this.axios.post('/1/model/section/', sectionDto)
                 .then(responseF).catch((error) => {
                   console.log(error)
                 })
             } else {
               this.sendingData = true
-              this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/subsection', sectionDto)
+              this.axios.post('/1/model/section/' + this.inElementId + '/subsection', sectionDto)
                 .then(responseF).catch((error) => {
                   console.log(error)
                 })
@@ -348,7 +344,7 @@ export default {
           } else {
             /* add existing section */
             this.sendingData = true
-            this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/subsection/' + this.existingSection.id, {})
+            this.axios.put('/1/model/section/' + this.inElementId + '/subsection/' + this.existingSection.id, {})
               .then(responseF).catch((error) => {
                 console.log(error)
               })
@@ -356,7 +352,7 @@ export default {
         } else {
           /* edit existing section */
           this.sendingData = true
-          this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + sectionDto.id, sectionDto)
+          this.axios.put('/1/model/section/' + sectionDto.id, sectionDto)
             .then(responseF).catch((error) => {
               console.log(error)
             })
@@ -373,13 +369,13 @@ export default {
         }
       }
 
-      this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/removeSubsection/' + this.section.id,
+      this.axios.put('/1/model/section/' + this.inElementId + '/removeSubsection/' + this.section.id,
         {}).then(responseF).catch((error) => {
         console.log(error)
       })
     },
     deleteSection () {
-      this.axios.delete('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
+      this.axios.delete('/1/model/section/' + this.section.id)
         .then((response) => {
           this.closeThis()
           this.$store.commit('triggerUpdateModel')
