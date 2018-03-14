@@ -96,7 +96,7 @@ export default {
 
   methods: {
     sectionSelected () {
-      this.$store.dispatch('updateCurrentSection', this.section)
+      this.$router.push({name: 'ModelSection', params: {sectionId: this.section.id}})
     },
     clickOutsideMenu () {
       this.showSubmenu = false

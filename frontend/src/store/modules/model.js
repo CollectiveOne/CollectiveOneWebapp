@@ -11,8 +11,9 @@ const pathToTop = function (genealogy, parents) {
 }
 
 const state = {
-  currentSection: null,
-  currentSectionGenealogy: null
+  currentSectionId: null,
+  currentSectionGenealogy: null,
+  level: 1
 }
 
 const getters = {
@@ -25,20 +26,22 @@ const getters = {
 }
 
 const mutations = {
-  setCurrentSection: (state, payload) => {
-    state.currentSection = payload
-  },
   setCurrentSectionGenealogy: (state, payload) => {
     state.currentSectionGenealogy = payload
+  },
+  levelDown: (state) => {
+    state.level = state.level > 1 ? state.level - 1 : 1
+  },
+  levelUp: (state) => {
+    state.level = state.level + 1
   }
 }
 
 const actions = {
-  updateCurrentSection: (context, section) => {
+  updateCurrentSection: (context, sectionId) => {
     context.commit('setCurrentSectionGenealogy', null)
-    context.commit('setCurrentSection', section)
 
-    Vue.axios.get('/1/model/section/' + section.id + '/genealogy').then((response) => {
+    Vue.axios.get('/1/model/section/' + sectionId + '/genealogy').then((response) => {
       if (response.data.result === 'success') {
         context.commit('setCurrentSectionGenealogy', response.data.data)
       }

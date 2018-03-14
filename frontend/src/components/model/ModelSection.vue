@@ -15,60 +15,53 @@
       </transition>
     </div>
 
-    <div class="">
-
-      <div v-if="expanded" class="w3-row subelements-container">
-        <div class="w3-col">
-
-          <div class="w3-row slider-container">
-            <transition name="slideDownUp">
-              <div v-if="showCards" class="cards-container">
-                <div v-for="(cardWrapper, ix) in sortedByLikes"
-                  :key="cardWrapper.id"
-                  :class="cardsContainerClasses"
-                  @dragover.prevent
-                  @drop.prevent="cardDroped(cardWrapper.id, $event)">
-
-                  <div class="">
-                    <app-model-card-with-modal
-                      :cardWrapperInit="cardWrapper"
-                      :inSectionId="section.id"
-                      :inSectionTitle="section.title"
-                      :cardEffect="cardsAsCards">
-                    </app-model-card-with-modal>
-                  </div>
-
-                </div>
-              </div>
-            </transition>
-          </div>
-
-            <div class="slider-container">
-              <transition name="slideDownUp">
-
-                <div v-if="showSubsections" class="subsections-container">
-                  <div v-for="subsection in section.subsections"
-                    :key="subsection.id"
-                    class="subsection-container"
-                    @dragover.prevent
-                    @drop.prevent="subsectionDroped(subsection.id, $event)">
-
-                    <app-model-section
-                      :section="subsection"
-                      :inElementId="section.id"
-                      :inElementTitle="section.title"
-                      dragType="MOVE_SUBSECTION"
-                      :cardsAsCardsInit="cardsAsCards">
-                    </app-model-section>
-                  </div>
-
-                </div>
-              </transition>
-            </div>
-          </div>
-        </div>
-      </transition>
+    <div v-if="nestedIn.length > 0 && sortedCards.length > 0"
+      class="w3-row title-row">
+      <div v-for="parent in nestedIn.slice(1, nestedIn.length)"
+        class="w3-left">
+        {{ parent.title }} <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </div>
+      <div class="w3-left">
+        {{ section.title }}
+      </div>
     </div>
+
+    <div class="w3-row">
+      <div v-for="(cardWrapper, ix) in sortedCards"
+        :key="cardWrapper.id"
+        :class="cardsContainerClasses"
+        @dragover.prevent
+        @drop.prevent="cardDroped(cardWrapper.id, $event)">
+
+        <div class="">
+          <app-model-card-with-modal
+            :cardWrapperInit="cardWrapper"
+            :inSectionId="section.id"
+            :inSectionTitle="section.title"
+            :cardEffect="cardsAsCards">
+          </app-model-card-with-modal>
+        </div>
+      </div>
+    </div>
+
+    <div class="w3-row">
+      <div v-for="subsection in section.subsections"
+        :key="subsection.id"
+        class="subsection-container"
+        @dragover.prevent
+        @drop.prevent="subsectionDroped(subsection.id, $event)">
+
+        <app-model-section
+          :section="subsection"
+          :inElementId="section.id"
+          :inElementTitle="section.title"
+          dragType="MOVE_SUBSECTION"
+          :cardsAsCardsInit="cardsAsCards"
+          :nestedIn="nestedIn.concat([section])">
+        </app-model-section>
+      </div>
+    </div>
+
   </div>
 
 </template>
@@ -89,6 +82,10 @@ export default {
     section: {
       type: Object,
       default: null
+    },
+    nestedIn: {
+      type: Array,
+      default: () => { return [] }
     },
     inElementId: {
       type: String,
@@ -124,7 +121,7 @@ export default {
   },
 
   computed: {
-    sortedByLikes () {
+    sortedCards () {
       if (!this.sortByLikes) {
         return JSON.parse(JSON.stringify(this.section.cardsWrappers))
       } else {
@@ -245,22 +242,7 @@ export default {
 .section-container {
 }
 
-.expand-row-collapsed {
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  overflow: hidden;
-}
-
-.expand-row button {
-  width: 100%;
-  text-align: center;
-  padding-left: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
 .cards-container {
-  padding: 6px 10px 22px 10px;
 }
 
 .section-card-col-with-nav, .section-card-col-no-nav {
@@ -353,50 +335,23 @@ export default {
   margin-bottom: 16px;
 }
 
-.empty-div {
-  min-height: 22px;
-  color: #d5d6d7;
-  padding-right: 10px;
-  margin: 3px 0px;
-}
-
-.last-add {
-  margin-top: 16px;
-}
-
-.empty-div:hover {
-  background-color: #bfc1c3;
-  color: white;
-}
-
-.bottom-bar .fa {
-  margin-top: 5px;
-  font-size: 16px !important;
-  margin-right: 5px;
-}
-
-.bottom-bar .button-text {
-  padding-top: 5px;
-}
-
-.show-sections-button {
-  width: 100%;
-}
-
-.subsection-controls-row {
-  padding-left: 16px;
-  margin-top: 6px;
+.title-row {
+  margin-top: 12px;
   margin-bottom: 6px;
 }
 
+.title-row .fa {
+  font-size: 12px;
+}
+
+.title-row > div {
+  margin-right: 5px;
+}
+
 .subsections-container {
-  padding-left: 16px;
-  padding-top: 12px;
-  padding-right: 10px;
 }
 
 .subsection-container {
-  margin-bottom: 20px;
 }
 
 </style>

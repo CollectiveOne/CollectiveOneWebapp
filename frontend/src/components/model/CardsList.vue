@@ -1,22 +1,10 @@
 <template lang="html">
   <div class="">
-
-    <div class="slider-container">
-      <transition name="slideDownUp">
-        <app-model-card-modal
-          v-if="showNewCardModal"
-          :isNew="true"
-          :inSectionId="currentSection.id"
-          :inSectionTitle="currentSection.title"
-          @close="showNewCardModal = false">
-        </app-model-card-modal>
-      </transition>
-    </div>
-
     <div class="cards-list">
       <app-model-section
         :section="section"
-        :cardEffect="true">
+        :cardEffect="true"
+        :level="level">
       </app-model-section>
     </div>
   </div>
@@ -24,20 +12,14 @@
 
 <script>
 
-import ModelCardModal from '@/components/model/modals/ModelCardModal'
 import ModelSection from '@/components/model/ModelSection'
 
 export default {
   components: {
-    'app-model-card-modal': ModelCardModal,
     'app-model-section': ModelSection
   },
 
   props: {
-    level: {
-      type: Number,
-      default: 1
-    }
   },
 
   data () {
@@ -48,8 +30,11 @@ export default {
   },
 
   computed: {
-    currentSection () {
-      return this.$store.state.model.currentSection
+    currentSectionId () {
+      return this.$route.params.sectionId
+    },
+    level () {
+      return this.$store.state.model.level
     }
   },
 
@@ -57,15 +42,15 @@ export default {
     level () {
       this.update()
     },
-    '$store.state.model.currentSection' () {
+    '$route' () {
       this.update()
     }
   },
 
   methods: {
     update () {
-      if (this.currentSection) {
-        this.axios.get('/1/model/section/' + this.currentSection.id, {params: {level: this.level}}).then((response) => {
+      if (this.currentSectionId) {
+        this.axios.get('/1/model/section/' + this.currentSectionId, {params: {level: this.level}}).then((response) => {
           if (response.data.result === 'success') {
             this.section = response.data.data
           }

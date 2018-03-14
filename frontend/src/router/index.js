@@ -16,7 +16,8 @@ import TransfersSection from '@/components/initiative/TransfersSection.vue'
 import TimelineSection from '@/components/initiative/TimelineSection.vue'
 
 import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
-import ModelSectionPlacer from '@/components/model/ModelSectionPlacer.vue'
+import CardsList from '@/components/model/CardsList.vue'
+
 import ModelCardWrapperPlacer from '@/components/model/ModelCardWrapperPlacer.vue'
 import ModelSearchContainer from '@/components/model/ModelSearchContainer.vue'
 
@@ -68,14 +69,19 @@ export default new Router({
                 { path: 'timeline', name: 'InitiativeTimeline', component: TimelineSection, meta: {'column': 2} },
                 {
                   path: 'model',
-                  name: 'InitiativeModel',
                   component: ModelSectionTab,
                   meta: {'column': 3},
                   children: [
                     {
+                      path: '/',
+                      name: 'InitiativeModel',
+                      component: CardsList,
+                      meta: {'column': 3}
+                    },
+                    {
                       path: 'section/:sectionId',
                       name: 'ModelSection',
-                      component: ModelSectionPlacer,
+                      component: CardsList,
                       meta: {'column': 3},
                       children: [
                         { path: 'card/:cardId', name: 'ModelCardInSection', meta: {'column': 3} }

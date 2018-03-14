@@ -20,7 +20,7 @@
       <div class="w3-row control-row w3-border-bottom">
         <div class="w3-left breadcrumb">
           <transition name="fadeenter">
-            <div :key="currentSection.id" class="w3-left">
+            <div :key="currentSectionId" class="w3-left">
               <div v-for="(parent, ix) in currentSectionPath" class="w3-left">
                 <div class="w3-left">
                   {{ parent.title }}
@@ -32,23 +32,10 @@
             </div>
           </transition>
         </div>
-        <div class="w3-right zoom-controls gray-1-color">
-          <div class="w3-left">
-            <i class="fa fa-level-down" aria-hidden="true"></i>
-            {{ level }}
-          </div>
-          <div class="w3-left cursor-pointer">
-            <i @click="levelDown()" class="fa fa-minus-circle" aria-hidden="true"></i>
-          </div>
-          <div class="w3-left cursor-pointer">
-            <i @click="levelUp()" class="fa fa-plus-circle" aria-hidden="true"></i>
-          </div>
-        </div>
       </div>
       <div class="w3-row w3-margin-top w3-container">
         <transition name="fadeenter">
-          <app-cards-list :key="currentSection.id" :level="level">
-          </app-cards-list>
+          <router-view></router-view>
         </transition>
       </div>
     </div>
@@ -71,8 +58,7 @@ export default {
 
   data () {
     return {
-      showNewCardModal: false,
-      level: 1
+      showNewCardModal: false
     }
   },
 
@@ -80,8 +66,8 @@ export default {
     initiative () {
       return this.$store.state.initiative.initiative
     },
-    currentSection () {
-      return this.$store.state.model.currentSection
+    currentSectionId () {
+      return this.$route.params.sectionId
     },
     currentSectionGenealogy () {
       return this.$store.state.model.currentSectionGenealogy
@@ -95,18 +81,27 @@ export default {
     }
   },
 
-  methods: {
-    levelDown () {
-      this.level = this.level > 1 ? this.level - 1 : 1
-    },
-    levelUp () {
-      this.level = this.level + 1
+  watch: {
+    '$route' () {
+      this.$store.dispatch('updateCurrentSection', this.$route.params.sectionId)
     }
   },
 
+  methods: {
+  },
+
   created () {
-    if (this.$store.state.model.currentSection === null) {
-      this.$store.dispatch('updateCurrentSection', this.initiative.topModelSection)
+    // if (this.$store.state.model.currentSection === null) {
+    //   this.$store.dispatch('updateCurrentSection', this.initiative.topModelSection)
+    // }
+
+    if (this.$route.name === 'InitiativeModel') {
+      console.log('redirecting to top section')
+      this.$router.replace({name: 'ModelSection', params: {sectionId: this.initiative.topModelSection.id}})
+    }
+
+    if (this.$route.name === 'ModelSection') {
+       this.$store.dispatch('updateCurrentSection', this.$route.params.sectionId)
     }
   }
 }

@@ -14,6 +14,19 @@
     </transition>
 
     <div class="model-nav-container w3-container">
+      <div class="w3-row w3-center">
+        <div class="zoom-controls gray-1-color">
+          <div class="cursor-pointer">
+            <i @click="$store.commit('levelDown')" class="fa fa-minus-circle" aria-hidden="true"></i>
+          </div>
+          <div class="">
+            {{ level }}
+          </div>
+          <div class="cursor-pointer">
+            <i @click="$store.commit('levelUp')" class="fa fa-plus-circle" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
       <div class="w3-row">
         <app-model-section-nav-item
           :section="initiative.topModelSection">
@@ -41,7 +54,12 @@ export default {
   computed: {
     initiative () {
       return this.$store.state.initiative.initiative
+    },
+    level () {
+      return this.$store.state.model.level
     }
+  },
+  methods: {
   }
 }
 </script>
@@ -51,6 +69,18 @@ export default {
 .model-nav-container {
   padding-top: 16px;
   min-height: calc(100vh - 131px);
+}
+
+.zoom-controls {
+  margin: 0 auto;
+  width: 90px;
+  font-size: 20px;
+}
+
+.zoom-controls > div {
+  width: 30px;
+  float: left;
+  text-align: center;
 }
 
 </style>
