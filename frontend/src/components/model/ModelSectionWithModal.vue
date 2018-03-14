@@ -139,25 +139,9 @@ export default {
   },
 
   props: {
-    sectionInit: {
+    section: {
       type: Object,
       default: null
-    },
-    basicPreloaded: {
-      type: Boolean,
-      default: false
-    },
-    subElementsPreloaded: {
-      type: Boolean,
-      default: false
-    },
-    initiativeId: {
-      type: String,
-      default: ''
-    },
-    sectionId: {
-      type: String,
-      default: ''
     },
     inElementId: {
       type: String,
@@ -181,14 +165,6 @@ export default {
     cardsAsCardsInit: {
       type: Boolean,
       default: true
-    },
-    expandInit: {
-      type: Boolean,
-      default: false
-    },
-    expandSubSubsecInit: {
-      type: Boolean,
-      default: false
     }
   },
 

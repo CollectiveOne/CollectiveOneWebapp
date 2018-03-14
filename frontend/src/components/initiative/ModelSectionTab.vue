@@ -97,7 +97,7 @@ export default {
 
   methods: {
     levelDown () {
-      this.level = this.level > 0 ? this.level - 1 : 0
+      this.level = this.level > 1 ? this.level - 1 : 1
     },
     levelUp () {
       this.level = this.level + 1

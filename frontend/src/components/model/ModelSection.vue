@@ -1,6 +1,7 @@
 <template lang="html">
 
-  <div v-if="section" class="section-container w3-border gray-1-border w3-round" ref="sectionContainer">
+  <div v-if="section" class="section-container" ref="sectionContainer">
+
     <div class="slider-container">
       <transition name="slideDownUp">
         <app-model-card-modal v-if="showCardModal"
@@ -14,78 +15,10 @@
       </transition>
     </div>
 
-    <div class="cursor-pointer"
-      draggable="true"
-      @dragstart="dragStart($event)"
-      @click="$emit('header-clicked')">
+    <div class="">
 
-      <app-model-section-header
-        :section="section"
-        :level="level"
-        :floating="floating"
-        :inElementId="inElementId"
-        :expand="expanded"
-        :showMessagesIndicator="true"
-        :forceUpdate="forceUpdate"
-        @show-messages="$emit('show-messages')">
-      </app-model-section-header>
-    </div>
-
-    <div v-if="expanded" class="w3-row expand-row w3-leftbar w3-border-bottom w3-border-top">
-      <div class="w3-col s4">
-        <button class="w3-button light-grey w3-small"
-          @click="toggleExpand()">
-          <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse section</span>
-        </button>
-      </div>
-      <div class="w3-col s4 w3-border-left">
-        <div class="w3-row">
-          <div class="w3-col s8">
-            <button class="w3-button light-grey w3-small"
-              @click="showCards =!showCards">
-              <span v-if="showCards"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide cards</span>
-              <span v-if="!showCards"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ nCardWrappers }}</b> cards</span>
-            </button>
-          </div>
-          <div class="w3-col s4">
-            <button class="w3-button light-grey w3-small" :disabled="!isLoggedAnEditor"
-              @click="newCardFromBar()">
-              <i class="fa fa-plus" aria-hidden="true"></i><span class="w3-hide-small w3-hide-medium"> new card</span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="w3-col s4 w3-border-left">
-        <div class="w3-row">
-          <div class="w3-col s8">
-            <button class="w3-button light-grey w3-small"
-              @click="showSubsections =!showSubsections">
-              <span v-if="showSubsections"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide subsections</span>
-              <span v-if="!showSubsections"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ section.nSubsections }}</b> subsections</span>
-            </button>
-          </div>
-          <div class="w3-col s4">
-            <button class="w3-button light-grey w3-small" :disabled="!isLoggedAnEditor"
-              @click="newSubsectionFromBar()">
-              <i class="fa fa-plus" aria-hidden="true"></i><span class="w3-hide-small w3-hide-medium"> new subsec</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="gray-1-border slider-container">
-
-      <div v-if="expanded" class="w3-row w3-leftbar subelements-container">
+      <div v-if="expanded" class="w3-row subelements-container">
         <div class="w3-col">
-
-          <div v-if="section.cardsWrappers.length > 0 && showSubsections && !showCards" class="w3-row w3-center w3-margin-top">
-            <button class="w3-button light-grey w3-small w3-round"
-              @click="showCards =!showCards">
-              <span v-if="showCards"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide cards</span>
-              <span v-else><b>{{ section.cardsWrappers.length }}</b> cards hidden</span>
-            </button>
-          </div>
 
           <div class="w3-row slider-container">
             <transition name="slideDownUp">
@@ -96,55 +29,19 @@
                   @dragover.prevent
                   @drop.prevent="cardDroped(cardWrapper.id, $event)">
 
-                  <div v-if="cardsAsCards"
-                    @click="$emit('new-card', ix)"
-                    class="empty-div cursor-pointer w3-row w3-round">
-                    <div class="w3-right">
-                      <i>add card here</i>
-                    </div>
-                  </div>
-
                   <div class="">
                     <app-model-card-with-modal
                       :cardWrapperInit="cardWrapper"
-                      :initiativeId="initiativeId"
                       :inSectionId="section.id"
                       :inSectionTitle="section.title"
-                      :cardEffect="cardsAsCards"
-                      :forceUpdate="forceUpdate">
+                      :cardEffect="cardsAsCards">
                     </app-model-card-with-modal>
                   </div>
 
                 </div>
-                <div v-if="cardsAsCards" class="last-add section-card-col"
-                  @dragover.prevent
-                  @drop.prevent="cardDroped('', $event)">
-
-                  <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
-                    <button class="w3-button" style="width: 100%"
-                      @click="$emit('new-card')">
-                      <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-                      add card
-                    </button>
-                  </div>
-                </div>
               </div>
             </transition>
           </div>
-
-            <div v-if="section.nSubsections > 0 && showCards && !showSubsections" class="w3-center w3-margin-bottom">
-              <button  class="w3-button light-grey w3-small w3-round"
-                @click="showSubsections =!showSubsections">
-                <span><b>{{ section.nSubsections }}</b> subsections hidden</span>
-              </button>
-            </div>
-
-            <div v-if="section.nSubsections > 0 && showSubsections" class="w3-row subsection-controls-row noselect">
-              <div class="w3-tag gray-1 w3-small w3-left cursor-pointer"
-                @click="expandSubSubsecInit =!expandSubSubsecInit">
-                {{ expandSubSubsecInit ? 'collapse' : 'expand' }} all subsections
-              </div>
-            </div>
 
             <div class="slider-container">
               <transition name="slideDownUp">
@@ -156,31 +53,15 @@
                     @dragover.prevent
                     @drop.prevent="subsectionDroped(subsection.id, $event)">
 
-                    <app-model-section-with-modal
-                      :preloaded="subsection.subElementsLoaded"
-                      :sectionInit="subsection"
-                      :sectionId="subsection.id"
-                      :initiativeId="initiativeId"
+                    <app-model-section
+                      :section="subsection"
                       :inElementId="section.id"
                       :inElementTitle="section.title"
-                      :level="level + 1"
                       dragType="MOVE_SUBSECTION"
-                      :cardsAsCardsInit="cardsAsCards"
-                      :expandInit="expandSubSubsecInit"
-                      :forceUpdate="forceUpdate">
-                    </app-model-section-with-modal>
+                      :cardsAsCardsInit="cardsAsCards">
+                    </app-model-section>
                   </div>
 
-                  <div class="subsection-container gray-1-color w3-border w3-round"
-                    @dragover.prevent
-                    @drop.prevent="subsectionDroped('', $event)">
-
-                    <button class="w3-button" style="width: 100%; text-align: left"
-                      @click="$emit('new-subsection')">
-                      <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-                      add subsection
-                    </button>
-                  </div>
                 </div>
               </transition>
             </div>
@@ -188,27 +69,6 @@
         </div>
       </transition>
     </div>
-
-    <div v-if="!expanded" class="w3-row expand-row w3-leftbar expand-row-collapsed">
-      <button class="w3-button light-grey w3-small"
-        @click="toggleExpand()">
-        <span>
-          <i class="fa fa-chevron-down" aria-hidden="true"></i> Expand
-          <span v-if="section.nSubsections > 0 && section.nCards > 0"> (contains <b>{{ section.nSubsections }}</b> subsections and <b>{{ section.nCards }}</b> cards)</span>
-          <span v-else>
-            <span v-if="section.nSubsections > 0"> (contains <b>{{ section.nSubsections }}</b> subsections)</span>
-            <span v-if="section.nCards > 0"> (contains <b>{{ section.nCards }}</b> cards)</span>
-          </span>
-        </span>
-      </button>
-    </div>
-    <div v-if="expanded && (showCards || showSubsections)" class="w3-row expand-row w3-leftbar">
-      <button class="w3-button light-grey w3-small"
-        @click="toggleExpand()">
-        <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse "{{  section.title }}" section</span>
-      </button>
-    </div>
-
   </div>
 
 </template>
@@ -226,25 +86,9 @@ export default {
   },
 
   props: {
-    sectionInit: {
+    section: {
       type: Object,
       default: null
-    },
-    basicPreloaded: {
-      type: Boolean,
-      default: false
-    },
-    subElementsPreloaded: {
-      type: Boolean,
-      default: false
-    },
-    initiativeId: {
-      type: String,
-      default: ''
-    },
-    sectionId: {
-      type: String,
-      default: ''
     },
     inElementId: {
       type: String,
@@ -253,10 +97,6 @@ export default {
     inElementTitle: {
       type: String,
       default: ''
-    },
-    level: {
-      type: Number,
-      default: 0
     },
     dragType: {
       type: String
@@ -268,28 +108,15 @@ export default {
     cardsAsCards: {
       type: Boolean,
       default: true
-    },
-    forceUpdate: {
-      type: Boolean,
-      default: true
-    },
-    expandInit: {
-      type: Boolean,
-      default: false
-    },
-    sortByLikes: {
-      type: Boolean,
-      default: false
     }
   },
 
   data () {
     return {
-      section: null,
       loaded: false,
       showSubsections: true,
       showCards: true,
-      expanded: false,
+      expanded: true,
       showCardModal: false,
       showCardId: '',
       expandSubSubsecInit: false
@@ -330,100 +157,7 @@ export default {
     }
   },
 
-  watch: {
-    '$store.state.support.triggerUpdateModel' () {
-      this.update()
-    },
-    '$route' () {
-      this.checkCardSubroute()
-    },
-    forceUpdate () {
-      this.update()
-    },
-    expandInit () {
-      if (this.expandInit) {
-        this.startExpand()
-      } else {
-        this.startCollapse()
-      }
-    }
-  },
-
   methods: {
-    toggleExpand () {
-      if (!this.expanded) {
-        if (!this.loaded) {
-          this.update(true)
-        } else {
-          this.startExpand()
-        }
-      } else {
-        this.startCollapse()
-      }
-    },
-    startExpand () {
-      this.showCards = false
-      this.showSubsections = false
-      this.expanded = true
-
-      this.$nextTick(() => {
-        if (this.nCardWrappers > 0) {
-          this.showCards = true
-          setTimeout(() => {
-            if (this.section.nSubsections > 0) {
-              this.showSubsections = true
-            }
-          }, 350)
-        } else {
-          if (this.section.nSubsections > 0) {
-            this.showSubsections = true
-          } else {
-            /* totally empty section */
-            this.showCards = true
-          }
-        }
-      })
-    },
-    startCollapse () {
-      if (this.showSubsections) {
-        this.showSubsections = false
-        setTimeout(() => {
-          if (this.showCards) {
-            this.showCards = false
-            setTimeout(() => {
-              this.expanded = false
-            }, 500)
-          } else {
-            this.expanded = false
-          }
-        }, 500)
-      } else {
-        if (this.showCards) {
-          this.showCards = false
-          setTimeout(() => {
-            this.expanded = false
-          }, 500)
-        } else {
-          this.expanded = false
-        }
-      }
-    },
-    update (expandFlag) {
-      expandFlag = expandFlag || false
-      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id, {
-        params: {
-          level: 1
-        }
-      }).then((response) => {
-        // console.log(response.data)
-        this.loaded = true
-        this.section = response.data.data
-        this.$emit('updated', this.section)
-        if (expandFlag) {
-          this.startExpand()
-        }
-      })
-    },
     cardDroped (onCardWrapperId, event) {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
       if (dragData.type === 'MOVE_CARD') {
@@ -502,29 +236,6 @@ export default {
       this.showSubsections = true
       this.$emit('new-subsection')
     }
-  },
-
-  created () {
-    if (!this.basicPreloaded) {
-      this.section = {
-        id: this.sectionId
-      }
-      this.update()
-    } else {
-      this.section = this.sectionInit
-      if (this.subElementsPreloaded) {
-        this.loaded = true
-      } else {
-        this.update()
-      }
-    }
-
-    if (this.expandInit) {
-      this.toggleExpand()
-    }
-
-    /* check if open card modal */
-    this.checkCardSubroute()
   }
 }
 </script>

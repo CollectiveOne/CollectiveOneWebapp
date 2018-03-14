@@ -1,35 +1,49 @@
 <template lang="html">
   <div class="">
-    <div v-for="cardWrapper in allCardWrappers" class="">
-      <app-model-card-with-modal
-        :cardWrapperInit="cardWrapper"
+
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-card-modal
+          v-if="showNewCardModal"
+          :isNew="true"
+          :inSectionId="currentSection.id"
+          :inSectionTitle="currentSection.title"
+          @close="showNewCardModal = false">
+        </app-model-card-modal>
+      </transition>
+    </div>
+
+    <div class="cards-list">
+      <app-model-section
+        :section="section"
         :cardEffect="true">
-      </app-model-card-with-modal>
+      </app-model-section>
     </div>
   </div>
 </template>
 
 <script>
 
-const appendAllCards = function (section, cardsWrappers) {
-  cardsWrappers = cardsWrappers.concat(section.cardsWrappers)
-  for (var ixS in section.subsections) {
-    appendAllCards(section.subsections[ixS], cardsWrappers)
-  }
-  return cardsWrappers
-}
+import ModelCardModal from '@/components/model/modals/ModelCardModal'
+import ModelSection from '@/components/model/ModelSection'
 
 export default {
+  components: {
+    'app-model-card-modal': ModelCardModal,
+    'app-model-section': ModelSection
+  },
+
   props: {
     level: {
       type: Number,
       default: 1
     }
   },
+
   data () {
     return {
-      sectionContent: null,
-      allCardWrappers: []
+      section: null,
+      showNewCardModal: false
     }
   },
 
@@ -40,6 +54,9 @@ export default {
   },
 
   watch: {
+    level () {
+      this.update()
+    },
     '$store.state.model.currentSection' () {
       this.update()
     }
@@ -48,16 +65,12 @@ export default {
   methods: {
     update () {
       if (this.currentSection) {
-          this.axios.get('/1/model/section/' + this.currentSection.id, {params: {level: this.level}}).then((response) => {
-            if (response.data.result === 'success') {
-              this.section = response.data.data
-              this.updateAllCardWrappers()
-            }
-          })
+        this.axios.get('/1/model/section/' + this.currentSection.id, {params: {level: this.level}}).then((response) => {
+          if (response.data.result === 'success') {
+            this.section = response.data.data
+          }
+        })
       }
-    },
-    updateAllCardWrappers () {
-      this.allCardWrappers = appendAllCards(this.section, [])
     }
   },
 
