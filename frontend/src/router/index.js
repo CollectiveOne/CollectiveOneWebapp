@@ -16,7 +16,9 @@ import TransfersSection from '@/components/initiative/TransfersSection.vue'
 import TimelineSection from '@/components/initiative/TimelineSection.vue'
 
 import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
-import CardsList from '@/components/model/CardsList.vue'
+import ModelSectionContent from '@/components/model/ModelSectionContent.vue'
+import ModelCardsList from '@/components/model/ModelCardsList.vue'
+import ModelSectionMessages from '@/components/model/ModelSectionMessages.vue'
 
 import ModelCardWrapperPlacer from '@/components/model/ModelCardWrapperPlacer.vue'
 import ModelSearchContainer from '@/components/model/ModelSearchContainer.vue'
@@ -70,21 +72,23 @@ export default new Router({
                 {
                   path: 'model',
                   component: ModelSectionTab,
+                  name: 'InitiativeModelBase',
                   meta: {'column': 3},
                   children: [
                     {
                       path: '/',
                       name: 'InitiativeModel',
-                      component: CardsList,
+                      component: ModelSectionContent,
                       meta: {'column': 3}
                     },
                     {
                       path: 'section/:sectionId',
-                      name: 'ModelSection',
-                      component: CardsList,
+                      name: 'ModelSectionContent',
+                      component: ModelSectionContent,
                       meta: {'column': 3},
                       children: [
-                        { path: 'card/:cardId', name: 'ModelCardInSection', meta: {'column': 3} }
+                        { path: 'messages', name: 'ModelSectionMessages', component: ModelSectionMessages, meta: {'column': 3} },
+                        { path: 'cards', name: 'ModelCardsList', component: ModelCardsList, meta: {'column': 3} }
                       ]
                     },
                     { path: 'card/:cardWrapperId', name: 'ModelCardAlone', component: ModelCardWrapperPlacer, meta: {'column': 3} },

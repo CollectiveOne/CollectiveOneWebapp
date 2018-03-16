@@ -600,7 +600,7 @@ export default {
           }
 
           this.sendingData = true
-          this.axios.put('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id, cardDto)
+          this.axios.put('/1/model/cardWrapper/' + this.cardWrapper.id, cardDto)
             .then(responseF).catch((error) => {
               console.log(error)
             })

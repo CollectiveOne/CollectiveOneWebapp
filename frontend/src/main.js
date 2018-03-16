@@ -16,8 +16,9 @@ import MarkdownEditor from '@/components/global/MarkdownEditor.vue'
 import Indicator from '@/components/notifications/Indicator.vue'
 import DropDownMenu from '@/components/global/DropDownMenu.vue'
 
-import ModelSectionWithModal from '@/components/model/ModelSectionWithModal.vue'
 import ModelCardWithModal from '@/components/model/ModelCardWithModal.vue'
+import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
+import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 
 Vue.config.productionTip = false
 
@@ -43,8 +44,9 @@ Vue.component('app-indicator', Indicator)
 Vue.component('app-drop-down-menu', DropDownMenu)
 
 /* registered globally to solve the circular reference */
-Vue.component('app-model-section-with-modal', ModelSectionWithModal)
 Vue.component('app-model-card-with-modal', ModelCardWithModal)
+Vue.component('app-model-section-modal', ModelSectionModal)
+Vue.component('app-model-card-modal', ModelCardModal)
 
 /* custom directive to detect click outside from
 https://stackoverflow.com/questions/36170425/detect-click-outside-element?answertab=votes#tab-top */

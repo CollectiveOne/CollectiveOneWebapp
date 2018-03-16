@@ -10,6 +10,7 @@
         :polling="true"
         :triggerUpdate="triggerUpdate"
         :contextElementId="contextElementId"
+        :level="level"
         @updated="scrollToBottom()"
         @last-activity="lastActivityReceived($event)"
         @edit-message="editMessage($event)"
@@ -81,6 +82,10 @@ export default {
     onlyMessagesInit: {
       type: Boolean,
       defaul: false
+    },
+    level: {
+      type: Number,
+      default: 1
     }
   },
 

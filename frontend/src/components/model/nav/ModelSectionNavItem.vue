@@ -12,7 +12,7 @@
       </transition>
     </div>
 
-    <div class="w3-row">
+    <div class="w3-row" :class="{'section-selected': highlightLevelUse > 0}">
       <div @click="showSubsections = !showSubsections" class="circle-div cursor-pointer">
         <div v-if="hasSubsections">
           <i v-if="!showSubsections" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
@@ -22,14 +22,13 @@
           <i class="fa fa-circle" aria-hidden="true"></i>
         </div>
       </div>
-      <div @click="sectionSelected()" class="title-div cursor-pointer">
+      <div @click="sectionSelected()" class="title-div cursor-pointer noselect">
         {{ section.title }}
       </div>
       <div @click="showSubmenu = !showSubmenu" class="control-div cursor-pointer">
         <i class="fa fa-bars" aria-hidden="true"></i>
       </div>
-      <div v-if="showSubmenu" class="control-btns w3-card w3-white"
-        v-click-outside="clickOutsideMenu">
+      <div v-if="showSubmenu" class="control-btns w3-card w3-white">
         <app-drop-down-menu :items="menuItems"
           @addSubsection="addSubsection()"
           @edit="edit()"
@@ -39,7 +38,9 @@
     </div>
 
     <div v-if="showSubsections" class="w3-row subsections-container">
-      <app-model-section-nav-item v-for="subsection in subsections" :section="subsection" :key="subsection.id"
+      <app-model-section-nav-item v-for="subsection in subsections"
+        :section="subsection" :key="subsection.id"
+        :highlightLevel="highlightLevelUse - 1"
         class="subsection-row">
       </app-model-section-nav-item>
     </div>
@@ -61,6 +62,10 @@ export default {
   props: {
     section: {
       type: Object
+    },
+    highlightLevel: {
+      type: Number,
+      default: 0
     }
   },
 
@@ -91,12 +96,27 @@ export default {
     },
     hasSubsections () {
       return this.section.nSubsections > 0
+    },
+    isSelected () {
+      return this.$route.params.sectionId === this.section.id
+    },
+    level () {
+      return this.$store.state.model.level
+    },
+    highlightLevelUse () {
+      if (this.isSelected) {
+        /* if this is the selected section, start counting from level */
+        return this.level
+      } else {
+        /* if this is not the selected section, decrease the highlightLevel property */
+        return this.highlightLevel
+      }
     }
   },
 
   methods: {
     sectionSelected () {
-      this.$router.push({name: 'ModelSection', params: {sectionId: this.section.id}})
+      this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
     },
     clickOutsideMenu () {
       this.showSubmenu = false
@@ -116,6 +136,11 @@ export default {
 </script>
 
 <style scoped>
+
+.section-selected {
+  background-color: rgb(93, 93, 93);
+  color: white;
+}
 
 .circle-div {
   width: 30px;

@@ -77,6 +77,10 @@ export default {
     contextElementId: {
       type: String,
       default: ''
+    },
+    level: {
+      type: Number,
+      default: 1
     }
   },
 
@@ -94,6 +98,12 @@ export default {
   watch: {
     triggerUpdate () {
       this.resetElements()
+    },
+    level () {
+      this.getActivity('RESET')
+    },
+    url () {
+      this.getActivity('RESET')
     }
   },
 
@@ -129,7 +139,8 @@ export default {
         params: {
           page: askPage,
           size: 10,
-          onlyMessages: this.onlyMessages
+          onlyMessages: this.onlyMessages,
+          level: this.level
         }
       }).then((response) => {
         this.loading = false

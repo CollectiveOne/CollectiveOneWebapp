@@ -1,5 +1,5 @@
 <template lang="html">
-  <div :class="{'big-content-container': isTimeline}">
+  <div>
     <div v-if="$store.state.support.initiativeLoaded" class="w3-row">
       <div class="w3-white w3-col ">
         <div class="header-container">
@@ -31,20 +31,12 @@
                 </div>
               </div>
 
-              <div class="w3-col m6 w3-right section-tabs w3-center">
+              <div class="w3-col m6 section-tabs w3-center">
                 <router-link :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
                   class="tab-btn-space">
                   <div class="tab-btn noselect" :class="{'bold-text': isOverview, 'button-blue': isOverview}">
                     <span class="w3-hide-small w3-hide-medium tab-btn-text">Overview</span>
                     <span class="w3-hide-large"><i class="fa fa-home" aria-hidden="true"></i></span>
-                  </div>
-                </router-link>
-                <router-link v-if="this.initiative.meta.modelEnabled"
-                  :to="{ name: 'InitiativeTimeline', params: { initiativeId: initiative.id } }"
-                  class="tab-btn-space">
-                  <div class="tab-btn noselect" :class="{'bold-text': isTimeline, 'button-blue': isTimeline}">
-                    <span class="w3-hide-small w3-hide-medium tab-btn-text">Timeline</span>
-                    <span class="w3-hide-large"><i class="fa fa-comments-o" aria-hidden="true"></i></span>
                   </div>
                 </router-link>
                 <router-link :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
@@ -74,7 +66,7 @@
           </transition>
         </div>
 
-        <div class="w3-row content-container" :class="{'content-container-small': isTimeline}">
+        <div class="w3-row content-container">
           <transition :name="animationType" mode="out-in" appear>
             <router-view :key="initiative.id">
             </router-view>
@@ -142,16 +134,7 @@ export default {
     isModel () {
       var res = false
       this.$route.matched.forEach((e) => {
-        if (e.name === 'InitiativeModel') {
-          res = true
-        }
-      })
-      return res
-    },
-    isTimeline () {
-      var res = false
-      this.$route.matched.forEach((e) => {
-        if (e.name === 'InitiativeTimeline') {
+        if (e.name === 'InitiativeModelBase') {
           res = true
         }
       })
@@ -171,24 +154,6 @@ export default {
     },
     clickOutsideShowMenu () {
       this.showEditMenu = false
-    },
-    onSwipeLeft () {
-      console.log('swiped left')
-      if (this.isOverview) {
-        this.$router.push({name: 'InitiativePeople'})
-      }
-      if (this.isPeople) {
-        this.$router.push({name: 'InitiativeAssignations'})
-      }
-    },
-    onSwipeRight () {
-      console.log('swiped right')
-      if (this.isAssignations) {
-        this.$router.push({name: 'InitiativePeople'})
-      }
-      if (this.isPeople) {
-        this.$router.push({name: 'InitiativeOverview'})
-      }
     }
   },
 
@@ -219,10 +184,6 @@ export default {
 
 .content-container {
   overflow: hidden;
-}
-
-.content-container-small {
-  height: calc(100vh - 135px);
 }
 
 .header-container {
@@ -261,7 +222,6 @@ export default {
 }
 
 .section-tabs {
-  height: 65px;
   display: flex;
   flex-direction: row;
 }
@@ -269,7 +229,7 @@ export default {
 .tab-btn-space {
   display: block;
   padding: 19px 10px 0px 10px;
-  width: 20%;
+  width: 25%;
 }
 
 .tab-btn {
@@ -279,12 +239,6 @@ export default {
 
 .tab-btn-text {
   font-size: 14px;
-}
-
-.tablink {
-  height: 100%;
-  padding-top: 8px;
-  cursor: pointer;
 }
 
 .bold-text {

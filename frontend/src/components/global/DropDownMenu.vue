@@ -5,7 +5,7 @@
       <div class="icon-cont">
         <i class="fa" :class="item.faIcon" aria-hidden="true"></i>
       </div>
-      <div class="text-cont">
+      <div class="text-cont noselect">
         {{ item.text }}
       </div>
     </div>

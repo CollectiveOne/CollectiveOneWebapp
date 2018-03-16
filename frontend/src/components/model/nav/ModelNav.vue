@@ -14,7 +14,7 @@
     </transition>
 
     <div class="model-nav-container w3-container">
-      <div class="w3-row w3-center">
+      <div class="w3-row w3-center w3-margin-bottom">
         <div class="zoom-controls gray-1-color">
           <div class="cursor-pointer">
             <i @click="$store.commit('levelDown')" class="fa fa-minus-circle" aria-hidden="true"></i>

@@ -386,26 +386,12 @@ public class ModelController extends BaseController {
 		return modelService.searchSection(query, new PageRequest(page, size), initiativeId, getLoggedUserId());
 	}
 	
-	@RequestMapping(path = "/model/section/{sectionId}/countMessages", method = RequestMethod.GET)
-	public GetResult<Long> countMessagesUnderSection(
-			@PathVariable("sectionId") String sectionIdStr,
-			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
-		
-		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
-		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
-			return new GetResult<Long>("error", "access denied", null);
-		}
-		
-		return modelService.countMessagesUnderSection(sectionId);
-	}
-	
 	@RequestMapping(path = "/activity/model/section/{sectionId}", method = RequestMethod.GET)
 	public GetResult<Page<ActivityDto>> getActivityUnderSection(
 			@PathVariable("sectionId") String sectionIdStr,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size, 
+			@RequestParam(name="level", defaultValue="1") Integer level,
 			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
@@ -416,7 +402,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return modelService.getActivityResultUnderSection(sectionId, new PageRequest(page, size), onlyMessages);
+		return modelService.getActivityResultUnderSection(sectionId, new PageRequest(page, size), onlyMessages, level);
 	}
 	
 	@RequestMapping(path = "/model/card/{cardWrapperId}/countMessages", method = RequestMethod.GET)

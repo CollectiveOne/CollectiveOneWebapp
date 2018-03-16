@@ -61,7 +61,6 @@
         </app-model-section>
       </div>
     </div>
-
   </div>
 
 </template>

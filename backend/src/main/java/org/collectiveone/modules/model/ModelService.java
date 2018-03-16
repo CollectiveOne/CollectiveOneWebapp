@@ -578,14 +578,18 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public List<UUID> getAllSubsectionsIds (UUID sectionId) {
+	public List<UUID> getAllSubsectionsIds (UUID sectionId, Integer level) {
 		readIds.clear();
 		readIds.add(sectionId);
-		return getAllSubsectionsIdsRec(sectionId);
+		return getAllSubsectionsIdsRec(sectionId, level);
 	}
 	
 	@Transactional
-	public List<UUID> getAllSubsectionsIdsRec (UUID sectionId) {
+	public List<UUID> getAllSubsectionsIdsRec (UUID sectionId, Integer level) {
+		if (level <= 0) {
+			return new ArrayList<UUID>();
+		} 
+		
 		List<UUID> subsectionsIds = modelSectionRepository.getSubsectionsIds(sectionId);
 		List<UUID> allSubsectionIds = new ArrayList<UUID>();
 		
@@ -597,7 +601,7 @@ public class ModelService {
 		readIds.addAll(subsectionsIds);
 		
 		for (UUID subsectionId : subsectionsIds) {
-			List<UUID> subsubsectionIds = getAllSubsectionsIdsRec(subsectionId);
+			List<UUID> subsubsectionIds = getAllSubsectionsIdsRec(subsectionId, level - 1);
 			
 			for (UUID subsubsectionId : subsubsectionIds) {
 				if(allSubsectionIds.indexOf(subsubsectionId) == -1) {
@@ -610,39 +614,9 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Long> countMessagesUnderSection (UUID sectionId) {
-		Page<Activity> activity = getActivityUnderSection(sectionId, new PageRequest(1, 1), true);
-		return new GetResult<Long>("success", "activity counted", activity.getTotalElements());
-	}
-	
-	@Transactional
-	public Page<Message> getMessagesUnderSection(UUID sectionId, PageRequest page) {
-		/* TODO: This is not actually used. Messages are being retrieved from the
-		 * activity entities they generate. That approached should be abandoned
-		 */		
+	public GetResult<Page<ActivityDto>> getActivityResultUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages, Integer level) {
 		
-		List<UUID> allSectionIds = new ArrayList<UUID>();
-		
-		allSectionIds.add(sectionId);
-		allSectionIds.addAll(getAllSubsectionsIds(sectionId));
-		
-		List<UUID> cardsIds = allSectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
-		
-		Page<Message> messages = null;
-		
-		if (cardsIds.size() > 0) {
-			messages = messageRepository.findOfSectionsAndCards(allSectionIds, cardsIds, page);	
-		} else {
-			messages = messageRepository.findOfSections(allSectionIds, page);
-		}
-		
-		return messages;
-	}
-	
-	@Transactional
-	public GetResult<Page<ActivityDto>> getActivityResultUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages) {
-		
-		Page<Activity> activities = getActivityUnderSection(sectionId, page, onlyMessages);
+		Page<Activity> activities = getActivityUnderSection(sectionId, page, onlyMessages, level);
 		
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		
@@ -656,12 +630,12 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public Page<Activity> getActivityUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages) {
+	public Page<Activity> getActivityUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages, Integer level) {
 		
 		List<UUID> allSectionIds = new ArrayList<UUID>();
 		
 		allSectionIds.add(sectionId);
-		allSectionIds.addAll(getAllSubsectionsIds(sectionId));
+		allSectionIds.addAll(getAllSubsectionsIds(sectionId, level - 1));
 		
 		List<UUID> cardsIds = allSectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
 		

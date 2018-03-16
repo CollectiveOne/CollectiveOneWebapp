@@ -6,17 +6,6 @@
       @mouseover="hovering = true"
       @mouseleave="hovering = false">
 
-      <div v-if="showDetails" class="w3-row light-grey details-row">
-        <div class="w3-col s6">
-          <div class="w3-tag" :class="stateClass">
-            {{ cardWrapper.state }}
-          </div>
-        </div>
-        <div class="w3-col s6">
-          {{ cardWrapper.targetDate > 0 ? dateString(cardWrapper.targetDate) : '' }}
-        </div>
-      </div>
-
       <div class="w3-row card-container cursor-pointer w3-display-container"
         ref="cardContent">
 
