@@ -2,7 +2,7 @@
   <nav class="nav-container">
     <div class="">
       <div v-if="$store.state.user.authenticated" class="w3-container">
-        <div class="create-new w3-button light-grey w3-round-large w3-center"
+        <div id="T_createInitiativeButton" class="create-new w3-button light-grey w3-round-large w3-center"
           @click="$store.commit('showNewInitiativeModal', true)">
           <i class="fa fa-plus-circle"></i>  new initiative
         </div>

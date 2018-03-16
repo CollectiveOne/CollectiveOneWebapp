@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="">
 
-    <button class="bell-button w3-button w3-padding-large w3-display-container w3-xlarge" title="Notifications"
+    <button id="T_notificationButton" class="bell-button w3-button w3-padding-large w3-display-container w3-xlarge" title="Notifications"
       @click="showNotificationsClicked()">
 
       <i class="fa fa-bell-o w3-display-center"></i>
@@ -15,6 +15,7 @@
       class="notifications-container w3-white w3-card-4 w3-bar-block w3-center">
       <app-activity-table :activities="activities"></app-activity-table>
       <button v-if="!allShown"
+        id="T_showMoreButton" 
         @click="showMore()"
         class="w3-margin-top w3-margin-bottom w3-button app-button-light" type="button" name="button">show more...</button>
     </div>

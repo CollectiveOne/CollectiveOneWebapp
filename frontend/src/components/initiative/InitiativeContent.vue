@@ -8,6 +8,7 @@
               <div class="w3-col w3-right" style="width:50px">
                 <div class="edit-container">
                   <div
+                    id="T_editMenuButton"
                     v-if="isLoggedAMember"
                     @click="showEditMenu = !showEditMenu"
                     class="edit-btn-div w3-button w3-large"
@@ -15,12 +16,12 @@
                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                   </div>
                   <div v-if="showEditMenu" class="edit-menu w3-dropdown-content w3-bar-block w3-card">
-                    <div v-if="isLoggedAnAdmin"
+                    <div id="T_editInitiativeButton" v-if="isLoggedAnAdmin"
                       @click="$store.commit('showEditInitiativeModal', true); showEditMenu = false"
                       class="w3-bar-item w3-button">
                       <i class="fa fa-pencil" aria-hidden="true"></i>edit initiative
                     </div>
-                    <div v-if="isLoggedAMember || isLoggedAnAdmin"
+                    <div id="T_notificationInitiativeButton" v-if="isLoggedAMember || isLoggedAnAdmin"
                       @click="$store.commit('showEditNotificationsModal', true); showEditMenu = false"
                       class="w3-bar-item w3-button">
                       <i class="fa fa-cog" aria-hidden="true"></i>notifications
@@ -70,7 +71,7 @@
               <span class="w3-hide-large"><i class="fa fa-eye" aria-hidden="true"></i></span>
             </h5>
           </router-link>
-          <router-link tag="div" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
+          <router-link id="T_peopleTab" tag="div" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
             :class="{'border-blue': isPeople}"
             :style="tabLinkStyle"
@@ -80,7 +81,7 @@
               <span class="w3-hide-large"><i class="fa fa-users" aria-hidden="true"></i></span>
             </h5>
           </router-link>
-          <router-link tag="div" :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
+          <router-link id="T_transferTab" tag="div" :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
             class="w3-col tablink w3-bottombar w3-hover-light-grey"
             :class="{'border-blue': isAssignations}"
             :style="tabLinkStyle"
