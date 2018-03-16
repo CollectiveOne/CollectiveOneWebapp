@@ -53,6 +53,7 @@ needs the model card component inside, and would crate a recursion -->
       @mouseleave="showActionButton = false">
 
       <!-- forward all props  -->
+       <!-- what is the use of this -->
       <app-model-section
         :sectionId="sectionId"
         :sectionInit="sectionInit"
@@ -70,6 +71,7 @@ needs the model card component inside, and would crate a recursion -->
         :expandSubSubsecInit="expandSubSubsecInit"
         :forceUpdate="forceUpdate"
         :sortByLikes="sortByLikes"
+        :subscribe="subscribe"
         @updated="updated($event)"
         @new-card="newCard($event)"
         @new-subsection="newSubsection()"
@@ -118,6 +120,14 @@ needs the model card component inside, and would crate a recursion -->
             <i class="fa fa-refresh" aria-hidden="true"></i>
             <span class="tooltiptext gray-1">refresh contents</span>
           </div>
+          <div class="w3-button model-action-button gray-1-color w3-right tooltip"
+            @click="subscribe = !subscribe">
+            <i class="fa" :class="{' fa-eye': subscribe, ' fa-eye-slash': !subscribe}"
+              aria-hidden="true">
+            </i>
+            <span class="tooltiptext gray-1" >subscribe/unsubscribe</span>
+          </div>
+
         </div>
       </transition>
 
@@ -210,7 +220,8 @@ export default {
       showNewCardModal: false,
       forceUpdate: false,
       onlyMessages: false,
-      sortByLikes: false
+      sortByLikes: false,
+      subscribe: true
     }
   },
 
