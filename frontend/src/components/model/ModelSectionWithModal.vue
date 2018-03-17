@@ -121,9 +121,9 @@ needs the model card component inside, and would crate a recursion -->
             <span class="tooltiptext gray-1">refresh contents</span>
           </div>
           <div class="w3-button model-action-button gray-1-color w3-right tooltip"
-            @click="subscribe = !subscribe">
+            @click="toggleSubscribe()">
             <i class="fa" :class="{' fa-eye': subscribe, ' fa-eye-slash': !subscribe}"
-              aria-hidden="true">
+              aria-hidden="true">            
             </i>
             <span class="tooltiptext gray-1" >subscribe/unsubscribe</span>
           </div>
@@ -228,7 +228,17 @@ export default {
   computed: {
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
+    },
+    isSubscribed () {
+      return this.subscriber.state === 'SUBSCRIBED'
+    },
+    initiative () {
+      return this.$store.state.initiative.initiative
     }
+  },
+
+  mounted () {
+    this.updateSubscriber()
   },
 
   methods: {
@@ -245,6 +255,18 @@ export default {
     newCard (ix) {
       this.ixInSection = ix
       this.showNewCardModal = true
+    },
+    updateSubscriber () {
+      this.axios.get('/1/user/notifications/subscriber/' + this.initiative.id).then((response) => {
+        this.subscriber = response.data.data
+      })
+    },
+    toggleSubscribe () {
+      this.subscribe = !this.subscribe
+      this.subscriber.state = this.subscribe ? 'SUBSCRIBED' : 'UNSUBSCRIBED'
+      this.axios.put('/1/user/notifications/subscriber/' + this.initiative.id, this.subscriber).then((response) => {
+        this.updateSubscriber()
+      })
     }
   },
 
