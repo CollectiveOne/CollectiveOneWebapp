@@ -109,7 +109,7 @@ export default {
       return this.$store.state.modals.showNewTokenMintModal
     },
     windowIsSmall () {
-      return window.innerWidth < 601
+      return this.$store.state.support.windowIsSmall
     },
     navContainerClass () {
       if (this.windowIsSmall) {
@@ -159,6 +159,7 @@ export default {
 
 .nav-container-cell {
   width: 300px;
+  vertical-align: top !important;
 }
 
 </style>

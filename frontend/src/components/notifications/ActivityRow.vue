@@ -3,7 +3,11 @@
     <td class="avatar-col w3-center">
       <app-user-avatar :user="activity.triggerUser" :showName="false" :small="true"></app-user-avatar>
     </td>
-    <td class="text-div">
+    <td class="text-div wrap-long cursor-pointer w3-display-container"
+      @mouseover="hovering = true"
+      @mouseleave="hovering = false"
+      @click="clicked = !clicked">
+
       <div class="top-line w3-small">
         <span v-if="addContext">
           in <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
@@ -35,36 +39,36 @@
         <span v-if="isTokenCreated" class="">
           created a new token type called <b>{{ activity.mint.tokenName }}</b> in
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
-          and minted <b>{{ activity.mint.value }}</b> units.
+          and minted <b>{{ activity.mint.value.toFixed(2) }}</b> units.
         </span>
 
         <span v-if="isTokensMinted" class="">
-          minted <b>{{ activity.mint.value }} {{ activity.mint.tokenName }}</b> in
+          minted <b>{{ activity.mint.value.toFixed(2) }} {{ activity.mint.tokenName }}</b> in
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
         </span>
 
         <span v-if="isNewPRAssigantionCreated" class="">
           created a new peer-reviewed <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b> from
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
         </span>
 
         <span v-if="isNewDAssigantionCreated" class="">
           made a direct <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b> from
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
-          <app-user-link :user="activity.assignation.receivers[0].user"></app-user-link>
+          <span v-for="(receiver, ix) in activity.assignation.receivers">{{ ix > 0 ? ', ' : '' }}<app-user-link :user="receiver.user"></app-user-link></span>
         </span>
 
         <span v-if="isNewPRAssigantionDone" class="">
           Peer-reviewed <app-assignation-link :assignation="activity.assignation"></app-assignation-link> has been done. Created by
           <app-user-link :user="activity.triggerUser"></app-user-link> for
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b> from
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>.
         </span>
 
         <span v-if="isInitiativeTransfer" class="">
-          transferred <b>{{ activity.transfer.value }} {{ activity.transfer.assetName }}</b> from
+          transferred <b>{{ activity.transfer.value.toFixed(2) }} {{ activity.transfer.assetName }}</b> from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
           <app-initiative-link
             :initiativeId="activity.transfer.receiverId"
@@ -74,7 +78,7 @@
 
         <span v-if="isAssignationRevertOrdered" class="">
           ordered the revert of the <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b>
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
           with motive {{ activity.assignation.motive }}
           from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
@@ -83,7 +87,7 @@
         <span v-if="isAssignationRevertCancelled" class="">
           Revert order cancelled. Order to revert the
           <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b>
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
           with motive {{ activity.assignation.motive }}
           from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
@@ -93,7 +97,7 @@
         <span v-if="isAssignationReverted" class="">
           Revert order accepted. Order to revert the
           <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b>
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
           with motive {{ activity.assignation.motive }}
           from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
@@ -103,7 +107,7 @@
         <span v-if="isAssignationDeleted" class="">
           Ongoing transfer deleted. The
           <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value }} {{ activity.assignation.assets[0].assetName }}</b>
+          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
           with motive {{ activity.assignation.motive }}
           from
           <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
@@ -118,6 +122,9 @@
         </span>
         <span v-if="isModelViewDeleted" class="">
           deleted the view <app-model-view-link :view="activity.modelView"></app-model-view-link>.
+        </span>
+        <span v-if="isModelViewMoved" class="">
+          moved the view <app-model-view-link :view="activity.modelView"></app-model-view-link>.
         </span>
         <span v-if="isModelSectionCreatedOnSection" class="">
           created the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
@@ -187,7 +194,7 @@
           deleted the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
         </span>
 
-        <span v-if="isMessagePosted && (!showMessages || isExternalMessage)" :class="{'w3-tag w3-round gray-1': isExternalMessage}">
+        <span v-if="isMessagePosted && (!showMessages || isExternalMessage)" :class="{'w3-tag w3-round light-grey': isExternalMessage}">
           commented in
           <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
           <span v-if="isMessageInSection"><app-model-section-link :section="activity.modelSection"></app-model-section-link> section.</span>
@@ -195,10 +202,27 @@
           <span v-if="isMessageInInitiative"><app-initiative-link :initiative="activity.initiative"></app-initiative-link> initiative.</span>
         </span>
         <span v-if="isMessagePosted && showMessages" class="">
-          <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
+          <div>
+            <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
+          </div>
         </span>
-
       </div>
+
+      <div class="control-btns-row w3-display-topright" v-if="isMessagePosted && showMessages">
+        <transition name="fadeenter">
+          <div v-if="hovering">
+            <div v-if="authorIsLoggedUser" @click="$emit('edit-message', activity.message)"
+              class="w3-button light-grey">
+              <i class="fa fa-pencil"></i> edit
+            </div>
+            <div v-if="true" @click="$emit('reply-to-message', activity)"
+              class="w3-button light-grey">
+              <i class="fa fa-reply"></i> reply
+            </div>
+          </div>
+        </transition>
+      </div>
+
     </td>
   </tr>
 </template>
@@ -248,6 +272,13 @@ export default {
     'app-model-section-link': ModelSectionLink,
     'app-model-card-link': ModelCardInSectionLink,
     'app-model-card-alone-link': ModelCardAloneLink
+  },
+
+  data () {
+    return {
+      hovering: false,
+      clicked: false
+    }
   },
 
   computed: {
@@ -301,6 +332,9 @@ export default {
     },
     isModelViewDeleted () {
       return this.activity.type === 'MODEL_VIEW_DELETED'
+    },
+    isModelViewMoved () {
+      return this.activity.type === 'MODEL_VIEW_MOVED'
     },
     isModelSectionCreatedOnSection () {
       return this.activity.type === 'MODEL_SECTION_CREATED' &&
@@ -398,7 +432,7 @@ export default {
       return this.isMessagePosted && (this.activity.modelView !== null)
     },
     isMessageInInitiative () {
-      return false
+      return this.isMessagePosted && (!this.isMessageInView && !this.isMessageInSection && !this.isMessageInCardWrapper)
     },
     isExternalMessage () {
       if (!this.isMessagePosted || !this.showMessages) {
@@ -441,6 +475,14 @@ export default {
       }
 
       return ''
+    },
+    authorIsLoggedUser () {
+      if (this.isMessagePosted) {
+        if (this.$store.state.user.profile) {
+          return this.$store.state.user.profile.c1Id === this.activity.message.author.c1Id
+        }
+      }
+      return false
     }
   },
   methods: {
@@ -458,7 +500,8 @@ a {
 }
 
 .avatar-col {
-  padding-top: 3px;
+  padding-top: 6px;
+  vertical-align: top !important;
   width: 60px;
 }
 
@@ -469,12 +512,20 @@ a {
   padding-top: 3px;
 }
 
+.edit-btn {
+  margin-right: 4px;
+}
+
 .not-a-message {
   background-color: #eff3f6;
   margin-top: 6px;
   border-radius: 6px;
   padding: 3px 6px;
   font-style: italic;
+}
+
+.control-btns-row .w3-button {
+  padding: 1px 16px !important;
 }
 
 </style>

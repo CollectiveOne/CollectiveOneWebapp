@@ -49,14 +49,28 @@
     <div v-else class="editing-container light-grey">
       <div class="w3-center">
 
-        <div class="w3-row w3-margin-bottom">
-          <div class="w3-display-container w3-button user-image user-image-upload">
-            <input class="w3-display-middle"
-              @change="newFileSelected($event)" type="file" name="" value="">
+        <div class="w3-row">
+          <div class="w3-display-container user-image user-image-upload">
+            <div class="w3-display-middle">
+              <input class="inputfile" @change="newFileSelected($event)"
+                  type="file" name="imageFile" id="imageFile" accept="image/*">
+              <label for="imageFile" class="w3-button app-button">Upload</label>
+              <small>&lt; 1MB, square</small>
+            </div>
           </div>
         </div>
 
-        <div class="w3-row w3-margin-bottom">
+        <app-error-panel
+          :show="errorUploadingFile"
+          :message="errorUploadingFileMsg">
+        </app-error-panel>
+        <app-error-panel
+          :show="showImageUpdated"
+          message="Image succesfully uploaded. It will be updated once you click 'Accept' below."
+          panelType="success">
+        </app-error-panel>
+
+        <div class="w3-row w3-margin-bottom w3-margin-top">
           <input v-model.trim="user.nickname" class="w3-border w3-round w3-hover-light-grey" placeholder="Display Name" value="">
         </div>
         <app-error-panel
@@ -148,15 +162,22 @@ export default {
       user: null,
       newPictureFile: null,
       editing: false,
+      showImageUpdated: false,
       usernameExist: false,
       twitterLinkOk: true,
       facebookLinkOk: true,
-      linkedinLinkOk: true
+      linkedinLinkOk: true,
+      errorUploadingFile: false,
+      errorUploadingFileMsg: ''
     }
   },
 
   computed: {
     isLoggedUser () {
+      if (!this.user || !this.$store.state.user.profile) {
+        return false
+      }
+
       return this.user.c1Id === this.$store.state.user.profile.c1Id
     },
     nicknameTooLarge () {
@@ -192,6 +213,11 @@ export default {
         }).then((response) => {
           this.usernameExist = response.data.data
         })
+      }
+    },
+    editing () {
+      if (this.editing === true) {
+        this.showImageUpdated = false
       }
     }
   },
@@ -238,7 +264,25 @@ export default {
       }
     },
     newFileSelected (event) {
-      this.newPictureFile = event.target.files[0]
+      var fileData = event.target.files[0]
+
+      if (fileData !== null) {
+        if (fileData.size > 1048576) {
+          this.errorUploadingFile = true
+          this.errorUploadingFileMsg = 'Image file too big. Must be below 1 MB'
+          return
+        }
+
+        var data = new FormData()
+        data.append('file', fileData)
+
+        this.axios.post('/1/upload/profileImage', data).then((response) => {
+          console.log('image uploaded')
+          this.errorUploadingFile = false
+          this.showImageUpdated = true
+          this.user.useUploadedPicture = true
+        })
+      }
     },
     accept () {
       var ok = true
@@ -256,15 +300,6 @@ export default {
           this.$store.dispatch('updateProfile')
           this.editing = false
         })
-
-        if (this.newPictureFile !== null) {
-          var data = new FormData()
-          data.append('file', this.newPictureFile)
-
-          this.axios.post('/1/upload/profileImage', data).then((response) => {
-            console.log('file uploaded')
-          })
-        }
       }
     },
     update () {
@@ -305,6 +340,15 @@ export default {
 
 .show-container h2 {
   margin-bottom: 0px;
+}
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
 }
 
 .social-icons-container {

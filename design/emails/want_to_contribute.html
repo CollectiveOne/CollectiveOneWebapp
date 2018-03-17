@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+  <style type="text/css">
+
+      .top-header {
+        clear: both;
+        background-color: #eff3f6;
+        overflow: auto;
+        padding: 30px;
+      }
+
+      .container {
+        width: 100%;
+        text-align: center;
+        font-family: 'Arial', sans-serif;
+        color: #3e464e;
+      }
+
+      .logo-txt-div {
+        float: left;
+        font-size: 18px;
+        font-weight: bold;
+        clear: both;
+        margin-bottom: 10px;
+      }
+
+      .logo-img {
+        width: 50%;
+        max-width: 200px;
+        float: left;
+        clear: both;
+      }
+
+      .content {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        clear: both;
+      }
+
+			.time-box {
+				padding-left: 25px;
+			}
+
+			.user-picture {
+				border-radius: 50px;
+				width: 60px;
+			}
+
+			.add-button {
+				padding: 16px 32px;
+				background-color: #15a5cc;
+				max-width: 250px;
+				margin: 0 auto;
+				border-radius: 12px;
+
+			}
+
+			.add-button-a {
+				text-decoration: none;
+				color: white;
+			}
+
+			.footer {
+        padding: 30px;
+        background-color: #eff3f6;
+      }
+
+			.twitter-link {
+				margin-bottom: 20px;
+			}
+
+			.twitter-img {
+				width: 180px;
+			}
+
+	</style>
+</head>
+<body>
+<div class="container" style="text-align">
+	<div class="top-header">
+		<a href="http://www.collectiveone.org">
+			<img class="logo-img" src="https://image.ibb.co/bTQ9Ev/logo_color_auth0.png" />
+		</a>
+	</div>
+
+	<div class="content">
+		<h3>Contributor Request $INITIATIVE_ANCHOR$</h3>
+		<br>
+
+		<!-- <img class="user-picture" alt="" src="https://s3.us-east-2.amazonaws.com/collectiveone-b1/ProfileImages/ac12edce-5f45-124a-815f-486a854d000d" /> -->
+		<img class="user-picture" alt="" src="$USER_PICTURE$" />
+		<p class="username">$USER_NICKNAME$</p>
+
+		<p>
+			would like to contribute to the $INITIATIVE_ANCHOR$ initiative,
+			from which you are an administrator.
+		</p>
+
+		<p>
+			To add $USER_NICKNAME$ as a member click the button below
+		</p>
+
+		<br>
+
+
+		<a class="add-button-a" href="$ACCEPT_AS_MEMBER_URL$">
+			<div class="add-button">add $USER_NICKNAME$ as a member</div>
+		</a>
+
+		<br>
+
+		<p>
+			You can also contact him/her at $USER_EMAIL$.
+		</p>
+
+	</div>
+
+	<div class="footer">
+		<div class="twitter-link" >
+			<a href="https://twitter.com/intent/user?screen_name=collectiveonepr">
+				<img class="twitter-img" src="https://image.ibb.co/dS7wek/t_button.png"></img>
+			</a>
+		</div>
+	</div>
+
+</div>
+</body>
+</html>

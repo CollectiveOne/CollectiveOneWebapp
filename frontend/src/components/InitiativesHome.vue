@@ -30,7 +30,7 @@
       <hr>
       <div class="">
         <div v-if="loaded" class="w3-row-padding">
-          <div v-for="initiative in initiatives" class="initiative-card w3-col l6">
+          <div v-for="initiative in initiatives" class="initiative-card-col">
             <app-initiative-card
               :initiative="initiative"
               :key="initiative.id"
@@ -126,10 +126,27 @@ export default {
   padding-top: 8px;
 }
 
-.initiative-card {
+.initiative-card-col {
+  margin-bottom: 32px;
   display: inline-block;
-  vertical-align: top;
-  margin-bottom: 16px;
+}
+
+@media screen and (min-width: 1200px) {
+  .initiative-card-col {
+    width: calc(50% - 26px);
+    margin-left: 13px;
+    margin-right: 13px;
+    vertical-align: top;
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .initiative-card-col {
+    width: calc(100% - 26px);
+    margin-left: 13px;
+    margin-right: 13px;
+    vertical-align: top;
+  }
 }
 
 </style>

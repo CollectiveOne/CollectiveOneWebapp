@@ -1,28 +1,42 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4"
+      <div class="w3-card-4 app-modal-card w3-display-container"
         v-click-outside="clickOutside">
 
-        <div class="div-close-modal w3-display-topright w3-xlarge" @click="closeThis()">
-          <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
+        <div class="w3-display-topright">
+          <div class="w3-right w3-button w3-xlarge" @click="closeThisConfirm()">
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </div>
+          <div class="w3-right">
+            <app-model-modal-buttons
+              v-if="isLoggedAnEditor && !editing"
+              :show="showEditButtons"
+              @edit="startEditing()"
+              @delete="deleteCard()"
+              deleteMessage="This will delete the card from all the sections in which it is used."
+              @remove="removeCard()"
+              :removeMessage="'This will remove this card from the ' + inSectionTitle + ' section.'">
+            </app-model-modal-buttons>
+          </div>
+          <div v-if="!editing" class="w3-right w3-button w3-xlarge" @click="copyUrl()">
+            <i class="fa fa-share-alt" aria-hidden="true"></i>
+          </div>
+          <div class="slider-container url-show">
+            <transition name="slideDownUp">
+              <div v-if="showUrl" class="">
+                <input id="copy-url" class="w3-input w3-border" type="text" name="" :value="cardUrl">
+                <div class="w3-center"><small><i>please copy/paste the link above</i></small></div>
+              </div>
+            </transition>
+          </div>
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>{{ isNew ? 'New Card' : 'Model Card'}}</h2>
+          <h3>{{ isNew ? 'New Card' : 'Model Card'}}</h3>
         </div>
 
-        <div class="w3-container div-modal-content">
-
-          <app-model-modal-buttons
-            v-if="isLoggedAnEditor"
-            :show="showEditButtons"
-            @edit="startEditing()"
-            @delete="deleteCard()"
-            deleteMessage="This will delete the card from all the sections in which it is used."
-            @remove="removeCard()"
-            :removeMessage="'This will remove this card from the ' + inSectionTitle + ' section.'">
-          </app-model-modal-buttons>
+        <div v-if="!loading" class="div-modal-content w3-container">
 
           <div v-if="isNew" class="w3-row">
             <label class=""><b>In Section:</b></label>
@@ -45,7 +59,7 @@
 
           <div class="slider-container">
             <transition name="slideLeftRight">
-              <div v-if="addExisting" class="">
+              <div v-if="addExisting && editing" class="">
                 <app-model-card-selector
                   :initiativeId="initiativeId"
                   @select="cardSelected($event)">
@@ -67,23 +81,54 @@
 
               <div v-if="!addExisting">
 
-                <div v-if="!editing" class="">
+                <div v-if="!isNew">
                   <div class="w3-row">
-                    <div v-if="showUrl" class="w3-right w3-padding w3-tag light-grey w3-round-large w3-margin-left">
-                      url copied to clipboard
+                    <div class="w3-left w3-margin-right">
+                      <i>in:</i>
                     </div>
-                    <button @click="copyUrl()" class="w3-button app-button-light w3-right" type="button" name="button">
-                      <i class="fa fa-share" aria-hidden="true"></i> share
+                    <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container w3-left">
+                      <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
+                        class="gray-1 w3-tag w3-round w3-small">
+                        {{ inSection.title }}
+                      </router-link>
+                    </div>
+                    <div v-if="editing" v-for="toSection in addToSections" class="insection-tag-container w3-left w3-display-container w3-margin-left">
+                      <div class="success-background w3-tag w3-round w3-small">
+                        {{ toSection.title }}
+                      </div>
+                      <div @click="removeToSection(toSection)"
+                        class="remove-tag-icon success-color w3-display-right cursor-pointer">
+                        <i class="fa fa-times-circle"></i>
+                      </div>
+                    </div>
+                    <div v-if="editing" class="w3-left w3-margin-left">
+                      <div v-if="!addToSection"
+                        @click="addToSection = !addToSection"
+                        class="w3-tag button-blue w3-small w3-round cursor-pointer">
+                        add to another section
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="w3-row">
+                    <div class="slider-container">
+                      <transition name="slideDownUp">
+                        <app-model-section-selector
+                          v-if="addToSection"
+                          :initiativeId="cardWrapper.initiativeId"
+                          @select="sectionSelected($event)">
+                        </app-model-section-selector>
+                      </transition>
+                    </div>
+                  </div>
+
+                  <div v-if="addToSection" class="w3-row w3-margin-top w3-center">
+                    <button @click="addToSection = false"
+                      class="w3-button app-button" type="button" name="button">
+                      Cancel add to section
                     </button>
                   </div>
 
-                  <div class="slider-container">
-                    <transition name="slideDownUp">
-                      <div v-if="showUrl" class="w3-row">
-                        <input id="copy-url" class="w3-input "type="text" name="" :value="cardUrl" readonly>
-                      </div>
-                    </transition>
-                  </div>
                 </div>
 
                 <div v-if="!editing" class="">
@@ -129,12 +174,11 @@
                 </div>
 
                 <div class="w3-row w3-margin-top">
-                  <div v-if="!editing" class="w3-padding">
+                  <div v-if="!editing" class="">
                     <div v-if="card.title !== ''" class="">
                       <h3><b>{{ card.title }}</b></h3>
                     </div>
                     <div v-else class="">
-                      <i>(empty)</i>
                     </div>
                   </div>
                   <div v-else class="">
@@ -151,11 +195,11 @@
                   </div>
                 </div>
 
-                <div class="w3-row w3-margin-top">
-                  <div v-if="!editing" class="w3-padding light-grey">
+                <div class="w3-row">
+                  <div v-if="!editing" class="">
                     <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
                   </div>
-                  <div v-else class="">
+                  <div v-else class="w3-margin-top">
                     <label class=""><b>Text: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
                     <app-markdown-editor v-model="editedCard.text"></app-markdown-editor>
                     <app-error-panel
@@ -166,6 +210,7 @@
                 </div>
 
                 <hr>
+
                 <div class="">
                   <div v-if="!editing" class="">
                     <div v-if="cardWrapper.stateControl" class="w3-row-padding">
@@ -216,6 +261,7 @@
             <app-message-thread
               contextType="MODEL_CARD"
               :contextElementId="cardWrapperId"
+              :onlyMessagesInit="onlyMessages"
               :url="'/1/activity/model/card/' + cardWrapperId">
             </app-message-thread>
           </div>
@@ -223,16 +269,33 @@
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
             <hr>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel <span><small>(Esc)</small></span></button>
             </div>
             <div class="w3-col m6 w3-center">
-              <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept <span><small>(Ctr + Enter)</small></span></button>
               <div v-show="sendingData" class="sending-accept light-grey">
                 <img class="" src="../../../assets/loading.gif" alt="">
               </div>
             </div>
           </div>
 
+        </div>
+        <div v-else class="w3-row w3-center loader-gif-container">
+          <img class="loader-gif" src="../../../assets/loading.gif" alt="">
+        </div>
+
+        <div v-if="closeIntent" class="w3-display-middle w3-card w3-white w3-padding w3-round-large w3-center">
+          You are currently editing this view. Are you sure you want to close it? Any changes would get lost.
+          <div class="w3-row w3-margin-top">
+            <button class="w3-button app-button-light" name="button"
+              @click="closeIntent = false">
+              Cancel
+            </button>
+            <button class="w3-button app-button" name="button"
+              @click="closeThis()">
+              Confirm
+            </button>
+          </div>
         </div>
 
       </div>
@@ -245,6 +308,7 @@ import { dateString } from '@/lib/common.js'
 import Datepicker from 'vuejs-datepicker'
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
 import ModelCardSelector from '@/components/model/ModelCardSelector.vue'
+import ModelSectionSelector from '@/components/model/ModelSectionSelector.vue'
 import MessageThread from '@/components/notifications/MessageThread.vue'
 
 export default {
@@ -253,7 +317,8 @@ export default {
     'app-model-modal-buttons': ModelModalButtons,
     'datepicker': Datepicker,
     'app-model-card-selector': ModelCardSelector,
-    'app-message-thread': MessageThread
+    'app-message-thread': MessageThread,
+    'app-model-section-selector': ModelSectionSelector
   },
 
   props: {
@@ -276,6 +341,14 @@ export default {
     inSectionTitle: {
       type: String,
       default: ''
+    },
+    ixInSection: {
+      type: Number,
+      default: -1
+    },
+    onlyMessages: {
+      type: Boolean,
+      defaul: false
     }
   },
 
@@ -308,7 +381,11 @@ export default {
       errorUploadingFile: false,
       errorUploadingFileMsg: '',
       enableClickOutside: false,
-      sendingData: false
+      sendingData: false,
+      loading: false,
+      addToSection: false,
+      addToSections: [],
+      closeIntent: false
     }
   },
 
@@ -371,6 +448,7 @@ export default {
           var copyTextarea = document.querySelector('#copy-url')
           copyTextarea.select()
           document.execCommand('copy')
+          console.log('copied')
         })
       } else {
         this.showUrl = false
@@ -378,13 +456,21 @@ export default {
     },
     newFileSelected (event) {
       /* upload image */
+      var fileData = event.target.files[0]
+      if (fileData.size > 1048576) {
+        this.errorUploadingFile = true
+        this.errorUploadingFileMsg = 'Image file too big. Must be below 1 MB'
+        return
+      }
+
       var data = new FormData()
-      data.append('file', event.target.files[0])
+      data.append('file', fileData)
 
       this.uploadingImage = true
       this.errorUploadingFile = false
 
       this.axios.post('/1/upload/cardImage/' + this.cardWrapper.id, data).then((response) => {
+        console.log(response)
         this.uploadingImage = false
 
         if (response.data.result === 'success') {
@@ -395,15 +481,20 @@ export default {
           this.errorUploadingFileMsg = response.data.message
         }
       }).then((response) => {
-        this.editedCard.imageFile = response.data.data
+        /* to force reactivity */
+        var newEditedCard = JSON.parse(JSON.stringify(this.editedCard))
+        newEditedCard.imageFile = response.data.data
+        this.editedCard = newEditedCard
       })
     },
     dateString (v) {
       return dateString(v)
     },
     update () {
+      this.loading = true
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.cardWrapper = response.data.data
+        this.loading = false
       })
     },
     updateInSection () {
@@ -416,9 +507,15 @@ export default {
       this.existingCard = cardWrapper
     },
     clickOutside () {
-      // console.log('clicked outside')
       if (this.enableClickOutside) {
-        this.$emit('close')
+        this.closeThisConfirm()
+      }
+    },
+    closeThisConfirm () {
+      if (this.editing && (!this.titleEmpty || !this.textEmpty)) {
+        this.closeIntent = true
+      } else {
+        this.closeThis()
       }
     },
     closeThis () {
@@ -432,6 +529,7 @@ export default {
       }
     },
     startEditing () {
+      this.addToSections = []
       this.editedCard = JSON.parse(JSON.stringify(this.card))
 
       if (this.cardWrapper.targetDate) {
@@ -473,6 +571,7 @@ export default {
 
       if (ok) {
         var cardDto = JSON.parse(JSON.stringify(this.editedCard))
+
         var responseF = (response) => {
           this.sendingData = false
           if (response.data.result === 'success') {
@@ -484,6 +583,8 @@ export default {
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
+            cardDto.ixInSection = this.ixInSection
+
             this.sendingData = true
             this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/cardWrapper', cardDto).then(responseF).catch((error) => {
               console.log(error)
@@ -496,6 +597,13 @@ export default {
               })
           }
         } else {
+          /* editing */
+
+          /* add the new sections */
+          if (this.addToSections.length > 0) {
+            cardDto.inSections = this.addToSections
+          }
+
           this.sendingData = true
           this.axios.put('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id, cardDto)
           .then(responseF).catch((error) => {
@@ -534,6 +642,58 @@ export default {
     removeImage () {
       this.editedCard.imageFile = null
       this.editedCard.newImageFileId = 'REMOVE'
+    },
+    sectionSelected (section) {
+      this.addToSection = false
+
+      /* prevent adding in an existing section */
+      for (var ix1 in this.cardWrapper.inSections) {
+        if (this.cardWrapper.inSections[ix1].id === section.id) {
+          return
+        }
+      }
+
+      /* prevent adding twice the same section */
+      for (var ix2 in this.addToSections) {
+        if (this.addToSections[ix2].id === section.id) {
+          return
+        }
+      }
+
+      this.addToSections.push(section)
+    },
+    removeToSection (section) {
+      var ix = -1
+      for (var ixS in this.addToSections) {
+        if (this.addToSections[ixS].id === section.id) {
+          ix = ixS
+        }
+      }
+
+      if (ix !== -1) {
+        this.addToSections.splice(ix, 1)
+      }
+    },
+    atKeydown (e) {
+      if (!this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.closeThis()
+        }
+      }
+
+      if (this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.cancel()
+        }
+
+        /* ctr + enter */
+        if (e.keyCode === 13 && e.ctrlKey) {
+          e.preventDefault()
+          this.accept()
+        }
+      }
     }
   },
 
@@ -557,11 +717,24 @@ export default {
     setTimeout(() => {
       this.enableClickOutside = true
     }, 1000)
+
+    window.addEventListener('keydown', this.atKeydown)
+  },
+
+  destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 }
 </script>
 
 <style scoped>
+
+.url-show {
+  position: absolute;
+  margin-top: 60px;
+  margin-left: -100px;
+  width: 250px;
+}
 
 .not-add-existing-container {
   overflow: visible;
@@ -579,6 +752,10 @@ export default {
 .loader-gif-container {
   padding-top: 30px;
   padding-bottom: 30px;
+}
+
+.insection-tag-container {
+  margin-left: 6px;
 }
 
 .image-container {
@@ -640,6 +817,12 @@ export default {
 
 .state-tag {
   width: 100%;
+}
+
+.remove-tag-icon {
+  margin-top: -5px;
+  margin-right: -10px;
+  z-index: 10;
 }
 
 </style>

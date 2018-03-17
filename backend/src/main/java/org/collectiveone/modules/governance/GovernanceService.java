@@ -154,8 +154,8 @@ public class GovernanceService {
 	public DecisionVerdict canEditModel(UUID initiativeId, UUID creatorId) {
 		return isRolesAndEditor(initiativeId, creatorId);
 	}
-	
 
+	
 	
 	
 	/** ------------------ */

@@ -12,19 +12,15 @@ needs the model card component inside, and would crate a recursion -->
           :cardWrapperId="cardWrapper.id"
           :inSectionId="inSectionId"
           :inSectionTitle="inSectionTitle"
+          :onlyMessages="onlyMessages"
           @close="modalClosed()">
         </app-model-card-modal>
       </transition>
     </div>
 
-    <div class="w3-display-container"
-      @mouseover="hoverEnter()"
-      @mouseleave="hoverLeave()">
-
-      <div @click="showCard()" class="click-area cursor-pointer"
-        draggable="true"
-        @dragstart="dragStart($event)">
-      </div>
+    <div class=""
+      draggable="true"
+      @dragstart="dragStart($event)">
 
       <!-- forward all props  -->
       <app-model-card
@@ -33,26 +29,12 @@ needs the model card component inside, and would crate a recursion -->
         :inSectionId="inSectionId"
         :inSectionTitle="inSectionTitle"
         :cardEffect="cardEffect"
-        :hoverHighlight="hoverHighlight"
         :floating="floating"
-        :highlight="highlight"
-        :showFull="showFull"
-        @textTooLong="textTooLong = true">
+        :enableExpand="enableExpand"
+        :forceUpdate="forceUpdate"
+        @please-update="update()"
+        @expand-modal="showCard($event)">
       </app-model-card>
-
-      <transition name="fadeenter">
-        <div v-if="showActionButton && enableExpand"
-          class="w3-padding model-action-button gray-2-color w3-display-topright">
-          <i class="fa fa-expand" aria-hidden="true"></i>
-        </div>
-      </transition>
-
-      <div v-if="textTooLong" class="">
-        <div @click="showMoreClick()" v-if="enableExpand"
-          class="w3-padding model-action-button gray-2-color w3-display-bottomright cursor-pointer">
-          <i class="fa fa-arrows-v" aria-hidden="true"></i>
-        </div>
-      </div>
 
     </div>
 
@@ -71,7 +53,7 @@ export default {
   },
 
   props: {
-    cardWrapper: {
+    cardWrapperInit: {
       type: Object,
       default: null
     },
@@ -83,10 +65,6 @@ export default {
       type: String,
       default: ''
     },
-    inView: {
-      type: Boolean,
-      default: false
-    },
     inSectionTitle: {
       type: String,
       default: ''
@@ -94,10 +72,6 @@ export default {
     cardEffect: {
       type: Boolean,
       default: true
-    },
-    hoverHighlight: {
-      type: Boolean,
-      default: false
     },
     floating: {
       type: Boolean,
@@ -110,60 +84,51 @@ export default {
     expandLocally: {
       type: Boolean,
       default: true
+    },
+    forceUpdate: {
+      type: Boolean,
+      default: true
     }
   },
 
   data () {
     return {
-      showActionButton: false,
+      cardWrapper: null,
       showCardModal: false,
-      highlight: false,
-      textTooLong: false,
-      showFull: false
+      onlyMessages: false
+    }
+  },
+
+  watch: {
+    cardWrapperInit () {
+      this.cardWrapper = this.cardWrapperInit
     }
   },
 
   methods: {
+    update () {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+        this.cardWrapper = response.data.data
+      })
+    },
     modalClosed () {
       this.showCardModal = false
-      this.$emit('please-update')
+      this.update()
     },
-    hoverEnter () {
-      this.showActionButton = true
-      if (this.hoverHighlight) {
-        this.highlight = true
-      }
-    },
-    hoverLeave () {
-      this.showActionButton = false
-      this.highlight = false
-    },
-    showMoreClick () {
-      this.showFull = !this.showFull
-    },
-    showCard () {
+    showCard (onlyMessages) {
       if (this.expandLocally) {
+        this.onlyMessages = onlyMessages
         this.showCardModal = true
       } else {
-        if (this.inView) {
-          this.$router.push({
-            name: 'ModelCardInView',
-            params: {
-              initiativeId: this.initiativeId,
-              viewId: this.inViewId,
-              cardId: this.cardWrapper.id
-            }
-          })
-        } else {
-          this.$router.push({
-            name: 'ModelCardInSection',
-            params: {
-              initiativeId: this.initiativeId,
-              sectionId: this.inSectionId,
-              cardId: this.cardWrapper.id
-            }
-          })
-        }
+        this.$router.push({
+          name: 'ModelCardInSection',
+          params: {
+            initiativeId: this.initiativeId,
+            sectionId: this.inSectionId,
+            cardId: this.cardWrapper.id,
+            onlyMessages: onlyMessages
+          }
+        })
       }
     },
     dragStart (event) {
@@ -174,6 +139,10 @@ export default {
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
     }
+  },
+
+  created () {
+    this.cardWrapper = this.cardWrapperInit
   }
 }
 </script>
@@ -182,9 +151,16 @@ export default {
 
 .click-area {
   position: absolute;
+  min-height: 40px;
   height: calc(100% - 40px);
   width: 100%;
   z-index: 10;
+}
+
+.messages-indicator {
+  margin-right: 46px;
+  margin-bottom: 6px;
+  z-index: 11;
 }
 
 </style>

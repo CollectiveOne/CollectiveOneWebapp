@@ -24,8 +24,9 @@
         </router-link>
       </div>
 
-      <div v-if="isLoggedAnAdmin()" class="w3-col s2 w3-button" @click="newSubInitiative()">
+      <div v-if="isLoggedAnAdmin()" class="w3-col s2 w3-button tooltip" @click="newSubInitiative()">
         <i class="fa fa-plus gray-2-color" aria-hidden="true"></i>
+        <span class="tooltiptext gray-1">new subinitiative</span>
       </div>
     </div>
 
@@ -131,11 +132,7 @@ export default {
         parentId: this.initiative.id })
     },
     isLoggedAnAdmin () {
-      if (this.initiative.loggedMembership[0]) {
-        return this.initiative.loggedMembership[0].role === 'ADMIN'
-      } else {
-        return false
-      }
+      return this.initiative.loggedMembership[0].role === 'ADMIN'
     }
   },
 
@@ -177,6 +174,11 @@ export default {
 
 .line-element {
   text-align: center;
+}
+
+.tooltip .tooltiptext {
+  top: 80%;
+  right: 70%;
 }
 
 .selected {

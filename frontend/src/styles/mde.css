@@ -1,0 +1,8 @@
+.marked-text a {
+  text-decoration: underline !important;
+}
+
+.marked-text p {
+  margin-top: 3px;
+  margin-bottom: 3px;
+}

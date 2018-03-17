@@ -47,5 +47,21 @@ public class MessagesController extends BaseController {
 		
 		return messageService.postMessage(messageDto, getLoggedUserId(), contextType, elementId);
 	}
+	
+
+	/* creates a new message (context type + element id are used as the identifier of the location of the message) */
+	@RequestMapping(path = "/messages/{contextElementType}/{contextElementId}/{messageId}", method = RequestMethod.PUT) 
+	public PostResult editMessage(
+			@PathVariable("contextElementType") String contextElementTypeStr,
+			@PathVariable("contextElementId") String contextElementIdStr,
+			@PathVariable("messageId") String messageId,
+			@RequestBody MessageDto messageDto) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		return messageService.editMessage(messageDto, getLoggedUserId(), UUID.fromString(messageId));
+	}
 		
 }

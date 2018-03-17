@@ -1,0 +1,55 @@
+.w3-modal {
+  padding-top: 30px;
+  display: block;
+  z-index: 100;
+}
+
+.w3-modal-content {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  border-radius: 20px;
+  min-height: 200px;
+}
+
+.app-modal-card {
+  border-radius: 20px;
+  min-height: 200px;
+}
+
+.w3-modal .close-div {
+  margin-right: 25px;
+  margin-top: 20px;
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+  text-align: right;
+}
+
+.w3-modal .close-div:hover {
+  color: #15a5cc;
+}
+
+.w3-modal .bottom-btns-row button {
+  width: 100%;
+}
+
+.div-close-modal {
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+  text-align: right;
+}
+
+.fa-close-modal {
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.div-modal-content {
+  padding-top: 20px;
+  padding-bottom: 25px;
+}
+
+.modal-bottom-btns-row button {
+  width: 100%;
+}

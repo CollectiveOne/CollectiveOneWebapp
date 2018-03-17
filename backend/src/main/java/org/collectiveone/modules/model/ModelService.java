@@ -3,6 +3,7 @@ package org.collectiveone.modules.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import javax.transaction.Transactional;
 
@@ -13,8 +14,13 @@ import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
+import org.collectiveone.modules.conversations.Message;
+import org.collectiveone.modules.conversations.MessageRepositoryIf;
+import org.collectiveone.modules.files.FileService;
 import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredRepositoryIf;
+import org.collectiveone.modules.governance.CardLike;
+import org.collectiveone.modules.governance.CardLikeRepositoryIf;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
@@ -27,6 +33,7 @@ import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelViewRepositoryIf;
+import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +49,9 @@ public class ModelService {
 	
 	@Autowired
 	private ActivityService activityService;
+	
+	@Autowired
+	private FileService fileService;
 	
 	@Autowired
 	private InitiativeRepositoryIf initiativeRepository;
@@ -67,6 +77,16 @@ public class ModelService {
 	@Autowired
 	private ActivityRepositoryIf activityRepository;
 	
+	@Autowired
+	private MessageRepositoryIf messageRepository;
+	
+	@Autowired
+	private CardLikeRepositoryIf cardLikeRepository;
+	
+	
+	/* local memory needed as protection against infinite recursive loops */
+	private List<UUID> readIds = new ArrayList<UUID>();
+	
 	
 	@Transactional
 	public GetResult<ModelDto> getModel(UUID initiativeId, Integer level, UUID requestById) {
@@ -78,7 +98,7 @@ public class ModelService {
 		List<ModelView> views = initiative.getModelViews(); 
 		for (ModelView view : views) {
 			ModelViewDto viewDto = view.toDto();
-			viewDto = addViewSubElements(viewDto, view.getId(), level);
+			viewDto = addViewSubElements(viewDto, view.getId(), level, requestById);
 			viewsDto.add(viewDto); 
 		}
 		
@@ -89,7 +109,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public ModelViewDto addViewSubElements(ModelViewDto viewDto, UUID viewId, Integer level) {
+	public ModelViewDto addViewSubElements(ModelViewDto viewDto, UUID viewId, Integer level, UUID requestByUserId) {
 		
 		ModelView view = modelViewRepository.findById(viewId);
 		
@@ -97,7 +117,7 @@ public class ModelService {
 			viewDto.setSectionsLoaded(true);
 			
 			for (ModelSection section : view.getSections()) {
-				viewDto.getSections().add(getSectionDto(section.getId(), level - 1));
+				viewDto.getSections().add(getSectionDto(section.getId(), level - 1, requestByUserId));
 			}
 		} else {
 			viewDto.setSectionsLoaded(false);
@@ -140,12 +160,12 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelViewDto> getView (UUID viewId, UUID requestById, Integer level) {
+	public GetResult<ModelViewDto> getView (UUID viewId, UUID requestById, Integer level, UUID requestByUserId) {
 		
 		ModelView view = modelViewRepository.findById(viewId);
 		
 		ModelViewDto viewDto = view.toDto();
-		viewDto = addViewSubElements(viewDto, view.getId(), level);
+		viewDto = addViewSubElements(viewDto, view.getId(), level, requestByUserId);
 		
 		return new GetResult<ModelViewDto>("success", "view retrieved", viewDto);
 	}
@@ -212,12 +232,12 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById, Integer level) {
-		return new GetResult<ModelSectionDto>("success", "section retrieved",  getSectionDto(sectionId, level));
+	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById, Integer level, UUID requestByUserId) {
+		return new GetResult<ModelSectionDto>("success", "section retrieved",  getSectionDto(sectionId, level, requestByUserId));
 	}
 	
 	@Transactional
-	public ModelSectionDto getSectionDto(UUID sectionId, Integer level) {
+	public ModelSectionDto getSectionDto(UUID sectionId, Integer level, UUID requestByUserId) {
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		ModelSectionDto sectionDto = section.toDto();
 		
@@ -233,13 +253,13 @@ public class ModelService {
 			sectionDto.getInViews().add(inView.toDto());
 		}
 		
-		sectionDto = addSectionSubElements(sectionDto, section.getId(), level);
+		sectionDto = addSectionSubElements(sectionDto, section.getId(), level, requestByUserId);
 		
 		return sectionDto;
 	}
 	
 	@Transactional
-	public GetResult<Page<ModelSectionDto>> searchSection(String query, PageRequest page, UUID initiativeId) {
+	public GetResult<Page<ModelSectionDto>> searchSection(String query, PageRequest page, UUID initiativeId, UUID requestByUserId) {
 		
 		List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(initiativeId);
 		Page<ModelSection> enititiesPage = modelSectionRepository.searchBy("%"+query.toLowerCase()+"%", initiativeEcosystemIds, page);
@@ -247,7 +267,7 @@ public class ModelService {
 		List<ModelSectionDto> sectionDtos = new ArrayList<ModelSectionDto>();
 		
 		for(ModelSection section : enititiesPage.getContent()) {
-			sectionDtos.add(getSectionDto(section.getId(), 0));
+			sectionDtos.add(getSectionDto(section.getId(), 0, requestByUserId));
 		}
 		
 		Page<ModelSectionDto> dtosPage = new PageImpl<ModelSectionDto>(sectionDtos, page, enititiesPage.getNumberOfElements());
@@ -298,6 +318,36 @@ public class ModelService {
 		activityService.modelSectionRemovedFromView(section, view, appUserRepository.findByC1Id(creatorId));
 		
 		return new PostResult("success", "section removed to view", view.getId().toString());
+	}
+	
+	@Transactional
+	public PostResult moveView(
+			UUID initiativeId, 
+			UUID viewId, 
+			UUID onViewId,
+			UUID creatorId) {
+		/* move a view within an initiative */
+		
+		if (onViewId.equals(viewId)) {
+			return new PostResult("warning", "cannot move on itself", null);
+		}
+		
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+		ModelView view = modelViewRepository.findById(viewId);
+		ModelView beforeView = modelViewRepository.findById(onViewId);
+		
+		int index = initiative.getModelViews().indexOf(beforeView);
+		initiative.getModelViews().remove(view);
+		initiativeRepository.save(initiative);
+		
+		initiative.getModelViews().add(index, view);
+		
+		activityService.modelViewMoved(view, appUserRepository.findByC1Id(creatorId));
+		
+		modelViewRepository.save(view);
+		initiativeRepository.save(initiative);
+		
+		return new PostResult("success", "view moved", view.getId().toString());
 	}
 	
 	@Transactional
@@ -485,7 +535,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public ModelSectionDto addSectionSubElements(ModelSectionDto sectionDto, UUID sectionId, Integer level) {
+	public ModelSectionDto addSectionSubElements(ModelSectionDto sectionDto, UUID sectionId, Integer level, UUID requestByUserId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		
@@ -494,6 +544,13 @@ public class ModelService {
 			
 			for (ModelCardWrapper cardWrapper : section.getCardsWrappers()) {
 				ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
+				
+				cardWrapperDto.setnLikes(cardLikeRepository.countOfCard(cardWrapper.getId()));
+				
+				if (requestByUserId != null) {
+					cardWrapperDto.setUserLiked(cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapper.getId(), requestByUserId) != null);
+				}
+				
 				List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapper.getId());
 				
 				for (ModelSection inSection : inSections) {
@@ -504,13 +561,10 @@ public class ModelService {
 			}
 			
 			for (ModelSection subsection : section.getSubsections()) {
-				sectionDto.getSubsections().add(addSectionSubElements(subsection.toDto(), subsection.getId(), level - 1));
+				sectionDto.getSubsections().add(addSectionSubElements(subsection.toDto(), subsection.getId(), level - 1, requestByUserId));
 			}
 		} else {
 			sectionDto.setSubElementsLoaded(false);
-			for (ModelSection subsection : section.getSubsections()) {
-				sectionDto.getSubsections().add(subsection.toDto());
-			}
 		}
 		
 		return sectionDto; 
@@ -555,13 +609,19 @@ public class ModelService {
 		
 		ModelCard card = cardDto.toEntity(null, cardDto, null);
 		
+		card = modelCardRepository.save(card);
+		
 		if (cardDto.getNewImageFileId() != null) {
 			UUID imageFileId = cardDto.getNewImageFileId().equals("") ? null : UUID.fromString(cardDto.getNewImageFileId());
-			FileStored imageFile = fileStoredRepository.findById(imageFileId);
-			card.setImageFile(imageFile);
+			if (imageFileId != null) {
+				/* copy image from temporary location to card fixed location, needed the card ID for this */
+				UUID newFileId = fileService.copyImageAfterCreationToCard(creatorId, imageFileId, card.getId());
+				if (newFileId != null) {
+					FileStored newImageFile = fileStoredRepository.findById(newFileId);
+					card.setImageFile(newImageFile);	
+				}
+			}
 		}
-		
-		card = modelCardRepository.save(card);
 		
 		ModelCardWrapper cardWrapper = new ModelCardWrapper();
 		cardWrapper.setCard(card);
@@ -570,7 +630,21 @@ public class ModelService {
 		
 		cardWrapper = modelCardWrapperRepository.save(cardWrapper);
 		
-		section.getCardsWrappers().add(cardWrapper);
+		/* add location */
+		if (cardDto.getIxInSection() == null) {
+			/* at the end */
+			section.getCardsWrappers().add(cardWrapper);
+		} else {
+			if (cardDto.getIxInSection() == -1) {
+				/* at the end */
+				section.getCardsWrappers().add(cardWrapper);
+			} else {
+				/* at a given ix */
+				section.getCardsWrappers().add(cardDto.getIxInSection(), cardWrapper);
+			}
+
+		}
+		
 		modelSectionRepository.save(section);
 		
 		activityService.modelCardWrapperCreated(cardWrapper, section, appUserRepository.findByC1Id(creatorId));
@@ -612,6 +686,15 @@ public class ModelService {
 		cardWrapper.setCard(card);
 		cardWrapper.setOtherProperties(cardDto);
 		
+		/* this inSections actually refer to add to new sections */
+		for (ModelSectionDto sectionDto : cardDto.getInSections()) {
+			ModelSection section = modelSectionRepository.findById(UUID.fromString(sectionDto.getId()));
+			
+			if (section != null) {
+				section.getCardsWrappers().add(cardWrapper);
+			}
+		}
+	
 		activityService.modelCardWrapperEdited(cardWrapper, appUserRepository.findByC1Id(creatorId));
 		
 		return new PostResult("success", "card edited", cardWrapper.getId().toString());
@@ -656,11 +739,17 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelCardWrapperDto> getCardWrapper(UUID cardWrapperId, UUID requestById) {
+	public GetResult<ModelCardWrapperDto> getCardWrapper(UUID cardWrapperId, UUID requestByUserId) {
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapper.getId());
 		
 		ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
+		
+		cardWrapperDto.setnLikes(cardLikeRepository.countOfCard(cardWrapper.getId()));
+		
+		if (requestByUserId != null) {
+			cardWrapperDto.setUserLiked(cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapper.getId(), requestByUserId) != null);
+		}
 		
 		for (ModelSection section : inSections) {
 			cardWrapperDto.getInSections().add(section.toDto());
@@ -741,13 +830,25 @@ public class ModelService {
 	
 	@Transactional
 	public List<UUID> getAllSubsectionsIds (UUID sectionId) {
+		readIds.clear();
+		readIds.add(sectionId);
+		return getAllSubsectionsIdsRec(sectionId);
+	}
+	
+	@Transactional
+	public List<UUID> getAllSubsectionsIdsRec (UUID sectionId) {
 		List<UUID> subsectionsIds = modelSectionRepository.getSubsectionsIds(sectionId);
 		List<UUID> allSubsectionIds = new ArrayList<UUID>();
 		
+		/* remove those that have been already been added */
+		Predicate<UUID> isContained = e -> readIds.contains(e);
+		subsectionsIds.removeIf(isContained);
+		
 		allSubsectionIds.addAll(subsectionsIds);
+		readIds.addAll(subsectionsIds);
 		
 		for (UUID subsectionId : subsectionsIds) {
-			List<UUID> subsubsectionIds = getAllSubsectionsIds(subsectionId);
+			List<UUID> subsubsectionIds = getAllSubsectionsIdsRec(subsectionId);
 			
 			for (UUID subsubsectionId : subsubsectionIds) {
 				if(allSubsectionIds.indexOf(subsubsectionId) == -1) {
@@ -760,7 +861,32 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Page<ActivityDto>> getActivityUnderView (UUID viewId, PageRequest page, Boolean onlyMessages) {
+	public GetResult<Long> countMessagesUnderView (UUID viewId) {
+		Page<Activity> messages = getActivityUnderView(viewId, new PageRequest(1, 1), true);
+		return new GetResult<Long>("success", "activity counted", messages.getTotalElements());
+	}
+	
+	@Transactional
+	public Page<Message> getMessagesUnderView (UUID viewId, PageRequest page) {
+		
+		List<UUID> sectionIds = getAllSectionsIdsOfView(viewId);
+		List<UUID> cardsIds = sectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(sectionIds) : new ArrayList<UUID>();
+		
+		Page<Message> messages = null;
+		
+		if((sectionIds.size() > 0) && (cardsIds.size() > 0)) {
+			messages = messageRepository.findOfViewSectionsAndCards(viewId, sectionIds, cardsIds, page);
+		} else if ((sectionIds.size() > 0) && (cardsIds.size() == 0)) {
+			messages = messageRepository.findOfViewAndSections(viewId, sectionIds, page);
+		} else if ((sectionIds.size() == 0) && (cardsIds.size() == 0)) {
+			messages = messageRepository.findOfView(viewId, page);
+		}
+		
+		return messages;
+	}
+	
+	@Transactional
+	public Page<Activity> getActivityUnderView (UUID viewId, PageRequest page, Boolean onlyMessages) {
 		List<UUID> sectionIds = getAllSectionsIdsOfView(viewId);
 		List<UUID> cardsIds = sectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(sectionIds) : new ArrayList<UUID>();
 		
@@ -785,6 +911,14 @@ public class ModelService {
 			}
 		}
 		
+		return activities;
+	}
+	
+	@Transactional
+	public GetResult<Page<ActivityDto>> getActivityResultUnderView (UUID viewId, PageRequest page, Boolean onlyMessages) {
+		
+		Page<Activity> activities = getActivityUnderView(viewId, page, onlyMessages);
+		
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		
 		for(Activity activity : activities.getContent()) {
@@ -798,7 +932,53 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Page<ActivityDto>> getActivityUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages) {
+	public GetResult<Long> countMessagesUnderSection (UUID sectionId) {
+		Page<Activity> activity = getActivityUnderSection(sectionId, new PageRequest(1, 1), true);
+		return new GetResult<Long>("success", "activity counted", activity.getTotalElements());
+	}
+	
+	@Transactional
+	public Page<Message> getMessagesUnderSection(UUID sectionId, PageRequest page) {
+		/* TODO: This is not actually used. Messages are being retrieved from the
+		 * activity entities they generate. That approached should be abandoned
+		 */		
+		
+		List<UUID> allSectionIds = new ArrayList<UUID>();
+		
+		allSectionIds.add(sectionId);
+		allSectionIds.addAll(getAllSubsectionsIds(sectionId));
+		
+		List<UUID> cardsIds = allSectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
+		
+		Page<Message> messages = null;
+		
+		if (cardsIds.size() > 0) {
+			messages = messageRepository.findOfSectionsAndCards(allSectionIds, cardsIds, page);	
+		} else {
+			messages = messageRepository.findOfSections(allSectionIds, page);
+		}
+		
+		return messages;
+	}
+	
+	@Transactional
+	public GetResult<Page<ActivityDto>> getActivityResultUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages) {
+		
+		Page<Activity> activities = getActivityUnderSection(sectionId, page, onlyMessages);
+		
+		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
+		
+		for(Activity activity : activities.getContent()) {
+			activityDtos.add(activity.toDto());
+		}
+		
+		Page<ActivityDto> dtosPage = new PageImpl<ActivityDto>(activityDtos, page, activities.getNumberOfElements());
+		
+		return new GetResult<Page<ActivityDto>>("succes", "actvity returned", dtosPage);
+	}
+	
+	@Transactional
+	public Page<Activity> getActivityUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages) {
 		
 		List<UUID> allSectionIds = new ArrayList<UUID>();
 		
@@ -823,6 +1003,40 @@ public class ModelService {
 			}
 		}
 			
+		return activities;
+	}
+	
+	@Transactional
+	public GetResult<Long> countMessagesUnderCard (UUID cardWrapperId, Boolean onlyMessages) {
+		Page<Activity> messages = getActivityUnderCard(cardWrapperId, new PageRequest(1, 1), true);
+		return new GetResult<Long>("success", "activity counted", messages.getTotalElements());
+	}
+	
+	@Transactional
+	public Page<Message> getMessagesUnderCard (UUID cardWrapperId, PageRequest page) {
+		Page<Message> activities = null;
+		
+		activities = messageRepository.findOfCard(cardWrapperId, page);
+		
+		return activities;
+	}
+	
+	@Transactional
+	public Page<Activity> getActivityUnderCard (UUID cardWrapperId, PageRequest page, Boolean onlyMessages) {
+		Page<Activity> activities = null;
+		if (!onlyMessages) {
+			activities = activityRepository.findOfCard(cardWrapperId, page);
+		} else {
+			activities = activityRepository.findOfCardAndType(cardWrapperId, ActivityType.MESSAGE_POSTED, page);
+		}
+		return activities;
+	}
+	
+	@Transactional
+	public GetResult<Page<ActivityDto>> getActivityResultUnderCard (UUID cardWrapperId, PageRequest page, Boolean onlyMessages) {
+		
+		Page<Activity> activities = getActivityUnderCard(cardWrapperId, page, onlyMessages);
+	
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		
 		for(Activity activity : activities.getContent()) {
@@ -836,26 +1050,36 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Page<ActivityDto>> getActivityUnderCard (UUID cardWrapperId, PageRequest page, Boolean onlyMessages) {
+	public PostResult setLikeToCard (UUID cardWrapperId, UUID authorId, boolean likeStatus) {
+		ModelCardWrapper card = modelCardWrapperRepository.findById(cardWrapperId);
+		AppUser author = appUserRepository.findByC1Id(authorId);
 		
-		Page<Activity> activities = null;
-		if (!onlyMessages) {
-			activities = activityRepository.findOfCard(cardWrapperId, page);
+		CardLike like = cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapperId, authorId);
+		
+		/* add the like*/
+		if (likeStatus == true) {
+			if (like == null) {
+				like = new CardLike();
+				like.setAuthor(author);
+				like.setCardWrapper(card);
+				cardLikeRepository.save(like);
+			} else {
+				/* nothing to do, the like is already registered */
+			}	
 		} else {
-			activities = activityRepository.findOfCardAndType(cardWrapperId, ActivityType.MESSAGE_POSTED, page);
-		}
-	
-		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
-		
-		for(Activity activity : activities.getContent()) {
-			activityDtos.add(activity.toDto());
+			if (like != null) {
+				cardLikeRepository.delete(like);
+			} else {
+				/* nothing to do, the like is already absent */
+			}
 		}
 		
-		Page<ActivityDto> dtosPage = new PageImpl<ActivityDto>(activityDtos, page, activities.getNumberOfElements());
-		
-		return new GetResult<Page<ActivityDto>>("succes", "actvity returned", dtosPage);
-		
+		return new PostResult("success", "like status changed", null);
 	}
 	
+	@Transactional
+	public GetResult<Integer> countCardLikes (UUID cardWrapperId) {
+		return new GetResult<Integer>("success", "cards counted", cardLikeRepository.countOfCard(cardWrapperId));
+	}
 	
 }

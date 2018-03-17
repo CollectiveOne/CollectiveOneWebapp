@@ -6,12 +6,12 @@
     </div>
 
     <app-model-card-with-modal
-      :cardWrapper="cardWrapper"
+      :cardWrapperInit="cardWrapper"
       :initiativeId="$route.params.initiativeId"
       inSectionId=""
       inSectionTitle=""
       :cardEffect="true"
-      :floating="true"
+      :floating="false"
       @please-update="update()">
     </app-model-card-with-modal>
 

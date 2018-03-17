@@ -169,6 +169,15 @@
         </div>
 
         <div v-if="isDirect" class="w3-row">
+          <div v-if="assignation.receivers.length > 1" class="">
+            <app-users-percentages
+              :usersData="assignation.receivers"
+              :disable="true"
+              :showSelfBiases="false"
+              :showTotal="true"
+              :totalTokens="assignation.assets[0].value">
+            </app-users-percentages>
+          </div>
         </div>
 
         <hr>
@@ -192,7 +201,8 @@
                 :usersData="evaluationReceivers"
                 userAnchor="receiverUser"
                 :disable="disableEvaluations"
-                :key="disableEvaluations">
+                :key="disableEvaluations"
+                :totalTokens="assignation.assets[0].value">
               </app-users-percentages>
             </transition>
 
@@ -218,7 +228,8 @@
               :usersData="assignation.receivers"
               :disable="true"
               :showSelfBiases="assignation.config.selfBiasVisible"
-              :myEvaluations="evaluationReceivers">
+              :myEvaluations="evaluationReceivers"
+              :totalTokens="assignation.assets[0].value">
             </app-users-percentages>
           </div>
         </div>

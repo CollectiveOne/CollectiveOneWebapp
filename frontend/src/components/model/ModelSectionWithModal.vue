@@ -14,6 +14,7 @@ needs the model card component inside, and would crate a recursion -->
           :inView="inView"
           :inElementId="inElementId"
           :inElementTitle="inElementTitle"
+          :onlyMessages="onlyMessages"
           @close="showSectionModal = false">
         </app-model-section-modal>
       </transition>
@@ -38,6 +39,7 @@ needs the model card component inside, and would crate a recursion -->
         <app-model-card-modal
           v-if="showNewCardModal"
           :isNew="true"
+          :ixInSection="ixInSection"
           :initiativeId="initiativeId"
           :inSectionId="section.id"
           :inSectionTitle="section.title"
@@ -52,10 +54,11 @@ needs the model card component inside, and would crate a recursion -->
 
       <!-- forward all props  -->
       <app-model-section
-        :sectionInit="sectionInit"
-        :preloaded="preloaded"
-        :initiativeId="initiativeId"
         :sectionId="sectionId"
+        :sectionInit="sectionInit"
+        :basicPreloaded="basicPreloaded"
+        :subElementsPreloaded="subElementsPreloaded"
+        :initiativeId="initiativeId"
         :inView="inView"
         :inElementId="inElementId"
         :inElementTitle="inElementTitle"
@@ -63,24 +66,32 @@ needs the model card component inside, and would crate a recursion -->
         :dragType="dragType"
         :floating="floating"
         :cardsAsCards="cardsAsCards"
-        :force-update="forceUpdate"
-        @new-card="newCard()"
-        @new-subsection="newSubsection()">
+        :expandInit="expandInit"
+        :expandSubSubsecInit="expandSubSubsecInit"
+        :forceUpdate="forceUpdate"
+        :sortByLikes="sortByLikes"
+        @updated="updated($event)"
+        @new-card="newCard($event)"
+        @new-subsection="newSubsection()"
+        @show-messages="expandSectionModal(true)"
+        @header-clicked="expandSectionModal(true)">
       </app-model-section>
 
       <transition name="fadeenter">
         <div v-if="showActionButton" class="w3-display-topright action-buttons-container"
           @mouseleave="showSubActionButtons = false">
           <div
-            class="w3-button model-action-button gray-1-color w3-right"
+            class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="expandSectionModal()">
             <i class="fa fa-expand" aria-hidden="true"></i>
+            <span class="tooltiptext gray-1">expand</span>
           </div>
           <div
             v-if="isLoggedAnEditor"
-            class="w3-button model-action-button gray-1-color w3-right"
+            class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="showSubActionButtons = !showSubActionButtons">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            <span class="tooltiptext gray-1">add elements</span>
           </div>
           <div v-if="showSubActionButtons" class="sub-action-buttons-container w3-card w3-white">
             <div class="w3-button" @click="newCard()">
@@ -90,13 +101,22 @@ needs the model card component inside, and would crate a recursion -->
               <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i> add sub-section
             </div>
           </div>
-          <div class="w3-button model-action-button gray-1-color w3-right"
+          <div class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="cardsAsCards = !cardsAsCards">
             <i class="fa" :class="{ 'fa-bars': cardsAsCards, 'fa-th': !cardsAsCards }" aria-hidden="true"></i>
+            <span class="tooltiptext gray-1">toggle card/doc view</span>
           </div>
-          <div class="w3-button model-action-button gray-1-color w3-right"
+          <div class="w3-button model-action-button gray-1-color w3-right tooltip"
+            @click="sortByLikes = !sortByLikes">
+            <i class="fa" :class="{'fa-sort-numeric-asc': sortByLikes, ' fa-heartbeat': !sortByLikes}"
+              aria-hidden="true">
+            </i>
+            <span class="tooltiptext gray-1">sort by likes</span>
+          </div>
+          <div class="w3-button model-action-button gray-1-color w3-right tooltip"
             @click="forceUpdate = !forceUpdate">
             <i class="fa fa-refresh" aria-hidden="true"></i>
+            <span class="tooltiptext gray-1">refresh contents</span>
           </div>
         </div>
       </transition>
@@ -126,7 +146,11 @@ export default {
       type: Object,
       default: null
     },
-    preloaded: {
+    basicPreloaded: {
+      type: Boolean,
+      default: false
+    },
+    subElementsPreloaded: {
       type: Boolean,
       default: false
     },
@@ -160,6 +184,18 @@ export default {
     floating: {
       type: Boolean,
       default: false
+    },
+    cardsAsCardsInit: {
+      type: Boolean,
+      default: true
+    },
+    expandInit: {
+      type: Boolean,
+      default: false
+    },
+    expandSubSubsecInit: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -172,7 +208,9 @@ export default {
       showSectionModal: false,
       showNewSubsectionModal: false,
       showNewCardModal: false,
-      forceUpdate: false
+      forceUpdate: false,
+      onlyMessages: false,
+      sortByLikes: false
     }
   },
 
@@ -183,35 +221,45 @@ export default {
   },
 
   methods: {
-    expandSectionModal () {
+    updated (section) {
+      this.section = section
+    },
+    expandSectionModal (onlyMessages) {
+      this.onlyMessages = onlyMessages || false
       this.showSectionModal = true
     },
     newSubsection () {
       this.showNewSubsectionModal = true
     },
-    newCard () {
+    newCard (ix) {
+      this.ixInSection = ix
       this.showNewCardModal = true
     }
   },
 
-  created () {
-    if (!this.preloaded) {
-      this.section = {
-        id: this.sectionId
-      }
-    } else {
-      this.section = this.sectionInit
+  watch: {
+    cardsAsCardsInit () {
+      this.cardsAsCards = this.cardsAsCardsInit
     }
+  },
+
+  created () {
+    this.cardsAsCards = this.cardsAsCardsInit
+    this.section = this.sectionInit
   }
 }
 </script>
 
 <style scoped>
 
+.tooltip .tooltiptext {
+    top: 100%;
+    right: 50%;
+}
+
 .action-buttons-container {
   margin-top: 2px;
   margin-right: 1px;
-  z-index: 90;
 }
 
 .sub-action-buttons-container {

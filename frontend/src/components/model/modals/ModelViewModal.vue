@@ -1,35 +1,38 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4"
+      <div class="w3-card-4 app-modal-card w3-display-container"
         v-click-outside="clickOutside">
 
-        <div class="div-close-modal w3-display-topright w3-xlarge" @click="closeThis()">
-          <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
-        </div>
-
-        <div class="w3-container">
-
-          <div class="w3-row w3-border-bottom">
-            <h2>{{ isNew ? 'New View' : 'Model View' }}</h2>
+        <div class="w3-display-topright">
+          <div class="w3-right w3-button w3-xlarge" @click="closeThisConfirm()">
+            <i class="fa fa-times" aria-hidden="true"></i>
           </div>
-
-          <div class="w3-row div-modal-content">
-
+          <div class="w3-right">
             <app-model-modal-buttons
-              v-if="isLoggedAnEditor"
+              v-if="isLoggedAnEditor && !editing"
               :show="showEditButtons"
               :hideRemove="true"
               deleteMessage="This will delete the view. Its sections and cards will not be deleted."
               @edit="startEditing()"
               @delete="deleteView()">
             </app-model-modal-buttons>
+          </div>
+        </div>
 
-            <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
-            <div v-if="!editing" class="w3-row w3-padding light-grey">
-              {{ view.title }}
+        <div v-if="!loading" class="w3-container">
+
+          <div class="w3-row w3-border-bottom">
+            <h3>{{ isNew ? 'New View' : 'Model View' }}</h3>
+          </div>
+
+          <div class="w3-row div-modal-content">
+
+            <div v-if="!editing" class="w3-row">
+              <h3><b>{{ view.title }}</b></h3>
             </div>
             <div v-else class="w3-row">
+              <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
               <input type="text" class="w3-input w3-hover-light-grey" v-model="editedView.title">
               <app-error-panel
                 :show="titleEmptyShow"
@@ -41,13 +44,12 @@
               </app-error-panel>
             </div>
 
-            <br>
-            <label class=""><b>Description: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
             <div class="w3-row">
-              <div v-if="!editing" class="w3-padding light-grey">
+              <div v-if="!editing" class="">
                 <vue-markdown class="marked-text" :source="view.description"></vue-markdown>
               </div>
-              <div v-else class="">
+              <div v-else class="w3-margin-top">
+                <label class=""><b>Description:</b></label>
                 <app-markdown-editor v-model="editedView.description"></app-markdown-editor>
                 <app-error-panel
                   :show="descriptionErrorShow"
@@ -61,6 +63,7 @@
               <app-message-thread
                 contextType="MODEL_VIEW"
                 :contextElementId="viewId"
+                :onlyMessagesInit="onlyMessages"
                 :url="'/1/activity/model/view/' + viewId">
               </app-message-thread>
             </div>
@@ -68,16 +71,33 @@
             <div v-if="editing" class="modal-bottom-btns-row w3-row-padding">
               <hr>
               <div class="w3-col m6">
-                <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
+                <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel <span><small>(Esc)</small></span></button>
               </div>
               <div class="w3-col m6 w3-center">
-                <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept</button>
+                <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept <span><small>(Ctr + Enter)</small></span></button>
                 <div v-show="sendingData" class="sending-accept light-grey">
                   <img class="" src="../../../assets/loading.gif" alt="">
                 </div>
               </div>
             </div>
 
+          </div>
+        </div>
+        <div v-else class="w3-row w3-center loader-gif-container">
+          <img class="loader-gif" src="../../../assets/loading.gif" alt="">
+        </div>
+
+        <div v-if="closeIntent" class="w3-display-middle w3-card w3-white w3-padding w3-round-large w3-center">
+          You are currently editing this view. Are you sure you want to close it? Any changes would get lost.
+          <div class="w3-row w3-margin-top">
+            <button class="w3-button app-button-light" name="button"
+              @click="closeIntent = false">
+              Cancel
+            </button>
+            <button class="w3-button app-button" name="button"
+              @click="closeThis()">
+              Confirm
+            </button>
           </div>
         </div>
 
@@ -109,6 +129,10 @@ export default {
     initiativeId: {
       type: String,
       default: ''
+    },
+    onlyMessages: {
+      type: Boolean,
+      defaul: false
     }
   },
 
@@ -123,7 +147,9 @@ export default {
       showEditButtons: false,
       titleEmptyError: false,
       descriptionEmptyError: false,
-      sendingData: false
+      sendingData: false,
+      loading: false,
+      closeIntent: false
     }
   },
 
@@ -156,7 +182,9 @@ export default {
 
   methods: {
     update () {
+      this.loading = true
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/view/' + this.view.id).then((response) => {
+        this.loading = false
         this.view = response.data.data
       })
     },
@@ -166,7 +194,14 @@ export default {
     },
     clickOutside () {
       if (this.enableClickOutside) {
-        this.$emit('close')
+        this.closeThisConfirm()
+      }
+    },
+    closeThisConfirm () {
+      if (this.editing && (!this.titleEmpty || !this.descriptionEmpty)) {
+        this.closeIntent = true
+      } else {
+        this.closeThis()
       }
     },
     closeThis () {
@@ -191,23 +226,16 @@ export default {
         }
       }
 
-      if (this.descriptionEmpty) {
-        ok = false
-        this.descriptionEmptyError = true
-      }
-
       if (ok) {
         var viewDto = JSON.parse(JSON.stringify(this.editedView))
         var returnF = (response) => {
           this.sendingData = false
           if (response.data.result === 'success') {
             if (this.isNew) {
-              this.closeThis()
-              this.$store.dispatch('refreshModelViews', { router: null, redirect: false })
               this.$router.push({ name: 'ModelView', params: { viewId: response.data.elementId } })
-            } else {
-              this.update()
             }
+            this.$store.dispatch('refreshModelViews', { router: null, redirect: false })
+            this.closeThis()
             this.editing = false
           } else {
             this.showOutputMessage(response.data.message)
@@ -234,6 +262,27 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
+    },
+    atKeydown (e) {
+      if (!this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.closeThis()
+        }
+      }
+
+      if (this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.cancel()
+        }
+
+        /* ctr + enter */
+        if (e.keyCode === 13 && e.ctrlKey) {
+          e.preventDefault()
+          this.accept()
+        }
+      }
     }
   },
 
@@ -253,6 +302,12 @@ export default {
     setTimeout(() => {
       this.enableClickOutside = true
     }, 1000)
+
+    window.addEventListener('keydown', this.atKeydown)
+  },
+
+  destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 }
 </script>

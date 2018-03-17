@@ -17,16 +17,19 @@
 
     <div class="w3-row w3-margin-top">
       <div v-if="views" class="view-selector">
-        <div class="w3-left app-margin-right app-margin-bottom" v-for="view in views">
-          <router-link
-            :to="{ name: 'ModelView', params: { viewId: view.id } }"
-            class="w3-button w3-right"
-            :class="{'app-button-light': !isViewSelected(view.id), 'app-button': isViewSelected(view.id)}">
-            {{ view.title }}
-          </router-link>
+        <div v-for="view in views"
+          class="w3-left w3-margin-right app-margin-bottom"
+          draggable="true"
+          @dragstart="viewDragStart($event, view.id)"
+          @dragover.prevent
+          @drop.prevent="viewDragDroped(view.id, $event)">
+
+          <app-model-view-button :view="view" :selected="isViewSelected(view.id)">
+          </app-model-view-button>
         </div>
-        <div v-if="isLoggedAnEditor" @click="showViewModal = true" class="new-view-button w3-large w3-button w3-left app-button-color">
+        <div v-if="isLoggedAnEditor" @click="showViewModal = true" class="new-view-button w3-xxlarge w3-button w3-left app-button-color tooltip">
           <i class="fa fa-plus-circle" aria-hidden="true"></i>
+          <span class="tooltiptext gray-1 w3-large">create new view</span>
         </div>
       </div>
       <div class="w3-right">
@@ -57,11 +60,13 @@
 <script>
 import ModelViewModal from '@/components/model/modals/ModelViewModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
+import ModelViewButton from '@/components/model/ModelViewButton.vue'
 
 export default {
   components: {
     'app-model-view-modal': ModelViewModal,
-    'app-model-card-modal': ModelCardModal
+    'app-model-card-modal': ModelCardModal,
+    'app-model-view-button': ModelViewButton
   },
 
   data () {
@@ -99,6 +104,24 @@ export default {
           return true
         }
       }
+    },
+    viewDragStart (event, viewId) {
+      var moveViewData = {
+        type: 'MOVE_VIEW',
+        viewId: viewId
+      }
+      event.dataTransfer.setData('text/plain', JSON.stringify(moveViewData))
+    },
+    viewDragDroped (onViewId, event) {
+      var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
+      this.axios.put('/1/initiative/' + this.initiative.id +
+        '/model/moveView/' + dragData.viewId, {}, {
+          params: {
+            onViewId: onViewId
+          }
+        }).then((response) => {
+          this.$store.dispatch('refreshModelViews')
+        })
     }
   },
 
@@ -121,6 +144,11 @@ export default {
   padding-top: 5px !important;
   padding-bottom: 5px !important;
   border-radius: 12px;
+}
+
+.tooltip .tooltiptext {
+    top: 100%;
+    left: 50%;
 }
 
 .router-container {

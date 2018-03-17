@@ -1,5 +1,8 @@
 package org.collectiveone.modules.model.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredDto;
 import org.collectiveone.modules.model.ModelCard;
@@ -16,6 +19,8 @@ public class ModelCardDto {
 	private Boolean stateControl;
 	private String state;
 	private Long targetDate;
+	private Integer ixInSection;
+	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
 	
 	public ModelCard toEntity(ModelCard card, ModelCardDto cardDto, FileStored imageFile) {
 		
@@ -87,6 +92,18 @@ public class ModelCardDto {
 	}
 	public void setTargetDate(Long targetDate) {
 		this.targetDate = targetDate;
+	}
+	public Integer getIxInSection() {
+		return ixInSection;
+	}
+	public void setIxInSection(Integer ixInSection) {
+		this.ixInSection = ixInSection;
+	}
+	public List<ModelSectionDto> getInSections() {
+		return inSections;
+	}
+	public void setInSections(List<ModelSectionDto> inSections) {
+		this.inSections = inSections;
 	}
 	
 }

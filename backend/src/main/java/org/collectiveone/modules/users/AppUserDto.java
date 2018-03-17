@@ -17,6 +17,8 @@ public class AppUserDto {
 	private String shortBio;
 	private String longBio;
 	
+	private Boolean useUploadedPicture;
+	
 	
 	public String getC1Id() {
 		return c1Id;
@@ -83,6 +85,12 @@ public class AppUserDto {
 	}
 	public void setLongBio(String longBio) {
 		this.longBio = longBio;
+	}
+	public Boolean getUseUploadedPicture() {
+		return useUploadedPicture;
+	}
+	public void setUseUploadedPicture(Boolean useUploadedPicture) {
+		this.useUploadedPicture = useUploadedPicture;
 	}
 	
 }

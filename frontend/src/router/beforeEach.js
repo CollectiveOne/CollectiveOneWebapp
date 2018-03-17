@@ -16,6 +16,14 @@ export default (to, from, next) => {
           subsection = 'overview'
           break
 
+        case 'InitiativeTimeline':
+          subsection = 'timeline'
+          break
+
+        case 'InitiativeModel':
+          subsection = 'model'
+          break
+
         case 'InitiativePeople':
           subsection = 'people'
           break
@@ -24,9 +32,6 @@ export default (to, from, next) => {
           subsection = 'assignations'
           break
 
-        case 'InitiativeModel':
-          subsection = 'model'
-          break
       }
     }
     next(to.path + '/' + subsection)

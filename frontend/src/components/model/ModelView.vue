@@ -8,6 +8,7 @@
           :isNew="isNew"
           :viewId="view.id"
           :initiativeId="initiativeId"
+          :onlyMessages="onlyMessages"
           @close="showViewModal = false">
         </app-model-view-modal>
       </transition>
@@ -34,18 +35,49 @@
 
         <transition name="fadeenter">
           <div v-if="showActionButton" class="w3-display-topright buttons-container gray-1-color" style="width:100px">
-            <div @click="expandViewModal()" class="w3-button model-action-button w3-right">
+            <div @click="expandViewModal()" class="w3-button model-action-button w3-right tooltip">
               <i class="fa fa-expand" aria-hidden="true"></i>
+              <span class="tooltiptext gray-1">expand</span>
+            </div>
+
+            <div class="w3-button model-action-button gray-1-color w3-right tooltip"
+              @click="cardsAsCardsInit = !cardsAsCardsInit">
+              <i class="fa" :class="{ 'fa-bars': cardsAsCardsInit, 'fa-th': !cardsAsCardsInit }" aria-hidden="true"></i>
+              <span class="tooltiptext gray-1">toggle card/doc view</span>
             </div>
           </div>
         </transition>
 
-        <div class="w3-rest">
+        <div class="w3-rest cursor-pointer"
+          @click="expandViewModal(true)">
           <div class="w3-row">
-            <h1 class="">{{ view.title }}</h1>
+            <div class="w3-left">
+              <h1 class="">{{ view.title }}</h1>
+            </div>
+            <div class="w3-left comments-indicator cursor-pointer"
+              @click="expandViewModal(true)">
+              <app-indicator
+                :initiativeId="view.initiativeId"
+                contextType="MODEL_VIEW"
+                :contextElementId="view.id"
+                type="messages">
+              </app-indicator>
+            </div>
           </div>
-          <div class="w3-row w3-padding light-grey">
+          <div v-if="view.description !== ''" class="w3-row w3-padding light-grey">
             <vue-markdown class="marked-text" :source="view.description"></vue-markdown>
+          </div>
+        </div>
+      </div>
+
+      <div class="w3-row">
+        <div class="control-btn w3-left w3-tag gray-1 cursor-pointer noselect"
+          @click="expandSubSubsecInit = !expandSubSubsecInit">
+          <div class="w3-left button-text">
+            <small>
+              <span v-if="!expandSubSubsecInit">expand all</span>
+              <span v-else>collapse all</span>
+            </small>
           </div>
         </div>
       </div>
@@ -60,14 +92,17 @@
         </div>
 
         <app-model-section-with-modal
-          :preloaded="false"
-          :sectionId="section.id"
+          :basicPreloaded="true"
+          :subElementsPreloaded="false"
+          :sectionInit="section"
           :inView="true"
           :inElementId="view.id"
           :inElementTitle="view.title"
           :initiativeId="initiativeId"
           :level="0"
-          dragType="MOVE_SECTION">
+          dragType="MOVE_SECTION"
+          :cardsAsCardsInit="cardsAsCardsInit"
+          :expandInit="expandSubSubsecInit">
         </app-model-section-with-modal>
       </div>
 
@@ -107,7 +142,9 @@ export default {
       showActionButton: false,
       showViewModal: false,
       showSectionModal: false,
-      isNew: false
+      isNew: false,
+      cardsAsCardsInit: true,
+      expandSubSubsecInit: false
     }
   },
 
@@ -144,8 +181,9 @@ export default {
         this.view = response.data.data
       })
     },
-    expandViewModal () {
+    expandViewModal (onlyMessages) {
       this.isNew = false
+      this.onlyMessages = onlyMessages || false
       this.showViewModal = true
     },
     newSection () {
@@ -194,6 +232,11 @@ export default {
 
 <style scoped>
 
+.tooltip .tooltiptext {
+    top: 100%;
+    right: 50%;
+}
+
 .view-title .buttons-container {
   padding-top: 15px;
 }
@@ -202,8 +245,22 @@ export default {
   margin-bottom: 0px;
 }
 
+.comments-indicator {
+  padding-top: 12px;
+  padding-left: 16px;
+}
+
 .view-sections {
   /*margin-bottom: 30px;*/
+}
+
+.control-btn {
+  padding: 2px 16px;
+}
+
+.control-btn:hover {
+  background-color: #dbdee0;
+  color: black;
 }
 
 .section-drop-area {

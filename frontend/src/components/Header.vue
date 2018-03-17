@@ -50,6 +50,10 @@
         <app-notifications-list></app-notifications-list>
       </div>
 
+      <div class="nots-div w3-right w3-button w3-xlarge flex-vert bars-div dark-gray-color">
+        <router-link :to="{ name: 'Landing'}"><i class="fa fa-info-circle"></i></router-link>
+      </div>
+
      </div>
     </div>
   </div>
@@ -97,7 +101,7 @@ export default {
 
   computed: {
     windowIsSmall () {
-      return window.innerWidth < 601
+      return this.$store.state.support.windowIsSmall
     }
   }
 }

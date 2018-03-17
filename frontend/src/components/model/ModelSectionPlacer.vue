@@ -9,9 +9,11 @@
       :initiativeId="$route.params.initiativeId"
       :sectionId="$route.params.sectionId"
       :key="$route.params.sectionId"
-      :preloaded="false"
+      :basicPreloaded="false"
       :level="0"
-      :floating="true">
+      :floating="true"
+      :expandInit="true"
+      :expandSubSubsecInit="true">
     </app-model-section-with-modal>
   </div>
 </template>

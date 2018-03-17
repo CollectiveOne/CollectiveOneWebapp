@@ -4,7 +4,7 @@
       <div v-if="$store.state.user.authenticated" class="w3-container">
         <div class="create-new w3-button light-grey w3-round-large w3-center"
           @click="$store.commit('showNewInitiativeModal', true)" id="T_createInitiativeButton">
-          <i class="fa fa-plus-circle"></i>  create new
+          <i class="fa fa-plus-circle"></i>  new initiative
         </div>
       </div>
 

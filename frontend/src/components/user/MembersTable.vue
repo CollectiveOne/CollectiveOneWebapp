@@ -39,16 +39,21 @@
           <tr>
             <th class="avatar-col">AVATAR</th>
             <th>NICKNAME</th>
+            <th v-for="asset in assets">{{ asset.assetName }}</th>
             <th class="role-col">ROLE</th>
             <th v-if="isLoggedAnAdmin">DELETE</th>
+            <th v-if="showLeaveCol">LEAVE</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="member in members">
+          <tr v-for="member in membersSorted">
             <td class="avatar-col">
               <app-user-avatar :user="member.user" :showName="false"></app-user-avatar>
             </td>
             <td id="T_username">{{ member.user.nickname }}</td>
+            <td v-for="asset in assets">
+              {{ ownedOfThisAsset(asset, member) }}
+            </td>
             <td class="noselect w3-center role-col">
               <select v-if="canEdit" v-model="member.role" @change="$emit('role-updated', member)" class="role-select w3-select w3-round">
                 <option value="" disabled>Choose role</option>
@@ -73,7 +78,18 @@
                 <button id="T_cancelButton_DeletePople" @click="removeMemberCancelled()" class="w3-button app-button-light">Cancel Delete</button>
                 <button id="T_confirmButton_DeletePople" @click="removeMemberConfirmed()" class="w3-button app-button-danger">Confirm Delete</button>
               </div>
-
+            </td>
+            <td v-if="showLeaveCol">
+              <div v-if="isLoggedThis(member) && !isLoggedAnAdmin">
+                <i v-if="!leaving"
+                  @click="leave(member)"
+                  class="fa fa-times-circle-o w3-xlarge gray-1-color w3-button" aria-hidden="true">
+                </i>
+                <div v-else class="">
+                  <button @click="removeMemberCancelled()" class="w3-button app-button-light">Cancel</button>
+                  <button @click="removeMemberConfirmed()" class="w3-button app-button-danger">Confirm</button>
+                </div>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -97,6 +113,12 @@ export default {
     canEdit: {
       type: Boolean,
       default: false
+    },
+    assets: {
+      type: Array,
+      default: () => {
+        return []
+      }
     }
   },
 
@@ -112,8 +134,37 @@ export default {
   },
 
   computed: {
+    membersSorted () {
+      if (this.assets.length > 0) {
+        var membersTemp = JSON.parse(JSON.stringify(this.members))
+        return membersTemp.sort((a, b) => { return b.receivedAssets[0].ownedByThisHolder - a.receivedAssets[0].ownedByThisHolder })
+      } else {
+        return this.members
+      }
+    },
     isLoggedAnAdmin () {
       return this.$store.getters.isLoggedAnAdmin
+    },
+    isLoggedHere () {
+      if (!this.$store.state.user.profile) {
+        return false
+      }
+
+      for (var ix in this.members) {
+        if (this.members[ix].user.c1Id === this.$store.state.user.profile.c1Id) {
+          return true
+        }
+      }
+      return false
+    },
+    leaving () {
+      if (!this.memberToBeRemoved || !this.$store.state.user.profile) {
+        return false
+      }
+      return this.memberToBeRemoved.user.c1Id === this.$store.state.user.profile.c1Id
+    },
+    showLeaveCol () {
+      return this.isLoggedHere && !this.isLoggedAnAdmin
     }
   },
 
@@ -123,11 +174,26 @@ export default {
         this.memberToBeRemoved = member
       }, 500)
     },
+    leave (member) {
+      setTimeout(() => {
+        this.memberToBeRemoved = member
+      }, 500)
+    },
     removingThisMember (member) {
       if (this.memberToBeRemoved) {
         return this.memberToBeRemoved.user.c1Id === member.user.c1Id
       }
       return false
+    },
+    leaveThisConfirmed () {
+      this.$emit('remove', JSON.parse(JSON.stringify(this.memberToBeRemoved)))
+      this.memberToBeRemoved = null
+    },
+    isLoggedThis (member) {
+      if (!this.$store.state.user.profile) {
+        return false
+      }
+      return member.user.c1Id === this.$store.state.user.profile.c1Id
     },
     removeMemberCancelled () {
       this.memberToBeRemoved = null
@@ -142,6 +208,14 @@ export default {
     },
     userSelected (user) {
       this.newMember.user = user
+    },
+    ownedOfThisAsset (asset, member) {
+      for (var ix in member.receivedAssets) {
+        if (member.receivedAssets[ix].assetId === asset.assetId) {
+          return member.receivedAssets[ix].ownedByThisHolder > 0 ? member.receivedAssets[ix].ownedByThisHolder.toFixed(2) : '-'
+        }
+      }
+      return '-'
     }
   }
 }

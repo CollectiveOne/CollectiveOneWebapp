@@ -11,13 +11,17 @@ import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.Activity;
 import org.collectiveone.modules.activity.ActivityService;
+import org.collectiveone.modules.activity.WantToContributeNotification;
 import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
+import org.collectiveone.modules.activity.enums.NotificationEmailState;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
+import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
 import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredRepositoryIf;
 import org.collectiveone.modules.governance.DecisionMaker;
+import org.collectiveone.modules.governance.DecisionMakerRepositoryIf;
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.governance.GovernanceService;
@@ -91,6 +95,9 @@ public class InitiativeService {
 	private MemberRepositoryIf memberRepository;
 	
 	@Autowired
+	private DecisionMakerRepositoryIf decisionMakerRepository;
+	
+	@Autowired
 	private InitiativeMetaRepositoryIf initiativeMetaRepository;
 	
 	@Autowired
@@ -101,6 +108,9 @@ public class InitiativeService {
 	
 	@Autowired
 	private TokenMintRepositoryIf tokenMintRespository;
+	
+	@Autowired
+	private WantToContributeRepositoryIf wantToContributeRepository;
 	  
 	
 	@Transactional
@@ -257,26 +267,64 @@ public class InitiativeService {
 		
 		initiative = initiativeRepository.save(initiative);
 		
+		activityService.newInitiativeCreated(initiative, initiative.getCreator());
+		
 		return new GetResult<Initiative>("success", "initiative created", initiative);
 	}
 	
 	@Transactional
-	private GetResult<Initiative> addMembers(UUID initiativeId, List<MemberDto> initiativeMemebers) {
+	public PostResult wantToContribute(UUID initiativeId, UUID userId) {
+		
+		Initiative initiative = initiativeRepository.findById(initiativeId);
+				
+		AppUser user = appUserRepository.findByC1Id(userId);
+		
+		List<DecisionMaker> admins = decisionMakerRepository.findByGovernance_IdAndRole(initiative.getGovernance().getId(), DecisionMakerRole.ADMIN);
+
+		for (DecisionMaker admin : admins) {
+			WantToContributeNotification notification = new WantToContributeNotification();
+			
+			notification.setInitiative(initiative);
+			notification.setAdmin(admin.getUser());
+			notification.setUser(user);
+			notification.setEmailState(NotificationEmailState.PENDING);
+			
+			wantToContributeRepository.save(notification);
+		}
+		
+		return new PostResult("success", "notifications recorded for sending", null);
+	}
+	
+	@Transactional
+	public PostResult wantToContributeAccept(UUID initiativeId, UUID userId) {
+		
+		Member member = addMemberOrGet(initiativeId, userId, DecisionMakerRole.MEMBER);
+		
+		return new PostResult("success", "member added sending", member.getId().toString());
+	}
+	
+	@Transactional
+	private GetResult<Initiative> addMembers(UUID initiativeId, List<MemberDto> initiativeMembers) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
 		/* List of Members */
-		for (MemberDto memberDto : initiativeMemebers) {
-			addMember(initiativeId, UUID.fromString(memberDto.getUser().getC1Id()), DecisionMakerRole.valueOf(memberDto.getRole()));
+		for (MemberDto memberDto : initiativeMembers) {
+			addMemberOrGet(initiativeId, UUID.fromString(memberDto.getUser().getC1Id()), DecisionMakerRole.valueOf(memberDto.getRole()));
 		}
 		
 		return new GetResult<Initiative>("success", "initiative created", initiative);
 	}
 	
 	@Transactional
-	public Member addMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
+	public Member addMemberOrGet(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
+		AppUser memberUser = appUserRepository.findByC1Id(c1Id);
 		
-		AppUser memberUser = appUserRepository.findByC1Id(c1Id); 
+		Member existingMember = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, c1Id);
+		
+		if (existingMember != null) {
+			return existingMember;
+		}
 		
 		Member member = new Member();
 		member.setInitiative(initiative);
@@ -315,24 +363,24 @@ public class InitiativeService {
 		
 		if (!initiativeDto.getAsSubinitiative()) {
 			/* if is not a sub-initiative, then create a token for this initiative */
-			TokenType token = tokenService.create(initiativeDto.getOwnTokens().getAssetName(), "T");
-			initiative.getTokenTypes().add(token);
-			initiative = initiativeRepository.save(initiative);
-			tokenService.mintToHolder(token.getId(), initiative.getId(), initiativeDto.getOwnTokens().getOwnedByThisHolder(), TokenHolderType.INITIATIVE);
+			if (initiativeDto.getCreateToken()) {
+				TokenType token = tokenService.create(initiativeDto.getOwnTokens().getAssetName(), "T");
+				initiative.getTokenTypes().add(token);
+				initiative = initiativeRepository.save(initiative);
+				tokenService.mintToHolder(token.getId(), initiative.getId(), initiativeDto.getOwnTokens().getOwnedByThisHolder(), TokenHolderType.INITIATIVE);
+				
+				TokenMint mint = new TokenMint();
+				mint.setToken(token);
+				mint.setOrderedBy(appUserRepository.findByC1Id(creatorId));
+				mint.setToHolder(initiativeId);
+				mint.setMotive("Initiative creation.");
+				mint.setNotes("");
+				mint.setValue(initiativeDto.getOwnTokens().getOwnedByThisHolder());
+				
+				mint = tokenMintRespository.save(mint);
+			}
 			
-			TokenMint mint = new TokenMint();
-			mint.setToken(token);
-			mint.setOrderedBy(appUserRepository.findByC1Id(creatorId));
-			mint.setToHolder(initiativeId);
-			mint.setMotive("Initiative creation.");
-			mint.setNotes("");
-			mint.setValue(initiativeDto.getOwnTokens().getOwnedByThisHolder());
-			
-			mint = tokenMintRespository.save(mint);
-			
-			activityService.newInitiativeCreated(initiative, initiative.getCreator());
-			
-			return new PostResult("success", "initiative created and tokens created", initiative.getId().toString());
+			return new PostResult("success", "initiative tokens created", initiative.getId().toString());
 			
 		} else {
 			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
@@ -348,22 +396,25 @@ public class InitiativeService {
 			List<InitiativeTransfer> transfers = new ArrayList<InitiativeTransfer>();
 			/* and transfer parent assets to child */
 			for (TransferDto thisTransfer : initiativeDto.getAssetsTransfers()) {
-				TokenType token = tokenService.getTokenType(UUID.fromString(thisTransfer.getAssetId()));
-				
-				tokenService.transfer(token.getId(), parent.getId(), initiative.getId(), thisTransfer.getValue(), TokenHolderType.INITIATIVE);
-				
-				/* upper layer keeping track of who transfered what to whom */
-				InitiativeTransfer transfer = new InitiativeTransfer();
-				transfer.setFrom(parent);
-				transfer.setTo(initiative);
-				transfer.setTokenType(token);
-				transfer.setValue(thisTransfer.getValue());
-				transfer.setMotive("sub-initiative creation");
-				transfer.setNotes("");
-				transfer.setOrderDate(new Timestamp(System.currentTimeMillis()));
-								
-				transfer = initiativeTransferRepository.save(transfer);
-				transfers.add(transfer);
+				/* ignore zero token transfers */
+				if (thisTransfer.getValue() > 0) {
+					TokenType token = tokenService.getTokenType(UUID.fromString(thisTransfer.getAssetId()));
+					
+					tokenService.transfer(token.getId(), parent.getId(), initiative.getId(), thisTransfer.getValue(), TokenHolderType.INITIATIVE);
+					
+					/* upper layer keeping track of who transfered what to whom */
+					InitiativeTransfer transfer = new InitiativeTransfer();
+					transfer.setFrom(parent);
+					transfer.setTo(initiative);
+					transfer.setTokenType(token);
+					transfer.setValue(thisTransfer.getValue());
+					transfer.setMotive("sub-initiative creation");
+					transfer.setNotes("");
+					transfer.setOrderDate(new Timestamp(System.currentTimeMillis()));
+									
+					transfer = initiativeTransferRepository.save(transfer);
+					transfers.add(transfer);
+				}
 			}
 			
 			initiative.getRelationships().add(relationship);
@@ -506,7 +557,15 @@ public class InitiativeService {
 	public List<AssetsDto> getInitiativeAssetsDtoLight(UUID id) {
 		
 		Initiative initiative = initiativeRepository.findById(id);
+		List<TokenType> ownTokens = initiative.getTokenTypes();
 		List<TokenType> tokenTypes = tokenService.getTokenTypesHeldBy(initiative.getId());
+		
+		/* add own tokens even if the initiative does not have them */
+		for (TokenType own : ownTokens) {
+			if (!tokenTypes.contains(own)) {
+				tokenTypes.add(own);
+			}
+		}
 		
 		List<AssetsDto> assets = new ArrayList<AssetsDto>();
 		
@@ -726,6 +785,8 @@ public class InitiativeService {
 		initiativeMembers.setInitiativeId(initiative.getId().toString());
 		initiativeMembers.setInitiativeName(initiative.getMeta().getName());
 		
+		List<TokenType> tokenTypes = tokenService.getTokenTypesHeldBy(initiative.getId());
+		
 		
 		/* add members of this initiative */
 		for (Member member : initiative.getMembers()) {
@@ -740,6 +801,11 @@ public class InitiativeService {
 				memberDto.setRole(decisionMaker.getRole().toString());
 			} else {
 				memberDto.setRole(DecisionMakerRole.MEMBER.toString());
+			}
+			
+			/* assets related data */
+			for (TokenType token : tokenTypes) {
+				memberDto.getReceivedAssets().add(tokenService.getTokensOfHolderDtoLight(token.getId(), member.getUser().getC1Id()));
 			}
 			
 			initiativeMembers.getMembers().add(memberDto);
@@ -757,7 +823,7 @@ public class InitiativeService {
 	
 	@Transactional
 	public PostResult postMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
-		Member member = addMember(initiativeId, c1Id, role);
+		Member member = addMemberOrGet(initiativeId, c1Id, role);
 		if (member != null) {
 			return new PostResult("success", "member added",  member.getId().toString());
 		} 

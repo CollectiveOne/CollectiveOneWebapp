@@ -8,13 +8,14 @@ import { store } from './store/store'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-
-import VueSimplemde from 'vue-simplemde'
+import VueAnalytics from 'vue-analytics'
 
 Vue.config.productionTip = false
 
 Vue.use(VueAxios, axios)
-Vue.use(VueSimplemde)
+Vue.use(VueAnalytics, {
+  id: 'UA-92543820-1'
+})
 
 axios.interceptors.request.use(
   function (config) {
@@ -27,10 +28,14 @@ axios.interceptors.request.use(
 )
 
 import ErrorPanel from '@/components/global/ErrorPanel.vue'
+import VueMarkdown from 'vue-markdown'
 import MarkdownEditor from '@/components/global/MarkdownEditor.vue'
+import Indicator from '@/components/notifications/Indicator.vue'
 
 Vue.component('app-error-panel', ErrorPanel)
+Vue.component('vue-markdown', VueMarkdown)
 Vue.component('app-markdown-editor', MarkdownEditor)
+Vue.component('app-indicator', Indicator)
 
 /* registered globally to solve the circular reference */
 import ModelSectionWithModal from '@/components/model/ModelSectionWithModal.vue'

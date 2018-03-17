@@ -18,6 +18,7 @@
   <transition name="slideDownUp">
     <app-new-initiative-transfer-modal
       v-if="showNewInitiativeTransferModal"
+      :initiative="initiative"
       @close="showNewInitiativeTransferModal = false"
       @created="triggerUpdateCall()">
     </app-new-initiative-transfer-modal>
@@ -44,12 +45,12 @@
       </app-transfers-tables>
     </div>
 
-    <div v-if="isLoggedAnAdmin"
-      class="w3-display-topright w3-xxlarge w3-button plus-button gray-1-color"
+    <div v-if="isLoggedAnAdmin && initiative.assets.length > 0"
+      class="w3-display-topright w3-xxxlarge w3-button plus-button blue-color"
       @click="showActionMenu = !showActionMenu"
       v-click-outside="clickOutsideShowMenu">
-
       <i id="T_transferModal" class="fa fa-plus-circle" aria-hidden="true"></i>
+
     </div>
     <div v-if="showActionMenu" class="action-menu w3-display-topright">
       <div class="w3-card w3-white w3-large">
@@ -142,6 +143,25 @@ export default {
 
 .own-transfers-div {
   z-index: -1
+}
+
+.action-menu {
+  padding: 6px 0px 0px 0px  !important;
+  margin-left: -120%;
+  margin-top: 100px;
+}
+
+.action-menu .fa {
+  margin-left: 10px;
+  padding-top: 3px;
+}
+
+.action-menu .w3-card {
+  width: 250px;
+}
+
+.action-menu .w3-button {
+  width: 100%;
 }
 
 </style>

@@ -1,28 +1,31 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4"
+      <div class="w3-card-4 app-modal-card w3-display-container"
         v-click-outside="clickOutside">
 
-        <div class="div-close-modal w3-display-topright w3-xlarge" @click="closeThis()">
-          <i class="fa fa-times fa-close-modal" aria-hidden="true"></i>
+        <div class="w3-display-topright">
+          <div class="w3-right w3-button w3-xlarge" @click="closeThisConfirm()">
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </div>
+          <div class="w3-right">
+            <app-model-modal-buttons
+              v-if="isLoggedAnEditor && !editing"
+              :show="showEditButtons"
+              @edit="startEditing()"
+              @delete="deleteSection()"
+              deleteMessage="This will delete the section from all the views in which it is used."
+              @remove="removeSection()"
+              :removeMessage="'This will remove this subsection from ' + inElementTitle + '.'">
+            </app-model-modal-buttons>
+          </div>
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>{{ isNew ? 'New Section' : 'Model Section' }}</h2>
+          <h3>{{ isNew ? 'New Section' : 'Model Section' }}</h3>
         </div>
 
-        <div class="w3-container div-modal-content">
-
-          <app-model-modal-buttons
-            v-if="isLoggedAnEditor"
-            :show="showEditButtons"
-            @edit="startEditing()"
-            @delete="deleteSection()"
-            deleteMessage="This will delete the section from all the views in which it is used."
-            @remove="removeSection()"
-            :removeMessage="'This will remove this subsection from ' + inElementTitle + '.'">
-          </app-model-modal-buttons>
+        <div v-if="!loading" class="w3-container div-modal-content">
 
           <div v-if="isNew" class="w3-row">
             <label v-if="inView" class=""><b>In View:</b></label>
@@ -67,12 +70,12 @@
               @after-leave="animatingTab = false">
 
               <div v-if="!addExisting">
-                <div class="w3-row w3-margin-top">
-                  <div v-if="!editing" class="w3-padding light-grey">
-                    <h4><b>{{ section.title }}</b></h4>
+                <div class="w3-row">
+                  <div v-if="!editing" class="">
+                    <h3><b>{{ section.title }}</b></h3>
                   </div>
                   <div v-else class="">
-                    <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+                    <label class="w3-margin-top"><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
                     <input type="text" class="w3-input w3-hover-light-grey" v-model="editedSection.title">
                     <app-error-panel
                       :show="titleEmptyShow"
@@ -86,11 +89,11 @@
                 </div>
 
                 <div class="w3-row w3-margin-top">
-                  <div v-if="!editing" class="w3-padding light-grey">
+                  <div v-if="!editing" class="">
                     <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
                   </div>
                   <div v-else class="">
-                    <label class=""><b>Description: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+                    <label class=""><b>Description:</b></label>
                     <app-markdown-editor v-model="editedSection.description"></app-markdown-editor>
                     <app-error-panel
                       :show="descriptionErrorShow"
@@ -102,11 +105,12 @@
             </transition>
           </div>
 
-          <br>
           <div v-if="!isNew && !editing" class="">
+            <hr>
             <app-message-thread
               contextType="MODEL_SECTION"
               :contextElementId="sectionId"
+              :onlyMessagesInit="onlyMessages"
               :url="'/1/activity/model/section/' + sectionId">
             </app-message-thread>
           </div>
@@ -114,16 +118,33 @@
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
             <hr>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel <span><small>(Esc)</small></span></button>
             </div>
             <div class="w3-col m6 w3-center">
-              <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept <span><small>(Ctr + Enter)</small></span></button>
               <div v-show="sendingData" class="sending-accept light-grey">
                 <img class="" src="../../../assets/loading.gif" alt="">
               </div>
             </div>
           </div>
 
+        </div>
+        <div v-else class="w3-row w3-center loader-gif-container">
+          <img class="loader-gif" src="../../../assets/loading.gif" alt="">
+        </div>
+
+        <div v-if="closeIntent" class="w3-display-middle w3-card w3-white w3-padding w3-round-large w3-center">
+          You are currently editing this view. Are you sure you want to close it? Any changes would get lost.
+          <div class="w3-row w3-margin-top">
+            <button class="w3-button app-button-light" name="button"
+              @click="closeIntent = false">
+              Cancel
+            </button>
+            <button class="w3-button app-button" name="button"
+              @click="closeThis()">
+              Confirm
+            </button>
+          </div>
         </div>
 
       </div>
@@ -168,6 +189,10 @@ export default {
     inElementTitle: {
       type: String,
       default: ''
+    },
+    onlyMessages: {
+      type: Boolean,
+      defaul: false
     }
   },
 
@@ -188,7 +213,9 @@ export default {
       existingSection: null,
       noSectionSelectedError: false,
       animatingTab: false,
-      sendingData: false
+      sendingData: false,
+      loading: false,
+      closeIntent: false
     }
   },
 
@@ -227,8 +254,10 @@ export default {
 
   methods: {
     update () {
+      this.loading = true
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
       .then((response) => {
+        this.loading = false
         this.section = response.data.data
       })
     },
@@ -254,7 +283,14 @@ export default {
     },
     clickOutside () {
       if (this.enableClickOutside) {
-        this.$emit('close')
+        this.closeThisConfirm()
+      }
+    },
+    closeThisConfirm () {
+      if (this.editing && (!this.titleEmpty || !this.descriptionEmpty)) {
+        this.closeIntent = true
+      } else {
+        this.closeThis()
       }
     },
     closeThis () {
@@ -279,11 +315,6 @@ export default {
             ok = false
           }
         }
-
-        if (this.descriptionEmpty) {
-          ok = false
-          this.descriptionEmptyError = true
-        }
       } else {
         if (this.noSectionSelected) {
           ok = false
@@ -296,12 +327,7 @@ export default {
         var responseF = (response) => {
           this.sendingData = false
           if (response.data.result === 'success') {
-            if (this.isNew) {
-              this.closeThis()
-            } else {
-              this.editing = false
-              this.update()
-            }
+            this.closeThis()
             this.$store.commit('triggerUpdateModel')
           } else {
             this.showOutputMessage(response.data.message)
@@ -371,6 +397,27 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
+    },
+    atKeydown (e) {
+      if (!this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.closeThis()
+        }
+      }
+
+      if (this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.cancel()
+        }
+
+        /* ctr + enter */
+        if (e.keyCode === 13 && e.ctrlKey) {
+          e.preventDefault()
+          this.accept()
+        }
+      }
     }
   },
 
@@ -393,6 +440,12 @@ export default {
     setTimeout(() => {
       this.enableClickOutside = true
     }, 1000)
+
+    window.addEventListener('keydown', this.atKeydown)
+  },
+
+  destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 }
 </script>

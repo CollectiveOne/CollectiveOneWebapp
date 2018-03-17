@@ -84,6 +84,7 @@ public class AppUserService {
 		profile.setTwitterHandle(userDto.getTwitterHandle());
 		profile.setFacebookHandle(userDto.getFacebookHandle());
 		profile.setLinkedinHandle(userDto.getLinkedinHandle());
+		profile.setUseUploadedPicture(userDto.getUseUploadedPicture());
 		
 		appUserProfileRepository.save(profile);
 		

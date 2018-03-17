@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="w3-modal">
     <div class="w3-modal-content">
-      <div class="w3-card-4">
+      <div class="w3-card-4 app-modal-card">
         <div class="close-div w3-display-topright w3-xlarge" @click="closeThis()">
           <i class="fa fa-times" aria-hidden="true"></i>
         </div>
@@ -49,6 +49,10 @@
             <app-error-panel
               :show="allDonorsShow"
               message="not all receivers can be donors">
+            </app-error-panel>
+            <app-error-panel
+              :show="percentagesWrongShow"
+              message="percentages must sum 100%">
             </app-error-panel>
           </div>
 
@@ -205,7 +209,8 @@ export default {
       notEnoughReceivers: false,
       notEnoughEvaluators: false,
       allDonorsError: false,
-      assetsEmptyErrorConfirmed: false
+      assetsEmptyErrorConfirmed: false,
+      percentagesWrong: false
     }
   },
 
@@ -246,6 +251,23 @@ export default {
     },
     isStartOpen () {
       return this.assignation.config.startState === 'OPEN'
+    },
+    sumOfPercentages () {
+      if (this.assignation.directReceivers) {
+        var sum = 0
+        for (var ix in this.assignation.directReceivers) {
+          sum += this.assignation.directReceivers[ix].percent
+        }
+        return sum
+      } else {
+        return 0
+      }
+    },
+    sumOfPercentagesWrong () {
+      return Math.abs(this.sumOfPercentages - 100) > 0.001
+    },
+    percentagesWrongShow () {
+      return this.percentagesWrong && this.sumOfPercentagesWrong
     }
   },
 
@@ -347,6 +369,10 @@ export default {
             this.notEnoughReceivers = true
             ok = false
           }
+        }
+        if (this.sumOfPercentagesWrong) {
+          this.percentagesWrong = true
+          ok = false
         }
       } else {
         if (!this.assignation.peerReviewReceivers) {

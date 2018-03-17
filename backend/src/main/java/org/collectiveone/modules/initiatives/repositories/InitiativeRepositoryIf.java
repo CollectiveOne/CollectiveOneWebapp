@@ -26,10 +26,10 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 	@Query("SELECT init FROM Initiative init WHERE lower (init.meta.name) LIKE %?1% AND init.status='ENABLED'")
 	List<Initiative> searchByName(String q);
 	
-	@Query("SELECT init FROM Initiative init JOIN init.meta mta JOIN mta.tags tgs WHERE tgs.id IN ?1 AND mta.visibility = ?2 AND init.status='ENABLED'")
+	@Query("SELECT init FROM Initiative init JOIN init.meta mta JOIN mta.tags tgs WHERE tgs.id IN ?1 AND mta.visibility = ?2 AND init.status='ENABLED' ORDER BY mta.creationDate DESC")
 	List<Initiative> searchByTagIdAndVisibility(Collection<UUID> ids, InitiativeVisibility visibility);
 	
-	@Query("SELECT init FROM Initiative init JOIN init.meta mta WHERE mta.visibility = ?1 AND init.status='ENABLED'")
+	@Query("SELECT init FROM Initiative init JOIN init.meta mta WHERE mta.visibility = ?1 AND init.status='ENABLED' ORDER BY mta.creationDate DESC")
 	List<Initiative> findByVisibility(InitiativeVisibility visibility);
 	
 	Initiative findByTokenTypes_Id(UUID tokenTypeId);

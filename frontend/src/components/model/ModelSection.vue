@@ -1,6 +1,6 @@
 <template lang="html">
 
-  <div v-if="section" class="section-container w3-border gray-1-border w3-round">
+  <div v-if="section" class="section-container w3-border gray-1-border w3-round" ref="sectionContainer">
 
     <div class="slider-container">
       <transition name="slideDownUp">
@@ -15,135 +15,185 @@
       </transition>
     </div>
 
-    <div class=""
+    <div class="cursor-pointer"
       draggable="true"
-      @dragstart="dragStart($event)">
+      @dragstart="dragStart($event)"
+      @click="$emit('header-clicked')">
 
       <app-model-section-header
         :section="section"
         :level="level"
         :floating="floating"
         :inElementId="inElementId"
-        :expand="expanded">
+        :expand="expanded"
+        :showMessagesIndicator="true"
+        :forceUpdate="forceUpdate"
+        @show-messages="$emit('show-messages')">
       </app-model-section-header>
     </div>
 
-
-    <div v-if="expanded" class="w3-row expand-row w3-leftbar">
-      <button
-        class="w3-button light-grey w3-small"
-        @click="toggleExpand()">
-        <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse</span>
-      </button>
-    </div>
-
-    <div class="gray-1-border" :class="{'w3-border-bottom': !showExpandButton, 'slider-container': animatingSubsections}">
-      <transition name="slideDownUp"
-        @before-enter="animatingSubsections = true"
-        @after-enter="animatingSubsections = false"
-        @before-leave="animatingSubsections = true"
-        @after-leave="animatingSubsections = false">
-        <!-- hooks are needed to enable overflow when not animating -->
-
-        <div v-if="expanded" class="w3-row w3-leftbar subelements-container">
-
-          <div class="w3-row-padding cards-container">
-            <div v-for="cardWrapper in section.cardsWrappers"
-              :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
-              :key="cardWrapper.id"
-              @dragover.prevent
-              @drop.prevent="cardDroped(cardWrapper.id, $event)">
-
-              <app-model-card-with-modal
-                :cardWrapper="cardWrapper"
-                :initiativeId="initiativeId"
-                :inSectionId="section.id"
-                :inSectionTitle="section.title"
-                :cardEffect="cardsAsCards">
-              </app-model-card-with-modal>
-            </div>
-            <div :class="{'section-card-col': cardsAsCards, 'section-card-par': !cardsAsCards}"
-              @dragover.prevent
-              @drop.prevent="cardDroped('', $event)">
-
-              <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
-                <button class="w3-button" style="width: 100%"
-                  @click="$emit('new-card')">
-                  <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-                  add card
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="bottom-bar light-grey w3-small">
-            <button
-              class="w3-button model-button show-sections-button"
-              @click="showSubsections = !showSubsections">
-              <div v-if="showSubsections" >
-                <i class="w3-left fa fa-caret-up" aria-hidden="true"></i>
-                <div class="w3-left button-text">
-                  hide subsections
-                </div>
-              </div>
-              <div v-else>
-                <i class="w3-left fa fa-caret-right" aria-hidden="true"></i>
-                <div class="w3-left button-text">
-                  <b>{{ section.nSubsections }}</b> subsections
-                </div>
-              </div>
+    <div v-if="expanded" class="w3-row expand-row w3-leftbar w3-border-bottom w3-border-top">
+      <div class="w3-col s4">
+        <button class="w3-button light-grey w3-small"
+          @click="toggleExpand()">
+          <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse section</span>
+        </button>
+      </div>
+      <div class="w3-col s4 w3-border-left">
+        <div class="w3-row">
+          <div class="w3-col s8">
+            <button class="w3-button light-grey w3-small"
+              @click="showCards =!showCards">
+              <span v-if="showCards"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide cards</span>
+              <span v-if="!showCards"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ nCardWrappers }}</b> cards</span>
             </button>
           </div>
+          <div class="w3-col s4">
+            <button class="w3-button light-grey w3-small" :disabled="!isLoggedAnEditor"
+              @click="newCardFromBar()">
+              <i class="fa fa-plus" aria-hidden="true"></i><span class="w3-hide-small w3-hide-medium"> new card</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="w3-col s4 w3-border-left">
+        <div class="w3-row">
+          <div class="w3-col s8">
+            <button class="w3-button light-grey w3-small"
+              @click="showSubsections =!showSubsections">
+              <span v-if="showSubsections"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide subsections</span>
+              <span v-if="!showSubsections"><i class="fa fa-chevron-down" aria-hidden="true"></i> Show <b>{{ section.nSubsections }}</b> subsections</span>
+            </button>
+          </div>
+          <div class="w3-col s4">
+            <button class="w3-button light-grey w3-small" :disabled="!isLoggedAnEditor"
+              @click="newSubsectionFromBar()">
+              <i class="fa fa-plus" aria-hidden="true"></i><span class="w3-hide-small w3-hide-medium"> new subsec</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-          <div class="" :class="{'slider-container': animatingSubsections}">
-            <transition name="slideDownUp"
-              @before-enter="animatingSubsections = true"
-              @after-enter="animatingSubsections = false"
-              @before-leave="animatingSubsections = true"
-              @after-leave="animatingSubsections = false">
+    <div class="gray-1-border slider-container">
 
-              <div v-if="showSubsections" class="subsections-container">
-                <div v-for="subsection in section.subsections"
-                  :key="subsection.id"
-                  class="subsection-container"
-                  @dragover.prevent
-                  @drop="subsectionDroped(subsection.id, $event)">
+        <div v-if="expanded" class="w3-row w3-leftbar subelements-container">
+          <div class="w3-col">
 
-                  <app-model-section-with-modal
-                    :preloaded="subsection.subElementsLoaded"
-                    :sectionInit="subsection"
-                    :sectionId="subsection.id"
-                    :initiativeId="initiativeId"
-                    :inView="false"
-                    :inElementId="section.id"
-                    :inElementTitle="section.title"
-                    :level="level + 1"
-                    dragType="MOVE_SUBSECTION">
-                  </app-model-section-with-modal>
+            <div v-if="section.cardsWrappers.length > 0 && showSubsections && !showCards" class="w3-center w3-margin-top">
+              <button class="w3-button light-grey w3-small w3-round"
+                @click="showCards =!showCards">
+                <span v-if="showCards"><i class="fa fa-chevron-up" aria-hidden="true"></i> Hide cards</span>
+                <span v-else="showCards"><b>{{ section.cardsWrappers.length }}</b> cards hidden</span>
+              </button>
+            </div>
+
+            <div class="w3-row slider-container">
+              <transition name="slideDownUp">
+                <div v-if="showCards" class="cards-container">
+                  <div v-for="(cardWrapper, ix) in sortedByLikes"
+                    :class="cardsContainerClasses"
+                    :key="cardWrapper.id"
+                    @dragover.prevent
+                    @drop.prevent="cardDroped(cardWrapper.id, $event)">
+
+                    <div v-if="cardsAsCards"
+                      @click="$emit('new-card', ix)" class="empty-div cursor-pointer w3-row w3-round">
+                      <div class="w3-right">
+                        <i>add card here</i>
+                      </div>
+                    </div>
+
+                    <div class="">
+                      <app-model-card-with-modal
+                        :cardWrapperInit="cardWrapper"
+                        :initiativeId="initiativeId"
+                        :inSectionId="section.id"
+                        :inSectionTitle="section.title"
+                        :cardEffect="cardsAsCards"
+                        :forceUpdate="forceUpdate">
+                      </app-model-card-with-modal>
+                    </div>
+
+                  </div>
+                  <div v-if="cardsAsCards" class="last-add section-card-col"
+                    @dragover.prevent
+                    @drop.prevent="cardDroped('', $event)">
+
+                    <div class="gray-1-color" :class="{'w3-card-2': cardsAsCards}">
+                      <button class="w3-button" style="width: 100%"
+                        @click="$emit('new-card')">
+                        <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
+                        add card
+                      </button>
+                    </div>
+                  </div>
                 </div>
+              </transition>
+            </div>
 
-                <div class="subsection-container gray-1-color w3-border w3-round"
-                  @dragover.prevent
-                  @drop="subsectionDroped('', $event)">
+            <div v-if="section.nSubsections > 0 && showCards && !showSubsections" class="w3-center w3-margin-bottom">
+              <button  class="w3-button light-grey w3-small w3-round"
+                @click="showSubsections =!showSubsections">
+                <span><b>{{ section.nSubsections }}</b> subsections hidden</span>
+              </button>
+            </div>
 
-                  <button class="w3-button" style="width: 100%; text-align: left"
-                    @click="$emit('new-subsection')">
-                    <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
-                    add subsection
-                  </button>
-                </div>
+            <div v-if="section.nSubsections > 0 && showSubsections" class="w3-row subsection-controls-row noselect">
+              <div class="w3-tag gray-1 w3-small w3-left cursor-pointer"
+                @click="expandSubSubsecInit =!expandSubSubsecInit">
+                {{ expandSubSubsecInit ? 'collapse' : 'expand' }} all subsections
               </div>
-            </transition>
+            </div>
+
+            <div class="slider-container">
+              <transition name="slideDownUp">
+
+                <div v-if="showSubsections" class="subsections-container">
+                  <div v-for="subsection in section.subsections"
+                    :key="subsection.id"
+                    class="subsection-container"
+                    @dragover.prevent
+                    @drop.prevent="subsectionDroped(subsection.id, $event)">
+
+                    <app-model-section-with-modal
+                      :preloaded="subsection.subElementsLoaded"
+                      :sectionInit="subsection"
+                      :sectionId="subsection.id"
+                      :initiativeId="initiativeId"
+                      :inView="false"
+                      :inElementId="section.id"
+                      :inElementTitle="section.title"
+                      :level="level + 1"
+                      dragType="MOVE_SUBSECTION"
+                      :cardsAsCardsInit="cardsAsCards"
+                      :expandInit="expandSubSubsecInit"
+                      :forceUpdate="forceUpdate">
+                    </app-model-section-with-modal>
+                  </div>
+
+                  <div class="subsection-container gray-1-color w3-border w3-round"
+                    @dragover.prevent
+                    @drop.prevent="subsectionDroped('', $event)">
+
+                    <button class="w3-button" style="width: 100%; text-align: left"
+                      @click="$emit('new-subsection')">
+                      <i class="fa fa-plus w3-margin-right" aria-hidden="true"></i>
+                      add subsection
+                    </button>
+                  </div>
+                </div>
+              </transition>
+            </div>
           </div>
         </div>
       </transition>
     </div>
 
-    <div v-if="showExpandButton" class="w3-row expand-row w3-leftbar" :class="{'expand-row-collapsed': !expanded}">
-      <button
-        class="w3-button light-grey w3-small"
+    <div v-if="!expanded" class="w3-row expand-row w3-leftbar expand-row-collapsed">
+      <button class="w3-button light-grey w3-small"
         @click="toggleExpand()">
-        <span v-if="!expanded">
+        <span>
           <i class="fa fa-chevron-down" aria-hidden="true"></i> Expand
           <span v-if="section.nSubsections > 0 && section.nCards > 0"> (contains <b>{{ section.nSubsections }}</b> subsections and <b>{{ section.nCards }}</b> cards)</span>
           <span v-else>
@@ -151,8 +201,14 @@
             <span v-if="section.nCards > 0"> (contains <b>{{ section.nCards }}</b> cards)</span>
           </span>
         </span>
-        <span v-else><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse "{{  section.title }}" section</span>
       </button>
+    </div>
+    <div v-if="expanded && (showCards || showSubsections)" class="w3-row expand-row w3-leftbar">
+      <button class="w3-button light-grey w3-small"
+        @click="toggleExpand()">
+        <span><i class="fa fa-chevron-up" aria-hidden="true"></i> Collapse "{{  section.title }}" section</span>
+      </button>
+
     </div>
 
   </div>
@@ -176,7 +232,11 @@ export default {
       type: Object,
       default: null
     },
-    preloaded: {
+    basicPreloaded: {
+      type: Boolean,
+      default: false
+    },
+    subElementsPreloaded: {
       type: Boolean,
       default: false
     },
@@ -218,24 +278,61 @@ export default {
     forceUpdate: {
       type: Boolean,
       default: true
+    },
+    expandInit: {
+      type: Boolean,
+      default: false
+    },
+    sortByLikes: {
+      type: Boolean,
+      default: false
     }
   },
 
   data () {
     return {
       section: null,
-      showSubsections: false,
-      showCards: false,
+      loaded: false,
+      showSubsections: true,
+      showCards: true,
       expanded: false,
-      animatingSubsections: false,
       showCardModal: false,
-      showCardId: ''
+      showCardId: '',
+      expandSubSubsecInit: false
     }
   },
 
   computed: {
-    showExpandButton () {
-      return true
+    sortedByLikes () {
+      if (!this.sortByLikes) {
+        return JSON.parse(JSON.stringify(this.section.cardsWrappers))
+      } else {
+        var sortedArray = JSON.parse(JSON.stringify(this.section.cardsWrappers))
+        return sortedArray.sort((cardA, cardB) => {
+          return cardB.nLikes - cardA.nLikes
+        })
+      }
+    },
+    nCardWrappers () {
+      if (this.section) {
+        if (this.section.cardsWrappers) {
+          return this.section.cardsWrappers.length
+        } else {
+          return 0
+        }
+      } else {
+        return 0
+      }
+    },
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
+    cardsContainerClasses () {
+      return {
+        'section-card-col-with-nav': this.cardsAsCards && (this.$store.state.support.expandNav && !this.$store.state.support.windowIsSmall),
+        'section-card-col-no-nav': this.cardsAsCards && (!this.$store.state.support.expandNav || this.$store.state.support.windowIsSmall),
+        'section-card-par': !this.cardsAsCards
+      }
     }
   },
 
@@ -248,41 +345,95 @@ export default {
     },
     forceUpdate () {
       this.update()
+    },
+    expandInit () {
+      if (this.expandInit) {
+        this.startExpand()
+      } else {
+        this.startCollapse()
+      }
     }
   },
 
   methods: {
     toggleExpand () {
       if (!this.expanded) {
-        if (!this.preloaded) {
-          this.update()
+        if (!this.loaded) {
+          this.update(true)
+        } else {
+          this.startExpand()
         }
-        this.expanded = true
       } else {
-        this.expanded = false
+        this.startCollapse()
       }
     },
-    update () {
+    startExpand () {
+      this.showCards = false
+      this.showSubsections = false
+      this.expanded = true
+
+      this.$nextTick(() => {
+        if (this.nCardWrappers > 0) {
+          this.showCards = true
+          setTimeout(() => {
+            if (this.section.nSubsections > 0) {
+              this.showSubsections = true
+            }
+          }, 350)
+        } else {
+          if (this.section.nSubsections > 0) {
+            this.showSubsections = true
+          } else {
+            /* totally empty section */
+            this.showCards = true
+          }
+        }
+      })
+    },
+    startCollapse () {
+      if (this.showSubsections) {
+        this.showSubsections = false
+        setTimeout(() => {
+          if (this.showCards) {
+            this.showCards = false
+            setTimeout(() => {
+              this.expanded = false
+            }, 500)
+          } else {
+            this.expanded = false
+          }
+        }, 500)
+      } else {
+        if (this.showCards) {
+          this.showCards = false
+          setTimeout(() => {
+            this.expanded = false
+          }, 500)
+        } else {
+          this.expanded = false
+        }
+      }
+    },
+    update (expandFlag) {
+      expandFlag = expandFlag || false
       this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id, {
         params: {
           level: 1
         }
       }).then((response) => {
         // console.log(response.data)
+        this.loaded = true
         this.section = response.data.data
-        this.checkExpands()
+        this.$emit('updated', this.section)
+        if (expandFlag) {
+          this.startExpand()
+        }
       })
-    },
-    checkExpands () {
-      if (this.section.nSubsections > 0 && this.section.cardsWrappers.length === 0) {
-        this.showSubsections = true
-      }
     },
     cardDroped (onCardWrapperId, event) {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
-
       if (dragData.type === 'MOVE_CARD') {
-        if (dragData.fromSectionId !== '') {
+        if (dragData.fromSectionId !== '' && !event.ctrlKey) {
           /* move from section */
           this.axios.put('/1/initiative/' + this.initiativeId +
             '/model/section/' + dragData.fromSectionId +
@@ -349,26 +500,45 @@ export default {
       var found = false
       for (var ix in this.$route.matched) {
         if (this.$route.matched[ix].name === 'ModelCardInSection') {
-          this.showCardId = this.$route.params.cardId
-          this.showCardModal = true
-          found = true
+          /* only open the model when rendering the section in the url */
+          if (this.$route.params.sectionId === this.section.id) {
+            this.showCardId = this.$route.params.cardId
+            this.showCardModal = true
+            found = true
+          }
         }
       }
       if (!found) {
         this.showCardModal = false
       }
+    },
+    newCardFromBar () {
+      this.showCards = true
+      this.$emit('new-card')
+    },
+    newSubsectionFromBar () {
+      this.showSubsections = true
+      this.$emit('new-subsection')
     }
   },
 
   created () {
-    if (!this.preloaded) {
+    if (!this.basicPreloaded) {
       this.section = {
         id: this.sectionId
       }
       this.update()
     } else {
       this.section = this.sectionInit
-      this.checkExpands()
+      if (this.subElementsPreloaded) {
+        this.loaded = true
+      } else {
+        this.update()
+      }
+    }
+
+    if (this.expandInit) {
+      this.toggleExpand()
     }
 
     /* check if open card modal */
@@ -390,25 +560,71 @@ export default {
 
 .expand-row button {
   width: 100%;
-  text-align: left;
+  text-align: center;
   padding-left: 10px;
   padding-top: 5px;
   padding-bottom: 5px;
 }
 
 .cards-container {
-  padding: 20px 10px 4px 10px;
-  max-height: 500px;
-  overflow: auto;
+  padding: 6px 10px 22px 10px;
 }
 
-.section-card-col {
-  margin-bottom: 16px;
+.section-card-col-with-nav, .section-card-col-no-nav {
+  margin-bottom: 0px;
   display: inline-block;
 }
 
 @media screen and (min-width: 1700px) {
-  .section-card-col {
+  .section-card-col-no-nav {
+    width: calc(20% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+@media screen and (min-width: 1300px) and (max-width: 1699px) {
+  .section-card-col-no-nav {
+    width: calc(25% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+@media screen and (min-width: 900px) and (max-width: 1299px) {
+  .section-card-col-no-nav {
+    width: calc(33% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 899px) {
+  .section-card-col-no-nav {
+    width: calc(50% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .section-card-col-no-nav {
+    width: calc(100% - 16px);
+    margin-left: 8px;
+    margin-right: 8px;
+    vertical-align: top;
+  }
+}
+
+
+
+
+@media screen and (min-width: 1700px) {
+  .section-card-col-with-nav {
     width: calc(25% - 16px);
     margin-left: 8px;
     margin-right: 8px;
@@ -417,7 +633,7 @@ export default {
 }
 
 @media screen and (min-width: 1200px) and (max-width: 1699px) {
-  .section-card-col {
+  .section-card-col-with-nav {
     width: calc(33% - 16px);
     margin-left: 8px;
     margin-right: 8px;
@@ -425,8 +641,8 @@ export default {
   }
 }
 
-@media screen and (min-width: 992px) and (max-width: 1199px) {
-  .section-card-col {
+@media screen and (min-width: 900px) and (max-width: 1199px) {
+  .section-card-col-with-nav {
     width: calc(50% - 16px);
     margin-left: 8px;
     margin-right: 8px;
@@ -434,8 +650,8 @@ export default {
   }
 }
 
-@media screen and (max-width: 991px) {
-  .section-card-col {
+@media screen and (max-width: 899px) {
+  .section-card-col-with-nav {
     width: calc(100% - 16px);
     margin-left: 8px;
     margin-right: 8px;
@@ -443,8 +659,25 @@ export default {
   }
 }
 
+
 .section-card-par {
   margin-bottom: 16px;
+}
+
+.empty-div {
+  min-height: 22px;
+  color: #d5d6d7;
+  padding-right: 10px;
+  margin: 3px 0px;
+}
+
+.last-add {
+  margin-top: 16px;
+}
+
+.empty-div:hover {
+  background-color: #bfc1c3;
+  color: white;
 }
 
 .bottom-bar .fa {
@@ -461,9 +694,15 @@ export default {
   width: 100%;
 }
 
+.subsection-controls-row {
+  padding-left: 16px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
 .subsections-container {
-  padding-left: 20px;
-  padding-top: 20px;
+  padding-left: 16px;
+  padding-top: 12px;
   padding-right: 10px;
 }
 

@@ -48,8 +48,10 @@ public class Message {
 	
 	public MessageDto toDto() {
 		MessageDto dto = new MessageDto();
+		dto.setId(id.toString());
 		dto.setAuthor(author.toDtoLight());
 		dto.setText(text);
+		if (thread != null) dto.setThreadId(thread.getId().toString());
 		return dto;
 	}
 	

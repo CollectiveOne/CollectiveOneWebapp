@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
@@ -88,6 +89,40 @@ public class FileService {
 	}
 	
 	@Transactional
+	public UUID copyImageAfterCreationToCard(UUID userId, UUID fileId, UUID cardWrapperId) {
+		FileStored fileStored = fileStoredRepository.findById(fileId);
+		
+		if (fileStored == null) {
+			return null;
+		}
+		
+		String sourceBucketName = fileStored.getBucket();
+		String sourceKey = fileStored.getKey();
+		String destinationBucketName = fileStored.getBucket();
+		String destinationKey = "CardImages/" + cardWrapperId.toString();
+		
+		amazonS3Template.getAmazonS3Client().copyObject(
+				new CopyObjectRequest(
+						sourceBucketName, 
+						sourceKey, 
+						destinationBucketName, 
+						destinationKey).withCannedAccessControlList(CannedAccessControlList.PublicRead));
+		
+		FileStored newFileStored = new FileStored();
+		newFileStored.setBucket(fileStored.getBucket());
+		newFileStored.setKey(destinationKey);
+		newFileStored.setUploadedBy(appUserRepository.findByC1Id(userId));
+		newFileStored.setUrl(baseUrl + "/" + bucketName + "/" + destinationKey);
+		newFileStored.setLastUpdated(new Timestamp(System.currentTimeMillis()));
+		newFileStored.setInitiative(fileStored.getInitiative()); 
+		
+		newFileStored = fileStoredRepository.save(newFileStored);
+		
+		return newFileStored.getId();
+		
+	}
+	
+	@Transactional
 	public void uploadImageProfile(UUID userId, MultipartFile file) {
 		
 		String key = "ProfileImages/" + userId.toString();
@@ -96,7 +131,6 @@ public class FileService {
 		if (fileUploaded != null) {
 			AppUserProfile profile = appUserProfileRepository.findByUser_C1Id(userId);
 			profile.setUploadedPicture(fileUploaded);
-			profile.setUseUploadedPicture(true);
 			
 			appUserProfileRepository.save(profile);
 		}
