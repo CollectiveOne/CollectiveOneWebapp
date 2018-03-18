@@ -9,6 +9,7 @@ import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.InitiativeTag;
+import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
 import org.collectiveone.modules.initiatives.dto.MemberDto;
 import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
@@ -63,31 +64,31 @@ public class TestInitiativeService extends AbstractTest {
 
     @Test
     public void ifGetTagIsSuccess() {
-    		InitiativeService initiativeServiceMock=mock(InitiativeService.class);
-    		InitiativeTagDto tag=new InitiativeTagDto();
-    		tag.setId(UUID.randomUUID().toString());
-    		when(initiativeServiceMock.getTag(UUID.fromString("c0a80067-61b9-1590-8161-b91c6d570010"))).thenReturn(new GetResult<InitiativeTagDto>("success", "initiative tag returned", tag));		
-    		GetResult<InitiativeTagDto> result=initiativeServiceMock.getTag(UUID.fromString("c0a80067-61b9-1590-8161-b91c6d570010"));
-    		assertTrue(result.getResult().equals("success"));
+		InitiativeService initiativeServiceMock=mock(InitiativeService.class);
+		InitiativeTagDto tag=new InitiativeTagDto();
+		tag.setId(UUID.randomUUID().toString());
+		when(initiativeServiceMock.getTag(UUID.fromString("c0a80067-61b9-1590-8161-b91c6d570010"))).thenReturn(new GetResult<InitiativeTagDto>("success", "initiative tag returned", tag));		
+		GetResult<InitiativeTagDto> result=initiativeServiceMock.getTag(UUID.fromString("c0a80067-61b9-1590-8161-b91c6d570010"));
+		assertTrue(result.getResult().equals("success"));
 
     }
     
     @Test
     public void createInitiativeIfNoMembersWorks() {
-    		NewInitiativeDto initiative = new NewInitiativeDto();
-    		initiative.setName("test");
-    		
-    		//create data in db
-    		PostResult result = this.initiativeService.init(UUID.fromString(this.userId), initiative);
-    		//get id and try to convert id to UUID if valid or not
-    		try {
-    			UUID initiativeId=UUID.fromString(result.getElementId());	
-        		assertTrue(initiativeId.toString().length()>0);
-    		}
-    		catch(Exception ex)
-    		{
-    			assertTrue(false);
-    		}
+		NewInitiativeDto initiative = new NewInitiativeDto();
+		initiative.setName("test");
+		
+		//create data in db
+		PostResult result = this.initiativeService.init(UUID.fromString(this.userId), initiative);
+		//get id and try to convert id to UUID if valid or not
+		try {
+			UUID initiativeId=UUID.fromString(result.getElementId());	
+    		assertTrue(initiativeId.toString().length()>0);
+		}
+		catch(Exception ex)
+		{
+			assertTrue(false);
+		}
     		
     		
     }
@@ -95,10 +96,15 @@ public class TestInitiativeService extends AbstractTest {
     
     @Test
     public void isSearchTagsByWorks() {
-    		GetResult<List<InitiativeTagDto>> result=this.initiativeService.searchTagsBy("s");
-    		assertTrue(result.getResult().equals("success"));
+		GetResult<List<InitiativeTagDto>> result=this.initiativeService.searchTagsBy("s");
+		assertTrue(result.getResult().equals("success"));
     }
     
+    @Test
+    public void isGetOrAddMemberWorks() {
+		Member member = this.initiativeService.getOrAddMember(UUID.fromString(this.initiativeId),UUID.fromString(this.userId));
+		assertTrue(member != null);
+    }
     
    
     
