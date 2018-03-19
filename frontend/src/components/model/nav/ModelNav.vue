@@ -64,7 +64,9 @@ export default {
       this.$router.replace({name: this.$route.name, query: {levels: this.levels + 1}})
     },
     levelDown () {
-      this.$router.replace({name: this.$route.name, query: {levels: this.levels - 1}})
+      if (this.levels > 1) {
+        this.$router.replace({name: this.$route.name, query: {levels: this.levels - 1}})
+      }
     }
   }
 }
