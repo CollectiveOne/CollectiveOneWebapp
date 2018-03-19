@@ -12,8 +12,7 @@ const pathToTop = function (genealogy, parents) {
 
 const state = {
   currentSectionId: null,
-  currentSectionGenealogy: null,
-  level: 1
+  currentSectionGenealogy: null
 }
 
 const getters = {
@@ -28,12 +27,6 @@ const getters = {
 const mutations = {
   setCurrentSectionGenealogy: (state, payload) => {
     state.currentSectionGenealogy = payload
-  },
-  levelDown: (state) => {
-    state.level = state.level > 1 ? state.level - 1 : 1
-  },
-  levelUp: (state) => {
-    state.level = state.level + 1
   }
 }
 

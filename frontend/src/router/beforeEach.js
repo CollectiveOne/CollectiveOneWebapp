@@ -25,8 +25,4 @@ export default (to, from, next) => {
 
     next()
   }
-
-  if (to.name === 'ModelSectionContent') {
-    next({name: from.name})
-  }
 }

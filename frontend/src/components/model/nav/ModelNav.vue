@@ -17,13 +17,13 @@
       <div class="w3-row w3-center w3-margin-bottom">
         <div class="zoom-controls gray-1-color">
           <div class="cursor-pointer">
-            <i @click="$store.commit('levelDown')" class="fa fa-minus-circle" aria-hidden="true"></i>
+            <i @click="levelDown()" class="fa fa-minus-circle" aria-hidden="true"></i>
           </div>
           <div class="">
-            {{ level }}
+            {{ levels }}
           </div>
           <div class="cursor-pointer">
-            <i @click="$store.commit('levelUp')" class="fa fa-plus-circle" aria-hidden="true"></i>
+            <i @click="levelUp()" class="fa fa-plus-circle" aria-hidden="true"></i>
           </div>
         </div>
       </div>
@@ -55,11 +55,17 @@ export default {
     initiative () {
       return this.$store.state.initiative.initiative
     },
-    level () {
-      return this.$store.state.model.level
+    levels () {
+      return this.$route.query.levels
     }
   },
   methods: {
+    levelUp () {
+      this.$router.replace({name: this.$route.name, query: {levels: this.levels + 1}})
+    },
+    levelDown () {
+      this.$router.replace({name: this.$route.name, query: {levels: this.levels - 1}})
+    }
   }
 }
 </script>

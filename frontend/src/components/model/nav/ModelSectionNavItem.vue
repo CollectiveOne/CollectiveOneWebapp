@@ -100,13 +100,13 @@ export default {
     isSelected () {
       return this.$route.params.sectionId === this.section.id
     },
-    level () {
-      return this.$store.state.model.level
+    levels () {
+      return this.$route.query.levels
     },
     highlightLevelUse () {
       if (this.isSelected) {
-        /* if this is the selected section, start counting from level */
-        return this.level
+        /* if this is the selected section, start counting from levels */
+        return this.levels
       } else {
         /* if this is not the selected section, decrease the highlightLevel property */
         return this.highlightLevel
@@ -125,7 +125,7 @@ export default {
       this.showNewSubsectionModal = true
     },
     updateSubsections () {
-      this.axios.get('/1/model/section/' + this.section.id, { params: { level: 1 } }).then((response) => {
+      this.axios.get('/1/model/section/' + this.section.id, { params: { levels: 1 } }).then((response) => {
         if (response.data.result === 'success') {
           this.subsections = response.data.data.subsections
         }

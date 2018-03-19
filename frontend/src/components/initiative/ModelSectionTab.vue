@@ -24,16 +24,11 @@ export default {
     }
   },
 
-  watch: {
-    '$route' () {
-      this.redirect()
-    }
-  },
-
   methods: {
     redirect () {
       if (this.$route.name === 'InitiativeModel') {
-        this.$router.replace({name: 'ModelSectionContent', params: {sectionId: this.initiative.topModelSection.id}})
+        console.log('redirecting from InitiativeModel to ModelSectionContent with section id: ' + this.initiative.topModelSection.id)
+        this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.initiative.topModelSection.id}, query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
       }
     }
   },

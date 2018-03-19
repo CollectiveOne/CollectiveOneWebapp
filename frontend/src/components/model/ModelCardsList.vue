@@ -3,8 +3,7 @@
     <div class="cards-list">
       <app-model-section
         :section="section"
-        :cardEffect="true"
-        :level="level">
+        :cardEffect="true">
       </app-model-section>
     </div>
   </div>
@@ -33,15 +32,12 @@ export default {
     currentSectionId () {
       return this.$route.params.sectionId
     },
-    level () {
-      return this.$store.state.model.level
+    levels () {
+      return this.$route.query.levels
     }
   },
 
   watch: {
-    level () {
-      this.update()
-    },
     '$route' () {
       this.update()
     }
@@ -50,7 +46,7 @@ export default {
   methods: {
     update () {
       if (this.currentSectionId) {
-        this.axios.get('/1/model/section/' + this.currentSectionId, {params: {level: this.level}}).then((response) => {
+        this.axios.get('/1/model/section/' + this.currentSectionId, {params: {levels: this.levels}}).then((response) => {
           if (response.data.result === 'success') {
             this.section = response.data.data
           }

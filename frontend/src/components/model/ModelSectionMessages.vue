@@ -4,7 +4,7 @@
       contextType="MODEL_SECTION"
       :contextElementId="currentSectionId"
       :onlyMessagesInit="true"
-      :level="level"
+      :levels="levels"
       :url="'/1/activity/model/section/' + currentSectionId">
     </app-message-thread>
   </div>
@@ -21,8 +21,8 @@ export default {
     currentSectionId () {
       return this.$route.params.sectionId
     },
-    level () {
-      return this.$store.state.model.level
+    levels () {
+      return this.$route.query.levels
     }
   }
 }

@@ -78,7 +78,7 @@ export default {
       type: String,
       default: ''
     },
-    level: {
+    levels: {
       type: Number,
       default: 1
     }
@@ -99,7 +99,7 @@ export default {
     triggerUpdate () {
       this.resetElements()
     },
-    level () {
+    levels () {
       this.getActivity('RESET')
     },
     url () {
@@ -140,7 +140,7 @@ export default {
           page: askPage,
           size: 10,
           onlyMessages: this.onlyMessages,
-          level: this.level
+          levels: this.levels
         }
       }).then((response) => {
         this.loading = false

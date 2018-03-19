@@ -238,7 +238,7 @@ public class ModelController extends BaseController {
 	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.GET) 
 	public GetResult<ModelSectionDto> getSection(
 			@PathVariable("sectionId") String sectionIdStr,
-			@RequestParam(defaultValue = "1") Integer level) {
+			@RequestParam(defaultValue = "1") Integer levels) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
@@ -247,7 +247,7 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelSectionDto>("error", "access denied", null);
 		}
 		
-		return modelService.getSection(sectionId, getLoggedUserId(), level, getLoggedUserId(), false);
+		return modelService.getSection(sectionId, getLoggedUserId(), levels, getLoggedUserId(), false);
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/genealogy", method = RequestMethod.GET) 
@@ -391,7 +391,7 @@ public class ModelController extends BaseController {
 			@PathVariable("sectionId") String sectionIdStr,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size, 
-			@RequestParam(name="level", defaultValue="1") Integer level,
+			@RequestParam(name="levels", defaultValue="1") Integer levels,
 			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
@@ -402,7 +402,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return modelService.getActivityResultUnderSection(sectionId, new PageRequest(page, size), onlyMessages, level);
+		return modelService.getActivityResultUnderSection(sectionId, new PageRequest(page, size), onlyMessages, levels);
 	}
 	
 	@RequestMapping(path = "/model/card/{cardWrapperId}/countMessages", method = RequestMethod.GET)

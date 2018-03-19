@@ -49,21 +49,21 @@
         </transition>
       </div>
       <div class="w3-col m6 section-tabs w3-center">
-        <router-link :to="{ name: 'ModelSectionMessages' }"
+        <router-link :to="{ name: 'ModelSectionMessages', query: {levels: this.$route.query.levels ? this.$route.query.levels : 1} }"
           class="tab-btn-space">
           <div class="tab-btn noselect" :class="{'bold-text': isChat, 'button-blue': isChat}">
             <span class="w3-hide-small w3-hide-medium tab-btn-text">Chat</span>
             <span class="w3-hide-large"><i class="fa fa-home" aria-hidden="true"></i></span>
           </div>
         </router-link>
-        <router-link :to="{ name: 'ModelCardsList' }"
+        <router-link :to="{ name: 'ModelCardsList', query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}}"
           class="tab-btn-space">
           <div class="tab-btn noselect" :class="{'bold-text': isCards, 'button-blue': isCards}">
             <span class="w3-hide-small w3-hide-medium tab-btn-text">Cards</span>
             <span class="w3-hide-large"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></span>
           </div>
         </router-link>
-        <router-link :to="{ name: 'ModelCardsList' }"
+        <router-link :to="{ name: 'ModelCardsList', query: {levels: this.$route.query.levels ? this.$route.query.levels : 1} }"
           class="tab-btn-space">
           <div class="tab-btn noselect" :class="{'bold-text': isDoc, 'button-blue': isDoc}">
             <span class="w3-hide-small w3-hide-medium tab-btn-text">Doc</span>
@@ -123,11 +123,12 @@ export default {
       return this.$route.name === 'ModelCardsList'
     },
     isDoc () {
-      return false
+      return this.$route.name === 'ModelSectionDoc'
     },
     redirect () {
       if (this.$route.name === 'ModelSectionContent') {
-        this.$router.replace({name: 'ModelCardsList'})
+        console.log('redirecting from ModelSectionContent to ModelCardsList')
+        this.$router.replace({name: 'ModelCardsList', query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
       }
     }
   },
