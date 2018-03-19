@@ -25,4 +25,24 @@ export default (to, from, next) => {
 
     next()
   }
+
+  if (to.name === 'ModelSectionContent') {
+    switch (from.name) {
+      case 'ModelSectionMessages':
+        next({name: 'ModelSectionMessages', params: {sectionId: to.params.sectionId}, query: {levels: from.query.levels}})
+        break
+
+      case 'ModelSectionCards':
+        next({name: 'ModelSectionCards', params: {sectionId: to.params.sectionId}, query: {levels: from.query.levels}})
+        break
+
+      case 'ModelSectionDoc':
+        next({name: 'ModelSectionDoc', params: {sectionId: to.params.sectionId}, query: {levels: from.query.levels}})
+        break
+
+      default:
+      next()
+        break
+    }
+  }
 }

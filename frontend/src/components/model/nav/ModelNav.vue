@@ -56,7 +56,7 @@ export default {
       return this.$store.state.initiative.initiative
     },
     levels () {
-      return this.$route.query.levels
+      return parseInt(this.$route.query.levels)
     }
   },
   methods: {

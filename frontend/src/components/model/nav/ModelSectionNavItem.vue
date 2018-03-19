@@ -101,7 +101,7 @@ export default {
       return this.$route.params.sectionId === this.section.id
     },
     levels () {
-      return this.$route.query.levels
+      return parseInt(this.$route.query.levels)
     },
     highlightLevelUse () {
       if (this.isSelected) {
@@ -116,7 +116,7 @@ export default {
 
   methods: {
     sectionSelected () {
-      this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
+      this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}, query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
     },
     clickOutsideMenu () {
       this.showSubmenu = false

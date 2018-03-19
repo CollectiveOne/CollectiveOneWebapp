@@ -3,7 +3,7 @@
     <div class="cards-list">
       <app-model-section
         :section="section"
-        :cardEffect="true">
+        :cardsAsCards="true">
       </app-model-section>
     </div>
   </div>
@@ -33,7 +33,7 @@ export default {
       return this.$route.params.sectionId
     },
     levels () {
-      return this.$route.query.levels
+      return parseInt(this.$route.query.levels)
     }
   },
 

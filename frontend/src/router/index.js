@@ -17,8 +17,10 @@ import TimelineSection from '@/components/initiative/TimelineSection.vue'
 
 import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
 import ModelSectionContent from '@/components/model/ModelSectionContent.vue'
-import ModelCardsList from '@/components/model/ModelCardsList.vue'
+
 import ModelSectionMessages from '@/components/model/ModelSectionMessages.vue'
+import ModelSectionCards from '@/components/model/ModelSectionCards.vue'
+import ModelSectionDoc from '@/components/model/ModelSectionDoc.vue'
 
 import ModelCardWrapperPlacer from '@/components/model/ModelCardWrapperPlacer.vue'
 import ModelSearchContainer from '@/components/model/ModelSearchContainer.vue'
@@ -88,7 +90,8 @@ export default new Router({
                       meta: {'column': 3},
                       children: [
                         { path: 'messages', name: 'ModelSectionMessages', component: ModelSectionMessages, meta: {'column': 3} },
-                        { path: 'cards', name: 'ModelCardsList', component: ModelCardsList, meta: {'column': 3} }
+                        { path: 'cards', name: 'ModelSectionCards', component: ModelSectionCards, meta: {'column': 3} },
+                        { path: 'doc', name: 'ModelSectionDoc', component: ModelSectionDoc, meta: {'column': 3} }
                       ]
                     },
                     { path: 'card/:cardWrapperId', name: 'ModelCardAlone', component: ModelCardWrapperPlacer, meta: {'column': 3} },

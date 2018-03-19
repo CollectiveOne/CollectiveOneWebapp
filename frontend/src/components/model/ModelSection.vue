@@ -56,7 +56,7 @@
           :inElementId="section.id"
           :inElementTitle="section.title"
           dragType="MOVE_SUBSECTION"
-          :cardsAsCardsInit="cardsAsCards"
+          :cardsAsCards="cardsAsCards"
           :nestedIn="nestedIn.concat([section])">
         </app-model-section>
       </div>
