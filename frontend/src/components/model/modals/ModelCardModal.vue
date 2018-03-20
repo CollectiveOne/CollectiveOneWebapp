@@ -88,7 +88,7 @@
                     </div>
                     <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
                       class="insection-tag-container w3-left">
-                      <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
+                      <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
                         class="gray-1 w3-tag w3-round w3-small">
                         {{ inSection.title }}
                       </router-link>

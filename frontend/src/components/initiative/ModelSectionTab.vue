@@ -28,7 +28,7 @@ export default {
     redirect () {
       if (this.$route.name === 'InitiativeModel') {
         console.log('redirecting from InitiativeModel to ModelSectionContent with section id: ' + this.initiative.topModelSection.id)
-        this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.initiative.topModelSection.id}, query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
+        this.$router.replace({name: 'ModelSectionContent', params: {sectionId: this.initiative.topModelSection.id}, query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
       }
     }
   },

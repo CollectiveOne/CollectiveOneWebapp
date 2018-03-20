@@ -7,17 +7,16 @@
       @mouseleave="hovering = false">
 
       <div class="w3-row card-container cursor-pointer w3-display-container"
-        ref="cardContent">
+        ref="cardContent"
+        @click="cardClicked()">
 
         <div class="w3-col s12">
           <div v-if="hasImage"
-            class="w3-row image-container w3-center w3-display-container"
-            @click="$emit('expand-modal')">
+            class="w3-row image-container w3-center w3-display-container">
             <img class="" :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
           </div>
 
-          <div :class="{'card-container-padded': cardEffect, 'card-container-slim': !cardEffect }"
-            @click="$emit('expand-modal')">
+          <div :class="{'card-container-padded': cardEffect, 'card-container-slim': !cardEffect }">
             <div v-if="card.title !== ''" class="w3-row">
               <b>{{ card.title }}</b>
             </div>
@@ -45,7 +44,7 @@
             <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
               v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
               <div class="">
-                <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
+                <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
                   class="gray-1 w3-tag w3-round w3-small">
                   {{ inSection.title }}
                 </router-link>
@@ -56,7 +55,6 @@
           <div class="w3-right cursor-pointer indicator-comp"
             @click="$emit('expand-modal', true)">
             <app-indicator
-              :initiativeId="initiativeId"
               contextType="MODEL_CARD"
               :contextElementId="cardWrapper.id"
               :size="18"
@@ -68,7 +66,6 @@
           <div class="w3-right cursor-pointer indicator-comp"
             @click="toggleLike()">
             <app-indicator
-              :initiativeId="initiativeId"
               contextType="MODEL_CARD"
               :contextElementId="cardWrapper.id"
               :size="18"
@@ -107,10 +104,6 @@ export default {
       type: Object,
       default: null
     },
-    initiativeId: {
-      type: String,
-      default: ''
-    },
     inSectionId: {
       type: String,
       default: ''
@@ -147,25 +140,6 @@ export default {
   computed: {
     card () {
       return this.cardWrapper.card
-    },
-    showDetails () {
-      if (this.cardEffect) {
-        return this.cardWrapper.stateControl
-      }
-    },
-    stateClass () {
-      switch (this.cardWrapper.state) {
-        case 'REALITY':
-          return {
-            'success-panel': true
-          }
-
-        case 'PLAN':
-          return {
-            'warning-panel': true
-          }
-      }
-      return {}
     },
     hasImage () {
       return this.card.imageFile !== null
@@ -204,6 +178,9 @@ export default {
     showMoreClick () {
       this.showFull = !this.showFull
     },
+    cardClicked () {
+      this.$router.push({name: 'ModelSectionCard', params: {sectionId: this.inSectionId, cardWrapperId: this.cardWrapper.id}})
+    },
     showThisTag (inSection) {
       /* hide current section tag */
       if (this.floating) {
@@ -223,7 +200,7 @@ export default {
       }
     },
     toggleLike () {
-      this.axios.put('/1/initiative/' + this.initiativeId + '/model/card/' + this.cardWrapper.id + '/like',
+      this.axios.put('/1/model/card/' + this.cardWrapper.id + '/like',
         {}, {
           params: {
             likeStatus: !this.cardWrapper.userLiked

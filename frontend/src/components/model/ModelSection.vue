@@ -34,12 +34,12 @@
         @drop.prevent="cardDroped(cardWrapper.id, $event)">
 
         <div class="">
-          <app-model-card-with-modal
-            :cardWrapperInit="cardWrapper"
+          <app-model-card
+            :cardWrapper="cardWrapper"
             :inSectionId="section.id"
             :inSectionTitle="section.title"
             :cardEffect="cardsAsCards">
-          </app-model-card-with-modal>
+          </app-model-card>
         </div>
       </div>
     </div>
@@ -67,14 +67,14 @@
 
 <script>
 import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
-import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
+import ModelCard from '@/components/model/ModelCard.vue'
 
 export default {
   name: 'app-model-section',
 
   components: {
     'app-model-section-header': ModelSectionHeader,
-    'app-model-card-modal': ModelCardModal
+    'app-model-card': ModelCard
   },
 
   props: {
@@ -209,19 +209,14 @@ export default {
       })
     },
     checkCardSubroute () {
-      var found = false
       for (var ix in this.$route.matched) {
         if (this.$route.matched[ix].name === 'ModelCardInSection') {
           /* only open the model when rendering the section in the url */
           if (this.$route.params.sectionId === this.section.id) {
             this.showCardId = this.$route.params.cardId
             this.showCardModal = true
-            found = true
           }
         }
-      }
-      if (!found) {
-        this.showCardModal = false
       }
     },
     newCardFromBar () {
@@ -245,7 +240,7 @@ export default {
 }
 
 .section-card-col-with-nav, .section-card-col-no-nav {
-  margin-bottom: 0px;
+  margin-bottom: 20px;
   display: inline-block;
 }
 

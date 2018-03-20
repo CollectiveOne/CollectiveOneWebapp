@@ -20,9 +20,7 @@ import ModelSectionContent from '@/components/model/ModelSectionContent.vue'
 
 import ModelSectionMessages from '@/components/model/ModelSectionMessages.vue'
 import ModelSectionCards from '@/components/model/ModelSectionCards.vue'
-import ModelSectionDoc from '@/components/model/ModelSectionDoc.vue'
-
-import ModelCardWrapperPlacer from '@/components/model/ModelCardWrapperPlacer.vue'
+import ModelSectionCard from '@/components/model/ModelSectionCard.vue'
 import ModelSearchContainer from '@/components/model/ModelSearchContainer.vue'
 
 import UserProfilePage from '@/components/UserProfilePage.vue'
@@ -90,11 +88,11 @@ export default new Router({
                       meta: {'column': 3},
                       children: [
                         { path: 'messages', name: 'ModelSectionMessages', component: ModelSectionMessages, meta: {'column': 3} },
-                        { path: 'cards', name: 'ModelSectionCards', component: ModelSectionCards, meta: {'column': 3} },
-                        { path: 'doc', name: 'ModelSectionDoc', component: ModelSectionDoc, meta: {'column': 3} }
+                        { path: 'cards/:cardWrapperId', name: 'ModelSectionCards', component: ModelSectionCards, meta: {'column': 3} },
+                        { path: 'card', name: 'ModelSectionCard', component: ModelSectionCard, meta: {'column': 3} },
+                        { path: 'doc', name: 'ModelSectionDoc', component: ModelSectionCards, meta: {'column': 3} }
                       ]
                     },
-                    { path: 'card/:cardWrapperId', name: 'ModelCardAlone', component: ModelCardWrapperPlacer, meta: {'column': 3} },
                     { path: 'search', name: 'ModelSearch', component: ModelSearchContainer, meta: {'column': 3} }
                   ]
                 },

@@ -73,6 +73,7 @@ public class ModelCardWrapper {
 		
 		cardWrapperDto.setId(id.toString());
 		cardWrapperDto.setCard(card.toDto());
+		cardWrapperDto.setInitiativeId(initiative.getId().toString());
 		
 		return cardWrapperDto;
 	}

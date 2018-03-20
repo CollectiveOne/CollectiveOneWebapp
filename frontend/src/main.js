@@ -16,7 +16,6 @@ import MarkdownEditor from '@/components/global/MarkdownEditor.vue'
 import Indicator from '@/components/notifications/Indicator.vue'
 import DropDownMenu from '@/components/global/DropDownMenu.vue'
 
-import ModelCardWithModal from '@/components/model/ModelCardWithModal.vue'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 
@@ -44,7 +43,6 @@ Vue.component('app-indicator', Indicator)
 Vue.component('app-drop-down-menu', DropDownMenu)
 
 /* registered globally to solve the circular reference */
-Vue.component('app-model-card-with-modal', ModelCardWithModal)
 Vue.component('app-model-section-modal', ModelSectionModal)
 Vue.component('app-model-card-modal', ModelCardModal)
 

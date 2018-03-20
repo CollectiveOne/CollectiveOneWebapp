@@ -74,7 +74,7 @@
     </div>
     <div class="w3-row w3-margin-top w3-container">
       <transition name="fadeenter">
-        <router-view></router-view>
+        <router-view :cardsAsCards="isCards"></router-view>
       </transition>
     </div>
   </div>
@@ -164,7 +164,7 @@ export default {
 .control-row {
   padding: 6px 18px;
   font-size: 22px;
-  height: 65px;
+  min-height: 65px;
 }
 
 .control-btns {
