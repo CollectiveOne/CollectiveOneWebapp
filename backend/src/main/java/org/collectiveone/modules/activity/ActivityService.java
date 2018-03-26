@@ -144,9 +144,10 @@ public class ActivityService {
 	
 	@Transactional
 	public void addSubscriber(UUID elementId, UUID userId, SubscriptionElementType type) {
+
 		if (subscriberRepository.findByElementIdAndUser_C1Id(elementId, userId) == null) {
 			Subscriber subscriber = new Subscriber();
-			
+
 			subscriber.setElementId(elementId);
 			subscriber.setType(type);
 			subscriber.setUser(appUserRepository.findByC1Id(userId));
@@ -166,6 +167,7 @@ public class ActivityService {
 	
 	@Transactional
 	public PostResult editSubscriberState(UUID userId, UUID elementId, SubscriberState state) {
+
 		Subscriber subscriber = subscriberRepository.findByElementIdAndUser_C1Id(elementId, userId);
 		subscriber.setState(state);
 		subscriberRepository.save(subscriber);
@@ -477,13 +479,13 @@ public class ActivityService {
 	@Transactional
 	public void modelSectionCreatedOnSection(ModelSection section, ModelSection onSection, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
 		activity.setModelSection(section);
 		activity.setOnSection(onSection);
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
+		addSubscriber(section.getId(),triggerUser.getC1Id(), SubscriptionElementType.SUBSECTION);
 	}
 	
 	@Transactional
@@ -496,6 +498,7 @@ public class ActivityService {
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
+		addSubscriber(section.getId(),triggerUser.getC1Id(), SubscriptionElementType.SECTION);
 	}
 	
 	@Transactional
@@ -606,6 +609,7 @@ public class ActivityService {
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
+		addSubscriber(section.getId(),triggerUser.getC1Id(), SubscriptionElementType.SUBSECTION);
 	}
 	
 	@Transactional
@@ -618,6 +622,8 @@ public class ActivityService {
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
+		addSubscriber(section.getId(),triggerUser.getC1Id(), SubscriptionElementType.SECTION);
+		//add section to the subscribers
 	}
 	
 	@Transactional
@@ -799,36 +805,54 @@ public class ActivityService {
 	/** To be called within an activity transaction, modifies the notifications property of the
 	 * input activity */
 	private void addInitiativeActivityNotifications (Activity activity) {
-		List<Subscriber> subscribers = getInitiativeSubscribers(activity.getInitiative().getId());
-		
-		for (Subscriber subscriber : subscribers) {
-			
+		List<Subscriber> initiative_subscribers = getInitiativeSubscribers(activity.getInitiative().getId());
+		List<Subscriber> section_subscribers = null;
+		if(activity.getModelSection() != null) {
+			section_subscribers = getSectionSubscribers(activity.getModelSection().getId());
+		}
+		for (Subscriber subscriber : initiative_subscribers) {
 			if (subscriber.getState() != SubscriberState.UNSUBSCRIBED) {
 				if(activity.getTriggerUser().getC1Id() != subscriber.getUser().getC1Id()) {
 					/* add a notification only if the trigger user is not the subscriber */
+
+					/*add a notification only if the user is subscribed to the section*/
 					if (subscriber.getState() == SubscriberState.SUBSCRIBED) {
-						Notification notification = new Notification();
-						notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
-						notification.setActivity(activity);
-						notification.setSubscriber(subscriber);
-						notification.setState(NotificationState.PENDING);
-						
-						/* if not unsubscribed from emails, set the email as peding */
-						if (subscriber.getEmailNotificationsState() != SubscriberEmailNotificationsState.DISABLED 
-								&& subscriber.getUser().getEmailNotificationsEnabled()) {
-							notification.setEmailState(NotificationEmailState.PENDING);
-						} else {
-							notification.setEmailState(NotificationEmailState.DELIVERED);
+
+						if(section_subscribers != null) {
+							for(Subscriber section_subscriber : section_subscribers) {
+								if (section_subscriber.getState() == SubscriberState.SUBSCRIBED) {
+									addNotification(activity,subscriber);
+								}
+							}
+						}else {
+							addNotification(activity,subscriber);
 						}
 						
-						notification = notificationRepository.save(notification);
-						
-						activity.getNotifications().add(notification);
 					}
 				}
 			}
 			
 		}
+	}
+	
+	private void addNotification(Activity activity, Subscriber subscriber) {
+		Notification notification = new Notification();
+		notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		notification.setActivity(activity);
+		notification.setSubscriber(subscriber);
+		notification.setState(NotificationState.PENDING);
+		
+		/* if not unsubscribed from emails, set the email as peding */
+		if (subscriber.getEmailNotificationsState() != SubscriberEmailNotificationsState.DISABLED 
+				&& subscriber.getUser().getEmailNotificationsEnabled()) {
+			notification.setEmailState(NotificationEmailState.PENDING);
+		} else {
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+		}
+		
+		notification = notificationRepository.save(notification);
+		
+		activity.getNotifications().add(notification);
 	}
 	
 	@Transactional
@@ -840,8 +864,37 @@ public class ActivityService {
 		 * a subscriber state may be SUBSCRIPTION_DISABLED */
 		List<Subscriber> allSubscribers = subscriberRepository.findByElementId(initiativeId);
 		
-		/* then add the subscribers of all parent initiatives (B and A, in that order) */
+		/* then add the subscribers of all parent initiatives 2(B and A, in that order) */
 		List<Initiative> parents = initiativeService.getParentGenealogyInitiatives(initiativeId);
+		
+		for (Initiative parent : parents) {
+			List<Subscriber> parentSubscribers = subscriberRepository.findByElementId(parent.getId());
+			
+			for (Subscriber parentSubscriber : parentSubscribers) {
+				int ixOfSubscriber = indexOfSubscriber(allSubscribers, parentSubscriber);
+				if (ixOfSubscriber == -1) {
+					/* if this user is not already in the list of subscriptions, then
+					 * add it (this means that the applicable subscription is that at
+					 * the lowest level) */
+					allSubscribers.add(parentSubscriber);
+				}
+			}
+		}
+		
+		return allSubscribers;
+	}
+	
+	@Transactional
+	private List<Subscriber> getSectionSubscribers (UUID sectionId) {
+		
+		/* example https://docs.google.com/drawings/d/1PqPhefzrGVlWVfG-SRGS56l_e2qpNEsajLbnsAWcTfA/edit,
+		 * assume initiativeId = C */
+		/* start with this initiative subscribers (S3 and S6 in example). Take into account that 
+		 * a subscriber state may be SUBSCRIPTION_DISABLED */
+		List<Subscriber> allSubscribers = subscriberRepository.findByElementId(sectionId);
+		
+		/* then add the subscribers of all parent initiatives (B and A, in that order) */
+		List<Initiative> parents = initiativeService.getParentGenealogyInitiatives(sectionId);
 		
 		for (Initiative parent : parents) {
 			List<Subscriber> parentSubscribers = subscriberRepository.findByElementId(parent.getId());

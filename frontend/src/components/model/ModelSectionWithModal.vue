@@ -221,7 +221,7 @@ export default {
       forceUpdate: false,
       onlyMessages: false,
       sortByLikes: false,
-      subscribe: true
+      subscribe: this.isSubscribed
     }
   },
 
@@ -264,7 +264,7 @@ export default {
     toggleSubscribe () {
       this.subscribe = !this.subscribe
       this.subscriber.state = this.subscribe ? 'SUBSCRIBED' : 'UNSUBSCRIBED'
-      this.axios.put('/1/user/notifications/subscriber/' + this.initiative.id, this.subscriber).then((response) => {
+      this.axios.put('/1/user/notifications/subscriber/' + this.section.id, this.subscriber).then((response) => {
         this.updateSubscriber()
       })
     }
