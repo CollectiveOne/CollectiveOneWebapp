@@ -15,7 +15,7 @@
 
           <br>
           <label class=""><b>Name <span class="w3-small error-text">(required)</span></b></label>
-          <input v-model="name"
+          <input id="T_nameInput" v-model="name"
             class="w3-input w3-hover-light-grey" type="text"
             :class="{ 'error-input' : nameErrorShow }">
           <app-error-panel
@@ -29,7 +29,7 @@
 
           <br>
           <label class=""><b>Purpose <span class="w3-small error-text">(required)</span></b></label>
-          <textarea v-model="driver"
+          <textarea  id="T_purposeInput" v-model="driver"
             class="w3-input w3-border w3-round w3-hover-light-grey"
             :class="{ 'error-input' : driverErrorShow }">
           </textarea>
@@ -67,11 +67,11 @@
                   <div class="w3-row-padding">
                      <div class="w3-col m4">
                        <label class=""><b>Number of Tokens</b></label>
-                       <input v-model.number="ownTokens.ownedByThisHolder" class="w3-input w3-border w3-hover-light-grey" type="number">
+                       <input  id="T_numberTokensInput" v-model.number="ownTokens.ownedByThisHolder" class="w3-input w3-border w3-hover-light-grey" type="number">
                      </div>
                      <div class="w3-col m4"  :style="{'margin-bottom': '15px'}">
                        <label class=""><b>Token Name</b></label>
-                       <input v-model="ownTokens.assetName" class="w3-input w3-border w3-hover-light-grey" type="text">
+                       <input id="T_tokenNameInput"  v-model="ownTokens.assetName" class="w3-input w3-border w3-hover-light-grey" type="text">
                      </div>
                    </div>
                    <app-error-panel
@@ -107,10 +107,10 @@
 
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
+              <button id="T_cancelButton" type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button id="T_acceptButton"  type="button" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
         </div>

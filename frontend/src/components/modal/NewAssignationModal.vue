@@ -15,12 +15,16 @@
         <div class="this-container w3-container">
 
           <div class="section-tabs w3-row">
-            <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
+            <div
+              id="T_directTransferUser"
+              class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'border-blue': isDirect}"
               @click="assignation.type = DIRECT_ID()">
               <h5 class="" :class="{'bold-text': isDirect}">Direct</h5>
             </div>
-            <div class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
+            <div 
+              id="T_peerReviewedTransferUser" 
+              class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'border-blue': isPeerReviewed}"
               @click="assignation.type = PEER_REVIEWED_ID()">
               <h5 class="" :class="{'bold-text': isPeerReviewed}">Peer Reviewed</h5>
@@ -70,7 +74,7 @@
 
           <div class="w3-row">
             <label class=""><b>Motive <span class="w3-small error-text">(required)</span></b></label>
-            <input v-model="assignation.motive" class="w3-input w3-hover-light-grey" :class="{ 'error-input' : motiveErrorShow }" type="text">
+            <input id="T_motiveModal" v-model="assignation.motive" class="w3-input w3-hover-light-grey" :class="{ 'error-input' : motiveErrorShow }" type="text">
             <app-error-panel
               :show="motiveEmptyShow"
               message="please provide a motive for this transfer for future reference">
@@ -82,7 +86,7 @@
             <br>
 
             <label class=""><b>Notes</b></label>
-            <textarea v-model="assignation.notes" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
+            <textarea id="T_notesModal" v-model="assignation.notes" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
             <br>
           </div>
 
@@ -120,11 +124,11 @@
                     </div>
                     <div class="w3-col m6">
                       <div class="w3-row">
-                        <input v-model="assignation.config.selfBiasVisible" class="w3-check" type="checkbox">
+                        <input id="T_selfBiasTransferPeer" v-model="assignation.config.selfBiasVisible" class="w3-check" type="checkbox">
                         <label>Self-bias visible</label>
                       </div>
                       <div class="w3-row">
-                        <input v-model="assignation.config.evaluationsVisible" class="w3-check" type="checkbox">
+                        <input id="T_evauationsTransferPeer" v-model="assignation.config.evaluationsVisible" class="w3-check" type="checkbox">
                         <label>All evaluations visible</label>
                       </div>
                     </div>
@@ -150,15 +154,13 @@
 
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
+              <button id="T_cancelButton_ModalTransfer"  type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button id="T_acceptButton_ModalTransfer" type="button" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
-
         </div>
-
       </div>
     </div>
   </div>

@@ -30,12 +30,16 @@
           </div>
           <div class="w3-row-padding">
             <div class="w3-col s6">
-              <input @blur="valueUpdated($event)" :value="value.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round" type="number" min="0" :step="assetData.totalUnderThisHolder / 100">
+
+              <input id="T_amountCreate_NewTokens" @blur="valueUpdated($event)" :value="value.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round" type="number" min="0" :step="assetData.totalUnderThisHolder / 100">
+
             </div>
             <div class="w3-col s6">
               <div class="w3-row">
                 <div class="w3-col s10">
-                  <input @blur="percentageUpdated($event)" :value="percentage.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round" type="number" min="0" step="1">
+
+                  <input id="T_percentageCreate_NewTokens" @blur="percentageUpdated($event)" :value="percentage.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round" type="number" min="0" step="1">
+
                 </div>
                 <div class="w3-col s2 ">
                   <i class="fa fa-percent" aria-hidden="true"></i>
@@ -51,7 +55,7 @@
           <br>
           <div class="w3-row">
             <label class=""><b>Motive <span class="w3-small error-text">(required)</span></b></label>
-            <input v-model="motive" class="w3-input w3-hover-light-grey" :class="{ 'error-input' : motiveErrorShow }" type="text">
+            <input id="T_motive_NewTokens" v-model="motive" class="w3-input w3-hover-light-grey" :class="{ 'error-input' : motiveErrorShow }" type="text">
             <app-error-panel
               :show="motiveEmptyShow"
               message="please provide a motive for minting these tokens for future reference">
@@ -64,17 +68,17 @@
             <br>
 
             <label class=""><b>Notes</b></label>
-            <textarea v-model="notes" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
+            <textarea id="T_notes_NewTokens" v-model="notes" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
             <br>
           </div>
 
           <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
+              <button id="T_cancelButton_NewTokens"  type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button id="T_acceptButton_NewTokens"  type="button" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
 
