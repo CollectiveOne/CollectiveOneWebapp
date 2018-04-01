@@ -22,6 +22,7 @@ import ModelCardWrapperPlacer from '@/components/model/ModelCardWrapperPlacer.vu
 import ModelSearchContainer from '@/components/model/ModelSearchContainer.vue'
 
 import UserProfilePage from '@/components/UserProfilePage.vue'
+import WSWebSocketDebugPage from '@/components/WebSocketDebugPage.vue'
 
 Vue.use(Router)
 
@@ -99,6 +100,11 @@ export default new Router({
           path: 'user/:userId',
           name: 'UserProfilePage',
           component: UserProfilePage
+        },
+        {
+          path: 'websocket',
+          name: 'WebSocketDebugPage',
+          component: WSWebSocketDebugPage
         }
       ]
     }

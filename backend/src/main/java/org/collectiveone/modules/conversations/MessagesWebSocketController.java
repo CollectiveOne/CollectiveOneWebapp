@@ -28,7 +28,7 @@ public class MessagesWebSocketController {
     @MessageMapping("/messages/send")
     @SendTo("/topic/conversation")
     public String onReceivedMesage(String message){
-        return new SimpleDateFormat("HH:mm:ss").format(new Date())+"- "+message;
+        return "Server reply on "+new SimpleDateFormat("HH:mm:ss").format(new Date())+" for :: "+message;
     }
     
     @Scheduled(fixedRate = 5000)
