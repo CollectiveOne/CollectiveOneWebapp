@@ -41,7 +41,7 @@ export default (to, from, next) => {
         break
 
       default:
-      next()
+        next()
         break
     }
   }

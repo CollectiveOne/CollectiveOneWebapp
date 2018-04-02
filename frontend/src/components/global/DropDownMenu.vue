@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="menu-container">
+  <div class="menu-container w3-card w3-white">
     <div v-for="(item, ix) in items" :key="ix"
       class="w3-row menu-row" @click="$emit(item.value)">
       <div class="icon-cont">

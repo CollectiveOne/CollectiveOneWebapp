@@ -47,7 +47,10 @@ export default {
   },
 
   watch: {
-    '$route' () {
+    '$route.params.sectionId' () {
+      this.update()
+    },
+    levels () {
       this.update()
     }
   },

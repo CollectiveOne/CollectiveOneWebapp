@@ -25,26 +25,34 @@
       <div @click="sectionSelected()" class="title-div cursor-pointer noselect">
         {{ section.title }}
       </div>
-      <div @click="showSubmenu = !showSubmenu" class="control-div cursor-pointer">
+      <div @click="showSubmenu = !showSubmenu" class="control-div cursor-pointer"
+        v-click-outside="clickOutsideMenu">
         <i class="fa fa-bars" aria-hidden="true"></i>
       </div>
-      <div v-if="showSubmenu" class="control-btns w3-card w3-white">
+      <div v-if="showSubmenu" class="control-btns-container">
         <app-drop-down-menu :items="menuItems"
+          class="control-btns"
           @addSubsection="addSubsection()"
           @edit="edit()"
           @remove="remove()">
         </app-drop-down-menu>
       </div>
     </div>
-
-    <div v-if="showSubsections" class="w3-row subsections-container">
-      <app-model-section-nav-item v-for="subsection in subsections"
-        :section="subsection" :key="subsection.id"
-        :highlightLevel="highlightLevelUse - 1"
-        class="subsection-row">
-      </app-model-section-nav-item>
+    <div :class="{'slider-container': animating}">
+      <transition name="slideDownUp"
+        @before-enter="animating = true"
+        @after-enter="animating = false"
+        @before-leave="animating = true"
+        @after-leave="animating = false">
+        <div v-if="showSubsections" class="w3-row subsections-container">
+          <app-model-section-nav-item v-for="subsection in subsections"
+            :section="subsection" :key="subsection.id"
+            :highlightLevel="highlightLevelUse - 1"
+            class="subsection-row">
+          </app-model-section-nav-item>
+        </div>
+      </transition>
     </div>
-
   </div>
 
 </template>
@@ -74,7 +82,8 @@ export default {
       showSubsections: false,
       showSubmenu: false,
       showNewSubsectionModal: false,
-      subsections: []
+      subsections: [],
+      animating: false
     }
   },
 
@@ -83,6 +92,9 @@ export default {
       if (this.showSubsections) {
         this.updateSubsections()
       }
+    },
+    '$route' () {
+      this.checkExpandSubsections()
     }
   },
 
@@ -130,7 +142,18 @@ export default {
           this.subsections = response.data.data.subsections
         }
       })
+    },
+    checkExpandSubsections () {
+      if (this.highlightLevelUse > 1) {
+        this.showSubsections = true
+      } else {
+        // this.showSubsections = false
+      }
     }
+  },
+
+  mounted () {
+    this.checkExpandSubsections()
   }
 }
 </script>
@@ -138,7 +161,8 @@ export default {
 <style scoped>
 
 .section-selected {
-  background-color: rgb(93, 93, 93);
+  background-color: #5d5d5d;
+  transition: background-color 300ms ease;
   color: white;
 }
 
@@ -163,11 +187,16 @@ export default {
   background-color: #CCCCCC;
 }
 
+.control-btns-container {
+  position: relative;
+  float: left;
+}
+
 .control-btns {
-  margin-top: 25px;
-  margin-left: 135px;
-  position: absolute;
   width: 180px;
+  margin-top: 25px;
+  margin-left: -180px;
+  position: absolute;
   text-align: left;
 }
 

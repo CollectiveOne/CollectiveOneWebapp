@@ -1,18 +1,30 @@
 <template lang="html">
   <div v-if="cardWrapper" class="">
 
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-card-modal
+          v-if="showModal"
+          :isNew="false"
+          :cardWrapperId="cardWrapper.id"
+          :inSectionId="inSectionId"
+          :inSectionTitle="inSectionTitle"
+          @close="showModal = false">
+        </app-model-card-modal>
+      </transition>
+    </div>
+
     <div class="w3-display-container"
       :class="{ 'w3-card-4 w3-topbar border-blue w3-round-large': cardEffect }"
       @mouseover="hovering = true"
       @mouseleave="hovering = false">
 
       <div class="w3-row card-container cursor-pointer w3-display-container"
-        ref="cardContent"
-        @click="cardClicked()">
+        ref="cardContent">
 
-        <div class="w3-col s12">
+        <div class="w3-col s12" @click="cardClicked()">
           <div v-if="hasImage"
-            class="w3-row image-container w3-center w3-display-container">
+            class="w3-row w3-center w3-display-container" :class="{'image-container': cardEffect, 'image-container-doc': !cardEffect}">
             <img class="" :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
           </div>
 
@@ -27,15 +39,15 @@
               <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
             </div>
           </div>
-
-          <div v-if="textTooLong() && cardEffect" class="">
-            <div @click="showMoreClick()"
-              class="w3-padding model-action-button gray-2-color w3-display-bottomright cursor-pointer">
-              <i class="fa fa-arrows-v" aria-hidden="true"></i>
-            </div>
-          </div>
-
         </div>
+
+        <div v-if="textTooLong() && cardEffect" class="">
+          <div @click="showMoreClick()"
+            class="w3-padding model-action-button gray-2-color w3-display-bottomright cursor-pointer">
+            <i class="fa fa-arrows-v" aria-hidden="true"></i>
+          </div>
+        </div>
+
       </div>
 
       <div v-if="cardEffect" class="w3-row bottom-row light-grey">
@@ -53,7 +65,7 @@
           </div>
 
           <div class="w3-right cursor-pointer indicator-comp"
-            @click="$emit('expand-modal', true)">
+            @click="cardClicked()">
             <app-indicator
               contextType="MODEL_CARD"
               :contextElementId="cardWrapper.id"
@@ -81,7 +93,7 @@
       <transition name="fadeenter">
         <div v-if="hovering && enableExpand"
           class="w3-padding model-action-button gray-2-color w3-display-topright cursor-pointer"
-          @click="$emit('expand-modal')">
+          @click="cardClicked()">
           <i class="fa fa-expand" aria-hidden="true"></i>
         </div>
       </transition>
@@ -133,7 +145,8 @@ export default {
   data () {
     return {
       hovering: false,
-      showFull: false
+      showFull: false,
+      showModal: false
     }
   },
 
@@ -179,7 +192,7 @@ export default {
       this.showFull = !this.showFull
     },
     cardClicked () {
-      this.$router.push({name: 'ModelSectionCard', params: {sectionId: this.inSectionId, cardWrapperId: this.cardWrapper.id}})
+      this.$router.push({name: 'ModelSectionCard', params: { cardId: this.cardWrapper.id }, query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
     },
     showThisTag (inSection) {
       /* hide current section tag */
@@ -259,6 +272,15 @@ export default {
 .image-container img {
   max-height: 100%;
   max-width: 100%;
+}
+
+.image-container-doc {
+  height: 350px;
+  margin-bottom: 16px;
+}
+
+.image-container-doc img {
+  height: 100%;
 }
 
 .card-text {

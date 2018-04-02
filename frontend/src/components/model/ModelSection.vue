@@ -6,17 +6,16 @@
       <transition name="slideDownUp">
         <app-model-card-modal v-if="showCardModal"
           :isNew="false"
-          :initiativeId="initiativeId"
-          :cardWrapperId="showCardId"
+          :cardWrapperId="$route.params.cardId"
           :inSectionId="section.id"
           :inSectionTitle="section.Title"
-          @close="showCardModal = false">
+          @close="closeCardModal()">
         </app-model-card-modal>
       </transition>
     </div>
 
     <div v-if="nestedIn.length > 0 && sortedCards.length > 0"
-      class="w3-row title-row">
+      class="w3-row blue-color title-row">
       <div v-for="parent in nestedIn.slice(1, nestedIn.length)"
         class="w3-left">
         {{ parent.title }} <i class="fa fa-chevron-right" aria-hidden="true"></i>
@@ -119,6 +118,12 @@ export default {
     }
   },
 
+  watch: {
+    '$route' () {
+      this.checkCardSubroute()
+    }
+  },
+
   computed: {
     sortedCards () {
       if (!this.sortByLikes) {
@@ -208,17 +213,6 @@ export default {
         this.$store.commit('triggerUpdateModel')
       })
     },
-    checkCardSubroute () {
-      for (var ix in this.$route.matched) {
-        if (this.$route.matched[ix].name === 'ModelCardInSection') {
-          /* only open the model when rendering the section in the url */
-          if (this.$route.params.sectionId === this.section.id) {
-            this.showCardId = this.$route.params.cardId
-            this.showCardModal = true
-          }
-        }
-      }
-    },
     newCardFromBar () {
       this.showCards = true
       this.$emit('new-card')
@@ -226,7 +220,22 @@ export default {
     newSubsectionFromBar () {
       this.showSubsections = true
       this.$emit('new-subsection')
+    },
+    checkCardSubroute () {
+      this.showCardModal = false
+      if (this.$route.name === 'ModelSectionCard') {
+        if (this.$route.params.sectionId === this.section.id) {
+          this.showCardModal = true
+        }
+      }
+    },
+    closeCardModal () {
+      this.$router.replace({name: 'ModelSectionCards', query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
     }
+  },
+
+  created () {
+    this.checkCardSubroute()
   }
 }
 </script>
@@ -331,7 +340,7 @@ export default {
 
 .title-row {
   margin-top: 12px;
-  margin-bottom: 6px;
+  margin-bottom: 12px;
 }
 
 .title-row .fa {

@@ -5,7 +5,7 @@
         v-click-outside="clickOutside">
 
         <div class="w3-display-topright">
-          <div class="w3-right w3-button w3-xlarge" @click="closeThisConfirm()">
+          <div class="w3-right w3-button close-btn w3-xlarge" @click="closeThisConfirm()">
             <i class="fa fa-times" aria-hidden="true"></i>
           </div>
           <div class="w3-right">
@@ -18,17 +18,6 @@
               @remove="removeCard()"
               :removeMessage="'This will remove this card from the ' + inSectionTitle + ' section.'">
             </app-model-modal-buttons>
-          </div>
-          <div v-if="!editing" class="w3-right w3-button w3-xlarge" @click="copyUrl()">
-            <i class="fa fa-share-alt" aria-hidden="true"></i>
-          </div>
-          <div class="slider-container url-show">
-            <transition name="slideDownUp">
-              <div v-if="showUrl" class="">
-                <input id="copy-url" class="w3-input w3-border" type="text" name="" :value="cardUrl">
-                <div class="w3-center"><small><i>please copy/paste the link above</i></small></div>
-              </div>
-            </transition>
           </div>
         </div>
 
@@ -433,11 +422,6 @@ export default {
     },
     noCardSelectedShow () {
       return this.noCardSelectedError && this.noCardSelected
-    },
-    cardUrl () {
-      return window.location.host + '/#/app/inits/' + this.initiativeId +
-      '/model/section/' + this.inSectionId +
-      '/card/' + this.cardWrapper.id
     }
   },
 
@@ -720,6 +704,10 @@ export default {
 </script>
 
 <style scoped>
+
+.close-btn {
+  border-top-right-radius: 20px;
+}
 
 .url-show {
   position: absolute;

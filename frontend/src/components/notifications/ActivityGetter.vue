@@ -89,7 +89,7 @@ export default {
       activities: [],
       currentPage: 0,
       allShown: false,
-      intervalId: null,
+      intervalIds: [],
       loading: false,
       loadingMore: false
     }
@@ -97,12 +97,15 @@ export default {
 
   watch: {
     triggerUpdate () {
+      console.log('resetting due to trigger')
       this.resetElements()
     },
     levels () {
+      console.log('resetting due to level change')
       this.getActivity('RESET')
     },
     url () {
+      console.log('resetting due to url change')
       this.getActivity('RESET')
     }
   },
@@ -162,11 +165,13 @@ export default {
             this.$emit('updated')
 
             /* start polling after the first response */
+            console.log('resetting  message thread')
             if (this.polling) {
-              if (this.intervalId === null) {
-                this.intervalId = setInterval(() => {
+              if (this.intervalIds.length === 0) {
+                this.intervalIds.push(setInterval(() => {
                   this.getActivity('UPDATE')
-                }, 5000)
+                }, 5000))
+                console.log('creating interval ' + this.intervalIds + ' for thread ' + this.url)
               }
             }
             break
@@ -198,12 +203,15 @@ export default {
     }
   },
 
-  created () {
+  mounted () {
+    console.log('created getter for url ' + this.url)
     this.getActivity('RESET')
   },
 
   beforeDestroy () {
-    clearInterval(this.intervalId)
+    this.intervalIds.forEach((id) => {
+      clearInterval(id)
+    })
   }
 
 }

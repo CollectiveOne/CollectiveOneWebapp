@@ -120,7 +120,7 @@ export default {
       return this.$route.name === 'ModelSectionMessages'
     },
     isCards () {
-      return this.$route.name === 'ModelSectionCards'
+      return this.$route.name === 'ModelSectionCards' || this.$route.name === 'ModelSectionCard'
     },
     isDoc () {
       return this.$route.name === 'ModelSectionDoc'

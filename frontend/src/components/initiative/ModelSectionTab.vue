@@ -1,6 +1,5 @@
 <template lang="html">
   <div class="w3-cell-row">
-
     <div class="vision-nav light-grey w3-cell">
       <app-model-nav></app-model-nav>
     </div>
