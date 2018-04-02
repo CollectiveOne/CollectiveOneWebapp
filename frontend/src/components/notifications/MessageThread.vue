@@ -235,11 +235,8 @@ export default {
     }
   },
 
-  created () {
-    this.showOnlyMessages = this.onlyMessagesInit
-  },
-
   mounted () {
+    this.showOnlyMessages = this.onlyMessagesInit
     this.scrollToBottom()
     window.addEventListener('keydown', this.atKeydown)
   },

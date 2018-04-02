@@ -44,6 +44,7 @@
         @after-enter="animating = false"
         @before-leave="animating = true"
         @after-leave="animating = false">
+
         <div v-if="showSubsections" class="w3-row subsections-container">
           <app-model-section-nav-item v-for="subsection in subsections"
             :section="subsection" :key="subsection.id"

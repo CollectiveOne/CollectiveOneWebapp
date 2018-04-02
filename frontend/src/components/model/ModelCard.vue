@@ -112,7 +112,7 @@ export default {
   mixins: [smoothHeight],
 
   props: {
-    cardWrapper: {
+    cardWrapperInit: {
       type: Object,
       default: null
     },
@@ -144,6 +144,7 @@ export default {
 
   data () {
     return {
+      cardWrapper: null,
       hovering: false,
       showFull: false,
       showModal: false
@@ -175,6 +176,11 @@ export default {
   },
 
   methods: {
+    update () {
+      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+        this.cardWrapper = response.data.data
+      })
+    },
     dateString (v) {
       return dateString(v)
     },
@@ -219,9 +225,13 @@ export default {
             likeStatus: !this.cardWrapper.userLiked
           }
         }).then((response) => {
-          this.$emit('please-update')
+          this.update()
         })
     }
+  },
+
+  created () {
+    this.cardWrapper = this.cardWrapperInit
   },
 
   mounted () {

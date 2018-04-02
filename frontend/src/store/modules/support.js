@@ -9,6 +9,7 @@ const state = {
   userEmailNotVerified: false,
   initiativeLoaded: false,
   expandNav: false,
+  expandModelNav: false,
   windowIsSmall: false
 }
 
@@ -124,6 +125,9 @@ const mutations = {
   },
   toggleExpandNav: (state) => {
     state.expandNav = !state.expandNav
+  },
+  toggleExpandModelNav: (state) => {
+    state.expandModelNav = !state.expandModelNav
   },
   setWindowIsSmall: (state, payload) => {
     state.windowIsSmall = payload

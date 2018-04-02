@@ -13,7 +13,6 @@ import Unsubscribe from '@/components/user/Unsubscribe.vue'
 import OverviewSection from '@/components/initiative/OverviewSection.vue'
 import PeopleSection from '@/components/initiative/PeopleSection.vue'
 import TransfersSection from '@/components/initiative/TransfersSection.vue'
-import TimelineSection from '@/components/initiative/TimelineSection.vue'
 
 import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
 import ModelSectionContent from '@/components/model/ModelSectionContent.vue'
@@ -67,7 +66,6 @@ export default new Router({
               component: InitiativesContent,
               children: [
                 { path: 'overview', name: 'InitiativeOverview', component: OverviewSection, meta: {'column': 1} },
-                { path: 'timeline', name: 'InitiativeTimeline', component: TimelineSection, meta: {'column': 2} },
                 {
                   path: 'model',
                   component: ModelSectionTab,
