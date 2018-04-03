@@ -47,7 +47,7 @@ export default {
   },
 
   props: {
-    initiativeId: {
+    sectionId: {
       type: String,
       default: ''
     }
@@ -75,8 +75,9 @@ export default {
       this.$emit('select', null)
     },
     update () {
-      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/search', {
+      this.axios.get('/1/model/section/search', {
         params: {
+          sectionId: this.sectionId,
           query: this.query,
           page: this.page,
           size: 10

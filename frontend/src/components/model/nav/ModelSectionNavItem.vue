@@ -45,7 +45,7 @@
         @before-leave="animating = true"
         @after-leave="animating = false">
 
-        <div v-if="showSubsections" class="w3-row subsections-container">
+        <div v-if="showSubsections && subsections.length > 0" class="w3-row subsections-container">
           <app-model-section-nav-item v-for="subsection in subsections"
             :section="subsection" :key="subsection.id"
             :highlightLevel="highlightLevelUse - 1"
@@ -162,7 +162,7 @@ export default {
 <style scoped>
 
 .section-selected {
-  background-color: #5d5d5d;
+  background-color: #797474;
   transition: background-color 300ms ease;
   color: white;
 }

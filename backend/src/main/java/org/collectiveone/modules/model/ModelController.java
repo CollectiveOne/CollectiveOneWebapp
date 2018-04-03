@@ -370,14 +370,15 @@ public class ModelController extends BaseController {
 		return modelService.searchCardWrapper(query, new PageRequest(page, size), initiativeId);
 	}
 	
-	@RequestMapping(path = "/initiative/{initiativeId}/model/section/search", method = RequestMethod.GET) 
+	@RequestMapping(path = "/model/section/search", method = RequestMethod.GET) 
 	public GetResult<Page<ModelSectionDto>> searchSection(
-			@PathVariable("initiativeId") String initiativeIdStr,
+			@RequestParam("sectionId") String sectionIdStr,
 			@RequestParam("query") String query,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size) {
 		
-		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		UUID sectionId = UUID.fromString(sectionIdStr);
+		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
 		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
 			return new GetResult<Page<ModelSectionDto>>("error", "access denied", null);

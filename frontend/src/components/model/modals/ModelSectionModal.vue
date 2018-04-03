@@ -51,7 +51,7 @@
             <transition name="slideLeftRight">
               <div v-if="addExisting" class="">
                 <app-model-section-selector
-                  :initiativeId="initiativeId"
+                  :sectionId="inElementId"
                   @select="sectionSelected($event)">
                 </app-model-section-selector>
                 <app-error-panel
