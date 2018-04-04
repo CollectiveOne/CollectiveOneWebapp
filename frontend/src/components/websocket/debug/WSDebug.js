@@ -28,7 +28,7 @@ export default {
           //console.log(frame);
           ///topic/activity/model/card/{cardWrapperId}/page/{page}/size/{size}/{onlyMessages}
           ///topic/activity/model/card/c0a80f4b-628a-1d31-8162-8ad0f0d5000f
-          this.stompClient.subscribe("/topic/conversation/a", tick => {
+          this.stompClient.subscribe("/topic/messages/c0a80068-6281-190d-8162-81a8c6250010", tick => {
             
             //var res = JSON.parse(tick.body);
             console.log(tick.body);

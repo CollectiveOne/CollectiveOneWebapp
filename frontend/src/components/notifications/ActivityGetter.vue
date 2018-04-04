@@ -41,6 +41,8 @@
 
 <script>
 import ActivityTable from '@/components/notifications/ActivityTable.vue'
+import SockJS from 'sockjs-client'
+import Stomp from 'webstomp-client'
 
 export default {
   components: {
@@ -87,7 +89,8 @@ export default {
       allShown: false,
       intervalId: null,
       loading: false,
-      loadingMore: false
+      loadingMore: false,
+      connected: false
     }
   },
 
@@ -151,13 +154,13 @@ export default {
             this.$emit('updated')
 
             /* start polling after the first response */
-            if (this.polling) {
-              if (this.intervalId === null) {
-                this.intervalId = setInterval(() => {
-                  this.getActivity('UPDATE')
-                }, 5000)
-              }
-            }
+            // if (this.polling) {
+            //   if (this.intervalId === null) {
+            //     this.intervalId = setInterval(() => {
+            //       this.getActivity('UPDATE')
+            //     }, 5000)
+            //   }
+            // }
             break
 
           case 'OLDER':
@@ -165,30 +168,72 @@ export default {
             break
 
           case 'UPDATE':
-            var newIx = 0
-
-            if (this.activities.length > 0) {
-              var latestId = this.activities[0].id
-              if (response.data.data.content.length > 0) {
-                if (response.data.data.content[newIx].id) {
-                  while (response.data.data.content[newIx].id !== latestId) {
-                    this.activities.splice(newIx, 0, response.data.data.content[newIx])
-                    newIx++
-                  }
-                  if (newIx > 0) {
-                    this.$emit('updated')
-                  }
-                }
-              }
-            }
+            this.remapActivities(response)
             break
         }
       })
+    },
+    remapActivities (response) {
+      var newIx = 0
+
+      if (this.activities.length > 0) {
+        var latestId = this.activities[0].id
+        if (response.data.data.content.length > 0) {
+          if (response.data.data.content[newIx].id) {
+            while (response.data.data.content[newIx].id !== latestId) {
+              this.activities.splice(newIx, 0, response.data.data.content[newIx])
+              newIx++
+            }
+            if (newIx > 0) {
+              this.$emit('updated')
+            }
+          }
+        }
+      }
+    },
+    connect () {
+      this.socket = new SockJS(process.env.WEBSOCKET_SERVER_URL)
+      this.stompClient = Stomp.over(this.socket)
+      this.stompClient.connect(
+        {},
+        frame => {
+          this.connected = true
+          this.stompClient.subscribe('/topic/messages/' + this.contextElementId, tick => {
+            var response = {data: JSON.parse(tick.body)}
+            // console.log(response)
+            if (response.data.data.content.length > 0) {
+              this.$emit('last-activity', response.data.data.content[0])
+            }
+            if (response.data.data.content.length < 10) {
+              this.allShown = true
+            }
+            if (response.data.data.content.length === 10) {
+              this.allShown = false
+            }
+
+            this.remapActivities(response)
+          })
+        },
+        error => {
+          console.log(error)
+          this.connected = false
+        }
+      )
+    },
+    disconnect () {
+      if (this.stompClient) {
+        this.stompClient.disconnect()
+      }
+      this.connected = false
+    },
+    tickleConnection () {
+      this.connected ? this.disconnect() : this.connect()
     }
   },
 
   created () {
     this.getActivity('RESET')
+    this.connect()
   },
 
   beforeDestroy () {
