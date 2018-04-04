@@ -38,6 +38,7 @@ export default {
 }
 
 .menu-row {
+  text-align: left;
   padding: 4px 0px;
 }
 

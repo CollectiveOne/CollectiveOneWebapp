@@ -163,6 +163,11 @@ public class ModelService {
 			if (!readIds.contains(inSection.getId())) {
 				readIds.add(inSection.getId());
 				genealogy.getParents().add(getSectionParentGenealogyRec(inSection.getId()));	
+			} else {
+				/* if section already added, add it but don't keep looking recursively */
+				ModelSectionGenealogyDto repeatedGenealogy = new ModelSectionGenealogyDto();
+				repeatedGenealogy.setSection(inSection.toDtoLight());
+				genealogy.getParents().add(repeatedGenealogy);
 			}
 		}
 		

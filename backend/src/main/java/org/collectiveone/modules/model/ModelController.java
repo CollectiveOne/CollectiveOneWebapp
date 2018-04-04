@@ -266,14 +266,14 @@ public class ModelController extends BaseController {
 	
 	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.DELETE) 
 	public PostResult deleteSection(
-			@PathVariable("initiativeId") String initiativeIdStr,
 			@PathVariable("sectionId") String sectionIdStr) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
 		}
 		
-		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		UUID sectionId = UUID.fromString(sectionIdStr);
+		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
 		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");

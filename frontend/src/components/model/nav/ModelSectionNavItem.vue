@@ -1,17 +1,5 @@
 <template lang="html">
   <div class="w3-row">
-    <div class="slider-container">
-      <transition name="slideDownUp">
-        <app-model-section-modal
-          v-if="showNewSubsectionModal"
-          :isNew="true"
-          :inElementId="section.id"
-          :inElementTitle="section.title"
-          @close="showNewSubsectionModal = false">
-        </app-model-section-modal>
-      </transition>
-    </div>
-
     <div class="w3-row" :class="{'section-selected': highlightLevelUse > 0}">
       <div @click="showSubsections = !showSubsections" class="circle-div cursor-pointer">
         <div v-if="hasSubsections">
@@ -25,17 +13,9 @@
       <div @click="sectionSelected()" class="title-div cursor-pointer noselect">
         {{ section.title }}
       </div>
-      <div @click="showSubmenu = !showSubmenu" class="control-div cursor-pointer"
-        v-click-outside="clickOutsideMenu">
-        <i class="fa fa-bars" aria-hidden="true"></i>
-      </div>
-      <div v-if="showSubmenu" class="control-btns-container">
-        <app-drop-down-menu :items="menuItems"
-          class="control-btns"
-          @addSubsection="addSubsection()"
-          @edit="edit()"
-          @remove="remove()">
-        </app-drop-down-menu>
+      <div class="control-div">
+        <app-section-control-buttons :section="section" :inSection="inSection">
+        </app-section-control-buttons>
       </div>
     </div>
     <div :class="{'slider-container': animating}">
@@ -47,6 +27,7 @@
 
         <div v-if="showSubsections && subsections.length > 0" class="w3-row subsections-container">
           <app-model-section-nav-item v-for="subsection in subsections"
+            :inSection="section"
             :section="subsection" :key="subsection.id"
             :highlightLevel="highlightLevelUse - 1"
             class="subsection-row">
@@ -59,18 +40,24 @@
 </template>
 
 <script>
+import SectionControlButtons from '@/components/model/SectionControlButtons'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal'
 
 export default {
   name: 'app-model-section-nav-item',
 
   components: {
+    'app-section-control-buttons': SectionControlButtons,
     'app-model-section-modal': ModelSectionModal
   },
 
   props: {
     section: {
       type: Object
+    },
+    inSection: {
+      type: Object,
+      default: null
     },
     highlightLevel: {
       type: Number,
@@ -81,8 +68,6 @@ export default {
   data () {
     return {
       showSubsections: false,
-      showSubmenu: false,
-      showNewSubsectionModal: false,
       subsections: [],
       animating: false
     }
@@ -100,13 +85,6 @@ export default {
   },
 
   computed: {
-    menuItems () {
-      return [
-        { text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' },
-        { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
-        { text: 'remove', value: 'remove', faIcon: 'fa-times' }
-      ]
-    },
     hasSubsections () {
       return this.section.nSubsections > 0
     },
@@ -130,9 +108,6 @@ export default {
   methods: {
     sectionSelected () {
       this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}, query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
-    },
-    clickOutsideMenu () {
-      this.showSubmenu = false
     },
     addSubsection () {
       this.showNewSubsectionModal = true
@@ -179,26 +154,9 @@ export default {
 }
 
 .control-div {
+  text-align: center;
   width: 30px;
   float: left;
-  text-align: center;
-}
-
-.control-div:hover {
-  background-color: #CCCCCC;
-}
-
-.control-btns-container {
-  position: relative;
-  float: left;
-}
-
-.control-btns {
-  width: 180px;
-  margin-top: 25px;
-  margin-left: -180px;
-  position: absolute;
-  text-align: left;
 }
 
 .subsections-container {

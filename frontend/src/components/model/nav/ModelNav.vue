@@ -15,10 +15,6 @@
 
     <div class="model-nav-container w3-container">
       <div class="w3-row w3-margin-bottom">
-        <div class="w3-left" @click="$store.commit('toggleExpandModelNav')">
-          <i v-if="!expandModelNav" class="fa fa-chevron-circle-right"></i>
-          <i v-if="expandModelNav" class="fa fa-chevron-circle-left"></i>
-        </div>
         <div class="zoom-controls gray-1-color">
           <div class="cursor-pointer">
             <i @click="levelDown()" class="fa fa-minus-circle" aria-hidden="true"></i>

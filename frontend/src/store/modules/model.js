@@ -1,13 +1,20 @@
 import Vue from 'vue'
 
-const pathToTop = function (genealogy, parents) {
-  parents.push(genealogy.section)
-  if (genealogy.parents.length > 0) {
-    /* only one path to top */
-    parents = pathToTop(genealogy.parents[0], parents)
-  }
+const pathsToTop = function (genealogy, currentPath, allPaths) {
+  // https://softwareengineering.stackexchange.com/questions/307263/algorithm-to-get-all-paths-in-a-tree
+  currentPath.push(genealogy.section)
 
-  return parents
+  if (genealogy.parents.length === 0) {
+    // save this path to the allPaths array
+    allPaths.push(JSON.parse(JSON.stringify(currentPath)))
+    currentPath = []
+    return
+  } else {
+    for (var pIx in genealogy.parents) {
+      var newPath = JSON.parse(JSON.stringify(currentPath))
+      pathsToTop(genealogy.parents[pIx], newPath, allPaths)
+    }
+  }
 }
 
 const state = {
@@ -16,9 +23,19 @@ const state = {
 }
 
 const getters = {
-  currentSectionPath: (state) => {
+  currentSectionPaths: (state) => {
     if (state.currentSectionGenealogy !== null) {
-      return pathToTop(state.currentSectionGenealogy, [])
+      var allPaths = []
+      /* updates allPaths as reference */
+      pathsToTop(state.currentSectionGenealogy, [], allPaths)
+
+      /* remove currentSection and reverse all paths */
+      for (var pIx in allPaths) {
+        allPaths[pIx].shift()
+        allPaths[pIx].reverse()
+      }
+
+      return allPaths
     }
     return []
   }
