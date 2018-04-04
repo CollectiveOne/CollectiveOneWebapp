@@ -6,6 +6,7 @@ import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,8 @@ public class MessagesController extends BaseController {
 	@Autowired
 	private InitiativeService initiativeService;
 	
+	@Autowired
+	SimpMessagingTemplate template;
 	
 	/* creates a new message (context type + element id are used as the identifier of the location of the message) */
 	@RequestMapping(path = "/messages/{contextElementType}/{contextElementId}", method = RequestMethod.POST) 
@@ -44,6 +47,8 @@ public class MessagesController extends BaseController {
 		if (!initiativeService.isMemberOfEcosystem(initiativeId, getLoggedUserId())) {
 			return new PostResult("error", "not authorized", "");
 		}
+		
+		template.convertAndSend("/topic/conversation/a", "Current time is ");
 		
 		return messageService.postMessage(messageDto, getLoggedUserId(), contextType, elementId);
 	}

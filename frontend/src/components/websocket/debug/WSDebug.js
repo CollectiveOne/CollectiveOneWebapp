@@ -15,7 +15,7 @@ export default {
       console.log("Send message:" + this.send_message);
       if (this.stompClient && this.stompClient.connected) {
         const msg = this.send_message
-        this.stompClient.send("/app/messages/send", msg, {});
+        this.stompClient.send("/app/activity/model/card/c0a80f4b-628a-1d31-8162-8ad0f0d5000f", msg, {});
       }
     },
     connect() {
@@ -25,10 +25,14 @@ export default {
         {},
         frame => {
           this.connected = true;
-          console.log(frame);
-          this.stompClient.subscribe("/topic/conversation", tick => {
+          //console.log(frame);
+          ///topic/activity/model/card/{cardWrapperId}/page/{page}/size/{size}/{onlyMessages}
+          ///topic/activity/model/card/c0a80f4b-628a-1d31-8162-8ad0f0d5000f
+          this.stompClient.subscribe("/topic/conversation/a", tick => {
+            
+            //var res = JSON.parse(tick.body);
             console.log(tick.body);
-            this.received_messages.push(tick.body);
+            //this.received_messages.push(tick.body);
           });
         },
         error => {
