@@ -1,8 +1,12 @@
 ﻿---------------------------------------------------------
--- This script will only fill the contents of the initiatives and initiatives_meta
--- tables. All other tables and all other sequences are generated
--- using a DB dump which excludes the decisions table data.
--- /usr/bin/pg_dump --host ec2-23-21-246-11.compute-1.amazonaws.com --port 5432 --username "fiobqmzrthifdx" --no-password  --format plain --data- only --disable-triggers --verbose --file "/home/pepo/workspace/c1-data/c1-v2-bk-000" --exclude-table "public.initiatives" "d7lpi8u3gn8hak"
+-- Make a partial dump of the database with the command below and fill a clean DB with it using \i,  migration script
+-- /usr/bin/pg_dump --host ec2-54-83-11-247.compute-1.amazonaws.com --port 5432 --username "pmiyqtnfrstmst" --password --format plain --data-only --disable-triggers --exclude-table model_cards_wrapper --exclude-table model_views --exclude-table activity --exclude-table initiatives_model_views --exclude-table initiatives_model_views_trash --exclude-table model_views_sections --exclude-table model_views_sections_trash --exclude-table initiatives_other_tokens --exclude-table likes --verbose --file "/home/pepo/workspace/c1data/bk-062-base" "d20ec3jfi8l031"
+-- THEN run the branch code to create the top level sections, 
+-- THEN run this script to fill the sections
+-- THEN make a CUSTOM dump of the contents with this command
+-- /usr/bin/pg_dump --cluster 9.6/main --host localhost --port 5432 --username "postgres" --no-password  --format custom --blobs --no-privileges --no-tablespaces --verbose --file "/home/pepo/workspace/c1data/c1-migration-065-custom" "c1db"
+-- THEN delete all tables online and restor using this commmand
+-- /usr/bin/pg_restore --cluster 9.6/main --host ec2-54-75-239-237.eu-west-1.compute.amazonaws.com --port 5432 --username "sqiowmccjkebrr" --dbname "d4j1dmpkvm9qvu" --no-password --no-owner  --verbose "/home/pepo/workspace/c1data/c1-migration-065-custom"
 ---------------------------------------------------------
 
 DROP SCHEMA IF EXISTS masterschema CASCADE;
