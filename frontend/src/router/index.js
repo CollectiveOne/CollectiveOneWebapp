@@ -85,8 +85,7 @@ export default new Router({
                       children: [
                         { path: 'messages', name: 'ModelSectionMessages', component: ModelSectionMessages, meta: {'column': 3} },
                         { path: 'cards', name: 'ModelSectionCards', component: ModelSectionCards, meta: {'column': 3} },
-                        { path: 'cards/:cardId', name: 'ModelSectionCard', component: ModelSectionCards, meta: {'column': 3} },
-                        { path: 'doc', name: 'ModelSectionDoc', component: ModelSectionCards, meta: {'column': 3} }
+                        { path: 'cards/:cardId', name: 'ModelSectionCard', component: ModelSectionCards, meta: {'column': 3} }
                       ]
                     },
                     {

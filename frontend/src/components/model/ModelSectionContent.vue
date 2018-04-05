@@ -19,16 +19,9 @@
             <span class="w3-hide-large"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></span>
           </div>
         </router-link>
-        <router-link :to="{ name: 'ModelSectionDoc', query: {levels: this.$route.query.levels ? this.$route.query.levels : 1} }"
-          class="tab-btn-space">
-          <div class="tab-btn noselect" :class="{'bold-text': isDoc, 'button-blue': isDoc}">
-            <span class="w3-hide-small w3-hide-medium tab-btn-text">Doc</span>
-            <span class="w3-hide-large"><i class="fa fa-users" aria-hidden="true"></i></span>
-          </div>
-        </router-link>
       </div>
     </div>
-    <div class="w3-row w3-margin-top w3-container">
+    <div class="w3-row">
       <transition name="fadeenter">
         <router-view></router-view>
       </transition>
@@ -96,7 +89,7 @@ export default {
 .tab-btn-space {
   display: block;
   padding: 6px 10px 0px 10px;
-  width: 33%;
+  width: 50%;
 }
 
 .tab-btn {

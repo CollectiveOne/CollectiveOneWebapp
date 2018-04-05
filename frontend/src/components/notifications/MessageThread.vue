@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="thread-container w3-display-container">
-    <div id="history-container" class="w3-row history-container w3-border">
+    <div id="history-container" class="w3-row history-container">
       <app-activity-getter
         :url="url"
         :reverse="true"
