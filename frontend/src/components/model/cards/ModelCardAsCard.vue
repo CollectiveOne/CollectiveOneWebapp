@@ -122,9 +122,90 @@ export default {
     hasImage () {
       return this.card.imageFile !== null
     }
+  },
+
+  mounted () {
   }
 }
 </script>
 
 <style scoped>
+
+
+.card-container {
+}
+
+.card-container-padded {
+  padding: 8px 6px 12px 12px !important;
+}
+
+.card-container-slim {
+  padding: 0px 0px 0px 0px !important;
+}
+
+.top-row {
+  padding: 6px 3px 6px 3px;
+}
+
+.details-row {
+  margin-top: 3px;
+}
+
+.image-container {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  min-height: 80px;
+  max-height: 150px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-container img {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.image-container-doc {
+  height: 350px;
+  margin-bottom: 16px;
+}
+
+.image-container-doc img {
+  height: 100%;
+}
+
+.card-text {
+  overflow-y: hidden;
+}
+
+.card-text-ascard-no-image {
+  max-height: 250px;
+}
+
+.card-text p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.bottom-row {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  padding: 3px 6px;
+  min-height: 30px;
+}
+
+.insection-tag-container {
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.indicator-comp {
+  margin-right: 6px;
+  margin-left: 4px;
+}
+
 </style>
