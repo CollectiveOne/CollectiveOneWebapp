@@ -16,8 +16,8 @@ CREATE SCHEMA masterschema;
 -- Connect to other server
 ---------------------------------------------------------
 CREATE EXTENSION postgres_fdw;
-CREATE SERVER master FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'ec2-54-83-11-247.compute-1.amazonaws.com', dbname 'd20ec3jfi8l031', port '5432');
-CREATE USER MAPPING FOR postgres SERVER master OPTIONS (user 'pmiyqtnfrstmst', password '58433182ce1b5042f8fecd6e26a89c2a0b923fd4cd519ff6a048eea13b113560');
+CREATE SERVER master FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'localhost', dbname 'c1db-bk', port '5432');
+CREATE USER MAPPING FOR postgres SERVER master OPTIONS (user 'postgres', password 'iristra');
 IMPORT FOREIGN SCHEMA public FROM SERVER master INTO masterschema;
 
 
