@@ -35,8 +35,7 @@
         <div class="">
           <app-model-card
             :cardWrapperInit="cardWrapper"
-            :inSectionId="section.id"
-            :inSectionTitle="section.title"
+            :inSection="section"
             :cardEffect="cardsAsCards">
           </app-model-card>
         </div>

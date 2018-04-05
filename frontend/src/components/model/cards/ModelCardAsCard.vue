@@ -75,7 +75,7 @@
     </div>
 
     <transition name="fadeenter">
-      <div v-if="hovering && enableExpand"
+      <div v-if="hovering"
         class="w3-padding model-action-button gray-2-color w3-display-topright cursor-pointer"
         @click="cardClicked()">
         <i class="fa fa-expand" aria-hidden="true"></i>
@@ -94,6 +94,20 @@ export default {
     cardWrapper: {
       type: Object,
       default: null
+    },
+    forceUpdate: {
+      type: Boolean,
+      default: true
+    },
+    inSection: {
+      type: Object,
+      default: null
+    }
+  },
+
+  data () {
+    return {
+      hovering: false
     }
   },
 
@@ -112,15 +126,52 @@ export default {
       } else {
         return {}
       }
-    }
-  },
-
-  methods: {
+    },
     card () {
       return this.cardWrapper.card
     },
     hasImage () {
       return this.card.imageFile !== null
+    }
+  },
+
+  methods: {
+    showThisTag (inSection) {
+      return inSection.id !== this.inSection.id
+    },
+    textTooLong () {
+      if (!this.$refs.cardText) {
+        return false
+      }
+      if (this.$refs.cardText.scrollHeight > 250) {
+        return true
+      } else {
+        return this.$refs.cardText.clientHeight < this.$refs.cardText.scrollHeight
+      }
+    },
+    hoverEnter () {
+      this.showActionButton = true
+      this.highlight = true
+    },
+    hoverLeave () {
+      this.showActionButton = false
+      this.highlight = false
+    },
+    showMoreClick () {
+      this.showFull = !this.showFull
+    },
+    cardClicked () {
+      this.$router.push({name: 'ModelSectionCard', params: { cardId: this.cardWrapper.id }, query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
+    },
+    toggleLike () {
+      this.axios.put('/1/model/card/' + this.cardWrapper.id + '/like',
+        {}, {
+          params: {
+            likeStatus: !this.cardWrapper.userLiked
+          }
+        }).then((response) => {
+          this.update()
+        })
     }
   },
 

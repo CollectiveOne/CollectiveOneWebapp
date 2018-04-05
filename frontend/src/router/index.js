@@ -88,6 +88,12 @@ export default new Router({
                         { path: 'cards/:cardId', name: 'ModelSectionCard', component: ModelSectionCards, meta: {'column': 3} },
                         { path: 'doc', name: 'ModelSectionDoc', component: ModelSectionCards, meta: {'column': 3} }
                       ]
+                    },
+                    {
+                      path: '/card',
+                      name: 'ModelCardAlone',
+                      component: ModelSectionCards,
+                      meta: {'column': 3}
                     }
                   ]
                 },
