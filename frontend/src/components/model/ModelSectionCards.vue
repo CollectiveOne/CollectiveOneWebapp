@@ -4,8 +4,9 @@
       <app-model-section
         v-if="!loading"
         :section="section"
-        :cardsAsCards="cardsAsCards">
+        :cardsType="cardsType">
       </app-model-section>
+
       <div v-else class="w3-row w3-center loader-gif-container">
         <img class="loader-gif" src="../../assets/loading.gif" alt="">
       </div>
@@ -22,13 +23,6 @@ export default {
     'app-model-section': ModelSection
   },
 
-  props: {
-    cardsAsCards: {
-      type: Boolean,
-      default: true
-    }
-  },
-
   data () {
     return {
       section: null,
@@ -43,6 +37,15 @@ export default {
     },
     levels () {
       return parseInt(this.$route.query.levels)
+    },
+    cardsType () {
+      if (this.$route.name === 'ModelSectionDoc') {
+        return 'doc'
+      }
+      if (this.$route.query.cardsType) {
+        return this.$route.query.cardsType
+      }
+      return 'card'
     }
   },
 

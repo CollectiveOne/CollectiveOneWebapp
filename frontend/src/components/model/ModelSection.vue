@@ -36,7 +36,7 @@
           <app-model-card
             :cardWrapperInit="cardWrapper"
             :inSection="section"
-            :cardEffect="cardsAsCards">
+            :type="cardsType">
           </app-model-card>
         </div>
       </div>
@@ -53,8 +53,7 @@
           :section="subsection"
           :inElementId="section.id"
           :inElementTitle="section.title"
-          dragType="MOVE_SUBSECTION"
-          :cardsAsCards="cardsAsCards"
+          :cardsType="cardsType"
           :nestedIn="nestedIn.concat([section])">
         </app-model-section>
       </div>
@@ -92,16 +91,9 @@ export default {
       type: String,
       default: ''
     },
-    dragType: {
-      type: String
-    },
-    floating: {
-      type: Boolean,
-      default: false
-    },
-    cardsAsCards: {
-      type: Boolean,
-      default: true
+    cardsType: {
+      type: String,
+      default: 'card'
     }
   },
 
@@ -150,9 +142,9 @@ export default {
     },
     cardsContainerClasses () {
       return {
-        'section-card-col-with-nav': this.cardsAsCards && (this.$store.state.support.expandNav && !this.$store.state.support.windowIsSmall),
-        'section-card-col-no-nav': this.cardsAsCards && (!this.$store.state.support.expandNav || this.$store.state.support.windowIsSmall),
-        'section-card-par': !this.cardsAsCards
+        'section-card-col-with-nav': this.cardsType === 'card' && (this.$store.state.support.expandNav && !this.$store.state.support.windowIsSmall),
+        'section-card-col-no-nav': this.cardsType === 'card' && (!this.$store.state.support.expandNav || this.$store.state.support.windowIsSmall),
+        'section-card-par': !this.cardsType !== 'card'
       }
     }
   },

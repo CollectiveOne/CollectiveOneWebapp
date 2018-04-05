@@ -30,7 +30,7 @@
     </div>
     <div class="w3-row w3-margin-top w3-container">
       <transition name="fadeenter">
-        <router-view :cardsAsCards="isCards"></router-view>
+        <router-view></router-view>
       </transition>
     </div>
   </div>
