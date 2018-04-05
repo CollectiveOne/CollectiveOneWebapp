@@ -19,7 +19,6 @@ import ModelSectionContent from '@/components/model/ModelSectionContent.vue'
 
 import ModelSectionMessages from '@/components/model/ModelSectionMessages.vue'
 import ModelSectionCards from '@/components/model/ModelSectionCards.vue'
-import ModelSearchContainer from '@/components/model/ModelSearchContainer.vue'
 
 import UserProfilePage from '@/components/UserProfilePage.vue'
 
@@ -89,8 +88,7 @@ export default new Router({
                         { path: 'cards/:cardId', name: 'ModelSectionCard', component: ModelSectionCards, meta: {'column': 3} },
                         { path: 'doc', name: 'ModelSectionDoc', component: ModelSectionCards, meta: {'column': 3} }
                       ]
-                    },
-                    { path: 'search', name: 'ModelSearch', component: ModelSearchContainer, meta: {'column': 3} }
+                    }
                   ]
                 },
                 { path: 'people', name: 'InitiativePeople', component: PeopleSection, meta: {'column': 4} },

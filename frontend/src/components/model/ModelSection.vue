@@ -66,7 +66,7 @@
 
 <script>
 import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
-import ModelCard from '@/components/model/ModelCard.vue'
+import ModelCard from '@/components/model/cards/ModelCard.vue'
 
 export default {
   name: 'app-model-section',

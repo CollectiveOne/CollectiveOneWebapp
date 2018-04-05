@@ -298,7 +298,7 @@
 import { dateString } from '@/lib/common.js'
 import Datepicker from 'vuejs-datepicker'
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
-import ModelCardSelector from '@/components/model/ModelCardSelector.vue'
+import ModelCardSelector from '@/components/model/cards/ModelCardSelector.vue'
 import ModelSectionSelector from '@/components/model/ModelSectionSelector.vue'
 import MessageThread from '@/components/notifications/MessageThread.vue'
 

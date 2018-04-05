@@ -14,102 +14,31 @@
       </transition>
     </div>
 
-    <div class="w3-display-container"
-      :class="{ 'w3-card-4 w3-topbar border-blue w3-round-large': cardEffect }"
-      @mouseover="hovering = true"
-      @mouseleave="hovering = false">
-
-      <div class="w3-row card-container cursor-pointer w3-display-container"
-        ref="cardContent">
-
-        <div class="w3-col s12" @click="cardClicked()">
-          <div v-if="hasImage"
-            class="w3-row w3-center w3-display-container" :class="{'image-container': cardEffect, 'image-container-doc': !cardEffect}">
-            <img class="" :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
-          </div>
-
-          <div :class="{'card-container-padded': cardEffect, 'card-container-slim': !cardEffect }">
-            <div v-if="card.title !== ''" class="w3-row">
-              <b>{{ card.title }}</b>
-            </div>
-
-            <div ref="cardText"
-              class="w3-row card-text"
-              :style="cardTextStyle">
-              <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="textTooLong() && cardEffect" class="">
-          <div @click="showMoreClick()"
-            class="w3-padding model-action-button gray-2-color w3-display-bottomright cursor-pointer">
-            <i class="fa fa-arrows-v" aria-hidden="true"></i>
-          </div>
-        </div>
-
-      </div>
-
-      <div v-if="cardEffect" class="w3-row bottom-row light-grey">
-
-          <div v-if="cardWrapper.inSections.length > 0" class="">
-            <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
-              v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
-              <div class="">
-                <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
-                  class="gray-1 w3-tag w3-round w3-small">
-                  {{ inSection.title }}
-                </router-link>
-              </div>
-            </div>
-          </div>
-
-          <div class="w3-right cursor-pointer indicator-comp"
-            @click="cardClicked()">
-            <app-indicator
-              contextType="MODEL_CARD"
-              :contextElementId="cardWrapper.id"
-              :size="18"
-              type="messages"
-              :forceUpdate="forceUpdate">
-            </app-indicator>
-          </div>
-
-          <div class="w3-right cursor-pointer indicator-comp"
-            @click="toggleLike()">
-            <app-indicator
-              contextType="MODEL_CARD"
-              :contextElementId="cardWrapper.id"
-              :size="18"
-              type="likes"
-              :selected="cardWrapper.userLiked"
-              :autoUpdate="false"
-              :countInit="cardWrapper.nLikes">
-            </app-indicator>
-          </div>
-
-      </div>
-
-      <transition name="fadeenter">
-        <div v-if="hovering && enableExpand"
-          class="w3-padding model-action-button gray-2-color w3-display-topright cursor-pointer"
-          @click="cardClicked()">
-          <i class="fa fa-expand" aria-hidden="true"></i>
-        </div>
-      </transition>
-
+    <div class="card-content-container">
+      <app-model-card-as-card :cardWrapper="cardWrapper"></app-model-card-as-card>
+      <!-- <component :is="cardComponent" :cardWrapper="cardWrapper"></component> -->
     </div>
+
   </div>
 </template>
 
 <script>
-import { dateString } from '@/lib/common.js'
+import ModelCardSummary from '@/components/model/cards/ModelCardSummary.vue'
+import ModelCardAsCard from '@/components/model/cards/ModelCardAsCard.vue'
+import ModelCardAsPar from '@/components/model/cards/ModelCardAsPar.vue'
+
 import smoothHeight from 'vue-smooth-height'
 
 export default {
   name: 'model-card',
 
-  mixins: [smoothHeight],
+  components: {
+    'app-model-card-summary': ModelCardSummary,
+    'app-model-card-as-card': ModelCardAsCard,
+    'app-model-card-as-par': ModelCardAsPar
+  },
+
+  mixins: [ smoothHeight ],
 
   props: {
     cardWrapperInit: {
@@ -124,9 +53,9 @@ export default {
       type: String,
       default: ''
     },
-    cardEffect: {
-      type: Boolean,
-      default: true
+    type: {
+      type: String,
+      default: 'card'
     },
     floating: {
       type: Boolean,
@@ -145,32 +74,24 @@ export default {
   data () {
     return {
       cardWrapper: null,
-      hovering: false,
-      showFull: false,
       showModal: false
     }
   },
 
   computed: {
-    card () {
-      return this.cardWrapper.card
-    },
-    hasImage () {
-      return this.card.imageFile !== null
-    },
-    cardTextStyle () {
-      if (this.cardEffect && !this.showFull) {
-        if (this.hasImage) {
-          return {
-            maxHeight: '100px'
-          }
-        } else {
-          return {
-            maxHeight: '250px'
-          }
-        }
-      } else {
-        return {}
+    cardComponent () {
+      switch (this.type) {
+        case 'summary':
+          return 'app-model-card-summary'
+
+        case 'card':
+          return 'app-model-card-as-card'
+
+        case 'doc':
+          return 'app-model-card-as-par'
+
+        default:
+          return 'app-model-card-as-card'
       }
     }
   },
@@ -180,9 +101,6 @@ export default {
       this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.cardWrapper = response.data.data
       })
-    },
-    dateString (v) {
-      return dateString(v)
     },
     hoverEnter () {
       this.showActionButton = true

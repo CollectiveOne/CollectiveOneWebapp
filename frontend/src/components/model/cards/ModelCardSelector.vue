@@ -34,14 +34,14 @@
 </template>
 
 <script>
-import ModelCard from '@/components/model/ModelCard.vue'
+import ModelCardSummary from '@/components/model/cards/ModelCardSummary.vue'
 
 export default {
 
   name: 'model-card-selector',
 
   components: {
-    'app-model-card': ModelCard
+    'app-model-card-summary': ModelCardSummary
   },
 
   props: {
