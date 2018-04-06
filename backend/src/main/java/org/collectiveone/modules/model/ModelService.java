@@ -538,7 +538,14 @@ public class ModelService {
 		
 		List<Activity> created = activityRepository.findOfCard(cardWrapperId, ActivityType.MODEL_CARDWRAPPER_CREATED);
 		
-		return new GetResult<AppUserDto>("success", "authors events retrieved", created.get(0).getTriggerUser().toDtoLight());
+		
+		AppUserDto creator = null;
+		
+		if (created.size() > 0) {
+			creator = created.get(0).getTriggerUser().toDtoLight();
+		}
+		
+		return new GetResult<AppUserDto>("success", "authors events retrieved", creator);
 	}
 	
 	@Transactional

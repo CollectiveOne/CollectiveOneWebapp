@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="">
+  <div class="card-messages-container">
     <app-message-thread
       contextType="MODEL_SECTION"
       :contextElementId="currentSectionId"
@@ -22,11 +22,16 @@ export default {
       return this.$route.params.sectionId
     },
     levels () {
-      return parseInt(this.$route.query.levels)
+      return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
     }
   }
 }
 </script>
 
-<style lang="css">
+<style scoped>
+
+.card-messages-container {
+  padding: 12px 12px;
+}
+
 </style>

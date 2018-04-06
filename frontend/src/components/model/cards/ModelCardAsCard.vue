@@ -86,9 +86,13 @@
 </template>
 
 <script>
+import { cardMixin } from '@/components/model/cards/cardMixin.js'
+
 export default {
 
   name: 'model-card-as-card',
+
+  mixins: [ cardMixin ],
 
   props: {
     cardWrapper: {
@@ -159,19 +163,6 @@ export default {
     },
     showMoreClick () {
       this.showFull = !this.showFull
-    },
-    cardClicked () {
-      this.$router.push({name: 'ModelSectionCard', params: { cardId: this.cardWrapper.id }, query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
-    },
-    toggleLike () {
-      this.axios.put('/1/model/card/' + this.cardWrapper.id + '/like',
-        {}, {
-          params: {
-            likeStatus: !this.cardWrapper.userLiked
-          }
-        }).then((response) => {
-          this.update()
-        })
     }
   },
 

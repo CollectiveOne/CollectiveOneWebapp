@@ -59,9 +59,13 @@
 </template>
 
 <script>
+import { cardMixin } from '@/components/model/cards/cardMixin.js'
+
 export default {
 
   name: 'model-card-summary',
+
+  mixins: [ cardMixin ],
 
   props: {
     cardWrapper: {
@@ -87,7 +91,7 @@ export default {
 
   computed: {
     cardShortTitle () {
-      return this.card.title !== '' ? this.card.title : (this.card.text.length < 30 ? this.card.text : this.card.text.slice(0, 30))
+      return this.card.title !== '' ? this.card.title : (this.card.text.length < 40 ? this.card.text : this.card.text.slice(0, 40) + '...')
     },
     card () {
       return this.cardWrapper.card
@@ -101,16 +105,6 @@ export default {
     showThisTag (inSection) {
       return inSection.id !== this.inSection.id
     },
-    textTooLong () {
-      if (!this.$refs.cardText) {
-        return false
-      }
-      if (this.$refs.cardText.scrollHeight > 250) {
-        return true
-      } else {
-        return this.$refs.cardText.clientHeight < this.$refs.cardText.scrollHeight
-      }
-    },
     hoverEnter () {
       this.showActionButton = true
       this.highlight = true
@@ -118,29 +112,6 @@ export default {
     hoverLeave () {
       this.showActionButton = false
       this.highlight = false
-    },
-    showMoreClick () {
-      this.showFull = !this.showFull
-    },
-    cardClicked () {
-      this.$router.push({name: 'ModelSectionCard', params: { cardId: this.cardWrapper.id }, query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
-    },
-    toggleLike () {
-      this.axios.put('/1/model/card/' + this.cardWrapper.id + '/like',
-        {}, {
-          params: {
-            likeStatus: !this.cardWrapper.userLiked
-          }
-        }).then((response) => {
-          this.update()
-        })
-    },
-    getAuthors () {
-      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id + '/creator').then((response) => {
-        if (response.data.result === 'success') {
-          this.creator = response.data.data
-        }
-      })
     }
   },
 

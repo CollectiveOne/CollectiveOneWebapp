@@ -19,7 +19,8 @@
         :is="cardComponent"
         :cardWrapper="cardWrapper"
         :inSection="inSection"
-        :forceUpdate="forceUpdate">
+        :forceUpdate="forceUpdate"
+        @update="update()">
       </component>
       <!-- <  :cardWrapper="cardWrapper"></component> -->
     </div>

@@ -26,23 +26,45 @@ export default (to, from, next) => {
     next()
   }
 
-  if (to.name === 'ModelSectionContent') {
-    switch (from.name) {
-      case 'ModelSectionMessages':
-        next({name: 'ModelSectionMessages', params: {sectionId: to.params.sectionId}, query: {levels: from.query.levels}})
-        break
+  var toModelSection = false
+  for (var ix in to.matched) {
+    if (to.matched[ix].name === 'ModelSectionContent') {
+      toModelSection = true
+    }
+  }
 
-      case 'ModelSectionCards':
-        next({name: 'ModelSectionCards', params: {sectionId: to.params.sectionId}, query: {levels: from.query.levels}})
-        break
+  if (toModelSection) {
+    console.log('going within model section')
 
-      case 'ModelSectionDoc':
-        next({name: 'ModelSectionDoc', params: {sectionId: to.params.sectionId}, query: {levels: from.query.levels}})
-        break
+    /* keep the levels and cards url parameters when switching among views. */
+    var fromLevels = from.query.levels ? from.query.levels : '1'
+    var fromCardsType = from.query.cardsType ? from.query.cardsType : 'cards'
 
-      default:
+    var toLevels = to.query.levels ? to.query.levels : fromLevels
+    var toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
+
+    if (to.name === 'ModelSectionContent') {
+      /* just keep the current tab when switching among sections */
+      switch (from.name) {
+        case 'ModelSectionMessages':
+        next({name: 'ModelSectionMessages', params: {sectionId: to.params.sectionId}, query: {levels: toLevels, cardsType: toCardsType}})
+          break
+
+        case 'ModelSectionCards':
+        case 'ModelSectionCard':
+          next({name: 'ModelSectionCards', params: {sectionId: to.params.sectionId}, query: {levels: toLevels, cardsType: toCardsType}})
+          break
+
+        default:
+          next()
+          break
+      }
+    } else {
+      if ((toLevels !== fromLevels) || (toCardsType !== fromCardsType) || (to.name !== from.name)) {
+        next({name: to.name, params: {sectionId: to.params.sectionId}, query: {levels: toLevels, cardsType: toCardsType}})
+      } else {
         next()
-        break
+      }
     }
   }
 }

@@ -2,13 +2,13 @@
   <div class="">
     <div class="w3-row controls-row">
       <div class="w3-left card-view-controls">
-        <div @click="summaryView()" class="w3-left control-btn">
+        <div @click="summaryView()" class="w3-left control-btn" :class="{'selected': isSummary}">
           <i class="fa fa-list" aria-hidden="true"></i>
         </div>
-        <div @click="cardView()" class="w3-left control-btn">
+        <div @click="cardView()" class="w3-left control-btn" :class="{'selected': isCard}">
           <i class="fa fa-th-large" aria-hidden="true"></i>
         </div>
-        <div @click="docView()" class="w3-left control-btn">
+        <div @click="docView()" class="w3-left control-btn" :class="{'selected': isDoc}">
           <i class="fa fa-file-text" aria-hidden="true"></i>
         </div>
       </div>
@@ -51,10 +51,19 @@ export default {
       return this.$route.params.sectionId
     },
     levels () {
-      return parseInt(this.$route.query.levels)
+      return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
     },
     cardsType () {
-      return this.$route.query.cardsType ? this.$route.query.cardsType : 'cards'
+      return this.$route.query.cardsType ? this.$route.query.cardsType : 'card'
+    },
+    isSummary () {
+      return this.cardsType === 'summary'
+    },
+    isCard () {
+      return this.cardsType === 'card'
+    },
+    isDoc () {
+      return this.cardsType === 'doc'
     }
   },
 
@@ -69,7 +78,13 @@ export default {
 
   methods: {
     summaryView () {
-      this.$router.push({name: 'ModelSectionCards', params: {query: {}}})
+      this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'summary'}})
+    },
+    cardView () {
+      this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'card'}})
+    },
+    docView () {
+      this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'doc'}})
     },
     update () {
       this.loading = true
@@ -106,6 +121,11 @@ export default {
 
 .control-btn:hover {
   background-color: #595959;
+}
+
+.selected {
+  background-color: #15a5cc;
+  color: white;
 }
 
 .control-btn-selected {

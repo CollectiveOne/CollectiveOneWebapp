@@ -5,14 +5,14 @@
         <app-section-info></app-section-info>
       </div>
       <div class="w3-col m6 section-tabs w3-center">
-        <router-link :to="{ name: 'ModelSectionMessages', query: {levels: this.$route.query.levels ? this.$route.query.levels : 1} }"
+        <router-link :to="{ name: 'ModelSectionMessages'}"
           class="tab-btn-space">
           <div class="tab-btn noselect" :class="{'bold-text': isChat, 'button-blue': isChat}">
             <span class="w3-hide-small w3-hide-medium tab-btn-text">Chat</span>
             <span class="w3-hide-large"><i class="fa fa-home" aria-hidden="true"></i></span>
           </div>
         </router-link>
-        <router-link :to="{ name: 'ModelSectionCards', query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}}"
+        <router-link :to="{ name: 'ModelSectionCards'}"
           class="tab-btn-space">
           <div class="tab-btn noselect" :class="{'bold-text': isCards, 'button-blue': isCards}">
             <span class="w3-hide-small w3-hide-medium tab-btn-text">Cards</span>
@@ -51,7 +51,7 @@ export default {
     redirect () {
       if (this.$route.name === 'ModelSectionContent') {
         console.log('redirecting from ModelSectionContent to ModelSectionCards')
-        this.$router.replace({name: 'ModelSectionCards', query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
+        this.$router.replace({name: 'ModelSectionCards'})
       }
     }
   },

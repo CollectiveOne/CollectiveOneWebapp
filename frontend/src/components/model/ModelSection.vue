@@ -221,7 +221,7 @@ export default {
       }
     },
     closeCardModal () {
-      this.$router.replace({name: 'ModelSectionCards', query: {levels: this.$route.query.levels ? this.$route.query.levels : 1}})
+      this.$router.replace({name: 'ModelSectionCards'})
     }
   },
 
