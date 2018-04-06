@@ -32,6 +32,7 @@ import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
+import org.collectiveone.modules.users.AppUserDto;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -530,6 +531,14 @@ public class ModelService {
 		}
 		
 		return new GetResult<ModelCardWrapperDto>("success", "card retrieved", cardWrapperDto);
+	}
+	
+	@Transactional
+	public GetResult<AppUserDto> getCardWrapperCreator(UUID cardWrapperId) {
+		
+		List<Activity> created = activityRepository.findOfCard(cardWrapperId, ActivityType.MODEL_CARDWRAPPER_CREATED);
+		
+		return new GetResult<AppUserDto>("success", "authors events retrieved", created.get(0).getTriggerUser().toDtoLight());
 	}
 	
 	@Transactional

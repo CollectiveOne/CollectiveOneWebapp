@@ -2,13 +2,13 @@
   <div class="">
     <div class="w3-row controls-row">
       <div class="w3-left card-view-controls">
-        <div @click="cardsType = 'summary'" class="w3-left control-btn">
+        <div @click="summaryView()" class="w3-left control-btn">
           <i class="fa fa-list" aria-hidden="true"></i>
         </div>
-        <div @click="cardsType = 'card'" class="w3-left control-btn">
+        <div @click="cardView()" class="w3-left control-btn">
           <i class="fa fa-th-large" aria-hidden="true"></i>
         </div>
-        <div @click="cardsType = 'doc'" class="w3-left control-btn">
+        <div @click="docView()" class="w3-left control-btn">
           <i class="fa fa-file-text" aria-hidden="true"></i>
         </div>
       </div>
@@ -42,8 +42,7 @@ export default {
     return {
       section: null,
       showNewCardModal: false,
-      loading: false,
-      cardsType: 'card'
+      loading: false
     }
   },
 
@@ -53,6 +52,9 @@ export default {
     },
     levels () {
       return parseInt(this.$route.query.levels)
+    },
+    cardsType () {
+      return this.$route.query.cardsType ? this.$route.query.cardsType : 'cards'
     }
   },
 
@@ -66,6 +68,9 @@ export default {
   },
 
   methods: {
+    summaryView () {
+      this.$router.push({name: 'ModelSectionCards', params: {query: {}}})
+    },
     update () {
       this.loading = true
       if (this.currentSectionId) {
@@ -105,6 +110,10 @@ export default {
 
 .control-btn-selected {
   background-color: #15a5cc;
+}
+
+.cards-list {
+  padding: 12px 12px;
 }
 
 </style>

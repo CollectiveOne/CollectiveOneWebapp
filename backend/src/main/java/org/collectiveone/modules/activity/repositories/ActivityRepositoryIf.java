@@ -41,4 +41,6 @@ public interface ActivityRepositoryIf extends CrudRepository<Activity, UUID> {
 	@Query("SELECT act FROM Activity act WHERE act.initiative.id IN ?1 AND act.type = ?2 ORDER BY act.timestamp DESC")
 	Page<Activity> findOfInitiativesAndType(List<UUID> initiativesId, ActivityType type, Pageable pageable);
 	
+	@Query("SELECT act FROM Activity act WHERE act.modelCardWrapper.id = ?1 AND act.type = ?2 ORDER BY act.timestamp DESC")
+	List<Activity> findOfCard(UUID cardWrapperId, ActivityType type);	
 }

@@ -14,6 +14,7 @@ import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.dto.ModelSectionGenealogyDto;
+import org.collectiveone.modules.users.AppUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -314,6 +315,21 @@ public class ModelController extends BaseController {
 		}
 		
 		return modelService.getCardWrapper(cardWrapperId, getLoggedUserId());
+	}
+	
+
+	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}/creator", method = RequestMethod.GET) 
+	public GetResult<AppUserDto> getCardWrapperAuthors(
+			@PathVariable("cardWrapperId") String cardWrapperIdStr) {
+		
+		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
+		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<AppUserDto>("error", "access denied", null);
+		}
+		
+		return modelService.getCardWrapperCreator(cardWrapperId);
 	}
 	
 	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
