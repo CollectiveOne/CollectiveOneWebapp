@@ -48,6 +48,14 @@
           </div>
         </div>
 
+        <div class="w3-right gray-1-color control-div">
+          <app-card-control-buttons
+            :cardWrapper="cardWrapper"
+            :inSection="inSection"
+            @update="$emit('update')">
+          </app-card-control-buttons>
+        </div>
+
         <div class="w3-right cursor-pointer indicator-comp"
           @click="cardClicked()">
           <app-indicator
@@ -87,12 +95,17 @@
 
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
+import CardControlButtons from '@/components/model/cards/CardControlButtons.vue'
 
 export default {
 
   name: 'model-card-as-card',
 
   mixins: [ cardMixin ],
+
+  components: {
+    'app-card-control-buttons': CardControlButtons
+  },
 
   props: {
     cardWrapper: {
@@ -248,6 +261,10 @@ export default {
 .indicator-comp {
   margin-right: 6px;
   margin-left: 4px;
+}
+
+.control-div {
+  padding: 3px 6px;
 }
 
 </style>

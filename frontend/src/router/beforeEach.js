@@ -34,11 +34,9 @@ export default (to, from, next) => {
   }
 
   if (toModelSection) {
-    console.log('going within model section')
-
     /* keep the levels and cards url parameters when switching among views. */
     var fromLevels = from.query.levels ? from.query.levels : '1'
-    var fromCardsType = from.query.cardsType ? from.query.cardsType : 'cards'
+    var fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
 
     var toLevels = to.query.levels ? to.query.levels : fromLevels
     var toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType

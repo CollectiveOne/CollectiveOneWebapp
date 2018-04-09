@@ -379,7 +379,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult createCardWrapper(ModelCardDto cardDto, UUID sectionId, UUID creatorId) {
+	public PostResult createCardWrapper(ModelCardDto cardDto, UUID sectionId, UUID creatorId, UUID beforeId, UUID afterId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		if (section == null) return new PostResult("error", "section not found", "");
@@ -406,19 +406,30 @@ public class ModelService {
 		
 		cardWrapper = modelCardWrapperRepository.save(cardWrapper);
 		
+		Integer ix = null;
+		
+		if (beforeId != null) {
+			ModelCardWrapper beforeCardWrapper = modelCardWrapperRepository.findById(beforeId);
+			ix = section.getCardsWrappers().indexOf(beforeCardWrapper);
+		}
+		
+		if (afterId != null) {
+			ModelCardWrapper afterCardWrapper = modelCardWrapperRepository.findById(afterId);
+			ix = section.getCardsWrappers().indexOf(afterCardWrapper) + 1;
+		}
+		
 		/* add location */
-		if (cardDto.getIxInSection() == null) {
+		if (ix == null) {
 			/* at the end */
 			section.getCardsWrappers().add(cardWrapper);
 		} else {
-			if (cardDto.getIxInSection() == -1) {
+			if ((ix == -1) || (ix == section.getCardsWrappers().size() - 1)) {
 				/* at the end */
 				section.getCardsWrappers().add(cardWrapper);
 			} else {
 				/* at a given ix */
-				section.getCardsWrappers().add(cardDto.getIxInSection(), cardWrapper);
+				section.getCardsWrappers().add(ix, cardWrapper);
 			}
-
 		}
 		
 		modelSectionRepository.save(section);

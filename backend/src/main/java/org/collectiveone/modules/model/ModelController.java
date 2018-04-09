@@ -287,7 +287,9 @@ public class ModelController extends BaseController {
 	@RequestMapping(path = "/model/section/{sectionId}/cardWrapper", method = RequestMethod.POST)
 	public PostResult createCardWrapper(
 			@PathVariable("sectionId") String sectionIdStr,
-			@RequestBody ModelCardDto cardDto) {
+			@RequestBody ModelCardDto cardDto,
+			@RequestParam(name="beforeCardWrapperId", defaultValue="") String beforeCardWrapperIdStr,
+			@RequestParam(name="afterCardWrapperId", defaultValue="") String afterCardWrapperIdStr) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -300,7 +302,10 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.createCardWrapper(cardDto, sectionId, getLoggedUser().getC1Id());
+		UUID beforeId = beforeCardWrapperIdStr.equals("") ? null : UUID.fromString(beforeCardWrapperIdStr);
+		UUID afterId = afterCardWrapperIdStr.equals("") ? null : UUID.fromString(afterCardWrapperIdStr);
+		
+		return modelService.createCardWrapper(cardDto, sectionId, getLoggedUser().getC1Id(), beforeId, afterId);
 	}
 	
 	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}", method = RequestMethod.GET) 

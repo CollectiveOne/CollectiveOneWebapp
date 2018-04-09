@@ -260,7 +260,7 @@
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
             <hr>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel <span><small>(Esc)</small></span></button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel <span><small>(Esc)</small></span></button>
             </div>
             <div class="w3-col m6 w3-center">
               <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept <span><small>(Ctr + Enter)</small></span></button>
@@ -317,10 +317,6 @@ export default {
       type: Boolean,
       default: false
     },
-    initiativeId: {
-      type: String,
-      default: ''
-    },
     cardWrapperId: {
       type: String,
       default: ''
@@ -337,9 +333,21 @@ export default {
       type: Number,
       default: -1
     },
+    editingInit: {
+      type: Boolean,
+      defaul: false
+    },
     onlyMessages: {
       type: Boolean,
       defaul: false
+    },
+    newCardLocation: {
+      type: String,
+      default: ''
+    },
+    atCardWrapper: {
+      type: Object,
+      default: ''
     }
   },
 
@@ -358,7 +366,6 @@ export default {
       showEditButtons: false,
       titleEmptyError: false,
       textEmptyError: false,
-      targetDateStr: '',
       addExisting: false,
       existingCard: null,
       noCardSelectedError: false,
@@ -397,10 +404,16 @@ export default {
       }
     },
     titleEmpty () {
-      return this.editedCard.title === ''
+      if (this.editedCard) {
+        return this.editedCard.title === ''
+      }
+      return false
     },
     titleTooLong () {
-      return this.editedCard.title.length > 42
+      if (this.editedCard) {
+        return this.editedCard.title.length > 42
+      }
+      return false
     },
     titleErrorShow () {
       return this.titleEmptyShow || this.titleTooLongShow
@@ -412,7 +425,10 @@ export default {
       return this.titleTooLong
     },
     textEmpty () {
-      return this.editedCard.text === ''
+      if (this.editedCard) {
+        return this.editedCard.text === ''
+      }
+      return false
     },
     textErrorShow () {
       return this.textEmptyError && this.textEmpty
@@ -480,6 +496,9 @@ export default {
       this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.cardWrapper = response.data.data
         this.loading = false
+        if (this.editingInit) {
+          this.startEditing()
+        }
       })
     },
     cardSelected (cardWrapper) {
@@ -510,23 +529,7 @@ export default {
     startEditing () {
       this.addToSections = []
       this.editedCard = JSON.parse(JSON.stringify(this.card))
-
-      if (this.cardWrapper.targetDate) {
-        if (this.cardWrapper.targetDate > 0) {
-          this.targetDateStr = new Date(this.cardWrapper.targetDate)
-        }
-      }
-
-      this.editedCard.stateControl = this.cardWrapper.stateControl
-      this.editedCard.state = this.cardWrapper.state
-      this.editedCard.targetDate = this.cardWrapper.targetDate
-
       this.editing = true
-    },
-    targetDateSelected (dateStr) {
-      this.targetDateStr = dateStr
-      var date = new Date(dateStr)
-      this.editedCard.targetDate = date.getTime()
     },
     accept () {
       // console.log('clicked accept')
@@ -555,23 +558,37 @@ export default {
           this.sendingData = false
           if (response.data.result === 'success') {
             this.closeThis()
-            this.$store.commit('triggerUpdateModelContent')
+            this.$emit('update')
           }
         }
 
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
-            cardDto.ixInSection = this.ixInSection
+            var params = {}
+            switch (this.newCardLocation) {
+              case 'end':
+                break
+
+              case 'before':
+                params.beforeCardWrapperId = this.atCardWrapper.id
+                break
+
+              case 'after':
+                  params.afterCardWrapperId = this.atCardWrapper.id
+                  break
+            }
+
+            console.log(params)
 
             this.sendingData = true
-            this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto).then(responseF).catch((error) => {
+            this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto, { params: params }).then(responseF).catch((error) => {
               console.log(error)
             })
           } else {
             this.sendingData = true
             this.axios.put('/1/model/section/' + this.inSectionId + '/cardWrapper/' + this.existingCard.id,
-              {}).then(responseF).catch((error) => {
+              {}, params).then(responseF).catch((error) => {
                 console.log(error)
               })
           }
