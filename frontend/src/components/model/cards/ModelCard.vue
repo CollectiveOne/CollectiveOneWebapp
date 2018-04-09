@@ -20,7 +20,8 @@
         :cardWrapper="cardWrapper"
         :inSection="inSection"
         :forceUpdate="forceUpdate"
-        @update="update()">
+        @update="update()"
+        @updateCards="$emit('updateCards')">
       </component>
       <!-- <  :cardWrapper="cardWrapper"></component> -->
     </div>

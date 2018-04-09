@@ -558,7 +558,7 @@ export default {
           this.sendingData = false
           if (response.data.result === 'success') {
             this.closeThis()
-            this.$emit('update')
+            this.$emit('updateCards')
           }
         }
 
@@ -578,8 +578,6 @@ export default {
                   params.afterCardWrapperId = this.atCardWrapper.id
                   break
             }
-
-            console.log(params)
 
             this.sendingData = true
             this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto, { params: params }).then(responseF).catch((error) => {

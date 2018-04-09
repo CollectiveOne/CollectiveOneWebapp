@@ -1,5 +1,6 @@
 package org.collectiveone.modules.model;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
@@ -248,7 +249,21 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelSectionDto>("error", "access denied", null);
 		}
 		
-		return modelService.getSection(sectionId, getLoggedUserId(), levels, getLoggedUserId(), false);
+		return modelService.getSection(sectionId, levels, getLoggedUserId(), false);
+	}
+	
+	@RequestMapping(path = "/model/section/{sectionId}/cardWrappers", method = RequestMethod.GET) 
+	public GetResult<List<ModelCardWrapperDto>> getSectionCardWrappers(
+			@PathVariable("sectionId") String sectionIdStr) {
+		
+		UUID sectionId = UUID.fromString(sectionIdStr);
+		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<List<ModelCardWrapperDto>>("error", "access denied", null);
+		}
+		
+		return modelService.getSectionCardWrappers(sectionId, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/genealogy", method = RequestMethod.GET) 

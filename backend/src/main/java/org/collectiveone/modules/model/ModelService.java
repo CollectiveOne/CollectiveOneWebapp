@@ -122,7 +122,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID requestById, Integer level, UUID requestByUserId, Boolean onlySections) {
+	public GetResult<ModelSectionDto> getSection(UUID sectionId, Integer level, UUID requestByUserId, Boolean onlySections) {
 		return new GetResult<ModelSectionDto>("success", "section retrieved",  getSectionDto(sectionId, level, requestByUserId, onlySections));
 	}
 	
@@ -142,6 +142,19 @@ public class ModelService {
 		}
 		
 		return sectionDto;
+	}
+	
+	@Transactional
+	public GetResult<List<ModelCardWrapperDto>> getSectionCardWrappers(UUID sectionId, UUID requestByUserId) {
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		
+		List<ModelCardWrapperDto> cardWrappersDtos = new ArrayList<ModelCardWrapperDto>(); 
+		
+		for (ModelCardWrapper cardWrapper : section.getCardsWrappers()) {
+			cardWrappersDtos.add(getCardWrapperDtoWithMetadata(cardWrapper, requestByUserId));
+		}
+		
+		return new GetResult<List<ModelCardWrapperDto>>("success", "section retrieved",  cardWrappersDtos);
 	}
 	
 	@Transactional
@@ -323,21 +336,7 @@ public class ModelService {
 		
 		if (!onlySections) {
 			for (ModelCardWrapper cardWrapper : section.getCardsWrappers()) {
-				ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
-				
-				cardWrapperDto.setnLikes(cardLikeRepository.countOfCard(cardWrapper.getId()));
-				
-				if (requestByUserId != null) {
-					cardWrapperDto.setUserLiked(cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapper.getId(), requestByUserId) != null);
-				}
-				
-				List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapper.getId());
-				
-				for (ModelSection inSection : inSections) {
-					cardWrapperDto.getInSections().add(inSection.toDto());
-				}
-				
-				sectionDto.getCardsWrappers().add(cardWrapperDto);
+				sectionDto.getCardsWrappers().add(getCardWrapperDtoWithMetadata(cardWrapper, requestByUserId));
 			}
 		}
 				
@@ -354,6 +353,24 @@ public class ModelService {
 		} 
 		
 		return sectionDto; 
+	}
+	
+	private ModelCardWrapperDto getCardWrapperDtoWithMetadata(ModelCardWrapper cardWrapper, UUID requestByUserId) {
+		ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
+		
+		cardWrapperDto.setnLikes(cardLikeRepository.countOfCard(cardWrapper.getId()));
+		
+		if (requestByUserId != null) {
+			cardWrapperDto.setUserLiked(cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapper.getId(), requestByUserId) != null);
+		}
+		
+		List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapper.getId());
+		
+		for (ModelSection inSection : inSections) {
+			cardWrapperDto.getInSections().add(inSection.toDto());
+		}
+		
+		return cardWrapperDto;
 	}
 	
 	@Transactional

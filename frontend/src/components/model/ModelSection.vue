@@ -9,7 +9,8 @@
           :cardWrapperId="$route.params.cardId"
           :inSectionId="section.id"
           :inSectionTitle="section.Title"
-          @close="closeCardModal()">
+          @close="closeCardModal()"
+          @updateCards="updateCards()">
         </app-model-card-modal>
       </transition>
     </div>
@@ -36,7 +37,8 @@
           <app-model-card
             :cardWrapperInit="cardWrapper"
             :inSection="section"
-            :type="cardsType">
+            :type="cardsType"
+            @updateCards="$emit('updateCards')">
           </app-model-card>
         </div>
       </div>
@@ -150,6 +152,13 @@ export default {
   },
 
   methods: {
+    updateCards () {
+      this.axios.get('/1/model/section/' + this.section.id + '/cardWrappers').then((response) => {
+        if (response.data.result === 'success') {
+          this.section.cardsWrappers = response.data.data
+        }
+      })
+    },
     cardDroped (onCardWrapperId, event) {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
       if (dragData.type === 'MOVE_CARD') {

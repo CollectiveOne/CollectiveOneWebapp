@@ -11,7 +11,8 @@
             :inSectionTitle="inSection.title"
             :atCardWrapper="cardWrapper"
             :newCardLocation="newCardLocation"
-            @close="showNewCardModal = false">
+            @close="showNewCardModal = false"
+            @updateCards="$emit('updateCards')">
           </app-model-card-modal>
         </transition>
       </div>
