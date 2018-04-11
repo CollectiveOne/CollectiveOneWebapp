@@ -15,6 +15,7 @@ import VueMarkdown from 'vue-markdown'
 import MarkdownEditor from '@/components/global/MarkdownEditor.vue'
 import Indicator from '@/components/notifications/Indicator.vue'
 import DropDownMenu from '@/components/global/DropDownMenu.vue'
+import UserAvatar from '@/components/user/UserAvatar.vue'
 
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
@@ -41,6 +42,7 @@ Vue.component('vue-markdown', VueMarkdown)
 Vue.component('app-markdown-editor', MarkdownEditor)
 Vue.component('app-indicator', Indicator)
 Vue.component('app-drop-down-menu', DropDownMenu)
+Vue.component('app-user-avatar', UserAvatar)
 
 /* registered globally to solve the circular reference */
 Vue.component('app-model-section-modal', ModelSectionModal)

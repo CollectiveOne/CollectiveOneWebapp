@@ -1,5 +1,6 @@
 package org.collectiveone.modules.model;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -418,9 +419,15 @@ public class ModelService {
 			}
 		}
 		
+		AppUser creator = appUserRepository.findByC1Id(creatorId);
+		
 		ModelCardWrapper cardWrapper = new ModelCardWrapper();
 		cardWrapper.setCard(card);
 		cardWrapper.setInitiative(section.getInitiative());
+		cardWrapper.setCreator(creator);
+		cardWrapper.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		cardWrapper.getEditors().add(creator);
+		cardWrapper.setLastEdited(new Timestamp(System.currentTimeMillis()));
 		
 		cardWrapper = modelCardWrapperRepository.save(cardWrapper);
 		
@@ -488,7 +495,13 @@ public class ModelService {
 		
 		card = modelCardRepository.save(card);
 		cardWrapper.setCard(card);
+		cardWrapper.setLastEdited(new Timestamp(System.currentTimeMillis()));
 		
+		/* add an editor only once */
+		AppUser prevEditor = modelCardWrapperRepository.findEditor(cardWrapper.getId(), creatorId);
+		if (prevEditor == null) {
+			cardWrapper.getEditors().add(appUserRepository.findByC1Id(creatorId));
+		}
 		
 		/* this inSections actually refer to add to new sections */
 		for (ModelSectionDto sectionDto : cardDto.getInSections()) {
@@ -563,21 +576,6 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<AppUserDto> getCardWrapperCreator(UUID cardWrapperId) {
-		
-		List<Activity> created = activityRepository.findOfCard(cardWrapperId, ActivityType.MODEL_CARDWRAPPER_CREATED);
-		
-		
-		AppUserDto creator = null;
-		
-		if (created.size() > 0) {
-			creator = created.get(0).getTriggerUser().toDtoLight();
-		}
-		
-		return new GetResult<AppUserDto>("success", "authors events retrieved", creator);
-	}
-	
-	@Transactional
 	public Initiative getCardWrapperInitiative(UUID cardWrapperId) {
 		return modelCardWrapperRepository.findById(cardWrapperId).getInitiative();
 	}
@@ -595,7 +593,18 @@ public class ModelService {
 			case "CREATION_DATE_DESC":
 				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.creationDate"));
 				break;
-		
+				
+			case "EDITION_DATE_DESC":
+				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.lastEdited"));
+				break;
+				
+			case "CREATOR":
+				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.ASC, "crdWrp.creator.profile.nickname"));
+				break;
+			
+			default:
+				pageRequest = new PageRequest(page, pageSize);
+				break;
 		}
 		
 		Page<ModelCardWrapper> enititiesPage = 

@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -19,6 +20,7 @@ import org.collectiveone.modules.conversations.MessageThread;
 import org.collectiveone.modules.governance.CardLike;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
+import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -49,7 +51,13 @@ public class ModelCardWrapper {
 	
 	private Timestamp creationDate;
 	
+	@ManyToOne
+	private AppUser creator;
+	
 	private Timestamp lastEdited;
+	
+	@ManyToMany
+	private List<AppUser> editors = new ArrayList<AppUser>();
 	
 	@Override
 	public int hashCode() {
@@ -78,7 +86,14 @@ public class ModelCardWrapper {
 		cardWrapperDto.setId(id.toString());
 		cardWrapperDto.setCard(card.toDto());
 		cardWrapperDto.setInitiativeId(initiative.getId().toString());
+		if (creator != null) cardWrapperDto.setCreator(creator.toDtoLight());
 		if (creationDate != null) cardWrapperDto.setCreationDate(creationDate.getTime());
+		if (lastEdited != null) cardWrapperDto.setLastEdited(lastEdited.getTime());
+		if (editors != null) {
+			for (AppUser editor : editors) {
+				cardWrapperDto.getEditors().add(editor.toDtoLight());
+			}
+		}
 		
 		return cardWrapperDto;
 	}
@@ -138,6 +153,14 @@ public class ModelCardWrapper {
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
 	}
+	
+	public AppUser getCreator() {
+		return creator;
+	}
+
+	public void setCreator(AppUser creator) {
+		this.creator = creator;
+	}
 
 	public Timestamp getLastEdited() {
 		return lastEdited;
@@ -145,6 +168,14 @@ public class ModelCardWrapper {
 
 	public void setLastEdited(Timestamp lastEdited) {
 		this.lastEdited = lastEdited;
+	}
+
+	public List<AppUser> getEditors() {
+		return editors;
+	}
+
+	public void setEditors(List<AppUser> editors) {
+		this.editors = editors;
 	}
 	
 }

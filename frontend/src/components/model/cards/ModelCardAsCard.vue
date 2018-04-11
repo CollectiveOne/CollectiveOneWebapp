@@ -36,49 +36,59 @@
 
     <div class="w3-row bottom-row light-grey">
 
-        <div v-if="cardWrapper.inSections.length > 0" class="">
-          <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
-            v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
-            <div class="">
-              <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
-                class="gray-1 w3-tag w3-round w3-small">
-                {{ inSection.title }}
-              </router-link>
-            </div>
+      <div v-if="cardWrapper.creator !== null" class="w3-left text-div">
+        <app-user-avatar :user="cardWrapper.creator" :showName="false" :small="true"></app-user-avatar>
+      </div>
+
+      <div v-if="editors.length > 0" class="w3-left editors-div">
+        <div class="w3-left" v-for="editor in editors">
+          <app-user-avatar v-if="editor.c1Id !== cardWrapper.creator.c1Id" :user="editor" :showName="false" :small="true"></app-user-avatar>
+        </div>
+      </div>
+
+      <div v-if="cardWrapper.inSections.length > 0" class="w3-margin-left w3-left">
+        <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
+          v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
+          <div class="">
+            <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
+              class="gray-1 w3-tag w3-round w3-small">
+              {{ inSection.title }}
+            </router-link>
           </div>
         </div>
+      </div>
 
-        <div class="w3-right gray-1-color control-div">
-          <app-card-control-buttons
-            :cardWrapper="cardWrapper"
-            :inSection="inSection"
-            @update="$emit('update')">
-          </app-card-control-buttons>
-        </div>
+      <div class="w3-right gray-1-color control-div">
+        <app-card-control-buttons
+          :cardWrapper="cardWrapper"
+          :inSection="inSection"
+          @update="$emit('update')">
+        </app-card-control-buttons>
+      </div>
 
-        <div class="w3-right cursor-pointer indicator-comp"
-          @click="cardClicked()">
-          <app-indicator
-            contextType="MODEL_CARD"
-            :contextElementId="cardWrapper.id"
-            :size="18"
-            type="messages"
-            :forceUpdate="forceUpdate">
-          </app-indicator>
-        </div>
+      <div class="w3-right cursor-pointer indicator-comp"
+        @click="cardClicked()">
+        <app-indicator
+          contextType="MODEL_CARD"
+          :contextElementId="cardWrapper.id"
+          :size="18"
+          type="messages"
+          :forceUpdate="forceUpdate">
+        </app-indicator>
+      </div>
 
-        <div class="w3-right cursor-pointer indicator-comp"
-          @click="toggleLike()">
-          <app-indicator
-            contextType="MODEL_CARD"
-            :contextElementId="cardWrapper.id"
-            :size="18"
-            type="likes"
-            :selected="cardWrapper.userLiked"
-            :autoUpdate="false"
-            :countInit="cardWrapper.nLikes">
-          </app-indicator>
-        </div>
+      <div class="w3-right cursor-pointer indicator-comp"
+        @click="toggleLike()">
+        <app-indicator
+          contextType="MODEL_CARD"
+          :contextElementId="cardWrapper.id"
+          :size="18"
+          type="likes"
+          :selected="cardWrapper.userLiked"
+          :autoUpdate="false"
+          :countInit="cardWrapper.nLikes">
+        </app-indicator>
+      </div>
 
     </div>
 

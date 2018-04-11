@@ -13,12 +13,14 @@ export const cardMixin = {
           this.$emit('update')
         })
     },
-    getAuthors () {
-      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id + '/creator').then((response) => {
-        if (response.data.result === 'success') {
-          this.creator = response.data.data
+    editors () {
+      var editors = []
+      for (var ix in this.cardWrapper.editors) {
+        if (this.cardWrapper.editors[ix].c1Id !== this.cardWrapper.creator.c1Id) {
+          editors.push(this.cardWrapper.editors[ix])
         }
-      })
+      }
+      return editors
     }
   }
 }

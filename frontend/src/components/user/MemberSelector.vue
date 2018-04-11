@@ -38,14 +38,8 @@
 
 
 <script>
-import UserAvatar from './UserAvatar.vue'
-
 export default {
   name: 'member-selector',
-
-  components: {
-    'app-user-avatar': UserAvatar
-  },
 
   props: {
     members: Array,

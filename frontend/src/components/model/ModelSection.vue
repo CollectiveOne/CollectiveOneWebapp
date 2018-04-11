@@ -155,9 +155,6 @@ export default {
     newSubsectionFromBar () {
       this.showSubsections = true
       this.$emit('new-subsection')
-    },
-    closeCardModal () {
-      this.$router.replace({name: 'ModelSectionCards'})
     }
   }
 }

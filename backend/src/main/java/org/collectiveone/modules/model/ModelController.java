@@ -338,20 +338,6 @@ public class ModelController extends BaseController {
 	}
 	
 
-	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}/creator", method = RequestMethod.GET) 
-	public GetResult<AppUserDto> getCardWrapperAuthors(
-			@PathVariable("cardWrapperId") String cardWrapperIdStr) {
-		
-		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
-		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
-			return new GetResult<AppUserDto>("error", "access denied", null);
-		}
-		
-		return modelService.getCardWrapperCreator(cardWrapperId);
-	}
-	
 	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
 	public PostResult editCardWrapper(
 			@PathVariable("cardWrapperId") String cardWrapperIdStr,

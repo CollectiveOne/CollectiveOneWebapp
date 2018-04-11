@@ -194,7 +194,6 @@
 </template>
 
 <script>
-import UserAvatar from '@/components/user/UserAvatar.vue'
 import UserLink from '@/components/global/UserLink.vue'
 import InitiativeLink from '@/components/global/InitiativeLink.vue'
 import AssignationLink from '@/components/global/AssignationLink.vue'
@@ -229,7 +228,6 @@ export default {
   },
 
   components: {
-    'app-user-avatar': UserAvatar,
     'app-user-link': UserLink,
     'app-initiative-link': InitiativeLink,
     'app-assignation-link': AssignationLink,

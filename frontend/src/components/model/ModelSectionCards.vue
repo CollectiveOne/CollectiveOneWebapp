@@ -27,18 +27,28 @@
         </div>
 
         <div class="w3-left card-order-controls">
-          <div class="w3-left">
-            <input v-model="cardQuery" class="w3-input" type="text" name="" value="" placeholder="search">
-          </div>
-        </div>
-
-        <div class="w3-left card-order-controls">
           <select v-model="cardSortBy" class="w3-input">
-            <option value="BY_SECTIONS">By Sections</option>
+            <option value="BY_SECTIONS">Section Order</option>
             <option value="CREATION_DATE_DESC">Last Created</option>
             <option value="EDITION_DATE_DESC">Last Edited</option>
             <option value="CREATOR">Author</option>
           </select>
+        </div>
+
+        <div class="w3-left card-order-controls">
+          <div class="w3-left">
+            <input ref="inputQuery" v-model="newCardQuery" class="w3-input" type="text" name="" value="" placeholder="search">
+          </div>
+          <div @click="updateQuery()" class="w3-left control-btn selected">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </div>
+        </div>
+
+        <div v-if="cardQuery !== '' && !isSectionsOrder" class="w3-left card-order-controls text-details">
+          searching by
+          <span class="cursor-pointer" @click="resetQuery()">
+            <i><b>"{{ cardQuery}}"</b></i> <i class="fa fa-times-circle" aria-hidden="true"></i>
+          </span>
         </div>
 
       </div>
@@ -82,6 +92,7 @@ export default {
       section: null,
       showCardModal: false,
       loading: false,
+      newCardQuery: '',
       cardQuery: '',
       cardSortBy: 'BY_SECTIONS',
       page: 0,
@@ -124,11 +135,6 @@ export default {
     levels () {
       this.update()
     },
-    cardQuery () {
-      if (!this.isSectionsOrder) {
-        this.updateCards()
-      }
-    },
     cardSortBy () {
       if (!this.isSectionsOrder) {
         this.updateCards()
@@ -164,7 +170,7 @@ export default {
              page: this.page,
              pageSize: this.pageSize,
              sortBy: this.cardSortBy,
-             levels: this.levels
+             levels: 999
            }
          }).then((response) => {
           this.loading = false
@@ -189,6 +195,14 @@ export default {
         })
       }
     },
+    updateQuery () {
+      this.cardQuery = this.newCardQuery
+      this.update()
+    },
+    resetQuery () {
+      this.newCardQuery = ''
+      this.updateQuery()
+    },
     update () {
       if (this.isSectionsOrder) {
         this.updateSection()
@@ -206,12 +220,28 @@ export default {
     },
     closeCardModal () {
       this.$router.replace({name: 'ModelSectionCards'})
+    },
+    atKeydown (e) {
+      if (document.activeElement === this.$refs.inputQuery) {
+        if (e.keyCode === 13) {
+          e.preventDefault()
+          this.updateQuery()
+        }
+      }
     }
   },
 
   created () {
     this.update()
     this.checkCardSubroute()
+  },
+
+  mounted () {
+    window.addEventListener('keydown', this.atKeydown)
+  },
+
+  destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 }
 </script>
@@ -245,6 +275,10 @@ export default {
 
 .control-btn-selected {
   background-color: #15a5cc;
+}
+
+.text-details {
+  padding-top: 8px;
 }
 
 .cards-list {

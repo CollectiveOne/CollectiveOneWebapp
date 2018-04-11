@@ -27,8 +27,14 @@
 
     <div class="w3-col m4 right-div">
 
-      <div v-if="creator !== null" class="w3-left text-div">
-        {{ creator.nickname }}
+      <div v-if="cardWrapper.creator !== null" class="w3-left text-div">
+        <app-user-avatar :user="cardWrapper.creator" :showName="false" :small="true"></app-user-avatar>
+      </div>
+
+      <div v-if="editors.length > 0" class="w3-left editors-div">
+        <div class="w3-left" v-for="editor in editors">
+          <app-user-avatar v-if="editor.c1Id !== cardWrapper.creator.c1Id" :user="editor" :showName="false" :small="true"></app-user-avatar>
+        </div>
       </div>
 
       <div class="w3-right gray-1-color control-div">
@@ -98,8 +104,7 @@ export default {
 
   data () {
     return {
-      hovering: false,
-      creator: null
+      hovering: false
     }
   },
 
@@ -130,7 +135,6 @@ export default {
   },
 
   created () {
-    this.getAuthors()
   }
 }
 </script>
@@ -173,7 +177,13 @@ export default {
   padding-top: 3px;
 }
 
-
+.editors-div {
+  margin-left: 10px;
+  padding-left: 8px;
+  border-left-style: dotted;
+  border-color: #c1c1c1;
+  border-width: 1px;
+}
 
 .insection-tag-container {
   display: inline-block;

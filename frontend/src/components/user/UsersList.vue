@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import UserAvatar from './UserAvatar.vue'
 import MemberSelector from './MemberSelector.vue'
 
 export default {
@@ -58,7 +57,6 @@ export default {
   },
 
   components: {
-    'app-user-avatar': UserAvatar,
     'app-member-selector': MemberSelector
   },
 

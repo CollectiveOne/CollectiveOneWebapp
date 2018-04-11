@@ -202,45 +202,19 @@
 
                 <hr>
 
-                <div class="">
-                  <div v-if="!editing" class="">
-                    <div v-if="cardWrapper.stateControl" class="w3-row-padding">
-                      <div class="w3-col m6 w3-margin-bottom">
-                        <label class=""><b>State:</b></label><br>
-                        <div class="w3-tag gray-1 w3-padding w3-round state-tag">
-                          {{ cardWrapper.state }}
-                        </div>
-                      </div>
-                      <div v-if="targetDateStr !== ''" class="w3-col m6">
-                        <label class=""><b>Target date:</b></label>
-                        <input class="w3-input" :value="dateString(this.cardWrapper.targetDate)" disabled>
-                      </div>
+                <div v-if="!editing" class="">
+                  <div class="w3-row">
+                    <i>created in {{ dateString(cardWrapper.creationDate) }} by</i>
+                    <div class="inline-block">
+                      <app-user-avatar :user="cardWrapper.creator" :showName="true" :small="true"></app-user-avatar>
                     </div>
                   </div>
-                  <div v-else class="">
-                    <button
-                      @click="editedCard.stateControl = !editedCard.stateControl"
-                      class="w3-button app-button state-enable-button">
-                      {{ editedCard.stateControl ? 'Remove state and deadline' : 'Set state and deadline' }}
-                    </button>
-                    <transition name="fadeenter">
-                      <div v-if="editedCard.stateControl" class="w3-row-padding w3-margin-top">
-                        <div class="w3-col m6 w3-margin-bottom">
-                          <label class=""><b>State:</b></label>
-                          <select class="w3-select" v-model="editedCard.state">
-                            <option>PLAN</option>
-                            <option>REALITY</option>
-                          </select>
-                        </div>
-                        <div class="w3-col m6">
-                          <label class=""><b>Target date:</b></label>
-                          <datepicker
-                            :value="targetDateStr"
-                            @selected="targetDateSelected($event)">
-                          </datepicker>
-                        </div>
+                  <div v-if="editors.length > 0" class="w3-row">
+                    <i>edited by
+                      <div class="inline-block" v-for="editor in editors">
+                        <app-user-avatar v-if="editor.c1Id !== cardWrapper.creator.c1Id" :user="editor" :showName="true" :small="true"></app-user-avatar>
                       </div>
-                    </transition>
+                    </i>
                   </div>
                 </div>
               </div>
@@ -355,7 +329,7 @@ export default {
     return {
       cardWrapper: {
         id: '',
-        stateControl: false,
+        creationDate: 0,
         card: {
           title: '',
           text: ''
@@ -396,12 +370,14 @@ export default {
     card () {
       return this.cardWrapper.card
     },
-    showStateControl () {
-      if (this.editing) {
-        return this.editedCard.stateControl
-      } else {
-        return this.cardWrapper.stateControl
+    editors () {
+      var editors = []
+      for (var ix in this.cardWrapper.editors) {
+        if (this.cardWrapper.editors[ix].c1Id !== this.cardWrapper.creator.c1Id) {
+          editors.push(this.cardWrapper.editors[ix])
+        }
       }
+      return editors
     },
     titleEmpty () {
       if (this.editedCard) {
