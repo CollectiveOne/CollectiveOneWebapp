@@ -2,7 +2,9 @@ package org.collectiveone.modules.initiatives;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -50,6 +52,7 @@ import org.collectiveone.modules.tokens.enums.TokenHolderType;
 import org.collectiveone.modules.tokens.repositories.InitiativeTransferRepositoryIf;
 import org.collectiveone.modules.tokens.repositories.TokenMintRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
+import org.collectiveone.modules.users.AppUserDto;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -179,6 +182,20 @@ public class InitiativeService {
 		return false;
 	}
 	
+	@Transactional
+	public GetResult<List<AppUserDto>> getMembersOfEcosystem(UUID initiativeId, String query, PageRequest page) {
+
+		List<UUID> ecosystemIds = findAllInitiativeEcosystemIds(initiativeId);
+		Page<AppUser> allMemberUsers = memberRepository.findMembersOfInitiatives(ecosystemIds, query.toLowerCase(), page);
+		List<AppUserDto> allMembersDto = new ArrayList<AppUserDto>();
+
+		for (AppUser user : allMemberUsers.getContent()) {
+			allMembersDto.add(user.toDtoLight());
+		}
+		return new GetResult<List<AppUserDto>>("success", "members retrieved", allMembersDto);
+	}   
+
+
 	private Boolean canAccessInherited(UUID initiativeId, UUID userId) {
 		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
 		if (parent != null) {
@@ -675,6 +692,19 @@ public class InitiativeService {
 		
 		return parentsDtos;
 	}
+		
+	@Transactional 
+	public List<UUID> findByAlsoInInitiativesEcosystem(UUID initiativeId) {
+		Initiative superInitiative = getSuperInitiative(initiativeId);
+		List<InitiativeDto> subinitiativesTree = getSubinitiativesTree(superInitiative.getId(), null);
+		
+		List<UUID> ecosystemIds = new ArrayList<UUID>();
+		
+		ecosystemIds.add(superInitiative.getId());
+		ecosystemIds.addAll(extractAllIdsFromInitiativesTree(subinitiativesTree, new ArrayList<UUID>()));
+		
+		return ecosystemIds;
+	}
 	
 	@Transactional 
 	public List<UUID> findAllInitiativeEcosystemIds(UUID initiativeId) {
@@ -761,7 +791,7 @@ public class InitiativeService {
 			memberDto.setId(member.getId().toString());
 			memberDto.setUser(member.getUser().toDtoLight());
 			
-			/* governance related data */
+			/* Governance related data */
 			DecisionMaker decisionMaker = governanceService.getDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
 			if(decisionMaker != null) {
 				memberDto.setRole(decisionMaker.getRole().toString());

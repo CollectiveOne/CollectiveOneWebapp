@@ -1,6 +1,7 @@
 package org.collectiveone.modules.initiatives;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
@@ -16,6 +17,7 @@ import org.collectiveone.modules.initiatives.dto.MemberDto;
 import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
 import org.collectiveone.modules.initiatives.dto.SearchFiltersDto;
 import org.collectiveone.modules.tokens.dto.AssetsDto;
+import org.collectiveone.modules.users.AppUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -237,6 +239,21 @@ public class InitiativesController extends BaseController {
 				UUID.fromString(memberDto.getUser().getC1Id()),
 				DecisionMakerRole.valueOf(memberDto.getRole()));
 	}
+	
+   @RequestMapping(path = "/initiative/{initiativeId}/members/suggestions", method = RequestMethod.GET)
+   public GetResult<List<AppUserDto>> memberSuggestions(
+		   	@RequestParam("q") String query,
+			@PathVariable("initiativeId") String initiativeIdFetch) {
+       System.out.println("In memberSuesstions Table=" + initiativeIdFetch);
+       UUID initiativeId = UUID.fromString(initiativeIdFetch);
+       
+       if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+           return new GetResult<List<AppUserDto>>("error", "access denied", null);
+       }
+       
+       return initiativeService.getMembersOfEcosystem(UUID.fromString(initiativeIdFetch), query, new PageRequest(0, 10));
+	}
+
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/tags", method = RequestMethod.POST) 
 	public PostResult addTagToInitiative(

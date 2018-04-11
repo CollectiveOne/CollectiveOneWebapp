@@ -4,19 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.collectiveone.modules.tokens.MemberTransfer;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-@Entity(name = "members")
+@Entity
+@Table(name = "members")
 public class Member implements Comparable<Member>{
 
 	@Id
@@ -33,8 +37,10 @@ public class Member implements Comparable<Member>{
 	private AppUser user;
 	
 	@OneToMany(mappedBy = "member")
-	private List<MemberTransfer> tokensTransfers = new ArrayList<MemberTransfer>();
+	private List<MemberTransfer> tokensTransfers = new ArrayList<MemberTransfer>(); 
 
+	@ManyToMany(cascade = CascadeType.ALL)
+	private List<Initiative> alsoInInitiativesEcosystem = new ArrayList<Initiative>();
 
 	@Override
     public int compareTo(Member m) {
