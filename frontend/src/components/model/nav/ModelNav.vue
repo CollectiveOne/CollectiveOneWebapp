@@ -14,19 +14,6 @@
     </transition>
 
     <div class="model-nav-container w3-container">
-      <div class="w3-row w3-margin-bottom">
-        <div class="zoom-controls gray-1-color">
-          <div class="cursor-pointer">
-            <i @click="levelDown()" class="fa fa-minus-circle" aria-hidden="true"></i>
-          </div>
-          <div class="">
-            {{ levels }}
-          </div>
-          <div class="cursor-pointer">
-            <i @click="levelUp()" class="fa fa-plus-circle" aria-hidden="true"></i>
-          </div>
-        </div>
-      </div>
       <div class="w3-row">
         <app-model-section-nav-item
           :section="initiative.topModelSection">
@@ -63,14 +50,6 @@ export default {
     }
   },
   methods: {
-    levelUp () {
-      this.$router.replace({name: this.$route.name, query: {levels: this.levels + 1}})
-    },
-    levelDown () {
-      if (this.levels > 1) {
-        this.$router.replace({name: this.$route.name, query: {levels: this.levels - 1}})
-      }
-    }
   }
 }
 </script>

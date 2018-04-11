@@ -7,14 +7,14 @@
           :isNew="false"
           :cardWrapperId="$route.params.cardId"
           @close="closeCardModal()"
-          @updateCards="updateCards()">
+          @updateCards="resetCards()">
         </app-model-card-modal>
       </transition>
     </div>
 
     <div class="model-section-cards-container">
       <div class="w3-row controls-row">
-        <div class="w3-left card-view-controls">
+        <div class="w3-left control-group">
           <div @click="summaryView()" class="w3-left control-btn" :class="{'selected': isSummary}">
             <i class="fa fa-list" aria-hidden="true"></i>
           </div>
@@ -26,46 +26,87 @@
           </div>
         </div>
 
-        <div class="w3-left card-order-controls">
-          <select v-model="cardSortBy" class="w3-input">
-            <option value="BY_SECTIONS">Section Order</option>
-            <option value="CREATION_DATE_DESC">Last Created</option>
-            <option value="EDITION_DATE_DESC">Last Edited</option>
-            <option value="CREATOR">Author</option>
-          </select>
-        </div>
-
-        <div class="w3-left card-order-controls">
-          <div class="w3-left">
-            <input ref="inputQuery" v-model="newCardQuery" class="w3-input" type="text" name="" value="" placeholder="search">
+        <div class="w3-left control-group">
+          <div @click="sectionOrder()" class="w3-left control-btn" :class="{'selected': isSectionsOrder}">
+            <i class="fa fa-tree" aria-hidden="true"></i>
           </div>
-          <div @click="updateQuery()" class="w3-left control-btn selected">
-            <i class="fa fa-search" aria-hidden="true"></i>
+          <div @click="aggregatedOrder()" class="w3-left control-btn" :class="{'selected': !isSectionsOrder}">
+            <i class="fa fa-filter" aria-hidden="true"></i>
           </div>
         </div>
 
-        <div v-if="cardQuery !== '' && !isSectionsOrder" class="w3-left card-order-controls text-details">
-          searching by
-          <span class="cursor-pointer" @click="resetQuery()">
-            <i><b>"{{ cardQuery}}"</b></i> <i class="fa fa-times-circle" aria-hidden="true"></i>
+        <div v-if="isSectionsOrder" class="">
+          <div class="w3-left control-group zoom-controls">
+            <div class="w3-left cursor-pointer">
+              <i @click="levelDown()" class="fa fa-minus-circle" aria-hidden="true"></i>
+            </div>
+            <div class="w3-left number-div">
+              {{ levels }}
+            </div>
+            <div class="w3-left cursor-pointer">
+              <i @click="levelUp()" class="fa fa-plus-circle" aria-hidden="true"></i>
+            </div>
+          </div>
+        </div>
+        <div v-else class="">
+          <div class="w3-left control-group">
+            <div class="w3-left">
+              <input ref="inputQuery" v-model="newCardQuery" class="w3-input"
+                type="text" name="" value="" placeholder="search">
+            </div>
+            <div @click="updateQuery()" class="w3-left control-btn selected">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </div>
+          </div>
+
+          <div class="w3-left control-group">
+            <select v-model="cardSortBy" class="w3-input">
+              <option value="CREATION_DATE_DESC">Last Created</option>
+              <option value="EDITION_DATE_DESC">Last Edited</option>
+              <option value="CREATOR">Author</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="w3-left control-group text-details">
+          <span v-if="!isSectionsOrder">
+            you are
+            <span v-if="cardQuery !== ''" class="">
+              searching by
+              <span class="cursor-pointer" @click="resetQuery()">
+                <i><b>"{{ cardQuery }}"</b></i> <i class="fa fa-times-circle" aria-hidden="true"></i>
+              </span>
+            </span>
+            <span v-else class="">
+              seeing all cards
+            </span>
+            under the
+            <br>"{{ section.title }}" section.
           </span>
-        </div>
+          <span v-else>
+            you are seeing cards up to {{ levels }} levels under the <br>"{{ section.title }}" and in their specified order.
+          </span>
 
+        </div>
       </div>
 
       <div class="cards-list">
         <app-model-section
-          v-if="!loading && isSectionsOrder"
+          v-if="isSectionsOrder"
           :section="section"
           :cardsType="cardsType">
         </app-model-section>
 
         <app-model-cards-container
-          v-if="!loading && !isSectionsOrder"
+          v-if="!isSectionsOrder"
           :cardWrappers="cardWrappers"
           :inSection="section"
           :cardsType="cardsType">
         </app-model-cards-container>
+
+        <div v-if="!isSectionsOrder && thereAreMore" class="w3-row w3-center">
+          <button @click="showMore()" class="w3-button app-button-light" type="button" name="button">show more</button>
+        </div>
 
         <div v-if="loading" class="w3-row w3-center loader-gif-container">
           <img class="loader-gif" src="../../assets/loading.gif" alt="">
@@ -92,11 +133,13 @@ export default {
       section: null,
       showCardModal: false,
       loading: false,
+      orderType: 'sections',
       newCardQuery: '',
       cardQuery: '',
-      cardSortBy: 'BY_SECTIONS',
+      cardSortBy: 'CREATION_DATE_DESC',
       page: 0,
-      pageSize: 20,
+      pageSize: 10,
+      thereAreMore: true,
       cardWrappers: []
     }
   },
@@ -121,7 +164,7 @@ export default {
       return this.cardsType === 'doc'
     },
     isSectionsOrder () {
-      return this.cardQuery === '' && this.cardSortBy === 'BY_SECTIONS'
+      return this.orderType === 'sections'
     }
   },
 
@@ -137,7 +180,7 @@ export default {
     },
     cardSortBy () {
       if (!this.isSectionsOrder) {
-        this.updateCards()
+        this.resetCards()
       } else {
         this.updateSection()
       }
@@ -145,6 +188,21 @@ export default {
   },
 
   methods: {
+    sectionOrder () {
+      this.orderType = 'sections'
+    },
+    aggregatedOrder () {
+      this.resetCards()
+      this.orderType = 'aggregated'
+    },
+    levelUp () {
+      this.$router.replace({name: this.$route.name, query: {levels: this.levels + 1}})
+    },
+    levelDown () {
+      if (this.levels > 1) {
+        this.$router.replace({name: this.$route.name, query: {levels: this.levels - 1}})
+      }
+    },
     summaryView () {
       if (this.$route.query.cardsType !== 'summary') {
         this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'summary'}})
@@ -160,7 +218,17 @@ export default {
         this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'doc'}})
       }
     },
-    updateCards () {
+    showMore () {
+      this.page = this.page + 1
+      this.getMoreCards()
+    },
+    resetCards () {
+      this.page = 0
+      this.thereAreMore = true
+      this.cardWrappers = []
+      this.getMoreCards()
+    },
+    getMoreCards () {
       this.loading = true
       if (this.currentSectionId) {
         this.axios.get('/1/model/section/' + this.currentSectionId + '/cardWrappers/search',
@@ -175,7 +243,10 @@ export default {
          }).then((response) => {
           this.loading = false
           if (response.data.result === 'success') {
-            this.cardWrappers = response.data.data.content
+            if (response.data.data.content.length < this.pageSize) {
+              this.thereAreMore = false
+            }
+            this.cardWrappers = this.cardWrappers.concat(response.data.data.content)
           }
         }).catch((err) => {
           console.log(err)
@@ -207,7 +278,7 @@ export default {
       if (this.isSectionsOrder) {
         this.updateSection()
       } else {
-        this.updateCards()
+        this.resetCards()
       }
     },
     checkCardSubroute () {
@@ -252,8 +323,23 @@ export default {
   margin: 6px 6px;
 }
 
-.card-order-controls {
+.control-group {
   margin-left: 20px;
+}
+
+.zoom-controls {
+  margin-left: 20px;
+  width: 90px;
+  font-size: 28px;
+  text-align: center;
+}
+
+.zoom-controls > .w3-left {
+  width: 30px;
+}
+
+.zoom-controls > .number-div {
+  font-size: 22px;
 }
 
 .control-btn {
@@ -278,7 +364,7 @@ export default {
 }
 
 .text-details {
-  padding-top: 8px;
+  font-size: 12px;
 }
 
 .cards-list {
