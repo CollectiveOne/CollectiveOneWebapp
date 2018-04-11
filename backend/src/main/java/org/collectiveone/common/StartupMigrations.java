@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
-import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.activity.Activity;
+import org.collectiveone.modules.activity.enums.ActivityType;
+import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
+import org.collectiveone.modules.model.ModelCardWrapper;
+import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -20,39 +22,30 @@ public class StartupMigrations implements ApplicationListener<ContextRefreshedEv
 	
 	
 	@Autowired
-	InitiativeRepositoryIf initiativeRepository;
+	ModelCardWrapperRepositoryIf modelCardWrapperRepository;
 	
 	@Autowired
-	private ModelSectionRepositoryIf modelSectionRepository;
+	ActivityRepositoryIf activityRepository;
 	
 	@EventListener
 	@Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
 		
 		/* Create top section to all initiatives */
-		List<Initiative> initiatives = (List<Initiative>) initiativeRepository.findAll();
+		List<ModelCardWrapper> cardWrappers = modelCardWrapperRepository.findWithNullCreationDate();
 		
-		System.out.println("creating initiatives top sections");
+		System.out.println("filling card wrappers creation date");
 		
-		for (Initiative initiative : initiatives) {
-			if (initiative.getTopModelSection() == null) {
-				
-				System.out.println("creating top section for " + initiative.getMeta().getName());
-				
-				ModelSection section = new ModelSection();
-				section.setTitle(initiative.getMeta().getName());
-				section.setInitiative(initiative);
-				section.setIsTopModelSection(true);
-				
-				section = modelSectionRepository.save(section);
-				
-				initiative.setTopModelSection(section);
-				initiativeRepository.save(initiative);
-				
+		for (ModelCardWrapper cardWrapper : cardWrappers) {
+			
+			List<Activity> creationEvents = activityRepository.findOfCard(cardWrapper.getId(), ActivityType.MODEL_CARDWRAPPER_CREATED);
+			
+			if (creationEvents.size() > 0) {
+				System.out.println("filling card wrapper " + cardWrapper.getId().toString() +" creation date");
+				cardWrapper.setCreationDate(creationEvents.get(0).getTimestamp());
 			}
+			
+			modelCardWrapperRepository.save(cardWrapper);
 		}
     }
-	
-	
-
 }

@@ -45,12 +45,29 @@ export default (to, from, next) => {
       /* just keep the current tab when switching among sections */
       switch (from.name) {
         case 'ModelSectionMessages':
-        next({name: 'ModelSectionMessages', params: {sectionId: to.params.sectionId}, query: {levels: toLevels, cardsType: toCardsType}})
+        next({
+            name: 'ModelSectionMessages',
+            params: {
+              sectionId: to.params.sectionId
+            },
+            query: {
+              levels: toLevels,
+              cardsType: toCardsType
+            }
+          })
           break
 
         case 'ModelSectionCards':
         case 'ModelSectionCard':
-          next({name: 'ModelSectionCards', params: {sectionId: to.params.sectionId}, query: {levels: toLevels, cardsType: toCardsType}})
+          next({
+            name: 'ModelSectionCards',
+            params: {
+              sectionId: to.params.sectionId
+            },
+            query: {
+              levels: toLevels,
+              cardsType: toCardsType
+            }})
           break
 
         default:
@@ -58,8 +75,19 @@ export default (to, from, next) => {
           break
       }
     } else {
-      if ((toLevels !== fromLevels) || (toCardsType !== fromCardsType) || (to.name !== from.name)) {
-        next({name: to.name, params: {sectionId: to.params.sectionId}, query: {levels: toLevels, cardsType: toCardsType}})
+      if (
+        (toLevels !== fromLevels) ||
+        (toCardsType !== fromCardsType) ||
+        (to.name !== from.name)) {
+        next({
+          name: to.name,
+          params: {
+            sectionId: to.params.sectionId
+          },
+          query: {
+            levels: toLevels,
+            cardsType: toCardsType
+          }})
       } else {
         next()
       }

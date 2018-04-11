@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -582,27 +583,33 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(String query, PageRequest page, UUID initiativeId) {
-		List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(initiativeId);
-		Page<ModelCardWrapper> enititiesPage = modelCardWrapperRepository.searchBy("%"+query.toLowerCase()+"%", initiativeEcosystemIds, page);
+	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(UUID sectionId, String query, Integer page, Integer pageSize, String sortByIn, Integer levels, UUID requestById) {
+		List<UUID> allSectionIds = new ArrayList<UUID>();
+		
+		allSectionIds.add(sectionId);
+		allSectionIds.addAll(getAllSubsectionsIds(sectionId, levels - 1));
+		
+		PageRequest pageRequest = null;
+		
+		switch (sortByIn) {
+			case "CREATION_DATE_DESC":
+				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.creationDate"));
+				break;
+		
+		}
+		
+		Page<ModelCardWrapper> enititiesPage = 
+				modelCardWrapperRepository.searchInSectionByQuery(allSectionIds, "%"+query.toLowerCase()+"%", pageRequest);
 		
 		List<ModelCardWrapperDto> cardsDtos = new ArrayList<ModelCardWrapperDto>();
 		
 		for(ModelCardWrapper cardWrapper : enititiesPage.getContent()) {
-			List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapper.getId());
-			
-			ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
-			
-			for (ModelSection section : inSections) {
-				cardWrapperDto.getInSections().add(section.toDto());
-			}
-			
-			cardsDtos.add(cardWrapperDto);
+			cardsDtos.add(getCardWrapperDtoWithMetadata(cardWrapper, requestById));
 		}
 		
-		Page<ModelCardWrapperDto> dtosPage = new PageImpl<ModelCardWrapperDto>(cardsDtos, page, enititiesPage.getNumberOfElements());
+		Page<ModelCardWrapperDto> dtosPage = new PageImpl<ModelCardWrapperDto>(cardsDtos, pageRequest, enititiesPage.getNumberOfElements());
 		
-		return new GetResult<Page<ModelCardWrapperDto>>("succes", "cards returned", dtosPage);
+		return new GetResult<Page<ModelCardWrapperDto>>("success", "cards returned", dtosPage);
 	}
 		
 	@Transactional

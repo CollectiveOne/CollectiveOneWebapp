@@ -347,7 +347,7 @@ export default {
     },
     atCardWrapper: {
       type: Object,
-      default: ''
+      default: null
     }
   },
 

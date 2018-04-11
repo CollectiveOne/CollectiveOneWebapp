@@ -1,5 +1,6 @@
 package org.collectiveone.modules.model;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -46,6 +47,9 @@ public class ModelCardWrapper {
 	@OneToMany(mappedBy="cardWrapper")
 	private List<CardLike> likes;
 	
+	private Timestamp creationDate;
+	
+	private Timestamp lastEdited;
 	
 	@Override
 	public int hashCode() {
@@ -74,6 +78,7 @@ public class ModelCardWrapper {
 		cardWrapperDto.setId(id.toString());
 		cardWrapperDto.setCard(card.toDto());
 		cardWrapperDto.setInitiativeId(initiative.getId().toString());
+		if (creationDate != null) cardWrapperDto.setCreationDate(creationDate.getTime());
 		
 		return cardWrapperDto;
 	}
@@ -125,6 +130,21 @@ public class ModelCardWrapper {
 	public void setLikes(List<CardLike> likes) {
 		this.likes = likes;
 	}
-	
+
+	public Timestamp getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Timestamp creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Timestamp getLastEdited() {
+		return lastEdited;
+	}
+
+	public void setLastEdited(Timestamp lastEdited) {
+		this.lastEdited = lastEdited;
+	}
 	
 }

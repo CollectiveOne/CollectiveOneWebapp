@@ -371,6 +371,24 @@ public class ModelController extends BaseController {
 		return modelService.editCardWrapper(initiativeId, cardWrapperId, cardDto, getLoggedUser().getC1Id());
 	}
 	
+	@RequestMapping(path = "/model/section/{sectionId}/cardWrappers/search", method = RequestMethod.GET) 
+	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(
+			@PathVariable("sectionId") String sectionIdStr,
+			@RequestParam(name="query", defaultValue="") String query,
+			@RequestParam(name="page", defaultValue="0") Integer page,
+			@RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
+			@RequestParam(name="levels", defaultValue="1") Integer levels,
+			@RequestParam(name="sortBy", defaultValue="1") String sortBy) {
+		
+		UUID sectionId = UUID.fromString(sectionIdStr);
+		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<Page<ModelCardWrapperDto>>("error", "access denied", null);
+		}
+		
+		return modelService.searchCardWrapper(sectionId, query, page, pageSize, sortBy, levels, getLoggedUserId());
+	}
 	
 	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}", method = RequestMethod.DELETE) 
 	public PostResult deleteCardWrapper(
@@ -389,23 +407,7 @@ public class ModelController extends BaseController {
 		
 		return modelService.deleteCardWrapper(cardWrapperId, getLoggedUser().getC1Id());
 	}
-	
-	@RequestMapping(path = "/initiative/{initiativeId}/model/cardWrapper/search", method = RequestMethod.GET) 
-	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(
-			@PathVariable("initiativeId") String initiativeIdStr,
-			@RequestParam("query") String query,
-			@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size) {
 		
-		UUID initiativeId = UUID.fromString(initiativeIdStr);
-		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
-			return new GetResult<Page<ModelCardWrapperDto>>("error", "access denied", null);
-		}
-		
-		return modelService.searchCardWrapper(query, new PageRequest(page, size), initiativeId);
-	}
-	
 	@RequestMapping(path = "/model/section/search", method = RequestMethod.GET) 
 	public GetResult<Page<ModelSectionDto>> searchSection(
 			@RequestParam("sectionId") String sectionIdStr,

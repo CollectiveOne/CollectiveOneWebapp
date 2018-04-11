@@ -1,18 +1,5 @@
 <template lang="html">
-  <div v-if="cardWrapper" class="">
-
-    <div class="slider-container">
-      <transition name="slideDownUp">
-        <app-model-card-modal
-          v-if="showModal"
-          :isNew="false"
-          :cardWrapperId="cardWrapper.id"
-          :inSectionId="inSection.id"
-          :inSectionTitle="inSection.title"
-          @close="showModal = false">
-        </app-model-card-modal>
-      </transition>
-    </div>
+  <div v-if="cardWrapper" class="card-base-div">
 
     <div class="card-content-container">
       <component
@@ -64,8 +51,7 @@ export default {
 
   data () {
     return {
-      cardWrapper: null,
-      showModal: false
+      cardWrapper: null
     }
   },
 

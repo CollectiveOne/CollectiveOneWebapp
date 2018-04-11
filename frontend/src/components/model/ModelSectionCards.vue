@@ -1,30 +1,67 @@
 <template lang="html">
-  <div class="">
-    <div class="w3-row controls-row">
-      <div class="w3-left card-view-controls">
-        <div @click="summaryView()" class="w3-left control-btn" :class="{'selected': isSummary}">
-          <i class="fa fa-list" aria-hidden="true"></i>
-        </div>
-        <div @click="cardView()" class="w3-left control-btn" :class="{'selected': isCard}">
-          <i class="fa fa-th-large" aria-hidden="true"></i>
-        </div>
-        <div @click="docView()" class="w3-left control-btn" :class="{'selected': isDoc}">
-          <i class="fa fa-file-text" aria-hidden="true"></i>
-        </div>
-      </div>
+  <div class="model-section-cards">
+
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-card-modal v-if="showCardModal"
+          :isNew="false"
+          :cardWrapperId="$route.params.cardId"
+          @close="closeCardModal()"
+          @updateCards="updateCards()">
+        </app-model-card-modal>
+      </transition>
     </div>
 
-    <div class="cards-list">
-      <app-model-section
-        v-if="!loading"
-        :section="section"
-        :cardsType="cardsType">
-      </app-model-section>
+    <div class="model-section-cards-container">
+      <div class="w3-row controls-row">
+        <div class="w3-left card-view-controls">
+          <div @click="summaryView()" class="w3-left control-btn" :class="{'selected': isSummary}">
+            <i class="fa fa-list" aria-hidden="true"></i>
+          </div>
+          <div @click="cardView()" class="w3-left control-btn" :class="{'selected': isCard}">
+            <i class="fa fa-th-large" aria-hidden="true"></i>
+          </div>
+          <div @click="docView()" class="w3-left control-btn" :class="{'selected': isDoc}">
+            <i class="fa fa-file-text" aria-hidden="true"></i>
+          </div>
+        </div>
 
-      <div v-else class="w3-row w3-center loader-gif-container">
-        <img class="loader-gif" src="../../assets/loading.gif" alt="">
+        <div class="w3-left card-order-controls">
+          <div class="w3-left">
+            <input v-model="cardQuery" class="w3-input" type="text" name="" value="" placeholder="search">
+          </div>
+        </div>
+
+        <div class="w3-left card-order-controls">
+          <select v-model="cardSortBy" class="w3-input">
+            <option value="BY_SECTIONS">By Sections</option>
+            <option value="CREATION_DATE_DESC">Last Created</option>
+            <option value="EDITION_DATE_DESC">Last Edited</option>
+            <option value="CREATOR">Author</option>
+          </select>
+        </div>
+
       </div>
 
+      <div class="cards-list">
+        <app-model-section
+          v-if="!loading && isSectionsOrder"
+          :section="section"
+          :cardsType="cardsType">
+        </app-model-section>
+
+        <app-model-cards-container
+          v-if="!loading && !isSectionsOrder"
+          :cardWrappers="cardWrappers"
+          :inSection="section"
+          :cardsType="cardsType">
+        </app-model-cards-container>
+
+        <div v-if="loading" class="w3-row w3-center loader-gif-container">
+          <img class="loader-gif" src="../../assets/loading.gif" alt="">
+        </div>
+
+      </div>
     </div>
   </div>
 </template>
@@ -32,17 +69,24 @@
 <script>
 
 import ModelSection from '@/components/model/ModelSection'
+import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer'
 
 export default {
   components: {
-    'app-model-section': ModelSection
+    'app-model-section': ModelSection,
+    'app-model-cards-container': ModelCardsContainer
   },
 
   data () {
     return {
       section: null,
-      showNewCardModal: false,
-      loading: false
+      showCardModal: false,
+      loading: false,
+      cardQuery: '',
+      cardSortBy: 'BY_SECTIONS',
+      page: 0,
+      pageSize: 20,
+      cardWrappers: []
     }
   },
 
@@ -64,6 +108,9 @@ export default {
     },
     isDoc () {
       return this.cardsType === 'doc'
+    },
+    isSectionsOrder () {
+      return this.cardQuery === '' && this.cardSortBy === 'BY_SECTIONS'
     }
   },
 
@@ -71,22 +118,65 @@ export default {
     '$route.params.sectionId' () {
       this.update()
     },
+    '$route' () {
+      this.checkCardSubroute()
+    },
     levels () {
       this.update()
+    },
+    cardQuery () {
+      if (!this.isSectionsOrder) {
+        this.updateCards()
+      }
+    },
+    cardSortBy () {
+      if (!this.isSectionsOrder) {
+        this.updateCards()
+      } else {
+        this.updateSection()
+      }
     }
   },
 
   methods: {
     summaryView () {
-      this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'summary'}})
+      if (this.$route.query.cardsType !== 'summary') {
+        this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'summary'}})
+      }
     },
     cardView () {
-      this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'card'}})
+      if (this.$route.query.cardsType !== 'card') {
+        this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'card'}})
+      }
     },
     docView () {
-      this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'doc'}})
+      if (this.$route.query.cardsType !== 'doc') {
+        this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'doc'}})
+      }
     },
-    update () {
+    updateCards () {
+      this.loading = true
+      if (this.currentSectionId) {
+        this.axios.get('/1/model/section/' + this.currentSectionId + '/cardWrappers/search',
+         {
+           params: {
+             query: this.cardQuery,
+             page: this.page,
+             pageSize: this.pageSize,
+             sortBy: this.cardSortBy,
+             levels: this.levels
+           }
+         }).then((response) => {
+          this.loading = false
+          if (response.data.result === 'success') {
+            this.cardWrappers = response.data.data.content
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
+    },
+    updateSection () {
       this.loading = true
       if (this.currentSectionId) {
         this.axios.get('/1/model/section/' + this.currentSectionId, {params: {levels: this.levels}}).then((response) => {
@@ -94,13 +184,34 @@ export default {
           if (response.data.result === 'success') {
             this.section = response.data.data
           }
+        }).catch((err) => {
+          console.log(err)
         })
       }
+    },
+    update () {
+      if (this.isSectionsOrder) {
+        this.updateSection()
+      } else {
+        this.updateCards()
+      }
+    },
+    checkCardSubroute () {
+      this.showCardModal = false
+      if (this.$route.name === 'ModelSectionCard') {
+        if (this.$route.params.sectionId === this.section.id) {
+          this.showCardModal = true
+        }
+      }
+    },
+    closeCardModal () {
+      this.$router.replace({name: 'ModelSectionCards'})
     }
   },
 
   created () {
     this.update()
+    this.checkCardSubroute()
   }
 }
 </script>
@@ -109,6 +220,10 @@ export default {
 
 .controls-row {
   margin: 6px 6px;
+}
+
+.card-order-controls {
+  margin-left: 20px;
 }
 
 .control-btn {

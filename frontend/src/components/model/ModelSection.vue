@@ -2,19 +2,6 @@
 
   <div v-if="section" class="section-container" ref="sectionContainer">
 
-    <div class="slider-container">
-      <transition name="slideDownUp">
-        <app-model-card-modal v-if="showCardModal"
-          :isNew="false"
-          :cardWrapperId="$route.params.cardId"
-          :inSectionId="section.id"
-          :inSectionTitle="section.Title"
-          @close="closeCardModal()"
-          @updateCards="updateCards()">
-        </app-model-card-modal>
-      </transition>
-    </div>
-
     <div v-if="nestedIn.length > 0 && sortedCards.length > 0"
       class="w3-row blue-color title-row">
       <div v-for="parent in nestedIn.slice(1, nestedIn.length)"
@@ -27,21 +14,12 @@
     </div>
 
     <div class="w3-row">
-      <div v-for="(cardWrapper, ix) in sortedCards"
-        :key="cardWrapper.id"
-        :class="cardsContainerClasses"
-        @dragover.prevent
-        @drop.prevent="cardDroped(cardWrapper.id, $event)">
-
-        <div class="">
-          <app-model-card
-            :cardWrapperInit="cardWrapper"
-            :inSection="section"
-            :type="cardsType"
-            @updateCards="$emit('updateCards')">
-          </app-model-card>
-        </div>
-      </div>
+      <app-model-cards-container
+        :cardWrappers="sortedCards"
+        :cardsType="cardsType"
+        :inSection="section"
+        @updateCards="updateCards()">
+      </app-model-cards-container>
     </div>
 
     <div class="w3-row">
@@ -66,14 +44,14 @@
 
 <script>
 import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
-import ModelCard from '@/components/model/cards/ModelCard.vue'
+import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer.vue'
 
 export default {
   name: 'app-model-section',
 
   components: {
     'app-model-section-header': ModelSectionHeader,
-    'app-model-card': ModelCard
+    'app-model-cards-container': ModelCardsContainer
   },
 
   props: {
@@ -105,15 +83,8 @@ export default {
       showSubsections: true,
       showCards: true,
       expanded: true,
-      showCardModal: false,
       showCardId: '',
       expandSubSubsecInit: false
-    }
-  },
-
-  watch: {
-    '$route' () {
-      this.checkCardSubroute()
     }
   },
 
@@ -141,13 +112,6 @@ export default {
     },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
-    },
-    cardsContainerClasses () {
-      return {
-        'section-card-col-with-nav': this.cardsType === 'card' && (this.$store.state.support.expandNav && !this.$store.state.support.windowIsSmall),
-        'section-card-col-no-nav': this.cardsType === 'card' && (!this.$store.state.support.expandNav || this.$store.state.support.windowIsSmall),
-        'section-card-par': !this.cardsType !== 'card'
-      }
     }
   },
 
@@ -158,35 +122,6 @@ export default {
           this.section.cardsWrappers = response.data.data
         }
       })
-    },
-    cardDroped (onCardWrapperId, event) {
-      var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
-      if (dragData.type === 'MOVE_CARD') {
-        if (dragData.fromSectionId !== '' && !event.ctrlKey) {
-          /* move from section */
-          this.axios.put('/1/initiative/' + this.initiativeId +
-            '/model/section/' + dragData.fromSectionId +
-            '/moveCard/' + dragData.cardWrapperId, {}, {
-            params: {
-              onSectionId: this.section.id,
-              onCardWrapperId: onCardWrapperId
-            }
-          }).then((response) => {
-            this.$store.commit('triggerUpdateModel')
-          })
-        } else {
-          /* add existing card */
-          this.axios.put('/1/initiative/' + this.initiativeId +
-            '/model/section/' + this.section.id +
-            '/cardWrapper/' + dragData.cardWrapperId, {}, {
-            params: {
-              beforeCardWrapperId: onCardWrapperId
-            }
-          }).then((response) => {
-            this.$store.commit('triggerUpdateModel')
-          })
-        }
-      }
     },
     dragStart (event) {
       var moveSectionData = {
@@ -221,122 +156,14 @@ export default {
       this.showSubsections = true
       this.$emit('new-subsection')
     },
-    checkCardSubroute () {
-      this.showCardModal = false
-      if (this.$route.name === 'ModelSectionCard') {
-        if (this.$route.params.sectionId === this.section.id) {
-          this.showCardModal = true
-        }
-      }
-    },
     closeCardModal () {
       this.$router.replace({name: 'ModelSectionCards'})
     }
-  },
-
-  created () {
-    this.checkCardSubroute()
   }
 }
 </script>
 
 <style scoped>
-
-.section-container {
-}
-
-.cards-container {
-}
-
-.section-card-col-with-nav, .section-card-col-no-nav {
-  margin-bottom: 20px;
-  display: inline-block;
-}
-
-@media screen and (min-width: 1700px) {
-  .section-card-col-no-nav {
-    width: calc(20% - 16px);
-    margin-left: 8px;
-    margin-right: 8px;
-    vertical-align: top;
-  }
-}
-
-@media screen and (min-width: 1300px) and (max-width: 1699px) {
-  .section-card-col-no-nav {
-    width: calc(25% - 16px);
-    margin-left: 8px;
-    margin-right: 8px;
-    vertical-align: top;
-  }
-}
-
-@media screen and (min-width: 900px) and (max-width: 1299px) {
-  .section-card-col-no-nav {
-    width: calc(33% - 16px);
-    margin-left: 8px;
-    margin-right: 8px;
-    vertical-align: top;
-  }
-}
-
-@media screen and (min-width: 600px) and (max-width: 899px) {
-  .section-card-col-no-nav {
-    width: calc(50% - 16px);
-    margin-left: 8px;
-    margin-right: 8px;
-    vertical-align: top;
-  }
-}
-
-@media screen and (max-width: 599px) {
-  .section-card-col-no-nav {
-    width: calc(100% - 16px);
-    margin-left: 8px;
-    margin-right: 8px;
-    vertical-align: top;
-  }
-}
-
-@media screen and (min-width: 1700px) {
-  .section-card-col-with-nav {
-    width: calc(25% - 16px);
-    margin-left: 8px;
-    margin-right: 8px;
-    vertical-align: top;
-  }
-}
-
-@media screen and (min-width: 1200px) and (max-width: 1699px) {
-  .section-card-col-with-nav {
-    width: calc(33% - 16px);
-    margin-left: 8px;
-    margin-right: 8px;
-    vertical-align: top;
-  }
-}
-
-@media screen and (min-width: 900px) and (max-width: 1199px) {
-  .section-card-col-with-nav {
-    width: calc(50% - 16px);
-    margin-left: 8px;
-    margin-right: 8px;
-    vertical-align: top;
-  }
-}
-
-@media screen and (max-width: 899px) {
-  .section-card-col-with-nav {
-    width: calc(100% - 16px);
-    margin-left: 8px;
-    margin-right: 8px;
-    vertical-align: top;
-  }
-}
-
-.section-card-par {
-  margin-bottom: 16px;
-}
 
 .title-row {
   margin-top: 12px;
@@ -349,12 +176,6 @@ export default {
 
 .title-row > div {
   margin-right: 5px;
-}
-
-.subsections-container {
-}
-
-.subsection-container {
 }
 
 </style>

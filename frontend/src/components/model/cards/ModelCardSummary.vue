@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="card-summary-container w3-card-2 w3-row"
+  <div class="card-summary-container w3-card w3-row"
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 

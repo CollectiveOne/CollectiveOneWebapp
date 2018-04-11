@@ -7,12 +7,10 @@ public class ModelCardWrapperDto {
 
 	private String id;
 	private ModelCardDto card;
-	private Boolean stateControl;
+	private Long creationDate; 
+	private String initiativeId;
 	private Integer nLikes;
 	private Boolean userLiked;
-	private String state;
-	private String initiativeId;
-	private Long targetDate; 
 	private List<ModelCardDto> oldVersions;
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
 	
@@ -28,11 +26,17 @@ public class ModelCardWrapperDto {
 	public void setCard(ModelCardDto card) {
 		this.card = card;
 	}
-	public Boolean getStateControl() {
-		return stateControl;
+	public Long getCreationDate() {
+		return creationDate;
 	}
-	public void setStateControl(Boolean stateControl) {
-		this.stateControl = stateControl;
+	public void setCreationDate(Long creationDate) {
+		this.creationDate = creationDate;
+	}
+	public String getInitiativeId() {
+		return initiativeId;
+	}
+	public void setInitiativeId(String initiativeId) {
+		this.initiativeId = initiativeId;
 	}
 	public Integer getnLikes() {
 		return nLikes;
@@ -45,24 +49,6 @@ public class ModelCardWrapperDto {
 	}
 	public void setUserLiked(Boolean userLiked) {
 		this.userLiked = userLiked;
-	}
-	public String getState() {
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
-	}
-	public String getInitiativeId() {
-		return initiativeId;
-	}
-	public void setInitiativeId(String initiativeId) {
-		this.initiativeId = initiativeId;
-	}
-	public Long getTargetDate() {
-		return targetDate;
-	}
-	public void setTargetDate(Long targetDate) {
-		this.targetDate = targetDate;
 	}
 	public List<ModelCardDto> getOldVersions() {
 		return oldVersions;
