@@ -84,7 +84,7 @@
             <br>"{{ section.title }}" section.
           </span>
           <span v-else>
-            you are seeing cards up to {{ levels }} levels under the <br>"{{ section.title }}" and in their specified order.
+            you are seeing all cards up to {{ levels }} levels under the <br>"{{ section.title }}" section and respecting their in-section order.
           </span>
 
         </div>
