@@ -6,7 +6,7 @@ const state = {
   currentInitiativeTree: [],
   triggerUpdateAssets: false,
   triggerUpdateModelNav: false,
-  triggerUpdateModelContent: false,
+  triggerUpdateSectionCards: false,
   userEmailNotVerified: false,
   initiativeLoaded: false,
   expandNav: false,
@@ -115,8 +115,8 @@ const mutations = {
   triggerUpdateModelNav: (state) => {
     state.triggerUpdateModelNav = !state.triggerUpdateModelNav
   },
-  triggerUpdateModelContent: (state) => {
-    state.triggerUpdateModelContent = !state.triggerUpdateModelContent
+  triggerUpdateSectionCards: (state) => {
+    state.triggerUpdateSectionCards = !state.triggerUpdateSectionCards
   },
   setUserEmailNotVerified: (state, payload) => {
     state.userEmailNotVerified = payload

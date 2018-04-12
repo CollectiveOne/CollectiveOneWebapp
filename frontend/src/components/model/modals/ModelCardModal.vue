@@ -586,7 +586,7 @@ export default {
       var responseF = (response) => {
         if (response.data.result === 'success') {
           this.closeThis()
-          this.$store.commit('triggerUpdateModelContent')
+          this.$store.commit('triggerUpdateSectionCards')
         } else {
           this.showOutputMessage(response.data.message)
         }
@@ -598,7 +598,7 @@ export default {
     },
     deleteCard () {
       this.axios.delete('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
-        this.$store.commit('triggerUpdateModelContent')
+        this.$store.commit('triggerUpdateSectionCards')
         this.closeThis()
       }).catch((error) => {
         console.log(error)

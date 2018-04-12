@@ -3,7 +3,7 @@
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 
-    <div class="">
+    <div class="w3-row">
 
       <div class="w3-col s12">
 

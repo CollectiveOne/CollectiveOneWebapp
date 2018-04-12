@@ -4,8 +4,12 @@
     <div v-for="(cardWrapper, ix) in cardWrappers"
       :key="cardWrapper.id"
       :class="cardsContainerClasses"
-      @dragover.prevent
+      @dragover.prevent="draggingOver(cardWrapper)"
       @drop.prevent="cardDroped(cardWrapper.id, $event)">
+
+      <div v-if="isDraggingOver(cardWrapper)" class="drop-div">
+
+      </div>
 
       <div class="card-container-in-list">
         <app-model-card
@@ -52,36 +56,72 @@ export default {
     }
   },
 
+  data () {
+    return {
+      draggingOverCardWrapper: null,
+      resetIntervalId: 0
+    }
+  },
+
   methods: {
+    draggingOver (cardWrapper) {
+      this.draggingOverCardWrapper = cardWrapper
+
+      /* make sure this resets even if dropped elsewhere */
+      clearTimeout(this.resetIntervalId)
+      this.resetIntervalId = setTimeout(() => {
+        this.draggingOverCardWrapper = null
+      }, 500)
+    },
+    isDraggingOver (cardWrapper) {
+      if (this.draggingOverCardWrapper) {
+        return (this.draggingOverCardWrapper.id === cardWrapper.id)
+      }
+      return false
+    },
     cardDroped (onCardWrapperId, event) {
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
       if (dragData.type === 'MOVE_CARD') {
-        if (dragData.fromSectionId !== '' && !event.ctrlKey) {
+        var moveFlag = false
+        if (!event.ctrlKey && dragData.fromSectionId !== '') {
+          moveFlag = true
+        } else {
+          moveFlag = false
+        }
+
+        if (moveFlag) {
           /* move from section */
-          this.axios.put('/1/initiative/' + this.initiativeId +
-            '/model/section/' + dragData.fromSectionId +
+          console.log('moving card ' + dragData.cardWrapperId +
+            ' from ' + dragData.fromSectionId +
+            ' to ' + this.inSection.id)
+
+          this.axios.put('/1/model/section/' + dragData.fromSectionId +
             '/moveCard/' + dragData.cardWrapperId, {}, {
             params: {
-              onSectionId: this.section.id,
+              onSectionId: this.inSection.id,
               onCardWrapperId: onCardWrapperId
             }
           }).then((response) => {
-            this.$store.commit('triggerUpdateModel')
+            this.$store.commit('triggerUpdateSectionCards')
           })
         } else {
           /* copy card without removing it */
-          this.axios.put('/1/initiative/' + this.initiativeId +
-            '/model/section/' + this.inSection.id +
+          console.log('adding card ' + dragData.cardWrapperId +
+            ' to ' + this.inSection.id)
+          this.axios.put('/1/model/section/' + this.inSection.id +
             '/cardWrapper/' + dragData.cardWrapperId, {}, {
             params: {
               beforeCardWrapperId: onCardWrapperId
             }
           }).then((response) => {
-            this.$store.commit('triggerUpdateModel')
+            this.$store.commit('triggerUpdateSectionCards')
           })
         }
       }
     }
+  },
+
+  created () {
   }
 }
 </script>
@@ -95,6 +135,13 @@ export default {
 .section-card-col-with-nav, .section-card-col-no-nav {
   margin-bottom: 20px;
   display: inline-block;
+}
+
+.drop-div {
+  height: 10px;
+  background-color: #828282;
+  border-radius: 5px;
+  margin-bottom: 10px;
 }
 
 @media screen and (min-width: 1700px) {

@@ -1,7 +1,10 @@
 <template lang="html">
   <div v-if="cardWrapper" class="card-base-div">
 
-    <div class="card-content-container">
+    <div class="card-content-container"
+      draggable="true"
+      @dragstart="dragStart($event)">
+
       <component
         :is="cardComponent"
         :cardWrapper="cardWrapper"
@@ -10,7 +13,7 @@
         @update="update()"
         @updateCards="$emit('updateCards')">
       </component>
-      <!-- <  :cardWrapper="cardWrapper"></component> -->
+
     </div>
 
   </div>
@@ -78,6 +81,14 @@ export default {
       this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.cardWrapper = response.data.data
       })
+    },
+    dragStart (event) {
+      var moveCardData = {
+        type: 'MOVE_CARD',
+        cardWrapperId: this.cardWrapper.id,
+        fromSectionId: this.inSection.id
+      }
+      event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
     }
   },
 

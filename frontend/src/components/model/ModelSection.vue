@@ -25,16 +25,15 @@
     <div class="w3-row">
       <div v-for="subsection in section.subsections"
         :key="subsection.id"
-        class="subsection-container"
-        @dragover.prevent
-        @drop.prevent="subsectionDroped(subsection.id, $event)">
+        class="subsection-container">
 
         <app-model-section
           :section="subsection"
           :inElementId="section.id"
           :inElementTitle="section.title"
           :cardsType="cardsType"
-          :nestedIn="nestedIn.concat([section])">
+          :nestedIn="nestedIn.concat([section])"
+          @updateCards="updateCards()">
         </app-model-section>
       </div>
     </div>
@@ -115,6 +114,12 @@ export default {
     }
   },
 
+  watch: {
+    '$store.state.support.triggerUpdateSectionCards' () {
+      this.updateCards()
+    }
+  },
+
   methods: {
     updateCards () {
       this.axios.get('/1/model/section/' + this.section.id + '/cardWrappers').then((response) => {
@@ -130,23 +135,6 @@ export default {
         fromElementId: this.inElementId
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveSectionData))
-    },
-    subsectionDroped (onSubsectionId, event) {
-      var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
-      var url = ''
-
-      url = '/1/initiative/' + this.initiativeId +
-        '/model/section/' + dragData.fromElementId +
-        '/moveSubsection/' + dragData.sectionId
-
-      this.axios.put(url, {}, {
-        params: {
-          onSectionId: this.section.id,
-          onSubsectionId: onSubsectionId
-        }
-      }).then((response) => {
-        this.$store.commit('triggerUpdateModel')
-      })
     },
     newCardFromBar () {
       this.showCards = true

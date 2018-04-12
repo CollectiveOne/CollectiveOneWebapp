@@ -54,7 +54,7 @@
         <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
           <div class="w3-padding w3-round light-grey w3-margin-bottom">
             <p>
-              <b>Warning:</b> Are you sure you want to remove the section "{{ section.title }}" as a subsection of "{{ inSection.title }}"?
+              <b>Warning:</b> Are you sure you want to remove the section "{{ inSection.title }}" as a subsection of "{{ inSection.title }}"?
             </p>
           </div>
           <button
@@ -70,7 +70,7 @@
         <div v-if="deleteIntent" class="w3-row w3-center delete-intent-div">
           <div class="w3-padding w3-round light-grey w3-margin-bottom">
             <p>
-              <b>Warning:</b> Are you sure you want to completely delete the section "{{ section.title }}"? This will delete it from all the sections in which it is a subsection.
+              <b>Warning:</b> Are you sure you want to completely delete the section "{{ inSection.title }}"? This will delete it from all the sections in which it is a subsection.
             </p>
           </div>
           <button
@@ -143,12 +143,13 @@ export default {
       this.deleteIntent = true
     },
     removeConfirmed () {
-      this.axios.put('/1/model/section/' + this.inSection.id + '/removeCard/' + this.card.id,
+      this.axios.put('/1/model/section/' + this.inSection.id + '/removeCard/' + this.cardWrapper.id,
         {}).then((response) => {
           console.log(response)
           if (response.data.result === 'success') {
             this.removeIntent = false
             this.expanded = false
+            this.$emit('updateCards')
           } else {
             this.showOutputMessage(response.data.message)
           }
@@ -161,6 +162,7 @@ export default {
         .then((response) => {
           this.deleteIntent = false
           this.expanded = false
+          this.$emit('updateCards')
         }).catch((error) => {
           console.log(error)
         })

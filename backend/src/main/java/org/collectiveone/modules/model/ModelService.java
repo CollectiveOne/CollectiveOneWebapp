@@ -298,6 +298,12 @@ public class ModelService {
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		
+		ModelCardWrapper cardWrapperInSection = modelCardWrapperRepository.findByIdAndSectionId(cardWrapperId, sectionId);
+		
+		if (cardWrapperInSection != null) {
+			return new PostResult("error", "card already in section", section.getId().toString());
+		}
+		
 		if (beforeCardWrapperId == null) {
 			section.getCardsWrappers().add(cardWrapper);
 		} else {

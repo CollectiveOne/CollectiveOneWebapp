@@ -162,13 +162,13 @@ export default {
             this.$emit('updated')
 
             /* start polling after the first response */
-            if (this.polling) {
-              if (this.intervalIds.length === 0) {
-                this.intervalIds.push(setInterval(() => {
-                  this.getActivity('UPDATE')
-                }, 5000))
-              }
-            }
+            // if (this.polling) {
+            //   if (this.intervalIds.length === 0) {
+            //     this.intervalIds.push(setInterval(() => {
+            //       this.getActivity('UPDATE')
+            //     }, 5000))
+            //   }
+            // }
             break
 
           case 'OLDER':
