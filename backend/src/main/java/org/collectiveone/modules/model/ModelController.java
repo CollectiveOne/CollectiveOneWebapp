@@ -15,7 +15,6 @@ import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.dto.ModelSectionGenealogyDto;
-import org.collectiveone.modules.users.AppUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -210,7 +209,7 @@ public class ModelController extends BaseController {
 			@PathVariable("sectionId") String fromSectionIdStr,
 			@PathVariable("cardWrapperId") String cardWrapperIdStr,
 			@RequestParam(name = "onSectionId") String onSectionIdStr,
-			@RequestParam(name = "onCardWrapperId") String onCardWrapperIdStr) {
+			@RequestParam(name = "onCardWrapperId", defaultValue="") String onCardWrapperIdStr) {
 	
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);

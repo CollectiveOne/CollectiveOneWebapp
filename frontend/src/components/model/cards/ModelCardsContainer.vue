@@ -8,7 +8,6 @@
       @drop.prevent="cardDroped(cardWrapper.id, $event)">
 
       <div v-if="isDraggingOver(cardWrapper)" class="drop-div">
-
       </div>
 
       <div class="card-container-in-list">

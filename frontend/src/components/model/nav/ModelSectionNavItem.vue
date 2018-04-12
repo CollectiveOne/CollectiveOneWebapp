@@ -1,6 +1,7 @@
 <template lang="html">
   <div class="w3-row">
-    <div class="w3-row" :class="{'section-selected': highlightLevelUse > 0}">
+
+    <div class="w3-row" :class="{'section-selected': highlightLevelUse > 0, 'dragging-over':  draggingOverFlag}">
       <div @click="showSubsections = !showSubsections" class="circle-div cursor-pointer">
         <div v-if="hasSubsections">
           <i v-if="!showSubsections" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
@@ -10,7 +11,10 @@
           <i class="fa fa-circle" aria-hidden="true"></i>
         </div>
       </div>
-      <div @click="sectionSelected()" class="title-div cursor-pointer noselect">
+      <div @click="sectionSelected()" class="title-div cursor-pointer noselect"
+        @dragover.prevent="draggingOver()"
+        @dragleave.prevent="draggingLeave()"
+        @drop.prevent="cardDroped($event)">
         {{ section.title }}
       </div>
       <div class="control-div">
@@ -69,7 +73,9 @@ export default {
     return {
       showSubsections: false,
       subsections: [],
-      animating: false
+      animating: false,
+      draggingOverFlag: false,
+      resetIntervalId: 0
     }
   },
 
@@ -125,6 +131,45 @@ export default {
       } else {
         // this.showSubsections = false
       }
+    },
+    draggingOver () {
+      this.draggingOverFlag = true
+    },
+    draggingLeave () {
+      clearTimeout(this.resetIntervalId)
+      this.resetIntervalId = setTimeout(() => {
+        this.draggingOverFlag = false
+      }, 100)
+    },
+    cardDroped (event) {
+      this.draggingOverFlag = false
+      var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
+      if (dragData.type === 'MOVE_CARD') {
+        var moveFlag = false
+        if (!event.ctrlKey && dragData.fromSectionId !== '') {
+          moveFlag = true
+        } else {
+          moveFlag = false
+        }
+
+        if (moveFlag) {
+          /* move from section */
+          this.axios.put('/1/model/section/' + dragData.fromSectionId +
+            '/moveCard/' + dragData.cardWrapperId, {}, {
+            params: {
+              onSectionId: this.section.id
+            }
+          }).then((response) => {
+            this.$store.commit('triggerUpdateSectionCards')
+          })
+        } else {
+          /* copy card without removing it */
+          this.axios.put('/1/model/section/' + this.section.id +
+            '/cardWrapper/' + dragData.cardWrapperId, {}).then((response) => {
+            this.$store.commit('triggerUpdateSectionCards')
+          })
+        }
+      }
     }
   },
 
@@ -140,6 +185,10 @@ export default {
   background-color: #797474;
   transition: background-color 300ms ease;
   color: white;
+}
+
+.dragging-over {
+  background-color: #cfcfcf;
 }
 
 .circle-div {
