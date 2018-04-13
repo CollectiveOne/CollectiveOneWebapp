@@ -1,6 +1,5 @@
 <template lang="html">
   <div>
-    <app-header></app-header>
     <div class="w3-row app-content">
       <router-view></router-view>
     </div>
@@ -48,7 +47,6 @@ export default {
 <style scoped>
 
 .app-content {
-  margin-top:65px;
 }
 
 </style>

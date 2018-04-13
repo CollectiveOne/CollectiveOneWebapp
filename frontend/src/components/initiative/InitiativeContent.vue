@@ -5,7 +5,13 @@
         <div class="header-container">
           <transition name="fadeenter" mode="out-in" appear>
             <div class="w3-row white-bg w3-border-bottom" :key="initiative.meta.name">
-              <div class="w3-col m6">
+              <div class="w3-col m5">
+                <div class="w3-left w3-xlarge flex-vert bars-div"
+                  @click="$store.commit('toggleExpandNav')">
+                  <i v-if="!expandNav" class="fa fa-chevron-circle-right"></i>
+                  <i v-if="expandNav" class="fa fa-chevron-circle-left"></i>
+                </div>
+
                 <h3 class="w3-left initiative-path noselect">
                   <b><app-initiative-path :initiative="initiative"></app-initiative-path></b>
                 </h3>
@@ -31,7 +37,13 @@
                 </div>
               </div>
 
-              <div class="w3-col m6 section-tabs w3-center">
+              <div class="w3-col m5 section-tabs w3-center">
+                <div class="w3-bar header-div w3-border-bottom w3-white">
+                  <router-link :to="{name: 'InitiativesHome'}" class="logo-container w3-bar-item noselect cursor-pointer">
+                    <img class="icon" src="../../assets/imago-red.png" alt="">
+                  </router-link>
+                </div>
+
                 <router-link :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
                   class="tab-btn-space">
                   <div class="tab-btn noselect" :class="{'bold-text': isOverview, 'button-blue': isOverview}">
@@ -62,6 +74,44 @@
                 </router-link>
               </div>
 
+              <div class="w3-col m2">
+                <div v-if="$store.state.user.authenticated"
+                  @click="userOptionsClicked()" class="w3-bar-item w3-right w3-button"
+                  v-click-outside="clickOutsideUser">
+
+                  <div v-if="$store.state.user.profile" class="logged-user">
+                    <div class="avatar-img-container w3-left">
+                      <img :src="$store.state.user.profile.pictureUrl" class="logged-avatar w3-circle noselect">
+                    </div>
+                    <div class="logged-nickname noselect w3-left  w3-hide-medium w3-hide-small">
+                      {{ $store.state.user.profile.nickname }}
+                    </div>
+                  </div>
+                  <div v-if="showUserOptions"
+                    class="avatar-dropdown-content w3-card-2 w3-bar-block w3-white w3-large"
+                    :class="{'left-align-1': windowIsSmall, 'left-align-2': !windowIsSmall}">
+
+                    <div @click="goMyProfile()" class="w3-bar-item w3-button"><i class="fa fa-user" aria-hidden="true"></i>profile</div>
+                    <div @click="goHome()" class="w3-bar-item w3-button"><i class="fa fa-home" aria-hidden="true"></i>home</div>
+                    <div @click="logoutUser()" class="w3-bar-item w3-button"><i class="fa fa-power-off" aria-hidden="true"></i>logout</div>
+                  </div>
+                </div>
+                <div v-else class="login-button-container w3-bar-item w3-right">
+                  <button @click="login()"
+                    class="w3-button app-button" name="button">
+                    login
+                  </button>
+                </div>
+
+                <div v-if="$store.state.user.authenticated" class="nots-div w3-right">
+                  <app-notifications-list></app-notifications-list>
+                </div>
+
+                <div class="nots-div w3-right w3-button w3-xlarge flex-vert bars-div dark-gray-color">
+                  <router-link :to="{ name: 'Landing'}"><i class="fa fa-info-circle"></i></router-link>
+                </div>
+              </div>
+
             </div>
           </transition>
         </div>
@@ -90,7 +140,9 @@ export default {
 
   data () {
     return {
-      showEditMenu: false
+      showEditMenu: false,
+      showActivityList: false,
+      showUserOptions: false
     }
   },
 
@@ -142,6 +194,9 @@ export default {
     },
     animationType () {
       return this.$store.state.support.contentAnimationType
+    },
+    expandNav () {
+      return this.$store.state.support.expandNav
     }
   },
 
@@ -154,6 +209,26 @@ export default {
     },
     clickOutsideShowMenu () {
       this.showEditMenu = false
+    },
+    login () {
+      this.$store.state.user.lock.show()
+    },
+    userOptionsClicked () {
+      this.showUserOptions = !this.showUserOptions
+    },
+    clickOutsideUser () {
+      this.showUserOptions = false
+    },
+    goMyProfile () {
+      this.showUserOptions = false
+      this.$router.push({ name: 'UserProfilePage', params: { userId: this.$store.state.user.profile.c1Id } })
+    },
+    goHome () {
+      this.showUserOptions = false
+      this.$router.push({name: 'InitiativesHome'})
+    },
+    logoutUser () {
+      this.$store.dispatch('logoutUser')
     }
   },
 
@@ -174,6 +249,12 @@ export default {
 </script>
 
 <style scoped>
+
+.bars-div {
+  width: 70px;
+  padding: 20px 20px;
+  cursor: pointer;
+}
 
 .big-content-container {
   height: calc(100vh - 65px);
@@ -243,6 +324,37 @@ export default {
 
 .bold-text {
   font-weight: bold;
+}
+
+.icon {
+  margin-top: 18px;
+  height: 32px;
+}
+
+.nots-div {
+  height: 100% !important;
+}
+
+.logged-nickname {
+  height: 100%;
+  padding-top: 10px;
+  font-size: 18px;
+  margin-right: 20px;
+}
+
+.avatar-img-container {
+  margin-right: 15px;
+  padding: 6px;
+}
+
+.avatar-img-container img {
+  width: 37px;
+}
+
+.avatar-dropdown-content {
+  position: absolute;
+  width: 150px;
+  margin-top: 58px;
 }
 
 </style>
