@@ -18,6 +18,7 @@
         :cardWrappers="sortedCards"
         :cardsType="cardsType"
         :inSection="section"
+        :acceptDrop="true"
         @updateCards="updateCards()">
       </app-model-cards-container>
     </div>

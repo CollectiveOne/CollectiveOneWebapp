@@ -33,7 +33,6 @@ import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
-import org.collectiveone.modules.users.AppUserDto;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -277,14 +276,21 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult addSection (UUID sectionId, UUID onSectionId, UUID creatorId) {
+	public PostResult addSection (UUID sectionId, UUID onSectionId, UUID beforeSubsectionId, UUID creatorId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		
 		/* add it as subsection */
 		ModelSection onSection = modelSectionRepository.findById(onSectionId);
 		
-		onSection.getSubsections().add(section);
+		if (beforeSubsectionId != null) {
+			ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
+			int index = onSection.getSubsections().indexOf(beforeSubsection);
+			onSection.getSubsections().add(index, section);
+		} else {
+			onSection.getSubsections().add(section);
+		}
+		
 		onSection = modelSectionRepository.save(onSection);
 		
 		activityService.modelNewSubsection(section, onSection, appUserRepository.findByC1Id(creatorId));

@@ -77,7 +77,8 @@ public class ModelController extends BaseController {
 	@RequestMapping(path = "/model/section/{sectionId}/subsection/{subsectionId}", method = RequestMethod.PUT)
 	public PostResult addExistingSectionSubsection(
 			@PathVariable("sectionId") String sectionIdStr,
-			@PathVariable("subsectionId") String subsectionIdStr) {
+			@PathVariable("subsectionId") String subsectionIdStr, 
+			@RequestParam(name = "beforeSubsectionId", defaultValue="") String beforeSubsectionIdStr) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -90,7 +91,10 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.addSection(UUID.fromString(subsectionIdStr), sectionId, getLoggedUserId());
+		/* dropped on subsection can be empty */
+		UUID beforeSubsectionId =  beforeSubsectionIdStr.equals("") ? null : UUID.fromString(beforeSubsectionIdStr);
+		
+		return modelService.addSection(UUID.fromString(subsectionIdStr), sectionId, beforeSubsectionId, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.PUT) 
@@ -136,7 +140,7 @@ public class ModelController extends BaseController {
 			@PathVariable("sectionId") String sectionIdStr,
 			@PathVariable("subsectionId") String subsectionIdStr,
 			@RequestParam(name = "onSectionId", defaultValue="") String onSectionIdStr,
-			@RequestParam(name = "onSubsectionId") String onSubsectionIdStr) {
+			@RequestParam(name = "beforeSubsectionId", defaultValue="") String beforeSubsectionIdStr) {
 	
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -153,13 +157,13 @@ public class ModelController extends BaseController {
 		UUID onSectionId =  onSectionIdStr.equals("") ? null : UUID.fromString(onSectionIdStr);
 		
 		/* dropped on subsection can be empty */
-		UUID onSubsectionId =  onSubsectionIdStr.equals("") ? null : UUID.fromString(onSubsectionIdStr);
+		UUID beforeSubsectionId =  beforeSubsectionIdStr.equals("") ? null : UUID.fromString(beforeSubsectionIdStr);
 		
 		return modelService.moveSubsection(
 				sectionId, 
 				UUID.fromString(subsectionIdStr),
 				onSectionId,
-				onSubsectionId,
+				beforeSubsectionId,
 				getLoggedUserId());
 	}
 	

@@ -591,13 +591,13 @@ export default {
           this.showOutputMessage(response.data.message)
         }
       }
-      this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/removeCard/' + this.cardWrapper.id,
+      this.axios.put('/1/model/section/' + this.inSectionId + '/removeCard/' + this.cardWrapper.id,
         {}).then(responseF).catch((error) => {
         console.log(error)
       })
     },
     deleteCard () {
-      this.axios.delete('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+      this.axios.delete('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.$store.commit('triggerUpdateSectionCards')
         this.closeThis()
       }).catch((error) => {

@@ -5,13 +5,14 @@ const state = {
   myInitiativesTree: [],
   currentInitiativeTree: [],
   triggerUpdateAssets: false,
-  triggerUpdateModelNav: false,
+  triggerUpdateSectionsTree: false,
   triggerUpdateSectionCards: false,
   userEmailNotVerified: false,
   initiativeLoaded: false,
   expandNav: false,
   expandModelNav: false,
-  windowIsSmall: false
+  windowIsSmall: false,
+  draggingElement: null
 }
 
 const findCoordinate = function (initiatives, id, coord) {
@@ -112,8 +113,8 @@ const mutations = {
   triggerUpdateAssets: (state) => {
     state.triggerUpdateAssets = !state.triggerUpdateAssets
   },
-  triggerUpdateModelNav: (state) => {
-    state.triggerUpdateModelNav = !state.triggerUpdateModelNav
+  triggerUpdateSectionsTree: (state) => {
+    state.triggerUpdateSectionsTree = !state.triggerUpdateSectionsTree
   },
   triggerUpdateSectionCards: (state) => {
     state.triggerUpdateSectionCards = !state.triggerUpdateSectionCards
@@ -135,6 +136,9 @@ const mutations = {
   },
   setWindowIsSmall: (state, payload) => {
     state.windowIsSmall = payload
+  },
+  setDraggingElement: (state, payload) => {
+    state.draggingElement = payload
   }
 }
 

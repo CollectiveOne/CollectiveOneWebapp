@@ -89,6 +89,14 @@ export default {
         fromSectionId: this.inSection.id
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
+
+      /* have an extended version of the dragged elements */
+      var moveCardElement = {
+        type: 'MOVE_CARD',
+        cardWrapper: this.cardWrapper,
+        fromSection: this.inSection
+      }
+      this.$store.commit('setDraggingElement', moveCardElement)
     }
   },
 

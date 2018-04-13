@@ -6,6 +6,8 @@
         <app-model-card-modal v-if="showCardModal"
           :isNew="false"
           :cardWrapperId="$route.params.cardId"
+          :inSectionId="section.id"
+          :inSectionTitle="section.title"
           @close="closeCardModal()"
           @updateCards="resetCards()">
         </app-model-card-modal>
@@ -78,7 +80,7 @@
               </span>
             </span>
             <span v-else class="">
-              seeing all cards
+              searching all cards
             </span>
             under the
             <br>"{{ section.title }}" section.
@@ -101,7 +103,8 @@
           v-if="!isSectionsOrder"
           :cardWrappers="cardWrappers"
           :inSection="section"
-          :cardsType="cardsType">
+          :cardsType="cardsType"
+          :acceptDrop="false">
         </app-model-cards-container>
 
         <div v-if="!isSectionsOrder && thereAreMore" class="w3-row w3-center">
@@ -184,6 +187,12 @@ export default {
       } else {
         this.updateSection()
       }
+    },
+    '$store.state.support.triggerUpdateSectionCards' () {
+      this.resetCards()
+    },
+    '$store.state.support.triggerUpdateSectionsTree' () {
+      this.resetCards()
     }
   },
 
@@ -320,11 +329,15 @@ export default {
 <style scoped>
 
 .controls-row {
-  margin: 6px 6px;
+  margin: 12px 12px 6px 12px;
+}
+
+.cards-list {
+  padding: 6px 12px 12px 12px;
 }
 
 .control-group {
-  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .zoom-controls {
@@ -367,8 +380,5 @@ export default {
   font-size: 12px;
 }
 
-.cards-list {
-  padding: 12px 12px;
-}
 
 </style>

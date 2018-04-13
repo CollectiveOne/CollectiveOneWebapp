@@ -42,6 +42,10 @@ export default {
     cardsType: {
       type: String,
       default: 'card'
+    },
+    acceptDrop: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -64,6 +68,10 @@ export default {
 
   methods: {
     draggingOver (cardWrapper) {
+      if (!this.acceptDrop) {
+        return
+      }
+
       this.draggingOverCardWrapper = cardWrapper
 
       /* make sure this resets even if dropped elsewhere */
@@ -73,12 +81,19 @@ export default {
       }, 500)
     },
     isDraggingOver (cardWrapper) {
+      if (!this.acceptDrop) {
+        return false
+      }
       if (this.draggingOverCardWrapper) {
         return (this.draggingOverCardWrapper.id === cardWrapper.id)
       }
       return false
     },
     cardDroped (onCardWrapperId, event) {
+      if (!this.acceptDrop) {
+        return
+      }
+
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
       if (dragData.type === 'MOVE_CARD') {
         var moveFlag = false
@@ -117,6 +132,7 @@ export default {
           })
         }
       }
+      this.$store.commit('setDraggingElement', null)
     }
   },
 

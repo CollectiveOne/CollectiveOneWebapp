@@ -1,7 +1,18 @@
 <template lang="html">
   <div class="w3-row">
 
-    <div class="w3-row" :class="{'section-selected': highlightLevelUse > 0, 'dragging-over':  draggingOverFlag}">
+    <div class="w3-row"
+      :class="rowClass"
+      draggable="true"
+      @dragstart="dragStart($event)"
+      @dragover.prevent="draggingOver($event)"
+      @dragleave.prevent="draggingLeave()"
+      @drop.prevent="dragDroped($event)">
+
+      <div v-if="draggingOverWithSectionSameLevelFlag" class="w3-row dragging-same-level-clue">
+
+      </div>
+
       <div @click="showSubsections = !showSubsections" class="circle-div cursor-pointer">
         <div v-if="hasSubsections">
           <i v-if="!showSubsections" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
@@ -11,10 +22,7 @@
           <i class="fa fa-circle" aria-hidden="true"></i>
         </div>
       </div>
-      <div @click="sectionSelected()" class="title-div cursor-pointer noselect"
-        @dragover.prevent="draggingOver()"
-        @dragleave.prevent="draggingLeave()"
-        @drop.prevent="cardDroped($event)">
+      <div @click="sectionSelected()" class="title-div cursor-pointer noselect">
         {{ section.title }}
       </div>
       <div class="control-div">
@@ -74,7 +82,9 @@ export default {
       showSubsections: false,
       subsections: [],
       animating: false,
-      draggingOverFlag: false,
+      draggingOverWithCardFlag: false,
+      draggingOverWithSectionSameLevelFlag: false,
+      draggingOverWithSectionInsideFlag: false,
       resetIntervalId: 0
     }
   },
@@ -87,10 +97,21 @@ export default {
     },
     '$route' () {
       this.checkExpandSubsections()
+    },
+    '$store.state.support.triggerUpdateSectionsTree' () {
+      this.updateSubsections()
     }
   },
 
   computed: {
+    rowClass () {
+      return {
+        'section-selected': this.highlightLevelUse > 0,
+        'dragging-over-with-card': this.draggingOverWithCardFlag,
+        'dragging-over-with-section-same-level': this.draggingOverWithSectionSameLevelFlag,
+        'dragging-over-with-section-inside': this.draggingOverWithSectionInsideFlag
+      }
+    },
     hasSubsections () {
       return this.section.nSubsections > 0
     },
@@ -132,20 +153,59 @@ export default {
         // this.showSubsections = false
       }
     },
-    draggingOver () {
-      this.draggingOverFlag = true
+    dragStart (event) {
+      var moveSectionData = {
+        type: 'MOVE_SECTION',
+        sectionId: this.section.id,
+        fromSectionId: this.inSection.id
+      }
+      event.dataTransfer.setData('text/plain', JSON.stringify(moveSectionData))
+
+      /* have an extended version of the dragged elements */
+      var moveSectionElement = {
+        type: 'MOVE_SECTION',
+        section: this.section,
+        fromSection: this.inSection
+      }
+      this.$store.commit('setDraggingElement', moveSectionElement)
+    },
+    draggingOver (event) {
+      var draggingElement = this.$store.state.support.draggingElement
+      if (draggingElement !== null) {
+        if (draggingElement.type === 'MOVE_CARD') {
+          this.draggingOverWithCardFlag = true
+        }
+
+        if (draggingElement.type === 'MOVE_SECTION') {
+          let ratioX = (event.clientX - event.currentTarget.offsetLeft) / event.currentTarget.offsetWidth
+          // let ratioY = (event.clientY - event.currentTarget.offsetTop) / event.currentTarget.offsetHeight
+          if (ratioX < 0.5) {
+            this.draggingOverWithSectionInsideFlag = false
+            this.draggingOverWithSectionSameLevelFlag = true
+          } else {
+            this.draggingOverWithSectionSameLevelFlag = false
+            this.draggingOverWithSectionInsideFlag = true
+          }
+        }
+      }
     },
     draggingLeave () {
       clearTimeout(this.resetIntervalId)
       this.resetIntervalId = setTimeout(() => {
-        this.draggingOverFlag = false
+        this.draggingOverWithCardFlag = false
+        this.draggingOverWithSectionSameLevelFlag = false
+        this.draggingOverWithSectionInsideFlag = false
       }, 100)
     },
-    cardDroped (event) {
-      this.draggingOverFlag = false
+    dragDroped (event) {
+      this.draggingOverWithCardFlag = false
+      this.draggingOverWithSectionSameLevelFlag = false
+      this.draggingOverWithSectionInsideFlag = false
+
       var dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
+      var moveFlag = false
+
       if (dragData.type === 'MOVE_CARD') {
-        var moveFlag = false
         if (!event.ctrlKey && dragData.fromSectionId !== '') {
           moveFlag = true
         } else {
@@ -170,6 +230,57 @@ export default {
           })
         }
       }
+
+      if (dragData.type === 'MOVE_SECTION') {
+        if (!event.ctrlKey && dragData.fromSectionId !== '') {
+          moveFlag = true
+        } else {
+          moveFlag = false
+        }
+
+        let inside = false
+        let ratioX = (event.clientX - event.currentTarget.offsetLeft) / event.currentTarget.offsetWidth
+
+        if (ratioX > 0.5) {
+          inside = true
+        }
+
+        let onSectionId = ''
+        let beforeSubsectionId = ''
+
+        if (inside) {
+          onSectionId = this.section.id
+          beforeSubsectionId = ''
+        } else {
+          onSectionId = this.inSection.id
+          beforeSubsectionId = this.section.id
+        }
+
+        if (moveFlag) {
+          /* move from section */
+          this.axios.put('/1/model/section/' + dragData.fromSectionId +
+            '/moveSubsection/' + dragData.sectionId, {}, {
+            params: {
+              onSectionId: onSectionId,
+              beforeSubsectionId: beforeSubsectionId
+            }
+          }).then((response) => {
+            this.$store.commit('triggerUpdateSectionsTree')
+          })
+        } else {
+          /* copy card without removing it */
+          this.axios.put('/1/model/section/' + onSectionId +
+            '/subsection/' + dragData.sectionId, {}, {
+              params: {
+                beforeSubsectionId: beforeSubsectionId
+              }
+            }).then((response) => {
+            this.$store.commit('triggerUpdateSectionsTree')
+          })
+        }
+      }
+
+      this.$store.commit('setDraggingElement', null)
     }
   },
 
@@ -187,7 +298,17 @@ export default {
   color: white;
 }
 
-.dragging-over {
+.dragging-over-with-card {
+  background-color: #cfcfcf;
+}
+
+.dragging-same-level-clue {
+  height: 5px;
+  background-color: #575757;
+  border-radius: 2.5px;
+}
+
+.dragging-over-with-section-inside {
   background-color: #cfcfcf;
 }
 
