@@ -4,37 +4,23 @@
     <div class="">
       <div class="slider-container">
         <transition name="slideDownUp">
-          <app-model-card-modal
-            v-if="showNewCardModal"
-            :isNew="true"
-            :inSectionId="section.id"
-            :inSectionTitle="section.title"
-            @close="showNewCardModal = false"
-            @updateCards="$store.commit('triggerUpdateSectionCards')">
-          </app-model-card-modal>
+          <app-new-initiative-modal v-if="showNewInitiativeModal">
+          </app-new-initiative-modal>
         </transition>
-      </div>
 
-      <div class="slider-container">
         <transition name="slideDownUp">
-          <app-model-section-modal
-            v-if="showNewSubsectionModal"
-            :isNew="true"
-            :inElementId="section.id"
-            :inElementTitle="section.title"
-            @close="showNewSubsectionModal = false">
-          </app-model-section-modal>
+          <app-new-subinitiative-modal v-if="showNewSubInitiativeModal">
+          </app-new-subinitiative-modal>
         </transition>
-      </div>
 
-      <div class="slider-container">
         <transition name="slideDownUp">
-          <app-model-section-modal
-            v-if="showSectionModal"
-            :isNew="false"
-            :sectionId="section.id"
-            @close="showSectionModal = false">
-          </app-model-section-modal>
+          <app-edit-initiative-modal v-if="showEditInitiativeModal">
+          </app-edit-initiative-modal>
+        </transition>
+
+        <transition name="slideDownUp">
+          <app-edit-notifications-modal v-if="showEditNotificationsModal">
+          </app-edit-notifications-modal>
         </transition>
       </div>
     </div>
@@ -112,11 +98,10 @@ export default {
   data () {
     return {
       expanded: false,
-      showSectionModal: false,
-      showNewSubsectionModal: false,
-      showNewCardModal: false,
-      deleteIntent: false,
-      removeIntent: false
+      showNewInitiativeModal: false,
+      showNewSubInitiativeModal: false,
+      showEditInitiativeModal: false,
+      showEditNotificationsModal: false
     }
   },
 

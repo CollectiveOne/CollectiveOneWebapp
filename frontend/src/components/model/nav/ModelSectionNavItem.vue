@@ -23,7 +23,7 @@
         </div>
       </div>
       <div @click="sectionSelected()" class="title-div cursor-pointer noselect">
-        {{ section.title }}
+        {{ section.isTopModelSection ? 'All' : section.title }}
       </div>
       <div class="control-div">
         <app-section-control-buttons :section="section" :inSection="inSection">

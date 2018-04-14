@@ -306,7 +306,8 @@ export default {
           this.sendingData = false
           if (response.data.result === 'success') {
             this.closeThis()
-            this.$store.commit('triggerUpdateModel')
+            this.$store.commit('triggerUpdateSectionsTree')
+            this.$store.dispatch('refreshCurrentSection')
           } else {
             this.showOutputMessage(response.data.message)
           }

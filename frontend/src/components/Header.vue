@@ -1,18 +1,24 @@
 <template lang="html">
-  <div class="this-container">
+  <div class="header-container w3-row">
 
-    <!--  Output Messages -->
-    <app-output-message></app-output-message>
+   <div class="w3-left left-elements">
 
-    <!-- Navbar -->
-    <div class="w3-top">
-     <div class="w3-bar header-div w3-border-bottom w3-white">
-       <router-link :to="{name: 'InitiativesHome'}" class="logo-container w3-bar-item noselect cursor-pointer">
-         <img class="logo w3-hide-small" src="../assets/logo-color.png" alt="">
-         <img class="icon w3-hide-medium w3-hide-large" src="../assets/imago-red.png" alt="">
-       </router-link>
+     <div class="w3-left w3-xlarge flex-vert bars-div"
+       @click="$store.commit('toggleExpandNav')">
+       <i v-if="!expandNav" class="fa fa-chevron-circle-right"></i>
+       <i v-if="expandNav" class="fa fa-chevron-circle-left"></i>
      </div>
-    </div>
+
+     <div class="w3-left initiative-path noselect">
+       <app-initiative-path :initiative="initiative"></app-initiative-path>
+       <app-initiative-control-buttons></app-initiative-control-buttons>
+     </div>
+
+     <router-link :to="{name: 'InitiativesHome'}" class="logo-container w3-bar-item noselect cursor-pointer">
+       <img class="icon" src="../assets/imago-red.png" alt="">
+     </router-link>
+   </div>
+
   </div>
 </template>
 

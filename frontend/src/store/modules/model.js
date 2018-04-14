@@ -48,6 +48,9 @@ const mutations = {
 }
 
 const actions = {
+  refreshCurrentSection: (context, sectionId) => {
+    context.dispatch('updateCurrentSection', context.state.currentSectionGenealogy.section.id)
+  },
   updateCurrentSection: (context, sectionId) => {
     context.commit('setCurrentSectionGenealogy', null)
 

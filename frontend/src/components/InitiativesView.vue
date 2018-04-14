@@ -1,38 +1,7 @@
 <template lang="html">
 <div class="">
 
-  <!-- All Modals in one place -->
-  <div class="modals">
-
-    <transition name="slideDownUp">
-      <app-new-initiative-modal v-if="showNewInitiativeModal">
-      </app-new-initiative-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-new-subinitiative-modal v-if="showNewSubInitiativeModal">
-      </app-new-subinitiative-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-edit-initiative-modal v-if="showEditInitiativeModal">
-      </app-edit-initiative-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-edit-notifications-modal v-if="showEditNotificationsModal">
-      </app-edit-notifications-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-new-tokenmint-modal v-if="showNewTokenMintModal">
-      </app-new-tokenmint-modal>
-    </transition>
-
-  </div>
-
   <!-- Initiatives View -->
-
   <div class="w3-cell-row">
 
     <transition name="slideRightLeft">
