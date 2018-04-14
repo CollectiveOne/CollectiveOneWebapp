@@ -101,9 +101,9 @@ export default {
     menuItems () {
       if (this.isLoggedAnAdmin !== null) {
         return [
-          { text: 'notifications', value: 'notifications', faIcon: 'fa-cog' },
           { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
           { text: 'new subinitiative', value: 'newSubinitiative', faIcon: 'fa-plus' },
+          { text: 'notifications', value: 'notifications', faIcon: 'fa-cog' },
           { text: 'delete', value: 'delete', faIcon: 'fa-times' }
         ]
       } else {
