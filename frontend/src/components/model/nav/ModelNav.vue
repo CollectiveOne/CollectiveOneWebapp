@@ -58,7 +58,7 @@ export default {
 
 .model-nav-container {
   padding-top: 16px;
-  min-height: calc(100vh - 131px);
+  min-height: calc(100vh - 50px - 1px);
 }
 
 .zoom-controls {
