@@ -96,7 +96,7 @@ export default {
 <style scoped>
 
 .nav-container-cell {
-  margin-top: 65px;
+  margin-top: 50px;
   width: 300px;
   vertical-align: top !important;
 }

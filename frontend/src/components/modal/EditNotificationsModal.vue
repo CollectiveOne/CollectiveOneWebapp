@@ -122,7 +122,7 @@ export default {
       })
     },
     closeThis () {
-      this.$store.commit('showEditNotificationsModal', false)
+      this.$emit('close')
     },
     accept () {
       this.axios.put('/1/user/notifications/subscriber/' + this.initiative.id, this.subscriber).then((response) => {

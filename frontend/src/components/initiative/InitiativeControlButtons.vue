@@ -4,22 +4,24 @@
     <div class="">
       <div class="slider-container">
         <transition name="slideDownUp">
-          <app-new-initiative-modal v-if="showNewInitiativeModal">
-          </app-new-initiative-modal>
-        </transition>
-
-        <transition name="slideDownUp">
-          <app-new-subinitiative-modal v-if="showNewSubInitiativeModal">
+          <app-new-subinitiative-modal
+            v-if="showNewSubInitiativeModal"
+            :parentInitiative="this.initiative"
+            @close="showNewSubInitiativeModal = false">
           </app-new-subinitiative-modal>
         </transition>
 
         <transition name="slideDownUp">
-          <app-edit-initiative-modal v-if="showEditInitiativeModal">
+          <app-edit-initiative-modal
+            v-if="showEditInitiativeModal"
+            @close="showEditInitiativeModal = false">
           </app-edit-initiative-modal>
         </transition>
 
         <transition name="slideDownUp">
-          <app-edit-notifications-modal v-if="showEditNotificationsModal">
+          <app-edit-notifications-modal
+            v-if="showEditNotificationsModal"
+            @close="showEditNotificationsModal = false">
           </app-edit-notifications-modal>
         </transition>
       </div>
@@ -27,7 +29,7 @@
 
     <div class="modal-buttons-container">
 
-      <div class="expand-btn cursor-pointer"
+      <div class="expand-btn w3-xlarge cursor-pointer"
         @click="expanded =! expanded"
         v-click-outside="clickOutsideMenu">
         <i class="fa fa-bars" aria-hidden="true"></i>
@@ -36,35 +38,18 @@
       <app-drop-down-menu
         v-show="expanded"
         class="drop-menu"
-        @addCard="addCard()"
-        @addSubsection="addSubsection()"
-        @edit="edit()"
-        @remove="remove()"
-        @delete="deleteSection()"
+        @notifications="showNotifications()"
+        @edit="showEditInitiative()"
+        @newSubinitiative="showNewSubInitiative()"
+        @delete="deleteInitiative()"
         :items="menuItems">
       </app-drop-down-menu>
 
-      <div v-if="inSection !== null" class="w3-card w3-white drop-menu">
-        <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
-          <div class="w3-padding w3-round light-grey w3-margin-bottom">
-            <p>
-              <b>Warning:</b> Are you sure you want to remove the section "{{ section.title }}" as a subsection of "{{ inSection.title }}"?
-            </p>
-          </div>
-          <button
-            class="w3-button light-grey"
-            @click="removeIntent = false">cancel
-          </button>
-          <button
-            class="w3-button button-blue"
-            @click="removeConfirmed()">confirm
-          </button>
-        </div>
-
+      <div class="w3-card w3-white drop-menu">
         <div v-if="deleteIntent" class="w3-row w3-center delete-intent-div">
           <div class="w3-padding w3-round light-grey w3-margin-bottom">
             <p>
-              <b>Warning:</b> Are you sure you want to completely delete the section "{{ section.title }}"? This will delete it from all the sections in which it is a subsection.
+              <b>Warning:</b> Are you sure you want to completely delete the initiative "{{ initiative.meta.name }}"? This will delete all its contents.
             </p>
           </div>
           <button
@@ -82,23 +67,27 @@
 </template>
 
 <script>
-export default {
+import NewSubInitiativeModal from '@/components/modal/NewSubInitiativeModal.vue'
+import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
+import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
 
+export default {
+  components: {
+    'app-new-subinitiative-modal': NewSubInitiativeModal,
+    'app-edit-initiative-modal': EditInitiativeModal,
+    'app-edit-notifications-modal': EditNotificationsModal
+  },
   props: {
-    section: {
+    initiative: {
       type: Object,
       default: null
-    },
-    inSection: {
-      type: Object,
-      deafult: null
     }
   },
 
   data () {
     return {
       expanded: false,
-      showNewInitiativeModal: false,
+      deleteIntent: false,
       showNewSubInitiativeModal: false,
       showEditInitiativeModal: false,
       showEditNotificationsModal: false
@@ -106,55 +95,40 @@ export default {
   },
 
   computed: {
+    isLoggedAnAdmin () {
+      return this.$store.getters.isLoggedAnAdmin
+    },
     menuItems () {
-      if (this.inSection !== null) {
+      if (this.isLoggedAnAdmin !== null) {
         return [
-          { text: 'add card', value: 'addCard', faIcon: 'fa-plus' },
-          { text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' },
+          { text: 'notifications', value: 'notifications', faIcon: 'fa-cog' },
           { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
-          { text: 'remove', value: 'remove', faIcon: 'fa-times' },
+          { text: 'new subinitiative', value: 'newSubinitiative', faIcon: 'fa-plus' },
           { text: 'delete', value: 'delete', faIcon: 'fa-times' }
         ]
       } else {
         return [
-          { text: 'add card', value: 'addCard', faIcon: 'fa-plus' },
-          { text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' },
-          { text: 'edit', value: 'edit', faIcon: 'fa-pencil' }
+          { text: 'notifications', value: 'notifications', faIcon: 'fa-engine' }
         ]
       }
-   }
+    }
   },
 
   methods: {
-    addCard () {
-      this.showNewCardModal = true
+    showNotifications () {
+      this.expanded = false
+      this.showEditNotificationsModal = true
     },
-    addSubsection () {
-      this.showNewSubsectionModal = true
+    showEditInitiative () {
+      this.expanded = false
+      this.showEditInitiativeModal = true
     },
-    edit () {
-      this.showSectionModal = true
+    showNewSubInitiative () {
+      this.expanded = false
+      this.showNewSubInitiativeModal = true
     },
-    remove () {
-      this.removeIntent = true
-    },
-    deleteSection () {
+    deleteInitiative () {
       this.deleteIntent = true
-    },
-    removeConfirmed () {
-      this.axios.put('/1/model/section/' + this.inSection.id + '/removeSubsection/' + this.section.id,
-        {}).then((response) => {
-          console.log(response)
-          if (response.data.result === 'success') {
-            this.removeIntent = false
-            this.expanded = false
-            this.$store.commit('triggerUpdateSectionsTree')
-          } else {
-            this.showOutputMessage(response.data.message)
-          }
-        }).catch((error) => {
-        console.log(error)
-      })
     },
     deleteConfirmed () {
       this.axios.delete('/1/model/section/' + this.section.id)
@@ -183,13 +157,16 @@ export default {
 <style scoped>
 
 .expand-btn {
+  padding: 8px 12px;
+  width: 50px;
+  height: 50px;
 }
 
 .drop-menu {
   position: absolute;
   width: 180px;
-  margin-top: 3px;
-  margin-left: -150px;
+  margin-top: 0px;
+  margin-left: -120px;
   text-align: left;
   font-size: 15px;
   z-index: 1;

@@ -324,7 +324,7 @@ export default {
       }
     },
     closeThis () {
-      this.$store.commit('showEditInitiativeModal', false)
+      this.$emit('close')
     },
     accept () {
       var ok = true

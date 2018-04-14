@@ -149,9 +149,15 @@ export default {
     'app-members-table-container': MembersTableContainer
   },
 
+  props: {
+    parentInitiative: {
+      type: Object,
+      default: null
+    }
+  },
+
   data () {
     return {
-      parentInitiative: null,
       name: '',
       driver: '',
       assetsTransfers: [],
@@ -261,7 +267,7 @@ export default {
     },
 
     closeThis () {
-      this.$store.commit('showNewSubInitiativeModal', { show: false })
+      this.$emit('close')
     },
 
     accept () {
