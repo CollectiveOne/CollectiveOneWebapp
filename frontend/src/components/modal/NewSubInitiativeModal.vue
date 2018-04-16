@@ -149,9 +149,15 @@ export default {
     'app-members-table-container': MembersTableContainer
   },
 
+  props: {
+    parentInitiative: {
+      type: Object,
+      default: null
+    }
+  },
+
   data () {
     return {
-      parentInitiative: null,
       name: '',
       driver: '',
       assetsTransfers: [],
@@ -177,7 +183,7 @@ export default {
       return (this.nameTooLong)
     },
     nameTooLong () {
-      return this.name.length > 30
+      return this.name.length > 42
     },
     driverErrorShow () {
       return this.driverEmptyError && (this.driver === '')
@@ -261,7 +267,7 @@ export default {
     },
 
     closeThis () {
-      this.$store.commit('showNewSubInitiativeModal', { show: false })
+      this.$emit('close')
     },
 
     accept () {
@@ -276,7 +282,7 @@ export default {
         ok = false
         this.nameEmptyError = true
       } else {
-        if (this.name.length > 30) {
+        if (this.nameTooLong) {
           ok = false
         }
       }

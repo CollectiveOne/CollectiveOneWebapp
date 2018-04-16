@@ -32,10 +32,8 @@ import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelSection;
-import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
-import org.collectiveone.modules.model.repositories.ModelViewRepositoryIf;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
@@ -72,9 +70,6 @@ public class ActivityService {
 	
 	@Autowired
 	private InitiativeRepositoryIf initiativeRepository;
-	
-	@Autowired
-	private ModelViewRepositoryIf modelViewRepository;
 	
 	@Autowired
 	private ModelSectionRepositoryIf modelSectionRepository;
@@ -442,33 +437,11 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelViewCreated(ModelView view, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, view.getInitiative()); 
+	public void modelSectionCreated(ModelSection section, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
 		
-		activity.setType(ActivityType.MODEL_VIEW_CREATED);
-		activity.setModelView(view);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelViewEdited(ModelView view, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, view.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_VIEW_EDITED);
-		activity.setModelView(view);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelViewDeleted(ModelView view, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, view.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_VIEW_DELETED);
-		activity.setModelView(view);
+		activity.setType(ActivityType.MODEL_SECTION_CREATED);
+		activity.setModelSection(section);
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
@@ -481,18 +454,6 @@ public class ActivityService {
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
 		activity.setModelSection(section);
 		activity.setOnSection(onSection);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelSectionCreatedOnView(ModelSection section, ModelView onView, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_CREATED);
-		activity.setModelSection(section);
-		activity.setOnView(onView);
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
@@ -522,55 +483,6 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelSectionRemovedFromView(ModelSection section, ModelView fromView, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_REMOVED);
-		activity.setModelSection(section);
-		activity.setFromView(fromView);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelViewMoved(ModelView view, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, view.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_VIEW_MOVED);
-		activity.setModelView(view);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelSectionMovedInView(ModelSection section, ModelView onView, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_MOVED);
-		activity.setModelSection(section);
-		activity.setFromView(onView);
-		activity.setOnView(onView);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelSectionMovedFromViewToSection(ModelSection section, ModelView fromView, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_MOVED);
-		activity.setModelSection(section);
-		activity.setFromView(fromView);
-		activity.setOnSection(onSection);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
 	public void modelSectionMovedFromSectionToSection(ModelSection section, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
 		
@@ -584,37 +496,12 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelSectionMovedFromSectionToView(ModelSection section, ModelSection fromSection, ModelView onView, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_MOVED);
-		activity.setModelSection(section);
-		activity.setFromSection(fromSection);
-		activity.setOnView(onView);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
 	public void modelNewSubsection(ModelSection section, ModelSection onSection, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
 		activity.setModelSection(section);
 		activity.setOnSection(onSection);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelNewSection(ModelSection section, ModelView onView, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_CREATED);
-		activity.setModelSection(section);
-		activity.setOnView(onView);
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
@@ -726,10 +613,6 @@ public class ActivityService {
 			
 			case MODEL_SECTION:
 				activity.setModelSection(modelSectionRepository.findById(elementId));
-				break;
-				
-			case MODEL_VIEW:
-				activity.setModelView(modelViewRepository.findById(elementId));
 				break;
 				
 			case INITIATIVE:

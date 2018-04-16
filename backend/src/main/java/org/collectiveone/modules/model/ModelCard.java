@@ -27,7 +27,7 @@ public class ModelCard {
 	private UUID id;
 	
 	
-	@Column(name = "title", length = 30)
+	@Column(name = "title", length = 42)
 	private String title;
 	
 	@Lob

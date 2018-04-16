@@ -208,8 +208,7 @@ export default {
     removeMember (member) {
       var index = this.indexOfMember(member.user.c1Id)
       if (index > -1) {
-        this.axios.delete('/1/initiative/' + this.initiative.id + '/member/' + member.user.c1Id,
-        ).then((response) => {
+        this.axios.delete('/1/initiative/' + this.initiative.id + '/member/' + member.user.c1Id).then((response) => {
           if (response.data.result === 'success') {
             this.$store.dispatch('refreshInitiative')
           } else {

@@ -1,6 +1,6 @@
 <template lang="html">
   <router-link :to="{
-    name: 'ModelSection',
+    name: 'ModelSectionContent',
     params: {
       'initiativeId': this.section.initiativeId,
       'sectionId': this.section.id

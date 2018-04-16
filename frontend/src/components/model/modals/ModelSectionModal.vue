@@ -8,17 +8,6 @@
           <div class="w3-right w3-button w3-xlarge" @click="closeThisConfirm()">
             <i class="fa fa-times" aria-hidden="true"></i>
           </div>
-          <div class="w3-right">
-            <app-model-modal-buttons
-              v-if="isLoggedAnEditor && !editing"
-              :show="showEditButtons"
-              @edit="startEditing()"
-              @delete="deleteSection()"
-              deleteMessage="This will delete the section from all the views in which it is used."
-              @remove="removeSection()"
-              :removeMessage="'This will remove this subsection from ' + inElementTitle + '.'">
-            </app-model-modal-buttons>
-          </div>
         </div>
 
         <div class="w3-container w3-border-bottom">
@@ -28,7 +17,7 @@
         <div v-if="!loading" class="w3-container div-modal-content">
 
           <div v-if="isNew" class="w3-row">
-            <label v-if="inView" class=""><b>In View:</b></label>
+            <label v-if="inInitiative" class=""><b>As top level section under the initiative:</b></label>
             <label v-else class=""><b>In Section:</b></label>
             <br>
             <h4>{{ this.inElementTitleOk }}</h4>
@@ -51,7 +40,7 @@
             <transition name="slideLeftRight">
               <div v-if="addExisting" class="">
                 <app-model-section-selector
-                  :initiativeId="initiativeId"
+                  :sectionId="inElementId"
                   @select="sectionSelected($event)">
                 </app-model-section-selector>
                 <app-error-panel
@@ -74,9 +63,9 @@
                   <div v-if="!editing" class="">
                     <h3><b>{{ section.title }}</b></h3>
                   </div>
-                  <div v-else class="">
-                    <label class="w3-margin-top"><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
-                    <input type="text" class="w3-input w3-hover-light-grey" v-model="editedSection.title">
+                  <div v-else class="w3-margin-top">
+                    <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+                    <input ref="titleInput" type="text" class="w3-input w3-hover-light-grey" v-model="editedSection.title">
                     <app-error-panel
                       :show="titleEmptyShow"
                       message="please add a title">
@@ -105,20 +94,10 @@
             </transition>
           </div>
 
-          <div v-if="!isNew && !editing" class="">
-            <hr>
-            <app-message-thread
-              contextType="MODEL_SECTION"
-              :contextElementId="sectionId"
-              :onlyMessagesInit="onlyMessages"
-              :url="'/1/activity/model/section/' + sectionId">
-            </app-message-thread>
-          </div>
-
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
             <hr>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel <span><small>(Esc)</small></span></button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel <span><small>(Esc)</small></span></button>
             </div>
             <div class="w3-col m6 w3-center">
               <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept <span><small>(Ctr + Enter)</small></span></button>
@@ -134,7 +113,7 @@
         </div>
 
         <div v-if="closeIntent" class="w3-display-middle w3-card w3-white w3-padding w3-round-large w3-center">
-          You are currently editing this view. Are you sure you want to close it? Any changes would get lost.
+          You are currently editing this section. Are you sure you want to close it? Any changes would get lost.
           <div class="w3-row w3-margin-top">
             <button class="w3-button app-button-light" name="button"
               @click="closeIntent = false">
@@ -153,14 +132,12 @@
 </template>
 
 <script>
-import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
 import ModelSectionSelector from '@/components/model/ModelSectionSelector.vue'
 import MessageThread from '@/components/notifications/MessageThread.vue'
 
 export default {
 
   components: {
-    'app-model-modal-buttons': ModelModalButtons,
     'app-model-section-selector': ModelSectionSelector,
     'app-message-thread': MessageThread
   },
@@ -170,17 +147,13 @@ export default {
       type: Boolean,
       default: false
     },
-    initiativeId: {
-      type: String,
-      default: ''
-    },
     sectionId: {
       type: String,
       default: ''
     },
-    inView: {
+    inInitiative: {
       type: Boolean,
-      default: true
+      default: false
     },
     inElementId: {
       type: String,
@@ -224,10 +197,16 @@ export default {
       return this.$store.getters.isLoggedAnEditor
     },
     titleEmpty () {
-      return this.editedSection.title === ''
+      if (this.editedSection) {
+        return this.editedSection.title === ''
+      }
+      return false
     },
     titleTooLong () {
-      return this.editedSection.title.length > 30
+      if (this.editedSection) {
+        return this.editedSection.title.length > 42
+      }
+      return false
     },
     titleErrorShow () {
       return this.titleEmptyShow || this.titleTooLongShow
@@ -239,7 +218,10 @@ export default {
       return this.titleTooLong
     },
     descriptionEmpty () {
-      return this.editedSection.description === ''
+      if (this.editedSection) {
+        return this.editedSection.description === ''
+      }
+      return false
     },
     descriptionErrorShow () {
       return this.descriptionEmptyError && this.descriptionEmpty
@@ -255,23 +237,19 @@ export default {
   methods: {
     update () {
       this.loading = true
-      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
-      .then((response) => {
-        this.loading = false
-        this.section = response.data.data
-      })
+      this.axios.get('/1/model/section/' + this.section.id)
+        .then((response) => {
+          this.loading = false
+          this.section = response.data.data
+          this.startEditing()
+        })
     },
     updateInElement () {
-      if (this.inView) {
-        this.axios.get('/1/initiative/' + this.initiativeId + '/model/view/' + this.inElementId)
-        .then((response) => {
-          this.inElementTitleOk = response.data.data.title
-        })
-      } else {
-        this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId)
-        .then((response) => {
-          this.inElementTitleOk = response.data.data.title
-        })
+      if (!this.inInitiative) {
+        this.axios.get('/1/model/section/' + this.inElementId)
+          .then((response) => {
+            this.inElementTitleOk = response.data.data.title
+          })
       }
     },
     startEditing () {
@@ -328,75 +306,46 @@ export default {
           this.sendingData = false
           if (response.data.result === 'success') {
             this.closeThis()
-            this.$store.commit('triggerUpdateModel')
+            this.$store.commit('triggerUpdateSectionsTree')
+            this.$store.dispatch('refreshCurrentSection')
           } else {
             this.showOutputMessage(response.data.message)
           }
         }
 
         if (this.isNew) {
-          var place = ''
-          if (this.inView) {
-            place = 'view'
-          } else {
-            place = 'section'
-          }
-
           if (!this.addExisting) {
-            /* create new section */
-            this.sendingData = true
-            this.axios.post('/1/initiative/' + this.initiativeId + '/model/' + place + '/' + this.inElementId + '/subsection', sectionDto)
-            .then(responseF).catch((error) => {
-              console.log(error)
-            })
+            if (this.inInitiative) {
+              /* create new section */
+              this.sendingData = true
+              this.axios.post('/1/model/section/', sectionDto)
+                .then(responseF).catch((error) => {
+                  console.log(error)
+                })
+            } else {
+              this.sendingData = true
+              this.axios.post('/1/model/section/' + this.inElementId + '/subsection', sectionDto)
+                .then(responseF).catch((error) => {
+                  console.log(error)
+                })
+            }
           } else {
             /* add existing section */
             this.sendingData = true
-            this.axios.put('/1/initiative/' + this.initiativeId + '/model/' + place + '/' + this.inElementId + '/subsection/' + this.existingSection.id, {})
-            .then(responseF).catch((error) => {
-              console.log(error)
-            })
+            this.axios.put('/1/model/section/' + this.inElementId + '/subsection/' + this.existingSection.id, {})
+              .then(responseF).catch((error) => {
+                console.log(error)
+              })
           }
         } else {
           /* edit existing section */
           this.sendingData = true
-          this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + sectionDto.id, sectionDto)
-          .then(responseF).catch((error) => {
-            console.log(error)
-          })
+          this.axios.put('/1/model/section/' + sectionDto.id, sectionDto)
+            .then(responseF).catch((error) => {
+              console.log(error)
+            })
         }
       }
-    },
-    removeSection () {
-      var responseF = (response) => {
-        if (response.data.result === 'success') {
-          this.closeThis()
-          this.$store.commit('triggerUpdateModel')
-        } else {
-          this.showOutputMessage(response.data.message)
-        }
-      }
-
-      if (this.inView) {
-        this.axios.put('/1/initiative/' + this.initiativeId + '/model/view/' + this.inElementId + '/removeSection/' + this.section.id,
-          {}).then(responseF).catch((error) => {
-            console.log(error)
-          })
-      } else {
-        this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inElementId + '/removeSubsection/' + this.section.id,
-          {}).then(responseF).catch((error) => {
-            console.log(error)
-          })
-      }
-    },
-    deleteSection () {
-      this.axios.delete('/1/initiative/' + this.initiativeId + '/model/section/' + this.section.id)
-      .then((response) => {
-        this.closeThis()
-        this.$store.commit('triggerUpdateModel')
-      }).catch((error) => {
-        console.log(error)
-      })
     },
     atKeydown (e) {
       if (!this.editing) {
@@ -430,6 +379,9 @@ export default {
         description: ''
       }
       this.editing = true
+      this.$nextTick(() => {
+        this.$refs.titleInput.focus()
+      })
       this.updateInElement()
     } else {
       this.showEditButtons = true

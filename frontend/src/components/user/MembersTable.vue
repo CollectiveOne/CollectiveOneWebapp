@@ -99,12 +99,10 @@
 </template>
 
 <script>
-import UserAvatar from '@/components/user/UserAvatar.vue'
 import UserSelector from '@/components/user/UserSelector.vue'
 
 export default {
   components: {
-    'app-user-avatar': UserAvatar,
     'app-user-selector': UserSelector
   },
 

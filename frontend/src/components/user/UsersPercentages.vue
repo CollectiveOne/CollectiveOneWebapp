@@ -135,14 +135,9 @@
 </template>
 
 <script>
-import UserAvatar from '@/components/user/UserAvatar.vue'
 import { floatToChar } from '@/lib/common.js'
 
 export default {
-  components: {
-    'app-user-avatar': UserAvatar
-  },
-
   props: {
     /* WARNING: percents are updated directly in this property! */
     usersData: {

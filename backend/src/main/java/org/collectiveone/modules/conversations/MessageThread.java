@@ -17,7 +17,6 @@ import javax.persistence.Table;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelSection;
-import org.collectiveone.modules.model.ModelView;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -41,9 +40,6 @@ public class MessageThread {
 	
 	@OneToOne(mappedBy = "messageThread")
 	ModelSection modelSection;
-	
-	@OneToOne(mappedBy = "messageThread")
-	ModelView modelView;
 	
 	@OneToOne(mappedBy = "messageThread")
 	Initiative initiative;
@@ -81,14 +77,6 @@ public class MessageThread {
 
 	public void setModelSection(ModelSection modelSection) {
 		this.modelSection = modelSection;
-	}
-
-	public ModelView getModelView() {
-		return modelView;
-	}
-
-	public void setModelView(ModelView modelView) {
-		this.modelView = modelView;
 	}
 
 	public Initiative getInitiative() {

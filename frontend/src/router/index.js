@@ -13,13 +13,12 @@ import Unsubscribe from '@/components/user/Unsubscribe.vue'
 import OverviewSection from '@/components/initiative/OverviewSection.vue'
 import PeopleSection from '@/components/initiative/PeopleSection.vue'
 import TransfersSection from '@/components/initiative/TransfersSection.vue'
-import TimelineSection from '@/components/initiative/TimelineSection.vue'
 
 import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
-import ModelViewPlacer from '@/components/model/ModelViewPlacer.vue'
-import ModelSectionPlacer from '@/components/model/ModelSectionPlacer.vue'
-import ModelCardWrapperPlacer from '@/components/model/ModelCardWrapperPlacer.vue'
-import ModelSearchContainer from '@/components/model/ModelSearchContainer.vue'
+import ModelSectionContent from '@/components/model/ModelSectionContent.vue'
+
+import ModelSectionMessages from '@/components/model/ModelSectionMessages.vue'
+import ModelSectionCards from '@/components/model/ModelSectionCards.vue'
 
 import UserProfilePage from '@/components/UserProfilePage.vue'
 
@@ -66,25 +65,35 @@ export default new Router({
               component: InitiativesContent,
               children: [
                 { path: 'overview', name: 'InitiativeOverview', component: OverviewSection, meta: {'column': 1} },
-                { path: 'timeline', name: 'InitiativeTimeline', component: TimelineSection, meta: {'column': 2} },
                 {
                   path: 'model',
-                  name: 'InitiativeModel',
                   component: ModelSectionTab,
+                  name: 'InitiativeModelBase',
                   meta: {'column': 3},
                   children: [
-                    { path: 'view/:viewId', name: 'ModelView', component: ModelViewPlacer, meta: {'column': 3} },
+                    {
+                      path: '/',
+                      name: 'InitiativeModel',
+                      component: ModelSectionContent,
+                      meta: {'column': 3}
+                    },
                     {
                       path: 'section/:sectionId',
-                      name: 'ModelSection',
-                      component: ModelSectionPlacer,
-                      meta: {'column': 2},
+                      name: 'ModelSectionContent',
+                      component: ModelSectionContent,
+                      meta: {'column': 3},
                       children: [
-                        { path: 'card/:cardId', name: 'ModelCardInSection', meta: {'column': 3} }
+                        { path: 'messages', name: 'ModelSectionMessages', component: ModelSectionMessages, meta: {'column': 3} },
+                        { path: 'cards', name: 'ModelSectionCards', component: ModelSectionCards, meta: {'column': 3} },
+                        { path: 'cards/:cardId', name: 'ModelSectionCard', component: ModelSectionCards, meta: {'column': 3} }
                       ]
                     },
-                    { path: 'card/:cardWrapperId', name: 'ModelCardAlone', component: ModelCardWrapperPlacer, meta: {'column': 3} },
-                    { path: 'search', name: 'ModelSearch', component: ModelSearchContainer, meta: {'column': 3} }
+                    {
+                      path: '/card',
+                      name: 'ModelCardAlone',
+                      component: ModelSectionCards,
+                      meta: {'column': 3}
+                    }
                   ]
                 },
                 { path: 'people', name: 'InitiativePeople', component: PeopleSection, meta: {'column': 4} },
