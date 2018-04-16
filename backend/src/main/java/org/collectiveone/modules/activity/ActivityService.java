@@ -3,7 +3,9 @@ package org.collectiveone.modules.activity;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.UUID;
 
@@ -687,7 +689,68 @@ public class ActivityService {
 	/** To be called within an activity transaction, modifies the notifications property of the
 	 * input activity */
 	private void addInitiativeActivityNotifications (Activity activity) {
-		List<Subscriber> initiative_subscribers = getInitiativeSubscribers(activity.getInitiative().getId());
+		
+		/* this method build the full list of subscribers and add a notification for each of them*/
+		Set<Subscriber> subscribers = new HashSet<Subscriber>();
+		
+		Boolean isInModel = false;
+		/* subscribers are derived from the sections if activity is on a card or section*/
+		switch (activity.getType()) {
+			case MODEL_CARDWRAPPER_ADDED:
+			case MODEL_CARDWRAPPER_DELETED:
+			case MODEL_CARDWRAPPER_CREATED:
+			case MODEL_CARDWRAPPER_EDITED:
+			case MODEL_CARDWRAPPER_MOVED:
+			case MODEL_CARDWRAPPER_REMOVED:
+			case MODEL_SECTION_ADDED:
+			case MODEL_SECTION_CREATED:
+			case MODEL_SECTION_DELETED:
+			case MODEL_SECTION_EDITED:
+			case MODEL_SECTION_MOVED:
+			case MODEL_SECTION_REMOVED:
+				
+				isInModel = true;
+				break;
+				
+			case MESSAGE_POSTED:
+				isInModel = (activity.getModelCardWrapper() != null) 
+					|| (activity.getModelSection() != null);
+				break;
+			
+			default:
+				break;			
+		}
+		
+		/* if the activity occurs in the model, search for subscribers based on sections */
+		if (isInModel) {
+			
+			List<ModelSection> sections = null;
+			switch (activity.getType()) {
+				case MODEL_CARDWRAPPER_ADDED:
+				case MODEL_CARDWRAPPER_DELETED:
+				case MODEL_CARDWRAPPER_CREATED:
+				case MODEL_CARDWRAPPER_EDITED:
+				case MODEL_CARDWRAPPER_MOVED:
+				case MODEL_CARDWRAPPER_REMOVED:
+					
+					/* activity in cards is considered as occurring on the sections these card is placed*/
+					sections = modelCardWrapperRepository.findParentSections(activity.getModelCardWrapper().getId());
+					break;
+					
+				default: 
+					/* activity in section applies to that section only */
+					sections = new ArrayList<ModelSection>();
+					sections.add(activity.getModelSection());
+					break;
+			}
+			
+			for (ModelSection section : sections) {
+				/* append the subscribers of this section and all its parents */
+				appendSectionSubscribers(section.getId(), subscribers);
+			}
+		}
+		
+		List<Subscriber> subscribers = appendInitiativeSubscribers(activity.getInitiative().getId());
 		List<Subscriber> section_subscribers = null;
 		
 		if(activity.getModelSection() != null) {
@@ -726,7 +789,7 @@ public class ActivityService {
 		notification.setSubscriber(subscriber);
 		notification.setState(NotificationState.PENDING);
 		
-		/* if not unsubscribed from emails, set the email as peding */
+		/* if not unsubscribed from emails, set the email as pending */
 		if (subscriber.getEmailNotificationsState() != SubscriberEmailNotificationsState.DISABLED 
 				&& subscriber.getUser().getEmailNotificationsEnabled()) {
 			notification.setEmailState(NotificationEmailState.PENDING);
@@ -739,33 +802,36 @@ public class ActivityService {
 		activity.getNotifications().add(notification);
 	}
 	
+	/* update the input subscribers list */
+	private void appendSectionSubscribers(UUID sectionId, Set<Subscriber> allSubcribers) {
+		List<Subscriber> thisSubscribers = subscriberRepository.findByElementId(sectionId);
+		/* being a set, no duplicates are created */
+		allSubcribers.addAll(thisSubscribers);
+		
+		/* get section immediate parents */
+		GraphNode sectionNode = modelService.getSectionNode(sectionId, true, false, 1);
+		
+		for (GraphNode parent : sectionNode.getParents()) {
+			/* recursively add parent subscribers*/
+			appendSectionSubscribers(parent.getElementId(), allSubcribers);
+		}
+	}
+	
 	@Transactional
-	private List<Subscriber> getInitiativeSubscribers (UUID initiativeId) {
+	private void appendInitiativeSubscribers (UUID initiativeId, Set<Subscriber> allSubcribers) {
 		
 		/* example https://docs.google.com/drawings/d/1PqPhefzrGVlWVfG-SRGS56l_e2qpNEsajLbnsAWcTfA/edit,
 		 * assume initiativeId = C */
 		/* start with this initiative subscribers (S3 and S6 in example). Take into account that 
 		 * a subscriber state may be SUBSCRIPTION_DISABLED */
-		List<Subscriber> allSubscribers = subscriberRepository.findByElementId(initiativeId);
+		allSubcribers.addAll(subscriberRepository.findByElementId(initiativeId))
 		
 		/* then add the subscribers of all parent initiatives 2(B and A, in that order) */
 		List<Initiative> parents = initiativeService.getParentGenealogyInitiatives(initiativeId);
 		
 		for (Initiative parent : parents) {
-			List<Subscriber> parentSubscribers = subscriberRepository.findByElementId(parent.getId());
-			
-			for (Subscriber parentSubscriber : parentSubscribers) {
-				int ixOfSubscriber = indexOfSubscriber(allSubscribers, parentSubscriber);
-				if (ixOfSubscriber == -1) {
-					/* if this user is not already in the list of subscriptions, then
-					 * add it (this means that the applicable subscription is that at
-					 * the lowest level) */
-					allSubscribers.add(parentSubscriber);
-				}
-			}
+			allSubcribers.addAll(subscriberRepository.findByElementId(parent.getId()));
 		}
-		
-		return allSubscribers;
 	}
 	
 	@Transactional

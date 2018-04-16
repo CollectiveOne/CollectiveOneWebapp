@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 import javax.transaction.Transactional;
 
@@ -79,10 +78,6 @@ public class ModelService {
 	
 	@Autowired
 	private CardLikeRepositoryIf cardLikeRepository;
-	
-	
-	/* local memory needed as protection against infinite recursive loops */
-	private List<UUID> readIds = new ArrayList<UUID>();
 	
 	
 	@Transactional
@@ -625,8 +620,8 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelSectionLinkedDto> getSectionParentGenealogy(UUID sectionId) {
-		ModelSectionLinkedDto linkedDtos = getModelSectionDtosFromNodes(getAllParentSectionsGenealogy(sectionId));
+	public GetResult<ModelSectionLinkedDto> getSectionParentGenealogy(UUID sectionId, Integer levels) {
+		ModelSectionLinkedDto linkedDtos = getModelSectionDtosFromNodes(getSectionNode(sectionId, true, false, levels));
 		return new GetResult<ModelSectionLinkedDto>("success", "parents retrieved", linkedDtos);
 	}
 	
@@ -652,13 +647,11 @@ public class ModelService {
 	
 	
 	@Transactional
-	public GraphNode getAllParentSectionsGenealogy(UUID sectionId) {
-		readIds.clear();
-		return getAllParentSectionsIdsRec(sectionId);
+	public GraphNode getSectionNode(UUID sectionId, Boolean addParents, Boolean addChildren, Integer levels) {
+		return getSectionNodeRec(sectionId, addParents, addChildren, levels, new ArrayList<UUID>());
 	}
 	
-	@Transactional
-	public GraphNode getAllParentSectionsIdsRec(UUID sectionId) {
+	private GraphNode getSectionNodeRec(UUID sectionId, Boolean addParents, Boolean addChildren, Integer levels, List<UUID> readIds) {
 		
 		if (!modelSectionRepository.sectionExists(sectionId)) {
 			return null;
@@ -669,19 +662,65 @@ public class ModelService {
 		
 		readIds.add(sectionId);
 		
-		List<UUID> inSections = modelSectionRepository.findParentSectionsIds(sectionId);
+		Boolean recurse = false;
 		
-		for (UUID inSectionId : inSections) {
-			if (!readIds.contains(inSectionId)) {
-				readIds.add(inSectionId);
-				/* recursive call to search for parent parents*/
-				node.getParents().add(getAllParentSectionsIdsRec(inSectionId));
-			} else {
-				/* if section already added, add it but don't keep looking recursively */
-				GraphNode repeatedNode = new GraphNode();
-				repeatedNode.setElementId(inSectionId);
-				node.getParents().add(repeatedNode);
+		if (levels != null) {
+			if (levels > 1) {
+				recurse = true; 
 			}
+		}
+		
+		if (addParents) {
+			List<UUID> parents = modelSectionRepository.findParentSectionsIds(sectionId);
+			
+			for (UUID inSectionId : parents) {
+				if (!readIds.contains(inSectionId)) {
+					GraphNode parentNode = null;
+					if (recurse) {
+						/* recursive call to search for parent parents*/
+						parentNode = getSectionNodeRec(inSectionId, addParents, false, levels - 1, readIds);	
+					} else {
+						readIds.add(inSectionId);
+						parentNode = new GraphNode();
+						parentNode.setElementId(inSectionId);
+					}
+					
+					node.getParents().add(parentNode);
+					
+				} else {
+					/* if section already added, add it but don't keep looking recursively */
+					GraphNode repeatedNode = new GraphNode();
+					repeatedNode.setElementId(inSectionId);
+					node.getParents().add(repeatedNode);
+				}
+			}
+		}
+		
+		if (addChildren) {
+			List<UUID> children = modelSectionRepository.findSubsectionsIds(sectionId);
+			
+			for (UUID subSectionId : children) {
+				if (!readIds.contains(subSectionId)) {
+					GraphNode childrenNode = null;
+					if (recurse) {
+						/* recursive call to search for parent parents*/
+						childrenNode = getSectionNodeRec(subSectionId, false, addChildren, levels - 1, readIds);	
+					} else {
+						readIds.add(subSectionId);
+						childrenNode = new GraphNode();
+						childrenNode.setElementId(subSectionId);
+					}
+					
+					node.getChildren().add(childrenNode);
+					
+				} else {
+					/* if section already added, add it but don't keep looking recursively */
+					GraphNode repeatedNode = new GraphNode();
+					repeatedNode.setElementId(subSectionId);
+					node.getChildren().add(repeatedNode);
+				}
+			}
+			
 		}
 		
 		return node;
@@ -689,38 +728,8 @@ public class ModelService {
 	
 	@Transactional
 	public List<UUID> getAllSubsectionsIds (UUID sectionId, Integer level) {
-		readIds.clear();
-		readIds.add(sectionId);
-		return getAllSubsectionsIdsRec(sectionId, level);
-	}
-	
-	@Transactional
-	public List<UUID> getAllSubsectionsIdsRec (UUID sectionId, Integer level) {
-		if (level <= 0) {
-			return new ArrayList<UUID>();
-		} 
-		
-		List<UUID> subsectionsIds = modelSectionRepository.getSubsectionsIds(sectionId);
-		List<UUID> allSubsectionIds = new ArrayList<UUID>();
-		
-		/* remove those that have been already been added */
-		Predicate<UUID> isContained = e -> readIds.contains(e);
-		subsectionsIds.removeIf(isContained);
-		
-		allSubsectionIds.addAll(subsectionsIds);
-		readIds.addAll(subsectionsIds);
-		
-		for (UUID subsectionId : subsectionsIds) {
-			List<UUID> subsubsectionIds = getAllSubsectionsIdsRec(subsectionId, level - 1);
-			
-			for (UUID subsubsectionId : subsubsectionIds) {
-				if(allSubsectionIds.indexOf(subsubsectionId) == -1) {
-					allSubsectionIds.add(subsubsectionId);
-				}
-			}
-		}
-		
-		return allSubsectionIds;
+		GraphNode subsection = getSectionNode(sectionId, false, true, null);
+		return subsection.toList(false, true);
 	}
 	
 	@Transactional

@@ -280,7 +280,7 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelSectionLinkedDto>("error", "access denied", null);
 		}
 		
-		return modelService.getSectionParentGenealogy(sectionId);
+		return modelService.getSectionParentGenealogy(sectionId, null);
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.DELETE) 
