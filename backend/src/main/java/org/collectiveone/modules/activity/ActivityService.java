@@ -15,6 +15,7 @@ import org.collectiveone.modules.activity.dto.NotificationDto;
 import org.collectiveone.modules.activity.dto.SubscriberDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.enums.NotificationEmailState;
+import org.collectiveone.modules.activity.enums.NotificationPushState;
 import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.enums.SubscriberEmailNotificationsState;
 import org.collectiveone.modules.activity.enums.SubscriberState;
@@ -56,7 +57,9 @@ public class ActivityService {
 	
 	@Autowired
 	private MessageService messageService;
-	
+
+	@Autowired
+	private PushMessageBuilder pushMessageBuilder;
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
@@ -123,9 +126,14 @@ public class ActivityService {
 	public GetResult<List<NotificationDto>> getUserNotifications(UUID userId, PageRequest page) {
 		
 		List<NotificationDto> notifications = new ArrayList<NotificationDto>();
-		
+		NotificationDto notificationResult;
+		String pushMessage;
 		for(Notification notification : notificationRepository.findOfUser(userId, page)) {
-			notifications.add(notification.toDto());
+
+			notificationResult = notification.toDto();
+			pushMessage = pushMessageBuilder.getPushMessage(notification);
+			notificationResult.setPushMessage(pushMessage);
+			notifications.add(notificationResult);
 		}
 		
 		return new GetResult<List<NotificationDto>>("success", "notifications found", notifications);
@@ -136,6 +144,20 @@ public class ActivityService {
 		for(Notification notification: notificationRepository.findBySubscriber_User_C1IdAndState(userId, NotificationState.PENDING)) {
 			notification.setState(NotificationState.DELIVERED);
 			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notificationRepository.save(notification);
+		}
+		
+		return new PostResult("success", "success", "");
+	}
+	
+	@Transactional
+	public PostResult notificationsPushed(UUID userId) {
+		for(Notification notification: notificationRepository.findBySubscriber_User_C1IdAndPushState(userId, NotificationPushState.PENDING)) {
+			System.out.println(notification);
+			
+			notification.setPushState(NotificationPushState.PUSHED);
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+			
 			notificationRepository.save(notification);
 		}
 		
@@ -784,8 +806,8 @@ public class ActivityService {
 					notification.setSubscriber(subscriber);
 					
 					notification.setState(NotificationState.PENDING);
-					
-					/* if not unsubscribed from emails, set the email as peding */
+					notification.setPushState(NotificationPushState.PENDING);
+					/* if not unsubscribed from emails, set the email as pending */
 					if (subscriber.getEmailNotificationsState() != SubscriberEmailNotificationsState.DISABLED) {
 						notification.setEmailState(NotificationEmailState.PENDING);
 					} else {
@@ -841,6 +863,7 @@ public class ActivityService {
 		notification.setActivity(activity);
 		notification.setSubscriber(subscriber);
 		notification.setState(NotificationState.PENDING);
+		notification.setPushState(NotificationPushState.PENDING);
 		
 		/* if not unsubscribed from emails, set the email as peding */
 		if (subscriber.getEmailNotificationsState() != SubscriberEmailNotificationsState.DISABLED 

@@ -52,6 +52,15 @@ public class ActivityController extends BaseController {
 		return activityService.notificationsRead(getLoggedUser().getC1Id());
 	}
 	
+	@RequestMapping(path = "/user/notifications/pushed", method = RequestMethod.PUT)
+	public PostResult notificationsNotify() {
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		return activityService.notificationsPushed(getLoggedUser().getC1Id());
+	}
+	
 	@RequestMapping(path = "/user/notifications/subscriber/{initiativeId}", method = RequestMethod.GET)
 	public GetResult<SubscriberDto> getSubscriber(@PathVariable("initiativeId") String initiativeId) {
 		if (getLoggedUser() == null) {

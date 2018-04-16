@@ -9,6 +9,8 @@ public class NotificationDto {
 	private String subscriberState;
 	private ActivityDto activity;
 	private String state;
+	private String pushState;
+	private String pushMessage;
 	
 	public String getId() {
 		return id;
@@ -39,6 +41,18 @@ public class NotificationDto {
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	public String getPushState() {
+		return pushState;
+	}
+	public void setPushState(String pushState) {
+		this.pushState = pushState;
+	}
+	public void setPushMessage(String pushMessage) {
+		this.pushMessage = pushMessage;
+	}
+	public String getPushMessage() {
+		return pushMessage;
 	}
 	
 }

@@ -60,6 +60,13 @@ export default {
   },
 
   methods: {
+    pushDesktopNotification (pushMessage, pushIcon) {
+      var notify = new Notification('CollectiveOne (' + this.numberOfUnreadNotifications + ')', {
+        body: pushMessage,
+        icon: pushIcon
+      })
+      setTimeout(notify.close.bind(notify), 5000)
+    },
     updateNotifications () {
       if (!this.showingMoreNotifications) {
         /* dont update if the user is scrolling down de notifications */
@@ -72,6 +79,16 @@ export default {
           /* check that new notifications arrived */
           this.allShown = false
           this.notifications = response.data.data
+        }).then((response) => {
+          /* push desktop notification */
+          for (var i = 0; i < this.notifications.length; i++) {
+            if (this.notifications[i].pushState === 'PENDING') {
+              this.pushDesktopNotification(this.notifications[i].pushMessage, this.notifications[i].activity.triggerUser.pictureUrl)
+            }
+          }
+        }).then((response) => {
+          /* update notification state */
+          this.notificationsPushed()
         }).catch(function (error) {
           console.log(error)
         })
@@ -90,7 +107,6 @@ export default {
         if (response.data.data.length < 10) {
           this.allShown = true
         }
-
         this.notifications = this.notifications.concat(response.data.data)
       }).catch(function (error) {
         console.log(error)
@@ -102,6 +118,16 @@ export default {
       if (this.$store.state.user.profile) {
         this.axios.put('/1/user/notifications/read', {}).then((response) => {
           this.updateNotifications()
+        }).catch(function (error) {
+          console.log(error)
+        })
+      }
+    },
+
+    notificationsPushed () {
+      /* notifications notified */
+      if (this.$store.state.user.profile) {
+        this.axios.put('/1/user/notifications/pushed', {}).then((response) => {
         }).catch(function (error) {
           console.log(error)
         })

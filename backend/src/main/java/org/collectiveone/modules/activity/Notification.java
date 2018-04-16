@@ -14,9 +14,11 @@ import javax.persistence.Table;
 
 import org.collectiveone.modules.activity.dto.NotificationDto;
 import org.collectiveone.modules.activity.enums.NotificationEmailState;
+import org.collectiveone.modules.activity.enums.NotificationPushState;
 import org.collectiveone.modules.activity.enums.NotificationState;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table( name = "notifications" )
@@ -45,6 +47,9 @@ public class Notification {
 	@Column(name = "email_state")
 	private NotificationEmailState emailState;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "push_state")
+	private NotificationPushState pushState;
 	
 	public NotificationDto toDto() {
 		NotificationDto dto = new NotificationDto();
@@ -54,6 +59,8 @@ public class Notification {
 		dto.setState(state.toString());
 		dto.setSubscriberUser(subscriber.getUser().toDtoLight());
 		dto.setSubscriberState(subscriber.getState().toString());
+		if(pushState != null)
+			dto.setPushState(pushState.toString());
 		
 		return dto;
 	}
@@ -105,7 +112,13 @@ public class Notification {
 	public void setEmailState(NotificationEmailState emailState) {
 		this.emailState = emailState;
 	}
-	
-	
+
+	public NotificationPushState getPushState() {
+		return pushState;
+	}
+
+	public void setPushState(NotificationPushState pushState) {
+		this.pushState = pushState;
+	}
 	
 }

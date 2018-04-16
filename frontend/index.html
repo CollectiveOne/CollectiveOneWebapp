@@ -16,4 +16,23 @@
   <body class="w3-white">
     <div id="app"></div>
   </body>
+  <script type="text/javascript">
+    
+     Notification.requestPermission();
+    if (window.Notification) {
+      console.log('Your web browser does support notifications!');
+
+          window.Notification.requestPermission(function(response){
+            console.log('Notification Response = ',response);
+            if(response === 'denied'){
+              console.log("Notification alerts has been denied");
+            }else if(response === 'granted'){
+              console.log("Notification alerts has been granted");
+            }
+          });
+
+    } else {
+        console.log('Your web browser does not support notifications!');
+    }
+  </script>
 </html>
