@@ -1,5 +1,6 @@
 package org.collectiveone.modules.model;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
