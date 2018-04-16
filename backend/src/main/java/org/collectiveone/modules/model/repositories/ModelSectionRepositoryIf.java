@@ -13,8 +13,19 @@ public interface ModelSectionRepositoryIf extends CrudRepository<ModelSection, U
 
 	public ModelSection findById(UUID sectionId);
 	
+	@Query("SELECT section.id from ModelSection section WHERE sec.id = ?1")
+	public UUID getId(UUID sectionId);
+	
+	default Boolean sectionExists(UUID sectionId) {
+		UUID res = getId(sectionId);
+		return res != null;
+	}
+	
 	@Query("SELECT section from ModelSection section JOIN section.subsections subsec WHERE subsec.id = ?1")
 	public List<ModelSection> findParentSections(UUID sectionId);
+	
+	@Query("SELECT section.id from ModelSection section JOIN section.subsections subsec WHERE subsec.id = ?1")
+	public List<UUID> findParentSectionsIds(UUID sectionId);
 	
 	@Query("SELECT sec from ModelSection sec " +
 			"WHERE (LOWER(sec.title) LIKE ?1 OR LOWER(sec.description) LIKE ?1) " +

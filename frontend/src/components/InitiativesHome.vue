@@ -1,7 +1,10 @@
 <template lang="html">
   <div class="">
     <router-view></router-view>
-    <div class="">
+    <div class="w3-row">
+      <app-header :inInitiative="false"></app-header>
+    </div>
+    <div class="w3-row">
       <div v-if="$store.state.user.authenticated" class="w3-row w3-center light-grey">
         <div class="w3-col m6 border-blue cursor-pointer tablink" :class="{'w3-bottombar': !publicInitiatives}"
           @click="publicInitiatives = false">
@@ -25,11 +28,13 @@
 </template>
 
 <script>
+import Header from '@/components/Header.vue'
 import PublicInitiatives from '@/components/PublicInitiatives.vue'
 import MyInitiatives from '@/components/MyInitiatives.vue'
 
 export default {
   components: {
+    'app-header': Header,
     'app-public-initiatives': PublicInitiatives,
     'app-my-initiatives': MyInitiatives
   },

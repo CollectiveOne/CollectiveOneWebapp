@@ -4,7 +4,7 @@
       <div class="w3-row">
 
        <div class="w3-row">
-         <app-header></app-header>
+         <app-header :inInitiative="true"></app-header>
        </div>
 
         <div class="w3-row content-container">

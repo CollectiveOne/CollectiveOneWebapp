@@ -14,7 +14,7 @@ import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
-import org.collectiveone.modules.model.dto.ModelSectionGenealogyDto;
+import org.collectiveone.modules.model.dto.ModelSectionLinkedDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -270,14 +270,14 @@ public class ModelController extends BaseController {
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/genealogy", method = RequestMethod.GET) 
-	public GetResult<ModelSectionGenealogyDto> getSectionGenealogy(
+	public GetResult<ModelSectionLinkedDto> getSectionGenealogy(
 			@PathVariable("sectionId") String sectionIdStr) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
 		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
-			return new GetResult<ModelSectionGenealogyDto>("error", "access denied", null);
+			return new GetResult<ModelSectionLinkedDto>("error", "access denied", null);
 		}
 		
 		return modelService.getSectionParentGenealogy(sectionId);

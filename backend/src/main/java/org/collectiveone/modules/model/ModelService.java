@@ -28,7 +28,7 @@ import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
-import org.collectiveone.modules.model.dto.ModelSectionGenealogyDto;
+import org.collectiveone.modules.model.dto.ModelSectionLinkedDto;
 import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
@@ -158,36 +158,6 @@ public class ModelService {
 		return new GetResult<List<ModelCardWrapperDto>>("success", "section retrieved",  cardWrappersDtos);
 	}
 	
-	@Transactional
-	public GetResult<ModelSectionGenealogyDto> getSectionParentGenealogy(UUID sectionId) {
-		readIds.clear();
-		return new GetResult<ModelSectionGenealogyDto>("success", "parents retrieved", getSectionParentGenealogyRec(sectionId));
-	}
-	
-	@Transactional
-	public ModelSectionGenealogyDto getSectionParentGenealogyRec(UUID sectionId) {
-		
-		ModelSectionGenealogyDto genealogy = new ModelSectionGenealogyDto();
-		genealogy.setSection(modelSectionRepository.findById(sectionId).toDtoLight());
-		
-		readIds.add(sectionId);
-		
-		List<ModelSection> inSections = modelSectionRepository.findParentSections(sectionId);
-		
-		for (ModelSection inSection : inSections) {
-			if (!readIds.contains(inSection.getId())) {
-				readIds.add(inSection.getId());
-				genealogy.getParents().add(getSectionParentGenealogyRec(inSection.getId()));	
-			} else {
-				/* if section already added, add it but don't keep looking recursively */
-				ModelSectionGenealogyDto repeatedGenealogy = new ModelSectionGenealogyDto();
-				repeatedGenealogy.setSection(inSection.toDtoLight());
-				genealogy.getParents().add(repeatedGenealogy);
-			}
-		}
-		
-		return genealogy;
-	}
 	
 	@Transactional
 	public GetResult<Page<ModelSectionDto>> searchSection(String query, PageRequest page, UUID initiativeId, UUID requestByUserId) {
@@ -652,6 +622,69 @@ public class ModelService {
 		activityService.modelCardWrapperDeleted(cardWrapper, appUserRepository.findByC1Id(creatorId));
 		
 		return new PostResult("success", "section deleted", cardWrapper.getId().toString());
+	}
+	
+	@Transactional
+	public GetResult<ModelSectionLinkedDto> getSectionParentGenealogy(UUID sectionId) {
+		ModelSectionLinkedDto linkedDtos = getModelSectionDtosFromNodes(getAllParentSectionsGenealogy(sectionId));
+		return new GetResult<ModelSectionLinkedDto>("success", "parents retrieved", linkedDtos);
+	}
+	
+	/* Recursive method that get the sections data and convert it to a DTO structure while keeping the
+	 * links between sections as derived from the input Node */
+	@Transactional
+	public ModelSectionLinkedDto getModelSectionDtosFromNodes(GraphNode node) {
+		
+		ModelSectionLinkedDto sectionLinked = new ModelSectionLinkedDto();
+		
+		sectionLinked.setSection(modelSectionRepository.findById(node.elementId).toDtoLight());
+		
+		for (GraphNode parentNode : node.getParents()) {
+			sectionLinked.getParents().add(getModelSectionDtosFromNodes(parentNode));
+		}
+		
+		for (GraphNode childrenNode : node.getChildren()) {
+			sectionLinked.getChildren().add(getModelSectionDtosFromNodes(childrenNode));
+		}
+		
+		return sectionLinked;
+	}
+	
+	
+	@Transactional
+	public GraphNode getAllParentSectionsGenealogy(UUID sectionId) {
+		readIds.clear();
+		return getAllParentSectionsIdsRec(sectionId);
+	}
+	
+	@Transactional
+	public GraphNode getAllParentSectionsIdsRec(UUID sectionId) {
+		
+		if (!modelSectionRepository.sectionExists(sectionId)) {
+			return null;
+		}
+		
+		GraphNode node = new GraphNode();
+		node.setElementId(sectionId);
+		
+		readIds.add(sectionId);
+		
+		List<UUID> inSections = modelSectionRepository.findParentSectionsIds(sectionId);
+		
+		for (UUID inSectionId : inSections) {
+			if (!readIds.contains(inSectionId)) {
+				readIds.add(inSectionId);
+				/* recursive call to search for parent parents*/
+				node.getParents().add(getAllParentSectionsIdsRec(inSectionId));
+			} else {
+				/* if section already added, add it but don't keep looking recursively */
+				GraphNode repeatedNode = new GraphNode();
+				repeatedNode.setElementId(inSectionId);
+				node.getParents().add(repeatedNode);
+			}
+		}
+		
+		return node;
 	}
 	
 	@Transactional

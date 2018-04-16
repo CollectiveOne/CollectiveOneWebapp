@@ -1,39 +1,40 @@
 <template lang="html">
   <div class="w3-row header-row">
-
-   <div class="w3-col m4">
+    <div class="w3-col m4">
      <div class="w3-left nav-menu-btn w3-xlarge cursor-pointer"
        @click="$store.commit('toggleExpandNav')">
        <i v-if="!expandNav" class="fa fa-chevron-circle-right"></i>
        <i v-if="expandNav" class="fa fa-chevron-circle-left"></i>
      </div>
 
-     <div v-for="(parent, ix) in reversedParents" :key="parent.id" class="w3-left initiative-section">
-       <router-link :to="{name: 'Initiative', params: {'initiativeId': parent.id }}"
-         tag="div" class="w3-left cursor-pointer" :class="{ 'parent-2': ix > 0 }">
-         {{ parent.meta.name }}
-       </router-link>
-       <div class="w3-left separator">
-         <i class="fa fa-chevron-right" aria-hidden="true"></i>
+     <div v-if="inInitiative" class="">
+       <div v-for="(parent, ix) in reversedParents" :key="parent.id" class="w3-left initiative-section">
+         <router-link :to="{name: 'Initiative', params: {'initiativeId': parent.id }}"
+           tag="div" class="w3-left cursor-pointer" :class="{ 'parent-2': ix > 0 }">
+           {{ parent.meta.name }}
+         </router-link>
+         <div class="w3-left separator">
+           <i class="fa fa-chevron-right" aria-hidden="true"></i>
+         </div>
+       </div>
+       <div class="w3-left">
+          <div class="w3-left initiative-section">
+            {{ initiative.meta.name }}
+          </div>
+
+          <app-initiative-control-buttons
+            class="w3-left" :initiative="this.initiative">
+          </app-initiative-control-buttons>
+       </div>
+       <div v-if="initiative.status !== 'ENABLED'" class="w3-left w3-tag w3-round w3-margin-left error-panel">
+         {{ initiative.status }}
        </div>
      </div>
-     <div class="w3-left">
-        <div class="w3-left initiative-section">
-          {{ initiative.meta.name }}
-        </div>
 
-        <app-initiative-control-buttons
-          class="w3-left" :initiative="this.initiative">
-        </app-initiative-control-buttons>
-     </div>
-     <div v-if="initiative.status !== 'ENABLED'" class="w3-left w3-tag w3-round w3-margin-left error-panel">
-       {{ initiative.status }}
-     </div>
+    </div>
 
-   </div>
-
-   <div class="w3-col m4">
-     <div class="tab-btns-container w3-xlarge">
+    <div class="w3-col m4">
+     <div v-if="inInitiative" class="tab-btns-container w3-xlarge">
        <router-link :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
          class="tab-btn-space">
          <div class="tab-btn noselect" :class="{'selected': isOverview}">
@@ -59,10 +60,13 @@
          </div>
        </router-link>
      </div>
+     <div v-else class="logo-container">
+       <img class="logo" src="../assets/logo-color.png" alt="">
+     </div>
 
-   </div>
+    </div>
 
-   <div class="w3-col m4">
+    <div class="w3-col m4">
 
      <div v-if="$store.state.user.authenticated"
        @click="userOptionsClicked()" class="w3-right cursor-pointer"
@@ -100,11 +104,11 @@
 
      <router-link :to="{ name: 'Landing'}"><i class="w3-right w3-xlarge info-button fa fa-info-circle"></i></router-link>
 
-     <router-link :to="{name: 'InitiativesHome'}" class="w3-right logo-container noselect cursor-pointer">
+     <router-link v-if="inInitiative" :to="{name: 'InitiativesHome'}" class="w3-right logo-container noselect cursor-pointer">
        <img class="icon" src="../assets/imago-red.png" alt="">
      </router-link>
 
-   </div>
+    </div>
 
   </div>
 </template>
@@ -117,6 +121,13 @@ export default {
   components: {
     'app-initiative-control-buttons': InitiativeControlButtons,
     'app-notifications-list': NotificationsList
+  },
+
+  props: {
+    inInitiative: {
+      type: Boolean,
+      default: false
+    }
   },
 
   data () {
@@ -276,6 +287,14 @@ export default {
 }
 
 .icon {
+  height: 32px;
+}
+
+.logo-container {
+  text-align: center;
+}
+
+.logo {
   height: 32px;
 }
 
