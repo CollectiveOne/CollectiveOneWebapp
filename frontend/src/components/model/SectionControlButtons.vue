@@ -37,6 +37,17 @@
           </app-model-section-modal>
         </transition>
       </div>
+
+      <div class="slider-container">
+        <transition name="slideDownUp">
+          <app-edit-notifications-modal
+            v-if="showEditNotificationsModal"
+            :sectionId="section.id"
+            @close="showEditNotificationsModal = false">
+          </app-edit-notifications-modal>
+        </transition>
+      </div>
+
     </div>
 
     <div class="modal-buttons-container">
@@ -115,6 +126,7 @@ export default {
       showSectionModal: false,
       showNewSubsectionModal: false,
       showNewCardModal: false,
+      showEditNotificationsModal: false,
       deleteIntent: false,
       removeIntent: false
     }

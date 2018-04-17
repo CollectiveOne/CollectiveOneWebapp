@@ -648,6 +648,7 @@ public class ModelService {
 	
 	@Transactional
 	public GraphNode getSectionNode(UUID sectionId, Boolean addParents, Boolean addChildren, Integer levels) {
+		/* levels = null means as many levels as available */
 		return getSectionNodeRec(sectionId, addParents, addChildren, levels, new ArrayList<UUID>());
 	}
 	
@@ -669,6 +670,8 @@ public class ModelService {
 			if (levels > 0) {
 				this_neighbors = true; 
 			}
+		} else {
+			this_neighbors = true;
 		}
 		
 		/* children are one more level */
@@ -681,6 +684,8 @@ public class ModelService {
 				if (levels > 2) {
 					recurse = true; 
 				}
+			} else {
+				recurse = true;
 			}
 			
 			if (addParents) {
@@ -691,7 +696,7 @@ public class ModelService {
 						GraphNode parentNode = null;
 						if (recurse) {
 							/* recursive call to search for parent parents*/
-							parentNode = getSectionNodeRec(inSectionId, addParents, false, levels - 1, readIds);	
+							parentNode = getSectionNodeRec(inSectionId, addParents, false, levels != null ? levels - 1 : null, readIds);	
 						} else {
 							readIds.add(inSectionId);
 							parentNode = new GraphNode();
@@ -717,7 +722,7 @@ public class ModelService {
 						GraphNode childrenNode = null;
 						if (recurse) {
 							/* recursive call to search for parent parents*/
-							childrenNode = getSectionNodeRec(subSectionId, false, addChildren, levels - 1, readIds);	
+							childrenNode = getSectionNodeRec(subSectionId, false, addChildren, levels != null ? levels - 1 : null, readIds);	
 						} else {
 							readIds.add(subSectionId);
 							childrenNode = new GraphNode();
