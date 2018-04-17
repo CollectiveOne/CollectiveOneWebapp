@@ -7,8 +7,8 @@ import java.util.UUID;
 public class GraphNode {
 
 	UUID elementId;
-	List<GraphNode> parents;
-	List<GraphNode> children;
+	List<GraphNode> parents = new ArrayList<GraphNode>();
+	List<GraphNode> children = new ArrayList<GraphNode>();
 	
 	public List<UUID> toList(Boolean addParents, Boolean addChildren) {
 		return toList(addParents, addChildren, new ArrayList<UUID>());

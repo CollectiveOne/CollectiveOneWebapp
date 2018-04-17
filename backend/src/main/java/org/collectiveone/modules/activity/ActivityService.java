@@ -750,35 +750,20 @@ public class ActivityService {
 			}
 		}
 		
-		List<Subscriber> subscribers = appendInitiativeSubscribers(activity.getInitiative().getId());
-		List<Subscriber> section_subscribers = null;
+		appendInitiativeSubscribers(activity.getInitiative().getId(), subscribers);
 		
-		if(activity.getModelSection() != null) {
-			section_subscribers = getSectionSubscribers(activity.getModelSection().getId());
-		}
-		
-		for (Subscriber subscriber : initiative_subscribers) {
+		/* now prepare a notification for each subscriber */
+		for (Subscriber subscriber : subscribers) {
 			if (subscriber.getState() != SubscriberState.UNSUBSCRIBED) {
 				if(activity.getTriggerUser().getC1Id() != subscriber.getUser().getC1Id()) {
 					/* add a notification only if the trigger user is not the subscriber */
 
 					/*add a notification only if the user is subscribed to the section*/
 					if (subscriber.getState() == SubscriberState.SUBSCRIBED) {
-
-						if(section_subscribers != null) {
-							for(Subscriber section_subscriber : section_subscribers) {
-								if (section_subscriber.getState() == SubscriberState.SUBSCRIBED) {
-									addNotification(activity,subscriber);
-								}
-							}
-						}else {
-							addNotification(activity,subscriber);
-						}
-						
+						addNotification(activity,subscriber);
 					}
 				}
 			}
-			
 		}
 	}
 	
@@ -824,53 +809,13 @@ public class ActivityService {
 		 * assume initiativeId = C */
 		/* start with this initiative subscribers (S3 and S6 in example). Take into account that 
 		 * a subscriber state may be SUBSCRIPTION_DISABLED */
-		allSubcribers.addAll(subscriberRepository.findByElementId(initiativeId))
+		allSubcribers.addAll(subscriberRepository.findByElementId(initiativeId));
 		
 		/* then add the subscribers of all parent initiatives 2(B and A, in that order) */
 		List<Initiative> parents = initiativeService.getParentGenealogyInitiatives(initiativeId);
-		
 		for (Initiative parent : parents) {
 			allSubcribers.addAll(subscriberRepository.findByElementId(parent.getId()));
 		}
-	}
-	
-	@Transactional
-	private List<Subscriber> getSectionSubscribers (UUID sectionId) {
-		
-		/* example https://docs.google.com/drawings/d/1PqPhefzrGVlWVfG-SRGS56l_e2qpNEsajLbnsAWcTfA/edit,
-		 * assume initiativeId = C */
-		/* start with this initiative subscribers (S3 and S6 in example). Take into account that 
-		 * a subscriber state may be SUBSCRIPTION_DISABLED */
-		List<Subscriber> allSubscribers = subscriberRepository.findByElementId(sectionId);
-		
-		/* then add the subscribers of all parent initiatives (B and A, in that order) */
-		GraphNode parentSectionsIds = modelService.getAllParentSectionsGenealogy(sectionId);
-		
-		for (UUID parentSection : parentSectionsIds) {
-			List<Subscriber> parentSubscribers = subscriberRepository.findByElementId(parent.getId());
-			
-			for (Subscriber parentSubscriber : parentSubscribers) {
-				int ixOfSubscriber = indexOfSubscriber(allSubscribers, parentSubscriber);
-				if (ixOfSubscriber == -1) {
-					/* if this user is not already in the list of subscriptions, then
-					 * add it (this means that the applicable subscription is that at
-					 * the lowest level) */
-					allSubscribers.add(parentSubscriber);
-				}
-			}
-		}
-		
-		return allSubscribers;
-	}
-	
-	private int indexOfSubscriber(List<Subscriber> subscribers, Subscriber parentSubscriber) {
-		for (int ix = 0; ix < subscribers.size(); ix++) {
-			Subscriber subscriber = subscribers.get(ix);
-			if (subscriber.getUser().getC1Id() == parentSubscriber.getUser().getC1Id()) {
-				return ix;
-			}
-		}
-		return -1;
 	}
 	
 }
