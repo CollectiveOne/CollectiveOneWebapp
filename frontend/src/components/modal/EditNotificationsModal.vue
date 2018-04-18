@@ -8,7 +8,7 @@
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>Edit notifications of {{ initiative.meta.name }}</h2>
+          <h2>Edit notifications of "{{ elementName }}"</h2>
         </div>
 
         <div v-if="subscriber" class="w3-container form-container">
@@ -90,6 +90,21 @@
 
 <script>
 export default {
+  props: {
+    section: {
+      type: Object,
+      default: null
+    },
+    initiative: {
+      type: Object,
+      default: null
+    },
+    type: {
+      type: String,
+      default: 'section'
+    }
+  },
+
   data () {
     return {
       subscriber: null
@@ -97,8 +112,19 @@ export default {
   },
 
   computed: {
-    initiative () {
-      return this.$store.state.initiative.initiative
+    isSection () {
+      return this.type === 'section'
+    },
+    elementName () {
+      if (this.come.comeSection === 1) {
+        return 'section xzzz'
+      }
+      return 'section title'
+      // if (this.isSection) {
+      //   return this.section.title
+      // } else {
+      //   return this.initiative.meta.name
+      // }
     },
     isSubscribed () {
       return this.subscriber.state === 'SUBSCRIBED'
@@ -122,6 +148,13 @@ export default {
   },
 
   methods: {
+    test () {
+      console.log('testing 1')
+      if (this.come.comeSection === 1) {
+        this.showNewCardModal = true
+      }
+      console.log('testing 2')
+    },
     updateSubscriber () {
       this.axios.get('/1/user/notifications/subscriber/' + this.initiative.id).then((response) => {
         this.subscriber = response.data.data
@@ -135,6 +168,10 @@ export default {
         this.closeThis()
       })
     }
+  },
+
+  created () {
+    this.test()
   }
 }
 </script>
