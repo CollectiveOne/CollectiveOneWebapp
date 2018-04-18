@@ -108,7 +108,10 @@ export default {
           }
         }).then((response) => {
           /* update notification state */
-          this.notificationsPushed()
+          //  preventing unecessary calling of the api
+          if (this.pushNotifications.length) {
+            this.notificationsPushed()
+          }
         }).catch(function (error) {
           console.log(error)
         })
