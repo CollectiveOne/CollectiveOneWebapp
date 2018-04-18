@@ -1,5 +1,6 @@
 package org.collectiveone.modules.users;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +32,7 @@ public class UsersController extends BaseController {
 		}
 		
 		AppUser user = appUserService.getOrCreateFromAuth0Id(auth0Id);
+		
 		return appUserService.getUserLight(user.getC1Id());
 	}
 	
