@@ -16,8 +16,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.activity.dto.SubscriberDto;
-import org.collectiveone.modules.activity.enums.SubscriberEmailNotificationsState;
-import org.collectiveone.modules.activity.enums.SubscriberState;
+import org.collectiveone.modules.activity.enums.SubscriberEmailNowConfig;
+import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryConfig;
+import org.collectiveone.modules.activity.enums.SubscriberInAppConfig;
+import org.collectiveone.modules.activity.enums.SubscriberInheritConfig;
+import org.collectiveone.modules.activity.enums.SubscriberMuteConfig;
+import org.collectiveone.modules.activity.enums.SubscriberPushConfig;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -44,12 +48,29 @@ public class Subscriber {
 	private AppUser user;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "state")
-	private SubscriberState state;
+	@Column(name = "inherit_config")
+	private SubscriberInheritConfig inheritConfig;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "email_notification_state")
-	private SubscriberEmailNotificationsState emailNotificationsState;
+	@Column(name = "mute_config")
+	private SubscriberMuteConfig muteConfig;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "in_app_config")
+	private SubscriberInAppConfig inAppConfig;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "push_config")
+	private SubscriberPushConfig pushConfig;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "emails_now_config")
+	private SubscriberEmailNowConfig emailNowConfig;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "emails_summary_config")
+	private SubscriberEmailSummaryConfig emailSummaryConfig;
+	
 	
 	@OneToMany(mappedBy = "subscriber", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Notification> notifications = new ArrayList<Notification>();
@@ -60,8 +81,12 @@ public class Subscriber {
 		dto.setId(id.toString());
 		dto.setElementId(elementId.toString());
 		dto.setUser(user.toDtoLight());
-		dto.setState(state.toString());
-		dto.setEmailNotificationsState(emailNotificationsState.toString());
+		
+		dto.setInheritConfig(inheritConfig.toString());
+		dto.setMuteConfig(muteConfig.toString());
+		dto.setInAppConfig(inAppConfig.toString());
+		dto.setEmailsNowConfig(emailNowConfig.toString());
+		dto.setEmailsSummaryConfig(emailSummaryConfig.toString());
 		
 		return dto;
 	}
@@ -123,22 +148,70 @@ public class Subscriber {
 		this.user = user;
 	}
 
-	public SubscriberState getState() {
-		return state;
+	public SubscriberInheritConfig getInheritConfig() {
+		return inheritConfig;
 	}
 
-	public void setState(SubscriberState state) {
-		this.state = state;
+	public void setInheritConfig(SubscriberInheritConfig inheritConfig) {
+		this.inheritConfig = inheritConfig;
 	}
 
-	public SubscriberEmailNotificationsState getEmailNotificationsState() {
-		return emailNotificationsState;
+	public SubscriberMuteConfig getMuteConfig() {
+		return muteConfig;
 	}
 
-	public void setEmailNotificationsState(SubscriberEmailNotificationsState emailNotificationsState) {
-		this.emailNotificationsState = emailNotificationsState;
+	public void setMuteConfig(SubscriberMuteConfig muteConfig) {
+		this.muteConfig = muteConfig;
 	}
-	
+
+	public SubscriberEmailNowConfig getEmailNowConfig() {
+		return emailNowConfig;
+	}
+
+	public void setEmailNowConfig(SubscriberEmailNowConfig emailNowConfig) {
+		this.emailNowConfig = emailNowConfig;
+	}
+
+	public SubscriberEmailSummaryConfig getEmailSummaryConfig() {
+		return emailSummaryConfig;
+	}
+
+	public void setEmailSummaryConfig(SubscriberEmailSummaryConfig emailSummaryConfig) {
+		this.emailSummaryConfig = emailSummaryConfig;
+	}
+
+	public SubscriberInAppConfig getState() {
+		return inAppConfig;
+	}
+
+	public void setState(SubscriberInAppConfig state) {
+		this.inAppConfig = state;
+	}
+
+	public SubscriberInAppConfig getInAppConfig() {
+		return inAppConfig;
+	}
+
+	public void setInAppConfig(SubscriberInAppConfig inAppConfig) {
+		this.inAppConfig = inAppConfig;
+	}
+
+	public SubscriberPushConfig getPushConfig() {
+		return pushConfig;
+	}
+
+	public void setPushConfig(SubscriberPushConfig pushConfig) {
+		this.pushConfig = pushConfig;
+	}
+
+	public SubscriberEmailNowConfig getEmailsNowConfig() {
+		return emailNowConfig;
+	}
+
+	public void setEmailsNowConfig(SubscriberEmailNowConfig emailsNowConfig) {
+		this.emailNowConfig = emailsNowConfig;
+	}
+
 	public List<Notification> getNotifications() {
 		return notifications;
 	}

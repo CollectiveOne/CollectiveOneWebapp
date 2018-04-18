@@ -9,7 +9,7 @@ import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.dto.NotificationDto;
 import org.collectiveone.modules.activity.dto.SubscriberDto;
-import org.collectiveone.modules.activity.enums.SubscriberState;
+import org.collectiveone.modules.activity.enums.SubscriberInAppConfig;
 
 import org.collectiveone.modules.users.AppUserService;
 import org.junit.After;
@@ -63,7 +63,7 @@ public class TestActivityService extends AbstractTest {
     
     @Test
     public void ifEditSubscriberStateWorks() {
-    		PostResult result = activityService.editSubscriberState(UUID.fromString(this.userId), UUID.fromString(initiativeId), SubscriberState.UNSUBSCRIBED);
+    		PostResult result = activityService.editSubscriberState(UUID.fromString(this.userId), UUID.fromString(initiativeId), SubscriberInAppConfig.UNSUBSCRIBED);
     		assertTrue(result.getResult().equals("success"));
     }
       

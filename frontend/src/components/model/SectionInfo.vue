@@ -4,7 +4,7 @@
       <transition name="fadeenter">
         <div :key="currentSectionId" class="w3-left this-section-title">
           <div class="w3-left title-div">
-            {{ currentSection.title }}
+            {{ sectionTitle }}
           </div>
           <div class="w3-left btn-div">
             <app-section-control-buttons :section="currentSection" :inSection="null">
@@ -67,6 +67,12 @@ export default {
         { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
         { text: 'remove', value: 'remove', faIcon: 'fa-times' }
       ]
+    },
+    sectionTitle () {
+      if (this.currentSection) {
+        return this.currentSection.title
+      }
+      return ''
     },
     currentSectionId () {
       return this.$route.params.sectionId

@@ -1,14 +1,14 @@
 package org.collectiveone.modules.activity.dto;
 
-import org.collectiveone.modules.users.AppUserDto;
-
 public class NotificationDto {
 
 	private String id;
-	private AppUserDto subscriberUser;
-	private String subscriberState;
+	private SubscriberDto subscriber;
 	private ActivityDto activity;
-	private String state;
+	private String inAppState;
+	private String pushState;
+	private String emailNowState;
+	private String emailSummaryState;
 	
 	public String getId() {
 		return id;
@@ -16,17 +16,11 @@ public class NotificationDto {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public AppUserDto getSubscriberUser() {
-		return subscriberUser;
+	public SubscriberDto getSubscriber() {
+		return subscriber;
 	}
-	public void setSubscriberUser(AppUserDto subscriberUserDto) {
-		this.subscriberUser = subscriberUserDto;
-	}
-	public String getSubscriberState() {
-		return subscriberState;
-	}
-	public void setSubscriberState(String subscriberState) {
-		this.subscriberState = subscriberState;
+	public void setSubscriber(SubscriberDto subscriber) {
+		this.subscriber = subscriber;
 	}
 	public ActivityDto getActivity() {
 		return activity;
@@ -34,11 +28,29 @@ public class NotificationDto {
 	public void setActivity(ActivityDto activityDto) {
 		this.activity = activityDto;
 	}
-	public String getState() {
-		return state;
+	public String getInAppState() {
+		return inAppState;
 	}
-	public void setState(String state) {
-		this.state = state;
+	public void setInAppState(String inAppState) {
+		this.inAppState = inAppState;
+	}
+	public String getPushState() {
+		return pushState;
+	}
+	public void setPushState(String pushState) {
+		this.pushState = pushState;
+	}
+	public String getEmailNowState() {
+		return emailNowState;
+	}
+	public void setEmailNowState(String emailNowState) {
+		this.emailNowState = emailNowState;
+	}
+	public String getEmailSummaryState() {
+		return emailSummaryState;
+	}
+	public void setEmailSummaryState(String emailSummaryState) {
+		this.emailSummaryState = emailSummaryState;
 	}
 	
 }

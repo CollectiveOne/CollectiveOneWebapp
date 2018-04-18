@@ -46,6 +46,9 @@ public class Activity {
 	@Column(name = "type")
 	private ActivityType type;
 	
+	@OneToMany
+	private List<AppUser> mentions = new ArrayList<AppUser>();
+	
 	@Column(name = "timestamp")
 	private Timestamp timestamp;
 	

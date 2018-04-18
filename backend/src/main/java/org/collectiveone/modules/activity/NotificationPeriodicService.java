@@ -10,6 +10,8 @@ import org.collectiveone.modules.activity.enums.NotificationEmailState;
 import org.collectiveone.modules.activity.enums.NotificationTrackingType;
 import org.collectiveone.modules.activity.repositories.NotificationEmailTrackingRepositoryIf;
 import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
+import org.collectiveone.modules.users.AppUserRepositoryIf;
+import org.collectiveone.modules.users.UserOnlineStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,14 @@ public class NotificationPeriodicService {
 	@Autowired
 	private EmailService emailService;
 	
+	@Autowired
+	private AppUserRepositoryIf appUserRepository;
+	
+	/* update user offline every 5 minutes */
+	@Scheduled(fixedDelay = 300000)
+	public void updateUserOnlineStatus() {
+		appUserRepository.setStatusForUsersLastSeenBefore(UserOnlineStatus.OFFLINE, System.currentTimeMillis() - 1000L*60L*5L);
+	}
 	
 	@Scheduled(fixedDelay = 30000)
 	public void checkSendEmailsSendNow() throws IOException {

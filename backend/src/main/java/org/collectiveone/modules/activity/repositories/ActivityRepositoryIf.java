@@ -44,4 +44,11 @@ public interface ActivityRepositoryIf extends CrudRepository<Activity, UUID> {
 	@Query("SELECT act FROM Activity act WHERE act.modelCardWrapper.id = ?1 AND act.type = ?2 ORDER BY act.timestamp DESC")
 	List<Activity> findOfCard(UUID cardWrapperId, ActivityType type);	
 	
+	Activity findByIdAndMentions_C1Id(UUID activityId, UUID userId);
+	
+	default Boolean userMentioned(UUID activityId, UUID userId) {
+		Activity res = findByIdAndMentions_C1Id(activityId, userId);
+		return res != null;
+	}
+	
 }

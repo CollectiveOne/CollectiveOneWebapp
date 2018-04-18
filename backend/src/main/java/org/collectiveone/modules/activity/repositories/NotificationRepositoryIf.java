@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.collectiveone.modules.activity.Notification;
 import org.collectiveone.modules.activity.enums.NotificationEmailState;
 import org.collectiveone.modules.activity.enums.NotificationState;
-import org.collectiveone.modules.activity.enums.SubscriberEmailNotificationsState;
+import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryConfig;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -18,5 +18,5 @@ public interface NotificationRepositoryIf extends CrudRepository<Notification, U
 	
 	List<Notification> findBySubscriber_User_C1IdAndState(UUID userId, NotificationState state);
 	
-	List<Notification> findBySubscriber_EmailNotificationsStateAndEmailState(SubscriberEmailNotificationsState subscriberEmailNotificationState, NotificationEmailState notificationEmailState);
+	List<Notification> findBySubscriber_EmailNowConfigAndEmailState(SubscriberEmailSummaryConfig subscriberEmailNotificationState, NotificationEmailState notificationEmailState);
 }

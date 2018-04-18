@@ -47,7 +47,10 @@ export default {
     },
     isDoc () {
       return this.$route.name === 'ModelSectionDoc'
-    },
+    }
+  },
+
+  methods: {
     redirect () {
       if (this.$route.name === 'ModelSectionContent') {
         console.log('redirecting from ModelSectionContent to ModelSectionCards')

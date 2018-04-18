@@ -8,9 +8,14 @@ public class SubscriberDto {
 	private AppUserDto user;
 	private String elementId;
 	private String elementType;
-	private String state;
-	private String emailNotificationsState;
 	
+	private String inheritConfig;
+	private String muteConfig;
+	
+	private String inAppConfig;
+	private String pushConfig;
+	private String emailsNowConfig;
+	private String emailsSummaryConfig;	
 	
 	public String getId() {
 		return id;
@@ -36,17 +41,41 @@ public class SubscriberDto {
 	public void setElementType(String elementType) {
 		this.elementType = elementType;
 	}
-	public String getState() {
-		return state;
+	public String getInheritConfig() {
+		return inheritConfig;
 	}
-	public void setState(String state) {
-		this.state = state;
+	public void setInheritConfig(String inheritConfig) {
+		this.inheritConfig = inheritConfig;
 	}
-	public String getEmailNotificationsState() {
-		return emailNotificationsState;
+	public String getMuteConfig() {
+		return muteConfig;
 	}
-	public void setEmailNotificationsState(String emailNotificationsState) {
-		this.emailNotificationsState = emailNotificationsState;
+	public void setMuteConfig(String muteConfig) {
+		this.muteConfig = muteConfig;
 	}
-
+	public String getInAppConfig() {
+		return inAppConfig;
+	}
+	public void setInAppConfig(String inAppConfig) {
+		this.inAppConfig = inAppConfig;
+	}
+	public String getPushConfig() {
+		return pushConfig;
+	}
+	public void setPushConfig(String pushConfig) {
+		this.pushConfig = pushConfig;
+	}
+	public String getEmailsNowConfig() {
+		return emailsNowConfig;
+	}
+	public void setEmailsNowConfig(String emailsNowConfig) {
+		this.emailsNowConfig = emailsNowConfig;
+	}
+	public String getEmailsSummaryConfig() {
+		return emailsSummaryConfig;
+	}
+	public void setEmailsSummaryConfig(String emailsSummaryConfig) {
+		this.emailsSummaryConfig = emailsSummaryConfig;
+	}
+	
 }
