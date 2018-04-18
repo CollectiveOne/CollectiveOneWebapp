@@ -38,7 +38,8 @@ export default {
       notifications: [],
       currentPage: 0,
       showingMoreNotifications: false,
-      allShown: false
+      allShown: false,
+      pushNotifications: []
     }
   },
 
@@ -60,12 +61,17 @@ export default {
   },
 
   methods: {
-    pushDesktopNotification (pushMessage, pushIcon) {
+    pushDesktopNotification (pushMessage, pushIcon, pushURL) {
       var notify = new Notification('CollectiveOne (' + this.numberOfUnreadNotifications + ')', {
         body: pushMessage,
         icon: pushIcon
       })
-      setTimeout(notify.close.bind(notify), 5000)
+      notify.onshow = function () { setTimeout(notify.close.bind(notify), 5000) }
+      notify.onclick = function (event) {
+        event.preventDefault()
+        window.open(pushURL, '_blank')
+        notify.close()
+      }
     },
     updateNotifications () {
       if (!this.showingMoreNotifications) {
@@ -80,10 +86,24 @@ export default {
           this.allShown = false
           this.notifications = response.data.data
         }).then((response) => {
-          /* push desktop notification */
+          /* add desktop notifications */
+          //  console.log(JSON.stringify(this.notifications[0]))
           for (var i = 0; i < this.notifications.length; i++) {
             if (this.notifications[i].pushState === 'PENDING') {
-              this.pushDesktopNotification(this.notifications[i].pushMessage, this.notifications[i].activity.triggerUser.pictureUrl)
+              this.pushNotifications.push({
+                pushMessage: this.notifications[i].pushMessage,
+                pushIcon: this.notifications[i].activity.triggerUser.pictureUrl,
+                pushURL: 'http://www.collectiveone.org/'
+              })
+            }
+          }
+        }).then((response) => {
+          /* push desktop notifications */
+          if (this.pushNotifications.length > 2) {
+            this.pushDesktopNotification('You have received ' + this.numberOfUnreadNotifications + ' new notfications', 'https://image.ibb.co/mgQn1a/imago_red.png', 'http://www.collectiveone.org/')
+          } else {
+            for (var i = 0; i < this.pushNotifications.length; i++) {
+              this.pushDesktopNotification(this.pushNotifications[i].pushMessage, this.pushNotifications[i].pushIcon, this.pushNotifications[i].pushURL)
             }
           }
         }).then((response) => {
@@ -128,6 +148,8 @@ export default {
       /* notifications notified */
       if (this.$store.state.user.profile) {
         this.axios.put('/1/user/notifications/pushed', {}).then((response) => {
+          //  reset the notifications added
+          this.pushNotifications = []
         }).catch(function (error) {
           console.log(error)
         })
