@@ -13,9 +13,9 @@ public class SubscriberDto {
 	
 	private String inAppConfig;
 	private String pushConfig;
-	private String emailsNowConfig;
-	private String emailsSummaryConfig;
-	private String emailsSummaryPeriodConfig;	
+	private String emailNowConfig;
+	private String emailSummaryConfig;
+	private String emailSummaryPeriodConfig;	
 	
 	public String getId() {
 		return id;
@@ -59,24 +59,23 @@ public class SubscriberDto {
 	public void setPushConfig(String pushConfig) {
 		this.pushConfig = pushConfig;
 	}
-	public String getEmailsNowConfig() {
-		return emailsNowConfig;
+	public String getEmailNowConfig() {
+		return emailNowConfig;
 	}
-	public void setEmailsNowConfig(String emailsNowConfig) {
-		this.emailsNowConfig = emailsNowConfig;
+	public void setEmailNowConfig(String emailNowConfig) {
+		this.emailNowConfig = emailNowConfig;
 	}
-	public String getEmailsSummaryConfig() {
-		return emailsSummaryConfig;
+	public String getEmailSummaryConfig() {
+		return emailSummaryConfig;
 	}
-	public void setEmailsSummaryConfig(String emailsSummaryConfig) {
-		this.emailsSummaryConfig = emailsSummaryConfig;
+	public void setEmailSummaryConfig(String emailSummaryConfig) {
+		this.emailSummaryConfig = emailSummaryConfig;
 	}
-	public String getEmailsSummaryPeriodConfig() {
-		return emailsSummaryPeriodConfig;
+	public String getEmailSummaryPeriodConfig() {
+		return emailSummaryPeriodConfig;
 	}
-	public void setEmailsSummaryPeriodConfig(String emailsSummaryPeriodConfig) {
-		this.emailsSummaryPeriodConfig = emailsSummaryPeriodConfig;
+	public void setEmailSummaryPeriodConfig(String emailSummaryPeriodConfig) {
+		this.emailSummaryPeriodConfig = emailSummaryPeriodConfig;
 	}
-	
 	
 }

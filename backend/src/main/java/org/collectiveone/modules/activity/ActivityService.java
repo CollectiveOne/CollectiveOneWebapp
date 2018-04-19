@@ -162,10 +162,7 @@ public class ActivityService {
 			
 			subscriber.setInheritConfig(SubscriberInheritConfig.INHERIT);
 			
-			subscriber.setInAppConfig(SubscriberInAppConfig.ALL_EVENTS);
-			subscriber.setPushConfig(SubscriberPushConfig.ALL_EVENTS);
-			subscriber.setEmailNowConfig(SubscriberEmailNowConfig.DISABLED);
-			subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.ALL_EVENTS);
+			initDefaultSubscriber(subscriber);
 			
 			subscriberRepository.save(subscriber);
 		}
@@ -180,15 +177,15 @@ public class ActivityService {
 	
 	@Transactional
 	public PostResult editSubscriber(UUID userId, UUID elementId, SubscriptionElementType type, SubscriberDto subscriberDto) {
-		Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
-		
+		Subscriber subscriber = getOrCreateSubscriber(elementId, type, userId);
+				
 		subscriber.setInheritConfig(SubscriberInheritConfig.valueOf(subscriberDto.getInheritConfig()));
 		
 		subscriber.setInAppConfig(SubscriberInAppConfig.valueOf(subscriberDto.getInAppConfig()));
 		subscriber.setPushConfig(SubscriberPushConfig.valueOf(subscriberDto.getPushConfig()));
-		subscriber.setEmailNowConfig(SubscriberEmailNowConfig.valueOf(subscriberDto.getEmailsNowConfig()));
-		subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.valueOf(subscriberDto.getEmailsSummaryConfig()));
-		subscriber.setEmailSummaryPeriodConfig(SubscriberEmailSummaryPeriodConfig.valueOf(subscriberDto.getEmailsSummaryPeriodConfig()));
+		subscriber.setEmailNowConfig(SubscriberEmailNowConfig.valueOf(subscriberDto.getEmailNowConfig()));
+		subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.valueOf(subscriberDto.getEmailSummaryConfig()));
+		subscriber.setEmailSummaryPeriodConfig(SubscriberEmailSummaryPeriodConfig.valueOf(subscriberDto.getEmailSummaryPeriodConfig()));
 				
 		subscriberRepository.save(subscriber);
 		
@@ -199,7 +196,12 @@ public class ActivityService {
 	public GetResult<SubscriberDto> getSubscriber(UUID userId, UUID elementId, SubscriptionElementType type) {
 		Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
 		if (subscriber == null) {
-			return new GetResult<SubscriberDto>("success", "subscriber not found", null);
+			subscriber = new Subscriber();
+			
+			subscriber.setInheritConfig(SubscriberInheritConfig.INHERIT);
+			subscriber.setType(type);
+			subscriber.setElementId(elementId);
+			subscriber.setUser(appUserRepository.findByC1Id(userId));
 		}
 		
 		return new GetResult<SubscriberDto>("success", "success", subscriber.toDto());
@@ -208,6 +210,32 @@ public class ActivityService {
 	
 	/** Each user have one general purposed Susbscriber element used to send general notifications
 	 * not associated to any initiative or element */
+	@Transactional
+	private Subscriber getOrCreateSubscriber(UUID elementId, SubscriptionElementType type, UUID userId) {
+		Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
+
+		if (subscriber != null) {
+			return subscriber;
+		}
+		
+		subscriber = new Subscriber();
+		
+		subscriber.setUser(appUserRepository.findByC1Id(userId));
+		subscriber.setElementId(elementId);
+		subscriber.setType(type);
+		
+		initDefaultSubscriber(subscriber);
+		
+		return subscriberRepository.save(subscriber);
+	}
+	
+	private void initDefaultSubscriber(Subscriber subscriber) {
+		subscriber.setInAppConfig(SubscriberInAppConfig.ALL_EVENTS);
+		subscriber.setPushConfig(SubscriberPushConfig.ONLY_MESSAGES);
+		subscriber.setEmailNowConfig(SubscriberEmailNowConfig.DISABLED);
+		subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.ALL_EVENTS);
+	}
+	
 	@Transactional
 	private Subscriber getOrCreateCollectiveOneSubscriber(UUID userId) {
 		Subscriber subscriber = subscriberRepository.findByUser_C1IdAndType(userId, SubscriptionElementType.COLLECTIVEONE);
@@ -221,10 +249,7 @@ public class ActivityService {
 		subscriber.setType(SubscriptionElementType.COLLECTIVEONE);
 		subscriber.setUser(appUserRepository.findByC1Id(userId));
 		
-		subscriber.setInAppConfig(SubscriberInAppConfig.ALL_EVENTS);
-		subscriber.setPushConfig(SubscriberPushConfig.ONLY_MESSAGES);
-		subscriber.setEmailNowConfig(SubscriberEmailNowConfig.DISABLED);
-		subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.ALL_EVENTS);
+		initDefaultSubscriber(subscriber);
 		
 		return subscriberRepository.save(subscriber);
 	}

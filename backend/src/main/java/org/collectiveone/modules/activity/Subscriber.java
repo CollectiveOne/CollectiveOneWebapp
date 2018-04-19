@@ -78,16 +78,18 @@ public class Subscriber {
 	
 	public SubscriberDto toDto() {
 		SubscriberDto dto = new SubscriberDto();
-		dto.setId(id.toString());
+		if (id != null) dto.setId(id.toString());
 		dto.setElementId(elementId.toString());
+		dto.setElementType(type.toString());
 		dto.setUser(user.toDtoLight());
 		
 		if (inheritConfig != null) dto.setInheritConfig(inheritConfig.toString());
 		
 		if (inAppConfig != null) dto.setInAppConfig(inAppConfig.toString());
 		if (pushConfig != null) dto.setPushConfig(pushConfig.toString());
-		if (emailNowConfig != null) dto.setEmailsNowConfig(emailNowConfig.toString());
-		if (emailSummaryConfig != null) dto.setEmailsSummaryConfig(emailSummaryConfig.toString());
+		if (emailNowConfig != null) dto.setEmailNowConfig(emailNowConfig.toString());
+		if (emailSummaryConfig != null) dto.setEmailSummaryConfig(emailSummaryConfig.toString());
+		if (emailSummaryPeriodConfig != null) dto.setEmailSummaryPeriodConfig(emailSummaryPeriodConfig.toString());
 		
 		return dto;
 	}
