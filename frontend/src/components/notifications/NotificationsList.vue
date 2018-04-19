@@ -67,8 +67,8 @@ export default {
           }
         }).then((response) => {
           /* check that new notifications arrived */
-          this.allShown = false
           this.notifications = response.data.data
+          this.allShown = this.notifications.length < 10
         }).catch(function (error) {
           console.log(error)
         })
