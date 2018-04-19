@@ -18,9 +18,9 @@ import javax.persistence.Table;
 import org.collectiveone.modules.activity.dto.SubscriberDto;
 import org.collectiveone.modules.activity.enums.SubscriberEmailNowConfig;
 import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryConfig;
+import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryPeriodConfig;
 import org.collectiveone.modules.activity.enums.SubscriberInAppConfig;
 import org.collectiveone.modules.activity.enums.SubscriberInheritConfig;
-import org.collectiveone.modules.activity.enums.SubscriberMuteConfig;
 import org.collectiveone.modules.activity.enums.SubscriberPushConfig;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.users.AppUser;
@@ -52,10 +52,6 @@ public class Subscriber {
 	private SubscriberInheritConfig inheritConfig;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "mute_config")
-	private SubscriberMuteConfig muteConfig;
-	
-	@Enumerated(EnumType.STRING)
 	@Column(name = "in_app_config")
 	private SubscriberInAppConfig inAppConfig;
 	
@@ -71,6 +67,10 @@ public class Subscriber {
 	@Column(name = "emails_summary_config")
 	private SubscriberEmailSummaryConfig emailSummaryConfig;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "emails_summary_period_config")
+	private SubscriberEmailSummaryPeriodConfig emailSummaryPeriodConfig;
+	
 	
 	@OneToMany(mappedBy = "subscriber", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Notification> notifications = new ArrayList<Notification>();
@@ -83,8 +83,9 @@ public class Subscriber {
 		dto.setUser(user.toDtoLight());
 		
 		dto.setInheritConfig(inheritConfig.toString());
-		dto.setMuteConfig(muteConfig.toString());
+		
 		dto.setInAppConfig(inAppConfig.toString());
+		dto.setPushConfig(pushConfig.toString());
 		dto.setEmailsNowConfig(emailNowConfig.toString());
 		dto.setEmailsSummaryConfig(emailSummaryConfig.toString());
 		
@@ -156,14 +157,6 @@ public class Subscriber {
 		this.inheritConfig = inheritConfig;
 	}
 
-	public SubscriberMuteConfig getMuteConfig() {
-		return muteConfig;
-	}
-
-	public void setMuteConfig(SubscriberMuteConfig muteConfig) {
-		this.muteConfig = muteConfig;
-	}
-
 	public SubscriberEmailNowConfig getEmailNowConfig() {
 		return emailNowConfig;
 	}
@@ -178,14 +171,6 @@ public class Subscriber {
 
 	public void setEmailSummaryConfig(SubscriberEmailSummaryConfig emailSummaryConfig) {
 		this.emailSummaryConfig = emailSummaryConfig;
-	}
-
-	public SubscriberInAppConfig getState() {
-		return inAppConfig;
-	}
-
-	public void setState(SubscriberInAppConfig state) {
-		this.inAppConfig = state;
 	}
 
 	public SubscriberInAppConfig getInAppConfig() {
@@ -204,20 +189,21 @@ public class Subscriber {
 		this.pushConfig = pushConfig;
 	}
 
-	public SubscriberEmailNowConfig getEmailsNowConfig() {
-		return emailNowConfig;
-	}
-
-	public void setEmailsNowConfig(SubscriberEmailNowConfig emailsNowConfig) {
-		this.emailNowConfig = emailsNowConfig;
-	}
-
 	public List<Notification> getNotifications() {
 		return notifications;
 	}
 
 	public void setNotifications(List<Notification> notifications) {
 		this.notifications = notifications;
+	}
+
+	public SubscriberEmailSummaryPeriodConfig getEmailSummaryPeriodConfig() {
+		return emailSummaryPeriodConfig;
+	}
+
+	public void setEmailSummaryPeriodConfig(SubscriberEmailSummaryPeriodConfig emailSummaryPeriodConfig) {
+		this.emailSummaryPeriodConfig = emailSummaryPeriodConfig;
 	}	
+	
 	
 }

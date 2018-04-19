@@ -291,5 +291,13 @@ public class Activity {
 	public void setMessage(Message message) {
 		this.message = message;
 	}
+
+	public List<AppUser> getMentions() {
+		return mentions;
+	}
+
+	public void setMentions(List<AppUser> mentions) {
+		this.mentions = mentions;
+	}
 	
 }

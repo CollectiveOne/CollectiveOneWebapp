@@ -10,12 +10,12 @@ public class SubscriberDto {
 	private String elementType;
 	
 	private String inheritConfig;
-	private String muteConfig;
 	
 	private String inAppConfig;
 	private String pushConfig;
 	private String emailsNowConfig;
-	private String emailsSummaryConfig;	
+	private String emailsSummaryConfig;
+	private String emailsSummaryPeriodConfig;	
 	
 	public String getId() {
 		return id;
@@ -47,12 +47,6 @@ public class SubscriberDto {
 	public void setInheritConfig(String inheritConfig) {
 		this.inheritConfig = inheritConfig;
 	}
-	public String getMuteConfig() {
-		return muteConfig;
-	}
-	public void setMuteConfig(String muteConfig) {
-		this.muteConfig = muteConfig;
-	}
 	public String getInAppConfig() {
 		return inAppConfig;
 	}
@@ -77,5 +71,12 @@ public class SubscriberDto {
 	public void setEmailsSummaryConfig(String emailsSummaryConfig) {
 		this.emailsSummaryConfig = emailsSummaryConfig;
 	}
+	public String getEmailsSummaryPeriodConfig() {
+		return emailsSummaryPeriodConfig;
+	}
+	public void setEmailsSummaryPeriodConfig(String emailsSummaryPeriodConfig) {
+		this.emailsSummaryPeriodConfig = emailsSummaryPeriodConfig;
+	}
+	
 	
 }

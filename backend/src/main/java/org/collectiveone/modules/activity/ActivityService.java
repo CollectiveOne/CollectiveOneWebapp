@@ -16,12 +16,13 @@ import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.dto.NotificationDto;
 import org.collectiveone.modules.activity.dto.SubscriberDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
-import org.collectiveone.modules.activity.enums.NotificationEmailState;
 import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.enums.SubscriberEmailNowConfig;
-import org.collectiveone.modules.activity.enums.SubscriberEmailsConfig;
+import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryConfig;
+import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryPeriodConfig;
 import org.collectiveone.modules.activity.enums.SubscriberInAppConfig;
-import org.collectiveone.modules.activity.enums.SubscriberMuteConfig;
+import org.collectiveone.modules.activity.enums.SubscriberInheritConfig;
+import org.collectiveone.modules.activity.enums.SubscriberPushConfig;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.activity.repositories.NotificationRepositoryIf;
@@ -45,7 +46,6 @@ import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
-import org.collectiveone.modules.users.AppUserService;
 import org.collectiveone.modules.users.UserOnlineStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -53,9 +53,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ActivityService {
-	
-	@Autowired
-	private AppUserService appUserService;
 	
 	@Autowired
 	private InitiativeService initiativeService;
@@ -102,8 +99,7 @@ public class ActivityService {
 	public void sendNotificationEmailsSendNow() throws IOException {
 		
 		List<Notification> notifications = 
-				notificationRepository.findBySubscriber_EmailNowNotificationsStateAndEmailState(
-						SubscriberEmailNowConfig., NotificationEmailState.PENDING);
+				notificationRepository.findByEmailNowState(NotificationState.PENDING);
 		
 		emailService.sendNotificationsSendNow(notifications);
 	}
@@ -112,8 +108,8 @@ public class ActivityService {
 	public void sendNotificationEmailsOnceADay() throws IOException {
 		
 		List<Notification> notifications = 
-				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(
-						SubscriberEmailsConfig.SEND_ONCEADAY, NotificationEmailState.PENDING);
+				notificationRepository.findBySubscriber_EmailSummaryPeriodConfigAndEmailSummaryState(
+						SubscriberEmailSummaryPeriodConfig.DAILY, NotificationState.PENDING);
 		
 		emailService.sendNotificationsGrouped(notifications);
 	}
@@ -122,8 +118,8 @@ public class ActivityService {
 	public void sendNotificationEmailsOnceAWeek() throws IOException {
 		
 		List<Notification> notifications = 
-				notificationRepository.findBySubscriber_EmailNotificationsStateAndEmailState(
-						SubscriberEmailsConfig.SEND_ONCEAWEEK, NotificationEmailState.PENDING);
+				notificationRepository.findBySubscriber_EmailSummaryPeriodConfigAndEmailSummaryState(
+						SubscriberEmailSummaryPeriodConfig.WEEKLY, NotificationState.PENDING);
 		
 		emailService.sendNotificationsGrouped(notifications);
 	}
@@ -142,9 +138,13 @@ public class ActivityService {
 	
 	@Transactional
 	public PostResult notificationsRead(UUID userId) {
-		for(Notification notification: notificationRepository.findBySubscriber_User_C1IdAndState(userId, NotificationState.PENDING)) {
-			notification.setState(NotificationState.DELIVERED);
-			notification.setEmailState(NotificationEmailState.DELIVERED);
+		for(Notification notification: notificationRepository.findBySubscriber_User_C1IdAndInAppState(userId, NotificationState.PENDING)) {
+			
+			notification.setInAppState(NotificationState.DELIVERED);
+			notification.setPushState(NotificationState.DELIVERED);
+			notification.setEmailNowState(NotificationState.DELIVERED);
+			notification.setEmailSummaryState(NotificationState.DELIVERED);
+			
 			notificationRepository.save(notification);
 		}
 		
@@ -159,36 +159,40 @@ public class ActivityService {
 			subscriber.setElementId(elementId);
 			subscriber.setType(type);
 			subscriber.setUser(appUserRepository.findByC1Id(userId));
-			subscriber.setState(SubscriberInAppConfig.SUBSCRIBED);
-			subscriber.setEmailNotificationsState(SubscriberEmailsConfig.SEND_ONCEADAY);
+			
+			subscriber.setInheritConfig(SubscriberInheritConfig.INHERIT);
+			
+			subscriber.setInAppConfig(SubscriberInAppConfig.ALL_EVENTS);
+			subscriber.setPushConfig(SubscriberPushConfig.ALL_EVENTS);
+			subscriber.setEmailNowConfig(SubscriberEmailNowConfig.DISABLED);
+			subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.ALL_EVENTS);
 			
 			subscriberRepository.save(subscriber);
 		}
 	}
 	
 	@Transactional
-	public void removeSubscriber(UUID elementId, UUID userId) {
-		Subscriber subscriber = subscriberRepository.findByElementIdAndUser_C1Id(elementId, userId);
+	public void removeSubscriber(UUID elementId, SubscriptionElementType type, UUID userId) {
+		Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
 		subscriberRepository.delete(subscriber);
 	}
 	
 	
 	@Transactional
-	public PostResult editSubscriberState(UUID userId, UUID elementId, SubscriberInAppConfig state) {
-		Subscriber subscriber = subscriberRepository.findByElementIdAndUser_C1Id(elementId, userId);
-		subscriber.setState(state);
+	public PostResult editSubscriber(UUID userId, UUID elementId, SubscriptionElementType type, SubscriberDto subscriberDto) {
+		Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
+		
+		subscriber.setInheritConfig(SubscriberInheritConfig.valueOf(subscriberDto.getInheritConfig()));
+		
+		subscriber.setInAppConfig(SubscriberInAppConfig.valueOf(subscriberDto.getInAppConfig()));
+		subscriber.setPushConfig(SubscriberPushConfig.valueOf(subscriberDto.getPushConfig()));
+		subscriber.setEmailNowConfig(SubscriberEmailNowConfig.valueOf(subscriberDto.getEmailsNowConfig()));
+		subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.valueOf(subscriberDto.getEmailsSummaryConfig()));
+		subscriber.setEmailSummaryPeriodConfig(SubscriberEmailSummaryPeriodConfig.valueOf(subscriberDto.getEmailsSummaryPeriodConfig()));
+				
 		subscriberRepository.save(subscriber);
 		
 		return new PostResult("success", "member notifications changed", "");
-	}
-	
-	@Transactional
-	public PostResult editSubscriberEmailNotificationsState(UUID userId, UUID elementId, SubscriberEmailsConfig emailNotificationsState) {
-		Subscriber subscriber = subscriberRepository.findByElementIdAndUser_C1Id(elementId, userId);
-		subscriber.setEmailNotificationsState(emailNotificationsState);
-		subscriberRepository.save(subscriber);
-		
-		return new PostResult("success", "subscriber email notifications changed", "");
 	}
 	
 	@Transactional
@@ -216,8 +220,11 @@ public class ActivityService {
 		
 		subscriber.setType(SubscriptionElementType.COLLECTIVEONE);
 		subscriber.setUser(appUserRepository.findByC1Id(userId));
-		subscriber.setState(SubscriberInAppConfig.SUBSCRIBED);
-		subscriber.setEmailNotificationsState(SubscriberEmailsConfig.SEND_NOW);
+		
+		subscriber.setInAppConfig(SubscriberInAppConfig.ALL_EVENTS);
+		subscriber.setPushConfig(SubscriberPushConfig.ONLY_MESSAGES);
+		subscriber.setEmailNowConfig(SubscriberEmailNowConfig.DISABLED);
+		subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.ALL_EVENTS);
 		
 		return subscriberRepository.save(subscriber);
 	}
@@ -658,7 +665,21 @@ public class ActivityService {
 	
 	/** To be called within an activity transaction, modifies the notifications property of the
 	 * input activity */
-	private void addInitiativeActivityNotifications (Activity activity, List<AppUser> mentions) {
+	
+	/* Special case of new initiative created. ALl members are notified, not the subscribers */
+	private void addNewInitiativeNotifications (Activity activity) {
+		SortedSet<Member> members = activity.getInitiative().getMembers();
+		
+		for (Member member : members) {
+			if(activity.getTriggerUser().getC1Id() != member.getUser().getC1Id()) {
+				/* add a notification only if the trigger user is not the subscriber */
+				Subscriber subscriber = getOrCreateCollectiveOneSubscriber(member.getUser().getC1Id());
+				createSubscriberNotification(subscriber, activity);
+			}
+		}
+	}
+	
+	private void addInitiativeActivityNotifications (Activity activity) {
 		
 		/* this method build the full list of subscribers and add a notification for each of them */
 		Set<Subscriber> subscribers = new HashSet<Subscriber>();
@@ -724,130 +745,133 @@ public class ActivityService {
 
 		/* now prepare a notification for each subscriber */
 		for (Subscriber subscriber : subscribers) {
-			/* skip subscriber if muted */
-			if (subscriber.getMuteConfig() == SubscriberMuteConfig.ENABLED) {
-				if (subscriber.getInAppConfig() != SubscriberInAppConfig.DISABLED) {
-					
-					AppUser user = subscriber.getUser();
-					
-					Notification notification = new Notification();
-					notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
-					notification.setActivity(activity);
-					notification.setSubscriber(subscriber);
-					
-					Boolean isOnline = subscriber.getUser().getOnlineStatus() == UserOnlineStatus.ONLINE;
-					if (isOnline) {
+			createSubscriberNotification(subscriber, activity);
+		}
+		
+	}
+	
+	private void createSubscriberNotification(Subscriber subscriber, Activity activity) {
+		if (subscriber.getInAppConfig() != SubscriberInAppConfig.DISABLED) {
+			
+			AppUser user = subscriber.getUser();
+			
+			Notification notification = new Notification();
+			notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
+			notification.setActivity(activity);
+			notification.setSubscriber(subscriber);
+			
+			Boolean isOnline = subscriber.getUser().getOnlineStatus() == UserOnlineStatus.ONLINE;
+			if (isOnline) {
+				/* if the user is online, notification is marker as delivered */
+				notification.setInAppState(NotificationState.DELIVERED);
+				notification.setPushState(NotificationState.DELIVERED);
+				notification.setEmailNowState(NotificationState.DELIVERED);
+				notification.setEmailSummaryState(NotificationState.DELIVERED);
+				
+			} else {
+				notification.setInAppState(NotificationState.PENDING);
+				notification.setPushState(NotificationState.PENDING);
+				notification.setEmailNowState(NotificationState.PENDING);
+				notification.setEmailSummaryState(NotificationState.PENDING);
+				
+				/* mark as delivered in some scenarios */
+				Boolean isMentioned = activity.getMentions().contains(user);
+				Boolean isMessage = activity.getType() == ActivityType.MESSAGE_POSTED;
+				
+				switch (subscriber.getInAppConfig()) {
+				
+					case DISABLED:
+						/* this should never be the case  due to conditional some above */
 						notification.setInAppState(NotificationState.DELIVERED);
+						break;
+					
+					case ONLY_MENTIONS:
+						if (!isMentioned) {
+							notification.setInAppState(NotificationState.DELIVERED);
+						}
+						break;
+						
+					case ONLY_MESSAGES:
+						if (!isMessage) {
+							notification.setInAppState(NotificationState.DELIVERED);
+						}
+						break;	
+						
+					case ALL_EVENTS:
+						break;
+				}
+				
+				switch (subscriber.getPushConfig()) {
+					case DISABLED:
+						/* this should never be the case  due to conditional some above */
 						notification.setPushState(NotificationState.DELIVERED);
+						break;
+					
+					case ONLY_MENTIONS:
+						if (!isMentioned) {
+							notification.setPushState(NotificationState.DELIVERED);
+						}
+						break;
+						
+					case ONLY_MESSAGES:
+						if (!isMessage) {
+							notification.setPushState(NotificationState.DELIVERED);
+						}
+						break;	
+						
+					case ALL_EVENTS:
+						break;
+				}
+				
+				switch (subscriber.getEmailNowConfig()) {
+					case DISABLED:
+						/* this should never be the case  due to conditional some above */
 						notification.setEmailNowState(NotificationState.DELIVERED);
+						break;
+					
+					case ONLY_MENTIONS:
+						if (!isMentioned) {
+							notification.setEmailNowState(NotificationState.DELIVERED);
+						}
+						break;
+						
+					case ONLY_MESSAGES:
+						if (!isMessage) {
+							notification.setEmailNowState(NotificationState.DELIVERED);
+						}
+						break;	
+						
+					case ALL_EVENTS:
+						break;
+				}
+				
+				switch (subscriber.getEmailSummaryConfig()) {
+					case DISABLED:
+						/* this should never be the case  due to conditional some above */
 						notification.setEmailSummaryState(NotificationState.DELIVERED);
-						
-					} else {
-						notification.setInAppState(NotificationState.PENDING);
-						notification.setPushState(NotificationState.PENDING);
-						notification.setEmailNowState(NotificationState.PENDING);
-						notification.setEmailSummaryState(NotificationState.PENDING);
-						
-						/* mark as delivered in some scenarios */
-						Boolean isMentioned = mentions.contains(user);
-						Boolean isMessage = activity.getType() == ActivityType.MESSAGE_POSTED;
-						
-						switch (subscriber.getInAppConfig()) {
-						
-							case DISABLED:
-								/* this should never be the case  due to conditional some above */
-								notification.setInAppState(NotificationState.DELIVERED);
-								break;
-							
-							case ONLY_MENTIONS:
-								if (!isMentioned) {
-									notification.setInAppState(NotificationState.DELIVERED);
-								}
-								break;
-								
-							case ONLY_MESSAGES:
-								if (!isMessage) {
-									notification.setInAppState(NotificationState.DELIVERED);
-								}
-								break;	
-								
-							case ALL_EVENTS:
-								break;
-						}
-						
-						switch (subscriber.getPushConfig()) {
-							case DISABLED:
-								/* this should never be the case  due to conditional some above */
-								notification.setPushState(NotificationState.DELIVERED);
-								break;
-							
-							case ONLY_MENTIONS:
-								if (!isMentioned) {
-									notification.setPushState(NotificationState.DELIVERED);
-								}
-								break;
-								
-							case ONLY_MESSAGES:
-								if (!isMessage) {
-									notification.setPushState(NotificationState.DELIVERED);
-								}
-								break;	
-								
-							case ALL_EVENTS:
-								break;
-						}
-						
-						switch (subscriber.getEmailNowConfig()) {
-							case DISABLED:
-								/* this should never be the case  due to conditional some above */
-								notification.setEmailNowState(NotificationState.DELIVERED);
-								break;
-							
-							case ONLY_MENTIONS:
-								if (!isMentioned) {
-									notification.setEmailNowState(NotificationState.DELIVERED);
-								}
-								break;
-								
-							case ONLY_MESSAGES:
-								if (!isMessage) {
-									notification.setEmailNowState(NotificationState.DELIVERED);
-								}
-								break;	
-								
-							case ALL_EVENTS:
-								break;
-						}
-						
-						switch (subscriber.getEmailSummaryConfig()) {
-							case DISABLED:
-								/* this should never be the case  due to conditional some above */
-								notification.setEmailSummaryState(NotificationState.DELIVERED);
-								break;
-							
-							case ONLY_MENTIONS:
-								if (!isMentioned) {
-									notification.setEmailSummaryState(NotificationState.DELIVERED);
-								}
-								break;
-								
-							case ONLY_MESSAGES:
-								if (!isMessage) {
-									notification.setEmailSummaryState(NotificationState.DELIVERED);
-								}
-								break;	
-								
-							case ALL_EVENTS:
-								break;
-						}
-					}
+						break;
 					
-					notification = notificationRepository.save(notification);
-					
-					activity.getNotifications().add(notification);
-					
+					case ONLY_MENTIONS:
+						if (!isMentioned) {
+							notification.setEmailSummaryState(NotificationState.DELIVERED);
+						}
+						break;
+						
+					case ONLY_MESSAGES:
+						if (!isMessage) {
+							notification.setEmailSummaryState(NotificationState.DELIVERED);
+						}
+						break;	
+						
+					case ALL_EVENTS:
+						break;
 				}
 			}
+			
+			notification = notificationRepository.save(notification);
+			
+			activity.getNotifications().add(notification);
+			
 		}
 	}
 	
