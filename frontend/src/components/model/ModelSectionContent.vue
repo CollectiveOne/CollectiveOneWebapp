@@ -8,8 +8,8 @@
         <router-link :to="{ name: 'ModelSectionMessages'}"
           class="tab-btn-space">
           <div class="tab-btn noselect" :class="{'bold-text': isChat, 'button-blue': isChat}">
-            <span class="w3-hide-small w3-hide-medium tab-btn-text">Chat</span>
-            <span class="w3-hide-large"><i class="fa fa-home" aria-hidden="true"></i></span>
+            <span class="w3-hide-small w3-hide-medium tab-btn-text">Timeline</span>
+            <span class="w3-hide-large"><i class="fa fa-comments" aria-hidden="true"></i></span>
           </div>
         </router-link>
         <router-link :to="{ name: 'ModelSectionCards'}"
@@ -66,6 +66,7 @@ export default {
   },
 
   created () {
+    this.$store.dispatch('updateCurrentSection', this.$route.params.sectionId)
     this.redirect()
   }
 }

@@ -771,22 +771,18 @@ public class ModelService {
 	public Page<Activity> getActivityUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages, Integer level) {
 		
 		List<UUID> allSectionIds = getAllSubsectionsIds(sectionId, level);
-		List<UUID> cardsIds = allSectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
+		List<UUID> cardsIds = allSectionIds.size() > 0 ? modelCardWrapperRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
+		
+		if (cardsIds.size() == 0) {
+			cardsIds.add(UUID.randomUUID());
+		}
 		
 		Page<Activity> activities = null;
 		
 		if (!onlyMessages) {
-			if (cardsIds.size() > 0) {
-				activities = activityRepository.findOfSectionsAndCards(allSectionIds, cardsIds, page);	
-			} else {
-				activities = activityRepository.findOfSections(allSectionIds, page);
-			}
+			activities = activityRepository.findOfSectionsOrCards(allSectionIds, cardsIds, page);	
 		} else {
-			if (cardsIds.size() > 0) {
-				activities = activityRepository.findOfSectionsAndCardsAndType(allSectionIds, cardsIds, ActivityType.MESSAGE_POSTED, page);	
-			} else {
-				activities = activityRepository.findOfSectionsAndType(allSectionIds, ActivityType.MESSAGE_POSTED, page);
-			}
+			activities = activityRepository.findOfSectionsOrCardsAndType(allSectionIds, cardsIds, ActivityType.MESSAGE_POSTED, page);	
 		}
 			
 		return activities;
@@ -810,10 +806,16 @@ public class ModelService {
 	@Transactional
 	public Page<Activity> getActivityUnderCard (UUID cardWrapperId, PageRequest page, Boolean onlyMessages) {
 		Page<Activity> activities = null;
+		List<UUID> dum = new ArrayList<UUID>();
+		List<UUID> cardIds = new ArrayList<UUID>();
+		
+		dum.add(UUID.randomUUID());
+		cardIds.add(cardWrapperId);
+		
 		if (!onlyMessages) {
-			activities = activityRepository.findOfCard(cardWrapperId, page);
+			activities = activityRepository.findOfSectionsOrCards(dum, cardIds, page);
 		} else {
-			activities = activityRepository.findOfCardAndType(cardWrapperId, ActivityType.MESSAGE_POSTED, page);
+			activities = activityRepository.findOfSectionsOrCardsAndType(dum, cardIds, ActivityType.MESSAGE_POSTED, page);
 		}
 		return activities;
 	}

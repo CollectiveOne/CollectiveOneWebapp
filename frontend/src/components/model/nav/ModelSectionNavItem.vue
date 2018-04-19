@@ -25,6 +25,12 @@
       <div @click="sectionSelected()" class="title-div cursor-pointer noselect">
         {{ section.isTopModelSection ? 'All' : section.title }}
       </div>
+      <div class="notification-div">
+        <app-notifications-list
+          contextType="MODEL_SECTION"
+          :contextElementId="section.id">
+        </app-notifications-list>
+      </div>
       <div class="control-div">
         <app-section-control-buttons :section="section" :inSection="inSection">
         </app-section-control-buttons>
@@ -52,6 +58,7 @@
 </template>
 
 <script>
+import NotificationsList from '@/components/notifications/NotificationsList.vue'
 import SectionControlButtons from '@/components/model/SectionControlButtons'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal'
 
@@ -60,7 +67,8 @@ export default {
 
   components: {
     'app-section-control-buttons': SectionControlButtons,
-    'app-model-section-modal': ModelSectionModal
+    'app-model-section-modal': ModelSectionModal,
+    'app-notifications-list': NotificationsList
   },
 
   props: {
@@ -319,12 +327,17 @@ export default {
 }
 
 .title-div {
-  width: calc(100% - 30px - 30px);
+  width: calc(100% - 30px - 30px - 30px);
   float: left;
 }
 
 .control-div {
   text-align: center;
+  width: 30px;
+  float: left;
+}
+
+.notification-div {
   width: 30px;
   float: left;
 }

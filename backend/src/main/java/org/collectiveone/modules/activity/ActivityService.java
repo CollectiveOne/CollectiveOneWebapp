@@ -16,6 +16,7 @@ import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.dto.NotificationDto;
 import org.collectiveone.modules.activity.dto.SubscriberDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
+import org.collectiveone.modules.activity.enums.NotificationContextType;
 import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.enums.SubscriberEmailNowConfig;
 import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryConfig;
@@ -125,11 +126,39 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public GetResult<List<NotificationDto>> getUserNotifications(UUID userId, PageRequest page) {
+	public GetResult<List<NotificationDto>> getUserNotifications(UUID userId, NotificationContextType contextType, UUID elementId, Boolean all, PageRequest page) {
 		
 		List<NotificationDto> notifications = new ArrayList<NotificationDto>();
 		
-		for(Notification notification : notificationRepository.findOfUser(userId, page)) {
+		List<UUID> allSectionIds = null;
+		List<UUID> cardsIds = null;
+		
+		switch (contextType) {
+			case MODEL_SECTION:
+				allSectionIds = modelService.getAllSubsectionsIds(elementId, null);
+				cardsIds = allSectionIds.size() > 0 ? modelCardWrapperRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
+				break;
+				
+			case MODEL_CARD:
+				allSectionIds = new ArrayList<UUID>();
+				cardsIds = new ArrayList<UUID>();
+				cardsIds.add(elementId);
+				break;
+				
+			default:
+				break;
+		
+		}
+		
+		if (allSectionIds.size() == 0) {
+			allSectionIds.add(UUID.randomUUID());
+		}
+		
+		if (cardsIds.size() == 0) {
+			cardsIds.add(UUID.randomUUID());
+		}
+		
+		for(Notification notification : notificationRepository.findOfUserInSections(userId, NotificationState.PENDING, allSectionIds, cardsIds, page)) {
 			notifications.add(notification.toDto());
 		}
 		
