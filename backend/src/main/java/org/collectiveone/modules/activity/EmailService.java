@@ -16,7 +16,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.collectiveone.modules.activity.enums.ActivityType;
-import org.collectiveone.modules.activity.enums.NotificationEmailState;
+import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.repositories.NotificationRepositoryIf;
 import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
 import org.collectiveone.modules.assignations.Assignation;
@@ -103,7 +103,8 @@ public class EmailService {
 				
 				for (Notification notification : theseNotifications) {
 					/* protection to prevent spamming */
-					notification.setEmailState(NotificationEmailState.DELIVERED);
+					notification.setEmailNowState(NotificationState.DELIVERED);
+					notification.setEmailSummaryState(NotificationState.DELIVERED);
 					notificationRepository.save(notification);
 				}
 			}
@@ -147,7 +148,8 @@ public class EmailService {
 				
 				for (Notification notification : theseNotifications) {
 					/* protection to prevent spamming */
-					notification.setEmailState(NotificationEmailState.DELIVERED);
+					notification.setEmailNowState(NotificationState.DELIVERED);
+					notification.setEmailSummaryState(NotificationState.DELIVERED);
 					notificationRepository.save(notification);
 				}
 			}
@@ -195,7 +197,7 @@ public class EmailService {
 	
 	private String sendSegmentedPerUserAndInitiativeNotifications(List<Notification> notifications, AppUser receiver, Initiative initiative) throws IOException {
 		if(env.getProperty("collectiveone.webapp.send-email-enabled").equalsIgnoreCase("true")) {
-			if(notifications.size() > 0) {
+			if(notifications.size() > 0 && receiver.getEmailNotificationsEnabled()) {
 				Request request = new Request();
 				Mail mail = new Mail();
 				
@@ -249,7 +251,8 @@ public class EmailService {
 						System.out.println("emails sent!");
 						
 						for (Notification notification : notifications) {
-							notification.setEmailState(NotificationEmailState.DELIVERED);
+							notification.setEmailNowState(NotificationState.DELIVERED);
+							notification.setEmailSummaryState(NotificationState.DELIVERED);
 							notificationRepository.save(notification);
 						}
 						
@@ -376,28 +379,32 @@ public class EmailService {
 	
 		for(WantToContributeNotification notification : notifications) {
 			
-			String toEmailString = notification.getAdmin().getEmail();
-			Initiative initiative = notification.getInitiative();
-			String acceptRequestUrl = env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/" + 
-					initiative.getId().toString() + "/people/addMember/" + notification.getUser().getC1Id().toString();
+			if (notification.getAdmin().getEmailNotificationsEnabled()) {
+				String toEmailString = notification.getAdmin().getEmail();
+				Initiative initiative = notification.getInitiative();
+				String acceptRequestUrl = env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/" + 
+						initiative.getId().toString() + "/people/addMember/" + notification.getUser().getC1Id().toString();
+				
+				
+				Personalization personalization = new Personalization();
+				
+				Email toEmail = new Email();
+				toEmail.setEmail(toEmailString);
+				
+				personalization.addTo(toEmail);
+				personalization.addSubstitution("$INITIATIVE_ANCHOR$", getInitiativeAnchor(initiative));
+				personalization.addSubstitution("$USER_NICKNAME$", notification.getUser().getProfile().getNickname());
+				personalization.addSubstitution("$USER_PICTURE$", notification.getUser().getProfile().getPictureUrl());
+				personalization.addSubstitution("$USER_EMAIL$", notification.getUser().getEmail());
+				personalization.addSubstitution("$ACCEPT_AS_MEMBER_URL$", acceptRequestUrl);
+							
+				mail.addPersonalization(personalization);
 			
+				notification.setEmailState(NotificationState.DELIVERED);
+				
+				wantToContributeRepository.save(notification);
+			}
 			
-			Personalization personalization = new Personalization();
-			
-			Email toEmail = new Email();
-			toEmail.setEmail(toEmailString);
-			
-			personalization.addTo(toEmail);
-			personalization.addSubstitution("$INITIATIVE_ANCHOR$", getInitiativeAnchor(initiative));
-			personalization.addSubstitution("$USER_NICKNAME$", notification.getUser().getProfile().getNickname());
-			personalization.addSubstitution("$USER_PICTURE$", notification.getUser().getProfile().getPictureUrl());
-			personalization.addSubstitution("$USER_EMAIL$", notification.getUser().getEmail());
-			personalization.addSubstitution("$ACCEPT_AS_MEMBER_URL$", acceptRequestUrl);
-						
-			mail.addPersonalization(personalization);
-		
-			notification.setEmailState(NotificationEmailState.DELIVERED);
-			wantToContributeRepository.save(notification);
 		}
 		
 		mail.setTemplateId(env.getProperty("collectiveone.webapp.want-to-contribute-template"));
@@ -424,7 +431,9 @@ public class EmailService {
 				mail.addPersonalization(personalization);
 			} 
 			
-			notification.setEmailState(NotificationEmailState.DELIVERED);
+			notification.setEmailNowState(NotificationState.DELIVERED);
+			notification.setEmailSummaryState(NotificationState.DELIVERED);
+			
 			notificationRepository.save(notification);
 		}
 		

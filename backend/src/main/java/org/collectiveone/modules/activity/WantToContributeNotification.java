@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.activity.enums.NotificationEmailState;
+import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -38,7 +38,7 @@ public class WantToContributeNotification {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "email_state")
-	private NotificationEmailState emailState;
+	private NotificationState emailState;
 	
 
 	public UUID getId() {
@@ -73,11 +73,11 @@ public class WantToContributeNotification {
 		this.admin = admin;
 	}
 
-	public NotificationEmailState getEmailState() {
+	public NotificationState getEmailState() {
 		return emailState;
 	}
 
-	public void setEmailState(NotificationEmailState emailState) {
+	public void setEmailState(NotificationState emailState) {
 		this.emailState = emailState;
 	}
 	

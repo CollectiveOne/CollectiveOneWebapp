@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.collectiveone.modules.activity.enums.NotificationEmailState;
+import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.enums.NotificationTrackingType;
 import org.collectiveone.modules.activity.repositories.NotificationEmailTrackingRepositoryIf;
 import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
@@ -47,7 +47,7 @@ public class NotificationPeriodicService {
 	
 	@Scheduled(fixedDelay = 30000)
 	public void checkWantToContributeNow() throws IOException {
-		List<WantToContributeNotification> notifications = wantToContributeRepository.findByEmailState(NotificationEmailState.PENDING);
+		List<WantToContributeNotification> notifications = wantToContributeRepository.findByEmailState(NotificationState.PENDING);
 		
 		emailService.sendWantToContributeNotifications(notifications);
 	}

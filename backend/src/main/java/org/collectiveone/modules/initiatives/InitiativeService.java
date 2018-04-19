@@ -14,7 +14,7 @@ import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.WantToContributeNotification;
 import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
-import org.collectiveone.modules.activity.enums.NotificationEmailState;
+import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
@@ -286,7 +286,7 @@ public class InitiativeService {
 			notification.setInitiative(initiative);
 			notification.setAdmin(admin.getUser());
 			notification.setUser(user);
-			notification.setEmailState(NotificationEmailState.PENDING);
+			notification.setEmailState(NotificationState.PENDING);
 			
 			wantToContributeRepository.save(notification);
 		}
