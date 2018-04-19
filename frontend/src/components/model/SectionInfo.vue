@@ -22,7 +22,9 @@
           <div v-if="currentSectionPaths[0].length > 0" class="w3-row">
             <small>This is section is under:</small>
           </div>
-          <div v-if="currentSectionPaths[0].length > 0" class="w3-row" v-for="currentSectionPath in currentSectionPaths">
+          <div v-if="currentSectionPaths[0].length > 0" class="w3-row"
+            v-for="currentSectionPath in currentSectionPaths">
+
             <div class="w3-left fa-container">
               <i class="fa fa-circle " aria-hidden="true"></i>
             </div>

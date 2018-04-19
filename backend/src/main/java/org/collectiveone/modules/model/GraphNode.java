@@ -11,25 +11,28 @@ public class GraphNode {
 	List<GraphNode> children = new ArrayList<GraphNode>();
 	
 	public List<UUID> toList(Boolean addParents, Boolean addChildren) {
-		return toList(addParents, addChildren, new ArrayList<UUID>());
+		List<UUID> list = new ArrayList<UUID>();
+		
+		/* add elements by reference */
+		addNeighborsRec(addParents, addChildren, list);
+		
+		return list;
 	}
 	
-	public List<UUID> toList(Boolean addParents, Boolean addChildren, List<UUID> list) {
+	public void addNeighborsRec(Boolean addParents, Boolean addChildren, List<UUID> list) {
 		list.add(elementId);
 		
 		if (addParents) {
 			for (GraphNode parent : parents) {
-				list.addAll(parent.toList(true, false, list));
+				parent.addNeighborsRec(true, false, list);;
 			}	
 		}
 		
 		if (addChildren) {
 			for (GraphNode children : children) {
-				list.addAll(children.toList(false, true, list));
+				children.addNeighborsRec(false, true, list);;
 			}
 		}
-		
-		return list;
 	}
 	
 	public UUID getElementId() {
