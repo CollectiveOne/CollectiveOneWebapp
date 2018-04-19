@@ -15,7 +15,7 @@
       class="notifications-container w3-white w3-card-4 w3-bar-block w3-center">
       <app-activity-table :activities="activities"></app-activity-table>
       <button v-if="!allShown"
-        id="T_showMoreButton" 
+        id="T_showMoreButton"
         @click="showMore()"
         class="w3-margin-top w3-margin-bottom w3-button app-button-light" type="button" name="button">show more...</button>
     </div>
@@ -64,7 +64,7 @@ export default {
     updateNotifications () {
       if (!this.showingMoreNotifications) {
         /* dont update if the user is scrolling down de notifications */
-        this.axios.get('/1/user/notifications', {
+        this.axios.get('/1/notifications', {
           params: {
             page: 0,
             size: 10
@@ -81,7 +81,7 @@ export default {
 
     addNotifications () {
       this.showingMoreNotifications = true
-      this.axios.get('/1/user/notifications', {
+      this.axios.get('/1/notifications', {
         params: {
           page: this.currentPage,
           size: 10
@@ -101,7 +101,7 @@ export default {
     notificationsRead () {
       /* notifications read */
       if (this.$store.state.user.profile) {
-        this.axios.put('/1/user/notifications/read', {}).then((response) => {
+        this.axios.put('/1/notifications/read', {}).then((response) => {
           this.updateNotifications()
         }).catch(function (error) {
           console.log(error)

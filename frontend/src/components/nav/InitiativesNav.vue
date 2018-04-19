@@ -1,9 +1,17 @@
 <template lang="html">
   <nav class="nav-container">
+
+    <transition name="slideDownUp">
+      <app-new-initiative-modal
+        v-if="showNewInitiativeModal"
+        @close="showNewInitiativeModal = false">
+      </app-new-initiative-modal>
+    </transition>
+
     <div class="">
       <div v-if="$store.state.user.authenticated" class="w3-container">
         <div id="T_createInitiativeButton" class="create-new w3-button light-grey w3-round-large w3-center"
-          @click="$store.commit('showNewInitiativeModal', true)">
+          @click="newInitiative()">
           <i class="fa fa-plus-circle"></i>  new initiative
         </div>
       </div>
@@ -31,16 +39,19 @@
 </template>
 
 <script>
+import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
 import InitiativeMenuItem from './InitiativeMenuItem.vue'
 
 export default {
 
   components: {
+    'app-new-initiative-modal': NewInitiativeModal,
     'app-initiative-menu-item': InitiativeMenuItem
   },
 
   data () {
     return {
+      showNewInitiativeModal: false
     }
   },
 
@@ -51,9 +62,8 @@ export default {
   },
 
   methods: {
-    newSubInitiative (data) {
-      this.parentInitiativeIdForModal = data
-      this.showNewSubInitiativeModal = true
+    newInitiative () {
+      this.showNewInitiativeModal = true
     },
     login () {
       this.$store.state.user.lock.show()
@@ -65,7 +75,6 @@ export default {
 <style scoped>
 
 .nav-container {
-  min-height: calc(100vh - 51px);
 }
 
 .create-new {

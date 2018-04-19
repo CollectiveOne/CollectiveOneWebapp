@@ -82,12 +82,12 @@ public class Subscriber {
 		dto.setElementId(elementId.toString());
 		dto.setUser(user.toDtoLight());
 		
-		dto.setInheritConfig(inheritConfig.toString());
+		if (inheritConfig != null) dto.setInheritConfig(inheritConfig.toString());
 		
-		dto.setInAppConfig(inAppConfig.toString());
-		dto.setPushConfig(pushConfig.toString());
-		dto.setEmailsNowConfig(emailNowConfig.toString());
-		dto.setEmailsSummaryConfig(emailSummaryConfig.toString());
+		if (inAppConfig != null) dto.setInAppConfig(inAppConfig.toString());
+		if (pushConfig != null) dto.setPushConfig(pushConfig.toString());
+		if (emailNowConfig != null) dto.setEmailsNowConfig(emailNowConfig.toString());
+		if (emailSummaryConfig != null) dto.setEmailsSummaryConfig(emailSummaryConfig.toString());
 		
 		return dto;
 	}

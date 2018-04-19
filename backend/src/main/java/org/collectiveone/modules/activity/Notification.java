@@ -60,10 +60,10 @@ public class Notification {
 		dto.setSubscriber(subscriber.toDto());
 		dto.setActivity(activity.toDto());
 		
-		dto.setInAppState(inAppState.toString());
-		dto.setPushState(pushState.toString());
-		dto.setEmailNowState(emailNowState.toString());
-		dto.setEmailSummaryState(emailSummaryState.toString());
+		if (inAppState != null) dto.setInAppState(inAppState.toString());
+		if (pushState != null) dto.setPushState(pushState.toString());
+		if (emailNowState != null) dto.setEmailNowState(emailNowState.toString());
+		if (emailSummaryState != null) dto.setEmailSummaryState(emailSummaryState.toString());
 		
 		return dto;
 	}

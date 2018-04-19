@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.enums.NotificationTrackingType;
 import org.collectiveone.modules.activity.repositories.NotificationEmailTrackingRepositoryIf;
@@ -36,8 +38,9 @@ public class NotificationPeriodicService {
 	
 	/* update user offline every 5 minutes */
 	@Scheduled(fixedDelay = 300000)
+	@Transactional
 	public void updateUserOnlineStatus() {
-		appUserRepository.setStatusForUsersLastSeenBefore(UserOnlineStatus.OFFLINE, System.currentTimeMillis() - 1000L*60L*5L);
+		appUserRepository.setStatusForUsersLastSeenBefore(UserOnlineStatus.OFFLINE, fiveMinutesAgo());
 	}
 	
 	@Scheduled(fixedDelay = 30000)
@@ -91,6 +94,14 @@ public class NotificationPeriodicService {
 			
 			activityService.sendNotificationEmailsOnceAWeek();
 		}
+	}
+	
+	private Timestamp fiveMinutesAgo() {
+		Date now = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(now);
+		c.add(Calendar.MINUTE, -5);
+		return new Timestamp(c.getTimeInMillis());
 	}
 	
 	private Timestamp tomorrow() {

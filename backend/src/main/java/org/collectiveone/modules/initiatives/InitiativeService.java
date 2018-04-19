@@ -847,7 +847,7 @@ public class InitiativeService {
 			/* delete only if another admin remains */
 			
 			/* members were subscribed to initiatives by default, so, delete them when deleting the member */
-			activityService.removeSubscriber(initiativeId, member.getUser().getC1Id());
+			activityService.removeSubscriber(initiativeId,  SubscriptionElementType.INITIATIVE, member.getUser().getC1Id());
 			
 			memberRepository.delete(member);
 			governanceService.deleteDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());

@@ -54,18 +54,18 @@ public class TestActivityService extends AbstractTest {
     		GetResult<List<NotificationDto>> notifications = activityService.getUserNotifications(UUID.fromString(this.userId), new PageRequest(1, 10));
     		assertTrue(notifications.getResult().equals("success"));
     }
+//    
+//    @Test
+//    public void ifGetSubscriberWorks() {
+//    		GetResult<SubscriberDto> notification = activityService.getSubscriber(UUID.fromString(this.userId), UUID.fromString(this.initiativeId));
+//    		assertTrue(notification.getResult().equals("success"));
+//    }
     
-    @Test
-    public void ifGetSubscriberWorks() {
-    		GetResult<SubscriberDto> notification = activityService.getSubscriber(UUID.fromString(this.userId), UUID.fromString(this.initiativeId));
-    		assertTrue(notification.getResult().equals("success"));
-    }
-    
-    @Test
-    public void ifEditSubscriberStateWorks() {
-    		PostResult result = activityService.editSubscriberState(UUID.fromString(this.userId), UUID.fromString(initiativeId), SubscriberInAppConfig.UNSUBSCRIBED);
-    		assertTrue(result.getResult().equals("success"));
-    }
+//    @Test
+//    public void ifEditSubscriberStateWorks() {
+//    		PostResult result = activityService.editSubscriberState(UUID.fromString(this.userId), UUID.fromString(initiativeId), SubscriberInAppConfig.UNSUBSCRIBED);
+//    		assertTrue(result.getResult().equals("success"));
+//    }
       
     
 }
