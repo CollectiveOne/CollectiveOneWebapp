@@ -1,5 +1,6 @@
 package org.collectiveone.modules.users;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -37,6 +38,9 @@ public class AppUserService {
 			/* the first time a user is requested, it 
 			 * is added to the local DB */
 			appUser = addUserToLocalDB(auth0Id);
+		} else {
+			appUser.setLastSeen(new Timestamp(System.currentTimeMillis()));
+			appUserRepository.save(appUser);
 		}
     	
     	return appUser;
@@ -44,7 +48,12 @@ public class AppUserService {
 	
 	@Transactional
 	public AppUser getFromAuth0Id(String auth0Id) {
-    	return appUserRepository.findByAuth0Id(auth0Id);
+		AppUser appUser = appUserRepository.findByAuth0Id(auth0Id);
+		if (appUser != null) {
+			appUser.setLastSeen(new Timestamp(System.currentTimeMillis()));
+			appUserRepository.save(appUser);	
+		}
+    	return appUser;
 	}
 	
 	@Transactional

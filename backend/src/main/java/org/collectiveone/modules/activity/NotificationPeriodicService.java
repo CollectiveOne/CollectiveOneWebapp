@@ -6,10 +6,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.collectiveone.modules.activity.enums.NotificationEmailState;
+import javax.transaction.Transactional;
+
+import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.enums.NotificationTrackingType;
 import org.collectiveone.modules.activity.repositories.NotificationEmailTrackingRepositoryIf;
 import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
+import org.collectiveone.modules.users.AppUserRepositoryIf;
+import org.collectiveone.modules.users.UserOnlineStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -29,6 +33,15 @@ public class NotificationPeriodicService {
 	@Autowired
 	private EmailService emailService;
 	
+	@Autowired
+	private AppUserRepositoryIf appUserRepository;
+	
+	/* update user offline every 5 minutes */
+	@Scheduled(fixedDelay = 300000)
+	@Transactional
+	public void updateUserOnlineStatus() {
+		appUserRepository.setStatusForUsersLastSeenBefore(UserOnlineStatus.OFFLINE, fiveMinutesAgo());
+	}
 	
 	@Scheduled(fixedDelay = 30000)
 	public void checkSendEmailsSendNow() throws IOException {
@@ -37,7 +50,7 @@ public class NotificationPeriodicService {
 	
 	@Scheduled(fixedDelay = 30000)
 	public void checkWantToContributeNow() throws IOException {
-		List<WantToContributeNotification> notifications = wantToContributeRepository.findByEmailState(NotificationEmailState.PENDING);
+		List<WantToContributeNotification> notifications = wantToContributeRepository.findByEmailState(NotificationState.PENDING);
 		
 		emailService.sendWantToContributeNotifications(notifications);
 	}
@@ -81,6 +94,14 @@ public class NotificationPeriodicService {
 			
 			activityService.sendNotificationEmailsOnceAWeek();
 		}
+	}
+	
+	private Timestamp fiveMinutesAgo() {
+		Date now = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(now);
+		c.add(Calendar.MINUTE, -5);
+		return new Timestamp(c.getTimeInMillis());
 	}
 	
 	private Timestamp tomorrow() {

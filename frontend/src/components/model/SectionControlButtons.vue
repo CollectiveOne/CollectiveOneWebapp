@@ -42,7 +42,7 @@
         <transition name="slideDownUp">
           <app-edit-notifications-modal
             v-if="showEditNotificationsModal"
-            :sectionId="section.id"
+            :section="section"
             @close="showEditNotificationsModal = false">
           </app-edit-notifications-modal>
         </transition>
@@ -66,6 +66,7 @@
         @edit="edit()"
         @remove="remove()"
         @delete="deleteSection()"
+        @configNotifications="configNotifications()"
         :items="menuItems">
       </app-drop-down-menu>
 
@@ -107,7 +108,12 @@
 </template>
 
 <script>
+import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
+
 export default {
+  components: {
+    'app-edit-notifications-modal': EditNotificationsModal
+  },
 
   props: {
     section: {
@@ -134,33 +140,38 @@ export default {
 
   computed: {
     menuItems () {
+      let menuItems = [
+        { text: 'add card', value: 'addCard', faIcon: 'fa-plus' },
+        { text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' },
+        { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
+        { text: 'notifications', value: 'configNotifications', faIcon: 'fa-cog' } ]
+
       if (this.inSection !== null) {
-        return [
-          { text: 'add card', value: 'addCard', faIcon: 'fa-plus' },
-          { text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' },
-          { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
+        menuItems = menuItems.concat([
           { text: 'remove', value: 'remove', faIcon: 'fa-times' },
           { text: 'delete', value: 'delete', faIcon: 'fa-times' }
-        ]
-      } else {
-        return [
-          { text: 'add card', value: 'addCard', faIcon: 'fa-plus' },
-          { text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' },
-          { text: 'edit', value: 'edit', faIcon: 'fa-pencil' }
-        ]
+        ])
       }
+      return menuItems
    }
   },
 
   methods: {
     addCard () {
+      this.expanded = false
       this.showNewCardModal = true
     },
     addSubsection () {
+      this.expanded = false
       this.showNewSubsectionModal = true
     },
     edit () {
+      this.expanded = false
       this.showSectionModal = true
+    },
+    configNotifications () {
+      this.expanded = false
+      this.showEditNotificationsModal = true
     },
     remove () {
       this.removeIntent = true
@@ -169,6 +180,7 @@ export default {
       this.deleteIntent = true
     },
     removeConfirmed () {
+      this.expanded = false
       this.axios.put('/1/model/section/' + this.inSection.id + '/removeSubsection/' + this.section.id,
         {}).then((response) => {
           console.log(response)
@@ -184,6 +196,7 @@ export default {
       })
     },
     deleteConfirmed () {
+      this.expanded = false
       this.axios.delete('/1/model/section/' + this.section.id)
         .then((response) => {
           this.deleteIntent = false

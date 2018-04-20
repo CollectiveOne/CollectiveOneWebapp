@@ -46,6 +46,9 @@ public class Activity {
 	@Column(name = "type")
 	private ActivityType type;
 	
+	@OneToMany
+	private List<AppUser> mentions = new ArrayList<AppUser>();
+	
 	@Column(name = "timestamp")
 	private Timestamp timestamp;
 	
@@ -287,6 +290,14 @@ public class Activity {
 
 	public void setMessage(Message message) {
 		this.message = message;
+	}
+
+	public List<AppUser> getMentions() {
+		return mentions;
+	}
+
+	public void setMentions(List<AppUser> mentions) {
+		this.mentions = mentions;
 	}
 	
 }

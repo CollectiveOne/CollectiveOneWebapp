@@ -6,8 +6,8 @@
         <app-model-card-modal v-if="showCardModal"
           :isNew="false"
           :cardWrapperId="$route.params.cardId"
-          :inSectionId="section.id"
-          :inSectionTitle="section.title"
+          :inSectionId="sectionId"
+          :inSectionTitle="sectionTitle"
           @close="closeCardModal()"
           @updateCards="resetCards()">
         </app-model-card-modal>
@@ -83,10 +83,10 @@
               searching all cards
             </span>
             under the
-            <br>"{{ section.title }}" section.
+            <br>"{{ sectionTitle }}" section.
           </span>
           <span v-else>
-            you are seeing all cards up to {{ levels }} levels under the <br>"{{ section.title }}" section and respecting their in-section order.
+            you are seeing all cards up to {{ levels }} levels under the <br>"{{ sectionTitle }}" section and respecting their in-section order.
           </span>
 
         </div>
@@ -148,6 +148,12 @@ export default {
   },
 
   computed: {
+    sectionId () {
+      return this.section !== null ? this.section.id : ''
+    },
+    sectionTitle () {
+      return this.section !== null ? this.section.title : ''
+    },
     currentSectionId () {
       return this.$route.params.sectionId
     },

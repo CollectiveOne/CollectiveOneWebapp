@@ -4,7 +4,7 @@
       <transition name="fadeenter">
         <div :key="currentSectionId" class="w3-left this-section-title">
           <div class="w3-left title-div">
-            {{ currentSection.title }}
+            {{ sectionTitle }}
           </div>
           <div class="w3-left btn-div">
             <app-section-control-buttons :section="currentSection" :inSection="null">
@@ -22,7 +22,9 @@
           <div v-if="currentSectionPaths[0].length > 0" class="w3-row">
             <small>This is section is under:</small>
           </div>
-          <div v-if="currentSectionPaths[0].length > 0" class="w3-row" v-for="currentSectionPath in currentSectionPaths">
+          <div v-if="currentSectionPaths[0].length > 0" class="w3-row"
+            v-for="currentSectionPath in currentSectionPaths">
+
             <div class="w3-left fa-container">
               <i class="fa fa-circle " aria-hidden="true"></i>
             </div>
@@ -67,6 +69,12 @@ export default {
         { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
         { text: 'remove', value: 'remove', faIcon: 'fa-times' }
       ]
+    },
+    sectionTitle () {
+      if (this.currentSection) {
+        return this.currentSection.title
+      }
+      return ''
     },
     currentSectionId () {
       return this.$route.params.sectionId

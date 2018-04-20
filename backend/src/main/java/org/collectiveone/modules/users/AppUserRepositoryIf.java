@@ -1,8 +1,10 @@
 package org.collectiveone.modules.users;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -16,4 +18,10 @@ public interface AppUserRepositoryIf extends CrudRepository<AppUser, UUID> {
 	AppUser findByEmail(String email);	
 	
 	List<AppUser> findTop10ByProfile_NicknameLikeIgnoreCase(String q);
+	
+	List<AppUser> findByOnlineStatus(UserOnlineStatus status);
+	
+	@Modifying
+    @Query("UPDATE AppUser user SET user.onlineStatus = ?1 WHERE user.lastSeen < ?2")
+    void setStatusForUsersLastSeenBefore(UserOnlineStatus status, Timestamp editedBefore);
 }

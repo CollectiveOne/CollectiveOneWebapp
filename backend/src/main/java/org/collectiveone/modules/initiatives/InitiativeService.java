@@ -14,7 +14,7 @@ import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.WantToContributeNotification;
 import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
-import org.collectiveone.modules.activity.enums.NotificationEmailState;
+import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
@@ -286,7 +286,7 @@ public class InitiativeService {
 			notification.setInitiative(initiative);
 			notification.setAdmin(admin.getUser());
 			notification.setUser(user);
-			notification.setEmailState(NotificationEmailState.PENDING);
+			notification.setEmailState(NotificationState.PENDING);
 			
 			wantToContributeRepository.save(notification);
 		}
@@ -847,7 +847,7 @@ public class InitiativeService {
 			/* delete only if another admin remains */
 			
 			/* members were subscribed to initiatives by default, so, delete them when deleting the member */
-			activityService.removeSubscriber(initiativeId, member.getUser().getC1Id());
+			activityService.removeSubscriber(initiativeId,  SubscriptionElementType.INITIATIVE, member.getUser().getC1Id());
 			
 			memberRepository.delete(member);
 			governanceService.deleteDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());

@@ -24,7 +24,8 @@ Vue.config.productionTip = false
 
 Vue.use(VueAxios, axios)
 Vue.use(VueAnalytics, {
-  id: 'UA-92543820-1'
+  id: 'UA-92543820-1',
+  router
 })
 
 axios.interceptors.request.use(

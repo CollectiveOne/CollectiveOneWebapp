@@ -8,8 +8,16 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.collectiveone.modules.activity.Activity;
+import org.collectiveone.modules.activity.Subscriber;
 import org.collectiveone.modules.activity.enums.ActivityType;
+import org.collectiveone.modules.activity.enums.SubscriberEmailNowConfig;
+import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryConfig;
+import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryPeriodConfig;
+import org.collectiveone.modules.activity.enums.SubscriberInAppConfig;
+import org.collectiveone.modules.activity.enums.SubscriberInheritConfig;
+import org.collectiveone.modules.activity.enums.SubscriberPushConfig;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
+import org.collectiveone.modules.activity.repositories.SubscriberRepositoryIf;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.ModelCardWrapper;
@@ -42,6 +50,9 @@ public class StartupMigrations implements ApplicationListener<ContextRefreshedEv
 	
 	@Autowired
 	AppUserRepositoryIf appUserRepository;
+	
+	@Autowired
+	SubscriberRepositoryIf subscriberRepository;
 	
 	
 	@EventListener
@@ -131,6 +142,23 @@ public class StartupMigrations implements ApplicationListener<ContextRefreshedEv
 			cardWrapper.setLastEdited(lastEdited);
 			
 			modelCardWrapperRepository.save(cardWrapper);
+		}
+		
+		/* Initialize subscription preferences */
+		List<Subscriber> allSubscribers = (List<Subscriber>) subscriberRepository.findAllNotSet();
+				
+		for (Subscriber subscriber : allSubscribers) {
+		
+			System.out.println("updatig subscriber " + subscriber.getType().toString());
+			
+			if (subscriber.getInheritConfig() == null) subscriber.setInheritConfig(SubscriberInheritConfig.INHERIT);
+			if (subscriber.getInAppConfig() == null) subscriber.setInAppConfig(SubscriberInAppConfig.ALL_EVENTS);
+			if (subscriber.getPushConfig() == null) subscriber.setPushConfig(SubscriberPushConfig.ALL_EVENTS);
+			if (subscriber.getEmailNowConfig() == null) subscriber.setEmailNowConfig(SubscriberEmailNowConfig.DISABLED);
+			if (subscriber.getEmailSummaryConfig() == null) subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.ALL_EVENTS);
+			if (subscriber.getEmailSummaryPeriodConfig() == null) subscriber.setEmailSummaryPeriodConfig(SubscriberEmailSummaryPeriodConfig.DAILY);
+			
+			subscriberRepository.save(subscriber);
 		}
     }
 }

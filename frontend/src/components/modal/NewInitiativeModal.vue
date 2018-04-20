@@ -227,7 +227,7 @@ export default {
     },
 
     closeThis () {
-      this.$store.commit('showNewInitiativeModal', false)
+      this.$emit('close')
     },
 
     accept () {

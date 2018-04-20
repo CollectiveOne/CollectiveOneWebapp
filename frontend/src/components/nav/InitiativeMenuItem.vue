@@ -24,10 +24,6 @@
         </router-link>
       </div>
 
-      <div v-if="isLoggedAnAdmin()" class="w3-col s2 w3-button tooltip" @click="newSubInitiative()">
-        <i class="fa fa-plus gray-2-color" aria-hidden="true"></i>
-        <span class="tooltiptext gray-1">new subinitiative</span>
-      </div>
     </div>
 
     <div class="slider-container">

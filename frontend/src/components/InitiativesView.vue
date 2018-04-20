@@ -99,6 +99,7 @@ export default {
   margin-top: 50px;
   width: 300px;
   vertical-align: top !important;
+  height: calc(100vh - 51px);
 }
 
 </style>
