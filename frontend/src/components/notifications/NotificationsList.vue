@@ -87,13 +87,12 @@ export default {
           this.notifications = response.data.data
         }).then((response) => {
           /* add desktop notifications */
-          //  console.log(JSON.stringify(this.notifications[0]))
           for (var i = 0; i < this.notifications.length; i++) {
-            if (this.notifications[i].pushState === 'PENDING') {
+            if (this.notifications[i].pushInfo.state === 'PENDING') {
               this.pushNotifications.push({
-                pushMessage: this.notifications[i].pushMessage,
-                pushIcon: this.notifications[i].activity.triggerUser.pictureUrl,
-                pushURL: 'http://www.collectiveone.org/'
+                pushMessage: this.notifications[i].pushInfo.message,
+                pushIcon: this.notifications[i].pushInfo.icon,
+                pushURL: this.notifications[i].pushInfo.url
               })
             }
           }

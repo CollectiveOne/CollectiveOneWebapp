@@ -1,6 +1,7 @@
 package org.collectiveone.modules.activity;
 
 import java.io.IOException;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +9,10 @@ import java.util.SortedSet;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
-
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.dto.NotificationDto;
+import org.collectiveone.modules.activity.dto.PushInfoDto;
 import org.collectiveone.modules.activity.dto.SubscriberDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.enums.NotificationEmailState;
@@ -127,12 +128,12 @@ public class ActivityService {
 		
 		List<NotificationDto> notifications = new ArrayList<NotificationDto>();
 		NotificationDto notificationResult;
-		String pushMessage;
+		PushInfoDto pushInfo;
 		for(Notification notification : notificationRepository.findOfUser(userId, page)) {
 
 			notificationResult = notification.toDto();
-			pushMessage = pushMessageBuilder.getPushMessage(notification);
-			notificationResult.setPushMessage(pushMessage);
+			pushInfo = pushMessageBuilder.getPushMessage(notification);
+			notificationResult.setPushInfo(pushInfo);			
 			notifications.add(notificationResult);
 		}
 		

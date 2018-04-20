@@ -59,8 +59,6 @@ public class Notification {
 		dto.setState(state.toString());
 		dto.setSubscriberUser(subscriber.getUser().toDtoLight());
 		dto.setSubscriberState(subscriber.getState().toString());
-		if(pushState != null)
-			dto.setPushState(pushState.toString());
 		
 		return dto;
 	}
