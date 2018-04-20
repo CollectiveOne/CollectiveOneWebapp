@@ -27,8 +27,9 @@
       </div>
       <div class="notification-div">
         <app-notifications-list
-          contextType="MODEL_SECTION"
-          :contextElementId="section.id">
+          :section="section"
+          :forceUpdate="forceUpdateNotifications"
+          @updateNotifications="$emit('updateNotifications')">
         </app-notifications-list>
       </div>
       <div class="control-div">
@@ -48,7 +49,8 @@
             :inSection="section"
             :section="subsection" :key="subsection.id"
             :highlightLevel="highlightLevelUse - 1"
-            class="subsection-row">
+            class="subsection-row"
+            @updateNotifications="updateNotifications()">
           </app-model-section-nav-item>
         </div>
       </transition>
@@ -93,7 +95,8 @@ export default {
       draggingOverWithCardFlag: false,
       draggingOverWithSectionSameLevelFlag: false,
       draggingOverWithSectionInsideFlag: false,
-      resetIntervalId: 0
+      resetIntervalId: 0,
+      forceUpdateNotifications: false
     }
   },
 
@@ -146,6 +149,10 @@ export default {
     },
     addSubsection () {
       this.showNewSubsectionModal = true
+    },
+    updateNotifications () {
+      this.forceUpdateNotifications = !this.forceUpdateNotifications
+      this.$emit('updateNotifications')
     },
     updateSubsections () {
       this.axios.get('/1/model/section/' + this.section.id, { params: { levels: 1 } }).then((response) => {
@@ -338,6 +345,7 @@ export default {
 }
 
 .notification-div {
+  min-height: 1px;
   width: 30px;
   float: left;
 }

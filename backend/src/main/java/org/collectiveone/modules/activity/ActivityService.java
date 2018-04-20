@@ -125,10 +125,11 @@ public class ActivityService {
 		emailService.sendNotificationsGrouped(notifications);
 	}
 	
-	@Transactional
-	public GetResult<List<NotificationDto>> getUserNotifications(UUID userId, NotificationContextType contextType, UUID elementId, Boolean all, PageRequest page) {
-		
-		List<NotificationDto> notifications = new ArrayList<NotificationDto>();
+	private List<Notification> userUnreadNotifications(
+			UUID userId, 
+			NotificationContextType contextType, 
+			UUID elementId,
+			PageRequest page) {
 		
 		List<UUID> allSectionIds = null;
 		List<UUID> cardsIds = null;
@@ -158,16 +159,36 @@ public class ActivityService {
 			cardsIds.add(UUID.randomUUID());
 		}
 		
-		for(Notification notification : notificationRepository.findOfUserInSections(userId, NotificationState.PENDING, allSectionIds, cardsIds, page)) {
-			notifications.add(notification.toDto());
-		}
-		
-		return new GetResult<List<NotificationDto>>("success", "notifications found", notifications);
+		return notificationRepository.findOfUserInSections(userId, NotificationState.PENDING, allSectionIds, cardsIds, page);
 	}
 	
 	@Transactional
-	public PostResult notificationsRead(UUID userId) {
-		for(Notification notification: notificationRepository.findBySubscriber_User_C1IdAndInAppState(userId, NotificationState.PENDING)) {
+	public GetResult<List<NotificationDto>> getUserNotifications(
+			UUID userId, 
+			NotificationContextType contextType, 
+			UUID elementId,
+			PageRequest page) {
+		
+		List<NotificationDto> notificationsDtos = new ArrayList<NotificationDto>();
+		
+		List<Notification> notifications = userUnreadNotifications(userId, contextType, elementId, page);
+		
+		for(Notification notification : notifications) {
+			notificationsDtos.add(notification.toDto());
+		}
+		
+		return new GetResult<List<NotificationDto>>("success", "notifications found", notificationsDtos);
+	}
+	
+	@Transactional
+	public PostResult notificationsRead(
+			UUID userId, 
+			NotificationContextType contextType, 
+			UUID elementId ) {
+		
+		List<Notification> notifications = userUnreadNotifications(userId, contextType, elementId, null);
+		
+		for(Notification notification: notifications) {
 			
 			notification.setInAppState(NotificationState.DELIVERED);
 			notification.setPushState(NotificationState.DELIVERED);

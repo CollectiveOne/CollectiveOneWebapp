@@ -35,7 +35,6 @@ public class ActivityController extends BaseController {
 	public GetResult<List<NotificationDto>> getNotifications(
 			@RequestParam("page") Integer page,
 			@RequestParam(name="size", defaultValue="10") Integer size,
-			@RequestParam(name="all", defaultValue="false") Boolean all,
 			@PathVariable(name="contextElementType") String contextElementType,
 			@PathVariable("elementId") String elementId) {
 		
@@ -47,17 +46,22 @@ public class ActivityController extends BaseController {
 				getLoggedUserId(),
 				NotificationContextType.valueOf(contextElementType),
 				UUID.fromString(elementId),
-				all,
 				new PageRequest(page, size));
 	}
 	
-	@RequestMapping(path = "/notifications/read", method = RequestMethod.PUT)
-	public PostResult notificationsRead() {
+	@RequestMapping(path = "/notifications/{contextElementType}/{elementId}/read", method = RequestMethod.PUT)
+	public PostResult notificationsRead(
+			@PathVariable(name="contextElementType") String contextElementType,
+			@PathVariable("elementId") String elementId) {
+		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
 		}
 		
-		return activityService.notificationsRead(getLoggedUser().getC1Id());
+		return activityService.notificationsRead(
+				getLoggedUserId(), 
+				NotificationContextType.valueOf(contextElementType),
+				UUID.fromString(elementId));
 	}
 	
 	@RequestMapping(path = "/notifications/subscriber/{elementType}/{elementId}", method = RequestMethod.GET)

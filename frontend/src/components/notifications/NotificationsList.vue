@@ -8,12 +8,27 @@
 
     <div v-show="showTable"
       v-click-outside="clickOutsideNotifications"
-      class="notifications-container w3-white w3-card-4 w3-bar-block w3-center">
+      class="notifications-container w3-white w3-card-4 w3-bar-block">
+      <div class="w3-row-padding w3-border-bottom">
+        <div class="w3-col s8 text-div">
+          {{ notifications.length }} new events under {{ section.title }}
+        </div>
+        <button class="w3-col s4 w3-margin-top w3-margin-bottom w3-button app-button"
+          @click="notificationsRead()">
+          mark as read
+        </button>
+      </div>
+
       <app-activity-table :activities="activities"></app-activity-table>
-      <button v-if="!allShown"
-        id="T_showMoreButton"
-        @click="showMore()"
-        class="w3-margin-top w3-margin-bottom w3-button app-button-light" type="button" name="button">show more...</button>
+
+      <div class="w3-row w3-center">
+        <button v-if="!allShown"
+          id="T_showMoreButton"
+          @click="showMore()"
+          class="w3-margin-top w3-margin-bottom w3-button app-button-light" type="button" name="button">
+          show more...
+        </button>
+      </div>
     </div>
 
   </div>
@@ -29,11 +44,13 @@ export default {
   },
 
   props: {
-    contextType: {
-      type: String
+    section: {
+      type: Object,
+      default: null
     },
-    contextElementId: {
-      type: String
+    forceUpdate: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -48,11 +65,23 @@ export default {
   },
 
   computed: {
+    contextType () {
+      return 'MODEL_SECTION'
+    },
+    contextElementId () {
+      return this.section.id
+    },
     activities () {
       return this.notifications.map(function (n) { return n.activity })
     },
     url () {
       return '/1/notifications/' + this.contextType + '/' + this.contextElementId
+    }
+  },
+
+  watch: {
+    forceUpdate () {
+      this.updateNotifications()
     }
   },
 
@@ -95,6 +124,15 @@ export default {
     },
 
     notificationsRead () {
+      this.axios.put(this.url + '/read', {
+        }).then((response) => {
+          /* check that new notifications arrived */
+          this.$emit('updateNotifications')
+          this.updateNotifications()
+          this.hide()
+        }).catch(function (error) {
+          console.log(error)
+        })
     },
 
     showMore () {
@@ -124,9 +162,6 @@ export default {
     hide () {
       this.showTable = false
       this.showingMoreNotifications = false
-      if (!this.showingMoreNotifications) {
-        this.notificationsRead()
-      }
     },
     show () {
       this.showTable = true
@@ -141,14 +176,19 @@ export default {
 
 <style scoped>
 
+.text-div {
+  padding: 16px 12px;
+  text-align: right;
+}
+
 .bell-button {
   width: 30px;
   text-align: center;
 }
 
 .circle {
-  color: rgb(249, 48, 48);
-  font-size: 18px;
+  color: #b91414;
+  font-size: 10px;
 }
 
 .notifications-container {
