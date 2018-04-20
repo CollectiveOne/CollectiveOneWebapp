@@ -803,6 +803,20 @@ public class ActivityService {
 					sections = modelCardWrapperRepository.findParentSections(activity.getModelCardWrapper().getId());
 					break;
 					
+				case MESSAGE_POSTED:
+					sections = new ArrayList<ModelSection>();
+					
+					/* message context is derived from the existence or not of the associated section */
+					if (activity.getModelSection() != null) {
+						sections.add(activity.getModelSection());	
+					} 
+					
+					if (activity.getModelCardWrapper() != null) {
+						sections.addAll(modelCardWrapperRepository.findParentSections(activity.getModelCardWrapper().getId()));
+					}
+					
+					break;
+					
 				default: 
 					/* activity in section applies to that section only */
 					sections = new ArrayList<ModelSection>();
