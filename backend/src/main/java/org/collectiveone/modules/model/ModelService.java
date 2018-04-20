@@ -226,6 +226,9 @@ public class ModelService {
 		if (beforeSubsectionId != null) {
 			ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
 			int index = toSection.getSubsections().indexOf(beforeSubsection);
+			if (index < 0) {
+				return new PostResult("error", "error while moving section", subSection.getId().toString());
+			}
 			toSection.getSubsections().add(index, subSection);
 		} else {
 			toSection.getSubsections().add(subSection);
@@ -665,9 +668,10 @@ public class ModelService {
 		/* this node is one level */
 		levels = levels != null ? levels - 1 : null;
 		
+		/* look for neighbors if input level was 2 or larger */
 		Boolean this_neighbors = false;
 		if (levels != null) {
-			if (levels > 0) {
+			if (levels >= 1) {
 				this_neighbors = true; 
 			}
 		} else {
@@ -677,32 +681,13 @@ public class ModelService {
 		/* children are one more level */
 		if (this_neighbors) {
 			
-			/* logic to see if recurse moved here because is common to parent
-			 * and children */
-			Boolean recurse = false;
-			if (levels != null) {
-				if (levels > 2) {
-					recurse = true; 
-				}
-			} else {
-				recurse = true;
-			}
-			
 			if (addParents) {
 				List<UUID> parents = modelSectionRepository.findParentSectionsIds(sectionId);
 				
 				for (UUID inSectionId : parents) {
 					if (!readIds.contains(inSectionId)) {
 						GraphNode parentNode = null;
-						if (recurse) {
-							/* recursive call to search for parent parents*/
-							parentNode = getSectionNodeRec(inSectionId, addParents, false, levels != null ? levels - 1 : null, readIds);	
-						} else {
-							readIds.add(inSectionId);
-							parentNode = new GraphNode();
-							parentNode.setElementId(inSectionId);
-						}
-						
+						parentNode = getSectionNodeRec(inSectionId, addParents, false, levels, readIds);	
 						node.getParents().add(parentNode);
 						
 					} else {
@@ -720,15 +705,7 @@ public class ModelService {
 				for (UUID subSectionId : children) {
 					if (!readIds.contains(subSectionId)) {
 						GraphNode childrenNode = null;
-						if (recurse) {
-							/* recursive call to search for parent parents*/
-							childrenNode = getSectionNodeRec(subSectionId, false, addChildren, levels != null ? levels - 1 : null, readIds);	
-						} else {
-							readIds.add(subSectionId);
-							childrenNode = new GraphNode();
-							childrenNode.setElementId(subSectionId);
-						}
-						
+						childrenNode = getSectionNodeRec(subSectionId, false, addChildren, levels, readIds);	
 						node.getChildren().add(childrenNode);
 						
 					} else {
@@ -738,7 +715,6 @@ public class ModelService {
 						node.getChildren().add(repeatedNode);
 					}
 				}
-				
 			}
 		}
 		

@@ -47,10 +47,6 @@ export default {
     section: {
       type: Object,
       default: null
-    },
-    forceUpdate: {
-      type: Boolean,
-      default: false
     }
   },
 
@@ -76,12 +72,18 @@ export default {
     },
     url () {
       return '/1/notifications/' + this.contextType + '/' + this.contextElementId
+    },
+    triggerUpdateNotifications () {
+      return this.$store.state.support.triggerUpdateNotifications
     }
   },
 
   watch: {
-    forceUpdate () {
-      this.updateNotifications()
+    triggerUpdateNotifications () {
+      /* only update if there is notifications to be removed */
+      if (this.notifications.length > 0) {
+        this.updateNotifications()
+      }
     }
   },
 
@@ -127,7 +129,7 @@ export default {
       this.axios.put(this.url + '/read', {
         }).then((response) => {
           /* check that new notifications arrived */
-          this.$emit('updateNotifications')
+          this.$store.commit('triggerUpdateNotifications')
           this.updateNotifications()
           this.hide()
         }).catch(function (error) {

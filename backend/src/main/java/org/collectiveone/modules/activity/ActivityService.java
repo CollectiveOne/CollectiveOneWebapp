@@ -248,9 +248,12 @@ public class ActivityService {
 		if (subscriber == null) {
 			subscriber = new Subscriber();
 			
-			subscriber.setInheritConfig(SubscriberInheritConfig.INHERIT);
 			subscriber.setType(type);
 			subscriber.setElementId(elementId);
+			subscriber.setInheritConfig(SubscriberInheritConfig.INHERIT);
+			
+			initDefaultSubscriber(subscriber);
+			
 			subscriber.setUser(appUserRepository.findByC1Id(userId));
 		}
 		
@@ -284,6 +287,7 @@ public class ActivityService {
 		subscriber.setPushConfig(SubscriberPushConfig.ONLY_MESSAGES);
 		subscriber.setEmailNowConfig(SubscriberEmailNowConfig.DISABLED);
 		subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.ALL_EVENTS);
+		subscriber.setEmailSummaryPeriodConfig(SubscriberEmailSummaryPeriodConfig.DAILY);
 	}
 	
 	@Transactional
@@ -757,6 +761,9 @@ public class ActivityService {
 	private void addInitiativeActivityNotifications (Activity activity) {
 		
 		/* this method build the full list of subscribers and add a notification for each of them */
+		/* a separate set of user ids is used to make sure only one subscriber entity per user is added */
+		
+		Set<UUID> userIds = new HashSet<UUID>();
 		Set<Subscriber> subscribers = new HashSet<Subscriber>();
 		
 		Boolean isInModel = false;
@@ -826,11 +833,11 @@ public class ActivityService {
 			
 			for (ModelSection section : sections) {
 				/* append the subscribers of this section and all its parents */
-				appendSectionSubscribers(section.getId(), subscribers);
+				appendSectionSubscribers(section.getId(), subscribers, userIds);
 			}
 		}
 		
-		appendInitiativeSubscribers(activity.getInitiative().getId(), subscribers);
+		appendInitiativeSubscribers(activity.getInitiative().getId(), subscribers, userIds);
 
 		/* now prepare a notification for each subscriber */
 		for (Subscriber subscriber : subscribers) {
@@ -840,7 +847,9 @@ public class ActivityService {
 	}
 	
 	private void createSubscriberNotification(Subscriber subscriber, Activity activity) {
-		if (subscriber.getInAppConfig() != SubscriberInAppConfig.DISABLED) {
+		/* only if subscriber has enabled notifications and its different from the trigger user */
+		if ((subscriber.getInAppConfig() != SubscriberInAppConfig.DISABLED) && (
+				!activity.getTriggerUser().getC1Id().equals(subscriber.getUser().getC1Id()))) {
 			
 			AppUser user = subscriber.getUser();
 			
@@ -965,28 +974,41 @@ public class ActivityService {
 	}
 	
 	/* update the input subscribers list */
-	private void appendSectionSubscribers(UUID sectionId, Set<Subscriber> allSubcribers) {
+	private void appendSectionSubscribers(UUID sectionId, Set<Subscriber> allSubcribers, Set<UUID> allUserIds) {
 		List<Subscriber> thisSubscribers = subscriberRepository.findByElementId(sectionId);
 		/* being a set, no duplicates are created */
-		allSubcribers.addAll(thisSubscribers);
+		
+		for (Subscriber subscriber : thisSubscribers) {
+			if (!allUserIds.contains(subscriber.getUser().getC1Id())) {
+				allUserIds.add(subscriber.getUser().getC1Id());
+				allSubcribers.add(subscriber);		
+			} 
+		}
 		
 		/* get section immediate parents */
-		GraphNode sectionNode = modelService.getSectionNode(sectionId, true, false, 1);
+		GraphNode sectionNode = modelService.getSectionNode(sectionId, true, false, 2);
 		
 		for (GraphNode parent : sectionNode.getParents()) {
 			/* recursively add parent subscribers*/
-			appendSectionSubscribers(parent.getElementId(), allSubcribers);
+			appendSectionSubscribers(parent.getElementId(), allSubcribers, allUserIds);
 		}
 	}
 	
 	@Transactional
-	private void appendInitiativeSubscribers (UUID initiativeId, Set<Subscriber> allSubcribers) {
+	private void appendInitiativeSubscribers (UUID initiativeId, Set<Subscriber> allSubcribers, Set<UUID> allUserIds) {
 		
 		/* example https://docs.google.com/drawings/d/1PqPhefzrGVlWVfG-SRGS56l_e2qpNEsajLbnsAWcTfA/edit,
 		 * assume initiativeId = C */
 		/* start with this initiative subscribers (S3 and S6 in example). Take into account that 
 		 * a subscriber state may be SUBSCRIPTION_DISABLED */
-		allSubcribers.addAll(subscriberRepository.findByElementId(initiativeId));
+		List<Subscriber> thisSubscribers = subscriberRepository.findByElementId(initiativeId);
+		
+		for (Subscriber subscriber : thisSubscribers) {
+			if (!allUserIds.contains(subscriber.getUser().getC1Id())) {
+				allUserIds.add(subscriber.getUser().getC1Id());
+				allSubcribers.add(subscriber);		
+			} 
+		}
 		
 		/* then add the subscribers of all parent initiatives 2(B and A, in that order) */
 		List<Initiative> parents = initiativeService.getParentGenealogyInitiatives(initiativeId);

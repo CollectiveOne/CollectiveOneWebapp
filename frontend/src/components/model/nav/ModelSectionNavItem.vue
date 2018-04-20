@@ -28,8 +28,7 @@
       <div class="notification-div">
         <app-notifications-list
           :section="section"
-          :forceUpdate="forceUpdateNotifications"
-          @updateNotifications="$emit('updateNotifications')">
+          :forceUpdate="forceUpdateNotifications">
         </app-notifications-list>
       </div>
       <div class="control-div">
@@ -49,8 +48,7 @@
             :inSection="section"
             :section="subsection" :key="subsection.id"
             :highlightLevel="highlightLevelUse - 1"
-            class="subsection-row"
-            @updateNotifications="updateNotifications()">
+            class="subsection-row">
           </app-model-section-nav-item>
         </div>
       </transition>
@@ -149,10 +147,6 @@ export default {
     },
     addSubsection () {
       this.showNewSubsectionModal = true
-    },
-    updateNotifications () {
-      this.forceUpdateNotifications = !this.forceUpdateNotifications
-      this.$emit('updateNotifications')
     },
     updateSubsections () {
       this.axios.get('/1/model/section/' + this.section.id, { params: { levels: 1 } }).then((response) => {

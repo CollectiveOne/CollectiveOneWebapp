@@ -7,6 +7,7 @@ const state = {
   triggerUpdateAssets: false,
   triggerUpdateSectionsTree: false,
   triggerUpdateSectionCards: false,
+  triggerUpdateNotifications: false,
   userEmailNotVerified: false,
   initiativeLoaded: false,
   expandNav: false,
@@ -118,6 +119,9 @@ const mutations = {
   },
   triggerUpdateSectionCards: (state) => {
     state.triggerUpdateSectionCards = !state.triggerUpdateSectionCards
+  },
+  triggerUpdateNotifications: (state) => {
+    state.triggerUpdateNotifications = !state.triggerUpdateNotifications
   },
   setUserEmailNotVerified: (state, payload) => {
     state.userEmailNotVerified = payload
