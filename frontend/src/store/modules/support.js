@@ -5,11 +5,14 @@ const state = {
   myInitiativesTree: [],
   currentInitiativeTree: [],
   triggerUpdateAssets: false,
-  triggerUpdateModel: false,
+  triggerUpdateSectionsTree: false,
+  triggerUpdateSectionCards: false,
   userEmailNotVerified: false,
   initiativeLoaded: false,
-  expandNav: true,
-  windowIsSmall: false
+  expandNav: false,
+  expandModelNav: false,
+  windowIsSmall: false,
+  draggingElement: null
 }
 
 const findCoordinate = function (initiatives, id, coord) {
@@ -65,6 +68,17 @@ const getters = {
   initiativesTree: (state, getters, rootState) => (id) => {
     return rootState.user.authenticated ? state.myInitiativesTree : state.currentInitiativeTree
   },
+  initiativesTreeTop: (state, getters, rootState) => (id) => {
+    if (!rootState.user.authenticated) {
+      return []
+    } else {
+      var topInitiatives = []
+      for (var ix in state.myInitiativesTree) {
+        topInitiatives.push(state.myInitiativesTree[ix])
+      }
+      return topInitiatives
+    }
+  },
   initiativeCoordinate: (state, getters) => (id) => {
     var coord = []
     findCoordinate(getters.initiativesTree(), id, coord)
@@ -99,8 +113,11 @@ const mutations = {
   triggerUpdateAssets: (state) => {
     state.triggerUpdateAssets = !state.triggerUpdateAssets
   },
-  triggerUpdateModel: (state) => {
-    state.triggerUpdateModel = !state.triggerUpdateModel
+  triggerUpdateSectionsTree: (state) => {
+    state.triggerUpdateSectionsTree = !state.triggerUpdateSectionsTree
+  },
+  triggerUpdateSectionCards: (state) => {
+    state.triggerUpdateSectionCards = !state.triggerUpdateSectionCards
   },
   setUserEmailNotVerified: (state, payload) => {
     state.userEmailNotVerified = payload
@@ -111,8 +128,17 @@ const mutations = {
   setExpandNav: (state, payload) => {
     state.expandNav = payload
   },
+  toggleExpandNav: (state) => {
+    state.expandNav = !state.expandNav
+  },
+  toggleExpandModelNav: (state) => {
+    state.expandModelNav = !state.expandModelNav
+  },
   setWindowIsSmall: (state, payload) => {
     state.windowIsSmall = payload
+  },
+  setDraggingElement: (state, payload) => {
+    state.draggingElement = payload
   }
 }
 

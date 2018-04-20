@@ -19,12 +19,14 @@
             </div>
             <div class="w3-left w3-round button-bar">
               <button
+                id="T_notificationNoSubscribedButton"
                 class="w3-bar-item w3-button w3-round"
                 :class="{'app-button': !isSubscribed, 'app-button-light': isSubscribed}"
                 @click="subscriber.state = 'UNSUBSCRIBED'">
                 No
               </button>
               <button
+                id="T_notificationYesSubscribedButton"
                 class="w3-bar-item w3-button w3-round"
                 :class="{'app-button': isSubscribed, 'app-button-light': !isSubscribed}"
                 @click="subscriber.state = 'SUBSCRIBED'">
@@ -39,24 +41,28 @@
             </div>
             <div class="w3-left button-bar">
               <button
+                id="T_notificationEmailNeverButton"
                 class="w3-bar-item w3-button w3-round"
                 :class="{'app-button': isNever, 'app-button-light': !isNever}"
                 @click="subscriber.emailNotificationsState = 'DISABLED'">
                 Never
               </button>
               <button
+                id="T_notificationEmailImmediatelyButton"
                 class="w3-bar-item w3-button w3-round"
                 :class="{'app-button': isImmediate, 'app-button-light': !isImmediate}"
                 @click="subscriber.emailNotificationsState = 'SEND_NOW'">
                 Immediately
               </button>
               <button
+                id="T_notificationEmailDayButton"
                 class="w3-bar-item w3-button w3-round"
                 :class="{'app-button': isOnceADay, 'app-button-light': !isOnceADay}"
                 @click="subscriber.emailNotificationsState = 'SEND_ONCEADAY'">
                 Once a day
               </button>
               <button
+                id="T_notificationEmailWeekButton"
                 class="w3-bar-item w3-button w3-round"
                 :class="{'app-button': isOnceAWeek, 'app-button-light': !isOnceAWeek}"
                 @click="subscriber.emailNotificationsState = 'SEND_ONCEAWEEK'">
@@ -68,10 +74,10 @@
           <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
+              <button id="T_notificationCancelButton" type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button  id="T_notificationAcceptButton" type="button" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
 
@@ -122,7 +128,7 @@ export default {
       })
     },
     closeThis () {
-      this.$store.commit('showEditNotificationsModal', false)
+      this.$emit('close')
     },
     accept () {
       this.axios.put('/1/user/notifications/subscriber/' + this.initiative.id, this.subscriber).then((response) => {

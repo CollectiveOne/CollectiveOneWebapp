@@ -3,7 +3,9 @@ package org.collectiveone.modules.activity;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.UUID;
 
@@ -30,12 +32,12 @@ import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+import org.collectiveone.modules.model.GraphNode;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelSection;
-import org.collectiveone.modules.model.ModelView;
+import org.collectiveone.modules.model.ModelService;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
-import org.collectiveone.modules.model.repositories.ModelViewRepositoryIf;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
@@ -50,6 +52,9 @@ public class ActivityService {
 	
 	@Autowired
 	private InitiativeService initiativeService;
+	
+	@Autowired
+	private ModelService modelService;
 	
 	@Autowired
 	private EmailService emailService;
@@ -72,9 +77,6 @@ public class ActivityService {
 	
 	@Autowired
 	private InitiativeRepositoryIf initiativeRepository;
-	
-	@Autowired
-	private ModelViewRepositoryIf modelViewRepository;
 	
 	@Autowired
 	private ModelSectionRepositoryIf modelSectionRepository;
@@ -442,33 +444,11 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelViewCreated(ModelView view, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, view.getInitiative()); 
+	public void modelSectionCreated(ModelSection section, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
 		
-		activity.setType(ActivityType.MODEL_VIEW_CREATED);
-		activity.setModelView(view);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelViewEdited(ModelView view, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, view.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_VIEW_EDITED);
-		activity.setModelView(view);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelViewDeleted(ModelView view, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, view.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_VIEW_DELETED);
-		activity.setModelView(view);
+		activity.setType(ActivityType.MODEL_SECTION_CREATED);
+		activity.setModelSection(section);
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
@@ -481,18 +461,6 @@ public class ActivityService {
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
 		activity.setModelSection(section);
 		activity.setOnSection(onSection);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelSectionCreatedOnView(ModelSection section, ModelView onView, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_CREATED);
-		activity.setModelSection(section);
-		activity.setOnView(onView);
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
@@ -522,55 +490,6 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelSectionRemovedFromView(ModelSection section, ModelView fromView, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_REMOVED);
-		activity.setModelSection(section);
-		activity.setFromView(fromView);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelViewMoved(ModelView view, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, view.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_VIEW_MOVED);
-		activity.setModelView(view);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelSectionMovedInView(ModelSection section, ModelView onView, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_MOVED);
-		activity.setModelSection(section);
-		activity.setFromView(onView);
-		activity.setOnView(onView);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelSectionMovedFromViewToSection(ModelSection section, ModelView fromView, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_MOVED);
-		activity.setModelSection(section);
-		activity.setFromView(fromView);
-		activity.setOnSection(onSection);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
 	public void modelSectionMovedFromSectionToSection(ModelSection section, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
 		
@@ -584,37 +503,12 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelSectionMovedFromSectionToView(ModelSection section, ModelSection fromSection, ModelView onView, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_MOVED);
-		activity.setModelSection(section);
-		activity.setFromSection(fromSection);
-		activity.setOnView(onView);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
 	public void modelNewSubsection(ModelSection section, ModelSection onSection, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
 		activity.setModelSection(section);
 		activity.setOnSection(onSection);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelNewSection(ModelSection section, ModelView onView, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_CREATED);
-		activity.setModelSection(section);
-		activity.setOnView(onView);
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
@@ -728,10 +622,6 @@ public class ActivityService {
 				activity.setModelSection(modelSectionRepository.findById(elementId));
 				break;
 				
-			case MODEL_VIEW:
-				activity.setModelView(modelViewRepository.findById(elementId));
-				break;
-				
 			case INITIATIVE:
 				activity.setInitiative(initiativeRepository.findById(elementId));
 				break;
@@ -799,75 +689,133 @@ public class ActivityService {
 	/** To be called within an activity transaction, modifies the notifications property of the
 	 * input activity */
 	private void addInitiativeActivityNotifications (Activity activity) {
-		List<Subscriber> subscribers = getInitiativeSubscribers(activity.getInitiative().getId());
 		
-		for (Subscriber subscriber : subscribers) {
+		/* this method build the full list of subscribers and add a notification for each of them*/
+		Set<Subscriber> subscribers = new HashSet<Subscriber>();
+		
+		Boolean isInModel = false;
+		/* subscribers are derived from the sections if activity is on a card or section*/
+		switch (activity.getType()) {
+			case MODEL_CARDWRAPPER_ADDED:
+			case MODEL_CARDWRAPPER_DELETED:
+			case MODEL_CARDWRAPPER_CREATED:
+			case MODEL_CARDWRAPPER_EDITED:
+			case MODEL_CARDWRAPPER_MOVED:
+			case MODEL_CARDWRAPPER_REMOVED:
+			case MODEL_SECTION_ADDED:
+			case MODEL_SECTION_CREATED:
+			case MODEL_SECTION_DELETED:
+			case MODEL_SECTION_EDITED:
+			case MODEL_SECTION_MOVED:
+			case MODEL_SECTION_REMOVED:
+				
+				isInModel = true;
+				break;
+				
+			case MESSAGE_POSTED:
+				isInModel = (activity.getModelCardWrapper() != null) 
+					|| (activity.getModelSection() != null);
+				break;
 			
+			default:
+				break;			
+		}
+		
+		/* if the activity occurs in the model, search for subscribers based on sections */
+		if (isInModel) {
+			
+			List<ModelSection> sections = null;
+			switch (activity.getType()) {
+				case MODEL_CARDWRAPPER_ADDED:
+				case MODEL_CARDWRAPPER_DELETED:
+				case MODEL_CARDWRAPPER_CREATED:
+				case MODEL_CARDWRAPPER_EDITED:
+				case MODEL_CARDWRAPPER_MOVED:
+				case MODEL_CARDWRAPPER_REMOVED:
+					
+					/* activity in cards is considered as occurring on the sections these card is placed*/
+					sections = modelCardWrapperRepository.findParentSections(activity.getModelCardWrapper().getId());
+					break;
+					
+				default: 
+					/* activity in section applies to that section only */
+					sections = new ArrayList<ModelSection>();
+					sections.add(activity.getModelSection());
+					break;
+			}
+			
+			for (ModelSection section : sections) {
+				/* append the subscribers of this section and all its parents */
+				appendSectionSubscribers(section.getId(), subscribers);
+			}
+		}
+		
+		appendInitiativeSubscribers(activity.getInitiative().getId(), subscribers);
+		
+		/* now prepare a notification for each subscriber */
+		for (Subscriber subscriber : subscribers) {
 			if (subscriber.getState() != SubscriberState.UNSUBSCRIBED) {
 				if(activity.getTriggerUser().getC1Id() != subscriber.getUser().getC1Id()) {
 					/* add a notification only if the trigger user is not the subscriber */
+
+					/*add a notification only if the user is subscribed to the section*/
 					if (subscriber.getState() == SubscriberState.SUBSCRIBED) {
-						Notification notification = new Notification();
-						notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
-						notification.setActivity(activity);
-						notification.setSubscriber(subscriber);
-						notification.setState(NotificationState.PENDING);
-						
-						/* if not unsubscribed from emails, set the email as peding */
-						if (subscriber.getEmailNotificationsState() != SubscriberEmailNotificationsState.DISABLED 
-								&& subscriber.getUser().getEmailNotificationsEnabled()) {
-							notification.setEmailState(NotificationEmailState.PENDING);
-						} else {
-							notification.setEmailState(NotificationEmailState.DELIVERED);
-						}
-						
-						notification = notificationRepository.save(notification);
-						
-						activity.getNotifications().add(notification);
+						addNotification(activity,subscriber);
 					}
 				}
 			}
-			
+		}
+	}
+	
+	private void addNotification(Activity activity, Subscriber subscriber) {
+		Notification notification = new Notification();
+		notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
+		notification.setActivity(activity);
+		notification.setSubscriber(subscriber);
+		notification.setState(NotificationState.PENDING);
+		
+		/* if not unsubscribed from emails, set the email as pending */
+		if (subscriber.getEmailNotificationsState() != SubscriberEmailNotificationsState.DISABLED 
+				&& subscriber.getUser().getEmailNotificationsEnabled()) {
+			notification.setEmailState(NotificationEmailState.PENDING);
+		} else {
+			notification.setEmailState(NotificationEmailState.DELIVERED);
+		}
+		
+		notification = notificationRepository.save(notification);
+		
+		activity.getNotifications().add(notification);
+	}
+	
+	/* update the input subscribers list */
+	private void appendSectionSubscribers(UUID sectionId, Set<Subscriber> allSubcribers) {
+		List<Subscriber> thisSubscribers = subscriberRepository.findByElementId(sectionId);
+		/* being a set, no duplicates are created */
+		allSubcribers.addAll(thisSubscribers);
+		
+		/* get section immediate parents */
+		GraphNode sectionNode = modelService.getSectionNode(sectionId, true, false, 1);
+		
+		for (GraphNode parent : sectionNode.getParents()) {
+			/* recursively add parent subscribers*/
+			appendSectionSubscribers(parent.getElementId(), allSubcribers);
 		}
 	}
 	
 	@Transactional
-	private List<Subscriber> getInitiativeSubscribers (UUID initiativeId) {
+	private void appendInitiativeSubscribers (UUID initiativeId, Set<Subscriber> allSubcribers) {
 		
 		/* example https://docs.google.com/drawings/d/1PqPhefzrGVlWVfG-SRGS56l_e2qpNEsajLbnsAWcTfA/edit,
 		 * assume initiativeId = C */
 		/* start with this initiative subscribers (S3 and S6 in example). Take into account that 
 		 * a subscriber state may be SUBSCRIPTION_DISABLED */
-		List<Subscriber> allSubscribers = subscriberRepository.findByElementId(initiativeId);
+		allSubcribers.addAll(subscriberRepository.findByElementId(initiativeId));
 		
-		/* then add the subscribers of all parent initiatives (B and A, in that order) */
+		/* then add the subscribers of all parent initiatives 2(B and A, in that order) */
 		List<Initiative> parents = initiativeService.getParentGenealogyInitiatives(initiativeId);
-		
 		for (Initiative parent : parents) {
-			List<Subscriber> parentSubscribers = subscriberRepository.findByElementId(parent.getId());
-			
-			for (Subscriber parentSubscriber : parentSubscribers) {
-				int ixOfSubscriber = indexOfSubscriber(allSubscribers, parentSubscriber);
-				if (ixOfSubscriber == -1) {
-					/* if this user is not already in the list of subscriptions, then
-					 * add it (this means that the applicable subscription is that at
-					 * the lowest level) */
-					allSubscribers.add(parentSubscriber);
-				}
-			}
+			allSubcribers.addAll(subscriberRepository.findByElementId(parent.getId()));
 		}
-		
-		return allSubscribers;
-	}
-	
-	private int indexOfSubscriber(List<Subscriber> subscribers, Subscriber parentSubscriber) {
-		for (int ix = 0; ix < subscribers.size(); ix++) {
-			Subscriber subscriber = subscribers.get(ix);
-			if (subscriber.getUser().getC1Id() == parentSubscriber.getUser().getC1Id()) {
-				return ix;
-			}
-		}
-		return -1;
 	}
 	
 }

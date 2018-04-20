@@ -9,10 +9,10 @@ public class ModelSectionDto {
 
 	private String id;
 	private String initiativeId;
+	private Boolean isTopModelSection;
 	private Boolean isSubsection;
 	private String parentSectionId;
 	private String parentSectionTitle;
-	private String viewId;
 	private String title;
 	private String description;
 	private Boolean subElementsLoaded;
@@ -21,9 +21,7 @@ public class ModelSectionDto {
 	
 	private List<ModelCardWrapperDto> cardsWrappers = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelSectionDto> subsections = new ArrayList<ModelSectionDto>();
-	
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
-	private List<ModelViewDto> inViews = new ArrayList<ModelViewDto>();
 	
 	
 	public ModelSection toEntity(ModelSection section, ModelSectionDto sectionDto) {
@@ -48,6 +46,12 @@ public class ModelSectionDto {
 	public void setInitiativeId(String initiativeId) {
 		this.initiativeId = initiativeId;
 	}
+	public Boolean getIsTopModelSection() {
+		return isTopModelSection;
+	}
+	public void setIsTopModelSection(Boolean isTopModelSection) {
+		this.isTopModelSection = isTopModelSection;
+	}
 	public Boolean getIsSubsection() {
 		return isSubsection;
 	}
@@ -65,12 +69,6 @@ public class ModelSectionDto {
 	}
 	public void setParentSectionTitle(String parentSectionTitle) {
 		this.parentSectionTitle = parentSectionTitle;
-	}
-	public String getViewId() {
-		return viewId;
-	}
-	public void setViewId(String viewId) {
-		this.viewId = viewId;
 	}
 	public String getTitle() {
 		return title;
@@ -120,12 +118,5 @@ public class ModelSectionDto {
 	public void setInSections(List<ModelSectionDto> inSections) {
 		this.inSections = inSections;
 	}
-	public List<ModelViewDto> getInViews() {
-		return inViews;
-	}
-	public void setInViews(List<ModelViewDto> inViews) {
-		this.inViews = inViews;
-	}
-	
 	
 }

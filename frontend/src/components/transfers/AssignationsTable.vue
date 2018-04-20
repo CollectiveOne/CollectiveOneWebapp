@@ -64,15 +64,10 @@
 </template>
 
 <script>
-import UserAvatar from '@/components/user/UserAvatar.vue'
 import { tokensString, dateString } from '@/lib/common.js'
 
 export default {
   name: 'assignationsTable',
-
-  components: {
-    'app-user-avatar': UserAvatar
-  },
 
   props: {
     url: {

@@ -3,7 +3,7 @@
     <div v-if="!editing" class="w3-display-container show-container light-grey">
       <div v-if="isLoggedUser" class="edit-button w3-display-topright">
         <div @click="editing = true" class="w3-button w3-large">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
+          <i id="T_editProfileButton" class="fa fa-pencil" aria-hidden="true"></i>
         </div>
       </div>
       <div class="w3-row w3-center">
@@ -79,7 +79,7 @@
         </app-error-panel>
 
         <div class="w3-row">
-          <input v-model.trim="user.username" class="w3-border w3-round w3-hover-light-grey" placeholder="username (unique)" value="">
+          <input id="T_usernameProfileEdit" v-model.trim="user.username" class="w3-border w3-round w3-hover-light-grey" placeholder="username (unique)" value="">
         </div>
         <app-error-panel
           :show="usernameExist"
@@ -95,7 +95,7 @@
         </app-error-panel>
 
         <div class="w3-row w3-margin-top w3-margin-bottom">
-          <textarea v-model="user.shortBio" class="w3-input w3-border w3-round w3-hover-light-grey" rows="4" placeholder="short bio"></textarea>
+          <textarea id="T_bioProfileEdit" v-model="user.shortBio" class="w3-input w3-border w3-round w3-hover-light-grey" rows="4" placeholder="short bio"></textarea>
         </div>
         <app-error-panel
           :show="shortBioTooLarge"
@@ -103,7 +103,7 @@
         </app-error-panel>
 
         <div class="w3-row">
-          <input v-model.trim="user.twitterHandle" @focusout="checkTwitterHandle()"
+          <input  id="T_twitterProfileEdit"  v-model.trim="user.twitterHandle" @focusout="checkTwitterHandle()"
           class="w3-border w3-round w3-hover-light-grey" placeholder="twitter url" value="">
         </div>
         <app-error-panel
@@ -112,7 +112,7 @@
         </app-error-panel>
 
         <div class="w3-row w3-margin-top">
-          <input v-model.trim="user.facebookHandle" @focusout="checkFacebookHandle()"
+          <input  id="T_facebookProfileEdit"  v-model.trim="user.facebookHandle" @focusout="checkFacebookHandle()"
           class="w3-border w3-round w3-hover-light-grey" placeholder="facebook url" value="">
         </div>
         <app-error-panel
@@ -121,7 +121,7 @@
         </app-error-panel>
 
         <div class="w3-row w3-margin-top">
-          <input v-model.trim="user.linkedinHandle" @focusout="checkLinkedinHandle()"
+          <input id="T_linkedinProfileEdit" v-model.trim="user.linkedinHandle" @focusout="checkLinkedinHandle()"
           class="w3-border w3-round w3-hover-light-grey" placeholder="linkedin url" value="">
         </div>
         <app-error-panel
@@ -134,10 +134,10 @@
       <hr>
       <div class="bottom-btns-row w3-row-padding">
         <div class="w3-col m6">
-          <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
+          <button id="T_buttonCancelProfileEdit" type="button" class="w3-button app-button-light" @click="cancel()">Cancel</button>
         </div>
         <div class="w3-col m6">
-          <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+          <button  id="T_buttonAcceptProfileEdit" type="button" class="w3-button app-button" @click="accept()">Accept</button>
         </div>
       </div>
     </div>

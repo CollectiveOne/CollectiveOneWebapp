@@ -1,20 +1,21 @@
 <template lang="html">
   <div class="">
 
-    <button class="bell-button w3-button w3-padding-large w3-display-container w3-xlarge" title="Notifications"
+    <div class="bell-button w3-xlarge cursor-pointer"
       @click="showNotificationsClicked()">
 
-      <i class="fa fa-bell-o w3-display-center"></i>
+      <i class="fa fa-bell-o"></i>
       <i v-if="numberOfUnreadNotifications > 0" class="fa fa-circle w3-display-topright circle">
         <span class="circle-text w3-display-middle">{{ numberOfUnreadNotifications }}</span>
       </i>
-    </button>
+    </div>
 
     <div v-show="showTable"
       v-click-outside="clickOutsideNotifications"
       class="notifications-container w3-white w3-card-4 w3-bar-block w3-center">
       <app-activity-table :activities="activities"></app-activity-table>
       <button v-if="!allShown"
+        id="T_showMoreButton" 
         @click="showMore()"
         class="w3-margin-top w3-margin-bottom w3-button app-button-light" type="button" name="button">show more...</button>
     </div>
@@ -150,7 +151,14 @@ export default {
 <style scoped>
 
 .bell-button {
-  height: 64px;
+  width: 50px;
+  height: 50px;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.bell-button:hover {
+  background-color: #cfcfcf;
 }
 
 .fa-bell-o {

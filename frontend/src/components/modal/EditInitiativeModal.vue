@@ -36,7 +36,7 @@
 
           <div class="w3-row w3-margin-top">
             <label class=""><b>Name</b></label>
-            <input v-model="newInitiative.meta.name"
+            <input  id="T_nameInputEdit" v-model="newInitiative.meta.name"
               class="w3-input w3-hover-light-grey"
               :class="{ 'error-input' : nameErrorShow }"
               type="text">
@@ -53,7 +53,7 @@
 
           <div class="w3-row">
             <label class=""><b>Purpose</b></label>
-            <app-markdown-editor v-model="newInitiative.meta.driver"></app-markdown-editor>
+            <app-markdown-editor id="T_purposeInputEdit" v-model="newInitiative.meta.driver"></app-markdown-editor>
             <app-error-panel
               :show="driverEmptyShow"
               message="please set a purpose for the initiative">
@@ -83,12 +83,12 @@
                     VISION:
                   </div>
                   <div class="w3-col m8">
-                    <button class="w3-left w3-button"
+                    <button id="T_disableVisionButton" class="w3-left w3-button"
                       :class="{ 'app-button': !newInitiative.meta.modelEnabled, 'app-button-light': newInitiative.meta.modelEnabled }"
                       @click="newInitiative.meta.modelEnabled = false">
                       disable
                     </button>
-                    <button class="w3-left w3-button app-button"
+                    <button id="T_enableVisionButton" class="w3-left w3-button app-button"
                       :class="{ 'app-button': newInitiative.meta.modelEnabled, 'app-button-light': !newInitiative.meta.modelEnabled }"
                       @click="newInitiative.meta.modelEnabled = true">
                       enable
@@ -131,28 +131,36 @@
             <div class="w3-col s12">
               <div class="w3-row w3-margin-top modules-row">
                   <div class="w3-col s4">
-                    <button class="w3-left w3-button"
+                    <button 
+                      id="T_private_visibilityButton"
+                      class="w3-left w3-button"
                       :class="{ 'app-button': isPrivate, 'app-button-light': !isPrivate }"
                       @click="newInitiative.meta.visibility = 'PRIVATE'">
                       private
                     </button>
                   </div>
                   <div class="w3-col s4">
-                    <button class="w3-left w3-button"
+                    <button 
+                      id="T_ecosystem_visibilityButton"
+                      class="w3-left w3-button"
                       :class="{ 'app-button': isEcosystem, 'app-button-light': !isEcosystem }"
                       @click="newInitiative.meta.visibility = 'ECOSYSTEM'">
                       ecosystem
                     </button>
                   </div>
                   <div v-if="isSubinitiative" class="w3-col s4">
-                    <button class="w3-left w3-button"
+                    <button
+                      id="T_inherited_visibilityButton"
+                      class="w3-left w3-button"
                       :class="{ 'app-button': isInherited, 'app-button-light': !isInherited }"
                       @click="newInitiative.meta.visibility = 'INHERITED'">
                       inherited
                     </button>
                   </div>
                   <div class="w3-col s4">
-                    <button class="w3-left w3-button"
+                    <button
+                      id="T_public_visibilityButton"
+                      class="w3-left w3-button"
                       :class="{ 'app-button': isPublic, 'app-button-light': !isPublic }"
                       @click="newInitiative.meta.visibility = 'PUBLIC'">
                       public
@@ -168,13 +176,13 @@
               <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button type="button" id="T_acceptButtonEditInitiative" class="w3-button app-button" @click="accept()">Accept</button>
             </div>
           </div>
 
           <hr>
           <div class="w3-row w3-center w3-margin-bottom delete-row">
-            <button type="button" class="w3-left w3-button app-button-danger" @click="deleteInitiativeSelected = true">Delete Initiative</button>
+            <button  id="T_deleteInitiativeButton" type="button" class="w3-left w3-button app-button-danger" @click="deleteInitiativeSelected = true">Delete Initiative</button>
           </div>
           <div class="slider-container">
             <transition name="slideDownUp">
@@ -188,10 +196,12 @@
                 </div>
 
                 <button
+                  id="T_cancelDeleteInitiativeButton"
                   class="w3-button app-button-light button-pair"
                   @click="deleteInitiativeSelected = false">cancel
                 </button>
                 <button
+                  id="T_confirmDeleteInitiativeButton"
                   class="w3-button app-button-danger button-pair"
                   @click="deleteInitiative()">confirm
                 </button>
@@ -324,7 +334,7 @@ export default {
       }
     },
     closeThis () {
-      this.$store.commit('showEditInitiativeModal', false)
+      this.$emit('close')
     },
     accept () {
       var ok = true

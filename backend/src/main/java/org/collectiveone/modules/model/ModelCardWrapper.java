@@ -8,10 +8,9 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -20,8 +19,8 @@ import javax.persistence.Table;
 import org.collectiveone.modules.conversations.MessageThread;
 import org.collectiveone.modules.governance.CardLike;
 import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
+import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -38,16 +37,6 @@ public class ModelCardWrapper {
 	@ManyToOne
 	private Initiative initiative;
 	
-	@Column(name = "state_control")
-	private Boolean stateControl;
-	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "state")
-	private ModelCardState state;
-	
-	@Column(name = "targetDate")
-	private Timestamp targetDate;
-	
 	@OneToOne(cascade = CascadeType.ALL)
 	private ModelCard card;
 	
@@ -60,6 +49,15 @@ public class ModelCardWrapper {
 	@OneToMany(mappedBy="cardWrapper")
 	private List<CardLike> likes;
 	
+	private Timestamp creationDate;
+	
+	@ManyToOne
+	private AppUser creator;
+	
+	private Timestamp lastEdited;
+	
+	@ManyToMany
+	private List<AppUser> editors = new ArrayList<AppUser>();
 	
 	@Override
 	public int hashCode() {
@@ -87,26 +85,18 @@ public class ModelCardWrapper {
 		
 		cardWrapperDto.setId(id.toString());
 		cardWrapperDto.setCard(card.toDto());
-		cardWrapperDto.setStateControl(stateControl);
-		if (state != null) cardWrapperDto.setState(state.toString());
-		if (initiative != null) cardWrapperDto.setInitiativeId(initiative.getId().toString());
-		if (targetDate != null) cardWrapperDto.setTargetDate(targetDate.getTime());
-		
-		return cardWrapperDto;
-	}
-	
-	public void setOtherProperties(ModelCardDto cardDto) {
-		if (cardDto.getStateControl() != null) {
-			if (cardDto.getStateControl()) {
-				setStateControl(cardDto.getStateControl());
-				setState(ModelCardState.valueOf(cardDto.getState()));
-			} else {
-				setStateControl(cardDto.getStateControl());
+		cardWrapperDto.setInitiativeId(initiative.getId().toString());
+		if (creator != null) cardWrapperDto.setCreator(creator.toDtoLight());
+		if (creationDate != null) cardWrapperDto.setCreationDate(creationDate.getTime());
+		if (lastEdited != null) cardWrapperDto.setLastEdited(lastEdited.getTime());
+		if (editors != null) {
+			for (AppUser editor : editors) {
+				cardWrapperDto.getEditors().add(editor.toDtoLight());
 			}
 		}
 		
-		if (cardDto.getTargetDate() != null) setTargetDate(new Timestamp(cardDto.getTargetDate()));
-	}	
+		return cardWrapperDto;
+	}
 	
 	public UUID getId() {
 		return id;
@@ -140,30 +130,6 @@ public class ModelCardWrapper {
 		this.oldVersions = oldVersions;
 	}
 	
-	public Boolean getStateControl() {
-		return stateControl;
-	}
-
-	public void setStateControl(Boolean stateControl) {
-		this.stateControl = stateControl;
-	}
-	
-	public ModelCardState getState() {
-		return state;
-	}
-
-	public void setState(ModelCardState state) {
-		this.state = state;
-	}
-
-	public Timestamp getTargetDate() {
-		return targetDate;
-	}
-
-	public void setTargetDate(Timestamp targetDate) {
-		this.targetDate = targetDate;
-	}
-
 	public MessageThread getMessageThread() {
 		return messageThread;
 	}
@@ -179,6 +145,37 @@ public class ModelCardWrapper {
 	public void setLikes(List<CardLike> likes) {
 		this.likes = likes;
 	}
+
+	public Timestamp getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Timestamp creationDate) {
+		this.creationDate = creationDate;
+	}
 	
+	public AppUser getCreator() {
+		return creator;
+	}
+
+	public void setCreator(AppUser creator) {
+		this.creator = creator;
+	}
+
+	public Timestamp getLastEdited() {
+		return lastEdited;
+	}
+
+	public void setLastEdited(Timestamp lastEdited) {
+		this.lastEdited = lastEdited;
+	}
+
+	public List<AppUser> getEditors() {
+		return editors;
+	}
+
+	public void setEditors(List<AppUser> editors) {
+		this.editors = editors;
+	}
 	
 }

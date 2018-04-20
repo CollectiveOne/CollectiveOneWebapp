@@ -25,7 +25,6 @@ import org.collectiveone.modules.assignations.Receiver;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelSection;
-import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
@@ -446,15 +445,11 @@ public class EmailService {
 		Assignation assignation = notification.getActivity().getAssignation();
 		InitiativeTransfer transfer = notification.getActivity().getInitiativeTransfer();
 		
-		ModelView modelView = notification.getActivity().getModelView();
 		ModelSection modelSection = notification.getActivity().getModelSection();
 		ModelCardWrapper modelCardWrapper = notification.getActivity().getModelCardWrapper();
 		
 		ModelSection onSection = notification.getActivity().getOnSection();
-		ModelView onView = notification.getActivity().getOnView();
-		
 		ModelSection fromSection = notification.getActivity().getFromSection();
-		ModelView fromView = notification.getActivity().getFromView();
 		
 		String message = "";
 		
@@ -570,23 +565,11 @@ public class EmailService {
 				" of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() + 
 				" with motive: " + assignation.getMotive() + ". No tokens have or will be transferred.</p> ";
 			
-		case MODEL_VIEW_CREATED:
-			return "<p>created a new model view named " + getModelViewAnchor(modelView) + "</p> ";
-			
-		case MODEL_VIEW_EDITED:
-			return "<p>edited the model " + getModelViewAnchor(modelView) + " view</p> ";
-			
-		case MODEL_VIEW_DELETED:
-			return "<p>deleted the model " + getModelViewAnchor(modelView) + " view</p> ";
-			
 		case MODEL_SECTION_CREATED:
 			if (onSection != null) {
 				message = "<p>created a new section " + getModelSectionAnchor(modelSection) + 
 						" under section " + getModelSectionAnchor(onSection) + "</p> ";
-			} else {
-				message = "<p>created a new section " + getModelSectionAnchor(modelSection) + 
-						" under the " + getModelViewAnchor(onView) + " view</p> ";
-			}							
+			} 						
 			return message;
 			
 		case MODEL_SECTION_EDITED:
@@ -609,10 +592,8 @@ public class EmailService {
 			if (onSection != null) {
 				message = "<p>added the section " + getModelSectionAnchor(modelSection) + 
 						" as sub-section of " + getModelSectionAnchor(onSection) + "</p> ";
-			} else {
-				message = "<p>added the section " + getModelSectionAnchor(modelSection) + 
-						" under the " + getModelViewAnchor(onView) + " view</p> ";
-			}							
+			} 
+			
 			return message;
 			
 		case MODEL_SECTION_MOVED:
@@ -621,32 +602,15 @@ public class EmailService {
 					message = "<p>moved the section " + getModelSectionAnchor(modelSection) + 
 							" from section " + getModelSectionAnchor(fromSection) + 
 							" to section " + getModelSectionAnchor(onSection) + "</p> ";
-				} else {
-					message = "<p>moved the section " + getModelSectionAnchor(modelSection) + 
-							" from view " + getModelViewAnchor(fromView) + 
-							" to section " + getModelSectionAnchor(onSection) + "</p> ";
 				}
 				
-			} else {
-				if (fromSection != null) {
-					message = "<p>moved the section " + getModelSectionAnchor(modelSection) + 
-							" from section " + getModelSectionAnchor(fromSection) + 
-							" to the " + getModelViewAnchor(onView) + "view</p> ";
-				} else {
-					message = "<p>moved the section " + getModelSectionAnchor(modelSection) + 
-							" from view " + getModelViewAnchor(fromView) + 
-							" to the " + getModelViewAnchor(onView) + " view</p> ";
-				}
-			}		
+			}	
 			return message;
 			
 		case MODEL_SECTION_REMOVED:
 			if (fromSection != null) {
 				message = "<p>removed the section " + getModelSectionAnchor(modelSection) + 
 						" from section " + getModelSectionAnchor(fromSection) + "</p> ";
-			} else {
-				message = "<p>removed the section " + getModelSectionAnchor(modelSection) + 
-						" from the " + getModelSectionAnchor(fromSection) + " view</p> ";
 			}
 			return message;
 			
@@ -711,12 +675,6 @@ public class EmailService {
 		} else {
 			return "";
 		}
-	}
-	
-	private String getModelViewAnchor(ModelView view) {
-		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
-				view.getInitiative().getId().toString() + "/model/view/" + 
-				view.getId().toString() + ">" + view.getTitle() + "</a>";
 	}
 	
 	private String getModelSectionAnchor(ModelSection section) {

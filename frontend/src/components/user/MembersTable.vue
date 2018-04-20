@@ -19,7 +19,7 @@
         <div class="w3-col m5">
           <div class="w3-row-padding">
             <div class="w3-col s8 w3-center">
-              <select class="role-select w3-select w3-round" v-model="newMember.role">
+              <select id="T_memberRoleDropDown" class="role-select w3-select w3-round" v-model="newMember.role">
                 <option value="" disabled>Choose role</option>
                 <option value="ADMIN">ADMIN</option>
                 <option value="EDITOR">EDITOR</option>
@@ -27,7 +27,7 @@
               </select>
             </div>
             <div class="w3-col s4 w3-center">
-              <button type="button" class="add-btn w3-button app-button" @click="add()">add</button>
+              <button id="T_addButton" type="button" class="add-btn w3-button app-button" @click="add()">add</button>
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@
             <td class="avatar-col">
               <app-user-avatar :user="member.user" :showName="false"></app-user-avatar>
             </td>
-            <td>{{ member.user.nickname }}</td>
+            <td id="T_username">{{ member.user.nickname }}</td>
             <td v-for="asset in assets">
               {{ ownedOfThisAsset(asset, member) }}
             </td>
@@ -67,14 +67,16 @@
                 </span>
               </p>
             </td>
-            <td v-if="isLoggedAnAdmin">
-              <i v-if="!removingThisMember(member)"
+            <td v-if="isLoggedAnAdmin" id="T_deleteUser">
+              <i 
+                id="T_peopleDeleteIcon" 
+                v-if="!removingThisMember(member)"
                 @click="removeMember(member)"
                 class="fa fa-times-circle-o w3-xlarge gray-1-color w3-button" aria-hidden="true">
               </i>
               <div v-else class="">
-                <button @click="removeMemberCancelled()" class="w3-button app-button-light">Cancel Delete</button>
-                <button @click="removeMemberConfirmed()" class="w3-button app-button-danger">Confirm Delete</button>
+                <button id="T_cancelButton_DeletePople" @click="removeMemberCancelled()" class="w3-button app-button-light">Cancel Delete</button>
+                <button id="T_confirmButton_DeletePople" @click="removeMemberConfirmed()" class="w3-button app-button-danger">Confirm Delete</button>
               </div>
             </td>
             <td v-if="showLeaveCol">
@@ -97,12 +99,10 @@
 </template>
 
 <script>
-import UserAvatar from '@/components/user/UserAvatar.vue'
 import UserSelector from '@/components/user/UserSelector.vue'
 
 export default {
   components: {
-    'app-user-avatar': UserAvatar,
     'app-user-selector': UserSelector
   },
 

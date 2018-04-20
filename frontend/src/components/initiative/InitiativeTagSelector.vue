@@ -5,6 +5,7 @@
 
     <input  type="text"
             :id="id"
+            name="T_selectTagInputInitiative" 
             class="w3-input w3-hover-light-grey autocomplete-inputs"
             placeholder="select tag"
             v-model="type"
@@ -18,7 +19,7 @@
 
     <div class="w3-row" :class="(className ? className + '-list ' : '') + 'autocomplete transition autocomplete-list'" v-show="showList">
       <ul class="w3-border">
-        <li v-if="enableCreate" @click="$emit('create-new')" class="w3-button w3-center" style="width: 100%"><b>create new</b></li>
+        <li id="T_createNewSelectTag" v-if="enableCreate" @click="$emit('create-new')" class="w3-button w3-center" style="width: 100%"><b>create new</b></li>
         <hr class="hrz-line">
         <li v-for="(data, i) in json"
             transition="showAll"

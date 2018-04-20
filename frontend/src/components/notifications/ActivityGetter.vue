@@ -79,6 +79,10 @@ export default {
     contextElementId: {
       type: String,
       default: ''
+    },
+    levels: {
+      type: Number,
+      default: 1
     }
   },
 
@@ -87,7 +91,7 @@ export default {
       activities: [],
       currentPage: 0,
       allShown: false,
-      intervalId: null,
+      intervalIds: [],
       loading: false,
       loadingMore: false,
       connected: false
@@ -97,6 +101,12 @@ export default {
   watch: {
     triggerUpdate () {
       this.resetElements()
+    },
+    levels () {
+      this.getActivity('RESET')
+    },
+    url () {
+      this.getActivity('RESET')
     }
   },
 
@@ -132,7 +142,8 @@ export default {
         params: {
           page: askPage,
           size: 10,
-          onlyMessages: this.onlyMessages
+          onlyMessages: this.onlyMessages,
+          levels: this.levels
         }
       }).then((response) => {
         this.loading = false
@@ -155,10 +166,10 @@ export default {
 
             /* start polling after the first response */
             // if (this.polling) {
-            //   if (this.intervalId === null) {
-            //     this.intervalId = setInterval(() => {
+            //   if (this.intervalIds.length === 0) {
+            //     this.intervalIds.push(setInterval(() => {
             //       this.getActivity('UPDATE')
-            //     }, 5000)
+            //     }, 5000))
             //   }
             // }
             break
@@ -237,7 +248,9 @@ export default {
   },
 
   beforeDestroy () {
-    clearInterval(this.intervalId)
+    this.intervalIds.forEach((id) => {
+      clearInterval(id)
+    })
   }
 
 }

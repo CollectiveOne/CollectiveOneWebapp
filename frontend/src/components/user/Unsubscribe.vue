@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="slider-container">
     <transition name="slideDownUp">
-      <div v-if="show"class="w3-panel w3-padding light-grey">
+      <div v-if="show" class="w3-panel w3-padding light-grey">
         <h3>{{ message }}</h3>
       </div>
     </transition>

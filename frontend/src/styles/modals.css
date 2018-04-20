@@ -1,7 +1,10 @@
 .w3-modal {
   padding-top: 30px;
   display: block;
-  z-index: 100;
+  z-index: 2;
+  color: black;
+  text-align: left;
+  font-size: 15px;
 }
 
 .w3-modal-content {

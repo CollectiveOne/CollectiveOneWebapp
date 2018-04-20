@@ -7,6 +7,7 @@
     </div>
     <div class="w3-col s10">
       <input  type="text"
+              id="T_selectMemberTransferModal" 
               class="w3-input w3-hover-light-grey autocomplete-inputs"
               placeholder="select member"
               v-model="type"
@@ -38,14 +39,8 @@
 
 
 <script>
-import UserAvatar from './UserAvatar.vue'
-
 export default {
   name: 'member-selector',
-
-  components: {
-    'app-user-avatar': UserAvatar
-  },
 
   props: {
     members: Array,
@@ -123,7 +118,9 @@ export default {
       }
 
       // Callback Event
-      this.onInput ? this.onInput(val) : null
+      if (this.onInput) {
+        this.onInput(val)
+      }
     },
 
     showAll () {
@@ -138,7 +135,9 @@ export default {
 
       setTimeout(() => {
         // Callback Event
-        this.onHide ? this.onHide() : null
+        if (this.onHide) {
+          this.onHide()
+        }
 
         this.showList = false
       }, 250)
@@ -148,7 +147,9 @@ export default {
       this.focusList = 0
 
       // Callback Event
-      this.onFocus ? this.onFocus(e) : null
+      if (this.onFocus) {
+        this.onFocus(e)
+      }
 
       // Show when seleceted
       this.showAll()

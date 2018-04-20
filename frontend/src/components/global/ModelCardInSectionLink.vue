@@ -1,6 +1,6 @@
 <template lang="html">
   <router-link :to="{
-    name: 'ModelCardInSection',
+    name: 'ModelSectionCard',
     params: {
       'initiativeId': this.cardWrapper.initiativeId,
       'sectionId': this.onSection ? this.onSection.id : '',

@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="thread-container w3-display-container">
-    <div id="history-container" class="w3-row history-container w3-border">
+    <div id="history-container" class="w3-row history-container w3-border" >
       <app-activity-getter
         :url="url"
         :reverse="true"
@@ -10,6 +10,7 @@
         :polling="true"
         :triggerUpdate="triggerUpdate"
         :contextElementId="contextElementId"
+        :levels="levels"
         @updated="scrollToBottom()"
         @last-activity="lastActivityReceived($event)"
         @edit-message="editMessage($event)"
@@ -81,6 +82,10 @@ export default {
     onlyMessagesInit: {
       type: Boolean,
       defaul: false
+    },
+    levels: {
+      type: Number,
+      default: 1
     }
   },
 
@@ -118,16 +123,9 @@ export default {
         return false
       }
     },
-    replyingToActivityInView () {
-      if (this.replyingToActivity) {
-        return this.replyingToActivity.modelView !== null
-      } else {
-        return false
-      }
-    },
     replyingToActivityInInitiative () {
       if (this.replyingToActivity) {
-        return !this.replyingToActivityInView && !this.replyingToActivityInSection && !this.replyingToActivityInCard
+        return !this.replyingToActivityInSection && !this.replyingToActivityInCard
       } else {
         return false
       }
@@ -138,9 +136,6 @@ export default {
       }
       if (this.replyingToActivityInSection) {
         return this.replyingToActivity.modelSection.title + ' section'
-      }
-      if (this.replyingToActivityInView) {
-        return this.replyingToActivity.modelView.title + ' view'
       }
       if (this.replyingToActivityInInitiative) {
         return this.replyingToActivity.initiative.meta.name + ' initiative'
@@ -194,10 +189,6 @@ export default {
             contextType = 'MODEL_SECTION'
             contextElementId = this.replyingToActivity.modelSection.id
           }
-          if (this.replyingToActivityInView) {
-            contextType = 'MODEL_VIEW'
-            contextElementId = this.replyingToActivity.modelView.id
-          }
           if (this.replyingToActivityInInitiative) {
             contextType = 'INITIATIVE'
             contextElementId = this.replyingToActivity.initiative.id
@@ -244,11 +235,8 @@ export default {
     }
   },
 
-  created () {
-    this.showOnlyMessages = this.onlyMessagesInit
-  },
-
   mounted () {
+    this.showOnlyMessages = this.onlyMessagesInit
     this.scrollToBottom()
     window.addEventListener('keydown', this.atKeydown)
   },
@@ -284,8 +272,12 @@ export default {
 }
 
 .tooltip .tooltiptext {
-    top: 8%;
-    right: 105%;
+  top: 8%;
+  right: 105%;
+}
+
+.only-messages-button button {
+  background-color: rgba(21, 165, 204, 0.4) !important;
 }
 
 </style>
