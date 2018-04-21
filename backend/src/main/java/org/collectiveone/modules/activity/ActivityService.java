@@ -16,6 +16,7 @@ import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.dto.NotificationDto;
 import org.collectiveone.modules.activity.dto.SubscriberDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
+import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.NotificationContextType;
 import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.enums.SubscriberEmailNowConfig;
@@ -29,9 +30,11 @@ import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.activity.repositories.NotificationRepositoryIf;
 import org.collectiveone.modules.activity.repositories.SubscriberRepositoryIf;
 import org.collectiveone.modules.assignations.Assignation;
+
 import org.collectiveone.modules.conversations.Message;
 import org.collectiveone.modules.conversations.MessageService;
 import org.collectiveone.modules.conversations.MessageThreadContextType;
+
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.Member;
@@ -49,7 +52,9 @@ import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.collectiveone.modules.users.UserOnlineStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -89,6 +94,10 @@ public class ActivityService {
 	@Autowired
 	private ModelCardWrapperRepositoryIf modelCardWrapperRepository;
 	
+	
+	
+	@Autowired
+	SimpMessagingTemplate template;
 	
 	@Transactional
 	public void sendWantToContributeEmails() throws IOException {
@@ -1015,6 +1024,43 @@ public class ActivityService {
 		for (Initiative parent : parents) {
 			allSubcribers.addAll(subscriberRepository.findByElementId(parent.getId()));
 		}
+	}
+	
+	public void broadcastMessage ( UUID elementId, MessageThreadContextType contextType) {
+		List<UUID> sectionIds;
+		GraphNode sectionGraph;
+		GetResult<Page<ActivityDto>> activities;
+		if(contextType == MessageThreadContextType.MODEL_SECTION) {
+			// get all sections of this 
+			//sectionIds = modelCardWrapperRepository.findParentSectionsIds(elementId);
+			sectionGraph = modelService.getSectionNode(elementId, true, false, null);
+			sectionIds = sectionGraph.toList(true, false);
+			
+			for (UUID id : sectionIds) {
+		    		activities= modelService.getActivityResultUnderSection(id, new PageRequest(0, 10), false, null);
+		        template.convertAndSend("/topic/messages/" + id, activities);
+		    }
+
+			
+		}
+		else {
+			sectionIds = new ArrayList<UUID>();
+			
+			//get activities of card itself and pass to its own thread window
+			activities= modelService.getActivityResultUnderCard(elementId, new PageRequest(0, 10), false);
+			template.convertAndSend("/topic/messages/" + elementId, activities);
+			
+			//now get all sections for that card where it contains
+			List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(elementId);
+			
+			for (ModelSection section : inSections) {
+				activities= modelService.getActivityResultUnderSection(section.getId(), new PageRequest(0, 10), false, null);
+		        template.convertAndSend("/topic/messages/" + section.getId(), activities);
+			}
+		}
+
+		   
+	    
 	}
 	
 }
