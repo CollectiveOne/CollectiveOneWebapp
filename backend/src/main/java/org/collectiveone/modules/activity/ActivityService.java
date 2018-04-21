@@ -1036,12 +1036,6 @@ public class ActivityService {
 			sectionGraph = modelService.getSectionNode(elementId, true, false, null);
 			sectionIds = sectionGraph.toList(true, false);
 			
-			for (UUID id : sectionIds) {
-		    		activities= modelService.getActivityResultUnderSection(id, new PageRequest(0, 10), false, null);
-		        template.convertAndSend("/topic/messages/" + id, activities);
-		    }
-
-			
 		}
 		else {
 			sectionIds = new ArrayList<UUID>();
@@ -1054,10 +1048,15 @@ public class ActivityService {
 			List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(elementId);
 			
 			for (ModelSection section : inSections) {
-				activities= modelService.getActivityResultUnderSection(section.getId(), new PageRequest(0, 10), false, null);
-		        template.convertAndSend("/topic/messages/" + section.getId(), activities);
+				sectionIds.add(section.getId());
 			}
 		}
+		
+		
+		for (UUID id : sectionIds) {
+	    		activities= modelService.getActivityResultUnderSection(id, new PageRequest(0, 10), false, null);
+	        template.convertAndSend("/topic/messages/" + id, activities);
+	    }
 
 		   
 	    
