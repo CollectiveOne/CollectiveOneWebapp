@@ -98,10 +98,6 @@
        </button>
      </div>
 
-     <div v-if="$store.state.user.authenticated" class="nots-div w3-right">
-       <app-notifications-list></app-notifications-list>
-     </div>
-
      <router-link :to="{ name: 'Landing'}"><i class="w3-right w3-xlarge info-button fa fa-info-circle"></i></router-link>
 
      <router-link v-if="inInitiative" :to="{name: 'InitiativesHome'}" class="w3-right logo-container noselect cursor-pointer">
@@ -115,12 +111,10 @@
 
 <script>
 import InitiativeControlButtons from '@/components/initiative/InitiativeControlButtons.vue'
-import NotificationsList from '@/components/notifications/NotificationsList.vue'
 
 export default {
   components: {
-    'app-initiative-control-buttons': InitiativeControlButtons,
-    'app-notifications-list': NotificationsList
+    'app-initiative-control-buttons': InitiativeControlButtons
   },
 
   props: {

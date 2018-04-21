@@ -35,4 +35,7 @@ public interface ModelCardWrapperRepositoryIf extends CrudRepository<ModelCardWr
 	@Query("SELECT edt FROM ModelCardWrapper crdWrp JOIN crdWrp.editors edt WHERE crdWrp.id = ?1 AND edt.id = ?2")
 	public AppUser findEditor(UUID cardWrapperId, UUID editorId);
 	
+	@Query("SELECT DISTINCT crd.id FROM ModelSection sec JOIN sec.cardsWrappers crd WHERE sec.id IN ?1")
+	public List<UUID> findAllCardsIdsOfSections(List<UUID> sectionId);
+	
 }

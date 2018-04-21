@@ -226,6 +226,9 @@ public class ModelService {
 		if (beforeSubsectionId != null) {
 			ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
 			int index = toSection.getSubsections().indexOf(beforeSubsection);
+			if (index < 0) {
+				return new PostResult("error", "error while moving section", subSection.getId().toString());
+			}
 			toSection.getSubsections().add(index, subSection);
 		} else {
 			toSection.getSubsections().add(subSection);
@@ -665,9 +668,10 @@ public class ModelService {
 		/* this node is one level */
 		levels = levels != null ? levels - 1 : null;
 		
+		/* look for neighbors if input level was 2 or larger */
 		Boolean this_neighbors = false;
 		if (levels != null) {
-			if (levels > 0) {
+			if (levels >= 1) {
 				this_neighbors = true; 
 			}
 		} else {
@@ -677,32 +681,13 @@ public class ModelService {
 		/* children are one more level */
 		if (this_neighbors) {
 			
-			/* logic to see if recurse moved here because is common to parent
-			 * and children */
-			Boolean recurse = false;
-			if (levels != null) {
-				if (levels > 2) {
-					recurse = true; 
-				}
-			} else {
-				recurse = true;
-			}
-			
 			if (addParents) {
 				List<UUID> parents = modelSectionRepository.findParentSectionsIds(sectionId);
 				
 				for (UUID inSectionId : parents) {
 					if (!readIds.contains(inSectionId)) {
 						GraphNode parentNode = null;
-						if (recurse) {
-							/* recursive call to search for parent parents*/
-							parentNode = getSectionNodeRec(inSectionId, addParents, false, levels != null ? levels - 1 : null, readIds);	
-						} else {
-							readIds.add(inSectionId);
-							parentNode = new GraphNode();
-							parentNode.setElementId(inSectionId);
-						}
-						
+						parentNode = getSectionNodeRec(inSectionId, addParents, false, levels, readIds);	
 						node.getParents().add(parentNode);
 						
 					} else {
@@ -720,15 +705,7 @@ public class ModelService {
 				for (UUID subSectionId : children) {
 					if (!readIds.contains(subSectionId)) {
 						GraphNode childrenNode = null;
-						if (recurse) {
-							/* recursive call to search for parent parents*/
-							childrenNode = getSectionNodeRec(subSectionId, false, addChildren, levels != null ? levels - 1 : null, readIds);	
-						} else {
-							readIds.add(subSectionId);
-							childrenNode = new GraphNode();
-							childrenNode.setElementId(subSectionId);
-						}
-						
+						childrenNode = getSectionNodeRec(subSectionId, false, addChildren, levels, readIds);	
 						node.getChildren().add(childrenNode);
 						
 					} else {
@@ -738,7 +715,6 @@ public class ModelService {
 						node.getChildren().add(repeatedNode);
 					}
 				}
-				
 			}
 		}
 		
@@ -771,22 +747,18 @@ public class ModelService {
 	public Page<Activity> getActivityUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages, Integer level) {
 		
 		List<UUID> allSectionIds = getAllSubsectionsIds(sectionId, level);
-		List<UUID> cardsIds = allSectionIds.size() > 0 ? modelCardRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
+		List<UUID> cardsIds = allSectionIds.size() > 0 ? modelCardWrapperRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
+		
+		if (cardsIds.size() == 0) {
+			cardsIds.add(UUID.randomUUID());
+		}
 		
 		Page<Activity> activities = null;
 		
 		if (!onlyMessages) {
-			if (cardsIds.size() > 0) {
-				activities = activityRepository.findOfSectionsAndCards(allSectionIds, cardsIds, page);	
-			} else {
-				activities = activityRepository.findOfSections(allSectionIds, page);
-			}
+			activities = activityRepository.findOfSectionsOrCards(allSectionIds, cardsIds, page);	
 		} else {
-			if (cardsIds.size() > 0) {
-				activities = activityRepository.findOfSectionsAndCardsAndType(allSectionIds, cardsIds, ActivityType.MESSAGE_POSTED, page);	
-			} else {
-				activities = activityRepository.findOfSectionsAndType(allSectionIds, ActivityType.MESSAGE_POSTED, page);
-			}
+			activities = activityRepository.findOfSectionsOrCardsAndType(allSectionIds, cardsIds, ActivityType.MESSAGE_POSTED, page);	
 		}
 			
 		return activities;
@@ -810,10 +782,16 @@ public class ModelService {
 	@Transactional
 	public Page<Activity> getActivityUnderCard (UUID cardWrapperId, PageRequest page, Boolean onlyMessages) {
 		Page<Activity> activities = null;
+		List<UUID> dum = new ArrayList<UUID>();
+		List<UUID> cardIds = new ArrayList<UUID>();
+		
+		dum.add(UUID.randomUUID());
+		cardIds.add(cardWrapperId);
+		
 		if (!onlyMessages) {
-			activities = activityRepository.findOfCard(cardWrapperId, page);
+			activities = activityRepository.findOfSectionsOrCards(dum, cardIds, page);
 		} else {
-			activities = activityRepository.findOfCardAndType(cardWrapperId, ActivityType.MESSAGE_POSTED, page);
+			activities = activityRepository.findOfSectionsOrCardsAndType(dum, cardIds, ActivityType.MESSAGE_POSTED, page);
 		}
 		return activities;
 	}

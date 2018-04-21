@@ -1,23 +1,34 @@
 <template lang="html">
   <div class="">
 
-    <div class="bell-button w3-xlarge cursor-pointer"
+    <div v-if="notifications.length > 0" class="bell-button cursor-pointer w3-display-container"
       @click="showNotificationsClicked()">
-
-      <i class="fa fa-bell-o"></i>
-      <i v-if="numberOfUnreadNotifications > 0" class="fa fa-circle w3-display-topright circle">
-        <span class="circle-text w3-display-middle">{{ numberOfUnreadNotifications }}</span>
-      </i>
+      <i class="fa fa-circle circle"></i>
     </div>
 
     <div v-show="showTable"
       v-click-outside="clickOutsideNotifications"
-      class="notifications-container w3-white w3-card-4 w3-bar-block w3-center">
+      class="notifications-container w3-white w3-card-4 w3-bar-block">
+      <div class="w3-row-padding w3-border-bottom">
+        <div class="w3-col s8 text-div">
+          {{ notifications.length }} new events under {{ section.title }}
+        </div>
+        <button class="w3-col s4 w3-margin-top w3-margin-bottom w3-button app-button"
+          @click="notificationsRead()">
+          mark as read
+        </button>
+      </div>
+
       <app-activity-table :activities="activities"></app-activity-table>
-      <button v-if="!allShown"
-        id="T_showMoreButton"
-        @click="showMore()"
-        class="w3-margin-top w3-margin-bottom w3-button app-button-light" type="button" name="button">show more...</button>
+
+      <div class="w3-row w3-center">
+        <button v-if="!allShown"
+          id="T_showMoreButton"
+          @click="showMore()"
+          class="w3-margin-top w3-margin-bottom w3-button app-button-light" type="button" name="button">
+          show more...
+        </button>
+      </div>
     </div>
 
   </div>
@@ -32,10 +43,16 @@ export default {
     'app-activity-table': ActivityTable
   },
 
+  props: {
+    section: {
+      type: Object,
+      default: null
+    }
+  },
+
   data () {
     return {
       showTable: false,
-      preventClickOutside: true,
       notifications: [],
       currentPage: 0,
       showingMoreNotifications: false,
@@ -44,19 +61,29 @@ export default {
   },
 
   computed: {
+    contextType () {
+      return 'MODEL_SECTION'
+    },
+    contextElementId () {
+      return this.section.id
+    },
     activities () {
       return this.notifications.map(function (n) { return n.activity })
     },
-    numberOfUnreadNotifications () {
-      return this.notifications.filter((e) => {
-        return e.state === 'PENDING'
-      }).length
+    url () {
+      return '/1/notifications/' + this.contextType + '/' + this.contextElementId
+    },
+    triggerUpdateNotifications () {
+      return this.$store.state.support.triggerUpdateNotifications
     }
   },
 
   watch: {
-    '$store.state.user.triggerUpdateNotifications' () {
-      this.updateNotifications()
+    triggerUpdateNotifications () {
+      /* only update if there is notifications to be removed */
+      if (this.notifications.length > 0) {
+        this.updateNotifications()
+      }
     }
   },
 
@@ -64,15 +91,15 @@ export default {
     updateNotifications () {
       if (!this.showingMoreNotifications) {
         /* dont update if the user is scrolling down de notifications */
-        this.axios.get('/1/notifications', {
+        this.axios.get(this.url, {
           params: {
             page: 0,
             size: 10
           }
         }).then((response) => {
           /* check that new notifications arrived */
-          this.allShown = false
           this.notifications = response.data.data
+          this.allShown = this.notifications.length < 10
         }).catch(function (error) {
           console.log(error)
         })
@@ -81,7 +108,7 @@ export default {
 
     addNotifications () {
       this.showingMoreNotifications = true
-      this.axios.get('/1/notifications', {
+      this.axios.get(this.url, {
         params: {
           page: this.currentPage,
           size: 10
@@ -99,14 +126,15 @@ export default {
     },
 
     notificationsRead () {
-      /* notifications read */
-      if (this.$store.state.user.profile) {
-        this.axios.put('/1/notifications/read', {}).then((response) => {
+      this.axios.put(this.url + '/read', {
+        }).then((response) => {
+          /* check that new notifications arrived */
+          this.$store.commit('triggerUpdateNotifications')
           this.updateNotifications()
+          this.hide()
         }).catch(function (error) {
           console.log(error)
         })
-      }
     },
 
     showMore () {
@@ -136,52 +164,33 @@ export default {
     hide () {
       this.showTable = false
       this.showingMoreNotifications = false
-      if (!this.showingMoreNotifications) {
-        this.notificationsRead()
-      }
     },
     show () {
       this.showTable = true
-      this.updateNotifications()
     }
+  },
+
+  created () {
+    this.updateNotifications()
   }
 }
 </script>
 
 <style scoped>
 
+.text-div {
+  padding: 16px 12px;
+  text-align: right;
+}
+
 .bell-button {
-  width: 50px;
-  height: 50px;
-  padding: 8px 12px;
+  width: 30px;
   text-align: center;
-}
-
-.bell-button:hover {
-  background-color: #cfcfcf;
-}
-
-.fa-bell-o {
-  transform: rotate(30deg);
 }
 
 .circle {
-  margin-top: 8px;
-  margin-right: 10px;
-  color: rgb(249, 48, 48);
-  font-size: 20px;
-}
-
-.circle-text {
-  font-size: 12px;
-  font-weight: bold;
-  text-align: center;
-  color: white;
-}
-
-.number {
-  background-color: rgb(101, 172, 255);
-  font-weight: bold;
+  color: #b91414;
+  font-size: 10px;
 }
 
 .notifications-container {
@@ -190,11 +199,6 @@ export default {
   margin-left: -212px;
   max-height: calc(100vh - 80px);
   overflow-y: auto;
-}
-
-hr {
-  margin-top: 10px;
-  margin-bottom: 10px;
 }
 
 </style>

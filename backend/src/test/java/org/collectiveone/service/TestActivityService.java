@@ -49,11 +49,11 @@ public class TestActivityService extends AbstractTest {
         // clean up after each test method
     }
     
-    @Test
-    public void ifGetUserNotificationsWorks() {
-    		GetResult<List<NotificationDto>> notifications = activityService.getUserNotifications(UUID.fromString(this.userId), new PageRequest(1, 10));
-    		assertTrue(notifications.getResult().equals("success"));
-    }
+//    @Test
+//    public void ifGetUserNotificationsWorks() {
+//    		GetResult<List<NotificationDto>> notifications = activityService.getUserNotifications(UUID.fromString(this.userId), new PageRequest(1, 10));
+//    		assertTrue(notifications.getResult().equals("success"));
+//    }
 //    
 //    @Test
 //    public void ifGetSubscriberWorks() {

@@ -1,6 +1,6 @@
 ﻿---------------------------------------------------------
--- Make a partial dump of the database with the command below and fill a clean DB with it using \i,  migration script
--- /usr/bin/pg_dump --host ec2-54-83-11-247.compute-1.amazonaws.com --port 5432 --username "pmiyqtnfrstmst" --password --format plain --data-only --disable-triggers --exclude-table model_cards_wrapper --exclude-table model_views --exclude-table activity --exclude-table initiatives_model_views --exclude-table initiatives_model_views_trash --exclude-table model_views_sections --exclude-table model_views_sections_trash --exclude-table initiatives_other_tokens --exclude-table likes --verbose --file "/home/pepo/workspace/c1data/bk-062-base" "d20ec3jfi8l031"
+-- Make a partial dump of the database with the command below (after making a copy of the online DB in c1db-bk) and fill a clean DB with it using \i,  migration script
+-- /usr/bin/pg_dump --host localhost --port 5432 --username "postgres" --password --format plain --data-only --disable-triggers --exclude-table model_cards_wrapper --exclude-table model_views --exclude-table activity --exclude-table initiatives_model_views --exclude-table initiatives_model_views_trash --exclude-table model_views_sections --exclude-table model_views_sections_trash --exclude-table initiatives_other_tokens --exclude-table likes --verbose --file "/home/pepo/workspace/c1data/bk-068-base" "c1db-bk"
 -- THEN run the branch code to create the top level sections, 
 -- THEN run this script to fill the sections
 -- THEN make a CUSTOM dump of the contents with this command
@@ -78,6 +78,14 @@ UPDATE activity SET type = 'MODEL_SECTION_EDITED' WHERE type = 'MODEL_VIEW_EDITE
 UPDATE activity SET type = 'MODEL_SECTION_DELETED' WHERE type = 'MODEL_VIEW_DELETED';
 UPDATE activity SET type = 'MODEL_SECTION_MOVED' WHERE type = 'MODEL_VIEW_MOVED';
 
+-- Fill Subscribers
+INSERT INTO subscribers
+  (id, user_c1id, element_id, type)  
+SELECT 
+  id, user_c1id, element_id, type
+FROM masterschema.subscribers;
+
+-- Notifications table is lost
 
 --------------------------------------------------------
 -- DROP masterschema
