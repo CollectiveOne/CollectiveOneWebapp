@@ -1,6 +1,5 @@
 package org.collectiveone.modules.users;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
