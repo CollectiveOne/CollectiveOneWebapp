@@ -1070,12 +1070,12 @@ public class ActivityService {
 			
 			/* send messages to all of them */
 			for (UUID sectionId : allIncumbentSectionsIds) {
-	    		template.convertAndSend("/activty/model/section/" + sectionId, "UPDATE");
+	    		template.convertAndSend("/channel/activity/model/section/" + sectionId, "UPDATE");
 			}
 			
 			/* if activity on a card wrapper, also broadcast its own channel */
 			if (activity.getModelCardWrapper() != null) {
-				template.convertAndSend("/activty/model/card/" + activity.getModelCardWrapper().getId(), "UPDATE");
+				template.convertAndSend("/channel/activity/model/card/" + activity.getModelCardWrapper().getId(), "UPDATE");
 			}
 		}
 		

@@ -208,11 +208,11 @@ export default {
           let url = ''
           switch (this.contextType) {
             case 'MODEL_CARD':
-              url = '/activity/model/card/' + this.contextElementId
+              url = '/channel/activity/model/card/' + this.contextElementId
               break
 
             case 'MODEL_SECTION':
-              url = '/activity/model/section/' + this.contextElementId
+              url = '/channel/activity/model/section/' + this.contextElementId
               break
           }
 
