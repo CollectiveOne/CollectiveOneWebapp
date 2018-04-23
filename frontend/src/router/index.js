@@ -21,6 +21,7 @@ import ModelSectionMessages from '@/components/model/ModelSectionMessages.vue'
 import ModelSectionCards from '@/components/model/ModelSectionCards.vue'
 
 import UserProfilePage from '@/components/UserProfilePage.vue'
+import WSWebSocketDebugPage from '@/components/WebSocketDebugPage.vue'
 
 Vue.use(Router)
 
@@ -108,6 +109,11 @@ export default new Router({
           path: 'user/:userId',
           name: 'UserProfilePage',
           component: UserProfilePage
+        },
+        {
+          path: 'websocket',
+          name: 'WebSocketDebugPage',
+          component: WSWebSocketDebugPage
         }
       ]
     }
