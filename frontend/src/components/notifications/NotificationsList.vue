@@ -79,20 +79,22 @@ export default {
         this.axios.get('/1/user/notifications', {
           params: {
             page: 0,
-            size: 10
+            size: 10,
+            isHtml: false
           }
         }).then((response) => {
           /* check that new notifications arrived */
           this.allShown = false
           this.notifications = response.data.data
+          console.log(JSON.stringify(this.notifications[0]))
         }).then((response) => {
           /* add desktop notifications */
           for (var i = 0; i < this.notifications.length; i++) {
-            if (this.notifications[i].pushInfo.state === 'PENDING') {
+            if (this.notifications[i].pushState === 'PENDING') {
               this.pushNotifications.push({
-                pushMessage: this.notifications[i].pushInfo.message,
-                pushIcon: this.notifications[i].pushInfo.icon,
-                pushURL: this.notifications[i].pushInfo.url
+                pushMessage: this.notifications[i].message,
+                pushIcon: this.notifications[i].triggerUser.pictureUrl,
+                pushURL: this.notifications[i].url
               })
             }
           }
@@ -122,7 +124,8 @@ export default {
       this.axios.get('/1/user/notifications', {
         params: {
           page: this.currentPage,
-          size: 10
+          size: 10,
+          isHtml: false
         }
       }).then((response) => {
         /* check that new notifications arrived */

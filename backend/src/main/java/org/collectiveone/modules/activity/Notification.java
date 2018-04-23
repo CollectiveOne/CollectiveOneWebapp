@@ -51,18 +51,6 @@ public class Notification {
 	@Column(name = "push_state")
 	private NotificationPushState pushState;
 	
-	public NotificationDto toDto() {
-		NotificationDto dto = new NotificationDto();
-		
-		dto.setId(id.toString());
-		dto.setActivity(activity.toDto());
-		dto.setState(state.toString());
-		dto.setSubscriberUser(subscriber.getUser().toDtoLight());
-		dto.setSubscriberState(subscriber.getState().toString());
-		
-		return dto;
-	}
-	
 	public UUID getId() {
 		return id;
 	}
