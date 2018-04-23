@@ -179,20 +179,20 @@ export default {
             break
 
           case 'UPDATE':
-            this.remapActivities(response)
+            this.checkIfNewActivities(response.data.data.content)
             break
         }
       })
     },
-    remapActivities (response) {
+    checkIfNewActivities (activityList) {
       var newIx = 0
 
       if (this.activities.length > 0) {
         var latestId = this.activities[0].id
-        if (response.data.data.content.length > 0) {
-          if (response.data.data.content[newIx].id) {
-            while (response.data.data.content[newIx].id !== latestId) {
-              this.activities.splice(newIx, 0, response.data.data.content[newIx])
+        if (activityList.length > 0) {
+          if (activityList[newIx].id) {
+            while (activityList[newIx].id !== latestId) {
+              this.activities.splice(newIx, 0, activityList[newIx])
               newIx++
             }
             if (newIx > 0) {
