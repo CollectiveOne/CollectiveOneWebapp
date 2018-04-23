@@ -3,14 +3,10 @@ package org.collectiveone.modules.conversations;
 import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
-import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.model.ModelController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +23,6 @@ public class MessagesController extends BaseController {
 	
 	@Autowired
 	private InitiativeService initiativeService;
-	
-	@Autowired
-	SimpMessagingTemplate template;
 	
 	@Autowired
 	ModelController modelController;
@@ -56,10 +49,6 @@ public class MessagesController extends BaseController {
 		}
 		
 		PostResult result= messageService.postMessage(messageDto, getLoggedUserId(), contextType, elementId);
-		/* now get results */
-		GetResult<Page<ActivityDto>> activities= modelController.getActivityUnderCard(contextElementIdStr, 0, 10, false);
-		
-		template.convertAndSend("/topic/messages/"+contextElementIdStr, activities);
 		
 		return result;
 	}

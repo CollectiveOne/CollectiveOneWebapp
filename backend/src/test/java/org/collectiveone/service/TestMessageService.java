@@ -13,20 +13,13 @@ import org.collectiveone.modules.conversations.MessageThreadContextType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Transactional
 public class TestMessageService extends AbstractTest {
 	
-	
-	@Autowired
-	private MessageService messageService;
-	
 	MessageService messageServiceMock;
-
-	
 	
     @Before
     public void setUp() {

@@ -50,6 +50,7 @@ import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.collectiveone.modules.users.UserOnlineStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -89,6 +90,10 @@ public class ActivityService {
 	@Autowired
 	private ModelCardWrapperRepositoryIf modelCardWrapperRepository;
 	
+	
+	
+	@Autowired
+	SimpMessagingTemplate template;
 	
 	@Transactional
 	public void sendWantToContributeEmails() throws IOException {
@@ -758,14 +763,7 @@ public class ActivityService {
 		}
 	}
 	
-	private void addInitiativeActivityNotifications (Activity activity) {
-		
-		/* this method build the full list of subscribers and add a notification for each of them */
-		/* a separate set of user ids is used to make sure only one subscriber entity per user is added */
-		
-		Set<UUID> userIds = new HashSet<UUID>();
-		Set<Subscriber> subscribers = new HashSet<Subscriber>();
-		
+	private Boolean isInModel(Activity activity) {
 		Boolean isInModel = false;
 		/* subscribers are derived from the sections if activity is on a card or section*/
 		switch (activity.getType()) {
@@ -793,47 +791,77 @@ public class ActivityService {
 			default:
 				break;			
 		}
+		return isInModel;
+	}
+	
+	private void addInitiativeActivityNotifications (Activity activity) {
+		
+		createNotifications(activity);
+		
+		/* broadcast the event to connected websockets */
+		broadcastMessage(activity);
+	}
+	
+	private List<UUID> directlyAffectedSectionsIds(Activity activity) {
+		List<ModelSection> sections = null;
+		switch (activity.getType()) {
+			case MODEL_CARDWRAPPER_ADDED:
+			case MODEL_CARDWRAPPER_DELETED:
+			case MODEL_CARDWRAPPER_CREATED:
+			case MODEL_CARDWRAPPER_EDITED:
+			case MODEL_CARDWRAPPER_MOVED:
+			case MODEL_CARDWRAPPER_REMOVED:
+				
+				/* activity in cards is considered as occurring on the sections these card is placed*/
+				sections = modelCardWrapperRepository.findParentSections(activity.getModelCardWrapper().getId());
+				break;
+				
+			case MESSAGE_POSTED:
+				sections = new ArrayList<ModelSection>();
+				
+				/* message context is derived from the existence or not of the associated section */
+				if (activity.getModelSection() != null) {
+					sections.add(activity.getModelSection());	
+				} 
+				
+				if (activity.getModelCardWrapper() != null) {
+					sections.addAll(modelCardWrapperRepository.findParentSections(activity.getModelCardWrapper().getId()));
+				}
+				
+				break;
+				
+			default: 
+				/* activity in section applies to that section only */
+				sections = new ArrayList<ModelSection>();
+				sections.add(activity.getModelSection());
+				break;
+		}
+		
+		List<UUID> sectionsIds = new ArrayList<UUID>();
+		
+		for (ModelSection section : sections) {
+			sectionsIds.add(section.getId());
+		}
+		
+		return sectionsIds;
+	}
+	
+	private void createNotifications (Activity activity) {
+		
+		/* this method build the full list of subscribers and add a notification for each of them */
+		/* a separate set of user ids is used to make sure only one subscriber entity per user is added */
+		
+		Set<UUID> userIds = new HashSet<UUID>();
+		Set<Subscriber> subscribers = new HashSet<Subscriber>();
+		
+		Boolean isInModel = isInModel(activity);
 		
 		/* if the activity occurs in the model, search for subscribers based on sections */
 		if (isInModel) {
 			
-			List<ModelSection> sections = null;
-			switch (activity.getType()) {
-				case MODEL_CARDWRAPPER_ADDED:
-				case MODEL_CARDWRAPPER_DELETED:
-				case MODEL_CARDWRAPPER_CREATED:
-				case MODEL_CARDWRAPPER_EDITED:
-				case MODEL_CARDWRAPPER_MOVED:
-				case MODEL_CARDWRAPPER_REMOVED:
-					
-					/* activity in cards is considered as occurring on the sections these card is placed*/
-					sections = modelCardWrapperRepository.findParentSections(activity.getModelCardWrapper().getId());
-					break;
-					
-				case MESSAGE_POSTED:
-					sections = new ArrayList<ModelSection>();
-					
-					/* message context is derived from the existence or not of the associated section */
-					if (activity.getModelSection() != null) {
-						sections.add(activity.getModelSection());	
-					} 
-					
-					if (activity.getModelCardWrapper() != null) {
-						sections.addAll(modelCardWrapperRepository.findParentSections(activity.getModelCardWrapper().getId()));
-					}
-					
-					break;
-					
-				default: 
-					/* activity in section applies to that section only */
-					sections = new ArrayList<ModelSection>();
-					sections.add(activity.getModelSection());
-					break;
-			}
-			
-			for (ModelSection section : sections) {
+			for (UUID sectionId : directlyAffectedSectionsIds(activity)) {
 				/* append the subscribers of this section and all its parents */
-				appendSectionSubscribers(section.getId(), subscribers, userIds);
+				appendSectionSubscribers(sectionId, subscribers, userIds);
 			}
 		}
 		
@@ -1017,4 +1045,39 @@ public class ActivityService {
 		}
 	}
 	
+	public void broadcastMessage (Activity activity) {
+		
+		/* message is broadcasted to all parent sections (if is in Model) and all parent initiatives */
+		
+		Boolean isInModel = isInModel(activity);
+		
+		if (isInModel) {
+			
+			/* sections in which the activity took place. Activity on cards can be in many sections at the same time */
+			List<UUID> sectionIds = directlyAffectedSectionsIds(activity);
+			
+			/* parent sections of these affected sections */
+			/* using a Set forces each UUID to be unique */
+			Set<UUID> allIncumbentSectionsIds = new HashSet<UUID>();
+			
+			/* add directly affected sections */
+			allIncumbentSectionsIds.addAll(sectionIds);
+			
+			/* add all parents of all sections */
+			for (UUID sectionId : sectionIds) {
+				allIncumbentSectionsIds.addAll(modelService.getSectionNode(sectionId, true, false, null).toList());
+			}
+			
+			/* send messages to all of them */
+			for (UUID sectionId : allIncumbentSectionsIds) {
+	    		template.convertAndSend("/channel/activity/model/section/" + sectionId, "UPDATE");
+			}
+			
+			/* if activity on a card wrapper, also broadcast its own channel */
+			if (activity.getModelCardWrapper() != null) {
+				template.convertAndSend("/channel/activity/model/card/" + activity.getModelCardWrapper().getId(), "UPDATE");
+			}
+		}
+		
+	}
 }

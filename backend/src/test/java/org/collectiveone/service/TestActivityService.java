@@ -1,17 +1,14 @@
 package org.collectiveone.service;
 
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 import java.util.UUID;
 
-import org.apache.tomcat.jni.Time;
 import org.collectiveone.AbstractTest;
 import org.collectiveone.common.dto.GetResult;
-import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.dto.NotificationDto;
-import org.collectiveone.modules.activity.dto.SubscriberDto;
-import org.collectiveone.modules.activity.enums.SubscriberInAppConfig;
-
-import org.collectiveone.modules.users.AppUserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,18 +17,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
 
 @Transactional
 public class TestActivityService extends AbstractTest {
 	@Autowired
     private ActivityService activityService;
-	
-	@Autowired
-    private AppUserService userService;
 	
 	@Value("${TEST_USER}")
 	String userId;
