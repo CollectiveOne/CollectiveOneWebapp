@@ -10,6 +10,10 @@ public class GraphNode {
 	List<GraphNode> parents = new ArrayList<GraphNode>();
 	List<GraphNode> children = new ArrayList<GraphNode>();
 	
+	public List<UUID> toList() {
+		return toList(true, true);
+	}
+	
 	public List<UUID> toList(Boolean addParents, Boolean addChildren) {
 		List<UUID> list = new ArrayList<UUID>();
 		

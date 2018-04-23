@@ -4,11 +4,9 @@ import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.model.ModelController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +22,7 @@ public class MessagesController extends BaseController {
 	private MessageService messageService;
 	
 	@Autowired
-	private ActivityService activityService;
-	
-	@Autowired
 	private InitiativeService initiativeService;
-	
-	@Autowired
-	SimpMessagingTemplate template;
 	
 	@Autowired
 	ModelController modelController;
@@ -57,7 +49,6 @@ public class MessagesController extends BaseController {
 		}
 		
 		PostResult result= messageService.postMessage(messageDto, getLoggedUserId(), contextType, elementId);
-		activityService.broadcastMessage(elementId, contextType);
 		
 		return result;
 	}

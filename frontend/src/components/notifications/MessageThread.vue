@@ -2,13 +2,12 @@
   <div class="thread-container w3-display-container">
     <div id="history-container" class="w3-row history-container w3-border" >
       <app-activity-getter
-        :url="url"
         :reverse="true"
         :addBorders="false"
         :showMessages="true"
         :onlyMessages="showOnlyMessages"
-        :polling="true"
         :triggerUpdate="triggerUpdate"
+        :contextType="contextType"
         :contextElementId="contextElementId"
         :levels="levels"
         @updated="scrollToBottom()"
