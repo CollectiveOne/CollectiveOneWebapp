@@ -7,7 +7,11 @@
             {{ sectionTitle }}
           </div>
           <div class="w3-left btn-div">
-            <app-section-control-buttons :section="currentSection" :inSection="null">
+            <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
+            </app-section-control-buttons>
+          </div>
+          <div class="w3-left btn-div">
+            <app-section-control-buttons :section="currentSection" :inSection="null" :onlyAdd="true">
             </app-section-control-buttons>
           </div>
           <div @click="showIn = !showIn" class="w3-left btn-div cursor-pointer">
@@ -19,6 +23,11 @@
     <div class="slider-container">
       <transition name="slideDownUp">
         <div v-if="showIn" class="w3-row breadcrumb">
+          <div class="w3-row description-container w3-margin-top">
+            <span v-if="currentSection.description !== null && currentSection.description !== ''">{{ currentSection.description }}</span>
+            <span v-else>empty</span>
+          </div>
+
           <div v-if="currentSectionPaths[0].length > 0" class="w3-row">
             <small>This is section is under:</small>
           </div>
@@ -36,10 +45,6 @@
                 <i class="fa fa-chevron-right" aria-hidden="true"></i>
               </div>
             </div>
-          </div>
-          <div class="w3-row description-container w3-margin-top w3-margin-bottom">
-            <span v-if="currentSection.description !== null && currentSection.description !== ''">{{ currentSection.description }}</span>
-            <span v-else>empty</span>
           </div>
         </div>
       </transition>

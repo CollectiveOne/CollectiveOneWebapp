@@ -18,6 +18,15 @@
       <div class="w3-row controls-row">
         <div class="w3-left control-group">
           <div @click="summaryView()" class="w3-left control-btn" :class="{'selected': isSummary}">
+            <i class="fa fa-comments-o" aria-hidden="true"></i>
+          </div>
+          <div @click="cardView()" class="w3-left control-btn" :class="{'selected': isCard}">
+            <i class="fa fa-square" aria-hidden="true"></i>
+          </div>
+        </div>
+
+        <div class="w3-left control-group">
+          <div @click="summaryView()" class="w3-left control-btn" :class="{'selected': isSummary}">
             <i class="fa fa-list" aria-hidden="true"></i>
           </div>
           <div @click="cardView()" class="w3-left control-btn" :class="{'selected': isCard}">
@@ -93,6 +102,13 @@
       </div>
 
       <div class="cards-list">
+        <app-message-thread
+          contextType="MODEL_SECTION"
+          :contextElementId="section.id"
+          :onlyMessagesInit="true"
+          :levels="levels">
+        </app-message-thread>
+
         <app-model-section
           v-if="isSectionsOrder"
           :section="section"
@@ -121,14 +137,15 @@
 </template>
 
 <script>
-
+import MessageThread from '@/components/notifications/MessageThread'
 import ModelSection from '@/components/model/ModelSection'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer'
 
 export default {
   components: {
     'app-model-section': ModelSection,
-    'app-model-cards-container': ModelCardsContainer
+    'app-model-cards-container': ModelCardsContainer,
+    'app-message-thread': MessageThread
   },
 
   data () {
