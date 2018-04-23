@@ -25,8 +25,7 @@
         contextType="MODEL_SECTION"
         :contextElementId="currentSectionId"
         :onlyMessagesInit="true"
-        :levels="levels"
-        :url="'/1/activity/model/section/' + currentSectionId">
+        :levels="levels">
       </app-message-thread>
     </div>
   </div>

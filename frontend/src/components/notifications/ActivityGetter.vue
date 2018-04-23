@@ -41,15 +41,14 @@
 
 <script>
 import ActivityTable from '@/components/notifications/ActivityTable.vue'
+import SockJS from 'sockjs-client'
+import Stomp from 'webstomp-client'
 
 export default {
   components: {
     'app-activity-table': ActivityTable
   },
   props: {
-    url: {
-      type: String
-    },
     reverse: {
       type: Boolean,
       default: false
@@ -70,9 +69,9 @@ export default {
       type: Boolean,
       default: false
     },
-    polling: {
-      type: Boolean,
-      default: false
+    contextType: {
+      type: String,
+      default: ''
     },
     contextElementId: {
       type: String,
@@ -89,28 +88,25 @@ export default {
       activities: [],
       currentPage: 0,
       allShown: false,
-      intervalIds: [],
       loading: false,
-      loadingMore: false
+      loadingMore: false,
+      connected: false
     }
   },
 
   watch: {
     triggerUpdate () {
-      this.resetElements()
+      this.getActivity('RESET')
     },
     levels () {
       this.getActivity('RESET')
     },
-    url () {
+    contextElementId () {
       this.getActivity('RESET')
     }
   },
 
   methods: {
-    resetElements () {
-      this.getActivity('RESET')
-    },
     showMoreClick () {
       this.getActivity('OLDER')
     },
@@ -135,7 +131,18 @@ export default {
           break
       }
 
-      this.axios.get(this.url, {
+      let url = ''
+      switch (this.contextType) {
+        case 'MODEL_CARD':
+          url = '/1/activity/model/card/' + this.contextElementId
+          break
+
+        case 'MODEL_SECTION':
+          url = '/1/activity/model/section/' + this.contextElementId
+          break
+      }
+
+      this.axios.get(url, {
         params: {
           page: askPage,
           size: 10,
@@ -160,15 +167,6 @@ export default {
           case 'RESET':
             this.activities = response.data.data.content
             this.$emit('updated')
-
-            /* start polling after the first response */
-            // if (this.polling) {
-            //   if (this.intervalIds.length === 0) {
-            //     this.intervalIds.push(setInterval(() => {
-            //       this.getActivity('UPDATE')
-            //     }, 5000))
-            //   }
-            // }
             break
 
           case 'OLDER':
@@ -176,36 +174,80 @@ export default {
             break
 
           case 'UPDATE':
-            var newIx = 0
-
-            if (this.activities.length > 0) {
-              var latestId = this.activities[0].id
-              if (response.data.data.content.length > 0) {
-                if (response.data.data.content[newIx].id) {
-                  while (response.data.data.content[newIx].id !== latestId) {
-                    this.activities.splice(newIx, 0, response.data.data.content[newIx])
-                    newIx++
-                  }
-                  if (newIx > 0) {
-                    this.$emit('updated')
-                  }
-                }
-              }
-            }
+            this.checkIfNewActivities(response.data.data.content)
             break
         }
       })
+    },
+    checkIfNewActivities (activityList) {
+      var newIx = 0
+
+      if (this.activities.length > 0) {
+        var latestId = this.activities[0].id
+        if (activityList.length > 0) {
+          if (activityList[newIx].id) {
+            while (activityList[newIx].id !== latestId) {
+              this.activities.splice(newIx, 0, activityList[newIx])
+              newIx++
+            }
+            if (newIx > 0) {
+              this.$emit('updated')
+            }
+          }
+        }
+      }
+    },
+    connectSocket () {
+      this.socket = new SockJS(process.env.WEBSOCKET_SERVER_URL)
+      this.stompClient = Stomp.over(this.socket)
+      this.stompClient.connect(
+        {},
+        frame => {
+          this.connected = true
+
+          let url = ''
+          switch (this.contextType) {
+            case 'MODEL_CARD':
+              url = '/channel/activity/model/card/' + this.contextElementId
+              break
+
+            case 'MODEL_SECTION':
+              url = '/channel/activity/model/section/' + this.contextElementId
+              break
+          }
+
+          console.log('subscribing to ' + url)
+
+          this.stompClient.subscribe(url, tick => {
+            console.log('tick')
+            console.log(tick)
+            var message = tick.body
+            if (message === 'UPDATE') {
+              this.getActivity('UPDATE')
+            }
+          })
+        },
+        error => {
+          console.log(error)
+          this.connected = false
+        }
+      )
+    },
+    disconnectSocket () {
+      if (this.stompClient) {
+        this.stompClient.disconnect()
+      }
+      this.connected = false
     }
   },
 
   created () {
     this.getActivity('RESET')
+    this.connectSocket()
   },
 
   beforeDestroy () {
-    this.intervalIds.forEach((id) => {
-      clearInterval(id)
-    })
+    this.disconnectSocket()
   }
 
 }

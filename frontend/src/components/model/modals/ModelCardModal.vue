@@ -226,8 +226,7 @@
             <app-message-thread
               contextType="MODEL_CARD"
               :contextElementId="cardWrapperId"
-              :onlyMessagesInit="onlyMessages"
-              :url="'/1/activity/model/card/' + cardWrapperId">
+              :onlyMessagesInit="onlyMessages">
             </app-message-thread>
           </div>
 

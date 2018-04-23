@@ -111,7 +111,6 @@
 import AssetDistributionChart from '@/components/transfers/AssetDistributionChart.vue'
 import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
 import InitiativeTag from '@/components/initiative/InitiativeTag.vue'
-import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
 import NewTokenModal from '@/components/modal/NewTokenModal.vue'
 import NewTokenExchangeModal from '@/components/modal/NewTokenExchangeModal.vue'
 import NewAssignationModal from '@/components/modal/NewAssignationModal.vue'
@@ -122,7 +121,6 @@ export default {
     'app-asset-distribution-chart': AssetDistributionChart,
     'app-edit-initiative-modal': EditInitiativeModal,
     'app-initiative-tag': InitiativeTag,
-    'app-activity-getter': ActivityGetter,
     'app-new-token-modal': NewTokenModal,
     'app-new-tokenexchange-modal': NewTokenExchangeModal,
     'app-new-assignation-modal': NewAssignationModal,

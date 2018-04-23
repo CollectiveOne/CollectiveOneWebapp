@@ -133,13 +133,11 @@
 
 <script>
 import ModelSectionSelector from '@/components/model/ModelSectionSelector.vue'
-import MessageThread from '@/components/notifications/MessageThread.vue'
 
 export default {
 
   components: {
-    'app-model-section-selector': ModelSectionSelector,
-    'app-message-thread': MessageThread
+    'app-model-section-selector': ModelSectionSelector
   },
 
   props: {

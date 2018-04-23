@@ -1,20 +1,19 @@
 package org.collectiveone.service;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
 import java.util.UUID;
 
-import org.apache.tomcat.jni.Time;
 import org.collectiveone.AbstractTest;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.initiatives.InitiativeService;
-import org.collectiveone.modules.initiatives.InitiativeTag;
 import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
-import org.collectiveone.modules.initiatives.dto.MemberDto;
 import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
-import org.collectiveone.modules.users.AppUserDto;
-import org.collectiveone.modules.users.AppUserService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,24 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.amazonaws.services.applicationdiscovery.model.Tag;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Transactional
 public class TestInitiativeService extends AbstractTest {
 	@Autowired
     private InitiativeService initiativeService;
-	
-	@Autowired
-    private AppUserService userService;
 	
 	@Value("${TEST_USER}")
 	String userId;

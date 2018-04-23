@@ -16,6 +16,7 @@
   "dependencies": {
     "auth0-lock": "^10.14.0",
     "axios": "^0.16.1",
+    "sockjs-client": "^1.1.4",
     "vue": "^2.2.2",
     "vue-analytics": "^5.10.2",
     "vue-axios": "^2.0.1",
@@ -24,7 +25,8 @@
     "vue-simplemde": "^0.4.4",
     "vue-smooth-height": "^1.1.11",
     "vuejs-datepicker": "^0.9.11",
-    "vuex": "^2.3.0"
+    "vuex": "^2.3.0",
+    "webstomp-client": "^1.2.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
