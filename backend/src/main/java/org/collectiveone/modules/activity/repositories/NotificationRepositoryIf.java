@@ -12,6 +12,8 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface NotificationRepositoryIf extends CrudRepository<Notification, UUID> {
 
+	Notification findById(UUID notificationId);
+	
 	@Query("SELECT notif FROM Notification notif JOIN notif.activity act WHERE notif.subscriber.user.c1Id = ?1 ORDER BY act.timestamp DESC")
 	List<Notification> findOfUser(UUID userId, Pageable page);
 	

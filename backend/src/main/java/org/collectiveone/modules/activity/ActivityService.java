@@ -68,6 +68,9 @@ public class ActivityService {
 	@Autowired
 	private MessageService messageService;
 	
+	@Autowired
+	private NotificationDtoBuilder notificationDtoBuilder;
+	
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
@@ -89,7 +92,6 @@ public class ActivityService {
 	
 	@Autowired
 	private ModelCardWrapperRepositoryIf modelCardWrapperRepository;
-	
 	
 	
 	@Autowired
@@ -172,14 +174,15 @@ public class ActivityService {
 			UUID userId, 
 			NotificationContextType contextType, 
 			UUID elementId,
-			PageRequest page) {
+			PageRequest page,
+			Boolean isHtml) {
 		
 		List<NotificationDto> notificationsDtos = new ArrayList<NotificationDto>();
 		
 		List<Notification> notifications = userUnreadNotifications(userId, contextType, elementId, page);
 		
 		for(Notification notification : notifications) {
-			notificationsDtos.add(notification.toDto());
+			notificationsDtos.add(notificationDtoBuilder.getNotificationDto(notification, isHtml));
 		}
 		
 		return new GetResult<List<NotificationDto>>("success", "notifications found", notificationsDtos);
@@ -204,6 +207,22 @@ public class ActivityService {
 		}
 		
 		return new PostResult("success", "success", "");
+	}
+	
+	@Transactional
+	public PostResult notificationPushed(
+			UUID notificationId ) {
+		
+		Notification notification = notificationRepository.findById(notificationId);
+		
+		if (notification == null) {
+			return new PostResult("error", "notification not found", "");
+		}
+		
+		notification.setPushState(NotificationState.DELIVERED);
+		notificationRepository.save(notification);
+		
+		return new PostResult("success", "notification updated", "");
 	}
 	
 	@Transactional
