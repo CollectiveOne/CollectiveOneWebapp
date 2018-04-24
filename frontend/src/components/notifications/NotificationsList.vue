@@ -100,7 +100,7 @@ export default {
           if (this.pushNotifications.length > 2) {
             this.pushDesktopNotification('You have received ' + this.numberOfUnreadNotifications + ' new notfications', 'https://image.ibb.co/mgQn1a/imago_red.png', 'http://www.collectiveone.org/')
           } else {
-            for (var i = 0; i < this.pushNotifications.length; i++) {
+            for (i = 0; i < this.pushNotifications.length; i++) {
               this.pushDesktopNotification(this.pushNotifications[i].pushMessage, this.pushNotifications[i].pushIcon, this.pushNotifications[i].pushURL)
             }
           }
