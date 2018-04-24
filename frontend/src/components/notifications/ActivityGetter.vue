@@ -103,6 +103,9 @@ export default {
     },
     contextElementId () {
       this.getActivity('RESET')
+    },
+    onlyMessages () {
+      this.getActivity('RESET')
     }
   },
 

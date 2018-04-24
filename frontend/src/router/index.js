@@ -16,9 +16,7 @@ import TransfersSection from '@/components/initiative/TransfersSection.vue'
 
 import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
 import ModelSectionContent from '@/components/model/ModelSectionContent.vue'
-
-import ModelSectionMessages from '@/components/model/ModelSectionMessages.vue'
-import ModelSectionCards from '@/components/model/ModelSectionCards.vue'
+import ModelSectionElements from '@/components/model/ModelSectionElements.vue'
 
 import UserProfilePage from '@/components/UserProfilePage.vue'
 import WSWebSocketDebugPage from '@/components/WebSocketDebugPage.vue'
@@ -84,15 +82,15 @@ export default new Router({
                       component: ModelSectionContent,
                       meta: {'column': 3},
                       children: [
-                        { path: 'messages', name: 'ModelSectionMessages', component: ModelSectionMessages, meta: {'column': 3} },
-                        { path: 'cards', name: 'ModelSectionCards', component: ModelSectionCards, meta: {'column': 3} },
-                        { path: 'cards/:cardId', name: 'ModelSectionCard', component: ModelSectionCards, meta: {'column': 3} }
+                        { path: 'messages', name: 'ModelSectionMessages', component: ModelSectionElements, meta: {'column': 3} },
+                        { path: 'cards', name: 'ModelSectionCards', component: ModelSectionElements, meta: {'column': 3} },
+                        { path: 'cards/:cardId', name: 'ModelSectionCard', component: ModelSectionElements, meta: {'column': 3} }
                       ]
                     },
                     {
                       path: '/card',
                       name: 'ModelCardAlone',
-                      component: ModelSectionCards,
+                      component: ModelSectionElements,
                       meta: {'column': 3}
                     }
                   ]

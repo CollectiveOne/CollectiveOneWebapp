@@ -20,18 +20,6 @@ export default {
     'app-section-info': SectionInfo
   },
 
-  computed: {
-    isChat () {
-      return this.$route.name === 'ModelSectionMessages'
-    },
-    isCards () {
-      return this.$route.name === 'ModelSectionCards' || this.$route.name === 'ModelSectionCard'
-    },
-    isDoc () {
-      return this.$route.name === 'ModelSectionDoc'
-    }
-  },
-
   methods: {
     redirect () {
       if (this.$route.name === 'ModelSectionContent') {
@@ -42,12 +30,13 @@ export default {
   },
 
   watch: {
-    '$route' () {
+    '$route.name' () {
       this.redirect()
     }
   },
 
   created () {
+    console.log('ModelSectionContent created')
     this.$store.dispatch('updateCurrentSection', this.$route.params.sectionId)
     this.redirect()
   }

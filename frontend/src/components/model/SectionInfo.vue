@@ -102,7 +102,7 @@ export default {
   },
 
   watch: {
-    '$route' () {
+    '$route.params.sectionId' () {
       this.$store.dispatch('updateCurrentSection', this.$route.params.sectionId)
     }
   },

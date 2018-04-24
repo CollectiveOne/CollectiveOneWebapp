@@ -17,85 +17,123 @@
     <div class="model-section-cards-container">
       <div class="w3-row controls-row">
         <div class="w3-left control-group">
-          <div @click="summaryView()" class="w3-left control-btn" :class="{'selected': isSummary}">
-            <i class="fa fa-comments-o" aria-hidden="true"></i>
+          <div @click="messagesContent()" class="w3-left control-btn tab-btn noselect" :class="{'selected': isMessagesContent}">
+            <i class="fa fa-comments-o" aria-hidden="true"></i> timeline
           </div>
-          <div @click="cardView()" class="w3-left control-btn" :class="{'selected': isCard}">
-            <i class="fa fa-square" aria-hidden="true"></i>
-          </div>
-        </div>
-
-        <div class="w3-left control-group">
-          <div @click="summaryView()" class="w3-left control-btn" :class="{'selected': isSummary}">
-            <i class="fa fa-list" aria-hidden="true"></i>
-          </div>
-          <div @click="cardView()" class="w3-left control-btn" :class="{'selected': isCard}">
-            <i class="fa fa-th-large" aria-hidden="true"></i>
-          </div>
-          <div @click="docView()" class="w3-left control-btn" :class="{'selected': isDoc}">
-            <i class="fa fa-file-text" aria-hidden="true"></i>
+          <div @click="cardsContent()" class="w3-left control-btn tab-btn noselect" :class="{'selected': isCardsContent}">
+            <i class="fa fa-square" aria-hidden="true"></i> cards
           </div>
         </div>
 
-        <div class="w3-left control-group">
-          <div @click="sectionOrder()" class="w3-left control-btn" :class="{'selected': isSectionsOrder}">
-            <i class="fa fa-tree" aria-hidden="true"></i>
-          </div>
-          <div @click="aggregatedOrder()" class="w3-left control-btn" :class="{'selected': !isSectionsOrder}">
-            <i class="fa fa-filter" aria-hidden="true"></i>
+        <div class="w3-left control-group zoom-controls">
+          <div class="slider-container">
+            <transition name="slideRightLeft">
+              <div v-if="isSectionsOrder || isMessagesContent" class="">
+                <div class="w3-left cursor-pointer">
+                  <i @click="levelDown()" class="fa fa-minus-circle" aria-hidden="true"></i>
+                </div>
+                <div class="w3-left number-div">
+                  {{ levels }}
+                </div>
+                <div class="w3-left cursor-pointer">
+                  <i @click="levelUp()" class="fa fa-plus-circle" aria-hidden="true"></i>
+                </div>
+              </div>
+            </transition>
           </div>
         </div>
 
-        <div v-if="isSectionsOrder" class="">
-          <div class="w3-left control-group zoom-controls">
-            <div class="w3-left cursor-pointer">
-              <i @click="levelDown()" class="fa fa-minus-circle" aria-hidden="true"></i>
-            </div>
-            <div class="w3-left number-div">
-              {{ levels }}
-            </div>
-            <div class="w3-left cursor-pointer">
-              <i @click="levelUp()" class="fa fa-plus-circle" aria-hidden="true"></i>
-            </div>
-          </div>
-        </div>
-        <div v-else class="">
-          <div class="w3-left control-group">
-            <div class="w3-left">
-              <input ref="inputQuery" v-model="newCardQuery" class="w3-input"
-                type="text" name="" value="" placeholder="search">
-            </div>
-            <div @click="updateQuery()" class="w3-left control-btn selected">
-              <i class="fa fa-search" aria-hidden="true"></i>
-            </div>
-          </div>
+        <div class="w3-left slider-container">
+          <transition name="slideRightLeft">
+            <div v-if="isCardsContent" class="">
+              <div class="w3-left control-group">
+                <div @click="sectionOrder()" class="w3-left control-btn" :class="{'selected': isSectionsOrder}">
+                  <i class="fa fa-tree" aria-hidden="true"></i>
+                </div>
+                <div @click="aggregatedOrder()" class="w3-left control-btn" :class="{'selected': !isSectionsOrder}">
+                  <i class="fa fa-filter" aria-hidden="true"></i>
+                </div>
+              </div>
 
-          <div class="w3-left control-group">
-            <select v-model="cardSortBy" class="w3-input">
-              <option value="CREATION_DATE_DESC">Last Created</option>
-              <option value="EDITION_DATE_DESC">Last Edited</option>
-              <option value="CREATOR">Author</option>
-            </select>
-          </div>
+              <div class="w3-left control-group">
+                <div @click="summaryView()" class="w3-left control-btn" :class="{'selected': isSummary}">
+                  <i class="fa fa-list" aria-hidden="true"></i>
+                </div>
+                <div @click="cardView()" class="w3-left control-btn" :class="{'selected': isCard}">
+                  <i class="fa fa-th-large" aria-hidden="true"></i>
+                </div>
+                <div @click="docView()" class="w3-left control-btn" :class="{'selected': isDoc}">
+                  <i class="fa fa-file-text" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+          </transition>
+        </div>
+
+        <div class="w3-left slider-container">
+          <transition name="slideRightLeft">
+            <div v-if="!isCardsContent" class="">
+              <div class="w3-left control-group">
+                <div @click="isOnlyMessages = true" class="w3-left control-btn" :class="{'selected': isOnlyMessages}">
+                  <i class="fa fa-comment" aria-hidden="true"></i>
+                </div>
+                <div @click="isOnlyMessages = false" class="w3-left control-btn" :class="{'selected': !isOnlyMessages}">
+                  <i class="fa fa-list" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+          </transition>
+        </div>
+
+        <div class="w3-left slider-container">
+          <transition name="slideRightLeft">
+            <div v-if="isCardsContent && !isSectionsOrder" class="">
+              <div class="w3-left control-group">
+                <div class="w3-left">
+                  <input ref="inputQuery" v-model="newCardQuery" class="w3-input"
+                    type="text" name="" value="" placeholder="search">
+                </div>
+                <div @click="updateQuery()" class="w3-left control-btn selected">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </div>
+              </div>
+
+              <div class="w3-left control-group">
+                <select v-model="cardSortBy" class="w3-input">
+                  <option value="CREATION_DATE_DESC">Last Created</option>
+                  <option value="EDITION_DATE_DESC">Last Edited</option>
+                  <option value="CREATOR">Author</option>
+                </select>
+              </div>
+            </div>
+          </transition>
         </div>
 
         <div class="w3-left control-group text-details">
-          <span v-if="!isSectionsOrder">
-            you are
-            <span v-if="cardQuery !== ''" class="">
-              searching by
-              <span class="cursor-pointer" @click="resetQuery()">
-                <i><b>"{{ cardQuery }}"</b></i> <i class="fa fa-times-circle" aria-hidden="true"></i>
+          <span v-if="isCardsContent">
+            <span v-if="!isSectionsOrder">
+              you are
+              <span v-if="cardQuery !== ''" class="">
+                searching by
+                <span class="cursor-pointer" @click="resetQuery()">
+                  <i><b>"{{ cardQuery }}"</b></i> <i class="fa fa-times-circle" aria-hidden="true"></i>
+                </span>
               </span>
+              <span v-else class="">
+                searching all cards
+              </span>
+              under the
+              <br>"{{ sectionTitle }}" section.
             </span>
-            <span v-else class="">
-              searching all cards
+            <span v-else>
+              you are seeing all cards up to {{ levels }} levels under the <br>"{{ sectionTitle }}" section and respecting their in-section order.
             </span>
-            under the
-            <br>"{{ sectionTitle }}" section.
           </span>
           <span v-else>
-            you are seeing all cards up to {{ levels }} levels under the <br>"{{ sectionTitle }}" section and respecting their in-section order.
+            you are seeing
+            <span v-if="isOnlyMessages">all messages</span>
+            <span v-else>all events</span>
+            up to {{ levels }} levels under the <br>"{{ sectionTitle }}" section.
           </span>
 
         </div>
@@ -103,20 +141,21 @@
 
       <div class="cards-list">
         <app-message-thread
+          v-if="isMessagesContent"
           contextType="MODEL_SECTION"
           :contextElementId="section.id"
-          :onlyMessagesInit="true"
+          :onlyMessages="isOnlyMessages"
           :levels="levels">
         </app-message-thread>
 
         <app-model-section
-          v-if="isSectionsOrder"
+          v-if="isCardsContent && isSectionsOrder"
           :section="section"
           :cardsType="cardsType">
         </app-model-section>
 
         <app-model-cards-container
-          v-if="!isSectionsOrder"
+          v-if="isCardsContent && !isSectionsOrder"
           :cardWrappers="cardWrappers"
           :inSection="section"
           :cardsType="cardsType"
@@ -154,6 +193,7 @@ export default {
       showCardModal: false,
       loading: false,
       orderType: 'sections',
+      isOnlyMessages: true,
       newCardQuery: '',
       cardQuery: '',
       cardSortBy: 'CREATION_DATE_DESC',
@@ -173,6 +213,13 @@ export default {
     },
     currentSectionId () {
       return this.$route.params.sectionId
+    },
+    isMessagesContent () {
+      return this.$route.name === 'ModelSectionMessages'
+    },
+    isCardsContent () {
+      return this.$route.name === 'ModelSectionCards' ||
+        this.$route.name === 'ModelSectionCard'
     },
     levels () {
       return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
@@ -198,7 +245,7 @@ export default {
     '$route.params.sectionId' () {
       this.update()
     },
-    '$route' () {
+    '$route.name' () {
       this.checkCardSubroute()
     },
     levels () {
@@ -220,6 +267,16 @@ export default {
   },
 
   methods: {
+    messagesContent () {
+      if (this.$route.name !== 'ModelSectionMessages') {
+        this.$router.push({name: 'ModelSectionMessages'})
+      }
+    },
+    cardsContent () {
+      if (this.$route.name !== 'ModelSectionCards') {
+        this.$router.push({name: 'ModelSectionCards'})
+      }
+    },
     sectionOrder () {
       this.orderType = 'sections'
     },
@@ -356,7 +413,7 @@ export default {
 }
 
 .cards-list {
-  padding: 6px 12px 12px 12px;
+  padding: 12px 12px 12px 12px;
 }
 
 .control-group {
@@ -364,17 +421,17 @@ export default {
 }
 
 .zoom-controls {
-  margin-left: 20px;
+  min-height: 1px;
   width: 90px;
   font-size: 28px;
   text-align: center;
 }
 
-.zoom-controls > .w3-left {
+.zoom-controls .w3-left {
   width: 30px;
 }
 
-.zoom-controls > .number-div {
+.zoom-controls .number-div {
   font-size: 22px;
 }
 
@@ -386,6 +443,11 @@ export default {
   border-radius: 3px;
 }
 
+.tab-btn {
+  width: 100px;
+  text-align: center;
+}
+
 .control-btn:hover {
   background-color: #595959;
 }
@@ -393,6 +455,7 @@ export default {
 .selected {
   background-color: #15a5cc;
   color: white;
+  font-weight: bold;
 }
 
 .control-btn-selected {
@@ -403,5 +466,8 @@ export default {
   font-size: 12px;
 }
 
+.section-cards-container {
+  margin-top: 15px;
+}
 
 </style>
