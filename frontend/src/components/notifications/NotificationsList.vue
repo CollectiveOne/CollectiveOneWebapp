@@ -86,8 +86,6 @@ export default {
           /* check that new notifications arrived */
           this.allShown = false
           this.notifications = response.data.data
-          console.log(JSON.stringify(this.notifications[0]))
-        }).then((response) => {
           /* add desktop notifications */
           for (var i = 0; i < this.notifications.length; i++) {
             if (this.notifications[i].pushState === 'PENDING') {
@@ -98,7 +96,6 @@ export default {
               })
             }
           }
-        }).then((response) => {
           /* push desktop notifications */
           if (this.pushNotifications.length > 2) {
             this.pushDesktopNotification('You have received ' + this.numberOfUnreadNotifications + ' new notfications', 'https://image.ibb.co/mgQn1a/imago_red.png', 'http://www.collectiveone.org/')
@@ -107,7 +104,6 @@ export default {
               this.pushDesktopNotification(this.pushNotifications[i].pushMessage, this.pushNotifications[i].pushIcon, this.pushNotifications[i].pushURL)
             }
           }
-        }).then((response) => {
           /* update notification state */
           //  preventing unecessary calling of the api
           if (this.pushNotifications.length) {
