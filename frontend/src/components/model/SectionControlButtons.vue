@@ -55,7 +55,10 @@
       <div class="expand-btn cursor-pointer"
         @click="expanded =! expanded"
         v-click-outside="clickOutsideMenu">
-        <i class="fa fa-bars" aria-hidden="true"></i>
+        <i class="fa"
+          :class="{'fa-bars': !onlyAdd, 'fa-plus': onlyAdd}"
+          aria-hidden="true">
+        </i>
       </div>
 
       <app-drop-down-menu
@@ -123,6 +126,14 @@ export default {
     inSection: {
       type: Object,
       deafult: null
+    },
+    hideAdd: {
+      type: Boolean,
+      deafult: false
+    },
+    onlyAdd: {
+      type: Boolean,
+      deafult: false
     }
   },
 
@@ -141,10 +152,20 @@ export default {
   computed: {
     menuItems () {
       let menuItems = [
-        { text: 'add card', value: 'addCard', faIcon: 'fa-plus' },
-        { text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' },
         { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
         { text: 'notifications', value: 'configNotifications', faIcon: 'fa-cog' } ]
+
+      if (!this.hideAdd) {
+        let thisItems = [
+          { text: 'add card', value: 'addCard', faIcon: 'fa-plus' },
+          { text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' } ]
+
+        if (this.onlyAdd) {
+          return thisItems
+        } else {
+          menuItems = thisItems.concat(menuItems)
+        }
+      }
 
       if (this.inSection !== null) {
         menuItems = menuItems.concat([
@@ -229,7 +250,7 @@ export default {
   position: absolute;
   width: 180px;
   margin-top: 3px;
-  margin-left: -150px;
+  margin-left: -120px;
   text-align: left;
   font-size: 15px;
   z-index: 1;

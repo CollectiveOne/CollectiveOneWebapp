@@ -5,7 +5,7 @@
         :reverse="true"
         :addBorders="false"
         :showMessages="true"
-        :onlyMessages="showOnlyMessages"
+        :onlyMessages="onlyMessages"
         :triggerUpdate="triggerUpdate"
         :contextType="contextType"
         :contextElementId="contextElementId"
@@ -44,16 +44,6 @@
         @send="send($event)">
       </app-markdown-editor>
     </div>
-    <div class="w3-display-topright only-messages-button">
-      <button
-        class="w3-button app-button tooltip" type="button" name="button"
-        @click="showOnlyMessagesClicked()">
-        <span v-if="!showOnlyMessages"><i class="fa fa-comment-o" aria-hidden="true"></i></span>
-        <span v-else=""><i class="fa fa-list" aria-hidden="true"></i></span>
-        <span v-if="showOnlyMessages" class="tooltiptext gray-1">show activity too</span>
-        <span v-else class="tooltiptext gray-1">show only messages</span>
-      </button>
-    </div>
   </div>
 </template>
 
@@ -78,7 +68,7 @@ export default {
       type: String,
       default: ''
     },
-    onlyMessagesInit: {
+    onlyMessages: {
       type: Boolean,
       defaul: false
     },
@@ -93,7 +83,6 @@ export default {
       newMessageText: '',
       triggerUpdate: true,
       intervalId: 0,
-      showOnlyMessages: false,
       editing: false,
       messageToEdit: null,
       showMembersOnly: false,

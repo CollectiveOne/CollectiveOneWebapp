@@ -100,6 +100,9 @@ export default {
           /* check that new notifications arrived */
           this.notifications = response.data.data
           this.allShown = this.notifications.length < 10
+
+          /* send push notifications */
+          this.$store.dispatch('addPushNotifications', this.notifications)
         }).catch(function (error) {
           console.log(error)
         })

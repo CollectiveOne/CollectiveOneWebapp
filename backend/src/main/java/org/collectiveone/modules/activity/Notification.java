@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.activity.dto.NotificationDto;
 import org.collectiveone.modules.activity.enums.NotificationState;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -52,21 +51,6 @@ public class Notification {
 	@Column(name = "email_summary_state")
 	private NotificationState emailSummaryState;
 
-	
-	public NotificationDto toDto() {
-		NotificationDto dto = new NotificationDto();
-		
-		dto.setId(id.toString());
-		dto.setSubscriber(subscriber.toDto());
-		dto.setActivity(activity.toDto());
-		
-		if (inAppState != null) dto.setInAppState(inAppState.toString());
-		if (pushState != null) dto.setPushState(pushState.toString());
-		if (emailNowState != null) dto.setEmailNowState(emailNowState.toString());
-		if (emailSummaryState != null) dto.setEmailSummaryState(emailSummaryState.toString());
-		
-		return dto;
-	}
 	
 	public UUID getId() {
 		return id;

@@ -104,6 +104,9 @@ export default {
     },
     '$store.state.socket.connected' () {
       this.handleSocket()
+    },
+    onlyMessages () {
+      this.getActivity('RESET')
     }
   },
 

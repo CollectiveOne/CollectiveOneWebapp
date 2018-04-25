@@ -6,7 +6,7 @@
         <transition name="slideDownUp">
           <app-new-subinitiative-modal
             v-if="showNewSubInitiativeModal"
-            :parentInitiative="this.initiative"
+            :parentInitiative="initiative"
             @close="showNewSubInitiativeModal = false">
           </app-new-subinitiative-modal>
         </transition>
@@ -21,6 +21,8 @@
         <transition name="slideDownUp">
           <app-edit-notifications-modal
             v-if="showEditNotificationsModal"
+            type="INITIATIVE"
+            :initiative="initiative"
             @close="showEditNotificationsModal = false">
           </app-edit-notifications-modal>
         </transition>
@@ -166,7 +168,7 @@ export default {
   position: absolute;
   width: 180px;
   margin-top: 0px;
-  margin-left: -120px;
+  margin-left: -80px;
   text-align: left;
   font-size: 15px;
   z-index: 1;
