@@ -89,6 +89,17 @@ public class ActivityController extends BaseController {
 		return activityService.getSubscriber(getLoggedUserId(), UUID.fromString(elementId), SubscriptionElementType.valueOf(elementType));
 	}
 	
+	@RequestMapping(path = "/notifications/subscriber/{elementType}/{elementId}/inheritFrom", method = RequestMethod.GET)
+	public GetResult<SubscriberDto> getSubscriberInheritFrom(
+				@PathVariable("elementId") String elementId,
+				@PathVariable(name="elementType") String elementType ) {
+		if (getLoggedUser() == null) {
+			return new GetResult<SubscriberDto>("error", "endpoint enabled users only", null);
+		}
+		
+		return activityService.getSubscriberInheritFrom(getLoggedUserId(), UUID.fromString(elementId), SubscriptionElementType.valueOf(elementType));
+	}
+	
 	@RequestMapping(path = "/notifications/subscriber/{elementType}/{elementId}", method = RequestMethod.PUT)
 	public PostResult editSubscriber(
 			@PathVariable("elementId") String elementId,

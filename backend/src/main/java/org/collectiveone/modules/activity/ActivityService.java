@@ -268,6 +268,58 @@ public class ActivityService {
 		return new PostResult("success", "member notifications changed", "");
 	}
 	
+	/* central DTO conversion to add context element logic */
+	private SubscriberDto getSubscriberDto(Subscriber subscriber) {
+		
+		SubscriberDto subscriberDto = subscriber.toDto();
+		
+		/* add dto of the context element */
+		switch (subscriber.getType()) {
+			case SECTION:
+				subscriberDto.setSection(modelSectionRepository.findById(subscriber.getElementId()).toDtoLight());
+				break;
+			
+			case INITIATIVE:
+				subscriberDto.setInitiative(initiativeRepository.findById(subscriber.getElementId()).toDto());
+				break;
+				
+			default: 
+				break;
+		}
+		
+		if (subscriber.getInheritConfig() == SubscriberInheritConfig.INHERIT) {
+			Subscriber applicableSubscriber = getApplicableSubscriber(
+					subscriber.getUser().getC1Id(), 
+					subscriber.getType(), 
+					subscriber.getElementId());
+			
+			SubscriberDto applicableSubscriberDto = applicableSubscriber.toDto();
+			
+			switch (applicableSubscriber.getType()) {
+				case SECTION:
+					applicableSubscriberDto.setSection(modelSectionRepository.findById(applicableSubscriber.getElementId()).toDtoLight());
+					break;
+				
+				case INITIATIVE:
+					applicableSubscriberDto.setInitiative(initiativeRepository.findById(applicableSubscriber.getElementId()).toDto());
+					break;
+					
+				default: 
+					break;
+			}
+			
+			subscriberDto.setApplicableSubscriber(applicableSubscriberDto);
+		}
+		
+		return subscriberDto; 
+	}
+	
+	@Transactional
+	public GetResult<SubscriberDto> getSubscriberInheritFrom(UUID userId, UUID elementId, SubscriptionElementType type) {
+		Subscriber applicableSubscriber = getApplicableSubscriber(userId, type, elementId);
+		return new GetResult<SubscriberDto>("success", "success", getSubscriberDto(applicableSubscriber));
+	}
+	
 	@Transactional
 	public GetResult<SubscriberDto> getSubscriber(UUID userId, UUID elementId, SubscriptionElementType type) {
 		Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
@@ -284,11 +336,10 @@ public class ActivityService {
 			
 			subscriber.setUser(appUserRepository.findByC1Id(userId));
 			
-			subscriberDto = subscriber.toDto();
-			subscriberDto.setApplicableSubscriber(getApplicableSubscriber(userId, type, elementId).toDto());
+			subscriberDto = getSubscriberDto(subscriber);
 			
 		} else {
-			subscriberDto = subscriber.toDto();
+			subscriberDto = getSubscriberDto(subscriber);
 		}
 		
 		return new GetResult<SubscriberDto>("success", "success", subscriberDto);
@@ -336,6 +387,8 @@ public class ActivityService {
 		
 		subscriber.setType(SubscriptionElementType.COLLECTIVEONE);
 		subscriber.setUser(appUserRepository.findByC1Id(userId));
+		
+		subscriber.setInheritConfig(SubscriberInheritConfig.CUSTOM);
 		
 		initDefaultSubscriber(subscriber);
 		
@@ -895,7 +948,7 @@ public class ActivityService {
 		
 		/* if not found a CUSTOM subscriber in any section or initiative, use the user global subscriber */
 		if (applicableSubscriber == null) {
-			applicableSubscriber = subscriberRepository.findByUser_C1IdAndType(userId, SubscriptionElementType.COLLECTIVEONE);
+			applicableSubscriber = getOrCreateCollectiveOneSubscriber(userId);
 		}
 		
 		return applicableSubscriber;		
@@ -929,7 +982,9 @@ public class ActivityService {
 		Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(initiativeId, SubscriptionElementType.INITIATIVE, userId);
 		
 		if (subscriber != null) {
-			return subscriber;
+			if (subscriber.getInheritConfig() == SubscriberInheritConfig.CUSTOM) {
+				return subscriber;	
+			}
 		} 
 		
 		
@@ -938,7 +993,9 @@ public class ActivityService {
 		for (Initiative parent : parents) {
 			subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(parent.getId(), SubscriptionElementType.INITIATIVE, userId);
 			if (subscriber != null) {
-				return subscriber;
+				if (subscriber.getInheritConfig() == SubscriberInheritConfig.CUSTOM) {
+					return subscriber;
+				}
 			}
 		}
 		
@@ -975,7 +1032,7 @@ public class ActivityService {
 		for (Map.Entry<UUID, Subscriber> entry : subscribersMap.entrySet()) {
 			Subscriber thisSubscriber = entry.getValue();
 			if (thisSubscriber.getInheritConfig() == SubscriberInheritConfig.INHERIT) {
-				Subscriber globalSubscriber = subscriberRepository.findByUser_C1IdAndType(thisSubscriber.getUser().getC1Id(), SubscriptionElementType.COLLECTIVEONE);
+				Subscriber globalSubscriber = getOrCreateCollectiveOneSubscriber(thisSubscriber.getUser().getC1Id());
 				subscribersMap.put(entry.getKey(), globalSubscriber);
 			}
 		}
