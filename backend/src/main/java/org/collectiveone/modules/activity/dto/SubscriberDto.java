@@ -10,6 +10,7 @@ public class SubscriberDto {
 	private String elementType;
 	
 	private String inheritConfig;
+	private SubscriberDto applicableSubscriber;
 	
 	private String inAppConfig;
 	private String pushConfig;
@@ -46,6 +47,12 @@ public class SubscriberDto {
 	}
 	public void setInheritConfig(String inheritConfig) {
 		this.inheritConfig = inheritConfig;
+	}
+	public SubscriberDto getApplicableSubscriber() {
+		return applicableSubscriber;
+	}
+	public void setApplicableSubscriber(SubscriberDto applicableSubscriber) {
+		this.applicableSubscriber = applicableSubscriber;
 	}
 	public String getInAppConfig() {
 		return inAppConfig;

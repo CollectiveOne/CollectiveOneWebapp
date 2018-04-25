@@ -151,7 +151,8 @@ public class StartupMigrations implements ApplicationListener<ContextRefreshedEv
 		
 			System.out.println("updatig subscriber " + subscriber.getType().toString());
 			
-			if (subscriber.getInheritConfig() == null) subscriber.setInheritConfig(SubscriberInheritConfig.INHERIT);
+			if (subscriber.getInheritConfig() == null) subscriber.setInheritConfig(SubscriberInheritConfig.CUSTOM);
+			
 			if (subscriber.getInAppConfig() == null) subscriber.setInAppConfig(SubscriberInAppConfig.ALL_EVENTS);
 			if (subscriber.getPushConfig() == null) subscriber.setPushConfig(SubscriberPushConfig.ALL_EVENTS);
 			if (subscriber.getEmailNowConfig() == null) subscriber.setEmailNowConfig(SubscriberEmailNowConfig.DISABLED);
