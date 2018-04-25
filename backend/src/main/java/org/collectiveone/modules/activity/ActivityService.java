@@ -295,7 +295,8 @@ public class ActivityService {
 			Subscriber applicableSubscriber = getApplicableSubscriber(
 					subscriber.getUser().getC1Id(), 
 					subscriber.getType(), 
-					subscriber.getElementId());
+					subscriber.getElementId(),
+					false);
 			
 			SubscriberDto applicableSubscriberDto = applicableSubscriber.toDto();
 			
@@ -320,7 +321,7 @@ public class ActivityService {
 	
 	@Transactional
 	public GetResult<SubscriberDto> getSubscriberInheritFrom(UUID userId, UUID elementId, SubscriptionElementType type) {
-		Subscriber applicableSubscriber = getApplicableSubscriber(userId, type, elementId);
+		Subscriber applicableSubscriber = getApplicableSubscriber(userId, type, elementId, true);
 		return new GetResult<SubscriberDto>("success", "success", getSubscriberDto(applicableSubscriber));
 	}
 	
@@ -921,12 +922,13 @@ public class ActivityService {
 	
 	/* this method must be consistent with the create notification method below. Otherwise the user wont know
 	 * what the hell is going on... */
-	private Subscriber getApplicableSubscriber(UUID userId, SubscriptionElementType elementType, UUID elementId) {
+	private Subscriber getApplicableSubscriber(UUID userId, SubscriptionElementType elementType, UUID elementId, Boolean skipOne) {
 		Subscriber applicableSubscriber = null; 
 		
 		/* check if start on section */
 		if (elementType == SubscriptionElementType.SECTION) {
-			applicableSubscriber = findSubscriberOnSectionsRec(userId, elementId, new HashSet<UUID>());
+			applicableSubscriber = findSubscriberOnSectionsRec(userId, elementId, new HashSet<UUID>(), skipOne);
+			skipOne = false;
 			
 			/* if found in sections */
 			if (applicableSubscriber != null) {
@@ -935,7 +937,7 @@ public class ActivityService {
 		}
 		
 		/* if not found in section or not relative to section, look on initiatives */
-		applicableSubscriber = findSubscriberOnInitiatives(userId, elementId);
+		applicableSubscriber = findSubscriberOnInitiatives(userId, elementId, skipOne);
 		
 		/* if not found a CUSTOM subscriber in any section or initiative, use the user global subscriber */
 		if (applicableSubscriber == null) {
@@ -945,22 +947,30 @@ public class ActivityService {
 		return applicableSubscriber;		
 	}
 	
-	private Subscriber findSubscriberOnSectionsRec(UUID userId, UUID sectionId, Set<UUID> readIds) {
-		Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(sectionId, SubscriptionElementType.SECTION, userId);
-		readIds.add(sectionId);
+	private Subscriber findSubscriberOnSectionsRec(UUID userId, UUID sectionId, Set<UUID> readIds, Boolean skipOne) {
 		
-		/* if found, return it, otherwise look for it recursively in the parent sections*/
-		if (subscriber != null) {
-			if (subscriber.getInheritConfig() == SubscriberInheritConfig.CUSTOM) {
-				return subscriber;	
-			}
+		if (!skipOne) {
+			Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(sectionId, SubscriptionElementType.SECTION, userId);
+			readIds.add(sectionId);
+			
+			/* if found, return it, otherwise look for it recursively in the parent sections*/
+			if (subscriber != null) {
+				if (subscriber.getInheritConfig() == SubscriberInheritConfig.CUSTOM) {
+					return subscriber;	
+				}
+			}	
 		}
 		
 		GraphNode sectionNode = modelService.getSectionNode(sectionId, true, false, 2);
 		
 		for (GraphNode parent : sectionNode.getParents()) {
 			/* recursively add parent subscribers*/
-			return findSubscriberOnSectionsRec(userId, parent.getElementId(), readIds);
+			Subscriber parentSubscriber = findSubscriberOnSectionsRec(userId, parent.getElementId(), readIds, false);
+			
+			/* return (and stop searching other parents) if not null only */
+			if (parentSubscriber != null) {
+				return parentSubscriber;
+			}
 		}
 		
 		/* if no parents, return null*/
@@ -968,16 +978,19 @@ public class ActivityService {
 		
 	}
 	
-	private Subscriber findSubscriberOnInitiatives(UUID userId, UUID initiativeId) {
+	private Subscriber findSubscriberOnInitiatives(UUID userId, UUID initiativeId, Boolean skipOne) {
 		
-		Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(initiativeId, SubscriptionElementType.INITIATIVE, userId);
+		Subscriber subscriber = null; 
 		
-		if (subscriber != null) {
-			if (subscriber.getInheritConfig() == SubscriberInheritConfig.CUSTOM) {
-				return subscriber;	
-			}
-		} 
-		
+		if (!skipOne) {
+			subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(initiativeId, SubscriptionElementType.INITIATIVE, userId);
+			
+			if (subscriber != null) {
+				if (subscriber.getInheritConfig() == SubscriberInheritConfig.CUSTOM) {
+					return subscriber;	
+				}
+			}	
+		}
 		
 		List<Initiative> parents = initiativeService.getParentGenealogyInitiatives(initiativeId);
 		
@@ -1165,7 +1178,6 @@ public class ActivityService {
 	/* update the input subscribers list */
 	private void appendSectionSubscribers(UUID sectionId, Map<UUID, Subscriber> subscribersMap) {
 		List<Subscriber> thisSubscribers = subscriberRepository.findByElementId(sectionId);
-		/* being a set, no duplicates are created */
 		
 		for (Subscriber subscriber : thisSubscribers) {
 			
@@ -1174,7 +1186,7 @@ public class ActivityService {
 				subscribersMap.put(subscriber.getUser().getC1Id(), subscriber);
 				
 			} else {
-				/* else, if this subscriber is CUSTOM, get the current subscriber and place him if INHERIT */
+				/* else, if this subscriber is CUSTOM, get the current subscriber and replace him if INHERIT */
 				if (subscriber.getInheritConfig() == SubscriberInheritConfig.CUSTOM) {
 					Subscriber existingSubscriber = subscribersMap.get(subscriber.getUser().getC1Id());
 					if (existingSubscriber.getInheritConfig() == SubscriberInheritConfig.INHERIT) {
@@ -1205,7 +1217,15 @@ public class ActivityService {
 		for (Subscriber subscriber : thisSubscribers) {
 			if (!subscribersMap.containsKey(subscriber.getUser().getC1Id())) {
 				subscribersMap.put(subscriber.getUser().getC1Id(), subscriber);
-			} 
+			} else {
+				/* else, if this subscriber is CUSTOM, get the current subscriber and replace him if INHERIT */
+				if (subscriber.getInheritConfig() == SubscriberInheritConfig.CUSTOM) {
+					Subscriber existingSubscriber = subscribersMap.get(subscriber.getUser().getC1Id());
+					if (existingSubscriber.getInheritConfig() == SubscriberInheritConfig.INHERIT) {
+						subscribersMap.put(subscriber.getUser().getC1Id(), subscriber);
+					}
+				}
+			}
 		}
 		
 		/* then add the subscribers of all parent initiatives 2(B and A, in that order) */
@@ -1215,6 +1235,19 @@ public class ActivityService {
 			
 			for (Subscriber parentSubscriber : parentSubscribers) {
 				subscribersMap.put(parentSubscriber.getUser().getC1Id(), parentSubscriber);
+				
+				if (!subscribersMap.containsKey(parentSubscriber.getUser().getC1Id())) {
+					subscribersMap.put(parentSubscriber.getUser().getC1Id(), parentSubscriber);
+				} else {
+					/* else, if this subscriber is CUSTOM, get the current subscriber and replace him if INHERIT */
+					if (parentSubscriber.getInheritConfig() == SubscriberInheritConfig.CUSTOM) {
+						Subscriber existingSubscriber = subscribersMap.get(parentSubscriber.getUser().getC1Id());
+						if (existingSubscriber.getInheritConfig() == SubscriberInheritConfig.INHERIT) {
+							subscribersMap.put(parentSubscriber.getUser().getC1Id(), parentSubscriber);
+						}
+					}
+				}
+				
 			}
 		}
 	}

@@ -22,8 +22,8 @@
     </div>
     <div class="slider-container">
       <transition name="slideDownUp">
-        <div v-if="showIn" class="w3-row breadcrumb">
-          <div class="w3-row description-container w3-margin-top">
+        <div v-if="showIn && currentSection && currentSectionPaths.length > 0" class="w3-row breadcrumb">
+          <div class="w3-row description-container">
             <span v-if="currentSection.description !== null && currentSection.description !== ''">{{ currentSection.description }}</span>
             <span v-else>empty</span>
           </div>
