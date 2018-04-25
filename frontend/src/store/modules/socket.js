@@ -5,15 +5,10 @@ const socket = new SockJS(process.env.WEBSOCKET_SERVER_URL)
 const stompClient = Stomp.over(socket)
 
 const state = {
-  sckConnected: false
+  connected: false
 }
 
-const getters = {
-  isConnected: (state) => {
-    return state.connected
-  }
-
-}
+const getters = {}
 
 const mutations = {
   setConnected: (state, payload) => {
@@ -27,7 +22,6 @@ const actions = {
       stompClient.connect(
         {},
         frame => {
-          console.log("socket connected")
           context.commit('setConnected', true)
           resolve(true)
         },
@@ -42,10 +36,19 @@ const actions = {
 
   subscribe: (context, payload) => {
     if (context.state.connected) {
-      stompClient.subscribe(payload.url, tick => {
-        payload.callback(tick)
+      return stompClient.subscribe(payload.url, tick => {
+        payload.onMessage(tick)
       })
+    } else {
+      return null
     }
+  },
+
+  disconnectSocket: (context) => {
+    if (stompClient) {
+      stompClient.disconnect()
+    }
+    context.commit('setConnected', false)
   }
 }
 
