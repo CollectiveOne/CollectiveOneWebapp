@@ -8,12 +8,12 @@
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>Edit notifications of {{ elementName }}</h2>
+          <h2>Edit {{ notificationsTitle }}</h2>
         </div>
 
         <div class="w3-container form-container">
 
-          <div v-if="subscriber" class="w3-row-padding">
+          <div v-if="subscriber && type !== 'COLLECTIVEONE'" class="w3-row-padding">
             <div class="w3-col m4 s12 text-column">General Config:</div>
             <div class="w3-col m8 s12">
               <div class="w3-row-padding">
@@ -317,25 +317,35 @@ export default {
             return '"' + this.inheritedFrom.initiative.meta.name + '" Initiative'
 
           case 'COLLECTIVEONE':
-            return 'your global subscription preferences'
+            return 'your global notification preferences'
         }
       }
     },
     isSection () {
       return this.type === 'SECTION'
     },
-    elementName () {
-      if (this.isSection) {
-        return '"' + this.section.title + '" Section'
-      } else {
-        return '"' + this.initiative.meta.name + '" Initiative'
+    notificationsTitle () {
+      switch (this.type) {
+        case 'SECTION':
+          return 'notifications for the "' + this.section.title + '" Section'
+
+        case 'INITIATIVE':
+          return 'notifications for the "' + this.initiative.meta.name + '" Initiative'
+
+        case 'COLLECTIVEONE':
+          return 'your global notification preferences'
       }
     },
     elementId () {
-      if (this.isSection) {
-        return this.section.id
-      } else {
-        return this.initiative.id
+      switch (this.type) {
+        case 'SECTION':
+          return this.section.id
+
+        case 'INITIATIVE':
+          return this.initiative.id
+
+        case 'COLLECTIVEONE':
+          return '00000000-0000-0000-0000-000000000000'
       }
     }
   },

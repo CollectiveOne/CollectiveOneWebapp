@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.collectiveone.modules.activity.Activity;
+import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.Subscriber;
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.enums.SubscriberEmailNowConfig;
@@ -16,6 +17,7 @@ import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryPeriodConf
 import org.collectiveone.modules.activity.enums.SubscriberInAppConfig;
 import org.collectiveone.modules.activity.enums.SubscriberInheritConfig;
 import org.collectiveone.modules.activity.enums.SubscriberPushConfig;
+import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.activity.repositories.SubscriberRepositoryIf;
 import org.collectiveone.modules.initiatives.Initiative;
@@ -35,7 +37,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class StartupMigrations implements ApplicationListener<ContextRefreshedEvent> {
 	
-	
+	@Autowired
+	ActivityService activityService;
+		
 	@Autowired
 	ModelCardWrapperRepositoryIf modelCardWrapperRepository;
 	
@@ -161,5 +165,24 @@ public class StartupMigrations implements ApplicationListener<ContextRefreshedEv
 			
 			subscriberRepository.save(subscriber);
 		}
+		
+		/* make sure all app users have their global collectiveone subscriber entity */
+		List<AppUser> allAppUsers = subscriberRepository.findAllUsersWithoutSubscriberOfType(SubscriptionElementType.COLLECTIVEONE);
+		
+		for (AppUser user : allAppUsers) {
+			System.out.println("creating global subscriber for " + user.getProfile().getNickname());
+			
+			Subscriber subscriber = new Subscriber();
+			
+			subscriber.setType(SubscriptionElementType.COLLECTIVEONE);
+			subscriber.setUser(user);
+			
+			subscriber.setInheritConfig(SubscriberInheritConfig.CUSTOM);
+			
+			activityService.initDefaultSubscriber(subscriber);
+			
+			subscriberRepository.save(subscriber);
+		}
+		
     }
 }

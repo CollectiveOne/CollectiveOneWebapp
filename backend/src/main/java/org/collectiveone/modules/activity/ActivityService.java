@@ -246,7 +246,11 @@ public class ActivityService {
 	
 	@Transactional
 	public void removeSubscriber(UUID elementId, SubscriptionElementType type, UUID userId) {
-		Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
+		Subscriber subscriber = type == 
+				SubscriptionElementType.COLLECTIVEONE ? 
+						subscriberRepository.findByUser_C1IdAndType(userId, type) :
+						subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
+						
 		subscriberRepository.delete(subscriber);
 	}
 	
@@ -322,7 +326,11 @@ public class ActivityService {
 	
 	@Transactional
 	public GetResult<SubscriberDto> getSubscriber(UUID userId, UUID elementId, SubscriptionElementType type) {
-		Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
+		Subscriber subscriber = type == 
+			SubscriptionElementType.COLLECTIVEONE ? 
+					subscriberRepository.findByUser_C1IdAndType(userId, type) :
+					subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
+					
 		SubscriberDto subscriberDto = null;
 		
 		if (subscriber == null) {
@@ -350,7 +358,10 @@ public class ActivityService {
 	 * not associated to any initiative or element */
 	@Transactional
 	private Subscriber getOrCreateSubscriber(UUID elementId, SubscriptionElementType type, UUID userId) {
-		Subscriber subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
+		Subscriber subscriber = type == 
+				SubscriptionElementType.COLLECTIVEONE ? 
+						subscriberRepository.findByUser_C1IdAndType(userId, type) :
+						subscriberRepository.findByElementIdAndTypeAndUser_C1Id(elementId, type, userId);
 
 		if (subscriber != null) {
 			return subscriber;
@@ -367,32 +378,12 @@ public class ActivityService {
 		return subscriberRepository.save(subscriber);
 	}
 	
-	private void initDefaultSubscriber(Subscriber subscriber) {
+	public void initDefaultSubscriber(Subscriber subscriber) {
 		subscriber.setInAppConfig(SubscriberInAppConfig.ALL_EVENTS);
 		subscriber.setPushConfig(SubscriberPushConfig.ONLY_MESSAGES);
 		subscriber.setEmailNowConfig(SubscriberEmailNowConfig.DISABLED);
 		subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.ALL_EVENTS);
 		subscriber.setEmailSummaryPeriodConfig(SubscriberEmailSummaryPeriodConfig.DAILY);
-	}
-	
-	@Transactional
-	private Subscriber getOrCreateCollectiveOneSubscriber(UUID userId) {
-		Subscriber subscriber = subscriberRepository.findByUser_C1IdAndType(userId, SubscriptionElementType.COLLECTIVEONE);
-
-		if (subscriber != null) {
-			return subscriber;
-		}
-		
-		subscriber = new Subscriber();
-		
-		subscriber.setType(SubscriptionElementType.COLLECTIVEONE);
-		subscriber.setUser(appUserRepository.findByC1Id(userId));
-		
-		subscriber.setInheritConfig(SubscriberInheritConfig.CUSTOM);
-		
-		initDefaultSubscriber(subscriber);
-		
-		return subscriberRepository.save(subscriber);
 	}
 	
 	/**
@@ -839,7 +830,7 @@ public class ActivityService {
 		for (Member member : members) {
 			if(activity.getTriggerUser().getC1Id() != member.getUser().getC1Id()) {
 				/* add a notification only if the trigger user is not the subscriber */
-				Subscriber subscriber = getOrCreateCollectiveOneSubscriber(member.getUser().getC1Id());
+				Subscriber subscriber = subscriberRepository.findByUser_C1IdAndType(member.getUser().getC1Id(), SubscriptionElementType.COLLECTIVEONE);
 				createSubscriberNotification(subscriber, activity);
 			}
 		}
@@ -948,7 +939,7 @@ public class ActivityService {
 		
 		/* if not found a CUSTOM subscriber in any section or initiative, use the user global subscriber */
 		if (applicableSubscriber == null) {
-			applicableSubscriber = getOrCreateCollectiveOneSubscriber(userId);
+			applicableSubscriber = subscriberRepository.findByUser_C1IdAndType(userId, SubscriptionElementType.COLLECTIVEONE);
 		}
 		
 		return applicableSubscriber;		
@@ -1032,7 +1023,7 @@ public class ActivityService {
 		for (Map.Entry<UUID, Subscriber> entry : subscribersMap.entrySet()) {
 			Subscriber thisSubscriber = entry.getValue();
 			if (thisSubscriber.getInheritConfig() == SubscriberInheritConfig.INHERIT) {
-				Subscriber globalSubscriber = getOrCreateCollectiveOneSubscriber(thisSubscriber.getUser().getC1Id());
+				Subscriber globalSubscriber = subscriberRepository.findByUser_C1IdAndType(thisSubscriber.getUser().getC1Id(), SubscriptionElementType.COLLECTIVEONE); 
 				subscribersMap.put(entry.getKey(), globalSubscriber);
 			}
 		}

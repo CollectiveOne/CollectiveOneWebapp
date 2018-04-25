@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.collectiveone.modules.activity.Subscriber;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
+import org.collectiveone.modules.users.AppUser;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -24,5 +25,10 @@ public interface SubscriberRepositoryIf extends CrudRepository<Subscriber, UUID>
 			+ "sub.emailSummaryConfig IS NULL OR "
 			+ "sub.emailSummaryPeriodConfig IS NULL")
 	List<Subscriber> findAllNotSet();
+	
+	@Query("SELECT users FROM AppUser users "
+			+ "WHERE c1Id NOT IN ("
+			+ "SELECT sub.user.c1Id FROM Subscriber sub WHERE sub.type = ?1)")
+	List<AppUser> findAllUsersWithoutSubscriberOfType(SubscriptionElementType type);
 
 }
