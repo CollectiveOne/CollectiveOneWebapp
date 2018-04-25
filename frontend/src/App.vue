@@ -65,6 +65,9 @@ export default {
     this.$store.commit('setLock', lock)
     this.$store.commit('authenticate', !!localStorage.getItem('id_token'))
     this.$store.dispatch('updateProfile')
+    this.$store.dispatch('initializeWebsocket').then(res=>{
+      console.log("WS connect "+res);
+    })
   }
 }
 </script>

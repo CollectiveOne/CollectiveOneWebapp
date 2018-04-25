@@ -27,13 +27,14 @@ const actions = {
       stompClient.connect(
         {},
         frame => {
+          console.log("socket connected")
           context.commit('setConnected', true)
-          resolve()
+          resolve(true)
         },
         error => {
           console.log(error)
           context.commit('setConnected', false)
-          reject()
+          reject(false)
         }
       )
     })
