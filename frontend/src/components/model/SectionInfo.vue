@@ -6,15 +6,15 @@
           <div class="w3-left title-div">
             {{ sectionTitle }}
           </div>
-          <div class="w3-left btn-div">
+          <div class="w3-left btn-div fa-button">
             <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
             </app-section-control-buttons>
           </div>
-          <div class="w3-left btn-div">
+          <div class="w3-left btn-div fa-button">
             <app-section-control-buttons :section="currentSection" :inSection="null" :onlyAdd="true">
             </app-section-control-buttons>
           </div>
-          <div @click="showIn = !showIn" class="w3-left btn-div cursor-pointer">
+          <div @click="showIn = !showIn" class="w3-left btn-div fa-button">
             <i class="fa fa-info-circle" aria-hidden="true"></i>
           </div>
         </div>
@@ -142,10 +142,6 @@ export default {
 .btn-div {
   width: 35px;
   text-align: center;
-}
-
-.btn-div:hover {
-  background-color: rgb(171, 171, 171);
 }
 
 .description-container {

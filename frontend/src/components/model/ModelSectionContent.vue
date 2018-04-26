@@ -49,7 +49,7 @@ export default {
 }
 
 .control-row {
-  padding: 16px 18px 12px 26px;
+  padding: 16px 18px 12px 36px;
 }
 
 </style>
