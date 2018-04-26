@@ -172,7 +172,7 @@ export default {
   margin-left: -80px;
   text-align: left;
   font-size: 15px;
-  z-index: 1;
+  z-index: 2;
 }
 
 .delete-intent-div {

@@ -325,6 +325,7 @@ export default {
  position: absolute;
  margin-top: 50px;
  width: 150px;
+ z-index: 2;
 }
 
 .login-button-container {
