@@ -46,10 +46,12 @@
 
         <div v-if="showSubsections && subsections.length > 0" class="w3-row subsections-container"
           :class="{'subsection-container-selected': highlight}" >
-          <app-model-section-nav-item v-for="subsection in subsections"
+          <app-model-section-nav-item
+            v-for="(subsection, ix) in subsections"
             :inSection="section"
             :section="subsection" :key="subsection.id"
             :highlightLevel="highlightLevelUse - 1"
+            :expandSubsections="thisSubsectionExpands(ix)"
             class="subsection-row">
           </app-model-section-nav-item>
         </div>
@@ -84,6 +86,10 @@ export default {
     highlightLevel: {
       type: Number,
       default: 0
+    },
+    expandSubsections: {
+      type: Array,
+      default: () => { return [] }
     }
   },
 
@@ -147,6 +153,21 @@ export default {
   },
 
   methods: {
+    thisSubsectionExpands (ix) {
+      if (this.expandSubsections.length > 1) {
+        let subexpands = this.expandSubsections[1]
+        /* find the one of this subsection ix */
+        let thisSubexpand = subexpands.filter((e) => { return e[0] === ix })
+        /* if found */
+        if (thisSubexpand.length > 0) {
+          /* replace ix with flag */
+          let thisSubexpandClean = JSON.parse(JSON.stringify(thisSubexpand[0]))
+          thisSubexpandClean[0] = 1
+          return thisSubexpandClean
+        }
+      }
+      return []
+    },
     sectionSelected () {
       this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
     },
@@ -164,7 +185,9 @@ export default {
       if (this.highlightLevelUse > 1) {
         this.showSubsections = true
       } else {
-        // this.showSubsections = false
+        if (this.expandSubsections.length > 0) {
+          this.showSubsections = this.expandSubsections[0] === 1
+        }
       }
     },
     dragStart (event) {

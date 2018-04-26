@@ -16,16 +16,27 @@
     <div class="model-nav-container">
       <div class="w3-row">
         <app-model-section-nav-item
-          :section="initiative.topModelSection">
+          :section="initiative.topModelSection"
+          :expandSubsections="menuExpandArray">
         </app-model-section-nav-item>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelSectionNavItem from '@/components/model/nav/ModelSectionNavItem.vue'
+
+const extractMenuExpands = function (codedString) {
+  console.log(codedString)
+  let jsonStr = codedString.replace(/C/g, '[').replace(/D/g, ']').replace(/Q/g, ',')
+  console.log(jsonStr)
+  let arr = JSON.parse(jsonStr)
+  console.log(arr)
+  return arr
+}
 
 export default {
   components: {
@@ -45,11 +56,18 @@ export default {
     levels () {
       return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
     },
-    expandModelNav () {
-      return this.$store.state.support.expandModelNav
+    menu () {
+      return 'C1QCC1QCC1DDDQC4DDD' // this.$route.query.menu ? this.$route.query.menu : ''
+    },
+    menuExpandArray () {
+      return extractMenuExpands(this.menu)
     }
   },
+
   methods: {
+  },
+
+  created () {
   }
 }
 </script>

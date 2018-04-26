@@ -36,7 +36,6 @@ export default {
   },
 
   created () {
-    console.log('ModelSectionContent created')
     this.$store.dispatch('updateCurrentSection', this.$route.params.sectionId)
     this.redirect()
   }
