@@ -51,8 +51,7 @@
             :inSection="section"
             :section="subsection" :key="subsection.id"
             :highlightLevel="highlightLevelUse - 1"
-            :globalLevel="globalLevel + 1"
-            :ixInParent="ix"
+            :coordinate="coordinate.concat(ix)"
             :expandSubsections="thisSubsectionExpands(ix)"
             class="subsection-row">
           </app-model-section-nav-item>
@@ -90,13 +89,9 @@ export default {
       type: Number,
       default: 0
     },
-    globalLevel: {
-      type: Number,
-      default: 0
-    },
-    ixInParent: {
-      type: Number,
-      default: 0
+    coordinate: {
+      type: Array,
+      default: () => { return [] }
     },
     expandSubsections: {
       type: Array,
@@ -168,37 +163,47 @@ export default {
 
   methods: {
     toggleSubsections () {
+      debugger
       this.showSubsections = !this.showSubsections
+
+      if (!this.showSubsections) {
+        /* TODO: undo when collapsing */
+        return
+      }
+
       let menuArray = menuStringToArray(this.menu)
-      /* initialize */
-      if (menuArray.length === 0) {
-        if (this.globalLevel === 0) {
-          /* first expand */
-          menuArray = [1]
+
+      /* get the subsectionExpands array of this section parent level
+         so that the expand row is added there */
+
+      let levelArray = menuArray
+
+      /* the last coordinate is the index in the parent */
+      let ixInParent = this.coordinate[this.coordinate.length - 1]
+      let globalLevel = this.coordinate.length - 1
+
+      /* initialize if empty */
+      if (levelArray.length === 0) {
+        levelArray.push([ixInParent, []])
+      }
+
+      /* explore the tree to reach this section level array */
+      for (let level = 0; level < globalLevel; level++) {
+        levelArray = levelArray[1][this.coordinate[level]]
+      }
+
+      let subsectionsExpands = levelArray[1]
+
+      let ixFound = -1
+      for (let ix in subsectionsExpands) {
+        if (subsectionsExpands[ix][0] === ixInParent) {
+          ixFound = ix
         }
-      } else {
-        if (menuArray.length === 1) {
-          /* first subsection */
-          menuArray.push([[this.ixInParent]])
-        } else {
-          console.log('menuArray.length > 1')
-          let subsectionsExpands = menuArray[1]
-          console.log(subsectionsExpands)
-          let ixFound = -1
-          for (let ix in subsectionsExpands) {
-            if (subsectionsExpands[ix][0] === this.ixInParent) {
-              ixFound = ix
-            }
-          }
-          console.log('ixFound')
-          console.log(ixFound)
-          /* this subsection expansion not found */
-          if (ixFound === -1) {
-            console.log('subsectionsExpands')
-            subsectionsExpands.push([this.ixInParent])
-            console.log(subsectionsExpands)
-          }
-        }
+      }
+
+      /* this subsection expansion not found */
+      if (ixFound === -1) {
+        subsectionsExpands.push([ixInParent, []])
       }
 
       let menuCoded = menuArrayToString(menuArray)
@@ -239,7 +244,7 @@ export default {
         this.showSubsections = true
       } else {
         if (this.expandSubsections.length > 0) {
-          this.showSubsections = this.expandSubsections[0] === 1
+          this.showSubsections = this.expandSubsections[0] === this.ixInParent
         }
       }
     },

@@ -12,6 +12,10 @@ const menuStringToArray = function (codedString) {
 const menuArrayToString = function (arr) {
   console.log('menuArrayToString')
   console.log(arr)
+  if (arr.length === 0) {
+    return ''
+  }
+
   let str
 
   if (arr.length > 0) {

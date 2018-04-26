@@ -17,7 +17,7 @@
       <div class="w3-row">
         <app-model-section-nav-item
           :section="initiative.topModelSection"
-          :globalLevel="0"
+          :coordinate="[0]"
           :expandSubsections="menuExpandArray">
         </app-model-section-nav-item>
       </div>
