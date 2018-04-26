@@ -5,7 +5,7 @@
         <app-model-nav ></app-model-nav>
       </div>
     </transition>
-    <div @click="showNavBar = !showNavBar" class="hide-nav-div" :class="{'hide-nav-div-shift': showNavBar}">
+    <div @click="showNavBar = !showNavBar" class="hide-nav-div drop-shadow-br" :class="{'hide-nav-div-shift': showNavBar}">
       <i v-if="showNavBar" class="fa fa-chevron-left" aria-hidden="true"></i>
       <i v-else class="fa fa-chevron-right" aria-hidden="true"></i>
     </div>
@@ -74,7 +74,7 @@ export default {
   height: 35px;
   position: absolute;
   top: 12px;
-  background-color: #637484;
+  background-color: #313942;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   color: white;
@@ -88,7 +88,7 @@ export default {
 }
 
 .hide-nav-div:hover {
-  background-color: #6f8294;
+  background-color: #3e464e;
 }
 
 </style>

@@ -37,9 +37,11 @@ export default (to, from, next) => {
     /* keep the levels and cards url parameters when switching among views. */
     var fromLevels = from.query.levels ? from.query.levels : '1'
     var fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
+    var fromMenu = from.query.menu ? from.query.menu : ''
 
     var toLevels = to.query.levels ? to.query.levels : fromLevels
     var toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
+    var toMenu = to.query.menu ? to.query.menu : fromMenu
 
     if (to.name === 'ModelSectionContent') {
       /* just keep the current tab when switching among sections */
@@ -52,7 +54,8 @@ export default (to, from, next) => {
             },
             query: {
               levels: toLevels,
-              cardsType: toCardsType
+              cardsType: toCardsType,
+              menu: toMenu
             }
           })
           break
@@ -66,7 +69,8 @@ export default (to, from, next) => {
             },
             query: {
               levels: toLevels,
-              cardsType: toCardsType
+              cardsType: toCardsType,
+              menu: toMenu
             }})
           break
 
@@ -78,6 +82,7 @@ export default (to, from, next) => {
       if (
         (toLevels !== fromLevels) ||
         (toCardsType !== fromCardsType) ||
+        (toMenu !== fromMenu) ||
         (to.name !== from.name)) {
         next({
           name: to.name,
@@ -86,7 +91,8 @@ export default (to, from, next) => {
           },
           query: {
             levels: toLevels,
-            cardsType: toCardsType
+            cardsType: toCardsType,
+            menu: toMenu
           }})
       } else {
         next()
