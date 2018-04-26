@@ -31,7 +31,7 @@
 
     <div class="modal-buttons-container">
 
-      <div class="expand-btn w3-xlarge cursor-pointer"
+      <div class="expand-btn w3-xlarge fa-button"
         @click="expanded =! expanded"
         v-click-outside="clickOutsideMenu">
         <i class="fa fa-bars" aria-hidden="true"></i>
@@ -162,6 +162,7 @@ export default {
   padding: 8px 12px;
   width: 50px;
   height: 50px;
+  text-align: center;
 }
 
 .drop-menu {

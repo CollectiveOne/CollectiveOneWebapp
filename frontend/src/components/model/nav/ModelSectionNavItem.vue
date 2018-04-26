@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="w3-row">
+  <div class="w3-row section-nav-item-container">
 
-    <div class="w3-row"
+    <div class="w3-row section-nav-item-first-row"
       :class="rowClass"
       draggable="true"
       @dragstart="dragStart($event)"
@@ -31,11 +31,12 @@
           :forceUpdate="forceUpdateNotifications">
         </app-notifications-list>
       </div>
-      <div class="control-div">
+      <div class="control-div" :class="{'fa-button': !highlight, 'fa-button-dark': highlight}">
         <app-section-control-buttons :section="section" :inSection="inSection">
         </app-section-control-buttons>
       </div>
     </div>
+
     <div :class="{'slider-container': animating}">
       <transition name="slideDownUp"
         @before-enter="animating = true"
@@ -43,7 +44,8 @@
         @before-leave="animating = true"
         @after-leave="animating = false">
 
-        <div v-if="showSubsections && subsections.length > 0" class="w3-row subsections-container">
+        <div v-if="showSubsections && subsections.length > 0" class="w3-row subsections-container"
+          :class="{'subsection-container-selected': highlight}" >
           <app-model-section-nav-item v-for="subsection in subsections"
             :inSection="section"
             :section="subsection" :key="subsection.id"
@@ -113,9 +115,12 @@ export default {
   },
 
   computed: {
+    highlight () {
+      return this.highlightLevelUse > 0
+    },
     rowClass () {
       return {
-        'section-selected': this.highlightLevelUse > 0,
+        'section-selected': this.highlight,
         'dragging-over-with-card': this.draggingOverWithCardFlag,
         'dragging-over-with-section-same-level': this.draggingOverWithSectionSameLevelFlag,
         'dragging-over-with-section-inside': this.draggingOverWithSectionInsideFlag
@@ -301,57 +306,69 @@ export default {
 
 <style scoped>
 
+.section-nav-item-container {
+  color: #57636f;
+}
+
+.section-nav-item-first-row {
+}
+
+.subsections-container {
+  padding-left: 20px;
+}
+
+.subsection-container-selected {
+  background-color: #313942;
+}
+
+.subsection-row {
+}
+
 .section-selected {
-  background-color: #797474;
-  transition: background-color 300ms ease;
+  background-color: #313942;
+  transition: all 300ms ease;
   color: white;
+  border-color: #3e464e;
 }
 
 .dragging-over-with-card {
-  background-color: #cfcfcf;
+  background-color: #637484;
 }
 
 .dragging-same-level-clue {
   height: 5px;
-  background-color: #575757;
+  background-color: #637484;
   border-radius: 2.5px;
 }
 
 .dragging-over-with-section-inside {
-  background-color: #cfcfcf;
+  background-color: #637484;
 }
 
 .circle-div {
   width: 30px;
   float: left;
   text-align: center;
+  padding: 3px 0px;
 }
 
 .title-div {
   width: calc(100% - 30px - 30px - 30px);
   float: left;
+  padding: 3px 0px;
 }
 
 .control-div {
   text-align: center;
   width: 30px;
   float: left;
+  padding: 3px 0px;
 }
 
 .notification-div {
   min-height: 1px;
   width: 30px;
   float: left;
-}
-
-.subsections-container {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 25px;
-}
-
-.subsection-row {
-  padding-top: 5px;
 }
 
 </style>

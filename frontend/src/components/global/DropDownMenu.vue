@@ -34,12 +34,14 @@ export default {
 <style scoped>
 
 .menu-row:hover {
-  background-color: #CCCCCC;
+  background-color: #ced4d9;
 }
 
 .menu-row {
   text-align: left;
   padding: 4px 0px;
+  cursor: pointer;
+  color: #313942;
 }
 
 .icon-cont {

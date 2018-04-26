@@ -8,9 +8,9 @@
       </app-edit-notifications-modal>
     </transition>
 
-    <div class="w3-row header-row">
+    <div class="w3-row header-row drop-shadow-br light-grey">
       <div class="w3-col m4">
-       <div class="w3-left nav-menu-btn w3-xlarge cursor-pointer"
+       <div class="w3-left nav-menu-btn w3-xlarge fa-button"
          @click="$store.commit('toggleExpandNav')">
          <i v-if="!expandNav" class="fa fa-chevron-circle-right"></i>
          <i v-if="expandNav" class="fa fa-chevron-circle-left"></i>
@@ -32,7 +32,7 @@
             </div>
 
             <app-initiative-control-buttons
-              class="w3-left" :initiative="this.initiative">
+              class="w3-left w3-margin-left" :initiative="this.initiative">
             </app-initiative-control-buttons>
          </div>
          <div v-if="initiative.status !== 'ENABLED'" class="w3-left w3-tag w3-round w3-margin-left error-panel">
@@ -46,25 +46,25 @@
        <div v-if="inInitiative" class="tab-btns-container w3-xlarge">
          <router-link :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
            class="tab-btn-space">
-           <div class="tab-btn noselect" :class="{'selected': isOverview}">
+           <div class="fa-button noselect" :class="{'fa-button-selected': isOverview}">
              <span class=""><i class="fa fa-home" aria-hidden="true"></i></span>
            </div>
          </router-link>
          <router-link :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
            class="tab-btn-space">
-           <div class="tab-btn noselect" :class="{'selected': isModel}">
+           <div class="fa-button noselect" :class="{'fa-button-selected': isModel}">
              <span class=""><i class="fa fa-th-large" aria-hidden="true"></i></span>
            </div>
          </router-link>
          <router-link :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
            class="tab-btn-space">
-           <div class="tab-btn noselect" :class="{'selected': isPeople}">
+           <div class="fa-button noselect" :class="{'fa-button-selected': isPeople}">
              <span class=""><i class="fa fa-users" aria-hidden="true"></i></span>
            </div>
          </router-link>
          <router-link :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
            class="tab-btn-space">
-           <div class="tab-btn noselect" :class="{'selected': isAssignations}">
+           <div class="fa-button noselect" :class="{'fa-button-selected': isAssignations}">
              <span class=""><i class="fa fa-exchange" aria-hidden="true"></i></span>
            </div>
          </router-link>
@@ -81,7 +81,7 @@
          @click="userOptionsClicked()" class="w3-right cursor-pointer"
          v-click-outside="clickOutsideUser">
 
-         <div v-if="$store.state.user.profile" class="logged-user-div w3-right">
+         <div v-if="$store.state.user.profile" class="logged-user-div fa-button w3-right">
            <div class="avatar-img-container w3-left">
              <img :src="$store.state.user.profile.pictureUrl" class="logged-avatar w3-circle noselect">
            </div>
@@ -108,7 +108,7 @@
          </button>
        </div>
 
-       <router-link :to="{ name: 'Landing'}"><i class="w3-right w3-xlarge info-button fa fa-info-circle"></i></router-link>
+       <router-link :to="{ name: 'Landing'}" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-info-circle"></i></router-link>
 
        <router-link v-if="inInitiative" :to="{name: 'InitiativesHome'}" class="w3-right logo-container noselect cursor-pointer">
          <img class="icon" src="../assets/imago-red.png" alt="">
@@ -239,9 +239,7 @@ export default {
 <style scoped>
 
 .header-row {
-  border-bottom-style: solid;
-  border-width: 0.5px;
-  border-color: #ededed;
+  z-index: 2;
 }
 
 .nav-menu-btn {
@@ -249,10 +247,6 @@ export default {
   height: 50px;
   padding: 8px 12px;
   text-align: center;
-}
-
-.nav-menu-btn:hover {
-  background-color: #cfcfcf;
 }
 
 .initiative-section {
@@ -283,14 +277,6 @@ export default {
   text-align: center;
 }
 
-.tab-btn-space:hover {
-  background-color: #cfcfcf;
-}
-
-.selected {
-  color: #15a5cc;
-}
-
 .logo-container  {
   padding: 9px 12px;
 }
@@ -315,16 +301,8 @@ export default {
   text-align: center;
 }
 
-.info-button:hover {
-  background-color: #cfcfcf;
-}
-
 .logged-user-div {
   height: 50px;
-}
-
-.logged-user-div:hover {
-  background-color: #cfcfcf;
 }
 
 .logged-nickname {

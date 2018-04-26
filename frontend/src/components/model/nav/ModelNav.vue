@@ -13,7 +13,7 @@
       </app-model-section-modal>
     </transition>
 
-    <div class="model-nav-container w3-container">
+    <div class="model-nav-container">
       <div class="w3-row">
         <app-model-section-nav-item
           :section="initiative.topModelSection">
@@ -57,7 +57,6 @@ export default {
 <style scoped>
 
 .model-nav-container {
-  padding-top: 16px;
   min-height: calc(100vh - 50px - 1px);
 }
 

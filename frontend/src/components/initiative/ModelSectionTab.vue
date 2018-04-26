@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="w3-cell-row">
-    <div class="vision-nav light-grey w3-cell">
+    <div class="vision-nav light-grey w3-cell light-grey drop-shadow-br w3-border-top">
       <app-model-nav></app-model-nav>
     </div>
     <div class="vision-content w3-cell">
@@ -42,28 +42,12 @@ export default {
 
 .vision-nav {
   width: 350px;
+  vertical-align: top;
+  border-color: #e3e6e8 !important;
 }
 
 .vision-content {
   vertical-align: top;
-}
-
-.router-container {
-  font-family: 'Open Sans', sans-serif !important;
-}
-
-.router-container h1 {
-  font-size: 32px;
-}
-
-.router-container {
-  padding-bottom: 20px;
-}
-
-.router-container .model-button {
-  background-color: #eff3f6;
-  padding-top: 2px !important;
-  padding-bottom: 3px !important;
 }
 
 </style>
