@@ -66,6 +66,26 @@ const findInitiative = function (initiatives, id) {
   return null
 }
 
+const findThisExpands = function (expandsTree, coord) {
+  let globalLevel = coord.length - 1
+
+  /* transverse the sections expansion tree to find the expansion data
+     of this coordinate */
+  let thisExpands = expandsTree
+  for (var level = 0; level < globalLevel; level++) {
+    /* find the expansion data of this subsection */
+    for (var ixS in thisExpands) {
+      let thisExpand = thisExpands[ixS]
+      if (thisExpand[0] === coord[level]) {
+        /* replace thisExpands with that section subelements */
+        thisExpands = thisExpands[ixS][1]
+      }
+    }
+  }
+
+  return thisExpands
+}
+
 const getters = {
   initiativesTree: (state, getters, rootState) => (id) => {
     return rootState.user.authenticated ? state.myInitiativesTree : state.currentInitiativeTree
@@ -93,31 +113,37 @@ const getters = {
     } else {
       return '#637484'
     }
+  },
+  isSectionExpanded: (state, getters) => (coord) => {
+    let ixInParent = coord[coord.length - 1]
+    let thisExpands = findThisExpands(state.expandedSubsectionsTree, coord)
+    for (let ixFound in thisExpands) {
+      if (thisExpands[ixFound][0] === ixInParent) {
+        return true
+      }
+    }
+    return false
   }
 }
 
 const mutations = {
-  expandSection: (state, coordinate) => {
-    let ixInParent = this.coordinate[this.coordinate.length - 1]
-    let globalLevel = this.coordinate.length - 1
+  expandSection: (state, setting) => {
+    let coord = setting.coord
+    let value = setting.value
+    let ixInParent = coord[coord.length - 1]
+    let thisExpands = findThisExpands(state.expandedSubsectionsTree, coord)
 
-    /* transverse the sections expansion tree to find the expansion data
-       of this coordinate */
-    let thisExpands = state.expandedSubsectionsTree
-    for (var level = 0; level < globalLevel; level++) {
-      /* find the expansion data of this subsection */
-      for (var ixS in thisExpands) {
-        let thisExpand = thisExpands[ixS]
-        if (thisExpand[0] === this.coordinate[level]) {
-          /* replace thisExpands with that section subelements */
-          thisExpands = thisExpands[ixS]
+    if (value) {
+      /* append the element to the expandedSubsectionsTree in the correct position
+         by reference */
+      thisExpands.push([ixInParent, []])
+    } else {
+      for (let ixFound in thisExpands) {
+        if (thisExpands[ixFound][0] === ixInParent) {
+          thisExpands.splice(ixFound, 1)
         }
       }
     }
-
-    /* append the element to the expandedSubsectionsTree in the correct position
-       by reference */
-    thisExpands.push([ixInParent, []])
   },
   setContentAnimationType: (state, payload) => {
     state.contentAnimationType = payload

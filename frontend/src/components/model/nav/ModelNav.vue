@@ -17,8 +17,7 @@
       <div class="w3-row">
         <app-model-section-nav-item
           :section="initiative.topModelSection"
-          :coordinate="[0]"
-          :expandSubsections="menuExpandArray">
+          :coordinate="[0]">
         </app-model-section-nav-item>
       </div>
     </div>
@@ -29,7 +28,6 @@
 <script>
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelSectionNavItem from '@/components/model/nav/ModelSectionNavItem.vue'
-import { menuStringToArray } from '@/components/model/nav/expandCode'
 
 export default {
   components: {
@@ -48,12 +46,6 @@ export default {
     },
     levels () {
       return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
-    },
-    menu () {
-      return this.$route.query.menu ? this.$route.query.menu : ''
-    },
-    menuExpandArray () {
-      return menuStringToArray(this.menu)
     }
   },
 

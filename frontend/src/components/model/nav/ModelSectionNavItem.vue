@@ -65,7 +65,7 @@
 import NotificationsList from '@/components/notifications/NotificationsList.vue'
 import SectionControlButtons from '@/components/model/SectionControlButtons'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal'
-import { menuStringToArray, menuArrayToString } from '@/components/model/nav/expandCode.js'
+import { menuArrayToString } from '@/components/model/nav/expandCode.js'
 
 export default {
   name: 'app-model-section-nav-item',
@@ -158,46 +158,21 @@ export default {
 
   methods: {
     toggleSubsections () {
-      debugger
-      this.showSubsections = !this.showSubsections
+      this.$store.commit('expandSection', {coord: this.coordinate, value: !this.showSubsections})
+      this.checkExpandSubsections()
 
-      if (!this.showSubsections) {
-        /* TODO: undo when collapsing */
-        return
-      }
-
-      let menuArray = menuStringToArray(this.menu)
-
-      /* get the subsectionExpands array of this section parent level
-         so that the expand row is added there */
-
-      /* the last coordinate is the index in the parent */
-      let ixInParent = this.coordinate[this.coordinate.length - 1]
-      let globalLevel = this.coordinate.length - 1
-
-      let subsectionExpands = menuArray
-      /* initialize if empty */
-      if (subsectionExpands.length === 0) {
-        subsectionExpands.push([ixInParent, []])
-      }
-
-      /* transverse the tree to reach this subsectionExpands array */
-      for (let level = 0; level < globalLevel; level++) {
-        let ixFound = -1
-        for (let ix in subsectionExpands) {
-          if (subsectionExpands[ix][0] === this.coordinate[level]) {
-            ixFound = ix
-          }
-        }
-        /* this subsection expansion not found */
-        if (ixFound === -1) {
-          subsectionExpands.push([ixInParent, []])
-        }
-      }
-
-      let menuCoded = menuArrayToString(menuArray)
-      if (menuCoded !== this.menu) {
-        this.$router.replace({name: this.$route.name, query: {menu: menuCoded}})
+      console.log(JSON.stringify(this.$store.state.support.expandedSubsectionsTree))
+      let menuCoded = menuArrayToString(this.$store.state.support.expandedSubsectionsTree)
+      console.log(menuCoded)
+      // if (menuCoded !== this.menu) {
+      //   this.$router.replace({name: this.$route.name, query: {menu: menuCoded}})
+      // }
+    },
+    checkExpandSubsections () {
+      if (this.highlightLevelUse > 1) {
+        this.showSubsections = true
+      } else {
+        this.showSubsections = this.$store.getters.isSectionExpanded(this.coordinate)
       }
     },
     sectionSelected () {
@@ -212,15 +187,6 @@ export default {
           this.subsections = response.data.data.subsections
         }
       })
-    },
-    checkExpandSubsections () {
-      if (this.highlightLevelUse > 1) {
-        this.showSubsections = true
-      } else {
-        if (this.expandSubsections.length > 0) {
-          this.showSubsections = this.expandSubsections[0] === this.ixInParent
-        }
-      }
     },
     dragStart (event) {
       var moveSectionData = {
