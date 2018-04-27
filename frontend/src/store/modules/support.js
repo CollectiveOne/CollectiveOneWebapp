@@ -4,6 +4,7 @@ const state = {
   contentAnimationType: 'slideToDown',
   myInitiativesTree: [],
   currentInitiativeTree: [],
+  expandedSubsectionsTree: [],
   triggerUpdateAssets: false,
   triggerUpdateSectionsTree: false,
   triggerUpdateSectionCards: false,
@@ -96,6 +97,28 @@ const getters = {
 }
 
 const mutations = {
+  expandSection: (state, coordinate) => {
+    let ixInParent = this.coordinate[this.coordinate.length - 1]
+    let globalLevel = this.coordinate.length - 1
+
+    /* transverse the sections expansion tree to find the expansion data
+       of this coordinate */
+    let thisExpands = state.expandedSubsectionsTree
+    for (var level = 0; level < globalLevel; level++) {
+      /* find the expansion data of this subsection */
+      for (var ixS in thisExpands) {
+        let thisExpand = thisExpands[ixS]
+        if (thisExpand[0] === this.coordinate[level]) {
+          /* replace thisExpands with that section subelements */
+          thisExpands = thisExpands[ixS]
+        }
+      }
+    }
+
+    /* append the element to the expandedSubsectionsTree in the correct position
+       by reference */
+    thisExpands.push([ixInParent, []])
+  },
   setContentAnimationType: (state, payload) => {
     state.contentAnimationType = payload
   },

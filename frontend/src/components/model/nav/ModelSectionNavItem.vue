@@ -52,7 +52,6 @@
             :section="subsection" :key="subsection.id"
             :highlightLevel="highlightLevelUse - 1"
             :coordinate="coordinate.concat(ix)"
-            :expandSubsections="thisSubsectionExpands(ix)"
             class="subsection-row">
           </app-model-section-nav-item>
         </div>
@@ -90,10 +89,6 @@ export default {
       default: 0
     },
     coordinate: {
-      type: Array,
-      default: () => { return [] }
-    },
-    expandSubsections: {
       type: Array,
       default: () => { return [] }
     }
@@ -176,55 +171,34 @@ export default {
       /* get the subsectionExpands array of this section parent level
          so that the expand row is added there */
 
-      let levelArray = menuArray
-
       /* the last coordinate is the index in the parent */
       let ixInParent = this.coordinate[this.coordinate.length - 1]
       let globalLevel = this.coordinate.length - 1
 
+      let subsectionExpands = menuArray
       /* initialize if empty */
-      if (levelArray.length === 0) {
-        levelArray.push([ixInParent, []])
+      if (subsectionExpands.length === 0) {
+        subsectionExpands.push([ixInParent, []])
       }
 
-      /* explore the tree to reach this section level array */
+      /* transverse the tree to reach this subsectionExpands array */
       for (let level = 0; level < globalLevel; level++) {
-        levelArray = levelArray[1][this.coordinate[level]]
-      }
-
-      let subsectionsExpands = levelArray[1]
-
-      let ixFound = -1
-      for (let ix in subsectionsExpands) {
-        if (subsectionsExpands[ix][0] === ixInParent) {
-          ixFound = ix
+        let ixFound = -1
+        for (let ix in subsectionExpands) {
+          if (subsectionExpands[ix][0] === this.coordinate[level]) {
+            ixFound = ix
+          }
         }
-      }
-
-      /* this subsection expansion not found */
-      if (ixFound === -1) {
-        subsectionsExpands.push([ixInParent, []])
+        /* this subsection expansion not found */
+        if (ixFound === -1) {
+          subsectionExpands.push([ixInParent, []])
+        }
       }
 
       let menuCoded = menuArrayToString(menuArray)
       if (menuCoded !== this.menu) {
         this.$router.replace({name: this.$route.name, query: {menu: menuCoded}})
       }
-    },
-    thisSubsectionExpands (ix) {
-      if (this.expandSubsections.length > 1) {
-        let subexpands = this.expandSubsections[1]
-        /* find the one of this subsection ix */
-        let thisSubexpand = subexpands.filter((e) => { return e[0] === ix })
-        /* if found */
-        if (thisSubexpand.length > 0) {
-          /* replace ix with flag */
-          let thisSubexpandClean = JSON.parse(JSON.stringify(thisSubexpand[0]))
-          thisSubexpandClean[0] = 1
-          return thisSubexpandClean
-        }
-      }
-      return []
     },
     sectionSelected () {
       this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
