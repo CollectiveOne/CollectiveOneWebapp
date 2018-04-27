@@ -53,6 +53,11 @@ export default {
   },
 
   created () {
+    if (this.$route.query.menu) {
+      if (this.$route.query.menu !== '') {
+        this.$store.commit('setExpandedSubsectionsTreeFromString', this.$route.query.menu)
+      }
+    }
   }
 }
 </script>

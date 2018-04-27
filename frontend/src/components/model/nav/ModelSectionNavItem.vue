@@ -65,7 +65,6 @@
 import NotificationsList from '@/components/notifications/NotificationsList.vue'
 import SectionControlButtons from '@/components/model/SectionControlButtons'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal'
-import { menuArrayToString } from '@/components/model/nav/expandCode.js'
 
 export default {
   name: 'app-model-section-nav-item',
@@ -113,7 +112,7 @@ export default {
         this.updateSubsections()
       }
     },
-    '$route' () {
+    '$store.state.support.triggerCheckExpandSubsections' () {
       this.checkExpandSubsections()
     },
     '$store.state.support.triggerUpdateSectionsTree' () {
@@ -150,23 +149,16 @@ export default {
         /* if this is not the selected section, decrease the highlightLevel property */
         return this.highlightLevel
       }
-    },
-    menu () {
-      return this.$route.query.menu ? this.$route.query.menu : ''
     }
   },
 
   methods: {
     toggleSubsections () {
-      this.$store.commit('expandSection', {coord: this.coordinate, value: !this.showSubsections})
+      this.$store.commit('expandSection', {
+        coord: this.coordinate,
+        value: !this.showSubsections
+      })
       this.checkExpandSubsections()
-
-      console.log(JSON.stringify(this.$store.state.support.expandedSubsectionsTree))
-      let menuCoded = menuArrayToString(this.$store.state.support.expandedSubsectionsTree)
-      console.log(menuCoded)
-      // if (menuCoded !== this.menu) {
-      //   this.$router.replace({name: this.$route.name, query: {menu: menuCoded}})
-      // }
     },
     checkExpandSubsections () {
       if (this.highlightLevelUse > 1) {

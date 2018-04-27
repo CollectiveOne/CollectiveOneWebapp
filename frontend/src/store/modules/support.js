@@ -1,10 +1,13 @@
 import Vue from 'vue'
+import router from '@/router'
+import { menuArrayToString, menuStringToArray } from '@/components/model/nav/expandCode.js'
 
 const state = {
   contentAnimationType: 'slideToDown',
   myInitiativesTree: [],
   currentInitiativeTree: [],
   expandedSubsectionsTree: [],
+  triggerCheckExpandSubsections: false,
   triggerUpdateAssets: false,
   triggerUpdateSectionsTree: false,
   triggerUpdateSectionCards: false,
@@ -76,9 +79,11 @@ const findThisExpands = function (expandsTree, coord) {
     /* find the expansion data of this subsection */
     for (var ixS in thisExpands) {
       let thisExpand = thisExpands[ixS]
-      if (thisExpand[0] === coord[level]) {
-        /* replace thisExpands with that section subelements */
-        thisExpands = thisExpands[ixS][1]
+      if (thisExpand) {
+        if (thisExpand[0] === coord[level]) {
+          /* replace thisExpands with that section subelements */
+          thisExpands = thisExpands[ixS][1]
+        }
       }
     }
   }
@@ -127,6 +132,9 @@ const getters = {
 }
 
 const mutations = {
+  setExpandedSubsectionsTreeFromString: (state, payload) => {
+    state.expandedSubsectionsTree = menuStringToArray(payload)
+  },
   expandSection: (state, setting) => {
     let coord = setting.coord
     let value = setting.value
@@ -143,6 +151,11 @@ const mutations = {
           thisExpands.splice(ixFound, 1)
         }
       }
+    }
+
+    let menuCoded = menuArrayToString(state.expandedSubsectionsTree)
+    if (menuCoded !== this.menu) {
+      router.replace({name: router.app.$route.name, query: {menu: menuCoded}})
     }
   },
   setContentAnimationType: (state, payload) => {
