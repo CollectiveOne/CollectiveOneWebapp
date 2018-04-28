@@ -33,7 +33,7 @@
         :show="showMembersOnly"
         message="sorry, only members of the initiative can send messages here">
       </app-error-panel>
-      <app-markdown-editor
+      <app-messages-markdown-editor
         class="editor-container"
         v-model="newMessageText"
         placeholder="say something"
@@ -42,7 +42,7 @@
         @c-focus="writting = true"
         @c-blur="writting = false"
         @send="send($event)">
-      </app-markdown-editor>
+      </app-messages-markdown-editor>
     </div>
   </div>
 </template>
@@ -157,9 +157,10 @@ export default {
     cancelReply () {
       this.replying = false
     },
-    send () {
+    send (data) {
       var message = {
-        text: this.newMessageText
+        text: this.newMessageText,
+        uuidsOfMentions: data.mentions
       }
       if (!this.editing) {
         var contextType = ''

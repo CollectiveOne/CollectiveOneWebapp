@@ -13,7 +13,8 @@ public class MessageDto {
 	private Long timestamp;
 	private String authorId;
 	private AppUserDto author;
-	
+	private String uuidsOfMentions[];
+
 	public Message toEntity(MessageDto messageDto, AppUser author) {
 		
 		Message message = new Message();
@@ -61,5 +62,14 @@ public class MessageDto {
 	public void setAuthor(AppUserDto author) {
 		this.author = author;
 	}
-	
+
+	public String[] getUuidsOfMentions() {
+		return uuidsOfMentions;
+	}
+
+	public void setUuidsOfMentions(String[] uuidsOfMentions) {
+		this.uuidsOfMentions = uuidsOfMentions;
+	}
+
+
 }
