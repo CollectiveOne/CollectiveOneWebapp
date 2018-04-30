@@ -22,7 +22,7 @@
           <i class="fa fa-circle" aria-hidden="true"></i>
         </div>
       </div>
-      <div @click="sectionSelected()" class="title-div cursor-pointer noselect">
+      <div @click="sectionSelected()" @dblclick="toggleSubsections()" class="title-div cursor-pointer noselect">
         {{ section.isTopModelSection ? 'All' : section.title }}
       </div>
       <div class="notification-div">

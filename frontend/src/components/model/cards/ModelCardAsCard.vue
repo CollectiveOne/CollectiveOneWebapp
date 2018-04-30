@@ -50,10 +50,7 @@
         <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
           v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
           <div class="">
-            <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
-              class="gray-1 w3-tag w3-round w3-small">
-              {{ inSection.title }}
-            </router-link>
+            <app-model-section-tag :section="inSection"></app-model-section-tag>
           </div>
         </div>
       </div>
