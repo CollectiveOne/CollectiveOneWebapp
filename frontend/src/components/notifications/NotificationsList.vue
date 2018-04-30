@@ -84,6 +84,9 @@ export default {
       if (this.notifications.length > 0) {
         this.updateNotifications()
       }
+    },
+    '$store.state.socket.connected' () {
+      this.handleSocket()
     }
   },
 
@@ -170,11 +173,34 @@ export default {
     },
     show () {
       this.showTable = true
+    },
+    handleSocket () {
+      let url = ''
+      switch (this.contextType) {
+        case 'MODEL_CARD':
+          url = '/channel/activity/model/card/' + this.contextElementId
+          break
+
+        case 'MODEL_SECTION':
+          url = '/channel/activity/model/section/' + this.contextElementId
+          break
+      }
+
+      this.subscription = this.$store.dispatch('subscribe', {
+        url: url,
+        onMessage: (tick) => {
+          var message = tick.body
+          if (message === 'UPDATE') {
+            this.updateNotifications()
+          }
+        }
+      })
     }
   },
 
   created () {
     this.updateNotifications()
+    this.handleSocket()
   }
 }
 </script>
