@@ -88,8 +88,10 @@ const actions = {
         addLoggedUser: true
       }
     }).then((response) => {
-      context.commit('setInitiative', response.data.data)
+      let initiative = response.data.data
+      context.commit('setInitiative', initiative)
       context.commit('setInitiativeLoaded', true)
+      context.dispatch('resetSectionsTree', initiative.topModelSection.id)
     }).catch((error) => {
       console.log(error)
     })

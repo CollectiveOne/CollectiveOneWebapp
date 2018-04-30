@@ -74,7 +74,7 @@ export default {
   },
 
   watch: {
-    '$route' (to, from) {
+    '$route.params.initiativeId' (to, from) {
       this.updateInitiative()
     }
   },

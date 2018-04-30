@@ -166,7 +166,7 @@ export default {
 
   methods: {
     toggleSubsections () {
-      this.$store.dispatch('toogleExpandSubsection', this.coordinate)
+      this.$store.dispatch('expandSubsection', this.coordinate)
       this.showSubsections = !this.showSubsections
     },
     checkExpandSubsections () {
@@ -180,7 +180,6 @@ export default {
     },
     sectionSelected () {
       if (this.section) {
-        this.$store.commit('setLastSectionVisited', this.section)
         this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
       }
     },

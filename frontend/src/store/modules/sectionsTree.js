@@ -79,17 +79,31 @@ const actions = {
       }
     })
   },
-  toogleExpandSubsection: (context, coord) => {
+  collapseSubsection: (context, coord) => {
     let sectionData = getSectionDataAtCoord(state.sectionsTree, coord)
-    sectionData.expand = !sectionData.expand
+    sectionData.expand = true
+  },
+  expandSubsection: (context, coord) => {
+    let sectionData = getSectionDataAtCoord(state.sectionsTree, coord)
+    sectionData.expand = true
     /* besides expanding, preload the subsections of each subsection */
-    if (sectionData.expand) {
-      for (let ix = 0; ix < sectionData.subsectionsData.length; ix++) {
-        if (!sectionData.subsectionsData[ix].subsectionsDataSet) {
-          context.dispatch('appendSectionData', { sectionId: sectionData.subsectionsData[ix].section.id, coord: coord.concat(ix) })
-        }
+    for (let ix = 0; ix < sectionData.subsectionsData.length; ix++) {
+      if (!sectionData.subsectionsData[ix].subsectionsDataSet) {
+        context.dispatch('appendSectionData', { sectionId: sectionData.subsectionsData[ix].section.id, coord: coord.concat(ix) })
       }
     }
+  },
+  expandSectionsInPaths: (context, paths) => {
+    // for (let ix in paths) {
+    //   let thisPath = paths[ix]
+    //
+    //   /* make sure this path starts at the current initiative */
+    //   if (thisPath[0].id === context.rootState.initiative.initiative.topSectionModel.id) {
+    //     for (let ix2 in thisPath) {
+    //       thisSection = thisPath[ix2]
+    //     }
+    //   }
+    // }
   }
 }
 
