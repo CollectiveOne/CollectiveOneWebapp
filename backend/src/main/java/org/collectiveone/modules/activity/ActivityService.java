@@ -1234,7 +1234,6 @@ public class ActivityService {
 			List<Subscriber> parentSubscribers = subscriberRepository.findByElementId(parent.getId());
 			
 			for (Subscriber parentSubscriber : parentSubscribers) {
-				subscribersMap.put(parentSubscriber.getUser().getC1Id(), parentSubscriber);
 				
 				if (!subscribersMap.containsKey(parentSubscriber.getUser().getC1Id())) {
 					subscribersMap.put(parentSubscriber.getUser().getC1Id(), parentSubscriber);
@@ -1285,6 +1284,5 @@ public class ActivityService {
 				template.convertAndSend("/channel/activity/model/card/" + activity.getModelCardWrapper().getId(), "UPDATE");
 			}
 		}
-		
 	}
 }

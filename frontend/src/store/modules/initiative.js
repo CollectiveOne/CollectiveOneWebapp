@@ -91,7 +91,7 @@ const actions = {
       let initiative = response.data.data
       context.commit('setInitiative', initiative)
       context.commit('setInitiativeLoaded', true)
-      context.dispatch('resetSectionsTree', initiative.topModelSection.id)
+      context.dispatch('resetSectionsTree', { sectionId: initiative.topModelSection.id })
     }).catch((error) => {
       console.log(error)
     })

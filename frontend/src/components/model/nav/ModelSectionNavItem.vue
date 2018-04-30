@@ -166,8 +166,10 @@ export default {
 
   methods: {
     toggleSubsections () {
-      this.$store.dispatch('expandSubsection', this.coordinate)
       this.showSubsections = !this.showSubsections
+      if (this.showSubsections) {
+        this.$store.dispatch('expandSubsection', this.coordinate)
+      }
     },
     checkExpandSubsections () {
       if (this.highlightLevelUse > 1) {

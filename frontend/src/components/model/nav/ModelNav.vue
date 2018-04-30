@@ -64,7 +64,7 @@ export default {
 
   created () {
     if (this.section === null) {
-      this.$store.dispatch('resetSectionsTree', this.initiative.topModelSection.id)
+      this.$store.dispatch('resetSectionsTree', { sectionId: this.initiative.topModelSection.id })
     }
   }
 }
