@@ -39,6 +39,7 @@ const mutations = {
         state.sectionsTree = [{
           section: payload.sectionData.section,
           subsectionsData: payload.sectionData.subsectionsData,
+          subsectionsDataSet: true,
           expand: false
         }]
         return
@@ -48,6 +49,7 @@ const mutations = {
     let sectionData = getSectionDataAtCoord(state.sectionsTree, payload.coord)
     sectionData.section = payload.sectionData.section
     sectionData.subsectionsData = payload.sectionData.subsectionsData
+    sectionData.subsectionsDataSet = true
   }
 }
 
@@ -65,6 +67,7 @@ const actions = {
           subsectionsData.push({
             section: subsections[ix],
             subsectionsData: [],
+            subsectionsDataSet: false,
             expand: false
           })
         }
@@ -82,7 +85,9 @@ const actions = {
     /* besides expanding, preload the subsections of each subsection */
     if (sectionData.expand) {
       for (let ix = 0; ix < sectionData.subsectionsData.length; ix++) {
-        context.dispatch('appendSectionData', { sectionId: sectionData.subsectionsData[ix].section.id, coord: coord.concat(ix) })
+        if (!sectionData.subsectionsData[ix].subsectionsDataSet) {
+          context.dispatch('appendSectionData', { sectionId: sectionData.subsectionsData[ix].section.id, coord: coord.concat(ix) })
+        }
       }
     }
   }

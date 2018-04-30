@@ -102,6 +102,11 @@ export default {
     }
   },
 
+  watch: {
+    levels () {
+    }
+  },
+
   computed: {
     sectionData () {
       return this.$store.getters.getSectionDataAtCoord(this.coordinate)
