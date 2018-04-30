@@ -106,21 +106,13 @@ export default {
     }
   },
 
-  watch: {
-    showSubsections () {
-      if (this.showSubsections) {
-        this.updateSubsections()
-      }
-    },
-    '$store.state.support.triggerCheckExpandSubsections' () {
-      this.checkExpandSubsections()
-    },
-    '$store.state.support.triggerUpdateSectionsTree' () {
-      this.updateSubsections()
-    }
-  },
-
   computed: {
+    sectionData () {
+      return this.$store.getters.getSectionAtCoord(this.coordinate)
+    },
+    section () {
+      return this.sectionData.section
+    },
     highlight () {
       return this.highlightLevelUse > 0
     },
@@ -164,21 +156,11 @@ export default {
       if (this.highlightLevelUse > 1) {
         this.showSubsections = true
       } else {
-        this.showSubsections = this.$store.getters.isSectionExpanded(this.coordinate)
+        this.showSubsections = this.sectionData.expand
       }
     },
     sectionSelected () {
       this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
-    },
-    addSubsection () {
-      this.showNewSubsectionModal = true
-    },
-    updateSubsections () {
-      this.axios.get('/1/model/section/' + this.section.id, { params: { levels: 1 } }).then((response) => {
-        if (response.data.result === 'success') {
-          this.subsections = response.data.data.subsections
-        }
-      })
     },
     dragStart (event) {
       var moveSectionData = {

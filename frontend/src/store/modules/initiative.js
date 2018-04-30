@@ -1,7 +1,8 @@
 import Vue from 'vue'
 
 const state = {
-  initiative: null
+  initiative: null,
+  initiativeLoaded: false
 }
 
 const getters = {
@@ -62,6 +63,9 @@ const getters = {
 const mutations = {
   setInitiative: (state, payload) => {
     state.initiative = payload
+  },
+  setInitiativeLoaded: (state, payload) => {
+    state.initiativeLoaded = payload
   }
 }
 

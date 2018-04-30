@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <div v-if="$store.state.support.initiativeLoaded">
+    <div v-if="$store.state.initiative.initiativeLoaded">
       <div class="w3-row">
 
        <div class="w3-row">
