@@ -16,7 +16,7 @@
     <div class="model-nav-container">
       <div class="w3-row">
         <app-model-section-nav-item
-          :section="initiative.topModelSection"
+          :section="section"
           :coordinate="[0]">
         </app-model-section-nav-item>
       </div>
@@ -34,6 +34,7 @@ export default {
     'app-model-section-modal': ModelSectionModal,
     'app-model-section-nav-item': ModelSectionNavItem
   },
+
   data () {
     return {
       showSectionModal: false
@@ -41,6 +42,15 @@ export default {
   },
 
   computed: {
+    sectionData () {
+      return this.$store.getters.getSectionDataAtCoord([0])
+    },
+    section () {
+      if (this.sectionData) {
+        return this.sectionData.section
+      }
+      return null
+    },
     initiative () {
       return this.$store.state.initiative.initiative
     },
@@ -53,10 +63,8 @@ export default {
   },
 
   created () {
-    if (this.$route.query.menu) {
-      if (this.$route.query.menu !== '') {
-        this.$store.commit('setExpandedSubsectionsTreeFromString', this.$route.query.menu)
-      }
+    if (this.section === null) {
+      this.$store.dispatch('resetSectionsTree', this.initiative.topModelSection.id)
     }
   }
 }

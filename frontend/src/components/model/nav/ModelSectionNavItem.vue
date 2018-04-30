@@ -23,9 +23,9 @@
         </div>
       </div>
       <div @click="sectionSelected()" @dblclick="toggleSubsections()" class="title-div cursor-pointer noselect">
-        {{ section.isTopModelSection ? 'All' : section.title }}
+        {{ sectionTitle }}
       </div>
-      <div class="notification-div">
+      <div v-if="section" class="notification-div">
         <app-notifications-list
           :section="section"
           :forceUpdate="forceUpdateNotifications">
@@ -76,9 +76,6 @@ export default {
   },
 
   props: {
-    section: {
-      type: Object
-    },
     inSection: {
       type: Object,
       default: null
@@ -96,7 +93,6 @@ export default {
   data () {
     return {
       showSubsections: false,
-      subsections: [],
       animating: false,
       draggingOverWithCardFlag: false,
       draggingOverWithSectionSameLevelFlag: false,
@@ -108,10 +104,19 @@ export default {
 
   computed: {
     sectionData () {
-      return this.$store.getters.getSectionAtCoord(this.coordinate)
+      return this.$store.getters.getSectionDataAtCoord(this.coordinate)
     },
     section () {
-      return this.sectionData.section
+      if (this.sectionData) {
+        return this.sectionData.section
+      }
+      return null
+    },
+    subsections () {
+      if (this.section) {
+        return this.section.subsections
+      }
+      return []
     },
     highlight () {
       return this.highlightLevelUse > 0
@@ -124,11 +129,23 @@ export default {
         'dragging-over-with-section-inside': this.draggingOverWithSectionInsideFlag
       }
     },
+    sectionTitle () {
+      if (this.section) {
+        return this.section.isTopModelSection ? 'All' : this.section.title
+      }
+      return ''
+    },
     hasSubsections () {
-      return this.section.nSubsections > 0
+      if (this.section) {
+        return this.section.nSubsections > 0
+      }
+      return false
     },
     isSelected () {
-      return this.$route.params.sectionId === this.section.id
+      if (this.section) {
+        return this.$route.params.sectionId === this.section.id
+      }
+      return false
     },
     levels () {
       return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
@@ -146,21 +163,22 @@ export default {
 
   methods: {
     toggleSubsections () {
-      this.$store.commit('expandSection', {
-        coord: this.coordinate,
-        value: !this.showSubsections
-      })
-      this.checkExpandSubsections()
+      this.$store.dispatch('toogleExpandSubsection', this.coordinate)
+      this.showSubsections = !this.showSubsections
     },
     checkExpandSubsections () {
       if (this.highlightLevelUse > 1) {
         this.showSubsections = true
       } else {
-        this.showSubsections = this.sectionData.expand
+        if (this.sectionData) {
+          this.showSubsections = this.sectionData.expand
+        }
       }
     },
     sectionSelected () {
-      this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
+      if (this.section) {
+        this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
+      }
     },
     dragStart (event) {
       var moveSectionData = {

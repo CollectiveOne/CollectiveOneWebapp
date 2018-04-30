@@ -1,75 +1,91 @@
-import router from '@/router'
-import { menuArrayToString, menuStringToArray } from '@/components/model/nav/expandCode.js'
+import Vue from 'vue'
+
+const getSectionDataAtCoord = function (sectionsTree, coord) {
+  let subTree = sectionsTree
+
+  /* navigate inside the tree up the penultimate coord */
+  for (let ix = 0; ix < coord.length - 1; ix++) {
+    if (subTree.length === 0) {
+      return null
+    }
+    subTree = subTree[coord[ix]].subsectionsData
+  }
+
+  if (subTree.length === 0) {
+    return null
+  }
+
+  return subTree[coord[coord.length - 1]]
+}
 
 const state = {
   sectionsTree: []
 }
 
-const findThisExpands = function (expandsTree, coord) {
-  let globalLevel = coord.length - 1
-
-  /* transverse the sections expansion tree to find the expansion data
-     of this coordinate */
-  let thisExpands = expandsTree
-  for (var level = 0; level < globalLevel; level++) {
-    /* find the expansion data of this subsection */
-    for (var ixS in thisExpands) {
-      let thisExpand = thisExpands[ixS]
-      if (thisExpand) {
-        if (thisExpand[0] === coord[level]) {
-          /* replace thisExpands with that section subelements */
-          thisExpands = thisExpands[ixS][1]
-        }
-      }
-    }
-  }
-
-  return thisExpands
-}
-
 const getters = {
-  isSectionExpanded: (state, getters) => (coord) => {
-    let ixInParent = coord[coord.length - 1]
-    let thisExpands = findThisExpands(state.expandedSubsectionsTree, coord)
-    for (let ixFound in thisExpands) {
-      if (thisExpands[ixFound][0] === ixInParent) {
-        return true
-      }
-    }
-    return false
+  getSectionDataAtCoord: (state) => (coord) => {
+    return getSectionDataAtCoord(state.sectionsTree, coord)
   }
 }
 
 const mutations = {
-  setExpandedSubsectionsTreeFromString: (state, payload) => {
-    state.expandedSubsectionsTree = menuStringToArray(payload)
+  setSectionsTree: (state, payload) => {
+    state.sectionsTree = payload
   },
-  expandSection: (state, setting) => {
-    let coord = setting.coord
-    let value = setting.value
-    let ixInParent = coord[coord.length - 1]
-    let thisExpands = findThisExpands(state.expandedSubsectionsTree, coord)
-
-    if (value) {
-      /* append the element to the expandedSubsectionsTree in the correct position
-         by reference */
-      thisExpands.push([ixInParent, []])
-    } else {
-      for (let ixFound in thisExpands) {
-        if (thisExpands[ixFound][0] === ixInParent) {
-          thisExpands.splice(ixFound, 1)
-        }
+  appendSectionData: (state, payload) => {
+    if (payload.coord.length === 1) {
+      if (payload.coord[0] === 0) {
+        /* initialize tree */
+        state.sectionsTree = [{
+          section: payload.sectionData.section,
+          subsectionsData: payload.sectionData.subsectionsData,
+          expand: false
+        }]
+        return
       }
     }
 
-    let menuCoded = menuArrayToString(state.expandedSubsectionsTree)
-    if (menuCoded !== this.menu) {
-      router.replace({name: router.app.$route.name, query: {menu: menuCoded}})
-    }
+    let sectionData = getSectionDataAtCoord(state.sectionsTree, payload.coord)
+    sectionData.section = payload.sectionData.section
+    sectionData.subsectionsData = payload.sectionData.subsectionsData
   }
 }
 
 const actions = {
+  resetSectionsTree: (context, id) => {
+    context.dispatch('appendSectionData', {sectionId: id, coord: [0]})
+  },
+  appendSectionData: (context, payload) => {
+    Vue.axios.get('/1/model/section/' + payload.sectionId, { params: { levels: 1 } }).then((response) => {
+      if (response.data.result === 'success') {
+        let section = response.data.data
+        let subsections = section.subsections
+        let subsectionsData = []
+        for (let ix in subsections) {
+          subsectionsData.push({
+            section: subsections[ix],
+            subsectionsData: [],
+            expand: false
+          })
+        }
+        let sectionData = {
+          section: section,
+          subsectionsData: subsectionsData
+        }
+        context.commit('appendSectionData', { sectionData: sectionData, coord: payload.coord })
+      }
+    })
+  },
+  toogleExpandSubsection: (context, coord) => {
+    let sectionData = getSectionDataAtCoord(state.sectionsTree, coord)
+    sectionData.expand = !sectionData.expand
+    /* besides expanding, preload the subsections of each subsection */
+    if (sectionData.expand) {
+      for (let ix = 0; ix < sectionData.subsectionsData.length; ix++) {
+        context.dispatch('appendSectionData', { sectionId: sectionData.subsectionsData[ix].section.id, coord: coord.concat(ix) })
+      }
+    }
+  }
 }
 
 export default {
