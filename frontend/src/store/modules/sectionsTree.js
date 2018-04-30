@@ -1,5 +1,9 @@
 import Vue from 'vue'
 
+const state = {
+  sectionsTree: []
+}
+
 const getSectionDataAtCoord = function (sectionsTree, coord) {
   let subTree = sectionsTree
 
@@ -16,10 +20,6 @@ const getSectionDataAtCoord = function (sectionsTree, coord) {
   }
 
   return subTree[coord[coord.length - 1]]
-}
-
-const state = {
-  sectionsTree: []
 }
 
 const getters = {

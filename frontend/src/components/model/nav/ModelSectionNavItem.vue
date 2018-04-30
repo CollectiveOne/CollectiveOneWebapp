@@ -103,8 +103,6 @@ export default {
   },
 
   watch: {
-    levels () {
-    }
   },
 
   computed: {
@@ -182,6 +180,7 @@ export default {
     },
     sectionSelected () {
       if (this.section) {
+        this.$store.commit('setLastSectionVisited', this.section)
         this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
       }
     },

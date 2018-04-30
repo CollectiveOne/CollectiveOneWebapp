@@ -23,8 +23,7 @@ export default {
   methods: {
     redirect () {
       if (this.$route.name === 'ModelSectionContent') {
-        console.log('redirecting from ModelSectionContent to ModelSectionCards')
-        this.$router.replace({name: 'ModelSectionCards'})
+        this.$router.replace({ name: 'ModelSectionCards' })
       }
     }
   },

@@ -38,8 +38,12 @@ export default {
   methods: {
     redirect () {
       if (this.$route.name === 'InitiativeModel') {
-        console.log('redirecting from InitiativeModel to ModelSectionContent with section id: ' + this.initiative.topModelSection.id)
-        this.$router.replace({name: 'ModelSectionContent', params: {sectionId: this.initiative.topModelSection.id}})
+        let currentSection = this.$store.getters.currentSection
+        if (currentSection !== null) {
+          this.$router.replace({name: 'ModelSectionContent', params: {sectionId: currentSection.id}})
+        } else {
+          this.$router.replace({name: 'ModelSectionContent', params: {sectionId: this.initiative.topModelSection.id}})
+        }
       }
     }
   },
