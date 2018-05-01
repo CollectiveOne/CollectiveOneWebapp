@@ -1,13 +1,13 @@
 <template lang="html">
   <div>
     <div v-if="$store.state.initiative.initiativeLoaded">
-      <div class="w3-row">
+      <div class="w3-row initiative-row">
 
-       <div class="w3-row">
-         <app-header :inInitiative="true"></app-header>
-       </div>
+        <div class="w3-row initiative-header-row">
+          <app-header :inInitiative="true"></app-header>
+        </div>
 
-        <div class="w3-row content-container">
+        <div class="w3-row initiative-content-row">
           <transition :name="animationType" mode="out-in" appear>
             <router-view :key="initiative.id">
             </router-view>
@@ -91,15 +91,17 @@ export default {
 
 <style scoped>
 
-.big-content-container {
-  height: calc(100vh - 65px);
+.initiative-row {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  justify-content: flex-start;
 }
 
-.content-container {
-  overflow: hidden;
+.initiative-header-row {
+  flex-basis: 50px;
+}
+
+.initiative-content-row {
 }
 
 </style>

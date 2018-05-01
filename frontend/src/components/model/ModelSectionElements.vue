@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <div class="w3-left control-group">
+        <div class="w3-left control-group noselect">
           <div class="w3-left zoom-controls">
             <div @click="levelDown()" class="w3-left cursor-pointer arrow-div">
               <img src="./../../assets/zoom-out-icon.svg" alt="">
@@ -59,10 +59,10 @@
 
         <div v-if="!isCardsContent" class="w3-left control-group">
           <div @click="isOnlyMessages = true" class="w3-left control-btn" :class="{'selected': isOnlyMessages}">
-            <img src="./../../assets/chat-icon.svg" alt="">
+            <img src="./../../assets/chat-icon-2.svg" alt="">
           </div>
           <div @click="isOnlyMessages = false" class="w3-left control-btn" :class="{'selected': !isOnlyMessages}">
-            <img src="./../../assets/chat-icon.svg" alt="">
+            <img src="./../../assets/all-events-icon.svg" alt="">
           </div>
         </div>
 

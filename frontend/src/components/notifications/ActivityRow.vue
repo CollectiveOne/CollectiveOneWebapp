@@ -18,7 +18,7 @@
         </span>
       </div>
 
-      <div class="" :class="{'not-a-message': !isMessagePosted && showMessages}">
+      <div class="" :class="{'event-summary': !isMessagePosted && showMessages}">
         <span v-if="isInitiativeCreated" class="">
           created the new initiative <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
         </span>
@@ -161,7 +161,7 @@
           deleted the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
         </span>
 
-        <span v-if="isMessagePosted && (!showMessages || isExternalMessage)" :class="{'w3-tag w3-round light-grey': isExternalMessage}">
+        <span v-if="isMessagePosted && (!showMessages || isExternalMessage)" :class="{'event-summary': isExternalMessage}">
           commented in
           <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
           <span v-if="isMessageInSection"><app-model-section-link :section="activity.modelSection"></app-model-section-link> section.</span>
@@ -434,7 +434,7 @@ a {
   margin-right: 4px;
 }
 
-.not-a-message {
+.event-summary {
   background-color: #eff3f6;
   margin-top: 6px;
   border-radius: 6px;

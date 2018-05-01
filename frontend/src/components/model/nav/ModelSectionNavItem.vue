@@ -172,19 +172,28 @@ export default {
 
   methods: {
     toggleSubsections () {
-      this.showSubsections = !this.showSubsections
       if (this.showSubsections) {
-        this.$store.dispatch('expandSubsection', this.coordinate)
+        this.collapseSubsections()
       } else {
-        this.$store.dispatch('collapseSubsection', this.coordinate)
+        this.expandSubsections()
       }
+    },
+    expandSubsections () {
+      this.showSubsections = true
+      this.$store.dispatch('expandSubsection', this.coordinate)
+    },
+    collapseSubsections () {
+      this.showSubsections = false
+      this.$store.dispatch('collapseSubsection', this.coordinate)
     },
     checkExpandSubsections () {
       if (this.highlightLevelUse > 1) {
         this.showSubsections = true
       } else {
         if (this.sectionData) {
-          this.showSubsections = this.sectionData.expand
+          if (this.sectionData.expand) {
+            this.expandSubsections()
+          }
         }
       }
     },
