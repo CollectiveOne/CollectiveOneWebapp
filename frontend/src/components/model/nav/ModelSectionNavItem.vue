@@ -27,7 +27,7 @@
       </div>
       <div class="notification-div">
         <app-notifications-list
-          :section="section"
+          :element="section"
           :forceUpdate="forceUpdateNotifications">
         </app-notifications-list>
       </div>

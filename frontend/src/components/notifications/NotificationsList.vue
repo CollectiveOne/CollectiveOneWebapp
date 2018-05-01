@@ -11,7 +11,7 @@
       class="notifications-container w3-white w3-card-4 w3-bar-block">
       <div class="w3-row-padding w3-border-bottom">
         <div class="w3-col s8 text-div">
-          {{ notifications.length }} new events under {{ section.title }}
+          {{ notifications.length }} new events under {{ element.title }}
         </div>
         <button class="w3-col s4 w3-margin-top w3-margin-bottom w3-button app-button"
           @click="notificationsRead()">
@@ -44,9 +44,13 @@ export default {
   },
 
   props: {
-    section: {
+    element: {
       type: Object,
       default: null
+    },
+    contextType: {
+      type: String,
+      default: 'MODEL_SECTION'
     }
   },
 
@@ -61,11 +65,8 @@ export default {
   },
 
   computed: {
-    contextType () {
-      return 'MODEL_SECTION'
-    },
     contextElementId () {
-      return this.section.id
+      return this.element.id
     },
     activities () {
       return this.notifications.map(function (n) { return n.activity })
@@ -183,6 +184,10 @@ export default {
 
         case 'MODEL_SECTION':
           url = '/channel/activity/model/section/' + this.contextElementId
+          break
+
+        case 'INITIATIVE':
+          url = '/channel/activity/model/initaitive/' + this.contextElementId
           break
       }
 

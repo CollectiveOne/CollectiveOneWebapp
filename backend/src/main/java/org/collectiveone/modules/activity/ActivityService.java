@@ -37,6 +37,7 @@ import org.collectiveone.modules.conversations.MessageThreadContextType;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.Member;
+import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.GraphNode;
 import org.collectiveone.modules.model.ModelCardWrapper;
@@ -142,17 +143,22 @@ public class ActivityService {
 		
 		List<UUID> allSectionIds = null;
 		List<UUID> cardsIds = null;
-		
+		boolean isModel = false;
 		switch (contextType) {
 			case MODEL_SECTION:
 				allSectionIds = modelService.getAllSubsectionsIds(elementId, null);
 				cardsIds = allSectionIds.size() > 0 ? modelCardWrapperRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
+				isModel = true;
 				break;
 				
 			case MODEL_CARD:
 				allSectionIds = new ArrayList<UUID>();
 				cardsIds = new ArrayList<UUID>();
 				cardsIds.add(elementId);
+				isModel = true;
+				break;
+			case INITIATIVE:
+				isModel = false;
 				break;
 				
 			default:
@@ -160,17 +166,46 @@ public class ActivityService {
 		
 		}
 		
-		if (allSectionIds.size() == 0) {
-			allSectionIds.add(UUID.randomUUID());
+		if(isModel == true) {
+			if (allSectionIds.size() == 0) {
+				allSectionIds.add(UUID.randomUUID());
+			}
+			
+			if (cardsIds.size() == 0) {
+				cardsIds.add(UUID.randomUUID());
+			}
+			
+			return notificationRepository.findOfUserInSections(userId, NotificationState.PENDING, allSectionIds, cardsIds, page);
+		}
+		else
+		{
+			List<InitiativeDto> subinitiativesTree = initiativeService.getSubinitiativesTree(elementId, null);
+			
+			List<UUID> allInitiativesIds = new ArrayList<UUID>();
+			
+			allInitiativesIds.add(elementId);
+			allInitiativesIds.addAll(extractAllIdsFromInitiativesTree(subinitiativesTree, new ArrayList<UUID>()));
+			
+			return notificationRepository.findOfUserInInitiatives(userId, NotificationState.PENDING, allInitiativesIds, page);
 		}
 		
-		if (cardsIds.size() == 0) {
-			cardsIds.add(UUID.randomUUID());
-		}
 		
-		return notificationRepository.findOfUserInSections(userId, NotificationState.PENDING, allSectionIds, cardsIds, page);
 	}
 	
+	
+	private List<UUID> extractAllIdsFromInitiativesTree(List<InitiativeDto> initiativeTree, List<UUID> list) {
+		
+		for (InitiativeDto initiativeDto : initiativeTree) {
+			list.add(UUID.fromString(initiativeDto.getId()));
+		}
+		
+		for (InitiativeDto initiativeDto : initiativeTree) {
+			extractAllIdsFromInitiativesTree(initiativeDto.getSubInitiatives(), list);
+		}
+		
+		return list;
+	}
+
 	@Transactional
 	public GetResult<List<NotificationDto>> getUserNotifications(
 			UUID userId, 
@@ -1284,6 +1319,12 @@ public class ActivityService {
 			if (activity.getModelCardWrapper() != null) {
 				template.convertAndSend("/channel/activity/model/card/" + activity.getModelCardWrapper().getId(), "UPDATE");
 			}
+			
+			List<Initiative> parentInits = initiativeService.getParentGenealogyInitiatives(activity.getInitiative().getId());
+			parentInits.add(activity.getInitiative()); //add parent initiative of activity to broadcast list
+	        for (Initiative init : parentInits) {
+	            template.convertAndSend("/channel/activity/model/initaitive/" + init.getId(), "UPDATE");
+	        }
 		}
 		
 	}
