@@ -24,6 +24,7 @@ const getSectionDataAtCoord = function (sectionsTree, coord) {
 }
 
 const isSectionShown = function (subTree, sectionId) {
+  let shownInSubsections = false
   for (let ix in subTree) {
     if (subTree[ix].section.id === sectionId) {
       return true
@@ -31,12 +32,12 @@ const isSectionShown = function (subTree, sectionId) {
       /* recursively call this method in the subsectionsData if they
       are expanded */
       if (subTree[ix].expand) {
-        return isSectionShown(subTree[ix].subsectionsData, sectionId)
+         shownInSubsections = shownInSubsections || isSectionShown(subTree[ix].subsectionsData, sectionId)
       }
     }
   }
   /* if tree is empty or not found in the for above */
-  return false
+  return shownInSubsections
 }
 
 const getters = {
@@ -125,6 +126,10 @@ const actions = {
       return
     }
 
+    if (sectionData.subsectionsData.length === 0) {
+      return
+    }
+
     /* find next section to be expanded from the subsections */
     let ixNext = 0
     for (let ix = 0; ix < sectionData.subsectionsData.length; ix++) {
@@ -137,18 +142,18 @@ const actions = {
     let newCoord = payload.coord.concat(ixNext)
     let newSectionData = getSectionDataAtCoord(state.sectionsTree, newCoord)
 
-    context.dispatch('appendSectionData', { sectionId: sectionData.section.id, coord: newCoord })
+    context.dispatch('appendSectionData', { sectionId: sectionData.subsectionsData[ixNext].section.id, coord: newCoord })
       .then(() => {
         /* after loading, recursive call to this same action to keep expanding the sections */
-        if (payload.expandIds.length > 1) {
-          let nextIds = payload.expandIds.shift()
+        if (payload.expandIds.length > 0) {
+          payload.expandIds.shift()
           context.dispatch('expandSectionAndContinue', {
             sectionData: newSectionData,
-            expandIds: nextIds,
+            expandIds: payload.expandIds,
             coord: newCoord
           })
         } else {
-
+          context.commit('triggerUpdateExpands')
         }
       })
   },
@@ -175,6 +180,7 @@ const actions = {
     }
 
     if (!context.getters.isSectionShown(payload.currentSectionId)) {
+      console.log('autoexpanding unshown section ' + payload.currentSectionId)
       /* if section is not currently shown, autoexpand all paths that reach to it */
       for (let ix in payload.currentSectionPaths) {
         let thisPath = payload.currentSectionPaths[ix]
