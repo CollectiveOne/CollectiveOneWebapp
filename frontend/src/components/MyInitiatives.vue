@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <div class="w3-row-padding">
+    <div v-if="!loading" class="w3-row-padding">
       <div v-for="initiative in myInitiatives" class="initiative-card-col">
         <app-initiative-card
           :initiative="initiative"
@@ -8,6 +8,9 @@
           @clicked="updateCurrentInitiative($event)">
         </app-initiative-card>
       </div>
+    </div>
+    <div v-else class="w3-row w3-center loader-gif-container">
+      <img class="loader-gif" src="../assets/loading.gif" alt="">
     </div>
   </div>
 </template>
@@ -21,6 +24,9 @@ export default {
   },
 
   computed: {
+    loading () {
+      return this.$store.state.initiativesTree.loadingMyInitiatives
+    },
     myInitiatives () {
       return this.$store.getters.initiativesTreeTop()
     }

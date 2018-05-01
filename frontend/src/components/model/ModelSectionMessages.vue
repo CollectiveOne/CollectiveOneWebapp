@@ -44,14 +44,8 @@ export default {
     currentSectionId () {
       return this.$route.params.sectionId
     },
-    currentSectionGenealogy () {
-      return this.$store.state.model.currentSectionGenealogy
-    },
     currentSection () {
-      if (this.currentSectionGenealogy) {
-        return this.currentSectionGenealogy.section
-      }
-      return {'title': 'section'}
+      this.$store.getters.currentSection()
     },
     levels () {
       return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1

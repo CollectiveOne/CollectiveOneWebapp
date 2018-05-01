@@ -202,6 +202,7 @@ export default {
   margin-left: -212px;
   max-height: calc(100vh - 80px);
   overflow-y: auto;
+  z-index: 2;
 }
 
 </style>

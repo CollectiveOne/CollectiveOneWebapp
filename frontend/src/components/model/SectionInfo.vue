@@ -6,15 +6,15 @@
           <div class="w3-left title-div">
             {{ sectionTitle }}
           </div>
-          <div class="w3-left btn-div">
+          <div class="w3-left btn-div fa-button">
             <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
             </app-section-control-buttons>
           </div>
-          <div class="w3-left btn-div">
+          <div class="w3-left btn-div fa-button">
             <app-section-control-buttons :section="currentSection" :inSection="null" :onlyAdd="true">
             </app-section-control-buttons>
           </div>
-          <div @click="showIn = !showIn" class="w3-left btn-div cursor-pointer">
+          <div @click="showIn = !showIn" class="w3-left btn-div fa-button">
             <i class="fa fa-info-circle" aria-hidden="true"></i>
           </div>
         </div>
@@ -23,7 +23,7 @@
     <div class="slider-container">
       <transition name="slideDownUp">
         <div v-if="showIn && currentSection && currentSectionPaths.length > 0" class="w3-row breadcrumb">
-          <div class="w3-row description-container">
+          <div class="w3-row description-container light-grey">
             <span v-if="currentSection.description !== null && currentSection.description !== ''">{{ currentSection.description }}</span>
             <span v-else>empty</span>
           </div>
@@ -144,14 +144,9 @@ export default {
   text-align: center;
 }
 
-.btn-div:hover {
-  background-color: rgb(171, 171, 171);
-}
-
 .description-container {
   border-radius: 3px;
   padding: 3px 12px;
-  background-color: #cfcfcf;
 }
 
 </style>

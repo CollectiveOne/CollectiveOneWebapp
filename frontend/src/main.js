@@ -20,6 +20,7 @@ import UserAvatar from '@/components/user/UserAvatar.vue'
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 import MessagesMarkdownEditor from '@/components/global/MessagesMarkdownEditor.vue'
+import ModelSectionTag from '@/components/model/MoodelSectionTag.vue'
 
 Vue.config.productionTip = false
 
@@ -50,6 +51,7 @@ Vue.component('app-messages-markdown-editor', MessagesMarkdownEditor)
 /* registered globally to solve the circular reference */
 Vue.component('app-model-section-modal', ModelSectionModal)
 Vue.component('app-model-card-modal', ModelCardModal)
+Vue.component('app-model-section-tag', ModelSectionTag)
 
 /* custom directive to detect click outside from
 https://stackoverflow.com/questions/36170425/detect-click-outside-element?answertab=votes#tab-top */

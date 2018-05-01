@@ -8,8 +8,8 @@
       <div class="w3-col s12">
 
         <div class="card-container-padded">
-          <div v-if="card.title !== ''" class="w3-row">
-            <b>{{ card.title }}</b>
+          <div v-if="card.title !== ''" class="w3-row card-title">
+            {{ card.title }}
           </div>
 
           <div ref="cardText"

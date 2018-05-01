@@ -1,3 +1,31 @@
+.drop-shadow-br {
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.16), 2px 3px 3px rgba(0,0,0,0.12);
+}
+
+.fa-button {
+  color: #313942;
+  cursor: pointer;
+  transition: all 300ms ease;
+}
+
+.fa-button-selected {
+  color: #15a5cc;
+  cursor: pointer;
+}
+
+.fa-button:hover {
+  background-color: #ced4d9;
+}
+
+.fa-button-dark {
+  transition: all 300ms ease;
+  color: white;
+}
+
+.fa-button-dark:hover {
+  background-color: #637484;
+}
+
 .app-button {
   background-color: #15a5cc !important;
   color: white;
@@ -79,6 +107,27 @@
                                   supported by Chrome and Opera */
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #eff3f6;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #637484;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #6f8294;
+}
+
 .flex-vert {
   display: flex !important;
   justify-content: center !important;
@@ -112,13 +161,6 @@
 
 .app-margin-bottom {
   margin-bottom: 10px;
-}
-
-.vdp-datepicker input {
-  width: 100%;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 10px;
 }
 
 .loader-gif-container {

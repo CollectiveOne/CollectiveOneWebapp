@@ -13,8 +13,8 @@
         </div>
 
         <div class="card-container-padded">
-          <div v-if="card.title !== ''" class="w3-row">
-            <b>{{ card.title }}</b>
+          <div v-if="card.title !== ''" class="w3-row card-title">
+            {{ card.title }}
           </div>
 
           <div ref="cardText"
@@ -50,10 +50,7 @@
         <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
           v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
           <div class="">
-            <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
-              class="gray-1 w3-tag w3-round w3-small">
-              {{ inSection.title }}
-            </router-link>
+            <app-model-section-tag :section="inSection"></app-model-section-tag>
           </div>
         </div>
       </div>
@@ -195,10 +192,6 @@ export default {
 </script>
 
 <style scoped>
-
-
-.card-container {
-}
 
 .card-container-padded {
   padding: 8px 6px 12px 12px !important;

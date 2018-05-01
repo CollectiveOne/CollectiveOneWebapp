@@ -31,7 +31,7 @@
 
     <div class="modal-buttons-container">
 
-      <div class="expand-btn w3-xlarge cursor-pointer"
+      <div class="expand-btn w3-xlarge fa-button"
         @click="expanded =! expanded"
         v-click-outside="clickOutsideMenu">
         <i class="fa fa-bars" aria-hidden="true"></i>
@@ -137,7 +137,6 @@ export default {
         .then((response) => {
           this.deleteIntent = false
           this.expanded = false
-          this.$store.commit('triggerUpdateSectionsTree')
         }).catch((error) => {
           console.log(error)
         })
@@ -162,6 +161,7 @@ export default {
   padding: 8px 12px;
   width: 50px;
   height: 50px;
+  text-align: center;
 }
 
 .drop-menu {
@@ -171,7 +171,7 @@ export default {
   margin-left: -80px;
   text-align: left;
   font-size: 15px;
-  z-index: 1;
+  z-index: 2;
 }
 
 .delete-intent-div {

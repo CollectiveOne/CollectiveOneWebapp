@@ -1,7 +1,13 @@
 <template lang="html">
-  <div class="w3-cell-row">
-    <div class="vision-nav light-grey w3-cell">
-      <app-model-nav></app-model-nav>
+  <div class="w3-cell-row nav-cell-row">
+    <transition name="slideRightLeft">
+      <div v-show="showNavBar" class="vision-nav-cell w3-cell light-grey drop-shadow-br w3-border-top">
+        <app-model-nav ></app-model-nav>
+      </div>
+    </transition>
+    <div @click="showNavBar = !showNavBar" class="hide-nav-div drop-shadow-br" :class="{'hide-nav-div-shift': showNavBar}">
+      <i v-if="showNavBar" class="fa fa-chevron-left" aria-hidden="true"></i>
+      <i v-else class="fa fa-chevron-right" aria-hidden="true"></i>
     </div>
     <div class="vision-content w3-cell">
       <router-view></router-view>
@@ -17,6 +23,12 @@ export default {
     'app-model-nav': ModelNav
   },
 
+  data () {
+    return {
+      showNavBar: true
+    }
+  },
+
   computed: {
     initiative () {
       return this.$store.state.initiative.initiative
@@ -26,8 +38,12 @@ export default {
   methods: {
     redirect () {
       if (this.$route.name === 'InitiativeModel') {
-        console.log('redirecting from InitiativeModel to ModelSectionContent with section id: ' + this.initiative.topModelSection.id)
-        this.$router.replace({name: 'ModelSectionContent', params: {sectionId: this.initiative.topModelSection.id}})
+        let currentSection = this.$store.getters.currentSection
+        if (currentSection !== null) {
+          this.$router.replace({name: 'ModelSectionContent', params: {sectionId: currentSection.id}})
+        } else {
+          this.$router.replace({name: 'ModelSectionContent', params: {sectionId: this.initiative.topModelSection.id}})
+        }
       }
     }
   },
@@ -40,30 +56,43 @@ export default {
 
 <style scoped>
 
-.vision-nav {
+.nav-cell-row {
+  position: relative;
+}
+
+.vision-nav-cell {
   width: 350px;
+  min-width: 350px;
+  min-height: 1px;
+  vertical-align: top;
+  border-color: #e3e6e8 !important;
 }
 
 .vision-content {
   vertical-align: top;
+  min-width: 350px;
 }
 
-.router-container {
-  font-family: 'Open Sans', sans-serif !important;
+.hide-nav-div {
+  width: 25px;
+  height: 35px;
+  position: absolute;
+  top: 12px;
+  background-color: #313942;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  color: white;
+  padding-top: 7px;
+  padding-left: 6px;
+  cursor: pointer;
 }
 
-.router-container h1 {
-  font-size: 32px;
+.hide-nav-div-shift {
+  left: 350px;
 }
 
-.router-container {
-  padding-bottom: 20px;
-}
-
-.router-container .model-button {
-  background-color: #eff3f6;
-  padding-top: 2px !important;
-  padding-bottom: 3px !important;
+.hide-nav-div:hover {
+  background-color: #3e464e;
 }
 
 </style>
