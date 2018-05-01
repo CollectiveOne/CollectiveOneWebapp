@@ -23,7 +23,7 @@
     <div class="slider-container">
       <transition name="slideDownUp">
         <div v-if="showIn && currentSection && currentSectionPaths.length > 0" class="w3-row breadcrumb">
-          <div class="w3-row description-container">
+          <div class="w3-row description-container light-grey">
             <span v-if="currentSection.description !== null && currentSection.description !== ''">{{ currentSection.description }}</span>
             <span v-else>empty</span>
           </div>
@@ -147,7 +147,6 @@ export default {
 .description-container {
   border-radius: 3px;
   padding: 3px 12px;
-  background-color: #cfcfcf;
 }
 
 </style>

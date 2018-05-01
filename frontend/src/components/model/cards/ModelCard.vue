@@ -106,6 +106,40 @@ export default {
 }
 </script>
 
+<style>
+
+.card-content-container,
+.card-content-container h1,
+.card-content-container h2,
+.card-content-container h3,
+.card-content-container h4,
+.card-content-container h5
+{
+  font-family: 'Open Sans', sans-serif;
+}
+
+.card-content-container h1 {
+  font-size: 19px;
+}
+
+.card-content-container h2 {
+  font-size: 17px;
+}
+
+.card-content-container h3,
+.card-content-container h4,
+.card-content-container h5 {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.card-title {
+  color: #15a5cc;
+}
+
+</style>
+
+
 <style scoped>
 
 </style>

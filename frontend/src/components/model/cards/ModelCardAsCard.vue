@@ -13,8 +13,8 @@
         </div>
 
         <div class="card-container-padded">
-          <div v-if="card.title !== ''" class="w3-row">
-            <b>{{ card.title }}</b>
+          <div v-if="card.title !== ''" class="w3-row card-title">
+            {{ card.title }}
           </div>
 
           <div ref="cardText"
@@ -192,10 +192,6 @@ export default {
 </script>
 
 <style scoped>
-
-
-.card-container {
-}
 
 .card-container-padded {
   padding: 8px 6px 12px 12px !important;

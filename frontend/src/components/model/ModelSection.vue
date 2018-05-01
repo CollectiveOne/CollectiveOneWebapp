@@ -2,15 +2,21 @@
 
   <div v-if="section" class="section-container" ref="sectionContainer">
 
-    <div v-if="nestedIn.length > 0 && sortedCards.length > 0"
-      class="w3-row blue-color title-row">
-      <div v-for="parent in nestedIn.slice(1, nestedIn.length)"
-        class="w3-left">
-        {{ parent.title }} <i class="fa fa-chevron-right" aria-hidden="true"></i>
+    <div v-if="nestedIn.length > 0 && section.subElementsLoaded"
+      class="w3-row title-row">
+      <div class="w3-row blue-color title-text">
+        <div v-for="parent in nestedIn.slice(1, nestedIn.length)"
+          class="w3-left">
+          {{ parent.title }} <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </div>
+        <div class="w3-left">
+          <b>{{ section.title }}</b>
+        </div>
       </div>
-      <div class="w3-left">
-        {{ section.title }}
+      <div v-if="section.description !== ''" class="w3-row description-text light-grey">
+        {{ section.description }}
       </div>
+
     </div>
 
     <div class="w3-row">
@@ -151,9 +157,17 @@ export default {
 
 <style scoped>
 
+.section-container {
+  font-family: 'Open Sans', sans-serif;
+}
+
 .title-row {
   margin-top: 12px;
   margin-bottom: 12px;
+}
+
+.title-text {
+  font-size: 17px;
 }
 
 .title-row .fa {
@@ -162,6 +176,12 @@ export default {
 
 .title-row > div {
   margin-right: 5px;
+}
+
+.description-text {
+  padding: 3px 12px;
+  margin-top: 6px;
+  margin-bottom: 6px;
 }
 
 </style>

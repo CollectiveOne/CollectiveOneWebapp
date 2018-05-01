@@ -169,7 +169,7 @@
         </span>
         <span v-if="isMessagePosted && showMessages" class="">
           <div>
-            <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
+            <vue-markdown class="marked-text message-container" :source="activity.message.text"></vue-markdown>
           </div>
         </span>
       </div>
@@ -444,6 +444,10 @@ a {
 
 .control-btns-row .w3-button {
   padding: 1px 16px !important;
+}
+
+.message-container {
+  font-family: 'Open Sans', sans-serif;
 }
 
 </style>

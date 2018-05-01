@@ -105,6 +105,9 @@ export default {
   watch: {
     '$store.state.sectionsTree.triggerUpdateExpands' () {
       this.checkExpandSubsections()
+    },
+    levels () {
+      this.checkExpandSubsections()
     }
   },
 
