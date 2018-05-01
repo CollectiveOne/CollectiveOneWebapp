@@ -1,5 +1,5 @@
 <template lang="html">
-  <nav class="nav-container">
+  <nav class="nav-container w3-border-right">
 
     <transition name="slideDownUp">
       <app-new-initiative-modal

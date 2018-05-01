@@ -1,14 +1,6 @@
-.white-bg {
-  background-color: white;
-}
-
 .dark-gray {
   background-color: #313942;
   color: white;
-}
-
-.dark-gray-color {
-  color: #313942;
 }
 
 .dark-gray-selected {
@@ -39,12 +31,12 @@
 
 .light-grey {
   background-color: #eff3f6;
-  color: black;
+  color: #313942;
 }
 
 .light-grey-d1 {
   background-color: #dbdee0;
-  color: black;
+  color: #313942;
 }
 
 .light-grey-color {

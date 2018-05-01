@@ -413,11 +413,12 @@ export default {
 }
 
 .cards-list {
-  padding: 12px 12px 12px 12px;
+  padding: 12px 24px;
 }
 
 .control-group {
   margin-right: 20px;
+  margin-bottom: 3px;
 }
 
 .zoom-controls {
@@ -425,6 +426,7 @@ export default {
   width: 90px;
   font-size: 28px;
   text-align: center;
+  color: #3e464e;
 }
 
 .zoom-controls .w3-left {
@@ -439,8 +441,9 @@ export default {
   cursor: pointer;
   margin-right: 4px;
   padding: 8px 12px;
-  background-color: #b6b6b6;
+  background-color: #eff3f6;
   border-radius: 3px;
+  transition: all 300ms ease;
 }
 
 .tab-btn {
@@ -449,7 +452,7 @@ export default {
 }
 
 .control-btn:hover {
-  background-color: #595959;
+  background-color: #ced4d9;
 }
 
 .selected {

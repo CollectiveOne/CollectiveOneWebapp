@@ -45,39 +45,11 @@ export default {
 
 <style scoped>
 
-.w3-col {
-  min-height: 1px;
-}
-
 .section-content {
 }
 
 .control-row {
-  padding: 6px 18px;
-}
-
-.section-tabs {
-  display: flex;
-  flex-direction: row;
-}
-
-.tab-btn-space {
-  display: block;
-  padding: 6px 10px 0px 10px;
-  width: 50%;
-}
-
-.tab-btn {
-  padding: 0px 6px;
-  border-radius: 6px;
-}
-
-.tab-btn-text {
-  font-size: 14px;
-}
-
-.bold-text {
-  font-weight: bold;
+  padding: 16px 18px 12px 36px;
 }
 
 </style>
