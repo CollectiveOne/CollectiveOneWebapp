@@ -137,7 +137,6 @@ export default {
         .then((response) => {
           this.deleteIntent = false
           this.expanded = false
-          this.$store.commit('triggerUpdateSectionsTree')
         }).catch((error) => {
           console.log(error)
         })

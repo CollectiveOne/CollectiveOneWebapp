@@ -40,12 +40,27 @@ const isSectionShown = function (subTree, sectionId) {
   return shownInSubsections
 }
 
+const getSectionCoordsFromId = function (sectionData, sectionId, thisCoord, foundCoords) {
+  if (sectionData.section.id === sectionId) {
+    foundCoords.push(thisCoord.slice())
+  }
+  for (let ix in sectionData.subsectionsData) {
+    getSectionCoordsFromId(sectionData.subsectionsData[ix], sectionId, thisCoord.concat(ix), foundCoords)
+  }
+}
+
 const getters = {
   getSectionDataAtCoord: (state) => (coord) => {
     return getSectionDataAtCoord(state.sectionsTree, coord)
   },
   isSectionShown: (state) => (sectionId) => {
     return isSectionShown(state.sectionsTree, sectionId)
+  },
+  getSectionCoordsFromId: (state) => (sectionId) => {
+    let foundCoords = []
+    /* updat foundCoords by reference */
+    getSectionCoordsFromId(state.sectionsTree[0], sectionId, [0], foundCoords)
+    return foundCoords
   }
 }
 
@@ -112,7 +127,7 @@ const actions = {
   },
   collapseSubsection: (context, coord) => {
     let sectionData = getSectionDataAtCoord(state.sectionsTree, coord)
-    sectionData.expand = true
+    sectionData.expand = false
   },
   expandSectionAndContinue: (context, payload) => {
     let sectionData = payload.sectionData
@@ -199,6 +214,12 @@ const actions = {
           }
         }
       }
+    }
+  },
+  updateSectionDataInTree: (context, payload) => {
+    let coords = context.getters.getSectionCoordsFromId(payload.sectionId)
+    for (let ix in coords) {
+      context.dispatch('appendSectionData', { sectionId: payload.sectionId, coord: coords[ix] })
     }
   }
 }

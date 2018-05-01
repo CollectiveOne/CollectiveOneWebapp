@@ -260,9 +260,6 @@ export default {
     },
     '$store.state.support.triggerUpdateSectionCards' () {
       this.resetCards()
-    },
-    '$store.state.support.triggerUpdateSectionsTree' () {
-      this.resetCards()
     }
   },
 

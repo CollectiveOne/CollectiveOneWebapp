@@ -302,18 +302,20 @@ export default {
               beforeSubsectionId: beforeSubsectionId
             }
           }).then((response) => {
-            this.$store.commit('triggerUpdateSectionsTree')
+            this.$store.dispatch('updateSectionDataInTree', {sectionId: dragData.fromSectionId})
+            this.$store.dispatch('updateSectionDataInTree', {sectionId: onSectionId})
           })
         } else {
-          /* copy card without removing it */
+          /* copy section without removing it */
           this.axios.put('/1/model/section/' + onSectionId +
             '/subsection/' + dragData.sectionId, {}, {
               params: {
                 beforeSubsectionId: beforeSubsectionId
               }
             }).then((response) => {
-            this.$store.commit('triggerUpdateSectionsTree')
-          })
+              this.$store.dispatch('updateSectionDataInTree', {sectionId: onSectionId})
+              this.$store.dispatch('updateSectionDataInTree', {sectionId: dragData.fromSectionId})
+            })
         }
       }
 

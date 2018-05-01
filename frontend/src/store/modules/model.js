@@ -60,15 +60,17 @@ const actions = {
   updateCurrentSection: (context, sectionId) => {
     context.commit('setCurrentSectionGenealogy', null)
 
-    Vue.axios.get('/1/model/section/' + sectionId + '/genealogy').then((response) => {
-      if (response.data.result === 'success') {
-        context.commit('setCurrentSectionGenealogy', response.data.data)
-        context.dispatch('autoExpandSectionsTree', {
-          currentSectionId: sectionId,
-          currentSectionPaths: context.getters.currentSectionPaths
-        })
-      }
-    })
+    if (sectionId !== '') {
+      Vue.axios.get('/1/model/section/' + sectionId + '/genealogy').then((response) => {
+        if (response.data.result === 'success') {
+          context.commit('setCurrentSectionGenealogy', response.data.data)
+          context.dispatch('autoExpandSectionsTree', {
+            currentSectionId: sectionId,
+            currentSectionPaths: context.getters.currentSectionPaths
+          })
+        }
+      })
+    }
   }
 }
 
