@@ -188,6 +188,7 @@ export default {
 }
 
 .image-container {
+  margin-top: 16px;
   min-height: 80px;
   max-height: 250px;
   overflow: hidden;

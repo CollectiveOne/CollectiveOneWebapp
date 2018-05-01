@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import router from '@/router'
 
 const state = {
   initiative: null,
@@ -91,7 +92,7 @@ const actions = {
       let initiative = response.data.data
       context.commit('setInitiative', initiative)
       context.commit('setInitiativeLoaded', true)
-      context.dispatch('resetSectionsTree', { sectionId: initiative.topModelSection.id })
+      context.dispatch('resetSectionsTree', { baseSectionId: initiative.topModelSection.id, currentSectionId: router.app.$route.params.sectionId ? router.app.$route.params.sectionId : '' })
     }).catch((error) => {
       console.log(error)
     })

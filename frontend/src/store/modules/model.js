@@ -63,7 +63,10 @@ const actions = {
     Vue.axios.get('/1/model/section/' + sectionId + '/genealogy').then((response) => {
       if (response.data.result === 'success') {
         context.commit('setCurrentSectionGenealogy', response.data.data)
-        context.dispatch('expandSectionsInPaths', context.getters.currentSectionPaths)
+        context.dispatch('autoExpandSectionsTree', {
+          currentSectionId: sectionId,
+          currentSectionPaths: context.getters.currentSectionPaths
+        })
       }
     })
   }

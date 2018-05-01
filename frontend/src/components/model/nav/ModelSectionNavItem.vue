@@ -103,6 +103,9 @@ export default {
   },
 
   watch: {
+    '$store.state.sectionsTree.triggerUpdateExpands' () {
+      this.checkExpandSubsections()
+    }
   },
 
   computed: {
@@ -169,6 +172,8 @@ export default {
       this.showSubsections = !this.showSubsections
       if (this.showSubsections) {
         this.$store.dispatch('expandSubsection', this.coordinate)
+      } else {
+        this.$store.dispatch('collapseSubsection', this.coordinate)
       }
     },
     checkExpandSubsections () {
