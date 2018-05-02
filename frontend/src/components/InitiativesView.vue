@@ -1,12 +1,19 @@
 <template lang="html">
 <div class="">
 
+  <transition name="slideDownUp">
+    <app-new-initiative-modal
+      v-if="showNewInitiativeModal"
+      @close="showNewInitiativeModal = false">
+    </app-new-initiative-modal>
+  </transition>
+
   <!-- Initiatives View -->
   <div class="w3-cell-row">
 
     <transition name="slideRightLeft">
       <div v-show="expandNav" class="dark-gray nav-container-cell w3-sidebar">
-        <app-initiatives-nav @initiative-selected="initiativeSelected()"></app-initiatives-nav>
+        <app-initiatives-nav @initiative-selected="initiativeSelected()" @new-initiative="showNewInitiativeModal = true"></app-initiatives-nav>
       </div>
     </transition>
 
@@ -25,26 +32,18 @@
 
 <script>
 import InitiativesNav from '@/components/nav/InitiativesNav.vue'
-
 import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
-import NewSubInitiativeModal from '@/components/modal/NewSubInitiativeModal.vue'
-import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
-import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
-import NewTokenMintModal from '@/components/modal/NewTokenMintModal.vue'
 
 export default {
   components: {
     'app-new-initiative-modal': NewInitiativeModal,
-    'app-new-subinitiative-modal': NewSubInitiativeModal,
-    'app-initiatives-nav': InitiativesNav,
-    'app-edit-initiative-modal': EditInitiativeModal,
-    'app-edit-notifications-modal': EditNotificationsModal,
-    'app-new-tokenmint-modal': NewTokenMintModal
+    'app-initiatives-nav': InitiativesNav
   },
 
   data () {
     return {
-      showContent: true
+      showContent: true,
+      showNewInitiativeModal: false
     }
   },
 

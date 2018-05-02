@@ -50,7 +50,7 @@
             <transition name="slideLeftRight">
               <div v-if="addExisting && editing" class="">
                 <app-model-card-selector
-                  :initiativeId="initiativeId"
+                  :inSectionId="inSectionId"
                   @select="cardSelected($event)">
                 </app-model-card-selector>
                 <app-error-panel

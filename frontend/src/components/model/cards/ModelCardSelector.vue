@@ -45,7 +45,7 @@ export default {
   },
 
   props: {
-    initiativeId: {
+    inSectionId: {
       type: String,
       default: ''
     }
@@ -73,11 +73,12 @@ export default {
       this.$emit('select', null)
     },
     update () {
-      this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/search', {
+      this.axios.get('/1/model/section/' + this.inSectionId + '/cardWrappers/search', {
         params: {
           query: this.query,
           page: this.page,
-          size: 10
+          pageSize: 10,
+          inInitiativeEcosystem: true
         }
       }).then((response) => {
         this.cardWrappers = response.data.data.content

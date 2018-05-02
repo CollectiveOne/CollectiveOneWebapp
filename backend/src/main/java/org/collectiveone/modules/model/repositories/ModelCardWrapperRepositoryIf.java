@@ -24,7 +24,12 @@ public interface ModelCardWrapperRepositoryIf extends CrudRepository<ModelCardWr
 	@Query("SELECT crdWrp FROM ModelSection sec JOIN sec.cardsWrappers crdWrp JOIN crdWrp.card crd "
 			+ "WHERE (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
 			+ "AND sec.id IN ?1")
-	public Page<ModelCardWrapper> searchInSectionByQuery(List<UUID> sectionIds, String query, Pageable page);
+	public Page<ModelCardWrapper> searchInSectionsByQuery(List<UUID> sectionIds, String query, Pageable page);
+	
+	@Query("SELECT crdWrp from ModelCardWrapper crdWrp JOIN crdWrp.card crd "
+			+ "WHERE (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
+			+ "AND crdWrp.initiative.id IN ?1")
+	public Page<ModelCardWrapper> searchInInitiativesByQuery(List<UUID> initiativeIds, String query, Pageable page);
 	
 	@Query("SELECT crdWrp FROM ModelCardWrapper crdWrp WHERE crdWrp.creationDate IS NULL OR crdWrp.creator IS NULL")
 	public List<ModelCardWrapper> findWithNullCreation();

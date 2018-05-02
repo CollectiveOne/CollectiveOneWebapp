@@ -367,7 +367,8 @@ public class ModelController extends BaseController {
 			@RequestParam(name="page", defaultValue="0") Integer page,
 			@RequestParam(name="pageSize", defaultValue="10") Integer pageSize,
 			@RequestParam(name="levels", defaultValue="1") Integer levels,
-			@RequestParam(name="sortBy", defaultValue="1") String sortBy) {
+			@RequestParam(name="sortBy", defaultValue="1") String sortBy,
+			@RequestParam(name="inInitiativeEcosystem", defaultValue="false") Boolean inInitiativeEcosystem) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
@@ -376,7 +377,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ModelCardWrapperDto>>("error", "access denied", null);
 		}
 		
-		return modelService.searchCardWrapper(sectionId, query, page, pageSize, sortBy, levels, getLoggedUserId());
+		return modelService.searchCardWrapper(sectionId, query, page, pageSize, sortBy, levels, getLoggedUserId(), inInitiativeEcosystem);
 	}
 	
 	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}", method = RequestMethod.DELETE) 
