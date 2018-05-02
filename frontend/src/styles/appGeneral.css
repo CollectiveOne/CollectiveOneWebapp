@@ -1,3 +1,26 @@
+.control-btn {
+  cursor: pointer;
+  margin-right: 4px;
+  padding: 8px 10px;
+  background-color: #eff3f6;
+  border-radius: 3px;
+  transition: all 300ms ease;
+}
+
+.control-btn:hover {
+  background-color: #ced4d9;
+}
+
+.control-btn img {
+  width: 20px;
+}
+
+.control-btn-selected {
+  background-color: #15a5cc;
+  color: white;
+  font-weight: bold;
+}
+
 .drop-shadow-br {
   box-shadow: 2px 2px 4px rgba(0,0,0,0.16), 2px 3px 3px rgba(0,0,0,0.12);
 }

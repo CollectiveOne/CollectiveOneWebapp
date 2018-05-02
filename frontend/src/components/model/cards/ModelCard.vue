@@ -10,6 +10,7 @@
         :cardWrapper="cardWrapper"
         :inSection="inSection"
         :forceUpdate="forceUpdate"
+        :inCardSelector="inCardSelector"
         @update="update()"
         @updateCards="$emit('updateCards')">
       </component>
@@ -49,6 +50,10 @@ export default {
     forceUpdate: {
       type: Boolean,
       default: true
+    },
+    inCardSelector: {
+      type: Boolean,
+      default: false
     }
   },
 

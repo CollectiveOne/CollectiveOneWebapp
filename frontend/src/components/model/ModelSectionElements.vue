@@ -18,16 +18,16 @@
       <div class="w3-row controls-row">
 
         <div class="w3-left control-group">
-          <div @click="messagesContent()" class="w3-left control-btn" :class="{'selected': isMessagesContent}">
+          <div @click="messagesContent()" class="w3-left control-btn" :class="{'control-btn-selected': isMessagesContent}">
             <img src="./../../assets/chat-icon.svg" alt="">
           </div>
-          <div @click="summaryView()" class="w3-left control-btn" :class="{'selected': isSummary}">
+          <div @click="summaryView()" class="w3-left control-btn" :class="{'control-btn-selected': isSummary}">
             <img src="./../../assets/rows-icon.svg" alt="">
           </div>
-          <div @click="cardView()" class="w3-left control-btn" :class="{'selected': isCard}">
+          <div @click="cardView()" class="w3-left control-btn" :class="{'control-btn-selected': isCard}">
             <img src="./../../assets/cards-icon.svg" alt="">
           </div>
-          <div @click="docView()" class="w3-left control-btn" :class="{'selected': isDoc}">
+          <div @click="docView()" class="w3-left control-btn" :class="{'control-btn-selected': isDoc}">
             <img src="./../../assets/doc-icon.svg" alt="">
           </div>
         </div>
@@ -48,20 +48,20 @@
 
         <div v-if="isCardsContent" class="w3-left control-group">
           <div class="">
-            <div @click="sectionOrder()" class="w3-left control-btn" :class="{'selected': isSectionsOrder}">
+            <div @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
               <img src="./../../assets/network-icon.svg" alt="">
             </div>
-            <div @click="aggregatedOrder()" class="w3-left control-btn" :class="{'selected': !isSectionsOrder}">
+            <div @click="aggregatedOrder()" class="w3-left control-btn" :class="{'control-btn-selected': !isSectionsOrder}">
               <img src="./../../assets/search-icon.svg" alt="">
             </div>
           </div>
         </div>
 
         <div v-if="!isCardsContent" class="w3-left control-group">
-          <div @click="isOnlyMessages = true" class="w3-left control-btn" :class="{'selected': isOnlyMessages}">
+          <div @click="isOnlyMessages = true" class="w3-left control-btn" :class="{'control-btn-selected': isOnlyMessages}">
             <img src="./../../assets/chat-icon-2.svg" alt="">
           </div>
-          <div @click="isOnlyMessages = false" class="w3-left control-btn" :class="{'selected': !isOnlyMessages}">
+          <div @click="isOnlyMessages = false" class="w3-left control-btn" :class="{'control-btn-selected': !isOnlyMessages}">
             <img src="./../../assets/all-events-icon.svg" alt="">
           </div>
         </div>
@@ -74,7 +74,7 @@
                   <input ref="inputQuery" v-model="newCardQuery" class="w3-input"
                     type="text" name="" value="" placeholder="search">
                 </div>
-                <div @click="updateQuery()" class="w3-left control-btn selected">
+                <div @click="updateQuery()" class="w3-left control-btn control-btn-selected">
                   <i class="fa fa-refresh" aria-hidden="true"></i>
                 </div>
               </div>
@@ -427,33 +427,6 @@ export default {
   height: 38px;
   font-size: 19px;
   padding: 5px 12px;
-}
-
-.control-btn {
-  cursor: pointer;
-  margin-right: 4px;
-  padding: 8px 10px;
-  background-color: #eff3f6;
-  border-radius: 3px;
-  transition: all 300ms ease;
-}
-
-.control-btn:hover {
-  background-color: #ced4d9;
-}
-
-.control-btn img {
-  width: 20px;
-}
-
-.selected {
-  background-color: #15a5cc;
-  color: white;
-  font-weight: bold;
-}
-
-.control-btn-selected {
-  background-color: #15a5cc;
 }
 
 .text-details {

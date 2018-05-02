@@ -54,24 +54,6 @@ export default {
     userAuthenticated () {
       return this.$store.state.user.authenticated
     },
-    showNewInitiativeModal () {
-      return this.$store.state.modals.showNewInitiativeModal
-    },
-    showNewSubInitiativeModal () {
-      return this.$store.state.modals.showNewSubInitiativeModal
-    },
-    showEditInitiativeModal () {
-      return this.$store.state.modals.showEditInitiativeModal
-    },
-    showEditMenu () {
-      return this.$store.state.modals.showEditMenu
-    },
-    showEditNotificationsModal () {
-      return this.$store.state.modals.showEditNotificationsModal
-    },
-    showNewTokenMintModal () {
-      return this.$store.state.modals.showNewTokenMintModal
-    },
     windowIsSmall () {
       return this.$store.state.support.windowIsSmall
     },

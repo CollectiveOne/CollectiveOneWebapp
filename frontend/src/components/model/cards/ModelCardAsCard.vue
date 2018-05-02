@@ -55,42 +55,45 @@
         </div>
       </div>
 
-      <div class="w3-right gray-1-color control-div">
-        <app-card-control-buttons
-          :cardWrapper="cardWrapper"
-          :inSection="inSection"
-          @update="$emit('update')">
-        </app-card-control-buttons>
-      </div>
+      <div v-if="!inCardSelector" class="w3-right">
 
-      <div class="w3-right cursor-pointer indicator-comp"
-        @click="cardClicked()">
-        <app-indicator
-          contextType="MODEL_CARD"
-          :contextElementId="cardWrapper.id"
-          :size="18"
-          type="messages"
-          :forceUpdate="forceUpdate">
-        </app-indicator>
-      </div>
+        <div class="w3-right gray-1-color control-div">
+          <app-card-control-buttons
+            :cardWrapper="cardWrapper"
+            :inSection="inSection"
+            @update="$emit('update')">
+          </app-card-control-buttons>
+        </div>
 
-      <div class="w3-right cursor-pointer indicator-comp"
-        @click="toggleLike()">
-        <app-indicator
-          contextType="MODEL_CARD"
-          :contextElementId="cardWrapper.id"
-          :size="18"
-          type="likes"
-          :selected="cardWrapper.userLiked"
-          :autoUpdate="false"
-          :countInit="cardWrapper.nLikes">
-        </app-indicator>
-      </div>
+        <div class="w3-right cursor-pointer indicator-comp"
+          @click="cardClicked()">
+          <app-indicator
+            contextType="MODEL_CARD"
+            :contextElementId="cardWrapper.id"
+            :size="18"
+            type="messages"
+            :forceUpdate="forceUpdate">
+          </app-indicator>
+        </div>
 
+        <div class="w3-right cursor-pointer indicator-comp"
+          @click="toggleLike()">
+          <app-indicator
+            contextType="MODEL_CARD"
+            :contextElementId="cardWrapper.id"
+            :size="18"
+            type="likes"
+            :selected="cardWrapper.userLiked"
+            :autoUpdate="false"
+            :countInit="cardWrapper.nLikes">
+          </app-indicator>
+        </div>
+
+      </div>
     </div>
 
     <transition name="fadeenter">
-      <div v-if="hovering"
+      <div v-if="hovering && !inCardSelector"
         class="w3-padding model-action-button gray-2-color w3-display-topright cursor-pointer"
         @click="cardClicked()">
         <i class="fa fa-expand" aria-hidden="true"></i>
@@ -160,9 +163,6 @@ export default {
   },
 
   methods: {
-    showThisTag (inSection) {
-      return inSection.id !== this.inSection.id
-    },
     textTooLong () {
       if (!this.$refs.cardText) {
         return false

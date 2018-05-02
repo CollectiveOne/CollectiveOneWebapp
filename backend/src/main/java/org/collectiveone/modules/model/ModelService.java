@@ -591,8 +591,13 @@ public class ModelService {
 			
 			enititiesPage = modelCardWrapperRepository.searchInSectionsByQuery(allSectionIds, "%"+query.toLowerCase()+"%", pageRequest);
 		} else {
+			
 			ModelSection section = modelSectionRepository.findById(sectionId);
 			List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(section.getInitiative().getId());
+			
+			/* TODO: weird issue when using dynamic new Sort, sort hardcoded based laste edited */
+			pageRequest = new PageRequest(page, pageSize);
+			
 			enititiesPage = modelCardWrapperRepository.searchInInitiativesByQuery(initiativeEcosystemIds, "%"+query.toLowerCase()+"%", pageRequest);
 		}
 		

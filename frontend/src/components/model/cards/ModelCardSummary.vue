@@ -4,7 +4,7 @@
     @mouseleave="hovering = false">
 
     <div class="w3-col m8 left-div">
-      <div @click="cardClicked()" class="w3-left expand-btn cursor-pointer">
+      <div v-if="!inCardSelector" @click="cardClicked()" class="w3-left expand-btn cursor-pointer">
         <i class="fa fa-expand" aria-hidden="true"></i>
       </div>
 
@@ -37,38 +37,41 @@
         </div>
       </div>
 
-      <div class="w3-right gray-1-color control-div">
-        <app-card-control-buttons
-          :cardWrapper="cardWrapper"
-          :inSection="inSection"
-          @update="$emit('update')"
-          @updateCards="$emit('updateCards')">
-        </app-card-control-buttons>
+      <div v-if="!inCardSelector" class="w3-right">
+        <div class="w3-right gray-1-color control-div">
+          <app-card-control-buttons
+            :cardWrapper="cardWrapper"
+            :inSection="inSection"
+            @update="$emit('update')"
+            @updateCards="$emit('updateCards')">
+          </app-card-control-buttons>
+        </div>
+
+        <div class="w3-right cursor-pointer indicator-comp"
+          @click="cardClicked()">
+          <app-indicator
+            contextType="MODEL_CARD"
+            :contextElementId="cardWrapper.id"
+            :size="18"
+            type="messages"
+            :forceUpdate="forceUpdate">
+          </app-indicator>
+        </div>
+
+        <div class="w3-right cursor-pointer indicator-comp"
+          @click="toggleLike()">
+          <app-indicator
+            contextType="MODEL_CARD"
+            :contextElementId="cardWrapper.id"
+            :size="18"
+            type="likes"
+            :selected="cardWrapper.userLiked"
+            :autoUpdate="false"
+            :countInit="cardWrapper.nLikes">
+          </app-indicator>
+        </div>
       </div>
 
-      <div class="w3-right cursor-pointer indicator-comp"
-        @click="cardClicked()">
-        <app-indicator
-          contextType="MODEL_CARD"
-          :contextElementId="cardWrapper.id"
-          :size="18"
-          type="messages"
-          :forceUpdate="forceUpdate">
-        </app-indicator>
-      </div>
-
-      <div class="w3-right cursor-pointer indicator-comp"
-        @click="toggleLike()">
-        <app-indicator
-          contextType="MODEL_CARD"
-          :contextElementId="cardWrapper.id"
-          :size="18"
-          type="likes"
-          :selected="cardWrapper.userLiked"
-          :autoUpdate="false"
-          :countInit="cardWrapper.nLikes">
-        </app-indicator>
-      </div>
     </div>
   </div>
 </template>
@@ -121,9 +124,6 @@ export default {
   },
 
   methods: {
-    showThisTag (inSection) {
-      return inSection.id !== this.inSection.id
-    },
     hoverEnter () {
       this.showActionButton = true
       this.highlight = true

@@ -1,7 +1,22 @@
 export const cardMixin = {
+  props: {
+    inCardSelector: {
+      type: Boolean,
+      default: false
+    }
+  },
   methods: {
+    showThisTag (inSection) {
+      /* hide the card in which this section is from tags */
+      if (this.inSection) {
+        return inSection.id !== this.inSection.id
+      }
+      return true
+    },
     cardClicked () {
-      this.$router.push({name: 'ModelSectionCard', params: { cardId: this.cardWrapper.id }})
+      if (!this.inCardSelector) {
+        this.$router.push({name: 'ModelSectionCard', params: { cardId: this.cardWrapper.id }})
+      }
     },
     toggleLike () {
       this.axios.put('/1/model/card/' + this.cardWrapper.id + '/like',

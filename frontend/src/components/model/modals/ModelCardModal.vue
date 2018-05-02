@@ -699,13 +699,6 @@ export default {
   border-top-right-radius: 20px;
 }
 
-.url-show {
-  position: absolute;
-  margin-top: 60px;
-  margin-left: -100px;
-  width: 250px;
-}
-
 .not-add-existing-container {
   overflow: visible;
 }

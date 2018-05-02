@@ -4,3 +4,4 @@
 /org.hibernate.eclipse.console.prefs
 /org.eclipse.jdt.apt.core.prefs
 *.eclipse.core.resources.prefs
+*.rebel.xml.bak
