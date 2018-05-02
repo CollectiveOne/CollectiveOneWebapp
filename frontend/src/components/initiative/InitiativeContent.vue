@@ -1,6 +1,6 @@
 <template lang="html">
-  <div>
-    <div v-if="$store.state.initiative.initiativeLoaded">
+  <div class="initiative-content">
+    <div v-if="$store.state.initiative.initiativeLoaded" class="initiative-content-loaded">
       <div class="w3-row initiative-row">
 
         <div class="w3-row initiative-header-row">
@@ -91,6 +91,18 @@ export default {
 
 <style scoped>
 
+.initiative-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.initiative-content-loaded {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .initiative-row {
   height: 100%;
   display: flex;
@@ -98,11 +110,19 @@ export default {
 }
 
 .initiative-header-row {
-  flex-basis: 50px;
+  min-height: 50px;
 }
 
 .initiative-content-row {
+  height: 100%;
   display: flex;
+  flex-direction: column;
+}
+
+.temp-content {
+  background-color: red;
+  height: 1500px;
+  width: 100%;
 }
 
 </style>

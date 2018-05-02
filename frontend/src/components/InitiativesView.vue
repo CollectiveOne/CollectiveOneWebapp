@@ -94,6 +94,12 @@ export default {
   flex-direction: column;
 }
 
+.slider-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .nav-container-cell {
   width: 300px;
   height: 100%;

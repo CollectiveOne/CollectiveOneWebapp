@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="model-section-cards">
+  <div class="model-section-elements">
 
     <div class="slider-container">
       <transition name="slideDownUp">
@@ -14,7 +14,7 @@
       </transition>
     </div>
 
-    <div class="model-section-cards-container">
+    <div class="model-section-elements-container">
       <div class="w3-row controls-row">
 
         <div class="w3-left control-group">
@@ -386,12 +386,27 @@ export default {
 
 <style scoped>
 
+.model-section-elements {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.model-section-elements-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .controls-row {
   margin: 12px 12px 6px 24px;
+  min-height: 35px;
 }
 
 .elements-container {
   padding: 12px 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .control-group {

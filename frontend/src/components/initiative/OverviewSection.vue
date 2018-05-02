@@ -174,7 +174,6 @@ export default {
 <style scoped>
 
 .overview-content {
-  overflow: visible;
 }
 
 .this-container {

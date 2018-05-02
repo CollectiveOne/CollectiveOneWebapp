@@ -1,15 +1,17 @@
 <template lang="html">
-  <div class="w3-cell-row nav-cell-row">
-    <transition name="slideRightLeft">
-      <div v-show="showNavBar" class="vision-nav-cell w3-cell light-grey drop-shadow-br w3-border-top">
-        <app-model-nav ></app-model-nav>
-      </div>
-    </transition>
+  <div class="w3-row section-content-tab">
+    <div class="section-nav-container">
+      <transition name="slideRightLeft">
+        <div v-show="showNavBar" class="vision-nav-cell light-grey drop-shadow-br w3-border-top">
+          <app-model-nav ></app-model-nav>
+        </div>
+      </transition>
+    </div>
     <div @click="showNavBar = !showNavBar" class="hide-nav-div drop-shadow-br" :class="{'hide-nav-div-shift': showNavBar}">
       <i v-if="showNavBar" class="fa fa-chevron-left" aria-hidden="true"></i>
       <i v-else class="fa fa-chevron-right" aria-hidden="true"></i>
     </div>
-    <div class="vision-content w3-cell">
+    <div class="vision-content">
       <router-view></router-view>
     </div>
   </div>
@@ -56,21 +58,28 @@ export default {
 
 <style scoped>
 
-.nav-cell-row {
+.section-content-tab {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
   position: relative;
+}
+
+.section-nav-container{
+  height: 100%;
 }
 
 .vision-nav-cell {
   width: 350px;
-  min-width: 350px;
   min-height: 1px;
-  vertical-align: top;
   border-color: #e3e6e8 !important;
 }
 
 .vision-content {
-  vertical-align: top;
-  min-width: 350px;
+  height: 100%;
+  min-width: calc(100% - 350px);
+  display: flex;
+  flex-direction: column;
 }
 
 .hide-nav-div {
