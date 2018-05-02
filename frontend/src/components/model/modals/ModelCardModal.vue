@@ -550,8 +550,8 @@ export default {
                 break
 
               case 'after':
-                  params.afterCardWrapperId = this.atCardWrapper.id
-                  break
+                params.afterCardWrapperId = this.atCardWrapper.id
+                break
             }
 
             this.sendingData = true

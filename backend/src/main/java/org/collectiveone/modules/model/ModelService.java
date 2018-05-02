@@ -322,12 +322,7 @@ public class ModelService {
 			}
 		}
 				
-		if (level <= 0) {
-			/* add only the subsection titles and metadata */
-			for (ModelSection subsection : section.getSubsections()) {
-				sectionDto.getSubsections().add(subsection.toDto());
-			}
-		} else {
+		if (level > 0) {
 			/* add the subsections with their sub-elements too */
 			for (ModelSection subsection : section.getSubsections()) {
 				sectionDto.getSubsections().add(addSectionSubElements(subsection.toDto(), subsection.getId(), level - 1, requestByUserId, onlySections));

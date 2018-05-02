@@ -3,10 +3,10 @@
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 
-    <div class="w3-row card-container cursor-pointer w3-display-container"
+    <div class="w3-row card-container cursor-pointer" :class="{'limit-height': !showFull}"
       ref="cardContent">
 
-      <div class="w3-col s12" @click="cardClicked()">
+      <div class="w3-row" @click="cardClicked()">
         <div v-if="hasImage"
           class="w3-row w3-center w3-display-container image-container">
           <img class="" :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
@@ -18,23 +18,22 @@
           </div>
 
           <div ref="cardText"
-            class="w3-row card-text"
-            :style="cardTextStyle">
+            class="w3-row card-text">
             <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
           </div>
-        </div>
-      </div>
-
-      <div v-if="textTooLong()" class="">
-        <div @click="showMoreClick()"
-          class="w3-padding model-action-button gray-2-color w3-display-bottomright cursor-pointer">
-          <i class="fa fa-arrows-v" aria-hidden="true"></i>
         </div>
       </div>
 
     </div>
 
     <div class="w3-row bottom-row light-grey">
+
+      <div v-if="textTooLong()" class="expand-height-button">
+        <div @click="showMoreClick()"
+          class="w3-padding gray-2-color cursor-pointer">
+          <i class="fa fa-arrows-v" aria-hidden="true"></i>
+        </div>
+      </div>
 
       <div v-if="cardWrapper.creator !== null" class="w3-left text-div">
         <app-user-avatar :user="cardWrapper.creator" :showName="false" :small="true"></app-user-avatar>
@@ -94,7 +93,7 @@
 
     <transition name="fadeenter">
       <div v-if="hovering && !inCardSelector"
-        class="w3-padding model-action-button gray-2-color w3-display-topright cursor-pointer"
+        class="w3-padding gray-2-color w3-display-topright cursor-pointer"
         @click="cardClicked()">
         <i class="fa fa-expand" aria-hidden="true"></i>
       </div>
@@ -134,26 +133,12 @@ export default {
 
   data () {
     return {
-      hovering: false
+      hovering: false,
+      showFull: false
     }
   },
 
   computed: {
-    cardTextStyle () {
-      if (!this.showFull) {
-        if (this.hasImage) {
-          return {
-            maxHeight: '100px'
-          }
-        } else {
-          return {
-            maxHeight: '250px'
-          }
-        }
-      } else {
-        return {}
-      }
-    },
     card () {
       return this.cardWrapper.card
     },
@@ -193,8 +178,19 @@ export default {
 
 <style scoped>
 
+.card-container {
+  max-height: 750px;
+  transition: max-height 1000ms ease;
+  overflow-y: auto;
+}
+
 .card-container-padded {
   padding: 8px 6px 12px 12px !important;
+}
+
+.limit-height {
+  max-height: 250px;
+  overflow: hidden;
 }
 
 .card-container-slim {
@@ -249,6 +245,7 @@ export default {
 }
 
 .bottom-row {
+  position: relative;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   padding: 3px 6px;
@@ -268,6 +265,13 @@ export default {
 
 .control-div {
   padding: 3px 6px;
+}
+
+.expand-height-button {
+  position: absolute;
+  left: calc(100% - 38px);
+  top: -38px;
+  background-color: rgba(218, 218, 218, 0.5);
 }
 
 </style>

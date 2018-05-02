@@ -344,7 +344,7 @@ export default {
 <style scoped>
 
 .section-nav-item-container {
-  color: #57636f;
+  color: #616e7a;
 }
 
 .section-nav-item-first-row {

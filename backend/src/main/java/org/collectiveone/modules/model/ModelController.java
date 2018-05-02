@@ -243,7 +243,8 @@ public class ModelController extends BaseController {
 	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.GET) 
 	public GetResult<ModelSectionDto> getSection(
 			@PathVariable("sectionId") String sectionIdStr,
-			@RequestParam(defaultValue = "1") Integer levels) {
+			@RequestParam(defaultValue = "1") Integer levels,
+			@RequestParam(name="onlySections", defaultValue = "false") Boolean onlySections) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
@@ -252,7 +253,7 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelSectionDto>("error", "access denied", null);
 		}
 		
-		return modelService.getSection(sectionId, levels, getLoggedUserId(), false);
+		return modelService.getSection(sectionId, levels, getLoggedUserId(), onlySections);
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/cardWrappers", method = RequestMethod.GET) 

@@ -100,7 +100,7 @@ const actions = {
   },
   appendSectionData: (context, payload) => {
     return new Promise((resolve, reject) => {
-      Vue.axios.get('/1/model/section/' + payload.sectionId, { params: { levels: 1 } }).then((response) => {
+      Vue.axios.get('/1/model/section/' + payload.sectionId, { params: { levels: 2, onlySections: true } }).then((response) => {
         if (response.data.result === 'success') {
           let section = response.data.data
           let subsections = section.subsections
