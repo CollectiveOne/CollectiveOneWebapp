@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="">
+  <div class="overview-content">
 
     <transition name="slideDownUp">
       <app-new-token-modal
@@ -172,6 +172,10 @@ export default {
 </script>
 
 <style scoped>
+
+.overview-content {
+  overflow: visible;
+}
 
 .this-container {
   padding-top: 25px !important;

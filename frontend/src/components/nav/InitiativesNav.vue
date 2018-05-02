@@ -2,10 +2,17 @@
   <nav class="nav-container w3-border-right">
 
     <div class="">
-      <div v-if="$store.state.user.authenticated" class="w3-container">
-        <div id="T_createInitiativeButton" class="create-new w3-button light-grey w3-round-large w3-center"
+      <div v-if="$store.state.user.authenticated" class="w3-row-padding btns-row">
+        <div class="w3-col s4">
+          <div @click="closeNav()" class="w3-xlarge cursor-pointer noselect">
+            <i class="fa fa-chevron-circle-left"></i>
+          </div>
+        </div>
+        <div id="T_createInitiativeButton" class="w3-col s8 "
           @click="newInitiative()">
-          <i class="fa fa-plus-circle"></i>  new initiative
+          <div class="create-new w3-button light-grey w3-round-large w3-center">
+            <i class="fa fa-plus-circle"></i>  new initiative
+          </div>
         </div>
       </div>
 
@@ -64,6 +71,9 @@ export default {
     },
     login () {
       this.$store.state.user.lock.show()
+    },
+    closeNav () {
+      this.$store.commit('toggleExpandNav')
     }
   }
 }
@@ -74,10 +84,15 @@ export default {
 .nav-container {
 }
 
-.create-new {
-  margin-top: 20px;
-  margin-bottom: 0px;
+.btns-row {
+  padding: 16px 12px;
+}
+
+.btns-row .w3-button {
   width: 100%;
+}
+
+.create-new {
   text-align: left;
 }
 
@@ -102,7 +117,6 @@ export default {
 }
 
 .my-initiatives-row {
-  margin-top: 30px;
 }
 
 </style>

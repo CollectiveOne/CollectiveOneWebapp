@@ -1,5 +1,5 @@
 <template lang="html">
-<div class="">
+<div class="initiatives-view">
 
   <transition name="slideDownUp">
     <app-new-initiative-modal
@@ -9,7 +9,7 @@
   </transition>
 
   <!-- Initiatives View -->
-  <div class="w3-cell-row">
+  <div class="w3-row initiatives-row">
 
     <transition name="slideRightLeft">
       <div v-show="expandNav" class="dark-gray nav-container-cell w3-sidebar">
@@ -17,7 +17,7 @@
       </div>
     </transition>
 
-    <div v-show="showContent" class="w3-cell content-container-cell">
+    <div v-show="showContent" class="w3-row content-container-cell">
       <div class="slider-container">
         <transition name="slideDownUp" mode="out-in">
           <router-view></router-view>
@@ -76,11 +76,27 @@ export default {
 
 <style scoped>
 
+.initiatives-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.initiatives-row {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-container-cell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .nav-container-cell {
-  margin-top: 50px;
   width: 300px;
-  vertical-align: top !important;
-  height: calc(100vh - 51px);
+  height: 100%;
 }
 
 </style>

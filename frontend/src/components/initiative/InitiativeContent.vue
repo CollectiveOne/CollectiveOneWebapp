@@ -92,9 +92,9 @@ export default {
 <style scoped>
 
 .initiative-row {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
 }
 
 .initiative-header-row {
@@ -102,6 +102,7 @@ export default {
 }
 
 .initiative-content-row {
+  display: flex;
 }
 
 </style>

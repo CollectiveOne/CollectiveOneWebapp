@@ -12,8 +12,7 @@
       <div class="w3-col m4">
        <div class="w3-left nav-menu-btn w3-xlarge fa-button"
          @click="$store.commit('toggleExpandNav')">
-         <i v-if="!expandNav" class="fa fa-chevron-circle-right"></i>
-         <i v-if="expandNav" class="fa fa-chevron-circle-left"></i>
+         <i class="fa fa-chevron-circle-right"></i>
        </div>
 
        <div v-if="inInitiative" class="">
