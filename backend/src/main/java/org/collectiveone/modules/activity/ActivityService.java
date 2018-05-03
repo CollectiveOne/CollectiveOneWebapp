@@ -835,7 +835,7 @@ public class ActivityService {
 		
 		activity.setType(ActivityType.MESSAGE_POSTED);
 		activity.setMessage(message);
-		activity.getMentions().addAll(mentionedUsers);
+		activity.getMentionedUsers().addAll(mentionedUsers);
 		setMessageLocation(activity, contextType, elementId);
 		
 		activity = activityRepository.save(activity);
@@ -1135,7 +1135,7 @@ public class ActivityService {
 				notification.setEmailSummaryState(NotificationState.PENDING);
 				
 				/* mark as delivered in some scenarios */
-				Boolean isMentioned = activity.getMentions().contains(user);
+				Boolean isMentioned = activity.getMentionedUsers().contains(user);
 				Boolean isMessage = activity.getType() == ActivityType.MESSAGE_POSTED;
 				
 				switch (subscriber.getInAppConfig()) {

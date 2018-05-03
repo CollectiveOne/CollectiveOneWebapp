@@ -10,8 +10,10 @@
     <div class="w3-row">
       <div v-if="mentioning" class="dropup">
         <div class="dropup-content">
-          <a href="#" v-for="user in userSuggestions"
-          @click="userSelected(user)">{{ user.nickname }}</a>
+          <div v-for="user in userSuggestions"
+            @click="userSelected(user)">
+            <app-user-avatar :user="user" :small="true"></app-user-avatar>
+          </div>
         </div>
       </div>
       <div class="w3-row">
@@ -357,14 +359,16 @@ export default {
   z-index: 1;
 }
 
-.dropup-content a {
+.dropup-content div {
   color: black;
-  padding: 12px 16px;
+  padding: 6px 16px;
   text-decoration: none;
   display: block;
 }
 
-.dropup-content a:hover {background-color: #ccc}
+.dropup-content div:hover {
+  background-color: #ccc
+}
 
 .dropup .dropup-content {
     display: block; /*triggers to showList*/
