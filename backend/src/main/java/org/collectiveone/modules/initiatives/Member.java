@@ -10,13 +10,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.collectiveone.modules.tokens.MemberTransfer;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-@Entity(name = "members")
+@Entity
+@Table(name = "members")
 public class Member implements Comparable<Member>{
 
 	@Id

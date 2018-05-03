@@ -1,30 +1,32 @@
 <template lang="html">
   <div class="w3-cell-row">
-    <div class="w3-row" v-if="showMentionedUsers">
-      <p>
-        <span v-if="mentionedUsers.length">Mentions :</span>
-        <span class="w3-tag w3-teal mentionedUsers" v-for="(data, i) in mentionedUsers">@{{ data.nickname }} <i class="fa fa-close mentionedUsersClose" @click="userSelectedClose(data,i)"></i></span>
-      </p>
+    <div class="w3-row">
+      <span v-if="mentionedUsers.length">Mentions :</span>
+      <span class="w3-tag w3-teal mentionedUsers"
+        v-for="(user, i) in mentionedUsers">@{{ user.nickname }}
+        <i class="fa fa-close mentionedUsersClose" @click="removeUserSelected(i)"></i>
+      </span>
     </div>
-      <div class="w3-row">
-        <div class="dropup" v-show="mentioned">
-          <div class="dropup-content">
-            <a href="#" v-for="(data, i) in memberList" 
-            @click="userSelected(data)">{{ data.nickname }}</a>
-          </div>
+    <div class="w3-row">
+      <div v-if="mentioning" class="dropup">
+        <div class="dropup-content">
+          <a href="#" v-for="user in userSuggestions"
+          @click="userSelected(user)">{{ user.nickname }}</a>
         </div>
+      </div>
       <div class="w3-row">
 
-        <textarea 
-          v-if="!preview" 
-          class="this-textarea" 
+        <textarea
+          v-if="!preview"
+          class="this-textarea"
           :class="textareaClasses"
           ref="mdArea"
-          @focus="atFocus($event)" 
+          @focus="atFocus($event)"
           @blur="$emit('c-blur', $event)"
+          @keyup="checkMentions()"
+          @click="checkMentions()"
           v-model="text"
-          :placeholder="placeholder"
-          v-on:keyup="checkKeyEntered">
+          :placeholder="placeholder">
         </textarea>
         <div v-if="preview || sideBySide" class="this-markdown" :class="markdownClasses">
           <vue-markdown class="marked-text" :source="text"></vue-markdown>
@@ -60,6 +62,7 @@
 </template>
 
 <script>
+import { spliceString } from '@/lib/common.js'
 
 export default {
 
@@ -83,12 +86,10 @@ export default {
       text: '',
       preview: false,
       sideBySide: false,
-      mentioned: false,
-      memberList: '',
-      el: '',
+      mentioningQuery: '',
+      userSuggestions: [],
       mentionedUsers: [],
-      mentionedUsersIds: [],
-      showMentionedUsers: true
+      lastMentionIx: 0
     }
   },
 
@@ -100,6 +101,9 @@ export default {
     text () {
       this.$emit('input', this.text)
       this.checkHeight()
+    },
+    mentioningQuery () {
+      this.updateMentionSuggestions()
     }
   },
 
@@ -133,82 +137,103 @@ export default {
         }
       }
     },
-    initiative () {
-      return this.$store.state.initiative.initiative
+    mentioning () {
+      return this.mentioningQuery !== ''
+    },
+    initiativeId () {
+      return this.$route.params.initiativeId
     }
   },
 
   methods: {
-    sendData () {
-      var info = {
-        message: this.value,
-        mentions: this.mentionedUsersIds
+    removeUserSelected (index) {
+      let user = this.mentionedUsers[index]
+      /* remove string */
+      let ixFound = this.text.search(user.nickname)
+      if (ixFound !== -1) {
+        /* remove the name with the @ too */
+        this.text = spliceString(this.text, ixFound - 1, user.nickname.length + 1, '')
       }
-      this.$emit('send', info)
-      this.name = ''
-      this.mentioned = false
-      this.mentionedUsers = []
-      this.mentionedUsersIds = []
-    },
-    userSelectedClose (event, index) {
-      console.log(event.c1Id, index)
       this.mentionedUsers.splice(index, 1)
-      this.mentionedUsersIds.splice(index, 1)
     },
-    checkName (el) {
-      el.style.color = 'orange'
+
+    getMentions () {
+      let re = /@\w*/g
+      let mentions = []
+      let m
+
+      /* get mentions and their indexes */
+      do {
+        m = re.exec(this.text)
+        if (m) {
+          mentions.push(m)
+        }
+      } while (m)
+
+      return mentions
     },
-    fetchUserList (name) {
-      this.url = '/1/users/suggestions?q=' + name
-      console.log(this.url)
-      this.axios.get(this.url).then((response) => {
-        console.log(response, response.data.data)
-        this.onRequestLoaded ? this.onRequestLoaded(response.data.data.data) : null
-        this.memberList = this.process ? self.process(response.data) : response.data.data
+
+    checkMentions () {
+      /* regular expression of @word */
+      let mentions = this.getMentions()
+
+      /* check if cursor is at one mention */
+      let selectedMention = []
+      for (let ix = 0; ix < mentions.length; ix++) {
+        let e = mentions[ix]
+        if ((e.index <= this.$refs.mdArea.selectionStart) &&
+          (this.$refs.mdArea.selectionStart <= (e.index + e[0].length))) {
+          selectedMention = e
+          /* need to remember ix to know which mention to update after user select */
+          this.lastMentionIx = ix
+        }
+      }
+
+      // console.log(selectedMention)
+      if (selectedMention.length > 0) {
+        /* remove the at and store in mentioning */
+        this.mentioningQuery = selectedMention[0].substr(1)
+      } else {
+        this.mentioningQuery = ''
+      }
+
+      /* check mentioned user are still mentioned */
+      for (let ix = 0; ix < this.mentionedUsers.length; ix++) {
+        if (this.text.search(this.mentionedUsers[ix].nickname) === -1) {
+          this.removeUserSelected(ix)
+        }
+      }
+    },
+
+    updateMentionSuggestions () {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/members/suggestions?q=' + this.mentioningQuery).then((response) => {
+        if (response.data.result === 'success') {
+          this.userSuggestions = this.process ? self.process(response.data) : response.data.data
+        }
       })
     },
-    userSelected (event) {
-      this.mentioned = false
-      this.text = this.text.substr(0, this.text.length - this.name.length - 1) + event.nickname + ' '
-      this.name = ''
-      console.log(event.c1Id)
+
+    userSelected (user) {
+      let mentions = this.getMentions()
+      let mention = mentions[this.lastMentionIx]
+
+      /* remove mention */
+      this.text = spliceString(this.text, mention.index + 1, mention[0].length - 1, user.nickname)
       this.$refs.mdArea.focus()
-      if (this.mentionedUsersIds.indexOf(event.c1Id) === -1) {
-        this.mentionedUsers.push(event)
-        this.mentionedUsersIds.push(event.c1Id)
+      this.$refs.mdArea.selectionStart = mention.index + user.nickname.length
+
+      /* add mentioned user if not already added */
+      if (this.mentionedUsers.filter(e => e.c1Id === user.c1Id).length === 0) {
+        this.mentionedUsers.push(user)
       }
+      this.mentioningQuery = ''
     },
-    checkKeyEntered (e) {
-      this.el = e
-      if (!this.text.length) {
-        this.name = ''
-        this.mentioned = false
-        this.mentionedUsers = []
-        this.mentionedUsersIds = []
-      }
-      switch (e.keyCode) {
-        case 32: // space
-          this.name = ''
-          this.mentioned = false
-          break
-        case 50: // @
-          this.mentioned = true
-          this.fetchUserList('') // showAll
-          break
-        case 8: //  backspace
-          this.name = !this.name.length ? '' : this.name.substr(0, (this.name.length - 1))
-          break
-        default:
-          if (this.mentioned && e.keyCode >= 65 && e.key >= 'a' && e.keyCode <= 91 && e.key <= 'z') {
-            this.name += e.key
-            this.fetchUserList(this.name) // fetch users from member table
-          }
-      }
-    },
+
     atFocus (event) {
       this.$emit('c-focus', event)
       this.checkHeight()
     },
+
     checkHeight () {
       if (this.$refs.mdArea) {
         if (this.text !== '') {
@@ -219,20 +244,35 @@ export default {
         }
       }
     },
+
     togglePreview () {
       this.sideBySide = false
       this.preview = !this.preview
     },
+
     toggleSideBySide () {
       this.preview = false
       this.sideBySide = !this.sideBySide
     },
+
     atKeydown (e) {
       /* ctr + enter */
       if (e.keyCode === 13 && e.ctrlKey) {
         e.preventDefault()
         this.sendData()
       }
+    },
+
+    sendData () {
+      var info = {
+        message: this.value,
+        mentions: this.mentionedUsers.map(e => e.c1Id)
+      }
+      this.$emit('send', info)
+      this.userSuggestions = []
+      this.mentionedUsers = []
+      this.preview = false
+      this.sideBySide = false
     }
   },
 
@@ -323,7 +363,7 @@ export default {
 }
 .mentionedUsers {
    padding-left: 10px;
-   padding-right: 10px; 
+   padding-right: 10px;
    margin-left: 5px;
 }
 
