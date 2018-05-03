@@ -41,8 +41,6 @@
 
 <script>
 import ActivityTable from '@/components/notifications/ActivityTable.vue'
-import SockJS from 'sockjs-client'
-import Stomp from 'webstomp-client'
 
 export default {
   components: {
@@ -90,7 +88,7 @@ export default {
       allShown: false,
       loading: false,
       loadingMore: false,
-      connected: false
+      subscription: null
     }
   },
 
@@ -103,6 +101,9 @@ export default {
     },
     contextElementId () {
       this.getActivity('RESET')
+    },
+    '$store.state.socket.connected' () {
+      this.handleSocket()
     },
     onlyMessages () {
       this.getActivity('RESET')
@@ -200,58 +201,36 @@ export default {
         }
       }
     },
-    connectSocket () {
-      this.socket = new SockJS(process.env.WEBSOCKET_SERVER_URL)
-      this.stompClient = Stomp.over(this.socket)
-      this.stompClient.connect(
-        {},
-        frame => {
-          this.connected = true
+    handleSocket () {
+      let url = ''
+      switch (this.contextType) {
+        case 'MODEL_CARD':
+          url = '/channel/activity/model/card/' + this.contextElementId
+          break
 
-          let url = ''
-          switch (this.contextType) {
-            case 'MODEL_CARD':
-              url = '/channel/activity/model/card/' + this.contextElementId
-              break
-
-            case 'MODEL_SECTION':
-              url = '/channel/activity/model/section/' + this.contextElementId
-              break
-          }
-
-          console.log('subscribing to ' + url)
-
-          this.stompClient.subscribe(url, tick => {
-            console.log('tick')
-            console.log(tick)
-            var message = tick.body
-            if (message === 'UPDATE') {
-              this.getActivity('UPDATE')
-            }
-          })
-        },
-        error => {
-          console.log(error)
-          this.connected = false
-        }
-      )
-    },
-    disconnectSocket () {
-      if (this.stompClient) {
-        this.stompClient.disconnect()
+        case 'MODEL_SECTION':
+          url = '/channel/activity/model/section/' + this.contextElementId
+          break
       }
-      this.connected = false
+
+      this.subscription = this.$store.dispatch('subscribe', {
+        url: url,
+        onMessage: (tick) => {
+          var message = tick.body
+          if (message === 'UPDATE') {
+            this.getActivity('UPDATE')
+          }
+        }
+      })
     }
   },
 
   created () {
     this.getActivity('RESET')
-    this.connectSocket()
+    this.handleSocket()
   },
 
-  beforeDestroy () {
-    this.disconnectSocket()
-  }
+  beforeDestroy () {}
 
 }
 </script>

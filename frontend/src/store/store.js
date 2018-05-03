@@ -8,6 +8,7 @@ import messages from './modules/messages'
 import support from './modules/support'
 import model from './modules/model'
 import sectionsTree from './modules/sectionsTree'
+import socket from './modules/socket'
 import pushManager from './modules/pushManager'
 
 Vue.use(Vuex)
@@ -23,6 +24,7 @@ export const store = new Vuex.Store({
     support,
     model,
     sectionsTree,
+    socket,
     pushManager
   }
 })

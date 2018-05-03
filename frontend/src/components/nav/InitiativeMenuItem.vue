@@ -24,6 +24,13 @@
         </router-link>
       </div>
 
+      <div class="notification-div">
+        <app-notifications-list
+          :element="initiative"
+          contextType="INITIATIVE">
+        </app-notifications-list>
+      </div>
+
     </div>
 
     <div class="slider-container">
@@ -43,9 +50,12 @@
 </template>
 
 <script>
+import NotificationsList from '@/components/notifications/NotificationsList.vue'
 export default {
   name: 'app-initiative-menu-item',
-
+  components: {
+    'app-notifications-list': NotificationsList
+  },
   props: {
     initiative: {
       type: Object,
@@ -179,6 +189,12 @@ export default {
 
 .selected {
   font-weight: bold;
+}
+
+.notification-div {
+  min-height: 1px;
+  width: 30px;
+  float: left;
 }
 
 </style>
