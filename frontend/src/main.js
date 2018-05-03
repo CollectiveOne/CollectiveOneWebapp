@@ -19,6 +19,7 @@ import UserAvatar from '@/components/user/UserAvatar.vue'
 
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
+import MessagesMarkdownEditor from '@/components/global/MessagesMarkdownEditor.vue'
 import ModelSectionTag from '@/components/model/MoodelSectionTag.vue'
 
 Vue.config.productionTip = false
@@ -45,6 +46,7 @@ Vue.component('app-markdown-editor', MarkdownEditor)
 Vue.component('app-indicator', Indicator)
 Vue.component('app-drop-down-menu', DropDownMenu)
 Vue.component('app-user-avatar', UserAvatar)
+Vue.component('app-messages-markdown-editor', MessagesMarkdownEditor)
 
 /* registered globally to solve the circular reference */
 Vue.component('app-model-section-modal', ModelSectionModal)
