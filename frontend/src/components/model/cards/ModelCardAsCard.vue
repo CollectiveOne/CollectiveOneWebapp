@@ -60,7 +60,8 @@
           <app-card-control-buttons
             :cardWrapper="cardWrapper"
             :inSection="inSection"
-            @update="$emit('update')">
+            @update="$emit('update')"
+            @updateCards="$emit('updateCards')">
           </app-card-control-buttons>
         </div>
 

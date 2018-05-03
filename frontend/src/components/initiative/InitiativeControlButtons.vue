@@ -133,13 +133,17 @@ export default {
       this.deleteIntent = true
     },
     deleteConfirmed () {
-      this.axios.delete('/1/model/section/' + this.section.id)
-        .then((response) => {
-          this.deleteIntent = false
-          this.expanded = false
-        }).catch((error) => {
-          console.log(error)
-        })
+      this.axios.delete('/1/initiative/' + this.initiative.id).then((response) => {
+        this.$store.dispatch('refreshInitiative')
+        this.$store.dispatch('updateMyInitiatives')
+        if (this.initiative.parents.length > 0) {
+          var parentId = this.initiative.parents[this.initiative.parents.length - 1].id
+          this.$router.replace({ name: 'InitiativeOverview', params: { initiativeId: parentId } })
+          this.closeThis()
+        } else {
+          window.location.href = '/'
+        }
+      })
     },
     clickOutsideMenu () {
       this.expanded = false

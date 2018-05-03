@@ -174,6 +174,7 @@ export default {
 <style scoped>
 
 .overview-content {
+  overflow: auto;
 }
 
 .this-container {

@@ -276,6 +276,7 @@ export default {
 <style scoped>
 
 .this-container {
+  overflow: auto;
   padding-top: 0px !important;
   padding-bottom: 25px !important;
 }
