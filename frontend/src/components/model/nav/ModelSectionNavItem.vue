@@ -188,7 +188,7 @@ export default {
     },
     checkExpandSubsections () {
       if (this.highlightLevelUse > 1) {
-        this.showSubsections = true
+        this.expandSubsections()
       } else {
         if (this.sectionData) {
           if (this.sectionData.expand) {

@@ -240,18 +240,19 @@ export default {
 .thread-container {
   height: 100%;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
 }
 
 .history-container {
   min-height: 60px;
-  height: calc(100% - 120px);
   overflow: auto;
   flex-grow: 1;
 }
 
 .bottom-container {
-  flex-grow: 1;
+  min-height: 50px;
+  flex-shrink: 0;
 }
 
 .only-messages-button {

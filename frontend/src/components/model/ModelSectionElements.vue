@@ -342,10 +342,12 @@ export default {
       this.updateQuery()
     },
     update () {
-      if (this.isSectionsOrder) {
-        this.updateSection()
-      } else {
-        this.resetCards()
+      if (!this.isMessagesContent) {
+        if (this.isSectionsOrder) {
+          this.updateSection()
+        } else {
+          this.resetCards()
+        }
       }
     },
     checkCardSubroute () {
@@ -389,24 +391,28 @@ export default {
 .model-section-elements {
   height: 100%;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
 }
 
 .model-section-elements-container {
   height: 100%;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
 }
 
 .controls-row {
   margin: 12px 12px 6px 24px;
-  min-height: 35px;
+  min-height: 40px;
+  flex-shrink: 0;
 }
 
 .elements-container {
   padding: 12px 24px;
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 }
 
 .control-group {
