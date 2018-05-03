@@ -1,10 +1,10 @@
 <template lang="html">
-  <div class="w3-cell-row">
-    <div class="w3-row">
-      <span v-if="mentionedUsers.length">Mentions :</span>
-      <span class="w3-tag w3-teal mentionedUsers"
+  <div class="w3-cell-row editor-container">
+    <div v-if="mentionedUsers.length > 0" class="w3-row mentions-row">
+      <span>Mentions :</span>
+      <span class="w3-tag mentionedUsers light-grey"
         v-for="(user, i) in mentionedUsers">@{{ user.nickname }}
-        <i class="fa fa-close mentionedUsersClose" @click="removeUserSelected(i)"></i>
+        <i class="fa fa-close mentionedUsersClose cursor-pointer" @click="removeUserSelected(i)"></i>
       </span>
     </div>
     <div class="w3-row">
@@ -335,25 +335,33 @@ export default {
   justify-content: flex-end;
 }
 
+.editor-container {
+  position: relative;
+}
+
+.mentions-row {
+  font-size: 12px;
+}
+
 .dropup {
-    position: relative;
-    width: 100%
+  position: relative;
+  width: 100%
 }
 
 .dropup-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    width: 790px;
-    bottom: 0px;
-    z-index: 1;
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  width: 790px;
+  bottom: 0px;
+  z-index: 1;
 }
 
 .dropup-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
 }
 
 .dropup-content a:hover {background-color: #ccc}
@@ -361,10 +369,15 @@ export default {
 .dropup .dropup-content {
     display: block; /*triggers to showList*/
 }
+
 .mentionedUsers {
-   padding-left: 10px;
-   padding-right: 10px;
+   padding: 0px 10px !important;
    margin-left: 5px;
+   border-radius: 3px;
+}
+
+.mentionedUsersClose {
+   padding: 0px 10px !important;
 }
 
 .mentionedUsersClose:hover {
