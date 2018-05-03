@@ -230,7 +230,9 @@ export default {
     this.handleSocket()
   },
 
-  beforeDestroy () {}
+  beforeDestroy () {
+    this.$store.dispatch('unsubscribe', this.subscription)
+  }
 
 }
 </script>

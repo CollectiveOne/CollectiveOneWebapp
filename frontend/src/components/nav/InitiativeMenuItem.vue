@@ -27,6 +27,7 @@
       <div class="notification-div">
         <app-notifications-list
           :element="initiative"
+          :isMainNav="true"
           contextType="INITIATIVE">
         </app-notifications-list>
       </div>
@@ -195,6 +196,13 @@ export default {
   min-height: 1px;
   width: 30px;
   float: left;
+  position: relative;
+  top: 8px
 }
+
+.sub-initiative-element {
+  height: 800px;
+}
+
 
 </style>

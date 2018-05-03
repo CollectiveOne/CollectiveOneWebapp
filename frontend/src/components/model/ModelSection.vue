@@ -124,6 +124,11 @@ export default {
   watch: {
     '$store.state.support.triggerUpdateSectionCards' () {
       this.updateCards()
+      this.handleSocket()
+    },
+
+    subscription: function (val) {
+      console.log('subscribed from ModelSection' + val)
     }
   },
 
@@ -150,7 +155,35 @@ export default {
     newSubsectionFromBar () {
       this.showSubsections = true
       this.$emit('new-subsection')
+    },
+    handleSocket () {
+      if (this.section) {
+        console.log(this.section.id)
+        let url = '/channel/activity/model/section/' + this.section.id
+        // console.log('url is' + url)
+        this.subscription = this.$store.dispatch('subscribe', {
+          url: url,
+          onMessage: (tick) => {
+            var message = tick.body
+            console.log('sagar')
+            if (message === 'UPDATE') {
+              this.updateCards()
+            }
+          }
+        })
+        setInterval(() => {
+          console.log(this.subscription.id + 'sagar')
+        }, 1000)
+      }
     }
+  },
+
+  created () {
+    this.handleSocket()
+  },
+
+  beforeDestroy () {
+    this.$store.dispatch('unsubscribe', this.subscription)
   }
 }
 </script>

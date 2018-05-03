@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="">
+  <div :class="{'compact':isMainNav}">
 
     <div v-if="notifications.length > 0" class="bell-button cursor-pointer w3-display-container"
       @click="showNotificationsClicked()">
@@ -11,11 +11,11 @@
       v-click-outside="clickOutsideNotifications"
       class="notifications-container w3-white w3-card-4 w3-bar-block">
       <div class="w3-row-padding w3-border-bottom">
-        <div class="w3-col s8 text-div">
+        <div class="w3-col text-div" :class="isMainNav?'s7':'s8'">
           {{ notifications.length }} new events under {{ element.title }}
         </div>
-        <button class="w3-col s4 w3-margin-top w3-margin-bottom w3-button app-button"
-          @click="allNotificationsRead()">
+        <button class="w3-col  w3-margin-top w3-margin-bottom w3-button app-button" :class="isMainNav?'s5':'s4'"
+          @click="notificationsRead()">
           mark as read
         </button>
       </div>
@@ -53,7 +53,7 @@ export default {
       type: String,
       default: 'MODEL_SECTION'
     },
-    isSelected: {
+    isMainNav: {
       type: Boolean,
       default: false
     }
@@ -245,6 +245,10 @@ export default {
   created () {
     this.updateNotifications()
     this.handleSocket()
+  },
+
+  beforeDestroy () {
+    this.$store.dispatch('unsubscribe', this.subscription)
   }
 }
 </script>
@@ -278,6 +282,11 @@ export default {
   max-height: calc(100vh - 80px);
   overflow-y: auto;
   z-index: 2;
+}
+
+.compact .notifications-container {
+  width: 292px;
+  left: -32px;
 }
 
 </style>
