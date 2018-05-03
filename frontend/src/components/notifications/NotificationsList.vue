@@ -3,7 +3,8 @@
 
     <div v-if="notifications.length > 0" class="bell-button cursor-pointer w3-display-container"
       @click="showNotificationsClicked()">
-      <i class="fa fa-circle circle"></i>
+      <i v-if="onlyNotificationsUnder" class="fa fa-circle-o circle-o"></i>
+      <i v-else class="fa fa-circle circle"></i>
     </div>
 
     <div v-show="showTable"
@@ -14,7 +15,7 @@
           {{ notifications.length }} new events under {{ element.title }}
         </div>
         <button class="w3-col s4 w3-margin-top w3-margin-bottom w3-button app-button"
-          @click="notificationsRead()">
+          @click="allNotificationsRead()">
           mark as read
         </button>
       </div>
@@ -51,6 +52,10 @@ export default {
     contextType: {
       type: String,
       default: 'MODEL_SECTION'
+    },
+    isSelected: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -76,6 +81,23 @@ export default {
     },
     triggerUpdateNotifications () {
       return this.$store.state.support.triggerUpdateNotifications
+    },
+    notificationsHere () {
+      let notificationsHere = []
+      for (let ix in this.notifications) {
+        if (this.notifications[ix].activity.modelSection) {
+          if (this.notifications[ix].activity.modelSection.id === this.contextElementId) {
+            notificationsHere.push(this.notifications[ix])
+          }
+        }
+      }
+      return notificationsHere
+    },
+    onlyNotificationsUnder () {
+      if (this.notifications.length > 0) {
+        return this.notificationsHere.length === 0
+      }
+      return false
     }
   },
 
@@ -105,8 +127,11 @@ export default {
           this.notifications = response.data.data
           this.allShown = this.notifications.length < 10
 
-          /* send push notifications */
           this.$store.dispatch('addPushNotifications', this.notifications)
+          if (this.isSelected) {
+            /* autoread notifications of this section */
+            this.messageNotificationsRead(this.notificationsHere)
+          }
         }).catch(function (error) {
           console.log(error)
         })
@@ -132,9 +157,8 @@ export default {
       })
     },
 
-    notificationsRead () {
-      this.axios.put(this.url + '/read', {
-        }).then((response) => {
+    allNotificationsRead () {
+      this.axios.put(this.url + '/read', {}).then((response) => {
           /* check that new notifications arrived */
           this.$store.commit('triggerUpdateNotifications')
           this.updateNotifications()
@@ -142,6 +166,21 @@ export default {
         }).catch(function (error) {
           console.log(error)
         })
+    },
+
+    messageNotificationsRead (notificationListIn) {
+      let notificationsList = notificationListIn || []
+      let messagesList = notificationsList.filter((e) => { return e.activity.type === 'MESSAGE_POSTED' })
+      let idsList = messagesList.map((e) => e.id)
+      if (idsList.length > 0) {
+        this.axios.put('/1/notifications/read', idsList).then((response) => {
+          /* check that new notifications arrived */
+          this.$store.commit('triggerUpdateNotifications')
+          this.updateNotifications()
+        }).catch(function (error) {
+          console.log(error)
+        })
+      }
     },
 
     showMore () {
@@ -224,6 +263,11 @@ export default {
 
 .circle {
   color: #b91414;
+  font-size: 10px;
+}
+
+.circle-o {
+  color: #b35454;
   font-size: 10px;
 }
 

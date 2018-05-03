@@ -62,6 +62,7 @@ export default {
 .control-row {
   padding: 16px 18px 12px 36px;
   min-height: 62px;
+  flex-shrink: 0;
 }
 
 .section-elements {

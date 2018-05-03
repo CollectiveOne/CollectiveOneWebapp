@@ -86,9 +86,11 @@ const mutations = {
     }
 
     let sectionData = getSectionDataAtCoord(state.sectionsTree, payload.coord)
-    sectionData.section = payload.sectionData.section
-    sectionData.subsectionsData = payload.sectionData.subsectionsData
-    sectionData.subsectionsDataSet = true
+    if (payload.sectionData.section) {
+      sectionData.section = payload.sectionData.section
+      sectionData.subsectionsData = payload.sectionData.subsectionsData
+      sectionData.subsectionsDataSet = true
+    }
   }
 }
 

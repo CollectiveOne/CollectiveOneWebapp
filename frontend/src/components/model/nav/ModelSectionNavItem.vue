@@ -28,7 +28,8 @@
       <div v-if="section" class="notification-div">
         <app-notifications-list
           :element="section"
-          :forceUpdate="forceUpdateNotifications">
+          :forceUpdate="forceUpdateNotifications"
+          :isSelected="isSelected">
         </app-notifications-list>
       </div>
       <div class="control-div" :class="{'fa-button': !highlight, 'fa-button-dark': highlight}">
@@ -406,6 +407,7 @@ export default {
   min-height: 1px;
   width: 30px;
   float: left;
+  padding-top: 2px;
 }
 
 </style>

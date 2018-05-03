@@ -124,7 +124,7 @@
         <app-message-thread
           v-if="isMessagesContent"
           contextType="MODEL_SECTION"
-          :contextElementId="section.id"
+          :contextElementId="currentSectionId"
           :onlyMessages="isOnlyMessages"
           :levels="levels">
         </app-message-thread>
@@ -173,6 +173,7 @@ export default {
       section: null,
       showCardModal: false,
       loading: false,
+      sectionLoadedOnce: false,
       orderType: 'sections',
       isOnlyMessages: true,
       newCardQuery: '',
@@ -271,16 +272,25 @@ export default {
       }
     },
     summaryView () {
+      if (!this.sectionLoadedOnce) {
+        this.updateSection()
+      }
       if (this.$route.query.cardsType !== 'summary' || this.$route.name !== 'ModelSectionCards') {
         this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'summary'}})
       }
     },
     cardView () {
+      if (!this.sectionLoadedOnce) {
+        this.updateSection()
+      }
       if (this.$route.query.cardsType !== 'card' || this.$route.name !== 'ModelSectionCards') {
         this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'card'}})
       }
     },
     docView () {
+      if (!this.sectionLoadedOnce) {
+        this.updateSection()
+      }
       if (this.$route.query.cardsType !== 'doc' || this.$route.name !== 'ModelSectionCards') {
         this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'doc'}})
       }
@@ -325,6 +335,7 @@ export default {
       if (this.currentSectionId) {
         this.axios.get('/1/model/section/' + this.currentSectionId, {params: {levels: this.levels}}).then((response) => {
           this.loading = false
+          this.sectionLoadedOnce = true
           if (response.data.result === 'success') {
             this.section = response.data.data
           }

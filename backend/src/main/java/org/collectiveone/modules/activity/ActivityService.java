@@ -144,6 +144,7 @@ public class ActivityService {
 		List<UUID> allSectionIds = null;
 		List<UUID> cardsIds = null;
 		boolean isModel = false;
+		
 		switch (contextType) {
 			case MODEL_SECTION:
 				allSectionIds = modelService.getAllSubsectionsIds(elementId, null);
@@ -157,6 +158,7 @@ public class ActivityService {
 				cardsIds.add(elementId);
 				isModel = true;
 				break;
+				
 			case INITIATIVE:
 				isModel = false;
 				break;
@@ -176,9 +178,8 @@ public class ActivityService {
 			}
 			
 			return notificationRepository.findOfUserInSections(userId, NotificationState.PENDING, allSectionIds, cardsIds, page);
-		}
-		else
-		{
+			
+		} else {
 			List<InitiativeDto> subinitiativesTree = initiativeService.getSubinitiativesTree(elementId, null);
 			
 			List<UUID> allInitiativesIds = new ArrayList<UUID>();
@@ -232,6 +233,29 @@ public class ActivityService {
 			UUID elementId ) {
 		
 		List<Notification> notifications = userUnreadNotifications(userId, contextType, elementId, null);
+		
+		for(Notification notification: notifications) {
+			
+			notification.setInAppState(NotificationState.DELIVERED);
+			notification.setPushState(NotificationState.DELIVERED);
+			notification.setEmailNowState(NotificationState.DELIVERED);
+			notification.setEmailSummaryState(NotificationState.DELIVERED);
+			
+			notificationRepository.save(notification);
+		}
+		
+		return new PostResult("success", "success", "");
+	}
+	
+	@Transactional
+	public PostResult notificationsListRead(
+			UUID userId,
+			List<UUID> notificationIds) {
+		
+		if (notificationIds.size() == 0) {
+			notificationIds.add(UUID.randomUUID());
+		}
+		List<Notification> notifications = notificationRepository.findByIdIn(userId, notificationIds);
 		
 		for(Notification notification: notifications) {
 			
