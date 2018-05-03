@@ -76,8 +76,9 @@ export default {
 }
 
 .vision-content {
+  flex-grow: 1;
   height: 100%;
-  min-width: calc(100% - 350px);
+  min-width: 350px;
   display: flex;
   flex-direction: column;
 }

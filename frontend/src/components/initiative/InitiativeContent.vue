@@ -111,6 +111,7 @@ export default {
 
 .initiative-header-row {
   min-height: 50px;
+  flex-shrink: 0;
 }
 
 .initiative-content-row {
