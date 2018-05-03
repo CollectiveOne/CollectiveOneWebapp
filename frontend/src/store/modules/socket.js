@@ -44,6 +44,14 @@ const actions = {
     }
   },
 
+  unsubscribe: (context, payload) => {
+    if (context.state.connected) {
+      stompClient.unsubscribe(payload.id)
+    } else {
+      return null
+    }
+  },
+
   disconnectSocket: (context) => {
     if (stompClient) {
       stompClient.disconnect()
