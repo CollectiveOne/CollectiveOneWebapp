@@ -45,10 +45,10 @@
         </div>
 
         <div v-if="crumbTooLong && !windowIsSmall" class="scroll-btns">
-          <div @click="scrollLeft()" v-show="!scrollOnLeft" class="left-scroll-btn">
+          <div @click="scrollLeft()" class="left-scroll-btn">
             <i class="fa fa-chevron-left"></i>
           </div>
-          <div @click="scrollRight()" v-show="!scrollOnRight" class="right-scroll-btn">
+          <div @click="scrollRight()" class="right-scroll-btn">
             <i class="fa fa-chevron-right"></i>
           </div>
         </div>
