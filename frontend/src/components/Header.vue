@@ -16,7 +16,7 @@
           <i class="fa fa-chevron-circle-right"></i>
         </div>
 
-        <div v-if="inInitiative" class="initiatives-breadcrumb small-scroll noselect">
+        <div v-if="inInitiative" @scroll="scrolling()" class="initiatives-breadcrumb small-scroll noselect" ref="breadcrumb">
 
           <div v-for="(parent, ix) in reversedParents" :key="parent.id" class="initiative-section">
             <router-link :to="{name: 'Initiative', params: {'initiativeId': parent.id }}"
@@ -37,10 +37,22 @@
               class="w3-margin-left" :initiative="this.initiative">
             </app-initiative-control-buttons>
           </div>
+
           <div v-if="initiative.status !== 'ENABLED'" class="w3-tag w3-round w3-margin-left error-panel">
             {{ initiative.status }}
           </div>
+
         </div>
+
+        <div v-if="crumbTooLong && !windowIsSmall" class="scroll-btns">
+          <div @click="scrollLeft()" v-show="!scrollOnLeft" class="left-scroll-btn">
+            <i class="fa fa-chevron-left"></i>
+          </div>
+          <div @click="scrollRight()" v-show="!scrollOnRight" class="right-scroll-btn">
+            <i class="fa fa-chevron-right"></i>
+          </div>
+        </div>
+
       </div>
 
       <div class="w3-col m4">
@@ -143,7 +155,10 @@ export default {
       showActivityList: false,
       showUserOptions: false,
       showEditNotificationsModal: false,
-      draggingBC: false
+      draggingBC: false,
+      crumbTooLong: false,
+      scrollOnLeft: false,
+      scrollOnRight: false
     }
   },
 
@@ -233,10 +248,45 @@ export default {
     },
     logoutUser () {
       this.$store.dispatch('logoutUser')
+    },
+    scrolling () {
+      this.checkCrumbScroll()
+    },
+    checkCrumbScroll () {
+      if (!this.$refs.breadcrumb) {
+        this.crumbTooLong = false
+      }
+      this.crumbTooLong = this.$refs.breadcrumb.clientWidth < this.$refs.breadcrumb.scrollWidth
+
+      this.checkScrollOnLeft()
+      this.checkScrollOnRight()
+    },
+    checkScrollOnLeft () {
+      if (this.$refs.breadcrumb.scrollLeft === 0) {
+        this.scrollOnLeft = true
+      } else {
+        this.scrollOnLeft = false
+      }
+    },
+    checkScrollOnRight () {
+      if (this.$refs.breadcrumb.scrollLeft === this.$refs.breadcrumb.scrollWidth) {
+        this.scrollOnRight = true
+      } else {
+        this.scrollOnRight = false
+      }
+    },
+    scrollLeft () {
+      this.$refs.breadcrumb.scrollLeft -= 50
+    },
+    scrollRight () {
+      this.$refs.breadcrumb.scrollLeft += 50
     }
   },
 
   mounted () {
+    this.$nextTick(() => {
+      this.checkCrumbScroll()
+    })
   }
 }
 </script>
@@ -256,6 +306,37 @@ export default {
 
 .initiatives-breadcrumb-container {
   position: relative;
+}
+
+.scroll-btns {
+  position: absolute;
+  top: 13px;
+  width: 100%;
+  height: 0px;
+  font-size: 18px;
+  color: white;
+}
+
+.scroll-btns > div {
+  position: absolute;
+  width: 30px;
+  opacity: 0.3;
+  background-color: rgb(184, 184, 184);
+  text-align: center;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.scroll-btns > div:hover {
+  background-color: #15a5cc;
+}
+
+.scroll-btns .left-scroll-btn {
+  left: 50px;
+}
+
+.scroll-btns .right-scroll-btn {
+  right: -10px;
 }
 
 .initiatives-breadcrumb {

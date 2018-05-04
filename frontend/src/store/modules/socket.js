@@ -2,7 +2,7 @@ import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
 
 const socket = new SockJS(process.env.WEBSOCKET_SERVER_URL)
-const stompClient = Stomp.over(socket)
+const stompClient = Stomp.over(socket, { debug: false })
 
 const state = {
   connected: false
