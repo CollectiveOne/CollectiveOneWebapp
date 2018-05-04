@@ -14,6 +14,19 @@
       </transition>
     </div>
 
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-card-modal
+          v-if="showNewCardModal"
+          :isNew="true"
+          :inSectionId="section.id"
+          :inSectionTitle="section.title"
+          @close="showNewCardModal = false"
+          @updateCards="update()">
+        </app-model-card-modal>
+      </transition>
+    </div>
+
     <div class="model-section-elements-container">
       <div class="w3-row controls-row small-scroll">
 
@@ -135,6 +148,15 @@
           :cardsType="cardsType">
         </app-model-section>
 
+        <div v-if="isCardsContent && isSectionsOrder && !sectionHasContent && !loading" class="w3-row w3-center">
+          <div class="w3-row">
+            <i>no cards have been created in "{{ section.title }}"</i>
+          </div>
+          <div @click="showNewCardModal = true" class="control-btn w3-row w3-margin-top">create one</div>
+          <div v-if="levels === 1" class="w3-row w3-margin-top">or</div>
+          <div v-if="levels === 1" @click="levelUp()" class="control-btn w3-row w3-margin-top">look one level further</div>
+        </div>
+
         <app-model-cards-container
           v-if="isCardsContent && !isSectionsOrder"
           :cardWrappers="cardWrappers"
@@ -161,6 +183,24 @@ import MessageThread from '@/components/notifications/MessageThread'
 import ModelSection from '@/components/model/ModelSection'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer'
 
+const sectionHasContent = function (section) {
+  if (section.cardsWrappers.length > 0) {
+    return true
+  } else {
+    if (section.subsections.length > 0) {
+      return true
+    } else {
+      /* recursive call  */
+      for (let ix in section.subsections) {
+        if (sectionHasContent(section.subsections[ix])) {
+          return true
+        }
+      }
+    }
+  }
+  return false
+}
+
 export default {
   components: {
     'app-model-section': ModelSection,
@@ -172,6 +212,7 @@ export default {
     return {
       section: null,
       showCardModal: false,
+      showNewCardModal: false,
       loading: false,
       sectionLoadedOnce: false,
       orderType: 'sections',
@@ -195,6 +236,12 @@ export default {
     },
     currentSectionId () {
       return this.$route.params.sectionId
+    },
+    sectionHasContent () {
+      if (this.section) {
+        return sectionHasContent(this.section)
+      }
+      return false
     },
     isMessagesContent () {
       return this.$route.name === 'ModelSectionMessages'
