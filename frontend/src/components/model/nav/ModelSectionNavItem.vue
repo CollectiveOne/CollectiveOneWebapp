@@ -53,7 +53,8 @@
             :section="subsection" :key="subsection.id"
             :highlightLevel="highlightLevelUse - 1"
             :coordinate="coordinate.concat(ix)"
-            class="subsection-row">
+            class="subsection-row"
+            @section-selected="$emit('section-selected', $event)">
           </app-model-section-nav-item>
         </div>
       </transition>
@@ -199,6 +200,7 @@ export default {
       }
     },
     sectionSelected () {
+      this.$emit('section-selected', this.section)
       if (this.section) {
         this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
       }

@@ -29,7 +29,7 @@
       </div>
     </div>
 
-    <div class="modal-buttons-container">
+    <div class="initiative-buttons-container">
 
       <div class="expand-btn w3-xlarge fa-button"
         @click="expanded =! expanded"
@@ -161,6 +161,9 @@ export default {
 
 <style scoped>
 
+.initiative-buttons-container {
+}
+
 .expand-btn {
   padding: 8px 12px;
   width: 50px;
@@ -172,7 +175,7 @@ export default {
   position: absolute;
   width: 180px;
   margin-top: 0px;
-  margin-left: -80px;
+  right: 0px;
   text-align: left;
   font-size: 15px;
   z-index: 2;

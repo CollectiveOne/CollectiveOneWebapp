@@ -9,109 +9,111 @@
     </transition>
 
     <div class="w3-row header-row drop-shadow-br light-grey">
-      <div class="w3-col m4">
-       <div class="w3-left nav-menu-btn w3-xlarge fa-button"
-         @click="$store.commit('toggleExpandNav')">
-         <i class="fa fa-chevron-circle-right"></i>
-       </div>
+      <div class="w3-col m4 initiatives-breadcrumb-container">
 
-       <div v-if="inInitiative" class="">
-         <div v-for="(parent, ix) in reversedParents" :key="parent.id" class="w3-left initiative-section">
-           <router-link :to="{name: 'Initiative', params: {'initiativeId': parent.id }}"
-             tag="div" class="w3-left cursor-pointer" :class="{ 'parent-2': ix > 0 }">
-             {{ parent.meta.name }}
-           </router-link>
-           <div class="w3-left separator">
-             <i class="fa fa-chevron-right" aria-hidden="true"></i>
-           </div>
-         </div>
-         <div class="w3-left">
-            <div class="w3-left initiative-section">
+        <div class="w3-left nav-menu-btn w3-xlarge fa-button"
+          @click="$store.commit('toggleExpandNav')">
+          <i class="fa fa-chevron-circle-right"></i>
+        </div>
+
+        <div v-if="inInitiative" class="initiatives-breadcrumb small-scroll noselect">
+
+          <div v-for="(parent, ix) in reversedParents" :key="parent.id" class="initiative-section">
+            <router-link :to="{name: 'Initiative', params: {'initiativeId': parent.id }}"
+              tag="div" class="w3-left cursor-pointer" :class="{ 'parent-2': ix > 0 }">
+              {{ parent.meta.name }}
+            </router-link>
+            <div class="separator">
+              <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </div>
+          </div>
+
+          <div class="initiative-section">
+            <div class="">
               {{ initiative.meta.name }}
             </div>
 
             <app-initiative-control-buttons
-              class="w3-left w3-margin-left" :initiative="this.initiative">
+              class="w3-margin-left" :initiative="this.initiative">
             </app-initiative-control-buttons>
-         </div>
-         <div v-if="initiative.status !== 'ENABLED'" class="w3-left w3-tag w3-round w3-margin-left error-panel">
-           {{ initiative.status }}
-         </div>
-       </div>
+          </div>
+          <div v-if="initiative.status !== 'ENABLED'" class="w3-tag w3-round w3-margin-left error-panel">
+            {{ initiative.status }}
+          </div>
+        </div>
+      </div>
+
+      <div class="w3-col m4">
+        <div v-if="inInitiative" class="tab-btns-container w3-xlarge">
+          <router-link :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
+            class="tab-btn-space">
+            <div class="fa-button noselect" :class="{'fa-button-selected': isOverview}">
+              <span class=""><i class="fa fa-home" aria-hidden="true"></i></span>
+            </div>
+          </router-link>
+          <router-link :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
+            class="tab-btn-space">
+            <div class="fa-button noselect" :class="{'fa-button-selected': isModel}">
+              <span class=""><i class="fa fa-th-large" aria-hidden="true"></i></span>
+            </div>
+          </router-link>
+          <router-link :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
+            class="tab-btn-space">
+            <div class="fa-button noselect" :class="{'fa-button-selected': isPeople}">
+              <span class=""><i class="fa fa-users" aria-hidden="true"></i></span>
+            </div>
+          </router-link>
+          <router-link :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
+            class="tab-btn-space">
+            <div class="fa-button noselect" :class="{'fa-button-selected': isAssignations}">
+              <span class=""><i class="fa fa-exchange" aria-hidden="true"></i></span>
+            </div>
+          </router-link>
+        </div>
+        <div v-else class="logo-container">
+          <img class="logo" src="../assets/logo-color.png" alt="">
+        </div>
 
       </div>
 
       <div class="w3-col m4">
-       <div v-if="inInitiative" class="tab-btns-container w3-xlarge">
-         <router-link :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
-           class="tab-btn-space">
-           <div class="fa-button noselect" :class="{'fa-button-selected': isOverview}">
-             <span class=""><i class="fa fa-home" aria-hidden="true"></i></span>
-           </div>
-         </router-link>
-         <router-link :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
-           class="tab-btn-space">
-           <div class="fa-button noselect" :class="{'fa-button-selected': isModel}">
-             <span class=""><i class="fa fa-th-large" aria-hidden="true"></i></span>
-           </div>
-         </router-link>
-         <router-link :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
-           class="tab-btn-space">
-           <div class="fa-button noselect" :class="{'fa-button-selected': isPeople}">
-             <span class=""><i class="fa fa-users" aria-hidden="true"></i></span>
-           </div>
-         </router-link>
-         <router-link :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
-           class="tab-btn-space">
-           <div class="fa-button noselect" :class="{'fa-button-selected': isAssignations}">
-             <span class=""><i class="fa fa-exchange" aria-hidden="true"></i></span>
-           </div>
-         </router-link>
-       </div>
-       <div v-else class="logo-container">
-         <img class="logo" src="../assets/logo-color.png" alt="">
-       </div>
 
-      </div>
+        <div v-if="$store.state.user.authenticated"
+          @click="userOptionsClicked()" class="w3-right cursor-pointer"
+          v-click-outside="clickOutsideUser">
 
-      <div class="w3-col m4">
+          <div v-if="$store.state.user.profile" class="logged-user-div fa-button w3-right">
+            <div class="avatar-img-container w3-left">
+              <img :src="$store.state.user.profile.pictureUrl" class="logged-avatar w3-circle noselect">
+            </div>
+            <div class="logged-nickname noselect w3-left w3-hide-medium w3-hide-small">
+              {{ $store.state.user.profile.nickname }}
+            </div>
+          </div>
 
-       <div v-if="$store.state.user.authenticated"
-         @click="userOptionsClicked()" class="w3-right cursor-pointer"
-         v-click-outside="clickOutsideUser">
+          <app-drop-down-menu
+            v-show="showUserOptions"
+            class="user-drop-menu"
+            @profile="goMyProfile()"
+            @home="goHome()"
+            @notifications="showEditNotificationsModal = true"
+            @logout="logoutUser()"
+            :items="userMenuItems">
+          </app-drop-down-menu>
 
-         <div v-if="$store.state.user.profile" class="logged-user-div fa-button w3-right">
-           <div class="avatar-img-container w3-left">
-             <img :src="$store.state.user.profile.pictureUrl" class="logged-avatar w3-circle noselect">
-           </div>
-           <div class="logged-nickname noselect w3-left w3-hide-medium w3-hide-small">
-             {{ $store.state.user.profile.nickname }}
-           </div>
-         </div>
+        </div>
+        <div v-else class="login-button-container w3-bar-item w3-right">
+          <button @click="login()"
+            class="w3-button app-button" name="button">
+            login
+          </button>
+        </div>
 
-         <app-drop-down-menu
-           v-show="showUserOptions"
-           class="user-drop-menu"
-           @profile="goMyProfile()"
-           @home="goHome()"
-           @notifications="showEditNotificationsModal = true"
-           @logout="logoutUser()"
-           :items="userMenuItems">
-         </app-drop-down-menu>
+        <router-link :to="{ name: 'Landing'}" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-info-circle"></i></router-link>
 
-       </div>
-       <div v-else class="login-button-container w3-bar-item w3-right">
-         <button @click="login()"
-           class="w3-button app-button" name="button">
-           login
-         </button>
-       </div>
-
-       <router-link :to="{ name: 'Landing'}" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-info-circle"></i></router-link>
-
-       <router-link v-if="inInitiative" :to="{name: 'InitiativesHome'}" class="w3-right logo-container noselect cursor-pointer">
-         <img class="icon" src="../assets/imago-red.png" alt="">
-       </router-link>
+        <router-link v-if="inInitiative" :to="{name: 'InitiativesHome'}" class="w3-right logo-container noselect cursor-pointer">
+          <img class="icon" src="../assets/imago-red.png" alt="">
+        </router-link>
 
       </div>
     </div>
@@ -140,7 +142,8 @@ export default {
     return {
       showActivityList: false,
       showUserOptions: false,
-      showEditNotificationsModal: false
+      showEditNotificationsModal: false,
+      draggingBC: false
     }
   },
 
@@ -231,6 +234,9 @@ export default {
     logoutUser () {
       this.$store.dispatch('logoutUser')
     }
+  },
+
+  mounted () {
   }
 }
 </script>
@@ -248,10 +254,25 @@ export default {
   text-align: center;
 }
 
+.initiatives-breadcrumb-container {
+  position: relative;
+}
+
+.initiatives-breadcrumb {
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y:  visible;
+}
+
 .initiative-section {
-  padding: 10px 0px 0px 12px;
+  padding: 0px 12px;
   font-size: 20px;
   text-align: left;
+  display: inline-block;
+}
+
+.initiative-section > div {
+  display: inline-block;
 }
 
 .initiative-section .fa {
@@ -324,7 +345,7 @@ export default {
  position: absolute;
  margin-top: 50px;
  width: 150px;
- z-index: 2;
+ z-index: 3;
 }
 
 .login-button-container {

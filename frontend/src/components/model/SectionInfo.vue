@@ -2,19 +2,19 @@
   <div class="">
     <div class="w3-row">
       <transition name="fadeenter">
-        <div :key="currentSectionId" class="w3-left this-section-title">
-          <div class="w3-left title-div">
+        <div :key="currentSectionId" class="this-section-title small-scroll">
+          <div class="title-div">
             {{ sectionTitle }}
           </div>
-          <div class="w3-left btn-div fa-button">
+          <div class="btn-div fa-button">
             <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
             </app-section-control-buttons>
           </div>
-          <div class="w3-left btn-div fa-button">
+          <div class="btn-div fa-button">
             <app-section-control-buttons :section="currentSection" :inSection="null" :onlyAdd="true">
             </app-section-control-buttons>
           </div>
-          <div @click="showIn = !showIn" class="w3-left btn-div fa-button">
+          <div @click="showIn = !showIn" class="btn-div fa-button">
             <i class="fa fa-info-circle" aria-hidden="true"></i>
           </div>
         </div>
@@ -119,6 +119,12 @@ export default {
 
 .this-section-title {
   font-size: 22px;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.this-section-title > div {
+  display: inline-block;
 }
 
 .title-div {

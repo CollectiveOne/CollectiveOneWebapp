@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <div class="w3-row">
+    <div class="w3-row w3-container">
       <label for=""><b>Filter by tag:</b></label>
       <div class="w3-col s12">
         <div class="w3-row-padding">

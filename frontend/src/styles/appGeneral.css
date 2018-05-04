@@ -8,7 +8,7 @@
 }
 
 .control-btn:hover {
-  background-color: #ced4d9;
+  background-color: #15a5cc;
 }
 
 .control-btn img {
@@ -149,6 +149,12 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #6f8294;
+}
+
+/* width */
+.small-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
 }
 
 .flex-vert {

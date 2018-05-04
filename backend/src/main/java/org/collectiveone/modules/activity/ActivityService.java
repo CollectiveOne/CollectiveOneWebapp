@@ -1339,16 +1339,13 @@ public class ActivityService {
 	    		template.convertAndSend("/channel/activity/model/section/" + sectionId, "UPDATE");
 			}
 			
-			/* if activity on a card wrapper, also broadcast its own channel */
-			if (activity.getModelCardWrapper() != null) {
-				template.convertAndSend("/channel/activity/model/card/" + activity.getModelCardWrapper().getId(), "UPDATE");
-			}
-			
-			List<Initiative> parentInits = initiativeService.getParentGenealogyInitiatives(activity.getInitiative().getId());
-			parentInits.add(activity.getInitiative()); //add parent initiative of activity to broadcast list
-	        for (Initiative init : parentInits) {
-	            template.convertAndSend("/channel/activity/model/initaitive/" + init.getId(), "UPDATE");
-	        }
 		}
+		
+		/* all events are broadcasted to their initaitive channel and their parents */
+		List<Initiative> parentInits = initiativeService.getParentGenealogyInitiatives(activity.getInitiative().getId());
+		parentInits.add(activity.getInitiative()); //add parent initiative of activity to broadcast list
+        for (Initiative init : parentInits) {
+            template.convertAndSend("/channel/activity/model/initaitive/" + init.getId(), "UPDATE");
+        }
 	}
 }

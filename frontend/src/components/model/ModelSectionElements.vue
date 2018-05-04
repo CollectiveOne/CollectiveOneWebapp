@@ -15,9 +15,9 @@
     </div>
 
     <div class="model-section-elements-container">
-      <div class="w3-row controls-row">
+      <div class="w3-row controls-row small-scroll">
 
-        <div class="w3-left control-group">
+        <div class="control-group">
           <div @click="messagesContent()" class="w3-left control-btn" :class="{'control-btn-selected': isMessagesContent}">
             <img src="./../../assets/chat-icon.svg" alt="">
           </div>
@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <div class="w3-left control-group noselect">
+        <div class="control-group noselect">
           <div class="w3-left zoom-controls">
             <div @click="levelDown()" class="w3-left cursor-pointer arrow-div">
               <img src="./../../assets/zoom-out-icon.svg" alt="">
@@ -46,7 +46,7 @@
           </div>
         </div>
 
-        <div v-if="isCardsContent" class="w3-left control-group">
+        <div v-if="isCardsContent" class="control-group">
           <div class="">
             <div @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
               <img src="./../../assets/network-icon.svg" alt="">
@@ -57,7 +57,7 @@
           </div>
         </div>
 
-        <div v-if="!isCardsContent" class="w3-left control-group">
+        <div v-if="!isCardsContent" class="control-group">
           <div @click="isOnlyMessages = true" class="w3-left control-btn" :class="{'control-btn-selected': isOnlyMessages}">
             <img src="./../../assets/chat-icon-2.svg" alt="">
           </div>
@@ -66,20 +66,20 @@
           </div>
         </div>
 
-        <div class="w3-left slider-container">
+        <div class="control-group slider-container">
           <transition name="slideRightLeft">
             <div v-if="isCardsContent && !isSectionsOrder" class="">
-              <div class="w3-left control-group">
-                <div class="w3-left">
+              <div class="">
+                <div class="">
                   <input ref="inputQuery" v-model="newCardQuery" class="w3-input"
                     type="text" name="" value="" placeholder="search">
                 </div>
-                <div @click="updateQuery()" class="w3-left control-btn control-btn-selected">
+                <div @click="updateQuery()" class="control-btn control-btn-selected">
                   <i class="fa fa-refresh" aria-hidden="true"></i>
                 </div>
               </div>
 
-              <div class="w3-left control-group">
+              <div class="w3-margin-left">
                 <select v-model="cardSortBy" class="w3-input">
                   <option value="CREATION_DATE_DESC">Last Created</option>
                   <option value="EDITION_DATE_DESC">Last Edited</option>
@@ -90,7 +90,7 @@
           </transition>
         </div>
 
-        <div v-if="false" class="w3-left control-group text-details">
+        <div v-if="false" class="control-group text-details">
           <span v-if="isCardsContent">
             <span v-if="!isSectionsOrder">
               you are
@@ -413,12 +413,6 @@ export default {
   flex-direction: column;
 }
 
-.controls-row {
-  margin: 12px 12px 6px 24px;
-  min-height: 40px;
-  flex-shrink: 0;
-}
-
 .elements-container {
   padding: 12px 24px;
   display: flex;
@@ -426,9 +420,22 @@ export default {
   flex-grow: 1;
 }
 
+.controls-row {
+  margin: 12px 12px 6px 24px;
+  min-height: 40px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
 .control-group {
   margin-right: 20px;
   margin-bottom: 3px;
+  display: inline-block;
+}
+
+.control-group div {
+  display: inline-block;
 }
 
 .zoom-controls {
