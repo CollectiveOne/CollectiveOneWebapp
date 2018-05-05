@@ -192,7 +192,7 @@ export default {
       // console.log(selectedMention)
       if (selectedMention.length > 0) {
         /* remove the at and store in mentioning */
-        this.mentioningQuery = selectedMention[0].substr(1)
+        this.mentioningQuery = selectedMention[0].substr(0)
       } else {
         this.mentioningQuery = ''
       }
@@ -206,7 +206,7 @@ export default {
     },
 
     updateMentionSuggestions () {
-      this.axios.get('/1/initiative/' + this.initiativeId + '/members/suggestions?q=' + this.mentioningQuery).then((response) => {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/members/suggestions?q=' + this.mentioningQuery.substr(1)).then((response) => {
         if (response.data.result === 'success') {
           this.userSuggestions = this.process ? self.process(response.data) : response.data.data
         }
