@@ -149,7 +149,7 @@ export default {
     removeUserSelected (index) {
       let user = this.mentionedUsers[index]
       /* remove string */
-      let ixFound = this.text.search(user.nickname)
+      let ixFound = this.text.search('@' + user.nickname)
       if (ixFound !== -1) {
         /* remove the name with the @ too */
         this.text = spliceString(this.text, ixFound - 1, user.nickname.length + 1, '')
