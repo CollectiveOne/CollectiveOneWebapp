@@ -6,7 +6,6 @@
         :addBorders="false"
         :showMessages="true"
         :onlyMessages="onlyMessages"
-        :triggerUpdate="triggerUpdate"
         :contextType="contextType"
         :contextElementId="contextElementId"
         :levels="levels"
@@ -81,7 +80,6 @@ export default {
   data () {
     return {
       newMessageText: '',
-      triggerUpdate: true,
       intervalId: 0,
       editing: false,
       messageToEdit: null,
@@ -188,7 +186,6 @@ export default {
           if (response.data.result === 'success') {
             this.replying = false
             this.newMessageText = ''
-            this.triggerUpdate = !this.triggerUpdate
           } else {
             this.showMembersOnly = true
           }
@@ -198,7 +195,6 @@ export default {
           if (response.data.result === 'success') {
             this.editing = false
             this.newMessageText = ''
-            this.triggerUpdate = !this.triggerUpdate
           }
         })
       }
@@ -211,7 +207,6 @@ export default {
     },
     showOnlyMessagesClicked () {
       this.showOnlyMessages = !this.showOnlyMessages
-      this.triggerUpdate = !this.triggerUpdate
     },
     atKeydown (e) {
       /* detect upkey to auto edit last message */
