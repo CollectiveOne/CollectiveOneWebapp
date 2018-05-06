@@ -165,7 +165,7 @@ export default {
       /* get mentions and their indexes */
       do {
         m = re.exec(this.text)
-        if (m && (this.text.charAt(m.index - 1) === ' ' || this.text.length === 1)) {
+        if (m && (this.text.charAt(m.index - 1) === ' ' || this.text.length)) {
           mentions.push(m)
         }
       } while (m)
