@@ -90,7 +90,8 @@ export default {
       showCards: true,
       expanded: true,
       showCardId: '',
-      expandSubSubsecInit: false
+      expandSubSubsecInit: false,
+      subscription: null
     }
   },
 
@@ -124,11 +125,9 @@ export default {
   watch: {
     '$store.state.support.triggerUpdateSectionCards' () {
       this.updateCards()
-      this.handleSocket()
     },
-
-    subscription: function (val) {
-      console.log('subscribed from ModelSection' + val)
+    section () {
+      this.subscribeSocket()
     }
   },
 
@@ -137,6 +136,17 @@ export default {
       this.axios.get('/1/model/section/' + this.section.id + '/cardWrappers').then((response) => {
         if (response.data.result === 'success') {
           this.section.cardsWrappers = response.data.data
+        }
+      })
+    },
+    subscribeSocket () {
+      this.subscription = this.$store.dispatch('subscribe', {
+        url: '/channel/activity/model/section/' + this.section.id,
+        onMessage: (tick) => {
+          var message = tick.body
+          if (message === 'UPDATE') {
+            this.updateCards()
+          }
         }
       })
     },
@@ -179,11 +189,16 @@ export default {
   },
 
   created () {
-    this.handleSocket()
+    if (this.section) {
+      this.subscribeSocket()
+    }
   },
 
   beforeDestroy () {
-    this.$store.dispatch('unsubscribe', this.subscription)
+    if (this.subscription) {
+      console.log('enable this after merge')
+      // this.$store.dispatch('unsubscribe', this.subscription)
+    }
   }
 }
 </script>

@@ -80,12 +80,12 @@ public class NotificationDtoBuilder {
 
 		case TOKENS_MINTED:
 			message = checkHtml("<p>") + "minted " + mint.getValue() + " " + mint.getToken().getName() + " with motive: " + mint.getMotive() + ".</p>";
-			url = getInitiativeUrl(subInitiative.getId());
+			url = getInitiativeUrl(initiative.getId());
 			break;
 			
 		case TOKEN_CREATED:
 			message = checkHtml("<p>") + "created a new token type called " + tokenType.getName() + " in " + getInitiativeAnchor(initiative) + ", and minted " + mint.getValue() + " units.</p>";
-			url = getInitiativeUrl(subInitiative.getId());
+			url = getInitiativeUrl(initiative.getId());
 			break;
 			
 		case PR_ASSIGNATION_CREATED:
@@ -159,7 +159,7 @@ public class NotificationDtoBuilder {
 					transfer.getValue() + " " + transfer.getTokenType().getName() +
 					" to " + getInitiativeAnchor(transfer.getTo()) + ", with motive: " + 
 					checkHtml("</p><p>") + transfer.getMotive() + checkHtml("</p>");
-			url = getInitiativeUrl(subInitiative.getId());
+			url = getInitiativeUrl(initiative.getId());
 			break;
 
 		case ASSIGNATION_REVERT_ORDERED: 	

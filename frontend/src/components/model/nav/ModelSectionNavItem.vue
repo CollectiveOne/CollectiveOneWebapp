@@ -110,6 +110,9 @@ export default {
     },
     levels () {
       this.checkExpandSubsections()
+    },
+    section () {
+      this.subscribeSocket()
     }
   },
 
@@ -204,6 +207,18 @@ export default {
       if (this.section) {
         this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
       }
+    },
+    subscribeSocket () {
+      this.subscription = this.$store.dispatch('subscribe', {
+        url: '/channel/activity/model/section/' + this.section.id,
+        onMessage: (tick) => {
+          console.log('socket message on section' + this.section.id)
+          var message = tick.body
+          if (message === 'UPDATE') {
+            this.$store.dispatch('updateSectionDataInTree', {sectionId: this.section.id})
+          }
+        }
+      })
     },
     dragStart (event) {
       var moveSectionData = {
@@ -335,6 +350,12 @@ export default {
       }
 
       this.$store.commit('setDraggingElement', null)
+    }
+  },
+
+  created () {
+    if (this.section) {
+      this.subscribeSocket()
     }
   },
 

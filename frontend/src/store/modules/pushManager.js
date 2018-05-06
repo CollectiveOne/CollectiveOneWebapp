@@ -23,8 +23,6 @@ const actions = {
       let notification = notifications[ix]
       if (notification.pushState === 'PENDING') {
         if (!context.state.pushedIds.includes(notification.id)) {
-          console.log('pushing')
-          console.log(notification)
           context.commit('addPushedId', notification.id)
           let user = notification.activity.triggerUser
 

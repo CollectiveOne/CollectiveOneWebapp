@@ -18,6 +18,7 @@
           @updateCards="$emit('updateCards')">
         </app-model-card>
       </div>
+      
     </div>
   </div>
 </template>
