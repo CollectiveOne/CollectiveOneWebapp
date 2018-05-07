@@ -130,8 +130,8 @@ export default {
       return null
     },
     subsections () {
-      if (this.section) {
-        return this.section.subsections
+      if (this.sectionData) {
+        return this.sectionData.subsectionsData.map((e) => e.section)
       }
       return []
     },
@@ -216,27 +216,29 @@ export default {
         this.$store.dispatch('updateSectionDataInTree', {sectionId: this.section.id})
       }
     },
-    updateParentInTree () {
-      if (this.inSection) {
-        this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inSection.id})
+    removeFromTree () {
+      if (this.section) {
+        this.$store.dispatch('removeSectionDataFromId', {sectionId: this.section.id})
       }
     },
     sectionRemoved () {
       if (this.isSelected) {
         this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.inSection.id}})
       }
-      this.updateParentInTree()
+      this.removeFromTree()
     },
     subscribeSocket () {
-      this.subscription = this.$store.dispatch('subscribe', {
-        url: '/channel/activity/model/section/' + this.section.id,
-        onMessage: (tick) => {
-          var message = tick.body
-          if (message === 'UPDATE') {
-            this.updateInTree()
+      if (this.section) {
+        this.subscription = this.$store.dispatch('subscribe', {
+          url: '/channel/activity/model/section/' + this.section.id,
+          onMessage: (tick) => {
+            var message = tick.body
+            if (message === 'UPDATE') {
+              this.updateInTree()
+            }
           }
-        }
-      })
+        })
+      }
     },
     dragStart (event) {
       var moveSectionData = {
