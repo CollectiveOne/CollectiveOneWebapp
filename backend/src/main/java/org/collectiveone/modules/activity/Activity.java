@@ -12,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -46,8 +47,8 @@ public class Activity {
 	@Column(name = "type")
 	private ActivityType type;
 	
-	@OneToMany
-	private List<AppUser> mentions = new ArrayList<AppUser>();
+	@ManyToMany
+	private List<AppUser> mentionedUsers = new ArrayList<AppUser>();
 	
 	@Column(name = "timestamp")
 	private Timestamp timestamp;
@@ -292,12 +293,13 @@ public class Activity {
 		this.message = message;
 	}
 
-	public List<AppUser> getMentions() {
-		return mentions;
+	public List<AppUser> getMentionedUsers() {
+		return mentionedUsers;
 	}
 
-	public void setMentions(List<AppUser> mentions) {
-		this.mentions = mentions;
+	public void setMentionedUsers(List<AppUser> mentionedUsers) {
+		this.mentionedUsers = mentionedUsers;
 	}
+
 	
 }

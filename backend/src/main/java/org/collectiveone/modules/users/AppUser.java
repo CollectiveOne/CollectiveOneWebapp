@@ -84,6 +84,31 @@ public class AppUser {
 		return dto;
 	}
 	
+	@Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((c1Id == null) ? 0 : c1Id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        AppUser other = (AppUser) obj;
+        if (c1Id == null) {
+            if (other.c1Id != null)
+                return false;
+        } else if (!c1Id.equals(other.c1Id))
+            return false;
+        return true;
+    }
+	
 	public UUID getC1Id() {
 		return c1Id;
 	}
@@ -126,5 +151,5 @@ public class AppUser {
 	public void setOnlineStatus(UserOnlineStatus onlineStatus) {
 		this.onlineStatus = onlineStatus;
 	}
-		
+	
 }

@@ -70,8 +70,6 @@ export default {
 <style scoped>
 
 .submembers-table {
-  max-height: 80vh;
-  overflow-y: auto;
 }
 
 .avatar-col {

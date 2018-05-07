@@ -50,7 +50,7 @@
             <transition name="slideLeftRight">
               <div v-if="addExisting && editing" class="">
                 <app-model-card-selector
-                  :initiativeId="initiativeId"
+                  :inSectionId="inSectionId"
                   @select="cardSelected($event)">
                 </app-model-card-selector>
                 <app-error-panel
@@ -550,8 +550,8 @@ export default {
                 break
 
               case 'after':
-                  params.afterCardWrapperId = this.atCardWrapper.id
-                  break
+                params.afterCardWrapperId = this.atCardWrapper.id
+                break
             }
 
             this.sendingData = true
@@ -697,13 +697,6 @@ export default {
 
 .close-btn {
   border-top-right-radius: 20px;
-}
-
-.url-show {
-  position: absolute;
-  margin-top: 60px;
-  margin-left: -100px;
-  width: 250px;
 }
 
 .not-add-existing-container {

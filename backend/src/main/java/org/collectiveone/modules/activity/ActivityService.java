@@ -144,6 +144,7 @@ public class ActivityService {
 		List<UUID> allSectionIds = null;
 		List<UUID> cardsIds = null;
 		boolean isModel = false;
+		
 		switch (contextType) {
 			case MODEL_SECTION:
 				allSectionIds = modelService.getAllSubsectionsIds(elementId, null);
@@ -157,6 +158,7 @@ public class ActivityService {
 				cardsIds.add(elementId);
 				isModel = true;
 				break;
+				
 			case INITIATIVE:
 				isModel = false;
 				break;
@@ -176,9 +178,8 @@ public class ActivityService {
 			}
 			
 			return notificationRepository.findOfUserInSections(userId, NotificationState.PENDING, allSectionIds, cardsIds, page);
-		}
-		else
-		{
+			
+		} else {
 			List<InitiativeDto> subinitiativesTree = initiativeService.getSubinitiativesTree(elementId, null);
 			
 			List<UUID> allInitiativesIds = new ArrayList<UUID>();
@@ -232,6 +233,29 @@ public class ActivityService {
 			UUID elementId ) {
 		
 		List<Notification> notifications = userUnreadNotifications(userId, contextType, elementId, null);
+		
+		for(Notification notification: notifications) {
+			
+			notification.setInAppState(NotificationState.DELIVERED);
+			notification.setPushState(NotificationState.DELIVERED);
+			notification.setEmailNowState(NotificationState.DELIVERED);
+			notification.setEmailSummaryState(NotificationState.DELIVERED);
+			
+			notificationRepository.save(notification);
+		}
+		
+		return new PostResult("success", "success", "");
+	}
+	
+	@Transactional
+	public PostResult notificationsListRead(
+			UUID userId,
+			List<UUID> notificationIds) {
+		
+		if (notificationIds.size() == 0) {
+			notificationIds.add(UUID.randomUUID());
+		}
+		List<Notification> notifications = notificationRepository.findByIdIn(userId, notificationIds);
 		
 		for(Notification notification: notifications) {
 			
@@ -805,13 +829,14 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void messagePosted(Message message, AppUser triggerUser, MessageThreadContextType contextType, UUID elementId) {
+	public void messagePosted(Message message, AppUser triggerUser, MessageThreadContextType contextType, UUID elementId, List<AppUser> mentionedUsers) {
 		
 		Initiative initiative = initiativeRepository.findById(messageService.getInitiativeIdOfMessageThread(message.getThread()));
 		Activity activity = getBaseActivity(triggerUser, initiative); 
 		
 		activity.setType(ActivityType.MESSAGE_POSTED);
 		activity.setMessage(message);
+		activity.getMentionedUsers().addAll(mentionedUsers);
 		setMessageLocation(activity, contextType, elementId);
 		
 		activity = activityRepository.save(activity);
@@ -1111,7 +1136,7 @@ public class ActivityService {
 				notification.setEmailSummaryState(NotificationState.PENDING);
 				
 				/* mark as delivered in some scenarios */
-				Boolean isMentioned = activity.getMentions().contains(user);
+				Boolean isMentioned = activity.getMentionedUsers().contains(user);
 				Boolean isMessage = activity.getType() == ActivityType.MESSAGE_POSTED;
 				
 				switch (subscriber.getInAppConfig()) {
@@ -1270,7 +1295,6 @@ public class ActivityService {
 			List<Subscriber> parentSubscribers = subscriberRepository.findByElementId(parent.getId());
 			
 			for (Subscriber parentSubscriber : parentSubscribers) {
-				subscribersMap.put(parentSubscriber.getUser().getC1Id(), parentSubscriber);
 				
 				if (!subscribersMap.containsKey(parentSubscriber.getUser().getC1Id())) {
 					subscribersMap.put(parentSubscriber.getUser().getC1Id(), parentSubscriber);
@@ -1316,17 +1340,13 @@ public class ActivityService {
 	    			template.convertAndSend("/channel/activity/model/section/" + sectionId, "UPDATE");
 			}
 			
-			/* if activity on a card wrapper, also broadcast its own channel */
-			if (activity.getModelCardWrapper() != null) {
-				template.convertAndSend("/channel/activity/model/card/" + activity.getModelCardWrapper().getId(), "UPDATE");
-			}
-			
-			List<Initiative> parentInits = initiativeService.getParentGenealogyInitiatives(activity.getInitiative().getId());
-			parentInits.add(activity.getInitiative()); //add parent initiative of activity to broadcast list
-	        for (Initiative init : parentInits) {
-	            template.convertAndSend("/channel/activity/model/initaitive/" + init.getId(), "UPDATE");
-	        }
 		}
 		
+		/* all events are broadcasted to their initaitive channel and their parents */
+		List<Initiative> parentInits = initiativeService.getParentGenealogyInitiatives(activity.getInitiative().getId());
+		parentInits.add(activity.getInitiative()); //add parent initiative of activity to broadcast list
+        for (Initiative init : parentInits) {
+            template.convertAndSend("/channel/activity/model/initaitive/" + init.getId(), "UPDATE");
+        }
 	}
 }

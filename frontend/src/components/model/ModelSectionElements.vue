@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="model-section-cards">
+  <div class="model-section-elements">
 
     <div class="slider-container">
       <transition name="slideDownUp">
@@ -14,91 +14,85 @@
       </transition>
     </div>
 
-    <div class="model-section-cards-container">
-      <div class="w3-row controls-row">
-        <div class="w3-left control-group">
-          <div @click="messagesContent()" class="w3-left control-btn tab-btn noselect" :class="{'selected': isMessagesContent}">
-            <i class="fa fa-comments-o" aria-hidden="true"></i> timeline
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-card-modal
+          v-if="showNewCardModal"
+          :isNew="true"
+          :inSectionId="section.id"
+          :inSectionTitle="section.title"
+          @close="showNewCardModal = false"
+          @updateCards="update()">
+        </app-model-card-modal>
+      </transition>
+    </div>
+
+    <div class="model-section-elements-container">
+      <div class="w3-row controls-row small-scroll">
+
+        <div class="control-group">
+          <div @click="messagesContent()" class="w3-left control-btn" :class="{'control-btn-selected': isMessagesContent}">
+            <img src="./../../assets/chat-icon.svg" alt="">
           </div>
-          <div @click="cardsContent()" class="w3-left control-btn tab-btn noselect" :class="{'selected': isCardsContent}">
-            <i class="fa fa-square" aria-hidden="true"></i> cards
+          <div @click="summaryView()" class="w3-left control-btn" :class="{'control-btn-selected': isSummary}">
+            <img src="./../../assets/rows-icon.svg" alt="">
+          </div>
+          <div @click="cardView()" class="w3-left control-btn" :class="{'control-btn-selected': isCard}">
+            <img src="./../../assets/cards-icon.svg" alt="">
+          </div>
+          <div @click="docView()" class="w3-left control-btn" :class="{'control-btn-selected': isDoc}">
+            <img src="./../../assets/doc-icon.svg" alt="">
           </div>
         </div>
 
-        <div class="w3-left control-group zoom-controls">
-          <div class="slider-container">
-            <transition name="slideRightLeft">
-              <div v-if="isSectionsOrder || isMessagesContent" class="">
-                <div class="w3-left cursor-pointer">
-                  <i @click="levelDown()" class="fa fa-minus-circle" aria-hidden="true"></i>
-                </div>
-                <div class="w3-left number-div">
-                  {{ levels }}
-                </div>
-                <div class="w3-left cursor-pointer">
-                  <i @click="levelUp()" class="fa fa-plus-circle" aria-hidden="true"></i>
-                </div>
-              </div>
-            </transition>
-          </div>
-        </div>
-
-        <div class="w3-left slider-container">
-          <transition name="slideRightLeft">
-            <div v-if="isCardsContent" class="">
-              <div class="w3-left control-group">
-                <div @click="sectionOrder()" class="w3-left control-btn" :class="{'selected': isSectionsOrder}">
-                  <i class="fa fa-tree" aria-hidden="true"></i>
-                </div>
-                <div @click="aggregatedOrder()" class="w3-left control-btn" :class="{'selected': !isSectionsOrder}">
-                  <i class="fa fa-filter" aria-hidden="true"></i>
-                </div>
-              </div>
-
-              <div class="w3-left control-group">
-                <div @click="summaryView()" class="w3-left control-btn" :class="{'selected': isSummary}">
-                  <i class="fa fa-list" aria-hidden="true"></i>
-                </div>
-                <div @click="cardView()" class="w3-left control-btn" :class="{'selected': isCard}">
-                  <i class="fa fa-th-large" aria-hidden="true"></i>
-                </div>
-                <div @click="docView()" class="w3-left control-btn" :class="{'selected': isDoc}">
-                  <i class="fa fa-file-text" aria-hidden="true"></i>
-                </div>
-              </div>
+        <div class="control-group noselect">
+          <div class="w3-left zoom-controls">
+            <div @click="levelDown()" class="w3-left cursor-pointer arrow-div">
+              <img src="./../../assets/zoom-out-icon.svg" alt="">
             </div>
-          </transition>
-        </div>
-
-        <div class="w3-left slider-container">
-          <transition name="slideRightLeft">
-            <div v-if="!isCardsContent" class="">
-              <div class="w3-left control-group">
-                <div @click="isOnlyMessages = true" class="w3-left control-btn" :class="{'selected': isOnlyMessages}">
-                  <i class="fa fa-comment" aria-hidden="true"></i>
-                </div>
-                <div @click="isOnlyMessages = false" class="w3-left control-btn" :class="{'selected': !isOnlyMessages}">
-                  <i class="fa fa-list" aria-hidden="true"></i>
-                </div>
-              </div>
+            <div class="w3-left number-div">
+              {{ levels }}
             </div>
-          </transition>
+            <div @click="levelUp()" class="w3-left cursor-pointer arrow-div">
+              <img src="./../../assets/zoom-in-icon.svg" alt="">
+            </div>
+          </div>
         </div>
 
-        <div class="w3-left slider-container">
+        <div v-if="isCardsContent" class="control-group">
+          <div class="">
+            <div @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
+              <img src="./../../assets/network-icon.svg" alt="">
+            </div>
+            <div @click="aggregatedOrder()" class="w3-left control-btn" :class="{'control-btn-selected': !isSectionsOrder}">
+              <img src="./../../assets/search-icon.svg" alt="">
+            </div>
+          </div>
+        </div>
+
+        <div v-if="!isCardsContent" class="control-group">
+          <div @click="isOnlyMessages = true" class="w3-left control-btn" :class="{'control-btn-selected': isOnlyMessages}">
+            <img src="./../../assets/chat-icon-2.svg" alt="">
+          </div>
+          <div @click="isOnlyMessages = false" class="w3-left control-btn" :class="{'control-btn-selected': !isOnlyMessages}">
+            <img src="./../../assets/all-events-icon.svg" alt="">
+          </div>
+        </div>
+
+        <div class="control-group slider-container">
           <transition name="slideRightLeft">
             <div v-if="isCardsContent && !isSectionsOrder" class="">
-              <div class="w3-left control-group">
-                <div class="w3-left">
+              <div class="">
+                <div class="">
                   <input ref="inputQuery" v-model="newCardQuery" class="w3-input"
                     type="text" name="" value="" placeholder="search">
                 </div>
-                <div @click="updateQuery()" class="w3-left control-btn selected">
-                  <i class="fa fa-search" aria-hidden="true"></i>
+                <div @click="updateQuery()" class="control-btn control-btn-selected">
+                  <i class="fa fa-refresh" aria-hidden="true"></i>
                 </div>
               </div>
 
-              <div class="w3-left control-group">
+              <div class="w3-margin-left">
                 <select v-model="cardSortBy" class="w3-input">
                   <option value="CREATION_DATE_DESC">Last Created</option>
                   <option value="EDITION_DATE_DESC">Last Edited</option>
@@ -109,7 +103,7 @@
           </transition>
         </div>
 
-        <div class="w3-left control-group text-details">
+        <div v-if="false" class="control-group text-details">
           <span v-if="isCardsContent">
             <span v-if="!isSectionsOrder">
               you are
@@ -139,11 +133,11 @@
         </div>
       </div>
 
-      <div class="cards-list">
+      <div class="elements-container">
         <app-message-thread
           v-if="isMessagesContent"
           contextType="MODEL_SECTION"
-          :contextElementId="section.id"
+          :contextElementId="currentSectionId"
           :onlyMessages="isOnlyMessages"
           :levels="levels">
         </app-message-thread>
@@ -153,6 +147,15 @@
           :section="section"
           :cardsType="cardsType">
         </app-model-section>
+
+        <div v-if="isCardsContent && isSectionsOrder && !sectionHasContent && !loading" class="w3-row w3-center">
+          <div class="w3-row">
+            <i>no cards have been created in "{{ section.title }}"</i>
+          </div>
+          <div @click="showNewCardModal = true" class="control-btn w3-row w3-margin-top">create one</div>
+          <div v-if="levels === 1" class="w3-row w3-margin-top">or</div>
+          <div v-if="levels === 1" @click="levelUp()" class="control-btn w3-row w3-margin-top">look one level further</div>
+        </div>
 
         <app-model-cards-container
           v-if="isCardsContent && !isSectionsOrder"
@@ -180,6 +183,24 @@ import MessageThread from '@/components/notifications/MessageThread'
 import ModelSection from '@/components/model/ModelSection'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer'
 
+const sectionHasContent = function (section) {
+  if (section.cardsWrappers.length > 0) {
+    return true
+  } else {
+    if (section.subsections.length > 0) {
+      return true
+    } else {
+      /* recursive call  */
+      for (let ix in section.subsections) {
+        if (sectionHasContent(section.subsections[ix])) {
+          return true
+        }
+      }
+    }
+  }
+  return false
+}
+
 export default {
   components: {
     'app-model-section': ModelSection,
@@ -191,7 +212,9 @@ export default {
     return {
       section: null,
       showCardModal: false,
+      showNewCardModal: false,
       loading: false,
+      sectionLoadedOnce: false,
       orderType: 'sections',
       isOnlyMessages: true,
       newCardQuery: '',
@@ -214,6 +237,12 @@ export default {
     currentSectionId () {
       return this.$route.params.sectionId
     },
+    sectionHasContent () {
+      if (this.section) {
+        return sectionHasContent(this.section)
+      }
+      return false
+    },
     isMessagesContent () {
       return this.$route.name === 'ModelSectionMessages'
     },
@@ -228,13 +257,13 @@ export default {
       return this.$route.query.cardsType ? this.$route.query.cardsType : 'card'
     },
     isSummary () {
-      return this.cardsType === 'summary'
+      return this.cardsType === 'summary' && this.isCardsContent
     },
     isCard () {
-      return this.cardsType === 'card'
+      return this.cardsType === 'card' && this.isCardsContent
     },
     isDoc () {
-      return this.cardsType === 'doc'
+      return this.cardsType === 'doc' && this.isCardsContent
     },
     isSectionsOrder () {
       return this.orderType === 'sections'
@@ -259,9 +288,6 @@ export default {
       }
     },
     '$store.state.support.triggerUpdateSectionCards' () {
-      this.resetCards()
-    },
-    '$store.state.support.triggerUpdateSectionsTree' () {
       this.resetCards()
     }
   },
@@ -293,17 +319,26 @@ export default {
       }
     },
     summaryView () {
-      if (this.$route.query.cardsType !== 'summary') {
+      if (!this.sectionLoadedOnce) {
+        this.updateSection()
+      }
+      if (this.$route.query.cardsType !== 'summary' || this.$route.name !== 'ModelSectionCards') {
         this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'summary'}})
       }
     },
     cardView () {
-      if (this.$route.query.cardsType !== 'card') {
+      if (!this.sectionLoadedOnce) {
+        this.updateSection()
+      }
+      if (this.$route.query.cardsType !== 'card' || this.$route.name !== 'ModelSectionCards') {
         this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'card'}})
       }
     },
     docView () {
-      if (this.$route.query.cardsType !== 'doc') {
+      if (!this.sectionLoadedOnce) {
+        this.updateSection()
+      }
+      if (this.$route.query.cardsType !== 'doc' || this.$route.name !== 'ModelSectionCards') {
         this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'doc'}})
       }
     },
@@ -347,6 +382,7 @@ export default {
       if (this.currentSectionId) {
         this.axios.get('/1/model/section/' + this.currentSectionId, {params: {levels: this.levels}}).then((response) => {
           this.loading = false
+          this.sectionLoadedOnce = true
           if (response.data.result === 'success') {
             this.section = response.data.data
           }
@@ -364,10 +400,12 @@ export default {
       this.updateQuery()
     },
     update () {
-      if (this.isSectionsOrder) {
-        this.updateSection()
-      } else {
-        this.resetCards()
+      if (!this.isMessagesContent) {
+        if (this.isSectionsOrder) {
+          this.updateSection()
+        } else {
+          this.resetCards()
+        }
       }
     },
     checkCardSubroute () {
@@ -408,61 +446,73 @@ export default {
 
 <style scoped>
 
-.controls-row {
-  margin: 12px 12px 6px 12px;
+.model-section-elements {
+  height: 100%;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
 }
 
-.cards-list {
+.model-section-elements-container {
+  height: 100%;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+}
+
+.elements-container {
   padding: 12px 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.controls-row {
+  margin: 12px 12px 6px 24px;
+  min-height: 40px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow-x: auto;
 }
 
 .control-group {
   margin-right: 20px;
   margin-bottom: 3px;
+  display: inline-block;
+}
+
+.control-group div {
+  display: inline-block;
 }
 
 .zoom-controls {
   min-height: 1px;
-  width: 90px;
-  font-size: 28px;
+  width: 120px;
   text-align: center;
   color: #3e464e;
-}
-
-.zoom-controls .w3-left {
-  width: 30px;
-}
-
-.zoom-controls .number-div {
-  font-size: 22px;
-}
-
-.control-btn {
-  cursor: pointer;
-  margin-right: 4px;
-  padding: 8px 12px;
   background-color: #eff3f6;
   border-radius: 3px;
-  transition: all 300ms ease;
 }
 
-.tab-btn {
-  width: 100px;
-  text-align: center;
+.zoom-controls .arrow-div {
+  width: 40px;
+  height: 38px;
 }
 
-.control-btn:hover {
+.zoom-controls .arrow-div img {
+  margin-top: 12px;
+  width: 14px;
+}
+
+.zoom-controls .arrow-div:hover {
   background-color: #ced4d9;
 }
 
-.selected {
-  background-color: #15a5cc;
-  color: white;
-  font-weight: bold;
-}
-
-.control-btn-selected {
-  background-color: #15a5cc;
+.zoom-controls .number-div {
+  width: 40px;
+  height: 38px;
+  font-size: 19px;
+  padding: 5px 12px;
 }
 
 .text-details {

@@ -72,7 +72,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+
+.container-fluid {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
 @import '~simplemde/dist/simplemde.min.css';
 

@@ -13,7 +13,7 @@
 
       </div>
 
-      <div @click="showSubsections = !showSubsections" class="circle-div cursor-pointer">
+      <div @click="toggleSubsections()" class="circle-div cursor-pointer">
         <div v-if="hasSubsections">
           <i v-if="!showSubsections" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
           <i v-else class="fa fa-chevron-circle-down" aria-hidden="true"></i>
@@ -22,13 +22,14 @@
           <i class="fa fa-circle" aria-hidden="true"></i>
         </div>
       </div>
-      <div @click="sectionSelected()" class="title-div cursor-pointer noselect">
-        {{ section.isTopModelSection ? 'All' : section.title }}
+      <div @click="sectionSelected()" @dblclick="toggleSubsections()" class="title-div cursor-pointer noselect">
+        {{ sectionTitle }}
       </div>
-      <div class="notification-div">
+      <div v-if="section" class="notification-div">
         <app-notifications-list
           :element="section"
-          :forceUpdate="forceUpdateNotifications">
+          :forceUpdate="forceUpdateNotifications"
+          :isSelected="isSelected">
         </app-notifications-list>
       </div>
       <div class="control-div" :class="{'fa-button': !highlight, 'fa-button-dark': highlight}">
@@ -46,11 +47,14 @@
 
         <div v-if="showSubsections && subsections.length > 0" class="w3-row subsections-container"
           :class="{'subsection-container-selected': highlight}" >
-          <app-model-section-nav-item v-for="subsection in subsections"
+          <app-model-section-nav-item
+            v-for="(subsection, ix) in subsections"
             :inSection="section"
             :section="subsection" :key="subsection.id"
             :highlightLevel="highlightLevelUse - 1"
-            class="subsection-row">
+            :coordinate="coordinate.concat(ix)"
+            class="subsection-row"
+            @section-selected="$emit('section-selected', $event)">
           </app-model-section-nav-item>
         </div>
       </transition>
@@ -74,9 +78,6 @@ export default {
   },
 
   props: {
-    section: {
-      type: Object
-    },
     inSection: {
       type: Object,
       default: null
@@ -84,13 +85,16 @@ export default {
     highlightLevel: {
       type: Number,
       default: 0
+    },
+    coordinate: {
+      type: Array,
+      default: () => { return [] }
     }
   },
 
   data () {
     return {
       showSubsections: false,
-      subsections: [],
       animating: false,
       draggingOverWithCardFlag: false,
       draggingOverWithSectionSameLevelFlag: false,
@@ -101,20 +105,30 @@ export default {
   },
 
   watch: {
-    showSubsections () {
-      if (this.showSubsections) {
-        this.updateSubsections()
-      }
-    },
-    '$route' () {
+    '$store.state.sectionsTree.triggerUpdateExpands' () {
       this.checkExpandSubsections()
     },
-    '$store.state.support.triggerUpdateSectionsTree' () {
-      this.updateSubsections()
+    levels () {
+      this.checkExpandSubsections()
     }
   },
 
   computed: {
+    sectionData () {
+      return this.$store.getters.getSectionDataAtCoord(this.coordinate)
+    },
+    section () {
+      if (this.sectionData) {
+        return this.sectionData.section
+      }
+      return null
+    },
+    subsections () {
+      if (this.section) {
+        return this.section.subsections
+      }
+      return []
+    },
     highlight () {
       return this.highlightLevelUse > 0
     },
@@ -126,11 +140,23 @@ export default {
         'dragging-over-with-section-inside': this.draggingOverWithSectionInsideFlag
       }
     },
+    sectionTitle () {
+      if (this.section) {
+        return this.section.isTopModelSection ? 'All' : this.section.title
+      }
+      return ''
+    },
     hasSubsections () {
-      return this.section.nSubsections > 0
+      if (this.section) {
+        return this.section.nSubsections > 0
+      }
+      return false
     },
     isSelected () {
-      return this.$route.params.sectionId === this.section.id
+      if (this.section) {
+        return this.$route.params.sectionId === this.section.id
+      }
+      return false
     },
     levels () {
       return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
@@ -147,24 +173,36 @@ export default {
   },
 
   methods: {
-    sectionSelected () {
-      this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
+    toggleSubsections () {
+      if (this.showSubsections) {
+        this.collapseSubsections()
+      } else {
+        this.expandSubsections()
+      }
     },
-    addSubsection () {
-      this.showNewSubsectionModal = true
+    expandSubsections () {
+      this.showSubsections = true
+      this.$store.dispatch('expandSubsection', this.coordinate)
     },
-    updateSubsections () {
-      this.axios.get('/1/model/section/' + this.section.id, { params: { levels: 1 } }).then((response) => {
-        if (response.data.result === 'success') {
-          this.subsections = response.data.data.subsections
-        }
-      })
+    collapseSubsections () {
+      this.showSubsections = false
+      this.$store.dispatch('collapseSubsection', this.coordinate)
     },
     checkExpandSubsections () {
       if (this.highlightLevelUse > 1) {
-        this.showSubsections = true
+        this.expandSubsections()
       } else {
-        // this.showSubsections = false
+        if (this.sectionData) {
+          if (this.sectionData.expand) {
+            this.expandSubsections()
+          }
+        }
+      }
+    },
+    sectionSelected () {
+      this.$emit('section-selected', this.section)
+      if (this.section) {
+        this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
       }
     },
     dragStart (event) {
@@ -279,18 +317,20 @@ export default {
               beforeSubsectionId: beforeSubsectionId
             }
           }).then((response) => {
-            this.$store.commit('triggerUpdateSectionsTree')
+            this.$store.dispatch('updateSectionDataInTree', {sectionId: dragData.fromSectionId})
+            this.$store.dispatch('updateSectionDataInTree', {sectionId: onSectionId})
           })
         } else {
-          /* copy card without removing it */
+          /* copy section without removing it */
           this.axios.put('/1/model/section/' + onSectionId +
             '/subsection/' + dragData.sectionId, {}, {
               params: {
                 beforeSubsectionId: beforeSubsectionId
               }
             }).then((response) => {
-            this.$store.commit('triggerUpdateSectionsTree')
-          })
+              this.$store.dispatch('updateSectionDataInTree', {sectionId: onSectionId})
+              this.$store.dispatch('updateSectionDataInTree', {sectionId: dragData.fromSectionId})
+            })
         }
       }
 
@@ -307,7 +347,7 @@ export default {
 <style scoped>
 
 .section-nav-item-container {
-  color: #57636f;
+  color: #616e7a;
 }
 
 .section-nav-item-first-row {
@@ -369,6 +409,7 @@ export default {
   min-height: 1px;
   width: 30px;
   float: left;
+  padding-top: 2px;
 }
 
 </style>

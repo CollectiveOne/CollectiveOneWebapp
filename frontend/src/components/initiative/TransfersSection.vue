@@ -1,6 +1,6 @@
 <template lang="html">
 
-<div>
+<div class="transfer-section">
 
   <transition name="slideDownUp">
     <app-assignation-modal v-if="showAssignationModal">
@@ -130,6 +130,10 @@ export default {
 </script>
 
 <style scoped>
+
+.transfer-section {
+  overflow: auto;
+}
 
 .section-container {
   padding-top: 0px;

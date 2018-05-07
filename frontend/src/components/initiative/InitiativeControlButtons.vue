@@ -29,7 +29,7 @@
       </div>
     </div>
 
-    <div class="modal-buttons-container">
+    <div class="initiative-buttons-container">
 
       <div class="expand-btn w3-xlarge fa-button"
         @click="expanded =! expanded"
@@ -133,14 +133,17 @@ export default {
       this.deleteIntent = true
     },
     deleteConfirmed () {
-      this.axios.delete('/1/model/section/' + this.section.id)
-        .then((response) => {
-          this.deleteIntent = false
-          this.expanded = false
-          this.$store.commit('triggerUpdateSectionsTree')
-        }).catch((error) => {
-          console.log(error)
-        })
+      this.axios.delete('/1/initiative/' + this.initiative.id).then((response) => {
+        this.$store.dispatch('refreshInitiative')
+        this.$store.dispatch('updateMyInitiatives')
+        if (this.initiative.parents.length > 0) {
+          var parentId = this.initiative.parents[this.initiative.parents.length - 1].id
+          this.$router.replace({ name: 'InitiativeOverview', params: { initiativeId: parentId } })
+          this.closeThis()
+        } else {
+          window.location.href = '/'
+        }
+      })
     },
     clickOutsideMenu () {
       this.expanded = false
@@ -158,6 +161,9 @@ export default {
 
 <style scoped>
 
+.initiative-buttons-container {
+}
+
 .expand-btn {
   padding: 8px 12px;
   width: 50px;
@@ -169,7 +175,7 @@ export default {
   position: absolute;
   width: 180px;
   margin-top: 0px;
-  margin-left: -80px;
+  right: 0px;
   text-align: left;
   font-size: 15px;
   z-index: 2;

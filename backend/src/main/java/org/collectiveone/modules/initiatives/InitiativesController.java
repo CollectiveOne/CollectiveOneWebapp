@@ -16,6 +16,7 @@ import org.collectiveone.modules.initiatives.dto.MemberDto;
 import org.collectiveone.modules.initiatives.dto.NewInitiativeDto;
 import org.collectiveone.modules.initiatives.dto.SearchFiltersDto;
 import org.collectiveone.modules.tokens.dto.AssetsDto;
+import org.collectiveone.modules.users.AppUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -196,6 +197,20 @@ public class InitiativesController extends BaseController {
 				UUID.fromString(initiativeId), 
 				UUID.fromString(memberDto.getUser().getC1Id()),
 				DecisionMakerRole.valueOf(memberDto.getRole()));
+	}
+	
+	@RequestMapping(path = "/initiative/{initiativeId}/members/suggestions", method = RequestMethod.GET)
+	public GetResult<List<AppUserDto>> memberSuggestions(
+		   	@RequestParam("q") String query,
+			@PathVariable("initiativeId") String initiativeIdFetch) {
+		
+	    UUID initiativeId = UUID.fromString(initiativeIdFetch);
+	    
+	    if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+	        return new GetResult<List<AppUserDto>>("error", "access denied", null);
+	    }
+	    
+	    return initiativeService.getMembersOfEcosystem(UUID.fromString(initiativeIdFetch), query, new PageRequest(0, 10));
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/member/{userId}", method = RequestMethod.DELETE) 

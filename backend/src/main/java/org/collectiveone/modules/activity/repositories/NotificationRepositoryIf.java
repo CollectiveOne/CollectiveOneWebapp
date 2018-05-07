@@ -14,6 +14,9 @@ public interface NotificationRepositoryIf extends CrudRepository<Notification, U
 
 	Notification findById(UUID notificationId);
 	
+	@Query("SELECT notif FROM Notification notif WHERE notif.subscriber.user.c1Id = ?1 AND notif.id IN ?2")
+	List<Notification> findByIdIn(UUID userId, List<UUID> notificationIds);
+	
 	@Query("SELECT notif FROM Notification notif JOIN notif.activity act WHERE notif.subscriber.user.c1Id = ?1 ORDER BY act.timestamp DESC")
 	List<Notification> findOfUser(UUID userId, Pageable page);
 	

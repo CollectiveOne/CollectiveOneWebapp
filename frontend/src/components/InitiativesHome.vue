@@ -1,11 +1,11 @@
 <template lang="html">
-  <div class="">
+  <div class="initiatives-home">
     <router-view></router-view>
-    <div class="w3-row">
+    <div class="w3-row header-row">
       <app-header :inInitiative="false"></app-header>
     </div>
-    <div class="w3-row">
-      <div v-if="$store.state.user.authenticated" class="w3-row w3-center light-grey">
+    <div class="w3-row browse-initiatives-row">
+      <div v-if="$store.state.user.authenticated" class="w3-row w3-center w3-border-bottom">
         <div class="w3-col m6 border-blue cursor-pointer tablink" :class="{'w3-bottombar': !publicInitiatives}"
           @click="publicInitiatives = false">
           <h3>My Initiatives</h3>
@@ -18,10 +18,10 @@
       <div v-else class="">
         <h3>Browse Public Initiatives</h3>
       </div>
-    </div>
-    <div class="w3-container inits-container">
-      <app-public-initiatives v-if="publicInitiatives"></app-public-initiatives>
-      <app-my-initiatives v-else></app-my-initiatives>
+      <div class="inits-container">
+        <app-public-initiatives v-if="publicInitiatives"></app-public-initiatives>
+        <app-my-initiatives v-else></app-my-initiatives>
+      </div>
     </div>
   </div>
 
@@ -54,6 +54,21 @@ export default {
 </script>
 
 <style scoped>
+
+.initiatives-home {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-row {
+  flex-shrink: 0;
+}
+
+.browse-initiatives-row {
+  padding-top: 16px;
+  overflow: auto;
+}
 
 .tablink:hover {
   background-color: #cccccc;

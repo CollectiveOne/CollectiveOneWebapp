@@ -322,12 +322,7 @@ public class ModelService {
 			}
 		}
 				
-		if (level <= 0) {
-			/* add only the subsection titles and metadata */
-			for (ModelSection subsection : section.getSubsections()) {
-				sectionDto.getSubsections().add(subsection.toDto());
-			}
-		} else {
+		if (level > 0) {
 			/* add the subsections with their sub-elements too */
 			for (ModelSection subsection : section.getSubsections()) {
 				sectionDto.getSubsections().add(addSectionSubElements(subsection.toDto(), subsection.getId(), level - 1, requestByUserId, onlySections));
@@ -561,12 +556,7 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(UUID sectionId, String query, Integer page, Integer pageSize, String sortByIn, Integer levels, UUID requestById) {
-		List<UUID> allSectionIds = new ArrayList<UUID>();
-		
-		allSectionIds.add(sectionId);
-		allSectionIds.addAll(getAllSubsectionsIds(sectionId, levels - 1));
-		
+	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(UUID sectionId, String query, Integer page, Integer pageSize, String sortByIn, Integer levels, UUID requestById, Boolean inInitiativeEcosystem) {
 		PageRequest pageRequest = null;
 		
 		switch (sortByIn) {
@@ -587,8 +577,24 @@ public class ModelService {
 				break;
 		}
 		
-		Page<ModelCardWrapper> enititiesPage = 
-				modelCardWrapperRepository.searchInSectionByQuery(allSectionIds, "%"+query.toLowerCase()+"%", pageRequest);
+		Page<ModelCardWrapper> enititiesPage = null;
+		if (!inInitiativeEcosystem) {
+			List<UUID> allSectionIds = new ArrayList<UUID>();
+			
+			allSectionIds.add(sectionId);
+			allSectionIds.addAll(getAllSubsectionsIds(sectionId, levels - 1));
+			
+			enititiesPage = modelCardWrapperRepository.searchInSectionsByQuery(allSectionIds, "%"+query.toLowerCase()+"%", pageRequest);
+		} else {
+			
+			ModelSection section = modelSectionRepository.findById(sectionId);
+			List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(section.getInitiative().getId());
+			
+			/* TODO: weird issue when using dynamic new Sort, sort hardcoded based laste edited */
+			pageRequest = new PageRequest(page, pageSize);
+			
+			enititiesPage = modelCardWrapperRepository.searchInInitiativesByQuery(initiativeEcosystemIds, "%"+query.toLowerCase()+"%", pageRequest);
+		}
 		
 		List<ModelCardWrapperDto> cardsDtos = new ArrayList<ModelCardWrapperDto>();
 		

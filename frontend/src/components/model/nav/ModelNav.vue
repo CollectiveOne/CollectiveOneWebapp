@@ -16,10 +16,13 @@
     <div class="model-nav-container">
       <div class="w3-row">
         <app-model-section-nav-item
-          :section="initiative.topModelSection">
+          :section="section"
+          :coordinate="[0]"
+          @section-selected="$emit('section-selected', $event)">
         </app-model-section-nav-item>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -32,6 +35,7 @@ export default {
     'app-model-section-modal': ModelSectionModal,
     'app-model-section-nav-item': ModelSectionNavItem
   },
+
   data () {
     return {
       showSectionModal: false
@@ -39,17 +43,27 @@ export default {
   },
 
   computed: {
+    sectionData () {
+      return this.$store.getters.getSectionDataAtCoord([0])
+    },
+    section () {
+      if (this.sectionData) {
+        return this.sectionData.section
+      }
+      return null
+    },
     initiative () {
       return this.$store.state.initiative.initiative
     },
     levels () {
       return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
-    },
-    expandModelNav () {
-      return this.$store.state.support.expandModelNav
     }
   },
+
   methods: {
+  },
+
+  created () {
   }
 }
 </script>

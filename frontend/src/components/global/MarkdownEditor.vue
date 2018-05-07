@@ -29,7 +29,7 @@
     <div v-if="showSend" class="w3-cell send-button-column w3-cell-top">
       <div class="send-button-container">
         <button class="w3-button app-button" name="button"
-          @click="$emit('send', value)">
+          @click="send()">
           <i class="fa fa-paper-plane" aria-hidden="true"></i>
           <br>
           <small>ctr + &crarr;</small>
@@ -136,6 +136,11 @@ export default {
         e.preventDefault()
         this.$emit('send', this.value)
       }
+    },
+    send () {
+      this.preview = false
+      this.sideBySide = false
+      this.$emit('send', this.value)
     }
   },
 
@@ -195,6 +200,7 @@ export default {
 }
 
 .markdown-container {
+  font-family: 'Open Sans', sans-serif;
 }
 
 </style>

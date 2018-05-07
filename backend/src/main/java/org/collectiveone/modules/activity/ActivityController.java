@@ -1,5 +1,6 @@
 package org.collectiveone.modules.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,6 +65,22 @@ public class ActivityController extends BaseController {
 				getLoggedUserId(), 
 				NotificationContextType.valueOf(contextElementType),
 				UUID.fromString(elementId));
+	}
+	
+	@RequestMapping(path = "/notifications/read", method = RequestMethod.PUT)
+	public PostResult notificationsListRead(@RequestBody List<String> notificationsIdsStr) {
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		List<UUID> notificationIds = new ArrayList<UUID>();
+		for (String idStr : notificationsIdsStr) {
+			notificationIds.add(UUID.fromString(idStr));
+		}
+		
+		return activityService.notificationsListRead(
+				getLoggedUserId(), 
+				notificationIds);
 	}
 	
 	@RequestMapping(path = "/notifications/pushed/{notificationId}", method = RequestMethod.PUT)

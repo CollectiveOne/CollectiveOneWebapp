@@ -1,13 +1,22 @@
 <template lang="html">
-  <div>
-    <div v-if="$store.state.support.initiativeLoaded">
-      <div class="w3-row">
+  <div class="initiative-content">
+    <div v-if="$store.state.initiative.initiativeLoaded" class="initiative-content-loaded">
+      <div class="w3-row initiative-row">
 
-       <div class="w3-row">
-         <app-header :inInitiative="true"></app-header>
-       </div>
+        <transition name="slideDownUp">
+          <div v-show="!hideTopBar" class="w3-row initiative-header-row">
+            <app-header :inInitiative="true"></app-header>
+          </div>
+        </transition>
 
-        <div class="w3-row content-container">
+        <div v-if="windowIsSmall" class="w3-row hide-nail-container">
+          <div @click="hideTopBar = !hideTopBar" class="hide-nail drop-shadow-br cursor-pointer">
+            <i v-if="!hideTopBar" class="fa fa-chevron-up" aria-hidden="true"></i>
+            <i v-else class="fa fa-chevron-down" aria-hidden="true"></i>
+          </div>
+        </div>
+
+        <div class="w3-row initiative-content-row">
           <transition :name="animationType" mode="out-in" appear>
             <router-view :key="initiative.id">
             </router-view>
@@ -29,6 +38,12 @@ export default {
     'app-header': Header
   },
 
+  data () {
+    return {
+      hideTopBar: false
+    }
+  },
+
   computed: {
     initiative () {
       return this.$store.state.initiative.initiative
@@ -36,8 +51,8 @@ export default {
     animationType () {
       return this.$store.state.support.contentAnimationType
     },
-    expandNav () {
-      return this.$store.state.support.expandNav
+    windowIsSmall () {
+      return this.$store.state.support.windowIsSmall
     }
   },
 
@@ -74,7 +89,7 @@ export default {
   },
 
   watch: {
-    '$route' (to, from) {
+    '$route.params.initiativeId' (to, from) {
       this.updateInitiative()
     }
   },
@@ -91,15 +106,61 @@ export default {
 
 <style scoped>
 
-.big-content-container {
-  height: calc(100vh - 65px);
+.initiative-content {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  position: relative;
 }
 
-.content-container {
-  overflow: hidden;
+.hide-nail-container {
+  position: relative;
+  z-index: 2;
+}
+
+.hide-nail {
+  position: absolute;
+  right: 20px;
+  height: 25px;
+  width: 35px;
+  background-color: #313942;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  text-align: center;
+  color: white;
+}
+
+.hide-nail:hover {
+  background-color: #3e464e;
+}
+
+.initiative-content-loaded {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.initiative-row {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.initiative-header-row {
+  min-height: 50px;
+  flex-shrink: 0;
+}
+
+.initiative-content-row {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.temp-content {
+  background-color: red;
+  height: 1500px;
+  width: 100%;
 }
 
 </style>

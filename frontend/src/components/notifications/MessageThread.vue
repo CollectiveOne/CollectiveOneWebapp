@@ -6,7 +6,6 @@
         :addBorders="false"
         :showMessages="true"
         :onlyMessages="onlyMessages"
-        :triggerUpdate="triggerUpdate"
         :contextType="contextType"
         :contextElementId="contextElementId"
         :levels="levels"
@@ -33,16 +32,17 @@
         :show="showMembersOnly"
         message="sorry, only members of the initiative can send messages here">
       </app-error-panel>
-      <app-markdown-editor
+      <app-messages-markdown-editor
         class="editor-container"
         v-model="newMessageText"
         placeholder="say something"
         :showToolbar="false"
+        :elementId="contextElementId"
         :showSend="true"
         @c-focus="writting = true"
         @c-blur="writting = false"
         @send="send($event)">
-      </app-markdown-editor>
+      </app-messages-markdown-editor>
     </div>
   </div>
 </template>
@@ -81,7 +81,6 @@ export default {
   data () {
     return {
       newMessageText: '',
-      triggerUpdate: true,
       intervalId: 0,
       editing: false,
       messageToEdit: null,
@@ -157,9 +156,10 @@ export default {
     cancelReply () {
       this.replying = false
     },
-    send () {
+    send (data) {
       var message = {
-        text: this.newMessageText
+        text: this.newMessageText,
+        uuidsOfMentions: data.mentions
       }
       if (!this.editing) {
         var contextType = ''
@@ -187,7 +187,6 @@ export default {
           if (response.data.result === 'success') {
             this.replying = false
             this.newMessageText = ''
-            this.triggerUpdate = !this.triggerUpdate
           } else {
             this.showMembersOnly = true
           }
@@ -197,7 +196,6 @@ export default {
           if (response.data.result === 'success') {
             this.editing = false
             this.newMessageText = ''
-            this.triggerUpdate = !this.triggerUpdate
           }
         })
       }
@@ -210,7 +208,6 @@ export default {
     },
     showOnlyMessagesClicked () {
       this.showOnlyMessages = !this.showOnlyMessages
-      this.triggerUpdate = !this.triggerUpdate
     },
     atKeydown (e) {
       /* detect upkey to auto edit last message */
@@ -240,18 +237,19 @@ export default {
 .thread-container {
   height: 100%;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
 }
 
 .history-container {
   min-height: 60px;
-  height: calc(100% - 120px);
   overflow: auto;
   flex-grow: 1;
 }
 
 .bottom-container {
-  flex-grow: 1;
+  min-height: 50px;
+  flex-shrink: 0;
 }
 
 .only-messages-button {

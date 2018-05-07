@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="">
+  <div class="overview-content">
 
     <transition name="slideDownUp">
       <app-new-token-modal
@@ -173,6 +173,10 @@ export default {
 
 <style scoped>
 
+.overview-content {
+  overflow: auto;
+}
+
 .this-container {
   padding-top: 25px !important;
   padding-bottom: 25px !important;
@@ -188,6 +192,7 @@ export default {
 }
 
 .image-container {
+  margin-top: 16px;
   min-height: 80px;
   max-height: 250px;
   overflow: hidden;

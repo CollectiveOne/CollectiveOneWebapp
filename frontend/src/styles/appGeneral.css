@@ -1,5 +1,29 @@
+.control-btn {
+  cursor: pointer;
+  margin-right: 4px;
+  padding: 8px 10px;
+  background-color: #eff3f6;
+  border-radius: 3px;
+  transition: all 300ms ease;
+  user-select: none;  
+}
+
+.control-btn:hover {
+  background-color: #15a5cc;
+}
+
+.control-btn img {
+  width: 20px;
+}
+
+.control-btn-selected {
+  background-color: #15a5cc;
+  color: white;
+  font-weight: bold;
+}
+
 .drop-shadow-br {
-  box-shadow: 2px 0px 4px 2px rgba(0,0,0,0.16), 2px 0px 10px 2px rgba(0,0,0,0.12);
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.16), 2px 3px 3px rgba(0,0,0,0.12);
 }
 
 .fa-button {
@@ -126,6 +150,12 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #6f8294;
+}
+
+/* width */
+.small-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
 }
 
 .flex-vert {
