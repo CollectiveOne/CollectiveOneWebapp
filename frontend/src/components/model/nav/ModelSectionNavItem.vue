@@ -103,8 +103,7 @@ export default {
       draggingOverWithSectionSameLevelFlag: false,
       draggingOverWithSectionInsideFlag: false,
       resetIntervalId: 0,
-      forceUpdateNotifications: false,
-      subscription: null
+      forceUpdateNotifications: false
     }
   },
 
@@ -213,9 +212,9 @@ export default {
       }
     },
     updateInTree () {
-      // if (this.section) {
-      //   this.$store.dispatch('updateSectionDataInTree', {sectionId: this.section.id})
-      // }
+      if (this.section) {
+        this.$store.dispatch('updateSectionDataInTree', {sectionId: this.section.id})
+      }
     },
     updateParentInTree () {
       if (this.inSection) {
@@ -229,20 +228,18 @@ export default {
       this.updateParentInTree()
     },
     subscribeSocket () {
-      if (this.subscription === null) {
-        this.subscription = this.$store.dispatch('subscribe', {
-          url: '/channel/activity/model/section/' + this.section.id,
-          onMessage: (tick) => {
-            if (this.section) {
-              console.log('socket message on section ' + this.section.title)
-            }
-            var message = tick.body
-            if (message === 'UPDATE') {
-              this.updateInTree()
-            }
+      this.subscription = this.$store.dispatch('subscribe', {
+        url: '/channel/activity/model/section/' + this.section.id,
+        onMessage: (tick) => {
+          if (this.section) {
+            console.log('socket message on section ' + this.section.title)
           }
-        })
-      }
+          var message = tick.body
+          if (message === 'UPDATE') {
+            this.updateInTree()
+          }
+        }
+      })
     },
     dragStart (event) {
       var moveSectionData = {
@@ -385,14 +382,7 @@ export default {
 
   mounted () {
     this.checkExpandSubsections()
-  },
-
-  beforeDestroy () {
-    if (this.subscription) {
-      this.$store.dispatch('unsubscribe', this.subscription)
-    }
   }
-
 }
 </script>
 

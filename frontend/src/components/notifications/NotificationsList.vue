@@ -1,5 +1,5 @@
 <template lang="html">
-  <div>
+  <div :class="{'compact':isMainNav}">
 
     <div v-if="notifications.length > 0" class="bell-button cursor-pointer w3-display-container"
       @click="showNotificationsClicked()">
@@ -11,7 +11,7 @@
       v-click-outside="clickOutsideNotifications"
       class="notifications-container w3-white w3-card-4 w3-bar-block">
       <div class="w3-row-padding w3-border-bottom">
-        <div class="w3-col text-div">
+        <div class="w3-col text-div" :class="isMainNav?'s7':'s8'">
           {{ notifications.length }} new events under {{ element.title }}
         </div>
         <button class="w3-col  w3-margin-top w3-margin-bottom w3-button app-button" :class="isMainNav?'s5':'s4'"
@@ -282,6 +282,11 @@ export default {
   max-height: calc(100vh - 80px);
   overflow-y: auto;
   z-index: 2;
+}
+
+.compact .notifications-container {
+  width: 292px;
+  left: -32px;
 }
 
 </style>

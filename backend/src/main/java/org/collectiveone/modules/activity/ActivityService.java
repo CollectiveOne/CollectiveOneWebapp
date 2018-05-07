@@ -1337,7 +1337,7 @@ public class ActivityService {
 			
 			/* send messages to all of them */
 			for (UUID sectionId : allIncumbentSectionsIds) {
-				template.convertAndSend("/channel/activity/model/section/" + sectionId, "UPDATE");
+	    			template.convertAndSend("/channel/activity/model/section/" + sectionId, "UPDATE");
 			}
 			
 		}
