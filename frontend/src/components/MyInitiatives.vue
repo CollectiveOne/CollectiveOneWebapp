@@ -1,12 +1,29 @@
 <template lang="html">
   <div class="">
+    <transition name="slideDownUp">
+      <app-new-initiative-modal
+        v-if="showNewInitiativeModal"
+        @close="showNewInitiativeModal = false">
+      </app-new-initiative-modal>
+    </transition>
+
     <div v-if="!loading" class="w3-row-padding">
-      <div v-for="initiative in myInitiatives" class="initiative-card-col">
-        <app-initiative-card
-          :initiative="initiative"
-          :key="initiative.id"
-          @clicked="updateCurrentInitiative($event)">
-        </app-initiative-card>
+      <div v-if="myInitiatives.length > 0" class="">
+        <div v-for="initiative in myInitiatives" class="initiative-card-col">
+          <app-initiative-card
+            :initiative="initiative"
+            :key="initiative.id"
+            @clicked="updateCurrentInitiative($event)">
+          </app-initiative-card>
+        </div>
+      </div>
+      <div v-else class="w3-center">
+        <div class="w3-row w3-margin-top">
+          <i>you are not yet part of any initiative</i>
+        </div>
+        <div class="w3-row w3-margin-top">
+          <button @click="showNewInitiativeModal = true" class="w3-button app-button">create one</button>
+        </div>
       </div>
     </div>
     <div v-else class="w3-row w3-center loader-gif-container">
@@ -17,10 +34,18 @@
 
 <script>
 import InitiativeCard from '@/components/initiative/InitiativeCard.vue'
+import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
 
 export default {
   components: {
-    'app-initiative-card': InitiativeCard
+    'app-initiative-card': InitiativeCard,
+    'app-new-initiative-modal': NewInitiativeModal
+  },
+
+  data () {
+    return {
+      showNewInitiativeModal: false
+    }
   },
 
   computed: {

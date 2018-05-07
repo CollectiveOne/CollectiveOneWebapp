@@ -43,7 +43,8 @@ public class NotificationPeriodicService {
 		appUserRepository.setStatusForUsersLastSeenBefore(UserOnlineStatus.OFFLINE, fiveMinutesAgo());
 	}
 	
-	@Scheduled(fixedDelay = 30000)
+	// TODO: 3s for debug move back to 30seconds!
+	@Scheduled(fixedDelay = 3000)
 	public void checkSendEmailsSendNow() throws IOException {
 		activityService.sendNotificationEmailsSendNow();
 	}

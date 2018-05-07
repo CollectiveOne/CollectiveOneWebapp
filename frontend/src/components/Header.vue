@@ -114,7 +114,7 @@
           </app-drop-down-menu>
 
         </div>
-        <div v-else class="login-button-container w3-bar-item w3-right">
+        <div v-else class="login-button-container w3-right">
           <button @click="login()"
             class="w3-button app-button" name="button">
             login
@@ -431,7 +431,8 @@ export default {
 }
 
 .login-button-container {
-  padding: 13px;
+  padding-top: 6px;
+  padding-right: 6px;
 }
 
 </style>

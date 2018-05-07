@@ -11,8 +11,8 @@
       v-click-outside="clickOutsideNotifications"
       class="notifications-container w3-white w3-card-4 w3-bar-block">
       <div class="w3-row-padding w3-border-bottom">
-        <div class="w3-col text-div">
-          {{ notifications.length }} new events under {{ element.title }}
+        <div class="w3-col s8 text-div w3-center">
+          {{ notifications.length }} new events under <br>{{ element.title }}
         </div>
         <button class="w3-col  w3-margin-top w3-margin-bottom w3-button app-button" :class="isMainNav?'s5':'s4'"
           @click="notificationsRead()">

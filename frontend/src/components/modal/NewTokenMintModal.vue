@@ -90,6 +90,12 @@ import { tokensString } from '@/lib/common'
 
 export default {
 
+  props: {
+    assetId: {
+      type: String
+    }
+  },
+
   data () {
     return {
       assetData: null,
@@ -103,9 +109,6 @@ export default {
   },
 
   computed: {
-    assetId () {
-      return this.$store.state.modals.assetIdForMint
-    },
     newAmountVal () {
       return this.assetData.totalExistingTokens + this.value
     },
@@ -147,7 +150,7 @@ export default {
       this.value = this.percentage / 100 * this.assetData.totalExistingTokens
     },
     closeThis () {
-      this.$store.commit('showNewTokenMintModal', { show: false })
+      this.$emit('close')
     },
     accept () {
       var ok = true

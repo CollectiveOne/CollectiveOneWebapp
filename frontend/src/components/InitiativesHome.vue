@@ -4,8 +4,8 @@
     <div class="w3-row header-row">
       <app-header :inInitiative="false"></app-header>
     </div>
-    <div class="w3-row browse-initiatives-row">
-      <div v-if="$store.state.user.authenticated" class="w3-row w3-center w3-border-bottom">
+    <div class="w3-row-padding browse-initiatives-row">
+      <div v-if="$store.state.user.authenticated" class="w3-row w3-center w3-border-bottom noselect">
         <div class="w3-col m6 border-blue cursor-pointer tablink" :class="{'w3-bottombar': !publicInitiatives}"
           @click="publicInitiatives = false">
           <h3>My Initiatives</h3>

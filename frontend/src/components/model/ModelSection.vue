@@ -140,15 +140,17 @@ export default {
       })
     },
     subscribeSocket () {
-      this.subscription = this.$store.dispatch('subscribe', {
-        url: '/channel/activity/model/section/' + this.section.id,
-        onMessage: (tick) => {
-          var message = tick.body
-          if (message === 'UPDATE') {
-            this.updateCards()
+      if (this.subscription !== null) {
+        this.subscription = this.$store.dispatch('subscribe', {
+          url: '/channel/activity/model/section/' + this.section.id,
+          onMessage: (tick) => {
+            var message = tick.body
+            if (message === 'UPDATE') {
+              this.updateCards()
+            }
           }
-        }
-      })
+        })
+      }
     },
     dragStart (event) {
       var moveSectionData = {
@@ -196,8 +198,7 @@ export default {
 
   beforeDestroy () {
     if (this.subscription) {
-      console.log('enable this after merge')
-      // this.$store.dispatch('unsubscribe', this.subscription)
+      this.$store.dispatch('unsubscribe', this.subscription)
     }
   }
 }

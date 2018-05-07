@@ -199,9 +199,5 @@ export default {
   top: 8px
 }
 
-.sub-initiative-element {
-  height: 800px;
-}
-
 
 </style>

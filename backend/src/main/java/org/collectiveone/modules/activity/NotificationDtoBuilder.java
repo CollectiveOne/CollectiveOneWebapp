@@ -41,7 +41,6 @@ public class NotificationDtoBuilder {
 		
 		Initiative initiative = act.getInitiative();
 		Initiative subInitiative = act.getSubInitiative();
-		String transferredAssets = (act.getInitiativeTransfers() != null) ? getTransferString(act.getInitiativeTransfers()) : "";
 		TokenType tokenType = notification.getActivity().getTokenType();
 		TokenMint mint = notification.getActivity().getMint();
 		Assignation assignation = notification.getActivity().getAssignation();
@@ -68,13 +67,15 @@ public class NotificationDtoBuilder {
 			break;
 		
 		case INITIATIVE_DELETED:
-			message =  checkHtml("<p>") + "deleted the initiative " + getInitiativeAnchor(initiative) + checkHtml(
-					". All its assets, if any, have been transferred to its parent initiative, if the parent exist.</p>");
+			message =  checkHtml("<p>") + "deleted the initiative " + getInitiativeAnchor(initiative) + checkHtml(".</p>");
 			url = getInitiativeUrl(initiative.getId());
 			break;
 				
 		case SUBINITIATIVE_CREATED:
-			message = checkHtml("<p>") + "created " + checkHtml("the ") + getInitiativeAnchor(subInitiative) + " sub-initiative " + " sub-initiative and transferred " + transferredAssets + " to it.</p>";
+			message = checkHtml("<p>") + "created the " + getInitiativeAnchor(subInitiative) + " sub-initiative." + checkHtml("</p>");
+			if (act.getInitiativeTransfers() != null) {
+				message += checkHtml("<p>") + " And transferred " + getTransferString(act.getInitiativeTransfers()) + " to it." + checkHtml("</p>");
+			}	
 			url = getInitiativeUrl(subInitiative.getId());
 			break;
 
