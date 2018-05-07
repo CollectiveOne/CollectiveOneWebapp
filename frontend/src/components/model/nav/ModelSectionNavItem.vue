@@ -33,7 +33,10 @@
         </app-notifications-list>
       </div>
       <div class="control-div" :class="{'fa-button': !highlight, 'fa-button-dark': highlight}">
-        <app-section-control-buttons :section="section" :inSection="inSection">
+        <app-section-control-buttons
+          :section="section"
+          :inSection="inSection"
+          @section-removed="sectionRemoved()">
         </app-section-control-buttons>
       </div>
     </div>
@@ -208,14 +211,29 @@ export default {
         this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
       }
     },
+    updateInTree () {
+      if (this.section) {
+        this.$store.dispatch('updateSectionDataInTree', {sectionId: this.section.id})
+      }
+    },
+    updateParentInTree () {
+      if (this.inSection) {
+        this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inSection.id})
+      }
+    },
+    sectionRemoved () {
+      if (this.isSelected) {
+        this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.inSection.id}})
+      }
+      this.updateParentInTree()
+    },
     subscribeSocket () {
       this.subscription = this.$store.dispatch('subscribe', {
         url: '/channel/activity/model/section/' + this.section.id,
         onMessage: (tick) => {
-          console.log('socket message on section' + this.section.id)
           var message = tick.body
           if (message === 'UPDATE') {
-            this.$store.dispatch('updateSectionDataInTree', {sectionId: this.section.id})
+            this.updateInTree()
           }
         }
       })

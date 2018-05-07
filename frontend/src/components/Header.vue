@@ -255,6 +255,7 @@ export default {
     checkCrumbScroll () {
       if (!this.$refs.breadcrumb) {
         this.crumbTooLong = false
+        return
       }
       this.crumbTooLong = this.$refs.breadcrumb.clientWidth < this.$refs.breadcrumb.scrollWidth
 
