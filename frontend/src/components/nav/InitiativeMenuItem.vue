@@ -27,7 +27,6 @@
       <div class="notification-div">
         <app-notifications-list
           :element="initiative"
-          :isMainNav="true"
           contextType="INITIATIVE">
         </app-notifications-list>
       </div>
