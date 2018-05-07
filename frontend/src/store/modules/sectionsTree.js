@@ -71,20 +71,9 @@ const mutations = {
   setSectionsTree: (state, payload) => {
     state.sectionsTree = payload
   },
-  removeSectionData: (state, payload) => {
-    /* make a new copy of the coord */
-    let parentCoord = payload.coord.slice()
-    /* rmeove last element */
-    let thisIx = parentCoord.splice(-1, 1)
-
-    let parentSectionData = getSectionDataAtCoord(state.sectionsTree, parentCoord)
-    if (parentSectionData) {
-      if (parentSectionData.subsectionsData) {
-        parentSectionData.subsectionsData.splice(thisIx[0], 1)
-      }
-    }
-  },
   appendSectionData: (state, payload) => {
+    payload.refresh = payload.refresh || false
+
     if (payload.coord.length === 1) {
       if (payload.coord[0] === 0) {
         /* initialize tree */
@@ -102,8 +91,45 @@ const mutations = {
     if (sectionData && payload.sectionData) {
       if (sectionData.section && payload.sectionData.section) {
         sectionData.section = payload.sectionData.section
-        sectionData.subsectionsData = payload.sectionData.subsectionsData
-        sectionData.subsectionsDataSet = true
+        if (!payload.refresh) {
+          /* overwrite all subsections */
+          sectionData.subsectionsData = payload.sectionData.subsectionsData
+          sectionData.subsectionsDataSet = true
+        } else {
+          /* if refresh, remove missing subsections or add new ones, the rest are left as they are */
+          var ixNew
+          var ixNow
+
+          /* add new subsections */
+          for (ixNew = 0; ixNew < payload.sectionData.subsectionsData.length; ixNew++) {
+            let exist = false
+            for (ixNow = 0; ixNow < sectionData.subsectionsData.length; ixNow++) {
+              if (payload.sectionData.subsectionsData[ixNew].section.id === sectionData.subsectionsData[ixNow].section.id) {
+                exist = true
+                break
+              }
+            }
+            if (!exist) {
+              /* add new subsection */
+              sectionData.subsectionsData.splice(ixNew, 0, payload.sectionData.subsectionsData[ixNew])
+            }
+          }
+
+          /* remove removed subsections */
+          var removeSubsectionIxs = []
+          for (ixNow = 0; ixNow < sectionData.subsectionsData.length; ixNow++) {
+            if (payload.sectionData.subsectionsData.filter((subsectionData) => {
+              return subsectionData.section.id === sectionData.subsectionsData[ixNow].section.id
+            }).length === 0) {
+              removeSubsectionIxs.push(ixNow)
+            }
+          }
+
+          /* remove in backaward order to not mess the ix */
+          for (var ix = removeSubsectionIxs.length - 1; ix >= 0; ix--) {
+            sectionData.subsectionsData.splice(removeSubsectionIxs[ix], 1)
+          }
+        }
       }
     }
   }
@@ -117,6 +143,7 @@ const actions = {
   },
 
   appendSectionData: (context, payload) => {
+    payload.refresh = payload.refresh || false
     return new Promise((resolve, reject) => {
       Vue.axios.get('/1/model/section/' + payload.sectionId, { params: { levels: 2, onlySections: true } }).then((response) => {
         if (response.data.result === 'success') {
@@ -135,7 +162,7 @@ const actions = {
             section: section,
             subsectionsData: subsectionsData
           }
-          context.commit('appendSectionData', { sectionData: sectionData, coord: payload.coord })
+          context.commit('appendSectionData', { sectionData: sectionData, coord: payload.coord, refresh: payload.refresh })
           resolve()
         } else {
           reject()
@@ -242,14 +269,7 @@ const actions = {
   updateSectionDataInTree: (context, payload) => {
     let coords = context.getters.getSectionCoordsFromId(payload.sectionId)
     for (let ix in coords) {
-      context.dispatch('appendSectionData', { sectionId: payload.sectionId, coord: coords[ix] })
-    }
-  },
-
-  removeSectionDataFromId: (context, payload) => {
-    let coords = context.getters.getSectionCoordsFromId(payload.sectionId)
-    for (let ix in coords) {
-      context.commit('removeSectionData', { coord: coords[ix] })
+      context.dispatch('appendSectionData', { sectionId: payload.sectionId, coord: coords[ix], refresh: true })
     }
   }
 }
