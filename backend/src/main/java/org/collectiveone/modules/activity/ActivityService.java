@@ -1346,7 +1346,7 @@ public class ActivityService {
 		List<Initiative> parentInits = initiativeService.getParentGenealogyInitiatives(activity.getInitiative().getId());
 		parentInits.add(activity.getInitiative()); //add parent initiative of activity to broadcast list
         for (Initiative init : parentInits) {
-            template.convertAndSend("/channel/activity/model/initaitive/" + init.getId(), "UPDATE");
+            template.convertAndSend("/channel/activity/model/initiative/" + init.getId(), "UPDATE");
         }
 	}
 }

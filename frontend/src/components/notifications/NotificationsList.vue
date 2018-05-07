@@ -226,7 +226,7 @@ export default {
           break
 
         case 'INITIATIVE':
-          url = '/channel/activity/model/initaitive/' + this.contextElementId
+          url = '/channel/activity/model/initiative/' + this.contextElementId
           break
       }
 

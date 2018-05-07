@@ -130,8 +130,8 @@ export default {
       return null
     },
     subsections () {
-      if (this.section) {
-        return this.section.subsections
+      if (this.sectionData) {
+        return this.sectionData.subsectionsData.map(e => e.section)
       }
       return []
     },
@@ -231,6 +231,9 @@ export default {
       this.subscription = this.$store.dispatch('subscribe', {
         url: '/channel/activity/model/section/' + this.section.id,
         onMessage: (tick) => {
+          if (this.section) {
+            console.log('socket message on section ' + this.section.title)
+          }
           var message = tick.body
           if (message === 'UPDATE') {
             this.updateInTree()

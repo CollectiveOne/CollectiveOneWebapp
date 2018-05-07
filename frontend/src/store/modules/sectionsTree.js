@@ -90,10 +90,30 @@ const mutations = {
     if (sectionData && payload.sectionData) {
       if (sectionData.section && payload.sectionData.section) {
         /* this function always overwrites the sectionData so make sure you
-           are overwritting the same section */
+           are overwritting the expected section */
         if (sectionData.section.id === payload.sectionData.section.id) {
           sectionData.section = payload.sectionData.section
-          sectionData.subsectionsData = payload.sectionData.subsectionsData
+          /* only update subsections they are different from the current ones */
+          let newSize = payload.sectionData.subsectionsData.length
+          let oldSize = sectionData.subsectionsData.length
+
+          /* force the new list of subsections */
+          for (let ix = 0; ix < newSize; ix++) {
+            if (ix < sectionData.subsectionsData.length) {
+              if (sectionData.subsectionsData[ix].section.id !== payload.sectionData.subsectionsData[ix].section.id) {
+                sectionData.subsectionsData[ix] = payload.sectionData.subsectionsData[ix]
+              }
+            } else {
+              sectionData.subsectionsData.push(payload.sectionData.subsectionsData[ix])
+            }
+          }
+
+          /* remove excess sections */
+          if (newSize < oldSize) {
+            let nDeleted = oldSize - newSize
+            sectionData.subsectionsData.splice(-nDeleted, nDeleted)
+          }
+
           sectionData.subsectionsDataSet = true
         }
       }
