@@ -9,7 +9,7 @@
 
     <div v-show="showTable"
       v-click-outside="clickOutsideNotifications"
-      class="notifications-container w3-white w3-card-4 w3-bar-block">
+      class="notifications-container w3-white w3-card-4 w3-bar-block noselect">
       <div class="w3-row-padding w3-border-bottom">
         <div class="w3-col s8 text-div w3-center">
           {{ notifications.length }} new events under <br>{{ element.title }}
