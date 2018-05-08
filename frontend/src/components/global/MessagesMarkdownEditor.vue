@@ -151,7 +151,7 @@ export default {
     removeUserSelected (index) {
       let user = this.mentionedUsers[index]
       /* remove string */
-      let ixFound = this.text.search(user.nickname)
+      let ixFound = this.text.search('@' + user.nickname)
       if (ixFound !== -1) {
         /* remove the name with the @ too */
         this.text = spliceString(this.text, ixFound - 1, user.nickname.length + 1, '')
@@ -167,7 +167,7 @@ export default {
       /* get mentions and their indexes */
       do {
         m = re.exec(this.text)
-        if (m) {
+        if (m && (this.text.charAt(m.index - 1) === ' ' || this.text.length)) {
           mentions.push(m)
         }
       } while (m)
@@ -194,7 +194,7 @@ export default {
       // console.log(selectedMention)
       if (selectedMention.length > 0) {
         /* remove the at and store in mentioning */
-        this.mentioningQuery = selectedMention[0].substr(1)
+        this.mentioningQuery = selectedMention[0].substr(0)
       } else {
         this.mentioningQuery = ''
       }
@@ -208,7 +208,7 @@ export default {
     },
 
     updateMentionSuggestions () {
-      this.axios.get('/1/initiative/' + this.initiativeId + '/members/suggestions?q=' + this.mentioningQuery).then((response) => {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/members/suggestions?q=' + this.mentioningQuery.substr(1)).then((response) => {
         if (response.data.result === 'success') {
           this.userSuggestions = this.process ? self.process(response.data) : response.data.data
         }
