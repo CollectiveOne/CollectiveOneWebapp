@@ -32,6 +32,9 @@
         </transition-group>
       </div>
     </div>
+    <div v-else class="w3-center w3-row">
+      <i>the parent initaitive does not have any asset</i>
+    </div>
 
   </div>
 </template>
@@ -100,7 +103,9 @@ export default {
       }).then((response) => {
         this.assets = response.data.data.assets
         if (this.assetIdSelected === '') {
-          this.assetIdSelected = this.assets[0].assetId
+          if (this.assets.length > 0) {
+            this.assetIdSelected = this.assets[0].assetId
+          }
         }
       })
     },

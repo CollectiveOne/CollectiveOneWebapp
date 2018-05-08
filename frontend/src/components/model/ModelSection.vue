@@ -90,7 +90,8 @@ export default {
       showCards: true,
       expanded: true,
       showCardId: '',
-      expandSubSubsecInit: false
+      expandSubSubsecInit: false,
+      subscription: null
     }
   },
 
@@ -124,11 +125,9 @@ export default {
   watch: {
     '$store.state.support.triggerUpdateSectionCards' () {
       this.updateCards()
-      this.handleSocket()
     },
-
-    subscription: function (val) {
-      console.log('subscribed from ModelSection' + val)
+    section () {
+      this.subscribeSocket()
     }
   },
 
@@ -139,6 +138,19 @@ export default {
           this.section.cardsWrappers = response.data.data
         }
       })
+    },
+    subscribeSocket () {
+      if (this.subscription !== null) {
+        this.subscription = this.$store.dispatch('subscribe', {
+          url: '/channel/activity/model/section/' + this.section.id,
+          onMessage: (tick) => {
+            var message = tick.body
+            if (message === 'UPDATE') {
+              this.updateCards()
+            }
+          }
+        })
+      }
     },
     dragStart (event) {
       var moveSectionData = {
@@ -171,16 +183,23 @@ export default {
             }
           }
         })
+        setInterval(() => {
+          console.log(this.subscription.id + 'sagar')
+        }, 1000)
       }
     }
   },
 
   created () {
-    this.handleSocket()
+    if (this.section) {
+      this.subscribeSocket()
+    }
   },
 
   beforeDestroy () {
-    this.$store.dispatch('unsubscribe', this.subscription)
+    if (this.subscription) {
+      this.$store.dispatch('unsubscribe', this.subscription)
+    }
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template lang="html">
-  <div :class="{'compact':isMainNav}">
+  <div>
 
-    <div v-if="notifications.length > 0" class="bell-button cursor-pointer w3-display-container"
+    <div v-if="notifications.length > 0" class="icon-button cursor-pointer w3-display-container"
       @click="showNotificationsClicked()">
       <i v-if="onlyNotificationsUnder" class="fa fa-circle-o circle-o"></i>
       <i v-else class="fa fa-circle circle"></i>
@@ -9,10 +9,10 @@
 
     <div v-show="showTable"
       v-click-outside="clickOutsideNotifications"
-      class="notifications-container w3-white w3-card-4 w3-bar-block">
-      <div class="w3-row-padding w3-border-bottom">
-        <div class="w3-col text-div" :class="isMainNav?'s7':'s8'">
-          {{ notifications.length }} new events under {{ element.title }}
+      class="notifications-container w3-white w3-card-4 w3-bar-block noselect">
+      <div class="w3-row-padding w3-border-bottom notifications-header">
+        <div class="w3-col s8 text-div w3-center">
+          {{ notifications.length }} new events under <br>{{ element.title }}
         </div>
         <button class="w3-col  w3-margin-top w3-margin-bottom w3-button app-button" :class="isMainNav?'s5':'s4'"
           @click="notificationsRead()">
@@ -88,14 +88,32 @@ export default {
     },
     notificationsHere () {
       let notificationsHere = []
-      for (let ix in this.notifications) {
-        if (this.notifications[ix].activity.modelSection) {
-          if (this.notifications[ix].activity.modelSection.id === this.contextElementId) {
-            notificationsHere.push(this.notifications[ix])
+
+      switch (this.contextType) {
+        case 'MODEL_SECTION':
+          for (let ix in this.notifications) {
+            if (this.notifications[ix].activity.modelSection) {
+              if (this.notifications[ix].activity.modelSection.id === this.contextElementId) {
+                notificationsHere.push(this.notifications[ix])
+              }
+            }
           }
-        }
+          break
+
+        case 'INITIATIVE':
+          for (let ix in this.notifications) {
+            if (this.notifications[ix].activity.initiative) {
+              if (this.notifications[ix].activity.initiative.id === this.contextElementId) {
+                notificationsHere.push(this.notifications[ix])
+              }
+            }
+          }
       }
+
       return notificationsHere
+    },
+    notificationsHereMessages () {
+      return this.notificationsHere.filter((e) => { return e.activity.type === 'MESSAGE_POSTED' })
     },
     onlyNotificationsUnder () {
       if (this.notifications.length > 0) {
@@ -131,11 +149,13 @@ export default {
           this.notifications = response.data.data
           this.allShown = this.notifications.length < 10
 
-          this.$store.dispatch('addPushNotifications', this.notifications)
-          if (this.isSelected) {
-            /* autoread notifications of this section */
-            this.messageNotificationsRead(this.notificationsHere)
+          if (this.isSelected && this.$route.name === 'ModelSectionMessages') {
+            /* autoread message notifications of this section */
+            this.messageNotificationsRead()
           }
+
+          /* push all notifications */
+          this.$store.dispatch('addPushNotifications', this.notifications)
         }).catch(function (error) {
           console.log(error)
         })
@@ -172,10 +192,8 @@ export default {
         })
     },
 
-    messageNotificationsRead (notificationListIn) {
-      let notificationsList = notificationListIn || []
-      let messagesList = notificationsList.filter((e) => { return e.activity.type === 'MESSAGE_POSTED' })
-      let idsList = messagesList.map((e) => e.id)
+    messageNotificationsRead () {
+      let idsList = this.notificationsHereMessages.map((e) => e.id)
       if (idsList.length > 0) {
         this.axios.put('/1/notifications/read', idsList).then((response) => {
           /* check that new notifications arrived */
@@ -230,7 +248,7 @@ export default {
           break
 
         case 'INITIATIVE':
-          url = '/channel/activity/model/initaitive/' + this.contextElementId
+          url = '/channel/activity/model/initiative/' + this.contextElementId
           break
       }
 
@@ -259,12 +277,16 @@ export default {
 
 <style scoped>
 
+.notifications-header {
+  font-size: 16px;
+}
+
 .text-div {
   padding: 16px 12px;
   text-align: right;
 }
 
-.bell-button {
+.icon-button {
   width: 30px;
   text-align: center;
 }

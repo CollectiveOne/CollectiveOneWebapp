@@ -86,10 +86,37 @@ const mutations = {
     }
 
     let sectionData = getSectionDataAtCoord(state.sectionsTree, payload.coord)
-    if (payload.sectionData.section) {
-      sectionData.section = payload.sectionData.section
-      sectionData.subsectionsData = payload.sectionData.subsectionsData
-      sectionData.subsectionsDataSet = true
+
+    if (sectionData && payload.sectionData) {
+      if (sectionData.section && payload.sectionData.section) {
+        /* this function always overwrites the sectionData so make sure you
+           are overwritting the expected section */
+        if (sectionData.section.id === payload.sectionData.section.id) {
+          sectionData.section = payload.sectionData.section
+          /* only update subsections they are different from the current ones */
+          let newSize = payload.sectionData.subsectionsData.length
+          let oldSize = sectionData.subsectionsData.length
+
+          /* force the new list of subsections */
+          for (let ix = 0; ix < newSize; ix++) {
+            if (ix < sectionData.subsectionsData.length) {
+              if (sectionData.subsectionsData[ix].section.id !== payload.sectionData.subsectionsData[ix].section.id) {
+                sectionData.subsectionsData[ix] = payload.sectionData.subsectionsData[ix]
+              }
+            } else {
+              sectionData.subsectionsData.push(payload.sectionData.subsectionsData[ix])
+            }
+          }
+
+          /* remove excess sections */
+          if (newSize < oldSize) {
+            let nDeleted = oldSize - newSize
+            sectionData.subsectionsData.splice(-nDeleted, nDeleted)
+          }
+
+          sectionData.subsectionsDataSet = true
+        }
+      }
     }
   }
 }
@@ -100,6 +127,7 @@ const actions = {
       context.dispatch('updateCurrentSection', payload.currentSectionId)
     })
   },
+
   appendSectionData: (context, payload) => {
     return new Promise((resolve, reject) => {
       Vue.axios.get('/1/model/section/' + payload.sectionId, { params: { levels: 2, onlySections: true } }).then((response) => {
@@ -127,10 +155,12 @@ const actions = {
       })
     })
   },
+
   collapseSubsection: (context, coord) => {
     let sectionData = getSectionDataAtCoord(state.sectionsTree, coord)
     sectionData.expand = false
   },
+
   expandSectionAndContinue: (context, payload) => {
     let sectionData = payload.sectionData
     sectionData.expand = true
@@ -174,6 +204,7 @@ const actions = {
         }
       })
   },
+
   expandSubsection: (context, coord) => {
     let sectionData = getSectionDataAtCoord(state.sectionsTree, coord)
     sectionData.expand = true
@@ -190,6 +221,7 @@ const actions = {
       }
     }
   },
+
   autoExpandSectionsTree: (context, payload) => {
     if (context.state.sectionsTree.length === 0) {
       /* only check if the section tree has been already initialized */
@@ -218,6 +250,7 @@ const actions = {
       }
     }
   },
+
   updateSectionDataInTree: (context, payload) => {
     let coords = context.getters.getSectionCoordsFromId(payload.sectionId)
     for (let ix in coords) {

@@ -25,11 +25,24 @@
       } else {
         state.data[found] = payload
       }
-    }
+    },
+
+    clearData: (state, payload) => {
+        var found = state.data.findIndex(res => {
+          return res.elementId === payload
+        })
+        if (found >= 0) {
+          state.data.splice(found, 1)
+        }
+      }
   }
   const actions = {
     doBackup: (context, payload) => {
       context.commit('setData', payload)
+    },
+
+    clear: (context, payload) => {
+        context.commit('clearData', payload)
     }
   }
   export default {

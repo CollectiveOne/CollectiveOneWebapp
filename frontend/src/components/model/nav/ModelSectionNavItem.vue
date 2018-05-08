@@ -33,7 +33,10 @@
         </app-notifications-list>
       </div>
       <div class="control-div" :class="{'fa-button': !highlight, 'fa-button-dark': highlight}">
-        <app-section-control-buttons :section="section" :inSection="inSection">
+        <app-section-control-buttons
+          :section="section"
+          :inSection="inSection"
+          @section-removed="sectionRemoved()">
         </app-section-control-buttons>
       </div>
     </div>
@@ -100,7 +103,8 @@ export default {
       draggingOverWithSectionSameLevelFlag: false,
       draggingOverWithSectionInsideFlag: false,
       resetIntervalId: 0,
-      forceUpdateNotifications: false
+      forceUpdateNotifications: false,
+      subscription: null
     }
   },
 
@@ -110,6 +114,9 @@ export default {
     },
     levels () {
       this.checkExpandSubsections()
+    },
+    section () {
+      this.subscribeSocket()
     }
   },
 
@@ -124,8 +131,8 @@ export default {
       return null
     },
     subsections () {
-      if (this.section) {
-        return this.section.subsections
+      if (this.sectionData) {
+        return this.sectionData.subsectionsData.map(e => e.section)
       }
       return []
     },
@@ -203,6 +210,38 @@ export default {
       this.$emit('section-selected', this.section)
       if (this.section) {
         this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
+      }
+    },
+    updateInTree () {
+      // if (this.section) {
+      //   this.$store.dispatch('updateSectionDataInTree', {sectionId: this.section.id})
+      // }
+    },
+    updateParentInTree () {
+      if (this.inSection) {
+        this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inSection.id})
+      }
+    },
+    sectionRemoved () {
+      if (this.isSelected) {
+        this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.inSection.id}})
+      }
+      this.updateParentInTree()
+    },
+    subscribeSocket () {
+      if (this.subscription === null) {
+        this.subscription = this.$store.dispatch('subscribe', {
+          url: '/channel/activity/model/section/' + this.section.id,
+          onMessage: (tick) => {
+            if (this.section) {
+              console.log('socket message on section ' + this.section.title)
+            }
+            var message = tick.body
+            if (message === 'UPDATE') {
+              this.updateInTree()
+            }
+          }
+        })
       }
     },
     dragStart (event) {
@@ -338,9 +377,22 @@ export default {
     }
   },
 
+  created () {
+    if (this.section) {
+      this.subscribeSocket()
+    }
+  },
+
   mounted () {
     this.checkExpandSubsections()
+  },
+
+  beforeDestroy () {
+    if (this.subscription) {
+      this.$store.dispatch('unsubscribe', this.subscription)
+    }
   }
+
 }
 </script>
 

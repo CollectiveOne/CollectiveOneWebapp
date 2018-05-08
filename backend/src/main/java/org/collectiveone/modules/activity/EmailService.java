@@ -2,32 +2,22 @@ package org.collectiveone.modules.activity;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.collectiveone.modules.activity.dto.NotificationDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.repositories.NotificationRepositoryIf;
 import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
-import org.collectiveone.modules.assignations.Assignation;
-import org.collectiveone.modules.assignations.Evaluator;
-import org.collectiveone.modules.assignations.Receiver;
 import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.model.ModelCardWrapper;
-import org.collectiveone.modules.model.ModelSection;
-import org.collectiveone.modules.tokens.InitiativeTransfer;
-import org.collectiveone.modules.tokens.TokenMint;
-import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -46,6 +36,9 @@ public class EmailService {
 	
 	@Autowired
 	private NotificationRepositoryIf notificationRepository;
+	
+	@Autowired
+	private NotificationDtoBuilder notificationDtoBuilder;
 	
 	@Autowired
 	private WantToContributeRepositoryIf wantToContributeRepository;
@@ -120,52 +113,56 @@ public class EmailService {
 	
 	public String sendNotificationsSendNow(List<Notification> notifications) throws IOException {
 		
-		/* being global, it is kept in memory as attribute of this component */
-		segmentedPerActivityNotifications.clear();
-		
-		/* segment all notifications into subarrays of those of the same 
-		 * activity type, one email with multiple personalizations per activity type */
-		for (Notification notification : notifications) {
-			int ix = indexOfType(notification.getActivity().getType());
-			if (ix == -1) {
-				List<Notification> newArray = new ArrayList<Notification>();
-				newArray.add(notification);
-				segmentedPerActivityNotifications.add(newArray);
-			} else {
-				segmentedPerActivityNotifications.get(ix).add(notification);
-			}
-		}
-		
-		String result = "success";
-		
-		for (List<Notification> theseNotifications : segmentedPerActivityNotifications) {
+		if (notifications.size() > 0) {
+			/* being global, it is kept in memory as attribute of this component */
+			segmentedPerActivityNotifications.clear();
 			
-			String subresult = ""; 
-			try {
-				subresult = sendSegmentedPerActivityNotifications(theseNotifications);
-			} catch (Exception ex) {
-				subresult = "error sending emails";
-				
-				for (Notification notification : theseNotifications) {
-					/* protection to prevent spamming */
-					notification.setEmailNowState(NotificationState.DELIVERED);
-					notification.setEmailSummaryState(NotificationState.DELIVERED);
-					notificationRepository.save(notification);
+			/* segment all notifications into subarrays of those of the same 
+			 * activity type, one email with multiple personalizations per activity type */
+			for (Notification notification : notifications) {
+				int ix = indexOfType(notification.getActivity().getType());
+				if (ix == -1) {
+					List<Notification> newArray = new ArrayList<Notification>();
+					newArray.add(notification);
+					segmentedPerActivityNotifications.add(newArray);
+				} else {
+					segmentedPerActivityNotifications.get(ix).add(notification);
 				}
 			}
+			
+			String result = "success";
+			
+			for (List<Notification> theseNotifications : segmentedPerActivityNotifications) {
+				
+				String subresult = ""; 
+				try {
+					subresult = sendSegmentedPerActivityNotifications(theseNotifications);
+				} catch (Exception ex) {
+					subresult = "error sending emails";
+					
+					for (Notification notification : theseNotifications) {
+						/* protection to prevent spamming */
+						notification.setEmailNowState(NotificationState.DELIVERED);
+						notification.setEmailSummaryState(NotificationState.DELIVERED);
+						notificationRepository.save(notification);
+					}
+				}
+				
+				if (!subresult.equals("success")) {
+					result = "error sending notifications";
+				}
+			}
+			
+			String subresult = "";
 			
 			if (!subresult.equals("success")) {
 				result = "error sending notifications";
 			}
+			
+			return result;
 		}
 		
-		String subresult = "";
-		
-		if (!subresult.equals("success")) {
-			result = "error sending notifications";
-		}
-	
-		return result;
+		return "empty";
 	}
 	
 	private int indexOfType(ActivityType type) {
@@ -222,6 +219,7 @@ public class EmailService {
 				
 				String rows = "";
 				for (Notification notification : notifications) {
+					NotificationDto notificationDto = notificationDtoBuilder.getNotificationDto(notification, true);
 					rows += 
 						"<tr>"
 					+		"<td class=\"avatar-box\">"
@@ -231,7 +229,7 @@ public class EmailService {
 					+			getTimeSinceStr(notification.getActivity().getTimestamp())
 					+		"</td>"
 					+		"<td class=\"activity-text\">"
-					+			getActivityMessage(notification)
+					+			notificationDto.getMessage()
 					+		"</td>"
 					+	"</tr>";
 				}
@@ -425,8 +423,8 @@ public class EmailService {
 			if(notification.getSubscriber().getUser().getEmailNotificationsEnabled()) {
 				Personalization personalization = basicInitiativePersonalization(notification);
 				
-				String message = getActivityMessage(notification);
-				personalization.addSubstitution("$MESSAGE$", message);
+				NotificationDto notificationDto = notificationDtoBuilder.getNotificationDto(notification, true);
+				personalization.addSubstitution("$MESSAGE$", notificationDto.getMessage());
 				
 				mail.addPersonalization(personalization);
 			} 
@@ -442,208 +440,6 @@ public class EmailService {
 		return mail;
 	}
 	
-	private String getActivityMessage(Notification notification) {
-		
-		Activity act = notification.getActivity();
-		
-		Initiative initiative = act.getInitiative();
-		Initiative subInitiative = act.getSubInitiative();
-		String transferredAssets = (act.getInitiativeTransfers() != null) ? getTransferString(act.getInitiativeTransfers()) : "";
-		TokenType tokenType = notification.getActivity().getTokenType();
-		TokenMint mint = notification.getActivity().getMint();
-		Assignation assignation = notification.getActivity().getAssignation();
-		InitiativeTransfer transfer = notification.getActivity().getInitiativeTransfer();
-		
-		ModelSection modelSection = notification.getActivity().getModelSection();
-		ModelCardWrapper modelCardWrapper = notification.getActivity().getModelCardWrapper();
-		
-		ModelSection onSection = notification.getActivity().getOnSection();
-		ModelSection fromSection = notification.getActivity().getFromSection();
-		
-		String message = "";
-		
-		switch (notification.getActivity().getType()) {
-			
-		case INITIATIVE_CREATED:
-			return "<p>created the " + getInitiativeAnchor(initiative) + " initiative and added you as a member.</p>";
-			
-		case SUBINITIATIVE_CREATED:
-			return "<p>created the " + getInitiativeAnchor(subInitiative) + " sub-initiative and transferred " + transferredAssets + " to it.</p>";
-
-		case INITIATIVE_EDITED:
-			return "<p>edited the name or purpose of the " + getInitiativeAnchor(initiative) + " initiative.</p>";
-		
-		case INITIATIVE_DELETED: 
-			return "<p>deleted the initiative " + getInitiativeAnchor(initiative) + 
-				". All its assets, if any, have been transferred to its parent initiative,"
-				+ "if the parent exist.</p> ";
-		
-		case TOKENS_MINTED: 
-			return "<p>minted " + mint.getValue() + " " + mint.getToken().getName() + " with motive: " + mint.getMotive() + ".</p>";
-			
-		case TOKEN_CREATED:
-			return "<p>created a new token type called " + tokenType.getName() + " in " + getInitiativeAnchor(initiative) + ", and minted " + mint.getValue() + " units.</p>";
-			
-		case PR_ASSIGNATION_CREATED:
-			Evaluator evaluator = null;
-			
-			/* check if this member is an evaluator */
-			for (Evaluator thisEvaluator : assignation.getEvaluators()) {
-				if (thisEvaluator.getUser().getC1Id() == notification.getSubscriber().getUser().getC1Id()) {
-					evaluator = thisEvaluator;
-				}
-			}
-						String receiversList = "";
-			for (int ix = 0; ix < assignation.getReceivers().size(); ix++) {
-				
-				/* first element starts the string */
-				if (ix == 0) {
-					receiversList += "";	
-				}
-			
-				/* next elements add a comma or 'and' and a space */
-				if (ix > 0) {
-					if  (ix == assignation.getReceivers().size() - 1) {
-						receiversList += " and ";
-					} else {
-						receiversList += ", ";
-					}
-				}
-				if (assignation.getReceivers().get(ix).getUser().getC1Id() == notification.getSubscriber().getUser().getC1Id()) {
-					receiversList += "you";
-				} else {
-					receiversList += assignation.getReceivers().get(ix).getUser().getProfile().getNickname();
-				}
-			}
-			message = "<p>created a new peer-reviewed " + getAssignationAnchor(assignation) + " of " + 
-					assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +
-					" to be distributed among " + receiversList + ", with motive: </p><p>" + assignation.getMotive() + ".</p>"; 
-			
-			if (evaluator != null) {
-				Date closeDate = assignation.getConfig().getMaxClosureDate();
-				SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, ''yy");
-				message += "<p>You are one of the evaluators of this transfer! Please visit the " + 
-						getAssignationAnchor(assignation) + " page to make your evaluation.</p>" + 
-						"<p>You have until " + dateFormat.format(closeDate) + " at this time of the day to do it.</p>";
-			}
-			
-			return message;
-		
-		case PR_ASSIGNATION_DONE: 
-			return "<p>Peer-reviewed " + getAssignationAnchor(assignation) + " with motive: </p>"
-				+ "<p>" + assignation.getMotive() + "</p>"
-				+ "<p>has been closed.</p>"
-				+ "<p>" + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +
-				" have been transferred to its receivers.</p>";
-			
-		case D_ASSIGNATION_CREATED:
-			return "<p>made a direct " + getAssignationAnchor(assignation) + " of " + 
-				assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +
-				" to " + assignation.getReceivers().get(0).getUser().getProfile().getNickname() + ", with motive: </p><p>" + assignation.getMotive() + ".</p>";
-			
-		case INITIATIVE_TRANSFER:
-			return "<p>made a transfer of " + 
-					transfer.getValue() + " " + transfer.getTokenType().getName() +
-					" to " + getInitiativeAnchor(transfer.getTo()) + ", with motive: </p><p>" + transfer.getMotive() + ".</p>"; 
-
-		case ASSIGNATION_REVERT_ORDERED: 
-			message = "<p>wants to revert the " + getAssignationAnchor(assignation) + 
-				" of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() + 
-				" with motive: " + assignation.getMotive() + ".</p> ";
-		
-			for (Receiver receiver : assignation.getReceivers()) {
-				if (receiver.getUser().getC1Id().equals(notification.getSubscriber().getUser().getC1Id())) {
-					message += "<p>You were one of the transfer receivers, so you will have to approve this revert by "
-							+ "visiting the " + getAssignationAnchor(assignation) + " page.</p>";
-				}
-			}
-			return message;
-			
-		case ASSIGNATION_REVERT_CANCELLED: 
-			return "<p>ordered a revert of the " + getAssignationAnchor(assignation) + 
-				" of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() + 
-				" with motive: " + assignation.getMotive() + ", but this revert has been cancelled.</p> ";
-		
-		case ASSIGNATION_REVERTED: 
-			return "<p>ordered a revert of the " + getAssignationAnchor(assignation) + 
-				" of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() + 
-				" with motive: " + assignation.getMotive() + ", and the revert has been accepted.</p> ";
-		
-		case ASSIGNATION_DELETED: 
-			return "<p>deleted the ongoing " + getAssignationAnchor(assignation) + 
-				" of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() + 
-				" with motive: " + assignation.getMotive() + ". No tokens have or will be transferred.</p> ";
-			
-		case MODEL_SECTION_CREATED:
-			if (onSection != null) {
-				message = "<p>created a new section " + getModelSectionAnchor(modelSection) + 
-						" under section " + getModelSectionAnchor(onSection) + "</p> ";
-			} 						
-			return message;
-			
-		case MODEL_SECTION_EDITED:
-			return "<p>edited the model section " + getModelSectionAnchor(modelSection) + "</p> ";
-			
-		case MODEL_SECTION_DELETED:
-			return "<p>deleted the model section " + getModelSectionAnchor(modelSection) + "</p> ";
-			
-		case MODEL_CARDWRAPPER_CREATED:
-			return "<p>created a new card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
-					" in the " + getModelSectionAnchor(onSection) + " section</p> ";
-			
-		case MODEL_CARDWRAPPER_EDITED:
-			return "<p>edited the model card " + getModelCardWrapperAnchor(modelCardWrapper) + "</p> ";
-			
-		case MODEL_CARDWRAPPER_DELETED:
-			return "<p>deleted the model card " + getModelCardWrapperAnchor(modelCardWrapper) + "</p> ";
-			
-		case MODEL_SECTION_ADDED: 
-			if (onSection != null) {
-				message = "<p>added the section " + getModelSectionAnchor(modelSection) + 
-						" as sub-section of " + getModelSectionAnchor(onSection) + "</p> ";
-			} 
-			
-			return message;
-			
-		case MODEL_SECTION_MOVED:
-			if (onSection != null) {
-				if (fromSection != null) {
-					message = "<p>moved the section " + getModelSectionAnchor(modelSection) + 
-							" from section " + getModelSectionAnchor(fromSection) + 
-							" to section " + getModelSectionAnchor(onSection) + "</p> ";
-				}
-				
-			}	
-			return message;
-			
-		case MODEL_SECTION_REMOVED:
-			if (fromSection != null) {
-				message = "<p>removed the section " + getModelSectionAnchor(modelSection) + 
-						" from section " + getModelSectionAnchor(fromSection) + "</p> ";
-			}
-			return message;
-			
-		case MODEL_CARDWRAPPER_ADDED:
-			return "<p>added the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
-					" under section " + getModelSectionAnchor(onSection) + "</p> ";
-			
-		case MODEL_CARDWRAPPER_MOVED:
-			return "<p>moved the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
-					" from section " + getModelSectionAnchor(fromSection) + 
-					" to section " + getModelSectionAnchor(onSection) + "</p> ";
-			
-		case MODEL_CARDWRAPPER_REMOVED:
-			return "<p>removed the card " + getModelCardWrapperAnchor(modelCardWrapper, fromSection) + 
-					" from section " + getModelSectionAnchor(fromSection) + "</p> ";
-			
-		default:
-			break;
-		
-		}
-		
-		return "";
-	}
-		
 	private Personalization basicInitiativePersonalization(Notification notification) {
 		String toEmailString = notification.getSubscriber().getUser().getEmail();
 		String triggeredByUsername = notification.getActivity().getTriggerUser().getProfile().getNickname();
@@ -671,38 +467,6 @@ public class EmailService {
 	private String getInitiativeAnchor(Initiative initiative) {
 		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/" + 
 				initiative.getId().toString() + "/overview>" + initiative.getMeta().getName() + "</a>";
-	}
-	
-	private String getAssignationAnchor(Assignation assignation) {
-		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/" + 
-				assignation.getInitiative().getId().toString() + "/assignations/" + assignation.getId().toString() + ">transfer</a>";
-	}
-	
-	private String getTransferString(List<InitiativeTransfer> transfers) {
-		if (transfers.size() > 0) {
-			return NumberFormat.getNumberInstance(Locale.US).format(transfers.get(0).getValue()) + " " + transfers.get(0).getTokenType().getName();
-		} else {
-			return "";
-		}
-	}
-	
-	private String getModelSectionAnchor(ModelSection section) {
-		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
-				section.getInitiative().getId().toString() + "/model/section/" + 
-				section.getId().toString() + ">" + section.getTitle() + "</a>";
-	}
-	
-	private String getModelCardWrapperAnchor(ModelCardWrapper cardWrapper, ModelSection onSection) {
-		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
-				cardWrapper.getInitiative().getId().toString() + "/model/section/" + 
-				onSection.getId().toString() + "/card/" + cardWrapper.getCard().getId().toString() + 
-				">" + cardWrapper.getCard().getTitle() + "</a>";
-	}
-	
-	private String getModelCardWrapperAnchor(ModelCardWrapper cardWrapper) {
-		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
-				cardWrapper.getInitiative().getId().toString() + "/model/card/" + 
-				cardWrapper.getId().toString() + ">" + cardWrapper.getCard().getTitle() + "</a>";
 	}
 	
 	private String getUnsuscribeFromInitiativeHref(Initiative initiative) {

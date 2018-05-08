@@ -204,11 +204,10 @@ export default {
       this.expanded = false
       this.axios.put('/1/model/section/' + this.inSection.id + '/removeSubsection/' + this.section.id,
         {}).then((response) => {
-          console.log(response)
           if (response.data.result === 'success') {
             this.removeIntent = false
             this.expanded = false
-            this.$store.commit('triggerUpdateSectionsTree')
+            this.$emit('section-removed')
           } else {
             this.showOutputMessage(response.data.message)
           }

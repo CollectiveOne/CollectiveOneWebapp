@@ -34,8 +34,13 @@
 
     </div>
 
-    <div class="slider-container">
-      <transition name="slideDownUp">
+    <div :class="{'slider-container': animatingTab}">
+      <transition name="slideDownUp"
+          @before-enter="animatingTab = true"
+          @after-enter="animatingTab = false"
+          @before-leave="animatingTab = true"
+          @after-leave="animatingTab = false">
+
         <div class="sub-initiatives-container" v-if="showSubinitiatives" >
           <div class="w3-row" v-for="(subinitiative, ix) in initiative.subInitiatives">
             <app-initiative-menu-item
@@ -52,11 +57,14 @@
 
 <script>
 import NotificationsList from '@/components/notifications/NotificationsList.vue'
+
 export default {
   name: 'app-initiative-menu-item',
+
   components: {
     'app-notifications-list': NotificationsList
   },
+
   props: {
     initiative: {
       type: Object,
@@ -71,6 +79,13 @@ export default {
     coord: {
       type: Array,
       default: () => { return [] }
+    }
+  },
+
+  data () {
+    return {
+      showSubinitiatives: false,
+      animatingTab: false
     }
   },
 
@@ -123,12 +138,6 @@ export default {
     },
     hasSubinitiatives () {
       return this.initiative.subInitiatives.length > 0
-    }
-  },
-
-  data () {
-    return {
-      showSubinitiatives: false
     }
   },
 
@@ -198,10 +207,6 @@ export default {
   float: left;
   position: relative;
   top: 8px
-}
-
-.sub-initiative-element {
-  height: 800px;
 }
 
 

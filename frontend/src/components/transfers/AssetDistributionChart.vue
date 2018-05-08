@@ -2,6 +2,14 @@
 
   <div v-if="assetData" class="">
 
+    <transition name="slideDownUp">
+      <app-new-tokenmint-modal
+        v-if="showNewTokenMintModal"
+        :assetId="assetId"
+        @close="showNewTokenMintModal = false">
+      </app-new-tokenmint-modal>
+    </transition>
+
     <div class="this-container">
       <div class="w3-row">
         <div class="w3-col distribution-container" :class="{'l8': showAssigner, 'l12': !showAssigner}">
@@ -172,9 +180,11 @@
 
 <script>
 import { tokensString, amountAndPerc } from '@/lib/common'
+import NewTokenMintModal from '@/components/modal/NewTokenMintModal.vue'
 
 export default {
   components: {
+    'app-new-tokenmint-modal': NewTokenMintModal
   },
 
   props: {
@@ -213,7 +223,8 @@ export default {
       showMembers: false,
       value: 0,
       percentage: 0,
-      valueTooLarge: false
+      valueTooLarge: false,
+      showNewTokenMintModal: false
     }
   },
 
@@ -340,10 +351,7 @@ export default {
       this.$emit('assigned', transferData)
     },
     mintClicked () {
-      this.$store.commit('showNewTokenMintModal', {
-        show: true,
-        assetId: this.assetData.assetId
-      })
+      this.showNewTokenMintModal = true
     },
     valueUpdated (value) {
       this.value = value

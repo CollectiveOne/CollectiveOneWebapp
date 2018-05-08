@@ -33,9 +33,18 @@
               {{ initiative.meta.name }}
             </div>
 
+            <div class="notification-div">
+              <app-notifications-list
+                :element="initiative"
+                contextType="INITIATIVE">
+              </app-notifications-list>
+            </div>
+
             <app-initiative-control-buttons
-              class="w3-margin-left" :initiative="this.initiative">
+              class=""
+              :initiative="this.initiative">
             </app-initiative-control-buttons>
+
           </div>
 
           <div v-if="initiative.status !== 'ENABLED'" class="w3-tag w3-round w3-margin-left error-panel">
@@ -114,7 +123,7 @@
           </app-drop-down-menu>
 
         </div>
-        <div v-else class="login-button-container w3-bar-item w3-right">
+        <div v-else class="login-button-container w3-right">
           <button @click="login()"
             class="w3-button app-button" name="button">
             login
@@ -136,11 +145,13 @@
 <script>
 import InitiativeControlButtons from '@/components/initiative/InitiativeControlButtons.vue'
 import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
+import NotificationsList from '@/components/notifications/NotificationsList.vue'
 
 export default {
   components: {
     'app-initiative-control-buttons': InitiativeControlButtons,
-    'app-edit-notifications-modal': EditNotificationsModal
+    'app-edit-notifications-modal': EditNotificationsModal,
+    'app-notifications-list': NotificationsList
   },
 
   props: {
@@ -255,6 +266,7 @@ export default {
     checkCrumbScroll () {
       if (!this.$refs.breadcrumb) {
         this.crumbTooLong = false
+        return
       }
       this.crumbTooLong = this.$refs.breadcrumb.clientWidth < this.$refs.breadcrumb.scrollWidth
 
@@ -337,6 +349,11 @@ export default {
 
 .scroll-btns .right-scroll-btn {
   right: -10px;
+}
+
+.notification-div {
+  display: inline-block;
+  vertical-align: top;
 }
 
 .initiatives-breadcrumb {
@@ -430,7 +447,8 @@ export default {
 }
 
 .login-button-container {
-  padding: 13px;
+  padding-top: 6px;
+  padding-right: 6px;
 }
 
 </style>

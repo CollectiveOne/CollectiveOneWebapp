@@ -50,7 +50,9 @@ export default {
 <style scoped>
 
 .section-content-scroll {
-  overflow-y: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .section-content-fixed {

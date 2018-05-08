@@ -279,6 +279,9 @@ export default {
       this.mentionedUsers = []
       this.preview = false
       this.sideBySide = false
+
+      // now delete edit content from backup
+      this.$store.dispatch('clear', this.elementId)
     }
   },
 
@@ -299,7 +302,6 @@ export default {
 
   beforeDestroy () {
     // do backup
-    console.log('beforeDestroyed')
     if (this.value !== '') {
       this.$store.dispatch('doBackup', {elementId: this.elementId, value: this.value})
     }
