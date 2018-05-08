@@ -33,16 +33,16 @@
         :show="showMembersOnly"
         message="sorry, only members of the initiative can send messages here">
       </app-error-panel>
-      <app-messages-markdown-editor
+      <app-markdown-editor
         class="editor-container"
         v-model="newMessageText"
         placeholder="say something"
         :showToolbar="false"
-        :showSend="true"
+        :showSendAndMentions="true"
         @c-focus="writting = true"
         @c-blur="writting = false"
         @send="send($event)">
-      </app-messages-markdown-editor>
+      </app-markdown-editor>
     </div>
   </div>
 </template>
