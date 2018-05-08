@@ -5,7 +5,7 @@ const state = {
   triggerUpdateNotifications: false,
   userEmailNotVerified: false,
   expandNav: false,
-  expandModelNav: false,
+  expandModelNav: true,
   windowIsSmall: false,
   draggingElement: null
 }

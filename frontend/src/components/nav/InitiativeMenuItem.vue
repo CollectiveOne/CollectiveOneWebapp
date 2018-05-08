@@ -56,6 +56,7 @@
 
 <script>
 import NotificationsList from '@/components/notifications/NotificationsList.vue'
+
 export default {
   name: 'app-initiative-menu-item',
 

@@ -2,15 +2,15 @@
   <div class="w3-row section-content-tab">
     <div class="section-nav-container">
       <transition name="slideRightLeft">
-        <div v-show="showNavBar" class="vision-nav-cell light-grey drop-shadow-br w3-border-top">
+        <div v-show="expandModelNav" class="vision-nav-cell light-grey drop-shadow-br w3-border-top">
           <app-model-nav @section-selected="sectionSelected()">
           </app-model-nav>
         </div>
       </transition>
     </div>
     <div class="hide-nav-div-container">
-      <div @click="showNavBar = !showNavBar" class="hide-nav-div drop-shadow-br">
-        <i v-if="showNavBar" class="fa fa-chevron-left" aria-hidden="true"></i>
+      <div @click="expandModelNavClicked()" class="hide-nav-div drop-shadow-br">
+        <i v-if="expandModelNav" class="fa fa-chevron-left" aria-hidden="true"></i>
         <i v-else class="fa fa-chevron-right" aria-hidden="true"></i>
       </div>
     </div>
@@ -30,7 +30,6 @@ export default {
 
   data () {
     return {
-      showNavBar: true
     }
   },
 
@@ -40,10 +39,16 @@ export default {
     },
     windowIsSmall () {
       return this.$store.state.support.windowIsSmall
+    },
+    expandModelNav () {
+      return this.$store.state.support.expandModelNav
     }
   },
 
   methods: {
+    expandModelNavClicked () {
+      this.$store.commit('toggleExpandModelNav')
+    },
     sectionSelected () {
       if (this.windowIsSmall) {
         this.showNavBar = false

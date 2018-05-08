@@ -18,7 +18,7 @@
           @updateCards="$emit('updateCards')">
         </app-model-card>
       </div>
-      
+
     </div>
   </div>
 </template>
@@ -53,8 +53,8 @@ export default {
   computed: {
     cardsContainerClasses () {
       return {
-        'section-card-col-with-nav': this.cardsType === 'card' && (this.$store.state.support.expandNav && !this.$store.state.support.windowIsSmall),
-        'section-card-col-no-nav': this.cardsType === 'card' && (!this.$store.state.support.expandNav || this.$store.state.support.windowIsSmall),
+        'section-card-col-with-nav': this.cardsType === 'card' && (this.$store.state.support.expandModelNav && !this.$store.state.support.windowIsSmall),
+        'section-card-col-no-nav': this.cardsType === 'card' && (!this.$store.state.support.expandModelNav || this.$store.state.support.windowIsSmall),
         'section-card-par': !this.cardsType !== 'card'
       }
     }
