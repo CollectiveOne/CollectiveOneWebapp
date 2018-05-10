@@ -1,5 +1,5 @@
 <template lang="html">
-  <div>
+  <div class="notifications-container">
 
     <div v-if="notifications.length > 0" class="icon-button cursor-pointer w3-display-container"
       @click="showNotificationsClicked()">
@@ -9,7 +9,7 @@
 
     <div v-show="showTable"
       v-click-outside="clickOutsideNotifications"
-      class="notifications-container w3-white w3-card-4 w3-bar-block noselect">
+      class="notifications-list-container w3-white w3-card-4 w3-bar-block noselect">
       <div class="w3-row-padding w3-border-bottom notifications-header">
         <div class="w3-col s8 text-div w3-center">
           {{ notifications.length }} new events under <br>{{ element.title }}
@@ -298,9 +298,13 @@ export default {
 }
 
 .notifications-container {
-  width:420px;
+}
+
+.notifications-list-container {
+  width: 420px;
   position: absolute;
-  margin-left: -212px;
+  top: 30px;
+  left: 16px;
   max-height: calc(100vh - 80px);
   overflow-y: auto;
   z-index: 2;

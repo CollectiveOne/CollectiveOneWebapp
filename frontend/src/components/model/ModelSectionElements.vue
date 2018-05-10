@@ -216,7 +216,7 @@ export default {
       loading: false,
       sectionLoadedOnce: false,
       orderType: 'sections',
-      isOnlyMessages: true,
+      isOnlyMessages: false,
       newCardQuery: '',
       cardQuery: '',
       cardSortBy: 'CREATION_DATE_DESC',
@@ -479,6 +479,7 @@ export default {
   margin-right: 20px;
   margin-bottom: 3px;
   display: inline-block;
+  vertical-align: top;
 }
 
 .control-group div {

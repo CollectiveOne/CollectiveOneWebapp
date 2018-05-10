@@ -29,7 +29,7 @@ export default {
   methods: {
     redirect () {
       if (this.$route.name === 'ModelSectionContent') {
-        this.$router.replace({ name: 'ModelSectionCards' })
+        this.$router.replace({ name: 'ModelSectionMessages' })
       }
     }
   },
