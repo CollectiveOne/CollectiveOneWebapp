@@ -18,7 +18,6 @@ const pathsToTop = function (genealogy, currentPath, allPaths) {
 }
 
 const state = {
-  currentSectionId: null,
   currentSectionGenealogy: null
 }
 
