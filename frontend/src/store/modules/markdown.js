@@ -2,7 +2,7 @@
     data: []
   }
   const getters = {
-      getData: (state) => (elementId) => {
+      getMarkdownBackupData: (state) => (elementId) => {
           var result = state.data.filter(res => {
               return elementId === res.elementId
           })
@@ -15,7 +15,7 @@
       }
   }
   const mutations = {
-    setData: (state, payload) => {
+    setMarkdownBackupData: (state, payload) => {
       var found = state.data.findIndex(res => {
         return res.elementId === payload.elementId
       })
@@ -27,7 +27,7 @@
       }
     },
 
-    clearData: (state, payload) => {
+    clearMarkdownBackup: (state, payload) => {
         var found = state.data.findIndex(res => {
           return res.elementId === payload
         })
@@ -37,12 +37,12 @@
       }
   }
   const actions = {
-    doBackup: (context, payload) => {
-      context.commit('setData', payload)
+    doMarkdownBackup: (context, payload) => {
+      context.commit('setMarkdownBackupData', payload)
     },
 
-    clear: (context, payload) => {
-        context.commit('clearData', payload)
+    clearMarkdownBackupData: (context, payload) => {
+        context.commit('clearMarkdownBackup', payload)
     }
   }
   export default {

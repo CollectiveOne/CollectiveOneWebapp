@@ -281,7 +281,7 @@ export default {
       this.sideBySide = false
 
       // now delete edit content from backup
-      this.$store.dispatch('clear', this.elementId)
+      this.$store.dispatch('clearMarkdownBackupData', this.elementId)
     }
   },
 
@@ -289,7 +289,7 @@ export default {
     if (this.value) {
       this.text = this.value
     } else {
-      this.text = this.$store.getters.getData(this.elementId)
+      this.text = this.$store.getters.getMarkdownBackupData(this.elementId)
     }
     window.addEventListener('keydown', this.atKeydown)
     /* autoresize textarea */
@@ -303,7 +303,7 @@ export default {
   beforeDestroy () {
     // do backup
     if (this.value !== '') {
-      this.$store.dispatch('doBackup', {elementId: this.elementId, value: this.value})
+      this.$store.dispatch('doMarkdownBackup', {elementId: this.elementId, value: this.value})
     }
   },
 
