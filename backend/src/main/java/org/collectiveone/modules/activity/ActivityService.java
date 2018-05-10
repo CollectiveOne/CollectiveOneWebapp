@@ -109,8 +109,11 @@ public class ActivityService {
 	@Transactional
 	public void sendNotificationEmailsSendNow() throws IOException {
 		
+		/* 1 minutes ago */
+		Timestamp nowMinus = new Timestamp(System.currentTimeMillis() - (1L*1000L*60L)); 
+		
 		List<Notification> notifications = 
-				notificationRepository.findByEmailNowState(NotificationState.PENDING);
+				notificationRepository.findByEmailNowStateOlderThan(NotificationState.PENDING, nowMinus);
 		
 		emailService.sendNotificationsSendNow(notifications);
 	}

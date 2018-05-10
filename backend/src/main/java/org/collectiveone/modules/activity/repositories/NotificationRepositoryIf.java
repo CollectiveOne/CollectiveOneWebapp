@@ -1,5 +1,6 @@
 package org.collectiveone.modules.activity.repositories;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,7 +41,8 @@ public interface NotificationRepositoryIf extends CrudRepository<Notification, U
 	
 	List<Notification> findBySubscriber_User_C1IdAndInAppState(UUID userId, NotificationState notificationState);
 	
-	List<Notification> findByEmailNowState(NotificationState notificationState);
+	@Query("SELECT notif FROM Notification notif JOIN notif.activity act WHERE notif.emailNowState = ?1 AND act.timestamp < ?2")
+	List<Notification> findByEmailNowStateOlderThan(NotificationState notificationState, Timestamp timestamp);
 	
 	List<Notification> findBySubscriber_EmailSummaryPeriodConfigAndEmailSummaryState(SubscriberEmailSummaryPeriodConfig config, NotificationState notificationEmailState);
 }

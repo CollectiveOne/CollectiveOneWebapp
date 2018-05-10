@@ -149,7 +149,8 @@ export default {
     },
     sectionTitle () {
       if (this.section) {
-        return this.section.isTopModelSection ? 'All' : this.section.title
+        return this.section.title
+        // return this.section.isTopModelSection ? 'All' : this.section.title
       }
       return ''
     },
