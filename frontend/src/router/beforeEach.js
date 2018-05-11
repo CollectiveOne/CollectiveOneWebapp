@@ -11,7 +11,13 @@ export default (to, from, next) => {
      *  is the initaitive section
     */
 
-    next({name: 'InitiativeOverview', replace: true})
+    next({
+      name: 'InitiativeOverview',
+      params: {
+        initiativeId: to.params.initiativeId
+      },
+      replace: true
+    })
   } else {
     /** select animation based on column and level */
     var animation = ''
