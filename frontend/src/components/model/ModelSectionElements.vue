@@ -56,6 +56,9 @@
             <div @click="levelUp()" class="w3-left cursor-pointer arrow-div">
               <img src="./../../assets/zoom-out-icon.svg" alt="">
             </div>
+            <!-- <div @click="infiniteClicked()" class="w3-left cursor-pointer arrow-div w3-border-left">
+              <img src="./../../assets/infinite-icon.svg" alt="">
+            </div> -->
           </div>
         </div>
 
@@ -537,6 +540,7 @@ export default {
 .zoom-controls {
   min-height: 1px;
   width: 120px;
+  /*width: 160px;*/
   text-align: center;
   color: #3e464e;
   background-color: #eff3f6;

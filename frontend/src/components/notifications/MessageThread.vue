@@ -7,6 +7,7 @@
         :showMessages="true"
         :onlyMessages="onlyMessages"
         :triggerRefresh="triggerRefresh"
+        :triggerUpdate="triggerUpdate"
         :contextType="contextType"
         :contextElementId="contextElementId"
         :levels="levels"
@@ -89,7 +90,8 @@ export default {
       lastMessage: null,
       replying: false,
       replyingToActivity: null,
-      triggerRefresh: false
+      triggerRefresh: false,
+      triggerUpdate: false
     }
   },
 
@@ -211,6 +213,7 @@ export default {
     },
     showOnlyMessagesClicked () {
       this.showOnlyMessages = !this.showOnlyMessages
+      this.triggerUpdate = !this.triggerUpdate
     },
     atKeydown (e) {
       /* detect upkey to auto edit last message */

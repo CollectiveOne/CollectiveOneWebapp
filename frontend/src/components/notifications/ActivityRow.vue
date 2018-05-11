@@ -118,6 +118,10 @@
           created the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
           section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
         </span>
+        <span v-if="isModelSectionCreatedOnInitiative" class="">
+          created the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
+          initiative <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,.
+        </span>
         <span v-if="isModelSectionEdited" class="">
           edited the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> title/description.
         </span>
@@ -129,6 +133,9 @@
           moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>
            from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
            to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+        </span>
+        <span v-if="isModelSectionMoved" class="">
+          moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>.
         </span>
         <span v-if="isModelCardWrapperAdded" class="">
           added the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
@@ -290,12 +297,21 @@ export default {
       return this.activity.type === 'MODEL_SECTION_CREATED' &&
         this.activity.onSection !== null
     },
+    isModelSectionCreatedOnInitiative () {
+      return this.activity.type === 'MODEL_SECTION_CREATED' &&
+        this.activity.onSection === null
+    },
     isModelSectionEdited () {
       return this.activity.type === 'MODEL_SECTION_EDITED'
     },
     isModelSectionRemovedFromSection () {
       return this.activity.type === 'MODEL_SECTION_REMOVED' &&
         this.activity.fromSection !== null
+    },
+    isModelSectionMoved () {
+      return this.activity.type === 'MODEL_SECTION_MOVED' &&
+        (this.activity.fromSection === null ||
+        this.activity.onSection === null)
     },
     isModelSectionMovedFromSectionToSection () {
       return this.activity.type === 'MODEL_SECTION_MOVED' &&
