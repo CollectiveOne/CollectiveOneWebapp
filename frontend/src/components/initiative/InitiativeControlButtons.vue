@@ -101,18 +101,12 @@ export default {
       return this.$store.getters.isLoggedAnAdmin
     },
     menuItems () {
-      if (this.isLoggedAnAdmin !== null) {
-        return [
-          { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
-          { text: 'new subinitiative', value: 'newSubinitiative', faIcon: 'fa-plus' },
-          { text: 'notifications', value: 'notifications', faIcon: 'fa-cog' },
-          { text: 'delete', value: 'delete', faIcon: 'fa-times' }
-        ]
-      } else {
-        return [
-          { text: 'notifications', value: 'notifications', faIcon: 'fa-engine' }
-        ]
-      }
+      let items = []
+      if (this.isLoggedAnAdmin) items.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
+      if (this.isLoggedAnAdmin) items.push({ text: 'new subinitiative', value: 'newSubinitiative', faIcon: 'fa-plus' })
+      items.push({ text: 'notifications', value: 'notifications', faIcon: 'fa-cog' })
+      if (this.isLoggedAnAdmin) items.push({ text: 'delete', value: 'delete', faIcon: 'fa-times' })
+      return items
     }
   },
 
@@ -178,7 +172,7 @@ export default {
   right: 0px;
   text-align: left;
   font-size: 15px;
-  z-index: 2;
+  z-index: 3;
 }
 
 .delete-intent-div {

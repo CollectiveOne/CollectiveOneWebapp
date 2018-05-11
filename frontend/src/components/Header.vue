@@ -100,7 +100,7 @@
       <div class="w3-col m4">
 
         <div v-if="$store.state.user.authenticated"
-          @click="userOptionsClicked()" class="w3-right cursor-pointer"
+          @click="userOptionsClicked()" class="w3-right cursor-pointer user-container"
           v-click-outside="clickOutsideUser">
 
           <div v-if="$store.state.user.profile" class="logged-user-div fa-button w3-right">
@@ -318,6 +318,7 @@ export default {
 
 .initiatives-breadcrumb-container {
   position: relative;
+  height: 50px;
 }
 
 .scroll-btns {
@@ -360,6 +361,7 @@ export default {
   white-space: nowrap;
   overflow-x: auto;
   overflow-y:  visible;
+  height: 50px;
 }
 
 .initiative-section {
@@ -439,11 +441,16 @@ export default {
   width: 37px;
 }
 
+.user-container {
+  position: relative;
+}
+
 .user-drop-menu {
- position: absolute;
- margin-top: 50px;
- width: 150px;
- z-index: 3;
+  position: absolute;
+  top: 50px;
+  right: 0px;
+  width: 150px;
+  z-index: 3;
 }
 
 .login-button-container {

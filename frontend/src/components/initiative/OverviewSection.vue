@@ -43,11 +43,6 @@
       <div class="w3-card">
         <header class="w3-bar gray-1 section-header-bar">
           <h4 class="w3-bar-item w3-left">Purpose</h4>
-          <div v-if="isLoggedAnAdmin"
-            class="edit-btn-div w3-bar-item w3-button w3-right w3-large"
-            @click="$store.commit('showEditInitiativeModal', true)">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-          </div>
         </header>
         <div class="w3-container section-content">
           <div class="w3-row">
@@ -81,11 +76,6 @@
             class="w3-button">
             <i class="fa fa-plus" aria-hidden="true"></i>create new
           </div>
-          <!-- <div v-if="isLoggedAnAdmin"
-            @click="showTokensExchangeModal = true"
-            class="w3-button">
-            <i class="fa fa-exchange" aria-hidden="true"></i>exchange/convert
-          </div> -->
         </div>
         <div class="assets-content">
           <div v-if="initiative.assets.length === 0" class="w3-center">

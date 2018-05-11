@@ -150,29 +150,21 @@ export default {
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
     menuItems () {
-      let menuItems = [
-        { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
-        { text: 'notifications', value: 'configNotifications', faIcon: 'fa-cog' } ]
+      let menuItems = []
 
-      if (!this.hideAdd) {
-        let thisItems = [
-          { text: 'add card', value: 'addCard', faIcon: 'fa-plus' },
-          { text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' } ]
+      if (this.isLoggedAnEditor && !this.onlyAdd) menuItems.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
+      if (this.isLoggedAnEditor && !this.hideAdd) menuItems.push({ text: 'add card', value: 'addCard', faIcon: 'fa-plus' })
+      if (this.isLoggedAnEditor && !this.hideAdd) menuItems.push({ text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' })
 
-        if (this.onlyAdd) {
-          return thisItems
-        } else {
-          menuItems = thisItems.concat(menuItems)
-        }
-      }
+      if (!this.onlyAdd) menuItems.push({ text: 'notifications', value: 'configNotifications', faIcon: 'fa-cog' })
 
-      if (this.inSection !== null) {
-        menuItems = menuItems.concat([
-          { text: 'remove', value: 'remove', faIcon: 'fa-times' },
-          { text: 'delete', value: 'delete', faIcon: 'fa-times' }
-        ])
-      }
+      if (this.isLoggedAnEditor && this.inSection !== null && !this.onlyAdd) menuItems.push({ text: 'remove', value: 'remove', faIcon: 'fa-times' })
+      if (this.isLoggedAnEditor && this.inSection !== null && !this.onlyAdd) menuItems.push({ text: 'delete', value: 'delete', faIcon: 'fa-times' })
+
       return menuItems
    }
   },

@@ -10,7 +10,7 @@
             <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
             </app-section-control-buttons>
           </div>
-          <div class="btn-div fa-button">
+          <div v-if="isLoggedAnEditor" class="btn-div fa-button">
             <app-section-control-buttons :section="currentSection" :inSection="null" :onlyAdd="true">
             </app-section-control-buttons>
           </div>
@@ -67,6 +67,9 @@ export default {
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
     menuItems () {
       return [
         { text: 'add card', value: 'addCard', faIcon: 'fa-plus' },
