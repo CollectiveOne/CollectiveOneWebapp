@@ -55,6 +55,10 @@ export default {
       type: Boolean,
       default: false
     },
+    triggerRefresh: {
+      type: Boolean,
+      default: false
+    },
     addBorders: {
       type: Boolean,
       default: true
@@ -96,6 +100,9 @@ export default {
     triggerUpdate () {
       this.getActivity('RESET')
     },
+    triggerRefresh () {
+      this.getActivity('UPDATE')
+    },
     levels () {
       this.getActivity('RESET')
     },
@@ -103,7 +110,7 @@ export default {
       this.getActivity('RESET')
     },
     '$store.state.socket.connected' () {
-      this.handleSocket()
+      this.subscribeSocket()
     },
     onlyMessages () {
       this.getActivity('RESET')
@@ -122,6 +129,7 @@ export default {
           this.loading = true
           this.currentPage = 0
           askPage = this.currentPage
+          this.subscribeSocket()
           break
 
         case 'OLDER':
@@ -201,7 +209,7 @@ export default {
         }
       }
     },
-    handleSocket () {
+    subscribeSocket () {
       let url = ''
       switch (this.contextType) {
         case 'MODEL_CARD':
@@ -211,6 +219,10 @@ export default {
         case 'MODEL_SECTION':
           url = '/channel/activity/model/section/' + this.contextElementId
           break
+      }
+
+      if (this.subscription !== null) {
+        this.$store.dispatch('unsubscribe', this.subscription)
       }
 
       this.subscription = this.$store.dispatch('subscribe', {
@@ -227,11 +239,12 @@ export default {
 
   created () {
     this.getActivity('RESET')
-    this.handleSocket()
   },
 
   beforeDestroy () {
-    this.$store.dispatch('unsubscribe', this.subscription)
+    if (this.subscription) {
+      this.$store.dispatch('unsubscribe', this.subscription)
+    }
   }
 
 }

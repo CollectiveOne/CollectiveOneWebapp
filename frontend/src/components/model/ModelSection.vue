@@ -140,7 +140,7 @@ export default {
       })
     },
     subscribeSocket () {
-      if (this.subscription !== null) {
+      if (this.subscription === null) {
         this.subscription = this.$store.dispatch('subscribe', {
           url: '/channel/activity/model/section/' + this.section.id,
           onMessage: (tick) => {
