@@ -361,7 +361,6 @@ export default {
   white-space: nowrap;
   overflow-x: auto;
   overflow-y:  visible;
-  height: 50px;
 }
 
 .initiative-section {

@@ -82,7 +82,6 @@ export default {
 }
 
 .section-nav-container{
-  height: 100%;
 }
 
 .vision-nav-cell {
@@ -90,6 +89,8 @@ export default {
   width: 350px;
   min-height: 1px;
   border-color: #e3e6e8 !important;
+  overflow-y: auto;
+  height: 100%;
 }
 
 .vision-content {
@@ -98,6 +99,7 @@ export default {
   min-width: 350px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .hide-nav-div-container {

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="">
+  <div class="model-nav-container-large">
 
     <transition name="slideDownUp">
       <app-model-section-modal
@@ -70,8 +70,11 @@ export default {
 
 <style scoped>
 
+.model-nav-container-large {
+  height: 100%;
+}
+
 .model-nav-container {
-  min-height: calc(100vh - 50px - 1px);
 }
 
 .zoom-controls {

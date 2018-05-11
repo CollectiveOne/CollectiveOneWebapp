@@ -48,13 +48,13 @@
         <div class="control-group noselect">
           <div class="w3-left zoom-controls">
             <div @click="levelDown()" class="w3-left cursor-pointer arrow-div">
-              <img src="./../../assets/zoom-out-icon.svg" alt="">
+              <img src="./../../assets/zoom-in-icon.svg" alt="">
             </div>
             <div class="w3-left number-div">
               {{ levels }}
             </div>
             <div @click="levelUp()" class="w3-left cursor-pointer arrow-div">
-              <img src="./../../assets/zoom-in-icon.svg" alt="">
+              <img src="./../../assets/zoom-out-icon.svg" alt="">
             </div>
           </div>
         </div>
@@ -462,7 +462,7 @@ export default {
       var encodedUri = encodeURI(fileContent)
       var link = document.createElement('a')
       link.setAttribute('href', encodedUri)
-      link.setAttribute('download', 'test.md')
+      link.setAttribute('download', this.section.title + '.md')
       document.body.appendChild(link)
 
       link.click()
