@@ -103,6 +103,14 @@
           </transition>
         </div>
 
+        <div v-if="isCardsContent && isSectionsOrder" class="control-group">
+          <div class="">
+            <div @click="downloadContent()" class="w3-left control-btn">
+              <img src="./../../assets/download-icon.svg" alt="">
+            </div>
+          </div>
+        </div>
+
         <div v-if="false" class="control-group text-details">
           <span v-if="isCardsContent">
             <span v-if="!isSectionsOrder">
@@ -182,6 +190,34 @@
 import MessageThread from '@/components/notifications/MessageThread'
 import ModelSection from '@/components/model/ModelSection'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer'
+
+const sectionToMarkdown = function (section, level) {
+  var text = ''
+  /* write section on text as reference */
+  text += Array(level + 1).join('#') + ' '
+  level = level < 5 ? level + 1 : level
+  text += section.title + '\r\n'
+
+  if (section.description !== '') {
+    text += section.description + '\r\n'
+  }
+
+  for (let ix in section.cardsWrappers) {
+    let cardWrapper = section.cardsWrappers[ix]
+    if (cardWrapper.card.title !== '') {
+      text += Array(level + 1).join('#') + ' '
+      level = level < 5 ? level + 1 : level
+      text += cardWrapper.card.title + '\r\n'
+    }
+    text += cardWrapper.card.text + '\r\n'
+  }
+
+  for (let ix in section.subsections) {
+    text += sectionToMarkdown(section.subsections[ix], level)
+  }
+
+  return text
+}
 
 const sectionHasContent = function (section) {
   if (section.cardsWrappers.length > 0) {
@@ -418,6 +454,18 @@ export default {
     },
     closeCardModal () {
       this.$router.replace({name: 'ModelSectionCards'})
+    },
+    downloadContent () {
+      let fileContent = 'data:text/plain;charset=utf-8,'
+      fileContent += sectionToMarkdown(this.section, 1)
+
+      var encodedUri = encodeURI(fileContent)
+      var link = document.createElement('a')
+      link.setAttribute('href', encodedUri)
+      link.setAttribute('download', 'test.md')
+      document.body.appendChild(link)
+
+      link.click()
     },
     atKeydown (e) {
       if (document.activeElement === this.$refs.inputQuery) {
