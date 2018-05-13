@@ -2,7 +2,7 @@
   <div class="">
     <table class="w3-table w3-striped w3-bordered w3-centered">
       <tbody>
-        <tr v-for="(userData, ix) in usersData" :key="userData.user.c1Id">
+        <tr v-for="userData in usersData" :key="userData.user.c1Id">
           <td class="avatar-col">
             <app-user-avatar :user="userData.user"
               class="user-container" :showName="false">
@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import UserAvatar from './UserAvatar.vue'
 import MemberSelector from './MemberSelector.vue'
 
 export default {
@@ -58,7 +57,6 @@ export default {
   },
 
   components: {
-    'app-user-avatar': UserAvatar,
     'app-member-selector': MemberSelector
   },
 

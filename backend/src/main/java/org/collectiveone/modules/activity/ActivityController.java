@@ -1,5 +1,6 @@
 package org.collectiveone.modules.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,8 +9,8 @@ import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.dto.NotificationDto;
 import org.collectiveone.modules.activity.dto.SubscriberDto;
-import org.collectiveone.modules.activity.enums.SubscriberEmailNotificationsState;
-import org.collectiveone.modules.activity.enums.SubscriberState;
+import org.collectiveone.modules.activity.enums.NotificationContextType;
+import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.users.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -31,58 +32,110 @@ public class ActivityController extends BaseController {
 	private AppUserService appUserService;
 	
 	
-	@RequestMapping(path = "/user/notifications", method = RequestMethod.GET)
+	@RequestMapping(path = "/notifications/{contextElementType}/{elementId}", method = RequestMethod.GET)
 	public GetResult<List<NotificationDto>> getNotifications(
 			@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size) {
+			@RequestParam(name="size", defaultValue="10") Integer size,
+			@RequestParam(name="isHtml", defaultValue="false") Boolean isHtml,
+			@PathVariable(name="contextElementType") String contextElementType,
+			@PathVariable("elementId") String elementId) {
 		
 		if (getLoggedUser() == null) {
 			return new GetResult<List<NotificationDto>>("error", "endpoint enabled users only", null);
 		}
 		
-		return activityService.getUserNotifications(getLoggedUserId(), new PageRequest(page, size));
+		return activityService.getUserNotifications(
+				getLoggedUserId(),
+				NotificationContextType.valueOf(contextElementType),
+				UUID.fromString(elementId),
+				new PageRequest(page, size),
+				isHtml);
 	}
 	
-	@RequestMapping(path = "/user/notifications/read", method = RequestMethod.PUT)
-	public PostResult notificationsRead() {
+	@RequestMapping(path = "/notifications/{contextElementType}/{elementId}/read", method = RequestMethod.PUT)
+	public PostResult notificationsRead(
+			@PathVariable(name="contextElementType") String contextElementType,
+			@PathVariable("elementId") String elementId) {
+		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
 		}
 		
-		return activityService.notificationsRead(getLoggedUser().getC1Id());
+		return activityService.notificationsRead(
+				getLoggedUserId(), 
+				NotificationContextType.valueOf(contextElementType),
+				UUID.fromString(elementId));
 	}
 	
-	@RequestMapping(path = "/user/notifications/subscriber/{initiativeId}", method = RequestMethod.GET)
-	public GetResult<SubscriberDto> getSubscriber(@PathVariable("initiativeId") String initiativeId) {
+	@RequestMapping(path = "/notifications/read", method = RequestMethod.PUT)
+	public PostResult notificationsListRead(@RequestBody List<String> notificationsIdsStr) {
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		List<UUID> notificationIds = new ArrayList<UUID>();
+		for (String idStr : notificationsIdsStr) {
+			notificationIds.add(UUID.fromString(idStr));
+		}
+		
+		return activityService.notificationsListRead(
+				getLoggedUserId(), 
+				notificationIds);
+	}
+	
+	@RequestMapping(path = "/notifications/pushed/{notificationId}", method = RequestMethod.PUT)
+	public PostResult notificationPushed(
+			@PathVariable(name="notificationId") String notificationId) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		return activityService.notificationPushed(
+				UUID.fromString(notificationId));
+	}
+	
+	@RequestMapping(path = "/notifications/subscriber/{elementType}/{elementId}", method = RequestMethod.GET)
+	public GetResult<SubscriberDto> getSubscriber(
+				@PathVariable("elementId") String elementId,
+				@PathVariable(name="elementType") String elementType ) {
 		if (getLoggedUser() == null) {
 			return new GetResult<SubscriberDto>("error", "endpoint enabled users only", null);
 		}
 		
-		return activityService.getSubscriber(getLoggedUser().getC1Id(), UUID.fromString(initiativeId));
+		return activityService.getSubscriber(getLoggedUserId(), UUID.fromString(elementId), SubscriptionElementType.valueOf(elementType));
 	}
 	
-	@RequestMapping(path = "/user/notifications/subscriber/{initiativeId}", method = RequestMethod.PUT)
-	public PostResult editSubscriber(@PathVariable("initiativeId") String initiativeId, @RequestBody SubscriberDto subscriber) {
+	@RequestMapping(path = "/notifications/subscriber/{elementType}/{elementId}/inheritFrom", method = RequestMethod.GET)
+	public GetResult<SubscriberDto> getSubscriberInheritFrom(
+				@PathVariable("elementId") String elementId,
+				@PathVariable(name="elementType") String elementType ) {
+		if (getLoggedUser() == null) {
+			return new GetResult<SubscriberDto>("error", "endpoint enabled users only", null);
+		}
+		
+		return activityService.getSubscriberInheritFrom(getLoggedUserId(), UUID.fromString(elementId), SubscriptionElementType.valueOf(elementType));
+	}
+	
+	@RequestMapping(path = "/notifications/subscriber/{elementType}/{elementId}", method = RequestMethod.PUT)
+	public PostResult editSubscriber(
+			@PathVariable("elementId") String elementId,
+			@PathVariable(name="elementType") String elementType,
+			@RequestBody SubscriberDto subscriber) {
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
 		}
 		
-		activityService.editSubscriberState(getLoggedUser().getC1Id(), UUID.fromString(initiativeId), SubscriberState.valueOf(subscriber.getState()));
-		activityService.editSubscriberEmailNotificationsState(getLoggedUser().getC1Id(), UUID.fromString(initiativeId), SubscriberEmailNotificationsState.valueOf(subscriber.getEmailNotificationsState()));
+		activityService.editSubscriber(
+				getLoggedUserId(), 
+				UUID.fromString(elementId), 
+				SubscriptionElementType.valueOf(elementType),
+				subscriber);
 		
 		return new PostResult("success", "success", "");
 	}
 	
-	@RequestMapping(path = "/notifications/unsubscribeFromInitiative/{initiativeId}", method = RequestMethod.PUT)
-	public PostResult unsuscribeFromInitiative(@PathVariable("initiativeId") String initiativeId) {
-		if (getLoggedUser() == null) {
-			return new PostResult("error", "endpoint enabled users only", null);
-		}
-		
-		return activityService.editSubscriberState(getLoggedUser().getC1Id(), UUID.fromString(initiativeId), SubscriberState.UNSUBSCRIBED);
-	}
-	
-	@RequestMapping(path = "/notifications/unsubscribeFromAll", method = RequestMethod.PUT)
+	@RequestMapping(path = "/notifications/disableEmails", method = RequestMethod.PUT)
 	public PostResult unsuscribeFromInitiative() {
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);

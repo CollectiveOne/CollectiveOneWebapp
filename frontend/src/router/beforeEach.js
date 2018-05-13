@@ -2,39 +2,19 @@ import { store } from '../store/store'
 export default (to, from, next) => {
   /** adhock logic to handle route transitions so that the sub-section is kept
   when switching among initiatives, and the animation is selected accordingly */
-
   if (to.name === 'Initiative') {
     /** always redirect if target is base initiative.
      *  The path level 1 is 'inits' and the path level '3'
      *  is the initaitive section
     */
 
-    var subsection = 'overview'
-    if (from.matched[1].path === '/app/inits' && from.matched.length >= 4) {
-      switch (from.matched[3].name) {
-        case 'InitiativeOverview':
-          subsection = 'overview'
-          break
-
-        case 'InitiativeTimeline':
-          subsection = 'timeline'
-          break
-
-        case 'InitiativeModel':
-          subsection = 'model'
-          break
-
-        case 'InitiativePeople':
-          subsection = 'people'
-          break
-
-        case 'InitiativeAssignations':
-          subsection = 'assignations'
-          break
-
-      }
-    }
-    next(to.path + '/' + subsection)
+    next({
+      name: 'InitiativeOverview',
+      params: {
+        initiativeId: to.params.initiativeId
+      },
+      replace: true
+    })
   } else {
     /** select animation based on column and level */
     var animation = ''
@@ -46,37 +26,80 @@ export default (to, from, next) => {
       } else {
         animation = 'slideToRight'
       }
-    } else {
-      var fromCoord = store.getters.initiativeCoordinate(from.params.initiativeId)
-      var toCoord = store.getters.initiativeCoordinate(to.params.initiativeId)
-
-      /* if within the same level */
-      var ixLevel = 0
-      var moveDown = true
-
-      while (true) {
-        if (fromCoord.length < ixLevel + 1) {
-          moveDown = true
-          break
-        }
-        if (toCoord.length < ixLevel + 1) {
-          moveDown = false
-          break
-        }
-        if (fromCoord[ixLevel] !== toCoord[ixLevel]) {
-          moveDown = toCoord[ixLevel] > fromCoord[ixLevel]
-          break
-        }
-        ixLevel = ixLevel + 1
-        if (ixLevel > 50) {
-          break
-        }
-      }
-      animation = moveDown ? 'slideToUp' : 'slideToDown'
     }
-
     store.commit('setContentAnimationType', animation)
 
     next()
+  }
+
+  var toModelSection = false
+  for (var ix in to.matched) {
+    if (to.matched[ix].name === 'ModelSectionContent') {
+      toModelSection = true
+    }
+  }
+
+  if (toModelSection) {
+    /* keep the levels and cards url parameters when switching among views. */
+    var fromLevels = from.query.levels ? from.query.levels : '1'
+    var fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
+
+    var toLevels = to.query.levels ? to.query.levels : fromLevels
+    var toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
+
+    if (to.name === 'ModelSectionContent') {
+      /* just keep the current tab when switching among sections */
+      switch (from.name) {
+        case 'ModelSectionMessages':
+        next({
+            name: 'ModelSectionMessages',
+            params: {
+              sectionId: to.params.sectionId
+            },
+            query: {
+              levels: toLevels,
+              cardsType: toCardsType
+            },
+            replace: true
+          })
+          break
+
+        case 'ModelSectionCards':
+        case 'ModelSectionCard':
+          next({
+            name: 'ModelSectionCards',
+            params: {
+              sectionId: to.params.sectionId
+            },
+            query: {
+              levels: toLevels,
+              cardsType: toCardsType
+            },
+            replace: true})
+          break
+
+        default:
+          next()
+          break
+      }
+    } else {
+      if (
+        (toLevels !== fromLevels) ||
+        (toCardsType !== fromCardsType) ||
+        (to.name !== from.name)) {
+        next({
+          name: to.name,
+          params: {
+            sectionId: to.params.sectionId
+          },
+          query: {
+            levels: toLevels,
+            cardsType: toCardsType
+          },
+          replace: true})
+      } else {
+        next()
+      }
+    }
   }
 }

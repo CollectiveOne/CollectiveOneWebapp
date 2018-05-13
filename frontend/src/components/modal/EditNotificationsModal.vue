@@ -8,70 +8,257 @@
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>Edit notifications of {{ initiative.meta.name }}</h2>
+          <h2>Edit {{ notificationsTitle }}</h2>
         </div>
 
-        <div v-if="subscriber" class="w3-container form-container">
+        <div class="w3-container form-container">
 
-          <div class="w3-row">
-            <div class="w3-left label-div">
-              <label class=""><b>See notifications in this page:</b></label>
-            </div>
-            <div class="w3-left w3-round button-bar">
-              <button
-                id="T_notificationNoSubscribedButton"
-                class="w3-bar-item w3-button w3-round"
-                :class="{'app-button': !isSubscribed, 'app-button-light': isSubscribed}"
-                @click="subscriber.state = 'UNSUBSCRIBED'">
-                No
-              </button>
-              <button
-                id="T_notificationYesSubscribedButton"
-                class="w3-bar-item w3-button w3-round"
-                :class="{'app-button': isSubscribed, 'app-button-light': !isSubscribed}"
-                @click="subscriber.state = 'SUBSCRIBED'">
-                Yes
-              </button>
-            </div>
-          </div>
-          <br>
-          <div v-show="isSubscribed" class="w3-row">
-            <div class="w3-left label-div">
-              <label class=""><b>... and send an email:</b></label>
-            </div>
-            <div class="w3-left button-bar">
-              <button
-                id="T_notificationEmailNeverButton"
-                class="w3-bar-item w3-button w3-round"
-                :class="{'app-button': isNever, 'app-button-light': !isNever}"
-                @click="subscriber.emailNotificationsState = 'DISABLED'">
-                Never
-              </button>
-              <button
-                id="T_notificationEmailImmediatelyButton"
-                class="w3-bar-item w3-button w3-round"
-                :class="{'app-button': isImmediate, 'app-button-light': !isImmediate}"
-                @click="subscriber.emailNotificationsState = 'SEND_NOW'">
-                Immediately
-              </button>
-              <button
-                id="T_notificationEmailDayButton"
-                class="w3-bar-item w3-button w3-round"
-                :class="{'app-button': isOnceADay, 'app-button-light': !isOnceADay}"
-                @click="subscriber.emailNotificationsState = 'SEND_ONCEADAY'">
-                Once a day
-              </button>
-              <button
-                id="T_notificationEmailWeekButton"
-                class="w3-bar-item w3-button w3-round"
-                :class="{'app-button': isOnceAWeek, 'app-button-light': !isOnceAWeek}"
-                @click="subscriber.emailNotificationsState = 'SEND_ONCEAWEEK'">
-                Once a week
-              </button>
+          <div v-if="subscriber && type !== 'COLLECTIVEONE'" class="w3-row-padding">
+            <div class="w3-col m4 s12 text-column">General Config:</div>
+            <div class="w3-col m8 s12">
+              <div class="w3-row-padding">
+                <div class="w3-col s6">
+                  <button
+                    class="w3-button w3-round"
+                    :class="{'app-button': subscriber.inheritConfig === 'INHERIT', 'app-button-light': subscriber.inheritConfig !== 'INHERIT'}"
+                    @click="setInherit()">
+                    Inherit
+                  </button>
+                </div>
+                <div class="w3-col s6">
+                  <button
+                    class="w3-button w3-round"
+                    :class="{'app-button': subscriber.inheritConfig === 'CUSTOM', 'app-button-light': subscriber.inheritConfig !== 'CUSTOM'}"
+                    @click="subscriber.inheritConfig = 'CUSTOM'">
+                    Custom
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
           <hr>
+
+          <div v-if="applicableSubscriber" class="w3-row w3-center w3-margin-bottom">
+            <div  v-if="subscriber.inheritConfig === 'INHERIT'" class="">
+              Inhereting notification preferences from: <br><b>{{ applicableSubscriberElementName }}</b>
+            </div>
+          </div>
+
+          <div v-if="applicableSubscriber" class="details-configuration">
+
+            <div class="w3-row-padding">
+              <div class="w3-col m4 s12"></div>
+              <div class="w3-col m8 s12">
+                <div class="w3-row-padding column-header">
+                  <div class="w3-col s3">
+                    disable
+                  </div>
+                  <div class="w3-col s3">
+                    only mentions
+                  </div>
+                  <div class="w3-col s3">
+                    only messages
+                  </div>
+                  <div class="w3-col s3">
+                    all events
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="w3-row-padding table-row">
+              <div class="w3-col m4 s12 text-column">In-App Notifications:</div>
+              <div class="w3-col m8 s12">
+                <div class="w3-row-padding">
+                  <div class="w3-col s3">
+                    <button
+                      class="w3-button w3-round"
+                      :class="{'app-button': applicableSubscriber.inAppConfig === 'DISABLED', 'app-button-light': applicableSubscriber.inAppConfig !== 'DISABLED'}"
+                      @click="applicableSubscriber.inAppConfig = 'DISABLED'">
+                      <i class="fa fa-circle" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <div class="w3-col s3">
+                    <button
+                      class="w3-button w3-round"
+                      :class="{'app-button': applicableSubscriber.inAppConfig === 'ONLY_MENTIONS', 'app-button-light': applicableSubscriber.inAppConfig !== 'ONLY_MENTIONS'}"
+                      @click="applicableSubscriber.inAppConfig = 'ONLY_MENTIONS'">
+                      <i class="fa fa-circle" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <div class="w3-col s3">
+                    <button
+                      class="w3-button w3-round"
+                      :class="{'app-button': applicableSubscriber.inAppConfig === 'ONLY_MESSAGES', 'app-button-light': applicableSubscriber.inAppConfig !== 'ONLY_MESSAGES'}"
+                      @click="applicableSubscriber.inAppConfig = 'ONLY_MESSAGES'">
+                      <i class="fa fa-circle" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <div class="w3-col s3">
+                    <button
+                      class="w3-button w3-round"
+                      :class="{'app-button': applicableSubscriber.inAppConfig === 'ALL_EVENTS', 'app-button-light': applicableSubscriber.inAppConfig !== 'ALL_EVENTS'}"
+                      @click="applicableSubscriber.inAppConfig = 'ALL_EVENTS'">
+                      <i class="fa fa-circle" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="applicableSubscriber.inAppConfig !== 'DISABLED'" class="">
+              <div class="w3-row-padding table-row">
+                <div class="w3-col m4 s12 text-column">Push Notifications:<br><small>Sent only when not active in the app</small></div>
+                <div class="w3-col m8 s12">
+                  <div class="w3-row-padding">
+                    <div class="w3-col s3">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.pushConfig === 'DISABLED', 'app-button-light': applicableSubscriber.pushConfig !== 'DISABLED'}"
+                        @click="applicableSubscriber.pushConfig = 'DISABLED'">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="w3-col s3">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.pushConfig === 'ONLY_MENTIONS', 'app-button-light': applicableSubscriber.pushConfig !== 'ONLY_MENTIONS'}"
+                        @click="applicableSubscriber.pushConfig = 'ONLY_MENTIONS'">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="w3-col s3">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.pushConfig === 'ONLY_MESSAGES', 'app-button-light': applicableSubscriber.pushConfig !== 'ONLY_MESSAGES'}"
+                        @click="applicableSubscriber.pushConfig = 'ONLY_MESSAGES'">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="w3-col s3">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.pushConfig === 'ALL_EVENTS', 'app-button-light': applicableSubscriber.pushConfig !== 'ALL_EVENTS'}"
+                        @click="applicableSubscriber.pushConfig = 'ALL_EVENTS'">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="w3-row-padding table-row">
+                <div class="w3-col m4 s12 text-column">Immediate Email:<br><small>Sent only when not active in the app</small></div>
+                <div class="w3-col m8 s12">
+                  <div class="w3-row-padding">
+                    <div class="w3-col s3">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.emailNowConfig === 'DISABLED', 'app-button-light': applicableSubscriber.emailNowConfig !== 'DISABLED'}"
+                        @click="applicableSubscriber.emailNowConfig = 'DISABLED'">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="w3-col s3">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.emailNowConfig === 'ONLY_MENTIONS', 'app-button-light': applicableSubscriber.emailNowConfig !== 'ONLY_MENTIONS'}"
+                        @click="applicableSubscriber.emailNowConfig = 'ONLY_MENTIONS'">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="w3-col s3">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.emailNowConfig === 'ONLY_MESSAGES', 'app-button-light': applicableSubscriber.emailNowConfig !== 'ONLY_MESSAGES'}"
+                        @click="applicableSubscriber.emailNowConfig = 'ONLY_MESSAGES'">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="w3-col s3">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.emailNowConfig === 'ALL_EVENTS', 'app-button-light': applicableSubscriber.emailNowConfig !== 'ALL_EVENTS'}"
+                        @click="applicableSubscriber.emailNowConfig = 'ALL_EVENTS'">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="w3-row-padding table-row">
+                <div class="w3-col m4 s12 text-column">Email Summary:<br><small>Sent only when not already read in app</small></div>
+                <div class="w3-col m8 s12">
+                  <div class="w3-row-padding table-row">
+                    <div class="w3-col s3">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.emailSummaryConfig === 'DISABLED', 'app-button-light': applicableSubscriber.emailSummaryConfig !== 'DISABLED'}"
+                        @click="applicableSubscriber.emailSummaryConfig = 'DISABLED'">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="w3-col s3">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.emailSummaryConfig === 'ONLY_MENTIONS', 'app-button-light': applicableSubscriber.emailSummaryConfig !== 'ONLY_MENTIONS'}"
+                        @click="applicableSubscriber.emailSummaryConfig = 'ONLY_MENTIONS'">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="w3-col s3">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.emailSummaryConfig === 'ONLY_MESSAGES', 'app-button-light': applicableSubscriber.emailSummaryConfig !== 'ONLY_MESSAGES'}"
+                        @click="applicableSubscriber.emailSummaryConfig = 'ONLY_MESSAGES'">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="w3-col s3">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.emailSummaryConfig === 'ALL_EVENTS', 'app-button-light': applicableSubscriber.emailSummaryConfig !== 'ALL_EVENTS'}"
+                        @click="applicableSubscriber.emailSummaryConfig = 'ALL_EVENTS'">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="w3-row-padding">
+                    <div class="w3-col s6">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.emailSummaryPeriodConfig === 'DAILY', 'app-button-light': applicableSubscriber.emailSummaryPeriodConfig !== 'DAILY'}"
+                        @click="applicableSubscriber.emailSummaryPeriodConfig = 'DAILY'">
+                        daily
+                      </button>
+                    </div>
+                    <div class="w3-col s6">
+                      <button
+                        class="w3-button w3-round"
+                        :class="{'app-button': applicableSubscriber.emailSummaryPeriodConfig === 'WEEKLY', 'app-button-light': applicableSubscriber.emailSummaryPeriodConfig !== 'WEEKLY'}"
+                        @click="applicableSubscriber.emailSummaryPeriodConfig = 'WEEKLY'">
+                        weekly
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div v-if="subscriber.inheritConfig === 'INHERIT'" class="obfuscate-div">
+            </div>
+          </div>
+
+          <hr>
+
+          <app-error-panel
+            :show="showError"
+            :message="errorMessage">
+          </app-error-panel>
+
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
               <button id="T_notificationCancelButton" type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
@@ -90,78 +277,198 @@
 
 <script>
 export default {
+  props: {
+    section: {
+      type: Object,
+      default: null
+    },
+    initiative: {
+      type: Object,
+      default: null
+    },
+    type: {
+      type: String,
+      default: 'SECTION'
+    }
+  },
+
   data () {
     return {
-      subscriber: null
+      subscriber: null,
+      inheritedFrom: null,
+      showError: false,
+      errorMessage: 'sample'
     }
   },
 
   computed: {
-    initiative () {
-      return this.$store.state.initiative.initiative
+    applicableSubscriber () {
+      if (this.subscriber) {
+        if (this.subscriber.inheritConfig === 'CUSTOM') {
+          return this.subscriber
+        } else {
+          return this.inheritedFrom
+        }
+      }
     },
-    isSubscribed () {
-      return this.subscriber.state === 'SUBSCRIBED'
+    applicableSubscriberElementName () {
+      if (this.inheritedFrom) {
+        switch (this.inheritedFrom.elementType) {
+          case 'SECTION':
+            return '"' + this.inheritedFrom.section.title + '" Section'
+
+          case 'INITIATIVE':
+            return '"' + this.inheritedFrom.initiative.meta.name + '" Initiative'
+
+          case 'COLLECTIVEONE':
+            return 'your global notification preferences'
+        }
+      }
     },
-    isNever () {
-      return this.subscriber.emailNotificationsState === 'DISABLED'
+    isSection () {
+      return this.type === 'SECTION'
     },
-    isImmediate () {
-      return this.subscriber.emailNotificationsState === 'SEND_NOW'
+    notificationsTitle () {
+      switch (this.type) {
+        case 'SECTION':
+          return 'notifications for the "' + this.section.title + '" Section'
+
+        case 'INITIATIVE':
+          return 'notifications for the "' + this.initiative.meta.name + '" Initiative'
+
+        case 'COLLECTIVEONE':
+          return 'your global notification preferences'
+      }
     },
-    isOnceADay () {
-      return this.subscriber.emailNotificationsState === 'SEND_ONCEADAY'
+    elementId () {
+      switch (this.type) {
+        case 'SECTION':
+          return this.section.id
+
+        case 'INITIATIVE':
+          return this.initiative.id
+
+        case 'COLLECTIVEONE':
+          return '00000000-0000-0000-0000-000000000000'
+      }
+    }
+  },
+
+  methods: {
+    setInherit () {
+      this.subscriber.inheritConfig = 'INHERIT'
+      this.updateInheritedFrom()
     },
-    isOnceAWeek () {
-      return this.subscriber.emailNotificationsState === 'SEND_ONCEAWEEK'
+    updateInheritedFrom () {
+      /* update only the inherited from subscriber, needed when user switching to inherited */
+      this.axios.get('/1/notifications/subscriber/' + this.type + '/' + this.elementId + '/inheritFrom').then((response) => {
+        this.inheritedFrom = response.data.data
+      })
+    },
+    updateSubscriber () {
+      this.axios.get('/1/notifications/subscriber/' + this.type + '/' + this.elementId).then((response) => {
+        this.subscriber = response.data.data
+        /* initialize the inherited from subscriber if available */
+        if (this.subscriber.inheritConfig === 'INHERIT') {
+          this.inheritedFrom = this.subscriber.applicableSubscriber
+        }
+      })
+    },
+    closeThis () {
+      this.$emit('close')
+    },
+    accept () {
+      let ok = true
+
+      if (this.subscriber.inheritConfig === 'CUSTOM') {
+        if (this.subscriber.inAppConfig === null) {
+          ok = false
+          this.showError = true
+          this.errorMessage = 'please configure the In-App notifications'
+        }
+
+        if (this.subscriber.pushConfig === null) {
+          ok = false
+          this.showError = true
+          this.errorMessage = 'please configure the Push notifications'
+        }
+
+        if (this.subscriber.emailNowConfig === null) {
+          ok = false
+          this.showError = true
+          this.errorMessage = 'please configure the immediate emails'
+        }
+
+        if (this.subscriber.emailSummaryConfig === null) {
+          ok = false
+          this.showError = true
+          this.errorMessage = 'please configure the email summary'
+        }
+
+        if (this.subscriber.emailSummaryPeriodConfig === null) {
+          ok = false
+          this.showError = true
+          this.errorMessage = 'please configure the email summary period'
+        }
+      }
+
+      if (ok) {
+        this.showError = false
+        this.axios.put('/1/notifications/subscriber/' + this.type + '/' + this.elementId, this.subscriber).then((response) => {
+          this.closeThis()
+        })
+      }
     }
   },
 
   mounted () {
     this.updateSubscriber()
-  },
-
-  methods: {
-    updateSubscriber () {
-      this.axios.get('/1/user/notifications/subscriber/' + this.initiative.id).then((response) => {
-        this.subscriber = response.data.data
-      })
-    },
-    closeThis () {
-      this.$store.commit('showEditNotificationsModal', false)
-    },
-    accept () {
-      this.axios.put('/1/user/notifications/subscriber/' + this.initiative.id, this.subscriber).then((response) => {
-        this.closeThis()
-      })
-    }
   }
 }
 </script>
 
 <style scoped>
 
+.details-configuration {
+  position: relative;
+  padding: 6px 0px;
+}
+
+.obfuscate-div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0.5, 0.5, 0.5, 0.5);
+  color: white;
+  top: 0;
+  left: 0;
+  border-radius: 6px;
+}
+
+.w3-col {
+  min-height: 1px;
+}
+
 .form-container {
   padding-top: 35px;
   padding-bottom: 35px;
 }
 
-.label-div {
-  padding-top: 4px;
-  width: 200px;
+.text-column {
   text-align: right;
-  margin-right: 20px;
 }
 
-.button-bar {
+.table-row {
+  margin-bottom: 16px;
 }
 
-.button-bar .w3-bar-item {
-  width: 110px;
-  font-size: 12px;
+.column-header {
+  text-align: center;
+  font-weight: bold;
+  height: 30px;
 }
 
-.bottom-btns-row button {
+button {
   width: 100%;
 }
 

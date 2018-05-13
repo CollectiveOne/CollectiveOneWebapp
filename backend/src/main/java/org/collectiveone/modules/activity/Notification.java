@@ -12,8 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.activity.dto.NotificationDto;
-import org.collectiveone.modules.activity.enums.NotificationEmailState;
 import org.collectiveone.modules.activity.enums.NotificationState;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -38,25 +36,21 @@ public class Notification {
 	private Timestamp creationDate;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "state")
-	private NotificationState state;
+	@Column(name = "in_app_state")
+	private NotificationState inAppState;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "email_state")
-	private NotificationEmailState emailState;
-
+	@Column(name = "push_state")
+	private NotificationState pushState;
 	
-	public NotificationDto toDto() {
-		NotificationDto dto = new NotificationDto();
-		
-		dto.setId(id.toString());
-		dto.setActivity(activity.toDto());
-		dto.setState(state.toString());
-		dto.setSubscriberUser(subscriber.getUser().toDtoLight());
-		dto.setSubscriberState(subscriber.getState().toString());
-		
-		return dto;
-	}
+	@Enumerated(EnumType.STRING)
+	@Column(name = "email_now_state")
+	private NotificationState emailNowState;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "email_summary_state")
+	private NotificationState emailSummaryState;
+
 	
 	public UUID getId() {
 		return id;
@@ -90,22 +84,37 @@ public class Notification {
 		this.creationDate = creationDate;
 	}
 
-	public NotificationState getState() {
-		return state;
+	public NotificationState getInAppState() {
+		return inAppState;
 	}
 
-	public void setState(NotificationState state) {
-		this.state = state;
+	public void setInAppState(NotificationState inAppState) {
+		this.inAppState = inAppState;
 	}
 
-	public NotificationEmailState getEmailState() {
-		return emailState;
+	public NotificationState getPushState() {
+		return pushState;
 	}
 
-	public void setEmailState(NotificationEmailState emailState) {
-		this.emailState = emailState;
+	public void setPushState(NotificationState pushState) {
+		this.pushState = pushState;
 	}
-	
-	
+
+	public NotificationState getEmailNowState() {
+		return emailNowState;
+	}
+
+	public void setEmailNowState(NotificationState emailNowState) {
+		this.emailNowState = emailNowState;
+	}
+
+	public NotificationState getEmailSummaryState() {
+		return emailSummaryState;
+	}
+
+	public void setEmailSummaryState(NotificationState emailSummaryState) {
+		this.emailSummaryState = emailSummaryState;
+	}
+
 	
 }

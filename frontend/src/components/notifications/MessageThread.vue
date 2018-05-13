@@ -1,15 +1,16 @@
 <template lang="html">
   <div class="thread-container w3-display-container">
-    <div id="history-container" class="w3-row history-container w3-border">
+    <div id="history-container" class="w3-row history-container w3-border" >
       <app-activity-getter
-        :url="url"
         :reverse="true"
         :addBorders="false"
         :showMessages="true"
-        :onlyMessages="showOnlyMessages"
-        :polling="true"
+        :onlyMessages="onlyMessages"
+        :triggerRefresh="triggerRefresh"
         :triggerUpdate="triggerUpdate"
+        :contextType="contextType"
         :contextElementId="contextElementId"
+        :levels="levels"
         @updated="scrollToBottom()"
         @last-activity="lastActivityReceived($event)"
         @edit-message="editMessage($event)"
@@ -38,21 +39,11 @@
         v-model="newMessageText"
         placeholder="say something"
         :showToolbar="false"
-        :showSend="true"
+        :showSendAndMentions="true"
         @c-focus="writting = true"
         @c-blur="writting = false"
         @send="send($event)">
       </app-markdown-editor>
-    </div>
-    <div class="w3-display-topright only-messages-button">
-      <button
-        class="w3-button app-button tooltip" type="button" name="button"
-        @click="showOnlyMessagesClicked()">
-        <span v-if="!showOnlyMessages"><i class="fa fa-comment-o" aria-hidden="true"></i></span>
-        <span v-else=""><i class="fa fa-list" aria-hidden="true"></i></span>
-        <span v-if="showOnlyMessages" class="tooltiptext gray-1">show activity too</span>
-        <span v-else class="tooltiptext gray-1">show only messages</span>
-      </button>
     </div>
   </div>
 </template>
@@ -74,29 +65,37 @@ export default {
       type: String,
       default: ''
     },
+    contextOfContextElementId: {
+      type: String,
+      default: ''
+    },
     url: {
       type: String,
       default: ''
     },
-    onlyMessagesInit: {
+    onlyMessages: {
       type: Boolean,
       defaul: false
+    },
+    levels: {
+      type: Number,
+      default: 1
     }
   },
 
   data () {
     return {
       newMessageText: '',
-      triggerUpdate: true,
       intervalId: 0,
-      showOnlyMessages: false,
       editing: false,
       messageToEdit: null,
       showMembersOnly: false,
       writting: false,
       lastMessage: null,
       replying: false,
-      replyingToActivity: null
+      replyingToActivity: null,
+      triggerRefresh: false,
+      triggerUpdate: false
     }
   },
 
@@ -118,16 +117,9 @@ export default {
         return false
       }
     },
-    replyingToActivityInView () {
-      if (this.replyingToActivity) {
-        return this.replyingToActivity.modelView !== null
-      } else {
-        return false
-      }
-    },
     replyingToActivityInInitiative () {
       if (this.replyingToActivity) {
-        return !this.replyingToActivityInView && !this.replyingToActivityInSection && !this.replyingToActivityInCard
+        return !this.replyingToActivityInSection && !this.replyingToActivityInCard
       } else {
         return false
       }
@@ -138,9 +130,6 @@ export default {
       }
       if (this.replyingToActivityInSection) {
         return this.replyingToActivity.modelSection.title + ' section'
-      }
-      if (this.replyingToActivityInView) {
-        return this.replyingToActivity.modelView.title + ' view'
       }
       if (this.replyingToActivityInInitiative) {
         return this.replyingToActivity.initiative.meta.name + ' initiative'
@@ -174,9 +163,10 @@ export default {
     cancelReply () {
       this.replying = false
     },
-    send () {
+    send (data) {
       var message = {
-        text: this.newMessageText
+        text: this.newMessageText,
+        uuidsOfMentions: data.mentions
       }
       if (!this.editing) {
         var contextType = ''
@@ -194,21 +184,23 @@ export default {
             contextType = 'MODEL_SECTION'
             contextElementId = this.replyingToActivity.modelSection.id
           }
-          if (this.replyingToActivityInView) {
-            contextType = 'MODEL_VIEW'
-            contextElementId = this.replyingToActivity.modelView.id
-          }
           if (this.replyingToActivityInInitiative) {
             contextType = 'INITIATIVE'
             contextElementId = this.replyingToActivity.initiative.id
           }
         }
 
-        this.axios.post('/1/messages/' + contextType + '/' + contextElementId, message).then((response) => {
+        this.axios.post(
+          '/1/messages/' + contextType + '/' + contextElementId,
+          message, {
+            params: {
+              contextOfContextElementId: this.contextOfContextElementId
+            }
+          }).then((response) => {
           if (response.data.result === 'success') {
             this.replying = false
             this.newMessageText = ''
-            this.triggerUpdate = !this.triggerUpdate
+            this.triggerRefresh = !this.triggerRefresh
           } else {
             this.showMembersOnly = true
           }
@@ -218,7 +210,7 @@ export default {
           if (response.data.result === 'success') {
             this.editing = false
             this.newMessageText = ''
-            this.triggerUpdate = !this.triggerUpdate
+            this.triggerRefresh = !this.triggerRefresh
           }
         })
       }
@@ -244,11 +236,8 @@ export default {
     }
   },
 
-  created () {
-    this.showOnlyMessages = this.onlyMessagesInit
-  },
-
   mounted () {
+    this.showOnlyMessages = this.onlyMessagesInit
     this.scrollToBottom()
     window.addEventListener('keydown', this.atKeydown)
   },
@@ -264,18 +253,19 @@ export default {
 .thread-container {
   height: 100%;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
 }
 
 .history-container {
   min-height: 60px;
-  height: calc(100% - 120px);
   overflow: auto;
   flex-grow: 1;
 }
 
 .bottom-container {
-  flex-grow: 1;
+  min-height: 50px;
+  flex-shrink: 0;
 }
 
 .only-messages-button {
@@ -284,8 +274,12 @@ export default {
 }
 
 .tooltip .tooltiptext {
-    top: 8%;
-    right: 105%;
+  top: 8%;
+  right: 105%;
+}
+
+.only-messages-button button {
+  background-color: rgba(21, 165, 204, 0.4) !important;
 }
 
 </style>

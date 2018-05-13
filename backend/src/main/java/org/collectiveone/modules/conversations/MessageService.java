@@ -1,5 +1,7 @@
 package org.collectiveone.modules.conversations;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -10,10 +12,8 @@ import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelSection;
-import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
-import org.collectiveone.modules.model.repositories.ModelViewRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +38,6 @@ public class MessageService {
 	private InitiativeRepositoryIf initiativeRepository;
 	
 	@Autowired
-	private ModelViewRepositoryIf modelViewRepository;
-	
-	@Autowired
 	private ModelSectionRepositoryIf modelSectionRepository;
 	
 	@Autowired
@@ -56,9 +53,6 @@ public class MessageService {
 			
 			case MODEL_SECTION:
 				return modelSectionRepository.findById(elementId).getInitiative().getId();
-				
-			case MODEL_VIEW:
-				return modelViewRepository.findById(elementId).getInitiative().getId();
 				
 			case INITIATIVE:
 				return initiativeRepository.findById(elementId).getId();
@@ -84,9 +78,6 @@ public class MessageService {
 			case MODEL_SECTION:
 				return thread.getModelSection().getInitiative().getId();
 				
-			case MODEL_VIEW:
-				return thread.getModelView().getInitiative().getId();
-				
 			case INITIATIVE:
 				return thread.getInitiative().getId();
 				
@@ -107,9 +98,6 @@ public class MessageService {
 			case MODEL_SECTION:
 				return thread.getModelSection().getId();
 				
-			case MODEL_VIEW:
-				return thread.getModelView().getId();
-				
 			case INITIATIVE:
 				return thread.getInitiative().getId();
 				
@@ -120,7 +108,12 @@ public class MessageService {
 	}
 	
 	@Transactional
-	public PostResult postMessage(MessageDto messageDto, UUID authorId, MessageThreadContextType contextType, UUID elementId) {
+	public PostResult postMessage(
+			MessageDto messageDto, 
+			UUID authorId, 
+			MessageThreadContextType contextType, 
+			UUID elementId,
+			UUID contextOfContextElementId) {
 		
 		AppUser author = appUserRepository.findByC1Id(authorId);
 		Message message = messageDto.toEntity(messageDto, author);
@@ -134,7 +127,13 @@ public class MessageService {
 		message = messageRepository.save(message);
 		thread = messageThreadRepository.save(thread);
 		
-		activityService.messagePosted(message, author, contextType, elementId);
+		List<AppUser> mentionedUsers = new ArrayList<AppUser>();
+		for(String uuid : messageDto.getUuidsOfMentions()) {
+			AppUser appUser = appUserRepository.findByC1Id(UUID.fromString(uuid));
+			mentionedUsers.add(appUser);
+		}
+		
+		activityService.messagePosted(message, author, contextType, elementId, contextOfContextElementId, mentionedUsers);
 
 		return new PostResult("success", "message posted", message.getId().toString());		 		
 	}
@@ -184,13 +183,6 @@ public class MessageService {
 					modelSectionRepository.save(section);
 					break;
 					
-				case MODEL_VIEW:
-					ModelView view = modelViewRepository.findById(elementId);
-					thread.setModelView(view);
-					view.setMessageThread(thread);
-					modelViewRepository.save(view);
-					break;
-					
 				case INITIATIVE:
 					Initiative initiative = initiativeRepository.findById(elementId);
 					thread.setInitiative(initiative);
@@ -212,9 +204,6 @@ public class MessageService {
 			
 			case MODEL_SECTION:
 				return messageThreadRepository.findByModelSection_Id(elementId);
-				
-			case MODEL_VIEW:
-				return messageThreadRepository.findByModelView_Id(elementId);
 				
 			case INITIATIVE:
 				return messageThreadRepository.findByInitiative_Id(elementId);

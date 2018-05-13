@@ -1,8 +1,9 @@
 import Vue from 'vue'
+import router from '@/router'
 
 const state = {
   initiative: null,
-  initiativeModelViews: null
+  initiativeLoaded: false
 }
 
 const getters = {
@@ -64,8 +65,8 @@ const mutations = {
   setInitiative: (state, payload) => {
     state.initiative = payload
   },
-  setModelViews: (state, payload) => {
-    state.initiativeModelViews = payload
+  setInitiativeLoaded: (state, payload) => {
+    state.initiativeLoaded = payload
   }
 }
 
@@ -88,8 +89,10 @@ const actions = {
         addLoggedUser: true
       }
     }).then((response) => {
-      context.commit('setInitiative', response.data.data)
+      let initiative = response.data.data
+      context.commit('setInitiative', initiative)
       context.commit('setInitiativeLoaded', true)
+      context.dispatch('resetSectionsTree', { baseSectionId: initiative.topModelSection.id, currentSectionId: router.app.$route.params.sectionId ? router.app.$route.params.sectionId : '' })
     }).catch((error) => {
       console.log(error)
     })
@@ -98,26 +101,6 @@ const actions = {
   refreshInitiative: (context) => {
     if (context.state.initiative) {
       context.dispatch('updateInitiative', context.state.initiative.id)
-    }
-  },
-
-  refreshModelViews: (context, pars) => {
-    if (context.state.initiative) {
-      Vue.axios.get('/1/initiative/' + context.state.initiative.id + '/model', {
-        params: {
-          level: 0
-        }
-      }).then((response) => {
-        context.commit('setModelViews', response.data.data)
-        if (pars) {
-          if (pars.redirect) {
-            if (context.state.initiativeModelViews.views.length > 0) {
-              /* redirect to the first view by default */
-              pars.router.replace({ name: 'ModelView', params: { viewId: context.state.initiativeModelViews.views[0].id } })
-            }
-          }
-        }
-      })
     }
   }
 }

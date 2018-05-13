@@ -16,9 +16,6 @@ public class ModelCardDto {
 	private String text;
 	private String newImageFileId;
 	private FileStoredDto imageFile;
-	private Boolean stateControl;
-	private String state;
-	private Long targetDate;
 	private Integer ixInSection;
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
 	
@@ -74,24 +71,6 @@ public class ModelCardDto {
 	}
 	public void setImageFile(FileStoredDto imageFile) {
 		this.imageFile = imageFile;
-	}
-	public Boolean getStateControl() {
-		return stateControl;
-	}
-	public void setStateControl(Boolean stateControl) {
-		this.stateControl = stateControl;
-	}
-	public String getState() {
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
-	}
-	public Long getTargetDate() {
-		return targetDate;
-	}
-	public void setTargetDate(Long targetDate) {
-		this.targetDate = targetDate;
 	}
 	public Integer getIxInSection() {
 		return ixInSection;

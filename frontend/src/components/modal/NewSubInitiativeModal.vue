@@ -67,7 +67,7 @@
                 <keep-alive>
                   <app-initiative-assets-assigner
                     v-if="transferAssetsFlag"
-                    :initiativeId="parentId" type='initiative-assigner'
+                    :initiativeId="parentInitiative.id" type='initiative-assigner'
                     :initiativeName="parentInitiative.meta.name" @updated="parentAssetsSelected($event)"
                     :showError="assetsErrorShow">
                   </app-initiative-assets-assigner>
@@ -149,9 +149,15 @@ export default {
     'app-members-table-container': MembersTableContainer
   },
 
+  props: {
+    parentInitiative: {
+      type: Object,
+      default: null
+    }
+  },
+
   data () {
     return {
-      parentInitiative: null,
       name: '',
       driver: '',
       assetsTransfers: [],
@@ -177,7 +183,7 @@ export default {
       return (this.nameTooLong)
     },
     nameTooLong () {
-      return this.name.length > 30
+      return this.name.length > 42
     },
     driverErrorShow () {
       return this.driverEmptyError && (this.driver === '')
@@ -223,7 +229,6 @@ export default {
 
     parentAssetsSelected (assets) {
       this.assetsTransfers = JSON.parse(JSON.stringify(assets))
-      this.parentId = this.assetsTransfers[0].senderId
       this.updateParent()
     },
 
@@ -261,7 +266,7 @@ export default {
     },
 
     closeThis () {
-      this.$store.commit('showNewSubInitiativeModal', { show: false })
+      this.$emit('close')
     },
 
     accept () {
@@ -276,7 +281,7 @@ export default {
         ok = false
         this.nameEmptyError = true
       } else {
-        if (this.name.length > 30) {
+        if (this.nameTooLong) {
           ok = false
         }
       }
@@ -327,18 +332,6 @@ export default {
           console.log(error)
         })
       }
-    },
-
-    updateParent () {
-      if (this.parentId !== '') {
-        this.axios.get('/1/initiative/' + this.parentId, {
-          params: {
-            addMembers: true
-          }
-        }).then((response) => {
-          this.parentInitiative = response.data.data
-        })
-      }
     }
   },
 
@@ -349,9 +342,6 @@ export default {
       member.role = 'ADMIN'
       this.members.push(member)
     }
-
-    this.parentId = this.$store.state.modals.parentInitiativeIdForModal
-    this.updateParent()
   }
 }
 </script>

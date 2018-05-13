@@ -2,3 +2,8 @@
 /bin/
 /rebel.xml
 /.factorypath
+/.springBeans
+/mvnw
+/mvnw.cmd
+
+.mvn

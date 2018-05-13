@@ -3,7 +3,7 @@
     class="section-title-container w3-leftbar gray-1-border">
 
     <div class="w3-row title-row">
-        <router-link tag="a" :to="{ name: 'ModelSection', params: { sectionId: section.id } }"
+        <router-link tag="a" :to="{ name: 'ModelSectionContent', params: { sectionId: section.id } }"
           class="section-title cursor-pointer w3-left" :style="sectionTitleStyle">
           {{ section.title }}
         </router-link>
@@ -26,15 +26,9 @@
           <i>in:</i>
         </div>
         <div v-for="parentSection in section.inSections" class="in-tag-container w3-left">
-          <router-link :to="{ name: 'ModelSection', params: { sectionId: parentSection.id } }"
+          <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: parentSection.id } }"
             class="gray-1 w3-tag w3-round w3-small">
             {{ parentSection.title }}
-          </router-link>
-        </div>
-        <div v-for="parentView in section.inViews" class="in-tag-container w3-left">
-          <router-link :to="{ name: 'ModelView', params: { viewId: parentView.id } }"
-            class="gray-1 w3-tag w3-round w3-small">
-            {{ parentView.title }}
           </router-link>
         </div>
       </div>
@@ -45,17 +39,9 @@
           </div>
           <div v-for="parentSection in section.inSections" class="in-tag-container w3-left">
             <div v-if="parentSection.id !== inElementId" class="">
-              <router-link :to="{ name: 'ModelSection', params: { sectionId: parentSection.id } }"
+              <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: parentSection.id } }"
                 class="gray-1 w3-tag w3-round w3-small">
                 {{ parentSection.title }}
-              </router-link>
-            </div>
-          </div>
-          <div v-for="parentView in section.inViews" class="in-tag-container w3-left">
-            <div v-if="parentView.id !== inElementId" class="">
-              <router-link :to="{ name: 'ModelView', params: { viewId: parentView.id } }"
-                class="gray-1 w3-tag w3-round w3-small">
-                {{ parentView.title }}
               </router-link>
             </div>
           </div>
@@ -112,12 +98,6 @@ export default {
       var ix
       for (ix in this.section.inSections) {
         if (this.section.inSections[ix].id !== this.inElementId) {
-          return true
-        }
-      }
-
-      for (ix in this.section.inViews) {
-        if (this.section.inViews[ix].id !== this.inElementId) {
           return true
         }
       }

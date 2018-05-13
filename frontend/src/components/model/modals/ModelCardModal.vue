@@ -5,7 +5,7 @@
         v-click-outside="clickOutside">
 
         <div class="w3-display-topright">
-          <div class="w3-right w3-button w3-xlarge" @click="closeThisConfirm()">
+          <div class="w3-right w3-button close-btn w3-xlarge" @click="closeThisConfirm()">
             <i class="fa fa-times" aria-hidden="true"></i>
           </div>
           <div class="w3-right">
@@ -19,17 +19,6 @@
               :removeMessage="'This will remove this card from the ' + inSectionTitle + ' section.'">
             </app-model-modal-buttons>
           </div>
-          <div v-if="!editing" class="w3-right w3-button w3-xlarge" @click="copyUrl()">
-            <i class="fa fa-share-alt" aria-hidden="true"></i>
-          </div>
-          <div class="slider-container url-show">
-            <transition name="slideDownUp">
-              <div v-if="showUrl" class="">
-                <input id="copy-url" class="w3-input w3-border" type="text" name="" :value="cardUrl">
-                <div class="w3-center"><small><i>please copy/paste the link above</i></small></div>
-              </div>
-            </transition>
-          </div>
         </div>
 
         <div class="w3-container w3-border-bottom">
@@ -41,7 +30,7 @@
           <div v-if="isNew" class="w3-row">
             <label class=""><b>In Section:</b></label>
             <br>
-            <h4>{{ this.inSectionTitleOk }}</h4>
+            <h4>{{ this.inSectionTitle }}</h4>
           </div>
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
@@ -61,7 +50,7 @@
             <transition name="slideLeftRight">
               <div v-if="addExisting && editing" class="">
                 <app-model-card-selector
-                  :initiativeId="initiativeId"
+                  :inSectionId="inSectionId"
                   @select="cardSelected($event)">
                 </app-model-card-selector>
                 <app-error-panel
@@ -86,13 +75,15 @@
                     <div class="w3-left w3-margin-right">
                       <i>in:</i>
                     </div>
-                    <div v-for="inSection in cardWrapper.inSections" class="insection-tag-container w3-left">
-                      <router-link :to="{ name: 'ModelSection', params: { sectionId: inSection.id } }"
+                    <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
+                      class="insection-tag-container w3-left">
+                      <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
                         class="gray-1 w3-tag w3-round w3-small">
                         {{ inSection.title }}
                       </router-link>
                     </div>
-                    <div v-if="editing" v-for="toSection in addToSections" class="insection-tag-container w3-left w3-display-container w3-margin-left">
+                    <div v-if="editing" v-for="toSection in addToSections" :key="toSection.id"
+                      class="insection-tag-container w3-left w3-display-container w3-margin-left">
                       <div class="success-background w3-tag w3-round w3-small">
                         {{ toSection.title }}
                       </div>
@@ -211,45 +202,19 @@
 
                 <hr>
 
-                <div class="">
-                  <div v-if="!editing" class="">
-                    <div v-if="cardWrapper.stateControl" class="w3-row-padding">
-                      <div class="w3-col m6 w3-margin-bottom">
-                        <label class=""><b>State:</b></label><br>
-                        <div class="w3-tag gray-1 w3-padding w3-round state-tag">
-                          {{ cardWrapper.state }}
-                        </div>
-                      </div>
-                      <div v-if="targetDateStr !== ''" class="w3-col m6">
-                        <label class=""><b>Target date:</b></label>
-                        <input class="w3-input" :value="dateString(this.cardWrapper.targetDate)" disabled>
-                      </div>
+                <div v-if="!editing" class="">
+                  <div class="w3-row">
+                    <i>created in {{ dateString(cardWrapper.creationDate) }} by</i>
+                    <div class="inline-block">
+                      <app-user-avatar :user="cardWrapper.creator" :showName="true" :small="true"></app-user-avatar>
                     </div>
                   </div>
-                  <div v-else class="">
-                    <button
-                      @click="editedCard.stateControl = !editedCard.stateControl"
-                      class="w3-button app-button state-enable-button">
-                      {{ editedCard.stateControl ? 'Remove state and deadline' : 'Set state and deadline' }}
-                    </button>
-                    <transition name="fadeenter">
-                      <div v-if="editedCard.stateControl" class="w3-row-padding w3-margin-top">
-                        <div class="w3-col m6 w3-margin-bottom">
-                          <label class=""><b>State:</b></label>
-                          <select class="w3-select" v-model="editedCard.state">
-                            <option>PLAN</option>
-                            <option>REALITY</option>
-                          </select>
-                        </div>
-                        <div class="w3-col m6">
-                          <label class=""><b>Target date:</b></label>
-                          <datepicker
-                            :value="targetDateStr"
-                            @selected="targetDateSelected($event)">
-                          </datepicker>
-                        </div>
+                  <div v-if="editors.length > 0" class="w3-row">
+                    <i>edited by
+                      <div class="inline-block" v-for="editor in editors">
+                        <app-user-avatar v-if="editor.c1Id !== cardWrapper.creator.c1Id" :user="editor" :showName="true" :small="true"></app-user-avatar>
                       </div>
-                    </transition>
+                    </i>
                   </div>
                 </div>
               </div>
@@ -261,15 +226,15 @@
             <app-message-thread
               contextType="MODEL_CARD"
               :contextElementId="cardWrapperId"
-              :onlyMessagesInit="onlyMessages"
-              :url="'/1/activity/model/card/' + cardWrapperId">
+              :contextOfContextElementId="inSectionId"
+              :onlyMessagesInit="onlyMessages">
             </app-message-thread>
           </div>
 
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
             <hr>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="cancel()">Cancel <span><small>(Esc)</small></span></button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel <span><small>(Esc)</small></span></button>
             </div>
             <div class="w3-col m6 w3-center">
               <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept <span><small>(Ctr + Enter)</small></span></button>
@@ -285,7 +250,7 @@
         </div>
 
         <div v-if="closeIntent" class="w3-display-middle w3-card w3-white w3-padding w3-round-large w3-center">
-          You are currently editing this view. Are you sure you want to close it? Any changes would get lost.
+          You are currently editing this card. Are you sure you want to close it? Any changes would get lost.
           <div class="w3-row w3-margin-top">
             <button class="w3-button app-button-light" name="button"
               @click="closeIntent = false">
@@ -307,7 +272,7 @@
 import { dateString } from '@/lib/common.js'
 import Datepicker from 'vuejs-datepicker'
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
-import ModelCardSelector from '@/components/model/ModelCardSelector.vue'
+import ModelCardSelector from '@/components/model/cards/ModelCardSelector.vue'
 import ModelSectionSelector from '@/components/model/ModelSectionSelector.vue'
 import MessageThread from '@/components/notifications/MessageThread.vue'
 
@@ -326,10 +291,6 @@ export default {
       type: Boolean,
       default: false
     },
-    initiativeId: {
-      type: String,
-      default: ''
-    },
     cardWrapperId: {
       type: String,
       default: ''
@@ -346,9 +307,21 @@ export default {
       type: Number,
       default: -1
     },
+    editingInit: {
+      type: Boolean,
+      defaul: false
+    },
     onlyMessages: {
       type: Boolean,
       defaul: false
+    },
+    newCardLocation: {
+      type: String,
+      default: ''
+    },
+    atCardWrapper: {
+      type: Object,
+      default: null
     }
   },
 
@@ -356,19 +329,17 @@ export default {
     return {
       cardWrapper: {
         id: '',
-        stateControl: false,
+        creationDate: 0,
         card: {
           title: '',
           text: ''
         }
       },
       editedCard: null,
-      inSectionTitleOk: '',
       editing: false,
       showEditButtons: false,
       titleEmptyError: false,
       textEmptyError: false,
-      targetDateStr: '',
       addExisting: false,
       existingCard: null,
       noCardSelectedError: false,
@@ -399,18 +370,26 @@ export default {
     card () {
       return this.cardWrapper.card
     },
-    showStateControl () {
-      if (this.editing) {
-        return this.editedCard.stateControl
-      } else {
-        return this.cardWrapper.stateControl
+    editors () {
+      var editors = []
+      for (var ix in this.cardWrapper.editors) {
+        if (this.cardWrapper.editors[ix].c1Id !== this.cardWrapper.creator.c1Id) {
+          editors.push(this.cardWrapper.editors[ix])
+        }
       }
+      return editors
     },
     titleEmpty () {
-      return this.editedCard.title === ''
+      if (this.editedCard) {
+        return this.editedCard.title === ''
+      }
+      return false
     },
     titleTooLong () {
-      return this.editedCard.title.length > 30
+      if (this.editedCard) {
+        return this.editedCard.title.length > 42
+      }
+      return false
     },
     titleErrorShow () {
       return this.titleEmptyShow || this.titleTooLongShow
@@ -422,7 +401,10 @@ export default {
       return this.titleTooLong
     },
     textEmpty () {
-      return this.editedCard.text === ''
+      if (this.editedCard) {
+        return this.editedCard.text === ''
+      }
+      return false
     },
     textErrorShow () {
       return this.textEmptyError && this.textEmpty
@@ -432,11 +414,6 @@ export default {
     },
     noCardSelectedShow () {
       return this.noCardSelectedError && this.noCardSelected
-    },
-    cardUrl () {
-      return window.location.host + '/#/app/inits/' + this.initiativeId +
-      '/model/section/' + this.inSectionId +
-      '/card/' + this.cardWrapper.id
     }
   },
 
@@ -492,15 +469,12 @@ export default {
     },
     update () {
       this.loading = true
-      this.axios.get('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
         this.cardWrapper = response.data.data
         this.loading = false
-      })
-    },
-    updateInSection () {
-      this.axios.get('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId)
-      .then((response) => {
-        this.inSectionTitleOk = response.data.data.title
+        if (this.editingInit) {
+          this.startEditing()
+        }
       })
     },
     cardSelected (cardWrapper) {
@@ -531,23 +505,7 @@ export default {
     startEditing () {
       this.addToSections = []
       this.editedCard = JSON.parse(JSON.stringify(this.card))
-
-      if (this.cardWrapper.targetDate) {
-        if (this.cardWrapper.targetDate > 0) {
-          this.targetDateStr = new Date(this.cardWrapper.targetDate)
-        }
-      }
-
-      this.editedCard.stateControl = this.cardWrapper.stateControl
-      this.editedCard.state = this.cardWrapper.state
-      this.editedCard.targetDate = this.cardWrapper.targetDate
-
       this.editing = true
-    },
-    targetDateSelected (dateStr) {
-      this.targetDateStr = dateStr
-      var date = new Date(dateStr)
-      this.editedCard.targetDate = date.getTime()
     },
     accept () {
       // console.log('clicked accept')
@@ -576,23 +534,35 @@ export default {
           this.sendingData = false
           if (response.data.result === 'success') {
             this.closeThis()
-            this.$store.commit('triggerUpdateModel')
+            this.$emit('updateCards')
           }
         }
 
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
-            cardDto.ixInSection = this.ixInSection
+            var params = {}
+            switch (this.newCardLocation) {
+              case 'end':
+                break
+
+              case 'before':
+                params.beforeCardWrapperId = this.atCardWrapper.id
+                break
+
+              case 'after':
+                params.afterCardWrapperId = this.atCardWrapper.id
+                break
+            }
 
             this.sendingData = true
-            this.axios.post('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/cardWrapper', cardDto).then(responseF).catch((error) => {
+            this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto, { params: params }).then(responseF).catch((error) => {
               console.log(error)
             })
           } else {
             this.sendingData = true
-            this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/cardWrapper/' + this.existingCard.id,
-              {}).then(responseF).catch((error) => {
+            this.axios.put('/1/model/section/' + this.inSectionId + '/cardWrapper/' + this.existingCard.id,
+              {}, params).then(responseF).catch((error) => {
                 console.log(error)
               })
           }
@@ -605,10 +575,10 @@ export default {
           }
 
           this.sendingData = true
-          this.axios.put('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id, cardDto)
-          .then(responseF).catch((error) => {
-            console.log(error)
-          })
+          this.axios.put('/1/model/cardWrapper/' + this.cardWrapper.id, cardDto)
+            .then(responseF).catch((error) => {
+              console.log(error)
+            })
         }
       }
     },
@@ -616,19 +586,19 @@ export default {
       var responseF = (response) => {
         if (response.data.result === 'success') {
           this.closeThis()
-          this.$store.commit('triggerUpdateModel')
+          this.$store.commit('triggerUpdateSectionCards')
         } else {
           this.showOutputMessage(response.data.message)
         }
       }
-      this.axios.put('/1/initiative/' + this.initiativeId + '/model/section/' + this.inSectionId + '/removeCard/' + this.cardWrapper.id,
+      this.axios.put('/1/model/section/' + this.inSectionId + '/removeCard/' + this.cardWrapper.id,
         {}).then(responseF).catch((error) => {
-          console.log(error)
-        })
+        console.log(error)
+      })
     },
     deleteCard () {
-      this.axios.delete('/1/initiative/' + this.initiativeId + '/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
-        this.$store.commit('triggerUpdateModel')
+      this.axios.delete('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+        this.$store.commit('triggerUpdateSectionCards')
         this.closeThis()
       }).catch((error) => {
         console.log(error)
@@ -698,8 +668,6 @@ export default {
   },
 
   mounted () {
-    this.inSectionTitleOk = this.inSectionTitle
-
     if (this.isNew) {
       this.editedCard = {
         stateControl: false,
@@ -707,7 +675,6 @@ export default {
         text: ''
       }
       this.editing = true
-      this.updateInSection()
     } else {
       this.showEditButtons = true
       this.cardWrapper.id = this.cardWrapperId
@@ -729,11 +696,8 @@ export default {
 
 <style scoped>
 
-.url-show {
-  position: absolute;
-  margin-top: 60px;
-  margin-left: -100px;
-  width: 250px;
+.close-btn {
+  border-top-right-radius: 20px;
 }
 
 .not-add-existing-container {
@@ -741,12 +705,12 @@ export default {
 }
 
 .inputfile {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
 }
 
 .loader-gif-container {

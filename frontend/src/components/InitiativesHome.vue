@@ -1,49 +1,26 @@
 <template lang="html">
-  <div class="">
+  <div class="initiatives-home">
     <router-view></router-view>
-    <div class="w3-container">
-      <h1>Browse Public Initiatives</h1>
-      <div class="w3-row">
-        <label for=""><b>Filter by tag:</b></label>
-        <div class="w3-col s12">
-          <div class="w3-row-padding">
-            <div class="w3-col m4">
-              <app-initiative-tag-selector
-                class="tag-selector"
-                @select="tagSelected($event)"
-                :resetTrigger="resetTrigger">
-              </app-initiative-tag-selector>
-            </div>
-            <div class="w3-col m8 tags-column">
-              <app-initiative-tag
-                v-for="tag in filters.tags"
-                :tag="tag"
-                :key="tag.id"
-                class="tags-containers"
-                :showRemove="true"
-                @remove="removeTag($event)">
-              </app-initiative-tag>
-            </div>
-          </div>
+    <div class="w3-row header-row">
+      <app-header :inInitiative="false"></app-header>
+    </div>
+    <div class="w3-row-padding browse-initiatives-row">
+      <div v-if="$store.state.user.authenticated" class="w3-row w3-center w3-border-bottom noselect">
+        <div class="w3-col m6 border-blue cursor-pointer tablink" :class="{'w3-bottombar': !publicInitiatives}"
+          @click="publicInitiatives = false">
+          <h3>My Initiatives</h3>
+        </div>
+        <div class="w3-col m6 border-blue cursor-pointer tablink" :class="{'w3-bottombar': publicInitiatives}"
+          @click="publicInitiatives = true">
+          <h3>Browse Public Initiatives</h3>
         </div>
       </div>
-      <hr>
-      <div class="">
-        <div v-if="loaded" class="w3-row-padding">
-          <div v-for="initiative in initiatives" class="initiative-card-col">
-            <app-initiative-card
-              :initiative="initiative"
-              :key="initiative.id"
-              @clicked="updateCurrentInitiative($event)">
-            </app-initiative-card>
-          </div>
-          <div v-if="initiatives.length == 0" class="w3-center">
-            <i>no results found</i>
-          </div>
-        </div>
-        <div v-else class="w3-row w3-center loader-gif-container">
-          <img class="loader-gif" src="../assets/loading.gif" alt="">
-        </div>
+      <div v-else class="">
+        <h3>Browse Public Initiatives</h3>
+      </div>
+      <div class="inits-container">
+        <app-public-initiatives v-if="publicInitiatives"></app-public-initiatives>
+        <app-my-initiatives v-else></app-my-initiatives>
       </div>
     </div>
   </div>
@@ -51,102 +28,54 @@
 </template>
 
 <script>
-import InitiativeCard from '@/components/initiative/InitiativeCard.vue'
-import InitiativeTagSelector from '@/components/initiative/InitiativeTagSelector.vue'
-import InitiativeTag from '@/components/initiative/InitiativeTag.vue'
-
-const getIndexOfTag = function (list, id) {
-  for (var ix in list) {
-    if (list[ix].id === id) {
-      return ix
-    }
-  }
-  return -1
-}
+import Header from '@/components/Header.vue'
+import PublicInitiatives from '@/components/PublicInitiatives.vue'
+import MyInitiatives from '@/components/MyInitiatives.vue'
 
 export default {
   components: {
-    'app-initiative-card': InitiativeCard,
-    'app-initiative-tag-selector': InitiativeTagSelector,
-    'app-initiative-tag': InitiativeTag
+    'app-header': Header,
+    'app-public-initiatives': PublicInitiatives,
+    'app-my-initiatives': MyInitiatives
   },
 
   data () {
     return {
-      filters: {
-        query: '',
-        tags: []
-      },
-      initiatives: [],
-      loaded: false,
-      resetTrigger: true
-    }
-  },
-
-  computed: {
-  },
-
-  methods: {
-    updateResults () {
-      this.loaded = false
-      this.axios.put('/1/initiatives/search', this.filters).then((response) => {
-        this.loaded = true
-        this.initiatives = response.data.data
-      })
-    },
-    tagSelected (tag) {
-      this.resetTrigger = !this.resetTrigger
-      if (getIndexOfTag(this.filters.tags, tag.id) === -1) {
-        this.filters.tags.push(tag)
-        this.updateResults()
-      }
-    },
-    removeTag (tag) {
-      var ix = getIndexOfTag(this.filters.tags, tag.id)
-      if (ix !== -1) {
-        this.filters.tags.splice(ix, 1)
-        this.updateResults()
-      }
-    },
-    updateCurrentInitiative (id) {
-      this.$store.dispatch('updateCurrentInitiativeTree', id)
+      publicInitiatives: true
     }
   },
 
   created () {
-    this.updateResults()
+    if (this.$store.state.user.authenticated) {
+      this.publicInitiatives = false
+    }
   }
-
 }
 </script>
 
 <style scoped>
 
-.tags-column {
-  padding-top: 8px;
+.initiatives-home {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.initiative-card-col {
-  margin-bottom: 32px;
-  display: inline-block;
+.header-row {
+  flex-shrink: 0;
 }
 
-@media screen and (min-width: 1200px) {
-  .initiative-card-col {
-    width: calc(50% - 26px);
-    margin-left: 13px;
-    margin-right: 13px;
-    vertical-align: top;
-  }
+.browse-initiatives-row {
+  padding-top: 16px;
+  overflow: auto;
 }
 
-@media screen and (max-width: 1199px) {
-  .initiative-card-col {
-    width: calc(100% - 26px);
-    margin-left: 13px;
-    margin-right: 13px;
-    vertical-align: top;
-  }
+.tablink:hover {
+  background-color: #cccccc;
+}
+
+.inits-container {
+  padding-top: 16px;
 }
 
 </style>

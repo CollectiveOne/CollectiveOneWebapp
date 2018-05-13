@@ -16,8 +16,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.activity.dto.SubscriberDto;
-import org.collectiveone.modules.activity.enums.SubscriberEmailNotificationsState;
-import org.collectiveone.modules.activity.enums.SubscriberState;
+import org.collectiveone.modules.activity.enums.SubscriberEmailNowConfig;
+import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryConfig;
+import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryPeriodConfig;
+import org.collectiveone.modules.activity.enums.SubscriberInAppConfig;
+import org.collectiveone.modules.activity.enums.SubscriberInheritConfig;
+import org.collectiveone.modules.activity.enums.SubscriberPushConfig;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -44,12 +48,29 @@ public class Subscriber {
 	private AppUser user;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "state")
-	private SubscriberState state;
+	@Column(name = "inherit_config")
+	private SubscriberInheritConfig inheritConfig;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "email_notification_state")
-	private SubscriberEmailNotificationsState emailNotificationsState;
+	@Column(name = "in_app_config")
+	private SubscriberInAppConfig inAppConfig;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "push_config")
+	private SubscriberPushConfig pushConfig;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "emails_now_config")
+	private SubscriberEmailNowConfig emailNowConfig;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "emails_summary_config")
+	private SubscriberEmailSummaryConfig emailSummaryConfig;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "emails_summary_period_config")
+	private SubscriberEmailSummaryPeriodConfig emailSummaryPeriodConfig;
+	
 	
 	@OneToMany(mappedBy = "subscriber", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Notification> notifications = new ArrayList<Notification>();
@@ -57,15 +78,47 @@ public class Subscriber {
 	
 	public SubscriberDto toDto() {
 		SubscriberDto dto = new SubscriberDto();
-		dto.setId(id.toString());
-		dto.setElementId(elementId.toString());
+		if (id != null) dto.setId(id.toString());
+		if (elementId != null) dto.setElementId(elementId.toString());
+		dto.setElementType(type.toString());
 		dto.setUser(user.toDtoLight());
-		dto.setState(state.toString());
-		dto.setEmailNotificationsState(emailNotificationsState.toString());
+		
+		if (inheritConfig != null) dto.setInheritConfig(inheritConfig.toString());
+		
+		if (inAppConfig != null) dto.setInAppConfig(inAppConfig.toString());
+		if (pushConfig != null) dto.setPushConfig(pushConfig.toString());
+		if (emailNowConfig != null) dto.setEmailNowConfig(emailNowConfig.toString());
+		if (emailSummaryConfig != null) dto.setEmailSummaryConfig(emailSummaryConfig.toString());
+		if (emailSummaryPeriodConfig != null) dto.setEmailSummaryPeriodConfig(emailSummaryPeriodConfig.toString());
 		
 		return dto;
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Subscriber other = (Subscriber) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
 	public UUID getId() {
 		return id;
 	}
@@ -98,28 +151,61 @@ public class Subscriber {
 		this.user = user;
 	}
 
-	public SubscriberState getState() {
-		return state;
+	public SubscriberInheritConfig getInheritConfig() {
+		return inheritConfig;
 	}
 
-	public void setState(SubscriberState state) {
-		this.state = state;
+	public void setInheritConfig(SubscriberInheritConfig inheritConfig) {
+		this.inheritConfig = inheritConfig;
 	}
 
-	public SubscriberEmailNotificationsState getEmailNotificationsState() {
-		return emailNotificationsState;
+	public SubscriberEmailNowConfig getEmailNowConfig() {
+		return emailNowConfig;
 	}
 
-	public void setEmailNotificationsState(SubscriberEmailNotificationsState emailNotificationsState) {
-		this.emailNotificationsState = emailNotificationsState;
+	public void setEmailNowConfig(SubscriberEmailNowConfig emailNowConfig) {
+		this.emailNowConfig = emailNowConfig;
 	}
-	
+
+	public SubscriberEmailSummaryConfig getEmailSummaryConfig() {
+		return emailSummaryConfig;
+	}
+
+	public void setEmailSummaryConfig(SubscriberEmailSummaryConfig emailSummaryConfig) {
+		this.emailSummaryConfig = emailSummaryConfig;
+	}
+
+	public SubscriberInAppConfig getInAppConfig() {
+		return inAppConfig;
+	}
+
+	public void setInAppConfig(SubscriberInAppConfig inAppConfig) {
+		this.inAppConfig = inAppConfig;
+	}
+
+	public SubscriberPushConfig getPushConfig() {
+		return pushConfig;
+	}
+
+	public void setPushConfig(SubscriberPushConfig pushConfig) {
+		this.pushConfig = pushConfig;
+	}
+
 	public List<Notification> getNotifications() {
 		return notifications;
 	}
 
 	public void setNotifications(List<Notification> notifications) {
 		this.notifications = notifications;
+	}
+
+	public SubscriberEmailSummaryPeriodConfig getEmailSummaryPeriodConfig() {
+		return emailSummaryPeriodConfig;
+	}
+
+	public void setEmailSummaryPeriodConfig(SubscriberEmailSummaryPeriodConfig emailSummaryPeriodConfig) {
+		this.emailSummaryPeriodConfig = emailSummaryPeriodConfig;
 	}	
+	
 	
 }

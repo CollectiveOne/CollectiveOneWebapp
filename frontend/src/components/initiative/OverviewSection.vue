@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="">
+  <div class="overview-content">
 
     <transition name="slideDownUp">
       <app-new-token-modal
@@ -43,11 +43,6 @@
       <div class="w3-card">
         <header class="w3-bar gray-1 section-header-bar">
           <h4 class="w3-bar-item w3-left">Purpose</h4>
-          <div v-if="isLoggedAnAdmin"
-            class="edit-btn-div w3-bar-item w3-button w3-right w3-large"
-            @click="$store.commit('showEditInitiativeModal', true)">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-          </div>
         </header>
         <div class="w3-container section-content">
           <div class="w3-row">
@@ -81,11 +76,6 @@
             class="w3-button">
             <i class="fa fa-plus" aria-hidden="true"></i>create new
           </div>
-          <!-- <div v-if="isLoggedAnAdmin"
-            @click="showTokensExchangeModal = true"
-            class="w3-button">
-            <i class="fa fa-exchange" aria-hidden="true"></i>exchange/convert
-          </div> -->
         </div>
         <div class="assets-content">
           <div v-if="initiative.assets.length === 0" class="w3-center">
@@ -111,7 +101,6 @@
 import AssetDistributionChart from '@/components/transfers/AssetDistributionChart.vue'
 import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
 import InitiativeTag from '@/components/initiative/InitiativeTag.vue'
-import ActivityGetter from '@/components/notifications/ActivityGetter.vue'
 import NewTokenModal from '@/components/modal/NewTokenModal.vue'
 import NewTokenExchangeModal from '@/components/modal/NewTokenExchangeModal.vue'
 import NewAssignationModal from '@/components/modal/NewAssignationModal.vue'
@@ -122,7 +111,6 @@ export default {
     'app-asset-distribution-chart': AssetDistributionChart,
     'app-edit-initiative-modal': EditInitiativeModal,
     'app-initiative-tag': InitiativeTag,
-    'app-activity-getter': ActivityGetter,
     'app-new-token-modal': NewTokenModal,
     'app-new-tokenexchange-modal': NewTokenExchangeModal,
     'app-new-assignation-modal': NewAssignationModal,
@@ -175,6 +163,10 @@ export default {
 
 <style scoped>
 
+.overview-content {
+  overflow: auto;
+}
+
 .this-container {
   padding-top: 25px !important;
   padding-bottom: 25px !important;
@@ -190,6 +182,7 @@ export default {
 }
 
 .image-container {
+  margin-top: 16px;
   min-height: 80px;
   max-height: 250px;
   overflow: hidden;

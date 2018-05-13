@@ -3,17 +3,20 @@ package org.collectiveone.modules.model.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.collectiveone.modules.users.AppUserDto;
+
 public class ModelCardWrapperDto {
 
 	private String id;
 	private ModelCardDto card;
-	private Boolean stateControl;
+	private AppUserDto creator;
+	private Long creationDate; 
+	private String initiativeId;
 	private Integer nLikes;
 	private Boolean userLiked;
-	private String state;
-	private String initiativeId;
-	private Long targetDate; 
-	private List<ModelCardDto> oldVersions;
+	private Long lastEdited;
+	private List<AppUserDto> editors = new ArrayList<AppUserDto>();
+	private List<ModelCardDto> oldVersions = new ArrayList<ModelCardDto>();
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
 	
 	public String getId() {
@@ -28,11 +31,29 @@ public class ModelCardWrapperDto {
 	public void setCard(ModelCardDto card) {
 		this.card = card;
 	}
-	public Boolean getStateControl() {
-		return stateControl;
+	public AppUserDto getCreator() {
+		return creator;
 	}
-	public void setStateControl(Boolean stateControl) {
-		this.stateControl = stateControl;
+	public void setCreator(AppUserDto creator) {
+		this.creator = creator;
+	}
+	public List<AppUserDto> getEditors() {
+		return editors;
+	}
+	public void setEditors(List<AppUserDto> editors) {
+		this.editors = editors;
+	}
+	public Long getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Long creationDate) {
+		this.creationDate = creationDate;
+	}
+	public String getInitiativeId() {
+		return initiativeId;
+	}
+	public void setInitiativeId(String initiativeId) {
+		this.initiativeId = initiativeId;
 	}
 	public Integer getnLikes() {
 		return nLikes;
@@ -46,23 +67,11 @@ public class ModelCardWrapperDto {
 	public void setUserLiked(Boolean userLiked) {
 		this.userLiked = userLiked;
 	}
-	public String getState() {
-		return state;
+	public Long getLastEdited() {
+		return lastEdited;
 	}
-	public void setState(String state) {
-		this.state = state;
-	}
-	public String getInitiativeId() {
-		return initiativeId;
-	}
-	public void setInitiativeId(String initiativeId) {
-		this.initiativeId = initiativeId;
-	}
-	public Long getTargetDate() {
-		return targetDate;
-	}
-	public void setTargetDate(Long targetDate) {
-		this.targetDate = targetDate;
+	public void setLastEdited(Long lastEdited) {
+		this.lastEdited = lastEdited;
 	}
 	public List<ModelCardDto> getOldVersions() {
 		return oldVersions;

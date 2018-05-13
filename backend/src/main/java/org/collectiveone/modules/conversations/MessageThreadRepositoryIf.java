@@ -12,8 +12,6 @@ public interface MessageThreadRepositoryIf extends CrudRepository<MessageThread,
 	
 	MessageThread findByModelSection_Id(UUID elementId);
 	
-	MessageThread findByModelView_Id(UUID elementId);
-	
 	MessageThread findByInitiative_Id(UUID elementId);
 		
 }

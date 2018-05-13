@@ -1,47 +1,23 @@
 <template lang="html">
-<div class="">
+<div class="initiatives-view">
 
-  <!-- All Modals in one place -->
-  <div class="modals">
-
-    <transition name="slideDownUp">
-      <app-new-initiative-modal v-if="showNewInitiativeModal">
-      </app-new-initiative-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-new-subinitiative-modal v-if="showNewSubInitiativeModal">
-      </app-new-subinitiative-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-edit-initiative-modal v-if="showEditInitiativeModal">
-      </app-edit-initiative-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-edit-notifications-modal v-if="showEditNotificationsModal">
-      </app-edit-notifications-modal>
-    </transition>
-
-    <transition name="slideDownUp">
-      <app-new-tokenmint-modal v-if="showNewTokenMintModal">
-      </app-new-tokenmint-modal>
-    </transition>
-
-  </div>
+  <transition name="slideDownUp">
+    <app-new-initiative-modal
+      v-if="showNewInitiativeModal"
+      @close="showNewInitiativeModal = false">
+    </app-new-initiative-modal>
+  </transition>
 
   <!-- Initiatives View -->
-
-  <div class="w3-cell-row">
+  <div class="w3-row initiatives-row">
 
     <transition name="slideRightLeft">
-      <div v-show="expandNav" class="dark-gray nav-container-cell" :class="navContainerClass">
-        <app-initiatives-nav @initiative-selected="initiativeSelected()"></app-initiatives-nav>
+      <div v-show="expandNav" class="dark-gray nav-container-cell w3-sidebar">
+        <app-initiatives-nav @initiative-selected="initiativeSelected()" @new-initiative="showNewInitiativeModal = true"></app-initiatives-nav>
       </div>
     </transition>
 
-    <div v-show="showContent" class="w3-cell content-container-cell" :class="contentContainerClass">
+    <div v-show="showContent" class="w3-row content-container-cell">
       <div class="slider-container">
         <transition name="slideDownUp" mode="out-in">
           <router-view></router-view>
@@ -56,85 +32,30 @@
 
 <script>
 import InitiativesNav from '@/components/nav/InitiativesNav.vue'
-
 import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
-import NewSubInitiativeModal from '@/components/modal/NewSubInitiativeModal.vue'
-import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
-import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
-import NewTokenMintModal from '@/components/modal/NewTokenMintModal.vue'
 
 export default {
   components: {
     'app-new-initiative-modal': NewInitiativeModal,
-    'app-new-subinitiative-modal': NewSubInitiativeModal,
-    'app-initiatives-nav': InitiativesNav,
-    'app-edit-initiative-modal': EditInitiativeModal,
-    'app-edit-notifications-modal': EditNotificationsModal,
-    'app-new-tokenmint-modal': NewTokenMintModal
-  },
-
-  props: {
-    expandNav: {
-      type: Boolean,
-      default: true
-    }
+    'app-initiatives-nav': InitiativesNav
   },
 
   data () {
     return {
-      showContent: true
+      showContent: true,
+      showNewInitiativeModal: false
     }
   },
 
   computed: {
+    expandNav () {
+      return this.$store.state.support.expandNav
+    },
     userAuthenticated () {
       return this.$store.state.user.authenticated
     },
-    showNewInitiativeModal () {
-      return this.$store.state.modals.showNewInitiativeModal
-    },
-    showNewSubInitiativeModal () {
-      return this.$store.state.modals.showNewSubInitiativeModal
-    },
-    showEditInitiativeModal () {
-      return this.$store.state.modals.showEditInitiativeModal
-    },
-    showEditMenu () {
-      return this.$store.state.modals.showEditMenu
-    },
-    showEditNotificationsModal () {
-      return this.$store.state.modals.showEditNotificationsModal
-    },
-    showNewTokenMintModal () {
-      return this.$store.state.modals.showNewTokenMintModal
-    },
     windowIsSmall () {
       return this.$store.state.support.windowIsSmall
-    },
-    navContainerClass () {
-      if (this.windowIsSmall) {
-        return {
-          'w3-sidebar': true
-        }
-      } else {
-        return {
-          'w3-cell': true
-        }
-      }
-    },
-    contentContainerClass () {
-      if (this.windowIsSmall) {
-        return {
-        }
-      } else {
-        if (this.expandNav) {
-          return {
-          }
-        } else {
-          return {
-          }
-        }
-      }
     },
     basePage () {
       return this.$route.name === 'Initiatives'
@@ -143,9 +64,7 @@ export default {
 
   methods: {
     initiativeSelected () {
-      if (this.windowIsSmall) {
-        this.$emit('hide-nav')
-      }
+      this.$store.commit('setExpandNav', false)
     }
   },
 
@@ -157,9 +76,33 @@ export default {
 
 <style scoped>
 
+.initiatives-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.initiatives-row {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-container-cell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.slider-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .nav-container-cell {
   width: 300px;
-  vertical-align: top !important;
+  height: 100%;
 }
 
 </style>

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="gray-1-color" :class="">
+  <div class="gray-1-color">
     <div v-if="show" class="w3-left noselect">
       <div class="">
         <span :style="iconStyle"><i class="fa" :class="iconClass"></i></span>
@@ -125,16 +125,12 @@ export default {
         }
 
         switch (this.contextType) {
-          case 'MODEL_VIEW':
-            url = '/1/initiative/' + initId + '/model/view/' + this.contextElementId + '/' + this.requestType
-            break
-
           case 'MODEL_SECTION':
-            url = '/1/initiative/' + initId + '/model/section/' + this.contextElementId + '/' + this.requestType
+            url = '/1/model/section/' + this.contextElementId + '/' + this.requestType
             break
 
           case 'MODEL_CARD':
-            url = '/1/initiative/' + initId + '/model/card/' + this.contextElementId + '/' + this.requestType
+            url = '/1/model/card/' + this.contextElementId + '/' + this.requestType
             break
         }
 

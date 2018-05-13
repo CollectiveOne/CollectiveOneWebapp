@@ -14,17 +14,15 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.conversations.MessageThread;
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
-import org.collectiveone.modules.model.ModelView;
+import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -65,14 +63,9 @@ public class Initiative {
 	@OneToOne
 	private InitiativeMeta meta;	
 	
-	@ManyToMany
-	@OrderColumn(name = "views_order")
-	private List<ModelView> modelViews = new ArrayList<ModelView>();
-	
-	@ManyToMany
-	@OrderColumn(name = "views_order")
-	private List<ModelView> modelViewsTrash = new ArrayList<ModelView>();
-	
+	@OneToOne
+	private ModelSection topModelSection;
+		
 	@OneToOne
 	private MessageThread messageThread;
 	
@@ -84,6 +77,7 @@ public class Initiative {
 		dto.setCreator(creator.toDtoLight());
 		dto.setStatus(status.toString());
 		dto.setMeta(meta.toDto());
+		dto.setTopModelSection(topModelSection.toDto());
 		
 		if(tokenTypes != null) {
 			for (TokenType tokenType : tokenTypes) {
@@ -143,17 +137,11 @@ public class Initiative {
 	public void setMeta(InitiativeMeta meta) {
 		this.meta = meta;
 	}
-	public List<ModelView> getModelViews() {
-		return modelViews;
+	public ModelSection getTopModelSection() {
+		return topModelSection;
 	}
-	public void setModelViews(List<ModelView> modelViews) {
-		this.modelViews = modelViews;
-	}
-	public List<ModelView> getModelViewsTrash() {
-		return modelViewsTrash;
-	}
-	public void setModelViewsTrash(List<ModelView> modelViewsTrash) {
-		this.modelViewsTrash = modelViewsTrash;
+	public void setTopModelSection(ModelSection topModelSection) {
+		this.topModelSection = topModelSection;
 	}
 	public MessageThread getMessageThread() {
 		return messageThread;

@@ -13,8 +13,13 @@
       <div class="img-div noselect"
         @mouseover="showHoverName = true"
         @mouseleave="showHoverName = false">
-        <img @click="showProfileModal = true" class="w3-circle cursor-pointer" :class="imgClass" :src="userPictureUrl" @error="errorOnPicture"/>
-        <div v-if="!showName && showHoverName && enableHover" class="w3-container w3-padding hover-name-container w3-tag dark-gray w3-round">
+
+        <img @click="showProfileModal = true" class="w3-circle cursor-pointer"
+          :class="imgClass" :src="userPictureUrl" @error="errorOnPicture"/>
+
+        <div v-if="!showName && showHoverName && enableHover"
+          class="w3-container w3-padding hover-name-container w3-tag dark-gray w3-round">
+
           <div class="w3-row cursor-pointer nickname-row">
             <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
           </div>
@@ -38,7 +43,8 @@
           </div>
         </div>
       </div>
-      <div v-if="showName" class="name-container">
+      <div v-if="showName" class="name-container"
+        :class="{'name-large': !small, 'name-small': small}">
         <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
       </div>
     </div>
@@ -140,10 +146,19 @@ export default {
 
 .name-container {
   display: inline-block;
-  font-size: 18px;
-  margin-left: 15px;
   text-align: left;
   vertical-align: middle;
+}
+
+.name-large {
+  font-size: 18px;
+  margin-left: 15px;
+}
+
+.name-small {
+  font-size: 12px;
+  margin-left: 3px;
+  padding-top: 2px;
 }
 
 .hover-name-container {
@@ -168,8 +183,8 @@ export default {
 }
 
 .img-style-small {
-  width: 35px;
-  height: 35px;
+  width: 25px;
+  height: 25px;
 }
 
 </style>

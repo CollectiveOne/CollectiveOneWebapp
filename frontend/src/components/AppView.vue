@@ -1,8 +1,7 @@
 <template lang="html">
-  <div>
-    <app-header @expand-nav="expandNav = !expandNav"></app-header>
+  <div class="app-view">
     <div class="w3-row app-content">
-      <router-view @hide-nav="expandNav = false" :expandNav="expandNav"></router-view>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -15,21 +14,9 @@ export default {
     AppHeader: Header
   },
 
-  data () {
-    return {
-      expandNav: false
-    }
-  },
-
   computed: {
     windowIsSmall () {
       return this.$store.state.support.windowIsSmall
-    }
-  },
-
-  watch: {
-    expandNav () {
-      this.$store.commit('setExpandNav', this.expandNav)
     }
   },
 
@@ -47,10 +34,8 @@ export default {
     this.checkWindowSize()
 
     if (this.windowIsSmall) {
-      this.expandNav = false
       this.$store.commit('setWindowIsSmall', true)
     } else {
-      this.expandNav = true
       this.$store.commit('setWindowIsSmall', false)
     }
 
@@ -61,8 +46,16 @@ export default {
 
 <style scoped>
 
+.app-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .app-content {
-  margin-top:65px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 </style>

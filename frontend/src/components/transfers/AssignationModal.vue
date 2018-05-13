@@ -258,7 +258,6 @@
 </template>
 
 <script>
-import UserAvatar from '@/components/user/UserAvatar.vue'
 import ValueSeal from '@/components/transfers/ValueSeal.vue'
 import UsersPercentages from '@/components/user/UsersPercentages.vue'
 import PeerReviewedEvaluations from '@/components/transfers/PeerReviewedEvaluations.vue'
@@ -267,7 +266,6 @@ import { getTimeStrUntil, dateString } from '@/lib/common.js'
 export default {
 
   components: {
-    'app-user-avatar': UserAvatar,
     'app-value-seal': ValueSeal,
     'app-users-percentages': UsersPercentages,
     'app-peer-reviewed-evaluations': PeerReviewedEvaluations

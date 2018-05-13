@@ -68,8 +68,8 @@
               </p>
             </td>
             <td v-if="isLoggedAnAdmin" id="T_deleteUser">
-              <i 
-                id="T_peopleDeleteIcon" 
+              <i
+                id="T_peopleDeleteIcon"
                 v-if="!removingThisMember(member)"
                 @click="removeMember(member)"
                 class="fa fa-times-circle-o w3-xlarge gray-1-color w3-button" aria-hidden="true">
@@ -99,12 +99,10 @@
 </template>
 
 <script>
-import UserAvatar from '@/components/user/UserAvatar.vue'
 import UserSelector from '@/components/user/UserSelector.vue'
 
 export default {
   components: {
-    'app-user-avatar': UserAvatar,
     'app-user-selector': UserSelector
   },
 
@@ -224,8 +222,6 @@ export default {
 <style scoped>
 
 .members-table-container {
-  max-height: 80vh;
-  overflow-y: auto;
 }
 
 .table-row {

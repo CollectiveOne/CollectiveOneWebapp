@@ -31,12 +31,7 @@
 </template>
 
 <script>
-import UserAvatar from '@/components/user/UserAvatar.vue'
-
 export default {
-  components: {
-    'app-user-avatar': UserAvatar
-  },
 
   props: {
     evaluators: Array,

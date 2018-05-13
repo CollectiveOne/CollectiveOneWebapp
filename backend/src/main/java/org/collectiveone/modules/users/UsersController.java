@@ -31,6 +31,7 @@ public class UsersController extends BaseController {
 		}
 		
 		AppUser user = appUserService.getOrCreateFromAuth0Id(auth0Id);
+		
 		return appUserService.getUserLight(user.getC1Id());
 	}
 	

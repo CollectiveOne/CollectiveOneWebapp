@@ -1,5 +1,6 @@
 package org.collectiveone.modules.users;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -8,6 +9,11 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.ActivityService;
+import org.collectiveone.modules.activity.Subscriber;
+import org.collectiveone.modules.activity.enums.SubscriberInheritConfig;
+import org.collectiveone.modules.activity.enums.SubscriptionElementType;
+import org.collectiveone.modules.activity.repositories.SubscriberRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +33,13 @@ public class AppUserService {
 	
 	@Autowired
 	private ManagementAPI mgmt;
+	
+	@Autowired
+	private ActivityService activityService;
+	
+	@Autowired
+	private SubscriberRepositoryIf subscriberRepository;
+	
 
 	@Transactional
 	public AppUser getOrCreateFromAuth0Id(String auth0Id) {
@@ -37,6 +50,9 @@ public class AppUserService {
 			/* the first time a user is requested, it 
 			 * is added to the local DB */
 			appUser = addUserToLocalDB(auth0Id);
+		} else {
+			appUser.setLastSeen(new Timestamp(System.currentTimeMillis()));
+			appUserRepository.save(appUser);
 		}
     	
     	return appUser;
@@ -44,7 +60,12 @@ public class AppUserService {
 	
 	@Transactional
 	public AppUser getFromAuth0Id(String auth0Id) {
-    	return appUserRepository.findByAuth0Id(auth0Id);
+		AppUser appUser = appUserRepository.findByAuth0Id(auth0Id);
+		if (appUser != null) {
+			appUser.setLastSeen(new Timestamp(System.currentTimeMillis()));
+			appUserRepository.save(appUser);	
+		}
+    	return appUser;
 	}
 	
 	@Transactional
@@ -173,6 +194,18 @@ public class AppUserService {
 					profile = appUserProfileRepository.save(profile);
 					
 					appUser.setProfile(profile);
+					
+					/* create global subscriber */
+					Subscriber subscriber = new Subscriber();
+					
+					subscriber.setType(SubscriptionElementType.COLLECTIVEONE);
+					subscriber.setUser(appUser);
+					
+					subscriber.setInheritConfig(SubscriberInheritConfig.CUSTOM);
+					
+					activityService.initDefaultSubscriber(subscriber);
+					
+					subscriberRepository.save(subscriber);
 					
 				} 
 			} else {

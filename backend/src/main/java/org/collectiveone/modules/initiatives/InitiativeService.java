@@ -14,7 +14,7 @@ import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.WantToContributeNotification;
 import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
-import org.collectiveone.modules.activity.enums.NotificationEmailState;
+import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
@@ -36,9 +36,8 @@ import org.collectiveone.modules.initiatives.repositories.InitiativeRelationship
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeTagRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
-import org.collectiveone.modules.model.ModelService;
-import org.collectiveone.modules.model.dto.ModelSectionDto;
-import org.collectiveone.modules.model.dto.ModelViewDto;
+import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenService;
@@ -50,6 +49,7 @@ import org.collectiveone.modules.tokens.enums.TokenHolderType;
 import org.collectiveone.modules.tokens.repositories.InitiativeTransferRepositoryIf;
 import org.collectiveone.modules.tokens.repositories.TokenMintRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
+import org.collectiveone.modules.users.AppUserDto;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -66,9 +66,6 @@ public class InitiativeService {
 	
 	@Autowired
 	private GovernanceService governanceService;
-	
-	@Autowired
-	private ModelService modelService;
 	
 	@Autowired
 	private TokenTransferService tokenTransferService;
@@ -93,6 +90,9 @@ public class InitiativeService {
 	
 	@Autowired
 	private MemberRepositoryIf memberRepository;
+	
+	@Autowired
+	private ModelSectionRepositoryIf modelSectionRepository;
 	
 	@Autowired
 	private DecisionMakerRepositoryIf decisionMakerRepository;
@@ -179,6 +179,20 @@ public class InitiativeService {
 		return false;
 	}
 	
+	@Transactional
+	public GetResult<List<AppUserDto>> getMembersOfEcosystem(UUID initiativeId, String query, PageRequest page) {
+	
+		List<UUID> ecosystemIds = findAllInitiativeEcosystemIds(initiativeId);
+		Page<AppUser> allMemberUsers = memberRepository.findMembersOfInitiatives(ecosystemIds, query.toLowerCase(), page);
+		List<AppUserDto> allMembersDto = new ArrayList<AppUserDto>();
+	
+		for (AppUser user : allMemberUsers.getContent()) {
+			allMembersDto.add(user.toDtoLight());
+		}
+		return new GetResult<List<AppUserDto>>("success", "members retrieved", allMembersDto);
+	}   
+	
+	
 	private Boolean canAccessInherited(UUID initiativeId, UUID userId) {
 		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
 		if (parent != null) {
@@ -205,17 +219,17 @@ public class InitiativeService {
 				PostResult result3 = transferAssets(result.getData().getId(), initiativeDto, userId);
 				
 				if (result3.getResult().equals("success")) {
-					PostResult result4 = initializeModel(result.getData().getId(), userId);
+					
+					PostResult result4 = initModel(result.getData().getId());
 					
 					if (result4.getResult().equals("success")) {
-						
 						return new PostResult("success", "initiative created and initalized",  result.getData().getId().toString());
-						
 					} else {
 						return new PostResult("error", "error initializing model",  "");
 					}
-				
+					
 				} else {
+					
 					return new PostResult("error", "error transferring assets",  "");
 				}
 			} else {
@@ -287,7 +301,7 @@ public class InitiativeService {
 			notification.setInitiative(initiative);
 			notification.setAdmin(admin.getUser());
 			notification.setUser(user);
-			notification.setEmailState(NotificationEmailState.PENDING);
+			notification.setEmailState(NotificationState.PENDING);
 			
 			wantToContributeRepository.save(notification);
 		}
@@ -427,22 +441,20 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	private PostResult initializeModel(UUID initiativeId, UUID creatorId) {
+	private PostResult initModel(UUID initiativeId) {
+		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
-		ModelViewDto viewDto = new ModelViewDto();
-		viewDto.setTitle("General View");
-		viewDto.setDescription("Initial auto-generated sample view. You can edit or delete it at will.");
+		ModelSection section = new ModelSection();
+		section.setTitle(initiative.getMeta().getName());
+		section.setInitiative(initiative);
+		section.setIsTopModelSection(true);
 		
-			
-		PostResult result = modelService.createView(initiativeId, viewDto, creatorId, false);
+		section = modelSectionRepository.save(section);
 		
-		ModelSectionDto sectionDto = new ModelSectionDto();
-		sectionDto.setTitle("Section");
-		sectionDto.setDescription("Initial auto-generated sample section. You can edit or delete it at will.");
+		initiative.setTopModelSection(section);
+		initiativeRepository.save(initiative);
 		
-		PostResult result2 = modelService.createSection(sectionDto, null, UUID.fromString(result.getElementId()), creatorId, false);
-		
-		return result2;
+		return new PostResult("success", "initiative top section created",  initiative.getId().toString());
 	}
 	
 	@Transactional
@@ -509,12 +521,14 @@ public class InitiativeService {
 		initiativeMetaRepository.save(initiativeMeta);
 		
 		if (!oldName.equals(initiativeDto.getName()) || !oldDriver.equals(initiativeDto.getDriver())) {
+			/* update topModelSection name */
+			ModelSection section = initiative.getTopModelSection();
+			section.setTitle(initiativeMeta.getName());
+			modelSectionRepository.save(section);
+			
 			/* notify only if actually different */
 			activityService.initiativeEdited(initiative, appUserRepository.findByC1Id(userId), oldName, oldDriver);
 		}
-		
-		
-		
 		
 		return new PostResult("success", "initaitive updated", initiative.getId().toString());  
 	}
@@ -848,7 +862,7 @@ public class InitiativeService {
 			/* delete only if another admin remains */
 			
 			/* members were subscribed to initiatives by default, so, delete them when deleting the member */
-			activityService.removeSubscriber(initiativeId, member.getUser().getC1Id());
+			activityService.removeSubscriber(initiativeId,  SubscriptionElementType.INITIATIVE, member.getUser().getC1Id());
 			
 			memberRepository.delete(member);
 			governanceService.deleteDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());

@@ -1,3 +1,55 @@
+.control-btn {
+  cursor: pointer;
+  margin-right: 4px;
+  padding: 8px 10px;
+  background-color: #eff3f6;
+  border-radius: 3px;
+  transition: all 300ms ease;
+  user-select: none;  
+}
+
+.control-btn:hover {
+  background-color: #15a5cc;
+}
+
+.control-btn img {
+  width: 20px;
+}
+
+.control-btn-selected {
+  background-color: #15a5cc;
+  color: white;
+  font-weight: bold;
+}
+
+.drop-shadow-br {
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.16), 2px 3px 3px rgba(0,0,0,0.12);
+}
+
+.fa-button {
+  color: #313942;
+  cursor: pointer;
+  transition: all 300ms ease;
+}
+
+.fa-button-selected {
+  color: #15a5cc;
+  cursor: pointer;
+}
+
+.fa-button:hover {
+  background-color: #ced4d9;
+}
+
+.fa-button-dark {
+  transition: all 300ms ease;
+  color: white;
+}
+
+.fa-button-dark:hover {
+  background-color: #637484;
+}
+
 .app-button {
   background-color: #15a5cc !important;
   color: white;
@@ -65,6 +117,9 @@
   box-shadow: 0 0 10px red;
 }
 
+.inline-block {
+  display: inline-block;
+}
 
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
@@ -74,6 +129,33 @@
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #eff3f6;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #637484;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #6f8294;
+}
+
+/* width */
+.small-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
 }
 
 .flex-vert {
@@ -109,13 +191,6 @@
 
 .app-margin-bottom {
   margin-bottom: 10px;
-}
-
-.vdp-datepicker input {
-  width: 100%;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 10px;
 }
 
 .loader-gif-container {

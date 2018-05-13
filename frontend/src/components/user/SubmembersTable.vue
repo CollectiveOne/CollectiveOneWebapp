@@ -36,13 +36,7 @@
 </template>
 
 <script>
-import UserAvatar from '@/components/user/UserAvatar.vue'
-
 export default {
-  components: {
-    'app-user-avatar': UserAvatar
-  },
-
   props: {
     submembers: Array,
     assets: {
@@ -76,8 +70,6 @@ export default {
 <style scoped>
 
 .submembers-table {
-  max-height: 80vh;
-  overflow-y: auto;
 }
 
 .avatar-col {

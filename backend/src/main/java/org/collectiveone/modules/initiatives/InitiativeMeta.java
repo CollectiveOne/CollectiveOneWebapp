@@ -33,7 +33,7 @@ public class InitiativeMeta {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@Column(name = "name", length = 30)
+	@Column(name = "name", length = 42)
 	private String name;
 	
 	@Lob
