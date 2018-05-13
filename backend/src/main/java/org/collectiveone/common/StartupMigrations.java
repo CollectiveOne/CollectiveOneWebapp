@@ -166,7 +166,8 @@ public class StartupMigrations implements ApplicationListener<ContextRefreshedEv
 			subscriberRepository.save(subscriber);
 		}
 		
-		/* make sure all app users have their global collectiveone subscriber entity */
+//		/* run this after having merged subscribers with sql script */
+//		/* make sure all app users have their global collectiveone subscriber entity */
 		List<AppUser> allAppUsers = subscriberRepository.findAllUsersWithoutSubscriberOfType(SubscriptionElementType.COLLECTIVEONE);
 		
 		for (AppUser user : allAppUsers) {
