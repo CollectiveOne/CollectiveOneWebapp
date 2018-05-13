@@ -169,6 +169,9 @@ export default {
     levels () {
       return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
     },
+    infiniteLevels () {
+      return this.levels === 999
+    },
     highlightLevelUse () {
       if (this.isSelected) {
         /* if this is the selected section, start counting from levels */
@@ -198,7 +201,9 @@ export default {
     },
     checkExpandSubsections () {
       if (this.highlightLevelUse > 1) {
-        this.expandSubsections()
+        if (!this.infiniteLevels) {
+          this.expandSubsections()
+        }
       } else {
         if (this.sectionData) {
           if (this.sectionData.expand) {

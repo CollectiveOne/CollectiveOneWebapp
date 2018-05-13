@@ -47,18 +47,22 @@
 
         <div class="control-group noselect">
           <div class="w3-left zoom-controls">
-            <div @click="levelDown()" class="w3-left cursor-pointer arrow-div">
-              <img src="./../../assets/zoom-in-icon.svg" alt="">
+            <div class="w3-left zoom-controls-enabled">
+              <div @click="levelDown()" class="w3-left cursor-pointer arrow-div">
+                <img src="./../../assets/zoom-in-icon.svg" alt="">
+              </div>
+              <div class="w3-left number-div">
+                {{ levels !== 999 ? levels : '&#x221e;' }}
+              </div>
+              <div @click="levelUp()" class="w3-left cursor-pointer arrow-div">
+                <img src="./../../assets/zoom-out-icon.svg" alt="">
+              </div>
+              <div v-if="infiniteLevels" class="zoom-controls-cover">
+              </div>
             </div>
-            <div class="w3-left number-div">
-              {{ levels }}
-            </div>
-            <div @click="levelUp()" class="w3-left cursor-pointer arrow-div">
-              <img src="./../../assets/zoom-out-icon.svg" alt="">
-            </div>
-            <!-- <div @click="infiniteClicked()" class="w3-left cursor-pointer arrow-div w3-border-left">
+            <div @click="levelsInfinite()" class="w3-left cursor-pointer arrow-div w3-border-left" :class="{'control-btn-selected': infiniteLevels}">
               <img src="./../../assets/infinite-icon.svg" alt="">
-            </div> -->
+            </div>
           </div>
         </div>
 
@@ -177,7 +181,7 @@
         </app-model-cards-container>
 
         <div v-if="!isSectionsOrder && thereAreMore" class="w3-row w3-center">
-          <button @click="showMore()" class="w3-button app-button-light" type="button" name="button">show more</button>
+          <button @click="showMore()"="w3-button app-button-light" type="button" name="button">show more</button>
         </div>
 
         <div v-if="loading" class="w3-row w3-center loader-gif-container">
@@ -292,6 +296,9 @@ export default {
     levels () {
       return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
     },
+    infiniteLevels () {
+      return this.levels === 999
+    },
     cardsType () {
       return this.$route.query.cardsType ? this.$route.query.cardsType : 'card'
     },
@@ -350,11 +357,22 @@ export default {
       this.orderType = 'aggregated'
     },
     levelUp () {
-      this.$router.replace({name: this.$route.name, query: {levels: this.levels + 1}})
+      if (!this.infiniteLevels) {
+        this.$router.replace({name: this.$route.name, query: {levels: this.levels + 1}})
+      }
     },
     levelDown () {
-      if (this.levels > 1) {
-        this.$router.replace({name: this.$route.name, query: {levels: this.levels - 1}})
+      if (!this.infiniteLevels) {
+        if (this.levels > 1) {
+          this.$router.replace({name: this.$route.name, query: {levels: this.levels - 1}})
+        }
+      }
+    },
+    levelsInfinite () {
+      if (this.infiniteLevels) {
+        this.$router.replace({name: this.$route.name, query: {levels: 1}})
+      } else {
+        this.$router.replace({name: this.$route.name, query: {levels: 999}})
       }
     },
     summaryView () {
@@ -539,8 +557,7 @@ export default {
 
 .zoom-controls {
   min-height: 1px;
-  width: 120px;
-  /*width: 160px;*/
+  width: 160px;
   text-align: center;
   color: #3e464e;
   background-color: #eff3f6;
@@ -566,6 +583,20 @@ export default {
   height: 38px;
   font-size: 19px;
   padding: 5px 12px;
+}
+
+.zoom-controls-enabled {
+  position: relative;
+}
+
+.zoom-controls .zoom-controls-cover {
+  position: absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color: rgba(71, 71, 71, 0.8);
+  border-radius: 3px;
 }
 
 .text-details {
