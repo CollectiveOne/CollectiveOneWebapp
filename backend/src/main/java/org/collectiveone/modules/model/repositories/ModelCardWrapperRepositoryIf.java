@@ -21,12 +21,12 @@ public interface ModelCardWrapperRepositoryIf extends CrudRepository<ModelCardWr
 	@Query("SELECT section FROM ModelSection section JOIN section.cardsWrappers crds WHERE crds.id = ?1")
 	public List<ModelSection> findParentSections(UUID modelCardWrapperId);
 	
-	@Query("SELECT crdWrp FROM ModelSection sec JOIN sec.cardsWrappers crdWrp JOIN crdWrp.card crd "
+	@Query("SELECT DISTINCT crdWrp FROM ModelSection sec JOIN sec.cardsWrappers crdWrp JOIN crdWrp.card crd "
 			+ "WHERE (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
 			+ "AND sec.id IN ?1")
 	public Page<ModelCardWrapper> searchInSectionsByQuery(List<UUID> sectionIds, String query, Pageable page);
 	
-	@Query("SELECT crdWrp FROM ModelCardWrapper crdWrp JOIN crdWrp.card crd "
+	@Query("SELECT DISTINCT crdWrp FROM ModelCardWrapper crdWrp JOIN crdWrp.card crd "
 			+ "WHERE (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
 			+ "AND crdWrp.initiative.id IN ?1 ORDER BY crdWrp.lastEdited")
 	public Page<ModelCardWrapper> searchInInitiativesByQuery(List<UUID> initiativeIds, String query, Pageable page);

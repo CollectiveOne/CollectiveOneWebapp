@@ -180,8 +180,8 @@
           :acceptDrop="false">
         </app-model-cards-container>
 
-        <div v-if="!isSectionsOrder && thereAreMore" class="w3-row w3-center">
-          <button @click="showMore()"="w3-button app-button-light" type="button" name="button">show more</button>
+        <div v-if="!isSectionsOrder && thereAreMore" class="w3-row w3-center w3-margin-top w3-margin-bottom">
+          <button @click="showMore()" class="w3-button app-button-light" type="button" name="button">show more</button>
         </div>
 
         <div v-if="loading" class="w3-row w3-center loader-gif-container">
