@@ -42,29 +42,28 @@ const actions = {
           }
 
           if (ok) {
-            if (!window.Notification) {
-              Notification.requestPermission()
-            } else {
-              let user = notification.activity.triggerUser
+            /* ask permisson */
+            Notification.requestPermission()
 
-              var notify = new Notification('CollectiveOne', {
-                body: user.nickname + ' ' + notification.message,
-                tag: notification.activity.id,
-                icon: user.pictureUrl
-              })
+            let user = notification.activity.triggerUser
 
-              notify.onshow = function () { setTimeout(notify.close.bind(notify), 5000) }
-              notify.onclick = function (event) {
-                event.preventDefault()
-                window.open(notification.url, '_blank')
-                notify.close()
-              }
+            var notify = new Notification('CollectiveOne', {
+              body: user.nickname + ' ' + notification.message,
+              tag: notification.activity.id,
+              icon: user.pictureUrl
+            })
 
-              Vue.axios.put('/1/notifications/pushed/' + notification.id, {}).then((response) => {
-              }).catch(function (error) {
-                console.log(error)
-              })
+            notify.onshow = function () { setTimeout(notify.close.bind(notify), 5000) }
+            notify.onclick = function (event) {
+              event.preventDefault()
+              window.open(notification.url, '_blank')
+              notify.close()
             }
+
+            Vue.axios.put('/1/notifications/pushed/' + notification.id, {}).then((response) => {
+            }).catch(function (error) {
+              console.log(error)
+            })
           }
         }
       }
