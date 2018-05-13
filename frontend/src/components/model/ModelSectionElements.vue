@@ -258,6 +258,7 @@ export default {
       showNewCardModal: false,
       loading: false,
       sectionLoadedOnce: false,
+      sectionLoadedOnceLevels: 0,
       orderType: 'sections',
       isOnlyMessages: false,
       newCardQuery: '',
@@ -376,7 +377,7 @@ export default {
       }
     },
     summaryView () {
-      if (!this.sectionLoadedOnce) {
+      if (!this.sectionLoadedOnce || (this.sectionLoadedOnceLevels !== this.levels)) {
         this.updateSection()
       }
       if (this.$route.query.cardsType !== 'summary' || this.$route.name !== 'ModelSectionCards') {
@@ -384,7 +385,7 @@ export default {
       }
     },
     cardView () {
-      if (!this.sectionLoadedOnce) {
+      if (!this.sectionLoadedOnce || (this.sectionLoadedOnceLevels !== this.levels)) {
         this.updateSection()
       }
       if (this.$route.query.cardsType !== 'card' || this.$route.name !== 'ModelSectionCards') {
@@ -392,7 +393,7 @@ export default {
       }
     },
     docView () {
-      if (!this.sectionLoadedOnce) {
+      if (!this.sectionLoadedOnce || (this.sectionLoadedOnceLevels !== this.levels)) {
         this.updateSection()
       }
       if (this.$route.query.cardsType !== 'doc' || this.$route.name !== 'ModelSectionCards') {
@@ -440,6 +441,7 @@ export default {
         this.axios.get('/1/model/section/' + this.currentSectionId, {params: {levels: this.levels}}).then((response) => {
           this.loading = false
           this.sectionLoadedOnce = true
+          this.sectionLoadedOnceLevels = this.levels
           if (response.data.result === 'success') {
             this.section = response.data.data
           }
