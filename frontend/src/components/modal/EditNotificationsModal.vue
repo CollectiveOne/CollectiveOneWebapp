@@ -39,7 +39,14 @@
 
           <hr>
 
+          <div class="w3-row w3-center w3-margin-bottom">
+            <div  v-if="subscriber.inheritConfig === 'INHERIT'" class="">
+              Inhereting notification preferences from: <br><b>{{ applicableSubscriberElementName }}</b>
+            </div>
+          </div>
+
           <div v-if="applicableSubscriber" class="details-configuration">
+
             <div class="w3-row-padding">
               <div class="w3-col m4 s12"></div>
               <div class="w3-col m8 s12">
@@ -241,10 +248,7 @@
 
             </div>
 
-            <div v-if="subscriber.inheritConfig === 'INHERIT'" class="obfuscate-div w3-display-container">
-              <div class="w3-display-middle">
-                Inhereting notification preferences from: <br><b>{{ applicableSubscriberElementName }}</b>
-              </div>
+            <div v-if="subscriber.inheritConfig === 'INHERIT'" class="obfuscate-div">
             </div>
           </div>
 
@@ -435,12 +439,10 @@ export default {
   width: 100%;
   height: 100%;
   background-color: rgba(0.5, 0.5, 0.5, 0.5);
+  color: white;
   top: 0;
   left: 0;
   border-radius: 6px;
-  color: white;
-  font-size: 22px;
-  text-align: center;
 }
 
 .w3-col {
