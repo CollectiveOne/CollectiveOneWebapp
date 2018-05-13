@@ -268,9 +268,14 @@ public class NotificationDtoBuilder {
 			
 		case MESSAGE_POSTED:
 			String from = "CollectiveOne";
-			if(notification.getActivity().getModelCardWrapper() != null) {
+			if(modelCardWrapper != null) {
 				
-				from = getModelCardWrapperAnchor(modelCardWrapper) + " card";
+				if (onSection != null ) {
+					from = getModelCardWrapperAnchor(modelCardWrapper, notification.getActivity().getOnSection()) + " card";	
+				} else {
+					from = getModelCardWrapperName(modelCardWrapper) + " card";
+				}
+				
 				url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
 				
 			} else if (notification.getActivity().getModelSection() != null) {

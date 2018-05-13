@@ -158,7 +158,7 @@ export default {
       })
     },
     deleteConfirmed () {
-      this.axios.delete('/1/model/cardWrapper/' + this.card.id)
+      this.axios.delete('/1/model/cardWrapper/' + this.cardWrapper.id)
         .then((response) => {
           this.deleteIntent = false
           this.expanded = false
