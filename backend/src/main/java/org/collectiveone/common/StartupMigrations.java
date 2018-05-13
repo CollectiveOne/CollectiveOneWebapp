@@ -1,14 +1,32 @@
 package org.collectiveone.common;
 
 
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.UUID;
+
 import javax.transaction.Transactional;
 
+import org.collectiveone.modules.activity.Activity;
 import org.collectiveone.modules.activity.ActivityService;
+import org.collectiveone.modules.activity.Subscriber;
+import org.collectiveone.modules.activity.enums.ActivityType;
+import org.collectiveone.modules.activity.enums.SubscriberEmailNowConfig;
+import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryConfig;
+import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryPeriodConfig;
+import org.collectiveone.modules.activity.enums.SubscriberInAppConfig;
+import org.collectiveone.modules.activity.enums.SubscriberInheritConfig;
+import org.collectiveone.modules.activity.enums.SubscriberPushConfig;
+import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.activity.repositories.SubscriberRepositoryIf;
+import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+import org.collectiveone.modules.model.ModelCardWrapper;
+import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
+import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -44,5 +62,128 @@ public class StartupMigrations implements ApplicationListener<ContextRefreshedEv
 	@EventListener
 	@Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
+		
+		/* Create top section to all initiatives */
+		List<Initiative> initiatives = (List<Initiative>) initiativeRepository.findAll();
+		
+		System.out.println("creating initiatives top sections");
+		
+		for (Initiative initiative : initiatives) {
+			if (initiative.getTopModelSection() == null) {
+				
+				System.out.println("creating top section for " + initiative.getMeta().getName());
+				
+				ModelSection section = new ModelSection();
+				section.setTitle(initiative.getMeta().getName());
+				section.setInitiative(initiative);
+				section.setIsTopModelSection(true);
+				
+				section = modelSectionRepository.save(section);
+				
+				initiative.setTopModelSection(section);
+				initiativeRepository.save(initiative);
+				
+			}
+		}
+		
+		
+		/* Fill card wrappers creation date */
+		List<ModelCardWrapper> cardWrappersNotCreated = modelCardWrapperRepository.findWithNullCreation();
+		
+		System.out.println("filling card wrappers creation date");
+		
+		for (ModelCardWrapper cardWrapper : cardWrappersNotCreated) {
+			
+			List<Activity> creationEvents = activityRepository.findOfCard(cardWrapper.getId(), ActivityType.MODEL_CARDWRAPPER_CREATED);
+			
+			Timestamp creationDate = null;
+			AppUser creator = null;
+			
+			if (creationEvents.size() > 0) {
+				creationDate = creationEvents.get(0).getTimestamp();
+				creator = creationEvents.get(0).getTriggerUser();
+				
+			} else {
+				creationDate = new Timestamp(1451606400000L);
+				creator = appUserRepository.findByC1Id(UUID.fromString("ac12edce-5f45-124a-815f-486a854d000d")); // Tom
+			}
+			
+			System.out.println("filling card wrapper " + cardWrapper.getId().toString() +" creation date and creator");
+			cardWrapper.setCreationDate(creationDate);
+			cardWrapper.setCreator(creator);
+			
+			modelCardWrapperRepository.save(cardWrapper);
+		}
+		
+		/* Fill card wrappers last edited date */
+		List<ModelCardWrapper> cardWrappersNotEdited = modelCardWrapperRepository.findWithNullLastEdited();
+		
+		System.out.println("filling card wrappers last edited date");
+		
+		for (ModelCardWrapper cardWrapper : cardWrappersNotEdited) {
+			
+			cardWrapper.getEditors().clear();
+			List<Activity> editionEvents = activityRepository.findOfCard(cardWrapper.getId(), ActivityType.MODEL_CARDWRAPPER_CREATED);
+			
+			Timestamp lastEdited = null;
+			
+			if (editionEvents.size() > 0) {
+				Activity lastEdition = editionEvents.get(0);
+				lastEdited = lastEdition.getTimestamp();
+				/* get the max */
+				for (Activity thisEvent : editionEvents) {
+					if (thisEvent.getTimestamp().after(lastEdited)) {
+						lastEdited = thisEvent.getTimestamp();
+					}
+					cardWrapper.getEditors().add(lastEdition.getTriggerUser());
+				}
+			} else {
+				lastEdited = new Timestamp(1451606400000L);
+				cardWrapper.getEditors().add(appUserRepository.findByC1Id(UUID.fromString("ac12edce-5f45-124a-815f-486a854d000d")));
+			}
+			
+			System.out.println("filling card wrapper " + cardWrapper.getId().toString() +" last edited date");
+			cardWrapper.setLastEdited(lastEdited);
+			
+			modelCardWrapperRepository.save(cardWrapper);
+		}
+		
+		/* Initialize subscription preferences */
+		List<Subscriber> allSubscribers = (List<Subscriber>) subscriberRepository.findAllNotSet();
+				
+		for (Subscriber subscriber : allSubscribers) {
+		
+			System.out.println("updatig subscriber " + subscriber.getType().toString());
+			
+			if (subscriber.getInheritConfig() == null) subscriber.setInheritConfig(SubscriberInheritConfig.CUSTOM);
+			
+			if (subscriber.getInAppConfig() == null) subscriber.setInAppConfig(SubscriberInAppConfig.ALL_EVENTS);
+			if (subscriber.getPushConfig() == null) subscriber.setPushConfig(SubscriberPushConfig.ALL_EVENTS);
+			if (subscriber.getEmailNowConfig() == null) subscriber.setEmailNowConfig(SubscriberEmailNowConfig.DISABLED);
+			if (subscriber.getEmailSummaryConfig() == null) subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.ALL_EVENTS);
+			if (subscriber.getEmailSummaryPeriodConfig() == null) subscriber.setEmailSummaryPeriodConfig(SubscriberEmailSummaryPeriodConfig.DAILY);
+			
+			subscriberRepository.save(subscriber);
+		}
+		
+//		/* run this after having merged subscribers with sql script */
+//		/* make sure all app users have their global collectiveone subscriber entity */
+		List<AppUser> allAppUsers = subscriberRepository.findAllUsersWithoutSubscriberOfType(SubscriptionElementType.COLLECTIVEONE);
+		
+		for (AppUser user : allAppUsers) {
+			System.out.println("creating global subscriber for " + user.getProfile().getNickname());
+			
+			Subscriber subscriber = new Subscriber();
+			
+			subscriber.setType(SubscriptionElementType.COLLECTIVEONE);
+			subscriber.setUser(user);
+			
+			subscriber.setInheritConfig(SubscriberInheritConfig.CUSTOM);
+			
+			activityService.initDefaultSubscriber(subscriber);
+			
+			subscriberRepository.save(subscriber);
+		}
+		
     }
 }
