@@ -218,8 +218,7 @@ public class ModelService {
 		
 		/* remove subsection from section */
 		fromSection.getSubsections().remove(subSection);
-		fromSection = modelSectionRepository.save(fromSection);
-	
+		
 		/* moving to another section add to section as subsection */
 		ModelSection toSection = modelSectionRepository.findById(toSectionId);
 		
@@ -233,8 +232,10 @@ public class ModelService {
 		} else {
 			toSection.getSubsections().add(subSection);
 		}
-		subSection.setInitiative(toSection.getInitiative());
 		
+		fromSection = modelSectionRepository.save(fromSection);
+		subSection.setInitiative(toSection.getInitiative());
+				
 		activityService.modelSectionMovedFromSectionToSection(subSection, fromSection, toSection, appUserRepository.findByC1Id(creatorId));
 		
 		modelSectionRepository.save(toSection);
