@@ -226,6 +226,7 @@
             <app-message-thread
               contextType="MODEL_CARD"
               :contextElementId="cardWrapperId"
+              :contextOfContextElementId="inSectionId"
               :onlyMessagesInit="onlyMessages">
             </app-message-thread>
           </div>

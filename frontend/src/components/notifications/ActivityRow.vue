@@ -171,6 +171,7 @@
         <span v-if="isMessagePosted && (!showMessages || isExternalMessage)" :class="{'event-summary': isExternalMessage}">
           commented in
           <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
+          <span v-if="isMessageInCardWrapperOnSection"><app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link></span>
           <span v-if="isMessageInSection"><app-model-section-link :section="activity.modelSection"></app-model-section-link> section.</span>
           <span v-if="isMessageInInitiative"><app-initiative-link :initiative="activity.initiative"></app-initiative-link> initiative.</span>
         </span>
@@ -362,19 +363,22 @@ export default {
       return this.activity.type === 'MESSAGE_POSTED'
     },
     isMessageInCardWrapper () {
-      return this.isMessagePosted && (this.activity.modelCardWrapper !== null)
+      return this.isMessagePosted && (this.activity.modelCardWrapper !== null) && (this.activity.onSection === null)
+    },
+    isMessageInCardWrapperOnSection () {
+      return this.isMessagePosted && (this.activity.modelCardWrapper !== null) && (this.activity.onSection !== null)
     },
     isMessageInSection () {
       return this.isMessagePosted && (this.activity.modelSection !== null)
     },
     isMessageInInitiative () {
-      return this.isMessagePosted && (!this.isMessageInView && !this.isMessageInSection && !this.isMessageInCardWrapper)
+      return this.isMessagePosted && (!this.isMessageInSection && !this.isMessageInCardWrapperOnSection && !this.isMessageInCardWrapper)
     },
     isExternalMessage () {
       if (!this.isMessagePosted || !this.showMessages) {
         return false
       } else {
-        if (this.isMessageInCardWrapper) {
+        if (this.isMessageInCardWrapper || this.isMessageInCardWrapperOnSection) {
           return this.activity.modelCardWrapper.id !== this.contextElementId
         } else if (this.isMessageInSection) {
           return this.activity.modelSection.id !== this.contextElementId

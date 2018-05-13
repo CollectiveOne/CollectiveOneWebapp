@@ -65,6 +65,10 @@ export default {
       type: String,
       default: ''
     },
+    contextOfContextElementId: {
+      type: String,
+      default: ''
+    },
     url: {
       type: String,
       default: ''
@@ -186,7 +190,13 @@ export default {
           }
         }
 
-        this.axios.post('/1/messages/' + contextType + '/' + contextElementId, message).then((response) => {
+        this.axios.post(
+          '/1/messages/' + contextType + '/' + contextElementId,
+          message, {
+            params: {
+              contextOfContextElementId: this.contextOfContextElementId
+            }
+          }).then((response) => {
           if (response.data.result === 'success') {
             this.replying = false
             this.newMessageText = ''

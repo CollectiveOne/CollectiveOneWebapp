@@ -163,7 +163,7 @@
           :cardsType="cardsType">
         </app-model-section>
 
-        <div v-if="isCardsContent && isSectionsOrder && !sectionHasContent && !loading" class="w3-row w3-center">
+        <div v-if="isCardsContent && isSectionsOrder && !sectionHasContent && !loading && section" class="w3-row w3-center">
           <div class="w3-row">
             <i>no cards have been created in "{{ section.title }}"</i>
           </div>
@@ -444,6 +444,7 @@ export default {
           this.sectionLoadedOnceLevels = this.levels
           if (response.data.result === 'success') {
             this.section = response.data.data
+            this.checkCardSubroute()
           }
         }).catch((err) => {
           console.log(err)
@@ -470,7 +471,7 @@ export default {
     checkCardSubroute () {
       this.showCardModal = false
       if (this.$route.name === 'ModelSectionCard') {
-        if (this.$route.params.sectionId === this.section.id) {
+        if (this.section) {
           this.showCardModal = true
         }
       }

@@ -832,7 +832,13 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void messagePosted(Message message, AppUser triggerUser, MessageThreadContextType contextType, UUID elementId, List<AppUser> mentionedUsers) {
+	public void messagePosted(
+			Message message, 
+			AppUser triggerUser, 
+			MessageThreadContextType contextType, 
+			UUID elementId, 
+			UUID contextOfContextElementId,
+			List<AppUser> mentionedUsers) {
 		
 		Initiative initiative = initiativeRepository.findById(messageService.getInitiativeIdOfMessageThread(message.getThread()));
 		Activity activity = getBaseActivity(triggerUser, initiative); 
@@ -840,18 +846,23 @@ public class ActivityService {
 		activity.setType(ActivityType.MESSAGE_POSTED);
 		activity.setMessage(message);
 		activity.getMentionedUsers().addAll(mentionedUsers);
-		setMessageLocation(activity, contextType, elementId);
+		setMessageLocation(activity, contextType, elementId, contextOfContextElementId);
 		
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
 	}
 	
-	private void setMessageLocation(Activity activity, MessageThreadContextType contextType, UUID elementId) {
+	private void setMessageLocation(
+			Activity activity, 
+			MessageThreadContextType contextType, 
+			UUID elementId,
+			UUID contextOfContextElementId) {
 		switch (contextType) {
 			
 			case MODEL_CARD:
 				activity.setModelCardWrapper(modelCardWrapperRepository.findById(elementId));
+				activity.setOnSection(modelSectionRepository.findById(contextOfContextElementId));
 				break;
 			
 			case MODEL_SECTION:
