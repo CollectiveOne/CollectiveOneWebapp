@@ -39,7 +39,7 @@
 
           <hr>
 
-          <div class="w3-row w3-center w3-margin-bottom">
+          <div v-if="applicableSubscriber" class="w3-row w3-center w3-margin-bottom">
             <div  v-if="subscriber.inheritConfig === 'INHERIT'" class="">
               Inhereting notification preferences from: <br><b>{{ applicableSubscriberElementName }}</b>
             </div>

@@ -42,25 +42,29 @@ const actions = {
           }
 
           if (ok) {
-            let user = notification.activity.triggerUser
+            if (!window.Notification) {
+              Notification.requestPermission()
+            } else {
+              let user = notification.activity.triggerUser
 
-            var notify = new Notification('CollectiveOne', {
-              body: user.nickname + ' ' + notification.message,
-              tag: notification.activity.id,
-              icon: user.pictureUrl
-            })
+              var notify = new Notification('CollectiveOne', {
+                body: user.nickname + ' ' + notification.message,
+                tag: notification.activity.id,
+                icon: user.pictureUrl
+              })
 
-            notify.onshow = function () { setTimeout(notify.close.bind(notify), 5000) }
-            notify.onclick = function (event) {
-              event.preventDefault()
-              window.open(notification.url, '_blank')
-              notify.close()
+              notify.onshow = function () { setTimeout(notify.close.bind(notify), 5000) }
+              notify.onclick = function (event) {
+                event.preventDefault()
+                window.open(notification.url, '_blank')
+                notify.close()
+              }
+
+              Vue.axios.put('/1/notifications/pushed/' + notification.id, {}).then((response) => {
+              }).catch(function (error) {
+                console.log(error)
+              })
             }
-
-            Vue.axios.put('/1/notifications/pushed/' + notification.id, {}).then((response) => {
-            }).catch(function (error) {
-              console.log(error)
-            })
           }
         }
       }

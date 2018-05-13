@@ -1000,6 +1000,8 @@ public class ActivityService {
 	private Subscriber getApplicableSubscriber(UUID userId, SubscriptionElementType elementType, UUID elementId, Boolean skipOne) {
 		Subscriber applicableSubscriber = null; 
 		
+		
+		
 		/* check if start on section */
 		if (elementType == SubscriptionElementType.SECTION) {
 			applicableSubscriber = findSubscriberOnSectionsRec(userId, elementId, new HashSet<UUID>(), skipOne);
@@ -1011,8 +1013,25 @@ public class ActivityService {
 			}
 		}
 		
-		/* if not found in section or not relative to section, look on initiatives */
-		applicableSubscriber = findSubscriberOnInitiatives(userId, elementId, skipOne);
+		/* get applicable initiative */
+		UUID initiativeId = null;
+		switch (elementType) {
+			case SECTION:
+				initiativeId = modelSectionRepository.findById(elementId).getInitiative().getId();
+				break;
+				
+			case INITIATIVE:
+				initiativeId = elementId;
+				break;
+				
+			default:
+				break;
+		}
+		
+		if (initiativeId != null) {
+			/* if not found in section or not relative to section, look on initiatives */
+			applicableSubscriber = findSubscriberOnInitiatives(userId, initiativeId, skipOne);	
+		}
 		
 		/* if not found a CUSTOM subscriber in any section or initiative, use the user global subscriber */
 		if (applicableSubscriber == null) {
