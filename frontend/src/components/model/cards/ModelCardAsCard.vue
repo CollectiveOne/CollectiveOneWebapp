@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <div v-if="cardWrapper.inSections.length > 0" class="w3-margin-left w3-left">
+      <div v-if="cardWrapper.inSections.length > 0 && !hideCardControls" class="w3-margin-left w3-left">
         <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
           v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
           <div class="">
