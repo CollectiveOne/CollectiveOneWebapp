@@ -110,6 +110,11 @@ export default {
     },
     mentioningQuery () {
       this.updateMentionSuggestions()
+    },
+
+    elementId () {
+      console.log('changed ' + this.elementId)
+      this.text = this.$store.getters.getMarkdownBackupData(this.elementId)
     }
   },
 
@@ -289,7 +294,7 @@ export default {
     if (this.value) {
       this.text = this.value
     } else {
-      this.text = this.$store.getters.getMarkdownBackupData(this.elementId)
+      this.text = this.$store.state.markdown.data.get(this.elementId)
     }
     window.addEventListener('keydown', this.atKeydown)
     /* autoresize textarea */
