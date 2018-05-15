@@ -55,7 +55,7 @@ export default {
 
   data () {
     return {
-      showSubsections: false,
+      showSubsections: true,
       animating: false
     }
   },

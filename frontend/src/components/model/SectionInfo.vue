@@ -19,7 +19,7 @@
           </div>
           <div class="btn-div fa-button">
             <router-link :to="{ name: 'ModelSectionRead', params: {sectionId: this.currentSection.id} }">
-              <i class="fa fa-file-text-o" aria-hidden="true"></i>
+              <img src="./../../assets/shareable-view.svg" alt="">
             </router-link>
           </div>
         </div>
@@ -133,6 +133,10 @@ export default {
 
 .this-section-title > div {
   display: inline-block;
+}
+
+.fa-button img {
+  height: 24px;
 }
 
 .title-div {
