@@ -44,7 +44,7 @@
           </div>
         </div>
 
-        <div class="w3-row">
+        <div class="w3-row section-row">
           <app-model-section
             v-if="!loading"
             :section="section"
@@ -170,17 +170,8 @@ export default {
 
 .section-nav {
   min-width: 350px;
-}
-
-.section-content {
-  padding: 12px 12px;
-  flex-grow: 1;
   height: 100%;
   overflow: auto;
-}
-
-.control-btns-row {
-  padding-left: 28px;
 }
 
 .model-section-read-container {
@@ -190,8 +181,28 @@ export default {
   position: relative;
 }
 
+.section-content {
+  padding: 12px 12px;
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.control-btns-row {
+  padding-left: 28px;
+  flex-shrink: 0;
+}
+
+.section-row {
+  flex-grow: 1;
+  overflow: auto;
+  padding: 12px 0px;
+}
+
 .hide-nav-div-container {
   width: 0px;
+  z-index: 3;
 }
 
 .hide-nav-div {
