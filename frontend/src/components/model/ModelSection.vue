@@ -1,6 +1,6 @@
 <template lang="html">
 
-  <div v-if="section" class="section-container" ref="sectionContainer">
+  <div v-if="section" class="section-container" ref="sectionContainer" :id="section.id">
 
     <div v-if="(nestedIn.length > 0 && section.subElementsLoaded) || showThisTitle"
       class="w3-row title-row">
