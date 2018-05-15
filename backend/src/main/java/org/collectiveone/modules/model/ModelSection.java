@@ -45,8 +45,14 @@ public class ModelSection {
 	@Column(name = "description")
 	private String description;
 	
+	@ManyToMany(mappedBy = "section")
+	@OrderColumn(name = "cards_order")
+	private List<ModelCardWrapperAddition> cardsWrapperAdditionsPrivate = new ArrayList<ModelCardWrapperAddition>();
 	
-	@ManyToMany
+	@ManyToMany(mappedBy = "section")
+	@OrderColumn(name = "cards_order")
+	private List<ModelCardWrapperAddition> cardsWrapperAdditionsProposed = new ArrayList<ModelCardWrapperAddition>();
+	
 	@OrderColumn(name = "cards_order")
 	private List<ModelCardWrapper> cardsWrappers = new ArrayList<ModelCardWrapper>();
 	
