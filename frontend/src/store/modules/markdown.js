@@ -8,7 +8,9 @@
     },
 
     clearMarkdownBackup: (state, payload) => {
-        state.data.clear()
+        if (state.has(payload)) {
+          state.data.delete(payload)
+        }
       }
   }
   const actions = {
