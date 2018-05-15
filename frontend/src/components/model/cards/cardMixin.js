@@ -3,6 +3,10 @@ export const cardMixin = {
     inCardSelector: {
       type: Boolean,
       default: false
+    },
+    cardRouteName: {
+      type: String,
+      default: 'ModelSectionCard'
     }
   },
   methods: {
@@ -15,7 +19,7 @@ export const cardMixin = {
     },
     cardClicked () {
       if (!this.inCardSelector) {
-        this.$router.push({name: 'ModelSectionCard', params: { cardId: this.cardWrapper.id }})
+        this.$router.push({name: this.cardRouteName, params: { cardId: this.cardWrapper.id }})
       }
     },
     toggleLike () {

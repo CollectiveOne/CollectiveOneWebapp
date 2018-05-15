@@ -15,6 +15,8 @@
           :cardWrapperInit="cardWrapper"
           :inSection="inSection"
           :type="cardsType"
+          :cardRouteName="cardRouteName"
+          :hideCardControls="hideCardControls"
           @updateCards="$emit('updateCards')">
         </app-model-card>
       </div>
@@ -47,6 +49,14 @@ export default {
     acceptDrop: {
       type: Boolean,
       default: false
+    },
+    hideCardControls: {
+      type: Boolean,
+      default: false
+    },
+    cardRouteName: {
+      type: String,
+      default: 'ModelSectionCard'
     }
   },
 

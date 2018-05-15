@@ -2,7 +2,7 @@
 
   <div v-if="section" class="section-container" ref="sectionContainer">
 
-    <div v-if="nestedIn.length > 0 && section.subElementsLoaded"
+    <div v-if="(nestedIn.length > 0 && section.subElementsLoaded) || showThisTitle"
       class="w3-row title-row">
       <div class="w3-row blue-color title-text">
         <div v-for="parent in nestedIn.slice(1, nestedIn.length)"
@@ -25,6 +25,8 @@
         :cardsType="cardsType"
         :inSection="section"
         :acceptDrop="true"
+        :cardRouteName="cardRouteName"
+        :hideCardControls="hideCardControls"
         @updateCards="updateCards()">
       </app-model-cards-container>
     </div>
@@ -40,6 +42,8 @@
           :inElementTitle="section.title"
           :cardsType="cardsType"
           :nestedIn="nestedIn.concat([section])"
+          :cardRouteName="cardRouteName"
+          :hideCardControls="hideCardControls"
           @updateCards="updateCards()">
         </app-model-section>
       </div>
@@ -65,6 +69,10 @@ export default {
       type: Object,
       default: null
     },
+    showThisTitle: {
+      type: Boolean,
+      default: false
+    },
     nestedIn: {
       type: Array,
       default: () => { return [] }
@@ -80,6 +88,14 @@ export default {
     cardsType: {
       type: String,
       default: 'card'
+    },
+    hideCardControls: {
+      type: Boolean,
+      default: false
+    },
+    cardRouteName: {
+      type: String,
+      default: 'ModelSectionCard'
     }
   },
 

@@ -17,6 +17,11 @@
           <div @click="showIn = !showIn" class="btn-div fa-button">
             <i class="fa fa-info-circle" aria-hidden="true"></i>
           </div>
+          <div class="btn-div fa-button">
+            <router-link :to="{ name: 'ModelSectionRead', params: {sectionId: this.currentSection.id} }">
+              <i class="fa fa-file-text-o" aria-hidden="true"></i>
+            </router-link>
+          </div>
         </div>
       </transition>
     </div>

@@ -41,11 +41,11 @@ export default (to, from, next) => {
 
   if (toModelSection) {
     /* keep the levels and cards url parameters when switching among views. */
-    var fromLevels = from.query.levels ? from.query.levels : '1'
-    var fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
+    let fromLevels = from.query.levels ? from.query.levels : '1'
+    let fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
 
-    var toLevels = to.query.levels ? to.query.levels : fromLevels
-    var toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
+    let toLevels = to.query.levels ? to.query.levels : fromLevels
+    let toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
 
     if (to.name === 'ModelSectionContent') {
       /* just keep the current tab when switching among sections */
@@ -101,5 +101,20 @@ export default (to, from, next) => {
         next()
       }
     }
+  }
+
+  if (to.name === 'ModelSectionRead' || to.name === 'ModelSectionReadCard') {
+    let fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
+    let toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
+
+    next({
+      name: to.name,
+      params: {
+        sectionId: to.params.sectionId
+      },
+      query: {
+        cardsType: toCardsType
+      },
+      replace: true})
   }
 }

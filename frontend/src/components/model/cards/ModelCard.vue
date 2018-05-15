@@ -11,6 +11,8 @@
         :inSection="inSection"
         :forceUpdate="forceUpdate"
         :inCardSelector="inCardSelector"
+        :cardRouteName="cardRouteName"
+        :hideCardControls="hideCardControls"
         @update="update()"
         @updateCards="$emit('updateCards')">
       </component>
@@ -54,6 +56,14 @@ export default {
     inCardSelector: {
       type: Boolean,
       default: false
+    },
+    hideCardControls: {
+      type: Boolean,
+      default: false
+    },
+    cardRouteName: {
+      type: String,
+      default: 'ModelSectionCard'
     }
   },
 

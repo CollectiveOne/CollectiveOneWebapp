@@ -5,6 +5,8 @@ import RootView from '@/components/RootView.vue'
 import LandingView from '@/components/LandingView.vue'
 
 import AppView from '@/components/AppView.vue'
+
+import ModelSectionRead from '@/components/model/ModelSectionRead.vue'
 import InitiativesView from '@/components/InitiativesView.vue'
 import InitiativesHome from '@/components/InitiativesHome.vue'
 import InitiativesContent from '@/components/initiative/InitiativeContent.vue'
@@ -45,6 +47,16 @@ export default new Router({
           path: '/',
           name: 'AppView',
           redirect: '/app/inits'
+        },
+        {
+          path: '/section/:sectionId',
+          name: 'ModelSectionRead',
+          component: ModelSectionRead
+        },
+        {
+          path: '/section/:sectionId/card/:cardId',
+          name: 'ModelSectionReadCard',
+          component: ModelSectionRead
         },
         {
           path: 'inits',

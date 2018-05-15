@@ -38,7 +38,7 @@
       </div>
 
       <div v-if="!inCardSelector" class="w3-right">
-        <div class="w3-right gray-1-color control-div">
+        <div v-if="!hideCardControls" class="w3-right gray-1-color control-div">
           <app-card-control-buttons
             :cardWrapper="cardWrapper"
             :inSection="inSection"
@@ -102,6 +102,10 @@ export default {
     inSection: {
       type: Object,
       default: null
+    },
+    hideCardControls: {
+      type: Boolean,
+      default: false
     }
   },
 
