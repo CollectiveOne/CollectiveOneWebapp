@@ -107,14 +107,14 @@ export default {
     text () {
       this.$emit('input', this.text)
       this.checkHeight()
+      this.$store.dispatch('doMarkdownBackup', {elementId: this.elementId, value: this.value})
     },
     mentioningQuery () {
       this.updateMentionSuggestions()
     },
 
     elementId () {
-      console.log('changed ' + this.elementId)
-      this.text = this.$store.getters.getMarkdownBackupData(this.elementId)
+      this.text = this.$store.state.markdown.data.get(this.elementId)
     }
   },
 
