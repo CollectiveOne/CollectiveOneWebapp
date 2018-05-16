@@ -39,7 +39,7 @@
             </div>
             <div v-for="(parent, ix) in currentSectionPath" class="w3-left">
               <div class="w3-left">
-                {{ parent.title }}
+                <router-link :to="{ name: 'ModelSectionContent', params: {'sectionId': parent.id } }"> {{ parent.title }} </router-link>
               </div>
               <div v-if="ix < currentSectionPath.length - 1" class="w3-left fa-container">
                 <i class="fa fa-chevron-right" aria-hidden="true"></i>
