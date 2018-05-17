@@ -18,7 +18,9 @@ public interface ModelCardWrapperRepositoryIf extends CrudRepository<ModelCardWr
 	@Query("SELECT crdWrp FROM ModelSection section JOIN section.cardsWrappers crdWrp WHERE crdWrp.id = ?1 AND section.id = ?2")
 	public ModelCardWrapper findByIdAndSectionId(UUID modelCardWrapperId, UUID sectionId);
 
-	@Query("SELECT section FROM ModelSection section JOIN section.cardsWrappers crds WHERE crds.id = ?1")
+	@Query("SELECT section FROM ModelSection section "
+			+ "JOIN section.cardsWrappers crds "
+			+ "WHERE crds.id = ?1")
 	public List<ModelSection> findParentSections(UUID modelCardWrapperId);
 	
 	@Query("SELECT DISTINCT crdWrp FROM ModelSection sec JOIN sec.cardsWrappers crdWrp JOIN crdWrp.card crd "

@@ -42,19 +42,54 @@
       <app-drop-down-menu
         v-show="expanded"
         class="drop-menu"
+        @edit="edit()"
+        @makePersonal="makePersonal()"
+        @makeShared="makeShared()"
         @addCardBefore="addCardBefore()"
         @addCardAfter="addCardAfter()"
-        @edit="edit()"
         @remove="remove()"
         @delete="deleteCard()"
         :items="menuItems">
       </app-drop-down-menu>
 
-      <div v-if="inSection !== null" class="w3-card w3-white drop-menu">
+      <div class="w3-card w3-white drop-menu">
+
+        <div v-if="makePersonalIntent" class="w3-row w3-center delete-intent-div">
+          <div class="w3-padding w3-round light-grey w3-margin-bottom">
+            <p>
+              <b>Warning:</b> Are you sure you want to make this card visible? It will be seen by all initiative members.
+            </p>
+          </div>
+          <button
+            class="w3-button light-grey"
+            @click="makePersonalIntent = false">cancel
+          </button>
+          <button
+            class="w3-button button-blue"
+            @click="makePersonalConfirmed()">confirm
+          </button>
+        </div>
+
+        <div v-if="makeSharedIntent" class="w3-row w3-center delete-intent-div">
+          <div class="w3-padding w3-round light-grey w3-margin-bottom">
+            <p>
+              <b>Warning:</b> Are you sure you want to make this card shared? It will start being controlled be the initiative members and not only by you. It cannot be undonde.
+            </p>
+          </div>
+          <button
+            class="w3-button light-grey"
+            @click="makeSharedIntent = false">cancel
+          </button>
+          <button
+            class="w3-button button-blue"
+            @click="makeSharedConfirmed()">confirm
+          </button>
+        </div>
+
         <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
           <div class="w3-padding w3-round light-grey w3-margin-bottom">
             <p>
-              <b>Warning:</b> Are you sure you want to remove the section "{{ inSection.title }}" as a subsection of "{{ inSection.title }}"?
+              <b>Warning:</b> Are you sure you want to remove this card from "{{ inSection.title }}"?
             </p>
           </div>
           <button
@@ -70,7 +105,7 @@
         <div v-if="deleteIntent" class="w3-row w3-center delete-intent-div">
           <div class="w3-padding w3-round light-grey w3-margin-bottom">
             <p>
-              <b>Warning:</b> Are you sure you want to completely delete the section "{{ inSection.title }}"? This will delete it from all the sections in which it is a subsection.
+              <b>Warning:</b> Are you sure you want to completely delete this card? This will delete it from all the sections in which it is currenlty present.
             </p>
           </div>
           <button
@@ -107,20 +142,36 @@ export default {
       showNewCardModal: false,
       newCardLocation: 'end',
       showEditCardModal: false,
+      makePersonalIntent: false,
+      makeSharedIntent: false,
       deleteIntent: false,
       removeIntent: false
     }
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
+    isPrivate () {
+      return this.cardWrapper.scope === 'PRIVATE'
+    },
+    isPersonal () {
+      return this.cardWrapper.scope === 'PERSONAL'
+    },
+    isLoggedTheAuthor () {
+      return this.cardWrapper.creator.c1Id === this.$store.state.user.profile.c1Id
+    },
     menuItems () {
-      return [
-        { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
-        { text: 'add card before', value: 'addCardBefore', faIcon: 'fa-plus' },
-        { text: 'add card after', value: 'addCardAfter', faIcon: 'fa-plus' },
-        { text: 'remove', value: 'remove', faIcon: 'fa-times' },
-        { text: 'delete', value: 'delete', faIcon: 'fa-times' }
-      ]
+      let menuItems = []
+      if (this.isLoggedAnEditor) menuItems.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
+      if (this.isLoggedAnEditor && this.isPrivate && this.isLoggedTheAuthor) menuItems.push({ text: 'make visible', value: 'makePersonal', faIcon: 'fa-share' })
+      if (this.isLoggedAnEditor && this.isPersonal && this.isLoggedTheAuthor) menuItems.push({ text: 'make shared', value: 'makeShared', faIcon: 'fa-share' })
+      if (this.isLoggedAnEditor) menuItems.push({ text: 'add card before', value: 'addCardBefore', faIcon: 'fa-plus' })
+      if (this.isLoggedAnEditor) menuItems.push({ text: 'add card after', value: 'addCardAfter', faIcon: 'fa-plus' })
+      if (this.isLoggedAnEditor) menuItems.push({ text: 'remove', value: 'remove', faIcon: 'fa-times' })
+      if (this.isLoggedAnEditor) menuItems.push({ text: 'delete', value: 'delete', faIcon: 'fa-times' })
+      return menuItems
    }
   },
 
@@ -141,6 +192,42 @@ export default {
     },
     deleteCard () {
       this.deleteIntent = true
+    },
+    makePersonal () {
+      this.makePersonalIntent = true
+    },
+    makeShared () {
+      this.makeSharedIntent = true
+    },
+    makePersonalConfirmed () {
+      this.axios.put('/1/model/section/' + this.inSection.id + '/cardWrapper/' + this.cardWrapper.id + '/makePersonal',
+        {}).then((response) => {
+          console.log(response)
+          if (response.data.result === 'success') {
+            this.makePersonalIntent = false
+            this.expanded = false
+            this.$emit('updateCards')
+          } else {
+            this.showOutputMessage(response.data.message)
+          }
+        }).catch((error) => {
+        console.log(error)
+      })
+    },
+    makeSharedConfirmed () {
+      this.axios.put('/1/model/section/' + this.inSection.id + '/cardWrapper/' + this.cardWrapper.id + '/makeShared',
+        {}).then((response) => {
+          console.log(response)
+          if (response.data.result === 'success') {
+            this.makeSharedIntent = false
+            this.expanded = false
+            this.$emit('updateCards')
+          } else {
+            this.showOutputMessage(response.data.message)
+          }
+        }).catch((error) => {
+        console.log(error)
+      })
     },
     removeConfirmed () {
       this.axios.put('/1/model/section/' + this.inSection.id + '/removeCard/' + this.cardWrapper.id,

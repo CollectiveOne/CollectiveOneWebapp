@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="w3-display-container w3-card-4 w3-topbar border-blue w3-round-large"
+  <div class="w3-display-container w3-card-4 w3-topbar w3-round-large" :class="containerClass"
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 
@@ -56,7 +56,7 @@
 
       <div v-if="!inCardSelector" class="w3-right">
 
-        <div v-if="!hideCardControls" class="w3-right gray-1-color control-div">
+        <div v-if="!hideCardControls && $store.state.user.authenticated" class="w3-right gray-1-color control-div">
           <app-card-control-buttons
             :cardWrapper="cardWrapper"
             :inSection="inSection"
@@ -118,26 +118,6 @@ export default {
   },
 
   props: {
-    cardWrapper: {
-      type: Object,
-      default: null
-    },
-    forceUpdate: {
-      type: Boolean,
-      default: true
-    },
-    inSection: {
-      type: Object,
-      default: null
-    },
-    hideCardControls: {
-      type: Boolean,
-      default: false
-    },
-    cardRouteName: {
-      type: String,
-      default: 'ModelSectionCard'
-    }
   },
 
   data () {

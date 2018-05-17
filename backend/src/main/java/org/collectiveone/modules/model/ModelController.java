@@ -361,6 +361,54 @@ public class ModelController extends BaseController {
 		return modelService.editCardWrapper(initiativeId, cardWrapperId, cardDto, getLoggedUser().getC1Id());
 	}
 	
+	@RequestMapping(path = "/model/section/{sectionId}/cardWrapper/{cardWrapperId}/makePersonal", method = RequestMethod.PUT) 
+	public PostResult makeCardWrapperPersonal(
+			@PathVariable("sectionId") String sectionIdStr,
+			@PathVariable("cardWrapperId") String cardWrapperIdStr) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
+		UUID sectionId = UUID.fromString(sectionIdStr);
+		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
+		
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		if (!modelService.getModelCardWrapperCreatorId(cardWrapperId).equals(getLoggedUserId())) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.makeCardWrapperPersonal(cardWrapperId, sectionId, getLoggedUserId());
+	}
+	
+	@RequestMapping(path = "/model/section/{sectionId}/cardWrapper/{cardWrapperId}/makeShared", method = RequestMethod.PUT) 
+	public PostResult makeCardWrapperShared(
+			@PathVariable("sectionId") String sectionIdStr,
+			@PathVariable("cardWrapperId") String cardWrapperIdStr) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
+		UUID sectionId = UUID.fromString(sectionIdStr);
+		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
+		
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		if (!modelService.getModelCardWrapperCreatorId(cardWrapperId).equals(getLoggedUserId())) {
+			return new PostResult("error", "not authorized, you are not the card author", "");
+		}
+		
+		return modelService.makeCardWrapperShared(cardWrapperId, sectionId, getLoggedUserId());
+	}
+	
 	@RequestMapping(path = "/model/section/{sectionId}/cardWrappers/search", method = RequestMethod.GET) 
 	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(
 			@PathVariable("sectionId") String sectionIdStr,

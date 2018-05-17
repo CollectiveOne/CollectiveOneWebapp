@@ -4,9 +4,10 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -14,7 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "model_cards_wrapper")
+@Table(name = "model_cards_wrapper_additions")
 public class ModelCardWrapperAddition {
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -26,11 +27,16 @@ public class ModelCardWrapperAddition {
 	@ManyToOne
 	private ModelSection section;
 	
+	@Enumerated(EnumType.STRING)
+	private ModelCardWrapperScope scope;
+	
 	@ManyToOne
 	private ModelCardWrapper cardWrapper;
 	
-	@ManyToMany
-	private ModelCardWrapper afterCardWrapper;
+	@ManyToOne
+	private ModelCardWrapper onCardWrapper;
+	
+	private Boolean isBefore;
 
 	public UUID getId() {
 		return id;
@@ -40,6 +46,14 @@ public class ModelCardWrapperAddition {
 		this.id = id;
 	}
 
+	public ModelCardWrapper getCardWrapper() {
+		return cardWrapper;
+	}
+
+	public void setCardWrapper(ModelCardWrapper cardWrapper) {
+		this.cardWrapper = cardWrapper;
+	}
+	
 	public ModelSection getSection() {
 		return section;
 	}
@@ -48,20 +62,28 @@ public class ModelCardWrapperAddition {
 		this.section = section;
 	}
 
-	public ModelCardWrapper getCardWrapper() {
-		return cardWrapper;
+	public ModelCardWrapperScope getScope() {
+		return scope;
 	}
 
-	public void setCardWrapper(ModelCardWrapper cardWrapper) {
-		this.cardWrapper = cardWrapper;
+	public void setScope(ModelCardWrapperScope scope) {
+		this.scope = scope;
 	}
 
-	public ModelCardWrapper getAfterCardWrapper() {
-		return afterCardWrapper;
+	public ModelCardWrapper getOnCardWrapper() {
+		return onCardWrapper;
 	}
 
-	public void setAfterCardWrapper(ModelCardWrapper afterCardWrapper) {
-		this.afterCardWrapper = afterCardWrapper;
+	public void setOnCardWrapper(ModelCardWrapper onCardWrapper) {
+		this.onCardWrapper = onCardWrapper;
 	}
-		
+
+	public Boolean getIsBefore() {
+		return isBefore;
+	}
+
+	public void setIsBefore(Boolean isBefore) {
+		this.isBefore = isBefore;
+	}
+
 }

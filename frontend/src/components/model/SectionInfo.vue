@@ -6,7 +6,7 @@
           <div class="title-div">
             {{ sectionTitle }}
           </div>
-          <div class="btn-div fa-button">
+          <div v-if="$store.state.user.authenticated" class="btn-div fa-button">
             <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
             </app-section-control-buttons>
           </div>
@@ -18,7 +18,7 @@
             <i class="fa fa-info-circle" aria-hidden="true"></i>
           </div>
           <div class="btn-div fa-button">
-            <router-link :to="{ name: 'ModelSectionRead', params: {sectionId: this.currentSection.id} }">
+            <router-link :to="{ name: 'ModelSectionRead', params: {sectionId: this.currentSection ? this.currentSection.id : ''} }">
               <img src="./../../assets/shareable-view.svg" alt="">
             </router-link>
           </div>

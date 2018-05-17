@@ -113,14 +113,34 @@ export default {
 
   computed: {
     sortedCards () {
-      if (!this.sortByLikes) {
-        return JSON.parse(JSON.stringify(this.section.cardsWrappers))
-      } else {
-        var sortedArray = JSON.parse(JSON.stringify(this.section.cardsWrappers))
-        return sortedArray.sort((cardA, cardB) => {
-          return cardB.nLikes - cardA.nLikes
+      let allCardWrappers = this.section.cardsWrappers.slice()
+
+      for (let ix in this.section.cardsWrappersPrivate) {
+        let cardWrapperPrivate = this.section.cardsWrappersPrivate[ix]
+        let ixFound = this.section.cardsWrappers.findIndex((e) => {
+          return e.id === cardWrapperPrivate.onCardWrapperId
         })
+        if (ixFound !== -1) {
+          let ixInsert = cardWrapperPrivate.isBefore ? ixFound : ixFound + 1
+          allCardWrappers.splice(ixInsert, 0, cardWrapperPrivate)
+        } else {
+          allCardWrappers.push(cardWrapperPrivate)
+        }
       }
+
+      for (let ix in this.section.cardsWrappersPersonal) {
+        let cardWrapperPrivate = this.section.cardsWrappersPersonal[ix]
+        let ixFound = this.section.cardsWrappers.findIndex((e) => {
+          return e.id === cardWrapperPrivate.onCardWrapperId
+        })
+        if (ixFound !== -1) {
+          let ixInsert = cardWrapperPrivate.isBefore ? ixFound : ixFound + 1
+          allCardWrappers.splice(ixInsert, 0, cardWrapperPrivate)
+        } else {
+          allCardWrappers.push(cardWrapperPrivate)
+        }
+      }
+      return allCardWrappers
     },
     nCardWrappers () {
       if (this.section) {

@@ -19,6 +19,8 @@ public class ModelSectionDto {
 	private Integer nSubsections;
 	private Integer nCards;
 	
+	private List<ModelCardWrapperDto> cardsWrappersPrivate = new ArrayList<ModelCardWrapperDto>();
+	private List<ModelCardWrapperDto> cardsWrappersPersonal = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelCardWrapperDto> cardsWrappers = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelSectionDto> subsections = new ArrayList<ModelSectionDto>();
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
@@ -118,5 +120,18 @@ public class ModelSectionDto {
 	public void setInSections(List<ModelSectionDto> inSections) {
 		this.inSections = inSections;
 	}
+	public List<ModelCardWrapperDto> getCardsWrappersPrivate() {
+		return cardsWrappersPrivate;
+	}
+	public void setCardsWrappersPrivate(List<ModelCardWrapperDto> cardsWrappersPrivate) {
+		this.cardsWrappersPrivate = cardsWrappersPrivate;
+	}
+	public List<ModelCardWrapperDto> getCardsWrappersPersonal() {
+		return cardsWrappersPersonal;
+	}
+	public void setCardsWrappersPersonal(List<ModelCardWrapperDto> cardsWrappersPersonal) {
+		this.cardsWrappersPersonal = cardsWrappersPersonal;
+	}
+	
 	
 }

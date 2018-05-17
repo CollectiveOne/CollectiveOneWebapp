@@ -24,6 +24,7 @@ import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.conversations.Message;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.ModelCardWrapper;
+import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
@@ -101,6 +102,9 @@ public class Activity {
 	@ManyToOne
 	private ModelSection fromSection;
 	
+	@ManyToOne
+	private ModelCardWrapperAddition modelCardWrapperAddition;
+	
 	
 	// -------
 	
@@ -133,6 +137,11 @@ public class Activity {
 		
 		if(onSection != null) dto.setOnSection(onSection.toDto());
 		if(fromSection != null) dto.setFromSection(fromSection.toDto());
+		
+		if (type == ActivityType.MODEL_CARDWRAPPER_MADE_PERSONAL || type == ActivityType.MODEL_CARDWRAPPER_MADE_SHARED) {
+			dto.setModelCardWrapper(modelCardWrapperAddition.getCardWrapper().toDto());
+			dto.setModelSection(modelCardWrapperAddition.getSection().toDto());
+		}
 		
 		if(message != null) dto.setMessage(message.toDto());
 		
@@ -301,5 +310,13 @@ public class Activity {
 		this.mentionedUsers = mentionedUsers;
 	}
 
+	public ModelCardWrapperAddition getModelCardWrapperAddition() {
+		return modelCardWrapperAddition;
+	}
+
+	public void setModelCardWrapperAddition(ModelCardWrapperAddition modelCardWrapperAddition) {
+		this.modelCardWrapperAddition = modelCardWrapperAddition;
+	}
+	
 	
 }

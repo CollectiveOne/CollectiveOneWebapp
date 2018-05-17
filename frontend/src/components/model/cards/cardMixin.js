@@ -1,5 +1,21 @@
 export const cardMixin = {
   props: {
+    cardWrapper: {
+      type: Object,
+      default: null
+    },
+    forceUpdate: {
+      type: Boolean,
+      default: true
+    },
+    inSection: {
+      type: Object,
+      default: null
+    },
+    hideCardControls: {
+      type: Boolean,
+      default: false
+    },
     inCardSelector: {
       type: Boolean,
       default: false
@@ -7,6 +23,25 @@ export const cardMixin = {
     cardRouteName: {
       type: String,
       default: 'ModelSectionCard'
+    }
+  },
+  computed: {
+    containerClass () {
+      let cClass = {}
+      switch (this.cardWrapper.scope) {
+        case 'PRIVATE':
+          cClass['border-red'] = true
+          break
+
+        case 'PERSONAL':
+          cClass['border-yellow'] = true
+          break
+
+        default:
+          cClass['border-blue'] = true
+          break
+      }
+      return cClass
     }
   },
   methods: {

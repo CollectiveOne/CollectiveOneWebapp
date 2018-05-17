@@ -218,6 +218,20 @@ public class NotificationDtoBuilder {
 			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
 			break;
 			
+		case MODEL_CARDWRAPPER_MADE_PERSONAL:
+			message = checkHtml("<p>") + "made the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
+			" on section " + getModelSectionAnchor(onSection) + checkHtml(" visible</p>");
+			
+			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
+			break;
+			
+		case MODEL_CARDWRAPPER_MADE_SHARED:
+			message = checkHtml("<p>") + "made the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
+			" on section " + getModelSectionAnchor(onSection) + checkHtml(" common</p>");
+			
+			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
+			break;
+			
 		case MODEL_CARDWRAPPER_EDITED:
 			message = checkHtml("<p>") + "edited the card " + getModelCardWrapperAnchor(modelCardWrapper) + checkHtml("</p>");
 			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());

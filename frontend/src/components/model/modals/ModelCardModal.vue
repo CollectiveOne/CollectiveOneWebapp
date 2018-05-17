@@ -70,56 +70,13 @@
 
               <div v-if="!addExisting">
 
-                <div v-if="!isNew">
-                  <div class="w3-row">
-                    <div class="w3-left w3-margin-right">
-                      <i>in:</i>
-                    </div>
-                    <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
-                      class="insection-tag-container w3-left">
-                      <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
-                        class="gray-1 w3-tag w3-round w3-small">
-                        {{ inSection.title }}
-                      </router-link>
-                    </div>
-                    <div v-if="editing" v-for="toSection in addToSections" :key="toSection.id"
-                      class="insection-tag-container w3-left w3-display-container w3-margin-left">
-                      <div class="success-background w3-tag w3-round w3-small">
-                        {{ toSection.title }}
-                      </div>
-                      <div @click="removeToSection(toSection)"
-                        class="remove-tag-icon success-color w3-display-right cursor-pointer">
-                        <i class="fa fa-times-circle"></i>
-                      </div>
-                    </div>
-                    <div v-if="editing" class="w3-left w3-margin-left">
-                      <div v-if="!addToSection"
-                        @click="addToSection = !addToSection"
-                        class="w3-tag button-blue w3-small w3-round cursor-pointer">
-                        add to another section
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="w3-row">
-                    <div class="slider-container">
-                      <transition name="slideDownUp">
-                        <app-model-section-selector
-                          v-if="addToSection"
-                          :initiativeId="cardWrapper.initiativeId"
-                          @select="sectionSelected($event)">
-                        </app-model-section-selector>
-                      </transition>
-                    </div>
-                  </div>
-
-                  <div v-if="addToSection" class="w3-row w3-margin-top w3-center">
-                    <button @click="addToSection = false"
-                      class="w3-button app-button" type="button" name="button">
-                      Cancel add to section
-                    </button>
-                  </div>
-
+                <div v-if="editing" class="w3-row w3-margin-top">
+                  <label class=""><b>Scope:</b></label>
+                  <select v-model="editedCard.newScope" class="w3-input" name="">
+                    <option value="PRIVATE">Private (only I can see it)</option>
+                    <option value="PERSONAL">Visible (others can see it, but its mine)</option>
+                    <option value="SHARED">Common (controlled by all editors)</option>
+                  </select>
                 </div>
 
                 <div v-if="!editing" class="">
@@ -354,8 +311,6 @@ export default {
       enableClickOutside: false,
       sendingData: false,
       loading: false,
-      addToSection: false,
-      addToSections: [],
       closeIntent: false
     }
   },
@@ -503,7 +458,6 @@ export default {
       }
     },
     startEditing () {
-      this.addToSections = []
       this.editedCard = JSON.parse(JSON.stringify(this.card))
       this.editing = true
     },
@@ -568,12 +522,6 @@ export default {
           }
         } else {
           /* editing */
-
-          /* add the new sections */
-          if (this.addToSections.length > 0) {
-            cardDto.inSections = this.addToSections
-          }
-
           this.sendingData = true
           this.axios.put('/1/model/cardWrapper/' + this.cardWrapper.id, cardDto)
             .then(responseF).catch((error) => {
@@ -613,37 +561,6 @@ export default {
       this.editedCard.imageFile = null
       this.editedCard.newImageFileId = 'REMOVE'
     },
-    sectionSelected (section) {
-      this.addToSection = false
-
-      /* prevent adding in an existing section */
-      for (var ix1 in this.cardWrapper.inSections) {
-        if (this.cardWrapper.inSections[ix1].id === section.id) {
-          return
-        }
-      }
-
-      /* prevent adding twice the same section */
-      for (var ix2 in this.addToSections) {
-        if (this.addToSections[ix2].id === section.id) {
-          return
-        }
-      }
-
-      this.addToSections.push(section)
-    },
-    removeToSection (section) {
-      var ix = -1
-      for (var ixS in this.addToSections) {
-        if (this.addToSections[ixS].id === section.id) {
-          ix = ixS
-        }
-      }
-
-      if (ix !== -1) {
-        this.addToSections.splice(ix, 1)
-      }
-    },
     atKeydown (e) {
       if (!this.editing) {
         /* esc */
@@ -670,9 +587,9 @@ export default {
   mounted () {
     if (this.isNew) {
       this.editedCard = {
-        stateControl: false,
         title: '',
-        text: ''
+        text: '',
+        newScope: 'PERSONAL'
       }
       this.editing = true
     } else {

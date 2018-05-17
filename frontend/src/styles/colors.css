@@ -51,6 +51,14 @@
   border-color: #15a5cc !important;
 }
 
+.border-red {
+  border-color: #cc157d !important;
+}
+
+.border-yellow {
+  border-color: #dfd43e !important;
+}
+
 .button-blue {
   background-color: #15a5cc !important;
   color: white;

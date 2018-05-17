@@ -41,6 +41,7 @@ import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.GraphNode;
 import org.collectiveone.modules.model.ModelCardWrapper;
+import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
@@ -760,6 +761,29 @@ public class ActivityService {
 		addInitiativeActivityNotifications(activity);
 	}
 	
+	@Transactional
+	public void modelCardWrapperMadeShared(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_MADE_SHARED);
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelCardWrapperMadePersonal(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_MADE_PERSONAL);
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+		
 	@Transactional
 	public void modelCardWrapperRemoved(ModelCardWrapper cardWrapper, ModelSection fromSection, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 

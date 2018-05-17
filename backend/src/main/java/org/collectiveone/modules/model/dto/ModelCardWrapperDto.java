@@ -3,6 +3,7 @@ package org.collectiveone.modules.model.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.collectiveone.modules.model.ModelCardWrapperScope;
 import org.collectiveone.modules.users.AppUserDto;
 
 public class ModelCardWrapperDto {
@@ -18,6 +19,12 @@ public class ModelCardWrapperDto {
 	private List<AppUserDto> editors = new ArrayList<AppUserDto>();
 	private List<ModelCardDto> oldVersions = new ArrayList<ModelCardDto>();
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
+	
+	/* for private and personal, position is given relative to another card */
+	private ModelCardWrapperScope scope;
+	private String onCardWrapperId;
+	private Boolean isBefore;
+	
 	
 	public String getId() {
 		return id;
@@ -85,5 +92,24 @@ public class ModelCardWrapperDto {
 	public void setInSections(List<ModelSectionDto> inSections) {
 		this.inSections = inSections;
 	}
+	public ModelCardWrapperScope getScope() {
+		return scope;
+	}
+	public void setScope(ModelCardWrapperScope scope) {
+		this.scope = scope;
+	}
+	public String getOnCardWrapperId() {
+		return onCardWrapperId;
+	}
+	public void setOnCardWrapperId(String onCardWrapperId) {
+		this.onCardWrapperId = onCardWrapperId;
+	}
+	public Boolean getIsBefore() {
+		return isBefore;
+	}
+	public void setIsBefore(Boolean isBefore) {
+		this.isBefore = isBefore;
+	}
+	
 	
 }
