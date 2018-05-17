@@ -136,7 +136,8 @@ export default {
           this.axios.put('/1/model/section/' + this.inSection.id +
             '/cardWrapper/' + dragData.cardWrapperId, {}, {
             params: {
-              beforeCardWrapperId: onCardWrapperId
+              beforeCardWrapperId: onCardWrapperId,
+              scope: dragData.scope
             }
           }).then((response) => {
             this.$store.commit('triggerUpdateSectionCards')

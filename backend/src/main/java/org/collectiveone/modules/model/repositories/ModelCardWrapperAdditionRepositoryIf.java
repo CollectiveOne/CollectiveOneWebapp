@@ -27,4 +27,10 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "AND crdWrpAdd.scope = ?3")
 	ModelCardWrapperAddition findBySectionAndCardWrapperId(UUID sectionId, UUID cardWrapperId, ModelCardWrapperScope scope);
 	
+	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
+			+ "WHERE crdWrpAdd.cardWrapper.id= ?2 "
+			+ "AND crdWrpAdd.section.id = ?1 "
+			+ "AND crdWrpAdd.scope != 'SHARED'")
+	ModelCardWrapperAddition findBySectionAndCardWrapperIdNotShared(UUID sectionId, UUID cardWrapperId);
+	
 }

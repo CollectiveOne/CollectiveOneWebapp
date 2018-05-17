@@ -65,7 +65,7 @@
           </app-card-control-buttons>
         </div>
 
-        <div class="w3-right cursor-pointer indicator-comp"
+        <div v-if="!isPrivate" class="w3-right cursor-pointer indicator-comp"
           @click="cardClicked()">
           <app-indicator
             contextType="MODEL_CARD"
@@ -76,7 +76,7 @@
           </app-indicator>
         </div>
 
-        <div class="w3-right cursor-pointer indicator-comp"
+        <div v-if="!isPrivate" class="w3-right cursor-pointer indicator-comp"
           @click="toggleLike()">
           <app-indicator
             contextType="MODEL_CARD"

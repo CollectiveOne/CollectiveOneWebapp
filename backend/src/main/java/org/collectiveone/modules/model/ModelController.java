@@ -171,7 +171,8 @@ public class ModelController extends BaseController {
 	public PostResult addExistingCard(
 			@PathVariable("sectionId") String sectionIdStr,
 			@PathVariable("cardWrapperId") String cardWrapperIdStr,
-			@RequestParam(name = "beforeCardWrapperId", defaultValue="") String beforeCardWrapperIdStr) {
+			@RequestParam(name = "beforeCardWrapperId", defaultValue="") String beforeCardWrapperIdStr,
+			@RequestParam(name = "scope", defaultValue="") String scopeStr) {
 	
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -184,9 +185,11 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
+		ModelCardWrapperScope scope = scopeStr.equals("") ? ModelCardWrapperScope.SHARED : ModelCardWrapperScope.valueOf(scopeStr);
+		
 		UUID beforeCardWrapperId = beforeCardWrapperIdStr.equals("") ? null : UUID.fromString(beforeCardWrapperIdStr);
 		
-		return modelService.addCardToSection(UUID.fromString(sectionIdStr), cardWrapperId, beforeCardWrapperId, getLoggedUserId());
+		return modelService.addCardToSection(UUID.fromString(sectionIdStr), cardWrapperId, beforeCardWrapperId, getLoggedUserId(), scope);
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/removeCard/{cardWrapperId}", method = RequestMethod.PUT) 
@@ -329,7 +332,8 @@ public class ModelController extends BaseController {
 	
 	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}", method = RequestMethod.GET) 
 	public GetResult<ModelCardWrapperDto> getCardWrapper(
-			@PathVariable("cardWrapperId") String cardWrapperIdStr) {
+			@PathVariable("cardWrapperId") String cardWrapperIdStr,
+			@RequestParam(name="inSectionId", defaultValue="") String inSectionIdStr) {
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
 		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
@@ -338,7 +342,9 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelCardWrapperDto>("error", "access denied", null);
 		}
 		
-		return modelService.getCardWrapper(cardWrapperId, getLoggedUserId());
+		UUID inSectionId = inSectionIdStr.equals("") ? null : UUID.fromString(inSectionIdStr);
+		
+		return modelService.getCardWrapper(cardWrapperId, getLoggedUserId(), inSectionId);
 	}
 	
 

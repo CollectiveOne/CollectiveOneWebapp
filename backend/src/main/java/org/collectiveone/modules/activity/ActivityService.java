@@ -783,6 +783,17 @@ public class ActivityService {
 		addInitiativeActivityNotifications(activity);
 	}
 	
+	@Transactional
+	public void modelCardWrapperAdditionAddedToSection(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_PERSONAL_MOVED);
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
 		
 	@Transactional
 	public void modelCardWrapperRemoved(ModelCardWrapper cardWrapper, ModelSection fromSection, AppUser triggerUser) {

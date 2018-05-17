@@ -26,6 +26,12 @@ export const cardMixin = {
     }
   },
   computed: {
+    isPrivate () {
+      return this.cardWrapper.scope === 'PRIVATE'
+    },
+    isPersonal () {
+      return this.cardWrapper.scope === 'PERSONAL'
+    },
     containerClass () {
       let cClass = {}
       switch (this.cardWrapper.scope) {

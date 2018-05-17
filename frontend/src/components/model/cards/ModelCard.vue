@@ -93,7 +93,11 @@ export default {
 
   methods: {
     update () {
-      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id, {
+        params: {
+          inSectionId: this.inSection ? this.inSection.id : ''
+        }
+      }).then((response) => {
         this.cardWrapper = response.data.data
       })
     },
@@ -101,7 +105,8 @@ export default {
       var moveCardData = {
         type: 'MOVE_CARD',
         cardWrapperId: this.cardWrapper.id,
-        fromSectionId: this.inSection.id
+        fromSectionId: this.inSection.id,
+        scope: this.cardWrapper.scope
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
 
