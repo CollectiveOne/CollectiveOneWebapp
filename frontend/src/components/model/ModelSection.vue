@@ -96,6 +96,18 @@ export default {
     cardRouteName: {
       type: String,
       default: 'ModelSectionCard'
+    },
+    showPrivate: {
+      type: Boolean,
+      default: true
+    },
+    showShared: {
+      type: Boolean,
+      default: true
+    },
+    showCommon: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -113,33 +125,42 @@ export default {
 
   computed: {
     sortedCards () {
-      let allCardWrappers = this.section.cardsWrappers.slice()
+      let allCardWrappers = []
 
-      for (let ix in this.section.cardsWrappersPrivate) {
-        let cardWrapperPrivate = this.section.cardsWrappersPrivate[ix]
-        let ixFound = this.section.cardsWrappers.findIndex((e) => {
-          return e.id === cardWrapperPrivate.onCardWrapperId
-        })
-        if (ixFound !== -1) {
-          let ixInsert = cardWrapperPrivate.isBefore ? ixFound : ixFound + 1
-          allCardWrappers.splice(ixInsert, 0, cardWrapperPrivate)
-        } else {
-          allCardWrappers.push(cardWrapperPrivate)
+      if (this.showCommon) {
+        allCardWrappers = this.section.cardsWrappers.slice()
+      }
+
+      if (this.showPrivate) {
+        for (let ix in this.section.cardsWrappersPrivate) {
+          let cardWrapperPrivate = this.section.cardsWrappersPrivate[ix]
+          let ixFound = allCardWrappers.findIndex((e) => {
+            return e.id === cardWrapperPrivate.onCardWrapperId
+          })
+          if (ixFound !== -1) {
+            let ixInsert = cardWrapperPrivate.isBefore ? ixFound : ixFound + 1
+            allCardWrappers.splice(ixInsert, 0, cardWrapperPrivate)
+          } else {
+            allCardWrappers.push(cardWrapperPrivate)
+          }
         }
       }
 
-      for (let ix in this.section.cardsWrappersPersonal) {
-        let cardWrapperPrivate = this.section.cardsWrappersPersonal[ix]
-        let ixFound = this.section.cardsWrappers.findIndex((e) => {
-          return e.id === cardWrapperPrivate.onCardWrapperId
-        })
-        if (ixFound !== -1) {
-          let ixInsert = cardWrapperPrivate.isBefore ? ixFound : ixFound + 1
-          allCardWrappers.splice(ixInsert, 0, cardWrapperPrivate)
-        } else {
-          allCardWrappers.push(cardWrapperPrivate)
+      if (this.showShared) {
+        for (let ix in this.section.cardsWrappersPersonal) {
+          let cardWrapperPrivate = this.section.cardsWrappersPersonal[ix]
+          let ixFound = allCardWrappers.findIndex((e) => {
+            return e.id === cardWrapperPrivate.onCardWrapperId
+          })
+          if (ixFound !== -1) {
+            let ixInsert = cardWrapperPrivate.isBefore ? ixFound : ixFound + 1
+            allCardWrappers.splice(ixInsert, 0, cardWrapperPrivate)
+          } else {
+            allCardWrappers.push(cardWrapperPrivate)
+          }
         }
       }
+
       return allCardWrappers
     },
     nCardWrappers () {

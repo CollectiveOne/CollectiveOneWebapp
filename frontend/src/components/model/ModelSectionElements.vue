@@ -68,6 +68,23 @@
 
         <div v-if="isCardsContent" class="control-group">
           <div class="">
+            <div @click="showPrivateClick()" class="w3-left control-btn" :class="{'control-btn-selected': showPrivate}">
+              <img src="./../../assets/private-icon.svg" alt="">
+            </div>
+            <div @click="showSharedClick()" class="w3-left control-btn" :class="{'control-btn-selected': showShared}">
+              <img src="./../../assets/shared-icon.svg" alt="">
+            </div>
+            <div @click="showCommonClick()" class="w3-left control-btn" :class="{'control-btn-selected': showCommon}">
+              <img src="./../../assets/common-icon.svg" alt="">
+            </div>
+            <div @click="showAllClick()" class="w3-left control-btn">
+              <img src="./../../assets/all-icon.svg" alt="">
+            </div>
+          </div>
+        </div>
+
+        <div v-if="isCardsContent" class="control-group">
+          <div class="">
             <div @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
               <img src="./../../assets/network-icon.svg" alt="">
             </div>
@@ -160,7 +177,10 @@
         <app-model-section
           v-if="isCardsContent && isSectionsOrder"
           :section="section"
-          :cardsType="cardsType">
+          :cardsType="cardsType"
+          :showPrivate="showPrivate"
+          :showShared="showShared"
+          :showCommon="showCommon">
         </app-model-section>
 
         <div v-if="isCardsContent && isSectionsOrder && !sectionHasContent && !loading && section" class="w3-row w3-center">
@@ -267,7 +287,10 @@ export default {
       page: 0,
       pageSize: 10,
       thereAreMore: true,
-      cardWrappers: []
+      cardWrappers: [],
+      showPrivate: true,
+      showShared: true,
+      showCommon: true
     }
   },
 
@@ -399,6 +422,20 @@ export default {
       if (this.$route.query.cardsType !== 'doc' || this.$route.name !== 'ModelSectionCards') {
         this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'doc'}})
       }
+    },
+    showPrivateClick () {
+      this.showPrivate = !this.showPrivate
+    },
+    showSharedClick () {
+      this.showShared = !this.showShared
+    },
+    showCommonClick () {
+      this.showCommon = !this.showCommon
+    },
+    showAllClick () {
+      this.showPrivate = true
+      this.showShared = true
+      this.showCommon = true
     },
     showMore () {
       this.page = this.page + 1
@@ -565,6 +602,7 @@ export default {
   color: #3e464e;
   background-color: #eff3f6;
   border-radius: 3px;
+  transition: all 300ms ease;
 }
 
 .zoom-controls .arrow-div {
