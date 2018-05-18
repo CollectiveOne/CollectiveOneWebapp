@@ -250,7 +250,7 @@ const sectionToMarkdown = function (section, level) {
 const sectionHasContent = function (section) {
   if (section.cardsWrappers.length > 0 ||
     section.cardsWrappersPrivate.length > 0 ||
-    section.cardsWrappersPersonal.length > 0) {
+    section.cardsWrappersShared.length > 0) {
     return true
   } else {
     if (section.subsections.length > 0) {

@@ -147,8 +147,8 @@ export default {
       }
 
       if (this.showCommon) {
-        for (let ix in this.section.cardsWrappersPersonal) {
-          let cardWrapperPrivate = this.section.cardsWrappersPersonal[ix]
+        for (let ix in this.section.cardsWrappersShared) {
+          let cardWrapperPrivate = this.section.cardsWrappersShared[ix]
           let ixFound = allCardWrappers.findIndex((e) => {
             return e.id === cardWrapperPrivate.onCardWrapperId
           })
@@ -195,7 +195,7 @@ export default {
         if (response.data.result === 'success') {
           this.section.cardsWrappers = response.data.data.cardsWrappers
           this.section.cardsWrappersPrivate = response.data.data.cardsWrappersPrivate
-          this.section.cardsWrappersPersonal = response.data.data.cardsWrappersPersonal
+          this.section.cardsWrappersShared = response.data.data.cardsWrappersShared
         }
       })
     },

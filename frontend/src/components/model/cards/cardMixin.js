@@ -29,8 +29,8 @@ export const cardMixin = {
     isPrivate () {
       return this.cardWrapper.scope === 'PRIVATE'
     },
-    isPersonal () {
-      return this.cardWrapper.scope === 'PERSONAL'
+    isShared () {
+      return this.cardWrapper.scope === 'SHARED'
     },
     containerClass () {
       let cClass = {}
@@ -39,7 +39,7 @@ export const cardMixin = {
           cClass['border-red'] = true
           break
 
-        case 'PERSONAL':
+        case 'SHARED':
           cClass['border-yellow'] = true
           break
 

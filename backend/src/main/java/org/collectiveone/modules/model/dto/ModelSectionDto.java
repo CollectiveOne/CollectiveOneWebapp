@@ -20,7 +20,7 @@ public class ModelSectionDto {
 	private Integer nCards;
 	
 	private List<ModelCardWrapperDto> cardsWrappersPrivate = new ArrayList<ModelCardWrapperDto>();
-	private List<ModelCardWrapperDto> cardsWrappersPersonal = new ArrayList<ModelCardWrapperDto>();
+	private List<ModelCardWrapperDto> cardsWrappersShared = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelCardWrapperDto> cardsWrappers = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelSectionDto> subsections = new ArrayList<ModelSectionDto>();
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
@@ -126,11 +126,11 @@ public class ModelSectionDto {
 	public void setCardsWrappersPrivate(List<ModelCardWrapperDto> cardsWrappersPrivate) {
 		this.cardsWrappersPrivate = cardsWrappersPrivate;
 	}
-	public List<ModelCardWrapperDto> getCardsWrappersPersonal() {
-		return cardsWrappersPersonal;
+	public List<ModelCardWrapperDto> getCardsWrappersShared() {
+		return cardsWrappersShared;
 	}
-	public void setCardsWrappersPersonal(List<ModelCardWrapperDto> cardsWrappersPersonal) {
-		this.cardsWrappersPersonal = cardsWrappersPersonal;
+	public void setCardsWrappersShared(List<ModelCardWrapperDto> cardsWrappersShared) {
+		this.cardsWrappersShared = cardsWrappersShared;
 	}
 	
 	

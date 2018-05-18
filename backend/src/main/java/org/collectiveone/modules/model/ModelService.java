@@ -288,7 +288,7 @@ public class ModelService {
 		ModelCardWrapper beforeCardWrapper = modelCardWrapperRepository.findById(beforeCardWrapperId);
 		
 		switch (scope) {
-			case PERSONAL:
+			case SHARED:
 			case PRIVATE:
 				ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
 				
@@ -300,7 +300,7 @@ public class ModelService {
 				
 				modelCardWrapperAdditionRepository.save(cardWrapperAddition);
 				
-				if (scope == ModelCardWrapperScope.PERSONAL) {
+				if (scope == ModelCardWrapperScope.SHARED) {
 					activityService.modelCardWrapperAdditionAddedToSection(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 				}
 				
@@ -365,13 +365,13 @@ public class ModelService {
 			cardWrappersHolder.getCardsWrappersPrivate().add(cardWrapperDto);
 		}
 		
-		/* if request user is in ecosystem add personal cards too */
+		/* if request user is in ecosystem add shared cards too */
 		if(initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId)) {
 			
-			List<ModelCardWrapperAddition> modelCardWrappersPersonal = 
-					modelCardWrapperAdditionRepository.findOfInSection(section.getId(), ModelCardWrapperScope.PERSONAL);
+			List<ModelCardWrapperAddition> modelCardWrappersShared = 
+					modelCardWrapperAdditionRepository.findOfInSection(section.getId(), ModelCardWrapperScope.SHARED);
 			
-			for (ModelCardWrapperAddition cardWrapperAddition : modelCardWrappersPersonal) {
+			for (ModelCardWrapperAddition cardWrapperAddition : modelCardWrappersShared) {
 				ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition.getCardWrapper(), requestByUserId);
 				if (cardWrapperAddition.getOnCardWrapper() != null) {
 					cardWrapperDto.setOnCardWrapperId(cardWrapperAddition.getOnCardWrapper().getId().toString());
@@ -379,7 +379,7 @@ public class ModelService {
 				}				
 				cardWrapperDto.setScope(cardWrapperAddition.getScope());
 				
-				cardWrappersHolder.getCardsWrappersPersonal().add(cardWrapperDto);
+				cardWrappersHolder.getCardsWrappersShared().add(cardWrapperDto);
 			}
 		}
 		
@@ -397,7 +397,7 @@ public class ModelService {
 			
 			sectionDto.setCardsWrappers(cardWrappersHolder.getCardsWrappers());
 			sectionDto.setCardsWrappersPrivate(cardWrappersHolder.getCardsWrappersPrivate());
-			sectionDto.setCardsWrappersPersonal(cardWrappersHolder.getCardsWrappersPersonal());
+			sectionDto.setCardsWrappersShared(cardWrappersHolder.getCardsWrappersShared());
 		}
 				
 		if (level > 0) {
@@ -488,7 +488,7 @@ public class ModelService {
 		switch (cardDto.getNewScope()) {
 		
 			case PRIVATE:
-			case PERSONAL:
+			case SHARED:
 				
 				ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
 				ModelCardWrapper onCardWrapper = null;
@@ -508,7 +508,7 @@ public class ModelService {
 				
 				modelCardWrapperAdditionRepository.save(cardWrapperAddition);
 				
-				if (cardDto.getNewScope() == ModelCardWrapperScope.PERSONAL) {
+				if (cardDto.getNewScope() == ModelCardWrapperScope.SHARED) {
 					activityService.modelCardWrapperCreated(cardWrapper, section, appUserRepository.findByC1Id(creatorId));
 				}
 				
@@ -614,17 +614,17 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult makeCardWrapperPersonal(UUID cardWrapperId, UUID onSectionId, UUID requestByUserId) {
+	public PostResult makeCardWrapperShared(UUID cardWrapperId, UUID onSectionId, UUID requestByUserId) {
 		
 		ModelCardWrapperAddition cardWrapperAddition = 
 				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(onSectionId, cardWrapperId, ModelCardWrapperScope.PRIVATE);
 				
 		if (cardWrapperAddition == null) return new PostResult("error", "card wrapper not found", "");
 		
-		cardWrapperAddition.setScope(ModelCardWrapperScope.PERSONAL);
+		cardWrapperAddition.setScope(ModelCardWrapperScope.SHARED);
 		modelCardWrapperAdditionRepository.save(cardWrapperAddition);
 		
-		activityService.modelCardWrapperMadePersonal(cardWrapperAddition, appUserRepository.findByC1Id(requestByUserId));
+		activityService.modelCardWrapperMadeShared(cardWrapperAddition, appUserRepository.findByC1Id(requestByUserId));
 		
 		return new PostResult("success", "card edited", cardWrapperAddition.getId().toString());
 	}
@@ -633,7 +633,7 @@ public class ModelService {
 	public PostResult makeCardWrapperCommon(UUID cardWrapperId, UUID onSectionId, UUID requestByUserId) {
 		
 		ModelCardWrapperAddition cardWrapperAddition = 
-				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(onSectionId, cardWrapperId, ModelCardWrapperScope.PERSONAL);
+				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(onSectionId, cardWrapperId, ModelCardWrapperScope.SHARED);
 				
 		if (cardWrapperAddition == null) return new PostResult("error", "card wrapper not found", "");
 		

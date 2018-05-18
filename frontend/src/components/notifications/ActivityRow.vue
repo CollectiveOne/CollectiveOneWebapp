@@ -152,7 +152,7 @@
           created the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
            on section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
         </span>
-        <span v-if="isModelCardWrapperMadePersonal" class="">
+        <span v-if="isModelCardWrapperMadeShared" class="">
           made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
            on section <app-model-section-link :section="activity.onSection"></app-model-section-link> visible.
         </span>
@@ -346,8 +346,8 @@ export default {
       return this.activity.type === 'MODEL_CARDWRAPPER_CREATED' &&
         this.activity.onSection !== null
     },
-    isModelCardWrapperMadePersonal () {
-      return this.activity.type === 'MODEL_CARDWRAPPER_MADE_PERSONAL'
+    isModelCardWrapperMadeShared () {
+      return this.activity.type === 'MODEL_CARDWRAPPER_MADE_SHARED'
     },
     isModelCardWrapperMadeCommon () {
       return this.activity.type === 'MODEL_CARDWRAPPER_MADE_COMMON'

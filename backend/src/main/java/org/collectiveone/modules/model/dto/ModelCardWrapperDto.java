@@ -20,7 +20,7 @@ public class ModelCardWrapperDto {
 	private List<ModelCardDto> oldVersions = new ArrayList<ModelCardDto>();
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
 	
-	/* for private and personal, position is given relative to another card */
+	/* for private and shared, position is given relative to another card */
 	private ModelCardWrapperScope scope;
 	private String onCardWrapperId;
 	private Boolean isBefore;

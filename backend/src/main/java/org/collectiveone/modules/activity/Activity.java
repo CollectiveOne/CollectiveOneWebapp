@@ -138,7 +138,7 @@ public class Activity {
 		if(onSection != null) dto.setOnSection(onSection.toDto());
 		if(fromSection != null) dto.setFromSection(fromSection.toDto());
 		
-		if (type == ActivityType.MODEL_CARDWRAPPER_MADE_PERSONAL || type == ActivityType.MODEL_CARDWRAPPER_MADE_COMMON) {
+		if (type == ActivityType.MODEL_CARDWRAPPER_MADE_SHARED || type == ActivityType.MODEL_CARDWRAPPER_MADE_COMMON) {
 			dto.setModelCardWrapper(modelCardWrapperAddition.getCardWrapper().toDto());
 			dto.setModelSection(modelCardWrapperAddition.getSection().toDto());
 		}

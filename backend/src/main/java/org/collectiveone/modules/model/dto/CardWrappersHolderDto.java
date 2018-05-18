@@ -6,7 +6,7 @@ import java.util.List;
 public class CardWrappersHolderDto {
 	
 	private List<ModelCardWrapperDto> cardsWrappersPrivate = new ArrayList<ModelCardWrapperDto>();
-	private List<ModelCardWrapperDto> cardsWrappersPersonal = new ArrayList<ModelCardWrapperDto>();
+	private List<ModelCardWrapperDto> cardsWrappersShared = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelCardWrapperDto> cardsWrappers = new ArrayList<ModelCardWrapperDto>();
 	
 	public List<ModelCardWrapperDto> getCardsWrappersPrivate() {
@@ -15,11 +15,11 @@ public class CardWrappersHolderDto {
 	public void setCardsWrappersPrivate(List<ModelCardWrapperDto> cardsWrappersPrivate) {
 		this.cardsWrappersPrivate = cardsWrappersPrivate;
 	}
-	public List<ModelCardWrapperDto> getCardsWrappersPersonal() {
-		return cardsWrappersPersonal;
+	public List<ModelCardWrapperDto> getCardsWrappersShared() {
+		return cardsWrappersShared;
 	}
-	public void setCardsWrappersPersonal(List<ModelCardWrapperDto> cardsWrappersPersonal) {
-		this.cardsWrappersPersonal = cardsWrappersPersonal;
+	public void setCardsWrappersShared(List<ModelCardWrapperDto> cardsWrappersShared) {
+		this.cardsWrappersShared = cardsWrappersShared;
 	}
 	public List<ModelCardWrapperDto> getCardsWrappers() {
 		return cardsWrappers;

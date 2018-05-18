@@ -45,7 +45,7 @@
         v-show="expanded"
         class="drop-menu"
         @edit="edit()"
-        @makePersonal="makePersonal()"
+        @makeShared="makeShared()"
         @makeCommon="makeCommon()"
         @addCardBefore="addCardBefore()"
         @addCardAfter="addCardAfter()"
@@ -56,7 +56,7 @@
 
       <div class="w3-card w3-white drop-menu">
 
-        <div v-if="makePersonalIntent" class="w3-row w3-center delete-intent-div">
+        <div v-if="makeSharedIntent" class="w3-row w3-center delete-intent-div">
           <div class="w3-padding w3-round light-grey w3-margin-bottom">
             <p>
               <b>Warning:</b> Are you sure you want to make this card visible? It will be seen by all initiative members.
@@ -64,11 +64,11 @@
           </div>
           <button
             class="w3-button light-grey"
-            @click="makePersonalIntent = false">cancel
+            @click="makeSharedIntent = false">cancel
           </button>
           <button
             class="w3-button button-blue"
-            @click="makePersonalConfirmed()">confirm
+            @click="makeSharedConfirmed()">confirm
           </button>
         </div>
 
@@ -144,7 +144,7 @@ export default {
       showNewCardModal: false,
       newCardLocation: 'end',
       showEditCardModal: false,
-      makePersonalIntent: false,
+      makeSharedlIntent: false,
       makeCommonIntent: false,
       deleteIntent: false,
       removeIntent: false
@@ -158,8 +158,8 @@ export default {
     isPrivate () {
       return this.cardWrapper.scope === 'PRIVATE'
     },
-    isPersonal () {
-      return this.cardWrapper.scope === 'PERSONAL'
+    isShared () {
+      return this.cardWrapper.scope === 'SHARED'
     },
     isLoggedTheAuthor () {
       return this.cardWrapper.creator.c1Id === this.$store.state.user.profile.c1Id
@@ -169,7 +169,7 @@ export default {
 
       switch (this.cardWrapper.scope) {
         case 'PRIVATE':
-        case 'PERSONAL':
+        case 'SHARED':
           if (this.isLoggedTheAuthor) menuItems.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
           break
 
@@ -178,8 +178,8 @@ export default {
           break
       }
 
-      if (this.isLoggedAnEditor && this.isPrivate && this.isLoggedTheAuthor) menuItems.push({ text: 'make visible', value: 'makePersonal', faIcon: 'fa-share' })
-      if (this.isLoggedAnEditor && this.isPersonal && this.isLoggedTheAuthor) menuItems.push({ text: 'make common', value: 'makeCommon', faIcon: 'fa-share' })
+      if (this.isLoggedAnEditor && this.isPrivate && this.isLoggedTheAuthor) menuItems.push({ text: 'make shared', value: 'makeShared', faIcon: 'fa-share' })
+      if (this.isLoggedAnEditor && this.isShared && this.isLoggedTheAuthor) menuItems.push({ text: 'make common', value: 'makeCommon', faIcon: 'fa-share' })
       if (this.isLoggedAnEditor) menuItems.push({ text: 'add card before', value: 'addCardBefore', faIcon: 'fa-plus' })
       if (this.isLoggedAnEditor) menuItems.push({ text: 'add card after', value: 'addCardAfter', faIcon: 'fa-plus' })
       if (this.isLoggedAnEditor) menuItems.push({ text: 'remove', value: 'remove', faIcon: 'fa-times' })
@@ -207,17 +207,17 @@ export default {
     deleteCard () {
       this.deleteIntent = true
     },
-    makePersonal () {
-      this.makePersonalIntent = true
+    makeShared () {
+      this.makeSharedIntent = true
     },
     makeCommon () {
       this.makeCommonIntent = true
     },
-    makePersonalConfirmed () {
-      this.axios.put('/1/model/section/' + this.inSection.id + '/cardWrapper/' + this.cardWrapper.id + '/makePersonal',
+    makeSharedConfirmed () {
+      this.axios.put('/1/model/section/' + this.inSection.id + '/cardWrapper/' + this.cardWrapper.id + '/makeShared',
         {}).then((response) => {
           if (response.data.result === 'success') {
-            this.makePersonalIntent = false
+            this.makeSharedIntent = false
             this.expanded = false
             this.$emit('updateCards')
           } else {

@@ -74,7 +74,7 @@
                   <label class=""><b>Scope (in "{{ inSectionTitle }}" section):</b></label>
                   <select v-model="editedCard.newScope" class="w3-input" name="">
                     <option value="PRIVATE">Private (only I can see it)</option>
-                    <option value="PERSONAL">Visible (others can see it, but its mine)</option>
+                    <option value="SHARED">Shared (others can see it, but its mine)</option>
                     <option value="COMMON">Common (controlled by all editors)</option>
                   </select>
                 </div>
@@ -326,7 +326,7 @@ export default {
     canChangeScope () {
       switch (this.editedCard.newScope) {
         case 'PRIVATE':
-        case 'PERSONAL':
+        case 'SHARED':
           return this.isNew ? true : this.isLoggedTheAuthor
 
         case 'COMMON':
@@ -627,7 +627,7 @@ export default {
       this.editedCard = {
         title: '',
         text: '',
-        newScope: 'PERSONAL'
+        newScope: 'SHARED'
       }
       this.editing = true
     } else {

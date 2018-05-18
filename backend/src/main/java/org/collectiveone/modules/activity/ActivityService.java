@@ -773,10 +773,10 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelCardWrapperMadePersonal(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+	public void modelCardWrapperMadeShared(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
 		
-		activity.setType(ActivityType.MODEL_CARDWRAPPER_MADE_PERSONAL);
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_MADE_SHARED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
 		activity = activityRepository.save(activity);
 		
@@ -787,7 +787,7 @@ public class ActivityService {
 	public void modelCardWrapperAdditionAddedToSection(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
 		
-		activity.setType(ActivityType.MODEL_CARDWRAPPER_PERSONAL_MOVED);
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_SHARED_MOVED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
 		activity = activityRepository.save(activity);
 		

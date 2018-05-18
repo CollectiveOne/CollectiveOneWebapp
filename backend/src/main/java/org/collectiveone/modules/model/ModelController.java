@@ -370,8 +370,8 @@ public class ModelController extends BaseController {
 		return modelService.editCardWrapper(initiativeId, inSectionId, cardWrapperId, cardDto, getLoggedUser().getC1Id());
 	}
 	
-	@RequestMapping(path = "/model/section/{sectionId}/cardWrapper/{cardWrapperId}/makePersonal", method = RequestMethod.PUT) 
-	public PostResult makeCardWrapperPersonal(
+	@RequestMapping(path = "/model/section/{sectionId}/cardWrapper/{cardWrapperId}/makeShared", method = RequestMethod.PUT) 
+	public PostResult makeCardWrapperShared(
 			@PathVariable("sectionId") String sectionIdStr,
 			@PathVariable("cardWrapperId") String cardWrapperIdStr) {
 		
@@ -391,7 +391,7 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.makeCardWrapperPersonal(cardWrapperId, sectionId, getLoggedUserId());
+		return modelService.makeCardWrapperShared(cardWrapperId, sectionId, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/cardWrapper/{cardWrapperId}/makeCommon", method = RequestMethod.PUT) 
