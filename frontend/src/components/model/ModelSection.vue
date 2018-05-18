@@ -101,7 +101,7 @@ export default {
       type: Boolean,
       default: true
     },
-    showShared: {
+    showCommon: {
       type: Boolean,
       default: true
     },
@@ -146,7 +146,7 @@ export default {
         }
       }
 
-      if (this.showShared) {
+      if (this.showCommon) {
         for (let ix in this.section.cardsWrappersPersonal) {
           let cardWrapperPrivate = this.section.cardsWrappersPersonal[ix]
           let ixFound = allCardWrappers.findIndex((e) => {

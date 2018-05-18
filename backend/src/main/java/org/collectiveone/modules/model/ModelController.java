@@ -185,7 +185,7 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		ModelCardWrapperScope scope = scopeStr.equals("") ? ModelCardWrapperScope.SHARED : ModelCardWrapperScope.valueOf(scopeStr);
+		ModelCardWrapperScope scope = scopeStr.equals("") ? ModelCardWrapperScope.COMMON : ModelCardWrapperScope.valueOf(scopeStr);
 		
 		UUID beforeCardWrapperId = beforeCardWrapperIdStr.equals("") ? null : UUID.fromString(beforeCardWrapperIdStr);
 		
@@ -394,8 +394,8 @@ public class ModelController extends BaseController {
 		return modelService.makeCardWrapperPersonal(cardWrapperId, sectionId, getLoggedUserId());
 	}
 	
-	@RequestMapping(path = "/model/section/{sectionId}/cardWrapper/{cardWrapperId}/makeShared", method = RequestMethod.PUT) 
-	public PostResult makeCardWrapperShared(
+	@RequestMapping(path = "/model/section/{sectionId}/cardWrapper/{cardWrapperId}/makeCommon", method = RequestMethod.PUT) 
+	public PostResult makeCardWrapperCommon(
 			@PathVariable("sectionId") String sectionIdStr,
 			@PathVariable("cardWrapperId") String cardWrapperIdStr) {
 		
@@ -415,7 +415,7 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized, you are not the card author", "");
 		}
 		
-		return modelService.makeCardWrapperShared(cardWrapperId, sectionId, getLoggedUserId());
+		return modelService.makeCardWrapperCommon(cardWrapperId, sectionId, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/cardWrappers/search", method = RequestMethod.GET) 

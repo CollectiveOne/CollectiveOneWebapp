@@ -75,7 +75,7 @@
                   <select v-model="editedCard.newScope" class="w3-input" name="">
                     <option value="PRIVATE">Private (only I can see it)</option>
                     <option value="PERSONAL">Visible (others can see it, but its mine)</option>
-                    <option value="SHARED">Common (controlled by all editors)</option>
+                    <option value="COMMON">Common (controlled by all editors)</option>
                   </select>
                 </div>
 
@@ -329,7 +329,7 @@ export default {
         case 'PERSONAL':
           return this.isNew ? true : this.isLoggedTheAuthor
 
-        case 'SHARED':
+        case 'COMMON':
           return false
 
       }

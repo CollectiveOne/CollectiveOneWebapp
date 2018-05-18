@@ -156,7 +156,7 @@
           made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
            on section <app-model-section-link :section="activity.onSection"></app-model-section-link> visible.
         </span>
-        <span v-if="isModelCardWrapperMadeShared" class="">
+        <span v-if="isModelCardWrapperMadeCommon" class="">
           made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
            on section <app-model-section-link :section="activity.onSection"></app-model-section-link> common.
         </span>
@@ -349,8 +349,8 @@ export default {
     isModelCardWrapperMadePersonal () {
       return this.activity.type === 'MODEL_CARDWRAPPER_MADE_PERSONAL'
     },
-    isModelCardWrapperMadeShared () {
-      return this.activity.type === 'MODEL_CARDWRAPPER_MADE_SHARED'
+    isModelCardWrapperMadeCommon () {
+      return this.activity.type === 'MODEL_CARDWRAPPER_MADE_COMMON'
     },
     isModelCardWrapperEdited () {
       return this.activity.type === 'MODEL_CARDWRAPPER_EDITED'

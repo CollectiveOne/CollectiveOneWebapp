@@ -230,7 +230,7 @@ public class NotificationDtoBuilder {
 			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
 			break;
 			
-		case MODEL_CARDWRAPPER_MADE_SHARED:
+		case MODEL_CARDWRAPPER_MADE_COMMON:
 			message = checkHtml("<p>") + "made the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
 			" on section " + getModelSectionAnchor(onSection) + checkHtml(" common</p>");
 			

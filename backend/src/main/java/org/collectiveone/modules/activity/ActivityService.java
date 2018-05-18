@@ -762,10 +762,10 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelCardWrapperMadeShared(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+	public void modelCardWrapperMadeCommon(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
 		
-		activity.setType(ActivityType.MODEL_CARDWRAPPER_MADE_SHARED);
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_MADE_COMMON);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
 		activity = activityRepository.save(activity);
 		
