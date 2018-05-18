@@ -509,7 +509,7 @@ public class ModelService {
 				modelCardWrapperAdditionRepository.save(cardWrapperAddition);
 				
 				if (cardDto.getNewScope() == ModelCardWrapperScope.SHARED) {
-					activityService.modelCardWrapperCreated(cardWrapper, section, appUserRepository.findByC1Id(creatorId));
+					activityService.modelCardWrapperSharedCreated(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 				}
 				
 				modelSectionRepository.save(section);

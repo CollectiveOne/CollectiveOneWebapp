@@ -625,6 +625,10 @@ export default {
   display: inline-block;
 }
 
+.control-btn {
+  margin-right: 4px;
+}
+
 .zoom-controls {
   min-height: 1px;
   width: 160px;

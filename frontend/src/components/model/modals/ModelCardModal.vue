@@ -71,8 +71,11 @@
               <div v-if="!addExisting">
 
                 <div v-if="editing && canChangeScope" class="w3-row w3-margin-top">
-                  <label class=""><b>Scope (in "{{ inSectionTitle }}" section):</b></label>
-                  <select v-model="editedCard.newScope" class="w3-input" name="">
+                  <label class="">
+                    <b>Scope (in "{{ inSectionTitle }}" section):</b>
+                  </label>
+                  <select v-model="editedCard.newScope"
+                    class="w3-input w3-topbar" :class="selectorBorderClass" name="">
                     <option value="PRIVATE">Private (only I can see it)</option>
                     <option value="SHARED">Shared (others can see it, but its mine)</option>
                     <option value="COMMON">Common (controlled by all editors)</option>
@@ -316,6 +319,23 @@ export default {
   },
 
   computed: {
+    selectorBorderClass () {
+      let cClass = {}
+      switch (this.editedCard.newScope) {
+        case 'PRIVATE':
+          cClass['border-red'] = true
+          break
+
+        case 'SHARED':
+          cClass['border-yellow'] = true
+          break
+
+        default:
+          cClass['border-blue'] = true
+          break
+      }
+      return cClass
+    },
     isLoggedTheAuthor () {
       if (this.cardWrapper.creator && this.$store.state.user.profile) {
         console.log(this.cardWrapper)
@@ -330,7 +350,7 @@ export default {
           return this.isNew ? true : this.isLoggedTheAuthor
 
         case 'COMMON':
-          return false
+          return this.isNew
 
       }
     },

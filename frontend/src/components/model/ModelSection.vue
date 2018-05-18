@@ -2,6 +2,19 @@
 
   <div v-if="section" class="section-container" ref="sectionContainer" :id="section.id">
 
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-card-modal
+          v-if="showNewCardModal"
+          :isNew="true"
+          :inSectionId="section.id"
+          :inSectionTitle="section.title"
+          @close="showNewCardModal = false"
+          @updateCards="updateCards()">
+        </app-model-card-modal>
+      </transition>
+    </div>
+
     <div v-if="(nestedIn.length > 0 && section.subElementsLoaded) || showThisTitle"
       class="w3-row title-row">
       <div class="w3-row blue-color title-text">
@@ -13,8 +26,8 @@
           <b>{{ section.title }}</b>
         </div>
       </div>
-      <div v-if="section.description !== ''" class="w3-row description-text light-grey">
-        {{ section.description }}
+      <div v-if="hasDescription" class="w3-row description-text light-grey">
+        <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
       </div>
 
     </div>
@@ -27,7 +40,9 @@
         :acceptDrop="true"
         :cardRouteName="cardRouteName"
         :hideCardControls="hideCardControls"
-        @updateCards="updateCards()">
+        :showNewCardButton="cardsType !== 'doc'"
+        @updateCards="updateCards()"
+        @create-card="showNewCardModal = true">
       </app-model-cards-container>
     </div>
 
@@ -38,8 +53,7 @@
 
         <app-model-section
           :section="subsection"
-          :inElementId="section.id"
-          :inElementTitle="section.title"
+          :inSection="section"
           :cardsType="cardsType"
           :nestedIn="nestedIn.concat([section])"
           :cardRouteName="cardRouteName"
@@ -77,13 +91,9 @@ export default {
       type: Array,
       default: () => { return [] }
     },
-    inElementId: {
-      type: String,
-      default: ''
-    },
-    inElementTitle: {
-      type: String,
-      default: ''
+    inSection: {
+      type: Object,
+      default: null
     },
     cardsType: {
       type: String,
@@ -101,7 +111,7 @@ export default {
       type: Boolean,
       default: true
     },
-    showCommon: {
+    showShared: {
       type: Boolean,
       default: true
     },
@@ -119,11 +129,18 @@ export default {
       expanded: true,
       showCardId: '',
       expandSubSubsecInit: false,
-      subscription: null
+      subscription: null,
+      showNewCardModal: false
     }
   },
 
   computed: {
+    hasDescription () {
+      if (this.section.description) {
+        return this.section.description !== ''
+      }
+      return false
+    },
     sortedCards () {
       let allCardWrappers = []
 
@@ -146,7 +163,7 @@ export default {
         }
       }
 
-      if (this.showCommon) {
+      if (this.showShared) {
         for (let ix in this.section.cardsWrappersShared) {
           let cardWrapperPrivate = this.section.cardsWrappersShared[ix]
           let ixFound = allCardWrappers.findIndex((e) => {

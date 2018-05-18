@@ -50,6 +50,9 @@
             :section="section"
             :showThisTitle="true"
             :hideCardControls="true"
+            :showPrivate="false"
+            :showShared="false"
+            :showCommon="true"
             :cardRouteName="'ModelSectionReadCard'"
             :cardsType="cardsType">
           </app-model-section>
@@ -187,6 +190,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  min-width: 300px;
 }
 
 .control-btns-row {

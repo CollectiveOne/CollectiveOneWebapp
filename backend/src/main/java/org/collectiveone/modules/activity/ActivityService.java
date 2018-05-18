@@ -831,6 +831,17 @@ public class ActivityService {
 	}
 	
 	@Transactional
+	public void modelCardWrapperSharedCreated(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_SHARED_CREATED);
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
 	public void modelCardWrapperEdited(ModelCardWrapper cardWrapper, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
 		
@@ -954,9 +965,13 @@ public class ActivityService {
 			case MODEL_CARDWRAPPER_ADDED:
 			case MODEL_CARDWRAPPER_DELETED:
 			case MODEL_CARDWRAPPER_CREATED:
+			case MODEL_CARDWRAPPER_SHARED_CREATED:
 			case MODEL_CARDWRAPPER_EDITED:
 			case MODEL_CARDWRAPPER_MOVED:
 			case MODEL_CARDWRAPPER_REMOVED:
+			case MODEL_CARDWRAPPER_MADE_COMMON:
+			case MODEL_CARDWRAPPER_MADE_SHARED:
+			case MODEL_CARDWRAPPER_SHARED_MOVED:
 			case MODEL_SECTION_ADDED:
 			case MODEL_SECTION_CREATED:
 			case MODEL_SECTION_DELETED:
@@ -999,6 +1014,16 @@ public class ActivityService {
 				/* activity in cards is considered as occurring on the sections these card is placed*/
 				sections = modelCardWrapperRepository.findParentSections(activity.getModelCardWrapper().getId());
 				break;
+				
+			/* these activities occur at the section level, because scope is a section + card characteristic, not a card one. */
+			case MODEL_CARDWRAPPER_SHARED_CREATED:
+			case MODEL_CARDWRAPPER_MADE_COMMON:
+			case MODEL_CARDWRAPPER_MADE_SHARED:
+			case MODEL_CARDWRAPPER_SHARED_MOVED:
+				sections = new ArrayList<ModelSection>();
+				sections.add(activity.getModelCardWrapperAddition().getSection());
+				break;
+				
 				
 			case MESSAGE_POSTED:
 				sections = new ArrayList<ModelSection>();

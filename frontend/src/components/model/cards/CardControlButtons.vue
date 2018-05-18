@@ -144,7 +144,7 @@ export default {
       showNewCardModal: false,
       newCardLocation: 'end',
       showEditCardModal: false,
-      makeSharedlIntent: false,
+      makeSharedIntent: false,
       makeCommonIntent: false,
       deleteIntent: false,
       removeIntent: false

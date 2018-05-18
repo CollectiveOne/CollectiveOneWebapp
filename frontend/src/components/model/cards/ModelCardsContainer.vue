@@ -21,7 +21,12 @@
         </app-model-card>
       </div>
 
+    </div><div v-if="showNewCardButton" :class="cardsContainerClasses" class="">
+      <div @click="$emit('create-card')" class="control-btn w3-card-2 w3-padding w3-round w3-center">
+        <i class="fa fa-plus" aria-hidden="true"></i> create new card
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -57,6 +62,10 @@ export default {
     cardRouteName: {
       type: String,
       default: 'ModelSectionCard'
+    },
+    showNewCardButton: {
+      type: Boolean,
+      default: false
     }
   },
 
