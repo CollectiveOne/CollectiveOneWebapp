@@ -184,15 +184,6 @@
           :showCommon="showCommon">
         </app-model-section>
 
-        <div v-if="isCardsContent && isSectionsOrder && !sectionHasContent && !loading && section" class="w3-row w3-center">
-          <div class="w3-row">
-            <i>no cards have been created in "{{ section.title }}"</i>
-          </div>
-          <div @click="showNewCardModal = true" class="control-btn w3-row w3-margin-top">create one</div>
-          <div v-if="levels === 1" class="w3-row w3-margin-top">or</div>
-          <div v-if="levels === 1" @click="levelUp()" class="control-btn w3-row w3-margin-top">look one level further</div>
-        </div>
-
         <app-model-cards-container
           v-if="isCardsContent && !isSectionsOrder"
           :cardWrappers="cardWrappers"

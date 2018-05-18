@@ -21,7 +21,13 @@
         </app-model-card>
       </div>
 
-    </div><div v-if="showNewCardButton" :class="cardsContainerClasses" class="">
+    </div><div v-if="showNewCardButton" :class="cardsContainerClasses" class=""
+      @dragover.prevent="draggingOver()"
+      @drop.prevent="cardDroped('', $event)">
+
+      <div v-if="draggingOverCreateCard" class="drop-div">
+      </div>
+
       <div @click="$emit('create-card')" class="control-btn w3-card-2 w3-padding w3-round w3-center">
         <i class="fa fa-plus" aria-hidden="true"></i> create new card
       </div>
@@ -82,6 +88,7 @@ export default {
   data () {
     return {
       draggingOverCardWrapper: null,
+      draggingOverCreateCard: false,
       resetIntervalId: 0
     }
   },
@@ -92,12 +99,19 @@ export default {
         return
       }
 
+      if (cardWrapper == null) {
+        this.draggingOverCreateCard = true
+      } else {
+        this.draggingOverCreateCard = false
+      }
+
       this.draggingOverCardWrapper = cardWrapper
 
       /* make sure this resets even if dropped elsewhere */
       clearTimeout(this.resetIntervalId)
       this.resetIntervalId = setTimeout(() => {
         this.draggingOverCardWrapper = null
+        this.draggingOverCreateCard = false
       }, 500)
     },
     isDraggingOver (cardWrapper) {

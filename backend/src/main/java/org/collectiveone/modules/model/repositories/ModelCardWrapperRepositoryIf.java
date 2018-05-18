@@ -25,12 +25,14 @@ public interface ModelCardWrapperRepositoryIf extends CrudRepository<ModelCardWr
 	
 	@Query("SELECT DISTINCT crdWrp FROM ModelSection sec JOIN sec.cardsWrappers crdWrp JOIN crdWrp.card crd "
 			+ "WHERE (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
-			+ "AND sec.id IN ?1")
+			+ "AND sec.id IN ?1 "
+			+ "AND (crdWrp.status != 'DELETED' OR crdWrp.status IS NULL)")
 	public Page<ModelCardWrapper> searchInSectionsByQuery(List<UUID> sectionIds, String query, Pageable page);
 	
 	@Query("SELECT DISTINCT crdWrp FROM ModelCardWrapper crdWrp JOIN crdWrp.card crd "
 			+ "WHERE (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
-			+ "AND crdWrp.initiative.id IN ?1 ORDER BY crdWrp.lastEdited")
+			+ "AND crdWrp.initiative.id IN ?1 "
+			+ "AND (crdWrp.status != 'DELETED' OR crdWrp.status IS NULL) ORDER BY crdWrp.lastEdited")
 	public Page<ModelCardWrapper> searchInInitiativesByQuery(List<UUID> initiativeIds, String query, Pageable page);
 	
 	@Query("SELECT crdWrp FROM ModelCardWrapper crdWrp WHERE crdWrp.creationDate IS NULL OR crdWrp.creator IS NULL")
@@ -42,7 +44,10 @@ public interface ModelCardWrapperRepositoryIf extends CrudRepository<ModelCardWr
 	@Query("SELECT edt FROM ModelCardWrapper crdWrp JOIN crdWrp.editors edt WHERE crdWrp.id = ?1 AND edt.id = ?2")
 	public AppUser findEditor(UUID cardWrapperId, UUID editorId);
 	
-	@Query("SELECT DISTINCT crd.id FROM ModelSection sec JOIN sec.cardsWrappers crd WHERE sec.id IN ?1")
+	@Query("SELECT DISTINCT crdWrp.id FROM ModelSection sec "
+			+ "JOIN sec.cardsWrappers crdWrp "
+			+ "WHERE sec.id IN ?1 "
+			+ "AND (crdWrp.status != 'DELETED' OR crdWrp.status IS NULL)")
 	public List<UUID> findAllCardsIdsOfSections(List<UUID> sectionId);
 	
 	

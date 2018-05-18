@@ -820,7 +820,6 @@ public class ModelService {
 	@Transactional
 	public PostResult deleteCardWrapper (UUID cardWrapperId, UUID creatorId) {
 		
-		
 		List<ModelSection> parents = modelCardWrapperRepository.findParentSections(cardWrapperId);
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		
@@ -832,6 +831,10 @@ public class ModelService {
 				modelSectionRepository.save(parent);
 			}
 		}
+		
+		/* mark as deleted */
+		cardWrapper.setStatus(Status.DELETED);
+		modelCardWrapperRepository.save(cardWrapper);
 		
 		activityService.modelCardWrapperDeleted(cardWrapper, appUserRepository.findByC1Id(creatorId));
 		
