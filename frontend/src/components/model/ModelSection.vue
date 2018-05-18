@@ -58,6 +58,9 @@
           :nestedIn="nestedIn.concat([section])"
           :cardRouteName="cardRouteName"
           :hideCardControls="hideCardControls"
+          :showPrivate="showPrivate"
+          :showShared="showShared"
+          :showCommon="showCommon"
           @updateCards="updateCards()">
         </app-model-section>
       </div>

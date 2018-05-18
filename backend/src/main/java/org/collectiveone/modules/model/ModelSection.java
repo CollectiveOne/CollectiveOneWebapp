@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -51,6 +52,12 @@ public class ModelSection {
 	
 	@ManyToMany
 	private List<ModelCardWrapper> cardsWrappersTrash = new ArrayList<ModelCardWrapper>();
+	
+	@OneToMany(mappedBy="section")
+	private List<ModelCardWrapperAddition> cardsWrappersAdditionsPrivate = new ArrayList<ModelCardWrapperAddition>();
+	
+	@OneToMany(mappedBy="section")
+	private List<ModelCardWrapperAddition> cardsWrappersAdditionsShared = new ArrayList<ModelCardWrapperAddition>();
 	
 	/* should be one to many but there seems to be a bug in Hibernate 
 	 * see https://stackoverflow.com/questions/4022509/constraint-violation-in-hibernate-unidirectional-onetomany-mapping-with-jointabl
@@ -186,6 +193,22 @@ public class ModelSection {
 
 	public void setMessageThread(MessageThread messageThread) {
 		this.messageThread = messageThread;
+	}
+
+	public List<ModelCardWrapperAddition> getCardsWrappersAdditionsPrivate() {
+		return cardsWrappersAdditionsPrivate;
+	}
+
+	public void setCardsWrappersAdditionsPrivate(List<ModelCardWrapperAddition> cardsWrappersAdditionsPrivate) {
+		this.cardsWrappersAdditionsPrivate = cardsWrappersAdditionsPrivate;
+	}
+
+	public List<ModelCardWrapperAddition> getCardsWrappersAdditionsShared() {
+		return cardsWrappersAdditionsShared;
+	}
+
+	public void setCardsWrappersAdditionsShared(List<ModelCardWrapperAddition> cardsWrappersAdditionsShared) {
+		this.cardsWrappersAdditionsShared = cardsWrappersAdditionsShared;
 	}
 		
 }
