@@ -44,8 +44,16 @@ export default (to, from, next) => {
     let fromLevels = from.query.levels ? from.query.levels : '1'
     let fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
 
+    let fromShowPrivate = from.query.showPrivate != null ? from.query.showPrivate : true
+    let fromShowShared = from.query.showShared != null ? from.query.showShared : true
+    let fromShowCommon = from.query.showCommon != null ? from.query.showCommon : true
+
     let toLevels = to.query.levels ? to.query.levels : fromLevels
     let toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
+
+    let toShowPrivate = to.query.showPrivate != null ? to.query.showPrivate : fromShowPrivate
+    let toShowShared = to.query.showShared != null ? to.query.showShared : fromShowShared
+    let toShowCommon = to.query.showCommon != null ? to.query.showCommon : fromShowCommon
 
     if (to.name === 'ModelSectionContent') {
       /* just keep the current tab when switching among sections */
@@ -58,7 +66,10 @@ export default (to, from, next) => {
             },
             query: {
               levels: toLevels,
-              cardsType: toCardsType
+              cardsType: toCardsType,
+              showPrivate: toShowPrivate,
+              showShared: toShowShared,
+              showCommon: toShowCommon
             },
             replace: true
           })
@@ -73,7 +84,10 @@ export default (to, from, next) => {
             },
             query: {
               levels: toLevels,
-              cardsType: toCardsType
+              cardsType: toCardsType,
+              showPrivate: toShowPrivate,
+              showShared: toShowShared,
+              showCommon: toShowCommon
             },
             replace: true})
           break
@@ -86,6 +100,9 @@ export default (to, from, next) => {
       if (
         (toLevels !== fromLevels) ||
         (toCardsType !== fromCardsType) ||
+        (toShowPrivate !== fromShowPrivate) ||
+        (toShowShared !== fromShowShared) ||
+        (toShowCommon !== fromShowCommon) ||
         (to.name !== from.name)) {
         next({
           name: to.name,
@@ -94,7 +111,10 @@ export default (to, from, next) => {
           },
           query: {
             levels: toLevels,
-            cardsType: toCardsType
+            cardsType: toCardsType,
+            showPrivate: toShowPrivate,
+            showShared: toShowShared,
+            showCommon: toShowCommon
           },
           replace: true})
       } else {

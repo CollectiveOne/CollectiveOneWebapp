@@ -1,6 +1,5 @@
 package org.collectiveone.modules.model;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
@@ -11,6 +10,7 @@ import org.collectiveone.modules.governance.DecisionVerdict;
 import org.collectiveone.modules.governance.GovernanceService;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
+import org.collectiveone.modules.model.dto.CardWrappersHolderDto;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
@@ -260,14 +260,14 @@ public class ModelController extends BaseController {
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/cardWrappers", method = RequestMethod.GET) 
-	public GetResult<List<ModelCardWrapperDto>> getSectionCardWrappers(
+	public GetResult<CardWrappersHolderDto> getSectionCardWrappers(
 			@PathVariable("sectionId") String sectionIdStr) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
 		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
-			return new GetResult<List<ModelCardWrapperDto>>("error", "access denied", null);
+			return new GetResult<CardWrappersHolderDto>("error", "access denied", null);
 		}
 		
 		return modelService.getSectionCardWrappers(sectionId, getLoggedUserId());
@@ -351,7 +351,8 @@ public class ModelController extends BaseController {
 	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
 	public PostResult editCardWrapper(
 			@PathVariable("cardWrapperId") String cardWrapperIdStr,
-			@RequestBody ModelCardDto cardDto) {
+			@RequestBody ModelCardDto cardDto,
+			@RequestParam(name="inSectionId", defaultValue="") String inSectionIdStr) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -364,7 +365,9 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.editCardWrapper(initiativeId, cardWrapperId, cardDto, getLoggedUser().getC1Id());
+		UUID inSectionId = inSectionIdStr.equals("") ? null : UUID.fromString(inSectionIdStr);
+		
+		return modelService.editCardWrapper(initiativeId, inSectionId, cardWrapperId, cardDto, getLoggedUser().getC1Id());
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/cardWrapper/{cardWrapperId}/makePersonal", method = RequestMethod.PUT) 

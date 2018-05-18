@@ -67,6 +67,12 @@ export default {
     }
   },
 
+  watch: {
+    cardWrapperInit () {
+      this.cardWrapper = this.cardWrapperInit
+    }
+  },
+
   data () {
     return {
       cardWrapper: null

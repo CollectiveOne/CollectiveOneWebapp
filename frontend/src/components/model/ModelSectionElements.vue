@@ -66,15 +66,15 @@
           </div>
         </div>
 
-        <div v-if="isCardsContent" class="control-group">
+        <div v-if="isCardsContent && this.$store.state.user.authenticated" class="control-group">
           <div class="">
-            <div @click="showPrivateClick()" class="w3-left control-btn" :class="{'control-btn-selected': showPrivate}">
+            <div @click="showPrivateClick()" class="w3-left control-btn border-red" :class="{'control-btn-selected': showPrivate, 'w3-bottombar': showPrivate}">
               <img src="./../../assets/private-icon.svg" alt="">
             </div>
-            <div @click="showSharedClick()" class="w3-left control-btn" :class="{'control-btn-selected': showShared}">
+            <div @click="showSharedClick()" class="w3-left control-btn border-yellow" :class="{'control-btn-selected': showShared, 'w3-bottombar': showShared}">
               <img src="./../../assets/shared-icon.svg" alt="">
             </div>
-            <div @click="showCommonClick()" class="w3-left control-btn" :class="{'control-btn-selected': showCommon}">
+            <div @click="showCommonClick()" class="w3-left control-btn border-blue" :class="{'control-btn-selected': showCommon, 'w3-bottombar': showCommon}">
               <img src="./../../assets/common-icon.svg" alt="">
             </div>
             <div @click="showAllClick()" class="w3-left control-btn">
@@ -267,6 +267,14 @@ const sectionHasContent = function (section) {
   return false
 }
 
+const checkBooleanQuery = function (query) {
+  if (typeof (query) === 'boolean') {
+    return query
+  } else {
+    return query === 'true'
+  }
+}
+
 export default {
   components: {
     'app-model-section': ModelSection,
@@ -290,10 +298,7 @@ export default {
       page: 0,
       pageSize: 10,
       thereAreMore: true,
-      cardWrappers: [],
-      showPrivate: true,
-      showShared: true,
-      showCommon: true
+      cardWrappers: []
     }
   },
 
@@ -328,6 +333,24 @@ export default {
     },
     cardsType () {
       return this.$route.query.cardsType ? this.$route.query.cardsType : 'card'
+    },
+    showPrivate () {
+      if (this.$route.query.showPrivate == null) {
+        return true
+      }
+      return checkBooleanQuery(this.$route.query.showPrivate)
+    },
+    showShared () {
+      if (this.$route.query.showShared == null) {
+        return true
+      }
+      return checkBooleanQuery(this.$route.query.showShared)
+    },
+    showCommon () {
+      if (this.$route.query.showCommon == null) {
+        return true
+      }
+      return checkBooleanQuery(this.$route.query.showCommon)
     },
     isSummary () {
       return this.cardsType === 'summary' && this.isCardsContent
@@ -427,18 +450,22 @@ export default {
       }
     },
     showPrivateClick () {
-      this.showPrivate = !this.showPrivate
+      this.$router.replace({name: 'ModelSectionCards', query: {showPrivate: !this.showPrivate}})
     },
     showSharedClick () {
-      this.showShared = !this.showShared
+      this.$router.replace({name: 'ModelSectionCards', query: {showShared: !this.showShared}})
     },
     showCommonClick () {
-      this.showCommon = !this.showCommon
+      this.$router.replace({name: 'ModelSectionCards', query: {showCommon: !this.showCommon}})
     },
     showAllClick () {
-      this.showPrivate = true
-      this.showShared = true
-      this.showCommon = true
+      this.$router.replace({
+        name: 'ModelSectionCards',
+        query: {
+          showPrivate: true,
+          showShared: true,
+          showCommon: true
+        }})
     },
     showMore () {
       this.page = this.page + 1

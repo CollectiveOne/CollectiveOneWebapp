@@ -837,7 +837,7 @@ public class ActivityService {
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_EDITED);
 		activity.setModelCardWrapper(cardWrapper);
 		activity = activityRepository.save(activity);
-		System.out.println(activity.getId().toString()+" edited by sagar");
+		
 		broadcastMessage(activity);
 		addInitiativeActivityNotifications(activity);
 	}

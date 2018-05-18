@@ -23,6 +23,8 @@
             v-if="showEditCardModal"
             :isNew="false"
             :cardWrapperId="cardWrapper.id"
+            :inSectionId="inSection.id"
+            :inSectionTitle="inSection.title"
             :editingInit="true"
             @close="showEditCardModal = false"
             @update="$emit('update')">
@@ -164,7 +166,18 @@ export default {
     },
     menuItems () {
       let menuItems = []
-      if (this.isLoggedAnEditor) menuItems.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
+
+      switch (this.cardWrapper.scope) {
+        case 'PRIVATE':
+        case 'PERSONAL':
+          if (this.isLoggedTheAuthor) menuItems.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
+          break
+
+        case 'SHARED':
+          if (this.isLoggedAnEditor) menuItems.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
+          break
+      }
+
       if (this.isLoggedAnEditor && this.isPrivate && this.isLoggedTheAuthor) menuItems.push({ text: 'make visible', value: 'makePersonal', faIcon: 'fa-share' })
       if (this.isLoggedAnEditor && this.isPersonal && this.isLoggedTheAuthor) menuItems.push({ text: 'make shared', value: 'makeShared', faIcon: 'fa-share' })
       if (this.isLoggedAnEditor) menuItems.push({ text: 'add card before', value: 'addCardBefore', faIcon: 'fa-plus' })
@@ -186,6 +199,7 @@ export default {
     },
     edit () {
       this.showEditCardModal = true
+      this.expanded = false
     },
     remove () {
       this.removeIntent = true
@@ -202,7 +216,6 @@ export default {
     makePersonalConfirmed () {
       this.axios.put('/1/model/section/' + this.inSection.id + '/cardWrapper/' + this.cardWrapper.id + '/makePersonal',
         {}).then((response) => {
-          console.log(response)
           if (response.data.result === 'success') {
             this.makePersonalIntent = false
             this.expanded = false

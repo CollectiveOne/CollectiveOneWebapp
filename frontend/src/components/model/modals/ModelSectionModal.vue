@@ -25,12 +25,12 @@
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
             <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
-              :class="{'border-blue': !addExisting}"
+              :class="{'border-blue-app': !addExisting}"
               @click="addExisting = false">
               <h5 class="noselect" :class="{'bold-text': !addExisting}">Create New</h5>
             </div>
             <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
-              :class="{'border-blue': addExisting}"
+              :class="{'border-blue-app': addExisting}"
               @click="addExisting = true">
               <h5 class="noselect" :class="{'bold-text': addExisting}">Add Existing</h5>
             </div>

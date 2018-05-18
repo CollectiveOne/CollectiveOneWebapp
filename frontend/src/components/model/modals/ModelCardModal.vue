@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="w3-modal">
+  <div class="w3-modal" draggable="false">
     <div class="w3-modal-content">
       <div class="w3-card-4 app-modal-card w3-display-container"
         v-click-outside="clickOutside">
@@ -35,12 +35,12 @@
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
             <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
-              :class="{'border-blue': !addExisting}"
+              :class="{'border-blue-app': !addExisting}"
               @click="addExisting = false">
               <h5 class="noselect" :class="{'bold-text': !addExisting}">Create New</h5>
             </div>
             <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
-              :class="{'border-blue': addExisting}"
+              :class="{'border-blue-app': addExisting}"
               @click="addExisting = true">
               <h5 class="noselect" :class="{'bold-text': addExisting}">Add Existing</h5>
             </div>
@@ -70,8 +70,8 @@
 
               <div v-if="!addExisting">
 
-                <div v-if="editing" class="w3-row w3-margin-top">
-                  <label class=""><b>Scope:</b></label>
+                <div v-if="editing && canChangeScope" class="w3-row w3-margin-top">
+                  <label class=""><b>Scope (in "{{ inSectionTitle }}" section):</b></label>
                   <select v-model="editedCard.newScope" class="w3-input" name="">
                     <option value="PRIVATE">Private (only I can see it)</option>
                     <option value="PERSONAL">Visible (others can see it, but its mine)</option>
@@ -316,6 +316,24 @@ export default {
   },
 
   computed: {
+    isLoggedTheAuthor () {
+      if (this.cardWrapper.creator && this.$store.state.user.profile) {
+        console.log(this.cardWrapper)
+        console.log(this.$store.state.user.profile)
+        return this.cardWrapper.creator.c1Id === this.$store.state.user.profile.c1Id
+      }
+    },
+    canChangeScope () {
+      switch (this.editedCard.newScope) {
+        case 'PRIVATE':
+        case 'PERSONAL':
+          return this.isNew ? true : this.isLoggedTheAuthor
+
+        case 'SHARED':
+          return false
+
+      }
+    },
     showSelectFile () {
       return this.editing && this.changeImage
     },
@@ -424,7 +442,11 @@ export default {
     },
     update () {
       this.loading = true
-      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id, {
+        params: {
+          inSectionId: this.inSectionId
+        }
+      }).then((response) => {
         this.cardWrapper = response.data.data
         this.loading = false
         if (this.editingInit) {
@@ -459,6 +481,7 @@ export default {
     },
     startEditing () {
       this.editedCard = JSON.parse(JSON.stringify(this.card))
+      this.editedCard.newScope = this.cardWrapper.scope
       this.editing = true
     },
     accept () {
@@ -484,14 +507,6 @@ export default {
       if (ok) {
         var cardDto = JSON.parse(JSON.stringify(this.editedCard))
 
-        var responseF = (response) => {
-          this.sendingData = false
-          if (response.data.result === 'success') {
-            this.closeThis()
-            this.$emit('updateCards')
-          }
-        }
-
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
@@ -510,21 +525,44 @@ export default {
             }
 
             this.sendingData = true
-            this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto, { params: params }).then(responseF).catch((error) => {
+            this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto, { params: params })
+            .then((response) => {
+              this.sendingData = false
+              if (response.data.result === 'success') {
+                this.closeThis()
+                this.$emit('updateCards')
+              }
+            }).catch((error) => {
               console.log(error)
             })
           } else {
             this.sendingData = true
             this.axios.put('/1/model/section/' + this.inSectionId + '/cardWrapper/' + this.existingCard.id,
-              {}, params).then(responseF).catch((error) => {
+              {}, params).then((response) => {
+                this.sendingData = false
+                if (response.data.result === 'success') {
+                  this.closeThis()
+                  this.$emit('updateCards')
+                }
+              }).catch((error) => {
                 console.log(error)
               })
           }
         } else {
           /* editing */
           this.sendingData = true
-          this.axios.put('/1/model/cardWrapper/' + this.cardWrapper.id, cardDto)
-            .then(responseF).catch((error) => {
+          this.axios.put('/1/model/cardWrapper/' + this.cardWrapper.id, cardDto, {
+            params: {
+              inSectionId: this.inSectionId
+            }
+          })
+            .then((response) => {
+              this.sendingData = false
+              if (response.data.result === 'success') {
+                this.closeThis()
+                this.$emit('update')
+              }
+            }).catch((error) => {
               console.log(error)
             })
         }

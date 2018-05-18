@@ -41,15 +41,20 @@ public class NotificationDtoBuilder {
 		
 		Initiative initiative = act.getInitiative();
 		Initiative subInitiative = act.getSubInitiative();
-		TokenType tokenType = notification.getActivity().getTokenType();
-		TokenMint mint = notification.getActivity().getMint();
-		Assignation assignation = notification.getActivity().getAssignation();
-		InitiativeTransfer transfer = notification.getActivity().getInitiativeTransfer();
+		TokenType tokenType = act.getTokenType();
+		TokenMint mint = act.getMint();
+		Assignation assignation = act.getAssignation();
+		InitiativeTransfer transfer = act.getInitiativeTransfer();
 		
-		ModelSection modelSection = notification.getActivity().getModelSection();
-		ModelCardWrapper modelCardWrapper = notification.getActivity().getModelCardWrapper();
-		ModelSection onSection = notification.getActivity().getOnSection();
-		ModelSection fromSection = notification.getActivity().getFromSection();
+		ModelSection modelSection = act.getModelSection();
+		ModelCardWrapper modelCardWrapper = act.getModelCardWrapper();
+		ModelSection onSection = act.getOnSection();
+		ModelSection fromSection = act.getFromSection();
+		
+		if (act.getModelCardWrapperAddition() != null) {
+			modelCardWrapper = act.getModelCardWrapperAddition().getCardWrapper();
+			onSection = act.getModelCardWrapperAddition().getSection();
+		}
 		
 		String message = "";
 		String url = "";

@@ -190,9 +190,12 @@ export default {
 
   methods: {
     updateCards () {
+      console.log('updating cards')
       this.axios.get('/1/model/section/' + this.section.id + '/cardWrappers').then((response) => {
         if (response.data.result === 'success') {
-          this.section.cardsWrappers = response.data.data
+          this.section.cardsWrappers = response.data.data.cardsWrappers
+          this.section.cardsWrappersPrivate = response.data.data.cardsWrappersPrivate
+          this.section.cardsWrappersPersonal = response.data.data.cardsWrappersPersonal
         }
       })
     },

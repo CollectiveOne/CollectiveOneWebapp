@@ -47,8 +47,12 @@
   color: white;
 }
 
-.border-blue {
+.border-blue-app {
   border-color: #15a5cc !important;
+}
+
+.border-blue {
+  border-color: #0c708b !important;
 }
 
 .border-red {

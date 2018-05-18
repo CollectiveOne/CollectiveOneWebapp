@@ -18,14 +18,14 @@
             <div
               id="T_directTransferUser"
               class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
-              :class="{'border-blue': isDirect}"
+              :class="{'border-blue-app': isDirect}"
               @click="assignation.type = DIRECT_ID()">
               <h5 class="" :class="{'bold-text': isDirect}">Direct</h5>
             </div>
-            <div 
-              id="T_peerReviewedTransferUser" 
+            <div
+              id="T_peerReviewedTransferUser"
               class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
-              :class="{'border-blue': isPeerReviewed}"
+              :class="{'border-blue-app': isPeerReviewed}"
               @click="assignation.type = PEER_REVIEWED_ID()">
               <h5 class="" :class="{'bold-text': isPeerReviewed}">Peer Reviewed</h5>
             </div>
