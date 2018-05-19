@@ -1,25 +1,24 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import RootView from '@/components/RootView.vue'
-import LandingView from '@/components/LandingView.vue'
+const RootView = () => import('@/components/RootView.vue')
+const LandingView = () => import('@/components/LandingView.vue')
+const AppView = () => import('@/components/AppView.vue')
+const InitiativesView = () => import('@/components/InitiativesView.vue')
+const InitiativesHome = () => import('@/components/InitiativesHome.vue')
+const InitiativesContent = () => import('@/components/initiative/InitiativeContent.vue')
+const Unsubscribe = () => import('@/components/user/Unsubscribe.vue')
 
-import AppView from '@/components/AppView.vue'
-import InitiativesView from '@/components/InitiativesView.vue'
-import InitiativesHome from '@/components/InitiativesHome.vue'
-import InitiativesContent from '@/components/initiative/InitiativeContent.vue'
-import Unsubscribe from '@/components/user/Unsubscribe.vue'
+const OverviewSection = () => import('@/components/initiative/OverviewSection.vue')
+const PeopleSection = () => import('@/components/initiative/PeopleSection.vue')
+const TransfersSection = () => import('@/components/initiative/TransfersSection.vue')
 
-import OverviewSection from '@/components/initiative/OverviewSection.vue'
-import PeopleSection from '@/components/initiative/PeopleSection.vue'
-import TransfersSection from '@/components/initiative/TransfersSection.vue'
+const ModelSectionTab = () => import('@/components/initiative/ModelSectionTab.vue')
+const ModelSectionContent = () => import('@/components/model/ModelSectionContent.vue')
+const ModelSectionElements = () => import('@/components/model/ModelSectionElements.vue')
 
-import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
-import ModelSectionContent from '@/components/model/ModelSectionContent.vue'
-import ModelSectionElements from '@/components/model/ModelSectionElements.vue'
-
-import UserProfilePage from '@/components/UserProfilePage.vue'
-import WSWebSocketDebugPage from '@/components/WebSocketDebugPage.vue'
+const UserProfilePage = () => import('@/components/UserProfilePage.vue')
+const WSWebSocketDebugPage = () => import('@/components/WebSocketDebugPage.vue')
 
 Vue.use(Router)
 
