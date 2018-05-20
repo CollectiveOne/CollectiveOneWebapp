@@ -66,7 +66,6 @@ export default new Router({
                 {
                   path: 'model',
                   component: ModelSectionTab,
-                  name: 'InitiativeModelBase',
                   meta: {'column': 3},
                   children: [
                     {
