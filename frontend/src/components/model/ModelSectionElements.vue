@@ -392,6 +392,7 @@ export default {
     },
     sectionOrder () {
       this.orderType = 'sections'
+      this.update()
     },
     aggregatedOrder () {
       this.resetCards()

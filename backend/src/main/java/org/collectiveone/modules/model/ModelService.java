@@ -348,14 +348,14 @@ public class ModelService {
 		CardWrappersHolderDto cardWrappersHolder = new CardWrappersHolderDto();
 		
 		for (ModelCardWrapper cardWrapper : section.getCardsWrappers()) {
-			cardWrappersHolder.getCardsWrappers().add(getCardWrapperDtoWithMetadata(cardWrapper, requestByUserId));
+			cardWrappersHolder.getCardsWrappers().add(getCardWrapperDtoWithMetadata(cardWrapper, requestByUserId, null));
 		}
 		
 		List<ModelCardWrapperAddition> modelCardWrappersPrivate = 
 				modelCardWrapperAdditionRepository.findOfUserInSection(requestByUserId, section.getId(), ModelCardWrapperScope.PRIVATE);
 		
 		for (ModelCardWrapperAddition cardWrapperAddition : modelCardWrappersPrivate) {
-			ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition.getCardWrapper(), requestByUserId);
+			ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition.getCardWrapper(), requestByUserId, null);
 			if (cardWrapperAddition.getOnCardWrapper() != null) {
 				cardWrapperDto.setOnCardWrapperId(cardWrapperAddition.getOnCardWrapper().getId().toString());
 				cardWrapperDto.setIsBefore(cardWrapperAddition.getIsBefore());
@@ -372,7 +372,7 @@ public class ModelService {
 					modelCardWrapperAdditionRepository.findOfInSection(section.getId(), ModelCardWrapperScope.SHARED);
 			
 			for (ModelCardWrapperAddition cardWrapperAddition : modelCardWrappersShared) {
-				ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition.getCardWrapper(), requestByUserId);
+				ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition.getCardWrapper(), requestByUserId, null);
 				if (cardWrapperAddition.getOnCardWrapper() != null) {
 					cardWrapperDto.setOnCardWrapperId(cardWrapperAddition.getOnCardWrapper().getId().toString());
 					cardWrapperDto.setIsBefore(cardWrapperAddition.getIsBefore());
@@ -410,9 +410,32 @@ public class ModelService {
 		return sectionDto; 
 	}
 	
-	private ModelCardWrapperDto getCardWrapperDtoWithMetadata(ModelCardWrapper cardWrapper, UUID requestByUserId) {
+	private ModelCardWrapperDto getCardWrapperDtoWithMetadata(ModelCardWrapper cardWrapper, UUID requestByUserId, UUID inSectionId) {
 		ModelCardWrapperDto cardWrapperDto = cardWrapper.toDto();
 		
+		/* check if this card wrapper is an addition on that section */
+		if (inSectionId != null) {
+			ModelCardWrapperAddition cardWrapperAddition = 
+					modelCardWrapperAdditionRepository.findBySectionAndCardWrapperIdNotCommon(inSectionId, cardWrapper.getId());
+			
+			if (cardWrapperAddition != null) {
+				
+				if (cardWrapperAddition.getScope() == ModelCardWrapperScope.PRIVATE) {
+					if (!cardWrapperAddition.getCardWrapper().getCreator().getC1Id().equals(requestByUserId)) {
+						return null;
+					}
+				}
+				
+				cardWrapperDto.setScope(cardWrapperAddition.getScope());
+				
+			} else {
+				cardWrapperDto.setScope(ModelCardWrapperScope.COMMON);
+			}
+		} else {
+			cardWrapperDto.setScope(ModelCardWrapperScope.COMMON);
+		}
+		
+		/* get number of likes */
 		cardWrapperDto.setnLikes(cardLikeRepository.countOfCard(cardWrapper.getId()));
 		
 		if (requestByUserId != null) {
@@ -729,28 +752,7 @@ public class ModelService {
 		ModelCardWrapperDto cardWrapperDto = null;
 		
 		/* check if this is a card addition */
-		if (inSectionId != null) {
-			ModelCardWrapperAddition cardWrapperAddition = 
-					modelCardWrapperAdditionRepository.findBySectionAndCardWrapperIdNotCommon(inSectionId, cardWrapperId);
-			
-			if (cardWrapperAddition != null) {
-				
-				if (cardWrapperAddition.getScope() == ModelCardWrapperScope.PRIVATE) {
-					if (!cardWrapperAddition.getCardWrapper().getCreator().getC1Id().equals(requestByUserId)) {
-						return new GetResult<ModelCardWrapperDto>("error", "not authorized, not the author", null);
-					}
-				}
-				
-				cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition.getCardWrapper(), requestByUserId);
-				cardWrapperDto.setScope(cardWrapperAddition.getScope());
-				
-			} else {
-				cardWrapperDto = getCardWrapperDtoWithMetadata(modelCardWrapperRepository.findById(cardWrapperId), requestByUserId);
-				cardWrapperDto.setScope(ModelCardWrapperScope.COMMON);
-			}
-		} else {
-			cardWrapperDto = getCardWrapperDtoWithMetadata(modelCardWrapperRepository.findById(cardWrapperId), requestByUserId);
-		}
+		cardWrapperDto = getCardWrapperDtoWithMetadata(modelCardWrapperRepository.findById(cardWrapperId), requestByUserId, inSectionId);
 		
 		return new GetResult<ModelCardWrapperDto>("success", "card retrieved", cardWrapperDto);
 	}
@@ -768,33 +770,36 @@ public class ModelService {
 	@Transactional
 	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(UUID sectionId, String query, Integer page, Integer pageSize, String sortByIn, Integer levels, UUID requestById, Boolean inInitiativeEcosystem) {
 		PageRequest pageRequest = null;
-		
-		switch (sortByIn) {
-			case "CREATION_DATE_DESC":
-				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.creationDate"));
-				break;
-				
-			case "EDITION_DATE_DESC":
-				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.lastEdited"));
-				break;
-				
-			case "CREATOR":
-				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.ASC, "crdWrp.creator.profile.nickname"));
-				break;
-			
-			default:
-				pageRequest = new PageRequest(page, pageSize);
-				break;
-		}
-		
 		Page<ModelCardWrapper> enititiesPage = null;
+		
 		if (!inInitiativeEcosystem) {
 			List<UUID> allSectionIds = new ArrayList<UUID>();
 			
-			allSectionIds.add(sectionId);
 			allSectionIds.addAll(getAllSubsectionsIds(sectionId, levels - 1));
 			
-			enititiesPage = modelCardWrapperRepository.searchInSectionsByQuery(allSectionIds, "%"+query.toLowerCase()+"%", pageRequest);
+			switch (sortByIn) {
+				case "CREATION_DATE_DESC":
+					pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "creationDate"));
+					break;
+					
+				case "EDITION_DATE_DESC":
+					pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "lastEdited"));
+					break;
+					
+				case "CREATOR":
+//					pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.ASC, "creator.profile.nickname"));
+//					TODO: not able to make this work now...
+					pageRequest = new PageRequest(page, pageSize);
+					break;
+				
+				default:
+					pageRequest = new PageRequest(page, pageSize);
+					break;
+			}
+			
+//			, "%"+query.toLowerCase()+"%",
+			enititiesPage = modelCardWrapperRepository.searchInSectionsByQuery(allSectionIds, pageRequest);
+			
 		} else {
 			
 			ModelSection section = modelSectionRepository.findById(sectionId);
@@ -803,13 +808,31 @@ public class ModelService {
 			/* TODO: weird issue when using dynamic new Sort, sort hardcoded based laste edited */
 			pageRequest = new PageRequest(page, pageSize);
 			
+			switch (sortByIn) {
+				case "CREATION_DATE_DESC":
+					pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.creationDate"));
+					break;
+					
+				case "EDITION_DATE_DESC":
+					pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.lastEdited"));
+					break;
+					
+				case "CREATOR":
+					pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.ASC, "crdWrp.creator.profile.nickname"));
+					break;
+				
+				default:
+					pageRequest = new PageRequest(page, pageSize);
+					break;
+			}
+			
 			enititiesPage = modelCardWrapperRepository.searchInInitiativesByQuery(initiativeEcosystemIds, "%"+query.toLowerCase()+"%", pageRequest);
 		}
 		
 		List<ModelCardWrapperDto> cardsDtos = new ArrayList<ModelCardWrapperDto>();
 		
 		for(ModelCardWrapper cardWrapper : enititiesPage.getContent()) {
-			cardsDtos.add(getCardWrapperDtoWithMetadata(cardWrapper, requestById));
+			cardsDtos.add(getCardWrapperDtoWithMetadata(cardWrapper, requestById, sectionId));
 		}
 		
 		Page<ModelCardWrapperDto> dtosPage = new PageImpl<ModelCardWrapperDto>(cardsDtos, pageRequest, enititiesPage.getNumberOfElements());

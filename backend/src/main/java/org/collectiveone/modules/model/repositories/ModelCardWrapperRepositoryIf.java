@@ -23,18 +23,14 @@ public interface ModelCardWrapperRepositoryIf extends CrudRepository<ModelCardWr
 			+ "WHERE crds.id = ?1")
 	public List<ModelSection> findParentSections(UUID modelCardWrapperId);
 	
-	@Query("SELECT DISTINCT crdWrp, crdWrpA, crdWrpS FROM ModelSection sec "
-			+ "JOIN sec.cardsWrappers crdWrp JOIN crdWrp.card crd "
-			+ "JOIN sec.cardsWrappersAdditionsPrivate crdWrpAP JOIN crdWrpAP.cardWrapper crdWrpA JOIN crdWrpA.card crdA "
-			+ "JOIN sec.cardsWrappersAdditionsShared  crdWrpAS JOIN crdWrpAS.cardWrapper crdWrpS JOIN crdWrpS.card crdS "
-			+ "WHERE (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
-			+ "OR    (LOWER(crdA.title) LIKE ?2 OR LOWER(crdA.text) LIKE ?2 OR LOWER(crdWrpA.creator.profile.nickname) LIKE ?2) "
-			+ "OR    (LOWER(crdS.title) LIKE ?2 OR LOWER(crdS.text) LIKE ?2 OR LOWER(crdWrpS.creator.profile.nickname) LIKE ?2) "
-			+ "AND sec.id IN ?1 "
-			+ "AND (crdWrp.status != 'DELETED' OR crdWrp.status IS NULL) "
-			+ "AND (crdWrpA.status != 'DELETED' OR crdWrpA.status IS NULL) "
-			+ "AND (crdWrpS.status != 'DELETED' OR crdWrpS.status IS NULL) ")
-	public Page<ModelCardWrapper> searchInSectionsByQuery(List<UUID> sectionIds, String query, Pageable page);
+	@Query("SELECT DISTINCT crdWrp FROM ModelCardWrapper crdWrp "
+			+ "WHERE crdWrp.id IN ("
+			+ "SELECT crdWrpC.id FROM ModelSection sec1 JOIN sec1.cardsWrappers crdWrpC WHERE sec1.id IN ?1) "
+			+ "OR crdWrp.id IN ("
+			+ "SELECT crdWrpP.id FROM ModelSection sec2 JOIN sec2.cardsWrappersAdditionsPrivate crdWrpAddP JOIN crdWrpAddP.cardWrapper crdWrpP WHERE sec2.id IN ?1) "
+			+ "OR crdWrp.id IN ("
+			+ "SELECT crdWrpS.id FROM ModelSection sec3 JOIN sec3.cardsWrappersAdditionsShared crdWrpAddS JOIN crdWrpAddS.cardWrapper crdWrpS WHERE sec3.id IN ?1) ")
+	public Page<ModelCardWrapper> searchInSectionsByQuery(List<UUID> sectionId, Pageable page);
 	
 	@Query("SELECT DISTINCT crdWrp FROM ModelCardWrapper crdWrp JOIN crdWrp.card crd "
 			+ "WHERE (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
