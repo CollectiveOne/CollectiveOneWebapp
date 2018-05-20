@@ -8,8 +8,6 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -60,9 +58,6 @@ public class ModelCardWrapper {
 	
 	@ManyToMany
 	private List<AppUser> editors = new ArrayList<AppUser>();
-	
-	@Enumerated(EnumType.STRING)
-	private Status status;
 	
 	@Override
 	public int hashCode() {
@@ -181,14 +176,6 @@ public class ModelCardWrapper {
 
 	public void setEditors(List<AppUser> editors) {
 		this.editors = editors;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
 	}
 	
 }

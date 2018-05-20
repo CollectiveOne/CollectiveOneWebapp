@@ -25,11 +25,20 @@ public interface ModelCardWrapperRepositoryIf extends CrudRepository<ModelCardWr
 	
 	@Query("SELECT DISTINCT crdWrp FROM ModelCardWrapper crdWrp "
 			+ "WHERE crdWrp.id IN ("
-			+ "SELECT crdWrpC.id FROM ModelSection sec1 JOIN sec1.cardsWrappers crdWrpC WHERE sec1.id IN ?1) "
-			+ "OR crdWrp.id IN ("
-			+ "SELECT crdWrpP.id FROM ModelSection sec2 JOIN sec2.cardsWrappersAdditionsPrivate crdWrpAddP JOIN crdWrpAddP.cardWrapper crdWrpP WHERE sec2.id IN ?1) "
-			+ "OR crdWrp.id IN ("
-			+ "SELECT crdWrpS.id FROM ModelSection sec3 JOIN sec3.cardsWrappersAdditionsShared crdWrpAddS JOIN crdWrpAddS.cardWrapper crdWrpS WHERE sec3.id IN ?1) ")
+				+ "SELECT crdWrpC.id FROM ModelSection sec1 "
+				+ "JOIN sec1.cardsWrappers crdWrpC "
+				+ "WHERE sec1.id IN ?1"
+			+ ") OR crdWrp.id IN ("
+				+ "SELECT crdWrpP.id FROM ModelSection sec2 "
+				+ "JOIN sec2.cardsWrappersAdditionsPrivate crdWrpAddP "
+				+ "JOIN crdWrpAddP.cardWrapper crdWrpP "
+				+ "WHERE sec2.id IN ?1"
+			+ ") OR crdWrp.id IN ("
+				+ "SELECT crdWrpS.id FROM ModelSection sec3 "
+				+ "JOIN sec3.cardsWrappersAdditionsShared crdWrpAddS "
+				+ "JOIN crdWrpAddS.cardWrapper crdWrpS "
+				+ "WHERE sec3.id IN ?1"
+			+ ") ")
 	public Page<ModelCardWrapper> searchInSectionsByQuery(List<UUID> sectionId, Pageable page);
 	
 	@Query("SELECT DISTINCT crdWrp FROM ModelCardWrapper crdWrp JOIN crdWrp.card crd "

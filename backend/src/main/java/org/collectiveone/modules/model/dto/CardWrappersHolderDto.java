@@ -7,7 +7,7 @@ public class CardWrappersHolderDto {
 	
 	private List<ModelCardWrapperDto> cardsWrappersPrivate = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelCardWrapperDto> cardsWrappersShared = new ArrayList<ModelCardWrapperDto>();
-	private List<ModelCardWrapperDto> cardsWrappers = new ArrayList<ModelCardWrapperDto>();
+	private List<ModelCardWrapperDto> cardsWrappersCommon = new ArrayList<ModelCardWrapperDto>();
 	
 	public List<ModelCardWrapperDto> getCardsWrappersPrivate() {
 		return cardsWrappersPrivate;
@@ -21,11 +21,11 @@ public class CardWrappersHolderDto {
 	public void setCardsWrappersShared(List<ModelCardWrapperDto> cardsWrappersShared) {
 		this.cardsWrappersShared = cardsWrappersShared;
 	}
-	public List<ModelCardWrapperDto> getCardsWrappers() {
-		return cardsWrappers;
+	public List<ModelCardWrapperDto> getCardsWrappersCommon() {
+		return cardsWrappersCommon;
 	}
-	public void setCardsWrappers(List<ModelCardWrapperDto> cardsWrappers) {
-		this.cardsWrappers = cardsWrappers;
-	}	
+	public void setCardsWrappersCommon(List<ModelCardWrapperDto> cardsWrappersCommon) {
+		this.cardsWrappersCommon = cardsWrappersCommon;
+	}
 	
 }

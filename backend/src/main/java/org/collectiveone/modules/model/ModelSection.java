@@ -46,18 +46,17 @@ public class ModelSection {
 	@Column(name = "description")
 	private String description;
 	
-	@ManyToMany
-	@OrderColumn(name = "cards_order")
-	private List<ModelCardWrapper> cardsWrappers = new ArrayList<ModelCardWrapper>();
-	
-	@ManyToMany
-	private List<ModelCardWrapper> cardsWrappersTrash = new ArrayList<ModelCardWrapper>();
-	
 	@OneToMany(mappedBy="section")
 	private List<ModelCardWrapperAddition> cardsWrappersAdditionsPrivate = new ArrayList<ModelCardWrapperAddition>();
 	
 	@OneToMany(mappedBy="section")
 	private List<ModelCardWrapperAddition> cardsWrappersAdditionsShared = new ArrayList<ModelCardWrapperAddition>();
+	
+	@ManyToMany
+	@OneToMany(mappedBy="section")
+	@OrderColumn(name = "cards_order")
+	private List<ModelCardWrapperAddition> cardsWrappersAdditionsCommon = new ArrayList<ModelCardWrapperAddition>();
+	
 	
 	/* should be one to many but there seems to be a bug in Hibernate 
 	 * see https://stackoverflow.com/questions/4022509/constraint-violation-in-hibernate-unidirectional-onetomany-mapping-with-jointabl
@@ -110,7 +109,6 @@ public class ModelSection {
 		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
 		
 		sectionDto.setnSubsections(subsections.size());
-		sectionDto.setnCards(cardsWrappers.size());
 		
 		return sectionDto;
 	}
@@ -155,20 +153,12 @@ public class ModelSection {
 		this.description = description;
 	}
 
-	public List<ModelCardWrapper> getCardsWrappers() {
-		return cardsWrappers;
+	public List<ModelCardWrapperAddition> getCardsWrappersAdditionsCommon() {
+		return cardsWrappersAdditionsCommon;
 	}
 
-	public void setCardsWrappers(List<ModelCardWrapper> cardsWrappers) {
-		this.cardsWrappers = cardsWrappers;
-	}
-	
-	public List<ModelCardWrapper> getCardsWrappersTrash() {
-		return cardsWrappersTrash;
-	}
-
-	public void setCardsWrappersTrash(List<ModelCardWrapper> cardsWrappersTrash) {
-		this.cardsWrappersTrash = cardsWrappersTrash;
+	public void setCardsWrappersAdditionsCommon(List<ModelCardWrapperAddition> cardsWrappersAdditionsCommon) {
+		this.cardsWrappersAdditionsCommon = cardsWrappersAdditionsCommon;
 	}
 
 	public List<ModelSection> getSubsections() {

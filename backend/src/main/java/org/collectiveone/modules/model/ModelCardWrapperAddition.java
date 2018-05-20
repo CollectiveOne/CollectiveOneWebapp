@@ -34,9 +34,12 @@ public class ModelCardWrapperAddition {
 	private ModelCardWrapper cardWrapper;
 	
 	@ManyToOne
-	private ModelCardWrapper onCardWrapper;
+	private ModelCardWrapperAddition onCardWrapperAddition;
 	
 	private Boolean isBefore;
+	
+	@Enumerated(EnumType.STRING)
+	private Status status;
 
 	public UUID getId() {
 		return id;
@@ -70,12 +73,12 @@ public class ModelCardWrapperAddition {
 		this.scope = scope;
 	}
 
-	public ModelCardWrapper getOnCardWrapper() {
-		return onCardWrapper;
+	public ModelCardWrapperAddition getOnCardWrapperAddition() {
+		return onCardWrapperAddition;
 	}
 
-	public void setOnCardWrapper(ModelCardWrapper onCardWrapper) {
-		this.onCardWrapper = onCardWrapper;
+	public void setOnCardWrapperAddition(ModelCardWrapperAddition onCardWrapperAddition) {
+		this.onCardWrapperAddition = onCardWrapperAddition;
 	}
 
 	public Boolean getIsBefore() {
@@ -86,4 +89,12 @@ public class ModelCardWrapperAddition {
 		this.isBefore = isBefore;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+	
 }
