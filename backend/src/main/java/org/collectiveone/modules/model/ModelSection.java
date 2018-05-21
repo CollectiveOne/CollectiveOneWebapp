@@ -53,14 +53,10 @@ public class ModelSection {
 	private List<ModelCardWrapperAddition> cardsWrappersAdditionsShared = new ArrayList<ModelCardWrapperAddition>();
 	
 	@ManyToMany
-	@OneToMany(mappedBy="section")
 	@OrderColumn(name = "cards_order")
 	private List<ModelCardWrapperAddition> cardsWrappersAdditionsCommon = new ArrayList<ModelCardWrapperAddition>();
 	
 	
-	/* should be one to many but there seems to be a bug in Hibernate 
-	 * see https://stackoverflow.com/questions/4022509/constraint-violation-in-hibernate-unidirectional-onetomany-mapping-with-jointabl
-	 * */
 	@ManyToMany
 	@OrderColumn(name = "subsections_order")
 	private List<ModelSection> subsections = new ArrayList<ModelSection>();

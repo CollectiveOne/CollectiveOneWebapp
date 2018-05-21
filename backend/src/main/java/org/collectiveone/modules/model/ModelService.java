@@ -278,14 +278,8 @@ public class ModelService {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
-		
-		ModelCardWrapper cardWrapperInSection = modelCardWrapperRepository.findByIdAndSectionId(cardWrapperId, sectionId);
-		
-		if (cardWrapperInSection != null) {
-			return new PostResult("error", "card already in section", section.getId().toString());
-		}
-		
 		ModelCardWrapperAddition beforeCardWrapperAddition = modelCardWrapperAdditionRepository.findById(beforeCardWrapperId);
+		
 		
 		ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
 		
@@ -348,14 +342,14 @@ public class ModelService {
 		CardWrappersHolderDto cardWrappersHolder = new CardWrappersHolderDto();
 		
 		for (ModelCardWrapperAddition cardWrapperAddition : section.getCardsWrappersAdditionsCommon()) {
-			cardWrappersHolder.getCardsWrappersCommon().add(getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId, null));
+			cardWrappersHolder.getCardsWrappersCommon().add(getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId));
 		}
 		
 		List<ModelCardWrapperAddition> modelCardWrappersPrivate = 
 				modelCardWrapperAdditionRepository.findOfUserInSection(requestByUserId, section.getId(), ModelCardWrapperScope.PRIVATE);
 		
 		for (ModelCardWrapperAddition cardWrapperAddition : modelCardWrappersPrivate) {
-			ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId, null);
+			ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId);
 			cardWrappersHolder.getCardsWrappersPrivate().add(cardWrapperDto);
 		}
 		
@@ -363,10 +357,10 @@ public class ModelService {
 		if(initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId)) {
 			
 			List<ModelCardWrapperAddition> modelCardWrappersShared = 
-					modelCardWrapperAdditionRepository.findInSection(section.getId(), ModelCardWrapperScope.SHARED);
+					modelCardWrapperAdditionRepository.findInSectionWithScope(section.getId(), ModelCardWrapperScope.SHARED);
 			
 			for (ModelCardWrapperAddition cardWrapperAddition : modelCardWrappersShared) {
-				ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId, null);
+				ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId);
 				cardWrappersHolder.getCardsWrappersShared().add(cardWrapperDto);
 			}
 		}
@@ -398,7 +392,7 @@ public class ModelService {
 		return sectionDto; 
 	}
 	
-	private ModelCardWrapperDto getCardWrapperDtoWithMetadata(ModelCardWrapperAddition cardWrapperAddition, UUID requestByUserId, UUID inSectionId) {
+	private ModelCardWrapperDto getCardWrapperDtoWithMetadata(ModelCardWrapperAddition cardWrapperAddition, UUID requestByUserId) {
 		
 		/* Card wrapper additions are converted into card wrappers dtos for simplicity */
 		ModelCardWrapperDto cardWrapperDto = cardWrapperAddition.getCardWrapper().toDto();
@@ -412,7 +406,7 @@ public class ModelService {
 		}
 		
 		if (cardWrapperAddition.getOnCardWrapperAddition() != null) {
-			cardWrapperDto.setOnCardWrapperId(cardWrapperAddition.getOnCardWrapperAddition().getId().toString());
+			cardWrapperDto.setOnCardWrapperId(cardWrapperAddition.getOnCardWrapperAddition().getCardWrapper().getId().toString());
 			cardWrapperDto.setIsBefore(cardWrapperAddition.getIsBefore());
 		}
 		
@@ -423,7 +417,7 @@ public class ModelService {
 			cardWrapperDto.setUserLiked(cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapperAddition.getCardWrapper().getId(), requestByUserId) != null);
 		}
 		
-		List<ModelSection> inSections = modelCardWrapperRepository.findParentSections(cardWrapperAddition.getCardWrapper().getId());
+		List<ModelSection> inSections = modelCardWrapperAdditionRepository.findParentSections(cardWrapperAddition.getCardWrapper().getId());
 		
 		for (ModelSection inSection : inSections) {
 			cardWrapperDto.getInSections().add(inSection.toDto());
@@ -478,6 +472,7 @@ public class ModelService {
 		
 		AppUser creator = appUserRepository.findByC1Id(creatorId);
 		
+		/* create card wrapper */
 		ModelCardWrapper cardWrapper = new ModelCardWrapper();
 		cardWrapper.setCard(card);
 		cardWrapper.setInitiative(section.getInitiative());
@@ -488,17 +483,24 @@ public class ModelService {
 		
 		cardWrapper = modelCardWrapperRepository.save(cardWrapper);
 		
+		/* create cardwrapper addition */
+		ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
+		ModelCardWrapperAddition onCardWrapperAddition = null;
+				
+		cardWrapperAddition.setSection(section);
+		cardWrapperAddition.setCardWrapper(cardWrapper);
+		cardWrapperAddition.setOnCardWrapperAddition(onCardWrapperAddition);
+		cardWrapperAddition.setScope(cardDto.getNewScope());
+		
+		modelCardWrapperAdditionRepository.save(cardWrapperAddition);
+		
 		/* add to section */
 		switch (cardDto.getNewScope()) {
-		
-			WHAT TO DO WITH THE ORDER???
 		
 			case PRIVATE:
 			case SHARED:
 				
-				ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
-				ModelCardWrapperAddition onCardWrapperAddition = null;
-						
+				/* order is relative to other cards */
 				if (beforeId != null) { 
 					onCardWrapperAddition = modelCardWrapperAdditionRepository.findById(beforeId);
 					cardWrapperAddition.setIsBefore(true);
@@ -507,33 +509,32 @@ public class ModelService {
 					cardWrapperAddition.setIsBefore(false);
 				} 
 
-				cardWrapperAddition.setSection(section);
-				cardWrapperAddition.setCardWrapper(cardWrapper);
-				cardWrapperAddition.setOnCardWrapperAddition(onCardWrapperAddition);
-				cardWrapperAddition.setScope(cardDto.getNewScope());
-				
-				modelCardWrapperAdditionRepository.save(cardWrapperAddition);
 				
 				if (cardDto.getNewScope() == ModelCardWrapperScope.SHARED) {
 					activityService.modelCardWrapperSharedCreated(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 				}
 				
-				modelSectionRepository.save(section);
-				
 				break;
 			
 			case COMMON:
+				
+				/* order is absolute in the section and uses hibernate @OrderColumn */
+				
 				Integer ix = null;
 				
 				if (beforeId != null) {
+					
 					ModelCardWrapperAddition beforeCardWrapperAddition = modelCardWrapperAdditionRepository.findById(beforeId);
 					ix = section.getCardsWrappersAdditionsCommon().indexOf(beforeCardWrapperAddition);
+					
 				} else if (afterId != null) {
+					
 					ModelCardWrapperAddition afterCardWrapperAddition = modelCardWrapperAdditionRepository.findById(afterId);
 					ix = section.getCardsWrappersAdditionsCommon().indexOf(afterCardWrapperAddition) + 1;
+					
 				}
-				
-				/* add location */
+			
+				/* add in the correct location */
 				if (ix == null) {
 					/* at the end */
 					section.getCardsWrappersAdditionsCommon().add(cardWrapperAddition);
@@ -548,7 +549,7 @@ public class ModelService {
 				}
 				
 				modelSectionRepository.save(section);
-				activityService.modelCardWrapperCreated(cardWrapper, section, appUserRepository.findByC1Id(creatorId));
+				activityService.modelCardWrapperCommonCreated(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 				
 				break;
 				
@@ -621,7 +622,7 @@ public class ModelService {
 	public PostResult makeCardWrapperShared(UUID cardWrapperId, UUID onSectionId, UUID requestByUserId) {
 		
 		ModelCardWrapperAddition cardWrapperAddition = 
-				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(onSectionId, cardWrapperId, ModelCardWrapperScope.PRIVATE);
+				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperIdAndScope(onSectionId, cardWrapperId, ModelCardWrapperScope.PRIVATE);
 				
 		if (cardWrapperAddition == null) return new PostResult("error", "card wrapper not found", "");
 		
@@ -637,33 +638,35 @@ public class ModelService {
 	public PostResult makeCardWrapperCommon(UUID cardWrapperId, UUID onSectionId, UUID requestByUserId) {
 		
 		ModelCardWrapperAddition cardWrapperAddition = 
-				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(onSectionId, cardWrapperId, ModelCardWrapperScope.SHARED);
+				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperIdAndScope(onSectionId, cardWrapperId, ModelCardWrapperScope.SHARED);
 				
 		if (cardWrapperAddition == null) return new PostResult("error", "card wrapper not found", "");
 		
 		cardWrapperAddition.setScope(ModelCardWrapperScope.COMMON);
+		
+		/* update the order */
 		ModelSection section = cardWrapperAddition.getSection();
 		
-		if (cardWrapperAddition.getOnCardWrapper() != null) {
-			int ix = section.getCardsWrappers().indexOf(cardWrapperAddition.getCardWrapper());
+		if (cardWrapperAddition.getOnCardWrapperAddition() != null) {
+			int ix = section.getCardsWrappersAdditionsCommon().indexOf(cardWrapperAddition);
 			if (ix != -1) {
 				if (cardWrapperAddition.getIsBefore()) {
-					section.getCardsWrappers().add(ix, cardWrapperAddition.getCardWrapper());
+					section.getCardsWrappersAdditionsCommon().add(ix, cardWrapperAddition);
 				} else {
-					section.getCardsWrappers().add(ix + 1, cardWrapperAddition.getCardWrapper());
+					section.getCardsWrappersAdditionsCommon().add(ix + 1, cardWrapperAddition);
 				}
 			} else {
-				section.getCardsWrappers().add(cardWrapperAddition.getCardWrapper());
+				section.getCardsWrappersAdditionsCommon().add(cardWrapperAddition);
 			}
 		} else {
-			section.getCardsWrappers().add(cardWrapperAddition.getCardWrapper());
+			section.getCardsWrappersAdditionsCommon().add(cardWrapperAddition);
 		}
 		
 		modelSectionRepository.save(section);
 		
 		activityService.modelCardWrapperMadeCommon(cardWrapperAddition, appUserRepository.findByC1Id(requestByUserId));
 		
-		return new PostResult("success", "card edited", cardWrapperAddition.getId().toString());
+		return new PostResult("success", "card wrapper converted to common", cardWrapperAddition.getId().toString());
 	}
 	
 	
@@ -674,66 +677,72 @@ public class ModelService {
 			return new PostResult("error", "cannot move on itself", null);
 		}
 		
-		ModelCardWrapper beforeCardWrapper = null;
+		ModelCardWrapperAddition modelCardWrapperAddition = 
+				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(fromSectionId, cardWrapperId);
+		
+		
+		/* set section */
+		ModelSection fromSection = modelSectionRepository.findById(fromSectionId);
+		ModelSection toSection = modelSectionRepository.findById(toSectionId);
+		modelCardWrapperAddition.setSection(toSection);
+		
+		/* set order */
+		ModelCardWrapperAddition beforeCardWrapperAddition = null;
 		int onIndex = -1;
 		
-		ModelSection toSection = modelSectionRepository.findById(toSectionId);
 		if (beforeCardWrapperId != null) {
-			beforeCardWrapper = modelCardWrapperRepository.findById(beforeCardWrapperId);
-			onIndex = toSection.getCardsWrappers().indexOf(beforeCardWrapper);
+			beforeCardWrapperAddition = modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(toSectionId, beforeCardWrapperId);
 		}
-				
-		ModelCardWrapperAddition modelCardWrapperAddition = 
-				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperIdNotCommon(fromSectionId, cardWrapperId);
 		
-		/* moving card additions */
-		if (modelCardWrapperAddition != null) {
-			
-			modelCardWrapperAddition.setSection(toSection);
-			
-			if (beforeCardWrapper != null) {
-				modelCardWrapperAddition.setOnCardWrapper(beforeCardWrapper);
-				modelCardWrapperAddition.setIsBefore(true);
-			} else {
-				modelCardWrapperAddition.setOnCardWrapper(null);
-			}
-			
-			modelCardWrapperAdditionRepository.save(modelCardWrapperAddition);
-			return new PostResult("success", "card moved", modelCardWrapperAddition.getId().toString());
-			
-		} else {
-			ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
-			if (cardWrapper == null) return new PostResult("error", "card wrapper not found", "");
-			
-			/* remove from section */
-			ModelSection fromSection = modelSectionRepository.findById(fromSectionId);
-			fromSection.getCardsWrappers().remove(cardWrapper);
-			modelSectionRepository.save(fromSection);
-			
-			if (onIndex != -1) {
-				toSection.getCardsWrappers().add(onIndex, cardWrapper);
-			} else {
-				toSection.getCardsWrappers().add(cardWrapper);
-			}
-			
-			cardWrapper.setInitiative(toSection.getInitiative());
-			
-			modelSectionRepository.save(toSection);
-			modelCardWrapperRepository.save(cardWrapper);
-			
-			activityService.modelCardWrapperMoved(cardWrapper, fromSection, toSection, appUserRepository.findByC1Id(creatorId));
-			
-			return new PostResult("success", "card moved", cardWrapper.getId().toString());
+		switch (modelCardWrapperAddition.getScope()) {
+			case PRIVATE:
+			case SHARED:
+				if (beforeCardWrapperAddition != null) {
+					modelCardWrapperAddition.setOnCardWrapperAddition(beforeCardWrapperAddition);
+					modelCardWrapperAddition.setIsBefore(true);
+				} else {
+					modelCardWrapperAddition.setOnCardWrapperAddition(null);
+				}
+				
+				break;
+				
+			case COMMON:
+				/* remove from origin section */
+				int fromIx = fromSection.getCardsWrappersAdditionsCommon().indexOf(modelCardWrapperAddition);
+				fromSection.getCardsWrappersAdditionsCommon().remove(fromIx);
+				modelSectionRepository.save(fromSection);
+				
+				if (beforeCardWrapperAddition != null) {
+					onIndex = toSection.getCardsWrappersAdditionsCommon().indexOf(beforeCardWrapperAddition);
+					if (onIndex != -1) {
+						toSection.getCardsWrappersAdditionsCommon().add(onIndex, modelCardWrapperAddition);
+					} else {
+						toSection.getCardsWrappersAdditionsCommon().add(modelCardWrapperAddition);
+					}
+				}
+				modelSectionRepository.save(toSection);
+						
+				break;
 		}
+		
+		if (modelCardWrapperAddition.getScope() != ModelCardWrapperScope.PRIVATE) {
+			activityService.modelCardWrapperAdditionMoved(modelCardWrapperAddition, fromSection, toSection, appUserRepository.findByC1Id(creatorId));
+		}
+		
+		modelCardWrapperAdditionRepository.save(modelCardWrapperAddition);
+		
+		return new PostResult("success", "card wrapper moved", modelCardWrapperAddition.getId().toString());
+		
 	}
 	
 	@Transactional
-	public GetResult<ModelCardWrapperDto> getCardWrapper(UUID cardWrapperId, UUID requestByUserId, UUID inSectionId) {
+	public GetResult<ModelCardWrapperDto> getCardWrapperAddition(UUID cardWrapperId, UUID requestByUserId, UUID inSectionId) {
 		
 		ModelCardWrapperDto cardWrapperDto = null;
 		
 		/* check if this is a card addition */
-		cardWrapperDto = getCardWrapperDtoWithMetadata(modelCardWrapperRepository.findById(cardWrapperId), requestByUserId, inSectionId);
+		cardWrapperDto = getCardWrapperDtoWithMetadata(
+				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(inSectionId, cardWrapperId), requestByUserId);
 		
 		return new GetResult<ModelCardWrapperDto>("success", "card retrieved", cardWrapperDto);
 	}
@@ -751,69 +760,46 @@ public class ModelService {
 	@Transactional
 	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(UUID sectionId, String query, Integer page, Integer pageSize, String sortByIn, Integer levels, UUID requestById, Boolean inInitiativeEcosystem) {
 		PageRequest pageRequest = null;
-		Page<ModelCardWrapper> enititiesPage = null;
+		Page<ModelCardWrapperAddition> enititiesPage = null;
+		
+		switch (sortByIn) {
+			case "CREATION_DATE_DESC":
+				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.creationDate"));
+				break;
+				
+			case "EDITION_DATE_DESC":
+				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.lastEdited"));
+				break;
+				
+			case "CREATOR":
+				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.ASC, "crdWrp.creator.profile.nickname"));
+				break;
+			
+			default:
+				pageRequest = new PageRequest(page, pageSize);
+				break;
+		}
 		
 		if (!inInitiativeEcosystem) {
 			List<UUID> allSectionIds = new ArrayList<UUID>();
 			
 			allSectionIds.addAll(getAllSubsectionsIds(sectionId, levels - 1));
 			
-			switch (sortByIn) {
-				case "CREATION_DATE_DESC":
-					pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "creationDate"));
-					break;
-					
-				case "EDITION_DATE_DESC":
-					pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "lastEdited"));
-					break;
-					
-				case "CREATOR":
-//					pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.ASC, "creator.profile.nickname"));
-//					TODO: not able to make this work now...
-					pageRequest = new PageRequest(page, pageSize);
-					break;
-				
-				default:
-					pageRequest = new PageRequest(page, pageSize);
-					break;
-			}
-			
 //			, "%"+query.toLowerCase()+"%",
-			enititiesPage = modelCardWrapperRepository.searchInSectionsByQuery(allSectionIds, pageRequest);
+			enititiesPage = modelCardWrapperAdditionRepository.searchInSectionsByQuery(allSectionIds, pageRequest);
 			
 		} else {
 			
 			ModelSection section = modelSectionRepository.findById(sectionId);
 			List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(section.getInitiative().getId());
 			
-			/* TODO: weird issue when using dynamic new Sort, sort hardcoded based laste edited */
-			pageRequest = new PageRequest(page, pageSize);
-			
-			switch (sortByIn) {
-				case "CREATION_DATE_DESC":
-					pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.creationDate"));
-					break;
-					
-				case "EDITION_DATE_DESC":
-					pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.lastEdited"));
-					break;
-					
-				case "CREATOR":
-					pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.ASC, "crdWrp.creator.profile.nickname"));
-					break;
-				
-				default:
-					pageRequest = new PageRequest(page, pageSize);
-					break;
-			}
-			
-			enititiesPage = modelCardWrapperRepository.searchInInitiativesByQuery(initiativeEcosystemIds, "%"+query.toLowerCase()+"%", pageRequest);
+			enititiesPage = modelCardWrapperAdditionRepository.searchInInitiativesByQuery(initiativeEcosystemIds, pageRequest);
 		}
 		
 		List<ModelCardWrapperDto> cardsDtos = new ArrayList<ModelCardWrapperDto>();
 		
-		for(ModelCardWrapper cardWrapper : enititiesPage.getContent()) {
-			cardsDtos.add(getCardWrapperDtoWithMetadata(cardWrapper, requestById, sectionId));
+		for(ModelCardWrapperAddition cardWrapperAddition : enititiesPage.getContent()) {
+			cardsDtos.add(getCardWrapperDtoWithMetadata(cardWrapperAddition, requestById));
 		}
 		
 		Page<ModelCardWrapperDto> dtosPage = new PageImpl<ModelCardWrapperDto>(cardsDtos, pageRequest, enititiesPage.getNumberOfElements());
@@ -824,25 +810,30 @@ public class ModelService {
 	@Transactional
 	public PostResult deleteCardWrapper (UUID cardWrapperId, UUID creatorId) {
 		
-		List<ModelSection> parents = modelCardWrapperRepository.findParentSections(cardWrapperId);
-		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
+		List<ModelCardWrapperAddition> allAdditions = modelCardWrapperAdditionRepository.findOfCardWrapper(cardWrapperId);
 		
 		/* remove from all sections */
-		if (parents.size() > 0) {
-			for (ModelSection parent : parents) {
-				parent.getCardsWrappers().remove(cardWrapper);
-				parent.getCardsWrappersTrash().add(cardWrapper);
-				modelSectionRepository.save(parent);
+		for (ModelCardWrapperAddition cardWrapperAddition : allAdditions) {
+			
+			cardWrapperAddition.setStatus(Status.DELETED);
+			
+			/* remove from list of common cards */
+			if(cardWrapperAddition.getScope() == ModelCardWrapperScope.COMMON) {
+				ModelSection section = cardWrapperAddition.getSection(); 
+				int ix = section.getCardsWrappersAdditionsCommon().indexOf(cardWrapperAddition);
+				if (ix != -1) {
+					section.getCardsWrappersAdditionsCommon().remove(ix);
+					modelSectionRepository.save(section);
+				}
+			}
+
+			/* create notification */
+			if (cardWrapperAddition.getScope() != ModelCardWrapperScope.PRIVATE) {
+				activityService.modelCardWrapperAdditionRemoved(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 			}
 		}
 		
-		/* mark as deleted */
-		cardWrapper.setStatus(Status.DELETED);
-		modelCardWrapperRepository.save(cardWrapper);
-		
-		activityService.modelCardWrapperDeleted(cardWrapper, appUserRepository.findByC1Id(creatorId));
-		
-		return new PostResult("success", "section deleted", cardWrapper.getId().toString());
+		return new PostResult("success", "card wrapper removed from all sections and deleted", cardWrapperId.toString());
 	}
 	
 	@Transactional
@@ -970,7 +961,7 @@ public class ModelService {
 	public Page<Activity> getActivityUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages, Integer level) {
 		
 		List<UUID> allSectionIds = getAllSubsectionsIds(sectionId, level);
-		List<UUID> cardsIds = allSectionIds.size() > 0 ? modelCardWrapperRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
+		List<UUID> cardsIds = allSectionIds.size() > 0 ? modelCardWrapperAdditionRepository.findAllCardWrapperIdsOfSections(allSectionIds) : new ArrayList<UUID>();
 		
 		if (cardsIds.size() == 0) {
 			cardsIds.add(UUID.randomUUID());

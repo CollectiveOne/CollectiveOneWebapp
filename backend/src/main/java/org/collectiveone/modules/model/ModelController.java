@@ -344,7 +344,7 @@ public class ModelController extends BaseController {
 		
 		UUID inSectionId = inSectionIdStr.equals("") ? null : UUID.fromString(inSectionIdStr);
 		
-		return modelService.getCardWrapper(cardWrapperId, getLoggedUserId(), inSectionId);
+		return modelService.getCardWrapperAddition(cardWrapperId, getLoggedUserId(), inSectionId);
 	}
 	
 

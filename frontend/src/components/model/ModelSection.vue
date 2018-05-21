@@ -148,7 +148,7 @@ export default {
       let allCardWrappers = []
 
       if (this.showCommon) {
-        allCardWrappers = this.section.cardsWrappers.slice()
+        allCardWrappers = this.section.cardsWrappersCommon.slice()
       }
 
       if (this.showPrivate) {
@@ -183,17 +183,6 @@ export default {
 
       return allCardWrappers
     },
-    nCardWrappers () {
-      if (this.section) {
-        if (this.section.cardsWrappers) {
-          return this.section.cardsWrappers.length
-        } else {
-          return 0
-        }
-      } else {
-        return 0
-      }
-    },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
     }
@@ -213,7 +202,7 @@ export default {
       console.log('updating cards')
       this.axios.get('/1/model/section/' + this.section.id + '/cardWrappers').then((response) => {
         if (response.data.result === 'success') {
-          this.section.cardsWrappers = response.data.data.cardsWrappers
+          this.section.cardsWrappersCommon = response.data.data.cardsWrappersCommon
           this.section.cardsWrappersPrivate = response.data.data.cardsWrappersPrivate
           this.section.cardsWrappersShared = response.data.data.cardsWrappersShared
         }

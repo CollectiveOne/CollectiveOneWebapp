@@ -221,8 +221,8 @@ const sectionToMarkdown = function (section, level) {
     text += section.description + '\r\n'
   }
 
-  for (let ix in section.cardsWrappers) {
-    let cardWrapper = section.cardsWrappers[ix]
+  for (let ix in section.cardsWrappersCommon) {
+    let cardWrapper = section.cardsWrappersCommon[ix]
     if (cardWrapper.card.title !== '') {
       text += Array(level + 1).join('#') + ' '
       level = level < 5 ? level + 1 : level
@@ -239,7 +239,7 @@ const sectionToMarkdown = function (section, level) {
 }
 
 const sectionHasContent = function (section) {
-  if (section.cardsWrappers.length > 0 ||
+  if (section.cardsWrappersCommon.length > 0 ||
     section.cardsWrappersPrivate.length > 0 ||
     section.cardsWrappersShared.length > 0) {
     return true
