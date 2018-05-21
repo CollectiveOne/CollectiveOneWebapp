@@ -320,7 +320,11 @@ export default {
       return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
     },
     infiniteLevels () {
-      return this.levels === 999
+      if (this.isSectionsOrder) {
+        return this.levels === 999
+      } else {
+        return true
+      }
     },
     cardsType () {
       return this.$route.query.cardsType ? this.$route.query.cardsType : 'card'
@@ -365,9 +369,11 @@ export default {
       this.checkCardSubroute()
     },
     levels () {
+      console.log('udpating due to levels watch')
       this.update()
     },
     cardSortBy () {
+      console.log('udpating due to sortby watch')
       if (!this.isSectionsOrder) {
         this.resetCards()
       } else {
@@ -395,26 +401,28 @@ export default {
       this.update()
     },
     aggregatedOrder () {
-      this.resetCards()
       this.orderType = 'aggregated'
+      this.resetCards()
     },
     levelUp () {
-      if (!this.infiniteLevels) {
+      if (!this.infiniteLevels && this.isSectionsOrder) {
         this.$router.replace({name: this.$route.name, query: {levels: this.levels + 1}})
       }
     },
     levelDown () {
-      if (!this.infiniteLevels) {
+      if (!this.infiniteLevels && this.isSectionsOrder) {
         if (this.levels > 1) {
           this.$router.replace({name: this.$route.name, query: {levels: this.levels - 1}})
         }
       }
     },
     levelsInfinite () {
-      if (this.infiniteLevels) {
-        this.$router.replace({name: this.$route.name, query: {levels: 1}})
-      } else {
-        this.$router.replace({name: this.$route.name, query: {levels: 999}})
+      if (this.isSectionsOrder) {
+        if (this.infiniteLevels) {
+          this.$router.replace({name: this.$route.name, query: {levels: 1}})
+        } else {
+          this.$router.replace({name: this.$route.name, query: {levels: 999}})
+        }
       }
     },
     summaryView () {
@@ -470,6 +478,7 @@ export default {
       this.getMoreCards()
     },
     getMoreCards () {
+      console.log('getting more cards')
       this.loading = true
       if (this.currentSectionId) {
         this.axios.get('/1/model/section/' + this.currentSectionId + '/cardWrappers/search',

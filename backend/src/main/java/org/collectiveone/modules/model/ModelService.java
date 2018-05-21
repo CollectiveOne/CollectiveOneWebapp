@@ -785,8 +785,8 @@ public class ModelService {
 			
 			allSectionIds.addAll(getAllSubsectionsIds(sectionId, levels - 1));
 			
-//			, "%"+query.toLowerCase()+"%",
-			enititiesPage = modelCardWrapperAdditionRepository.searchInSectionsByQuery(allSectionIds, pageRequest);
+//			, 
+			enititiesPage = modelCardWrapperAdditionRepository.searchInSectionsByQuery(allSectionIds, "%"+query.toLowerCase()+"%", pageRequest);
 			
 		} else {
 			

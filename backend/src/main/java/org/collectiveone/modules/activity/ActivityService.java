@@ -1014,7 +1014,12 @@ public class ActivityService {
 			case MODEL_CARDWRAPPER_REMOVED:
 				
 				/* activity in cards is considered as occurring on the sections these card is placed*/
-				UUID cardWrapperId = activity.getModelCardWrapperAddition().getId();
+				UUID cardWrapperId = null;
+				if (activity.getModelCardWrapperAddition() != null) {
+					cardWrapperId = activity.getModelCardWrapperAddition().getId();	
+				} else {
+					cardWrapperId = activity.getModelCardWrapper().getId();
+				}
 				sections = modelCardWrapperAdditionRepository.findParentSections(cardWrapperId);
 				break;
 				

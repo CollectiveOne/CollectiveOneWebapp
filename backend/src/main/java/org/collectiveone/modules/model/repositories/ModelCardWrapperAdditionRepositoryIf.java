@@ -59,8 +59,11 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.cardWrapper crdWrp "
-			+ "WHERE crdWrpAdd.section.id IN ?1")
-	Page<ModelCardWrapperAddition> searchInSectionsByQuery(List<UUID> sectionIds, Pageable page);
+			+ "JOIN crdWrp.card crd "
+			+ "WHERE crdWrpAdd.section.id IN ?1 "
+			+ "AND (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
+	Page<ModelCardWrapperAddition> searchInSectionsByQuery(List<UUID> sectionIds, String query, Pageable page);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.section sec "
