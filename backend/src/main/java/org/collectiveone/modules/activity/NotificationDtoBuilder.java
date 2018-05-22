@@ -46,8 +46,17 @@ public class NotificationDtoBuilder {
 		Assignation assignation = act.getAssignation();
 		InitiativeTransfer transfer = act.getInitiativeTransfer();
 		
-		ModelSection modelSection = act.getModelSection();
-		ModelCardWrapper modelCardWrapper = act.getModelCardWrapper();
+		ModelSection modelSection = null;
+		ModelCardWrapper modelCardWrapper = null;
+		
+		if (act.getModelCardWrapperAddition() != null) {
+			modelSection = act.getModelCardWrapperAddition().getSection();
+			modelCardWrapper = act.getModelCardWrapperAddition().getCardWrapper();
+		} else {
+			modelSection = act.getModelSection();
+			modelCardWrapper = act.getModelCardWrapper();
+		}
+		
 		ModelSection onSection = act.getOnSection();
 		ModelSection fromSection = act.getFromSection();
 		

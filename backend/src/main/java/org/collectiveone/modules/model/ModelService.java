@@ -297,7 +297,7 @@ public class ModelService {
 				
 			case PRIVATE:
 				if (scope == ModelCardWrapperScope.SHARED) {
-					activityService.modelCardWrapperAdditionAddedToSection(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
+					activityService.modelCardWrapperAdded(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 				}
 				
 				modelSectionRepository.save(section);
@@ -312,7 +312,7 @@ public class ModelService {
 					section.getCardsWrappersAdditionsCommon().add(index, cardWrapperAddition);
 				}
 				
-				activityService.modelCardWrapperAdded(cardWrapper, section, appUserRepository.findByC1Id(creatorId));
+				activityService.modelCardWrapperAdded(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 				
 				section = modelSectionRepository.save(section);
 				break;
@@ -409,6 +409,9 @@ public class ModelService {
 			cardWrapperDto.setOnCardWrapperId(cardWrapperAddition.getOnCardWrapperAddition().getCardWrapper().getId().toString());
 			cardWrapperDto.setIsBefore(cardWrapperAddition.getIsBefore());
 		}
+		
+		/* set initiative based on section */
+		cardWrapperDto.setInitiativeId(cardWrapperAddition.getSection().getInitiative().getId().toString());
 		
 		/* get number of likes */
 		cardWrapperDto.setnLikes(cardLikeRepository.countOfCard(cardWrapperAddition.getCardWrapper().getId()));
@@ -511,7 +514,7 @@ public class ModelService {
 
 				
 				if (cardDto.getNewScope() == ModelCardWrapperScope.SHARED) {
-					activityService.modelCardWrapperSharedCreated(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
+					activityService.modelCardWrapperCreated(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 				}
 				
 				break;
@@ -549,7 +552,7 @@ public class ModelService {
 				}
 				
 				modelSectionRepository.save(section);
-				activityService.modelCardWrapperCommonCreated(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
+				activityService.modelCardWrapperCreated(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 				
 				break;
 				
@@ -572,16 +575,14 @@ public class ModelService {
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		if (cardWrapper == null) return new PostResult("error", "card wrapper not found", "");
 		
-		/* check if this is a cardAddition */
-		if (inSectionId != null) {
-			ModelCardWrapperAddition cardWrapperAddition = 
-					modelCardWrapperAdditionRepository.findBySectionAndCardWrapperIdNotCommon(inSectionId, cardWrapperId);
-			
-			if (cardWrapperAddition != null) {
-				cardWrapperAddition.setScope(cardDto.getNewScope());	
-				modelCardWrapperAdditionRepository.save(cardWrapperAddition);
-			}
+		ModelCardWrapperAddition cardWrapperAddition = 
+				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperIdNotCommon(inSectionId, cardWrapperId);
+		
+		if (cardWrapperAddition != null) {
+			cardWrapperAddition.setScope(cardDto.getNewScope());	
+			modelCardWrapperAdditionRepository.save(cardWrapperAddition);
 		}
+		
 		
 		ModelCard originalCard = cardWrapper.getCard();
 		
@@ -613,7 +614,7 @@ public class ModelService {
 			cardWrapper.getEditors().add(appUserRepository.findByC1Id(creatorId));
 		}
 		
-		activityService.modelCardWrapperEdited(cardWrapper, appUserRepository.findByC1Id(creatorId));
+		activityService.modelCardWrapperEdited(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 		
 		return new PostResult("success", "card edited", cardWrapper.getId().toString());
 	}
@@ -726,7 +727,7 @@ public class ModelService {
 		}
 		
 		if (modelCardWrapperAddition.getScope() != ModelCardWrapperScope.PRIVATE) {
-			activityService.modelCardWrapperAdditionMoved(modelCardWrapperAddition, fromSection, toSection, appUserRepository.findByC1Id(creatorId));
+			activityService.modelCardWrapperMoved(modelCardWrapperAddition, fromSection, toSection, appUserRepository.findByC1Id(creatorId));
 		}
 		
 		modelCardWrapperAdditionRepository.save(modelCardWrapperAddition);
@@ -829,7 +830,7 @@ public class ModelService {
 
 			/* create notification */
 			if (cardWrapperAddition.getScope() != ModelCardWrapperScope.PRIVATE) {
-				activityService.modelCardWrapperAdditionRemoved(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
+				activityService.modelCardWrapperRemoved(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 			}
 		}
 		

@@ -85,7 +85,6 @@ public class ModelCardWrapper {
 		
 		cardWrapperDto.setId(id.toString());
 		cardWrapperDto.setCard(card.toDto());
-		cardWrapperDto.setInitiativeId(initiative.getId().toString());
 		if (creator != null) cardWrapperDto.setCreator(creator.toDtoLight());
 		if (creationDate != null) cardWrapperDto.setCreationDate(creationDate.getTime());
 		if (lastEdited != null) cardWrapperDto.setLastEdited(lastEdited.getTime());
