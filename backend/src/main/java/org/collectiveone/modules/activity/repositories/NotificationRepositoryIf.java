@@ -35,7 +35,6 @@ public interface NotificationRepositoryIf extends CrudRepository<Notification, U
 			+ "ORDER BY act.timestamp DESC")
 	List<Notification> findOfUserInSections(UUID userId, NotificationState state, List<UUID> sectionIds, List<UUID> cardWrappersIds, Pageable page);	
 	
-	
 	@Query("SELECT notif FROM Notification notif "
             + "JOIN notif.activity act "
             + "WHERE notif.subscriber.user.c1Id = ?1 "

@@ -707,31 +707,47 @@ public class ModelService {
 			return new PostResult("error", "cannot move on itself", null);
 		}
 		
-		ModelCardWrapperAddition cardWrapperAddition = 
+		ModelCardWrapperAddition cardWrapperAdditionFrom = 
 				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(fromSectionId, cardWrapperId);
 		
-		/* check permisson */
-		if (cardWrapperAddition.getScope() == ModelCardWrapperScope.PRIVATE || 
-				cardWrapperAddition.getScope() == ModelCardWrapperScope.SHARED) {
-			if (cardWrapperAddition.getCardWrapper().getCreator().getC1Id() != requestedById) {
-				return new PostResult("error", "only author can move shared or public card", cardWrapperAddition.getId().toString());
+		/* check permission */
+		if (cardWrapperAdditionFrom.getScope() == ModelCardWrapperScope.PRIVATE || 
+				cardWrapperAdditionFrom.getScope() == ModelCardWrapperScope.SHARED) {
+			if (cardWrapperAdditionFrom.getCardWrapper().getCreator().getC1Id() != requestedById) {
+				return new PostResult("error", "only author can move shared or public card", cardWrapperAdditionFrom.getId().toString());
 			}
 		}
 		
-		/* check it doesn not already exist in to section */
-		ModelCardWrapperAddition existingCard = modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(toSectionId, cardWrapperId);
-		if (existingCard != null) {
-			if (existingCard.getStatus() != Status.DELETED) {
-				return new PostResult("error", "card already in this section", null);				
-			} else {
-				cardWrapperAddition = existingCard;
-			}
+		ModelCardWrapperAddition existingCard = null;
+		Boolean existedAsDeleted = false;
+		
+		/* check it doesn't already exist in to section */
+		if (!fromSectionId.equals(toSectionId)) {
+			existingCard = modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(toSectionId, cardWrapperId);
+			if (existingCard != null) {
+				if (existingCard.getStatus() != Status.DELETED) {
+					return new PostResult("error", "card already in this section", null);				
+				} else {
+					/* if it exist but is deleted, change its scope */
+					existedAsDeleted = true;
+					existingCard.setScope(cardWrapperAdditionFrom.getScope());
+					cardWrapperAdditionFrom.setStatus(Status.DELETED);
+				}
+			}	
+		}
+		
+		/**/
+		ModelCardWrapperAddition cardWrapperAdditionTo;
+		if (existedAsDeleted) {
+			cardWrapperAdditionTo = existingCard;
+		} else {
+			cardWrapperAdditionTo = cardWrapperAdditionFrom;
 		}
 		
 		/* set section */
 		ModelSection fromSection = modelSectionRepository.findById(fromSectionId);
 		ModelSection toSection = modelSectionRepository.findById(toSectionId);
-		cardWrapperAddition.setSection(toSection);
+		cardWrapperAdditionTo.setSection(toSection);
 		
 		/* set order */
 		ModelCardWrapperAddition beforeCardWrapperAddition = null;
@@ -741,43 +757,46 @@ public class ModelService {
 			beforeCardWrapperAddition = modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(toSectionId, beforeCardWrapperId);
 		}
 		
-		switch (cardWrapperAddition.getScope()) {
+		switch (cardWrapperAdditionTo.getScope()) {
 			case PRIVATE:
 			case SHARED:
 				if (beforeCardWrapperAddition != null) {
-					cardWrapperAddition.setOnCardWrapperAddition(beforeCardWrapperAddition);
-					cardWrapperAddition.setIsBefore(true);
+					cardWrapperAdditionTo.setOnCardWrapperAddition(beforeCardWrapperAddition);
+					cardWrapperAdditionTo.setIsBefore(true);
 				} else {
-					cardWrapperAddition.setOnCardWrapperAddition(null);
+					cardWrapperAdditionTo.setOnCardWrapperAddition(null);
 				}
 				
 				break;
 				
 			case COMMON:
 				/* remove from origin section */
-				fromSection.getCardsWrappersAdditionsCommon().remove(cardWrapperAddition);
+				fromSection.getCardsWrappersAdditionsCommon().remove(cardWrapperAdditionFrom);
 				modelSectionRepository.save(fromSection);
 				
 				if (beforeCardWrapperAddition != null) {
 					onIndex = toSection.getCardsWrappersAdditionsCommon().indexOf(beforeCardWrapperAddition);
 					if (onIndex != -1) {
-						toSection.getCardsWrappersAdditionsCommon().add(onIndex, cardWrapperAddition);
+						toSection.getCardsWrappersAdditionsCommon().add(onIndex, cardWrapperAdditionTo);
 					} else {
-						toSection.getCardsWrappersAdditionsCommon().add(cardWrapperAddition);
+						toSection.getCardsWrappersAdditionsCommon().add(cardWrapperAdditionTo);
 					}
+				} else {
+					toSection.getCardsWrappersAdditionsCommon().add(cardWrapperAdditionTo);
 				}
 				modelSectionRepository.save(toSection);
 						
 				break;
 		}
 		
-		if (cardWrapperAddition.getScope() != ModelCardWrapperScope.PRIVATE) {
-			activityService.modelCardWrapperMoved(cardWrapperAddition, fromSection, toSection, appUserRepository.findByC1Id(requestedById));
+		if (cardWrapperAdditionTo.getScope() != ModelCardWrapperScope.PRIVATE) {
+			activityService.modelCardWrapperMoved(cardWrapperAdditionTo, fromSection, toSection, appUserRepository.findByC1Id(requestedById));
 		}
 		
-		modelCardWrapperAdditionRepository.save(cardWrapperAddition);
+		modelCardWrapperAdditionRepository.save(cardWrapperAdditionFrom);
+		modelCardWrapperAdditionRepository.save(cardWrapperAdditionTo);
 		
-		return new PostResult("success", "card wrapper moved", cardWrapperAddition.getId().toString());
+		return new PostResult("success", "card wrapper moved", cardWrapperAdditionTo.getId().toString());
 		
 	}
 	

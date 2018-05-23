@@ -163,7 +163,7 @@
            on section <app-model-section-link :section="activity.onSection"></app-model-section-link> common.
         </span>
         <span v-if="isModelCardWrapperEdited" class="">
-          edited the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
+          edited the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
         </span>
         <span v-if="isModelCardWrapperMovedSameSection" class="">
           moved the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
