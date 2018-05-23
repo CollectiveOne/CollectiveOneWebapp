@@ -991,9 +991,24 @@ public class ActivityService {
 			case MODEL_CARDWRAPPER_MOVED:
 			case MODEL_CARDWRAPPER_REMOVED:
 				
-				/* activity in cards is considered as occurring on the sections these card is placed*/
+				/* activity in cards is considered as occurring on the sections these card is placed */
 				UUID cardWrapperId = activity.getModelCardWrapperAddition().getCardWrapper().getId();	
 				sections = modelCardWrapperAdditionRepository.findParentSections(cardWrapperId);
+				
+				/* add this addition section in case its not there (just removed) */
+				if (activity.getModelCardWrapperAddition() != null && !sections.contains(activity.getModelCardWrapperAddition().getSection())) {
+					sections.add(activity.getModelCardWrapperAddition().getSection());	
+				}
+				
+				/* add from and to sections in case they are not there */
+				if (activity.getFromSection() != null && !sections.contains(activity.getFromSection())) {
+					sections.add(activity.getFromSection());
+				}
+				
+				if (activity.getOnSection() != null && !sections.contains(activity.getOnSection())) {
+					sections.add(activity.getOnSection());
+				}
+				
 				break;
 				
 			/* these activities occur at the section level, because scope is a section + card characteristic, not a card one. */

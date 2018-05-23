@@ -214,6 +214,7 @@ export default {
           url: '/channel/activity/model/section/' + this.section.id,
           onMessage: (tick) => {
             var message = tick.body
+            console.log('mesage on section: ' + this.section.id + ' - MSG: ' + message)
             if (message === 'UPDATE') {
               this.updateCards()
             }

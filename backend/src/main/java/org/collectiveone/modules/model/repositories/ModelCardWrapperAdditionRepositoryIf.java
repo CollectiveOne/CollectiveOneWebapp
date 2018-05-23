@@ -43,8 +43,9 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "JOIN crdWrpAdd.cardWrapper crdWrp "
 			+ "WHERE crdWrp.id= ?2 "
 			+ "AND crdWrpAdd.section.id = ?1 "
-			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrp.creator.c1Id = ?3) ")
-	ModelCardWrapperAddition findBySectionAndCardWrapperVisibleToUser(UUID sectionId, UUID cardWrapperId, UUID creatorId);
+			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrpAdd.adder.c1Id = ?3) "
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
+	ModelCardWrapperAddition findBySectionAndCardWrapperVisibleToUser(UUID sectionId, UUID cardWrapperId, UUID adderId);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "WHERE crdWrpAdd.cardWrapper.id= ?2 "
@@ -59,7 +60,7 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "WHERE crdWrpAdd.section.id IN ?1 "
 			+ "AND (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
 			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
-			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrp.creator.c1Id = ?3)")
+			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrpAdd.adder.c1Id = ?3)")
 	Page<ModelCardWrapperAddition> searchInSectionsByQuery(List<UUID> sectionIds, String query, UUID requestById, Pageable page);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
@@ -69,7 +70,7 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "WHERE sec.initiative.id IN ?1 "
 			+ "AND (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
 			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
-			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrp.creator.c1Id = ?3)")
+			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrpAdd.adder.c1Id = ?3)")
 	Page<ModelCardWrapperAddition> searchInInitiativesByQuery(List<UUID> initiativeIds, String query, UUID requestById, Pageable page);
 	
 	@Query("SELECT DISTINCT crdWrp.id FROM ModelCardWrapperAddition crdWrpAdd "

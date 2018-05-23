@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.model.dto.InModelSectionDto;
+import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -38,6 +39,9 @@ public class ModelCardWrapperAddition {
 	private ModelCardWrapperAddition onCardWrapperAddition;
 	
 	private Boolean isBefore;
+	
+	@ManyToOne
+	private AppUser adder;
 	
 	@Enumerated(EnumType.STRING)
 	private Status status;
@@ -141,6 +145,14 @@ public class ModelCardWrapperAddition {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public AppUser getAdder() {
+		return adder;
+	}
+
+	public void setAdder(AppUser adder) {
+		this.adder = adder;
 	}
 	
 }
