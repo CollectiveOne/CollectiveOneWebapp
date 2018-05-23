@@ -276,19 +276,28 @@ public class ModelService {
 			UUID creatorId,
 			ModelCardWrapperScope scope) {
 		
+		ModelSection section = modelSectionRepository.findById(sectionId);
 		
 		ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
 		
 		ModelCardWrapperAddition existingCard = modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(sectionId, cardWrapperId);
 		if (existingCard != null) {
 			if (existingCard.getStatus() != Status.DELETED) {
+				/* healing code: ... if the card is there and is common, but is not in the common card array, add it */
+				if (existingCard.getScope() == ModelCardWrapperScope.COMMON) {
+					if (!section.getCardsWrappersAdditionsCommon().contains(existingCard)) {
+						section.getCardsWrappersAdditionsCommon().add(existingCard);
+						modelSectionRepository.save(section);
+					}
+				}
+				
 				return new PostResult("error", "card already in this section", null);				
 			} else {
 				cardWrapperAddition = existingCard;
+				cardWrapperAddition.setStatus(Status.VALID);
 			}
 		}
 		
-		ModelSection section = modelSectionRepository.findById(sectionId);
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		ModelCardWrapperAddition beforeCardWrapperAddition = modelCardWrapperAdditionRepository.findBySectionAndCardWrapperId(sectionId, beforeCardWrapperId);
 		
@@ -318,7 +327,12 @@ public class ModelService {
 					section.getCardsWrappersAdditionsCommon().add(cardWrapperAddition);
 				} else {
 					int index = section.getCardsWrappersAdditionsCommon().indexOf(beforeCardWrapperAddition);
-					section.getCardsWrappersAdditionsCommon().add(index, cardWrapperAddition);
+					if (index != -1) {
+						section.getCardsWrappersAdditionsCommon().add(index, cardWrapperAddition);	
+					} else {
+						section.getCardsWrappersAdditionsCommon().add(cardWrapperAddition);
+					}
+					
 				}
 				
 				activityService.modelCardWrapperAdded(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
@@ -732,6 +746,7 @@ public class ModelService {
 					existedAsDeleted = true;
 					existingCard.setScope(cardWrapperAdditionFrom.getScope());
 					cardWrapperAdditionFrom.setStatus(Status.DELETED);
+					existingCard.setStatus(Status.VALID);
 				}
 			}	
 		}

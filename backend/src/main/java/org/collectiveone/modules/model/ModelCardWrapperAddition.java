@@ -42,6 +42,16 @@ public class ModelCardWrapperAddition {
 	private Status status;
 	
 	@Override
+	public String toString() {
+		return "id: " + id.toString() + 
+				"- section id: " + section.getId().toString() +
+				"- section title: " + section.getTitle() +
+				"- cardWrapper id: " + cardWrapper.getId().toString() +
+				"- scope : " + scope.toString() +
+				"- status : " + (status != null ? status.toString() : "null");
+	}
+	
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
