@@ -40,9 +40,11 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 	List<ModelCardWrapperAddition> findOfUserInSection(UUID userId, UUID sectionId, ModelCardWrapperScope scope);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
-			+ "WHERE crdWrpAdd.cardWrapper.id= ?2 "
-			+ "AND crdWrpAdd.section.id = ?1 ")
-	ModelCardWrapperAddition findBySectionAndCardWrapperId(UUID sectionId, UUID cardWrapperId);
+			+ "JOIN crdWrpAdd.cardWrapper crdWrp "
+			+ "WHERE crdWrp.id= ?2 "
+			+ "AND crdWrpAdd.section.id = ?1 "
+			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrp.creator.c1Id = ?3) ")
+	ModelCardWrapperAddition findBySectionAndCardWrapperVisibleToUser(UUID sectionId, UUID cardWrapperId, UUID creatorId);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "WHERE crdWrpAdd.cardWrapper.id= ?2 "
