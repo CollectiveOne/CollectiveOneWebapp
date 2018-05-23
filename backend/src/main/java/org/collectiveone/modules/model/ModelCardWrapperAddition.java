@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.model.dto.InModelSectionDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -40,6 +41,16 @@ public class ModelCardWrapperAddition {
 	
 	@Enumerated(EnumType.STRING)
 	private Status status;
+	
+	public InModelSectionDto toInModelSectionDto() {
+		InModelSectionDto dto = new InModelSectionDto();
+		dto.setId(section.getId().toString());
+		dto.setTitle(section.getTitle());
+		dto.setDescription(section.getDescription());
+		dto.setInitiativeId(section.getInitiative().getId().toString());
+		dto.setScope(scope.toString());
+		return dto;
+	}
 	
 	@Override
 	public String toString() {

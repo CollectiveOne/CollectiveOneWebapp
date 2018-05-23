@@ -462,10 +462,20 @@ public class ModelService {
 			cardWrapperDto.setUserLiked(cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapperAddition.getCardWrapper().getId(), requestByUserId) != null);
 		}
 		
-		List<ModelSection> inSections = modelCardWrapperAdditionRepository.findParentSections(cardWrapperAddition.getCardWrapper().getId());
+		List<ModelCardWrapperAddition> allAdditions = modelCardWrapperAdditionRepository.findOfCardWrapper(cardWrapperAddition.getCardWrapper().getId());
 		
-		for (ModelSection inSection : inSections) {
-			cardWrapperDto.getInSections().add(inSection.toDto());
+		for (ModelCardWrapperAddition thisAddition : allAdditions) {
+			/* private info only for author */
+			boolean skip = false;
+			if (thisAddition.getScope() == ModelCardWrapperScope.PRIVATE) {
+				if (!thisAddition.getCardWrapper().getCreator().getC1Id().equals(requestByUserId)) {
+					skip = true;
+				}
+			}
+			
+			if (!skip) {
+				cardWrapperDto.getInModelSections().add(thisAddition.toInModelSectionDto());	
+			}
 		}
 		
 		return cardWrapperDto;

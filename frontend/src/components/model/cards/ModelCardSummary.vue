@@ -12,16 +12,11 @@
         {{ cardShortTitle }}
       </div>
 
-      <div v-if="cardWrapper.inSections.length > 0 && !hideCardControls" class="w3-right text-div">
-        <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
-          v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
-          <div class="">
-            <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
-              class="gray-1 w3-tag w3-round w3-small">
-              {{ inSection.title }}
-            </router-link>
-          </div>
-        </div>
+      <div v-if="cardWrapper.inModelSections.length > 0 && !hideCardControls" class="w3-right text-div">
+        <app-in-model-sections-tags
+          :inModelSections="cardWrapper.inModelSections"
+          :hideSectionId="inSectionId">
+        </app-in-model-sections-tags>
       </div>
     </div>
 
@@ -79,6 +74,7 @@
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
 import CardControlButtons from '@/components/model/cards/CardControlButtons.vue'
+import InModelSectionsTags from '@/components/model/cards/InModelSectionsTags.vue'
 
 export default {
 
@@ -87,7 +83,8 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-card-control-buttons': CardControlButtons
+    'app-card-control-buttons': CardControlButtons,
+    'app-in-model-sections-tags': InModelSectionsTags
   },
 
   props: {
@@ -171,12 +168,6 @@ export default {
   border-left-style: dotted;
   border-color: #c1c1c1;
   border-width: 1px;
-}
-
-.insection-tag-container {
-  display: inline-block;
-  margin-right: 5px;
-  margin-bottom: 2px;
 }
 
 .indicator-comp {

@@ -18,7 +18,7 @@ public class ModelCardWrapperDto {
 	private Long lastEdited;
 	private List<AppUserDto> editors = new ArrayList<AppUserDto>();
 	private List<ModelCardDto> oldVersions = new ArrayList<ModelCardDto>();
-	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
+	private List<InModelSectionDto> inModelSections = new ArrayList<InModelSectionDto>();
 	
 	/* for private and shared, position is given relative to another card */
 	private ModelCardWrapperScope scope;
@@ -86,11 +86,11 @@ public class ModelCardWrapperDto {
 	public void setOldVersions(List<ModelCardDto> oldVersions) {
 		this.oldVersions = oldVersions;
 	}
-	public List<ModelSectionDto> getInSections() {
-		return inSections;
+	public List<InModelSectionDto> getInModelSections() {
+		return inModelSections;
 	}
-	public void setInSections(List<ModelSectionDto> inSections) {
-		this.inSections = inSections;
+	public void setInModelSections(List<InModelSectionDto> inModelSections) {
+		this.inModelSections = inModelSections;
 	}
 	public ModelCardWrapperScope getScope() {
 		return scope;

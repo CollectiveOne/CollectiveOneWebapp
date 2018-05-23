@@ -32,6 +32,9 @@ export const cardMixin = {
     isShared () {
       return this.cardWrapper.scope === 'SHARED'
     },
+    inSectionId () {
+        return this.inSection ? this.inSection.id : ''
+    },
     containerClass () {
       let cClass = {}
       switch (this.cardWrapper.scope) {
@@ -51,13 +54,6 @@ export const cardMixin = {
     }
   },
   methods: {
-    showThisTag (inSection) {
-      /* hide the card in which this section is from tags */
-      if (this.inSection) {
-        return inSection.id !== this.inSection.id
-      }
-      return true
-    },
     cardClicked () {
       if (!this.inCardSelector) {
         this.$router.push({name: this.cardRouteName, params: { cardId: this.cardWrapper.id }})

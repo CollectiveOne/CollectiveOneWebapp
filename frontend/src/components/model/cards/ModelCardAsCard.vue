@@ -45,13 +45,11 @@
         </div>
       </div>
 
-      <div v-if="cardWrapper.inSections.length > 0 && !hideCardControls" class="w3-margin-left w3-left">
-        <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
-          v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
-          <div class="">
-            <app-model-section-tag :section="inSection"></app-model-section-tag>
-          </div>
-        </div>
+      <div v-if="cardWrapper.inModelSections.length > 0 && !hideCardControls" class="w3-margin-left w3-left">
+        <app-in-model-sections-tags
+          :inModelSections="cardWrapper.inModelSections"
+          :hideSectionId="inSectionId">
+        </app-in-model-sections-tags>
       </div>
 
       <div v-if="!inCardSelector" class="w3-right">
@@ -106,6 +104,7 @@
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
 import CardControlButtons from '@/components/model/cards/CardControlButtons.vue'
+import InModelSectionsTags from '@/components/model/cards/InModelSectionsTags.vue'
 
 export default {
 
@@ -114,7 +113,8 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-card-control-buttons': CardControlButtons
+    'app-card-control-buttons': CardControlButtons,
+    'app-in-model-sections-tags': InModelSectionsTags
   },
 
   props: {
