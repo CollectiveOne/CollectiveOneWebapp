@@ -41,7 +41,7 @@
             </div>
             <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
               :class="{'border-blue-app': addExisting}"
-              @click="addExisting = true">
+              @click="addExisting = true; existingCard = null">
               <h5 class="noselect" :class="{'bold-text': addExisting}">Add Existing</h5>
             </div>
           </div>
@@ -49,14 +49,33 @@
           <div class="slider-container">
             <transition name="slideLeftRight">
               <div v-if="addExisting && editing" class="">
-                <app-model-card-selector
-                  :inSectionId="inSectionId"
-                  @select="cardSelected($event)">
-                </app-model-card-selector>
-                <app-error-panel
-                  :show="noCardSelectedShow"
-                  message="please select one card from above">
-                </app-error-panel>
+                <div class="w3-row">
+                  <app-model-card-selector
+                    :inSectionId="inSectionId"
+                    @select="cardSelected($event)">
+                  </app-model-card-selector>
+                  <app-error-panel
+                    :show="noCardSelectedShow"
+                    message="please select one card from above">
+                  </app-error-panel>
+                  <app-error-panel
+                    :show="cardAlreadyPresentShow"
+                    message="please select one card from above">
+                  </app-error-panel>
+                </div>
+
+                <div v-if="existingCard !== null" class="w3-row w3-container w3-margin-top">
+                  <label class="">
+                    <b>New scope (in "{{ inSectionTitle }}" section):</b>
+                  </label>
+                  <select v-model="existingCardNewScope"
+                    class="w3-input w3-topbar" :class="selectorExistingBorderClass" name="">
+                    <option value="PRIVATE">Private (only I can see it)</option>
+                    <option value="SHARED">Shared (others can see it, but its mine)</option>
+                    <option value="COMMON">Common (controlled by all editors)</option>
+                  </select>
+                </div>
+
               </div>
             </transition>
           </div>
@@ -302,6 +321,7 @@ export default {
       textEmptyError: false,
       addExisting: false,
       existingCard: null,
+      existingCardNewScope: '',
       noCardSelectedError: false,
       animatingTab: false,
       showUrl: false,
@@ -319,6 +339,23 @@ export default {
   },
 
   computed: {
+    selectorExistingBorderClass () {
+      let cClass = {}
+      switch (this.existingCardNewScope) {
+        case 'PRIVATE':
+          cClass['border-red'] = true
+          break
+
+        case 'SHARED':
+          cClass['border-yellow'] = true
+          break
+
+        default:
+          cClass['border-blue'] = true
+          break
+      }
+      return cClass
+    },
     selectorBorderClass () {
       let cClass = {}
       switch (this.editedCard.newScope) {
@@ -476,6 +513,7 @@ export default {
     },
     cardSelected (cardWrapper) {
       this.existingCard = cardWrapper
+      this.existingCardNewScope = cardWrapper.scope
     },
     clickOutside () {
       if (this.enableClickOutside) {
@@ -530,22 +568,22 @@ export default {
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
-            var params = {}
+            var thisParams = {}
             switch (this.newCardLocation) {
               case 'end':
                 break
 
               case 'before':
-                params.beforeCardWrapperId = this.atCardWrapper.id
+                thisParams.beforeCardWrapperId = this.atCardWrapper.id
                 break
 
               case 'after':
-                params.afterCardWrapperId = this.atCardWrapper.id
+                thisParams.afterCardWrapperId = this.atCardWrapper.id
                 break
             }
 
             this.sendingData = true
-            this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto, { params: params })
+            this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto, { params: thisParams })
             .then((response) => {
               this.sendingData = false
               if (response.data.result === 'success') {
@@ -558,7 +596,11 @@ export default {
           } else {
             this.sendingData = true
             this.axios.put('/1/model/section/' + this.inSectionId + '/cardWrapper/' + this.existingCard.id,
-              {}, params).then((response) => {
+              {}, {
+                params: {
+                  scope: this.existingCardNewScope
+                }
+              }).then((response) => {
                 this.sendingData = false
                 if (response.data.result === 'success') {
                   this.closeThis()

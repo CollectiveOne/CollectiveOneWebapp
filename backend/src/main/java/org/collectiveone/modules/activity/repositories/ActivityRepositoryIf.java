@@ -15,18 +15,24 @@ public interface ActivityRepositoryIf extends CrudRepository<Activity, UUID> {
 	Activity findTop1ByAssignation_IdAndTypeOrderByTimestampDesc(UUID assignationId, ActivityType type);
 	
 	@Query("SELECT act FROM Activity act "
+			+ "LEFT JOIN act.modelCardWrapperAddition crdWrpAdd "
 			+ "WHERE act.modelSection.id IN ?1 "
+			+ "OR act.modelCardWrapper.id IN ?2 "
 			+ "OR act.onSection.id IN ?1 "
 			+ "OR act.fromSection.id IN ?1 "
-			+ "OR act.modelCardWrapper.id IN ?2 "
+			+ "OR crdWrpAdd.section.id IN ?1 "
+			+ "OR crdWrpAdd.cardWrapper.id IN ?2 "
 			+ "ORDER BY act.timestamp DESC")
 	Page<Activity> findOfSectionsOrCards(List<UUID> sectionIds, List<UUID> cardsWrappersIds, Pageable pageable);
 	
 	@Query("SELECT act FROM Activity act "
+			+ "LEFT JOIN act.modelCardWrapperAddition crdWrpAdd "
 			+ "WHERE (act.modelSection.id IN ?1 "
+			+ "OR act.modelCardWrapper.id IN ?2 "
 			+ "OR act.onSection.id IN ?1 "
 			+ "OR act.fromSection.id IN ?1 "
-			+ "OR act.modelCardWrapper.id IN ?2) "
+			+ "OR crdWrpAdd.section.id IN ?1 "
+			+ "OR crdWrpAdd.cardWrapper.id IN ?2) "
 			+ "AND (act.type = ?3) "
 			+ "ORDER BY act.timestamp DESC")
 	Page<Activity> findOfSectionsOrCardsAndType(List<UUID> sectionIds, List<UUID> cardsWrappersIds, ActivityType type, Pageable pageable);

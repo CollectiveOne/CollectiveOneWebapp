@@ -2,7 +2,7 @@
   <div v-if="cardWrapper" class="card-base-div">
 
     <div class="card-content-container"
-      draggable="true"
+      :draggable="isDraggable"
       @dragstart="dragStart($event)">
 
       <component
@@ -80,6 +80,22 @@ export default {
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
+    authorIsLoggedUser () {
+      if (this.$store.state.user.profile) {
+        return this.$store.state.user.profile.c1Id === this.cardWrapper.creator.c1Id
+      }
+      return false
+    },
+    isDraggable () {
+      if (this.cardWrapper.scope === 'COMMON') {
+        return this.isLoggedAnEditor
+      } else {
+        return this.authorIsLoggedUser
+      }
+    },
     cardComponent () {
       switch (this.type) {
         case 'summary':

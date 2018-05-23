@@ -2,7 +2,7 @@
   <div class="">
     <div class="w3-row">
       <transition name="fadeenter">
-        <div :key="currentSectionId" class="this-section-title small-scroll">
+        <div :key="currentSectionId" v-if="currentSection" class="this-section-title small-scroll">
           <div class="title-div">
             {{ sectionTitle }}
           </div>
@@ -18,7 +18,7 @@
             <i class="fa fa-info-circle" aria-hidden="true"></i>
           </div>
           <div class="btn-div fa-button">
-            <router-link :to="{ name: 'ModelSectionRead', params: {sectionId: this.currentSection ? this.currentSection.id : ''} }">
+            <router-link :to="{ name: 'ModelSectionRead', params: {sectionId: this.currentSection.id} }">
               <img src="./../../assets/shareable-view.svg" alt="">
             </router-link>
           </div>

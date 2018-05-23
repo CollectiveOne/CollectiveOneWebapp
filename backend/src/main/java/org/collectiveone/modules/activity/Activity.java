@@ -26,6 +26,7 @@ import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
@@ -131,11 +132,21 @@ public class Activity {
 		if(mint != null) dto.setMint(mint.toDto());
 		if(assignation != null) dto.setAssignation(assignation.toDto()); 
 		if(initiativeTransfer != null) dto.setTransfer(initiativeTransfer.toDto()); 
-		
 		if(modelSection != null) dto.setModelSection(modelSection.toDto());
-		if(modelCardWrapper != null) dto.setModelCardWrapper(modelCardWrapper.toDto());
 		
-		if(onSection != null) dto.setOnSection(onSection.toDto());
+		if (modelCardWrapperAddition != null) {
+			dto.setOnSection(modelCardWrapperAddition.getSection().toDto());
+			ModelCardWrapperDto cardWrapperDto = modelCardWrapperAddition.getCardWrapper().toDto();
+			
+			cardWrapperDto.setInitiativeId(modelCardWrapperAddition.getSection().getInitiative().getId().toString());
+			cardWrapperDto.setScope(modelCardWrapperAddition.getScope());
+			
+			dto.setModelCardWrapper(cardWrapperDto);	
+		} else {
+			if(onSection != null) dto.setOnSection(onSection.toDto());
+			if(modelCardWrapper != null) dto.setModelCardWrapper(modelCardWrapper.toDto());	
+		}
+		
 		if(fromSection != null) dto.setFromSection(fromSection.toDto());
 		
 		if (type == ActivityType.MODEL_CARDWRAPPER_MADE_SHARED || type == ActivityType.MODEL_CARDWRAPPER_MADE_COMMON) {

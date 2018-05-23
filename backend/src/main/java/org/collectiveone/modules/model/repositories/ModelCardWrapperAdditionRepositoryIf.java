@@ -17,11 +17,13 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 	
 	@Query("SELECT sec FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.section sec "
-			+ "WHERE crdWrpAdd.cardWrapper.id = ?1")
+			+ "WHERE crdWrpAdd.cardWrapper.id = ?1 "
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
 	List<ModelSection> findParentSections(UUID cardWrapperId);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
-			+ "WHERE crdWrpAdd.cardWrapper.id = ?1")
+			+ "WHERE crdWrpAdd.cardWrapper.id = ?1 "
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
 	List<ModelCardWrapperAddition> findOfCardWrapper(UUID cardWrapperId);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
@@ -39,8 +41,7 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "WHERE crdWrpAdd.cardWrapper.id= ?2 "
-			+ "AND crdWrpAdd.section.id = ?1 "
-			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
+			+ "AND crdWrpAdd.section.id = ?1 ")
 	ModelCardWrapperAddition findBySectionAndCardWrapperId(UUID sectionId, UUID cardWrapperId);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
@@ -51,31 +52,30 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 	ModelCardWrapperAddition findBySectionAndCardWrapperIdAndScope(UUID sectionId, UUID cardWrapperId, ModelCardWrapperScope scope);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
-			+ "WHERE crdWrpAdd.cardWrapper.id= ?2 "
-			+ "AND crdWrpAdd.section.id = ?1 "
-			+ "AND crdWrpAdd.scope != 'COMMON' "
-			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
-	ModelCardWrapperAddition findBySectionAndCardWrapperIdNotCommon(UUID sectionId, UUID cardWrapperId);
-	
-	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.cardWrapper crdWrp "
 			+ "JOIN crdWrp.card crd "
 			+ "WHERE crdWrpAdd.section.id IN ?1 "
 			+ "AND (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
-			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
-	Page<ModelCardWrapperAddition> searchInSectionsByQuery(List<UUID> sectionIds, String query, Pageable page);
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
+			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrp.creator.c1Id = ?3)")
+	Page<ModelCardWrapperAddition> searchInSectionsByQuery(List<UUID> sectionIds, String query, UUID requestById, Pageable page);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.section sec "
 			+ "JOIN crdWrpAdd.cardWrapper crdWrp "
-			+ "WHERE sec.initiative.id IN ?1")
-	Page<ModelCardWrapperAddition> searchInInitiativesByQuery(List<UUID> initiativeIds, Pageable page);
+			+ "JOIN crdWrp.card crd "
+			+ "WHERE sec.initiative.id IN ?1 "
+			+ "AND (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
+			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrp.creator.c1Id = ?3)")
+	Page<ModelCardWrapperAddition> searchInInitiativesByQuery(List<UUID> initiativeIds, String query, UUID requestById, Pageable page);
 	
 	@Query("SELECT DISTINCT crdWrp.id FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.cardWrapper crdWrp "
 			+ "JOIN crdWrpAdd.section sec "
 			+ "WHERE sec.id IN ?1 "
-			+ "AND crdWrpAdd.scope != 'PRIVATE'")
+			+ "AND crdWrpAdd.scope != 'PRIVATE' "
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
 	public List<UUID> findAllCardWrapperIdsOfSections(List<UUID> sectionId);
 	
 }

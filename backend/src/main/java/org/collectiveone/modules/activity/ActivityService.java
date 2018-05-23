@@ -840,6 +840,7 @@ public class ActivityService {
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_REMOVED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity.setFromSection(cardWrapperAddition.getSection());
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
