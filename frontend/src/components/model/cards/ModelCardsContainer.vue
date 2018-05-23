@@ -28,7 +28,7 @@
       <div v-if="draggingOverCreateCard" class="drop-div">
       </div>
 
-      <div @click="$emit('create-card')" class="control-btn w3-card-2 w3-padding w3-round w3-center">
+      <div @click="$emit('create-card')" class="control-btn w3-card-2 w3-padding w3-round w3-center create-card-div">
         <i class="fa fa-plus" aria-hidden="true"></i> create new card
       </div>
     </div>
@@ -192,6 +192,11 @@ export default {
   background-color: #828282;
   border-radius: 5px;
   margin-bottom: 10px;
+}
+
+.create-card-div {
+  margin-top: 20px;
+  max-width: 350px;
 }
 
 @media screen and (min-width: 1700px) {

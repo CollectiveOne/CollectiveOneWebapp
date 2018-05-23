@@ -156,11 +156,11 @@
 
         <span v-if="isModelCardWrapperMadeShared" class="">
           made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-           on section <app-model-section-link :section="activity.onSection"></app-model-section-link> visible.
+           on section <app-model-section-link :section="activity.onSection"></app-model-section-link> a shared card.
         </span>
         <span v-if="isModelCardWrapperMadeCommon" class="">
           made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-           on section <app-model-section-link :section="activity.onSection"></app-model-section-link> common.
+           on section <app-model-section-link :section="activity.onSection"></app-model-section-link> a common card.
         </span>
         <span v-if="isModelCardWrapperEdited" class="">
           edited the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
