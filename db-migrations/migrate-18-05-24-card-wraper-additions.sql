@@ -1,7 +1,5 @@
 ﻿---------------------------------------------------------
--- Make a partial dump of the database with the command below (after making a copy of the online DB in c1db-bk) and fill a clean DB with it using \i,  migration script
--- /usr/bin/pg_dump --host localhost --port 5432 --username "postgres" --password --format plain --data-only --disable-triggers --exclude-table model_cards_wrapper --exclude-table model_views --exclude-table activity --exclude-table initiatives_model_views --exclude-table initiatives_model_views_trash --exclude-table model_views_sections --exclude-table model_views_sections_trash --exclude-table initiatives_other_tokens --exclude-table likes --verbose --file "/home/pepo/workspace/c1data/bk-068-base" "c1db-bk"
--- THEN run the branch code to create the top level sections, 
+-- Make a full dump of the database fill a clean DB with it using \i,  migration script (an error for public.model_sections_cards_wrappers will be shown, its ok)
 -- THEN run this script to fill the sections
 -- THEN make a CUSTOM dump of the contents with this command
 -- /usr/bin/pg_dump --cluster 9.6/main --host localhost --port 5432 --username "postgres" --no-password  --format custom --blobs --no-privileges --no-tablespaces --verbose --file "/home/pepo/workspace/c1data/c1-migration-065-custom" "c1db"
@@ -32,8 +30,8 @@ SELECT
   cards_order
 FROM masterschema.model_sections_cards_wrappers; 
 
-DROP TABLE model_sections_cards_wrappers;
-ALTER TABLE model_sections_cards_wrappers_temp RENAME TO model_sections_cards_wrappers;   
+DROP TABLE masterschema.model_sections_cards_wrappers;
+ALTER TABLE masterschema.model_sections_cards_wrappers_temp RENAME TO model_sections_cards_wrappers;   
 
 -- Model Card Wrappers withput state control
 INSERT INTO model_cards_wrapper_additions 
@@ -52,7 +50,7 @@ SELECT
   'COMMON'
 FROM masterschema.model_sections_cards_wrappers AS sec_crd_wrp 
 JOIN masterschema.model_cards_wrapper AS crd_wrp 
-ON sec_crd_wrp.cards_wrappers_id = crd_wrp.id
+ON sec_crd_wrp.cards_wrappers_id = crd_wrp.id;
 
 
 /* store order of common cards (all current cards) */
