@@ -589,6 +589,8 @@ export default {
               if (response.data.result === 'success') {
                 this.closeThis()
                 this.$emit('updateCards')
+              } else {
+                console.log(response.data.message)
               }
             }).catch((error) => {
               console.log(error)

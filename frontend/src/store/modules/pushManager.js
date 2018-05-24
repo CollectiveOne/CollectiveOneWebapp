@@ -22,7 +22,7 @@ const actions = {
   addPushNotifications: (context, notifications) => {
     for (var ix in notifications) {
       let notification = notifications[ix]
-      if (notification.pushState === 'PENDING') {
+      if (notification.pushState === 'PENDING' && notification.inAppState === 'PENDING') {
         if (!context.state.pushedIds.includes(notification.id)) {
           context.commit('addPushedId', notification.id)
 

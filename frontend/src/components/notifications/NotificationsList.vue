@@ -145,7 +145,6 @@ export default {
           this.notifications = response.data.data
           this.allShown = this.notifications.length < 10
 
-          console.log('updating notifications for ' + this.url)
           if (this.isSelected && this.$route.name === 'ModelSectionMessages') {
             /* autoread message notifications of this section */
             this.messageNotificationsRead()

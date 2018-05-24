@@ -77,16 +77,4 @@ export default {
 .model-nav-container {
 }
 
-.zoom-controls {
-  margin: 0 auto;
-  width: 90px;
-  font-size: 20px;
-}
-
-.zoom-controls > div {
-  width: 30px;
-  float: left;
-  text-align: center;
-}
-
 </style>

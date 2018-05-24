@@ -735,11 +735,13 @@ public class ModelService {
 		}
 		
 		/* check there is not a visible card already in this section */
-		ModelCardWrapperAddition existingCard = 
-				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(toSectionId, cardWrapperId, requestedById);
-				
-		if (existingCard != null) {
-			return new PostResult("error", "card already in this section", null);
+		if (!fromSectionId.equals(toSectionId)) {
+			ModelCardWrapperAddition existingCard = 
+					modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(toSectionId, cardWrapperId, requestedById);
+					
+			if (existingCard != null) {
+				return new PostResult("error", "card already in this section", null);
+			}	
 		}
 		
 		/* remove card from section (just mark it as deleted)*/
@@ -790,6 +792,7 @@ public class ModelService {
 				} else {
 					cardWrapperAdditionTo.setOnCardWrapperAddition(null);
 				}
+				modelCardWrapperAdditionRepository.save(cardWrapperAdditionTo);
 				
 				break;
 				
