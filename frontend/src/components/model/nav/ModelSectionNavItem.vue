@@ -515,7 +515,7 @@ export default {
   text-align: center;
   width: 30px;
   float: left;
-  padding: 3px 0px;
+  padding: 8px 0px;
 }
 
 .notification-div {
