@@ -20,10 +20,14 @@
             <i v-else class="fa fa-chevron-circle-down" aria-hidden="true"></i>
           </div>
           <div v-else>
-            <i class="fa fa-circle" aria-hidden="true"></i>
+            <i @click="sectionSelected()" class="fa fa-circle" aria-hidden="true"></i>
           </div>
         </div>
-        <div @click="sectionSelected()" @dblclick="toggleSubsections()" class="title-div cursor-pointer noselect">
+        <div @click="sectionSelected()" @dblclick="toggleSubsections()"
+          class="title-div cursor-pointer noselect" :class="titleClass"
+          @mouseover="hoveringOnTitle = true"
+          @mouseenter="hoveringOnTitle = true"
+          @mouseleave="hoveringOnTitle = false">
           {{ sectionTitle }}
         </div>
       </div>
@@ -112,7 +116,8 @@ export default {
       draggingOverWithSectionInsideFlag: false,
       resetIntervalId: 0,
       forceUpdateNotifications: false,
-      subscription: null
+      subscription: null,
+      hoveringOnTitle: false
     }
   },
 
@@ -169,6 +174,11 @@ export default {
       }
 
       return thisClasses
+    },
+    titleClass () {
+      return {
+        'title-hover': this.hoveringOnTitle && !this.highlight
+      }
     },
     sectionTitle () {
       if (this.section) {
@@ -486,7 +496,11 @@ export default {
   transition: all 300ms ease;
 }
 
-.circle-div:hover, .title-div:hover {
+.circle-div:hover {
+  color: #106e87;
+}
+
+.title-hover {
   color: #106e87;
 }
 
