@@ -33,7 +33,7 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 	List<ModelCardWrapperAddition> findInSectionWithScope(UUID sectionId, ModelCardWrapperScope scope);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
-			+ "WHERE crdWrpAdd.cardWrapper.creator.c1Id = ?1 "
+			+ "WHERE crdWrpAdd.adder.c1Id = ?1 "
 			+ "AND crdWrpAdd.section.id = ?2 "
 			+ "AND crdWrpAdd.scope = ?3 "
 			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
@@ -80,5 +80,16 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "AND crdWrpAdd.scope != 'PRIVATE' "
 			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
 	public List<UUID> findAllCardWrapperIdsOfSections(List<UUID> sectionId);
+	
+	@Query("SELECT COUNT(crdWrpAdd) FROM ModelCardWrapperAddition crdWrpAdd "
+			+ "JOIN crdWrpAdd.cardWrapper crdWrp "
+			+ "WHERE crdWrp.id = ?1 "
+			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrpAdd.adder.c1Id = ?2)")
+	public Integer countCardWrapperAdditionsAccessibleTo(UUID cardWrapperId, UUID userId);
+	
+	default Boolean cardWrapperuserHaveAccess(UUID cardWrapperId, UUID userId) {
+		Integer res = countCardWrapperAdditionsAccessibleTo(cardWrapperId, userId);
+		return res == null ? false : res > 0;
+	}
 	
 }

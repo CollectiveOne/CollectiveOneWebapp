@@ -445,8 +445,12 @@ public class ModelService {
 			cardWrapperDto.setIsBefore(cardWrapperAddition.getIsBefore());
 		}
 		
-		/* set initiative based on section */
-		cardWrapperDto.setInitiativeId(cardWrapperAddition.getSection().getInitiative().getId().toString());
+		if (cardWrapperAddition.getSection() != null) {
+			/* set initiative based on section */
+			cardWrapperDto.setInitiativeId(cardWrapperAddition.getSection().getInitiative().getId().toString());
+		} else {
+			cardWrapperDto.setInitiativeId(cardWrapperAddition.getCardWrapper().getInitiative().getId().toString());
+		}
 		
 		/* get number of likes */
 		cardWrapperDto.setnLikes(cardLikeRepository.countOfCard(cardWrapperAddition.getCardWrapper().getId()));
@@ -819,9 +823,15 @@ public class ModelService {
 		
 		ModelCardWrapperDto cardWrapperDto = null;
 		
+		if (!modelCardWrapperAdditionRepository.cardWrapperuserHaveAccess(cardWrapperId, requestByUserId)) {
+			return new GetResult<ModelCardWrapperDto>("error", "dont have access to this card", null);
+		}
+		
 		/* check if this is a card addition */
-		cardWrapperDto = getCardWrapperDtoWithMetadata(
-				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(inSectionId, cardWrapperId, requestByUserId), requestByUserId);
+		ModelCardWrapperAddition dummy = new ModelCardWrapperAddition();
+		dummy.setCardWrapper(modelCardWrapperRepository.findById(cardWrapperId));
+		
+		cardWrapperDto = getCardWrapperDtoWithMetadata(dummy, requestByUserId);
 		
 		return new GetResult<ModelCardWrapperDto>("success", "card retrieved", cardWrapperDto);
 	}
