@@ -46,6 +46,7 @@
 
         <div class="w3-row section-row">
           <app-model-section
+            class="section-component"
             v-if="!loading"
             :section="section"
             :showThisTitle="true"
@@ -185,7 +186,7 @@ export default {
 }
 
 .section-content {
-  padding: 12px 12px;
+  padding: 12px 0px 12px 12px;
   flex-grow: 1;
   height: 100%;
   display: flex;
@@ -195,13 +196,20 @@ export default {
 
 .control-btns-row {
   padding-left: 28px;
+  padding-bottom: 12px;
   flex-shrink: 0;
+}
+
+.section-component {
+  max-width: 1000px;
 }
 
 .section-row {
   flex-grow: 1;
   overflow: auto;
   padding: 12px 0px;
+  padding-left: 3vw;
+  padding-right: 3vw;
 }
 
 .hide-nav-div-container {

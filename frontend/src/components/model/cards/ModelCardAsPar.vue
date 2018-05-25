@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class=""
+  <div class="card-container-doc"
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 
@@ -78,6 +78,10 @@ export default {
   }
 }
 </script>
+
+<style>
+
+</style>
 
 <style scoped>
 

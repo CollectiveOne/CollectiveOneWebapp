@@ -1,6 +1,7 @@
 <template lang="html">
 
-  <div v-if="section" class="section-container" ref="sectionContainer" :id="section.id">
+  <div v-if="section"
+    class="section-container" ref="sectionContainer" :id="section.id">
 
     <div class="slider-container">
       <transition name="slideDownUp">
@@ -16,15 +17,23 @@
     </div>
 
     <div v-if="(nestedIn.length > 0 && section.subElementsLoaded) || showThisTitle"
-      class="w3-row title-row">
+      class="w3-row title-row"
+      :class="{'card-container-doc': cardsType === 'doc'}">
       <div class="w3-row blue-color title-text">
         <div v-for="parent in nestedIn.slice(1, nestedIn.length)"
           class="w3-left">
-          <router-link :to="{ name: 'ModelSectionContent', params: {'sectionId': parent.id } }"> {{ parent.title }} </router-link>
-           <i class="fa fa-chevron-right" aria-hidden="true"></i>
+          <router-link class="w3-left" :to="{ name: 'ModelSectionContent', params: {'sectionId': parent.id } }">
+            <span v-html="headerOpenTag + parent.title + headerCloseTag"></span>
+          </router-link>
+          <div class="w3-left chevron-container">
+            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+          </div>
+
         </div>
         <div class="w3-left">
-          <router-link :to="{ name: 'ModelSectionContent', params: {'sectionId': section.id } }"> <b>{{ section.title }}</b> </router-link>
+          <router-link :to="{ name: 'ModelSectionContent', params: {'sectionId': section.id } }">
+            <span v-html="headerOpenTag + '<b>' +  section.title + '</b>' + headerCloseTag"></span>
+          </router-link>
         </div>
       </div>
       <div v-if="hasDescription" class="w3-row description-text light-grey">
@@ -139,10 +148,27 @@ export default {
   },
 
   computed: {
+    nestedLevel () {
+      return this.nestedIn.length + 1
+    },
+    headerOpenTag () {
+      if (this.cardsType !== 'doc') {
+        return ''
+      }
+
+      return '<h' + (this.nestedLevel < 6 ? this.nestedLevel : 6) + '>'
+    },
+    headerCloseTag () {
+      if (this.cardsType !== 'doc') {
+        return ''
+      }
+
+      return '</h' + (this.nestedLevel < 6 ? this.nestedLevel : 6) + '>'
+    },
     hasDescription () {
       if (this.section.description) {
         return this.section.description !== ''
-      }
+      }``
       return false
     },
     sortedCards () {
@@ -275,7 +301,46 @@ export default {
 }
 </script>
 
+<style>
+
+.card-container-doc,
+.card-container-doc h1,
+.card-container-doc h2,
+.card-container-doc h3,
+.card-container-doc h4,
+.card-container-doc h5
+{
+font-family: 'Merriweather', serif;
+}
+
+.card-container-doc {
+  font-size: 19px;
+  line-height: 32px;
+}
+
+.card-container-doc h1 {
+  font-size: 32px;
+}
+
+.card-container-doc h2 {
+  font-size: 26px;
+}
+
+.card-container-doc h3,
+.card-container-doc h4,
+.card-container-doc h5 {
+  /*font-weight: bold;*/
+  font-size: 22px;
+}
+
+</style>
+
 <style scoped>
+
+
+.chevron-container {
+  padding: 8px;
+}
 
 .section-container {
   font-family: 'Open Sans', sans-serif;
@@ -288,6 +353,10 @@ export default {
 
 .title-text {
   font-size: 17px;
+}
+
+.title-text > * {
+  display: inline-block;
 }
 
 .title-row .fa {
