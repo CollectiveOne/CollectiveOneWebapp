@@ -7,3 +7,4 @@
 /mvnw.cmd
 
 .mvn
+*.project
