@@ -483,7 +483,7 @@ export default {
 
 .arrow-and-title {
   padding: 3px 0px;
-  font-size: 18px;
+  font-size: 16px;
   float: left;
   width: calc(100% - 30px - 30px);
 }

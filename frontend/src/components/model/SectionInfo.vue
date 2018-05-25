@@ -6,6 +6,10 @@
           <div class="title-div">
             {{ sectionTitle }}
           </div>
+          <div @click="showIn = !showIn" class="btn-div fa-button">
+            <i v-if="showIn" class="fa fa-chevron-up" aria-hidden="true"></i>
+            <i v-else class="fa fa-chevron-down" aria-hidden="true"></i>
+          </div>
           <div v-if="$store.state.user.authenticated" class="btn-div fa-button">
             <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
             </app-section-control-buttons>
@@ -13,9 +17,6 @@
           <div v-if="isLoggedAnEditor" class="btn-div fa-button">
             <app-section-control-buttons :section="currentSection" :inSection="null" :onlyAdd="true">
             </app-section-control-buttons>
-          </div>
-          <div @click="showIn = !showIn" class="btn-div fa-button">
-            <i class="fa fa-info-circle" aria-hidden="true"></i>
           </div>
           <div class="btn-div fa-button">
             <router-link :to="{ name: 'ModelSectionRead', params: {sectionId: this.currentSection.id} }">

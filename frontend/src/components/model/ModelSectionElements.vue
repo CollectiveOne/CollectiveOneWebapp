@@ -45,7 +45,7 @@
           </div>
         </div>
 
-        <div class="control-group noselect">
+        <div v-if="isCardsContent" class="control-group noselect">
           <div class="w3-left zoom-controls">
             <div class="w3-left zoom-controls-enabled">
               <div @click="levelDown()" class="w3-left cursor-pointer arrow-div">
@@ -172,7 +172,7 @@
           contextType="MODEL_SECTION"
           :contextElementId="currentSectionId"
           :onlyMessages="isOnlyMessages"
-          :levels="levels">
+          :levels="999">
         </app-message-thread>
 
         <app-model-section
