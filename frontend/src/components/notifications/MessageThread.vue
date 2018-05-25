@@ -40,6 +40,7 @@
         placeholder="say something"
         :showToolbar="false"
         :showSendAndMentions="true"
+        :elementId="contextElementId"
         @c-focus="writting = true"
         @c-blur="writting = false"
         @send="send($event)">

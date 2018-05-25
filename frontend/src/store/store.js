@@ -10,6 +10,7 @@ import model from './modules/model'
 import sectionsTree from './modules/sectionsTree'
 import socket from './modules/socket'
 import pushManager from './modules/pushManager'
+import markdown from './modules/markdown'
 
 Vue.use(Vuex)
 
@@ -25,6 +26,7 @@ export const store = new Vuex.Store({
     model,
     sectionsTree,
     socket,
-    pushManager
+    pushManager,
+    markdown
   }
 })

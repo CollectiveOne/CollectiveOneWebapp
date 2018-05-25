@@ -14,8 +14,8 @@
         <div class="w3-col s8 text-div w3-center">
           {{ notifications.length }} new events under <br>{{ element.title }}
         </div>
-        <button class="w3-col s4 w3-margin-top w3-margin-bottom w3-button app-button"
-          @click="allNotificationsRead()">
+        <button class="w3-col  w3-margin-top w3-margin-bottom w3-button app-button" :class="isMainNav?'s5':'s4'"
+          @click="notificationsRead()">
           mark as read
         </button>
       </div>
@@ -52,6 +52,10 @@ export default {
     contextType: {
       type: String,
       default: 'MODEL_SECTION'
+    },
+    isMainNav: {
+      type: Boolean,
+      default: false
     },
     isSelected: {
       type: Boolean,
@@ -308,6 +312,11 @@ export default {
   max-height: calc(100vh - 80px);
   overflow-y: auto;
   z-index: 2;
+}
+
+.compact .notifications-container {
+  width: 292px;
+  left: -32px;
 }
 
 </style>

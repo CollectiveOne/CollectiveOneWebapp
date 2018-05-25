@@ -223,7 +223,7 @@ export default {
     isModel () {
       var res = false
       this.$route.matched.forEach((e) => {
-        if (e.name === 'InitiativeModelBase') {
+        if (e.name === 'ModelSectionContent' || e.name === 'InitiativeModel') {
           res = true
         }
       })
