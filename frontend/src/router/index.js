@@ -71,13 +71,9 @@ export default new Router({
             },
             {
               path: ':initiativeId',
+              name: 'Initiative',
               component: InitiativesContent,
               children: [
-                {
-                  path: '/',
-                  name: 'Initiative',
-                  redirect: '/overview'
-                },
                 {
                   path: 'overview',
                   name: 'InitiativeOverview',

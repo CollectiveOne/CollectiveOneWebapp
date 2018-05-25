@@ -1,10 +1,10 @@
 import { store } from '../store/store'
+
 export default (to, from, next) => {
   /** adhock logic to handle route transitions so that the sub-section is kept
   when switching among initiatives, and the animation is selected accordingly */
-  console.log('before each from: ' + from.name + ' to ' + to.name)
+  console.log('from ' + from.name + ' to ' + to.name)
 
-  var toInitiativeTab = false
   if (to.name === 'Initiative') {
     /** always redirect if target is base initiative.
      *  The path level 1 is 'inits' and the path level '3'
@@ -18,6 +18,7 @@ export default (to, from, next) => {
       },
       replace: true
     })
+    return
   } else {
     /** select animation based on column and level */
     var animation = ''
@@ -31,8 +32,6 @@ export default (to, from, next) => {
       }
     }
     store.commit('setContentAnimationType', animation)
-
-    next()
   }
 
   var toModelSection = false
@@ -43,86 +42,62 @@ export default (to, from, next) => {
   }
 
   if (toModelSection) {
+    /* query parameters are:
+      - stored in a global state
+      - if the parameter is not in the "to" page, the value of the global state is used
+      - if the parameter is in the "to" request, the global state is set and the value is used
+      - all the values of the global state are added as query parameters, even if not used, to enable url sharing
+    */
+
     /* keep the levels and cards url parameters when switching among views. */
-    let fromLevels = from.query.levels ? from.query.levels : '1'
-    let fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
+    if (to.query.levels != null) store.commit('setLevels', to.query.levels)
+    if (to.query.cardsType != null) store.commit('setCardsType', to.query.cardsType)
+    if (to.query.showPrivate != null) store.commit('setDhowPrivate', to.query.showPrivate)
+    if (to.query.showShared != null) store.commit('setShowShared', to.query.showShared)
+    if (to.query.showCommon != null) store.commit('setShowCommon', to.query.showCommon)
 
-    let fromShowPrivate = from.query.showPrivate != null ? from.query.showPrivate : true
-    let fromShowShared = from.query.showShared != null ? from.query.showShared : true
-    let fromShowCommon = from.query.showCommon != null ? from.query.showCommon : true
+    let toQuery = {
+      toLevels: store.state.viewParameters.levels,
+      toCardsType: store.state.viewParameters.cardsType,
+      toShowPrivate: store.state.viewParameters.showPrivate,
+      toShowShared: store.state.viewParameters.showShared,
+      toShowCommon: store.state.viewParameters.showCommon
+    }
 
-    let toLevels = to.query.levels ? to.query.levels : fromLevels
-    let toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
-
-    let toShowPrivate = to.query.showPrivate != null ? to.query.showPrivate : fromShowPrivate
-    let toShowShared = to.query.showShared != null ? to.query.showShared : fromShowShared
-    let toShowCommon = to.query.showCommon != null ? to.query.showCommon : fromShowCommon
-
-    if (to.name === 'ModelSectionContent') {
+    let toName = to.name
+    if (toName === 'ModelSectionContent') {
       /* just keep the current tab when switching among sections */
       switch (from.name) {
         case 'ModelSectionMessages':
-        next({
-            name: 'ModelSectionMessages',
-            params: {
-              sectionId: to.params.sectionId
-            },
-            query: {
-              levels: toLevels,
-              cardsType: toCardsType,
-              showPrivate: toShowPrivate,
-              showShared: toShowShared,
-              showCommon: toShowCommon
-            },
-            replace: true
-          })
+          toName = 'ModelSectionMessages'
           break
 
         case 'ModelSectionCards':
         case 'ModelSectionCard':
-          next({
-            name: 'ModelSectionCards',
-            params: {
-              sectionId: to.params.sectionId
-            },
-            query: {
-              levels: toLevels,
-              cardsType: toCardsType,
-              showPrivate: toShowPrivate,
-              showShared: toShowShared,
-              showCommon: toShowCommon
-            },
-            replace: true})
+          toName = 'ModelSectionCards'
           break
 
         default:
           next()
-          break
+          return
       }
+    }
+
+    if (toName !== from.name) {
+      let nextPars = {
+        name: toName,
+        params: {
+          sectionId: to.params.sectionId
+        },
+        query: toQuery,
+        replace: true
+      }
+      console.log(nextPars)
+      next(nextPars)
+      return
     } else {
-      if (
-        (toLevels !== fromLevels) ||
-        (toCardsType !== fromCardsType) ||
-        (toShowPrivate !== fromShowPrivate) ||
-        (toShowShared !== fromShowShared) ||
-        (toShowCommon !== fromShowCommon) ||
-        (to.name !== from.name)) {
-        next({
-          name: to.name,
-          params: {
-            sectionId: to.params.sectionId
-          },
-          query: {
-            levels: toLevels,
-            cardsType: toCardsType,
-            showPrivate: toShowPrivate,
-            showShared: toShowShared,
-            showCommon: toShowCommon
-          },
-          replace: true})
-      } else {
-        next()
-      }
+      next()
+      return
     }
   }
 
@@ -138,6 +113,10 @@ export default (to, from, next) => {
       query: {
         cardsType: toCardsType
       },
-      replace: true})
+      replace: true
+    })
+    return
   }
+
+  next()
 }
