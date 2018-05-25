@@ -42,28 +42,6 @@ export default (to, from, next) => {
   }
 
   if (toModelSection) {
-    /* query parameters are:
-      - stored in a global state
-      - if the parameter is not in the "to" page, the value of the global state is used
-      - if the parameter is in the "to" request, the global state is set and the value is used
-      - all the values of the global state are added as query parameters, even if not used, to enable url sharing
-    */
-
-    /* keep the levels and cards url parameters when switching among views. */
-    if (to.query.levels != null) store.commit('setLevels', to.query.levels)
-    if (to.query.cardsType != null) store.commit('setCardsType', to.query.cardsType)
-    if (to.query.showPrivate != null) store.commit('setDhowPrivate', to.query.showPrivate)
-    if (to.query.showShared != null) store.commit('setShowShared', to.query.showShared)
-    if (to.query.showCommon != null) store.commit('setShowCommon', to.query.showCommon)
-
-    let toQuery = {
-      toLevels: store.state.viewParameters.levels,
-      toCardsType: store.state.viewParameters.cardsType,
-      toShowPrivate: store.state.viewParameters.showPrivate,
-      toShowShared: store.state.viewParameters.showShared,
-      toShowCommon: store.state.viewParameters.showCommon
-    }
-
     let toName = to.name
     if (toName === 'ModelSectionContent') {
       /* just keep the current tab when switching among sections */
@@ -81,24 +59,20 @@ export default (to, from, next) => {
           next()
           return
       }
-    }
 
-    if (toName !== from.name) {
       let nextPars = {
         name: toName,
         params: {
           sectionId: to.params.sectionId
         },
-        query: toQuery,
         replace: true
       }
-      console.log(nextPars)
       next(nextPars)
       return
-    } else {
-      next()
-      return
     }
+
+    next()
+    return
   }
 
   if (to.name === 'ModelSectionRead' || to.name === 'ModelSectionReadCard') {

@@ -1,5 +1,6 @@
 const state = {
   levels: 1,
+  isInfiniteLevels: false,
   cardsType: 'card',
   showPrivate: true,
   showShared: true,
@@ -13,17 +14,37 @@ const mutations = {
   setLevels: (state, payload) => {
     state.levels = payload
   },
+  levelUp: (state) => {
+    if (!state.infiniteLevels) {
+      state.levels = state.levels + 1
+    }
+  },
+  levelDown: (state) => {
+    if (!state.infiniteLevels) {
+      if (state.levels > 1) {
+        state.levels = state.levels - 1
+      }
+    }
+  },
+  toggleInifinteLevels: (state) => {
+    state.infiniteLevels = state.infiniteLevels
+  },
   setCardsType: (state, payload) => {
     state.cardsType = payload
   },
-  setShowPrivate: (state, payload) => {
-    state.showPrivate = payload
+  toggleShowPrivate: (state) => {
+    state.showPrivate = !state.showPrivate
   },
-  setShowShared: (state, payload) => {
-    state.showShared = payload
+  toggleShowShared: (state) => {
+    state.showShared = !state.showShared
   },
-  setShowCommon: (state, payload) => {
-    state.showCommon = payload
+  toggleShowCommon: (state) => {
+    state.showCommon = !state.showCommon
+  },
+  showAllTypes: (state) => {
+    state.showPrivate = true
+    state.showShared = true
+    state.showCommon = true
   }
 }
 

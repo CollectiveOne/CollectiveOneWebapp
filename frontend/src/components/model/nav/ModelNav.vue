@@ -56,7 +56,7 @@ export default {
       return this.$store.state.initiative.initiative
     },
     levels () {
-      return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
+      return this.$store.state.viewParameters.levels
     }
   },
 

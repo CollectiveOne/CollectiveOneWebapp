@@ -200,7 +200,7 @@ export default {
       return false
     },
     levels () {
-      return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
+      return this.$store.state.viewParameters.levels
     },
     infiniteLevels () {
       return this.levels === 999

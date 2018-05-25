@@ -60,7 +60,7 @@
               <div v-if="infiniteLevels" class="zoom-controls-cover">
               </div>
             </div>
-            <div @click="levelsInfinite()" class="w3-left cursor-pointer arrow-div w3-border-left" :class="{'control-btn-selected': infiniteLevels}">
+            <div @click="toggleInifinteLevels()" class="w3-left cursor-pointer arrow-div w3-border-left" :class="{'control-btn-selected': infiniteLevels}">
               <img src="./../../assets/infinite-icon.svg" alt="">
             </div>
           </div>
@@ -258,14 +258,6 @@ const sectionHasContent = function (section) {
   return false
 }
 
-const checkBooleanQuery = function (query) {
-  if (typeof (query) === 'boolean') {
-    return query
-  } else {
-    return query === 'true'
-  }
-}
-
 export default {
   components: {
     'app-model-section': ModelSection,
@@ -317,11 +309,11 @@ export default {
         this.$route.name === 'ModelSectionCard'
     },
     levels () {
-      return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
+      return this.$store.state.viewParameters.levels
     },
     infiniteLevels () {
       if (this.isSectionsOrder) {
-        return this.levels === 999
+        return this.$store.state.viewParameters.isInfiniteLevels
       } else {
         return true
       }
@@ -330,22 +322,13 @@ export default {
       return this.$route.query.cardsType ? this.$route.query.cardsType : 'card'
     },
     showPrivate () {
-      if (this.$route.query.showPrivate == null) {
-        return true
-      }
-      return checkBooleanQuery(this.$route.query.showPrivate)
+      return this.$store.state.viewParameters.showPrivate
     },
     showShared () {
-      if (this.$route.query.showShared == null) {
-        return true
-      }
-      return checkBooleanQuery(this.$route.query.showShared)
+      return this.$store.state.viewParameters.showShared
     },
     showCommon () {
-      if (this.$route.query.showCommon == null) {
-        return true
-      }
-      return checkBooleanQuery(this.$route.query.showCommon)
+      return this.$store.state.viewParameters.showCommon
     },
     isSummary () {
       return this.cardsType === 'summary' && this.isCardsContent
@@ -373,7 +356,6 @@ export default {
       this.update()
     },
     cardSortBy () {
-      console.log('udpating due to sortby watch')
       if (!this.isSectionsOrder) {
         this.resetCards()
       } else {
@@ -405,24 +387,14 @@ export default {
       this.resetCards()
     },
     levelUp () {
-      if (!this.infiniteLevels && this.isSectionsOrder) {
-        this.$router.replace({name: this.$route.name, query: {levels: this.levels + 1}})
-      }
+      this.$store.commit('levelUp')
     },
     levelDown () {
-      if (!this.infiniteLevels && this.isSectionsOrder) {
-        if (this.levels > 1) {
-          this.$router.replace({name: this.$route.name, query: {levels: this.levels - 1}})
-        }
-      }
+      this.$store.commit('levelDown')
     },
-    levelsInfinite () {
+    toggleInifinteLevels () {
       if (this.isSectionsOrder) {
-        if (this.infiniteLevels) {
-          this.$router.replace({name: this.$route.name, query: {levels: 1}})
-        } else {
-          this.$router.replace({name: this.$route.name, query: {levels: 999}})
-        }
+        this.$store.commit('toggleInifinteLevels')
       }
     },
     summaryView () {
@@ -450,22 +422,16 @@ export default {
       }
     },
     showPrivateClick () {
-      this.$router.replace({name: 'ModelSectionCards', query: {showPrivate: !this.showPrivate}})
+      this.$store.commit('toggleShowPrivate')
     },
     showSharedClick () {
-      this.$router.replace({name: 'ModelSectionCards', query: {showShared: !this.showShared}})
+      this.$store.commit('toggleShowShared')
     },
     showCommonClick () {
-      this.$router.replace({name: 'ModelSectionCards', query: {showCommon: !this.showCommon}})
+      this.$store.commit('toggleShowCommon')
     },
     showAllClick () {
-      this.$router.replace({
-        name: 'ModelSectionCards',
-        query: {
-          showPrivate: true,
-          showShared: true,
-          showCommon: true
-        }})
+      this.$store.commit('showAllTypes')
     },
     showMore () {
       this.page = this.page + 1
