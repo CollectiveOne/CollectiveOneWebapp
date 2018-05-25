@@ -1,20 +1,21 @@
 <template lang="html">
-  <div class="">
+  <div class="notifications-container">
 
-    <div v-if="notifications.length > 0" class="bell-button cursor-pointer w3-display-container"
+    <div v-if="notifications.length > 0" class="icon-button cursor-pointer w3-display-container"
       @click="showNotificationsClicked()">
-      <i class="fa fa-circle circle"></i>
+      <i v-if="onlyNotificationsUnder" class="fa fa-circle-o circle-o"></i>
+      <i v-else class="fa fa-circle circle"></i>
     </div>
 
     <div v-show="showTable"
       v-click-outside="clickOutsideNotifications"
-      class="notifications-container w3-white w3-card-4 w3-bar-block">
-      <div class="w3-row-padding w3-border-bottom">
-        <div class="w3-col s8 text-div">
-          {{ notifications.length }} new events under {{ section.title }}
+      class="notifications-list-container w3-white w3-card-4 w3-bar-block noselect">
+      <div class="w3-row-padding w3-border-bottom notifications-header">
+        <div class="w3-col s8 text-div w3-center">
+          {{ notifications.length }} new events under <br>{{ element.title }}
         </div>
         <button class="w3-col s4 w3-margin-top w3-margin-bottom w3-button app-button"
-          @click="notificationsRead()">
+          @click="allNotificationsRead()">
           mark as read
         </button>
       </div>
@@ -44,9 +45,17 @@ export default {
   },
 
   props: {
-    section: {
+    element: {
       type: Object,
       default: null
+    },
+    contextType: {
+      type: String,
+      default: 'MODEL_SECTION'
+    },
+    isSelected: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -61,11 +70,8 @@ export default {
   },
 
   computed: {
-    contextType () {
-      return 'MODEL_SECTION'
-    },
     contextElementId () {
-      return this.section.id
+      return this.element.id
     },
     activities () {
       return this.notifications.map(function (n) { return n.activity })
@@ -75,6 +81,41 @@ export default {
     },
     triggerUpdateNotifications () {
       return this.$store.state.support.triggerUpdateNotifications
+    },
+    notificationsHere () {
+      let notificationsHere = []
+
+      switch (this.contextType) {
+        case 'MODEL_SECTION':
+          for (let ix in this.notifications) {
+            if (this.notifications[ix].activity.modelSection) {
+              if (this.notifications[ix].activity.modelSection.id === this.contextElementId) {
+                notificationsHere.push(this.notifications[ix])
+              }
+            }
+          }
+          break
+
+        case 'INITIATIVE':
+          for (let ix in this.notifications) {
+            if (this.notifications[ix].activity.initiative) {
+              if (this.notifications[ix].activity.initiative.id === this.contextElementId) {
+                notificationsHere.push(this.notifications[ix])
+              }
+            }
+          }
+      }
+
+      return notificationsHere
+    },
+    notificationsHereMessages () {
+      return this.notificationsHere.filter((e) => { return e.activity.type === 'MESSAGE_POSTED' })
+    },
+    onlyNotificationsUnder () {
+      if (this.notifications.length > 0) {
+        return this.notificationsHere.length === 0
+      }
+      return false
     }
   },
 
@@ -84,6 +125,9 @@ export default {
       if (this.notifications.length > 0) {
         this.updateNotifications()
       }
+    },
+    '$store.state.socket.connected' () {
+      this.handleSocket()
     }
   },
 
@@ -100,6 +144,14 @@ export default {
           /* check that new notifications arrived */
           this.notifications = response.data.data
           this.allShown = this.notifications.length < 10
+
+          if (this.isSelected && this.$route.name === 'ModelSectionMessages') {
+            /* autoread message notifications of this section */
+            this.messageNotificationsRead()
+          }
+
+          /* push all notifications */
+          this.$store.dispatch('addPushNotifications', this.notifications)
         }).catch(function (error) {
           console.log(error)
         })
@@ -125,9 +177,8 @@ export default {
       })
     },
 
-    notificationsRead () {
-      this.axios.put(this.url + '/read', {
-        }).then((response) => {
+    allNotificationsRead () {
+      this.axios.put(this.url + '/read', {}).then((response) => {
           /* check that new notifications arrived */
           this.$store.commit('triggerUpdateNotifications')
           this.updateNotifications()
@@ -135,6 +186,19 @@ export default {
         }).catch(function (error) {
           console.log(error)
         })
+    },
+
+    messageNotificationsRead () {
+      let idsList = this.notificationsHereMessages.map((e) => e.id)
+      if (idsList.length > 0) {
+        this.axios.put('/1/notifications/read', idsList).then((response) => {
+          /* check that new notifications arrived */
+          this.$store.commit('triggerUpdateNotifications')
+          this.updateNotifications()
+        }).catch(function (error) {
+          console.log(error)
+        })
+      }
     },
 
     showMore () {
@@ -167,23 +231,58 @@ export default {
     },
     show () {
       this.showTable = true
+    },
+    handleSocket () {
+      let url = ''
+      switch (this.contextType) {
+        case 'MODEL_CARD':
+          url = '/channel/activity/model/card/' + this.contextElementId
+          break
+
+        case 'MODEL_SECTION':
+          url = '/channel/activity/model/section/' + this.contextElementId
+          break
+
+        case 'INITIATIVE':
+          url = '/channel/activity/model/initiative/' + this.contextElementId
+          break
+      }
+
+      this.subscription = this.$store.dispatch('subscribe', {
+        url: url,
+        onMessage: (tick) => {
+          var message = tick.body
+          if (message === 'UPDATE') {
+            this.updateNotifications()
+          }
+        }
+      })
     }
   },
 
   created () {
     this.updateNotifications()
+    this.handleSocket()
+  },
+
+  beforeDestroy () {
+    this.$store.dispatch('unsubscribe', this.subscription)
   }
 }
 </script>
 
 <style scoped>
 
+.notifications-header {
+  font-size: 16px;
+}
+
 .text-div {
   padding: 16px 12px;
   text-align: right;
 }
 
-.bell-button {
+.icon-button {
   width: 30px;
   text-align: center;
 }
@@ -193,12 +292,22 @@ export default {
   font-size: 10px;
 }
 
+.circle-o {
+  color: #b35454;
+  font-size: 10px;
+}
+
 .notifications-container {
-  width:420px;
+}
+
+.notifications-list-container {
+  width: 420px;
   position: absolute;
-  margin-left: -212px;
+  top: 30px;
+  left: 16px;
   max-height: calc(100vh - 80px);
   overflow-y: auto;
+  z-index: 2;
 }
 
 </style>

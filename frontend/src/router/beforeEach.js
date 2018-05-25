@@ -8,7 +8,13 @@ export default (to, from, next) => {
      *  is the initaitive section
     */
 
-    next(to.path + '/overview')
+    next({
+      name: 'InitiativeOverview',
+      params: {
+        initiativeId: to.params.initiativeId
+      },
+      replace: true
+    })
   } else {
     /** select animation based on column and level */
     var animation = ''
@@ -35,11 +41,19 @@ export default (to, from, next) => {
 
   if (toModelSection) {
     /* keep the levels and cards url parameters when switching among views. */
-    var fromLevels = from.query.levels ? from.query.levels : '1'
-    var fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
+    let fromLevels = from.query.levels ? from.query.levels : '1'
+    let fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
 
-    var toLevels = to.query.levels ? to.query.levels : fromLevels
-    var toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
+    let fromShowPrivate = from.query.showPrivate != null ? from.query.showPrivate : true
+    let fromShowShared = from.query.showShared != null ? from.query.showShared : true
+    let fromShowCommon = from.query.showCommon != null ? from.query.showCommon : true
+
+    let toLevels = to.query.levels ? to.query.levels : fromLevels
+    let toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
+
+    let toShowPrivate = to.query.showPrivate != null ? to.query.showPrivate : fromShowPrivate
+    let toShowShared = to.query.showShared != null ? to.query.showShared : fromShowShared
+    let toShowCommon = to.query.showCommon != null ? to.query.showCommon : fromShowCommon
 
     if (to.name === 'ModelSectionContent') {
       /* just keep the current tab when switching among sections */
@@ -52,8 +66,12 @@ export default (to, from, next) => {
             },
             query: {
               levels: toLevels,
-              cardsType: toCardsType
-            }
+              cardsType: toCardsType,
+              showPrivate: toShowPrivate,
+              showShared: toShowShared,
+              showCommon: toShowCommon
+            },
+            replace: true
           })
           break
 
@@ -66,8 +84,12 @@ export default (to, from, next) => {
             },
             query: {
               levels: toLevels,
-              cardsType: toCardsType
-            }})
+              cardsType: toCardsType,
+              showPrivate: toShowPrivate,
+              showShared: toShowShared,
+              showCommon: toShowCommon
+            },
+            replace: true})
           break
 
         default:
@@ -78,6 +100,9 @@ export default (to, from, next) => {
       if (
         (toLevels !== fromLevels) ||
         (toCardsType !== fromCardsType) ||
+        (toShowPrivate !== fromShowPrivate) ||
+        (toShowShared !== fromShowShared) ||
+        (toShowCommon !== fromShowCommon) ||
         (to.name !== from.name)) {
         next({
           name: to.name,
@@ -86,11 +111,30 @@ export default (to, from, next) => {
           },
           query: {
             levels: toLevels,
-            cardsType: toCardsType
-          }})
+            cardsType: toCardsType,
+            showPrivate: toShowPrivate,
+            showShared: toShowShared,
+            showCommon: toShowCommon
+          },
+          replace: true})
       } else {
         next()
       }
     }
+  }
+
+  if (to.name === 'ModelSectionRead' || to.name === 'ModelSectionReadCard') {
+    let fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
+    let toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
+
+    next({
+      name: to.name,
+      params: {
+        sectionId: to.params.sectionId
+      },
+      query: {
+        cardsType: toCardsType
+      },
+      replace: true})
   }
 }

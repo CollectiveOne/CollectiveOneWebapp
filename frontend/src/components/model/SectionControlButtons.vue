@@ -55,7 +55,10 @@
       <div class="expand-btn cursor-pointer"
         @click="expanded =! expanded"
         v-click-outside="clickOutsideMenu">
-        <i class="fa fa-bars" aria-hidden="true"></i>
+        <i class="fa"
+          :class="{'fa-bars': !onlyAdd, 'fa-plus': onlyAdd}"
+          aria-hidden="true">
+        </i>
       </div>
 
       <app-drop-down-menu
@@ -123,6 +126,14 @@ export default {
     inSection: {
       type: Object,
       deafult: null
+    },
+    hideAdd: {
+      type: Boolean,
+      deafult: false
+    },
+    onlyAdd: {
+      type: Boolean,
+      deafult: false
     }
   },
 
@@ -139,19 +150,21 @@ export default {
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
     menuItems () {
-      let menuItems = [
-        { text: 'add card', value: 'addCard', faIcon: 'fa-plus' },
-        { text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' },
-        { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
-        { text: 'notifications', value: 'configNotifications', faIcon: 'fa-cog' } ]
+      let menuItems = []
 
-      if (this.inSection !== null) {
-        menuItems = menuItems.concat([
-          { text: 'remove', value: 'remove', faIcon: 'fa-times' },
-          { text: 'delete', value: 'delete', faIcon: 'fa-times' }
-        ])
-      }
+      if (this.isLoggedAnEditor && !this.onlyAdd) menuItems.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
+      if (this.isLoggedAnEditor && !this.hideAdd) menuItems.push({ text: 'add card', value: 'addCard', faIcon: 'fa-plus' })
+      if (this.isLoggedAnEditor && !this.hideAdd) menuItems.push({ text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' })
+
+      if (!this.onlyAdd) menuItems.push({ text: 'notifications', value: 'configNotifications', faIcon: 'fa-cog' })
+
+      if (this.isLoggedAnEditor && this.inSection !== null && !this.onlyAdd) menuItems.push({ text: 'remove', value: 'remove', faIcon: 'fa-times' })
+      if (this.isLoggedAnEditor && this.inSection !== null && !this.onlyAdd) menuItems.push({ text: 'delete', value: 'delete', faIcon: 'fa-times' })
+
       return menuItems
    }
   },
@@ -183,11 +196,10 @@ export default {
       this.expanded = false
       this.axios.put('/1/model/section/' + this.inSection.id + '/removeSubsection/' + this.section.id,
         {}).then((response) => {
-          console.log(response)
           if (response.data.result === 'success') {
             this.removeIntent = false
             this.expanded = false
-            this.$store.commit('triggerUpdateSectionsTree')
+            this.$emit('section-removed')
           } else {
             this.showOutputMessage(response.data.message)
           }
@@ -229,10 +241,10 @@ export default {
   position: absolute;
   width: 180px;
   margin-top: 3px;
-  margin-left: -150px;
+  margin-left: -120px;
   text-align: left;
   font-size: 15px;
-  z-index: 1;
+  z-index: 2;
 }
 
 .delete-intent-div {

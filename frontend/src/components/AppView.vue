@@ -1,5 +1,5 @@
 <template lang="html">
-  <div>
+  <div class="app-view">
     <div class="w3-row app-content">
       <router-view></router-view>
     </div>
@@ -46,7 +46,16 @@ export default {
 
 <style scoped>
 
+.app-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .app-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 </style>

@@ -2,7 +2,7 @@
   <div v-if="cardWrapper" class="card-base-div">
 
     <div class="card-content-container"
-      draggable="true"
+      :draggable="isDraggable"
       @dragstart="dragStart($event)">
 
       <component
@@ -10,6 +10,9 @@
         :cardWrapper="cardWrapper"
         :inSection="inSection"
         :forceUpdate="forceUpdate"
+        :inCardSelector="inCardSelector"
+        :cardRouteName="cardRouteName"
+        :hideCardControls="hideCardControls"
         @update="update()"
         @updateCards="$emit('updateCards')">
       </component>
@@ -49,6 +52,24 @@ export default {
     forceUpdate: {
       type: Boolean,
       default: true
+    },
+    inCardSelector: {
+      type: Boolean,
+      default: false
+    },
+    hideCardControls: {
+      type: Boolean,
+      default: false
+    },
+    cardRouteName: {
+      type: String,
+      default: 'ModelSectionCard'
+    }
+  },
+
+  watch: {
+    cardWrapperInit () {
+      this.cardWrapper = this.cardWrapperInit
     }
   },
 
@@ -59,6 +80,22 @@ export default {
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
+    authorIsLoggedUser () {
+      if (this.$store.state.user.profile) {
+        return this.$store.state.user.profile.c1Id === this.cardWrapper.creator.c1Id
+      }
+      return false
+    },
+    isDraggable () {
+      if (this.cardWrapper.scope === 'COMMON') {
+        return this.isLoggedAnEditor
+      } else {
+        return this.authorIsLoggedUser
+      }
+    },
     cardComponent () {
       switch (this.type) {
         case 'summary':
@@ -78,7 +115,11 @@ export default {
 
   methods: {
     update () {
-      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id, {
+        params: {
+          inSectionId: this.inSection ? this.inSection.id : ''
+        }
+      }).then((response) => {
         this.cardWrapper = response.data.data
       })
     },
@@ -86,7 +127,8 @@ export default {
       var moveCardData = {
         type: 'MOVE_CARD',
         cardWrapperId: this.cardWrapper.id,
-        fromSectionId: this.inSection.id
+        fromSectionId: this.inSection.id,
+        scope: this.cardWrapper.scope
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
 
@@ -105,6 +147,40 @@ export default {
   }
 }
 </script>
+
+<style>
+
+.card-content-container,
+.card-content-container h1,
+.card-content-container h2,
+.card-content-container h3,
+.card-content-container h4,
+.card-content-container h5
+{
+  font-family: 'Open Sans', sans-serif;
+}
+
+.card-content-container h1 {
+  font-size: 19px;
+}
+
+.card-content-container h2 {
+  font-size: 17px;
+}
+
+.card-content-container h3,
+.card-content-container h4,
+.card-content-container h5 {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.card-title {
+  color: #15a5cc;
+}
+
+</style>
+
 
 <style scoped>
 

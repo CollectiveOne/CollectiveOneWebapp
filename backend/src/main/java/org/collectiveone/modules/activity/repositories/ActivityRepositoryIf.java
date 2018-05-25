@@ -14,26 +14,43 @@ public interface ActivityRepositoryIf extends CrudRepository<Activity, UUID> {
 	
 	Activity findTop1ByAssignation_IdAndTypeOrderByTimestampDesc(UUID assignationId, ActivityType type);
 	
-	@Query("SELECT act FROM Activity act WHERE act.modelSection.id IN ?1 OR act.modelCardWrapper.id IN ?2 ORDER BY act.timestamp DESC")
+	@Query("SELECT act FROM Activity act "
+			+ "LEFT JOIN act.modelCardWrapperAddition crdWrpAdd "
+			+ "WHERE act.modelSection.id IN ?1 "
+			+ "OR act.modelCardWrapper.id IN ?2 "
+			+ "OR act.onSection.id IN ?1 "
+			+ "OR act.fromSection.id IN ?1 "
+			+ "OR crdWrpAdd.section.id IN ?1 "
+			+ "OR crdWrpAdd.cardWrapper.id IN ?2 "
+			+ "ORDER BY act.timestamp DESC")
 	Page<Activity> findOfSectionsOrCards(List<UUID> sectionIds, List<UUID> cardsWrappersIds, Pageable pageable);
 	
-	@Query("SELECT act FROM Activity act WHERE (act.modelSection.id IN ?1 OR act.modelCardWrapper.id IN ?2) AND (act.type = ?3) ORDER BY act.timestamp DESC")
+	@Query("SELECT act FROM Activity act "
+			+ "LEFT JOIN act.modelCardWrapperAddition crdWrpAdd "
+			+ "WHERE (act.modelSection.id IN ?1 "
+			+ "OR act.modelCardWrapper.id IN ?2 "
+			+ "OR act.onSection.id IN ?1 "
+			+ "OR act.fromSection.id IN ?1 "
+			+ "OR crdWrpAdd.section.id IN ?1 "
+			+ "OR crdWrpAdd.cardWrapper.id IN ?2) "
+			+ "AND (act.type = ?3) "
+			+ "ORDER BY act.timestamp DESC")
 	Page<Activity> findOfSectionsOrCardsAndType(List<UUID> sectionIds, List<UUID> cardsWrappersIds, ActivityType type, Pageable pageable);
 	
-	@Query("SELECT act FROM Activity act WHERE act.initiative.id IN ?1 ORDER BY act.timestamp DESC")
+	@Query("SELECT act FROM Activity act "
+			+ "WHERE act.initiative.id IN ?1 "
+			+ "ORDER BY act.timestamp DESC")
 	Page<Activity> findOfInitiatives(List<UUID> initiativesId, Pageable pageable);
 	
-	@Query("SELECT act FROM Activity act WHERE act.initiative.id IN ?1 AND act.type = ?2 ORDER BY act.timestamp DESC")
+	@Query("SELECT act FROM Activity act "
+			+ "WHERE act.initiative.id IN ?1 "
+			+ "AND act.type = ?2 "
+			+ "ORDER BY act.timestamp DESC")
 	Page<Activity> findOfInitiativesAndType(List<UUID> initiativesId, ActivityType type, Pageable pageable);
 	
-	@Query("SELECT act FROM Activity act WHERE act.modelCardWrapper.id = ?1 AND act.type = ?2 ORDER BY act.timestamp DESC")
+	@Query("SELECT act FROM Activity act "
+			+ "WHERE act.modelCardWrapper.id = ?1 "
+			+ "AND act.type = ?2 ORDER BY act.timestamp DESC")
 	List<Activity> findOfCard(UUID cardWrapperId, ActivityType type);	
-	
-	Activity findByIdAndMentions_C1Id(UUID activityId, UUID userId);
-	
-	default Boolean userMentioned(UUID activityId, UUID userId) {
-		Activity res = findByIdAndMentions_C1Id(activityId, userId);
-		return res != null;
-	}
-	
+
 }

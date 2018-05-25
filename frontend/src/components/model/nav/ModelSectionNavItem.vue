@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="w3-row">
+  <div class="w3-row section-nav-item-container">
 
-    <div class="w3-row"
+    <div class="w3-row section-nav-item-first-row"
       :class="rowClass"
       draggable="true"
       @dragstart="dragStart($event)"
@@ -13,29 +13,41 @@
 
       </div>
 
-      <div @click="showSubsections = !showSubsections" class="circle-div cursor-pointer">
-        <div v-if="hasSubsections">
-          <i v-if="!showSubsections" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-          <i v-else class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+      <div :class="arrowAndTitleClass" class="arrow-and-title">
+        <div @click="toggleSubsections()" class="circle-div cursor-pointer">
+          <div v-if="hasSubsections">
+            <i v-if="!showSubsections" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+            <i v-else class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+          </div>
+          <div v-else>
+            <i @click="sectionSelected()" class="fa fa-circle" aria-hidden="true"></i>
+          </div>
         </div>
-        <div v-else>
-          <i class="fa fa-circle" aria-hidden="true"></i>
+        <div @click="sectionSelected()" @dblclick="toggleSubsections()"
+          class="title-div cursor-pointer noselect" :class="titleClass"
+          @mouseover="hoveringOnTitle = true"
+          @mouseenter="hoveringOnTitle = true"
+          @mouseleave="hoveringOnTitle = false">
+          {{ sectionTitle }}
         </div>
       </div>
-      <div @click="sectionSelected()" class="title-div cursor-pointer noselect">
-        {{ section.isTopModelSection ? 'All' : section.title }}
-      </div>
-      <div class="notification-div">
+
+      <div v-if="section" class="notification-div">
         <app-notifications-list
-          :section="section"
-          :forceUpdate="forceUpdateNotifications">
+          :element="section"
+          :forceUpdate="forceUpdateNotifications"
+          :isSelected="isSelected">
         </app-notifications-list>
       </div>
-      <div class="control-div">
-        <app-section-control-buttons :section="section" :inSection="inSection">
+      <div v-if="$store.state.user.authenticated" class="control-div" :class="{'fa-button': !highlight, 'fa-button-dark': highlight}">
+        <app-section-control-buttons
+          :section="section"
+          :inSection="inSection"
+          @section-removed="sectionRemoved()">
         </app-section-control-buttons>
       </div>
     </div>
+
     <div :class="{'slider-container': animating}">
       <transition name="slideDownUp"
         @before-enter="animating = true"
@@ -43,12 +55,17 @@
         @before-leave="animating = true"
         @after-leave="animating = false">
 
-        <div v-if="showSubsections && subsections.length > 0" class="w3-row subsections-container">
-          <app-model-section-nav-item v-for="subsection in subsections"
+        <div v-if="showSubsections && subsections.length > 0" class="w3-row subsections-container"
+          :class="{'subsection-container-selected': highlight}" >
+          <app-model-section-nav-item
+            class="subsection-row"
+            v-for="(subsection, ix) in subsections"
             :inSection="section"
             :section="subsection" :key="subsection.id"
             :highlightLevel="highlightLevelUse - 1"
-            class="subsection-row">
+            :coordinate="coordinate.concat(ix)"
+            :parentIsSelected="isSelected || parentIsSelected"
+            @section-selected="$emit('section-selected', $event)">
           </app-model-section-nav-item>
         </div>
       </transition>
@@ -72,9 +89,6 @@ export default {
   },
 
   props: {
-    section: {
-      type: Object
-    },
     inSection: {
       type: Object,
       default: null
@@ -82,53 +96,114 @@ export default {
     highlightLevel: {
       type: Number,
       default: 0
+    },
+    coordinate: {
+      type: Array,
+      default: () => { return [] }
+    },
+    parentIsSelected: {
+      type: Boolean,
+      default: false
     }
   },
 
   data () {
     return {
       showSubsections: false,
-      subsections: [],
       animating: false,
       draggingOverWithCardFlag: false,
       draggingOverWithSectionSameLevelFlag: false,
       draggingOverWithSectionInsideFlag: false,
       resetIntervalId: 0,
-      forceUpdateNotifications: false
+      forceUpdateNotifications: false,
+      subscription: null,
+      hoveringOnTitle: false
     }
   },
 
   watch: {
-    showSubsections () {
-      if (this.showSubsections) {
-        this.updateSubsections()
-      }
-    },
-    '$route' () {
+    '$store.state.sectionsTree.triggerUpdateExpands' () {
       this.checkExpandSubsections()
     },
-    '$store.state.support.triggerUpdateSectionsTree' () {
-      this.updateSubsections()
+    levels () {
+      this.checkExpandSubsections()
+    },
+    section () {
+      this.subscribeSocket()
     }
   },
 
   computed: {
+    sectionData () {
+      return this.$store.getters.getSectionDataAtCoord(this.coordinate)
+    },
+    section () {
+      if (this.sectionData) {
+        return this.sectionData.section
+      }
+      return null
+    },
+    subsections () {
+      if (this.sectionData) {
+        return this.sectionData.subsectionsData.map(e => e.section)
+      }
+      return []
+    },
+    highlight () {
+      return this.highlightLevelUse > 0
+    },
     rowClass () {
-      return {
-        'section-selected': this.highlightLevelUse > 0,
+      let thisClasses = {
+        'section-selected': this.highlight,
         'dragging-over-with-card': this.draggingOverWithCardFlag,
         'dragging-over-with-section-same-level': this.draggingOverWithSectionSameLevelFlag,
         'dragging-over-with-section-inside': this.draggingOverWithSectionInsideFlag
       }
+
+      return thisClasses
+    },
+    arrowAndTitleClass () {
+      let thisClasses = {}
+
+      if (this.highlight) {
+        thisClasses['title-selected'] = true
+      } else {
+        if (this.parentIsSelected) {
+          thisClasses['title-inside-section-selected'] = true
+        }
+      }
+
+      return thisClasses
+    },
+    titleClass () {
+      return {
+        'title-hover': this.hoveringOnTitle && !this.highlight
+      }
+    },
+    sectionTitle () {
+      if (this.section) {
+        return this.section.title
+        // return this.section.isTopModelSection ? 'All' : this.section.title
+      }
+      return ''
     },
     hasSubsections () {
-      return this.section.nSubsections > 0
+      if (this.section) {
+        return this.section.nSubsections > 0
+      }
+      return false
     },
     isSelected () {
-      return this.$route.params.sectionId === this.section.id
+      if (this.section) {
+        return this.$route.params.sectionId === this.section.id
+      }
+      return false
     },
     levels () {
       return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
+    },
+    infiniteLevels () {
+      return this.levels === 999
     },
     highlightLevelUse () {
       if (this.isSelected) {
@@ -142,24 +217,67 @@ export default {
   },
 
   methods: {
-    sectionSelected () {
-      this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
+    toggleSubsections () {
+      if (this.showSubsections) {
+        this.collapseSubsections()
+      } else {
+        this.expandSubsections()
+      }
     },
-    addSubsection () {
-      this.showNewSubsectionModal = true
+    expandSubsections () {
+      this.showSubsections = true
+      this.$store.dispatch('expandSubsection', this.coordinate)
     },
-    updateSubsections () {
-      this.axios.get('/1/model/section/' + this.section.id, { params: { levels: 1 } }).then((response) => {
-        if (response.data.result === 'success') {
-          this.subsections = response.data.data.subsections
-        }
-      })
+    collapseSubsections () {
+      this.showSubsections = false
+      this.$store.dispatch('collapseSubsection', this.coordinate)
     },
     checkExpandSubsections () {
       if (this.highlightLevelUse > 1) {
-        this.showSubsections = true
+        if (!this.infiniteLevels) {
+          this.expandSubsections()
+        }
       } else {
-        // this.showSubsections = false
+        if (this.sectionData) {
+          if (this.sectionData.expand) {
+            this.expandSubsections()
+          }
+        }
+      }
+    },
+    sectionSelected () {
+      this.$emit('section-selected', this.section)
+      if (this.section) {
+        this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
+      }
+    },
+    updateInTree () {
+      // if (this.section) {
+      //   this.$store.dispatch('updateSectionDataInTree', {sectionId: this.section.id})
+      // }
+    },
+    updateParentInTree () {
+      if (this.inSection) {
+        this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inSection.id})
+      }
+    },
+    sectionRemoved () {
+      if (this.isSelected) {
+        this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.inSection.id}})
+      }
+      this.updateParentInTree()
+    },
+    subscribeSocket () {
+      if (this.subscription === null) {
+        this.subscription = this.$store.dispatch('subscribe', {
+          url: '/channel/activity/model/section/' + this.section.id,
+          onMessage: (tick) => {
+            var message = tick.body
+            if (message === 'UPDATE') {
+              this.updateInTree()
+            }
+          }
+        })
       }
     },
     dragStart (event) {
@@ -274,18 +392,20 @@ export default {
               beforeSubsectionId: beforeSubsectionId
             }
           }).then((response) => {
-            this.$store.commit('triggerUpdateSectionsTree')
+            this.$store.dispatch('updateSectionDataInTree', {sectionId: dragData.fromSectionId})
+            this.$store.dispatch('updateSectionDataInTree', {sectionId: onSectionId})
           })
         } else {
-          /* copy card without removing it */
+          /* copy section without removing it */
           this.axios.put('/1/model/section/' + onSectionId +
             '/subsection/' + dragData.sectionId, {}, {
               params: {
                 beforeSubsectionId: beforeSubsectionId
               }
             }).then((response) => {
-            this.$store.commit('triggerUpdateSectionsTree')
-          })
+              this.$store.dispatch('updateSectionDataInTree', {sectionId: onSectionId})
+              this.$store.dispatch('updateSectionDataInTree', {sectionId: dragData.fromSectionId})
+            })
         }
       }
 
@@ -293,65 +413,116 @@ export default {
     }
   },
 
+  created () {
+    if (this.section) {
+      this.subscribeSocket()
+    }
+  },
+
   mounted () {
     this.checkExpandSubsections()
+  },
+
+  beforeDestroy () {
+    if (this.subscription) {
+      this.$store.dispatch('unsubscribe', this.subscription)
+    }
   }
+
 }
 </script>
 
 <style scoped>
 
+.section-nav-item-container {
+  color: #313942;
+}
+
 .section-selected {
-  background-color: #797474;
-  transition: background-color 300ms ease;
-  color: white;
+  background-color: #313942;
+  transition: all 300ms ease;
+  border-color: #3e464e;
+}
+
+.title-selected {
+  font-weight: bold;
+  color:  #15a5cc;
+}
+
+.title-inside-section-selected {
+  color: #9ba7a8;
+}
+
+.section-nav-item-first-row {
+}
+
+.subsections-container {
+  padding-left: 20px;
+}
+
+.subsection-container-selected {
+  background-color: #313942;
+}
+
+.subsection-row {
 }
 
 .dragging-over-with-card {
-  background-color: #cfcfcf;
+  background-color: #637484;
 }
 
 .dragging-same-level-clue {
   height: 5px;
-  background-color: #575757;
+  background-color: #637484;
   border-radius: 2.5px;
 }
 
 .dragging-over-with-section-inside {
-  background-color: #cfcfcf;
+  background-color: #637484;
+}
+
+.arrow-and-title {
+  padding: 3px 0px;
+  font-size: 18px;
+  float: left;
+  width: calc(100% - 30px - 30px);
 }
 
 .circle-div {
   width: 30px;
   float: left;
   text-align: center;
+  padding: 3px 0px;
+  transition: all 300ms ease;
+}
+
+.circle-div:hover {
+  color: #106e87;
+}
+
+.title-hover {
+  color: #106e87;
 }
 
 .title-div {
-  width: calc(100% - 30px - 30px - 30px);
+  width: calc(100% - 30px);
   float: left;
+  padding: 3px 0px;
+  transition: all 300ms ease;
 }
 
 .control-div {
   text-align: center;
   width: 30px;
   float: left;
+  padding: 8px 0px;
 }
 
 .notification-div {
   min-height: 1px;
   width: 30px;
   float: left;
-}
-
-.subsections-container {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 25px;
-}
-
-.subsection-row {
-  padding-top: 5px;
+  padding-top: 8px;
 }
 
 </style>

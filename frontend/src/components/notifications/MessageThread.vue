@@ -5,7 +5,8 @@
         :reverse="true"
         :addBorders="false"
         :showMessages="true"
-        :onlyMessages="showOnlyMessages"
+        :onlyMessages="onlyMessages"
+        :triggerRefresh="triggerRefresh"
         :triggerUpdate="triggerUpdate"
         :contextType="contextType"
         :contextElementId="contextElementId"
@@ -38,21 +39,11 @@
         v-model="newMessageText"
         placeholder="say something"
         :showToolbar="false"
-        :showSend="true"
+        :showSendAndMentions="true"
         @c-focus="writting = true"
         @c-blur="writting = false"
         @send="send($event)">
       </app-markdown-editor>
-    </div>
-    <div class="w3-display-topright only-messages-button">
-      <button
-        class="w3-button app-button tooltip" type="button" name="button"
-        @click="showOnlyMessagesClicked()">
-        <span v-if="!showOnlyMessages"><i class="fa fa-comment-o" aria-hidden="true"></i></span>
-        <span v-else=""><i class="fa fa-list" aria-hidden="true"></i></span>
-        <span v-if="showOnlyMessages" class="tooltiptext gray-1">show activity too</span>
-        <span v-else class="tooltiptext gray-1">show only messages</span>
-      </button>
     </div>
   </div>
 </template>
@@ -74,11 +65,15 @@ export default {
       type: String,
       default: ''
     },
+    contextOfContextElementId: {
+      type: String,
+      default: ''
+    },
     url: {
       type: String,
       default: ''
     },
-    onlyMessagesInit: {
+    onlyMessages: {
       type: Boolean,
       defaul: false
     },
@@ -91,16 +86,16 @@ export default {
   data () {
     return {
       newMessageText: '',
-      triggerUpdate: true,
       intervalId: 0,
-      showOnlyMessages: false,
       editing: false,
       messageToEdit: null,
       showMembersOnly: false,
       writting: false,
       lastMessage: null,
       replying: false,
-      replyingToActivity: null
+      replyingToActivity: null,
+      triggerRefresh: false,
+      triggerUpdate: false
     }
   },
 
@@ -168,9 +163,10 @@ export default {
     cancelReply () {
       this.replying = false
     },
-    send () {
+    send (data) {
       var message = {
-        text: this.newMessageText
+        text: this.newMessageText,
+        uuidsOfMentions: data.mentions
       }
       if (!this.editing) {
         var contextType = ''
@@ -194,11 +190,17 @@ export default {
           }
         }
 
-        this.axios.post('/1/messages/' + contextType + '/' + contextElementId, message).then((response) => {
+        this.axios.post(
+          '/1/messages/' + contextType + '/' + contextElementId,
+          message, {
+            params: {
+              contextOfContextElementId: this.contextOfContextElementId
+            }
+          }).then((response) => {
           if (response.data.result === 'success') {
             this.replying = false
             this.newMessageText = ''
-            this.triggerUpdate = !this.triggerUpdate
+            this.triggerRefresh = !this.triggerRefresh
           } else {
             this.showMembersOnly = true
           }
@@ -208,7 +210,7 @@ export default {
           if (response.data.result === 'success') {
             this.editing = false
             this.newMessageText = ''
-            this.triggerUpdate = !this.triggerUpdate
+            this.triggerRefresh = !this.triggerRefresh
           }
         })
       }
@@ -251,18 +253,19 @@ export default {
 .thread-container {
   height: 100%;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
 }
 
 .history-container {
   min-height: 60px;
-  height: calc(100% - 120px);
   overflow: auto;
   flex-grow: 1;
 }
 
 .bottom-container {
-  flex-grow: 1;
+  min-height: 50px;
+  flex-shrink: 0;
 }
 
 .only-messages-button {

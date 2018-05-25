@@ -9,6 +9,9 @@ public class NotificationDto {
 	private String pushState;
 	private String emailNowState;
 	private String emailSummaryState;
+	private String message;
+	private String url;
+	private Boolean isHtml;
 	
 	public String getId() {
 		return id;
@@ -51,6 +54,24 @@ public class NotificationDto {
 	}
 	public void setEmailSummaryState(String emailSummaryState) {
 		this.emailSummaryState = emailSummaryState;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	public Boolean getIsHtml() {
+		return isHtml;
+	}
+	public void setIsHtml(Boolean isHtml) {
+		this.isHtml = isHtml;
 	}
 	
 }

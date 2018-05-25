@@ -17,9 +17,10 @@ public class ModelSectionDto {
 	private String description;
 	private Boolean subElementsLoaded;
 	private Integer nSubsections;
-	private Integer nCards;
 	
-	private List<ModelCardWrapperDto> cardsWrappers = new ArrayList<ModelCardWrapperDto>();
+	private List<ModelCardWrapperDto> cardsWrappersPrivate = new ArrayList<ModelCardWrapperDto>();
+	private List<ModelCardWrapperDto> cardsWrappersShared = new ArrayList<ModelCardWrapperDto>();
+	private List<ModelCardWrapperDto> cardsWrappersCommon = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelSectionDto> subsections = new ArrayList<ModelSectionDto>();
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
 	
@@ -82,11 +83,11 @@ public class ModelSectionDto {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public List<ModelCardWrapperDto> getCardsWrappers() {
-		return cardsWrappers;
+	public List<ModelCardWrapperDto> getCardsWrappersCommon() {
+		return cardsWrappersCommon;
 	}
-	public void setCardsWrappers(List<ModelCardWrapperDto> cardsWrappers) {
-		this.cardsWrappers = cardsWrappers;
+	public void setCardsWrappersCommon(List<ModelCardWrapperDto> cardsWrappersCommon) {
+		this.cardsWrappersCommon = cardsWrappersCommon;
 	}
 	public List<ModelSectionDto> getSubsections() {
 		return subsections;
@@ -106,17 +107,24 @@ public class ModelSectionDto {
 	public void setnSubsections(Integer nSubsections) {
 		this.nSubsections = nSubsections;
 	}
-	public Integer getnCards() {
-		return nCards;
-	}
-	public void setnCards(Integer nCards) {
-		this.nCards = nCards;
-	}
 	public List<ModelSectionDto> getInSections() {
 		return inSections;
 	}
 	public void setInSections(List<ModelSectionDto> inSections) {
 		this.inSections = inSections;
 	}
+	public List<ModelCardWrapperDto> getCardsWrappersPrivate() {
+		return cardsWrappersPrivate;
+	}
+	public void setCardsWrappersPrivate(List<ModelCardWrapperDto> cardsWrappersPrivate) {
+		this.cardsWrappersPrivate = cardsWrappersPrivate;
+	}
+	public List<ModelCardWrapperDto> getCardsWrappersShared() {
+		return cardsWrappersShared;
+	}
+	public void setCardsWrappersShared(List<ModelCardWrapperDto> cardsWrappersShared) {
+		this.cardsWrappersShared = cardsWrappersShared;
+	}
+	
 	
 }

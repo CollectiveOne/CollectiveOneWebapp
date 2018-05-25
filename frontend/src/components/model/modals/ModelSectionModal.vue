@@ -25,12 +25,12 @@
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
             <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
-              :class="{'border-blue': !addExisting}"
+              :class="{'border-blue-app': !addExisting}"
               @click="addExisting = false">
               <h5 class="noselect" :class="{'bold-text': !addExisting}">Create New</h5>
             </div>
             <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
-              :class="{'border-blue': addExisting}"
+              :class="{'border-blue-app': addExisting}"
               @click="addExisting = true">
               <h5 class="noselect" :class="{'bold-text': addExisting}">Add Existing</h5>
             </div>
@@ -300,38 +300,33 @@ export default {
 
       if (ok) {
         var sectionDto = JSON.parse(JSON.stringify(this.editedSection))
-        var responseF = (response) => {
-          this.sendingData = false
-          if (response.data.result === 'success') {
-            this.closeThis()
-            this.$store.commit('triggerUpdateSectionsTree')
-            this.$store.dispatch('refreshCurrentSection')
-          } else {
-            this.showOutputMessage(response.data.message)
-          }
-        }
 
         if (this.isNew) {
           if (!this.addExisting) {
-            if (this.inInitiative) {
-              /* create new section */
-              this.sendingData = true
-              this.axios.post('/1/model/section/', sectionDto)
-                .then(responseF).catch((error) => {
-                  console.log(error)
-                })
-            } else {
-              this.sendingData = true
-              this.axios.post('/1/model/section/' + this.inElementId + '/subsection', sectionDto)
-                .then(responseF).catch((error) => {
-                  console.log(error)
-                })
-            }
+            this.sendingData = true
+            this.axios.post('/1/model/section/' + this.inElementId + '/subsection', sectionDto)
+              .then((response) => {
+                this.sendingData = false
+                if (response.data.result === 'success') {
+                  this.closeThis()
+                  this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inElementId})
+                  this.$store.dispatch('refreshCurrentSection')
+                }
+              }).catch((error) => {
+                console.log(error)
+              })
           } else {
             /* add existing section */
             this.sendingData = true
             this.axios.put('/1/model/section/' + this.inElementId + '/subsection/' + this.existingSection.id, {})
-              .then(responseF).catch((error) => {
+              .then((response) => {
+                this.sendingData = false
+                if (response.data.result === 'success') {
+                  this.closeThis()
+                  this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inElementId})
+                  this.$store.dispatch('refreshCurrentSection')
+                }
+              }).catch((error) => {
                 console.log(error)
               })
           }
@@ -339,7 +334,14 @@ export default {
           /* edit existing section */
           this.sendingData = true
           this.axios.put('/1/model/section/' + sectionDto.id, sectionDto)
-            .then(responseF).catch((error) => {
+            .then((response) => {
+              this.sendingData = false
+              if (response.data.result === 'success') {
+                this.closeThis()
+                this.$store.dispatch('updateSectionDataInTree', {sectionId: sectionDto.id})
+                this.$store.dispatch('refreshCurrentSection')
+              }
+            }).catch((error) => {
               console.log(error)
             })
         }

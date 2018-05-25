@@ -1,5 +1,7 @@
 package org.collectiveone.modules.conversations;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -106,7 +108,12 @@ public class MessageService {
 	}
 	
 	@Transactional
-	public PostResult postMessage(MessageDto messageDto, UUID authorId, MessageThreadContextType contextType, UUID elementId) {
+	public PostResult postMessage(
+			MessageDto messageDto, 
+			UUID authorId, 
+			MessageThreadContextType contextType, 
+			UUID elementId,
+			UUID contextOfContextElementId) {
 		
 		AppUser author = appUserRepository.findByC1Id(authorId);
 		Message message = messageDto.toEntity(messageDto, author);
@@ -120,7 +127,13 @@ public class MessageService {
 		message = messageRepository.save(message);
 		thread = messageThreadRepository.save(thread);
 		
-		activityService.messagePosted(message, author, contextType, elementId);
+		List<AppUser> mentionedUsers = new ArrayList<AppUser>();
+		for(String uuid : messageDto.getUuidsOfMentions()) {
+			AppUser appUser = appUserRepository.findByC1Id(UUID.fromString(uuid));
+			mentionedUsers.add(appUser);
+		}
+		
+		activityService.messagePosted(message, author, contextType, elementId, contextOfContextElementId, mentionedUsers);
 
 		return new PostResult("success", "message posted", message.getId().toString());		 		
 	}

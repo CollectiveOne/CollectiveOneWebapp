@@ -1,16 +1,23 @@
 <template lang="html">
-<div class="">
+<div class="initiatives-view">
+
+  <transition name="slideDownUp">
+    <app-new-initiative-modal
+      v-if="showNewInitiativeModal"
+      @close="showNewInitiativeModal = false">
+    </app-new-initiative-modal>
+  </transition>
 
   <!-- Initiatives View -->
-  <div class="w3-cell-row">
+  <div class="w3-row initiatives-row">
 
     <transition name="slideRightLeft">
       <div v-show="expandNav" class="dark-gray nav-container-cell w3-sidebar">
-        <app-initiatives-nav @initiative-selected="initiativeSelected()"></app-initiatives-nav>
+        <app-initiatives-nav @initiative-selected="initiativeSelected()" @new-initiative="showNewInitiativeModal = true"></app-initiatives-nav>
       </div>
     </transition>
 
-    <div v-show="showContent" class="w3-cell content-container-cell">
+    <div v-show="showContent" class="w3-row content-container-cell">
       <div class="slider-container">
         <transition name="slideDownUp" mode="out-in">
           <router-view></router-view>
@@ -25,26 +32,18 @@
 
 <script>
 import InitiativesNav from '@/components/nav/InitiativesNav.vue'
-
 import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
-import NewSubInitiativeModal from '@/components/modal/NewSubInitiativeModal.vue'
-import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
-import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
-import NewTokenMintModal from '@/components/modal/NewTokenMintModal.vue'
 
 export default {
   components: {
     'app-new-initiative-modal': NewInitiativeModal,
-    'app-new-subinitiative-modal': NewSubInitiativeModal,
-    'app-initiatives-nav': InitiativesNav,
-    'app-edit-initiative-modal': EditInitiativeModal,
-    'app-edit-notifications-modal': EditNotificationsModal,
-    'app-new-tokenmint-modal': NewTokenMintModal
+    'app-initiatives-nav': InitiativesNav
   },
 
   data () {
     return {
-      showContent: true
+      showContent: true,
+      showNewInitiativeModal: false
     }
   },
 
@@ -54,24 +53,6 @@ export default {
     },
     userAuthenticated () {
       return this.$store.state.user.authenticated
-    },
-    showNewInitiativeModal () {
-      return this.$store.state.modals.showNewInitiativeModal
-    },
-    showNewSubInitiativeModal () {
-      return this.$store.state.modals.showNewSubInitiativeModal
-    },
-    showEditInitiativeModal () {
-      return this.$store.state.modals.showEditInitiativeModal
-    },
-    showEditMenu () {
-      return this.$store.state.modals.showEditMenu
-    },
-    showEditNotificationsModal () {
-      return this.$store.state.modals.showEditNotificationsModal
-    },
-    showNewTokenMintModal () {
-      return this.$store.state.modals.showNewTokenMintModal
     },
     windowIsSmall () {
       return this.$store.state.support.windowIsSmall
@@ -95,11 +76,33 @@ export default {
 
 <style scoped>
 
+.initiatives-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.initiatives-row {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-container-cell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.slider-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .nav-container-cell {
-  margin-top: 50px;
   width: 300px;
-  vertical-align: top !important;
-  height: calc(100vh - 51px);
+  height: 100%;
 }
 
 </style>

@@ -18,7 +18,6 @@ const pathsToTop = function (genealogy, currentPath, allPaths) {
 }
 
 const state = {
-  currentSectionId: null,
   currentSectionGenealogy: null
 }
 
@@ -38,6 +37,12 @@ const getters = {
       return allPaths
     }
     return []
+  },
+  currentSection: (state) => {
+    if (state.currentSectionGenealogy !== null) {
+      return state.currentSectionGenealogy.section
+    }
+    return null
   }
 }
 
@@ -54,11 +59,17 @@ const actions = {
   updateCurrentSection: (context, sectionId) => {
     context.commit('setCurrentSectionGenealogy', null)
 
-    Vue.axios.get('/1/model/section/' + sectionId + '/genealogy').then((response) => {
-      if (response.data.result === 'success') {
-        context.commit('setCurrentSectionGenealogy', response.data.data)
-      }
-    })
+    if (sectionId !== '') {
+      Vue.axios.get('/1/model/section/' + sectionId + '/genealogy').then((response) => {
+        if (response.data.result === 'success') {
+          context.commit('setCurrentSectionGenealogy', response.data.data)
+          context.dispatch('autoExpandSectionsTree', {
+            currentSectionId: sectionId,
+            currentSectionPaths: context.getters.currentSectionPaths
+          })
+        }
+      })
+    }
   }
 }
 

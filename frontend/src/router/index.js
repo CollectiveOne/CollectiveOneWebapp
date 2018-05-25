@@ -5,6 +5,8 @@ import RootView from '@/components/RootView.vue'
 import LandingView from '@/components/LandingView.vue'
 
 import AppView from '@/components/AppView.vue'
+
+import ModelSectionRead from '@/components/model/ModelSectionRead.vue'
 import InitiativesView from '@/components/InitiativesView.vue'
 import InitiativesHome from '@/components/InitiativesHome.vue'
 import InitiativesContent from '@/components/initiative/InitiativeContent.vue'
@@ -16,9 +18,7 @@ import TransfersSection from '@/components/initiative/TransfersSection.vue'
 
 import ModelSectionTab from '@/components/initiative/ModelSectionTab.vue'
 import ModelSectionContent from '@/components/model/ModelSectionContent.vue'
-
-import ModelSectionMessages from '@/components/model/ModelSectionMessages.vue'
-import ModelSectionCards from '@/components/model/ModelSectionCards.vue'
+import ModelSectionElements from '@/components/model/ModelSectionElements.vue'
 
 import UserProfilePage from '@/components/UserProfilePage.vue'
 import WSWebSocketDebugPage from '@/components/WebSocketDebugPage.vue'
@@ -47,6 +47,16 @@ export default new Router({
           path: '/',
           name: 'AppView',
           redirect: '/app/inits'
+        },
+        {
+          path: '/section/:sectionId',
+          name: 'ModelSectionRead',
+          component: ModelSectionRead
+        },
+        {
+          path: '/section/:sectionId/card/:cardId',
+          name: 'ModelSectionReadCard',
+          component: ModelSectionRead
         },
         {
           path: 'inits',
@@ -84,15 +94,15 @@ export default new Router({
                       component: ModelSectionContent,
                       meta: {'column': 3},
                       children: [
-                        { path: 'messages', name: 'ModelSectionMessages', component: ModelSectionMessages, meta: {'column': 3} },
-                        { path: 'cards', name: 'ModelSectionCards', component: ModelSectionCards, meta: {'column': 3} },
-                        { path: 'cards/:cardId', name: 'ModelSectionCard', component: ModelSectionCards, meta: {'column': 3} }
+                        { path: 'messages', name: 'ModelSectionMessages', component: ModelSectionElements, meta: {'column': 3} },
+                        { path: 'cards', name: 'ModelSectionCards', component: ModelSectionElements, meta: {'column': 3} },
+                        { path: 'cards/:cardId', name: 'ModelSectionCard', component: ModelSectionElements, meta: {'column': 3} }
                       ]
                     },
                     {
                       path: '/card',
                       name: 'ModelCardAlone',
-                      component: ModelSectionCards,
+                      component: ModelSectionElements,
                       meta: {'column': 3}
                     }
                   ]

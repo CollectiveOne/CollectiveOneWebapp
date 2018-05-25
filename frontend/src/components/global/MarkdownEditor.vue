@@ -1,11 +1,33 @@
 <template lang="html">
-  <div class="w3-cell-row">
-    <div class="w3-cell markdown-container">
+  <div class="w3-cell-row editor-container">
+    <div v-if="mentionedUsers.length > 0 && showSendAndMentions" class="w3-row mentions-row">
+      <span>Mentions :</span>
+      <span class="w3-tag mentionedUsers light-grey"
+        v-for="(user, i) in mentionedUsers">@{{ user.nickname }}
+        <i class="fa fa-close mentionedUsersClose cursor-pointer" @click="removeUserSelected(i)"></i>
+      </span>
+    </div>
+    <div class="w3-row markdown-container">
+      <div v-if="mentioning && showSendAndMentions" class="dropup">
+        <div class="dropup-content">
+          <div v-for="user in userSuggestions"
+            @click="userSelected(user)">
+            <app-user-avatar :user="user" :small="true"></app-user-avatar>
+          </div>
+        </div>
+      </div>
       <div class="w3-row">
-        <textarea v-if="!preview" class="this-textarea" :class="textareaClasses" ref="mdArea"
-          @focus="atFocus($event)" @blur="$emit('c-blur', $event)"
+        <textarea 
+          v-if="!preview" 
+          class="this-textarea" 
+          :class="textareaClasses" 
+          ref="mdArea"
+          @focus="atFocus($event)" 
+          @blur="$emit('c-blur', $event)"
           v-model="text"
-          :placeholder="placeholder">
+          :placeholder="placeholder"
+          @keyup="checkMentions()"
+          @check="checkMentions()">
         </textarea>
         <div v-if="preview || sideBySide" class="this-markdown" :class="markdownClasses">
           <vue-markdown class="marked-text" :source="text"></vue-markdown>
@@ -26,10 +48,10 @@
         <i class="fa fa-question-circle" aria-hidden="true"></i>
       </a>
     </div>
-    <div v-if="showSend" class="w3-cell send-button-column w3-cell-top">
+    <div v-if="showSendAndMentions" class="w3-cell send-button-column w3-cell-top">
       <div class="send-button-container">
         <button class="w3-button app-button" name="button"
-          @click="$emit('send', value)">
+          @click="send()">
           <i class="fa fa-paper-plane" aria-hidden="true"></i>
           <br>
           <small>ctr + &crarr;</small>
@@ -40,6 +62,8 @@
 </template>
 
 <script>
+import { spliceString } from '@/lib/common.js'
+
 export default {
   props: {
     value: {
@@ -50,7 +74,7 @@ export default {
       type: String,
       default: ''
     },
-    showSend: {
+    showSendAndMentions: {
       type: Boolean,
       default: false
     }
@@ -60,7 +84,11 @@ export default {
     return {
       text: '',
       preview: false,
-      sideBySide: false
+      sideBySide: false,
+      mentioningQuery: '',
+      userSuggestions: [],
+      mentionedUsers: [],
+      lastMentionIx: 0
     }
   },
 
@@ -72,6 +100,9 @@ export default {
     text () {
       this.$emit('input', this.text)
       this.checkHeight()
+    },
+    mentioningQuery () {
+      this.updateMentionSuggestions()
     }
   },
 
@@ -104,10 +135,103 @@ export default {
           'm6': true
         }
       }
+    },
+    mentioning () {
+      return this.mentioningQuery !== ''
+    },
+    initiativeId () {
+      return this.$route.params.initiativeId
     }
   },
 
   methods: {
+    removeUserSelected (index) {
+      let user = this.mentionedUsers[index]
+      /* remove string */
+      let ixFound = this.text.search('@' + user.nickname)
+      if (ixFound !== -1) {
+        /* remove the name with the @ too */
+        this.text = spliceString(this.text, ixFound - 1, user.nickname.length + 1, '')
+      }
+      this.mentionedUsers.splice(index, 1)
+    },
+
+    getMentions () {
+      let re = /@\w*/g
+      let mentions = []
+      let m
+
+      /* get mentions and their indexes */
+      do {
+        m = re.exec(this.text)
+        if (m && (this.text.charAt(m.index - 1) === ' ' || this.text.length)) {
+          mentions.push(m)
+        }
+      } while (m)
+
+      return mentions
+    },
+
+    checkMentions () {
+      if (!this.showSendAndMentions) {
+        return
+      }
+      /* regular expression of @word */
+      let mentions = this.getMentions()
+
+      /* check if cursor is at one mention */
+      let selectedMention = []
+      for (let ix = 0; ix < mentions.length; ix++) {
+        let e = mentions[ix]
+        if ((e.index <= this.$refs.mdArea.selectionStart) &&
+          (this.$refs.mdArea.selectionStart <= (e.index + e[0].length))) {
+          selectedMention = e
+          /* need to remember ix to know which mention to update after user select */
+          this.lastMentionIx = ix
+        }
+      }
+
+      // console.log(selectedMention)
+      if (selectedMention.length > 0) {
+        /* remove the at and store in mentioning */
+        this.mentioningQuery = selectedMention[0].substr(0)
+      } else {
+        this.mentioningQuery = ''
+      }
+
+      /* check mentioned user are still mentioned */
+      for (let ix = 0; ix < this.mentionedUsers.length; ix++) {
+        if (this.text.search(this.mentionedUsers[ix].nickname) === -1) {
+          this.removeUserSelected(ix)
+        }
+      }
+    },
+
+    updateMentionSuggestions () {
+      this.axios.get('/1/initiative/' + this.initiativeId + '/members/suggestions?q=' + this.mentioningQuery.substr(1)).then((response) => {
+        if (response.data.result === 'success') {
+          this.userSuggestions = this.process ? self.process(response.data) : response.data.data
+        }
+      })
+    },
+
+    userSelected (user) {
+      let mentions = this.getMentions()
+      let mention = mentions[this.lastMentionIx]
+
+      /* remove mention */
+      this.text = spliceString(this.text, mention.index + 1, mention[0].length - 1, user.nickname)
+      this.$refs.mdArea.focus()
+      this.$refs.mdArea.selectionStart = mention.index + user.nickname.length
+
+      /* add mentioned user if not already added */
+      if (this.mentionedUsers.filter(e => e.c1Id === user.c1Id).length === 0) {
+        this.mentionedUsers.push(user)
+      }
+      this.mentioningQuery = ''
+      this.text += ' '
+    },
+
     atFocus (event) {
       this.$emit('c-focus', event)
       this.checkHeight()
@@ -134,8 +258,19 @@ export default {
       /* ctr + enter */
       if (e.keyCode === 13 && e.ctrlKey) {
         e.preventDefault()
-        this.$emit('send', this.value)
+        this.send()
       }
+    },
+    send () {
+      var info = {
+        message: this.value,
+        mentions: this.mentionedUsers.map(e => e.c1Id)
+      }
+      this.$emit('send', info)
+      this.userSuggestions = []
+      this.mentionedUsers = []
+      this.preview = false
+      this.sideBySide = false
     }
   },
 
@@ -195,6 +330,61 @@ export default {
 }
 
 .markdown-container {
+  font-family: 'Open Sans', sans-serif;
 }
 
+.w3-cell-top {
+  vertical-align: bottom;
+}
+
+.editor-container {
+  position: relative;
+}
+
+.mentions-row {
+  font-size: 12px;
+}
+
+.dropup {
+  position: relative;
+  width: 100%
+}
+
+.dropup-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  width: 790px;
+  bottom: 0px;
+  z-index: 1;
+}
+
+.dropup-content div {
+  color: black;
+  padding: 6px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropup-content div:hover {
+  background-color: #ccc
+}
+
+.dropup .dropup-content {
+    display: block; /*triggers to showList*/
+}
+
+.mentionedUsers {
+   padding: 0px 10px !important;
+   margin-left: 5px;
+   border-radius: 3px;
+}
+
+.mentionedUsersClose {
+   padding: 0px 10px !important;
+}
+
+.mentionedUsersClose:hover {
+  color: #C0C0C0;
+}
 </style>

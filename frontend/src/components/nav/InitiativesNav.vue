@@ -1,18 +1,18 @@
 <template lang="html">
-  <nav class="nav-container">
-
-    <transition name="slideDownUp">
-      <app-new-initiative-modal
-        v-if="showNewInitiativeModal"
-        @close="showNewInitiativeModal = false">
-      </app-new-initiative-modal>
-    </transition>
+  <nav class="nav-container w3-border-right">
 
     <div class="">
-      <div v-if="$store.state.user.authenticated" class="w3-container">
-        <div id="T_createInitiativeButton" class="create-new w3-button light-grey w3-round-large w3-center"
+      <div v-if="$store.state.user.authenticated" class="w3-row-padding btns-row">
+        <div class="w3-col s4">
+          <div @click="closeNav()" class="w3-xlarge cursor-pointer noselect">
+            <i class="fa fa-chevron-circle-left"></i>
+          </div>
+        </div>
+        <div id="T_createInitiativeButton" class="w3-col s8 "
           @click="newInitiative()">
-          <i class="fa fa-plus-circle"></i>  new initiative
+          <div class="create-new w3-button light-grey w3-round-large w3-center">
+            <i class="fa fa-plus-circle"></i>  new initiative
+          </div>
         </div>
       </div>
 
@@ -22,12 +22,16 @@
           <span v-else="$store.state.user.authenticated"><i>current initiative</i></span>
         </h6>
       </div>
-      <app-initiative-menu-item v-for="(initiative, ix) in menuInitiatives"
-        :initiative="initiative" :key="initiative.id"
-        :coord="[ ix ]" class="top-menu-item"
-        @initiative-selected="$emit('initiative-selected')">
-      </app-initiative-menu-item>
-
+      <div v-if="!loading" class="">
+        <app-initiative-menu-item v-for="(initiative, ix) in menuInitiatives"
+          :initiative="initiative" :key="initiative.id"
+          :coord="[ ix ]" class="top-menu-item"
+          @initiative-selected="$emit('initiative-selected')">
+        </app-initiative-menu-item>
+      </div>
+      <div v-else class="w3-row w3-center loader-gif-container">
+        <img class="loader-gif" src="../../assets/loading.gif" alt="">
+      </div>
     </div>
     <div v-if="!$store.state.user.authenticated" class="w3-container">
       <button @click="login()"
@@ -39,23 +43,23 @@
 </template>
 
 <script>
-import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
 import InitiativeMenuItem from './InitiativeMenuItem.vue'
 
 export default {
 
   components: {
-    'app-new-initiative-modal': NewInitiativeModal,
     'app-initiative-menu-item': InitiativeMenuItem
   },
 
   data () {
     return {
-      showNewInitiativeModal: false
     }
   },
 
   computed: {
+    loading () {
+      return this.$store.state.initiativesTree.loadingMyInitiatives
+    },
     menuInitiatives () {
       return this.$store.getters.initiativesTree()
     }
@@ -63,10 +67,13 @@ export default {
 
   methods: {
     newInitiative () {
-      this.showNewInitiativeModal = true
+      this.$emit('new-initiative')
     },
     login () {
       this.$store.state.user.lock.show()
+    },
+    closeNav () {
+      this.$store.commit('toggleExpandNav')
     }
   }
 }
@@ -77,10 +84,15 @@ export default {
 .nav-container {
 }
 
-.create-new {
-  margin-top: 20px;
-  margin-bottom: 0px;
+.btns-row {
+  padding: 16px 12px;
+}
+
+.btns-row .w3-button {
   width: 100%;
+}
+
+.create-new {
   text-align: left;
 }
 
@@ -105,7 +117,6 @@ export default {
 }
 
 .my-initiatives-row {
-  margin-top: 30px;
 }
 
 </style>

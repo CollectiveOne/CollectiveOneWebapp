@@ -1,27 +1,9 @@
 <template lang="html">
-  <div class="section-content">
+  <div :class="{'section-content-fixed': isMessages, 'section-content-scroll': !isMessages}">
     <div class="w3-row control-row w3-border-bottom">
-      <div class="w3-col m6">
-        <app-section-info></app-section-info>
-      </div>
-      <div class="w3-col m6 section-tabs w3-center">
-        <router-link :to="{ name: 'ModelSectionMessages'}"
-          class="tab-btn-space">
-          <div class="tab-btn noselect" :class="{'bold-text': isChat, 'button-blue': isChat}">
-            <span class="w3-hide-small w3-hide-medium tab-btn-text">Timeline</span>
-            <span class="w3-hide-large"><i class="fa fa-comments" aria-hidden="true"></i></span>
-          </div>
-        </router-link>
-        <router-link :to="{ name: 'ModelSectionCards'}"
-          class="tab-btn-space">
-          <div class="tab-btn noselect" :class="{'bold-text': isCards, 'button-blue': isCards}">
-            <span class="w3-hide-small w3-hide-medium tab-btn-text">Cards</span>
-            <span class="w3-hide-large"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></span>
-          </div>
-        </router-link>
-      </div>
+      <app-section-info></app-section-info>
     </div>
-    <div class="w3-row">
+    <div class="w3-row section-elements">
       <transition name="fadeenter">
         <router-view></router-view>
       </transition>
@@ -39,28 +21,21 @@ export default {
   },
 
   computed: {
-    isChat () {
+    isMessages () {
       return this.$route.name === 'ModelSectionMessages'
-    },
-    isCards () {
-      return this.$route.name === 'ModelSectionCards' || this.$route.name === 'ModelSectionCard'
-    },
-    isDoc () {
-      return this.$route.name === 'ModelSectionDoc'
     }
   },
 
   methods: {
     redirect () {
       if (this.$route.name === 'ModelSectionContent') {
-        console.log('redirecting from ModelSectionContent to ModelSectionCards')
-        this.$router.replace({name: 'ModelSectionCards'})
+        this.$router.replace({ name: 'ModelSectionMessages' })
       }
     }
   },
 
   watch: {
-    '$route' () {
+    '$route.name' () {
       this.redirect()
     }
   },
@@ -74,39 +49,28 @@ export default {
 
 <style scoped>
 
-.w3-col {
-  min-height: 1px;
+.section-content-scroll {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.section-content {
+.section-content-fixed {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .control-row {
-  padding: 6px 18px;
+  padding: 16px 18px 12px 36px;
+  min-height: 62px;
+  flex-shrink: 0;
 }
 
-.section-tabs {
+.section-elements {
   display: flex;
-  flex-direction: row;
-}
-
-.tab-btn-space {
-  display: block;
-  padding: 6px 10px 0px 10px;
-  width: 50%;
-}
-
-.tab-btn {
-  padding: 0px 6px;
-  border-radius: 6px;
-}
-
-.tab-btn-text {
-  font-size: 14px;
-}
-
-.bold-text {
-  font-weight: bold;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 </style>

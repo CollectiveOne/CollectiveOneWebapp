@@ -1,10 +1,10 @@
 <template lang="html">
-  <div class="card-summary-container w3-card w3-row"
+  <div class="card-summary-container w3-leftbar w3-card w3-row" :class="containerClass"
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 
     <div class="w3-col m8 left-div">
-      <div @click="cardClicked()" class="w3-left expand-btn cursor-pointer">
+      <div v-if="!inCardSelector" @click="cardClicked()" class="w3-left expand-btn cursor-pointer">
         <i class="fa fa-expand" aria-hidden="true"></i>
       </div>
 
@@ -12,16 +12,11 @@
         {{ cardShortTitle }}
       </div>
 
-      <div v-if="cardWrapper.inSections.length > 0" class="w3-right text-div">
-        <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
-          v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
-          <div class="">
-            <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
-              class="gray-1 w3-tag w3-round w3-small">
-              {{ inSection.title }}
-            </router-link>
-          </div>
-        </div>
+      <div v-if="cardWrapper.inModelSections.length > 0 && !hideCardControls" class="w3-right text-div">
+        <app-in-model-sections-tags
+          :inModelSections="cardWrapper.inModelSections"
+          :hideSectionId="inSectionId">
+        </app-in-model-sections-tags>
       </div>
     </div>
 
@@ -37,38 +32,41 @@
         </div>
       </div>
 
-      <div class="w3-right gray-1-color control-div">
-        <app-card-control-buttons
-          :cardWrapper="cardWrapper"
-          :inSection="inSection"
-          @update="$emit('update')"
-          @updateCards="$emit('updateCards')">
-        </app-card-control-buttons>
+      <div v-if="!inCardSelector" class="w3-right">
+        <div v-if="!hideCardControls && $store.state.user.authenticated" class="w3-right gray-1-color control-div">
+          <app-card-control-buttons
+            :cardWrapper="cardWrapper"
+            :inSection="inSection"
+            @update="$emit('update')"
+            @updateCards="$emit('updateCards')">
+          </app-card-control-buttons>
+        </div>
+
+        <div v-if="!isPrivate" class="w3-right cursor-pointer indicator-comp"
+          @click="cardClicked()">
+          <app-indicator
+            contextType="MODEL_CARD"
+            :contextElementId="cardWrapper.id"
+            :size="18"
+            type="messages"
+            :forceUpdate="forceUpdate">
+          </app-indicator>
+        </div>
+
+        <div v-if="!isPrivate" class="w3-right cursor-pointer indicator-comp"
+          @click="toggleLike()">
+          <app-indicator
+            contextType="MODEL_CARD"
+            :contextElementId="cardWrapper.id"
+            :size="18"
+            type="likes"
+            :selected="cardWrapper.userLiked"
+            :autoUpdate="false"
+            :countInit="cardWrapper.nLikes">
+          </app-indicator>
+        </div>
       </div>
 
-      <div class="w3-right cursor-pointer indicator-comp"
-        @click="cardClicked()">
-        <app-indicator
-          contextType="MODEL_CARD"
-          :contextElementId="cardWrapper.id"
-          :size="18"
-          type="messages"
-          :forceUpdate="forceUpdate">
-        </app-indicator>
-      </div>
-
-      <div class="w3-right cursor-pointer indicator-comp"
-        @click="toggleLike()">
-        <app-indicator
-          contextType="MODEL_CARD"
-          :contextElementId="cardWrapper.id"
-          :size="18"
-          type="likes"
-          :selected="cardWrapper.userLiked"
-          :autoUpdate="false"
-          :countInit="cardWrapper.nLikes">
-        </app-indicator>
-      </div>
     </div>
   </div>
 </template>
@@ -76,6 +74,7 @@
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
 import CardControlButtons from '@/components/model/cards/CardControlButtons.vue'
+import InModelSectionsTags from '@/components/model/cards/InModelSectionsTags.vue'
 
 export default {
 
@@ -84,22 +83,11 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-card-control-buttons': CardControlButtons
+    'app-card-control-buttons': CardControlButtons,
+    'app-in-model-sections-tags': InModelSectionsTags
   },
 
   props: {
-    cardWrapper: {
-      type: Object,
-      default: null
-    },
-    forceUpdate: {
-      type: Boolean,
-      default: true
-    },
-    inSection: {
-      type: Object,
-      default: null
-    }
   },
 
   data () {
@@ -121,9 +109,6 @@ export default {
   },
 
   methods: {
-    showThisTag (inSection) {
-      return inSection.id !== this.inSection.id
-    },
     hoverEnter () {
       this.showActionButton = true
       this.highlight = true
@@ -183,12 +168,6 @@ export default {
   border-left-style: dotted;
   border-color: #c1c1c1;
   border-width: 1px;
-}
-
-.insection-tag-container {
-  display: inline-block;
-  margin-right: 5px;
-  margin-bottom: 2px;
 }
 
 .indicator-comp {

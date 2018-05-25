@@ -2,23 +2,37 @@
   <div class="">
     <div class="w3-row">
       <transition name="fadeenter">
-        <div :key="currentSectionId" class="w3-left this-section-title">
-          <div class="w3-left title-div">
+        <div :key="currentSectionId" v-if="currentSection" class="this-section-title small-scroll">
+          <div class="title-div">
             {{ sectionTitle }}
           </div>
-          <div class="w3-left btn-div">
-            <app-section-control-buttons :section="currentSection" :inSection="null">
+          <div v-if="$store.state.user.authenticated" class="btn-div fa-button">
+            <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
             </app-section-control-buttons>
           </div>
-          <div @click="showIn = !showIn" class="w3-left btn-div cursor-pointer">
+          <div v-if="isLoggedAnEditor" class="btn-div fa-button">
+            <app-section-control-buttons :section="currentSection" :inSection="null" :onlyAdd="true">
+            </app-section-control-buttons>
+          </div>
+          <div @click="showIn = !showIn" class="btn-div fa-button">
             <i class="fa fa-info-circle" aria-hidden="true"></i>
+          </div>
+          <div class="btn-div fa-button">
+            <router-link :to="{ name: 'ModelSectionRead', params: {sectionId: this.currentSection.id} }">
+              <img src="./../../assets/shareable-view.svg" alt="">
+            </router-link>
           </div>
         </div>
       </transition>
     </div>
     <div class="slider-container">
       <transition name="slideDownUp">
-        <div v-if="showIn" class="w3-row breadcrumb">
+        <div v-if="showIn && currentSection && currentSectionPaths.length > 0" class="w3-row breadcrumb">
+          <div class="w3-row description-container light-grey">
+            <span v-if="currentSection.description !== null && currentSection.description !== ''">{{ currentSection.description }}</span>
+            <span v-else>empty</span>
+          </div>
+
           <div v-if="currentSectionPaths[0].length > 0" class="w3-row">
             <small>This is section is under:</small>
           </div>
@@ -36,10 +50,6 @@
                 <i class="fa fa-chevron-right" aria-hidden="true"></i>
               </div>
             </div>
-          </div>
-          <div class="w3-row description-container w3-margin-top w3-margin-bottom">
-            <span v-if="currentSection.description !== null && currentSection.description !== ''">{{ currentSection.description }}</span>
-            <span v-else>empty</span>
           </div>
         </div>
       </transition>
@@ -62,6 +72,9 @@ export default {
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
     menuItems () {
       return [
         { text: 'add card', value: 'addCard', faIcon: 'fa-plus' },
@@ -97,7 +110,7 @@ export default {
   },
 
   watch: {
-    '$route' () {
+    '$route.params.sectionId' () {
       this.$store.dispatch('updateCurrentSection', this.$route.params.sectionId)
     }
   },
@@ -114,6 +127,16 @@ export default {
 
 .this-section-title {
   font-size: 22px;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.this-section-title > div {
+  display: inline-block;
+}
+
+.fa-button img {
+  height: 24px;
 }
 
 .title-div {
@@ -139,14 +162,9 @@ export default {
   text-align: center;
 }
 
-.btn-div:hover {
-  background-color: rgb(171, 171, 171);
-}
-
 .description-container {
   border-radius: 3px;
   padding: 3px 12px;
-  background-color: #cfcfcf;
 }
 
 </style>

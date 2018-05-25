@@ -18,7 +18,7 @@
         </span>
       </div>
 
-      <div class="" :class="{'not-a-message': !isMessagePosted && showMessages}">
+      <div class="" :class="{'event-summary': !isMessagePosted && showMessages}">
         <span v-if="isInitiativeCreated" class="">
           created the new initiative <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
         </span>
@@ -118,6 +118,10 @@
           created the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
           section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
         </span>
+        <span v-if="isModelSectionCreatedOnInitiative" class="">
+          created the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
+          initiative <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,.
+        </span>
         <span v-if="isModelSectionEdited" class="">
           edited the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> title/description.
         </span>
@@ -130,23 +134,36 @@
            from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
            to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
         </span>
+        <span v-if="isModelSectionMoved" class="">
+          moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>.
+        </span>
+
+        <span v-if="isModelCardWrapperCreated" class="">
+          created the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+           on section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+        </span>
         <span v-if="isModelCardWrapperAdded" class="">
-          added the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+          added the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
            in section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
         </span>
         <span v-if="isModelCardWrapperRemoved" class="">
-          removed the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.fromSection"></app-model-card-link>
+          removed the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.fromSection"></app-model-card-link>
            from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
         </span>
         <span v-if="isModelSectionDeleted" class="">
           deleted the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>
         </span>
-        <span v-if="isModelCardWrapperCreated" class="">
-          created the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-           on section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+
+        <span v-if="isModelCardWrapperMadeShared" class="">
+          made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+           on section <app-model-section-link :section="activity.onSection"></app-model-section-link> a shared card.
+        </span>
+        <span v-if="isModelCardWrapperMadeCommon" class="">
+          made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+           on section <app-model-section-link :section="activity.onSection"></app-model-section-link> a common card.
         </span>
         <span v-if="isModelCardWrapperEdited" class="">
-          edited the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
+          edited the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
         </span>
         <span v-if="isModelCardWrapperMovedSameSection" class="">
           moved the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
@@ -161,15 +178,16 @@
           deleted the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
         </span>
 
-        <span v-if="isMessagePosted && (!showMessages || isExternalMessage)" :class="{'w3-tag w3-round light-grey': isExternalMessage}">
+        <span v-if="isMessagePosted && (!showMessages || isExternalMessage)" :class="{'event-summary': isExternalMessage}">
           commented in
           <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
+          <span v-if="isMessageInCardWrapperOnSection"><app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link></span>
           <span v-if="isMessageInSection"><app-model-section-link :section="activity.modelSection"></app-model-section-link> section.</span>
           <span v-if="isMessageInInitiative"><app-initiative-link :initiative="activity.initiative"></app-initiative-link> initiative.</span>
         </span>
         <span v-if="isMessagePosted && showMessages" class="">
           <div>
-            <vue-markdown class="marked-text" :source="activity.message.text"></vue-markdown>
+            <vue-markdown class="marked-text message-container" :source="activity.message.text"></vue-markdown>
           </div>
         </span>
       </div>
@@ -290,12 +308,21 @@ export default {
       return this.activity.type === 'MODEL_SECTION_CREATED' &&
         this.activity.onSection !== null
     },
+    isModelSectionCreatedOnInitiative () {
+      return this.activity.type === 'MODEL_SECTION_CREATED' &&
+        this.activity.onSection === null
+    },
     isModelSectionEdited () {
       return this.activity.type === 'MODEL_SECTION_EDITED'
     },
     isModelSectionRemovedFromSection () {
       return this.activity.type === 'MODEL_SECTION_REMOVED' &&
         this.activity.fromSection !== null
+    },
+    isModelSectionMoved () {
+      return this.activity.type === 'MODEL_SECTION_MOVED' &&
+        (this.activity.fromSection === null ||
+        this.activity.onSection === null)
     },
     isModelSectionMovedFromSectionToSection () {
       return this.activity.type === 'MODEL_SECTION_MOVED' &&
@@ -317,9 +344,29 @@ export default {
     isModelSectionDeleted () {
       return this.activity.type === 'MODEL_SECTION_DELETED'
     },
+    cardWrapperScope () {
+      if (this.activity.modelCardWrapper) {
+        switch (this.activity.modelCardWrapper.scope) {
+          case 'PRIVATE':
+            return 'private'
+
+          case 'SHARED':
+            return 'shared'
+
+          case 'COMMON':
+            return 'common'
+        }
+      }
+      return ''
+    },
     isModelCardWrapperCreated () {
-      return this.activity.type === 'MODEL_CARDWRAPPER_CREATED' &&
-        this.activity.onSection !== null
+      return this.activity.type === 'MODEL_CARDWRAPPER_CREATED'
+    },
+    isModelCardWrapperMadeShared () {
+      return this.activity.type === 'MODEL_CARDWRAPPER_MADE_SHARED'
+    },
+    isModelCardWrapperMadeCommon () {
+      return this.activity.type === 'MODEL_CARDWRAPPER_MADE_COMMON'
     },
     isModelCardWrapperEdited () {
       return this.activity.type === 'MODEL_CARDWRAPPER_EDITED'
@@ -346,19 +393,22 @@ export default {
       return this.activity.type === 'MESSAGE_POSTED'
     },
     isMessageInCardWrapper () {
-      return this.isMessagePosted && (this.activity.modelCardWrapper !== null)
+      return this.isMessagePosted && (this.activity.modelCardWrapper !== null) && (this.activity.onSection === null)
+    },
+    isMessageInCardWrapperOnSection () {
+      return this.isMessagePosted && (this.activity.modelCardWrapper !== null) && (this.activity.onSection !== null)
     },
     isMessageInSection () {
       return this.isMessagePosted && (this.activity.modelSection !== null)
     },
     isMessageInInitiative () {
-      return this.isMessagePosted && (!this.isMessageInView && !this.isMessageInSection && !this.isMessageInCardWrapper)
+      return this.isMessagePosted && (!this.isMessageInSection && !this.isMessageInCardWrapperOnSection && !this.isMessageInCardWrapper)
     },
     isExternalMessage () {
       if (!this.isMessagePosted || !this.showMessages) {
         return false
       } else {
-        if (this.isMessageInCardWrapper) {
+        if (this.isMessageInCardWrapper || this.isMessageInCardWrapperOnSection) {
           return this.activity.modelCardWrapper.id !== this.contextElementId
         } else if (this.isMessageInSection) {
           return this.activity.modelSection.id !== this.contextElementId
@@ -434,7 +484,7 @@ a {
   margin-right: 4px;
 }
 
-.not-a-message {
+.event-summary {
   background-color: #eff3f6;
   margin-top: 6px;
   border-radius: 6px;
@@ -444,6 +494,10 @@ a {
 
 .control-btns-row .w3-button {
   padding: 1px 16px !important;
+}
+
+.message-container {
+  font-family: 'Open Sans', sans-serif;
 }
 
 </style>

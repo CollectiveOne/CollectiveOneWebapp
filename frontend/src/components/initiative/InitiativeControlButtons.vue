@@ -6,7 +6,7 @@
         <transition name="slideDownUp">
           <app-new-subinitiative-modal
             v-if="showNewSubInitiativeModal"
-            :parentInitiative="this.initiative"
+            :parentInitiative="initiative"
             @close="showNewSubInitiativeModal = false">
           </app-new-subinitiative-modal>
         </transition>
@@ -21,15 +21,17 @@
         <transition name="slideDownUp">
           <app-edit-notifications-modal
             v-if="showEditNotificationsModal"
+            type="INITIATIVE"
+            :initiative="initiative"
             @close="showEditNotificationsModal = false">
           </app-edit-notifications-modal>
         </transition>
       </div>
     </div>
 
-    <div class="modal-buttons-container">
+    <div class="initiative-buttons-container">
 
-      <div class="expand-btn w3-xlarge cursor-pointer"
+      <div class="expand-btn w3-xlarge fa-button"
         @click="expanded =! expanded"
         v-click-outside="clickOutsideMenu">
         <i class="fa fa-bars" aria-hidden="true"></i>
@@ -99,18 +101,12 @@ export default {
       return this.$store.getters.isLoggedAnAdmin
     },
     menuItems () {
-      if (this.isLoggedAnAdmin !== null) {
-        return [
-          { text: 'edit', value: 'edit', faIcon: 'fa-pencil' },
-          { text: 'new subinitiative', value: 'newSubinitiative', faIcon: 'fa-plus' },
-          { text: 'notifications', value: 'notifications', faIcon: 'fa-cog' },
-          { text: 'delete', value: 'delete', faIcon: 'fa-times' }
-        ]
-      } else {
-        return [
-          { text: 'notifications', value: 'notifications', faIcon: 'fa-engine' }
-        ]
-      }
+      let items = []
+      if (this.isLoggedAnAdmin) items.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
+      if (this.isLoggedAnAdmin) items.push({ text: 'new subinitiative', value: 'newSubinitiative', faIcon: 'fa-plus' })
+      items.push({ text: 'notifications', value: 'notifications', faIcon: 'fa-cog' })
+      if (this.isLoggedAnAdmin) items.push({ text: 'delete', value: 'delete', faIcon: 'fa-times' })
+      return items
     }
   },
 
@@ -131,14 +127,17 @@ export default {
       this.deleteIntent = true
     },
     deleteConfirmed () {
-      this.axios.delete('/1/model/section/' + this.section.id)
-        .then((response) => {
-          this.deleteIntent = false
-          this.expanded = false
-          this.$store.commit('triggerUpdateSectionsTree')
-        }).catch((error) => {
-          console.log(error)
-        })
+      this.axios.delete('/1/initiative/' + this.initiative.id).then((response) => {
+        this.$store.dispatch('refreshInitiative')
+        this.$store.dispatch('updateMyInitiatives')
+        if (this.initiative.parents.length > 0) {
+          var parentId = this.initiative.parents[this.initiative.parents.length - 1].id
+          this.$router.replace({ name: 'InitiativeOverview', params: { initiativeId: parentId } })
+          this.closeThis()
+        } else {
+          window.location.href = '/'
+        }
+      })
     },
     clickOutsideMenu () {
       this.expanded = false
@@ -156,20 +155,24 @@ export default {
 
 <style scoped>
 
+.initiative-buttons-container {
+}
+
 .expand-btn {
   padding: 8px 12px;
   width: 50px;
   height: 50px;
+  text-align: center;
 }
 
 .drop-menu {
   position: absolute;
   width: 180px;
   margin-top: 0px;
-  margin-left: -120px;
+  right: 0px;
   text-align: left;
   font-size: 15px;
-  z-index: 1;
+  z-index: 3;
 }
 
 .delete-intent-div {

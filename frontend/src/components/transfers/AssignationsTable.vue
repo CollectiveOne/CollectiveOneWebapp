@@ -193,8 +193,6 @@ export default {
 <style scoped>
 
 .full-table-container {
-  max-height: 80vh;
-  overflow-y: auto;
 }
 
 .table-element {

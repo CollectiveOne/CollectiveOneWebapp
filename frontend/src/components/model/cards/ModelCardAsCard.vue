@@ -1,40 +1,39 @@
 <template lang="html">
-  <div class="w3-display-container w3-card-4 w3-topbar border-blue w3-round-large"
+  <div class="w3-display-container w3-card-4 w3-topbar w3-round-large" :class="containerClass"
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 
-    <div class="w3-row card-container cursor-pointer w3-display-container"
+    <div class="w3-row card-container cursor-pointer" :class="{'limit-height': !showFull}"
       ref="cardContent">
 
-      <div class="w3-col s12" @click="cardClicked()">
+      <div class="w3-row" @click="cardClicked()">
         <div v-if="hasImage"
           class="w3-row w3-center w3-display-container image-container">
           <img class="" :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
         </div>
 
         <div class="card-container-padded">
-          <div v-if="card.title !== ''" class="w3-row">
-            <b>{{ card.title }}</b>
+          <div v-if="card.title !== ''" class="w3-row card-title">
+            {{ card.title }}
           </div>
 
           <div ref="cardText"
-            class="w3-row card-text"
-            :style="cardTextStyle">
+            class="w3-row card-text">
             <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
           </div>
-        </div>
-      </div>
-
-      <div v-if="textTooLong()" class="">
-        <div @click="showMoreClick()"
-          class="w3-padding model-action-button gray-2-color w3-display-bottomright cursor-pointer">
-          <i class="fa fa-arrows-v" aria-hidden="true"></i>
         </div>
       </div>
 
     </div>
 
     <div class="w3-row bottom-row light-grey">
+
+      <div v-if="textTooLong()" class="expand-height-button">
+        <div @click="showMoreClick()"
+          class="w3-padding gray-2-color cursor-pointer">
+          <i class="fa fa-arrows-v" aria-hidden="true"></i>
+        </div>
+      </div>
 
       <div v-if="cardWrapper.creator !== null" class="w3-left text-div">
         <app-user-avatar :user="cardWrapper.creator" :showName="false" :small="true"></app-user-avatar>
@@ -46,55 +45,54 @@
         </div>
       </div>
 
-      <div v-if="cardWrapper.inSections.length > 0" class="w3-margin-left w3-left">
-        <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
-          v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
-          <div class="">
-            <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
-              class="gray-1 w3-tag w3-round w3-small">
-              {{ inSection.title }}
-            </router-link>
-          </div>
+      <div v-if="cardWrapper.inModelSections.length > 0 && !hideCardControls" class="w3-margin-left w3-left">
+        <app-in-model-sections-tags
+          :inModelSections="cardWrapper.inModelSections"
+          :hideSectionId="inSectionId">
+        </app-in-model-sections-tags>
+      </div>
+
+      <div v-if="!inCardSelector" class="w3-right">
+
+        <div v-if="!hideCardControls && $store.state.user.authenticated" class="w3-right gray-1-color control-div">
+          <app-card-control-buttons
+            :cardWrapper="cardWrapper"
+            :inSection="inSection"
+            @update="$emit('update')"
+            @updateCards="$emit('updateCards')">
+          </app-card-control-buttons>
         </div>
-      </div>
 
-      <div class="w3-right gray-1-color control-div">
-        <app-card-control-buttons
-          :cardWrapper="cardWrapper"
-          :inSection="inSection"
-          @update="$emit('update')">
-        </app-card-control-buttons>
-      </div>
+        <div v-if="!isPrivate" class="w3-right cursor-pointer indicator-comp"
+          @click="cardClicked()">
+          <app-indicator
+            contextType="MODEL_CARD"
+            :contextElementId="cardWrapper.id"
+            :size="18"
+            type="messages"
+            :forceUpdate="forceUpdate">
+          </app-indicator>
+        </div>
 
-      <div class="w3-right cursor-pointer indicator-comp"
-        @click="cardClicked()">
-        <app-indicator
-          contextType="MODEL_CARD"
-          :contextElementId="cardWrapper.id"
-          :size="18"
-          type="messages"
-          :forceUpdate="forceUpdate">
-        </app-indicator>
-      </div>
+        <div v-if="!isPrivate" class="w3-right cursor-pointer indicator-comp"
+          @click="toggleLike()">
+          <app-indicator
+            contextType="MODEL_CARD"
+            :contextElementId="cardWrapper.id"
+            :size="18"
+            type="likes"
+            :selected="cardWrapper.userLiked"
+            :autoUpdate="false"
+            :countInit="cardWrapper.nLikes">
+          </app-indicator>
+        </div>
 
-      <div class="w3-right cursor-pointer indicator-comp"
-        @click="toggleLike()">
-        <app-indicator
-          contextType="MODEL_CARD"
-          :contextElementId="cardWrapper.id"
-          :size="18"
-          type="likes"
-          :selected="cardWrapper.userLiked"
-          :autoUpdate="false"
-          :countInit="cardWrapper.nLikes">
-        </app-indicator>
       </div>
-
     </div>
 
     <transition name="fadeenter">
-      <div v-if="hovering"
-        class="w3-padding model-action-button gray-2-color w3-display-topright cursor-pointer"
+      <div v-if="hovering && !inCardSelector"
+        class="w3-padding gray-2-color w3-display-topright cursor-pointer"
         @click="cardClicked()">
         <i class="fa fa-expand" aria-hidden="true"></i>
       </div>
@@ -106,6 +104,7 @@
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
 import CardControlButtons from '@/components/model/cards/CardControlButtons.vue'
+import InModelSectionsTags from '@/components/model/cards/InModelSectionsTags.vue'
 
 export default {
 
@@ -114,46 +113,21 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-card-control-buttons': CardControlButtons
+    'app-card-control-buttons': CardControlButtons,
+    'app-in-model-sections-tags': InModelSectionsTags
   },
 
   props: {
-    cardWrapper: {
-      type: Object,
-      default: null
-    },
-    forceUpdate: {
-      type: Boolean,
-      default: true
-    },
-    inSection: {
-      type: Object,
-      default: null
-    }
   },
 
   data () {
     return {
-      hovering: false
+      hovering: false,
+      showFull: false
     }
   },
 
   computed: {
-    cardTextStyle () {
-      if (!this.showFull) {
-        if (this.hasImage) {
-          return {
-            maxHeight: '100px'
-          }
-        } else {
-          return {
-            maxHeight: '250px'
-          }
-        }
-      } else {
-        return {}
-      }
-    },
     card () {
       return this.cardWrapper.card
     },
@@ -163,9 +137,6 @@ export default {
   },
 
   methods: {
-    showThisTag (inSection) {
-      return inSection.id !== this.inSection.id
-    },
     textTooLong () {
       if (!this.$refs.cardText) {
         return false
@@ -196,12 +167,19 @@ export default {
 
 <style scoped>
 
-
 .card-container {
+  max-height: 750px;
+  transition: max-height 1000ms ease;
+  overflow-y: auto;
 }
 
 .card-container-padded {
   padding: 8px 6px 12px 12px !important;
+}
+
+.limit-height {
+  max-height: 250px;
+  overflow: hidden;
 }
 
 .card-container-slim {
@@ -256,6 +234,7 @@ export default {
 }
 
 .bottom-row {
+  position: relative;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   padding: 3px 6px;
@@ -275,6 +254,13 @@ export default {
 
 .control-div {
   padding: 3px 6px;
+}
+
+.expand-height-button {
+  position: absolute;
+  left: calc(100% - 38px);
+  top: -38px;
+  background-color: rgba(218, 218, 218, 0.5);
 }
 
 </style>

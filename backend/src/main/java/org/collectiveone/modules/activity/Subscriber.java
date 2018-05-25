@@ -79,7 +79,7 @@ public class Subscriber {
 	public SubscriberDto toDto() {
 		SubscriberDto dto = new SubscriberDto();
 		if (id != null) dto.setId(id.toString());
-		dto.setElementId(elementId.toString());
+		if (elementId != null) dto.setElementId(elementId.toString());
 		dto.setElementType(type.toString());
 		dto.setUser(user.toDtoLight());
 		

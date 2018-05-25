@@ -1,7 +1,9 @@
 import Vue from 'vue'
+import router from '@/router'
 
 const state = {
-  initiative: null
+  initiative: null,
+  initiativeLoaded: false
 }
 
 const getters = {
@@ -62,6 +64,9 @@ const getters = {
 const mutations = {
   setInitiative: (state, payload) => {
     state.initiative = payload
+  },
+  setInitiativeLoaded: (state, payload) => {
+    state.initiativeLoaded = payload
   }
 }
 
@@ -84,8 +89,10 @@ const actions = {
         addLoggedUser: true
       }
     }).then((response) => {
-      context.commit('setInitiative', response.data.data)
+      let initiative = response.data.data
+      context.commit('setInitiative', initiative)
       context.commit('setInitiativeLoaded', true)
+      context.dispatch('resetSectionsTree', { baseSectionId: initiative.topModelSection.id, currentSectionId: router.app.$route.params.sectionId ? router.app.$route.params.sectionId : '' })
     }).catch((error) => {
       console.log(error)
     })

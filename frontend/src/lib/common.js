@@ -65,6 +65,11 @@ const amountAndPerc = function (val, tot) {
   return tot > 0 ? tokensString(val, 1) + ' / ' + percStr(val / tot * 100, 1) + '%' : '0 / 0%'
 }
 
+/* splice for strings */
+const spliceString = function (string, idx, rem, str) {
+  return string.slice(0, idx) + str + string.slice(idx + Math.abs(rem))
+}
+
 export {
   floatToChar,
   getTimeStrUntil,
@@ -72,5 +77,6 @@ export {
   dateString,
   tokensString,
   percStr,
-  amountAndPerc
+  amountAndPerc,
+  spliceString
 }

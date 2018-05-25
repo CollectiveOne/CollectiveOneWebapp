@@ -36,19 +36,6 @@ const actions = {
   updateProfile: (context) => {
     /* user profile */
     if (context.state.authenticated) {
-      /* set auto-update ever 5 seconds */
-      if (context.state.intervalId == null) {
-        context.state.intervalId = setInterval(() => {
-          /* update everything every 10 s */
-          if (context.state.authenticated) {
-            // context.dispatch('updateMyInitiatives')
-            context.commit('triggerUpdateNotifications')
-            // context.commit('triggerUpdateAssets')
-            // context.commit('triggerUpdateModel')
-          }
-        }, 30000)
-      }
-
       Vue.axios.get('/1/user/myProfile').then((response) => {
         if (response.data.result === 'success') {
           context.commit('setProfile', response.data.data)
@@ -63,15 +50,6 @@ const actions = {
         console.log(error)
         context.dispatch('logoutUser')
       })
-    } else {
-      /* autoupdate for non logged user */
-      if (context.state.intervalId2 == null) {
-        context.state.intervalId2 = setInterval(() => {
-          // context.dispatch('refreshInitiative')
-          // context.dispatch('refreshTransfers')
-          // context.commit('triggerUpdateAssets')
-        }, 10000)
-      }
     }
   },
 

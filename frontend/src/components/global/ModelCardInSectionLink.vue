@@ -6,7 +6,7 @@
       'sectionId': this.onSection ? this.onSection.id : '',
       'cardId': this.cardWrapper.id
       }}">
-    {{ cardWrapper.card.title !== '' ? cardWrapper.card.title : 'card' }}
+    {{ cardWrapper.card.title !== '' ? cardWrapper.card.title : cardWrapper.card.text.length < 25 ? cardWrapper.card.text : cardWrapper.card.text.slice(0,24) + ' ...' }}
   </router-link>
 </template>
 
