@@ -7,7 +7,8 @@
       <div class="w3-row blue-color title-text">
         <div v-for="parent in nestedIn.slice(1, nestedIn.length)"
           class="w3-left">
-          {{ parent.title }} <i class="fa fa-chevron-right" aria-hidden="true"></i>
+          <router-link :to="{ name: 'ModelSectionContent', params: {'sectionId': parent.id } }"> {{ parent.title }} </router-link>
+           <i class="fa fa-chevron-right" aria-hidden="true"></i>
         </div>
         <div class="w3-left">
           <router-link :to="{ name: 'ModelSectionContent', params: {'sectionId': section.id } }"> <b>{{ section.title }}</b> </router-link>

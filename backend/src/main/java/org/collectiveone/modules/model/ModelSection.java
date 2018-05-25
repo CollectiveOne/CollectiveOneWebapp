@@ -94,6 +94,7 @@ public class ModelSection {
 		sectionDto.setTitle(title);
 		sectionDto.setDescription(description);
 		sectionDto.setIsTopModelSection(isTopModelSection);
+		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
 		
 		return sectionDto; 
 	}
