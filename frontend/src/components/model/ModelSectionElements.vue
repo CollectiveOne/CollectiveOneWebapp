@@ -309,7 +309,7 @@ export default {
         this.$route.name === 'ModelSectionCard'
     },
     levels () {
-      return this.$store.state.viewParameters.levels
+      return this.$store.getters.getActualLevels
     },
     infiniteLevels () {
       if (this.isSectionsOrder) {

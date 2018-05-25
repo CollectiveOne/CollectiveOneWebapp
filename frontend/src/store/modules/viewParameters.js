@@ -8,6 +8,13 @@ const state = {
 }
 
 const getters = {
+  getActualLevels: (state) => {
+    if (state.isInfiniteLevels) {
+      return 999
+    } else {
+      return state.levels
+    }
+  }
 }
 
 const mutations = {
@@ -27,7 +34,7 @@ const mutations = {
     }
   },
   toggleInifinteLevels: (state) => {
-    state.infiniteLevels = state.infiniteLevels
+    state.isInfiniteLevels = !state.isInfiniteLevels
   },
   setCardsType: (state, payload) => {
     state.cardsType = payload

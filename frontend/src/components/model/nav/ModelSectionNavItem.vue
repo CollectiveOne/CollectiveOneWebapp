@@ -200,7 +200,7 @@ export default {
       return false
     },
     levels () {
-      return this.$store.state.viewParameters.levels
+      return this.$store.getters.getActualLevels
     },
     infiniteLevels () {
       return this.levels === 999

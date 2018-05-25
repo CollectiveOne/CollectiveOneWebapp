@@ -48,8 +48,8 @@ export default {
       this.$store.getters.currentSection()
     },
     levels () {
-      return this.$store.state.viewParameters.levels
-    }
+      return this.$store.getters.getActualLevels
+    },
   },
 
   methods: {
