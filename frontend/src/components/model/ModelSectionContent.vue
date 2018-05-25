@@ -29,6 +29,7 @@ export default {
   methods: {
     redirect () {
       if (this.$route.name === 'ModelSectionContent') {
+        console.log('redirecting to ModelSectionMessages')
         this.$router.replace({ name: 'ModelSectionMessages' })
       }
     }
@@ -36,6 +37,7 @@ export default {
 
   watch: {
     '$route.name' () {
+      console.log('reacting to route change in ModelSectionContent')
       this.redirect()
     }
   },

@@ -58,8 +58,10 @@ export default {
       if (this.$route.name === 'InitiativeModel') {
         let currentSection = this.$store.getters.currentSection
         if (currentSection !== null) {
+          console.log('redirecting to ModelSectionContent with sectionId: ' + currentSection.id)
           this.$router.replace({name: 'ModelSectionContent', params: {sectionId: currentSection.id}})
         } else {
+          console.log('redirecting to ModelSectionContent with sectionId: ' + this.initiative.topModelSection.id)
           this.$router.replace({name: 'ModelSectionContent', params: {sectionId: this.initiative.topModelSection.id}})
         }
       }
@@ -67,6 +69,7 @@ export default {
   },
 
   created () {
+    console.log('ModelSectionTab created')
     this.redirect()
   }
 }

@@ -4,10 +4,12 @@ import Router from 'vue-router'
 const RootView = () => import('@/components/RootView.vue')
 const LandingView = () => import('@/components/LandingView.vue')
 const AppView = () => import('@/components/AppView.vue')
+
 const InitiativesView = () => import('@/components/InitiativesView.vue')
 const InitiativesHome = () => import('@/components/InitiativesHome.vue')
 const InitiativesContent = () => import('@/components/initiative/InitiativeContent.vue')
 const Unsubscribe = () => import('@/components/user/Unsubscribe.vue')
+const ModelSectionRead = () => import('@/components/model/ModelSectionRead.vue')
 
 const OverviewSection = () => import('@/components/initiative/OverviewSection.vue')
 const PeopleSection = () => import('@/components/initiative/PeopleSection.vue')
@@ -69,10 +71,18 @@ export default new Router({
             },
             {
               path: ':initiativeId',
-              name: 'Initiative',
               component: InitiativesContent,
               children: [
-                { path: 'overview', name: 'InitiativeOverview', component: OverviewSection, meta: {'column': 1} },
+                {
+                  path: '/',
+                  name: 'Initiative',
+                  redirect: '/overview'
+                },
+                {
+                  path: 'overview',
+                  name: 'InitiativeOverview',
+                  component: OverviewSection,
+                  meta: {'column': 1} },
                 {
                   path: 'model',
                   component: ModelSectionTab,
