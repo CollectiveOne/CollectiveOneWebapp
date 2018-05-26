@@ -54,10 +54,10 @@
 
       <div class="expand-btn cursor-pointer"
         @click="expanded =! expanded"
-        v-click-outside="clickOutsideMenu">
+        v-click-outside="clickOutsideMenu"
+        v-show="!draggable">
         <i class="fa"
-          :class="{'fa-bars': !onlyAdd, 'fa-plus': onlyAdd}"
-          aria-hidden="true">
+          :class="{'fa-bars': !onlyAdd, 'fa-plus': onlyAdd}" aria-hidden="true">
         </i>
       </div>
 
@@ -134,6 +134,10 @@ export default {
     onlyAdd: {
       type: Boolean,
       deafult: false
+    },
+    draggable: {
+      type: Boolean,
+      default: false
     }
   },
 

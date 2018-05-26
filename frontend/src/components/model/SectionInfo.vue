@@ -7,7 +7,11 @@
             {{ sectionTitle }}
           </div>
           <div class="btn-div fa-button">
-            <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
+            <app-section-control-buttons 
+            :section="currentSection" 
+            :inSection="null" 
+            :draggable="$store.state.support.triggerCardDraggingState"
+            :hideAdd="true">
             </app-section-control-buttons>
           </div>
           <div v-if="isLoggedAnEditor" class="btn-div fa-button">

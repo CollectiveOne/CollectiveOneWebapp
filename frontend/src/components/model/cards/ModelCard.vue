@@ -2,7 +2,7 @@
   <div v-if="cardWrapper" class="card-base-div">
 
     <div class="card-content-container"
-      draggable="true"
+      :draggable="$store.state.support.triggerCardDraggingState"
       @dragstart="dragStart($event)">
 
       <component
