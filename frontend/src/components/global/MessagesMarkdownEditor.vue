@@ -107,7 +107,7 @@ export default {
     text () {
       this.$emit('input', this.text)
       this.checkHeight()
-      this.$store.dispatch('doMarkdownBackup', {elementId: this.elementId, value: this.value})
+      this.$store.dispatch('doMarkdownBackup', {elementId: this.elementId, value: this.text})
     },
     mentioningQuery () {
       this.updateMentionSuggestions()
