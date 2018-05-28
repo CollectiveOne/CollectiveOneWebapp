@@ -88,9 +88,6 @@
             <div @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
               <img src="./../../assets/network-icon.svg" alt="">
             </div>
-            <div @click="draggable()" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
-              <img src="./../../assets/move-icon.svg" alt="">
-            </div>
             <div @click="aggregatedOrder()" class="w3-left control-btn" :class="{'control-btn-selected': !isSectionsOrder}">
               <img src="./../../assets/search-icon.svg" alt="">
             </div>
@@ -134,6 +131,9 @@
           <div class="">
             <div @click="downloadContent()" class="w3-left control-btn">
               <img src="./../../assets/download-icon.svg" alt="">
+            </div>
+            <div @click="draggable()" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
+              <img src="./../../assets/move-icon.svg" alt="">
             </div>
           </div>
         </div>

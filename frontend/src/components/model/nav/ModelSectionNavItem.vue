@@ -9,7 +9,7 @@
       @dragleave.prevent="draggingLeave()"
       @drop.prevent="dragDroped($event)">
 
-      <div v-if="draggingOverWithSectionSameLevelFlag" class="w3-row dragging-same-level-clue">
+      <div v-if="draggingOverWithSectionSameLevelFlag" class="dragging-same-level-clue">
 
       </div>
 
@@ -39,13 +39,16 @@
           :isSelected="isSelected">
         </app-notifications-list>
       </div>
-      <div v-if="$store.state.user.authenticated" class="control-div" :class="{'fa-button': !highlight, 'fa-button-dark': highlight}">
+      <div v-if="$store.state.user.authenticated && !draggingEnabled" class="control-div" :class="{'fa-button': !highlight, 'fa-button-dark': highlight}">
         <app-section-control-buttons
           :section="section"
           :inSection="inSection"
           :draggable="$store.state.support.triggerSectionDraggingState"
           @section-removed="sectionRemoved()">
         </app-section-control-buttons>
+      </div>
+      <div v-if="draggingEnabled" class="drag-message-div">
+        <span><i class="fa fa-arrows" aria-hidden="true"></i></span>
       </div>
     </div>
 
@@ -214,6 +217,9 @@ export default {
         /* if this is not the selected section, decrease the highlightLevel property */
         return this.highlightLevel
       }
+    },
+    draggingEnabled () {
+      return this.$store.state.support.triggerSectionDraggingState
     }
   },
 
@@ -455,6 +461,7 @@ export default {
 }
 
 .section-nav-item-first-row {
+  position: relative;
 }
 
 .subsections-container {
@@ -473,6 +480,10 @@ export default {
 }
 
 .dragging-same-level-clue {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
   height: 5px;
   background-color: #637484;
   border-radius: 2.5px;
@@ -516,7 +527,7 @@ export default {
   text-align: center;
   width: 30px;
   float: left;
-  padding: 8px 0px;
+  padding: 6px 0px;
 }
 
 .notification-div {
@@ -524,6 +535,17 @@ export default {
   width: 30px;
   float: left;
   padding-top: 8px;
+}
+
+.drag-message-div {
+  top: 4px;
+  right: 12px;
+  position: absolute;
+  background-color: rgba(21, 165, 204, 0.8);
+  color: white;
+  border-radius: 6px;
+  padding: 3px 6px;
+  cursor: move;
 }
 
 </style>

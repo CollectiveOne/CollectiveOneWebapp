@@ -14,7 +14,7 @@
     </transition>
 
     <div class="model-nav-container">
-      <div class="row">
+      <div v-if="$store.state.user.authenticated" class="w3-row">
         <app-model-nav-control-buttons>
         </app-model-nav-control-buttons>
       </div>
@@ -81,6 +81,11 @@ export default {
 }
 
 .model-nav-container {
+}
+
+.controls-row {
+  background-color: #f9f9f9;
+  padding: 6px;
 }
 
 </style>
