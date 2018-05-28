@@ -7,7 +7,9 @@ const state = {
   expandNav: false,
   expandModelNav: true,
   windowIsSmall: false,
-  draggingElement: null
+  draggingElement: null,
+  triggerSectionDraggingState: false,
+  triggerCardDraggingState: false
 }
 
 const getters = {
@@ -43,6 +45,12 @@ const mutations = {
   },
   setDraggingElement: (state, payload) => {
     state.draggingElement = payload
+  },
+  triggerSectionDraggingState: (state) => {
+    state.triggerSectionDraggingState = !state.triggerSectionDraggingState
+  },
+  triggerCardDraggingState: (state) => {
+    state.triggerCardDraggingState = !state.triggerCardDraggingState
   }
 }
 

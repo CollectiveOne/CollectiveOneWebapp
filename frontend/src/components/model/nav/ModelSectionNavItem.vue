@@ -1,9 +1,9 @@
 <template lang="html">
-  <div class="w3-row section-nav-item-container">
 
+  <div class="w3-row section-nav-item-container">
     <div class="w3-row section-nav-item-first-row"
       :class="rowClass"
-      draggable="true"
+      :draggable="$store.state.support.triggerSectionDraggingState"
       @dragstart="dragStart($event)"
       @dragover.prevent="draggingOver($event)"
       @dragleave.prevent="draggingLeave()"
@@ -43,6 +43,7 @@
         <app-section-control-buttons
           :section="section"
           :inSection="inSection"
+          :draggable="$store.state.support.triggerSectionDraggingState"
           @section-removed="sectionRemoved()">
         </app-section-control-buttons>
       </div>

@@ -88,6 +88,9 @@
             <div @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
               <img src="./../../assets/network-icon.svg" alt="">
             </div>
+            <div @click="draggable()" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
+              <img src="./../../assets/move-icon.svg" alt="">
+            </div>
             <div @click="aggregatedOrder()" class="w3-left control-btn" :class="{'control-btn-selected': !isSectionsOrder}">
               <img src="./../../assets/search-icon.svg" alt="">
             </div>
@@ -341,6 +344,9 @@ export default {
     },
     isSectionsOrder () {
       return this.orderType === 'sections'
+    },
+    isDraggable () {
+      return this.$store.state.support.triggerCardDraggingState
     }
   },
 
@@ -368,6 +374,9 @@ export default {
   },
 
   methods: {
+    draggable () {
+      this.$store.commit('triggerCardDraggingState')
+    },
     messagesContent () {
       if (this.$route.name !== 'ModelSectionMessages') {
         this.$router.push({name: 'ModelSectionMessages'})
