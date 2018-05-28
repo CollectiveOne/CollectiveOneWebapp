@@ -15,6 +15,18 @@
         @updateCards="$emit('updateCards')">
       </component>
 
+      <transition name="fadeenter">
+        <div v-if="$store.state.support.triggerCardDraggingState" class="cover-when-draggable">
+          <div class="cover-when-draggable-content">
+            <span>
+              <i class="fa fa-arrows" aria-hidden="true"></i> <b>move</b>
+              (drop on another section while pressing Ctrl to
+              <i class="fa fa-clone" aria-hidden="true"></i> <b>copy</b>)
+            </span>
+          </div>
+        </div>
+      </transition>
+
     </div>
 
   </div>
@@ -112,6 +124,38 @@ export default {
 </script>
 
 <style>
+
+.card-content-container {
+  position: relative;
+}
+
+.cover-when-draggable {
+  top: 0px;
+  left: 0px;
+  border-radius: 6px;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  background-color: rgba(164, 164, 164, 0.4);
+  padding: 0px 16px;
+  font-size: 16px;
+  cursor: move;
+}
+
+.cover-when-draggable-content {
+  max-width: 80%;
+  max-height: 80%;
+  margin: 0 auto;
+  background-color: #15a5cc;
+  color: white;
+  border-radius: 12px;
+  padding: 3px 12px;
+}
+
 
 .card-content-container,
 .card-content-container h1,
