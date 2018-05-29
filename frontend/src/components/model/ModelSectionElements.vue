@@ -322,7 +322,7 @@ export default {
       }
     },
     cardsType () {
-      return this.$route.query.cardsType ? this.$route.query.cardsType : 'card'
+      return this.$store.state.viewParameters.cardsType
     },
     showPrivate () {
       return this.$store.state.viewParameters.showPrivate
@@ -410,24 +410,27 @@ export default {
       if (!this.sectionLoadedOnce || (this.sectionLoadedOnceLevels !== this.levels)) {
         this.updateSection()
       }
-      if (this.$route.query.cardsType !== 'summary' || this.$route.name !== 'ModelSectionCards') {
-        this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'summary'}})
+      this.$store.commit('setCardsType', 'summary')
+      if (this.$route.name !== 'ModelSectionCards') {
+        this.$router.push({name: 'ModelSectionCards'})
       }
     },
     cardView () {
       if (!this.sectionLoadedOnce || (this.sectionLoadedOnceLevels !== this.levels)) {
         this.updateSection()
       }
-      if (this.$route.query.cardsType !== 'card' || this.$route.name !== 'ModelSectionCards') {
-        this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'card'}})
+      this.$store.commit('setCardsType', 'card')
+      if (this.$route.name !== 'ModelSectionCards') {
+        this.$router.push({name: 'ModelSectionCards'})
       }
     },
     docView () {
       if (!this.sectionLoadedOnce || (this.sectionLoadedOnceLevels !== this.levels)) {
         this.updateSection()
       }
-      if (this.$route.query.cardsType !== 'doc' || this.$route.name !== 'ModelSectionCards') {
-        this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'doc'}})
+      this.$store.commit('setCardsType', 'doc')
+      if (this.$route.name !== 'ModelSectionCards') {
+        this.$router.push({name: 'ModelSectionCards'})
       }
     },
     showPrivateClick () {

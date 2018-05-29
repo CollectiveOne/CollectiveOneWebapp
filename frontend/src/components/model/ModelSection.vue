@@ -339,7 +339,7 @@ font-family: 'Merriweather', serif;
 
 
 .chevron-container {
-  padding: 8px;
+  padding: 0px 8px;
 }
 
 .section-container {
