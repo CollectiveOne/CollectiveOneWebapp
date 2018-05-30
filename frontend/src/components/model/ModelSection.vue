@@ -26,7 +26,7 @@
             <span v-html="headerOpenTag + parent.title + headerCloseTag"></span>
           </router-link>
           <div class="w3-left chevron-container">
-            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            <span v-html="headerOpenTag + faRawHtml + headerCloseTag"></span>
           </div>
 
         </div>
@@ -212,6 +212,9 @@ export default {
     },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
+    },
+    faRawHtml () {
+      return '<i class="fa fa-chevron-right" aria-hidden="true"></i>'
     }
   },
 
@@ -337,11 +340,6 @@ font-family: 'Merriweather', serif;
 
 <style scoped>
 
-
-.chevron-container {
-  padding: 0px 8px;
-}
-
 .section-container {
   font-family: 'Open Sans', sans-serif;
 }
@@ -359,8 +357,14 @@ font-family: 'Merriweather', serif;
   display: inline-block;
 }
 
-.title-row .fa {
-  font-size: 12px;
+.title-text .w3-left > * {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.chevron-container {
+  padding: 0px 8px;
+  font-size: 15px;
 }
 
 .title-row > div {

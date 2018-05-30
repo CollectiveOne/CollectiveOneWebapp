@@ -75,22 +75,5 @@ export default (to, from, next) => {
     return
   }
 
-  if (to.name === 'ModelSectionRead' || to.name === 'ModelSectionReadCard') {
-    let fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
-    let toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
-
-    next({
-      name: to.name,
-      params: {
-        sectionId: to.params.sectionId
-      },
-      query: {
-        cardsType: toCardsType
-      },
-      replace: true
-    })
-    return
-  }
-
   next()
 }

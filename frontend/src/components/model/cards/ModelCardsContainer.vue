@@ -21,7 +21,7 @@
         </app-model-card>
       </div>
 
-    </div><div v-if="showNewCardButton" :class="cardsContainerClasses" class=""
+    </div><div v-if="showNewCardButton && !hideCardControls" :class="cardsContainerClasses" class=""
       @dragover.prevent="draggingOver()"
       @drop.prevent="cardDroped('', $event)">
 

@@ -9,7 +9,7 @@
           <i v-else class="fa fa-chevron-circle-down" aria-hidden="true"></i>
         </div>
         <div v-else>
-          <i class="fa fa-circle" aria-hidden="true"></i>
+          <i @click="sectionSelected()" class="fa fa-circle" aria-hidden="true"></i>
         </div>
       </div>
       <div @click="sectionSelected()" @dblclick="toggleSubsections()" class="title-div cursor-pointer noselect">
@@ -103,6 +103,7 @@ export default {
 }
 
 .section-nav-item-first-row {
+  padding: 3px 0px;
 }
 
 .subsections-container {
@@ -128,12 +129,23 @@ export default {
   float: left;
   text-align: center;
   padding: 3px 0px;
+  transition: all 300ms ease;
+}
+
+.circle-div:hover {
+  color: #106e87;
 }
 
 .title-div {
   width: calc(100% - 30px - 30px - 30px);
   float: left;
   padding: 3px 0px;
+  transition: all 300ms ease;
 }
+
+.title-div:hover {
+  color: #106e87;
+}
+
 
 </style>

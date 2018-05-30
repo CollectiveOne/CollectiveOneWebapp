@@ -46,7 +46,7 @@
 
         <div class="w3-row section-row">
           <app-model-section
-            class="section-component"
+            :class="{'section-component-doc': cardsType === 'doc'}"
             v-if="!loading"
             :section="section"
             :showThisTitle="true"
@@ -93,7 +93,7 @@ export default {
       return this.$route.params.sectionId
     },
     cardsType () {
-      return this.$route.query.cardsType ? this.$route.query.cardsType : 'doc'
+      return this.$store.state.viewParameters.cardsType
     },
     isSummary () {
       return this.cardsType === 'summary'
@@ -144,20 +144,18 @@ export default {
       this.$router.replace({name: 'ModelSectionRead'})
     },
     summaryView () {
-      if (this.$route.query.cardsType !== 'summary') {
-        this.$router.push({name: 'ModelSectionRead', query: {cardsType: 'summary'}})
-      }
+      this.$store.commit('setCardsType', 'summary')
     },
     cardView () {
-      if (this.$route.query.cardsType !== 'card') {
-        this.$router.push({name: 'ModelSectionRead', query: {cardsType: 'card'}})
-      }
+      this.$store.commit('setCardsType', 'card')
     },
     docView () {
-      if (this.$route.query.cardsType !== 'doc') {
-        this.$router.push({name: 'ModelSectionRead', query: {cardsType: 'doc'}})
-      }
+      this.$store.commit('setCardsType', 'doc')
     }
+  },
+
+  beforeCreate () {
+    this.$store.commit('setCardsType', 'doc')
   },
 
   created () {
@@ -200,7 +198,11 @@ export default {
   flex-shrink: 0;
 }
 
-.section-component {
+.control-btn {
+  margin-right: 6px;
+}
+
+.section-component-doc {
   max-width: 1000px;
 }
 
