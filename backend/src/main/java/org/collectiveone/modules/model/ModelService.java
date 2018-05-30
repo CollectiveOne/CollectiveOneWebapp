@@ -628,14 +628,25 @@ public class ModelService {
 		ModelCardWrapperAddition cardWrapperAddition = 
 				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(inSectionId, cardWrapperId, creatorId);
 		
+		/* only author can edit the content. Adders can only move the card around */
+		if (cardWrapperAddition.getScope() != ModelCardWrapperScope.COMMON) {
+			if (!cardWrapperAddition.getCardWrapper().getCreator().getC1Id().equals(creatorId)) {
+				return new PostResult("error", "access denied, only author can edit a card", "");
+			}
+		}
+		
 		if (cardWrapperAddition != null) {
-			cardWrapperAddition.setScope(cardDto.getNewScope());	
-			modelCardWrapperAdditionRepository.save(cardWrapperAddition);
+			if (cardDto.getNewScope() != null) {
+				cardWrapperAddition.setScope(cardDto.getNewScope());	
+				modelCardWrapperAdditionRepository.save(cardWrapperAddition);	
+			}
 		}
 		
 		ModelCard originalCard = cardWrapper.getCard();
 		
-		cardWrapper.getOldVersions().add(originalCard);
+		if (!cardWrapper.getOldVersions().contains(originalCard)) {
+			cardWrapper.getOldVersions().add(originalCard);	
+		}
 		
 		ModelCard card = cardDto.toEntity(null, cardDto, null);
 		
@@ -662,6 +673,8 @@ public class ModelService {
 		if (prevEditor == null) {
 			cardWrapper.getEditors().add(appUserRepository.findByC1Id(creatorId));
 		}
+		
+		modelCardWrapperRepository.save(cardWrapper);
 		
 		if (cardWrapperAddition.getScope() != ModelCardWrapperScope.PRIVATE) {
 			activityService.modelCardWrapperEdited(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));	
@@ -830,11 +843,18 @@ public class ModelService {
 			return new GetResult<ModelCardWrapperDto>("error", "dont have access to this card", null);
 		}
 		
-		/* check if this is a card addition */
-		ModelCardWrapperAddition dummy = new ModelCardWrapperAddition();
-		dummy.setCardWrapper(modelCardWrapperRepository.findById(cardWrapperId));
 		
-		cardWrapperDto = getCardWrapperDtoWithMetadata(dummy, requestByUserId);
+		ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
+		/* check if this is a card addition */
+		if (inSectionId != null) {
+			cardWrapperAddition = 
+					modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(inSectionId, cardWrapperId, requestByUserId);	
+		} else {
+			cardWrapperAddition = new ModelCardWrapperAddition();
+			cardWrapperAddition.setCardWrapper(modelCardWrapperRepository.findById(cardWrapperId));
+		}
+		
+		cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId);
 		
 		return new GetResult<ModelCardWrapperDto>("success", "card retrieved", cardWrapperDto);
 	}

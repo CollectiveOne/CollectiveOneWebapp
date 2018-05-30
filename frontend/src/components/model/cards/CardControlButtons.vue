@@ -12,6 +12,7 @@
             :atCardWrapper="cardWrapper"
             :newCardLocation="newCardLocation"
             @close="showNewCardModal = false"
+            @update="$emit('update')"
             @updateCards="$emit('updateCards')">
           </app-model-card-modal>
         </transition>

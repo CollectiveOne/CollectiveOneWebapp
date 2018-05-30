@@ -127,6 +127,7 @@ export default {
 
   methods: {
     update () {
+      console.log('updating card ' + this.cardWrapper.id)
       this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id, {
         params: {
           inSectionId: this.inSection ? this.inSection.id : ''

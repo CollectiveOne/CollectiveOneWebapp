@@ -30,7 +30,7 @@ SELECT
   cards_order
 FROM masterschema.model_sections_cards_wrappers; 
 
-DROP TABLE masterschema.model_sections_cards_wrappers;
+DROP FOREIGN TABLE masterschema.model_sections_cards_wrappers;
 ALTER TABLE masterschema.model_sections_cards_wrappers_temp RENAME TO model_sections_cards_wrappers;   
 
 -- Model Card Wrappers withput state control

@@ -9,6 +9,7 @@
           :inSectionId="sectionId"
           :inSectionTitle="sectionTitle"
           @close="closeCardModal()"
+          @update="resetCards()"
           @updateCards="resetCards()">
         </app-model-card-modal>
       </transition>
@@ -352,6 +353,9 @@ export default {
 
   watch: {
     '$route.params.sectionId' () {
+      this.update()
+    },
+    '$route.params.cardId' () {
       this.update()
     },
     '$route.name' () {
