@@ -2,20 +2,21 @@
   <div class="">
     <div class="w3-row">
       <transition name="fadeenter">
-        <div :key="currentSectionId" class="this-section-title small-scroll">
+        <div :key="currentSectionId" v-if="currentSection" class="this-section-title small-scroll">
           <div class="title-div">
             {{ sectionTitle }}
           </div>
-          <div class="btn-div fa-button">
+          <div @click="showIn = !showIn" class="btn-div fa-button">
+            <i v-if="showIn" class="fa fa-chevron-up" aria-hidden="true"></i>
+            <i v-else class="fa fa-chevron-down" aria-hidden="true"></i>
+          </div>
+          <div v-if="$store.state.user.authenticated" class="btn-div fa-button">
             <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
             </app-section-control-buttons>
           </div>
           <div v-if="isLoggedAnEditor" class="btn-div fa-button">
             <app-section-control-buttons :section="currentSection" :inSection="null" :onlyAdd="true">
             </app-section-control-buttons>
-          </div>
-          <div @click="showIn = !showIn" class="btn-div fa-button">
-            <i class="fa fa-info-circle" aria-hidden="true"></i>
           </div>
           <div class="btn-div fa-button">
             <router-link :to="{ name: 'ModelSectionRead', params: {sectionId: this.currentSection.id} }">
@@ -44,7 +45,9 @@
             </div>
             <div v-for="(parent, ix) in currentSectionPath" class="w3-left">
               <div class="w3-left">
-                {{ parent.title }}
+                <router-link :to="{ name: 'ModelSectionContent', params: {'sectionId': parent.id, 'initiativeId': parent.initiativeId } }">
+                  {{ parent.title }}
+                </router-link>
               </div>
               <div v-if="ix < currentSectionPath.length - 1" class="w3-left fa-container">
                 <i class="fa fa-chevron-right" aria-hidden="true"></i>

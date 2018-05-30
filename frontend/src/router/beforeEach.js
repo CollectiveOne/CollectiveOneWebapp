@@ -1,7 +1,10 @@
 import { store } from '../store/store'
+
 export default (to, from, next) => {
   /** adhock logic to handle route transitions so that the sub-section is kept
   when switching among initiatives, and the animation is selected accordingly */
+  console.log('from ' + from.name + ' to ' + to.name)
+
   if (to.name === 'Initiative') {
     /** always redirect if target is base initiative.
      *  The path level 1 is 'inits' and the path level '3'
@@ -15,6 +18,7 @@ export default (to, from, next) => {
       },
       replace: true
     })
+    return
   } else {
     /** select animation based on column and level */
     var animation = ''
@@ -28,8 +32,6 @@ export default (to, from, next) => {
       }
     }
     store.commit('setContentAnimationType', animation)
-
-    next()
   }
 
   var toModelSection = false
@@ -40,67 +42,37 @@ export default (to, from, next) => {
   }
 
   if (toModelSection) {
-    /* keep the levels and cards url parameters when switching among views. */
-    let fromLevels = from.query.levels ? from.query.levels : '1'
-    let fromCardsType = from.query.cardsType ? from.query.cardsType : 'card'
-
-    let toLevels = to.query.levels ? to.query.levels : fromLevels
-    let toCardsType = to.query.cardsType ? to.query.cardsType : fromCardsType
-
-    if (to.name === 'ModelSectionContent') {
+    let toName = to.name
+    if (toName === 'ModelSectionContent') {
       /* just keep the current tab when switching among sections */
       switch (from.name) {
         case 'ModelSectionMessages':
-        next({
-            name: 'ModelSectionMessages',
-            params: {
-              sectionId: to.params.sectionId
-            },
-            query: {
-              levels: toLevels,
-              cardsType: toCardsType
-            },
-            replace: true
-          })
+          toName = 'ModelSectionMessages'
           break
 
         case 'ModelSectionCards':
         case 'ModelSectionCard':
-          next({
-            name: 'ModelSectionCards',
-            params: {
-              sectionId: to.params.sectionId
-            },
-            query: {
-              levels: toLevels,
-              cardsType: toCardsType
-            },
-            replace: true})
+          toName = 'ModelSectionCards'
           break
 
         default:
           next()
-          break
+          return
       }
-    } else {
-      if (
-        (toLevels !== fromLevels) ||
-        (toCardsType !== fromCardsType) ||
-        (to.name !== from.name)) {
-        next({
-          name: to.name,
-          params: {
-            sectionId: to.params.sectionId
-          },
-          query: {
-            levels: toLevels,
-            cardsType: toCardsType
-          },
-          replace: true})
-      } else {
-        next()
+
+      let nextPars = {
+        name: toName,
+        params: {
+          sectionId: to.params.sectionId
+        },
+        replace: true
       }
+      next(nextPars)
+      return
     }
+
+    next()
+    return
   }
 
   if (to.name === 'ModelSectionRead' || to.name === 'ModelSectionReadCard') {
@@ -115,6 +87,10 @@ export default (to, from, next) => {
       query: {
         cardsType: toCardsType
       },
-      replace: true})
+      replace: true
+    })
+    return
   }
+
+  next()
 }

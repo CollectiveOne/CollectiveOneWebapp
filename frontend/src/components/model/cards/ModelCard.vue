@@ -2,7 +2,7 @@
   <div v-if="cardWrapper" class="card-base-div">
 
     <div class="card-content-container"
-      draggable="true"
+      :draggable="$store.state.support.triggerCardDraggingState && isDraggable"
       @dragstart="dragStart($event)">
 
       <component
@@ -16,6 +16,18 @@
         @update="update()"
         @updateCards="$emit('updateCards')">
       </component>
+
+      <transition name="fadeenter">
+        <div v-if="$store.state.support.triggerCardDraggingState" class="cover-when-draggable">
+          <div class="cover-when-draggable-content">
+            <span>
+              <i class="fa fa-arrows" aria-hidden="true"></i> <b>move</b>
+              (drop on another section while pressing Ctrl to
+              <i class="fa fa-clone" aria-hidden="true"></i> <b>copy</b>)
+            </span>
+          </div>
+        </div>
+      </transition>
 
     </div>
 
@@ -67,6 +79,12 @@ export default {
     }
   },
 
+  watch: {
+    cardWrapperInit () {
+      this.cardWrapper = this.cardWrapperInit
+    }
+  },
+
   data () {
     return {
       cardWrapper: null
@@ -74,6 +92,22 @@ export default {
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
+    authorIsLoggedUser () {
+      if (this.$store.state.user.profile) {
+        return this.$store.state.user.profile.c1Id === this.cardWrapper.creator.c1Id
+      }
+      return false
+    },
+    isDraggable () {
+      if (this.cardWrapper.scope === 'COMMON') {
+        return this.isLoggedAnEditor
+      } else {
+        return this.authorIsLoggedUser
+      }
+    },
     cardComponent () {
       switch (this.type) {
         case 'summary':
@@ -93,7 +127,11 @@ export default {
 
   methods: {
     update () {
-      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id, {
+        params: {
+          inSectionId: this.inSection ? this.inSection.id : ''
+        }
+      }).then((response) => {
         this.cardWrapper = response.data.data
       })
     },
@@ -101,7 +139,8 @@ export default {
       var moveCardData = {
         type: 'MOVE_CARD',
         cardWrapperId: this.cardWrapper.id,
-        fromSectionId: this.inSection.id
+        fromSectionId: this.inSection.id,
+        scope: this.cardWrapper.scope
       }
       event.dataTransfer.setData('text/plain', JSON.stringify(moveCardData))
 
@@ -122,6 +161,38 @@ export default {
 </script>
 
 <style>
+
+.card-content-container {
+  position: relative;
+}
+
+.cover-when-draggable {
+  top: 0px;
+  left: 0px;
+  border-radius: 6px;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  background-color: rgba(164, 164, 164, 0.4);
+  padding: 0px 16px;
+  font-size: 16px;
+  cursor: move;
+}
+
+.cover-when-draggable-content {
+  max-width: 80%;
+  max-height: 80%;
+  margin: 0 auto;
+  background-color: #15a5cc;
+  color: white;
+  border-radius: 12px;
+  padding: 3px 12px;
+}
+
 
 .card-content-container,
 .card-content-container h1,

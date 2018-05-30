@@ -46,10 +46,14 @@
 
         <div class="w3-row section-row">
           <app-model-section
+            class="section-component"
             v-if="!loading"
             :section="section"
             :showThisTitle="true"
             :hideCardControls="true"
+            :showPrivate="false"
+            :showShared="false"
+            :showCommon="true"
             :cardRouteName="'ModelSectionReadCard'"
             :cardsType="cardsType">
           </app-model-section>
@@ -182,22 +186,30 @@ export default {
 }
 
 .section-content {
-  padding: 12px 12px;
+  padding: 12px 0px 12px 12px;
   flex-grow: 1;
   height: 100%;
   display: flex;
   flex-direction: column;
+  min-width: 300px;
 }
 
 .control-btns-row {
   padding-left: 28px;
+  padding-bottom: 12px;
   flex-shrink: 0;
+}
+
+.section-component {
+  max-width: 1000px;
 }
 
 .section-row {
   flex-grow: 1;
   overflow: auto;
   padding: 12px 0px;
+  padding-left: 3vw;
+  padding-right: 3vw;
 }
 
 .hide-nav-div-container {

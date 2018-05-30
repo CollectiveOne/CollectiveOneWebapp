@@ -1,5 +1,21 @@
 export const cardMixin = {
   props: {
+    cardWrapper: {
+      type: Object,
+      default: null
+    },
+    forceUpdate: {
+      type: Boolean,
+      default: true
+    },
+    inSection: {
+      type: Object,
+      default: null
+    },
+    hideCardControls: {
+      type: Boolean,
+      default: false
+    },
     inCardSelector: {
       type: Boolean,
       default: false
@@ -9,14 +25,35 @@ export const cardMixin = {
       default: 'ModelSectionCard'
     }
   },
-  methods: {
-    showThisTag (inSection) {
-      /* hide the card in which this section is from tags */
-      if (this.inSection) {
-        return inSection.id !== this.inSection.id
-      }
-      return true
+  computed: {
+    isPrivate () {
+      return this.cardWrapper.scope === 'PRIVATE'
     },
+    isShared () {
+      return this.cardWrapper.scope === 'SHARED'
+    },
+    inSectionId () {
+        return this.inSection ? this.inSection.id : ''
+    },
+    containerClass () {
+      let cClass = {}
+      switch (this.cardWrapper.scope) {
+        case 'PRIVATE':
+          cClass['border-red'] = true
+          break
+
+        case 'SHARED':
+          cClass['border-yellow'] = true
+          break
+
+        default:
+          cClass['border-blue'] = true
+          break
+      }
+      return cClass
+    }
+  },
+  methods: {
     cardClicked () {
       if (!this.inCardSelector) {
         this.$router.push({name: this.cardRouteName, params: { cardId: this.cardWrapper.id }})

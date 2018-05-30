@@ -48,8 +48,8 @@ export default {
       this.$store.getters.currentSection()
     },
     levels () {
-      return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
-    }
+      return this.$store.getters.getActualLevels
+    },
   },
 
   methods: {

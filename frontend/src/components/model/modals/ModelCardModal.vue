@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="w3-modal">
+  <div class="w3-modal" draggable="false">
     <div class="w3-modal-content">
       <div class="w3-card-4 app-modal-card w3-display-container"
         v-click-outside="clickOutside">
@@ -35,13 +35,13 @@
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
             <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
-              :class="{'border-blue': !addExisting}"
+              :class="{'border-blue-app': !addExisting}"
               @click="addExisting = false">
               <h5 class="noselect" :class="{'bold-text': !addExisting}">Create New</h5>
             </div>
             <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
-              :class="{'border-blue': addExisting}"
-              @click="addExisting = true">
+              :class="{'border-blue-app': addExisting}"
+              @click="addExisting = true; existingCard = null">
               <h5 class="noselect" :class="{'bold-text': addExisting}">Add Existing</h5>
             </div>
           </div>
@@ -49,14 +49,33 @@
           <div class="slider-container">
             <transition name="slideLeftRight">
               <div v-if="addExisting && editing" class="">
-                <app-model-card-selector
-                  :inSectionId="inSectionId"
-                  @select="cardSelected($event)">
-                </app-model-card-selector>
-                <app-error-panel
-                  :show="noCardSelectedShow"
-                  message="please select one card from above">
-                </app-error-panel>
+                <div class="w3-row">
+                  <app-model-card-selector
+                    :inSectionId="inSectionId"
+                    @select="cardSelected($event)">
+                  </app-model-card-selector>
+                  <app-error-panel
+                    :show="noCardSelectedShow"
+                    message="please select one card from above">
+                  </app-error-panel>
+                  <app-error-panel
+                    :show="cardAlreadyPresentShow"
+                    message="please select one card from above">
+                  </app-error-panel>
+                </div>
+
+                <div v-if="existingCard !== null" class="w3-row w3-container w3-margin-top">
+                  <label class="">
+                    <b>New scope (in "{{ inSectionTitle }}" section):</b>
+                  </label>
+                  <select v-model="existingCardNewScope"
+                    class="w3-input w3-topbar" :class="selectorExistingBorderClass" name="">
+                    <option value="PRIVATE">Private (only I can see it)</option>
+                    <option value="SHARED">Shared (others can see it, but its mine)</option>
+                    <option value="COMMON">Common (controlled by all editors)</option>
+                  </select>
+                </div>
+
               </div>
             </transition>
           </div>
@@ -70,56 +89,16 @@
 
               <div v-if="!addExisting">
 
-                <div v-if="!isNew">
-                  <div class="w3-row">
-                    <div class="w3-left w3-margin-right">
-                      <i>in:</i>
-                    </div>
-                    <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
-                      class="insection-tag-container w3-left">
-                      <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
-                        class="gray-1 w3-tag w3-round w3-small">
-                        {{ inSection.title }}
-                      </router-link>
-                    </div>
-                    <div v-if="editing" v-for="toSection in addToSections" :key="toSection.id"
-                      class="insection-tag-container w3-left w3-display-container w3-margin-left">
-                      <div class="success-background w3-tag w3-round w3-small">
-                        {{ toSection.title }}
-                      </div>
-                      <div @click="removeToSection(toSection)"
-                        class="remove-tag-icon success-color w3-display-right cursor-pointer">
-                        <i class="fa fa-times-circle"></i>
-                      </div>
-                    </div>
-                    <div v-if="editing" class="w3-left w3-margin-left">
-                      <div v-if="!addToSection"
-                        @click="addToSection = !addToSection"
-                        class="w3-tag button-blue w3-small w3-round cursor-pointer">
-                        add to another section
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="w3-row">
-                    <div class="slider-container">
-                      <transition name="slideDownUp">
-                        <app-model-section-selector
-                          v-if="addToSection"
-                          :initiativeId="cardWrapper.initiativeId"
-                          @select="sectionSelected($event)">
-                        </app-model-section-selector>
-                      </transition>
-                    </div>
-                  </div>
-
-                  <div v-if="addToSection" class="w3-row w3-margin-top w3-center">
-                    <button @click="addToSection = false"
-                      class="w3-button app-button" type="button" name="button">
-                      Cancel add to section
-                    </button>
-                  </div>
-
+                <div v-if="editing && canChangeScope" class="w3-row w3-margin-top">
+                  <label class="">
+                    <b>Scope (in "{{ inSectionTitle }}" section):</b>
+                  </label>
+                  <select v-model="editedCard.newScope"
+                    class="w3-input w3-topbar" :class="selectorBorderClass" name="">
+                    <option value="PRIVATE">Private (only I can see it)</option>
+                    <option value="SHARED">Shared (others can see it, but its mine)</option>
+                    <option value="COMMON">Common (controlled by all editors)</option>
+                  </select>
                 </div>
 
                 <div v-if="!editing" class="">
@@ -342,6 +321,7 @@ export default {
       textEmptyError: false,
       addExisting: false,
       existingCard: null,
+      existingCardNewScope: '',
       noCardSelectedError: false,
       animatingTab: false,
       showUrl: false,
@@ -354,13 +334,63 @@ export default {
       enableClickOutside: false,
       sendingData: false,
       loading: false,
-      addToSection: false,
-      addToSections: [],
       closeIntent: false
     }
   },
 
   computed: {
+    selectorExistingBorderClass () {
+      let cClass = {}
+      switch (this.existingCardNewScope) {
+        case 'PRIVATE':
+          cClass['border-red'] = true
+          break
+
+        case 'SHARED':
+          cClass['border-yellow'] = true
+          break
+
+        default:
+          cClass['border-blue'] = true
+          break
+      }
+      return cClass
+    },
+    selectorBorderClass () {
+      let cClass = {}
+      switch (this.editedCard.newScope) {
+        case 'PRIVATE':
+          cClass['border-red'] = true
+          break
+
+        case 'SHARED':
+          cClass['border-yellow'] = true
+          break
+
+        default:
+          cClass['border-blue'] = true
+          break
+      }
+      return cClass
+    },
+    isLoggedTheAuthor () {
+      if (this.cardWrapper.creator && this.$store.state.user.profile) {
+        console.log(this.cardWrapper)
+        console.log(this.$store.state.user.profile)
+        return this.cardWrapper.creator.c1Id === this.$store.state.user.profile.c1Id
+      }
+    },
+    canChangeScope () {
+      switch (this.editedCard.newScope) {
+        case 'PRIVATE':
+        case 'SHARED':
+          return this.isNew ? true : this.isLoggedTheAuthor
+
+        case 'COMMON':
+          return this.isNew
+
+      }
+    },
     showSelectFile () {
       return this.editing && this.changeImage
     },
@@ -469,7 +499,11 @@ export default {
     },
     update () {
       this.loading = true
-      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id).then((response) => {
+      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id, {
+        params: {
+          inSectionId: this.inSectionId
+        }
+      }).then((response) => {
         this.cardWrapper = response.data.data
         this.loading = false
         if (this.editingInit) {
@@ -479,6 +513,7 @@ export default {
     },
     cardSelected (cardWrapper) {
       this.existingCard = cardWrapper
+      this.existingCardNewScope = cardWrapper.scope
     },
     clickOutside () {
       if (this.enableClickOutside) {
@@ -503,8 +538,8 @@ export default {
       }
     },
     startEditing () {
-      this.addToSections = []
       this.editedCard = JSON.parse(JSON.stringify(this.card))
+      this.editedCard.newScope = this.cardWrapper.scope
       this.editing = true
     },
     accept () {
@@ -530,53 +565,68 @@ export default {
       if (ok) {
         var cardDto = JSON.parse(JSON.stringify(this.editedCard))
 
-        var responseF = (response) => {
-          this.sendingData = false
-          if (response.data.result === 'success') {
-            this.closeThis()
-            this.$emit('updateCards')
-          }
-        }
-
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
-            var params = {}
+            var thisParams = {}
             switch (this.newCardLocation) {
               case 'end':
                 break
 
               case 'before':
-                params.beforeCardWrapperId = this.atCardWrapper.id
+                thisParams.beforeCardWrapperId = this.atCardWrapper.id
                 break
 
               case 'after':
-                params.afterCardWrapperId = this.atCardWrapper.id
+                thisParams.afterCardWrapperId = this.atCardWrapper.id
                 break
             }
 
             this.sendingData = true
-            this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto, { params: params }).then(responseF).catch((error) => {
+            this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto, { params: thisParams })
+            .then((response) => {
+              this.sendingData = false
+              if (response.data.result === 'success') {
+                this.closeThis()
+                this.$emit('updateCards')
+              } else {
+                console.log(response.data.message)
+              }
+            }).catch((error) => {
               console.log(error)
             })
           } else {
             this.sendingData = true
             this.axios.put('/1/model/section/' + this.inSectionId + '/cardWrapper/' + this.existingCard.id,
-              {}, params).then(responseF).catch((error) => {
+              {}, {
+                params: {
+                  scope: this.existingCardNewScope
+                }
+              }).then((response) => {
+                this.sendingData = false
+                if (response.data.result === 'success') {
+                  this.closeThis()
+                  this.$emit('updateCards')
+                }
+              }).catch((error) => {
                 console.log(error)
               })
           }
         } else {
           /* editing */
-
-          /* add the new sections */
-          if (this.addToSections.length > 0) {
-            cardDto.inSections = this.addToSections
-          }
-
           this.sendingData = true
-          this.axios.put('/1/model/cardWrapper/' + this.cardWrapper.id, cardDto)
-            .then(responseF).catch((error) => {
+          this.axios.put('/1/model/cardWrapper/' + this.cardWrapper.id, cardDto, {
+            params: {
+              inSectionId: this.inSectionId
+            }
+          })
+            .then((response) => {
+              this.sendingData = false
+              if (response.data.result === 'success') {
+                this.closeThis()
+                this.$emit('update')
+              }
+            }).catch((error) => {
               console.log(error)
             })
         }
@@ -613,37 +663,6 @@ export default {
       this.editedCard.imageFile = null
       this.editedCard.newImageFileId = 'REMOVE'
     },
-    sectionSelected (section) {
-      this.addToSection = false
-
-      /* prevent adding in an existing section */
-      for (var ix1 in this.cardWrapper.inSections) {
-        if (this.cardWrapper.inSections[ix1].id === section.id) {
-          return
-        }
-      }
-
-      /* prevent adding twice the same section */
-      for (var ix2 in this.addToSections) {
-        if (this.addToSections[ix2].id === section.id) {
-          return
-        }
-      }
-
-      this.addToSections.push(section)
-    },
-    removeToSection (section) {
-      var ix = -1
-      for (var ixS in this.addToSections) {
-        if (this.addToSections[ixS].id === section.id) {
-          ix = ixS
-        }
-      }
-
-      if (ix !== -1) {
-        this.addToSections.splice(ix, 1)
-      }
-    },
     atKeydown (e) {
       if (!this.editing) {
         /* esc */
@@ -670,9 +689,9 @@ export default {
   mounted () {
     if (this.isNew) {
       this.editedCard = {
-        stateControl: false,
         title: '',
-        text: ''
+        text: '',
+        newScope: 'SHARED'
       }
       this.editing = true
     } else {

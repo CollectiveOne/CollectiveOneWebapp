@@ -48,6 +48,7 @@ const getters = {
 
 const mutations = {
   setCurrentSectionGenealogy: (state, payload) => {
+    console.log('setting section genealogy: ' + payload)
     state.currentSectionGenealogy = payload
   }
 }
@@ -59,7 +60,7 @@ const actions = {
   updateCurrentSection: (context, sectionId) => {
     context.commit('setCurrentSectionGenealogy', null)
 
-    if (sectionId !== '') {
+    if (sectionId !== '' && sectionId != null) {
       Vue.axios.get('/1/model/section/' + sectionId + '/genealogy').then((response) => {
         if (response.data.result === 'success') {
           context.commit('setCurrentSectionGenealogy', response.data.data)

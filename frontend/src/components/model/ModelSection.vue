@@ -1,20 +1,43 @@
 <template lang="html">
 
-  <div v-if="section" class="section-container" ref="sectionContainer" :id="section.id">
+  <div v-if="section"
+    class="section-container" ref="sectionContainer" :id="section.id">
+
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-model-card-modal
+          v-if="showNewCardModal"
+          :isNew="true"
+          :inSectionId="section.id"
+          :inSectionTitle="section.title"
+          @close="showNewCardModal = false"
+          @updateCards="updateCards()">
+        </app-model-card-modal>
+      </transition>
+    </div>
 
     <div v-if="(nestedIn.length > 0 && section.subElementsLoaded) || showThisTitle"
-      class="w3-row title-row">
+      class="w3-row title-row"
+      :class="{'card-container-doc': cardsType === 'doc'}">
       <div class="w3-row blue-color title-text">
         <div v-for="parent in nestedIn.slice(1, nestedIn.length)"
           class="w3-left">
-          {{ parent.title }} <i class="fa fa-chevron-right" aria-hidden="true"></i>
+          <router-link class="w3-left" :to="{ name: 'ModelSectionContent', params: {'sectionId': parent.id } }">
+            <span v-html="headerOpenTag + parent.title + headerCloseTag"></span>
+          </router-link>
+          <div class="w3-left chevron-container">
+            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+          </div>
+
         </div>
         <div class="w3-left">
-          <b>{{ section.title }}</b>
+          <router-link :to="{ name: 'ModelSectionContent', params: {'sectionId': section.id } }">
+            <span v-html="headerOpenTag + '<b>' +  section.title + '</b>' + headerCloseTag"></span>
+          </router-link>
         </div>
       </div>
-      <div v-if="section.description !== ''" class="w3-row description-text light-grey">
-        {{ section.description }}
+      <div v-if="hasDescription" class="w3-row description-text light-grey">
+        <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
       </div>
 
     </div>
@@ -27,7 +50,9 @@
         :acceptDrop="true"
         :cardRouteName="cardRouteName"
         :hideCardControls="hideCardControls"
-        @updateCards="updateCards()">
+        :showNewCardButton="cardsType !== 'doc'"
+        @updateCards="updateCards()"
+        @create-card="showNewCardModal = true">
       </app-model-cards-container>
     </div>
 
@@ -38,12 +63,14 @@
 
         <app-model-section
           :section="subsection"
-          :inElementId="section.id"
-          :inElementTitle="section.title"
+          :inSection="section"
           :cardsType="cardsType"
           :nestedIn="nestedIn.concat([section])"
           :cardRouteName="cardRouteName"
           :hideCardControls="hideCardControls"
+          :showPrivate="showPrivate"
+          :showShared="showShared"
+          :showCommon="showCommon"
           @updateCards="updateCards()">
         </app-model-section>
       </div>
@@ -77,13 +104,9 @@ export default {
       type: Array,
       default: () => { return [] }
     },
-    inElementId: {
-      type: String,
-      default: ''
-    },
-    inElementTitle: {
-      type: String,
-      default: ''
+    inSection: {
+      type: Object,
+      default: null
     },
     cardsType: {
       type: String,
@@ -96,6 +119,18 @@ export default {
     cardRouteName: {
       type: String,
       default: 'ModelSectionCard'
+    },
+    showPrivate: {
+      type: Boolean,
+      default: true
+    },
+    showShared: {
+      type: Boolean,
+      default: true
+    },
+    showCommon: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -107,31 +142,73 @@ export default {
       expanded: true,
       showCardId: '',
       expandSubSubsecInit: false,
-      subscription: null
+      subscription: null,
+      showNewCardModal: false
     }
   },
 
   computed: {
-    sortedCards () {
-      if (!this.sortByLikes) {
-        return JSON.parse(JSON.stringify(this.section.cardsWrappers))
-      } else {
-        var sortedArray = JSON.parse(JSON.stringify(this.section.cardsWrappers))
-        return sortedArray.sort((cardA, cardB) => {
-          return cardB.nLikes - cardA.nLikes
-        })
-      }
+    nestedLevel () {
+      return this.nestedIn.length + 1
     },
-    nCardWrappers () {
-      if (this.section) {
-        if (this.section.cardsWrappers) {
-          return this.section.cardsWrappers.length
-        } else {
-          return 0
-        }
-      } else {
-        return 0
+    headerOpenTag () {
+      if (this.cardsType !== 'doc') {
+        return ''
       }
+
+      return '<h' + (this.nestedLevel < 6 ? this.nestedLevel : 6) + '>'
+    },
+    headerCloseTag () {
+      if (this.cardsType !== 'doc') {
+        return ''
+      }
+
+      return '</h' + (this.nestedLevel < 6 ? this.nestedLevel : 6) + '>'
+    },
+    hasDescription () {
+      if (this.section.description) {
+        return this.section.description !== ''
+      }``
+      return false
+    },
+    sortedCards () {
+      let allCardWrappers = []
+
+      if (this.showCommon) {
+        allCardWrappers = this.section.cardsWrappersCommon.slice()
+      }
+
+      if (this.showPrivate) {
+        for (let ix in this.section.cardsWrappersPrivate) {
+          let cardWrapperPrivate = this.section.cardsWrappersPrivate[ix]
+          let ixFound = allCardWrappers.findIndex((e) => {
+            return e.id === cardWrapperPrivate.onCardWrapperId
+          })
+          if (ixFound !== -1) {
+            let ixInsert = cardWrapperPrivate.isBefore ? ixFound : ixFound + 1
+            allCardWrappers.splice(ixInsert, 0, cardWrapperPrivate)
+          } else {
+            allCardWrappers.push(cardWrapperPrivate)
+          }
+        }
+      }
+
+      if (this.showShared) {
+        for (let ix in this.section.cardsWrappersShared) {
+          let cardWrapperPrivate = this.section.cardsWrappersShared[ix]
+          let ixFound = allCardWrappers.findIndex((e) => {
+            return e.id === cardWrapperPrivate.onCardWrapperId
+          })
+          if (ixFound !== -1) {
+            let ixInsert = cardWrapperPrivate.isBefore ? ixFound : ixFound + 1
+            allCardWrappers.splice(ixInsert, 0, cardWrapperPrivate)
+          } else {
+            allCardWrappers.push(cardWrapperPrivate)
+          }
+        }
+      }
+
+      return allCardWrappers
     },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
@@ -149,9 +226,12 @@ export default {
 
   methods: {
     updateCards () {
+      console.log('updating cards')
       this.axios.get('/1/model/section/' + this.section.id + '/cardWrappers').then((response) => {
         if (response.data.result === 'success') {
-          this.section.cardsWrappers = response.data.data
+          this.section.cardsWrappersCommon = response.data.data.cardsWrappersCommon
+          this.section.cardsWrappersPrivate = response.data.data.cardsWrappersPrivate
+          this.section.cardsWrappersShared = response.data.data.cardsWrappersShared
         }
       })
     },
@@ -161,6 +241,7 @@ export default {
           url: '/channel/activity/model/section/' + this.section.id,
           onMessage: (tick) => {
             var message = tick.body
+            console.log('mesage on section: ' + this.section.id + ' - MSG: ' + message)
             if (message === 'UPDATE') {
               this.updateCards()
             }
@@ -220,7 +301,46 @@ export default {
 }
 </script>
 
+<style>
+
+.card-container-doc,
+.card-container-doc h1,
+.card-container-doc h2,
+.card-container-doc h3,
+.card-container-doc h4,
+.card-container-doc h5
+{
+font-family: 'Merriweather', serif;
+}
+
+.card-container-doc {
+  font-size: 19px;
+  line-height: 32px;
+}
+
+.card-container-doc h1 {
+  font-size: 32px;
+}
+
+.card-container-doc h2 {
+  font-size: 26px;
+}
+
+.card-container-doc h3,
+.card-container-doc h4,
+.card-container-doc h5 {
+  /*font-weight: bold;*/
+  font-size: 22px;
+}
+
+</style>
+
 <style scoped>
+
+
+.chevron-container {
+  padding: 0px 8px;
+}
 
 .section-container {
   font-family: 'Open Sans', sans-serif;
@@ -233,6 +353,10 @@ export default {
 
 .title-text {
   font-size: 17px;
+}
+
+.title-text > * {
+  display: inline-block;
 }
 
 .title-row .fa {

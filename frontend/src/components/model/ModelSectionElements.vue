@@ -45,7 +45,7 @@
           </div>
         </div>
 
-        <div class="control-group noselect">
+        <div v-if="isCardsContent" class="control-group noselect">
           <div class="w3-left zoom-controls">
             <div class="w3-left zoom-controls-enabled">
               <div @click="levelDown()" class="w3-left cursor-pointer arrow-div">
@@ -60,8 +60,25 @@
               <div v-if="infiniteLevels" class="zoom-controls-cover">
               </div>
             </div>
-            <div @click="levelsInfinite()" class="w3-left cursor-pointer arrow-div w3-border-left" :class="{'control-btn-selected': infiniteLevels}">
+            <div @click="toggleInifinteLevels()" class="w3-left cursor-pointer arrow-div w3-border-left" :class="{'control-btn-selected': infiniteLevels}">
               <img src="./../../assets/infinite-icon.svg" alt="">
+            </div>
+          </div>
+        </div>
+
+        <div v-if="isCardsContent && this.$store.state.user.authenticated" class="control-group">
+          <div class="">
+            <div @click="showPrivateClick()" class="w3-left control-btn border-red" :class="{'control-btn-selected': showPrivate, 'w3-bottombar': showPrivate}">
+              <img src="./../../assets/private-icon.svg" alt="">
+            </div>
+            <div @click="showSharedClick()" class="w3-left control-btn border-yellow" :class="{'control-btn-selected': showShared, 'w3-bottombar': showShared}">
+              <img src="./../../assets/shared-icon.svg" alt="">
+            </div>
+            <div @click="showCommonClick()" class="w3-left control-btn border-blue" :class="{'control-btn-selected': showCommon, 'w3-bottombar': showCommon}">
+              <img src="./../../assets/common-icon.svg" alt="">
+            </div>
+            <div @click="showAllClick()" class="w3-left control-btn">
+              <img src="./../../assets/all-icon.svg" alt="">
             </div>
           </div>
         </div>
@@ -115,6 +132,9 @@
             <div @click="downloadContent()" class="w3-left control-btn">
               <img src="./../../assets/download-icon.svg" alt="">
             </div>
+            <div @click="draggable()" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
+              <img src="./../../assets/move-icon.svg" alt="">
+            </div>
           </div>
         </div>
 
@@ -149,28 +169,23 @@
       </div>
 
       <div class="elements-container">
+
         <app-message-thread
           v-if="isMessagesContent"
           contextType="MODEL_SECTION"
           :contextElementId="currentSectionId"
           :onlyMessages="isOnlyMessages"
-          :levels="levels">
+          :levels="999">
         </app-message-thread>
 
         <app-model-section
           v-if="isCardsContent && isSectionsOrder"
           :section="section"
-          :cardsType="cardsType">
+          :cardsType="cardsType"
+          :showPrivate="showPrivate"
+          :showShared="showShared"
+          :showCommon="showCommon">
         </app-model-section>
-
-        <div v-if="isCardsContent && isSectionsOrder && !sectionHasContent && !loading && section" class="w3-row w3-center">
-          <div class="w3-row">
-            <i>no cards have been created in "{{ section.title }}"</i>
-          </div>
-          <div @click="showNewCardModal = true" class="control-btn w3-row w3-margin-top">create one</div>
-          <div v-if="levels === 1" class="w3-row w3-margin-top">or</div>
-          <div v-if="levels === 1" @click="levelUp()" class="control-btn w3-row w3-margin-top">look one level further</div>
-        </div>
 
         <app-model-cards-container
           v-if="isCardsContent && !isSectionsOrder"
@@ -209,8 +224,8 @@ const sectionToMarkdown = function (section, level) {
     text += section.description + '\r\n'
   }
 
-  for (let ix in section.cardsWrappers) {
-    let cardWrapper = section.cardsWrappers[ix]
+  for (let ix in section.cardsWrappersCommon) {
+    let cardWrapper = section.cardsWrappersCommon[ix]
     if (cardWrapper.card.title !== '') {
       text += Array(level + 1).join('#') + ' '
       level = level < 5 ? level + 1 : level
@@ -227,7 +242,9 @@ const sectionToMarkdown = function (section, level) {
 }
 
 const sectionHasContent = function (section) {
-  if (section.cardsWrappers.length > 0) {
+  if (section.cardsWrappersCommon.length > 0 ||
+    section.cardsWrappersPrivate.length > 0 ||
+    section.cardsWrappersShared.length > 0) {
     return true
   } else {
     if (section.subsections.length > 0) {
@@ -295,13 +312,26 @@ export default {
         this.$route.name === 'ModelSectionCard'
     },
     levels () {
-      return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
+      return this.$store.getters.getActualLevels
     },
     infiniteLevels () {
-      return this.levels === 999
+      if (this.isSectionsOrder) {
+        return this.$store.state.viewParameters.isInfiniteLevels
+      } else {
+        return true
+      }
     },
     cardsType () {
-      return this.$route.query.cardsType ? this.$route.query.cardsType : 'card'
+      return this.$store.state.viewParameters.cardsType
+    },
+    showPrivate () {
+      return this.$store.state.viewParameters.showPrivate
+    },
+    showShared () {
+      return this.$store.state.viewParameters.showShared
+    },
+    showCommon () {
+      return this.$store.state.viewParameters.showCommon
     },
     isSummary () {
       return this.cardsType === 'summary' && this.isCardsContent
@@ -314,6 +344,9 @@ export default {
     },
     isSectionsOrder () {
       return this.orderType === 'sections'
+    },
+    isDraggable () {
+      return this.$store.state.support.triggerCardDraggingState
     }
   },
 
@@ -325,6 +358,7 @@ export default {
       this.checkCardSubroute()
     },
     levels () {
+      console.log('udpating due to levels watch')
       this.update()
     },
     cardSortBy () {
@@ -340,6 +374,9 @@ export default {
   },
 
   methods: {
+    draggable () {
+      this.$store.commit('triggerCardDraggingState')
+    },
     messagesContent () {
       if (this.$route.name !== 'ModelSectionMessages') {
         this.$router.push({name: 'ModelSectionMessages'})
@@ -352,53 +389,61 @@ export default {
     },
     sectionOrder () {
       this.orderType = 'sections'
+      this.update()
     },
     aggregatedOrder () {
-      this.resetCards()
       this.orderType = 'aggregated'
+      this.resetCards()
     },
     levelUp () {
-      if (!this.infiniteLevels) {
-        this.$router.replace({name: this.$route.name, query: {levels: this.levels + 1}})
-      }
+      this.$store.commit('levelUp')
     },
     levelDown () {
-      if (!this.infiniteLevels) {
-        if (this.levels > 1) {
-          this.$router.replace({name: this.$route.name, query: {levels: this.levels - 1}})
-        }
-      }
+      this.$store.commit('levelDown')
     },
-    levelsInfinite () {
-      if (this.infiniteLevels) {
-        this.$router.replace({name: this.$route.name, query: {levels: 1}})
-      } else {
-        this.$router.replace({name: this.$route.name, query: {levels: 999}})
+    toggleInifinteLevels () {
+      if (this.isSectionsOrder) {
+        this.$store.commit('toggleInifinteLevels')
       }
     },
     summaryView () {
       if (!this.sectionLoadedOnce || (this.sectionLoadedOnceLevels !== this.levels)) {
         this.updateSection()
       }
-      if (this.$route.query.cardsType !== 'summary' || this.$route.name !== 'ModelSectionCards') {
-        this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'summary'}})
+      this.$store.commit('setCardsType', 'summary')
+      if (this.$route.name !== 'ModelSectionCards') {
+        this.$router.push({name: 'ModelSectionCards'})
       }
     },
     cardView () {
       if (!this.sectionLoadedOnce || (this.sectionLoadedOnceLevels !== this.levels)) {
         this.updateSection()
       }
-      if (this.$route.query.cardsType !== 'card' || this.$route.name !== 'ModelSectionCards') {
-        this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'card'}})
+      this.$store.commit('setCardsType', 'card')
+      if (this.$route.name !== 'ModelSectionCards') {
+        this.$router.push({name: 'ModelSectionCards'})
       }
     },
     docView () {
       if (!this.sectionLoadedOnce || (this.sectionLoadedOnceLevels !== this.levels)) {
         this.updateSection()
       }
-      if (this.$route.query.cardsType !== 'doc' || this.$route.name !== 'ModelSectionCards') {
-        this.$router.push({name: 'ModelSectionCards', query: {cardsType: 'doc'}})
+      this.$store.commit('setCardsType', 'doc')
+      if (this.$route.name !== 'ModelSectionCards') {
+        this.$router.push({name: 'ModelSectionCards'})
       }
+    },
+    showPrivateClick () {
+      this.$store.commit('toggleShowPrivate')
+    },
+    showSharedClick () {
+      this.$store.commit('toggleShowShared')
+    },
+    showCommonClick () {
+      this.$store.commit('toggleShowCommon')
+    },
+    showAllClick () {
+      this.$store.commit('showAllTypes')
     },
     showMore () {
       this.page = this.page + 1
@@ -411,6 +456,7 @@ export default {
       this.getMoreCards()
     },
     getMoreCards () {
+      console.log('getting more cards')
       this.loading = true
       if (this.currentSectionId) {
         this.axios.get('/1/model/section/' + this.currentSectionId + '/cardWrappers/search',
@@ -558,6 +604,10 @@ export default {
   display: inline-block;
 }
 
+.control-btn {
+  margin-right: 4px;
+}
+
 .zoom-controls {
   min-height: 1px;
   width: 160px;
@@ -565,6 +615,7 @@ export default {
   color: #3e464e;
   background-color: #eff3f6;
   border-radius: 3px;
+  transition: all 300ms ease;
 }
 
 .zoom-controls .arrow-div {

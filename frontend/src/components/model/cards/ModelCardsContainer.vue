@@ -21,7 +21,18 @@
         </app-model-card>
       </div>
 
+    </div><div v-if="showNewCardButton" :class="cardsContainerClasses" class=""
+      @dragover.prevent="draggingOver()"
+      @drop.prevent="cardDroped('', $event)">
+
+      <div v-if="draggingOverCreateCard" class="drop-div">
+      </div>
+
+      <div v-if="cardWrappers.length === 0" @click="$emit('create-card')" class="control-btn w3-card-2 w3-padding w3-round w3-center create-card-div">
+        <i class="fa fa-plus" aria-hidden="true"></i> create new card
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -57,6 +68,10 @@ export default {
     cardRouteName: {
       type: String,
       default: 'ModelSectionCard'
+    },
+    showNewCardButton: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -73,6 +88,7 @@ export default {
   data () {
     return {
       draggingOverCardWrapper: null,
+      draggingOverCreateCard: false,
       resetIntervalId: 0
     }
   },
@@ -83,12 +99,19 @@ export default {
         return
       }
 
+      if (cardWrapper == null) {
+        this.draggingOverCreateCard = true
+      } else {
+        this.draggingOverCreateCard = false
+      }
+
       this.draggingOverCardWrapper = cardWrapper
 
       /* make sure this resets even if dropped elsewhere */
       clearTimeout(this.resetIntervalId)
       this.resetIntervalId = setTimeout(() => {
         this.draggingOverCardWrapper = null
+        this.draggingOverCreateCard = false
       }, 500)
     },
     isDraggingOver (cardWrapper) {
@@ -136,7 +159,8 @@ export default {
           this.axios.put('/1/model/section/' + this.inSection.id +
             '/cardWrapper/' + dragData.cardWrapperId, {}, {
             params: {
-              beforeCardWrapperId: onCardWrapperId
+              beforeCardWrapperId: onCardWrapperId,
+              scope: dragData.scope
             }
           }).then((response) => {
             this.$store.commit('triggerUpdateSectionCards')
@@ -168,6 +192,11 @@ export default {
   background-color: #828282;
   border-radius: 5px;
   margin-bottom: 10px;
+}
+
+.create-card-div {
+  margin-top: 20px;
+  max-width: 350px;
 }
 
 @media screen and (min-width: 1700px) {

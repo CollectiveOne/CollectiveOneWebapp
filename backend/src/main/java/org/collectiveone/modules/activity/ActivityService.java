@@ -40,9 +40,10 @@ import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.GraphNode;
-import org.collectiveone.modules.model.ModelCardWrapper;
+import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
+import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
@@ -95,6 +96,9 @@ public class ActivityService {
 	
 	@Autowired
 	private ModelCardWrapperRepositoryIf modelCardWrapperRepository;
+	
+	@Autowired
+	private ModelCardWrapperAdditionRepositoryIf modelCardWrapperAdditionRepository;
 	
 	
 	@Autowired
@@ -151,7 +155,7 @@ public class ActivityService {
 		switch (contextType) {
 			case MODEL_SECTION:
 				allSectionIds = modelService.getAllSubsectionsIds(elementId, null);
-				cardsIds = allSectionIds.size() > 0 ? modelCardWrapperRepository.findAllCardsIdsOfSections(allSectionIds) : new ArrayList<UUID>();
+				cardsIds = allSectionIds.size() > 0 ? modelCardWrapperAdditionRepository.findAllCardWrapperIdsOfSections(allSectionIds) : new ArrayList<UUID>();
 				isModel = true;
 				break;
 				
@@ -749,30 +753,6 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelCardWrapperAdded(ModelCardWrapper cardWrapper, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_CARDWRAPPER_ADDED);
-		activity.setModelCardWrapper(cardWrapper);
-		activity.setOnSection(onSection);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelCardWrapperRemoved(ModelCardWrapper cardWrapper, ModelSection fromSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_CARDWRAPPER_REMOVED);
-		activity.setModelCardWrapper(cardWrapper);
-		activity.setFromSection(fromSection);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
 	public void modelSectionDeleted(ModelSection section, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
 		
@@ -783,36 +763,70 @@ public class ActivityService {
 		addInitiativeActivityNotifications(activity);
 	}
 	
+	
+	
 	@Transactional
-	public void modelCardWrapperCreated(ModelCardWrapper cardWrapper, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
+	public void modelCardWrapperCreated(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_CREATED);
-		activity.setModelCardWrapper(cardWrapper);
-		activity.setOnSection(onSection);
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
 	}
 	
 	@Transactional
-	public void modelCardWrapperEdited(ModelCardWrapper cardWrapper, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
+	public void modelCardWrapperMadeShared(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_MADE_SHARED);
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelCardWrapperMadeCommon(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_MADE_COMMON);
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelCardWrapperAdded(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_ADDED);
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelCardWrapperEdited(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_EDITED);
-		activity.setModelCardWrapper(cardWrapper);
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
 		activity = activityRepository.save(activity);
-		System.out.println(activity.getId().toString()+" edited by sagar");
+		
 		broadcastMessage(activity);
 		addInitiativeActivityNotifications(activity);
 	}
 	
 	@Transactional
-	public void modelCardWrapperMoved(ModelCardWrapper cardWrapper, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
+	public void modelCardWrapperMoved(ModelCardWrapperAddition cardWrapperAddition, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_MOVED);
-		activity.setModelCardWrapper(cardWrapper);
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
 		activity.setFromSection(fromSection);
 		activity.setOnSection(onSection);
 		activity = activityRepository.save(activity);
@@ -821,15 +835,29 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelCardWrapperDeleted(ModelCardWrapper cardWrapper, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapper.getInitiative()); 
+	public void modelCardWrapperRemoved(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
 		
-		activity.setType(ActivityType.MODEL_CARDWRAPPER_DELETED);
-		activity.setModelCardWrapper(cardWrapper);
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_REMOVED);
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity.setFromSection(cardWrapperAddition.getSection());
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
 	}
+	
+	@Transactional
+	public void modelCardWrapperDeleted(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_CARDWRAPPER_DELETED);
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	
 	
 	@Transactional
 	public void messagePosted(
@@ -922,6 +950,8 @@ public class ActivityService {
 			case MODEL_CARDWRAPPER_EDITED:
 			case MODEL_CARDWRAPPER_MOVED:
 			case MODEL_CARDWRAPPER_REMOVED:
+			case MODEL_CARDWRAPPER_MADE_COMMON:
+			case MODEL_CARDWRAPPER_MADE_SHARED:
 			case MODEL_SECTION_ADDED:
 			case MODEL_SECTION_CREATED:
 			case MODEL_SECTION_DELETED:
@@ -961,9 +991,33 @@ public class ActivityService {
 			case MODEL_CARDWRAPPER_MOVED:
 			case MODEL_CARDWRAPPER_REMOVED:
 				
-				/* activity in cards is considered as occurring on the sections these card is placed*/
-				sections = modelCardWrapperRepository.findParentSections(activity.getModelCardWrapper().getId());
+				/* activity in cards is considered as occurring on the sections these card is placed */
+				UUID cardWrapperId = activity.getModelCardWrapperAddition().getCardWrapper().getId();	
+				sections = modelCardWrapperAdditionRepository.findParentSections(cardWrapperId);
+				
+				/* add this addition section in case its not there (just removed) */
+				if (activity.getModelCardWrapperAddition() != null && !sections.contains(activity.getModelCardWrapperAddition().getSection())) {
+					sections.add(activity.getModelCardWrapperAddition().getSection());	
+				}
+				
+				/* add from and to sections in case they are not there */
+				if (activity.getFromSection() != null && !sections.contains(activity.getFromSection())) {
+					sections.add(activity.getFromSection());
+				}
+				
+				if (activity.getOnSection() != null && !sections.contains(activity.getOnSection())) {
+					sections.add(activity.getOnSection());
+				}
+				
 				break;
+				
+			/* these activities occur at the section level, because scope is a section + card characteristic, not a card one. */
+			case MODEL_CARDWRAPPER_MADE_COMMON:
+			case MODEL_CARDWRAPPER_MADE_SHARED:
+				sections = new ArrayList<ModelSection>();
+				sections.add(activity.getModelCardWrapperAddition().getSection());
+				break;
+				
 				
 			case MESSAGE_POSTED:
 				sections = new ArrayList<ModelSection>();
@@ -974,7 +1028,7 @@ public class ActivityService {
 				} 
 				
 				if (activity.getModelCardWrapper() != null) {
-					sections.addAll(modelCardWrapperRepository.findParentSections(activity.getModelCardWrapper().getId()));
+					sections.addAll(modelCardWrapperAdditionRepository.findParentSections(activity.getModelCardWrapper().getId()));
 				}
 				
 				break;

@@ -14,6 +14,10 @@
     </transition>
 
     <div class="model-nav-container">
+      <div v-if="$store.state.user.authenticated" class="w3-row">
+        <app-model-nav-control-buttons>
+        </app-model-nav-control-buttons>
+      </div>
       <div class="w3-row">
         <app-model-section-nav-item
           :section="section"
@@ -29,11 +33,13 @@
 <script>
 import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelSectionNavItem from '@/components/model/nav/ModelSectionNavItem.vue'
+import ModelNavControlButtons from '@/components/model/nav/ModelNavControlButtons.vue'
 
 export default {
   components: {
     'app-model-section-modal': ModelSectionModal,
-    'app-model-section-nav-item': ModelSectionNavItem
+    'app-model-section-nav-item': ModelSectionNavItem,
+    'app-model-nav-control-buttons': ModelNavControlButtons
   },
 
   data () {
@@ -56,7 +62,7 @@ export default {
       return this.$store.state.initiative.initiative
     },
     levels () {
-      return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
+      return this.$store.state.viewParameters.levels
     }
   },
 
@@ -77,16 +83,9 @@ export default {
 .model-nav-container {
 }
 
-.zoom-controls {
-  margin: 0 auto;
-  width: 90px;
-  font-size: 20px;
-}
-
-.zoom-controls > div {
-  width: 30px;
-  float: left;
-  text-align: center;
+.controls-row {
+  background-color: #f9f9f9;
+  padding: 6px;
 }
 
 </style>

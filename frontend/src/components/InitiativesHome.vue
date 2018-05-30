@@ -6,11 +6,11 @@
     </div>
     <div class="w3-row-padding browse-initiatives-row">
       <div v-if="$store.state.user.authenticated" class="w3-row w3-center w3-border-bottom noselect">
-        <div class="w3-col m6 border-blue cursor-pointer tablink" :class="{'w3-bottombar': !publicInitiatives}"
+        <div class="w3-col m6 border-blue-app cursor-pointer tablink" :class="{'w3-bottombar': !publicInitiatives}"
           @click="publicInitiatives = false">
           <h3>My Initiatives</h3>
         </div>
-        <div class="w3-col m6 border-blue cursor-pointer tablink" :class="{'w3-bottombar': publicInitiatives}"
+        <div class="w3-col m6 border-blue-app cursor-pointer tablink" :class="{'w3-bottombar': publicInitiatives}"
           @click="publicInitiatives = true">
           <h3>Browse Public Initiatives</h3>
         </div>

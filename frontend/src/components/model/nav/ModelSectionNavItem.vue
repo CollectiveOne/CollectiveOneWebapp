@@ -1,30 +1,37 @@
 <template lang="html">
-  <div class="w3-row section-nav-item-container">
 
+  <div class="w3-row section-nav-item-container">
     <div class="w3-row section-nav-item-first-row"
       :class="rowClass"
-      draggable="true"
+      :draggable="$store.state.support.triggerSectionDraggingState"
       @dragstart="dragStart($event)"
       @dragover.prevent="draggingOver($event)"
       @dragleave.prevent="draggingLeave()"
       @drop.prevent="dragDroped($event)">
 
-      <div v-if="draggingOverWithSectionSameLevelFlag" class="w3-row dragging-same-level-clue">
+      <div v-if="draggingOverWithSectionSameLevelFlag" class="dragging-same-level-clue">
 
       </div>
 
-      <div @click="toggleSubsections()" class="circle-div cursor-pointer">
-        <div v-if="hasSubsections">
-          <i v-if="!showSubsections" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-          <i v-else class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+      <div :class="arrowAndTitleClass" class="arrow-and-title">
+        <div @click="toggleSubsections()" class="circle-div cursor-pointer">
+          <div v-if="hasSubsections">
+            <i v-if="!showSubsections" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+            <i v-else class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+          </div>
+          <div v-else>
+            <i @click="sectionSelected()" class="fa fa-circle" aria-hidden="true"></i>
+          </div>
         </div>
-        <div v-else>
-          <i class="fa fa-circle" aria-hidden="true"></i>
+        <div @click="sectionSelected()" @dblclick="toggleSubsections()"
+          class="title-div cursor-pointer noselect" :class="titleClass"
+          @mouseover="hoveringOnTitle = true"
+          @mouseenter="hoveringOnTitle = true"
+          @mouseleave="hoveringOnTitle = false">
+          {{ sectionTitle }}
         </div>
       </div>
-      <div @click="sectionSelected()" @dblclick="toggleSubsections()" class="title-div cursor-pointer noselect">
-        {{ sectionTitle }}
-      </div>
+
       <div v-if="section" class="notification-div">
         <app-notifications-list
           :element="section"
@@ -32,12 +39,16 @@
           :isSelected="isSelected">
         </app-notifications-list>
       </div>
-      <div class="control-div" :class="{'fa-button': !highlight, 'fa-button-dark': highlight}">
+      <div v-if="$store.state.user.authenticated && !draggingEnabled" class="control-div" :class="{'fa-button': !highlight, 'fa-button-dark': highlight}">
         <app-section-control-buttons
           :section="section"
           :inSection="inSection"
+          :draggable="$store.state.support.triggerSectionDraggingState"
           @section-removed="sectionRemoved()">
         </app-section-control-buttons>
+      </div>
+      <div v-if="draggingEnabled" class="drag-message-div">
+        <span><i class="fa fa-arrows" aria-hidden="true"></i></span>
       </div>
     </div>
 
@@ -51,12 +62,13 @@
         <div v-if="showSubsections && subsections.length > 0" class="w3-row subsections-container"
           :class="{'subsection-container-selected': highlight}" >
           <app-model-section-nav-item
+            class="subsection-row"
             v-for="(subsection, ix) in subsections"
             :inSection="section"
             :section="subsection" :key="subsection.id"
             :highlightLevel="highlightLevelUse - 1"
             :coordinate="coordinate.concat(ix)"
-            class="subsection-row"
+            :parentIsSelected="isSelected || parentIsSelected"
             @section-selected="$emit('section-selected', $event)">
           </app-model-section-nav-item>
         </div>
@@ -92,6 +104,10 @@ export default {
     coordinate: {
       type: Array,
       default: () => { return [] }
+    },
+    parentIsSelected: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -104,7 +120,8 @@ export default {
       draggingOverWithSectionInsideFlag: false,
       resetIntervalId: 0,
       forceUpdateNotifications: false,
-      subscription: null
+      subscription: null,
+      hoveringOnTitle: false
     }
   },
 
@@ -140,11 +157,31 @@ export default {
       return this.highlightLevelUse > 0
     },
     rowClass () {
-      return {
+      let thisClasses = {
         'section-selected': this.highlight,
         'dragging-over-with-card': this.draggingOverWithCardFlag,
         'dragging-over-with-section-same-level': this.draggingOverWithSectionSameLevelFlag,
         'dragging-over-with-section-inside': this.draggingOverWithSectionInsideFlag
+      }
+
+      return thisClasses
+    },
+    arrowAndTitleClass () {
+      let thisClasses = {}
+
+      if (this.highlight) {
+        thisClasses['title-selected'] = true
+      } else {
+        if (this.parentIsSelected) {
+          thisClasses['title-inside-section-selected'] = true
+        }
+      }
+
+      return thisClasses
+    },
+    titleClass () {
+      return {
+        'title-hover': this.hoveringOnTitle && !this.highlight
       }
     },
     sectionTitle () {
@@ -167,7 +204,7 @@ export default {
       return false
     },
     levels () {
-      return this.$route.query.levels ? parseInt(this.$route.query.levels) : 1
+      return this.$store.getters.getActualLevels
     },
     infiniteLevels () {
       return this.levels === 999
@@ -180,6 +217,9 @@ export default {
         /* if this is not the selected section, decrease the highlightLevel property */
         return this.highlightLevel
       }
+    },
+    draggingEnabled () {
+      return this.$store.state.support.triggerSectionDraggingState
     }
   },
 
@@ -402,10 +442,26 @@ export default {
 <style scoped>
 
 .section-nav-item-container {
-  color: #616e7a;
+  color: #313942;
+}
+
+.section-selected {
+  background-color: #313942;
+  transition: all 300ms ease;
+  border-color: #3e464e;
+}
+
+.title-selected {
+  font-weight: bold;
+  color:  #15a5cc;
+}
+
+.title-inside-section-selected {
+  color: #9ba7a8;
 }
 
 .section-nav-item-first-row {
+  position: relative;
 }
 
 .subsections-container {
@@ -419,18 +475,15 @@ export default {
 .subsection-row {
 }
 
-.section-selected {
-  background-color: #313942;
-  transition: all 300ms ease;
-  color: white;
-  border-color: #3e464e;
-}
-
 .dragging-over-with-card {
   background-color: #637484;
 }
 
 .dragging-same-level-clue {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
   height: 5px;
   background-color: #637484;
   border-radius: 2.5px;
@@ -440,31 +493,59 @@ export default {
   background-color: #637484;
 }
 
+.arrow-and-title {
+  padding: 3px 0px;
+  font-size: 16px;
+  float: left;
+  width: calc(100% - 30px - 30px);
+}
+
 .circle-div {
   width: 30px;
   float: left;
   text-align: center;
   padding: 3px 0px;
+  transition: all 300ms ease;
+}
+
+.circle-div:hover {
+  color: #106e87;
+}
+
+.title-hover {
+  color: #106e87;
 }
 
 .title-div {
-  width: calc(100% - 30px - 30px - 30px);
+  width: calc(100% - 30px);
   float: left;
   padding: 3px 0px;
+  transition: all 300ms ease;
 }
 
 .control-div {
   text-align: center;
   width: 30px;
   float: left;
-  padding: 3px 0px;
+  padding: 6px 0px;
 }
 
 .notification-div {
   min-height: 1px;
   width: 30px;
   float: left;
-  padding-top: 2px;
+  padding-top: 8px;
+}
+
+.drag-message-div {
+  top: 4px;
+  right: 12px;
+  position: absolute;
+  background-color: rgba(21, 165, 204, 0.8);
+  color: white;
+  border-radius: 6px;
+  padding: 3px 6px;
+  cursor: move;
 }
 
 </style>

@@ -56,8 +56,7 @@
         @click="expanded =! expanded"
         v-click-outside="clickOutsideMenu">
         <i class="fa"
-          :class="{'fa-bars': !onlyAdd, 'fa-plus': onlyAdd}"
-          aria-hidden="true">
+          :class="{'fa-bars': !onlyAdd, 'fa-plus': onlyAdd}" aria-hidden="true">
         </i>
       </div>
 

@@ -47,8 +47,35 @@
   color: white;
 }
 
-.border-blue {
+.border-blue-app {
   border-color: #15a5cc !important;
+}
+
+.border-blue {
+  border-color: #0c708b !important;
+}
+
+.border-red {
+  border-color: #980458 !important;
+}
+
+.border-yellow {
+  border-color: #c6bb21 !important;
+}
+
+.tag-blue {
+  background-color: #0c708b !important;
+  color: white;
+}
+
+.tag-red {
+  background-color: #980458 !important;
+  color: white;
+}
+
+.tag-yellow {
+  background-color: #c6bb21 !important;
+  color: white;
 }
 
 .button-blue {

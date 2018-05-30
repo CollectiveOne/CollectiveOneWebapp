@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="w3-display-container w3-card-4 w3-topbar border-blue w3-round-large"
+  <div class="w3-display-container w3-card-4 w3-topbar w3-round-large" :class="containerClass"
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 
@@ -45,18 +45,16 @@
         </div>
       </div>
 
-      <div v-if="cardWrapper.inSections.length > 0 && !hideCardControls" class="w3-margin-left w3-left">
-        <div v-for="inSection in cardWrapper.inSections" :key="inSection.id"
-          v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
-          <div class="">
-            <app-model-section-tag :section="inSection"></app-model-section-tag>
-          </div>
-        </div>
+      <div v-if="cardWrapper.inModelSections.length > 0 && !hideCardControls" class="w3-margin-left w3-left">
+        <app-in-model-sections-tags
+          :inModelSections="cardWrapper.inModelSections"
+          :hideSectionId="inSectionId">
+        </app-in-model-sections-tags>
       </div>
 
       <div v-if="!inCardSelector" class="w3-right">
 
-        <div v-if="!hideCardControls" class="w3-right gray-1-color control-div">
+        <div v-if="!hideCardControls && $store.state.user.authenticated" class="w3-right gray-1-color control-div">
           <app-card-control-buttons
             :cardWrapper="cardWrapper"
             :inSection="inSection"
@@ -65,7 +63,7 @@
           </app-card-control-buttons>
         </div>
 
-        <div class="w3-right cursor-pointer indicator-comp"
+        <div v-if="!isPrivate" class="w3-right cursor-pointer indicator-comp"
           @click="cardClicked()">
           <app-indicator
             contextType="MODEL_CARD"
@@ -76,7 +74,7 @@
           </app-indicator>
         </div>
 
-        <div class="w3-right cursor-pointer indicator-comp"
+        <div v-if="!isPrivate" class="w3-right cursor-pointer indicator-comp"
           @click="toggleLike()">
           <app-indicator
             contextType="MODEL_CARD"
@@ -106,6 +104,7 @@
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
 import CardControlButtons from '@/components/model/cards/CardControlButtons.vue'
+import InModelSectionsTags from '@/components/model/cards/InModelSectionsTags.vue'
 
 export default {
 
@@ -114,30 +113,11 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-card-control-buttons': CardControlButtons
+    'app-card-control-buttons': CardControlButtons,
+    'app-in-model-sections-tags': InModelSectionsTags
   },
 
   props: {
-    cardWrapper: {
-      type: Object,
-      default: null
-    },
-    forceUpdate: {
-      type: Boolean,
-      default: true
-    },
-    inSection: {
-      type: Object,
-      default: null
-    },
-    hideCardControls: {
-      type: Boolean,
-      default: false
-    },
-    cardRouteName: {
-      type: String,
-      default: 'ModelSectionCard'
-    }
   },
 
   data () {

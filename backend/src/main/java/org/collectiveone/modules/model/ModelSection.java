@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -45,17 +46,17 @@ public class ModelSection {
 	@Column(name = "description")
 	private String description;
 	
+	@OneToMany(mappedBy="section")
+	private List<ModelCardWrapperAddition> cardsWrappersAdditionsPrivate = new ArrayList<ModelCardWrapperAddition>();
+	
+	@OneToMany(mappedBy="section")
+	private List<ModelCardWrapperAddition> cardsWrappersAdditionsShared = new ArrayList<ModelCardWrapperAddition>();
 	
 	@ManyToMany
 	@OrderColumn(name = "cards_order")
-	private List<ModelCardWrapper> cardsWrappers = new ArrayList<ModelCardWrapper>();
+	private List<ModelCardWrapperAddition> cardsWrappersAdditionsCommon = new ArrayList<ModelCardWrapperAddition>();
 	
-	@ManyToMany
-	private List<ModelCardWrapper> cardsWrappersTrash = new ArrayList<ModelCardWrapper>();
 	
-	/* should be one to many but there seems to be a bug in Hibernate 
-	 * see https://stackoverflow.com/questions/4022509/constraint-violation-in-hibernate-unidirectional-onetomany-mapping-with-jointabl
-	 * */
 	@ManyToMany
 	@OrderColumn(name = "subsections_order")
 	private List<ModelSection> subsections = new ArrayList<ModelSection>();
@@ -94,6 +95,7 @@ public class ModelSection {
 		sectionDto.setTitle(title);
 		sectionDto.setDescription(description);
 		sectionDto.setIsTopModelSection(isTopModelSection);
+		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
 		
 		return sectionDto; 
 	}
@@ -104,7 +106,6 @@ public class ModelSection {
 		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
 		
 		sectionDto.setnSubsections(subsections.size());
-		sectionDto.setnCards(cardsWrappers.size());
 		
 		return sectionDto;
 	}
@@ -149,20 +150,12 @@ public class ModelSection {
 		this.description = description;
 	}
 
-	public List<ModelCardWrapper> getCardsWrappers() {
-		return cardsWrappers;
+	public List<ModelCardWrapperAddition> getCardsWrappersAdditionsCommon() {
+		return cardsWrappersAdditionsCommon;
 	}
 
-	public void setCardsWrappers(List<ModelCardWrapper> cardsWrappers) {
-		this.cardsWrappers = cardsWrappers;
-	}
-	
-	public List<ModelCardWrapper> getCardsWrappersTrash() {
-		return cardsWrappersTrash;
-	}
-
-	public void setCardsWrappersTrash(List<ModelCardWrapper> cardsWrappersTrash) {
-		this.cardsWrappersTrash = cardsWrappersTrash;
+	public void setCardsWrappersAdditionsCommon(List<ModelCardWrapperAddition> cardsWrappersAdditionsCommon) {
+		this.cardsWrappersAdditionsCommon = cardsWrappersAdditionsCommon;
 	}
 
 	public List<ModelSection> getSubsections() {
@@ -188,5 +181,21 @@ public class ModelSection {
 	public void setMessageThread(MessageThread messageThread) {
 		this.messageThread = messageThread;
 	}
-	
+
+	public List<ModelCardWrapperAddition> getCardsWrappersAdditionsPrivate() {
+		return cardsWrappersAdditionsPrivate;
+	}
+
+	public void setCardsWrappersAdditionsPrivate(List<ModelCardWrapperAddition> cardsWrappersAdditionsPrivate) {
+		this.cardsWrappersAdditionsPrivate = cardsWrappersAdditionsPrivate;
+	}
+
+	public List<ModelCardWrapperAddition> getCardsWrappersAdditionsShared() {
+		return cardsWrappersAdditionsShared;
+	}
+
+	public void setCardsWrappersAdditionsShared(List<ModelCardWrapperAddition> cardsWrappersAdditionsShared) {
+		this.cardsWrappersAdditionsShared = cardsWrappersAdditionsShared;
+	}
+		
 }

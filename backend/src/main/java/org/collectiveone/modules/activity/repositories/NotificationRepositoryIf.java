@@ -23,15 +23,17 @@ public interface NotificationRepositoryIf extends CrudRepository<Notification, U
 	
 	@Query("SELECT notif FROM Notification notif "
 			+ "JOIN notif.activity act "
+			+ "LEFT JOIN act.modelCardWrapperAddition crdWrpAdd "
 			+ "WHERE notif.subscriber.user.c1Id = ?1 "
 			+ "AND notif.inAppState = ?2 "
 			+ "AND (act.modelSection.id IN ?3 "
 			+ "OR act.fromSection.id IN ?3 "
 			+ "OR act.onSection.id IN ?3 "
-			+ "OR act.modelCardWrapper.id IN ?4) "
+			+ "OR act.modelCardWrapper.id IN ?4 "
+			+ "OR crdWrpAdd.section.id IN ?3 "
+			+ "OR crdWrpAdd.cardWrapper.id IN ?4) "
 			+ "ORDER BY act.timestamp DESC")
 	List<Notification> findOfUserInSections(UUID userId, NotificationState state, List<UUID> sectionIds, List<UUID> cardWrappersIds, Pageable page);	
-	
 	
 	@Query("SELECT notif FROM Notification notif "
             + "JOIN notif.activity act "

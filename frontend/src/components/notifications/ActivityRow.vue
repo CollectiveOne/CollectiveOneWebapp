@@ -137,23 +137,33 @@
         <span v-if="isModelSectionMoved" class="">
           moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>.
         </span>
+
+        <span v-if="isModelCardWrapperCreated" class="">
+          created the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+           on section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+        </span>
         <span v-if="isModelCardWrapperAdded" class="">
-          added the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+          added the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
            in section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
         </span>
         <span v-if="isModelCardWrapperRemoved" class="">
-          removed the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.fromSection"></app-model-card-link>
+          removed the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.fromSection"></app-model-card-link>
            from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
         </span>
         <span v-if="isModelSectionDeleted" class="">
           deleted the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>
         </span>
-        <span v-if="isModelCardWrapperCreated" class="">
-          created the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-           on section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+
+        <span v-if="isModelCardWrapperMadeShared" class="">
+          made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+           on section <app-model-section-link :section="activity.onSection"></app-model-section-link> a shared card.
+        </span>
+        <span v-if="isModelCardWrapperMadeCommon" class="">
+          made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+           on section <app-model-section-link :section="activity.onSection"></app-model-section-link> a common card.
         </span>
         <span v-if="isModelCardWrapperEdited" class="">
-          edited the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
+          edited the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
         </span>
         <span v-if="isModelCardWrapperMovedSameSection" class="">
           moved the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
@@ -334,9 +344,29 @@ export default {
     isModelSectionDeleted () {
       return this.activity.type === 'MODEL_SECTION_DELETED'
     },
+    cardWrapperScope () {
+      if (this.activity.modelCardWrapper) {
+        switch (this.activity.modelCardWrapper.scope) {
+          case 'PRIVATE':
+            return 'private'
+
+          case 'SHARED':
+            return 'shared'
+
+          case 'COMMON':
+            return 'common'
+        }
+      }
+      return ''
+    },
     isModelCardWrapperCreated () {
-      return this.activity.type === 'MODEL_CARDWRAPPER_CREATED' &&
-        this.activity.onSection !== null
+      return this.activity.type === 'MODEL_CARDWRAPPER_CREATED'
+    },
+    isModelCardWrapperMadeShared () {
+      return this.activity.type === 'MODEL_CARDWRAPPER_MADE_SHARED'
+    },
+    isModelCardWrapperMadeCommon () {
+      return this.activity.type === 'MODEL_CARDWRAPPER_MADE_COMMON'
     },
     isModelCardWrapperEdited () {
       return this.activity.type === 'MODEL_CARDWRAPPER_EDITED'
