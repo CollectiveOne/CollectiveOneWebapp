@@ -18,7 +18,7 @@
             <app-section-control-buttons :section="currentSection" :inSection="null" :onlyAdd="true">
             </app-section-control-buttons>
           </div>
-          <div class="btn-div fa-button">
+          <div tooltip="Share" class="btn-div fa-button">
             <router-link :to="{ name: 'ModelSectionRead', params: {sectionId: this.currentSection.id} }">
               <img src="./../../assets/shareable-view.svg" alt="">
             </router-link>

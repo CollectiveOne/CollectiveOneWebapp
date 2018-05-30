@@ -31,16 +31,16 @@
       <div class="w3-row controls-row small-scroll">
 
         <div class="control-group">
-          <div @click="messagesContent()" class="w3-left control-btn" :class="{'control-btn-selected': isMessagesContent}">
+          <div tooltip="Messages" @click="messagesContent()" class="w3-left control-btn" :class="{'control-btn-selected': isMessagesContent}">
             <img src="./../../assets/chat-icon.svg" alt="">
           </div>
-          <div @click="summaryView()" class="w3-left control-btn" :class="{'control-btn-selected': isSummary}">
+          <div tooltip="Card in List" @click="summaryView()" class="w3-left control-btn" :class="{'control-btn-selected': isSummary}">
             <img src="./../../assets/rows-icon.svg" alt="">
           </div>
-          <div @click="cardView()" class="w3-left control-btn" :class="{'control-btn-selected': isCard}">
+          <div tooltip="Cards in Grid" @click="cardView()" class="w3-left control-btn" :class="{'control-btn-selected': isCard}">
             <img src="./../../assets/cards-icon.svg" alt="">
           </div>
-          <div @click="docView()" class="w3-left control-btn" :class="{'control-btn-selected': isDoc}">
+          <div tooltip="Documents" @click="docView()" class="w3-left control-btn" :class="{'control-btn-selected': isDoc}">
             <img src="./../../assets/doc-icon.svg" alt="">
           </div>
         </div>
@@ -48,19 +48,19 @@
         <div v-if="isCardsContent" class="control-group noselect">
           <div class="w3-left zoom-controls">
             <div class="w3-left zoom-controls-enabled">
-              <div @click="levelDown()" class="w3-left cursor-pointer arrow-div">
+              <div tooltip="Decrease Level" @click="levelDown()" class="w3-left cursor-pointer arrow-div">
                 <img src="./../../assets/zoom-in-icon.svg" alt="">
               </div>
-              <div class="w3-left number-div">
+              <div tooltip="Level" class="w3-left number-div">
                 {{ levels !== 999 ? levels : '&#x221e;' }}
               </div>
-              <div @click="levelUp()" class="w3-left cursor-pointer arrow-div">
+              <div tooltip="Increase Level" @click="levelUp()" class="w3-left cursor-pointer arrow-div">
                 <img src="./../../assets/zoom-out-icon.svg" alt="">
               </div>
               <div v-if="infiniteLevels" class="zoom-controls-cover">
               </div>
             </div>
-            <div @click="toggleInifinteLevels()" class="w3-left cursor-pointer arrow-div w3-border-left" :class="{'control-btn-selected': infiniteLevels}">
+            <div tooltip="Infinite Level" @click="toggleInifinteLevels()" class="w3-left cursor-pointer arrow-div w3-border-left" :class="{'control-btn-selected': infiniteLevels}">
               <img src="./../../assets/infinite-icon.svg" alt="">
             </div>
           </div>
@@ -68,16 +68,16 @@
 
         <div v-if="isCardsContent && this.$store.state.user.authenticated" class="control-group">
           <div class="">
-            <div @click="showPrivateClick()" class="w3-left control-btn border-red" :class="{'control-btn-selected': showPrivate, 'w3-bottombar': showPrivate}">
+            <div tooltip="Private Cards" @click="showPrivateClick()" class="w3-left control-btn border-red" :class="{'control-btn-selected': showPrivate, 'w3-bottombar': showPrivate}">
               <img src="./../../assets/private-icon.svg" alt="">
             </div>
-            <div @click="showSharedClick()" class="w3-left control-btn border-yellow" :class="{'control-btn-selected': showShared, 'w3-bottombar': showShared}">
+            <div tooltip="Shared Cards" @click="showSharedClick()" class="w3-left control-btn border-yellow" :class="{'control-btn-selected': showShared, 'w3-bottombar': showShared}">
               <img src="./../../assets/shared-icon.svg" alt="">
             </div>
-            <div @click="showCommonClick()" class="w3-left control-btn border-blue" :class="{'control-btn-selected': showCommon, 'w3-bottombar': showCommon}">
+            <div tooltip="Common Cards"  @click="showCommonClick()" class="w3-left control-btn border-blue" :class="{'control-btn-selected': showCommon, 'w3-bottombar': showCommon}">
               <img src="./../../assets/common-icon.svg" alt="">
             </div>
-            <div @click="showAllClick()" class="w3-left control-btn">
+            <div tooltip="All Cards" @click="showAllClick()" class="w3-left control-btn">
               <img src="./../../assets/all-icon.svg" alt="">
             </div>
           </div>
@@ -85,20 +85,20 @@
 
         <div v-if="isCardsContent" class="control-group">
           <div class="">
-            <div @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
+            <div tooltip="Order By Sections"  @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
               <img src="./../../assets/network-icon.svg" alt="">
             </div>
-            <div @click="aggregatedOrder()" class="w3-left control-btn" :class="{'control-btn-selected': !isSectionsOrder}">
+            <div tooltip="Search" @click="aggregatedOrder()" class="w3-left control-btn" :class="{'control-btn-selected': !isSectionsOrder}">
               <img src="./../../assets/search-icon.svg" alt="">
             </div>
           </div>
         </div>
 
         <div v-if="!isCardsContent" class="control-group">
-          <div @click="isOnlyMessages = true" class="w3-left control-btn" :class="{'control-btn-selected': isOnlyMessages}">
+          <div tooltip="Only Messages" @click="isOnlyMessages = true" class="w3-left control-btn" :class="{'control-btn-selected': isOnlyMessages}">
             <img src="./../../assets/chat-icon-2.svg" alt="">
           </div>
-          <div @click="isOnlyMessages = false" class="w3-left control-btn" :class="{'control-btn-selected': !isOnlyMessages}">
+          <div tooltip="All Events" @click="isOnlyMessages = false" class="w3-left control-btn" :class="{'control-btn-selected': !isOnlyMessages}">
             <img src="./../../assets/all-events-icon.svg" alt="">
           </div>
         </div>
@@ -129,10 +129,10 @@
 
         <div v-if="isCardsContent && isSectionsOrder" class="control-group">
           <div class="">
-            <div @click="downloadContent()" class="w3-left control-btn">
+            <div tooltip="Download" @click="downloadContent()" class="w3-left control-btn">
               <img src="./../../assets/download-icon.svg" alt="">
             </div>
-            <div @click="draggable()" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
+            <div tooltip="Cards Draggable" @click="draggable()" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
               <img src="./../../assets/move-icon.svg" alt="">
             </div>
           </div>

@@ -11,7 +11,7 @@
     <div class="w3-row header-row drop-shadow-br light-grey">
       <div class="w3-col m4 initiatives-breadcrumb-container">
 
-        <div class="w3-left nav-menu-btn w3-xlarge fa-button"
+        <div tooltip="Initiatives" class="w3-left nav-menu-btn w3-xlarge fa-button"
           @click="$store.commit('toggleExpandNav')">
           <i class="fa fa-chevron-circle-right"></i>
         </div>
@@ -29,7 +29,7 @@
           </div>
 
           <div class="initiative-section">
-            <div class="">
+            <div tooltip="Initiative Section" class="">
               {{ initiative.meta.name }}
             </div>
 
@@ -68,25 +68,25 @@
         <div v-if="inInitiative" class="tab-btns-container w3-xlarge">
           <router-link :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
             class="tab-btn-space">
-            <div class="fa-button noselect" :class="{'fa-button-selected': isOverview}">
+            <div tooltip="Overview" class="fa-button noselect" :class="{'fa-button-selected': isOverview}">
               <span class=""><i class="fa fa-home" aria-hidden="true"></i></span>
             </div>
           </router-link>
           <router-link :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
             class="tab-btn-space">
-            <div class="fa-button noselect" :class="{'fa-button-selected': isModel}">
+            <div tooltip="Models" class="fa-button noselect" :class="{'fa-button-selected': isModel}">
               <span class=""><i class="fa fa-th-large" aria-hidden="true"></i></span>
             </div>
           </router-link>
           <router-link :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
             class="tab-btn-space">
-            <div class="fa-button noselect" :class="{'fa-button-selected': isPeople}">
+            <div tooltip="Users" class="fa-button noselect" :class="{'fa-button-selected': isPeople}">
               <span class=""><i class="fa fa-users" aria-hidden="true"></i></span>
             </div>
           </router-link>
           <router-link :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
             class="tab-btn-space">
-            <div class="fa-button noselect" :class="{'fa-button-selected': isAssignations}">
+            <div tooltip="Assignations" class="fa-button noselect" :class="{'fa-button-selected': isAssignations}">
               <span class=""><i class="fa fa-exchange" aria-hidden="true"></i></span>
             </div>
           </router-link>
@@ -99,7 +99,7 @@
 
       <div class="w3-col m4">
 
-        <div v-if="$store.state.user.authenticated"
+        <div tooltip="User Menu" v-if="$store.state.user.authenticated"
           @click="userOptionsClicked()" class="w3-right cursor-pointer user-container"
           v-click-outside="clickOutsideUser">
 
@@ -130,9 +130,9 @@
           </button>
         </div>
 
-        <router-link :to="{ name: 'Landing'}" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-info-circle"></i></router-link>
+        <router-link :to="{ name: 'Landing'}" tooltip="Log Out" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-info-circle"></i></router-link>
 
-        <router-link v-if="inInitiative" :to="{name: 'InitiativesHome'}" class="w3-right logo-container noselect cursor-pointer">
+        <router-link v-if="inInitiative" :to="{name: 'InitiativesHome'}" tooltip="Home" class="w3-right logo-container noselect cursor-pointer">
           <img class="icon" src="../assets/imago-red.png" alt="">
         </router-link>
 

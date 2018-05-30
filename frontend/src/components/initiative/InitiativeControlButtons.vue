@@ -31,7 +31,7 @@
 
     <div class="initiative-buttons-container">
 
-      <div class="expand-btn w3-xlarge fa-button"
+      <div tooltip="Initiative Menu" class="expand-btn w3-xlarge fa-button"
         @click="expanded =! expanded"
         v-click-outside="clickOutsideMenu">
         <i class="fa fa-bars" aria-hidden="true"></i>
