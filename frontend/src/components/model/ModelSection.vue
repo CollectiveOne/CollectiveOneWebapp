@@ -22,18 +22,25 @@
       <div class="w3-row blue-color title-text">
         <div v-for="parent in nestedIn.slice(1, nestedIn.length)"
           class="w3-left">
-          <router-link class="w3-left" :to="{ name: 'ModelSectionContent', params: {'sectionId': parent.id } }">
-            <span v-html="headerOpenTag + parent.title + headerCloseTag"></span>
+          <router-link v-if="addSectionLinks" class="w3-left" :to="{ name: 'ModelSectionContent', params: {'sectionId': parent.id } }">
+             {{ parent.title }}
           </router-link>
+          <div v-else class="w3-left">
+            <span v-html="headerOpenTag + parent.title + headerCloseTag"></span>
+          </div>
           <div class="w3-left chevron-container">
-            <span v-html="headerOpenTag + faRawHtml + headerCloseTag"></span>
+            <span v-if="!isDocView" v-html="faRawHtml"></span>
+            <span v-else v-html="headerOpenTag + faRawHtml + headerCloseTag"></span>
           </div>
 
         </div>
         <div class="w3-left">
-          <router-link :to="{ name: 'ModelSectionContent', params: {'sectionId': section.id } }">
-            <span v-html="headerOpenTag + '<b>' +  section.title + '</b>' + headerCloseTag"></span>
+          <router-link v-if="addSectionLinks" :to="{ name: 'ModelSectionContent', params: {'sectionId': section.id } }">
+            <b>{{ section.title }}</b>
           </router-link>
+          <div v-else class="">
+            <span v-html="headerOpenTag + '<b>' +  section.title + '</b>' + headerCloseTag"></span>
+          </div>
         </div>
       </div>
       <div v-if="hasDescription" class="w3-row description-text light-grey">
@@ -151,12 +158,21 @@ export default {
     nestedLevel () {
       return this.nestedIn.length + 1
     },
+    isDocView () {
+      return this.cardsType === 'doc'
+    },
+    isReadFriendly () {
+      return this.cardRouteName === 'ModelSectionReadCard'
+    },
+    addSectionLinks () {
+      return !this.isReadFriendly
+    },
     headerOpenTag () {
-      if (this.cardsType !== 'doc') {
+      if (this.isDocView) {
+        return '<h' + (this.nestedLevel < 6 ? this.nestedLevel : 6) + '>'
+      } else {
         return ''
       }
-
-      return '<h' + (this.nestedLevel < 6 ? this.nestedLevel : 6) + '>'
     },
     headerCloseTag () {
       if (this.cardsType !== 'doc') {

@@ -6,8 +6,6 @@
         <app-model-card-modal v-if="showCardModal"
           :isNew="false"
           :cardWrapperId="$route.params.cardId"
-          :inSectionId="section.id"
-          :inSectionTitle="section.title"
           @close="closeCardModal()">
         </app-model-card-modal>
       </transition>

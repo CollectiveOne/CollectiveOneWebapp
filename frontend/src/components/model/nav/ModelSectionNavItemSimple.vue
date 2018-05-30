@@ -65,7 +65,7 @@ export default {
 
   computed: {
     subsections () {
-      return this.section.subsections
+      return this.section != null ? this.section.subsections : []
     },
     highlight () {
       return this.highlightLevelUse > 0
