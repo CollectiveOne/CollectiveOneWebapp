@@ -843,7 +843,6 @@ public class ModelService {
 			return new GetResult<ModelCardWrapperDto>("error", "dont have access to this card", null);
 		}
 		
-		
 		ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
 		/* check if this is a card addition */
 		if (inSectionId != null) {

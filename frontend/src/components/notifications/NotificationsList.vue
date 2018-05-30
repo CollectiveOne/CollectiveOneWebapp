@@ -15,7 +15,7 @@
           {{ notifications.length }} new events under <br>{{ element.title }}
         </div>
         <button class="w3-col  w3-margin-top w3-margin-bottom w3-button app-button" :class="isMainNav?'s5':'s4'"
-          @click="notificationsRead()">
+          @click="allNotificationsRead()">
           mark as read
         </button>
       </div>
