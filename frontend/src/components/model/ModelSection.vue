@@ -1,4 +1,4 @@
-<template lang="html">
+cd w<template lang="html">
 
   <div v-if="section"
     class="section-container" ref="sectionContainer" :id="section.id">
@@ -89,6 +89,45 @@
 <script>
 import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer.vue'
+
+/* this function will append the cards of the toAddList to the baseList
+respecting the the onCardWrapperId */
+const getConnectedList = function (id, toAddList) {
+
+  let firstElement = toAddList.filter((card) => card.id === id)
+  let connectedList = [ firstElement ]
+
+  let connectedToThis = toAddList.filter((card) => card.onCardWrapperId === firstElement.id)
+
+  for (let ix = 0; ix < connectedToThis.length; ix++) {
+    /* recursive call to all the cards that links to this one */
+    connectedList = connectedList.concat(getConnectedList(connectedToThis[ix].id, toAddList))
+  }
+
+  return conectedList
+}
+
+const appendCardsToBase = function (baseList, toAddList) {
+
+  let relativeToBase = toAddList.filter((cardToAdd) => {
+    return baseList.findIndex((cardInBase) => cardToAdd.onCardWrapperId === cardInBase.id) !== -1
+  })
+
+  /* add those relative to base list  */
+  relativeToBase.forEach((cardRelativeToBase) => {
+
+    /* get entire list of cards connected to that card */
+    let connectedCards = getConnectedList(cardRelativeToBase.id, toAddList)
+
+    /* add all the connected array at the index  */
+    let ixOnCard = baseList.findIndex((cardInBase) => cardInBase.id === cardRelativeToBase.id)
+    baseList.slice(0, ixOnCard).concat(cardRelativeToBase.reverse()).concat(baseList.slice(ixOnCard))
+
+    toAddList.
+  })
+
+  /**/
+}
 
 export default {
   name: 'app-model-section',
@@ -195,18 +234,8 @@ export default {
       }
 
       if (this.showPrivate) {
-        for (let ix in this.section.cardsWrappersPrivate) {
-          let cardWrapperPrivate = this.section.cardsWrappersPrivate[ix]
-          let ixFound = allCardWrappers.findIndex((e) => {
-            return e.id === cardWrapperPrivate.onCardWrapperId
-          })
-          if (ixFound !== -1) {
-            let ixInsert = cardWrapperPrivate.isBefore ? ixFound : ixFound + 1
-            allCardWrappers.splice(ixInsert, 0, cardWrapperPrivate)
-          } else {
-            allCardWrappers.push(cardWrapperPrivate)
-          }
-        }
+
+        getConnectedList(allCardWrappers, this.section.cardsWrappersPrivate.slice())
       }
 
       if (this.showShared) {
