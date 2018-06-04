@@ -4,10 +4,10 @@
     <div v-for="(cardWrapper, ix) in cardWrappers"
       :key="cardWrapper.id"
       :class="cardsContainerClasses"
-      @dragover.prevent="draggingOver(cardWrapper)"
+      @dragover.prevent="draggingOver($event, cardWrapper)"
       @drop.prevent="cardDroped(cardWrapper.id, $event)">
 
-      <div v-if="isDraggingOver(cardWrapper)" class="drop-div">
+      <div v-if="isDraggingOver(cardWrapper) && draggingOverCardWrapperBefore" class="drop-div">
       </div>
 
       <div class="card-container-in-list">
@@ -19,6 +19,9 @@
           :hideCardControls="hideCardControls"
           @updateCards="$emit('updateCards')">
         </app-model-card>
+      </div>
+
+      <div v-if="isDraggingOver(cardWrapper) && draggingOverCardWrapperAfter" class="drop-div">
       </div>
 
     </div><div v-if="showNewCardButton && !hideCardControls" :class="cardsContainerClasses" class=""
@@ -89,12 +92,14 @@ export default {
     return {
       draggingOverCardWrapper: null,
       draggingOverCreateCard: false,
+      draggingOverCardWrapperBefore: false,
+      draggingOverCardWrapperAfter: false,
       resetIntervalId: 0
     }
   },
 
   methods: {
-    draggingOver (cardWrapper) {
+    draggingOver (event, cardWrapper) {
       if (!this.acceptDrop) {
         return
       }
@@ -107,6 +112,14 @@ export default {
 
       this.draggingOverCardWrapper = cardWrapper
 
+      let ratioY = (event.clientY - event.currentTarget.offsetTop) / event.currentTarget.offsetHeight
+      if (ratioY < 0.5) {
+        this.draggingOverCardWrapperBefore = true
+        this.draggingOverCardWrapperAfter = false
+      } else {
+        this.draggingOverCardWrapperBefore = false
+        this.draggingOverCardWrapperAfter = true
+      }
       /* make sure this resets even if dropped elsewhere */
       clearTimeout(this.resetIntervalId)
       this.resetIntervalId = setTimeout(() => {
@@ -147,7 +160,8 @@ export default {
             '/moveCard/' + dragData.cardWrapperId, {}, {
             params: {
               onSectionId: this.inSection.id,
-              onCardWrapperId: onCardWrapperId
+              onCardWrapperId: onCardWrapperId,
+              isBefore: this.draggingOverCardWrapperBefore
             }
           }).then((response) => {
             this.$store.commit('triggerUpdateSectionCards')
@@ -159,7 +173,8 @@ export default {
           this.axios.put('/1/model/section/' + this.inSection.id +
             '/cardWrapper/' + dragData.cardWrapperId, {}, {
             params: {
-              beforeCardWrapperId: onCardWrapperId,
+              onCardWrapperId: onCardWrapperId,
+              isBefore: this.draggingOverCardWrapperBefore,
               scope: dragData.scope
             }
           }).then((response) => {

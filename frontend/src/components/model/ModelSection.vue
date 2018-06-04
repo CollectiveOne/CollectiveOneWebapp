@@ -93,7 +93,6 @@ import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer.vu
 /* this function will append the cards of the toAddList to the baseList
 respecting the the onCardWrapperId */
 const getConnectedList = function (id, toAddList) {
-
   let firstElement = toAddList.filter((card) => card.id === id)
   let connectedList = [ firstElement ]
 
@@ -104,29 +103,41 @@ const getConnectedList = function (id, toAddList) {
     connectedList = connectedList.concat(getConnectedList(connectedToThis[ix].id, toAddList))
   }
 
-  return conectedList
+  return connectedList
 }
 
 const appendCardsToBase = function (baseList, toAddList) {
-
   let relativeToBase = toAddList.filter((cardToAdd) => {
     return baseList.findIndex((cardInBase) => cardToAdd.onCardWrapperId === cardInBase.id) !== -1
   })
 
   /* add those relative to base list  */
   relativeToBase.forEach((cardRelativeToBase) => {
-
     /* get entire list of cards connected to that card */
     let connectedCards = getConnectedList(cardRelativeToBase.id, toAddList)
 
     /* add all the connected array at the index  */
     let ixOnCard = baseList.findIndex((cardInBase) => cardInBase.id === cardRelativeToBase.id)
-    baseList.slice(0, ixOnCard).concat(cardRelativeToBase.reverse()).concat(baseList.slice(ixOnCard))
+    baseList.slice(0, ixOnCard).concat(connectedCards.reverse()).concat(baseList.slice(ixOnCard))
 
-    toAddList.
+    /* remove added cards from to add list */
+    connectedCards.forEach((card) => {
+      toAddList.splice(toAddList.findIndex((cardFind) => cardFind.id === card.id), 1)
+    })
   })
 
-  /**/
+  /* then add floating cards */
+
+  /* add remaining cards (but there should not be any...) */
+  for (let ix = 0; ix < toAddList.length; ix++) {
+    let thisCard = toAddList[ix]
+    let ixFound = baseList.findIndex((card) => thisCard.id === card.id)
+    if (ixFound !== -1) {
+      baseList.splice(ixFound, 0, thisCard)
+    } else {
+      baseList.push(thisCard)
+    }
+  }
 }
 
 export default {
@@ -234,23 +245,11 @@ export default {
       }
 
       if (this.showPrivate) {
-
-        getConnectedList(allCardWrappers, this.section.cardsWrappersPrivate.slice())
+        appendCardsToBase(allCardWrappers, this.section.cardsWrappersPrivate.slice())
       }
 
       if (this.showShared) {
-        for (let ix in this.section.cardsWrappersShared) {
-          let cardWrapperPrivate = this.section.cardsWrappersShared[ix]
-          let ixFound = allCardWrappers.findIndex((e) => {
-            return e.id === cardWrapperPrivate.onCardWrapperId
-          })
-          if (ixFound !== -1) {
-            let ixInsert = cardWrapperPrivate.isBefore ? ixFound : ixFound + 1
-            allCardWrappers.splice(ixInsert, 0, cardWrapperPrivate)
-          } else {
-            allCardWrappers.push(cardWrapperPrivate)
-          }
-        }
+        appendCardsToBase(allCardWrappers, this.section.cardsWrappersShared.slice())
       }
 
       return allCardWrappers

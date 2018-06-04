@@ -171,7 +171,8 @@ public class ModelController extends BaseController {
 	public PostResult addExistingCard(
 			@PathVariable("sectionId") String sectionIdStr,
 			@PathVariable("cardWrapperId") String cardWrapperIdStr,
-			@RequestParam(name = "beforeCardWrapperId", defaultValue="") String beforeCardWrapperIdStr,
+			@RequestParam(name = "onCardWrapperId", defaultValue="") String onCardWrapperIdStr,
+			@RequestParam(name = "isBefore", defaultValue="false") Boolean isBefore,
 			@RequestParam(name = "scope", defaultValue="") String scopeStr) {
 	
 		if (getLoggedUser() == null) {
@@ -187,9 +188,15 @@ public class ModelController extends BaseController {
 		
 		ModelCardWrapperScope scope = scopeStr.equals("") ? ModelCardWrapperScope.COMMON : ModelCardWrapperScope.valueOf(scopeStr);
 		
-		UUID beforeCardWrapperId = beforeCardWrapperIdStr.equals("") ? null : UUID.fromString(beforeCardWrapperIdStr);
+		UUID onCardWrapperId = onCardWrapperIdStr.equals("") ? null : UUID.fromString(onCardWrapperIdStr);
 		
-		return modelService.addCardToSection(UUID.fromString(sectionIdStr), cardWrapperId, beforeCardWrapperId, getLoggedUserId(), scope);
+		return modelService.addCardToSection(
+				UUID.fromString(sectionIdStr), 
+				cardWrapperId, 
+				onCardWrapperId, 
+				isBefore,
+				getLoggedUserId(), 
+				scope);
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/removeCard/{cardWrapperId}", method = RequestMethod.PUT) 
@@ -216,7 +223,8 @@ public class ModelController extends BaseController {
 			@PathVariable("sectionId") String fromSectionIdStr,
 			@PathVariable("cardWrapperId") String cardWrapperIdStr,
 			@RequestParam(name = "onSectionId") String onSectionIdStr,
-			@RequestParam(name = "onCardWrapperId", defaultValue="") String onCardWrapperIdStr) {
+			@RequestParam(name = "onCardWrapperId", defaultValue="") String onCardWrapperIdStr,
+			@RequestParam(name = "isBefore", defaultValue="false") Boolean isBefore) {
 	
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -240,6 +248,7 @@ public class ModelController extends BaseController {
 				cardWrapperId,
 				UUID.fromString(onSectionIdStr),
 				onCardWrapperID,
+				isBefore,
 				getLoggedUserId());
 	}
 	
@@ -310,8 +319,8 @@ public class ModelController extends BaseController {
 	public PostResult createCardWrapper(
 			@PathVariable("sectionId") String sectionIdStr,
 			@RequestBody ModelCardDto cardDto,
-			@RequestParam(name="beforeCardWrapperId", defaultValue="") String beforeCardWrapperIdStr,
-			@RequestParam(name="afterCardWrapperId", defaultValue="") String afterCardWrapperIdStr) {
+			@RequestParam(name="onCardWrapperId", defaultValue="") String onCardWrapperIdStr,
+			@RequestParam(name = "isBefore", defaultValue="false") Boolean isBefore) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -324,10 +333,14 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		UUID beforeId = beforeCardWrapperIdStr.equals("") ? null : UUID.fromString(beforeCardWrapperIdStr);
-		UUID afterId = afterCardWrapperIdStr.equals("") ? null : UUID.fromString(afterCardWrapperIdStr);
+		UUID onCardWrapperId = onCardWrapperIdStr.equals("") ? null : UUID.fromString(onCardWrapperIdStr);
 		
-		return modelService.createCardWrapper(cardDto, sectionId, getLoggedUser().getC1Id(), beforeId, afterId);
+		return modelService.createCardWrapper(
+				cardDto, 
+				sectionId, 
+				getLoggedUser().getC1Id(), 
+				onCardWrapperId, 
+				isBefore);
 	}
 	
 	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}", method = RequestMethod.GET) 

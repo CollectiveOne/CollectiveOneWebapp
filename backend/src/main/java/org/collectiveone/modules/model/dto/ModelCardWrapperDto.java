@@ -22,8 +22,8 @@ public class ModelCardWrapperDto {
 	
 	/* for private and shared, position is given relative to another card */
 	private ModelCardWrapperScope scope;
-	private String onCardWrapperId;
-	private Boolean isBefore;
+	private String beforeCardWrapperId;
+	private String afterCardWrapperId;
 	
 	
 	public String getId() {
@@ -98,18 +98,17 @@ public class ModelCardWrapperDto {
 	public void setScope(ModelCardWrapperScope scope) {
 		this.scope = scope;
 	}
-	public String getOnCardWrapperId() {
-		return onCardWrapperId;
+	public String getBeforeCardWrapperId() {
+		return beforeCardWrapperId;
 	}
-	public void setOnCardWrapperId(String onCardWrapperId) {
-		this.onCardWrapperId = onCardWrapperId;
+	public void setBeforeCardWrapperId(String beforeCardWrapperId) {
+		this.beforeCardWrapperId = beforeCardWrapperId;
 	}
-	public Boolean getIsBefore() {
-		return isBefore;
+	public String getAfterCardWrapperId() {
+		return afterCardWrapperId;
 	}
-	public void setIsBefore(Boolean isBefore) {
-		this.isBefore = isBefore;
+	public void setAfterCardWrapperId(String afterCardWrapperId) {
+		this.afterCardWrapperId = afterCardWrapperId;
 	}
-	
 	
 }

@@ -35,10 +35,13 @@ public class ModelCardWrapperAddition {
 	@ManyToOne
 	private ModelCardWrapper cardWrapper;
 	
+	/* double-linked list determines the order */
 	@ManyToOne
-	private ModelCardWrapperAddition onCardWrapperAddition;
+	private ModelCardWrapperAddition beforeCardWrapperAddition;
 	
-	private Boolean isBefore;
+	/* double-linked list determines the order */
+	@ManyToOne
+	private ModelCardWrapperAddition afterCardWrapperAddition;
 	
 	@ManyToOne
 	private AppUser adder;
@@ -122,21 +125,21 @@ public class ModelCardWrapperAddition {
 	public void setScope(ModelCardWrapperScope scope) {
 		this.scope = scope;
 	}
-
-	public ModelCardWrapperAddition getOnCardWrapperAddition() {
-		return onCardWrapperAddition;
+	
+	public ModelCardWrapperAddition getBeforeCardWrapperAddition() {
+		return beforeCardWrapperAddition;
 	}
 
-	public void setOnCardWrapperAddition(ModelCardWrapperAddition onCardWrapperAddition) {
-		this.onCardWrapperAddition = onCardWrapperAddition;
+	public void setBeforeCardWrapperAddition(ModelCardWrapperAddition beforeCardWrapperAddition) {
+		this.beforeCardWrapperAddition = beforeCardWrapperAddition;
 	}
 
-	public Boolean getIsBefore() {
-		return isBefore;
+	public ModelCardWrapperAddition getAfterCardWrapperAddition() {
+		return afterCardWrapperAddition;
 	}
 
-	public void setIsBefore(Boolean isBefore) {
-		this.isBefore = isBefore;
+	public void setAfterCardWrapperAddition(ModelCardWrapperAddition afterCardWrapperAddition) {
+		this.afterCardWrapperAddition = afterCardWrapperAddition;
 	}
 
 	public Status getStatus() {
