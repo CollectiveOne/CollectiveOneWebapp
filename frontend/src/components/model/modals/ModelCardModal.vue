@@ -560,23 +560,11 @@ export default {
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
-            var thisParams = {}
-            switch (this.newCardLocation) {
-              case 'end':
-                break
-
-              case 'before':
-                thisParams.beforeCardWrapperId = this.atCardWrapper.id
-                break
-
-              case 'after':
-                thisParams.afterCardWrapperId = this.atCardWrapper.id
-                break
-            }
-
             this.sendingData = true
-            this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto, { params: thisParams })
-            .then((response) => {
+            this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto, { params: {
+              onCardWrapperId: this.atCardWrapper ? this.atCardWrapper.id : null,
+              isBefore: this.newCardLocation === 'before'
+            }}).then((response) => {
               this.sendingData = false
               if (response.data.result === 'success') {
                 this.closeThis()
@@ -592,6 +580,8 @@ export default {
             this.axios.put('/1/model/section/' + this.inSectionId + '/cardWrapper/' + this.existingCard.id,
               {}, {
                 params: {
+                  onCardWrapperId: this.atCardWrapper ? this.atCardWrapper.id : null,
+                  isBefore: this.newCardLocation === 'before',
                   scope: this.existingCardNewScope
                 }
               }).then((response) => {

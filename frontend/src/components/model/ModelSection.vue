@@ -140,6 +140,35 @@ const appendCardsToBase = function (baseList, toAddList) {
   }
 }
 
+const removeFromList = function (list, el) {
+  let ix = list.findIndex((e) => el.id === e.id)
+  if (ix !== -1) {
+    return list.splice(ix, 1)
+  }
+  return null
+}
+
+const getArrayFromList = function (list) {
+  let array = []
+
+  let firstElements = list.filter((e) => { return e.afterCardWrapperId == null })
+  firstElements.forEach((firstEl) => {
+    /* add this first element */
+    array.push(firstEl)
+    removeFromList(list, firstEl)
+
+    /* add all connected elements */
+    let next = list.find((e) => { return e.afterCardWrapperId === firstEl.id })
+    while (next != null) {
+      array.push(next)
+      removeFromList(list, next)
+      next = list.find((e) => { return e.afterCardWrapperId === next.id })
+    }
+  })
+
+  return array
+}
+
 export default {
   name: 'app-model-section',
 
@@ -241,7 +270,7 @@ export default {
       let allCardWrappers = []
 
       if (this.showCommon) {
-        allCardWrappers = this.section.cardsWrappersCommon.slice()
+        allCardWrappers = getArrayFromList(this.section.cardsWrappersCommon.slice())
       }
 
       if (this.showPrivate) {

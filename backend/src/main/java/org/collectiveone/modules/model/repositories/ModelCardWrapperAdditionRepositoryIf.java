@@ -33,6 +33,12 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 	List<ModelCardWrapperAddition> findInSectionWithScope(UUID sectionId, ModelCardWrapperScope scope);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
+			+ "WHERE crdWrpAdd.section.id = ?1 "
+			+ "AND crdWrpAdd.scope = 'COMMON' "
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
+	List<ModelCardWrapperAddition> findCommonInSection(UUID sectionId);
+	
+	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "WHERE crdWrpAdd.adder.c1Id = ?1 "
 			+ "AND crdWrpAdd.section.id = ?2 "
 			+ "AND crdWrpAdd.scope = ?3 "
@@ -53,6 +59,14 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "AND crdWrpAdd.scope = ?3 "
 			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
 	ModelCardWrapperAddition findBySectionAndCardWrapperIdAndScope(UUID sectionId, UUID cardWrapperId, ModelCardWrapperScope scope);
+	
+	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
+			+ "WHERE "
+			+ "crdWrpAdd.section.id = ?1 "
+			+ "AND crdWrpAdd.scope = ?2 "
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
+			+ "AND crdWrpAdd.beforeCardWrapperAddition IS NULL")
+	List<ModelCardWrapperAddition> findLastBySectionAndCardWrapperIdAndScope(UUID sectionId, ModelCardWrapperScope scope);	
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.cardWrapper crdWrp "

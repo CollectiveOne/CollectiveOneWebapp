@@ -1,6 +1,6 @@
 <template lang="html">
-  <div class="">
-    <h1>redirect!</h1>
+  <div class="w3-row w3-center loader-gif-container">
+    <img class="loader-gif" src="../assets/loading.gif" alt="">
   </div>
 </template>
 
