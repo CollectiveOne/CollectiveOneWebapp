@@ -3,6 +3,7 @@
 
     <div v-for="(cardWrapper, ix) in cardWrappers"
       :key="cardWrapper.id"
+      class="section-card"
       :class="cardsContainerClasses"
       @dragover.prevent="draggingOver($event, cardWrapper)"
       @drop.prevent="cardDroped(cardWrapper.id, $event)">
@@ -85,6 +86,9 @@ export default {
         'section-card-col-no-nav': this.cardsType === 'card' && (!this.$store.state.support.expandModelNav || this.$store.state.support.windowIsSmall),
         'section-card-par': !this.cardsType !== 'card'
       }
+    },
+    draggingElement () {
+      return this.$store.state.support.draggingElement
     }
   },
 
@@ -110,7 +114,13 @@ export default {
         this.draggingOverCreateCard = false
       }
 
-      this.draggingOverCardWrapper = cardWrapper
+      if ((this.draggingElement.cardWrapper.scope === 'COMMON' && cardWrapper.scope === 'COMMON') ||
+        (this.draggingElement.cardWrapper.scope !== 'COMMON') ||
+        this.draggingElement == null) {
+        this.draggingOverCardWrapper = cardWrapper
+      } else {
+        this.draggingOverCardWrapper = null
+      }
 
       let ratioY = (event.clientY - event.currentTarget.offsetTop) / event.currentTarget.offsetHeight
       if (ratioY < 0.5) {
@@ -200,6 +210,10 @@ export default {
 .section-card-col-with-nav, .section-card-col-no-nav {
   margin-bottom: 20px;
   display: inline-block;
+}
+
+.section-card {
+  /*position: relative;*/
 }
 
 .drop-div {

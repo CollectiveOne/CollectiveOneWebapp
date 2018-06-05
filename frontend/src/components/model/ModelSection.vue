@@ -90,54 +90,41 @@ cd w<template lang="html">
 import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer.vue'
 
-/* this function will append the cards of the toAddList to the baseList
-respecting the the onCardWrapperId */
-const getConnectedList = function (id, toAddList) {
-  let firstElement = toAddList.filter((card) => card.id === id)
-  let connectedList = [ firstElement ]
-
-  let connectedToThis = toAddList.filter((card) => card.onCardWrapperId === firstElement.id)
-
-  for (let ix = 0; ix < connectedToThis.length; ix++) {
-    /* recursive call to all the cards that links to this one */
-    connectedList = connectedList.concat(getConnectedList(connectedToThis[ix].id, toAddList))
-  }
-
-  return connectedList
-}
-
 const appendCardsToBase = function (baseList, toAddList) {
   let relativeToBase = toAddList.filter((cardToAdd) => {
-    return baseList.findIndex((cardInBase) => cardToAdd.onCardWrapperId === cardInBase.id) !== -1
+    let ixInBase = baseList.findIndex((cardInBase) => {
+      return (cardToAdd.beforeCardWrapperId === cardInBase.id) ||
+        (cardToAdd.afterCardWrapperId === cardInBase.id)
+    })
+
+    return ixInBase !== -1
   })
 
   /* add those relative to base list  */
   relativeToBase.forEach((cardRelativeToBase) => {
-    /* get entire list of cards connected to that card */
-    let connectedCards = getConnectedList(cardRelativeToBase.id, toAddList)
+    let nextCard = cardRelativeToBase
 
-    /* add all the connected array at the index  */
-    let ixOnCard = baseList.findIndex((cardInBase) => cardInBase.id === cardRelativeToBase.id)
-    baseList.slice(0, ixOnCard).concat(connectedCards.reverse()).concat(baseList.slice(ixOnCard))
+    do {
+      let ixInBase = baseList.findIndex((cardInBase) => {
+        return (nextCard.beforeCardWrapperId === cardInBase.id) ||
+          (nextCard.afterCardWrapperId === cardInBase.id)
+      })
 
-    /* remove added cards from to add list */
-    connectedCards.forEach((card) => {
-      toAddList.splice(toAddList.findIndex((cardFind) => cardFind.id === card.id), 1)
-    })
+      if (nextCard.beforeCardWrapperId === baseList[ixInBase].id) {
+        baseList.splice(ixInBase, 0, nextCard)
+      } else {
+        baseList.splice(ixInBase + 1, 0, nextCard)
+      }
+      removeFromList(toAddList, nextCard)
+
+      nextCard = toAddList.find((e) => { return e.afterCardWrapperId === nextCard.id })
+    } while (nextCard != null)
   })
 
-  /* then add floating cards */
+  /* append all remaining */
+  baseList = baseList.concat(getArrayFromList(toAddList))
 
-  /* add remaining cards (but there should not be any...) */
-  for (let ix = 0; ix < toAddList.length; ix++) {
-    let thisCard = toAddList[ix]
-    let ixFound = baseList.findIndex((card) => thisCard.id === card.id)
-    if (ixFound !== -1) {
-      baseList.splice(ixFound, 0, thisCard)
-    } else {
-      baseList.push(thisCard)
-    }
-  }
+  return baseList
 }
 
 const removeFromList = function (list, el) {
@@ -151,6 +138,7 @@ const removeFromList = function (list, el) {
 const getArrayFromList = function (list) {
   let array = []
 
+  /* start from first elements */
   let firstElements = list.filter((e) => { return e.afterCardWrapperId == null })
   firstElements.forEach((firstEl) => {
     /* add this first element */
@@ -165,6 +153,21 @@ const getArrayFromList = function (list) {
       next = list.find((e) => { return e.afterCardWrapperId === next.id })
     }
   })
+
+  while (list.length > 0) {
+    let firstEl = list.shift()
+    /* add this first element */
+    array.push(firstEl)
+    removeFromList(list, firstEl)
+
+    /* add all connected elements */
+    let next = list.find((e) => { return e.afterCardWrapperId === firstEl.id })
+    while (next != null) {
+      array.push(next)
+      removeFromList(list, next)
+      next = list.find((e) => { return e.afterCardWrapperId === next.id })
+    }
+  }
 
   return array
 }
@@ -273,13 +276,16 @@ export default {
         allCardWrappers = getArrayFromList(this.section.cardsWrappersCommon.slice())
       }
 
+      let nonCommonCards = []
       if (this.showPrivate) {
-        appendCardsToBase(allCardWrappers, this.section.cardsWrappersPrivate.slice())
+        nonCommonCards = nonCommonCards.concat(this.section.cardsWrappersPrivate.slice())
       }
 
       if (this.showShared) {
-        appendCardsToBase(allCardWrappers, this.section.cardsWrappersShared.slice())
+        nonCommonCards = nonCommonCards.concat(this.section.cardsWrappersShared.slice())
       }
+
+      allCardWrappers = appendCardsToBase(allCardWrappers, nonCommonCards)
 
       return allCardWrappers
     },

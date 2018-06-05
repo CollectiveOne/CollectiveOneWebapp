@@ -66,7 +66,16 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "AND crdWrpAdd.scope = ?2 "
 			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
 			+ "AND crdWrpAdd.beforeCardWrapperAddition IS NULL")
-	List<ModelCardWrapperAddition> findLastBySectionAndCardWrapperIdAndScope(UUID sectionId, ModelCardWrapperScope scope);	
+	List<ModelCardWrapperAddition> findLastBySectionAndScope(UUID sectionId, ModelCardWrapperScope scope);	
+	
+	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
+			+ "WHERE "
+			+ "crdWrpAdd.section.id = ?1 "
+			+ "AND crdWrpAdd.adder.c1Id = ?2 "
+			+ "AND crdWrpAdd.scope = ?3 "
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
+			+ "AND crdWrpAdd.beforeCardWrapperAddition IS NULL")
+	List<ModelCardWrapperAddition> findLastBySectionAndAdderAndScope(UUID sectionId, UUID adderId, ModelCardWrapperScope scope);	
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.cardWrapper crdWrp "
