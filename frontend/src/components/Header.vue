@@ -11,7 +11,7 @@
     <div class="w3-row header-row drop-shadow-br light-grey">
       <div class="w3-col m4 initiatives-breadcrumb-container">
 
-        <div tooltip="Initiatives" class="w3-left nav-menu-btn w3-xlarge fa-button"
+        <div tooltip="Initiatives Browser" class="w3-left nav-menu-btn w3-xlarge fa-button"
           @click="$store.commit('toggleExpandNav')">
           <i class="fa fa-chevron-circle-right"></i>
         </div>
@@ -29,7 +29,7 @@
           </div>
 
           <div class="initiative-section">
-            <div tooltip="Initiative Section" class="">
+            <div class="">
               {{ initiative.meta.name }}
             </div>
 
@@ -74,19 +74,19 @@
           </router-link>
           <router-link :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
             class="tab-btn-space">
-            <div tooltip="Models" class="fa-button noselect" :class="{'fa-button-selected': isModel}">
+            <div tooltip="Content" class="fa-button noselect" :class="{'fa-button-selected': isModel}">
               <span class=""><i class="fa fa-th-large" aria-hidden="true"></i></span>
             </div>
           </router-link>
           <router-link :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
             class="tab-btn-space">
-            <div tooltip="Users" class="fa-button noselect" :class="{'fa-button-selected': isPeople}">
+            <div tooltip="Members" class="fa-button noselect" :class="{'fa-button-selected': isPeople}">
               <span class=""><i class="fa fa-users" aria-hidden="true"></i></span>
             </div>
           </router-link>
           <router-link :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
             class="tab-btn-space">
-            <div tooltip="Assignations" class="fa-button noselect" :class="{'fa-button-selected': isAssignations}">
+            <div tooltip="Transfers" class="fa-button noselect" :class="{'fa-button-selected': isAssignations}">
               <span class=""><i class="fa fa-exchange" aria-hidden="true"></i></span>
             </div>
           </router-link>

@@ -606,6 +606,7 @@ export default {
 
 .control-group div {
   display: inline-block;
+  position: relative;
 }
 
 .control-btn {
