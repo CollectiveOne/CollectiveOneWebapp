@@ -17,12 +17,12 @@
         </div>
       </div>
       <div class="w3-row">
-        <textarea 
-          v-if="!preview" 
-          class="this-textarea" 
-          :class="textareaClasses" 
+        <textarea
+          v-if="!preview"
+          class="this-textarea"
+          :class="textareaClasses"
           ref="mdArea"
-          @focus="atFocus($event)" 
+          @focus="atFocus($event)"
           @blur="$emit('c-blur', $event)"
           v-model="text"
           :placeholder="placeholder"
@@ -77,6 +77,10 @@ export default {
     showSendAndMentions: {
       type: Boolean,
       default: false
+    },
+    elementId: {
+      type: String,
+      default: ''
     }
   },
 
@@ -100,9 +104,13 @@ export default {
     text () {
       this.$emit('input', this.text)
       this.checkHeight()
+      this.$store.dispatch('doMarkdownBackup', {elementId: this.elementId, value: this.text})
     },
     mentioningQuery () {
       this.updateMentionSuggestions()
+    },
+    elementId () {
+      this.text = this.$store.state.markdown.data.get(this.elementId)
     }
   },
 
@@ -271,11 +279,18 @@ export default {
       this.mentionedUsers = []
       this.preview = false
       this.sideBySide = false
+
+      // now delete edit content from backup
+      this.$store.dispatch('clearMarkdownBackupData', this.elementId)
     }
   },
 
   mounted () {
-    this.text = this.value
+    if (this.value) {
+      this.text = this.value
+    } else {
+      this.text = this.$store.state.markdown.data.get(this.elementId)
+    }
     window.addEventListener('keydown', this.atKeydown)
 
     /* autoresize textarea */
@@ -284,6 +299,13 @@ export default {
     setTimeout(() => {
       this.checkHeight()
     }, 500)
+  },
+
+  beforeDestroy () {
+    // do backup
+    if (this.value !== '') {
+      this.$store.dispatch('doMarkdownBackup', {elementId: this.elementId, value: this.value})
+    }
   },
 
   destroyed () {
