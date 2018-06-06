@@ -8,188 +8,189 @@
       @mouseleave="hovering = false"
       @click="clicked = !clicked">
 
-      <div class="top-line w3-small">
-        <span v-if="addContext">
-          in <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-        </span>
-        <b><app-user-link :user="activity.triggerUser"></app-user-link></b>
-        <span v-if="addTime">
-           , {{ getTimeStrSince(activity.timestamp) }} ago.
-        </span>
+      <div class="top-line w3-row">
+        <div class="w3-small w3-left event-trigger-user">
+          <span v-if="addContext">
+            in <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+          </span>
+          <b><app-user-link :user="activity.triggerUser"></app-user-link></b>
+          <span v-if="addTime">
+             , {{ getTimeStrSince(activity.timestamp) }} ago.
+          </span>
+        </div>
+
+        <div class="event-summary w3-small w3-left" :class="{'event-summary-solid': !showMessages, 'event-summary-light': showMessages}">
+          <span v-if="isInitiativeCreated" class="">
+            created the new initiative <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+          </span>
+
+          <span v-if="isInitiativeEdited" class="">
+            edited <app-initiative-link :initiative="activity.initiative"></app-initiative-link> {{ initiativeChanged }}
+          </span>
+
+          <span v-if="isSubinitiativeCreated" class="">
+            created <app-initiative-link :initiative="activity.subInitiative"></app-initiative-link> under
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+          </span>
+
+          <span v-if="isInitiativeDeleted" class="">
+            deleted <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+          </span>
+
+          <span v-if="isTokenCreated" class="">
+            created a new token type called <b>{{ activity.mint.tokenName }}</b> in
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
+            and minted <b>{{ activity.mint.value.toFixed(2) }}</b> units.
+          </span>
+
+          <span v-if="isTokensMinted" class="">
+            minted <b>{{ activity.mint.value.toFixed(2) }} {{ activity.mint.tokenName }}</b> in
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+          </span>
+
+          <span v-if="isNewPRAssigantionCreated" class="">
+            created a new peer-reviewed <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
+            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+          </span>
+
+          <span v-if="isNewDAssigantionCreated" class="">
+            made a direct <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
+            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
+            <span v-for="(receiver, ix) in activity.assignation.receivers">{{ ix > 0 ? ', ' : '' }}<app-user-link :user="receiver.user"></app-user-link></span>
+          </span>
+
+          <span v-if="isNewPRAssigantionDone" class="">
+            Peer-reviewed <app-assignation-link :assignation="activity.assignation"></app-assignation-link> has been done. Created by
+            <app-user-link :user="activity.triggerUser"></app-user-link> for
+            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>.
+          </span>
+
+          <span v-if="isInitiativeTransfer" class="">
+            transferred <b>{{ activity.transfer.value.toFixed(2) }} {{ activity.transfer.assetName }}</b> from
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
+            <app-initiative-link
+              :initiativeId="activity.transfer.receiverId"
+              :initiativeName="activity.transfer.receiverName">
+            </app-initiative-link>
+          </span>
+
+          <span v-if="isAssignationRevertOrdered" class="">
+            ordered the revert of the <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
+            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
+            with motive {{ activity.assignation.motive }}
+            from
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+          </span>
+
+          <span v-if="isAssignationRevertCancelled" class="">
+            Revert order cancelled. Order to revert the
+            <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
+            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
+            with motive {{ activity.assignation.motive }}
+            from
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+            , but the revert was not accepted.
+          </span>
+
+          <span v-if="isAssignationReverted" class="">
+            Revert order accepted. Order to revert the
+            <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
+            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
+            with motive {{ activity.assignation.motive }}
+            from
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
+            and the revert has been done.
+          </span>
+
+          <span v-if="isAssignationDeleted" class="">
+            Ongoing transfer deleted. The
+            <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
+            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
+            with motive {{ activity.assignation.motive }}
+            from
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
+            has been deleted.
+          </span>
+
+          <span v-if="isModelSectionCreatedOnSection" class="">
+            created the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
+            section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+          </span>
+          <span v-if="isModelSectionCreatedOnInitiative" class="">
+            created the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
+            initiative <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,.
+          </span>
+          <span v-if="isModelSectionEdited" class="">
+            edited the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> title/description.
+          </span>
+          <span v-if="isModelSectionRemovedFromSection" class="">
+            removed the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link>
+            from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
+          </span>
+          <span v-if="isModelSectionMovedFromSectionToSection" class="">
+            moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>
+             from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
+             to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+          </span>
+          <span v-if="isModelSectionMoved" class="">
+            moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>.
+          </span>
+
+          <span v-if="isModelCardWrapperCreated" class="">
+            created the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+             on section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+          </span>
+          <span v-if="isModelCardWrapperAdded" class="">
+            added the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+             in section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+          </span>
+          <span v-if="isModelCardWrapperRemoved" class="">
+            removed the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.fromSection"></app-model-card-link>
+             from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
+          </span>
+          <span v-if="isModelSectionDeleted" class="">
+            deleted the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>
+          </span>
+
+          <span v-if="isModelCardWrapperMadeShared" class="">
+            made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+             on section <app-model-section-link :section="activity.onSection"></app-model-section-link> a shared card.
+          </span>
+          <span v-if="isModelCardWrapperMadeCommon" class="">
+            made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+             on section <app-model-section-link :section="activity.onSection"></app-model-section-link> a common card.
+          </span>
+          <span v-if="isModelCardWrapperEdited" class="">
+            edited the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
+          </span>
+          <span v-if="isModelCardWrapperMovedSameSection" class="">
+            moved the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+            within section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
+          </span>
+          <span v-if="isModelCardWrapperMovedDiferentSections" class="">
+            moved the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+            from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
+            to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+          </span>
+          <span v-if="isModelCardWrapperDeleted" class="">
+            deleted the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
+          </span>
+
+          <span v-if="isMessagePosted && (!showMessages || isExternalMessage)">
+            commented in
+            <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
+            <span v-if="isMessageInCardWrapperOnSection"><app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link></span>
+            <span v-if="isMessageInSection"><app-model-section-link :section="activity.modelSection"></app-model-section-link> section.</span>
+            <span v-if="isMessageInInitiative"><app-initiative-link :initiative="activity.initiative"></app-initiative-link> initiative.</span>
+          </span>
+        </div>
       </div>
 
-      <div class="" :class="{'event-summary': !isMessagePosted && showMessages}">
-        <span v-if="isInitiativeCreated" class="">
-          created the new initiative <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-        </span>
-
-        <span v-if="isInitiativeEdited" class="">
-          edited <app-initiative-link :initiative="activity.initiative"></app-initiative-link> {{ initiativeChanged }}
-        </span>
-
-        <span v-if="isSubinitiativeCreated" class="">
-          created <app-initiative-link :initiative="activity.subInitiative"></app-initiative-link> under
-          <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-        </span>
-
-        <span v-if="isInitiativeDeleted" class="">
-          deleted <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-        </span>
-
-        <span v-if="isTokenCreated" class="">
-          created a new token type called <b>{{ activity.mint.tokenName }}</b> in
-          <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
-          and minted <b>{{ activity.mint.value.toFixed(2) }}</b> units.
-        </span>
-
-        <span v-if="isTokensMinted" class="">
-          minted <b>{{ activity.mint.value.toFixed(2) }} {{ activity.mint.tokenName }}</b> in
-          <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-        </span>
-
-        <span v-if="isNewPRAssigantionCreated" class="">
-          created a new peer-reviewed <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
-          <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-        </span>
-
-        <span v-if="isNewDAssigantionCreated" class="">
-          made a direct <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
-          <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
-          <span v-for="(receiver, ix) in activity.assignation.receivers">{{ ix > 0 ? ', ' : '' }}<app-user-link :user="receiver.user"></app-user-link></span>
-        </span>
-
-        <span v-if="isNewPRAssigantionDone" class="">
-          Peer-reviewed <app-assignation-link :assignation="activity.assignation"></app-assignation-link> has been done. Created by
-          <app-user-link :user="activity.triggerUser"></app-user-link> for
-          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
-          <app-initiative-link :initiative="activity.initiative"></app-initiative-link>.
-        </span>
-
-        <span v-if="isInitiativeTransfer" class="">
-          transferred <b>{{ activity.transfer.value.toFixed(2) }} {{ activity.transfer.assetName }}</b> from
-          <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
-          <app-initiative-link
-            :initiativeId="activity.transfer.receiverId"
-            :initiativeName="activity.transfer.receiverName">
-          </app-initiative-link>
-        </span>
-
-        <span v-if="isAssignationRevertOrdered" class="">
-          ordered the revert of the <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
-          with motive {{ activity.assignation.motive }}
-          from
-          <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-        </span>
-
-        <span v-if="isAssignationRevertCancelled" class="">
-          Revert order cancelled. Order to revert the
-          <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
-          with motive {{ activity.assignation.motive }}
-          from
-          <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-          , but the revert was not accepted.
-        </span>
-
-        <span v-if="isAssignationReverted" class="">
-          Revert order accepted. Order to revert the
-          <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
-          with motive {{ activity.assignation.motive }}
-          from
-          <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
-          and the revert has been done.
-        </span>
-
-        <span v-if="isAssignationDeleted" class="">
-          Ongoing transfer deleted. The
-          <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-          <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
-          with motive {{ activity.assignation.motive }}
-          from
-          <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
-          has been deleted.
-        </span>
-
-        <span v-if="isModelSectionCreatedOnSection" class="">
-          created the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
-          section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-        </span>
-        <span v-if="isModelSectionCreatedOnInitiative" class="">
-          created the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
-          initiative <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,.
-        </span>
-        <span v-if="isModelSectionEdited" class="">
-          edited the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> title/description.
-        </span>
-        <span v-if="isModelSectionRemovedFromSection" class="">
-          removed the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link>
-          from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
-        </span>
-        <span v-if="isModelSectionMovedFromSectionToSection" class="">
-          moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>
-           from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
-           to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-        </span>
-        <span v-if="isModelSectionMoved" class="">
-          moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>.
-        </span>
-
-        <span v-if="isModelCardWrapperCreated" class="">
-          created the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-           on section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-        </span>
-        <span v-if="isModelCardWrapperAdded" class="">
-          added the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-           in section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-        </span>
-        <span v-if="isModelCardWrapperRemoved" class="">
-          removed the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.fromSection"></app-model-card-link>
-           from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
-        </span>
-        <span v-if="isModelSectionDeleted" class="">
-          deleted the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>
-        </span>
-
-        <span v-if="isModelCardWrapperMadeShared" class="">
-          made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-           on section <app-model-section-link :section="activity.onSection"></app-model-section-link> a shared card.
-        </span>
-        <span v-if="isModelCardWrapperMadeCommon" class="">
-          made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-           on section <app-model-section-link :section="activity.onSection"></app-model-section-link> a common card.
-        </span>
-        <span v-if="isModelCardWrapperEdited" class="">
-          edited the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
-        </span>
-        <span v-if="isModelCardWrapperMovedSameSection" class="">
-          moved the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-          within section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
-        </span>
-        <span v-if="isModelCardWrapperMovedDiferentSections" class="">
-          moved the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-          from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
-          to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
-        </span>
-        <span v-if="isModelCardWrapperDeleted" class="">
-          deleted the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
-        </span>
-
-        <span v-if="isMessagePosted && (!showMessages || isExternalMessage)" :class="{'event-summary': isExternalMessage}">
-          commented in
-          <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
-          <span v-if="isMessageInCardWrapperOnSection"><app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link></span>
-          <span v-if="isMessageInSection"><app-model-section-link :section="activity.modelSection"></app-model-section-link> section.</span>
-          <span v-if="isMessageInInitiative"><app-initiative-link :initiative="activity.initiative"></app-initiative-link> initiative.</span>
-        </span>
-        <span v-if="isMessagePosted && showMessages" class="">
-          <div>
-            <vue-markdown class="marked-text message-container" :source="activity.message.text"></vue-markdown>
-          </div>
-        </span>
+      <div v-if="isMessagePosted && showMessages" class="w3-row">
+        <vue-markdown class="marked-text message-container" :source="activity.message.text"></vue-markdown>
       </div>
 
       <div class="control-btns-row w3-display-topright" v-if="isMessagePosted && showMessages">
@@ -484,12 +485,26 @@ a {
   margin-right: 4px;
 }
 
+.event-trigger-user {
+  padding: 3px 0px;
+  margin-right: 12px;
+}
+
 .event-summary {
-  background-color: #eff3f6;
-  margin-top: 6px;
   border-radius: 6px;
   padding: 3px 6px;
   font-style: italic;
+}
+
+.event-summary-light {
+  background-color: #fafafa;
+  color: #637484;
+}
+
+.event-summary-solid {
+  background-color: #eff3f6;
+  color: black;
+  width: 100%;
 }
 
 .control-btns-row .w3-button {
