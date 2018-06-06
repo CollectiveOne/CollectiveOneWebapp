@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -45,17 +44,6 @@ public class ModelSection {
 	@Type(type = "org.hibernate.type.TextType")
 	@Column(name = "description")
 	private String description;
-	
-	@OneToMany(mappedBy="section")
-	private List<ModelCardWrapperAddition> cardsWrappersAdditionsPrivate = new ArrayList<ModelCardWrapperAddition>();
-	
-	@OneToMany(mappedBy="section")
-	private List<ModelCardWrapperAddition> cardsWrappersAdditionsShared = new ArrayList<ModelCardWrapperAddition>();
-	
-	@ManyToMany
-	@OrderColumn(name = "cards_order")
-	private List<ModelCardWrapperAddition> cardsWrappersAdditionsCommon = new ArrayList<ModelCardWrapperAddition>();
-	
 	
 	@ManyToMany
 	@OrderColumn(name = "subsections_order")
@@ -150,14 +138,6 @@ public class ModelSection {
 		this.description = description;
 	}
 
-	public List<ModelCardWrapperAddition> getCardsWrappersAdditionsCommon() {
-		return cardsWrappersAdditionsCommon;
-	}
-
-	public void setCardsWrappersAdditionsCommon(List<ModelCardWrapperAddition> cardsWrappersAdditionsCommon) {
-		this.cardsWrappersAdditionsCommon = cardsWrappersAdditionsCommon;
-	}
-
 	public List<ModelSection> getSubsections() {
 		return subsections;
 	}
@@ -180,22 +160,6 @@ public class ModelSection {
 
 	public void setMessageThread(MessageThread messageThread) {
 		this.messageThread = messageThread;
-	}
-
-	public List<ModelCardWrapperAddition> getCardsWrappersAdditionsPrivate() {
-		return cardsWrappersAdditionsPrivate;
-	}
-
-	public void setCardsWrappersAdditionsPrivate(List<ModelCardWrapperAddition> cardsWrappersAdditionsPrivate) {
-		this.cardsWrappersAdditionsPrivate = cardsWrappersAdditionsPrivate;
-	}
-
-	public List<ModelCardWrapperAddition> getCardsWrappersAdditionsShared() {
-		return cardsWrappersAdditionsShared;
-	}
-
-	public void setCardsWrappersAdditionsShared(List<ModelCardWrapperAddition> cardsWrappersAdditionsShared) {
-		this.cardsWrappersAdditionsShared = cardsWrappersAdditionsShared;
 	}
 		
 }

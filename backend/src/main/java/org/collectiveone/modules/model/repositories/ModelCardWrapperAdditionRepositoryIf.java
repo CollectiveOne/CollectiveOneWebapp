@@ -54,6 +54,14 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 	ModelCardWrapperAddition findBySectionAndCardWrapperVisibleToUser(UUID sectionId, UUID cardWrapperId, UUID adderId);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
+			+ "JOIN crdWrpAdd.cardWrapper crdWrp "
+			+ "WHERE crdWrp.id= ?2 "
+			+ "AND crdWrpAdd.section.id = ?1 "
+			+ "AND crdWrpAdd.adder.c1Id = ?3 "
+			+ "AND crdWrpAdd.status = 'DELETED'")
+	List<ModelCardWrapperAddition> findDeletedBySectionAndCardWrapperAndAdder(UUID sectionId, UUID cardWrapperId, UUID adderId);
+	
+	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "WHERE crdWrpAdd.cardWrapper.id= ?2 "
 			+ "AND crdWrpAdd.section.id = ?1 "
 			+ "AND crdWrpAdd.scope = ?3 "

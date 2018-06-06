@@ -122,7 +122,7 @@ export default {
         this.draggingOverCardWrapper = null
       }
 
-      let ratioY = (event.clientY - event.currentTarget.offsetTop) / event.currentTarget.offsetHeight
+      let ratioY = (event.screenY - event.currentTarget.getBoundingClientRect().top - 100) / event.currentTarget.offsetHeight
       if (ratioY < 0.5) {
         this.draggingOverCardWrapperBefore = true
         this.draggingOverCardWrapperAfter = false

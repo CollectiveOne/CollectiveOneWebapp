@@ -351,7 +351,8 @@ export default {
           this.axios.put('/1/model/section/' + dragData.fromSectionId +
             '/moveCard/' + dragData.cardWrapperId, {}, {
             params: {
-              onSectionId: this.section.id
+              onSectionId: this.section.id,
+              scope: dragData.scope
             }
           }).then((response) => {
             this.$store.commit('triggerUpdateSectionCards')
@@ -359,7 +360,11 @@ export default {
         } else {
           /* copy card without removing it */
           this.axios.put('/1/model/section/' + this.section.id +
-            '/cardWrapper/' + dragData.cardWrapperId, {}).then((response) => {
+            '/cardWrapper/' + dragData.cardWrapperId, {}, {
+            params: {
+              scope: dragData.scope
+            }
+          }).then((response) => {
             this.$store.commit('triggerUpdateSectionCards')
           })
         }
