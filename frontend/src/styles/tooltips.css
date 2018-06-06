@@ -1,23 +1,19 @@
-/* Tooltip container */
-.tooltip {
-    position: relative;
-    display: inline-block;
-    overflow: visible !important;
-}
-
-/* Tooltip text */
-.tooltip .tooltiptext {
+[tooltip]:before {        
+    position: absolute;
+    content : attr(tooltip);
     visibility: hidden;
+    display: inline-block;
+    top: 40px;
     min-width: 120px;
     text-align: center;
     padding: 5px 10px;
     border-radius: 6px;
-
-    /* Position the tooltip text - see examples below! */
-    position: absolute;
+    font-size: 15px;
+    color: #fdfdfd;
+    background:rgba(0,0,0,0.6);
+    vertical-align:bottom;
+    z-index: 9999
 }
-
-/* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
+[tooltip]:hover:before { 
     visibility: visible;
 }

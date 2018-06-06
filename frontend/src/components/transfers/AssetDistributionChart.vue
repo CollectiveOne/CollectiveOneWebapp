@@ -453,5 +453,4 @@ export default {
   margin-top: 4px;
   margin-bottom: 10px;
 }
-
 </style>

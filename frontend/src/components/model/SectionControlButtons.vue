@@ -52,7 +52,7 @@
 
     <div class="modal-buttons-container">
 
-      <div class="expand-btn cursor-pointer"
+      <div tooltip="Seciton Menu" class="expand-btn cursor-pointer"
         @click="expanded =! expanded"
         v-click-outside="clickOutsideMenu">
         <i class="fa"
