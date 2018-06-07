@@ -124,8 +124,15 @@ export default {
 
       let ratioY = (event.screenY - event.currentTarget.getBoundingClientRect().top - 100) / event.currentTarget.offsetHeight
       if (ratioY < 0.5) {
-        this.draggingOverCardWrapperBefore = true
-        this.draggingOverCardWrapperAfter = false
+        if (this.draggingElement.cardWrapper.scope !== 'COMMON' && cardWrapper.scope === 'COMMON') {
+          /* Non common cards can only be placed after common cards */
+          this.draggingOverCardWrapper = null
+          this.draggingOverCardWrapperBefore = false
+          this.draggingOverCardWrapperAfter = false
+        } else {
+          this.draggingOverCardWrapperBefore = true
+          this.draggingOverCardWrapperAfter = false
+        }
       } else {
         this.draggingOverCardWrapperBefore = false
         this.draggingOverCardWrapperAfter = true

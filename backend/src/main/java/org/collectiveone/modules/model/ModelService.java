@@ -337,24 +337,63 @@ public class ModelService {
 			/* protection logic to prevent wrong orders */
 			switch (cardWrapperAddition.getScope()) {
 				case COMMON:
-					if (onCardWrapperAddition.getScope() != ModelCardWrapperScope.COMMON) {
-						return "error, cannot place a common card after a non-common card";
+					switch (onCardWrapperAddition.getScope()) {
+						case COMMON:
+							if (isBefore) {
+								cardLeft = onCardWrapperAddition.getAfterCardWrapperAddition();
+								cardRight = onCardWrapperAddition;
+							} else {
+								cardLeft = onCardWrapperAddition;
+								cardRight = onCardWrapperAddition.getBeforeCardWrapperAddition();
+							}
+							break;
+							
+						case PRIVATE:
+						case SHARED:
+							/* a common card can only be marked as being “before”, or “after” another common card */
+							return "error, cannot place a common card after a non-common card";
 					}
 					break;
 					
 				case PRIVATE:
-				case SHARED:				
+				case SHARED:
+					switch (onCardWrapperAddition.getScope()) {
+						case COMMON:
+							if (isBefore) {
+								/* a non-common card can only be marked as being “after” a common card */
+								return "error, cannot place a common card after a non-common card";
+							} else {
+								if (onCardWrapperAddition.getBeforeCardWrapperAddition() != null) {
+									switch (onCardWrapperAddition.getBeforeCardWrapperAddition().getScope()) {
+										case COMMON:
+											break;
+											
+										case PRIVATE:
+										case SHARED:
+											/* a non-common card can only be marked as “before” another non-common card */
+											cardRight = onCardWrapperAddition.getBeforeCardWrapperAddition();
+											break;
+									}
+								}
+								cardLeft = onCardWrapperAddition;
+								
+							}
+							break;
+							
+						case PRIVATE:
+						case SHARED:
+							if (isBefore) {
+								cardRight = onCardWrapperAddition;
+								cardLeft = onCardWrapperAddition.getAfterCardWrapperAddition();
+							} else {
+								cardLeft = onCardWrapperAddition;
+								cardRight = onCardWrapperAddition.getBeforeCardWrapperAddition();
+							}
+							break;
+					}
 					break;
 			}
-			
-			if (isBefore) {
-				cardLeft = onCardWrapperAddition.getAfterCardWrapperAddition();
-				cardRight = onCardWrapperAddition;
-			} else {
-				cardLeft = onCardWrapperAddition;
-				cardRight = onCardWrapperAddition.getBeforeCardWrapperAddition();
-			}
-			
+	
 		} else {
 			
 			/* if no place is specified */
@@ -387,30 +426,20 @@ public class ModelService {
 				}
 			}
 		}
-
 		
 		/* all cards can be after a common or shared or public card */
 		cardWrapperAddition.setAfterCardWrapperAddition(cardLeft);
+		cardWrapperAddition.setBeforeCardWrapperAddition(cardRight);
 		
 		if (cardLeft != null) {
-			/* common cards are linked only to other common cards */
-			if (((cardLeft.getScope() == ModelCardWrapperScope.COMMON) && (cardWrapperAddition.getScope() == ModelCardWrapperScope.COMMON)) ||
-				(cardLeft.getScope() != ModelCardWrapperScope.COMMON) && (cardWrapperAddition.getScope() != ModelCardWrapperScope.COMMON)) {
-				
-				cardLeft.setBeforeCardWrapperAddition(cardWrapperAddition);
-				modelCardWrapperAdditionRepository.save(cardLeft);	
-			}
+			cardLeft.setBeforeCardWrapperAddition(cardWrapperAddition);
+			modelCardWrapperAdditionRepository.save(cardLeft);	
 		}
 		
 		if (cardRight != null) {
-			if (((cardRight.getScope() == ModelCardWrapperScope.COMMON) && (cardWrapperAddition.getScope() == ModelCardWrapperScope.COMMON)) ||
-					(cardRight.getScope() != ModelCardWrapperScope.COMMON) && (cardWrapperAddition.getScope() != ModelCardWrapperScope.COMMON)) {
-				
-				/* but only common cards are marked as being before a common card */
-				cardWrapperAddition.setBeforeCardWrapperAddition(cardRight);
-				cardRight.setAfterCardWrapperAddition(cardWrapperAddition);
-				modelCardWrapperAdditionRepository.save(cardRight);
-			}
+			/* but only common cards are marked as being before a common card */
+			cardRight.setAfterCardWrapperAddition(cardWrapperAddition);
+			modelCardWrapperAdditionRepository.save(cardRight);
 		}
 		
 		modelCardWrapperAdditionRepository.save(cardWrapperAddition);
