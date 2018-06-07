@@ -3,7 +3,7 @@ package org.collectiveone.modules.model.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.collectiveone.modules.model.ModelCardWrapperScope;
+import org.collectiveone.modules.model.ModelScope;
 import org.collectiveone.modules.users.AppUserDto;
 
 public class ModelCardWrapperDto {
@@ -21,7 +21,7 @@ public class ModelCardWrapperDto {
 	private List<InModelSectionDto> inModelSections = new ArrayList<InModelSectionDto>();
 	
 	/* for private and shared, position is given relative to another card */
-	private ModelCardWrapperScope scope;
+	private ModelScope scope;
 	private String beforeCardWrapperId;
 	private String afterCardWrapperId;
 	
@@ -92,10 +92,10 @@ public class ModelCardWrapperDto {
 	public void setInModelSections(List<InModelSectionDto> inModelSections) {
 		this.inModelSections = inModelSections;
 	}
-	public ModelCardWrapperScope getScope() {
+	public ModelScope getScope() {
 		return scope;
 	}
-	public void setScope(ModelCardWrapperScope scope) {
+	public void setScope(ModelScope scope) {
 		this.scope = scope;
 	}
 	public String getBeforeCardWrapperId() {

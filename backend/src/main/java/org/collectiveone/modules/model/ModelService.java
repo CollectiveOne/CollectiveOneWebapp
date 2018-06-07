@@ -278,16 +278,16 @@ public class ModelService {
 		
 		if (cardLeft != null) {
 			/* common cards are linked only to other common cards */
-			if (((cardLeft.getScope() == ModelCardWrapperScope.COMMON) && (cardWrapperAddition.getScope() == ModelCardWrapperScope.COMMON)) ||
-				(cardLeft.getScope() != ModelCardWrapperScope.COMMON) && (cardWrapperAddition.getScope() != ModelCardWrapperScope.COMMON)) {
+			if (((cardLeft.getScope() == ModelScope.COMMON) && (cardWrapperAddition.getScope() == ModelScope.COMMON)) ||
+				(cardLeft.getScope() != ModelScope.COMMON) && (cardWrapperAddition.getScope() != ModelScope.COMMON)) {
 			
 				cardLeft.setBeforeCardWrapperAddition(cardRight);
 				modelCardWrapperAdditionRepository.save(cardLeft);
 			}
 		}
 		if (cardRight != null) {
-			if (((cardRight.getScope() == ModelCardWrapperScope.COMMON) && (cardWrapperAddition.getScope() == ModelCardWrapperScope.COMMON)) ||
-					(cardRight.getScope() != ModelCardWrapperScope.COMMON) && (cardWrapperAddition.getScope() != ModelCardWrapperScope.COMMON)) {
+			if (((cardRight.getScope() == ModelScope.COMMON) && (cardWrapperAddition.getScope() == ModelScope.COMMON)) ||
+					(cardRight.getScope() != ModelScope.COMMON) && (cardWrapperAddition.getScope() != ModelScope.COMMON)) {
 				
 				cardRight.setAfterCardWrapperAddition(cardLeft);
 				modelCardWrapperAdditionRepository.save(cardRight);
@@ -337,7 +337,7 @@ public class ModelService {
 			/* protection logic to prevent wrong orders */
 			switch (cardWrapperAddition.getScope()) {
 				case COMMON:
-					if (onCardWrapperAddition.getScope() != ModelCardWrapperScope.COMMON) {
+					if (onCardWrapperAddition.getScope() != ModelScope.COMMON) {
 						return "error, cannot place a common card after a non-common card";
 					}
 					break;
@@ -375,7 +375,7 @@ public class ModelService {
 			if (cardLeft == null) {
 			
 				List<ModelCardWrapperAddition> lastCommonCards = modelCardWrapperAdditionRepository.findLastBySectionAndScope(
-						cardWrapperAddition.getSection().getId(), ModelCardWrapperScope.COMMON);
+						cardWrapperAddition.getSection().getId(), ModelScope.COMMON);
 				
 				/* this card is already stored... so filter it out... */
 				if (lastCommonCards.size() > 0) {
@@ -394,8 +394,8 @@ public class ModelService {
 		
 		if (cardLeft != null) {
 			/* common cards are linked only to other common cards */
-			if (((cardLeft.getScope() == ModelCardWrapperScope.COMMON) && (cardWrapperAddition.getScope() == ModelCardWrapperScope.COMMON)) ||
-				(cardLeft.getScope() != ModelCardWrapperScope.COMMON) && (cardWrapperAddition.getScope() != ModelCardWrapperScope.COMMON)) {
+			if (((cardLeft.getScope() == ModelScope.COMMON) && (cardWrapperAddition.getScope() == ModelScope.COMMON)) ||
+				(cardLeft.getScope() != ModelScope.COMMON) && (cardWrapperAddition.getScope() != ModelScope.COMMON)) {
 				
 				cardLeft.setBeforeCardWrapperAddition(cardWrapperAddition);
 				modelCardWrapperAdditionRepository.save(cardLeft);	
@@ -403,8 +403,8 @@ public class ModelService {
 		}
 		
 		if (cardRight != null) {
-			if (((cardRight.getScope() == ModelCardWrapperScope.COMMON) && (cardWrapperAddition.getScope() == ModelCardWrapperScope.COMMON)) ||
-					(cardRight.getScope() != ModelCardWrapperScope.COMMON) && (cardWrapperAddition.getScope() != ModelCardWrapperScope.COMMON)) {
+			if (((cardRight.getScope() == ModelScope.COMMON) && (cardWrapperAddition.getScope() == ModelScope.COMMON)) ||
+					(cardRight.getScope() != ModelScope.COMMON) && (cardWrapperAddition.getScope() != ModelScope.COMMON)) {
 				
 				/* but only common cards are marked as being before a common card */
 				cardWrapperAddition.setBeforeCardWrapperAddition(cardRight);
@@ -425,7 +425,7 @@ public class ModelService {
 			UUID onCardWrapperId,
 			Boolean isBefore,
 			UUID requestByUserId,
-			ModelCardWrapperScope scope) {
+			ModelScope scope) {
 		
 		ModelCardWrapperAddition existingCard = 
 				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(sectionId, cardWrapperId, requestByUserId);
@@ -464,7 +464,7 @@ public class ModelService {
 			return new PostResult("error", result, section.getId().toString());
 		}
 				
-		if (scope != ModelCardWrapperScope.PRIVATE) {
+		if (scope != ModelScope.PRIVATE) {
 			activityService.modelCardWrapperAdded(cardWrapperAddition, appUserRepository.findByC1Id(requestByUserId));
 		}
 		
@@ -479,7 +479,7 @@ public class ModelService {
 		
 		removeCardWrapperAdditionKeepOrder(cardWrapperAddition, requestedById);
 		
-		if (cardWrapperAddition.getScope() != ModelCardWrapperScope.PRIVATE) {
+		if (cardWrapperAddition.getScope() != ModelScope.PRIVATE) {
 			activityService.modelCardWrapperRemoved(cardWrapperAddition, appUserRepository.findByC1Id(requestedById));
 		}
 		
@@ -500,7 +500,7 @@ public class ModelService {
 		}
 		
 		List<ModelCardWrapperAddition> modelCardWrappersPrivate = 
-				modelCardWrapperAdditionRepository.findOfUserInSection(requestByUserId, section.getId(), ModelCardWrapperScope.PRIVATE);
+				modelCardWrapperAdditionRepository.findOfUserInSection(requestByUserId, section.getId(), ModelScope.PRIVATE);
 		
 		for (ModelCardWrapperAddition cardWrapperAddition : modelCardWrappersPrivate) {
 			ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId);
@@ -511,7 +511,7 @@ public class ModelService {
 		if(initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId)) {
 			
 			List<ModelCardWrapperAddition> modelCardWrappersShared = 
-					modelCardWrapperAdditionRepository.findInSectionWithScope(section.getId(), ModelCardWrapperScope.SHARED);
+					modelCardWrapperAdditionRepository.findInSectionWithScope(section.getId(), ModelScope.SHARED);
 			
 			for (ModelCardWrapperAddition cardWrapperAddition : modelCardWrappersShared) {
 				ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId);
@@ -553,7 +553,7 @@ public class ModelService {
 		cardWrapperDto.setScope(cardWrapperAddition.getScope());
 		
 		/* check if this card wrapper is private on that section only adder is able to see it */
-		if (cardWrapperAddition.getScope() == ModelCardWrapperScope.PRIVATE) {
+		if (cardWrapperAddition.getScope() == ModelScope.PRIVATE) {
 			if (!cardWrapperAddition.getAdder().getC1Id().equals(requestByUserId)) {
 				return null;
 			}
@@ -586,7 +586,7 @@ public class ModelService {
 		for (ModelCardWrapperAddition thisAddition : allAdditions) {
 			/* private info only for author */
 			boolean skip = false;
-			if (thisAddition.getScope() == ModelCardWrapperScope.PRIVATE) {
+			if (thisAddition.getScope() == ModelScope.PRIVATE) {
 				if (!thisAddition.getAdder().getC1Id().equals(requestByUserId)) {
 					skip = true;
 				}
@@ -677,7 +677,7 @@ public class ModelService {
 			return new PostResult("error", result, section.getId().toString());
 		}
 		
-		if (cardWrapperAddition.getScope() != ModelCardWrapperScope.PRIVATE) {
+		if (cardWrapperAddition.getScope() != ModelScope.PRIVATE) {
 			activityService.modelCardWrapperCreated(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 		}
 		
@@ -702,7 +702,7 @@ public class ModelService {
 				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(inSectionId, cardWrapperId, creatorId);
 		
 		/* only author can edit the content. Adders can only move the card around */
-		if (cardWrapperAddition.getScope() != ModelCardWrapperScope.COMMON) {
+		if (cardWrapperAddition.getScope() != ModelScope.COMMON) {
 			if (!cardWrapperAddition.getCardWrapper().getCreator().getC1Id().equals(creatorId)) {
 				return new PostResult("error", "access denied, only author can edit a card", "");
 			}
@@ -749,7 +749,7 @@ public class ModelService {
 		
 		modelCardWrapperRepository.save(cardWrapper);
 		
-		if (cardWrapperAddition.getScope() != ModelCardWrapperScope.PRIVATE) {
+		if (cardWrapperAddition.getScope() != ModelScope.PRIVATE) {
 			activityService.modelCardWrapperEdited(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));	
 		}
 		
@@ -760,11 +760,11 @@ public class ModelService {
 	public PostResult makeCardWrapperShared(UUID cardWrapperId, UUID onSectionId, UUID requestByUserId) {
 		
 		ModelCardWrapperAddition cardWrapperAddition = 
-				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperIdAndScope(onSectionId, cardWrapperId, ModelCardWrapperScope.PRIVATE);
+				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperIdAndScope(onSectionId, cardWrapperId, ModelScope.PRIVATE);
 				
 		if (cardWrapperAddition == null) return new PostResult("error", "card wrapper not found", "");
 		
-		cardWrapperAddition.setScope(ModelCardWrapperScope.SHARED);
+		cardWrapperAddition.setScope(ModelScope.SHARED);
 		modelCardWrapperAdditionRepository.save(cardWrapperAddition);
 		
 		activityService.modelCardWrapperMadeShared(cardWrapperAddition, appUserRepository.findByC1Id(requestByUserId));
@@ -780,7 +780,7 @@ public class ModelService {
 				
 		if (cardWrapperAddition == null) return new PostResult("error", "card wrapper not found", "");
 		
-		cardWrapperAddition.setScope(ModelCardWrapperScope.COMMON);
+		cardWrapperAddition.setScope(ModelScope.COMMON);
 		
 		/* update the order */
 		addCardWrapperAdditionInOrder(
@@ -859,7 +859,7 @@ public class ModelService {
 			return new PostResult("error", result, null);
 		}
 		
-		if (cardWrapperAdditionTo.getScope() != ModelCardWrapperScope.PRIVATE) {
+		if (cardWrapperAdditionTo.getScope() != ModelScope.PRIVATE) {
 			ModelSection fromSection = modelSectionRepository.findById(fromSectionId);
 			activityService.modelCardWrapperMoved(cardWrapperAdditionTo, fromSection, toSection, appUserRepository.findByC1Id(requestedById));
 		}
@@ -971,7 +971,7 @@ public class ModelService {
 			cardWrapperAddition.setStatus(Status.DELETED);
 			
 			/* create notification */
-			if (cardWrapperAddition.getScope() != ModelCardWrapperScope.PRIVATE) {
+			if (cardWrapperAddition.getScope() != ModelScope.PRIVATE) {
 				activityService.modelCardWrapperRemoved(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 			}
 		}

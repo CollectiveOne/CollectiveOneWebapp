@@ -186,7 +186,7 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		ModelCardWrapperScope scope = scopeStr.equals("") ? ModelCardWrapperScope.COMMON : ModelCardWrapperScope.valueOf(scopeStr);
+		ModelScope scope = scopeStr.equals("") ? ModelScope.COMMON : ModelScope.valueOf(scopeStr);
 		
 		UUID onCardWrapperId = onCardWrapperIdStr.equals("") ? null : UUID.fromString(onCardWrapperIdStr);
 		

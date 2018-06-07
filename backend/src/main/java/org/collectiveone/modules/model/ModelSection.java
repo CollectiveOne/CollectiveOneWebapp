@@ -1,7 +1,5 @@
 package org.collectiveone.modules.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -9,10 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.conversations.MessageThread;
@@ -45,12 +41,6 @@ public class ModelSection {
 	@Column(name = "description")
 	private String description;
 	
-	@ManyToMany
-	@OrderColumn(name = "subsections_order")
-	private List<ModelSection> subsections = new ArrayList<ModelSection>();
-	
-	@ManyToMany
-	private List<ModelSection> subsectionsTrash = new ArrayList<ModelSection>();
 	
 	@OneToOne
 	private MessageThread messageThread;
@@ -90,11 +80,7 @@ public class ModelSection {
 	
 	public ModelSectionDto toDto() {
 		ModelSectionDto sectionDto = toDtoLight();
-		
 		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
-		
-		sectionDto.setnSubsections(subsections.size());
-		
 		return sectionDto;
 	}
 	
@@ -136,22 +122,6 @@ public class ModelSection {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public List<ModelSection> getSubsections() {
-		return subsections;
-	}
-
-	public void setSubsections(List<ModelSection> subsections) {
-		this.subsections = subsections;
-	}
-
-	public List<ModelSection> getSubsectionsTrash() {
-		return subsectionsTrash;
-	}
-
-	public void setSubsectionsTrash(List<ModelSection> subsectionsTrash) {
-		this.subsectionsTrash = subsectionsTrash;
 	}
 
 	public MessageThread getMessageThread() {

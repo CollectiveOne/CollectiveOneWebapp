@@ -30,7 +30,7 @@ public class ModelCardWrapperAddition {
 	private ModelSection section;
 	
 	@Enumerated(EnumType.STRING)
-	private ModelCardWrapperScope scope;
+	private ModelScope scope;
 	
 	@ManyToOne
 	private ModelCardWrapper cardWrapper;
@@ -118,11 +118,11 @@ public class ModelCardWrapperAddition {
 		this.section = section;
 	}
 
-	public ModelCardWrapperScope getScope() {
+	public ModelScope getScope() {
 		return scope;
 	}
 
-	public void setScope(ModelCardWrapperScope scope) {
+	public void setScope(ModelScope scope) {
 		this.scope = scope;
 	}
 	
