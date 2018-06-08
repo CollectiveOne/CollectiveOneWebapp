@@ -142,6 +142,14 @@ public class ModelCardWrapperAddition implements OrderedElement {
 	public void setAfterElement(OrderedElement afterElement) {
 		this.afterElement = (ModelCardWrapperAddition) afterElement;
 	}
+	
+	public ModelCardWrapperAddition getBeforeCardWrapperAddition() {
+		return beforeElement;
+	}
+	
+	public ModelCardWrapperAddition getAfterCardWrapperAddition() {
+		return afterElement;
+	}
 
 	public Status getStatus() {
 		return status;
