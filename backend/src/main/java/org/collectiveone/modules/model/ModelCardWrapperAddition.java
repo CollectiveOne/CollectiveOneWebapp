@@ -2,6 +2,7 @@ package org.collectiveone.modules.model;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,7 +19,7 @@ import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "model_cards_wrapper_additions")
-public class ModelCardWrapperAddition {
+public class ModelCardWrapperAddition implements OrderedElement {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -36,12 +37,12 @@ public class ModelCardWrapperAddition {
 	private ModelCardWrapper cardWrapper;
 	
 	/* double-linked list determines the order */
-	@ManyToOne
-	private ModelCardWrapperAddition beforeCardWrapperAddition;
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	private ModelCardWrapperAddition beforeElement;
 	
 	/* double-linked list determines the order */
-	@ManyToOne
-	private ModelCardWrapperAddition afterCardWrapperAddition;
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	private ModelCardWrapperAddition afterElement;
 	
 	@ManyToOne
 	private AppUser adder;
@@ -126,20 +127,20 @@ public class ModelCardWrapperAddition {
 		this.scope = scope;
 	}
 	
-	public ModelCardWrapperAddition getBeforeCardWrapperAddition() {
-		return beforeCardWrapperAddition;
+	public OrderedElement getBeforeElement() {
+		return beforeElement;
 	}
 
-	public void setBeforeCardWrapperAddition(ModelCardWrapperAddition beforeCardWrapperAddition) {
-		this.beforeCardWrapperAddition = beforeCardWrapperAddition;
+	public void setBeforeElement(OrderedElement beforeElement) {
+		this.beforeElement = (ModelCardWrapperAddition) beforeElement;
 	}
 
-	public ModelCardWrapperAddition getAfterCardWrapperAddition() {
-		return afterCardWrapperAddition;
+	public OrderedElement getAfterElement() {
+		return afterElement;
 	}
 
-	public void setAfterCardWrapperAddition(ModelCardWrapperAddition afterCardWrapperAddition) {
-		this.afterCardWrapperAddition = afterCardWrapperAddition;
+	public void setAfterElement(OrderedElement afterElement) {
+		this.afterElement = (ModelCardWrapperAddition) afterElement;
 	}
 
 	public Status getStatus() {
