@@ -33,6 +33,7 @@ import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
+import org.collectiveone.modules.model.repositories.ModelSubsectionRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,9 @@ public class ModelService {
 	@Autowired
 	private ModelCardWrapperAdditionRepositoryIf modelCardWrapperAdditionRepository;
 	
+	@Autowired
+	private ModelSubsectionRepositoryIf modelSubsectionRepository;
+	
 	
 	@Transactional
 	public GetResult<ModelSectionDto> getModel(UUID initiativeId, Integer level, UUID requestById, Boolean onlySections) {
@@ -104,7 +108,14 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult createSection(ModelSectionDto sectionDto, UUID parentSectionId, UUID creatorId, boolean register) {
+	public PostResult createSection(
+			ModelSectionDto sectionDto, 
+			UUID parentSectionId, 
+			UUID creatorId, 
+			boolean register, 
+			UUID onSectionId,
+			Boolean isBefore,
+			ModelScope scope) {
 		
 		ModelSection section = sectionDto.toEntity(null, sectionDto);
 		section = modelSectionRepository.save(section);
@@ -112,8 +123,30 @@ public class ModelService {
 		ModelSection parent = modelSectionRepository.findById(parentSectionId);
 		if (parent == null) return new PostResult("error", "parent section not found", "");
 		
-		parent.getSubsections().add(section);
 		section.setInitiative(parent.getInitiative());
+		
+		ModelSubsection onSubsection = getOnSubsectionFromId(
+				onSectionId, 
+				parentSectionId, 
+				scope, 
+				creatorId);
+		
+		ModelSubsection subsection = new ModelSubsection();
+		
+		subsection.setAdder(appUserRepository.findByC1Id(creatorId));
+		subsection.setSection(section);
+		subsection.setInSection(parent);
+		subsection.setScope(scope);
+		subsection.setStatus(Status.VALID);
+		
+		subsection = modelSubsectionRepository.save(subsection);
+		
+		if (onSubsection != null) {
+			String result = linkOrderedElement(subsection, onSubsection, isBefore, creatorId); 
+			if (result != "success") {
+				return new PostResult("error", result, section.getId().toString());
+			}	
+		}
 		
 		if (register) activityService.modelSectionCreatedOnSection(section, parent, appUserRepository.findByC1Id(creatorId));
 		
@@ -436,7 +469,46 @@ public class ModelService {
 		return new PostResult("success", "card added to section", section.getId().toString());
 	}
 	
-	private ModelCardWrapperAddition getOnCardWrapperAdditionFromId(UUID onCardWrapperId, UUID sectionId, ModelScope scope, UUID requestByUserId) {
+	private ModelSubsection getOnSubsectionFromId(UUID onSectionId, UUID parentSectionId, ModelScope scope, UUID requestByUserId) {
+		
+		ModelSubsection onSubsection = null;
+		
+		if (onSectionId != null) {
+			onSubsection = 
+					modelSubsectionRepository.findByParentSectionAndSectionVisibleToUser(
+							parentSectionId, 
+							onSectionId, 
+							requestByUserId);	
+		} else {
+			/* if no place is specified */
+			/* try to place if after the last section with the same scope added by this user */
+			List<ModelSubsection> lastSections 
+				= modelSubsectionRepository.findLastByParentSectionAndAdderAndScope(
+					parentSectionId, requestByUserId, scope);
+			
+			if (lastSections.size() > 0) {
+				onSubsection = lastSections.get(0);
+			}
+			
+			/* if nothing found, try to place it after the last common card */
+			if (onSubsection == null) {
+			
+				List<ModelSubsection> lastCommonSections 
+					= modelSubsectionRepository.findLastByParentSectionAndScope(
+						parentSectionId, ModelScope.COMMON);
+				
+				if (lastCommonSections.size() > 0) {
+					onSubsection = lastCommonSections.get(0);
+				}
+			}
+		}
+		
+		return onSubsection;
+	} 
+	
+	private ModelCardWrapperAddition getOnCardWrapperAdditionFromId(
+			UUID onCardWrapperId, UUID sectionId, ModelScope scope, UUID requestByUserId) {
+		
 		ModelCardWrapperAddition onCardWrapperAddition = null;
 		
 		if (onCardWrapperId != null) {

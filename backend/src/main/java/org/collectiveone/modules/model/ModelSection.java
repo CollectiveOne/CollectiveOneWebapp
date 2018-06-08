@@ -1,7 +1,5 @@
 package org.collectiveone.modules.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -9,13 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.conversations.MessageThread;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.hibernate.annotations.GenericGenerator;
@@ -44,17 +38,6 @@ public class ModelSection {
 	@Type(type = "org.hibernate.type.TextType")
 	@Column(name = "description")
 	private String description;
-	
-	
-	@OneToOne
-	private MessageThread messageThread;
-	
-	@ManyToMany
-	@OrderColumn(name = "subsections_order")
-	private List<ModelSection> subsections = new ArrayList<ModelSection>();
-	
-	@ManyToMany
-	private List<ModelSection> subsectionsTrash = new ArrayList<ModelSection>();
 	
 	
 	@Override
@@ -136,30 +119,4 @@ public class ModelSection {
 		this.description = description;
 	}
 
-	public MessageThread getMessageThread() {
-		return messageThread;
-	}
-
-	public void setMessageThread(MessageThread messageThread) {
-		this.messageThread = messageThread;
-	}
-
-	public List<ModelSection> getSubsections() {
-		return subsections;
-	}
-
-	public void setSubsections(List<ModelSection> subsections) {
-		this.subsections = subsections;
-	}
-
-	public List<ModelSection> getSubsectionsTrash() {
-		return subsectionsTrash;
-	}
-
-	public void setSubsectionsTrash(List<ModelSection> subsectionsTrash) {
-		this.subsectionsTrash = subsectionsTrash;
-	}
-	
-	
-		
 }

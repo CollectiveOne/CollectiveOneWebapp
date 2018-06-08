@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.users.AppUser;
@@ -29,9 +28,6 @@ public class Message {
 	private UUID id;
 	
 	@ManyToOne
-	private MessageThread thread;
-	
-	@ManyToOne
 	private AppUser author;
 	
 	@Column(name = "timestamp")
@@ -42,16 +38,12 @@ public class Message {
 	@Column(name = "text")
 	private String text;
 	
-	@OneToOne
-	private MessageThread subThread;
-	
 	
 	public MessageDto toDto() {
 		MessageDto dto = new MessageDto();
 		dto.setId(id.toString());
 		dto.setAuthor(author.toDtoLight());
 		dto.setText(text);
-		if (thread != null) dto.setThreadId(thread.getId().toString());
 		return dto;
 	}
 	
@@ -62,14 +54,6 @@ public class Message {
 
 	public void setId(UUID id) {
 		this.id = id;
-	}
-
-	public MessageThread getThread() {
-		return thread;
-	}
-
-	public void setThread(MessageThread thread) {
-		this.thread = thread;
 	}
 
 	public AppUser getAuthor() {
@@ -94,14 +78,6 @@ public class Message {
 
 	public void setText(String text) {
 		this.text = text;
-	}
-
-	public MessageThread getSubThread() {
-		return subThread;
-	}
-
-	public void setSubThread(MessageThread subThread) {
-		this.subThread = subThread;
 	}
 	
 

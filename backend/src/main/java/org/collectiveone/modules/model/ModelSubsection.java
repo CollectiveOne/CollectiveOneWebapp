@@ -17,7 +17,7 @@ import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "model_section_subsections")
-public class ModelSubsection {
+public class ModelSubsection implements OrderedElement {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -36,11 +36,11 @@ public class ModelSubsection {
 	
 	/* double-linked list determines the order */
 	@ManyToOne
-	private ModelSubsection beforeSubsction;
+	private ModelSubsection beforeElement;
 	
 	/* double-linked list determines the order */
 	@ManyToOne
-	private ModelSubsection afterCSubsection;
+	private ModelSubsection afterElement;
 	
 	@ManyToOne
 	private AppUser adder;
@@ -81,22 +81,32 @@ public class ModelSubsection {
 		this.section = section;
 	}
 
-	public ModelSubsection getBeforeSubsction() {
-		return beforeSubsction;
+
+	public OrderedElement getBeforeElement() {
+		return beforeElement;
+	}
+	
+	public void setBeforeElement(OrderedElement beforeElement) {
+		this.beforeElement = (ModelSubsection) beforeElement;
 	}
 
-	public void setBeforeSubsction(ModelSubsection beforeSubsction) {
-		this.beforeSubsction = beforeSubsction;
+	public OrderedElement getAfterElement() {
+		return afterElement;
 	}
 
-	public ModelSubsection getAfterCSubsection() {
-		return afterCSubsection;
+	public void setAfterElement(OrderedElement afterElement) {
+		this.afterElement = (ModelSubsection) afterElement;
 	}
-
-	public void setAfterCSubsection(ModelSubsection afterCSubsection) {
-		this.afterCSubsection = afterCSubsection;
+	
+	public ModelSubsection getBeforeCardWrapperAddition() {
+		return beforeElement;
 	}
-
+	
+	public ModelSubsection getAfterCardWrapperAddition() {
+		return afterElement;
+	}
+	
+	
 	public AppUser getAdder() {
 		return adder;
 	}
