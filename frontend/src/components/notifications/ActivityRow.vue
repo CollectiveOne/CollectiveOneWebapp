@@ -179,6 +179,7 @@
         </span>
 
         <span v-if="isMessagePosted && (!showMessages || isExternalMessage)" :class="{'event-summary': isExternalMessage}">
+          <span v-if="loggedUserMentioned">mentioned you in a </span>
           commented in
           <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
           <span v-if="isMessageInCardWrapperOnSection"><app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link></span>
@@ -262,6 +263,13 @@ export default {
   },
 
   computed: {
+    loggedUserMentioned () {
+      if (this.$store.state.user.profile) {
+        return this.activity.message.mentions.findIndex((mention) => {
+          mention.c1Id === this.$store.state.user.profile.c1Id
+        }) !== -1
+      }
+    },
     isInitiativeCreated () {
       return this.activity.type === 'INITIATIVE_CREATED'
     },

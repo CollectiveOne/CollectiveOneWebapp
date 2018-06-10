@@ -156,6 +156,10 @@ public class Activity {
 		
 		if(message != null) dto.setMessage(message.toDto());
 		
+		for (AppUser mentionedUser : mentionedUsers) {
+			dto.getMentionedUsers().add(mentionedUser.toDtoLight());
+		}
+		
 		return dto;
 	}
 	

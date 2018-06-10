@@ -318,7 +318,14 @@ public class NotificationDtoBuilder {
 				
 			}
 			String text = notification.getActivity().getMessage().getText();
-			message = "commented in " + from + ": " + (text.length() > 60 ? text.substring(0, 60) + "..." : text);
+			// message = "commented in " + from + ": " + (text.length() > 60 ? text.substring(0, 60) + "..." : text);
+			
+			if (act.getMentionedUsers().contains(notification.getSubscriber().getUser())) {
+				/* mentioned to user */
+				message = "mentioned you in a ";
+			}
+			message += "commented in " + from + ": " + (text.length() > 60 ? text.substring(0, 60) + "..." : text);
+			
 			break;
 			
 		default:

@@ -1,5 +1,8 @@
 package org.collectiveone.modules.activity.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.collectiveone.modules.assignations.dto.AssignationDto;
 import org.collectiveone.modules.conversations.MessageDto;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
@@ -27,6 +30,7 @@ public class ActivityDto {
 	
 	private ModelSectionDto onSection;
 	private ModelSectionDto fromSection;
+	private List<AppUserDto> mentionedUsers = new ArrayList<AppUserDto>();
 	
 	private MessageDto message;
 	
@@ -125,6 +129,12 @@ public class ActivityDto {
 	}
 	public void setMessage(MessageDto message) {
 		this.message = message;
+	}
+	public List<AppUserDto> getMentionedUsers() {
+		return mentionedUsers;
+	}
+	public void setMentionedUsers(List<AppUserDto> mentionedUsers) {
+		this.mentionedUsers = mentionedUsers;
 	}
 	
 }
