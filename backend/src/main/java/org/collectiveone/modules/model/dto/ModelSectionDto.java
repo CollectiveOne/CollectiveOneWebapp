@@ -3,6 +3,7 @@ package org.collectiveone.modules.model.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.collectiveone.modules.model.ModelScope;
 import org.collectiveone.modules.model.ModelSection;
 
 public class ModelSectionDto {
@@ -15,6 +16,7 @@ public class ModelSectionDto {
 	private String parentSectionTitle;
 	private String title;
 	private String description;
+	private ModelScope newScope;
 	private Boolean subElementsLoaded;
 	private Integer nSubsections;
 	
@@ -82,6 +84,12 @@ public class ModelSectionDto {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public ModelScope getNewScope() {
+		return newScope;
+	}
+	public void setNewScope(ModelScope newScope) {
+		this.newScope = newScope;
 	}
 	public List<ModelCardWrapperDto> getCardsWrappersCommon() {
 		return cardsWrappersCommon;

@@ -26,6 +26,7 @@ import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.ModelSubsection;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
@@ -105,6 +106,10 @@ public class Activity {
 	
 	@ManyToOne
 	private ModelCardWrapperAddition modelCardWrapperAddition;
+	
+	@ManyToOne
+	private ModelSubsection modelSubsection;
+	
 	
 	
 	// -------
@@ -328,6 +333,15 @@ public class Activity {
 	public void setModelCardWrapperAddition(ModelCardWrapperAddition modelCardWrapperAddition) {
 		this.modelCardWrapperAddition = modelCardWrapperAddition;
 	}
+
+	public ModelSubsection getModelSubsection() {
+		return modelSubsection;
+	}
+
+	public void setModelSubsection(ModelSubsection modelSubsection) {
+		this.modelSubsection = modelSubsection;
+	}
+	
 	
 	
 }

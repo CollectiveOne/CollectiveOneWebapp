@@ -81,7 +81,6 @@ public class ModelSubsection implements OrderedElement {
 		this.section = section;
 	}
 
-
 	public OrderedElement getBeforeElement() {
 		return beforeElement;
 	}

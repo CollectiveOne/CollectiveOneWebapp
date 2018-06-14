@@ -29,6 +29,7 @@ import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.dto.ModelSectionLinkedDto;
+import org.collectiveone.modules.model.dto.SubsectionsHolderDto;
 import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
@@ -112,10 +113,8 @@ public class ModelService {
 			ModelSectionDto sectionDto, 
 			UUID parentSectionId, 
 			UUID creatorId, 
-			boolean register, 
 			UUID onSectionId,
-			Boolean isBefore,
-			ModelScope scope) {
+			Boolean isBefore) {
 		
 		ModelSection section = sectionDto.toEntity(null, sectionDto);
 		section = modelSectionRepository.save(section);
@@ -128,7 +127,7 @@ public class ModelService {
 		ModelSubsection onSubsection = getOnSubsectionFromId(
 				onSectionId, 
 				parentSectionId, 
-				scope, 
+				sectionDto.getNewScope(), 
 				creatorId);
 		
 		ModelSubsection subsection = new ModelSubsection();
@@ -136,7 +135,7 @@ public class ModelService {
 		subsection.setAdder(appUserRepository.findByC1Id(creatorId));
 		subsection.setSection(section);
 		subsection.setInSection(parent);
-		subsection.setScope(scope);
+		subsection.setScope(sectionDto.getNewScope());
 		subsection.setStatus(Status.VALID);
 		
 		subsection = modelSubsectionRepository.save(subsection);
@@ -148,7 +147,9 @@ public class ModelService {
 			}	
 		}
 		
-		if (register) activityService.modelSectionCreatedOnSection(section, parent, appUserRepository.findByC1Id(creatorId));
+		if (subsection.getScope() != ModelScope.PRIVATE) {
+			activityService.modelSectionCreatedOnSection(section, parent, appUserRepository.findByC1Id(creatorId));
+		}
 		
 		modelSectionRepository.save(parent);
 		
@@ -219,19 +220,18 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult removeSubsectionFromSection(UUID sectionId, UUID subsectionId, UUID creatorId) {
+	public PostResult removeSubsectionFromSection(UUID sectionId, UUID subsectionId, UUID requestedById) {
 		
-		ModelSection section = modelSectionRepository.findById(sectionId);
-		ModelSection subsection = modelSectionRepository.findById(subsectionId);
+		ModelSubsection subsection = 
+				modelSubsectionRepository.findByParentSectionAndSectionVisibleToUser(sectionId, subsectionId, requestedById);
 		
-		section.getSubsections().remove(subsection);
-		section.getSubsectionsTrash().add(subsection);
+		removeSubsectionKeepOrder(subsection, requestedById);
 		
-		section = modelSectionRepository.save(section);
+		if (subsection.getScope() != ModelScope.PRIVATE) {
+			activityService.modelSubsectionRemoved(subsection, appUserRepository.findByC1Id(requestedById));
+		}
 		
-		activityService.modelSectionRemovedFromSection(subsection, section, appUserRepository.findByC1Id(creatorId));
-		
-		return new PostResult("success", "subsection removed to section", section.getId().toString());
+		return new PostResult("success", "card added to section", subsection.getId().toString());
 	}
 	
 	@Transactional
@@ -239,66 +239,150 @@ public class ModelService {
 			UUID fromSectionId, 
 			UUID subSectionId, 
 			UUID toSectionId, 
-			UUID beforeSubsectionId,
-			UUID creatorId) {
-		/* move a subsection to another section or subsection or, as top section, to a view */
+			UUID onSubsectionId,
+			Boolean isBefore,
+			UUID requestedById) {
 		
+		/* move a subsection to another section or subsection or, as top section, to a view */
 		if (subSectionId.equals(toSectionId)) {
 			return new PostResult("warning", "cannot move on itself", null);
 		}
-				
-		ModelSection subSection = modelSectionRepository.findById(subSectionId);
-		ModelSection fromSection = modelSectionRepository.findById(fromSectionId);
 		
-		/* remove subsection from section */
-		fromSection.getSubsections().remove(subSection);
-		
-		/* moving to another section add to section as subsection */
-		ModelSection toSection = modelSectionRepository.findById(toSectionId);
-		
-		if (beforeSubsectionId != null) {
-			ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
-			int index = toSection.getSubsections().indexOf(beforeSubsection);
-			if (index < 0) {
-				return new PostResult("error", "error while moving section", subSection.getId().toString());
-			}
-			toSection.getSubsections().add(index, subSection);
-		} else {
-			toSection.getSubsections().add(subSection);
+		/* check there is not a visible subsection already in this section */
+		if (!fromSectionId.equals(toSectionId)) {
+			ModelSubsection existingSubsection = 
+					modelSubsectionRepository.findByParentSectionAndSectionVisibleToUser(
+							toSectionId, subSectionId, requestedById);
+					
+			if (existingSubsection != null) {
+				return new PostResult("error", "subsection already in this section", null);
+			}	
 		}
 		
-		fromSection = modelSectionRepository.save(fromSection);
-		subSection.setInitiative(toSection.getInitiative());
-				
-		activityService.modelSectionMovedFromSectionToSection(subSection, fromSection, toSection, appUserRepository.findByC1Id(creatorId));
+		ModelSection toSection = modelSectionRepository.findById(toSectionId);
 		
-		modelSectionRepository.save(toSection);
-		modelSectionRepository.save(subSection);
+		ModelSubsection subsectionFrom = 
+				modelSubsectionRepository.findByParentSectionAndSectionVisibleToUser(
+						fromSectionId, subSectionId, requestedById);
 		
-		return new PostResult("success", "subsection moved", subSection.getId().toString());
+		ModelSubsection subsectionTo = null;
+		
+		if (!fromSectionId.equals(toSectionId)) {
+			/* remove card from original section */
+			removeSubsectionKeepOrder(subsectionFrom, requestedById);
+			
+			/* check if this card was already deleted by this adder in this section */
+			List<ModelSubsection> subsectionsDeleted = 
+					modelSubsectionRepository.findDeletedByParentSectionAndSectionAndAdder(
+							toSectionId, subSectionId, requestedById);
+			
+			if (subsectionsDeleted.size() == 0) {
+				/* check if this card was already deleted from this section by this user, in which case, just update it */
+				subsectionTo = new ModelSubsection();
+				subsectionTo = modelSubsectionRepository.save(subsectionTo);
+			} else {
+				subsectionTo = subsectionsDeleted.get(0);
+			}
+			
+			subsectionTo.setAdder(appUserRepository.findByC1Id(requestedById));
+			subsectionTo.setInSection(toSection);
+			subsectionTo.setSection(subsectionFrom.getSection());
+			subsectionTo.setScope(subsectionFrom.getScope());
+			subsectionTo.setStatus(Status.VALID);
+			
+		} else {
+			/* moving within the same section */
+			unlinkOrderedElement(subsectionFrom);
+			subsectionTo = subsectionFrom;
+		}
+		
+		ModelSubsection onSubsection = getOnSubsectionFromId(
+				subSectionId, 
+				toSectionId,
+				subsectionFrom.getScope(), 
+				requestedById);
+		
+		/* save after finding the onCardWrapperAddition */
+		modelSubsectionRepository.save(subsectionTo);
+		
+		if (onSubsection != null) {
+			String result = linkOrderedElement(subsectionTo, onSubsection, isBefore, requestedById); 
+			if (result != "success") {
+				return new PostResult("error", result, null);
+			}
+		}
+		
+		if (subsectionTo.getScope() != ModelScope.PRIVATE) {
+			ModelSection fromSection = modelSectionRepository.findById(fromSectionId);
+			activityService.modelSubsectionMoved(subsectionTo, fromSection, toSection, appUserRepository.findByC1Id(requestedById));
+		}
+		
+		return new PostResult("success", "card wrapper moved", subsectionTo.getId().toString());
 	}
 	
 	@Transactional
-	public PostResult addSection (UUID sectionId, UUID onSectionId, UUID beforeSubsectionId, UUID creatorId) {
+	public PostResult addSubsectionToSection (
+			UUID sectionId, 
+			UUID parentSectionId, 
+			UUID onSubsectionId, 
+			Boolean isBefore,
+			UUID requestByUserId ,
+			ModelScope scope) {
 		
-		ModelSection section = modelSectionRepository.findById(sectionId);
 		
-		/* add it as subsection */
-		ModelSection onSection = modelSectionRepository.findById(onSectionId);
+		ModelSubsection existingSubsection = 
+				modelSubsectionRepository.findByParentSectionAndSectionVisibleToUser(
+						parentSectionId, sectionId, requestByUserId);
 		
-		if (beforeSubsectionId != null) {
-			ModelSection beforeSubsection = modelSectionRepository.findById(beforeSubsectionId);
-			int index = onSection.getSubsections().indexOf(beforeSubsection);
-			onSection.getSubsections().add(index, section);
-		} else {
-			onSection.getSubsections().add(section);
+		if (existingSubsection != null) {
+			return new PostResult("error", "section already in this section", null);
 		}
 		
-		onSection = modelSectionRepository.save(onSection);
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelSection parentSection = modelSectionRepository.findById(parentSectionId);
 		
-		activityService.modelNewSubsection(section, onSection, appUserRepository.findByC1Id(creatorId));
+		/* check if this card was already deleted by this adder in this section */
+		ModelSubsection subsection = null;
 		
-		return new PostResult("success", "section added to section", section.getId().toString());
+		List<ModelSubsection> subsectionsDeleted = 
+				modelSubsectionRepository.findDeletedByParentSectionAndSectionAndAdder(
+						parentSectionId, sectionId, requestByUserId);
+		
+		if (subsectionsDeleted.size() == 0) {
+			/* check if this card was already deleted from this section by this user, in which case, just update it */
+			subsection = new ModelSubsection();
+			subsection = modelSubsectionRepository.save(subsection);
+		} else {
+			subsection = subsectionsDeleted.get(0);
+		} 
+		
+		subsection.setAdder(appUserRepository.findByC1Id(requestByUserId));
+		subsection.setSection(section);
+		subsection.setInSection(parentSection);
+		subsection.setScope(scope);
+		subsection.setStatus(Status.VALID);
+		
+		subsection = modelSubsectionRepository.save(subsection);
+		
+		ModelSubsection onSubsection = getOnSubsectionFromId(
+				onSubsectionId, 
+				parentSectionId, 
+				scope, 
+				requestByUserId);
+				
+		if (onSubsection != null) {
+			String result = linkOrderedElement(subsection, onSubsection, isBefore, requestByUserId); 
+			if (result != "success") {
+				return new PostResult("error", result, section.getId().toString());
+			}
+		}
+				
+		if (scope != ModelScope.PRIVATE) {
+			activityService.modelSubsectionAdded(subsection, appUserRepository.findByC1Id(requestByUserId));
+		}
+		
+		return new PostResult("success", "card added to section", section.getId().toString());
+		
 	}
 	
 	private String unlinkOrderedElement(
@@ -325,6 +409,21 @@ public class ModelService {
 		}
 		
 		return "success";
+	}
+	
+	private String removeSubsectionKeepOrder(
+			ModelSubsection subsection,
+			UUID requestByUserId) {
+		
+		String res = unlinkOrderedElement(subsection);
+		
+		if (res == "success") {
+			subsection.setStatus(Status.DELETED);
+			modelSubsectionRepository.save(subsection);
+			return "success";	
+		} else {
+			return "error";
+		}
 	}
 	
 	private String removeCardWrapperAdditionKeepOrder(
@@ -558,6 +657,40 @@ public class ModelService {
 	}
 	
 	@Transactional
+	private SubsectionsHolderDto getSectionSubsectionsDtos(UUID sectionId, UUID requestByUserId) {
+		
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		SubsectionsHolderDto subsectionsHolder = new SubsectionsHolderDto();
+		
+		List<ModelSubsection> modelSubsectionsCommon = 
+				modelSubsectionRepository.findInSectionWithScope(section.getId(), ModelScope.COMMON);
+		
+		for (ModelSubsection subsection : modelSubsectionsCommon) {
+			subsectionsHolder.getSubsectionsCommon().add(subsection.getSection().toDto());
+		}
+		
+		List<ModelSubsection> modelSubsectionsPrivate = 
+				modelSubsectionRepository.findOfUserInSection(requestByUserId, section.getId(), ModelScope.PRIVATE);
+		
+		for (ModelSubsection subsection : modelSubsectionsPrivate) {
+			subsectionsHolder.getSubsectionsPrivate().add(subsection.getSection().toDto());
+		}
+		
+		/* if request user is in ecosystem add shared cards too */
+		if(initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId)) {
+			
+			List<ModelSubsection> modelSubsectionsShared = 
+					modelSubsectionRepository.findInSectionWithScope(section.getId(), ModelScope.SHARED);
+			
+			for (ModelSubsection subsection : modelSubsectionsShared) {
+				subsectionsHolder.getSubsectionsShared().add(subsection.getSection().toDto());
+			}
+		}
+		
+		return subsectionsHolder;
+	}
+	
+	@Transactional
 	private CardWrappersHolderDto getSectionCardWrappersDtos(UUID sectionId, UUID requestByUserId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
@@ -596,11 +729,10 @@ public class ModelService {
 	@Transactional
 	public ModelSectionDto addSectionSubElements(ModelSectionDto sectionDto, UUID sectionId, Integer level, UUID requestByUserId, Boolean onlySections) {
 		
-		ModelSection section = modelSectionRepository.findById(sectionId);
 		sectionDto.setSubElementsLoaded(true);
 		
 		if (!onlySections) {
-			CardWrappersHolderDto cardWrappersHolder = getSectionCardWrappersDtos(section.getId(), requestByUserId);
+			CardWrappersHolderDto cardWrappersHolder = getSectionCardWrappersDtos(sectionId, requestByUserId);
 			
 			sectionDto.setCardsWrappersCommon(cardWrappersHolder.getCardsWrappersCommon());
 			sectionDto.setCardsWrappersPrivate(cardWrappersHolder.getCardsWrappersPrivate());
@@ -609,8 +741,11 @@ public class ModelService {
 				
 		if (level > 0) {
 			/* add the subsections with their sub-elements too */
-			for (ModelSection subsection : section.getSubsections()) {
-				sectionDto.getSubsections().add(addSectionSubElements(subsection.toDto(), subsection.getId(), level - 1, requestByUserId, onlySections));
+			SubsectionsHolderDto subsectionsHolder = getSectionSubsectionsDtos(sectionId, requestByUserId);
+			
+			for (ModelSectionDto subsectionDto : subsectionsHolder.getSubsectionsCommon()) {
+				sectionDto.getSubsections().add(addSectionSubElements(
+						subsectionDto, UUID.fromString(subsectionDto.getId()), level - 1, requestByUserId, onlySections));
 			}
 		} 
 		
@@ -674,23 +809,20 @@ public class ModelService {
 	@Transactional
 	public PostResult deleteSection (UUID sectionId, UUID creatorId) {
 		
-		ModelSection section = modelSectionRepository.findById(sectionId);
+		List<ModelSubsection> allSubsections = modelSubsectionRepository.findOfSection(sectionId);
 		
-		/* remove references to parent sections */
-		List<ModelSection> parents = modelSectionRepository.findParentSections(sectionId);
-		if (parents.size() > 0) {
-			for (ModelSection parent : parents) {
-				parent.getSubsections().remove(section);
-				parent.getSubsectionsTrash().add(section);
+		/* remove from all sections */
+		for (ModelSubsection subsection : allSubsections) {
+			
+			subsection.setStatus(Status.DELETED);
+			
+			/* create notification */
+			if (subsection.getScope() != ModelScope.PRIVATE) {
+				activityService.modelSubsectionRemoved(subsection, appUserRepository.findByC1Id(creatorId));
 			}
 		}
 		
-		
-		section = modelSectionRepository.save(section);
-		
-		activityService.modelSectionDeleted(section, appUserRepository.findByC1Id(creatorId));
-		
-		return new PostResult("success", "section deleted", section.getId().toString());
+		return new PostResult("success", "card wrapper removed from all sections and deleted", sectionId.toString());
 	}
 	
 	@Transactional
@@ -913,7 +1045,8 @@ public class ModelService {
 			removeCardWrapperAdditionKeepOrder(cardWrapperAdditionFrom, requestedById);
 			
 			/* check if this card was already deleted by this adder in this section */
-			List<ModelCardWrapperAddition> cardWrapperAdditionsDeleted = modelCardWrapperAdditionRepository.findDeletedBySectionAndCardWrapperAndAdder(toSectionId, cardWrapperId, requestedById);
+			List<ModelCardWrapperAddition> cardWrapperAdditionsDeleted = 
+					modelCardWrapperAdditionRepository.findDeletedBySectionAndCardWrapperAndAdder(toSectionId, cardWrapperId, requestedById);
 			
 			if (cardWrapperAdditionsDeleted.size() == 0) {
 				/* check if this card was already deleted from this section by this user, in which case, just update it */

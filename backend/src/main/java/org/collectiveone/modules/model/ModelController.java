@@ -58,7 +58,9 @@ public class ModelController extends BaseController {
 	@RequestMapping(path = "/model/section/{sectionId}/subsection", method = RequestMethod.POST)
 	public PostResult createSectionSubsection(
 			@PathVariable("sectionId") String sectionIdStr,
-			@RequestBody ModelSectionDto sectionDto) {
+			@RequestBody ModelSectionDto sectionDto,
+			@RequestParam(name="onSubsectionId", defaultValue="") String onSubsectionIdStr,
+			@RequestParam(name = "isBefore", defaultValue="false") Boolean isBefore) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -71,7 +73,14 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.createSection(sectionDto, sectionId, getLoggedUserId(), true);
+		UUID onSubsectionId = onSubsectionIdStr.equals("") ? null : UUID.fromString(onSubsectionIdStr);
+		
+		return modelService.createSection(
+				sectionDto, 
+				sectionId, 
+				getLoggedUserId(),
+				onSubsectionId,
+				isBefore);
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/subsection/{subsectionId}", method = RequestMethod.PUT)
@@ -94,7 +103,11 @@ public class ModelController extends BaseController {
 		/* dropped on subsection can be empty */
 		UUID beforeSubsectionId =  beforeSubsectionIdStr.equals("") ? null : UUID.fromString(beforeSubsectionIdStr);
 		
-		return modelService.addSection(UUID.fromString(subsectionIdStr), sectionId, beforeSubsectionId, getLoggedUserId());
+		return modelService.addSubsectionToSection(
+				UUID.fromString(subsectionIdStr), 
+				sectionId, 
+				beforeSubsectionId, 
+				getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.PUT) 
@@ -139,8 +152,9 @@ public class ModelController extends BaseController {
 	public PostResult moveSectionSubsection(
 			@PathVariable("sectionId") String sectionIdStr,
 			@PathVariable("subsectionId") String subsectionIdStr,
+			@RequestParam(name = "toSectionId") String toSectionIdStr,
 			@RequestParam(name = "onSectionId", defaultValue="") String onSectionIdStr,
-			@RequestParam(name = "beforeSubsectionId", defaultValue="") String beforeSubsectionIdStr) {
+			@RequestParam(name = "isBefore", defaultValue="false") Boolean isBefore) {
 	
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -153,17 +167,15 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		/* dropped on section can be empty */
-		UUID onSectionId =  onSectionIdStr.equals("") ? null : UUID.fromString(onSectionIdStr);
-		
 		/* dropped on subsection can be empty */
-		UUID beforeSubsectionId =  beforeSubsectionIdStr.equals("") ? null : UUID.fromString(beforeSubsectionIdStr);
+		UUID onSectionId =  onSectionIdStr.equals("") ? null : UUID.fromString(onSectionIdStr);
 		
 		return modelService.moveSubsection(
 				sectionId, 
 				UUID.fromString(subsectionIdStr),
+				UUID.fromString(toSectionIdStr),
 				onSectionId,
-				beforeSubsectionId,
+				isBefore,
 				getLoggedUserId());
 	}
 	
@@ -338,7 +350,7 @@ public class ModelController extends BaseController {
 		return modelService.createCardWrapper(
 				cardDto, 
 				sectionId, 
-				getLoggedUser().getC1Id(), 
+				getLoggedUserId(), 
 				onCardWrapperId, 
 				isBefore);
 	}

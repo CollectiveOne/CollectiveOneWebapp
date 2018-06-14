@@ -43,8 +43,6 @@ public class ModelCardWrapper {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ModelCard> oldVersions = new ArrayList<ModelCard>();
 	
-	@OneToOne
-	private MessageThread messageThread;	
 	
 	@OneToMany(mappedBy="cardWrapper")
 	private List<CardLike> likes;

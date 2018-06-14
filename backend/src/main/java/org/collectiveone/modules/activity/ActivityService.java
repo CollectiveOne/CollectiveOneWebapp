@@ -32,7 +32,6 @@ import org.collectiveone.modules.activity.repositories.NotificationRepositoryIf;
 import org.collectiveone.modules.activity.repositories.SubscriberRepositoryIf;
 import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.conversations.Message;
-import org.collectiveone.modules.conversations.MessageService;
 import org.collectiveone.modules.conversations.MessageThreadContextType;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
@@ -43,6 +42,7 @@ import org.collectiveone.modules.model.GraphNode;
 import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
+import org.collectiveone.modules.model.ModelSubsection;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
@@ -68,9 +68,6 @@ public class ActivityService {
 	
 	@Autowired
 	private EmailService emailService;
-	
-	@Autowired
-	private MessageService messageService;
 	
 	@Autowired
 	private NotificationDtoBuilder notificationDtoBuilder;
@@ -728,6 +725,31 @@ public class ActivityService {
 	}
 	
 	@Transactional
+	public void modelSubsectionRemoved(ModelSubsection subsection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_REMOVED);
+		activity.setModelSubsection(subsection);
+		activity.setFromSection(subsection.getInSection());
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelSubsectionMoved(ModelSubsection subsection, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_MOVED);
+		activity.setModelSubsection(subsection);
+		activity.setFromSection(fromSection);
+		activity.setOnSection(onSection);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
 	public void modelSectionMovedFromSectionToSection(ModelSection section, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
 		
@@ -747,6 +769,17 @@ public class ActivityService {
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
 		activity.setModelSection(section);
 		activity.setOnSection(onSection);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void modelSubsectionAdded(ModelSubsection subsection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.MODEL_SECTION_ADDED);
+		activity.setModelSubsection(subsection);
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
@@ -859,6 +892,7 @@ public class ActivityService {
 	
 	
 	
+	
 	@Transactional
 	public void messagePosted(
 			Message message, 
@@ -868,8 +902,7 @@ public class ActivityService {
 			UUID contextOfContextElementId,
 			List<AppUser> mentionedUsers) {
 		
-		Initiative initiative = initiativeRepository.findById(messageService.getInitiativeIdOfMessageThread(message.getThread()));
-		Activity activity = getBaseActivity(triggerUser, initiative); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MESSAGE_POSTED);
 		activity.setMessage(message);
