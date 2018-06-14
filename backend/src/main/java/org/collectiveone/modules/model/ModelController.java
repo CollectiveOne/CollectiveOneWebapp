@@ -57,7 +57,7 @@ public class ModelController extends BaseController {
 	
 	@RequestMapping(path = "/model/section/{sectionId}/subsection", method = RequestMethod.POST)
 	public PostResult createSectionSubsection(
-			@PathVariable("sectionId") String sectionIdStr,
+			@PathVariable("parentSectionId") String parentSectionIdStr,
 			@RequestBody ModelSectionDto sectionDto,
 			@RequestParam(name="onSubsectionId", defaultValue="") String onSubsectionIdStr,
 			@RequestParam(name = "isBefore", defaultValue="false") Boolean isBefore) {
@@ -66,8 +66,8 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "endpoint enabled users only", null);
 		}
 		
-		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
+		UUID parentSectionId = UUID.fromString(parentSectionIdStr);
+		UUID initiativeId = modelService.getSectionInitiative(parentSectionId).getId();
 		
 		if (governanceService.canEditModel(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
@@ -77,37 +77,43 @@ public class ModelController extends BaseController {
 		
 		return modelService.createSection(
 				sectionDto, 
-				sectionId, 
+				parentSectionId, 
 				getLoggedUserId(),
 				onSubsectionId,
 				isBefore);
 	}
 	
-	@RequestMapping(path = "/model/section/{sectionId}/subsection/{subsectionId}", method = RequestMethod.PUT)
+	@RequestMapping(path = "/model/section/{parentSectionId}/subsection/{subsectionId}", method = RequestMethod.PUT)
 	public PostResult addExistingSectionSubsection(
-			@PathVariable("sectionId") String sectionIdStr,
+			@PathVariable("parentSectionId") String parentSectionIdStr,
 			@PathVariable("subsectionId") String subsectionIdStr, 
-			@RequestParam(name = "beforeSubsectionId", defaultValue="") String beforeSubsectionIdStr) {
+			@RequestParam(name = "onSubsectionId", defaultValue="") String onSubsectionIdStr, 
+			@RequestParam(name = "isBefore", defaultValue="false") Boolean isBefore,
+			@RequestParam(name = "scope", defaultValue="") String scopeStr) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
 		}
 		
-		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
+		UUID parentSectionId = UUID.fromString(parentSectionIdStr);
+		UUID initiativeId = modelService.getSectionInitiative(parentSectionId).getId();
 		
 		if (governanceService.canEditModel(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
+		ModelScope scope = scopeStr.equals("") ? ModelScope.COMMON : ModelScope.valueOf(scopeStr);
+		
 		/* dropped on subsection can be empty */
-		UUID beforeSubsectionId =  beforeSubsectionIdStr.equals("") ? null : UUID.fromString(beforeSubsectionIdStr);
+		UUID onSubsectionId =  onSubsectionIdStr.equals("") ? null : UUID.fromString(onSubsectionIdStr);
 		
 		return modelService.addSubsectionToSection(
-				UUID.fromString(subsectionIdStr), 
-				sectionId, 
-				beforeSubsectionId, 
-				getLoggedUserId());
+				UUID.fromString(subsectionIdStr),
+				parentSectionId,
+				onSubsectionId,
+				isBefore,
+				getLoggedUserId(),
+				scope);
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.PUT) 

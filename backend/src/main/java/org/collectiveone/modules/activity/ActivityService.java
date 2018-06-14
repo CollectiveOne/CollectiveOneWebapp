@@ -730,7 +730,7 @@ public class ActivityService {
 		
 		activity.setType(ActivityType.MODEL_SECTION_REMOVED);
 		activity.setModelSubsection(subsection);
-		activity.setFromSection(subsection.getInSection());
+		activity.setFromSection(subsection.getParentSection());
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);

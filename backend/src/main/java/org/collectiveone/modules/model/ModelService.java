@@ -14,8 +14,6 @@ import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
-import org.collectiveone.modules.conversations.Message;
-import org.collectiveone.modules.conversations.MessageRepositoryIf;
 import org.collectiveone.modules.files.FileService;
 import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredRepositoryIf;
@@ -78,9 +76,6 @@ public class ModelService {
 	private ActivityRepositoryIf activityRepository;
 	
 	@Autowired
-	private MessageRepositoryIf messageRepository;
-	
-	@Autowired
 	private CardLikeRepositoryIf cardLikeRepository;
 	
 	@Autowired
@@ -134,7 +129,7 @@ public class ModelService {
 		
 		subsection.setAdder(appUserRepository.findByC1Id(creatorId));
 		subsection.setSection(section);
-		subsection.setInSection(parent);
+		subsection.setParentSection(parent);
 		subsection.setScope(sectionDto.getNewScope());
 		subsection.setStatus(Status.VALID);
 		
@@ -166,10 +161,10 @@ public class ModelService {
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		ModelSectionDto sectionDto = section.toDto();
 		
-		List<ModelSection> inSections = modelSectionRepository.findParentSections(section.getId());
+		List<ModelSubsection> subsections = modelSubsectionRepository.findOfSection(section.getId());
 		
-		for (ModelSection inSection : inSections) {
-			sectionDto.getInSections().add(inSection.toDto());
+		for (ModelSubsection subsection : subsections) {
+			sectionDto.getInSections().add(subsection.getSection().toDto());
 		}
 		
 		if(level > 0) {
@@ -285,7 +280,7 @@ public class ModelService {
 			}
 			
 			subsectionTo.setAdder(appUserRepository.findByC1Id(requestedById));
-			subsectionTo.setInSection(toSection);
+			subsectionTo.setParentSection(toSection);
 			subsectionTo.setSection(subsectionFrom.getSection());
 			subsectionTo.setScope(subsectionFrom.getScope());
 			subsectionTo.setStatus(Status.VALID);
@@ -358,7 +353,7 @@ public class ModelService {
 		
 		subsection.setAdder(appUserRepository.findByC1Id(requestByUserId));
 		subsection.setSection(section);
-		subsection.setInSection(parentSection);
+		subsection.setParentSection(parentSection);
 		subsection.setScope(scope);
 		subsection.setStatus(Status.VALID);
 		
@@ -663,14 +658,14 @@ public class ModelService {
 		SubsectionsHolderDto subsectionsHolder = new SubsectionsHolderDto();
 		
 		List<ModelSubsection> modelSubsectionsCommon = 
-				modelSubsectionRepository.findInSectionWithScope(section.getId(), ModelScope.COMMON);
+				modelSubsectionRepository.findParentSectionWithScope(section.getId(), ModelScope.COMMON);
 		
 		for (ModelSubsection subsection : modelSubsectionsCommon) {
 			subsectionsHolder.getSubsectionsCommon().add(subsection.getSection().toDto());
 		}
 		
 		List<ModelSubsection> modelSubsectionsPrivate = 
-				modelSubsectionRepository.findOfUserInSection(requestByUserId, section.getId(), ModelScope.PRIVATE);
+				modelSubsectionRepository.findOfUserInParentSection(requestByUserId, section.getId(), ModelScope.PRIVATE);
 		
 		for (ModelSubsection subsection : modelSubsectionsPrivate) {
 			subsectionsHolder.getSubsectionsPrivate().add(subsection.getSection().toDto());
@@ -680,7 +675,7 @@ public class ModelService {
 		if(initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId)) {
 			
 			List<ModelSubsection> modelSubsectionsShared = 
-					modelSubsectionRepository.findInSectionWithScope(section.getId(), ModelScope.SHARED);
+					modelSubsectionRepository.findParentSectionWithScope(section.getId(), ModelScope.SHARED);
 			
 			for (ModelSubsection subsection : modelSubsectionsShared) {
 				subsectionsHolder.getSubsectionsShared().add(subsection.getSection().toDto());
@@ -1264,7 +1259,7 @@ public class ModelService {
 		if (this_neighbors) {
 			
 			if (addParents) {
-				List<UUID> parents = modelSectionRepository.findParentSectionsIds(sectionId);
+				List<UUID> parents = modelSubsectionRepository.findParentSectionsIds(sectionId);
 				
 				for (UUID inSectionId : parents) {
 					if (!readIds.contains(inSectionId)) {
@@ -1282,7 +1277,7 @@ public class ModelService {
 			}
 			
 			if (addChildren) {
-				List<UUID> children = modelSectionRepository.findSubsectionsIds(sectionId);
+				List<UUID> children = modelSubsectionRepository.findSubsectionsIds(sectionId);
 				
 				for (UUID subSectionId : children) {
 					if (!readIds.contains(subSectionId)) {
@@ -1350,15 +1345,6 @@ public class ModelService {
 	public GetResult<Long> countMessagesUnderCard (UUID cardWrapperId, Boolean onlyMessages) {
 		Page<Activity> messages = getActivityUnderCard(cardWrapperId, new PageRequest(1, 1), true);
 		return new GetResult<Long>("success", "activity counted", messages.getTotalElements());
-	}
-	
-	@Transactional
-	public Page<Message> getMessagesUnderCard (UUID cardWrapperId, PageRequest page) {
-		Page<Message> activities = null;
-		
-		activities = messageRepository.findOfCard(cardWrapperId, page);
-		
-		return activities;
 	}
 	
 	@Transactional

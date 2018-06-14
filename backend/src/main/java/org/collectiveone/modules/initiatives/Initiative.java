@@ -19,7 +19,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.conversations.MessageThread;
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.model.ModelSection;
@@ -66,9 +65,6 @@ public class Initiative {
 	@OneToOne
 	private ModelSection topModelSection;
 		
-	@OneToOne
-	private MessageThread messageThread;
-	
 	
 	public InitiativeDto toDto() {
 		InitiativeDto dto = new InitiativeDto();
@@ -143,12 +139,5 @@ public class Initiative {
 	public void setTopModelSection(ModelSection topModelSection) {
 		this.topModelSection = topModelSection;
 	}
-	public MessageThread getMessageThread() {
-		return messageThread;
-	}
-	public void setMessageThread(MessageThread messageThread) {
-		this.messageThread = messageThread;
-	}
-	
 	
 }

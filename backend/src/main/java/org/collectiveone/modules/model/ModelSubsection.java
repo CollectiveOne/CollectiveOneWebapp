@@ -26,7 +26,7 @@ public class ModelSubsection implements OrderedElement {
 	private UUID id;
 	
 	@ManyToOne
-	private ModelSection inSection;
+	private ModelSection parentSection;
 	
 	@Enumerated(EnumType.STRING)
 	private ModelScope scope;
@@ -57,12 +57,12 @@ public class ModelSubsection implements OrderedElement {
 		this.id = id;
 	}
 
-	public ModelSection getInSection() {
-		return inSection;
+	public ModelSection getParentSection() {
+		return parentSection;
 	}
 
-	public void setInSection(ModelSection inSection) {
-		this.inSection = inSection;
+	public void setParentSection(ModelSection parentSection) {
+		this.parentSection = parentSection;
 	}
 
 	public ModelScope getScope() {
