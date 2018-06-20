@@ -191,12 +191,12 @@ export default {
 
   methods: {
     addCardBefore () {
-      this.newCardLocation = 'before'
-      this.showNewCardModal = true
+      this.$store.commit('createNewCardLocation', 'before')
+      this.$emit('createNew')
     },
     addCardAfter () {
-      this.newCardLocation = 'after'
-      this.showNewCardModal = true
+      this.$store.commit('createNewCardLocation', 'after')
+      this.$emit('createNew')
     },
     edit () {
       this.showEditCardModal = true

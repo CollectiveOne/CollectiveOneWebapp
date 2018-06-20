@@ -59,6 +59,7 @@ cd w<template lang="html">
         :hideCardControls="hideCardControls"
         :showNewCardButton="cardsType !== 'doc'"
         @updateCards="updateCards()"
+        @createNew="createNew"
         @create-card="showNewCardModal = true">
       </app-model-cards-container>
     </div>
@@ -232,7 +233,12 @@ export default {
       showCardId: '',
       expandSubSubsecInit: false,
       subscription: null,
-      showNewCardModal: false
+      showNewCardModal: false,
+      createNewCard: false,
+      newCard: {
+        type: 'new',
+        cardWrapper: null
+      }
     }
   },
 
@@ -266,7 +272,7 @@ export default {
     hasDescription () {
       if (this.section.description) {
         return this.section.description !== ''
-      }``
+      }
       return false
     },
     sortedCards () {
@@ -286,6 +292,16 @@ export default {
       }
 
       allCardWrappers = appendCardsToBase(allCardWrappers, nonCommonCards)
+
+      if (this.createNewCard) {
+        let index = allCardWrappers.findIndex(x => x.id === this.newCard.cardWrapper.id)
+
+        if (this.$store.state.support.createNewCardLocation === 'before') {
+          index -= 1
+        }
+        allCardWrappers.splice(index + 1, 0, this.newCard)
+        this.createNewCard = false
+      }
 
       return allCardWrappers
     },
@@ -307,10 +323,17 @@ export default {
   },
 
   methods: {
+    createNew (value) {
+      this.newCard.cardWrapper = value
+      this.newCard.type = 'newCard'
+      this.createNewCard = true
+    },
     updateCards () {
       console.log('updating cards')
       this.axios.get('/1/model/section/' + this.section.id + '/cardWrappers').then((response) => {
         if (response.data.result === 'success') {
+          //  set new card parameters to default
+          this.createNewCard = false
           this.section.cardsWrappersCommon = response.data.data.cardsWrappersCommon
           this.section.cardsWrappersPrivate = response.data.data.cardsWrappersPrivate
           this.section.cardsWrappersShared = response.data.data.cardsWrappersShared

@@ -9,7 +9,8 @@ const state = {
   windowIsSmall: false,
   draggingElement: null,
   triggerSectionDraggingState: false,
-  triggerCardDraggingState: false
+  triggerCardDraggingState: false,
+  createNewCardLocation: null
 }
 
 const getters = {
@@ -51,6 +52,9 @@ const mutations = {
   },
   triggerCardDraggingState: (state) => {
     state.triggerCardDraggingState = !state.triggerCardDraggingState
+  },
+  createNewCardLocation: (state, payload) => {
+    state.createNewCardLocation = payload
   }
 }
 
