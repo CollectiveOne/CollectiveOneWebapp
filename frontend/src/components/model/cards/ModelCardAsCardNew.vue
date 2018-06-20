@@ -103,15 +103,11 @@ export default {
       type: String,
       default: ''
     },
-    inSectionTitleNew: {
-      type: String,
-      default: ''
+    inSection: {
+      type: Object,
+      default: null
     },
-    newCardLocation: {
-      type: String,
-      default: ''
-    },
-    atCardWrapper: {
+    cardWrapper: {
       type: Object,
       default: null
     },
@@ -180,28 +176,11 @@ export default {
     titleTooLongShow () {
       return this.titleTooLong
     },
-    cardComponent () {
-      console.log('thisbanda', this.type)
-      switch (this.type) {
-        case 'summary':
-          return 'app-model-card-summary'
-
-        case 'card':
-          if (this.cardWrapper.type === 'newCard') {
-            return 'app-model-card-as-card-new'
-          } else {
-            return 'app-model-card-as-card'
-          }
-
-        case 'doc':
-          return 'app-model-card-as-par'
-
-        case 'new':
-          return 'app-model-card-as-card-new'
-
-        default:
-          return 'app-model-card-as-card'
-      }
+    atCardWrapper () {
+      return this.cardWrapper === null ? null : this.cardWrapper.cardWrapper
+    },
+    newCardLocation () {
+      return this.$store.state.support.createNewCardLocation === 'before'
     }
   },
 
@@ -294,17 +273,17 @@ export default {
           this.noCardSelectedError = true
         }
       }
-
+      console.log(this.newCardLocation, 'before')
       if (ok) {
         var cardDto = JSON.parse(JSON.stringify(this.editedCard))
-        console.log('cardDto', JSON.stringify(cardDto))
+        console.log('cardDto', JSON.stringify(cardDto), this.inSection.id)
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
             this.sendingData = true
-            this.axios.post('/1/model/section/' + this.inSectionIdNew + '/cardWrapper', cardDto, { params: {
-              onCardWrapperId: null,
-              isBefore: this.newCardLocation === 'before'
+            this.axios.post('/1/model/section/' + this.inSection.id + '/cardWrapper', cardDto, { params: {
+              onCardWrapperId: this.atCardWrapper ? this.atCardWrapper.id : null,
+              isBefore: this.newCardLocation
             }}).then((response) => {
               this.sendingData = false
               if (response.data.result === 'success') {
