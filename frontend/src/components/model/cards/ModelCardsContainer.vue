@@ -19,6 +19,7 @@
           :type="cardsType"
           :cardRouteName="cardRouteName"
           :hideCardControls="hideCardControls"
+          @edit="$emit('edit', cardWrapper)"
           @createNew="$emit('createNew', cardWrapper)"
           @updateCards="$emit('updateCards')">
         </app-model-card>
@@ -43,14 +44,17 @@
         <app-model-card-as-summary-editor
           v-if="cardsType === 'summary'"
           :isNew="true"
-          :inSectionIdNew="inSection.id"
-          :inModelSection="inSection"
-          :cardWrapper="cardWrapper"
+          :inSection="inSection"
           @updateCards="$emit('updateCards')">
         </app-model-card-as-summary-editor>
+        <app-model-card-as-par-editor
+          v-if="cardsType === 'doc'"
+          :isNew="true"
+          :inSection="inSection"
+          @updateCards="$emit('updateCards')">
+        </app-model-card-as-par-editor>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -58,12 +62,14 @@
 import ModelCard from '@/components/model/cards/ModelCard.vue'
 import ModelCardAsCardNew from '@/components/model/cards/ModelCardAsCardNew.vue'
 import ModelCardAsSummaryEditor from '@/components/model/cards/ModelCardAsSummaryEditor.vue'
+import ModelCardAsParEditor from '@/components/model/cards/ModelCardAsParEditor.vue'
 
 export default {
   components: {
     'app-model-card': ModelCard,
     'app-model-card-as-card-new': ModelCardAsCardNew,
-    'app-model-card-as-summary-editor': ModelCardAsSummaryEditor
+    'app-model-card-as-summary-editor': ModelCardAsSummaryEditor,
+    'app-model-card-as-par-editor': ModelCardAsParEditor
   },
 
   props: {

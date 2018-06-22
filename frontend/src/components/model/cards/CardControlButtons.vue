@@ -48,8 +48,8 @@
         @edit="edit()"
         @makeShared="makeShared()"
         @makeCommon="makeCommon()"
-        @addCardBefore="addCardBefore()"
-        @addCardAfter="addCardAfter()"
+        @addCardBefore="addCardLocation('before')"
+        @addCardAfter="addCardLocation('after')"
         @remove="remove()"
         @delete="deleteCard()"
         :items="menuItems">
@@ -190,16 +190,14 @@ export default {
   },
 
   methods: {
-    addCardBefore () {
-      this.$store.commit('createNewCardLocation', 'before')
+    addCardLocation (location) {
+      this.$store.commit('createNewCardLocation', location)
       this.$emit('createNew')
-    },
-    addCardAfter () {
-      this.$store.commit('createNewCardLocation', 'after')
-      this.$emit('createNew')
+      this.expanded = false
     },
     edit () {
-      this.showEditCardModal = true
+      //  this.showEditCardModal = true
+      this.$emit('edit')
       this.expanded = false
     },
     remove () {
