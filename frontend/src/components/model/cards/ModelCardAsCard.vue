@@ -61,6 +61,7 @@
             :inSection="inSection"
             @update="$emit('update')"
             @createNew="$emit('createNew')"
+            @edit="$emit('edit')"
             @updateCards="$emit('updateCards')">
           </app-card-control-buttons>
         </div>

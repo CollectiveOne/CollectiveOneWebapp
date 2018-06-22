@@ -11,7 +11,7 @@
 
         <div class="card-container-padded">
           <div class="w3-row card-title">
-            <input type="text" class="w3-input w3-hover-light-grey" placeholder="Enter card title"  v-model="editedCard.title">
+            <input type="text" class="w3-input w3-hover-light-grey" placeholder="Enter card title" v-model="editedCard.title">
             <app-error-panel
             :show="titleTooLongShow"
             message="name too long">
@@ -21,7 +21,7 @@
         <div ref="cardText" class="w3-row card-text">
 
           <div class="w3">
-            <app-markdown-editor placeholder="Enter text here" v-model="editedCard.text"></app-markdown-editor>
+            <app-markdown-editor placeholder="Enter text here"  value="bandapelaw" v-model="editedCard.text"></app-markdown-editor>
           </app-error-panel>
           </div>
 
@@ -64,7 +64,7 @@
     </div>
     <div class="w3-row button-row light-grey">
       <div class="send-button-container">
-        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">Create new card</button>
+        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }}</button>
         <div v-show="sendingData" class="sending-accept light-grey">
           <img class="" src="../../../assets/loading.gif" alt="">
         </div>
@@ -76,7 +76,6 @@
 
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
-import CardControlButtons from '@/components/model/cards/CardControlButtons.vue'
 import InModelSectionsTags from '@/components/model/cards/InModelSectionsTags.vue'
 
 export default {
@@ -86,7 +85,6 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-card-control-buttons': CardControlButtons,
     'app-in-model-sections-tags': InModelSectionsTags
   },
 
@@ -181,10 +179,17 @@ export default {
     },
     newCardLocation () {
       return this.$store.state.support.createNewCardLocation === 'before'
+    },
+    cardButtonText () {
+      return this.isNew ? 'Create new card' : 'Save Card'
     }
   },
 
   methods: {
+    startEditing () {
+      this.editedCard = JSON.parse(JSON.stringify(this.atCardWrapper.card))
+      this.editedCard.newScope = this.cardWrapper.scope
+    },
     newFileSelected (event) {
       /* upload image */
       var fileData = event.target.files[0]
@@ -273,7 +278,7 @@ export default {
           this.noCardSelectedError = true
         }
       }
-      console.log(this.newCardLocation, 'before')
+      console.log(this.newCardLocation, 'before', this.atCardWrapper.card.text)
       if (ok) {
         var cardDto = JSON.parse(JSON.stringify(this.editedCard))
         console.log('cardDto', JSON.stringify(cardDto), this.inSection.id)
@@ -295,6 +300,24 @@ export default {
               console.log(error)
             })
           }
+        } else {
+          /* editing */
+          console.log('editing')
+          this.sendingData = true
+          this.axios.put('/1/model/cardWrapper/' + this.atCardWrapper.id, cardDto, {
+            params: {
+              inSectionId: this.inSectionId
+            }
+          })
+            .then((response) => {
+              this.sendingData = false
+              if (response.data.result === 'success') {
+                this.closeThis()
+                this.$emit('update')
+              }
+            }).catch((error) => {
+              console.log(error)
+            })
         }
       }
     }
@@ -302,12 +325,15 @@ export default {
 
   mounted () {
     if (this.isNew) {
+      console.log('eita call hauci')
       this.editedCard = {
         title: '',
         text: '',
         newScope: 'SHARED'
       }
       this.editing = true
+    } else {
+      this.startEditing()
     }
   }
 }

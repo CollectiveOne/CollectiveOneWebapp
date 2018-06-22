@@ -11,9 +11,11 @@
         :inSection="inSection"
         :forceUpdate="forceUpdate"
         :inCardSelector="inCardSelector"
+        :isNew="cardWrapper.type === 'newCard'"
         :cardRouteName="cardRouteName"
         :hideCardControls="hideCardControls"
         @update="update()"
+        @edit="$emit('edit')"
         @createNew="$emit('createNew')"
         @updateCards="$emit('updateCards')">
       </component>
@@ -36,6 +38,7 @@
 </template>
 
 <script>
+import ModelCardAsSummaryEditor from '@/components/model/cards/ModelCardAsSummaryEditor.vue'
 import ModelCardAsCardNew from '@/components/model/cards/ModelCardAsCardNew.vue'
 import ModelCardSummary from '@/components/model/cards/ModelCardSummary.vue'
 import ModelCardAsCard from '@/components/model/cards/ModelCardAsCard.vue'
@@ -45,6 +48,7 @@ export default {
   name: 'model-card',
 
   components: {
+    'app-model-card-as-summary-editor': ModelCardAsSummaryEditor,
     'app-model-card-as-card-new': ModelCardAsCardNew,
     'app-model-card-summary': ModelCardSummary,
     'app-model-card-as-card': ModelCardAsCard,
@@ -115,10 +119,14 @@ export default {
       console.log('thisbanda', this.type)
       switch (this.type) {
         case 'summary':
-          return 'app-model-card-summary'
+          if (this.cardWrapper.type === 'newCard' || this.cardWrapper.type === 'edit') {
+            return 'app-model-card-as-summary-editor'
+          } else {
+            return 'app-model-card-summary'
+          }
 
         case 'card':
-          if (this.cardWrapper.type === 'newCard') {
+          if (this.cardWrapper.type === 'newCard' || this.cardWrapper.type === 'edit') {
             return 'app-model-card-as-card-new'
           } else {
             return 'app-model-card-as-card'
