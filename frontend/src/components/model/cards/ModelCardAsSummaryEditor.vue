@@ -82,7 +82,11 @@ export default {
   },
 
   props: {
-    inModelSection: {
+    isNew: {
+      type: Boolean,
+      default: false
+    },
+    inSection: {
       type: Object,
       default: null
     },
@@ -94,7 +98,6 @@ export default {
 
   data () {
     return {
-      hovering: false,
       cClass: {
         'border-yellow': true
       },
@@ -102,13 +105,25 @@ export default {
         title: '',
         text: '',
         newScope: 'SHARED'
-      }
+      },
+      editing: true,
+      hovering: false,
+      showFull: false,
+      addExisting: false,
+      sendingData: false,
+      loading: false
     }
   },
 
   computed: {
     cardShortTitle () {
       return 'banda'
+    },
+    atCardWrapper () {
+      return this.cardWrapper === null ? null : this.cardWrapper.cardWrapper
+    },
+    newCardLocation () {
+      return this.$store.state.support.createNewCardLocation === 'before'
     }
     // card () {
     //   return this.cardWrapper.card
@@ -141,10 +156,49 @@ export default {
     hoverLeave () {
       this.showActionButton = false
       this.highlight = false
-    }
-  },
+    },
+    createCard () {
+      var ok = true
 
-  created () {
+      if (!this.addExisting) {
+        if (this.titleTooLong) {
+          ok = false
+        }
+
+        if (this.textEmpty) {
+          ok = false
+          this.textEmptyError = true
+        }
+      } else {
+        if (this.noCardSelected) {
+          ok = false
+          this.noCardSelectedError = true
+        }
+      }
+      if (ok) {
+        var cardDto = JSON.parse(JSON.stringify(this.editedCard))
+        console.log('cardDto', JSON.stringify(cardDto), this.inSection.id, this.isNew, this.addExisting)
+        if (this.isNew) {
+          if (!this.addExisting) {
+            /* create new card */
+            this.sendingData = true
+            this.axios.post('/1/model/section/' + this.inSection.id + '/cardWrapper', cardDto, { params: {
+              onCardWrapperId: this.atCardWrapper ? this.atCardWrapper.id : null,
+              isBefore: this.newCardLocation
+            }}).then((response) => {
+              this.sendingData = false
+              if (response.data.result === 'success') {
+                this.$emit('updateCards')
+              } else {
+                console.log(response.data.message)
+              }
+            }).catch((error) => {
+              console.log(error)
+            })
+          }
+        }
+      }
+    }
   }
 }
 </script>
