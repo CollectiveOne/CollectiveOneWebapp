@@ -171,7 +171,7 @@ export default {
   methods: {
     addCard () {
       this.expanded = false
-      this.showNewCardModal = true
+      this.$emit('addCard')
     },
     addSubsection () {
       this.expanded = false

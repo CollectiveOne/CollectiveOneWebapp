@@ -14,10 +14,13 @@
       <div class="card-container-in-list">
         <app-model-card
           :cardWrapperInit="cardWrapper"
+          :cardWrappers="cardWrappers"
           :inSection="inSection"
           :type="cardsType"
           :cardRouteName="cardRouteName"
           :hideCardControls="hideCardControls"
+          @edit="$emit('edit', cardWrapper)"
+          @createNew="$emit('createNew', cardWrapper)"
           @updateCards="$emit('updateCards')">
         </app-model-card>
       </div>
@@ -25,27 +28,56 @@
       <div v-if="isDraggingOver(cardWrapper) && draggingOverCardWrapperAfter" class="drop-div">
       </div>
 
-    </div><div v-if="showNewCardButton && !hideCardControls" :class="cardsContainerClasses" class=""
+    </div>
+    <div v-if="!hideCardControls" :class="cardsContainerClasses" class=""
       @dragover.prevent="draggingOver()"
       @drop.prevent="cardDroped('', $event)">
 
       <div v-if="draggingOverCreateCard" class="drop-div">
       </div>
-
-      <div v-if="cardWrappers.length === 0" @click="$emit('create-card')" class="control-btn w3-card-2 w3-padding w3-round w3-center create-card-div">
-        <i class="fa fa-plus" aria-hidden="true"></i> create new card
+      <div v-if="cardWrappers.length === 0" class="card-container-in-list">
+        <app-model-card-as-card-new
+          v-if="cardsType === 'card'"
+          :isNew="true"
+          :inSection="inSection"
+          @updateCards="$emit('updateCards')">
+        </app-model-card-as-card-new>
+        <app-model-card-as-summary-editor
+          v-if="cardsType === 'summary'"
+          :isNew="true"
+          :inSection="inSection"
+          @updateCards="$emit('updateCards')">
+        </app-model-card-as-summary-editor>
+        <app-model-card-as-par-editor
+          v-if="cardsType === 'doc'"
+          :isNew="true"
+          :inSection="inSection"
+          @updateCards="$emit('updateCards')">
+        </app-model-card-as-par-editor>
       </div>
     </div>
 
+    <app-model-card-as-par-editor
+      v-if="cardsType === 'doc' & cardWrappers.length !== 0"
+      :isNew="true"
+      :cardWrapper="lastCardWrapper"
+      :inSection="inSection">
+    </app-model-card-as-par-editor>
   </div>
 </template>
 
 <script>
 import ModelCard from '@/components/model/cards/ModelCard.vue'
+import ModelCardAsCardNew from '@/components/model/cards/ModelCardAsCardNew.vue'
+import ModelCardAsSummaryEditor from '@/components/model/cards/ModelCardAsSummaryEditor.vue'
+import ModelCardAsParEditor from '@/components/model/cards/ModelCardAsParEditor.vue'
 
 export default {
   components: {
-    'app-model-card': ModelCard
+    'app-model-card': ModelCard,
+    'app-model-card-as-card-new': ModelCardAsCardNew,
+    'app-model-card-as-summary-editor': ModelCardAsSummaryEditor,
+    'app-model-card-as-par-editor': ModelCardAsParEditor
   },
 
   props: {
@@ -59,7 +91,7 @@ export default {
     },
     cardsType: {
       type: String,
-      default: 'card'
+      default: 'new'
     },
     acceptDrop: {
       type: Boolean,
@@ -72,15 +104,12 @@ export default {
     cardRouteName: {
       type: String,
       default: 'ModelSectionCard'
-    },
-    showNewCardButton: {
-      type: Boolean,
-      default: false
     }
   },
 
   computed: {
     cardsContainerClasses () {
+      console.log(this)
       return {
         'section-card-col-with-nav': this.cardsType === 'card' && (this.$store.state.support.expandModelNav && !this.$store.state.support.windowIsSmall),
         'section-card-col-no-nav': this.cardsType === 'card' && (!this.$store.state.support.expandModelNav || this.$store.state.support.windowIsSmall),
@@ -89,6 +118,12 @@ export default {
     },
     draggingElement () {
       return this.$store.state.support.draggingElement
+    },
+    lastCardWrapper () {
+      let cardWrapper = {
+        cardWrapper: this.cardWrappers[this.cardWrappers.length - 1]
+      }
+      return cardWrapper
     }
   },
 
@@ -196,7 +231,12 @@ export default {
     }
   },
 
-  created () {
+  watch: {
+    '$route.query.createCard' (createCard) {
+      if (createCard) {
+        this.$emit('createNew', this.cardWrappers[this.cardWrappers.length - 1])
+      }
+    }
   }
 }
 </script>

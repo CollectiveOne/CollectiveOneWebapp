@@ -11,9 +11,12 @@
         :inSection="inSection"
         :forceUpdate="forceUpdate"
         :inCardSelector="inCardSelector"
+        :isNew="cardWrapper.type === 'newCard'"
         :cardRouteName="cardRouteName"
         :hideCardControls="hideCardControls"
         @update="update()"
+        @edit="$emit('edit')"
+        @createNew="$emit('createNew')"
         @updateCards="$emit('updateCards')">
       </component>
 
@@ -35,17 +38,23 @@
 </template>
 
 <script>
+import ModelCardAsSummaryEditor from '@/components/model/cards/ModelCardAsSummaryEditor.vue'
+import ModelCardAsCardNew from '@/components/model/cards/ModelCardAsCardNew.vue'
 import ModelCardSummary from '@/components/model/cards/ModelCardSummary.vue'
 import ModelCardAsCard from '@/components/model/cards/ModelCardAsCard.vue'
 import ModelCardAsPar from '@/components/model/cards/ModelCardAsPar.vue'
+import ModelCardAsParEditor from '@/components/model/cards/ModelCardAsParEditor.vue'
 
 export default {
   name: 'model-card',
 
   components: {
+    'app-model-card-as-summary-editor': ModelCardAsSummaryEditor,
+    'app-model-card-as-card-new': ModelCardAsCardNew,
     'app-model-card-summary': ModelCardSummary,
     'app-model-card-as-card': ModelCardAsCard,
-    'app-model-card-as-par': ModelCardAsPar
+    'app-model-card-as-par': ModelCardAsPar,
+    'app-model-card-as-par-editor': ModelCardAsParEditor
   },
 
   props: {
@@ -109,15 +118,31 @@ export default {
       }
     },
     cardComponent () {
+      console.log('thisbanda', this.type)
       switch (this.type) {
         case 'summary':
-          return 'app-model-card-summary'
+          if (this.cardWrapper.type === 'newCard' || this.cardWrapper.type === 'edit') {
+            return 'app-model-card-as-summary-editor'
+          } else {
+            return 'app-model-card-summary'
+          }
 
         case 'card':
-          return 'app-model-card-as-card'
+          if (this.cardWrapper.type === 'newCard' || this.cardWrapper.type === 'edit') {
+            return 'app-model-card-as-card-new'
+          } else {
+            return 'app-model-card-as-card'
+          }
 
         case 'doc':
-          return 'app-model-card-as-par'
+          if (this.cardWrapper.type === 'newCard' || this.cardWrapper.type === 'edit') {
+            return 'app-model-card-as-par-editor'
+          } else {
+            return 'app-model-card-as-par'
+          }
+
+        case 'new':
+          return 'app-model-card-as-card-new'
 
         default:
           return 'app-model-card-as-card'

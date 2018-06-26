@@ -56,9 +56,12 @@
 
         <div v-if="!hideCardControls && $store.state.user.authenticated" class="w3-right gray-1-color control-div">
           <app-card-control-buttons
+            :cardWrappers="cardWrappers"
             :cardWrapper="cardWrapper"
             :inSection="inSection"
             @update="$emit('update')"
+            @createNew="$emit('createNew')"
+            @edit="$emit('edit')"
             @updateCards="$emit('updateCards')">
           </app-card-control-buttons>
         </div>
@@ -118,6 +121,10 @@ export default {
   },
 
   props: {
+    cardWrappers: {
+      type: Array,
+      default: () => { return [] }
+    }
   },
 
   data () {

@@ -44,7 +44,8 @@
           :section="section"
           :inSection="inSection"
           :draggable="$store.state.support.triggerSectionDraggingState"
-          @section-removed="sectionRemoved()">
+          @section-removed="sectionRemoved()"
+          @addCard="addCard">
         </app-section-control-buttons>
       </div>
       <div v-if="draggingEnabled" class="drag-message-div">
@@ -237,6 +238,12 @@ export default {
   },
 
   methods: {
+    addCard () {
+      console.log(this.isSelected)
+      if (!this.isSelected) {
+        this.$router.push({name: 'ModelSectionCards', params: {sectionId: this.section.id}, query: {createCard: true}})
+      }
+    },
     toggleSubsections () {
       if (this.showSubsections) {
         this.collapseSubsections()

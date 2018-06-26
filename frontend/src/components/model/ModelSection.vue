@@ -57,8 +57,9 @@
         :acceptDrop="true"
         :cardRouteName="cardRouteName"
         :hideCardControls="hideCardControls"
-        :showNewCardButton="cardsType !== 'doc'"
         @updateCards="updateCards()"
+        @createNew="createNew"
+        @edit="edit"
         @create-card="showNewCardModal = true">
       </app-model-cards-container>
     </div>
@@ -151,7 +152,13 @@ export default {
       showCardId: '',
       expandSubSubsecInit: false,
       subscription: null,
-      showNewCardModal: false
+      showNewCardModal: false,
+      createNewCard: false,
+      editCard: false,
+      targetCard: {
+        type: 'new',
+        cardWrapper: null
+      }
     }
   },
 
@@ -185,7 +192,7 @@ export default {
     hasDescription () {
       if (this.section.description) {
         return this.section.description !== ''
-      }``
+      }
       return false
     },
     sortedCards () {
@@ -205,6 +212,23 @@ export default {
       }
 
       allCardWrappers = appendElementsToBase(allCardWrappers, nonCommonCards)
+
+      //  new-card-editor for creating new cards
+      if (this.createNewCard) {
+        let index = allCardWrappers.findIndex(x => x.id === this.targetCard.cardWrapper.id)
+        if (this.$store.state.support.createNewCardLocation === 'before') {
+          index -= 1
+        }
+        allCardWrappers.splice(index + 1, 0, this.targetCard)
+        this.createNewCard = false
+      }
+      //  new-card-editor for editing existing cards
+      if (this.editCard) {
+        let index = allCardWrappers.findIndex(x => x.id === this.targetCard.cardWrapper.id)
+        this.targetCard.type = 'edit'
+        allCardWrappers[index] = this.targetCard
+        this.editCard = false
+      }
 
       return allCardWrappers
     },
@@ -246,10 +270,22 @@ export default {
   },
 
   methods: {
+    edit (value) {
+      this.targetCard.cardWrapper = value
+      this.targetCard.type = 'edit'
+      this.editCard = true
+    },
+    createNew (value) {
+      this.targetCard.cardWrapper = value
+      this.targetCard.type = 'newCard'
+      this.createNewCard = true
+    },
     updateCards () {
       console.log('updating cards')
       this.axios.get('/1/model/section/' + this.section.id + '/cardWrappers').then((response) => {
         if (response.data.result === 'success') {
+          //  set new card parameters to default
+          this.createNewCard = false
           this.section.cardsWrappersCommon = response.data.data.cardsWrappersCommon
           this.section.cardsWrappersPrivate = response.data.data.cardsWrappersPrivate
           this.section.cardsWrappersShared = response.data.data.cardsWrappersShared

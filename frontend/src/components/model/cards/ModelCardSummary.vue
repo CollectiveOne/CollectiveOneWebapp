@@ -37,7 +37,9 @@
           <app-card-control-buttons
             :cardWrapper="cardWrapper"
             :inSection="inSection"
+            @createNew="$emit('createNew')"
             @update="$emit('update')"
+            @edit="$emit('edit')"
             @updateCards="$emit('updateCards')">
           </app-card-control-buttons>
         </div>
