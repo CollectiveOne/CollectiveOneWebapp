@@ -6,9 +6,7 @@
     <div class="w3-row card-container cursor-pointer" :class="{'limit-height': !showFull}"
       ref="cardContent">
 
-<!--       <div class="w3-row" @click="cardClicked();"> -->
       <div class="w3-row">
-
         <div class="card-container-padded">
           <div class="w3-row card-title">
             <input type="text" class="w3-input w3-hover-light-grey" placeholder="Enter card title" v-model="editedCard.title">
@@ -18,34 +16,27 @@
             </app-error-panel>
           </div>
 
-        <div ref="cardText" class="w3-row card-text">
-
-          <div class="w3">
-            <app-markdown-editor placeholder="Enter text here"  value="bandapelaw" v-model="editedCard.text"></app-markdown-editor>
-          </app-error-panel>
+          <div ref="cardText" class="w3-row card-text">
+            <div class="w3">
+              <app-markdown-editor placeholder="Enter text here"  v-model="editedCard.text"></app-markdown-editor>
+            </app-error-panel>
+            </div>
           </div>
-
-      </div>
-
         </div>
-    </div>
+      </div>
 
     </div>
 
     <div class="w3-row bottom-row light-grey">
-
       <div v-if="!inCardSelector" class="w3-left scope-controls">
-
         <div  class="w3-right cursor-pointer indicator-comp"
           @click="scopeSelected('common')">
           <i class="fa fa-circle select-common highlight" aria-hidden="true"></i>
         </div>
-
         <div class="w3-right cursor-pointer indicator-comp"
           @click="scopeSelected('shared')">
           <i class="fa fa-circle select-shared highlight" aria-hidden="true"></i>
         </div>
-
         <div class="w3-right cursor-pointer indicator-comp"
           @click="scopeSelected('private')">
           <i class="fa fa-circle select-private highlight" aria-hidden="true"></i>
@@ -135,9 +126,6 @@ export default {
   },
 
   computed: {
-    hasImage () {
-      return this.card.imageFile !== null
-    },
     titleEmpty () {
       if (this.editedCard) {
         return this.editedCard.title === ''
@@ -190,39 +178,6 @@ export default {
       this.editedCard = JSON.parse(JSON.stringify(this.atCardWrapper.card))
       this.editedCard.newScope = this.cardWrapper.scope
     },
-    newFileSelected (event) {
-      /* upload image */
-      var fileData = event.target.files[0]
-      if (fileData.size > 1048576) {
-        this.errorUploadingFile = true
-        this.errorUploadingFileMsg = 'Image file too big. Must be below 1 MB'
-        return
-      }
-
-      var data = new FormData()
-      data.append('file', fileData)
-
-      this.uploadingImage = true
-      this.errorUploadingFile = false
-
-      this.axios.post('/1/upload/cardImage/' + this.cardWrapper.id, data).then((response) => {
-        console.log(response)
-        this.uploadingImage = false
-
-        if (response.data.result === 'success') {
-          this.editedCard.newImageFileId = response.data.elementId
-          return this.axios.get('/1/files/' + this.editedCard.newImageFileId)
-        } else {
-          this.errorUploadingFile = true
-          this.errorUploadingFileMsg = response.data.message
-        }
-      }).then((response) => {
-        /* to force reactivity */
-        var newEditedCard = JSON.parse(JSON.stringify(this.editedCard))
-        newEditedCard.imageFile = response.data.data
-        this.editedCard = newEditedCard
-      })
-    },
     scopeSelected (scope) {
       console.log(scope)
       this.cClass = {}
@@ -236,7 +191,6 @@ export default {
         this.editedCard.newScope = 'COMMON'
         this.cClass['border-blue'] = true
       }
-      console.log(this.cClass)
     },
     textTooLong () {
       if (!this.$refs.cardText) {
@@ -278,10 +232,8 @@ export default {
           this.noCardSelectedError = true
         }
       }
-      console.log(this.newCardLocation, 'before', this.atCardWrapper.card.text)
       if (ok) {
         var cardDto = JSON.parse(JSON.stringify(this.editedCard))
-        console.log('cardDto', JSON.stringify(cardDto), this.inSection.id)
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
