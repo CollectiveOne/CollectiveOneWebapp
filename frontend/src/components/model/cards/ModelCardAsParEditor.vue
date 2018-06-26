@@ -15,7 +15,7 @@
             <app-markdown-editor placeholder="Enter text here" v-model="editedCard.text"></app-markdown-editor>
           </div>
           <div>
-        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }}</button>
+        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }} <span><small>(Ctr + Enter)</small></span></button>
                 <div v-show="sendingData" class="sending-accept light-grey">
           <img class="" src="../../../assets/loading.gif" alt="">
         </div>
@@ -154,6 +154,27 @@ export default {
             })
         }
       }
+    },
+    atKeydown (e) {
+      if (!this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.closeThis()
+        }
+      }
+
+      if (this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.cancel()
+        }
+
+        /* ctr + enter */
+        if (e.keyCode === 13 && e.ctrlKey) {
+          e.preventDefault()
+          this.createCard()
+        }
+      }
     }
   },
 
@@ -169,6 +190,11 @@ export default {
     } else {
       this.startEditing()
     }
+    window.addEventListener('keydown', this.atKeydown)
+  },
+
+  destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 }
 </script>

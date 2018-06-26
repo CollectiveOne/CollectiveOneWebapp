@@ -8,26 +8,9 @@
         <input type="text" class="w3-input w3-hover-light-grey" placeholder="Enter card title"  v-model="editedCard.title">
           <app-markdown-editor placeholder="Enter text here" v-model="editedCard.text"></app-markdown-editor>
       </div>
-
-<!--       <div v-if="cardWrapper.inModelSections.length > 0 && !hideCardControls" class="w3-right text-div">
-        <app-in-model-sections-tags
-          :inModelSections="cardWrapper.inModelSections"
-          :hideSectionId="inSectionId">
-        </app-in-model-sections-tags>
-      </div> -->
     </div>
 
     <div class="w3-col m4 right-div controls">
-
-<!--       <div v-if="cardWrapper.creator !== null" class="w3-left text-div">
-        <app-user-avatar :user="cardWrapper.creator" :showName="false" :small="true"></app-user-avatar>
-      </div>
- -->
-<!--       <div v-if="editors.length > 0" class="w3-left editors-div">
-        <div class="w3-left" v-for="editor in editors">
-          <app-user-avatar v-if="editor.c1Id !== cardWrapper.creator.c1Id" :user="editor" :showName="false" :small="true"></app-user-avatar>
-        </div>
-      </div> -->
 
       <div v-if="!inCardSelector" class="w3-left scope-controls">
 
@@ -56,7 +39,7 @@
         </div>
       </div>
         <div class="send-button-container">
-        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }}</button>
+        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }} <span><small>(Ctr + Enter)</small></span></button>
         <div v-show="sendingData" class="sending-accept light-grey">
           <img class="" src="../../../assets/loading.gif" alt="">
         </div>
@@ -182,7 +165,6 @@ export default {
       }
       if (ok) {
         var cardDto = JSON.parse(JSON.stringify(this.editedCard))
-        console.log('cardDto', JSON.stringify(cardDto), this.inSection.id, this.isNew, this.addExisting)
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */
@@ -221,6 +203,27 @@ export default {
             })
         }
       }
+    },
+    atKeydown (e) {
+      if (!this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.closeThis()
+        }
+      }
+
+      if (this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+          this.cancel()
+        }
+
+        /* ctr + enter */
+        if (e.keyCode === 13 && e.ctrlKey) {
+          e.preventDefault()
+          this.createCard()
+        }
+      }
     }
   },
 
@@ -236,6 +239,11 @@ export default {
     } else {
       this.startEditing()
     }
+    window.addEventListener('keydown', this.atKeydown)
+  },
+
+  destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 }
 </script>
