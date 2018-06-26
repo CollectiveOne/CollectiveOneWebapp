@@ -15,7 +15,7 @@
             <app-markdown-editor placeholder="Enter text here" v-model="editedCard.text"></app-markdown-editor>
           </div>
           <div>
-        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">Create new card</button>
+        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }}</button>
                 <div v-show="sendingData" class="sending-accept light-grey">
           <img class="" src="../../../assets/loading.gif" alt="">
         </div>
@@ -72,6 +72,15 @@ export default {
   },
 
   computed: {
+    atCardWrapper () {
+      return this.cardWrapper === null ? null : this.cardWrapper.cardWrapper
+    },
+    newCardLocation () {
+      return this.$store.state.support.createNewCardLocation === 'before'
+    },
+    cardButtonText () {
+      return this.isNew ? 'Create new card' : 'Save Card'
+    }
   },
 
   methods: {
@@ -103,7 +112,6 @@ export default {
       }
       if (ok) {
         var cardDto = JSON.parse(JSON.stringify(this.editedCard))
-        console.log('cardDto', JSON.stringify(cardDto), this.inSection.id, this.isNew, this.addExisting)
         if (this.isNew) {
           if (!this.addExisting) {
             /* create new card */

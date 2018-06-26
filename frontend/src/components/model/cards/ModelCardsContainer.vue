@@ -28,7 +28,8 @@
       <div v-if="isDraggingOver(cardWrapper) && draggingOverCardWrapperAfter" class="drop-div">
       </div>
 
-    </div><div v-if="!hideCardControls" :class="cardsContainerClasses" class=""
+    </div>
+    <div v-if="!hideCardControls" :class="cardsContainerClasses" class=""
       @dragover.prevent="draggingOver()"
       @drop.prevent="cardDroped('', $event)">
 
@@ -55,6 +56,13 @@
         </app-model-card-as-par-editor>
       </div>
     </div>
+
+    <app-model-card-as-par-editor
+      v-if="cardsType === 'doc' & cardWrappers.length !== 0"
+      :isNew="true"
+      :cardWrapper="lastCardWrapper"
+      :inSection="inSection">
+    </app-model-card-as-par-editor>
   </div>
 </template>
 
@@ -110,6 +118,12 @@ export default {
     },
     draggingElement () {
       return this.$store.state.support.draggingElement
+    },
+    lastCardWrapper () {
+      let cardWrapper = {
+        cardWrapper: this.cardWrappers[this.cardWrappers.length - 1]
+      }
+      return cardWrapper
     }
   },
 
@@ -215,9 +229,6 @@ export default {
       }
       this.$store.commit('setDraggingElement', null)
     }
-  },
-
-  created () {
   }
 }
 </script>
