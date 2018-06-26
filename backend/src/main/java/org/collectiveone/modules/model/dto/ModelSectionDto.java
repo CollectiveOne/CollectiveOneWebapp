@@ -12,18 +12,22 @@ public class ModelSectionDto {
 	private String initiativeId;
 	private Boolean isTopModelSection;
 	private Boolean isSubsection;
+	private ModelScope scope;
 	private String parentSectionId;
 	private String parentSectionTitle;
 	private String title;
 	private String description;
 	private ModelScope newScope;
 	private Boolean subElementsLoaded;
-	private Integer nSubsections;
 	
 	private List<ModelCardWrapperDto> cardsWrappersPrivate = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelCardWrapperDto> cardsWrappersShared = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelCardWrapperDto> cardsWrappersCommon = new ArrayList<ModelCardWrapperDto>();
-	private List<ModelSectionDto> subsections = new ArrayList<ModelSectionDto>();
+	
+	private List<ModelSectionDto> subsectionsCommon = new ArrayList<ModelSectionDto>();
+	private List<ModelSectionDto> subsectionsShared = new ArrayList<ModelSectionDto>();
+	private List<ModelSectionDto> subsectionsPrivate = new ArrayList<ModelSectionDto>();
+	
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
 	
 	
@@ -73,6 +77,13 @@ public class ModelSectionDto {
 	public void setParentSectionTitle(String parentSectionTitle) {
 		this.parentSectionTitle = parentSectionTitle;
 	}
+	public ModelScope getScope() {
+		return scope;
+	}
+	public void setScope(ModelScope scope) {
+		this.scope = scope;
+	}
+
 	public String getTitle() {
 		return title;
 	}
@@ -97,23 +108,29 @@ public class ModelSectionDto {
 	public void setCardsWrappersCommon(List<ModelCardWrapperDto> cardsWrappersCommon) {
 		this.cardsWrappersCommon = cardsWrappersCommon;
 	}
-	public List<ModelSectionDto> getSubsections() {
-		return subsections;
+	public List<ModelSectionDto> getSubsectionsCommon() {
+		return subsectionsCommon;
 	}
-	public void setSubsections(List<ModelSectionDto> subsections) {
-		this.subsections = subsections;
+	public void setSubsectionsCommon(List<ModelSectionDto> subsectionsCommon) {
+		this.subsectionsCommon = subsectionsCommon;
+	}
+	public List<ModelSectionDto> getSubsectionsShared() {
+		return subsectionsShared;
+	}
+	public void setSubsectionsShared(List<ModelSectionDto> subsectionsShared) {
+		this.subsectionsShared = subsectionsShared;
+	}
+	public List<ModelSectionDto> getSubsectionsPrivate() {
+		return subsectionsPrivate;
+	}
+	public void setSubsectionsPrivate(List<ModelSectionDto> subsectionsPrivate) {
+		this.subsectionsPrivate = subsectionsPrivate;
 	}
 	public Boolean getSubElementsLoaded() {
 		return subElementsLoaded;
 	}
 	public void setSubElementsLoaded(Boolean subElementsLoaded) {
 		this.subElementsLoaded = subElementsLoaded;
-	}
-	public Integer getnSubsections() {
-		return nSubsections;
-	}
-	public void setnSubsections(Integer nSubsections) {
-		this.nSubsections = nSubsections;
 	}
 	public List<ModelSectionDto> getInSections() {
 		return inSections;

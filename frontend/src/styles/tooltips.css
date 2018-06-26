@@ -1,8 +1,8 @@
-[tooltip]:before {        
+[tooltip]:before {
     position: absolute;
     content : attr(tooltip);
     visibility: hidden;
-    display: inline-block;
+    display: none;
     top: 40px;
     min-width: 120px;
     text-align: center;
@@ -14,6 +14,6 @@
     vertical-align:bottom;
     z-index: 9999
 }
-[tooltip]:hover:before { 
+[tooltip]:hover:before {
     visibility: visible;
 }

@@ -36,8 +36,12 @@ import org.collectiveone.modules.initiatives.repositories.InitiativeRelationship
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeTagRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
+import org.collectiveone.modules.model.ModelScope;
 import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.ModelSubsection;
+import org.collectiveone.modules.model.Status;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
+import org.collectiveone.modules.model.repositories.ModelSubsectionRepositoryIf;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenService;
@@ -111,6 +115,9 @@ public class InitiativeService {
 	
 	@Autowired
 	private WantToContributeRepositoryIf wantToContributeRepository;
+	
+	@Autowired
+	private ModelSubsectionRepositoryIf modelSubsectionRepository;
 	  
 	
 	@Transactional
@@ -220,7 +227,7 @@ public class InitiativeService {
 				
 				if (result3.getResult().equals("success")) {
 					
-					PostResult result4 = initModel(result.getData().getId());
+					PostResult result4 = initModel(result.getData().getId(), userId);
 					
 					if (result4.getResult().equals("success")) {
 						return new PostResult("success", "initiative created and initalized",  result.getData().getId().toString());
@@ -441,17 +448,25 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	private PostResult initModel(UUID initiativeId) {
+	private PostResult initModel(UUID initiativeId, UUID requestByUserId) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		
 		ModelSection section = new ModelSection();
 		section.setTitle(initiative.getMeta().getName());
 		section.setInitiative(initiative);
-		section.setIsTopModelSection(true);
 		
 		section = modelSectionRepository.save(section);
 		
-		initiative.setTopModelSection(section);
+		ModelSubsection subsection = new ModelSubsection();
+		
+		subsection.setSection(section);
+		subsection.setAdder(appUserRepository.findByC1Id(requestByUserId));
+		subsection.setScope(ModelScope.COMMON);
+		subsection.setStatus(Status.VALID);
+		
+		subsection = modelSubsectionRepository.save(subsection);		
+		
+		initiative.setTopModelSubsection(subsection);
 		initiativeRepository.save(initiative);
 		
 		return new PostResult("success", "initiative top section created",  initiative.getId().toString());
@@ -522,7 +537,7 @@ public class InitiativeService {
 		
 		if (!oldName.equals(initiativeDto.getName()) || !oldDriver.equals(initiativeDto.getDriver())) {
 			/* update topModelSection name */
-			ModelSection section = initiative.getTopModelSection();
+			ModelSection section = initiative.getTopModelSubsection().getSection();
 			section.setTitle(initiativeMeta.getName());
 			modelSectionRepository.save(section);
 			

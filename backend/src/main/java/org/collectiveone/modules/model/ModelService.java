@@ -90,9 +90,9 @@ public class ModelService {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		if (initiative == null) return new GetResult<ModelSectionDto>("error", "initiative not found", null);
 		
-		ModelSectionDto sectionDto = initiative.getTopModelSection().toDto();
+		ModelSectionDto sectionDto = initiative.getTopModelSubsection().getSection().toDto();
 		if (level > 0) {
-			sectionDto = addSectionSubElements(sectionDto, initiative.getTopModelSection().getId(), level - 1, requestById, onlySections);	
+			sectionDto = addSectionSubElements(sectionDto, initiative.getTopModelSubsection().getSection().getId(), level - 1, requestById, onlySections);	
 		}
 			
 		return new GetResult<ModelSectionDto> ("success", "model found", sectionDto);
@@ -143,7 +143,7 @@ public class ModelService {
 		}
 		
 		if (subsection.getScope() != ModelScope.PRIVATE) {
-			activityService.modelSectionCreatedOnSection(section, parent, appUserRepository.findByC1Id(creatorId));
+			activityService.modelSectionCreatedOnSection(subsection, parent, appUserRepository.findByC1Id(creatorId));
 		}
 		
 		modelSectionRepository.save(parent);
@@ -152,23 +152,39 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelSectionDto> getSection(UUID sectionId, Integer level, UUID requestByUserId, Boolean onlySections) {
-		return new GetResult<ModelSectionDto>("success", "section retrieved",  getSectionDto(sectionId, level, requestByUserId, onlySections));
+	public GetResult<ModelSectionDto> getSection(UUID sectionId, UUID inSectionId, Integer level, UUID requestByUserId, Boolean onlySections) {
+		return new GetResult<ModelSectionDto>("success", "section retrieved", getSectionDto(sectionId, inSectionId, level, requestByUserId, onlySections));
 	}
 	
 	@Transactional
-	public ModelSectionDto getSectionDto(UUID sectionId, Integer level, UUID requestByUserId, Boolean onlySections) {
-		ModelSection section = modelSectionRepository.findById(sectionId);
-		ModelSectionDto sectionDto = section.toDto();
+	public ModelSectionDto getSectionDto(UUID sectionId, UUID inSectionId, Integer level, UUID requestByUserId, Boolean onlySections) {
 		
-		List<ModelSubsection> subsections = modelSubsectionRepository.findOfSection(section.getId());
+		if (!modelSubsectionRepository.subsectionUserHaveAccess(sectionId, requestByUserId)) {
+			return null;
+		}
 		
-		for (ModelSubsection subsection : subsections) {
-			sectionDto.getInSections().add(subsection.getSection().toDto());
+		ModelSubsection subsection = new ModelSubsection();
+		/* check if this is a card addition */
+		if (inSectionId != null) {
+			subsection = 
+					modelSubsectionRepository.findByParentSectionAndSectionVisibleToUser(inSectionId, sectionId, requestByUserId);	
+		} else {
+			subsection = new ModelSubsection();
+			subsection.setSection(modelSectionRepository.findById(sectionId));
+		}
+		
+		ModelSectionDto sectionDto = getSubsectionDto(subsection);
+		
+		List<ModelSubsection> inSubsections = modelSubsectionRepository.findOfSection(sectionId);
+		
+		for (ModelSubsection inSubsection : inSubsections) {
+			if (inSubsection.getParentSection() != null) {
+				sectionDto.getInSections().add(inSubsection.getParentSection().toDto());
+			}
 		}
 		
 		if(level > 0) {
-			sectionDto = addSectionSubElements(sectionDto, section.getId(), level - 1, requestByUserId, onlySections);
+			sectionDto = addSectionSubElements(sectionDto, sectionId, level - 1, requestByUserId, onlySections);
 		}
 		
 		return sectionDto;
@@ -193,7 +209,7 @@ public class ModelService {
 		List<ModelSectionDto> sectionDtos = new ArrayList<ModelSectionDto>();
 		
 		for(ModelSection section : enititiesPage.getContent()) {
-			sectionDtos.add(getSectionDto(section.getId(), 0, requestByUserId, true));
+			sectionDtos.add(getSectionDto(section.getId(), null, 0, requestByUserId, true));
 		}
 		
 		Page<ModelSectionDto> dtosPage = new PageImpl<ModelSectionDto>(sectionDtos, page, enititiesPage.getNumberOfElements());
@@ -202,14 +218,25 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult editSection (UUID sectionId, ModelSectionDto sectionDto, UUID creatorId) {
+	public PostResult editSection (UUID sectionId, UUID parentSectionId, ModelSectionDto sectionDto, UUID creatorId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		
 		section = sectionDto.toEntity(section, sectionDto);
 		section = modelSectionRepository.save(section);
 		
-		activityService.modelSectionEdited(section, appUserRepository.findByC1Id(creatorId));
+		ModelSubsection subsection = null;
+		if (parentSectionId != null) {
+			subsection = modelSubsectionRepository.findByParentSectionAndSectionVisibleToUser(parentSectionId, sectionId, creatorId);
+			subsection.setScope(sectionDto.getNewScope());
+		} else {
+			subsection = new ModelSubsection();
+			subsection.setSection(section);
+		}
+		
+		subsection = modelSubsectionRepository.save(subsection);
+		
+		activityService.modelSectionEdited(subsection, appUserRepository.findByC1Id(creatorId));
 		
 		return new PostResult("success", "section edited", section.getId().toString());
 	}
@@ -652,33 +679,43 @@ public class ModelService {
 	}
 	
 	@Transactional
-	private SubsectionsHolderDto getSectionSubsectionsDtos(UUID sectionId, UUID requestByUserId) {
+	private ModelSectionDto getSubsectionDto(ModelSubsection subsection) {
+		ModelSectionDto sectionDto = subsection.getSection().toDto();
+		sectionDto.setScope(subsection.getScope());
+		return sectionDto;
+	}
+	
+	@Transactional
+	private SubsectionsHolderDto getSectionSubsectionsDtos(UUID sectionId, Integer level, UUID requestByUserId, Boolean onlySections) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		SubsectionsHolderDto subsectionsHolder = new SubsectionsHolderDto();
 		
 		List<ModelSubsection> modelSubsectionsCommon = 
-				modelSubsectionRepository.findParentSectionWithScope(section.getId(), ModelScope.COMMON);
+				modelSubsectionRepository.findInParentSectionWithScope(section.getId(), ModelScope.COMMON);
 		
 		for (ModelSubsection subsection : modelSubsectionsCommon) {
-			subsectionsHolder.getSubsectionsCommon().add(subsection.getSection().toDto());
+			subsectionsHolder.getSubsectionsCommon().add(
+					addSectionSubElements(getSubsectionDto(subsection), subsection.getSection().getId(), level - 1, requestByUserId, onlySections));
 		}
 		
 		List<ModelSubsection> modelSubsectionsPrivate = 
 				modelSubsectionRepository.findOfUserInParentSection(requestByUserId, section.getId(), ModelScope.PRIVATE);
 		
 		for (ModelSubsection subsection : modelSubsectionsPrivate) {
-			subsectionsHolder.getSubsectionsPrivate().add(subsection.getSection().toDto());
+			subsectionsHolder.getSubsectionsPrivate().add(
+					addSectionSubElements(getSubsectionDto(subsection), subsection.getSection().getId(), level - 1, requestByUserId, onlySections));
 		}
 		
 		/* if request user is in ecosystem add shared cards too */
 		if(initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId)) {
 			
 			List<ModelSubsection> modelSubsectionsShared = 
-					modelSubsectionRepository.findParentSectionWithScope(section.getId(), ModelScope.SHARED);
+					modelSubsectionRepository.findInParentSectionWithScope(section.getId(), ModelScope.SHARED);
 			
 			for (ModelSubsection subsection : modelSubsectionsShared) {
-				subsectionsHolder.getSubsectionsShared().add(subsection.getSection().toDto());
+				subsectionsHolder.getSubsectionsShared().add(
+						addSectionSubElements(getSubsectionDto(subsection), subsection.getSection().getId(), level - 1, requestByUserId, onlySections));
 			}
 		}
 		
@@ -736,12 +773,11 @@ public class ModelService {
 				
 		if (level > 0) {
 			/* add the subsections with their sub-elements too */
-			SubsectionsHolderDto subsectionsHolder = getSectionSubsectionsDtos(sectionId, requestByUserId);
+			SubsectionsHolderDto subsectionsHolder = getSectionSubsectionsDtos(sectionId, level, requestByUserId, onlySections);
 			
-			for (ModelSectionDto subsectionDto : subsectionsHolder.getSubsectionsCommon()) {
-				sectionDto.getSubsections().add(addSectionSubElements(
-						subsectionDto, UUID.fromString(subsectionDto.getId()), level - 1, requestByUserId, onlySections));
-			}
+			sectionDto.setSubsectionsCommon(subsectionsHolder.getSubsectionsCommon());
+			sectionDto.setSubsectionsPrivate(subsectionsHolder.getSubsectionsPrivate());
+			sectionDto.setSubsectionsShared(subsectionsHolder.getSubsectionsShared());
 		} 
 		
 		return sectionDto; 
@@ -761,11 +797,11 @@ public class ModelService {
 		}
 		
 		if (cardWrapperAddition.getBeforeElement() != null) {
-			cardWrapperDto.setBeforeCardWrapperId(cardWrapperAddition.getBeforeCardWrapperAddition().getCardWrapper().getId().toString());
+			cardWrapperDto.setBeforeElementId(cardWrapperAddition.getBeforeCardWrapperAddition().getCardWrapper().getId().toString());
 		}
 		
 		if (cardWrapperAddition.getAfterElement() != null) {
-			cardWrapperDto.setAfterCardWrapperId(cardWrapperAddition.getAfterCardWrapperAddition().getCardWrapper().getId().toString());
+			cardWrapperDto.setAfterElementId(cardWrapperAddition.getAfterCardWrapperAddition().getCardWrapper().getId().toString());
 		}
 		
 		if (cardWrapperAddition.getSection() != null) {
@@ -1093,7 +1129,7 @@ public class ModelService {
 		
 		ModelCardWrapperDto cardWrapperDto = null;
 		
-		if (!modelCardWrapperAdditionRepository.cardWrapperuserHaveAccess(cardWrapperId, requestByUserId)) {
+		if (!modelCardWrapperAdditionRepository.cardWrapperUserHaveAccess(cardWrapperId, requestByUserId)) {
 			return new GetResult<ModelCardWrapperDto>("error", "dont have access to this card", null);
 		}
 		
@@ -1130,7 +1166,7 @@ public class ModelService {
 			Integer pageSize, 
 			String sortByIn, 
 			Integer levels, 
-			UUID requestById, 
+			UUID requestByUserId, 
 			Boolean inInitiativeEcosystem) {
 		
 		PageRequest pageRequest = null;
@@ -1157,22 +1193,25 @@ public class ModelService {
 		if (!inInitiativeEcosystem) {
 			List<UUID> allSectionIds = new ArrayList<UUID>();
 			
-			allSectionIds.addAll(getAllSubsectionsIds(sectionId, levels - 1));
+			ModelSection section = modelSectionRepository.findById(sectionId);
+			Boolean isMemberOfEcosystem = initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId);
+			
+			allSectionIds.addAll(getAllSubsectionsIds(sectionId, levels - 1, requestByUserId, isMemberOfEcosystem));
 
-			enititiesPage = modelCardWrapperAdditionRepository.searchInSectionsByQuery(allSectionIds, "%"+query.toLowerCase()+"%", requestById, pageRequest);
+			enititiesPage = modelCardWrapperAdditionRepository.searchInSectionsByQuery(allSectionIds, "%"+query.toLowerCase()+"%", requestByUserId, pageRequest);
 			
 		} else {
 			
 			ModelSection section = modelSectionRepository.findById(sectionId);
 			List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(section.getInitiative().getId());
 			
-			enititiesPage = modelCardWrapperAdditionRepository.searchInInitiativesByQuery(initiativeEcosystemIds, "%"+query.toLowerCase()+"%", requestById, pageRequest);
+			enititiesPage = modelCardWrapperAdditionRepository.searchInInitiativesByQuery(initiativeEcosystemIds, "%"+query.toLowerCase()+"%", requestByUserId, pageRequest);
 		}
 		
 		List<ModelCardWrapperDto> cardsDtos = new ArrayList<ModelCardWrapperDto>();
 		
 		for(ModelCardWrapperAddition cardWrapperAddition : enititiesPage.getContent()) {
-			cardsDtos.add(getCardWrapperDtoWithMetadata(cardWrapperAddition, requestById));
+			cardsDtos.add(getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId));
 		}
 		
 		Page<ModelCardWrapperDto> dtosPage = new PageImpl<ModelCardWrapperDto>(cardsDtos, pageRequest, enititiesPage.getNumberOfElements());
@@ -1200,8 +1239,10 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<ModelSectionLinkedDto> getSectionParentGenealogy(UUID sectionId, Integer levels) {
-		ModelSectionLinkedDto linkedDtos = getModelSectionDtosFromNodes(getSectionNode(sectionId, true, false, levels));
+	public GetResult<ModelSectionLinkedDto> getSectionParentGenealogy(UUID sectionId, Integer levels, UUID requestByUserId) {
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		Boolean isMemberOfEcosystem = initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId);
+		ModelSectionLinkedDto linkedDtos = getModelSectionDtosFromNodes(getSectionNode(sectionId, true, false, levels, requestByUserId, isMemberOfEcosystem));
 		return new GetResult<ModelSectionLinkedDto>("success", "parents retrieved", linkedDtos);
 	}
 	
@@ -1225,14 +1266,31 @@ public class ModelService {
 		return sectionLinked;
 	}
 	
+	@Transactional
+	public GraphNode getSectionNode(
+			UUID sectionId, 
+			Boolean addParents, 
+			Boolean addChildren, 
+			Integer levels) {
+		
+		/* levels = null means as many levels as available */
+		return getSectionNodeRec(sectionId, addParents, addChildren, levels, null, false, new ArrayList<UUID>());
+	}	
 	
 	@Transactional
-	public GraphNode getSectionNode(UUID sectionId, Boolean addParents, Boolean addChildren, Integer levels) {
+	public GraphNode getSectionNode(
+			UUID sectionId, 
+			Boolean addParents, 
+			Boolean addChildren, 
+			Integer levels, 
+			UUID requestByUserId, 
+			Boolean isMemberOfEcosystem) {
+		
 		/* levels = null means as many levels as available */
-		return getSectionNodeRec(sectionId, addParents, addChildren, levels, new ArrayList<UUID>());
+		return getSectionNodeRec(sectionId, addParents, addChildren, levels, requestByUserId, isMemberOfEcosystem, new ArrayList<UUID>());
 	}
 	
-	private GraphNode getSectionNodeRec(UUID sectionId, Boolean addParents, Boolean addChildren, Integer levels, List<UUID> readIds) {
+	private GraphNode getSectionNodeRec(UUID sectionId, Boolean addParents, Boolean addChildren, Integer levels, UUID requestByUserId, Boolean isMemberOfEcosystem, List<UUID> readIds) {
 		
 		if (!modelSectionRepository.sectionExists(sectionId)) {
 			return null;
@@ -1259,12 +1317,17 @@ public class ModelService {
 		if (this_neighbors) {
 			
 			if (addParents) {
-				List<UUID> parents = modelSubsectionRepository.findParentSectionsIds(sectionId);
+				List<UUID> parents = null;
+				if (requestByUserId != null) {
+					parents = modelSubsectionRepository.findParentSectionsIdsVisibleToUser(sectionId, requestByUserId, isMemberOfEcosystem);
+				} else {
+					parents = modelSubsectionRepository.findParentSectionsIds(sectionId);
+				}
 				
 				for (UUID inSectionId : parents) {
 					if (!readIds.contains(inSectionId)) {
 						GraphNode parentNode = null;
-						parentNode = getSectionNodeRec(inSectionId, addParents, false, levels, readIds);	
+						parentNode = getSectionNodeRec(inSectionId, addParents, false, levels, requestByUserId, isMemberOfEcosystem, readIds);	
 						node.getParents().add(parentNode);
 						
 					} else {
@@ -1277,12 +1340,17 @@ public class ModelService {
 			}
 			
 			if (addChildren) {
-				List<UUID> children = modelSubsectionRepository.findSubsectionsIds(sectionId);
+				List<UUID> children = null;
+				if (requestByUserId != null) {
+					children = modelSubsectionRepository.findSubsectionsIdsVisibleToUser(sectionId, requestByUserId, isMemberOfEcosystem);
+				} else {
+					children = modelSubsectionRepository.findSubsectionsIds(sectionId);
+				} 
 				
 				for (UUID subSectionId : children) {
 					if (!readIds.contains(subSectionId)) {
 						GraphNode childrenNode = null;
-						childrenNode = getSectionNodeRec(subSectionId, false, addChildren, levels, readIds);	
+						childrenNode = getSectionNodeRec(subSectionId, false, addChildren, levels, requestByUserId, isMemberOfEcosystem, readIds);	
 						node.getChildren().add(childrenNode);
 						
 					} else {
@@ -1299,15 +1367,29 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public List<UUID> getAllSubsectionsIds (UUID sectionId, Integer level) {
-		GraphNode subsection = getSectionNode(sectionId, false, true, level);
+	public List<UUID> getAllSubsectionsIds (
+			UUID sectionId, 
+			Integer level) {
+		
+		GraphNode subsection = getSectionNode(sectionId, false, true, level, null, false);
 		return subsection.toList(false, true);
 	}
 	
 	@Transactional
-	public GetResult<Page<ActivityDto>> getActivityResultUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages, Integer level) {
+	public List<UUID> getAllSubsectionsIds (
+			UUID sectionId, 
+			Integer level, 
+			UUID requestByUserId, 
+			Boolean isMemberOfEcosystem) {
 		
-		Page<Activity> activities = getActivityUnderSection(sectionId, page, onlyMessages, level);
+		GraphNode subsection = getSectionNode(sectionId, false, true, level, requestByUserId, isMemberOfEcosystem);
+		return subsection.toList(false, true);
+	}
+	
+	@Transactional
+	public GetResult<Page<ActivityDto>> getActivityResultUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages, Integer level, UUID requestByUserId) {
+		
+		Page<Activity> activities = getActivityUnderSection(sectionId, page, onlyMessages, level, requestByUserId);
 		
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		
@@ -1321,9 +1403,12 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public Page<Activity> getActivityUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages, Integer level) {
+	public Page<Activity> getActivityUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages, Integer level, UUID requestByUserId) {
 		
-		List<UUID> allSectionIds = getAllSubsectionsIds(sectionId, level);
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		Boolean isMemberOfEcosystem = initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId);
+		
+		List<UUID> allSectionIds = getAllSubsectionsIds(sectionId, level, requestByUserId, isMemberOfEcosystem);
 		List<UUID> cardsIds = allSectionIds.size() > 0 ? modelCardWrapperAdditionRepository.findAllCardWrapperIdsOfSections(allSectionIds) : new ArrayList<UUID>();
 		
 		if (cardsIds.size() == 0) {

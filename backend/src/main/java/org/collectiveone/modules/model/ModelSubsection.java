@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "model_section_subsections")
+@Table(name = "model_subsections")
 public class ModelSubsection implements OrderedElement {
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -48,6 +48,14 @@ public class ModelSubsection implements OrderedElement {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 	
+	public String toString() {
+		return "id: " + id.toString() + " " + 	
+				"parent id: " + (parentSection != null ? parentSection.getId().toString() : "null") + " " +
+				"parent title: " + (parentSection != null ? parentSection.getTitle() : "null") + " " +
+				"section id: " + section.getId().toString() + " " +
+				"section title: " + section.getTitle() + " ";
+				
+	}
 
 	public UUID getId() {
 		return id;

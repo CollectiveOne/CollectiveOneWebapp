@@ -16,8 +16,11 @@ public interface ActivityRepositoryIf extends CrudRepository<Activity, UUID> {
 	
 	@Query("SELECT act FROM Activity act "
 			+ "LEFT JOIN act.modelCardWrapperAddition crdWrpAdd "
+			+ "LEFT JOIN act.modelSubsection subsec "
 			+ "WHERE act.modelSection.id IN ?1 "
 			+ "OR act.modelCardWrapper.id IN ?2 "
+			+ "OR subsec.section.id IN ?1 "
+			+ "OR subsec.parentSection.id IN ?1 "
 			+ "OR act.onSection.id IN ?1 "
 			+ "OR act.fromSection.id IN ?1 "
 			+ "OR crdWrpAdd.section.id IN ?1 "
@@ -27,8 +30,11 @@ public interface ActivityRepositoryIf extends CrudRepository<Activity, UUID> {
 	
 	@Query("SELECT act FROM Activity act "
 			+ "LEFT JOIN act.modelCardWrapperAddition crdWrpAdd "
+			+ "LEFT JOIN act.modelSubsection subsec "
 			+ "WHERE (act.modelSection.id IN ?1 "
 			+ "OR act.modelCardWrapper.id IN ?2 "
+			+ "OR subsec.section.id IN ?1 "
+			+ "OR subsec.parentSection.id IN ?1 "
 			+ "OR act.onSection.id IN ?1 "
 			+ "OR act.fromSection.id IN ?1 "
 			+ "OR crdWrpAdd.section.id IN ?1 "

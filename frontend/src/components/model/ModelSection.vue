@@ -1,4 +1,4 @@
-cd w<template lang="html">
+<template lang="html">
 
   <div v-if="section"
     class="section-container" ref="sectionContainer" :id="section.id">
@@ -64,7 +64,7 @@ cd w<template lang="html">
     </div>
 
     <div class="w3-row">
-      <div v-for="subsection in section.subsections"
+      <div v-for="subsection in sortedSubsections"
         :key="subsection.id"
         class="subsection-container">
 
@@ -89,88 +89,7 @@ cd w<template lang="html">
 <script>
 import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer.vue'
-
-const appendCardsToBase = function (baseList, toAddList) {
-  let relativeToBase = toAddList.filter((cardToAdd) => {
-    let ixInBase = baseList.findIndex((cardInBase) => {
-      return (cardToAdd.beforeCardWrapperId === cardInBase.id) ||
-        (cardToAdd.afterCardWrapperId === cardInBase.id)
-    })
-
-    return ixInBase !== -1
-  })
-
-  /* add those relative to base list  */
-  relativeToBase.forEach((cardRelativeToBase) => {
-    let nextCard = cardRelativeToBase
-
-    do {
-      let ixInBase = baseList.findIndex((cardInBase) => {
-        return (nextCard.beforeCardWrapperId === cardInBase.id) ||
-          (nextCard.afterCardWrapperId === cardInBase.id)
-      })
-
-      if (nextCard.beforeCardWrapperId === baseList[ixInBase].id) {
-        baseList.splice(ixInBase, 0, nextCard)
-      } else {
-        baseList.splice(ixInBase + 1, 0, nextCard)
-      }
-      removeFromList(toAddList, nextCard)
-
-      nextCard = toAddList.find((e) => { return e.afterCardWrapperId === nextCard.id })
-    } while (nextCard != null)
-  })
-
-  /* append all remaining */
-  baseList = baseList.concat(getArrayFromList(toAddList))
-
-  return baseList
-}
-
-const removeFromList = function (list, el) {
-  let ix = list.findIndex((e) => el.id === e.id)
-  if (ix !== -1) {
-    return list.splice(ix, 1)
-  }
-  return null
-}
-
-const getArrayFromList = function (list) {
-  let array = []
-
-  /* start from first elements */
-  let firstElements = list.filter((e) => { return e.afterCardWrapperId == null })
-  firstElements.forEach((firstEl) => {
-    /* add this first element */
-    array.push(firstEl)
-    removeFromList(list, firstEl)
-
-    /* add all connected elements */
-    let next = list.find((e) => { return e.afterCardWrapperId === firstEl.id })
-    while (next != null) {
-      array.push(next)
-      removeFromList(list, next)
-      next = list.find((e) => { return e.afterCardWrapperId === next.id })
-    }
-  })
-
-  while (list.length > 0) {
-    let firstEl = list.shift()
-    /* add this first element */
-    array.push(firstEl)
-    removeFromList(list, firstEl)
-
-    /* add all connected elements */
-    let next = list.find((e) => { return e.afterCardWrapperId === firstEl.id })
-    while (next != null) {
-      array.push(next)
-      removeFromList(list, next)
-      next = list.find((e) => { return e.afterCardWrapperId === next.id })
-    }
-  }
-
-  return array
-}
+import { getArrayFromList, appendElementsToBase } from '@/lib/sortAlgorithm.js'
 
 export default {
   name: 'app-model-section',
@@ -285,9 +204,29 @@ export default {
         nonCommonCards = nonCommonCards.concat(this.section.cardsWrappersShared.slice())
       }
 
-      allCardWrappers = appendCardsToBase(allCardWrappers, nonCommonCards)
+      allCardWrappers = appendElementsToBase(allCardWrappers, nonCommonCards)
 
       return allCardWrappers
+    },
+    sortedSubsections () {
+      let allSubsections = []
+
+      if (this.showCommon) {
+        allSubsections = getArrayFromList(this.section.subsectionsCommon.slice())
+      }
+
+      let nonCommonSubsections = []
+      if (this.showPrivate) {
+        nonCommonSubsections = nonCommonSubsections.concat(this.section.subsectionsPrivate.slice())
+      }
+
+      if (this.showShared) {
+        nonCommonSubsections = nonCommonSubsections.concat(this.section.subsectionsShared.slice())
+      }
+
+      allSubsections = appendElementsToBase(allSubsections, nonCommonSubsections)
+
+      return allSubsections
     },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor

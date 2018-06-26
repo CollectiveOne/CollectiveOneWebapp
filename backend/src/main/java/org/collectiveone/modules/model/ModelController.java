@@ -55,7 +55,7 @@ public class ModelController extends BaseController {
 		return modelService.getModel(initiativeId, level, getLoggedUserId(), onlySections);
 	}
 	
-	@RequestMapping(path = "/model/section/{sectionId}/subsection", method = RequestMethod.POST)
+	@RequestMapping(path = "/model/section/{parentSectionId}/subsection", method = RequestMethod.POST)
 	public PostResult createSectionSubsection(
 			@PathVariable("parentSectionId") String parentSectionIdStr,
 			@RequestBody ModelSectionDto sectionDto,
@@ -119,7 +119,8 @@ public class ModelController extends BaseController {
 	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.PUT) 
 	public PostResult editSection(
 			@PathVariable("sectionId") String sectionIdStr,
-			@RequestBody ModelSectionDto sectionDto) {
+			@RequestBody ModelSectionDto sectionDto,
+			@RequestParam(name="parentSectionId", defaultValue="") String parentSectionIdStr) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -132,7 +133,9 @@ public class ModelController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return modelService.editSection(sectionId, sectionDto, getLoggedUser().getC1Id());
+		UUID parentSectionId = parentSectionIdStr.equals("") ? null : UUID.fromString(parentSectionIdStr);
+		
+		return modelService.editSection(sectionId, parentSectionId, sectionDto, getLoggedUser().getC1Id());
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/removeSubsection/{subsectionId}", method = RequestMethod.PUT) 
@@ -274,7 +277,8 @@ public class ModelController extends BaseController {
 	public GetResult<ModelSectionDto> getSection(
 			@PathVariable("sectionId") String sectionIdStr,
 			@RequestParam(defaultValue = "1") Integer levels,
-			@RequestParam(name="onlySections", defaultValue = "false") Boolean onlySections) {
+			@RequestParam(name="onlySections", defaultValue = "false") Boolean onlySections,
+			@RequestParam(name="parentSectionId", defaultValue="") String parentSectionIdStr) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
@@ -283,7 +287,9 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelSectionDto>("error", "access denied", null);
 		}
 		
-		return modelService.getSection(sectionId, levels, getLoggedUserId(), onlySections);
+		UUID parentSectionId = parentSectionIdStr.equals("") ? null : UUID.fromString(parentSectionIdStr);
+		
+		return modelService.getSection(sectionId, parentSectionId, levels, getLoggedUserId(), onlySections);
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/cardWrappers", method = RequestMethod.GET) 
@@ -311,7 +317,7 @@ public class ModelController extends BaseController {
 			return new GetResult<ModelSectionLinkedDto>("error", "access denied", null);
 		}
 		
-		return modelService.getSectionParentGenealogy(sectionId, null);
+		return modelService.getSectionParentGenealogy(sectionId, null, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.DELETE) 
@@ -520,7 +526,11 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return modelService.getActivityResultUnderSection(sectionId, new PageRequest(page, size), onlyMessages, levels);
+		/* logged user must be anonymous since null would give access to all section links */
+		UUID loggedUserId = getLoggedUserId();
+		loggedUserId = loggedUserId == null ? UUID.fromString("00000000-0000-0000-0000-000000000000") : loggedUserId;
+		
+		return modelService.getActivityResultUnderSection(sectionId, new PageRequest(page, size), onlyMessages, levels, loggedUserId);
 	}
 	
 	@RequestMapping(path = "/model/card/{cardWrapperId}/countMessages", method = RequestMethod.GET)

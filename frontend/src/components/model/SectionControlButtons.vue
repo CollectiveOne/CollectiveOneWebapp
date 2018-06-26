@@ -20,8 +20,7 @@
           <app-model-section-modal
             v-if="showNewSubsectionModal"
             :isNew="true"
-            :inElementId="section.id"
-            :inElementTitle="section.title"
+            :inSection="section"
             @close="showNewSubsectionModal = false">
           </app-model-section-modal>
         </transition>
@@ -33,6 +32,7 @@
             v-if="showSectionModal"
             :isNew="false"
             :sectionId="section.id"
+            :inSection="inSection"
             @close="showSectionModal = false">
           </app-model-section-modal>
         </transition>

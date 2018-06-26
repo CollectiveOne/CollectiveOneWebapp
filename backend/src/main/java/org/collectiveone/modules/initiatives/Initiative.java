@@ -21,7 +21,7 @@ import javax.persistence.Table;
 
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
-import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.ModelSubsection;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -63,7 +63,7 @@ public class Initiative {
 	private InitiativeMeta meta;	
 	
 	@OneToOne
-	private ModelSection topModelSection;
+	private ModelSubsection topModelSubsection;
 		
 	
 	public InitiativeDto toDto() {
@@ -73,7 +73,7 @@ public class Initiative {
 		dto.setCreator(creator.toDtoLight());
 		dto.setStatus(status.toString());
 		dto.setMeta(meta.toDto());
-		dto.setTopModelSection(topModelSection.toDto());
+		dto.setTopModelSection(topModelSubsection.getSection().toDto());
 		
 		if(tokenTypes != null) {
 			for (TokenType tokenType : tokenTypes) {
@@ -133,11 +133,12 @@ public class Initiative {
 	public void setMeta(InitiativeMeta meta) {
 		this.meta = meta;
 	}
-	public ModelSection getTopModelSection() {
-		return topModelSection;
+	public ModelSubsection getTopModelSubsection() {
+		return topModelSubsection;
 	}
-	public void setTopModelSection(ModelSection topModelSection) {
-		this.topModelSection = topModelSection;
+	public void setTopModelSubsection(ModelSubsection topModelSubsection) {
+		this.topModelSubsection = topModelSubsection;
 	}
+	
 	
 }

@@ -118,7 +118,7 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrpAdd.adder.c1Id = ?2)")
 	public Integer countCardWrapperAdditionsAccessibleTo(UUID cardWrapperId, UUID userId);
 	
-	default Boolean cardWrapperuserHaveAccess(UUID cardWrapperId, UUID userId) {
+	default Boolean cardWrapperUserHaveAccess(UUID cardWrapperId, UUID userId) {
 		Integer res = countCardWrapperAdditionsAccessibleTo(cardWrapperId, userId);
 		return res == null ? false : res > 0;
 	}

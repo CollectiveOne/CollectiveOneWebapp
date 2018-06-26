@@ -20,7 +20,7 @@
             <label v-if="inInitiative" class=""><b>As top level section under the initiative:</b></label>
             <label v-else class=""><b>In Section:</b></label>
             <br>
-            <h4>{{ this.inElementTitleOk }}</h4>
+            <h4>{{ this.inSectionTitleOk }}</h4>
           </div>
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
@@ -40,7 +40,7 @@
             <transition name="slideLeftRight">
               <div v-if="addExisting" class="">
                 <app-model-section-selector
-                  :sectionId="inElementId"
+                  :sectionId="inSection ? inSection.id : ''"
                   @select="sectionSelected($event)">
                 </app-model-section-selector>
                 <app-error-panel
@@ -59,6 +59,19 @@
               @after-leave="animatingTab = false">
 
               <div v-if="!addExisting">
+
+                <div v-if="editing && this.inSection != null" class="w3-row w3-margin-top">
+                  <label class="">
+                    <b>Scope (in "{{ inSectionTitleOk }}" section):</b>
+                  </label>
+                  <select v-model="editedSection.newScope"
+                    class="w3-input w3-topbar" :class="selectorBorderClass" name="">
+                    <option value="PRIVATE">Private (only I can see it)</option>
+                    <option value="SHARED">Shared (others can see it, but its mine)</option>
+                    <option value="COMMON">Common (controlled by all editors)</option>
+                  </select>
+                </div>
+
                 <div class="w3-row">
                   <div v-if="!editing" class="">
                     <h3><b>{{ section.title }}</b></h3>
@@ -153,13 +166,9 @@ export default {
       type: Boolean,
       default: false
     },
-    inElementId: {
-      type: String,
-      default: ''
-    },
-    inElementTitle: {
-      type: String,
-      default: ''
+    inSection: {
+      type: Object,
+      default: null
     },
     onlyMessages: {
       type: Boolean,
@@ -172,9 +181,10 @@ export default {
       section: {
         if: '',
         title: '',
-        description: ''
+        description: '',
+        newScope: 'SHARED'
       },
-      inElementTitleOk: '',
+      inSectionTitleOk: '',
       editedSection: null,
       editing: false,
       showEditButtons: false,
@@ -191,6 +201,23 @@ export default {
   },
 
   computed: {
+    selectorBorderClass () {
+      let cClass = {}
+      switch (this.editedSection.newScope) {
+        case 'PRIVATE':
+          cClass['border-red'] = true
+          break
+
+        case 'SHARED':
+          cClass['border-yellow'] = true
+          break
+
+        default:
+          cClass['border-blue'] = true
+          break
+      }
+      return cClass
+    },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
     },
@@ -235,8 +262,11 @@ export default {
   methods: {
     update () {
       this.loading = true
-      this.axios.get('/1/model/section/' + this.section.id)
-        .then((response) => {
+      this.axios.get('/1/model/section/' + this.section.id, {
+        params: {
+          parentSectionId: this.inSection ? this.inSection.id : ''
+        }
+      }).then((response) => {
           this.loading = false
           this.section = response.data.data
           this.startEditing()
@@ -244,14 +274,15 @@ export default {
     },
     updateInElement () {
       if (!this.inInitiative) {
-        this.axios.get('/1/model/section/' + this.inElementId)
+        this.axios.get('/1/model/section/' + this.inSection.id)
           .then((response) => {
-            this.inElementTitleOk = response.data.data.title
+            this.inSectionTitleOk = response.data.data.title
           })
       }
     },
     startEditing () {
       this.editedSection = JSON.parse(JSON.stringify(this.section))
+      this.editedSection.newScope = this.section.scope
       this.editing = true
     },
     sectionSelected (section) {
@@ -304,12 +335,12 @@ export default {
         if (this.isNew) {
           if (!this.addExisting) {
             this.sendingData = true
-            this.axios.post('/1/model/section/' + this.inElementId + '/subsection', sectionDto)
+            this.axios.post('/1/model/section/' + this.inSection.id + '/subsection', sectionDto)
               .then((response) => {
                 this.sendingData = false
                 if (response.data.result === 'success') {
                   this.closeThis()
-                  this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inElementId})
+                  this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inSection.id})
                   this.$store.dispatch('refreshCurrentSection')
                 }
               }).catch((error) => {
@@ -318,12 +349,12 @@ export default {
           } else {
             /* add existing section */
             this.sendingData = true
-            this.axios.put('/1/model/section/' + this.inElementId + '/subsection/' + this.existingSection.id, {})
+            this.axios.put('/1/model/section/' + this.inSection.id + '/subsection/' + this.existingSection.id, {})
               .then((response) => {
                 this.sendingData = false
                 if (response.data.result === 'success') {
                   this.closeThis()
-                  this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inElementId})
+                  this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inSection.id})
                   this.$store.dispatch('refreshCurrentSection')
                 }
               }).catch((error) => {
@@ -333,8 +364,11 @@ export default {
         } else {
           /* edit existing section */
           this.sendingData = true
-          this.axios.put('/1/model/section/' + sectionDto.id, sectionDto)
-            .then((response) => {
+          this.axios.put('/1/model/section/' + sectionDto.id, sectionDto, {
+            params: {
+              parentSectionId: this.inSection.id
+            }
+          }).then((response) => {
               this.sendingData = false
               if (response.data.result === 'success') {
                 this.closeThis()
@@ -371,12 +405,13 @@ export default {
   },
 
   mounted () {
-    this.inElementTitleOk = this.inElementTitle
+    this.inSectionTitleOk = this.inSection ? this.inSection.title : ''
 
     if (this.isNew) {
       this.editedSection = {
         title: '',
-        description: ''
+        description: '',
+        newScope: this.inSection ? this.inSection.scope : 'COMMON'
       }
       this.editing = true
       this.$nextTick(() => {

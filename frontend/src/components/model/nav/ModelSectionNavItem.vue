@@ -1,7 +1,7 @@
 <template lang="html">
 
   <div class="w3-row section-nav-item-container">
-    <div class="w3-row section-nav-item-first-row"
+    <div class="w3-row section-nav-item-first-row w3-leftbar"
       :class="rowClass"
       :draggable="$store.state.support.triggerSectionDraggingState"
       @dragstart="dragStart($event)"
@@ -164,6 +164,22 @@ export default {
         'dragging-over-with-section-inside': this.draggingOverWithSectionInsideFlag
       }
 
+      if (this.section) {
+        switch (this.section.scope) {
+          case 'PRIVATE':
+          thisClasses['border-red'] = true
+          break
+
+          case 'SHARED':
+          thisClasses['border-yellow'] = true
+          break
+
+          default:
+          thisClasses['border-blue'] = true
+          break
+        }
+      }
+
       return thisClasses
     },
     arrowAndTitleClass () {
@@ -192,10 +208,7 @@ export default {
       return ''
     },
     hasSubsections () {
-      if (this.section) {
-        return this.section.nSubsections > 0
-      }
-      return false
+      return this.subsections.length > 0
     },
     isSelected () {
       if (this.section) {

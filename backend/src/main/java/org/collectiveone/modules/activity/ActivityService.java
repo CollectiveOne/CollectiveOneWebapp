@@ -679,22 +679,22 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelSectionCreated(ModelSection section, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+	public void modelSectionCreated(ModelSubsection subsection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
-		activity.setModelSection(section);
+		activity.setModelSubsection(subsection);
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
 	}
 	
 	@Transactional
-	public void modelSectionCreatedOnSection(ModelSection section, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+	public void modelSectionCreatedOnSection(ModelSubsection subsection, ModelSection onSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
-		activity.setModelSection(section);
+		activity.setModelSubsection(subsection);
 		activity.setOnSection(onSection);
 		activity = activityRepository.save(activity);
 		
@@ -702,22 +702,22 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelSectionEdited(ModelSection section, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+	public void modelSectionEdited(ModelSubsection subsection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_EDITED);
-		activity.setModelSection(section);
+		activity.setModelSubsection(subsection);
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
 	}
 	
 	@Transactional
-	public void modelSectionRemovedFromSection(ModelSection section, ModelSection fromSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+	public void modelSectionRemovedFromSection(ModelSubsection subsection, ModelSection fromSection, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_REMOVED);
-		activity.setModelSection(section);
+		activity.setModelSubsection(subsection);
 		activity.setFromSection(fromSection);
 		activity = activityRepository.save(activity);
 		
@@ -750,19 +750,6 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelSectionMovedFromSectionToSection(ModelSection section, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_MOVED);
-		activity.setModelSection(section);
-		activity.setFromSection(fromSection);
-		activity.setOnSection(onSection);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
 	public void modelNewSubsection(ModelSection section, ModelSection onSection, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
 		
@@ -780,17 +767,6 @@ public class ActivityService {
 		
 		activity.setType(ActivityType.MODEL_SECTION_ADDED);
 		activity.setModelSubsection(subsection);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void modelSectionDeleted(ModelSection section, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_DELETED);
-		activity.setModelSection(section);
 		activity = activityRepository.save(activity);
 		
 		addInitiativeActivityNotifications(activity);
@@ -1069,7 +1045,7 @@ public class ActivityService {
 			default: 
 				/* activity in section applies to that section only */
 				sections = new ArrayList<ModelSection>();
-				sections.add(activity.getModelSection());
+				sections.add(activity.getModelSubsection().getSection());
 				break;
 		}
 		
@@ -1210,7 +1186,9 @@ public class ActivityService {
 		}
 		
 		/* then search for subscribers based on initiatives */
-		appendInitiativeSubscribers(activity.getInitiative().getId(), subscribersMap);
+		if (activity.getInitiative() != null) {
+			appendInitiativeSubscribers(activity.getInitiative().getId(), subscribersMap);	
+		}
 		
 		/* now check if there are subscribers with INHERIT config, if so, use the personal
 		 * config of each user at CollectiveOne global level */
@@ -1463,10 +1441,12 @@ public class ActivityService {
 		}
 		
 		/* all events are broadcasted to their initaitive channel and their parents */
-		List<Initiative> parentInits = initiativeService.getParentGenealogyInitiatives(activity.getInitiative().getId());
-		parentInits.add(activity.getInitiative()); //add parent initiative of activity to broadcast list
-        for (Initiative init : parentInits) {
-            template.convertAndSend("/channel/activity/model/initiative/" + init.getId(), "UPDATE");
-        }
+		if (activity.getInitiative() != null) {
+			List<Initiative> parentInits = initiativeService.getParentGenealogyInitiatives(activity.getInitiative().getId());
+			parentInits.add(activity.getInitiative()); //add parent initiative of activity to broadcast list
+	        for (Initiative init : parentInits) {
+	            template.convertAndSend("/channel/activity/model/initiative/" + init.getId(), "UPDATE");
+	        }
+		}		
 	}
 }
