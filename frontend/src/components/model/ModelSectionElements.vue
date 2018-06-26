@@ -133,7 +133,7 @@
             <div tooltip="Download" @click="downloadContent()" class="w3-left control-btn">
               <img src="./../../assets/download-icon.svg" alt="">
             </div>
-            <div tooltip="Cards Draggable" @click="draggable()" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
+            <div v-if="isLoggedAnEditor" tooltip="Cards Draggable" @click="draggable()" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
               <img src="./../../assets/move-icon.svg" alt="">
             </div>
           </div>
@@ -348,11 +348,16 @@ export default {
     },
     isDraggable () {
       return this.$store.state.support.triggerCardDraggingState
+    },
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
     }
   },
 
   watch: {
     '$route.params.sectionId' () {
+      this.sectionLoadedOnce = false
+      this.section = null
       this.update()
     },
     '$route.params.cardId' () {

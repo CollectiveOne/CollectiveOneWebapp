@@ -35,6 +35,9 @@ export const cardMixin = {
     inSectionId () {
         return this.inSection ? this.inSection.id : ''
     },
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
     containerClass () {
       let cClass = {}
       switch (this.cardWrapper.scope) {

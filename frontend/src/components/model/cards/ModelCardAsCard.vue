@@ -52,9 +52,9 @@
         </app-in-model-sections-tags>
       </div>
 
-      <div v-if="!inCardSelector" class="w3-right">
+      <div v-if="!inCardSelector && $store.state.user.authenticated" class="w3-right">
 
-        <div v-if="!hideCardControls && $store.state.user.authenticated" class="w3-right gray-1-color control-div">
+        <div v-if="!hideCardControls && this.isLoggedAnEditor" class="w3-right gray-1-color control-div">
           <app-card-control-buttons
             :cardWrappers="cardWrappers"
             :cardWrapper="cardWrapper"

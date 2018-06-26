@@ -207,6 +207,8 @@ export default {
             }
           }
         }
+      } else {
+        this.activities = activityList
       }
     },
     subscribeSocket () {

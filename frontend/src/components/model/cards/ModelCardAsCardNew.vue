@@ -9,7 +9,7 @@
       <div class="w3-row">
         <div class="card-container-padded">
           <div class="w3-row card-title">
-            <input type="text" class="w3-input w3-hover-light-grey" placeholder="Enter card title" v-model="editedCard.title">
+            <input type="text" class="w3-input w3-hover-light-grey" placeholder="title (optional)" v-model="editedCard.title">
             <app-error-panel
             :show="titleTooLongShow"
             message="name too long">
@@ -18,7 +18,12 @@
 
           <div ref="cardText" class="w3-row card-text">
             <div class="w3">
-              <app-markdown-editor placeholder="Enter text here"  v-model="editedCard.text"></app-markdown-editor>
+              <app-markdown-editor
+                v-model="editedCard.text"
+                placeholder="text (required)"
+                :showBorder="false"
+                :keepBackup="false">
+              </app-markdown-editor>
             </app-error-panel>
             </div>
           </div>
@@ -299,7 +304,7 @@ export default {
    text-shadow: 0px 0px 5px #000000;
 }
 
-.select-clicked { 
+.select-clicked {
    text-shadow: 0px 0px 5px #000000;
 }
 .app-button {

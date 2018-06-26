@@ -96,7 +96,7 @@
                   </div>
                   <div v-else class="">
                     <label class=""><b>Description:</b></label>
-                    <app-markdown-editor v-model="editedSection.description"></app-markdown-editor>
+                    <app-markdown-editor v-model="editedSection.description" :keepBackup="false"></app-markdown-editor>
                     <app-error-panel
                       :show="descriptionErrorShow"
                       message="please include a description of this section">
@@ -411,7 +411,7 @@ export default {
       this.editedSection = {
         title: '',
         description: '',
-        newScope: this.inSection ? this.inSection.scope : 'COMMON'
+        newScope: this.inSection.scope ? this.inSection.scope : 'COMMON'
       }
       this.editing = true
       this.$nextTick(() => {
