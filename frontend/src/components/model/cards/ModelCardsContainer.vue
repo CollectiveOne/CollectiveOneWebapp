@@ -232,8 +232,8 @@ export default {
   },
 
   watch: {
-    '$route.query.createCard' (createCard) {
-      if (createCard) {
+    'inSection.id' () {
+      if (this.$route.query.createCard === this.inSection.id) {
         this.$emit('createNew', this.cardWrappers[this.cardWrappers.length - 1])
       }
     }
