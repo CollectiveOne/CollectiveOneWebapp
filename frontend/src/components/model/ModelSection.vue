@@ -294,21 +294,19 @@ export default {
 
       allCardWrappers = appendCardsToBase(allCardWrappers, nonCommonCards)
 
-      //new-card-editor for creating new cards
+      //  new-card-editor for creating new cards
       if (this.createNewCard) {
         let index = allCardWrappers.findIndex(x => x.id === this.targetCard.cardWrapper.id)
-        console.log(index, 'position')
         if (this.$store.state.support.createNewCardLocation === 'before') {
           index -= 1
         }
         allCardWrappers.splice(index + 1, 0, this.targetCard)
         this.createNewCard = false
       }
-      //new-card-editor for editing existing cards
+      //  new-card-editor for editing existing cards
       if (this.editCard) {
         let index = allCardWrappers.findIndex(x => x.id === this.targetCard.cardWrapper.id)
         this.targetCard.type = 'edit'
-        console.log(index, 'position')
         allCardWrappers[index] = this.targetCard
         this.editCard = false
       }

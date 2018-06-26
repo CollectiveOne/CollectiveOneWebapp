@@ -229,6 +229,14 @@ export default {
       }
       this.$store.commit('setDraggingElement', null)
     }
+  },
+
+  watch: {
+    '$route.query.createCard' (createCard) {
+      if (createCard) {
+        this.$emit('createNew', this.cardWrappers[this.cardWrappers.length - 1])
+      }
+    }
   }
 }
 </script>

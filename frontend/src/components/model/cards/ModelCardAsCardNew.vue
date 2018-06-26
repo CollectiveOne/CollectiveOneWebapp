@@ -258,7 +258,7 @@ export default {
           this.sendingData = true
           this.axios.put('/1/model/cardWrapper/' + this.atCardWrapper.id, cardDto, {
             params: {
-              inSectionId: this.inSectionId
+              inSectionId: this.inSection.id
             }
           })
             .then((response) => {
@@ -277,7 +277,6 @@ export default {
 
   mounted () {
     if (this.isNew) {
-      console.log('eita call hauci')
       this.editedCard = {
         title: '',
         text: '',
