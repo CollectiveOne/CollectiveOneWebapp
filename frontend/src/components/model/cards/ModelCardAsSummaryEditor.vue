@@ -56,7 +56,7 @@
         </div>
       </div>
         <div class="send-button-container">
-        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">Create new card</button>
+        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }}</button>
         <div v-show="sendingData" class="sending-accept light-grey">
           <img class="" src="../../../assets/loading.gif" alt="">
         </div>
@@ -67,7 +67,6 @@
 
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
-import CardControlButtons from '@/components/model/cards/CardControlButtons.vue'
 import InModelSectionsTags from '@/components/model/cards/InModelSectionsTags.vue'
 
 export default {
@@ -77,7 +76,6 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-card-control-buttons': CardControlButtons,
     'app-in-model-sections-tags': InModelSectionsTags
   },
 
@@ -124,6 +122,9 @@ export default {
     },
     newCardLocation () {
       return this.$store.state.support.createNewCardLocation === 'before'
+    },
+    cardButtonText () {
+      return this.isNew ? 'Create new card' : 'Save Card'
     }
     // card () {
     //   return this.cardWrapper.card
@@ -134,6 +135,10 @@ export default {
   },
 
   methods: {
+    startEditing () {
+      this.editedCard = JSON.parse(JSON.stringify(this.atCardWrapper.card))
+      this.editedCard.newScope = this.cardWrapper.scope
+    },
     scopeSelected (scope) {
       console.log(scope)
       this.cClass = {}
@@ -196,8 +201,40 @@ export default {
               console.log(error)
             })
           }
+        } else {
+          /* editing */
+          console.log('editing')
+          this.sendingData = true
+          this.axios.put('/1/model/cardWrapper/' + this.atCardWrapper.id, cardDto, {
+            params: {
+              inSectionId: this.inSectionId
+            }
+          })
+            .then((response) => {
+              this.sendingData = false
+              if (response.data.result === 'success') {
+                this.closeThis()
+                this.$emit('update')
+              }
+            }).catch((error) => {
+              console.log(error)
+            })
         }
       }
+    }
+  },
+
+  mounted () {
+    if (this.isNew) {
+      console.log('eita call hauci')
+      this.editedCard = {
+        title: '',
+        text: '',
+        newScope: 'SHARED'
+      }
+      this.editing = true
+    } else {
+      this.startEditing()
     }
   }
 }
