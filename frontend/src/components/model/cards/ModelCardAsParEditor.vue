@@ -84,6 +84,10 @@ export default {
   },
 
   methods: {
+    startEditing () {
+      this.editedCard = JSON.parse(JSON.stringify(this.atCardWrapper.card))
+      this.editedCard.newScope = this.cardWrapper.scope
+    },
     hoverEnter () {
       this.showActionButton = true
       this.highlight = true
@@ -130,12 +134,41 @@ export default {
               console.log(error)
             })
           }
+        } else {
+          /* editing */
+          console.log('editing')
+          this.sendingData = true
+          this.axios.put('/1/model/cardWrapper/' + this.atCardWrapper.id, cardDto, {
+            params: {
+              inSectionId: this.inSection.id
+            }
+          })
+            .then((response) => {
+              this.sendingData = false
+              if (response.data.result === 'success') {
+                this.closeThis()
+                this.$emit('update')
+              }
+            }).catch((error) => {
+              console.log(error)
+            })
         }
       }
     }
   },
 
   mounted () {
+    if (this.isNew) {
+      console.log('eita call hauci')
+      this.editedCard = {
+        title: '',
+        text: '',
+        newScope: 'SHARED'
+      }
+      this.editing = true
+    } else {
+      this.startEditing()
+    }
   }
 }
 </script>

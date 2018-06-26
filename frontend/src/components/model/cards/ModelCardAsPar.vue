@@ -23,6 +23,15 @@
           <img class="" :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
         </div>
 
+
+        <transition name="fadeenter">
+          <div v-if="hovering"
+            class="w3-padding gray-2-color w3-display-topright cursor-pointer"
+            @click="$emit('edit')">
+            <i class="fa fa-edit" aria-hidden="true"></i>
+          </div>
+        </transition>
+
       </div>
     </div>
   </div>

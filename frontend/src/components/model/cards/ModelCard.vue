@@ -43,6 +43,7 @@ import ModelCardAsCardNew from '@/components/model/cards/ModelCardAsCardNew.vue'
 import ModelCardSummary from '@/components/model/cards/ModelCardSummary.vue'
 import ModelCardAsCard from '@/components/model/cards/ModelCardAsCard.vue'
 import ModelCardAsPar from '@/components/model/cards/ModelCardAsPar.vue'
+import ModelCardAsParEditor from '@/components/model/cards/ModelCardAsParEditor.vue'
 
 export default {
   name: 'model-card',
@@ -52,7 +53,8 @@ export default {
     'app-model-card-as-card-new': ModelCardAsCardNew,
     'app-model-card-summary': ModelCardSummary,
     'app-model-card-as-card': ModelCardAsCard,
-    'app-model-card-as-par': ModelCardAsPar
+    'app-model-card-as-par': ModelCardAsPar,
+    'app-model-card-as-par-editor': ModelCardAsParEditor
   },
 
   props: {
@@ -133,7 +135,11 @@ export default {
           }
 
         case 'doc':
-          return 'app-model-card-as-par'
+          if (this.cardWrapper.type === 'newCard' || this.cardWrapper.type === 'edit') {
+            return 'app-model-card-as-par-editor'
+          } else {
+            return 'app-model-card-as-par'
+          }
 
         case 'new':
           return 'app-model-card-as-card-new'
