@@ -28,7 +28,7 @@
       <div v-if="isDraggingOver(cardWrapper) && draggingOverCardWrapperAfter" class="drop-div">
       </div>
 
-    </div><div v-if="showNewCardButton && !hideCardControls" :class="cardsContainerClasses" class=""
+    </div><div v-if="!hideCardControls" :class="cardsContainerClasses" class=""
       @dragover.prevent="draggingOver()"
       @drop.prevent="cardDroped('', $event)">
 
@@ -96,10 +96,6 @@ export default {
     cardRouteName: {
       type: String,
       default: 'ModelSectionCard'
-    },
-    showNewCardButton: {
-      type: Boolean,
-      default: false
     }
   },
 

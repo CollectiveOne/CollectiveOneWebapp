@@ -57,9 +57,9 @@ cd w<template lang="html">
         :acceptDrop="true"
         :cardRouteName="cardRouteName"
         :hideCardControls="hideCardControls"
-        :showNewCardButton="cardsType !== 'doc'"
         @updateCards="updateCards()"
         @createNew="createNew"
+        @edit="edit"
         @create-card="showNewCardModal = true">
       </app-model-cards-container>
     </div>
@@ -235,7 +235,8 @@ export default {
       subscription: null,
       showNewCardModal: false,
       createNewCard: false,
-      newCard: {
+      editCard: false,
+      targetCard: {
         type: 'new',
         cardWrapper: null
       }
@@ -293,14 +294,23 @@ export default {
 
       allCardWrappers = appendCardsToBase(allCardWrappers, nonCommonCards)
 
+      //new-card-editor for creating new cards
       if (this.createNewCard) {
-        let index = allCardWrappers.findIndex(x => x.id === this.newCard.cardWrapper.id)
-
+        let index = allCardWrappers.findIndex(x => x.id === this.targetCard.cardWrapper.id)
+        console.log(index, 'position')
         if (this.$store.state.support.createNewCardLocation === 'before') {
           index -= 1
         }
-        allCardWrappers.splice(index + 1, 0, this.newCard)
+        allCardWrappers.splice(index + 1, 0, this.targetCard)
         this.createNewCard = false
+      }
+      //new-card-editor for editing existing cards
+      if (this.editCard) {
+        let index = allCardWrappers.findIndex(x => x.id === this.targetCard.cardWrapper.id)
+        this.targetCard.type = 'edit'
+        console.log(index, 'position')
+        allCardWrappers[index] = this.targetCard
+        this.editCard = false
       }
 
       return allCardWrappers
@@ -323,9 +333,14 @@ export default {
   },
 
   methods: {
+    edit (value) {
+      this.targetCard.cardWrapper = value
+      this.targetCard.type = 'edit'
+      this.editCard = true
+    },
     createNew (value) {
-      this.newCard.cardWrapper = value
-      this.newCard.type = 'newCard'
+      this.targetCard.cardWrapper = value
+      this.targetCard.type = 'newCard'
       this.createNewCard = true
     },
     updateCards () {
