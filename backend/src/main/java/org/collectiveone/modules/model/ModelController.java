@@ -367,8 +367,8 @@ public class ModelController extends BaseController {
 				isBefore);
 	}
 	
-	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}", method = RequestMethod.GET) 
-	public GetResult<ModelCardWrapperDto> getCardWrapper(
+	@RequestMapping(path = "/model/cardWrapperAddition/{cardWrapperId}", method = RequestMethod.GET) 
+	public GetResult<ModelCardWrapperDto> getCardWrapperAddition(
 			@PathVariable("cardWrapperId") String cardWrapperIdStr,
 			@RequestParam(name="inSectionId", defaultValue="") String inSectionIdStr) {
 		
@@ -382,6 +382,20 @@ public class ModelController extends BaseController {
 		UUID inSectionId = inSectionIdStr.equals("") ? null : UUID.fromString(inSectionIdStr);
 		
 		return modelService.getCardWrapperAddition(cardWrapperId, getLoggedUserId(), inSectionId);
+	}
+	
+	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}", method = RequestMethod.GET) 
+	public GetResult<ModelCardWrapperDto> getCardWrapper(
+			@PathVariable("cardWrapperId") String cardWrapperIdStr) {
+		
+		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
+		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<ModelCardWrapperDto>("error", "access denied", null);
+		}
+		
+		return modelService.getCardWrapper(cardWrapperId, getLoggedUserId());
 	}
 	
 

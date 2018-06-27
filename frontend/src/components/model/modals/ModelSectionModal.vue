@@ -36,8 +36,15 @@
             </div>
           </div>
 
-          <div class="slider-container">
-            <transition name="slideLeftRight">
+
+          <div :class="{'slider-container': animatingTab}">
+            <transition name="slideRightLeft"
+              mode="out-in"
+              @before-enter="animatingTab = true"
+              @after-enter="animatingTab = false"
+              @before-leave="animatingTab = true"
+              @after-leave="animatingTab = false">
+
               <div v-if="addExisting" class="">
                 <app-model-section-selector
                   :sectionId="inSection ? inSection.id : ''"
@@ -47,18 +54,21 @@
                   :show="noSectionSelectedShow"
                   message="please select one section from above">
                 </app-error-panel>
+
+                <div class="w3-row w3-container w3-margin-top">
+                  <label class="">
+                    <b>New scope (in "{{ inSectionTitleOk }}" section):</b>
+                  </label>
+                  <select v-model="existingSectionNewScope"
+                    class="w3-input w3-topbar" :class="selectorExistingBorderClass" name="">
+                    <option value="PRIVATE">Private (only I can see it)</option>
+                    <option value="SHARED">Shared (other members can see it, but its mine)</option>
+                    <option value="COMMON">Common (controlled by all editors)</option>
+                  </select>
+                </div>
+
               </div>
-            </transition>
-          </div>
-
-          <div :class="{'slider-container': animatingTab}">
-            <transition name="slideRightLeft"
-              @before-enter="animatingTab = true"
-              @after-enter="animatingTab = false"
-              @before-leave="animatingTab = true"
-              @after-leave="animatingTab = false">
-
-              <div v-if="!addExisting">
+              <div v-else>
 
                 <div v-if="editing && this.inSection != null" class="w3-row w3-margin-top">
                   <label class="">
@@ -67,7 +77,7 @@
                   <select v-model="editedSection.newScope"
                     class="w3-input w3-topbar" :class="selectorBorderClass" name="">
                     <option value="PRIVATE">Private (only I can see it)</option>
-                    <option value="SHARED">Shared (others can see it, but its mine)</option>
+                    <option value="SHARED">Shared (other members can see it, but its mine)</option>
                     <option value="COMMON">Common (controlled by all editors)</option>
                   </select>
                 </div>
@@ -192,6 +202,7 @@ export default {
       descriptionEmptyError: false,
       addExisting: false,
       existingSection: null,
+      existingSectionNewScope: '',
       noSectionSelectedError: false,
       animatingTab: false,
       sendingData: false,
@@ -201,6 +212,23 @@ export default {
   },
 
   computed: {
+    selectorExistingBorderClass () {
+      let cClass = {}
+      switch (this.existingSectionNewScope) {
+        case 'PRIVATE':
+          cClass['border-red'] = true
+          break
+
+        case 'SHARED':
+          cClass['border-yellow'] = true
+          break
+
+        default:
+          cClass['border-blue'] = true
+          break
+      }
+      return cClass
+    },
     selectorBorderClass () {
       let cClass = {}
       switch (this.editedSection.newScope) {
@@ -349,8 +377,11 @@ export default {
           } else {
             /* add existing section */
             this.sendingData = true
-            this.axios.put('/1/model/section/' + this.inSection.id + '/subsection/' + this.existingSection.id, {})
-              .then((response) => {
+            this.axios.put('/1/model/section/' + this.inSection.id + '/subsection/' + this.existingSection.id, {}, {
+              params: {
+                scope: this.existingSectionNewScope
+              }
+            }).then((response) => {
                 this.sendingData = false
                 if (response.data.result === 'success') {
                   this.closeThis()
@@ -413,6 +444,7 @@ export default {
         description: '',
         newScope: this.inSection.scope ? this.inSection.scope : 'COMMON'
       }
+      this.existingSectionNewScope = this.inSection.scope ? this.inSection.scope : 'COMMON'
       this.editing = true
       this.$nextTick(() => {
         this.$refs.titleInput.focus()

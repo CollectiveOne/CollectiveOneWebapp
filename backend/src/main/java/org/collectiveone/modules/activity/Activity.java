@@ -159,6 +159,12 @@ public class Activity {
 			dto.setModelSection(modelCardWrapperAddition.getSection().toDto());
 		}
 		
+
+		if (modelSubsection != null) {
+			dto.setModelSection(modelSubsection.getSection().toDtoLight());
+			dto.setOnSection(modelSubsection.getParentSection().toDtoLight());
+		}
+		
 		if(message != null) dto.setMessage(message.toDto());
 		
 		return dto;

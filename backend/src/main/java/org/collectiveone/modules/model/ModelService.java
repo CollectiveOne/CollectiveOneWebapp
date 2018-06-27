@@ -1125,6 +1125,23 @@ public class ModelService {
 	}
 	
 	@Transactional
+	public GetResult<ModelCardWrapperDto> getCardWrapper(UUID cardWrapperId, UUID requestByUserId) {
+		
+		ModelCardWrapperDto cardWrapperDto = null;
+		
+		if (!modelCardWrapperAdditionRepository.cardWrapperUserHaveAccess(cardWrapperId, requestByUserId)) {
+			return new GetResult<ModelCardWrapperDto>("error", "dont have access to this card", null);
+		}
+		
+		ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
+		cardWrapperAddition.setCardWrapper(modelCardWrapperRepository.findById(cardWrapperId));
+		
+		cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId);
+		
+		return new GetResult<ModelCardWrapperDto>("success", "card retrieved", cardWrapperDto);
+	}
+	
+	@Transactional
 	public GetResult<ModelCardWrapperDto> getCardWrapperAddition(UUID cardWrapperId, UUID requestByUserId, UUID inSectionId) {
 		
 		ModelCardWrapperDto cardWrapperDto = null;

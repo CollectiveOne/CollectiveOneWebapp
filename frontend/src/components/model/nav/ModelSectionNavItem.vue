@@ -310,6 +310,7 @@ export default {
     dragStart (event) {
       var moveSectionData = {
         type: 'MOVE_SECTION',
+        scope: this.section.scope,
         sectionId: this.section.id,
         fromSectionId: this.inSection.id
       }
@@ -318,6 +319,7 @@ export default {
       /* have an extended version of the dragged elements */
       var moveSectionElement = {
         type: 'MOVE_SECTION',
+        scope: this.section.scope,
         section: this.section,
         fromSection: this.inSection
       }
@@ -420,8 +422,9 @@ export default {
           this.axios.put('/1/model/section/' + dragData.fromSectionId +
             '/moveSubsection/' + dragData.sectionId, {}, {
             params: {
-              onSectionId: onSectionId,
-              beforeSubsectionId: beforeSubsectionId
+              toSectionId: onSectionId,
+              onSubsectionId: beforeSubsectionId,
+              isBefore: true
             }
           }).then((response) => {
             this.$store.dispatch('updateSectionDataInTree', {sectionId: dragData.fromSectionId})
@@ -432,7 +435,9 @@ export default {
           this.axios.put('/1/model/section/' + onSectionId +
             '/subsection/' + dragData.sectionId, {}, {
               params: {
-                beforeSubsectionId: beforeSubsectionId
+                scope: dragData.scope,
+                onSubsectionId: beforeSubsectionId,
+                isBefore: true
               }
             }).then((response) => {
               this.$store.dispatch('updateSectionDataInTree', {sectionId: onSectionId})

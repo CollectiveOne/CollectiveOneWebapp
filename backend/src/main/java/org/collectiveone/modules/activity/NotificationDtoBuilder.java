@@ -57,7 +57,15 @@ public class NotificationDtoBuilder {
 			modelCardWrapper = act.getModelCardWrapper();
 		}
 		
-		ModelSection onSection = act.getOnSection();
+		ModelSection onSection = null;
+		
+		if (act.getModelSubsection() != null) {
+			modelSection = act.getModelSubsection().getSection();
+			onSection = act.getModelSubsection().getParentSection();
+		} else {
+			onSection = act.getOnSection();	
+		}
+		
 		ModelSection fromSection = act.getFromSection();
 		
 		if (act.getModelCardWrapperAddition() != null) {
