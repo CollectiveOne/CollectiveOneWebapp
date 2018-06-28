@@ -62,7 +62,15 @@
       </div>
     </div>
 
-  </div>
+    <transition name="fadeenter">
+      <div v-if="hovering & editing"
+      class="w3-padding gray-2-color w3-display-topright cursor-pointer"
+      @click="$emit('edit')">
+      <i class="fa fa-close" aria-hidden="true"></i>
+    </div>
+  </transition>
+
+</div>
 </template>
 
 <script>

@@ -10,6 +10,15 @@
       </div>
     </div>
 
+
+    <transition name="fadeenter">
+      <div v-if="hovering & editing"
+      class="w3-padding gray-2-color w3-display-bottomleft cursor-pointer"
+      @click="$emit('edit')">
+      <i class="fa fa-close" aria-hidden="true"></i>
+    </div>
+  </transition>
+
     <div class="w3-col m4 right-div controls">
 
       <div v-if="!inCardSelector" class="w3-left scope-controls">
@@ -38,12 +47,14 @@
           <i class="fa fa-expand highlight" aria-hidden="true"></i>
         </div>
       </div>
-        <div class="send-button-container">
+      <div class="send-button-container">
         <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }} <span><small>(Ctr + Enter)</small></span></button>
         <div v-show="sendingData" class="sending-accept light-grey">
           <img class="" src="../../../assets/loading.gif" alt="">
         </div>
       </div>
+
+
     </div>
   </div>
 </template>
