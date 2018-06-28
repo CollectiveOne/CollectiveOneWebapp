@@ -15,17 +15,22 @@
             <app-markdown-editor placeholder="Enter text here" v-model="editedCard.text"></app-markdown-editor>
           </div>
           <div>
-        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }}</button>
-                <div v-show="sendingData" class="sending-accept light-grey">
-          <img class="" src="../../../assets/loading.gif" alt="">
-        </div>
+            <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }} 
+              <span><small>(Ctr + Enter)</small></span></button>
+            <div v-show="sendingData" class="sending-accept light-grey">
+              <img class="" src="../../../assets/loading.gif" alt="">
+            </div>
           </div>
         </div>
 
-<!--         <div v-if="hasImage"
-          class="w3-row w3-center w3-display-container image-container">
-          <img class="" :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
-        </div> -->
+
+    <transition name="fadeenter">
+      <div v-if="hovering & editing"
+      class="w3-padding gray-2-color w3-display-topright cursor-pointer"
+      @click="$emit('edit')">
+      <i class="fa fa-close" aria-hidden="true"></i>
+    </div>
+  </transition>
 
       </div>
     </div>
@@ -59,6 +64,7 @@ export default {
   data () {
     return {
       hovering: false,
+      editing: true,
       editedCard: {
         title: '',
         text: '',
@@ -146,12 +152,25 @@ export default {
             .then((response) => {
               this.sendingData = false
               if (response.data.result === 'success') {
-                this.closeThis()
-                this.$emit('update')
+                this.$emit('updateCards')
               }
             }).catch((error) => {
               console.log(error)
             })
+        }
+      }
+    },
+    atKeydown (e) {
+      if (this.editing) {
+        /* esc */
+        if (e.keyCode === 27) {
+            this.$emit('edit')
+        }
+
+        /* ctr + enter */
+        if (e.keyCode === 13 && e.ctrlKey) {
+          e.preventDefault()
+          this.createCard()
         }
       }
     }
@@ -169,6 +188,11 @@ export default {
     } else {
       this.startEditing()
     }
+    window.addEventListener('keydown', this.atKeydown)
+  },
+
+  destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 }
 </script>

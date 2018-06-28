@@ -260,9 +260,8 @@ export default {
 
   methods: {
     addCard () {
-      console.log(this.isSelected)
       if (!this.isSelected) {
-        this.$router.push({name: 'ModelSectionCards', params: {sectionId: this.section.id}, query: {createCard: true}})
+        this.$router.push({name: 'ModelSectionCards', params: {sectionId: this.section.id}, query: {createCard: this.section.id}})
       }
     },
     toggleSubsections () {
