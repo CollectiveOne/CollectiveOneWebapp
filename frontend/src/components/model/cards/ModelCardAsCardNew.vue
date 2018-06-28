@@ -184,7 +184,8 @@ export default {
   methods: {
     startEditing () {
       this.editedCard = JSON.parse(JSON.stringify(this.atCardWrapper.card))
-      this.editedCard.newScope = this.cardWrapper.scope
+      this.editedCard.newScope = this.atCardWrapper.scope
+      this.scopeSelected(this.editedCard.newScope.toLowerCase())
     },
     scopeSelected (scope) {
       console.log(scope)
