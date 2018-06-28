@@ -58,7 +58,7 @@
     </div>
 
     <app-model-card-as-par-editor
-      v-if="cardsType === 'doc' & cardWrappers.length !== 0"
+      v-if="cardsType === 'doc' & cardWrappers.length !== 0 & isLoggedAnEditor"
       :isNew="true"
       :cardWrapper="lastCardWrapper"
       :inSection="inSection">
@@ -108,6 +108,9 @@ export default {
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
     cardsContainerClasses () {
       console.log(this)
       return {
