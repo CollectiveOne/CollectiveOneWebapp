@@ -196,7 +196,7 @@ export default {
           }
         } else {
           /* editing */
-          console.log('editing')
+          console.log('editing', this.atCardWrapper.id)
           this.sendingData = true
           this.axios.put('/1/model/cardWrapper/' + this.atCardWrapper.id, cardDto, {
             params: {
@@ -206,8 +206,7 @@ export default {
             .then((response) => {
               this.sendingData = false
               if (response.data.result === 'success') {
-                this.closeThis()
-                this.$emit('update')
+                this.$emit('updateCards')
               }
             }).catch((error) => {
               console.log(error)
@@ -216,17 +215,10 @@ export default {
       }
     },
     atKeydown (e) {
-      if (!this.editing) {
-        /* esc */
-        if (e.keyCode === 27) {
-          this.closeThis()
-        }
-      }
-
       if (this.editing) {
         /* esc */
         if (e.keyCode === 27) {
-          this.cancel()
+          this.$emit('edit')
         }
 
         /* ctr + enter */

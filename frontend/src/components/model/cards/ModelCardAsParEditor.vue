@@ -152,8 +152,7 @@ export default {
             .then((response) => {
               this.sendingData = false
               if (response.data.result === 'success') {
-                this.closeThis()
-                this.$emit('update')
+                this.$emit('updateCards')
               }
             }).catch((error) => {
               console.log(error)
@@ -162,17 +161,10 @@ export default {
       }
     },
     atKeydown (e) {
-      if (!this.editing) {
-        /* esc */
-        if (e.keyCode === 27) {
-          this.closeThis()
-        }
-      }
-
       if (this.editing) {
         /* esc */
         if (e.keyCode === 27) {
-          this.cancel()
+            this.$emit('edit')
         }
 
         /* ctr + enter */
