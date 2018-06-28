@@ -60,15 +60,15 @@
         @before-leave="animating = true"
         @after-leave="animating = false">
 
-        <div v-if="showSubsections && subsections.length > 0" class="w3-row subsections-container"
+        <div v-if="showSubsections && subsectionsDataFiltered.length > 0" class="w3-row subsections-container"
           :class="{'subsection-container-selected': highlight}" >
           <app-model-section-nav-item
             class="subsection-row"
-            v-for="(subsection, ix) in subsections"
+            v-for="(subsectionData, ix) in subsectionsDataFiltered"
             :inSection="section"
-            :section="subsection" :key="subsection.id"
+            :sectionData="subsectionData"
+            :key="subsectionData.section.id"
             :highlightLevel="highlightLevelUse - 1"
-            :coordinate="coordinate.concat(ix)"
             :parentIsSelected="isSelected || parentIsSelected"
             @section-selected="$emit('section-selected', $event)">
           </app-model-section-nav-item>
@@ -94,6 +94,10 @@ export default {
   },
 
   props: {
+    sectionData: {
+      type: Object,
+      default: null
+    },
     inSection: {
       type: Object,
       default: null
@@ -101,10 +105,6 @@ export default {
     highlightLevel: {
       type: Number,
       default: 0
-    },
-    coordinate: {
-      type: Array,
-      default: () => { return [] }
     },
     parentIsSelected: {
       type: Boolean,
@@ -139,20 +139,41 @@ export default {
   },
 
   computed: {
-    sectionData () {
-      return this.$store.getters.getSectionDataAtCoord(this.coordinate)
-    },
     section () {
       if (this.sectionData) {
         return this.sectionData.section
       }
       return null
     },
-    subsections () {
+    showPrivate () {
+      return this.$store.state.viewParameters.showPrivateSections
+    },
+    showShared () {
+      return this.$store.state.viewParameters.showSharedSections
+    },
+    showCommon () {
+      return this.$store.state.viewParameters.showCommonSections
+    },
+    subsectionsDataFiltered () {
       if (this.sectionData) {
-        return this.sectionData.subsectionsData.map(e => e.section)
+        let subsectionsDataFiltered = this.sectionData.subsectionsData.filter((subsectionData) => {
+          switch (subsectionData.section.scope) {
+            case 'PRIVATE':
+              return this.showPrivate
+
+            case 'SHARED':
+              return this.showShared
+
+            case 'COMMON':
+              return this.showCommon
+          }
+          return true
+        })
+
+        return subsectionsDataFiltered
+      } else {
+        return []
       }
-      return []
     },
     highlight () {
       return this.highlightLevelUse > 0
@@ -209,7 +230,7 @@ export default {
       return ''
     },
     hasSubsections () {
-      return this.subsections.length > 0
+      return this.subsectionsDataFiltered.length > 0
     },
     isSelected () {
       if (this.section) {
@@ -253,11 +274,11 @@ export default {
     },
     expandSubsections () {
       this.showSubsections = true
-      this.$store.dispatch('expandSubsection', this.coordinate)
+      this.$store.dispatch('expandSubsection', this.sectionData.coordinate)
     },
     collapseSubsections () {
       this.showSubsections = false
-      this.$store.dispatch('collapseSubsection', this.coordinate)
+      this.$store.dispatch('collapseSubsection', this.sectionData.coordinate)
     },
     checkExpandSubsections () {
       if (this.highlightLevelUse > 1) {
@@ -423,8 +444,8 @@ export default {
             '/moveSubsection/' + dragData.sectionId, {}, {
             params: {
               toSectionId: onSectionId,
-              onSubsectionId: beforeSubsectionId,
-              isBefore: true
+              onSectionId: beforeSubsectionId,
+              isBefore: false
             }
           }).then((response) => {
             this.$store.dispatch('updateSectionDataInTree', {sectionId: dragData.fromSectionId})
@@ -437,7 +458,7 @@ export default {
               params: {
                 scope: dragData.scope,
                 onSubsectionId: beforeSubsectionId,
-                isBefore: true
+                isBefore: false
               }
             }).then((response) => {
               this.$store.dispatch('updateSectionDataInTree', {sectionId: onSectionId})
@@ -511,7 +532,7 @@ export default {
 
 .dragging-same-level-clue {
   position: absolute;
-  top: 0px;
+  bottom: 0px;
   left: 0px;
   width: 100%;
   height: 5px;

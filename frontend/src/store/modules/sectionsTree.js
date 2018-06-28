@@ -77,6 +77,7 @@ const mutations = {
       if (payload.coord[0] === 0) {
         /* initialize tree */
         state.sectionsTree = [{
+          coordinate: [0],
           inSection: null,
           section: payload.sectionData.section,
           subsectionsData: payload.sectionData.subsectionsData,
@@ -166,8 +167,9 @@ const actions = {
 
           let subsectionsData = []
 
-          for (let ix in subsections) {
+          for (let ix = 0; ix < subsections.length; ix++) {
             subsectionsData.push({
+              coordinate: payload.coord.concat(ix),
               inSection: section,
               section: subsections[ix],
               subsectionsData: [],

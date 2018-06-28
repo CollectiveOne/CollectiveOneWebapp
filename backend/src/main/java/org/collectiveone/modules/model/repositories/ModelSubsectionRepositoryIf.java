@@ -78,7 +78,7 @@ public interface ModelSubsectionRepositoryIf extends CrudRepository<ModelSubsect
 	
 	@Query("SELECT subsection FROM ModelSubsection subsection "
 			+ "WHERE "
-			+ "subsection.section.id = ?1 "
+			+ "subsection.parentSection.id = ?1 "
 			+ "AND subsection.adder.c1Id = ?2 "
 			+ "AND subsection.scope = ?3 "
 			+ "AND (subsection.status != 'DELETED' OR subsection.status IS NULL) "

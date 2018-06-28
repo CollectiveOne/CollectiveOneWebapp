@@ -12,7 +12,7 @@ public class ModelSectionDto {
 	private String initiativeId;
 	private Boolean isTopModelSection;
 	private Boolean isSubsection;
-	private ModelScope scope;
+	
 	private String parentSectionId;
 	private String parentSectionTitle;
 	private String title;
@@ -29,6 +29,10 @@ public class ModelSectionDto {
 	private List<ModelSectionDto> subsectionsPrivate = new ArrayList<ModelSectionDto>();
 	
 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
+	
+	private ModelScope scope;
+	private String beforeElementId;
+	private String afterElementId;
 	
 	
 	public ModelSection toEntity(ModelSection section, ModelSectionDto sectionDto) {
@@ -149,6 +153,18 @@ public class ModelSectionDto {
 	}
 	public void setCardsWrappersShared(List<ModelCardWrapperDto> cardsWrappersShared) {
 		this.cardsWrappersShared = cardsWrappersShared;
+	}
+	public String getBeforeElementId() {
+		return beforeElementId;
+	}
+	public void setBeforeElementId(String beforeElementId) {
+		this.beforeElementId = beforeElementId;
+	}
+	public String getAfterElementId() {
+		return afterElementId;
+	}
+	public void setAfterElementId(String afterElementId) {
+		this.afterElementId = afterElementId;
 	}
 	
 	

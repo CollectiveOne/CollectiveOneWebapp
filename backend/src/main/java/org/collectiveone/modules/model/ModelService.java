@@ -319,7 +319,7 @@ public class ModelService {
 		}
 		
 		ModelSubsection onSubsection = getOnSubsectionFromId(
-				subSectionId, 
+				onSubsectionId, 
 				toSectionId,
 				subsectionFrom.getScope(), 
 				requestedById);
@@ -681,7 +681,17 @@ public class ModelService {
 	@Transactional
 	private ModelSectionDto getSubsectionDto(ModelSubsection subsection) {
 		ModelSectionDto sectionDto = subsection.getSection().toDto();
+		
 		sectionDto.setScope(subsection.getScope());
+		
+		if (subsection.getBeforeElement() != null) {
+			sectionDto.setBeforeElementId(subsection.getBeforeSubsection().getSection().getId().toString());
+		}
+		
+		if (subsection.getAfterElement() != null) {
+			sectionDto.setAfterElementId(subsection.getAfterSubsection().getSection().getId().toString());
+		}
+		
 		return sectionDto;
 	}
 	

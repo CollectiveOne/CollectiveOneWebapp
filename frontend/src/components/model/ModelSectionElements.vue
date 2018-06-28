@@ -78,9 +78,6 @@
             <div tooltip="Common Cards"  @click="showCommonClick()" class="w3-left control-btn border-blue" :class="{'control-btn-selected': showCommon, 'w3-bottombar': showCommon}">
               <img src="./../../assets/common-icon.svg" alt="">
             </div>
-            <div tooltip="All Cards" @click="showAllClick()" class="w3-left control-btn">
-              <img src="./../../assets/all-icon.svg" alt="">
-            </div>
           </div>
         </div>
 

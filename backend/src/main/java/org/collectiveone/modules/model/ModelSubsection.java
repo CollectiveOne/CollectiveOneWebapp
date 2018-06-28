@@ -2,6 +2,7 @@ package org.collectiveone.modules.model;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -35,11 +36,11 @@ public class ModelSubsection implements OrderedElement {
 	private ModelSection section;
 	
 	/* double-linked list determines the order */
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private ModelSubsection beforeElement;
 	
 	/* double-linked list determines the order */
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private ModelSubsection afterElement;
 	
 	@ManyToOne
@@ -105,11 +106,11 @@ public class ModelSubsection implements OrderedElement {
 		this.afterElement = (ModelSubsection) afterElement;
 	}
 	
-	public ModelSubsection getBeforeCardWrapperAddition() {
+	public ModelSubsection getBeforeSubsection() {
 		return beforeElement;
 	}
 	
-	public ModelSubsection getAfterCardWrapperAddition() {
+	public ModelSubsection getAfterSubsection() {
 		return afterElement;
 	}
 	
