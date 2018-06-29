@@ -63,6 +63,10 @@
   border-color: #c6bb21 !important;
 }
 
+.border-gray {
+  border-color: #6f8294 !important;
+}
+
 .tag-blue {
   background-color: #0c708b !important;
   color: white;

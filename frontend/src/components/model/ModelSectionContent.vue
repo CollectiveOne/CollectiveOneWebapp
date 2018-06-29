@@ -36,8 +36,8 @@ export default {
   },
 
   watch: {
-    '$route.name' () {
-      console.log('reacting to route change in ModelSectionContent')
+    '$route.params.sectionId' () {
+      console.log('reacting to route sectionId in ModelSectionContent')
       this.redirect()
     }
   },

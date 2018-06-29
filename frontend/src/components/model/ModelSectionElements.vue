@@ -353,14 +353,13 @@ export default {
 
   watch: {
     '$route.params.sectionId' () {
+      console.log('update due to section id watch')
       this.sectionLoadedOnce = false
       this.section = null
       this.update()
     },
-    '$route.params.cardId' () {
-      this.update()
-    },
     '$route.name' () {
+      console.log('checking card subroute due to route name watch')
       this.checkCardSubroute()
     },
     levels () {

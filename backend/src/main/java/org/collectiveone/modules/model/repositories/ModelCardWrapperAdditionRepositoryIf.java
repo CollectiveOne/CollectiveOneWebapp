@@ -3,6 +3,7 @@ package org.collectiveone.modules.model.repositories;
 import java.util.List;
 import java.util.UUID;
 
+import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelScope;
 import org.collectiveone.modules.model.ModelSection;
@@ -85,16 +86,16 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "AND crdWrpAdd.beforeElement IS NULL")
 	List<ModelCardWrapperAddition> findLastBySectionAndAdderAndScope(UUID sectionId, UUID adderId, ModelScope scope);	
 	
-	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
+	@Query("SELECT DISTINCT crdWrp FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.cardWrapper crdWrp "
 			+ "JOIN crdWrp.card crd "
 			+ "WHERE crdWrpAdd.section.id IN ?1 "
 			+ "AND (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
 			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
 			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrpAdd.adder.c1Id = ?3)")
-	Page<ModelCardWrapperAddition> searchInSectionsByQuery(List<UUID> sectionIds, String query, UUID requestById, Pageable page);
+	Page<ModelCardWrapper> searchInSectionsByQuery(List<UUID> sectionIds, String query, UUID requestById, Pageable page);
 	
-	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
+	@Query("SELECT crdWrp FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.section sec "
 			+ "JOIN crdWrpAdd.cardWrapper crdWrp "
 			+ "JOIN crdWrp.card crd "
@@ -102,7 +103,7 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "AND (LOWER(crd.title) LIKE ?2 OR LOWER(crd.text) LIKE ?2 OR LOWER(crdWrp.creator.profile.nickname) LIKE ?2) "
 			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
 			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrpAdd.adder.c1Id = ?3)")
-	Page<ModelCardWrapperAddition> searchInInitiativesByQuery(List<UUID> initiativeIds, String query, UUID requestById, Pageable page);
+	Page<ModelCardWrapper> searchInInitiativesByQuery(List<UUID> initiativeIds, String query, UUID requestById, Pageable page);
 	
 	@Query("SELECT DISTINCT crdWrp.id FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.cardWrapper crdWrp "

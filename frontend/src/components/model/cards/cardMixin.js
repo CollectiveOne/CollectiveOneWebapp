@@ -49,8 +49,12 @@ export const cardMixin = {
           cClass['border-yellow'] = true
           break
 
-        default:
+        case 'COMMON':
           cClass['border-blue'] = true
+          break
+
+        default:
+          cClass['border-gray'] = true
           break
       }
       return cClass

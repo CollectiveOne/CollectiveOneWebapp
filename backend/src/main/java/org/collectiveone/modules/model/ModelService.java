@@ -1205,7 +1205,7 @@ public class ModelService {
 			Boolean inInitiativeEcosystem) {
 		
 		PageRequest pageRequest = null;
-		Page<ModelCardWrapperAddition> enititiesPage = null;
+		Page<ModelCardWrapper> enititiesPage = null;
 		
 		switch (sortByIn) {
 			case "CREATION_DATE_DESC":
@@ -1245,7 +1245,10 @@ public class ModelService {
 		
 		List<ModelCardWrapperDto> cardsDtos = new ArrayList<ModelCardWrapperDto>();
 		
-		for(ModelCardWrapperAddition cardWrapperAddition : enititiesPage.getContent()) {
+		for(ModelCardWrapper cardWrapper: enititiesPage.getContent()) {
+			ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
+			cardWrapperAddition.setCardWrapper(cardWrapper);
+			
 			cardsDtos.add(getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId));
 		}
 		
