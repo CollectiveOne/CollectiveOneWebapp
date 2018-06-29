@@ -1,18 +1,24 @@
 <template lang="html">
   <div class="notifications-container">
 
-    <div v-if="notifications.length > 0" class="icon-button cursor-pointer w3-display-container"
+    <div class="icon-button cursor-pointer w3-display-container"
       @click="showNotificationsClicked()">
-      <i v-if="onlyNotificationsUnder" class="fa fa-circle-o circle-o"></i>
-      <i v-else class="fa fa-circle circle"></i>
+      <span v-if="totalUnread === 0">
+        <i class="fa fa-circle-o circle-empty"></i>
+      </span>
+      <span v-else>
+        <i v-if="onlyNotificationsUnder" class="fa fa-circle-o circle-o"></i>
+        <i v-else class="fa fa-circle circle"></i>
+      </span>
+
     </div>
 
-    <div v-show="showTable"
+    <div v-if="showTable"
       v-click-outside="clickOutsideNotifications"
       class="notifications-list-container w3-white w3-card-4 w3-bar-block noselect">
       <div class="w3-row-padding w3-border-bottom notifications-header">
         <div class="w3-col s8 text-div w3-center">
-          {{ notifications.length }} new events under <br>{{ element.title }}
+          {{ totalUnread }} unread events under <br>{{ element.title }}
         </div>
         <button class="w3-col  w3-margin-top w3-margin-bottom w3-button app-button" :class="isMainNav?'s5':'s4'"
           @click="allNotificationsRead()">
@@ -67,6 +73,7 @@ export default {
     return {
       showTable: false,
       notifications: [],
+      totalUnread: 0,
       currentPage: 0,
       showingMoreNotifications: false,
       allShown: false
@@ -142,11 +149,14 @@ export default {
         this.axios.get(this.url, {
           params: {
             page: 0,
-            size: 10
+            size: 10,
+            onlyUnread: false
           }
         }).then((response) => {
           /* check that new notifications arrived */
-          this.notifications = response.data.data
+          this.notifications = response.data.data.notifications
+          this.totalUnread = response.data.data.totalUnread
+
           this.allShown = this.notifications.length < 10
 
           if (this.isSelected && this.$route.name === 'ModelSectionMessages') {
@@ -167,7 +177,8 @@ export default {
       this.axios.get(this.url, {
         params: {
           page: this.currentPage,
-          size: 10
+          size: 10,
+          onlyUnread: false
         }
       }).then((response) => {
         /* check that new notifications arrived */
@@ -175,7 +186,8 @@ export default {
           this.allShown = true
         }
 
-        this.notifications = this.notifications.concat(response.data.data)
+        this.notifications = this.notifications.concat(response.data.data.notifications)
+        this.totalUnread = response.data.data.totalUnread
       }).catch(function (error) {
         console.log(error)
       })
@@ -298,6 +310,11 @@ export default {
 
 .circle-o {
   color: #b35454;
+  font-size: 10px;
+}
+
+.circle-empty {
+  color: #cbcfd2;
   font-size: 10px;
 }
 

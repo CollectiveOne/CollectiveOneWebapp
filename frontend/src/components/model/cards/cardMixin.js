@@ -66,16 +66,6 @@ export const cardMixin = {
         this.$router.push({name: this.cardRouteName, params: { cardId: this.cardWrapper.id }})
       }
     },
-    toggleLike () {
-      this.axios.put('/1/model/card/' + this.cardWrapper.id + '/like',
-        {}, {
-          params: {
-            likeStatus: !this.cardWrapper.userLiked
-          }
-        }).then((response) => {
-          this.$emit('update')
-        })
-    },
     editors () {
       var editors = []
       for (var ix in this.cardWrapper.editors) {

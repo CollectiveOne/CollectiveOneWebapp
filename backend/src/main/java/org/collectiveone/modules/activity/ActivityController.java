@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.activity.dto.NotificationDto;
+import org.collectiveone.modules.activity.dto.NotificationsPackDto;
 import org.collectiveone.modules.activity.dto.SubscriberDto;
 import org.collectiveone.modules.activity.enums.NotificationContextType;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
@@ -33,15 +33,16 @@ public class ActivityController extends BaseController {
 	
 	
 	@RequestMapping(path = "/notifications/{contextElementType}/{elementId}", method = RequestMethod.GET)
-	public GetResult<List<NotificationDto>> getNotifications(
+	public GetResult<NotificationsPackDto> getNotifications(
 			@RequestParam("page") Integer page,
 			@RequestParam(name="size", defaultValue="10") Integer size,
 			@RequestParam(name="isHtml", defaultValue="false") Boolean isHtml,
+			@RequestParam(name="onlyUnread", defaultValue="false") Boolean onlyUnread,
 			@PathVariable(name="contextElementType") String contextElementType,
 			@PathVariable("elementId") String elementId) {
 		
 		if (getLoggedUser() == null) {
-			return new GetResult<List<NotificationDto>>("error", "endpoint enabled users only", null);
+			return new GetResult<NotificationsPackDto>("error", "endpoint enabled users only", null);
 		}
 		
 		return activityService.getUserNotifications(
@@ -49,7 +50,8 @@ public class ActivityController extends BaseController {
 				NotificationContextType.valueOf(contextElementType),
 				UUID.fromString(elementId),
 				new PageRequest(page, size),
-				isHtml);
+				isHtml,
+				onlyUnread);
 	}
 	
 	@RequestMapping(path = "/notifications/{contextElementType}/{elementId}/read", method = RequestMethod.PUT)
