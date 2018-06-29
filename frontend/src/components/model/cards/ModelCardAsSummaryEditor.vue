@@ -61,7 +61,6 @@
 
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
-import InModelSectionsTags from '@/components/model/cards/InModelSectionsTags.vue'
 
 export default {
 
@@ -70,7 +69,6 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-in-model-sections-tags': InModelSectionsTags
   },
 
   props: {
@@ -278,7 +276,7 @@ export default {
    text-shadow: 0px 0px 5px #000000;
 }
 
-.select-clicked { 
+.select-clicked {
    text-shadow: 0px 0px 5px #000000;
 }
 .app-button {

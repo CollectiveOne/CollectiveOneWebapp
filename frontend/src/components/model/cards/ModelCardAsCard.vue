@@ -107,7 +107,7 @@
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
 import CardControlButtons from '@/components/model/cards/CardControlButtons.vue'
-import InModelSectionsTags from '@/components/model/cards/InModelSectionsTags.vue'
+import InModelSectionsTags from '@/components/model/InModelSectionsTags.vue'
 
 export default {
 

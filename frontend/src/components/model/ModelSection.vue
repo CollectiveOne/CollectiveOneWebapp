@@ -32,7 +32,6 @@
             <span v-if="!isDocView" v-html="faRawHtml"></span>
             <span v-else v-html="headerOpenTag + faRawHtml + headerCloseTag"></span>
           </div>
-
         </div>
         <div class="w3-left">
           <router-link v-if="addSectionLinks" :to="{ name: 'ModelSectionContent', params: {'sectionId': section.id } }">
@@ -41,6 +40,17 @@
           <div v-else class="">
             <span v-html="headerOpenTag + '<b>' +  section.title + '</b>' + headerCloseTag"></span>
           </div>
+        </div>
+      </div>
+      <div class="w3-row">
+        <div class="w3-left w3-margin-right">
+          <i>also in</i>
+        </div>
+        <div class="w3-left">
+          <app-in-model-sections-tags
+            :inModelSections="section.inSections"
+            :hideSectionId="section.id">
+          </app-in-model-sections-tags>
         </div>
       </div>
       <div v-if="hasDescription" class="w3-row description-text light-grey">
@@ -90,6 +100,7 @@
 <script>
 import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer.vue'
+import InModelSectionsTags from '@/components/model/InModelSectionsTags.vue'
 import { getArrayFromList, appendElementsToBase } from '@/lib/sortAlgorithm.js'
 
 export default {
@@ -97,7 +108,8 @@ export default {
 
   components: {
     'app-model-section-header': ModelSectionHeader,
-    'app-model-cards-container': ModelCardsContainer
+    'app-model-cards-container': ModelCardsContainer,
+    'app-in-model-sections-tags': InModelSectionsTags
   },
 
   props: {

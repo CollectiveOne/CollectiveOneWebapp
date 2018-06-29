@@ -692,6 +692,14 @@ public class ModelService {
 			sectionDto.setAfterElementId(subsection.getAfterSubsection().getSection().getId().toString());
 		}
 		
+		List<ModelSubsection> inSubsections = modelSubsectionRepository.findOfSection(subsection.getSection().getId());
+		
+		for (ModelSubsection inSubsection : inSubsections) {
+			if (inSubsection.getParentSection() != null) {
+				sectionDto.getInSections().add(inSubsection.getParentSection().toDto());
+			}
+		}
+		
 		return sectionDto;
 	}
 	

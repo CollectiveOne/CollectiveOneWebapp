@@ -80,7 +80,6 @@
 
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
-import InModelSectionsTags from '@/components/model/cards/InModelSectionsTags.vue'
 
 export default {
 
@@ -89,7 +88,6 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-in-model-sections-tags': InModelSectionsTags
   },
 
   props: {
