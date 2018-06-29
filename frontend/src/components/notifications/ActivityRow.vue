@@ -180,7 +180,8 @@
           </span>
 
           <span v-if="isMessagePosted && (!showMessages || isExternalMessage)">
-            commented in
+            <span v-if="loggedUserMentioned">mentioned you in a commented in </span>
+            <span v-else>commented in </span>
             <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
             <span v-if="isMessageInCardWrapperOnSection"><app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link></span>
             <span v-if="isMessageInSection"><app-model-section-link :section="activity.modelSection"></app-model-section-link> section.</span>
@@ -445,6 +446,7 @@ export default {
 
       return ''
     },
+    
     authorIsLoggedUser () {
       if (this.isMessagePosted) {
         if (this.$store.state.user.profile) {
@@ -452,6 +454,14 @@ export default {
         }
       }
       return false
+    },
+
+    loggedUserMentioned () {
+      if (this.$store.state.user.profile) {
+        return this.activity.message.mentions.findIndex((mention) => {
+          mention.c1Id === this.$store.state.user.profile.c1Id
+        }) !== -1
+      }
     }
   },
   methods: {
