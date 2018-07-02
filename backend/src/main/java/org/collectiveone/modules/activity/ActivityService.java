@@ -1444,6 +1444,16 @@ public class ActivityService {
 		
 		if (isInModel) {
 			
+			/* card wrapper derived from card wrapper or card wrapper addition, whatever is not null... */
+			UUID cardWrapperId = activity.getModelCardWrapper() != null ? activity.getModelCardWrapper().getId() : null;
+			cardWrapperId = (cardWrapperId == null) ? 
+					((activity.getModelCardWrapperAddition() == null) ? activity.getModelCardWrapperAddition().getCardWrapper().getId() : null) :
+					cardWrapperId;
+			
+			if (cardWrapperId != null) {
+				template.convertAndSend("/channel/activity/model/card/" + cardWrapperId, "UPDATE");
+			}
+					
 			/* sections in which the activity took place. Activity on cards can be in many sections at the same time */
 			List<UUID> sectionIds = directlyAffectedSectionsIds(activity);
 			

@@ -336,7 +336,10 @@ public class NotificationDtoBuilder {
 				message = "commented in ";
 			}
 			
-			String textLimited = isHtml ? text : (text.length() > 60 ? text.substring(0, 60) + "..." : text); 
+			String textLimited = "";
+			if (text != null) {
+				textLimited = isHtml ? text : (text.length() > 60 ? text.substring(0, 60) + "..." : text);	
+			}
 			message += from + ": " + textLimited;
 			
 			break;

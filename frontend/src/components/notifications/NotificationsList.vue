@@ -18,7 +18,7 @@
       class="notifications-list-container w3-white w3-card-4 w3-bar-block noselect">
       <div class="w3-row-padding w3-border-bottom notifications-header">
         <div class="w3-col s8 text-div w3-center">
-          {{ totalUnread }} unread events under <br>{{ element.title }}
+          {{ totalUnread }} unread events under <br>{{ elementTitle }}
         </div>
         <button class="w3-col  w3-margin-top w3-margin-bottom w3-button app-button" :class="isMainNav?'s5':'s4'"
           @click="allNotificationsRead()">
@@ -84,6 +84,18 @@ export default {
   },
 
   computed: {
+    elementTitle () {
+      switch (this.contextType) {
+        case 'MODEL_CARD':
+          return 'this card'
+
+        case 'MODEL_SECTION':
+        case 'INITIATIVE':
+          return this.element.title
+      }
+
+      return 'this element'
+    },
     contextElementId () {
       return this.element.id
     },
@@ -286,6 +298,8 @@ export default {
       this.subscription = this.$store.dispatch('subscribe', {
         url: url,
         onMessage: (tick) => {
+          console.log('tick under ' + this.contextType + ' ' + this.contextElementId)
+          console.log(tick)
           var message = tick.body
           if (message === 'UPDATE') {
             this.updateNotifications()
