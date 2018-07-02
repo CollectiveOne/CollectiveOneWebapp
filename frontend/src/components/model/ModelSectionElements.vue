@@ -32,52 +32,104 @@
       <div class="w3-row controls-row small-scroll">
 
         <div class="control-group">
-          <div tooltip="Messages" @click="messagesContent()" class="w3-left control-btn" :class="{'control-btn-selected': isMessagesContent}">
-            <img src="./../../assets/chat-icon.svg" alt="">
-          </div>
-          <div tooltip="Card in List" @click="summaryView()" class="w3-left control-btn" :class="{'control-btn-selected': isSummary}">
-            <img src="./../../assets/rows-icon.svg" alt="">
-          </div>
-          <div tooltip="Cards in Grid" @click="cardView()" class="w3-left control-btn" :class="{'control-btn-selected': isCard}">
-            <img src="./../../assets/cards-icon.svg" alt="">
-          </div>
-          <div tooltip="Documents" @click="docView()" class="w3-left control-btn" :class="{'control-btn-selected': isDoc}">
-            <img src="./../../assets/doc-icon.svg" alt="">
-          </div>
+          <popper trigger="hover":options="popperOptions">
+            <div class="popper">messages</div>
+
+            <div slot="reference" @click="messagesContent()" class="w3-left control-btn" :class="{'control-btn-selected': isMessagesContent}">
+              <img src="./../../assets/chat-icon.svg" alt="">
+            </div>
+          </popper>
+
+          <popper trigger="hover" :options="popperOptions">
+            <div class="popper">cards summary</div>
+
+            <div slot="reference" @click="summaryView()" class="w3-left control-btn" :class="{'control-btn-selected': isSummary}">
+              <img src="./../../assets/rows-icon.svg" alt="">
+            </div>
+          </popper>
+
+          <popper trigger="hover" :options="popperOptions">
+            <div class="popper">cards</div>
+
+            <div slot="reference" @click="cardView()" class="w3-left control-btn" :class="{'control-btn-selected': isCard}">
+              <img src="./../../assets/cards-icon.svg" alt="">
+            </div>
+          </popper>
+
+          <popper trigger="hover" :options="popperOptions">
+            <div class="popper">document view</div>
+
+            <div slot="reference" @click="docView()" class="w3-left control-btn" :class="{'control-btn-selected': isDoc}">
+              <img src="./../../assets/doc-icon.svg" alt="">
+            </div>
+          </popper>
+
         </div>
 
         <div v-if="isCardsContent" class="control-group noselect">
           <div class="w3-left zoom-controls">
             <div class="w3-left zoom-controls-enabled">
-              <div tooltip="Decrease Level" @click="levelDown()" class="w3-left cursor-pointer arrow-div">
-                <img src="./../../assets/zoom-in-icon.svg" alt="">
-              </div>
+              <popper trigger="hover":options="popperOptions">
+                <div class="popper">see less levels</div>
+
+                <div slot="reference" @click="levelDown()" class="w3-left cursor-pointer arrow-div">
+                  <img src="./../../assets/zoom-in-icon.svg" alt="">
+                </div>
+              </popper>
+
               <div tooltip="Level" class="w3-left number-div">
                 {{ levels !== 999 ? levels : '&#x221e;' }}
               </div>
-              <div tooltip="Increase Level" @click="levelUp()" class="w3-left cursor-pointer arrow-div">
-                <img src="./../../assets/zoom-out-icon.svg" alt="">
-              </div>
+
+              <popper trigger="hover":options="popperOptions">
+                <div class="popper">see more levels</div>
+
+                <div slot="reference" @click="levelUp()" class="w3-left cursor-pointer arrow-div">
+                  <img src="./../../assets/zoom-out-icon.svg" alt="">
+                </div>
+              </popper>
+
               <div v-if="infiniteLevels" class="zoom-controls-cover">
               </div>
             </div>
-            <div tooltip="Infinite Level" @click="toggleInifinteLevels()" class="w3-left cursor-pointer arrow-div w3-border-left" :class="{'control-btn-selected': infiniteLevels}">
-              <img src="./../../assets/infinite-icon.svg" alt="">
-            </div>
+
+            <popper trigger="hover":options="popperOptions">
+              <div class="popper">see all levels</div>
+
+              <div slot="reference" @click="toggleInifinteLevels()" class="w3-left cursor-pointer arrow-div w3-border-left" :class="{'control-btn-selected': infiniteLevels}">
+                <img src="./../../assets/infinite-icon.svg" alt="">
+              </div>
+            </popper>
+
           </div>
         </div>
 
         <div v-if="isCardsContent && this.$store.state.user.authenticated" class="control-group">
           <div class="">
-            <div tooltip="Private Cards" @click="showPrivateClick()" class="w3-left control-btn border-red" :class="{'control-btn-selected': showPrivate, 'w3-bottombar': showPrivate}">
-              <img src="./../../assets/private-icon.svg" alt="">
-            </div>
-            <div tooltip="Shared Cards" @click="showSharedClick()" class="w3-left control-btn border-yellow" :class="{'control-btn-selected': showShared, 'w3-bottombar': showShared}">
-              <img src="./../../assets/shared-icon.svg" alt="">
-            </div>
-            <div tooltip="Common Cards"  @click="showCommonClick()" class="w3-left control-btn border-blue" :class="{'control-btn-selected': showCommon, 'w3-bottombar': showCommon}">
-              <img src="./../../assets/common-icon.svg" alt="">
-            </div>
+            <popper trigger="hover":options="popperOptions">
+              <div class="popper">{{ showPrivate ? 'hide' : 'show' }} private cards</div>
+
+              <div slot="reference" @click="showPrivateClick()" class="w3-left control-btn border-red" :class="{'control-btn-selected': showPrivate, 'w3-bottombar': showPrivate}">
+                <img src="./../../assets/private-icon.svg" alt="">
+              </div>
+            </popper>
+
+            <popper trigger="hover":options="popperOptions">
+              <div class="popper">{{ showShared ? 'hide' : 'show' }} shared cards</div>
+
+              <div slot="reference" @click="showSharedClick()" class="w3-left control-btn border-yellow" :class="{'control-btn-selected': showShared, 'w3-bottombar': showShared}">
+                <img src="./../../assets/shared-icon.svg" alt="">
+              </div>
+            </popper>
+
+            <popper trigger="hover":options="popperOptions">
+              <div class="popper">{{ showCommon ? 'hide' : 'show' }} common cards</div>
+
+              <div slot="reference" @click="showCommonClick()" class="w3-left control-btn border-blue" :class="{'control-btn-selected': showCommon, 'w3-bottombar': showCommon}">
+                <img src="./../../assets/common-icon.svg" alt="">
+              </div>
+            </popper>
+
           </div>
         </div>
 
@@ -210,6 +262,8 @@
 import MessageThread from '@/components/notifications/MessageThread'
 import ModelSection from '@/components/model/ModelSection'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer'
+import Popper from 'vue-popperjs'
+import 'vue-popperjs/dist/css/vue-popper.css'
 
 const sectionToMarkdown = function (section, level) {
   var text = ''
@@ -263,7 +317,8 @@ export default {
   components: {
     'app-model-section': ModelSection,
     'app-model-cards-container': ModelCardsContainer,
-    'app-message-thread': MessageThread
+    'app-message-thread': MessageThread,
+    'popper': Popper
   },
 
   data () {
@@ -348,6 +403,16 @@ export default {
     },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
+    },
+    popperOptions () {
+      return {
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: false
+          }
+        }
+      }
     }
   },
 
@@ -607,7 +672,6 @@ export default {
 
 .control-group div {
   display: inline-block;
-  position: relative;
 }
 
 .control-btn {
@@ -646,7 +710,6 @@ export default {
 }
 
 .zoom-controls-enabled {
-  position: relative;
 }
 
 .zoom-controls .zoom-controls-cover {
