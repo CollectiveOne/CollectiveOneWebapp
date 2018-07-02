@@ -4,7 +4,7 @@
     @mouseleave="hovering = false">
 
     <div class="cursor-pointer" :class="inputClass">
-      <div class="w3-row">
+      <div class="w3-row input-border">
         <input type="text" class="w3-input w3-hover-light-grey" placeholder="Enter card title" v-model="editedCard.title">
       </div>
       <div ref="cardText" class="w3-row card-text">
@@ -12,8 +12,8 @@
       </div>
     </div>
 
-    <div :class="controlsClass">
-      <div v-if="!inCardSelector" class="w3-left scope-controls">
+    <div v-if="type !== 'doc'" :class="controlsClass">
+      <div class="w3-left scope-controls">
         <div  class="w3-right cursor-pointer indicator-comp"
           @click="scope = 'COMMON'">
           <i class="fa fa-circle select-common highlight" aria-hidden="true"></i>
@@ -28,7 +28,7 @@
         </div>
       </div>
 
-      <div v-if="!inCardSelector" class="w3-right control-buttons">
+      <div class="w3-right control-buttons">
         <div class="w3-right cursor-pointer indicator-comp">
           <i class="fa fa-upload highlight" aria-hidden="true"></i>
         </div>
@@ -73,11 +73,7 @@ export default {
   props: {
     isNew: {
       type: Boolean,
-      default: true
-    },
-    inSectionIdNew: {
-      type: String,
-      default: ''
+      default: false
     },
     cardWrapperId: {
       type: String,
@@ -178,6 +174,7 @@ export default {
 
       inputClass['w3-row card-container cursor-pointer limit-height'] = this.type === 'card'
       inputClass['w3-col m8 left-div'] = this.type === 'summary'
+      inputClass['w3-row w3-col s12'] = this.type === 'doc'
 
       return inputClass
     },
@@ -194,6 +191,7 @@ export default {
 
       buttonClass['w3-row light-grey'] = this.type === 'card'
       buttonClass['w3-col m4 right-div-bottom controls send-button-container-summary'] = this.type === 'summary'
+      buttonClass['send-button-container-doc'] = this.type === 'doc'
 
       return buttonClass
     }
@@ -264,7 +262,7 @@ export default {
           }
         } else {
           /* editing */
-          console.log('editing')
+          console.log('editing', this.inSection.id, this.type, this.atCardWrapper.id, this.scope, cardDto)
           this.sendingData = true
           this.axios.put('/1/model/cardWrapper/' + this.atCardWrapper.id, cardDto, {
             params: {
@@ -272,6 +270,7 @@ export default {
             }
           })
             .then((response) => {
+              console.log(response)
               this.sendingData = false
               if (response.data.result === 'success') {
                 this.$emit('updateCards')
@@ -320,6 +319,11 @@ export default {
 
 <style scoped>
 
+.input-border {
+  border: solid #ccc !important;
+  border-width: 1px 1px 0px 1px !important;
+}
+
 .card-summary-container {
   overflow: hidden;
   position: relative;
@@ -362,6 +366,9 @@ export default {
   bottom:   0;
 }
 
+.send-button-container-doc {
+  display: initial;
+}
 .scope-controls, .control-buttons {
   padding: 5px 0px 5px 0px;
 }
