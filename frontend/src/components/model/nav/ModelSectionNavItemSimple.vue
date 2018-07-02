@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { getArrayFromList } from '@/lib/sortAlgorithm.js'
 
 export default {
   name: 'app-model-section-nav-item-simple',
@@ -65,7 +66,7 @@ export default {
 
   computed: {
     subsections () {
-      return this.section != null ? this.section.subsections : []
+      return this.section != null ? getArrayFromList(this.section.subsectionsCommon.slice()) : []
     },
     highlight () {
       return this.highlightLevelUse > 0

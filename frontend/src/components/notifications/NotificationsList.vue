@@ -298,8 +298,8 @@ export default {
       this.subscription = this.$store.dispatch('subscribe', {
         url: url,
         onMessage: (tick) => {
-          console.log('tick under ' + this.contextType + ' ' + this.contextElementId)
-          console.log(tick)
+          // console.log('tick under ' + this.contextType + ' ' + this.contextElementId)
+          // console.log(tick)
           var message = tick.body
           if (message === 'UPDATE') {
             this.updateNotifications()

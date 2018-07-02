@@ -32,7 +32,7 @@
         </div>
       </div>
 
-      <div v-if="!inCardSelector" class="w3-right">
+      <div v-if="!inCardSelector && $store.state.user.authenticated" class="w3-right">
         <app-card-user-indicators
           :cardWrapper="cardWrapper"
           :inSection="inSection"

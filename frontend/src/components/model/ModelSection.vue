@@ -42,7 +42,7 @@
           </div>
         </div>
       </div>
-      <div class="w3-row">
+      <div v-if="!readOnly" class="w3-row">
         <div class="w3-left w3-margin-right">
           <i>also in</i>
         </div>
@@ -66,7 +66,7 @@
         :inSection="section"
         :acceptDrop="true"
         :cardRouteName="cardRouteName"
-        :hideCardControls="hideCardControls"
+        :hideCardControls="readOnly"
         @updateCards="updateCards()"
         @createNew="createNew"
         @edit="edit"
@@ -85,7 +85,7 @@
           :cardsType="cardsType"
           :nestedIn="nestedIn.concat([section])"
           :cardRouteName="cardRouteName"
-          :hideCardControls="hideCardControls"
+          :readOnly="readOnly"
           :showPrivate="showPrivate"
           :showShared="showShared"
           :showCommon="showCommon"
@@ -152,6 +152,10 @@ export default {
     showCommon: {
       type: Boolean,
       default: true
+    },
+    readOnly: {
+      type: Boolean,
+      default: false
     }
   },
 

@@ -1447,7 +1447,7 @@ public class ActivityService {
 			/* card wrapper derived from card wrapper or card wrapper addition, whatever is not null... */
 			UUID cardWrapperId = activity.getModelCardWrapper() != null ? activity.getModelCardWrapper().getId() : null;
 			cardWrapperId = (cardWrapperId == null) ? 
-					((activity.getModelCardWrapperAddition() == null) ? activity.getModelCardWrapperAddition().getCardWrapper().getId() : null) :
+					((activity.getModelCardWrapperAddition() != null) ? activity.getModelCardWrapperAddition().getCardWrapper().getId() : null) :
 					cardWrapperId;
 			
 			if (cardWrapperId != null) {
