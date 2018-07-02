@@ -19,7 +19,7 @@
           </span>
         </div>
 
-        <div class="event-summary w3-small w3-left" :class="{'event-summary-solid': !showMessages, 'event-summary-light': showMessages}">
+        <div class="event-summary w3-small w3-left" :class="{'event-summary-solid': !showMessagesText, 'event-summary-light': showMessagesText}">
           <span v-if="isInitiativeCreated" class="">
             created the new initiative <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
           </span>
@@ -179,7 +179,7 @@
             deleted the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
           </span>
 
-          <span v-if="isMessagePosted && (!showMessages || isExternalMessage)">
+          <span v-if="isMessagePosted && (!showMessagesText || isExternalMessage)">
             <span v-if="loggedUserMentioned">mentioned you in a comment in </span>
             <span v-else>commented in </span>
             <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
@@ -190,11 +190,11 @@
         </div>
       </div>
 
-      <div v-if="isMessagePosted && showMessages" class="w3-row">
+      <div v-if="isMessagePosted && showMessagesText" class="w3-row">
         <vue-markdown class="marked-text message-container" :source="activity.message.text"></vue-markdown>
       </div>
 
-      <div class="control-btns-row w3-display-topright" v-if="isMessagePosted && showMessages">
+      <div class="control-btns-row w3-display-topright" v-if="isMessagePosted && showMessagesText">
         <transition name="fadeenter">
           <div v-if="hovering">
             <div v-if="authorIsLoggedUser" @click="$emit('edit-message', activity.message)"
@@ -237,7 +237,7 @@ export default {
       type: Boolean,
       default: true
     },
-    showMessages: {
+    showMessagesText: {
       type: Boolean,
       default: false
     },
@@ -411,7 +411,7 @@ export default {
       return this.isMessagePosted && (!this.isMessageInSection && !this.isMessageInCardWrapperOnSection && !this.isMessageInCardWrapper)
     },
     isExternalMessage () {
-      if (!this.isMessagePosted || !this.showMessages) {
+      if (!this.isMessagePosted || !this.showMessagesText) {
         return false
       } else {
         if (this.isMessageInCardWrapper || this.isMessageInCardWrapperOnSection) {

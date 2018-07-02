@@ -4,8 +4,9 @@
       <app-activity-getter
         :reverse="true"
         :addBorders="false"
-        :showMessages="true"
-        :onlyMessages="onlyMessages"
+        :showMessagesText="true"
+        :showMessages="showMessages"
+        :showEvents="showEvents"
         :triggerRefresh="triggerRefresh"
         :triggerUpdate="triggerUpdate"
         :contextType="contextType"
@@ -74,9 +75,13 @@ export default {
       type: String,
       default: ''
     },
-    onlyMessages: {
+    showMessages: {
       type: Boolean,
-      defaul: false
+      defaul: true
+    },
+    showEvents: {
+      type: Boolean,
+      defaul: true
     },
     levels: {
       type: Number,

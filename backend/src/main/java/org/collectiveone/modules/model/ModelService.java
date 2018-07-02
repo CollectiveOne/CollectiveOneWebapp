@@ -1425,9 +1425,15 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public GetResult<Page<ActivityDto>> getActivityResultUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages, Integer level, UUID requestByUserId) {
+	public GetResult<Page<ActivityDto>> getActivityResultUnderSection (
+			UUID sectionId, 
+			PageRequest page, 
+			Boolean addMessages, 
+			Boolean addEvents,
+			Integer level, 
+			UUID requestByUserId) {
 		
-		Page<Activity> activities = getActivityUnderSection(sectionId, page, onlyMessages, level, requestByUserId);
+		Page<Activity> activities = getActivityUnderSection(sectionId, page, addMessages, addEvents, level, requestByUserId);
 		
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		
@@ -1441,7 +1447,13 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public Page<Activity> getActivityUnderSection (UUID sectionId, PageRequest page, Boolean onlyMessages, Integer level, UUID requestByUserId) {
+	public Page<Activity> getActivityUnderSection (
+			UUID sectionId, 
+			PageRequest page, 
+			Boolean addMessages, 
+			Boolean addEvents, 
+			Integer level, 
+			UUID requestByUserId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		Boolean isMemberOfEcosystem = initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId);
@@ -1454,24 +1466,25 @@ public class ModelService {
 		}
 		
 		Page<Activity> activities = null;
-		
-		if (!onlyMessages) {
-			activities = activityRepository.findOfSectionsOrCards(allSectionIds, cardsIds, page);	
-		} else {
-			activities = activityRepository.findOfSectionsOrCardsAndType(allSectionIds, cardsIds, ActivityType.MESSAGE_POSTED, page);	
-		}
+		activities = activityRepository.findOfSectionsOrCardsAndType(
+				allSectionIds, 
+				cardsIds,
+				!(addMessages && addEvents),
+				ActivityType.MESSAGE_POSTED,
+				addMessages,
+				page);	
 			
 		return activities;
 	}
 	
 	@Transactional
 	public GetResult<Long> countMessagesUnderCard (UUID cardWrapperId, Boolean onlyMessages) {
-		Page<Activity> messages = getActivityUnderCard(cardWrapperId, new PageRequest(1, 1), true);
+		Page<Activity> messages = getActivityUnderCard(cardWrapperId, new PageRequest(1, 1), true, true);
 		return new GetResult<Long>("success", "activity counted", messages.getTotalElements());
 	}
 	
 	@Transactional
-	public Page<Activity> getActivityUnderCard (UUID cardWrapperId, PageRequest page, Boolean onlyMessages) {
+	public Page<Activity> getActivityUnderCard (UUID cardWrapperId, PageRequest page, Boolean addMessages, Boolean addEvents) {
 		Page<Activity> activities = null;
 		List<UUID> dum = new ArrayList<UUID>();
 		List<UUID> cardIds = new ArrayList<UUID>();
@@ -1479,18 +1492,21 @@ public class ModelService {
 		dum.add(UUID.randomUUID());
 		cardIds.add(cardWrapperId);
 		
-		if (!onlyMessages) {
-			activities = activityRepository.findOfSectionsOrCards(dum, cardIds, page);
-		} else {
-			activities = activityRepository.findOfSectionsOrCardsAndType(dum, cardIds, ActivityType.MESSAGE_POSTED, page);
-		}
+		activities = activityRepository.findOfSectionsOrCardsAndType(
+				dum, 
+				cardIds, 
+				!(addMessages && addEvents),
+				ActivityType.MESSAGE_POSTED, 
+				addMessages,
+				page);
+		
 		return activities;
 	}
 	
 	@Transactional
-	public GetResult<Page<ActivityDto>> getActivityResultUnderCard (UUID cardWrapperId, PageRequest page, Boolean onlyMessages) {
+	public GetResult<Page<ActivityDto>> getActivityResultUnderCard (UUID cardWrapperId, PageRequest page, Boolean addMessages, Boolean addEvents) {
 		
-		Page<Activity> activities = getActivityUnderCard(cardWrapperId, page, onlyMessages);
+		Page<Activity> activities = getActivityUnderCard(cardWrapperId, page, addMessages, addEvents);
 	
 		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
 		

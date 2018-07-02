@@ -139,7 +139,10 @@
             </popper>
 
             <popper trigger="hover":options="popperOptions">
-              <div class="popper">{{ showShared ? 'hide' : 'show' }} shared cards</div>
+              <app-help-popper
+                :title="(showShared ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHARED-CARDS-TT')"
+                :details="$t('help.SHARED-CARDS-DET')">
+              </app-help-popper>
 
               <div slot="reference" @click="showSharedClick()" class="w3-left control-btn border-yellow" :class="{'control-btn-selected': showShared, 'w3-bottombar': showShared}">
                 <img src="./../../assets/shared-icon.svg" alt="">
@@ -147,7 +150,10 @@
             </popper>
 
             <popper trigger="hover":options="popperOptions">
-              <div class="popper">{{ showCommon ? 'hide' : 'show' }} common cards</div>
+              <app-help-popper
+                :title="(showCommon ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.COMMON-CARDS-TT')"
+                :details="$t('help.COMMON-CARDS-DET')">
+              </app-help-popper>
 
               <div slot="reference" @click="showCommonClick()" class="w3-left control-btn border-blue" :class="{'control-btn-selected': showCommon, 'w3-bottombar': showCommon}">
                 <img src="./../../assets/common-icon.svg" alt="">
@@ -160,7 +166,10 @@
         <div v-if="isCardsContent" class="control-group">
           <div class="">
             <popper trigger="hover":options="popperOptions">
-              <div class="popper">show all cards</div>
+              <app-help-popper
+                :title="$t('help.SHOW-SECTION-ORDER-TT')"
+                :details="$t('help.SHOW-SECTION-ORDER-DET')">
+              </app-help-popper>
 
               <div slot="reference"  @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
                 <img src="./../../assets/network-icon.svg" alt="">
@@ -168,7 +177,10 @@
             </popper>
 
             <popper trigger="hover":options="popperOptions">
-              <div class="popper">search cards</div>
+              <app-help-popper
+                :title="$t('help.SEARCH-CARDS-TT')"
+                :details="$t('help.SEARCH-CARDS-DET')">
+              </app-help-popper>
 
               <div slot="reference" @click="aggregatedOrder()" class="w3-left control-btn" :class="{'control-btn-selected': !isSectionsOrder}">
                 <img src="./../../assets/search-icon.svg" alt="">
@@ -179,12 +191,28 @@
         </div>
 
         <div v-if="!isCardsContent" class="control-group">
-          <div tooltip="Only Messages" @click="isOnlyMessages = true" class="w3-left control-btn" :class="{'control-btn-selected': isOnlyMessages}">
-            <img src="./../../assets/chat-icon-2.svg" alt="">
-          </div>
-          <div tooltip="All Events" @click="isOnlyMessages = false" class="w3-left control-btn" :class="{'control-btn-selected': !isOnlyMessages}">
-            <img src="./../../assets/all-events-icon.svg" alt="">
-          </div>
+          <popper trigger="hover":options="popperOptions">
+            <app-help-popper
+            :title="(showMessages ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHOW-MESSAGES-TT')"
+            :details="$t('help.SHOW-MESSAGES-DET')">
+            </app-help-popper>
+
+            <div slot="reference" @click="showMessages = !showMessages" class="w3-left control-btn" :class="{'control-btn-selected': showMessages}">
+              <img src="./../../assets/chat-icon-2.svg" alt="">
+            </div>
+          </popper>
+
+          <popper trigger="hover":options="popperOptions">
+            <app-help-popper
+            :title="(showEvents ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHOW-EVENTS-TT')"
+            :details="$t('help.SHOW-EVENTS-DET')">
+            </app-help-popper>
+
+            <div slot="reference" @click="showEvents = !showEvents" class="w3-left control-btn" :class="{'control-btn-selected': showEvents}">
+              <img src="./../../assets/all-events-icon.svg" alt="">
+            </div>
+          </popper>
+
         </div>
 
         <div class="control-group slider-container">
@@ -258,7 +286,8 @@
           v-if="isMessagesContent"
           contextType="MODEL_SECTION"
           :contextElementId="currentSectionId"
-          :onlyMessages="isOnlyMessages"
+          :showMessages="showMessages"
+          :showEvents="showEvents"
           :levels="999">
         </app-message-thread>
 
@@ -361,7 +390,8 @@ export default {
       sectionLoadedOnce: false,
       sectionLoadedOnceLevels: 0,
       orderType: 'sections',
-      isOnlyMessages: false,
+      showMessages: true,
+      showEvents: true,
       newCardQuery: '',
       cardQuery: '',
       cardSortBy: 'CREATION_DATE_DESC',

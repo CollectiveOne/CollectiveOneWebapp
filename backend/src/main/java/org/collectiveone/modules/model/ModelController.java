@@ -530,7 +530,8 @@ public class ModelController extends BaseController {
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size, 
 			@RequestParam(name="levels", defaultValue="1") Integer levels,
-			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
+			@RequestParam(name="addMessages", defaultValue="true") Boolean addMessages,
+			@RequestParam(name="addEvents", defaultValue="true") Boolean addEvents) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		
@@ -544,7 +545,7 @@ public class ModelController extends BaseController {
 		UUID loggedUserId = getLoggedUserId();
 		loggedUserId = loggedUserId == null ? UUID.fromString("00000000-0000-0000-0000-000000000000") : loggedUserId;
 		
-		return modelService.getActivityResultUnderSection(sectionId, new PageRequest(page, size), onlyMessages, levels, loggedUserId);
+		return modelService.getActivityResultUnderSection(sectionId, new PageRequest(page, size), addMessages, addEvents, levels, loggedUserId);
 	}
 	
 	@RequestMapping(path = "/model/card/{cardWrapperId}/countMessages", method = RequestMethod.GET)
@@ -567,7 +568,8 @@ public class ModelController extends BaseController {
 			@PathVariable("cardWrapperId") String cardWrapperIdStr,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size, 
-			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
+			@RequestParam(name="addMessages", defaultValue="true") Boolean addMessages,
+			@RequestParam(name="addEvents", defaultValue="true") Boolean addEvents) {
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
 		
@@ -577,7 +579,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return modelService.getActivityResultUnderCard(cardWrapperId, new PageRequest(page, size), onlyMessages);
+		return modelService.getActivityResultUnderCard(cardWrapperId, new PageRequest(page, size), addMessages, addEvents);
 	}
 	
 	@RequestMapping(path = "/model/card/{cardWrapperId}/like", method = RequestMethod.PUT)

@@ -5,7 +5,7 @@
       :activity="activity"
       :addInAppState="addInAppState"
       :addContext="addContext"
-      :showMessages="showMessages"
+      :showMessagesText="showMessagesText"
       :contextElementId="contextElementId"
       @edit-message="$emit('edit-message', $event)"
       @reply-to-message="$emit('reply-to-message', $event)">
@@ -37,7 +37,7 @@ export default {
       type: Boolean,
       default: true
     },
-    showMessages: {
+    showMessagesText: {
       type: Boolean,
       default: false
     },
