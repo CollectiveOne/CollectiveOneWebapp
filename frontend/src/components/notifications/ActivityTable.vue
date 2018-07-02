@@ -3,6 +3,7 @@
     <app-activity-row v-for="activity in activitiesOrdered"
       :key="activity.id"
       :activity="activity"
+      :addInAppState="addInAppState"
       :addContext="addContext"
       :showMessages="showMessages"
       :contextElementId="contextElementId"
@@ -43,15 +44,19 @@ export default {
     contextElementId: {
       type: String,
       default: ''
+    },
+    addInAppState: {
+      type: Boolean,
+      default: false
     }
   },
 
   computed: {
     activitiesOrdered () {
       if (this.reverse) {
-        return JSON.parse(JSON.stringify(this.activities)).reverse()
+        return this.activities.slice().reverse()
       } else {
-        return JSON.parse(JSON.stringify(this.activities))
+        return this.activities.slice()
       }
     }
   },

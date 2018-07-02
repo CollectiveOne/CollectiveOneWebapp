@@ -1,5 +1,5 @@
 <template lang="html">
-  <tr class="">
+  <tr :class="rowClass">
     <td class="avatar-col w3-center">
       <app-user-avatar :user="activity.triggerUser" :showName="false" :small="true"></app-user-avatar>
     </td>
@@ -244,6 +244,10 @@ export default {
     contextElementId: {
       type: String,
       default: ''
+    },
+    addInAppState: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -464,6 +468,15 @@ export default {
         })
         return ix !== -1
       }
+    },
+
+    rowClass () {
+      let rowClass = {}
+      if (this.addInAppState) {
+        rowClass['w3-leftbar'] = this.activity.inAppState === 'PENDING'
+        rowClass['not-read-color'] = this.activity.inAppState === 'PENDING'
+      }
+      return rowClass
     }
   },
   methods: {
@@ -525,6 +538,10 @@ a {
 
 .message-container {
   font-family: 'Open Sans', sans-serif;
+}
+
+.not-read-color {
+  border-left-color: #b35454 !important;
 }
 
 </style>

@@ -39,6 +39,7 @@ import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.GraphNode;
+import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
@@ -919,12 +920,16 @@ public class ActivityService {
 		switch (contextType) {
 			
 			case MODEL_CARD:
-				activity.setModelCardWrapper(modelCardWrapperRepository.findById(elementId));
+				ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(elementId);
+				activity.setModelCardWrapper(cardWrapper);
 				activity.setOnSection(modelSectionRepository.findById(contextOfContextElementId));
+				activity.setInitiative(cardWrapper.getInitiative());
 				break;
 			
 			case MODEL_SECTION:
-				activity.setModelSection(modelSectionRepository.findById(elementId));
+				ModelSection section = modelSectionRepository.findById(elementId);
+				activity.setModelSection(section);
+				activity.setInitiative(section.getInitiative());
 				break;
 				
 			case INITIATIVE:

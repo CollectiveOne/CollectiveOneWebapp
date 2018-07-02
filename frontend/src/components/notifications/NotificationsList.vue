@@ -26,7 +26,10 @@
         </button>
       </div>
 
-      <app-activity-table :activities="activities"></app-activity-table>
+      <app-activity-table
+        :activities="activities"
+        :addInAppState="true">
+      </app-activity-table>
 
       <div class="w3-row w3-center">
         <button v-if="!allShown"
@@ -85,7 +88,13 @@ export default {
       return this.element.id
     },
     activities () {
-      return this.notifications.map(function (n) { return n.activity })
+      let activities = []
+      this.notifications.forEach((notification) => {
+        let activity = notification.activity
+        activity.inAppState = notification.inAppState
+        activities.push(activity)
+      })
+      return activities
     },
     url () {
       return '/1/notifications/' + this.contextType + '/' + this.contextElementId
@@ -97,6 +106,16 @@ export default {
       let notificationsHere = []
 
       switch (this.contextType) {
+        case 'MODEL_CARD':
+          for (let ix in this.notifications) {
+            if (this.notifications[ix].activity.modelCardWrapper) {
+              if (this.notifications[ix].activity.modelCardWrapper.id === this.contextElementId) {
+                notificationsHere.push(this.notifications[ix])
+              }
+            }
+          }
+          break
+
         case 'MODEL_SECTION':
           for (let ix in this.notifications) {
             if (this.notifications[ix].activity.modelSection) {
