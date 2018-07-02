@@ -33,7 +33,10 @@
 
         <div class="control-group">
           <popper trigger="hover":options="popperOptions">
-            <div class="popper">messages</div>
+            <app-help-popper
+              title="message"
+              details="here you will find all recent messages and activity of this section and of all the aggregated subsections">
+            </app-help-popper>
 
             <div slot="reference" @click="messagesContent()" class="w3-left control-btn" :class="{'control-btn-selected': isMessagesContent}">
               <img src="./../../assets/chat-icon.svg" alt="">
@@ -89,8 +92,8 @@
                 </div>
               </popper>
 
-              <div v-if="infiniteLevels" class="zoom-controls-cover">
-              </div>
+              <!-- <div v-if="infiniteLevels" class="zoom-controls-cover">
+              </div> -->
             </div>
 
             <popper trigger="hover":options="popperOptions">
@@ -135,12 +138,22 @@
 
         <div v-if="isCardsContent" class="control-group">
           <div class="">
-            <div tooltip="Order By Sections"  @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
-              <img src="./../../assets/network-icon.svg" alt="">
-            </div>
-            <div tooltip="Search" @click="aggregatedOrder()" class="w3-left control-btn" :class="{'control-btn-selected': !isSectionsOrder}">
-              <img src="./../../assets/search-icon.svg" alt="">
-            </div>
+            <popper trigger="hover":options="popperOptions">
+              <div class="popper">show all cards</div>
+
+              <div slot="reference"  @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
+                <img src="./../../assets/network-icon.svg" alt="">
+              </div>
+            </popper>
+
+            <popper trigger="hover":options="popperOptions">
+              <div class="popper">search cards</div>
+
+              <div slot="reference" @click="aggregatedOrder()" class="w3-left control-btn" :class="{'control-btn-selected': !isSectionsOrder}">
+                <img src="./../../assets/search-icon.svg" alt="">
+              </div>
+            </popper>
+
           </div>
         </div>
 
@@ -262,8 +275,6 @@
 import MessageThread from '@/components/notifications/MessageThread'
 import ModelSection from '@/components/model/ModelSection'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer'
-import Popper from 'vue-popperjs'
-import 'vue-popperjs/dist/css/vue-popper.css'
 
 const sectionToMarkdown = function (section, level) {
   var text = ''
@@ -317,8 +328,7 @@ export default {
   components: {
     'app-model-section': ModelSection,
     'app-model-cards-container': ModelCardsContainer,
-    'app-message-thread': MessageThread,
-    'popper': Popper
+    'app-message-thread': MessageThread
   },
 
   data () {
@@ -466,10 +476,14 @@ export default {
       this.resetCards()
     },
     levelUp () {
-      this.$store.commit('levelUp')
+      if (!this.infiniteLevels) {
+        this.$store.commit('levelUp')
+      }
     },
     levelDown () {
-      this.$store.commit('levelDown')
+      if (!this.infiniteLevels) {
+        this.$store.commit('levelDown')
+      }
     },
     toggleInifinteLevels () {
       if (this.isSectionsOrder) {

@@ -21,6 +21,9 @@ import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 import ModelSectionTag from '@/components/model/MoodelSectionTag.vue'
 
+import Popper from 'vue-popperjs'
+import HelpPopper from '@/components/HelpPopper.vue'
+
 Vue.config.productionTip = false
 
 Vue.use(VueAxios, axios)
@@ -50,6 +53,8 @@ Vue.component('app-user-avatar', UserAvatar)
 Vue.component('app-model-section-modal', ModelSectionModal)
 Vue.component('app-model-card-modal', ModelCardModal)
 Vue.component('app-model-section-tag', ModelSectionTag)
+Vue.component('popper', Popper)
+Vue.component('app-help-popper', HelpPopper)
 
 /* custom directive to detect click outside from
 https://stackoverflow.com/questions/36170425/detect-click-outside-element?answertab=votes#tab-top */
