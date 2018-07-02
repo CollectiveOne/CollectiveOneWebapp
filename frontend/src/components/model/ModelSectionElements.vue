@@ -34,8 +34,8 @@
         <div class="control-group">
           <popper trigger="hover":options="popperOptions">
             <app-help-popper
-              title="message"
-              details="here you will find all recent messages and activity of this section and of all the aggregated subsections">
+              :title="$t('help.MESSAGES-TAB-TT')"
+              :details="$t('help.MESSAGES-TAB-DET')">
             </app-help-popper>
 
             <div slot="reference" @click="messagesContent()" class="w3-left control-btn" :class="{'control-btn-selected': isMessagesContent}">
@@ -44,7 +44,10 @@
           </popper>
 
           <popper trigger="hover" :options="popperOptions">
-            <div class="popper">cards summary</div>
+            <app-help-popper
+              :title="$t('help.CARDS-SUMMARY-TAB-TT')"
+              :details="$t('help.CARDS-SUMMARY-TAB-DET')">
+            </app-help-popper>
 
             <div slot="reference" @click="summaryView()" class="w3-left control-btn" :class="{'control-btn-selected': isSummary}">
               <img src="./../../assets/rows-icon.svg" alt="">
@@ -52,7 +55,10 @@
           </popper>
 
           <popper trigger="hover" :options="popperOptions">
-            <div class="popper">cards</div>
+            <app-help-popper
+              :title="$t('help.CARDS-TAB-TT')"
+              :details="$t('help.CARDS-TAB-DET')">
+            </app-help-popper>
 
             <div slot="reference" @click="cardView()" class="w3-left control-btn" :class="{'control-btn-selected': isCard}">
               <img src="./../../assets/cards-icon.svg" alt="">
@@ -60,7 +66,10 @@
           </popper>
 
           <popper trigger="hover" :options="popperOptions">
-            <div class="popper">document view</div>
+            <app-help-popper
+              :title="$t('help.CARDS-DOC-VIEW-TT')"
+              :details="$t('help.CARDS-DOC-VIEW-DET')">
+            </app-help-popper>
 
             <div slot="reference" @click="docView()" class="w3-left control-btn" :class="{'control-btn-selected': isDoc}">
               <img src="./../../assets/doc-icon.svg" alt="">
@@ -73,19 +82,25 @@
           <div class="w3-left zoom-controls">
             <div class="w3-left zoom-controls-enabled">
               <popper trigger="hover":options="popperOptions">
-                <div class="popper">see less levels</div>
+                <app-help-popper
+                  :title="$t('help.REDUCE-LEVELS-TT')"
+                  :details="$t('help.REDUCE-LEVELS-DET')">
+                </app-help-popper>
 
                 <div slot="reference" @click="levelDown()" class="w3-left cursor-pointer arrow-div">
                   <img src="./../../assets/zoom-in-icon.svg" alt="">
                 </div>
               </popper>
 
-              <div tooltip="Level" class="w3-left number-div">
+              <div class="w3-left number-div">
                 {{ levels !== 999 ? levels : '&#x221e;' }}
               </div>
 
               <popper trigger="hover":options="popperOptions">
-                <div class="popper">see more levels</div>
+                <app-help-popper
+                  :title="$t('help.INCREASE-LEVELS-TT')"
+                  :details="$t('help.INCREASE-LEVELS-DET')">
+                </app-help-popper>
 
                 <div slot="reference" @click="levelUp()" class="w3-left cursor-pointer arrow-div">
                   <img src="./../../assets/zoom-out-icon.svg" alt="">
@@ -97,7 +112,10 @@
             </div>
 
             <popper trigger="hover":options="popperOptions">
-              <div class="popper">see all levels</div>
+              <app-help-popper
+                :title="$t('help.SEE-ALL-LEVELS-TT')"
+                :details="$t('help.SEE-ALL-LEVELS-DET')">
+              </app-help-popper>
 
               <div slot="reference" @click="toggleInifinteLevels()" class="w3-left cursor-pointer arrow-div w3-border-left" :class="{'control-btn-selected': infiniteLevels}">
                 <img src="./../../assets/infinite-icon.svg" alt="">
@@ -110,7 +128,10 @@
         <div v-if="isCardsContent && this.$store.state.user.authenticated" class="control-group">
           <div class="">
             <popper trigger="hover":options="popperOptions">
-              <div class="popper">{{ showPrivate ? 'hide' : 'show' }} private cards</div>
+              <app-help-popper
+                :title="(showPrivate ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.PRIVATE-CARDS-TT')"
+                :details="$t('help.PRIVATE-CARDS-DET')">
+              </app-help-popper>
 
               <div slot="reference" @click="showPrivateClick()" class="w3-left control-btn border-red" :class="{'control-btn-selected': showPrivate, 'w3-bottombar': showPrivate}">
                 <img src="./../../assets/private-icon.svg" alt="">

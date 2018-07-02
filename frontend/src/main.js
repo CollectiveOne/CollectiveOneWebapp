@@ -6,6 +6,9 @@ import router from './router'
 import beforeEach from './router/beforeEach'
 import { store } from './store/store'
 
+import VueI18n from 'vue-i18n'
+import { translations } from '@/lang'
+
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueAnalytics from 'vue-analytics'
@@ -30,6 +33,13 @@ Vue.use(VueAxios, axios)
 Vue.use(VueAnalytics, {
   id: 'UA-92543820-1',
   router
+})
+
+Vue.use(VueI18n)
+export const i18n = new VueI18n({
+  locale: 'en', // set locale
+  fallbackLocale: 'en',
+  messages: translations
 })
 
 axios.interceptors.request.use(
@@ -77,6 +87,7 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   template: '<App/>',
   components: { App }
 })

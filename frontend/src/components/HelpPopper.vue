@@ -1,10 +1,11 @@
 <template lang="html">
   <div class="popper">
-    <div class="">
-      {{ title }}
+    <div @click="showDetails = !showDetails" class="header cursor-pointer">
+      {{ title }}<br>
+      <small class="more-button">{{ showDetails ? 'less' : 'more' }}</small>
     </div>
-    <div v-if="showDetails" class="">
-      {{ details }}
+    <hr v-if="showDetails">
+    <div v-if="showDetails" class="details-div" v-html="details">
     </div>
 
   </div>
@@ -24,7 +25,7 @@ export default {
 
   data () {
     return {
-      showDetails: true
+      showDetails: false
     }
   }
 }
@@ -32,10 +33,24 @@ export default {
 
 <style scoped>
 
-.help-popper-container {
-  background-color: white;
-  border-style: solid;
-  border-width: 2px;
+.popper {
+  padding: 6px 12px;
+}
+
+.header {
+  line-height: 10px;
+}
+
+.more-button {
+  text-decoration: underline;
+  color: blue;
+}
+
+.details-div {
+  max-width: 250px;
+  white-space: normal;
+  padding-bottom: 10px;
+  text-align: left;
 }
 
 </style>
