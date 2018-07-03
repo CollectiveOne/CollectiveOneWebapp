@@ -258,6 +258,7 @@ export default {
 
 .thread-container {
   height: 100%;
+  max-height: 100vh;
   display: flex;
   flex-grow: 1;
   flex-direction: column;

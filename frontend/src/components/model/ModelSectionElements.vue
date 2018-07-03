@@ -13,9 +13,7 @@
           @updateCards="resetCards()">
         </app-model-card-modal>
       </transition>
-    </div>
-
-    <div class="slider-container">
+    
       <transition name="slideDownUp">
         <app-model-card-modal
           v-if="showNewCardModal"
