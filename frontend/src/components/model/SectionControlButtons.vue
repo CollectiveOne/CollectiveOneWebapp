@@ -13,9 +13,7 @@
             @updateCards="$store.commit('triggerUpdateSectionCards')">
           </app-model-card-modal>
         </transition>
-      </div>
 
-      <div class="slider-container">
         <transition name="slideDownUp">
           <app-model-section-modal
             v-if="showNewSubsectionModal"
@@ -24,9 +22,7 @@
             @close="showNewSubsectionModal = false">
           </app-model-section-modal>
         </transition>
-      </div>
 
-      <div class="slider-container">
         <transition name="slideDownUp">
           <app-model-section-modal
             v-if="showSectionModal"
@@ -36,9 +32,7 @@
             @close="showSectionModal = false">
           </app-model-section-modal>
         </transition>
-      </div>
 
-      <div class="slider-container">
         <transition name="slideDownUp">
           <app-edit-notifications-modal
             v-if="showEditNotificationsModal"
@@ -50,62 +44,59 @@
 
     </div>
 
-    <div class="modal-buttons-container">
+    <popper :append-to-body="true" trigger="click":options="popperOptions" class="">
+      <div class="">
+        <app-drop-down-menu
+          class="drop-menu"
+          @addCard="addCard()"
+          @addSubsection="addSubsection()"
+          @edit="edit()"
+          @remove="remove()"
+          @delete="deleteSection()"
+          @configNotifications="configNotifications()"
+          :items="menuItems">
+        </app-drop-down-menu>
 
-      <div tooltip="Seciton Menu" class="expand-btn cursor-pointer"
-        @click="expanded =! expanded"
-        v-click-outside="clickOutsideMenu">
-        <i class="fa"
-          :class="{'fa-bars': !onlyAdd, 'fa-plus': onlyAdd}" aria-hidden="true">
-        </i>
-      </div>
-
-      <app-drop-down-menu
-        v-show="expanded"
-        class="drop-menu"
-        @addCard="addCard()"
-        @addSubsection="addSubsection()"
-        @edit="edit()"
-        @remove="remove()"
-        @delete="deleteSection()"
-        @configNotifications="configNotifications()"
-        :items="menuItems">
-      </app-drop-down-menu>
-
-      <div v-if="inSection !== null" class="w3-card w3-white drop-menu">
-        <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
-          <div class="w3-padding w3-round light-grey w3-margin-bottom">
-            <p>
-              <b>Warning:</b> Are you sure you want to remove the section "{{ section.title }}" as a subsection of "{{ inSection.title }}"?
-            </p>
+        <div v-if="inSection !== null" class="w3-card w3-white drop-menu">
+          <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
+            <div class="w3-padding w3-round light-grey w3-margin-bottom">
+              <p>
+                <b>Warning:</b> Are you sure you want to remove the section "{{ section.title }}" as a subsection of "{{ inSection.title }}"?
+              </p>
+            </div>
+            <button
+              class="w3-button light-grey"
+              @click="removeIntent = false">cancel
+            </button>
+            <button
+              class="w3-button button-blue"
+              @click="removeConfirmed()">confirm
+            </button>
           </div>
-          <button
-            class="w3-button light-grey"
-            @click="removeIntent = false">cancel
-          </button>
-          <button
-            class="w3-button button-blue"
-            @click="removeConfirmed()">confirm
-          </button>
-        </div>
 
-        <div v-if="deleteIntent" class="w3-row w3-center delete-intent-div">
-          <div class="w3-padding w3-round light-grey w3-margin-bottom">
-            <p>
-              <b>Warning:</b> Are you sure you want to completely delete the section "{{ section.title }}"? This will delete it from all the sections in which it is a subsection.
-            </p>
+          <div v-if="deleteIntent" class="w3-row w3-center delete-intent-div">
+            <div class="w3-padding w3-round light-grey w3-margin-bottom">
+              <p>
+                <b>Warning:</b> Are you sure you want to completely delete the section "{{ section.title }}"? This will delete it from all the sections in which it is a subsection.
+              </p>
+            </div>
+            <button
+              class="w3-button light-grey"
+              @click="deleteIntent = false">cancel
+            </button>
+            <button
+              class="w3-button danger-btn"
+              @click="deleteConfirmed()">confirm
+            </button>
           </div>
-          <button
-            class="w3-button light-grey"
-            @click="deleteIntent = false">cancel
-          </button>
-          <button
-            class="w3-button danger-btn"
-            @click="deleteConfirmed()">confirm
-          </button>
         </div>
       </div>
-    </div>
+
+      <div slot="reference" class="expand-btn cursor-pointer">
+        <i class="fa" :class="{'fa-bars': !onlyAdd, 'fa-plus': onlyAdd}" aria-hidden="true"></i>
+      </div>
+    </popper>
+
   </div>
 </template>
 
@@ -138,7 +129,6 @@ export default {
 
   data () {
     return {
-      expanded: false,
       showSectionModal: false,
       showNewSubsectionModal: false,
       showNewCardModal: false,
@@ -165,6 +155,16 @@ export default {
       if (this.isLoggedAnEditor && this.inSection !== null && !this.onlyAdd) menuItems.push({ text: 'delete', value: 'delete', faIcon: 'fa-times' })
 
       return menuItems
+   },
+   popperOptions () {
+     return {
+       placement: 'bottom',
+       modifiers: {
+         preventOverflow: {
+           enabled: false
+         }
+       }
+     }
    }
   },
 
@@ -237,13 +237,9 @@ export default {
 }
 
 .drop-menu {
-  position: absolute;
   width: 180px;
-  margin-top: 3px;
-  margin-left: -120px;
   text-align: left;
   font-size: 15px;
-  z-index: 2;
 }
 
 .delete-intent-div {

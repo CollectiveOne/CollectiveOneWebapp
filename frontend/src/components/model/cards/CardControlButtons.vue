@@ -16,9 +16,7 @@
             @updateCards="$emit('updateCards')">
           </app-model-card-modal>
         </transition>
-      </div>
 
-      <div class="slider-container">
         <transition name="slideDownUp">
           <app-model-card-modal
             v-if="showEditCardModal"
@@ -34,44 +32,43 @@
       </div>
     </div>
 
-    <div class="modal-buttons-container">
+    <popper :append-to-body="true" trigger="click":options="popperOptions" class="">
+      <div class="">
+        <app-drop-down-menu
+          class="drop-menu"
+          @edit="edit()"
+          @addCardBefore="addCardLocation('before')"
+          @addCardAfter="addCardLocation('after')"
+          @remove="remove()"
+          :items="menuItems">
+        </app-drop-down-menu>
 
-      <div class="expand-btn cursor-pointer"
-        @click="expanded =! expanded"
-        v-click-outside="clickOutsideMenu">
+        <div class="w3-card w3-white drop-menu">
+
+          <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
+            <div class="w3-padding w3-round light-grey w3-margin-bottom">
+              <p>
+                <b>Warning:</b> Are you sure you want to remove this card from "{{ inSection.title }}"?
+              </p>
+            </div>
+            <button
+              class="w3-button light-grey"
+              @click="removeIntent = false">cancel
+            </button>
+            <button
+              class="w3-button button-blue"
+              @click="removeConfirmed()">confirm
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <div slot="reference" class="expand-btn cursor-pointer">
         <i class="fa fa-bars" aria-hidden="true"></i>
       </div>
+    </popper>
 
-      <app-drop-down-menu
-        v-show="expanded"
-        class="drop-menu"
-        @edit="edit()"
-        @addCardBefore="addCardLocation('before')"
-        @addCardAfter="addCardLocation('after')"
-        @remove="remove()"
-        :items="menuItems">
-      </app-drop-down-menu>
-
-      <div class="w3-card w3-white drop-menu">
-
-        <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
-          <div class="w3-padding w3-round light-grey w3-margin-bottom">
-            <p>
-              <b>Warning:</b> Are you sure you want to remove this card from "{{ inSection.title }}"?
-            </p>
-          </div>
-          <button
-            class="w3-button light-grey"
-            @click="removeIntent = false">cancel
-          </button>
-          <button
-            class="w3-button button-blue"
-            @click="removeConfirmed()">confirm
-          </button>
-        </div>
-
-      </div>
-    </div>
   </div>
 </template>
 
@@ -91,7 +88,6 @@ export default {
 
   data () {
     return {
-      expanded: false,
       showNewCardModal: false,
       newCardLocation: 'end',
       showEditCardModal: false,
@@ -130,7 +126,17 @@ export default {
       if (this.isLoggedAnEditor) menuItems.push({ text: 'add card after', value: 'addCardAfter', faIcon: 'fa-plus' })
       if (this.isLoggedAnEditor) menuItems.push({ text: 'remove', value: 'remove', faIcon: 'fa-times' })
       return menuItems
-   }
+    },
+    popperOptions () {
+      return {
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: false
+          }
+        }
+      }
+    }
   },
 
   methods: {
@@ -182,13 +188,9 @@ export default {
 }
 
 .drop-menu {
-  position: absolute;
   width: 180px;
-  margin-top: 3px;
-  margin-left: -150px;
   text-align: left;
   font-size: 15px;
-  z-index: 2;
 }
 
 .delete-intent-div {
