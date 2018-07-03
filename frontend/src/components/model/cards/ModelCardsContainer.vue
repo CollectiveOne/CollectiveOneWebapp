@@ -36,48 +36,33 @@
       <div v-if="draggingOverCreateCard" class="drop-div">
       </div>
       <div v-if="cardWrappers.length === 0" class="card-container-in-list">
-        <app-model-card-as-card-new
-          v-if="cardsType === 'card'"
+        <app-model-card-editor
           :isNew="true"
           :inSection="inSection"
+          :type="cardsType"
           @updateCards="$emit('updateCards')">
-        </app-model-card-as-card-new>
-        <app-model-card-as-summary-editor
-          v-if="cardsType === 'summary'"
-          :isNew="true"
-          :inSection="inSection"
-          @updateCards="$emit('updateCards')">
-        </app-model-card-as-summary-editor>
-        <app-model-card-as-par-editor
-          v-if="cardsType === 'doc'"
-          :isNew="true"
-          :inSection="inSection"
-          @updateCards="$emit('updateCards')">
-        </app-model-card-as-par-editor>
+        </app-model-card-editor>
       </div>
     </div>
 
-    <app-model-card-as-par-editor
+    <app-model-card-editor
       v-if="cardsType === 'doc' & cardWrappers.length !== 0 & isLoggedAnEditor"
       :isNew="true"
+      :type="cardsType"
       :cardWrapper="lastCardWrapper"
       :inSection="inSection">
-    </app-model-card-as-par-editor>
+    </app-model-card-editor>
   </div>
 </template>
 
 <script>
 import ModelCard from '@/components/model/cards/ModelCard.vue'
-import ModelCardAsCardNew from '@/components/model/cards/ModelCardAsCardNew.vue'
-import ModelCardAsSummaryEditor from '@/components/model/cards/ModelCardAsSummaryEditor.vue'
-import ModelCardAsParEditor from '@/components/model/cards/ModelCardAsParEditor.vue'
+import ModelCardEditor from '@/components/model/cards/ModelCardEditor.vue'
 
 export default {
   components: {
     'app-model-card': ModelCard,
-    'app-model-card-as-card-new': ModelCardAsCardNew,
-    'app-model-card-as-summary-editor': ModelCardAsSummaryEditor,
-    'app-model-card-as-par-editor': ModelCardAsParEditor
+    'app-model-card-editor': ModelCardEditor
   },
 
   props: {
