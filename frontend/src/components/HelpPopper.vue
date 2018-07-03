@@ -47,7 +47,7 @@ export default {
 }
 
 .details-div {
-  max-width: 250px;
+  width: 250px;
   white-space: normal;
   padding-bottom: 10px;
   text-align: left;

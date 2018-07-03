@@ -4,22 +4,53 @@
 
     <div v-if="this.$store.state.user.authenticated" class="control-group">
       <div class="">
-        <div tooltip="Private Cards" @click="showPrivateClick()" class="w3-left control-btn border-red" :class="{'control-btn-selected': showPrivate, 'w3-bottombar': showPrivate}">
-          <img src="./../../../assets/private-icon.svg" alt="">
-        </div>
-        <div tooltip="Shared Cards" @click="showSharedClick()" class="w3-left control-btn border-yellow" :class="{'control-btn-selected': showShared, 'w3-bottombar': showShared}">
-          <img src="./../../../assets/shared-icon.svg" alt="">
-        </div>
-        <div tooltip="Common Cards"  @click="showCommonClick()" class="w3-left control-btn border-blue" :class="{'control-btn-selected': showCommon, 'w3-bottombar': showCommon}">
-          <img src="./../../../assets/common-icon.svg" alt="">
-        </div>
+        <popper trigger="hover":options="popperOptions">
+          <app-help-popper
+            :title="(showPrivate ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.PRIVATE-SECTIONS-TT')"
+            :details="$t('help.PRIVATE-SECTIONS-DET')">
+          </app-help-popper>
+
+          <div slot="reference" @click="showPrivateClick()" class="w3-left control-btn border-red" :class="{'control-btn-selected': showPrivate, 'w3-bottombar': showPrivate}">
+            <img src="./../../../assets/private-icon.svg" alt="">
+          </div>
+        </popper>
+
+        <popper trigger="hover":options="popperOptions">
+          <app-help-popper
+            :title="(showShared ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHARED-SECTIONS-TT')"
+            :details="$t('help.SHARED-SECTIONS-DET')">
+          </app-help-popper>
+
+          <div slot="reference" @click="showSharedClick()" class="w3-left control-btn border-yellow" :class="{'control-btn-selected': showShared, 'w3-bottombar': showShared}">
+            <img src="./../../../assets/shared-icon.svg" alt="">
+          </div>
+        </popper>
+
+        <popper trigger="hover":options="popperOptions">
+          <app-help-popper
+            :title="(showCommon ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.COMMON-SECTIONS-TT')"
+            :details="$t('help.COMMON-SECTIONS-DET')">
+          </app-help-popper>
+
+          <div slot="reference"  @click="showCommonClick()" class="w3-left control-btn border-blue" :class="{'control-btn-selected': showCommon, 'w3-bottombar': showCommon}">
+            <img src="./../../../assets/common-icon.svg" alt="">
+          </div>
+        </popper>
+
       </div>
     </div>
 
     <div class="control-group">
-      <div tooltip="Move Sections" @click="toggleDraggable()" class="w3-right control-btn" :class="{'control-btn-selected': isDraggable}">
-        <img src="./../../../assets/move-icon.svg" alt="">
-      </div>
+      <popper trigger="hover":options="popperOptions">
+        <app-help-popper
+          :title="(isDraggable ? $t('general.DISABLE') : $t('general.ENABLE')) + ' ' + $t('help.ENABLE-DRAG-AND-DROP-TT')"
+          :details="$t('help.ENABLE-DRAG-AND-DROP-SECTIONS-DET')">
+        </app-help-popper>
+
+        <div slot="reference" @click="toggleDraggable()" class="w3-right control-btn" :class="{'control-btn-selected': isDraggable}">
+          <img src="./../../../assets/move-icon.svg" alt="">
+        </div>
+      </popper>
     </div>
 
   </div>

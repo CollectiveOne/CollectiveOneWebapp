@@ -11,7 +11,23 @@ const LEVELS_DOWN = LEVELS_DOWN_VERB + LEVELS_BASE
 const LEVELS_UP = LEVELS_UP_VERB + LEVELS_BASE
 const LEVELS_ALL = LEVELS_ALL_VERB + LEVELS_BASE
 
-const SCOPE_CARDS_BASE = 'A card can be added in a section with different scopes:<br><br>- "PRIVATE": only the user who adds the card to that section can see it.<br><br>- "SHARED": all the members of that initiative ecosystem (all parent initiatives and their subinitiatives) can see and comment the card (but only the adder can remove, move or edit it)<br><br>- "COMMON": Visible to all initiative ecosystem members, and if the initiative is public, visible to anonymous visitors. All the editors of the initiative can edit it.'
+/* ---------------------------------------------------------- */
+/* SCOPES HELP ENG */
+/* ---------------------------------------------------------- */
+
+const SCOPE_COMMON = '<br><br>- "PRIVATE": only the user who adds the subsection to that section can see it.<br><br>- "SHARED": all the members of that initiative ecosystem (all parent initiatives and their subinitiatives) can see it  (but only the user who added the card can remove, move or edit it)<br><br>- "COMMON": Visible to all initiative ecosystem members, and if the initiative is public, visible to non-members too. Only EDITORS or ADMINS of the initiative can edit COMMON cards.<br><br>- <b>Note:</b> The same element can have different scopes on different sections.'
+
+const SCOPE_CARDS_BASE = 'A card can be added in a section with different scopes:' + SCOPE_COMMON
+
+const SCOPE_SUBSECTIONS_BASE = 'A subsection can be added in a section with different scopes:' + SCOPE_COMMON
+
+/* ---------------------------------------------------------- */
+/* DRAG AND DROP HELP ENG */
+/* ---------------------------------------------------------- */
+
+const ENABLE_DD_CARDS = 'This will enable/disable Drag and Drop of cards, allowing you to<br><br>- Reorder cards in this section.<br><br>- Moving cards to other sections by dropping them over an existing section on the navigation panel on the left.<br><br>- Copying (adding) cards to another section by dropping them on an existing section on the navigation panel on the left while holding the CTRL key.<br><br><b>Note:</b> PRIVATE and SHARED cards can only be placed <i>after</i> a COMMON card, they cannot be placed <i>before</i> one.'
+
+const ENABLE_DD_SECTIONS = 'This will enable/disable Drag and Drop of sections, allowing you to<br><br>- Rorder subsections in a given section.<br><br>- Moving subsections to other sections by dropping them over an existing section (dropping them in the left half of the target section will add the dragged section at the <i>same level</i>, while dropping it on the right half will add it <i>as a subsection</i>).<br><br>- Copying (adding) subsections to another section by dropping them on an existing section while holding the CTRL key (same rules apply as for moving a section).<br><br><b>Note:</b> PRIVATE and SHARED sections can only be placed <i>after</i> a COMMON section, they cannot be placed <i>before</i> one.'
 
 /* ---------------------------------------------------------- */
 /* TRANSLATIONS */
@@ -20,11 +36,13 @@ const translations = {
   en: {
     general: {
       'SHOW': 'show',
-      'HIDE': 'hide'
+      'HIDE': 'hide',
+      'ENABLE': 'enable',
+      'DISABLE': 'disable'
     },
     help: {
       'MESSAGES-TAB-TT': 'messages',
-      'MESSAGES-TAB-DET': 'Here you will find a list of all messages and events that were sent or occurred in this section. The list will also include all the messages and events of the all the subsections',
+      'MESSAGES-TAB-DET': 'Here you will find a list of all messages and events that were sent or occurred in this section. The list will also include the messages and events of all the subsections',
 
       'CARDS-SUMMARY-TAB-TT': 'cards summary',
       'CARDS-SUMMARY-TAB-DET': 'Here you will find a <b>condensed</b> list of all the cards in this section (and its subsections if selected levels is greater than 2)',
@@ -54,16 +72,56 @@ const translations = {
       'COMMON-CARDS-DET': SCOPE_CARDS_BASE,
 
       'SHOW-SECTION-ORDER-TT': 'show cards ordered by sections',
-      'SHOW-SECTION-ORDER-DET': 'This view will show all the cards of the selected sections (based on the current depth level) and in their pre-specified per-section order. The number of cards shown will depend on the depth level only',
+      'SHOW-SECTION-ORDER-DET': 'This view will show all the cards of the selected sections (based on the current depth level) in their pre-specified per-section order. The number of cards shown will depend on the depth level only',
 
       'SEARCH-CARDS-TT': 'seach all cards under this section',
-      'SEARCH-CARDS-DET': 'This will search all cards under this section (and all its subsecions) matching the input query. Top ten results will be shown by default, and you can sort the results based on different criteria.',
+      'SEARCH-CARDS-DET': 'This will search all cards under this section (and all its subsecions) matching the input query. Only the top ten cards will be initially shown.',
 
       'SHOW-MESSAGES-TT': 'messages',
       'SHOW-MESSAGES-DET': 'This will show or hide messages from the activity timeline',
 
       'SHOW-EVENTS-TT': 'other events',
-      'SHOW-EVENTS-DET': 'This will show or hide events (everything that is not a message) from the activity timeline'
+      'SHOW-EVENTS-DET': 'This will show or hide events (everything that is not a message) from the activity timeline',
+
+      'DOWNLOAD-CONTENT-TT': 'download as text file',
+      'DOWNLOAD-CONTENT-DET': 'This will download the cards currenlty being shown as a marked-down text file',
+
+      'ENABLE-DRAG-AND-DROP-TT': 'drag and drop',
+      'ENABLE-DRAG-AND-DROP-CARDS-DET': ENABLE_DD_CARDS,
+      'ENABLE-DRAG-AND-DROP-SECTIONS-DET': ENABLE_DD_SECTIONS,
+
+      'PRIVATE-SECTIONS-TT': 'private sections',
+      'PRIVATE-SECTIONS-DET': SCOPE_SUBSECTIONS_BASE,
+
+      'SHARED-SECTIONS-TT': 'shared sections',
+      'SHARED-SECTIONS-DET': SCOPE_SUBSECTIONS_BASE,
+
+      'COMMON-SECTIONS-TT': 'common sections',
+      'COMMON-SECTIONS-DET': SCOPE_SUBSECTIONS_BASE,
+
+      'SECTION-DETAILS-TT': 'details',
+      'SECTION-DETAILS-DET': 'One section can be a subsection of many parent sections at the same time. Here you can see a description of this section and all the places in which this section is present (those visible to you).',
+
+      'READ-FRIENDLY-URL-TT': 'open read-only view',
+      'READ-FRIENDLY-URL-DET': 'The read-only view will open a dedicated page which is perfect for sharing the contents of a section in a read-friendly version.<br><br>The view will include all COMMON cards and all COMMON subsections, at all depth levels.<br><br>You can share the link to that page with others, but access will depend on the visibility of the initiative.',
+
+      'HOME-TAB-TT': 'initiative overview',
+      'HOME-TAB-DET': 'This view shows the initiative details and a summary of the initiative assets/tokens and the transfers made to subinitiatives or members.',
+
+      'CONTENT-TAB-TT': 'initiative content',
+      'CONTENT-TAB-DET': 'This view shows  all the conversations and content of this initiative, organized in sections and cards:<br><br>- <b>A section</b> is a general purpose context, and it automatically provides a conversation space (like a #channel on a chat application), and a content space (similar to post-it boards) made out of cards.<br><br>- <b>A card</b> can contain text and (optionally) one image. Cards are designed to hold ideas, tasks, reminders or anything you want, however, because they are ordered within the section, cards can evolve to become paragraphs of a well structured section in a document.<br><br><b>Note:</b> Sections can be nested, allowing you to have nested conversation channels. Moreover, a section can be a subsection of many other sections at the same time, and a card can be included in many sections at the same time too, enabling you to flexibly aggregate the conversations and cards.',
+
+      'MEMBERS-TAB-TT': 'initiative members',
+      'MEMBERS-TAB-DET': 'This view shows all the members of this initiative and an aggregated list of the members of the subinitiatives.<br><br>Each initiative or subinitiative has its own, and independent, list of members, with their associated roles. Roles can be on of the following:<br><br>- ADMIN: who can edit the initiative details and create and transfer its assets/tokens.<br><br>- EDITOR: Who can create and edit sections and cards, but cant manipulate tokens.<br><br>- MEMBER: Who has access to the initiative (in case it is private) and can receive initiative assets.',
+
+      'TRANSFERS-TAB-TT': 'initiative transfers',
+      'TRANSFERS-TAB-DET': 'This view shows all the transfers of assets/tokens made in this initiative and an aggregated view of all the transfers made on all the subinitiatives.',
+
+      'LANDING-BUTTON-TT': 'landing page',
+      'LANDING-BUTTON-DET': 'You will find  video tutorials in the bottom of the page.',
+
+      'HOME-BUTTON-TT': 'home page',
+      'HOME-BUTTON-DET': 'In the home page you can browse public initiatives.'
     }
   }
 }

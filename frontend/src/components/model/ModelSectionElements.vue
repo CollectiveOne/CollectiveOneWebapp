@@ -193,8 +193,8 @@
         <div v-if="!isCardsContent" class="control-group">
           <popper trigger="hover":options="popperOptions">
             <app-help-popper
-            :title="(showMessages ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHOW-MESSAGES-TT')"
-            :details="$t('help.SHOW-MESSAGES-DET')">
+              :title="(showMessages ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHOW-MESSAGES-TT')"
+              :details="$t('help.SHOW-MESSAGES-DET')">
             </app-help-popper>
 
             <div slot="reference" @click="showMessages = !showMessages" class="w3-left control-btn" :class="{'control-btn-selected': showMessages}">
@@ -241,12 +241,29 @@
 
         <div v-if="isCardsContent && isSectionsOrder" class="control-group">
           <div class="">
-            <div tooltip="Download" @click="downloadContent()" class="w3-left control-btn">
-              <img src="./../../assets/download-icon.svg" alt="">
-            </div>
-            <div v-if="isLoggedAnEditor" tooltip="Cards Draggable" @click="draggable()" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
-              <img src="./../../assets/move-icon.svg" alt="">
-            </div>
+
+            <popper trigger="hover":options="popperOptions">
+              <app-help-popper
+                :title="$t('help.DOWNLOAD-CONTENT-TT')"
+                :details="$t('help.DOWNLOAD-CONTENT-DET')">
+              </app-help-popper>
+
+              <div slot="reference" @click="downloadContent()" class="w3-left control-btn">
+                <img src="./../../assets/download-icon.svg" alt="">
+              </div>
+            </popper>
+
+            <popper trigger="hover":options="popperOptions">
+              <app-help-popper
+                :title="(isDraggable ? $t('general.DISABLE') : $t('general.ENABLE')) + ' ' + $t('help.ENABLE-DRAG-AND-DROP-TT')"
+                :details="$t('help.ENABLE-DRAG-AND-DROP-CARDS-DET')">
+              </app-help-popper>
+
+              <div slot="reference" v-if="isLoggedAnEditor" @click="draggable()" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
+                <img src="./../../assets/move-icon.svg" alt="">
+              </div>
+            </popper>
+
           </div>
         </div>
 
@@ -325,8 +342,9 @@
 import MessageThread from '@/components/notifications/MessageThread'
 import ModelSection from '@/components/model/ModelSection'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer'
+import { getSortedCardWrappers, getSortedSubsections } from '@/lib/sortAlgorithm.js'
 
-const sectionToMarkdown = function (section, level) {
+const sectionToMarkdown = function (section, level, showCommon, showShared, showPrivate) {
   var text = ''
   /* write section on text as reference */
   text += Array(level + 1).join('#') + ' '
@@ -337,8 +355,10 @@ const sectionToMarkdown = function (section, level) {
     text += section.description + '\r\n'
   }
 
-  for (let ix in section.cardsWrappersCommon) {
-    let cardWrapper = section.cardsWrappersCommon[ix]
+  let sortedCardWrappers = getSortedCardWrappers(section, showCommon, showShared, showPrivate)
+
+  for (let ix in sortedCardWrappers) {
+    let cardWrapper = sortedCardWrappers[ix]
     if (cardWrapper.card.title !== '') {
       text += Array(level + 1).join('#') + ' '
       level = level < 5 ? level + 1 : level
@@ -347,31 +367,13 @@ const sectionToMarkdown = function (section, level) {
     text += cardWrapper.card.text + '\r\n'
   }
 
-  for (let ix in section.subsections) {
-    text += sectionToMarkdown(section.subsections[ix], level)
+  let sortedSubsections = getSortedSubsections(section, showCommon, showShared, showPrivate)
+
+  for (let ix in sortedSubsections) {
+    text += sectionToMarkdown(sortedSubsections[ix], level, showCommon, showShared, showPrivate)
   }
 
   return text
-}
-
-const sectionHasContent = function (section) {
-  if (section.cardsWrappersCommon.length > 0 ||
-    section.cardsWrappersPrivate.length > 0 ||
-    section.cardsWrappersShared.length > 0) {
-    return true
-  } else {
-    if (section.subsections.length > 0) {
-      return true
-    } else {
-      /* recursive call  */
-      for (let ix in section.subsections) {
-        if (sectionHasContent(section.subsections[ix])) {
-          return true
-        }
-      }
-    }
-  }
-  return false
 }
 
 export default {
@@ -411,12 +413,6 @@ export default {
     },
     currentSectionId () {
       return this.$route.params.sectionId
-    },
-    sectionHasContent () {
-      if (this.section) {
-        return sectionHasContent(this.section)
-      }
-      return false
     },
     isMessagesContent () {
       return this.$route.name === 'ModelSectionMessages'
@@ -662,7 +658,7 @@ export default {
     },
     downloadContent () {
       let fileContent = 'data:text/plain;charset=utf-8,'
-      fileContent += sectionToMarkdown(this.section, 1)
+      fileContent += sectionToMarkdown(this.section, 1, this.showCommon, this.showShared, this.showPrivate)
 
       var encodedUri = encodeURI(fileContent)
       var link = document.createElement('a')

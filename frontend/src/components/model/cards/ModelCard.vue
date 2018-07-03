@@ -24,9 +24,7 @@
         <div v-if="$store.state.support.triggerCardDraggingState" class="cover-when-draggable">
           <div class="cover-when-draggable-content">
             <span>
-              <i class="fa fa-arrows" aria-hidden="true"></i> <b>move</b>
-              (drop on another section while pressing Ctrl to
-              <i class="fa fa-clone" aria-hidden="true"></i> <b>copy</b>)
+              <i class="fa fa-arrows" aria-hidden="true"></i> move
             </span>
           </div>
         </div>

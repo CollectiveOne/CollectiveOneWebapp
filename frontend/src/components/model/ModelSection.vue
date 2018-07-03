@@ -101,7 +101,7 @@
 import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer.vue'
 import InModelSectionsTags from '@/components/model/InModelSectionsTags.vue'
-import { getArrayFromList, appendElementsToBase } from '@/lib/sortAlgorithm.js'
+import { getSortedCardWrappers, getSortedSubsections } from '@/lib/sortAlgorithm.js'
 
 export default {
   name: 'app-model-section',
@@ -212,22 +212,7 @@ export default {
       return false
     },
     sortedCards () {
-      let allCardWrappers = []
-
-      if (this.showCommon) {
-        allCardWrappers = getArrayFromList(this.section.cardsWrappersCommon.slice())
-      }
-
-      let nonCommonCards = []
-      if (this.showPrivate) {
-        nonCommonCards = nonCommonCards.concat(this.section.cardsWrappersPrivate.slice())
-      }
-
-      if (this.showShared) {
-        nonCommonCards = nonCommonCards.concat(this.section.cardsWrappersShared.slice())
-      }
-
-      allCardWrappers = appendElementsToBase(allCardWrappers, nonCommonCards)
+      let allCardWrappers = getSortedCardWrappers(this.section, this.showCommon, this.showShared, this.showPrivate)
 
       //  new-card-editor for creating new cards
       if (this.createNewCard) {
@@ -249,24 +234,7 @@ export default {
       return allCardWrappers
     },
     sortedSubsections () {
-      let allSubsections = []
-
-      if (this.showCommon) {
-        allSubsections = getArrayFromList(this.section.subsectionsCommon.slice())
-      }
-
-      let nonCommonSubsections = []
-      if (this.showPrivate) {
-        nonCommonSubsections = nonCommonSubsections.concat(this.section.subsectionsPrivate.slice())
-      }
-
-      if (this.showShared) {
-        nonCommonSubsections = nonCommonSubsections.concat(this.section.subsectionsShared.slice())
-      }
-
-      allSubsections = appendElementsToBase(allSubsections, nonCommonSubsections)
-
-      return allSubsections
+      return getSortedSubsections(this.section, this.showCommon, this.showShared, this.showPrivate)
     },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor

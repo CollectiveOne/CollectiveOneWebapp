@@ -80,7 +80,48 @@ const appendElementsToBase = function (baseList, toAddList) {
   return baseList
 }
 
+const getSortedCardWrappers = function (section, showCommon, showShared, showPrivate) {
+  let allCardWrappers = []
+
+  if (showCommon) {
+    allCardWrappers = getArrayFromList(section.cardsWrappersCommon.slice())
+  }
+
+  let nonCommonCards = []
+  if (showPrivate) {
+    nonCommonCards = nonCommonCards.concat(section.cardsWrappersPrivate.slice())
+  }
+
+  if (showShared) {
+    nonCommonCards = nonCommonCards.concat(section.cardsWrappersShared.slice())
+  }
+
+  allCardWrappers = appendElementsToBase(allCardWrappers, nonCommonCards)
+
+  return allCardWrappers
+}
+
+const getSortedSubsections = function (section, showCommon, showShared, showPrivate) {
+  let allSubsections = []
+
+  if (showCommon) {
+    allSubsections = getArrayFromList(section.subsectionsCommon.slice())
+  }
+
+  let nonCommonSubsections = []
+  if (showPrivate) {
+    nonCommonSubsections = nonCommonSubsections.concat(section.subsectionsPrivate.slice())
+  }
+
+  if (showShared) {
+    nonCommonSubsections = nonCommonSubsections.concat(section.subsectionsShared.slice())
+  }
+
+  return appendElementsToBase(allSubsections, nonCommonSubsections)
+}
+
 export {
-  getArrayFromList,
-  appendElementsToBase
+  getSortedCardWrappers,
+  getSortedSubsections,
+  getArrayFromList
 }

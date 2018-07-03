@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { getArrayFromList, appendElementsToBase } from '@/lib/sortAlgorithm.js'
+import { getSortedSubsections } from '@/lib/sortAlgorithm.js'
 
 const state = {
   sectionsTree: [],
@@ -157,13 +157,7 @@ const actions = {
           // console.log(section)
 
           /* sort subsections for this user */
-          let subsections = getArrayFromList(section.subsectionsCommon.slice())
-
-          let nonCommonSubsections = []
-          nonCommonSubsections = nonCommonSubsections.concat(section.subsectionsPrivate.slice())
-          nonCommonSubsections = nonCommonSubsections.concat(section.subsectionsShared.slice())
-
-          subsections = appendElementsToBase(subsections, nonCommonSubsections)
+          let subsections = getSortedSubsections(section, true, true, true)
 
           let subsectionsData = []
 
