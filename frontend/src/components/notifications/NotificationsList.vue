@@ -1,45 +1,44 @@
 <template lang="html">
   <div class="notifications-container">
 
-    <div class="icon-button cursor-pointer w3-display-container"
-      @click="showNotificationsClicked()">
-      <span v-if="totalUnread === 0">
-        <i class="fa fa-circle-o circle-empty"></i>
-      </span>
-      <span v-else>
-        <i v-if="onlyNotificationsUnder" class="fa fa-circle-o circle-o"></i>
-        <i v-else class="fa fa-circle circle"></i>
-      </span>
-
-    </div>
-
-    <div v-if="showTable"
-      v-click-outside="clickOutsideNotifications"
-      class="notifications-list-container w3-white w3-card-4 w3-bar-block noselect">
-      <div class="w3-row-padding w3-border-bottom notifications-header">
-        <div class="w3-col s8 text-div w3-center">
-          {{ totalUnread }} unread events under <br>{{ elementTitle }}
+    <popper :append-to-body="true" trigger="click":options="popperOptions" class="">
+      <div class="notifications-list-container w3-white w3-card-4 w3-bar-block noselect">
+        <div class="w3-row-padding w3-border-bottom notifications-header">
+          <div class="w3-col s8 text-div w3-center">
+            {{ totalUnread }} unread events under <br>{{ elementTitle }}
+          </div>
+          <button class="w3-col  w3-margin-top w3-margin-bottom w3-button app-button" :class="isMainNav?'s5':'s4'"
+            @click="allNotificationsRead()">
+            mark as read
+          </button>
         </div>
-        <button class="w3-col  w3-margin-top w3-margin-bottom w3-button app-button" :class="isMainNav?'s5':'s4'"
-          @click="allNotificationsRead()">
-          mark as read
-        </button>
+
+        <app-activity-table
+          :activities="activities"
+          :addInAppState="true">
+        </app-activity-table>
+
+        <div class="w3-row w3-center">
+          <button v-if="!allShown"
+            id="T_showMoreButton"
+            @click="showMore()"
+            class="w3-margin-top w3-margin-bottom w3-button app-button-light" type="button" name="button">
+            show more...
+          </button>
+        </div>
       </div>
 
-      <app-activity-table
-        :activities="activities"
-        :addInAppState="true">
-      </app-activity-table>
-
-      <div class="w3-row w3-center">
-        <button v-if="!allShown"
-          id="T_showMoreButton"
-          @click="showMore()"
-          class="w3-margin-top w3-margin-bottom w3-button app-button-light" type="button" name="button">
-          show more...
-        </button>
+      <div slot="reference" class="icon-button cursor-pointer w3-display-container"
+        @click="showNotificationsClicked()">
+        <span v-if="totalUnread === 0">
+          <i class="fa fa-circle-o circle-empty"></i>
+        </span>
+        <span v-else>
+          <i v-if="onlyNotificationsUnder" class="fa fa-circle-o circle-o"></i>
+          <i v-else class="fa fa-circle circle"></i>
+        </span>
       </div>
-    </div>
+    </popper>
 
   </div>
 </template>
@@ -158,6 +157,19 @@ export default {
         return this.notificationsHere.length === 0
       }
       return false
+    },
+    popperOptions () {
+      return {
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: false
+          },
+          flip: {
+            enabled: false
+          }
+        }
+      }
     }
   },
 
@@ -355,13 +367,9 @@ export default {
 }
 
 .notifications-list-container {
-  width: 420px;
-  position: absolute;
-  top: 30px;
-  left: 16px;
-  max-height: calc(100vh - 80px);
-  overflow-y: auto;
-  z-index: 2;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow: auto;
 }
 
 .compact .notifications-container {
