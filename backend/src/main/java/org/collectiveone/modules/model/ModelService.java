@@ -1469,9 +1469,9 @@ public class ModelService {
 		activities = activityRepository.findOfSectionsOrCardsAndType(
 				allSectionIds, 
 				cardsIds,
-				!(addMessages && addEvents),
 				ActivityType.MESSAGE_POSTED,
 				addMessages,
+				addEvents,
 				page);	
 			
 		return activities;
@@ -1495,9 +1495,9 @@ public class ModelService {
 		activities = activityRepository.findOfSectionsOrCardsAndType(
 				dum, 
 				cardIds, 
-				!(addMessages && addEvents),
-				ActivityType.MESSAGE_POSTED, 
+				ActivityType.MESSAGE_POSTED,
 				addMessages,
+				addEvents,
 				page);
 		
 		return activities;

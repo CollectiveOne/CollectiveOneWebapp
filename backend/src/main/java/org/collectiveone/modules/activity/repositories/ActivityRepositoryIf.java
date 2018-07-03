@@ -15,10 +15,7 @@ public interface ActivityRepositoryIf extends CrudRepository<Activity, UUID> {
 	
 	Activity findTop1ByAssignation_IdAndTypeOrderByTimestampDesc(UUID assignationId, ActivityType type);
 	
-	/* if filterByType is TRUE. results will be filtered based on activity type
-	 * 	if includeExcludeType is TRUE, results with activity type == type will be included
-	 * 	if includeExcludeType is FALSE, results with activity type != type will be included.
-	 * If filterByType is FALSE, all results, independently of the type, will be included */
+	/* CHECK https://docs.google.com/spreadsheets/d/11M405BZg7lJWr_G_qjeaAecCT8Q5wTQXLjuHfZyhjP0/edit#gid=0 */
 	@Query("SELECT act FROM Activity act "
 			+ "LEFT JOIN act.modelCardWrapperAddition crdWrpAdd "
 			+ "LEFT JOIN act.modelSubsection subsec "
@@ -30,15 +27,14 @@ public interface ActivityRepositoryIf extends CrudRepository<Activity, UUID> {
 			+ "OR act.fromSection.id IN :sectionIds "
 			+ "OR crdWrpAdd.section.id IN :sectionIds "
 			+ "OR crdWrpAdd.cardWrapper.id IN :cardWrapperIds) "
-			+ "AND (((:filterByType = FALSE OR act.type  = :type) AND (:filterByType = FALSE OR :includeExcludeType = TRUE)) "
-			+ "OR   ((:filterByType = FALSE OR act.type != :type) AND (:filterByType = FALSE OR :includeExcludeType = FALSE))) "
+			+ "AND ((:addMessages = TRUE AND act.type = :type) OR (:addEvents = TRUE AND act.type != :type)) "
 			+ "ORDER BY act.timestamp DESC")
 	Page<Activity> findOfSectionsOrCardsAndType(
 			@Param("sectionIds") List<UUID> sectionIds, 
 			@Param("cardWrapperIds") List<UUID> cardsWrappersIds, 
-			@Param("filterByType") Boolean filterByType, 
-			@Param("type") ActivityType type, 
-			@Param("includeExcludeType") Boolean inlcludeExcludeTypeFlag, 
+			@Param("type") ActivityType type,
+			@Param("addMessages") Boolean addMessages,
+			@Param("addEvents") Boolean addEvents, 	
 			Pageable pageable);
 	
 	@Query("SELECT act FROM Activity act "
