@@ -10,6 +10,7 @@ import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryPeriodConf
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 public interface NotificationRepositoryIf extends CrudRepository<Notification, UUID> {
 
@@ -24,30 +25,44 @@ public interface NotificationRepositoryIf extends CrudRepository<Notification, U
 	@Query("SELECT notif FROM Notification notif "
 			+ "JOIN notif.activity act "
 			+ "LEFT JOIN act.modelCardWrapperAddition crdWrpAdd "
-			+ "WHERE notif.subscriber.user.c1Id = ?1 "
-			+ "AND notif.inAppState IN ?2 "
-			+ "AND (act.modelSection.id IN ?3 "
-			+ "OR act.fromSection.id IN ?3 "
-			+ "OR act.onSection.id IN ?3 "
-			+ "OR act.modelCardWrapper.id IN ?4 "
-			+ "OR crdWrpAdd.section.id IN ?3 "
-			+ "OR crdWrpAdd.cardWrapper.id IN ?4) "
+			+ "LEFT JOIN act.modelSubsection subsec "
+			+ "WHERE notif.subscriber.user.c1Id = :userId "
+			+ "AND notif.inAppState IN :states "
+			+ "AND (act.modelSection.id IN :sectionIds "
+			+ "OR act.fromSection.id IN :sectionIds "
+			+ "OR act.onSection.id IN :sectionIds "
+			+ "OR act.modelCardWrapper.id IN :cardWrappersIds "
+			+ "OR subsec.section.id IN :sectionIds "
+			+ "OR subsec.parentSection.id IN :sectionIds "
+			+ "OR crdWrpAdd.section.id IN :sectionIds "
+			+ "OR crdWrpAdd.cardWrapper.id IN :cardWrappersIds) "
 			+ "ORDER BY act.timestamp DESC")
-	List<Notification> findOfUserInSections(UUID userId, List<NotificationState> states, List<UUID> sectionIds, List<UUID> cardWrappersIds, Pageable page);	
+	List<Notification> findOfUserInSections(
+			@Param("userId") UUID userId, 
+			@Param("states") List<NotificationState> states, 
+			@Param("sectionIds") List<UUID> sectionIds, 
+			@Param("cardWrappersIds") List<UUID> cardWrappersIds, 
+			Pageable page);	
 	
 	/* WARNING ALMOST REPEATED QUERY USED FOR COUNTING! */
 	@Query("SELECT COUNT(notif) FROM Notification notif "
 			+ "JOIN notif.activity act "
 			+ "LEFT JOIN act.modelCardWrapperAddition crdWrpAdd "
-			+ "WHERE notif.subscriber.user.c1Id = ?1 "
+			+ "LEFT JOIN act.modelSubsection subsec "
+			+ "WHERE notif.subscriber.user.c1Id = :userId "
 			+ "AND notif.inAppState = 'PENDING' "
-			+ "AND (act.modelSection.id IN ?2 "
-			+ "OR act.fromSection.id IN ?2 "
-			+ "OR act.onSection.id IN ?2 "
-			+ "OR act.modelCardWrapper.id IN ?3 "
-			+ "OR crdWrpAdd.section.id IN ?2 "
-			+ "OR crdWrpAdd.cardWrapper.id IN ?3)")
-	Integer countOfUserInSections(UUID userId, List<UUID> sectionIds, List<UUID> cardWrappersIds);	
+			+ "AND (act.modelSection.id IN :sectionIds "
+			+ "OR act.fromSection.id IN :sectionIds "
+			+ "OR act.onSection.id IN :sectionIds "
+			+ "OR act.modelCardWrapper.id IN :cardWrappersIds "
+			+ "OR subsec.section.id IN :sectionIds "
+			+ "OR subsec.parentSection.id IN :sectionIds "
+			+ "OR crdWrpAdd.section.id IN :sectionIds "
+			+ "OR crdWrpAdd.cardWrapper.id IN :cardWrappersIds)")
+	Integer countOfUserInSections(
+			@Param("userId") UUID userId, 
+			@Param("sectionIds") List<UUID> sectionIds, 
+			@Param("cardWrappersIds") List<UUID> cardWrappersIds);	
 	
 	@Query("SELECT notif FROM Notification notif "
             + "JOIN notif.activity act "

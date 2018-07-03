@@ -2,7 +2,7 @@
   <router-link :to="{
     name: 'ModelSectionCard',
     params: {
-      'initiativeId': this.cardWrapper.initiativeId,
+      'initiativeId': this.onSection ? this.onSection.initiativeId : '',
       'sectionId': this.onSection ? this.onSection.id : '',
       'cardId': this.cardWrapper.id
       }}">

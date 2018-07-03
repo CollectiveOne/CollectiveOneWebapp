@@ -83,6 +83,19 @@
       },
       showCommon () {
         return this.$store.state.viewParameters.showCommonSections
+      },
+      popperOptions () {
+        return {
+          placement: 'bottom',
+          modifiers: {
+            preventOverflow: {
+              enabled: false
+            },
+            flip: {
+              enabled: false
+            }
+          }
+        }
       }
     },
 

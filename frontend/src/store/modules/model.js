@@ -48,7 +48,6 @@ const getters = {
 
 const mutations = {
   setCurrentSectionGenealogy: (state, payload) => {
-    console.log('setting section genealogy: ' + payload)
     state.currentSectionGenealogy = payload
   }
 }

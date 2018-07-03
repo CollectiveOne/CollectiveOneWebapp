@@ -282,6 +282,19 @@ export default {
         { text: 'notifications', value: 'notifications', faIcon: 'fa-cog' },
         { text: 'logout', value: 'logout', faIcon: 'fa-power-off' }
       ]
+    },
+    popperOptions () {
+      return {
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: false
+          },
+          flip: {
+            enabled: false
+          }
+        }
+      }
     }
   },
 

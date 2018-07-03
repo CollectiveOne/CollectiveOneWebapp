@@ -112,7 +112,6 @@ export default {
       return this.$store.getters.isLoggedAnEditor
     },
     cardsContainerClasses () {
-      console.log(this)
       return {
         'section-card-col-with-nav': this.cardsType === 'card' && (this.$store.state.support.expandModelNav && !this.$store.state.support.windowIsSmall),
         'section-card-col-no-nav': this.cardsType === 'card' && (!this.$store.state.support.expandModelNav || this.$store.state.support.windowIsSmall),
