@@ -3,6 +3,36 @@
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 
+
+      <div v-if="!editing" class="">
+        <div v-if="card.imageFile" class="w3-row image-container w3-center w3-display-container w3-card-2 cursor-pointer">
+          <img @click="showImageClick()" :src="card.imageFile.url + '?lastUpdated='+ card.imageFile.lastUpdated" alt="">
+        </div>
+      </div>
+      <div v-if="editing" class="">
+        <div class="w3-row image-container w3-center w3-display-container w3-card-2">
+          <div v-if="uploadingImage" class="loader-gif-container">
+            <img class="loader-gif" src="../../../assets/loading.gif" alt="">
+          </div>
+          <div v-if="!uploadingImage" class="">
+            <img v-if="editedCard.imageFile" @click="showImageClick()" :src="editedCard.imageFile.url + '?lastUpdated='+ editedCard.imageFile.lastUpdated" alt="">
+          </div>
+          <div v-if="!uploadingImage" class="w3-display-middle">
+            <input class="inputfile" @change="newFileSelected($event)"
+            type="file" name="imageFile" id="imageFile" accept="image/*">
+            <label for="imageFile" class="w3-button app-button">{{ editedCard.imageFile ? 'change' : 'upload image' }}</label>
+            <button v-if="editedCard.imageFile"
+            @click="removeImage()"
+            class="w3-button app-button-danger">remove</button>
+          </div>
+        </div>
+        <app-error-panel
+        :show="errorUploadingFile"
+        :message="errorUploadingFileMsg">
+      </app-error-panel>
+    </div>
+
+<div :class="cClass">
     <div class="cursor-pointer" :class="inputClass">
       <div class="w3-row input-border">
         <input type="text" class="w3-input w3-hover-light-grey" placeholder="Enter card title" v-model="editedCard.title">
@@ -28,8 +58,9 @@
         </div>
       </div>
 
+
       <div class="w3-right control-buttons">
-        <div class="w3-right cursor-pointer indicator-comp">
+        <div class="w3-right cursor-pointer indicator-comp" @change="newFileSelected($event)">
           <i class="fa fa-upload highlight" aria-hidden="true"></i>
         </div>
         <div class="w3-right cursor-pointer indicator-comp" @click="cardClicked()">
@@ -52,7 +83,7 @@
       <i class="fa fa-close" aria-hidden="true"></i>
     </div>
   </transition>
-
+</div>
 </div>
 </template>
 
@@ -106,7 +137,10 @@ export default {
       addExisting: false,
       sendingData: false,
       loading: false,
-      scope: 'SHARED'
+      scope: 'SHARED',
+      uploadingImage: false,
+      errorUploadingFile: false,
+      errorUploadingFileMsg: ''
     }
   },
 
@@ -194,10 +228,55 @@ export default {
       buttonClass['send-button-container-doc'] = this.type === 'doc'
 
       return buttonClass
+    },
+    card () {
+      return this.atCardWrapper.card
     }
   },
 
   methods: {
+    removeImage () {
+      this.editedCard.imageFile = null
+      this.editedCard.newImageFileId = 'REMOVE'
+    },
+    newFileSelected (event) {
+      /* upload image */
+      var fileData = event.target.files[0]
+      if (fileData.size > 1048576) {
+        this.errorUploadingFile = true
+        this.errorUploadingFileMsg = 'Image file too big. Must be below 1 MB'
+        return
+      }
+
+      var data = new FormData()
+      data.append('file', fileData)
+
+      this.uploadingImage = true
+      this.errorUploadingFile = false
+
+      this.axios.post('/1/upload/cardImage/' + this.atCardWrapper.id, data).then((response) => {
+        console.log(response)
+        this.uploadingImage = false
+
+        if (response.data.result === 'success') {
+          this.editedCard.newImageFileId = response.data.elementId
+          return this.axios.get('/1/files/' + this.editedCard.newImageFileId)
+        } else {
+          this.errorUploadingFile = true
+          this.errorUploadingFileMsg = response.data.message
+        }
+      }).then((response) => {
+        /* to force reactivity */
+        var newEditedCard = JSON.parse(JSON.stringify(this.editedCard))
+        newEditedCard.imageFile = response.data.data
+        this.editedCard = newEditedCard
+      })
+    },
+    showImageClick () {
+      if (!this.editing) {
+        this.showImage = true
+      }
+    },
     startEditing () {
       this.editedCard = JSON.parse(JSON.stringify(this.atCardWrapper.card))
       this.scope = this.atCardWrapper.scope
@@ -318,6 +397,20 @@ export default {
 </script>
 
 <style scoped>
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.loader-gif-container {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
 
 .input-border {
   border: solid #ccc !important;
