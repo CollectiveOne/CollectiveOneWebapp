@@ -27,64 +27,64 @@
         </div>
       </div>
       <app-error-panel
-      :show="errorUploadingFile"
-      :message="errorUploadingFileMsg">
-    </app-error-panel>
+        :show="errorUploadingFile"
+        :message="errorUploadingFileMsg">
+      </app-error-panel>
+    </div>
+
+    <div :class="cClass">
+      <div class="cursor-pointer" :class="inputClass">
+        <div class="w3-row input-border">
+          <input type="text" class="w3-input w3-hover-light-grey" placeholder="Enter card title" v-model="editedCard.title">
+        </div>
+        <div ref="cardText" class="w3-row card-text">
+          <app-markdown-editor placeholder="Enter text here"  v-model="editedCard.text"></app-markdown-editor>
+        </div>
+      </div>
+
+      <div v-if="type !== 'doc'" :class="controlsClass">
+        <div class="w3-left scope-controls">
+          <div  class="w3-right cursor-pointer indicator-comp"
+            @click="scope = 'COMMON'">
+            <i class="fa fa-circle select-common highlight" aria-hidden="true"></i>
+          </div>
+          <div class="w3-right cursor-pointer indicator-comp"
+            @click="scope = 'SHARED'">
+            <i class="fa fa-circle select-shared highlight" aria-hidden="true"></i>
+          </div>
+          <div class="w3-right cursor-pointer indicator-comp"
+            @click="scope = 'PRIVATE'">
+            <i class="fa fa-circle select-private highlight" aria-hidden="true"></i>
+          </div>
+        </div>
+
+
+        <div class="w3-right control-buttons">
+          <div class="w3-right cursor-pointer indicator-comp" @change="newFileSelected($event)">
+            <i class="fa fa-upload highlight" aria-hidden="true"></i>
+          </div>
+          <div class="w3-right cursor-pointer indicator-comp" @click="cardClicked()">
+            <i class="fa fa-expand highlight" aria-hidden="true"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-row send-button-container" :class="buttonClass">
+        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }} <span><small>(Ctr + Enter)</small></span></button>
+        <div v-show="sendingData" class="sending-accept light-grey">
+          <img class="" src="../../../assets/loading.gif" alt="">
+        </div>
+      </div>
+
+      <transition name="fadeenter">
+        <div v-if="hovering & editing"
+          class="w3-padding gray-2-color w3-display-topright cursor-pointer"
+          @click="$emit('edit')">
+          <i class="fa fa-close" aria-hidden="true"></i>
+        </div>
+      </transition>
+    </div>
   </div>
-
-  <div :class="cClass">
-    <div class="cursor-pointer" :class="inputClass">
-      <div class="w3-row input-border">
-        <input type="text" class="w3-input w3-hover-light-grey" placeholder="Enter card title" v-model="editedCard.title">
-      </div>
-      <div ref="cardText" class="w3-row card-text">
-        <app-markdown-editor placeholder="Enter text here"  v-model="editedCard.text"></app-markdown-editor>
-      </div>
-    </div>
-
-    <div v-if="type !== 'doc'" :class="controlsClass">
-      <div class="w3-left scope-controls">
-        <div  class="w3-right cursor-pointer indicator-comp"
-          @click="scope = 'COMMON'">
-          <i class="fa fa-circle select-common highlight" aria-hidden="true"></i>
-        </div>
-        <div class="w3-right cursor-pointer indicator-comp"
-          @click="scope = 'SHARED'">
-          <i class="fa fa-circle select-shared highlight" aria-hidden="true"></i>
-        </div>
-        <div class="w3-right cursor-pointer indicator-comp"
-          @click="scope = 'PRIVATE'">
-          <i class="fa fa-circle select-private highlight" aria-hidden="true"></i>
-        </div>
-      </div>
-
-
-      <div class="w3-right control-buttons">
-        <div class="w3-right cursor-pointer indicator-comp" @change="newFileSelected($event)">
-          <i class="fa fa-upload highlight" aria-hidden="true"></i>
-        </div>
-        <div class="w3-right cursor-pointer indicator-comp" @click="cardClicked()">
-          <i class="fa fa-expand highlight" aria-hidden="true"></i>
-        </div>
-      </div>
-    </div>
-
-    <div class="button-row send-button-container" :class="buttonClass">
-      <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }} <span><small>(Ctr + Enter)</small></span></button>
-      <div v-show="sendingData" class="sending-accept light-grey">
-        <img class="" src="../../../assets/loading.gif" alt="">
-      </div>
-    </div>
-
-    <transition name="fadeenter">
-      <div v-if="hovering & editing"
-        class="w3-padding gray-2-color w3-display-topright cursor-pointer"
-        @click="$emit('edit')">
-        <i class="fa fa-close" aria-hidden="true"></i>
-      </div>
-    </transition>
-  </div>
-</div>
 </template>
 
 <script>
