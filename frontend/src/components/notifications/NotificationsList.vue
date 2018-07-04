@@ -2,7 +2,7 @@
   <div class="notifications-container">
 
     <popper :append-to-body="true" trigger="click":options="popperOptions" class="">
-      <div class="notifications-list-container w3-white w3-card-4 w3-bar-block noselect">
+      <div class="notifications-list-container w3-white w3-card-4 w3-bar-block noselect w3-topbar border-blue-app">
         <div class="w3-row-padding w3-border-bottom notifications-header">
           <div class="w3-col s8 text-div w3-center">
             {{ totalUnread }} unread events under <br>{{ elementTitle }}
@@ -163,9 +163,6 @@ export default {
         placement: 'bottom',
         modifiers: {
           preventOverflow: {
-            enabled: false
-          },
-          flip: {
             enabled: false
           }
         }
@@ -368,7 +365,7 @@ export default {
 
 .notifications-list-container {
   max-width: 400px;
-  max-height: 80vh;
+  max-height: 60vh;
   overflow: auto;
 }
 

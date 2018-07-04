@@ -39,7 +39,9 @@
           :isSelected="isSelected">
         </app-notifications-list>
       </div>
-      <div v-if="$store.state.user.authenticated && !draggingEnabled" class="control-div" :class="{'fa-button': !highlight, 'fa-button-dark': highlight}">
+      <div v-if="$store.state.user.authenticated && !draggingEnabled"
+        class="control-div" :class="{'fa-button': !parentIsSelected, 'fa-button-dark': parentIsSelected || highlight}">
+
         <app-section-control-buttons
           :section="section"
           :inSection="inSection"

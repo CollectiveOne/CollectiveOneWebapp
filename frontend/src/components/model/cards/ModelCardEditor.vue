@@ -3,36 +3,36 @@
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 
-
-      <div v-if="!editing" class="">
-        <div v-if="card.imageFile" class="w3-row image-container w3-center w3-display-container w3-card-2 cursor-pointer">
-          <img @click="showImageClick()" :src="card.imageFile.url + '?lastUpdated='+ card.imageFile.lastUpdated" alt="">
-        </div>
+    <div v-if="!editing" class="">
+      <div v-if="card.imageFile" class="w3-row image-container w3-center w3-display-container w3-card-2 cursor-pointer">
+        <img @click="showImageClick()" :src="card.imageFile.url + '?lastUpdated='+ card.imageFile.lastUpdated" alt="">
       </div>
-      <div v-if="editing" class="">
-        <div class="w3-row image-container w3-center w3-display-container w3-card-2">
-          <div v-if="uploadingImage" class="loader-gif-container">
-            <img class="loader-gif" src="../../../assets/loading.gif" alt="">
-          </div>
-          <div v-if="!uploadingImage" class="">
-            <img v-if="editedCard.imageFile" @click="showImageClick()" :src="editedCard.imageFile.url + '?lastUpdated='+ editedCard.imageFile.lastUpdated" alt="">
-          </div>
-          <div v-if="!uploadingImage" class="w3-display-middle">
-            <input class="inputfile" @change="newFileSelected($event)"
-            type="file" name="imageFile" id="imageFile" accept="image/*">
-            <label for="imageFile" class="w3-button app-button">{{ editedCard.imageFile ? 'change' : 'upload image' }}</label>
-            <button v-if="editedCard.imageFile"
-            @click="removeImage()"
-            class="w3-button app-button-danger">remove</button>
-          </div>
-        </div>
-        <app-error-panel
-        :show="errorUploadingFile"
-        :message="errorUploadingFileMsg">
-      </app-error-panel>
     </div>
 
-<div :class="cClass">
+    <div v-if="editing" class="">
+      <div class="w3-row image-container w3-center w3-display-container w3-card-2">
+        <div v-if="uploadingImage" class="loader-gif-container">
+          <img class="loader-gif" src="../../../assets/loading.gif" alt="">
+        </div>
+        <div v-if="!uploadingImage" class="">
+          <img v-if="editedCard.imageFile" @click="showImageClick()" :src="editedCard.imageFile.url + '?lastUpdated='+ editedCard.imageFile.lastUpdated" alt="">
+        </div>
+        <div v-if="!uploadingImage" class="w3-display-middle">
+          <input class="inputfile" @change="newFileSelected($event)"
+          type="file" name="imageFile" id="imageFile" accept="image/*">
+          <label for="imageFile" class="w3-button app-button">{{ editedCard.imageFile ? 'change' : 'upload image' }}</label>
+          <button v-if="editedCard.imageFile"
+          @click="removeImage()"
+          class="w3-button app-button-danger">remove</button>
+        </div>
+      </div>
+      <app-error-panel
+      :show="errorUploadingFile"
+      :message="errorUploadingFileMsg">
+    </app-error-panel>
+  </div>
+
+  <div :class="cClass">
     <div class="cursor-pointer" :class="inputClass">
       <div class="w3-row input-border">
         <input type="text" class="w3-input w3-hover-light-grey" placeholder="Enter card title" v-model="editedCard.title">
@@ -70,26 +70,26 @@
     </div>
 
     <div class="button-row send-button-container" :class="buttonClass">
-        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }} <span><small>(Ctr + Enter)</small></span></button>
-        <div v-show="sendingData" class="sending-accept light-grey">
-          <img class="" src="../../../assets/loading.gif" alt="">
-        </div>
+      <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }} <span><small>(Ctr + Enter)</small></span></button>
+      <div v-show="sendingData" class="sending-accept light-grey">
+        <img class="" src="../../../assets/loading.gif" alt="">
+      </div>
     </div>
 
     <transition name="fadeenter">
       <div v-if="hovering & editing"
-      class="w3-padding gray-2-color w3-display-topright cursor-pointer"
-      @click="$emit('edit')">
-      <i class="fa fa-close" aria-hidden="true"></i>
-    </div>
-  </transition>
-</div>
+        class="w3-padding gray-2-color w3-display-topright cursor-pointer"
+        @click="$emit('edit')">
+        <i class="fa fa-close" aria-hidden="true"></i>
+      </div>
+    </transition>
+  </div>
 </div>
 </template>
 
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
-import InModelSectionsTags from '@/components/model/cards/InModelSectionsTags.vue'
+import InModelSectionsTags from '@/components/model/InModelSectionsTags.vue'
 
 export default {
 
@@ -441,7 +441,7 @@ export default {
    text-shadow: 0px 0px 5px #000000;
 }
 
-.select-clicked { 
+.select-clicked {
    text-shadow: 0px 0px 5px #000000;
 }
 .app-button {
