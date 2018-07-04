@@ -3,27 +3,23 @@
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 
-    <div v-if="!editing" class="">
-      <div v-if="card.imageFile" class="w3-row image-container w3-center w3-display-container w3-card-2 cursor-pointer">
-        <img @click="showImageClick()" :src="card.imageFile.url + '?lastUpdated='+ card.imageFile.lastUpdated" alt="">
-      </div>
-    </div>
-
-    <div v-if="editing" class="">
-      <div class="w3-row image-container w3-center w3-display-container w3-card-2">
+    <div class="">
+      <div v-if="hasImage || uploadingImage" class="w3-row image-container w3-center w3-display-container">
         <div v-if="uploadingImage" class="loader-gif-container">
           <img class="loader-gif" src="../../../assets/loading.gif" alt="">
         </div>
         <div v-if="!uploadingImage" class="">
-          <img v-if="editedCard.imageFile" @click="showImageClick()" :src="editedCard.imageFile.url + '?lastUpdated='+ editedCard.imageFile.lastUpdated" alt="">
+          <img v-if="hasImage" @click="showImageClick()" :src="editedCard.imageFile.url + '?lastUpdated='+ editedCard.imageFile.lastUpdated" alt="">
         </div>
         <div v-if="!uploadingImage" class="w3-display-middle">
           <input class="inputfile" @change="newFileSelected($event)"
           type="file" name="imageFile" id="imageFile" accept="image/*">
-          <label for="imageFile" class="w3-button app-button">{{ editedCard.imageFile ? 'change' : 'upload image' }}</label>
-          <button v-if="editedCard.imageFile"
-          @click="removeImage()"
-          class="w3-button app-button-danger">remove</button>
+          <label for="imageFile" class="w3-button app-button w3-rounded">{{ editedCard.imageFile ? 'change' : 'upload image' }}</label>
+          <button v-if="hasImage"
+            @click="removeImage()"
+            class="w3-button app-button-danger">
+            remove
+          </button>
         </div>
       </div>
       <app-error-panel
@@ -32,13 +28,13 @@
       </app-error-panel>
     </div>
 
-    <div :class="cClass">
+    <div>
       <div class="cursor-pointer" :class="inputClass">
         <div class="w3-row input-border">
-          <input type="text" class="w3-input w3-hover-light-grey" placeholder="Enter card title" v-model="editedCard.title">
+          <input type="text" class="w3-input w3-hover-light-grey" placeholder="title" v-model="editedCard.title">
         </div>
         <div ref="cardText" class="w3-row card-text">
-          <app-markdown-editor placeholder="Enter text here"  v-model="editedCard.text"></app-markdown-editor>
+          <app-markdown-editor placeholder="content" v-model="editedCard.text" :keepBackup="false"></app-markdown-editor>
         </div>
       </div>
 
@@ -60,17 +56,25 @@
 
 
         <div class="w3-right control-buttons">
-          <div class="w3-right cursor-pointer indicator-comp" @change="newFileSelected($event)">
-            <i class="fa fa-upload highlight" aria-hidden="true"></i>
+          <div v-if="!hasImage" class="w3-right cursor-pointer indicator-comp">
+            <input class="inputfile" @change="newFileSelected($event)"
+            type="file" name="imageFile" id="imageFile" accept="image/*">
+            <label for="imageFile" class="cursor-pointer">
+              <i class="fa fa-picture-o highlight" aria-hidden="true"></i>
+            </label>
           </div>
-          <div class="w3-right cursor-pointer indicator-comp" @click="cardClicked()">
+
+          <div v-if="!isNew" class="w3-right cursor-pointer w3-margin-right" @click="expandCard()">
             <i class="fa fa-expand highlight" aria-hidden="true"></i>
           </div>
         </div>
+
       </div>
 
       <div class="button-row send-button-container" :class="buttonClass">
-        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">{{ cardButtonText }} <span><small>(Ctr + Enter)</small></span></button>
+        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">
+          {{ cardButtonText }}
+        </button>
         <div v-show="sendingData" class="sending-accept light-grey">
           <img class="" src="../../../assets/loading.gif" alt="">
         </div>
@@ -79,7 +83,7 @@
       <transition name="fadeenter">
         <div v-if="hovering & editing"
           class="w3-padding gray-2-color w3-display-topright cursor-pointer"
-          @click="$emit('edit')">
+          @click="$emit('edit', null)">
           <i class="fa fa-close" aria-hidden="true"></i>
         </div>
       </transition>
@@ -105,10 +109,6 @@ export default {
     isNew: {
       type: Boolean,
       default: false
-    },
-    cardWrapperId: {
-      type: String,
-      default: ''
     },
     inSection: {
       type: Object,
@@ -184,11 +184,17 @@ export default {
     atCardWrapper () {
       return this.cardWrapper === null ? null : this.cardWrapper.cardWrapper
     },
+    cardWrapperIdForImage () {
+      return this.isNew ? '' : this.atCardWrapper.id
+    },
     newCardLocation () {
       return this.$store.state.support.createNewCardLocation === 'before'
     },
     cardButtonText () {
-      return this.isNew ? 'Create new card' : 'Save Card'
+      return this.isNew ? 'Create' : 'Save'
+    },
+    hasImage () {
+      return this.editedCard.imageFile != null
     },
     cClass () {
       let cClass = {}
@@ -235,6 +241,11 @@ export default {
   },
 
   methods: {
+    expandCard () {
+      if (!this.inCardSelector) {
+        this.$router.push({name: this.cardRouteName, params: { cardId: this.cardWrapperIdForImage }})
+      }
+    },
     removeImage () {
       this.editedCard.imageFile = null
       this.editedCard.newImageFileId = 'REMOVE'
@@ -254,7 +265,7 @@ export default {
       this.uploadingImage = true
       this.errorUploadingFile = false
 
-      this.axios.post('/1/upload/cardImage/' + this.atCardWrapper.id, data).then((response) => {
+      this.axios.post('/1/upload/cardImage/' + this.cardWrapperIdForImage, data).then((response) => {
         console.log(response)
         this.uploadingImage = false
 
@@ -414,7 +425,7 @@ export default {
 
 .input-border {
   border: solid #ccc !important;
-  border-width: 1px 1px 0px 1px !important;
+  border-width: 1px 0px 0px 0px !important;
 }
 
 .card-summary-container {
@@ -538,12 +549,9 @@ export default {
   margin-bottom: 0px;
 }
 
-.bottom-row .button-row{
-  position: relative;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  padding: 3px 6px;
-  min-height: 30px;
+.bottom-row {
+  padding: 6px 12px;
+  font-size: 18px;
 }
 
 .insection-tag-container {

@@ -14,7 +14,6 @@
       <div class="card-container-in-list">
         <app-model-card
           :cardWrapperInit="cardWrapper"
-          :cardWrappers="cardWrappers"
           :inSection="inSection"
           :type="cardsType"
           :cardRouteName="cardRouteName"

@@ -26,6 +26,9 @@ export const cardMixin = {
     }
   },
   computed: {
+    cardWrapperId () {
+      return this.cardWrapper ? this.cardWrapper.id : ''
+    },
     isPrivate () {
       return this.cardWrapper.scope === 'PRIVATE'
     },
@@ -33,7 +36,7 @@ export const cardMixin = {
       return this.cardWrapper.scope === 'SHARED'
     },
     inSectionId () {
-        return this.inSection ? this.inSection.id : ''
+      return this.inSection ? this.inSection.id : ''
     },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
@@ -63,7 +66,7 @@ export const cardMixin = {
   methods: {
     cardClicked () {
       if (!this.inCardSelector) {
-        this.$router.push({name: this.cardRouteName, params: { cardId: this.cardWrapper.id }})
+        this.$router.push({name: this.cardRouteName, params: { cardId: this.cardWrapperId }})
       }
     },
     editors () {
