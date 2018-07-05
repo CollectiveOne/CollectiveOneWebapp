@@ -52,41 +52,18 @@
         </app-in-model-sections-tags>
       </div>
 
-      <div v-if="!inCardSelector" class="w3-right">
-
-        <div v-if="!hideCardControls && $store.state.user.authenticated" class="w3-right gray-1-color control-div">
-          <app-card-control-buttons
-            :cardWrapper="cardWrapper"
-            :inSection="inSection"
-            @update="$emit('update')"
-            @updateCards="$emit('updateCards')">
-          </app-card-control-buttons>
-        </div>
-
-        <div v-if="!isPrivate" class="w3-right cursor-pointer indicator-comp"
-          @click="cardClicked()">
-          <app-indicator
-            contextType="MODEL_CARD"
-            :contextElementId="cardWrapper.id"
-            :size="18"
-            type="messages"
-            :forceUpdate="forceUpdate">
-          </app-indicator>
-        </div>
-
-        <div v-if="!isPrivate" class="w3-right cursor-pointer indicator-comp"
-          @click="toggleLike()">
-          <app-indicator
-            contextType="MODEL_CARD"
-            :contextElementId="cardWrapper.id"
-            :size="18"
-            type="likes"
-            :selected="cardWrapper.userLiked"
-            :autoUpdate="false"
-            :countInit="cardWrapper.nLikes">
-          </app-indicator>
-        </div>
-
+      <div v-if="!inCardSelector && $store.state.user.authenticated" class="w3-right">
+        <app-card-user-indicators
+          :cardWrapper="cardWrapper"
+          :inSection="inSection"
+          :hideCardControls="hideCardControls"
+          :inCardSelector="inCardSelector"
+          :cardRouteName="cardRouteName"
+          @update="$emit('update')"
+          @createNew="$emit('createNew')"
+          @edit="$emit('edit')"
+          @updateCards="$emit('updateCards')">
+        </app-card-user-indicators>
       </div>
     </div>
 
@@ -103,8 +80,8 @@
 
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
-import CardControlButtons from '@/components/model/cards/CardControlButtons.vue'
-import InModelSectionsTags from '@/components/model/cards/InModelSectionsTags.vue'
+import InModelSectionsTags from '@/components/model/InModelSectionsTags.vue'
+import CardUserIndicators from '@/components/model/cards/CardUserIndicators.vue'
 
 export default {
 
@@ -113,8 +90,8 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-card-control-buttons': CardControlButtons,
-    'app-in-model-sections-tags': InModelSectionsTags
+    'app-in-model-sections-tags': InModelSectionsTags,
+    'app-card-user-indicators': CardUserIndicators
   },
 
   props: {
@@ -245,15 +222,6 @@ export default {
   display: inline-block;
   margin-right: 5px;
   margin-bottom: 5px;
-}
-
-.indicator-comp {
-  margin-right: 6px;
-  margin-left: 4px;
-}
-
-.control-div {
-  padding: 3px 6px;
 }
 
 .expand-height-button {

@@ -26,6 +26,9 @@ export const cardMixin = {
     }
   },
   computed: {
+    cardWrapperId () {
+      return this.cardWrapper ? this.cardWrapper.id : ''
+    },
     isPrivate () {
       return this.cardWrapper.scope === 'PRIVATE'
     },
@@ -33,7 +36,10 @@ export const cardMixin = {
       return this.cardWrapper.scope === 'SHARED'
     },
     inSectionId () {
-        return this.inSection ? this.inSection.id : ''
+      return this.inSection ? this.inSection.id : ''
+    },
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
     },
     containerClass () {
       let cClass = {}
@@ -46,8 +52,12 @@ export const cardMixin = {
           cClass['border-yellow'] = true
           break
 
-        default:
+        case 'COMMON':
           cClass['border-blue'] = true
+          break
+
+        default:
+          cClass['border-gray'] = true
           break
       }
       return cClass
@@ -56,18 +66,8 @@ export const cardMixin = {
   methods: {
     cardClicked () {
       if (!this.inCardSelector) {
-        this.$router.push({name: this.cardRouteName, params: { cardId: this.cardWrapper.id }})
+        this.$router.push({name: this.cardRouteName, params: { cardId: this.cardWrapperId }})
       }
-    },
-    toggleLike () {
-      this.axios.put('/1/model/card/' + this.cardWrapper.id + '/like',
-        {}, {
-          params: {
-            likeStatus: !this.cardWrapper.userLiked
-          }
-        }).then((response) => {
-          this.$emit('update')
-        })
     },
     editors () {
       var editors = []

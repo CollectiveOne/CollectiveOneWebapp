@@ -16,7 +16,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.conversations.MessageThread;
 import org.collectiveone.modules.governance.CardLike;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
@@ -43,8 +42,6 @@ public class ModelCardWrapper {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ModelCard> oldVersions = new ArrayList<ModelCard>();
 	
-	@OneToOne
-	private MessageThread messageThread;	
 	
 	@OneToMany(mappedBy="cardWrapper")
 	private List<CardLike> likes;
@@ -129,14 +126,6 @@ public class ModelCardWrapper {
 		this.oldVersions = oldVersions;
 	}
 	
-	public MessageThread getMessageThread() {
-		return messageThread;
-	}
-
-	public void setMessageThread(MessageThread messageThread) {
-		this.messageThread = messageThread;
-	}
-
 	public List<CardLike> getLikes() {
 		return likes;
 	}

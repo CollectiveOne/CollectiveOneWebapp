@@ -3,8 +3,9 @@
     <app-activity-row v-for="activity in activitiesOrdered"
       :key="activity.id"
       :activity="activity"
+      :addInAppState="addInAppState"
       :addContext="addContext"
-      :showMessages="showMessages"
+      :showMessagesText="showMessagesText"
       :contextElementId="contextElementId"
       @edit-message="$emit('edit-message', $event)"
       @reply-to-message="$emit('reply-to-message', $event)">
@@ -36,22 +37,26 @@ export default {
       type: Boolean,
       default: true
     },
-    showMessages: {
+    showMessagesText: {
       type: Boolean,
       default: false
     },
     contextElementId: {
       type: String,
       default: ''
+    },
+    addInAppState: {
+      type: Boolean,
+      default: false
     }
   },
 
   computed: {
     activitiesOrdered () {
       if (this.reverse) {
-        return JSON.parse(JSON.stringify(this.activities)).reverse()
+        return this.activities.slice().reverse()
       } else {
-        return JSON.parse(JSON.stringify(this.activities))
+        return this.activities.slice()
       }
     }
   },

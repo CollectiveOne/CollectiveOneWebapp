@@ -13,9 +13,7 @@
           @updateCards="resetCards()">
         </app-model-card-modal>
       </transition>
-    </div>
-
-    <div class="slider-container">
+    
       <transition name="slideDownUp">
         <app-model-card-modal
           v-if="showNewCardModal"
@@ -32,76 +30,187 @@
       <div class="w3-row controls-row small-scroll">
 
         <div class="control-group">
-          <div tooltip="Messages" @click="messagesContent()" class="w3-left control-btn" :class="{'control-btn-selected': isMessagesContent}">
-            <img src="./../../assets/chat-icon.svg" alt="">
-          </div>
-          <div tooltip="Card in List" @click="summaryView()" class="w3-left control-btn" :class="{'control-btn-selected': isSummary}">
-            <img src="./../../assets/rows-icon.svg" alt="">
-          </div>
-          <div tooltip="Cards in Grid" @click="cardView()" class="w3-left control-btn" :class="{'control-btn-selected': isCard}">
-            <img src="./../../assets/cards-icon.svg" alt="">
-          </div>
-          <div tooltip="Documents" @click="docView()" class="w3-left control-btn" :class="{'control-btn-selected': isDoc}">
-            <img src="./../../assets/doc-icon.svg" alt="">
-          </div>
+          <popper trigger="hover":options="popperOptions">
+            <app-help-popper
+              :title="$t('help.MESSAGES-TAB-TT')"
+              :details="$t('help.MESSAGES-TAB-DET')">
+            </app-help-popper>
+
+            <div slot="reference" @click="messagesContent()" class="w3-left control-btn" :class="{'control-btn-selected': isMessagesContent}">
+              <img src="./../../assets/chat-icon.svg" alt="">
+            </div>
+          </popper>
+
+          <popper trigger="hover" :options="popperOptions">
+            <app-help-popper
+              :title="$t('help.CARDS-SUMMARY-TAB-TT')"
+              :details="$t('help.CARDS-SUMMARY-TAB-DET')">
+            </app-help-popper>
+
+            <div slot="reference" @click="summaryView()" class="w3-left control-btn" :class="{'control-btn-selected': isSummary}">
+              <img src="./../../assets/rows-icon.svg" alt="">
+            </div>
+          </popper>
+
+          <popper trigger="hover" :options="popperOptions">
+            <app-help-popper
+              :title="$t('help.CARDS-TAB-TT')"
+              :details="$t('help.CARDS-TAB-DET')">
+            </app-help-popper>
+
+            <div slot="reference" @click="cardView()" class="w3-left control-btn" :class="{'control-btn-selected': isCard}">
+              <img src="./../../assets/cards-icon.svg" alt="">
+            </div>
+          </popper>
+
+          <popper trigger="hover" :options="popperOptions">
+            <app-help-popper
+              :title="$t('help.CARDS-DOC-VIEW-TT')"
+              :details="$t('help.CARDS-DOC-VIEW-DET')">
+            </app-help-popper>
+
+            <div slot="reference" @click="docView()" class="w3-left control-btn" :class="{'control-btn-selected': isDoc}">
+              <img src="./../../assets/doc-icon.svg" alt="">
+            </div>
+          </popper>
+
         </div>
 
         <div v-if="isCardsContent" class="control-group noselect">
           <div class="w3-left zoom-controls">
             <div class="w3-left zoom-controls-enabled">
-              <div tooltip="Decrease Level" @click="levelDown()" class="w3-left cursor-pointer arrow-div">
-                <img src="./../../assets/zoom-in-icon.svg" alt="">
-              </div>
-              <div tooltip="Level" class="w3-left number-div">
+              <popper trigger="hover":options="popperOptions">
+                <app-help-popper
+                  :title="$t('help.REDUCE-LEVELS-TT')"
+                  :details="$t('help.REDUCE-LEVELS-DET')">
+                </app-help-popper>
+
+                <div slot="reference" @click="levelDown()" class="w3-left cursor-pointer arrow-div">
+                  <img src="./../../assets/zoom-in-icon.svg" alt="">
+                </div>
+              </popper>
+
+              <div class="w3-left number-div">
                 {{ levels !== 999 ? levels : '&#x221e;' }}
               </div>
-              <div tooltip="Increase Level" @click="levelUp()" class="w3-left cursor-pointer arrow-div">
-                <img src="./../../assets/zoom-out-icon.svg" alt="">
-              </div>
-              <div v-if="infiniteLevels" class="zoom-controls-cover">
-              </div>
+
+              <popper trigger="hover":options="popperOptions">
+                <app-help-popper
+                  :title="$t('help.INCREASE-LEVELS-TT')"
+                  :details="$t('help.INCREASE-LEVELS-DET')">
+                </app-help-popper>
+
+                <div slot="reference" @click="levelUp()" class="w3-left cursor-pointer arrow-div">
+                  <img src="./../../assets/zoom-out-icon.svg" alt="">
+                </div>
+              </popper>
+
+              <!-- <div v-if="infiniteLevels" class="zoom-controls-cover">
+              </div> -->
             </div>
-            <div tooltip="Infinite Level" @click="toggleInifinteLevels()" class="w3-left cursor-pointer arrow-div w3-border-left" :class="{'control-btn-selected': infiniteLevels}">
-              <img src="./../../assets/infinite-icon.svg" alt="">
-            </div>
+
+            <popper trigger="hover":options="popperOptions">
+              <app-help-popper
+                :title="$t('help.SEE-ALL-LEVELS-TT')"
+                :details="$t('help.SEE-ALL-LEVELS-DET')">
+              </app-help-popper>
+
+              <div slot="reference" @click="toggleInifinteLevels()" class="w3-left cursor-pointer arrow-div w3-border-left" :class="{'control-btn-selected': infiniteLevels}">
+                <img src="./../../assets/infinite-icon.svg" alt="">
+              </div>
+            </popper>
+
           </div>
         </div>
 
         <div v-if="isCardsContent && this.$store.state.user.authenticated" class="control-group">
           <div class="">
-            <div tooltip="Private Cards" @click="showPrivateClick()" class="w3-left control-btn border-red" :class="{'control-btn-selected': showPrivate, 'w3-bottombar': showPrivate}">
-              <img src="./../../assets/private-icon.svg" alt="">
-            </div>
-            <div tooltip="Shared Cards" @click="showSharedClick()" class="w3-left control-btn border-yellow" :class="{'control-btn-selected': showShared, 'w3-bottombar': showShared}">
-              <img src="./../../assets/shared-icon.svg" alt="">
-            </div>
-            <div tooltip="Common Cards"  @click="showCommonClick()" class="w3-left control-btn border-blue" :class="{'control-btn-selected': showCommon, 'w3-bottombar': showCommon}">
-              <img src="./../../assets/common-icon.svg" alt="">
-            </div>
-            <div tooltip="All Cards" @click="showAllClick()" class="w3-left control-btn">
-              <img src="./../../assets/all-icon.svg" alt="">
-            </div>
+            <popper trigger="hover":options="popperOptions">
+              <app-help-popper
+                :title="(showPrivate ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.PRIVATE-CARDS-TT')"
+                :details="$t('help.PRIVATE-CARDS-DET')">
+              </app-help-popper>
+
+              <div slot="reference" @click="showPrivateClick()" class="w3-left control-btn border-red" :class="{'control-btn-selected': showPrivate, 'w3-bottombar': showPrivate}">
+                <img src="./../../assets/private-icon.svg" alt="">
+              </div>
+            </popper>
+
+            <popper trigger="hover":options="popperOptions">
+              <app-help-popper
+                :title="(showShared ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHARED-CARDS-TT')"
+                :details="$t('help.SHARED-CARDS-DET')">
+              </app-help-popper>
+
+              <div slot="reference" @click="showSharedClick()" class="w3-left control-btn border-yellow" :class="{'control-btn-selected': showShared, 'w3-bottombar': showShared}">
+                <img src="./../../assets/shared-icon.svg" alt="">
+              </div>
+            </popper>
+
+            <popper trigger="hover":options="popperOptions">
+              <app-help-popper
+                :title="(showCommon ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.COMMON-CARDS-TT')"
+                :details="$t('help.COMMON-CARDS-DET')">
+              </app-help-popper>
+
+              <div slot="reference" @click="showCommonClick()" class="w3-left control-btn border-blue" :class="{'control-btn-selected': showCommon, 'w3-bottombar': showCommon}">
+                <img src="./../../assets/common-icon.svg" alt="">
+              </div>
+            </popper>
+
           </div>
         </div>
 
         <div v-if="isCardsContent" class="control-group">
           <div class="">
-            <div tooltip="Order By Sections"  @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
-              <img src="./../../assets/network-icon.svg" alt="">
-            </div>
-            <div tooltip="Search" @click="aggregatedOrder()" class="w3-left control-btn" :class="{'control-btn-selected': !isSectionsOrder}">
-              <img src="./../../assets/search-icon.svg" alt="">
-            </div>
+            <popper trigger="hover":options="popperOptions">
+              <app-help-popper
+                :title="$t('help.SHOW-SECTION-ORDER-TT')"
+                :details="$t('help.SHOW-SECTION-ORDER-DET')">
+              </app-help-popper>
+
+              <div slot="reference"  @click="sectionOrder()" class="w3-left control-btn" :class="{'control-btn-selected': isSectionsOrder}">
+                <img src="./../../assets/network-icon.svg" alt="">
+              </div>
+            </popper>
+
+            <popper trigger="hover":options="popperOptions">
+              <app-help-popper
+                :title="$t('help.SEARCH-CARDS-TT')"
+                :details="$t('help.SEARCH-CARDS-DET')">
+              </app-help-popper>
+
+              <div slot="reference" @click="aggregatedOrder()" class="w3-left control-btn" :class="{'control-btn-selected': !isSectionsOrder}">
+                <img src="./../../assets/search-icon.svg" alt="">
+              </div>
+            </popper>
+
           </div>
         </div>
 
         <div v-if="!isCardsContent" class="control-group">
-          <div tooltip="Only Messages" @click="isOnlyMessages = true" class="w3-left control-btn" :class="{'control-btn-selected': isOnlyMessages}">
-            <img src="./../../assets/chat-icon-2.svg" alt="">
-          </div>
-          <div tooltip="All Events" @click="isOnlyMessages = false" class="w3-left control-btn" :class="{'control-btn-selected': !isOnlyMessages}">
-            <img src="./../../assets/all-events-icon.svg" alt="">
-          </div>
+          <popper trigger="hover":options="popperOptions">
+            <app-help-popper
+              :title="(showMessages ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHOW-MESSAGES-TT')"
+              :details="$t('help.SHOW-MESSAGES-DET')">
+            </app-help-popper>
+
+            <div slot="reference" @click="showMessages = !showMessages" class="w3-left control-btn" :class="{'control-btn-selected': showMessages}">
+              <img src="./../../assets/chat-icon-2.svg" alt="">
+            </div>
+          </popper>
+
+          <popper trigger="hover":options="popperOptions">
+            <app-help-popper
+            :title="(showEvents ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHOW-EVENTS-TT')"
+            :details="$t('help.SHOW-EVENTS-DET')">
+            </app-help-popper>
+
+            <div slot="reference" @click="showEvents = !showEvents" class="w3-left control-btn" :class="{'control-btn-selected': showEvents}">
+              <img src="./../../assets/all-events-icon.svg" alt="">
+            </div>
+          </popper>
+
         </div>
 
         <div class="control-group slider-container">
@@ -130,12 +239,29 @@
 
         <div v-if="isCardsContent && isSectionsOrder" class="control-group">
           <div class="">
-            <div tooltip="Download" @click="downloadContent()" class="w3-left control-btn">
-              <img src="./../../assets/download-icon.svg" alt="">
-            </div>
-            <div tooltip="Cards Draggable" @click="draggable()" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
-              <img src="./../../assets/move-icon.svg" alt="">
-            </div>
+
+            <popper trigger="hover":options="popperOptions">
+              <app-help-popper
+                :title="$t('help.DOWNLOAD-CONTENT-TT')"
+                :details="$t('help.DOWNLOAD-CONTENT-DET')">
+              </app-help-popper>
+
+              <div slot="reference" @click="downloadContent()" class="w3-left control-btn">
+                <img src="./../../assets/download-icon.svg" alt="">
+              </div>
+            </popper>
+
+            <popper trigger="hover":options="popperOptions">
+              <app-help-popper
+                :title="(isDraggable ? $t('general.DISABLE') : $t('general.ENABLE')) + ' ' + $t('help.ENABLE-DRAG-AND-DROP-TT')"
+                :details="$t('help.ENABLE-DRAG-AND-DROP-CARDS-DET')">
+              </app-help-popper>
+
+              <div slot="reference" v-if="isLoggedAnEditor" @click="draggable()" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
+                <img src="./../../assets/move-icon.svg" alt="">
+              </div>
+            </popper>
+
           </div>
         </div>
 
@@ -175,7 +301,8 @@
           v-if="isMessagesContent"
           contextType="MODEL_SECTION"
           :contextElementId="currentSectionId"
-          :onlyMessages="isOnlyMessages"
+          :showMessages="showMessages"
+          :showEvents="showEvents"
           :levels="999">
         </app-message-thread>
 
@@ -213,8 +340,9 @@
 import MessageThread from '@/components/notifications/MessageThread'
 import ModelSection from '@/components/model/ModelSection'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer'
+import { getSortedCardWrappers, getSortedSubsections } from '@/lib/sortAlgorithm.js'
 
-const sectionToMarkdown = function (section, level) {
+const sectionToMarkdown = function (section, level, showCommon, showShared, showPrivate) {
   var text = ''
   /* write section on text as reference */
   text += Array(level + 1).join('#') + ' '
@@ -225,8 +353,10 @@ const sectionToMarkdown = function (section, level) {
     text += section.description + '\r\n'
   }
 
-  for (let ix in section.cardsWrappersCommon) {
-    let cardWrapper = section.cardsWrappersCommon[ix]
+  let sortedCardWrappers = getSortedCardWrappers(section, showCommon, showShared, showPrivate)
+
+  for (let ix in sortedCardWrappers) {
+    let cardWrapper = sortedCardWrappers[ix]
     if (cardWrapper.card.title !== '') {
       text += Array(level + 1).join('#') + ' '
       level = level < 5 ? level + 1 : level
@@ -235,31 +365,13 @@ const sectionToMarkdown = function (section, level) {
     text += cardWrapper.card.text + '\r\n'
   }
 
-  for (let ix in section.subsections) {
-    text += sectionToMarkdown(section.subsections[ix], level)
+  let sortedSubsections = getSortedSubsections(section, showCommon, showShared, showPrivate)
+
+  for (let ix in sortedSubsections) {
+    text += sectionToMarkdown(sortedSubsections[ix], level, showCommon, showShared, showPrivate)
   }
 
   return text
-}
-
-const sectionHasContent = function (section) {
-  if (section.cardsWrappersCommon.length > 0 ||
-    section.cardsWrappersPrivate.length > 0 ||
-    section.cardsWrappersShared.length > 0) {
-    return true
-  } else {
-    if (section.subsections.length > 0) {
-      return true
-    } else {
-      /* recursive call  */
-      for (let ix in section.subsections) {
-        if (sectionHasContent(section.subsections[ix])) {
-          return true
-        }
-      }
-    }
-  }
-  return false
 }
 
 export default {
@@ -278,7 +390,8 @@ export default {
       sectionLoadedOnce: false,
       sectionLoadedOnceLevels: 0,
       orderType: 'sections',
-      isOnlyMessages: false,
+      showMessages: true,
+      showEvents: true,
       newCardQuery: '',
       cardQuery: '',
       cardSortBy: 'CREATION_DATE_DESC',
@@ -298,12 +411,6 @@ export default {
     },
     currentSectionId () {
       return this.$route.params.sectionId
-    },
-    sectionHasContent () {
-      if (this.section) {
-        return sectionHasContent(this.section)
-      }
-      return false
     },
     isMessagesContent () {
       return this.$route.name === 'ModelSectionMessages'
@@ -348,17 +455,31 @@ export default {
     },
     isDraggable () {
       return this.$store.state.support.triggerCardDraggingState
+    },
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
+    popperOptions () {
+      return {
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: false
+          }
+        }
+      }
     }
   },
 
   watch: {
     '$route.params.sectionId' () {
-      this.update()
-    },
-    '$route.params.cardId' () {
+      console.log('update due to section id watch')
+      this.sectionLoadedOnce = false
+      this.section = null
       this.update()
     },
     '$route.name' () {
+      console.log('checking card subroute due to route name watch')
       this.checkCardSubroute()
     },
     levels () {
@@ -400,10 +521,14 @@ export default {
       this.resetCards()
     },
     levelUp () {
-      this.$store.commit('levelUp')
+      if (!this.infiniteLevels) {
+        this.$store.commit('levelUp')
+      }
     },
     levelDown () {
-      this.$store.commit('levelDown')
+      if (!this.infiniteLevels) {
+        this.$store.commit('levelDown')
+      }
     },
     toggleInifinteLevels () {
       if (this.isSectionsOrder) {
@@ -531,7 +656,7 @@ export default {
     },
     downloadContent () {
       let fileContent = 'data:text/plain;charset=utf-8,'
-      fileContent += sectionToMarkdown(this.section, 1)
+      fileContent += sectionToMarkdown(this.section, 1, this.showCommon, this.showShared, this.showPrivate)
 
       var encodedUri = encodeURI(fileContent)
       var link = document.createElement('a')
@@ -606,7 +731,6 @@ export default {
 
 .control-group div {
   display: inline-block;
-  position: relative;
 }
 
 .control-btn {
@@ -645,7 +769,6 @@ export default {
 }
 
 .zoom-controls-enabled {
-  position: relative;
 }
 
 .zoom-controls .zoom-controls-cover {

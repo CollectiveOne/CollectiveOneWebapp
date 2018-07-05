@@ -81,6 +81,14 @@ export default {
     elementId: {
       type: String,
       default: ''
+    },
+    showBorder: {
+      type: Boolean,
+      default: true
+    },
+    keepBackup: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -104,7 +112,9 @@ export default {
     text () {
       this.$emit('input', this.text)
       this.checkHeight()
-      this.$store.dispatch('doMarkdownBackup', {elementId: this.elementId, value: this.text})
+      if (this.keepBackup) {
+        this.$store.dispatch('doMarkdownBackup', {elementId: this.elementId, value: this.text})
+      }
     },
     mentioningQuery () {
       this.updateMentionSuggestions()
@@ -119,12 +129,12 @@ export default {
       if (!this.sideBySide) {
         return {
           'w3-input': true,
-          'w3-border': true
+          'w3-border': this.showBorder
         }
       } else {
         return {
           'w3-input': true,
-          'w3-border': true,
+          'w3-border': this.showBorder,
           'w3-col': true,
           'm6': true
         }
@@ -281,7 +291,9 @@ export default {
       this.sideBySide = false
 
       // now delete edit content from backup
-      this.$store.dispatch('clearMarkdownBackupData', this.elementId)
+      if (this.keepBackup) {
+        this.$store.dispatch('clearMarkdownBackupData', this.elementId)
+      }
     }
   },
 
@@ -289,7 +301,9 @@ export default {
     if (this.value) {
       this.text = this.value
     } else {
-      this.text = this.$store.state.markdown.data.get(this.elementId)
+      if (this.keepBackup) {
+        this.text = this.$store.state.markdown.data.get(this.elementId)
+      }
     }
     window.addEventListener('keydown', this.atKeydown)
 
@@ -304,7 +318,9 @@ export default {
   beforeDestroy () {
     // do backup
     if (this.value !== '') {
-      this.$store.dispatch('doMarkdownBackup', {elementId: this.elementId, value: this.value})
+      if (this.keepBackup) {
+        this.$store.dispatch('doMarkdownBackup', {elementId: this.elementId, value: this.value})
+      }
     }
   },
 

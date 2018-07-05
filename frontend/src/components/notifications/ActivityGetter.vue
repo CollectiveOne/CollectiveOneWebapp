@@ -17,7 +17,7 @@
         :addContext="false"
         :reverse="reverse"
         :addBorders="addBorders"
-        :showMessages="showMessages"
+        :showMessagesText="showMessagesText"
         :contextElementId="contextElementId"
         @edit-message="$emit('edit-message', $event)"
         @reply-to-message="$emit('reply-to-message', $event)">
@@ -63,13 +63,17 @@ export default {
       type: Boolean,
       default: true
     },
-    showMessages: {
+    showMessagesText: {
       type: Boolean,
       default: false
     },
-    onlyMessages: {
+    showMessages: {
       type: Boolean,
-      default: false
+      defaul: true
+    },
+    showEvents: {
+      type: Boolean,
+      defaul: true
     },
     contextType: {
       type: String,
@@ -112,7 +116,10 @@ export default {
     '$store.state.socket.connected' () {
       this.subscribeSocket()
     },
-    onlyMessages () {
+    showMessages () {
+      this.getActivity('RESET')
+    },
+    showEvents () {
       this.getActivity('RESET')
     }
   },
@@ -158,7 +165,8 @@ export default {
         params: {
           page: askPage,
           size: 10,
-          onlyMessages: this.onlyMessages,
+          addMessages: this.showMessages,
+          addEvents: this.showEvents,
           levels: this.levels
         }
       }).then((response) => {
@@ -207,6 +215,8 @@ export default {
             }
           }
         }
+      } else {
+        this.activities = activityList
       }
     },
     subscribeSocket () {

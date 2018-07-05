@@ -3,7 +3,7 @@ package org.collectiveone.modules.model.dto;
 import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredDto;
 import org.collectiveone.modules.model.ModelCard;
-import org.collectiveone.modules.model.ModelCardWrapperScope;
+import org.collectiveone.modules.model.ModelScope;
 
 public class ModelCardDto {
 
@@ -11,7 +11,7 @@ public class ModelCardDto {
 	private String title;
 	private String text;
 	private String newImageFileId;
-	private ModelCardWrapperScope newScope;
+	private ModelScope newScope;
 	private FileStoredDto imageFile;
 	
 	public ModelCard toEntity(ModelCard card, ModelCardDto cardDto, FileStored imageFile) {
@@ -49,10 +49,10 @@ public class ModelCardDto {
 	public void setNewImageFileId(String newImageFileId) {
 		this.newImageFileId = newImageFileId;
 	}
-	public ModelCardWrapperScope getNewScope() {
+	public ModelScope getNewScope() {
 		return newScope;
 	}
-	public void setNewScope(ModelCardWrapperScope newScope) {
+	public void setNewScope(ModelScope newScope) {
 		this.newScope = newScope;
 	}
 	public FileStoredDto getImageFile() {

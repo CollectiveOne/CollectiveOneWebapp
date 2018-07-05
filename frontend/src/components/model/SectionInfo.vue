@@ -6,23 +6,45 @@
           <div class="title-div">
             {{ sectionTitle }}
           </div>
-          <div @click="showIn = !showIn" class="btn-div fa-button">
-            <i v-if="showIn" class="fa fa-chevron-up" aria-hidden="true"></i>
-            <i v-else class="fa fa-chevron-down" aria-hidden="true"></i>
+
+          <div class="title-buttons">
+            <popper trigger="hover":options="popperOptions" class="btn-div">
+              <app-help-popper
+                :title="(showIn ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SECTION-DETAILS-TT')"
+                :details="$t('help.SECTION-DETAILS-DET')">
+              </app-help-popper>
+
+              <div slot="reference" @click="showIn = !showIn" class="fa-button">
+                <i v-if="showIn" class="fa fa-chevron-up" aria-hidden="true"></i>
+                <i v-else class="fa fa-chevron-down" aria-hidden="true"></i>
+              </div>
+            </popper>
+
+            <div v-if="$store.state.user.authenticated" class="btn-div fa-button">
+              <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
+              </app-section-control-buttons>
+            </div>
+
+            <div v-if="isLoggedAnEditor" class="btn-div fa-button">
+              <app-section-control-buttons :section="currentSection" :inSection="null" :onlyAdd="true">
+              </app-section-control-buttons>
+            </div>
+
+            <popper trigger="hover":options="popperOptions" class="btn-div">
+              <app-help-popper
+                :title="$t('help.READ-FRIENDLY-URL-TT')"
+                :details="$t('help.READ-FRIENDLY-URL-DET')">
+              </app-help-popper>
+
+              <div slot="reference" class="fa-button">
+                <router-link :to="{ name: 'ModelSectionRead', params: {sectionId: this.currentSection.id} }">
+                  <img src="./../../assets/shareable-view.svg" alt="">
+                </router-link>
+              </div>
+            </popper>
+
           </div>
-          <div v-if="$store.state.user.authenticated" class="btn-div fa-button">
-            <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
-            </app-section-control-buttons>
-          </div>
-          <div v-if="isLoggedAnEditor" class="btn-div fa-button">
-            <app-section-control-buttons :section="currentSection" :inSection="null" :onlyAdd="true">
-            </app-section-control-buttons>
-          </div>
-          <div tooltip="Share" class="btn-div fa-button">
-            <router-link :to="{ name: 'ModelSectionRead', params: {sectionId: this.currentSection.id} }">
-              <img src="./../../assets/shareable-view.svg" alt="">
-            </router-link>
-          </div>
+
         </div>
       </transition>
     </div>
@@ -109,6 +131,16 @@ export default {
         return this.$store.getters.currentSectionPaths
       }
       return []
+    },
+    popperOptions () {
+      return {
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: false
+          }
+        }
+      }
     }
   },
 
@@ -134,16 +166,17 @@ export default {
   overflow-x: auto;
 }
 
-.this-section-title > div {
-  display: inline-block;
-}
-
 .fa-button img {
   height: 24px;
 }
 
 .title-div {
   margin-right: 16px;
+  display: inline-block;
+}
+
+.title-buttons {
+  display: inline-block;
 }
 
 .breadcrumb {
@@ -163,6 +196,7 @@ export default {
 .btn-div {
   width: 35px;
   text-align: center;
+  display: inline-block;
 }
 
 .description-container {

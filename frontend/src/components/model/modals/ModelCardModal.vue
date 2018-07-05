@@ -201,12 +201,13 @@
           </div>
 
           <br>
-          <div v-if="!isNew && !editing" class="">
+          <div v-if="!isNew && !editing" class="message-thread-container">
             <app-message-thread
               contextType="MODEL_CARD"
               :contextElementId="cardWrapperId"
               :contextOfContextElementId="inSectionId"
-              :onlyMessagesInit="onlyMessages">
+              :showMessages="true"
+              :showEvents="true">
             </app-message-thread>
           </div>
 
@@ -287,10 +288,6 @@ export default {
       default: -1
     },
     editingInit: {
-      type: Boolean,
-      defaul: false
-    },
-    onlyMessages: {
       type: Boolean,
       defaul: false
     },
@@ -788,6 +785,9 @@ export default {
   margin-top: -5px;
   margin-right: -10px;
   z-index: 10;
+}
+
+.message-thread-container {
 }
 
 </style>

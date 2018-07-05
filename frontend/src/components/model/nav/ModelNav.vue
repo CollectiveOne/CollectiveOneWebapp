@@ -20,8 +20,7 @@
       </div>
       <div class="w3-row">
         <app-model-section-nav-item
-          :section="section"
-          :coordinate="[0]"
+          :sectionData="sectionData"
           @section-selected="$emit('section-selected', $event)">
         </app-model-section-nav-item>
       </div>

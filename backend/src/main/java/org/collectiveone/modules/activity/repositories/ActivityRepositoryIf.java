@@ -9,33 +9,33 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 public interface ActivityRepositoryIf extends CrudRepository<Activity, UUID> {
 	
 	Activity findTop1ByAssignation_IdAndTypeOrderByTimestampDesc(UUID assignationId, ActivityType type);
 	
+	/* CHECK https://docs.google.com/spreadsheets/d/11M405BZg7lJWr_G_qjeaAecCT8Q5wTQXLjuHfZyhjP0/edit#gid=0 */
 	@Query("SELECT act FROM Activity act "
 			+ "LEFT JOIN act.modelCardWrapperAddition crdWrpAdd "
-			+ "WHERE act.modelSection.id IN ?1 "
-			+ "OR act.modelCardWrapper.id IN ?2 "
-			+ "OR act.onSection.id IN ?1 "
-			+ "OR act.fromSection.id IN ?1 "
-			+ "OR crdWrpAdd.section.id IN ?1 "
-			+ "OR crdWrpAdd.cardWrapper.id IN ?2 "
+			+ "LEFT JOIN act.modelSubsection subsec "
+			+ "WHERE (act.modelSection.id IN :sectionIds "
+			+ "OR act.modelCardWrapper.id IN :cardWrapperIds "
+			+ "OR subsec.section.id IN :sectionIds "
+			+ "OR subsec.parentSection.id IN :sectionIds "
+			+ "OR act.onSection.id IN :sectionIds "
+			+ "OR act.fromSection.id IN :sectionIds "
+			+ "OR crdWrpAdd.section.id IN :sectionIds "
+			+ "OR crdWrpAdd.cardWrapper.id IN :cardWrapperIds) "
+			+ "AND ((:addMessages = TRUE AND act.type = :type) OR (:addEvents = TRUE AND act.type != :type)) "
 			+ "ORDER BY act.timestamp DESC")
-	Page<Activity> findOfSectionsOrCards(List<UUID> sectionIds, List<UUID> cardsWrappersIds, Pageable pageable);
-	
-	@Query("SELECT act FROM Activity act "
-			+ "LEFT JOIN act.modelCardWrapperAddition crdWrpAdd "
-			+ "WHERE (act.modelSection.id IN ?1 "
-			+ "OR act.modelCardWrapper.id IN ?2 "
-			+ "OR act.onSection.id IN ?1 "
-			+ "OR act.fromSection.id IN ?1 "
-			+ "OR crdWrpAdd.section.id IN ?1 "
-			+ "OR crdWrpAdd.cardWrapper.id IN ?2) "
-			+ "AND (act.type = ?3) "
-			+ "ORDER BY act.timestamp DESC")
-	Page<Activity> findOfSectionsOrCardsAndType(List<UUID> sectionIds, List<UUID> cardsWrappersIds, ActivityType type, Pageable pageable);
+	Page<Activity> findOfSectionsOrCardsAndType(
+			@Param("sectionIds") List<UUID> sectionIds, 
+			@Param("cardWrapperIds") List<UUID> cardsWrappersIds, 
+			@Param("type") ActivityType type,
+			@Param("addMessages") Boolean addMessages,
+			@Param("addEvents") Boolean addEvents, 	
+			Pageable pageable);
 	
 	@Query("SELECT act FROM Activity act "
 			+ "WHERE act.initiative.id IN ?1 "

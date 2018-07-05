@@ -16,9 +16,7 @@
             @updateCards="$emit('updateCards')">
           </app-model-card-modal>
         </transition>
-      </div>
 
-      <div class="slider-container">
         <transition name="slideDownUp">
           <app-model-card-modal
             v-if="showEditCardModal"
@@ -34,94 +32,43 @@
       </div>
     </div>
 
-    <div class="modal-buttons-container">
+    <popper :append-to-body="true" trigger="click":options="popperOptions" class="">
+      <div class="">
+        <app-drop-down-menu
+          class="drop-menu"
+          @edit="edit()"
+          @addCardBefore="addCardLocation('before')"
+          @addCardAfter="addCardLocation('after')"
+          @remove="remove()"
+          :items="menuItems">
+        </app-drop-down-menu>
 
-      <div class="expand-btn cursor-pointer"
-        @click="expanded =! expanded"
-        v-click-outside="clickOutsideMenu">
+        <div class="w3-card w3-white drop-menu">
+
+          <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
+            <div class="w3-padding w3-round light-grey w3-margin-bottom">
+              <p>
+                <b>Warning:</b> Are you sure you want to remove this card from "{{ inSection.title }}"?
+              </p>
+            </div>
+            <button
+              class="w3-button light-grey"
+              @click="removeIntent = false">cancel
+            </button>
+            <button
+              class="w3-button button-blue"
+              @click="removeConfirmed()">confirm
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <div slot="reference" class="expand-btn cursor-pointer">
         <i class="fa fa-bars" aria-hidden="true"></i>
       </div>
+    </popper>
 
-      <app-drop-down-menu
-        v-show="expanded"
-        class="drop-menu"
-        @edit="edit()"
-        @makeShared="makeShared()"
-        @makeCommon="makeCommon()"
-        @addCardBefore="addCardBefore()"
-        @addCardAfter="addCardAfter()"
-        @remove="remove()"
-        @delete="deleteCard()"
-        :items="menuItems">
-      </app-drop-down-menu>
-
-      <div class="w3-card w3-white drop-menu">
-
-        <div v-if="makeSharedIntent" class="w3-row w3-center delete-intent-div">
-          <div class="w3-padding w3-round light-grey w3-margin-bottom">
-            <p>
-              <b>Warning:</b> Are you sure you want to make this card visible? It will be seen by all initiative members.
-            </p>
-          </div>
-          <button
-            class="w3-button light-grey"
-            @click="makeSharedIntent = false">cancel
-          </button>
-          <button
-            class="w3-button button-blue"
-            @click="makeSharedConfirmed()">confirm
-          </button>
-        </div>
-
-        <div v-if="makeCommonIntent" class="w3-row w3-center delete-intent-div">
-          <div class="w3-padding w3-round light-grey w3-margin-bottom">
-            <p>
-              <b>Warning:</b> Are you sure you want to make this card common? It will start being controlled be the initiative members and not only by you. It cannot be undonde.
-            </p>
-          </div>
-          <button
-            class="w3-button light-grey"
-            @click="makeCommonIntent = false">cancel
-          </button>
-          <button
-            class="w3-button button-blue"
-            @click="makeCommonConfirmed()">confirm
-          </button>
-        </div>
-
-        <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
-          <div class="w3-padding w3-round light-grey w3-margin-bottom">
-            <p>
-              <b>Warning:</b> Are you sure you want to remove this card from "{{ inSection.title }}"?
-            </p>
-          </div>
-          <button
-            class="w3-button light-grey"
-            @click="removeIntent = false">cancel
-          </button>
-          <button
-            class="w3-button button-blue"
-            @click="removeConfirmed()">confirm
-          </button>
-        </div>
-
-        <div v-if="deleteIntent" class="w3-row w3-center delete-intent-div">
-          <div class="w3-padding w3-round light-grey w3-margin-bottom">
-            <p>
-              <b>Warning:</b> Are you sure you want to completely delete this card? This will delete it from all the sections in which it is currenlty present.
-            </p>
-          </div>
-          <button
-            class="w3-button light-grey"
-            @click="deleteIntent = false">cancel
-          </button>
-          <button
-            class="w3-button danger-btn"
-            @click="deleteConfirmed()">confirm
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -141,13 +88,9 @@ export default {
 
   data () {
     return {
-      expanded: false,
       showNewCardModal: false,
       newCardLocation: 'end',
       showEditCardModal: false,
-      makeSharedIntent: false,
-      makeCommonIntent: false,
-      deleteIntent: false,
       removeIntent: false
     }
   },
@@ -179,69 +122,36 @@ export default {
           break
       }
 
-      if (this.isLoggedAnEditor && this.isPrivate && this.isLoggedTheAuthor) menuItems.push({ text: 'make shared', value: 'makeShared', faIcon: 'fa-share' })
-      if (this.isLoggedAnEditor && this.isShared && this.isLoggedTheAuthor) menuItems.push({ text: 'make common', value: 'makeCommon', faIcon: 'fa-share' })
       if (this.isLoggedAnEditor) menuItems.push({ text: 'add card before', value: 'addCardBefore', faIcon: 'fa-plus' })
       if (this.isLoggedAnEditor) menuItems.push({ text: 'add card after', value: 'addCardAfter', faIcon: 'fa-plus' })
       if (this.isLoggedAnEditor) menuItems.push({ text: 'remove', value: 'remove', faIcon: 'fa-times' })
-      if (this.isLoggedAnEditor) menuItems.push({ text: 'delete', value: 'delete', faIcon: 'fa-times' })
       return menuItems
-   }
+    },
+    popperOptions () {
+      return {
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: false
+          }
+        }
+      }
+    }
   },
 
   methods: {
-    addCardBefore () {
-      this.newCardLocation = 'before'
-      this.showNewCardModal = true
-    },
-    addCardAfter () {
-      this.newCardLocation = 'after'
-      this.showNewCardModal = true
+    addCardLocation (location) {
+      this.$store.commit('createNewCardLocation', location)
+      this.$emit('createNew')
+      this.expanded = false
     },
     edit () {
-      this.showEditCardModal = true
+      //  this.showEditCardModal = true
+      this.$emit('edit')
       this.expanded = false
     },
     remove () {
       this.removeIntent = true
-    },
-    deleteCard () {
-      this.deleteIntent = true
-    },
-    makeShared () {
-      this.makeSharedIntent = true
-    },
-    makeCommon () {
-      this.makeCommonIntent = true
-    },
-    makeSharedConfirmed () {
-      this.axios.put('/1/model/section/' + this.inSection.id + '/cardWrapper/' + this.cardWrapper.id + '/makeShared',
-        {}).then((response) => {
-          if (response.data.result === 'success') {
-            this.makeSharedIntent = false
-            this.expanded = false
-            this.$emit('updateCards')
-          } else {
-            this.showOutputMessage(response.data.message)
-          }
-        }).catch((error) => {
-        console.log(error)
-      })
-    },
-    makeCommonConfirmed () {
-      this.axios.put('/1/model/section/' + this.inSection.id + '/cardWrapper/' + this.cardWrapper.id + '/makeCommon',
-        {}).then((response) => {
-          console.log(response)
-          if (response.data.result === 'success') {
-            this.makeCommonIntent = false
-            this.expanded = false
-            this.$emit('updateCards')
-          } else {
-            this.showOutputMessage(response.data.message)
-          }
-        }).catch((error) => {
-        console.log(error)
-      })
     },
     removeConfirmed () {
       this.axios.put('/1/model/section/' + this.inSection.id + '/removeCard/' + this.cardWrapper.id,
@@ -257,16 +167,6 @@ export default {
         }).catch((error) => {
         console.log(error)
       })
-    },
-    deleteConfirmed () {
-      this.axios.delete('/1/model/cardWrapper/' + this.cardWrapper.id)
-        .then((response) => {
-          this.deleteIntent = false
-          this.expanded = false
-          this.$emit('updateCards')
-        }).catch((error) => {
-          console.log(error)
-        })
     },
     clickOutsideMenu () {
       this.expanded = false
@@ -288,13 +188,9 @@ export default {
 }
 
 .drop-menu {
-  position: absolute;
   width: 180px;
-  margin-top: 3px;
-  margin-left: -150px;
   text-align: left;
   font-size: 15px;
-  z-index: 2;
 }
 
 .delete-intent-div {

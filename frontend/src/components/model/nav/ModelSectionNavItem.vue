@@ -1,7 +1,7 @@
 <template lang="html">
 
   <div class="w3-row section-nav-item-container">
-    <div class="w3-row section-nav-item-first-row"
+    <div class="w3-row section-nav-item-first-row w3-leftbar"
       :class="rowClass"
       :draggable="$store.state.support.triggerSectionDraggingState"
       @dragstart="dragStart($event)"
@@ -39,12 +39,15 @@
           :isSelected="isSelected">
         </app-notifications-list>
       </div>
-      <div v-if="$store.state.user.authenticated && !draggingEnabled" class="control-div" :class="{'fa-button': !highlight, 'fa-button-dark': highlight}">
+      <div v-if="$store.state.user.authenticated && !draggingEnabled"
+        class="control-div" :class="{'fa-button': !parentIsSelected, 'fa-button-dark': parentIsSelected || highlight}">
+
         <app-section-control-buttons
           :section="section"
           :inSection="inSection"
           :draggable="$store.state.support.triggerSectionDraggingState"
-          @section-removed="sectionRemoved()">
+          @section-removed="sectionRemoved()"
+          @addCard="addCard">
         </app-section-control-buttons>
       </div>
       <div v-if="draggingEnabled" class="drag-message-div">
@@ -59,15 +62,15 @@
         @before-leave="animating = true"
         @after-leave="animating = false">
 
-        <div v-if="showSubsections && subsections.length > 0" class="w3-row subsections-container"
+        <div v-if="showSubsections && subsectionsDataFiltered.length > 0" class="w3-row subsections-container"
           :class="{'subsection-container-selected': highlight}" >
           <app-model-section-nav-item
             class="subsection-row"
-            v-for="(subsection, ix) in subsections"
+            v-for="(subsectionData, ix) in subsectionsDataFiltered"
             :inSection="section"
-            :section="subsection" :key="subsection.id"
+            :sectionData="subsectionData"
+            :key="subsectionData.section.id"
             :highlightLevel="highlightLevelUse - 1"
-            :coordinate="coordinate.concat(ix)"
             :parentIsSelected="isSelected || parentIsSelected"
             @section-selected="$emit('section-selected', $event)">
           </app-model-section-nav-item>
@@ -93,6 +96,10 @@ export default {
   },
 
   props: {
+    sectionData: {
+      type: Object,
+      default: null
+    },
     inSection: {
       type: Object,
       default: null
@@ -100,10 +107,6 @@ export default {
     highlightLevel: {
       type: Number,
       default: 0
-    },
-    coordinate: {
-      type: Array,
-      default: () => { return [] }
     },
     parentIsSelected: {
       type: Boolean,
@@ -138,20 +141,41 @@ export default {
   },
 
   computed: {
-    sectionData () {
-      return this.$store.getters.getSectionDataAtCoord(this.coordinate)
-    },
     section () {
       if (this.sectionData) {
         return this.sectionData.section
       }
       return null
     },
-    subsections () {
+    showPrivate () {
+      return this.$store.state.viewParameters.showPrivateSections
+    },
+    showShared () {
+      return this.$store.state.viewParameters.showSharedSections
+    },
+    showCommon () {
+      return this.$store.state.viewParameters.showCommonSections
+    },
+    subsectionsDataFiltered () {
       if (this.sectionData) {
-        return this.sectionData.subsectionsData.map(e => e.section)
+        let subsectionsDataFiltered = this.sectionData.subsectionsData.filter((subsectionData) => {
+          switch (subsectionData.section.scope) {
+            case 'PRIVATE':
+              return this.showPrivate
+
+            case 'SHARED':
+              return this.showShared
+
+            case 'COMMON':
+              return this.showCommon
+          }
+          return true
+        })
+
+        return subsectionsDataFiltered
+      } else {
+        return []
       }
-      return []
     },
     highlight () {
       return this.highlightLevelUse > 0
@@ -162,6 +186,22 @@ export default {
         'dragging-over-with-card': this.draggingOverWithCardFlag,
         'dragging-over-with-section-same-level': this.draggingOverWithSectionSameLevelFlag,
         'dragging-over-with-section-inside': this.draggingOverWithSectionInsideFlag
+      }
+
+      if (this.section) {
+        switch (this.section.scope) {
+          case 'PRIVATE':
+          thisClasses['border-red'] = true
+          break
+
+          case 'SHARED':
+          thisClasses['border-yellow'] = true
+          break
+
+          default:
+          thisClasses['border-blue'] = true
+          break
+        }
       }
 
       return thisClasses
@@ -192,10 +232,7 @@ export default {
       return ''
     },
     hasSubsections () {
-      if (this.section) {
-        return this.section.nSubsections > 0
-      }
-      return false
+      return this.subsectionsDataFiltered.length > 0
     },
     isSelected () {
       if (this.section) {
@@ -224,6 +261,11 @@ export default {
   },
 
   methods: {
+    addCard () {
+      if (!this.isSelected) {
+        this.$router.push({name: 'ModelSectionCards', params: {sectionId: this.section.id}, query: {createCard: this.section.id}})
+      }
+    },
     toggleSubsections () {
       if (this.showSubsections) {
         this.collapseSubsections()
@@ -233,11 +275,11 @@ export default {
     },
     expandSubsections () {
       this.showSubsections = true
-      this.$store.dispatch('expandSubsection', this.coordinate)
+      this.$store.dispatch('expandSubsection', this.sectionData.coordinate)
     },
     collapseSubsections () {
       this.showSubsections = false
-      this.$store.dispatch('collapseSubsection', this.coordinate)
+      this.$store.dispatch('collapseSubsection', this.sectionData.coordinate)
     },
     checkExpandSubsections () {
       if (this.highlightLevelUse > 1) {
@@ -290,6 +332,7 @@ export default {
     dragStart (event) {
       var moveSectionData = {
         type: 'MOVE_SECTION',
+        scope: this.section.scope,
         sectionId: this.section.id,
         fromSectionId: this.inSection.id
       }
@@ -298,6 +341,7 @@ export default {
       /* have an extended version of the dragged elements */
       var moveSectionElement = {
         type: 'MOVE_SECTION',
+        scope: this.section.scope,
         section: this.section,
         fromSection: this.inSection
       }
@@ -400,8 +444,9 @@ export default {
           this.axios.put('/1/model/section/' + dragData.fromSectionId +
             '/moveSubsection/' + dragData.sectionId, {}, {
             params: {
-              onSectionId: onSectionId,
-              beforeSubsectionId: beforeSubsectionId
+              toSectionId: onSectionId,
+              onSectionId: beforeSubsectionId,
+              isBefore: false
             }
           }).then((response) => {
             this.$store.dispatch('updateSectionDataInTree', {sectionId: dragData.fromSectionId})
@@ -412,7 +457,9 @@ export default {
           this.axios.put('/1/model/section/' + onSectionId +
             '/subsection/' + dragData.sectionId, {}, {
               params: {
-                beforeSubsectionId: beforeSubsectionId
+                scope: dragData.scope,
+                onSubsectionId: beforeSubsectionId,
+                isBefore: false
               }
             }).then((response) => {
               this.$store.dispatch('updateSectionDataInTree', {sectionId: onSectionId})
@@ -486,7 +533,7 @@ export default {
 
 .dragging-same-level-clue {
   position: absolute;
-  top: 0px;
+  bottom: 0px;
   left: 0px;
   width: 100%;
   height: 5px;

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { getSortedSubsections } from '@/lib/sortAlgorithm.js'
 
 const state = {
   sectionsTree: [],
@@ -71,11 +72,13 @@ const mutations = {
   setSectionsTree: (state, payload) => {
     state.sectionsTree = payload
   },
-  appendSectionData: (state, payload) => {
+  appendSectionDataCommit: (state, payload) => {
     if (payload.coord.length === 1) {
       if (payload.coord[0] === 0) {
         /* initialize tree */
         state.sectionsTree = [{
+          coordinate: [0],
+          inSection: null,
           section: payload.sectionData.section,
           subsectionsData: payload.sectionData.subsectionsData,
           subsectionsDataSet: true,
@@ -92,6 +95,12 @@ const mutations = {
         /* this function always overwrites the sectionData so make sure you
            are overwritting the expected section */
         if (sectionData.section.id === payload.sectionData.section.id) {
+          let inSectionData = null
+          if (payload.coord.length > 1) {
+            inSectionData = getSectionDataAtCoord(state.sectionsTree, payload.coord.slice(0, -1))
+          }
+
+          sectionData.inSection = inSectionData.section
           sectionData.section = payload.sectionData.section
           /* only update subsections they are different from the current ones */
           let newSize = payload.sectionData.subsectionsData.length
@@ -123,31 +132,56 @@ const mutations = {
 
 const actions = {
   resetSectionsTree: (context, payload) => {
-    context.dispatch('appendSectionData', {sectionId: payload.baseSectionId, coord: [0]}).then(() => {
+    context.dispatch('appendSectionData', {
+      sectionId: payload.baseSectionId,
+      coord: [0]
+    }).then(() => {
       context.dispatch('updateCurrentSection', payload.currentSectionId)
     })
   },
 
+  /* This will add a section and their immediate subsections at a given coordinate.
+  Its an asynchronoues method that gets the data from the backend */
   appendSectionData: (context, payload) => {
     return new Promise((resolve, reject) => {
-      Vue.axios.get('/1/model/section/' + payload.sectionId, { params: { levels: 2, onlySections: true } }).then((response) => {
+      Vue.axios.get('/1/model/section/' + payload.sectionId,
+      {
+        params: {
+          levels: 2,
+          parentSectionId: payload.parentSectionId ? payload.parentSectionId : '',
+          onlySections: true
+        }
+      }).then((response) => {
         if (response.data.result === 'success') {
           let section = response.data.data
-          let subsections = section.subsections
+          // console.log(section)
+
+          /* sort subsections for this user */
+          let subsections = getSortedSubsections(section, true, true, true)
+
           let subsectionsData = []
-          for (let ix in subsections) {
+
+          for (let ix = 0; ix < subsections.length; ix++) {
             subsectionsData.push({
+              coordinate: payload.coord.concat(ix),
+              inSection: section,
               section: subsections[ix],
               subsectionsData: [],
               subsectionsDataSet: false,
               expand: false
             })
           }
+
           let sectionData = {
             section: section,
             subsectionsData: subsectionsData
           }
-          context.commit('appendSectionData', { sectionData: sectionData, coord: payload.coord })
+
+          context.commit('appendSectionDataCommit', {
+            sectionData: sectionData,
+            coord: payload.coord
+          })
+
           resolve()
         } else {
           reject()
@@ -189,8 +223,11 @@ const actions = {
     let newCoord = payload.coord.concat(ixNext)
     let newSectionData = getSectionDataAtCoord(state.sectionsTree, newCoord)
 
-    context.dispatch('appendSectionData', { sectionId: sectionData.subsectionsData[ixNext].section.id, coord: newCoord })
-      .then(() => {
+    context.dispatch('appendSectionData', {
+      sectionId: sectionData.subsectionsData[ixNext].section.id,
+      parentSectionId: sectionData.section.id,
+      coord: newCoord
+    }).then(() => {
         /* after loading, recursive call to this same action to keep expanding the sections */
         if (payload.expandIds.length > 0) {
           payload.expandIds.shift()
@@ -211,13 +248,21 @@ const actions = {
 
     /* force subsections to be appended */
     if (!sectionData.subsectionsDataSet) {
-      context.dispatch('appendSectionData', { sectionId: sectionData.section.id, coord: coord })
+      context.dispatch('appendSectionData', {
+        parentSectionId: sectionData.inSection.id,
+        sectionId: sectionData.section.id,
+        coord: coord
+      })
     }
 
     /* besides expanding, preload the subsections of each subsection */
     for (let ix = 0; ix < sectionData.subsectionsData.length; ix++) {
       if (!sectionData.subsectionsData[ix].subsectionsDataSet) {
-        context.dispatch('appendSectionData', { sectionId: sectionData.subsectionsData[ix].section.id, coord: coord.concat(ix) })
+        context.dispatch('appendSectionData', {
+          sectionId: sectionData.subsectionsData[ix].section.id,
+          parentSectionId: sectionData.section.id,
+          coord: coord.concat(ix)
+        })
       }
     }
   },
@@ -254,7 +299,14 @@ const actions = {
   updateSectionDataInTree: (context, payload) => {
     let coords = context.getters.getSectionCoordsFromId(payload.sectionId)
     for (let ix in coords) {
-      context.dispatch('appendSectionData', { sectionId: payload.sectionId, coord: coords[ix] })
+      let thisCoord = coords[ix]
+      let currentSectionData = context.getters.getSectionDataAtCoord(thisCoord)
+
+      context.dispatch('appendSectionData', {
+        sectionId: payload.sectionId,
+        parentSectionId: currentSectionData.inSection ? currentSectionData.inSection.id : '',
+        coord: thisCoord
+      })
     }
   }
 }

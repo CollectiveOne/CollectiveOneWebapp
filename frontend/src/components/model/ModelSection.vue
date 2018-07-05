@@ -1,4 +1,4 @@
-cd w<template lang="html">
+<template lang="html">
 
   <div v-if="section"
     class="section-container" ref="sectionContainer" :id="section.id">
@@ -32,7 +32,6 @@ cd w<template lang="html">
             <span v-if="!isDocView" v-html="faRawHtml"></span>
             <span v-else v-html="headerOpenTag + faRawHtml + headerCloseTag"></span>
           </div>
-
         </div>
         <div class="w3-left">
           <router-link v-if="addSectionLinks" :to="{ name: 'ModelSectionContent', params: {'sectionId': section.id } }">
@@ -41,6 +40,17 @@ cd w<template lang="html">
           <div v-else class="">
             <span v-html="headerOpenTag + '<b>' +  section.title + '</b>' + headerCloseTag"></span>
           </div>
+        </div>
+      </div>
+      <div v-if="!readOnly && section.inSections.length > 1" class="w3-row">
+        <div class="w3-left w3-margin-right">
+          <i>also in</i>
+        </div>
+        <div class="w3-left">
+          <app-in-model-sections-tags
+            :inModelSections="section.inSections"
+            :hideSectionId="inSection.id">
+          </app-in-model-sections-tags>
         </div>
       </div>
       <div v-if="hasDescription" class="w3-row description-text light-grey">
@@ -56,15 +66,16 @@ cd w<template lang="html">
         :inSection="section"
         :acceptDrop="true"
         :cardRouteName="cardRouteName"
-        :hideCardControls="hideCardControls"
-        :showNewCardButton="cardsType !== 'doc'"
+        :hideCardControls="readOnly"
         @updateCards="updateCards()"
+        @createNew="createNew"
+        @edit="edit"
         @create-card="showNewCardModal = true">
       </app-model-cards-container>
     </div>
 
     <div class="w3-row">
-      <div v-for="subsection in section.subsections"
+      <div v-for="subsection in sortedSubsections"
         :key="subsection.id"
         class="subsection-container">
 
@@ -74,7 +85,7 @@ cd w<template lang="html">
           :cardsType="cardsType"
           :nestedIn="nestedIn.concat([section])"
           :cardRouteName="cardRouteName"
-          :hideCardControls="hideCardControls"
+          :readOnly="readOnly"
           :showPrivate="showPrivate"
           :showShared="showShared"
           :showCommon="showCommon"
@@ -89,95 +100,16 @@ cd w<template lang="html">
 <script>
 import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer.vue'
-
-const appendCardsToBase = function (baseList, toAddList) {
-  let relativeToBase = toAddList.filter((cardToAdd) => {
-    let ixInBase = baseList.findIndex((cardInBase) => {
-      return (cardToAdd.beforeCardWrapperId === cardInBase.id) ||
-        (cardToAdd.afterCardWrapperId === cardInBase.id)
-    })
-
-    return ixInBase !== -1
-  })
-
-  /* add those relative to base list  */
-  relativeToBase.forEach((cardRelativeToBase) => {
-    let nextCard = cardRelativeToBase
-
-    do {
-      let ixInBase = baseList.findIndex((cardInBase) => {
-        return (nextCard.beforeCardWrapperId === cardInBase.id) ||
-          (nextCard.afterCardWrapperId === cardInBase.id)
-      })
-
-      if (nextCard.beforeCardWrapperId === baseList[ixInBase].id) {
-        baseList.splice(ixInBase, 0, nextCard)
-      } else {
-        baseList.splice(ixInBase + 1, 0, nextCard)
-      }
-      removeFromList(toAddList, nextCard)
-
-      nextCard = toAddList.find((e) => { return e.afterCardWrapperId === nextCard.id })
-    } while (nextCard != null)
-  })
-
-  /* append all remaining */
-  baseList = baseList.concat(getArrayFromList(toAddList))
-
-  return baseList
-}
-
-const removeFromList = function (list, el) {
-  let ix = list.findIndex((e) => el.id === e.id)
-  if (ix !== -1) {
-    return list.splice(ix, 1)
-  }
-  return null
-}
-
-const getArrayFromList = function (list) {
-  let array = []
-
-  /* start from first elements */
-  let firstElements = list.filter((e) => { return e.afterCardWrapperId == null })
-  firstElements.forEach((firstEl) => {
-    /* add this first element */
-    array.push(firstEl)
-    removeFromList(list, firstEl)
-
-    /* add all connected elements */
-    let next = list.find((e) => { return e.afterCardWrapperId === firstEl.id })
-    while (next != null) {
-      array.push(next)
-      removeFromList(list, next)
-      next = list.find((e) => { return e.afterCardWrapperId === next.id })
-    }
-  })
-
-  while (list.length > 0) {
-    let firstEl = list.shift()
-    /* add this first element */
-    array.push(firstEl)
-    removeFromList(list, firstEl)
-
-    /* add all connected elements */
-    let next = list.find((e) => { return e.afterCardWrapperId === firstEl.id })
-    while (next != null) {
-      array.push(next)
-      removeFromList(list, next)
-      next = list.find((e) => { return e.afterCardWrapperId === next.id })
-    }
-  }
-
-  return array
-}
+import InModelSectionsTags from '@/components/model/InModelSectionsTags.vue'
+import { getSortedCardWrappers, getSortedSubsections } from '@/lib/sortAlgorithm.js'
 
 export default {
   name: 'app-model-section',
 
   components: {
     'app-model-section-header': ModelSectionHeader,
-    'app-model-cards-container': ModelCardsContainer
+    'app-model-cards-container': ModelCardsContainer,
+    'app-in-model-sections-tags': InModelSectionsTags
   },
 
   props: {
@@ -220,6 +152,10 @@ export default {
     showCommon: {
       type: Boolean,
       default: true
+    },
+    readOnly: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -232,7 +168,13 @@ export default {
       showCardId: '',
       expandSubSubsecInit: false,
       subscription: null,
-      showNewCardModal: false
+      showNewCardModal: false,
+      createNewCard: false,
+      editCard: false,
+      targetCard: {
+        type: 'new',
+        cardWrapper: null
+      }
     }
   },
 
@@ -266,28 +208,33 @@ export default {
     hasDescription () {
       if (this.section.description) {
         return this.section.description !== ''
-      }``
+      }
       return false
     },
     sortedCards () {
-      let allCardWrappers = []
+      let allCardWrappers = getSortedCardWrappers(this.section, this.showCommon, this.showShared, this.showPrivate)
 
-      if (this.showCommon) {
-        allCardWrappers = getArrayFromList(this.section.cardsWrappersCommon.slice())
+      //  new-card-editor for creating new cards
+      if (this.createNewCard) {
+        let index = allCardWrappers.findIndex(x => x.id === this.targetCard.cardWrapper.id)
+        if (this.$store.state.support.createNewCardLocation === 'before') {
+          index -= 1
+        }
+        allCardWrappers.splice(index + 1, 0, this.targetCard)
+        this.createNewCard = false
       }
-
-      let nonCommonCards = []
-      if (this.showPrivate) {
-        nonCommonCards = nonCommonCards.concat(this.section.cardsWrappersPrivate.slice())
+      //  new-card-editor for editing existing cards
+      if (this.editCard) {
+        let index = allCardWrappers.findIndex(x => x.id === this.targetCard.cardWrapper.id)
+        this.targetCard.type = 'edit'
+        allCardWrappers[index] = this.targetCard
+        this.editCard = false
       }
-
-      if (this.showShared) {
-        nonCommonCards = nonCommonCards.concat(this.section.cardsWrappersShared.slice())
-      }
-
-      allCardWrappers = appendCardsToBase(allCardWrappers, nonCommonCards)
 
       return allCardWrappers
+    },
+    sortedSubsections () {
+      return getSortedSubsections(this.section, this.showCommon, this.showShared, this.showPrivate)
     },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
@@ -307,10 +254,22 @@ export default {
   },
 
   methods: {
+    edit (value) {
+      this.targetCard.cardWrapper = value
+      this.targetCard.type = 'edit'
+      this.editCard = true
+    },
+    createNew (value) {
+      this.targetCard.cardWrapper = value
+      this.targetCard.type = 'newCard'
+      this.createNewCard = true
+    },
     updateCards () {
       console.log('updating cards')
       this.axios.get('/1/model/section/' + this.section.id + '/cardWrappers').then((response) => {
         if (response.data.result === 'success') {
+          //  set new card parameters to default
+          this.createNewCard = false
           this.section.cardsWrappersCommon = response.data.data.cardsWrappersCommon
           this.section.cardsWrappersPrivate = response.data.data.cardsWrappersPrivate
           this.section.cardsWrappersShared = response.data.data.cardsWrappersShared

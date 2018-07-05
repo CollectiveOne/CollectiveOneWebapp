@@ -1,13 +1,13 @@
 <template lang="html">
   <div class="card-container-doc"
-    @mouseover="hovering = true"
-    @mouseleave="hovering = false">
+    @mouseover="mouseOver()"
+    @mouseleave="mouseLeave()">
 
     <div class="w3-row">
 
       <div class="w3-col s12">
 
-        <div class="card-container-padded">
+        <div :class="containerClassPar" @click="clicked = !clicked">
           <div v-if="card.title !== ''" class="w3-row card-title">
             {{ card.title }}
           </div>
@@ -23,15 +23,41 @@
           <img class="" :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
         </div>
 
+
+        <transition name="fadeenter">
+          <div v-if="$store.state.user.authenticated && clicked" class="user-indicators-div">
+            <app-card-user-indicators
+              :cardWrapper="cardWrapper"
+              :inSection="inSection"
+              :hideCardControls="hideCardControls"
+              :inCardSelector="inCardSelector"
+              :cardRouteName="cardRouteName"
+              @update="$emit('update')"
+              @createNew="$emit('createNew')"
+              @edit="$emit('edit')"
+              @updateCards="$emit('updateCards')">
+            </app-card-user-indicators>
+          </div>
+        </transition>
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { cardMixin } from '@/components/model/cards/cardMixin.js'
+import CardUserIndicators from '@/components/model/cards/CardUserIndicators.vue'
+
 export default {
 
-  name: 'model-card-as-card',
+  name: 'model-card-as-par',
+
+  mixins: [ cardMixin ],
+
+  components: {
+    'app-card-user-indicators': CardUserIndicators
+  },
 
   props: {
     cardWrapper: {
@@ -50,7 +76,8 @@ export default {
 
   data () {
     return {
-      hovering: false
+      hovering: false,
+      clicked: false
     }
   },
 
@@ -60,17 +87,19 @@ export default {
     },
     hasImage () {
       return this.card.imageFile !== null
+    },
+    containerClassPar () {
+      let baseClass = this.containerClass
+      baseClass['card-container-padded'] = !this.hideCardControls
+
+      return baseClass
     }
   },
 
   methods: {
-    hoverEnter () {
-      this.showActionButton = true
-      this.highlight = true
+    mouseOver () {
     },
-    hoverLeave () {
-      this.showActionButton = false
-      this.highlight = false
+    mouseLeave () {
     }
   },
 
@@ -86,6 +115,18 @@ export default {
 <style scoped>
 
 .card-container-padded {
+  border-left-style: solid;
+  padding-left: 6px;
+}
+
+.card-container-doc {
+  position: relative;
+}
+
+.user-indicators-div {
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
 
 .image-container {
@@ -126,24 +167,6 @@ export default {
 .card-text p {
   margin-top: 0px;
   margin-bottom: 0px;
-}
-
-.bottom-row {
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  padding: 3px 6px;
-  min-height: 30px;
-}
-
-.insection-tag-container {
-  display: inline-block;
-  margin-right: 5px;
-  margin-bottom: 5px;
-}
-
-.indicator-comp {
-  margin-right: 6px;
-  margin-left: 4px;
 }
 
 </style>

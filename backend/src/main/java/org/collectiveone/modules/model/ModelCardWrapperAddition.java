@@ -2,6 +2,7 @@ package org.collectiveone.modules.model;
 
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,7 +19,7 @@ import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "model_cards_wrapper_additions")
-public class ModelCardWrapperAddition {
+public class ModelCardWrapperAddition implements OrderedElement {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -30,18 +31,18 @@ public class ModelCardWrapperAddition {
 	private ModelSection section;
 	
 	@Enumerated(EnumType.STRING)
-	private ModelCardWrapperScope scope;
+	private ModelScope scope;
 	
 	@ManyToOne
 	private ModelCardWrapper cardWrapper;
 	
 	/* double-linked list determines the order */
-	@ManyToOne
-	private ModelCardWrapperAddition beforeCardWrapperAddition;
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	private ModelCardWrapperAddition beforeElement;
 	
 	/* double-linked list determines the order */
-	@ManyToOne
-	private ModelCardWrapperAddition afterCardWrapperAddition;
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	private ModelCardWrapperAddition afterElement;
 	
 	@ManyToOne
 	private AppUser adder;
@@ -118,28 +119,36 @@ public class ModelCardWrapperAddition {
 		this.section = section;
 	}
 
-	public ModelCardWrapperScope getScope() {
+	public ModelScope getScope() {
 		return scope;
 	}
 
-	public void setScope(ModelCardWrapperScope scope) {
+	public void setScope(ModelScope scope) {
 		this.scope = scope;
 	}
 	
+	public OrderedElement getBeforeElement() {
+		return beforeElement;
+	}
+
+	public void setBeforeElement(OrderedElement beforeElement) {
+		this.beforeElement = (ModelCardWrapperAddition) beforeElement;
+	}
+
+	public OrderedElement getAfterElement() {
+		return afterElement;
+	}
+
+	public void setAfterElement(OrderedElement afterElement) {
+		this.afterElement = (ModelCardWrapperAddition) afterElement;
+	}
+	
 	public ModelCardWrapperAddition getBeforeCardWrapperAddition() {
-		return beforeCardWrapperAddition;
+		return beforeElement;
 	}
-
-	public void setBeforeCardWrapperAddition(ModelCardWrapperAddition beforeCardWrapperAddition) {
-		this.beforeCardWrapperAddition = beforeCardWrapperAddition;
-	}
-
+	
 	public ModelCardWrapperAddition getAfterCardWrapperAddition() {
-		return afterCardWrapperAddition;
-	}
-
-	public void setAfterCardWrapperAddition(ModelCardWrapperAddition afterCardWrapperAddition) {
-		this.afterCardWrapperAddition = afterCardWrapperAddition;
+		return afterElement;
 	}
 
 	public Status getStatus() {

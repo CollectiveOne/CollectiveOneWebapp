@@ -66,30 +66,62 @@
 
       <div class="w3-col m4">
         <div v-if="inInitiative" class="tab-btns-container w3-xlarge">
-          <router-link :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
-            class="tab-btn-space">
-            <div tooltip="Overview" class="fa-button noselect" :class="{'fa-button-selected': isOverview}">
-              <span class=""><i class="fa fa-home" aria-hidden="true"></i></span>
-            </div>
-          </router-link>
-          <router-link :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
-            class="tab-btn-space">
-            <div tooltip="Content" class="fa-button noselect" :class="{'fa-button-selected': isModel}">
-              <span class=""><i class="fa fa-th-large" aria-hidden="true"></i></span>
-            </div>
-          </router-link>
-          <router-link :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
-            class="tab-btn-space">
-            <div tooltip="Members" class="fa-button noselect" :class="{'fa-button-selected': isPeople}">
-              <span class=""><i class="fa fa-users" aria-hidden="true"></i></span>
-            </div>
-          </router-link>
-          <router-link :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
-            class="tab-btn-space">
-            <div tooltip="Transfers" class="fa-button noselect" :class="{'fa-button-selected': isAssignations}">
-              <span class=""><i class="fa fa-exchange" aria-hidden="true"></i></span>
-            </div>
-          </router-link>
+          <popper trigger="hover":options="popperOptions" class="btn-div">
+            <app-help-popper
+              :title="$t('help.HOME-TAB-TT')"
+              :details="$t('help.HOME-TAB-DET')">
+            </app-help-popper>
+
+            <router-link slot="reference" :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
+              class="tab-btn-space">
+              <div class="fa-button noselect" :class="{'fa-button-selected': isOverview}">
+                <span class=""><i class="fa fa-home" aria-hidden="true"></i></span>
+              </div>
+            </router-link>
+          </popper>
+
+          <popper trigger="hover":options="popperOptions" class="btn-div">
+            <app-help-popper
+              :title="$t('help.CONTENT-TAB-TT')"
+              :details="$t('help.CONTENT-TAB-DET')">
+            </app-help-popper>
+
+            <router-link slot="reference" :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
+              class="tab-btn-space">
+              <div tooltip="Content" class="fa-button noselect" :class="{'fa-button-selected': isModel}">
+                <span class=""><i class="fa fa-th-large" aria-hidden="true"></i></span>
+              </div>
+            </router-link>
+          </popper>
+
+          <popper trigger="hover":options="popperOptions" class="btn-div">
+            <app-help-popper
+              :title="$t('help.MEMBERS-TAB-TT')"
+              :details="$t('help.MEMBERS-TAB-DET')">
+            </app-help-popper>
+
+            <router-link slot="reference" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
+              class="tab-btn-space">
+              <div tooltip="Members" class="fa-button noselect" :class="{'fa-button-selected': isPeople}">
+                <span class=""><i class="fa fa-users" aria-hidden="true"></i></span>
+              </div>
+            </router-link>
+          </popper>
+
+          <popper trigger="hover":options="popperOptions" class="btn-div">
+            <app-help-popper
+              :title="$t('help.TRANSFERS-TAB-TT')"
+              :details="$t('help.TRANSFERS-TAB-DET')">
+            </app-help-popper>
+
+            <router-link slot="reference" :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
+              class="tab-btn-space">
+              <div tooltip="Transfers" class="fa-button noselect" :class="{'fa-button-selected': isAssignations}">
+                <span class=""><i class="fa fa-exchange" aria-hidden="true"></i></span>
+              </div>
+            </router-link>
+          </popper>
+
         </div>
         <div v-else class="logo-container">
           <img class="logo" src="../assets/logo-color.png" alt="">
@@ -130,11 +162,25 @@
           </button>
         </div>
 
-        <router-link :to="{ name: 'Landing'}" tooltip="Log Out" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-info-circle"></i></router-link>
+        <popper trigger="hover":options="popperOptions" class="btn-div">
+          <app-help-popper
+            :title="$t('help.LANDING-BUTTON-TT')"
+            :details="$t('help.LANDING-BUTTON-DET')">
+          </app-help-popper>
 
-        <router-link v-if="inInitiative" :to="{name: 'InitiativesHome'}" tooltip="Home" class="w3-right logo-container noselect cursor-pointer">
-          <img class="icon" src="../assets/imago-red.png" alt="">
-        </router-link>
+          <router-link slot="reference" :to="{ name: 'Landing'}" tooltip="Log Out" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-info-circle"></i></router-link>
+        </popper>
+
+        <popper trigger="hover":options="popperOptions" class="btn-div">
+          <app-help-popper
+            :title="$t('help.HOME-BUTTON-TT')"
+            :details="$t('help.HOME-BUTTON-DET')">
+          </app-help-popper>
+
+          <router-link slot="reference" v-if="inInitiative" :to="{name: 'InitiativesHome'}" tooltip="Home" class="w3-right logo-container noselect cursor-pointer">
+            <img class="icon" src="../assets/imago-red.png" alt="">
+          </router-link>
+        </popper>
 
       </div>
     </div>
@@ -236,6 +282,19 @@ export default {
         { text: 'notifications', value: 'notifications', faIcon: 'fa-cog' },
         { text: 'logout', value: 'logout', faIcon: 'fa-power-off' }
       ]
+    },
+    popperOptions () {
+      return {
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: false
+          },
+          flip: {
+            enabled: false
+          }
+        }
+      }
     }
   },
 

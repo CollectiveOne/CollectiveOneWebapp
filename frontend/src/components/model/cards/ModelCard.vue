@@ -11,9 +11,13 @@
         :inSection="inSection"
         :forceUpdate="forceUpdate"
         :inCardSelector="inCardSelector"
+        :isNew="cardWrapper.type === 'newCard'"
         :cardRouteName="cardRouteName"
         :hideCardControls="hideCardControls"
+        :type="type"
         @update="update()"
+        @edit="$emit('edit')"
+        @createNew="$emit('createNew')"
         @updateCards="$emit('updateCards')">
       </component>
 
@@ -21,9 +25,7 @@
         <div v-if="$store.state.support.triggerCardDraggingState" class="cover-when-draggable">
           <div class="cover-when-draggable-content">
             <span>
-              <i class="fa fa-arrows" aria-hidden="true"></i> <b>move</b>
-              (drop on another section while pressing Ctrl to
-              <i class="fa fa-clone" aria-hidden="true"></i> <b>copy</b>)
+              <i class="fa fa-arrows" aria-hidden="true"></i> move
             </span>
           </div>
         </div>
@@ -35,6 +37,7 @@
 </template>
 
 <script>
+import ModelCardEditor from '@/components/model/cards/ModelCardEditor.vue'
 import ModelCardSummary from '@/components/model/cards/ModelCardSummary.vue'
 import ModelCardAsCard from '@/components/model/cards/ModelCardAsCard.vue'
 import ModelCardAsPar from '@/components/model/cards/ModelCardAsPar.vue'
@@ -43,6 +46,7 @@ export default {
   name: 'model-card',
 
   components: {
+    'app-model-card-editor': ModelCardEditor,
     'app-model-card-summary': ModelCardSummary,
     'app-model-card-as-card': ModelCardAsCard,
     'app-model-card-as-par': ModelCardAsPar
@@ -109,6 +113,10 @@ export default {
       }
     },
     cardComponent () {
+      if (this.cardWrapper.type === 'newCard' || this.cardWrapper.type === 'edit' || this.type === 'new') {
+            return 'app-model-card-editor'
+      }
+
       switch (this.type) {
         case 'summary':
           return 'app-model-card-summary'
@@ -128,7 +136,7 @@ export default {
   methods: {
     update () {
       console.log('updating card ' + this.cardWrapper.id)
-      this.axios.get('/1/model/cardWrapper/' + this.cardWrapper.id, {
+      this.axios.get('/1/model/cardWrapperAddition/' + this.cardWrapper.id, {
         params: {
           inSectionId: this.inSection ? this.inSection.id : ''
         }

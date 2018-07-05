@@ -33,7 +33,9 @@ public class NotificationDtoBuilder {
 		return isHtml ? str : "";
 	}
 
-	public NotificationDto getNotificationDto(Notification notification, Boolean isHtml) {
+	public NotificationDto getNotificationDto(
+			Notification notification, 
+			Boolean isHtml) {
 		
 		this.isHtml = isHtml;
 		
@@ -57,7 +59,15 @@ public class NotificationDtoBuilder {
 			modelCardWrapper = act.getModelCardWrapper();
 		}
 		
-		ModelSection onSection = act.getOnSection();
+		ModelSection onSection = null;
+		
+		if (act.getModelSubsection() != null) {
+			modelSection = act.getModelSubsection().getSection();
+			onSection = act.getModelSubsection().getParentSection();
+		} else {
+			onSection = act.getOnSection();	
+		}
+		
 		ModelSection fromSection = act.getFromSection();
 		
 		if (act.getModelCardWrapperAddition() != null) {
@@ -318,7 +328,20 @@ public class NotificationDtoBuilder {
 				
 			}
 			String text = notification.getActivity().getMessage().getText();
-			message = "commented in " + from + ": " + (text.length() > 60 ? text.substring(0, 60) + "..." : text);
+			
+			if (act.getMentionedUsers().contains(notification.getSubscriber().getUser())) {
+				/* mentioned to user */
+				message = "mentioned you in a comment in ";
+			} else {
+				message = "commented in ";
+			}
+			
+			String textLimited = "";
+			if (text != null) {
+				textLimited = isHtml ? text : (text.length() > 60 ? text.substring(0, 60) + "..." : text);	
+			}
+			message += from + ": " + textLimited;
+			
 			break;
 			
 		default:

@@ -21,15 +21,6 @@ public interface ModelSectionRepositoryIf extends CrudRepository<ModelSection, U
 		return res != null;
 	}
 	
-	@Query("SELECT section FROM ModelSection section JOIN section.subsections subsec WHERE subsec.id = ?1")
-	public List<ModelSection> findParentSections(UUID sectionId);
-	
-	@Query("SELECT section.id FROM ModelSection section JOIN section.subsections subsec WHERE subsec.id = ?1")
-	public List<UUID> findParentSectionsIds(UUID sectionId);
-	
-	@Query("SELECT subsec.id FROM ModelSection section JOIN section.subsections subsec WHERE section.id = ?1")
-	public List<UUID> findSubsectionsIds(UUID sectionId);
-	
 	@Query("SELECT sec FROM ModelSection sec " +
 			"WHERE (LOWER(sec.title) LIKE ?1 OR LOWER(sec.description) LIKE ?1) " +
 			"AND sec.initiative.id IN ?2)")

@@ -251,3 +251,11 @@
   word-break: break-word;
   hyphens: auto;
 }
+
+.yes-border {
+  border-style: solid;
+}
+
+.no-border {
+  border-style: none;
+}

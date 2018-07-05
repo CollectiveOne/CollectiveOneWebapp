@@ -18,6 +18,8 @@
           :type="cardsType"
           :cardRouteName="cardRouteName"
           :hideCardControls="hideCardControls"
+          @edit="$emit('edit', cardWrapper)"
+          @createNew="$emit('createNew', cardWrapper)"
           @updateCards="$emit('updateCards')">
         </app-model-card>
       </div>
@@ -25,15 +27,26 @@
       <div v-if="isDraggingOver(cardWrapper) && draggingOverCardWrapperAfter" class="drop-div">
       </div>
 
-    </div><div v-if="showNewCardButton && !hideCardControls" :class="cardsContainerClasses" class=""
+    </div>
+
+    <div v-if="!hideCardControls" :class="cardsContainerClasses" class=""
       @dragover.prevent="draggingOver()"
       @drop.prevent="cardDroped('', $event)">
 
       <div v-if="draggingOverCreateCard" class="drop-div">
       </div>
 
-      <div v-if="cardWrappers.length === 0" @click="$emit('create-card')" class="control-btn w3-card-2 w3-padding w3-round w3-center create-card-div">
-        <i class="fa fa-plus" aria-hidden="true"></i> create new card
+      <div v-if="!creatingNewCard" class="">
+        <button class="w3-button app-button-light new-card-button" @click="creatingNewCard = true"><i class="fa fa-plus" aria-hidden="true"></i></button>
+      </div>
+      <div v-else class="card-container-in-list">
+        <app-model-card-editor
+          :isNew="true"
+          :inSection="inSection"
+          :type="cardsType"
+          @edit="creatingNewCard = false"
+          @updateCards="cardCreated()">
+        </app-model-card-editor>
       </div>
     </div>
 
@@ -42,10 +55,12 @@
 
 <script>
 import ModelCard from '@/components/model/cards/ModelCard.vue'
+import ModelCardEditor from '@/components/model/cards/ModelCardEditor.vue'
 
 export default {
   components: {
-    'app-model-card': ModelCard
+    'app-model-card': ModelCard,
+    'app-model-card-editor': ModelCardEditor
   },
 
   props: {
@@ -59,7 +74,7 @@ export default {
     },
     cardsType: {
       type: String,
-      default: 'card'
+      default: 'new'
     },
     acceptDrop: {
       type: Boolean,
@@ -72,14 +87,13 @@ export default {
     cardRouteName: {
       type: String,
       default: 'ModelSectionCard'
-    },
-    showNewCardButton: {
-      type: Boolean,
-      default: false
     }
   },
 
   computed: {
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
     cardsContainerClasses () {
       return {
         'section-card-col-with-nav': this.cardsType === 'card' && (this.$store.state.support.expandModelNav && !this.$store.state.support.windowIsSmall),
@@ -89,11 +103,18 @@ export default {
     },
     draggingElement () {
       return this.$store.state.support.draggingElement
+    },
+    lastCardWrapper () {
+      let cardWrapper = {
+        cardWrapper: this.cardWrappers[this.cardWrappers.length - 1]
+      }
+      return cardWrapper
     }
   },
 
   data () {
     return {
+      creatingNewCard: false,
       draggingOverCardWrapper: null,
       draggingOverCreateCard: false,
       draggingOverCardWrapperBefore: false,
@@ -103,6 +124,10 @@ export default {
   },
 
   methods: {
+    cardCreated () {
+      this.creatingNewCard = false
+      this.$emit('updateCards')
+    },
     draggingOver (event, cardWrapper) {
       if (!this.acceptDrop) {
         return
@@ -203,7 +228,12 @@ export default {
     }
   },
 
-  created () {
+  watch: {
+    'inSection.id' () {
+      if (this.$route.query.createCard === this.inSection.id) {
+        this.$emit('createNew', this.cardWrappers[this.cardWrappers.length - 1])
+      }
+    }
   }
 }
 </script>
@@ -233,6 +263,15 @@ export default {
 .create-card-div {
   margin-top: 20px;
   max-width: 350px;
+}
+
+.new-card-button {
+  height: 30px;
+  width: 30px;
+  border-radius: 15px !important;
+  padding: 0px !important;
+  color: white !important;
+  background-color: #cccccc !important;
 }
 
 @media screen and (min-width: 1700px) {

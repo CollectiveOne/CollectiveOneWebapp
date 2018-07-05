@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <div v-if="expand" class="w3-row gray-1-border section-description w3-small">
+    <div v-if="expand && section.description" class="w3-row gray-1-border section-description w3-small">
       <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
     </div>
 

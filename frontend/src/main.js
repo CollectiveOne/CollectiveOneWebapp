@@ -6,6 +6,9 @@ import router from './router'
 import beforeEach from './router/beforeEach'
 import { store } from './store/store'
 
+import VueI18n from 'vue-i18n'
+import { translations } from '@/lang'
+
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueAnalytics from 'vue-analytics'
@@ -21,12 +24,22 @@ import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 import ModelSectionTag from '@/components/model/MoodelSectionTag.vue'
 
+import Popper from 'vue-popperjs'
+import HelpPopper from '@/components/HelpPopper.vue'
+
 Vue.config.productionTip = false
 
 Vue.use(VueAxios, axios)
 Vue.use(VueAnalytics, {
   id: 'UA-92543820-1',
   router
+})
+
+Vue.use(VueI18n)
+export const i18n = new VueI18n({
+  locale: 'en', // set locale
+  fallbackLocale: 'en',
+  messages: translations
 })
 
 axios.interceptors.request.use(
@@ -50,6 +63,8 @@ Vue.component('app-user-avatar', UserAvatar)
 Vue.component('app-model-section-modal', ModelSectionModal)
 Vue.component('app-model-card-modal', ModelCardModal)
 Vue.component('app-model-section-tag', ModelSectionTag)
+Vue.component('popper', Popper)
+Vue.component('app-help-popper', HelpPopper)
 
 /* custom directive to detect click outside from
 https://stackoverflow.com/questions/36170425/detect-click-outside-element?answertab=votes#tab-top */
@@ -72,6 +87,7 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   template: '<App/>',
   components: { App }
 })

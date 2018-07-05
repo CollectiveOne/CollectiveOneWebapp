@@ -1,0 +1,669 @@
+diff --git a/backend/src/main/java/org/collectiveone/modules/initiatives/Initiative.java b/backend/src/main/java/org/collectiveone/modules/initiatives/Initiative.java
+index 6276ad1..bfa92ff 100644
+--- a/backend/src/main/java/org/collectiveone/modules/initiatives/Initiative.java
++++ b/backend/src/main/java/org/collectiveone/modules/initiatives/Initiative.java
+@@ -21,7 +21,7 @@ import javax.persistence.Table;
+ 
+ import org.collectiveone.modules.governance.Governance;
+ import org.collectiveone.modules.initiatives.dto.InitiativeDto;
+-import org.collectiveone.modules.model.ModelSection;
++import org.collectiveone.modules.model.ModelSubsection;
+ import org.collectiveone.modules.tokens.TokenType;
+ import org.collectiveone.modules.users.AppUser;
+ import org.hibernate.annotations.GenericGenerator;
+@@ -63,7 +63,7 @@ public class Initiative {
+ 	private InitiativeMeta meta;	
+ 	
+ 	@OneToOne
+-	private ModelSection topModelSection;
++	private ModelSubsection topModelSubsection;
+ 		
+ 	
+ 	public InitiativeDto toDto() {
+@@ -73,7 +73,7 @@ public class Initiative {
+ 		dto.setCreator(creator.toDtoLight());
+ 		dto.setStatus(status.toString());
+ 		dto.setMeta(meta.toDto());
+-		dto.setTopModelSection(topModelSection.toDto());
++		dto.setTopModelSection(topModelSubsection.getSection().toDto());
+ 		
+ 		if(tokenTypes != null) {
+ 			for (TokenType tokenType : tokenTypes) {
+@@ -133,11 +133,12 @@ public class Initiative {
+ 	public void setMeta(InitiativeMeta meta) {
+ 		this.meta = meta;
+ 	}
+-	public ModelSection getTopModelSection() {
+-		return topModelSection;
++	public ModelSubsection getTopModelSubsection() {
++		return topModelSubsection;
+ 	}
+-	public void setTopModelSection(ModelSection topModelSection) {
+-		this.topModelSection = topModelSection;
++	public void setTopModelSubsection(ModelSubsection topModelSubsection) {
++		this.topModelSubsection = topModelSubsection;
+ 	}
+ 	
++	
+ }
+diff --git a/backend/src/main/java/org/collectiveone/modules/initiatives/InitiativeService.java b/backend/src/main/java/org/collectiveone/modules/initiatives/InitiativeService.java
+index 0db05d8..d8bb1ab 100644
+--- a/backend/src/main/java/org/collectiveone/modules/initiatives/InitiativeService.java
++++ b/backend/src/main/java/org/collectiveone/modules/initiatives/InitiativeService.java
+@@ -36,8 +36,12 @@ import org.collectiveone.modules.initiatives.repositories.InitiativeRelationship
+ import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+ import org.collectiveone.modules.initiatives.repositories.InitiativeTagRepositoryIf;
+ import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
++import org.collectiveone.modules.model.ModelScope;
+ import org.collectiveone.modules.model.ModelSection;
++import org.collectiveone.modules.model.ModelSubsection;
++import org.collectiveone.modules.model.Status;
+ import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
++import org.collectiveone.modules.model.repositories.ModelSubsectionRepositoryIf;
+ import org.collectiveone.modules.tokens.InitiativeTransfer;
+ import org.collectiveone.modules.tokens.TokenMint;
+ import org.collectiveone.modules.tokens.TokenService;
+@@ -111,6 +115,9 @@ public class InitiativeService {
+ 	
+ 	@Autowired
+ 	private WantToContributeRepositoryIf wantToContributeRepository;
++	
++	@Autowired
++	private ModelSubsectionRepositoryIf modelSubsectionRepository;
+ 	  
+ 	
+ 	@Transactional
+@@ -220,7 +227,7 @@ public class InitiativeService {
+ 				
+ 				if (result3.getResult().equals("success")) {
+ 					
+-					PostResult result4 = initModel(result.getData().getId());
++					PostResult result4 = initModel(result.getData().getId(), userId);
+ 					
+ 					if (result4.getResult().equals("success")) {
+ 						return new PostResult("success", "initiative created and initalized",  result.getData().getId().toString());
+@@ -441,17 +448,25 @@ public class InitiativeService {
+ 	}
+ 	
+ 	@Transactional
+-	private PostResult initModel(UUID initiativeId) {
++	private PostResult initModel(UUID initiativeId, UUID requestByUserId) {
+ 		Initiative initiative = initiativeRepository.findById(initiativeId);
+ 		
+ 		ModelSection section = new ModelSection();
+ 		section.setTitle(initiative.getMeta().getName());
+ 		section.setInitiative(initiative);
+-		section.setIsTopModelSection(true);
+ 		
+ 		section = modelSectionRepository.save(section);
+ 		
+-		initiative.setTopModelSection(section);
++		ModelSubsection subsection = new ModelSubsection();
++		
++		subsection.setSection(section);
++		subsection.setAdder(appUserRepository.findByC1Id(requestByUserId));
++		subsection.setScope(ModelScope.COMMON);
++		subsection.setStatus(Status.VALID);
++		
++		subsection = modelSubsectionRepository.save(subsection);		
++		
++		initiative.setTopModelSubsection(subsection);
+ 		initiativeRepository.save(initiative);
+ 		
+ 		return new PostResult("success", "initiative top section created",  initiative.getId().toString());
+@@ -522,7 +537,7 @@ public class InitiativeService {
+ 		
+ 		if (!oldName.equals(initiativeDto.getName()) || !oldDriver.equals(initiativeDto.getDriver())) {
+ 			/* update topModelSection name */
+-			ModelSection section = initiative.getTopModelSection();
++			ModelSection section = initiative.getTopModelSubsection().getSection();
+ 			section.setTitle(initiativeMeta.getName());
+ 			modelSectionRepository.save(section);
+ 			
+diff --git a/backend/src/main/java/org/collectiveone/modules/model/ModelController.java b/backend/src/main/java/org/collectiveone/modules/model/ModelController.java
+index 7cff689..1542176 100644
+--- a/backend/src/main/java/org/collectiveone/modules/model/ModelController.java
++++ b/backend/src/main/java/org/collectiveone/modules/model/ModelController.java
+@@ -55,7 +55,7 @@ public class ModelController extends BaseController {
+ 		return modelService.getModel(initiativeId, level, getLoggedUserId(), onlySections);
+ 	}
+ 	
+-	@RequestMapping(path = "/model/section/{sectionId}/subsection", method = RequestMethod.POST)
++	@RequestMapping(path = "/model/section/{parentSectionId}/subsection", method = RequestMethod.POST)
+ 	public PostResult createSectionSubsection(
+ 			@PathVariable("parentSectionId") String parentSectionIdStr,
+ 			@RequestBody ModelSectionDto sectionDto,
+diff --git a/backend/src/main/java/org/collectiveone/modules/model/ModelSection.java b/backend/src/main/java/org/collectiveone/modules/model/ModelSection.java
+index a717cd5..4bf3fdc 100644
+--- a/backend/src/main/java/org/collectiveone/modules/model/ModelSection.java
++++ b/backend/src/main/java/org/collectiveone/modules/model/ModelSection.java
+@@ -29,8 +29,6 @@ public class ModelSection {
+ 	@ManyToOne
+ 	private Initiative initiative;
+ 	
+-	private Boolean isTopModelSection;
+-	
+ 	@Column(name = "title", length = 42)
+ 	private String title;
+ 	
+@@ -61,13 +59,17 @@ public class ModelSection {
+ 		return id.equals(other.getId());
+ 	}
+ 	
++	public String toString() {
++		return "id: " + id.toString() + " " + 	
++				"title: " + title + " ";
++	}
++	
+ 	public ModelSectionDto toDtoLight () {
+ 		ModelSectionDto sectionDto = new ModelSectionDto();
+ 		
+ 		sectionDto.setId(id.toString());
+ 		sectionDto.setTitle(title);
+ 		sectionDto.setDescription(description);
+-		sectionDto.setIsTopModelSection(isTopModelSection);
+ 		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
+ 		
+ 		return sectionDto; 
+@@ -95,14 +97,6 @@ public class ModelSection {
+ 		this.initiative = initiative;
+ 	}
+ 	
+-	public Boolean getIsTopModelSection() {
+-		return isTopModelSection;
+-	}
+-
+-	public void setIsTopModelSection(Boolean isTopModelSection) {
+-		this.isTopModelSection = isTopModelSection;
+-	}
+-
+ 	public String getTitle() {
+ 		return title;
+ 	}
+diff --git a/backend/src/main/java/org/collectiveone/modules/model/ModelService.java b/backend/src/main/java/org/collectiveone/modules/model/ModelService.java
+index b7004ce..46d185e 100644
+--- a/backend/src/main/java/org/collectiveone/modules/model/ModelService.java
++++ b/backend/src/main/java/org/collectiveone/modules/model/ModelService.java
+@@ -90,9 +90,9 @@ public class ModelService {
+ 		Initiative initiative = initiativeRepository.findById(initiativeId);
+ 		if (initiative == null) return new GetResult<ModelSectionDto>("error", "initiative not found", null);
+ 		
+-		ModelSectionDto sectionDto = initiative.getTopModelSection().toDto();
++		ModelSectionDto sectionDto = initiative.getTopModelSubsection().getSection().toDto();
+ 		if (level > 0) {
+-			sectionDto = addSectionSubElements(sectionDto, initiative.getTopModelSection().getId(), level - 1, requestById, onlySections);	
++			sectionDto = addSectionSubElements(sectionDto, initiative.getTopModelSubsection().getSection().getId(), level - 1, requestById, onlySections);	
+ 		}
+ 			
+ 		return new GetResult<ModelSectionDto> ("success", "model found", sectionDto);
+@@ -161,10 +161,12 @@ public class ModelService {
+ 		ModelSection section = modelSectionRepository.findById(sectionId);
+ 		ModelSectionDto sectionDto = section.toDto();
+ 		
+-		List<ModelSubsection> subsections = modelSubsectionRepository.findOfSection(section.getId());
++		List<ModelSubsection> inSubsections = modelSubsectionRepository.findOfSection(section.getId());
+ 		
+-		for (ModelSubsection subsection : subsections) {
+-			sectionDto.getInSections().add(subsection.getSection().toDto());
++		for (ModelSubsection inSubsection : inSubsections) {
++			if (inSubsection.getParentSection() != null) {
++				sectionDto.getInSections().add(inSubsection.getParentSection().toDto());
++			}
+ 		}
+ 		
+ 		if(level > 0) {
+@@ -658,7 +660,7 @@ public class ModelService {
+ 		SubsectionsHolderDto subsectionsHolder = new SubsectionsHolderDto();
+ 		
+ 		List<ModelSubsection> modelSubsectionsCommon = 
+-				modelSubsectionRepository.findParentSectionWithScope(section.getId(), ModelScope.COMMON);
++				modelSubsectionRepository.findInParentSectionWithScope(section.getId(), ModelScope.COMMON);
+ 		
+ 		for (ModelSubsection subsection : modelSubsectionsCommon) {
+ 			subsectionsHolder.getSubsectionsCommon().add(subsection.getSection().toDto());
+@@ -675,7 +677,7 @@ public class ModelService {
+ 		if(initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId)) {
+ 			
+ 			List<ModelSubsection> modelSubsectionsShared = 
+-					modelSubsectionRepository.findParentSectionWithScope(section.getId(), ModelScope.SHARED);
++					modelSubsectionRepository.findInParentSectionWithScope(section.getId(), ModelScope.SHARED);
+ 			
+ 			for (ModelSubsection subsection : modelSubsectionsShared) {
+ 				subsectionsHolder.getSubsectionsShared().add(subsection.getSection().toDto());
+@@ -738,10 +740,9 @@ public class ModelService {
+ 			/* add the subsections with their sub-elements too */
+ 			SubsectionsHolderDto subsectionsHolder = getSectionSubsectionsDtos(sectionId, requestByUserId);
+ 			
+-			for (ModelSectionDto subsectionDto : subsectionsHolder.getSubsectionsCommon()) {
+-				sectionDto.getSubsections().add(addSectionSubElements(
+-						subsectionDto, UUID.fromString(subsectionDto.getId()), level - 1, requestByUserId, onlySections));
+-			}
++			sectionDto.setSubsectionsCommon(subsectionsHolder.getSubsectionsCommon());
++			sectionDto.setSubsectionsPrivate(subsectionsHolder.getSubsectionsPrivate());
++			sectionDto.setSubsectionsShared(subsectionsHolder.getSubsectionsShared());
+ 		} 
+ 		
+ 		return sectionDto; 
+@@ -761,11 +762,11 @@ public class ModelService {
+ 		}
+ 		
+ 		if (cardWrapperAddition.getBeforeElement() != null) {
+-			cardWrapperDto.setBeforeCardWrapperId(cardWrapperAddition.getBeforeCardWrapperAddition().getCardWrapper().getId().toString());
++			cardWrapperDto.setBeforeElementId(cardWrapperAddition.getBeforeCardWrapperAddition().getCardWrapper().getId().toString());
+ 		}
+ 		
+ 		if (cardWrapperAddition.getAfterElement() != null) {
+-			cardWrapperDto.setAfterCardWrapperId(cardWrapperAddition.getAfterCardWrapperAddition().getCardWrapper().getId().toString());
++			cardWrapperDto.setAfterElementId(cardWrapperAddition.getAfterCardWrapperAddition().getCardWrapper().getId().toString());
+ 		}
+ 		
+ 		if (cardWrapperAddition.getSection() != null) {
+diff --git a/backend/src/main/java/org/collectiveone/modules/model/ModelSubsection.java b/backend/src/main/java/org/collectiveone/modules/model/ModelSubsection.java
+index 31ee381..862b0b7 100644
+--- a/backend/src/main/java/org/collectiveone/modules/model/ModelSubsection.java
++++ b/backend/src/main/java/org/collectiveone/modules/model/ModelSubsection.java
+@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
+ import org.hibernate.annotations.Parameter;
+ 
+ @Entity
+-@Table(name = "model_section_subsections")
++@Table(name = "model_subsections")
+ public class ModelSubsection implements OrderedElement {
+ 	@Id
+ 	@GeneratedValue(generator = "UUID")
+@@ -48,6 +48,14 @@ public class ModelSubsection implements OrderedElement {
+ 	@Enumerated(EnumType.STRING)
+ 	private Status status;
+ 	
++	public String toString() {
++		return "id: " + id.toString() + " " + 	
++				"parent id: " + (parentSection != null ? parentSection.getId().toString() : "null") + " " +
++				"parent title: " + (parentSection != null ? parentSection.getTitle() : "null") + " " +
++				"section id: " + section.getId().toString() + " " +
++				"section title: " + section.getTitle() + " ";
++				
++	}
+ 
+ 	public UUID getId() {
+ 		return id;
+diff --git a/backend/src/main/java/org/collectiveone/modules/model/dto/ModelCardWrapperDto.java b/backend/src/main/java/org/collectiveone/modules/model/dto/ModelCardWrapperDto.java
+index 68694db..947d817 100644
+--- a/backend/src/main/java/org/collectiveone/modules/model/dto/ModelCardWrapperDto.java
++++ b/backend/src/main/java/org/collectiveone/modules/model/dto/ModelCardWrapperDto.java
+@@ -22,8 +22,8 @@ public class ModelCardWrapperDto {
+ 	
+ 	/* for private and shared, position is given relative to another card */
+ 	private ModelScope scope;
+-	private String beforeCardWrapperId;
+-	private String afterCardWrapperId;
++	private String beforeElementId;
++	private String afterElementId;
+ 	
+ 	
+ 	public String getId() {
+@@ -98,17 +98,17 @@ public class ModelCardWrapperDto {
+ 	public void setScope(ModelScope scope) {
+ 		this.scope = scope;
+ 	}
+-	public String getBeforeCardWrapperId() {
+-		return beforeCardWrapperId;
++	public String getBeforeElementId() {
++		return beforeElementId;
+ 	}
+-	public void setBeforeCardWrapperId(String beforeCardWrapperId) {
+-		this.beforeCardWrapperId = beforeCardWrapperId;
++	public void setBeforeElementId(String beforeElementId) {
++		this.beforeElementId = beforeElementId;
+ 	}
+-	public String getAfterCardWrapperId() {
+-		return afterCardWrapperId;
++	public String getAfterElementId() {
++		return afterElementId;
+ 	}
+-	public void setAfterCardWrapperId(String afterCardWrapperId) {
+-		this.afterCardWrapperId = afterCardWrapperId;
++	public void setAfterElementId(String afterElementId) {
++		this.afterElementId = afterElementId;
+ 	}
+ 	
+ }
+diff --git a/backend/src/main/java/org/collectiveone/modules/model/dto/ModelSectionDto.java b/backend/src/main/java/org/collectiveone/modules/model/dto/ModelSectionDto.java
+index 45946a9..6586f36 100644
+--- a/backend/src/main/java/org/collectiveone/modules/model/dto/ModelSectionDto.java
++++ b/backend/src/main/java/org/collectiveone/modules/model/dto/ModelSectionDto.java
+@@ -18,12 +18,15 @@ public class ModelSectionDto {
+ 	private String description;
+ 	private ModelScope newScope;
+ 	private Boolean subElementsLoaded;
+-	private Integer nSubsections;
+ 	
+ 	private List<ModelCardWrapperDto> cardsWrappersPrivate = new ArrayList<ModelCardWrapperDto>();
+ 	private List<ModelCardWrapperDto> cardsWrappersShared = new ArrayList<ModelCardWrapperDto>();
+ 	private List<ModelCardWrapperDto> cardsWrappersCommon = new ArrayList<ModelCardWrapperDto>();
+-	private List<ModelSectionDto> subsections = new ArrayList<ModelSectionDto>();
++	
++	private List<ModelSectionDto> subsectionsCommon = new ArrayList<ModelSectionDto>();
++	private List<ModelSectionDto> subsectionsShared = new ArrayList<ModelSectionDto>();
++	private List<ModelSectionDto> subsectionsPrivate = new ArrayList<ModelSectionDto>();
++	
+ 	private List<ModelSectionDto> inSections = new ArrayList<ModelSectionDto>();
+ 	
+ 	
+@@ -97,11 +100,23 @@ public class ModelSectionDto {
+ 	public void setCardsWrappersCommon(List<ModelCardWrapperDto> cardsWrappersCommon) {
+ 		this.cardsWrappersCommon = cardsWrappersCommon;
+ 	}
+-	public List<ModelSectionDto> getSubsections() {
+-		return subsections;
++	public List<ModelSectionDto> getSubsectionsCommon() {
++		return subsectionsCommon;
++	}
++	public void setSubsectionsCommon(List<ModelSectionDto> subsectionsCommon) {
++		this.subsectionsCommon = subsectionsCommon;
++	}
++	public List<ModelSectionDto> getSubsectionsShared() {
++		return subsectionsShared;
+ 	}
+-	public void setSubsections(List<ModelSectionDto> subsections) {
+-		this.subsections = subsections;
++	public void setSubsectionsShared(List<ModelSectionDto> subsectionsShared) {
++		this.subsectionsShared = subsectionsShared;
++	}
++	public List<ModelSectionDto> getSubsectionsPrivate() {
++		return subsectionsPrivate;
++	}
++	public void setSubsectionsPrivate(List<ModelSectionDto> subsectionsPrivate) {
++		this.subsectionsPrivate = subsectionsPrivate;
+ 	}
+ 	public Boolean getSubElementsLoaded() {
+ 		return subElementsLoaded;
+@@ -109,12 +124,6 @@ public class ModelSectionDto {
+ 	public void setSubElementsLoaded(Boolean subElementsLoaded) {
+ 		this.subElementsLoaded = subElementsLoaded;
+ 	}
+-	public Integer getnSubsections() {
+-		return nSubsections;
+-	}
+-	public void setnSubsections(Integer nSubsections) {
+-		this.nSubsections = nSubsections;
+-	}
+ 	public List<ModelSectionDto> getInSections() {
+ 		return inSections;
+ 	}
+diff --git a/backend/src/main/java/org/collectiveone/modules/model/repositories/ModelSubsectionRepositoryIf.java b/backend/src/main/java/org/collectiveone/modules/model/repositories/ModelSubsectionRepositoryIf.java
+index 7e1fecd..1b814e8 100644
+--- a/backend/src/main/java/org/collectiveone/modules/model/repositories/ModelSubsectionRepositoryIf.java
++++ b/backend/src/main/java/org/collectiveone/modules/model/repositories/ModelSubsectionRepositoryIf.java
+@@ -31,10 +31,10 @@ public interface ModelSubsectionRepositoryIf extends CrudRepository<ModelSubsect
+ 		
+ 	
+ 	@Query("SELECT subsection FROM ModelSubsection subsection "
+-			+ "WHERE subsection.section.id = ?1 "
++			+ "WHERE subsection.parentSection.id = ?1 "
+ 			+ "AND subsection.scope = ?2 "
+ 			+ "AND (subsection.status != 'DELETED' OR subsection.status IS NULL)")
+-	List<ModelSubsection> findParentSectionWithScope(UUID sectionId, ModelScope scope);
++	List<ModelSubsection> findInParentSectionWithScope(UUID parentSectionId, ModelScope scope);
+ 	
+ 	@Query("SELECT subsection FROM ModelSubsection subsection "
+ 			+ "WHERE subsection.adder.c1Id = ?1 "
+@@ -53,11 +53,11 @@ public interface ModelSubsectionRepositoryIf extends CrudRepository<ModelSubsect
+ 	
+ 	@Query("SELECT subsection FROM ModelSubsection subsection "
+ 			+ "WHERE "
+-			+ "subsection.section.id = ?1 "
++			+ "subsection.parentSection.id = ?1 "
+ 			+ "AND subsection.scope = ?2 "
+ 			+ "AND (subsection.status != 'DELETED' OR subsection.status IS NULL) "
+ 			+ "AND subsection.beforeElement IS NULL")
+-	List<ModelSubsection> findLastByParentSectionAndScope(UUID sectionId, ModelScope scope);	
++	List<ModelSubsection> findLastByParentSectionAndScope(UUID parentSectionId, ModelScope scope);	
+ 	
+ 	@Query("SELECT subsection FROM ModelSubsection subsection "
+ 			+ "WHERE "
+diff --git a/frontend/src/components/model/ModelSection.vue b/frontend/src/components/model/ModelSection.vue
+index 2d878b0..10485d1 100644
+--- a/frontend/src/components/model/ModelSection.vue
++++ b/frontend/src/components/model/ModelSection.vue
+@@ -1,4 +1,4 @@
+-cd w<template lang="html">
++<template lang="html">
+ 
+   <div v-if="section"
+     class="section-container" ref="sectionContainer" :id="section.id">
+@@ -89,88 +89,7 @@ cd w<template lang="html">
+ <script>
+ import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
+ import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer.vue'
+-
+-const appendCardsToBase = function (baseList, toAddList) {
+-  let relativeToBase = toAddList.filter((cardToAdd) => {
+-    let ixInBase = baseList.findIndex((cardInBase) => {
+-      return (cardToAdd.beforeCardWrapperId === cardInBase.id) ||
+-        (cardToAdd.afterCardWrapperId === cardInBase.id)
+-    })
+-
+-    return ixInBase !== -1
+-  })
+-
+-  /* add those relative to base list  */
+-  relativeToBase.forEach((cardRelativeToBase) => {
+-    let nextCard = cardRelativeToBase
+-
+-    do {
+-      let ixInBase = baseList.findIndex((cardInBase) => {
+-        return (nextCard.beforeCardWrapperId === cardInBase.id) ||
+-          (nextCard.afterCardWrapperId === cardInBase.id)
+-      })
+-
+-      if (nextCard.beforeCardWrapperId === baseList[ixInBase].id) {
+-        baseList.splice(ixInBase, 0, nextCard)
+-      } else {
+-        baseList.splice(ixInBase + 1, 0, nextCard)
+-      }
+-      removeFromList(toAddList, nextCard)
+-
+-      nextCard = toAddList.find((e) => { return e.afterCardWrapperId === nextCard.id })
+-    } while (nextCard != null)
+-  })
+-
+-  /* append all remaining */
+-  baseList = baseList.concat(getArrayFromList(toAddList))
+-
+-  return baseList
+-}
+-
+-const removeFromList = function (list, el) {
+-  let ix = list.findIndex((e) => el.id === e.id)
+-  if (ix !== -1) {
+-    return list.splice(ix, 1)
+-  }
+-  return null
+-}
+-
+-const getArrayFromList = function (list) {
+-  let array = []
+-
+-  /* start from first elements */
+-  let firstElements = list.filter((e) => { return e.afterCardWrapperId == null })
+-  firstElements.forEach((firstEl) => {
+-    /* add this first element */
+-    array.push(firstEl)
+-    removeFromList(list, firstEl)
+-
+-    /* add all connected elements */
+-    let next = list.find((e) => { return e.afterCardWrapperId === firstEl.id })
+-    while (next != null) {
+-      array.push(next)
+-      removeFromList(list, next)
+-      next = list.find((e) => { return e.afterCardWrapperId === next.id })
+-    }
+-  })
+-
+-  while (list.length > 0) {
+-    let firstEl = list.shift()
+-    /* add this first element */
+-    array.push(firstEl)
+-    removeFromList(list, firstEl)
+-
+-    /* add all connected elements */
+-    let next = list.find((e) => { return e.afterCardWrapperId === firstEl.id })
+-    while (next != null) {
+-      array.push(next)
+-      removeFromList(list, next)
+-      next = list.find((e) => { return e.afterCardWrapperId === next.id })
+-    }
+-  }
+-
+-  return array
+-}
++import { getArrayFromList, appendElementsToBase } from '@/lib/sortAlgorithm.js'
+ 
+ export default {
+   name: 'app-model-section',
+@@ -285,7 +204,7 @@ export default {
+         nonCommonCards = nonCommonCards.concat(this.section.cardsWrappersShared.slice())
+       }
+ 
+-      allCardWrappers = appendCardsToBase(allCardWrappers, nonCommonCards)
++      allCardWrappers = appendElementsToBase(allCardWrappers, nonCommonCards)
+ 
+       return allCardWrappers
+     },
+diff --git a/frontend/src/components/model/modals/ModelSectionModal.vue b/frontend/src/components/model/modals/ModelSectionModal.vue
+index b624932..08f2ae8 100644
+--- a/frontend/src/components/model/modals/ModelSectionModal.vue
++++ b/frontend/src/components/model/modals/ModelSectionModal.vue
+@@ -59,6 +59,19 @@
+               @after-leave="animatingTab = false">
+ 
+               <div v-if="!addExisting">
++
++                <div v-if="editing" class="w3-row w3-margin-top">
++                  <label class="">
++                    <b>Scope (in "{{ inElementTitleOk }}" section):</b>
++                  </label>
++                  <select v-model="editedSection.newScope"
++                    class="w3-input w3-topbar" :class="selectorBorderClass" name="">
++                    <option value="PRIVATE">Private (only I can see it)</option>
++                    <option value="SHARED">Shared (others can see it, but its mine)</option>
++                    <option value="COMMON">Common (controlled by all editors)</option>
++                  </select>
++                </div>
++
+                 <div class="w3-row">
+                   <div v-if="!editing" class="">
+                     <h3><b>{{ section.title }}</b></h3>
+@@ -172,7 +185,8 @@ export default {
+       section: {
+         if: '',
+         title: '',
+-        description: ''
++        description: '',
++        newScope: 'SHARED'
+       },
+       inElementTitleOk: '',
+       editedSection: null,
+@@ -191,6 +205,23 @@ export default {
+   },
+ 
+   computed: {
++    selectorBorderClass () {
++      let cClass = {}
++      switch (this.editedSection.newScope) {
++        case 'PRIVATE':
++          cClass['border-red'] = true
++          break
++
++        case 'SHARED':
++          cClass['border-yellow'] = true
++          break
++
++        default:
++          cClass['border-blue'] = true
++          break
++      }
++      return cClass
++    },
+     isLoggedAnEditor () {
+       return this.$store.getters.isLoggedAnEditor
+     },
+@@ -376,7 +407,8 @@ export default {
+     if (this.isNew) {
+       this.editedSection = {
+         title: '',
+-        description: ''
++        description: '',
++        newScope: 'SHARED'
+       }
+       this.editing = true
+       this.$nextTick(() => {
+diff --git a/frontend/src/components/model/nav/ModelSectionNavItem.vue b/frontend/src/components/model/nav/ModelSectionNavItem.vue
+index d28ad1b..a7aaf2a 100644
+--- a/frontend/src/components/model/nav/ModelSectionNavItem.vue
++++ b/frontend/src/components/model/nav/ModelSectionNavItem.vue
+@@ -192,10 +192,7 @@ export default {
+       return ''
+     },
+     hasSubsections () {
+-      if (this.section) {
+-        return this.section.nSubsections > 0
+-      }
+-      return false
++      return this.subsections.length > 0
+     },
+     isSelected () {
+       if (this.section) {
+diff --git a/frontend/src/store/modules/sectionsTree.js b/frontend/src/store/modules/sectionsTree.js
+index 4f343be..e542223 100644
+--- a/frontend/src/store/modules/sectionsTree.js
++++ b/frontend/src/store/modules/sectionsTree.js
+@@ -1,4 +1,5 @@
+ import Vue from 'vue'
++import { getArrayFromList, appendElementsToBase } from '@/lib/sortAlgorithm.js'
+ 
+ const state = {
+   sectionsTree: [],
+@@ -133,7 +134,16 @@ const actions = {
+       Vue.axios.get('/1/model/section/' + payload.sectionId, { params: { levels: 2, onlySections: true } }).then((response) => {
+         if (response.data.result === 'success') {
+           let section = response.data.data
+-          let subsections = section.subsections
++
++          /* sort subsections for this user */
++          let subsections = getArrayFromList(section.subsectionsCommon.slice())
++
++          let nonCommonSubsections = []
++          nonCommonSubsections = nonCommonSubsections.concat(section.subsectionsPrivate.slice())
++          nonCommonSubsections = nonCommonSubsections.concat(section.subsectionsShared.slice())
++
++          subsections = appendElementsToBase(subsections, nonCommonSubsections)
++
+           let subsectionsData = []
+           for (let ix in subsections) {
+             subsectionsData.push({
+diff --git a/frontend/src/styles/tooltips.css b/frontend/src/styles/tooltips.css
+index 057a1fa..90f6ccc 100644
+--- a/frontend/src/styles/tooltips.css
++++ b/frontend/src/styles/tooltips.css
+@@ -1,8 +1,8 @@
+-[tooltip]:before {        
++[tooltip]:before {
+     position: absolute;
+     content : attr(tooltip);
+     visibility: hidden;
+-    display: inline-block;
++    display: none;
+     top: 40px;
+     min-width: 120px;
+     text-align: center;
+@@ -14,6 +14,6 @@
+     vertical-align:bottom;
+     z-index: 9999
+ }
+-[tooltip]:hover:before { 
++[tooltip]:hover:before {
+     visibility: visible;
+-}
+\ No newline at end of file
++}

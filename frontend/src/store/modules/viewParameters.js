@@ -4,7 +4,10 @@ const state = {
   cardsType: 'card',
   showPrivate: true,
   showShared: true,
-  showCommon: true
+  showCommon: true,
+  showPrivateSections: true,
+  showSharedSections: true,
+  showCommonSections: true
 }
 
 const getters = {
@@ -47,6 +50,15 @@ const mutations = {
   },
   toggleShowCommon: (state) => {
     state.showCommon = !state.showCommon
+  },
+  toggleShowPrivateSections: (state) => {
+    state.showPrivateSections = !state.showPrivateSections
+  },
+  toggleShowSharedSections: (state) => {
+    state.showSharedSections = !state.showSharedSections
+  },
+  toggleShowCommonSections: (state) => {
+    state.showCommonSections = !state.showCommonSections
   },
   showAllTypes: (state) => {
     state.showPrivate = true
