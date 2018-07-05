@@ -1479,7 +1479,7 @@ public class ModelService {
 	
 	@Transactional
 	public GetResult<Long> countMessagesUnderCard (UUID cardWrapperId, Boolean onlyMessages) {
-		Page<Activity> messages = getActivityUnderCard(cardWrapperId, new PageRequest(1, 1), true, true);
+		Page<Activity> messages = getActivityUnderCard(cardWrapperId, new PageRequest(1, 1), true, false);
 		return new GetResult<Long>("success", "activity counted", messages.getTotalElements());
 	}
 	

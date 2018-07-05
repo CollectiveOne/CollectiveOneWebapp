@@ -28,29 +28,28 @@
       </div>
 
     </div>
+
     <div v-if="!hideCardControls" :class="cardsContainerClasses" class=""
       @dragover.prevent="draggingOver()"
       @drop.prevent="cardDroped('', $event)">
 
       <div v-if="draggingOverCreateCard" class="drop-div">
       </div>
-      <div v-if="cardWrappers.length === 0" class="card-container-in-list">
+
+      <div v-if="!creatingNewCard" class="">
+        <button class="w3-button app-button-light new-card-button" @click="creatingNewCard = true"><i class="fa fa-plus" aria-hidden="true"></i></button>
+      </div>
+      <div v-else class="card-container-in-list">
         <app-model-card-editor
           :isNew="true"
           :inSection="inSection"
           :type="cardsType"
-          @updateCards="$emit('updateCards')">
+          @edit="creatingNewCard = false"
+          @updateCards="cardCreated()">
         </app-model-card-editor>
       </div>
     </div>
 
-    <app-model-card-editor
-      v-if="cardsType === 'doc' & cardWrappers.length !== 0 & isLoggedAnEditor"
-      :isNew="true"
-      :type="cardsType"
-      :cardWrapper="lastCardWrapper"
-      :inSection="inSection">
-    </app-model-card-editor>
   </div>
 </template>
 
@@ -115,6 +114,7 @@ export default {
 
   data () {
     return {
+      creatingNewCard: false,
       draggingOverCardWrapper: null,
       draggingOverCreateCard: false,
       draggingOverCardWrapperBefore: false,
@@ -124,6 +124,10 @@ export default {
   },
 
   methods: {
+    cardCreated () {
+      this.creatingNewCard = false
+      this.$emit('updateCards')
+    },
     draggingOver (event, cardWrapper) {
       if (!this.acceptDrop) {
         return
@@ -252,6 +256,15 @@ export default {
 .create-card-div {
   margin-top: 20px;
   max-width: 350px;
+}
+
+.new-card-button {
+  height: 30px;
+  width: 30px;
+  border-radius: 15px !important;
+  padding: 0px !important;
+  color: white !important;
+  background-color: #cccccc !important;
 }
 
 @media screen and (min-width: 1700px) {

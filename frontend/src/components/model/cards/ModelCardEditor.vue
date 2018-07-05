@@ -38,7 +38,7 @@
         </div>
       </div>
 
-      <div v-if="type !== 'doc'" :class="controlsClass">
+      <div :class="controlsClass">
         <div class="w3-left scope-controls">
           <div  class="w3-right cursor-pointer indicator-comp"
             @click="scope = 'COMMON'">
@@ -72,21 +72,23 @@
       </div>
 
       <div class="button-row send-button-container" :class="buttonClass">
-        <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">
-          {{ cardButtonText }}
-        </button>
-        <div v-show="sendingData" class="sending-accept light-grey">
-          <img class="" src="../../../assets/loading.gif" alt="">
+        <div class="w3-row">
+          <div class="w3-col m6">
+            <button class="w3-button app-button-light" name="button" @click="$emit('edit', null)">
+              cancel
+            </button>
+          </div>
+          <div class="w3-col m6">
+            <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">
+              {{ cardButtonText }}
+            </button>
+            <div v-show="sendingData" class="sending-accept light-grey">
+              <img class="" src="../../../assets/loading.gif" alt="">
+            </div>
+          </div>
         </div>
-      </div>
 
-      <transition name="fadeenter">
-        <div v-if="hovering & editing"
-          class="w3-padding gray-2-color w3-display-topright cursor-pointer"
-          @click="$emit('edit', null)">
-          <i class="fa fa-close" aria-hidden="true"></i>
-        </div>
-      </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -222,7 +224,7 @@ export default {
       let controlsClass = {}
 
       controlsClass['w3-row bottom-row light-grey'] = this.type === 'card'
-      controlsClass['w3-col m4 right-div-top controls'] = this.type === 'summary'
+      controlsClass['w3-col m4 right-div-top controls w3-display-bottom'] = this.type === 'summary'
 
       return controlsClass
     },
@@ -230,7 +232,7 @@ export default {
       let buttonClass = {}
 
       buttonClass['w3-row light-grey'] = this.type === 'card'
-      buttonClass['w3-col m4 right-div-bottom controls send-button-container-summary'] = this.type === 'summary'
+      buttonClass['w3-col m4 right-div-bottom controls send-button-container-summary w3-display-container'] = this.type === 'summary'
       buttonClass['send-button-container-doc'] = this.type === 'doc'
 
       return buttonClass
@@ -455,14 +457,17 @@ export default {
 .select-clicked {
    text-shadow: 0px 0px 5px #000000;
 }
+
 .app-button {
   border-radius: 0px;
 }
 
-.send-button-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+.app-button-light {
+  border-radius: 0px;
+}
+
+.send-button-container button {
+  width: 100%;
 }
 
 .send-button-container-summary {

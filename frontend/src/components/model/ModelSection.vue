@@ -42,14 +42,14 @@
           </div>
         </div>
       </div>
-      <div v-if="!readOnly" class="w3-row">
+      <div v-if="!readOnly && section.inSections.length > 1" class="w3-row">
         <div class="w3-left w3-margin-right">
           <i>also in</i>
         </div>
         <div class="w3-left">
           <app-in-model-sections-tags
             :inModelSections="section.inSections"
-            :hideSectionId="section.id">
+            :hideSectionId="inSection.id">
           </app-in-model-sections-tags>
         </div>
       </div>

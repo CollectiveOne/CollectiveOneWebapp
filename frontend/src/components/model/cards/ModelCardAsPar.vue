@@ -1,13 +1,13 @@
 <template lang="html">
   <div class="card-container-doc"
-    @mouseover="hovering = true"
-    @mouseleave="hovering = false">
+    @mouseover="mouseOver()"
+    @mouseleave="mouseLeave()">
 
     <div class="w3-row">
 
       <div class="w3-col s12">
 
-        <div class="card-container-padded">
+        <div class="card-container-padded" @click="clicked = !clicked">
           <div v-if="card.title !== ''" class="w3-row card-title">
             {{ card.title }}
           </div>
@@ -25,10 +25,18 @@
 
 
         <transition name="fadeenter">
-          <div v-if="hovering"
-            class="w3-padding gray-2-color w3-display-topright cursor-pointer"
-            @click="$emit('edit')">
-            <i class="fa fa-edit" aria-hidden="true"></i>
+          <div v-if="$store.state.user.authenticated && clicked" class="user-indicators-div">
+            <app-card-user-indicators
+              :cardWrapper="cardWrapper"
+              :inSection="inSection"
+              :hideCardControls="hideCardControls"
+              :inCardSelector="inCardSelector"
+              :cardRouteName="cardRouteName"
+              @update="$emit('update')"
+              @createNew="$emit('createNew')"
+              @edit="$emit('edit')"
+              @updateCards="$emit('updateCards')">
+            </app-card-user-indicators>
           </div>
         </transition>
 
@@ -38,9 +46,15 @@
 </template>
 
 <script>
+import CardUserIndicators from '@/components/model/cards/CardUserIndicators.vue'
+
 export default {
 
-  name: 'model-card-as-card',
+  name: 'model-card-as-par',
+
+  components: {
+    'app-card-user-indicators': CardUserIndicators
+  },
 
   props: {
     cardWrapper: {
@@ -59,7 +73,8 @@ export default {
 
   data () {
     return {
-      hovering: false
+      hovering: false,
+      clicked: false
     }
   },
 
@@ -73,13 +88,9 @@ export default {
   },
 
   methods: {
-    hoverEnter () {
-      this.showActionButton = true
-      this.highlight = true
+    mouseOver () {
     },
-    hoverLeave () {
-      this.showActionButton = false
-      this.highlight = false
+    mouseLeave () {
     }
   },
 
@@ -95,6 +106,16 @@ export default {
 <style scoped>
 
 .card-container-padded {
+}
+
+.card-container-doc {
+  position: relative;
+}
+
+.user-indicators-div {
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
 
 .image-container {
@@ -135,24 +156,6 @@ export default {
 .card-text p {
   margin-top: 0px;
   margin-bottom: 0px;
-}
-
-.bottom-row {
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  padding: 3px 6px;
-  min-height: 30px;
-}
-
-.insection-tag-container {
-  display: inline-block;
-  margin-right: 5px;
-  margin-bottom: 5px;
-}
-
-.indicator-comp {
-  margin-right: 6px;
-  margin-left: 4px;
 }
 
 </style>

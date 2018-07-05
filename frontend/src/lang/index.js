@@ -15,7 +15,7 @@ const LEVELS_ALL = LEVELS_ALL_VERB + LEVELS_BASE
 /* SCOPES HELP ENG */
 /* ---------------------------------------------------------- */
 
-const SCOPE_COMMON = '<br><br>- "PRIVATE": only the user who adds the subsection to that section can see it.<br><br>- "SHARED": all the members of that initiative ecosystem (all parent initiatives and their subinitiatives) can see it  (but only the user who added the card can remove, move or edit it)<br><br>- "COMMON": Visible to all initiative ecosystem members, and if the initiative is public, visible to non-members too. Only EDITORS or ADMINS of the initiative can edit COMMON cards.<br><br>- <b>Note:</b> The same element can have different scopes on different sections.'
+const SCOPE_COMMON = '<br><br>- "PRIVATE": only the user who adds the element to that section can see it.<br><br>- "SHARED": all the members of that initiative ecosystem (all parent initiatives and their subinitiatives) can see it  (but only the user who added the card can remove, move or edit it)<br><br>- "COMMON": Visible to all initiative ecosystem members, and if the initiative is public, visible to non-members too. Only EDITORS or ADMINS of the initiative can edit COMMON cards.<br><br>- <b>Note:</b> The same element can have different scopes on different sections.'
 
 const SCOPE_CARDS_BASE = 'A card can be added in a section with different scopes:' + SCOPE_COMMON
 
