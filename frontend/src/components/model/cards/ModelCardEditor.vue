@@ -207,7 +207,7 @@ export default {
 
       cClass['w3-card-4 w3-topbar w3-round-large'] = this.type === 'card'
       cClass['card-summary-container w3-leftbar w3-card w3-row'] = this.type === 'summary'
-      cClass['card-container-doc'] = this.type === 'doc'
+      cClass['card-editor-doc'] = this.type === 'doc'
 
       return cClass
     },
@@ -579,6 +579,11 @@ export default {
   left: calc(100% - 38px);
   top: -38px;
   background-color: rgba(218, 218, 218, 0.5);
+}
+
+.card-editor-doc {
+  border-left-style: solid;
+  padding-left: 6px;
 }
 
 </style>

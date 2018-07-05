@@ -7,7 +7,7 @@
 
       <div class="w3-col s12">
 
-        <div class="card-container-padded" @click="clicked = !clicked">
+        <div :class="containerClassPar" @click="clicked = !clicked">
           <div v-if="card.title !== ''" class="w3-row card-title">
             {{ card.title }}
           </div>
@@ -87,6 +87,12 @@ export default {
     },
     hasImage () {
       return this.card.imageFile !== null
+    },
+    containerClassPar () {
+      let baseClass = this.containerClass
+      baseClass['card-container-padded'] = !this.hideCardControls
+
+      return baseClass
     }
   },
 
@@ -109,6 +115,8 @@ export default {
 <style scoped>
 
 .card-container-padded {
+  border-left-style: solid;
+  padding-left: 6px;
 }
 
 .card-container-doc {
