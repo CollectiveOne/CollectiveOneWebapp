@@ -113,8 +113,6 @@ export default {
       }
     },
     cardComponent () {
-      console.log('ModelCard', this.type)
-
       if (this.cardWrapper.type === 'newCard' || this.cardWrapper.type === 'edit' || this.type === 'new') {
             return 'app-model-card-editor'
       }

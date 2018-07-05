@@ -46,11 +46,14 @@
 </template>
 
 <script>
+import { cardMixin } from '@/components/model/cards/cardMixin.js'
 import CardUserIndicators from '@/components/model/cards/CardUserIndicators.vue'
 
 export default {
 
   name: 'model-card-as-par',
+
+  mixins: [ cardMixin ],
 
   components: {
     'app-card-user-indicators': CardUserIndicators
