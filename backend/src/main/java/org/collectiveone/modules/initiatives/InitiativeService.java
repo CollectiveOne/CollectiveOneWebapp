@@ -112,7 +112,6 @@ public class InitiativeService {
 	@Autowired
 	private WantToContributeRepositoryIf wantToContributeRepository;
 	  
-	
 	@Transactional
 	public Boolean canAccess(UUID initiativeId, UUID userId) {
 		InitiativeVisibility visibility = initiativeRepository.getVisiblity(initiativeId);

@@ -2,15 +2,20 @@ package org.collectiveone.modules.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -20,6 +25,7 @@ import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -45,6 +51,15 @@ public class ModelSection {
 	@Column(name = "description")
 	private String description;
 	
+	@Enumerated(EnumType.STRING)
+	private PermissionConfig readConfig;
+
+	@Enumerated(EnumType.STRING)
+	private PermissionConfig editConfig;
+
+	@Enumerated(EnumType.STRING)
+	private PermissionConfig commentConfig;
+
 	@ManyToMany
 	@OrderColumn(name = "subsections_order")
 	private List<ModelSection> subsections = new ArrayList<ModelSection>();
@@ -54,6 +69,15 @@ public class ModelSection {
 	
 	@OneToOne
 	private MessageThread messageThread;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
+	private ModelSectionStatus status;
+
+	@OneToMany(mappedBy = "model_section")
+	@SortNatural
+	private SortedSet<Member> members = new TreeSet<Member>();
+
 	
 	@Override
 	public int hashCode() {
@@ -161,5 +185,57 @@ public class ModelSection {
 	public void setMessageThread(MessageThread messageThread) {
 		this.messageThread = messageThread;
 	}
+
+	public PermissionConfig getReadconfig()
+	{
+		return this.readConfig;
+	}
+
+	public void setReadconfig(PermissionConfig readConfig)
+	{
+		this.readConfig = readConfig;
+	}
+	
+
+	public PermissionConfig getCommentconfig()
+	{
+		return this.commentConfig;
+	}
+
+	public void setCommentconfig(PermissionConfig commentConfig)
+	{
+		this.commentConfig = commentConfig;
+	}
+	
+	public PermissionConfig getEditconfig()
+	{
+		return this.editConfig;
+	}
+
+	public void setEditconfig(PermissionConfig editConfig)
+	{
+		this.editConfig = editConfig;
+	}
+
+	public ModelSectionStatus getStatus()
+	{
+		return this.status;
+	}
+
+	public void setStatus(ModelSectionStatus status)
+	{
+		this.status = status;
+	}
+
+	public SortedSet<Member> getMembers()
+	{
+		return this.members;
+	}
+
+	public void setMembers(SortedSet<Member> members)
+	{
+		this.members = members;
+	}
+
 		
 }

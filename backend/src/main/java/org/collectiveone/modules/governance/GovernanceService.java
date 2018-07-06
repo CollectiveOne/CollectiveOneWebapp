@@ -63,10 +63,38 @@ public class GovernanceService {
 		
 		return verdict;
 	}
-	
+
+	@Transactional
+	public DecisionVerdict isRolesAndAdmin_2(UUID modelSectionId, UUID userId) {
+		DecisionVerdict verdict = null;
+		Governance governance = governanceRepository.findByModelSection_Id(modelSectionId);
+		
+		switch (governance.getType()) {
+		case ROLES:
+			if (isAdmin(governance.getId(), userId)) {
+				verdict = DecisionVerdict.APPROVED;
+			} else {
+				verdict = DecisionVerdict.DENIED;
+			}
+			break;
+		}
+		
+		return verdict;
+	}
+	//####
 	@Transactional
 	public DecisionVerdict isRolesAndAdminOrParentAdmin(UUID initiativeId, UUID userId) {
 		if (isRolesAndAdmin(initiativeId, userId) == DecisionVerdict.APPROVED) {
+			return DecisionVerdict.APPROVED;
+		} else {
+			Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
+			return isRolesAndAdmin(parent.getId(), userId);
+		}
+	}	
+
+	@Transactional
+	public DecisionVerdict isRolesAndAdminOrParentAdmin_2(UUID modelSectionId, UUID userId) {
+		if (isRolesAndAdmin_2(modelSectionId, userId) == DecisionVerdict.APPROVED) {
 			return DecisionVerdict.APPROVED;
 		} else {
 			Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);

@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.model.ModelSection;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -27,9 +28,14 @@ public class Governance {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
+	//####
 	@OneToOne
 	private Initiative initiative;
 
+	@OneToOne
+	private ModelSection ModelSection;
+
+	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "type")
 	private GovernanceType type;
@@ -67,6 +73,16 @@ public class Governance {
 
 	public void setDecisionMakers(List<DecisionMaker> decisionMakers) {
 		this.decisionMakers = decisionMakers;
+	}
+
+	public ModelSection getModelsection()
+	{
+		return this.ModelSection;
+	}
+
+	public void setModelsection(ModelSection ModelSection)
+	{
+		this.ModelSection = ModelSection;
 	}
 
 }

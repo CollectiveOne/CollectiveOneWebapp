@@ -10,4 +10,6 @@ public interface GovernanceRepositoryIf extends CrudRepository<Governance, UUID>
 	
 	Governance findByInitiative_Id(UUID initiativeId);
 	
+	Governance findByModelSection_Id(UUID modelSectionId);
+	
 }
