@@ -1,7 +1,9 @@
 package org.collectiveone.modules.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -21,8 +23,10 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.conversations.MessageThread;
+import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
+import org.collectiveone.modules.tokens.TokenType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.SortNatural;
@@ -77,6 +81,27 @@ public class ModelSection {
 	@OneToMany(mappedBy = "model_section")
 	@SortNatural
 	private SortedSet<Member> members = new TreeSet<Member>();
+
+	@OneToMany
+	private List<TokenType> tokenTypes = new ArrayList<TokenType>();
+	
+	@OneToMany(mappedBy = "model_section")
+	private Set<ModelSectionRelationship> relationships = new LinkedHashSet<ModelSectionRelationship>();
+	
+	public List<TokenType> getTokenTypes() {
+		return tokenTypes;
+	}
+	public void setTokenTypes(List<TokenType> tokenTypes) {
+		this.tokenTypes = tokenTypes;
+	}
+
+	public Set<ModelSectionRelationship> getRelationships() {
+		return relationships;
+	}
+
+	public void setRelationships(Set<ModelSectionRelationship> relationships) {
+		this.relationships = relationships;
+	}
 
 	
 	@Override
@@ -235,6 +260,20 @@ public class ModelSection {
 	public void setMembers(SortedSet<Member> members)
 	{
 		this.members = members;
+	}
+
+
+	@OneToOne
+	private Governance governance;
+
+	public Governance getGovernance()
+	{
+		return this.governance;
+	}
+
+	public void setGovernance(Governance governance)
+	{
+		this.governance = governance;
 	}
 
 		

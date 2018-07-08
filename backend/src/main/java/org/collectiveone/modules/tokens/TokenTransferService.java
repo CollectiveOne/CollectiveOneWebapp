@@ -18,7 +18,7 @@ import org.collectiveone.modules.initiatives.InitiativeRelationship;
 import org.collectiveone.modules.initiatives.InitiativeRelationshipType;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.InitiativeStatus;
-import org.collectiveone.modules.initiatives.Member;
+import org.collectiveone.modules.model.Member;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRelationshipRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;

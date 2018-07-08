@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.ModelSectionVisibility;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -34,5 +35,10 @@ public interface ModelSectionRepositoryIf extends CrudRepository<ModelSection, U
 			"WHERE (LOWER(sec.title) LIKE ?1 OR LOWER(sec.description) LIKE ?1) " +
 			"AND sec.initiative.id IN ?2)")
 	public Page<ModelSection> searchBy(String query, List<UUID> initiativeId, Pageable page);
+
+	ModelSection findByTokenTypes_Id(UUID tokenTypeId);
+
+	@Query("SELECT mta.visibility FROM ModelSection ms JOIN ms.meta mta WHERE init.id = ?1")
+	ModelSectionVisibility getVisiblity(UUID modelSectionId);
 
 }

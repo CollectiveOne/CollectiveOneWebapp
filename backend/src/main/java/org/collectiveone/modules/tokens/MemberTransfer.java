@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.initiatives.Member;
+import org.collectiveone.modules.model.Member;
 import org.collectiveone.modules.tokens.enums.MemberTransferStatus;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

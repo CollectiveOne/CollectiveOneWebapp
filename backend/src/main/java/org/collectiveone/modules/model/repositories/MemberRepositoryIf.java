@@ -1,4 +1,4 @@
-package org.collectiveone.modules.initiatives.repositories;
+package org.collectiveone.modules.model.repositories;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,10 +14,10 @@ public interface MemberRepositoryIf extends CrudRepository<Member, UUID> {
 
 	Member findByInitiative_IdAndUser_C1Id(UUID initiativeId, UUID userId);
 	
-	@Query("SELECT mem.id FROM Initiative init JOIN init.members mem WHERE init.id = ?1 AND mem.user.c1Id = ?2")
-	UUID findMemberId(UUID initiativeId, UUID userId);
+	@Query("SELECT mem.id FROM ModelSection ms JOIN ms.members mem WHERE ms.id = ?1 AND mem.user.c1Id = ?2")
+	UUID findMemberId(UUID modelSectionId, UUID userId);
 	
-	@Query("SELECT DISTINCT mem.user FROM Member mem WHERE mem.initiative.id IN ?1 AND lower (mem.user.profile.nickname) LIKE %?2%")
-	Page<AppUser> findMembersOfInitiatives(List<UUID> initiativesIds, String query, Pageable pageable);
+	@Query("SELECT DISTINCT mem.user FROM Member mem WHERE mem.model_section.id IN ?1 AND lower (mem.user.profile.nickname) LIKE %?2%")
+	Page<AppUser> findMembersOfInitiatives(List<UUID> modelSectionId, String query, Pageable pageable);
 	
 }

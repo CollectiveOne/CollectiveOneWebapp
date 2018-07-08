@@ -11,6 +11,8 @@ import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeRelationshipType;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,9 @@ public class GovernanceService {
 	@Autowired
 	private InitiativeRepositoryIf initiativeRepository;
 	
+	@Autowired
+	private ModelSectionRepositoryIf modelSectionRepositoryIf;
+	
 	
 	@Transactional
 	public Governance create(Initiative initiative) {
@@ -46,26 +51,10 @@ public class GovernanceService {
 
 	}
 	
-	@Transactional
-	public DecisionVerdict isRolesAndAdmin(UUID initiativeId, UUID userId) {
-		DecisionVerdict verdict = null;
-		Governance governance = governanceRepository.findByInitiative_Id(initiativeId);
-		
-		switch (governance.getType()) {
-		case ROLES:
-			if (isAdmin(governance.getId(), userId)) {
-				verdict = DecisionVerdict.APPROVED;
-			} else {
-				verdict = DecisionVerdict.DENIED;
-			}
-			break;
-		}
-		
-		return verdict;
-	}
+	
 
 	@Transactional
-	public DecisionVerdict isRolesAndAdmin_2(UUID modelSectionId, UUID userId) {
+	public DecisionVerdict isRolesAndAdmin(UUID modelSectionId, UUID userId) {
 		DecisionVerdict verdict = null;
 		Governance governance = governanceRepository.findByModelSection_Id(modelSectionId);
 		
@@ -81,31 +70,25 @@ public class GovernanceService {
 		
 		return verdict;
 	}
-	//####
+	
 	@Transactional
-	public DecisionVerdict isRolesAndAdminOrParentAdmin(UUID initiativeId, UUID userId) {
-		if (isRolesAndAdmin(initiativeId, userId) == DecisionVerdict.APPROVED) {
+	public DecisionVerdict isRolesAndAdminOrParentAdmin(UUID modelSectionId, UUID userId) {
+		if (isRolesAndAdmin(modelSectionId, userId) == DecisionVerdict.APPROVED) {
 			return DecisionVerdict.APPROVED;
 		} else {
-			Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
-			return isRolesAndAdmin(parent.getId(), userId);
-		}
-	}	
-
-	@Transactional
-	public DecisionVerdict isRolesAndAdminOrParentAdmin_2(UUID modelSectionId, UUID userId) {
-		if (isRolesAndAdmin_2(modelSectionId, userId) == DecisionVerdict.APPROVED) {
-			return DecisionVerdict.APPROVED;
-		} else {
-			Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
-			return isRolesAndAdmin(parent.getId(), userId);
+			// ####
+			//ModelSection parent = modelSectionRepositoryIf.findParentSections(modelSectionId, InitiativeRelationshipType.IS_ATTACHED_SUB);
+			//return isRolesAndAdmin(parent.getId(), userId);
+			return DecisionVerdict.APPROVED; // remove this
 		}
 	}	
 	
+	
+
 	@Transactional
-	public DecisionVerdict isRolesAndEditor(UUID initiativeId, UUID userId) {
+	public DecisionVerdict isRolesAndEditor(UUID modelSectionId, UUID userId) {
 		DecisionVerdict verdict = null;
-		Governance governance = governanceRepository.findByInitiative_Id(initiativeId);
+		Governance governance = governanceRepository.findByModelSection_Id(modelSectionId);
 		
 		switch (governance.getType()) {
 		case ROLES:
@@ -123,18 +106,19 @@ public class GovernanceService {
 		return verdict;
 	}
 	
+
 	@Transactional
-	public DecisionVerdict canCreateSubInitiative(UUID parentInitiativeId, UUID creatorId) {
-		return isRolesAndAdmin(parentInitiativeId, creatorId);
+	public DecisionVerdict canCreateSubSection(UUID parentSectionId, UUID creatorId) {
+		return isRolesAndAdmin(parentSectionId, creatorId);
 	}
 	
 	@Transactional
-	public DecisionVerdict canDeleteMember(UUID initiativeId, UUID deleterId) {
-		return isRolesAndAdmin(initiativeId, deleterId);
+	public DecisionVerdict canDeleteMember(UUID modelSectionId, UUID deleterId) {
+		return isRolesAndAdmin(modelSectionId, deleterId);
 	}
 	@Transactional
-	public DecisionVerdict canAddMember(UUID initiativeId, UUID adderId) {
-		return isRolesAndAdminOrParentAdmin(initiativeId, adderId);
+	public DecisionVerdict canAddMember(UUID modelSectionId, UUID adderId) {
+		return isRolesAndAdminOrParentAdmin(modelSectionId, adderId);
 	}
 	
 	@Transactional
