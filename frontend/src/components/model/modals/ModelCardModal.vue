@@ -539,11 +539,6 @@ export default {
         if (this.titleTooLong) {
           ok = false
         }
-
-        if (this.textEmpty) {
-          ok = false
-          this.textEmptyError = true
-        }
       } else {
         if (this.noCardSelected) {
           ok = false

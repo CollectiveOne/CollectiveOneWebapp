@@ -1,44 +1,53 @@
 <template lang="html">
-  <div :class="cClass"
+  <div class="model-card-editor-container" :class="containerClass"
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 
-    <div class="">
-      <div v-if="hasImage || uploadingImage" class="w3-row image-container w3-center w3-display-container">
-        <div v-if="uploadingImage" class="loader-gif-container">
-          <img class="loader-gif" src="../../../assets/loading.gif" alt="">
+    <div class="input-form" :class="inputClass">
+      <div class="image-row">
+        <div v-if="hasImage || uploadingImage" class="w3-row image-container w3-center w3-display-container">
+          <div v-if="uploadingImage" class="loader-gif-container">
+            <img class="loader-gif" src="../../../assets/loading.gif" alt="">
+          </div>
+          <div v-if="!uploadingImage" class="">
+            <img v-if="hasImage" @click="showImageClick()" :src="editedCard.imageFile.url + '?lastUpdated='+ editedCard.imageFile.lastUpdated" alt="">
+          </div>
+          <div v-if="!uploadingImage" class="w3-display-middle">
+            <input class="inputfile" @change="newFileSelected($event)"
+            type="file" name="imageFile" id="imageFile" accept="image/*">
+            <label for="imageFile" class="w3-button app-button w3-rounded">{{ editedCard.imageFile ? 'change' : 'upload image' }}</label>
+            <button v-if="hasImage"
+              @click="removeImage()"
+              class="w3-button app-button-danger">
+              remove
+            </button>
+          </div>
         </div>
-        <div v-if="!uploadingImage" class="">
-          <img v-if="hasImage" @click="showImageClick()" :src="editedCard.imageFile.url + '?lastUpdated='+ editedCard.imageFile.lastUpdated" alt="">
-        </div>
-        <div v-if="!uploadingImage" class="w3-display-middle">
-          <input class="inputfile" @change="newFileSelected($event)"
-          type="file" name="imageFile" id="imageFile" accept="image/*">
-          <label for="imageFile" class="w3-button app-button w3-rounded">{{ editedCard.imageFile ? 'change' : 'upload image' }}</label>
-          <button v-if="hasImage"
-            @click="removeImage()"
-            class="w3-button app-button-danger">
-            remove
-          </button>
-        </div>
+        <app-error-panel
+          :show="errorUploadingFile"
+          :message="errorUploadingFileMsg">
+        </app-error-panel>
       </div>
-      <app-error-panel
-        :show="errorUploadingFile"
-        :message="errorUploadingFileMsg">
-      </app-error-panel>
-    </div>
 
-    <div>
-      <div class="cursor-pointer" :class="inputClass">
+      <div class="cursor-pointer editor-row">
         <div class="w3-row input-border">
           <input type="text" class="w3-input w3-hover-light-grey" placeholder="title" v-model="editedCard.title">
         </div>
         <div ref="cardText" class="w3-row card-text">
-          <app-markdown-editor placeholder="content" v-model="editedCard.text" :keepBackup="false"></app-markdown-editor>
+          <app-markdown-editor
+            placeholder="content"
+            v-model="editedCard.text"
+            :keepBackup="false"
+            :showBorder="false">
+          </app-markdown-editor>
         </div>
       </div>
 
-      <div :class="controlsClass">
+    </div>
+
+    <div class="meta-row" :class="controlsClass">
+
+      <div class="controls-row">
         <div class="w3-left scope-controls">
           <div  class="w3-right cursor-pointer indicator-comp"
             @click="scope = 'COMMON'">
@@ -54,6 +63,9 @@
           </div>
         </div>
 
+        <div class="w3-left scope-text-div">
+           {{ cardScopeText }}
+        </div>
 
         <div class="w3-right control-buttons">
           <div v-if="!hasImage" class="w3-right cursor-pointer indicator-comp">
@@ -71,7 +83,7 @@
 
       </div>
 
-      <div class="button-row send-button-container" :class="buttonClass">
+      <div class="button-row send-button-container">
         <div class="w3-row">
           <div class="w3-col m6">
             <button class="w3-button app-button-light" name="button" @click="$emit('edit', null)">
@@ -87,8 +99,8 @@
             </div>
           </div>
         </div>
-
       </div>
+
     </div>
   </div>
 </template>
@@ -193,23 +205,23 @@ export default {
       return this.$store.state.support.createNewCardLocation === 'before'
     },
     cardButtonText () {
-      return this.isNew ? 'Create' : 'Save'
+      return this.isNew ? 'create' : 'save'
     },
     hasImage () {
       return this.editedCard.imageFile != null
     },
-    cClass () {
-      let cClass = {}
+    containerClass () {
+      let containerClass = {}
 
-      cClass['border-red'] = this.scope === 'PRIVATE'
-      cClass['border-yellow'] = this.scope === 'SHARED'
-      cClass['border-blue'] = this.scope === 'COMMON'
+      containerClass['border-red'] = this.scope === 'PRIVATE'
+      containerClass['border-yellow'] = this.scope === 'SHARED'
+      containerClass['border-blue'] = this.scope === 'COMMON'
 
-      cClass['w3-card-4 w3-topbar w3-round-large'] = this.type === 'card'
-      cClass['card-summary-container w3-leftbar w3-card w3-row'] = this.type === 'summary'
-      cClass['card-editor-doc'] = this.type === 'doc'
+      containerClass['w3-card-4 w3-topbar w3-round-large'] = this.type === 'card'
+      containerClass['card-summary-container w3-leftbar w3-card w3-row'] = this.type === 'summary'
+      containerClass['card-editor-doc'] = this.type === 'doc'
 
-      return cClass
+      return containerClass
     },
     inputClass () {
       let inputClass = {}
@@ -228,17 +240,21 @@ export default {
 
       return controlsClass
     },
-    buttonClass () {
-      let buttonClass = {}
-
-      buttonClass['w3-row light-grey'] = this.type === 'card'
-      buttonClass['w3-col m4 right-div-bottom controls send-button-container-summary w3-display-container'] = this.type === 'summary'
-      buttonClass['send-button-container-doc'] = this.type === 'doc'
-
-      return buttonClass
-    },
     card () {
       return this.atCardWrapper.card
+    },
+    cardScopeText () {
+      switch (this.scope) {
+        case 'PRIVATE':
+          return 'private'
+
+        case 'SHARED':
+          return 'shared'
+
+        case 'COMMON':
+          return 'common'
+      }
+      return ''
     }
   },
 
@@ -319,11 +335,6 @@ export default {
       if (!this.addExisting) {
         if (this.titleTooLong) {
           ok = false
-        }
-
-        if (this.textEmpty) {
-          ok = false
-          this.textEmptyError = true
         }
       } else {
         if (this.noCardSelected) {
@@ -554,9 +565,14 @@ export default {
   margin-bottom: 0px;
 }
 
-.bottom-row {
-  padding: 6px 12px;
-  font-size: 18px;
+.meta-row {
+}
+
+.button-row {
+}
+
+.scope-text-div {
+  padding: 4px 6px;
 }
 
 .insection-tag-container {
