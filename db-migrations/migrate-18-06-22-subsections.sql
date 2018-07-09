@@ -1,6 +1,8 @@
 ﻿---------------------------------------------------------
--- Make a full dump of the database fill a clean DB with it using \i,  migration script (an error for public.model_sections_cards_wrappers will be shown, its ok)
--- THEN run this script to fill the sections
+-- Make a partial dump of the database with the following command
+-- /usr/bin/pg_dump --host ec2-54-83-11-247.compute-1.amazonaws.com --port 5432 --username "pmiyqtnfrstmst" --password --format plain --data-only --disable-triggers --exclude-table initiatives --exclude-table model_sections --exclude-table model_cards_wrapper_additions --exclude-table messages --exclude-table model_cards_wrapper --exclude-table message_threads --exclude-table model_sections_subsections --exclude-table model_sections_subsections_trash --verbose --file "/home/pepo/workspace/c1data/bk-079-limited" "d20ec3jfi8l031"
+-- fill a clean DB with it using \i
+-- THEN run this script to fill all the modified tables and create the new model_subsections table
 -- THEN make a CUSTOM dump of the contents with this command
 -- /usr/bin/pg_dump --cluster 9.6/main --host localhost --port 5432 --username "postgres" --no-password  --format custom --blobs --no-privileges --no-tablespaces --verbose --file "/home/pepo/workspace/c1data/c1-migration-065-custom" "c1db"
 -- THEN delete all tables online and restor using this commmand
