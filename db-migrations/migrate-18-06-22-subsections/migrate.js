@@ -10,22 +10,23 @@ var pg = require('pg');
 
   /* set top model sections */
   /* get all top model sections */
-  // const topSectionsResult = await clientOld.query("SELECT id, top_model_section_id FROM initiatives");
-  //
-  // for (var ixTopModelSection = 0; ixTopModelSection < topSectionsResult.rows.length; ixTopModelSection++) {
-  //   let row = topSectionsResult.rows[ixTopModelSection];
-  //   console.log('initiative id:           ' + row.id);
-  //   console.log('top_model_section_id id: ' + row.top_model_section_id);
-  //
-  //   const topSubsectionResult = await clientNew.query("SELECT id FROM model_subsections WHERE section_id = '" + row.top_model_section_id + "'")
-  //
-  //   let row2 = topSubsectionResult.rows[0];
-  //   console.log('subsection id:           ' + row2);
-  //
-  //   await clientNew.query(
-  //     "UPDATE initiatives inita " +
-  //     "SET top_model_subsection_id = '" + row2.id + "' " +
-  // }
+  const topSectionsResult = await clientOld.query("SELECT id, top_model_section_id FROM initiatives");
+
+  for (var ixTopModelSection = 0; ixTopModelSection < topSectionsResult.rows.length; ixTopModelSection++) {
+    let row = topSectionsResult.rows[ixTopModelSection];
+    console.log('initiative id:           ' + row.id);
+    console.log('top_model_section_id id: ' + row.top_model_section_id);
+
+    const topSubsectionResult = await clientNew.query("SELECT id FROM model_subsections WHERE section_id = '" + row.top_model_section_id + "'")
+
+    let row2 = topSubsectionResult.rows[0];
+    console.log('subsection id:           ' + row2);
+
+    await clientNew.query(
+      "UPDATE initiatives inita " +
+      "SET top_model_subsection_id = '" + row2.id + "' " +
+      "WHERE inita.id = '" + row.id + "'")
+  }
 
   /* set before and after elements from order column */
 
