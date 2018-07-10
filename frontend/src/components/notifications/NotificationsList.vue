@@ -367,6 +367,7 @@ export default {
   max-width: 400px;
   max-height: 60vh;
   overflow: auto;
+  z-index: 20;
 }
 
 .compact .notifications-container {
