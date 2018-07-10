@@ -1,6 +1,6 @@
 <template lang="html">
 
-  <div class="w3-row controls-row small-scroll">
+  <div class="w3-row nav-controls-row small-scroll">
 
     <div v-if="this.$store.state.user.authenticated" class="control-group">
       <div class="">
@@ -119,17 +119,7 @@
 
 <style scoped>
 
-.control-group {
-  margin-right: 20px;
-  margin-bottom: 3px;
-  display: inline-block;
-  vertical-align: top;
-}
-
-.control-group div {
-  display: inline-block;
-  position: relative;
-}
+.nav-controls-row {}
 
 .control-btn {
   margin-right: 4px;

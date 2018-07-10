@@ -13,7 +13,7 @@
           @updateCards="resetCards()">
         </app-model-card-modal>
       </transition>
-    
+
       <transition name="slideDownUp">
         <app-model-card-modal
           v-if="showNewCardModal"
@@ -464,7 +464,8 @@ export default {
         placement: 'bottom',
         modifiers: {
           preventOverflow: {
-            enabled: false
+            enabled: true,
+            boundariesElement: 'viewport'
           }
         }
       }

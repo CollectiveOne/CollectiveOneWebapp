@@ -1,7 +1,7 @@
 <template lang="html">
 
   <div class="w3-row section-nav-item-container">
-    <div class="w3-row section-nav-item-first-row w3-leftbar"
+    <div class="w3-row section-nav-item-first-row"
       :class="rowClass"
       :draggable="$store.state.support.triggerSectionDraggingState"
       @dragstart="dragStart($event)"
@@ -514,6 +514,8 @@ export default {
 
 .section-nav-item-first-row {
   position: relative;
+  border-left-style: solid;
+  border-width: 2px;
 }
 
 .subsections-container {

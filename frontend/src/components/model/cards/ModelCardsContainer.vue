@@ -131,7 +131,7 @@ export default {
    },
    popperOptions () {
      return {
-       placement: 'bottom',
+       placement: 'right',
        modifiers: {
          preventOverflow: {
            enabled: false

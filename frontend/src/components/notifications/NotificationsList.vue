@@ -163,7 +163,8 @@ export default {
         placement: 'bottom',
         modifiers: {
           preventOverflow: {
-            enabled: false
+            enabled: true,
+            boundariesElement: 'window'
           }
         }
       }

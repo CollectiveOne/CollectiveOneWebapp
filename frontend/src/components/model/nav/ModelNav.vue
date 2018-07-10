@@ -14,9 +14,18 @@
     </transition>
 
     <div class="model-nav-container">
-      <div v-if="$store.state.user.authenticated" class="w3-row">
-        <app-model-nav-control-buttons>
-        </app-model-nav-control-buttons>
+      <div v-if="$store.state.user.authenticated"
+        class="w3-row w3-right dark-gray controls-row cursor-pointer"
+        @click="showControls = !showControls">
+        <i class="fa" :class="{'fa-chevron-down': !showControls, 'fa-chevron-up': showControls}" aria-hidden="true"></i>
+      </div>
+      <div class="slider-container w3-left">
+        <transition name="slideDownUp">
+          <div v-if="showControls" class="controls-btns">
+            <app-model-nav-control-buttons>
+            </app-model-nav-control-buttons>
+          </div>
+        </transition>
       </div>
       <div class="w3-row">
         <app-model-section-nav-item
@@ -43,7 +52,8 @@ export default {
 
   data () {
     return {
-      showSectionModal: false
+      showSectionModal: false,
+      showControls: false
     }
   },
 
@@ -75,6 +85,13 @@ export default {
 
 <style scoped>
 
+.controls-btns {
+  width: 350px;
+  height: 56px;
+  padding: 6px 6px;
+  background-color: #313942;
+}
+
 .model-nav-container-large {
   height: 100%;
 }
@@ -83,8 +100,13 @@ export default {
 }
 
 .controls-row {
-  background-color: #f9f9f9;
-  padding: 6px;
+  width: 100%;
+  text-align: center;
+  transition: all 300ms ease;
+}
+
+.controls-row:hover {
+  color: #60656b;
 }
 
 </style>
