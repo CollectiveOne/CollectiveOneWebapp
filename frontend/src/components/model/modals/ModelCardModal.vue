@@ -58,10 +58,6 @@
                     :show="noCardSelectedShow"
                     message="please select one card from above">
                   </app-error-panel>
-                  <app-error-panel
-                    :show="cardAlreadyPresentShow"
-                    message="please select one card from above">
-                  </app-error-panel>
                 </div>
 
                 <div v-if="existingCard !== null" class="w3-row w3-container w3-margin-top">
