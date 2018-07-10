@@ -29,7 +29,7 @@
 
     </div>
 
-    <div v-if="!hideCardControls" :class="cardsContainerClasses" class=""
+    <div v-if="!hideCardControls && isLoggedAnEditor" :class="cardsContainerClasses" class=""
       @dragover.prevent="draggingOver()"
       @drop.prevent="cardDroped('', $event)">
 
@@ -37,7 +37,18 @@
       </div>
 
       <div v-if="!creatingNewCard" class="">
-        <button class="w3-button app-button-light new-card-button" @click="creatingNewCard = true"><i class="fa fa-plus" aria-hidden="true"></i></button>
+        <popper :append-to-body="true" trigger="click":options="popperOptions" class="">
+          <app-drop-down-menu
+            class="drop-menu"
+            @createNew="creatingNewCard = true"
+            @addExisting="addExisting()"
+            :items="newCardItems">
+          </app-drop-down-menu>
+
+          <button slot="reference" class="w3-button app-button-light new-card-button">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </button>
+        </popper>
       </div>
       <div v-else class="card-container-in-list">
         <app-model-card-editor
@@ -109,7 +120,25 @@ export default {
         cardWrapper: this.cardWrappers[this.cardWrappers.length - 1]
       }
       return cardWrapper
-    }
+    },
+    newCardItems () {
+      let menuItems = []
+
+      menuItems.push({ text: 'create new', value: 'createNew', faIcon: 'fa-plus' })
+      menuItems.push({ text: 'add existing', value: 'addExisting', faIcon: 'fa-plus' })
+
+      return menuItems
+   },
+   popperOptions () {
+     return {
+       placement: 'bottom',
+       modifiers: {
+         preventOverflow: {
+           enabled: false
+         }
+       }
+     }
+   }
   },
 
   data () {
@@ -127,6 +156,9 @@ export default {
     cardCreated () {
       this.creatingNewCard = false
       this.$emit('updateCards')
+    },
+    addExisting () {
+      this.$emit('create-card', { addExistingInit: true })
     },
     draggingOver (event, cardWrapper) {
       if (!this.acceptDrop) {
@@ -272,6 +304,12 @@ export default {
   padding: 0px !important;
   color: white !important;
   background-color: #cccccc !important;
+}
+
+.drop-menu {
+  width: 180px;
+  text-align: left;
+  font-size: 15px;
 }
 
 @media screen and (min-width: 1700px) {

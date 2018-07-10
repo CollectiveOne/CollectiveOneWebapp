@@ -20,13 +20,8 @@
               </div>
             </popper>
 
-            <div v-if="$store.state.user.authenticated" class="btn-div fa-button">
-              <app-section-control-buttons :section="currentSection" :inSection="null" :hideAdd="true">
-              </app-section-control-buttons>
-            </div>
-
             <div v-if="isLoggedAnEditor" class="btn-div fa-button">
-              <app-section-control-buttons :section="currentSection" :inSection="null" :onlyAdd="true">
+              <app-section-control-buttons :section="currentSection" :inSection="null">
               </app-section-control-buttons>
             </div>
 

@@ -93,7 +93,7 @@
       </div>
 
       <div slot="reference" class="expand-btn cursor-pointer">
-        <i class="fa" :class="{'fa-bars': !onlyAdd, 'fa-plus': onlyAdd}" aria-hidden="true"></i>
+        <i class="fa fa-bars" aria-hidden="true"></i>
       </div>
     </popper>
 
@@ -116,14 +116,6 @@ export default {
     inSection: {
       type: Object,
       deafult: null
-    },
-    hideAdd: {
-      type: Boolean,
-      deafult: false
-    },
-    onlyAdd: {
-      type: Boolean,
-      deafult: false
     }
   },
 
@@ -145,14 +137,13 @@ export default {
     menuItems () {
       let menuItems = []
 
-      if (this.isLoggedAnEditor && !this.onlyAdd) menuItems.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
-      if (this.isLoggedAnEditor && !this.hideAdd) menuItems.push({ text: 'add card', value: 'addCard', faIcon: 'fa-plus' })
-      if (this.isLoggedAnEditor && !this.hideAdd) menuItems.push({ text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' })
+      if (this.isLoggedAnEditor) menuItems.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
+      if (this.isLoggedAnEditor) menuItems.push({ text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' })
 
-      if (!this.onlyAdd) menuItems.push({ text: 'notifications', value: 'configNotifications', faIcon: 'fa-cog' })
+      menuItems.push({ text: 'notifications', value: 'configNotifications', faIcon: 'fa-cog' })
 
-      if (this.isLoggedAnEditor && this.inSection !== null && !this.onlyAdd) menuItems.push({ text: 'remove', value: 'remove', faIcon: 'fa-times' })
-      if (this.isLoggedAnEditor && this.inSection !== null && !this.onlyAdd) menuItems.push({ text: 'delete', value: 'delete', faIcon: 'fa-times' })
+      if (this.isLoggedAnEditor && this.inSection !== null) menuItems.push({ text: 'remove', value: 'remove', faIcon: 'fa-times' })
+      if (this.isLoggedAnEditor && this.inSection !== null) menuItems.push({ text: 'delete', value: 'delete', faIcon: 'fa-times' })
 
       return menuItems
    },

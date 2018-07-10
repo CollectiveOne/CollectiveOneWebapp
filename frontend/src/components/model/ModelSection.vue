@@ -10,6 +10,7 @@
           :isNew="true"
           :inSectionId="section.id"
           :inSectionTitle="section.title"
+          :addExistingInit="addExistingInit"
           @close="showNewCardModal = false"
           @updateCards="updateCards()">
         </app-model-card-modal>
@@ -70,7 +71,7 @@
         @updateCards="updateCards()"
         @createNew="createNew"
         @edit="edit"
-        @create-card="showNewCardModal = true">
+        @create-card="createCardWithModal($event)">
       </app-model-cards-container>
     </div>
 
@@ -174,7 +175,8 @@ export default {
       targetCard: {
         type: 'new',
         cardWrapper: null
-      }
+      },
+      addExistingInit: false
     }
   },
 
@@ -263,6 +265,10 @@ export default {
       this.targetCard.cardWrapper = value
       this.targetCard.type = 'newCard'
       this.createNewCard = true
+    },
+    createCardWithModal (payload) {
+      this.addExistingInit = payload.addExistingInit || false
+      this.showNewCardModal = true
     },
     updateCards () {
       console.log('updating cards')

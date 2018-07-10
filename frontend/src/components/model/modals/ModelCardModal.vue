@@ -271,6 +271,10 @@ export default {
       type: Boolean,
       default: false
     },
+    addExistingInit: {
+      type: Boolean,
+      default: false
+    },
     cardWrapperId: {
       type: String,
       default: ''
@@ -668,6 +672,7 @@ export default {
         newScope: 'SHARED'
       }
       this.editing = true
+      this.addExisting = this.addExistingInit
     } else {
       this.showEditButtons = true
       this.cardWrapper.id = this.cardWrapperId
