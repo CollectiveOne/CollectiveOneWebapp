@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelSectionVisibility;
+import org.collectiveone.modules.model.PermissionConfig;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -38,7 +39,6 @@ public interface ModelSectionRepositoryIf extends CrudRepository<ModelSection, U
 
 	ModelSection findByTokenTypes_Id(UUID tokenTypeId);
 
-	@Query("SELECT mta.visibility FROM ModelSection ms JOIN ms.meta mta WHERE init.id = ?1")
-	ModelSectionVisibility getVisiblity(UUID modelSectionId);
-
+	@Query("SELECT section.visibility FROM ModelSection section WHERE section.id = ?1")
+	public ModelSectionVisibility getVisibility(UUID sectionId);
 }

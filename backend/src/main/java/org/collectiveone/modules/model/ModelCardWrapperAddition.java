@@ -54,7 +54,6 @@ public class ModelCardWrapperAddition {
 		dto.setId(section.getId().toString());
 		dto.setTitle(section.getTitle());
 		dto.setDescription(section.getDescription());
-		dto.setInitiativeId(section.getInitiative().getId().toString());
 		dto.setScope(scope.toString());
 		return dto;
 	}

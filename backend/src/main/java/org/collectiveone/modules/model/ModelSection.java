@@ -1,9 +1,7 @@
 package org.collectiveone.modules.model;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -16,15 +14,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.conversations.MessageThread;
-import org.collectiveone.modules.governance.Governance;
-import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.tokens.TokenType;
 import org.hibernate.annotations.GenericGenerator;
@@ -52,15 +47,7 @@ public class ModelSection {
 	@Column(name = "description")
 	private String description;
 	
-	@Enumerated(EnumType.STRING)
-	private PermissionConfig readConfig;
-
-	@Enumerated(EnumType.STRING)
-	private PermissionConfig editConfig;
-
-	@Enumerated(EnumType.STRING)
-	private PermissionConfig commentConfig;
-
+	
 	@Enumerated(EnumType.STRING)
 	private ModelSectionVisibility visibility;
 
@@ -192,36 +179,6 @@ public class ModelSection {
 		this.messageThread = messageThread;
 	}
 
-	public PermissionConfig getReadconfig()
-	{
-		return this.readConfig;
-	}
-
-	public void setReadconfig(PermissionConfig readConfig)
-	{
-		this.readConfig = readConfig;
-	}
-	
-
-	public PermissionConfig getCommentconfig()
-	{
-		return this.commentConfig;
-	}
-
-	public void setCommentconfig(PermissionConfig commentConfig)
-	{
-		this.commentConfig = commentConfig;
-	}
-	
-	public PermissionConfig getEditconfig()
-	{
-		return this.editConfig;
-	}
-
-	public void setEditconfig(PermissionConfig editConfig)
-	{
-		this.editConfig = editConfig;
-	}
 
 	public ModelSectionStatus getStatus()
 	{

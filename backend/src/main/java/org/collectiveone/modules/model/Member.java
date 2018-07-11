@@ -6,13 +6,13 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.tokens.MemberTransfer;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -39,6 +39,20 @@ public class Member implements Comparable<Member>{
 	@OneToMany(mappedBy = "member")
 	private List<MemberTransfer> tokensTransfers = new ArrayList<MemberTransfer>();
 
+
+	@Enumerated(EnumType.STRING)
+	private PermissionConfig role;
+
+
+	public PermissionConfig getRole()
+	{
+		return this.role;
+	}
+
+	public void setRole(PermissionConfig role)
+	{
+		this.role = role;
+	}
 
 	@Override
     public int compareTo(Member m) {

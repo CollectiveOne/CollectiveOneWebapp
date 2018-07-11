@@ -12,7 +12,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface MemberRepositoryIf extends CrudRepository<Member, UUID> {
 
-	Member findByInitiative_IdAndUser_C1Id(UUID initiativeId, UUID userId);
+	Member findByModelSection_IdAndUser_C1Id(UUID modelSectionId, UUID userId);
 	
 	@Query("SELECT mem.id FROM ModelSection ms JOIN ms.members mem WHERE ms.id = ?1 AND mem.user.c1Id = ?2")
 	UUID findMemberId(UUID modelSectionId, UUID userId);

@@ -1271,14 +1271,10 @@ public class ModelService {
 	
 
 	@Transactional 
-	public PostResult editMember(UUID modelSectionId, UUID userId, DecisionMakerRole role) {
+	public PostResult editMember(UUID modelSectionId, UUID userId, PermissionConfig role) {
 		ModelSection modelSection = modelSectionRepository.findById(modelSectionId);
-		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(modelSectionId, userId);
-		
-		if (member != null) {
-			governanceService.editOrCreateDecisionMaker(modelSection.getGovernance().getId(), member.getUser().getC1Id(), role);
-		}
-		
+		Member member = memberRepository.findByModelSection_IdAndUser_C1Id(modelSectionId, userId);
+	
 		return new PostResult("success", "member edited", member.getId().toString());
 		
 	}
@@ -1286,27 +1282,20 @@ public class ModelService {
 
 	@Transactional
 	public Boolean canAccess(UUID modelSectionId, UUID userId) {
-		ModelSectionVisibility visibility = modelSectionRepository.getVisiblity(modelSectionId);
-		
+		ModelSectionVisibility visibility = modelSectionRepository.getVisibility(modelSectionId);
+		PermissionConfig role = getRole(modelSectionId, userId);
 		if (visibility != null) {
-			switch (visibility) {
-				case MEMBER:
-					/* if private, only members can access initiative data */
-					return isMember(modelSectionId, userId);
-				
-				case EDITOR:
-					if (isMember(modelSectionId, userId)) {
-						return true;
-					} else {
-						return isMemberOfParent(modelSectionId, userId);
-					}
-					
-					
-				case ADMIN:
-					return true;
-					
-				default:
-					return canAccessInherited(modelSectionId, userId);
+			if(visibility == ModelSectionVisibility.PRIVATE) {
+				switch(role) {
+					case MEMBER:
+						return isMember(modelSectionId, userId);
+					case EDITOR:
+						// ?
+					case ADMIN:
+						// ?
+				}
+			} else if(visibility == ModelSectionVisibility.PUBLIC) {
+				return true;
 			}
 		} else {
 			return canAccessInherited(modelSectionId, userId);
@@ -1314,8 +1303,14 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public Boolean isMember(UUID initiativeId, UUID userId) {
-		return memberRepository.findMemberId(initiativeId, userId) != null;
+	public Boolean isMember(UUID modelSectionId, UUID userId) {
+		return memberRepository.findMemberId(modelSectionId, userId) != null;
+	}
+
+	@Transactional
+	public PermissionConfig getRole(UUID modelSectionId, UUID userId) {
+		Member member = memberRepository.findByModelSection_IdAndUser_C1Id(modelSectionId, userId);
+		return member.getRole();
 	}
 	
 
