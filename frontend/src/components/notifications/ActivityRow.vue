@@ -192,7 +192,7 @@
       </div>
 
       <div v-if="isMessagePosted && showMessagesText" class="w3-row">
-        <vue-markdown class="marked-text message-container" :source="activity.message.text"></vue-markdown>
+        <vue-markdown class="marked-text message-container" :source="activity.message.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
       </div>
 
       <div class="control-btns-row w3-display-topright" v-if="isMessagePosted && showMessagesText">

@@ -163,7 +163,7 @@
 
                 <div class="w3-row">
                   <div v-if="!editing" class="">
-                    <vue-markdown class="marked-text" :source="card.text"></vue-markdown>
+                    <vue-markdown class="marked-text" :source="card.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
                   </div>
                   <div v-else class="w3-margin-top">
                     <label class=""><b>Text: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>

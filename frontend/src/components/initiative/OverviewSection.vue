@@ -46,7 +46,7 @@
         </header>
         <div class="w3-container section-content">
           <div class="w3-row">
-            <vue-markdown class="marked-text" :source="initiative.meta.driver"></vue-markdown>
+            <vue-markdown class="marked-text" :source="initiative.meta.driver" :anchorAttributes="{target: '_blank'}"></vue-markdown>
           </div>
           <hr v-if="initiative.meta.tags.length > 0">
           <div class="w3-row w3-margin-top">

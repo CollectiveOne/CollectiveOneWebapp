@@ -55,7 +55,7 @@
         </div>
       </div>
       <div v-if="hasDescription" class="w3-row description-text light-grey">
-        <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
+        <vue-markdown class="marked-text" :source="section.description" :anchorAttributes="{target: '_blank'}"></vue-markdown>
       </div>
 
     </div>

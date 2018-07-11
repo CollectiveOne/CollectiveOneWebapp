@@ -102,7 +102,7 @@
 
                 <div class="w3-row w3-margin-top">
                   <div v-if="!editing" class="">
-                    <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
+                    <vue-markdown class="marked-text" :source="section.description" :anchorAttributes="{target: '_blank'}"></vue-markdown>
                   </div>
                   <div v-else class="">
                     <label class=""><b>Description:</b></label>

@@ -30,7 +30,7 @@
           @check="checkMentions()">
         </textarea>
         <div v-if="preview || sideBySide" class="this-markdown" :class="markdownClasses">
-          <vue-markdown class="marked-text" :source="text"></vue-markdown>
+          <vue-markdown class="marked-text" :source="text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
         </div>
       </div>
     </div>

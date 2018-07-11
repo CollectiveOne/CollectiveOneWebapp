@@ -50,7 +50,7 @@
     </div>
 
     <div v-if="expand && section.description" class="w3-row gray-1-border section-description w3-small">
-      <vue-markdown class="marked-text" :source="section.description"></vue-markdown>
+      <vue-markdown class="marked-text" :source="section.description" :anchorAttributes="{target: '_blank'}"></vue-markdown>
     </div>
 
   </div>

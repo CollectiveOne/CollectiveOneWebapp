@@ -13,7 +13,7 @@
       </a>
 
       <div class="w3-row driver-row">
-        <vue-markdown class="marked-text" :source="initiative.meta.driver"></vue-markdown>
+        <vue-markdown class="marked-text" :source="initiative.meta.driver" :anchorAttributes="{target: '_blank'}"></vue-markdown>
       </div>
     </div>
 
