@@ -29,10 +29,7 @@ public class Member implements Comparable<Member>{
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	//#### delete this
-	@ManyToOne
-	private Initiative initiative;
-
+	
 	@ManyToOne
 	private ModelSection modelSection;
 	
@@ -78,16 +75,6 @@ public class Member implements Comparable<Member>{
 
 	public void setTokensTransfers(List<MemberTransfer> tokensTransfers) {
 		this.tokensTransfers = tokensTransfers;
-	}
-
-	public Initiative getInitiative()
-	{
-		return this.initiative;
-	}
-
-	public void setInitiative(Initiative initiative)
-	{
-		this.initiative = initiative;
 	}
 
 	

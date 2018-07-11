@@ -42,9 +42,6 @@ public class ModelSection {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@ManyToOne
-	private Initiative initiative;
-	
 	private Boolean isTopModelSection;
 	
 	@Column(name = "title", length = 42)
@@ -64,6 +61,9 @@ public class ModelSection {
 	@Enumerated(EnumType.STRING)
 	private PermissionConfig commentConfig;
 
+	@Enumerated(EnumType.STRING)
+	private ModelSectionVisibility visibility;
+
 	@ManyToMany
 	@OrderColumn(name = "subsections_order")
 	private List<ModelSection> subsections = new ArrayList<ModelSection>();
@@ -78,15 +78,13 @@ public class ModelSection {
 	@Column(name = "status")
 	private ModelSectionStatus status;
 
-	@OneToMany(mappedBy = "model_section")
+	@OneToMany(mappedBy = "modelSection")
 	@SortNatural
 	private SortedSet<Member> members = new TreeSet<Member>();
 
 	@OneToMany
 	private List<TokenType> tokenTypes = new ArrayList<TokenType>();
 	
-	@OneToMany(mappedBy = "model_section")
-	private Set<ModelSectionRelationship> relationships = new LinkedHashSet<ModelSectionRelationship>();
 	
 	public List<TokenType> getTokenTypes() {
 		return tokenTypes;
@@ -95,13 +93,7 @@ public class ModelSection {
 		this.tokenTypes = tokenTypes;
 	}
 
-	public Set<ModelSectionRelationship> getRelationships() {
-		return relationships;
-	}
-
-	public void setRelationships(Set<ModelSectionRelationship> relationships) {
-		this.relationships = relationships;
-	}
+	
 
 	
 	@Override
@@ -132,16 +124,12 @@ public class ModelSection {
 		sectionDto.setTitle(title);
 		sectionDto.setDescription(description);
 		sectionDto.setIsTopModelSection(isTopModelSection);
-		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
 		
 		return sectionDto; 
 	}
 	
 	public ModelSectionDto toDto() {
-		ModelSectionDto sectionDto = toDtoLight();
-		
-		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
-		
+		ModelSectionDto sectionDto = toDtoLight();		
 		sectionDto.setnSubsections(subsections.size());
 		
 		return sectionDto;
@@ -155,13 +143,6 @@ public class ModelSection {
 		this.id = id;
 	}
 
-	public Initiative getInitiative() {
-		return initiative;
-	}
-
-	public void setInitiative(Initiative initiative) {
-		this.initiative = initiative;
-	}
 	
 	public Boolean getIsTopModelSection() {
 		return isTopModelSection;
@@ -262,18 +243,14 @@ public class ModelSection {
 		this.members = members;
 	}
 
-
-	@OneToOne
-	private Governance governance;
-
-	public Governance getGovernance()
+	public ModelSectionVisibility getVisibility()
 	{
-		return this.governance;
+		return this.visibility;
 	}
 
-	public void setGovernance(Governance governance)
+	public void setVisibility(ModelSectionVisibility visibility)
 	{
-		this.governance = governance;
+		this.visibility = visibility;
 	}
 
 		

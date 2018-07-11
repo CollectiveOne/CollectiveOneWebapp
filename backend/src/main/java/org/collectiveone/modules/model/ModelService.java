@@ -25,6 +25,7 @@ import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.governance.GovernanceService;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
+import org.collectiveone.modules.initiatives.dto.MemberDto;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.dto.CardWrappersHolderDto;
 import org.collectiveone.modules.model.dto.ModelCardDto;
@@ -117,10 +118,7 @@ public class ModelService {
 		return new GetResult<ModelSectionDto> ("success", "model found", sectionDto);
 	}
 	
-	@Transactional
-	public Initiative getSectionInitiative (UUID sectionId) {
-		return modelSectionRepository.findById(sectionId).getInitiative();
-	}
+	
 	
 	@Transactional
 	public PostResult createSection(ModelSectionDto sectionDto, UUID parentSectionId, UUID creatorId, boolean register) {
@@ -132,7 +130,6 @@ public class ModelService {
 		if (parent == null) return new PostResult("error", "parent section not found", "");
 		
 		parent.getSubsections().add(section);
-		section.setInitiative(parent.getInitiative());
 		
 		if (register) activityService.modelSectionCreatedOnSection(section, parent, appUserRepository.findByC1Id(creatorId));
 		
@@ -254,7 +251,6 @@ public class ModelService {
 		}
 		
 		fromSection = modelSectionRepository.save(fromSection);
-		subSection.setInitiative(toSection.getInitiative());
 				
 		activityService.modelSectionMovedFromSectionToSection(subSection, fromSection, toSection, appUserRepository.findByC1Id(creatorId));
 		
@@ -587,16 +583,17 @@ public class ModelService {
 		}
 		
 		/* if request user is in ecosystem add shared cards too */
-		if(initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId)) {
+		// #### commented as it is not required
+		// if(initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId)) {
 			
-			List<ModelCardWrapperAddition> modelCardWrappersShared = 
-					modelCardWrapperAdditionRepository.findInSectionWithScope(section.getId(), ModelCardWrapperScope.SHARED);
+		// 	List<ModelCardWrapperAddition> modelCardWrappersShared = 
+		// 			modelCardWrapperAdditionRepository.findInSectionWithScope(section.getId(), ModelCardWrapperScope.SHARED);
 			
-			for (ModelCardWrapperAddition cardWrapperAddition : modelCardWrappersShared) {
-				ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId);
-				cardWrappersHolder.getCardsWrappersShared().add(cardWrapperDto);
-			}
-		}
+		// 	for (ModelCardWrapperAddition cardWrapperAddition : modelCardWrappersShared) {
+		// 		ModelCardWrapperDto cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId);
+		// 		cardWrappersHolder.getCardsWrappersShared().add(cardWrapperDto);
+		// 	}
+		// }
 		
 		return cardWrappersHolder;
 	}
@@ -646,12 +643,6 @@ public class ModelService {
 			cardWrapperDto.setAfterCardWrapperId(cardWrapperAddition.getAfterCardWrapperAddition().getCardWrapper().getId().toString());
 		}
 		
-		if (cardWrapperAddition.getSection() != null) {
-			/* set initiative based on section */
-			cardWrapperDto.setInitiativeId(cardWrapperAddition.getSection().getInitiative().getId().toString());
-		} else {
-			cardWrapperDto.setInitiativeId(cardWrapperAddition.getCardWrapper().getInitiative().getId().toString());
-		}
 		
 		/* get number of likes */
 		cardWrapperDto.setnLikes(cardLikeRepository.countOfCard(cardWrapperAddition.getCardWrapper().getId()));
@@ -733,7 +724,6 @@ public class ModelService {
 		/* create card wrapper */
 		ModelCardWrapper cardWrapper = new ModelCardWrapper();
 		cardWrapper.setCard(card);
-		cardWrapper.setInitiative(section.getInitiative());
 		cardWrapper.setCreator(creator);
 		cardWrapper.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		cardWrapper.getEditors().add(creator);
@@ -1013,20 +1003,11 @@ public class ModelService {
 				break;
 		}
 		
-		if (!inInitiativeEcosystem) {
-			List<UUID> allSectionIds = new ArrayList<UUID>();
+		List<UUID> allSectionIds = new ArrayList<UUID>();
 			
-			allSectionIds.addAll(getAllSubsectionsIds(sectionId, levels - 1));
+		allSectionIds.addAll(getAllSubsectionsIds(sectionId, levels - 1));
 
-			enititiesPage = modelCardWrapperAdditionRepository.searchInSectionsByQuery(allSectionIds, "%"+query.toLowerCase()+"%", requestById, pageRequest);
-			
-		} else {
-			
-			ModelSection section = modelSectionRepository.findById(sectionId);
-			List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(section.getInitiative().getId());
-			
-			enititiesPage = modelCardWrapperAdditionRepository.searchInInitiativesByQuery(initiativeEcosystemIds, "%"+query.toLowerCase()+"%", requestById, pageRequest);
-		}
+		enititiesPage = modelCardWrapperAdditionRepository.searchInSectionsByQuery(allSectionIds, "%"+query.toLowerCase()+"%", requestById, pageRequest);
 		
 		List<ModelCardWrapperDto> cardsDtos = new ArrayList<ModelCardWrapperDto>();
 		
@@ -1287,23 +1268,7 @@ public class ModelService {
 		return modelSectionRepository.findByTokenTypes_Id(tokenTypeId);
 	}
 
-	@Transactional
-	public Member getOrAddMember(UUID modelSectionId, UUID userId) {
-		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(modelSectionId, userId);
-		
-		if(member == null) {
-			Initiative initiative = initiativeRepository.findById(modelSectionId);
-			AppUser user = appUserRepository.findByC1Id(userId);
-			
-			member = new Member();
-			member.setInitiative(initiative);
-			member.setUser(user);
-			
-			member = memberRepository.save(member);
-		}
-		
-		return member;
-	}
+	
 
 	@Transactional 
 	public PostResult editMember(UUID modelSectionId, UUID userId, DecisionMakerRole role) {
@@ -1325,28 +1290,21 @@ public class ModelService {
 		
 		if (visibility != null) {
 			switch (visibility) {
-				case PRIVATE:
+				case MEMBER:
 					/* if private, only members can access initiative data */
 					return isMember(modelSectionId, userId);
 				
-				case PARENTS:
+				case EDITOR:
 					if (isMember(modelSectionId, userId)) {
 						return true;
 					} else {
 						return isMemberOfParent(modelSectionId, userId);
 					}
 					
-				case ECOSYSTEM:
-					if (isMember(modelSectionId, userId)) {
-						return true;
-					} else {
-						return isMemberOfEcosystem(modelSectionId, userId);
-					}
 					
-				case PUBLIC:
+				case ADMIN:
 					return true;
 					
-				case INHERITED:
 				default:
 					return canAccessInherited(modelSectionId, userId);
 			}
@@ -1363,42 +1321,17 @@ public class ModelService {
 
 	//#### workout below from here
 	@Transactional
-	public Boolean isMemberOfParent(UUID initiativeId, UUID userId) {
-		List<Initiative> parents = getParentGenealogyInitiatives(initiativeId);
-		
-		for (Initiative parent : parents) {
-			if (isMember(parent.getId(), userId)) {
+	public Boolean isMemberOfParent(UUID sectionId, UUID userId) {
+		GraphNode node = getSectionNode(sectionId,true,false, 0);
+		List<GraphNode> parents = node.parents;
+		for (GraphNode parent : parents) {
+			if (isMember(parent.getElementId(), userId)) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	@Transactional
-	public Boolean isMemberOfEcosystem(UUID initiativeId, UUID userId) {
-		
-		List<UUID> ecosystemIds = findAllInitiativeEcosystemIds(initiativeId);
-		
-		for (UUID thisInitiativeId : ecosystemIds) {
-			if (isMember(thisInitiativeId, userId)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	@Transactional
-	public GetResult<List<AppUserDto>> getMembersOfEcosystem(UUID initiativeId, String query, PageRequest page) {
-	
-		List<UUID> ecosystemIds = findAllInitiativeEcosystemIds(initiativeId);
-		Page<AppUser> allMemberUsers = memberRepository.findMembersOfInitiatives(ecosystemIds, query.toLowerCase(), page);
-		List<AppUserDto> allMembersDto = new ArrayList<AppUserDto>();
-	
-		for (AppUser user : allMemberUsers.getContent()) {
-			allMembersDto.add(user.toDtoLight());
-		}
-		return new GetResult<List<AppUserDto>>("success", "members retrieved", allMembersDto);
-	}   
 	
 	
 	private Boolean canAccessInherited(UUID initiativeId, UUID userId) {
@@ -1410,361 +1343,13 @@ public class ModelService {
 			if (isMember(initiativeId, userId)) {
 				return true;
 			} else {
-				return isMemberOfEcosystem(initiativeId, userId);
+				return false;
 			}
 		}
 	}
 
-	@Transactional
-	public List<Initiative> getParentGenealogyInitiatives(UUID initiativeId) {
-		List<Initiative> parents = new ArrayList<Initiative>();
-		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
-		
-		while(parent != null) {
-			/* look upwards until an initiative with no parent is found */
-			parents.add(parent);
-			parent = initiativeRepository.findOfInitiativesWithRelationship(parent.getId(), InitiativeRelationshipType.IS_ATTACHED_SUB);
-		}
-		
-		return parents;
-	}
-	
-	@Transactional List<InitiativeDto> getParentInitiativesDtos(UUID initiativeId) {
-		List<InitiativeDto> parentsDtos = new ArrayList<InitiativeDto>();
-		
-		for (Initiative parent : getParentGenealogyInitiatives(initiativeId)) {
-			parentsDtos.add(parent.toDto());
-		}
-		
-		return parentsDtos;
-	}
-	
-	@Transactional 
-	public List<UUID> findAllInitiativeEcosystemIds(UUID initiativeId) {
-		Initiative superInitiative = getSuperInitiative(initiativeId);
-		List<InitiativeDto> subinitiativesTree = getSubinitiativesTree(superInitiative.getId(), null);
-		
-		List<UUID> ecosystemIds = new ArrayList<UUID>();
-		
-		ecosystemIds.add(superInitiative.getId());
-		ecosystemIds.addAll(extractAllIdsFromInitiativesTree(subinitiativesTree, new ArrayList<UUID>()));
-		
-		return ecosystemIds;
-	}
-	
-	private List<UUID> extractAllIdsFromInitiativesTree(List<InitiativeDto> initiativeTree, List<UUID> list) {
-		
-		for (InitiativeDto initiativeDto : initiativeTree) {
-			list.add(UUID.fromString(initiativeDto.getId()));
-		}
-		
-		for (InitiativeDto initiativeDto : initiativeTree) {
-			extractAllIdsFromInitiativesTree(initiativeDto.getSubInitiatives(), list);
-		}
-		
-		return list;
-	}
-	
-	@Transactional
-	public List<InitiativeDto> getSubinitiativesTree(UUID initiativeId, UUID userId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId); 
-		List<Initiative> subIniatiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_ATTACHED_SUB);
-		
-		List<InitiativeDto> subinitiativeDtos = new ArrayList<InitiativeDto>();
-		
-		for (Initiative subinitiative : subIniatiatives) {
-			if (subinitiative.getStatus() == InitiativeStatus.ENABLED) {
-				InitiativeDto subinitiativeDto = subinitiative.toDto();
-				
-				if (userId != null) {
-					subinitiativeDto.setLoggedMembership(getMemberAndInParent(subinitiative.getId(),  userId));	
-				}
-				
-				/* recursively call this for its own sub-initiatives */
-				List<InitiativeDto> subsubIniatiativesDto = getSubinitiativesTree(subinitiative.getId(), userId);
-				subinitiativeDto.setSubInitiatives(subsubIniatiativesDto);
-				
-				subinitiativeDtos.add(subinitiativeDto);
-			}
-		}
-		
-		return subinitiativeDtos;
-	}
-	
-	public List<MemberDto> getMemberAndInParent(UUID initiativeId, UUID userId) {
-		List<MemberDto> members = new ArrayList<MemberDto>();
-		members.add(getMember(initiativeId, userId));
-		members.add(getMemberInParent(initiativeId, userId));
-		
-		return members;
-	}
-	
-	@Transactional
-	public MemberDto getMemberInParent(UUID initiativeId, UUID userId) {
-		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
-		if (parent == null) return null;
-		else return getMember(parent.getId(), userId);
-	}
-	
-	@Transactional
-	public MemberDto getMember(UUID initiativeId, UUID userId) {
-		
-		if (userId == null) {
-			return null;
-		}
-		
-		/* check in this initiative */
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		
-		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, userId);
-		
-		MemberDto memberDto = new MemberDto();
-		
-		if (member != null) {
-			memberDto.setId(member.getId().toString());
-			memberDto.setUser(member.getUser().toDtoLight());
-			
-			/* governance related data */
-			DecisionMaker decisionMaker = governanceService.getDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
-			if(decisionMaker != null) {
-				memberDto.setRole(decisionMaker.getRole().toString());
-			} else {
-				memberDto.setRole(DecisionMakerRole.MEMBER.toString());
-			}
-		} else {
-			memberDto.setId("");
-			memberDto.setUser(appUserRepository.findByC1Id(userId).toDtoLight());
-			memberDto.setRole(DecisionMakerRole.ALIEN.toString());
-		}
-		
-		return memberDto;
-	}
-	
-	public InitiativeMembersDto getMembersAndSubmembers(UUID initiativeId) {
-		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		
-		InitiativeMembersDto initiativeMembers = new InitiativeMembersDto();
-		initiativeMembers.setInitiativeId(initiative.getId().toString());
-		initiativeMembers.setInitiativeName(initiative.getMeta().getName());
-		
-		List<TokenType> tokenTypes = tokenService.getTokenTypesHeldBy(initiative.getId());
-		
-		
-		/* add members of this initiative */
-		for (Member member : initiative.getMembers()) {
-			MemberDto memberDto = new MemberDto();
-			
-			memberDto.setId(member.getId().toString());
-			memberDto.setUser(member.getUser().toDtoLight());
-			
-			/* governance related data */
-			DecisionMaker decisionMaker = governanceService.getDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
-			if(decisionMaker != null) {
-				memberDto.setRole(decisionMaker.getRole().toString());
-			} else {
-				memberDto.setRole(DecisionMakerRole.MEMBER.toString());
-			}
-			
-			/* assets related data */
-			for (TokenType token : tokenTypes) {
-				memberDto.getReceivedAssets().add(tokenService.getTokensOfHolderDtoLight(token.getId(), member.getUser().getC1Id()));
-			}
-			
-			initiativeMembers.getMembers().add(memberDto);
-		}
-		
-		/* add the members of all sub-initiatives too */
-		for (InitiativeDto subInitiative : getSubinitiativesTree(initiative.getId(), null)) {
-			/* recursively call with subinitiatives */
-			initiativeMembers.getSubinitiativesMembers().add(getMembersAndSubmembers(UUID.fromString(subInitiative.getId())));
-		}
-		
-		return initiativeMembers;
-	}
 	
 	
-	@Transactional
-	public PostResult postMember(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
-		Member member = addMemberOrGet(initiativeId, c1Id, role);
-		if (member != null) {
-			return new PostResult("success", "member added",  member.getId().toString());
-		} 
-		
-		return new PostResult("error", "member not added", "");
-	}
 	
-	public PostResult deleteMember(UUID initiativeId, UUID memberUserId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, memberUserId);
-		
-		List<DecisionMaker> admins = governanceService.getDecisionMakerWithRole(initiative.getGovernance().getId(), DecisionMakerRole.ADMIN);
-		
-		boolean otherAdmin = false;
-		for (DecisionMaker admin :admins) {
-			if (!admin.getUser().getC1Id().equals(memberUserId)) {
-				otherAdmin = true;
-			}
-		}
-		
-		if (otherAdmin) {
-			/* delete only if another admin remains */
-			
-			/* members were subscribed to initiatives by default, so, delete them when deleting the member */
-			activityService.removeSubscriber(initiativeId,  SubscriptionElementType.INITIATIVE, member.getUser().getC1Id());
-			
-			memberRepository.delete(member);
-			governanceService.deleteDecisionMaker(initiative.getGovernance().getId(), member.getUser().getC1Id());
-			
-			return new PostResult("success", "contributor deleted", "");
-		}
-		
-		return new PostResult("error", "user is the only admin, it cannot be deleted", "");
-		
-	}
-	
-	@Transactional
-	public GetResult<List<InitiativeDto>> searchBy(SearchFiltersDto searchFilters) {
-		
-		List<UUID> tagIds = new ArrayList<UUID>();
-		for (InitiativeTagDto tag : searchFilters.getTags()) {
-			tagIds.add(UUID.fromString(tag.getId()));
-		}
-		
-		List<Initiative> initiatives = null;
-		
-		if (tagIds.size() > 0) {
-			initiatives = initiativeRepository.searchByTagIdAndVisibility(tagIds, InitiativeVisibility.PUBLIC);	
-		} else {
-			initiatives = initiativeRepository.findByVisibility(InitiativeVisibility.PUBLIC);
-		}
-		
-		List<Initiative> superInitiatives = onlySuperInitiatives(initiatives);
-		
-		List<InitiativeDto> initiativesDtos = new ArrayList<InitiativeDto>();
-		
-		for(Initiative initiative : superInitiatives) {
-			initiativesDtos.add(initiative.toDto());
-		}
-		
-		return new GetResult<List<InitiativeDto>>("succes", "initiatives returned", initiativesDtos);
-		
-	}
-	
-	@Transactional
-	public Member getOrAddMember(UUID initiativeId, UUID userId) {
-		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, userId);
-		
-		if(member == null) {
-			Initiative initiative = initiativeRepository.findById(initiativeId);
-			AppUser user = appUserRepository.findByC1Id(userId);
-			
-			member = new Member();
-			member.setInitiative(initiative);
-			member.setUser(user);
-			
-			member = memberRepository.save(member);
-		}
-		
-		return member;
-	}
-
-
-	@Transactional
-	public InitiativeTag getOrCreateTag(InitiativeTagDto tagDto) {
-		InitiativeTag tag = initiativeTagRepository.findByTagText(tagDto.getTagText());
-		
-		if (tag == null) {
-			tag = new InitiativeTag();
-			
-			tag.setTagText(tagDto.getTagText());
-			tag.setDescription(tagDto.getDescription());
-			
-			tag = initiativeTagRepository.save(tag);
-		}
-		
-		return tag;
-	}
-	
-	@Transactional
-	public PostResult addTagToInitiative(UUID initiativeId, InitiativeTagDto tagDto) {
-		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		if (initiative == null) return new PostResult("error", "initiative not found", "");
-		
-		InitiativeTag tag = getOrCreateTag(tagDto);
-		initiative.getMeta().getTags().add(tag);
-		
-		return new PostResult("success", "tag added to initiative", tag.getId().toString());
-	}
-	
-	@Transactional
-	public PostResult deleteTagFromInitiative(UUID initiativeId, UUID tagId) {
-		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		if (initiative == null) return new PostResult("error", "initiative not found", "");
-		
-		InitiativeTag tag = initiativeTagRepository.findById(tagId);
-		if (tag == null) return new PostResult("error", "tag not found", "");
-		
-		initiative.getMeta().getTags().remove(tag);
-		
-		return new PostResult("success", "tag added to initiative", initiative.getId().toString());
-	}
-	
-	
-	@Transactional
-	public GetResult<List<InitiativeTagDto>> searchTagsBy(String q) {
-		List<InitiativeTag> tags = initiativeTagRepository.findTop10ByTagTextLikeIgnoreCase("%"+q+"%");
-		
-		List<InitiativeTagDto> tagsDtos = new ArrayList<InitiativeTagDto>();
-		
-		for(InitiativeTag tag : tags) {
-			tagsDtos.add(tag.toDto());
-		}
-		
-		return new GetResult<List<InitiativeTagDto>>("succes", "initiatives returned", tagsDtos);
-	}
-	
-	@Transactional
-	public GetResult<InitiativeTagDto> getTag(UUID tagId) {
-		InitiativeTag tag = initiativeTagRepository.findById(tagId);
-		
-		if (tag == null) {
-			return new GetResult<InitiativeTagDto>("error", "initiative tag not found", null); 
-		}
-		
-		return new GetResult<InitiativeTagDto>("success", "initiative tag returned", tag.toDto());
-	}
-	
-	@Transactional
-	public GetResult<Page<ActivityDto>>  getActivityUnderInitiative(UUID initiativeId, PageRequest page, Boolean onlyMessages) {
-
-		List<InitiativeDto> subinitiativesTree = getSubinitiativesTree(initiativeId, null);
-		
-		List<UUID> allInitiativesIds = new ArrayList<UUID>();
-		
-		allInitiativesIds.add(initiativeId);
-		allInitiativesIds.addAll(extractAllIdsFromInitiativesTree(subinitiativesTree, new ArrayList<UUID>()));
-		
-		Page<Activity> activities = null;
-		
-		if(!onlyMessages) {
-			activities = activityRepository.findOfInitiatives(allInitiativesIds, page);
-		} else {
-			activities = activityRepository.findOfInitiativesAndType(allInitiativesIds, ActivityType.MESSAGE_POSTED, page);
-		}
-		
-		List<ActivityDto> activityDtos = new ArrayList<ActivityDto>();
-		
-		for(Activity activity : activities.getContent()) {
-			activityDtos.add(activity.toDto());
-		}
-		
-		Page<ActivityDto> dtosPage = new PageImpl<ActivityDto>(activityDtos, page, activities.getNumberOfElements());
-		
-		return new GetResult<Page<ActivityDto>>("succes", "actvity returned", dtosPage);
-	}
-
 
 }
