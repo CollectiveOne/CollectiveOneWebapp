@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -12,6 +14,7 @@ import javax.persistence.Table;
 
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
+import org.collectiveone.modules.model.enums.SectionGovernanceType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -36,6 +39,9 @@ public class ModelSection {
 	@Type(type = "org.hibernate.type.TextType")
 	@Column(name = "description")
 	private String description;
+	
+	@Enumerated(EnumType.STRING)
+	private SectionGovernanceType governanceType;
 	
 	
 	@Override
@@ -70,6 +76,7 @@ public class ModelSection {
 		sectionDto.setId(id.toString());
 		sectionDto.setTitle(title);
 		sectionDto.setDescription(description);
+		sectionDto.setGovernanceType(governanceType);
 		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
 		
 		return sectionDto; 
@@ -112,5 +119,14 @@ public class ModelSection {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public SectionGovernanceType getGovernanceType() {
+		return governanceType;
+	}
+
+	public void setGovernanceType(SectionGovernanceType governanceType) {
+		this.governanceType = governanceType;
+	}
+	
 
 }

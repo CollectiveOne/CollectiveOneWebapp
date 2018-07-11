@@ -32,6 +32,7 @@
               :hideCardControls="hideCardControls"
               :inCardSelector="inCardSelector"
               :cardRouteName="cardRouteName"
+              :governanceType="governanceType"
               @update="$emit('update')"
               @createNew="$emit('createNew')"
               @edit="$emit('edit')"

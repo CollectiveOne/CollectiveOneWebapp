@@ -24,7 +24,7 @@
       </app-activity-table>
     </div>
     <div  v-if="activities.length === 0 && !loading" class="w3-padding">
-      <i>no {{ onlyMessages ? 'messages' : 'activity' }} found</i>
+      <i>nothing was found</i>
     </div>
     <div v-if="loading" class="w3-row w3-center loader-gif-container">
       <img class="loader-gif" src="../../assets/loading.gif" alt="">

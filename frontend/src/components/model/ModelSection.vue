@@ -68,6 +68,7 @@
         :acceptDrop="true"
         :cardRouteName="cardRouteName"
         :hideCardControls="readOnly"
+        :governanceType="section.governanceType"
         @updateCards="updateCards()"
         @createNew="createNew"
         @edit="edit"

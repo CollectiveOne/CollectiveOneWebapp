@@ -39,7 +39,7 @@ import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
 import org.collectiveone.modules.model.ModelScope;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelSubsection;
-import org.collectiveone.modules.model.Status;
+import org.collectiveone.modules.model.enums.Status;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSubsectionRepositoryIf;
 import org.collectiveone.modules.tokens.InitiativeTransfer;

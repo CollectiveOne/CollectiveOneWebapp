@@ -82,6 +82,17 @@
                   </select>
                 </div>
 
+                <div v-if="editing && this.inSection != null" class="w3-row w3-margin-top">
+                  <label class="">
+                    <b>Governance Type (in "{{ inSectionTitleOk }}" section):</b>
+                  </label>
+                  <select v-model="editedSection.newGovernanceType"
+                    class="w3-input" name="">
+                    <option value="NONE">None</option>
+                    <option value="SEMAPHORES">Semaphores</option>
+                  </select>
+                </div>
+
                 <div class="w3-row">
                   <div v-if="!editing" class="">
                     <h3><b>{{ section.title }}</b></h3>
@@ -192,7 +203,8 @@ export default {
         if: '',
         title: '',
         description: '',
-        newScope: 'SHARED'
+        newScope: 'SHARED',
+        newGovernanceType: 'NONE'
       },
       inSectionTitleOk: '',
       editedSection: null,
@@ -310,7 +322,8 @@ export default {
     },
     startEditing () {
       this.editedSection = JSON.parse(JSON.stringify(this.section))
-      this.editedSection.newScope = this.section.scope
+      this.editedSection.newScope = this.section.scope ? this.section.scope : 'COMMON'
+      this.editedSection.newGovernanceType = this.section.governanceType ? this.section.governanceType : 'NONE'
       this.editing = true
     },
     sectionSelected (section) {
@@ -442,7 +455,8 @@ export default {
       this.editedSection = {
         title: '',
         description: '',
-        newScope: this.inSection.scope ? this.inSection.scope : 'COMMON'
+        newScope: this.inSection.scope ? this.inSection.scope : 'COMMON',
+        newGovernanceType: this.inSection.governanceType ? this.inSection.governanceType : 'NONE'
       }
       this.existingSectionNewScope = this.inSection.scope ? this.inSection.scope : 'COMMON'
       this.editing = true
@@ -470,5 +484,9 @@ export default {
 </script>
 
 <style scoped>
+
+.w3-modal {
+  cursor: auto;
+}
 
 </style>

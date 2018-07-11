@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.collectiveone.modules.model.ModelScope;
+import org.collectiveone.modules.model.enums.SemaphoreState;
 import org.collectiveone.modules.users.AppUserDto;
 
 public class ModelCardWrapperDto {
 
 	private String id;
+	private String additionId;
 	private ModelCardDto card;
 	private AppUserDto creator;
 	private Long creationDate; 
@@ -25,12 +27,21 @@ public class ModelCardWrapperDto {
 	private String beforeElementId;
 	private String afterElementId;
 	
+	/* for governance */
+	private SemaphoreState semaphoreState;
+	
 	
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getAdditionId() {
+		return additionId;
+	}
+	public void setAdditionId(String additionId) {
+		this.additionId = additionId;
 	}
 	public ModelCardDto getCard() {
 		return card;
@@ -109,6 +120,12 @@ public class ModelCardWrapperDto {
 	}
 	public void setAfterElementId(String afterElementId) {
 		this.afterElementId = afterElementId;
+	}
+	public SemaphoreState getSemaphoreState() {
+		return semaphoreState;
+	}
+	public void setSemaphoreState(SemaphoreState semaphoreState) {
+		this.semaphoreState = semaphoreState;
 	}
 	
 }

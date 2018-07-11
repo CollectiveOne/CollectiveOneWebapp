@@ -22,23 +22,15 @@
 
     <div class="w3-col m4 right-div">
 
-      <div v-if="cardWrapper.creator !== null" class="w3-left text-div">
-        <app-user-avatar :user="cardWrapper.creator" :showName="false" :small="true"></app-user-avatar>
-      </div>
-
-      <div v-if="editors.length > 0" class="w3-left editors-div">
-        <div class="w3-left" v-for="editor in editors">
-          <app-user-avatar v-if="editor.c1Id !== cardWrapper.creator.c1Id" :user="editor" :showName="false" :small="true"></app-user-avatar>
-        </div>
-      </div>
-
-      <div v-if="!inCardSelector && $store.state.user.authenticated" class="w3-right">
+      <div v-if="!inCardSelector" class="">
         <app-card-user-indicators
           :cardWrapper="cardWrapper"
           :inSection="inSection"
           :hideCardControls="hideCardControls"
           :inCardSelector="inCardSelector"
           :cardRouteName="cardRouteName"
+          :governanceType="governanceType"
+          :hideInSectionTags="true"
           @update="$emit('update')"
           @createNew="$emit('createNew')"
           @edit="$emit('edit')"
@@ -111,13 +103,13 @@ export default {
 
 .left-div {
   padding: 0px 12px;
-  border-right-style: solid;
-  border-width: 1px;
-  border-color: #d0d0d0;
 }
 
 .right-div {
   padding: 0px 12px;
+  border-left-style: solid;
+  border-width: 1px;
+  border-color: #d0d0d0;
 }
 
 .expand-btn {

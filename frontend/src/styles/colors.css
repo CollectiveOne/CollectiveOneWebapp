@@ -120,3 +120,39 @@
 .success-color {
   color: #40a36d !important;
 }
+
+.semaphore-green {
+  color: #40a36d !important;
+}
+
+.semaphore-yellow {
+  color: #c8bf42 !important;
+}
+
+.semaphore-red {
+  color: #c84242 !important;
+}
+
+.semaphore-green-border {
+  border-color: #40a36d !important;
+}
+
+.semaphore-yellow-border {
+  border-color: #c8bf42 !important;
+}
+
+.semaphore-red-border {
+  border-color: #c84242 !important;
+}
+
+.semaphore-green-selected {
+  text-shadow: 0px 0px 12px #40a36d;
+}
+
+.semaphore-yellow-selected {
+  text-shadow: 0px 0px 12px #c8bf42;
+}
+
+.semaphore-red-selected {
+  text-shadow: 0px 0px 12px #c84242;
+}

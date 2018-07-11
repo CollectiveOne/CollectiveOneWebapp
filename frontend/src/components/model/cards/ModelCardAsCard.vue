@@ -35,30 +35,14 @@
         </div>
       </div>
 
-      <div v-if="cardWrapper.creator !== null" class="w3-left text-div">
-        <app-user-avatar :user="cardWrapper.creator" :showName="false" :small="true"></app-user-avatar>
-      </div>
-
-      <div v-if="editors.length > 0" class="w3-left editors-div">
-        <div class="w3-left" v-for="editor in editors">
-          <app-user-avatar v-if="editor.c1Id !== cardWrapper.creator.c1Id" :user="editor" :showName="false" :small="true"></app-user-avatar>
-        </div>
-      </div>
-
-      <div v-if="cardWrapper.inModelSections.length > 0 && !hideCardControls" class="w3-margin-left w3-left">
-        <app-in-model-sections-tags
-          :inModelSections="cardWrapper.inModelSections"
-          :hideSectionId="inSectionId">
-        </app-in-model-sections-tags>
-      </div>
-
-      <div v-if="!inCardSelector && $store.state.user.authenticated" class="w3-right">
+      <div v-if="!inCardSelector" class="w3-row">
         <app-card-user-indicators
           :cardWrapper="cardWrapper"
           :inSection="inSection"
           :hideCardControls="hideCardControls"
           :inCardSelector="inCardSelector"
           :cardRouteName="cardRouteName"
+          :governanceType="governanceType"
           @update="$emit('update')"
           @createNew="$emit('createNew')"
           @edit="$emit('edit')"
@@ -80,7 +64,6 @@
 
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
-import InModelSectionsTags from '@/components/model/InModelSectionsTags.vue'
 import CardUserIndicators from '@/components/model/cards/CardUserIndicators.vue'
 
 export default {
@@ -90,7 +73,6 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-in-model-sections-tags': InModelSectionsTags,
     'app-card-user-indicators': CardUserIndicators
   },
 

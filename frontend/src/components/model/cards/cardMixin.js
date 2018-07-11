@@ -1,4 +1,5 @@
 export const cardMixin = {
+
   props: {
     cardWrapper: {
       type: Object,
@@ -23,8 +24,13 @@ export const cardMixin = {
     cardRouteName: {
       type: String,
       default: 'ModelSectionCard'
+    },
+    governanceType: {
+      type: String,
+      default: 'NONE'
     }
   },
+
   computed: {
     cardWrapperId () {
       return this.cardWrapper ? this.cardWrapper.id : ''
@@ -61,8 +67,18 @@ export const cardMixin = {
           break
       }
       return cClass
+    },
+    showLikes () {
+      return !this.isPrivate && !this.governanceTypeIsSemaphores
+    },
+    showSemaphore () {
+      return !this.isPrivate && this.governanceTypeIsSemaphores
+    },
+    governanceTypeIsSemaphores () {
+      return this.governanceType === 'SEMAPHORES'
     }
   },
+
   methods: {
     cardClicked () {
       if (!this.inCardSelector) {
