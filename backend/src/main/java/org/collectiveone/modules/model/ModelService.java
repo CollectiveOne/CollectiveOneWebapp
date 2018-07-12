@@ -1257,6 +1257,7 @@ public class ModelService {
 		
 		ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
 		cardWrapperAddition.setCardWrapper(modelCardWrapperRepository.findById(cardWrapperId));
+		cardWrapperAddition.setId(UUID.fromString("00000000-0000-0000-0000-000000000000"));
 		
 		cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId);
 		
