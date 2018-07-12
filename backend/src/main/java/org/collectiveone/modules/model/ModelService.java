@@ -1281,7 +1281,7 @@ public class ModelService {
 
 
 	@Transactional
-	public Boolean canAccess(UUID modelSectionId, UUID userId) {
+	public Boolean canAccess (UUID modelSectionId, UUID userId) {
 		ModelSectionVisibility visibility = modelSectionRepository.getVisibility(modelSectionId);
 		PermissionConfig role = getRole(modelSectionId, userId);
 		if (visibility != null) {
@@ -1290,16 +1290,46 @@ public class ModelService {
 					case MEMBER:
 						return isMember(modelSectionId, userId);
 					case EDITOR:
-						// ?
+						return true;
 					case ADMIN:
-						// ?
+						return true;
+					default:
+						return isMemberOfParent(modelSectionId, userId);
 				}
 			} else if(visibility == ModelSectionVisibility.PUBLIC) {
 				return true;
 			}
 		} else {
-			return canAccessInherited(modelSectionId, userId);
+			return isMemberOfParent(modelSectionId, userId);
 		}
+
+		return false;
+	}
+
+	@Transactional
+	public Boolean canEdit (UUID modelSectionId, UUID userId) {
+		ModelSectionVisibility visibility = modelSectionRepository.getVisibility(modelSectionId);
+		PermissionConfig role = getRole(modelSectionId, userId);
+		if (visibility != null) {
+			if(visibility == ModelSectionVisibility.PRIVATE) {
+				switch(role) {
+					case MEMBER:
+						return false;
+					case EDITOR:
+						return true;
+					case ADMIN:
+						return true;
+					default:
+						return isMemberOfParent(modelSectionId, userId);
+				}
+			} else if(visibility == ModelSectionVisibility.PUBLIC) {
+				return true;
+			}
+		} else {
+			return isMemberOfParent(modelSectionId, userId);
+		}
+
+		return false;
 	}
 	
 	@Transactional
@@ -1326,25 +1356,6 @@ public class ModelService {
 		}
 		return false;
 	}
-	
-	
-	
-	private Boolean canAccessInherited(UUID initiativeId, UUID userId) {
-		Initiative parent = initiativeRepository.findOfInitiativesWithRelationship(initiativeId, InitiativeRelationshipType.IS_ATTACHED_SUB);
-		if (parent != null) {
-			return canAccess(parent.getId(), userId);
-		} else {
-			/* default permission for inherited when no parent exist is like ecosystem */
-			if (isMember(initiativeId, userId)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-	}
-
-	
-	
 	
 
 }
