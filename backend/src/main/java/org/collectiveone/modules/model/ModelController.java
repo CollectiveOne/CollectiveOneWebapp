@@ -65,9 +65,8 @@ public class ModelController extends BaseController {
 		}
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
-		if (governanceService.canEditModel(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
+		if (!modelService.canEdit(sectionId, getLoggedUserId())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -85,9 +84,8 @@ public class ModelController extends BaseController {
 		}
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
-		if (governanceService.canEditModel(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
+		if (!modelService.canEdit(sectionId, getLoggedUserId())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -107,9 +105,7 @@ public class ModelController extends BaseController {
 		}
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
-		
-		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (!modelService.canEdit(sectionId, getLoggedUserId())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -126,9 +122,7 @@ public class ModelController extends BaseController {
 		}
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
-		
-		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (!modelService.canEdit(sectionId, getLoggedUserId())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -147,9 +141,7 @@ public class ModelController extends BaseController {
 		}
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
-		
-		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (!modelService.canEdit(sectionId, getLoggedUserId())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -180,9 +172,8 @@ public class ModelController extends BaseController {
 		}
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
 		
-		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (!modelService.canEdit(UUID.fromString(sectionIdStr), getLoggedUserId())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -209,9 +200,7 @@ public class ModelController extends BaseController {
 		}
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
-		
-		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (!modelService.canEdit(UUID.fromString(sectionIdStr), getLoggedUserId())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -231,9 +220,9 @@ public class ModelController extends BaseController {
 		}
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
-		
-		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+
+		//#### i am using onSectionIdStr, can
+		if (!modelService.canEdit(UUID.fromString(onSectionIdStr), getLoggedUserId())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -259,9 +248,8 @@ public class ModelController extends BaseController {
 			@RequestParam(name="onlySections", defaultValue = "false") Boolean onlySections) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+		if (!initiativeService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<ModelSectionDto>("error", "access denied", null);
 		}
 		
@@ -273,9 +261,8 @@ public class ModelController extends BaseController {
 			@PathVariable("sectionId") String sectionIdStr) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+		if (!modelService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<CardWrappersHolderDto>("error", "access denied", null);
 		}
 		
@@ -287,9 +274,8 @@ public class ModelController extends BaseController {
 			@PathVariable("sectionId") String sectionIdStr) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+		if (!initiativeService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<ModelSectionLinkedDto>("error", "access denied", null);
 		}
 		
@@ -305,9 +291,8 @@ public class ModelController extends BaseController {
 		}
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
-		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(sectionId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -327,9 +312,8 @@ public class ModelController extends BaseController {
 		}
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
-		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (governanceService.canEditModel(sectionId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
 			return new PostResult("error", "not authorized", "");
 		}
 		

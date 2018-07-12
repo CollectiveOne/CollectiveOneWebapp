@@ -970,6 +970,11 @@ public class ModelService {
 	public Initiative getCardWrapperInitiative(UUID cardWrapperId) {
 		return modelCardWrapperRepository.findById(cardWrapperId).getInitiative();
 	}
+
+	@Transactional
+	public Initiative getCardWrapperSection(UUID cardWrapperId) {
+		return modelCardWrapperRepository.findById(cardWrapperId).ge();
+	}
 	
 	@Transactional
 	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(
