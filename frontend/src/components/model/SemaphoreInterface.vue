@@ -1,38 +1,43 @@
 <template lang="html">
   <div class="w3-row semaphores-container">
-    <div class="w3-col s4">
-      <div class="avatars-container avatars-container-red">
-        <div v-for="semaphore in redSemaphores"
-          :key="semaphore.id"
-          class="avatar-semaphore semaphore-red-border">
-          <app-user-avatar
-            :user="semaphore.author"
-            :showName="false" :small="true">
-          </app-user-avatar>
+    <div v-if="semaphores.length === 0"class="w3-row w3-center">
+      <i>no flags yet</i>
+    </div>
+    <div v-else class="w3-row">
+      <div class="w3-col s4">
+        <div class="avatars-container avatars-container-red">
+          <div v-for="semaphore in redSemaphores"
+            :key="semaphore.id"
+            class="avatar-semaphore semaphore-red-border">
+            <app-user-avatar
+              :user="semaphore.author"
+              :showName="false" :small="true">
+            </app-user-avatar>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="w3-col s4">
-      <div class="avatars-container avatars-container-yellow">
-        <div v-for="semaphore in yellowSemaphores"
-          :key="semaphore.id"
-          class="avatar-semaphore semaphore-yellow-border">
-          <app-user-avatar
-            :user="semaphore.author"
-            :showName="false" :small="true">
-          </app-user-avatar>
+      <div class="w3-col s4">
+        <div class="avatars-container avatars-container-yellow">
+          <div v-for="semaphore in yellowSemaphores"
+            :key="semaphore.id"
+            class="avatar-semaphore semaphore-yellow-border">
+            <app-user-avatar
+              :user="semaphore.author"
+              :showName="false" :small="true">
+            </app-user-avatar>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="w3-col s4">
-      <div class="avatars-container avatars-container-green">
-        <div v-for="semaphore in greenSemaphores"
-          :key="semaphore.id"
-          class="avatar-semaphore semaphore-green-border">
-          <app-user-avatar
-            :user="semaphore.author"
-            :showName="false" :small="true">
-          </app-user-avatar>
+      <div class="w3-col s4">
+        <div class="avatars-container avatars-container-green">
+          <div v-for="semaphore in greenSemaphores"
+            :key="semaphore.id"
+            class="avatar-semaphore semaphore-green-border">
+            <app-user-avatar
+              :user="semaphore.author"
+              :showName="false" :small="true">
+            </app-user-avatar>
+          </div>
         </div>
       </div>
     </div>
