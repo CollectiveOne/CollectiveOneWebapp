@@ -972,7 +972,7 @@ public class ModelService {
 	}
 
 	@Transactional
-	public Initiative getCardWrapperSection(UUID cardWrapperId) {
+	public List<ModelSection> getCardWrapperSection(UUID cardWrapperId) {
 		return modelCardWrapperRepository.findById(cardWrapperId).ge();
 	}
 	
@@ -1293,7 +1293,7 @@ public class ModelService {
 			if(visibility == ModelSectionVisibility.PRIVATE) {
 				switch(role) {
 					case MEMBER:
-						return isMember(modelSectionId, userId);
+						return true;
 					case EDITOR:
 						return true;
 					case ADMIN:
