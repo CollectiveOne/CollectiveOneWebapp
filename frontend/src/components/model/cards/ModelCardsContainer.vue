@@ -18,7 +18,6 @@
           :type="cardsType"
           :cardRouteName="cardRouteName"
           :hideCardControls="hideCardControls"
-          :governanceType="governanceType"
           @edit="$emit('edit', cardWrapper)"
           @createNew="$emit('createNew', cardWrapper)"
           @updateCards="$emit('updateCards')">
@@ -99,10 +98,6 @@ export default {
     cardRouteName: {
       type: String,
       default: 'ModelSectionCard'
-    },
-    governanceType: {
-      type: String,
-      default: 'NONE'
     }
   },
 

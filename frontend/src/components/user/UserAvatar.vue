@@ -14,7 +14,7 @@
         @mouseover="showHoverName = true"
         @mouseleave="showHoverName = false">
 
-        <img @click="showProfileModal = true" class="w3-circle cursor-pointer"
+        <img class="w3-circle"
           :class="imgClass" :src="userPictureUrl" @error="errorOnPicture"/>
 
         <div v-if="!showName && showHoverName && enableHover"
@@ -82,6 +82,10 @@ export default {
     small: {
       type: Boolean,
       default: false
+    },
+    enableDatails: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -95,11 +99,16 @@ export default {
 
   computed: {
     imgClass () {
+      let imgClass = {}
       if (this.small) {
-        return { 'img-style-small': true }
+        imgClass['img-style-small'] = true
       } else {
-        return { 'img-style-large': true }
+        imgClass['img-style-large'] = true
       }
+
+      imgClass['cursor-pointer'] = this.enableDetails
+
+      return imgClass
     },
     hasUsername () {
       if (this.user.username) {

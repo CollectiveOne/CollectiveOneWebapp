@@ -1,7 +1,7 @@
 <template lang="html">
 
   <div class="user-indicators-container">
-    <div class="common-row w3-row" :class="{'common-row-with-gov': showSemaphore}">
+    <div class="common-row w3-row" :class="{'common-row-with-gov': showConsentPositions}">
       <div class="w3-left">
         <div v-if="cardWrapper.creator !== null" class="w3-left text-div">
           <app-user-avatar :user="cardWrapper.creator" :showName="false" :small="true"></app-user-avatar>
@@ -36,6 +36,8 @@
             @update="$emit('update')"
             @createNew="$emit('createNew')"
             @edit="$emit('edit')"
+            @startConsent="$emit('setConsent', true)"
+            @stopConsent="$emit('setConsent', false)"
             @updateCards="$emit('updateCards')">
           </app-card-control-buttons>
         </div>
@@ -64,29 +66,16 @@
           </app-indicator>
         </div>
 
-        <div v-if="showSemaphore" class="w3-right indicator-comp semaphore-container">
-          <div class="circle-holder semaphore-red" :class="{'semaphore-red-selected': stateIsRed}"
-            @click="setState('RED')">
-            <i class="fa fa-circle" aria-hidden="true"></i>
-          </div>
-          <div class="circle-holder semaphore-yellow" :class="{'semaphore-yellow-selected': stateIsYellow}"
-            @click="setState('YELLOW')">
-            <i class="fa fa-circle" aria-hidden="true"></i>
-          </div>
-          <div class="circle-holder semaphore-green" :class="{'semaphore-green-selected': stateIsGreen}"
-            @click="setState('GREEN')">
-            <i class="fa fa-circle" aria-hidden="true"></i>
-          </div>
-        </div>
-
       </div>
     </div>
 
-    <div v-if="showSemaphore" class="governance-row w3-row">
-      <app-semaphore-if
+    <div v-if="showConsentPositions" class="governance-row w3-row">
+      <app-consent-positions
         :elementId="cardWrapper.additionId"
-        :forceUpdate="forceSemaphoresUpdate">
-      </app-semaphore-if>
+        :ownPosition="cardWrapper.ownPosition"
+        :disabled="!consentIsOpened"
+        @update="$emit('update')">
+      </app-consent-positions>
     </div>
 
   </div>
@@ -98,7 +87,7 @@ import { cardMixin } from '@/components/model/cards/cardMixin.js'
 import CardControlButtons from '@/components/model/cards/CardControlButtons.vue'
 import NotificationsList from '@/components/notifications/NotificationsList.vue'
 import InModelSectionsTags from '@/components/model/InModelSectionsTags.vue'
-import SemaphoreInterface from '@/components/model/SemaphoreInterface.vue'
+import ConsentPositions from '@/components/model/ConsentPositions.vue'
 
 export default {
 
@@ -108,7 +97,7 @@ export default {
     'app-card-control-buttons': CardControlButtons,
     'app-in-model-sections-tags': InModelSectionsTags,
     'app-notifications-list': NotificationsList,
-    'app-semaphore-if': SemaphoreInterface
+    'app-consent-positions': ConsentPositions
   },
 
   props: {
@@ -120,7 +109,7 @@ export default {
 
   data () {
     return {
-      forceSemaphoresUpdate: false
+      forceConsentUpdate: false
     }
   },
 
@@ -146,17 +135,6 @@ export default {
         }).then((response) => {
           this.$emit('update')
         })
-    },
-    setState (value) {
-      this.axios.put('/1/model/cardAddition/' + this.cardWrapper.additionId + '/semaphoreState', {}, {
-        params: {
-          semaphoreState: value,
-          elementType: 'CARD_WRAPPER_ADDITION'
-        }
-      }).then((response) => {
-        this.$emit('update')
-        this.forceSemaphoresUpdate = !this.forceSemaphoresUpdate
-      })
     }
   }
 
@@ -167,6 +145,8 @@ export default {
 
 .user-indicators-container {
   width: 100%;
+  font-family: 'Raleway', sans-serif;
+  font-size: 15px;
 }
 
 .indicator-comp {
@@ -194,10 +174,6 @@ export default {
   margin-right: 8px;
   cursor: pointer;
   text-align: center;
-}
-
-.semaphore-container {
-  margin-right: 12px;
 }
 
 </style>

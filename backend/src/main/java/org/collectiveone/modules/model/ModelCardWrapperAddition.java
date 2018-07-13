@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.model.dto.InModelSectionDto;
+import org.collectiveone.modules.model.enums.ElementGovernanceType;
+import org.collectiveone.modules.model.enums.SimpleConsentState;
 import org.collectiveone.modules.model.enums.Status;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -51,6 +53,14 @@ public class ModelCardWrapperAddition implements OrderedElement {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 	
+	@Enumerated(EnumType.STRING)
+	private ElementGovernanceType governanceType;
+	
+	@Enumerated(EnumType.STRING)
+	private SimpleConsentState simpleConsentState;	
+	
+	
+	
 	public InModelSectionDto toInModelSectionDto() {
 		InModelSectionDto dto = new InModelSectionDto();
 		dto.setId(section.getId().toString());
@@ -58,6 +68,7 @@ public class ModelCardWrapperAddition implements OrderedElement {
 		dto.setDescription(section.getDescription());
 		dto.setInitiativeId(section.getInitiative().getId().toString());
 		dto.setScope(scope.toString());
+		
 		return dto;
 	}
 	
@@ -167,5 +178,23 @@ public class ModelCardWrapperAddition implements OrderedElement {
 	public void setAdder(AppUser adder) {
 		this.adder = adder;
 	}
+
+	public ElementGovernanceType getGovernanceType() {
+		return governanceType;
+	}
+
+	public void setGovernanceType(ElementGovernanceType governanceType) {
+		this.governanceType = governanceType;
+	}
+
+	public SimpleConsentState getSimpleConsentState() {
+		return simpleConsentState;
+	}
+
+	public void setSimpleConsentState(SimpleConsentState simpleConsentState) {
+		this.simpleConsentState = simpleConsentState;
+	}
+	
+	
 	
 }

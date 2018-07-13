@@ -23,21 +23,22 @@ import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.dto.CardWrappersHolderDto;
-import org.collectiveone.modules.model.dto.ElementSemaphoreDto;
+import org.collectiveone.modules.model.dto.ElementConsentPositionDto;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.dto.ModelSectionLinkedDto;
 import org.collectiveone.modules.model.dto.SubsectionsHolderDto;
-import org.collectiveone.modules.model.enums.SectionGovernanceType;
-import org.collectiveone.modules.model.enums.SemaphoreState;
+import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
+import org.collectiveone.modules.model.enums.ElementGovernanceType;
+import org.collectiveone.modules.model.enums.SimpleConsentState;
 import org.collectiveone.modules.model.enums.Status;
+import org.collectiveone.modules.model.repositories.ConsentPositionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSubsectionRepositoryIf;
-import org.collectiveone.modules.model.repositories.SemaphoreRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +91,7 @@ public class ModelService {
 	private ModelSubsectionRepositoryIf modelSubsectionRepository;
 	
 	@Autowired
-	private SemaphoreRepositoryIf semaphoreRepository;
+	private ConsentPositionRepositoryIf consentPositionRepository;
 	
 	
 	@Transactional
@@ -120,7 +121,6 @@ public class ModelService {
 			Boolean isBefore) {
 		
 		ModelSection section = sectionDto.toEntity(null, sectionDto);
-		section.setGovernanceType(sectionDto.getNewGovernanceType());
 		
 		section = modelSectionRepository.save(section);
 		
@@ -233,7 +233,6 @@ public class ModelService {
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		
 		section = sectionDto.toEntity(section, sectionDto);
-		if (sectionDto.getNewGovernanceType() != null) section.setGovernanceType(sectionDto.getNewGovernanceType());
 		
 		section = modelSectionRepository.save(section);
 		
@@ -766,7 +765,6 @@ public class ModelService {
 	private ModelSectionDto getSubsectionDto(ModelSubsection subsection) {
 		ModelSectionDto sectionDto = subsection.getSection().toDto();
 		
-		sectionDto.setGovernanceType(subsection.getSection().getGovernanceType());
 		sectionDto.setScope(subsection.getScope());
 		
 		if (subsection.getBeforeElement() != null) {
@@ -894,6 +892,8 @@ public class ModelService {
 		/* data associated to the addition */
 		cardWrapperDto.setAdditionId(cardWrapperAddition.getId().toString());
 		cardWrapperDto.setScope(cardWrapperAddition.getScope());
+		cardWrapperDto.setGovernanceType(cardWrapperAddition.getGovernanceType());
+		cardWrapperDto.setSimpleConsentState(cardWrapperAddition.getSimpleConsentState());
 		
 		/* check if this card wrapper is private on that section only adder is able to see it */
 		if (cardWrapperAddition.getScope() == ModelScope.PRIVATE) {
@@ -941,14 +941,13 @@ public class ModelService {
 		}
 		
 		/* section governance */
-		if (cardWrapperAddition.getSection() != null) {
-			if (cardWrapperAddition.getSection().getGovernanceType() == SectionGovernanceType.SEMAPHORES) {
-				ElementSemaphore semaphore = semaphoreRepository.findByElementIdAndAuthor_c1Id(cardWrapperAddition.getId(), requestByUserId);
-				if (semaphore != null) {
-					cardWrapperDto.setSemaphoreState(semaphore.getState());
-				} 
-			}
+		if (cardWrapperAddition.getGovernanceType() == ElementGovernanceType.SIMPLE_CONSENT) {
+			ElementConsentPosition consentStatus = consentPositionRepository.findByElementIdAndAuthor_c1Id(cardWrapperAddition.getId(), requestByUserId);
+			if (consentStatus != null) {
+				cardWrapperDto.setOwnPosition(consentStatus.getPositionColor());
+			} 
 		}
+		
 		
 		return cardWrapperDto;
 	}
@@ -1665,31 +1664,60 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public PostResult setSemaphoreState (UUID elementId, UUID authorId, SemaphoreState state) {
-		ElementSemaphore semaphore = semaphoreRepository.findByElementIdAndAuthor_c1Id(elementId, authorId);
+	public PostResult setSimpleConsentState (UUID elementId, SimpleConsentState state, UUID requestByUserId) {
+		ModelCardWrapperAddition cardWrapperAddition = modelCardWrapperAdditionRepository.findById(elementId);
 		
-		if (semaphore == null) {
-			semaphore = new ElementSemaphore();
-			semaphore.setAuthor(appUserRepository.findByC1Id(authorId));
-			semaphore.setElementId(elementId);
+		if (cardWrapperAddition.getGovernanceType() != ElementGovernanceType.SIMPLE_CONSENT) {
+			cardWrapperAddition.setGovernanceType(ElementGovernanceType.SIMPLE_CONSENT);
+			cardWrapperAddition.setSimpleConsentState(SimpleConsentState.OPENED);
+			
+			activityService.consentStatusStarted(cardWrapperAddition, appUserRepository.findByC1Id(requestByUserId));
+		} else {
+			if (state == SimpleConsentState.CLOSED) {
+				cardWrapperAddition.setSimpleConsentState(SimpleConsentState.CLOSED);
+				activityService.consentStatusClosed(cardWrapperAddition, appUserRepository.findByC1Id(requestByUserId));
+			} else {
+				cardWrapperAddition.setSimpleConsentState(SimpleConsentState.OPENED);
+				activityService.consentStatusReopened(cardWrapperAddition, appUserRepository.findByC1Id(requestByUserId));
+			}
 		}
 		
-		semaphore.setState(state);
-		semaphore = semaphoreRepository.save(semaphore);
+		modelCardWrapperAdditionRepository.save(cardWrapperAddition);
 		
-		return new PostResult("success", "semaphore state changed", semaphore.getId().toString());
+		return new PostResult("success", "card consent state changed", cardWrapperAddition.getId().toString()); 
 	}
 	
 	@Transactional
-	public GetResult<List<ElementSemaphoreDto>> getSemaphores(UUID elementId) {
-		List<ElementSemaphore> semaphores = semaphoreRepository.findByElementId(elementId);
+	public PostResult setSimpleConsentUserPosition(UUID elementId, UUID authorId, ElementConsentPositionColor positionColor) {
+		ModelCardWrapperAddition cardWrapperAddition = modelCardWrapperAdditionRepository.findById(elementId);
+		ElementConsentPosition consentPosition = consentPositionRepository.findByElementIdAndAuthor_c1Id(elementId, authorId);
 		
-		List<ElementSemaphoreDto> semaphoresDtos = new ArrayList<ElementSemaphoreDto>();
+		if (consentPosition == null) {
+			consentPosition = new ElementConsentPosition();
+			consentPosition.setAuthor(appUserRepository.findByC1Id(authorId));
+			consentPosition.setElementId(elementId);
+			
+			activityService.consentPositionStated(cardWrapperAddition, positionColor, appUserRepository.findByC1Id(authorId));
+		} else {
+			activityService.consentPositionChanged(cardWrapperAddition, positionColor, appUserRepository.findByC1Id(authorId));
+		}
 		
-		for (ElementSemaphore semaphore : semaphores) {
+		consentPosition.setPositionColor(positionColor);
+		consentPosition = consentPositionRepository.save(consentPosition);
+		
+		return new PostResult("success", "semaphore state changed", consentPosition.getId().toString());
+	}
+	
+	@Transactional
+	public GetResult<List<ElementConsentPositionDto>> getConsentPositions(UUID elementId) {
+		List<ElementConsentPosition> semaphores = consentPositionRepository.findByElementId(elementId);
+		
+		List<ElementConsentPositionDto> semaphoresDtos = new ArrayList<ElementConsentPositionDto>();
+		
+		for (ElementConsentPosition semaphore : semaphores) {
 			semaphoresDtos.add(semaphore.toDto());
 		}
-		return new GetResult<List<ElementSemaphoreDto>>("success", "semaphores retreived", semaphoresDtos);
+		return new GetResult<List<ElementConsentPositionDto>>("success", "semaphores retreived", semaphoresDtos);
 	}
 	
 }

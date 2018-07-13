@@ -32,11 +32,13 @@
       </div>
     </div>
 
-    <popper :append-to-body="true" trigger="click":options="popperOptions" class="">
+    <popper :append-to-body="true" trigger="click" :options="popperOptions" :toggleShow="togglePopperShow" class="">
       <div class="">
         <app-drop-down-menu
           class="drop-menu"
           @edit="edit()"
+          @startConsent="startConsent()"
+          @stopConsent="stopConsent()"
           @addCardBefore="addCardLocation('before')"
           @addCardAfter="addCardLocation('after')"
           @remove="remove()"
@@ -91,7 +93,8 @@ export default {
       showNewCardModal: false,
       newCardLocation: 'end',
       showEditCardModal: false,
-      removeIntent: false
+      removeIntent: false,
+      togglePopperShow: false
     }
   },
 
@@ -107,6 +110,12 @@ export default {
     },
     isLoggedTheAuthor () {
       return this.cardWrapper.creator.c1Id === this.$store.state.user.profile.c1Id
+    },
+    isConsent () {
+      return this.cardWrapper.governanceType === 'SIMPLE_CONSENT'
+    },
+    isConsentOpened () {
+      return this.cardWrapper.simpleConsentState === 'OPENED'
     },
     menuItems () {
       let menuItems = []
@@ -124,6 +133,17 @@ export default {
 
       if (this.isLoggedAnEditor) menuItems.push({ text: 'add card before', value: 'addCardBefore', faIcon: 'fa-plus' })
       if (this.isLoggedAnEditor) menuItems.push({ text: 'add card after', value: 'addCardAfter', faIcon: 'fa-plus' })
+
+      if (this.isLoggedAnEditor && !this.isConsent) {
+        menuItems.push({ text: 'start consent', value: 'startConsent', faIcon: 'fa-users' })
+      } else {
+        if (this.isConsentOpened) {
+          menuItems.push({ text: 'stop consent', value: 'stopConsent', faIcon: 'fa-users' })
+        } else {
+          menuItems.push({ text: 'reopen consent', value: 'startConsent', faIcon: 'fa-users' })
+        }
+      }
+
       if (this.isLoggedAnEditor) menuItems.push({ text: 'remove', value: 'remove', faIcon: 'fa-times' })
       return menuItems
     },
@@ -140,15 +160,23 @@ export default {
   },
 
   methods: {
+    startConsent () {
+      this.togglePopperShow = !this.togglePopperShow
+      this.$emit('startConsent')
+    },
+    stopConsent () {
+      this.togglePopperShow = !this.togglePopperShow
+      this.$emit('stopConsent')
+    },
     addCardLocation (location) {
       this.$store.commit('createNewCardLocation', location)
       this.$emit('createNew')
-      this.expanded = false
+      this.togglePopperShow = !this.togglePopperShow
     },
     edit () {
       //  this.showEditCardModal = true
       this.$emit('edit')
-      this.expanded = false
+      this.togglePopperShow = !this.togglePopperShow
     },
     remove () {
       this.removeIntent = true
@@ -159,7 +187,7 @@ export default {
           console.log(response)
           if (response.data.result === 'success') {
             this.removeIntent = false
-            this.expanded = false
+            this.togglePopperShow = !this.togglePopperShow
             this.$emit('updateCards')
           } else {
             this.showOutputMessage(response.data.message)
@@ -167,9 +195,6 @@ export default {
         }).catch((error) => {
         console.log(error)
       })
-    },
-    clickOutsideMenu () {
-      this.expanded = false
     }
   },
 

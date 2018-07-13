@@ -44,6 +44,7 @@ import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
 import org.collectiveone.modules.model.ModelSubsection;
+import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
@@ -888,6 +889,67 @@ public class ActivityService {
 		addInitiativeActivityNotifications(activity);
 	}
 	
+	@Transactional
+	public void consentStatusStarted(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.CONSENT_STATUS_OPENED);
+		
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void consentStatusClosed(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.CONSENT_STATUS_CLOSED);
+		
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void consentStatusReopened(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.CONSENT_STATUS_REOPENED);
+		
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void consentPositionStated(ModelCardWrapperAddition cardWrapperAddition, ElementConsentPositionColor positionColor, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.CONSENT_POSITION_STATED);
+		activity.setPositionColor(positionColor);
+		
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	@Transactional
+	public void consentPositionChanged(ModelCardWrapperAddition cardWrapperAddition, ElementConsentPositionColor positionColor, AppUser triggerUser) {
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		
+		activity.setType(ActivityType.CONSENT_POSITION_CHANGED);
+		activity.setPositionColor(positionColor);
+		
+		activity.setModelCardWrapperAddition(cardWrapperAddition);
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
 	
 	
 	
@@ -994,6 +1056,12 @@ public class ActivityService {
 			case MODEL_SECTION_MOVED:
 			case MODEL_SECTION_REMOVED:
 				
+			case CONSENT_STATUS_OPENED:
+			case CONSENT_STATUS_CLOSED:
+			case CONSENT_STATUS_REOPENED:
+			case CONSENT_POSITION_STATED:
+			case CONSENT_POSITION_CHANGED:
+				
 				isInModel = true;
 				break;
 				
@@ -1049,6 +1117,15 @@ public class ActivityService {
 			/* these activities occur at the section level, because scope is a section + card characteristic, not a card one. */
 			case MODEL_CARDWRAPPER_MADE_COMMON:
 			case MODEL_CARDWRAPPER_MADE_SHARED:
+				sections = new ArrayList<ModelSection>();
+				sections.add(activity.getModelCardWrapperAddition().getSection());
+				break;
+				
+			case CONSENT_STATUS_OPENED:
+			case CONSENT_STATUS_CLOSED:
+			case CONSENT_STATUS_REOPENED:
+			case CONSENT_POSITION_STATED:
+			case CONSENT_POSITION_CHANGED:
 				sections = new ArrayList<ModelSection>();
 				sections.add(activity.getModelCardWrapperAddition().getSection());
 				break;

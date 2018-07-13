@@ -1,6 +1,6 @@
 package org.collectiveone.modules.model.enums;
 
-public enum SectionGovernanceType {
+public enum ElementGovernanceType {
 	NONE, 
-	SEMAPHORES
+	SIMPLE_CONSENT
 }

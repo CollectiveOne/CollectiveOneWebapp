@@ -32,10 +32,10 @@
               :hideCardControls="hideCardControls"
               :inCardSelector="inCardSelector"
               :cardRouteName="cardRouteName"
-              :governanceType="governanceType"
               @update="$emit('update')"
               @createNew="$emit('createNew')"
               @edit="$emit('edit')"
+              @startConsent="$emit('startConsent')"
               @updateCards="$emit('updateCards')">
             </app-card-user-indicators>
           </div>
@@ -128,6 +128,7 @@ export default {
   position: absolute;
   top: 0px;
   right: 0px;
+  min-width: 30%;
 }
 
 .image-container {

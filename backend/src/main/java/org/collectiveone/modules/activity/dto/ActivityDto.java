@@ -8,6 +8,7 @@ import org.collectiveone.modules.conversations.MessageDto;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
+import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.tokens.dto.TokenMintDto;
 import org.collectiveone.modules.tokens.dto.TransferDto;
 import org.collectiveone.modules.users.AppUserDto;
@@ -33,6 +34,8 @@ public class ActivityDto {
 	private List<AppUserDto> mentionedUsers = new ArrayList<AppUserDto>();
 	
 	private MessageDto message;
+	
+	private ElementConsentPositionColor positionColor;
 	
 	public String getId() {
 		return id;
@@ -136,5 +139,12 @@ public class ActivityDto {
 	public void setMentionedUsers(List<AppUserDto> mentionedUsers) {
 		this.mentionedUsers = mentionedUsers;
 	}
+	public ElementConsentPositionColor getPositionColor() {
+		return positionColor;
+	}
+	public void setPositionColor(ElementConsentPositionColor positionColor) {
+		this.positionColor = positionColor;
+	}
+	
 	
 }

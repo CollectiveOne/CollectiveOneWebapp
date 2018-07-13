@@ -178,6 +178,25 @@
           <span v-if="isModelCardWrapperDeleted" class="">
             deleted the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
           </span>
+          <span v-if="isConsentStatusOpened" class="">
+            started a consent process on card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
+          </span>
+          <span v-if="isConsentStatusClosed" class="">
+            ended the consent process on card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
+          </span>
+          <span v-if="isConsentStatusReopened" class="">
+            reopened the consent process on card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
+          </span>
+          <span v-if="isConsentPositionStated" class="">
+            set his/her position on card
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+            to <b>{{ getConsentPositionText(activity.positionColor) }}</b>.
+          </span>
+          <span v-if="isConsentPositionChanged" class="">
+            changed his/her position on card
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+            to <b>{{ getConsentPositionText(activity.positionColor) }}</b>.
+          </span>
 
           <span v-if="isMessagePosted && (!showMessagesText || isExternalMessage)">
             <span v-if="loggedUserMentioned">mentioned you in a comment in </span>
@@ -395,6 +414,21 @@ export default {
     isModelCardWrapperDeleted () {
       return this.activity.type === 'MODEL_CARDWRAPPER_DELETED'
     },
+    isConsentStatusOpened () {
+      return this.activity.type === 'CONSENT_STATUS_OPENED'
+    },
+    isConsentStatusClosed () {
+      return this.activity.type === 'CONSENT_STATUS_CLOSED'
+    },
+    isConsentStatusReopened () {
+      return this.activity.type === 'CONSENT_STATUS_REOPENED'
+    },
+    isConsentPositionStated () {
+      return this.activity.type === 'CONSENT_POSITION_STATED'
+    },
+    isConsentPositionChanged () {
+      return this.activity.type === 'CONSENT_POSITION_CHANGED'
+    },
 
     isMessagePosted () {
       return this.activity.type === 'MESSAGE_POSTED'
@@ -483,6 +517,20 @@ export default {
   methods: {
     getTimeStrSince (v) {
       return getTimeStrSince(v)
+    },
+    getConsentPositionText (color) {
+      switch (color) {
+        case 'GREEN':
+          return 'SUPPORT'
+
+        case 'YELLOW':
+          return 'UNDECIDED'
+
+        case 'RED':
+          return 'OBJECT'
+      }
+
+      return ''
     }
   }
 }
