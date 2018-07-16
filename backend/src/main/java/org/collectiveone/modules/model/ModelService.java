@@ -21,8 +21,6 @@ import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredRepositoryIf;
 import org.collectiveone.modules.governance.CardLike;
 import org.collectiveone.modules.governance.CardLikeRepositoryIf;
-import org.collectiveone.modules.governance.DecisionMakerRole;
-import org.collectiveone.modules.governance.GovernanceService;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.dto.MemberDto;
@@ -60,8 +58,7 @@ public class ModelService {
 	@Autowired
 	private TokenService tokenService;
 	
-	@Autowired
-	private GovernanceService governanceService;
+
 	
 	@Autowired
 	private TokenTransferService tokenTransferService;
@@ -82,7 +79,7 @@ public class ModelService {
 	
 	@Autowired
 	private ModelCardWrapperRepositoryIf modelCardWrapperRepository;
-	
+
 	@Autowired
 	private ModelCardRepositoryIf modelCardRepository;
 	
@@ -172,10 +169,9 @@ public class ModelService {
 	
 	
 	@Transactional
-	public GetResult<Page<ModelSectionDto>> searchSection(String query, PageRequest page, UUID initiativeId, UUID requestByUserId) {
+	public GetResult<Page<ModelSectionDto>> searchSection(String query, PageRequest page, UUID sectionId, UUID requestByUserId) {
 		
-		List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(initiativeId);
-		Page<ModelSection> enititiesPage = modelSectionRepository.searchBy("%"+query.toLowerCase()+"%", initiativeEcosystemIds, page);
+		Page<ModelSection> enititiesPage = modelSectionRepository.searchBy("%"+query.toLowerCase()+"%", page);
 		
 		List<ModelSectionDto> sectionDtos = new ArrayList<ModelSectionDto>();
 		
@@ -755,14 +751,14 @@ public class ModelService {
 	
 	@Transactional
 	public PostResult editCardWrapper(
-			UUID initiativeId, 
+			UUID modelSectionId, 
 			UUID inSectionId, 
 			UUID cardWrapperId, 
 			ModelCardDto cardDto, 
 			UUID creatorId) {
 		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		if (initiative == null) return new PostResult("error", "initiative not found", "");
+		ModelSection modelSection = modelSectionRepository.findById(modelSectionId);
+		if (modelSection == null) return new PostResult("error", "Section not found", "");
 		
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
 		if (cardWrapper == null) return new PostResult("error", "card wrapper not found", "");
@@ -971,10 +967,7 @@ public class ModelService {
 		return modelCardWrapperRepository.findById(cardWrapperId).getInitiative();
 	}
 
-	@Transactional
-	public List<ModelSection> getCardWrapperSection(UUID cardWrapperId) {
-		return modelCardWrapperRepository.findById(cardWrapperId).ge();
-	}
+	
 	
 	@Transactional
 	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(

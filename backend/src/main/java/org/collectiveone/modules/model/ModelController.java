@@ -6,8 +6,6 @@ import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.dto.ActivityDto;
-import org.collectiveone.modules.governance.DecisionVerdict;
-import org.collectiveone.modules.governance.GovernanceService;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.model.dto.CardWrappersHolderDto;
@@ -32,9 +30,6 @@ public class ModelController extends BaseController {
 	
 	@Autowired
 	private ModelService modelService;
-
-	@Autowired
-	private GovernanceService governanceService;
 	
 	@Autowired
 	private InitiativeService initiativeService;
@@ -292,7 +287,7 @@ public class ModelController extends BaseController {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		
-		if (governanceService.canEditModel(sectionId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (!modelService.canEdit(sectionId, getLoggedUser().getC1Id())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -313,7 +308,7 @@ public class ModelController extends BaseController {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		
-		if (governanceService.canEditModel(sectionId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (!modelService.canEdit(sectionId, getLoggedUser().getC1Id())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -333,11 +328,13 @@ public class ModelController extends BaseController {
 			@RequestParam(name="inSectionId", defaultValue="") String inSectionIdStr) {
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
+
+		// ####
+		// List<ModelSection> initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
 		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
-			return new GetResult<ModelCardWrapperDto>("error", "access denied", null);
-		}
+		// if (!modelService.canAccess(initiativeId, getLoggedUserId())) {
+		// 	return new GetResult<ModelCardWrapperDto>("error", "access denied", null);
+		// }
 		
 		UUID inSectionId = inSectionIdStr.equals("") ? null : UUID.fromString(inSectionIdStr);
 		
@@ -345,27 +342,29 @@ public class ModelController extends BaseController {
 	}
 	
 
-	@RequestMapping(path = "/model/cardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
-	public PostResult editCardWrapper(
-			@PathVariable("cardWrapperId") String cardWrapperIdStr,
-			@RequestBody ModelCardDto cardDto,
-			@RequestParam(name="inSectionId", defaultValue="") String inSectionIdStr) {
+	//#####
+	// @RequestMapping(path = "/model/cardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
+	// public PostResult editCardWrapper(
+	// 		@PathVariable("cardWrapperId") String cardWrapperIdStr,
+	// 		@RequestBody ModelCardDto cardDto,
+	// 		@RequestParam(name="inSectionId", defaultValue="") String inSectionIdStr) {
 		
-		if (getLoggedUser() == null) {
-			return new PostResult("error", "endpoint enabled users only", null);
-		}
+	// 	if (getLoggedUser() == null) {
+	// 		return new PostResult("error", "endpoint enabled users only", null);
+	// 	}
 		
-		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
+	// 	UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
+	// 	// ####
+	// 	// UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
 		
-		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
-			return new PostResult("error", "not authorized", "");
-		}
+	// 	// if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+	// 	// 	return new PostResult("error", "not authorized", "");
+	// 	// }
 		
-		UUID inSectionId = inSectionIdStr.equals("") ? null : UUID.fromString(inSectionIdStr);
+	// 	UUID inSectionId = inSectionIdStr.equals("") ? null : UUID.fromString(inSectionIdStr);
 		
-		return modelService.editCardWrapper(initiativeId, inSectionId, cardWrapperId, cardDto, getLoggedUser().getC1Id());
-	}
+	// 	return modelService.editCardWrapper(initiativeId, inSectionId, cardWrapperId, cardDto, getLoggedUser().getC1Id());
+	// }
 	
 	@RequestMapping(path = "/model/section/{sectionId}/cardWrapper/{cardWrapperId}/makeShared", method = RequestMethod.PUT) 
 	public PostResult makeCardWrapperShared(
@@ -378,11 +377,13 @@ public class ModelController extends BaseController {
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
+
+		// ####
+		// UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
 		
-		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
-			return new PostResult("error", "not authorized", "");
-		}
+		// if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		// 	return new PostResult("error", "not authorized", "");
+		// }
 		
 		if (!modelService.getModelCardWrapperCreatorId(cardWrapperId).equals(getLoggedUserId())) {
 			return new PostResult("error", "not authorized", "");
@@ -402,11 +403,13 @@ public class ModelController extends BaseController {
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
+
+		// #### 
+		// UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
 		
-		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
-			return new PostResult("error", "not authorized", "");
-		}
+		// if (!modelService.canEdit(initiativeId, getLoggedUser().getC1Id())) {
+		// 	return new PostResult("error", "not authorized", "");
+		// }
 		
 		if (!modelService.getModelCardWrapperCreatorId(cardWrapperId).equals(getLoggedUserId())) {
 			return new PostResult("error", "not authorized, you are not the card author", "");
@@ -426,9 +429,9 @@ public class ModelController extends BaseController {
 			@RequestParam(name="inInitiativeEcosystem", defaultValue="false") Boolean inInitiativeEcosystem) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+		
+		if (!modelService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<Page<ModelCardWrapperDto>>("error", "access denied", null);
 		}
 		
@@ -444,11 +447,12 @@ public class ModelController extends BaseController {
 		}
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
+		// ####
+		// UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
 		
-		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
-			return new PostResult("error", "not authorized", "");
-		}
+		// if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		// 	return new PostResult("error", "not authorized", "");
+		// }
 		
 		return modelService.deleteCardWrapper(cardWrapperId, getLoggedUser().getC1Id());
 	}
@@ -461,13 +465,13 @@ public class ModelController extends BaseController {
 			@RequestParam("size") Integer size) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+		
+		if (!modelService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<Page<ModelSectionDto>>("error", "access denied", null);
 		}
 		
-		return modelService.searchSection(query, new PageRequest(page, size), initiativeId, getLoggedUserId());
+		return modelService.searchSection(query, new PageRequest(page, size), sectionId, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/activity/model/section/{sectionId}", method = RequestMethod.GET)
@@ -480,9 +484,9 @@ public class ModelController extends BaseController {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		
-		Initiative initiative = modelService.getSectionInitiative(sectionId);
+	
 		
-		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+		if (!modelService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
@@ -495,11 +499,11 @@ public class ModelController extends BaseController {
 			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
 		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
-			return new GetResult<Long>("error", "access denied", null);
-		}
+		//## workout later
+		// if (!modelService.canAccess(initiativeId, getLoggedUserId())) {
+		// 	return new GetResult<Long>("error", "access denied", null);
+		// }
 		
 		return modelService.countMessagesUnderCard(cardWrapperId, onlyMessages);
 	}
@@ -513,11 +517,12 @@ public class ModelController extends BaseController {
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
 		
-		Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
+		//####
+		// Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
 		
-		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
-			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
-		}
+		// if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+		// 	return new GetResult<Page<ActivityDto>>("error", "access denied", null);
+		// }
 		
 		return modelService.getActivityResultUnderCard(cardWrapperId, new PageRequest(page, size), onlyMessages);
 	}
@@ -533,11 +538,12 @@ public class ModelController extends BaseController {
 		
 		// UUID initiativeId = UUID.fromString(initiativeIdStr);
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-		Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
+		// ####
+		// Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
 		
-		if (!initiativeService.isMemberOfEcosystem(initiative.getId(), getLoggedUserId())) {
-			return new PostResult("error", "not authorized", "");
-		}
+		// if (!initiativeService.isMemberOfEcosystem(initiative.getId(), getLoggedUserId())) {
+		// 	return new PostResult("error", "not authorized", "");
+		// }
 				
 		return modelService.setLikeToCard(cardWrapperId, getLoggedUserId(), likeStatus);
 	}
@@ -548,11 +554,13 @@ public class ModelController extends BaseController {
 			@RequestParam(name="onlyMessages", defaultValue="false") Boolean onlyMessages) {
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
+
+		//#####
+		// UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
 		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
-			return new GetResult<Integer>("error", "access denied", null);
-		}
+		// if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+		// 	return new GetResult<Integer>("error", "access denied", null);
+		// }
 		
 		return modelService.countCardLikes(cardWrapperId);
 	}

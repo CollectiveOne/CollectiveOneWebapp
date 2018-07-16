@@ -34,6 +34,10 @@ import org.collectiveone.modules.assignations.repositories.ReceiverRepositoryIf;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+import org.collectiveone.modules.model.GraphNode;
+import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.ModelService;
+import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.tokens.MemberTransfer;
 import org.collectiveone.modules.tokens.TokenService;
 import org.collectiveone.modules.tokens.TokenTransferService;
@@ -57,7 +61,7 @@ public class AssignationService {
 	private TokenService tokenService;
 	
 	@Autowired
-	private InitiativeService initiativeService;
+	private ModelService modelService;
 	
 	@Autowired
 	private TokenTransferService tokenTransferService;
@@ -67,7 +71,7 @@ public class AssignationService {
 	private AppUserRepositoryIf appUserRepository;
 	
 	@Autowired
-	private InitiativeRepositoryIf initiativeRepository;
+	private ModelSectionRepositoryIf modelSectionRepository;
 	
 	@Autowired
 	private AssignationRepositoryIf assignationRepository;
@@ -91,8 +95,8 @@ public class AssignationService {
 	private MemberTransferRepositoryIf memberTransferRepository;
 	
 	
-	public PostResult createAssignation(UUID initiativeId, AssignationDto assignationDto, UUID creatorId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+	public PostResult createAssignation(UUID modelSectionId, AssignationDto assignationDto, UUID creatorId) {
+		ModelSection modelSection = modelSectionRepository.findById(modelSectionId);
 	
 		Assignation assignation = new Assignation();
 		
@@ -103,12 +107,15 @@ public class AssignationService {
 		assignation.setCreationDate(new Timestamp(System.currentTimeMillis()));
 		assignation.setState(AssignationState.valueOf(assignationDto.getConfig().getStartState()));
 		
-		assignation.setInitiative(initiative);
-		assignation.getAlsoInInitiatives().addAll(initiativeService.getParentGenealogyInitiatives(initiative.getId()));
+		assignation.setModelSection(modelSection);
+		
+		for(UUID itemId:modelService.getSectionNode(modelSection.getId(), true, true, 0).toList(true, true)) {
+			assignation.getAlsoInModelSections().add(modelSectionRepository.findById(itemId));
+		}
+
 		
 		AssignationConfig config = new AssignationConfig();
 		config.setSelfBiasVisible(Boolean.valueOf(assignationDto.getConfig().getSelfBiasVisible()));
-		config.setEvaluationsVisible(Boolean.valueOf(assignationDto.getConfig().getEvaluationsVisible()));
 		config.setDurationDays(assignationDto.getConfig().getMaxDuration());
 		
 		if (assignation.getState() == AssignationState.OPEN) {
@@ -158,7 +165,7 @@ public class AssignationService {
 			for(Bill bill : assignation.getBills()) {
 				for(Receiver receiver : assignation.getReceivers()) {
 					double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
-					PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
+					PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getModelSection().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
 					
 					if (result.getResult().equals("success")) {
 						receiver.setState(ReceiverState.RECEIVED);
@@ -228,8 +235,8 @@ public class AssignationService {
 	
 	
 	@Transactional
-	public UUID findInitiativeId(UUID assignationId) {
-		return assignationRepository.findInitiativeId(assignationId);
+	public UUID findModelSectionId(UUID assignationId) {
+		return assignationRepository.findModelSectionId(assignationId);
 	}
 	
 	@Transactional
@@ -301,7 +308,7 @@ public class AssignationService {
 						for(Receiver receiver : assignation.getReceivers()) {
 							if (receiver.getState().equals(ReceiverState.PENDING)) {
 								double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
-								PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getInitiative().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
+								PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getModelSection().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
 								
 								if (result.getResult().equals("success")) {
 									receiver.setState(ReceiverState.RECEIVED);
@@ -392,15 +399,15 @@ public class AssignationService {
 	}
 	
 	@Transactional
-	public List<Assignation> getOpenAssignations(UUID initiativeId) {
-		return  assignationRepository.findByInitiativeIdAndState(initiativeId, AssignationState.OPEN);
+	public List<Assignation> getOpenAssignations(UUID modelSectionId) {
+		return  assignationRepository.findByModelSectionIdAndState(modelSectionId, AssignationState.OPEN);
 	}
 	
 	@Transactional
 	public UUID getInitiativeIdOf(UUID assignationId) {
 		Assignation assignation = assignationRepository.findById(assignationId);
 		if (assignation != null) {
-			return assignation.getInitiative().getId();
+			return assignation.getModelSection().getId();
 		} else {
 			return null;
 		}
@@ -413,7 +420,7 @@ public class AssignationService {
 		AssignationDto assignationDto = null;
 		
 		if(assignation.getType() == AssignationType.PEER_REVIEWED) {
-			assignationDto = getPeerReviewedAssignation(assignation.getInitiative().getId(), assignation.getId(), userId, addAllEvaluations);
+			assignationDto = getPeerReviewedAssignation(assignation.getModelSection().getId(), assignation.getId(), userId, addAllEvaluations);
 		} else {
 			assignationDto = assignation.toDto();
 		}
@@ -422,13 +429,13 @@ public class AssignationService {
 	}
 	
 	@Transactional
-	public GetResult<List<AssignationDto>> getAssignationsOfInitiative(
-				UUID initiativeId, 
+	public GetResult<List<AssignationDto>> getAssignationsOfSection(
+				UUID modelSectionId, 
 				UUID evaluatorAppUserId, 
 				PageRequest page) {
 		
 		/* add assignations of of this initiative */
-		List<Assignation> assignations = assignationRepository.findByInitiativeId(initiativeId, page);
+		List<Assignation> assignations = assignationRepository.findByModelSectionId(modelSectionId, page);
 		
 		List<AssignationDto> assignationsDto = new ArrayList<AssignationDto>();
 		
@@ -441,12 +448,12 @@ public class AssignationService {
 	
 	@Transactional
 	public GetResult<List<AssignationDto>> getAssignationsOfSubinitiatives(
-				UUID initiativeId, 
+				UUID modelSectionId, 
 				UUID evaluatorAppUserId, 
 				PageRequest page) {
 		
 		/* add assignations of of this initiative */
-		List<Assignation> assignationsOfSubinitiative = assignationRepository.findByAlsoInInitiatives_Id(initiativeId, page);
+		List<Assignation> assignationsOfSubinitiative = assignationRepository.findByAlsoInModelSection_Id(modelSectionId, page);
 				
 		List<AssignationDto> assignationsDto = new ArrayList<AssignationDto>();
 		

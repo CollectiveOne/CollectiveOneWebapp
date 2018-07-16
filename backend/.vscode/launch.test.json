@@ -1,0 +1,30 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "webapp",
+                "projectName": "webapp",
+                "workingDirectory": "/Users/sagarda7/Documents/Projects/Vue/collective-one-orignal/backend",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "webapp",
+                "projectName": "webapp",
+                "workingDirectory": "/Users/sagarda7/Documents/Projects/Vue/collective-one-orignal/backend",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}

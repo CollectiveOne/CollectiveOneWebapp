@@ -24,6 +24,7 @@ import org.collectiveone.modules.assignations.dto.AssignationDtoLight;
 import org.collectiveone.modules.assignations.enums.AssignationState;
 import org.collectiveone.modules.assignations.enums.AssignationType;
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -41,10 +42,10 @@ public class Assignation {
 	private UUID id;
 	
 	@ManyToOne
-	private Initiative initiative;
+	private ModelSection modelSection;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
-	private List<Initiative> alsoInInitiatives = new ArrayList<Initiative>();
+	private List<ModelSection> alsoInModelSections = new ArrayList<ModelSection>();
 	
 	@Column(name = "motive", length = 55)
 	private String motive;
@@ -89,8 +90,8 @@ public class Assignation {
 		dto.setMotive(motive);
 		dto.setNotes(notes);
 		dto.setState(state.toString());
-		dto.setInitiativeId(initiative.getId().toString());
-		dto.setInitiativeName(initiative.getMeta().getName());
+		dto.setModelsectionid(modelSection.getId().toString());
+		dto.setModelsectionName(modelSection.getTitle());
 		dto.setCreationDate(creationDate.getTime());
 		
 		for(Bill bill : bills) {
@@ -108,8 +109,8 @@ public class Assignation {
 		dto.setMotive(motive);
 		dto.setNotes(notes);
 		dto.setState(state.toString());
-		dto.setInitiativeId(initiative.getId().toString());
-		dto.setInitiativeName(initiative.getMeta().getName());
+		dto.setModelsectionid(modelSection.getId().toString());
+		dto.setModelsectionName(modelSection.getTitle());
 		dto.setCreationDate(creationDate.getTime());
 		dto.setConfig(config.toDto());
 		
@@ -132,20 +133,20 @@ public class Assignation {
 		this.id = id;
 	}
 
-	public Initiative getInitiative() {
-		return initiative;
+	public ModelSection getModelSection() {
+		return modelSection;
 	}
 
-	public void setInitiative(Initiative initiative) {
-		this.initiative = initiative;
+	public void setModelSection(ModelSection modelSection) {
+		this.modelSection = modelSection;
 	}
 	
-	public List<Initiative> getAlsoInInitiatives() {
-		return alsoInInitiatives;
+	public List<ModelSection> getAlsoInModelSections() {
+		return alsoInModelSections;
 	}
 
-	public void setAlsoInInitiatives(List<Initiative> alsoInInitiatives) {
-		this.alsoInInitiatives = alsoInInitiatives;
+	public void setAlsoInInitiatives(List<ModelSection> alsoInModelSections) {
+		this.alsoInModelSections = alsoInModelSections;
 	}
 
 	public String getMotive() {

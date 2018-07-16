@@ -14,19 +14,19 @@ public interface AssignationRepositoryIf extends CrudRepository<Assignation, UUI
 	
 	Assignation findById(UUID assignationId);
 	
-	List<Assignation> findByInitiativeId(UUID initiativeId, Pageable page); 
+	List<Assignation> findByModelSectionId(UUID initiativeId, Pageable page); 
 	
-	List<Assignation> findByAlsoInInitiatives_Id(UUID initiativeId, Pageable page);
+	List<Assignation> findByAlsoInModelSection_Id(UUID initiativeId, Pageable page);
 	
 	List<Assignation> findByState(AssignationState state);
 	
-	List<Assignation> findByInitiativeIdAndState(UUID initiativeId, AssignationState state);
+	List<Assignation> findByModelSectionIdAndState(UUID modelSectionId, AssignationState state);
 	
 	List<Assignation> findByTypeAndState(AssignationType type, AssignationState state);
 	
 	@Query("SELECT init.id FROM Assignation ass "
-			+ "JOIN ass.initiative init "
+			+ "JOIN ass.modelSection init "
 			+ "WHERE ass.id = ?1")
-	UUID findInitiativeId(UUID assignationId);
+	UUID findModelSectionId(UUID assignationId);
 	
 }
