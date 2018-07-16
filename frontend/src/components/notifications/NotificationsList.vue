@@ -175,6 +175,7 @@ export default {
     triggerUpdateNotifications () {
       /* only update if there is notifications to be removed */
       if (this.notifications.length > 0) {
+        console.log('updating notifications in ' + this.url + ' due to triggerUpdateNotifications watch')
         this.updateNotifications()
       }
     },
@@ -184,7 +185,9 @@ export default {
   },
 
   methods: {
-    updateNotifications () {
+    updateNotifications (markMessagesRead) {
+      markMessagesRead = markMessagesRead || false
+
       if (!this.showingMoreNotifications) {
         /* dont update if the user is scrolling down de notifications */
         this.axios.get(this.url, {
@@ -200,9 +203,11 @@ export default {
 
           this.allShown = this.notifications.length < 10
 
-          if (this.isSelected && this.$route.name === 'ModelSectionMessages') {
-            /* autoread message notifications of this section */
-            this.messageNotificationsRead()
+          if (markMessagesRead) {
+            if (this.isSelected && this.$route.name === 'ModelSectionMessages') {
+              /* autoread message notifications of this section */
+              this.messageNotificationsRead()
+            }
           }
 
           /* push all notifications */
@@ -238,6 +243,7 @@ export default {
       this.axios.put(this.url + '/read', {}).then((response) => {
           /* check that new notifications arrived */
           this.$store.commit('triggerUpdateNotifications')
+          console.log('updating notifications in ' + this.url + ' due to allNotificationsRead response')
           this.updateNotifications()
           this.hide()
         }).catch(function (error) {
@@ -251,7 +257,8 @@ export default {
         this.axios.put('/1/notifications/read', idsList).then((response) => {
           /* check that new notifications arrived */
           this.$store.commit('triggerUpdateNotifications')
-          this.updateNotifications()
+          console.log('updating notifications in ' + this.url + ' due to messageNotificationsRead response')
+          this.updateNotifications(false)
         }).catch(function (error) {
           console.log(error)
         })
@@ -312,7 +319,8 @@ export default {
           // console.log(tick)
           var message = tick.body
           if (message === 'UPDATE') {
-            this.updateNotifications()
+            console.log('updating notifications in ' + this.url + ' due to socket message')
+            this.updateNotifications(true)
           }
         }
       })
@@ -320,7 +328,8 @@ export default {
   },
 
   created () {
-    this.updateNotifications()
+    console.log('updating notifications in ' + this.url + ' due to component creation')
+    this.updateNotifications(true)
     this.handleSocket()
   },
 
