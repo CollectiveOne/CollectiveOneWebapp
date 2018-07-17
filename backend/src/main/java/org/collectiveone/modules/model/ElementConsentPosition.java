@@ -18,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table( name = "card_wrapper_addition_semaphores")
+@Table( name = "card_wrapper_addition_positions")
 public class ElementConsentPosition {
 	@Id
 	@GeneratedValue(generator = "UUID")

@@ -153,6 +153,7 @@ export default {
         }
       }).then((response) => {
         this.update()
+        this.$emit('updateCards')
       })
     },
     dragStart (event) {

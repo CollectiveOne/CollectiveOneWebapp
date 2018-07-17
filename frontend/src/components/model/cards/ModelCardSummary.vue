@@ -33,7 +33,7 @@
           @update="$emit('update')"
           @createNew="$emit('createNew')"
           @edit="$emit('edit')"
-          @startConsent="$emit('startConsent')"
+          @setConsent="$emit('setConsent', $event)"
           @updateCards="$emit('updateCards')">
         </app-card-user-indicators>
       </div>

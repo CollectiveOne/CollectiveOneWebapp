@@ -1,15 +1,21 @@
 <template lang="html">
   <div class="notifications-container">
 
-    <popper :append-to-body="true" trigger="click" :options="popperOptions" class="">
+    <popper :append-to-body="true" trigger="click" :options="popperOptions" :toggleShow="toggleShow" class="">
       <div class="notifications-list-container w3-white w3-card-4 w3-bar-block noselect w3-topbar border-blue-app">
+
+        <div class="close-div w3-xlarge cursor-pointer gray-1-color"
+          @click="closeThis()">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </div>
+
         <div class="w3-row-padding w3-border-bottom notifications-header">
-          <div class="w3-col s8 text-div w3-center">
-            {{ totalUnread }} unread events under <br>{{ elementTitle }}
+          <div class="w3-col s6 text-div w3-center">
+            {{ totalUnread }} unread under <br>{{ elementTitle }}
           </div>
-          <button class="w3-col  w3-margin-top w3-margin-bottom w3-button app-button" :class="isMainNav?'s5':'s4'"
+          <button class="w3-col s4 w3-margin-top w3-margin-bottom w3-button app-button read-btn"
             @click="allNotificationsRead()">
-            mark as read
+            mark as <br>read
           </button>
         </div>
 
@@ -61,10 +67,6 @@ export default {
       type: String,
       default: 'MODEL_SECTION'
     },
-    isMainNav: {
-      type: Boolean,
-      default: false
-    },
     isSelected: {
       type: Boolean,
       default: false
@@ -78,7 +80,8 @@ export default {
       totalUnread: 0,
       currentPage: 0,
       showingMoreNotifications: false,
-      allShown: false
+      allShown: false,
+      toggleShow: false
     }
   },
 
@@ -160,11 +163,11 @@ export default {
     },
     popperOptions () {
       return {
-        placement: 'bottom',
+        placement: 'right',
         modifiers: {
           preventOverflow: {
             enabled: true,
-            boundariesElement: 'window'
+            boundariesElement: 'viewport'
           }
         }
       }
@@ -237,6 +240,7 @@ export default {
     allNotificationsRead () {
       this.axios.put(this.url + '/read', {}).then((response) => {
           /* check that new notifications arrived */
+          this.toggleShow = !this.toggleShow
           this.$store.commit('triggerUpdateNotifications')
           this.updateNotifications()
           this.hide()
@@ -271,6 +275,7 @@ export default {
         }
       }
     },
+
     showNotificationsClicked () {
       if (!this.showTable) {
         this.show()
@@ -282,13 +287,20 @@ export default {
         this.hide()
       }
     },
+
     hide () {
       this.showTable = false
       this.showingMoreNotifications = false
     },
+
     show () {
       this.showTable = true
     },
+
+    closeThis () {
+      this.toggleShow = !this.toggleShow
+    },
+
     handleSocket () {
       let url = ''
       switch (this.contextType) {
@@ -331,6 +343,23 @@ export default {
 </script>
 
 <style scoped>
+
+.close-div {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 35px;
+  height: 35px;
+  transition:all 0.3s ease-out;
+}
+
+.close-div:hover {
+  color: #15a5cc !important;
+}
+
+.read-btn {
+  padding: 6px 12px !important;
+}
 
 .notifications-header {
   font-size: 16px;

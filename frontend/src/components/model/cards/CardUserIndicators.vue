@@ -147,6 +147,7 @@ export default {
   width: 100%;
   font-family: 'Raleway', sans-serif;
   font-size: 15px;
+  line-height: 22.5px;
 }
 
 .indicator-comp {
