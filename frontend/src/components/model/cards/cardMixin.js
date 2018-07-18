@@ -24,10 +24,6 @@ export const cardMixin = {
     cardRouteName: {
       type: String,
       default: 'ModelSectionCard'
-    },
-    governanceType: {
-      type: String,
-      default: 'NONE'
     }
   },
 
@@ -69,13 +65,16 @@ export const cardMixin = {
       return cClass
     },
     showLikes () {
-      return !this.isPrivate && !this.governanceTypeIsSemaphores
+      return !this.isPrivate && !this.governanceTypeIsConsent
     },
-    showSemaphore () {
-      return !this.isPrivate && this.governanceTypeIsSemaphores
+    showConsentPositions () {
+      return !this.isPrivate && this.governanceTypeIsConsent
     },
-    governanceTypeIsSemaphores () {
-      return this.governanceType === 'SEMAPHORES'
+    governanceTypeIsConsent () {
+      return this.cardWrapper.governanceType === 'SIMPLE_CONSENT'
+    },
+    consentIsOpened () {
+      return this.cardWrapper.simpleConsentState === 'OPENED'
     }
   },
 

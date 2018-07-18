@@ -11,15 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.model.dto.ElementSemaphoreDto;
-import org.collectiveone.modules.model.enums.SemaphoreState;
+import org.collectiveone.modules.model.dto.ElementConsentPositionDto;
+import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table( name = "card_wrapper_addition_semaphores")
-public class ElementSemaphore {
+@Table( name = "card_wrapper_addition_positions")
+public class ElementConsentPosition {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -33,15 +33,16 @@ public class ElementSemaphore {
 	private AppUser author;
 	
 	@Enumerated(EnumType.STRING)
-	private SemaphoreState state;
+	private ElementConsentPositionColor positionColor;
 	
-	public ElementSemaphoreDto toDto() {
-		ElementSemaphoreDto dto = new ElementSemaphoreDto();
+	
+	public ElementConsentPositionDto toDto() {
+		ElementConsentPositionDto dto = new ElementConsentPositionDto();
 		
 		dto.setId(id.toString());
 		dto.setElementId(elementId.toString());
 		dto.setAuthor(author.toDtoLight());
-		dto.setState(state);
+		dto.setPositionColor(positionColor);
 		
 		return dto;
 	} 
@@ -66,16 +67,17 @@ public class ElementSemaphore {
 		this.author = author;
 	}
 
-	public SemaphoreState getState() {
-		return state;
-	}
-
-	public void setState(SemaphoreState state) {
-		this.state = state;
-	}
-
 	public void setId(UUID id) {
 		this.id = id;
 	}
+
+	public ElementConsentPositionColor getPositionColor() {
+		return positionColor;
+	}
+
+	public void setPositionColor(ElementConsentPositionColor positionColor) {
+		this.positionColor = positionColor;
+	}
+	
 	
 }

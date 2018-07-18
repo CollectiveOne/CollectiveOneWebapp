@@ -28,6 +28,7 @@ import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelSubsection;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
+import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
@@ -110,6 +111,8 @@ public class Activity {
 	@ManyToOne
 	private ModelSubsection modelSubsection;
 	
+	private ElementConsentPositionColor positionColor;
+	
 	
 	
 	// -------
@@ -166,6 +169,8 @@ public class Activity {
 		}
 		
 		if(message != null) dto.setMessage(message.toDto());
+		
+		if(positionColor != null) dto.setPositionColor(positionColor);
 		
 		for (AppUser mentionedUser : mentionedUsers) {
 			dto.getMentionedUsers().add(mentionedUser.toDtoLight());
@@ -350,6 +355,14 @@ public class Activity {
 
 	public void setModelSubsection(ModelSubsection modelSubsection) {
 		this.modelSubsection = modelSubsection;
+	}
+
+	public ElementConsentPositionColor getPositionColor() {
+		return positionColor;
+	}
+
+	public void setPositionColor(ElementConsentPositionColor positionColor) {
+		this.positionColor = positionColor;
 	}
 	
 	

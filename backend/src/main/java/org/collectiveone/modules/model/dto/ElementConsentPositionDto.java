@@ -1,13 +1,13 @@
 package org.collectiveone.modules.model.dto;
 
-import org.collectiveone.modules.model.enums.SemaphoreState;
+import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.users.AppUserDto;
 
-public class ElementSemaphoreDto {
+public class ElementConsentPositionDto {
 	private String id;
 	private String elementId;
 	private AppUserDto author;
-	private SemaphoreState state;
+	private ElementConsentPositionColor positionColor;
 	
 	public String getId() {
 		return id;
@@ -27,12 +27,11 @@ public class ElementSemaphoreDto {
 	public void setAuthor(AppUserDto author) {
 		this.author = author;
 	}
-	public SemaphoreState getState() {
-		return state;
+	public ElementConsentPositionColor getPositionColor() {
+		return positionColor;
 	}
-	public void setState(SemaphoreState state) {
-		this.state = state;
+	public void setPositionColor(ElementConsentPositionColor positionColor) {
+		this.positionColor = positionColor;
 	}
-	
 	
 }

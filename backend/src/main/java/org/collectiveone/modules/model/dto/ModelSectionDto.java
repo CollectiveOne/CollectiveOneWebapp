@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.collectiveone.modules.model.ModelScope;
 import org.collectiveone.modules.model.ModelSection;
-import org.collectiveone.modules.model.enums.SectionGovernanceType;
+import org.collectiveone.modules.model.enums.ElementGovernanceType;
 
 public class ModelSectionDto {
 
@@ -19,7 +19,6 @@ public class ModelSectionDto {
 	private String title;
 	private String description;
 	private ModelScope newScope;
-	private SectionGovernanceType newGovernanceType;
 	private Boolean subElementsLoaded;
 	
 	private List<ModelCardWrapperDto> cardsWrappersPrivate = new ArrayList<ModelCardWrapperDto>();
@@ -35,8 +34,6 @@ public class ModelSectionDto {
 	private ModelScope scope;
 	private String beforeElementId;
 	private String afterElementId;
-	
-	private SectionGovernanceType governanceType;
 	
 	
 	public ModelSection toEntity(ModelSection section, ModelSectionDto sectionDto) {
@@ -169,18 +166,6 @@ public class ModelSectionDto {
 	}
 	public void setAfterElementId(String afterElementId) {
 		this.afterElementId = afterElementId;
-	}
-	public SectionGovernanceType getGovernanceType() {
-		return governanceType;
-	}
-	public void setGovernanceType(SectionGovernanceType governanceType) {
-		this.governanceType = governanceType;
-	}
-	public SectionGovernanceType getNewGovernanceType() {
-		return newGovernanceType;
-	}
-	public void setNewGovernanceType(SectionGovernanceType newGovernanceType) {
-		this.newGovernanceType = newGovernanceType;
 	}
 	
 }

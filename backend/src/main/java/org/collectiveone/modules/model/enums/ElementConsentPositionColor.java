@@ -1,6 +1,6 @@
 package org.collectiveone.modules.model.enums;
 
-public enum SemaphoreState {
+public enum ElementConsentPositionColor {
 	GREEN,
 	YELLOW,
 	RED

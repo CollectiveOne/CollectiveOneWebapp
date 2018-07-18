@@ -29,11 +29,11 @@
           :hideCardControls="hideCardControls"
           :inCardSelector="inCardSelector"
           :cardRouteName="cardRouteName"
-          :governanceType="governanceType"
           :hideInSectionTags="true"
           @update="$emit('update')"
           @createNew="$emit('createNew')"
           @edit="$emit('edit')"
+          @setConsent="$emit('setConsent', $event)"
           @updateCards="$emit('updateCards')">
         </app-card-user-indicators>
       </div>

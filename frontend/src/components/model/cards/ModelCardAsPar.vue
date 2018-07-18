@@ -7,7 +7,7 @@
 
       <div class="w3-col s12">
 
-        <div :class="containerClassPar" @click="clicked = !clicked">
+        <div :class="containerClassPar" @click="clicked = false">
           <div v-if="card.title !== ''" class="w3-row card-title">
             {{ card.title }}
           </div>
@@ -24,22 +24,28 @@
         </div>
 
 
-        <transition name="fadeenter">
-          <div v-if="$store.state.user.authenticated && clicked" class="user-indicators-div">
-            <app-card-user-indicators
-              :cardWrapper="cardWrapper"
-              :inSection="inSection"
-              :hideCardControls="hideCardControls"
-              :inCardSelector="inCardSelector"
-              :cardRouteName="cardRouteName"
-              :governanceType="governanceType"
-              @update="$emit('update')"
-              @createNew="$emit('createNew')"
-              @edit="$emit('edit')"
-              @updateCards="$emit('updateCards')">
-            </app-card-user-indicators>
-          </div>
-        </transition>
+        <div v-if="$store.state.user.authenticated" class=""
+          v-click-outside="clickOutside">
+          <transition name="fadeenter">
+            <div v-if="!clicked" @click="clicked = true" class="expand-button gray-1-color">
+              <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+            </div>
+            <div v-else class="user-indicators-div w3-card-2 w3-white">
+              <app-card-user-indicators
+                :cardWrapper="cardWrapper"
+                :inSection="inSection"
+                :hideCardControls="hideCardControls"
+                :inCardSelector="inCardSelector"
+                :cardRouteName="cardRouteName"
+                @update="$emit('update')"
+                @createNew="$emit('createNew')"
+                @edit="$emit('edit')"
+                @setConsent="$emit('setConsent', $event)"
+                @updateCards="$emit('updateCards')">
+              </app-card-user-indicators>
+            </div>
+          </transition>
+        </div>
 
       </div>
     </div>
@@ -98,6 +104,9 @@ export default {
   },
 
   methods: {
+    clickOutside () {
+      this.clicked = false
+    },
     mouseOver () {
     },
     mouseLeave () {
@@ -128,6 +137,24 @@ export default {
   position: absolute;
   top: 0px;
   right: 0px;
+  min-width: 30%;
+  padding: 6px 6px;
+}
+
+.expand-button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 30px;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 300ms ease;
+  color: #a6aaad;
+}
+
+.expand-button:hover {
+  background-color: #eff3f6;
 }
 
 .image-container {

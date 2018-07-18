@@ -24,7 +24,7 @@ import ModelSectionModal from '@/components/model/modals/ModelSectionModal.vue'
 import ModelCardModal from '@/components/model/modals/ModelCardModal.vue'
 import ModelSectionTag from '@/components/model/MoodelSectionTag.vue'
 
-import Popper from 'vue-popperjs'
+import Popper from '@/components/external/VuePopper.vue'
 import HelpPopper from '@/components/HelpPopper.vue'
 
 Vue.config.productionTip = false

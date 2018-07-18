@@ -15,9 +15,9 @@
         :cardRouteName="cardRouteName"
         :hideCardControls="hideCardControls"
         :type="type"
-        :governanceType="governanceType"
         @update="update()"
         @edit="$emit('edit')"
+        @setConsent="setConsent($event)"
         @createNew="$emit('createNew')"
         @updateCards="$emit('updateCards')">
       </component>
@@ -81,10 +81,6 @@ export default {
     cardRouteName: {
       type: String,
       default: 'ModelSectionCard'
-    },
-    governanceType: {
-      type: String,
-      default: 'NONE'
     }
   },
 
@@ -147,6 +143,17 @@ export default {
         }
       }).then((response) => {
         this.cardWrapper = response.data.data
+      })
+    },
+    setConsent (state) {
+      this.axios.put('/1/model/cardAddition/' + this.cardWrapper.additionId + '/setConsent', {}, {
+        params: {
+          elementType: 'CARD_WRAPPER_ADDITION',
+          simpleConsentState: state ? 'OPENED' : 'CLOSED'
+        }
+      }).then((response) => {
+        this.update()
+        this.$emit('updateCards')
       })
     },
     dragStart (event) {
