@@ -12,6 +12,29 @@ public class AssignationDtoLight {
 	private String state;
 	private String modelSectionId;
 	private String modelSectionName;
+
+	public String getModelsectionid()
+	{
+		return this.modelSectionId;
+	}
+
+	public void setModelsectionid(String modelSectionId)
+	{
+		this.modelSectionId = modelSectionId;
+	}
+
+	private String modelSectionName;
+
+	public String getModelsectionName()
+	{
+		return this.modelSectionName;
+	}
+
+	public void setModelsectionName(String modelSectionName)
+	{
+		this.modelSectionName = modelSectionName;
+	}
+
 	private Long creationDate;
 	private List<BillDto> assets = new ArrayList<BillDto>();
 	
@@ -46,30 +69,6 @@ public class AssignationDtoLight {
 	public void setState(String state) {
 		this.state = state;
 	}
+<<<<<<< HEAD
 	public String getModelSectionId() {
 		return modelSectionId;
-	}
-	public void setModelSectionId(String modelSectionId) {
-		this.modelSectionId = modelSectionId;
-	}
-	public String getModelSectionName() {
-		return modelSectionId;
-	}
-	public void setModelSectionName(String modelSectionName) {
-		this.modelSectionName = modelSectionName;
-	}
-	public Long getCreationDate() {
-		return creationDate;
-	}
-	public void setCreationDate(Long creationDate) {
-		this.creationDate = creationDate;
-	}
-	public List<BillDto> getAssets() {
-		return assets;
-	}
-	public void setAssets(List<BillDto> assets) {
-		this.assets = assets;
-	}
-	
-	
-}

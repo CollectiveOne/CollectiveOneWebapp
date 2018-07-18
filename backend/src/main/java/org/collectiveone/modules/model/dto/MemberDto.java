@@ -3,7 +3,7 @@ package org.collectiveone.modules.model.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.collectiveone.modules.governance.DecisionMakerRole;
+import org.collectiveone.modules.model.PermissionConfig;
 import org.collectiveone.modules.tokens.dto.AssetsDto;
 import org.collectiveone.modules.users.AppUserDto;
 
@@ -31,7 +31,7 @@ public class MemberDto {
 
 	public String getRole() {
 		if (role != null) return role;
-		else return DecisionMakerRole.ALIEN.toString();
+		else return PermissionConfig.GUEST.toString();
 	}
 
 	public void setRole(String role) {

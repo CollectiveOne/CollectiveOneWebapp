@@ -45,8 +45,9 @@ public class Assignation {
 	private ModelSection modelSection;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
+
 	private List<ModelSection> alsoInModelSection = new ArrayList<ModelSection>();
-	
+
 	@Column(name = "motive", length = 55)
 	private String motive;
 	
@@ -89,7 +90,6 @@ public class Assignation {
 		dto.setType(type.toString());
 		dto.setMotive(motive);
 		dto.setNotes(notes);
-		dto.setState(state.toString());
 		dto.setModelSectionId(modelSection.getId().toString());
 		dto.setModelSectionName(modelSection.getTitle());
 		dto.setCreationDate(creationDate.getTime());
@@ -109,8 +109,10 @@ public class Assignation {
 		dto.setMotive(motive);
 		dto.setNotes(notes);
 		dto.setState(state.toString());
+
 		dto.setModelSectionId(modelSection.getId().toString());
-		dto.setModelSectionName(modelSection.getTitle());
+		dto.setModelSectionName(modelSection.getTitle());=======
+		
 		dto.setCreationDate(creationDate.getTime());
 		dto.setConfig(config.toDto());
 		
@@ -142,11 +144,13 @@ public class Assignation {
 	}
 	
 	public List<ModelSection> getAlsoInModelSections() {
-		return alsoInModelSection;
+
+		return alsoInModelSections;
 	}
 
-	public void setAlsoInInitiatives(List<ModelSection> alsoInModelSection) {
-		this.alsoInModelSection = alsoInModelSection;
+	public void setAlsoInInitiatives(List<ModelSection> alsoInModelSections) {
+		this.alsoInModelSections = alsoInModelSections;
+
 	}
 
 	public String getMotive() {

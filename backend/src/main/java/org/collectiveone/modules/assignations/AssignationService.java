@@ -31,10 +31,10 @@ import org.collectiveone.modules.assignations.repositories.BillRepositoryIf;
 import org.collectiveone.modules.assignations.repositories.EvaluationGradeRepositoryIf;
 import org.collectiveone.modules.assignations.repositories.EvaluatorRepositoryIf;
 import org.collectiveone.modules.assignations.repositories.ReceiverRepositoryIf;
-import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.initiatives.InitiativeService;
-import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+
+import org.collectiveone.modules.model.GraphNode;
 import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.ModelService;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.tokens.MemberTransfer;
 import org.collectiveone.modules.tokens.TokenService;
@@ -59,7 +59,7 @@ public class AssignationService {
 	private TokenService tokenService;
 	
 	@Autowired
-	private InitiativeService initiativeService;
+	private ModelService modelService;
 	
 	@Autowired
 	private TokenTransferService tokenTransferService;
@@ -106,13 +106,13 @@ public class AssignationService {
 		assignation.setState(AssignationState.valueOf(assignationDto.getConfig().getStartState()));
 		
 		assignation.setModelSection(modelSection);
-		
-		//####
-		//assignation.getAlsoInModelSections().addAll(initiativeService.getParentGenealogyInitiatives(modelSection.getId()));
+	
+		for(UUID itemId:modelService.getSectionNode(modelSection.getId(), true, true, 0).toList(true, true)) {
+			assignation.getAlsoInModelSections().add(modelSectionRepository.findById(itemId));
+		}
 		
 		AssignationConfig config = new AssignationConfig();
 		config.setSelfBiasVisible(Boolean.valueOf(assignationDto.getConfig().getSelfBiasVisible()));
-		config.setEvaluationsVisible(Boolean.valueOf(assignationDto.getConfig().getEvaluationsVisible()));
 		config.setDurationDays(assignationDto.getConfig().getMaxDuration());
 		
 		if (assignation.getState() == AssignationState.OPEN) {
@@ -232,8 +232,8 @@ public class AssignationService {
 	
 	
 	@Transactional
-	public UUID findInitiativeId(UUID assignationId) {
-		return assignationRepository.findInitiativeId(assignationId);
+	public UUID findModelSectionId(UUID assignationId) {
+		return assignationRepository.findModelSectionId(assignationId);
 	}
 	
 	@Transactional
@@ -396,8 +396,8 @@ public class AssignationService {
 	}
 	
 	@Transactional
-	public List<Assignation> getOpenAssignations(UUID initiativeId) {
-		return  assignationRepository.findByInitiativeIdAndState(initiativeId, AssignationState.OPEN);
+	public List<Assignation> getOpenAssignations(UUID modelSectionId) {
+		return  assignationRepository.findByModelSectionIdAndState(modelSectionId, AssignationState.OPEN);
 	}
 	
 	@Transactional
@@ -426,13 +426,13 @@ public class AssignationService {
 	}
 	
 	@Transactional
-	public GetResult<List<AssignationDto>> getAssignationsOfInitiative(
-				UUID initiativeId, 
+	public GetResult<List<AssignationDto>> getAssignationsOfSection(
+				UUID modelSectionId, 
 				UUID evaluatorAppUserId, 
 				PageRequest page) {
 		
 		/* add assignations of of this initiative */
-		List<Assignation> assignations = assignationRepository.findByInitiativeId(initiativeId, page);
+		List<Assignation> assignations = assignationRepository.findByModelSectionId(modelSectionId, page);
 		
 		List<AssignationDto> assignationsDto = new ArrayList<AssignationDto>();
 		
@@ -445,12 +445,12 @@ public class AssignationService {
 	
 	@Transactional
 	public GetResult<List<AssignationDto>> getAssignationsOfSubinitiatives(
-				UUID initiativeId, 
+				UUID modelSectionId, 
 				UUID evaluatorAppUserId, 
 				PageRequest page) {
 		
 		/* add assignations of of this initiative */
-		List<Assignation> assignationsOfSubinitiative = assignationRepository.findByAlsoInInitiatives_Id(initiativeId, page);
+		List<Assignation> assignationsOfSubinitiative = assignationRepository.findByAlsoInModelSection_Id(modelSectionId, page);
 				
 		List<AssignationDto> assignationsDto = new ArrayList<AssignationDto>();
 		
