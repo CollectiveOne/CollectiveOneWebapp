@@ -426,9 +426,9 @@ public class ModelController extends BaseController {
 			@RequestParam(name="inInitiativeEcosystem", defaultValue="false") Boolean inInitiativeEcosystem) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
 		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+		
+		if (!modelService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<Page<ModelCardWrapperDto>>("error", "access denied", null);
 		}
 		
@@ -461,13 +461,11 @@ public class ModelController extends BaseController {
 			@RequestParam("size") Integer size) {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
-		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
-		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+		if (!modelService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<Page<ModelSectionDto>>("error", "access denied", null);
 		}
 		
-		return modelService.searchSection(query, new PageRequest(page, size), initiativeId, getLoggedUserId());
+		return modelService.searchSection(query, new PageRequest(page, size), sectionId, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/activity/model/section/{sectionId}", method = RequestMethod.GET)
@@ -480,9 +478,7 @@ public class ModelController extends BaseController {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		
-		Initiative initiative = modelService.getSectionInitiative(sectionId);
-		
-		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+		if (!modelService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		

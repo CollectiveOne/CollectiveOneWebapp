@@ -62,11 +62,6 @@ public class Activity {
 	@ManyToOne
 	private AppUser triggerUser;
 	
-	@ManyToOne
-	private Initiative initiative;
-	
-	@ManyToOne
-	private Initiative subInitiative;
 	
 	@OneToMany
 	private List<InitiativeTransfer> initiativeTransfers = new ArrayList<InitiativeTransfer>();
@@ -122,9 +117,7 @@ public class Activity {
 		dto.setType(type.toString());
 		if (timestamp != null) dto.setTimestamp(timestamp.getTime());
 		if(triggerUser != null) dto.setTriggerUser(triggerUser.toDtoLight());
-		if(initiative != null) dto.setInitiative(initiative.toDto());
 		
-		if(subInitiative != null) dto.setSubInitiative(subInitiative.toDto());
 		
 		dto.setOldName(oldName);
 		dto.setOldDriver(oldDriver);
@@ -201,21 +194,6 @@ public class Activity {
 		this.triggerUser = triggerUser;
 	}
 
-	public Initiative getInitiative() {
-		return initiative;
-	}
-
-	public void setInitiative(Initiative initiative) {
-		this.initiative = initiative;
-	}
-
-	public Initiative getSubInitiative() {
-		return subInitiative;
-	}
-
-	public void setSubInitiative(Initiative subInitiative) {
-		this.subInitiative = subInitiative;
-	}
 
 	public List<InitiativeTransfer> getInitiativeTransfers() {
 		return initiativeTransfers;

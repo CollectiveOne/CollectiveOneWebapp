@@ -52,10 +52,8 @@ public class MessageService {
 				return modelCardWrapperRepository.findById(elementId).getInitiative().getId();
 			
 			case MODEL_SECTION:
-				return modelSectionRepository.findById(elementId).getInitiative().getId();
+				return modelSectionRepository.findById(elementId).getId();
 				
-			case INITIATIVE:
-				return initiativeRepository.findById(elementId).getId();
 				
 		}
 		
@@ -76,10 +74,8 @@ public class MessageService {
 				return thread.getModelCardWrapper().getInitiative().getId();
 			
 			case MODEL_SECTION:
-				return thread.getModelSection().getInitiative().getId();
-				
-			case INITIATIVE:
-				return thread.getInitiative().getId();
+				return thread.getModelSection().getId();
+			
 				
 		}
 		

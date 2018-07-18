@@ -12,7 +12,7 @@ public class ModelCardWrapperDto {
 	private ModelCardDto card;
 	private AppUserDto creator;
 	private Long creationDate; 
-	private String initiativeId;
+	private String contextId;
 	private Integer nLikes;
 	private Boolean userLiked;
 	private Long lastEdited;
@@ -56,11 +56,11 @@ public class ModelCardWrapperDto {
 	public void setCreationDate(Long creationDate) {
 		this.creationDate = creationDate;
 	}
-	public String getInitiativeId() {
-		return initiativeId;
+	public String getContextId() {
+		return contextId;
 	}
-	public void setInitiativeId(String initiativeId) {
-		this.initiativeId = initiativeId;
+	public void setContextId(String initiativeId) {
+		this.contextId = initiativeId;
 	}
 	public Integer getnLikes() {
 		return nLikes;

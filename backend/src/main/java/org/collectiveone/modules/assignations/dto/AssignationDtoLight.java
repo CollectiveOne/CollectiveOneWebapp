@@ -10,8 +10,8 @@ public class AssignationDtoLight {
 	private String motive;
 	private String notes;
 	private String state;
-	private String initiativeId;
-	private String initiativeName;
+	private String modelSectionId;
+	private String modelSectionName;
 	private Long creationDate;
 	private List<BillDto> assets = new ArrayList<BillDto>();
 	
@@ -46,17 +46,17 @@ public class AssignationDtoLight {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public String getInitiativeId() {
-		return initiativeId;
+	public String getModelSectionId() {
+		return modelSectionId;
 	}
-	public void setInitiativeId(String initiativeId) {
-		this.initiativeId = initiativeId;
+	public void setModelSectionId(String modelSectionId) {
+		this.modelSectionId = modelSectionId;
 	}
-	public String getInitiativeName() {
-		return initiativeName;
+	public String getModelSectionName() {
+		return modelSectionId;
 	}
-	public void setInitiativeName(String initiativeName) {
-		this.initiativeName = initiativeName;
+	public void setModelSectionName(String modelSectionName) {
+		this.modelSectionName = modelSectionName;
 	}
 	public Long getCreationDate() {
 		return creationDate;

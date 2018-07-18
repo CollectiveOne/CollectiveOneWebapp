@@ -36,10 +36,10 @@ import org.collectiveone.modules.conversations.MessageService;
 import org.collectiveone.modules.conversations.MessageThreadContextType;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
-import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.GraphNode;
+import org.collectiveone.modules.model.Member;
 import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
@@ -348,10 +348,6 @@ public class ActivityService {
 			case SECTION:
 				subscriberDto.setSection(modelSectionRepository.findById(subscriber.getElementId()).toDtoLight());
 				break;
-			
-			case INITIATIVE:
-				subscriberDto.setInitiative(initiativeRepository.findById(subscriber.getElementId()).toDto());
-				break;
 				
 			default: 
 				break;
@@ -461,18 +457,8 @@ public class ActivityService {
 	
 	
 	@Transactional
-	public void newInitiativeCreated(Initiative initiative, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, initiative); 
-		
-		activity.setType(ActivityType.INITIATIVE_CREATED);
-		activity = activityRepository.save(activity);
-		
-		addNewInitiativeNotifications(activity);
-	}
-	
-	@Transactional
-	public void newTokenCreated(Initiative initiative, AppUser triggerUser, TokenType token, TokenMint mint) {
-		Activity activity = getBaseActivity(triggerUser, initiative); 
+	public void newTokenCreated(ModelSection context, AppUser triggerUser, TokenType token, TokenMint mint) {
+		Activity activity = getBaseActivity(triggerUser, context); 
 		
 		activity.setType(ActivityType.TOKEN_CREATED);
 		activity.setTokenType(token);
@@ -482,50 +468,16 @@ public class ActivityService {
 		
 		addInitiativeActivityNotifications(activity);
 	}
-		
-	@Transactional
-	public void newSubinitiativeCreated(Initiative initiative, AppUser triggerUser, Initiative subinitiative, List<InitiativeTransfer> transfers) {
-		Activity activity = new Activity();
-		
-		activity.setType(ActivityType.SUBINITIATIVE_CREATED);
-		activity.setTriggerUser(triggerUser);
-		activity.setInitiative(initiative);
-		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
-		
-		activity.setSubInitiative(subinitiative);
-		for (InitiativeTransfer transfer : transfers) {
-			activity.getInitiativeTransfers().add(transfer);
-		}
-		
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
+	
+	
 	
 	@Transactional
-	public void initiativeEdited(Initiative initiative, AppUser triggerUser, String oldName, String oldDriver) {
-		Activity activity = new Activity();
-		
-		activity.setType(ActivityType.INITIATIVE_EDITED);
-		activity.setTriggerUser(triggerUser);
-		activity.setInitiative(initiative);
-		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
-		
-		activity.setOldName(oldName);
-		activity.setOldDriver(oldDriver);
-		
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
-	public void tokensMinted(Initiative initiative, TokenMint mint) {
+	public void tokensMinted(ModelSection context, TokenMint mint) {
 		Activity activity = new Activity();
 		
 		activity.setType(ActivityType.TOKENS_MINTED);
 		activity.setTriggerUser(mint.getOrderedBy());
-		activity.setInitiative(initiative);
+		activity.setOnSection(context);
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity.setMint(mint);
@@ -541,7 +493,7 @@ public class ActivityService {
 		
 		activity.setType(ActivityType.PR_ASSIGNATION_CREATED);
 		activity.setTriggerUser(triggerUser);
-		activity.setInitiative(assignation.getInitiative());
+		activity.setOnSection(assignation.getModelSection());
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity.setAssignation(assignation);
@@ -557,7 +509,7 @@ public class ActivityService {
 		
 		activity.setType(ActivityType.PR_ASSIGNATION_DONE);
 		activity.setTriggerUser(assignation.getCreator());
-		activity.setInitiative(assignation.getInitiative());
+		activity.setModelSection(assignation.getModelSection());
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity.setAssignation(assignation);
@@ -573,7 +525,7 @@ public class ActivityService {
 		
 		activity.setType(ActivityType.D_ASSIGNATION_CREATED);
 		activity.setTriggerUser(triggerUser);
-		activity.setInitiative(assignation.getInitiative());
+		activity.setModelSection(assignation.getMod());
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity.setAssignation(assignation);
@@ -623,7 +575,7 @@ public class ActivityService {
 		
 		activity.setType(ActivityType.ASSIGNATION_REVERT_CANCELLED);
 		activity.setTriggerUser(revertOrder.getTriggerUser());
-		activity.setInitiative(assignation.getInitiative());
+		activity.setModelSection(assignation.getModelSection());
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity.setAssignation(assignation);
@@ -641,7 +593,7 @@ public class ActivityService {
 		
 		activity.setType(ActivityType.ASSIGNATION_REVERTED);
 		activity.setTriggerUser(revertOrder.getTriggerUser());
-		activity.setInitiative(assignation.getInitiative());
+		activity.setModelSection(assignation.getModelSection());
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity.setAssignation(assignation);
@@ -657,7 +609,7 @@ public class ActivityService {
 		
 		activity.setType(ActivityType.ASSIGNATION_DELETED);
 		activity.setTriggerUser(triggerUser);
-		activity.setInitiative(assignation.getInitiative());
+		activity.setModelSection(assignation.getModelSection());
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity.setAssignation(assignation);
@@ -667,23 +619,10 @@ public class ActivityService {
 		addInitiativeActivityNotifications(activity);
 	}
 	
-	@Transactional
-	public void initiativeDeleted(Initiative initiative, AppUser triggerUser) {
-		Activity activity = new Activity();
-		
-		activity.setType(ActivityType.INITIATIVE_DELETED);
-		activity.setTriggerUser(triggerUser);
-		activity.setInitiative(initiative);
-		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
-		
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
 	
 	@Transactional
 	public void modelSectionCreated(ModelSection section, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, section); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
 		activity.setModelSection(section);
@@ -694,7 +633,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelSectionCreatedOnSection(ModelSection section, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, section); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
 		activity.setModelSection(section);
@@ -706,7 +645,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelSectionEdited(ModelSection section, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, section); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_EDITED);
 		activity.setModelSection(section);
@@ -717,7 +656,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelSectionRemovedFromSection(ModelSection section, ModelSection fromSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, section); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_REMOVED);
 		activity.setModelSection(section);
@@ -729,7 +668,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelSectionMovedFromSectionToSection(ModelSection section, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, section); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_MOVED);
 		activity.setModelSection(section);
@@ -742,7 +681,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelNewSubsection(ModelSection section, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, section); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
 		activity.setModelSection(section);
@@ -754,7 +693,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelSectionDeleted(ModelSection section, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, section); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_DELETED);
 		activity.setModelSection(section);
@@ -767,7 +706,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperCreated(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection()); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_CREATED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -778,7 +717,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperMadeShared(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection()); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_MADE_SHARED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -789,7 +728,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperMadeCommon(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection()); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_MADE_COMMON);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -800,7 +739,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperAdded(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection()); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_ADDED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -811,7 +750,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperEdited(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection()); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_EDITED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -823,7 +762,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperMoved(ModelCardWrapperAddition cardWrapperAddition, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection()); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_MOVED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -836,7 +775,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperRemoved(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection()); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_REMOVED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -848,7 +787,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperDeleted(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection()); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_DELETED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -868,7 +807,8 @@ public class ActivityService {
 			UUID contextOfContextElementId,
 			List<AppUser> mentionedUsers) {
 		
-		Initiative initiative = initiativeRepository.findById(messageService.getInitiativeIdOfMessageThread(message.getThread()));
+				//#### confirm here
+		ModelSection initiative = initiativeRepository.findById(messageService.getInitiativeIdOfMessageThread(message.getThread()));
 		Activity activity = getBaseActivity(triggerUser, initiative); 
 		
 		activity.setType(ActivityType.MESSAGE_POSTED);
@@ -896,21 +836,17 @@ public class ActivityService {
 			case MODEL_SECTION:
 				activity.setModelSection(modelSectionRepository.findById(elementId));
 				break;
-				
-			case INITIATIVE:
-				activity.setInitiative(initiativeRepository.findById(elementId));
-				break;
-				
+			
 		}
 	}
 	
 	
 	
-	private Activity getBaseActivity(AppUser triggerUser, Initiative initiative) {
+	private Activity getBaseActivity(AppUser triggerUser, ModelSection context) {
 		Activity activity = new Activity();
 		
 		activity.setTriggerUser(triggerUser);
-		activity.setInitiative(initiative);
+		activity.setModelSection(context);
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 
 		return activity;
@@ -928,8 +864,8 @@ public class ActivityService {
 	 * input activity */
 	
 	/* Special case of new initiative created. ALl members are notified, not the subscribers */
-	private void addNewInitiativeNotifications (Activity activity) {
-		SortedSet<Member> members = activity.getInitiative().getMembers();
+	private void addNewModelSectionNotifications (Activity activity) {
+		SortedSet<Member> members = activity.getModelSection().getMembers();
 		
 		for (Member member : members) {
 			if(activity.getTriggerUser().getC1Id() != member.getUser().getC1Id()) {
@@ -1071,7 +1007,7 @@ public class ActivityService {
 		UUID initiativeId = null;
 		switch (elementType) {
 			case SECTION:
-				initiativeId = modelSectionRepository.findById(elementId).getInitiative().getId();
+				initiativeId = modelSectionRepository.findById(elementId).getId();
 				break;
 				
 			case INITIATIVE:

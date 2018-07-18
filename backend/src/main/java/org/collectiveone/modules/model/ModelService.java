@@ -972,11 +972,6 @@ public class ModelService {
 	}
 
 	@Transactional
-	public Initiative getCardWrapperSection(UUID cardWrapperId) {
-		return modelCardWrapperRepository.findById(cardWrapperId).ge();
-	}
-	
-	@Transactional
 	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(
 			UUID sectionId, 
 			String query, 

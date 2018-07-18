@@ -309,7 +309,7 @@ public class NotificationDtoBuilder {
 			} else if (notification.getActivity().getModelSection() != null) {
 				
 				from = getModelSectionAnchor(modelSection) + " section";
-				url = getModelSectionUrl(modelSection.getInitiative().getId(), modelSection.getId());
+				url = getModelSectionUrl(modelSection.getId(), modelSection.getId());
 				
 			} else if (notification.getActivity().getInitiative() != null) {
 				
@@ -347,34 +347,30 @@ public class NotificationDtoBuilder {
 	}
 	
 	private String getInitiativeUrl(UUID initiativeId) {
-		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/" + 
+		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/context/" + 
 				initiativeId.toString() + "/overview";
 	}
 	
 	private String getAssignationUrl(UUID initiativeId, UUID assignationId) {
-		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/" + 
+		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/context/" + 
 				initiativeId.toString() + "/assignations/" + assignationId.toString();
 	}
 	
-	private String getModelSectionUrl(UUID initiativeId, UUID sectionId) {
-		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
-				initiativeId.toString() + "/model/section/" + 
+	private String getModelSectionUrl(UUID modelSectionId, UUID sectionId) {
+		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/context/" + 
+		modelSectionId.toString() + "/model/section/" + 
 				sectionId.toString();
 	}
 	
-	private String getModelCardWrapperUrl(UUID initiativeId, UUID sectionId, UUID cardWrapperId) {
-		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
-				initiativeId.toString() + "/model/section/" + 
+	private String getModelCardWrapperUrl(UUID modelSectionId, UUID sectionId, UUID cardWrapperId) {
+		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/context/" + 
+		modelSectionId.toString() + "/model/section/" + 
 				sectionId.toString() + "/cards/" + cardWrapperId.toString();
 	}
 	
-	private String getModelCardWrapperUrl(UUID initiativeId, UUID cardWrapperId) {
-		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/inits/" + 
-				initiativeId.toString() + "/model/card/" + cardWrapperId.toString();
-	}
-	
-	private String getInitiativeAnchor(Initiative initiative) {
-		return checkHtml("<a href=" + getInitiativeUrl(initiative.getId()) + ">") +  initiative.getMeta().getName() + checkHtml("</a>");
+	private String getModelCardWrapperUrl(UUID modelSectionId, UUID cardWrapperId) {
+		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/context/" + 
+		modelSectionId.toString() + "/model/card/" + cardWrapperId.toString();
 	}
 	
 	private String getAssignationAnchor(Assignation assignation) {
@@ -391,7 +387,7 @@ public class NotificationDtoBuilder {
 	}
 
 	private String getModelSectionAnchor(ModelSection section) {
-		return checkHtml("<a href=" + getModelSectionUrl(section.getInitiative().getId(), section.getId()) + ">") + section.getTitle() + checkHtml("</a>");
+		return checkHtml("<a href=" + getModelSectionUrl(section.getId(), section.getId()) + ">") + section.getTitle() + checkHtml("</a>");
 	}
 	
 	private String getModelCardWrapperAnchor(ModelCardWrapper cardWrapper, ModelSection onSection) {
