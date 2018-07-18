@@ -4,7 +4,7 @@
 
     <div v-if="this.$store.state.user.authenticated" class="control-group">
       <div class="">
-        <popper trigger="hover":options="popperOptions">
+        <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
           <app-help-popper
             :title="(showPrivate ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.PRIVATE-SECTIONS-TT')"
             :details="$t('help.PRIVATE-SECTIONS-DET')">
@@ -15,7 +15,7 @@
           </div>
         </popper>
 
-        <popper trigger="hover":options="popperOptions">
+        <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
           <app-help-popper
             :title="(showShared ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHARED-SECTIONS-TT')"
             :details="$t('help.SHARED-SECTIONS-DET')">
@@ -26,7 +26,7 @@
           </div>
         </popper>
 
-        <popper trigger="hover":options="popperOptions">
+        <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
           <app-help-popper
             :title="(showCommon ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.COMMON-SECTIONS-TT')"
             :details="$t('help.COMMON-SECTIONS-DET')">
@@ -41,7 +41,7 @@
     </div>
 
     <div class="control-group">
-      <popper trigger="hover":options="popperOptions">
+      <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
         <app-help-popper
           :title="(isDraggable ? $t('general.DISABLE') : $t('general.ENABLE')) + ' ' + $t('help.ENABLE-DRAG-AND-DROP-TT')"
           :details="$t('help.ENABLE-DRAG-AND-DROP-SECTIONS-DET')">

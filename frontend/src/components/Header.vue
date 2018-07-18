@@ -66,7 +66,7 @@
 
       <div class="w3-col m4">
         <div v-if="inInitiative" class="tab-btns-container w3-xlarge">
-          <popper trigger="hover":options="popperOptions" class="btn-div">
+          <popper trigger="hover":options="popperOptions" class="btn-div" delay-on-mouse-in="1200">
             <app-help-popper
               :title="$t('help.HOME-TAB-TT')"
               :details="$t('help.HOME-TAB-DET')">
@@ -80,7 +80,7 @@
             </router-link>
           </popper>
 
-          <popper trigger="hover":options="popperOptions" class="btn-div">
+          <popper trigger="hover":options="popperOptions" class="btn-div" delay-on-mouse-in="1200">
             <app-help-popper
               :title="$t('help.CONTENT-TAB-TT')"
               :details="$t('help.CONTENT-TAB-DET')">
@@ -94,7 +94,7 @@
             </router-link>
           </popper>
 
-          <popper trigger="hover":options="popperOptions" class="btn-div">
+          <popper trigger="hover":options="popperOptions" class="btn-div" delay-on-mouse-in="1200">
             <app-help-popper
               :title="$t('help.MEMBERS-TAB-TT')"
               :details="$t('help.MEMBERS-TAB-DET')">
@@ -108,7 +108,7 @@
             </router-link>
           </popper>
 
-          <popper trigger="hover":options="popperOptions" class="btn-div">
+          <popper trigger="hover":options="popperOptions" class="btn-div" delay-on-mouse-in="1200">
             <app-help-popper
               :title="$t('help.TRANSFERS-TAB-TT')"
               :details="$t('help.TRANSFERS-TAB-DET')">

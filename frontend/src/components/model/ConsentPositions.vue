@@ -26,8 +26,7 @@
         <app-user-avatar
           :user="$store.state.user.profile"
           :showName="false" :small="true"
-          :enableHover="false"
-          :enableDatails="false">
+          :enableHover="false">
         </app-user-avatar>
       </div>
 
@@ -47,8 +46,11 @@
       </app-user-avatar>
     </div>
 
-    <div v-if="disabled" class="cover-div">
-      <b>consent process is closed</b>
+    <div v-if="disabled" class="cover-div cover-div-closed">
+      <b>closed</b>
+    </div>
+    <div v-else class="cover-div cover-div-open">
+      <b>open</b>
     </div>
 
   </div>
@@ -149,13 +151,16 @@ export default {
 
 .cover-div {
   position: absolute;
-  height: 100%;
-  width: 100%;
   top: 0px;
-  left: 0px;
+  right: 0px;
   font-size: 12px;
   text-align: right;
   padding: 3px 6px;
+}
+
+.cover-div-closed {
+  height: 100%;
+  width: 100%;
   background-color: rgba(100, 100, 100, 0.3);
 }
 

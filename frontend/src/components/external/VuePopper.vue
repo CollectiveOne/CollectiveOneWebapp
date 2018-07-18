@@ -93,7 +93,7 @@
 
 <script>
   /* eslint-disable */
-  
+
   import Popper from 'popper.js';
 
   function on(element, event, handler) {
@@ -116,6 +116,10 @@
         validator: value => ['click', 'hover'].indexOf(value) > -1
       },
       delayOnMouseOut: {
+        type: Number,
+        default: 10,
+      },
+      delayOnMouseIn: {
         type: Number,
         default: 10,
       },
@@ -312,12 +316,15 @@
       },
 
       onMouseOver() {
-        this.showPopper = true;
-        clearTimeout(this._timer);
+        clearTimeout(this._timerOut);
+        this._timerIn = setTimeout(() => {
+          this.showPopper = true;
+        }, this.delayOnMouseIn);
       },
 
       onMouseOut() {
-        this._timer = setTimeout(() => {
+        clearTimeout(this._timerIn);
+        this._timerOut = setTimeout(() => {
           this.showPopper = false;
         }, this.delayOnMouseOut);
       },

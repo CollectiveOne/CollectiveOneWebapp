@@ -10,42 +10,50 @@
     </transition>
 
     <div class="w3-row avatar-container">
-      <div class="img-div noselect"
-        @mouseover="showHoverName = true"
-        @mouseleave="showHoverName = false">
+      <div class="img-div noselect">
 
-        <img class="w3-circle"
-          :class="imgClass" :src="userPictureUrl" @error="errorOnPicture"/>
+        <popper
+          trigger="hover" :options="popperOptions"
+          :toggleShow="toggleShow"
+          :disabled="showName || !enableHover" class="w3-left"
+          delay-on-mouse-in="750" delay-on-mouse-out="100">
 
-        <div v-if="!showName && showHoverName && enableHover"
-          class="w3-container w3-padding hover-name-container w3-tag dark-gray w3-round">
+          <div class="w3-container w3-padding hover-name-container dark-gray w3-round">
 
-          <div class="w3-row cursor-pointer nickname-row">
-            <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
-          </div>
-          <div class="w3-row">
-            {{ user.shortBio }}
-          </div>
-          <div class="w3-row">
-            <div class="social-icons-container">
+            <div @click="showModal" class="w3-row cursor-pointer nickname-row">
+              <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
+            </div>
+            <div class="w3-row">
+              {{ user.shortBio }}
+            </div>
+            <div class="w3-row">
+              <div class="social-icons-container">
 
-              <a v-if="user.twitterHandle" :href="user.twitterHandle" target="_blank" class="w3-button social-icon">
-                <i class="fa fa-twitter" aria-hidden="true"></i>
-              </a>
-              <a v-if="user.facebookHandle" :href="user.facebookHandle" target="_blank" class="w3-button social-icon">
-                <i class="fa fa-facebook" aria-hidden="true"></i>
-              </a>
-              <a v-if="user.linkedinHandle" :href="user.linkedinHandle" target="_blank" class="w3-button social-icon">
-                <i class="fa fa-linkedin" aria-hidden="true"></i>
-              </a>
+                <a v-if="user.twitterHandle" :href="user.twitterHandle" target="_blank" class="w3-button social-icon">
+                  <i class="fa fa-twitter" aria-hidden="true"></i>
+                </a>
+                <a v-if="user.facebookHandle" :href="user.facebookHandle" target="_blank" class="w3-button social-icon">
+                  <i class="fa fa-facebook" aria-hidden="true"></i>
+                </a>
+                <a v-if="user.linkedinHandle" :href="user.linkedinHandle" target="_blank" class="w3-button social-icon">
+                  <i class="fa fa-linkedin" aria-hidden="true"></i>
+                </a>
 
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div v-if="showName" class="name-container"
-        :class="{'name-large': !small, 'name-small': small}">
-        <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
+
+          <div slot="reference" class="">
+            <img class="w3-circle"
+              :class="imgClass" :src="userPictureUrl" @error="errorOnPicture">
+            </img>
+
+            <div v-if="showName" class="name-container"
+              :class="{'name-large': !small, 'name-small': small}">
+              <b>{{ user.nickname }} {{ hasUsername ? '('+user.username+')' : '' }}</b>
+            </div>
+          </div>
+        </popper>
       </div>
     </div>
   </div>
@@ -82,18 +90,14 @@ export default {
     small: {
       type: Boolean,
       default: false
-    },
-    enableDatails: {
-      type: Boolean,
-      default: true
     }
   },
 
   data () {
     return {
-      showHoverName: false,
       showProfileModal: false,
-      errorOnPictureFlag: false
+      errorOnPictureFlag: false,
+      toggleShow: false
     }
   },
 
@@ -120,12 +124,27 @@ export default {
     },
     userPictureUrl () {
       return this.errorOnPictureFlag ? 'https://image.ibb.co/mcnv8b/avatar.png' : this.user.pictureUrl
+    },
+    popperOptions () {
+      return {
+        placement: 'right',
+        modifiers: {
+          preventOverflow: {
+            enabled: true,
+            boundariesElement: 'viewport'
+          }
+        }
+      }
     }
   },
 
   methods: {
     errorOnPicture () {
       this.errorOnPictureFlag = true
+    },
+    showModal () {
+      this.toggleShow = !this.toggleShow
+      this.showProfileModal = true
     }
   }
 }
@@ -138,7 +157,6 @@ export default {
 }
 
 .avatar-container {
-  position: relative;
 }
 
 .avatar-container:before {
@@ -171,9 +189,8 @@ export default {
 }
 
 .hover-name-container {
-  position: absolute;
   width: 250px;
-  z-index: 10;
+  z-index: 20;
 }
 
 .social-icons-container {

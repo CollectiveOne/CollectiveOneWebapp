@@ -8,7 +8,7 @@
           </div>
 
           <div class="title-buttons">
-            <popper trigger="hover":options="popperOptions" class="btn-div">
+            <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200" class="btn-div">
               <app-help-popper
                 :title="(showIn ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SECTION-DETAILS-TT')"
                 :details="$t('help.SECTION-DETAILS-DET')">
@@ -25,7 +25,7 @@
               </app-section-control-buttons>
             </div>
 
-            <popper trigger="hover":options="popperOptions" class="btn-div">
+            <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200" class="btn-div">
               <app-help-popper
                 :title="$t('help.READ-FRIENDLY-URL-TT')"
                 :details="$t('help.READ-FRIENDLY-URL-DET')">
