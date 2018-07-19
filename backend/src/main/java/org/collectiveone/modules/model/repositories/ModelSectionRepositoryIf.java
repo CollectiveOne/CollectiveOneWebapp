@@ -40,4 +40,6 @@ public interface ModelSectionRepositoryIf extends CrudRepository<ModelSection, U
 
 	@Query("SELECT section.visibility FROM ModelSection section WHERE section.id = ?1")
 	public ModelSectionVisibility getVisibility(UUID sectionId);
+
+	
 }

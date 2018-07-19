@@ -47,6 +47,7 @@ import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepo
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
+import org.collectiveone.modules.tokens.ModelSectionTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
@@ -536,12 +537,12 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void transferToSubinitiative(InitiativeTransfer transfer) {
+	public void transferToSubModelSection(ModelSectionTransfer transfer) {
 		Activity activity = new Activity();
 		
 		activity.setType(ActivityType.INITIATIVE_TRANSFER);
 		activity.setTriggerUser(transfer.getOrderedBy());
-		activity.setInitiative(transfer.getFrom());
+		activity.setModelSection(transfer.getFrom());
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity.setInitiativeTransfer(transfer);

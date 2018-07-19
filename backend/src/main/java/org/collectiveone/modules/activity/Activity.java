@@ -28,6 +28,7 @@ import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
+import org.collectiveone.modules.tokens.ModelSectionTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
@@ -64,7 +65,7 @@ public class Activity {
 	
 	
 	@OneToMany
-	private List<InitiativeTransfer> initiativeTransfers = new ArrayList<InitiativeTransfer>();
+	private List<ModleSectionTransfer> initiativeTransfers = new ArrayList<InitiativeTransfer>();
 	
 	@Column(name = "old_name", length = 30)
 	private String oldName;
@@ -84,7 +85,7 @@ public class Activity {
 	private Assignation assignation;
 	
 	@OneToOne
-	private InitiativeTransfer initiativeTransfer;
+	private ModelSectionTransfer modelSectionTransfer;
 	
 	@ManyToOne
 	private ModelSection modelSection;
@@ -124,14 +125,14 @@ public class Activity {
 		
 		if(mint != null) dto.setMint(mint.toDto());
 		if(assignation != null) dto.setAssignation(assignation.toDto()); 
-		if(initiativeTransfer != null) dto.setTransfer(initiativeTransfer.toDto()); 
+		if(modelSectionTransfer != null) dto.setTransfer(modelSectionTransfer.toDto()); 
 		if(modelSection != null) dto.setModelSection(modelSection.toDto());
 		
 		if (modelCardWrapperAddition != null) {
 			dto.setOnSection(modelCardWrapperAddition.getSection().toDto());
 			ModelCardWrapperDto cardWrapperDto = modelCardWrapperAddition.getCardWrapper().toDto();
 			
-			cardWrapperDto.setInitiativeId(modelCardWrapperAddition.getSection().getInitiative().getId().toString());
+			cardWrapperDto.setModelSectionId(modelCardWrapperAddition.getSection().getId().toString());
 			cardWrapperDto.setScope(modelCardWrapperAddition.getScope());
 			
 			dto.setModelCardWrapper(cardWrapperDto);	
@@ -241,14 +242,6 @@ public class Activity {
 
 	public void setAssignation(Assignation assignation) {
 		this.assignation = assignation;
-	}
-
-	public InitiativeTransfer getInitiativeTransfer() {
-		return initiativeTransfer;
-	}
-
-	public void setInitiativeTransfer(InitiativeTransfer initiativeTransfer) {
-		this.initiativeTransfer = initiativeTransfer;
 	}
 
 	public ModelSection getModelSection() {

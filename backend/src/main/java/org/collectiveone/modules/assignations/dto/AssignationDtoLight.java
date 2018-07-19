@@ -11,7 +11,6 @@ public class AssignationDtoLight {
 	private String notes;
 	private String state;
 	private String modelSectionId;
-	private String modelSectionName;
 
 	public String getModelsectionid()
 	{
@@ -69,6 +68,19 @@ public class AssignationDtoLight {
 	public void setState(String state) {
 		this.state = state;
 	}
-<<<<<<< HEAD
-	public String getModelSectionId() {
-		return modelSectionId;
+	
+	public Long getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Long creationDate) {
+		this.creationDate = creationDate;
+	}
+	public List<BillDto> getAssets() {
+		return assets;
+	}
+	public void setAssets(List<BillDto> assets) {
+		this.assets = assets;
+	}
+	
+	
+}

@@ -1303,6 +1303,23 @@ public class ModelService {
 	}
 
 	@Transactional
+	public Boolean canMintTokens (UUID tokenId, UUID userId) {
+		ModelSection modelSection= findByTokenType_Id(tokenId);
+
+		PermissionConfig role = getRole(modelSection.getId(), userId);
+
+		return role == PermissionConfig.ADMIN;
+	}
+	
+	@Transactional
+	public Boolean canTransferToken (UUID modelSectionId, UUID userId) {
+	
+		PermissionConfig role = getRole(modelSectionId, userId);
+
+		return role == PermissionConfig.ADMIN;
+	}
+
+	@Transactional
 	public Boolean canEdit (UUID modelSectionId, UUID userId) {
 		ModelSectionVisibility visibility = modelSectionRepository.getVisibility(modelSectionId);
 		PermissionConfig role = getRole(modelSectionId, userId);
@@ -1353,5 +1370,23 @@ public class ModelService {
 		return false;
 	}
 	
+
+	@Transactional
+	public Member getOrAddMember(UUID modelSectionId, UUID userId) {
+		Member member = memberRepository.findByModelSection_IdAndUser_C1Id(modelSectionId, userId);
+		
+		if(member == null) {
+			ModelSection modelSection = modelSectionRepository.findById(modelSectionId);
+			AppUser user = appUserRepository.findByC1Id(userId);
+			
+			member = new Member();
+			member.setModelSection(modelSection);
+			member.setUser(user);
+			
+			member = memberRepository.save(member);
+		}
+		
+		return member;
+	}
 
 }

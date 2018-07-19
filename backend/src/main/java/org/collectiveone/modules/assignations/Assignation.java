@@ -90,8 +90,8 @@ public class Assignation {
 		dto.setType(type.toString());
 		dto.setMotive(motive);
 		dto.setNotes(notes);
-		dto.setModelSectionId(modelSection.getId().toString());
-		dto.setModelSectionName(modelSection.getTitle());
+		dto.setModelsectionid(modelSection.getId().toString());
+		dto.setModelsectionName(modelSection.getTitle());
 		dto.setCreationDate(creationDate.getTime());
 		
 		for(Bill bill : bills) {
@@ -110,8 +110,8 @@ public class Assignation {
 		dto.setNotes(notes);
 		dto.setState(state.toString());
 
-		dto.setModelSectionId(modelSection.getId().toString());
-		dto.setModelSectionName(modelSection.getTitle());=======
+		dto.setModelsectionid(modelSection.getId().toString());
+		dto.setModelsectionName(modelSection.getTitle());
 		
 		dto.setCreationDate(creationDate.getTime());
 		dto.setConfig(config.toDto());
@@ -145,11 +145,11 @@ public class Assignation {
 	
 	public List<ModelSection> getAlsoInModelSections() {
 
-		return alsoInModelSections;
+		return alsoInModelSection;
 	}
 
 	public void setAlsoInInitiatives(List<ModelSection> alsoInModelSections) {
-		this.alsoInModelSections = alsoInModelSections;
+		this.alsoInModelSection = alsoInModelSection;
 
 	}
 

@@ -19,15 +19,17 @@ import org.collectiveone.modules.initiatives.InitiativeRelationshipType;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.InitiativeStatus;
 import org.collectiveone.modules.model.Member;
+import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.ModelService;
+import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRelationshipRepositoryIf;
-import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.MemberRepositoryIf;
 import org.collectiveone.modules.tokens.dto.AssetsDto;
 import org.collectiveone.modules.tokens.dto.TokenMintDto;
 import org.collectiveone.modules.tokens.dto.TransferDto;
 import org.collectiveone.modules.tokens.enums.MemberTransferStatus;
 import org.collectiveone.modules.tokens.enums.TokenHolderType;
-import org.collectiveone.modules.tokens.repositories.InitiativeTransferRepositoryIf;
+import org.collectiveone.modules.tokens.repositories.ModelSectionTransferRepositoryIf;
 import org.collectiveone.modules.tokens.repositories.MemberTransferRepositoryIf;
 import org.collectiveone.modules.tokens.repositories.TokenMintRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
@@ -46,19 +48,19 @@ public class TokenTransferService {
 	private TokenService tokenService;
 	
 	@Autowired
-	private InitiativeService initiativeService;
+	private ModelService modelService;
 	
 	@Autowired
 	private AssignationService assignationService;
 	
 	@Autowired
-	private InitiativeRepositoryIf initiativeRepository;
+	private ModelSectionRepositoryIf modelSectionRepository;
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
 	
 	@Autowired
-	private InitiativeTransferRepositoryIf initiativeTransferRepository;
+	private ModelSectionTransferRepositoryIf modelSectionTransferRepository;
 	
 	@Autowired
 	private MemberTransferRepositoryIf memberTransferRepository;
@@ -77,20 +79,20 @@ public class TokenTransferService {
 	/** Get the distribution of an asset starting from a given initiative
 	 * and including the tokens transferred to its sub-initiatives and members */
 	@Transactional
-	public AssetsDto getTokenDistribution(UUID tokenId, UUID initiativeId) {
+	public AssetsDto getTokenDistribution(UUID tokenId, UUID modelSectionId) {
 
-		Initiative initiative = initiativeRepository.findById(initiativeId); 
-		AssetsDto assetDto = tokenService.getTokensOfHolderDto(tokenId, initiative.getId());
-		assetDto.setHolderName(initiative.getMeta().getName());
+		ModelSection modelSection = modelSectionRepository.findById(modelSectionId); 
+		AssetsDto assetDto = tokenService.getTokensOfHolderDto(tokenId, modelSection.getId());
+		assetDto.setHolderName(modelSection.getTitle());
 		
-		assetDto.setTransferredToSubinitiatives(getTransferredToSubinitiatives(tokenId, initiative.getId()));
-		assetDto.setTransferredToUsers(getTransferredToUsers(tokenId, initiative.getId()));
-		assetDto.setTransfersPending(getTransfersPending(initiative.getId()));
+		//####assetDto.setTotalTransferredToSubModelSections(getTransferredToSubModelSections(tokenId, modelSection.getId()));
+		assetDto.setTransferredToUsers(getTransferredToUsers(tokenId, modelSection.getId()));
+		assetDto.setTransfersPending(getTransfersPending(modelSection.getId()));
 		
 		/* sum all tranfers as additional data */
-		assetDto.setTotalTransferredToSubinitiatives(0.0);
-		for (TransferDto transfer : assetDto.getTransferredToSubinitiatives()) {
-			assetDto.setTotalTransferredToSubinitiatives(assetDto.getTotalTransferredToSubinitiatives() + transfer.getValue());
+		assetDto.setTotalTransferredToSubModelSections(0.0);
+		for (TransferDto transfer : assetDto.getTransferredToModelSections()) {
+			assetDto.setTotalTransferredToSubModelSections(assetDto.getTotalTransferredToSubModelSections() + transfer.getValue());
 		}
 		
 		assetDto.setTotalTransferredToUsers(0.0);
@@ -105,7 +107,7 @@ public class TokenTransferService {
 		
 		assetDto.setTotalUnderThisHolder(
 				assetDto.getOwnedByThisHolder() + 
-				assetDto.getTotalTransferredToSubinitiatives() + 
+				assetDto.getTotalTransferredToSubModelSections() + 
 				assetDto.getTotalTransferredToUsers());
 		
 		
@@ -115,7 +117,7 @@ public class TokenTransferService {
 	@Transactional
 	public String mintToInitiative(UUID tokenId, UUID initiativeId, UUID orderByUserId, TokenMintDto mintDto) {
 		
-		String result = tokenService.mintToHolder(tokenId, initiativeId, mintDto.getValue(), TokenHolderType.INITIATIVE);
+		String result = tokenService.mintToHolder(tokenId, initiativeId, mintDto.getValue(), TokenHolderType.MODEL_SECTION);
 		
 		if (result.equals("success")) {
 			AppUser orderedBy = appUserRepository.findByC1Id(orderByUserId);
@@ -130,7 +132,7 @@ public class TokenTransferService {
 			
 			mint = tokenMintRespository.save(mint);
 			
-			activityService.tokensMinted(initiativeRepository.findById(initiativeId), mint);
+			activityService.tokensMinted(modelSectionRepository.findById(initiativeId), mint);
 		}
 		
 		return result;
@@ -138,25 +140,25 @@ public class TokenTransferService {
 	}
 	
 	@Transactional
-	public PostResult transferFromInitiativeToUser(UUID initiativeId, TransferDto transfer) {
-		return transferFromInitiativeToUser(initiativeId, UUID.fromString(transfer.getReceiverId()), UUID.fromString(transfer.getAssetId()), transfer.getValue());
+	public PostResult transferFromModelSectionToUser(UUID initiativeId, TransferDto transfer) {
+		return transferFromModelSectionToUser(initiativeId, UUID.fromString(transfer.getReceiverId()), UUID.fromString(transfer.getAssetId()), transfer.getValue());
 	}
 	
 	@Transactional
-	public PostResult transferFromInitiativeToUser(UUID initiativeId, UUID receiverId, UUID assetId, double value) {
+	public PostResult transferFromModelSectionToUser(UUID modelSectionId, UUID receiverId, UUID assetId, double value) {
 		AppUser receiver = appUserRepository.findByC1Id(receiverId);
 		TokenType tokenType = tokenService.getTokenType(assetId);
 		
 		String result = tokenService.transfer(
 				tokenType.getId(), 
-				initiativeId, 
+				modelSectionId, 
 				receiver.getC1Id(), 
 				value, 
 				TokenHolderType.USER);
 		
 		if (result.equals("success")) {
 			/* register the transfer to the contributor  */
-			Member member = initiativeService.getOrAddMember(initiativeId, receiver.getC1Id());
+			Member member = modelService.getOrAddMember(modelSectionId, receiver.getC1Id());
 			
 			MemberTransfer thisTransfer = new MemberTransfer();
 			thisTransfer.setMember(member);
@@ -176,15 +178,15 @@ public class TokenTransferService {
 	}
 	
 	@Transactional
-	public void revertTransferFromInitiativeToUser(UUID transferId) {
+	public void revertTransferFromModelSectionToUser(UUID transferId) {
 		MemberTransfer transfer = memberTransferRepository.findById(transferId);
 		
 		String result = tokenService.transfer(
 				transfer.getTokenType().getId(), 
 				transfer.getMember().getUser().getC1Id(), 
-				transfer.getMember().getInitiative().getId(), 
+				transfer.getMember().getModelSection().getId(), 
 				transfer.getValue(), 
-				TokenHolderType.INITIATIVE);
+				TokenHolderType.MODEL_SECTION);
 		
 		if (result.equals("success")) {
 			transfer.setStatus(MemberTransferStatus.REVERTED);
@@ -193,9 +195,9 @@ public class TokenTransferService {
 	}
 	
 	@Transactional
-	public PostResult transferFromInitiativeToInitiative(UUID fromInitiativeId, TransferDto transferDto, UUID orderByUserId) {
-		return transferFromInitiativeToInitiative(
-				fromInitiativeId, 
+	public PostResult transferFromModelSectionToModelSection(UUID fromModelSectionId, TransferDto transferDto, UUID orderByUserId) {
+		return transferFromModelSectionToModelSection(
+			fromModelSectionId, 
 				UUID.fromString(transferDto.getReceiverId()),
 				orderByUserId,
 				UUID.fromString(transferDto.getAssetId()), 
@@ -205,22 +207,22 @@ public class TokenTransferService {
 	}
 	
 	@Transactional
-	public PostResult transferFromInitiativeToInitiative(UUID fromInitiativeId, UUID toInitiativeId, UUID orderByUserId, UUID assetId, double value, String motive, String notes) {
+	public PostResult transferFromModelSectionToModelSection(UUID fromModelSectionId, UUID toModelSectionId, UUID orderByUserId, UUID assetId, double value, String motive, String notes) {
 		
 		TokenType tokenType = tokenService.getTokenType(assetId);
-		Initiative from = initiativeRepository.findById(fromInitiativeId);
-		Initiative to = initiativeRepository.findById(toInitiativeId);
+		ModelSection from = modelSectionRepository.findById(fromModelSectionId);
+		ModelSection to = modelSectionRepository.findById(toModelSectionId);
 		
 		String result = tokenService.transfer(
 				tokenType.getId(), 
 				from.getId(), 
 				to.getId(), 
 				value, 
-				TokenHolderType.INITIATIVE);
+				TokenHolderType.MODEL_SECTION);
 		
 		if (result.equals("success")) {
 			/* register the transfer to the initiative  */
-			InitiativeTransfer transfer = new InitiativeTransfer();
+			ModelSectionTransfer transfer = new ModelSectionTransfer();
 			transfer.setTokenType(tokenType);
 			transfer.setFrom(from);
 			transfer.setTo(to);
@@ -230,7 +232,7 @@ public class TokenTransferService {
 			transfer.setOrderDate(new Timestamp(System.currentTimeMillis()));
 			transfer.setOrderedBy(appUserRepository.findByC1Id(orderByUserId));
 			
-			transfer = initiativeTransferRepository.save(transfer);
+			transfer = modelSectionTransferRepository.save(transfer);
 			
 			activityService.transferToSubinitiative(transfer);
 			
@@ -260,44 +262,45 @@ public class TokenTransferService {
 	@Transactional
 	public GetResult<List<TransferDto>> getTransfersFromInitiative(UUID initiativeId, PageRequest page) {
 		
-		List<TransferDto> initiativeTransfers = new ArrayList<TransferDto>();
+		List<TransferDto> ModelSectionTransfers = new ArrayList<TransferDto>();
 		
-		for (InitiativeTransfer transfer : initiativeTransferRepository.findByFrom_Id(initiativeId, page)) {
-			initiativeTransfers.add(transfer.toDto());
+		for (ModelSectionTransfer transfer : ModelSectionTransferRepository.findByFrom_Id(initiativeId, page)) {
+			ModelSectionTransfers.add(transfer.toDto());
 		}
 		
-		return new GetResult<List<TransferDto>>("success", "transfers retrieved", initiativeTransfers);
+		return new GetResult<List<TransferDto>>("success", "transfers retrieved", ModelSectionTransfers);
 	}
 	
 	/** Get the tokens transfers from one initiative to any other initiatives */
 	@Transactional
-	public GetResult<List<TransferDto>> getTransfersFromSubinitiatives(UUID initiativeId, PageRequest page) {
+	public GetResult<List<TransferDto>> getTransfersFromSubModelSections(UUID initiativeId, PageRequest page) {
 		
-		List<TransferDto> initiativeTransfers = new ArrayList<TransferDto>();
+		List<TransferDto> modelSectionTransfers = new ArrayList<TransferDto>();
 		
-		for (InitiativeTransfer transfer : initiativeTransferRepository.findByAlsoInInitiatives_Id(initiativeId, page)) {
-			initiativeTransfers.add(transfer.toDto());
+		for (ModelSectionTransfer transfer : ModelSectionTransferRepository.findByAlsoInModelSections_Id(initiativeId, page)) {
+			modelSectionTransfers.add(transfer.toDto());
 		}
 		
-		return new GetResult<List<TransferDto>>("success", "transfers retrieved", initiativeTransfers);
+		return new GetResult<List<TransferDto>>("success", "transfers retrieved", ModelSectionTransfers);
 	}
 	
 	/** Get the tokens transferred from one initiative into its sub-initiatives */
 	@Transactional
-	public List<TransferDto> getTransferredToSubinitiatives(UUID tokenId, UUID initiativeId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId); 
+	public List<TransferDto> getTransferredToSubModelSections(UUID tokenId, UUID initiativeId) {
+		ModelSection modelSection = modelSectionRepository.findById(initiativeId); 
 		TokenType token = tokenService.getTokenType(tokenId);
 
 		/* get of sub-initiatives */
+		// #### here findByOfInitiativeIdAndInitiative_StatusAndType ?
 		List<InitiativeRelationship> subinitiativesRelationships = 
-				initiativeRelationshipRepository.findByOfInitiativeIdAndInitiative_StatusAndType(initiative.getId(), InitiativeStatus.ENABLED, InitiativeRelationshipType.IS_ATTACHED_SUB);
+				initiativeRelationshipRepository.findByOfInitiativeIdAndInitiative_StatusAndType(modelSection.getId(), InitiativeStatus.ENABLED, InitiativeRelationshipType.IS_ATTACHED_SUB);
 		
 		List<TransferDto> transferredToSubinitiatives = new ArrayList<TransferDto>();
 		
 		for (InitiativeRelationship relationship : subinitiativesRelationships) {
 			/* get all transfers of a given token made from and to these initiatives */
-			Double totalTransferred = initiativeTransferRepository.getTotalTransferredFromTo(tokenId, relationship.getOfInitiative().getId(), relationship.getInitiative().getId());
-			Double totalReturned = initiativeTransferRepository.getTotalTransferredFromTo(tokenId, relationship.getInitiative().getId(), relationship.getOfInitiative().getId());
+			Double totalTransferred = ModelSectionTransferRepository.getTotalTransferredFromTo(tokenId, relationship.getOfInitiative().getId(), relationship.getInitiative().getId());
+			Double totalReturned = ModelSectionTransferRepository.getTotalTransferredFromTo(tokenId, relationship.getInitiative().getId(), relationship.getOfInitiative().getId());
 			
 			TransferDto dto = new TransferDto();
 			
@@ -318,11 +321,11 @@ public class TokenTransferService {
 	/** Get the tokens transferred from one initiative to its members */
 	@Transactional
 	public List<TransferDto> getTransferredToUsers(UUID tokenId, UUID initiativeId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId); 
+		ModelSection modelSection = modelSectionRepository.findById(initiativeId); 
 		TokenType token = tokenService.getTokenType(tokenId);
 
 		List<TransferDto> transferredToUsers = new ArrayList<TransferDto>();
-		for (Member member : initiative.getMembers()) {
+		for (Member member : modelSection.getMembers()) {
 			/* get all transfers of a given token made from an initiative to a contributor */
 			double totalTransferred = memberTransferRepository.getTotalTransferred(tokenId, member.getId());
 			
@@ -330,8 +333,8 @@ public class TokenTransferService {
 			
 			dto.setAssetId(token.getId().toString());
 			dto.setAssetName(token.getName());
-			dto.setSenderId(initiative.getId().toString());
-			dto.setSenderName(initiative.getMeta().getName());
+			dto.setSenderId(modelSection.getId().toString());
+			dto.setSenderName(modelSection.getTitle());
 			dto.setReceiverId(member.getUser().getC1Id().toString());
 			dto.setReceiverName(member.getUser().getProfile().getNickname());
 			dto.setValue(totalTransferred);
@@ -344,7 +347,7 @@ public class TokenTransferService {
 	
 	@Transactional
 	public List<TransferDto> getTransfersPending(UUID initiativeId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId); 
+		ModelSection modelSection = modelSectionRepository.findById(initiativeId); 
 		
 		List<TransferDto> transfersPending = new ArrayList<TransferDto>();
 		List<Assignation> assignations = assignationService.getOpenAssignations(initiativeId);
@@ -355,8 +358,8 @@ public class TokenTransferService {
 				
 				dto.setAssetId(bill.getTokenType().getId().toString());
 				dto.setAssetName(bill.getTokenType().getName());
-				dto.setSenderId(initiative.getId().toString());
-				dto.setSenderName(initiative.getMeta().getName());
+				dto.setSenderId(modelSection.getId().toString());
+				dto.setSenderName(modelSection.getTitle());
 				dto.setValue(bill.getValue());
 				
 				transfersPending.add(dto);

@@ -6,10 +6,9 @@ import java.util.UUID;
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.governance.DecisionVerdict;
-import org.collectiveone.modules.governance.GovernanceService;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
+import org.collectiveone.modules.model.ModelService;
 import org.collectiveone.modules.tokens.dto.AssetsDto;
 import org.collectiveone.modules.tokens.dto.TokenMintDto;
 import org.collectiveone.modules.tokens.dto.TransferDto;
@@ -36,7 +35,7 @@ public class TokenController extends BaseController {
 	private TokenService tokenService;
 	
 	@Autowired
-	private GovernanceService governanceService;
+	private ModelService modelService;
 	
 	@Autowired
 	private InitiativeService initiativeService;
@@ -81,7 +80,7 @@ public class TokenController extends BaseController {
 		
 		UUID tokenId = UUID.fromString(tokenIdStr);
 		
-		if (governanceService.canMintTokens(tokenId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (!modelService.canMintTokens(tokenId, getLoggedUser().getC1Id())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
@@ -114,17 +113,17 @@ public class TokenController extends BaseController {
 		return tokenTransferService.getTransfersFromInitiative(initiativeId, new PageRequest(page, size, sort));
 	}
 	
-	@RequestMapping(path = "/initiative/{initiativeId}/transfersFromSubinitiatives", method = RequestMethod.GET)
+	@RequestMapping(path = "/context/{modelSectionId}/transfersFromSubinitiatives", method = RequestMethod.GET)
 	public GetResult<List<TransferDto>> getTransferFromSubinitiative(
-			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("modelSectionId") String modelSectionIdStr,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size,
 			@RequestParam("sortDirection") String sortDirection,
 			@RequestParam("sortProperty") String sortProperty ) {
 		 
-		UUID initiativeId = UUID.fromString(initiativeIdStr);	
+		UUID modelSectionId = UUID.fromString(modelSectionIdStr);	
 		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+		if (!modelService.canAccess(modelSectionId, getLoggedUserId())) {
 			return new GetResult<List<TransferDto>>("error", "access denied", null);
 		}
 		
@@ -133,22 +132,22 @@ public class TokenController extends BaseController {
 		return tokenTransferService.getTransfersFromSubinitiatives(initiativeId, new PageRequest(page, size, sort));
 	}
 	
-	@RequestMapping(path = "/initiative/{initiativeId}/transferToInitiative", method = RequestMethod.POST)
-	public PostResult makeTransferToInitiative(
-			@PathVariable("initiativeId") String initiativeIdStr,
+	@RequestMapping(path = "/context/{modelSectionId}/transferToModelSection", method = RequestMethod.POST)
+	public PostResult makeTransferToModelSection(
+			@PathVariable("modelSectionId") String modelSectionIdStr,
 			@RequestBody TransferDto transferDto) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
 		}
 		
-		UUID initiativeId = UUID.fromString(initiativeIdStr);
+		UUID modelSectionId = UUID.fromString(modelSectionIdStr);
 		
-		if (governanceService.canTransferTokens(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+		if (!modelService.canTransferToken(modelSectionId, getLoggedUser().getC1Id())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		return tokenTransferService.transferFromInitiativeToInitiative(initiativeId, transferDto, getLoggedUser().getC1Id());
+		return tokenTransferService.transferFromModelSectionToModelSection(modelSectionId, transferDto, getLoggedUser().getC1Id());
 	}
 	
 }

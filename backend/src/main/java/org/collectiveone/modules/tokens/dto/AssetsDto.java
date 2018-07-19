@@ -12,12 +12,12 @@ public class AssetsDto {
 	private String holderName;
 	private double ownedByThisHolder;
 
-	private double totalTransferredToSubinitiatives;
+	private double totalTransferredToSubModelSections;
 	private double totalTransferredToUsers;
 	private double totalPending;
 	private double totalUnderThisHolder;
 	
-	private List<TransferDto> transferredToSubinitiatives = new ArrayList<TransferDto>();
+	private List<TransferDto> transferredToModelSections = new ArrayList<TransferDto>();
 	private List<TransferDto> transferredToUsers = new ArrayList<TransferDto>();
 	private List<TransferDto> transfersPending = new ArrayList<TransferDto>();
 	
@@ -58,12 +58,7 @@ public class AssetsDto {
 	public void setOwnedByThisHolder(double ownedByThisHolder) {
 		this.ownedByThisHolder = ownedByThisHolder;
 	}
-	public double getTotalTransferredToSubinitiatives() {
-		return totalTransferredToSubinitiatives;
-	}
-	public void setTotalTransferredToSubinitiatives(double totalTransferredToSubinitiatives) {
-		this.totalTransferredToSubinitiatives = totalTransferredToSubinitiatives;
-	}
+	
 	public double getTotalTransferredToUsers() {
 		return totalTransferredToUsers;
 	}
@@ -82,12 +77,7 @@ public class AssetsDto {
 	public void setTotalUnderThisHolder(double totalUnderThisHolder) {
 		this.totalUnderThisHolder = totalUnderThisHolder;
 	}
-	public List<TransferDto> getTransferredToSubinitiatives() {
-		return transferredToSubinitiatives;
-	}
-	public void setTransferredToSubinitiatives(List<TransferDto> transferredToSubinitiatives) {
-		this.transferredToSubinitiatives = transferredToSubinitiatives;
-	}
+	
 	public List<TransferDto> getTransferredToUsers() {
 		return transferredToUsers;
 	}
@@ -101,4 +91,34 @@ public class AssetsDto {
 		this.transfersPending = transfersPending;
 	}
 	
+
+    /**
+     * @return double return the totalTransferredToSubModelSections
+     */
+    public double getTotalTransferredToSubModelSections() {
+        return totalTransferredToSubModelSections;
+    }
+
+    /**
+     * @param totalTransferredToSubModelSections the totalTransferredToSubModelSections to set
+     */
+    public void setTotalTransferredToSubModelSections(double totalTransferredToSubModelSections) {
+        this.totalTransferredToSubModelSections = totalTransferredToSubModelSections;
+    }
+
+
+    /**
+     * @return List<TransferDto> return the transferredToModelSections
+     */
+    public List<TransferDto> getTransferredToModelSections() {
+        return transferredToModelSections;
+    }
+
+    /**
+     * @param transferredToModelSections the transferredToModelSections to set
+     */
+    public void setTransferredToModelSections(List<TransferDto> transferredToModelSections) {
+        this.transferredToModelSections = transferredToModelSections;
+    }
+
 }
