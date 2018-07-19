@@ -464,6 +464,7 @@ public class ModelController extends BaseController {
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size) {
 	
+		UUID sectionId = UUID.fromString(sectionIdStr);
 		if (!modelService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<Page<ModelSectionDto>>("error", "access denied", null);
 		}
@@ -481,11 +482,8 @@ public class ModelController extends BaseController {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		
-<<<<<<< HEAD
-=======
 	
 		
->>>>>>> 15d3fba2b3711c990e62dc8a9efc4c791c9ebe1e
 		if (!modelService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}

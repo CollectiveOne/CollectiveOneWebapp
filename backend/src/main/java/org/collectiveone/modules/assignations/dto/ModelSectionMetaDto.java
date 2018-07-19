@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.collectiveone.modules.files.FileStoredDto;
-import org.collectiveone.modules.initiatives.dto.InitiativeTagDto;
 import org.collectiveone.modules.model.dto.ModelSectionTagDto;
 
 public class ModelSectionMetaDto {
