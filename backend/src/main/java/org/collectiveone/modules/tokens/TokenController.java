@@ -8,6 +8,7 @@ import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
+import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
 import org.collectiveone.modules.tokens.dto.AssetsDto;
 import org.collectiveone.modules.tokens.dto.TokenMintDto;
@@ -33,37 +34,35 @@ public class TokenController extends BaseController {
 	
 	@Autowired
 	private TokenService tokenService;
+
 	
 	@Autowired
 	private ModelService modelService;
-	
-	@Autowired
-	private InitiativeService initiativeService;
 	
 	
 	@RequestMapping(path = "/token/{id}", method = RequestMethod.GET)
 	public GetResult<AssetsDto> getToken(
 			@PathVariable("id") String id, 
-			@RequestParam(defaultValue = "false") Boolean includeSubinitiatives,
-			@RequestParam(defaultValue = "") String initiativeIdStr) {
+			@RequestParam(defaultValue = "false") Boolean includeSubModelSections,
+			@RequestParam(defaultValue = "") String modelSectionIdStr) {
 		
 		UUID tokenTypeId = UUID.fromString(id);
-		Initiative initiative = initiativeService.findByTokenType_Id(tokenTypeId);
+		ModelSection modelSection = modelService.findByTokenType_Id(tokenTypeId);
 		
-		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+		if (!modelService.canAccess(modelSection.getId(), getLoggedUserId())) {
 			return new GetResult<AssetsDto>("error", "access denied", null);
 		}
 		
 		AssetsDto assetDto = tokenService.getTokenDto(UUID.fromString(id));
 		
-		if (includeSubinitiatives) {
-			UUID initiativeContextId = UUID.fromString(initiativeIdStr);
+		if (includeSubModelSections) {
+			UUID modelSectionContextId = UUID.fromString(modelSectionIdStr);
 			
-			if (!initiativeService.canAccess(initiativeContextId, getLoggedUserId())) {
+			if (!modelService.canAccess(modelSectionContextId, getLoggedUserId())) {
 				return new GetResult<AssetsDto>("error", "access denied", null);
 			}
 			
-			assetDto = tokenTransferService.getTokenDistribution(tokenTypeId, initiativeContextId);
+			assetDto = tokenTransferService.getTokenDistribution(tokenTypeId, modelSectionContextId);
 		}
 		
 		return new GetResult<AssetsDto>("success", "initiative retrieved", assetDto);
@@ -84,8 +83,8 @@ public class TokenController extends BaseController {
 			return new PostResult("error", "not authorized", "");
 		}
 		
-		Initiative initiative = initiativeService.findByTokenType_Id(tokenId);
-		String result = tokenTransferService.mintToInitiative(tokenId, initiative.getId(), getLoggedUser().getC1Id(), mintDto);
+		ModelSection modelSection = modelService.findByTokenType_Id(tokenId);
+		String result = tokenTransferService.mintToInitiative(tokenId, modelSection.getId(), getLoggedUser().getC1Id(), mintDto);
 		
 		if(result.equals("success")) {
 			return new PostResult("success", "tokens minted", tokenId.toString());
@@ -94,27 +93,29 @@ public class TokenController extends BaseController {
 		}
 	}
 	
-	@RequestMapping(path = "/initiative/{initiativeId}/transfersToInitiatives", method = RequestMethod.GET)
+	@RequestMapping(path = "/context/{modelSectionId}/transfersToModelSections", method = RequestMethod.GET)
 	public GetResult<List<TransferDto>> getTransferFromInitiative(
-			@PathVariable("initiativeId") String initiativeIdStr,
+			@PathVariable("modelSectionId") String modelSectionIdStr,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size,
 			@RequestParam("sortDirection") String sortDirection,
 			@RequestParam("sortProperty") String sortProperty ) {
 		 
-		UUID initiativeId = UUID.fromString(initiativeIdStr);	
+		UUID modelSectionsId = UUID.fromString(modelSectionIdStr);	
 		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+		if (!modelService.canAccess(modelSectionsId, getLoggedUserId())) {
 			return new GetResult<List<TransferDto>>("error", "access denied", null);
 		}
 		
 		Sort sort = new Sort(Sort.Direction.valueOf(sortDirection), sortProperty);
 		
-		return tokenTransferService.getTransfersFromInitiative(initiativeId, new PageRequest(page, size, sort));
+		return tokenTransferService.getTransfersFromModelSections(modelSectionsId, new PageRequest(page, size, sort));
 	}
 	
-	@RequestMapping(path = "/context/{modelSectionId}/transfersFromSubinitiatives", method = RequestMethod.GET)
-	public GetResult<List<TransferDto>> getTransferFromSubinitiative(
+
+	//#### transfersFromSubModelSections ??
+	@RequestMapping(path = "/context/{modelSectionId}/transfersFromSubModelSections", method = RequestMethod.GET)
+	public GetResult<List<TransferDto>> getTransferFromSubinitiatives(
 			@PathVariable("modelSectionId") String modelSectionIdStr,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size,
@@ -128,11 +129,11 @@ public class TokenController extends BaseController {
 		}
 		
 		Sort sort = new Sort(Sort.Direction.valueOf(sortDirection), sortProperty);
-		
-		return tokenTransferService.getTransfersFromSubinitiatives(initiativeId, new PageRequest(page, size, sort));
+		//inside function get all subsection using getSectionNode
+		return tokenTransferService.getTransfersFromSubModelSections(modelSectionId, new PageRequest(page, size, sort));
 	}
 	
-	@RequestMapping(path = "/context/{modelSectionId}/transferToModelSection", method = RequestMethod.POST)
+	@RequestMapping(path = "/ctx/{modelSectionId}/transferToModelSection", method = RequestMethod.POST)
 	public PostResult makeTransferToModelSection(
 			@PathVariable("modelSectionId") String modelSectionIdStr,
 			@RequestBody TransferDto transferDto) {
@@ -143,7 +144,7 @@ public class TokenController extends BaseController {
 		
 		UUID modelSectionId = UUID.fromString(modelSectionIdStr);
 		
-		if (!modelService.canTransferToken(modelSectionId, getLoggedUser().getC1Id())) {
+		if (modelService.canTransferToken(modelSectionId, getLoggedUser().getC1Id())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		

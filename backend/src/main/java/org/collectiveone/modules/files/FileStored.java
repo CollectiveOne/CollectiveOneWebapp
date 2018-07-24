@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -27,7 +28,18 @@ public class FileStored {
 	private UUID id;
 	
 	@ManyToOne
-	private Initiative initiative;
+	private ModelSection modelSection;
+
+	public ModelSection getModelsection()
+	{
+		return this.modelSection;
+	}
+
+	public void setModelsection(ModelSection modelSection)
+	{
+		this.modelSection = modelSection;
+	}
+
 	
 	@ManyToOne
 	private AppUser uploadedBy;
@@ -48,9 +60,9 @@ public class FileStored {
 		FileStoredDto dto = new FileStoredDto();
 		
 		dto.setId(id.toString());
-		if (initiative != null) {
-			dto.setInitiativeId(initiative.getId().toString());
-			dto.setInitiativeName(initiative.getMeta().getName());
+		if (modelSection != null) {
+			dto.setModelsectionid(modelSection.getId().toString());
+			dto.setModelsectionname(modelSection.getTitle());
 		}
 		dto.setKey(key);
 		dto.setBucket(bucket);
@@ -70,13 +82,7 @@ public class FileStored {
 		this.id = id;
 	}
 	
-	public Initiative getInitiative() {
-		return initiative;
-	}
-
-	public void setInitiative(Initiative initiative) {
-		this.initiative = initiative;
-	}
+	
 
 	public AppUser getUploadedBy() {
 		return uploadedBy;

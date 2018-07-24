@@ -162,7 +162,7 @@ public class AssignationService {
 			for(Bill bill : assignation.getBills()) {
 				for(Receiver receiver : assignation.getReceivers()) {
 					double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
-					PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getModelSection().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
+					PostResult result = tokenTransferService.transferFromModelSectionToUser(assignation.getModelSection().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
 					
 					if (result.getResult().equals("success")) {
 						receiver.setState(ReceiverState.RECEIVED);
@@ -305,7 +305,7 @@ public class AssignationService {
 						for(Receiver receiver : assignation.getReceivers()) {
 							if (receiver.getState().equals(ReceiverState.PENDING)) {
 								double value = bill.getValue() * receiver.getAssignedPercent() / 100.0;
-								PostResult result = tokenTransferService.transferFromInitiativeToUser(assignation.getModelSection().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
+								PostResult result = tokenTransferService.transferFromModelSectionToUser(assignation.getModelSection().getId(), receiver.getUser().getC1Id(), bill.getTokenType().getId(), value);
 								
 								if (result.getResult().equals("success")) {
 									receiver.setState(ReceiverState.RECEIVED);
@@ -521,7 +521,7 @@ public class AssignationService {
 			if (!missingApprovals) {
 				for (Receiver receiver : assignation.getReceivers()) {
 					MemberTransfer transfer = receiver.getTransfer();
-					tokenTransferService.revertTransferFromInitiativeToUser(transfer.getId());
+					tokenTransferService.revertTransferFromModelSectionToUser(transfer.getId());
 				}
 				
 				assignation.setState(AssignationState.REVERTED);

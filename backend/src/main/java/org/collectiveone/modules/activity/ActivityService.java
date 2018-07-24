@@ -43,6 +43,7 @@ import org.collectiveone.modules.model.Member;
 import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
+import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
@@ -61,8 +62,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ActivityService {
 	
-	@Autowired
-	private InitiativeService initiativeService;
 	
 	@Autowired
 	private ModelService modelService;
@@ -89,8 +88,7 @@ public class ActivityService {
 	@Autowired
 	private SubscriberRepositoryIf subscriberRepository;
 	
-	@Autowired
-	private InitiativeRepositoryIf initiativeRepository;
+	
 	
 	@Autowired
 	private ModelSectionRepositoryIf modelSectionRepository;
@@ -166,54 +164,27 @@ public class ActivityService {
 				cardsIds.add(elementId);
 				isModel = true;
 				break;
-				
-			case INITIATIVE:
-				isModel = false;
-				break;
+		
 				
 			default:
 				break;
 		
 		}
-		
-		if(isModel == true) {
-			if (allSectionIds.size() == 0) {
-				allSectionIds.add(UUID.randomUUID());
-			}
-			
-			if (cardsIds.size() == 0) {
-				cardsIds.add(UUID.randomUUID());
-			}
-			
-			return notificationRepository.findOfUserInSections(userId, NotificationState.PENDING, allSectionIds, cardsIds, page);
-			
-		} else {
-			List<InitiativeDto> subinitiativesTree = initiativeService.getSubinitiativesTree(elementId, null);
-			
-			List<UUID> allInitiativesIds = new ArrayList<UUID>();
-			
-			allInitiativesIds.add(elementId);
-			allInitiativesIds.addAll(extractAllIdsFromInitiativesTree(subinitiativesTree, new ArrayList<UUID>()));
-			
-			return notificationRepository.findOfUserInInitiatives(userId, NotificationState.PENDING, allInitiativesIds, page);
+		if (allSectionIds.size() == 0) {
+			allSectionIds.add(UUID.randomUUID());
 		}
+		
+		if (cardsIds.size() == 0) {
+			cardsIds.add(UUID.randomUUID());
+		}
+		
+		return notificationRepository.findOfUserInSections(userId, NotificationState.PENDING, allSectionIds, cardsIds, page);
 		
 		
 	}
 	
 	
-	private List<UUID> extractAllIdsFromInitiativesTree(List<InitiativeDto> initiativeTree, List<UUID> list) {
-		
-		for (InitiativeDto initiativeDto : initiativeTree) {
-			list.add(UUID.fromString(initiativeDto.getId()));
-		}
-		
-		for (InitiativeDto initiativeDto : initiativeTree) {
-			extractAllIdsFromInitiativesTree(initiativeDto.getSubInitiatives(), list);
-		}
-		
-		return list;
-	}
+	
 
 	@Transactional
 	public GetResult<List<NotificationDto>> getUserNotifications(
@@ -368,10 +339,6 @@ public class ActivityService {
 					applicableSubscriberDto.setSection(modelSectionRepository.findById(applicableSubscriber.getElementId()).toDtoLight());
 					break;
 				
-				case INITIATIVE:
-					applicableSubscriberDto.setInitiative(initiativeRepository.findById(applicableSubscriber.getElementId()).toDto());
-					break;
-					
 				default: 
 					break;
 			}
@@ -467,7 +434,7 @@ public class ActivityService {
 		
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	
@@ -485,7 +452,7 @@ public class ActivityService {
 		
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -501,7 +468,7 @@ public class ActivityService {
 		
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -517,7 +484,7 @@ public class ActivityService {
 		
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -526,30 +493,30 @@ public class ActivityService {
 		
 		activity.setType(ActivityType.D_ASSIGNATION_CREATED);
 		activity.setTriggerUser(triggerUser);
-		activity.setModelSection(assignation.getMod());
+		activity.setModelSection(assignation.getModelSection());
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity.setAssignation(assignation);
 		
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
 	public void transferToSubModelSection(ModelSectionTransfer transfer) {
 		Activity activity = new Activity();
 		
-		activity.setType(ActivityType.INITIATIVE_TRANSFER);
+		activity.setType(ActivityType.MODEL_SECTION_TRANSFER);
 		activity.setTriggerUser(transfer.getOrderedBy());
 		activity.setModelSection(transfer.getFrom());
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
-		activity.setInitiativeTransfer(transfer);
+		activity.setModelsectiontransfer(transfer);
 		
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -558,14 +525,14 @@ public class ActivityService {
 		
 		activity.setType(ActivityType.ASSIGNATION_REVERT_ORDERED);
 		activity.setTriggerUser(triggerUser);
-		activity.setInitiative(assignation.getInitiative());
+		activity.setModelSection(assignation.getModelSection());
 		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
 		
 		activity.setAssignation(assignation);
 		
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -583,7 +550,7 @@ public class ActivityService {
 		
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -601,7 +568,7 @@ public class ActivityService {
 		
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -617,7 +584,7 @@ public class ActivityService {
 		
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	
@@ -629,7 +596,7 @@ public class ActivityService {
 		activity.setModelSection(section);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -641,7 +608,7 @@ public class ActivityService {
 		activity.setOnSection(onSection);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -652,7 +619,7 @@ public class ActivityService {
 		activity.setModelSection(section);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -664,7 +631,7 @@ public class ActivityService {
 		activity.setFromSection(fromSection);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -677,7 +644,7 @@ public class ActivityService {
 		activity.setOnSection(onSection);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -689,7 +656,7 @@ public class ActivityService {
 		activity.setOnSection(onSection);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -700,7 +667,7 @@ public class ActivityService {
 		activity.setModelSection(section);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	
@@ -713,7 +680,7 @@ public class ActivityService {
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -724,7 +691,7 @@ public class ActivityService {
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -735,7 +702,7 @@ public class ActivityService {
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -746,7 +713,7 @@ public class ActivityService {
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -758,7 +725,7 @@ public class ActivityService {
 		activity = activityRepository.save(activity);
 		
 		broadcastMessage(activity);
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -771,7 +738,7 @@ public class ActivityService {
 		activity.setOnSection(onSection);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -783,7 +750,7 @@ public class ActivityService {
 		activity.setFromSection(cardWrapperAddition.getSection());
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	@Transactional
@@ -794,7 +761,7 @@ public class ActivityService {
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	
@@ -809,7 +776,7 @@ public class ActivityService {
 			List<AppUser> mentionedUsers) {
 		
 				//#### confirm here
-		ModelSection initiative = initiativeRepository.findById(messageService.getInitiativeIdOfMessageThread(message.getThread()));
+		ModelSection initiative = modelSectionRepository.findById(messageService.getInitiativeIdOfMessageThread(message.getThread()));
 		Activity activity = getBaseActivity(triggerUser, initiative); 
 		
 		activity.setType(ActivityType.MESSAGE_POSTED);
@@ -819,7 +786,7 @@ public class ActivityService {
 		
 		activity = activityRepository.save(activity);
 		
-		addInitiativeActivityNotifications(activity);
+		addModelSectionActivityNotifications(activity);
 	}
 	
 	private void setMessageLocation(
@@ -910,7 +877,7 @@ public class ActivityService {
 		return isInModel;
 	}
 	
-	private void addInitiativeActivityNotifications (Activity activity) {
+	private void addModelSectionActivityNotifications (Activity activity) {
 		
 		createNotifications(activity);
 		
@@ -1005,23 +972,20 @@ public class ActivityService {
 		}
 		
 		/* get applicable initiative */
-		UUID initiativeId = null;
+		UUID modelSectionId = null;
 		switch (elementType) {
 			case SECTION:
-				initiativeId = modelSectionRepository.findById(elementId).getId();
+			modelSectionId = modelSectionRepository.findById(elementId).getId();
 				break;
 				
-			case INITIATIVE:
-				initiativeId = elementId;
-				break;
-				
+			
 			default:
 				break;
 		}
 		
-		if (initiativeId != null) {
+		if (modelSectionId != null) {
 			/* if not found in section or not relative to section, look on initiatives */
-			applicableSubscriber = findSubscriberOnInitiatives(userId, initiativeId, skipOne);	
+			applicableSubscriber = findSubscriberOnModelSection(userId, modelSectionId, skipOne);	
 		}
 		
 		/* if not found a CUSTOM subscriber in any section or initiative, use the user global subscriber */
@@ -1063,12 +1027,12 @@ public class ActivityService {
 		
 	}
 	
-	private Subscriber findSubscriberOnInitiatives(UUID userId, UUID initiativeId, Boolean skipOne) {
+	private Subscriber findSubscriberOnModelSection(UUID userId, UUID modelSectionid, Boolean skipOne) {
 		
 		Subscriber subscriber = null; 
 		
 		if (!skipOne) {
-			subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(initiativeId, SubscriptionElementType.INITIATIVE, userId);
+			subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(modelSectionid, SubscriptionElementType.SECTION, userId);
 			
 			if (subscriber != null) {
 				if (subscriber.getInheritConfig() == SubscriberInheritConfig.CUSTOM) {
@@ -1077,10 +1041,10 @@ public class ActivityService {
 			}	
 		}
 		
-		List<Initiative> parents = initiativeService.getParentGenealogyInitiatives(initiativeId);
+		List<UUID> parents = modelService.getSectionNode(modelSectionid, true, false, null).toList();
 		
-		for (Initiative parent : parents) {
-			subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(parent.getId(), SubscriptionElementType.INITIATIVE, userId);
+		for (UUID parent : parents) {
+			subscriber = subscriberRepository.findByElementIdAndTypeAndUser_C1Id(parent, SubscriptionElementType.SECTION, userId);
 			if (subscriber != null) {
 				if (subscriber.getInheritConfig() == SubscriberInheritConfig.CUSTOM) {
 					return subscriber;
@@ -1114,7 +1078,7 @@ public class ActivityService {
 		}
 		
 		/* then search for subscribers based on initiatives */
-		appendInitiativeSubscribers(activity.getInitiative().getId(), subscribersMap);
+		appendInitiativeSubscribers(activity.getModelSection().getId(), subscribersMap);
 		
 		/* now check if there are subscribers with INHERIT config, if so, use the personal
 		 * config of each user at CollectiveOne global level */
@@ -1291,13 +1255,13 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	private void appendInitiativeSubscribers (UUID initiativeId, Map<UUID, Subscriber> subscribersMap) {
+	private void appendInitiativeSubscribers (UUID modelSectionId, Map<UUID, Subscriber> subscribersMap) {
 		
 		/* example https://docs.google.com/drawings/d/1PqPhefzrGVlWVfG-SRGS56l_e2qpNEsajLbnsAWcTfA/edit,
 		 * assume initiativeId = C */
 		/* start with this initiative subscribers (S3 and S6 in example). Take into account that 
 		 * a subscriber state may be SUBSCRIPTION_DISABLED */
-		List<Subscriber> thisSubscribers = subscriberRepository.findByElementId(initiativeId);
+		List<Subscriber> thisSubscribers = subscriberRepository.findByElementId(modelSectionId);
 		
 		for (Subscriber subscriber : thisSubscribers) {
 			if (!subscribersMap.containsKey(subscriber.getUser().getC1Id())) {
@@ -1314,9 +1278,9 @@ public class ActivityService {
 		}
 		
 		/* then add the subscribers of all parent initiatives 2(B and A, in that order) */
-		List<Initiative> parents = initiativeService.getParentGenealogyInitiatives(initiativeId);
-		for (Initiative parent : parents) {
-			List<Subscriber> parentSubscribers = subscriberRepository.findByElementId(parent.getId());
+		List<UUID> parents = modelService.getSectionNode(modelSectionId, true, false, 0).toList();
+		for (UUID parent : parents) {
+			List<Subscriber> parentSubscribers = subscriberRepository.findByElementId(parent);
 			
 			for (Subscriber parentSubscriber : parentSubscribers) {
 				
@@ -1367,10 +1331,10 @@ public class ActivityService {
 		}
 		
 		/* all events are broadcasted to their initaitive channel and their parents */
-		List<Initiative> parentInits = initiativeService.getParentGenealogyInitiatives(activity.getInitiative().getId());
-		parentInits.add(activity.getInitiative()); //add parent initiative of activity to broadcast list
-        for (Initiative init : parentInits) {
-            template.convertAndSend("/channel/activity/model/initiative/" + init.getId(), "UPDATE");
-        }
+		// List<Initiative> parentInits = initiativeService.getParentGenealogyInitiatives(activity.getInitiative().getId());
+		// parentInits.add(activity.getInitiative()); //add parent initiative of activity to broadcast list
+        // for (Initiative init : parentInits) {
+        //     template.convertAndSend("/channel/activity/model/initiative/" + init.getId(), "UPDATE");
+        // }
 	}
 }

@@ -128,7 +128,7 @@ public class TokenService {
 	
 	@Transactional
 	public double getTotalAssignedToOtherInitiatives(UUID tokenId, UUID initiativeId) {
-		Double res = tokenTypeRepository.getTotalAssignedToOther(tokenId, initiativeId, TokenHolderType.INITIATIVE);
+		Double res = tokenTypeRepository.getTotalAssignedToOther(tokenId, initiativeId, TokenHolderType.MODEL_SECTION);
 		if (res != null) {
 			return res;
 		} else {

@@ -14,12 +14,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.conversations.MessageThread;
+import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.tokens.TokenType;
 import org.hibernate.annotations.GenericGenerator;
@@ -71,6 +73,20 @@ public class ModelSection {
 
 	@OneToMany
 	private List<TokenType> tokenTypes = new ArrayList<TokenType>();
+
+	@ManyToOne
+	private FileStored imageFile;
+
+	public FileStored getImagefile()
+	{
+		return this.imageFile;
+	}
+
+	public void setImagefile(FileStored imageFile)
+	{
+		this.imageFile = imageFile;
+	}
+
 	
 	
 	public List<TokenType> getTokenTypes() {

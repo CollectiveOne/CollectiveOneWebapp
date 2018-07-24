@@ -1302,6 +1302,8 @@ public class ModelService {
 		return false;
 	}
 
+
+
 	@Transactional
 	public Boolean canMintTokens (UUID tokenId, UUID userId) {
 		ModelSection modelSection= findByTokenType_Id(tokenId);

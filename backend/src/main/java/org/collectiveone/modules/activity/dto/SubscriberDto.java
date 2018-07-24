@@ -1,6 +1,5 @@
 package org.collectiveone.modules.activity.dto;
 
-import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.users.AppUserDto;
 
@@ -11,7 +10,6 @@ public class SubscriberDto {
 	private String elementId;
 	private String elementType;
 	private ModelSectionDto section;
-	private InitiativeDto initiative;
 	
 	private String inheritConfig;
 	private SubscriberDto applicableSubscriber;
@@ -52,12 +50,7 @@ public class SubscriberDto {
 	public void setSection(ModelSectionDto section) {
 		this.section = section;
 	}
-	public InitiativeDto getInitiative() {
-		return initiative;
-	}
-	public void setInitiative(InitiativeDto initiative) {
-		this.initiative = initiative;
-	}
+	
 	public String getInheritConfig() {
 		return inheritConfig;
 	}

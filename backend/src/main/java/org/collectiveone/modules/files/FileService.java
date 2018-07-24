@@ -12,7 +12,9 @@ import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.config.aws.AmazonS3Template;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
+import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.users.AppUserProfile;
 import org.collectiveone.modules.users.AppUserProfileRepositoryIf;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
@@ -48,14 +50,14 @@ public class FileService {
 	private AppUserProfileRepositoryIf appUserProfileRepository;
 	
 	@Autowired
-	private InitiativeRepositoryIf initiativeRepository;
+	private ModelSectionRepositoryIf modelSectionRepository;
 	
 	@Autowired
 	private ModelService modelService;
 	
 
 	@Transactional
-	public FileStored handleFileUpload(UUID uploadedById, String key, MultipartFile file, UUID initiativeId) {
+	public FileStored handleFileUpload(UUID uploadedById, String key, MultipartFile file, UUID modelSectionId) {
 		if (!file.isEmpty()) {
 			try {
 				ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -73,7 +75,7 @@ public class FileService {
 				fileStored.setUrl(baseUrl + "/" + bucketName + "/" + key);
 				fileStored.setLastUpdated(new Timestamp(System.currentTimeMillis()));
 				
-				if (initiativeId != null) fileStored.setInitiative(initiativeRepository.findById(initiativeId)); 
+				if (modelSectionId != null) fileStored.setModelsection(modelSectionRepository.findById(modelSectionId)); 
 				
 				fileStored = fileStoredRepository.save(fileStored);
 				
@@ -114,7 +116,7 @@ public class FileService {
 		newFileStored.setUploadedBy(appUserRepository.findByC1Id(userId));
 		newFileStored.setUrl(baseUrl + "/" + bucketName + "/" + destinationKey);
 		newFileStored.setLastUpdated(new Timestamp(System.currentTimeMillis()));
-		newFileStored.setInitiative(fileStored.getInitiative()); 
+		newFileStored.setModelsection(fileStored.getModelsection()); 
 		
 		newFileStored = fileStoredRepository.save(newFileStored);
 		
@@ -186,14 +188,14 @@ public class FileService {
 	}
 	
 	@Transactional
-	public PostResult uploadInitiativeImage(UUID userId, UUID initiativeId, MultipartFile file) throws IOException {
+	public PostResult uploadMModelSectionImage(UUID userId, UUID modelSectionId, MultipartFile file) throws IOException {
 		
 		try (InputStream input = file.getInputStream()) {
 		    try {
 		        ImageIO.read(input).toString();
 		        
-		        String key = "InitiativeImages/" + initiativeId.toString();
-				FileStored fileUploaded = handleFileUpload(userId, key, file, initiativeId);
+		        String key = "ModelSectionImages/" + modelSectionId.toString();
+				FileStored fileUploaded = handleFileUpload(userId, key, file, modelSectionId);
 				
 				if (fileUploaded != null) {
 					return new PostResult("success", "image uploaded", fileUploaded.getId().toString());
@@ -209,8 +211,8 @@ public class FileService {
 	}
 	
 	@Transactional
-	public Initiative getFileInitiative(UUID fileId) {
-		return fileStoredRepository.findById(fileId).getInitiative();
+	public ModelSection getFileModelSection(UUID fileId) {
+		return fileStoredRepository.findById(fileId).getModelsection();
 	}
 	
 	@Transactional

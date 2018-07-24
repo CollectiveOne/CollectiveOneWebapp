@@ -22,12 +22,10 @@ import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.conversations.Message;
-import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
-import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.ModelSectionTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
@@ -65,7 +63,10 @@ public class Activity {
 	
 	
 	@OneToMany
-	private List<ModleSectionTransfer> initiativeTransfers = new ArrayList<InitiativeTransfer>();
+	private List<ModelSectionTransfer> modelSectionTransfers = new ArrayList<ModelSectionTransfer>();
+
+	
+
 	
 	@Column(name = "old_name", length = 30)
 	private String oldName;
@@ -86,6 +87,17 @@ public class Activity {
 	
 	@OneToOne
 	private ModelSectionTransfer modelSectionTransfer;
+
+	public ModelSectionTransfer getModelsectiontransfer()
+	{
+		return this.modelSectionTransfer;
+	}
+
+	public void setModelsectiontransfer(ModelSectionTransfer modelSectionTransfer)
+	{
+		this.modelSectionTransfer = modelSectionTransfer;
+	}
+
 	
 	@ManyToOne
 	private ModelSection modelSection;
@@ -132,7 +144,7 @@ public class Activity {
 			dto.setOnSection(modelCardWrapperAddition.getSection().toDto());
 			ModelCardWrapperDto cardWrapperDto = modelCardWrapperAddition.getCardWrapper().toDto();
 			
-			cardWrapperDto.setModelSectionId(modelCardWrapperAddition.getSection().getId().toString());
+			cardWrapperDto.setContextId(modelCardWrapperAddition.getSection().getId().toString());
 			cardWrapperDto.setScope(modelCardWrapperAddition.getScope());
 			
 			dto.setModelCardWrapper(cardWrapperDto);	
@@ -193,15 +205,6 @@ public class Activity {
 
 	public void setTriggerUser(AppUser triggerUser) {
 		this.triggerUser = triggerUser;
-	}
-
-
-	public List<InitiativeTransfer> getInitiativeTransfers() {
-		return initiativeTransfers;
-	}
-
-	public void setInitiativeTransfers(List<InitiativeTransfer> initiativeTransfers) {
-		this.initiativeTransfers = initiativeTransfers;
 	}
 
 	public String getOldName() {
@@ -298,6 +301,16 @@ public class Activity {
 
 	public void setModelCardWrapperAddition(ModelCardWrapperAddition modelCardWrapperAddition) {
 		this.modelCardWrapperAddition = modelCardWrapperAddition;
+	}
+
+	public List<ModelSectionTransfer> getModelsectiontransfers()
+	{
+		return this.modelSectionTransfers;
+	}
+
+	public void setModelsectiontransfers(List<ModelSectionTransfer> modelSectionTransfers)
+	{
+		this.modelSectionTransfers = modelSectionTransfers;
 	}
 	
 	

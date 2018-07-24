@@ -23,6 +23,6 @@ public interface ModelSectionTransferRepositoryIf extends CrudRepository<ModelSe
 	
 	List<ModelSectionTransfer> findByFrom_Id(UUID fromId, Pageable page);
 	
-	List<InitiativeTransfer> findByAlsoInModelSections_Id(UUID fromId, Pageable page);
+	List<ModelSectionTransfer> findByAlsoInModelSections_Id(UUID fromId, Pageable page);
 	
 }

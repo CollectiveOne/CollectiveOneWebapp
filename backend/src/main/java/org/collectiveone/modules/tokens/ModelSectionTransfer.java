@@ -46,8 +46,7 @@ public class ModelSectionTransfer {
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<ModelSection> alsoInModelSection = new ArrayList<ModelSection>();
 
-	
-	
+
 	@ManyToOne
 	private ModelSection to;
 	

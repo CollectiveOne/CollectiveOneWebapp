@@ -3,8 +3,30 @@ package org.collectiveone.modules.files;
 public class FileStoredDto {
 
 	private String id;
-	private String initiativeId;
-	private String initiativeName;
+	private String modelSectionId;
+
+	public String getModelsectionid()
+	{
+		return this.modelSectionId;
+	}
+
+	public void setModelsectionid(String modelSectionId)
+	{
+		this.modelSectionId = modelSectionId;
+	}
+
+	private String modelSectionName;
+
+	public String getModelsectionname()
+	{
+		return this.modelSectionName;
+	}
+
+	public void setModelsectionname(String modelSectionName)
+	{
+		this.modelSectionName = modelSectionName;
+	}
+
 	private String uploadedById;
 	private String bucket;
 	private String key;
@@ -18,18 +40,7 @@ public class FileStoredDto {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getInitiativeId() {
-		return initiativeId;
-	}
-	public void setInitiativeId(String initiativeId) {
-		this.initiativeId = initiativeId;
-	}
-	public String getInitiativeName() {
-		return initiativeName;
-	}
-	public void setInitiativeName(String initiativeName) {
-		this.initiativeName = initiativeName;
-	}
+	
 	public String getUploadedById() {
 		return uploadedById;
 	}

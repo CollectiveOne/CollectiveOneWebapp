@@ -18,6 +18,7 @@ import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.repositories.NotificationRepositoryIf;
 import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
 import org.collectiveone.modules.initiatives.Initiative;
+import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.users.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -74,7 +75,7 @@ public class EmailService {
 			segmentedPerUserAndInitiativeNotifications.clear();
 			
 			for (Notification notification : theseNotifications) {
-				int ix = indexOfInitiative(notification.getActivity().getInitiative().getId());
+				int ix = indexOfInitiative(notification.getActivity().getModelSection().getId());
 				if (ix == -1) {
 					List<Notification> newArray = new ArrayList<Notification>();
 					newArray.add(notification);
@@ -86,10 +87,10 @@ public class EmailService {
 			
 			String subresult = "";
 			try {
-				subresult = sendSegmentedPerUserAndInitiativeNotifications(
+				subresult = sendSegmentedPerUserAndModelSectionNotifications(
 						theseNotifications,
 						theseNotifications.get(0).getSubscriber().getUser(),
-						theseNotifications.get(0).getActivity().getInitiative());
+						theseNotifications.get(0).getActivity().getModelSection());
 				
 			} catch (Exception ex) {
 				subresult = "error sending emails";
@@ -185,14 +186,14 @@ public class EmailService {
 	
 	private int indexOfInitiative(UUID initiativeId) {
 		for (int ix = 0; ix < segmentedPerUserAndInitiativeNotifications.size(); ix++) {
-			if (segmentedPerUserAndInitiativeNotifications.get(ix).get(0).getActivity().getInitiative().getId().equals(initiativeId)) {
+			if (segmentedPerUserAndInitiativeNotifications.get(ix).get(0).getActivity().getModelSection().getId().equals(initiativeId)) {
 				return ix; 
 			}
 		}
 		return -1;
 	}
 	
-	private String sendSegmentedPerUserAndInitiativeNotifications(List<Notification> notifications, AppUser receiver, Initiative initiative) throws IOException {
+	private String sendSegmentedPerUserAndModelSectionNotifications(List<Notification> notifications, AppUser receiver, ModelSection modelSection) throws IOException {
 		if(env.getProperty("collectiveone.webapp.send-email-enabled").equalsIgnoreCase("true")) {
 			if(notifications.size() > 0 && receiver.getEmailNotificationsEnabled()) {
 				Request request = new Request();
@@ -210,8 +211,8 @@ public class EmailService {
 				toEmail.setEmail(receiver.getEmail());
 				
 				personalization.addTo(toEmail);
-				personalization.addSubstitution("$INITIATIVE_NAME$", initiative.getMeta().getName());
-				personalization.addSubstitution("$INITIATIVE_ANCHOR$", getInitiativeAnchor(initiative));
+				personalization.addSubstitution("$INITIATIVE_NAME$", modelSection.getTitle());
+				personalization.addSubstitution("$INITIATIVE_ANCHOR$", getModelSectionAnchor(modelSection));
 				
 				personalization.addSubstitution("$UNSUSCRIBE_FROM_ALL_HREF$", getUnsuscribeFromAllHref());
 				
@@ -379,9 +380,9 @@ public class EmailService {
 			
 			if (notification.getAdmin().getEmailNotificationsEnabled()) {
 				String toEmailString = notification.getAdmin().getEmail();
-				Initiative initiative = notification.getInitiative();
-				String acceptRequestUrl = env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/" + 
-						initiative.getId().toString() + "/people/addMember/" + notification.getUser().getC1Id().toString();
+				ModelSection modelSection = notification.getModelsection();
+				String acceptRequestUrl = env.getProperty("collectiveone.webapp.baseurl") +"/#/app/ctx/" + 
+				modelSection.getId().toString() + "/people/addMember/" + notification.getUser().getC1Id().toString();
 				
 				
 				Personalization personalization = new Personalization();
@@ -390,7 +391,7 @@ public class EmailService {
 				toEmail.setEmail(toEmailString);
 				
 				personalization.addTo(toEmail);
-				personalization.addSubstitution("$INITIATIVE_ANCHOR$", getInitiativeAnchor(initiative));
+				personalization.addSubstitution("$INITIATIVE_ANCHOR$", getModelSectionAnchor(modelSection));
 				personalization.addSubstitution("$USER_NICKNAME$", notification.getUser().getProfile().getNickname());
 				personalization.addSubstitution("$USER_PICTURE$", notification.getUser().getProfile().getPictureUrl());
 				personalization.addSubstitution("$USER_EMAIL$", notification.getUser().getEmail());
@@ -444,7 +445,7 @@ public class EmailService {
 		String toEmailString = notification.getSubscriber().getUser().getEmail();
 		String triggeredByUsername = notification.getActivity().getTriggerUser().getProfile().getNickname();
 		String triggerUserPictureUrl = notification.getActivity().getTriggerUser().getProfile().getPictureUrl();
-		Initiative initiative = notification.getActivity().getInitiative();
+		ModelSection modelSection = notification.getActivity().getModelSection();
 		
 		Personalization personalization = new Personalization();
 		
@@ -452,30 +453,30 @@ public class EmailService {
 		toEmail.setEmail(toEmailString);
 		
 		personalization.addTo(toEmail);
-		personalization.addSubstitution("$INITIATIVE_NAME$", initiative.getMeta().getName());
+		personalization.addSubstitution("$INITIATIVE_NAME$", modelSection.getTitle());
 		personalization.addSubstitution("$TRIGGER_USER_NICKNAME$", triggeredByUsername);
 		personalization.addSubstitution("$TRIGGER_USER_PICTURE$", triggerUserPictureUrl);
-		personalization.addSubstitution("$INITIATIVE_ANCHOR$", getInitiativeAnchor(initiative));
+		personalization.addSubstitution("$INITIATIVE_ANCHOR$", getModelSectionAnchor(modelSection));
 		personalization.addSubstitution("$INITIATIVE_PICTURE$", "http://guillaumeladvie.com/wp-content/uploads/2014/04/ouishare.jpg");
 		
-		personalization.addSubstitution("$UNSUSCRIBE_FROM_INITIATIVE_HREF$", getUnsuscribeFromInitiativeHref(initiative));
+		personalization.addSubstitution("$UNSUSCRIBE_FROM_INITIATIVE_HREF$", getUnsuscribeFromModelSectionHref(modelSection));
 		personalization.addSubstitution("$UNSUSCRIBE_FROM_ALL_HREF$", getUnsuscribeFromAllHref());
 		
 		return personalization;
 	}
 	
-	private String getInitiativeAnchor(Initiative initiative) {
-		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/" + 
-				initiative.getId().toString() + "/overview>" + initiative.getMeta().getName() + "</a>";
+	private String getModelSectionAnchor(ModelSection modelSection) {
+		return "<a href=" + env.getProperty("collectiveone.webapp.baseurl") +"/#/app/ctx/" + 
+		modelSection.getId().toString() + "/overview>" + modelSection.getTitle() + "</a>";
 	}
 	
-	private String getUnsuscribeFromInitiativeHref(Initiative initiative) {
-		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/unsubscribe?fromInitiativeId=" + 
-				initiative.getId().toString() + "&fromInitiativeName=" + initiative.getMeta().getName();
+	private String getUnsuscribeFromModelSectionHref(ModelSection modelSection) {
+		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/ctx/unsubscribe?fromInitiativeId=" + 
+		modelSection.getId().toString() + "&fromInitiativeName=" + modelSection.getTitle();
 	}
 	
 	private String getUnsuscribeFromAllHref() {
-		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/inits/unsubscribe?fromAll=true";
+		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/ctx/unsubscribe?fromAll=true";
 	}
 	
 }

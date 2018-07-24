@@ -13,6 +13,8 @@ import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.dto.ModelSectionLinkedDto;
+import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepositoryIf;
+import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -404,6 +406,10 @@ public class ModelController extends BaseController {
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
 		UUID sectionId = UUID.fromString(sectionIdStr);
 
+		// ####
+		// ModelCardWrapperAdditionRepositoryIf modelCardWrapper;
+		
+		// modelCardWrapper.findParentSections(cardWrapperId)
 		// #### 
 		// UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
 		

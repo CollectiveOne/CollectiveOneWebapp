@@ -6,10 +6,9 @@ import java.util.UUID;
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.governance.DecisionVerdict;
-import org.collectiveone.modules.governance.GovernanceService;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
+import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,14 +27,9 @@ public class FilesController extends BaseController {
 	private FileService fileService;
 	
 	@Autowired
-	private GovernanceService governanceService;
-	
-	@Autowired
 	private ModelService modelService;
 	
-	@Autowired
-	private InitiativeService initiativeService;
-	
+
 	
     @RequestMapping(value = "/upload/profileImage", method = RequestMethod.POST)
     public @ResponseBody String uploadProfileImage(@RequestParam("file") MultipartFile file) {
@@ -70,33 +64,36 @@ public class FilesController extends BaseController {
 			return new PostResult("error", "endpoint enabled users only", "");
 		}
     	
-    	UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
+		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
+		
     	Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
-    	
-    	if (governanceService.canEditModel(initiative.getId(), getLoggedUserId()) == DecisionVerdict.DENIED) {
-    		return new PostResult("error", "not authorized", "");
-		}
+		
+		// ####
+    	// if (governanceService.canEditModel(initiative.getId(), getLoggedUserId()) == DecisionVerdict.DENIED) {
+    	// 	return new PostResult("error", "not authorized", "");
+		// }
     	
     	
     	return fileService.uploadCardImage(getLoggedUserId(), cardWrapperId, file);
     }
     
-    @RequestMapping(value = "/upload/initiativeImage/{initiativeId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload/modelSectionImage/{modelSectionId}", method = RequestMethod.POST)
     public @ResponseBody PostResult uploadInitiativeImage(
-    		@PathVariable("initiativeId") String initiativeIdStr,
+    		@PathVariable("modelSectionId") String modelSectionIdStr,
     		@RequestParam("file") MultipartFile file) throws IOException {
     	
     	if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", "");
 		}
+		
+		// ####
+    	UUID initiativeId = UUID.fromString(modelSectionIdStr);
+    	// if (governanceService.canEdit(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
+    	// 	return new PostResult("error", "not authorized", "");
+		// }
     	
-    	UUID initiativeId = UUID.fromString(initiativeIdStr);
-    	if (governanceService.canEdit(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
-    		return new PostResult("error", "not authorized", "");
-		}
     	
-    	
-    	return fileService.uploadInitiativeImage(getLoggedUserId(), initiativeId, file);
+    	return fileService.uploadMModelSectionImage(getLoggedUserId(), initiativeId, file);
     }
     
     @RequestMapping(value = "/files/{fileId}", method = RequestMethod.GET)
@@ -104,10 +101,10 @@ public class FilesController extends BaseController {
     		@PathVariable("fileId") String fileIdStr) {
     	
     	UUID fileId = UUID.fromString(fileIdStr);
-    	Initiative initiative = fileService.getFileInitiative(fileId);
+    	ModelSection modelSection = fileService.getFileModelSection(fileId);
     	
-    	if (initiative != null) {
-    		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
+    	if (modelSection != null) {
+    		if (!modelService.canAccess(modelSection.getId(), getLoggedUserId())) {
     			return new GetResult<FileStoredDto>("error", "access denied", null);
     		}
     	}
