@@ -17,7 +17,6 @@ import org.collectiveone.modules.activity.enums.ActivityType;
 import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.repositories.NotificationRepositoryIf;
 import org.collectiveone.modules.activity.repositories.WantToContributeRepositoryIf;
-import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.users.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;

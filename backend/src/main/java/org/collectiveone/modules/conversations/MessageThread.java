@@ -14,7 +14,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelSection;
 import org.hibernate.annotations.GenericGenerator;
@@ -41,8 +40,6 @@ public class MessageThread {
 	@OneToOne(mappedBy = "messageThread")
 	ModelSection modelSection;
 	
-	@OneToOne(mappedBy = "messageThread")
-	Initiative initiative;
 	
 	@OneToMany(mappedBy="thread")
 	private List<Message> messages = new ArrayList<Message>();
@@ -79,13 +76,6 @@ public class MessageThread {
 		this.modelSection = modelSection;
 	}
 
-	public Initiative getInitiative() {
-		return initiative;
-	}
-
-	public void setInitiative(Initiative initiative) {
-		this.initiative = initiative;
-	}
 
 	public List<Message> getMessages() {
 		return messages;

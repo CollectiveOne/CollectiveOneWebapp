@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.model.ModelController;
+import org.collectiveone.modules.model.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +23,7 @@ public class MessagesController extends BaseController {
 	private MessageService messageService;
 	
 	@Autowired
-	private InitiativeService initiativeService;
+	private ModelService modelService;
 	
 	@Autowired
 	ModelController modelController;
@@ -43,11 +43,11 @@ public class MessagesController extends BaseController {
 		MessageThreadContextType contextType = MessageThreadContextType.valueOf(contextElementTypeStr);
 		UUID elementId = UUID.fromString(contextElementIdStr);
 		
-		UUID initiativeId = messageService.getInitiativeIdOfMessage(contextType, elementId);
+		UUID modelSectionId = messageService.getModelSectionIdOfMessage(contextType, elementId);
 		UUID contextOfContextElementId = contextOfContextElementIdStr.equals("") ? null : UUID.fromString(contextOfContextElementIdStr);
 		
 		/* Permission to comment is default to ecosystem for now */
-		if (!initiativeService.isMemberOfEcosystem(initiativeId, getLoggedUserId())) {
+		if (!modelService.canAccess(modelSectionId, getLoggedUserId())) {
 			return new PostResult("error", "not authorized", "");
 		}
 		

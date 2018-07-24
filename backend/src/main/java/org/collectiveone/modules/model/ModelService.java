@@ -21,10 +21,6 @@ import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredRepositoryIf;
 import org.collectiveone.modules.governance.CardLike;
 import org.collectiveone.modules.governance.CardLikeRepositoryIf;
-import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.initiatives.InitiativeService;
-import org.collectiveone.modules.initiatives.dto.MemberDto;
-import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.dto.CardWrappersHolderDto;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
@@ -50,7 +46,7 @@ import org.springframework.stereotype.Service;
 public class ModelService {
 	
 	@Autowired 
-	private InitiativeService initiativeService;
+	private ModelService modelService;
 	
 	@Autowired
 	private ActivityService activityService;
@@ -69,7 +65,7 @@ public class ModelService {
 	private FileService fileService;
 	
 	@Autowired
-	private InitiativeRepositoryIf initiativeRepository;
+	private ModelSectionRepositoryIf initiativeRepository;
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
@@ -102,18 +98,19 @@ public class ModelService {
 	@Autowired
 	private MemberRepositoryIf memberRepository;
 	
-	@Transactional
-	public GetResult<ModelSectionDto> getModel(UUID initiativeId, Integer level, UUID requestById, Boolean onlySections) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
-		if (initiative == null) return new GetResult<ModelSectionDto>("error", "initiative not found", null);
+	// #####
+	// @Transactional
+	// public GetResult<ModelSectionDto> getModel(UUID initiativeId, Integer level, UUID requestById, Boolean onlySections) {
+	// 	ModelSection initiative = initiativeRepository.findById(initiativeId);
+	// 	if (initiative == null) return new GetResult<ModelSectionDto>("error", "initiative not found", null);
 		
-		ModelSectionDto sectionDto = initiative.getTopModelSection().toDto();
-		if (level > 0) {
-			sectionDto = addSectionSubElements(sectionDto, initiative.getTopModelSection().getId(), level - 1, requestById, onlySections);	
-		}
+	// 	ModelSectionDto sectionDto = initiative.getTopModelSection().toDto();
+	// 	if (level > 0) {
+	// 		sectionDto = addSectionSubElements(sectionDto, initiative.getTopModelSection().getId(), level - 1, requestById, onlySections);	
+	// 	}
 			
-		return new GetResult<ModelSectionDto> ("success", "model found", sectionDto);
-	}
+	// 	return new GetResult<ModelSectionDto> ("success", "model found", sectionDto);
+	// }
 	
 	
 	
@@ -963,8 +960,8 @@ public class ModelService {
 	}
 	
 	@Transactional
-	public Initiative getCardWrapperInitiative(UUID cardWrapperId) {
-		return modelCardWrapperRepository.findById(cardWrapperId).getInitiative();
+	public ModelSection getCardWrapperModelSection(UUID cardWrapperId) {
+		return modelCardWrapperRepository.findById(cardWrapperId).getModelsection();
 	}
 
 	@Transactional

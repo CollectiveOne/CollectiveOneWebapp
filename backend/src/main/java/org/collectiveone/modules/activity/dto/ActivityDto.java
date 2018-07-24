@@ -2,7 +2,6 @@ package org.collectiveone.modules.activity.dto;
 
 import org.collectiveone.modules.assignations.dto.AssignationDto;
 import org.collectiveone.modules.conversations.MessageDto;
-import org.collectiveone.modules.initiatives.dto.InitiativeDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.tokens.dto.TokenMintDto;
@@ -15,8 +14,6 @@ public class ActivityDto {
 	private String type;
 	private Long timestamp;
 	private AppUserDto triggerUser;
-	private InitiativeDto initiative;
-	private InitiativeDto subInitiative;
 	private String oldName;
 	private String oldDriver;
 	private TokenMintDto mint;
@@ -54,18 +51,7 @@ public class ActivityDto {
 	public void setTriggerUser(AppUserDto triggerUser) {
 		this.triggerUser = triggerUser;
 	}
-	public InitiativeDto getInitiative() {
-		return initiative;
-	}
-	public void setInitiative(InitiativeDto initiative) {
-		this.initiative = initiative;
-	}
-	public InitiativeDto getSubInitiative() {
-		return subInitiative;
-	}
-	public void setSubInitiative(InitiativeDto subInitiative) {
-		this.subInitiative = subInitiative;
-	}
+	
 	public String getOldName() {
 		return oldName;
 	}

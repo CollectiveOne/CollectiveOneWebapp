@@ -18,7 +18,6 @@ import javax.persistence.Table;
 
 import org.collectiveone.modules.conversations.MessageThread;
 import org.collectiveone.modules.governance.CardLike;
-import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -35,7 +34,18 @@ public class ModelCardWrapper {
 	private UUID id;
 	
 	@ManyToOne
-	private Initiative initiative;
+	private ModelSection modelSection;
+
+	public ModelSection getModelsection()
+	{
+		return this.modelSection;
+	}
+
+	public void setModelsection(ModelSection modelSection)
+	{
+		this.modelSection = modelSection;
+	}
+
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private ModelCard card;
@@ -105,13 +115,7 @@ public class ModelCardWrapper {
 		this.id = id;
 	}
 	
-	public Initiative getInitiative() {
-		return initiative;
-	}
-
-	public void setInitiative(Initiative initiative) {
-		this.initiative = initiative;
-	}
+	
 	
 	public ModelCard getCard() {
 		return card;

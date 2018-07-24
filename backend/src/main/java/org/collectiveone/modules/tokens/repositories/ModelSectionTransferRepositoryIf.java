@@ -3,7 +3,6 @@ package org.collectiveone.modules.tokens.repositories;
 import java.util.List;
 import java.util.UUID;
 
-import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.ModelSectionTransfer;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -24,5 +23,7 @@ public interface ModelSectionTransferRepositoryIf extends CrudRepository<ModelSe
 	List<ModelSectionTransfer> findByFrom_Id(UUID fromId, Pageable page);
 	
 	List<ModelSectionTransfer> findByAlsoInModelSections_Id(UUID fromId, Pageable page);
+
+	//#### need a method to receive the list of ids, and return transfers in paginated way
 	
 }

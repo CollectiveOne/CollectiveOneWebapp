@@ -34,10 +34,6 @@ import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.conversations.Message;
 import org.collectiveone.modules.conversations.MessageService;
 import org.collectiveone.modules.conversations.MessageThreadContextType;
-import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.initiatives.InitiativeService;
-import org.collectiveone.modules.initiatives.dto.InitiativeDto;
-import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.GraphNode;
 import org.collectiveone.modules.model.Member;
 import org.collectiveone.modules.model.ModelCardWrapperAddition;
@@ -47,7 +43,6 @@ import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
-import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.ModelSectionTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
@@ -776,7 +771,7 @@ public class ActivityService {
 			List<AppUser> mentionedUsers) {
 		
 				//#### confirm here
-		ModelSection initiative = modelSectionRepository.findById(messageService.getInitiativeIdOfMessageThread(message.getThread()));
+		ModelSection initiative = modelSectionRepository.findById(messageService.getModelSectionIdOfMessageThread(message.getThread()));
 		Activity activity = getBaseActivity(triggerUser, initiative); 
 		
 		activity.setType(ActivityType.MESSAGE_POSTED);

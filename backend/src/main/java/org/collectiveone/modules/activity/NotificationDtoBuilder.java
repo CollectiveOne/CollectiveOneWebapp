@@ -13,7 +13,6 @@ import org.collectiveone.modules.assignations.Evaluator;
 import org.collectiveone.modules.assignations.Receiver;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelSection;
-import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.ModelSectionTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
@@ -208,7 +207,7 @@ public class NotificationDtoBuilder {
 		case MODEL_CARDWRAPPER_CREATED:
 			message = checkHtml("<p>") + "created the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
 					" on section " + getModelSectionAnchor(onSection) + checkHtml("</p>");
-					//####
+					//#### all below
 			// url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
 			break;
 			
@@ -216,30 +215,30 @@ public class NotificationDtoBuilder {
 			message = checkHtml("<p>") + "made the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
 			" on section " + getModelSectionAnchor(onSection) + checkHtml(" visible</p>");
 			
-			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
+			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_MADE_COMMON:
 			message = checkHtml("<p>") + "made the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
 			" on section " + getModelSectionAnchor(onSection) + checkHtml(" common</p>");
 			
-			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
+			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_EDITED:
 			message = checkHtml("<p>") + "edited the card " + getModelCardWrapperAnchor(modelCardWrapper) + checkHtml("</p>");
-			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
+			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_DELETED:
 			message = checkHtml("<p>") + "deleted the card " + getModelCardWrapperAnchor(modelCardWrapper) + checkHtml("</p>");
-			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
+			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_SECTION_ADDED: 
 			message = checkHtml("<p>") + "added the section " + getModelSectionAnchor(modelSection) + 
 				" as sub-section of " + getModelSectionAnchor(onSection) + checkHtml("</p>");
-			url = getModelSectionUrl(modelSection.getId(), modelSection.getId());		
+			//url = getModelSectionUrl(modelSection.getId(), modelSection.getId());		
 			break;
 			
 		case MODEL_SECTION_MOVED:
@@ -258,20 +257,20 @@ public class NotificationDtoBuilder {
 		case MODEL_CARDWRAPPER_ADDED:
 			message = checkHtml("<p>") + "added the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
 					" under section " + getModelSectionAnchor(onSection) + checkHtml("</p>");
-			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
+			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_MOVED:
 			message = checkHtml("<p>") + "moved the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
 					" from " + getModelSectionAnchor(fromSection) + 
 					" to " + getModelSectionAnchor(onSection) + checkHtml("</p>");
-			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
+			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_REMOVED:
 			message = checkHtml("<p>") + "removed the card " + getModelCardWrapperAnchor(modelCardWrapper, fromSection) + 
 					" from section " + getModelSectionAnchor(fromSection) + checkHtml("</p>");
-			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
+			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
 			break;
 			
 		case MESSAGE_POSTED:
@@ -284,7 +283,7 @@ public class NotificationDtoBuilder {
 					from = getModelCardWrapperName(modelCardWrapper) + " card";
 				}
 				
-				url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
+				//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
 				
 			} else if (notification.getActivity().getModelSection() != null) {
 				
@@ -327,29 +326,29 @@ public class NotificationDtoBuilder {
 	}
 	
 	private String getInitiativeUrl(UUID initiativeId) {
-		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/context/" + 
+		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/ctx/" + 
 				initiativeId.toString() + "/overview";
 	}
 	
 	private String getAssignationUrl(UUID initiativeId, UUID assignationId) {
-		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/context/" + 
+		return env.getProperty("collectiveone.webapp.baseurl") +"/#/app/ctx/" + 
 				initiativeId.toString() + "/assignations/" + assignationId.toString();
 	}
 	
 	private String getModelSectionUrl(UUID modelSectionId, UUID sectionId) {
-		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/context/" + 
+		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/ctx/" + 
 		modelSectionId.toString() + "/model/section/" + 
 				sectionId.toString();
 	}
 	
 	private String getModelCardWrapperUrl(UUID modelSectionId, UUID sectionId, UUID cardWrapperId) {
-		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/context/" + 
+		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/ctx/" + 
 		modelSectionId.toString() + "/model/section/" + 
 				sectionId.toString() + "/cards/" + cardWrapperId.toString();
 	}
 	
 	private String getModelCardWrapperUrl(UUID modelSectionId, UUID cardWrapperId) {
-		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/context/" + 
+		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/ctx/" + 
 		modelSectionId.toString() + "/model/card/" + cardWrapperId.toString();
 	}
 	
@@ -358,7 +357,7 @@ public class NotificationDtoBuilder {
 		return checkHtml("<a href=" + getAssignationUrl(assignation.getModelSection().getId(), assignation.getId()) + ">") + "transfer" + checkHtml("</a>");
 	}
 	
-	private String getTransferString(List<InitiativeTransfer> transfers) {
+	private String getTransferString(List<ModelSectionTransfer> transfers) {
 		if (transfers.size() > 0) {
 			return NumberFormat.getNumberInstance(Locale.US).format(transfers.get(0).getValue()) + " " + transfers.get(0).getTokenType().getName();
 		} else {
@@ -371,11 +370,15 @@ public class NotificationDtoBuilder {
 	}
 	
 	private String getModelCardWrapperAnchor(ModelCardWrapper cardWrapper, ModelSection onSection) {
-		return checkHtml("<a href=" + getModelCardWrapperUrl(cardWrapper.getInitiative().getId(), onSection.getId(), cardWrapper.getId()) + ">") + getModelCardWrapperName(cardWrapper) + checkHtml("</a>");
+		return "<a href=''>??</a>";
+		// ###
+		//return checkHtml("<a href=" + getModelCardWrapperUrl(cardWrapper.getInitiative().getId(), onSection.getId(), cardWrapper.getId()) + ">") + getModelCardWrapperName(cardWrapper) + checkHtml("</a>");
 	}
 	
 	private String getModelCardWrapperAnchor(ModelCardWrapper cardWrapper) {
-		return checkHtml("<a href=" + getModelCardWrapperUrl(cardWrapper.getInitiative().getId(),cardWrapper.getId()) + ">") + getModelCardWrapperName(cardWrapper) + checkHtml("</a>");
+		return "<a href=''>??</a>";
+		// ###
+		//return checkHtml("<a href=" + getModelCardWrapperUrl(cardWrapper.getInitiative().getId(),cardWrapper.getId()) + ">") + getModelCardWrapperName(cardWrapper) + checkHtml("</a>");
 	}
 	
 	private String getModelCardWrapperName(ModelCardWrapper cardWrapper) {

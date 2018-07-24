@@ -6,8 +6,6 @@ import java.util.UUID;
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +63,8 @@ public class FilesController extends BaseController {
 		}
     	
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-		
-    	Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
+		// ####
+    	//Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
 		
 		// ####
     	// if (governanceService.canEditModel(initiative.getId(), getLoggedUserId()) == DecisionVerdict.DENIED) {

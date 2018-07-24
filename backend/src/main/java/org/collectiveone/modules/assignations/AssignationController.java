@@ -8,7 +8,6 @@ import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.assignations.dto.AssignationDto;
 import org.collectiveone.modules.assignations.dto.EvaluationDto;
-import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.model.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.activity.enums.NotificationState;
-import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;

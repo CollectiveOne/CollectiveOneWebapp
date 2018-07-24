@@ -10,8 +10,6 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.config.aws.AmazonS3Template;
-import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
@@ -168,11 +166,13 @@ public class FileService {
 		try (InputStream input = file.getInputStream()) {
 		    try {
 		        ImageIO.read(input).toString();
-		        
-		        Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
+				
+				// ####
+				// ModelSection modelSection = modelService.getCardWrapperInitiative(cardWrapperId); below is temp
+				ModelSection modelSection = new ModelSection();
 				
 				String key = "CardImages/" + cardWrapperId.toString();
-				FileStored fileUploaded = handleFileUpload(userId, key, file, initiative.getId());
+				FileStored fileUploaded = handleFileUpload(userId, key, file, modelSection.getId());
 				
 				if (fileUploaded != null) {
 					return new PostResult("success", "image uploaded", fileUploaded.getId().toString());

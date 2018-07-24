@@ -35,8 +35,8 @@ public class TestMessageService extends AbstractTest {
     @Test
     public void isGetInitiativeIdOfMessageWorks() {
     		UUID id=UUID.randomUUID();
-    		when(messageServiceMock.getInitiativeIdOfMessage(MessageThreadContextType.MODEL_CARD, id)).thenReturn(id);
-    		assertTrue(messageServiceMock.getInitiativeIdOfMessage(MessageThreadContextType.MODEL_CARD, id).toString().equals(id.toString()));	
+    		when(messageServiceMock.getModelSectionIdOfMessage(MessageThreadContextType.MODEL_CARD, id)).thenReturn(id);
+    		assertTrue(messageServiceMock.getModelSectionIdOfMessage(MessageThreadContextType.MODEL_CARD, id).toString().equals(id.toString()));	
     }
     
     
@@ -48,9 +48,9 @@ public class TestMessageService extends AbstractTest {
     		thread.setId(id);
     		thread.setContextType(MessageThreadContextType.MODEL_CARD);
     		
-    		when(messageServiceMock.getInitiativeIdOfMessage(MessageThreadContextType.MODEL_CARD, id)).thenReturn(thread.getId());
+    		when(messageServiceMock.getModelSectionIdOfMessage(MessageThreadContextType.MODEL_CARD, id)).thenReturn(thread.getId());
     		
-    		UUID returnedId=messageServiceMock.getInitiativeIdOfMessage(MessageThreadContextType.MODEL_CARD, id);
+    		UUID returnedId=messageServiceMock.getModelSectionIdOfMessage(MessageThreadContextType.MODEL_CARD, id);
     		
     		assertTrue(returnedId.toString().equals(id.toString()));	
     }

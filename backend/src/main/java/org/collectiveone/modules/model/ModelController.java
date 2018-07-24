@@ -6,8 +6,6 @@ import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.activity.dto.ActivityDto;
-import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.model.dto.CardWrappersHolderDto;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
@@ -33,24 +31,23 @@ public class ModelController extends BaseController {
 	@Autowired
 	private ModelService modelService;
 	
-	@Autowired
-	private InitiativeService initiativeService;
 	
 	
-	@RequestMapping(path = "/initiative/{initiativeId}/model", method = RequestMethod.GET) 
-	public GetResult<ModelSectionDto> getModel(
-			@PathVariable("initiativeId") String initiativeIdStr,
-			@RequestParam(defaultValue = "0") Integer level,
-			@RequestParam(defaultValue = "false") Boolean onlySections) {
+	// #####
+	// @RequestMapping(path = "/initiative/{initiativeId}/model", method = RequestMethod.GET) 
+	// public GetResult<ModelSectionDto> getModel(
+	// 		@PathVariable("initiativeId") String initiativeIdStr,
+	// 		@RequestParam(defaultValue = "0") Integer level,
+	// 		@RequestParam(defaultValue = "false") Boolean onlySections) {
 		
-		UUID initiativeId = UUID.fromString(initiativeIdStr);
+	// 	UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
-		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
-			return new GetResult<ModelSectionDto>("error", "access denied", null);
-		}
+	// 	if (!modelService.canAccess(initiativeId, getLoggedUserId())) {
+	// 		return new GetResult<ModelSectionDto>("error", "access denied", null);
+	// 	}
 		
-		return modelService.getModel(initiativeId, level, getLoggedUserId(), onlySections);
-	}
+	// 	return modelService.getModel(initiativeId, level, getLoggedUserId(), onlySections);
+	// }
 	
 	@RequestMapping(path = "/model/section/{sectionId}/subsection", method = RequestMethod.POST)
 	public PostResult createSectionSubsection(
@@ -246,7 +243,7 @@ public class ModelController extends BaseController {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		
-		if (!initiativeService.canAccess(sectionId, getLoggedUserId())) {
+		if (!modelService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<ModelSectionDto>("error", "access denied", null);
 		}
 		
@@ -272,7 +269,7 @@ public class ModelController extends BaseController {
 		
 		UUID sectionId = UUID.fromString(sectionIdStr);
 		
-		if (!initiativeService.canAccess(sectionId, getLoggedUserId())) {
+		if (!modelService.canAccess(sectionId, getLoggedUserId())) {
 			return new GetResult<ModelSectionLinkedDto>("error", "access denied", null);
 		}
 		
