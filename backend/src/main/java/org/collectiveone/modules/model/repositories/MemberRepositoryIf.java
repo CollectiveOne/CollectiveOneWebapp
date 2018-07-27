@@ -17,7 +17,7 @@ public interface MemberRepositoryIf extends CrudRepository<Member, UUID> {
 	@Query("SELECT mem.id FROM ModelSection ms JOIN ms.members mem WHERE ms.id = ?1 AND mem.user.c1Id = ?2")
 	UUID findMemberId(UUID modelSectionId, UUID userId);
 	
-	@Query("SELECT DISTINCT mem.user FROM Member mem WHERE mem.model_section.id IN ?1 AND lower (mem.user.profile.nickname) LIKE %?2%")
-	Page<AppUser> findMembersOfInitiatives(List<UUID> modelSectionId, String query, Pageable pageable);
+	@Query("SELECT DISTINCT mem.user FROM Member mem WHERE mem.modelSection.id IN ?1 AND lower (mem.user.profile.nickname) LIKE %?2%")
+	Page<AppUser> findMembersOfModelSections(List<UUID> modelSectionId, String query, Pageable pageable);
 	
 }

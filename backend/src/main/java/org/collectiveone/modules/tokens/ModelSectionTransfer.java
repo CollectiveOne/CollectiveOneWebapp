@@ -44,7 +44,7 @@ public class ModelSectionTransfer {
 
 	
 	@ManyToMany(cascade = CascadeType.ALL)
-	private List<ModelSection> alsoInModelSection = new ArrayList<ModelSection>();
+	private List<ModelSection> alsoInModelSections = new ArrayList<ModelSection>();
 
 
 	@ManyToOne
@@ -155,15 +155,15 @@ public class ModelSectionTransfer {
     /**
      * @return List<ModelSection> return the alsoInModelSection
      */
-    public List<ModelSection> getAlsoInModelSection() {
-        return alsoInModelSection;
+    public List<ModelSection> getAlsoInModelSections() {
+        return alsoInModelSections;
     }
 
     /**
      * @param alsoInModelSection the alsoInModelSection to set
      */
-    public void setAlsoInModelSection(List<ModelSection> alsoInModelSection) {
-        this.alsoInModelSection = alsoInModelSection;
+    public void setAlsoInModelSection(List<ModelSection> alsoInModelSections) {
+        this.alsoInModelSections = alsoInModelSections;
     }
 
 }

@@ -62,8 +62,9 @@ public class TokenTransferService {
 	@Autowired
 	private MemberRepositoryIf memberRepository;
 	
-	@Autowired
-	private InitiativeRelationshipRepositoryIf initiativeRelationshipRepository;
+	//####
+	// @Autowired
+	// private InitiativeRelationshipRepositoryIf initiativeRelationshipRepository;
 	
 	@Autowired
 	private TokenMintRepositoryIf tokenMintRespository;
@@ -274,9 +275,6 @@ public class TokenTransferService {
 		for (ModelSectionTransfer transfer : modelSectionTransferRepository.findByAlsoInModelSections_Id(modelSectionId, page)) {
 			modelSectionTransfers.add(transfer.toDto());
 		}
-
-		//#### sagar work this for cardwrapper case here need change logic to get all sub initiatives from getModelSection
-		// List<UUID> allSectionIds = getAllSubsectionsIds(sectionId, level);
 		
 		return new GetResult<List<TransferDto>>("success", "transfers retrieved", modelSectionTransfers);
 	}
@@ -289,28 +287,28 @@ public class TokenTransferService {
 
 		/* get of sub-initiatives */
 		// #### here findByOfInitiativeIdAndInitiative_StatusAndType ?
-		List<InitiativeRelationship> subinitiativesRelationships = 
-				initiativeRelationshipRepository.findByOfInitiativeIdAndInitiative_StatusAndType(modelSection.getId(), InitiativeStatus.ENABLED, InitiativeRelationshipType.IS_ATTACHED_SUB);
+		// List<InitiativeRelationship> subinitiativesRelationships = 
+		// 		initiativeRelationshipRepository.findByOfInitiativeIdAndInitiative_StatusAndType(modelSection.getId(), InitiativeStatus.ENABLED, InitiativeRelationshipType.IS_ATTACHED_SUB);
 		
 		List<TransferDto> transferredToSubinitiatives = new ArrayList<TransferDto>();
 		
-		for (InitiativeRelationship relationship : subinitiativesRelationships) {
-			/* get all transfers of a given token made from and to these initiatives */
-			Double totalTransferred = modelSectionTransferRepository.getTotalTransferredFromTo(tokenId, relationship.getOfInitiative().getId(), relationship.getInitiative().getId());
-			Double totalReturned = modelSectionTransferRepository.getTotalTransferredFromTo(tokenId, relationship.getInitiative().getId(), relationship.getOfInitiative().getId());
+		// for (InitiativeRelationship relationship : subinitiativesRelationships) {
+		// 	/* get all transfers of a given token made from and to these initiatives */
+		// 	Double totalTransferred = modelSectionTransferRepository.getTotalTransferredFromTo(tokenId, relationship.getOfInitiative().getId(), relationship.getInitiative().getId());
+		// 	Double totalReturned = modelSectionTransferRepository.getTotalTransferredFromTo(tokenId, relationship.getInitiative().getId(), relationship.getOfInitiative().getId());
 			
-			TransferDto dto = new TransferDto();
+		// 	TransferDto dto = new TransferDto();
 			
-			dto.setAssetId(token.getId().toString());
-			dto.setAssetName(token.getName());
-			dto.setSenderId(relationship.getOfInitiative().getId().toString());
-			dto.setSenderName(relationship.getOfInitiative().getMeta().getName());
-			dto.setReceiverId(relationship.getInitiative().getId().toString());
-			dto.setReceiverName(relationship.getInitiative().getMeta().getName());
-			dto.setValue(totalTransferred - totalReturned);
+		// 	dto.setAssetId(token.getId().toString());
+		// 	dto.setAssetName(token.getName());
+		// 	dto.setSenderId(relationship.getOfInitiative().getId().toString());
+		// 	dto.setSenderName(relationship.getOfInitiative().getMeta().getName());
+		// 	dto.setReceiverId(relationship.getInitiative().getId().toString());
+		// 	dto.setReceiverName(relationship.getInitiative().getMeta().getName());
+		// 	dto.setValue(totalTransferred - totalReturned);
 			
-			transferredToSubinitiatives.add(dto);
-		}
+		// 	transferredToSubinitiatives.add(dto);
+		// }
 		
 		return transferredToSubinitiatives;
 	}

@@ -6,7 +6,6 @@ import javax.transaction.Transactional;
 import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.activity.repositories.SubscriberRepositoryIf;
-import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
@@ -31,8 +30,6 @@ public class StartupMigrations implements ApplicationListener<ContextRefreshedEv
 	@Autowired
 	ModelSectionRepositoryIf modelSectionRepository;
 	
-	@Autowired
-	InitiativeRepositoryIf initiativeRepository;
 	
 	@Autowired
 	AppUserRepositoryIf appUserRepository;

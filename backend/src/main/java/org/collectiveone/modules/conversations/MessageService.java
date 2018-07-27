@@ -189,9 +189,7 @@ public class MessageService {
 			
 			case MODEL_SECTION:
 				return messageThreadRepository.findByModelSection_Id(elementId);
-				
-			case INITIATIVE:
-				return messageThreadRepository.findByInitiative_Id(elementId);
+		
 			
 		}
 		
