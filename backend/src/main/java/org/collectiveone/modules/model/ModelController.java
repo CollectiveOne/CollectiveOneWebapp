@@ -215,7 +215,7 @@ public class ModelController extends BaseController {
 		
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
 
-		//#### i am using onSectionIdStr, can
+		
 		if (!modelService.canEdit(UUID.fromString(onSectionIdStr), getLoggedUserId())) {
 			return new PostResult("error", "not authorized", "");
 		}
@@ -235,6 +235,9 @@ public class ModelController extends BaseController {
 				getLoggedUserId());
 	}
 	
+	/*
+		http://collabedit.com/389b9
+	*/
 	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.GET) 
 	public GetResult<ModelSectionDto> getSection(
 			@PathVariable("sectionId") String sectionIdStr,

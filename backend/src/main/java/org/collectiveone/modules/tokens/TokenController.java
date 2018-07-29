@@ -91,11 +91,12 @@ public class TokenController extends BaseController {
 		}
 	}
 	
-	@RequestMapping(path = "/context/{modelSectionId}/transfersToModelSections", method = RequestMethod.GET)
-	public GetResult<List<TransferDto>> getTransferFromInitiative(
+	@RequestMapping(path = "/ctx/{modelSectionId}/transfersToModelSections", method = RequestMethod.GET)
+	public GetResult<List<TransferDto>> getTransferFromModelSections(
 			@PathVariable("modelSectionId") String modelSectionIdStr,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size,
+			@RequestParam(name="levels", defaultValue="1") Integer levels,
 			@RequestParam("sortDirection") String sortDirection,
 			@RequestParam("sortProperty") String sortProperty ) {
 		 
@@ -107,29 +108,29 @@ public class TokenController extends BaseController {
 		
 		Sort sort = new Sort(Sort.Direction.valueOf(sortDirection), sortProperty);
 		
-		return tokenTransferService.getTransfersFromModelSections(modelSectionsId, new PageRequest(page, size, sort));
+		return tokenTransferService.getTransfersFromModelSections(modelSectionsId, levels, new PageRequest(page, size, sort));
 	}
 	
 
-	//#### transfersFromSubModelSections ??
-	@RequestMapping(path = "/context/{modelSectionId}/transfersFromSubModelSections", method = RequestMethod.GET)
-	public GetResult<List<TransferDto>> getTransferFromSubinitiatives(
-			@PathVariable("modelSectionId") String modelSectionIdStr,
-			@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size,
-			@RequestParam("sortDirection") String sortDirection,
-			@RequestParam("sortProperty") String sortProperty ) {
+	// //#### transfersFromSubModelSections ??
+	// @RequestMapping(path = "/ctx/{modelSectionId}/transfersFromSubModelSections", method = RequestMethod.GET)
+	// public GetResult<List<TransferDto>> getTransferFromSubinitiatives(
+	// 		@PathVariable("modelSectionId") String modelSectionIdStr,
+	// 		@RequestParam("page") Integer page,
+	// 		@RequestParam("size") Integer size,
+	// 		@RequestParam("sortDirection") String sortDirection,
+	// 		@RequestParam("sortProperty") String sortProperty ) {
 		 
-		UUID modelSectionId = UUID.fromString(modelSectionIdStr);	
+	// 	UUID modelSectionId = UUID.fromString(modelSectionIdStr);	
 		
-		if (!modelService.canAccess(modelSectionId, getLoggedUserId())) {
-			return new GetResult<List<TransferDto>>("error", "access denied", null);
-		}
+	// 	if (!modelService.canAccess(modelSectionId, getLoggedUserId())) {
+	// 		return new GetResult<List<TransferDto>>("error", "access denied", null);
+	// 	}
 		
-		Sort sort = new Sort(Sort.Direction.valueOf(sortDirection), sortProperty);
-		//inside function get all subsection using getSectionNode
-		return tokenTransferService.getTransfersFromSubModelSections(modelSectionId, new PageRequest(page, size, sort));
-	}
+	// 	Sort sort = new Sort(Sort.Direction.valueOf(sortDirection), sortProperty);
+	// 	//inside function get all subsection using getSectionNode
+	// 	return tokenTransferService.getTransfersFromSubModelSections(modelSectionId, new PageRequest(page, size, sort));
+	// }
 	
 	@RequestMapping(path = "/ctx/{modelSectionId}/transferToModelSection", method = RequestMethod.POST)
 	public PostResult makeTransferToModelSection(

@@ -1,13 +1,16 @@
 package org.collectiveone.modules.files;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.model.ModelCardWrapperAddition;
 import org.collectiveone.modules.model.ModelSection;
 import org.collectiveone.modules.model.ModelService;
+import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +29,12 @@ public class FilesController extends BaseController {
 	
 	@Autowired
 	private ModelService modelService;
+
+
+	@Autowired
+	private ModelCardWrapperAdditionRepositoryIf modelCardWrapperAdditionRepository;
+
+
 	
 
 	
@@ -63,36 +72,20 @@ public class FilesController extends BaseController {
 		}
     	
 		UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-		// ####
-    	//Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
 		
-		// ####
-    	// if (governanceService.canEditModel(initiative.getId(), getLoggedUserId()) == DecisionVerdict.DENIED) {
-    	// 	return new PostResult("error", "not authorized", "");
-		// }
-    	
-    	
-    	return fileService.uploadCardImage(getLoggedUserId(), cardWrapperId, file);
-    }
-    
-    @RequestMapping(value = "/upload/modelSectionImage/{modelSectionId}", method = RequestMethod.POST)
-    public @ResponseBody PostResult uploadInitiativeImage(
-    		@PathVariable("modelSectionId") String modelSectionIdStr,
-    		@RequestParam("file") MultipartFile file) throws IOException {
-    	
-    	if (getLoggedUser() == null) {
-			return new PostResult("error", "endpoint enabled users only", "");
+	
+		//#### cardwrapper implementation
+    	List<ModelCardWrapperAddition> allAdditions = modelCardWrapperAdditionRepository.findOfCardWrapper(cardWrapperId);
+		for(ModelCardWrapperAddition addition: allAdditions) {
+			if(modelService.canAccess(addition.getSection().getId(), getLoggedUserId())) {
+				return fileService.uploadCardImage(getLoggedUserId(), cardWrapperId, file);
+			}
 		}
 		
-		// ####
-    	UUID initiativeId = UUID.fromString(modelSectionIdStr);
-    	// if (governanceService.canEdit(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
-    	// 	return new PostResult("error", "not authorized", "");
-		// }
-    	
-    	
-    	return fileService.uploadMModelSectionImage(getLoggedUserId(), initiativeId, file);
+		return new PostResult("error", "not authorized", "");
     }
+    
+   
     
     @RequestMapping(value = "/files/{fileId}", method = RequestMethod.GET)
     public @ResponseBody GetResult<FileStoredDto> getFileData (

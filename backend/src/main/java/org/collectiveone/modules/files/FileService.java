@@ -167,7 +167,9 @@ public class FileService {
 		    try {
 		        ImageIO.read(input).toString();
 				
-				// ####
+				// List<ModelCardWrapperAddition> allAdditions = modelCardWrapperAdditionRepository.findOfCardWrapper(cardWrapperId);
+				
+				// #### here i will get list from above code so which single model section to be used
 				// ModelSection modelSection = modelService.getCardWrapperInitiative(cardWrapperId); below is temp
 				ModelSection modelSection = new ModelSection();
 				

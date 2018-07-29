@@ -45,8 +45,9 @@ public class MessageService {
 	public UUID getModelSectionIdOfMessage(MessageThreadContextType contextType, UUID elementId) {
 		
 		switch (contextType) {
-			case MODEL_CARD:
-				return modelCardWrapperRepository.findById(elementId).getModelsection().getId();
+			// #### jose I remode modelSection from cardWrapper, now here ???
+			// case MODEL_CARD:
+			// 	return modelCardWrapperRepository.findById(elementId).getModelsection().getId();
 			
 			case MODEL_SECTION:
 				return modelSectionRepository.findById(elementId).getId();
@@ -66,9 +67,9 @@ public class MessageService {
 	public UUID getModelSectionIdOfMessageThread(MessageThread thread) {
 		
 		switch (thread.getContextType()) {
-		
-			case MODEL_CARD:
-				return thread.getModelCardWrapper().getModelsection().getId();
+			// #### jose I remode modelSection from cardWrapper, now here ???
+			// case MODEL_CARD:
+			// 	return thread.getModelCardWrapper().getModelsection().getId();
 			
 			case MODEL_SECTION:
 				return thread.getModelSection().getId();

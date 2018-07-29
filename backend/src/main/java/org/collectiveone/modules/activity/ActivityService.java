@@ -770,9 +770,9 @@ public class ActivityService {
 			UUID contextOfContextElementId,
 			List<AppUser> mentionedUsers) {
 		
-				//#### confirm here
-		ModelSection initiative = modelSectionRepository.findById(messageService.getModelSectionIdOfMessageThread(message.getThread()));
-		Activity activity = getBaseActivity(triggerUser, initiative); 
+		
+		ModelSection modelSection = modelSectionRepository.findById(messageService.getModelSectionIdOfMessageThread(message.getThread()));
+		Activity activity = getBaseActivity(triggerUser, modelSection); 
 		
 		activity.setType(ActivityType.MESSAGE_POSTED);
 		activity.setMessage(message);

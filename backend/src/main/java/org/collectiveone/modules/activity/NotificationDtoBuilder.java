@@ -206,39 +206,38 @@ public class NotificationDtoBuilder {
 			
 		case MODEL_CARDWRAPPER_CREATED:
 			message = checkHtml("<p>") + "created the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
-					" on section " + getModelSectionAnchor(onSection) + checkHtml("</p>");
-					//#### all below
-			// url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
+					" on section " + getModelSectionAnchor(onSection) + checkHtml("</p>"); 
+			url = getModelCardWrapperUrl(onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_MADE_SHARED:
 			message = checkHtml("<p>") + "made the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
 			" on section " + getModelSectionAnchor(onSection) + checkHtml(" visible</p>");
 			
-			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
+			url = getModelCardWrapperUrl(onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_MADE_COMMON:
 			message = checkHtml("<p>") + "made the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
 			" on section " + getModelSectionAnchor(onSection) + checkHtml(" common</p>");
 			
-			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
+			url = getModelCardWrapperUrl(onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_EDITED:
 			message = checkHtml("<p>") + "edited the card " + getModelCardWrapperAnchor(modelCardWrapper) + checkHtml("</p>");
-			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
+			url = getModelCardWrapperUrl(onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_DELETED:
 			message = checkHtml("<p>") + "deleted the card " + getModelCardWrapperAnchor(modelCardWrapper) + checkHtml("</p>");
-			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
+			url = getModelCardWrapperUrl(onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_SECTION_ADDED: 
 			message = checkHtml("<p>") + "added the section " + getModelSectionAnchor(modelSection) + 
 				" as sub-section of " + getModelSectionAnchor(onSection) + checkHtml("</p>");
-			//url = getModelSectionUrl(modelSection.getId(), modelSection.getId());		
+			url = getModelCardWrapperUrl(onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_SECTION_MOVED:
@@ -257,20 +256,20 @@ public class NotificationDtoBuilder {
 		case MODEL_CARDWRAPPER_ADDED:
 			message = checkHtml("<p>") + "added the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
 					" under section " + getModelSectionAnchor(onSection) + checkHtml("</p>");
-			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
+					url = getModelCardWrapperUrl(onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_MOVED:
 			message = checkHtml("<p>") + "moved the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
 					" from " + getModelSectionAnchor(fromSection) + 
 					" to " + getModelSectionAnchor(onSection) + checkHtml("</p>");
-			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
+					url = getModelCardWrapperUrl(onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_REMOVED:
 			message = checkHtml("<p>") + "removed the card " + getModelCardWrapperAnchor(modelCardWrapper, fromSection) + 
 					" from section " + getModelSectionAnchor(fromSection) + checkHtml("</p>");
-			//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
+					url = getModelCardWrapperUrl(onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MESSAGE_POSTED:
@@ -283,7 +282,7 @@ public class NotificationDtoBuilder {
 					from = getModelCardWrapperName(modelCardWrapper) + " card";
 				}
 				
-				//url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
+				url = getModelCardWrapperUrl(onSection.getId(), modelCardWrapper.getId());
 				
 			} else if (notification.getActivity().getModelSection() != null) {
 				
@@ -351,6 +350,10 @@ public class NotificationDtoBuilder {
 		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/ctx/" + 
 		modelSectionId.toString() + "/model/card/" + cardWrapperId.toString();
 	}
+
+	private String getModelCardWrapperUrl(UUID cardWrapperId) {
+		return env.getProperty("collectiveone.webapp.baseurl") + "/#/app/ctx/model/card/" + cardWrapperId.toString();
+	}
 	
 	private String getAssignationAnchor(Assignation assignation) {
 		
@@ -370,15 +373,12 @@ public class NotificationDtoBuilder {
 	}
 	
 	private String getModelCardWrapperAnchor(ModelCardWrapper cardWrapper, ModelSection onSection) {
-		return "<a href=''>??</a>";
-		// ###
-		//return checkHtml("<a href=" + getModelCardWrapperUrl(cardWrapper.getInitiative().getId(), onSection.getId(), cardWrapper.getId()) + ">") + getModelCardWrapperName(cardWrapper) + checkHtml("</a>");
+		
+		return checkHtml("<a href=" + getModelCardWrapperUrl(onSection.getId(), cardWrapper.getId()) + ">") + getModelCardWrapperName(cardWrapper) + checkHtml("</a>");
 	}
 	
 	private String getModelCardWrapperAnchor(ModelCardWrapper cardWrapper) {
-		return "<a href=''>??</a>";
-		// ###
-		//return checkHtml("<a href=" + getModelCardWrapperUrl(cardWrapper.getInitiative().getId(),cardWrapper.getId()) + ">") + getModelCardWrapperName(cardWrapper) + checkHtml("</a>");
+		return checkHtml("<a href=" + getModelCardWrapperUrl(cardWrapper.getId()) + ">") + getModelCardWrapperName(cardWrapper) + checkHtml("</a>");
 	}
 	
 	private String getModelCardWrapperName(ModelCardWrapper cardWrapper) {

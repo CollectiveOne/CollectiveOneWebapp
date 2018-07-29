@@ -24,6 +24,6 @@ public interface ModelSectionTransferRepositoryIf extends CrudRepository<ModelSe
 	
 	List<ModelSectionTransfer> findByAlsoInModelSections_Id(UUID fromId, Pageable page);
 
-	//#### need a method to receive the list of ids, and return transfers in paginated way
-	
+	@Query("SELECT tx FROM ModelSectionTransfer tx WHERE tx.from.id IN ?1")
+	List<ModelSectionTransfer> findBySectionsId(List<UUID> sectionIds, Pageable page);
 }

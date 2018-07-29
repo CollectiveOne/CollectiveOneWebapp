@@ -33,20 +33,6 @@ public class ModelCardWrapper {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@ManyToOne
-	private ModelSection modelSection;
-
-	public ModelSection getModelsection()
-	{
-		return this.modelSection;
-	}
-
-	public void setModelsection(ModelSection modelSection)
-	{
-		this.modelSection = modelSection;
-	}
-
-	
 	@OneToOne(cascade = CascadeType.ALL)
 	private ModelCard card;
 	

@@ -959,10 +959,6 @@ public class ModelService {
 		return modelCardWrapperRepository.findById(cardWrapperId).getCreator().getC1Id();
 	}
 	
-	@Transactional
-	public ModelSection getCardWrapperModelSection(UUID cardWrapperId) {
-		return modelCardWrapperRepository.findById(cardWrapperId).getModelsection();
-	}
 
 	@Transactional
 	public GetResult<Page<ModelCardWrapperDto>> searchCardWrapper(
@@ -1356,7 +1352,7 @@ public class ModelService {
 	}
 	
 
-	//#### workout below from here
+	
 	@Transactional
 	public Boolean isMemberOfParent(UUID sectionId, UUID userId) {
 		GraphNode node = getSectionNode(sectionId,true,false, 0);

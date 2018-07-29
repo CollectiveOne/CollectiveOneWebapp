@@ -62,9 +62,6 @@ public class TokenTransferService {
 	@Autowired
 	private MemberRepositoryIf memberRepository;
 	
-	//####
-	// @Autowired
-	// private InitiativeRelationshipRepositoryIf initiativeRelationshipRepository;
 	
 	@Autowired
 	private TokenMintRepositoryIf tokenMintRespository;
@@ -253,31 +250,23 @@ public class TokenTransferService {
 	}
 	
 	
-	/** Get the tokens transfers from one initiative to any other initiatives */
+	/** Get the tokens transfers from one initiative to any other model Sections */
 	@Transactional
-	public GetResult<List<TransferDto>> getTransfersFromModelSections(UUID modelSectionId, PageRequest page) {
+	public GetResult<List<TransferDto>> getTransfersFromModelSections(UUID modelSectionId, int levels, PageRequest page) {
 		
 		List<TransferDto> ModelSectionTransfers = new ArrayList<TransferDto>();
+
+		List<UUID> ids = modelService.getSectionNode(modelSectionId, false, true, levels).toList();
 		
-		for (ModelSectionTransfer transfer : modelSectionTransferRepository.findByFrom_Id(modelSectionId, page)) {
+		for (ModelSectionTransfer transfer : modelSectionTransferRepository.findBySectionsId(ids, page)) {
 			ModelSectionTransfers.add(transfer.toDto());
 		}
 		
 		return new GetResult<List<TransferDto>>("success", "transfers retrieved", ModelSectionTransfers);
 	}
 	
-	/** Get the tokens transfers from one initiative to any other initiatives */
-	@Transactional
-	public GetResult<List<TransferDto>> getTransfersFromSubModelSections(UUID modelSectionId, PageRequest page) {
-		
-		List<TransferDto> modelSectionTransfers = new ArrayList<TransferDto>();
-		
-		for (ModelSectionTransfer transfer : modelSectionTransferRepository.findByAlsoInModelSections_Id(modelSectionId, page)) {
-			modelSectionTransfers.add(transfer.toDto());
-		}
-		
-		return new GetResult<List<TransferDto>>("success", "transfers retrieved", modelSectionTransfers);
-	}
+	
+	
 	
 	/** Get the tokens transferred from one initiative into its sub-initiatives */
 	@Transactional
