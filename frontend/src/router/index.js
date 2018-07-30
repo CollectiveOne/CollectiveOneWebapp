@@ -45,12 +45,65 @@ export default new Router({
         {
           path: '/',
           name: 'AppView',
-          redirect: '/app/inits'
+          redirect: '/app/ctx'
         },
         {
           path: '/section/:sectionId',
           name: 'ModelSectionRead',
           component: ModelSectionRead
+        },
+        {
+          path: '/section/:sectionId/card/:cardId',
+          name: 'ModelSectionReadCard',
+          component: ModelSectionRead
+        },
+        {
+          path: 'ctx',
+          component: InitiativesView,
+          children: [
+            {
+              path: '/',
+              name: 'InitiativesHome',
+              component: InitiativesHome,
+              children: [
+                { path: 'unsubscribe', name: 'Unsubscribe', component: Unsubscribe }
+              ]
+            },
+            {
+              path: ':initiativeId',
+              name: 'Initiative',
+              component: InitiativesContent,
+              children: [
+                {
+                  path: 'overview',
+                  name: 'InitiativeOverview',
+                  component: OverviewSection,
+                  meta: {'column': 1} },
+                {
+                  path: '',
+                  component: ModelSectionTab,
+                  meta: {'column': 3},
+                  children: [
+                    {
+                      path: '/',
+                      name: 'InitiativeModel',
+                      component: ModelSectionContent,
+                      meta: {'column': 3}
+                    },
+                    {
+                      path: ':sectionId',
+                      name: 'ModelSectionContent',
+                      component: ModelSectionContent,
+                      meta: {'column': 3},
+                      children: [
+                        { path: 'messages', name: 'ModelSectionMessages', meta: {'column': 3} }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           path: '/section/:sectionId/card/:cardId',
