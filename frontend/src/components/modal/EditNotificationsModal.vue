@@ -360,19 +360,6 @@ export default {
       this.updateInheritedFrom()
     },
     updateInheritedFrom () {
-      /* update only the inherited from subscriber, needed when user switching to inherited */
-      this.axios.get('/1/notifications/subscriber/' + this.type + '/' + this.elementId + '/inheritFrom').then((response) => {
-        this.inheritedFrom = response.data.data
-      })
-    },
-    updateSubscriber () {
-      this.axios.get('/1/notifications/subscriber/' + this.type + '/' + this.elementId).then((response) => {
-        this.subscriber = response.data.data
-        /* initialize the inherited from subscriber if available */
-        if (this.subscriber.inheritConfig === 'INHERIT') {
-          this.inheritedFrom = this.subscriber.applicableSubscriber
-        }
-      })
     },
     closeThis () {
       this.$emit('close')
@@ -414,9 +401,6 @@ export default {
 
       if (ok) {
         this.showError = false
-        this.axios.put('/1/notifications/subscriber/' + this.type + '/' + this.elementId, this.subscriber).then((response) => {
-          this.closeThis()
-        })
       }
     }
   },

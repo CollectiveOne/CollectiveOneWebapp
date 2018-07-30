@@ -80,7 +80,7 @@ const actions = {
       }
     }
 
-    Vue.axios.get('/1/initiative/' + id, {
+    Vue.axios.get('/1/initiative/' + 'a9fe127b-64c2-1ec6-8164-c5a8835b000d', {
       params: {
         addAssetsIds: true,
         addSubinitiatives: true,
