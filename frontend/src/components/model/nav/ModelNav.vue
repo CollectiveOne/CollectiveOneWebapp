@@ -19,6 +19,10 @@
         </app-model-nav-control-buttons>
       </div>
       <div class="w3-row">
+        <div v-if="$store.state.sectionsTree.hasParents" class="parentContextContainer">
+          in: <button type="button" class="w3-button app-button parentContexts" 
+          v-for="(parentContext,i) in parentContexts" @click="expandParentContext(i)">{{ parentContext.name }}</button>
+        </div>
         <app-model-section-nav-item
           :sectionData="sectionData"
           @section-selected="$emit('section-selected', $event)">
@@ -44,10 +48,14 @@ export default {
   data () {
     return {
       showSectionModal: false
+      // parentContexts:  [{name: "Test 0", id: "saswat"}, {name: "Test 1", id: "sahoo"}]
     }
   },
 
   computed: {
+    parentContexts () {
+      return this.$store.getters.getParentsData(true)
+    },
     sectionData () {
       return this.$store.getters.getSectionDataAtCoord([0])
     },
@@ -66,6 +74,9 @@ export default {
   },
 
   methods: {
+    expandParentContext (parentContextPosition) {
+      console.log('clicked = ', this.parentContexts[parentContextPosition].id)
+    }
   },
 
   created () {
@@ -85,6 +96,16 @@ export default {
 .controls-row {
   background-color: #f9f9f9;
   padding: 6px;
+}
+
+.parentContextContainer {
+  padding-left: 5px;
+  padding-top: 5px;
+
+}
+
+.parentContexts {
+  margin-left: 5px;
 }
 
 </style>
