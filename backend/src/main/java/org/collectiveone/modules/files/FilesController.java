@@ -75,14 +75,18 @@ public class FilesController extends BaseController {
 		
 	
 		//#### cardwrapper implementation
-    	List<ModelCardWrapperAddition> allAdditions = modelCardWrapperAdditionRepository.findOfCardWrapper(cardWrapperId);
-		for(ModelCardWrapperAddition addition: allAdditions) {
-			if(modelService.canAccess(addition.getSection().getId(), getLoggedUserId())) {
-				return fileService.uploadCardImage(getLoggedUserId(), cardWrapperId, file);
-			}
+    	// List<ModelCardWrapperAddition> allAdditions = modelCardWrapperAdditionRepository.findOfCardWrapper(cardWrapperId);
+		// for(ModelCardWrapperAddition addition: allAdditions) {
+		// 	if(modelService.canAccess(addition.getSection().getId(), getLoggedUserId())) {
+		// 		return fileService.uploadCardImage(getLoggedUserId(), cardWrapperId, file);
+		// 	}
+		// }
+
+		if(!modelService.canAccessCardWrapper(cardWrapperId, getLoggedUserId())) {
+			return new PostResult("error", "not authorized", "");
 		}
+		return fileService.uploadCardImage(getLoggedUserId(), cardWrapperId, file);
 		
-		return new PostResult("error", "not authorized", "");
     }
     
    

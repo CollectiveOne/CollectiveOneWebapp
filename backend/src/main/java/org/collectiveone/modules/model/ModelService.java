@@ -1296,6 +1296,21 @@ public class ModelService {
 	}
 
 
+	@Transactional
+	public Boolean canAccessCardWrapper (UUID cardWrapperId, UUID userId) {
+		List<ModelCardWrapperAddition> allAdditions = modelCardWrapperAdditionRepository.findOfCardWrapper(cardWrapperId);
+		for(ModelCardWrapperAddition addition: allAdditions) {
+			if(modelService.canAccess(addition.getSection().getId(), userId)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	
+
+
 
 	@Transactional
 	public Boolean canMintTokens (UUID tokenId, UUID userId) {
