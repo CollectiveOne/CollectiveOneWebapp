@@ -890,7 +890,7 @@ public class ModelService {
 		ModelCardWrapperDto cardWrapperDto = cardWrapperAddition.getCardWrapper().toDto();
 		
 		/* data associated to the addition */
-		cardWrapperDto.setAdditionId(cardWrapperAddition.getId().toString());
+		cardWrapperDto.setAdditionId(cardWrapperAddition.getId() != null ? cardWrapperAddition.getId().toString() : null);
 		cardWrapperDto.setScope(cardWrapperAddition.getScope());
 		cardWrapperDto.setGovernanceType(cardWrapperAddition.getGovernanceType());
 		cardWrapperDto.setSimpleConsentState(cardWrapperAddition.getSimpleConsentState());

@@ -291,6 +291,25 @@ export default {
   },
 
   computed: {
+  },
+
+  methods: {
+    atKeydown (e) {
+      if (document.activeElement === this.$refs.inputQuery) {
+        if (e.keyCode === 13) {
+          e.preventDefault()
+          this.$emit('updateQuery')
+        }
+      }
+    }
+  },
+
+  mounted () {
+    window.addEventListener('keydown', this.atKeydown)
+  },
+
+  destroyed () {
+    window.removeEventListener('keydown', this.atKeydown)
   }
 }
 

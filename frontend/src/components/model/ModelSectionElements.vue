@@ -372,29 +372,14 @@ export default {
       document.body.appendChild(link)
 
       link.click()
-    },
-    atKeydown (e) {
-      if (document.activeElement === this.$refs.inputQuery) {
-        if (e.keyCode === 13) {
-          e.preventDefault()
-          this.updateQuery()
-        }
-      }
     }
   },
 
   created () {
     this.update()
     this.checkCardSubroute()
-  },
-
-  mounted () {
-    window.addEventListener('keydown', this.atKeydown)
-  },
-
-  destroyed () {
-    window.removeEventListener('keydown', this.atKeydown)
   }
+
 }
 </script>
 

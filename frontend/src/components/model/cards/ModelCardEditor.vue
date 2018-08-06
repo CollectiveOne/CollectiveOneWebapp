@@ -144,14 +144,14 @@ export default {
       editedCard: {
         title: '',
         text: '',
-        newScope: 'SHARED'
+        newScope: 'COMMON'
       },
       hovering: false,
       showFull: false,
       addExisting: false,
       sendingData: false,
       loading: false,
-      scope: 'SHARED',
+      scope: 'COMMON',
       uploadingImage: false,
       errorUploadingFile: false,
       errorUploadingFileMsg: ''
