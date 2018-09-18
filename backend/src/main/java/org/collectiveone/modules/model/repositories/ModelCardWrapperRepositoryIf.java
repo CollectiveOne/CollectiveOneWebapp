@@ -3,7 +3,7 @@ package org.collectiveone.modules.model.repositories;
 import java.util.List;
 import java.util.UUID;
 
-import org.collectiveone.modules.model.ModelCardWrapper;
+import org.collectiveone.modules.contexts.ModelCardWrapper;
 import org.collectiveone.modules.users.AppUser;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

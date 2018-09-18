@@ -1,4 +1,4 @@
-package org.collectiveone.modules.model;
+package org.collectiveone.modules.contexts;
 
 import java.util.UUID;
 
@@ -10,15 +10,15 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.model.dto.ModelSectionDto;
+import org.collectiveone.modules.contexts.dto.ModelCardDto;
+import org.collectiveone.modules.files.FileStored;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "model_sections")
-public class ModelSection {
+@Table(name = "model_cards")
+public class ModelCard {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -26,8 +26,6 @@ public class ModelSection {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@ManyToOne
-	private Initiative initiative;
 	
 	@Column(name = "title", length = 42)
 	private String title;
@@ -35,7 +33,23 @@ public class ModelSection {
 	@Lob
 	@Type(type = "org.hibernate.type.TextType")
 	@Column(name = "description")
-	private String description;
+	private String text;
+	
+	@ManyToOne
+	private FileStored imageFile;
+	
+	
+	public ModelCardDto toDto() {
+		ModelCardDto cardDto = new ModelCardDto();
+		
+		cardDto.setId(id.toString());
+		cardDto.setTitle(title);
+		cardDto.setText(text);
+		
+		if (imageFile != null) cardDto.setImageFile(imageFile.toDto());
+		
+		return cardDto;
+	}
 	
 	
 	@Override
@@ -54,33 +68,15 @@ public class ModelSection {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		
-		ModelSection other = (ModelSection) obj;
-		return id.equals(other.getId());
+		ModelCard other = (ModelCard) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
-	
-	public String toString() {
-		return "id: " + id.toString() + " " + 	
-				"title: " + title + " ";
-	}
-	
-	public ModelSectionDto toDtoLight () {
-		ModelSectionDto sectionDto = new ModelSectionDto();
-		
-		sectionDto.setId(id.toString());
-		sectionDto.setTitle(title);
-		sectionDto.setDescription(description);
-		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
-		
-		return sectionDto; 
-	}
-	
-	public ModelSectionDto toDto() {
-		ModelSectionDto sectionDto = toDtoLight();
-		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
-		return sectionDto;
-	}
-	
+
 	public UUID getId() {
 		return id;
 	}
@@ -89,14 +85,6 @@ public class ModelSection {
 		this.id = id;
 	}
 
-	public Initiative getInitiative() {
-		return initiative;
-	}
-
-	public void setInitiative(Initiative initiative) {
-		this.initiative = initiative;
-	}
-	
 	public String getTitle() {
 		return title;
 	}
@@ -105,12 +93,20 @@ public class ModelSection {
 		this.title = title;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getText() {
+		return text;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setText(String text) {
+		this.text = text;
 	}
 
+	public FileStored getImageFile() {
+		return imageFile;
+	}
+
+	public void setImageFile(FileStored imageFile) {
+		this.imageFile = imageFile;
+	}
+	
 }

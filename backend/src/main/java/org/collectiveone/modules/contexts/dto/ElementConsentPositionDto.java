@@ -1,6 +1,6 @@
-package org.collectiveone.modules.model.dto;
+package org.collectiveone.modules.contexts.dto;
 
-import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
+import org.collectiveone.modules.contexts.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.users.AppUserDto;
 
 public class ElementConsentPositionDto {

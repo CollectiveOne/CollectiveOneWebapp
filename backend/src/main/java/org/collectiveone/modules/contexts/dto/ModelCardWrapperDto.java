@@ -1,12 +1,12 @@
-package org.collectiveone.modules.model.dto;
+package org.collectiveone.modules.contexts.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.collectiveone.modules.model.ModelScope;
-import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
-import org.collectiveone.modules.model.enums.ElementGovernanceType;
-import org.collectiveone.modules.model.enums.SimpleConsentState;
+import org.collectiveone.modules.contexts.ModelScope;
+import org.collectiveone.modules.contexts.enums.ElementConsentPositionColor;
+import org.collectiveone.modules.contexts.enums.ElementGovernanceType;
+import org.collectiveone.modules.contexts.enums.SimpleConsentState;
 import org.collectiveone.modules.users.AppUserDto;
 
 public class ModelCardWrapperDto {

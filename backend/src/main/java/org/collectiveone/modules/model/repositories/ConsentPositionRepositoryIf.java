@@ -3,7 +3,7 @@ package org.collectiveone.modules.model.repositories;
 import java.util.List;
 import java.util.UUID;
 
-import org.collectiveone.modules.model.ElementConsentPosition;
+import org.collectiveone.modules.contexts.ElementConsentPosition;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ConsentPositionRepositoryIf extends CrudRepository<ElementConsentPosition, UUID> {

@@ -3,10 +3,10 @@ package org.collectiveone.modules.model.repositories;
 import java.util.List;
 import java.util.UUID;
 
-import org.collectiveone.modules.model.ModelCardWrapper;
-import org.collectiveone.modules.model.ModelCardWrapperAddition;
-import org.collectiveone.modules.model.ModelScope;
-import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.contexts.ModelCardWrapper;
+import org.collectiveone.modules.contexts.ModelCardWrapperAddition;
+import org.collectiveone.modules.contexts.ModelScope;
+import org.collectiveone.modules.contexts.ModelSection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

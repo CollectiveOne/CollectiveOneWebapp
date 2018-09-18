@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.collectiveone.modules.assignations.dto.AssignationDto;
+import org.collectiveone.modules.contexts.dto.ModelCardWrapperDto;
+import org.collectiveone.modules.contexts.dto.ModelSectionDto;
+import org.collectiveone.modules.contexts.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.conversations.MessageDto;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
-import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
-import org.collectiveone.modules.model.dto.ModelSectionDto;
-import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.tokens.dto.TokenMintDto;
 import org.collectiveone.modules.tokens.dto.TransferDto;
 import org.collectiveone.modules.users.AppUserDto;

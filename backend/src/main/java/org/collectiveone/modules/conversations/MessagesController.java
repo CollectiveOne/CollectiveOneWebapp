@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.contexts.ModelController;
 import org.collectiveone.modules.initiatives.InitiativeService;
-import org.collectiveone.modules.model.ModelController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;

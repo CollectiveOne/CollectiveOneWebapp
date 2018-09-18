@@ -1,9 +1,9 @@
-package org.collectiveone.modules.model.dto;
+package org.collectiveone.modules.contexts.dto;
 
+import org.collectiveone.modules.contexts.ModelCard;
+import org.collectiveone.modules.contexts.ModelScope;
 import org.collectiveone.modules.files.FileStored;
 import org.collectiveone.modules.files.FileStoredDto;
-import org.collectiveone.modules.model.ModelCard;
-import org.collectiveone.modules.model.ModelScope;
 
 public class ModelCardDto {
 

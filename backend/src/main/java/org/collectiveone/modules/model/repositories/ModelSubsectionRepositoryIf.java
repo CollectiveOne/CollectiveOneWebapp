@@ -3,8 +3,8 @@ package org.collectiveone.modules.model.repositories;
 import java.util.List;
 import java.util.UUID;
 
-import org.collectiveone.modules.model.ModelScope;
-import org.collectiveone.modules.model.ModelSubsection;
+import org.collectiveone.modules.contexts.ModelScope;
+import org.collectiveone.modules.contexts.ModelSubsection;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

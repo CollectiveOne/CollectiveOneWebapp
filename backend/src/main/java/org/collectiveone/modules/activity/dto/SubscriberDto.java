@@ -1,7 +1,7 @@
 package org.collectiveone.modules.activity.dto;
 
+import org.collectiveone.modules.contexts.dto.ModelSectionDto;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
-import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.users.AppUserDto;
 
 public class SubscriberDto {

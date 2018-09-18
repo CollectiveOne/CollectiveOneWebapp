@@ -1,4 +1,4 @@
-package org.collectiveone.modules.model.enums;
+package org.collectiveone.modules.contexts.enums;
 
 public enum ElementGovernanceType {
 	NONE, 

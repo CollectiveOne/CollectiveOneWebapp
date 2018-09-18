@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.collectiveone.modules.assignations.dto.InitiativeMetaDto;
-import org.collectiveone.modules.model.dto.ModelSectionDto;
+import org.collectiveone.modules.contexts.dto.ModelSectionDto;
 import org.collectiveone.modules.tokens.dto.AssetsDto;
 import org.collectiveone.modules.users.AppUserDto;
 

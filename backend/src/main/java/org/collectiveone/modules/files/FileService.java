@@ -10,9 +10,9 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.config.aws.AmazonS3Template;
+import org.collectiveone.modules.contexts.ModelService;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
-import org.collectiveone.modules.model.ModelService;
 import org.collectiveone.modules.users.AppUserProfile;
 import org.collectiveone.modules.users.AppUserProfileRepositoryIf;
 import org.collectiveone.modules.users.AppUserRepositoryIf;

@@ -1,4 +1,4 @@
-package org.collectiveone.modules.model.dto;
+package org.collectiveone.modules.contexts.dto;
 
 public class InModelSectionDto {
 	

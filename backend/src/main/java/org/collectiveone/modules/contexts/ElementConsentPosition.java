@@ -1,4 +1,4 @@
-package org.collectiveone.modules.model;
+package org.collectiveone.modules.contexts;
 
 import java.util.UUID;
 
@@ -11,8 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.model.dto.ElementConsentPositionDto;
-import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
+import org.collectiveone.modules.contexts.dto.ElementConsentPositionDto;
+import org.collectiveone.modules.contexts.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

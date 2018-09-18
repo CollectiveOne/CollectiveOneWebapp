@@ -19,9 +19,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.contexts.ModelSubsection;
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.initiatives.dto.InitiativeDto;
-import org.collectiveone.modules.model.ModelSubsection;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;

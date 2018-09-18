@@ -1,4 +1,4 @@
-package org.collectiveone.modules.model;
+package org.collectiveone.modules.contexts;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.contexts.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.governance.CardLike;
 import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
