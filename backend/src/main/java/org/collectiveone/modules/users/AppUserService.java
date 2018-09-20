@@ -9,11 +9,6 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.activity.ActivityService;
-import org.collectiveone.modules.activity.Subscriber;
-import org.collectiveone.modules.activity.enums.SubscriberInheritConfig;
-import org.collectiveone.modules.activity.enums.SubscriptionElementType;
-import org.collectiveone.modules.activity.repositories.SubscriberRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,13 +29,8 @@ public class AppUserService {
 	@Autowired
 	private ManagementAPI mgmt;
 	
-	@Autowired
-	private ActivityService activityService;
 	
-	@Autowired
-	private SubscriberRepositoryIf subscriberRepository;
 	
-
 	@Transactional
 	public AppUser getOrCreateFromAuth0Id(String auth0Id) {
 		
@@ -194,18 +184,6 @@ public class AppUserService {
 					profile = appUserProfileRepository.save(profile);
 					
 					appUser.setProfile(profile);
-					
-					/* create global subscriber */
-					Subscriber subscriber = new Subscriber();
-					
-					subscriber.setType(SubscriptionElementType.COLLECTIVEONE);
-					subscriber.setUser(appUser);
-					
-					subscriber.setInheritConfig(SubscriberInheritConfig.CUSTOM);
-					
-					activityService.initDefaultSubscriber(subscriber);
-					
-					subscriberRepository.save(subscriber);
 					
 				} 
 			} else {

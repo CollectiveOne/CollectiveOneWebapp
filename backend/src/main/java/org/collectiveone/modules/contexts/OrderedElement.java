@@ -10,8 +10,4 @@ public interface OrderedElement {
 
 	public void setAfterElement(OrderedElement afterElement);
 	
-	public ModelScope getScope();
-	
-	public void setScope(ModelScope scope);
-	
 }

@@ -6,11 +6,6 @@ import java.util.UUID;
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.contexts.ModelService;
-import org.collectiveone.modules.governance.DecisionVerdict;
-import org.collectiveone.modules.governance.GovernanceService;
-import org.collectiveone.modules.initiatives.Initiative;
-import org.collectiveone.modules.initiatives.InitiativeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,17 +22,7 @@ public class FilesController extends BaseController {
 	@Autowired
 	private FileService fileService;
 	
-	@Autowired
-	private GovernanceService governanceService;
-	
-	@Autowired
-	private ModelService modelService;
-	
-	@Autowired
-	private InitiativeService initiativeService;
-	
-	
-    @RequestMapping(value = "/upload/profileImage", method = RequestMethod.POST)
+	@RequestMapping(value = "/upload/profileImage", method = RequestMethod.POST)
     public @ResponseBody String uploadProfileImage(@RequestParam("file") MultipartFile file) {
     	
     	if (getLoggedUser() == null) {
@@ -48,7 +33,7 @@ public class FilesController extends BaseController {
     	return "success";
     }
     
-    @RequestMapping(value = "/upload/cardImage", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public @ResponseBody PostResult uploadCardImageBeforeCreation(
     		@RequestParam("file") MultipartFile file) throws IOException {
     	
@@ -61,57 +46,12 @@ public class FilesController extends BaseController {
     	return fileService.uploadCardImageBeforeCreation(getLoggedUserId(), file);
     }
     
-    @RequestMapping(value = "/upload/cardImage/{cardWrapperId}", method = RequestMethod.POST)
-    public @ResponseBody PostResult uploadCardImage(
-    		@PathVariable("cardWrapperId") String cardWrapperIdStr,
-    		@RequestParam("file") MultipartFile file) throws IOException {
-    	
-    	if (getLoggedUser() == null) {
-			return new PostResult("error", "endpoint enabled users only", "");
-		}
-    	
-    	UUID cardWrapperId = UUID.fromString(cardWrapperIdStr);
-    	Initiative initiative = modelService.getCardWrapperInitiative(cardWrapperId);
-    	
-    	if (governanceService.canEditModel(initiative.getId(), getLoggedUserId()) == DecisionVerdict.DENIED) {
-    		return new PostResult("error", "not authorized", "");
-		}
-    	
-    	
-    	return fileService.uploadCardImage(getLoggedUserId(), cardWrapperId, file);
-    }
-    
-    @RequestMapping(value = "/upload/initiativeImage/{initiativeId}", method = RequestMethod.POST)
-    public @ResponseBody PostResult uploadInitiativeImage(
-    		@PathVariable("initiativeId") String initiativeIdStr,
-    		@RequestParam("file") MultipartFile file) throws IOException {
-    	
-    	if (getLoggedUser() == null) {
-			return new PostResult("error", "endpoint enabled users only", "");
-		}
-    	
-    	UUID initiativeId = UUID.fromString(initiativeIdStr);
-    	if (governanceService.canEdit(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
-    		return new PostResult("error", "not authorized", "");
-		}
-    	
-    	
-    	return fileService.uploadInitiativeImage(getLoggedUserId(), initiativeId, file);
-    }
     
     @RequestMapping(value = "/files/{fileId}", method = RequestMethod.GET)
     public @ResponseBody GetResult<FileStoredDto> getFileData (
     		@PathVariable("fileId") String fileIdStr) {
     	
     	UUID fileId = UUID.fromString(fileIdStr);
-    	Initiative initiative = fileService.getFileInitiative(fileId);
-    	
-    	if (initiative != null) {
-    		if (!initiativeService.canAccess(initiative.getId(), getLoggedUserId())) {
-    			return new GetResult<FileStoredDto>("error", "access denied", null);
-    		}
-    	}
-    	
     	return new GetResult<FileStoredDto>("success", "file retrieved", fileService.getFileData(fileId));
     }
     
