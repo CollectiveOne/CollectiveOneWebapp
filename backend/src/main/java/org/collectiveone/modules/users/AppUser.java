@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.contexts.Perspective;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -51,6 +52,14 @@ public class AppUser {
 	private UserOnlineStatus onlineStatus;
 	
 	private Timestamp lastSeen;
+	
+	/**
+	 * Each user must have one and only one private 
+	 * context + perspective pair associated to him/her
+	 * */
+	@OneToOne
+	private Perspective userPerspective;
+	
 	
 	public AppUserDto toDtoLight() {
 		AppUserDto dto = new AppUserDto();
@@ -150,6 +159,12 @@ public class AppUser {
 	}
 	public void setOnlineStatus(UserOnlineStatus onlineStatus) {
 		this.onlineStatus = onlineStatus;
+	}
+	public Perspective getUserPerspective() {
+		return userPerspective;
+	}
+	public void setUserPerspective(Perspective userPerspective) {
+		this.userPerspective = userPerspective;
 	}
 	
 }

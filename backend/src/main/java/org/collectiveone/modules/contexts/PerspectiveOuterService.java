@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class PerspectiveOuterService {
 	
 	@Autowired
-	private PerspectiveInnerService trailInnerService;
+	private PerspectiveInnerService perspectiveInnerService;
 	
 	@Autowired
 	private CardService cardService; 
@@ -24,17 +24,16 @@ public class PerspectiveOuterService {
 	@Transactional
 	public PostResult stageCardWrapper(
 			NewCardDto cardDto, 
-			UUID trailId, 
+			UUID perspectiveId, 
 			UUID authorId, 
 			UUID onCardWrapperId, 
 			Boolean isBefore) {
 		
-		Commit workingCommit = trailInnerService.getOrCreateWorkingCommit(trailId, authorId);
+		Commit workingCommit = perspectiveInnerService.getOrCreateWorkingCommit(perspectiveId, authorId);
 		CardContent cardContent = cardService.createCardContent(cardDto.getBase());
 		
 		CardWrapper cardWrapper = new CardWrapper();
-		
-		Stage stage = new Stage(workingCommit, StageAction.ADD, cardWrapper, cardContent);
+		StageCard stage = new StageCard(workingCommit, StageAction.ADD, cardWrapper, cardContent);
 		
 		return new PostResult("success", "new card staged", "");
 	}

@@ -39,6 +39,13 @@ public class Context {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
+	
+	
+	public Context(String title, String description) {
+		super();
+		this.title = title;
+		this.description = description;
+	}
 
 	@Override
 	public boolean equals(Object obj) {

@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class BaseController {
 	
 	@Autowired
-	private AppUserService appUserService;
+	protected AppUserService appUserService;
 	
 	protected UUID getLoggedUserId() {
 		AppUser loggedUser = getLoggedUser();

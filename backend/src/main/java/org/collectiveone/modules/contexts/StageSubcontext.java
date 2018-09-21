@@ -11,14 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.contexts.cards.CardContent;
-import org.collectiveone.modules.contexts.cards.CardWrapper;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "stages")
-public class Stage {
+@Table(name = "stages_contexts")
+public class StageSubcontext {
 
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -34,16 +32,21 @@ public class Stage {
 	private StageAction action;
 	
 	@ManyToOne
-	private CardWrapper cardWrapper;
+	private Perspective perspective;
 	
 	@ManyToOne
-	private CardContent cardContent;
+	private Perspective beforePerspective;
+		
+	@ManyToOne
+	private Perspective afterPerspective;
 	
-	public Stage(Commit _commit, StageAction _action, CardWrapper _cardWrapper, CardContent _cardContent) {
-		commit = _commit;
-		action = _action;
-		cardWrapper = _cardWrapper;
-		cardContent = _cardContent;
+	
+
+	public StageSubcontext(Commit commit, StageAction action, Perspective perspective) {
+		super();
+		this.commit = commit;
+		this.action = action;
+		this.perspective = perspective;
 	}
 
 	public UUID getId() {
@@ -70,20 +73,12 @@ public class Stage {
 		this.action = action;
 	}
 
-	public CardWrapper getCardWrapper() {
-		return cardWrapper;
+	public Perspective getPerspective() {
+		return perspective;
 	}
 
-	public void setCardWrapper(CardWrapper cardWrapper) {
-		this.cardWrapper = cardWrapper;
+	public void setPerspective(Perspective perspective) {
+		this.perspective = perspective;
 	}
 
-	public CardContent getCardContent() {
-		return cardContent;
-	}
-
-	public void setCardContent(CardContent cardContent) {
-		this.cardContent = cardContent;
-	}
-	
 }

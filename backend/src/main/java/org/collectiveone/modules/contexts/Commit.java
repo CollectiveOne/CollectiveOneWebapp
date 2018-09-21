@@ -1,5 +1,6 @@
 package org.collectiveone.modules.contexts;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -7,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.users.AppUser;
@@ -28,17 +30,23 @@ public class Commit {
 	private AppUser author;
 	
 	@ManyToOne
-	private Perspective trail;
+	private Perspective perspective;
 	
 	@ManyToOne
 	private Commit previousCommit;
+	
+	@OneToMany(mappedBy="commit")
+	private List<StageSubcontext> subcontextStaged;
+	
+	@OneToMany(mappedBy="commit")
+	private List<StageCard> cardsStaged;
 	
 	
 
 	public Commit(AppUser author, Perspective trail, Commit previousCommit) {
 		super();
 		this.author = author;
-		this.trail = trail;
+		this.perspective = trail;
 		this.previousCommit = previousCommit;
 	}
 
@@ -58,12 +66,12 @@ public class Commit {
 		this.author = author;
 	}
 
-	public Perspective getTrail() {
-		return trail;
+	public Perspective getPerspective() {
+		return perspective;
 	}
 
-	public void setTrail(Perspective trail) {
-		this.trail = trail;
+	public void setPerspective(Perspective perspective) {
+		this.perspective = perspective;
 	}
 
 	public Commit getPreviousCommit() {
@@ -73,5 +81,23 @@ public class Commit {
 	public void setPreviousCommit(Commit previousCommit) {
 		this.previousCommit = previousCommit;
 	}
+
+	public List<StageSubcontext> getSubcontextStaged() {
+		return subcontextStaged;
+	}
+
+	public void setSubcontextStaged(List<StageSubcontext> subcontextStaged) {
+		this.subcontextStaged = subcontextStaged;
+	}
+
+	public List<StageCard> getCardsStaged() {
+		return cardsStaged;
+	}
+
+	public void setCardsStaged(List<StageCard> cardsStaged) {
+		this.cardsStaged = cardsStaged;
+	}
+	
+	
 	
 }

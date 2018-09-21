@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.contexts.dto.NewCardDto;
+import org.collectiveone.modules.contexts.dto.NewContextDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +20,53 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContextController extends BaseController { 
 	
 	@Autowired
-	private PerspectiveOuterService trailService;
+	private ContextOuterService contextService;
+	
+	@Autowired
+	private PerspectiveOuterService perspectiveService;
+	
+	
+	/**
+	 * Creates a new context.
+	 * 
+	 * URLParams 
+	 * - (optional) parentPerspectiveId=[UUID]. If not provided, the private perspective of the user is used.
+	 * 
+	 * DataParams
+	 * 	Required
+	 * 	- contextDto 
+	 * 		{
+	 * 			title: (required max 1024 length)[string],
+	 * 			description: (optional)[string]
+	 * 		} 
+	 * */
+	@RequestMapping(path = "/ctx", method = RequestMethod.POST)
+	public PostResult createContext(
+			@RequestBody NewContextDto contextDto,
+			@RequestParam(name="parentPerspectiveId", defaultValue="") String parentPerspectiveIdStr,
+			@RequestParam(name="beforePerspectiveId", defaultValue="") String beforePerspectiveIdStr,
+			@RequestParam(name="afterPerspectiveId", defaultValue="") String afterPerspectiveIdStr) {
+		
+		UUID parentPerspectiveId = null;
+		
+		if (parentPerspectiveIdStr.isEmpty()) {
+			parentPerspectiveId = appUserService.getUserPerspectiveId(getLoggedUserId());
+		} else {
+			parentPerspectiveId = UUID.fromString(parentPerspectiveIdStr);
+		}
+		
+		contextService.createContext(
+				contextDto, 
+				parentPerspectiveId, 
+				getLoggedUserId(),
+				beforePerspectiveIdStr.isEmpty() ? null : UUID.fromString(beforePerspectiveIdStr),
+				afterPerspectiveIdStr.isEmpty() ? null : UUID.fromString(afterPerspectiveIdStr));
+		
+		return new PostResult("success", "new context staged", "");	
+	}
+	
 
-	/* 
+	/** 
 	 * Stages a new card wrapper on a trail.
 	 * 
 	 * The card wrapper is created on the working commit. if no working commit is found,
@@ -46,7 +91,7 @@ public class ContextController extends BaseController {
 		UUID trailId = UUID.fromString(trailIdStr);
 		UUID onCardWrapperId = onCardWrapperIdStr.equals("") ? null : UUID.fromString(onCardWrapperIdStr);
 		
-		return trailService.stageCardWrapper(
+		return perspectiveService.stageCardWrapper(
 				cardDto, 
 				trailId, 
 				getLoggedUserId(), 

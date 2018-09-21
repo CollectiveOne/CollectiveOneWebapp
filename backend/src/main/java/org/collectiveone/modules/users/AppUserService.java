@@ -30,6 +30,10 @@ public class AppUserService {
 	private ManagementAPI mgmt;
 	
 	
+	@Transactional
+	public UUID getUserPerspectiveId(UUID userId) {
+		return appUserRepository.findByC1Id(userId).getUserPerspective().getId();		
+	}
 	
 	@Transactional
 	public AppUser getOrCreateFromAuth0Id(String auth0Id) {

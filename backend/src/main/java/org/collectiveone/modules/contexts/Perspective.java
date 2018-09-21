@@ -1,5 +1,6 @@
 package org.collectiveone.modules.contexts;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,9 +35,17 @@ public class Perspective {
 	private Commit head;
 	
 	@OneToMany
-	private List<Commit> workingCommits;
+	private List<Commit> workingCommits = new ArrayList<Commit>();
 	
 	
+	public Perspective(String name, Context context, Commit head, List<Commit> workingCommits) {
+		super();
+		this.name = name;
+		this.context = context;
+		this.head = head;
+		this.workingCommits = workingCommits;
+	}
+
 	public UUID getId() {
 		return id;
 	}
