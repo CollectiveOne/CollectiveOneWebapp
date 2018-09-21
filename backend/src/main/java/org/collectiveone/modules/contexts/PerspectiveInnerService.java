@@ -5,19 +5,19 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.collectiveone.modules.contexts.repositories.CommitRepositoryIf;
-import org.collectiveone.modules.contexts.repositories.TrailRepositoryIf;
+import org.collectiveone.modules.contexts.repositories.PerspectiveRepositoryIf;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TrailInnerService {
+public class PerspectiveInnerService {
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepositoryIf;
 	
 	@Autowired
-	private TrailRepositoryIf trailRepository;
+	private PerspectiveRepositoryIf trailRepository;
 	
 	@Autowired
 	private CommitRepositoryIf commitRepository;
@@ -31,7 +31,7 @@ public class TrailInnerService {
 		Commit workingCommit = trailRepository.findWorkingCommit(trailId, authorId);
 		
 		if (workingCommit == null) {
-			Trail trail = trailRepository.findById(trailId);
+			Perspective trail = trailRepository.findById(trailId);
 			
 			workingCommit = new Commit(appUserRepositoryIf.findByC1Id(authorId), trail, trail.getHead());
 			workingCommit = commitRepository.save(workingCommit);

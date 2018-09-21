@@ -15,8 +15,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "trails")
-public class Trail {
+@Table(name = "perspectives")
+public class Perspective {
 
 	@Id
 	@GeneratedValue(generator = "UUID")

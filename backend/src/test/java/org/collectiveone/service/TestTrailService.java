@@ -3,7 +3,7 @@ package org.collectiveone.service;
 import static org.junit.Assert.assertTrue;
 
 import org.collectiveone.AbstractTest;
-import org.collectiveone.modules.contexts.TrailOuterService;
+import org.collectiveone.modules.contexts.PerspectiveOuterService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,15 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class TestTrailService extends AbstractTest {
 	
 	@Autowired
-    private TrailOuterService trailOuterService;
+    private PerspectiveOuterService trailOuterService;
 	
 	@Value("${TEST_USER}")
 	String userId;
 	
-	@Value("${TEST_INITIATIVE_ID}")
-	String trailId;
-	
-    @Before
+	@Before
     public void setUp() {
         //service.evictCache();
     }
@@ -36,12 +33,12 @@ public class TestTrailService extends AbstractTest {
     
     @Test
     public void ifCreateInitiativeIsSuccess() {
-    		//UUID c1Id=this.userService.ge
+    	// UUID c1Id=this.userService.ge
     }
 
     @Test
     public void createContext() {
-		assertTrue(true);
+		assertTrue(false);
     }
     
 }

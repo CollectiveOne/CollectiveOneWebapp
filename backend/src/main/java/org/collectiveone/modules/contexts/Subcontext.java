@@ -25,7 +25,7 @@ public class Subcontext implements OrderedElement {
 	private UUID id;
 	
 	@ManyToOne
-	private Trail trail;
+	private Perspective trail;
 	
 	@ManyToOne
 	private Context subcontext;
@@ -59,11 +59,11 @@ public class Subcontext implements OrderedElement {
 		this.id = id;
 	}
 
-	public Trail getTrail() {
+	public Perspective getTrail() {
 		return trail;
 	}
 
-	public void setTrail(Trail trail) {
+	public void setTrail(Perspective trail) {
 		this.trail = trail;
 	}
 

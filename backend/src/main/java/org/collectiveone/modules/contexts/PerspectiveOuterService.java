@@ -13,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TrailOuterService {
+public class PerspectiveOuterService {
 	
 	@Autowired
-	private TrailInnerService trailInnerService;
+	private PerspectiveInnerService trailInnerService;
 	
 	@Autowired
 	private CardService cardService; 

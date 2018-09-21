@@ -15,7 +15,7 @@ import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "members")
-public class TrailMember implements Comparable<TrailMember>{
+public class PerspectiveMember implements Comparable<PerspectiveMember>{
 
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -25,14 +25,14 @@ public class TrailMember implements Comparable<TrailMember>{
 	private UUID id;
 	
 	@ManyToOne
-	private Trail trail;
+	private Perspective trail;
 	
 	@ManyToOne
 	private AppUser user;
 
 
 	@Override
-    public int compareTo(TrailMember m) {
+    public int compareTo(PerspectiveMember m) {
         return user.getC1Id().compareTo(m.getUser().getC1Id());
     }
 	

@@ -17,7 +17,7 @@ import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "cards_in_contexts")
-public class CardInTrail {
+public class CardInPerspective {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -26,18 +26,18 @@ public class CardInTrail {
 	private UUID id;
 	
 	@ManyToOne
-	private Trail trail;
+	private Perspective trail;
 	
 	@ManyToOne
 	private CardWrapper cardWrapper;
 	
 	/* double-linked list determines the order */
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	private CardInTrail beforeElement;
+	private CardInPerspective beforeElement;
 	
 	/* double-linked list determines the order */
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	private CardInTrail afterElement;
+	private CardInPerspective afterElement;
 	
 	@ManyToOne
 	private AppUser adder;
@@ -67,7 +67,7 @@ public class CardInTrail {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CardInTrail other = (CardInTrail) obj;
+		CardInPerspective other = (CardInPerspective) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -84,11 +84,11 @@ public class CardInTrail {
 		this.id = id;
 	}
 
-	public Trail getTrail() {
+	public Perspective getTrail() {
 		return trail;
 	}
 
-	public void setTrail(Trail trail) {
+	public void setTrail(Perspective trail) {
 		this.trail = trail;
 	}
 
@@ -100,19 +100,19 @@ public class CardInTrail {
 		this.cardWrapper = cardWrapper;
 	}
 
-	public CardInTrail getBeforeElement() {
+	public CardInPerspective getBeforeElement() {
 		return beforeElement;
 	}
 
-	public void setBeforeElement(CardInTrail beforeElement) {
+	public void setBeforeElement(CardInPerspective beforeElement) {
 		this.beforeElement = beforeElement;
 	}
 
-	public CardInTrail getAfterElement() {
+	public CardInPerspective getAfterElement() {
 		return afterElement;
 	}
 
-	public void setAfterElement(CardInTrail afterElement) {
+	public void setAfterElement(CardInPerspective afterElement) {
 		this.afterElement = afterElement;
 	}
 

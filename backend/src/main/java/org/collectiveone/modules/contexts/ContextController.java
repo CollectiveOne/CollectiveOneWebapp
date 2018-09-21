@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContextController extends BaseController { 
 	
 	@Autowired
-	private TrailOuterService trailService;
+	private PerspectiveOuterService trailService;
 
 	/* 
 	 * Stages a new card wrapper on a trail.

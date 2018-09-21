@@ -25,18 +25,21 @@ public class Commit {
 	private UUID id;
 	
 	@ManyToOne
-	private AppUser user;
+	private AppUser author;
 	
 	@ManyToOne
-	private Trail trail;
+	private Perspective trail;
 	
 	@ManyToOne
 	private Commit previousCommit;
 	
-	public Commit(AppUser _user, Trail _trail, Commit _previousCommit) {
-		user = _user;
-		trail = _trail;
-		previousCommit = _previousCommit;
+	
+
+	public Commit(AppUser author, Perspective trail, Commit previousCommit) {
+		super();
+		this.author = author;
+		this.trail = trail;
+		this.previousCommit = previousCommit;
 	}
 
 	public UUID getId() {
@@ -47,19 +50,19 @@ public class Commit {
 		this.id = id;
 	}
 
-	public AppUser getUser() {
-		return user;
+	public AppUser getAuthor() {
+		return author;
 	}
 
-	public void setUser(AppUser user) {
-		this.user = user;
+	public void setAuthor(AppUser author) {
+		this.author = author;
 	}
 
-	public Trail getTrail() {
+	public Perspective getTrail() {
 		return trail;
 	}
 
-	public void setTrail(Trail trail) {
+	public void setTrail(Perspective trail) {
 		this.trail = trail;
 	}
 
