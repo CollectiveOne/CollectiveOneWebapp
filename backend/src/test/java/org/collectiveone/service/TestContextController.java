@@ -2,7 +2,6 @@ package org.collectiveone.service;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.collectiveone.AbstractTest;
 import org.collectiveone.modules.contexts.dto.NewContextDto;
@@ -16,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.google.gson.Gson;
@@ -33,9 +33,13 @@ public class TestContextController extends AbstractTest {
     
 	@Before
     public void setUp() throws Exception {
-		this.mockMvc
+		MvcResult result = this.mockMvc
 	    	.perform(get("/1/user/myProfile"))
-	    	.andDo(MockMvcResultHandlers.print());
+	    	.andReturn();
+		
+		String content = result.getResponse().getContentAsString();
+		
+		System.out.println(content);
     }
 
     @After
