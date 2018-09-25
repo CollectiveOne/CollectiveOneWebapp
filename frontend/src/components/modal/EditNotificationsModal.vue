@@ -8,13 +8,13 @@
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>Edit {{ notificationsTitle }}</h2>
+          <h2>{{ notificationsTitle }}</h2>
         </div>
 
         <div class="w3-container form-container">
 
           <div v-if="subscriber && type !== 'COLLECTIVEONE'" class="w3-row-padding">
-            <div class="w3-col m4 s12 text-column">General Config:</div>
+            <div class="w3-col m4 s12 text-column">{{ $t('activity.GENERAL_CONF') }}:</div>
             <div class="w3-col m8 s12">
               <div class="w3-row-padding">
                 <div class="w3-col s6">
@@ -22,7 +22,7 @@
                     class="w3-button w3-round"
                     :class="{'app-button': subscriber.inheritConfig === 'INHERIT', 'app-button-light': subscriber.inheritConfig !== 'INHERIT'}"
                     @click="setInherit()">
-                    Inherit
+                    {{ $t('general.INHERIT') }}
                   </button>
                 </div>
                 <div class="w3-col s6">
@@ -30,7 +30,7 @@
                     class="w3-button w3-round"
                     :class="{'app-button': subscriber.inheritConfig === 'CUSTOM', 'app-button-light': subscriber.inheritConfig !== 'CUSTOM'}"
                     @click="subscriber.inheritConfig = 'CUSTOM'">
-                    Custom
+                    {{ $t('general.CUSTOM') }}
                   </button>
                 </div>
               </div>
@@ -40,8 +40,8 @@
           <hr>
 
           <div v-if="applicableSubscriber" class="w3-row w3-center w3-margin-bottom">
-            <div  v-if="subscriber.inheritConfig === 'INHERIT'" class="">
-              Inhereting notification preferences from: <br><b>{{ applicableSubscriberElementName }}</b>
+            <div  v-if="subscriber.inheritConfig === 'INHERIT'" class=""
+              v-html="$t('activity.INHERITING_FROM', { name: applicableSubscriberElementName })">
             </div>
           </div>
 
@@ -52,23 +52,25 @@
               <div class="w3-col m8 s12">
                 <div class="w3-row-padding column-header">
                   <div class="w3-col s3">
-                    disable
+                    {{ $t('activity.DISABLE') }}
                   </div>
                   <div class="w3-col s3">
-                    only mentions
+                    {{ $t('activity.ONLY_MENTIONS') }}
                   </div>
                   <div class="w3-col s3">
-                    only messages
+                    {{ $t('activity.ONLY_MESSAGES') }}
                   </div>
                   <div class="w3-col s3">
-                    all events
+                    {{ $t('activity.ALL_EVENTS') }}
                   </div>
                 </div>
               </div>
             </div>
 
             <div class="w3-row-padding table-row">
-              <div class="w3-col m4 s12 text-column">In-App Notifications:</div>
+              <div class="w3-col m4 s12 text-column">
+                {{ $t('activity.IN_APP_NOTIFICATIONS') }}:
+              </div>
               <div class="w3-col m8 s12">
                 <div class="w3-row-padding">
                   <div class="w3-col s3">
@@ -109,7 +111,9 @@
 
             <div v-if="applicableSubscriber.inAppConfig !== 'DISABLED'" class="">
               <div class="w3-row-padding table-row">
-                <div class="w3-col m4 s12 text-column">Push Notifications:<br><small>Sent only when not active in the app</small></div>
+                <div class="w3-col m4 s12 text-column"
+                  v-html="$t('activity.PUSH_NOTIFICATIONS_MSG')">
+                </div>
                 <div class="w3-col m8 s12">
                   <div class="w3-row-padding">
                     <div class="w3-col s3">
@@ -149,7 +153,9 @@
               </div>
 
               <div class="w3-row-padding table-row">
-                <div class="w3-col m4 s12 text-column">Immediate Email:<br><small>Sent only when not active in the app</small></div>
+                <div class="w3-col m4 s12 text-column"
+                  v-html="$t('activity.IMMEDIATE_MAIL_MSG')">
+                </div>
                 <div class="w3-col m8 s12">
                   <div class="w3-row-padding">
                     <div class="w3-col s3">
@@ -189,7 +195,9 @@
               </div>
 
               <div class="w3-row-padding table-row">
-                <div class="w3-col m4 s12 text-column">Email Summary:<br><small>Sent only when not already read in app</small></div>
+                <div class="w3-col m4 s12 text-column"
+                  v-html="$t('activity.EMAIL_SUMMARY_MSG')">
+                </div>
                 <div class="w3-col m8 s12">
                   <div class="w3-row-padding table-row">
                     <div class="w3-col s3">
@@ -231,7 +239,7 @@
                         class="w3-button w3-round"
                         :class="{'app-button': applicableSubscriber.emailSummaryPeriodConfig === 'DAILY', 'app-button-light': applicableSubscriber.emailSummaryPeriodConfig !== 'DAILY'}"
                         @click="applicableSubscriber.emailSummaryPeriodConfig = 'DAILY'">
-                        daily
+                        {{ $t('activity.DAILY') }}
                       </button>
                     </div>
                     <div class="w3-col s6">
@@ -239,7 +247,7 @@
                         class="w3-button w3-round"
                         :class="{'app-button': applicableSubscriber.emailSummaryPeriodConfig === 'WEEKLY', 'app-button-light': applicableSubscriber.emailSummaryPeriodConfig !== 'WEEKLY'}"
                         @click="applicableSubscriber.emailSummaryPeriodConfig = 'WEEKLY'">
-                        weekly
+                        {{ $t('activity.WEEKLY') }}
                       </button>
                     </div>
                   </div>
@@ -261,10 +269,14 @@
 
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button id="T_notificationCancelButton" type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">
+                {{ $t('general.CANCEL') }}
+              </button>
             </div>
             <div class="w3-col m6">
-              <button  id="T_notificationAcceptButton" type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button type="button" class="w3-button app-button" @click="accept()">
+                {{ $t('general.ACCEPT') }}
+              </button>
             </div>
           </div>
 
@@ -315,13 +327,13 @@ export default {
       if (this.inheritedFrom) {
         switch (this.inheritedFrom.elementType) {
           case 'SECTION':
-            return '"' + this.inheritedFrom.section.title + '" Section'
+            return this.$t('activity.TITLE_AND_TYPE', { title: this.inheritedFrom.section.title, type: 'Section' })
 
           case 'INITIATIVE':
-            return '"' + this.inheritedFrom.initiative.meta.name + '" Initiative'
+            return this.$t('activity.TITLE_AND_TYPE', { title: this.inheritedFrom.initiative.meta.name, type: 'Initiative' })
 
           case 'COLLECTIVEONE':
-            return 'your global notification preferences'
+            return this.$t('activity.GLOBAL_NOTIFICATIONS_PREFS')
         }
       }
     },
@@ -331,13 +343,13 @@ export default {
     notificationsTitle () {
       switch (this.type) {
         case 'SECTION':
-          return 'notifications for the "' + this.section.title + '" Section'
+          return this.$t('activity.EDIT_NOTIFICATIONS_OF', { title: this.section.title, type: 'Section' })
 
         case 'INITIATIVE':
-          return 'notifications for the "' + this.initiative.meta.name + '" Initiative'
+          return this.$t('activity.EDIT_NOTIFICATIONS_OF', { title: this.initiative.meta.name, type: 'Initiative' })
 
         case 'COLLECTIVEONE':
-          return 'your global notification preferences'
+          return this.$t('activity.EDIT_GLOBAL_NOTIFICATIONS')
       }
     },
     elementId () {
@@ -455,7 +467,7 @@ export default {
 }
 
 .text-column {
-  text-align: right;
+  text-align: center;
 }
 
 .table-row {

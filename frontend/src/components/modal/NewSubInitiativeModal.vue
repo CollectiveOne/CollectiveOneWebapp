@@ -8,49 +8,44 @@
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>New subinitiative of {{ parentInitiative.meta.name }}</h2>
+          <h2>{{ $t('initiatives.NEW_SUBINITIATIVE_OF') }} {{ parentInitiative.meta.name }}</h2>
         </div>
 
         <div class="w3-container form-container">
 
           <br>
-          <label class=""><b>Subinitiative Name <span class="w3-small error-text">(required)</span></b></label>
+          <label class=""><b>{{ $t('general.NAME') }} <span class="w3-small error-text">(required)</span></b></label>
           <input v-model="name"
             class="w3-input w3-hover-light-grey" type="text"
             :class="{ 'error-input' : nameErrorShow }">
           <app-error-panel
             :show="nameEmptyShow"
-            message="please select a name for this subinitiative">
+            :message="$t('general.FIELD_CANNOT_BE_EMPTY')">
           </app-error-panel>
           <app-error-panel
             :show="nameTooLongShow"
-            message="name too long">
+            :message="$t('general.FIELD_TOO_LONG')">
           </app-error-panel>
           <br>
 
-          <label class=""><b>Subinitiative Purpose <span class="w3-small error-text">(required)</span></b></label>
+          <label class=""><b>{{ $t('general.DESCRIPTION') }}</b></label>
           <textarea v-model="driver"
-            class="w3-input w3-border w3-round w3-hover-light-grey"
-            :class="{ 'error-input' : driverErrorShow }">
+            class="w3-input w3-border w3-round w3-hover-light-grey">
           </textarea>
-          <app-error-panel
-            :show="driverErrorShow"
-            message="please include the purpose of this subinitiative">
-          </app-error-panel>
 
           <hr>
 
           <div class="w3-container assets-selector-div">
             <div class="w3-row-padding">
               <div class="w3-col m4">
-                <h5><b>Transfer assets?</b></h5>
+                <h5><b>{{ $t('tokens.TRANSFER_ASSETS_Q') }}</b></h5>
               </div>
               <div class="w3-col m4">
                 <button class="w3-button transfer-button"
                   :class="{'app-button': transferAssetsFlag, 'app-button-light': !transferAssetsFlag, }"
                   type="button" name="button"
                   @click="transferAssetsFlag = true">
-                  yes
+                  {{ $t('general.YES') }}
                 </button>
               </div>
               <div class="w3-col m4">
@@ -58,7 +53,7 @@
                   :class="{'app-button': !transferAssetsFlag, 'app-button-light': transferAssetsFlag, }"
                   type="button" name="button"
                   @click="transferAssetsFlag = false">
-                  no
+                  {{ $t('general.NO') }}
                 </button>
               </div>
             </div>
@@ -78,13 +73,12 @@
           </div>
           <app-error-panel
             :show="assetsErrorShow"
-            message="warning: you have not selected any assets. Please confirm this is
-            ok below, or specify the amount to be transferred">
+            :message="$t('tokens.NO_ASSETS_TRANSFERRED_CONF')">
           </app-error-panel>
 
           <hr>
 
-          <label class="init-contr-label "><b>Initial Members</b></label>
+          <label class="init-contr-label "><b>{{ $t('initiatives.INITIAL_MEMBERS') }}</b></label>
           <app-members-table-container
             :members="members"
             :canEdit="true">
@@ -100,31 +94,30 @@
           </div>
           <app-error-panel
             :show="membersEmptyShow"
-            message="please select at least one member">
+            :message="$t('general.FIELD_CANNOT_BE_EMPTY')">
           </app-error-panel>
           <app-error-panel
             :show="noAdmingShow"
-            message="there must be at least one admin">
+            :message="$t('initiatives.ONE_ADMIN_ATLEAST')">
           </app-error-panel>
 
           <hr>
           <div v-if="assetsErrorShow" class="w3-row error-panel w3-padding w3-round w3-margin-bottom">
             <div class="w3-col l10">
-              You will not transfer assets from {{ parentInitiative.meta.name }} to this new initiative. Please
-              confirm this is ok.
+              {{ $t('tokens.NO_ASSETS_TRANSFERRED_MSG', { initName: parentInitiative.meta.name }) }}
             </div>
             <div class="w3-col l2 w3-center">
               <button
                 class="w3-button app-button w3-round-large" name="button"
-                @click="assetsEmptyErrorConfirmed = true">ok</button>
+                @click="assetsEmptyErrorConfirmed = true">{{ $t('general.OK') }}</button>
             </div>
           </div>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">{{ $t('general.CANCEL') }}</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button type="button" class="w3-button app-button" @click="accept()">{{ $t('general.ACCEPT') }}</button>
             </div>
           </div>
         </div>
@@ -163,7 +156,6 @@ export default {
       assetsTransfers: [],
       members: [],
       nameEmptyError: false,
-      driverEmptyError: false,
       assetsEmptyError: false,
       membersEmptyError: false,
       noAdminError: false,
@@ -184,9 +176,6 @@ export default {
     },
     nameTooLong () {
       return this.name.length > 42
-    },
-    driverErrorShow () {
-      return this.driverEmptyError && (this.driver === '')
     },
     assetsErrorShow () {
       return this.assetsEmptyError && !this.assetsSelected && !this.assetsEmptyErrorConfirmed
@@ -284,11 +273,6 @@ export default {
         if (this.nameTooLong) {
           ok = false
         }
-      }
-
-      if (this.driver === '') {
-        ok = false
-        this.driverEmptyError = true
       }
 
       if (this.transferAssetsFlag) {

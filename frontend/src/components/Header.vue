@@ -11,7 +11,7 @@
     <div class="w3-row header-row drop-shadow-br light-grey">
       <div class="w3-col m4 initiatives-breadcrumb-container">
 
-        <div tooltip="Initiatives Browser" class="w3-left nav-menu-btn w3-xlarge fa-button"
+        <div v-if="withInitiativeNav" class="w3-left nav-menu-btn w3-xlarge fa-button"
           @click="$store.commit('toggleExpandNav')">
           <i class="fa fa-chevron-circle-right"></i>
         </div>
@@ -66,7 +66,7 @@
 
       <div class="w3-col m4">
         <div v-if="inInitiative" class="tab-btns-container w3-xlarge">
-          <popper trigger="hover":options="popperOptions" class="btn-div" delay-on-mouse-in="1200">
+          <popper trigger="hover":options="popperOptions" class="btn-div" :delay-on-mouse-in="1200">
             <app-help-popper
               :title="$t('help.CONTENT-TAB-TT')"
               :details="$t('help.CONTENT-TAB-DET')">
@@ -80,7 +80,7 @@
             </router-link>
           </popper>
 
-          <popper trigger="hover":options="popperOptions" class="btn-div" delay-on-mouse-in="1200">
+          <popper trigger="hover":options="popperOptions" class="btn-div" :delay-on-mouse-in="1200">
             <app-help-popper
               :title="$t('help.MEMBERS-TAB-TT')"
               :details="$t('help.MEMBERS-TAB-DET')">
@@ -94,7 +94,7 @@
             </router-link>
           </popper>
 
-          <popper trigger="hover":options="popperOptions" class="btn-div" delay-on-mouse-in="1200">
+          <popper trigger="hover":options="popperOptions" class="btn-div" :delay-on-mouse-in="1200">
             <app-help-popper
               :title="$t('help.TRANSFERS-TAB-TT')"
               :details="$t('help.TRANSFERS-TAB-DET')">
@@ -110,7 +110,9 @@
 
         </div>
         <div v-else class="logo-container">
-          <img class="logo" src="../assets/logo-color.png" alt="">
+          <router-link slot="reference" :to="{name: 'InitiativesHome'}" class="cursor-pointer">
+            <img class="logo" src="../assets/logo-color.png" alt="">
+          </router-link>
         </div>
 
       </div>
@@ -163,7 +165,7 @@
             :details="$t('help.HOME-BUTTON-DET')">
           </app-help-popper>
 
-          <router-link slot="reference" v-if="inInitiative" :to="{name: 'InitiativesHome'}" tooltip="Home" class="w3-right logo-container noselect cursor-pointer">
+          <router-link slot="reference" :to="{name: 'InitiativesHome'}" tooltip="Home" class="w3-right logo-container noselect cursor-pointer">
             <img class="icon" src="../assets/imago-red.png" alt="">
           </router-link>
         </popper>
@@ -190,6 +192,10 @@ export default {
     inInitiative: {
       type: Boolean,
       default: false
+    },
+    withInitiativeNav: {
+      type: Boolean,
+      default: true
     }
   },
 

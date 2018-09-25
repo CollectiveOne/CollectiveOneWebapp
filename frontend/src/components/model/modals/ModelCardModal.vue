@@ -1,8 +1,7 @@
 <template lang="html">
   <div class="w3-modal" draggable="false">
     <div class="w3-modal-content">
-      <div class="w3-card-4 app-modal-card w3-display-container"
-        v-click-outside="clickOutside">
+      <div class="w3-card-4 app-modal-card w3-display-container">
 
         <div class="w3-display-topright">
           <div class="w3-right w3-button close-btn w3-xlarge" @click="closeThisConfirm()">
@@ -14,9 +13,8 @@
               :show="showEditButtons"
               @edit="startEditing()"
               @delete="deleteCard()"
-              deleteMessage="This will delete the card from all the sections in which it is used."
               @remove="removeCard()"
-              :removeMessage="'This will remove this card from the ' + inSectionTitle + ' section.'">
+              :in-section-title="inSectionTitle">
             </app-model-modal-buttons>
           </div>
         </div>
@@ -163,10 +161,10 @@
 
                 <div class="w3-row">
                   <div v-if="!editing" class="">
-                    <vue-markdown class="marked-text" :source="card.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
+                    <vue-markdown v-if="card.text" class="marked-text" :source="card.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
                   </div>
                   <div v-else class="w3-margin-top">
-                    <label class=""><b>Text: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+                    <label class=""><b>Text:</b></label>
                     <app-markdown-editor v-model="editedCard.text"></app-markdown-editor>
                     <app-error-panel
                       :show="textErrorShow"
@@ -665,7 +663,7 @@ export default {
       this.editedCard = {
         title: '',
         text: '',
-        newScope: 'SHARED'
+        newScope: 'COMMON'
       }
       this.editing = true
       this.addExisting = this.addExistingInit

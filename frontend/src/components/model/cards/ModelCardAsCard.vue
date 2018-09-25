@@ -19,7 +19,7 @@
 
           <div ref="cardText"
             class="w3-row card-text">
-            <vue-markdown class="marked-text" :source="card.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
+            <vue-markdown v-if="card.text" class="marked-text" :source="card.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
           </div>
         </div>
       </div>

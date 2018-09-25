@@ -10,9 +10,8 @@
               <app-value-seal :value="assignation.assets[0].value" :assetName="assignation.assets[0].assetName"></app-value-seal>
             </div>
             <div class="w3-row from-row w3-center ">
-              <div class="w3-tag w3-round noselect" :style="{'background-color': $store.getters.colorOfInitiative(assignation.initiativeId)}">
-                from
-                <b>{{ assignation.initiativeName }}</b>
+              <div class="w3-tag w3-round noselect" :style="{'background-color': $store.getters.colorOfInitiative(assignation.initiativeId)}"
+                v-html="$t('tokens.FROM_NAME', { name: assignation.initiativeName })">
               </div>
             </div>
             <div class="w3-row w3-center w3-margin-top">
@@ -27,7 +26,7 @@
             </div>
 
             <div v-if="assignation.notes.length > 0" class="w3-row w3-center">
-              <p>{{ assignation.notes }}</p>
+              <vue-markdown v-if="assignation.notes" class="marked-text" :source="assignation.notes" :anchorAttributes="{target: '_blank'}"></vue-markdown>
             </div>
 
             <div class="w3-row w3-center">
@@ -55,26 +54,24 @@
               <button
                 class="w3-button app-button"
                 @click="revertTransaction = true">
-                revert transaction
+                {{ $t('tokens.REVERT_TX') }}
               </button>
             </div>
             <div class="slider-container">
               <transition name="slideDownUp">
                 <div v-if="revertTransaction" class="w3-row tags-row w3-center">
                   <div class="w3-padding w3-round light-grey w3-margin-bottom">
-                    <p>
-                      <b>Warning:</b> This will order the transfer of tokens from the receivers
-                      back to the initiative. Please confirm you would like to revert this transaction.
+                    <p v-html="$t('tokens.REVERT_WARNING')">
                     </p>
                   </div>
 
                   <button
                     class="w3-button app-button-light button-pair"
-                    @click="revertTransaction = false">cancel
+                    @click="revertTransaction = false">{{ $t('general.CANCEL') }}
                   </button>
                   <button
                     class="w3-button app-button-danger button-pair"
-                    @click="orderRevert()">confirm
+                    @click="orderRevert()">{{ $t('general.CONFIRM') }}
                   </button>
                 </div>
               </transition>
@@ -84,26 +81,23 @@
               <button
                 class="w3-button app-button"
                 @click="deleteTransaction = true">
-                delete
+                {{ $t('general.DELETE') }}
               </button>
             </div>
             <div class="slider-container">
               <transition name="slideDownUp">
                 <div v-if="deleteTransaction" class="w3-row tags-row w3-center">
                   <div class="w3-padding w3-round light-grey w3-margin-bottom">
-                    <p>
-                      <b>Warning:</b> This will delete this assignation. All evaluations made
-                      will be lost and no tokens will be transferred. Please confirm.
-                    </p>
+                    <p v-html="$t('tokens.DELETE_WARNING')"></p>
                   </div>
 
                   <button
                     class="w3-button app-button-light button-pair"
-                    @click="deleteTransaction = false">cancel
+                    @click="deleteTransaction = false">{{ $t('general.CANCEL') }}
                   </button>
                   <button
                     class="w3-button app-button-danger button-pair"
-                    @click="deleteAssignation()">confirm
+                    @click="deleteAssignation()">{{ $t('general.CONFIRM') }}
                   </button>
                 </div>
               </transition>
@@ -113,26 +107,24 @@
               <button
                 class="w3-button app-button"
                 @click="openAssignation = true">
-                open - start evaluations
+                {{ $t('token.OPEN_START_EVALS') }}
               </button>
             </div>
             <div class="slider-container">
               <transition name="slideDownUp">
                 <div v-if="openAssignation" class="w3-row tags-row w3-center">
                   <div class="w3-padding w3-round light-grey w3-margin-bottom">
-                    <p>
-                      <b>Warning:</b> This will open the peer-review process and evaluators will have
-                      {{ assignation.config.maxDuration }} days to do provide their evaluations.
+                    <p v-html="$t('tokens.OPEN_WARNING', { days: assignation.config.maxDuration })">
                     </p>
                   </div>
 
                   <button
                     class="w3-button app-button-light button-pair"
-                    @click="openAssignation = false">cancel
+                    @click="openAssignation = false">{{ $t('general.CANCEL') }}
                   </button>
                   <button
                     class="w3-button app-button-danger button-pair"
-                    @click="openAssignationClick()">confirm
+                    @click="openAssignationClick()">{{ $t('general.CONFIRM') }}
                   </button>
                 </div>
               </transition>
@@ -140,29 +132,27 @@
 
             <div v-if="isReceiverApproval" class="w3-center">
               <div class="w3-padding w3-round light-grey w3-margin-bottom">
-                <p>
-                  <b>Attention:</b> One of the admins would like to revert this
-                  transation. Do you approve this revert?
+                <p v-html="$t('tokens.REVERT_WARNING', { days: assignation.config.maxDuration })">
                 </p>
               </div>
               <div v-if="!this.loggedReceiver.revertApproval" class="">
                 <button
                   class="w3-button app-button-light button-pair"
-                  @click="approveRevert(false)">reject
+                  @click="approveRevert(false)">{{ $t('tokens.REJECT') }}
                 </button>
                 <button
                   class="w3-button app-button button-pair"
-                  @click="approveRevert(true)">approve
+                  @click="approveRevert(true)">{{ $t('tokens.APPROVE') }}
                 </button>
               </div>
               <div v-else class="">
-                <div class="w3-tag w3-padding app-button button-pair noselect">approved!
+                <div class="w3-tag w3-padding app-button button-pair noselect">{{ $t('tokens.APPROVED_MSG') }}
                 </div>
               </div>
             </div>
 
             <div v-if="showStatus" class="w3-row w3-center">
-              <b>{{ assignation.evaluationsPending + ' evaluations pending' }}, closes in {{ getTimeStrUntil(assignation.config.maxClosureDate) }}</b>
+              <b>{{ $t('tokens.PEER_REV_STATUS', { nEvalsPending: assignation.evaluationsPending, timeRemaining: getTimeStrUntil(assignation.config.maxClosureDate) }) }}</b>
             </div>
 
           </div>
@@ -184,13 +174,12 @@
         <div class="w3-row-padding">
           <div v-if="isEvaluator && !isDone && !isDeleted && isOpen" class="w3-col l12 my-evaluation-div w3-margin-bottom">
             <div class="w3-row w3-center">
-              <h5 class=""><b>My evaluation</b></h5>
+              <h5 class=""><b>{{ $t('tokens.MY_EVAL') }}</b></h5>
             </div>
             <div class="slider-container">
               <transition name="slideDownUp">
                 <div v-if="!disableEvaluations" class="w3-panel light-grey">
-                  <p><b>Tip:</b> fill the values with numbers that make sense relative to
-                  each other, <b>even if they dont sum 100%</b>, and then click the "autoscale" button bellow.</p>
+                  <p v-html="$t('tokens.PEER_REV_TIP')"></p>
                 </div>
               </transition>
             </div>
@@ -210,18 +199,18 @@
               <button v-if="!disableEvaluations"
                 type="button" class="w3-button app-button"
                 @click="sendEvaluation()" :disabled="!arePercentagesOk">
-                Save
+                {{ $t('general.SAVE') }}
               </button>
               <button v-else
                 type="button" class="w3-button app-button"
                 @click="updateEvaluation = true">
-                Change my evaluation
+                {{ $t('tokens.CHANGE_MY_EVAL') }}
               </button>
             </div>
           </div>
           <div v-if="showResults" class="w3-col l12">
             <div class="w3-row w3-center">
-              <h5 class=""><b>Results</b></h5>
+              <h5 class=""><b>{{ $t('tokens.RESULTS') }}</b></h5>
             </div>
             <br>
             <app-users-percentages
@@ -236,7 +225,7 @@
         <div v-if="showEvaluations" class="w3-row">
           <hr>
           <div class="w3-row w3-center">
-            <h5 class=""><b>All Evaluations</b></h5>
+            <h5 class=""><b>{{ $t('tokens.ALL_EVALS') }}</b></h5>
           </div>
           <br>
           <app-peer-reviewed-evaluations

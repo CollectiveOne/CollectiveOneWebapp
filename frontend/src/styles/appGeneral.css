@@ -1,3 +1,8 @@
+.help-icon {
+  display: inline-block;
+  width: 20px;
+}
+
 .control-btn {
   cursor: pointer;
   padding: 8px 10px;

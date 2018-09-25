@@ -11,13 +11,6 @@
   </transition>
 
   <transition name="slideDownUp">
-    <app-new-tokenexchange-modal
-      v-if="showTokensExchangeModal"
-      @close="showTokensExchangeModal = false">
-    </app-new-tokenexchange-modal>
-  </transition>
-
-  <transition name="slideDownUp">
     <app-assignation-modal v-if="showAssignationModal">
     </app-assignation-modal>
   </transition>
@@ -45,7 +38,7 @@
       <div class="w3-card">
 
         <header class="section-header-bar w3-bar gray-1">
-          <h4 class="w3-bar-item w3-left">Assets</h4>
+          <h4 class="w3-bar-item w3-left">{{ $t('tokens.TOKENS')}} </h4>
 
           <popper :append-to-body="true" trigger="click" :options="popperOptions" class="">
             <div class="">
@@ -63,20 +56,12 @@
 
         </header>
 
-        <div v-if="showAssetsMenu" class="assets-menu w3-display-topright w3-card w3-white">
-          <div v-if="isLoggedAnAdmin"
-            @click="showNewTokenModal = true"
-            class="w3-button">
-            <i class="fa fa-plus" aria-hidden="true"></i>create new
-          </div>
-        </div>
-
         <div class="assets-content-div">
           <div v-if="initiative.assets.length === 0" class="w3-center">
-            No assets are currently held by this initiative<br>
+            {{ $t('tokens.NO_ASSETS_HELD') }}<br>
             <button class="w3-button app-button w3-margin-top" name="button"
               @click="showNewTokenModal = true">
-              create new token
+              {{ $t('general.CREATE_NEW') }}
             </button>
           </div>
           <div class="w3-row" v-for="(asset, ix) in initiative.assets" :key="asset.assetId" >
@@ -93,7 +78,7 @@
     </div>
 
     <div class="own-transfers-div">
-      <h3 class="section-header">Assets transfers from {{ initiative.meta.name }}:</h3>
+      <h3 class="section-header">{{ $t('tokens.TRANSFERS_HISTORY_FROM', { initName: initiative.meta.name }) }}:</h3>
       <app-transfers-tables
         :initiativeId="initiative.id"
         :ofSubinitiatives="false"
@@ -103,7 +88,7 @@
 
     <div v-if="hasSubinitiatives" class="sub-transfers-div">
       <hr>
-      <h3 class="section-header">From subinitiatives of {{ initiative.meta.name }}:</h3>
+      <h3 class="section-header">{{ $t('tokens.TRANSFERS_HISTORY_FROM_SUBINITIATIVES_OF', { initName: initiative.meta.name }) }}:</h3>
       <app-transfers-tables
         :initiativeId="initiative.id"
         :ofSubinitiatives="true"
@@ -166,7 +151,13 @@ export default {
     },
     assetsMenuItems () {
       let items = []
-      items.push({ text: 'create new', value: 'create-new', faIcon: 'fa-plus' })
+
+      items.push({
+        text: this.$t('general.CREATE_NEW'),
+        value: 'create-new',
+        faIcon: 'fa-plus'
+      })
+
       return items
     },
     popperOptions () {

@@ -8,7 +8,7 @@
         </div>
 
         <div class="w3-container  w3-border-bottom">
-          <h2>Edit Initiative</h2>
+          <h2>{{ $t('initiatives.EDIT_INITIATIVE') }}</h2>
         </div>
 
         <div class="w3-container form-container">
@@ -35,34 +35,30 @@
           </app-error-panel>
 
           <div class="w3-row w3-margin-top">
-            <label class=""><b>Name</b></label>
-            <input  id="T_nameInputEdit" v-model="newInitiative.meta.name"
+            <label class=""><b>{{ $t('general.NAME') }}</b></label>
+            <input v-model="newInitiative.meta.name"
               class="w3-input w3-hover-light-grey"
               :class="{ 'error-input' : nameErrorShow }"
               type="text">
             <app-error-panel
               :show="nameEmptyShow"
-              message="please set the new name of the initiative">
+              :message="$t('general.FIELD_CANNOT_BE_EMPTY')">
             </app-error-panel>
             <app-error-panel
               :show="nameTooLarge"
-              message="name too long">
+              :message="$t('general.FIELD_TOO_LONG')">
             </app-error-panel>
           </div>
           <br>
 
           <div class="w3-row">
-            <label class=""><b>Purpose</b></label>
-            <app-markdown-editor id="T_purposeInputEdit" v-model="newInitiative.meta.driver"></app-markdown-editor>
-            <app-error-panel
-              :show="driverEmptyShow"
-              message="please set a purpose for the initiative">
-            </app-error-panel>
+            <label class=""><b>{{ $t('general.DESCRIPTION') }}</b></label>
+            <app-markdown-editor v-model="newInitiative.meta.driver"></app-markdown-editor>
           </div>
           <br>
 
           <div class="w3-row">
-            <label class=""><b>Color</b></label>
+            <label class=""><b>{{ $t('initiatives.COLOR') }}</b></label>
             <div class="colors-container w3-center">
               <div
                 v-for="color in colors"
@@ -76,33 +72,9 @@
 
           <hr>
           <div class="w3-row">
-            <label class=""><b>Modules</b></label>
-            <div class="w3-col s12">
-              <div class="w3-row w3-margin-top modules-row">
-                  <div class="w3-col m4 module-tag-col">
-                    VISION:
-                  </div>
-                  <div class="w3-col m8">
-                    <button id="T_disableVisionButton" class="w3-left w3-button"
-                      :class="{ 'app-button': !newInitiative.meta.modelEnabled, 'app-button-light': newInitiative.meta.modelEnabled }"
-                      @click="newInitiative.meta.modelEnabled = false">
-                      disable
-                    </button>
-                    <button id="T_enableVisionButton" class="w3-left w3-button app-button"
-                      :class="{ 'app-button': newInitiative.meta.modelEnabled, 'app-button-light': !newInitiative.meta.modelEnabled }"
-                      @click="newInitiative.meta.modelEnabled = true">
-                      enable
-                    </button>
-                  </div>
-              </div>
-            </div>
-          </div>
-
-          <hr>
-          <div class="w3-row">
             <div class="w3-col s12">
               <div class="w3-row">
-                <label class=""><b>Tags</b></label>
+                <label class=""><b>{{ $t('initiatives.TAGS') }}</b></label>
               </div>
               <div class="w3-row-padding w3-margin-top tags-row">
                   <div class="w3-col l6 module-tag-col w3-margin-bottom">
@@ -127,7 +99,7 @@
 
           <hr>
           <div class="w3-row">
-            <label class=""><b>Visibility</b></label>
+            <label class=""><b>{{ $t('initiatives.VISIBILITY') }}</b></label>
             <div class="w3-col s12">
               <div class="w3-row w3-margin-top modules-row">
                   <div class="w3-col s4">
@@ -136,7 +108,7 @@
                       class="w3-left w3-button"
                       :class="{ 'app-button': isPrivate, 'app-button-light': !isPrivate }"
                       @click="newInitiative.meta.visibility = 'PRIVATE'">
-                      private
+                      {{ $t('initiatives.PRIVATE') }}
                     </button>
                   </div>
                   <div class="w3-col s4">
@@ -145,7 +117,7 @@
                       class="w3-left w3-button"
                       :class="{ 'app-button': isEcosystem, 'app-button-light': !isEcosystem }"
                       @click="newInitiative.meta.visibility = 'ECOSYSTEM'">
-                      ecosystem
+                      {{ $t('initiatives.ECOSYSTEM') }}
                     </button>
                   </div>
                   <div v-if="isSubinitiative" class="w3-col s4">
@@ -154,7 +126,7 @@
                       class="w3-left w3-button"
                       :class="{ 'app-button': isInherited, 'app-button-light': !isInherited }"
                       @click="newInitiative.meta.visibility = 'INHERITED'">
-                      inherited
+                      {{ $t('initiatives.INHERIT') }}
                     </button>
                   </div>
                   <div class="w3-col s4">
@@ -163,7 +135,7 @@
                       class="w3-left w3-button"
                       :class="{ 'app-button': isPublic, 'app-button-light': !isPublic }"
                       @click="newInitiative.meta.visibility = 'PUBLIC'">
-                      public
+                      {{ $t('initiatives.PUBLIC') }}
                     </button>
                   </div>
               </div>
@@ -173,37 +145,35 @@
           <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">{{ $t('general.CANCEL') }}</button>
             </div>
             <div class="w3-col m6">
-              <button type="button" id="T_acceptButtonEditInitiative" class="w3-button app-button" @click="accept()">Accept</button>
+              <button type="button" id="T_acceptButtonEditInitiative" class="w3-button app-button" @click="accept()">{{ $t('general.ACCEPT') }}</button>
             </div>
           </div>
 
           <hr>
           <div class="w3-row w3-center w3-margin-bottom delete-row">
-            <button  id="T_deleteInitiativeButton" type="button" class="w3-left w3-button app-button-danger" @click="deleteInitiativeSelected = true">Delete Initiative</button>
+            <button type="button" class="w3-left w3-button app-button-danger" @click="deleteInitiativeSelected = true">
+              {{ $t('initiatives.DELETE_INIT') }}
+            </button>
           </div>
           <div class="slider-container">
             <transition name="slideDownUp">
               <div v-if="deleteInitiativeSelected" class="w3-row tags-row w3-center">
                 <div class="w3-padding w3-round light-grey w3-margin-bottom">
-                  <p>
-                    <b>Warning:</b> This will delete this initiative and all its
-                    subinitiatives and, if there is a parent initiative, transfer all
-                    its assets back to it. Please confirm.
-                  </p>
+                  <p v-html="$t('initiatives.CONFIRM_DELETE_MSG')"></p>
                 </div>
 
                 <button
                   id="T_cancelDeleteInitiativeButton"
                   class="w3-button app-button-light button-pair"
-                  @click="deleteInitiativeSelected = false">cancel
+                  @click="deleteInitiativeSelected = false">{{ $t('general.CANCEL') }}
                 </button>
                 <button
                   id="T_confirmDeleteInitiativeButton"
                   class="w3-button app-button-danger button-pair"
-                  @click="deleteInitiative()">confirm
+                  @click="deleteInitiative()">{{ $t('general.CONFIRM') }}
                 </button>
               </div>
             </transition>
@@ -249,7 +219,6 @@ export default {
         '#00a8a8'
       ],
       nameEmptyError: false,
-      driverEmptyError: false,
       deleteInitiativeSelected: false,
       newTag: '',
       uploadingImage: false,
@@ -273,9 +242,6 @@ export default {
     },
     nameTooLarge () {
       return this.newInitiative.meta.name.length > 30
-    },
-    driverEmptyShow () {
-      return this.driverEmptyError && this.newInitiative.meta.driver === ''
     },
     isPrivate () {
       if (!this.isSubinitiative) {
@@ -345,11 +311,6 @@ export default {
       }
 
       if (this.nameTooLarge) {
-        ok = false
-      }
-
-      if (this.newInitiative.meta.driver === '') {
-        this.driverEmptyError = true
         ok = false
       }
 

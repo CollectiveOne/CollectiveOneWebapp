@@ -4,10 +4,10 @@
       <thead>
         <tr class="top-row">
           <th colspan="2"></th>
-          <th :colspan="receivers.length">receivers</th>
+          <th :colspan="receivers.length">{{ $t('tokens.RECEIVERS') }}</th>
         </tr>
         <tr class="evaluators-row">
-          <th colspan="2"><i class="fa fa-arrow-down" aria-hidden="true"></i> evaluators</th>
+          <th colspan="2"><i class="fa fa-arrow-down" aria-hidden="true"></i> {{ $t('tokens.EVALUATORS') }}</th>
           <th v-for="receiver in receivers">
             <app-user-avatar :user="receiver.user" :showName="false"></app-user-avatar>
           </th>

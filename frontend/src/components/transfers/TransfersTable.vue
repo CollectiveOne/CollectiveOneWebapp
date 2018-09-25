@@ -3,11 +3,11 @@
     <table v-if="transfers.length > 0" class="w3-table w3-striped w3-bordered w3-centered">
       <thead>
         <tr>
-          <th>DATE</th>
-          <th v-if="showFrom">FROM</th>
-          <th>VALUE</th>
-          <th>TO</th>
-          <th class="w3-hide-small">MOTIVE</th>
+          <th>{{ $t('tokens.DATE_UC') }}</th>
+          <th v-if="showFrom">{{ $t('tokens.FROM_UC') }}</th>
+          <th>{{ $t('tokens.VALUE_UC') }}</th>
+          <th>{{ $t('tokens.TO_UC') }}</th>
+          <th class="w3-hide-small">{{ $t('tokens.MOTIVE_UC') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -33,13 +33,13 @@
       </tbody>
     </table>
     <div v-else class="empty-div">
-      no transfers have been made to any initiative
+      {{ $t('general.NO_RESULTS_FOUND') }}
     </div>
     <div class="w3-row w3-center w3-margin-top">
       <button v-if="showMore"
        @click="showMoreClick()"
        class="w3-button app-button-light" type="button" name="button">
-        show more...
+        {{ $t('general.SHOW_MORE') }}...
       </button>
     </div>
   </div>

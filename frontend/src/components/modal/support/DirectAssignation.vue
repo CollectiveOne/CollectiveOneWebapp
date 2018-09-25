@@ -18,11 +18,13 @@
         </app-user-percentages>
       </div>
       <div v-if="receiversData.length === 0" class="w3-padding">
-        <i>no members have been selected</i>
+        <i>{{ $t('tokens.NO_MEMBERS_SELECTED') }}</i>
       </div>
     </div>
     <div class="w3-row w3-margin-top">
-      or <button @click="multiple = !multiple" class="w3-button app-button" type="button" name="button">{{ multiple ? 'only one receiver' : 'add multiple receivers' }}</button>
+      or <button @click="multiple = !multiple" class="w3-button app-button" type="button" name="button">
+        {{ multiple ? $t('$tokens.ONE_RECEIVER') : $t('tokens.MULTIPLE_RECEIVERS') }}
+      </button>
     </div>
   </div>
 </template>

@@ -3,7 +3,7 @@
     <div v-if="canEdit" class="new-member-row">
       <div class="w3-row w3-container">
         <label class="">
-          <b>add user:</b>
+          <b>{{ $t('members.ADD_USER') }}:</b>
         </label>
       </div>
 
@@ -19,15 +19,17 @@
         <div class="w3-col m5">
           <div class="w3-row-padding">
             <div class="w3-col s8 w3-center">
-              <select id="T_memberRoleDropDown" class="role-select w3-select w3-round" v-model="newMember.role">
-                <option value="" disabled>Choose role</option>
-                <option value="ADMIN">ADMIN</option>
-                <option value="EDITOR">EDITOR</option>
-                <option value="MEMBER" selected>MEMBER</option>
+              <select class="role-select w3-select w3-round" v-model="newMember.role">
+                <option value="" disabled>{{ $t('members.CHOOSE_ROLE') }}</option>
+                <option value="ADMIN">{{ $t('members.ADMIN') }}</option>
+                <option value="EDITOR">{{ $t('members.EDITOR') }}</option>
+                <option value="MEMBER" selected>{{ $t('members.MEMBER') }}</option>
               </select>
             </div>
             <div class="w3-col s4 w3-center">
-              <button id="T_addButton" type="button" class="add-btn w3-button app-button" @click="add()">add</button>
+              <button type="button" class="add-btn w3-button app-button" @click="add()">
+                {{ $t('general.ADD') }}
+              </button>
             </div>
           </div>
         </div>
@@ -37,12 +39,12 @@
       <table class="w3-table w3-striped w3-bordered w3-centered table-element">
         <thead>
           <tr>
-            <th class="avatar-col">AVATAR</th>
-            <th>NICKNAME</th>
+            <th class="avatar-col">{{ $t('members.AVATAR') }}</th>
+            <th>{{ $t('members.NICKNAME') }}</th>
             <th v-for="asset in assets">{{ asset.assetName }}</th>
-            <th class="role-col">ROLE</th>
-            <th v-if="isLoggedAnAdmin">DELETE</th>
-            <th v-if="showLeaveCol">LEAVE</th>
+            <th class="role-col">{{ $t('members.ROLE') }}</th>
+            <th v-if="isLoggedAnAdmin">{{ $t('members.DELETE') }}</th>
+            <th v-if="showLeaveCol">{{ $t('members.LEAVE') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -57,9 +59,9 @@
             <td class="noselect w3-center role-col">
               <select v-if="canEdit" v-model="member.role" @change="$emit('role-updated', member)" class="role-select w3-select w3-round">
                 <option value="" disabled>Choose role</option>
-                <option value="ADMIN">ADMIN</option>
-                <option value="EDITOR">EDITOR</option>
-                <option value="MEMBER" selected>MEMBER</option>
+                <option value="ADMIN">{{ $t('members.ADMIN') }}</option>
+                <option value="EDITOR">{{ $t('members.EDITOR') }}</option>
+                <option value="MEMBER" selected>{{ $t('members.MEMBER') }}</option>
               </select>
               <p v-else>
                 <span class="role-tag w3-tag w3-round gray-1">
@@ -69,14 +71,17 @@
             </td>
             <td v-if="isLoggedAnAdmin" id="T_deleteUser">
               <i
-                id="T_peopleDeleteIcon"
                 v-if="!removingThisMember(member)"
                 @click="removeMember(member)"
                 class="fa fa-times-circle-o w3-xlarge gray-1-color w3-button" aria-hidden="true">
               </i>
               <div v-else class="">
-                <button id="T_cancelButton_DeletePople" @click="removeMemberCancelled()" class="w3-button app-button-light">Cancel Delete</button>
-                <button id="T_confirmButton_DeletePople" @click="removeMemberConfirmed()" class="w3-button app-button-danger">Confirm Delete</button>
+                <button @click="removeMemberCancelled()" class="w3-button app-button-light">
+                  {{ $t('general.CANCEL') }}
+                </button>
+                <button @click="removeMemberConfirmed()" class="w3-button app-button-danger">
+                  {{ $t('general.CONFIRM') }}
+                </button>
               </div>
             </td>
             <td v-if="showLeaveCol">
@@ -86,8 +91,12 @@
                   class="fa fa-times-circle-o w3-xlarge gray-1-color w3-button" aria-hidden="true">
                 </i>
                 <div v-else class="">
-                  <button @click="removeMemberCancelled()" class="w3-button app-button-light">Cancel</button>
-                  <button @click="removeMemberConfirmed()" class="w3-button app-button-danger">Confirm</button>
+                  <button @click="removeMemberCancelled()" class="w3-button app-button-light">
+                    {{ $t('general.CANCEL') }}
+                  </button>
+                  <button @click="removeMemberConfirmed()" class="w3-button app-button-danger">{{ $t('general.CANCEL') }}
+                    {{ $t('general.CONFIRM') }}
+                  </button>
                 </div>
               </div>
             </td>

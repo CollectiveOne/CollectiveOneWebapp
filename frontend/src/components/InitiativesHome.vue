@@ -8,15 +8,15 @@
       <div v-if="$store.state.user.authenticated" class="w3-row w3-center w3-border-bottom noselect">
         <div class="w3-col m6 border-blue-app cursor-pointer tablink" :class="{'w3-bottombar': !publicInitiatives}"
           @click="publicInitiatives = false">
-          <h3>My Initiatives</h3>
+          <h3>{{ $t('initiatives.MY_INITIATIVES') }}</h3>
         </div>
         <div class="w3-col m6 border-blue-app cursor-pointer tablink" :class="{'w3-bottombar': publicInitiatives}"
           @click="publicInitiatives = true">
-          <h3>Browse Public Initiatives</h3>
+          <h3>{{ $t('initiatives.PUBLIC_INITIATIVES') }}</h3>
         </div>
       </div>
       <div v-else class="">
-        <h3>Browse Public Initiatives</h3>
+        <h3>{{ $t('initiatives.PUBLIC_INITIATIVES') }}</h3>
       </div>
       <div class="inits-container">
         <app-public-initiatives v-if="publicInitiatives"></app-public-initiatives>

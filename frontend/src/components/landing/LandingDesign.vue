@@ -210,6 +210,12 @@ export default {
     goToParticipate () {
       document.getElementById('participate').scrollIntoView({behavior: 'smooth', block: 'start'})
     }
+  },
+
+  mounted () {
+    if (this.$route.query.demos) {
+      this.goToDemos()
+    }
   }
 }
 </script>

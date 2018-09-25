@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="">
     <div class="w3-row w3-container">
-      <label for=""><b>Filter by tag:</b></label>
+      <label for=""><b>{{ $t('initiatives.FILTER_BY_TAG' )}}:</b></label>
       <div class="w3-col s12">
         <div class="w3-row-padding">
           <div class="w3-col m4">
@@ -35,7 +35,7 @@
           </app-initiative-card>
         </div>
         <div v-if="publicInitiatives.length == 0" class="w3-center">
-          <i>no results found</i>
+          <i>{{ $t('general.NO_RESULTS_FOUND') }}</i>
         </div>
       </div>
       <div v-else class="w3-row w3-center loader-gif-container">

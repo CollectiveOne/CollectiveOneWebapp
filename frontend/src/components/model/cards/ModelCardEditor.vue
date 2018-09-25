@@ -15,11 +15,13 @@
           <div v-if="!uploadingImage" class="w3-display-middle">
             <input class="inputfile" @change="newFileSelected($event)"
             type="file" name="imageFile" id="imageFile" accept="image/*">
-            <label for="imageFile" class="w3-button app-button w3-rounded">{{ editedCard.imageFile ? 'change' : 'upload image' }}</label>
+            <label for="imageFile" class="w3-button app-button w3-rounded">
+              {{ editedCard.imageFile ? $t('general.CHANGE') : $t('general.UPLOAD_IMAGE') }}
+            </label>
             <button v-if="hasImage"
               @click="removeImage()"
               class="w3-button app-button-danger">
-              remove
+              {{ $t('general.REMOVE') }}
             </button>
           </div>
         </div>
@@ -31,11 +33,12 @@
 
       <div class="cursor-pointer editor-row">
         <div class="w3-row input-border">
-          <input type="text" class="w3-input w3-hover-light-grey" placeholder="title" v-model="editedCard.title">
+          <input type="text" class="w3-input w3-hover-light-grey"
+            :placeholder="$t('model.TITLE')" v-model="editedCard.title">
         </div>
         <div ref="cardText" class="w3-row card-text">
           <app-markdown-editor
-            placeholder="content"
+            :placeholder="$t('model.CONTENT')"
             v-model="editedCard.text"
             :keepBackup="false"
             :showBorder="false">
@@ -87,7 +90,7 @@
         <div class="w3-row">
           <div class="w3-col m6">
             <button class="w3-button app-button-light" name="button" @click="$emit('edit', null)">
-              cancel
+              {{ $t('general.CANCEL') }}
             </button>
           </div>
           <div class="w3-col m6">
@@ -205,7 +208,7 @@ export default {
       return this.$store.state.support.createNewCardLocation === 'before'
     },
     cardButtonText () {
-      return this.isNew ? 'create' : 'save'
+      return this.isNew ? this.$t('general.CREATE') : this.$t('general.SAVE')
     },
     hasImage () {
       return this.editedCard.imageFile != null
@@ -246,13 +249,13 @@ export default {
     cardScopeText () {
       switch (this.scope) {
         case 'PRIVATE':
-          return 'private'
+          return this.$t('model.PRIVATE')
 
         case 'SHARED':
-          return 'shared'
+          return this.$t('model.SHARED')
 
         case 'COMMON':
-          return 'common'
+          return this.$t('model.COMMON')
       }
       return ''
     }
@@ -568,7 +571,8 @@ export default {
 .meta-row {
 }
 
-.button-row {
+.button-row button {
+  height: 40px;
 }
 
 .scope-text-div {
