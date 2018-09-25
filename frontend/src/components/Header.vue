@@ -68,20 +68,6 @@
         <div v-if="inInitiative" class="tab-btns-container w3-xlarge">
           <popper trigger="hover":options="popperOptions" class="btn-div" delay-on-mouse-in="1200">
             <app-help-popper
-              :title="$t('help.HOME-TAB-TT')"
-              :details="$t('help.HOME-TAB-DET')">
-            </app-help-popper>
-
-            <router-link slot="reference" :to="{ name: 'InitiativeOverview', params: { initiativeId: initiative.id } }"
-              class="tab-btn-space">
-              <div class="fa-button noselect" :class="{'fa-button-selected': isOverview}">
-                <span class=""><i class="fa fa-home" aria-hidden="true"></i></span>
-              </div>
-            </router-link>
-          </popper>
-
-          <popper trigger="hover":options="popperOptions" class="btn-div" delay-on-mouse-in="1200">
-            <app-help-popper
               :title="$t('help.CONTENT-TAB-TT')"
               :details="$t('help.CONTENT-TAB-DET')">
             </app-help-popper>
@@ -89,7 +75,7 @@
             <router-link slot="reference" :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
               class="tab-btn-space">
               <div tooltip="Content" class="fa-button noselect" :class="{'fa-button-selected': isModel}">
-                <span class=""><i class="fa fa-th-large" aria-hidden="true"></i></span>
+                <span class=""><i class="fa fa-home" aria-hidden="true"></i></span>
               </div>
             </router-link>
           </popper>
@@ -168,7 +154,7 @@
             :details="$t('help.LANDING-BUTTON-DET')">
           </app-help-popper>
 
-          <router-link slot="reference" :to="{ name: 'Landing'}" tooltip="Log Out" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-info-circle"></i></router-link>
+          <router-link slot="reference" :to="{ name: 'Landing', query: { demos: true }}" tooltip="Log Out" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-question-circle"></i></router-link>
         </popper>
 
         <popper trigger="hover":options="popperOptions" class="btn-div">
@@ -238,15 +224,6 @@ export default {
     },
     isLoggedAMember () {
       return this.$store.getters.isLoggedAMember
-    },
-    isOverview () {
-      var res = false
-      this.$route.matched.forEach((e) => {
-        if (e.name === 'InitiativeOverview') {
-          res = true
-        }
-      })
-      return res
     },
     isPeople () {
       var res = false

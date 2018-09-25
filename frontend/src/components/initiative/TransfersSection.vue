@@ -3,6 +3,21 @@
 <div class="transfer-section">
 
   <transition name="slideDownUp">
+    <app-new-token-modal
+      v-if="showNewTokenModal"
+      :initiativeId="initiative.id"
+      @close="showNewTokenModal = false">
+    </app-new-token-modal>
+  </transition>
+
+  <transition name="slideDownUp">
+    <app-new-tokenexchange-modal
+      v-if="showTokensExchangeModal"
+      @close="showTokensExchangeModal = false">
+    </app-new-tokenexchange-modal>
+  </transition>
+
+  <transition name="slideDownUp">
     <app-assignation-modal v-if="showAssignationModal">
     </app-assignation-modal>
   </transition>
@@ -26,8 +41,59 @@
 
   <div class="section-container w3-display-container">
 
+    <div class="assets-div">
+      <div class="w3-card">
+
+        <header class="section-header-bar w3-bar gray-1">
+          <h4 class="w3-bar-item w3-left">Assets</h4>
+
+          <popper :append-to-body="true" trigger="click" :options="popperOptions" class="">
+            <div class="">
+              <app-drop-down-menu
+                class="drop-menu"
+                @create-new="createNewToken()"
+                :items="assetsMenuItems">
+              </app-drop-down-menu>
+            </div>
+
+            <div slot="reference" class="expand-btn w3-xlarge fa-button w3-right">
+              <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+          </popper>
+
+        </header>
+
+        <div v-if="showAssetsMenu" class="assets-menu w3-display-topright w3-card w3-white">
+          <div v-if="isLoggedAnAdmin"
+            @click="showNewTokenModal = true"
+            class="w3-button">
+            <i class="fa fa-plus" aria-hidden="true"></i>create new
+          </div>
+        </div>
+
+        <div class="assets-content-div">
+          <div v-if="initiative.assets.length === 0" class="w3-center">
+            No assets are currently held by this initiative<br>
+            <button class="w3-button app-button w3-margin-top" name="button"
+              @click="showNewTokenModal = true">
+              create new token
+            </button>
+          </div>
+          <div class="w3-row" v-for="(asset, ix) in initiative.assets" :key="asset.assetId" >
+            <hr v-if="ix > 0">
+            <app-asset-distribution-chart
+              :assetId="asset.assetId" :initiativeId="initiative.id"
+              :canMint="initiative.ownAssetsIds.includes(asset.assetId)" :canEdit="isLoggedAnAdmin"
+              @new-assignation="newAssignation($event)"
+              @new-transfer="newTransfer($event)">
+            </app-asset-distribution-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="own-transfers-div">
-      <h3 class="section-header">From {{ initiative.meta.name }}:</h3>
+      <h3 class="section-header">Assets transfers from {{ initiative.meta.name }}:</h3>
       <app-transfers-tables
         :initiativeId="initiative.id"
         :ofSubinitiatives="false"
@@ -45,29 +111,13 @@
       </app-transfers-tables>
     </div>
 
-    <div v-if="isLoggedAnAdmin && initiative.assets.length > 0"
-      class="w3-display-topright w3-xxxlarge w3-button plus-button blue-color"
-      @click="showActionMenu = !showActionMenu"
-      v-click-outside="clickOutsideShowMenu">
-
-      <i id="T_transferModal" class="fa fa-plus-circle" aria-hidden="true"></i>
-    </div>
-    <div v-if="showActionMenu" class="action-menu w3-display-topright">
-      <div class="w3-card w3-white w3-large">
-        <div class="w3-button" id="T_transferModalUser" @click="newTransferToUser()">
-          <span class="w3-left">to user</span><i class="fa fa-sign-in w3-right" aria-hidden="true"></i>
-        </div>
-        <div v-if="hasSubinitiatives"  id="T_transferModalInitiative" class="w3-button" @click="newTransferToInitiative()">
-          <span class="w3-left">to initiative</span><i class="fa fa-sign-in w3-right" aria-hidden="true"></i>
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
 </template>
 
 <script>
+import NewTokenModal from '@/components/modal/NewTokenModal.vue'
+import AssetDistributionChart from '@/components/transfers/AssetDistributionChart.vue'
 import AssignationModal from '@/components/transfers/AssignationModal.vue'
 import TransfersTables from '@/components/transfers/TransfersTables.vue'
 import NewInitiativeTransferModal from '@/components/modal/NewInitiativeTransferModal.vue'
@@ -75,6 +125,8 @@ import NewAssignationModal from '@/components/modal/NewAssignationModal.vue'
 
 export default {
   components: {
+    'app-new-token-modal': NewTokenModal,
+    'app-asset-distribution-chart': AssetDistributionChart,
     'app-transfers-tables': TransfersTables,
     'app-assignation-modal': AssignationModal,
     'app-new-initiative-transfer-modal': NewInitiativeTransferModal,
@@ -83,7 +135,9 @@ export default {
 
   data () {
     return {
+      showNewTokenModal: false,
       showActionMenu: false,
+      assetIdToTransfer: '',
       showNewAssignationModal: false,
       showNewInitiativeTransferModal: false,
       triggerUpdate: false
@@ -109,6 +163,24 @@ export default {
         }
       }
       return false
+    },
+    assetsMenuItems () {
+      let items = []
+      items.push({ text: 'create new', value: 'create-new', faIcon: 'fa-plus' })
+      return items
+    },
+    popperOptions () {
+      return {
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: false
+          },
+          flip: {
+            enabled: false
+          }
+        }
+      }
     }
   },
 
@@ -116,20 +188,41 @@ export default {
     triggerUpdateCall () {
       this.triggerUpdate = !this.triggerUpdate
     },
-    newTransferToUser () {
+    newAssignation (assetData) {
+      this.assetIdToTransfer = assetData.assetId
       this.showNewAssignationModal = true
     },
-    newTransferToInitiative () {
+    newTransfer (assetData) {
+      this.assetIdToTransfer = assetData.assetId
       this.showNewInitiativeTransferModal = true
     },
     clickOutsideShowMenu () {
       this.showActionMenu = false
+    },
+    createNewToken () {
+      this.showNewTokenModal = true
     }
   }
 }
 </script>
 
 <style scoped>
+
+.assets-div {
+  padding: 20px 20px;
+}
+
+.expand-btn {
+  width: 60px;
+  padding-top: 15px;
+  height: 66px;
+  text-align: center;
+  color: white;
+}
+
+.drop-menu {
+  width: 150px;
+}
 
 .transfer-section {
   overflow: auto;
@@ -139,6 +232,10 @@ export default {
   padding-top: 0px;
   padding-bottom: 25px;
   min-height: 200px;
+}
+
+.assets-content-div {
+  margin-top: 25px;
 }
 
 .empty-div {

@@ -67,13 +67,11 @@
 </template>
 
 <script>
-import NewSubInitiativeModal from '@/components/modal/NewSubInitiativeModal.vue'
 import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
 import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
 
 export default {
   components: {
-    'app-new-subinitiative-modal': NewSubInitiativeModal,
     'app-edit-initiative-modal': EditInitiativeModal,
     'app-edit-notifications-modal': EditNotificationsModal
   },
@@ -87,7 +85,6 @@ export default {
   data () {
     return {
       deleteIntent: false,
-      showNewSubInitiativeModal: false,
       showEditInitiativeModal: false,
       showEditNotificationsModal: false
     }
@@ -100,7 +97,6 @@ export default {
     menuItems () {
       let items = []
       if (this.isLoggedAnAdmin) items.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
-      if (this.isLoggedAnAdmin) items.push({ text: 'new subinitiative', value: 'newSubinitiative', faIcon: 'fa-plus' })
       items.push({ text: 'notifications', value: 'notifications', faIcon: 'fa-cog' })
       if (this.isLoggedAnAdmin) items.push({ text: 'delete', value: 'delete', faIcon: 'fa-times' })
       return items
@@ -142,7 +138,7 @@ export default {
         this.$store.dispatch('updateMyInitiatives')
         if (this.initiative.parents.length > 0) {
           var parentId = this.initiative.parents[this.initiative.parents.length - 1].id
-          this.$router.replace({ name: 'InitiativeOverview', params: { initiativeId: parentId } })
+          this.$router.replace({ name: 'Initiative', params: { initiativeId: parentId } })
           this.closeThis()
         } else {
           window.location.href = '/'

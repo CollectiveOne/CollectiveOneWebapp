@@ -11,7 +11,6 @@ const InitiativesContent = () => import('@/components/initiative/InitiativeConte
 const Unsubscribe = () => import('@/components/user/Unsubscribe.vue')
 const ModelSectionRead = () => import('@/components/model/ModelSectionRead.vue')
 
-const OverviewSection = () => import('@/components/initiative/OverviewSection.vue')
 const PeopleSection = () => import('@/components/initiative/PeopleSection.vue')
 const TransfersSection = () => import('@/components/initiative/TransfersSection.vue')
 
@@ -75,44 +74,39 @@ export default new Router({
               component: InitiativesContent,
               children: [
                 {
-                  path: 'overview',
-                  name: 'InitiativeOverview',
-                  component: OverviewSection,
-                  meta: {'column': 1} },
-                {
                   path: 'model',
                   component: ModelSectionTab,
-                  meta: {'column': 3},
+                  meta: {'column': 1},
                   children: [
                     {
                       path: '/',
                       name: 'InitiativeModel',
                       component: ModelSectionContent,
-                      meta: {'column': 3}
+                      meta: {'column': 1}
                     },
                     {
                       path: 'section/:sectionId',
                       name: 'ModelSectionContent',
                       component: ModelSectionContent,
-                      meta: {'column': 3},
+                      meta: {'column': 1},
                       children: [
-                        { path: 'messages', name: 'ModelSectionMessages', component: ModelSectionElements, meta: {'column': 3} },
-                        { path: 'cards', name: 'ModelSectionCards', component: ModelSectionElements, meta: {'column': 3} },
-                        { path: 'cards/:cardId', name: 'ModelSectionCard', component: ModelSectionElements, meta: {'column': 3} }
+                        { path: 'messages', name: 'ModelSectionMessages', component: ModelSectionElements, meta: {'column': 1} },
+                        { path: 'cards', name: 'ModelSectionCards', component: ModelSectionElements, meta: {'column': 1} },
+                        { path: 'cards/:cardId', name: 'ModelSectionCard', component: ModelSectionElements, meta: {'column': 1} }
                       ]
                     },
                     {
                       path: '/card',
                       name: 'ModelCardAlone',
                       component: ModelSectionElements,
-                      meta: {'column': 3}
+                      meta: {'column': 1}
                     }
                   ]
                 },
-                { path: 'people', name: 'InitiativePeople', component: PeopleSection, meta: {'column': 4} },
-                { path: 'people/addMember/:userId', name: 'InitiativePeopleAddMember', component: PeopleSection, meta: {'column': 4} },
-                { path: 'assignations', name: 'InitiativeAssignations', component: TransfersSection, meta: {'column': 5} },
-                { path: 'assignations/:assignationId', name: 'InitiativeAssignation', component: TransfersSection, meta: {'column': 5} }
+                { path: 'people', name: 'InitiativePeople', component: PeopleSection, meta: {'column': 2} },
+                { path: 'people/addMember/:userId', name: 'InitiativePeopleAddMember', component: PeopleSection, meta: {'column': 2} },
+                { path: 'assignations', name: 'InitiativeAssignations', component: TransfersSection, meta: {'column': 3} },
+                { path: 'assignations/:assignationId', name: 'InitiativeAssignation', component: TransfersSection, meta: {'column': 3} }
               ]
             }
           ]

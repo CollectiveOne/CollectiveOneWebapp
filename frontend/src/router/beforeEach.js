@@ -12,7 +12,7 @@ export default (to, from, next) => {
     */
 
     next({
-      name: 'InitiativeOverview',
+      name: 'InitiativeModel',
       params: {
         initiativeId: to.params.initiativeId
       },

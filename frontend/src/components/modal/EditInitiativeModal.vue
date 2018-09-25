@@ -131,7 +131,7 @@
             <div class="w3-col s12">
               <div class="w3-row w3-margin-top modules-row">
                   <div class="w3-col s4">
-                    <button 
+                    <button
                       id="T_private_visibilityButton"
                       class="w3-left w3-button"
                       :class="{ 'app-button': isPrivate, 'app-button-light': !isPrivate }"
@@ -140,7 +140,7 @@
                     </button>
                   </div>
                   <div class="w3-col s4">
-                    <button 
+                    <button
                       id="T_ecosystem_visibilityButton"
                       class="w3-left w3-button"
                       :class="{ 'app-button': isEcosystem, 'app-button-light': !isEcosystem }"
@@ -367,7 +367,7 @@ export default {
         this.$store.dispatch('updateMyInitiatives')
         if (this.newInitiative.parents.length > 0) {
           var parentId = this.newInitiative.parents[this.newInitiative.parents.length - 1].id
-          this.$router.replace({ name: 'InitiativeOverview', params: { initiativeId: parentId } })
+          this.$router.replace({ name: 'Initiative', params: { initiativeId: parentId } })
           this.closeThis()
         } else {
           window.location.href = '/'
