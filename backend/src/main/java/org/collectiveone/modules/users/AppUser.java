@@ -62,6 +62,7 @@ public class AppUser {
 		dto.setFacebookHandle(getProfile().getFacebookHandle());
 		dto.setTwitterHandle(getProfile().getTwitterHandle());
 		dto.setLinkedinHandle(getProfile().getLinkedinHandle());
+		dto.setPreferredLocale(getProfile().getPreferredLocale());
 		
 		if (getProfile().getUseUploadedPicture() != null) {
 			if (!getProfile().getUseUploadedPicture()) {

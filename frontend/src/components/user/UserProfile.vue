@@ -3,7 +3,7 @@
     <div v-if="!editing" class="w3-display-container show-container light-grey">
       <div v-if="isLoggedUser" class="edit-button w3-display-topright">
         <div @click="editing = true" class="w3-button w3-large">
-          <i id="T_editProfileButton" class="fa fa-pencil" aria-hidden="true"></i>
+          <i class="fa fa-pencil" aria-hidden="true"></i>
         </div>
       </div>
       <div class="w3-row w3-center">

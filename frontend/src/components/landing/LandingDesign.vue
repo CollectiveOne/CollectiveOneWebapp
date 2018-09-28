@@ -119,7 +119,7 @@
     <div class="w3-row tutorial-video-row w3-border-top light-grey">
       <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container tutorial-top-title-container gray-2-color">
         <h2>{{ $t('landing.PERSONALIZED_CHANNELS') }}</h2>
-        <p>{{ $t('landing.PERSONALIZED_CHANNELS_CONTENT') }}</p>
+        <p>{{ $t('landing.PERSONALIZED_CHANNELS_CONTENTS') }}</p>
       </div>
       <div class="w3-cell w3-mobile tutorial-video-container">
         <div class="w3-center">

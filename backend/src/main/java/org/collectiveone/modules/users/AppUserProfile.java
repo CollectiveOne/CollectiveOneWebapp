@@ -63,6 +63,8 @@ public class AppUserProfile {
 	@Column(name = "linkedin_handle", length = 140)
 	private String linkedinHandle;
 	
+	@Column(name = "preferred_locale", length = 32)
+	private String preferredLocale;
 	
 
 	public UUID getId() {
@@ -159,6 +161,14 @@ public class AppUserProfile {
 
 	public void setLinkedinHandle(String linkedinHandle) {
 		this.linkedinHandle = linkedinHandle;
+	}
+
+	public String getPreferredLocale() {
+		return preferredLocale;
+	}
+
+	public void setPreferredLocale(String preferredLocale) {
+		this.preferredLocale = preferredLocale;
 	}
 	
 	

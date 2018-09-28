@@ -103,9 +103,12 @@ const translations = {
       'SHOW_MORE': 'show more',
       'MORE': 'more',
       'EMPTY': 'empty',
-      'HOME': 'inicio',
-      'PROFILE': 'perfil',
-      'LOGOUT': 'salir'
+      'HOME': 'home',
+      'PROFILE': 'profile',
+      'LOGOUT': 'logout',
+      'PROFILE_CC': 'Profile',
+      'SETTINGS': 'Settings',
+      'LANGUAGE': 'Language'
     },
     landing: {
       'PRINCIPLES': 'PRINCIPLES',
@@ -449,7 +452,10 @@ const translations = {
       'EMPTY': 'vacío',
       'HOME': 'inicio',
       'PROFILE': 'perfil',
-      'LOGOUT': 'salir'
+      'LOGOUT': 'salir',
+      'PROFILE_CC': 'Perfil',
+      'SETTINGS': 'Configuración',
+      'LANGUAGE': 'Idioma'
     },
     landing: {
       'PRINCIPLES': 'PRINCIPIOS',
@@ -554,7 +560,7 @@ const translations = {
       'TRANSFERRED_TO_MEMS': 'Transferidos a miembros',
       'AMOUNT_TO_TRANSF': 'Cantidad a ser transferida',
       'AVAILABLE': 'disponibles',
-      'NO_ASSETS_HELD': 'Esta iniciative aún no posee ningún token',
+      'NO_ASSETS_HELD': 'Esta iniciativa aún no posee ningún token',
       'TRANSFER_TO_INITIATIVE': 'Transferir tokens a otras iniciativas',
       'TRANSFER_TO': 'Transferir a ',
       'ZERO_TOKENS_ERROR': 'Selecciones cuántos tokens transferir',

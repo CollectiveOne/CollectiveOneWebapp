@@ -226,7 +226,7 @@ export default {
 }
 
 .assets-content-div {
-  margin-top: 25px;
+  padding: 25px 0px;
 }
 
 .empty-div {
