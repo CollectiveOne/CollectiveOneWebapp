@@ -36,8 +36,17 @@ Vue.use(VueAnalytics, {
 })
 
 Vue.use(VueI18n)
+
+// const getLang = function () {
+//   if (navigator.languages !== undefined) {
+//     return navigator.languages[0].substr(0, 1)
+//   } else {
+//     return navigator.language.substr(0, 1)
+//   }
+// }
+
 export const i18n = new VueI18n({
-  locale: 'en', // set locale
+  locale: 'es', // getLang(),
   fallbackLocale: 'en',
   messages: translations
 })

@@ -76,6 +76,8 @@
   background-color: #f1f1f1 !important;
   color: black;
   border-radius: 12px;
+  line-height: 16px;
+  transition:all 0.3s ease-out;
 }
 
 .app-button-danger {

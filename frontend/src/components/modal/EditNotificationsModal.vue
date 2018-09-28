@@ -327,10 +327,10 @@ export default {
       if (this.inheritedFrom) {
         switch (this.inheritedFrom.elementType) {
           case 'SECTION':
-            return this.$t('activity.TITLE_AND_TYPE', { title: this.inheritedFrom.section.title, type: 'Section' })
+            return this.$t('activity.TITLE_AND_TYPE', { title: this.inheritedFrom.section.title, type: this.$t('model.SECTION') })
 
           case 'INITIATIVE':
-            return this.$t('activity.TITLE_AND_TYPE', { title: this.inheritedFrom.initiative.meta.name, type: 'Initiative' })
+            return this.$t('activity.TITLE_AND_TYPE', { title: this.inheritedFrom.initiative.meta.name, type: this.$t('initiatives.INITIATIVE') })
 
           case 'COLLECTIVEONE':
             return this.$t('activity.GLOBAL_NOTIFICATIONS_PREFS')
@@ -343,10 +343,10 @@ export default {
     notificationsTitle () {
       switch (this.type) {
         case 'SECTION':
-          return this.$t('activity.EDIT_NOTIFICATIONS_OF', { title: this.section.title, type: 'Section' })
+          return this.$t('activity.EDIT_NOTIFICATIONS_OF', { title: this.section.title, type: this.$t('model.SECTION') })
 
         case 'INITIATIVE':
-          return this.$t('activity.EDIT_NOTIFICATIONS_OF', { title: this.initiative.meta.name, type: 'Initiative' })
+          return this.$t('activity.EDIT_NOTIFICATIONS_OF', { title: this.initiative.meta.name, type: this.$t('initiatives.INITIATIVE') })
 
         case 'COLLECTIVEONE':
           return this.$t('activity.EDIT_GLOBAL_NOTIFICATIONS')

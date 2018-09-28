@@ -8,7 +8,7 @@
           </div>
 
           <div class="title-buttons">
-            <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" class="btn-div">
+            <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
               <app-help-popper
                 :title="(showIn ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SECTION-DETAILS-TT')"
                 :details="$t('help.SECTION-DETAILS-DET')">
@@ -25,7 +25,7 @@
               </app-section-control-buttons>
             </div>
 
-            <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" class="btn-div">
+            <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
               <app-help-popper
                 :title="$t('help.READ-FRIENDLY-URL-TT')"
                 :details="$t('help.READ-FRIENDLY-URL-DET')">
@@ -48,7 +48,7 @@
         <div v-if="showIn && currentSection && currentSectionPaths.length > 0" class="w3-row breadcrumb">
           <div class="w3-row description-container light-grey">
             <span v-if="currentSection.description !== null && currentSection.description !== ''">{{ currentSection.description }}</span>
-            <span v-else>empty</span>
+            <span v-else>{{ $t('general.EMPTY') }}</span>
           </div>
 
           <div v-if="currentSectionPaths[0].length > 0" class="w3-row">

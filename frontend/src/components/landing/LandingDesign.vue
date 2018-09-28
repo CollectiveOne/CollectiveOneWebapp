@@ -4,24 +4,24 @@
       <div class="top-div-top-div">
           <img class="logo" src="../../assets/logo-white.png">
           <div class="section-tabs">
-            <div @click="goToPrinciples()" class="section-tab">{{ $t('PRINCIPLES') }}</div>
-            <div @click="goToFeatures()" class="section-tab">{{ $t('FEATURES') }}</div>
-            <div @click="goToDemos()" class="section-tab">{{ $t('DEMOS') }}</div>
-            <div @click="goToParticipate()" class="section-tab">{{ $t('PARTICIPATE') }}</div>
+            <div @click="goToPrinciples()" class="section-tab">{{ $t('landing.PRINCIPLES') }}</div>
+            <div @click="goToFeatures()" class="section-tab">{{ $t('landing.FEATURES') }}</div>
+            <div @click="goToDemos()" class="section-tab">{{ $t('landing.DEMOS') }}</div>
+            <div @click="goToParticipate()" class="section-tab">{{ $t('landing.PARTICIPATE') }}</div>
           </div>
       </div>
       <div class="top-div-middle-div">
         <h1>{{ $t('landing.WELCOME') }} <br>COLLECTIVEONE</h1>
         <div class="text-div-text">
-          <h5>{{ $t('landing.BRIEF') }}</h5>
+          <h5 v-html="$t('landing.BRIEF')"></h5>
         </div>
-        <button id="T_loginButton" class="w3-button dark-gray w3-margin-top" @click="login()">{{ $t('general.LOGIN_SIGNUP') }}</button>
-        <button id="T_exploreButton" class="w3-button dark-gray w3-margin-top" @click="explore()">{{ $t('landing.EXPLORE') }}</button>
+        <button class="w3-button dark-gray w3-margin-top" @click="login()">{{ $t('general.LOGIN_SIGNUP') }}</button>
+        <button class="w3-button dark-gray w3-margin-top" @click="explore()">{{ $t('landing.EXPLORE') }}</button>
       </div>
     </div>
 
     <div id="principles" class="w3-row principles-div w3-padding-large gray-2-color">
-      <h1>{{ $t('PRINCIPLES') }}</h1>
+      <h1>{{ $t('landing.PRINCIPLES') }}</h1>
       <div class="w3-row-padding principles-row">
         <div class="w3-col l4 principle">
           <img src="../../assets/icon-open.png" alt="">
@@ -247,6 +247,7 @@ export default {
 .top-div .top-div-middle-div {
   height: 100%;
   max-width: 800px;
+  padding-top: 35px;
   margin: 0 auto;
   display: flex;
   justify-content: center;

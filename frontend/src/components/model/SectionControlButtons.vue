@@ -60,33 +60,33 @@
         <div v-if="inSection !== null" class="w3-card w3-white drop-menu">
           <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
             <div class="w3-padding w3-round light-grey w3-margin-bottom">
-              <p>
-                <b>Warning:</b> Are you sure you want to remove the section "{{ section.title }}" as a subsection of "{{ inSection.title }}"?
+              <p
+                v-html="$t('model.REMOVE_SECTION_WARNING', { sectionTitle: section.title, inSectionTitle: inSection.title  })">
               </p>
             </div>
             <button
               class="w3-button light-grey"
-              @click="removeIntent = false">cancel
+              @click="removeIntent = false">{{ $t('general.CANCEL') }}
             </button>
             <button
               class="w3-button button-blue"
-              @click="removeConfirmed()">confirm
+              @click="removeConfirmed()">{{ $t('general.CONFIRM') }}
             </button>
           </div>
 
           <div v-if="deleteIntent" class="w3-row w3-center delete-intent-div">
             <div class="w3-padding w3-round light-grey w3-margin-bottom">
-              <p>
-                <b>Warning:</b> Are you sure you want to completely delete the section "{{ section.title }}"? This will delete it from all the sections in which it is a subsection.
+              <p
+                v-html="$t('model.DELETE_SECTION_WARNING', { sectionTitle: section.title })">
               </p>
             </div>
             <button
               class="w3-button light-grey"
-              @click="deleteIntent = false">cancel
+              @click="deleteIntent = false">{{ $t('general.CANCEL') }}
             </button>
             <button
               class="w3-button danger-btn"
-              @click="deleteConfirmed()">confirm
+              @click="deleteConfirmed()">{{ $t('general.CONFIRM') }}
             </button>
           </div>
         </div>
@@ -137,13 +137,39 @@ export default {
     menuItems () {
       let menuItems = []
 
-      if (this.isLoggedAnEditor) menuItems.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
-      if (this.isLoggedAnEditor) menuItems.push({ text: 'add subsection', value: 'addSubsection', faIcon: 'fa-plus' })
+      if (this.isLoggedAnEditor) {
+        menuItems.push({
+          text: this.$t('general.EDIT'),
+          value: 'edit',
+          faIcon: 'fa-pencil'
+        })
+      }
 
-      menuItems.push({ text: 'notifications', value: 'configNotifications', faIcon: 'fa-cog' })
+      if (this.isLoggedAnEditor) {
+        menuItems.push({
+          text: this.$t('model.ADD_SUBSECTION'),
+          value: 'addSubsection',
+          faIcon: 'fa-plus' })
+      }
 
-      if (this.isLoggedAnEditor && this.inSection !== null) menuItems.push({ text: 'remove', value: 'remove', faIcon: 'fa-times' })
-      if (this.isLoggedAnEditor && this.inSection !== null) menuItems.push({ text: 'delete', value: 'delete', faIcon: 'fa-times' })
+      menuItems.push({
+        text: this.$t('general.NOTIFICATIONS'),
+        value: 'configNotifications',
+        faIcon: 'fa-cog' })
+
+      if (this.isLoggedAnEditor && this.inSection !== null) {
+        menuItems.push({
+          text: this.$t('general.REMOVE'),
+          value: 'remove',
+          faIcon: 'fa-times' })
+      }
+
+      if (this.isLoggedAnEditor && this.inSection !== null) {
+       menuItems.push({
+         text: this.$t('general.DELETE'),
+         value: 'delete',
+         faIcon: 'fa-times' })
+      }
 
       return menuItems
    },

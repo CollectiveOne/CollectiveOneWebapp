@@ -22,7 +22,7 @@
             :class="{ 'error-input' : nameErrorShow }">
           <app-error-panel
             :show="nameEmptyShow"
-            :message="$t('general.FILED_CANNOT_BE_EMPTY')">
+            :message="$t('general.FIELD_CANNOT_BE_EMPTY')">
           </app-error-panel>
           <app-error-panel
             :show="nameTooLongShow"
