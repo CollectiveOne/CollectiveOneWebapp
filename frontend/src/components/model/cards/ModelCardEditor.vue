@@ -355,7 +355,7 @@ export default {
             }}).then((response) => {
               this.sendingData = false
               if (response.data.result === 'success') {
-                this.$emit('updateCards')
+                this.$emit('updtaeCards')
               } else {
                 console.log(response.data.message)
               }
@@ -377,6 +377,7 @@ export default {
               this.sendingData = false
               if (response.data.result === 'success') {
                 this.$emit('updateCards')
+                this.$emit('edit', null)
               }
             }).catch((error) => {
               console.log(error)
