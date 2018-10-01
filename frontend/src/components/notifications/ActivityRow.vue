@@ -11,201 +11,252 @@
       <div class="top-line w3-row">
         <div class="w3-small w3-left event-trigger-user">
           <span v-if="addContext">
-            in <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+            {{ $t('notifications.IN') }}<app-initiative-link :initiative="activity.initiative"></app-initiative-link>
           </span>
           <b><app-user-link :user="activity.triggerUser"></app-user-link></b>
           <span v-if="addTime">
-             , {{ getTimeStrSince(activity.timestamp) }} ago.
+             , {{ $t('notifications.TIME_AGO', { time: getTimeStrSince(activity.timestamp) }) }}
           </span>
         </div>
 
         <div class="event-summary w3-small w3-left" :class="{'event-summary-solid': !showMessagesText, 'event-summary-light': showMessagesText}">
           <span v-if="isInitiativeCreated" class="">
-            created the new initiative <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+             {{ $t('notifications.CREATED_INIT') }} <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
           </span>
 
           <span v-if="isInitiativeEdited" class="">
-            edited <app-initiative-link :initiative="activity.initiative"></app-initiative-link> {{ initiativeChanged }}
+
+            {{ $t('notifications.EDITED') }} <app-initiative-link :initiative="activity.initiative"></app-initiative-link> {{ initiativeChanged }}
           </span>
 
           <span v-if="isSubinitiativeCreated" class="">
-            created <app-initiative-link :initiative="activity.subInitiative"></app-initiative-link> under
-            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+            {{ $t('notifications.CREATED') }} <app-initiative-link :initiative="activity.subInitiative"></app-initiative-link>
+            {{ $t('notifications.UNDER') }} <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
           </span>
 
           <span v-if="isInitiativeDeleted" class="">
-            deleted <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+            {{ $t('notifications.DELETED') }} <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
           </span>
 
           <span v-if="isTokenCreated" class="">
-            created a new token type called <b>{{ activity.mint.tokenName }}</b> in
+            <span v-html="$t('notifications.CREATED_TOKEN_IN', { name: activity.mint.tokenName })"></span>
             <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
-            and minted <b>{{ activity.mint.value.toFixed(2) }}</b> units.
+            <span v-html="$t('notifications.AND_MINTED', { amount: activity.mint.value.toFixed(2) })"></span>
           </span>
 
           <span v-if="isTokensMinted" class="">
-            minted <b>{{ activity.mint.value.toFixed(2) }} {{ activity.mint.tokenName }}</b> in
+            {{ $t('notifications.MINTED_AMOUNT', { amount: activity.mint.value.toFixed(2), name: activity.mint.tokenName }) }}
             <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
           </span>
 
           <span v-if="isNewPRAssigantionCreated" class="">
-            created a new peer-reviewed <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
+            {{ $t('notifications.CREATED_NEW_PR') }} <app-assignation-link :assignation="activity.assignation"></app-assignation-link>
+            {{ $t('notifications.AMOUNT_OF_FROM'), { amount:  activity.assignation.assets[0].value.toFixed(2), name: activity.assignation.assets[0].assetName } }}
             <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
           </span>
 
           <span v-if="isNewDAssigantionCreated" class="">
-            made a direct <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
-            <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
+            {{ $t('notifications.MADE_DIRECT') }} <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
+            {{ $t('notifications.AMOUNT_OF_FROM'), { amount:  activity.assignation.assets[0].value.toFixed(2), name: activity.assignation.assets[0].assetName } }}
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+            {{ $t('notifications.TO') }}
             <span v-for="(receiver, ix) in activity.assignation.receivers">{{ ix > 0 ? ', ' : '' }}<app-user-link :user="receiver.user"></app-user-link></span>
           </span>
 
           <span v-if="isNewPRAssigantionDone" class="">
-            Peer-reviewed <app-assignation-link :assignation="activity.assignation"></app-assignation-link> has been done. Created by
-            <app-user-link :user="activity.triggerUser"></app-user-link> for
-            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b> from
+            {{ $t('notifications.PEER_REVIEWED') }}
+            <app-assignation-link :assignation="activity.assignation"></app-assignation-link>
+            {{ $t('notifications.HAS_BEEN_DONE') }}.
+            {{ $t('notifications.CREATED_BY') }}
+            <app-user-link :user="activity.triggerUser"></app-user-link>
+            {{ $t('notifications.AMOUNT_OF_FROM', { amount:  activity.assignation.assets[0].value.toFixed(2), name: activity.assignation.assets[0].assetName }) }}
             <app-initiative-link :initiative="activity.initiative"></app-initiative-link>.
           </span>
 
           <span v-if="isInitiativeTransfer" class="">
-            transferred <b>{{ activity.transfer.value.toFixed(2) }} {{ activity.transfer.assetName }}</b> from
-            <app-initiative-link :initiative="activity.initiative"></app-initiative-link> to
-            <app-initiative-link
-              :initiativeId="activity.transfer.receiverId"
-              :initiativeName="activity.transfer.receiverName">
-            </app-initiative-link>
+            {{ $t('notifications.TRANSFERRED') }}
+            {{ $t('notifications.AMOUNT_OF_FROM', { amount:  activity.transfer.value.toFixed(2), name: activity.transfer.assetName }) }}
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+            {{ $t('notifications.TO') }}
+            <app-initiative-link :initiativeId="activity.transfer.receiverId" :initiativeName="activity.transfer.receiverName"> </app-initiative-link>
           </span>
 
           <span v-if="isAssignationRevertOrdered" class="">
-            ordered the revert of the <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
-            with motive {{ activity.assignation.motive }}
-            from
+            {{ $t('notifications.ORDERED_THE_REVERT_OF') }}
+            <app-assignation-link :assignation="activity.assignation"></app-assignation-link>
+            {{ $t('notifications.OF') }}
+            {{ $t('notifications.AMOUNT_OF_FROM', { amount:  activity.assignation.assets[0].value.toFixed(2), name: activity.assignation.assets[0].assetName }) }}
             <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+            {{ $t('notifications.WITH_MOTIVE', { motive: activity.assignation.motive }) }}
           </span>
 
           <span v-if="isAssignationRevertCancelled" class="">
-            Revert order cancelled. Order to revert the
-            <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
-            with motive {{ activity.assignation.motive }}
-            from
+            {{ $t('notifications.REVERT_ORDER_CANCELLED') }}
+            <app-assignation-link :assignation="activity.assignation"></app-assignation-link>
+            {{ $t('notifications.OF') }}
+            {{ $t('notifications.AMOUNT_OF_FROM', { amount:  activity.assignation.assets[0].value.toFixed(2), name: activity.assignation.assets[0].assetName }) }}
             <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-            , but the revert was not accepted.
+            {{ $t('notifications.WITH_MOTIVE', { motive: activity.assignation.motive }) }},
+            {{ $t('notifications.REVERT_NOT_ACCEPTED') }}.
           </span>
 
           <span v-if="isAssignationReverted" class="">
-            Revert order accepted. Order to revert the
-            <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
-            with motive {{ activity.assignation.motive }}
-            from
-            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
-            and the revert has been done.
+            {{ $t('notifications.REVERT_ORDER_ACCEPTED') }}
+            <app-assignation-link :assignation="activity.assignation"></app-assignation-link>
+            {{ $t('notifications.OF') }}
+            {{ $t('notifications.AMOUNT_OF_FROM', { amount:  activity.assignation.assets[0].value.toFixed(2), name: activity.assignation.assets[0].assetName }) }}
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+            {{ $t('notifications.REVERT_ACCEPTED') }}.
           </span>
 
           <span v-if="isAssignationDeleted" class="">
-            Ongoing transfer deleted. The
-            <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-            <b>{{ activity.assignation.assets[0].value.toFixed(2) }} {{ activity.assignation.assets[0].assetName }}</b>
-            with motive {{ activity.assignation.motive }}
-            from
-            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,
-            has been deleted.
+            {{ $t('notifications.ONGOING_TRANSFER') }}
+            <app-assignation-link :assignation="activity.assignation"></app-assignation-link>
+            {{ $t('notifications.OF') }}
+            {{ $t('notifications.AMOUNT_OF_FROM', { amount:  activity.assignation.assets[0].value.toFixed(2), name: activity.assignation.assets[0].assetName }) }}
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+            {{ $t('notifications.WITH_MOTIVE', { motive: activity.assignation.motive }) }},
+            {{ $t('notifications.HAS_BEEN_DELETED') }}.
           </span>
 
           <span v-if="isModelSectionCreatedOnSection" class="">
-            created the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
-            section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+            {{ $t('notifications.CREATED_SUBSECTION') }}
+            <app-model-section-link :section="activity.modelSection"></app-model-section-link>
+            {{ $t('notifications.UNDER_SECTION') }}
+            <app-model-section-link :section="activity.onSection"></app-model-section-link>.
           </span>
           <span v-if="isModelSectionCreatedOnInitiative" class="">
-            created the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> under
-            initiative <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,.
+            {{ $t('notifications.CREATED_SECTION') }}
+            <app-model-section-link :section="activity.modelSection"></app-model-section-link>
+            {{ $t('notifications.UNDER_INITIATIVE') }}
+            <app-initiative-link :initiative="activity.initiative"></app-initiative-link>,.
           </span>
           <span v-if="isModelSectionEdited" class="">
-            edited the section <app-model-section-link :section="activity.modelSection"></app-model-section-link> title/description.
+            {{ $t('notifications.EDITED_SECTION') }}
+            <app-model-section-link :section="activity.modelSection"></app-model-section-link>
+            {{ $t('notifications.TITLE_DESCRIPTION') }}.
           </span>
           <span v-if="isModelSectionRemovedFromSection" class="">
-            removed the subsection <app-model-section-link :section="activity.modelSection"></app-model-section-link>
-            from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
+            {{ $t('notifications.REMOVED_SUBSECTION') }}
+            <app-model-section-link :section="activity.modelSection"></app-model-section-link>
+            {{ $t('notifications.FROM_SECTION') }}
+            <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
           </span>
           <span v-if="isModelSectionMovedFromSectionToSection" class="">
-            moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>
-             from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
-             to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+            {{ $t('notifications.MOVED_THE_SECTION') }}
+            <app-model-section-link :section="activity.modelSection"></app-model-section-link>
+            {{ $t('notifications.FROM_SECTION') }}
+            <app-model-section-link :section="activity.fromSection"></app-model-section-link>
+            {{ $t('notifications.TO_SECTION') }}
+            <app-model-section-link :section="activity.onSection"></app-model-section-link>.
           </span>
           <span v-if="isModelSectionMoved" class="">
-            moved the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>.
+            {{ $t('notifications.MOVED_THE_SECTION') }}
+            <app-model-section-link :section="activity.modelSection"></app-model-section-link>.
           </span>
 
           <span v-if="isModelCardWrapperCreated" class="">
-            created the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-             on section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+            {{ $t('notifications.CREATED_THE_CARD', { scope: cardWrapperScope }) }}
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+            {{ $t('notifications.IN_SECTION') }}
+            <app-model-section-link :section="activity.onSection"></app-model-section-link>.
           </span>
           <span v-if="isModelCardWrapperAdded" class="">
-            added the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-             in section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+            {{ $t('notifications.ADDED_THE_CARD', { scope: cardWrapperScope }) }}
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+            {{ $t('notifications.IN_SECTION') }}
+            <app-model-section-link :section="activity.onSection"></app-model-section-link>.
           </span>
           <span v-if="isModelCardWrapperRemoved" class="">
-            removed the {{ cardWrapperScope }} card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.fromSection"></app-model-card-link>
-             from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
+            {{ $t('notifications.REMOVED_THE_CARD', { scope: cardWrapperScope }) }}
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.fromSection"></app-model-card-link>
+            {{ $t('notifications.FROM_SECTION') }}
+            <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
           </span>
           <span v-if="isModelSectionDeleted" class="">
-            deleted the section <app-model-section-link :section="activity.modelSection"></app-model-section-link>
+            {{ $t('notifications.DELETED_SECTION') }}
+            <app-model-section-link :section="activity.modelSection"></app-model-section-link>
           </span>
 
           <span v-if="isModelCardWrapperMadeShared" class="">
-            made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-             on section <app-model-section-link :section="activity.onSection"></app-model-section-link> a shared card.
+            {{ $t('notifications.MADE_THE_CARD') }}
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+            {{ $t('notifications.IN_SECTION') }}
+            <app-model-section-link :section="activity.onSection"></app-model-section-link>
+            {{ $t('notifications.A_SHARED_CARD') }}.
           </span>
           <span v-if="isModelCardWrapperMadeCommon" class="">
-            made the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-             on section <app-model-section-link :section="activity.onSection"></app-model-section-link> a common card.
+            {{ $t('notifications.MADE_THE_CARD') }}
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+            {{ $t('notifications.IN_SECTION') }}
+            <app-model-section-link :section="activity.onSection"></app-model-section-link>
+            {{ $t('notifications.A_COMMON_CARD') }}.
           </span>
           <span v-if="isModelCardWrapperEdited" class="">
-            edited the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
+            {{ $t('notifications.EDITED_THE_CARD') }}
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
           </span>
           <span v-if="isModelCardWrapperMovedSameSection" class="">
-            moved the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-            within section <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
+            {{ $t('notifications.MOVED_CARD') }}
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+            {{ $t('notifications.WITHIN_SECTION') }}
+            <app-model-section-link :section="activity.fromSection"></app-model-section-link>.
           </span>
           <span v-if="isModelCardWrapperMovedDiferentSections" class="">
-            moved the card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-            from section <app-model-section-link :section="activity.fromSection"></app-model-section-link>
-            to section <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+            {{ $t('notifications.MOVED_CARD') }}
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+            {{ $t('notifications.FROM_SECTION') }}
+            <app-model-section-link :section="activity.fromSection"></app-model-section-link>
+            {{ $t('notifications.TO_SECTION') }}
+            <app-model-section-link :section="activity.onSection"></app-model-section-link>.
           </span>
           <span v-if="isModelCardWrapperDeleted" class="">
-            deleted the card <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
+            {{ $t('notifications.DELETED_CARD') }}
+            <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
           </span>
           <span v-if="isConsentStatusOpened" class="">
-            started a consent process on card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
+            {{ $t('notifications.STARTED_CONSENT') }}
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
           </span>
           <span v-if="isConsentStatusClosed" class="">
-            ended the consent process on card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
+            {{ $t('notifications.ENDED_CONSENT') }}
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
           </span>
           <span v-if="isConsentStatusReopened" class="">
-            reopened the consent process on card <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
+            {{ $t('notifications.REOPENED_CONSENT') }}
+            <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
           </span>
           <span v-if="isConsentPositionStated" class="">
-            set his/her position on card
+            {{ $t('notifications.POSITION_SET') }}
             <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-            to <b>{{ getConsentPositionText(activity.positionColor) }}</b>.
+            {{ $t('notifications.TO_POSITION', { position: getConsentPositionText(activity.positionColor) }) }}.
           </span>
           <span v-if="isConsentPositionChanged" class="">
-            changed his/her position on card
+            {{ $t('notifications.POSITION_CHANGED') }}
             <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-            to <b>{{ getConsentPositionText(activity.positionColor) }}</b>.
+            {{ $t('notifications.TO_POSITION', { position: getConsentPositionText(activity.positionColor) }) }}.
           </span>
 
           <span v-if="isMessagePosted && (!showMessagesText || isExternalMessage)">
-            <span v-if="loggedUserMentioned">mentioned you in a comment in </span>
-            <span v-else>commented in </span>
+            <span v-if="loggedUserMentioned">{{ $t('notifications.MENTIONED_YOU') }}</span>
+            <span v-else>{{ $t('notifications.COMMENTED_IN') }} </span>
 
-            <span v-if="isMessageInCardWrapper"><app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link> card.</span>
-            <span v-if="isMessageInCardWrapperOnSection"><app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link> card.</span>
-            <span v-if="isMessageInSection"><app-model-section-link :section="activity.modelSection"></app-model-section-link> section.</span>
-            <span v-if="isMessageInInitiative"><app-initiative-link :initiative="activity.initiative"></app-initiative-link> initiative.</span>
+            <span v-if="isMessageInCardWrapper">
+              <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>
+              {{ $t('notifications.CARD') }}.
+            </span>
+            <span v-if="isMessageInCardWrapperOnSection">
+              <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
+              {{ $t('notifications.CARD') }}.
+            </span>
+            <span v-if="isMessageInSection">
+              <app-model-section-link :section="activity.modelSection"></app-model-section-link>
+              {{ $t('notifications.SECTION') }}.
+            </span>
+            <span v-if="isMessageInInitiative">
+              <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
+              {{ $t('notifications.INITIATIVE') }}.
+            </span>
           </span>
         </div>
       </div>
@@ -219,11 +270,11 @@
           <div v-if="hovering">
             <div v-if="authorIsLoggedUser" @click="$emit('edit-message', activity.message)"
               class="w3-button light-grey">
-              <i class="fa fa-pencil"></i> edit
+              <i class="fa fa-pencil"></i> {{ $t('general.EDIT') }}
             </div>
             <div v-if="true" @click="$emit('reply-to-message', activity)"
               class="w3-button light-grey">
-              <i class="fa fa-reply"></i> reply
+              <i class="fa fa-reply"></i> {{ $t('notifications.REPLY') }}
             </div>
           </div>
         </transition>
@@ -472,15 +523,15 @@ export default {
       }
 
       if (nameChanged && driverChanged) {
-        return ' name and driver.'
+        return this.$t('notifications.NAME_AND_DESC')
       }
 
       if (nameChanged) {
-        return ' name.'
+        return this.$t('general.NAME')
       }
 
       if (driverChanged) {
-        return ' driver.'
+        return this.$t('general.DESCRIPTION')
       }
 
       return ''
