@@ -425,13 +425,13 @@ export default {
       if (this.activity.modelCardWrapper) {
         switch (this.activity.modelCardWrapper.scope) {
           case 'PRIVATE':
-            return 'private'
+            return this.$t('model.PRIVATE')
 
           case 'SHARED':
-            return 'shared'
+            return this.$t('model.SHARED')
 
           case 'COMMON':
-            return 'common'
+            return this.$t('model.COMMON')
         }
       }
       return ''

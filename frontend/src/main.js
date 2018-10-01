@@ -38,16 +38,12 @@ Vue.use(VueAnalytics, {
 Vue.use(VueI18n)
 
 const getLang = function () {
-  console.log('navigator.languages')
-  console.log(navigator.languages)
   if (navigator.languages !== undefined) {
     return navigator.languages[0].substr(0, 2)
   } else {
     return navigator.language.substr(0, 2)
   }
 }
-
-console.log('initializing locale to ' + getLang())
 
 export const i18n = new VueI18n({
   locale: getLang(),
