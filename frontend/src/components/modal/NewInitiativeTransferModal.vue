@@ -7,22 +7,26 @@
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>Direct transfer to a parent or child initiative</h2>
+          <h2>{{ $t('tokens.TRANSFER_TO_INITIATIVE') }}</h2>
         </div>
 
         <div v-if="initiativeOptions.length > 0" class="this-container w3-container">
 
           <div class="w3-row">
-            <label class=""><b>Transfer to <span class="w3-small error-text">(required)</span></b></label>
+            <label class=""><b>{{ $t('tokens.TRANSFER_TO') }}
+              <span class="w3-small error-text">({{ $t('general.REQUIRED') }})</span></b>
+            </label>
             <select v-model="transfer.receiverId"
               class="w3-select initiative-selector" name="transferto"
               :class="{ 'error-input' : subInitiativeEmptyShow }">
-              <option v-for="option in initiativeOptions" :value="option.id">{{ option.meta.name }}</option>
+              <option v-for="option in initiativeOptions" :value="option.id">
+                {{ option.meta.name }}
+              </option>
             </select>
           </div>
           <app-error-panel
             :show="subInitiativeEmptyShow"
-            message="please select a subinitiative to transfer the tokens to">
+            :message="$t('general.FIELD_CANNOT_BE_EMPTY')">
           </app-error-panel>
           <br>
 
@@ -38,26 +42,32 @@
           </div>
           <app-error-panel
             :show="assetsErrorShow"
-            message="please select the amount of assets to be transfer">
+            :message="$t('tokens.ZERO_TOKENS_ERROR')">
           </app-error-panel>
 
           <div class="w3-row">
-            <label class=""><b>Motive <span class="w3-small error-text">(required)</span></b></label>
+            <label class=""><b>{{ $t('tokens.MOTIVE') }}
+              <span class="w3-small error-text">({{ $t('general.REQUIRED') }})</span></b>
+            </label>
             <input v-model="transfer.motive"
               class="w3-input w3-hover-light-grey" type="text"
               :class="{ 'error-input' : motiveErrorShow }">
             <app-error-panel
               :show="motiveEmptyShow"
-              message="please provide a motive for this transfer for future reference">
+              :message="$t('general.FIELD_CANNOT_BE_EMPTY')">
             </app-error-panel>
             <app-error-panel
               :show="motiveTooLarge"
-              message="motive too large, please use the notes for long annotations">
+              :message="$t('general.FIELD_TOO_LONG')">
             </app-error-panel>
             <br>
 
-            <label class=""><b>Notes</b></label>
-            <textarea v-model="transfer.notes" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
+            <label class=""><b>{{ $t('general.NOTES') }}</b></label>
+            <app-markdown-editor
+              v-model="transfer.notes"
+              :keepBackup="false"
+              :showBorder="true">
+            </app-markdown-editor>
             <br>
           </div>
 
@@ -65,17 +75,21 @@
 
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">
+                {{ $t('general.CANCEL') }}
+              </button>
             </div>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button type="button" class="w3-button app-button" @click="accept()">
+                {{ $t('general.ACCEPT') }}
+              </button>
             </div>
           </div>
 
         </div>
         <div v-else class="w3-row w3-margin-top">
           <div class="error-panel w3-padding">
-            {{ initiative.meta.name }} does not have parent or child initiatives
+            {{ $t('tokens.NO_PARENTS_ERROR', { name: initiative.meta.name }) }}
           </div>
         </div>
       </div>

@@ -3,16 +3,16 @@
     <table class="w3-table w3-striped w3-bordered w3-centered table-class">
       <thead>
         <tr>
-          <th class="avatar-col middle" colspan="2">USER</th>
-          <th v-if="hasDonors">DONOR</th>
-          <th v-if="amEvaluator" class="percent-col">MINE %</th>
-          <th v-if="hasDonors" class="percent-col">PRE-DONOR %</th>
-          <th class="percent-col">{{ disable ? 'FINAL %' : '%' }}</th>
-          <th v-if="showTotal" class="value-col">{{ disable ? 'FINAL TOKENS' : 'TOTAL' }}</th>
+          <th class="avatar-col middle" colspan="2">{{ $t('tokens.USER_UC') }}</th>
+          <th v-if="hasDonors">{{ $t('tokens.DONOR_UC') }}</th>
+          <th v-if="amEvaluator" class="percent-col">{{ $t('tokens.MINE_UC') }} %</th>
+          <th v-if="hasDonors" class="percent-col">{{ $t('tokens.PRE_DONOR_UC') }} %</th>
+          <th class="percent-col">{{ disable ? $t('tokens.FINAL_UC') : '' }}%</th>
+          <th v-if="showTotal" class="value-col">{{ disable ? $t('tokens.FINAL_TOKENS_UC') : $t('tokens.TOTAL_UC') }}</th>
           <th class="bar-col w3-hide-small w3-hide-medium"></th>
-          <th v-if="!disable && showDontKnow">KNOW / DON'T</th>
-          <th v-if="showSelfBiases" class="self-bias-col">SELF-BIAS</th>
-          <th v-if="showRemove" class="self-bias-col">REMOVE</th>
+          <th v-if="!disable && showDontKnow">{{ $t('tokens.KNOW_DONT_UC') }}</th>
+          <th v-if="showSelfBiases" class="self-bias-col">{{ $t('tokens.SELF_BIAS_UC') }}</th>
+          <th v-if="showRemove" class="self-bias-col">{{ $t('tokens.REMOVE_UC') }}</th>
         </tr><i></i>
       </thead>
       <tbody>
@@ -36,7 +36,7 @@
                 <b>{{ userData.percent.toFixed(1) }} %</b>
               </div>
               <div v-else class="">
-                <b>don't know</b>
+                <b>{{ $t('tokens.DONT_KNOW') }}</b>
               </div>
             </div>
             <div v-else class="slider-container">
@@ -51,7 +51,7 @@
                 </div>
                 <div v-else key="2">
                   <div class="w3-tag w3-padding w3-round gray-1 noselect">
-                    DK
+                    {{ $t('tokens.DONT_KNOW_SHORT') }}
                   </div>
                 </div>
               </transition>
@@ -63,7 +63,7 @@
                 <b>{{ (userData.percent * totalTokens / 100).toFixed(2) }}</b>
               </div>
               <div v-else class="">
-                <b>don't know</b>
+                <b>{{ $t('tokens.DONT_KNOW') }}</b>
               </div>
             </div>
             <div v-else class="slider-container">
@@ -109,10 +109,10 @@
       <tfoot v-if="!disable">
         <tr>
           <td></td>
-          <td>total assigned:</td>
+          <td>{{ $t('tokens.TOTAL_ASSIGNED') }}:</td>
           <td>{{ sumOfPercents.toFixed() }}%</td>
           <td v-if="showTotal">{{ sumOfPercents * totalTokens / 100 }}</td>
-          <td>{{ autoScaled ? '( auto-rounded )' : ''}}</td>
+          <td>{{ autoScaled ? ('(' + $t('tokens.AUTO_ROUNDED') + ')') : ''}}</td>
         </tr>
       </tfoot>
     </table>
@@ -124,7 +124,7 @@
             <button
               class="w3-button app-button w3-margin-left"
               @click="autoScale()">
-              autoscale
+              {{ $t('tokens.AUTOSCALE') }}
             </button>
           </div>
         </div>

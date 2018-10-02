@@ -21,7 +21,7 @@
                     {{ underThisInitiativeStr }} {{ assetData.assetName }}
                   </div>
                   <div class="w3-row percentage-row">
-                    {{ underThisInitiativePercent }}% of existing
+                    {{ underThisInitiativePercent }}% {{ $t('tokens.OF_EXISTING') }}
                   </div>
                 </div>
                 <div id="T_addBrandNewTokensModal" v-if="canEdit && canMint " class="w3-button w3-display-bottommiddle" @click="mintClicked()">
@@ -32,7 +32,7 @@
             <div class="w3-col l8">
               <div class="w3-row w3-margin-bottom">
                 <label class="">
-                  <b>Still Available</b>
+                  <b>{{ $t('tokens.STILL_AVAILABLE') }}</b>
                 </label>
                 <div class="light-grey w3-round-xlarge w3-large">
                   <div class="app-blue w3-container w3-center w3-round-xlarge" :style="{'width': availableToThisInitiativePercent +'%'}">
@@ -43,7 +43,7 @@
 
               <div v-if="hasPending" class="w3-row w3-margin-bottom">
                 <label class="">
-                  <b>Under pending peer-review transfers</b>
+                  <b>{{ $t('tokens.UNDER_PENDING_PR')}}</b>
                 </label>
                 <div class="light-grey w3-round-xlarge w3-large">
                   <div class="app-blue w3-container w3-center w3-round-xlarge" :style="{'width': pendingTransfersPercent +'%'}">
@@ -56,7 +56,7 @@
                 <div class="w3-col" :class="{'s10' : canEdit, 's12' : !canEdit}">
                   <div class="w3-row cursor-pointer" @click="showSubinitiatives = !showSubinitiatives">
                     <label class="cursor-pointer noselect">
-                      <b>Transferred to sub-initiatives</b>
+                      <b class="noselect">{{ $t('tokens.TRANSFERRED_TO_SUBS') }}</b>
                     </label>
                     <div class="light-grey w3-round-xlarge w3-large">
                       <div class="app-blue w3-container w3-center w3-round-xlarge" :style="{'width': transferredToSubinitiativesPercent +'%'}">
@@ -103,7 +103,7 @@
 
                   <div class="w3-row cursor-pointer" @click="showMembers = !showMembers">
                     <label class="cursor-pointer">
-                      <b class="noselect">Transferred to members</b>
+                      <b class="noselect">{{ $t('tokens.TRANSFERRED_TO_MEMS') }}</b>
                     </label>
                     <div class="light-grey w3-round-xlarge w3-large">
                       <div class="app-blue w3-container w3-center w3-round-xlarge" :style="{'width': transferredToMembersPercent +'%'}">
@@ -145,7 +145,7 @@
         </div>
         <div v-if="showAssigner" class="assigner-container w3-col l4 w3-container">
           <div class="w3-row label-row">
-            <label class=""><b>Amount to be transfered</b></label>
+            <label class=""><b>{{ $t('tokens.AMOUNT_TO_TRANSF') }}</b></label>
           </div>
           <div class="w3-row-padding w3-large">
             <div class="w3-col s6">
@@ -167,7 +167,7 @@
           <div class="slider-container error-row w3-center">
             <transition name="slideDownUp">
               <div v-if="valueTooLarge" class="w3-row error-panel w3-tag w3-round">
-                {{ this.assetData.ownedByThisHolder > 0 ? 'only ' : ''}} {{this.assetData.ownedByThisHolder.toFixed(1) }} {{ this.assetData.assetName }} available
+                {{ this.assetData.ownedByThisHolder > 0 ? 'only ' : ''}} {{this.assetData.ownedByThisHolder.toFixed(1) }} {{ this.assetData.assetName }} {{ $t('tokens.AVAILABLE') }}
               </div>
             </transition>
           </div>

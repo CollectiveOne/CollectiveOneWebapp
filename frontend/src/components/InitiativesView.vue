@@ -13,7 +13,8 @@
 
     <transition name="slideRightLeft">
       <div v-show="expandNav" class="dark-gray nav-container-cell w3-sidebar">
-        <app-initiatives-nav @initiative-selected="initiativeSelected()" @new-initiative="showNewInitiativeModal = true"></app-initiatives-nav>
+        <app-initiatives-nav @initiative-selected="initiativeSelected()" @new-initiative="showNewInitiativeModal = true">
+        </app-initiatives-nav>
       </div>
     </transition>
 

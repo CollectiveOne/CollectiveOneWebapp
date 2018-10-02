@@ -7,7 +7,7 @@
         <transition name="fadeenter">
           <div v-if="!creating" class="w3-row">
             <div class="w3-col w3-right w3-center" style="width: 100px">
-              <button id="T_tagAdd_SelectTagInitiative"  @click="$emit('add', tag)" class="w3-button app-button" name="button">add</button>
+              <button @click="$emit('add', tag)" class="w3-button app-button" name="button">{{ $t('general.ADD') }}</button>
             </div>
             <div class="w3-rest new-tag-input-container">
               <app-initiative-tag-selector
@@ -24,39 +24,39 @@
       <div class="slider-container">
         <transition name="fadeenter">
           <div v-if="creating" class="w3-row">
-            <label><b>Tag:</b></label>
+            <label><b>{{ $t('initiatives.TAG') }}:</b></label>
             <input id="T_tagName_SelectTagInitiative" type="text" class="w3-input" v-model.trim="newTag.tagText">
             <app-error-panel
               :show="tagTextEmptyErrorShow"
-              message="please provide a tag">
+              :message="$t('general.FIELD_CANNOT_BE_EMPTY')">
             </app-error-panel>
             <app-error-panel
               :show="tagTextIsValidShow"
-              message="tag can only contain letters, numbers and/or spaces">
+              :message="$t('general.FIELD_ONLY_LETTERS')">
             </app-error-panel>
             <app-error-panel
               :show="tagTextTooLong"
-              message="tag too long">
+              :message="$t('general.FIELD_TOO_LONG')">
             </app-error-panel>
 
             <br>
-            <label><b>Description:</b></label>
+            <label><b>{{ $t('general.DESCRIPTION') }}:</b></label>
             <textarea id="T_tagDescription_SelectTagInitiative" class="w3-input w3-border" rows="2" placeholder="tag description"v-model.trim="newTag.description"></textarea>
             <app-error-panel
               :show="tagDescriptionEmptyErrorShow"
-              message="please provide a description">
+              :message="$t('general.FIELD_CANNOT_BE_EMPTY')">
             </app-error-panel>
             <app-error-panel
               :show="tagDescriptionTooLong"
-              message="tag description too long">
+              :message="$t('general.FIELD_TOO_LONG')">
             </app-error-panel>
 
             <div class="bottom-btns-row w3-row-padding w3-margin-top">
               <div class="w3-col m6">
-                <button type="button" class="w3-button app-button-light" @click="creating = false">Cancel</button>
+                <button type="button" class="w3-button app-button-light" @click="creating = false">{{ $t('general.CANCEL') }}</button>
               </div>
               <div class="w3-col m6">
-                <button id="T_buttonAccept_SelectTagInitiative" type="button" class="w3-button app-button" @click="saveTag()">Accept</button>
+                <button id="T_buttonAccept_SelectTagInitiative" type="button" class="w3-button app-button" @click="saveTag()">{{ $t('general.ACCEPT') }}</button>
               </div>
             </div>
           </div>

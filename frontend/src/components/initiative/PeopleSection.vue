@@ -4,7 +4,7 @@
       <div class="w3-row">
         <button @click="wantToContributeSelected = !wantToContributeSelected"
           class="w3-button app-button" type="button" name="button">
-          Want to contribute?
+          {{ $t('members.WANT_TO_CONTRIB_Q') }}
         </button>
       </div>
       <div class="w3-row w3-margin-top">
@@ -12,19 +12,18 @@
           <transition name="slideDownUp">
             <div v-if="wantToContributeSelected" class="w3-row tags-row w3-center">
               <div class="w3-padding w3-round light-grey w3-margin-bottom">
-                <p>
-                  The administrators of this initiative will be notified of your
-                  interest and will be able to add you as a contributor to this initiative.
-                </p>
+                <p>{{ $t('members.WANT_TO_CONTRIB_MSG') }}</p>
               </div>
 
               <button
                 class="w3-button app-button-light button-pair"
-                @click="wantToContributeSelected = false">cancel
+                @click="wantToContributeSelected = false">
+                {{ $t('general.CANCEL') }}
               </button>
               <button
                 class="w3-button app-button button-pair"
-                @click="wantToContribute()">confirm
+                @click="wantToContribute()">
+                {{ $t('general.CONFIRM') }}
               </button>
             </div>
           </transition>
@@ -33,20 +32,20 @@
     </div>
     <app-error-panel
       :show="requestSent"
-      message="The admins of this initiative have been notified."
+      :message="$t('members.ADMINS_NOTIFIED')"
       panelType="success">
     </app-error-panel>
     <app-error-panel
       :show="userAdded"
-      message="User succesfully added."
+      :message="$t('members.USER_ADDED_SUCCESS')"
       panelType="success">
     </app-error-panel>
     <app-error-panel
       :show="requestError"
-      message="Error notifying the admins">
+      :message="$t('members.ERROR_NOTIFYING')">
     </app-error-panel>
     <div class="w3-row own-members-div">
-      <h3 class="section-header">Members of {{ initiative.meta.name }}:</h3>
+      <h3 class="section-header"> {{ $t('members.MEMBERS_OF', { title: initiative.meta.name }) }}:</h3>
       <app-members-table
         :members="initiative.initiativeMembers.members"
         :canEdit="isLoggedAnAdmin || isLoggedAParentAdmin"
@@ -56,13 +55,13 @@
         @add="addMember($event)">
       </app-members-table>
       <div v-if="noOtherAdminError" class="w3-row w3-tag error-panel error-row w3-round">
-        there should be at least one admin per initiative
+        {{ $t('initiatives.ONE_ADMIN_ATLEAST') }}
       </div>
     </div>
     <br>
     <div v-if="allSubmembers.length > 0" class="sub-members-div">
       <hr>
-      <h3 class="section-header">Members of subinitiatives of {{ initiative.meta.name }}:</h3>
+      <h3 class="section-header">{{ $t('members.MEMBERS_OF_SUBS', { title: initiative.meta.name }) }}:</h3>
       <app-submembers-table
         :submembers="allSubmembers"
         :assets="initiative.assets">

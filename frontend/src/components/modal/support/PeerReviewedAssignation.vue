@@ -2,7 +2,7 @@
   <div class="">
     <div class="w3-row-padding">
       <div class="receivers-col w3-col m6">
-        <h5>Receivers:</h5>
+        <h5>{{ $t('tokens.RECEIVERS') }}:</h5>
         <div class="w3-row users-list">
           <app-users-list :usersInit="receivers" @updated="receiversUpdated($event)"
             type="receivers">
@@ -11,16 +11,15 @@
         <div class="slider-container">
           <transition name="slideDownUp">
             <div v-if="donorUsers.length > 0" class="w3-row">
-              <div class="w3-panel light-grey w3-padding">
-                <b>Warning:</b> {{ donorUsersStr }} will be part of the evaluation but the tokens they receive will be distributed
-                among the rest of receivers!
+              <div class="w3-panel light-grey w3-padding"
+                v-html="$t('tokens.DONOR_WARNING')">
               </div>
             </div>
           </transition>
         </div>
       </div>
       <div class="w3-col m6">
-        <h5>Evaluators: {{ sameAsReceivers ? '(same as receivers)' : ''}}</h5>
+        <h5>{{ $t('tokens.EVALUATORS') }}: {{ sameAsReceivers ? ( '(' + $t('tokens.SAME_AS_RECEIVERS') + ')') : ''}}</h5>
         <div v-if="!sameAsReceivers" class="w3-row users-list" :class="{'covered-div': sameAsReceivers}">
           <app-users-list :usersInit="evaluators" @updated="evaluatorsUpdated($event)"
             type="evaluators">
@@ -29,7 +28,7 @@
         <div class="w3-row w3-center button-evaluators">
           <button @click="switchSameAsReceivers()"
             class="w3-button app-button">
-            {{ sameAsReceivers ? 'different from receivers?' : 'same as receivers' }}
+            {{ sameAsReceivers ? $t('tokens.DIFF_FROM_RECEIVERS_Q') : $t('tokens.SAME_AS_RECEIVERS') }}
           </button>
         </div>
       </div>

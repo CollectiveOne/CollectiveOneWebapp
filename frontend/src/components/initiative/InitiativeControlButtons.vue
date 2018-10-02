@@ -41,19 +41,20 @@
 
         <div class="w3-card w3-white drop-menu">
           <div v-if="deleteIntent" class="w3-row w3-center delete-intent-div">
-            <div class="w3-padding w3-round light-grey w3-margin-bottom">
-              <p>
-                <b>Warning:</b> Are you sure you want to completely delete the initiative "{{ initiative.meta.name }}"? This will delete all its contents.
+            <div class="w3-row w3-padding w3-round light-grey w3-margin-bottom">
+              <p v-html="$t('initiatives.DELETE_WARNING', { name:  initiative.meta.name })">
               </p>
             </div>
-            <button
-              class="w3-button light-grey"
-              @click="deleteIntent = false">cancel
-            </button>
-            <button
-              class="w3-button danger-btn"
-              @click="deleteConfirmed()">confirm
-            </button>
+            <div class="w3-row btns-row">
+              <button
+                class="w3-button light-grey"
+                @click="deleteIntent = false">{{ $t('general.CANCEL') }}
+              </button>
+              <button
+                class="w3-button danger-btn"
+                @click="deleteConfirmed()">{{ $t('general.CONFIRM') }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -99,10 +100,35 @@ export default {
     },
     menuItems () {
       let items = []
-      if (this.isLoggedAnAdmin) items.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
-      if (this.isLoggedAnAdmin) items.push({ text: 'new subinitiative', value: 'newSubinitiative', faIcon: 'fa-plus' })
-      items.push({ text: 'notifications', value: 'notifications', faIcon: 'fa-cog' })
-      if (this.isLoggedAnAdmin) items.push({ text: 'delete', value: 'delete', faIcon: 'fa-times' })
+      if (this.isLoggedAnAdmin) {
+        items.push({
+          text: this.$t('general.EDIT'),
+          value: 'edit',
+          faIcon: 'fa-pencil'
+        })
+      }
+
+      if (this.isLoggedAnAdmin) {
+        items.push({
+          text: this.$t('initiatives.NEW_SUBINITIATIVE'),
+          value: 'newSubinitiative',
+          faIcon: 'fa-plus'
+        })
+      }
+
+      items.push({
+        text: this.$t('general.NOTIFICATIONS'),
+        value: 'notifications',
+        faIcon: 'fa-cog' })
+
+      if (this.isLoggedAnAdmin) {
+        items.push({
+          text: this.$t('general.DELETE'),
+          value: 'delete',
+          faIcon: 'fa-times'
+        })
+      }
+
       return items
     },
     popperOptions () {
@@ -142,7 +168,7 @@ export default {
         this.$store.dispatch('updateMyInitiatives')
         if (this.initiative.parents.length > 0) {
           var parentId = this.initiative.parents[this.initiative.parents.length - 1].id
-          this.$router.replace({ name: 'InitiativeOverview', params: { initiativeId: parentId } })
+          this.$router.replace({ name: 'Initiative', params: { initiativeId: parentId } })
           this.closeThis()
         } else {
           window.location.href = '/'
@@ -183,6 +209,10 @@ export default {
 
 .delete-intent-div {
   padding: 6px 6px;
+}
+
+.btns-row .w3-button {
+  width: calc(50% - 6px);
 }
 
 </style>

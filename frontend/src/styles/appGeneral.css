@@ -1,3 +1,8 @@
+.help-icon {
+  display: inline-block;
+  width: 20px;
+}
+
 .control-btn {
   cursor: pointer;
   padding: 8px 10px;
@@ -71,6 +76,8 @@
   background-color: #f1f1f1 !important;
   color: black;
   border-radius: 12px;
+  line-height: 16px;
+  transition:all 0.3s ease-out;
 }
 
 .app-button-danger {

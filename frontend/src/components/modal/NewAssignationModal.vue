@@ -8,7 +8,9 @@
 
         <div class="w3-container w3-border-bottom">
           <transition name="fadeenter" mode="out-in">
-            <h2 :key="isPeerReviewed">{{ isPeerReviewed ? 'Peer-reviewed transfer to users' : 'Direct transfer to user(s)' }}</h2>
+            <h2 :key="isPeerReviewed">
+              {{ isPeerReviewed ? $t('tokens.PEER_REVIEW_TITLE') : $t('tokens.DIRECT_TITLE') }}
+            </h2>
           </transition>
         </div>
 
@@ -20,14 +22,14 @@
               class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'border-blue-app': isDirect}"
               @click="assignation.type = DIRECT_ID()">
-              <h5 class="" :class="{'bold-text': isDirect}">Direct</h5>
+              <h5 class="" :class="{'bold-text': isDirect}">{{ $t('tokens.DIRECT') }}</h5>
             </div>
             <div
               id="T_peerReviewedTransferUser"
               class="w3-col s6 tablink w3-bottombar w3-hover-light-grey w3-padding"
               :class="{'border-blue-app': isPeerReviewed}"
               @click="assignation.type = PEER_REVIEWED_ID()">
-              <h5 class="" :class="{'bold-text': isPeerReviewed}">Peer Reviewed</h5>
+              <h5 class="" :class="{'bold-text': isPeerReviewed}">{{ $t('tokens.PEER_REVIEWED') }}</h5>
             </div>
           </div>
           <br>
@@ -40,19 +42,19 @@
             </transition>
             <app-error-panel
               :show="notEnoughReceivers"
-              message="please add at least one receiver">
+              :message="$t('toknes.NOT_ENOUGH_RECEIVERS')">
             </app-error-panel>
             <app-error-panel
               :show="notEnoughEvaluators"
-              message="please add at least one evaluator">
+              :message="$t('toknes.NOT_ENOUGH_EVALS')">
             </app-error-panel>
             <app-error-panel
               :show="allDonorsShow"
-              message="not all receivers can be donors">
+              :message="$t('toknes.NOT_ALL_DONORS')">
             </app-error-panel>
             <app-error-panel
               :show="percentagesWrongShow"
-              message="percentages must sum 100%">
+              :message="$t('toknes.PERCENTAGES_WRONG')">
             </app-error-panel>
           </div>
 
@@ -67,26 +69,29 @@
             </app-initiative-assets-assigner>
             <app-error-panel
               :show="assetsZeroShow"
-              message="warning: you have not selected any assets. Please confirm this is
-              ok below, or specify the amount to be transferred">
+              :message="$t('tokens.NO_ASSETS_SELECTED')">
             </app-error-panel>
           </div>
 
           <div class="w3-row">
-            <label class=""><b>Motive <span class="w3-small error-text">(required)</span></b></label>
-            <input id="T_motiveModal" v-model="assignation.motive" class="w3-input w3-hover-light-grey" :class="{ 'error-input' : motiveErrorShow }" type="text">
+            <label class=""><b>{{ $t('tokens.MOTIVE') }} <span class="w3-small error-text">({{ $t('general.REQUIRED') }})</span></b></label>
+            <input v-model="assignation.motive" class="w3-input w3-hover-light-grey" :class="{ 'error-input' : motiveErrorShow }" type="text">
             <app-error-panel
               :show="motiveEmptyShow"
-              message="please provide a motive for this transfer for future reference">
+              :message="$t('general.FIELD_CANNOT_BE_EMPTY')">
             </app-error-panel>
             <app-error-panel
               :show="motiveTooLarge"
-              message="motive too large, please use the notes for long annotations">
+              :message="$t('general.FIELD_TOO_LONG')">
             </app-error-panel>
             <br>
 
-            <label class=""><b>Notes</b></label>
-            <textarea id="T_notesModal" v-model="assignation.notes" class="w3-input w3-border w3-round w3-hover-light-grey"></textarea>
+            <label class=""><b>{{ $t('general.NOTES') }}</b></label>
+            <app-markdown-editor
+              v-model="assignation.notes"
+              :keepBackup="false"
+              :showBorder="true">
+            </app-markdown-editor>
             <br>
           </div>
 
@@ -95,41 +100,52 @@
               <div v-if="isPeerReviewed" class="w3-row">
                 <div class="w3-col s12">
                   <div class="w3-row">
-                    <label class=""><b>Configuration</b></label>
+                    <label class=""><b>{{ $t('general.CONFIGURATION') }}</b>
+                      <popper trigger="hover" :options="popperOptions" :delay-on-mouse-in="600" :delay-on-mouse-out="800">
+                        <app-help-popper
+                          :title="$t('help.PEER-REV-CONFIG-TT')"
+                          :details="$t('help.PEER-REV-CONFIG-DET')">
+                        </app-help-popper>
+
+                        <div slot="reference" @click="$emit('docView')" class="help-icon">
+                          <img src="./../../assets/question-icon.svg" alt="">
+                        </div>
+                      </popper>
+                    </label>
                   </div>
                   <div class="w3-row-padding configuration-row">
                     <div class="w3-col m6">
                       <div class="w3-row">
                         <div class="w3-col l3 m12">
-                          <label class="w3-left first-label">Initial State:</label>
+                          <label class="w3-left first-label">{{ $t('tokens.INITIAL_STATE') }}:</label>
                         </div>
                         <div class="w3-col l9 m12 w3-center state-btns">
                           <button class="w3-button"
                             :class="{'app-button': isStartOnHold, 'app-button-light': !isStartOnHold}" name="button"
                             @click="assignation.config.startState = 'ON_HOLD'">
-                            on-hold
+                            {{ $t('tokens.ON_HOLD') }}
                           </button>
                           <button class="w3-button"
                             :class="{'app-button': isStartOpen, 'app-button-light': !isStartOpen}" name="button"
                             @click="assignation.config.startState = 'OPEN'">
-                            open
+                            {{ $t('tokens.OPEN') }}
                           </button>
                         </div>
                       </div>
                       <div class="w3-row">
-                        <label class="w3-left first-label">Max duration</label>
+                        <label class="w3-left first-label">{{ $t('tokens.MAX_DURATION') }}</label>
                         <input v-model="assignation.config.maxDuration" class="w3-input w3-left input-number" type="number">
-                        <label class="w3-left">days</label>
+                        <label class="w3-left">{{ $tc('tokens.DAYS', assignation.config.maxDuration) }}</label>
                       </div>
                     </div>
                     <div class="w3-col m6">
                       <div class="w3-row">
-                        <input id="T_selfBiasTransferPeer" v-model="assignation.config.selfBiasVisible" class="w3-check" type="checkbox">
-                        <label>Self-bias visible</label>
+                        <input v-model="assignation.config.selfBiasVisible" class="w3-check" type="checkbox">
+                        <label>{{ $t('tokens.SELF_BIAS_VISIBLE') }}</label>
                       </div>
                       <div class="w3-row">
-                        <input id="T_evauationsTransferPeer" v-model="assignation.config.evaluationsVisible" class="w3-check" type="checkbox">
-                        <label>All evaluations visible</label>
+                        <input v-model="assignation.config.evaluationsVisible" class="w3-check" type="checkbox">
+                        <label>{{ $t('tokens.ALL_EVALS_VISIBLE') }}</label>
                       </div>
                     </div>
                   </div>
@@ -142,22 +158,25 @@
 
           <div v-if="assetsZeroShow" class="w3-row error-panel w3-padding w3-round w3-margin-bottom">
             <div class="w3-col l10">
-              You will not transfer assets to this users. Please
-              confirm this is ok.
+              {{ $t('tokens.NO_ASSETS_TRASFERRED') }}
             </div>
             <div class="w3-col l2 w3-center">
               <button
                 class="w3-button app-button w3-round-large" name="button"
-                @click="assetsEmptyErrorConfirmed = true">ok</button>
+                @click="assetsEmptyErrorConfirmed = true">{{ $t('general.OK') }}</button>
             </div>
           </div>
 
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button id="T_cancelButton_ModalTransfer"  type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">
+                {{ $t('general.CANCEL') }}
+              </button>
             </div>
             <div class="w3-col m6">
-              <button id="T_acceptButton_ModalTransfer" type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button type="button" class="w3-button app-button" @click="accept()">
+                {{ $t('general.ACCEPT') }}
+              </button>
             </div>
           </div>
         </div>
@@ -268,6 +287,17 @@ export default {
     },
     percentagesWrongShow () {
       return this.percentagesWrong && this.sumOfPercentagesWrong
+    },
+    popperOptions () {
+      return {
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: true,
+            boundariesElement: 'viewport'
+          }
+        }
+      }
     }
   },
 
@@ -486,6 +516,10 @@ form {
 
 .configuration-row .state-btns {
   padding-top: 5px;
+}
+
+.configuration-row .state-btns .w3-button {
+  height: 25px;
 }
 
 .configuration-row button {

@@ -2,7 +2,7 @@
   <div class="w3-row controls-row small-scroll">
 
     <div class="control-group">
-      <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
+      <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
         <app-help-popper
           :title="$t('help.MESSAGES-TAB-TT')"
           :details="$t('help.MESSAGES-TAB-DET')">
@@ -13,7 +13,7 @@
         </div>
       </popper>
 
-      <popper trigger="hover" :options="popperOptions" delay-on-mouse-in="1200">
+      <popper trigger="hover" :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
         <app-help-popper
           :title="$t('help.CARDS-SUMMARY-TAB-TT')"
           :details="$t('help.CARDS-SUMMARY-TAB-DET')">
@@ -24,7 +24,7 @@
         </div>
       </popper>
 
-      <popper trigger="hover" :options="popperOptions" delay-on-mouse-in="1200">
+      <popper trigger="hover" :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
         <app-help-popper
           :title="$t('help.CARDS-TAB-TT')"
           :details="$t('help.CARDS-TAB-DET')">
@@ -35,7 +35,7 @@
         </div>
       </popper>
 
-      <popper trigger="hover" :options="popperOptions" delay-on-mouse-in="1200">
+      <popper trigger="hover" :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
         <app-help-popper
           :title="$t('help.CARDS-DOC-VIEW-TT')"
           :details="$t('help.CARDS-DOC-VIEW-DET')">
@@ -51,7 +51,7 @@
     <div v-if="isCardsContent" class="control-group noselect">
       <div class="w3-left zoom-controls">
         <div class="w3-left zoom-controls-enabled">
-          <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
+          <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
             <app-help-popper
               :title="$t('help.REDUCE-LEVELS-TT')"
               :details="$t('help.REDUCE-LEVELS-DET')">
@@ -66,7 +66,7 @@
             {{ levels !== 999 ? levels : '&#x221e;' }}
           </div>
 
-          <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
+          <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
             <app-help-popper
               :title="$t('help.INCREASE-LEVELS-TT')"
               :details="$t('help.INCREASE-LEVELS-DET')">
@@ -81,7 +81,7 @@
           </div> -->
         </div>
 
-        <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
+        <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="$t('help.SEE-ALL-LEVELS-TT')"
             :details="$t('help.SEE-ALL-LEVELS-DET')">
@@ -97,7 +97,7 @@
 
     <div v-if="isCardsContent && this.$store.state.user.authenticated" class="control-group">
       <div class="">
-        <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
+        <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="(showPrivate ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.PRIVATE-CARDS-TT')"
             :details="$t('help.PRIVATE-CARDS-DET')">
@@ -108,7 +108,7 @@
           </div>
         </popper>
 
-        <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
+        <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="(showShared ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHARED-CARDS-TT')"
             :details="$t('help.SHARED-CARDS-DET')">
@@ -119,7 +119,7 @@
           </div>
         </popper>
 
-        <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
+        <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="(showCommon ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.COMMON-CARDS-TT')"
             :details="$t('help.COMMON-CARDS-DET')">
@@ -135,7 +135,7 @@
 
     <div v-if="isCardsContent" class="control-group">
       <div class="">
-        <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
+        <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="$t('help.SHOW-SECTION-ORDER-TT')"
             :details="$t('help.SHOW-SECTION-ORDER-DET')">
@@ -146,7 +146,7 @@
           </div>
         </popper>
 
-        <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
+        <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="$t('help.SEARCH-CARDS-TT')"
             :details="$t('help.SEARCH-CARDS-DET')">
@@ -160,7 +160,7 @@
       </div>
     </div>
 
-    <div v-if="!isCardsContent" class="control-group" delay-on-mouse-in="1200">
+    <div v-if="!isCardsContent" class="control-group" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
       <popper trigger="hover":options="popperOptions">
         <app-help-popper
           :title="(showMessages ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHOW-MESSAGES-TT')"
@@ -172,7 +172,7 @@
         </div>
       </popper>
 
-      <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
+      <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
         <app-help-popper
         :title="(showEvents ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHOW-EVENTS-TT')"
         :details="$t('help.SHOW-EVENTS-DET')">
@@ -212,7 +212,7 @@
     <div v-if="isCardsContent && isSectionsOrder" class="control-group">
       <div class="">
 
-        <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
+        <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="$t('help.DOWNLOAD-CONTENT-TT')"
             :details="$t('help.DOWNLOAD-CONTENT-DET')">
@@ -223,7 +223,7 @@
           </div>
         </popper>
 
-        <popper trigger="hover":options="popperOptions" delay-on-mouse-in="1200">
+        <popper trigger="hover":options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="(isDraggable ? $t('general.DISABLE') : $t('general.ENABLE')) + ' ' + $t('help.ENABLE-DRAG-AND-DROP-TT')"
             :details="$t('help.ENABLE-DRAG-AND-DROP-CARDS-DET')">
@@ -237,34 +237,6 @@
       </div>
     </div>
 
-    <div v-if="false" class="control-group text-details">
-      <span v-if="isCardsContent">
-        <span v-if="!isSectionsOrder">
-          you are
-          <span v-if="cardQuery !== ''" class="">
-            searching by
-            <span class="cursor-pointer" @click="$emit('resetQuery')">
-              <i><b>"{{ cardQuery }}"</b></i> <i class="fa fa-times-circle" aria-hidden="true"></i>
-            </span>
-          </span>
-          <span v-else class="">
-            searching all cards
-          </span>
-          under the
-          <br>"{{ sectionTitle }}" section.
-        </span>
-        <span v-else>
-          you are seeing all cards up to {{ levels }} levels under the <br>"{{ sectionTitle }}" section and respecting their in-section order.
-        </span>
-      </span>
-      <span v-else>
-        you are seeing
-        <span v-if="isOnlyMessages">all messages</span>
-        <span v-else>all events</span>
-        up to {{ levels }} levels under the <br>"{{ sectionTitle }}" section.
-      </span>
-
-    </div>
   </div>
 </template>
 

@@ -16,7 +16,7 @@
           trigger="hover" :options="popperOptions"
           :toggleShow="toggleShow"
           :disabled="showName || !enableHover" class="w3-left"
-          delay-on-mouse-in="750" delay-on-mouse-out="100">
+          :delay-on-mouse-in="750" :delay-on-mouse-out="100">
 
           <div class="w3-container w3-padding hover-name-container dark-gray w3-round">
 

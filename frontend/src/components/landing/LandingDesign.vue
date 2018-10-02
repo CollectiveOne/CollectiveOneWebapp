@@ -4,53 +4,39 @@
       <div class="top-div-top-div">
           <img class="logo" src="../../assets/logo-white.png">
           <div class="section-tabs">
-            <div @click="goToPrinciples()" class="section-tab">PRINCIPLES</div>
-            <div @click="goToVision()" class="section-tab">VISION</div>
-            <div @click="goToRoadmap()" class="section-tab">ROADMAP</div>
-            <div @click="goToParticipate()" class="section-tab">PARTICIPATE</div>
+            <div @click="goToPrinciples()" class="section-tab">{{ $t('landing.PRINCIPLES') }}</div>
+            <div @click="goToFeatures()" class="section-tab">{{ $t('landing.FEATURES') }}</div>
+            <div @click="goToDemos()" class="section-tab">{{ $t('landing.DEMOS') }}</div>
+            <div @click="goToParticipate()" class="section-tab">{{ $t('landing.PARTICIPATE') }}</div>
           </div>
       </div>
       <div class="top-div-middle-div">
-        <h1>WELCOME TO<br>COLLECTIVEONE</h1>
+        <h1>{{ $t('landing.WELCOME') }} <br>COLLECTIVEONE</h1>
         <div class="text-div-text">
-          <h5>
-            CollectiveOne is a method (and a platform) to develop open,
-            decentralized and collaborative initiatives: initiatives to which anyone can,
-            potentially, contribute, and which are collectively owned and self-governed
-            by their contributors.
-          </h5>
+          <h5 v-html="$t('landing.BRIEF')"></h5>
         </div>
-        <button id="T_loginButton" class="w3-button dark-gray w3-margin-top" @click="login()">LOG IN / SIGNUP</button>
-        <button id="T_exploreButton" class="w3-button dark-gray w3-margin-top" @click="explore()">EXPLORE THE APP</button>
+        <button class="w3-button dark-gray w3-margin-top" @click="login()">{{ $t('general.LOGIN_SIGNUP') }}</button>
+        <button class="w3-button dark-gray w3-margin-top" @click="explore()">{{ $t('landing.EXPLORE') }}</button>
       </div>
     </div>
 
     <div id="principles" class="w3-row principles-div w3-padding-large gray-2-color">
-      <h1>PRINCIPLES</h1>
+      <h1>{{ $t('landing.PRINCIPLES') }}</h1>
       <div class="w3-row-padding principles-row">
         <div class="w3-col l4 principle">
           <img src="../../assets/icon-open.png" alt="">
-          <h5><b>OPEN COLLABORATION</b></h5>
-          <p>
-            Like open-source projects, entry barriers are kept low to allow anyone to
-            contribute to an initiative in similar conditions as those of previous contributors.
-          </p>
+          <h5><b>{{ $t('landing.OPEN_COLLAB') }}</b></h5>
+          <p>{{ $t('landing.OPEN_COLLAB_CONTENT') }}</p>
+        </div>
+        <div class="w3-col l4 principle">
+          <img src="../../assets/icon-governance.png" alt="">
+          <h5><b>{{ $t('landing.DIST_GOV') }}</b></h5>
+          <p>{{ $t('landing.DIST_GOV_CONTENT') }}</p>
         </div>
         <div class="w3-col l4 principle">
           <img src="../../assets/icon-record.png" alt="">
-          <h5><b>CONTRIBUTIONS RECORD AND VALUE</b></h5>
-          <p>
-            Contributions are recognized and valued relative to each other using project-specific
-            tokens.
-          </p>
-        </div>
-        <div class="w3-col l4 principle">
-          <img src="../../assets/icon-liquid.png" alt="">
-          <h5><b>LIQUID OWNERSHIP</b></h5>
-          <p>
-            The ownership of each project is linked to contributions, and, therefore, to tokens.
-            The more you contribute, the more you should own.
-          </p>
+          <h5><b>{{ $t('landing.CONTRIB_REC') }}</b></h5>
+          <p>{{ $t('landing.CONTRIB_REC_CONTENT') }}</p>
         </div>
       </div>
       <div class="w3-row-padding principles-row">
@@ -58,20 +44,14 @@
         <div class="w3-col m8">
           <div class="w3-row-padding">
             <div class="w3-col l6 principle">
-              <img src="../../assets/icon-governance.png" alt="">
-              <h5><b>DISTRIBUTED GOVERNANCE</b></h5>
-              <p>
-                Configurable governance at each level of an initiative enables decisions to be taken openly
-                and collectively.
-              </p>
+              <img src="../../assets/icon-transparency.png" alt="">
+              <h5><b>{{ $t('landing.TRANSP') }}</b></h5>
+              <p>{{ $t('landing.TRANSP_CONTENTS') }}</p>
             </div>
             <div class="w3-col l6 principle">
-              <img src="../../assets/icon-transparency.png" alt="">
-              <h5><b>TRANSPARENCY</b></h5>
-              <p>
-                The information of an initiative can be kept public as a mean to attract and enable people
-                to contribute.
-              </p>
+              <img src="../../assets/icon-liquid.png" alt="">
+              <h5><b>{{ $t('landing.LIQUID_OWNERSHIP') }}</b></h5>
+              <p>{{ $t('landing.LIQUID_OWNERSHIP_CONTENT') }}</p>
             </div>
           </div>
         </div>
@@ -79,74 +59,52 @@
       </div>
     </div>
 
-    <div id="roadmap" class="w3-row vision-div w3-padding-large roadmap-div gray-2-color light-grey">
-      <h1>ROADMAP</h1>
+    <div id="features" class="w3-row vision-div w3-padding-large roadmap-div gray-2-color light-grey">
+      <h1>{{ $t('landing.FEATURES') }}</h1>
       <div class="w3-row-padding">
         <div class="w3-col l3">
           <div class="title-container flex-vert">
-            <h5><b>VALUE ACCOUNTING</b></h5>
+            <h5><b>{{ $t('landing.COLL_VISION') }}</b></h5>
           </div>
           <div class="text-container">
-            <p>
-              Basic infrastructure for managing tokens and transferring them to
-              subinitiatives and users.
-            </p>
-          </div>
-          <div class="w3-tag w3-green w3-round">
-            <b>beta</b>
+            <p>{{ $t('landing.COLL_VISION_CONTENT') }}</p>
           </div>
         </div>
         <div class="w3-col l3">
           <div class="title-container flex-vert">
-            <h5><b>COLLECTIVE VISION</b></h5>
+            <h5><b>{{ $t('landing.VALUE_ACC') }}</b></h5>
           </div>
           <div class="text-container">
-            <p>
-              A dedicated module that enables initiatives to collectively influence and
-              agree on the initiative's vision and plans.
-            </p>
-          </div>
-          <div class="w3-tag w3-green w3-round">
-            <b>beta</b>
+            <p>{{ $t('landing.VALUE_ACC_CONTENT') }}</p>
           </div>
         </div>
         <div class="w3-col l3">
           <div class="title-container flex-vert">
-            <h5><b>TASK MANAGEMENT</b></h5>
+            <h5><b>{{ $t('landing.DISTR_GOB') }}</b></h5>
           </div>
           <div class="text-container">
-            <p>
-              Kanban board to organize the tasks of an initiative and value these
-              using the initiative's tokens.
-            </p>
-          </div>
-          <div class="w3-tag gray-1 w3-round">
-            <b>soon</b>
+            <p>{{ $t('landing.DISTR_GOB_CONTENT') }}</p>
           </div>
         </div>
         <div class="w3-col l3">
           <div class="title-container flex-vert">
-            <h5><b>DISTRIBUTED GOVERNANCE</b></h5>
+            <h5><b>{{ $t('landing.TASK_MAN') }}</b></h5>
           </div>
           <div class="text-container">
-            <p>A dedicated module that enables initiatives to take decisions
-              collectively and efficiently.
-            </p>
-          </div>
-          <div class="w3-tag gray-1 w3-round">
-            <b>soon</b>
+            <p>{{ $t('landing.TASK_MAN_CONTENT') }}</p>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="w3-row tutorial-videos-header-container">
-      <h1 class="gray-1-color">CURRENT FEATURES</h1>
+    <div id="demos" class="w3-row tutorial-videos-header-container">
+      <h1 class="gray-1-color">{{ $t('landing.DEMOS')}}</h1>
     </div>
 
     <div class="w3-cell-row tutorial-video-row">
       <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container gray-2-color">
-        <h2>Create new initiatives and preallocate the value in sub-areas.</h2>
+        <h2>{{ $t('landing.FLEXIBLE_CHANNELS') }}</h2>
+        <p>{{ $t('landing.FLEXIBLE_CHANNELS_CONTENTS') }}</p>
       </div>
       <div class="w3-cell w3-mobile tutorial-video-container">
         <div class="">
@@ -160,7 +118,8 @@
 
     <div class="w3-row tutorial-video-row w3-border-top light-grey">
       <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container tutorial-top-title-container gray-2-color">
-        <h2>Agree on the vision and the plan with other contributors.</h2>
+        <h2>{{ $t('landing.PERSONALIZED_CHANNELS') }}</h2>
+        <p>{{ $t('landing.PERSONALIZED_CHANNELS_CONTENTS') }}</p>
       </div>
       <div class="w3-cell w3-mobile tutorial-video-container">
         <div class="w3-center">
@@ -171,13 +130,15 @@
         </div>
       </div>
       <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container tutorial-bottom-title-container gray-2-color">
-        <h2>Agree on the vision and the plan with other contributors.</h2>
+        <h2>{{ $t('landing.PERSONALIZED_CHANNELS') }}</h2>
+        <p>{{ $t('landing.PERSONALIZED_CHANNELS_CONTENTS') }}</p>
       </div>
     </div>
 
     <div class="w3-row tutorial-video-row tutorial-video-last-row w3-border-top w3-border-bottom">
       <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container gray-2-color">
-        <h2>Recognize contributions directly or through peer-review.</h2>
+        <h2>{{ $t('landing.CHANNEL_CONTENTS') }}</h2>
+        <p>{{ $t('landing.CHANNEL_CONTENTS_CONTENTS') }}</p>
       </div>
       <div class="w3-cell w3-mobile tutorial-video-container">
         <div class="w3-center ">
@@ -191,34 +152,16 @@
 
     <div id="participate" class="w3-row participate-div w3-padding-large">
       <div class="">
-        <h1 class="gray-2-color">PARTICIPATE</h1>
+        <h1 class="gray-2-color">{{ $t('landing.PARTICIPATE') }}</h1>
         <div class="w3-row-padding participate-row">
-          <h5>CollectiveOne is an open project itself and is being developed using
-            <b><a href="http://www.collectiveone.org/#/app/inits/ac119496-5e3e-1db5-815e-3f192a890001/overview">CollectiveOne itself</a></b>.
-            Contributions are welcome!
-            <br>
-            <br>Get your invitation to the project slack
-            <b><a href="http://old.collectiveone.org/v/slack" target="_blank">here</a></b> to get involved.</h5>
-        </div>
-      </div>
-    </div>
-
-    <div id="vision" class="w3-row vision-div w3-padding-large dark-gray vision-div">
-      <div class="centered-block gray-1-color">
-        <h1>OUR VISION</h1>
-        <div class="w3-row video-row">
-          <div>
-            <div class="video-container">
-              <iframe class="video-iframe" src="https://www.youtube.com/embed/qka1zP_GQaI" frameborder="0" allowfullscreen="true"></iframe>
-            </div>
-          </div>
+          <h5 v-html="$t('landing.PARTICIPATE_TEXT')"></h5>
         </div>
       </div>
     </div>
 
     <div class="w3-row bottom-div">
       <div class="w3-row icons-row dark-gray w3-center">
-        <p><b>FOLLOW US!</b></p>
+        <p><b>{{ $t('landing.FOLLOW_US') }}</b></p>
         <div class="icons-container">
           <div class="w3-col s1">
           </div>
@@ -256,26 +199,22 @@ export default {
       this.$router.push({ name: 'InitiativesHome' })
     },
     goToPrinciples () {
-      window.scroll(0, this.findPos(document.getElementById('principles')))
+      document.getElementById('principles').scrollIntoView({behavior: 'smooth', block: 'start'})
     },
-    goToVision () {
-      window.scroll(0, this.findPos(document.getElementById('vision')))
+    goToFeatures () {
+      document.getElementById('features').scrollIntoView({behavior: 'smooth', block: 'start'})
     },
-    goToRoadmap () {
-      window.scroll(0, this.findPos(document.getElementById('roadmap')))
+    goToDemos () {
+      document.getElementById('demos').scrollIntoView({behavior: 'smooth', block: 'start'})
     },
     goToParticipate () {
-      window.scroll(0, this.findPos(document.getElementById('participate')))
-    },
-    findPos (obj) {
-      var curtop = 0
-      if (obj.offsetParent) {
-        do {
-          curtop += obj.offsetTop
-          obj = obj.offsetParent
-        } while (obj.offsetParent)
-        return [curtop]
-      }
+      document.getElementById('participate').scrollIntoView({behavior: 'smooth', block: 'start'})
+    }
+  },
+
+  mounted () {
+    if (this.$route.query.demos) {
+      this.goToDemos()
     }
   }
 }
@@ -308,6 +247,7 @@ export default {
 .top-div .top-div-middle-div {
   height: 100%;
   max-width: 800px;
+  padding-top: 35px;
   margin: 0 auto;
   display: flex;
   justify-content: center;

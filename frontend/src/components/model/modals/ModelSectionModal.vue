@@ -11,14 +11,16 @@
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h3>{{ isNew ? 'New Section' : 'Model Section' }}</h3>
+          <h3>{{ isNew ? $t('model.NEW_SECTION') : $t('model.MODEL_SECTION') }}</h3>
         </div>
 
         <div v-if="!loading" class="w3-container div-modal-content">
 
           <div v-if="isNew" class="w3-row">
-            <label v-if="inInitiative" class=""><b>As top level section under the initiative:</b></label>
-            <label v-else class=""><b>In Section:</b></label>
+            <label v-if="inInitiative" class="">
+              <b>{{ $t('model.AS_TOP_LEVEL_IN') }}:</b>
+            </label>
+            <label v-else class=""><b>{{ $t('model.IN_SECTION') }}:</b></label>
             <br>
             <h4>{{ this.inSectionTitleOk }}</h4>
           </div>
@@ -27,12 +29,16 @@
             <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
               :class="{'border-blue-app': !addExisting}"
               @click="addExisting = false">
-              <h5 class="noselect" :class="{'bold-text': !addExisting}">Create New</h5>
+              <h5 class="noselect" :class="{'bold-text': !addExisting}">
+                {{ $t('model.CREATE_NEW') }}
+              </h5>
             </div>
             <div class="w3-col s6 w3-bottombar w3-hover-light-grey cursor-pointer"
               :class="{'border-blue-app': addExisting}"
               @click="addExisting = true">
-              <h5 class="noselect" :class="{'bold-text': addExisting}">Add Existing</h5>
+              <h5 class="noselect" :class="{'bold-text': addExisting}">
+                {{ $t('model.ADD_EXISTING') }}
+              </h5>
             </div>
           </div>
 
@@ -57,13 +63,13 @@
 
                 <div class="w3-row w3-container w3-margin-top">
                   <label class="">
-                    <b>New scope (in "{{ inSectionTitleOk }}" section):</b>
+                    <b>{{ $t('model.NEW_SCOPE_IN', { title: inSectionTitleOk }) }}:</b>
                   </label>
                   <select v-model="existingSectionNewScope"
                     class="w3-input w3-topbar" :class="selectorExistingBorderClass" name="">
-                    <option value="PRIVATE">Private (only I can see it)</option>
-                    <option value="SHARED">Shared (other members can see it, but its mine)</option>
-                    <option value="COMMON">Common (controlled by all editors)</option>
+                    <option value="PRIVATE">{{ $t('model.PRIVATE_MSG') }}</option>
+                    <option value="SHARED">{{ $t('model.SHARED_MSG') }}</option>
+                    <option value="COMMON">{{ $t('model.COMMON_MSG') }}</option>
                   </select>
                 </div>
 
@@ -72,13 +78,13 @@
 
                 <div v-if="editing && this.inSection != null" class="w3-row w3-margin-top">
                   <label class="">
-                    <b>Scope (in "{{ inSectionTitleOk }}" section):</b>
+                    <b>{{ $t('model.SCOPE_IN', { title: inSectionTitleOk }) }}:</b>
                   </label>
                   <select v-model="editedSection.newScope"
                     class="w3-input w3-topbar" :class="selectorBorderClass" name="">
-                    <option value="PRIVATE">Private (only I can see it)</option>
-                    <option value="SHARED">Shared (other members can see it, but its mine)</option>
-                    <option value="COMMON">Common (controlled by all editors)</option>
+                    <option value="PRIVATE">{{ $t('model.PRIVATE_MSG') }}</option>
+                    <option value="SHARED">{{ $t('model.SHARED_MSG') }}</option>
+                    <option value="COMMON">{{ $t('model.COMMON_MSG') }}</option>
                   </select>
                 </div>
 
@@ -87,15 +93,15 @@
                     <h3><b>{{ section.title }}</b></h3>
                   </div>
                   <div v-else class="w3-margin-top">
-                    <label class=""><b>Title: <span v-if="editing" class="w3-small error-text">(required)</span></b></label>
+                    <label class=""><b>{{ $t('model.TITLE') }}: <span v-if="editing" class="w3-small error-text">({{ $t('general.REQUIRED') }})</span></b></label>
                     <input ref="titleInput" type="text" class="w3-input w3-hover-light-grey" v-model="editedSection.title">
                     <app-error-panel
                       :show="titleEmptyShow"
-                      message="please add a title">
+                      :message="$t('general.FIELD_CANNOT_BE_EMPTY')">
                     </app-error-panel>
                     <app-error-panel
                       :show="titleTooLongShow"
-                      message="name too long">
+                      :message="$t('general.FIELD_TOO_LONG')">
                     </app-error-panel>
                   </div>
                 </div>
@@ -105,11 +111,11 @@
                     <vue-markdown class="marked-text" :source="section.description" :anchorAttributes="{target: '_blank'}"></vue-markdown>
                   </div>
                   <div v-else class="">
-                    <label class=""><b>Description:</b></label>
+                    <label class=""><b>{{ $t('general.DESCRIPTION') }}:</b></label>
                     <app-markdown-editor v-model="editedSection.description" :keepBackup="false"></app-markdown-editor>
                     <app-error-panel
                       :show="descriptionErrorShow"
-                      message="please include a description of this section">
+                      :message="$t('general.FIELD_CANNOT_BE_EMPTY')">
                     </app-error-panel>
                   </div>
                 </div>
@@ -120,10 +126,14 @@
           <div v-if="editing || addExisting" class="modal-bottom-btns-row w3-row-padding">
             <hr>
             <div class="w3-col m6">
-              <button type="button" class="w3-button app-button-light" @click="closeThis()">Cancel <span><small>(Esc)</small></span></button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">
+                {{ $t('general.CANCEL') }}<span><small>(Esc)</small></span>
+              </button>
             </div>
             <div class="w3-col m6 w3-center">
-              <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">Accept <span><small>(Ctr + Enter)</small></span></button>
+              <button v-show="!sendingData" type="button" class="w3-button app-button" @click="accept()">
+                {{ $t('general.ACCEPT') }}<span><small>(Ctr + Enter)</small></span>
+              </button>
               <div v-show="sendingData" class="sending-accept light-grey">
                 <img class="" src="../../../assets/loading.gif" alt="">
               </div>
@@ -136,15 +146,15 @@
         </div>
 
         <div v-if="closeIntent" class="w3-display-middle w3-card w3-white w3-padding w3-round-large w3-center">
-          You are currently editing this section. Are you sure you want to close it? Any changes would get lost.
+          {{ $t('model.CLOSE_WARNING') }}
           <div class="w3-row w3-margin-top">
             <button class="w3-button app-button-light" name="button"
               @click="closeIntent = false">
-              Cancel
+              {{ $t('general.CANCEL') }}
             </button>
             <button class="w3-button app-button" name="button"
               @click="closeThis()">
-              Confirm
+              {{ $t('general.Confirm') }}
             </button>
           </div>
         </div>

@@ -8,48 +8,47 @@
         </div>
 
         <div class="w3-container w3-border-bottom">
-          <h2>New Initiative</h2>
+          <h2>{{ $t('initiatives.NEW_INIT_MODAL') }}</h2>
         </div>
 
         <div class="w3-container form-container">
 
           <br>
-          <label class=""><b>Name <span class="w3-small error-text">(required)</span></b></label>
-          <input id="T_nameInput" v-model="name"
+          <label class="">
+            <b>{{ $t('general.NAME') }} <span class="w3-small error-text">({{ $t('general.REQUIRED') }})</span></b>
+          </label>
+          <input v-model="name"
             class="w3-input w3-hover-light-grey" type="text"
             :class="{ 'error-input' : nameErrorShow }">
           <app-error-panel
             :show="nameEmptyShow"
-            message="please select a name for this subinitiative">
+            :message="$t('general.FIELD_CANNOT_BE_EMPTY')">
           </app-error-panel>
           <app-error-panel
             :show="nameTooLongShow"
-            message="name too long">
+            :message="$t('general.FIELD_TOO_LONG')">
           </app-error-panel>
 
           <br>
-          <label class=""><b>Purpose <span class="w3-small error-text">(required)</span></b></label>
-          <textarea  id="T_purposeInput" v-model="driver"
-            class="w3-input w3-border w3-round w3-hover-light-grey"
-            :class="{ 'error-input' : driverErrorShow }">
+          <label class="">
+            <b>{{ $t('general.DESCRIPTION') }}</b>
+          </label>
+          <textarea v-model="driver"
+            class="w3-input w3-border w3-round w3-hover-light-grey">
           </textarea>
-          <app-error-panel
-            :show="driverErrorShow"
-            message="please include the purpose of this initiative">
-          </app-error-panel>
           <hr>
 
           <div class="w3-container assets-selector-div">
             <div class="w3-row-padding">
               <div class="w3-col m4">
-                <h5><b>Create a new token?</b></h5>
+                <h5><b>{{ $t('initiatives.CREATE_NEW_TOKEN_Q') }}</b></h5>
               </div>
               <div class="w3-col m4">
                 <button class="w3-button transfer-button"
                   :class="{'app-button': createTokenFlag, 'app-button-light': !createTokenFlag, }"
                   type="button" name="button"
                   @click="createTokenFlag = true">
-                  yes
+                  {{ $t('general.YES') }}
                 </button>
               </div>
               <div class="w3-col m4">
@@ -57,7 +56,7 @@
                   :class="{'app-button': !createTokenFlag, 'app-button-light': createTokenFlag, }"
                   type="button" name="button"
                   @click="createTokenFlag = false">
-                  no
+                  {{ $t('general.NO') }}
                 </button>
               </div>
             </div>
@@ -66,21 +65,21 @@
                 <div v-if="createTokenFlag" class="">
                   <div class="w3-row-padding">
                      <div class="w3-col m4">
-                       <label class=""><b>Number of Tokens</b></label>
-                       <input id="T_numberTokensInput" v-model.number="ownTokens.ownedByThisHolder" class="w3-input w3-border w3-hover-light-grey" type="number">
+                       <label class=""><b>{{ $t('tokens.NUMBER_OF_TOKENS') }}</b></label>
+                       <input v-model.number="ownTokens.ownedByThisHolder" class="w3-input w3-border w3-hover-light-grey" type="number">
                      </div>
                      <div class="w3-col m4"  :style="{'margin-bottom': '15px'}">
-                       <label class=""><b>Token Name</b></label>
-                       <input id="T_tokenNameInput" v-model="ownTokens.assetName" class="w3-input w3-border w3-hover-light-grey" type="text">
+                       <label class=""><b>{{ $t('tokens.TOKEN_NAME') }}</b></label>
+                       <input v-model="ownTokens.assetName" class="w3-input w3-border w3-hover-light-grey" type="text">
                      </div>
                    </div>
                    <app-error-panel
                      :show="tokenNameEmptyShow"
-                     message="token name cannot be empty define the name of the token.">
+                     :message="$t('general.FILED_CANNOT_BE_EMPTY')">
                    </app-error-panel>
                    <app-error-panel
                      :show="tokenNameTooLong"
-                     message="token name too long.">
+                     :message="$t('general.FIELD_TOO_LONG')">
                    </app-error-panel>
                 </div>
               </transition>
@@ -89,28 +88,30 @@
 
           <hr>
 
-          <label class="init-contr-label"><b>Initial Members</b></label>
+          <label class="init-contr-label">
+            <b>{{ $t('initiatives.INITIAL_MEMBERS') }}:</b>
+          </label>
           <app-members-table-container
             :members="members"
             :canEdit="true">
           </app-members-table-container>
           <app-error-panel
             :show="membersEmptyShow"
-            message="please select at least one member">
+            :message="$t('general.FILED_CANNOT_BE_EMPTY')">
           </app-error-panel>
           <app-error-panel
             :show="noAdmingShow"
-            message="there must be at least one admin">
+            :message="$t('initiatives.ONE_ADMIN_ATLEAST')">
           </app-error-panel>
 
           <hr>
 
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
-              <button id="T_cancelButton" type="button" class="w3-button app-button-light" @click="closeThis()">Cancel</button>
+              <button type="button" class="w3-button app-button-light" @click="closeThis()">{{ $t('general.CANCEL') }}</button>
             </div>
             <div class="w3-col m6">
-              <button id="T_acceptButton"  type="button" class="w3-button app-button" @click="accept()">Accept</button>
+              <button type="button" class="w3-button app-button" @click="accept()">{{ $t('general.ACCEPT') }}</button>
             </div>
           </div>
         </div>
@@ -177,9 +178,6 @@ export default {
     nameTooLong () {
       return this.name.length > 42
     },
-    driverErrorShow () {
-      return this.driverEmptyError && (this.driver === '')
-    },
     tokenNameEmpty () {
       return this.ownTokens.assetName === ''
     },
@@ -240,11 +238,6 @@ export default {
         if (this.nameTooLong) {
           ok = false
         }
-      }
-
-      if (this.driver === '') {
-        ok = false
-        this.driverEmptyError = true
       }
 
       if (this.tokenNameEmpty) {

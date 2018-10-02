@@ -19,10 +19,12 @@
       </div>
       <div v-else class="w3-center">
         <div class="w3-row w3-margin-top">
-          <i>you are not yet part of any initiative</i>
+          <i>{{ $t('initiatives.MY_INITS_EMPTY') }}</i>
         </div>
         <div class="w3-row w3-margin-top">
-          <button @click="showNewInitiativeModal = true" class="w3-button app-button">create one</button>
+          <button @click="showNewInitiativeModal = true" class="w3-button app-button">
+            {{ $t('initiatives.CREATE_ONE') }}
+          </button>
         </div>
       </div>
     </div>

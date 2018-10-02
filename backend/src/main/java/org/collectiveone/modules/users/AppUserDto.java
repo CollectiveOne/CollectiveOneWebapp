@@ -16,6 +16,7 @@ public class AppUserDto {
 	private String pictureUrl;
 	private String shortBio;
 	private String longBio;
+	private String preferredLocale;
 	
 	private Boolean useUploadedPicture;
 	
@@ -85,6 +86,12 @@ public class AppUserDto {
 	}
 	public void setLongBio(String longBio) {
 		this.longBio = longBio;
+	}
+	public String getPreferredLocale() {
+		return preferredLocale;
+	}
+	public void setPreferredLocale(String preferredLocale) {
+		this.preferredLocale = preferredLocale;
 	}
 	public Boolean getUseUploadedPicture() {
 		return useUploadedPicture;

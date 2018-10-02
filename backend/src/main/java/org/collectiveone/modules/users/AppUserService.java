@@ -119,6 +119,16 @@ public class AppUserService {
 		return new GetResult<Boolean>("success", "existance cheked", profile != null);
 	}
 	
+	@Transactional
+	public PostResult setPreferredLocale(UUID userId, String locale) {
+		AppUserProfile profile = appUserProfileRepository.findByUser_C1Id(userId);
+		
+		profile.setPreferredLocale(locale);
+		
+		appUserProfileRepository.save(profile);
+		
+		return new PostResult("success", "locale set", profile.getId().toString());
+	}
 	
 
 	@Transactional
@@ -230,5 +240,6 @@ public class AppUserService {
 		user.setEmailNotificationsEnabled(false);
 		return new PostResult("success", "email notifications disabled", "");
 	}
+	
 
 }

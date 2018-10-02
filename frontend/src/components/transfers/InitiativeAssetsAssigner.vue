@@ -2,14 +2,14 @@
   <div class="this-container">
     <div class="w3-row sub-initiative-first-row">
       <div class="w3-left">
-        <h5 class="w3-left"><b>Transfer from {{ initiativeName }}</b></h5>
+        <h5 class="w3-left"><b>{{ $t('tokens.TRANSFER_FROM', { initName: initiativeName } ) }}</b></h5>
       </div>
     </div>
 
     <div v-if="assets.length > 0" class="w3-row assigner-div">
       <div v-if="showSelector" class="">
         <div class="w3-row">
-          <label for=""><b>Asset to transfer</b></label>
+          <label for=""><b>{{ $t('tokens.TOKEN_TO_TRANSFER') }}</b></label>
           <select v-model="assetIdSelected" class="w3-input" name="">
             <option v-for="asset in assets" :value="asset.assetId">{{ asset.assetName }}</option>
           </select>
@@ -33,7 +33,7 @@
       </div>
     </div>
     <div v-else class="w3-center w3-row">
-      <i>the parent initaitive does not have any asset</i>
+      <i>{{ $t('tokens.NO_ASSETS_IN_PARENT') }}</i>
     </div>
 
   </div>

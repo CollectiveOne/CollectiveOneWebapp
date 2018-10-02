@@ -69,7 +69,7 @@ export default {
 
   computed: {
     cardShortTitle () {
-      return this.card.title !== '' ? this.card.title : (this.card.text.length < 40 ? this.card.text : this.card.text.slice(0, 40) + '...')
+      return this.card.title !== '' ? this.card.title : (this.card.text ? (this.card.text.length < 40 ? this.card.text : this.card.text.slice(0, 40) + '...') : '')
     },
     card () {
       return this.cardWrapper.card

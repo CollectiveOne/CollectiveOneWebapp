@@ -5,9 +5,9 @@
 
     <input  type="text"
             :id="id"
-            name="T_selectTagInputInitiative" 
+            name="T_selectTagInputInitiative"
             class="w3-input w3-hover-light-grey autocomplete-inputs"
-            placeholder="select tag"
+            :placeholder="$t('initiatives.SELECT_TAG')"
             v-model="type"
             @input="input(type)"
             @dblclick="showAll"
@@ -19,7 +19,9 @@
 
     <div class="w3-row" :class="(className ? className + '-list ' : '') + 'autocomplete transition autocomplete-list'" v-show="showList">
       <ul class="w3-border">
-        <li id="T_createNewSelectTag" v-if="enableCreate" @click="$emit('create-new')" class="w3-button w3-center" style="width: 100%"><b>create new</b></li>
+        <li v-if="enableCreate" @click="$emit('create-new')" class="w3-button w3-center" style="width: 100%">
+          <b>{{ $t('general.CREATE_NEW') }}</b>
+        </li>
         <hr class="hrz-line">
         <li v-for="(data, i) in json"
             transition="showAll"
@@ -36,7 +38,7 @@
           </a>
         </li>
         <li v-if="json.length == 0" class="w3-padding w3-center">
-          <i>no matches found</i>
+          <i>{{ $t('general.NO_RESULTS_FOUND') }}</i>
         </li>
       </ul>
 

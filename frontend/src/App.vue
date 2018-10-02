@@ -14,6 +14,18 @@ export default {
   methods: {
   },
 
+  watch: {
+    '$store.state.user.profile' () {
+      if (this.$store.state.user.profile) {
+        if (this.$store.state.user.profile.preferredLocale) {
+          if (this.$store.state.user.profile.preferredLocale !== '') {
+            this.$i18n.locale = this.$store.state.user.profile.preferredLocale
+          }
+        }
+      }
+    }
+  },
+
   components: {
     AppNewInitiativeModal: NewInitiativeModal
   },

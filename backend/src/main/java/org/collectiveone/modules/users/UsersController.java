@@ -59,6 +59,23 @@ public class UsersController extends BaseController {
 		return new PostResult("error", "only the profile owner can edit a profile", "");
 	}
 	
+	@RequestMapping(path = "/user/{userId}/lang",  method = RequestMethod.PUT)
+    public PostResult setPreferredLocale(@PathVariable("userId") String userIdStr, @RequestParam String locale) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID userId = UUID.fromString(userIdStr);
+		
+		if (!getLoggedUserId().equals(userId)) {
+			return new PostResult("error", "only the profile owner can edit a profile", "");
+		}
+		
+		return appUserService.setPreferredLocale(userId, locale);
+		
+	}
+	
 	@RequestMapping(path = "/users/suggestions", method = RequestMethod.GET)
 	public GetResult<List<AppUserDto>> suggestions(@RequestParam("q") String query) {
 		return appUserService.searchBy(query);
