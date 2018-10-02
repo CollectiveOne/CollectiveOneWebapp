@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="thread-container w3-display-container">
-    <div id="history-container" class="w3-row history-container w3-border" >
+    <div ref="historyContainer" class="w3-row history-container w3-border" >
       <app-activity-getter
         :reverse="true"
         :addBorders="false"
@@ -13,6 +13,7 @@
         :contextElementId="contextElementId"
         :levels="levels"
         @updated="scrollToBottom()"
+        @added-older="addedOlder($event)"
         @last-activity="lastActivityReceived($event)"
         @edit-message="editMessage($event)"
         @reply-to-message="replyToMessage($event)">
@@ -223,8 +224,15 @@ export default {
     },
     scrollToBottom () {
       this.$nextTick(() => {
-        var container = this.$el.querySelector('#history-container')
+        var container = this.$refs.historyContainer
         container.scrollTop = container.scrollHeight
+      })
+    },
+    addedOlder (payload) {
+      this.$nextTick(() => {
+        var container = this.$refs.historyContainer
+        var newHeight = container.childNodes[0].offsetHeight
+        container.scrollTop = newHeight - payload.height
       })
     },
     showOnlyMessagesClicked () {

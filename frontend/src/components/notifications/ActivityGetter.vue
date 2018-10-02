@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="">
+  <div ref="container" class="activity-getter">
 
     <div v-if="!allShown && reverse" class="w3-row w3-center w3-margin-top">
       <button v-if="!loadingMore" @click="showMoreClick()"
@@ -191,6 +191,8 @@ export default {
 
           case 'OLDER':
             this.activities = this.activities.concat(response.data.data.content)
+            let currentHeight = this.$refs.container.offsetHeight
+            this.$emit('added-older', { height: currentHeight })
             break
 
           case 'UPDATE':

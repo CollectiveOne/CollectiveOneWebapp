@@ -8,7 +8,7 @@ const mutations = {
   },
 
   clearMarkdownBackup: (state, payload) => {
-      if (state.has(payload)) {
+      if (state.data.has(payload)) {
         state.data.delete(payload)
       }
     }
