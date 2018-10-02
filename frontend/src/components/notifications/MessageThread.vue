@@ -21,24 +21,24 @@
     <div class="w3-row w3-margin-top bottom-container">
       <div v-if="editing" class="">
         <div class="success-panel w3-padding w3-margin-bottom">
-          Editing message
-          <span @click="cancelEdit()" class="cursor-pointer">(cancel <i class="fa fa-times"></i>)</span>
+          {{ $t('notifications.EDITING_MESSAGE') }}
+          <span @click="cancelEdit()" class="cursor-pointer">({{ $t('notifications.CANCEL') }} <i class="fa fa-times"></i>)</span>
         </div>
       </div>
       <div v-if="replying" class="">
         <div class="success-panel w3-padding w3-margin-bottom">
-          Replying to message from <b>{{ replyingToActivity.message.author.nickname }}</b> directly in the <b>{{ replyToMessageContext }}</b>.
-          <span @click="cancelReply()" class="cursor-pointer">(cancel <i class="fa fa-times"></i>)</span>
+          <span v-html="$t('notifications.REPLYING_TO', { author: replyingToActivity.message.author.nickname, context: replyToMessageContext })"></span>.
+          <span @click="cancelReply()" class="cursor-pointer">({{ $t('notifications.CANCEL') }} <i class="fa fa-times"></i>)</span>
         </div>
       </div>
       <app-error-panel
         :show="showMembersOnly"
-        message="sorry, only members of the initiative can send messages here">
+        :message="$t('notifications.ONLY_MEMBERS_CAN_COMMENT')">
       </app-error-panel>
       <app-markdown-editor
         class="editor-container"
         v-model="newMessageText"
-        placeholder="say something"
+        :placeholder="$t('notifications.SAY_SOMETHING')"
         :showToolbar="false"
         :showSendAndMentions="true"
         :elementId="contextElementId"

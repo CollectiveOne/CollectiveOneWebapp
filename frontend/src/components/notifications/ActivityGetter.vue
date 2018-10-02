@@ -4,7 +4,7 @@
     <div v-if="!allShown && reverse" class="w3-row w3-center w3-margin-top">
       <button v-if="!loadingMore" @click="showMoreClick()"
         class="w3-button app-button-light" type="button" name="button">
-        show older...
+        {{ $t('notifications.SHOW_OLDER') }}...
       </button>
       <div v-else="loadingMore" class="w3-row w3-center loader-gif-container-small">
         <img class="loader-gif-small" src="../../assets/loading.gif" alt="">
@@ -24,7 +24,7 @@
       </app-activity-table>
     </div>
     <div  v-if="activities.length === 0 && !loading" class="w3-padding">
-      <i>nothing was found</i>
+      <i>{{ $t('notifications.NOTHING_FOUND') }}</i>
     </div>
     <div v-if="loading" class="w3-row w3-center loader-gif-container">
       <img class="loader-gif" src="../../assets/loading.gif" alt="">
@@ -33,7 +33,7 @@
     <div v-if="!allShown && !reverse" class="w3-row w3-center w3-margin-top">
       <button @click="showMoreClick()"
         class="w3-button app-button-light" type="button" name="button">
-        show older...
+        {{ $t('notifications.SHOW_OLDER') }}...
       </button>
     </div>
   </div>

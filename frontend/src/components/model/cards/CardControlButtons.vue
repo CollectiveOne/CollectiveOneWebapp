@@ -49,17 +49,15 @@
 
           <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
             <div class="w3-padding w3-round light-grey w3-margin-bottom">
-              <p>
-                <b>Warning:</b> Are you sure you want to remove this card from "{{ inSection.title }}"?
-              </p>
+              <p v-html="$t('model.REMOVE_CARD_WARNING', { title: inSection.title })"></p>
             </div>
             <button
               class="w3-button light-grey"
-              @click="removeIntent = false">cancel
+              @click="removeIntent = false">{{ $t('general.CANCEL') }}
             </button>
             <button
               class="w3-button button-blue"
-              @click="removeConfirmed()">confirm
+              @click="removeConfirmed()">{{ $t('general.CONFIRM') }}
             </button>
           </div>
 
@@ -123,28 +121,64 @@ export default {
       switch (this.cardWrapper.scope) {
         case 'PRIVATE':
         case 'SHARED':
-          if (this.isLoggedTheAuthor) menuItems.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
+          if (this.isLoggedTheAuthor) {
+            menuItems.push({
+              text: this.$t('general.EDIT'),
+              value: 'edit',
+              faIcon: 'fa-pencil' })
+          }
           break
 
         case 'COMMON':
-          if (this.isLoggedAnEditor) menuItems.push({ text: 'edit', value: 'edit', faIcon: 'fa-pencil' })
+          if (this.isLoggedAnEditor) {
+            menuItems.push({
+              text: this.$t('general.EDIT'),
+              value: 'edit',
+              faIcon: 'fa-pencil' })
+          }
           break
       }
 
-      if (this.isLoggedAnEditor) menuItems.push({ text: 'add card before', value: 'addCardBefore', faIcon: 'fa-plus' })
-      if (this.isLoggedAnEditor) menuItems.push({ text: 'add card after', value: 'addCardAfter', faIcon: 'fa-plus' })
+      if (this.isLoggedAnEditor) {
+        menuItems.push({
+          text: this.$t('model.ADD_CARD_BEFORE'),
+          value: 'addCardBefore',
+          faIcon: 'fa-plus' })
+      }
+
+      if (this.isLoggedAnEditor) {
+        menuItems.push({
+          text: this.$t('model.ADD_CARD_AFTER'),
+          value: 'addCardAfter',
+          faIcon: 'fa-plus' })
+      }
 
       if (this.isLoggedAnEditor && !this.isConsent) {
-        menuItems.push({ text: 'start consent', value: 'startConsent', faIcon: 'fa-users' })
+        menuItems.push({
+          text: this.$t('model.START_CONSENT'),
+          value: 'startConsent',
+          faIcon: 'fa-users' })
       } else {
         if (this.isConsentOpened) {
-          menuItems.push({ text: 'stop consent', value: 'stopConsent', faIcon: 'fa-users' })
+          menuItems.push({
+            text: this.$t('model.STOP_CONSENT'),
+            value: 'stopConsent',
+            faIcon: 'fa-users' })
         } else {
-          menuItems.push({ text: 'reopen consent', value: 'startConsent', faIcon: 'fa-users' })
+          menuItems.push({
+            text: this.$t('model.REOPEN_CONSENT'),
+            value: 'startConsent',
+            faIcon: 'fa-users' })
         }
       }
 
-      if (this.isLoggedAnEditor) menuItems.push({ text: 'remove', value: 'remove', faIcon: 'fa-times' })
+      if (this.isLoggedAnEditor) {
+        menuItems.push({
+          text: this.$t('general.REMOVE'),
+          value: 'remove',
+          faIcon: 'fa-times' })
+      }
+
       return menuItems
     },
     popperOptions () {

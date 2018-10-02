@@ -227,9 +227,8 @@
             <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>.
           </span>
           <span v-if="isConsentPositionStated" class="">
-            {{ $t('notifications.POSITION_SET') }}
+            {{ $t('notifications.POSITION_SET', { position: getConsentPositionText(activity.positionColor) }) }}
             <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-            {{ $t('notifications.TO_POSITION', { position: getConsentPositionText(activity.positionColor) }) }}.
           </span>
           <span v-if="isConsentPositionChanged" class="">
             {{ $t('notifications.POSITION_CHANGED') }}
@@ -572,13 +571,13 @@ export default {
     getConsentPositionText (color) {
       switch (color) {
         case 'GREEN':
-          return 'SUPPORT'
+          return this.$t('model.SUPPORT')
 
         case 'YELLOW':
-          return 'UNDECIDED'
+          return this.$t('model.UNDECIDED')
 
         case 'RED':
-          return 'OBJECT'
+          return this.$t('model.OBJECT')
       }
 
       return ''

@@ -4,20 +4,20 @@
     <popper trigger="click" :options="popperOptions" :toggleShow="toggleShowPopper" :disabled="disabled" class="w3-left">
       <div class="position-selector w3-card w3-white">
         <div class="w3-row">
-          My position on this card:
+          {{ $t('model.MY_POSITION_ON_CARD') }}:
         </div>
         <div class="w3-row w3-margin-top">
           <div class="w3-left position-tag position-tag-green tag-margin"
             @click="setOwnPosition('GREEN')">
-            SUPPORT
+            {{ $t('model.SUPPORT') }}
           </div>
           <div class="w3-left position-tag position-tag-yellow tag-margin"
             @click="setOwnPosition('YELLOW')">
-            UNDECIDED
+            {{ $t('model.UNDECIDED') }}
           </div>
           <div class="w3-left position-tag position-tag-red"
             @click="setOwnPosition('RED')">
-            OBJECT
+            {{ $t('model.OBJECT') }}
           </div>
         </div>
       </div>
@@ -47,10 +47,10 @@
     </div>
 
     <div v-if="disabled" class="cover-div cover-div-closed">
-      <b>closed</b>
+      <b>{{ $t('model.CLOSED') }}</b>
     </div>
     <div v-else class="cover-div cover-div-open">
-      <b>open</b>
+      <b>{{ $t('model.OPEN') }}</b>
     </div>
 
   </div>
