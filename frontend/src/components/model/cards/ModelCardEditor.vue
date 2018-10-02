@@ -377,6 +377,7 @@ export default {
               this.sendingData = false
               if (response.data.result === 'success') {
                 this.$emit('updateCards')
+                this.$emit('edit', null)
               }
             }).catch((error) => {
               console.log(error)

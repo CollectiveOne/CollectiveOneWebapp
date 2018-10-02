@@ -176,7 +176,8 @@ export default {
         type: 'new',
         cardWrapper: null
       },
-      addExistingInit: false
+      addExistingInit: false,
+      targetCards: []
     }
   },
 
@@ -225,14 +226,14 @@ export default {
         allCardWrappers.splice(index + 1, 0, this.targetCard)
         this.createNewCard = false
       }
-      //  new-card-editor for editing existing cards
+      // new-card-editor for editing existing cards
       if (this.editCard) {
-        let index = allCardWrappers.findIndex(x => x.id === this.targetCard.cardWrapper.id)
-        this.targetCard.type = 'edit'
-        allCardWrappers[index] = this.targetCard
-        this.editCard = false
+        for (var ix in this.targetCards) {
+          let index = allCardWrappers.findIndex(x => x.id === this.targetCards[ix].cardWrapper.id)
+          this.targetCards[ix].type = 'edit'
+          allCardWrappers[index] = this.targetCards[ix]
+        }
       }
-
       return allCardWrappers
     },
     sortedSubsections () {
@@ -257,8 +258,18 @@ export default {
 
   methods: {
     edit (value) {
-      this.targetCard.cardWrapper = value
-      this.targetCard.type = 'edit'
+      if (value.type === 'edit') {  //  For cancel/save
+        for (var ix in this.targetCards) {
+          if (JSON.stringify(value) === JSON.stringify(this.targetCards[ix])) {
+            this.targetCards.splice(ix, 1)
+            break
+          }
+        }
+      } else {
+        this.targetCard.cardWrapper = value
+        this.targetCard.type = 'edit'
+        this.targetCards.push(JSON.parse(JSON.stringify(this.targetCard))) // clone object before push
+      }
       this.editCard = true
     },
     createNew (value) {
@@ -321,14 +332,12 @@ export default {
           url: url,
           onMessage: (tick) => {
             var message = tick.body
-            console.log('sagar')
             if (message === 'UPDATE') {
               this.updateCards()
             }
           }
         })
         setInterval(() => {
-          console.log(this.subscription.id + 'sagar')
         }, 1000)
       }
     }
