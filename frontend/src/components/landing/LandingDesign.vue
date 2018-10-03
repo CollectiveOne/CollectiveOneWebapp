@@ -104,7 +104,7 @@
     <div class="w3-cell-row tutorial-video-row">
       <div class="w3-cell w3-cell-middle w3-mobile tutorial-title-container gray-2-color">
         <h2>{{ $t('landing.FLEXIBLE_CHANNELS') }}</h2>
-        <p>{{ $t('landing.FLEXIBLE_CHANNELS_CONTENTS') }}</p>
+        <p v-html="$t('landing.FLEXIBLE_CHANNELS_CONTENTS')"></p>
       </div>
       <div class="w3-cell w3-mobile tutorial-video-container">
         <div class="">
@@ -165,11 +165,8 @@
         <div class="icons-container">
           <div class="w3-col s1">
           </div>
-          <a class="w3-button w3-col s2 slack-link" href="https://medium.com/collectiveone" target='_blank'>
+          <a class="w3-button w3-col s3 slack-link" href="https://medium.com/collectiveone" target='_blank'>
             <i class="fa fa-medium" aria-hidden="true"></i>
-          </a>
-          <a class="w3-button w3-col s2 slack-link" href="http://old.collectiveone.org/v/slack" target='_blank'>
-            <i class="fa fa-slack" aria-hidden="true"></i>
           </a>
           <a class="w3-button w3-col s2 email-link" href="mailto:contact@collectiveone.org">
             <i class="fa fa-envelope-o" aria-hidden="true"></i>
@@ -177,7 +174,7 @@
           <a class="w3-button w3-col s2 twitter-link" href="https://twitter.com/collectiveonepr" target='_blank'>
             <i class="fa fa-twitter" aria-hidden="true"></i>
           </a>
-          <a class="w3-button w3-col s2 github-link" href="https://github.com/CollectiveOne" target='_blank'>
+          <a class="w3-button w3-col s3 github-link" href="https://github.com/CollectiveOne" target='_blank'>
             <i class="fa fa-github" aria-hidden="true"></i>
           </a>
         </div>

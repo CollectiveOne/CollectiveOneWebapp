@@ -32,6 +32,24 @@
         </div>
       </div>
 
+      <div v-if="isSelected && isCardsView" class="zoom-controls">
+        <div @click="levelDown()" class="w3-left cursor-pointer arrow-div">
+          <img src="./../../../assets/zoom-in-icon.svg" alt="">
+        </div>
+
+        <div @click="levelUp()" class="w3-left cursor-pointer arrow-div">
+          <img src="./../../../assets/zoom-out-icon.svg" alt="">
+        </div>
+
+        <div class="levels-div-container">
+          <transition name="slideDownUp">
+            <div v-if="showLevel" class="levels-div noselect">
+              {{ levels }}
+            </div>
+          </transition>
+        </div>
+      </div>
+
       <div v-if="section" class="notification-div">
         <app-notifications-list
           :element="section"
@@ -39,6 +57,7 @@
           :isSelected="isSelected">
         </app-notifications-list>
       </div>
+
       <div v-if="$store.state.user.authenticated && !draggingEnabled"
         class="control-div" :class="{'fa-button': !parentIsSelected, 'fa-button-dark': parentIsSelected || highlight}">
 
@@ -50,6 +69,7 @@
           @addCard="addCard">
         </app-section-control-buttons>
       </div>
+
       <div v-if="draggingEnabled" class="drag-message-div">
         <span><i class="fa fa-arrows" aria-hidden="true"></i></span>
       </div>
@@ -124,7 +144,8 @@ export default {
       resetIntervalId: 0,
       forceUpdateNotifications: false,
       subscription: null,
-      hoveringOnTitle: false
+      hoveringOnTitle: false,
+      showLevel: false
     }
   },
 
@@ -257,6 +278,20 @@ export default {
     },
     draggingEnabled () {
       return this.$store.state.support.triggerSectionDraggingState
+    },
+    popperOptions () {
+      return {
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: true,
+            boundariesElement: 'viewport'
+          }
+        }
+      }
+    },
+    isCardsView () {
+      return this.$route.name === 'ModelSectionCards'
     }
   },
 
@@ -299,6 +334,20 @@ export default {
       if (this.section) {
         this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
       }
+    },
+    levelDown () {
+      this.showLevel = true
+      setTimeout(() => {
+        this.showLevel = false
+      }, 1000)
+      this.$store.commit('levelDown')
+    },
+    levelUp () {
+      this.showLevel = true
+      setTimeout(() => {
+        this.showLevel = false
+      }, 1000)
+      this.$store.commit('levelUp')
     },
     updateInTree () {
       // if (this.section) {
@@ -552,6 +601,55 @@ export default {
   font-size: 16px;
   float: left;
   width: calc(100% - 30px - 30px);
+}
+
+.zoom-controls {
+  position: absolute;
+  right: 60px;
+  top: 6px;
+  width: 55px;
+  height: 25px;
+}
+
+.zoom-controls > div {
+
+}
+
+.zoom-controls .arrow-div {
+  width: 25px;
+  height: 25px;
+  float: left;
+  text-align: center;
+  padding-top: 1px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  transition: all 300ms ease;
+}
+
+.zoom-controls .arrow-div:hover {
+  background-color: rgba(21, 165, 204, 0.5);
+}
+
+.zoom-controls > div:first-child {
+  margin-right: 5px;
+}
+
+.zoom-controls .arrow-div img {
+  width: 14px;
+}
+
+.levels-div-container {
+  position: absolute;
+  left: 15px;
+  top: 2px;
+  overflow: hidden;
+}
+
+.levels-div {
+  text-align: center;
+  background-color: #b35454;
+  width: 25px;
+  border-radius: 6px;
 }
 
 .circle-div {
