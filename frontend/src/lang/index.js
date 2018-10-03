@@ -173,7 +173,8 @@ const translations = {
       'DELETE_INIT': 'Delete Initiative',
       'CONFIRM_DELETE_MSG': '<b>Warning:</b> This will delete this initiative and all its subinitiatives and, if there is a parent initiative, transfer all its assets back to it. Please confirm.',
       'DELETE_WARNING': '<b>Warning:</b> Are you sure you want to completely delete the initiative "{name}"? This will delete all its contents.',
-      'SUBINITIATIVES': 'SUBINITIATIVES'
+      'SUBINITIATIVES': 'SUBINITIATIVES',
+      'ACCESS_DENIED': 'Sorry, it seems you dont have access to this content.'
     },
     members: {
       'WANT_TO_CONTRIB_Q': 'Want to contribute?',
@@ -566,7 +567,7 @@ const translations = {
       'DISTR_GOB': 'GOBERNANZA DISTRIBUIDA',
       'DISTR_GOB_CONTENT': 'Procesos que faciltan la toma de decisiones de forma abierta y eficiente.',
       'FLEXIBLE_CHANNELS': 'Red de canales de comunicación',
-      'FLEXIBLE_CHANNELS_CONTENTS': 'Colaborar es posible gracias a la comunicación. En CollectiveOne, los canales de comunicación de un proyecto pueden ser interconectados de forma flexible para representar mejor la estructura real de una organización',
+      'FLEXIBLE_CHANNELS_CONTENTS': 'La capacidad de colaborar depende de la capacidad de comunicar. En CollectiveOne, los canales de comunicación de un proyecto pueden ser interconectados de forma flexible para representar mejor la estructura real de una organización.',
       'PERSONALIZED_CHANNELS': 'Perspectiva Propia',
       'PERSONALIZED_CHANNELS_CONTENTS': 'Cada persona es un mundo. En CollectiveOne, cada usuario puede personalizar los canales de comunicación y su contenido de la manera que quiera.',
       'CHANNEL_CONTENTS': 'Tarjetas',
@@ -602,7 +603,8 @@ const translations = {
       'DELETE_INIT': 'Borrar Iniciativa',
       'CONFIRM_DELETE_MSG': '<b>Atención:</b> Se borrará la iniciativa junto con todas sus subiniciativas y, en caso de haber una iniciativa madre, se le transferirán todos los tokens a ella. Por favor confirme.',
       'DELETE_WARNING': '<b>Atención:</b> Confirma que desea borrar la iniciativa "{name}"? Esto borrará todos sus contenidos.',
-      'SUBINITIATIVES': 'SUB-INICIATIVAS'
+      'SUBINITIATIVES': 'SUB-INICIATIVAS',
+      'ACCESS_DENIED': 'Lo sentimos, al parecer no tienes acceso a este contenido.'
     },
     members: {
       'WANT_TO_CONTRIB_Q': 'Quieres contribuir?',

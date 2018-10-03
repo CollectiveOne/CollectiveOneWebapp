@@ -11,12 +11,12 @@ export default {
       var path = this.$store.state.user.auth0state
       console.log(path)
       if (!path.startsWith('/app')) {
-        this.$router.push({ name: 'InitiativesHome' })
+        this.$router.replace({ name: 'InitiativesHome' })
       } else {
-        this.$router.push(path)
+        this.$router.replace(path)
       }
     } else {
-      this.$router.push({ name: 'Landing' })
+      this.$router.replace({ name: 'Landing' })
     }
   }
 }

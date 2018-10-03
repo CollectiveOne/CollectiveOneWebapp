@@ -7,6 +7,7 @@ const state = {
   expandNav: false,
   expandModelNav: true,
   windowIsSmall: false,
+  isTouchScreen: false,
   draggingElement: null,
   triggerSectionDraggingState: false,
   triggerCardDraggingState: false,
@@ -40,6 +41,9 @@ const mutations = {
   },
   toggleExpandModelNav: (state) => {
     state.expandModelNav = !state.expandModelNav
+  },
+  setIsTouchScreen: (state, payload) => {
+    state.isTouchScreen = payload
   },
   setWindowIsSmall: (state, payload) => {
     state.windowIsSmall = payload

@@ -3,7 +3,8 @@ import router from '@/router'
 
 const state = {
   initiative: null,
-  initiativeLoaded: false
+  initiativeLoaded: false,
+  accessDenied: false
 }
 
 const getters = {
@@ -67,6 +68,9 @@ const mutations = {
   },
   setInitiativeLoaded: (state, payload) => {
     state.initiativeLoaded = payload
+  },
+  setAccessDenied: (state, payload) => {
+    state.accessDenied = payload
   }
 }
 
@@ -89,10 +93,18 @@ const actions = {
         addLoggedUser: true
       }
     }).then((response) => {
-      let initiative = response.data.data
-      context.commit('setInitiative', initiative)
-      context.commit('setInitiativeLoaded', true)
-      context.dispatch('resetSectionsTree', { baseSectionId: initiative.topModelSection.id, currentSectionId: router.app.$route.params.sectionId ? router.app.$route.params.sectionId : '' })
+      if (response.data.result === 'success') {
+        let initiative = response.data.data
+        context.commit('setInitiative', initiative)
+        context.commit('setAccessDenied', false)
+        context.commit('setInitiativeLoaded', true)
+        context.dispatch('resetSectionsTree', { baseSectionId: initiative.topModelSection.id, currentSectionId: router.app.$route.params.sectionId ? router.app.$route.params.sectionId : '' })
+      } else {
+        if (response.data.message === 'access denied') {
+          context.commit('setAccessDenied', true)
+          context.commit('setInitiativeLoaded', true)
+        }
+      }
     }).catch((error) => {
       console.log(error)
     })

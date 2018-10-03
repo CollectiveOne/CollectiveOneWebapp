@@ -79,6 +79,10 @@ export default {
     },
     closeNav () {
       this.$store.commit('toggleExpandNav')
+    },
+    swipeLeft () {
+      console.log('swiped left detected')
+      this.$store.commit('setExpandNav', false)
     }
   }
 }

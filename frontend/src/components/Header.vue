@@ -9,14 +9,14 @@
     </transition>
 
     <div class="w3-row header-row drop-shadow-br light-grey">
-      <div class="w3-col m4 initiatives-breadcrumb-container">
+      <div class="w3-col s12 m4 initiatives-breadcrumb-container">
 
         <div v-if="withInitiativeNav" class="w3-left nav-menu-btn w3-xlarge fa-button"
           @click="$store.commit('toggleExpandNav')">
           <i class="fa fa-chevron-circle-right"></i>
         </div>
 
-        <div v-if="inInitiative" @scroll="scrolling()" class="initiatives-breadcrumb small-scroll noselect" ref="breadcrumb">
+        <div v-if="inInitiative && !accessDenied" @scroll="scrolling()" class="initiatives-breadcrumb small-scroll noselect" ref="breadcrumb">
 
           <div v-for="(parent, ix) in reversedParents" :key="parent.id" class="initiative-section">
             <router-link :to="{name: 'Initiative', params: {'initiativeId': parent.id }}"
@@ -64,114 +64,117 @@
 
       </div>
 
-      <div class="w3-col m4">
-        <div v-if="inInitiative" class="tab-btns-container w3-xlarge">
-          <popper trigger="hover":options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
+      <div class="w3-col s12 m8">
+        <div class="w3-col s6">
+          <div v-if="inInitiative && !accessDenied" class="tab-btns-container w3-xlarge">
+            <popper trigger="hover":options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
+              <app-help-popper
+                :title="$t('help.CONTENT-TAB-TT')"
+                :details="$t('help.CONTENT-TAB-DET')">
+              </app-help-popper>
+
+              <router-link slot="reference" :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
+                class="tab-btn-space">
+                <div tooltip="Content" class="fa-button noselect" :class="{'fa-button-selected': isModel}">
+                  <span class=""><i class="fa fa-home" aria-hidden="true"></i></span>
+                </div>
+              </router-link>
+            </popper>
+
+            <popper trigger="hover":options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
+              <app-help-popper
+                :title="$t('help.MEMBERS-TAB-TT')"
+                :details="$t('help.MEMBERS-TAB-DET')">
+              </app-help-popper>
+
+              <router-link slot="reference" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
+                class="tab-btn-space">
+                <div tooltip="Members" class="fa-button noselect" :class="{'fa-button-selected': isPeople}">
+                  <span class=""><i class="fa fa-users" aria-hidden="true"></i></span>
+                </div>
+              </router-link>
+            </popper>
+
+            <popper trigger="hover":options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
+              <app-help-popper
+                :title="$t('help.TRANSFERS-TAB-TT')"
+                :details="$t('help.TRANSFERS-TAB-DET')">
+              </app-help-popper>
+
+              <router-link slot="reference" :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
+                class="tab-btn-space">
+                <div tooltip="Transfers" class="fa-button noselect" :class="{'fa-button-selected': isAssignations}">
+                  <span class=""><i class="fa fa-exchange" aria-hidden="true"></i></span>
+                </div>
+              </router-link>
+            </popper>
+
+          </div>
+          <div v-else class="logo-container">
+            <router-link v-if="!windowIsSmall" slot="reference" :to="{name: 'InitiativesHome'}" class="cursor-pointer">
+              <img class="logo" src="../assets/logo-color.png" alt="">
+            </router-link>
+          </div>
+
+        </div>
+
+        <div class="w3-col s6">
+
+          <div v-if="$store.state.user.authenticated"
+            class="">
+
+            <popper trigger="click" :options="popperOptions" class="user-container">
+              <app-drop-down-menu
+                class="user-drop-menu"
+                @profile="goMyProfile()"
+                @home="goHome()"
+                @notifications="showEditNotificationsModal = true"
+                @logout="logoutUser()"
+                :items="userMenuItems">
+              </app-drop-down-menu>
+
+              <div slot="reference" class="w3-right">
+                <div v-if="$store.state.user.profile" class="logged-user-div fa-button w3-right">
+                  <div class="avatar-img-container w3-left">
+                    <img :src="$store.state.user.profile.pictureUrl" class="logged-avatar w3-circle noselect">
+                  </div>
+                  <div class="logged-nickname noselect w3-left w3-hide-medium w3-hide-small">
+                    {{ $store.state.user.profile.nickname }}
+                  </div>
+                </div>
+              </div>
+            </popper>
+          </div>
+          <div v-else class="login-button-container w3-right">
+            <button @click="login()"
+              class="w3-button app-button" name="button">
+              {{ $t('general.LOGIN_SIGNUP') }}
+            </button>
+          </div>
+
+          <popper trigger="hover" :options="popperOptions"  :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
             <app-help-popper
-              :title="$t('help.CONTENT-TAB-TT')"
-              :details="$t('help.CONTENT-TAB-DET')">
+              :title="$t('help.LANDING-BUTTON-TT')"
+              :details="$t('help.LANDING-BUTTON-DET')">
             </app-help-popper>
 
-            <router-link slot="reference" :to="{ name: 'InitiativeModel', params: { initiativeId: initiative.id } }"
-              class="tab-btn-space">
-              <div tooltip="Content" class="fa-button noselect" :class="{'fa-button-selected': isModel}">
-                <span class=""><i class="fa fa-home" aria-hidden="true"></i></span>
-              </div>
-            </router-link>
+            <router-link slot="reference" :to="{ name: 'Landing', query: { demos: true }}" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-question-circle"></i></router-link>
           </popper>
 
-          <popper trigger="hover":options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
+          <popper trigger="hover" :options="popperOptions"  :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
             <app-help-popper
-              :title="$t('help.MEMBERS-TAB-TT')"
-              :details="$t('help.MEMBERS-TAB-DET')">
+              :title="$t('help.HOME-BUTTON-TT')"
+              :details="$t('help.HOME-BUTTON-DET')">
             </app-help-popper>
 
-            <router-link slot="reference" :to="{ name: 'InitiativePeople', params: { initiativeId: initiative.id } }"
-              class="tab-btn-space">
-              <div tooltip="Members" class="fa-button noselect" :class="{'fa-button-selected': isPeople}">
-                <span class=""><i class="fa fa-users" aria-hidden="true"></i></span>
-              </div>
-            </router-link>
-          </popper>
-
-          <popper trigger="hover":options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
-            <app-help-popper
-              :title="$t('help.TRANSFERS-TAB-TT')"
-              :details="$t('help.TRANSFERS-TAB-DET')">
-            </app-help-popper>
-
-            <router-link slot="reference" :to="{ name: 'InitiativeAssignations', params: { initiativeId: initiative.id } }"
-              class="tab-btn-space">
-              <div tooltip="Transfers" class="fa-button noselect" :class="{'fa-button-selected': isAssignations}">
-                <span class=""><i class="fa fa-exchange" aria-hidden="true"></i></span>
-              </div>
+            <router-link slot="reference" :to="{name: 'InitiativesHome'}" class="w3-right logo-container noselect cursor-pointer">
+              <img class="icon" src="../assets/imago-red.png" alt="">
             </router-link>
           </popper>
 
         </div>
-        <div v-else class="logo-container">
-          <router-link slot="reference" :to="{name: 'InitiativesHome'}" class="cursor-pointer">
-            <img class="logo" src="../assets/logo-color.png" alt="">
-          </router-link>
-        </div>
-
       </div>
 
-      <div class="w3-col m4">
-
-        <div v-if="$store.state.user.authenticated"
-          class="">
-
-          <popper trigger="click" :options="popperOptions" class="user-container">
-            <app-drop-down-menu
-              class="user-drop-menu"
-              @profile="goMyProfile()"
-              @home="goHome()"
-              @notifications="showEditNotificationsModal = true"
-              @logout="logoutUser()"
-              :items="userMenuItems">
-            </app-drop-down-menu>
-
-            <div slot="reference" class="w3-right">
-              <div v-if="$store.state.user.profile" class="logged-user-div fa-button w3-right">
-                <div class="avatar-img-container w3-left">
-                  <img :src="$store.state.user.profile.pictureUrl" class="logged-avatar w3-circle noselect">
-                </div>
-                <div class="logged-nickname noselect w3-left w3-hide-medium w3-hide-small">
-                  {{ $store.state.user.profile.nickname }}
-                </div>
-              </div>
-            </div>
-          </popper>
-        </div>
-        <div v-else class="login-button-container w3-right">
-          <button @click="login()"
-            class="w3-button app-button" name="button">
-            {{ $t('general.LOGIN_SIGNUP') }}
-          </button>
-        </div>
-
-        <popper trigger="hover" :options="popperOptions"  :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
-          <app-help-popper
-            :title="$t('help.LANDING-BUTTON-TT')"
-            :details="$t('help.LANDING-BUTTON-DET')">
-          </app-help-popper>
-
-          <router-link slot="reference" :to="{ name: 'Landing', query: { demos: true }}" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-question-circle"></i></router-link>
-        </popper>
-
-        <popper trigger="hover" :options="popperOptions"  :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
-          <app-help-popper
-            :title="$t('help.HOME-BUTTON-TT')"
-            :details="$t('help.HOME-BUTTON-DET')">
-          </app-help-popper>
-
-          <router-link slot="reference" :to="{name: 'InitiativesHome'}" class="w3-right logo-container noselect cursor-pointer">
-            <img class="icon" src="../assets/imago-red.png" alt="">
-          </router-link>
-        </popper>
-
-      </div>
     </div>
   </div>
 
@@ -211,6 +214,9 @@ export default {
   },
 
   computed: {
+    accessDenied () {
+      return this.$store.state.initiative.accessDenied
+    },
     windowIsSmall () {
       return this.$store.state.support.windowIsSmall
     },
@@ -221,8 +227,11 @@ export default {
       return this.$store.state.initiative.initiative
     },
     reversedParents () {
-      var copy = JSON.parse(JSON.stringify(this.initiative.parents))
-      return copy.reverse()
+      if (!this.accessDenied) {
+        var copy = JSON.parse(JSON.stringify(this.initiative.parents))
+        return copy.reverse()
+      }
+      return []
     },
     isLoggedAnAdmin () {
       return this.$store.getters.isLoggedAnAdmin

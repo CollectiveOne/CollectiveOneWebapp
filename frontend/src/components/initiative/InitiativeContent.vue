@@ -16,11 +16,16 @@
           </div>
         </div>
 
-        <div class="w3-row initiative-content-row">
+        <div v-if="!accessDenied" class="w3-row initiative-content-row">
           <transition :name="animationType" mode="out-in" appear>
             <router-view :key="initiative.id">
             </router-view>
           </transition>
+        </div>
+        <div v-else class="w3-center w3-container access-denied-panel">
+          <div class="w3-card-2 w3-round-large w3-padding error-panel">
+            <h4>{{ $t('initiatives.ACCESS_DENIED') }}</h4>
+          </div>
         </div>
       </div>
     </div>
@@ -45,6 +50,9 @@ export default {
   },
 
   computed: {
+    accessDenied () {
+      return this.$store.state.initiative.accessDenied
+    },
     initiative () {
       return this.$store.state.initiative.initiative
     },
@@ -161,6 +169,12 @@ export default {
   background-color: red;
   height: 1500px;
   width: 100%;
+}
+
+.access-denied-panel {
+  max-width: 600px;
+  margin: 0 auto;
+  margin-top: 50px;
 }
 
 </style>

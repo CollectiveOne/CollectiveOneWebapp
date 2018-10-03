@@ -12,6 +12,11 @@ export default {
   name: 'app',
 
   methods: {
+    setIsTouchScreen () {
+      console.log('setting is touchscreen')
+      this.$store.commit('setIsTouchScreen', true)
+      window.removeEventListener('touchstart', this.setIsTouchScreen)
+    }
   },
 
   watch: {
@@ -75,6 +80,9 @@ export default {
     this.$store.dispatch('initializeWebsocket').then(res => {
       console.log('WS connect ' + res)
     })
+
+    /* check if touch device */
+    window.addEventListener('touchstart', this.setIsTouchScreen)
   }
 }
 </script>
