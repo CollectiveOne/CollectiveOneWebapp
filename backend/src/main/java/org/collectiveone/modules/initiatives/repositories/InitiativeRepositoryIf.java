@@ -37,4 +37,10 @@ public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>
 	@Query("SELECT mta.visibility FROM Initiative init JOIN init.meta mta WHERE init.id = ?1")
 	InitiativeVisibility getVisiblity(UUID initiativeId);
 	
+	@Query("SELECT init.id FROM Initiative init WHERE init.topModelSubsection.id = ?1")
+	UUID findByTopLevelSectionId(UUID sectionId);
+	
+	@Query("SELECT init.topModelSubsection.section.id FROM Initiative init WHERE init.id = ?1")
+	UUID findTopModelSectionIdById(UUID initiativeId);
+	
 }

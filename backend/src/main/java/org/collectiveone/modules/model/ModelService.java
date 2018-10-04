@@ -1516,10 +1516,11 @@ public class ModelService {
 	
 	@Transactional
 	public List<UUID> getAllSubsectionsIds (
-			UUID sectionId, 
+			UUID sectionId,
+			UUID userId, 
 			Integer level) {
 		
-		GraphNode subsection = getSectionNode(sectionId, false, true, level, null, false);
+		GraphNode subsection = getSectionNode(sectionId, false, true, level, userId, false);
 		return subsection.toList(false, true);
 	}
 	

@@ -154,7 +154,7 @@ public class ActivityService {
 		
 		switch (contextType) {
 			case MODEL_SECTION:
-				allSectionIds = modelService.getAllSubsectionsIds(elementId, null);
+				allSectionIds = modelService.getAllSubsectionsIds(elementId, userId, null);
 				cardsIds = allSectionIds.size() > 0 ? modelCardWrapperAdditionRepository.findAllCardWrapperIdsOfSections(allSectionIds) : new ArrayList<UUID>();
 				isModel = true;
 				break;
@@ -198,6 +198,22 @@ public class ActivityService {
 			totalUnread = notificationRepository.countOfUserInSections(userId, allSectionIds, cardsIds);
 			
 		} else {
+			UUID topModelSectionId = initiativeRepository.findTopModelSectionIdById(elementId);
+			
+			allSectionIds = modelService.getAllSubsectionsIds(topModelSectionId, userId, null);
+			
+			if (allSectionIds.size() == 0) {
+				allSectionIds.add(UUID.randomUUID());
+			}
+			
+			cardsIds = new ArrayList<UUID>();
+			cardsIds.add(topModelSectionId);
+			cardsIds = modelCardWrapperAdditionRepository.findAllCardWrapperIdsOfSections(allSectionIds);
+			
+			if (cardsIds.size() == 0) {
+				cardsIds.add(UUID.randomUUID());
+			}
+			
 			List<InitiativeDto> subinitiativesTree = initiativeService.getSubinitiativesTree(elementId, null);
 			
 			List<UUID> allInitiativesIds = new ArrayList<UUID>();
@@ -205,8 +221,8 @@ public class ActivityService {
 			allInitiativesIds.add(elementId);
 			allInitiativesIds.addAll(extractAllIdsFromInitiativesTree(subinitiativesTree, new ArrayList<UUID>()));
 			
-			notifications = notificationRepository.findOfUserInInitiatives(userId, states, allInitiativesIds, page);
-			totalUnread = notificationRepository.countOfUserInInitiatives(userId, allInitiativesIds);
+			notifications = notificationRepository.findOfUserInInitiativesAndSection(userId, states, allInitiativesIds, allSectionIds, cardsIds, page);
+			totalUnread = notificationRepository.countOfUserInInitiativesAndSection(userId, allInitiativesIds, allSectionIds, cardsIds);
 		}
 		
 		NotificationsPack notificationsPack = new NotificationsPack();
@@ -703,7 +719,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelSectionCreated(ModelSubsection subsection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
 		activity.setModelSubsection(subsection);
@@ -714,7 +730,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelSectionCreatedOnSection(ModelSubsection subsection, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
 		activity.setModelSubsection(subsection);
@@ -726,7 +742,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelSectionEdited(ModelSubsection subsection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_EDITED);
 		activity.setModelSubsection(subsection);
@@ -737,7 +753,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelSectionRemovedFromSection(ModelSubsection subsection, ModelSection fromSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_REMOVED);
 		activity.setModelSubsection(subsection);
@@ -749,7 +765,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelSubsectionRemoved(ModelSubsection subsection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_REMOVED);
 		activity.setModelSubsection(subsection);
@@ -761,7 +777,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelSubsectionMoved(ModelSubsection subsection, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_MOVED);
 		activity.setModelSubsection(subsection);
@@ -774,7 +790,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelNewSubsection(ModelSection section, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, section.getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_CREATED);
 		activity.setModelSection(section);
@@ -786,7 +802,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelSubsectionAdded(ModelSubsection subsection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, subsection.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_SECTION_ADDED);
 		activity.setModelSubsection(subsection);
@@ -799,7 +815,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperCreated(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_CREATED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -810,7 +826,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperMadeShared(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_MADE_SHARED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -821,7 +837,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperMadeCommon(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_MADE_COMMON);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -832,7 +848,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperAdded(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_ADDED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -843,7 +859,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperEdited(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_EDITED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -855,7 +871,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperMoved(ModelCardWrapperAddition cardWrapperAddition, ModelSection fromSection, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_MOVED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -868,7 +884,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperRemoved(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_REMOVED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -880,7 +896,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void modelCardWrapperDeleted(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.MODEL_CARDWRAPPER_DELETED);
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
@@ -891,7 +907,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void consentStatusStarted(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.CONSENT_STATUS_OPENED);
 		
@@ -903,7 +919,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void consentStatusClosed(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.CONSENT_STATUS_CLOSED);
 		
@@ -915,7 +931,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void consentStatusReopened(ModelCardWrapperAddition cardWrapperAddition, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.CONSENT_STATUS_REOPENED);
 		
@@ -927,7 +943,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void consentPositionStated(ModelCardWrapperAddition cardWrapperAddition, ElementConsentPositionColor positionColor, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.CONSENT_POSITION_STATED);
 		activity.setPositionColor(positionColor);
@@ -940,7 +956,7 @@ public class ActivityService {
 	
 	@Transactional
 	public void consentPositionChanged(ModelCardWrapperAddition cardWrapperAddition, ElementConsentPositionColor positionColor, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, cardWrapperAddition.getSection().getInitiative()); 
+		Activity activity = getBaseActivity(triggerUser, null); 
 		
 		activity.setType(ActivityType.CONSENT_POSITION_CHANGED);
 		activity.setPositionColor(positionColor);
@@ -1461,10 +1477,34 @@ public class ActivityService {
 		/* get section immediate parents */
 		GraphNode sectionNode = modelService.getSectionNode(sectionId, true, false, 2);
 		
-		for (GraphNode parent : sectionNode.getParents()) {
-			/* recursively add parent subscribers*/
-			appendSectionSubscribers(parent.getElementId(), subscribersMap);
+		if (sectionNode.getParents().size() > 0) {
+			for (GraphNode parent : sectionNode.getParents()) {
+				/* recursively add parent subscribers*/
+				appendSectionSubscribers(parent.getElementId(), subscribersMap);
+			}	
+		} else {
+			/* this is a top level section associated to an initiative, get that initiative subscribers */
+			UUID initiativeId = initiativeRepository.findByTopLevelSectionId(sectionId);
+			List<Subscriber> initSubscribers = subscriberRepository.findByElementId(initiativeId);
+			
+			for (Subscriber subscriber : initSubscribers) {
+				
+				if (!subscribersMap.containsKey(subscriber.getUser().getC1Id())) {
+					/* if the user has not been added, then just add him */
+					subscribersMap.put(subscriber.getUser().getC1Id(), subscriber);
+					
+				} else {
+					/* else, if this subscriber is CUSTOM, get the current subscriber and replace him if INHERIT */
+					if (subscriber.getInheritConfig() == SubscriberInheritConfig.CUSTOM) {
+						Subscriber existingSubscriber = subscribersMap.get(subscriber.getUser().getC1Id());
+						if (existingSubscriber.getInheritConfig() == SubscriberInheritConfig.INHERIT) {
+							subscribersMap.put(subscriber.getUser().getC1Id(), subscriber);
+						}
+					}
+				}
+			}
 		}
+		
 	}
 	
 	@Transactional
