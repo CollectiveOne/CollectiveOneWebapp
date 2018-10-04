@@ -586,6 +586,19 @@ export default {
 }
 </script>
 
+<style >
+
+.message-container {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.message-container img {
+  max-width: 100%;
+  max-height: 1000px;
+}
+
+</style>
+
 <style scoped>
 
 a {
@@ -633,10 +646,6 @@ a {
 
 .control-btns-row .w3-button {
   padding: 1px 16px !important;
-}
-
-.message-container {
-  font-family: 'Open Sans', sans-serif;
 }
 
 .not-read-color {
