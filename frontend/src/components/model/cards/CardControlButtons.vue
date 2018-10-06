@@ -18,6 +18,7 @@
         </transition>
 
         <transition name="slideDownUp">
+          <!-- <button @contextmenu.prevent="handler">r-click</button> -->
           <app-model-card-modal
             v-if="showEditCardModal"
             :isNew="false"
@@ -32,7 +33,7 @@
       </div>
     </div>
 
-    <popper :append-to-body="true" trigger="click" :options="popperOptions" :toggleShow="togglePopperShow" class="">
+    <popper :append-to-body="true" trigger="click" :options="popperOptions" :toggleShow="showPopper && togglePopperShow" class="">
       <div class="">
         <app-drop-down-menu
           class="drop-menu"
@@ -83,7 +84,8 @@ export default {
     inSection: {
       type: Object,
       deafult: null
-    }
+    },
+    popperShow: false
   },
 
   data () {
@@ -97,6 +99,9 @@ export default {
   },
 
   computed: {
+    showPopper () {
+      return this.popperShow
+    },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
     },
@@ -231,7 +236,11 @@ export default {
       })
     }
   },
-
+  watch: {
+    popperShow (value) {
+      this.togglePopperShow = this.popperShow
+    }
+  },
   mounted () {
   },
 
