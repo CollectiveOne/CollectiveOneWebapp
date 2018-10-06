@@ -33,6 +33,7 @@
           <app-card-control-buttons
             :cardWrapper="cardWrapper"
             :inSection="inSection"
+            :popperShow="popperShow"
             @update="$emit('update')"
             @createNew="$emit('createNew')"
             @edit="$emit('edit')"
@@ -104,7 +105,8 @@ export default {
     hideInSectionTags: {
       type: Boolean,
       default: false
-    }
+    },
+    popperShow: false
   },
 
   data () {

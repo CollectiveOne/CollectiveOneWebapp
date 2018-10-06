@@ -1,7 +1,8 @@
 <template lang="html">
   <div class="w3-display-container w3-card-4 w3-topbar w3-round-large" :class="containerClass"
     @mouseover="hovering = true"
-    @mouseleave="hovering = false">
+    @mouseleave="hovering = false"
+    @contextmenu.prevent="openMenu">
 
     <div class="w3-row card-container cursor-pointer" :class="{'limit-height': !showFull}"
       ref="cardContent">
@@ -42,6 +43,7 @@
           :hideCardControls="hideCardControls"
           :inCardSelector="inCardSelector"
           :cardRouteName="cardRouteName"
+          :popperShow="popperShow"
           @update="$emit('update')"
           @createNew="$emit('createNew')"
           @edit="$emit('edit')"
@@ -82,7 +84,8 @@ export default {
   data () {
     return {
       hovering: false,
-      showFull: false
+      showFull: false,
+      popperShow: false
     }
   },
 
@@ -96,6 +99,9 @@ export default {
   },
 
   methods: {
+    openMenu () {
+      this.popperShow = !this.popperShow
+    },
     textTooLong () {
       if (!this.$refs.cardText) {
         return false
