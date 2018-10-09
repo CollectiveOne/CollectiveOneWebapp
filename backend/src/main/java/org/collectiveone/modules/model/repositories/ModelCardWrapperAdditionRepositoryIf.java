@@ -24,26 +24,30 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "WHERE crdWrpAdd.cardWrapper.id = ?1 "
-			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
+			+ "ORDER BY crdWrpAdd.cardWrapper.creationDate ASC")
 	List<ModelCardWrapperAddition> findOfCardWrapper(UUID cardWrapperId);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "WHERE crdWrpAdd.section.id = ?1 "
 			+ "AND crdWrpAdd.scope = ?2 "
-			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
+			+ "ORDER BY crdWrpAdd.cardWrapper.creationDate ASC")
 	List<ModelCardWrapperAddition> findInSectionWithScope(UUID sectionId, ModelScope scope);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "WHERE crdWrpAdd.section.id = ?1 "
 			+ "AND crdWrpAdd.scope = 'COMMON' "
-			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
+			+ "ORDER BY crdWrpAdd.cardWrapper.creationDate ASC")
 	List<ModelCardWrapperAddition> findCommonInSection(UUID sectionId);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "WHERE crdWrpAdd.adder.c1Id = ?1 "
 			+ "AND crdWrpAdd.section.id = ?2 "
 			+ "AND crdWrpAdd.scope = ?3 "
-			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)"
+			+ "ORDER BY crdWrpAdd.cardWrapper.creationDate ASC")
 	List<ModelCardWrapperAddition> findOfUserInSection(UUID userId, UUID sectionId, ModelScope scope);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
@@ -51,7 +55,8 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "WHERE crdWrp.id= ?2 "
 			+ "AND crdWrpAdd.section.id = ?1 "
 			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrpAdd.adder.c1Id = ?3) "
-			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL)")
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
+			+ "ORDER BY crdWrpAdd.cardWrapper.creationDate ASC")
 	ModelCardWrapperAddition findBySectionAndCardWrapperVisibleToUser(UUID sectionId, UUID cardWrapperId, UUID adderId);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
@@ -59,7 +64,8 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "WHERE crdWrp.id= ?2 "
 			+ "AND crdWrpAdd.section.id = ?1 "
 			+ "AND crdWrpAdd.adder.c1Id = ?3 "
-			+ "AND crdWrpAdd.status = 'DELETED'")
+			+ "AND crdWrpAdd.status = 'DELETED' "
+			+ "ORDER BY crdWrpAdd.cardWrapper.creationDate ASC")
 	List<ModelCardWrapperAddition> findDeletedBySectionAndCardWrapperAndAdder(UUID sectionId, UUID cardWrapperId, UUID adderId);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
@@ -74,7 +80,8 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "crdWrpAdd.section.id = ?1 "
 			+ "AND crdWrpAdd.scope = ?2 "
 			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
-			+ "AND crdWrpAdd.beforeElement IS NULL")
+			+ "AND crdWrpAdd.beforeElement IS NULL "
+			+ "ORDER BY crdWrpAdd.cardWrapper.creationDate ASC")
 	List<ModelCardWrapperAddition> findLastBySectionAndScope(UUID sectionId, ModelScope scope);	
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
@@ -83,7 +90,8 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "AND crdWrpAdd.adder.c1Id = ?2 "
 			+ "AND crdWrpAdd.scope = ?3 "
 			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
-			+ "AND crdWrpAdd.beforeElement IS NULL")
+			+ "AND crdWrpAdd.beforeElement IS NULL "
+			+ "ORDER BY crdWrpAdd.cardWrapper.creationDate ASC")
 	List<ModelCardWrapperAddition> findLastBySectionAndAdderAndScope(UUID sectionId, UUID adderId, ModelScope scope);	
 	
 	@Query("SELECT DISTINCT crdWrp FROM ModelCardWrapperAddition crdWrpAdd "

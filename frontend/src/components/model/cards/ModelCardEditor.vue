@@ -97,10 +97,16 @@
             <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">
               {{ cardButtonText }}
             </button>
-            <div v-show="sendingData" class="sending-accept light-grey">
+            <div v-show="sendingData" class="sending-accept light-grey w3-center">
               <img class="" src="../../../assets/loading.gif" alt="">
             </div>
           </div>
+        </div>
+        <div class="w3-row">
+          <app-error-panel
+            :show="errorCreatingCard"
+            :message="errorCreatingCardMessage">
+          </app-error-panel>
         </div>
       </div>
 
@@ -157,7 +163,9 @@ export default {
       scope: 'COMMON',
       uploadingImage: false,
       errorUploadingFile: false,
-      errorUploadingFileMsg: ''
+      errorUploadingFileMsg: '',
+      errorCreatingCard: false,
+      errorCreatingCardMessage: ''
     }
   },
 
@@ -360,7 +368,8 @@ export default {
               if (response.data.result === 'success') {
                 this.$emit('updateCards')
               } else {
-                console.log(response.data.message)
+                this.errorCreatingCard = true
+                this.errorCreatingCardMessage = response.data.message
               }
             }).catch((error) => {
               console.log(error)

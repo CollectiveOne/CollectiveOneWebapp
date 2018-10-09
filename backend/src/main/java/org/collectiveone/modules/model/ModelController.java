@@ -363,12 +363,16 @@ public class ModelController extends BaseController {
 		
 		UUID onCardWrapperId = onCardWrapperIdStr.equals("") ? null : UUID.fromString(onCardWrapperIdStr);
 		
-		return modelService.createCardWrapper(
-				cardDto, 
-				sectionId, 
-				getLoggedUserId(), 
-				onCardWrapperId, 
-				isBefore);
+		try {
+			return modelService.createCardWrapper(
+					cardDto, 
+					sectionId, 
+					getLoggedUserId(), 
+					onCardWrapperId, 
+					isBefore);
+		} catch(Exception e) {
+			return new PostResult("error", e.getMessage(), "");
+		}
 	}
 	
 	@RequestMapping(path = "/model/cardWrapperAddition/{cardWrapperId}", method = RequestMethod.GET) 

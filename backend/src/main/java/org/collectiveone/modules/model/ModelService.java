@@ -33,6 +33,7 @@ import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.model.enums.ElementGovernanceType;
 import org.collectiveone.modules.model.enums.SimpleConsentState;
 import org.collectiveone.modules.model.enums.Status;
+import org.collectiveone.modules.model.exceptions.WrongLinkOfElement;
 import org.collectiveone.modules.model.repositories.ConsentPositionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepositoryIf;
@@ -94,7 +95,7 @@ public class ModelService {
 	private ConsentPositionRepositoryIf consentPositionRepository;
 	
 	
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public GetResult<ModelSectionDto> getModel(UUID initiativeId, Integer level, UUID requestById, Boolean onlySections) {
 		Initiative initiative = initiativeRepository.findById(initiativeId);
 		if (initiative == null) return new GetResult<ModelSectionDto>("error", "initiative not found", null);
@@ -107,12 +108,12 @@ public class ModelService {
 		return new GetResult<ModelSectionDto> ("success", "model found", sectionDto);
 	}
 	
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public Initiative getSectionInitiative (UUID sectionId) {
 		return modelSectionRepository.findById(sectionId).getInitiative();
 	}
 	
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public PostResult createSection(
 			ModelSectionDto sectionDto, 
 			UUID parentSectionId, 
@@ -227,7 +228,7 @@ public class ModelService {
 		return new GetResult<Page<ModelSectionDto>>("succes", "sections returned", dtosPage);
 	}
 	
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public PostResult editSection (UUID sectionId, UUID parentSectionId, ModelSectionDto sectionDto, UUID creatorId) {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
@@ -267,7 +268,7 @@ public class ModelService {
 		return new PostResult("success", "card added to section", subsection.getId().toString());
 	}
 	
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public PostResult moveSubsection(
 			UUID fromSectionId, 
 			UUID subSectionId, 
@@ -353,7 +354,7 @@ public class ModelService {
 		return new PostResult("success", "card wrapper moved", subsectionTo.getId().toString());
 	}
 	
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public PostResult addSubsectionToSection (
 			UUID sectionId, 
 			UUID parentSectionId, 
@@ -552,6 +553,10 @@ public class ModelService {
 			OrderedElement element, 
 			OrderedElement onElement,
 			Boolean isBefore) {
+		
+		/* reset any info */
+		element.setAfterElement(null);
+		element.setBeforeElement(null);
 		
 		OrderedElement leftElement = null;
 		OrderedElement rightElement = null;
@@ -971,13 +976,13 @@ public class ModelService {
 		return new PostResult("success", "card wrapper removed from all sections and deleted", sectionId.toString());
 	}
 	
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public PostResult createCardWrapper(
 			ModelCardDto cardDto, 
 			UUID sectionId, 
 			UUID creatorId, 
 			UUID onCardWrapperId, 
-			Boolean isBefore) {
+			Boolean isBefore) throws WrongLinkOfElement {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		if (section == null) return new PostResult("error", "section not found", "");
@@ -1031,7 +1036,7 @@ public class ModelService {
 		if (onCardWrapperAddition != null) {
 			String result = linkOrderedElement(cardWrapperAddition, onCardWrapperAddition, isBefore); 
 			if (result != "success") {
-				return new PostResult("error", result, section.getId().toString());
+				throw new WrongLinkOfElement(result);
 			}	
 		}
 		
@@ -1043,7 +1048,7 @@ public class ModelService {
 		return new PostResult("success", "card created", cardWrapper.getId().toString());
 	}
 	
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public PostResult editCardWrapper(
 			UUID initiativeId, 
 			UUID inSectionId, 
@@ -1122,7 +1127,7 @@ public class ModelService {
 		return new PostResult("success", "card edited", cardWrapper.getId().toString());
 	}
 	
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public PostResult makeCardWrapperShared(UUID cardWrapperId, UUID onSectionId, UUID requestByUserId) {
 		
 		ModelCardWrapperAddition cardWrapperAddition = 
@@ -1138,7 +1143,7 @@ public class ModelService {
 		return new PostResult("success", "card edited", cardWrapperAddition.getId().toString());
 	}
 	
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public PostResult makeCardWrapperCommon(UUID cardWrapperId, UUID onSectionId, UUID requestByUserId) {
 		
 		ModelCardWrapperAddition cardWrapperAddition = 
@@ -1162,7 +1167,7 @@ public class ModelService {
 	}
 	
 	
-	@Transactional
+	@Transactional(rollbackOn = Exception.class)
 	public PostResult moveCardWrapper(
 			UUID fromSectionId, 
 			UUID cardWrapperId, 
