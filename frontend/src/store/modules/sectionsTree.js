@@ -82,7 +82,7 @@ const mutations = {
           section: payload.sectionData.section,
           subsectionsData: payload.sectionData.subsectionsData,
           subsectionsDataSet: true,
-          expand: false
+          expand: true
         }]
         return
       }
@@ -181,6 +181,8 @@ const actions = {
             sectionData: sectionData,
             coord: payload.coord
           })
+
+          context.commit('triggerUpdateExpands')
 
           resolve()
         } else {

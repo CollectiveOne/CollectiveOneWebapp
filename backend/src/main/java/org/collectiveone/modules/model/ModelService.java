@@ -1040,7 +1040,7 @@ public class ModelService {
 			activityService.modelCardWrapperCreated(cardWrapperAddition, appUserRepository.findByC1Id(creatorId));
 		}
 		
-		return new PostResult("success", "card created", card.getId().toString());
+		return new PostResult("success", "card created", cardWrapper.getId().toString());
 	}
 	
 	@Transactional

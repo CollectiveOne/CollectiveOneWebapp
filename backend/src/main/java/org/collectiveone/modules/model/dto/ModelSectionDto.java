@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.collectiveone.modules.model.ModelScope;
 import org.collectiveone.modules.model.ModelSection;
-import org.collectiveone.modules.model.enums.ElementGovernanceType;
 
 public class ModelSectionDto {
 
