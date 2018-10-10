@@ -982,7 +982,8 @@ public class ModelService {
 			UUID sectionId, 
 			UUID creatorId, 
 			UUID onCardWrapperId, 
-			Boolean isBefore) throws WrongLinkOfElement {
+			Boolean isBefore,
+			UUID adderId) throws WrongLinkOfElement {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		if (section == null) return new PostResult("error", "section not found", "");
@@ -1026,7 +1027,7 @@ public class ModelService {
 		/* create cardwrapper addition */
 		ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
 				
-		cardWrapperAddition.setAdder(creator);
+		cardWrapperAddition.setAdder(adderId == null ? creator : appUserRepository.findByC1Id(adderId));
 		cardWrapperAddition.setSection(section);
 		cardWrapperAddition.setCardWrapper(cardWrapper);
 		cardWrapperAddition.setScope(cardDto.getNewScope());
@@ -1724,6 +1725,19 @@ public class ModelService {
 			semaphoresDtos.add(semaphore.toDto());
 		}
 		return new GetResult<List<ElementConsentPositionDto>>("success", "semaphores retreived", semaphoresDtos);
+	}
+	
+	@Transactional
+	public UUID getIdOfOneModelSectionContainingSection(UUID sectionId) {
+		List<UUID> ids = modelSubsectionRepository.findParentSectionsIds(sectionId);
+		return ids.size() > 0 ? ids.get(0) : null;
+	}
+	
+
+	@Transactional
+	public UUID getIdOfOneModelSectionContainingCardWrapper(UUID sectionId) {
+		List<UUID> ids = modelSubsectionRepository.findParentSectionsIds(sectionId);
+		return ids.size() > 0 ? ids.get(0) : null;
 	}
 	
 }

@@ -9,6 +9,10 @@ import java.util.UUID;
 import org.collectiveone.AbstractTest;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.dto.ActivityDto;
+import org.collectiveone.modules.conversations.MessageDto;
+import org.collectiveone.modules.conversations.MessageService;
+import org.collectiveone.modules.conversations.MessageThreadContextType;
 import org.collectiveone.modules.governance.DecisionMakerRole;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
@@ -28,6 +32,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -44,6 +50,9 @@ public class TestModelService extends AbstractTest {
     private InitiativeService initiativeService;
 	
 	@Autowired
+    private MessageService messageService;
+	
+	@Autowired
 	private InitiativeRepositoryIf initiativeRepository;
 	
 	@Value("${AUTH0ID}")
@@ -55,11 +64,12 @@ public class TestModelService extends AbstractTest {
 	
 	UUID topLevelSectionId;
 	
+	UUID subsection1Id;
+	
     @Before
     public void setUp() {
     	
-    	
-//    	userAuth0Id
+    	PostResult result;
     	
     	/* create user */
     	AppUser user = appUserService.getOrCreateFromAuth0Id(userAuth0Id);
@@ -80,7 +90,7 @@ public class TestModelService extends AbstractTest {
     	
     	initiativeDto.setMembers(members);
     	
-    	PostResult result = initiativeService.init(userId, initiativeDto);
+    	result = initiativeService.init(userId, initiativeDto);
     	
     	System.out.print("creating dummy section... ");
     	
@@ -94,7 +104,9 @@ public class TestModelService extends AbstractTest {
     	sectionDto.setDescription("test section");
     	sectionDto.setTitle("Test Section");
     	
-    	modelService.createSection(sectionDto, topLevelSectionId, userId, null, false);
+    	result = modelService.createSection(sectionDto, topLevelSectionId, userId, null, false);
+    	
+    	subsection1Id = Str2UUID(result.getElementId());
     	
     	System.out.println("done!");
     }
@@ -104,8 +116,7 @@ public class TestModelService extends AbstractTest {
         // clean up after each test method
     }
     
-    @SuppressWarnings("unused")
-	private UUID Str2UUID(String str) {
+    private UUID Str2UUID(String str) {
     	try {
     		return UUID.fromString(str);
     	} catch (Exception e) {
@@ -114,7 +125,7 @@ public class TestModelService extends AbstractTest {
     }
     
     @Test
-    public void isCreateCommonCards() throws WrongLinkOfElement {
+    public void isCreateAndReorderCards() throws WrongLinkOfElement {
     	
     	PostResult result;
     	
@@ -131,7 +142,8 @@ public class TestModelService extends AbstractTest {
 				topLevelSectionId, 
 				userId, 
 				null, 
-				false);
+				false,
+				null);
     	
     	UUID commCardWrp0Id = Str2UUID(result.getElementId());
     	
@@ -144,7 +156,8 @@ public class TestModelService extends AbstractTest {
 				topLevelSectionId, 
 				userId, 
 				null, 
-				false);
+				false,
+				null);
     	
     	UUID commCardWrp1Id = Str2UUID(result.getElementId());
 
@@ -157,7 +170,8 @@ public class TestModelService extends AbstractTest {
 				topLevelSectionId, 
 				userId, 
 				null, 
-				false);
+				false,
+				null);
     	
     	UUID commCardWrp2Id = Str2UUID(result.getElementId());
     	
@@ -190,7 +204,8 @@ public class TestModelService extends AbstractTest {
 				topLevelSectionId, 
 				userId, 
 				null, 
-				false);
+				false,
+				null);
     	
     	UUID shCardWrp0Id = Str2UUID(result.getElementId());
     	
@@ -228,7 +243,8 @@ public class TestModelService extends AbstractTest {
 				topLevelSectionId, 
 				userId, 
 				null, 
-				false);
+				false,
+				null);
     	
     	UUID commCardWrp3Id = Str2UUID(result.getElementId());
     	
@@ -273,7 +289,8 @@ public class TestModelService extends AbstractTest {
 				topLevelSectionId, 
 				userId, 
 				shCardWrp0Id, 
-				false);
+				false,
+				null);
     	
     	UUID shCardWrp1Id = Str2UUID(result.getElementId());
     	
@@ -311,7 +328,8 @@ public class TestModelService extends AbstractTest {
 				topLevelSectionId, 
 				userId, 
 				shCardWrp0Id, 
-				true);
+				true,
+				null);
     	
     	UUID shCardWrp2Id = Str2UUID(result.getElementId());
     	
@@ -393,5 +411,189 @@ public class TestModelService extends AbstractTest {
     	System.out.println(result.getResult());
     }
    
+    @Test
+    public void isCommentAndMoveCommentsAndConvertToCard() throws WrongLinkOfElement {
+    	
+    	/* add three cards without specifying location */
+    	
+    	MessageDto messageDto = new MessageDto();
+    	String messageContent = "test message";
+    	
+    	messageDto.setText(messageContent);
+    	messageDto.setUuidsOfMentions(new String[0]);
+    	
+    	messageService.postMessage(
+    			messageDto, 
+    			userId, 
+    			MessageThreadContextType.MODEL_SECTION, 
+    			subsection1Id,
+    			null);
+    	
+    	
+    	GetResult<Page<ActivityDto>> actResult;
+    	
+    	/* get messages */
+    	PageRequest page = new PageRequest(0, 10);
+    	
+    	List<ActivityDto> actPage;
+    	
+    	actResult = modelService.getActivityResultUnderSection(
+    			subsection1Id, 
+    			page, 
+    			true, 
+    			false, 
+    			1, 
+    			userId);
+    	
+    	actPage = actResult.getData().getContent();
+    	
+    	assertTrue("wrong comment content", actPage.get(0).getMessage().getText().equals(messageContent));
+    	
+    	/* move comment to another section */
+    	
+    	UUID messageId = Str2UUID(actPage.get(0).getMessage().getId());
+    	
+    	messageService.moveMessage(
+    			messageId,
+    			topLevelSectionId,
+    			MessageThreadContextType.MODEL_SECTION,
+    			null);
+    	
+    	actResult = modelService.getActivityResultUnderSection(
+    			topLevelSectionId, 
+    			page, 
+    			true, 
+    			false, 
+    			1, 
+    			userId);
+    	
+    	actPage = actResult.getData().getContent();
+    	
+    	assertTrue("wrong comment content after moving", actPage.get(0).getMessage().getText().equals(messageContent));
+    	
     
+    	/* add a card wrapper and comment on it */
+    	PostResult result;
+    	
+    	ModelCardDto cardDto = new ModelCardDto();
+    	
+    	cardDto.setTitle("card common 1");
+    	cardDto.setText("card common 1 - text");
+    	cardDto.setNewScope(ModelScope.COMMON);
+    	
+    	result = modelService.createCardWrapper(
+				cardDto, 
+				subsection1Id, 
+				userId, 
+				null, 
+				false,
+				null);
+    	
+    	UUID commCardWrp0Id = Str2UUID(result.getElementId());
+    	
+    	messageDto = new MessageDto();
+    	String messageContent2 = "test message on card";
+    	
+    	messageDto.setText(messageContent2);
+    	messageDto.setUuidsOfMentions(new String[0]);
+    	
+    	messageService.postMessage(
+    			messageDto, 
+    			userId, 
+    			MessageThreadContextType.MODEL_CARD, 
+    			commCardWrp0Id,
+    			subsection1Id);
+    	
+    	actResult = modelService.getActivityResultUnderSection(
+    			subsection1Id, 
+    			page, 
+    			true, 
+    			false, 
+    			1, 
+    			userId);
+    	
+    	actPage = actResult.getData().getContent();
+    	messageId = Str2UUID(actPage.get(0).getMessage().getId());
+    	
+    	assertTrue("wrong comment content", 
+    			actPage.get(0).getMessage().getText().equals(messageContent2));
+    	
+    	/* move comment from card to section */
+    	messageService.moveMessage(
+    			messageId,
+    			topLevelSectionId,
+    			MessageThreadContextType.MODEL_SECTION,
+    			null);
+    	
+    	actResult = modelService.getActivityResultUnderSection(
+    			topLevelSectionId, 
+    			page, 
+    			true, 
+    			false, 
+    			1,
+    			userId);
+    	
+    	actPage = actResult.getData().getContent();
+    	messageId = Str2UUID(actPage.get(0).getMessage().getId());
+    	
+    	assertTrue("wrong comment content after moving to section", 
+    			actPage.get(0).getMessage().getText().equals(messageContent2));
+    	
+    	
+    	/* move comment from section back to card */
+    	
+    	messageService.moveMessage(
+    			messageId,
+    			commCardWrp0Id,
+    			MessageThreadContextType.MODEL_CARD,
+    			null);
+    	
+    	actResult = modelService.getActivityResultUnderCard(
+    			commCardWrp0Id, 
+    			page, 
+    			true, 
+    			false);
+    	
+    	actPage = actResult.getData().getContent();
+    	messageId = Str2UUID(actPage.get(0).getMessage().getId());
+    	
+    	assertTrue("wrong comment content after moving it back to card", 
+    			actPage.get(0).getMessage().getText().equals(messageContent2));
+    	
+    	
+    	actResult = modelService.getActivityResultUnderSection(
+    			subsection1Id, 
+    			page, 
+    			true, 
+    			false, 
+    			1,
+    			userId);
+    	
+    	actPage = actResult.getData().getContent();
+    	messageId = Str2UUID(actPage.get(0).getMessage().getId());
+    	
+    	assertTrue("wrong comment content after moving it back to card", 
+    			actPage.get(0).getMessage().getText().equals(messageContent2));
+    	
+    	
+    	/* convert comment to card */
+    	
+    	messageService.convertMessageToCard(
+    			messageId,
+    			subsection1Id,
+    			userId);
+    	
+    	GetResult<ModelSectionDto> cardsResult = 
+    			modelService.getSection(subsection1Id, null, 1, userId, false);
+    	
+    	ModelSectionDto sectionDto = (ModelSectionDto) cardsResult.getData();
+    	List<ModelCardWrapperDto> commonCards = sectionDto.getCardsWrappersCommon();
+    	
+    	assertTrue("wrong number of cards", 
+    			commonCards.size() == 2);
+    	
+    	assertTrue("card text is not the comment text", 
+    			commonCards.get(1).getCard().getText().equals(messageContent2));
+    	
+    }
 }

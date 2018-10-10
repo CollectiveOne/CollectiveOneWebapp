@@ -369,7 +369,9 @@ public class ModelController extends BaseController {
 					sectionId, 
 					getLoggedUserId(), 
 					onCardWrapperId, 
-					isBefore);
+					isBefore,
+					null);
+			
 		} catch(Exception e) {
 			return new PostResult("error", e.getMessage(), "");
 		}

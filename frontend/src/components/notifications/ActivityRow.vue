@@ -1,5 +1,16 @@
 <template lang="html">
   <tr :class="rowClass">
+
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-move-message-modal
+          v-if="showMoveMessageModal"
+          :activity="activity"
+          @close="closeMoveModal()">
+        </app-move-message-modal>
+      </transition>
+    </div>
+
     <td class="avatar-col w3-center">
       <app-user-avatar :user="activity.triggerUser" :showName="false" :small="true"></app-user-avatar>
     </td>
@@ -264,17 +275,25 @@
         <vue-markdown class="marked-text message-container" :source="activity.message.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
       </div>
 
-      <div class="control-btns-row w3-display-topright" v-if="isMessagePosted && showMessagesText">
+      <div class="message-options" v-if="isMessagePosted && showMessagesText">
         <transition name="fadeenter">
           <div v-if="hovering">
-            <div v-if="authorIsLoggedUser" @click="$emit('edit-message', activity.message)"
-              class="w3-button light-grey">
-              <i class="fa fa-pencil"></i> {{ $t('general.EDIT') }}
-            </div>
-            <div v-if="true" @click="$emit('reply-to-message', activity)"
-              class="w3-button light-grey">
-              <i class="fa fa-reply"></i> {{ $t('notifications.REPLY') }}
-            </div>
+
+            <popper :append-to-body="false" trigger="click" :options="popperOptions" :toggleShow="toggleMessageOptions" class="">
+              <div class="">
+                <app-drop-down-menu
+                  class="drop-menu"
+                  @edit="editMessage()"
+                  @move="moveMessage()"
+                  @convert-to-card="convertMessageToCard()"
+                  :items="menuItems">
+                </app-drop-down-menu>
+              </div>
+
+              <div slot="reference" class="expand-btn w3-large fa-button">
+                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+              </div>
+            </popper>
           </div>
         </transition>
       </div>
@@ -291,6 +310,7 @@ import AssignationLink from '@/components/global/AssignationLink.vue'
 import ModelSectionLink from '@/components/global/ModelSectionLink.vue'
 import ModelCardInSectionLink from '@/components/global/ModelCardInSectionLink.vue'
 import ModelCardAloneLink from '@/components/global/ModelCardAloneLink.vue'
+import MoveMessageModal from '@/components/modal/MoveMessageModal.vue'
 
 import { getTimeStrSince } from '@/lib/common.js'
 
@@ -327,13 +347,17 @@ export default {
     'app-assignation-link': AssignationLink,
     'app-model-section-link': ModelSectionLink,
     'app-model-card-link': ModelCardInSectionLink,
-    'app-model-card-alone-link': ModelCardAloneLink
+    'app-model-card-alone-link': ModelCardAloneLink,
+    'app-move-message-modal': MoveMessageModal
   },
 
   data () {
     return {
       hovering: false,
-      clicked: false
+      clicked: false,
+      toggleMessageOptions: false,
+      showMoveMessageModal: false,
+      showConvertMessageModal: false
     }
   },
 
@@ -562,9 +586,86 @@ export default {
         rowClass['not-read-color'] = this.activity.inAppState === 'PENDING'
       }
       return rowClass
+    },
+
+    popperOptions () {
+      return {
+        placement: 'left',
+        modifiers: {
+          preventOverflow: {
+            enabled: true
+          }
+        }
+      }
+    },
+
+    menuItems () {
+      let items = []
+
+      items.push({
+        text: this.$t('general.EDIT'),
+        value: 'edit',
+        faIcon: 'fa-pencil' })
+
+      items.push({
+        text: this.$t('general.MOVE'),
+        value: 'move',
+        faIcon: 'fa-arrow-circle-right'
+      })
+
+      items.push({
+        text: this.$t('notifications.CONVERT_TO_CARD'),
+        value: 'convert-to-card',
+        faIcon: 'fa-square-o'
+      })
+
+      return items
     }
   },
   methods: {
+    closeMoveModal () {
+      this.showMoveMessageModal = false
+      this.$emit('reset-activity')
+    },
+    closeConvertModal () {
+      this.showConvertMessageModal = false
+      this.$emit('reset-activity')
+    },
+    editMessage () {
+      this.$emit('edit-message', this.activity.message)
+      this.toggleMessageOptions = !this.toggleMessageOptions
+    },
+    replyToMessage () {
+      this.$emit('reply-to-message', this.activity)
+      this.toggleMessageOptions = !this.toggleMessageOptions
+    },
+    moveMessage () {
+      this.toggleMessageOptions = !this.toggleMessageOptions
+      this.showMoveMessageModal = true
+    },
+    convertMessageToCard () {
+      this.toggleMessageOptions = !this.toggleMessageOptions
+
+      var cardDto = {
+        title: '',
+        text: this.activity.message.text,
+        newScope: 'COMMON'
+      }
+
+      var toSectionId = this.activity.modelCardWrapper != null ? this.activity.onSection.id : this.activity.modelSection.id
+
+      /* create new card */
+      this.sendingData = true
+      this.axios.post('/1/model/section/' + toSectionId + '/cardWrapper', cardDto, {}).then((response) => {
+        if (response.data.result === 'success') {
+          this.$emit('reset-activity')
+        } else {
+          console.log(response.data.message)
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
     getTimeStrSince (v) {
       return getTimeStrSince(v)
     },
@@ -644,8 +745,21 @@ a {
   width: 100%;
 }
 
-.control-btns-row .w3-button {
-  padding: 1px 16px !important;
+.drop-menu {
+  width: 200px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.message-options {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+.message-options .expand-btn {
+  width: 30px;
+  text-align: center;
 }
 
 .not-read-color {

@@ -108,7 +108,8 @@ const translations = {
       'LOGOUT': 'logout',
       'PROFILE_CC': 'Profile',
       'SETTINGS': 'Settings',
-      'LANGUAGE': 'Language'
+      'LANGUAGE': 'Language',
+      'MOVE': 'move'
     },
     landing: {
       'PRINCIPLES': 'PRINCIPLES',
@@ -372,7 +373,11 @@ const translations = {
       'ONLY_MEMBERS_CAN_COMMENT': 'sorry, only members of the initiative can add messages here',
       'SAY_SOMETHING': 'say something',
       'SHOW_OLDER': 'show older',
-      'NOTHING_FOUND': 'nothing was found'
+      'NOTHING_FOUND': 'nothing was found',
+      'MOVE_MESSAGE': 'Move Message',
+      'TO_SECTION_CM': 'To Section',
+      'TO_CARD_CM': 'To Card',
+      'CONVERT_TO_CARD': 'convert to card'
     },
     model: {
       'SECTION': 'section',
@@ -538,7 +543,8 @@ const translations = {
       'LOGOUT': 'salir',
       'PROFILE_CC': 'Perfil',
       'SETTINGS': 'Configuración',
-      'LANGUAGE': 'Idioma'
+      'LANGUAGE': 'Idioma',
+      'MOVE': 'mover'
     },
     landing: {
       'PRINCIPLES': 'PRINCIPIOS',
@@ -802,7 +808,11 @@ const translations = {
       'ONLY_MEMBERS_CAN_COMMENT': 'sólamente los miembros de esta iniciativa pueden comentar en ella.',
       'SAY_SOMETHING': 'decir algo',
       'SHOW_OLDER': 'mostrar más',
-      'NOTHING_FOUND': 'no hay resultados'
+      'NOTHING_FOUND': 'no hay resultados',
+      'MOVE_MESSAGE': 'Mover Mensaje',
+      'TO_SECTION_CM': 'A Section',
+      'TO_CARD_CM': 'A Tarjeta',
+      'CONVERT_TO_CARD': 'convertir en tarjeta'
     },
     model: {
       'SECTION': 'sección',

@@ -74,13 +74,16 @@ public class EmailService {
 			segmentedPerUserAndInitiativeNotifications.clear();
 			
 			for (Notification notification : theseNotifications) {
-				int ix = indexOfInitiative(notification.getActivity().getInitiative().getId());
-				if (ix == -1) {
-					List<Notification> newArray = new ArrayList<Notification>();
-					newArray.add(notification);
-					segmentedPerUserAndInitiativeNotifications.add(newArray);
-				} else {
-					segmentedPerUserAndInitiativeNotifications.get(ix).add(notification);
+				// TODO: notifications on sections and cards are not associated to one initiative
+				if (notification.getActivity().getInitiative() != null) {
+					int ix = indexOfInitiative(notification.getActivity().getInitiative().getId());
+					if (ix == -1) {
+						List<Notification> newArray = new ArrayList<Notification>();
+						newArray.add(notification);
+						segmentedPerUserAndInitiativeNotifications.add(newArray);
+					} else {
+						segmentedPerUserAndInitiativeNotifications.get(ix).add(notification);
+					}	
 				}
 			}
 			

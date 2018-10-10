@@ -8,7 +8,8 @@
       :showMessagesText="showMessagesText"
       :contextElementId="contextElementId"
       @edit-message="$emit('edit-message', $event)"
-      @reply-to-message="$emit('reply-to-message', $event)">
+      @reply-to-message="$emit('reply-to-message', $event)"
+      @reset-activity="$emit('reset-activity')">
     </app-activity-row>
   </table>
 </template>

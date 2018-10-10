@@ -20,7 +20,8 @@
         :showMessagesText="showMessagesText"
         :contextElementId="contextElementId"
         @edit-message="$emit('edit-message', $event)"
-        @reply-to-message="$emit('reply-to-message', $event)">
+        @reply-to-message="$emit('reply-to-message', $event)"
+        @reset-activity="getActivity('RESET')">
       </app-activity-table>
     </div>
     <div  v-if="activities.length === 0 && !loading" class="w3-padding">

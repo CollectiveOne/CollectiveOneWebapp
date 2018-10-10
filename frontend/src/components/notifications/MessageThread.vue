@@ -225,14 +225,18 @@ export default {
     scrollToBottom () {
       this.$nextTick(() => {
         var container = this.$refs.historyContainer
-        container.scrollTop = container.scrollHeight
+        if (container != null) {
+          container.scrollTop = container.scrollHeight
+        }
       })
     },
     addedOlder (payload) {
       this.$nextTick(() => {
         var container = this.$refs.historyContainer
-        var newHeight = container.childNodes[0].offsetHeight
-        container.scrollTop = newHeight - payload.height
+        if (container != null) {
+          var newHeight = container.childNodes[0].offsetHeight
+          container.scrollTop = newHeight - payload.height
+        }
       })
     },
     showOnlyMessagesClicked () {

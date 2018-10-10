@@ -132,4 +132,9 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 		return res == null ? false : res > 0;
 	}
 	
+	default ModelCardWrapperAddition findFirstOfCardWrapper(UUID cardWrapperId) {
+		List<ModelCardWrapperAddition> allAdditions = findOfCardWrapper(cardWrapperId);
+		return allAdditions.size() > 0 ? allAdditions.get(0) : null;
+	}
+	
 }

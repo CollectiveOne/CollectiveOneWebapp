@@ -3,32 +3,20 @@
     @mouseover="hovering = true"
     @mouseleave="hovering = false">
 
-    <div class="w3-row card-container cursor-pointer" :class="{'limit-height': !showFull}"
-      ref="cardContent">
-
-      <div class="w3-row" @click="cardClicked()">
-        <div v-if="hasImage"
-          class="w3-row w3-center w3-display-container image-container">
-          <img class="" :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
-        </div>
-
-        <div class="card-container-padded">
-          <div v-if="card.title !== ''" class="w3-row card-title">
-            {{ card.title }}
-          </div>
-
-          <div ref="cardText"
-            class="w3-row card-text">
-            <vue-markdown v-if="card.text" class="marked-text" :source="card.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
-          </div>
-        </div>
+    <div class="card-content-container" :class="{'limit-height': !showFull}">
+      <div class=""
+        ref="cardContent" >
+        <app-model-card-as-card-content
+         :card="card"
+         :showFull="showFull"
+         @card-clicked="cardClicked()">
+        </app-model-card-as-card-content>
       </div>
-
     </div>
 
     <div class="w3-row bottom-row light-grey">
 
-      <div v-if="textTooLong()" class="expand-height-button">
+      <div v-if="textTooLong" class="expand-height-button">
         <div @click="showMoreClick()"
           class="w3-padding gray-2-color cursor-pointer">
           <i class="fa fa-arrows-v" aria-hidden="true"></i>
@@ -64,6 +52,7 @@
 
 <script>
 import { cardMixin } from '@/components/model/cards/cardMixin.js'
+import ModelCardAsCardContent from '@/components/model/cards/ModelCardAsCardContent.vue'
 import CardUserIndicators from '@/components/model/cards/CardUserIndicators.vue'
 
 export default {
@@ -73,7 +62,8 @@ export default {
   mixins: [ cardMixin ],
 
   components: {
-    'app-card-user-indicators': CardUserIndicators
+    'app-card-user-indicators': CardUserIndicators,
+    'app-model-card-as-card-content': ModelCardAsCardContent
   },
 
   props: {
@@ -82,28 +72,27 @@ export default {
   data () {
     return {
       hovering: false,
-      showFull: false
+      showFull: false,
+      textTooLong: false
     }
   },
 
   computed: {
     card () {
       return this.cardWrapper.card
-    },
-    hasImage () {
-      return this.card.imageFile !== null
     }
   },
 
   methods: {
-    textTooLong () {
-      if (!this.$refs.cardText) {
-        return false
+    checkTextTooLong () {
+      if (!this.$refs.cardContent) {
+        this.textTooLong = false
       }
-      if (this.$refs.cardText.scrollHeight > 250) {
-        return true
+      console.log(this.$refs.cardContent.scrollHeight)
+      if (this.$refs.cardContent.scrollHeight > 250) {
+        this.textTooLong = true
       } else {
-        return this.$refs.cardText.clientHeight < this.$refs.cardText.scrollHeight
+        this.textTooLong = this.$refs.cardContent.clientHeight < this.$refs.cardContent.scrollHeight
       }
     },
     hoverEnter () {
@@ -120,20 +109,19 @@ export default {
   },
 
   mounted () {
+    this.$nextTick(() => {
+      this.checkTextTooLong()
+    })
   }
 }
 </script>
 
 <style scoped>
 
-.card-container {
-  max-height: 750px;
+.card-content-container {
+  max-height: 80vh;
   transition: max-height 1000ms ease;
   overflow-y: auto;
-}
-
-.card-container-padded {
-  padding: 8px 6px 12px 12px !important;
 }
 
 .limit-height {
@@ -153,23 +141,6 @@ export default {
   margin-top: 3px;
 }
 
-.image-container {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  min-height: 80px;
-  max-height: 150px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-}
-
-.image-container img {
-  max-height: 100%;
-  max-width: 100%;
-}
-
 .image-container-doc {
   height: 350px;
   margin-bottom: 16px;
@@ -177,10 +148,6 @@ export default {
 
 .image-container-doc img {
   height: 100%;
-}
-
-.card-text {
-  overflow-y: hidden;
 }
 
 .card-text-ascard-no-image {
