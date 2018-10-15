@@ -9,3 +9,5 @@ For the moment, the CollectiveOne project, as owner of this software, grants lim
 All other uses of the sottware, in particular runing it on a web server accessible to more than 100 users, either for-profit or not, is forbidden.
 
 CollectiveOne will, nevertheless, be open to provide licenses for deployments to more than 100 users on a case-by-case basis and for organizations with a special social purposes or non-profits.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
