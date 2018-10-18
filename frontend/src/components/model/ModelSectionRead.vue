@@ -29,7 +29,7 @@
 
       <div class="section-content">
         <div class="w3-row control-btns-row">
-          <div class="">
+          <div class="w3-col s12 m4">
             <div @click="summaryView()" class="w3-left control-btn" :class="{'control-btn-selected': isSummary}">
               <img src="./../../assets/rows-icon.svg" alt="">
             </div>
@@ -38,6 +38,11 @@
             </div>
             <div @click="docView()" class="w3-left control-btn" :class="{'control-btn-selected': isDoc}">
               <img src="./../../assets/doc-icon.svg" alt="">
+            </div>
+          </div>
+          <div  v-if="isPublic" class="w3-col s12 m8 ">
+            <div class="control-btn section-link w3-left">
+              <app-model-section-link :section="section" :text="$t('model.SEE_IN_COLLECTIVEONE')"></app-model-section-link>.
             </div>
           </div>
         </div>
@@ -69,17 +74,20 @@
 <script>
 import ModelSection from '@/components/model/ModelSection'
 import ModelSectionNavSimple from '@/components/model/nav/ModelNavSimple'
+import ModelSectionLink from '@/components/global/ModelSectionLink.vue'
 
 export default {
 
   components: {
     'app-model-section': ModelSection,
-    'app-model-section-nav-simple': ModelSectionNavSimple
+    'app-model-section-nav-simple': ModelSectionNavSimple,
+    'app-model-section-link': ModelSectionLink
   },
 
   data () {
     return {
       section: null,
+      initiative: null,
       loading: false,
       showCardModal: false,
       expandModelNav: true
@@ -101,6 +109,9 @@ export default {
     },
     isDoc () {
       return this.cardsType === 'doc'
+    },
+    isPublic () {
+      return this.initiative !== null ? (this.initiative.meta.visibility !== null ? this.initiative.meta.visibility === 'PUBLIC' : false) : false
     }
   },
 
@@ -117,6 +128,23 @@ export default {
     expandModelNavClicked () {
       this.expandModelNav = !this.expandModelNav
     },
+    updateInitiative () {
+      this.axios.get('/1/initiative/' + this.section.initiativeId, {
+        params: {
+          addAssetsIds: false,
+          addSubinitiatives: false,
+          addParents: false,
+          addMembers: false,
+          addLoggedUser: false
+        }
+      }).then((response) => {
+        if (response.data.result === 'success') {
+          this.initiative = response.data.data
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     updateSection () {
       this.loading = true
       this.axios.get('/1/model/section/' + this.sectionId, {params: {levels: 999}})
@@ -125,6 +153,7 @@ export default {
         if (response.data.result === 'success') {
           this.section = response.data.data
           this.checkCardSubroute()
+          this.updateInitiative()
         }
       }).catch((err) => {
         console.log(err)
@@ -196,8 +225,15 @@ export default {
   flex-shrink: 0;
 }
 
+.control-btns-row .w3-col {
+  margin-bottom: 5px;
+}
+
 .control-btn {
   margin-right: 6px;
+}
+
+.section-link {
 }
 
 .section-component-doc {

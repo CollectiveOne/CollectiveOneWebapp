@@ -505,7 +505,7 @@ public class InitiativeService {
 		InitiativeMeta initiativeMeta = initiative.getMeta();
 		
 		String oldName = initiativeMeta.getName();
-		String oldDriver = initiativeMeta.getDriver();
+		String oldDriver = initiativeMeta.getDriver() == null ? "" : initiativeMeta.getDriver();
 		
 		initiativeMeta.setName(initiativeDto.getName());
 		initiativeMeta.setDriver(initiativeDto.getDriver());

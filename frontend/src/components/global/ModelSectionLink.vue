@@ -5,7 +5,7 @@
       'initiativeId': this.section ? this.section.initiativeId : '',
       'sectionId': this.section ? this.section.id : ''
       }}">
-    {{ this.section ? section.title : '' }}
+    {{ this.anchorText }}
   </router-link>
 </template>
 
@@ -14,6 +14,16 @@ export default {
   props: {
     section: {
       type: Object
+    },
+    text: {
+      type: String,
+      default: ''
+    }
+  },
+
+  computed: {
+    anchorText () {
+      return this.text === '' ? (this.section ? this.section.title : '') : this.text
     }
   }
 }

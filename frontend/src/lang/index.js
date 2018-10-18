@@ -409,7 +409,8 @@ const translations = {
       'UNDECIDED': 'Undecided',
       'OBJECT': 'Block',
       'CLOSED': 'closed',
-      'OPEN': 'open'
+      'OPEN': 'open',
+      'SEE_IN_COLLECTIVEONE': 'See in CollectiveOne'
     },
     help: {
       'MESSAGES-TAB-TT': 'messages',
@@ -839,7 +840,8 @@ const translations = {
       'UNDECIDED': 'Neutral',
       'OBJECT': 'Bloquear',
       'CLOSED': 'cerrada',
-      'OPEN': 'abierta'
+      'OPEN': 'abierta',
+      'SEE_IN_COLLECTIVEONE': 'Ver en CollectiveOne'
     },
     help: {
       'MESSAGES-TAB-TT': 'mensajes',
