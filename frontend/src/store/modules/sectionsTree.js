@@ -82,7 +82,7 @@ const mutations = {
           section: payload.sectionData.section,
           subsectionsData: payload.sectionData.subsectionsData,
           subsectionsDataSet: true,
-          expand: true
+          expand: false
         }]
         return
       }
@@ -132,6 +132,7 @@ const mutations = {
 
 const actions = {
   resetSectionsTree: (context, payload) => {
+    console.log('reseting sectionData ' + payload.baseSectionId)
     context.dispatch('appendSectionData', {
       sectionId: payload.baseSectionId,
       coord: [0]
@@ -144,6 +145,7 @@ const actions = {
   Its an asynchronoues method that gets the data from the backend */
   appendSectionData: (context, payload) => {
     return new Promise((resolve, reject) => {
+      console.log('appending sectionData ' + payload.sectionId)
       Vue.axios.get('/1/model/section/' + payload.sectionId,
       {
         params: {
@@ -225,6 +227,7 @@ const actions = {
     let newCoord = payload.coord.concat(ixNext)
     let newSectionData = getSectionDataAtCoord(state.sectionsTree, newCoord)
 
+    console.log('expanding and continue ' + payload.sectionData.section.title)
     context.dispatch('appendSectionData', {
       sectionId: sectionData.subsectionsData[ixNext].section.id,
       parentSectionId: sectionData.section.id,
@@ -249,6 +252,7 @@ const actions = {
     sectionData.expand = true
 
     /* force subsections to be appended */
+    console.log('expanding ' + sectionData.section.title)
     if (!sectionData.subsectionsDataSet) {
       context.dispatch('appendSectionData', {
         parentSectionId: sectionData.inSection.id,
@@ -260,6 +264,7 @@ const actions = {
     /* besides expanding, preload the subsections of each subsection */
     for (let ix = 0; ix < sectionData.subsectionsData.length; ix++) {
       if (!sectionData.subsectionsData[ix].subsectionsDataSet) {
+        console.log('preloading ' + sectionData.subsectionsData[ix].section.title + ' id: ' + sectionData.subsectionsData[ix].section.id)
         context.dispatch('appendSectionData', {
           sectionId: sectionData.subsectionsData[ix].section.id,
           parentSectionId: sectionData.section.id,

@@ -151,6 +151,7 @@ export default {
 
   watch: {
     '$store.state.sectionsTree.triggerUpdateExpands' () {
+      console.log('checking expand subsections due to triggerUpdateExpands')
       this.checkExpandSubsections()
     },
     levels () {
@@ -319,11 +320,13 @@ export default {
     checkExpandSubsections () {
       if (this.highlightLevelUse > 1) {
         if (!this.infiniteLevels) {
+          console.log('expanding subsections of ' + this.section.title + ' id: ' + this.section.id + ' due to levels')
           this.expandSubsections()
         }
       } else {
         if (this.sectionData) {
           if (this.sectionData.expand) {
+            console.log('expanding subsections of ' + this.section.title + ' id: ' + this.section.id + ' due to expand flag')
             this.expandSubsections()
           }
         }
