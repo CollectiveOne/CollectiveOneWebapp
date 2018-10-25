@@ -377,7 +377,8 @@ const translations = {
       'MOVE_MESSAGE': 'Move Message',
       'TO_SECTION_CM': 'To Section',
       'TO_CARD_CM': 'To Card',
-      'CONVERT_TO_CARD': 'convert to card'
+      'CONVERT_TO_CARD': 'convert to card',
+      'DELETE_MSG_WARNING': '<b>Warning:</b> Are you sure you want to delete this message? This cannot be undone.'
     },
     model: {
       'SECTION': 'section',
@@ -812,7 +813,8 @@ const translations = {
       'MOVE_MESSAGE': 'Mover Mensaje',
       'TO_SECTION_CM': 'A Section',
       'TO_CARD_CM': 'A Tarjeta',
-      'CONVERT_TO_CARD': 'convertir en tarjeta'
+      'CONVERT_TO_CARD': 'convertir en tarjeta',
+      'DELETE_MSG_WARNING': '<b>Atención:</b> Esta segure de querer borrar este mensaje? Esta acción no es reversible.'
     },
     model: {
       'SECTION': 'sección',

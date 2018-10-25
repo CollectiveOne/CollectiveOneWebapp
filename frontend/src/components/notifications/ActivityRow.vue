@@ -16,8 +16,7 @@
     </td>
     <td class="text-div wrap-long w3-display-container"
       @mouseover="hovering = true"
-      @mouseleave="hovering = false"
-      @click="clicked = !clicked">
+      @mouseleave="hovering = false">
 
       <div class="top-line w3-row">
         <div class="w3-small w3-left event-trigger-user">
@@ -252,7 +251,7 @@
             {{ $t('notifications.TO_POSITION', { position: getConsentPositionText(activity.positionColor) }) }}.
           </span>
 
-          <span v-if="isMessagePosted && (!showMessagesText || isExternalMessage)">
+          <span v-if="isMessagePosted && (!showMessagesText)">
             <span v-if="loggedUserMentioned">{{ $t('notifications.MENTIONED_YOU') }}</span>
             <span v-else>{{ $t('notifications.COMMENTED_IN') }} </span>
 
@@ -277,14 +276,19 @@
       </div>
 
       <div v-if="isMessagePosted && showMessagesText" class="w3-row cursor-pointer" @click="replyToMessage(false)">
-        <vue-markdown class="marked-text message-container" :source="activity.message.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
+        <div v-if="!messageDeleted" class="">
+          <vue-markdown class="marked-text message-container" :source="activity.message.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
+        </div>
+        <div v-else class="">
+          [deleted]
+        </div>
       </div>
 
       <div class="message-options" v-if="isMessagePosted && showMessagesText">
         <transition name="fadeenter">
-          <div v-if="hovering && $store.state.user.authenticated">
+          <div v-if="$store.state.user.authenticated && !messageDeleted">
 
-            <popper :append-to-body="false" trigger="click" :options="popperOptions" :toggleShow="toggleMessageOptions" class="">
+            <popper :append-to-body="true" trigger="click" :options="popperOptions" :toggleShow="toggleMessageOptions" class="">
               <div class="">
                 <app-drop-down-menu
                   class="drop-menu"
@@ -292,11 +296,31 @@
                   @edit="editMessage()"
                   @move="moveMessage()"
                   @convert-to-card="convertMessageToCard()"
+                  @remove="removeIntent = true"
                   :items="menuItems">
                 </app-drop-down-menu>
+
+                <div class="w3-card w3-white drop-menu">
+
+                  <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
+                    <div class="w3-padding w3-round light-grey w3-margin-bottom">
+                      <p v-html="$t('notifications.DELETE_MSG_WARNING')"></p>
+                    </div>
+                    <button
+                      class="w3-button light-grey"
+                      @click="removeIntent = false">{{ $t('general.CANCEL') }}
+                    </button>
+                    <button
+                      class="w3-button button-blue"
+                      @click="removeMessage()">{{ $t('general.CONFIRM') }}
+                    </button>
+                  </div>
+
+                </div>
+
               </div>
 
-              <div slot="reference" class="expand-btn w3-large fa-button">
+              <div slot="reference" class="expand-btn w3-large fa-button gray-2-color">
                 <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
               </div>
             </popper>
@@ -362,10 +386,10 @@ export default {
   data () {
     return {
       hovering: false,
-      clicked: false,
       toggleMessageOptions: false,
       showMoveMessageModal: false,
-      showConvertMessageModal: false
+      showConvertMessageModal: false,
+      removeIntent: false
     }
   },
 
@@ -540,6 +564,12 @@ export default {
         }
       }
     },
+    messageDeleted () {
+      if (this.activity.message) {
+        return this.activity.message.status === 'DELETED'
+      }
+      return false
+    },
     outsideOfThisContext () {
       if (this.applicableOnSection) {
         return this.applicableOnSection.id !== this.contextElementId
@@ -650,11 +680,19 @@ export default {
         })
       }
 
+      if (this.authorIsLoggedUser) {
+        items.push({
+          text: this.$t('general.REMOVE'),
+          value: 'remove',
+          faIcon: 'fa-times'
+        })
+      }
+
       return items
     },
 
     applicableOnSection () {
-      return this.activity.modelCardWrapper != null ? this.activity.onSection : this.activity.modelSection
+      return this.activity.modelCardWrapper != null ? (this.activity.onSection != null ? this.activity.onSection : this.activity.modelSection) : this.activity.modelSection
     }
   },
   methods: {
@@ -703,6 +741,19 @@ export default {
         console.log(error)
       })
     },
+    removeMessage () {
+      this.toggleMessageOptions = !this.toggleMessageOptions
+
+      this.axios.delete('/1/messages/' + this.activity.message.id, {}).then((response) => {
+        if (response.data.result === 'success') {
+          this.$emit('reset-activity')
+        } else {
+          console.log(response.data.message)
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
     getTimeStrSince (v) {
       return getTimeStrSince(v)
     },
@@ -720,6 +771,9 @@ export default {
 
       return ''
     }
+  },
+
+  mounted () {
   }
 }
 </script>

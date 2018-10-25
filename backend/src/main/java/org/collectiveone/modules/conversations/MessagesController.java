@@ -82,6 +82,25 @@ public class MessagesController extends BaseController {
 		return messageService.editMessage(messageDto, getLoggedUserId(), UUID.fromString(messageId));
 	}
 	
+	/* deletes a message */
+	@RequestMapping(path = "/messages/{messageId}", method = RequestMethod.DELETE) 
+	public PostResult deleteMessage(
+			@PathVariable("messageId") UUID messageId) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID initiativeId = messageService.getInitiativeIdOfMessage(messageId);
+		
+		/* check user can add a comment to the target position */
+		if (governanceService.canEditModel(initiativeId, getLoggedUserId()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return messageService.deleteMessage(getLoggedUserId(), messageId);
+	}
+	
 	/* moves an existing message (context type + element id are used as the identifier of the location of the message) */
 	@RequestMapping(path = "/message/{contextElementType}/{contextElementId}/{messageId}/move", method = RequestMethod.PUT) 
 	public PostResult moveMessage(

@@ -7,11 +7,14 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.Activity;
 import org.collectiveone.modules.activity.ActivityService;
+import org.collectiveone.modules.activity.repositories.ActivityRepositoryIf;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.ModelScope;
 import org.collectiveone.modules.model.ModelService;
 import org.collectiveone.modules.model.dto.ModelCardDto;
+import org.collectiveone.modules.model.enums.Status;
 import org.collectiveone.modules.model.exceptions.WrongLinkOfElement;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
@@ -25,6 +28,9 @@ public class MessageService {
 	
 	@Autowired
 	private ActivityService activityService;
+	
+	@Autowired
+	private ActivityRepositoryIf activityRepository;
 	
 	@Autowired
 	private ModelService modelService;
@@ -45,6 +51,17 @@ public class MessageService {
 	private ModelCardWrapperRepositoryIf modelCardWrapperRepository;
 
 
+	@Transactional
+	public UUID getInitiativeIdOfMessage(UUID messageId) {
+		Activity activity = activityRepository.findOfMessagePosted(messageId);
+		
+		if (activity.getModelCardWrapper() != null) {
+			return getInitiativeIdOfMessage(MessageThreadContextType.MODEL_CARD, activity.getModelCardWrapper().getId());
+		} else {
+			return getInitiativeIdOfMessage(MessageThreadContextType.MODEL_SECTION, activity.getModelSection().getId());
+		}
+	}
+	
 	@Transactional
 	public UUID getInitiativeIdOfMessage(MessageThreadContextType contextType, UUID elementId) {
 		
@@ -146,6 +163,26 @@ public class MessageService {
 		message = messageRepository.save(message);
 		
 		return new PostResult("success", "message edited", message.getId().toString());		 		
+	}
+	
+	@Transactional
+	public PostResult deleteMessage(UUID editorId, UUID messageId) {
+		
+		Message message = messageRepository.findById(messageId);
+		
+		if (message == null) {
+			return new PostResult("error", "message not found", null);		 		
+		}
+		
+		/* only author can delete a message */
+		if (!message.getAuthor().getC1Id().equals(editorId)) {
+			return new PostResult("error", "only author can edit a message", null);
+		}
+		
+		message.setStatus(Status.DELETED);
+		message = messageRepository.save(message);
+		
+		return new PostResult("success", "message deleted", message.getId().toString());		 		
 	}
 	
 }
