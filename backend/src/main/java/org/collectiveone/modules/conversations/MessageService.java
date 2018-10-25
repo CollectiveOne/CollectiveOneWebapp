@@ -71,6 +71,10 @@ public class MessageService {
 			UUID elementId,
 			UUID contextOfContextElementId) {
 		
+		if (messageDto.getText() == null || messageDto.getText().equals("")) {
+			return new PostResult("error", "empty messages cannot be posted", "");		 		
+		}
+		
 		AppUser author = appUserRepository.findByC1Id(authorId);
 		Message message = messageDto.toEntity(messageDto, author);
 		message = messageRepository.save(message);

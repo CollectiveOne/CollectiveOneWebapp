@@ -14,19 +14,24 @@
     <td class="avatar-col w3-center">
       <app-user-avatar :user="activity.triggerUser" :showName="false" :small="true"></app-user-avatar>
     </td>
-    <td class="text-div wrap-long cursor-pointer w3-display-container"
+    <td class="text-div wrap-long w3-display-container"
       @mouseover="hovering = true"
       @mouseleave="hovering = false"
       @click="clicked = !clicked">
 
       <div class="top-line w3-row">
         <div class="w3-small w3-left event-trigger-user">
-          <span v-if="addContext">
-            {{ $t('notifications.IN') }}<app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-          </span>
           <b><app-user-link :user="activity.triggerUser"></app-user-link></b>
           <span v-if="addTime">
              , {{ $t('notifications.TIME_AGO', { time: getTimeStrSince(activity.timestamp) }) }}
+          </span>
+
+          <span v-if="outsideOfThisContext">
+            , in
+            <app-model-section-tag
+              style="display: inline-block; margin-left: 4px;"
+              :section="applicableOnSection">
+            </app-model-section-tag>
           </span>
         </div>
 
@@ -271,18 +276,19 @@
         </div>
       </div>
 
-      <div v-if="isMessagePosted && showMessagesText" class="w3-row">
+      <div v-if="isMessagePosted && showMessagesText" class="w3-row cursor-pointer" @click="replyToMessage(false)">
         <vue-markdown class="marked-text message-container" :source="activity.message.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
       </div>
 
       <div class="message-options" v-if="isMessagePosted && showMessagesText">
         <transition name="fadeenter">
-          <div v-if="hovering">
+          <div v-if="hovering && $store.state.user.authenticated">
 
             <popper :append-to-body="false" trigger="click" :options="popperOptions" :toggleShow="toggleMessageOptions" class="">
               <div class="">
                 <app-drop-down-menu
                   class="drop-menu"
+                  @reply="replyToMessage(true)"
                   @edit="editMessage()"
                   @move="moveMessage()"
                   @convert-to-card="convertMessageToCard()"
@@ -311,6 +317,7 @@ import ModelSectionLink from '@/components/global/ModelSectionLink.vue'
 import ModelCardInSectionLink from '@/components/global/ModelCardInSectionLink.vue'
 import ModelCardAloneLink from '@/components/global/ModelCardAloneLink.vue'
 import MoveMessageModal from '@/components/modal/MoveMessageModal.vue'
+import ModelSectionTag from '@/components/model/ModelSectionTag.vue'
 
 import { getTimeStrSince } from '@/lib/common.js'
 
@@ -348,7 +355,8 @@ export default {
     'app-model-section-link': ModelSectionLink,
     'app-model-card-link': ModelCardInSectionLink,
     'app-model-card-alone-link': ModelCardAloneLink,
-    'app-move-message-modal': MoveMessageModal
+    'app-move-message-modal': MoveMessageModal,
+    'app-model-section-tag': ModelSectionTag
   },
 
   data () {
@@ -532,6 +540,12 @@ export default {
         }
       }
     },
+    outsideOfThisContext () {
+      if (this.applicableOnSection) {
+        return this.applicableOnSection.id !== this.contextElementId
+      }
+      return false
+    },
 
     initiativeChanged () {
       var nameChanged = false
@@ -599,27 +613,48 @@ export default {
       }
     },
 
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
+
     menuItems () {
       let items = []
 
       items.push({
-        text: this.$t('general.EDIT'),
-        value: 'edit',
-        faIcon: 'fa-pencil' })
-
-      items.push({
-        text: this.$t('general.MOVE'),
-        value: 'move',
-        faIcon: 'fa-arrow-circle-right'
+        text: this.$t('notifications.REPLY'),
+        value: 'reply',
+        faIcon: 'fa-reply'
       })
 
-      items.push({
-        text: this.$t('notifications.CONVERT_TO_CARD'),
-        value: 'convert-to-card',
-        faIcon: 'fa-square-o'
-      })
+      if (this.authorIsLoggedUser) {
+        items.push({
+          text: this.$t('general.EDIT'),
+          value: 'edit',
+          faIcon: 'fa-pencil'
+        })
+      }
+
+      if (this.isLoggedAnEditor) {
+        items.push({
+          text: this.$t('general.MOVE'),
+          value: 'move',
+          faIcon: 'fa-arrow-circle-right'
+        })
+      }
+
+      if (this.isLoggedAnEditor) {
+        items.push({
+          text: this.$t('notifications.CONVERT_TO_CARD'),
+          value: 'convert-to-card',
+          faIcon: 'fa-square-o'
+        })
+      }
 
       return items
+    },
+
+    applicableOnSection () {
+      return this.activity.modelCardWrapper != null ? this.activity.onSection : this.activity.modelSection
     }
   },
   methods: {
@@ -635,9 +670,11 @@ export default {
       this.$emit('edit-message', this.activity.message)
       this.toggleMessageOptions = !this.toggleMessageOptions
     },
-    replyToMessage () {
+    replyToMessage (toggleFlag) {
       this.$emit('reply-to-message', this.activity)
-      this.toggleMessageOptions = !this.toggleMessageOptions
+      if (toggleFlag) {
+        this.toggleMessageOptions = !this.toggleMessageOptions
+      }
     },
     moveMessage () {
       this.toggleMessageOptions = !this.toggleMessageOptions
@@ -652,7 +689,7 @@ export default {
         newScope: 'COMMON'
       }
 
-      var toSectionId = this.activity.modelCardWrapper != null ? this.activity.onSection.id : this.activity.modelSection.id
+      var toSectionId = this.applicableOnSection.id
 
       /* create new card */
       this.sendingData = true

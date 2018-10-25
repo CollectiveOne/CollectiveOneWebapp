@@ -2,18 +2,19 @@
   <div class="">
     <div v-for="inSection in inModelSections" :key="inSection.id"
       v-if="showThisTag(inSection)" class="w3-left insection-tag-container">
-      <div class="">
-        <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: inSection.id } }"
-          class="w3-tag w3-round w3-small" :class="tagClass(inSection)">
-          {{ inSection.title }}
-        </router-link>
-      </div>
+      <app-model-section-tag :section="inSection"></app-model-section-tag>
     </div>
   </div>
 </template>
 
 <script>
+import ModelSectionTag from '@/components/model/ModelSectionTag.vue'
+
 export default {
+  components: {
+    'app-model-section-tag': ModelSectionTag
+  },
+
   props: {
     inModelSections: {
       type: Array,
@@ -29,23 +30,6 @@ export default {
     showThisTag (inSection) {
       /* hide the card in which this section is from tags */
       return inSection.id !== this.hideSectionId
-    },
-    tagClass (inSection) {
-      let cClass = {}
-      switch (inSection.scope) {
-        case 'PRIVATE':
-          cClass['tag-red'] = true
-          break
-
-        case 'SHARED':
-          cClass['tag-yellow'] = true
-          break
-
-        default:
-          cClass['tag-blue'] = true
-          break
-      }
-      return cClass
     }
   }
 }

@@ -19,7 +19,7 @@
         @reply-to-message="replyToMessage($event)">
       </app-activity-getter>
     </div>
-    <div class="w3-row w3-margin-top bottom-container">
+    <div v-if="$store.state.user.authenticated" class="w3-row w3-margin-top bottom-container">
       <div v-if="editing" class="">
         <div class="success-panel w3-padding w3-margin-bottom">
           {{ $t('notifications.EDITING_MESSAGE') }}
@@ -33,8 +33,8 @@
         </div>
       </div>
       <app-error-panel
-        :show="showMembersOnly"
-        :message="$t('notifications.ONLY_MEMBERS_CAN_COMMENT')">
+        :show="showSendError"
+        :message="sendErrorMessage">
       </app-error-panel>
       <app-markdown-editor
         class="editor-container"
@@ -96,7 +96,8 @@ export default {
       intervalId: 0,
       editing: false,
       messageToEdit: null,
-      showMembersOnly: false,
+      showSendError: false,
+      sendErrorMessage: '',
       writting: false,
       lastMessage: null,
       replying: false,
@@ -209,7 +210,12 @@ export default {
             this.newMessageText = ''
             this.triggerRefresh = !this.triggerRefresh
           } else {
-            this.showMembersOnly = true
+            this.showSendError = true
+            if (this.data.message === 'not authorized') {
+              this.sendErrorMessage = this.$t('notifications.ONLY_MEMBERS_CAN_COMMENT')
+            } else {
+              this.sendErrorMessage = response.data.message
+            }
           }
         })
       } else {
