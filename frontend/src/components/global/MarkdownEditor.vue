@@ -52,9 +52,14 @@
       <div class="send-button-container">
         <button class="w3-button app-button" name="button"
           @click="send()">
-          <i class="fa fa-paper-plane" aria-hidden="true"></i>
-          <br>
-          <small>ctr + &crarr;</small>
+          <div v-if="!sending">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            <br>
+            <small>ctr + &crarr;</small>
+          </div>
+          <div v-else class="sending-container">
+            <img class="" src="../../assets/loading.gif" alt="">
+          </div>
         </button>
       </div>
     </div>
@@ -75,6 +80,10 @@ export default {
       default: ''
     },
     showSendAndMentions: {
+      type: Boolean,
+      default: false
+    },
+    sending: {
       type: Boolean,
       default: false
     },
@@ -280,19 +289,21 @@ export default {
       }
     },
     send () {
-      var info = {
-        message: this.value,
-        mentions: this.mentionedUsers.map(e => e.c1Id)
-      }
-      this.$emit('send', info)
-      this.userSuggestions = []
-      this.mentionedUsers = []
-      this.preview = false
-      this.sideBySide = false
+      if (!this.sending) {
+        var info = {
+          message: this.value,
+          mentions: this.mentionedUsers.map(e => e.c1Id)
+        }
+        this.$emit('send', info)
+        this.userSuggestions = []
+        this.mentionedUsers = []
+        this.preview = false
+        this.sideBySide = false
 
-      // now delete edit content from backup
-      if (this.keepBackup) {
-        this.$store.dispatch('clearMarkdownBackupData', this.elementId)
+        // now delete edit content from backup
+        if (this.keepBackup) {
+          this.$store.dispatch('clearMarkdownBackupData', this.elementId)
+        }
       }
     }
   },
@@ -365,6 +376,10 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+}
+
+.send-button-container img {
+  width: 35px;
 }
 
 .markdown-container {

@@ -43,6 +43,7 @@
         :showToolbar="false"
         :showSendAndMentions="true"
         :elementId="contextElementId"
+        :sending="sending"
         @c-focus="writting = true"
         @c-blur="writting = false"
         @send="send($event)">
@@ -103,7 +104,8 @@ export default {
       replying: false,
       replyingToActivity: null,
       triggerRefresh: false,
-      triggerUpdate: false
+      triggerUpdate: false,
+      sending: false
     }
   },
 
@@ -198,6 +200,7 @@ export default {
           }
         }
 
+        this.sending = true
         this.axios.post(
           '/1/messages/' + contextType + '/' + contextElementId,
           message, {
@@ -205,17 +208,21 @@ export default {
               contextOfContextElementId: this.contextOfContextElementId
             }
           }).then((response) => {
+          this.sending = false
           if (response.data.result === 'success') {
             this.replying = false
             this.newMessageText = ''
             this.triggerRefresh = !this.triggerRefresh
           } else {
             this.showSendError = true
-            if (this.data.message === 'not authorized') {
+            if (response.data.message === 'not authorized') {
               this.sendErrorMessage = this.$t('notifications.ONLY_MEMBERS_CAN_COMMENT')
             } else {
               this.sendErrorMessage = response.data.message
             }
+            setTimeout(() => {
+              this.showSendError = false
+            }, 3000)
           }
         })
       } else {
