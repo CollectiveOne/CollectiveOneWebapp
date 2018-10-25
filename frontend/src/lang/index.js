@@ -814,7 +814,7 @@ const translations = {
       'TO_SECTION_CM': 'A Section',
       'TO_CARD_CM': 'A Tarjeta',
       'CONVERT_TO_CARD': 'convertir en tarjeta',
-      'DELETE_MSG_WARNING': '<b>Atención:</b> Esta segure de querer borrar este mensaje? Esta acción no es reversible.'
+      'DELETE_MSG_WARNING': '<b>Atención:</b> Esta seguro de querer borrar este mensaje? Esta acción no es reversible.'
     },
     model: {
       'SECTION': 'sección',
