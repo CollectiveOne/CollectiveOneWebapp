@@ -415,7 +415,8 @@ const translations = {
       'UNDECIDED': 'Undecided',
       'OBJECT': 'Block',
       'CLOSED': 'closed',
-      'OPEN': 'open'
+      'OPEN': 'open',
+      'SECTION_IS_UNDER': 'This section is under'
     },
     help: {
       'MESSAGES-TAB-TT': 'messages',
@@ -851,7 +852,8 @@ const translations = {
       'UNDECIDED': 'Neutral',
       'OBJECT': 'Bloquear',
       'CLOSED': 'cerrada',
-      'OPEN': 'abierta'
+      'OPEN': 'abierta',
+      'SECTION_IS_UNDER': 'Esta sección se encuentra en'
     },
     help: {
       'MESSAGES-TAB-TT': 'mensajes',

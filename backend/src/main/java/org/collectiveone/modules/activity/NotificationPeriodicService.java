@@ -50,7 +50,8 @@ public class NotificationPeriodicService {
 	
 	@Scheduled(fixedDelay = 30000)
 	public void checkWantToContributeNow() throws IOException {
-		List<WantToContributeNotification> notifications = wantToContributeRepository.findByEmailState(NotificationState.PENDING);
+		List<WantToContributeNotification> notifications = 
+				wantToContributeRepository.findByEmailState(NotificationState.PENDING);
 		
 		emailService.sendWantToContributeNotifications(notifications);
 	}
@@ -58,9 +59,19 @@ public class NotificationPeriodicService {
 	@Scheduled(fixedDelay = 30000)
 	public void checkSendEmailsEveryDay() throws IOException {
 		
-		NotificationEmailTracking emailTracking = notificationEmailTrackingRepository.findByType(NotificationTrackingType.NEXT_ONCEADAY);
+		List<NotificationEmailTracking> emailTrackings = 
+				notificationEmailTrackingRepository.findByType(NotificationTrackingType.NEXT_ONCEADAY);
 		
-		if (emailTracking == null) {
+		NotificationEmailTracking emailTracking = null;
+		
+		/* delete repeated entries */
+		if (emailTrackings.size() > 1) {
+			notificationEmailTrackingRepository.delete(emailTrackings.subList(1, emailTrackings.size() - 1));
+			emailTracking = emailTrackings.get(0);
+		}
+		
+		/* create one entry */
+		if (emailTrackings.size() == 0) {
 			emailTracking = new NotificationEmailTracking();
 			emailTracking.setType(NotificationTrackingType.NEXT_ONCEADAY);
 			emailTracking.setTimestamp(tomorrow());
@@ -78,7 +89,16 @@ public class NotificationPeriodicService {
 	
 	@Scheduled(fixedDelay = 30000)
 	public void checkSendEmailsEveryWeek() throws IOException {
-		NotificationEmailTracking emailTracking = notificationEmailTrackingRepository.findByType(NotificationTrackingType.NEXT_ONCEAWEEK);
+		List<NotificationEmailTracking> emailTrackings = 
+				notificationEmailTrackingRepository.findByType(NotificationTrackingType.NEXT_ONCEAWEEK);
+		
+		NotificationEmailTracking emailTracking = null;
+		
+		/* delete repeated entries */
+		if (emailTrackings.size() > 1) {
+			notificationEmailTrackingRepository.delete(emailTrackings.subList(1, emailTrackings.size() - 1));
+			emailTracking = emailTrackings.get(0);
+		}
 		
 		if (emailTracking == null) {
 			emailTracking = new NotificationEmailTracking();
