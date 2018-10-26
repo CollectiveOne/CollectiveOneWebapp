@@ -265,7 +265,43 @@ public class ModelService {
 			activityService.modelSubsectionRemoved(subsection, appUserRepository.findByC1Id(requestedById));
 		}
 		
-		return new PostResult("success", "card added to section", subsection.getId().toString());
+		return new PostResult("success", "subsection removed", subsection.getId().toString());
+	}
+	
+	@Transactional
+	public PostResult resetSubsectionsOrder(UUID sectionId, UUID requestedById) {
+		
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		
+		Boolean isMemberOfEcosystem = initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestedById);
+		
+		List<ModelSubsection> subsections = 
+				modelSubsectionRepository.findSubsectionsVisibleToUser(sectionId, requestedById, isMemberOfEcosystem);
+		
+		for (ModelSubsection subsec : subsections) {
+			subsec.setBeforeElement(null);
+			subsec.setAfterElement(null);
+		}
+		
+		modelSubsectionRepository.save(subsections);
+		
+		return new PostResult("success", "subsections ordered reset", sectionId.toString());
+	}
+	
+	@Transactional
+	public PostResult resetCardWrappersOrder(UUID sectionId, UUID requestedById) {
+		
+		List<ModelCardWrapperAddition> cardWrapperAdditions = 
+				modelCardWrapperAdditionRepository.findInSectionVisibleToUser(sectionId, requestedById);
+		
+		for (ModelCardWrapperAddition cardAddition : cardWrapperAdditions) {
+			cardAddition.setBeforeElement(null);
+			cardAddition.setAfterElement(null);
+		}
+		
+		modelCardWrapperAdditionRepository.save(cardWrapperAdditions);
+		
+		return new PostResult("success", "subsections ordered reset", sectionId.toString());
 	}
 	
 	@Transactional(rollbackOn = Exception.class)

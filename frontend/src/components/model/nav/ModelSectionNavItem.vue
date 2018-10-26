@@ -685,14 +685,14 @@ export default {
   text-align: center;
   width: 30px;
   float: left;
-  padding: 6px 0px;
+  padding: 7.5px 0px 6px 0px;
 }
 
 .notification-div {
   min-height: 1px;
   width: 30px;
   float: left;
-  padding-top: 8px;
+  padding-top: 6px;
 }
 
 .drag-message-div {

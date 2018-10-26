@@ -416,7 +416,9 @@ const translations = {
       'OBJECT': 'Block',
       'CLOSED': 'closed',
       'OPEN': 'open',
-      'SECTION_IS_UNDER': 'This section is under'
+      'SECTION_IS_UNDER': 'This section is under',
+      'RESET_SUBSECTIONS_ORDER': 'reset subsecs order',
+      'RESET_CARDS_ORDER': 'reset cards order'
     },
     help: {
       'MESSAGES-TAB-TT': 'messages',
@@ -853,7 +855,9 @@ const translations = {
       'OBJECT': 'Bloquear',
       'CLOSED': 'cerrada',
       'OPEN': 'abierta',
-      'SECTION_IS_UNDER': 'Esta sección se encuentra en'
+      'SECTION_IS_UNDER': 'Esta sección se encuentra en',
+      'RESET_SUBSECTIONS_ORDER': 'resetear orden de subsecs',
+      'RESET_CARDS_ORDER': 'resetear orden de tarjetas'
     },
     help: {
       'MESSAGES-TAB-TT': 'mensajes',

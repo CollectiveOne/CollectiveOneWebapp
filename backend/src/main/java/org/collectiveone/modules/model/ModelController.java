@@ -161,6 +161,40 @@ public class ModelController extends BaseController {
 		return modelService.removeSubsectionFromSection(UUID.fromString(sectionIdStr), UUID.fromString(subsectionIdStr), getLoggedUserId());
 	}
 	
+	@RequestMapping(path = "/model/section/{sectionId}/resetSubsectionsOrder", method = RequestMethod.DELETE) 
+	public PostResult resetSubsectionsOrder(
+			@PathVariable("sectionId") UUID sectionId) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
+		
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.resetSubsectionsOrder(sectionId, getLoggedUser().getC1Id());
+	}
+	
+	@RequestMapping(path = "/model/section/{sectionId}/resetCardWrappersOrder", method = RequestMethod.DELETE) 
+	public PostResult resetCardwrappersOrder(
+			@PathVariable("sectionId") UUID sectionId) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
+		
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.resetCardWrappersOrder(sectionId, getLoggedUser().getC1Id());
+	}
+	
 	@RequestMapping(path = "/model/section/{sectionId}/moveSubsection/{subsectionId}", method = RequestMethod.PUT) 
 	public PostResult moveSectionSubsection(
 			@PathVariable("sectionId") String sectionIdStr,

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<ModelCardWrapperAddition, UUID> {
 	
@@ -58,6 +59,15 @@ public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<Mod
 			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
 			+ "ORDER BY crdWrpAdd.cardWrapper.creationDate ASC")
 	ModelCardWrapperAddition findBySectionAndCardWrapperVisibleToUser(UUID sectionId, UUID cardWrapperId, UUID adderId);
+	
+	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
+			+ "WHERE crdWrpAdd.section.id = :sectionId "
+			+ "AND (crdWrpAdd.scope != 'PRIVATE' OR crdWrpAdd.adder.c1Id = :adderId) "
+			+ "AND (crdWrpAdd.status != 'DELETED' OR crdWrpAdd.status IS NULL) "
+			+ "ORDER BY crdWrpAdd.cardWrapper.creationDate ASC")
+	List<ModelCardWrapperAddition> findInSectionVisibleToUser(
+			@Param("sectionId") UUID sectionId, 
+			@Param("adderId") UUID adderId);
 	
 	@Query("SELECT crdWrpAdd FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.cardWrapper crdWrp "
