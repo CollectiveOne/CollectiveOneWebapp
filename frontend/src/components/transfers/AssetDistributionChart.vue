@@ -15,8 +15,8 @@
         <div class="w3-col distribution-container" :class="{'l8': showAssigner, 'l12': !showAssigner}">
           <div class="w3-row-padding">
             <div class="w3-col l4 w3-center">
-              <div class="w3-display-container" :class="{tall: isOverview, short: !isOverview}">
-                <div class="w3-display-middle" style="width: 100%">
+              <div class="" :class="{tall: isOverview, short: !isOverview}">
+                <div class="w3-row" style="width: 100%">
                   <div class="w3-row tokens-row">
                     {{ underThisInitiativeStr }} {{ assetData.assetName }}
                   </div>
@@ -24,9 +24,20 @@
                     {{ underThisInitiativePercent }}% {{ $t('tokens.OF_EXISTING') }}
                   </div>
                 </div>
-                <div id="T_addBrandNewTokensModal" v-if="canEdit && canMint " class="w3-button w3-display-bottommiddle" @click="mintClicked()">
-                  <i class="fa fa-plus-circle gray-1-color" aria-hidden="true"></i>
+                <div v-if="canEdit && canMint" class="token-controls">
+                  <div class="btns-container">
+                    <div class="control-btn w3-left" @click="mintClicked()">
+                      <img src="./../../assets/mint.svg" alt="">
+                    </div>
+                    <div class="control-btn w3-left" @click="burnClicked()">
+                      <img src="./../../assets/burn.svg" alt="">
+                    </div>
+                    <div class="control-btn w3-left" @click="deleteClicked()">
+                      <img src="./../../assets/trash.svg" alt="">
+                    </div>
+                  </div>
                 </div>
+
               </div>
             </div>
             <div class="w3-col l8">
@@ -413,9 +424,28 @@ export default {
 }
 
 .tokens-row {
+  margin-top: 20px;
   font-size: 26px;
   font-style: normal;
   font-weight: 900;
+}
+
+.token-controls {
+  display: block;
+  overflow: auto;
+  margin-top: 15px;
+  width: 100%;
+}
+
+.btns-container {
+  margin: 0 auto;
+  display: block;
+  overflow: auto;
+  width: 140px;
+}
+
+.btns-container .control-btn {
+  margin-right: 5px;
 }
 
 .distribution-container {

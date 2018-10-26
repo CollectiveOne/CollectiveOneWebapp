@@ -79,6 +79,9 @@
           </div>
 
         </div>
+        <div v-else class="w3-row w3-center loader-gif-container">
+          <img class="" src="../../assets/loading.gif" alt="">
+        </div>
 
       </div>
     </div>
