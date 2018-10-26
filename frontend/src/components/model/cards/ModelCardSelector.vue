@@ -25,11 +25,13 @@
           v-for="cardWrapper in cardWrappers"
           :key="cardWrapper.id"
           @click="cardClicked(cardWrapper)">
-          <app-model-card
-            :cardWrapperInit="cardWrapper"
-            :inCardSelector="true"
-            :type="cardsType">
-          </app-model-card>
+          <div class="w3-card-4 w3-topbar w3-round-large card-subcontainer-in-selector">
+            <app-model-card-as-card-content
+             :card="cardWrapper.card"
+             :showFull="false"
+             @card-clicked="cardClicked()">
+            </app-model-card-as-card-content>
+          </div>
         </div>
         <div v-if="cardWrappers.length == 0" class="w3-center">
           <i>no cards found</i>
@@ -37,11 +39,13 @@
       </div>
     </div>
     <div v-if="cardSelected !== null" class="w3-row w3-display-container w3-margin-top w3-container">
-      <app-model-card
-        :cardWrapperInit="cardSelected"
-        :inCardSelector="true"
-        :type="cardsType">
-      </app-model-card>
+      <div class="w3-card-4 w3-topbar w3-round-large card-subcontainer-in-selector">
+        <app-model-card-as-card-content
+         :card="cardSelected.card"
+         :showFull="false"
+         @card-clicked="cardClicked()">
+        </app-model-card-as-card-content>
+      </div>
       <div class="delete-selected gray-1-color w3-display-topright w3-xlarge"
         @click="cardDeselected()">
         <i class="fa fa-times-circle cursor-pointer" aria-hidden="true"></i>
@@ -51,14 +55,14 @@
 </template>
 
 <script>
-import ModelCard from '@/components/model/cards/ModelCard.vue'
+import ModelCardAsCardContent from '@/components/model/cards/ModelCardAsCardContent.vue'
 
 export default {
 
   name: 'model-card-selector',
 
   components: {
-    'app-model-card': ModelCard
+    'app-model-card-as-card-content': ModelCardAsCardContent
   },
 
   props: {
@@ -152,6 +156,12 @@ export default {
 </script>
 
 <style scoped>
+
+.card-subcontainer-in-selector {
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+}
 
 .input-div {
   float: left;

@@ -52,5 +52,10 @@ public interface ActivityRepositoryIf extends CrudRepository<Activity, UUID> {
 			+ "WHERE act.modelCardWrapper.id = ?1 "
 			+ "AND act.type = ?2 ORDER BY act.timestamp DESC")
 	List<Activity> findOfCard(UUID cardWrapperId, ActivityType type);	
+	
+	@Query("SELECT act FROM Activity act "
+			+ "WHERE act.message.id = ?1 "
+			+ "AND act.type = 'MESSAGE_POSTED'")
+	Activity findOfMessagePosted(UUID messageId);	
 
 }

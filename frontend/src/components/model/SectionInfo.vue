@@ -52,7 +52,7 @@
           </div>
 
           <div v-if="currentSectionPaths[0].length > 0" class="w3-row">
-            <small>This is section is under:</small>
+            <small>{{ $t('model.SECTION_IS_UNDER') }}:</small>
           </div>
           <div v-if="currentSectionPaths[0].length > 0" class="w3-row"
             v-for="currentSectionPath in currentSectionPaths">

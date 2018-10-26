@@ -14,6 +14,7 @@ public class MessageDto {
 	private String authorId;
 	private AppUserDto author;
 	private String uuidsOfMentions[];
+	private String status;
 
 	public Message toEntity(MessageDto messageDto, AppUser author) {
 		
@@ -62,14 +63,19 @@ public class MessageDto {
 	public void setAuthor(AppUserDto author) {
 		this.author = author;
 	}
-
 	public String[] getUuidsOfMentions() {
 		return uuidsOfMentions;
 	}
-
 	public void setUuidsOfMentions(String[] uuidsOfMentions) {
 		this.uuidsOfMentions = uuidsOfMentions;
 	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 
 
 }

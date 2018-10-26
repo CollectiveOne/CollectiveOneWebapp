@@ -19,7 +19,7 @@
         @reply-to-message="replyToMessage($event)">
       </app-activity-getter>
     </div>
-    <div class="w3-row w3-margin-top bottom-container">
+    <div v-if="$store.state.user.authenticated" class="w3-row w3-margin-top bottom-container">
       <div v-if="editing" class="">
         <div class="success-panel w3-padding w3-margin-bottom">
           {{ $t('notifications.EDITING_MESSAGE') }}
@@ -33,8 +33,8 @@
         </div>
       </div>
       <app-error-panel
-        :show="showMembersOnly"
-        :message="$t('notifications.ONLY_MEMBERS_CAN_COMMENT')">
+        :show="showSendError"
+        :message="sendErrorMessage">
       </app-error-panel>
       <app-markdown-editor
         class="editor-container"
@@ -43,6 +43,7 @@
         :showToolbar="false"
         :showSendAndMentions="true"
         :elementId="contextElementId"
+        :sending="sending"
         @c-focus="writting = true"
         @c-blur="writting = false"
         @send="send($event)">
@@ -96,13 +97,15 @@ export default {
       intervalId: 0,
       editing: false,
       messageToEdit: null,
-      showMembersOnly: false,
+      showSendError: false,
+      sendErrorMessage: '',
       writting: false,
       lastMessage: null,
       replying: false,
       replyingToActivity: null,
       triggerRefresh: false,
-      triggerUpdate: false
+      triggerUpdate: false,
+      sending: false
     }
   },
 
@@ -197,6 +200,7 @@ export default {
           }
         }
 
+        this.sending = true
         this.axios.post(
           '/1/messages/' + contextType + '/' + contextElementId,
           message, {
@@ -204,12 +208,21 @@ export default {
               contextOfContextElementId: this.contextOfContextElementId
             }
           }).then((response) => {
+          this.sending = false
           if (response.data.result === 'success') {
             this.replying = false
             this.newMessageText = ''
             this.triggerRefresh = !this.triggerRefresh
           } else {
-            this.showMembersOnly = true
+            this.showSendError = true
+            if (response.data.message === 'not authorized') {
+              this.sendErrorMessage = this.$t('notifications.ONLY_MEMBERS_CAN_COMMENT')
+            } else {
+              this.sendErrorMessage = response.data.message
+            }
+            setTimeout(() => {
+              this.showSendError = false
+            }, 3000)
           }
         })
       } else {
@@ -225,14 +238,18 @@ export default {
     scrollToBottom () {
       this.$nextTick(() => {
         var container = this.$refs.historyContainer
-        container.scrollTop = container.scrollHeight
+        if (container != null) {
+          container.scrollTop = container.scrollHeight
+        }
       })
     },
     addedOlder (payload) {
       this.$nextTick(() => {
         var container = this.$refs.historyContainer
-        var newHeight = container.childNodes[0].offsetHeight
-        container.scrollTop = newHeight - payload.height
+        if (container != null) {
+          var newHeight = container.childNodes[0].offsetHeight
+          container.scrollTop = newHeight - payload.height
+        }
       })
     },
     showOnlyMessagesClicked () {

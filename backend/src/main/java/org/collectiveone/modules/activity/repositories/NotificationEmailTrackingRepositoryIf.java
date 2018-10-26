@@ -1,5 +1,6 @@
 package org.collectiveone.modules.activity.repositories;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.modules.activity.NotificationEmailTracking;
@@ -8,5 +9,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface NotificationEmailTrackingRepositoryIf extends CrudRepository<NotificationEmailTracking, UUID> {
 
-	NotificationEmailTracking findByType(NotificationTrackingType type);
+	List<NotificationEmailTracking> findByType(NotificationTrackingType type);
 }

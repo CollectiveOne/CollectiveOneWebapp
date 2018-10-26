@@ -990,24 +990,59 @@ public class ActivityService {
 		addInitiativeActivityNotifications(activity);
 	}
 	
+	@Transactional
+	public PostResult moveMessage(
+			UUID messageId,
+			UUID toElementId,
+			MessageThreadContextType toContextType, 
+			UUID contextOfContextElementId) {
+		
+		Activity activity = activityRepository.findOfMessagePosted(messageId);
+		setMessageLocation(activity, toContextType, toElementId, contextOfContextElementId);
+		activity = activityRepository.save(activity);
+		
+		return new PostResult("success", "messaged moved", messageId.toString());
+	}
+	
 	private void setMessageLocation(
 			Activity activity, 
 			MessageThreadContextType contextType, 
 			UUID elementId,
 			UUID contextOfContextElementId) {
+		
+		ModelSection section = null;
 		switch (contextType) {
 			
 			case MODEL_CARD:
 				ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(elementId);
 				activity.setModelCardWrapper(cardWrapper);
-				activity.setOnSection(modelSectionRepository.findById(contextOfContextElementId));
-				activity.setInitiative(cardWrapper.getInitiative());
+				
+				/* store also the section in which the card was when the comment was made */
+				if(contextOfContextElementId != null) {
+					section = modelSectionRepository.findById(contextOfContextElementId);
+				} else {
+					ModelCardWrapperAddition cardAddition = 
+							modelCardWrapperAdditionRepository.findFirstOfCardWrapper(elementId);
+					
+					if(cardAddition != null) {
+						section = cardAddition.getSection();
+					}
+				}
+				
+				activity.setOnSection(section);
+				
+				/* remove model section reference */
+				activity.setModelSection(null);
+				
 				break;
 			
 			case MODEL_SECTION:
-				ModelSection section = modelSectionRepository.findById(elementId);
+				section = modelSectionRepository.findById(elementId);
 				activity.setModelSection(section);
-				activity.setInitiative(section.getInitiative());
+
+				/* remove model card reference */
+				activity.setModelCardWrapper(null);
+				
 				break;
 				
 			case INITIATIVE:
@@ -1016,8 +1051,6 @@ public class ActivityService {
 				
 		}
 	}
-	
-	
 	
 	private Activity getBaseActivity(AppUser triggerUser, Initiative initiative) {
 		Activity activity = new Activity();

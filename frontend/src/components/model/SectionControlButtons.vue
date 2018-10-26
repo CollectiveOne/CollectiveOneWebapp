@@ -44,7 +44,7 @@
 
     </div>
 
-    <popper :append-to-body="true" trigger="click":options="popperOptions" class="">
+    <popper :append-to-body="true" trigger="click":options="popperOptions" class="" :toggleShow="toggleMenu">
       <div class="">
         <app-drop-down-menu
           class="drop-menu"
@@ -54,6 +54,8 @@
           @remove="remove()"
           @delete="deleteSection()"
           @configNotifications="configNotifications()"
+          @resetSubsectionsOrder="resetSubsectionsOrder()"
+          @resetCardsOrder="resetCardsOrder()"
           :items="menuItems">
         </app-drop-down-menu>
 
@@ -126,7 +128,8 @@ export default {
       showNewCardModal: false,
       showEditNotificationsModal: false,
       deleteIntent: false,
-      removeIntent: false
+      removeIntent: false,
+      toggleMenu: false
     }
   },
 
@@ -169,6 +172,20 @@ export default {
          text: this.$t('general.DELETE'),
          value: 'delete',
          faIcon: 'fa-times' })
+      }
+
+      if (this.isLoggedAnEditor) {
+       menuItems.push({
+         text: this.$t('model.RESET_SUBSECTIONS_ORDER'),
+         value: 'resetSubsectionsOrder',
+         faIcon: 'fa-exclamation-triangle' })
+      }
+
+      if (this.isLoggedAnEditor) {
+       menuItems.push({
+         text: this.$t('model.RESET_CARDS_ORDER'),
+         value: 'resetCardsOrder',
+         faIcon: 'fa-exclamation-triangle' })
       }
 
       return menuItems
@@ -230,6 +247,24 @@ export default {
           this.deleteIntent = false
           this.expanded = false
           this.$store.commit('triggerUpdateSectionsTree')
+        }).catch((error) => {
+          console.log(error)
+        })
+    },
+    resetSubsectionsOrder () {
+      this.axios.delete('/1/model/section/' + this.section.id + '/resetSubsectionsOrder')
+        .then((response) => {
+          this.toggleMenu = !this.toggleMenu
+          this.$store.commit('triggerUpdateExpands')
+        }).catch((error) => {
+          console.log(error)
+        })
+    },
+    resetCardsOrder () {
+      this.axios.delete('/1/model/section/' + this.section.id + '/resetCardWrappersOrder')
+        .then((response) => {
+          this.toggleMenu = !this.toggleMenu
+          this.$store.commit('triggerUpdateSectionCards')
         }).catch((error) => {
           console.log(error)
         })

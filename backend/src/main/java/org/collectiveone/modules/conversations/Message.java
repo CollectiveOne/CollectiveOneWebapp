@@ -5,12 +5,15 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.model.enums.Status;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -38,12 +41,22 @@ public class Message {
 	@Column(name = "text")
 	private String text;
 	
+	@Enumerated(EnumType.STRING)
+	private Status status;
+	
 	
 	public MessageDto toDto() {
 		MessageDto dto = new MessageDto();
 		dto.setId(id.toString());
 		dto.setAuthor(author.toDtoLight());
 		dto.setText(text);
+		if (status != null) {
+			dto.setStatus(status.toString());
+			if (status == Status.DELETED) {
+				dto.setText("");	
+			}
+		} 
+		
 		return dto;
 	}
 	
@@ -79,6 +92,13 @@ public class Message {
 	public void setText(String text) {
 		this.text = text;
 	}
-	
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 
 }

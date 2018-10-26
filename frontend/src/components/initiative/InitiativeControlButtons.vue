@@ -28,7 +28,7 @@
       </transition>
     </div>
 
-    <popper :append-to-body="true" trigger="click":options="popperOptions" class="">
+    <popper :append-to-body="true" trigger="click" :options="popperOptions" class="">
       <div class="">
         <app-drop-down-menu
           class="drop-menu"

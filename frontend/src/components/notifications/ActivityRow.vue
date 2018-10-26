@@ -1,21 +1,36 @@
 <template lang="html">
   <tr :class="rowClass">
+
+    <div class="slider-container">
+      <transition name="slideDownUp">
+        <app-move-message-modal
+          v-if="showMoveMessageModal"
+          :activity="activity"
+          @close="closeMoveModal()">
+        </app-move-message-modal>
+      </transition>
+    </div>
+
     <td class="avatar-col w3-center">
       <app-user-avatar :user="activity.triggerUser" :showName="false" :small="true"></app-user-avatar>
     </td>
-    <td class="text-div wrap-long cursor-pointer w3-display-container"
+    <td class="text-div wrap-long w3-display-container"
       @mouseover="hovering = true"
-      @mouseleave="hovering = false"
-      @click="clicked = !clicked">
+      @mouseleave="hovering = false">
 
       <div class="top-line w3-row">
         <div class="w3-small w3-left event-trigger-user">
-          <span v-if="addContext">
-            {{ $t('notifications.IN') }}<app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-          </span>
           <b><app-user-link :user="activity.triggerUser"></app-user-link></b>
           <span v-if="addTime">
              , {{ $t('notifications.TIME_AGO', { time: getTimeStrSince(activity.timestamp) }) }}
+          </span>
+
+          <span v-if="outsideOfThisContext">
+            , in
+            <app-model-section-tag
+              style="display: inline-block; margin-left: 4px;"
+              :section="applicableOnSection">
+            </app-model-section-tag>
           </span>
         </div>
 
@@ -236,7 +251,7 @@
             {{ $t('notifications.TO_POSITION', { position: getConsentPositionText(activity.positionColor) }) }}.
           </span>
 
-          <span v-if="isMessagePosted && (!showMessagesText || isExternalMessage)">
+          <span v-if="isMessagePosted && (!showMessagesText)">
             <span v-if="loggedUserMentioned">{{ $t('notifications.MENTIONED_YOU') }}</span>
             <span v-else>{{ $t('notifications.COMMENTED_IN') }} </span>
 
@@ -260,21 +275,55 @@
         </div>
       </div>
 
-      <div v-if="isMessagePosted && showMessagesText" class="w3-row">
-        <vue-markdown class="marked-text message-container" :source="activity.message.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
+      <div v-if="isMessagePosted && showMessagesText" class="w3-row cursor-pointer" @click="replyToMessage(false)">
+        <div v-if="!messageDeleted" class="">
+          <vue-markdown class="marked-text message-container" :source="activity.message.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
+        </div>
+        <div v-else class="">
+          [deleted]
+        </div>
       </div>
 
-      <div class="control-btns-row w3-display-topright" v-if="isMessagePosted && showMessagesText">
+      <div class="message-options" v-if="isMessagePosted && showMessagesText">
         <transition name="fadeenter">
-          <div v-if="hovering">
-            <div v-if="authorIsLoggedUser" @click="$emit('edit-message', activity.message)"
-              class="w3-button light-grey">
-              <i class="fa fa-pencil"></i> {{ $t('general.EDIT') }}
-            </div>
-            <div v-if="true" @click="$emit('reply-to-message', activity)"
-              class="w3-button light-grey">
-              <i class="fa fa-reply"></i> {{ $t('notifications.REPLY') }}
-            </div>
+          <div v-if="$store.state.user.authenticated && !messageDeleted">
+
+            <popper :append-to-body="true" trigger="click" :options="popperOptions" :toggleShow="toggleMessageOptions" class="">
+              <div class="">
+                <app-drop-down-menu
+                  class="drop-menu"
+                  @reply="replyToMessage(true)"
+                  @edit="editMessage()"
+                  @move="moveMessage()"
+                  @convert-to-card="convertMessageToCard()"
+                  @remove="removeIntent = true"
+                  :items="menuItems">
+                </app-drop-down-menu>
+
+                <div class="w3-card w3-white drop-menu">
+
+                  <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
+                    <div class="w3-padding w3-round light-grey w3-margin-bottom">
+                      <p v-html="$t('notifications.DELETE_MSG_WARNING')"></p>
+                    </div>
+                    <button
+                      class="w3-button light-grey"
+                      @click="removeIntent = false">{{ $t('general.CANCEL') }}
+                    </button>
+                    <button
+                      class="w3-button button-blue"
+                      @click="removeMessage()">{{ $t('general.CONFIRM') }}
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div slot="reference" class="expand-btn w3-large fa-button gray-2-color">
+                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+              </div>
+            </popper>
           </div>
         </transition>
       </div>
@@ -291,6 +340,8 @@ import AssignationLink from '@/components/global/AssignationLink.vue'
 import ModelSectionLink from '@/components/global/ModelSectionLink.vue'
 import ModelCardInSectionLink from '@/components/global/ModelCardInSectionLink.vue'
 import ModelCardAloneLink from '@/components/global/ModelCardAloneLink.vue'
+import MoveMessageModal from '@/components/modal/MoveMessageModal.vue'
+import ModelSectionTag from '@/components/model/ModelSectionTag.vue'
 
 import { getTimeStrSince } from '@/lib/common.js'
 
@@ -327,13 +378,18 @@ export default {
     'app-assignation-link': AssignationLink,
     'app-model-section-link': ModelSectionLink,
     'app-model-card-link': ModelCardInSectionLink,
-    'app-model-card-alone-link': ModelCardAloneLink
+    'app-model-card-alone-link': ModelCardAloneLink,
+    'app-move-message-modal': MoveMessageModal,
+    'app-model-section-tag': ModelSectionTag
   },
 
   data () {
     return {
       hovering: false,
-      clicked: false
+      toggleMessageOptions: false,
+      showMoveMessageModal: false,
+      showConvertMessageModal: false,
+      removeIntent: false
     }
   },
 
@@ -508,6 +564,18 @@ export default {
         }
       }
     },
+    messageDeleted () {
+      if (this.activity.message) {
+        return this.activity.message.status === 'DELETED'
+      }
+      return false
+    },
+    outsideOfThisContext () {
+      if (this.applicableOnSection) {
+        return this.applicableOnSection.id !== this.contextElementId
+      }
+      return false
+    },
 
     initiativeChanged () {
       var nameChanged = false
@@ -562,9 +630,131 @@ export default {
         rowClass['not-read-color'] = this.activity.inAppState === 'PENDING'
       }
       return rowClass
+    },
+
+    popperOptions () {
+      return {
+        placement: 'left',
+        modifiers: {
+          preventOverflow: {
+            enabled: true
+          }
+        }
+      }
+    },
+
+    isLoggedAnEditor () {
+      return this.$store.getters.isLoggedAnEditor
+    },
+
+    menuItems () {
+      let items = []
+
+      items.push({
+        text: this.$t('notifications.REPLY'),
+        value: 'reply',
+        faIcon: 'fa-reply'
+      })
+
+      if (this.authorIsLoggedUser) {
+        items.push({
+          text: this.$t('general.EDIT'),
+          value: 'edit',
+          faIcon: 'fa-pencil'
+        })
+      }
+
+      if (this.isLoggedAnEditor) {
+        items.push({
+          text: this.$t('general.MOVE'),
+          value: 'move',
+          faIcon: 'fa-arrow-circle-right'
+        })
+      }
+
+      if (this.isLoggedAnEditor) {
+        items.push({
+          text: this.$t('notifications.CONVERT_TO_CARD'),
+          value: 'convert-to-card',
+          faIcon: 'fa-square-o'
+        })
+      }
+
+      if (this.authorIsLoggedUser) {
+        items.push({
+          text: this.$t('general.REMOVE'),
+          value: 'remove',
+          faIcon: 'fa-times'
+        })
+      }
+
+      return items
+    },
+
+    applicableOnSection () {
+      return this.activity.modelCardWrapper != null ? (this.activity.onSection != null ? this.activity.onSection : this.activity.modelSection) : this.activity.modelSection
     }
   },
   methods: {
+    closeMoveModal () {
+      this.showMoveMessageModal = false
+      this.$emit('reset-activity')
+    },
+    closeConvertModal () {
+      this.showConvertMessageModal = false
+      this.$emit('reset-activity')
+    },
+    editMessage () {
+      this.$emit('edit-message', this.activity.message)
+      this.toggleMessageOptions = !this.toggleMessageOptions
+    },
+    replyToMessage (toggleFlag) {
+      this.$emit('reply-to-message', this.activity)
+      if (toggleFlag) {
+        this.toggleMessageOptions = !this.toggleMessageOptions
+      }
+    },
+    moveMessage () {
+      this.toggleMessageOptions = !this.toggleMessageOptions
+      this.showMoveMessageModal = true
+    },
+    convertMessageToCard () {
+      this.toggleMessageOptions = !this.toggleMessageOptions
+
+      var cardDto = {
+        title: '',
+        text: this.activity.message.text,
+        newScope: 'COMMON'
+      }
+
+      var toSectionId = this.applicableOnSection.id
+
+      /* create new card */
+      this.sendingData = true
+      this.axios.post('/1/model/section/' + toSectionId + '/cardWrapper', cardDto, {}).then((response) => {
+        if (response.data.result === 'success') {
+          this.$emit('reset-activity')
+          this.$store.commit('triggerUpdateSectionCards')
+        } else {
+          console.log(response.data.message)
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    removeMessage () {
+      this.toggleMessageOptions = !this.toggleMessageOptions
+
+      this.axios.delete('/1/messages/' + this.activity.message.id, {}).then((response) => {
+        if (response.data.result === 'success') {
+          this.$emit('reset-activity')
+        } else {
+          console.log(response.data.message)
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
     getTimeStrSince (v) {
       return getTimeStrSince(v)
     },
@@ -582,6 +772,9 @@ export default {
 
       return ''
     }
+  },
+
+  mounted () {
   }
 }
 </script>
@@ -644,8 +837,21 @@ a {
   width: 100%;
 }
 
-.control-btns-row .w3-button {
-  padding: 1px 16px !important;
+.drop-menu {
+  width: 200px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.message-options {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+.message-options .expand-btn {
+  width: 30px;
+  text-align: center;
 }
 
 .not-read-color {

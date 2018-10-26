@@ -46,6 +46,15 @@ public interface ModelSubsectionRepositoryIf extends CrudRepository<ModelSubsect
 			+ "OR (subsection.scope = 'COMMON')) "
 			+ "AND (subsection.status != 'DELETED' OR subsection.status IS NULL)")
 	List<UUID> findSubsectionsIdsVisibleToUser(UUID sectionId, UUID requestByUserId, Boolean isMemberOfEcosystem);
+	
+	@Query("SELECT subsection FROM ModelSubsection subsection "
+			+ "JOIN subsection.section sec "
+			+ "WHERE subsection.parentSection.id = ?1 "
+			+ "AND ((subsection.scope = 'PRIVATE' AND subsection.adder.c1Id = ?2) "
+			+ "OR (subsection.scope = 'SHARED' AND true = ?3) "
+			+ "OR (subsection.scope = 'COMMON')) "
+			+ "AND (subsection.status != 'DELETED' OR subsection.status IS NULL)")
+	List<ModelSubsection> findSubsectionsVisibleToUser(UUID sectionId, UUID requestByUserId, Boolean isMemberOfEcosystem);
 		
 	@Query("SELECT subsection FROM ModelSubsection subsection "
 			+ "WHERE subsection.parentSection.id = ?1 "

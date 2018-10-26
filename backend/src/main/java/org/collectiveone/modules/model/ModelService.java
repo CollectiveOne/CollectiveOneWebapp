@@ -265,7 +265,43 @@ public class ModelService {
 			activityService.modelSubsectionRemoved(subsection, appUserRepository.findByC1Id(requestedById));
 		}
 		
-		return new PostResult("success", "card added to section", subsection.getId().toString());
+		return new PostResult("success", "subsection removed", subsection.getId().toString());
+	}
+	
+	@Transactional
+	public PostResult resetSubsectionsOrder(UUID sectionId, UUID requestedById) {
+		
+		ModelSection section = modelSectionRepository.findById(sectionId);
+		
+		Boolean isMemberOfEcosystem = initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestedById);
+		
+		List<ModelSubsection> subsections = 
+				modelSubsectionRepository.findSubsectionsVisibleToUser(sectionId, requestedById, isMemberOfEcosystem);
+		
+		for (ModelSubsection subsec : subsections) {
+			subsec.setBeforeElement(null);
+			subsec.setAfterElement(null);
+		}
+		
+		modelSubsectionRepository.save(subsections);
+		
+		return new PostResult("success", "subsections ordered reset", sectionId.toString());
+	}
+	
+	@Transactional
+	public PostResult resetCardWrappersOrder(UUID sectionId, UUID requestedById) {
+		
+		List<ModelCardWrapperAddition> cardWrapperAdditions = 
+				modelCardWrapperAdditionRepository.findInSectionVisibleToUser(sectionId, requestedById);
+		
+		for (ModelCardWrapperAddition cardAddition : cardWrapperAdditions) {
+			cardAddition.setBeforeElement(null);
+			cardAddition.setAfterElement(null);
+		}
+		
+		modelCardWrapperAdditionRepository.save(cardWrapperAdditions);
+		
+		return new PostResult("success", "subsections ordered reset", sectionId.toString());
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
@@ -982,7 +1018,8 @@ public class ModelService {
 			UUID sectionId, 
 			UUID creatorId, 
 			UUID onCardWrapperId, 
-			Boolean isBefore) throws WrongLinkOfElement {
+			Boolean isBefore,
+			UUID adderId) throws WrongLinkOfElement {
 		
 		ModelSection section = modelSectionRepository.findById(sectionId);
 		if (section == null) return new PostResult("error", "section not found", "");
@@ -1026,7 +1063,7 @@ public class ModelService {
 		/* create cardwrapper addition */
 		ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
 				
-		cardWrapperAddition.setAdder(creator);
+		cardWrapperAddition.setAdder(adderId == null ? creator : appUserRepository.findByC1Id(adderId));
 		cardWrapperAddition.setSection(section);
 		cardWrapperAddition.setCardWrapper(cardWrapper);
 		cardWrapperAddition.setScope(cardDto.getNewScope());
@@ -1724,6 +1761,19 @@ public class ModelService {
 			semaphoresDtos.add(semaphore.toDto());
 		}
 		return new GetResult<List<ElementConsentPositionDto>>("success", "semaphores retreived", semaphoresDtos);
+	}
+	
+	@Transactional
+	public UUID getIdOfOneModelSectionContainingSection(UUID sectionId) {
+		List<UUID> ids = modelSubsectionRepository.findParentSectionsIds(sectionId);
+		return ids.size() > 0 ? ids.get(0) : null;
+	}
+	
+
+	@Transactional
+	public UUID getIdOfOneModelSectionContainingCardWrapper(UUID sectionId) {
+		List<UUID> ids = modelSubsectionRepository.findParentSectionsIds(sectionId);
+		return ids.size() > 0 ? ids.get(0) : null;
 	}
 	
 }

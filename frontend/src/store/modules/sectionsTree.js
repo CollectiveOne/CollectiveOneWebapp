@@ -102,7 +102,8 @@ const mutations = {
 
           sectionData.inSection = inSectionData.section
           sectionData.section = payload.sectionData.section
-          /* only update subsections they are different from the current ones */
+
+          /* only update subsections if are different from the current ones */
           let newSize = payload.sectionData.subsectionsData.length
           let oldSize = sectionData.subsectionsData.length
 

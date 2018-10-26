@@ -53,7 +53,8 @@
         @enableDraggable="enableDraggable()">
       </app-section-control-row>
 
-      <div class="elements-container">
+      <div class="elements-container"
+        :class="{'large-padding': !windowIsSmall, 'small-padding': windowIsSmall}">
 
         <app-message-thread
           v-if="isMessagesContent"
@@ -175,6 +176,9 @@ export default {
     },
     currentSectionId () {
       return this.$route.params.sectionId
+    },
+    windowIsSmall () {
+      return this.$store.state.support.windowIsSmall
     }
   },
 
@@ -400,10 +404,17 @@ export default {
 }
 
 .elements-container {
-  padding: 12px 24px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+}
+
+.large-padding {
+  padding: 12px 24px;
+}
+
+.small-padding {
+  padding: 3px 6px;
 }
 
 </style>
