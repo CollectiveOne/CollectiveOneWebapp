@@ -251,25 +251,15 @@
             {{ $t('notifications.TO_POSITION', { position: getConsentPositionText(activity.positionColor) }) }}.
           </span>
 
-          <span v-if="isMessagePosted && (!showMessagesText)">
+          <span v-if="isMessagePosted && (isMessageInCardWrapper || isMessageInCardWrapperOnSection)">
             <span v-if="loggedUserMentioned">{{ $t('notifications.MENTIONED_YOU') }}</span>
-            <span v-else>{{ $t('notifications.COMMENTED_IN') }} </span>
+            <span v-else> <b>{{ $t('notifications.IN_CARD') }}: </b></span>
 
             <span v-if="isMessageInCardWrapper">
-              <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>
-              {{ $t('notifications.CARD') }}.
+              <app-model-card-alone-link :cardWrapper="activity.modelCardWrapper"></app-model-card-alone-link>.
             </span>
             <span v-if="isMessageInCardWrapperOnSection">
               <app-model-card-link :cardWrapper="activity.modelCardWrapper" :onSection="activity.onSection"></app-model-card-link>
-              {{ $t('notifications.CARD') }}.
-            </span>
-            <span v-if="isMessageInSection">
-              <app-model-section-link :section="activity.modelSection"></app-model-section-link>
-              {{ $t('notifications.SECTION') }}.
-            </span>
-            <span v-if="isMessageInInitiative">
-              <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
-              {{ $t('notifications.INITIATIVE') }}.
             </span>
           </span>
         </div>
