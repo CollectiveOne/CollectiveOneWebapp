@@ -29,6 +29,7 @@ import org.collectiveone.modules.tokens.enums.MemberTransferStatus;
 import org.collectiveone.modules.tokens.enums.TokenHolderType;
 import org.collectiveone.modules.tokens.repositories.InitiativeTransferRepositoryIf;
 import org.collectiveone.modules.tokens.repositories.MemberTransferRepositoryIf;
+import org.collectiveone.modules.tokens.repositories.TokenBurnRepositoryIf;
 import org.collectiveone.modules.tokens.repositories.TokenMintRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
@@ -72,7 +73,10 @@ public class TokenTransferService {
 	@Autowired
 	private TokenMintRepositoryIf tokenMintRespository;
 	
+	@Autowired
+	private TokenBurnRepositoryIf tokenBurnRespository;
 	
+		
 	
 	/** Get the distribution of an asset starting from a given initiative
 	 * and including the tokens transferred to its sub-initiatives and members */
@@ -131,6 +135,30 @@ public class TokenTransferService {
 			mint = tokenMintRespository.save(mint);
 			
 			activityService.tokensMinted(initiativeRepository.findById(initiativeId), mint);
+		}
+		
+		return result;
+		
+	}
+	
+	@Transactional
+	public String burnOfInitiative(UUID tokenId, UUID initiativeId, UUID orderByUserId, TokenMintDto mintDto) {
+		
+		String result = tokenService.burnOfHolder(tokenId, initiativeId, mintDto.getValue(), TokenHolderType.INITIATIVE);
+		
+		if (result.equals("success")) {
+			AppUser orderedBy = appUserRepository.findByC1Id(orderByUserId);
+			
+			TokenBurn burn = new TokenBurn();
+			burn.setToken(tokenService.getTokenType(tokenId));
+			burn.setOrderedBy(orderedBy);
+			burn.setMotive(mintDto.getMotive());
+			burn.setNotes(mintDto.getNotes());
+			burn.setValue(mintDto.getValue());
+			
+			burn = tokenBurnRespository.save(burn);
+			
+			activityService.tokensBurnt(initiativeRepository.findById(initiativeId), burn);
 		}
 		
 		return result;

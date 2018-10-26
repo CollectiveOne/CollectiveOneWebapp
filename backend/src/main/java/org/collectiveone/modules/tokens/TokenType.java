@@ -6,12 +6,15 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.model.enums.Status;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -35,6 +38,9 @@ public class TokenType {
 	@OneToMany(mappedBy="tokenType")
 	@OrderBy("tokens DESC")
 	private Set<TokenHolder> holders = new LinkedHashSet<TokenHolder>();
+	
+	@Enumerated(EnumType.STRING)
+	private Status status;
 	
 
 	public UUID getId() {
@@ -67,6 +73,14 @@ public class TokenType {
 
 	public void setHolders(Set<TokenHolder> holders) {
 		this.holders = holders;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 	
 }

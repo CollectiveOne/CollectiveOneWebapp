@@ -219,7 +219,9 @@ export default {
     ownedOfThisAsset (asset, member) {
       for (var ix in member.receivedAssets) {
         if (member.receivedAssets[ix].assetId === asset.assetId) {
-          return member.receivedAssets[ix].ownedByThisHolder > 0 ? member.receivedAssets[ix].ownedByThisHolder.toFixed(2) : '-'
+          let ownedVal = member.receivedAssets[ix].ownedByThisHolder
+          let ownedPer = ownedVal / asset.totalExistingTokens * 100
+          return ownedVal > 0 ? ownedVal.toFixed(2) + ' / ' + ownedPer.toFixed(2) + '%' : '-'
         }
       }
       return '-'

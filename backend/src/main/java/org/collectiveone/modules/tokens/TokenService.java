@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
+import org.collectiveone.modules.model.enums.Status;
 import org.collectiveone.modules.tokens.dto.AssetsDto;
 import org.collectiveone.modules.tokens.enums.TokenHolderType;
 import org.collectiveone.modules.tokens.repositories.TokenHolderRepositoryIf;
@@ -35,9 +36,30 @@ public class TokenService {
 		TokenType token = new TokenType();
 		token.setName(name);
 		token.setSymbol(symbol);
+		token.setStatus(Status.VALID);
 		token = tokenTypeRepository.save(token);
 		
 		return token;
+	}
+	
+	@Transactional
+	public String delete(UUID tokenId) {
+		/* if no parent initiative is provided, create a new token type */
+		TokenType token = tokenTypeRepository.findById(tokenId);
+		token.setStatus(Status.DELETED);
+		token = tokenTypeRepository.save(token);
+		
+		return "success";
+	}
+	
+	@Transactional
+	public String restore(UUID tokenId) {
+		/* if no parent initiative is provided, create a new token type */
+		TokenType token = tokenTypeRepository.findById(tokenId);
+		token.setStatus(Status.VALID);
+		token = tokenTypeRepository.save(token);
+		
+		return "success";
 	}
 	
 	@Transactional
@@ -84,6 +106,22 @@ public class TokenService {
 		return "success";
 		
 	}
+	
+	@Transactional
+	public String burnOfHolder(UUID tokenId, UUID holderId, double value, TokenHolderType holderType) {
+		/* and assign a pool of its own tokens to this initiative */
+		
+		TokenType token = tokenTypeRepository.findById(tokenId);
+		TokenHolder holder = getHolder(token.getId(), holderId);
+		if (holder.getTokens() >= value) {
+			holder.setTokens(holder.getTokens() - value);
+		}
+		tokenHolderRepository.save(holder);
+		
+		return "success";
+		
+	}
+	
 	
 	@Transactional
 	public String transfer(UUID tokenId, UUID fromHolderId, UUID toHolderId, double value, TokenHolderType holderType) {
@@ -167,6 +205,7 @@ public class TokenService {
 		/* token info */
 		assetsDto.setAssetId(token.getId().toString());
 		assetsDto.setAssetName(token.getName());
+		assetsDto.setStatus(token.getStatus().toString());
 		
 		if (getExisting) {
 			/* Total amount of tokens in circulation */

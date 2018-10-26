@@ -2,6 +2,7 @@ package org.collectiveone.modules.initiatives;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -583,14 +584,17 @@ public class InitiativeService {
 	
 	/** */
 	@Transactional
-	public List<AssetsDto> getInitiativeAssetsDtoLight(UUID id) {
+	public List<AssetsDto> getInitiativeAssetsDtoLight(UUID id, Boolean addDeleted) {
 		
 		Initiative initiative = initiativeRepository.findById(id);
 		List<TokenType> ownTokens = initiative.getTokenTypes();
 		List<TokenType> tokenTypes = tokenService.getTokenTypesHeldBy(initiative.getId());
 		
-		/* add own tokens even if the initiative does not have them */
-		for (TokenType own : ownTokens) {
+		/* add own tokens even if the initiative does not have them and remove deleted tokens */
+		Iterator<TokenType> ownTokensIter = ownTokens.iterator();
+		
+		while (ownTokensIter.hasNext()) {
+			TokenType own = ownTokensIter.next(); 
 			if (!tokenTypes.contains(own)) {
 				tokenTypes.add(own);
 			}
@@ -602,7 +606,12 @@ public class InitiativeService {
 			AssetsDto asset = new AssetsDto();
 			asset.setAssetId(token.getId().toString());
 			asset.setAssetName(token.getName());
-			assets.add(asset);
+			asset.setStatus(token.toString());
+			asset.setTotalExistingTokens(tokenService.getTotalExisting(token.getId()));
+			
+			if ((token.getStatus() != Status.DELETED) || addDeleted) {
+				assets.add(asset);
+			}			
 		}
 		
 		return assets;
