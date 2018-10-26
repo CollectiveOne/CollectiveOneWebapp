@@ -137,6 +137,7 @@ export default {
   data () {
     return {
       showSubsections: false,
+      subsectionsDataFiltered: [],
       animating: false,
       draggingOverWithCardFlag: false,
       draggingOverWithSectionSameLevelFlag: false,
@@ -152,12 +153,16 @@ export default {
   watch: {
     '$store.state.sectionsTree.triggerUpdateExpands' () {
       this.checkExpandSubsections()
+      this.updateSubsectionsDataFiltered()
     },
     levels () {
       this.checkExpandSubsections()
     },
     section () {
       this.subscribeSocket()
+    },
+    sectionData () {
+      this.updateSubsectionsDataFiltered()
     }
   },
 
@@ -176,27 +181,6 @@ export default {
     },
     showCommon () {
       return this.$store.state.viewParameters.showCommonSections
-    },
-    subsectionsDataFiltered () {
-      if (this.sectionData) {
-        let subsectionsDataFiltered = this.sectionData.subsectionsData.filter((subsectionData) => {
-          switch (subsectionData.section.scope) {
-            case 'PRIVATE':
-              return this.showPrivate
-
-            case 'SHARED':
-              return this.showShared
-
-            case 'COMMON':
-              return this.showCommon
-          }
-          return true
-        })
-
-        return subsectionsDataFiltered
-      } else {
-        return []
-      }
     },
     highlight () {
       return this.highlightLevelUse > 0
@@ -299,6 +283,27 @@ export default {
     addCard () {
       if (!this.isSelected) {
         this.$router.push({name: 'ModelSectionCards', params: {sectionId: this.section.id}, query: {createCard: this.section.id}})
+      }
+    },
+    updateSubsectionsDataFiltered () {
+      if (this.sectionData) {
+        let subsectionsDataFiltered = this.sectionData.subsectionsData.filter((subsectionData) => {
+          switch (subsectionData.section.scope) {
+            case 'PRIVATE':
+              return this.showPrivate
+
+            case 'SHARED':
+              return this.showShared
+
+            case 'COMMON':
+              return this.showCommon
+          }
+          return true
+        })
+
+        this.subsectionsDataFiltered = subsectionsDataFiltered
+      } else {
+        this.subsectionsDataFiltered = []
       }
     },
     toggleSubsections () {
@@ -529,6 +534,7 @@ export default {
 
   mounted () {
     this.checkExpandSubsections()
+    this.updateSubsectionsDataFiltered()
   },
 
   beforeDestroy () {
