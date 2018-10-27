@@ -6,7 +6,7 @@
     <app-new-token-modal
       v-if="showNewTokenModal"
       :initiativeId="initiative.id"
-      @close="showNewTokenModal = false">
+      @close="tokenModalClosed()">
     </app-new-token-modal>
   </transition>
 
@@ -40,11 +40,12 @@
         <header class="section-header-bar w3-bar gray-1">
           <h4 class="w3-bar-item w3-left">{{ $t('tokens.TOKENS')}} </h4>
 
-          <popper :append-to-body="true" trigger="click" :options="popperOptions" class="">
+          <popper :append-to-body="true" trigger="click" :options="popperOptions" class="" :toggleShow="toggleDropdown">
             <div class="">
               <app-drop-down-menu
                 class="drop-menu"
                 @create-new="createNewToken()"
+                @toggle-deleted="toggleDeleted()"
                 :items="assetsMenuItems">
               </app-drop-down-menu>
             </div>
@@ -57,21 +58,25 @@
         </header>
 
         <div class="assets-content-div">
-          <div v-if="initiative.assets.length === 0" class="w3-center">
+          <div v-if="assets.length === 0 && !this.loading" class="w3-center">
             {{ $t('tokens.NO_ASSETS_HELD') }}<br>
             <button class="w3-button app-button w3-margin-top" name="button"
               @click="showNewTokenModal = true">
               {{ $t('general.CREATE_NEW') }}
             </button>
           </div>
-          <div class="w3-row" v-for="(asset, ix) in initiative.assets" :key="asset.assetId" >
+          <div v-if="!this.loading" class="w3-row" v-for="(asset, ix) in assets" :key="asset.assetId" >
             <hr v-if="ix > 0">
             <app-asset-distribution-chart
               :assetId="asset.assetId" :initiativeId="initiative.id"
               :canMint="initiative.ownAssetsIds.includes(asset.assetId)" :canEdit="isLoggedAnAdmin"
               @new-assignation="newAssignation($event)"
-              @new-transfer="newTransfer($event)">
+              @new-transfer="newTransfer($event)"
+              @please-update="updateAssets()">
             </app-asset-distribution-chart>
+          </div>
+          <div v-else class="w3-row w3-center loader-gif-container">
+            <img class="loader-gif" src="../../assets/loading.gif" alt="">
           </div>
         </div>
       </div>
@@ -125,7 +130,11 @@ export default {
       assetIdToTransfer: '',
       showNewAssignationModal: false,
       showNewInitiativeTransferModal: false,
-      triggerUpdate: false
+      triggerUpdate: false,
+      assets: [],
+      showDeleted: false,
+      loading: false,
+      toggleDropdown: false
     }
   },
 
@@ -158,6 +167,12 @@ export default {
         faIcon: 'fa-plus'
       })
 
+      items.push({
+        text: !this.showDeleted ? this.$t('tokens.SHOW_DELETED') : this.$t('tokens.HIDE_DELETED'),
+        value: 'toggle-deleted',
+        faIcon: !this.showDeleted ? 'fa-eye' : 'fa-ban'
+      })
+
       return items
     },
     popperOptions () {
@@ -176,8 +191,28 @@ export default {
   },
 
   methods: {
+    toggleDeleted () {
+      this.showDeleted = !this.showDeleted
+      this.updateAssets()
+      this.toggleDropdown = !this.toggleDropdown
+    },
+    updateAssets () {
+      this.loading = true
+      this.axios.get('/1/initiative/' + this.initiative.id + '/assets', {
+          params: {
+            addDeleted: this.showDeleted
+          }
+        }).then((response) => {
+          this.loading = false
+          this.assets = response.data.data
+      })
+    },
     triggerUpdateCall () {
       this.triggerUpdate = !this.triggerUpdate
+    },
+    tokenModalClosed () {
+      this.showNewTokenModal = false
+      this.updateAssets()
     },
     newAssignation (assetData) {
       this.assetIdToTransfer = assetData.assetId
@@ -192,7 +227,12 @@ export default {
     },
     createNewToken () {
       this.showNewTokenModal = true
+      this.toggleDropdown = !this.toggleDropdown
     }
+  },
+
+  created () {
+    this.updateAssets()
   }
 }
 </script>
@@ -212,7 +252,7 @@ export default {
 }
 
 .drop-menu {
-  width: 150px;
+  width: 200px;
 }
 
 .transfer-section {

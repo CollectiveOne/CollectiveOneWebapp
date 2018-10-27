@@ -3,11 +3,13 @@
   <div v-if="assetData" class="">
 
     <transition name="slideDownUp">
-      <app-new-tokenmint-modal
+      <app-token-edit-modal
         v-if="showNewTokenMintModal"
         :assetId="assetId"
+        :actionInit="tokenAction"
+        :initiativeId="initiativeId"
         @close="showNewTokenMintModal = false">
-      </app-new-tokenmint-modal>
+      </app-token-edit-modal>
     </transition>
 
     <div class="this-container">
@@ -15,18 +17,56 @@
         <div class="w3-col distribution-container" :class="{'l8': showAssigner, 'l12': !showAssigner}">
           <div class="w3-row-padding">
             <div class="w3-col l4 w3-center">
-              <div class="w3-display-container" :class="{tall: isOverview, short: !isOverview}">
-                <div class="w3-display-middle" style="width: 100%">
+              <div class="" :class="{tall: isOverview, short: !isOverview}">
+                <div class="w3-row" style="width: 100%">
                   <div class="w3-row tokens-row">
                     {{ underThisInitiativeStr }} {{ assetData.assetName }}
                   </div>
                   <div class="w3-row percentage-row">
                     {{ underThisInitiativePercent }}% {{ $t('tokens.OF_EXISTING') }}
                   </div>
+
+                  <div v-if="isDeleted" class="w3-row w3-margin-top">
+                    <div class="w3-row error-panel">
+                      {{ assetData.status }}
+                    </div>
+                    <div class="w3-row -w3-margin-top">
+                      <button class="w3-button app-button" @click="restoreToken()">{{ $t('tokens.RESTORE') }}</button>
+                    </div>
+                  </div>
+
                 </div>
-                <div id="T_addBrandNewTokensModal" v-if="canEdit && canMint " class="w3-button w3-display-bottommiddle" @click="mintClicked()">
-                  <i class="fa fa-plus-circle gray-1-color" aria-hidden="true"></i>
+                <div v-if="canEdit && canMint && !isDeleted" class="token-controls">
+                  <div class="btns-container w3-row">
+                    <div class="control-btn w3-left" @click="mintClicked()">
+                      <img src="./../../assets/mint.svg" alt="">
+                    </div>
+                    <div class="control-btn w3-left" @click="burnClicked()">
+                      <img src="./../../assets/burn.svg" alt="">
+                    </div>
+                    <div class="control-btn w3-left" @click="deleteIntent = true">
+                      <img src="./../../assets/trash.svg" alt="">
+                    </div>
+                  </div>
+
+                  <div v-if="deleteIntent" class="w3-row w3-center w3-margin-top">
+                    <div class="w3-padding w3-round light-grey w3-margin-bottom">
+                      <p
+                        v-html="$t('tokens.DELETE_TOKEN_WARNING', { tokenName: assetData.assetName })">
+                      </p>
+                    </div>
+                    <button
+                      class="w3-button light-grey"
+                      @click="deleteIntent = false">{{ $t('general.CANCEL') }}
+                    </button>
+                    <button
+                      class="w3-button danger-btn"
+                      @click="deleteConfirmed()">{{ $t('general.CONFIRM') }}
+                    </button>
+                  </div>
+
                 </div>
+
               </div>
             </div>
             <div class="w3-col l8">
@@ -149,13 +189,13 @@
           </div>
           <div class="w3-row-padding w3-large">
             <div class="w3-col s6">
-              <input id="T_amountToBeTransferred" @blur="valueUpdated(Number($event.target.value))" :value="value.toFixed(1)"  class="w3-input w3-border w3-hover-light-grey w3-round"
+              <input @blur="valueUpdated(Number($event.target.value))" :value="value.toFixed(1)"  class="w3-input w3-border w3-hover-light-grey w3-round"
               :class="{ 'error-input' : errorFound }" type="number" min="0">
             </div>
             <div class="w3-col s6">
               <div class="w3-row">
                 <div class="w3-col s10">
-                  <input id="T_percentageToBeTransferred"  @blur="percentageUpdated(Number($event.target.value))" :value="percentage.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round"
+                  <input @blur="percentageUpdated(Number($event.target.value))" :value="percentage.toFixed(1)" class="w3-input w3-border w3-hover-light-grey w3-round"
                   :class="{ 'error-input' : errorFound }" type="number" min="0" step="5">
                 </div>
                 <div class="w3-col s2">
@@ -167,7 +207,7 @@
           <div class="slider-container error-row w3-center">
             <transition name="slideDownUp">
               <div v-if="valueTooLarge" class="w3-row error-panel w3-tag w3-round">
-                {{ this.assetData.ownedByThisHolder > 0 ? 'only ' : ''}} {{this.assetData.ownedByThisHolder.toFixed(1) }} {{ this.assetData.assetName }} {{ $t('tokens.AVAILABLE') }}
+                {{ this.assetData.ownedByThisHolder > 0 ? $t('tokens.ONLY') + ' ' : ''}} {{this.assetData.ownedByThisHolder.toFixed(1) }} {{ this.assetData.assetName }} {{ $t('tokens.AVAILABLE') }}
               </div>
             </transition>
           </div>
@@ -180,11 +220,11 @@
 
 <script>
 import { tokensString, amountAndPerc } from '@/lib/common'
-import NewTokenMintModal from '@/components/modal/NewTokenMintModal.vue'
+import TokenEditModal from '@/components/modal/TokenEditModal.vue'
 
 export default {
   components: {
-    'app-new-tokenmint-modal': NewTokenMintModal
+    'app-token-edit-modal': TokenEditModal
   },
 
   props: {
@@ -224,11 +264,16 @@ export default {
       value: 0,
       percentage: 0,
       valueTooLarge: false,
-      showNewTokenMintModal: false
+      showNewTokenMintModal: false,
+      tokenAction: 'mint',
+      deleteIntent: false
     }
   },
 
   computed: {
+    isDeleted () {
+      return this.assetData.status === 'DELETED'
+    },
     showAssigner () {
       return this.isInitiativeAssigner || this.isMemberAssigner
     },
@@ -351,7 +396,25 @@ export default {
       this.$emit('assigned', transferData)
     },
     mintClicked () {
+      this.tokenAction = 'mint'
       this.showNewTokenMintModal = true
+    },
+    burnClicked () {
+      this.tokenAction = 'burn'
+      this.showNewTokenMintModal = true
+    },
+    deleteConfirmed () {
+      this.deleteIntent = false
+      this.axios.delete('/1/token/' + this.assetId).then((response) => {
+        this.$emit('please-update')
+        this.updateTokenData()
+      })
+    },
+    restoreToken () {
+      this.axios.put('/1/token/' + this.assetId + '/restore').then((response) => {
+        this.$emit('please-update')
+        this.updateTokenData()
+      })
     },
     valueUpdated (value) {
       this.value = value
@@ -405,17 +468,34 @@ export default {
 }
 
 .tall {
-  height: 150px;
 }
 
 .short {
-  height: 100px;
 }
 
 .tokens-row {
+  margin-top: 20px;
   font-size: 26px;
   font-style: normal;
   font-weight: 900;
+}
+
+.token-controls {
+  display: block;
+  overflow: auto;
+  margin-top: 15px;
+  width: 100%;
+}
+
+.btns-container {
+  margin: 0 auto;
+  display: block;
+  overflow: auto;
+  width: 140px;
+}
+
+.btns-container .control-btn {
+  margin-right: 5px;
 }
 
 .distribution-container {

@@ -95,6 +95,73 @@ public class TokenController extends BaseController {
 		}
 	}
 	
+	@RequestMapping(path = "/token/{tokenId}/burn", method = RequestMethod.PUT) 
+	public PostResult burnTokens(
+			@PathVariable("tokenId") String tokenIdStr, 
+			@RequestBody TokenMintDto mintDto) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID tokenId = UUID.fromString(tokenIdStr);
+		
+		if (governanceService.canMintTokens(tokenId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		Initiative initiative = initiativeService.findByTokenType_Id(tokenId);
+		String result = tokenTransferService.burnOfInitiative(tokenId, initiative.getId(), getLoggedUserId(), mintDto);
+		
+		if(result.equals("success")) {
+			return new PostResult("success", "tokens minted", tokenId.toString());
+		} else {
+			return new PostResult("error", "error while minting tokens", "");
+		}
+	}
+	
+	@RequestMapping(path = "/token/{tokenId}", method = RequestMethod.DELETE) 
+	public PostResult deleteToken(
+			@PathVariable("tokenId") UUID tokenId) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		if (governanceService.canMintTokens(tokenId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		String result = tokenService.delete(tokenId);
+		
+		if(result.equals("success")) {
+			return new PostResult("success", "token deleted", tokenId.toString());
+		} else {
+			return new PostResult("error", "error while deleting token", "");
+		}
+	}
+	
+	@RequestMapping(path = "/token/{tokenId}/restore", method = RequestMethod.PUT) 
+	public PostResult restoreToken(
+			@PathVariable("tokenId") UUID tokenId) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		if (governanceService.canMintTokens(tokenId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		String result = tokenService.restore(tokenId);
+		
+		if(result.equals("success")) {
+			return new PostResult("success", "token deleted", tokenId.toString());
+		} else {
+			return new PostResult("error", "error while deleting token", "");
+		}
+	}
+	
 	@RequestMapping(path = "/initiative/{initiativeId}/transfersToInitiatives", method = RequestMethod.GET)
 	public GetResult<List<TransferDto>> getTransferFromInitiative(
 			@PathVariable("initiativeId") String initiativeIdStr,

@@ -284,7 +284,21 @@ const translations = {
       'AUTOSCALE': 'autoscale',
       'CHANGE_MY_EVAL': 'Change my evaluation',
       'RESULTS': 'Results',
-      'ALL_EVALS': 'All Evaluations'
+      'ALL_EVALS': 'All Evaluations',
+      'CONFIGURE_TOKEN': 'Configure token',
+      'ACTION': 'Action',
+      'MINT': 'Mint',
+      'BURN': 'Burn',
+      'AMOUNT_TO_BE_CREATED': 'Amount to be created',
+      'AMOUNT_TO_BE_BURNT': 'Amount to be burnt',
+      'NEW_TOTAL_SUPPLY': 'New total supply',
+      'NEW_TOTAL_AVAILABLE': 'New total available',
+      'AMOUNT_LARGER_THAN_ZERO': 'please select an amount larger than 0',
+      'ONLY': 'only',
+      'DELETE_TOKEN_WARNING': '<b>Warning:</b> Are you sure you want to delete the "{tokenName}" token?',
+      'SHOW_DELETED': 'show deleted',
+      'HIDE_DELETED': 'hide deleted',
+      'RESTORE': 'restore'
     },
     activity: {
       'EDIT_NOTIFICATIONS_OF': 'Edit notifications for the {title} {type}',

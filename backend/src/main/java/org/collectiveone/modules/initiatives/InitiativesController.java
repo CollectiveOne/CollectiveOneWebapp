@@ -116,7 +116,7 @@ public class InitiativesController extends BaseController {
 		initiativeDto = initiativeService.getLight(initiativeId);
 		
 		if(addAssetsIds) {
-			initiativeDto.setAssets(initiativeService.getInitiativeAssetsDtoLight(initiativeId));
+			initiativeDto.setAssets(initiativeService.getInitiativeAssetsDtoLight(initiativeId, false));
 		}
 		
 		if(addSubinitiatives) {
@@ -136,6 +136,21 @@ public class InitiativesController extends BaseController {
 		}
 		
 		return new GetResult<InitiativeDto>("success", "initiative retrieved", initiativeDto);
+	}
+	
+	@RequestMapping(path = "/initiative/{initiativeId}/assets", method = RequestMethod.GET)
+	public GetResult<List<AssetsDto>> getInitiativeAssets(
+			@PathVariable("initiativeId") UUID initiativeId,
+			@RequestParam(name="addDeleted", defaultValue="false") Boolean addDeleted) {
+		
+		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
+			return new GetResult<List<AssetsDto>>("error", "access denied", null);
+		}
+		
+		return new GetResult<List<AssetsDto>>(
+				"success", 
+				"assets retreived", 
+				initiativeService.getInitiativeAssetsDtoLight(initiativeId, addDeleted));
 	}
 	
 	@RequestMapping(path = "/initiatives/mines", method = RequestMethod.GET)

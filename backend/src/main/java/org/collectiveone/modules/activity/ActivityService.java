@@ -49,6 +49,7 @@ import org.collectiveone.modules.model.repositories.ModelCardWrapperAdditionRepo
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
+import org.collectiveone.modules.tokens.TokenBurn;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
@@ -570,6 +571,24 @@ public class ActivityService {
 		
 		addInitiativeActivityNotifications(activity);
 	}
+	
+	@Transactional
+	public void tokensBurnt(Initiative initiative, TokenBurn burn) {
+		Activity activity = new Activity();
+		
+		activity.setType(ActivityType.TOKENS_BURNT);
+		activity.setTriggerUser(burn.getOrderedBy());
+		activity.setInitiative(initiative);
+		activity.setTimestamp(new Timestamp(System.currentTimeMillis()));
+		
+		activity.setBurn(burn);
+		
+		activity = activityRepository.save(activity);
+		
+		addInitiativeActivityNotifications(activity);
+	}
+	
+	
 	
 	@Transactional
 	public void peerReviewedAssignationCreated(Assignation assignation, AppUser triggerUser) {

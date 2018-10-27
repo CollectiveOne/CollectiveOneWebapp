@@ -6,6 +6,7 @@ import java.util.List;
 public class AssetsDto {
 	private String assetId;
 	private String assetName;
+	private String status;
 	private double totalExistingTokens;
 	
 	private String holderId;
@@ -33,6 +34,12 @@ public class AssetsDto {
 	}
 	public void setAssetName(String assetName) {
 		this.assetName = assetName;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	public double getTotalExistingTokens() {
 		return totalExistingTokens;

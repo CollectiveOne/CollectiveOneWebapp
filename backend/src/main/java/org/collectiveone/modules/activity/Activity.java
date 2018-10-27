@@ -30,6 +30,7 @@ import org.collectiveone.modules.model.ModelSubsection;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
+import org.collectiveone.modules.tokens.TokenBurn;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
@@ -86,6 +87,10 @@ public class Activity {
 	
 	@OneToOne
 	private TokenMint mint;
+
+	@OneToOne
+	private TokenBurn burn;
+	
 	
 	@ManyToOne
 	private Assignation assignation;
@@ -275,6 +280,14 @@ public class Activity {
 
 	public void setMint(TokenMint mint) {
 		this.mint = mint;
+	}
+	
+	public TokenBurn getBurn() {
+		return burn;
+	}
+
+	public void setBurn(TokenBurn burn) {
+		this.burn = burn;
 	}
 
 	public Assignation getAssignation() {
