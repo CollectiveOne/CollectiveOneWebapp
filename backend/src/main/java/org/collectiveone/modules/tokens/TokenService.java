@@ -205,7 +205,7 @@ public class TokenService {
 		/* token info */
 		assetsDto.setAssetId(token.getId().toString());
 		assetsDto.setAssetName(token.getName());
-		assetsDto.setStatus(token.getStatus().toString());
+		if (token.getStatus() != null) assetsDto.setStatus(token.getStatus().toString());
 		
 		if (getExisting) {
 			/* Total amount of tokens in circulation */

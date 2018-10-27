@@ -661,7 +661,7 @@ const translations = {
       'NO_ASSETS_TRANSFERRED_MSG': 'Confirma que no será transferido ningún token desde {initName} a esta nueva sub-iniciativa?',
       'TRANSFER_FROM': 'Transferir desde {initName}',
       'TOKEN_TO_TRANSFER': 'Token a transferir',
-      'NO_ASSETS_IN_PARENT': 'La iniciativa madre no posee ningún token',
+      'NO_ASSETS_IN_PARENT': 'La iniciativa no posee ningún token',
       'OF_EXISTING': 'de los existentes',
       'STILL_AVAILABLE': 'Aún disponibles',
       'UNDER_PENDING_PR': 'En proceso de transferencia co-evaluada',

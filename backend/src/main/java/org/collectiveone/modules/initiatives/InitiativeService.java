@@ -606,7 +606,7 @@ public class InitiativeService {
 			AssetsDto asset = new AssetsDto();
 			asset.setAssetId(token.getId().toString());
 			asset.setAssetName(token.getName());
-			asset.setStatus(token.toString());
+			if (token.getStatus() != null) asset.setStatus(token.getStatus().toString());
 			asset.setTotalExistingTokens(tokenService.getTotalExisting(token.getId()));
 			
 			if ((token.getStatus() != Status.DELETED) || addDeleted) {

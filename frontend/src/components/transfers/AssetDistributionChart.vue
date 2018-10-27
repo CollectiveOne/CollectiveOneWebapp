@@ -1,6 +1,6 @@
 <template lang="html">
 
-  <div v-if="assetData" class="">
+  <div class="">
 
     <transition name="slideDownUp">
       <app-token-edit-modal
@@ -12,12 +12,12 @@
       </app-token-edit-modal>
     </transition>
 
-    <div class="this-container">
+    <div v-if="assetData" class="this-container">
       <div class="w3-row">
         <div class="w3-col distribution-container" :class="{'l8': showAssigner, 'l12': !showAssigner}">
           <div class="w3-row-padding">
             <div class="w3-col l4 w3-center">
-              <div class="" :class="{tall: isOverview, short: !isOverview}">
+              <div class="" class="summary-container">
                 <div class="w3-row" style="width: 100%">
                   <div class="w3-row tokens-row">
                     {{ underThisInitiativeStr }} {{ assetData.assetName }}
@@ -214,6 +214,9 @@
         </div>
       </div>
     </div>
+    <div v-else class="w3-row w3-center loader-gif-container">
+      <img class="loader-gif" src="../../assets/loading.gif" alt="">
+    </div>
   </div>
 
 </template>
@@ -259,6 +262,7 @@ export default {
   data () {
     return {
       assetData: null,
+      loading: false,
       showSubinitiatives: false,
       showMembers: false,
       value: 0,
@@ -467,14 +471,11 @@ export default {
   font-size: 30px;
 }
 
-.tall {
-}
-
-.short {
+.summary-container {
+  padding: 25px 0px;
 }
 
 .tokens-row {
-  margin-top: 20px;
   font-size: 26px;
   font-style: normal;
   font-weight: 900;

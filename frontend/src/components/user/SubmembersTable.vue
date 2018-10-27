@@ -64,7 +64,9 @@ export default {
     ownedOfThisAsset (asset, submember) {
       for (var ix in submember.receivedAssets) {
         if (submember.receivedAssets[ix].assetId === asset.assetId) {
-          return submember.receivedAssets[ix].ownedByThisHolder > 0 ? submember.receivedAssets[ix].ownedByThisHolder.toFixed(2) : '-'
+          let ownedVal = submember.receivedAssets[ix].ownedByThisHolder
+          let ownedPer = ownedVal / asset.totalExistingTokens * 100
+          return ownedVal > 0 ? ownedVal.toFixed(2) + ' / ' + ownedPer.toFixed(2) + '%' : '-'
         }
       }
       return '-'

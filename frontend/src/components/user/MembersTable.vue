@@ -52,7 +52,7 @@
             <td class="avatar-col">
               <app-user-avatar :user="member.user" :showName="false"></app-user-avatar>
             </td>
-            <td id="T_username">{{ member.user.nickname }}</td>
+            <td>{{ member.user.nickname }}</td>
             <td v-for="asset in assets">
               {{ ownedOfThisAsset(asset, member) }}
             </td>
