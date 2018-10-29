@@ -34,13 +34,12 @@
           </span>
         </div>
 
-        <div class="event-summary w3-small w3-left" :class="{'event-summary-solid': !showMessagesText, 'event-summary-light': showMessagesText}">
+        <div class="event-summary w3-small w3-left event-summary-solid">
           <span v-if="isInitiativeCreated" class="">
              {{ $t('notifications.CREATED_INIT') }} <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
           </span>
 
           <span v-if="isInitiativeEdited" class="">
-
             {{ $t('notifications.EDITED') }} <app-initiative-link :initiative="activity.initiative"></app-initiative-link> {{ initiativeChanged }}
           </span>
 
@@ -265,9 +264,12 @@
         </div>
       </div>
 
-      <div v-if="isMessagePosted && showMessagesText" class="w3-row cursor-pointer" @click="replyToMessage(false)">
+      <div v-if="isMessagePosted" class="w3-row" :class="{'cursor-pointer': showMessagesText}" @click="replyToMessage(false)">
         <div v-if="!messageDeleted" class="">
-          <vue-markdown class="marked-text message-container" :source="activity.message.text" :anchorAttributes="{target: '_blank'}"></vue-markdown>
+          <vue-markdown class="marked-text message-container"
+            :source="showMessagesText ? activity.message.text : (activity.message.text.length < 75 ? activity.message.text : (activity.message.text.substr(0, 75) + '...'))"
+            :anchorAttributes="{target: '_blank'}">
+          </vue-markdown>
         </div>
         <div v-else class="">
           [deleted]
@@ -824,7 +826,6 @@ a {
 .event-summary-solid {
   background-color: #eff3f6;
   color: black;
-  width: 100%;
 }
 
 .drop-menu {
