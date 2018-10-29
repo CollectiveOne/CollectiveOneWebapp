@@ -97,7 +97,7 @@
             <button v-show="!sendingData" class="w3-button app-button" name="button" @click="createCard()">
               {{ cardButtonText }}
             </button>
-            <div v-show="sendingData" class="light-grey w3-center">
+            <div v-show="sendingData" class="sending-accept light-grey w3-center">
               <img class="" src="../../../assets/loading.gif" alt="">
             </div>
           </div>
