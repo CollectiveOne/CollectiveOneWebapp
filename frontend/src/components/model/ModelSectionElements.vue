@@ -206,6 +206,10 @@ export default {
     },
     '$store.state.support.triggerUpdateSectionCards' () {
       this.resetCards()
+    },
+    section () {
+      console.log('checking card subroute due to section update')
+      this.checkCardSubroute()
     }
   },
 
@@ -359,6 +363,10 @@ export default {
       if (this.$route.name === 'ModelSectionCard') {
         if (this.section) {
           this.showCardModal = true
+        } else {
+          if (!this.sectionLoadedOnce) {
+            this.updateSection()
+          }
         }
       }
     },
