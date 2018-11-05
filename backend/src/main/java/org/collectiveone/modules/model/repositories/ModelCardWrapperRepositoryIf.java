@@ -1,6 +1,7 @@
 package org.collectiveone.modules.model.repositories;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.collectiveone.modules.model.ModelCardWrapper;
@@ -10,7 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ModelCardWrapperRepositoryIf extends CrudRepository<ModelCardWrapper, UUID> {
 	
-	public ModelCardWrapper findById(UUID modelCardWrapperId);
+	public Optional<ModelCardWrapper> findById(UUID modelCardWrapperId);
 	
 	@Query("SELECT crdWrp FROM ModelCardWrapper crdWrp WHERE crdWrp.creationDate IS NULL OR crdWrp.creator IS NULL")
 	public List<ModelCardWrapper> findWithNullCreation();

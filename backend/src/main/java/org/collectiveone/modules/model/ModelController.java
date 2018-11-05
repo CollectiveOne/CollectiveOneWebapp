@@ -90,10 +90,11 @@ public class ModelController extends BaseController {
 	@RequestMapping(path = "/model/section/{parentSectionId}/subsection/{subsectionId}", method = RequestMethod.PUT)
 	public PostResult addExistingSectionSubsection(
 			@PathVariable("parentSectionId") String parentSectionIdStr,
-			@PathVariable("subsectionId") String subsectionIdStr, 
-			@RequestParam(name = "onSubsectionId", defaultValue="") String onSubsectionIdStr, 
+			@PathVariable("sectionId") UUID sectionId, 
+			@RequestParam(name = "onSubsectionId", defaultValue="") UUID onSubsectionId, 
 			@RequestParam(name = "isBefore", defaultValue="false") Boolean isBefore,
-			@RequestParam(name = "scope", defaultValue="") String scopeStr) {
+			@RequestParam(name = "scope", defaultValue="") String scopeStr,
+			@RequestParam(name = "detachFlag", defaultValue="false") Boolean detachFlag) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -109,15 +110,16 @@ public class ModelController extends BaseController {
 		ModelScope scope = scopeStr.equals("") ? ModelScope.COMMON : ModelScope.valueOf(scopeStr);
 		
 		/* dropped on subsection can be empty */
-		UUID onSubsectionId =  onSubsectionIdStr.equals("") ? null : UUID.fromString(onSubsectionIdStr);
 		
 		return modelService.addSubsectionToSection(
-				UUID.fromString(subsectionIdStr),
+				sectionId,
 				parentSectionId,
 				onSubsectionId,
 				isBefore,
 				getLoggedUserId(),
-				scope);
+				scope,
+				detachFlag);	
+		
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}", method = RequestMethod.PUT) 
@@ -565,7 +567,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ModelSectionDto>>("error", "access denied", null);
 		}
 		
-		return modelService.searchSection(query, new PageRequest(page, size), initiativeId, getLoggedUserId());
+		return modelService.searchSection(query, PageRequest.of(page, size), initiativeId, getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/activity/model/section/{sectionId}", method = RequestMethod.GET)
@@ -589,7 +591,7 @@ public class ModelController extends BaseController {
 		UUID loggedUserId = getLoggedUserId();
 		loggedUserId = loggedUserId == null ? UUID.fromString("00000000-0000-0000-0000-000000000000") : loggedUserId;
 		
-		return modelService.getActivityResultUnderSection(sectionId, new PageRequest(page, size), addMessages, addEvents, levels, loggedUserId);
+		return modelService.getActivityResultUnderSection(sectionId, PageRequest.of(page, size), addMessages, addEvents, levels, loggedUserId);
 	}
 	
 	@RequestMapping(path = "/model/card/{cardWrapperId}/countMessages", method = RequestMethod.GET)
@@ -623,7 +625,7 @@ public class ModelController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return modelService.getActivityResultUnderCard(cardWrapperId, new PageRequest(page, size), addMessages, addEvents);
+		return modelService.getActivityResultUnderCard(cardWrapperId, PageRequest.of(page, size), addMessages, addEvents);
 	}
 	
 	@RequestMapping(path = "/model/card/{cardWrapperId}/like", method = RequestMethod.PUT)

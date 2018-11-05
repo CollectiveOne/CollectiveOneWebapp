@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @author Sagar Devkota
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations="classpath:test.properties")
 public abstract class AbstractTest {
 

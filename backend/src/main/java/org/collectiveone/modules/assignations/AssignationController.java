@@ -65,9 +65,10 @@ public class AssignationController extends BaseController {
 			return new GetResult<List<AssignationDto>>("error", "access denied", null);
 		}
 		
-		Sort sort = new Sort(Sort.Direction.valueOf(sortDirection), sortProperty);
-		
-		return assignationService.getAssignationsOfInitiative(initiativeId, getLoggedUserId(), new PageRequest(page, size, sort));
+		return assignationService.getAssignationsOfInitiative(
+				initiativeId, 
+				getLoggedUserId(), 
+				PageRequest.of(page, size, Sort.Direction.valueOf(sortDirection), sortProperty));
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/assignationsOfSubinitiatives", method = RequestMethod.GET)
@@ -84,9 +85,10 @@ public class AssignationController extends BaseController {
 			return new GetResult<List<AssignationDto>>("error", "access denied", null);
 		}
 		
-		Sort sort = new Sort(Sort.Direction.valueOf(sortDirection), sortProperty);
-		
-		return assignationService.getAssignationsOfSubinitiatives(initiativeId, getLoggedUserId(), new PageRequest(page, size, sort));
+		return assignationService.getAssignationsOfSubinitiatives(
+				initiativeId, 
+				getLoggedUserId(), 
+				PageRequest.of(page, size, Sort.Direction.valueOf(sortDirection), sortProperty));
 	}
 	
 	@RequestMapping(path = "/assignation/{assignationId}", method = RequestMethod.GET)

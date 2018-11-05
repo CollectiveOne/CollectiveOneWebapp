@@ -69,8 +69,8 @@ public class TestTokenService extends AbstractTest {
     		UUID uuid=UUID.randomUUID();
     		mockToken.setId(uuid);
     		
-    		when(tokenTypeRepositoryMock.findById(uuid)).thenReturn(mockToken);
-    		TokenType token=tokenTypeRepositoryMock.findById(uuid);
+    		when(tokenTypeRepositoryMock.findById(uuid).get()).thenReturn(mockToken);
+    		TokenType token=tokenTypeRepositoryMock.findById(uuid).get();
     		assertTrue(token.getId().toString().equals(uuid.toString()));		
     
     }

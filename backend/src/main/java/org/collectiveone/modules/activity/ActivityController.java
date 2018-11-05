@@ -49,7 +49,7 @@ public class ActivityController extends BaseController {
 				getLoggedUserId(),
 				NotificationContextType.valueOf(contextElementType),
 				UUID.fromString(elementId),
-				new PageRequest(page, size),
+				PageRequest.of(page, size),
 				isHtml,
 				onlyUnread);
 	}

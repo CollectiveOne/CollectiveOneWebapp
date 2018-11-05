@@ -73,6 +73,26 @@
                   </select>
                 </div>
 
+                <div class="w3-row w3-margin-top">
+                  <b>{{ $t('model.LINK_STATUS_WITH_SECTION', { title: existingSection ? ("\"" + existingSection.title + "\""): '' }) }}</b>
+                </div>
+                <div class="w3-row-padding modal-bottom-btns-row">
+                  <div class="w3-col m6">
+                    <button type="button" class="w3-button"
+                      :class="{'app-button': !detachFlag, 'app-button-light': detachFlag}"
+                      @click="detachFlag = false">
+                      {{ $t('model.KEEP') }}
+                    </button>
+                  </div>
+                  <div class="w3-col m6">
+                    <button type="button" class="w3-button app-button"
+                      :class="{'app-button': detachFlag, 'app-button-light': !detachFlag}"
+                      @click="detachFlag = true">
+                      {{ $t('model.DETACH') }}
+                    </button>
+                  </div>
+                </div>
+
               </div>
               <div v-else>
 
@@ -217,7 +237,8 @@ export default {
       animatingTab: false,
       sendingData: false,
       loading: false,
-      closeIntent: false
+      closeIntent: false,
+      detachFlag: false
     }
   },
 
@@ -389,7 +410,8 @@ export default {
             this.sendingData = true
             this.axios.put('/1/model/section/' + this.inSection.id + '/subsection/' + this.existingSection.id, {}, {
               params: {
-                scope: this.existingSectionNewScope
+                scope: this.existingSectionNewScope,
+                detachFlag: this.detachFlag
               }
             }).then((response) => {
                 this.sendingData = false

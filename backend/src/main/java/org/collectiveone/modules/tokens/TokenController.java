@@ -176,9 +176,9 @@ public class TokenController extends BaseController {
 			return new GetResult<List<TransferDto>>("error", "access denied", null);
 		}
 		
-		Sort sort = new Sort(Sort.Direction.valueOf(sortDirection), sortProperty);
-		
-		return tokenTransferService.getTransfersFromInitiative(initiativeId, new PageRequest(page, size, sort));
+		return tokenTransferService.getTransfersFromInitiative(
+				initiativeId, 
+				PageRequest.of(page, size, Sort.Direction.valueOf(sortDirection), sortProperty));
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/transfersFromSubinitiatives", method = RequestMethod.GET)
@@ -195,9 +195,9 @@ public class TokenController extends BaseController {
 			return new GetResult<List<TransferDto>>("error", "access denied", null);
 		}
 		
-		Sort sort = new Sort(Sort.Direction.valueOf(sortDirection), sortProperty);
-		
-		return tokenTransferService.getTransfersFromSubinitiatives(initiativeId, new PageRequest(page, size, sort));
+		return tokenTransferService.getTransfersFromSubinitiatives(
+				initiativeId, 
+				PageRequest.of(page, size, Sort.Direction.valueOf(sortDirection), sortProperty));
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/transferToInitiative", method = RequestMethod.POST)

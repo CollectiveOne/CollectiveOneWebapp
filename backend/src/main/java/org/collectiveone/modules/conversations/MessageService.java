@@ -67,13 +67,13 @@ public class MessageService {
 		
 		switch (contextType) {
 			case MODEL_CARD:
-				return modelCardWrapperRepository.findById(elementId).getInitiative().getId();
+				return modelCardWrapperRepository.findById(elementId).get().getInitiative().getId();
 			
 			case MODEL_SECTION:
-				return modelSectionRepository.findById(elementId).getInitiative().getId();
+				return modelSectionRepository.findById(elementId).get().getInitiative().getId();
 				
 			case INITIATIVE:
-				return initiativeRepository.findById(elementId).getId();
+				return initiativeRepository.findById(elementId).get().getId();
 				
 		}
 		
@@ -128,7 +128,7 @@ public class MessageService {
 			UUID sectionId,
 			UUID userId) throws WrongLinkOfElement {
 		
-		Message message = messageRepository.findById(messageId);
+		Message message = messageRepository.findById(messageId).get();
 		
 		ModelCardDto cardDto = new ModelCardDto();
     	
@@ -148,7 +148,7 @@ public class MessageService {
 	@Transactional
 	public PostResult editMessage(MessageDto messageDto, UUID editorId, UUID messageId) {
 		
-		Message message = messageRepository.findById(messageId);
+		Message message = messageRepository.findById(messageId).get();
 		
 		if (message == null) {
 			return new PostResult("error", "message not found", null);		 		
@@ -168,7 +168,7 @@ public class MessageService {
 	@Transactional
 	public PostResult deleteMessage(UUID editorId, UUID messageId) {
 		
-		Message message = messageRepository.findById(messageId);
+		Message message = messageRepository.findById(messageId).get();
 		
 		if (message == null) {
 			return new PostResult("error", "message not found", null);		 		

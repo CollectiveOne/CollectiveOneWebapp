@@ -19,7 +19,6 @@ const ModelSectionContent = () => import('@/components/model/ModelSectionContent
 const ModelSectionElements = () => import('@/components/model/ModelSectionElements.vue')
 
 const UserProfilePage = () => import('@/components/UserProfilePage.vue')
-const WSWebSocketDebugPage = () => import('@/components/WebSocketDebugPage.vue')
 
 Vue.use(Router)
 
@@ -115,11 +114,6 @@ export default new Router({
           path: 'user/:userId',
           name: 'UserProfilePage',
           component: UserProfilePage
-        },
-        {
-          path: 'websocket',
-          name: 'WebSocketDebugPage',
-          component: WSWebSocketDebugPage
         }
       ]
     }

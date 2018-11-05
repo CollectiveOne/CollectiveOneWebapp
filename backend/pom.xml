@@ -104,7 +104,15 @@
             <artifactId>aws-java-sdk</artifactId>
             <version>1.11.185</version>
         </dependency>
-
+        
+        <!-- Test -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-devtools</artifactId>
+		    <optional>true</optional>
+		</dependency>
+		
+		
 	</dependencies>
 
 	<build>

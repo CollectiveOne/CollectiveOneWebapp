@@ -45,7 +45,7 @@ public class TokenService {
 	@Transactional
 	public String delete(UUID tokenId) {
 		/* if no parent initiative is provided, create a new token type */
-		TokenType token = tokenTypeRepository.findById(tokenId);
+		TokenType token = tokenTypeRepository.findById(tokenId).get();
 		token.setStatus(Status.DELETED);
 		token = tokenTypeRepository.save(token);
 		
@@ -55,7 +55,7 @@ public class TokenService {
 	@Transactional
 	public String restore(UUID tokenId) {
 		/* if no parent initiative is provided, create a new token type */
-		TokenType token = tokenTypeRepository.findById(tokenId);
+		TokenType token = tokenTypeRepository.findById(tokenId).get();
 		token.setStatus(Status.VALID);
 		token = tokenTypeRepository.save(token);
 		
@@ -64,7 +64,7 @@ public class TokenService {
 	
 	@Transactional
 	public TokenType getTokenType(UUID tokenId) {
-		return tokenTypeRepository.findById(tokenId);
+		return tokenTypeRepository.findById(tokenId).get();
 	}
 	
 	@Transactional
@@ -80,7 +80,7 @@ public class TokenService {
 		
 		if(holder == null) {
 			/* add new holder row with this ID */
-			TokenType tokenType = tokenTypeRepository.findById(tokenTypeId);
+			TokenType tokenType = tokenTypeRepository.findById(tokenTypeId).get();
 			
 			holder = new TokenHolder();
 			holder.setHolderId(holderId);
@@ -98,7 +98,7 @@ public class TokenService {
 	public String mintToHolder(UUID tokenId, UUID holderId, double value, TokenHolderType holderType) {
 		/* and assign a pool of its own tokens to this initiative */
 		
-		TokenType token = tokenTypeRepository.findById(tokenId);
+		TokenType token = tokenTypeRepository.findById(tokenId).get();
 		TokenHolder holder = getOrCreateHolder(token.getId(), holderId, holderType);
 		holder.setTokens(holder.getTokens() + value);
 		tokenHolderRepository.save(holder);
@@ -111,7 +111,7 @@ public class TokenService {
 	public String burnOfHolder(UUID tokenId, UUID holderId, double value, TokenHolderType holderType) {
 		/* and assign a pool of its own tokens to this initiative */
 		
-		TokenType token = tokenTypeRepository.findById(tokenId);
+		TokenType token = tokenTypeRepository.findById(tokenId).get();
 		TokenHolder holder = getHolder(token.getId(), holderId);
 		if (holder.getTokens() >= value) {
 			holder.setTokens(holder.getTokens() - value);
@@ -127,7 +127,7 @@ public class TokenService {
 	public String transfer(UUID tokenId, UUID fromHolderId, UUID toHolderId, double value, TokenHolderType holderType) {
 		/* and assign a pool of its own tokens to this initiative */
 		
-		TokenType token = tokenTypeRepository.findById(tokenId);
+		TokenType token = tokenTypeRepository.findById(tokenId).get();
 		
 		TokenHolder fromHolder = getHolder(token.getId(), fromHolderId);
 		TokenHolder toHolder = getOrCreateHolder(token.getId(), toHolderId, holderType);
@@ -199,7 +199,7 @@ public class TokenService {
 	
 	@Transactional
 	public AssetsDto getTokenDto(UUID tokenTypeId, boolean getExisting) {
-		TokenType token = tokenTypeRepository.findById(tokenTypeId);
+		TokenType token = tokenTypeRepository.findById(tokenTypeId).get();
 		AssetsDto assetsDto = new AssetsDto();
 		
 		/* token info */

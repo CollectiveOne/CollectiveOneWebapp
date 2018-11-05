@@ -274,7 +274,7 @@ public class InitiativeService {
 		if (!initiativeDto.getAsSubinitiative()) {
 			meta.setColor("#009ee3");
 		} else {
-			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
+			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId())).get();
 			meta.setColor(parent.getMeta().getColor());
 		}		
 		
@@ -297,7 +297,7 @@ public class InitiativeService {
 	@Transactional
 	public PostResult wantToContribute(UUID initiativeId, UUID userId) {
 		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 				
 		AppUser user = appUserRepository.findByC1Id(userId);
 		
@@ -327,7 +327,7 @@ public class InitiativeService {
 	
 	@Transactional
 	private GetResult<Initiative> addMembers(UUID initiativeId, List<MemberDto> initiativeMembers) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		
 		/* List of Members */
 		for (MemberDto memberDto : initiativeMembers) {
@@ -339,7 +339,7 @@ public class InitiativeService {
 	
 	@Transactional
 	public Member addMemberOrGet(UUID initiativeId, UUID c1Id, DecisionMakerRole role) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		AppUser memberUser = appUserRepository.findByC1Id(c1Id);
 		
 		Member existingMember = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, c1Id);
@@ -368,7 +368,7 @@ public class InitiativeService {
 	
 	@Transactional 
 	public PostResult editMember(UUID initiativeId, UUID userId, DecisionMakerRole role) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, userId);
 		
 		if (member != null) {
@@ -381,7 +381,7 @@ public class InitiativeService {
 		
 	@Transactional
 	private PostResult transferAssets(UUID initiativeId, NewInitiativeDto initiativeDto, UUID creatorId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		
 		if (!initiativeDto.getAsSubinitiative()) {
 			/* if is not a sub-initiative, then create a token for this initiative */
@@ -405,7 +405,7 @@ public class InitiativeService {
 			return new PostResult("success", "initiative tokens created", initiative.getId().toString());
 			
 		} else {
-			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId()));
+			Initiative parent = initiativeRepository.findById(UUID.fromString(initiativeDto.getParentInitiativeId())).get();
 			
 			/* if it is a sub-initiative, then link to parent initiative */
 			InitiativeRelationship relationship = new InitiativeRelationship();
@@ -450,7 +450,7 @@ public class InitiativeService {
 	
 	@Transactional
 	private PostResult initModel(UUID initiativeId, UUID requestByUserId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		
 		ModelSection section = new ModelSection();
 		section.setTitle(initiative.getMeta().getName());
@@ -475,7 +475,7 @@ public class InitiativeService {
 	
 	@Transactional
 	public PostResult createNewToken(UUID initiativeId, AssetsDto tokenDto, UUID userId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		
 		TokenType token = tokenService.create(tokenDto.getAssetName(), "T");
 		initiative.getTokenTypes().add(token);
@@ -502,7 +502,7 @@ public class InitiativeService {
 	
 	@Transactional
 	public PostResult edit(UUID initiativeId, UUID userId, NewInitiativeDto initiativeDto) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		InitiativeMeta initiativeMeta = initiative.getMeta();
 		
 		String oldName = initiativeMeta.getName();
@@ -519,7 +519,7 @@ public class InitiativeService {
 		/* remove and add all tags */
 		initiativeMeta.getTags().removeAll(initiativeMeta.getTags());
 		for (InitiativeTagDto tagDto : initiativeDto.getTags()) {
-			InitiativeTag tag = initiativeTagRepository.findById(UUID.fromString(tagDto.getId()));
+			InitiativeTag tag = initiativeTagRepository.findById(UUID.fromString(tagDto.getId())).get();
 			initiativeMeta.getTags().add(tag);
 		}
 		
@@ -527,7 +527,7 @@ public class InitiativeService {
 		if (initiativeDto.getNewImageFileId() != null) {
 			if(!initiativeDto.getNewImageFileId().equals("REMOVE")) {
 				UUID imageFileId = initiativeDto.getNewImageFileId().equals("") ? null : UUID.fromString(initiativeDto.getNewImageFileId());
-				FileStored imageFile = fileStoredRepository.findById(imageFileId);
+				FileStored imageFile = fileStoredRepository.findById(imageFileId).get();
 				initiativeMeta.setImageFile(imageFile);
 			} else {
 				initiativeMeta.setImageFile(null);
@@ -551,7 +551,7 @@ public class InitiativeService {
 	
 	@Transactional
 	public PostResult delete(UUID initiativeId, UUID userId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		
 		List<Initiative> subiniatiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_ATTACHED_SUB);
 		
@@ -579,14 +579,14 @@ public class InitiativeService {
 	 * data from its assets */
 	@Transactional
 	public InitiativeDto getLight(UUID id) {
-		return  initiativeRepository.findById(id).toDto();
+		return  initiativeRepository.findById(id).get().toDto();
 	}
 	
 	/** */
 	@Transactional
 	public List<AssetsDto> getInitiativeAssetsDtoLight(UUID id, Boolean addDeleted) {
 		
-		Initiative initiative = initiativeRepository.findById(id);
+		Initiative initiative = initiativeRepository.findById(id).get();
 		List<TokenType> ownTokens = initiative.getTokenTypes();
 		List<TokenType> tokenTypes = tokenService.getTokenTypesHeldBy(initiative.getId());
 		
@@ -686,7 +686,7 @@ public class InitiativeService {
 			/* last element in the parents array is the farthest relative */
 			return parents.get(parents.size() - 1);
 		} else {
-			return initiativeRepository.findById(initiativeId);
+			return initiativeRepository.findById(initiativeId).get();
 		}
 	}
 	
@@ -742,7 +742,7 @@ public class InitiativeService {
 	
 	@Transactional
 	public List<InitiativeDto> getSubinitiativesTree(UUID initiativeId, UUID userId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId); 
+		Initiative initiative = initiativeRepository.findById(initiativeId).get(); 
 		List<Initiative> subIniatiatives = initiativeRepository.findInitiativesWithRelationship(initiative.getId(), InitiativeRelationshipType.IS_ATTACHED_SUB);
 		
 		List<InitiativeDto> subinitiativeDtos = new ArrayList<InitiativeDto>();
@@ -789,7 +789,7 @@ public class InitiativeService {
 		}
 		
 		/* check in this initiative */
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		
 		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, userId);
 		
@@ -817,7 +817,7 @@ public class InitiativeService {
 	
 	public InitiativeMembersDto getMembersAndSubmembers(UUID initiativeId) {
 		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		
 		InitiativeMembersDto initiativeMembers = new InitiativeMembersDto();
 		initiativeMembers.setInitiativeId(initiative.getId().toString());
@@ -870,7 +870,7 @@ public class InitiativeService {
 	}
 	
 	public PostResult deleteMember(UUID initiativeId, UUID memberUserId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, memberUserId);
 		
 		List<DecisionMaker> admins = governanceService.getDecisionMakerWithRole(initiative.getGovernance().getId(), DecisionMakerRole.ADMIN);
@@ -931,7 +931,7 @@ public class InitiativeService {
 		Member member = memberRepository.findByInitiative_IdAndUser_C1Id(initiativeId, userId);
 		
 		if(member == null) {
-			Initiative initiative = initiativeRepository.findById(initiativeId);
+			Initiative initiative = initiativeRepository.findById(initiativeId).get();
 			AppUser user = appUserRepository.findByC1Id(userId);
 			
 			member = new Member();
@@ -964,7 +964,7 @@ public class InitiativeService {
 	@Transactional
 	public PostResult addTagToInitiative(UUID initiativeId, InitiativeTagDto tagDto) {
 		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		if (initiative == null) return new PostResult("error", "initiative not found", "");
 		
 		InitiativeTag tag = getOrCreateTag(tagDto);
@@ -976,10 +976,10 @@ public class InitiativeService {
 	@Transactional
 	public PostResult deleteTagFromInitiative(UUID initiativeId, UUID tagId) {
 		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		if (initiative == null) return new PostResult("error", "initiative not found", "");
 		
-		InitiativeTag tag = initiativeTagRepository.findById(tagId);
+		InitiativeTag tag = initiativeTagRepository.findById(tagId).get();
 		if (tag == null) return new PostResult("error", "tag not found", "");
 		
 		initiative.getMeta().getTags().remove(tag);
@@ -1003,7 +1003,7 @@ public class InitiativeService {
 	
 	@Transactional
 	public GetResult<InitiativeTagDto> getTag(UUID tagId) {
-		InitiativeTag tag = initiativeTagRepository.findById(tagId);
+		InitiativeTag tag = initiativeTagRepository.findById(tagId).get();
 		
 		if (tag == null) {
 			return new GetResult<InitiativeTagDto>("error", "initiative tag not found", null); 

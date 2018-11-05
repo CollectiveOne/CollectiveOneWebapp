@@ -37,6 +37,9 @@ public class ModelSection {
 	@Column(name = "description")
 	private String description;
 	
+	@ManyToOne
+	private ModelSection originSection;
+	
 	
 	@Override
 	public int hashCode() {
@@ -113,4 +116,12 @@ public class ModelSection {
 		this.description = description;
 	}
 
+	public ModelSection getOriginSection() {
+		return originSection;
+	}
+
+	public void setOriginSection(ModelSection originSection) {
+		this.originSection = originSection;
+	}
+	
 }

@@ -92,7 +92,7 @@ public class AssignationService {
 	
 	
 	public PostResult createAssignation(UUID initiativeId, AssignationDto assignationDto, UUID creatorId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 	
 		Assignation assignation = new Assignation();
 		
@@ -162,7 +162,7 @@ public class AssignationService {
 					
 					if (result.getResult().equals("success")) {
 						receiver.setState(ReceiverState.RECEIVED);
-						receiver.setTransfer(memberTransferRepository.findById(UUID.fromString(result.getElementId())));
+						receiver.setTransfer(memberTransferRepository.findById(UUID.fromString(result.getElementId())).get());
 						receiverRepository.save(receiver);
 					}
 				}
@@ -213,7 +213,7 @@ public class AssignationService {
 	
 	@Transactional
 	public PostResult openAssignation(UUID assignationId) {
-		Assignation assignation = assignationRepository.findById(assignationId);
+		Assignation assignation = assignationRepository.findById(assignationId).get();
 		
 		if (assignation.getState() == AssignationState.ON_HOLD) {
 			assignation.setState(AssignationState.OPEN);
@@ -235,7 +235,7 @@ public class AssignationService {
 	@Transactional
 	private PostResult evaluateAssignation(UUID evaluatorUserId, UUID assignationId, EvaluationDto evaluationsDto) {
 		
-		Assignation assignation = assignationRepository.findById(assignationId);
+		Assignation assignation = assignationRepository.findById(assignationId).get();
 		Evaluator evaluator = evaluatorRepository.findByAssignationIdAndUser_C1Id(assignation.getId(), evaluatorUserId);
 		
 		if (evaluator != null) {
@@ -263,7 +263,7 @@ public class AssignationService {
 	@Transactional
 	public void updateAssignationState(UUID assignationId) {
 		
-		Assignation assignation = assignationRepository.findById(assignationId);
+		Assignation assignation = assignationRepository.findById(assignationId).get();
 		
 		if (assignation.getType() == AssignationType.PEER_REVIEWED) {
 			PeerReviewedAssignation peerReviewedAssignation = new PeerReviewedAssignation();
@@ -305,7 +305,7 @@ public class AssignationService {
 								
 								if (result.getResult().equals("success")) {
 									receiver.setState(ReceiverState.RECEIVED);
-									receiver.setTransfer(memberTransferRepository.findById(UUID.fromString(result.getElementId())));
+									receiver.setTransfer(memberTransferRepository.findById(UUID.fromString(result.getElementId())).get());
 									receiverRepository.save(receiver);
 								} else {
 									errorSending = true;
@@ -329,7 +329,7 @@ public class AssignationService {
 	
 	@Transactional
 	public AssignationDto getPeerReviewedAssignation(UUID initiativeId, UUID assignationId, UUID evaluatorAppUserId, Boolean addAllEvaluations) {
-		Assignation assignation = assignationRepository.findById(assignationId);
+		Assignation assignation = assignationRepository.findById(assignationId).get();
 		AssignationDto assignationDto = assignation.toDto();
 		
 		/* add the evaluations of logged user */
@@ -398,7 +398,7 @@ public class AssignationService {
 	
 	@Transactional
 	public UUID getInitiativeIdOf(UUID assignationId) {
-		Assignation assignation = assignationRepository.findById(assignationId);
+		Assignation assignation = assignationRepository.findById(assignationId).get();
 		if (assignation != null) {
 			return assignation.getInitiative().getId();
 		} else {
@@ -409,7 +409,7 @@ public class AssignationService {
 	@Transactional
 	public GetResult<AssignationDto> getAssignationDto(UUID assignationId, UUID userId, Boolean addAllEvaluations) {
 		
-		Assignation assignation = assignationRepository.findById(assignationId);
+		Assignation assignation = assignationRepository.findById(assignationId).get();
 		AssignationDto assignationDto = null;
 		
 		if(assignation.getType() == AssignationType.PEER_REVIEWED) {
@@ -459,7 +459,7 @@ public class AssignationService {
 	
 	@Transactional
 	public PostResult revertAssignation(UUID assignationId, UUID userId) {
-		Assignation assignation = assignationRepository.findById(assignationId);
+		Assignation assignation = assignationRepository.findById(assignationId).get();
 		
 		if(assignation.getState() == AssignationState.DONE) {
 			for (Receiver receiver : assignation.getReceivers()) {
@@ -481,7 +481,7 @@ public class AssignationService {
 	
 	@Transactional
 	public PostResult approveRevertAssignation(UUID userId, UUID assignationId, Boolean value) {
-		Assignation assignation = assignationRepository.findById(assignationId);
+		Assignation assignation = assignationRepository.findById(assignationId).get();
 		
 		if(assignation.getState() == AssignationState.REVERT_ORDERED) {
 			Receiver receiver = receiverRepository.findByAssignation_IdAndUser_C1Id(assignationId, userId);
@@ -504,7 +504,7 @@ public class AssignationService {
 	}
 	
 	public void checkRevertStatus(UUID assignationId) {
-		Assignation assignation = assignationRepository.findById(assignationId);
+		Assignation assignation = assignationRepository.findById(assignationId).get();
 		
 		if(assignation.getState() == AssignationState.REVERT_ORDERED) {
 			boolean missingApprovals = false;
@@ -531,7 +531,7 @@ public class AssignationService {
 	
 	@Transactional
 	public PostResult deleteAssignation(UUID assignationId, UUID userId) {
-		Assignation assignation = assignationRepository.findById(assignationId);
+		Assignation assignation = assignationRepository.findById(assignationId).get();
 		
 		if(assignation.getState() == AssignationState.OPEN) {
 			assignation.setState(AssignationState.DELETED);

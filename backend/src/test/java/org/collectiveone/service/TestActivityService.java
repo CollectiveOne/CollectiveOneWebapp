@@ -1,27 +1,14 @@
 package org.collectiveone.service;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-import java.util.UUID;
-
 import org.collectiveone.AbstractTest;
-import org.collectiveone.common.dto.GetResult;
-import org.collectiveone.modules.activity.ActivityService;
-import org.collectiveone.modules.activity.dto.NotificationDto;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Transactional
 public class TestActivityService extends AbstractTest {
-	@Autowired
-    private ActivityService activityService;
 	
 	@Value("${TEST_USER}")
 	String userId;

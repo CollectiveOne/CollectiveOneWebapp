@@ -225,7 +225,7 @@ public class InitiativesController extends BaseController {
 	        return new GetResult<List<AppUserDto>>("error", "access denied", null);
 	    }
 	    
-	    return initiativeService.getMembersOfEcosystem(UUID.fromString(initiativeIdFetch), query, new PageRequest(0, 10));
+	    return initiativeService.getMembersOfEcosystem(UUID.fromString(initiativeIdFetch), query, PageRequest.of(0, 10));
 	}
 	
 	@RequestMapping(path = "/initiative/{initiativeId}/member/{userId}", method = RequestMethod.DELETE) 
@@ -358,7 +358,7 @@ public class InitiativesController extends BaseController {
 			return new GetResult<Page<ActivityDto>>("error", "access denied", null);
 		}
 		
-		return initiativeService.getActivityUnderInitiative(initiativeId, new PageRequest(page, size), onlyMessages);
+		return initiativeService.getActivityUnderInitiative(initiativeId, PageRequest.of(page, size), onlyMessages);
 	}
 	
 }

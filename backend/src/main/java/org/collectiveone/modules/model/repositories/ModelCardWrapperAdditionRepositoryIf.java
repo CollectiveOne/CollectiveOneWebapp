@@ -1,6 +1,7 @@
 package org.collectiveone.modules.model.repositories;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.collectiveone.modules.model.ModelCardWrapper;
@@ -15,7 +16,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ModelCardWrapperAdditionRepositoryIf extends CrudRepository<ModelCardWrapperAddition, UUID> {
 	
-	ModelCardWrapperAddition findById(UUID cardWrapperAdditionId);
+	Optional<ModelCardWrapperAddition> findById(UUID cardWrapperAdditionId);
 	
 	@Query("SELECT sec FROM ModelCardWrapperAddition crdWrpAdd "
 			+ "JOIN crdWrpAdd.section sec "

@@ -49,7 +49,7 @@ export default {
     },
     levels () {
       return this.$store.getters.getActualLevels
-    },
+    }
   },
 
   methods: {

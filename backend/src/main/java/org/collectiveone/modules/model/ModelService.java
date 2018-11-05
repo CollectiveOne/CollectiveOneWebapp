@@ -97,7 +97,7 @@ public class ModelService {
 	
 	@Transactional(rollbackOn = Exception.class)
 	public GetResult<ModelSectionDto> getModel(UUID initiativeId, Integer level, UUID requestById, Boolean onlySections) {
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		if (initiative == null) return new GetResult<ModelSectionDto>("error", "initiative not found", null);
 		
 		ModelSectionDto sectionDto = initiative.getTopModelSubsection().getSection().toDto();
@@ -110,7 +110,7 @@ public class ModelService {
 	
 	@Transactional(rollbackOn = Exception.class)
 	public Initiative getSectionInitiative (UUID sectionId) {
-		return modelSectionRepository.findById(sectionId).getInitiative();
+		return modelSectionRepository.findById(sectionId).get().getInitiative();
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
@@ -123,12 +123,11 @@ public class ModelService {
 		
 		ModelSection section = sectionDto.toEntity(null, sectionDto);
 		
-		section = modelSectionRepository.save(section);
-		
-		ModelSection parent = modelSectionRepository.findById(parentSectionId);
+		ModelSection parent = modelSectionRepository.findById(parentSectionId).get();
 		if (parent == null) return new PostResult("error", "parent section not found", "");
 		
 		section.setInitiative(parent.getInitiative());
+		section = modelSectionRepository.save(section);
 		
 		ModelSubsection onSubsection = getOnSubsectionFromId(
 				onSectionId, 
@@ -181,18 +180,10 @@ public class ModelService {
 					modelSubsectionRepository.findByParentSectionAndSectionVisibleToUser(inSectionId, sectionId, requestByUserId);	
 		} else {
 			subsection = new ModelSubsection();
-			subsection.setSection(modelSectionRepository.findById(sectionId));
+			subsection.setSection(modelSectionRepository.findById(sectionId).get());
 		}
 		
 		ModelSectionDto sectionDto = getSubsectionDto(subsection);
-		
-		List<ModelSubsection> inSubsections = modelSubsectionRepository.findOfSection(sectionId);
-		
-		for (ModelSubsection inSubsection : inSubsections) {
-			if (inSubsection.getParentSection() != null) {
-				sectionDto.getInSections().add(inSubsection.getParentSection().toDto());
-			}
-		}
 		
 		if(level > 0) {
 			sectionDto = addSectionSubElements(sectionDto, sectionId, level - 1, requestByUserId, onlySections);
@@ -203,7 +194,7 @@ public class ModelService {
 	
 	@Transactional
 	public GetResult<CardWrappersHolderDto> getSectionCardWrappers(UUID sectionId, UUID requestByUserId) {
-		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelSection section = modelSectionRepository.findById(sectionId).get();
 		
 		CardWrappersHolderDto cardWrappersHolder = getSectionCardWrappersDtos(section.getId(), requestByUserId);
 		
@@ -231,7 +222,7 @@ public class ModelService {
 	@Transactional(rollbackOn = Exception.class)
 	public PostResult editSection (UUID sectionId, UUID parentSectionId, ModelSectionDto sectionDto, UUID creatorId) {
 		
-		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelSection section = modelSectionRepository.findById(sectionId).get();
 		
 		section = sectionDto.toEntity(section, sectionDto);
 		
@@ -271,7 +262,7 @@ public class ModelService {
 	@Transactional
 	public PostResult resetSubsectionsOrder(UUID sectionId, UUID requestedById) {
 		
-		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelSection section = modelSectionRepository.findById(sectionId).get();
 		
 		Boolean isMemberOfEcosystem = initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestedById);
 		
@@ -283,7 +274,7 @@ public class ModelService {
 			subsec.setAfterElement(null);
 		}
 		
-		modelSubsectionRepository.save(subsections);
+		modelSubsectionRepository.saveAll(subsections);
 		
 		return new PostResult("success", "subsections ordered reset", sectionId.toString());
 	}
@@ -299,7 +290,7 @@ public class ModelService {
 			cardAddition.setAfterElement(null);
 		}
 		
-		modelCardWrapperAdditionRepository.save(cardWrapperAdditions);
+		modelCardWrapperAdditionRepository.saveAll(cardWrapperAdditions);
 		
 		return new PostResult("success", "subsections ordered reset", sectionId.toString());
 	}
@@ -329,7 +320,7 @@ public class ModelService {
 			}	
 		}
 		
-		ModelSection toSection = modelSectionRepository.findById(toSectionId);
+		ModelSection toSection = modelSectionRepository.findById(toSectionId).get();
 		
 		ModelSubsection subsectionFrom = 
 				modelSubsectionRepository.findByParentSectionAndSectionVisibleToUser(
@@ -383,7 +374,7 @@ public class ModelService {
 		}
 		
 		if (subsectionTo.getScope() != ModelScope.PRIVATE) {
-			ModelSection fromSection = modelSectionRepository.findById(fromSectionId);
+			ModelSection fromSection = modelSectionRepository.findById(fromSectionId).get();
 			activityService.modelSubsectionMoved(subsectionTo, fromSection, toSection, appUserRepository.findByC1Id(requestedById));
 		}
 		
@@ -397,37 +388,46 @@ public class ModelService {
 			UUID onSubsectionId, 
 			Boolean isBefore,
 			UUID requestByUserId ,
-			ModelScope scope) {
+			ModelScope scope,
+			Boolean detachFlag) {
 		
+		ModelSection sectionToAdd = null;
+		ModelSection parentSection = modelSectionRepository.findById(parentSectionId).get();
 		
-		ModelSubsection existingSubsection = 
-				modelSubsectionRepository.findByParentSectionAndSectionVisibleToUser(
-						parentSectionId, sectionId, requestByUserId);
-		
-		if (existingSubsection != null) {
-			return new PostResult("error", "section already in this section", null);
-		}
-		
-		ModelSection section = modelSectionRepository.findById(sectionId);
-		ModelSection parentSection = modelSectionRepository.findById(parentSectionId);
-		
-		/* check if this card was already deleted by this adder in this section */
 		ModelSubsection subsection = null;
 		
-		List<ModelSubsection> subsectionsDeleted = 
-				modelSubsectionRepository.findDeletedByParentSectionAndSectionAndAdder(
-						parentSectionId, sectionId, requestByUserId);
-		
-		if (subsectionsDeleted.size() == 0) {
-			/* check if this card was already deleted from this section by this user, in which case, just update it */
-			subsection = new ModelSubsection();
-			subsection = modelSubsectionRepository.save(subsection);
+		if (!detachFlag) {
+			
+			/* check if this card was already deleted by this adder in this section */
+			ModelSubsection existingSubsection = 
+					modelSubsectionRepository.findByParentSectionAndSectionVisibleToUser(
+							parentSectionId, sectionId, requestByUserId);
+			
+			if (existingSubsection != null) {
+				return new PostResult("error", "section already in this section", null);
+			}
+			
+			List<ModelSubsection> subsectionsDeleted = 
+					modelSubsectionRepository.findDeletedByParentSectionAndSectionAndAdder(
+							parentSectionId, sectionId, requestByUserId);
+			
+			if (subsectionsDeleted.size() == 0) {
+				/* check if this card was already deleted from this section by this user, in which case, just update it */
+				subsection = new ModelSubsection();
+				subsection = modelSubsectionRepository.save(subsection);
+			} else {
+				subsection = subsectionsDeleted.get(0);
+			} 
+			
+			sectionToAdd = modelSectionRepository.findById(sectionId).get();
+			
 		} else {
-			subsection = subsectionsDeleted.get(0);
-		} 
+			subsection = new ModelSubsection();
+			sectionToAdd = createSectionFromTemplate(sectionId);
+		}
 		
 		subsection.setAdder(appUserRepository.findByC1Id(requestByUserId));
-		subsection.setSection(section);
+		subsection.setSection(sectionToAdd);
 		subsection.setParentSection(parentSection);
 		subsection.setScope(scope);
 		subsection.setStatus(Status.VALID);
@@ -443,7 +443,7 @@ public class ModelService {
 		if (onSubsection != null) {
 			String result = linkOrderedElement(subsection, onSubsection, isBefore); 
 			if (result != "success") {
-				return new PostResult("error", result, section.getId().toString());
+				return new PostResult("error", result, sectionToAdd.getId().toString());
 			}
 		}
 				
@@ -451,8 +451,68 @@ public class ModelService {
 			activityService.modelSubsectionAdded(subsection, appUserRepository.findByC1Id(requestByUserId));
 		}
 		
-		return new PostResult("success", "card added to section", section.getId().toString());
+		return new PostResult("success", "card added to section", sectionToAdd.getId().toString());
 		
+	}
+	
+	private ModelSection createSectionFromTemplate(UUID sectionId) {
+		ModelSection section = modelSectionRepository.findById(sectionId).get();
+		
+		ModelSection newSection = new ModelSection();
+		
+		newSection.setOriginSection(section);
+		newSection.setTitle(section.getTitle());
+		newSection.setDescription(section.getDescription());
+		newSection.setInitiative(section.getInitiative());
+		
+		newSection =  modelSectionRepository.save(newSection);
+		
+		/* only common cards */
+		List<ModelCardWrapperAddition> cardWrapperAdditions = 
+				modelCardWrapperAdditionRepository.findInSectionWithScope(sectionId, ModelScope.COMMON);
+		
+		for (ModelCardWrapperAddition cardWrapperAddition : cardWrapperAdditions) {
+			ModelCardWrapperAddition newCardAddition = new ModelCardWrapperAddition();
+			
+			ModelCardWrapper cardWrapper = cardWrapperAddition.getCardWrapper();
+			ModelCardWrapper newCardWrapper = new ModelCardWrapper();
+			
+			newCardWrapper.setCard(cardWrapper.getCard());
+			newCardWrapper.setCreationDate(cardWrapper.getCreationDate());
+			newCardWrapper.setCreator(cardWrapper.getCreator());
+			newCardWrapper.setInitiative(cardWrapper.getInitiative());
+			newCardWrapper.setOrigin(cardWrapper);
+			
+			newCardWrapper = modelCardWrapperRepository.save(newCardWrapper);			
+			
+			newCardAddition.setSection(newSection);
+			newCardAddition.setAdder(cardWrapperAddition.getAdder());
+			newCardAddition.setCardWrapper(newCardWrapper);
+			newCardAddition.setScope(newCardAddition.getScope());
+			newCardAddition.setStatus(Status.VALID);
+			
+			newCardAddition = modelCardWrapperAdditionRepository.save(newCardAddition);			
+		}
+		
+		List<ModelSubsection> subsections = 
+				modelSubsectionRepository.findInParentSectionWithScope(sectionId, ModelScope.COMMON);
+		
+		for (ModelSubsection subsection : subsections) {
+			ModelSubsection newSubsection = new ModelSubsection();
+			
+			/* recursive call to this function ! */
+			ModelSection newSubsectionSection = createSectionFromTemplate(subsection.getSection().getId());
+			
+			newSubsection.setParentSection(newSection);
+			newSubsection.setAdder(subsection.getAdder());
+			newSubsection.setScope(subsection.getScope());
+			newSubsection.setSection(newSubsectionSection);
+			newSubsection.setStatus(Status.VALID);
+			
+			modelSubsectionRepository.save(newSubsection);
+		}
+		
+		return newSection;		
 	}
 	
 	private void updateScopeAndReorder(OrderedElement element, ModelScope newScope, OrderedElement lastElement) {
@@ -661,8 +721,8 @@ public class ModelService {
 			return new PostResult("error", "card already in this section", null);
 		}
 		
-		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
-		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId).get();
+		ModelSection section = modelSectionRepository.findById(sectionId).get();
 		
 		/* check if this card was already deleted by this adder in this section */
 		ModelCardWrapperAddition cardWrapperAddition = null;
@@ -830,7 +890,7 @@ public class ModelService {
 	@Transactional
 	private SubsectionsHolderDto getSectionSubsectionsDtos(UUID sectionId, Integer level, UUID requestByUserId, Boolean onlySections) {
 		
-		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelSection section = modelSectionRepository.findById(sectionId).get();
 		SubsectionsHolderDto subsectionsHolder = new SubsectionsHolderDto();
 		
 		List<ModelSubsection> modelSubsectionsCommon = 
@@ -867,7 +927,7 @@ public class ModelService {
 	@Transactional
 	private CardWrappersHolderDto getSectionCardWrappersDtos(UUID sectionId, UUID requestByUserId) {
 		
-		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelSection section = modelSectionRepository.findById(sectionId).get();
 		CardWrappersHolderDto cardWrappersHolder = new CardWrappersHolderDto();
 		
 		List<ModelCardWrapperAddition> modelCardWrappersCommon = 
@@ -1021,7 +1081,7 @@ public class ModelService {
 			Boolean isBefore,
 			UUID adderId) throws WrongLinkOfElement {
 		
-		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelSection section = modelSectionRepository.findById(sectionId).get();
 		if (section == null) return new PostResult("error", "section not found", "");
 		
 		ModelCard card = cardDto.toEntity(null, cardDto, null);
@@ -1034,7 +1094,7 @@ public class ModelService {
 				/* copy image from temporary location to card fixed location, needed the card ID for this */
 				UUID newFileId = fileService.copyImageAfterCreationToCard(creatorId, imageFileId, card.getId());
 				if (newFileId != null) {
-					FileStored newImageFile = fileStoredRepository.findById(newFileId);
+					FileStored newImageFile = fileStoredRepository.findById(newFileId).get();
 					card.setImageFile(newImageFile);	
 				}
 			}
@@ -1093,10 +1153,10 @@ public class ModelService {
 			ModelCardDto cardDto, 
 			UUID creatorId) {
 		
-		Initiative initiative = initiativeRepository.findById(initiativeId);
+		Initiative initiative = initiativeRepository.findById(initiativeId).get();
 		if (initiative == null) return new PostResult("error", "initiative not found", "");
 		
-		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId);
+		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId).get();
 		if (cardWrapper == null) return new PostResult("error", "card wrapper not found", "");
 		
 		ModelCardWrapperAddition cardWrapperAddition = 
@@ -1135,7 +1195,7 @@ public class ModelService {
 		if (cardDto.getNewImageFileId() != null) {
 			if(!cardDto.getNewImageFileId().equals("REMOVE")) {
 				UUID imageFileId = cardDto.getNewImageFileId().equals("") ? null : UUID.fromString(cardDto.getNewImageFileId());
-				FileStored imageFile = fileStoredRepository.findById(imageFileId);
+				FileStored imageFile = fileStoredRepository.findById(imageFileId).get();
 				card.setImageFile(imageFile);
 			} else {
 				card.setImageFile(null);
@@ -1227,7 +1287,7 @@ public class ModelService {
 			}	
 		}
 		
-		ModelSection toSection = modelSectionRepository.findById(toSectionId);
+		ModelSection toSection = modelSectionRepository.findById(toSectionId).get();
 		
 		ModelCardWrapperAddition cardWrapperAdditionFrom = 
 				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(fromSectionId, cardWrapperId, requestedById);
@@ -1279,7 +1339,7 @@ public class ModelService {
 		}
 		
 		if (cardWrapperAdditionTo.getScope() != ModelScope.PRIVATE) {
-			ModelSection fromSection = modelSectionRepository.findById(fromSectionId);
+			ModelSection fromSection = modelSectionRepository.findById(fromSectionId).get();
 			activityService.modelCardWrapperMoved(cardWrapperAdditionTo, fromSection, toSection, appUserRepository.findByC1Id(requestedById));
 		}
 		
@@ -1297,7 +1357,7 @@ public class ModelService {
 		}
 		
 		ModelCardWrapperAddition cardWrapperAddition = new ModelCardWrapperAddition();
-		cardWrapperAddition.setCardWrapper(modelCardWrapperRepository.findById(cardWrapperId));
+		cardWrapperAddition.setCardWrapper(modelCardWrapperRepository.findById(cardWrapperId).get());
 		cardWrapperAddition.setId(UUID.fromString("00000000-0000-0000-0000-000000000000"));
 		
 		cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId);
@@ -1321,7 +1381,7 @@ public class ModelService {
 					modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(inSectionId, cardWrapperId, requestByUserId);	
 		} else {
 			cardWrapperAddition = new ModelCardWrapperAddition();
-			cardWrapperAddition.setCardWrapper(modelCardWrapperRepository.findById(cardWrapperId));
+			cardWrapperAddition.setCardWrapper(modelCardWrapperRepository.findById(cardWrapperId).get());
 		}
 		
 		cardWrapperDto = getCardWrapperDtoWithMetadata(cardWrapperAddition, requestByUserId);
@@ -1331,17 +1391,17 @@ public class ModelService {
 	
 	@Transactional
 	public UUID getModelCardWrapperCreatorId(UUID cardWrapperId) {
-		return modelCardWrapperRepository.findById(cardWrapperId).getCreator().getC1Id();
+		return modelCardWrapperRepository.findById(cardWrapperId).get().getCreator().getC1Id();
 	}
 	
 	@Transactional
 	public Initiative getCardWrapperInitiative(UUID cardWrapperId) {
-		return modelCardWrapperRepository.findById(cardWrapperId).getInitiative();
+		return modelCardWrapperRepository.findById(cardWrapperId).get().getInitiative();
 	}
 	
 	@Transactional
 	public Initiative getCardWrapperAdditionInitiative(UUID cardWrapperAdditionId) {
-		return modelCardWrapperAdditionRepository.findById(cardWrapperAdditionId).getSection().getInitiative();
+		return modelCardWrapperAdditionRepository.findById(cardWrapperAdditionId).get().getSection().getInitiative();
 	}
 	
 	
@@ -1361,26 +1421,26 @@ public class ModelService {
 		
 		switch (sortByIn) {
 			case "CREATION_DATE_DESC":
-				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.creationDate"));
+				pageRequest = PageRequest.of(page, pageSize, Sort.Direction.DESC, "crdWrp.creationDate");
 				break;
 				
 			case "EDITION_DATE_DESC":
-				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.DESC, "crdWrp.lastEdited"));
+				pageRequest = PageRequest.of(page, pageSize, Sort.Direction.DESC, "crdWrp.lastEdited");
 				break;
 				
 			case "CREATOR":
-				pageRequest = new PageRequest(page, pageSize, new Sort(Sort.Direction.ASC, "crdWrp.creator.profile.nickname"));
+				pageRequest = PageRequest.of(page, pageSize, Sort.Direction.ASC, "crdWrp.creator.profile.nickname");
 				break;
 			
 			default:
-				pageRequest = new PageRequest(page, pageSize);
+				pageRequest = PageRequest.of(page, pageSize);
 				break;
 		}
 		
 		if (!inInitiativeEcosystem) {
 			List<UUID> allSectionIds = new ArrayList<UUID>();
 			
-			ModelSection section = modelSectionRepository.findById(sectionId);
+			ModelSection section = modelSectionRepository.findById(sectionId).get();
 			Boolean isMemberOfEcosystem = initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId);
 			
 			allSectionIds.addAll(getAllSubsectionsIds(sectionId, levels - 1, requestByUserId, isMemberOfEcosystem));
@@ -1389,7 +1449,7 @@ public class ModelService {
 			
 		} else {
 			
-			ModelSection section = modelSectionRepository.findById(sectionId);
+			ModelSection section = modelSectionRepository.findById(sectionId).get();
 			List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(section.getInitiative().getId());
 			
 			enititiesPage = modelCardWrapperAdditionRepository.searchInInitiativesByQuery(initiativeEcosystemIds, "%"+query.toLowerCase()+"%", requestByUserId, pageRequest);
@@ -1430,7 +1490,7 @@ public class ModelService {
 	
 	@Transactional
 	public GetResult<ModelSectionLinkedDto> getSectionParentGenealogy(UUID sectionId, Integer levels, UUID requestByUserId) {
-		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelSection section = modelSectionRepository.findById(sectionId).get();
 		Boolean isMemberOfEcosystem = initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId);
 		ModelSectionLinkedDto linkedDtos = getModelSectionDtosFromNodes(getSectionNode(sectionId, true, false, levels, requestByUserId, isMemberOfEcosystem));
 		return new GetResult<ModelSectionLinkedDto>("success", "parents retrieved", linkedDtos);
@@ -1443,7 +1503,7 @@ public class ModelService {
 		
 		ModelSectionLinkedDto sectionLinked = new ModelSectionLinkedDto();
 		
-		sectionLinked.setSection(modelSectionRepository.findById(node.elementId).toDtoLight());
+		sectionLinked.setSection(modelSectionRepository.findById(node.elementId).get().toDtoLight());
 		
 		for (GraphNode parentNode : node.getParents()) {
 			sectionLinked.getParents().add(getModelSectionDtosFromNodes(parentNode));
@@ -1608,7 +1668,7 @@ public class ModelService {
 			Integer level, 
 			UUID requestByUserId) {
 		
-		ModelSection section = modelSectionRepository.findById(sectionId);
+		ModelSection section = modelSectionRepository.findById(sectionId).get();
 		Boolean isMemberOfEcosystem = initiativeService.isMemberOfEcosystem(section.getInitiative().getId(), requestByUserId);
 		
 		List<UUID> allSectionIds = getAllSubsectionsIds(sectionId, level, requestByUserId, isMemberOfEcosystem);
@@ -1632,7 +1692,7 @@ public class ModelService {
 	
 	@Transactional
 	public GetResult<Long> countMessagesUnderCard (UUID cardWrapperId, Boolean onlyMessages) {
-		Page<Activity> messages = getActivityUnderCard(cardWrapperId, new PageRequest(1, 1), true, false);
+		Page<Activity> messages = getActivityUnderCard(cardWrapperId, PageRequest.of(1, 1), true, false);
 		return new GetResult<Long>("success", "activity counted", messages.getTotalElements());
 	}
 	
@@ -1675,7 +1735,7 @@ public class ModelService {
 	
 	@Transactional
 	public PostResult setLikeToCard (UUID cardWrapperId, UUID authorId, boolean likeStatus) {
-		ModelCardWrapper card = modelCardWrapperRepository.findById(cardWrapperId);
+		ModelCardWrapper card = modelCardWrapperRepository.findById(cardWrapperId).get();
 		AppUser author = appUserRepository.findByC1Id(authorId);
 		
 		CardLike like = cardLikeRepository.findByCardWrapperIdAndAuthor_c1Id(cardWrapperId, authorId);
@@ -1708,7 +1768,7 @@ public class ModelService {
 	
 	@Transactional
 	public PostResult setSimpleConsentState (UUID elementId, SimpleConsentState state, UUID requestByUserId) {
-		ModelCardWrapperAddition cardWrapperAddition = modelCardWrapperAdditionRepository.findById(elementId);
+		ModelCardWrapperAddition cardWrapperAddition = modelCardWrapperAdditionRepository.findById(elementId).get();
 		
 		if (cardWrapperAddition.getGovernanceType() != ElementGovernanceType.SIMPLE_CONSENT) {
 			cardWrapperAddition.setGovernanceType(ElementGovernanceType.SIMPLE_CONSENT);
@@ -1732,7 +1792,7 @@ public class ModelService {
 	
 	@Transactional
 	public PostResult setSimpleConsentUserPosition(UUID elementId, UUID authorId, ElementConsentPositionColor positionColor) {
-		ModelCardWrapperAddition cardWrapperAddition = modelCardWrapperAdditionRepository.findById(elementId);
+		ModelCardWrapperAddition cardWrapperAddition = modelCardWrapperAdditionRepository.findById(elementId).get();
 		ElementConsentPosition consentPosition = consentPositionRepository.findByElementIdAndAuthor_c1Id(elementId, authorId);
 		
 		if (consentPosition == null) {

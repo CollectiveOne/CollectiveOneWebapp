@@ -1,6 +1,7 @@
 package org.collectiveone.modules.model.repositories;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.collectiveone.modules.model.ModelScope;
@@ -10,7 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ModelSubsectionRepositoryIf extends CrudRepository<ModelSubsection, UUID> {
 	
-	ModelSubsection findById(UUID subsectionId);
+	Optional<ModelSubsection> findById(UUID subsectionId);
 
 	@Query("SELECT subsection FROM ModelSubsection subsection "
 			+ "WHERE subsection.section.id = ?1 "

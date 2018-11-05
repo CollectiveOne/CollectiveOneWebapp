@@ -224,7 +224,7 @@ public class GovernanceService {
 	
 	@Transactional
 	public DecisionMaker addDecisionMaker(UUID governanceId, UUID userId, DecisionMakerRole role) {
-		Governance governance = governanceRepository.findById(governanceId);
+		Governance governance = governanceRepository.findById(governanceId).get();
 		
 		DecisionMaker decisionMaker = new DecisionMaker();
 		decisionMaker.setGovernance(governance);

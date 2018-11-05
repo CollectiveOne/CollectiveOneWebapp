@@ -2,6 +2,7 @@ package org.collectiveone.modules.initiatives.repositories;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.collectiveone.modules.initiatives.Initiative;
@@ -12,7 +13,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface InitiativeRepositoryIf extends CrudRepository<Initiative, UUID>, InitiativeRepositoryCustomIf {
 
-	Initiative findById(UUID id);
+	Optional<Initiative> findById(UUID id);
 	
 	@Query("SELECT init FROM Initiative init JOIN init.members mem WHERE mem.user.c1Id = ?1 AND init.status='ENABLED'")
 	List<Initiative> findOfMember(UUID memberId);

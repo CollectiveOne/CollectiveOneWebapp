@@ -1,5 +1,6 @@
 package org.collectiveone.modules.tokens.repositories;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.collectiveone.modules.tokens.TokenType;
@@ -9,7 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface TokenTypeRepositoryIf extends CrudRepository<TokenType, UUID> {
 	
-	TokenType findById(UUID id);
+	Optional<TokenType> findById(UUID id);
 	
 	@Query("SELECT SUM(holder.tokens) FROM TokenHolder holder WHERE holder.tokenType.id = ?1")
 	Double totalExisting(UUID id);

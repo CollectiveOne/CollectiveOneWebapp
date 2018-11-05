@@ -1,5 +1,6 @@
 package org.collectiveone.modules.tokens.repositories;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.collectiveone.modules.tokens.MemberTransfer;
@@ -9,7 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface MemberTransferRepositoryIf extends CrudRepository<MemberTransfer, UUID> {
 
-	MemberTransfer findById(UUID id);
+	Optional<MemberTransfer> findById(UUID id);
 	
 	@Query("SELECT SUM(tx.value) FROM MemberTransfer tx WHERE tx.tokenType.id = ?1 AND tx.member.id = ?2 AND tx.status = ?3")
 	Double getTotalTransferredInternal(UUID tokenTypeId, UUID contributorId, MemberTransferStatus status);

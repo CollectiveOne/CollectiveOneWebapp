@@ -2,9 +2,12 @@ package org.collectiveone.service;
 
 import static org.junit.Assert.assertTrue;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import javax.transaction.Transactional;
 
 import org.collectiveone.AbstractTest;
 import org.collectiveone.common.dto.GetResult;
@@ -34,8 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
-
 
 @Transactional
 public class TestModelService extends AbstractTest {
@@ -67,7 +68,7 @@ public class TestModelService extends AbstractTest {
 	UUID subsection1Id;
 	
     @Before
-    public void setUp() {
+    public void setUp() throws SQLException {
     	
     	PostResult result;
     	
@@ -96,7 +97,7 @@ public class TestModelService extends AbstractTest {
     	
     	initiativeId = UUID.fromString(result.getElementId());
     	
-    	Initiative initiative = initiativeRepository.findById(initiativeId);
+    	Initiative initiative = initiativeRepository.findById(initiativeId).get();
     	topLevelSectionId = initiative.getTopModelSubsection().getSection().getId(); 
     	
     	ModelSectionDto sectionDto = new ModelSectionDto();
@@ -433,7 +434,7 @@ public class TestModelService extends AbstractTest {
     	GetResult<Page<ActivityDto>> actResult;
     	
     	/* get messages */
-    	PageRequest page = new PageRequest(0, 10);
+    	PageRequest page = PageRequest.of(0, 10);
     	
     	List<ActivityDto> actPage;
     	
@@ -595,5 +596,254 @@ public class TestModelService extends AbstractTest {
     	assertTrue("card text is not the comment text", 
     			commonCards.get(1).getCard().getText().equals(messageContent2));
     	
+    }
+    
+    @Test
+    public void isCopyAndDetachSection() throws WrongLinkOfElement {
+    	
+    	PostResult result;
+    	
+    	/* create sections scheleton */
+    	
+    	ModelSectionDto s1_Dto = new ModelSectionDto();
+    		
+    	s1_Dto.setTitle("Test Origin Section s1");
+    	s1_Dto.setDescription("test origin section s1");
+    	
+    	UUID s1Id = Str2UUID(
+    			modelService.createSection(
+	    			s1_Dto, 
+	    			topLevelSectionId, 
+	    			userId, 
+	    			null, 
+	    			false).getElementId());
+    	
+    	ModelSectionDto s11_Dto = new ModelSectionDto();
+    	
+    	s11_Dto.setTitle("Test Origin Section s11");
+    	s11_Dto.setDescription("test origin section s11");
+    	
+
+    	UUID s11Id = Str2UUID(
+    			modelService.createSection(
+    				s11_Dto, 
+	    			s1Id, 
+	    			userId, 
+	    			null, 
+	    			false).getElementId());
+    	
+    	ModelSectionDto s12_Dto = new ModelSectionDto();
+    	
+    	s12_Dto.setTitle("Test Origin Section s12");
+    	s12_Dto.setDescription("test origin section s12");
+    	
+
+    	UUID s12Id = Str2UUID(
+    			modelService.createSection(
+    				s12_Dto, 
+	    			s1Id, 
+	    			userId, 
+	    			null, 
+	    			false).getElementId());
+    	
+    	ModelSectionDto s121_Dto = new ModelSectionDto();
+    	
+    	s121_Dto.setTitle("Test Origin Section s121");
+    	s121_Dto.setDescription("test origin section s121");
+    	
+
+    	UUID s121Id = Str2UUID(
+    			modelService.createSection(
+    				s121_Dto, 
+	    			s12Id, 
+	    			userId, 
+	    			null, 
+	    			false).getElementId());
+    	
+    	/* create cards in sections */
+    	
+    	ModelCardDto cardDto_s1 = new ModelCardDto();
+    	
+    	cardDto_s1.setTitle("card common s1");
+    	cardDto_s1.setText("card common s1 - text");
+    	cardDto_s1.setNewScope(ModelScope.COMMON);
+    	
+    	result = modelService.createCardWrapper(
+    			cardDto_s1, 
+				s1Id, 
+				userId, 
+				null, 
+				false,
+				null);
+    	
+    	UUID crdWrp_s1Id = Str2UUID(result.getElementId());
+    	
+    	ModelCardDto cardDto_s11 = new ModelCardDto();
+    	
+    	cardDto_s11.setTitle("card common s11");
+    	cardDto_s11.setText("card common s11 - text");
+    	cardDto_s11.setNewScope(ModelScope.COMMON);
+    	
+    	result = modelService.createCardWrapper(
+    			cardDto_s11, 
+				s11Id, 
+				userId, 
+				null, 
+				false,
+				null);
+    	
+    	UUID crdWrp_s11Id = Str2UUID(result.getElementId());
+    	
+    	ModelCardDto cardDto_s12 = new ModelCardDto();
+    	
+    	cardDto_s12.setTitle("card common s12");
+    	cardDto_s12.setText("card common s12 - text");
+    	cardDto_s12.setNewScope(ModelScope.COMMON);
+    	
+    	result = modelService.createCardWrapper(
+    			cardDto_s12, 
+				s12Id, 
+				userId, 
+				null, 
+				false,
+				null);
+    	
+    	UUID crdWrp_s12Id = Str2UUID(result.getElementId());
+    	
+    	ModelCardDto cardDto_s121 = new ModelCardDto();
+    	
+    	cardDto_s121.setTitle("card common s121");
+    	cardDto_s121.setText("card common s121 - text");
+    	cardDto_s121.setNewScope(ModelScope.COMMON);
+    	
+    	result = modelService.createCardWrapper(
+    			cardDto_s121, 
+				s121Id, 
+				userId, 
+				null, 
+				false,
+				null);
+    	
+    	UUID crdWrp_s121Id = Str2UUID(result.getElementId());
+    	
+    	/* add new subsection to top level section which is a detached 
+    	 * copy of the s1 section */
+    	
+    	result = modelService.addSubsectionToSection (
+    			s1Id, 
+    			topLevelSectionId, 
+    			null, 
+    			false,
+    			userId ,
+    			ModelScope.COMMON,
+    			true);
+    	
+    	UUID s1_cp_Id = Str2UUID(result.getElementId());
+    	
+    	assertTrue("error in addSubsectionToSection method:" + result.getMessage(),
+    			result.getResult().equals("success"));
+    	
+    	/* get section with all subsections */
+    	GetResult<ModelSectionDto> sectionResult = null;
+    			
+    	sectionResult = modelService.getSection(
+    			s1_cp_Id, null, 999, userId, false);
+    	
+    	ModelSectionDto s1_Dto_cp_check = (ModelSectionDto) sectionResult.getData();
+    	
+    	assertTrue("ids are equal", 
+    			!s1_Dto_cp_check.getId().equals(s1Id.toString()));
+    	assertTrue("title dont match",
+    			s1_Dto_cp_check.getTitle().equals("Test Origin Section s1"));
+    	assertTrue("description dont match",
+    			s1_Dto_cp_check.getDescription().equals("test origin section s1"));
+    	assertTrue("wrong number of cards",
+    			s1_Dto_cp_check.getCardsWrappersCommon().size() == 1);
+    	
+    	assertTrue("card id is the same",
+    			!s1_Dto_cp_check.getCardsWrappersCommon().get(0).getId()
+    			.equals(crdWrp_s1Id.toString()));
+    	assertTrue("card title dont match",
+    			s1_Dto_cp_check.getCardsWrappersCommon().get(0).getCard().getTitle()
+    			.equals("card common s1"));
+    	assertTrue("card description dont match",
+    			s1_Dto_cp_check.getCardsWrappersCommon().get(0).getCard().getText()
+    			.equals("card common s1 - text"));
+    	
+    	
+    	assertTrue("wrong number of subsections",
+    			s1_Dto_cp_check.getSubsectionsCommon().size() == 3);
+    	
+    	for (ModelSectionDto subsection_Dto : s1_Dto_cp_check.getSubsectionsCommon()) {
+    		
+    		if (subsection_Dto.getTitle().equals("Test Origin Section s11")) {
+    			
+    			assertTrue("ids are equal", 
+    	    			!subsection_Dto.getId().equals(s11Id.toString()));
+    			assertTrue("title dont match",
+    					subsection_Dto.getTitle().equals("Test Origin Section s11"));
+    	    	assertTrue("description dont match",
+    	    			subsection_Dto.getDescription().equals("test origin section s11"));
+    	    	assertTrue("wrong number of subsections",
+    	    			subsection_Dto.getSubsectionsCommon().size() == 0);
+    	    	
+    	    	assertTrue("card id is the same",
+    	    			!subsection_Dto.getCardsWrappersCommon().get(0).getId()
+    	    			.equals(crdWrp_s11Id.toString()));
+    	    	assertTrue("card title dont match",
+    	    			subsection_Dto.getCardsWrappersCommon().get(0).getCard().getTitle()
+    	    			.equals("card common s11"));
+    	    	assertTrue("card description dont match",
+    	    			subsection_Dto.getCardsWrappersCommon().get(0).getCard().getText()
+    	    			.equals("card common s11 - text"));
+    	    	
+    		} else if (subsection_Dto.getTitle().equals("Test Origin Section s12")) {
+    			
+    			assertTrue("ids are equal", 
+    	    			!subsection_Dto.getId().equals(s12Id.toString()));
+    			assertTrue("title dont match",
+    					subsection_Dto.getTitle().equals("Test Origin Section s12"));
+    	    	assertTrue("description dont match",
+    	    			subsection_Dto.getDescription().equals("test origin section s12"));
+    	    	assertTrue("wrong number of subsections",
+    	    			subsection_Dto.getSubsectionsCommon().size() == 1);
+    	    	
+    	    	assertTrue("card id is the same",
+    	    			!subsection_Dto.getCardsWrappersCommon().get(0).getId()
+    	    			.equals(crdWrp_s12Id.toString()));
+    	    	assertTrue("card title dont match",
+    	    			subsection_Dto.getCardsWrappersCommon().get(0).getCard().getTitle()
+    	    			.equals("card common s12"));
+    	    	assertTrue("card description dont match",
+    	    			subsection_Dto.getCardsWrappersCommon().get(0).getCard().getText()
+    	    			.equals("card common s12 - text"));
+    	    	
+    	    	for (ModelSectionDto subsubsection_Dto : subsection_Dto.getSubsectionsCommon()) {
+    	    		
+    	    		assertTrue("ids are equal", 
+        	    			!subsubsection_Dto.getId().equals(s121Id.toString()));
+    	    		assertTrue("title dont match",
+    	    				subsubsection_Dto.getTitle().equals("Test Origin Section s121"));
+        	    	assertTrue("description dont match",
+        	    			subsubsection_Dto.getDescription().equals("test origin section s121"));
+        	    	assertTrue("wrong number of subsections",
+        	    			subsubsection_Dto.getSubsectionsCommon().size() == 0);
+        	    	
+        	    	assertTrue("card id is the same",
+        	    			!subsubsection_Dto.getCardsWrappersCommon().get(0).getId()
+        	    			.equals(crdWrp_s121Id.toString()));
+        	    	assertTrue("card title dont match",
+        	    			subsubsection_Dto.getCardsWrappersCommon().get(0).getCard().getTitle()
+        	    			.equals("card common s121"));
+        	    	assertTrue("card description dont match",
+        	    			subsubsection_Dto.getCardsWrappersCommon().get(0).getCard().getText()
+        	    			.equals("card common s121 - text"));
+    	    		
+    	    	}
+    			
+    		} else {
+    			assertTrue("subsection with this title not found", false);
+    		}
+    	}
     }
 }

@@ -318,7 +318,7 @@ public class ActivityService {
 	public PostResult notificationPushed(
 			UUID notificationId ) {
 		
-		Notification notification = notificationRepository.findById(notificationId);
+		Notification notification = notificationRepository.findById(notificationId).get();
 		
 		if (notification == null) {
 			return new PostResult("error", "notification not found", "");
@@ -383,11 +383,11 @@ public class ActivityService {
 		/* add dto of the context element */
 		switch (subscriber.getType()) {
 			case SECTION:
-				subscriberDto.setSection(modelSectionRepository.findById(subscriber.getElementId()).toDtoLight());
+				subscriberDto.setSection(modelSectionRepository.findById(subscriber.getElementId()).get().toDtoLight());
 				break;
 			
 			case INITIATIVE:
-				subscriberDto.setInitiative(initiativeRepository.findById(subscriber.getElementId()).toDto());
+				subscriberDto.setInitiative(initiativeRepository.findById(subscriber.getElementId()).get().toDto());
 				break;
 				
 			default: 
@@ -405,11 +405,11 @@ public class ActivityService {
 			
 			switch (applicableSubscriber.getType()) {
 				case SECTION:
-					applicableSubscriberDto.setSection(modelSectionRepository.findById(applicableSubscriber.getElementId()).toDtoLight());
+					applicableSubscriberDto.setSection(modelSectionRepository.findById(applicableSubscriber.getElementId()).get().toDtoLight());
 					break;
 				
 				case INITIATIVE:
-					applicableSubscriberDto.setInitiative(initiativeRepository.findById(applicableSubscriber.getElementId()).toDto());
+					applicableSubscriberDto.setInitiative(initiativeRepository.findById(applicableSubscriber.getElementId()).get().toDto());
 					break;
 					
 				default: 
@@ -1033,12 +1033,12 @@ public class ActivityService {
 		switch (contextType) {
 			
 			case MODEL_CARD:
-				ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(elementId);
+				ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(elementId).get();
 				activity.setModelCardWrapper(cardWrapper);
 				
 				/* store also the section in which the card was when the comment was made */
 				if(contextOfContextElementId != null) {
-					section = modelSectionRepository.findById(contextOfContextElementId);
+					section = modelSectionRepository.findById(contextOfContextElementId).get();
 				} else {
 					ModelCardWrapperAddition cardAddition = 
 							modelCardWrapperAdditionRepository.findFirstOfCardWrapper(elementId);
@@ -1056,7 +1056,7 @@ public class ActivityService {
 				break;
 			
 			case MODEL_SECTION:
-				section = modelSectionRepository.findById(elementId);
+				section = modelSectionRepository.findById(elementId).get();
 				activity.setModelSection(section);
 
 				/* remove model card reference */
@@ -1065,7 +1065,7 @@ public class ActivityService {
 				break;
 				
 			case INITIATIVE:
-				activity.setInitiative(initiativeRepository.findById(elementId));
+				activity.setInitiative(initiativeRepository.findById(elementId).get());
 				break;
 				
 		}
@@ -1251,7 +1251,7 @@ public class ActivityService {
 		UUID initiativeId = null;
 		switch (elementType) {
 			case SECTION:
-				initiativeId = modelSectionRepository.findById(elementId).getInitiative().getId();
+				initiativeId = modelSectionRepository.findById(elementId).get().getInitiative().getId();
 				break;
 				
 			case INITIATIVE:

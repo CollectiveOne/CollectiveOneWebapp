@@ -433,7 +433,10 @@ const translations = {
       'SEE_IN_COLLECTIVEONE': 'See in CollectiveOne',
       'SECTION_IS_UNDER': 'This section is under',
       'RESET_SUBSECTIONS_ORDER': 'reset subsecs order',
-      'RESET_CARDS_ORDER': 'reset cards order'
+      'RESET_CARDS_ORDER': 'reset cards order',
+      'LINK_STATUS_WITH_SECTION': 'Link status with the current {{ title }} section',
+      'KEEP': 'Keep',
+      'DETACH': 'Detach'
     },
     help: {
       'MESSAGES-TAB-TT': 'messages',

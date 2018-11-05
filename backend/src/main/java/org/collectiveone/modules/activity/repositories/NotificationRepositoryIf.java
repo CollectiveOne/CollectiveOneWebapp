@@ -2,6 +2,7 @@ package org.collectiveone.modules.activity.repositories;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.collectiveone.modules.activity.Notification;
@@ -14,7 +15,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface NotificationRepositoryIf extends CrudRepository<Notification, UUID> {
 
-	Notification findById(UUID notificationId);
+	Optional<Notification> findById(UUID notificationId);
 	
 	@Query("SELECT notif FROM Notification notif WHERE notif.subscriber.user.c1Id = ?1 AND notif.id IN ?2")
 	List<Notification> findByIdIn(UUID userId, List<UUID> notificationIds);

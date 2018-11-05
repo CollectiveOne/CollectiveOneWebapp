@@ -83,7 +83,7 @@ public class TokenTransferService {
 	@Transactional
 	public AssetsDto getTokenDistribution(UUID tokenId, UUID initiativeId) {
 
-		Initiative initiative = initiativeRepository.findById(initiativeId); 
+		Initiative initiative = initiativeRepository.findById(initiativeId).get(); 
 		AssetsDto assetDto = tokenService.getTokensOfHolderDto(tokenId, initiative.getId());
 		assetDto.setHolderName(initiative.getMeta().getName());
 		
@@ -134,7 +134,7 @@ public class TokenTransferService {
 			
 			mint = tokenMintRespository.save(mint);
 			
-			activityService.tokensMinted(initiativeRepository.findById(initiativeId), mint);
+			activityService.tokensMinted(initiativeRepository.findById(initiativeId).get(), mint);
 		}
 		
 		return result;
@@ -158,7 +158,7 @@ public class TokenTransferService {
 			
 			burn = tokenBurnRespository.save(burn);
 			
-			activityService.tokensBurnt(initiativeRepository.findById(initiativeId), burn);
+			activityService.tokensBurnt(initiativeRepository.findById(initiativeId).get(), burn);
 		}
 		
 		return result;
@@ -205,7 +205,7 @@ public class TokenTransferService {
 	
 	@Transactional
 	public void revertTransferFromInitiativeToUser(UUID transferId) {
-		MemberTransfer transfer = memberTransferRepository.findById(transferId);
+		MemberTransfer transfer = memberTransferRepository.findById(transferId).get();
 		
 		String result = tokenService.transfer(
 				transfer.getTokenType().getId(), 
@@ -236,8 +236,8 @@ public class TokenTransferService {
 	public PostResult transferFromInitiativeToInitiative(UUID fromInitiativeId, UUID toInitiativeId, UUID orderByUserId, UUID assetId, double value, String motive, String notes) {
 		
 		TokenType tokenType = tokenService.getTokenType(assetId);
-		Initiative from = initiativeRepository.findById(fromInitiativeId);
-		Initiative to = initiativeRepository.findById(toInitiativeId);
+		Initiative from = initiativeRepository.findById(fromInitiativeId).get();
+		Initiative to = initiativeRepository.findById(toInitiativeId).get();
 		
 		String result = tokenService.transfer(
 				tokenType.getId(), 
@@ -313,7 +313,7 @@ public class TokenTransferService {
 	/** Get the tokens transferred from one initiative into its sub-initiatives */
 	@Transactional
 	public List<TransferDto> getTransferredToSubinitiatives(UUID tokenId, UUID initiativeId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId); 
+		Initiative initiative = initiativeRepository.findById(initiativeId).get(); 
 		TokenType token = tokenService.getTokenType(tokenId);
 
 		/* get of sub-initiatives */
@@ -346,7 +346,7 @@ public class TokenTransferService {
 	/** Get the tokens transferred from one initiative to its members */
 	@Transactional
 	public List<TransferDto> getTransferredToUsers(UUID tokenId, UUID initiativeId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId); 
+		Initiative initiative = initiativeRepository.findById(initiativeId).get(); 
 		TokenType token = tokenService.getTokenType(tokenId);
 
 		List<TransferDto> transferredToUsers = new ArrayList<TransferDto>();
@@ -372,7 +372,7 @@ public class TokenTransferService {
 	
 	@Transactional
 	public List<TransferDto> getTransfersPending(UUID initiativeId) {
-		Initiative initiative = initiativeRepository.findById(initiativeId); 
+		Initiative initiative = initiativeRepository.findById(initiativeId).get(); 
 		
 		List<TransferDto> transfersPending = new ArrayList<TransferDto>();
 		List<Assignation> assignations = assignationService.getOpenAssignations(initiativeId);

@@ -73,7 +73,7 @@ public class FileService {
 				fileStored.setUrl(baseUrl + "/" + bucketName + "/" + key);
 				fileStored.setLastUpdated(new Timestamp(System.currentTimeMillis()));
 				
-				if (initiativeId != null) fileStored.setInitiative(initiativeRepository.findById(initiativeId)); 
+				if (initiativeId != null) fileStored.setInitiative(initiativeRepository.findById(initiativeId).get()); 
 				
 				fileStored = fileStoredRepository.save(fileStored);
 				
@@ -90,7 +90,7 @@ public class FileService {
 	
 	@Transactional
 	public UUID copyImageAfterCreationToCard(UUID userId, UUID fileId, UUID cardWrapperId) {
-		FileStored fileStored = fileStoredRepository.findById(fileId);
+		FileStored fileStored = fileStoredRepository.findById(fileId).get();
 		
 		if (fileStored == null) {
 			return null;
@@ -210,11 +210,11 @@ public class FileService {
 	
 	@Transactional
 	public Initiative getFileInitiative(UUID fileId) {
-		return fileStoredRepository.findById(fileId).getInitiative();
+		return fileStoredRepository.findById(fileId).get().getInitiative();
 	}
 	
 	@Transactional
 	public FileStoredDto getFileData(UUID fileId) {
-		return fileStoredRepository.findById(fileId).toDto();
+		return fileStoredRepository.findById(fileId).get().toDto();
 	}
 }

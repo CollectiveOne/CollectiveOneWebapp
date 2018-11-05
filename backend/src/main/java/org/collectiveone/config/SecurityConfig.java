@@ -27,6 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          .configure(http)
          .authorizeRequests()
          .antMatchers("/1/*").fullyAuthenticated();
+    	 
+    	 http.headers().frameOptions().disable();
     	
     	//http.authorizeRequests().antMatchers("/").permitAll();
     }
