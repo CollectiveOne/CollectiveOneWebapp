@@ -109,7 +109,8 @@ const translations = {
       'PROFILE_CC': 'Profile',
       'SETTINGS': 'Settings',
       'LANGUAGE': 'Language',
-      'MOVE': 'move'
+      'MOVE': 'move',
+      'IN': 'in'
     },
     landing: {
       'PRINCIPLES': 'PRINCIPLES',
@@ -436,7 +437,10 @@ const translations = {
       'RESET_CARDS_ORDER': 'reset cards order',
       'LINK_STATUS_WITH_SECTION': 'Link status with the current {{ title }} section',
       'KEEP': 'Keep',
-      'DETACH': 'Detach'
+      'DETACH': 'Detach',
+      'DETACH_LC': 'detach',
+      'DETACH_CARD_WARNING': 'Are you sure you want to detach this element from all its other instances and make it a new independent one? This cannot be undone.',
+      'ORIGIN': 'origin'
     },
     help: {
       'MESSAGES-TAB-TT': 'messages',

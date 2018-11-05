@@ -56,7 +56,7 @@ export default {
     },
     redirect () {
       if (this.$route.name === 'InitiativeModel') {
-        let currentSection = this.$store.getters.currentSection
+        let currentSection = this.$store.state.model.currentSection
         if (currentSection !== null) {
           console.log('redirecting to ModelSectionContent with sectionId: ' + currentSection.id)
           this.$router.replace({name: 'ModelSectionContent', params: {sectionId: currentSection.id}})

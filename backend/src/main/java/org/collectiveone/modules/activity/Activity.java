@@ -169,8 +169,8 @@ public class Activity {
 		
 
 		if (modelSubsection != null) {
-			dto.setModelSection(modelSubsection.getSection().toDtoLight());
-			dto.setOnSection(modelSubsection.getParentSection().toDtoLight());
+			dto.setModelSection(modelSubsection.getSection().toDto());
+			dto.setOnSection(modelSubsection.getParentSection().toDto());
 		}
 		
 		if(message != null) dto.setMessage(message.toDto());

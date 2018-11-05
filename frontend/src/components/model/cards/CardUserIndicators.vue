@@ -1,6 +1,21 @@
 <template lang="html">
 
   <div class="user-indicators-container">
+
+    <div v-if="hasOrigin" class="origin-row w3-row">
+      <i>{{ $t('model.ORIGIN') }}:</i>
+      <app-model-card-link
+        :cardWrapper="originCardWrapperAdditions[0].cardWrapper"
+        :onSection="originCardWrapperAdditions[0].section">
+      </app-model-card-link> {{ $t('general.IN') }}
+      <app-model-section-tag
+        v-for="originCardWrapperAddition in originCardWrapperAdditions"
+        :key="originCardWrapperAddition.id"
+        :section="originCardWrapperAddition.section"
+        class="on-origin-section">
+      </app-model-section-tag>
+    </div>
+
     <div class="common-row w3-row" :class="{'common-row-with-gov': showConsentPositions}">
       <div class="w3-left">
         <div v-if="cardWrapper.creator !== null" class="w3-left text-div">
@@ -13,10 +28,9 @@
           </div>
         </div>
 
-        <div v-if="cardWrapper.inModelSections.length > 0 && !hideCardControls && !hideInSectionTags" class="w3-margin-left w3-left">
+        <div v-if="alsoInSections.length > 0 && !hideCardControls && !hideInSectionTags" class="w3-margin-left w3-left">
           <app-in-model-sections-tags
-            :inModelSections="cardWrapper.inModelSections"
-            :hideSectionId="inSectionId">
+            :inModelSections="alsoInSections">
           </app-in-model-sections-tags>
         </div>
       </div>
@@ -33,6 +47,7 @@
           <app-card-control-buttons
             :cardWrapper="cardWrapper"
             :inSection="inSection"
+            :showDetach="alsoInSections.length > 0"
             @update="$emit('update')"
             @createNew="$emit('createNew')"
             @edit="$emit('edit')"
@@ -142,6 +157,20 @@ export default {
 </script>
 
 <style scoped>
+
+.origin-row {
+  padding: 6px 3px;
+  font-size: 12px;
+}
+
+.origin-row a {
+  text-decoration: underline;
+}
+
+.origin-row .on-origin-section {
+  display: inline-block;
+  margin-left: 6px;
+}
 
 .user-indicators-container {
   width: 100%;

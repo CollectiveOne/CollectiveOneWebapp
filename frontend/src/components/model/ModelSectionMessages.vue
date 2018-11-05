@@ -45,7 +45,7 @@ export default {
       return this.$route.params.sectionId
     },
     currentSection () {
-      this.$store.getters.currentSection()
+      this.$store.state.model.currentSection()
     },
     levels () {
       return this.$store.getters.getActualLevels

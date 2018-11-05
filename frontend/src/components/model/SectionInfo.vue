@@ -21,7 +21,10 @@
             </popper>
 
             <div v-if="isLoggedAnEditor" class="btn-div fa-button">
-              <app-section-control-buttons :section="currentSection" :inSection="null">
+              <app-section-control-buttons
+                :section="currentSection"
+                :inSection="null"
+                :showDetach="false">
               </app-section-control-buttons>
             </div>
 
@@ -38,6 +41,22 @@
               </div>
             </popper>
 
+          </div>
+
+          <div v-if="hasOrigin" class="title-origin">
+            <div class="origin-label w3-row">
+              <i>{{ $t('model.ORIGIN') }}:</i>
+              <app-model-section-link
+                :section="originSubsections[0].section">
+              </app-model-section-link>
+              {{ $t('general.IN') }}
+            </div>
+            <app-model-section-tag
+              v-for="originSubsection in originSubsections"
+              :key="originSubsection.id"
+              :section="originSubsection.parentSection"
+              class="origin-section-tag">
+            </app-model-section-tag>
           </div>
 
         </div>
@@ -79,10 +98,12 @@
 
 <script>
 import SectionControlButtons from '@/components/model/SectionControlButtons.vue'
+import ModelSectionLink from '@/components/global/ModelSectionLink.vue'
 
 export default {
   components: {
-    'app-section-control-buttons': SectionControlButtons
+    'app-section-control-buttons': SectionControlButtons,
+    'app-model-section-link': ModelSectionLink
   },
 
   data () {
@@ -92,6 +113,12 @@ export default {
   },
 
   computed: {
+    originSubsections () {
+      return this.currentSection != null ? this.currentSection.originSubsections : null
+    },
+    hasOrigin () {
+      return this.originSubsections.length > 0
+    },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
     },
@@ -113,10 +140,7 @@ export default {
       return this.$route.params.sectionId
     },
     currentSection () {
-      if (this.currentSectionGenealogy) {
-        return this.currentSectionGenealogy.section
-      }
-      return null
+      return this.$store.state.model.currentSection
     },
     currentSectionGenealogy () {
       return this.$store.state.model.currentSectionGenealogy
@@ -171,7 +195,29 @@ export default {
 }
 
 .title-buttons {
+  margin-right: 16px;
   display: inline-block;
+}
+
+.title-origin {
+  display: inline-block;
+  line-height: 33px;
+  height: 33px;
+  vertical-align: bottom;
+}
+
+.title-origin .origin-label {
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.title-origin .origin-label a {
+  text-decoration: underline;
+}
+
+.title-origin .origin-section-tag {
+  height: 16px;
+  line-height: 16px;
 }
 
 .breadcrumb {

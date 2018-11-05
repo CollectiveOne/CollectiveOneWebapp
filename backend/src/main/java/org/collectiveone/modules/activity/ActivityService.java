@@ -383,7 +383,7 @@ public class ActivityService {
 		/* add dto of the context element */
 		switch (subscriber.getType()) {
 			case SECTION:
-				subscriberDto.setSection(modelSectionRepository.findById(subscriber.getElementId()).get().toDtoLight());
+				subscriberDto.setSection(modelSectionRepository.findById(subscriber.getElementId()).get().toDto());
 				break;
 			
 			case INITIATIVE:
@@ -405,7 +405,7 @@ public class ActivityService {
 			
 			switch (applicableSubscriber.getType()) {
 				case SECTION:
-					applicableSubscriberDto.setSection(modelSectionRepository.findById(applicableSubscriber.getElementId()).get().toDtoLight());
+					applicableSubscriberDto.setSection(modelSectionRepository.findById(applicableSubscriber.getElementId()).get().toDto());
 					break;
 				
 				case INITIATIVE:

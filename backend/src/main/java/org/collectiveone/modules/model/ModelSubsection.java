@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.model.dto.ModelSubsectionDto;
 import org.collectiveone.modules.model.enums.Status;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -57,6 +58,16 @@ public class ModelSubsection implements OrderedElement {
 				"section id: " + section.getId().toString() + " " +
 				"section title: " + section.getTitle() + " ";
 				
+	}
+	
+	public ModelSubsectionDto toDto() {
+		ModelSubsectionDto dto = new ModelSubsectionDto();
+		
+		dto.setParentSection(parentSection.toDto());
+		dto.setSection(section.toDto());
+		dto.setScope(scope);
+		
+		return dto;
 	}
 
 	public UUID getId() {

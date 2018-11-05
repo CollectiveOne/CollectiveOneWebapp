@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.model.dto.InModelSectionDto;
+import org.collectiveone.modules.model.dto.ModelCardWrapperAdditionDto;
 import org.collectiveone.modules.model.enums.ElementGovernanceType;
 import org.collectiveone.modules.model.enums.SimpleConsentState;
 import org.collectiveone.modules.model.enums.Status;
@@ -59,7 +60,15 @@ public class ModelCardWrapperAddition implements OrderedElement {
 	@Enumerated(EnumType.STRING)
 	private SimpleConsentState simpleConsentState;	
 	
-	
+	public ModelCardWrapperAdditionDto toDto() {
+		ModelCardWrapperAdditionDto dto = new ModelCardWrapperAdditionDto();
+		
+		dto.setCardWrapper(cardWrapper.toDto());
+		dto.setSection(section.toDto());
+		dto.setScope(scope);
+		
+		return dto;
+	}
 	
 	public InModelSectionDto toInModelSectionDto() {
 		InModelSectionDto dto = new InModelSectionDto();

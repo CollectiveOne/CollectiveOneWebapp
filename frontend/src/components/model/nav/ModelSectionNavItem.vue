@@ -65,7 +65,9 @@
           :section="section"
           :inSection="inSection"
           :draggable="$store.state.support.triggerSectionDraggingState"
+          :showDetach="alsoInSections.length > 0"
           @section-removed="sectionRemoved()"
+          @section-detached="sectionDetached($event)"
           @addCard="addCard">
         </app-section-control-buttons>
       </div>
@@ -240,6 +242,11 @@ export default {
     hasSubsections () {
       return this.subsectionsDataFiltered.length > 0
     },
+    alsoInSections () {
+      return this.section.inSections.filter((section) => {
+        return this.inSection.id !== section.id
+      })
+    },
     isSelected () {
       if (this.section) {
         return this.$route.params.sectionId === this.section.id
@@ -371,6 +378,10 @@ export default {
       if (this.isSelected) {
         this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.inSection.id}})
       }
+      this.updateParentInTree()
+    },
+    sectionDetached (newSectionId) {
+      this.$router.push({name: 'ModelSectionContent', params: {sectionId: newSectionId}})
       this.updateParentInTree()
     },
     subscribeSocket () {

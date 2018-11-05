@@ -87,7 +87,7 @@ public class ModelController extends BaseController {
 				isBefore);
 	}
 	
-	@RequestMapping(path = "/model/section/{parentSectionId}/subsection/{subsectionId}", method = RequestMethod.PUT)
+	@RequestMapping(path = "/model/section/{parentSectionId}/subsection/{sectionId}", method = RequestMethod.PUT)
 	public PostResult addExistingSectionSubsection(
 			@PathVariable("parentSectionId") String parentSectionIdStr,
 			@PathVariable("sectionId") UUID sectionId, 
@@ -161,6 +161,27 @@ public class ModelController extends BaseController {
 		}
 		
 		return modelService.removeSubsectionFromSection(UUID.fromString(sectionIdStr), UUID.fromString(subsectionIdStr), getLoggedUserId());
+	}
+	
+	@RequestMapping(path = "/model/section/{sectionId}/detachSubsection/{subsectionId}", method = RequestMethod.PUT) 
+	public PostResult detachSubsection(
+			@PathVariable("sectionId") UUID sectionId,
+			@PathVariable("subsectionId") UUID subsectionId) {
+	
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID initiativeId = modelService.getSectionInitiative(sectionId).getId();
+		
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.detachSubsection(
+				sectionId, 
+				subsectionId, 
+				getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/resetSubsectionsOrder", method = RequestMethod.DELETE) 
@@ -258,6 +279,27 @@ public class ModelController extends BaseController {
 				isBefore,
 				getLoggedUserId(), 
 				scope);
+	}
+	
+	@RequestMapping(path = "/model/section/{sectionId}/detachCardWrapper/{cardWrapperId}", method = RequestMethod.PUT) 
+	public PostResult detachCard(
+			@PathVariable("sectionId") UUID sectionId,
+			@PathVariable("cardWrapperId") UUID cardWrapperId) {
+	
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		UUID initiativeId = modelService.getCardWrapperInitiative(cardWrapperId).getId();
+		
+		if (governanceService.canEditModel(initiativeId, getLoggedUser().getC1Id()) == DecisionVerdict.DENIED) {
+			return new PostResult("error", "not authorized", "");
+		}
+		
+		return modelService.detachCard(
+				sectionId, 
+				cardWrapperId,
+				getLoggedUserId());
 	}
 	
 	@RequestMapping(path = "/model/section/{sectionId}/removeCard/{cardWrapperId}", method = RequestMethod.PUT) 

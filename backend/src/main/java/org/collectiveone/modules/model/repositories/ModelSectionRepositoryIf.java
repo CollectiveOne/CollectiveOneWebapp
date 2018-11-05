@@ -24,7 +24,7 @@ public interface ModelSectionRepositoryIf extends CrudRepository<ModelSection, U
 	
 	@Query("SELECT sec FROM ModelSection sec " +
 			"WHERE (LOWER(sec.title) LIKE ?1 OR LOWER(sec.description) LIKE ?1) " +
-			"AND sec.initiative.id IN ?2)")
+			"AND sec.initiative.id IN ?2")
 	public Page<ModelSection> searchBy(String query, List<UUID> initiativeId, Pageable page);
 
 }

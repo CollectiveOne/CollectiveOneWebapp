@@ -34,6 +34,8 @@ public class ModelSectionDto {
 	private String beforeElementId;
 	private String afterElementId;
 	
+	private List<ModelSubsectionDto> originSubsections = new ArrayList<ModelSubsectionDto>();
+	
 	
 	public ModelSection toEntity(ModelSection section, ModelSectionDto sectionDto) {
 		
@@ -166,5 +168,12 @@ public class ModelSectionDto {
 	public void setAfterElementId(String afterElementId) {
 		this.afterElementId = afterElementId;
 	}
+	public List<ModelSubsectionDto> getOriginSubsections() {
+		return originSubsections;
+	}
+	public void setOriginSubsections(List<ModelSubsectionDto> originSubsections) {
+		this.originSubsections = originSubsections;
+	}
+	
 	
 }

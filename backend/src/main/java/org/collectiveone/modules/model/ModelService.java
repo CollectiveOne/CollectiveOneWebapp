@@ -460,10 +460,16 @@ public class ModelService {
 		
 		ModelSection newSection = new ModelSection();
 		
-		newSection.setOriginSection(section);
 		newSection.setTitle(section.getTitle());
 		newSection.setDescription(section.getDescription());
 		newSection.setInitiative(section.getInitiative());
+		
+		List<ModelSubsection> existingSubsections =
+				modelSubsectionRepository.findOfSection(section.getId());	
+		
+		for (ModelSubsection subsec : existingSubsections) {
+			newSection.getOriginSubsections().add(subsec);
+		}
 		
 		newSection =  modelSectionRepository.save(newSection);
 		
@@ -472,26 +478,11 @@ public class ModelService {
 				modelCardWrapperAdditionRepository.findInSectionWithScope(sectionId, ModelScope.COMMON);
 		
 		for (ModelCardWrapperAddition cardWrapperAddition : cardWrapperAdditions) {
-			ModelCardWrapperAddition newCardAddition = new ModelCardWrapperAddition();
-			
-			ModelCardWrapper cardWrapper = cardWrapperAddition.getCardWrapper();
-			ModelCardWrapper newCardWrapper = new ModelCardWrapper();
-			
-			newCardWrapper.setCard(cardWrapper.getCard());
-			newCardWrapper.setCreationDate(cardWrapper.getCreationDate());
-			newCardWrapper.setCreator(cardWrapper.getCreator());
-			newCardWrapper.setInitiative(cardWrapper.getInitiative());
-			newCardWrapper.setOrigin(cardWrapper);
-			
-			newCardWrapper = modelCardWrapperRepository.save(newCardWrapper);			
-			
-			newCardAddition.setSection(newSection);
-			newCardAddition.setAdder(cardWrapperAddition.getAdder());
-			newCardAddition.setCardWrapper(newCardWrapper);
-			newCardAddition.setScope(newCardAddition.getScope());
-			newCardAddition.setStatus(Status.VALID);
-			
-			newCardAddition = modelCardWrapperAdditionRepository.save(newCardAddition);			
+			createDetachedCopyOfCardWrapper(
+					cardWrapperAddition.getCardWrapper(), 
+					newSection,
+					cardWrapperAddition.getAdder(),
+					cardWrapperAddition.getScope());
 		}
 		
 		List<ModelSubsection> subsections = 
@@ -704,6 +695,118 @@ public class ModelService {
 		
 		return "success";
 	}
+	
+	private ModelCardWrapperAddition createDetachedCopyOfCardWrapper(
+			ModelCardWrapper cardWrapper, 
+			ModelSection onSection,
+			AppUser adder,
+			ModelScope scope) {
+		
+		ModelCardWrapperAddition newCardAddition = new ModelCardWrapperAddition();
+		
+		ModelCardWrapper newCardWrapper = new ModelCardWrapper();
+		
+		newCardWrapper.setCard(cardWrapper.getCard());
+		newCardWrapper.setCreationDate(cardWrapper.getCreationDate());
+		newCardWrapper.setCreator(cardWrapper.getCreator());
+		newCardWrapper.setInitiative(cardWrapper.getInitiative());
+		
+		List<ModelCardWrapperAddition> existingCardWrpAddtions =
+				modelCardWrapperAdditionRepository.findOfCardWrapper(cardWrapper.getId());	
+		
+		for (ModelCardWrapperAddition crdWrpAdd : existingCardWrpAddtions) {
+			newCardWrapper.getOriginCardWrapperAdditions().add(crdWrpAdd);
+		}
+		
+		newCardWrapper = modelCardWrapperRepository.save(newCardWrapper);			
+		
+		newCardAddition.setSection(onSection);
+		newCardAddition.setAdder(adder);
+		newCardAddition.setCardWrapper(newCardWrapper);
+		newCardAddition.setScope(scope);
+		newCardAddition.setStatus(Status.VALID);
+		
+		return modelCardWrapperAdditionRepository.save(newCardAddition);		
+		
+	}
+	
+	private ModelSubsection createDetachedCopyOfSection(
+			ModelSection section, 
+			ModelSection onSection,
+			AppUser adder,
+			ModelScope scope) {
+		
+		ModelSection newSection = createSectionFromTemplate(section.getId());
+		
+		List<ModelSubsection> existingSubsections =
+				modelSubsectionRepository.findOfSection(section.getId());	
+		
+		for (ModelSubsection subsec : existingSubsections) {
+			newSection.getOriginSubsections().add(subsec);
+		}
+		
+		newSection = modelSectionRepository.save(newSection);			
+		
+		ModelSubsection newSubsection = new ModelSubsection();
+		
+		newSubsection.setParentSection(onSection);
+		newSubsection.setAdder(adder);
+		newSubsection.setSection(newSection);
+		newSubsection.setScope(scope);
+		newSubsection.setStatus(Status.VALID);
+		
+		return modelSubsectionRepository.save(newSubsection);		
+	}
+	
+	@Transactional
+	public PostResult detachCard (
+			UUID sectionId, 
+			UUID cardWrapperId,
+			UUID userId) {
+		
+		ModelCardWrapperAddition oldCardWrapperAddition = 
+				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(sectionId, cardWrapperId, userId);
+		
+		ModelCardWrapperAddition newCardWrapperAddition = createDetachedCopyOfCardWrapper(
+				oldCardWrapperAddition.getCardWrapper(), 
+				oldCardWrapperAddition.getSection(),
+				oldCardWrapperAddition.getAdder(),
+				oldCardWrapperAddition.getScope());		
+		
+		newCardWrapperAddition.setBeforeElement(oldCardWrapperAddition.getBeforeElement());
+		newCardWrapperAddition.setAfterElement(oldCardWrapperAddition.getAfterElement());
+		
+		oldCardWrapperAddition.setStatus(Status.DELETED);
+		
+		modelCardWrapperAdditionRepository.save(oldCardWrapperAddition);
+				
+		return new PostResult("success", "card detached", newCardWrapperAddition.getCardWrapper().getId().toString());
+	}
+	
+	@Transactional
+	public PostResult detachSubsection (
+			UUID sectionId, 
+			UUID subsectionId,
+			UUID userId) {
+		
+		ModelSubsection oldSubsection = 
+				modelSubsectionRepository.findByParentSectionAndSectionVisibleToUser(sectionId, subsectionId, userId);
+		
+		ModelSubsection newSubsection = createDetachedCopyOfSection(
+				oldSubsection.getSection(), 
+				oldSubsection.getParentSection(), 
+				oldSubsection.getAdder(), 
+				oldSubsection.getScope());		
+		
+		newSubsection.setBeforeElement(oldSubsection.getBeforeElement());
+		newSubsection.setAfterElement(oldSubsection.getAfterElement());
+		
+		oldSubsection.setStatus(Status.DELETED);
+		
+		modelSubsectionRepository.save(oldSubsection);
+				
+		return new PostResult("success", "card detached", newSubsection.getSection().getId().toString());
+	}
 		
 	@Transactional
 	public PostResult addCardToSection (
@@ -715,7 +818,8 @@ public class ModelService {
 			ModelScope scope) {
 		
 		ModelCardWrapperAddition existingCard = 
-				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(sectionId, cardWrapperId, requestByUserId);
+				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(
+						sectionId, cardWrapperId, requestByUserId);
 		
 		if (existingCard != null) {
 			return new PostResult("error", "card already in this section", null);
@@ -868,6 +972,10 @@ public class ModelService {
 		
 		sectionDto.setScope(subsection.getScope());
 		
+		for (ModelSubsection subsec : subsection.getSection().getOriginSubsections()) {
+			sectionDto.getOriginSubsections().add(subsec.toDto());
+		}
+		
 		if (subsection.getBeforeElement() != null) {
 			sectionDto.setBeforeElementId(subsection.getBeforeSubsection().getSection().getId().toString());
 		}
@@ -993,6 +1101,11 @@ public class ModelService {
 		/* data associated to the addition */
 		cardWrapperDto.setAdditionId(cardWrapperAddition.getId() != null ? cardWrapperAddition.getId().toString() : null);
 		cardWrapperDto.setScope(cardWrapperAddition.getScope());
+		
+		for (ModelCardWrapperAddition crdWrpAdd : cardWrapperAddition.getCardWrapper().getOriginCardWrapperAdditions()) {
+			cardWrapperDto.getOriginCardWrapperAdditions().add(crdWrpAdd.toDto());
+		}
+		
 		cardWrapperDto.setGovernanceType(cardWrapperAddition.getGovernanceType());
 		cardWrapperDto.setSimpleConsentState(cardWrapperAddition.getSimpleConsentState());
 		
@@ -1503,7 +1616,7 @@ public class ModelService {
 		
 		ModelSectionLinkedDto sectionLinked = new ModelSectionLinkedDto();
 		
-		sectionLinked.setSection(modelSectionRepository.findById(node.elementId).get().toDtoLight());
+		sectionLinked.setSection(modelSectionRepository.findById(node.elementId).get().toDto());
 		
 		for (GraphNode parentNode : node.getParents()) {
 			sectionLinked.getParents().add(getModelSectionDtosFromNodes(parentNode));

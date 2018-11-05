@@ -1,5 +1,7 @@
 package org.collectiveone.modules.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -7,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -37,8 +40,8 @@ public class ModelSection {
 	@Column(name = "description")
 	private String description;
 	
-	@ManyToOne
-	private ModelSection originSection;
+	@ManyToMany
+	private List<ModelSubsection> originSubsections = new ArrayList<ModelSubsection>();
 	
 	
 	@Override
@@ -67,7 +70,7 @@ public class ModelSection {
 				"title: " + title + " ";
 	}
 	
-	public ModelSectionDto toDtoLight () {
+	public ModelSectionDto toDto () {
 		ModelSectionDto sectionDto = new ModelSectionDto();
 		
 		sectionDto.setId(id.toString());
@@ -77,13 +80,7 @@ public class ModelSection {
 		
 		return sectionDto; 
 	}
-	
-	public ModelSectionDto toDto() {
-		ModelSectionDto sectionDto = toDtoLight();
-		if (initiative != null) sectionDto.setInitiativeId(initiative.getId().toString());
-		return sectionDto;
-	}
-	
+
 	public UUID getId() {
 		return id;
 	}
@@ -116,12 +113,14 @@ public class ModelSection {
 		this.description = description;
 	}
 
-	public ModelSection getOriginSection() {
-		return originSection;
+	public List<ModelSubsection> getOriginSubsections() {
+		return originSubsections;
 	}
 
-	public void setOriginSection(ModelSection originSection) {
-		this.originSection = originSection;
+	public void setOriginSubsections(List<ModelSubsection> originSubsections) {
+		this.originSubsections = originSubsections;
 	}
+
+	
 	
 }

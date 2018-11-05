@@ -51,6 +51,7 @@
           @addCard="addCard()"
           @addSubsection="addSubsection()"
           @edit="edit()"
+          @detach="detachIntent = true"
           @remove="remove()"
           @delete="deleteSection()"
           @configNotifications="configNotifications()"
@@ -60,6 +61,21 @@
         </app-drop-down-menu>
 
         <div v-if="inSection !== null" class="w3-card w3-white drop-menu">
+
+          <div v-if="detachIntent" class="w3-row w3-center delete-intent-div">
+            <div class="w3-padding w3-round light-grey w3-margin-bottom">
+              <p v-html="$t('model.DETACH_CARD_WARNING')"></p>
+            </div>
+            <button
+              class="w3-button light-grey"
+              @click="detachIntent = false">{{ $t('general.CANCEL') }}
+            </button>
+            <button
+              class="w3-button button-blue"
+              @click="detachConfirmed()">{{ $t('general.CONFIRM') }}
+            </button>
+          </div>
+
           <div v-if="removeIntent" class="w3-row w3-center delete-intent-div">
             <div class="w3-padding w3-round light-grey w3-margin-bottom">
               <p
@@ -118,6 +134,10 @@ export default {
     inSection: {
       type: Object,
       deafult: null
+    },
+    showDetach: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -127,6 +147,7 @@ export default {
       showNewSubsectionModal: false,
       showNewCardModal: false,
       showEditNotificationsModal: false,
+      detachIntent: false,
       deleteIntent: false,
       removeIntent: false,
       toggleMenu: false
@@ -146,6 +167,12 @@ export default {
           value: 'edit',
           faIcon: 'fa-pencil'
         })
+        if (this.showDetach) {
+          menuItems.push({
+            text: this.$t('model.DETACH_LC'),
+            value: 'detach',
+            faIcon: 'fa-chain-broken' })
+        }
       }
 
       if (this.isLoggedAnEditor) {
@@ -225,6 +252,20 @@ export default {
     deleteSection () {
       this.deleteIntent = true
     },
+    detachConfirmed () {
+      this.axios.put('/1/model/section/' + this.inSection.id + '/detachSubsection/' + this.section.id,
+        {}).then((response) => {
+          console.log(response)
+          if (response.data.result === 'success') {
+            this.detachIntent = false
+            this.$emit('section-removed')
+          } else {
+            this.showOutputMessage(response.data.message)
+          }
+        }).catch((error) => {
+        console.log(error)
+      })
+    },
     removeConfirmed () {
       this.expanded = false
       this.axios.put('/1/model/section/' + this.inSection.id + '/removeSubsection/' + this.section.id,
@@ -232,7 +273,7 @@ export default {
           if (response.data.result === 'success') {
             this.removeIntent = false
             this.expanded = false
-            this.$emit('section-removed')
+            this.$emit('section-detached', response.data.data)
           } else {
             this.showOutputMessage(response.data.message)
           }

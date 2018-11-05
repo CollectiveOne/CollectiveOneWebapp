@@ -56,8 +56,9 @@ public class ModelCardWrapper {
 	@ManyToMany
 	private List<AppUser> editors = new ArrayList<AppUser>();
 	
-	@ManyToOne
-	private ModelCardWrapper origin;
+	@ManyToMany
+	private List<ModelCardWrapperAddition> originCardWrapperAdditions = new ArrayList<ModelCardWrapperAddition>();
+	
 	
 	@Override
 	public int hashCode() {
@@ -169,12 +170,12 @@ public class ModelCardWrapper {
 		this.editors = editors;
 	}
 
-	public ModelCardWrapper getOrigin() {
-		return origin;
+	public List<ModelCardWrapperAddition> getOriginCardWrapperAdditions() {
+		return originCardWrapperAdditions;
 	}
 
-	public void setOrigin(ModelCardWrapper origin) {
-		this.origin = origin;
+	public void setOriginCardWrapperAdditions(List<ModelCardWrapperAddition> originCardWrapperAdditions) {
+		this.originCardWrapperAdditions = originCardWrapperAdditions;
 	}
 	
 }

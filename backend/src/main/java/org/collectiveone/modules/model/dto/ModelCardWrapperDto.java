@@ -36,6 +36,8 @@ public class ModelCardWrapperDto {
 	
 	private ElementConsentPositionColor ownPosition;
 	
+	private List<ModelCardWrapperAdditionDto> originCardWrapperAdditions = new ArrayList<ModelCardWrapperAdditionDto>();
+	
 	
 	public String getId() {
 		return id;
@@ -150,6 +152,12 @@ public class ModelCardWrapperDto {
 	}
 	public void setOwnPosition(ElementConsentPositionColor ownPosition) {
 		this.ownPosition = ownPosition;
+	}
+	public List<ModelCardWrapperAdditionDto> getOriginCardWrapperAdditions() {
+		return originCardWrapperAdditions;
+	}
+	public void setOriginCardWrapperAdditions(List<ModelCardWrapperAdditionDto> originCardWrapperAdditions) {
+		this.originCardWrapperAdditions = originCardWrapperAdditions;
 	}
 	
 }

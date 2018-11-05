@@ -1,4 +1,10 @@
+import ModelCardInSectionLink from '@/components/global/ModelCardInSectionLink.vue'
+
 export const cardMixin = {
+
+  components: {
+    'app-model-card-link': ModelCardInSectionLink
+  },
 
   props: {
     cardWrapper: {
@@ -28,6 +34,15 @@ export const cardMixin = {
   },
 
   computed: {
+    originCardWrapperAdditions () {
+      if (this.cardWrapper) {
+        return this.cardWrapper.originCardWrapperAdditions
+      }
+      return []
+    },
+    hasOrigin () {
+      return this.originCardWrapperAdditions.length > 0
+    },
     cardWrapperId () {
       return this.cardWrapper ? this.cardWrapper.id : ''
     },
@@ -42,6 +57,11 @@ export const cardMixin = {
     },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor
+    },
+    alsoInSections () {
+      return this.cardWrapper.inModelSections.filter((section) => {
+        return this.inSection.id !== section.id
+      })
     },
     containerClass () {
       let cClass = {}
