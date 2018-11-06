@@ -76,6 +76,8 @@ public class NotificationPeriodicService {
 			emailTracking.setType(NotificationTrackingType.NEXT_ONCEADAY);
 			emailTracking.setTimestamp(tomorrow());
 			emailTracking = notificationEmailTrackingRepository.save(emailTracking);
+		} else {
+			emailTracking = emailTrackings.get(0);
 		}
 		
 		if (System.currentTimeMillis() > emailTracking.getTimestamp().getTime()) {
@@ -105,6 +107,8 @@ public class NotificationPeriodicService {
 			emailTracking.setType(NotificationTrackingType.NEXT_ONCEAWEEK);
 			emailTracking.setTimestamp(nextWeek());
 			emailTracking = notificationEmailTrackingRepository.save(emailTracking);
+		} else {
+			emailTracking = emailTrackings.get(0);
 		}
 		
 		if (System.currentTimeMillis() > emailTracking.getTimestamp().getTime()) {

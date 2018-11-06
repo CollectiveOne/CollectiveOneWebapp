@@ -22,7 +22,11 @@
             </label>
             <label v-else class=""><b>{{ $t('model.IN_SECTION') }}:</b></label>
             <br>
-            <h4>{{ this.inSectionTitleOk }}</h4>
+            <h4>{{ this.inSectionTitleOk }}
+              <span v-if="onSection != null">
+                ({{ isBefore ? $t('model.BEFORE_SECTION') : $t('model.AFTER_SECTION') }} {{ onSection.title }})
+              </span>
+            </h4>
           </div>
 
           <div v-if="isNew" class="section-tabs w3-row w3-center light-grey">
@@ -213,6 +217,14 @@ export default {
     onlyMessages: {
       type: Boolean,
       defaul: false
+    },
+    onSection: {
+      type: Object,
+      default: null
+    },
+    isBefore: {
+      type: Boolean,
+      defaul: false
     }
   },
 
@@ -394,8 +406,12 @@ export default {
         if (this.isNew) {
           if (!this.addExisting) {
             this.sendingData = true
-            this.axios.post('/1/model/section/' + this.inSection.id + '/subsection', sectionDto)
-              .then((response) => {
+            this.axios.post('/1/model/section/' + this.inSection.id + '/subsection', sectionDto, {
+              params: {
+                onSubsectionId: this.onSection != null ? this.onSection.id : null,
+                isBefore: this.isBefore
+              }
+            }).then((response) => {
                 this.sendingData = false
                 if (response.data.result === 'success') {
                   this.closeThis()
@@ -410,6 +426,8 @@ export default {
             this.sendingData = true
             this.axios.put('/1/model/section/' + this.inSection.id + '/subsection/' + this.existingSection.id, {}, {
               params: {
+                onSubsectionId: this.onSection != null ? this.onSection.id : null,
+                isBefore: this.isBefore,
                 scope: this.existingSectionNewScope,
                 detachFlag: this.detachFlag
               }

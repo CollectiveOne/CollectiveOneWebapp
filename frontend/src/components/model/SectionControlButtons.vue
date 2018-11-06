@@ -25,6 +25,17 @@
 
         <transition name="slideDownUp">
           <app-model-section-modal
+            v-if="showNewSectionModal"
+            :isNew="true"
+            :inSection="inSection"
+            :onSection="section"
+            :isBefore="isNewSectionBefore"
+            @close="showNewSectionModal = false">
+          </app-model-section-modal>
+        </transition>
+
+        <transition name="slideDownUp">
+          <app-model-section-modal
             v-if="showSectionModal"
             :isNew="false"
             :sectionId="section.id"
@@ -50,6 +61,8 @@
           class="drop-menu"
           @addCard="addCard()"
           @addSubsection="addSubsection()"
+          @addSectionBefore="addSection(true)"
+          @addSectionAfter="addSection(false)"
           @edit="edit()"
           @detach="detachIntent = true"
           @remove="remove()"
@@ -145,6 +158,8 @@ export default {
     return {
       showSectionModal: false,
       showNewSubsectionModal: false,
+      showNewSectionModal: false,
+      isNewSectionBefore: false,
       showNewCardModal: false,
       showEditNotificationsModal: false,
       detachIntent: false,
@@ -180,6 +195,18 @@ export default {
           text: this.$t('model.ADD_SUBSECTION'),
           value: 'addSubsection',
           faIcon: 'fa-plus' })
+
+        if (this.inSection !== null) {
+          menuItems.push({
+            text: this.$t('model.ADD_SECTION_BEFORE'),
+            value: 'addSectionBefore',
+            faIcon: 'fa-plus' })
+
+          menuItems.push({
+            text: this.$t('model.ADD_SECTION_AFTER'),
+            value: 'addSectionAfter',
+            faIcon: 'fa-plus' })
+         }
       }
 
       menuItems.push({
@@ -231,19 +258,24 @@ export default {
 
   methods: {
     addCard () {
-      this.expanded = false
+      this.toggleMenu = !this.toggleMenu
       this.$emit('addCard')
     },
     addSubsection () {
-      this.expanded = false
+      this.toggleMenu = !this.toggleMenu
       this.showNewSubsectionModal = true
     },
+    addSection (isBefore) {
+      this.toggleMenu = !this.toggleMenu
+      this.isNewSectionBefore = isBefore
+      this.showNewSectionModal = true
+    },
     edit () {
-      this.expanded = false
+      this.toggleMenu = !this.toggleMenu
       this.showSectionModal = true
     },
     configNotifications () {
-      this.expanded = false
+      this.toggleMenu = !this.toggleMenu
       this.showEditNotificationsModal = true
     },
     remove () {
@@ -272,7 +304,7 @@ export default {
         {}).then((response) => {
           if (response.data.result === 'success') {
             this.removeIntent = false
-            this.expanded = false
+            this.toggleMenu = !this.toggleMenu
             this.$emit('section-detached', response.data.data)
           } else {
             this.showOutputMessage(response.data.message)
@@ -286,7 +318,7 @@ export default {
       this.axios.delete('/1/model/section/' + this.section.id)
         .then((response) => {
           this.deleteIntent = false
-          this.expanded = false
+          this.toggleMenu = !this.toggleMenu
           this.$store.commit('triggerUpdateSectionsTree')
         }).catch((error) => {
           console.log(error)
@@ -330,7 +362,7 @@ export default {
 }
 
 .drop-menu {
-  width: 180px;
+  width: 250px;
   text-align: left;
   font-size: 15px;
 }

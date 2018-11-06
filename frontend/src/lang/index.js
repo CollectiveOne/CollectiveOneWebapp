@@ -440,7 +440,11 @@ const translations = {
       'DETACH': 'Detach',
       'DETACH_LC': 'detach',
       'DETACH_CARD_WARNING': 'Are you sure you want to detach this element from all its other instances and make it a new independent one? This cannot be undone.',
-      'ORIGIN': 'origin'
+      'ORIGIN': 'origin',
+      'ADD_SECTION_BEFORE': 'add section before',
+      'ADD_SECTION_AFTER': 'add section after',
+      'BEFORE_SECTION': 'before section',
+      'AFTER_SECTION': 'after section'
     },
     help: {
       'MESSAGES-TAB-TT': 'messages',

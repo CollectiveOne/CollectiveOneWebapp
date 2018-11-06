@@ -51,12 +51,15 @@
               </app-model-section-link>
               {{ $t('general.IN') }}
             </div>
-            <app-model-section-tag
-              v-for="originSubsection in originSubsections"
-              :key="originSubsection.id"
-              :section="originSubsection.parentSection"
-              class="origin-section-tag">
-            </app-model-section-tag>
+            <div class="origin-section-tags w3-row">
+              <app-model-section-tag
+                v-for="originSubsection in originSubsections"
+                class="origin-section-tag"
+                :key="originSubsection.id"
+                :section="originSubsection.parentSection">
+              </app-model-section-tag>
+            </div>
+
           </div>
 
         </div>
@@ -215,9 +218,16 @@ export default {
   text-decoration: underline;
 }
 
+.origin-section-tags {
+  height: 16px;
+  line-height: 16px;
+}
+
 .title-origin .origin-section-tag {
   height: 16px;
   line-height: 16px;
+  display: inline-block;
+  margin-right: 5px;
 }
 
 .breadcrumb {
