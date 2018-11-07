@@ -9,6 +9,7 @@
       :contextElementId="contextElementId"
       :fullWidthCard="fullWidthCard"
       :showCardsPreview="showCardsPreview"
+      :showInSection="showInSection"
       @edit-message="$emit('edit-message', $event)"
       @reply-to-message="$emit('reply-to-message', $event)"
       @reset-activity="$emit('reset-activity')">
@@ -59,6 +60,10 @@ export default {
     showCardsPreview: {
       type: Boolean,
       default: false
+    },
+    showInSection: {
+      type: Boolean,
+      default: true
     }
   },
 

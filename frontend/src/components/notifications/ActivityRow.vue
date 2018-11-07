@@ -25,7 +25,7 @@
              , {{ $t('notifications.TIME_AGO', { time: getTimeStrSince(activity.timestamp) }) }}
           </span>
 
-          <span v-if="outsideOfThisContext">
+          <span v-if="outsideOfThisContext && showInSection">
             , in
             <app-model-section-tag
               style="display: inline-block; margin-left: 4px;"
@@ -391,6 +391,10 @@ export default {
     showCardsPreview: {
       type: Boolean,
       default: false
+    },
+    showInSection: {
+      type: Boolean,
+      default: true
     }
   },
 
