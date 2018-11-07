@@ -357,6 +357,7 @@ const translations = {
       'REMOVED_SUBSECTION': 'removed the subsection',
       'FROM_SECTION': 'from section',
       'MOVED_THE_SECTION': 'moved the section',
+      'ADDED_THE_SECTION': 'added the section',
       'TO_SECTION': 'to section',
       'CREATED_THE_CARD': 'created the {scope} card',
       'IN_SECTION': 'on section',

@@ -168,6 +168,12 @@
             {{ $t('notifications.MOVED_THE_SECTION') }}
             <app-model-section-link :section="activity.modelSection"></app-model-section-link>.
           </span>
+          <span v-if="isModelSectionAdded" class="">
+            {{ $t('notifications.ADDED_THE_SECTION') }}
+            <app-model-section-link :section="activity.modelSection"></app-model-section-link>.
+            {{ $t('notifications.TO_SECTION') }}
+            <app-model-section-link :section="activity.onSection"></app-model-section-link>.
+          </span>
 
           <span v-if="isModelCardWrapperCreated" class="">
             {{ $t('notifications.CREATED_THE_CARD', { scope: cardWrapperScope }) }}
@@ -477,6 +483,9 @@ export default {
       return this.activity.type === 'MODEL_SECTION_MOVED' &&
         (this.activity.fromSection === null ||
         this.activity.onSection === null)
+    },
+    isModelSectionAdded () {
+      return this.activity.type === 'MODEL_SECTION_ADDED'
     },
     isModelSectionMovedFromSectionToSection () {
       return this.activity.type === 'MODEL_SECTION_MOVED' &&

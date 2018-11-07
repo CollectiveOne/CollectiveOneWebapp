@@ -243,9 +243,12 @@ export default {
       return this.subsectionsDataFiltered.length > 0
     },
     alsoInSections () {
-      return this.section.inSections.filter((section) => {
-        return this.inSection.id !== section.id
-      })
+      if (this.section) {
+        return this.section.inSections.filter((section) => {
+          return this.inSection.id !== section.id
+        })
+      }
+      return []
     },
     isSelected () {
       if (this.section) {
