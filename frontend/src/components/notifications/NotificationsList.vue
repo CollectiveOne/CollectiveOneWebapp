@@ -21,7 +21,9 @@
 
         <app-activity-table
           :activities="activities"
-          :addInAppState="true">
+          :addInAppState="true"
+          :fullWidthCard="true"
+          :showCardsPreview="contextType === 'MODEL_SECTION' || contextType === 'INITIATIVE'">
         </app-activity-table>
 
         <div class="w3-row w3-center">

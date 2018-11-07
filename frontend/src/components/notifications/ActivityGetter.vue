@@ -19,6 +19,8 @@
         :addBorders="addBorders"
         :showMessagesText="showMessagesText"
         :contextElementId="contextElementId"
+        :fullWidthCard="false"
+        :showCardsPreview="contextType === 'MODEL_SECTION'"
         @edit-message="$emit('edit-message', $event)"
         @reply-to-message="$emit('reply-to-message', $event)"
         @reset-activity="getActivity('RESET')">

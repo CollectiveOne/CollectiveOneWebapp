@@ -320,6 +320,24 @@
         </transition>
       </div>
 
+      <router-link v-if="isCardPosted && showCardsPreview"
+        class="w3-row-padding card-container-row"
+        :class="{'card-faded-bottom': cardTooLarge}"
+        :to="{name: 'ModelSectionCard', params: { cardId: this.activity.modelCardWrapper.id, sectionId: this.activity.onSection.id }}">
+        <div
+          ref='cardInternalDiv'
+          class="w3-card-4 w3-topbar w3-round-large w3-col"
+          :class="cardContainerClass">
+          <app-model-card-as-card-content
+           :card="activity.modelCardWrapper.card">
+          </app-model-card-as-card-content>
+        </div>
+      </router-link>
+
+      <!-- <div v-if="" class="w3-row">
+        card too large
+      </div> -->
+
     </td>
   </tr>
 </template>
@@ -334,6 +352,8 @@ import ModelCardInSectionLink from '@/components/global/ModelCardInSectionLink.v
 import ModelCardAloneLink from '@/components/global/ModelCardAloneLink.vue'
 import MoveMessageModal from '@/components/modal/MoveMessageModal.vue'
 import ModelSectionTag from '@/components/model/ModelSectionTag.vue'
+
+import ModelCardAsCardContent from '@/components/model/cards/ModelCardAsCardContent.vue'
 
 import { getTimeStrSince } from '@/lib/common.js'
 
@@ -361,6 +381,14 @@ export default {
     addInAppState: {
       type: Boolean,
       default: false
+    },
+    fullWidthCard: {
+      type: Boolean,
+      default: true
+    },
+    showCardsPreview: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -372,7 +400,8 @@ export default {
     'app-model-card-link': ModelCardInSectionLink,
     'app-model-card-alone-link': ModelCardAloneLink,
     'app-move-message-modal': MoveMessageModal,
-    'app-model-section-tag': ModelSectionTag
+    'app-model-section-tag': ModelSectionTag,
+    'app-model-card-as-card-content': ModelCardAsCardContent
   },
 
   data () {
@@ -381,7 +410,8 @@ export default {
       toggleMessageOptions: false,
       showMoveMessageModal: false,
       showConvertMessageModal: false,
-      removeIntent: false
+      removeIntent: false,
+      cardTooLarge: false
     }
   },
 
@@ -527,9 +557,43 @@ export default {
     isConsentPositionChanged () {
       return this.activity.type === 'CONSENT_POSITION_CHANGED'
     },
-
     isMessagePosted () {
       return this.activity.type === 'MESSAGE_POSTED'
+    },
+    isCardPosted () {
+      return this.isModelCardWrapperCreated || this.isModelCardWrapperEdited
+    },
+    cardContainerClass () {
+      let cClass = {}
+      switch (this.activity.modelCardWrapper.scope) {
+        case 'PRIVATE':
+          cClass['border-red'] = true
+          break
+
+        case 'SHARED':
+          cClass['border-yellow'] = true
+          break
+
+        case 'COMMON':
+          cClass['border-blue'] = true
+          break
+
+        default:
+          cClass['border-gray'] = true
+          break
+      }
+
+      if (this.fullWidthCard) {
+        cClass['s12'] = true
+        cClass['m12'] = true
+        cClass['l12'] = true
+      } else {
+        cClass['s12'] = true
+        cClass['m12'] = true
+        cClass['l6'] = true
+      }
+
+      return cClass
     },
     isMessageInCardWrapper () {
       return this.isMessagePosted && (this.activity.modelCardWrapper !== null) && (this.activity.onSection === null)
@@ -688,6 +752,15 @@ export default {
     }
   },
   methods: {
+    checkCardHeight () {
+      console.log(this.$refs.cardInternalDiv)
+      console.log(this.$refs.cardInternalDiv.clientHeight)
+      if (this.$refs.cardInternalDiv.clientHeight > 190) {
+        this.cardTooLarge = true
+      } else {
+        this.cardTooLarge = false
+      }
+    },
     closeMoveModal () {
       this.showMoveMessageModal = false
       this.$emit('reset-activity')
@@ -767,6 +840,11 @@ export default {
   },
 
   mounted () {
+    this.$nextTick(() => {
+      if (this.isCardPosted) {
+        this.checkCardHeight()
+      }
+    })
   }
 }
 </script>
@@ -843,6 +921,30 @@ a {
 .message-options .expand-btn {
   width: 30px;
   text-align: center;
+}
+
+.card-container-row {
+  margin-top: 6px;
+  max-height: 200px;
+  padding-bottom: 10px;
+  display: block;
+  overflow-y: hidden;
+}
+
+.card-faded-bottom {
+  position: relative;
+}
+
+.card-faded-bottom:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255, 1) 100%);
+  width: 100%;
+  height: 45px;
 }
 
 .not-read-color {

@@ -7,6 +7,8 @@
       :addContext="addContext"
       :showMessagesText="showMessagesText"
       :contextElementId="contextElementId"
+      :fullWidthCard="fullWidthCard"
+      :showCardsPreview="showCardsPreview"
       @edit-message="$emit('edit-message', $event)"
       @reply-to-message="$emit('reply-to-message', $event)"
       @reset-activity="$emit('reset-activity')">
@@ -47,6 +49,14 @@ export default {
       default: ''
     },
     addInAppState: {
+      type: Boolean,
+      default: false
+    },
+    fullWidthCard: {
+      type: Boolean,
+      default: true
+    },
+    showCardsPreview: {
       type: Boolean,
       default: false
     }
