@@ -256,7 +256,7 @@
             {{ $t('notifications.TO_POSITION', { position: getConsentPositionText(activity.positionColor) }) }}.
           </span>
 
-          <span v-if="isMessagePosted && (isMessageInCardWrapper || isMessageInCardWrapperOnSection)">
+          <span v-if="isMessagePosted && (isMessageInCardWrapper || isMessageInCardWrapperOnSection) && showInSection">
             <span v-if="loggedUserMentioned">{{ $t('notifications.MENTIONED_YOU') }}</span>
             <span v-else> <b>{{ $t('notifications.IN_CARD') }}: </b></span>
 
