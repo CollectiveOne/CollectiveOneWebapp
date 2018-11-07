@@ -439,7 +439,6 @@ export default {
 }
 
 .notifications-container {
-  width: 400px;
 }
 
 .notifications-list-container {

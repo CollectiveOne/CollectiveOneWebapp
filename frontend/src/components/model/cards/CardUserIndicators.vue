@@ -36,7 +36,7 @@
       </div>
 
       <div class="w3-right">
-        <div class="w3-right notification-div">
+        <div class="w3-right">
           <app-notifications-list
             :element="cardWrapper"
             contextType="MODEL_CARD">

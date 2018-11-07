@@ -575,7 +575,8 @@ const translations = {
       'PROFILE_CC': 'Perfil',
       'SETTINGS': 'Configuración',
       'LANGUAGE': 'Idioma',
-      'MOVE': 'mover'
+      'MOVE': 'mover',
+      'IN': 'en'
     },
     landing: {
       'PRINCIPLES': 'PRINCIPIOS',
@@ -808,6 +809,7 @@ const translations = {
       'REMOVED_SUBSECTION': 'ha quitado la subsección',
       'FROM_SECTION': 'de la sección',
       'MOVED_THE_SECTION': 'ha movido la sección',
+      'ADDED_THE_SECTION': 'ha añadido la sección',
       'TO_SECTION': 'a la sección',
       'CREATED_THE_CARD': 'ha creado la tarjeta {scope}',
       'IN_SECTION': 'en la sección',
@@ -885,7 +887,17 @@ const translations = {
       'SEE_IN_COLLECTIVEONE': 'Ver en CollectiveOne',
       'SECTION_IS_UNDER': 'Esta sección se encuentra en',
       'RESET_SUBSECTIONS_ORDER': 'resetear orden de subsecs',
-      'RESET_CARDS_ORDER': 'resetear orden de tarjetas'
+      'RESET_CARDS_ORDER': 'resetear orden de tarjetas',
+      'LINK_STATUS_WITH_SECTION': 'Estado del enlace con la sección {{ title }} existente',
+      'KEEP': 'Mantener',
+      'DETACH': 'Desligar',
+      'DETACH_LC': 'desligar',
+      'DETACH_CARD_WARNING': 'Está seguro que desea desligar este elemento de todas las demás instancias donde aparece y convertirlo en un nuevo elemento independiente?',
+      'ORIGIN': 'origen',
+      'ADD_SECTION_BEFORE': 'añadir sección antes',
+      'ADD_SECTION_AFTER': 'añadir sección después',
+      'BEFORE_SECTION': 'antes de la sección',
+      'AFTER_SECTION': 'después de la sección'
     },
     help: {
       'MESSAGES-TAB-TT': 'mensajes',

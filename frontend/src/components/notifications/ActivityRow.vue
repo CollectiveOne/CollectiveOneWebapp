@@ -329,7 +329,7 @@
       <router-link v-if="isCardPosted && showCardsPreview"
         class="w3-row-padding card-container-row"
         :class="{'card-faded-bottom': cardTooLarge}"
-        :to="{name: 'ModelSectionCard', params: { cardId: this.activity.modelCardWrapper.id, sectionId: this.activity.onSection.id }}">
+        :to="{name: 'ModelSectionCard', params: { cardId: this.activity.modelCardWrapper.id, sectionId: this.activity.onSection ? this.activity.onSection.id : ''}}">
         <div
           ref='cardInternalDiv'
           class="w3-card-4 w3-topbar w3-round-large w3-col"
@@ -339,10 +339,6 @@
           </app-model-card-as-card-content>
         </div>
       </router-link>
-
-      <!-- <div v-if="" class="w3-row">
-        card too large
-      </div> -->
 
     </td>
   </tr>
@@ -762,10 +758,12 @@ export default {
   },
   methods: {
     checkCardHeight () {
-      if (this.$refs.cardInternalDiv.clientHeight > 190) {
-        this.cardTooLarge = true
-      } else {
-        this.cardTooLarge = false
+      if (this.$refs.cardInternalDiv) {
+        if (this.$refs.cardInternalDiv.clientHeight > 190) {
+          this.cardTooLarge = true
+        } else {
+          this.cardTooLarge = false
+        }
       }
     },
     closeMoveModal () {
