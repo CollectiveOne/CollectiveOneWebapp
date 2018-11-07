@@ -9,26 +9,52 @@
           <i class="fa fa-times" aria-hidden="true"></i>
         </div>
 
-        <div class="w3-row-padding w3-border-bottom notifications-header">
-          <div class="w3-col s6 text-div w3-center">
-            {{ totalUnread }} unread under <br>{{ elementTitle }}
+        <div class="w3-row w3-border-bottom notifications-header">
+          <div class="w3-row">
+           Your notifications under "{{ elementTitle }}"
           </div>
-          <button class="w3-col s4 w3-margin-top w3-margin-bottom w3-button app-button read-btn"
-            @click="allNotificationsRead()">
-            mark as <br>read
-          </button>
+          <div class="w3-row-padding notif-control-row">
+            <div class="w3-col s4"
+              @click="showAll()">
+              <button class="w3-button w3-round"
+                :class="{'app-button': showingAll, 'app-button-light': !showingAll}">
+                All
+              </button>
+            </div>
+            <div class="w3-col s4"
+              @click="showUnreadOnly()">
+              <button class="w3-button w3-round"
+                :class="{'app-button': !showingAll, 'app-button-light': showingAll}">
+                {{ totalUnread }} unread
+              </button>
+            </div>
+            <div class="w3-col s4"
+              @click="allNotificationsRead()">
+              <button class="w3-button w3-round app-button-green">
+                mark as <br>read
+              </button>
+            </div>
+          </div>
         </div>
 
-        <app-activity-table
-          :activities="activities"
-          :addInAppState="true"
-          :fullWidthCard="true"
-          :showCardsPreview="contextType === 'MODEL_SECTION' || contextType === 'INITIATIVE'">
-        </app-activity-table>
+        <div v-if="!loading" class="">
+          <app-activity-table
+            v-if="activities.length > 0"
+            :activities="activities"
+            :addInAppState="true"
+            :fullWidthCard="true"
+            :showCardsPreview="contextType === 'MODEL_SECTION' || contextType === 'INITIATIVE'">
+          </app-activity-table>
+          <div v-else class="w3-padding w3-center">
+            <i>{{ $t('general.NO_RESULTS_FOUND') }}</i>
+          </div>
+        </div>
+        <div v-else class="w3-row w3-center loader-gif-container">
+          <img class="loader-gif" src="../../assets/loading.gif" alt="">
+        </div>
 
         <div class="w3-row w3-center">
           <button v-if="!allShown"
-            id="T_showMoreButton"
             @click="showMore()"
             class="w3-margin-top w3-margin-bottom w3-button app-button-light" type="button" name="button">
             show more...
@@ -78,9 +104,11 @@ export default {
   data () {
     return {
       showTable: false,
+      loading: false,
       notifications: [],
       totalUnread: 0,
       currentPage: 0,
+      showingAll: true,
       showingMoreNotifications: false,
       allShown: false,
       toggleShow: false
@@ -94,8 +122,10 @@ export default {
           return 'this card'
 
         case 'MODEL_SECTION':
-        case 'INITIATIVE':
           return this.element.title
+
+        case 'INITIATIVE':
+          return this.element.meta.name
       }
 
       return 'this element'
@@ -190,8 +220,18 @@ export default {
   },
 
   methods: {
+    showAll () {
+      this.showingAll = true
+      this.updateNotifications()
+    },
+    showUnreadOnly () {
+      this.showingAll = false
+      this.updateNotifications()
+    },
     updateNotifications (markMessagesRead) {
       markMessagesRead = markMessagesRead || false
+
+      this.loading = true
 
       if (!this.showingMoreNotifications) {
         /* dont update if the user is scrolling down de notifications */
@@ -199,9 +239,10 @@ export default {
           params: {
             page: 0,
             size: 10,
-            onlyUnread: false
+            onlyUnread: !this.showingAll
           }
         }).then((response) => {
+          this.loading = false
           /* check that new notifications arrived */
           this.notifications = response.data.data.notifications
           this.totalUnread = response.data.data.totalUnread
@@ -368,17 +409,13 @@ export default {
   color: #15a5cc !important;
 }
 
-.read-btn {
-  padding: 6px 12px !important;
+.notif-control-row button {
+    width: 100%;
+    height: 48px;
 }
 
 .notifications-header {
-  font-size: 16px;
-}
-
-.text-div {
-  padding: 16px 12px;
-  text-align: right;
+  padding: 12px 6px 6px 6px;
 }
 
 .icon-button {
@@ -402,6 +439,7 @@ export default {
 }
 
 .notifications-container {
+  width: 400px;
 }
 
 .notifications-list-container {

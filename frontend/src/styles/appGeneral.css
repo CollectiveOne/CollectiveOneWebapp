@@ -84,6 +84,14 @@
   background-color: #bc1c34 !important;
   color: white;
   border-radius: 12px;
+  line-height: 16px;
+}
+
+.app-button-green {
+  background-color: #40a36d !important;
+  color: white;
+  border-radius: 12px;
+  line-height: 16px;
 }
 
 .danger-btn {

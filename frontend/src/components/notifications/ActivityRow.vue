@@ -753,8 +753,6 @@ export default {
   },
   methods: {
     checkCardHeight () {
-      console.log(this.$refs.cardInternalDiv)
-      console.log(this.$refs.cardInternalDiv.clientHeight)
       if (this.$refs.cardInternalDiv.clientHeight > 190) {
         this.cardTooLarge = true
       } else {
