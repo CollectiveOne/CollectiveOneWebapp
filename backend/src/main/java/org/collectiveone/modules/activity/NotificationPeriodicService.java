@@ -43,12 +43,8 @@ public class NotificationPeriodicService {
 		appUserRepository.setStatusForUsersLastSeenBefore(UserOnlineStatus.OFFLINE, fiveMinutesAgo());
 	}
 	
-	@Scheduled(fixedDelay = 30000)
-	public void checkSendEmailsSendNow() throws IOException {
-		activityService.sendNotificationEmailsSendNow();
-	}
-	
-	@Scheduled(fixedDelay = 30000)
+	/* check every 1 min */
+	@Scheduled(fixedDelay = 60000)
 	public void checkWantToContributeNow() throws IOException {
 		List<WantToContributeNotification> notifications = 
 				wantToContributeRepository.findByEmailState(NotificationState.PENDING);
@@ -56,7 +52,42 @@ public class NotificationPeriodicService {
 		emailService.sendWantToContributeNotifications(notifications);
 	}
 	
-	@Scheduled(fixedDelay = 30000)
+	/* check every 1 min */
+	@Scheduled(fixedDelay = 60000)
+	public void checkSendEmailsNow() throws IOException {
+		
+		List<NotificationEmailTracking> emailTrackings = 
+				notificationEmailTrackingRepository.findByType(NotificationTrackingType.NEXT_NOW);
+		
+		NotificationEmailTracking emailTracking = null;
+		
+		/* delete repeated entries */
+		if (emailTrackings.size() > 1) {
+			notificationEmailTrackingRepository.deleteAll(emailTrackings.subList(1, emailTrackings.size() - 1));
+			emailTracking = emailTrackings.get(0);
+		}
+		
+		/* create one entry */
+		if (emailTrackings.size() == 0) {
+			emailTracking = new NotificationEmailTracking();
+			emailTracking.setType(NotificationTrackingType.NEXT_NOW);
+			emailTracking.setTimestamp(inTwoMinutes());
+			emailTracking = notificationEmailTrackingRepository.save(emailTracking);
+		} else {
+			emailTracking = emailTrackings.get(0);
+		}
+		
+		if (System.currentTimeMillis() > emailTracking.getTimestamp().getTime()) {
+
+			emailTracking.setTimestamp(inTwoMinutes());
+			emailTracking = notificationEmailTrackingRepository.save(emailTracking);
+			
+			activityService.sendNotificationEmailsSendNow();
+		}
+	}
+	
+	/* check every 5 min */
+	@Scheduled(fixedDelay = 300000)
 	public void checkSendEmailsEveryDay() throws IOException {
 		
 		List<NotificationEmailTracking> emailTrackings = 
@@ -89,7 +120,8 @@ public class NotificationPeriodicService {
 		}
 	}
 	
-	@Scheduled(fixedDelay = 30000)
+	/* check every 30 min */
+	@Scheduled(fixedDelay = 1800000)
 	public void checkSendEmailsEveryWeek() throws IOException {
 		List<NotificationEmailTracking> emailTrackings = 
 				notificationEmailTrackingRepository.findByType(NotificationTrackingType.NEXT_ONCEAWEEK);
@@ -120,11 +152,25 @@ public class NotificationPeriodicService {
 		}
 	}
 	
+	/* check every 24H */
+	@Scheduled(fixedDelay = 86400000)
+	public void deleteOldNotifications() throws IOException {
+		activityService.deleteOldNotifications();
+	}
+	
 	private Timestamp fiveMinutesAgo() {
 		Date now = new Date();
 		Calendar c = Calendar.getInstance();
 		c.setTime(now);
 		c.add(Calendar.MINUTE, -5);
+		return new Timestamp(c.getTimeInMillis());
+	}
+	
+	private Timestamp inTwoMinutes () {
+		Date now = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(now);
+		c.add(Calendar.MINUTE, 2);
 		return new Timestamp(c.getTimeInMillis());
 	}
 	

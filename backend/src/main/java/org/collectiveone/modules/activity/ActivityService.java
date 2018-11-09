@@ -3,6 +3,8 @@ package org.collectiveone.modules.activity;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -113,33 +115,55 @@ public class ActivityService {
 	@Transactional
 	public void sendNotificationEmailsSendNow() throws IOException {
 		
-		/* 1 minutes ago */
-		Timestamp nowMinus = new Timestamp(System.currentTimeMillis() - (1L*1000L*60L)); 
+		System.out.println("cheking notifications to send now");
 		
 		List<Notification> notifications = 
-				notificationRepository.findByEmailNowStateOlderThan(NotificationState.PENDING, nowMinus);
+				notificationRepository.findByEmailNowStateOrderedByUser(NotificationState.PENDING);
 		
-		emailService.sendNotificationsSendNow(notifications);
+		if (notifications.size() > 0) {
+			emailService.sendNotificationsGrouped(notifications, "Very recent activity on your initiatives");
+		}
 	}
 	
 	@Transactional
 	public void sendNotificationEmailsOnceADay() throws IOException {
 		
+		System.out.println("cheking notifications to send daily");
+		
 		List<Notification> notifications = 
-				notificationRepository.findBySubscriber_EmailSummaryPeriodConfigAndEmailSummaryState(
+				notificationRepository.findByPeriodConfigAndEmailSummaryStateOrderedByUser(
 						SubscriberEmailSummaryPeriodConfig.DAILY, NotificationState.PENDING);
 		
-		emailService.sendNotificationsGrouped(notifications);
+		if (notifications.size() > 0) {
+			emailService.sendNotificationsGrouped(notifications, "Summary of activity in the last day");
+		}
 	}
 	
 	@Transactional
 	public void sendNotificationEmailsOnceAWeek() throws IOException {
 		
+		System.out.println("cheking notifications to send weekly");
+		
 		List<Notification> notifications = 
-				notificationRepository.findBySubscriber_EmailSummaryPeriodConfigAndEmailSummaryState(
+				notificationRepository.findByPeriodConfigAndEmailSummaryStateOrderedByUser(
 						SubscriberEmailSummaryPeriodConfig.WEEKLY, NotificationState.PENDING);
 		
-		emailService.sendNotificationsGrouped(notifications);
+		if (notifications.size() > 0) {
+			emailService.sendNotificationsGrouped(notifications, "Summary of activity in the last week");
+		}
+	}
+	
+	@Transactional
+	public void deleteOldNotifications() throws IOException {
+		
+		System.out.println("deleting old notifications");
+		
+		Date now = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(now);
+		c.add(Calendar.WEEK_OF_MONTH, -2);
+		
+		notificationRepository.deleteOlderThan(new Timestamp(c.getTimeInMillis()));
 	}
 	
 	private NotificationsPack userNotifications(

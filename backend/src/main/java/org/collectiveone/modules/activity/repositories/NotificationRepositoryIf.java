@@ -9,6 +9,7 @@ import org.collectiveone.modules.activity.Notification;
 import org.collectiveone.modules.activity.enums.NotificationState;
 import org.collectiveone.modules.activity.enums.SubscriberEmailSummaryPeriodConfig;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -113,8 +114,23 @@ public interface NotificationRepositoryIf extends CrudRepository<Notification, U
 	
 	List<Notification> findBySubscriber_User_C1IdAndInAppState(UUID userId, NotificationState notificationState);
 	
-	@Query("SELECT notif FROM Notification notif JOIN notif.activity act WHERE notif.emailNowState = ?1 AND act.timestamp < ?2")
-	List<Notification> findByEmailNowStateOlderThan(NotificationState notificationState, Timestamp timestamp);
+	@Query("SELECT notif FROM Notification notif "
+			+ "JOIN notif.subscriber subs "
+			+ "WHERE notif.emailNowState = ?1 "
+			+ "ORDER BY subs.user.c1Id")
+	List<Notification> findByEmailNowStateOrderedByUser(NotificationState notificationState);
 	
-	List<Notification> findBySubscriber_EmailSummaryPeriodConfigAndEmailSummaryState(SubscriberEmailSummaryPeriodConfig config, NotificationState notificationEmailState);
+	@Query("SELECT notif FROM Notification notif "
+			+ "JOIN notif.subscriber subs "
+			+ "WHERE subs.emailSummaryPeriodConfig = ?1 "
+			+ "AND notif.emailSummaryState < ?2 "
+			+ "ORDER BY subs.user.c1Id")
+	List<Notification> findByPeriodConfigAndEmailSummaryStateOrderedByUser(
+			SubscriberEmailSummaryPeriodConfig config, 
+			NotificationState notificationEmailState);
+	
+	@Modifying
+	@Query("DELETE FROM Notification notif "
+			+ "WHERE notif.creationDate < ?1")
+	void deleteOlderThan(Timestamp date);
 }
