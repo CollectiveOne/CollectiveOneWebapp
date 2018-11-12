@@ -26,6 +26,7 @@ const actions = {
           resolve(true)
         },
         error => {
+          console.log('error conecting SockJS to: ' + process.env.WEBSOCKET_SERVER_URL)
           console.log(error)
           context.commit('setConnected', false)
           reject(false)
