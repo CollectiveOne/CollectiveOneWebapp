@@ -27,6 +27,14 @@ export default {
       if (this.windowIsSmall !== windowIsSmallNow) {
         this.$store.commit('setWindowIsSmall', windowIsSmallNow)
       }
+    },
+    setWindowFocus () {
+      console.log('window focused')
+      this.$store.commit('setWindowIsFocus', true)
+    },
+    setWindowBlur () {
+      console.log('window blur')
+      this.$store.commit('setWindowIsFocus', false)
     }
   },
 
@@ -40,6 +48,8 @@ export default {
     }
 
     window.addEventListener('resize', this.checkWindowSize)
+    window.onfocus = this.setWindowFocus
+    window.onblur = this.setWindowBlur
   }
 }
 </script>

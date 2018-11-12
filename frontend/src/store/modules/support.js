@@ -7,6 +7,7 @@ const state = {
   expandNav: false,
   expandModelNav: true,
   windowIsSmall: false,
+  windowIsFocus: true,
   isTouchScreen: false,
   draggingElement: null,
   triggerSectionDraggingState: false,
@@ -47,6 +48,9 @@ const mutations = {
   },
   setWindowIsSmall: (state, payload) => {
     state.windowIsSmall = payload
+  },
+  setWindowIsFocus: (state, payload) => {
+    state.windowIsFocus = payload
   },
   setDraggingElement: (state, payload) => {
     state.draggingElement = payload

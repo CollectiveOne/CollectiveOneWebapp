@@ -908,7 +908,6 @@ public class ActivityService {
 		activity.setModelCardWrapperAddition(cardWrapperAddition);
 		activity = activityRepository.save(activity);
 		
-		broadcastMessage(activity);
 		addInitiativeActivityNotifications(activity);
 	}
 	
@@ -1668,6 +1667,12 @@ public class ActivityService {
 				template.convertAndSend("/channel/activity/model/section/" + sectionId, "UPDATE");
 			}
 			
+			/* initiative is not saved in the activity of model sections anymore */
+			List<UUID> initiativesIds = initiativeRepository.findByTopLevelSectionIds(allIncumbentSectionsIds);
+			
+			for (UUID id : initiativesIds) {
+	            template.convertAndSend("/channel/activity/model/initiative/" + id, "UPDATE");
+	        }
 		}
 		
 		/* all events are broadcasted to their initaitive channel and their parents */

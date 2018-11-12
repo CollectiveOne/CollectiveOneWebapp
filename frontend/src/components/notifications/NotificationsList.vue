@@ -111,7 +111,8 @@ export default {
       showingAll: true,
       showingMoreNotifications: false,
       allShown: false,
-      toggleShow: false
+      toggleShow: false,
+      subscription: null
     }
   },
 
@@ -257,6 +258,7 @@ export default {
           }
 
           /* push all notifications */
+          console.log('pushing notifications ' + this.notifications.length + ' from ' + this.url)
           this.$store.dispatch('addPushNotifications', this.notifications)
         }).catch(function (error) {
           console.log(error)
@@ -370,7 +372,6 @@ export default {
       this.subscription = this.$store.dispatch('subscribe', {
         url: url,
         onMessage: (tick) => {
-          // console.log('tick under ' + this.contextType + ' ' + this.contextElementId)
           // console.log(tick)
           var message = tick.body
           if (message === 'UPDATE') {
