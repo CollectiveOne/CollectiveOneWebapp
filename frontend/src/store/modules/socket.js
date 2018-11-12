@@ -22,6 +22,7 @@ const actions = {
       stompClient.connect(
         {},
         frame => {
+          console.log('succesfully connected SockJS to: ' + process.env.WEBSOCKET_SERVER_URL)
           context.commit('setConnected', true)
           resolve(true)
         },
