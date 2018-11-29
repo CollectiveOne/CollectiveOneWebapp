@@ -1,5 +1,7 @@
 {
-  "name": "v3test",
+  "name": "c1-frontend",
+  "description": "CollectiveOne Official Client",
+  "author": "Jose Ospina <pepo.ospina@gmail.com>",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,6 +13,7 @@
     "auth0-lock": "^11.3.1",
     "axios": "^0.16.1",
     "popper.js": "^1.14.3",
+    "register-service-worker": "^1.5.2",
     "sockjs-client": "^1.1.4",
     "vue": "^2.5.17",
     "vue-analytics": "^5.10.2",
