@@ -288,6 +288,23 @@
 </template>
 
 <script>
+import { swRegistration } from '@/registerServiceWorker.js'
+
+function urlB64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
 export default {
   props: {
     section: {
@@ -435,6 +452,30 @@ export default {
 
   mounted () {
     this.updateSubscriber()
+
+    console.log('checking subscription')
+    console.log('VUE_APP_SEVER_PUBLIC_KEY:' + process.env.VUE_APP_SEVER_PUBLIC_KEY)
+
+    swRegistration.pushManager.getSubscription().then((subscription) => {
+      if (subscription == null) {
+        let applicationServerKey = urlB64ToUint8Array(process.env.VUE_APP_SEVER_PUBLIC_KEY)
+
+        console.log('subscribing')
+        swRegistration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: applicationServerKey
+          }).then(
+          function(pushSubscription) {
+            console.log(pushSubscription.subscriptionId)
+            console.log(pushSubscription.endpoint)
+          }, function(error) {
+            console.log('pushManager.subscribe Error:' + error)
+          })
+      }
+    }).catch((error) => {
+      console.log('error getting subscription')
+      console.log(error)
+    })
   }
 }
 </script>

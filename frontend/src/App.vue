@@ -6,7 +6,6 @@
 
 <script>
 import Auth0Lock from 'auth0-lock'
-import NewInitiativeModal from '@/components/modal/NewInitiativeModal.vue'
 
 export default {
   name: 'app',
@@ -31,10 +30,6 @@ export default {
     }
   },
 
-  components: {
-    AppNewInitiativeModal: NewInitiativeModal
-  },
-
   created () {
     var options = {
       auth: {
@@ -54,7 +49,7 @@ export default {
       }
     }
 
-    var lock = new Auth0Lock(process.env.AUTH0_CLIENT_ID, process.env.AUTH0_DOMAIN, options)
+    var lock = new Auth0Lock(process.env.VUE_APP_AUTH0_CLIENT_ID, process.env.VUE_APP_AUTH0_DOMAIN, options)
 
     lock.on('authenticated', (authResult) => {
       localStorage.setItem('access_token', authResult.accessToken)

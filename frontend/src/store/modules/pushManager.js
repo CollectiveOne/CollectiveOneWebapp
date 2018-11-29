@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import router from '@/router'
+import { swRegistration } from '@/registerServiceWorker.js'
 
 const state = {
   pushedIds: []
@@ -42,16 +43,16 @@ const actions = {
           }
 
           if (ok) {
-            /* ask permisson */
-            Notification.requestPermission()
-
             let user = notification.activity.triggerUser
 
             if (!context.rootState.support.windowIsFocus) {
-              var notify = new Notification('CollectiveOne', {
+              console.log('Creating Notification')
+
+              var notify = swRegistration.showNotification('CollectiveOne', {
                 body: user.nickname + ' ' + notification.message,
                 tag: notification.activity.id,
-                icon: user.pictureUrl
+                icon: user.pictureUrl,
+                vibrate: [150]
               })
 
               notify.onshow = function () {
@@ -62,6 +63,8 @@ const actions = {
                 window.open(notification.url, '_blank')
                 notify.close()
               }
+            } else {
+              console.log('notifications not pushed because window is focused')
             }
 
             Vue.axios.put('/1/notifications/pushed/' + notification.id, {}).then((response) => {

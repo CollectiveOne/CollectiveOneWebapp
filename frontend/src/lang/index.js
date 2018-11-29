@@ -584,7 +584,7 @@ const translations = {
       'DEMOS': 'DEMOS',
       'PARTICIPATE': 'PARTICIPA',
       'WELCOME': 'BIENVENIDO A',
-      'BRIEF': 'CollectiveOne es un método (y una plataforma) para desarrollar proyectos abiertos, descentralizados y colaborativos: projectos a los cuales cualquier persona puede, potencialmente, contribuir, y que pertenecen y son collectivamente gestionados por sus contribuidores. <br><br>Ah! y de paso es una herramienta de colaboración súper potente para equipos "normales".',
+      'BRIEF': 'CollectiveOne es un método (y una plataforma) para desarrollar proyectos abiertos, descentralizados y colaborativos: projectos a los cuales cualquier persona puede, potencialmente, contribuir, y que pertenecen y son colectivamente gestionados por sus contribuidores. <br><br>Ah! y de paso es una herramienta de colaboración súper potente para equipos "normales".',
       'EXPLORE': 'EXPLORAR',
       'OPEN_COLLAB': 'COLABORACIÓN ABIERTA',
       'OPEN_COLLAB_CONTENT': 'Similar a los proyectos de código abierto, las barreras de entrada a un proyecto son reducidas, permitiendo a cualquiera contribuir a un proyecto en condiciones similares a contribuidores previos.',

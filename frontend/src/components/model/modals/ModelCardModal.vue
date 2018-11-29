@@ -244,7 +244,6 @@
 
 <script>
 import { dateString } from '@/lib/common.js'
-import Datepicker from 'vuejs-datepicker'
 import ModelModalButtons from '@/components/model/modals/ModelModalButtons.vue'
 import ModelCardSelector from '@/components/model/cards/ModelCardSelector.vue'
 import ModelSectionSelector from '@/components/model/ModelSectionSelector.vue'
@@ -254,7 +253,6 @@ export default {
 
   components: {
     'app-model-modal-buttons': ModelModalButtons,
-    'datepicker': Datepicker,
     'app-model-card-selector': ModelCardSelector,
     'app-message-thread': MessageThread,
     'app-model-section-selector': ModelSectionSelector
