@@ -1,6 +1,6 @@
 {
-  "name": "v3test",
-  "short_name": "v3test",
+  "name": "CollectiveOne",
+  "short_name": "C1",
   "icons": [
     {
       "src": "img/icons/icon-72x72.png",
@@ -43,7 +43,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "./index.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#eff3f6"

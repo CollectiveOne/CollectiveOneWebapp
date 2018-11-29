@@ -14,6 +14,7 @@ import org.collectiveone.modules.assignations.Receiver;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.tokens.InitiativeTransfer;
 import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
@@ -75,28 +76,40 @@ public class NotificationDtoBuilder {
 			onSection = act.getModelCardWrapperAddition().getSection();
 		}
 		
+		String cardText = "";
+		if (modelCardWrapper != null) {
+			String text = modelCardWrapper.getCard().getText();
+			cardText = isHtml ? text : (text.length() > 60 ? text.substring(0, 60) + "..." : text);
+			cardText = modelCardWrapper.getCard().getTitle() + (isHtml ? "" : " - ") + checkHtml("</p><p>") + cardText; 
+		}
+		
+		String title = "";
 		String message = "";
 		String url = "";
 		
 		switch (notification.getActivity().getType()) {
 			
 		case INITIATIVE_CREATED:
-			message = checkHtml("<p>") + "created the " + getInitiativeAnchor(initiative) + checkHtml(" initiative and added you as a member.</p>");
+			title = "created the " + getInitiativeAnchor(initiative);
+			message = "and added you as a member";
 			url = getInitiativeUrl(initiative.getId());
 			break;
 
 		case INITIATIVE_EDITED:
-			message = checkHtml("<p>") + "edited the " + checkHtml("name or purpose of the ") + getInitiativeAnchor(initiative) + " initiative"  + checkHtml(".</p>");
+			title = "edited the " + getInitiativeAnchor(initiative) + " initiative";
+			message = "";
 			url = getInitiativeUrl(initiative.getId());
 			break;
 		
 		case INITIATIVE_DELETED:
-			message =  checkHtml("<p>") + "deleted the initiative " + getInitiativeAnchor(initiative) + checkHtml(".</p>");
+			title = "deleted the initiative " + getInitiativeAnchor(initiative);
+			message =  "";
 			url = getInitiativeUrl(initiative.getId());
 			break;
 				
 		case SUBINITIATIVE_CREATED:
-			message = checkHtml("<p>") + "created the " + getInitiativeAnchor(subInitiative) + " sub-initiative." + checkHtml("</p>");
+			title = "created the " + getInitiativeAnchor(subInitiative) + " sub-initiative";
+			message = "under the " + getInitiativeAnchor(initiative) + " initiative";
 			if (act.getInitiativeTransfers() != null) {
 				message += checkHtml("<p>") + " And transferred " + getTransferString(act.getInitiativeTransfers()) + " to it." + checkHtml("</p>");
 			}	
@@ -104,12 +117,20 @@ public class NotificationDtoBuilder {
 			break;
 
 		case TOKENS_MINTED:
-			message = checkHtml("<p>") + "minted " + mint.getValue() + " " + mint.getToken().getName() + " with motive: " + mint.getMotive() + ".</p>";
+			title = "minted " + mint.getValue() + " " + mint.getToken().getName();
+			message = "with motive: " + mint.getMotive();
+			url = getInitiativeUrl(initiative.getId());
+			break;
+			
+		case TOKENS_BURNT:
+			title = "burnt " + mint.getValue() + " " + mint.getToken().getName();
+			message = "with motive: " + mint.getMotive();
 			url = getInitiativeUrl(initiative.getId());
 			break;
 			
 		case TOKEN_CREATED:
-			message = checkHtml("<p>") + "created a new token type called " + tokenType.getName() + " in " + getInitiativeAnchor(initiative) + ", and minted " + mint.getValue() + " units.</p>";
+			title = "created a new token type called " + tokenType.getName(); 
+			message = "In " + getInitiativeAnchor(initiative) + ", and minted " + mint.getValue() + " units";
 			url = getInitiativeUrl(initiative.getId());
 			break;
 			
@@ -146,9 +167,9 @@ public class NotificationDtoBuilder {
 				}
 			}
 			
-			message = checkHtml("<p>") + "created a new peer-reviewed " + getAssignationAnchor(assignation) + " of " + 
-					assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +
-					" to be distributed among " + receiversList + ", with motive: " + checkHtml("</p><p>") + assignation.getMotive() + checkHtml("</p>"); 
+			title = "created a new peer-reviewed " + getAssignationAnchor(assignation);
+			message = "of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +
+					" to be distributed among " + receiversList + ", with motive: " + checkHtml("</p><p>") + assignation.getMotive(); 
 			
 			if (evaluator != null) {
 				Date closeDate = assignation.getConfig().getMaxClosureDate();
@@ -162,34 +183,34 @@ public class NotificationDtoBuilder {
 			break;
 		
 		case PR_ASSIGNATION_DONE: 
-			message = checkHtml("<p>") + "Peer-reviewed " + getAssignationAnchor(assignation) + " with motive: " + checkHtml("</p>") + 
+			title = "Peer-reviewed " + getAssignationAnchor(assignation) + " done";
+			message = "Peer-reviewed " + getAssignationAnchor(assignation) + " with motive: " + checkHtml("</p>") + 
 					checkHtml("<p>") + assignation.getMotive() + checkHtml("</p>") + 
 					checkHtml("<p>") + "has been closed." + checkHtml("</p>") + 
 					checkHtml("<p>") + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() + 
-					" have been transferred to its receivers." + checkHtml("</p>");
+					" have been transferred to its receivers.";
 			
 			url = getAssignationUrl(assignation.getInitiative().getId(), assignation.getId());
 			break;
 			
 		case D_ASSIGNATION_CREATED:
-			message = checkHtml("<p>") + "made a direct " + getAssignationAnchor(assignation) + " of " + 
-				assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +
-				" to " + assignation.getReceivers().get(0).getUser().getProfile().getNickname() + ", with motive: " + 
-				checkHtml("</p><p>") + assignation.getMotive() + checkHtml("</p>");
+			title = "made a transfer of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName();
+			message = "with motive: " + 
+				checkHtml("</p><p>") + assignation.getMotive();
 			url = getAssignationUrl(assignation.getInitiative().getId(), assignation.getId());
 			break;
 			
-		case INITIATIVE_TRANSFER:			
-			message = checkHtml("<p>") + "made a transfer of " + 
-					transfer.getValue() + " " + transfer.getTokenType().getName() +
-					" to " + getInitiativeAnchor(transfer.getTo()) + ", with motive: " + 
-					checkHtml("</p><p>") + transfer.getMotive() + checkHtml("</p>");
+		case INITIATIVE_TRANSFER:	
+			title = "made a transfer of " + transfer.getValue() + " " + transfer.getTokenType().getName() +
+					" to " + getInitiativeAnchor(transfer.getTo());
+			message = "with motive: " + 
+					checkHtml("</p><p>") + transfer.getMotive();
 			url = getInitiativeUrl(initiative.getId());
 			break;
 
-		case ASSIGNATION_REVERT_ORDERED: 	
-			message = checkHtml("<p>") + "wants to revert the " + getAssignationAnchor(assignation) + 
-				" of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() + 
+		case ASSIGNATION_REVERT_ORDERED:
+			title = "wants to revert the " + getAssignationAnchor(assignation);
+			message =  "of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() + 
 				" with motive: " + assignation.getMotive() + ".</p> ";
 			for (Receiver receiver : assignation.getReceivers()) {
 				if (receiver.getUser().getC1Id().equals(notification.getSubscriber().getUser().getC1Id()) && isHtml) {
@@ -202,105 +223,118 @@ public class NotificationDtoBuilder {
 
 			
 		case ASSIGNATION_REVERT_CANCELLED: 
-			message = checkHtml("<p>") + "ordered a revert of the " + getAssignationAnchor(assignation) + 
-				" of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +  ", but the revert has been cancelled.</p> ";
+			title = "order to revert" + getAssignationAnchor(assignation) + "cancelled";
+			message = "The order to revert the " + getAssignationAnchor(assignation) + 
+				" of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() +  
+				" has been cancelled";
 			url = getAssignationUrl(assignation.getInitiative().getId(), assignation.getId());
 			break;
 		
 		case ASSIGNATION_REVERTED: 
-			message = checkHtml("<p>") + "ordered a revert of the " + getAssignationAnchor(assignation) + 
-				" of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() + " with motive: " + assignation.getMotive() + ", and the revert has been accepted.</p> ";
+			title = "order to revert" + getAssignationAnchor(assignation) + "accepted";
+			message = "The order to revert the " + getAssignationAnchor(assignation) + 
+				" of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() + 
+				" with motive: " + assignation.getMotive() + ", and the revert has been accepted ";
 			url = getAssignationUrl(assignation.getInitiative().getId(), assignation.getId());
 			break;
 		
-		case ASSIGNATION_DELETED: 
-			message = checkHtml("<p>") + "deleted the ongoing " + getAssignationAnchor(assignation) + 
-				" of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() + 
-				" with motive: " + assignation.getMotive() + ". No tokens have or will be transferred." + checkHtml("</p>");
+		case ASSIGNATION_DELETED:
+			title = "deleted the " + getAssignationAnchor(assignation);
+			message = "of " + assignation.getBills().get(0).getValue() + " " + assignation.getBills().get(0).getTokenType().getName() + 
+				" with motive: " + assignation.getMotive() + ". No tokens have or will be transferred.";
 			url = getAssignationUrl(assignation.getInitiative().getId(), assignation.getId());
 			break;
 			
 		case MODEL_SECTION_CREATED:
-			message = checkHtml("<p>") + "created the subsection " + getModelSectionAnchor(modelSection) + 
-				" under section " + getModelSectionAnchor(onSection) + checkHtml("</p>");
+			title = "created the subsection " + getModelSectionAnchor(modelSection);
+			message = "under section " + getModelSectionAnchor(onSection);
 			url = getModelSectionUrl(modelSection.getInitiative().getId(), modelSection.getId());		
 			break;
 			
 		case MODEL_SECTION_EDITED:
-			message = checkHtml("<p>") + "edited the model section " + getModelSectionAnchor(modelSection) + checkHtml("</p>");
+			title = "edited the section " + getModelSectionAnchor(modelSection);
+			message = cardText;
 			url = getModelSectionUrl(modelSection.getInitiative().getId(), modelSection.getId());
 			break;
 			
 		case MODEL_SECTION_DELETED:
-			message = checkHtml("<p>") + "deleted the model section " + getModelSectionAnchor(modelSection) + checkHtml("</p>");
+			title = "deleted the model section " + getModelSectionAnchor(modelSection);
+			message = "";
 			url = getModelSectionUrl(modelSection.getInitiative().getId(), modelSection.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_CREATED:
-			message = checkHtml("<p>") + "created the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
-					" on section " + getModelSectionAnchor(onSection) + checkHtml("</p>");
+			title = "created the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + " on section " + getModelSectionAnchor(onSection);
+			message = cardText;
 			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_MADE_SHARED:
-			message = checkHtml("<p>") + "made the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
-			" on section " + getModelSectionAnchor(onSection) + checkHtml(" visible</p>");
-			
+			title = "made the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + " shared" +  
+				" on section " + getModelSectionAnchor(onSection);
+			message = "";
 			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_MADE_COMMON:
-			message = checkHtml("<p>") + "made the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
-			" on section " + getModelSectionAnchor(onSection) + checkHtml(" common</p>");
-			
+			title = "made the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + " common" + 
+				" on section " + getModelSectionAnchor(onSection);
+			message = "";
 			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_EDITED:
-			message = checkHtml("<p>") + "edited the card " + getModelCardWrapperAnchor(modelCardWrapper) + checkHtml("</p>");
+			title = "edited the card " + getModelCardWrapperAnchor(modelCardWrapper);
+			message = cardText;
 			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_DELETED:
-			message = checkHtml("<p>") + "deleted the card " + getModelCardWrapperAnchor(modelCardWrapper) + checkHtml("</p>");
+			title = "deleted the card " + getModelCardWrapperAnchor(modelCardWrapper);
+			message = cardText;
 			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_SECTION_ADDED: 
-			message = checkHtml("<p>") + "added the section " + getModelSectionAnchor(modelSection) + 
-				" as sub-section of " + getModelSectionAnchor(onSection) + checkHtml("</p>");
+			title = "added the section " + getModelSectionAnchor(modelSection) +
+				" as sub-section of " + getModelSectionAnchor(onSection);
+			message = "";
 			url = getModelSectionUrl(modelSection.getInitiative().getId(), modelSection.getId());		
 			break;
 			
 		case MODEL_SECTION_MOVED:
-			message = checkHtml("<p>") + "moved the section " + getModelSectionAnchor(modelSection) + 
-				" from " + getModelSectionAnchor(fromSection) + 
-				" to " + getModelSectionAnchor(onSection) + checkHtml("</p>");
+			title = "moved the section " + getModelSectionAnchor(modelSection);
+			message = "from " + getModelSectionAnchor(fromSection) + 
+				" to " + getModelSectionAnchor(onSection);
 			url = getModelSectionUrl(modelSection.getInitiative().getId(), modelSection.getId());		
 			break;
 			
 		case MODEL_SECTION_REMOVED:
-			message = checkHtml("<p>") + "removed the section " + getModelSectionAnchor(modelSection) + 
-				" from " + getModelSectionAnchor(fromSection) + checkHtml("</p>");
+			title = "removed the section " + getModelSectionAnchor(modelSection) + 
+					" from " + getModelSectionAnchor(fromSection);
+			message = "";
 			url = getModelSectionUrl(modelSection.getInitiative().getId(), modelSection.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_ADDED:
-			message = checkHtml("<p>") + "added the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
-					" under section " + getModelSectionAnchor(onSection) + checkHtml("</p>");
+			title = "added the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
+					" under section " + getModelSectionAnchor(onSection);
+			message = "";
 			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_MOVED:
-			message = checkHtml("<p>") + "moved the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
+			title = "moved the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection) + 
 					" from " + getModelSectionAnchor(fromSection) + 
-					" to " + getModelSectionAnchor(onSection) + checkHtml("</p>");
+					" to " + getModelSectionAnchor(onSection);
+			message = "";
 			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), onSection.getId(), modelCardWrapper.getId());
 			break;
 			
 		case MODEL_CARDWRAPPER_REMOVED:
-			message = checkHtml("<p>") + "removed the card " + getModelCardWrapperAnchor(modelCardWrapper, fromSection) + 
-					" from section " + getModelSectionAnchor(fromSection) + checkHtml("</p>");
+			title = "removed the card " + getModelCardWrapperAnchor(modelCardWrapper, fromSection) + 
+					" from section " + getModelSectionAnchor(fromSection);
+			message = "";
 			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
 			break;
 			
@@ -325,26 +359,52 @@ public class NotificationDtoBuilder {
 				
 				from = getInitiativeAnchor(initiative) + " initiative";
 				url = getInitiativeUrl(initiative.getId());
-				
 			}
+			
 			String text = notification.getActivity().getMessage().getText();
 			
 			if (act.getMentionedUsers().contains(notification.getSubscriber().getUser())) {
 				/* mentioned to user */
-				message = "mentioned you in a comment in ";
+				title = "mentioned you in a comment in " + from;
 			} else {
-				message = "commented in ";
+				title = "commented in " + from;
 			}
 			
 			String textLimited = "";
 			if (text != null) {
 				textLimited = isHtml ? text : (text.length() > 60 ? text.substring(0, 60) + "..." : text);	
 			}
-			message += from + ": " + textLimited;
+			message = textLimited;
 			
 			break;
 			
+		case CONSENT_STATUS_OPENED:
+			title = "started a consent process on card " + getModelCardWrapperAnchor(modelCardWrapper, onSection);
+			message = "";
+			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
+			break;
+			
+		case CONSENT_STATUS_CLOSED:
+			title = "closed a consent process on card " + getModelCardWrapperAnchor(modelCardWrapper, onSection);
+			message = "";
+			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
+			break;
+			
+		case CONSENT_POSITION_STATED:
+		case CONSENT_POSITION_CHANGED:
+			title = "decided to " + getPositionText(act.getPositionColor()) + " the card " + getModelCardWrapperAnchor(modelCardWrapper, onSection);
+			message = "";
+			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
+			break;
+			
+		case CONSENT_STATUS_REOPENED:
+			title = "reopened a consent process on card " + getModelCardWrapperAnchor(modelCardWrapper, onSection);
+			message = "";
+			url = getModelCardWrapperUrl(modelCardWrapper.getInitiative().getId(), modelCardWrapper.getId());
+			break;
+			
 		default:
+			title = "CollectiveOne";
 			message = "You have received a notification";
 			url = "http://www.collectiveone.org";
 			break;
@@ -362,6 +422,7 @@ public class NotificationDtoBuilder {
 		dto.setEmailNowState(notification.getEmailNowState().toString());
 		dto.setEmailSummaryState(notification.getEmailSummaryState().toString());
 		
+		dto.setTitle(title);
 		dto.setMessage(message);
 		dto.setUrl(url);
 		dto.setIsHtml(isHtml);
@@ -432,6 +493,21 @@ public class NotificationDtoBuilder {
 			String text = cardWrapper.getCard().getText();
 			return text.length() > 32 ? text.substring(0, 31) + "..." : text; 
 		}
+	}
+	
+	private String getPositionText(ElementConsentPositionColor color) {
+		switch (color) {
+		case RED:
+			return "block";
+		
+		case YELLOW:
+			return "be neutral on";
+			
+		case GREEN:
+			return "support";
+		}
+		
+		return "";
 	}
 	
 	

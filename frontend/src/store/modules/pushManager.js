@@ -30,7 +30,7 @@ const actions = {
           let ok = true
           /* dont show messages push notifications if current section
              is the section in which the message is written. */
-          if (notification.activity.type === 'MESSAGE_POSTED') {
+          if (notification.activity.type === 'MESSAGE_POSTED' && context.rootState.support.windowIsFocus) {
             if (notification.activity.modelSection) {
               if (context.rootState.model.currentSectionGenealogy) {
                 if (notification.activity.modelSection.id === context.rootState.model.currentSectionGenealogy.section.id) {
@@ -43,15 +43,17 @@ const actions = {
           }
 
           if (ok) {
-            let user = notification.activity.triggerUser
-
             if (!context.rootState.support.windowIsFocus) {
               console.log('Creating Notification')
 
-              var notify = swRegistration.showNotification('CollectiveOne', {
-                body: user.nickname + ' ' + notification.message,
+              let user = notification.activity.triggerUser
+
+              var notify = swRegistration.showNotification(user.nickname + ' ' + notification.title, {
+                body: notification.message,
                 tag: notification.activity.id,
                 icon: user.pictureUrl,
+                url: notification.url,
+                badge: 'https://image.ibb.co/mgQn1a/imago_red.png',
                 vibrate: [150]
               })
 

@@ -148,6 +148,7 @@ public class EmailService {
 					+			getTimeSinceStr(notification.getActivity().getTimestamp())
 					+		"</td>"
 					+		"<td class=\"activity-text\">"
+					+			"<b>" + notificationDto.getTitle() + "</b><br>" 
 					+			notificationDto.getMessage()
 					+		"</td>"
 					+	"</tr>";

@@ -156,10 +156,10 @@
 							<overwrite>true</overwrite>
 							<resources>
 								<resource>
-									<directory>${project.parent.basedir}/frontend/target/dist</directory>
+									<directory>${project.parent.basedir}/frontend/dist</directory>
 									<includes>
-										<include>static/</include>
-										<include>index.html</include>
+										<include>*/</include>
+										<include>*</include>
 									</includes>
 								</resource>
 							</resources>
