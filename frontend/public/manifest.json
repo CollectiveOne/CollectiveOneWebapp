@@ -3,6 +3,16 @@
   "short_name": "C1",
   "icons": [
     {
+      "src": "img/icons/icon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "img/icons/icon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
       "src": "img/icons/icon-72x72.png",
       "sizes": "72x72",
       "type": "image/png"
