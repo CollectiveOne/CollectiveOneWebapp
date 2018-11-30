@@ -92,7 +92,7 @@
 </template>
 
 <script>
-  /* eslint-disable */
+/* eslint-disable */
 
   import Popper from 'popper.js';
 

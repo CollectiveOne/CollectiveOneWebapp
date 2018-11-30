@@ -449,11 +449,11 @@ export default {
         }
 
         this.axios.post('/1/initiative/' + assignationToSend.initiativeId + '/assignation', assignationToSend)
-        .then((response) => {
-          this.$store.commit('triggerUpdateAssets')
-          this.$emit('created')
-          this.closeThis()
-        })
+          .then((response) => {
+            this.$store.commit('triggerUpdateAssets')
+            this.$emit('created')
+            this.closeThis()
+          })
       }
     }
   }

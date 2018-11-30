@@ -552,7 +552,7 @@ export default {
             this.axios.post('/1/model/section/' + this.inSectionId + '/cardWrapper', cardDto, { params: {
               onCardWrapperId: this.atCardWrapper ? this.atCardWrapper.id : null,
               isBefore: this.newCardLocation === 'before'
-            }}).then((response) => {
+            } }).then((response) => {
               this.sendingData = false
               if (response.data.result === 'success') {
                 this.closeThis()
@@ -573,14 +573,14 @@ export default {
                   scope: this.existingCardNewScope
                 }
               }).then((response) => {
-                this.sendingData = false
-                if (response.data.result === 'success') {
-                  this.closeThis()
-                  this.$emit('updateCards')
-                }
-              }).catch((error) => {
-                console.log(error)
-              })
+              this.sendingData = false
+              if (response.data.result === 'success') {
+                this.closeThis()
+                this.$emit('updateCards')
+              }
+            }).catch((error) => {
+              console.log(error)
+            })
           }
         } else {
           /* editing */

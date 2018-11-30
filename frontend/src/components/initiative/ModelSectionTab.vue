@@ -59,10 +59,10 @@ export default {
         let currentSection = this.$store.state.model.currentSection
         if (currentSection !== null) {
           console.log('redirecting to ModelSectionContent with sectionId: ' + currentSection.id)
-          this.$router.replace({name: 'ModelSectionContent', params: {sectionId: currentSection.id}})
+          this.$router.replace({ name: 'ModelSectionContent', params: { sectionId: currentSection.id } })
         } else {
           console.log('redirecting to ModelSectionContent with sectionId: ' + this.initiative.topModelSection.id)
-          this.$router.replace({name: 'ModelSectionContent', params: {sectionId: this.initiative.topModelSection.id}})
+          this.$router.replace({ name: 'ModelSectionContent', params: { sectionId: this.initiative.topModelSection.id } })
         }
       }
     }

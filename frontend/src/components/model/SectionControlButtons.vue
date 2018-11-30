@@ -206,7 +206,7 @@ export default {
             text: this.$t('model.ADD_SECTION_AFTER'),
             value: 'addSectionAfter',
             faIcon: 'fa-plus' })
-         }
+        }
       }
 
       menuItems.push({
@@ -222,38 +222,38 @@ export default {
       }
 
       if (this.isLoggedAnEditor && this.inSection !== null) {
-       menuItems.push({
-         text: this.$t('general.DELETE'),
-         value: 'delete',
-         faIcon: 'fa-times' })
+        menuItems.push({
+          text: this.$t('general.DELETE'),
+          value: 'delete',
+          faIcon: 'fa-times' })
       }
 
       if (this.isLoggedAnEditor) {
-       menuItems.push({
-         text: this.$t('model.RESET_SUBSECTIONS_ORDER'),
-         value: 'resetSubsectionsOrder',
-         faIcon: 'fa-exclamation-triangle' })
+        menuItems.push({
+          text: this.$t('model.RESET_SUBSECTIONS_ORDER'),
+          value: 'resetSubsectionsOrder',
+          faIcon: 'fa-exclamation-triangle' })
       }
 
       if (this.isLoggedAnEditor) {
-       menuItems.push({
-         text: this.$t('model.RESET_CARDS_ORDER'),
-         value: 'resetCardsOrder',
-         faIcon: 'fa-exclamation-triangle' })
+        menuItems.push({
+          text: this.$t('model.RESET_CARDS_ORDER'),
+          value: 'resetCardsOrder',
+          faIcon: 'fa-exclamation-triangle' })
       }
 
       return menuItems
-   },
-   popperOptions () {
-     return {
-       placement: 'bottom',
-       modifiers: {
-         preventOverflow: {
-           enabled: false
-         }
-       }
-     }
-   }
+    },
+    popperOptions () {
+      return {
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: false
+          }
+        }
+      }
+    }
   },
 
   methods: {
@@ -287,14 +287,14 @@ export default {
     detachConfirmed () {
       this.axios.put('/1/model/section/' + this.inSection.id + '/detachSubsection/' + this.section.id,
         {}).then((response) => {
-          console.log(response)
-          if (response.data.result === 'success') {
-            this.detachIntent = false
-            this.$emit('section-removed')
-          } else {
-            this.showOutputMessage(response.data.message)
-          }
-        }).catch((error) => {
+        console.log(response)
+        if (response.data.result === 'success') {
+          this.detachIntent = false
+          this.$emit('section-removed')
+        } else {
+          this.showOutputMessage(response.data.message)
+        }
+      }).catch((error) => {
         console.log(error)
       })
     },
@@ -302,14 +302,14 @@ export default {
       this.expanded = false
       this.axios.put('/1/model/section/' + this.inSection.id + '/removeSubsection/' + this.section.id,
         {}).then((response) => {
-          if (response.data.result === 'success') {
-            this.removeIntent = false
-            this.toggleMenu = !this.toggleMenu
-            this.$emit('section-detached', response.data.data)
-          } else {
-            this.showOutputMessage(response.data.message)
-          }
-        }).catch((error) => {
+        if (response.data.result === 'success') {
+          this.removeIntent = false
+          this.toggleMenu = !this.toggleMenu
+          this.$emit('section-detached', response.data.data)
+        } else {
+          this.showOutputMessage(response.data.message)
+        }
+      }).catch((error) => {
         console.log(error)
       })
     },

@@ -133,7 +133,7 @@ export default {
     },
     nameColFontSize () {
       var fontsize = this.level < 5 ? 16 - this.level : 11
-      return {'font-size': fontsize + 'px'}
+      return { 'font-size': fontsize + 'px' }
     },
     hasSubinitiatives () {
       return this.initiative.subInitiatives.length > 0
@@ -207,6 +207,5 @@ export default {
   position: relative;
   top: 8px
 }
-
 
 </style>

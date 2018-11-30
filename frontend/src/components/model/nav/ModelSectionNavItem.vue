@@ -199,16 +199,16 @@ export default {
       if (this.section) {
         switch (this.section.scope) {
           case 'PRIVATE':
-          thisClasses['border-red'] = true
-          break
+            thisClasses['border-red'] = true
+            break
 
           case 'SHARED':
-          thisClasses['border-yellow'] = true
-          break
+            thisClasses['border-yellow'] = true
+            break
 
           default:
-          thisClasses['border-blue'] = true
-          break
+            thisClasses['border-blue'] = true
+            break
         }
       }
 
@@ -293,7 +293,7 @@ export default {
   methods: {
     addCard () {
       if (!this.isSelected) {
-        this.$router.push({name: 'ModelSectionCards', params: {sectionId: this.section.id}, query: {createCard: this.section.id}})
+        this.$router.push({ name: 'ModelSectionCards', params: { sectionId: this.section.id }, query: { createCard: this.section.id } })
       }
     },
     updateSubsectionsDataFiltered () {
@@ -350,7 +350,7 @@ export default {
     sectionSelected () {
       this.$emit('section-selected', this.section)
       if (this.section) {
-        this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.section.id}})
+        this.$router.push({ name: 'ModelSectionContent', params: { sectionId: this.section.id } })
       }
     },
     levelDown () {
@@ -374,17 +374,17 @@ export default {
     },
     updateParentInTree () {
       if (this.inSection) {
-        this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inSection.id})
+        this.$store.dispatch('updateSectionDataInTree', { sectionId: this.inSection.id })
       }
     },
     sectionRemoved () {
       if (this.isSelected) {
-        this.$router.push({name: 'ModelSectionContent', params: {sectionId: this.inSection.id}})
+        this.$router.push({ name: 'ModelSectionContent', params: { sectionId: this.inSection.id } })
       }
       this.updateParentInTree()
     },
     sectionDetached (newSectionId) {
-      this.$router.push({name: 'ModelSectionContent', params: {sectionId: newSectionId}})
+      this.$router.push({ name: 'ModelSectionContent', params: { sectionId: newSectionId } })
       this.updateParentInTree()
     },
     subscribeSocket () {
@@ -520,22 +520,22 @@ export default {
               isBefore: false
             }
           }).then((response) => {
-            this.$store.dispatch('updateSectionDataInTree', {sectionId: dragData.fromSectionId})
-            this.$store.dispatch('updateSectionDataInTree', {sectionId: onSectionId})
+            this.$store.dispatch('updateSectionDataInTree', { sectionId: dragData.fromSectionId })
+            this.$store.dispatch('updateSectionDataInTree', { sectionId: onSectionId })
           })
         } else {
           /* copy section without removing it */
           this.axios.put('/1/model/section/' + onSectionId +
             '/subsection/' + dragData.sectionId, {}, {
-              params: {
-                scope: dragData.scope,
-                onSubsectionId: beforeSubsectionId,
-                isBefore: false
-              }
-            }).then((response) => {
-              this.$store.dispatch('updateSectionDataInTree', {sectionId: onSectionId})
-              this.$store.dispatch('updateSectionDataInTree', {sectionId: dragData.fromSectionId})
-            })
+            params: {
+              scope: dragData.scope,
+              onSubsectionId: beforeSubsectionId,
+              isBefore: false
+            }
+          }).then((response) => {
+            this.$store.dispatch('updateSectionDataInTree', { sectionId: onSectionId })
+            this.$store.dispatch('updateSectionDataInTree', { sectionId: dragData.fromSectionId })
+          })
         }
       }
 

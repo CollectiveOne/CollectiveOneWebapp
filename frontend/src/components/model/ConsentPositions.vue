@@ -105,13 +105,13 @@ export default {
     getBorderClass (position) {
       switch (position) {
         case 'GREEN':
-          return {'avatar-border-green': true}
+          return { 'avatar-border-green': true }
 
         case 'YELLOW':
-          return {'avatar-border-yellow': true}
+          return { 'avatar-border-yellow': true }
 
         case 'RED':
-          return {'avatar-border-red': true}
+          return { 'avatar-border-red': true }
       }
     },
     updatePositions () {

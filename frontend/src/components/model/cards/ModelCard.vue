@@ -115,7 +115,7 @@ export default {
     },
     cardComponent () {
       if (this.cardWrapper.type === 'newCard' || this.cardWrapper.type === 'edit' || this.type === 'new') {
-            return 'app-model-card-editor'
+        return 'app-model-card-editor'
       }
 
       switch (this.type) {
@@ -214,7 +214,6 @@ export default {
   padding: 3px 12px;
 }
 
-
 .card-content-container,
 .card-content-container h1,
 .card-content-container h2,
@@ -245,7 +244,6 @@ export default {
 }
 
 </style>
-
 
 <style scoped>
 

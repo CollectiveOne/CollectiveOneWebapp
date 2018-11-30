@@ -40,7 +40,6 @@
   </div>
 </template>
 
-
 <script>
 import { AutocompleteMixin } from '../../lib/mixins'
 

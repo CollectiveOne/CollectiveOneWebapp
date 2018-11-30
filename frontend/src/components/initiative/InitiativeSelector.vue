@@ -33,7 +33,6 @@
   </div>
 </template>
 
-
 <script>
 
 var debounce = function (callback, delay) {

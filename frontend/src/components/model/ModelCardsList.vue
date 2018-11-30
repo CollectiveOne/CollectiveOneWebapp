@@ -50,7 +50,7 @@ export default {
   methods: {
     update () {
       if (this.currentSectionId) {
-        this.axios.get('/1/model/section/' + this.currentSectionId, {params: {level: this.level}}).then((response) => {
+        this.axios.get('/1/model/section/' + this.currentSectionId, { params: { level: this.level } }).then((response) => {
           if (response.data.result === 'success') {
             this.section = response.data.data
           }

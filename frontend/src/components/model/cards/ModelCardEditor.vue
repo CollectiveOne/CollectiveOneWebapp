@@ -272,7 +272,7 @@ export default {
   methods: {
     expandCard () {
       if (!this.inCardSelector) {
-        this.$router.push({name: this.cardRouteName, params: { cardId: this.cardWrapperIdForImage }})
+        this.$router.push({ name: this.cardRouteName, params: { cardId: this.cardWrapperIdForImage } })
       }
     },
     removeImage () {
@@ -363,7 +363,7 @@ export default {
             this.axios.post('/1/model/section/' + this.inSection.id + '/cardWrapper', cardDto, { params: {
               onCardWrapperId: this.atCardWrapper ? this.atCardWrapper.id : null,
               isBefore: this.newCardLocation
-            }}).then((response) => {
+            } }).then((response) => {
               this.sendingData = false
               if (response.data.result === 'success') {
                 this.$emit('updateCards')

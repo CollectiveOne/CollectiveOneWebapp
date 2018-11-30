@@ -8,7 +8,6 @@ const pathsToTop = function (genealogy, currentPath, allPaths) {
     // save this path to the allPaths array
     allPaths.push(JSON.parse(JSON.stringify(currentPath)))
     currentPath = []
-    return
   } else {
     for (var pIx in genealogy.parents) {
       var newPath = JSON.parse(JSON.stringify(currentPath))

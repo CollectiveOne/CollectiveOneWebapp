@@ -46,7 +46,6 @@
             </div>
           </div>
 
-
           <div :class="{'slider-container': animatingTab}">
             <transition name="slideRightLeft"
               mode="out-in"
@@ -338,10 +337,10 @@ export default {
           parentSectionId: this.inSection ? this.inSection.id : ''
         }
       }).then((response) => {
-          this.loading = false
-          this.section = response.data.data
-          this.startEditing()
-        })
+        this.loading = false
+        this.section = response.data.data
+        this.startEditing()
+      })
     },
     updateInElement () {
       if (!this.inInitiative) {
@@ -412,15 +411,15 @@ export default {
                 isBefore: this.isBefore
               }
             }).then((response) => {
-                this.sendingData = false
-                if (response.data.result === 'success') {
-                  this.closeThis()
-                  this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inSection.id})
-                  this.$store.dispatch('refreshCurrentSection')
-                }
-              }).catch((error) => {
-                console.log(error)
-              })
+              this.sendingData = false
+              if (response.data.result === 'success') {
+                this.closeThis()
+                this.$store.dispatch('updateSectionDataInTree', { sectionId: this.inSection.id })
+                this.$store.dispatch('refreshCurrentSection')
+              }
+            }).catch((error) => {
+              console.log(error)
+            })
           } else {
             /* add existing section */
             this.sendingData = true
@@ -432,15 +431,15 @@ export default {
                 detachFlag: this.detachFlag
               }
             }).then((response) => {
-                this.sendingData = false
-                if (response.data.result === 'success') {
-                  this.closeThis()
-                  this.$store.dispatch('updateSectionDataInTree', {sectionId: this.inSection.id})
-                  this.$store.dispatch('refreshCurrentSection')
-                }
-              }).catch((error) => {
-                console.log(error)
-              })
+              this.sendingData = false
+              if (response.data.result === 'success') {
+                this.closeThis()
+                this.$store.dispatch('updateSectionDataInTree', { sectionId: this.inSection.id })
+                this.$store.dispatch('refreshCurrentSection')
+              }
+            }).catch((error) => {
+              console.log(error)
+            })
           }
         } else {
           /* edit existing section */
@@ -450,15 +449,15 @@ export default {
               parentSectionId: this.inSection.id
             }
           }).then((response) => {
-              this.sendingData = false
-              if (response.data.result === 'success') {
-                this.closeThis()
-                this.$store.dispatch('updateSectionDataInTree', {sectionId: sectionDto.id})
-                this.$store.dispatch('refreshCurrentSection')
-              }
-            }).catch((error) => {
-              console.log(error)
-            })
+            this.sendingData = false
+            if (response.data.result === 'success') {
+              this.closeThis()
+              this.$store.dispatch('updateSectionDataInTree', { sectionId: sectionDto.id })
+              this.$store.dispatch('refreshCurrentSection')
+            }
+          }).catch((error) => {
+            console.log(error)
+          })
         }
       }
     },

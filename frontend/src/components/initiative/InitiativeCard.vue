@@ -17,7 +17,6 @@
       </div>
     </div>
 
-
     <div class="w3-row w3-margin-top">
       <app-initiative-tag
         class="tags-containers"

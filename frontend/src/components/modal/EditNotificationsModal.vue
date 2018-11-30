@@ -290,19 +290,19 @@
 <script>
 import { swRegistration } from '@/registerServiceWorker.js'
 
-function urlB64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+function urlB64ToUint8Array (base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4)
   const base64 = (base64String + padding)
     .replace(/\-/g, '+')
-    .replace(/_/g, '/');
+    .replace(/_/g, '/')
 
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
+  const rawData = window.atob(base64)
+  const outputArray = new Uint8Array(rawData.length)
 
   for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
+    outputArray[i] = rawData.charCodeAt(i)
   }
-  return outputArray;
+  return outputArray
 }
 
 export default {
@@ -462,13 +462,13 @@ export default {
 
         console.log('subscribing')
         swRegistration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: applicationServerKey
-          }).then(
-          function(pushSubscription) {
+          userVisibleOnly: true,
+          applicationServerKey: applicationServerKey
+        }).then(
+          function (pushSubscription) {
             console.log(pushSubscription.subscriptionId)
             console.log(pushSubscription.endpoint)
-          }, function(error) {
+          }, function (error) {
             console.log('pushManager.subscribe Error:' + error)
           })
       }

@@ -258,7 +258,7 @@ export default {
 
   methods: {
     edit (value) {
-      if (value.type === 'edit') {  //  For cancel/save
+      if (value.type === 'edit') { //  For cancel/save
         for (var ix in this.targetCards) {
           if (JSON.stringify(value) === JSON.stringify(this.targetCards[ix])) {
             this.targetCards.splice(ix, 1)

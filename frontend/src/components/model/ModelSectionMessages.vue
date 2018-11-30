@@ -54,11 +54,11 @@ export default {
 
   methods: {
     levelUp () {
-      this.$router.replace({name: this.$route.name, query: {levels: this.levels + 1}})
+      this.$router.replace({ name: this.$route.name, query: { levels: this.levels + 1 } })
     },
     levelDown () {
       if (this.levels > 1) {
-        this.$router.replace({name: this.$route.name, query: {levels: this.levels - 1}})
+        this.$router.replace({ name: this.$route.name, query: { levels: this.levels - 1 } })
       }
     }
   }

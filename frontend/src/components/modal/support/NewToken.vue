@@ -4,7 +4,7 @@
       <h4 class="">Create a new token</h4>
     </div>
     <div class="w3-row-padding new-token-inputs">
-      
+
     </div>
   </div>
 </template>

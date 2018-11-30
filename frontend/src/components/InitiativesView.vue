@@ -73,9 +73,9 @@ export default {
     this.$store.dispatch('updateMyInitiatives')
 
     window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
+      e.preventDefault()
       console.log('before install available')
-    });
+    })
   }
 }
 </script>

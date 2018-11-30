@@ -289,15 +289,15 @@ export default {
 
     allNotificationsRead () {
       this.axios.put(this.url + '/read', {}).then((response) => {
-          /* check that new notifications arrived */
-          this.toggleShow = !this.toggleShow
-          this.$store.commit('triggerUpdateNotifications')
-          console.log('updating notifications in ' + this.url + ' due to allNotificationsRead response')
-          this.updateNotifications()
-          this.hide()
-        }).catch(function (error) {
-          console.log(error)
-        })
+        /* check that new notifications arrived */
+        this.toggleShow = !this.toggleShow
+        this.$store.commit('triggerUpdateNotifications')
+        console.log('updating notifications in ' + this.url + ' due to allNotificationsRead response')
+        this.updateNotifications()
+        this.hide()
+      }).catch(function (error) {
+        console.log(error)
+      })
     },
 
     messageNotificationsRead () {

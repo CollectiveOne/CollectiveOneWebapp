@@ -275,7 +275,7 @@ export default {
             this.closeThis()
             this.$store.commit('setExpandNav', false)
             this.$store.dispatch('updateMyInitiatives')
-            this.$router.push({name: 'Initiative', params: {'initiativeId': response.data.elementId}})
+            this.$router.push({ name: 'Initiative', params: { 'initiativeId': response.data.elementId } })
           } else {
             this.showOutputMessage(response.data.message)
           }

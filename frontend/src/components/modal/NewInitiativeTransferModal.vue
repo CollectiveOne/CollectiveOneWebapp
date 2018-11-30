@@ -212,19 +212,17 @@ export default {
 
       if (ok) {
         this.axios.post('/1/initiative/' + this.initiative.id + '/transferToInitiative', this.transfer)
-        .then((response) => {
-          this.$store.commit('triggerUpdateAssets')
-          this.$emit('created')
-          this.closeThis()
-        })
+          .then((response) => {
+            this.$store.commit('triggerUpdateAssets')
+            this.$emit('created')
+            this.closeThis()
+          })
       }
     }
   }
 
 }
 </script>
-
-
 
 <style scoped>
 

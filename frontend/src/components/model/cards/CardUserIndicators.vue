@@ -148,8 +148,8 @@ export default {
             likeStatus: !this.cardWrapper.userLiked
           }
         }).then((response) => {
-          this.$emit('update')
-        })
+        this.$emit('update')
+      })
     }
   }
 

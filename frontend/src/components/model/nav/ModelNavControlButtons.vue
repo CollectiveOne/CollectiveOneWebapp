@@ -59,62 +59,62 @@
 
 <script>
 
-  export default {
-    components: {
-    },
+export default {
+  components: {
+  },
 
-    props: {
-    },
+  props: {
+  },
 
-    data () {
+  data () {
+    return {
+    }
+  },
+
+  computed: {
+    isDraggable () {
+      return this.$store.state.support.triggerSectionDraggingState
+    },
+    showPrivate () {
+      return this.$store.state.viewParameters.showPrivateSections
+    },
+    showShared () {
+      return this.$store.state.viewParameters.showSharedSections
+    },
+    showCommon () {
+      return this.$store.state.viewParameters.showCommonSections
+    },
+    popperOptions () {
       return {
-      }
-    },
-
-    computed: {
-      isDraggable () {
-        return this.$store.state.support.triggerSectionDraggingState
-      },
-      showPrivate () {
-        return this.$store.state.viewParameters.showPrivateSections
-      },
-      showShared () {
-        return this.$store.state.viewParameters.showSharedSections
-      },
-      showCommon () {
-        return this.$store.state.viewParameters.showCommonSections
-      },
-      popperOptions () {
-        return {
-          placement: 'bottom',
-          modifiers: {
-            preventOverflow: {
-              enabled: false
-            },
-            flip: {
-              enabled: false
-            }
+        placement: 'bottom',
+        modifiers: {
+          preventOverflow: {
+            enabled: false
+          },
+          flip: {
+            enabled: false
           }
         }
       }
-    },
-
-    methods: {
-      toggleDraggable () {
-        this.$store.commit('triggerSectionDraggingState')
-      },
-      showPrivateClick () {
-        this.$store.commit('toggleShowPrivateSections')
-      },
-      showSharedClick () {
-        this.$store.commit('toggleShowSharedSections')
-      },
-      showCommonClick () {
-        this.$store.commit('toggleShowCommonSections')
-      }
     }
+  },
 
+  methods: {
+    toggleDraggable () {
+      this.$store.commit('triggerSectionDraggingState')
+    },
+    showPrivateClick () {
+      this.$store.commit('toggleShowPrivateSections')
+    },
+    showSharedClick () {
+      this.$store.commit('toggleShowSharedSections')
+    },
+    showCommonClick () {
+      this.$store.commit('toggleShowCommonSections')
+    }
   }
+
+}
 </script>
 
 <style scoped>

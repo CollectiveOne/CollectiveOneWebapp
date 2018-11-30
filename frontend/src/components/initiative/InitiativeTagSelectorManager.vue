@@ -2,7 +2,6 @@
   <div class="w3-row">
     <div class="w3-col s12">
 
-
       <div class="slider-container">
         <transition name="fadeenter">
           <div v-if="!creating" class="w3-row">

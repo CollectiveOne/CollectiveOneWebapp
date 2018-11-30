@@ -68,5 +68,4 @@ export default {
   overflow-y: hidden;
 }
 
-
 </style>

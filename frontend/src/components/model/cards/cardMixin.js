@@ -101,7 +101,7 @@ export const cardMixin = {
   methods: {
     cardClicked () {
       if (!this.inCardSelector) {
-        this.$router.push({name: this.cardRouteName, params: { cardId: this.cardWrapperId }})
+        this.$router.push({ name: this.cardRouteName, params: { cardId: this.cardWrapperId } })
       }
     },
     editors () {

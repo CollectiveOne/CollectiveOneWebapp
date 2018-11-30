@@ -107,10 +107,10 @@ export default {
           ownedByThisHolder: this.amount
         }
         this.axios.post('/1/initiative/' + this.initiativeId + '/token', assetDto)
-        .then((response) => {
-          this.$store.dispatch('refreshInitiative')
-          this.closeThis()
-        })
+          .then((response) => {
+            this.$store.dispatch('refreshInitiative')
+            this.closeThis()
+          })
       }
     }
   },
@@ -140,6 +140,5 @@ export default {
 .fa-certificate {
   font-size: 100px;
 }
-
 
 </style>

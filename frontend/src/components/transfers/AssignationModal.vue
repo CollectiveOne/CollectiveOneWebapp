@@ -431,19 +431,19 @@ export default {
     sendEvaluation () {
       if (this.arePercentagesOk) {
         this.axios.post('/1/assignation/' + this.assignation.id + '/evaluate', this.assignation.thisEvaluation)
-        .then((response) => {
-          this.updateEvaluation = false
-          this.updateAssignationData()
-          this.evaluationSavedMessage = true
-        })
+          .then((response) => {
+            this.updateEvaluation = false
+            this.updateAssignationData()
+            this.evaluationSavedMessage = true
+          })
       }
     },
     orderRevert () {
       this.revertTransaction = false
       this.axios.put('/1/assignation/' + this.assignation.id + '/revert', {})
-      .then((response) => {
-        this.updateAssignationData()
-      })
+        .then((response) => {
+          this.updateAssignationData()
+        })
     },
     approveRevert (val) {
       this.axios.put('/1/assignation/' + this.assignation.id + '/approveRevert', {}, {
@@ -457,9 +457,9 @@ export default {
     deleteAssignation () {
       this.deleteTransaction = false
       this.axios.put('/1/assignation/' + this.assignation.id + '/delete', {})
-      .then((response) => {
-        this.updateAssignationData()
-      })
+        .then((response) => {
+          this.updateAssignationData()
+        })
     }
   },
 

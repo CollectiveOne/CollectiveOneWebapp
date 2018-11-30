@@ -7,7 +7,7 @@
     </div>
     <div class="w3-col s10">
       <input  type="text"
-              id="T_selectMemberTransferModal" 
+              id="T_selectMemberTransferModal"
               class="w3-input w3-hover-light-grey autocomplete-inputs"
               placeholder="select member"
               v-model="type"
@@ -36,7 +36,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 export default {

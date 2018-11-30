@@ -23,7 +23,6 @@
           <img class="" :src="card.imageFile.url + '?lastUpdated=' + card.imageFile.lastUpdated" alt="">
         </div>
 
-
         <div v-if="$store.state.user.authenticated" class=""
           v-click-outside="clickOutside">
           <transition name="fadeenter">

@@ -75,7 +75,7 @@ export default {
               user: user,
               percent: 100
             }
-          ]})
+          ] })
       } else {
         var ix = this.indexOfUser(user)
         if (ix === -1) {

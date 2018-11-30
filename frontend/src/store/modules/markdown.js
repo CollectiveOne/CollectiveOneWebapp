@@ -8,10 +8,10 @@ const mutations = {
   },
 
   clearMarkdownBackup: (state, payload) => {
-      if (state.data.has(payload)) {
-        state.data.delete(payload)
-      }
+    if (state.data.has(payload)) {
+      state.data.delete(payload)
     }
+  }
 }
 const actions = {
   doMarkdownBackup: (context, payload) => {
@@ -19,7 +19,7 @@ const actions = {
   },
 
   clearMarkdownBackupData: (context, payload) => {
-      context.commit('clearMarkdownBackup', payload)
+    context.commit('clearMarkdownBackup', payload)
   }
 }
 export default {

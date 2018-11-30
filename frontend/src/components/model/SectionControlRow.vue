@@ -297,7 +297,6 @@ export default {
   overflow-x: auto;
 }
 
-
 .control-group {
   margin-right: 20px;
   margin-bottom: 3px;

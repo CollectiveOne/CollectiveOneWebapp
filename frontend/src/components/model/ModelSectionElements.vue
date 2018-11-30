@@ -219,12 +219,12 @@ export default {
     },
     messagesContent () {
       if (this.$route.name !== 'ModelSectionMessages') {
-        this.$router.push({name: 'ModelSectionMessages'})
+        this.$router.push({ name: 'ModelSectionMessages' })
       }
     },
     cardsContent () {
       if (this.$route.name !== 'ModelSectionCards') {
-        this.$router.push({name: 'ModelSectionCards'})
+        this.$router.push({ name: 'ModelSectionCards' })
       }
     },
     sectionOrder () {
@@ -256,7 +256,7 @@ export default {
       }
       this.$store.commit('setCardsType', 'summary')
       if (this.$route.name !== 'ModelSectionCards') {
-        this.$router.push({name: 'ModelSectionCards'})
+        this.$router.push({ name: 'ModelSectionCards' })
       }
     },
     cardView () {
@@ -265,7 +265,7 @@ export default {
       }
       this.$store.commit('setCardsType', 'card')
       if (this.$route.name !== 'ModelSectionCards') {
-        this.$router.push({name: 'ModelSectionCards'})
+        this.$router.push({ name: 'ModelSectionCards' })
       }
     },
     docView () {
@@ -274,7 +274,7 @@ export default {
       }
       this.$store.commit('setCardsType', 'doc')
       if (this.$route.name !== 'ModelSectionCards') {
-        this.$router.push({name: 'ModelSectionCards'})
+        this.$router.push({ name: 'ModelSectionCards' })
       }
     },
     showPrivateClick () {
@@ -304,15 +304,15 @@ export default {
       this.loading = true
       if (this.currentSectionId) {
         this.axios.get('/1/model/section/' + this.currentSectionId + '/cardWrappers/search',
-         {
-           params: {
-             query: this.cardQuery,
-             page: this.page,
-             pageSize: this.pageSize,
-             sortBy: this.cardSortBy,
-             levels: 999
-           }
-         }).then((response) => {
+          {
+            params: {
+              query: this.cardQuery,
+              page: this.page,
+              pageSize: this.pageSize,
+              sortBy: this.cardSortBy,
+              levels: 999
+            }
+          }).then((response) => {
           this.loading = false
           if (response.data.result === 'success') {
             if (response.data.data.content.length < this.pageSize) {
@@ -328,7 +328,7 @@ export default {
     updateSection () {
       this.loading = true
       if (this.currentSectionId) {
-        this.axios.get('/1/model/section/' + this.currentSectionId, {params: {levels: this.levels}}).then((response) => {
+        this.axios.get('/1/model/section/' + this.currentSectionId, { params: { levels: this.levels } }).then((response) => {
           this.loading = false
           this.sectionLoadedOnce = true
           this.sectionLoadedOnceLevels = this.levels
@@ -371,7 +371,7 @@ export default {
       }
     },
     closeCardModal () {
-      this.$router.replace({name: 'ModelSectionCards'})
+      this.$router.replace({ name: 'ModelSectionCards' })
     },
     downloadContent () {
       let fileContent = 'data:text/plain;charset=utf-8,'

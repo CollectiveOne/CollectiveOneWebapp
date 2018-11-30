@@ -128,17 +128,17 @@ export default {
       menuItems.push({ text: 'add existing', value: 'addExisting', faIcon: 'fa-plus' })
 
       return menuItems
-   },
-   popperOptions () {
-     return {
-       placement: 'right',
-       modifiers: {
-         preventOverflow: {
-           enabled: false
-         }
-       }
-     }
-   }
+    },
+    popperOptions () {
+      return {
+        placement: 'right',
+        modifiers: {
+          preventOverflow: {
+            enabled: false
+          }
+        }
+      }
+    }
   },
 
   data () {

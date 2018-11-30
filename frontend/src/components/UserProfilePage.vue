@@ -87,9 +87,9 @@ export default {
         this.axios.put('/1/user/' + this.loggedUser.c1Id + '/lang',
           {},
           { params: { locale: this.locale } })
-        .then((response) => {
-          this.$store.dispatch('updateProfile')
-        })
+          .then((response) => {
+            this.$store.dispatch('updateProfile')
+          })
       }
     },
     updateLocale () {

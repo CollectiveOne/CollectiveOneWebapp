@@ -33,7 +33,7 @@ const isSectionShown = function (subTree, sectionId) {
       /* recursively call this method in the subsectionsData if they
       are expanded */
       if (subTree[ix].expand) {
-         shownInSubsections = shownInSubsections || isSectionShown(subTree[ix].subsectionsData, sectionId)
+        shownInSubsections = shownInSubsections || isSectionShown(subTree[ix].subsectionsData, sectionId)
       }
     }
   }
@@ -60,7 +60,7 @@ const getters = {
   getSectionCoordsFromId: (state) => (sectionId) => {
     let foundCoords = []
     /* updat foundCoords by reference */
-  getSectionCoordsFromId(state.sectionsTree[0], sectionId, [0], foundCoords)
+    getSectionCoordsFromId(state.sectionsTree[0], sectionId, [0], foundCoords)
     return foundCoords
   }
 }
@@ -148,13 +148,13 @@ const actions = {
     return new Promise((resolve, reject) => {
       console.log('appending sectionData ' + payload.sectionId)
       Vue.axios.get('/1/model/section/' + payload.sectionId,
-      {
-        params: {
-          levels: 2,
-          parentSectionId: payload.parentSectionId ? payload.parentSectionId : '',
-          onlySections: true
-        }
-      }).then((response) => {
+        {
+          params: {
+            levels: 2,
+            parentSectionId: payload.parentSectionId ? payload.parentSectionId : '',
+            onlySections: true
+          }
+        }).then((response) => {
         if (response.data.result === 'success') {
           let section = response.data.data
           // console.log(section)
@@ -234,18 +234,18 @@ const actions = {
       parentSectionId: sectionData.section.id,
       coord: newCoord
     }).then(() => {
-        /* after loading, recursive call to this same action to keep expanding the sections */
-        if (payload.expandIds.length > 0) {
-          payload.expandIds.shift()
-          context.dispatch('expandSectionAndContinue', {
-            sectionData: newSectionData,
-            expandIds: payload.expandIds,
-            coord: newCoord
-          })
-        } else {
-          context.commit('triggerUpdateExpands')
-        }
-      })
+      /* after loading, recursive call to this same action to keep expanding the sections */
+      if (payload.expandIds.length > 0) {
+        payload.expandIds.shift()
+        context.dispatch('expandSectionAndContinue', {
+          sectionData: newSectionData,
+          expandIds: payload.expandIds,
+          coord: newCoord
+        })
+      } else {
+        context.commit('triggerUpdateExpands')
+      }
+    })
   },
 
   expandSubsection: (context, coord) => {

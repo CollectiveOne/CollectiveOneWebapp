@@ -122,7 +122,7 @@ export default {
       this.$emit('input', this.text)
       this.checkHeight()
       if (this.keepBackup) {
-        this.$store.dispatch('doMarkdownBackup', {elementId: this.elementId, value: this.text})
+        this.$store.dispatch('doMarkdownBackup', { elementId: this.elementId, value: this.text })
       }
     },
     mentioningQuery () {
@@ -330,7 +330,7 @@ export default {
     // do backup
     if (this.value !== '') {
       if (this.keepBackup) {
-        this.$store.dispatch('doMarkdownBackup', {elementId: this.elementId, value: this.value})
+        this.$store.dispatch('doMarkdownBackup', { elementId: this.elementId, value: this.value })
       }
     }
   },

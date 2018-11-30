@@ -92,7 +92,6 @@
             </div>
           </div>
 
-
           <hr>
           <div class="bottom-btns-row w3-row-padding">
             <div class="w3-col m6">
@@ -204,7 +203,7 @@ export default {
         params: {
           includeSubinitiatives: true,
           initiativeIdStr: this.initiativeId
-      }}).then((response) => {
+        } }).then((response) => {
         this.assetData = response.data.data
       })
     },
@@ -247,10 +246,10 @@ export default {
             notes: this.notes
           }
           this.axios.put('/1/token/' + this.assetData.assetId + '/mint', mintDto)
-          .then((response) => {
-            this.$store.commit('triggerUpdateAssets')
-            this.closeThis()
-          })
+            .then((response) => {
+              this.$store.commit('triggerUpdateAssets')
+              this.closeThis()
+            })
         } else {
           let burnDto = {
             value: this.value,
@@ -258,10 +257,10 @@ export default {
             notes: this.notes
           }
           this.axios.put('/1/token/' + this.assetData.assetId + '/burn', burnDto)
-          .then((response) => {
-            this.$store.commit('triggerUpdateAssets')
-            this.closeThis()
-          })
+            .then((response) => {
+              this.$store.commit('triggerUpdateAssets')
+              this.closeThis()
+            })
         }
       }
     }
@@ -294,6 +293,5 @@ export default {
 .fa-certificate {
   font-size: 100px;
 }
-
 
 </style>

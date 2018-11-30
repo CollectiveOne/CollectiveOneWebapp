@@ -313,7 +313,7 @@ export default {
       this.$router.push({ name: 'UserProfilePage', params: { userId: this.$store.state.user.profile.c1Id } })
     },
     goHome () {
-      this.$router.push({name: 'InitiativesHome'})
+      this.$router.push({ name: 'InitiativesHome' })
     },
     logoutUser () {
       this.$store.dispatch('logoutUser')

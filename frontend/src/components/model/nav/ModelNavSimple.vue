@@ -31,7 +31,7 @@ export default {
   methods: {
     sectionSelected (section) {
       let sectionDiv = document.getElementById(section.id)
-      sectionDiv.scrollIntoView({behavior: 'smooth', block: 'start'})
+      sectionDiv.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
 }

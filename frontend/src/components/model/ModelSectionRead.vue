@@ -147,17 +147,17 @@ export default {
     },
     updateSection () {
       this.loading = true
-      this.axios.get('/1/model/section/' + this.sectionId, {params: {levels: 999}})
-      .then((response) => {
-        this.loading = false
-        if (response.data.result === 'success') {
-          this.section = response.data.data
-          this.checkCardSubroute()
-          this.updateInitiative()
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
+      this.axios.get('/1/model/section/' + this.sectionId, { params: { levels: 999 } })
+        .then((response) => {
+          this.loading = false
+          if (response.data.result === 'success') {
+            this.section = response.data.data
+            this.checkCardSubroute()
+            this.updateInitiative()
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
     },
     checkCardSubroute () {
       this.showCardModal = false
@@ -168,7 +168,7 @@ export default {
       }
     },
     closeCardModal () {
-      this.$router.replace({name: 'ModelSectionRead'})
+      this.$router.replace({ name: 'ModelSectionRead' })
     },
     summaryView () {
       this.$store.commit('setCardsType', 'summary')

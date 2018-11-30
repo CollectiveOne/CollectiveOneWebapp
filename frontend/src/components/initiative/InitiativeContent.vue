@@ -89,7 +89,7 @@ export default {
     },
     goHome () {
       this.showUserOptions = false
-      this.$router.push({name: 'InitiativesHome'})
+      this.$router.push({ name: 'InitiativesHome' })
     },
     logoutUser () {
       this.$store.dispatch('logoutUser')

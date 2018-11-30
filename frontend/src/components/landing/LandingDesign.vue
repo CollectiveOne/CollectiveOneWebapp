@@ -196,16 +196,16 @@ export default {
       this.$router.push({ name: 'InitiativesHome' })
     },
     goToPrinciples () {
-      document.getElementById('principles').scrollIntoView({behavior: 'smooth', block: 'start'})
+      document.getElementById('principles').scrollIntoView({ behavior: 'smooth', block: 'start' })
     },
     goToFeatures () {
-      document.getElementById('features').scrollIntoView({behavior: 'smooth', block: 'start'})
+      document.getElementById('features').scrollIntoView({ behavior: 'smooth', block: 'start' })
     },
     goToDemos () {
-      document.getElementById('demos').scrollIntoView({behavior: 'smooth', block: 'start'})
+      document.getElementById('demos').scrollIntoView({ behavior: 'smooth', block: 'start' })
     },
     goToParticipate () {
-      document.getElementById('participate').scrollIntoView({behavior: 'smooth', block: 'start'})
+      document.getElementById('participate').scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   },
 

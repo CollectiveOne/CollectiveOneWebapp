@@ -92,7 +92,7 @@ export default {
   computed: {
     sectionTitleStyle () {
       var fontsize = this.level < 4 ? 22 - 4 * this.level : 12
-      return {'font-size': fontsize + 'px'}
+      return { 'font-size': fontsize + 'px' }
     },
     sectionIsInOtherPlaces () {
       var ix

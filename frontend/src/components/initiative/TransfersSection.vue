@@ -199,12 +199,12 @@ export default {
     updateAssets () {
       this.loading = true
       this.axios.get('/1/initiative/' + this.initiative.id + '/assets', {
-          params: {
-            addDeleted: this.showDeleted
-          }
-        }).then((response) => {
-          this.loading = false
-          this.assets = response.data.data
+        params: {
+          addDeleted: this.showDeleted
+        }
+      }).then((response) => {
+        this.loading = false
+        this.assets = response.data.data
       })
     },
     triggerUpdateCall () {

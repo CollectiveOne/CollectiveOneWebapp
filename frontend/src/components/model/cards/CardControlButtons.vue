@@ -156,12 +156,12 @@ export default {
               value: 'edit',
               faIcon: 'fa-pencil' })
 
-              if (this.showDetach) {
-                menuItems.push({
-                  text: this.$t('model.DETACH_LC'),
-                  value: 'detach',
-                  faIcon: 'fa-chain-broken' })
-              }
+            if (this.showDetach) {
+              menuItems.push({
+                text: this.$t('model.DETACH_LC'),
+                value: 'detach',
+                faIcon: 'fa-chain-broken' })
+            }
           }
           break
       }
@@ -245,30 +245,30 @@ export default {
     detachConfirmed () {
       this.axios.put('/1/model/section/' + this.inSection.id + '/detachCardWrapper/' + this.cardWrapper.id,
         {}).then((response) => {
-          console.log(response)
-          if (response.data.result === 'success') {
-            this.detachIntent = false
-            this.togglePopperShow = !this.togglePopperShow
-            this.$emit('updateCards')
-          } else {
-            this.showOutputMessage(response.data.message)
-          }
-        }).catch((error) => {
+        console.log(response)
+        if (response.data.result === 'success') {
+          this.detachIntent = false
+          this.togglePopperShow = !this.togglePopperShow
+          this.$emit('updateCards')
+        } else {
+          this.showOutputMessage(response.data.message)
+        }
+      }).catch((error) => {
         console.log(error)
       })
     },
     removeConfirmed () {
       this.axios.put('/1/model/section/' + this.inSection.id + '/removeCard/' + this.cardWrapper.id,
         {}).then((response) => {
-          console.log(response)
-          if (response.data.result === 'success') {
-            this.removeIntent = false
-            this.togglePopperShow = !this.togglePopperShow
-            this.$emit('updateCards')
-          } else {
-            this.showOutputMessage(response.data.message)
-          }
-        }).catch((error) => {
+        console.log(response)
+        if (response.data.result === 'success') {
+          this.removeIntent = false
+          this.togglePopperShow = !this.togglePopperShow
+          this.$emit('updateCards')
+        } else {
+          this.showOutputMessage(response.data.message)
+        }
+      }).catch((error) => {
         console.log(error)
       })
     }

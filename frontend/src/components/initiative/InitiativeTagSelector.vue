@@ -16,7 +16,6 @@
             @focus="focus"
             autocomplete="off" />
 
-
     <div class="w3-row" :class="(className ? className + '-list ' : '') + 'autocomplete transition autocomplete-list'" v-show="showList">
       <ul class="w3-border">
         <li v-if="enableCreate" @click="$emit('create-new')" class="w3-button w3-center" style="width: 100%">

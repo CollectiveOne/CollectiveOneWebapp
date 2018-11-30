@@ -58,7 +58,6 @@ const actions = {
                 badge: 'https://image.ibb.co/mgQn1a/imago_red.png',
                 vibrate: [150]
               })
-
             } else {
               console.log('notifications not pushed because window is focused')
             }
