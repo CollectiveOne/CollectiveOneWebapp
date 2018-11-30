@@ -11,6 +11,8 @@ export default (to, from, next) => {
      *  is the initaitive section
     */
 
+    store.commit('setCurrentSection', null)
+
     next({
       name: 'InitiativeModel',
       params: {

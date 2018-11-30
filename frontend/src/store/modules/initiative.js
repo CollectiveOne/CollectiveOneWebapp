@@ -98,7 +98,10 @@ const actions = {
         context.commit('setInitiative', initiative)
         context.commit('setAccessDenied', false)
         context.commit('setInitiativeLoaded', true)
-        context.dispatch('resetSectionsTree', { baseSectionId: initiative.topModelSection.id, currentSectionId: router.app.$route.params.sectionId ? router.app.$route.params.sectionId : '' })
+        context.dispatch('resetSectionsTree', {
+          baseSectionId: initiative.topModelSection.id,
+          currentSectionId: router.app.$route.params.sectionId ? router.app.$route.params.sectionId : ''
+        })
       } else {
         if (response.data.message === 'access denied') {
           context.commit('setAccessDenied', true)

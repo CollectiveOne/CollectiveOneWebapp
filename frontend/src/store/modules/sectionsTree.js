@@ -60,7 +60,7 @@ const getters = {
   getSectionCoordsFromId: (state) => (sectionId) => {
     let foundCoords = []
     /* updat foundCoords by reference */
-    getSectionCoordsFromId(state.sectionsTree[0], sectionId, [0], foundCoords)
+  getSectionCoordsFromId(state.sectionsTree[0], sectionId, [0], foundCoords)
     return foundCoords
   }
 }
