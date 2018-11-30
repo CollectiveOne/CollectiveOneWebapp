@@ -3,7 +3,8 @@
     <div v-if="mentionedUsers.length > 0 && showSendAndMentions" class="w3-row mentions-row">
       <span>Mentions :</span>
       <span class="w3-tag mentionedUsers light-grey"
-        v-for="(user, i) in mentionedUsers">@{{ user.nickname }}
+        v-for="(user, i) in mentionedUsers" :key="user.c1Id">
+        @{{ user.nickname }}
         <i class="fa fa-close mentionedUsersClose cursor-pointer" @click="removeUserSelected(i)"></i>
       </span>
     </div>
@@ -11,7 +12,8 @@
       <div v-if="mentioning && showSendAndMentions" class="dropup">
         <div class="dropup-content">
           <div v-for="user in userSuggestions"
-            @click="userSelected(user)">
+            @click="userSelected(user)"
+             :key="user.c1Id">
             <app-user-avatar :user="user" :small="true"></app-user-avatar>
           </div>
         </div>

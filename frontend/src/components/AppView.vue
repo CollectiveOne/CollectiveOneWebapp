@@ -7,11 +7,8 @@
 </template>
 
 <script>
-import Header from './Header.vue'
-
 export default {
   components: {
-    AppHeader: Header
   },
 
   computed: {
