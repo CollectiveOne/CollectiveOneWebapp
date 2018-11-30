@@ -1,5 +1,19 @@
 module.exports = {
   pwa: {
+    name: 'CollectiveOne',
+    themeColor: '#eff3f6',
+    msTileColor: '#000000',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',
+
+    iconPaths: {
+      favicon32: 'img/icons/icon-32x32.png',
+      favicon16: 'img/icons/icon-16x16.png',
+      appleTouchIcon: 'img/icons/icon-152x152.png',
+      maskIcon: 'img/icons/icon-32x32.png',
+      msTileImage: 'img/icons/icon-144x144.png'
+    },
+
     // configure the workbox plugin
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
