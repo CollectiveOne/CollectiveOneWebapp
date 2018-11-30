@@ -52,19 +52,13 @@ const actions = {
                 body: notification.message,
                 tag: notification.activity.id,
                 icon: user.pictureUrl,
-                url: notification.url,
+                data: {
+                  url: notification.url
+                },
                 badge: 'https://image.ibb.co/mgQn1a/imago_red.png',
                 vibrate: [150]
               })
 
-              notify.onshow = function () {
-                setTimeout(notify.close.bind(notify), 5000)
-              }
-              notify.onclick = function (event) {
-                event.preventDefault()
-                window.open(notification.url, '_blank')
-                notify.close()
-              }
             } else {
               console.log('notifications not pushed because window is focused')
             }
