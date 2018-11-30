@@ -58,14 +58,14 @@
         </header>
 
         <div class="assets-content-div">
-          <div v-if="assets.length === 0 && !this.loading" class="w3-center">
+          <div v-if="assets.length === 0 && !loading" class="w3-center">
             {{ $t('tokens.NO_ASSETS_HELD') }}<br>
             <button class="w3-button app-button w3-margin-top" name="button"
               @click="showNewTokenModal = true">
               {{ $t('general.CREATE_NEW') }}
             </button>
           </div>
-          <div v-if="!this.loading" class="w3-row" v-for="(asset, ix) in assets" :key="asset.assetId" >
+          <div v-if="!loading" class="w3-row" v-for="(asset, ix) in assets" :key="asset.assetId" >
             <hr v-if="ix > 0">
             <app-asset-distribution-chart
               :assetId="asset.assetId" :initiativeId="initiative.id"

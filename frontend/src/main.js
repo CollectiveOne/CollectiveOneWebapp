@@ -74,6 +74,20 @@ Vue.component('app-model-section-tag', ModelSectionTag)
 Vue.component('popper', Popper)
 Vue.component('app-help-popper', HelpPopper)
 
+Vue.directive('click-outside', {
+  bind: function (el, binding, vnode) {
+    Vue.event = function (event) {
+      if (!(el === event.target || el.contains(event.target))) {
+        vnode.context[binding.expression](event)
+      }
+    }
+    document.body.addEventListener('click', Vue.event)
+  },
+  unbind: function (el) {
+    document.body.removeEventListener('click', Vue.event)
+  }
+})
+
 new Vue({
   router,
   store,

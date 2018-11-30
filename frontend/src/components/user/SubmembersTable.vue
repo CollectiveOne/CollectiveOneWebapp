@@ -51,8 +51,11 @@ export default {
     submembersSorted () {
       var subMembersTemp = JSON.parse(JSON.stringify(this.submembers))
       return subMembersTemp.sort((a, b) => {
-        if (b.receivedAssets[0] !== undefined && a.receivedAssets[0].ownedByThisHolder) {
-          return b.receivedAssets[0].ownedByThisHolder - a.receivedAssets[0].ownedByThisHolder
+        if (b.receivedAssets[0] !== undefined && a.receivedAssets[0] !== undefined) {
+          if (a.receivedAssets[0].ownedByThisHolder) {
+            return b.receivedAssets[0].ownedByThisHolder - a.receivedAssets[0].ownedByThisHolder
+          }
+          return 1
         } else {
           return 0
         }
