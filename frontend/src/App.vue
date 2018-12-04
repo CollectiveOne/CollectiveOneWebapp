@@ -76,21 +76,6 @@ export default {
     /* check if touch device */
     window.addEventListener('touchstart', this.setIsTouchScreen)
 
-    let lastVisitedInitiatveId = localStorage.getItem('lastVisitedInitiatveId')
-    let lastVisitedSectionId = localStorage.getItem('lastVisitedSectionId')
-
-    console.log(lastVisitedInitiatveId)
-
-    if ((lastVisitedInitiatveId != null) && (lastVisitedInitiatveId != null)) {
-      console.log('redirecting to last visited section')
-      this.$router.replace({
-        name: 'ModelSectionContent',
-        params: {
-          initiativeId: lastVisitedInitiatveId,
-          sectionId: lastVisitedSectionId
-        }
-      })
-    }
   }
 }
 </script>

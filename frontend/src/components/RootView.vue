@@ -11,7 +11,24 @@ export default {
       var path = this.$store.state.user.auth0state
       console.log(path)
       if (!path.startsWith('/app')) {
-        this.$router.replace({ name: 'InitiativesHome' })
+
+        let lastVisitedInitiatveId = localStorage.getItem('lastVisitedInitiatveId')
+        let lastVisitedSectionId = localStorage.getItem('lastVisitedSectionId')
+
+        console.log(window.location.href)
+
+        if ((lastVisitedInitiatveId != null) && (lastVisitedInitiatveId != null)) {
+          console.log('redirecting to last visited section')
+          this.$router.replace({
+            name: 'ModelSectionContent',
+            params: {
+              initiativeId: lastVisitedInitiatveId,
+              sectionId: lastVisitedSectionId
+            }
+          })
+        } else {
+          this.$router.replace({ name: 'InitiativesHome' })
+        }
       } else {
         this.$router.replace(path)
       }
