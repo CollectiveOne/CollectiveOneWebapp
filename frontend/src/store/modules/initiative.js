@@ -65,6 +65,9 @@ const getters = {
 const mutations = {
   setInitiative: (state, payload) => {
     state.initiative = payload
+    if (payload != null) {
+      localStorage.setItem('lastVisitedInitiatveId', state.initiative.id)
+    }
   },
   setInitiativeLoaded: (state, payload) => {
     state.initiativeLoaded = payload

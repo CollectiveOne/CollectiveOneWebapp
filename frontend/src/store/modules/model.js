@@ -43,6 +43,9 @@ const getters = {
 const mutations = {
   setCurrentSection: (state, payload) => {
     state.currentSection = payload
+    if (payload != null) {
+      localStorage.setItem('lastVisitedSectionId', state.currentSection.id)
+    }
   },
   setCurrentSectionGenealogy: (state, payload) => {
     state.currentSectionGenealogy = payload

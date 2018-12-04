@@ -58,22 +58,24 @@
         </header>
 
         <div class="assets-content-div">
-          <div v-if="assets.length === 0 && !loading" class="w3-center">
+          <div v-if="assets.length === 0 && !loading && isLoggedAnAdmin" class="w3-center">
             {{ $t('tokens.NO_ASSETS_HELD') }}<br>
             <button class="w3-button app-button w3-margin-top" name="button"
               @click="showNewTokenModal = true">
               {{ $t('general.CREATE_NEW') }}
             </button>
           </div>
-          <div v-if="!loading" class="w3-row" v-for="(asset, ix) in assets" :key="asset.assetId" >
-            <hr v-if="ix > 0">
-            <app-asset-distribution-chart
-              :assetId="asset.assetId" :initiativeId="initiative.id"
-              :canMint="initiative.ownAssetsIds.includes(asset.assetId)" :canEdit="isLoggedAnAdmin"
-              @new-assignation="newAssignation($event)"
-              @new-transfer="newTransfer($event)"
-              @please-update="updateAssets()">
-            </app-asset-distribution-chart>
+          <div v-if="!loading" class="">
+            <div class="w3-row" v-for="(asset, ix) in assets" :key="asset.assetId" >
+              <hr v-if="ix > 0">
+              <app-asset-distribution-chart
+                :assetId="asset.assetId" :initiativeId="initiative.id"
+                :canMint="initiative.ownAssetsIds.includes(asset.assetId)" :canEdit="isLoggedAnAdmin"
+                @new-assignation="newAssignation($event)"
+                @new-transfer="newTransfer($event)"
+                @please-update="updateAssets()">
+              </app-asset-distribution-chart>
+            </div>
           </div>
           <div v-else class="w3-row w3-center loader-gif-container">
             <img class="loader-gif" src="../../assets/loading.gif" alt="">
