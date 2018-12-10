@@ -7,11 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.files.FileStored;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -39,9 +37,6 @@ public class AppUserProfile {
 	
 	@Column(name = "use_uploaded_picture")
 	private Boolean useUploadedPicture;
-	
-	@ManyToOne
-	private FileStored uploadedPicture;
 	
 	@Column(name = "username", unique = true, length = 16)
 	private String username;
@@ -103,14 +98,6 @@ public class AppUserProfile {
 
 	public void setUseUploadedPicture(Boolean useUploadedPicture) {
 		this.useUploadedPicture = useUploadedPicture;
-	}
-
-	public FileStored getUploadedPicture() {
-		return uploadedPicture;
-	}
-
-	public void setUploadedPicture(FileStored uploadedPicture) {
-		this.uploadedPicture = uploadedPicture;
 	}
 
 	public String getUsername() {

@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -34,25 +35,42 @@ public class TestContextController extends AbstractTest {
 	@Autowired
     private MockMvc mockMvc;
 	
-	private String authorizationToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvbUB4LmNvbSIsIm5hbWUiOiJ0b21AeC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9zLmdyYXZhdGFyLmNvbS9hdmF0YXIvMDgzYTMxYTgwZGNmZGVjNzJkMTBhMDgyYzJiOTUyMDM_cz00ODAmcj1wZyZkPWh0dHBzJTNBJTJGJTJGY2RuLmF1dGgwLmNvbSUyRmF2YXRhcnMlMkZ0by5wbmciLCJuaWNrbmFtZSI6InRvbSIsImFwcF9tZXRhZGF0YSI6eyJzY29wZSI6InJvbGVfdXNlciJ9LCJzY29wZSI6InJvbGVfdXNlciIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY2xpZW50SUQiOiJrdURYMVpWb3JBbHk1UFlkeVY3MjF6Um9UZjBLMG9ybSIsInVwZGF0ZWRfYXQiOiIyMDE4LTA5LTIxVDEzOjM2OjM5LjYxMFoiLCJ1c2VyX2lkIjoiYXV0aDB8NTllZGFjYWI3NDE2OGE3MDM0MTA5OTE4IiwiaWRlbnRpdGllcyI6W3sidXNlcl9pZCI6IjU5ZWRhY2FiNzQxNjhhNzAzNDEwOTkxOCIsInByb3ZpZGVyIjoiYXV0aDAiLCJjb25uZWN0aW9uIjoidGVzdCIsImlzU29jaWFsIjpmYWxzZX1dLCJjcmVhdGVkX2F0IjoiMjAxNy0xMC0yM1QwODo0NzozOS4wMTdaIiwiaXNzIjoiaHR0cHM6Ly9jb2xsZWN0aXZlb25lLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1OWVkYWNhYjc0MTY4YTcwMzQxMDk5MTgiLCJhdWQiOiJrdURYMVpWb3JBbHk1UFlkeVY3MjF6Um9UZjBLMG9ybSIsImlhdCI6MTUzNzUzNzAwMCwiZXhwIjoxNTQwMTI5MDAwfQ.qFU32s_botYT21m3wx4XtXr_GqZ_Y1wBR93s9VIPfV4";
+	@Value("${AUTH0_ISSUER}")
+	private String auth0Domain;
+	
+	@Value("${AUTH0_AUDIENCE}")
+	private String clientId;
+	
+	@Value("${AUTH0_SECRET}")
+	private String clientSecret;
+	
+	@Value("${TEST_USER_EMAIL}")
+	private String testEmail;
+	
+	@Value("${TEST_USER_PWD}")
+	private String testPwd;
+	
+	private String authorizationToken;
     
 	@Before
     public void setUp() throws Exception {
 		
-		AuthAPI auth = new AuthAPI("{YOUR_DOMAIN}", "{YOUR_CLIENT_ID}", "{YOUR_CLIENT_SECRET}");
+		AuthAPI auth = new AuthAPI(auth0Domain, clientId, clientSecret);
 		
-		AuthRequest request = auth.requestToken("https://api.me.auth0.com/users")
+		AuthRequest request = auth.login(testEmail, testPwd)
 		    .setScope("openid contacts");
 		try {
 		    TokenHolder holder = request.execute();
+		    authorizationToken = holder.getIdToken();
 		} catch (APIException exception) {
-		    // api error
+			System.out.println(exception);
 		} catch (Auth0Exception exception) {
-		    // request error
+			System.out.println(exception);
 		}
 		
 		MvcResult result = this.mockMvc
-	    	.perform(get("/1/user/myProfile"))
+	    	.perform(get("/1/user/myProfile")
+	        .header("Authorization", "Bearer " + authorizationToken))	    	
 	    	.andReturn();
 		
 		String content = result.getResponse().getContentAsString();

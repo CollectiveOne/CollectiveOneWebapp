@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-    	 JwtWebSecurityConfigurer.forHS256(audience, issuer, secret.getBytes())
+    	 JwtWebSecurityConfigurer.forRS256(audience, issuer)
          .configure(http)
          .authorizeRequests()
          .antMatchers("/1/*").fullyAuthenticated();

@@ -75,8 +75,6 @@ public class AppUser {
 		if (getProfile().getUseUploadedPicture() != null) {
 			if (!getProfile().getUseUploadedPicture()) {
 				dto.setPictureUrl(getProfile().getPictureUrl());
-			} else {
-				dto.setPictureUrl(getProfile().getUploadedPicture().getUrl()+"?updated="+getProfile().getUploadedPicture().getLastUpdated().toString());
 			}
 		} else {
 			dto.setPictureUrl(getProfile().getPictureUrl());
