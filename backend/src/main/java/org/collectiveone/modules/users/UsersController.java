@@ -26,7 +26,7 @@ public class UsersController extends BaseController {
     public GetResult<AppUserDto> myProfile() {
 		
 		String auth0Id = SecurityContextHolder.getContext().getAuthentication().getName();
-		if (auth0Id.equals("anonimousUser")) {
+		if (auth0Id.equals("anonymousUser")) {
 			return new GetResult<AppUserDto>("error", "anonymous user", null);
 		}
 		

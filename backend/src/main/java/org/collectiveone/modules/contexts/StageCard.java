@@ -11,8 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.contexts.cards.CardContent;
-import org.collectiveone.modules.contexts.cards.CardWrapper;
+import org.collectiveone.modules.contexts.cards.Card;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -34,16 +33,12 @@ public class StageCard {
 	private StageAction action;
 	
 	@ManyToOne
-	private CardWrapper cardWrapper;
+	private Card card;
 	
-	@ManyToOne
-	private CardContent cardContent;
-	
-	public StageCard(Commit _commit, StageAction _action, CardWrapper _cardWrapper, CardContent _cardContent) {
+	public StageCard(Commit _commit, StageAction _action, Card _card) {
 		commit = _commit;
 		action = _action;
-		cardWrapper = _cardWrapper;
-		cardContent = _cardContent;
+		card = _card;
 	}
 
 	public UUID getId() {
@@ -70,20 +65,20 @@ public class StageCard {
 		this.action = action;
 	}
 
-	public CardWrapper getCardWrapper() {
-		return cardWrapper;
+	public Card getCard() {
+		return card;
 	}
 
-	public void setCardWrapper(CardWrapper cardWrapper) {
-		this.cardWrapper = cardWrapper;
+	public void setCard(Card card) {
+		this.card = card;
 	}
 
-	public CardContent getCardContent() {
-		return cardContent;
+	public Card getCardContent() {
+		return card;
 	}
 
-	public void setCardContent(CardContent cardContent) {
-		this.cardContent = cardContent;
+	public void setCardContent(Card cardContent) {
+		this.card = cardContent;
 	}
 	
 }

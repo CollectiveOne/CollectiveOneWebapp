@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.contexts.cards.CardWrapper;
+import org.collectiveone.modules.contexts.cards.Card;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -26,10 +26,10 @@ public class CardInPerspective {
 	private UUID id;
 	
 	@ManyToOne
-	private Perspective trail;
+	private Perspective perspective;
 	
 	@ManyToOne
-	private CardWrapper cardWrapper;
+	private Card card;
 	
 	/* double-linked list determines the order */
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -46,9 +46,8 @@ public class CardInPerspective {
 	@Override
 	public String toString() {
 		return "id: " + id.toString() + 
-				"- context id: " + trail.getContext().getId().toString() +
-				"- context title: " + trail.getContext().getTitle() +
-				"- cardWrapper id: " + cardWrapper.getId().toString();
+				"- context id: " + perspective.getContext().getId().toString() +
+				"- cardWrapper id: " + card.getId().toString();
 	}
 	
 	@Override
@@ -84,20 +83,20 @@ public class CardInPerspective {
 		this.id = id;
 	}
 
-	public Perspective getTrail() {
-		return trail;
+	public Perspective getPerspective() {
+		return perspective;
 	}
 
-	public void setTrail(Perspective trail) {
-		this.trail = trail;
+	public void setPerspective(Perspective perspective) {
+		this.perspective = perspective;
 	}
 
-	public CardWrapper getCardWrapper() {
-		return cardWrapper;
+	public Card getCard() {
+		return card;
 	}
 
-	public void setCardWrapper(CardWrapper cardWrapper) {
-		this.cardWrapper = cardWrapper;
+	public void setCard(Card card) {
+		this.card = card;
 	}
 
 	public CardInPerspective getBeforeElement() {

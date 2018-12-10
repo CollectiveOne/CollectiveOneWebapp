@@ -26,7 +26,7 @@ public class ContextInnerService {
 	@Transactional
 	public Perspective createContext(NewContextDto contextDto, UUID creatorId) {
 		
-		Context context = new Context(contextDto.getTitle(), contextDto.getDescription());
+		Context context = new Context();
 		context = contextRepository.save(context);
 		
 		/* an empty perspective has a null head commit and no working commits */

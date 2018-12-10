@@ -25,7 +25,7 @@ public class Subcontext implements OrderedElement {
 	private UUID id;
 	
 	@ManyToOne
-	private Perspective trail;
+	private Perspective perspective;
 	
 	@ManyToOne
 	private Context subcontext;
@@ -44,10 +44,8 @@ public class Subcontext implements OrderedElement {
 	
 	public String toString() {
 		return "id: " + id.toString() + " " + 	
-				"parent context id: " + (trail != null ? trail.getContext().getId().toString() : "null") + " " +
-				"parent context title: " + (trail != null ? trail.getContext().getTitle() : "null") + " " +
-				"subcontext id: " + subcontext.getId().toString() + " " +
-				"subcontext title: " + subcontext.getTitle() + " ";
+				"parent context id: " + (perspective != null ? perspective.getContext().getId().toString() : "null") + " " +
+				"subcontext id: " + subcontext.getId().toString();
 				
 	}
 
@@ -60,11 +58,11 @@ public class Subcontext implements OrderedElement {
 	}
 
 	public Perspective getTrail() {
-		return trail;
+		return perspective;
 	}
 
 	public void setTrail(Perspective trail) {
-		this.trail = trail;
+		this.perspective = trail;
 	}
 
 	public Context getSubcontext() {

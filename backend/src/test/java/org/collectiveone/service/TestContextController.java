@@ -18,6 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import com.auth0.client.auth.AuthAPI;
+import com.auth0.exception.APIException;
+import com.auth0.exception.Auth0Exception;
+import com.auth0.json.auth.TokenHolder;
+import com.auth0.net.AuthRequest;
 import com.google.gson.Gson;
 
 
@@ -33,6 +38,19 @@ public class TestContextController extends AbstractTest {
     
 	@Before
     public void setUp() throws Exception {
+		
+		AuthAPI auth = new AuthAPI("{YOUR_DOMAIN}", "{YOUR_CLIENT_ID}", "{YOUR_CLIENT_SECRET}");
+		
+		AuthRequest request = auth.requestToken("https://api.me.auth0.com/users")
+		    .setScope("openid contacts");
+		try {
+		    TokenHolder holder = request.execute();
+		} catch (APIException exception) {
+		    // api error
+		} catch (Auth0Exception exception) {
+		    // request error
+		}
+		
 		MvcResult result = this.mockMvc
 	    	.perform(get("/1/user/myProfile"))
 	    	.andReturn();
