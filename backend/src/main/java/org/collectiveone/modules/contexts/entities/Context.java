@@ -1,4 +1,4 @@
-package org.collectiveone.modules.contexts;
+package org.collectiveone.modules.contexts.entities;
 
 import java.util.UUID;
 
@@ -6,17 +6,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "members")
-public class PerspectiveMember implements Comparable<PerspectiveMember>{
-
+@Table(name = "contexts")
+public class Context {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -24,18 +21,38 @@ public class PerspectiveMember implements Comparable<PerspectiveMember>{
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@ManyToOne
-	private Perspective trail;
 	
-	@ManyToOne
-	private AppUser user;
-
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+	
+	
+	public Context() {
+		super();
+	}
 
 	@Override
-    public int compareTo(PerspectiveMember m) {
-        return user.getC1Id().compareTo(m.getUser().getC1Id());
-    }
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		
+		Context other = (Context) obj;
+		return id.equals(other.getId());
+	}
 	
+	public String toString() {
+		return "id: " + id.toString();
+	}
+	
+		
 	public UUID getId() {
 		return id;
 	}
@@ -43,14 +60,5 @@ public class PerspectiveMember implements Comparable<PerspectiveMember>{
 	public void setId(UUID id) {
 		this.id = id;
 	}
-
-	public AppUser getUser() {
-		return user;
-	}
-
-	public void setUser(AppUser user) {
-		this.user = user;
-	}
 	
-
 }

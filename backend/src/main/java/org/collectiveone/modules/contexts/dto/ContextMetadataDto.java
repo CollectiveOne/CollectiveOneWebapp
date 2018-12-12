@@ -1,15 +1,15 @@
 package org.collectiveone.modules.contexts.dto;
 
-public class NewContextDto {
+public class ContextMetadataDto {
 
 	private String title;
 	private String description;
 	
-	public NewContextDto() {
+	public ContextMetadataDto() {
 		super();
 	}
 	
-	public NewContextDto(String title, String description) {
+	public ContextMetadataDto(String title, String description) {
 		super();
 		this.title = title;
 		this.description = description;

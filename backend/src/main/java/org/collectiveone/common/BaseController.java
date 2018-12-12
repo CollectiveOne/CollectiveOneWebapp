@@ -18,7 +18,7 @@ public class BaseController {
 		if (loggedUser == null) {
 			return null;
 		} else {
-			return loggedUser.getC1Id();
+			return loggedUser.getId();
 		}
 	}
 	

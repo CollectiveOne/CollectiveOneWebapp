@@ -8,6 +8,9 @@ import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.contexts.cards.Card;
 import org.collectiveone.modules.contexts.cards.CardService;
 import org.collectiveone.modules.contexts.dto.NewCardDto;
+import org.collectiveone.modules.contexts.entities.Commit;
+import org.collectiveone.modules.contexts.entities.StageAction;
+import org.collectiveone.modules.contexts.entities.StageCard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

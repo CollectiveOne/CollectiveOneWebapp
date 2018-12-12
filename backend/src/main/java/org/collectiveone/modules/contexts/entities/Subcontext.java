@@ -1,4 +1,4 @@
-package org.collectiveone.modules.contexts;
+package org.collectiveone.modules.contexts.entities;
 
 import java.util.UUID;
 
@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.contexts.OrderedElement;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

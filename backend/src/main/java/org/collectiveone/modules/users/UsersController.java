@@ -32,7 +32,7 @@ public class UsersController extends BaseController {
 		
 		AppUser user = appUserService.getOrCreateFromAuth0Id(auth0Id);
 		
-		return appUserService.getUserLight(user.getC1Id());
+		return appUserService.getUserLight(user.getId());
 	}
 	
 	@RequestMapping(path = "/user/profile/{userId}",  method = RequestMethod.GET)
@@ -52,7 +52,7 @@ public class UsersController extends BaseController {
 			return new PostResult("error", "endpoint enabled users only", null);
 		}
 		
-		if (getLoggedUser().getC1Id().compareTo(userId) == 0) {
+		if (getLoggedUser().getId().compareTo(userId) == 0) {
 			return appUserService.editUserProfile(userId, userDto);
 		}
 		

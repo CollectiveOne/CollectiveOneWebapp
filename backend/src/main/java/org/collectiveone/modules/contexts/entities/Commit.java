@@ -1,5 +1,6 @@
-package org.collectiveone.modules.contexts;
+package org.collectiveone.modules.contexts.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,12 +37,17 @@ public class Commit {
 	private Commit previousCommit;
 	
 	@OneToMany(mappedBy="commit")
-	private List<StageSubcontext> subcontextStaged;
+	private List<StageSubcontext> subcontextStaged = new ArrayList<StageSubcontext>();
 	
 	@OneToMany(mappedBy="commit")
-	private List<StageCard> cardsStaged;
+	private List<StageCard> cardsStaged = new ArrayList<StageCard>();
 	
+	@OneToMany(mappedBy="commit")
+	private List<StageMetadata> metadataStaged = new ArrayList<StageMetadata>();
 	
+	public Commit() {
+		super();
+	}
 
 	public Commit(AppUser author, Perspective trail, Commit previousCommit) {
 		super();
@@ -97,7 +103,14 @@ public class Commit {
 	public void setCardsStaged(List<StageCard> cardsStaged) {
 		this.cardsStaged = cardsStaged;
 	}
-	
+
+	public List<StageMetadata> getMetadataStaged() {
+		return metadataStaged;
+	}
+
+	public void setMetadataStaged(List<StageMetadata> metadataStaged) {
+		this.metadataStaged = metadataStaged;
+	}
 	
 	
 }

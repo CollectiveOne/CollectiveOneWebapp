@@ -1,4 +1,4 @@
-package org.collectiveone.modules.contexts;
+package org.collectiveone.modules.contexts.entities;
 
 import java.util.UUID;
 

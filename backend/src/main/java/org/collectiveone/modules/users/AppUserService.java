@@ -1,6 +1,5 @@
 package org.collectiveone.modules.users;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -9,6 +8,10 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.contexts.ContextInnerService;
+import org.collectiveone.modules.contexts.dto.ContextMetadataDto;
+import org.collectiveone.modules.contexts.entities.Perspective;
+import org.collectiveone.modules.contexts.repositories.UserDefaultPerspectiveRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +24,16 @@ import com.auth0.json.mgmt.users.User;
 public class AppUserService {
 	
 	@Autowired
+	private ContextInnerService contextInnerService;
+	
+	@Autowired
 	private AppUserRepositoryIf appUserRepository;
 	
 	@Autowired
 	private AppUserProfileRepositoryIf appUserProfileRepository;
+	
+	@Autowired
+	private UserDefaultPerspectiveRepositoryIf userDefaultPerspectiveRepository;	
 	
 	@Autowired
 	private ManagementAPI mgmt;
@@ -32,7 +41,9 @@ public class AppUserService {
 	
 	@Transactional
 	public UUID getUserPerspectiveId(UUID userId) {
-		return appUserRepository.findByC1Id(userId).getUserPerspective().getId();		
+		return userDefaultPerspectiveRepository.findDefaultPerspetiveIdByContextIdAndUserId(
+				appUserRepository.findById(userId).getRootContext().getId(),
+				userId);		
 	}
 	
 	@Transactional
@@ -44,9 +55,6 @@ public class AppUserService {
 			/* the first time a user is requested, it 
 			 * is added to the local DB */
 			appUser = addUserToLocalDB(auth0Id);
-		} else {
-			appUser.setLastSeen(new Timestamp(System.currentTimeMillis()));
-			appUserRepository.save(appUser);
 		}
     	
     	return appUser;
@@ -55,16 +63,12 @@ public class AppUserService {
 	@Transactional
 	public AppUser getFromAuth0Id(String auth0Id) {
 		AppUser appUser = appUserRepository.findByAuth0Id(auth0Id);
-		if (appUser != null) {
-			appUser.setLastSeen(new Timestamp(System.currentTimeMillis()));
-			appUserRepository.save(appUser);	
-		}
-    	return appUser;
+		return appUser;
 	}
 	
 	@Transactional
 	public AppUser getFromC1Id(UUID c1Id) {
-		return appUserRepository.findByC1Id(c1Id);
+		return appUserRepository.findById(c1Id);
 	}
 	
 	@Transactional
@@ -79,7 +83,7 @@ public class AppUserService {
 	
 	@Transactional
 	public PostResult editUserProfile(UUID c1Id, AppUserDto userDto) {
-		AppUserProfile profile = appUserProfileRepository.findByUser_C1Id(c1Id);
+		AppUserProfile profile = appUserProfileRepository.findByUserId(c1Id);
 		
 		if (profile.getUsername() != null) {
 			if (!profile.getUsername().equals(userDto.getUsername())) {
@@ -130,7 +134,7 @@ public class AppUserService {
 	
 	@Transactional
 	public Boolean updateUserDataInLocalDB(UUID c1Id) {
-		AppUser appUser = appUserRepository.findByC1Id(c1Id);
+		AppUser appUser = appUserRepository.findById(c1Id);
 		
 		try {
 			User auth0User = mgmt.users().get(appUser.getAuth0Ids().get(0), null).execute();
@@ -166,30 +170,32 @@ public class AppUserService {
 			appUser = appUserRepository.findByEmail(auth0User.getEmail());
 			
 			if (appUser == null) {
-				// if (auth0User.isEmailVerified()) {
-				 if (true) {
-					/* create a new user if not */
-					appUser = new AppUser();
-					
-					appUser.getAuth0Ids().add((auth0User.getId()));
-					appUser.setEmail(auth0User.getEmail());
-					appUser.setEmailNotificationsEnabled(true);
-					
-					AppUserProfile profile = new AppUserProfile();
-					
-					if (auth0User.getIdentities().get(0).getProvider().equals("auth0")) {
-						profile.setNickname(auth0User.getNickname());
-					} else {
-						profile.setNickname(auth0User.getName());
-					}
-					
-					profile.setUser(appUser);
-					profile.setPictureUrl(auth0User.getPicture());
-					profile = appUserProfileRepository.save(profile);
-					
-					appUser.setProfile(profile);
-					
-				} 
+				/* create a new user if not */
+				appUser = new AppUser();
+				appUser = appUserRepository.save(appUser);
+				
+				appUser.getAuth0Ids().add((auth0User.getId()));
+				
+				/* each user must have a profile */
+				AppUserProfile profile = new AppUserProfile();
+				
+				if (auth0User.getIdentities().get(0).getProvider().equals("auth0")) {
+					profile.setNickname(auth0User.getNickname());
+				} else {
+					profile.setNickname(auth0User.getName());
+				}
+				
+				profile.setUser(appUser);
+				profile.setPictureUrl(auth0User.getPicture());
+				profile = appUserProfileRepository.save(profile);
+				
+				appUser.setProfile(profile);
+				
+				/* each user must have a context */
+				ContextMetadataDto contextMetadata = new ContextMetadataDto("root context", "");
+				Perspective perspective = contextInnerService.createContext(appUser.getId(), contextMetadata);
+				appUser.setRootContext(perspective.getContext());
+				 
 			} else {
 				/* just add the auth0id to the existing user */
 				appUser.getAuth0Ids().add(auth0Id); 
@@ -205,12 +211,5 @@ public class AppUserService {
 		
 		return appUser;
 	} 
-	
-	@Transactional
-	public PostResult disableEmailNotifications(UUID userId) {
-		AppUser user = appUserRepository.findByC1Id(userId);
-		user.setEmailNotificationsEnabled(false);
-		return new PostResult("success", "email notifications disabled", "");
-	}
 
 }

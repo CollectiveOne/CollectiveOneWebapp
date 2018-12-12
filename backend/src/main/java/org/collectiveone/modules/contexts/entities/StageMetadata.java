@@ -1,23 +1,20 @@
-package org.collectiveone.modules.contexts;
+package org.collectiveone.modules.contexts.entities;
 
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.contexts.cards.Card;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "stages_cards")
-public class StageCard {
+@Table(name = "stages_metadata")
+public class StageMetadata {
 
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -29,16 +26,17 @@ public class StageCard {
 	@ManyToOne
 	private Commit commit;
 	
-	@Enumerated(EnumType.STRING)
-	private StageAction action;
-	
 	@ManyToOne
-	private Card card;
+	private ContextMetadata contextMetadata;
 	
-	public StageCard(Commit _commit, StageAction _action, Card _card) {
+	public StageMetadata() {
+		super();
+	}
+	
+	public StageMetadata(Commit _commit, ContextMetadata _metadata) {
+		super();
 		commit = _commit;
-		action = _action;
-		card = _card;
+		contextMetadata = _metadata;
 	}
 
 	public UUID getId() {
@@ -57,28 +55,13 @@ public class StageCard {
 		this.commit = commit;
 	}
 
-	public StageAction getAction() {
-		return action;
+	public ContextMetadata getContextMetadata() {
+		return contextMetadata;
 	}
 
-	public void setAction(StageAction action) {
-		this.action = action;
+	public void setContextMetadata(ContextMetadata contextMetadata) {
+		this.contextMetadata = contextMetadata;
 	}
 
-	public Card getCard() {
-		return card;
-	}
-
-	public void setCard(Card card) {
-		this.card = card;
-	}
-
-	public Card getCardContent() {
-		return card;
-	}
-
-	public void setCardContent(Card cardContent) {
-		this.card = cardContent;
-	}
 	
 }

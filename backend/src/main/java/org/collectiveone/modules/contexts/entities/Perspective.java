@@ -1,4 +1,4 @@
-package org.collectiveone.modules.contexts;
+package org.collectiveone.modules.contexts.entities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +44,10 @@ public class Perspective {
 		this.context = context;
 		this.head = head;
 		this.workingCommits = workingCommits;
+	}
+	
+	public Perspective() {
+		super();
 	}
 
 	public UUID getId() {

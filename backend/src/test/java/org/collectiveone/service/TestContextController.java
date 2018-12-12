@@ -1,10 +1,12 @@
 package org.collectiveone.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import org.collectiveone.AbstractTest;
-import org.collectiveone.modules.contexts.dto.NewContextDto;
+import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.contexts.dto.ContextMetadataDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.auth0.client.auth.AuthAPI;
 import com.auth0.exception.APIException;
@@ -73,9 +74,8 @@ public class TestContextController extends AbstractTest {
 	        .header("Authorization", "Bearer " + authorizationToken))	    	
 	    	.andReturn();
 		
-		String content = result.getResponse().getContentAsString();
-		
-		System.out.println(content);
+		System.out.println("Test user created:");
+		System.out.println(result.getResponse().getContentAsString());
     }
 
     @After
@@ -84,24 +84,32 @@ public class TestContextController extends AbstractTest {
     }
     
     @Test
-    public void ifCreateInitiativeIsSuccess() {
-    	// UUID c1Id=this.userService.ge
-    }
-
-    @Test
     public void createContext() throws Exception {
     	
-    	NewContextDto contextDto = new NewContextDto("myTitle", "myDescription");
+    	ContextMetadataDto contextDto = new ContextMetadataDto("myTitle", "myDescription");
     	
     	Gson gson = new Gson();
         String json = gson.toJson(contextDto);
-    	
-    	this.mockMvc
+        MvcResult result = null;
+        
+        result = this.mockMvc
 	    	.perform(post("/1/ctx")
 	    	.header("Authorization", "Bearer " + authorizationToken)
 	    	.contentType(MediaType.APPLICATION_JSON)
 	    	.content(json))
-	    	.andDo(MockMvcResultHandlers.print());
+	    	.andReturn();
+        
+        PostResult postResult = gson.fromJson(result.getResponse().getContentAsString(), PostResult.class); 
+        
+        assertEquals("error creating context: " + postResult.getMessage(),
+        		postResult.getResult(), "success");
+        
+        String contextId = postResult.getElementId();
+        
+        result = this.mockMvc
+    	    	.perform(get("/1/ctx/" + contextId)
+    	    	.header("Authorization", "Bearer " + authorizationToken))
+    	    	.andReturn();
     	
     }
     

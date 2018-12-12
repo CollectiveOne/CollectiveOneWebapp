@@ -1,6 +1,5 @@
 package org.collectiveone.modules.users;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -9,15 +8,13 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.contexts.Perspective;
+import org.collectiveone.modules.contexts.entities.Context;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -29,42 +26,28 @@ public class AppUser {
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
 		parameters = { @Parameter( name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
+	@Column(name = "id", updatable = false, nullable = false)
+	private UUID id;
 	
-	@Column(name = "c1Id", updatable = false, nullable = false)
-	private UUID c1Id;
+	@Column(name = "email", unique = true)
+	private String email;
 	
 	@ElementCollection
 	@CollectionTable(name="auth_ids", joinColumns=@JoinColumn(name="user_id"))
 	@Column(name="auth0_id")
 	private List<String> auth0Ids = new ArrayList<String>();
 	
-	@Column(name = "email", unique = true)
-	private String email;
-	
-	@Column(name = "email_notifications_enabled")
-	private Boolean emailNotificationsEnabled;
-	
 	@OneToOne(mappedBy="user")
 	private AppUserProfile profile;
 	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "online_status")
-	private UserOnlineStatus onlineStatus;
-	
-	private Timestamp lastSeen;
-	
-	/**
-	 * Each user must have one and only one private 
-	 * context + perspective pair associated to him/her
-	 * */
 	@OneToOne
-	private Perspective userPerspective;
+	private Context rootContext;
 	
 	
 	public AppUserDto toDtoLight() {
 		AppUserDto dto = new AppUserDto();
 		
-		dto.setC1Id(c1Id.toString());
+		dto.setC1Id(id.toString());
 		dto.setUsername(getProfile().getUsername());
 		dto.setNickname(getProfile().getNickname());
 		dto.setShortBio(getProfile().getShortBio());
@@ -95,7 +78,7 @@ public class AppUser {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((c1Id == null) ? 0 : c1Id.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
 
@@ -108,25 +91,19 @@ public class AppUser {
         if (getClass() != obj.getClass())
             return false;
         AppUser other = (AppUser) obj;
-        if (c1Id == null) {
-            if (other.c1Id != null)
+        if (id == null) {
+            if (other.id != null)
                 return false;
-        } else if (!c1Id.equals(other.c1Id))
+        } else if (!id.equals(other.id))
             return false;
         return true;
     }
 	
-	public UUID getC1Id() {
-		return c1Id;
+	public UUID getId() {
+		return id;
 	}
-	public void setC1Id(UUID c1Id) {
-		this.c1Id = c1Id;
-	}
-	public List<String> getAuth0Ids() {
-		return auth0Ids;
-	}
-	public void setAuth0Ids(List<String> auth0Ids) {
-		this.auth0Ids = auth0Ids;
+	public void setId(UUID id) {
+		this.id = id;
 	}
 	public String getEmail() {
 		return email;
@@ -134,11 +111,11 @@ public class AppUser {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Boolean getEmailNotificationsEnabled() {
-		return emailNotificationsEnabled;
+	public List<String> getAuth0Ids() {
+		return auth0Ids;
 	}
-	public void setEmailNotificationsEnabled(Boolean emailNotificationsEnabled) {
-		this.emailNotificationsEnabled = emailNotificationsEnabled;
+	public void setAuth0Ids(List<String> auth0Ids) {
+		this.auth0Ids = auth0Ids;
 	}
 	public AppUserProfile getProfile() {
 		return profile;
@@ -146,23 +123,12 @@ public class AppUser {
 	public void setProfile(AppUserProfile profile) {
 		this.profile = profile;
 	}
-	public Timestamp getLastSeen() {
-		return lastSeen;
+	public Context getRootContext() {
+		return rootContext;
 	}
-	public void setLastSeen(Timestamp lastSeen) {
-		this.lastSeen = lastSeen;
+	public void setRootContext(Context rootContext) {
+		this.rootContext = rootContext;
 	}
-	public UserOnlineStatus getOnlineStatus() {
-		return onlineStatus;
-	}
-	public void setOnlineStatus(UserOnlineStatus onlineStatus) {
-		this.onlineStatus = onlineStatus;
-	}
-	public Perspective getUserPerspective() {
-		return userPerspective;
-	}
-	public void setUserPerspective(Perspective userPerspective) {
-		this.userPerspective = userPerspective;
-	}
+
 	
 }
