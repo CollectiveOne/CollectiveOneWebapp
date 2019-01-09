@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,32 +30,29 @@ public class Commit {
 	
 	@ManyToOne
 	private AppUser author;
+
+	@OneToMany
+	private List<Commit> parents;
 	
 	@ManyToOne
-	private Perspective perspective;
+	private StageMetadata metadataStaged;
 	
-	@ManyToOne
-	private Commit previousCommit;
-	
-	@OneToMany(mappedBy="commit")
-	private List<StageSubcontext> subcontextStaged = new ArrayList<StageSubcontext>();
-	
-	@OneToMany(mappedBy="commit")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) 	
 	private List<StageCard> cardsStaged = new ArrayList<StageCard>();
 	
-	@OneToMany(mappedBy="commit")
-	private List<StageMetadata> metadataStaged = new ArrayList<StageMetadata>();
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<StageSubcontext> subcontextStaged = new ArrayList<StageSubcontext>();
+	
 	
 	public Commit() {
 		super();
 	}
-
-	public Commit(AppUser author, Perspective trail, Commit previousCommit) {
+	
+	public Commit(AppUser author) {
 		super();
 		this.author = author;
-		this.perspective = trail;
-		this.previousCommit = previousCommit;
 	}
+
 
 	public UUID getId() {
 		return id;
@@ -72,20 +70,12 @@ public class Commit {
 		this.author = author;
 	}
 
-	public Perspective getPerspective() {
-		return perspective;
+	public List<Commit> getParents() {
+		return parents;
 	}
 
-	public void setPerspective(Perspective perspective) {
-		this.perspective = perspective;
-	}
-
-	public Commit getPreviousCommit() {
-		return previousCommit;
-	}
-
-	public void setPreviousCommit(Commit previousCommit) {
-		this.previousCommit = previousCommit;
+	public void setParents(List<Commit> parents) {
+		this.parents = parents;
 	}
 
 	public List<StageSubcontext> getSubcontextStaged() {
@@ -104,13 +94,12 @@ public class Commit {
 		this.cardsStaged = cardsStaged;
 	}
 
-	public List<StageMetadata> getMetadataStaged() {
+	public StageMetadata getMetadataStaged() {
 		return metadataStaged;
 	}
 
-	public void setMetadataStaged(List<StageMetadata> metadataStaged) {
+	public void setMetadataStaged(StageMetadata metadataStaged) {
 		this.metadataStaged = metadataStaged;
 	}
-	
 	
 }

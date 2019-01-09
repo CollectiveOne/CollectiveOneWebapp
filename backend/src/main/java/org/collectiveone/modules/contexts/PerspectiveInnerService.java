@@ -5,7 +5,6 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.collectiveone.modules.contexts.entities.Commit;
-import org.collectiveone.modules.contexts.entities.Perspective;
 import org.collectiveone.modules.contexts.repositories.CommitRepositoryIf;
 import org.collectiveone.modules.contexts.repositories.PerspectiveRepositoryIf;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
@@ -19,27 +18,22 @@ public class PerspectiveInnerService {
 	private AppUserRepositoryIf appUserRepositoryIf;
 	
 	@Autowired
-	private PerspectiveRepositoryIf trailRepository;
+	private PerspectiveRepositoryIf perspectiveRepository;
 	
 	@Autowired
 	private CommitRepositoryIf commitRepository;
 	
 	@Transactional
 	public Commit getOrCreateWorkingCommit(
-			UUID trailId, 
+			UUID perspectiveId, 
 			UUID authorId) {
 		
 		/* Get or create the user workingCommit on this trail */
-		Commit workingCommit = trailRepository.findWorkingCommit(trailId, authorId);
+		Commit workingCommit = perspectiveRepository.findWorkingCommit(perspectiveId, authorId);
 		
 		if (workingCommit == null) {
-			Perspective trail = trailRepository.findById(trailId);
-			
-			workingCommit = new Commit(appUserRepositoryIf.findById(authorId), trail, trail.getHead());
+			workingCommit = new Commit(appUserRepositoryIf.findById(authorId));
 			workingCommit = commitRepository.save(workingCommit);
-			
-			trail.getWorkingCommits().add(workingCommit);
-			trailRepository.save(trail);
 		}
 		
 		return workingCommit;

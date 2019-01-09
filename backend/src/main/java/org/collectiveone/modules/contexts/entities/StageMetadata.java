@@ -24,9 +24,6 @@ public class StageMetadata {
 	private UUID id;
 	
 	@ManyToOne
-	private Commit commit;
-	
-	@ManyToOne
 	private ContextMetadata contextMetadata;
 	
 	public StageMetadata() {
@@ -35,7 +32,6 @@ public class StageMetadata {
 	
 	public StageMetadata(Commit _commit, ContextMetadata _metadata) {
 		super();
-		commit = _commit;
 		contextMetadata = _metadata;
 	}
 
@@ -45,14 +41,6 @@ public class StageMetadata {
 
 	public void setId(UUID id) {
 		this.id = id;
-	}
-
-	public Commit getCommit() {
-		return commit;
-	}
-
-	public void setCommit(Commit commit) {
-		this.commit = commit;
 	}
 
 	public ContextMetadata getContextMetadata() {

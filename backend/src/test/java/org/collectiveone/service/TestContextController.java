@@ -1,12 +1,18 @@
 package org.collectiveone.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
+import java.lang.reflect.Type;
+import java.util.UUID;
+
 import org.collectiveone.AbstractTest;
+import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.contexts.dto.ContextMetadataDto;
+import org.collectiveone.modules.contexts.dto.PerspectiveDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +31,7 @@ import com.auth0.exception.APIException;
 import com.auth0.exception.Auth0Exception;
 import com.auth0.json.auth.TokenHolder;
 import com.auth0.net.AuthRequest;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
 
@@ -74,6 +81,9 @@ public class TestContextController extends AbstractTest {
 	        .header("Authorization", "Bearer " + authorizationToken))	    	
 	    	.andReturn();
 		
+		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+		
 		System.out.println("Test user created:");
 		System.out.println(result.getResponse().getContentAsString());
     }
@@ -86,7 +96,10 @@ public class TestContextController extends AbstractTest {
     @Test
     public void createContext() throws Exception {
     	
-    	ContextMetadataDto contextDto = new ContextMetadataDto("myTitle", "myDescription");
+    	String title = "My Title";
+    	String description = "My Description";
+    	
+    	ContextMetadataDto contextDto = new ContextMetadataDto(title, description);
     	
     	Gson gson = new Gson();
         String json = gson.toJson(contextDto);
@@ -99,18 +112,43 @@ public class TestContextController extends AbstractTest {
 	    	.content(json))
 	    	.andReturn();
         
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
         PostResult postResult = gson.fromJson(result.getResponse().getContentAsString(), PostResult.class); 
         
         assertEquals("error creating context: " + postResult.getMessage(),
-        		postResult.getResult(), "success");
+        		"success", postResult.getResult());
         
         String contextId = postResult.getElementId();
+        
+        assertNotNull("unexpected id",  UUID.fromString(contextId));
         
         result = this.mockMvc
     	    	.perform(get("/1/ctx/" + contextId)
     	    	.header("Authorization", "Bearer " + authorizationToken))
     	    	.andReturn();
-    	
+        
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        @SuppressWarnings("serial")
+		Type resultType = new TypeToken<GetResult<PerspectiveDto>>(){}.getType();
+        
+        GetResult<PerspectiveDto> getResult = gson.fromJson(result.getResponse().getContentAsString(), resultType);
+        
+        assertEquals("error getting context: " + getResult.getMessage(),
+        		"success", getResult.getResult());
+        
+        PerspectiveDto perspectiveDto = getResult.getData();
+        
+        assertEquals("unexpected title",
+        		title, perspectiveDto.getMetadata().getTitle());
+        
+        assertEquals("unexpected description",
+       		 	description, perspectiveDto.getMetadata().getDescription());
+        
     }
+
     
 }

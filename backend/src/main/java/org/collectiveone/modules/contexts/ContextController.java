@@ -53,14 +53,12 @@ public class ContextController extends BaseController {
 			parentPerspectiveId = appUserService.getUserPerspectiveId(getLoggedUserId());
 		}
 		
-		contextService.createContext(
+		return contextService.createContext(
 				contextMetadataDto, 
 				parentPerspectiveId, 
 				getLoggedUserId(),
 				beforePerspectiveId,
 				afterPerspectiveId);
-		
-		return new PostResult("success", "new context staged", "");	
 	}
 	
 	/**
@@ -90,36 +88,4 @@ public class ContextController extends BaseController {
 		return contextService.getContext(contextId, getLoggedUserId(), levels, addCards);	
 	}
 	
-
-	/** 
-	 * Stages a new card wrapper on a trail.
-	 * 
-	 * The card wrapper is created on the working commit. if no working commit is found,
-	 * one is created pointing to the current head of that trail.
-	 * 
-	 * Any user can create a personal working commit. Permissions are check
-	 * when trying to push that commit as the head of the trail.
-	 *  
-	 * */
-	
-	@RequestMapping(path = "/tr/{trailId}/cardWrapper", method = RequestMethod.POST)
-	public PostResult stageCardWrapper(
-			@PathVariable("trailId") String trailIdStr,
-			@RequestBody NewCardDto cardDto,
-			@RequestParam(name="onCardWrapperId", defaultValue="") String onCardWrapperIdStr,
-			@RequestParam(name = "isBefore", defaultValue="false") Boolean isBefore) {
-		
-		if (getLoggedUser() == null) {
-			return new PostResult("error", "endpoint enabled users only", null);
-		}
-		
-		UUID trailId = UUID.fromString(trailIdStr);
-		UUID onCardWrapperId = onCardWrapperIdStr.equals("") ? null : UUID.fromString(onCardWrapperIdStr);
-		
-		return perspectiveService.stageCardWrapper(
-				cardDto, 
-				trailId, 
-				getLoggedUserId(), 
-				onCardWrapperId, 
-				isBefore);
-	}}
+}	

@@ -10,14 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.contexts.cards.Card;
+import org.collectiveone.modules.contexts.cards.CardW;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "cards_in_contexts")
-public class CardInPerspective {
+@Table(name = "cards_in_perspective")
+public class CardInP {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -29,15 +29,15 @@ public class CardInPerspective {
 	private Perspective perspective;
 	
 	@ManyToOne
-	private Card card;
+	private CardW cardW;
 	
 	/* double-linked list determines the order */
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	private CardInPerspective beforeElement;
+	private CardInP beforeElement;
 	
 	/* double-linked list determines the order */
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	private CardInPerspective afterElement;
+	private CardInP afterElement;
 	
 	@ManyToOne
 	private AppUser adder;
@@ -47,7 +47,7 @@ public class CardInPerspective {
 	public String toString() {
 		return "id: " + id.toString() + 
 				"- context id: " + perspective.getContext().getId().toString() +
-				"- cardWrapper id: " + card.getId().toString();
+				"- cardWrapper id: " + cardW.getId().toString();
 	}
 	
 	@Override
@@ -66,7 +66,7 @@ public class CardInPerspective {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CardInPerspective other = (CardInPerspective) obj;
+		CardInP other = (CardInP) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -91,27 +91,27 @@ public class CardInPerspective {
 		this.perspective = perspective;
 	}
 
-	public Card getCard() {
-		return card;
+	public CardW getCardW() {
+		return cardW;
 	}
 
-	public void setCard(Card card) {
-		this.card = card;
+	public void setCardW(CardW cardW) {
+		this.cardW = cardW;
 	}
 
-	public CardInPerspective getBeforeElement() {
+	public CardInP getBeforeElement() {
 		return beforeElement;
 	}
 
-	public void setBeforeElement(CardInPerspective beforeElement) {
+	public void setBeforeElement(CardInP beforeElement) {
 		this.beforeElement = beforeElement;
 	}
 
-	public CardInPerspective getAfterElement() {
+	public CardInP getAfterElement() {
 		return afterElement;
 	}
 
-	public void setAfterElement(CardInPerspective afterElement) {
+	public void setAfterElement(CardInP afterElement) {
 		this.afterElement = afterElement;
 	}
 

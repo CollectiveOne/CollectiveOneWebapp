@@ -25,30 +25,20 @@ public class StageSubcontext {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@ManyToOne
-	private Commit commit;
-	
 	@Enumerated(EnumType.STRING)
 	private StageAction action;
 	
 	@ManyToOne
-	private Perspective perspective;
-	
-	@ManyToOne
-	private Perspective beforePerspective;
-		
-	@ManyToOne
-	private Perspective afterPerspective;
+	private Subcontext subcontext;
 	
 	public StageSubcontext() {
 		super();
 	}
-
-	public StageSubcontext(Commit commit, StageAction action, Perspective perspective) {
+	
+	public StageSubcontext(Commit commit, StageAction action, Subcontext subcontext) {
 		super();
-		this.commit = commit;
 		this.action = action;
-		this.perspective = perspective;
+		this.subcontext = subcontext;
 	}
 
 	public UUID getId() {
@@ -59,14 +49,6 @@ public class StageSubcontext {
 		this.id = id;
 	}
 
-	public Commit getCommit() {
-		return commit;
-	}
-
-	public void setCommit(Commit commit) {
-		this.commit = commit;
-	}
-
 	public StageAction getAction() {
 		return action;
 	}
@@ -75,12 +57,12 @@ public class StageSubcontext {
 		this.action = action;
 	}
 
-	public Perspective getPerspective() {
-		return perspective;
+	public Subcontext getSubcontext() {
+		return subcontext;
 	}
 
-	public void setPerspective(Perspective perspective) {
-		this.perspective = perspective;
+	public void setSubcontext(Subcontext subcontext) {
+		this.subcontext = subcontext;
 	}
 
 }

@@ -26,23 +26,28 @@ public class StageCard {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@ManyToOne
-	private Commit commit;
-	
 	@Enumerated(EnumType.STRING)
 	private StageAction action;
 	
 	@ManyToOne
-	private Card card;
+	private CardInP cardInP;
+	
+	/* in case action is EDIT, the new content is stored here */
+	@ManyToOne
+	private Card newVersion;
+	
+	/* in case action is EDIT, keep a reference to the previous version  */
+	@ManyToOne
+	private Card oldVersion;
 	
 	public StageCard() {
 		super();
 	}
 	
-	public StageCard(Commit _commit, StageAction _action, Card _card) {
-		commit = _commit;
+	
+	public StageCard(Commit _commit, StageAction _action, CardInP _cardInP) {
 		action = _action;
-		card = _card;
+		cardInP = _cardInP;
 	}
 
 	public UUID getId() {
@@ -53,14 +58,6 @@ public class StageCard {
 		this.id = id;
 	}
 
-	public Commit getCommit() {
-		return commit;
-	}
-
-	public void setCommit(Commit commit) {
-		this.commit = commit;
-	}
-
 	public StageAction getAction() {
 		return action;
 	}
@@ -69,20 +66,30 @@ public class StageCard {
 		this.action = action;
 	}
 
-	public Card getCard() {
-		return card;
+	public CardInP getCardInP() {
+		return cardInP;
 	}
 
-	public void setCard(Card card) {
-		this.card = card;
+	public void setCardInP(CardInP cardInP) {
+		this.cardInP = cardInP;
+	}
+	
+	public Card getNewVersion() {
+		return newVersion;
 	}
 
-	public Card getCardContent() {
-		return card;
+	public void setNewVersion(Card newVersion) {
+		this.newVersion = newVersion;
 	}
 
-	public void setCardContent(Card cardContent) {
-		this.card = cardContent;
+	public Card getOldVersion() {
+		return oldVersion;
 	}
+
+	public void setOldVersion(Card oldVersion) {
+		this.oldVersion = oldVersion;
+	}
+	
+	
 	
 }

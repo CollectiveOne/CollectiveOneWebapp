@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.contexts.dto.CardDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -26,6 +27,12 @@ public class Card {
 	@Lob
 	@Type(type = "org.hibernate.type.TextType")
 	private String base;
+	
+	public CardDto toDto() {
+		CardDto dto = new CardDto();
+		dto.setBase(base);
+		return dto;
+	}
 	
 	
 	public UUID getId() {

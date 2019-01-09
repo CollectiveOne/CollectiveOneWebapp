@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.contexts.dto.ContextMetadataDto;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -32,6 +33,13 @@ public class ContextMetadata {
 		description = _description;
 	}
 	
+	public ContextMetadataDto toDto() {
+		ContextMetadataDto dto = new ContextMetadataDto();
+		dto.setTitle(title);
+		dto.setDescription(description);
+		
+		return dto;
+	}
 	
 	public UUID getId() {
 		return id;

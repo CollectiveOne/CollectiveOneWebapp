@@ -1,6 +1,5 @@
 package org.collectiveone.modules.contexts.repositories;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.modules.contexts.entities.Commit;
@@ -18,14 +17,5 @@ public interface PerspectiveRepositoryIf extends CrudRepository<Perspective, UUI
 			+ "WHERE persp.id = :perspId "
 			+ "AND commit.author.id = :authorId")
 	public Commit findWorkingCommit(@Param("perspId") UUID trailId, @Param("authorId") UUID authorId);
-	
-	@Query("SELECT commit FROM Perspective persp "
-			+ "JOIN persp.workingCommits commit "
-			+ "WHERE persp.id = :perspId "
-			+ "AND commit.author.id = :authorId")
-	public List<UUID> findSubperspectivesIds(UUID perspectiveId) {
-		
-	}
-	
 	
 }

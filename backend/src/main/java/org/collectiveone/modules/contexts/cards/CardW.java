@@ -1,4 +1,4 @@
-package org.collectiveone.modules.contexts.entities;
+package org.collectiveone.modules.contexts.cards;
 
 import java.util.UUID;
 
@@ -6,35 +6,27 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "members")
-public class PerspectiveMember implements Comparable<PerspectiveMember>{
-
+@Table(name = "cards_content")
+public class CardW {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
 		parameters = { @Parameter( name = "uuid_gen_strategy_class", value = "org.hibernate.id.uuid.CustomVersionOneStrategy") })
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
+		
+	@Lob
+	@Type(type = "org.hibernate.type.TextType")
+	private Card card;
 	
-	@ManyToOne
-	private Perspective trail;
-	
-	@ManyToOne
-	private AppUser user;
-
-
-	@Override
-    public int compareTo(PerspectiveMember m) {
-        return user.getId().compareTo(m.getUser().getId());
-    }
 	
 	public UUID getId() {
 		return id;
@@ -44,13 +36,12 @@ public class PerspectiveMember implements Comparable<PerspectiveMember>{
 		this.id = id;
 	}
 
-	public AppUser getUser() {
-		return user;
+	public Card getCard() {
+		return card;
 	}
 
-	public void setUser(AppUser user) {
-		this.user = user;
+	public void setCard(Card card) {
+		this.card = card;
 	}
-	
 
 }

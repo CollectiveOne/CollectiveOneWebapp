@@ -10,14 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.collectiveone.modules.contexts.OrderedElement;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "subcontexts")
-public class Subcontext implements OrderedElement {
+public class Subcontext {
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator",
@@ -26,10 +25,10 @@ public class Subcontext implements OrderedElement {
 	private UUID id;
 	
 	@ManyToOne
-	private Perspective perspective;
+	private Perspective onPerspective;
 	
 	@ManyToOne
-	private Context subcontext;
+	private Perspective perspective;
 	
 	/* double-linked list determines the order */
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -42,12 +41,36 @@ public class Subcontext implements OrderedElement {
 	@ManyToOne
 	private AppUser adder;
 	
-	
 	public String toString() {
 		return "id: " + id.toString() + " " + 	
 				"parent context id: " + (perspective != null ? perspective.getContext().getId().toString() : "null") + " " +
-				"subcontext id: " + subcontext.getId().toString();
+				"subperspective id: " + perspective.getId().toString();
 				
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Subcontext other = (Subcontext) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 	public UUID getId() {
@@ -58,54 +81,38 @@ public class Subcontext implements OrderedElement {
 		this.id = id;
 	}
 
-	public Perspective getTrail() {
+	public Perspective getPerspective() {
 		return perspective;
 	}
 
-	public void setTrail(Perspective trail) {
-		this.perspective = trail;
+	public void setPerspective(Perspective perspective) {
+		this.perspective = perspective;
 	}
 
-	public Context getSubcontext() {
-		return subcontext;
+	public Perspective getOnPerspective() {
+		return onPerspective;
 	}
 
-	public void setSubcontext(Context subcontext) {
-		this.subcontext = subcontext;
+	public void setOnPerspective(Perspective onPerspective) {
+		this.onPerspective = onPerspective;
+	}
+
+	public Subcontext getBeforeElement() {
+		return beforeElement;
 	}
 
 	public void setBeforeElement(Subcontext beforeElement) {
 		this.beforeElement = beforeElement;
 	}
 
+	public Subcontext getAfterElement() {
+		return afterElement;
+	}
+
 	public void setAfterElement(Subcontext afterElement) {
 		this.afterElement = afterElement;
 	}
 
-	public OrderedElement getBeforeElement() {
-		return beforeElement;
-	}
-	
-	public void setBeforeElement(OrderedElement beforeElement) {
-		this.beforeElement = (Subcontext) beforeElement;
-	}
-
-	public OrderedElement getAfterElement() {
-		return afterElement;
-	}
-
-	public void setAfterElement(OrderedElement afterElement) {
-		this.afterElement = (Subcontext) afterElement;
-	}
-	
-	public Subcontext getBeforeSubsection() {
-		return beforeElement;
-	}
-	
-	public Subcontext getAfterSubsection() {
-		return afterElement;
-	}
-	
 	public AppUser getAdder() {
 		return adder;
 	}

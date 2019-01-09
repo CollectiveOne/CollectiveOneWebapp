@@ -12,7 +12,10 @@ import org.collectiveone.modules.contexts.entities.Commit;
 import org.collectiveone.modules.contexts.entities.Perspective;
 import org.collectiveone.modules.contexts.entities.StageAction;
 import org.collectiveone.modules.contexts.entities.StageSubcontext;
+import org.collectiveone.modules.contexts.entities.Subcontext;
 import org.collectiveone.modules.contexts.repositories.CommitRepositoryIf;
+import org.collectiveone.modules.contexts.repositories.PerspectiveRepositoryIf;
+import org.collectiveone.modules.contexts.repositories.SubcontextRepositoryIf;
 import org.collectiveone.modules.contexts.repositories.UserDefaultPerspectiveRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,11 +30,16 @@ public class ContextOuterService {
 	private PerspectiveInnerService perspectiveInnerService;
 	
 	@Autowired
+	private PerspectiveRepositoryIf perspectiveRepository;
+	
+	@Autowired
+	private SubcontextRepositoryIf subcontextRepository;
+	
+	@Autowired
 	private CommitRepositoryIf commitRepository;
 	
 	@Autowired
 	private UserDefaultPerspectiveRepositoryIf userDefaultPerspectiveRepository;
-	
 	
 	
 	@Transactional
@@ -42,16 +50,24 @@ public class ContextOuterService {
 			UUID beforeContextId, 
 			UUID afterContextId) {
 		
+		Perspective perspective = contextInnerService.createContext(creatorId, contextMetadataDto);
+		Perspective parentPerspective = perspectiveRepository.findById(perspectiveId);
+		
+		Subcontext subcontext = new Subcontext();
+		
+		subcontext.setOnPerspective(parentPerspective);
+		subcontext.setPerspective(perspective);
+		/* TODO: add before and after element */
+		
+		subcontext = subcontextRepository.save(subcontext);
+		
 		Commit workingCommit = perspectiveInnerService.getOrCreateWorkingCommit(perspectiveId, creatorId);
 		
-		Perspective subcontextPerspective = contextInnerService.createContext(creatorId, contextMetadataDto);
-		
-		StageSubcontext stage = new StageSubcontext(workingCommit, StageAction.ADD, subcontextPerspective);
+		StageSubcontext stage = new StageSubcontext(workingCommit, StageAction.ADD, subcontext);
 		workingCommit.getSubcontextStaged().add(stage);
-		
 		workingCommit = commitRepository.save(workingCommit);
 		
-		return new PostResult("success", "new card staged", workingCommit.getId().toString());
+		return new PostResult("success", "context created", subcontext.getPerspective().getContext().getId().toString());
 	}
 	
 	@Transactional

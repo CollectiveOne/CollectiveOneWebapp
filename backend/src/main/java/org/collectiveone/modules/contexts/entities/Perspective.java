@@ -34,6 +34,7 @@ public class Perspective {
 	@ManyToOne
 	private Commit head;
 	
+	/* working commits are uncommitted changes, there is one per user and perspective. */
 	@OneToMany
 	private List<Commit> workingCommits = new ArrayList<Commit>();
 	
