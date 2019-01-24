@@ -16,6 +16,6 @@ public interface PerspectiveRepositoryIf extends CrudRepository<Perspective, UUI
 			+ "JOIN persp.workingCommits commit "
 			+ "WHERE persp.id = :perspId "
 			+ "AND commit.author.id = :authorId")
-	public Commit findWorkingCommit(@Param("perspId") UUID trailId, @Param("authorId") UUID authorId);
+	public Commit findWorkingCommit(@Param("perspId") UUID perspectiveId, @Param("authorId") UUID authorId);
 	
 }

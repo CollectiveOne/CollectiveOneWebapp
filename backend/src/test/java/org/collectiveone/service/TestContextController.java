@@ -8,11 +8,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import java.lang.reflect.Type;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.collectiveone.AbstractTest;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.contexts.ContextInnerService;
 import org.collectiveone.modules.contexts.dto.ContextMetadataDto;
 import org.collectiveone.modules.contexts.dto.PerspectiveDto;
+import org.collectiveone.modules.users.AppUserDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,8 +44,12 @@ import com.google.gson.Gson;
 @AutoConfigureMockMvc
 public class TestContextController extends AbstractTest {
 	
+	private static final Logger logger = LogManager.getLogger(TestContextController.class);
+	
 	@Autowired
     private MockMvc mockMvc;
+	
+	private Gson gson = new Gson();
 	
 	@Value("${AUTH0_ISSUER}")
 	private String auth0Domain;
@@ -59,6 +67,8 @@ public class TestContextController extends AbstractTest {
 	private String testPwd;
 	
 	private String authorizationToken;
+	
+	private AppUserDto user;
     
 	@Before
     public void setUp() throws Exception {
@@ -84,8 +94,16 @@ public class TestContextController extends AbstractTest {
 		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
         		200, result.getResponse().getStatus());
 		
-		System.out.println("Test user created:");
-		System.out.println(result.getResponse().getContentAsString());
+		
+		@SuppressWarnings("serial")
+		Type resultType = new TypeToken<GetResult<AppUserDto>>(){}.getType();
+        
+        GetResult<AppUserDto> getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), resultType);
+        
+        user = getResult.getData();
+		
+        logger.debug("Test user created:" + result.getResponse().getContentAsString());
     }
 
     @After
@@ -101,8 +119,7 @@ public class TestContextController extends AbstractTest {
     	
     	ContextMetadataDto contextDto = new ContextMetadataDto(title, description);
     	
-    	Gson gson = new Gson();
-        String json = gson.toJson(contextDto);
+    	String json = gson.toJson(contextDto);
         MvcResult result = null;
         
         result = this.mockMvc
@@ -120,10 +137,12 @@ public class TestContextController extends AbstractTest {
         assertEquals("error creating context: " + postResult.getMessage(),
         		"success", postResult.getResult());
         
+        /* store id context of new context */
         String contextId = postResult.getElementId();
         
         assertNotNull("unexpected id",  UUID.fromString(contextId));
         
+        /* get the new context and check metadata is correct*/
         result = this.mockMvc
     	    	.perform(get("/1/ctx/" + contextId)
     	    	.header("Authorization", "Bearer " + authorizationToken))
@@ -135,7 +154,8 @@ public class TestContextController extends AbstractTest {
         @SuppressWarnings("serial")
 		Type resultType = new TypeToken<GetResult<PerspectiveDto>>(){}.getType();
         
-        GetResult<PerspectiveDto> getResult = gson.fromJson(result.getResponse().getContentAsString(), resultType);
+        GetResult<PerspectiveDto> getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), resultType);
         
         assertEquals("error getting context: " + getResult.getMessage(),
         		"success", getResult.getResult());
@@ -147,6 +167,34 @@ public class TestContextController extends AbstractTest {
         
         assertEquals("unexpected description",
        		 	description, perspectiveDto.getMetadata().getDescription());
+        
+        /* get parent context with children and check metadata is correct */
+        result = this.mockMvc
+    	    	.perform(get("/1/ctx/" + user.getRootContextId())
+    	    	.param("levels", "1")
+    	    	.header("Authorization", "Bearer " + authorizationToken))
+    	    	.andReturn();
+        
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        @SuppressWarnings("serial")
+		GetResult<PerspectiveDto> getResult2 = 
+			gson.fromJson(result.getResponse().getContentAsString(), resultType);
+        
+        PerspectiveDto perspectiveDto2 = getResult2.getData();
+        
+        assertEquals("unexpected title",
+        		"root context", perspectiveDto2.getMetadata().getTitle());
+        
+        assertEquals("unexpected number of subcontexts",
+        		1, perspectiveDto2.getSubcontexts().size());
+        
+        assertEquals("unexpected title",
+        		title, perspectiveDto2.getSubcontexts().get(0).getMetadata().getTitle());
+        
+        assertEquals("unexpected description",
+        		description, perspectiveDto2.getSubcontexts().get(0).getMetadata().getDescription());
         
     }
 

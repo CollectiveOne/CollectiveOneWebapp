@@ -30,7 +30,7 @@ public class Commit {
 	
 	@ManyToOne
 	private AppUser author;
-
+	
 	@OneToMany
 	private List<Commit> parents;
 	
@@ -69,7 +69,7 @@ public class Commit {
 	public void setAuthor(AppUser author) {
 		this.author = author;
 	}
-
+	
 	public List<Commit> getParents() {
 		return parents;
 	}

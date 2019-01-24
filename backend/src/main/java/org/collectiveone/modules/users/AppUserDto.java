@@ -8,6 +8,7 @@ public class AppUserDto {
 	private List<String> auth0Ids = new ArrayList<String>();
 	private String email;
 	private String username;
+	private String rootContextId;
 	private String twitterHandle;
 	private String facebookHandle;
 	private String linkedinHandle;
@@ -43,6 +44,12 @@ public class AppUserDto {
 	}
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	public String getRootContextId() {
+		return rootContextId;
+	}
+	public void setRootContextId(String rootContextId) {
+		this.rootContextId = rootContextId;
 	}
 	public String getNickname() {
 		return nickname;

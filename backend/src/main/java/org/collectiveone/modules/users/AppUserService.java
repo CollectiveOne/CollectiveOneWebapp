@@ -6,12 +6,14 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.contexts.ContextInnerService;
 import org.collectiveone.modules.contexts.dto.ContextMetadataDto;
 import org.collectiveone.modules.contexts.entities.Perspective;
-import org.collectiveone.modules.contexts.repositories.UserDefaultPerspectiveRepositoryIf;
+import org.collectiveone.modules.contexts.repositories.UserActivePerspectiveRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,8 @@ import com.auth0.json.mgmt.users.User;
 @Service
 public class AppUserService {
 	
+	private static final Logger logger = LogManager.getLogger(AppUserService.class);
+	
 	@Autowired
 	private ContextInnerService contextInnerService;
 	
@@ -33,7 +37,7 @@ public class AppUserService {
 	private AppUserProfileRepositoryIf appUserProfileRepository;
 	
 	@Autowired
-	private UserDefaultPerspectiveRepositoryIf userDefaultPerspectiveRepository;	
+	private UserActivePerspectiveRepositoryIf userDefaultPerspectiveRepository;	
 	
 	@Autowired
 	private ManagementAPI mgmt;
@@ -195,6 +199,9 @@ public class AppUserService {
 				ContextMetadataDto contextMetadata = new ContextMetadataDto("root context", "");
 				Perspective perspective = contextInnerService.createContext(appUser.getId(), contextMetadata);
 				appUser.setRootContext(perspective.getContext());
+				
+				logger.debug("user root context id: {}", perspective.getContext().getId());
+				logger.debug("user root context perspective id: {}", perspective.getId());
 				 
 			} else {
 				/* just add the auth0id to the existing user */

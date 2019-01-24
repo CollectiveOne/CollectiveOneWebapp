@@ -14,8 +14,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "app_user_default_perpective")
-public class UserDefaultPerspective {
+@Table(name = "user_active_perpective")
+public class UserActivePerspective {
 	
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -33,7 +33,7 @@ public class UserDefaultPerspective {
 	@ManyToOne
 	private Perspective perspective;
 	
-	public UserDefaultPerspective() {
+	public UserActivePerspective() {
 		super();
 	}
 

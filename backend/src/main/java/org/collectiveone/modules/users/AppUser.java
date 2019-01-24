@@ -49,6 +49,7 @@ public class AppUser {
 		
 		dto.setC1Id(id.toString());
 		dto.setUsername(getProfile().getUsername());
+		dto.setRootContextId(rootContext.getId().toString());
 		dto.setNickname(getProfile().getNickname());
 		dto.setShortBio(getProfile().getShortBio());
 		dto.setFacebookHandle(getProfile().getFacebookHandle());
