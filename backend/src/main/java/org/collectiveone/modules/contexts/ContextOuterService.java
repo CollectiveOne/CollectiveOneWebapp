@@ -14,7 +14,8 @@ import org.collectiveone.modules.contexts.dto.PerspectiveDto;
 import org.collectiveone.modules.contexts.entities.Commit;
 import org.collectiveone.modules.contexts.entities.Perspective;
 import org.collectiveone.modules.contexts.entities.StageAction;
-import org.collectiveone.modules.contexts.entities.StageSubcontext;
+import org.collectiveone.modules.contexts.entities.StageElement;
+import org.collectiveone.modules.contexts.entities.StageType;
 import org.collectiveone.modules.contexts.entities.Subcontext;
 import org.collectiveone.modules.contexts.repositories.CommitRepositoryIf;
 import org.collectiveone.modules.contexts.repositories.PerspectiveRepositoryIf;
@@ -68,8 +69,10 @@ public class ContextOuterService {
 		
 		Commit workingCommit = perspectiveInnerService.getOrCreateWorkingCommit(parentPerspective.getId(), creatorId);
 		
-		StageSubcontext stage = new StageSubcontext(workingCommit, StageAction.ADD, subcontext);
-		workingCommit.getSubcontextStaged().add(stage);
+		StageElement stage = new StageElement(StageType.SUBCONTEXT, StageAction.ADD);
+		stage.setSubcontext(subcontext);
+		
+		workingCommit.getElementsStaged().add(stage);
 		workingCommit = commitRepository.save(workingCommit);
 		
 		logger.debug("added perspective {} of context {} as subcontext of perspective {} of context {}",
@@ -99,6 +102,34 @@ public class ContextOuterService {
 						levels,
 						addCards, 
 						new ArrayList<UUID>()));		
+	}
+	
+	@Transactional
+	public PostResult commitWorkingCommit(
+			UUID perspectiveId, 
+			UUID requestBy) {
+		
+		/* the default branch of this context for this user is retrieved */
+		contextInnerService.commitWorkingCommit(
+				perspectiveId,
+				requestBy);
+				
+		return new PostResult(
+				"success", 
+				"commit created", 
+				"");		
+	}
+	
+	@Transactional
+	public PostResult stageAction(
+			UUID stageId) {
+		
+		if (contextInnerService.addStage(stageId)) {
+			return new PostResult("success", "action staged", "");
+		} else {
+			return new PostResult("error", "action not staged", "");
+		}
+		
 	}
 	
 }

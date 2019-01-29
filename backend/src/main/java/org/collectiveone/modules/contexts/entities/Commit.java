@@ -34,14 +34,8 @@ public class Commit {
 	@OneToMany
 	private List<Commit> parents;
 	
-	@ManyToOne
-	private StageMetadata metadataStaged;
-	
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) 	
-	private List<StageCard> cardsStaged = new ArrayList<StageCard>();
-	
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<StageSubcontext> subcontextStaged = new ArrayList<StageSubcontext>();
+	private List<StageElement> elementsStaged = new ArrayList<StageElement>();
 	
 	
 	public Commit() {
@@ -78,28 +72,12 @@ public class Commit {
 		this.parents = parents;
 	}
 
-	public List<StageSubcontext> getSubcontextStaged() {
-		return subcontextStaged;
+	public List<StageElement> getElementsStaged() {
+		return elementsStaged;
 	}
 
-	public void setSubcontextStaged(List<StageSubcontext> subcontextStaged) {
-		this.subcontextStaged = subcontextStaged;
-	}
-
-	public List<StageCard> getCardsStaged() {
-		return cardsStaged;
-	}
-
-	public void setCardsStaged(List<StageCard> cardsStaged) {
-		this.cardsStaged = cardsStaged;
-	}
-
-	public StageMetadata getMetadataStaged() {
-		return metadataStaged;
-	}
-
-	public void setMetadataStaged(StageMetadata metadataStaged) {
-		this.metadataStaged = metadataStaged;
+	public void setElementsStaged(List<StageElement> elementsStaged) {
+		this.elementsStaged = elementsStaged;
 	}
 	
 }

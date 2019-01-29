@@ -13,8 +13,8 @@ import org.apache.logging.log4j.Logger;
 import org.collectiveone.AbstractTest;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
-import org.collectiveone.modules.contexts.ContextInnerService;
 import org.collectiveone.modules.contexts.dto.ContextMetadataDto;
+import org.collectiveone.modules.contexts.dto.NewCardDto;
 import org.collectiveone.modules.contexts.dto.PerspectiveDto;
 import org.collectiveone.modules.users.AppUserDto;
 import org.junit.After;
@@ -196,6 +196,11 @@ public class TestContextController extends AbstractTest {
         assertEquals("unexpected description",
         		description, perspectiveDto2.getSubcontexts().get(0).getMetadata().getDescription());
         
+    }
+    
+    @Test
+    public void commitWorkingCommit() throws Exception {
+    	
     }
 
     

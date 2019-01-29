@@ -30,9 +30,10 @@ public class PerspectiveInnerService {
 			UUID authorId) {
 		
 		/* Get or create the user workingCommit on this perspective */
-		Commit workingCommit = perspectiveRepository.findWorkingCommit(perspectiveId, authorId);
+		UUID workingCommitId = perspectiveRepository.findWorkingCommitId(perspectiveId, authorId);
+		Commit workingCommit = null;
 		
-		if (workingCommit == null) {
+		if (workingCommitId == null) {
 			workingCommit = new Commit(appUserRepositoryIf.findById(authorId));
 			workingCommit = commitRepository.save(workingCommit);
 			
@@ -41,6 +42,8 @@ public class PerspectiveInnerService {
 			perspective.getWorkingCommits().add(workingCommit);
 			
 			perspectiveRepository.save(perspective);
+		} else {
+			workingCommit = commitRepository.findOne(workingCommitId);
 		}
 		
 		return workingCommit;

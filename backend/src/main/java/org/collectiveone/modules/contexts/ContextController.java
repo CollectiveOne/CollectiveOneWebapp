@@ -6,7 +6,6 @@ import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.contexts.dto.ContextMetadataDto;
-import org.collectiveone.modules.contexts.dto.NewCardDto;
 import org.collectiveone.modules.contexts.dto.PerspectiveDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +22,6 @@ public class ContextController extends BaseController {
 	
 	@Autowired
 	private ContextOuterService contextService;
-	
-	@Autowired
-	private PerspectiveOuterService perspectiveService;
 	
 	
 	/**
@@ -87,5 +83,21 @@ public class ContextController extends BaseController {
 		
 		return contextService.getContext(contextId, getLoggedUserId(), levels, addCards);	
 	}
+	
+	/** Set the status of a stage action as added, meaning that it will be committed in the next commit 
+	 * 
+	 * URLParams
+	 * 
+	 * - contextId: The id of the context.
+	 * - perspectiveId: The id of the perspective.
+	 * - stageActionid: The id of the stageAction to be added 
+	 *  
+	 */
+	@RequestMapping(path = "/action/{actionId}/stage", method = RequestMethod.PUT)
+	public PostResult addStage(
+			@PathVariable(name="stageActionid") UUID stageActionid) {
+		
+		return contextService.stageAction(stageActionid);
+	} 
 	
 }	

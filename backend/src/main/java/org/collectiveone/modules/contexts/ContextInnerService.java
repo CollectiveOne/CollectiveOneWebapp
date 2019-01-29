@@ -15,9 +15,10 @@ import org.collectiveone.modules.contexts.entities.Commit;
 import org.collectiveone.modules.contexts.entities.Context;
 import org.collectiveone.modules.contexts.entities.ContextMetadata;
 import org.collectiveone.modules.contexts.entities.Perspective;
-import org.collectiveone.modules.contexts.entities.StageCard;
-import org.collectiveone.modules.contexts.entities.StageMetadata;
-import org.collectiveone.modules.contexts.entities.StageSubcontext;
+import org.collectiveone.modules.contexts.entities.StageAction;
+import org.collectiveone.modules.contexts.entities.StageElement;
+import org.collectiveone.modules.contexts.entities.StageStatus;
+import org.collectiveone.modules.contexts.entities.StageType;
 import org.collectiveone.modules.contexts.entities.UserActivePerspective;
 import org.collectiveone.modules.contexts.entitiesRedundant.PerspectiveCache;
 import org.collectiveone.modules.contexts.repositories.CommitRepositoryIf;
@@ -25,7 +26,7 @@ import org.collectiveone.modules.contexts.repositories.ContextMetadataRepository
 import org.collectiveone.modules.contexts.repositories.ContextRepositoryIf;
 import org.collectiveone.modules.contexts.repositories.PerspectiveCacheRepositoryIf;
 import org.collectiveone.modules.contexts.repositories.PerspectiveRepositoryIf;
-import org.collectiveone.modules.contexts.repositories.StageMetadataRepositoryIf;
+import org.collectiveone.modules.contexts.repositories.StageElementRepositoryIf;
 import org.collectiveone.modules.contexts.repositories.UserActivePerspectiveRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
@@ -50,7 +51,7 @@ public class ContextInnerService {
 	private ContextMetadataRepositoryIf contextMetadataRepository;
 
 	@Autowired
-	private StageMetadataRepositoryIf stageMetadataRepository;
+	private StageElementRepositoryIf stageElementRepository;
 	
 	@Autowired
 	private UserActivePerspectiveRepositoryIf userDefaultPerspectiveRepository;	
@@ -95,7 +96,7 @@ public class ContextInnerService {
 		
 		AppUser author = appUserRepository.findById(creatorId);
 		
-		StageMetadata stageMetadata = new StageMetadata();
+		StageElement stageMetadata = new StageElement(StageType.METADATA, StageAction.ADD);
 		ContextMetadata contextMetadata = new ContextMetadata();
 		
 		contextMetadata.setTitle(contextMetadataDto.getTitle());
@@ -103,10 +104,11 @@ public class ContextInnerService {
 		contextMetadata = contextMetadataRepository.save(contextMetadata);
 		
 		stageMetadata.setContextMetadata(contextMetadata);
-		stageMetadata = stageMetadataRepository.save(stageMetadata);
+		stageMetadata.setStatus(StageStatus.ADDED);
+		stageMetadata = stageElementRepository.save(stageMetadata);
 		
 		Commit firstCommit = new Commit(author);
-		firstCommit.setMetadataStaged(stageMetadata);
+		firstCommit.getElementsStaged().add(stageMetadata);
 		firstCommit = commitRepository.save(firstCommit); ;
 		
 		commitToPerspective(perspective.getId(), firstCommit);
@@ -123,27 +125,59 @@ public class ContextInnerService {
 	}
 	
 	@Transactional(rollbackOn = Exception.class)
+	public Boolean addStage(UUID stageId) {
+		
+		StageElement stageElement = stageElementRepository.findOne(stageId);
+		
+		stageElement.setStatus(StageStatus.ADDED);
+		stageElementRepository.save(stageElement);
+		
+		return true;
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public Boolean commitWorkingCommit(UUID perspectiveId, UUID requestBy) {
+		UUID workingCommitId = perspectiveRepository.findWorkingCommitId(perspectiveId, requestBy);
+		return commitToPerspective(perspectiveId, workingCommitId);
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	public Boolean commitToPerspective(UUID perspectiveId, UUID commitId) {
+		Commit commit = commitRepository.findOne(commitId);
+		return commitToPerspective(perspectiveId, commit);
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
 	public Boolean commitToPerspective(UUID perspectiveId, Commit commit) {
+		
+		/** Committing to a perspective means updating the head commit of that perspective */
 		Perspective perspective = perspectiveRepository.findById(perspectiveId);
 		perspective.setHead(commit);
 		perspectiveRepository.save(perspective);
 				
-		/* update cache */
+		/** However, the perspective chache (accumulation of changes) 
+		* needs to be updated too */
 		PerspectiveCache perspectiveCache = perspectiveCacheRepository.findByPerspectiveId(perspectiveId);
 		
-		if(commit.getMetadataStaged() != null) {
-			perspectiveCache.setMetadata(commit.getMetadataStaged().getContextMetadata());
+		StageElement stageMetadata = commitRepository.getStageMetadata(commit.getId());
+		
+		if(stageMetadata != null) {
+			if(stageMetadata.getStatus() == StageStatus.ADDED) {
+				perspectiveCache.setMetadata(stageMetadata.getContextMetadata());
+			}
 		}
 		
-		if(commit.getCardsStaged().size() > 0) {
-			for(StageCard stageCard : commit.getCardsStaged()) {
-				
+		List<StageElement> stagedCards = commitRepository.getStageElementsOfType(commit.getId(), StageType.CARD);
+		
+		for(StageElement stageCard : stagedCards) {
+			
+			if(stageCard.getStatus() == StageStatus.ADDED) {
 				switch (stageCard.getAction()) {
 				
 				case ADD:
 					perspectiveCache.getCardsInP().add(stageCard.getCardInP());
 					break;
-				
+					
 				case REMOVE:
 					perspectiveCache.getCardsInP().remove(stageCard.getCardInP());
 					break;
@@ -157,9 +191,12 @@ public class ContextInnerService {
 			}
 		}
 		
-		if(commit.getSubcontextStaged().size() > 0) {
-			for(StageSubcontext stageSubcontext : commit.getSubcontextStaged()) {
-				
+		
+		List<StageElement> stagedSubcontexts = commitRepository.getStageElementsOfType(commit.getId(), StageType.SUBCONTEXT);
+		
+		for(StageElement stageSubcontext : stagedSubcontexts) {
+			
+			if(stageSubcontext.getStatus() == StageStatus.ADDED) {
 				switch (stageSubcontext.getAction()) {
 				
 				case ADD:
@@ -203,15 +240,18 @@ public class ContextInnerService {
 		}
 		
 		/* add changes from working commit */
-		Commit workingCommit = perspectiveRepository.findWorkingCommit(perspectiveId, requestBy);
+		UUID workingCommitId = perspectiveRepository.findWorkingCommitId(perspectiveId, requestBy);
 		
-		if (workingCommit != null) {
-			if(workingCommit.getMetadataStaged() != null) {
-				perspectiveDto.setMetadata(workingCommit.getMetadataStaged().getContextMetadata().toDto());
+		if (workingCommitId != null) {
+			
+			StageElement stageMetadata = commitRepository.getStageMetadata(workingCommitId);
+			
+			if(stageMetadata != null) {
+				perspectiveDto.setMetadata(stageMetadata.getContextMetadata().toDto());
 			}
 			
 			if(addCards) {
-				for (StageCard stageCard : workingCommit.getCardsStaged()) {
+				for (StageElement stageCard : commitRepository.getStageElementsOfType(workingCommitId, StageType.CARD)) {
 					perspectiveDto.getCards().add(stageCard.getCardInP().getCardW().getCard().toDto());
 				}
 			}	
@@ -224,8 +264,8 @@ public class ContextInnerService {
 					perspectiveCacheRepository.findSubperspectivesIds(perspectiveId);
 			
 			/* add the subcontexts added in the working commit */
-			if (workingCommit != null) {
-				subperspectiveIds.addAll(commitRepository.findSubperspectivesIds(workingCommit.getId()));
+			if (workingCommitId != null) {
+				subperspectiveIds.addAll(commitRepository.findSubperspectivesIds(workingCommitId));
 			}
 			
 			/* recursively call this very same function to get the subcontexts perspectives dtos */
@@ -242,5 +282,5 @@ public class ContextInnerService {
 		
 		return perspectiveDto;
 	}
-
+	
 }

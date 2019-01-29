@@ -16,8 +16,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table(name = "stages_cards")
-public class StageCard {
+@Table(name = "staged_elements")
+public class StageElement {
 
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -27,8 +27,19 @@ public class StageCard {
 	private UUID id;
 	
 	@Enumerated(EnumType.STRING)
+	private StageType type;
+	
+	@Enumerated(EnumType.STRING)
 	private StageAction action;
 	
+	@Enumerated(EnumType.STRING)
+	private StageStatus status;
+	
+	/* Properties in case type = METADATA*/
+	@ManyToOne
+	private ContextMetadata contextMetadata;
+	
+	/* Properties in case type = CARD*/
 	@ManyToOne
 	private CardInP cardInP;
 	
@@ -40,14 +51,26 @@ public class StageCard {
 	@ManyToOne
 	private Card oldVersion;
 	
-	public StageCard() {
+	/* Properties in case type = SUBCONTEXT*/
+	@ManyToOne
+	private Subcontext subcontext;
+	
+	public StageElement() {
 		super();
+		this.status = StageStatus.PENDING;
 	}
 	
+	public StageElement(StageType type) {
+		super();
+		this.status = StageStatus.PENDING;
+		this.type = type;
+	}
 	
-	public StageCard(Commit _commit, StageAction _action, CardInP _cardInP) {
-		action = _action;
-		cardInP = _cardInP;
+	public StageElement(StageType type, StageAction action) {
+		super();
+		this.status = StageStatus.PENDING;
+		this.type = type;
+		this.action = action;
 	}
 
 	public UUID getId() {
@@ -58,12 +81,36 @@ public class StageCard {
 		this.id = id;
 	}
 
+	public StageType getType() {
+		return type;
+	}
+
+	public void setType(StageType type) {
+		this.type = type;
+	}
+
 	public StageAction getAction() {
 		return action;
 	}
 
 	public void setAction(StageAction action) {
 		this.action = action;
+	}
+
+	public StageStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(StageStatus status) {
+		this.status = status;
+	}
+
+	public ContextMetadata getContextMetadata() {
+		return contextMetadata;
+	}
+
+	public void setContextMetadata(ContextMetadata contextMetadata) {
+		this.contextMetadata = contextMetadata;
 	}
 
 	public CardInP getCardInP() {
@@ -73,7 +120,7 @@ public class StageCard {
 	public void setCardInP(CardInP cardInP) {
 		this.cardInP = cardInP;
 	}
-	
+
 	public Card getNewVersion() {
 		return newVersion;
 	}
@@ -89,7 +136,13 @@ public class StageCard {
 	public void setOldVersion(Card oldVersion) {
 		this.oldVersion = oldVersion;
 	}
-	
-	
+
+	public Subcontext getSubcontext() {
+		return subcontext;
+	}
+
+	public void setSubcontext(Subcontext subcontext) {
+		this.subcontext = subcontext;
+	}
 	
 }
