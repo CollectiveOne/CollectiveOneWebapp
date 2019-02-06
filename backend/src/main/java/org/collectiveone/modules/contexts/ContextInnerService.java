@@ -31,6 +31,9 @@ import org.collectiveone.modules.contexts.repositories.UserActivePerspectiveRepo
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -54,7 +57,7 @@ public class ContextInnerService {
 	private StageElementRepositoryIf stageElementRepository;
 	
 	@Autowired
-	private UserActivePerspectiveRepositoryIf userDefaultPerspectiveRepository;	
+	private UserActivePerspectiveRepositoryIf userActivePerspectiveRepository;	
 	
 	@Autowired
 	private AppUserRepositoryIf appUserRepository;
@@ -114,16 +117,48 @@ public class ContextInnerService {
 		commitToPerspective(perspective.getId(), firstCommit);
 		
 		/* set this as the default perspective for this context for the author */ 
-		UserActivePerspective defaultPerspective = new UserActivePerspective();
-		defaultPerspective.setContext(context);
-		defaultPerspective.setPerspective(perspective);
-		defaultPerspective.setUser(author);
+		UserActivePerspective activePerspective = new UserActivePerspective();
+		activePerspective.setContext(context);
+		activePerspective.setPerspective(perspective);
+		activePerspective.setUser(author);
 		
-		userDefaultPerspectiveRepository.save(defaultPerspective);
+		userActivePerspectiveRepository.save(activePerspective);
 		
 		return perspective;
 	}
 	
+	@Transactional(rollbackOn = Exception.class)
+	public UUID findDefaultPerspective(UUID contextId, UUID userId) {
+		UUID perspectiveId = 
+				userActivePerspectiveRepository.findDefaultPerspetiveIdByContextIdAndUserId(contextId, userId);
+		
+		if(perspectiveId == null) {
+			
+			PageRequest pageRequest = 
+					new PageRequest(0, 1, new Sort(Sort.Direction.DESC, "creationDate"));
+			
+			/* what is the default perspective for a context? */
+			Page<Perspective> page = perspectiveRepository.findByContextId(contextId, pageRequest);
+			
+			Perspective perspective = page.getContent().get(0);
+			
+			UserActivePerspective activePerspective = new UserActivePerspective();
+			
+			AppUser author = appUserRepository.findById(userId);
+			Context context = contextRepository.findOne(contextId);
+			
+			activePerspective.setContext(context);
+			activePerspective.setPerspective(perspective);
+			activePerspective.setUser(author);
+			
+			userActivePerspectiveRepository.save(activePerspective);
+			
+			perspectiveId = perspective.getId();
+		}
+		
+		return perspectiveId;
+	}
+		
 	@Transactional(rollbackOn = Exception.class)
 	public Boolean addStage(UUID stageId) {
 		
@@ -151,11 +186,11 @@ public class ContextInnerService {
 	public Boolean commitToPerspective(UUID perspectiveId, Commit commit) {
 		
 		/** Committing to a perspective means updating the head commit of that perspective */
-		Perspective perspective = perspectiveRepository.findById(perspectiveId);
+		Perspective perspective = perspectiveRepository.findOne(perspectiveId);
 		perspective.setHead(commit);
 		perspectiveRepository.save(perspective);
 				
-		/** However, the perspective chache (accumulation of changes) 
+		/** However, the perspective cache (accumulation of changes) 
 		* needs to be updated too */
 		PerspectiveCache perspectiveCache = perspectiveCacheRepository.findByPerspectiveId(perspectiveId);
 		

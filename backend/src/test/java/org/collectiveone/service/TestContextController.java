@@ -60,26 +60,36 @@ public class TestContextController extends AbstractTest {
 	@Value("${AUTH0_SECRET}")
 	private String clientSecret;
 	
-	@Value("${TEST_USER_EMAIL}")
-	private String testEmail;
+	@Value("${TEST_USER_EMAIL_1}")
+	private String testEmail1;
 	
-	@Value("${TEST_USER_PWD}")
-	private String testPwd;
+	@Value("${TEST_USER_PWD_1}")
+	private String testPwd1;
 	
-	private String authorizationToken;
+	private String authorizationTokenUser1;
 	
-	private AppUserDto user;
+	@Value("${TEST_USER_EMAIL_2}")
+	private String testEmail2;
+	
+	@Value("${TEST_USER_PWD_2}")
+	private String testPwd2;
+	
+	private String authorizationTokenUser2;
+	
+	private AppUserDto user1;
+	
+	private AppUserDto user2;
     
 	@Before
     public void setUp() throws Exception {
 		
 		AuthAPI auth = new AuthAPI(auth0Domain, clientId, clientSecret);
 		
-		AuthRequest request = auth.login(testEmail, testPwd)
+		AuthRequest request = auth.login(testEmail1, testPwd1)
 		    .setScope("openid contacts");
 		try {
 		    TokenHolder holder = request.execute();
-		    authorizationToken = holder.getIdToken();
+		    authorizationTokenUser1 = holder.getIdToken();
 		} catch (APIException exception) {
 			System.out.println(exception);
 		} catch (Auth0Exception exception) {
@@ -88,7 +98,7 @@ public class TestContextController extends AbstractTest {
 		
 		MvcResult result = this.mockMvc
 	    	.perform(get("/1/user/myProfile")
-	        .header("Authorization", "Bearer " + authorizationToken))	    	
+	        .header("Authorization", "Bearer " + authorizationTokenUser1))	    	
 	    	.andReturn();
 		
 		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
@@ -101,9 +111,37 @@ public class TestContextController extends AbstractTest {
         GetResult<AppUserDto> getResult = 
         		gson.fromJson(result.getResponse().getContentAsString(), resultType);
         
-        user = getResult.getData();
+        user1 = getResult.getData();
 		
         logger.debug("Test user created:" + result.getResponse().getContentAsString());
+        
+        request = auth.login(testEmail2, testPwd2)
+    		    .setScope("openid contacts");
+		try {
+		    TokenHolder holder = request.execute();
+		    authorizationTokenUser2 = holder.getIdToken();
+		} catch (APIException exception) {
+			System.out.println(exception);
+		} catch (Auth0Exception exception) {
+			System.out.println(exception);
+		}
+		
+		result = this.mockMvc
+	    	.perform(get("/1/user/myProfile")
+	        .header("Authorization", "Bearer " + authorizationTokenUser2))	    	
+	    	.andReturn();
+		
+		assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+		
+		
+		getResult = 
+        		gson.fromJson(result.getResponse().getContentAsString(), resultType);
+        
+        user2 = getResult.getData();
+		
+        logger.debug("Test user created:" + result.getResponse().getContentAsString());
+
     }
 
     @After
@@ -122,9 +160,10 @@ public class TestContextController extends AbstractTest {
     	String json = gson.toJson(contextDto);
         MvcResult result = null;
         
+        /* add new context to user 1 working commit */
         result = this.mockMvc
 	    	.perform(post("/1/ctx")
-	    	.header("Authorization", "Bearer " + authorizationToken)
+	    	.header("Authorization", "Bearer " + authorizationTokenUser1)
 	    	.contentType(MediaType.APPLICATION_JSON)
 	    	.content(json))
 	    	.andReturn();
@@ -145,7 +184,7 @@ public class TestContextController extends AbstractTest {
         /* get the new context and check metadata is correct*/
         result = this.mockMvc
     	    	.perform(get("/1/ctx/" + contextId)
-    	    	.header("Authorization", "Bearer " + authorizationToken))
+    	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
     	    	.andReturn();
         
         assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
@@ -170,9 +209,9 @@ public class TestContextController extends AbstractTest {
         
         /* get parent context with children and check metadata is correct */
         result = this.mockMvc
-    	    	.perform(get("/1/ctx/" + user.getRootContextId())
+    	    	.perform(get("/1/ctx/" + user1.getRootContextId())
     	    	.param("levels", "1")
-    	    	.header("Authorization", "Bearer " + authorizationToken))
+    	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
     	    	.andReturn();
         
         assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
@@ -196,7 +235,31 @@ public class TestContextController extends AbstractTest {
         assertEquals("unexpected description",
         		description, perspectiveDto2.getSubcontexts().get(0).getMetadata().getDescription());
         
+        /* get parent context with children and check metadata is correct as user 2 
+         * (should not see the subcontext as it is in the working commit of user 1)*/
+        result = this.mockMvc
+    	    	.perform(get("/1/ctx/" + user1.getRootContextId())
+    	    	.param("levels", "1")
+    	    	.header("Authorization", "Bearer " + authorizationTokenUser2))
+    	    	.andReturn();
+        
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        @SuppressWarnings("serial")
+		GetResult<PerspectiveDto> getResult3 = 
+			gson.fromJson(result.getResponse().getContentAsString(), resultType);
+        
+        PerspectiveDto perspectiveDto3 = getResult3.getData();
+        
+        assertEquals("unexpected title",
+        		"root context", perspectiveDto3.getMetadata().getTitle());
+        
+        assertEquals("unexpected number of subcontexts",
+        		0, perspectiveDto3.getSubcontexts().size());
+        
     }
+    
     
     @Test
     public void commitWorkingCommit() throws Exception {

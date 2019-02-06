@@ -1,5 +1,6 @@
 package org.collectiveone.modules.contexts.entities;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +28,9 @@ public class Perspective {
 	private UUID id;
 	
 	private String name;
+	
+	@Column
+	private Timestamp creationDate;
 	
 	@ManyToOne
 	private Context context;
@@ -65,6 +69,14 @@ public class Perspective {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public Timestamp getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Timestamp creationDate) {
+		this.creationDate = creationDate;
 	}
 
 	public Context getContext() {

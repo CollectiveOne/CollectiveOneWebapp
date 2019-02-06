@@ -38,7 +38,7 @@ public class PerspectiveInnerService {
 			workingCommit = commitRepository.save(workingCommit);
 			
 			/* store the working commit as one of the perspective */
-			Perspective perspective = perspectiveRepository.findById(perspectiveId);
+			Perspective perspective = perspectiveRepository.findOne(perspectiveId);
 			perspective.getWorkingCommits().add(workingCommit);
 			
 			perspectiveRepository.save(perspective);

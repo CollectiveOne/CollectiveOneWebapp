@@ -20,7 +20,6 @@ import org.collectiveone.modules.contexts.entities.Subcontext;
 import org.collectiveone.modules.contexts.repositories.CommitRepositoryIf;
 import org.collectiveone.modules.contexts.repositories.PerspectiveRepositoryIf;
 import org.collectiveone.modules.contexts.repositories.SubcontextRepositoryIf;
-import org.collectiveone.modules.contexts.repositories.UserActivePerspectiveRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,8 +43,6 @@ public class ContextOuterService {
 	@Autowired
 	private CommitRepositoryIf commitRepository;
 	
-	@Autowired
-	private UserActivePerspectiveRepositoryIf userActivePerspectiveRepository;
 	
 	/* A new context is created as a subcontext of the parentPerspectiveId, it is not committed
 	 * but stored in the users workingCommit area for that parent perspective */
@@ -58,7 +55,7 @@ public class ContextOuterService {
 			UUID afterContextId) {
 		
 		Perspective perspective = contextInnerService.createContext(creatorId, contextMetadataDto);
-		Perspective parentPerspective = perspectiveRepository.findById(parentPerspectiveId);
+		Perspective parentPerspective = perspectiveRepository.findOne(parentPerspectiveId);
 		
 		Subcontext subcontext = new Subcontext();
 		
@@ -89,9 +86,7 @@ public class ContextOuterService {
 			Boolean addCards) {
 		
 		/* the default branch of this context for this user is retrieved */
-		UUID perspectiveId = 
-				userActivePerspectiveRepository.findDefaultPerspetiveIdByContextIdAndUserId(
-						contextId, requestBy);
+		UUID perspectiveId = contextInnerService.findDefaultPerspective(contextId, requestBy);
 		
 		return new GetResult<PerspectiveDto>(
 				"success", 
