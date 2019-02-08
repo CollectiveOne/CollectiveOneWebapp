@@ -5,10 +5,17 @@ import java.util.List;
 
 public class PerspectiveDto {
 	
+	private String id;
 	private ContextMetadataDto metadata;
 	private List<CardDto> cards = new ArrayList<CardDto>();
 	private List<PerspectiveDto> subcontexts = new ArrayList<PerspectiveDto>();
 	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public ContextMetadataDto getMetadata() {
 		return metadata;
 	}

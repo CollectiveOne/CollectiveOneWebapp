@@ -116,6 +116,18 @@ public class ContextOuterService {
 	}
 	
 	@Transactional
+	public GetResult<List<StageElementDto>> getActions(
+			UUID stageId) {
+		
+		if (contextInnerService.addStage(stageId)) {
+			return new PostResult("success", "action staged", "");
+		} else {
+			return new PostResult("error", "action not staged", "");
+		}
+		
+	}
+	
+	@Transactional
 	public PostResult stageAction(
 			UUID stageId) {
 		

@@ -235,7 +235,7 @@ public class TestContextController extends AbstractTest {
         assertEquals("unexpected description",
         		description, perspectiveDto2.getSubcontexts().get(0).getMetadata().getDescription());
         
-        /* get parent context with children and check metadata is correct as user 2 
+        /** Get parent context with children and check metadata is correct as user 2 
          * (should not see the subcontext as it is in the working commit of user 1)*/
         result = this.mockMvc
     	    	.perform(get("/1/ctx/" + user1.getRootContextId())
@@ -257,6 +257,16 @@ public class TestContextController extends AbstractTest {
         
         assertEquals("unexpected number of subcontexts",
         		0, perspectiveDto3.getSubcontexts().size());
+        
+        /** Get actions on working commit */
+        result = this.mockMvc
+    	    	.perform(get("/1/persp/" + perspectiveDto3.getId() + "/actions")
+    	    	.param("levels", "0")
+    	    	.header("Authorization", "Bearer " + authorizationTokenUser2))
+    	    	.andReturn();
+        
+        
+        
         
     }
     

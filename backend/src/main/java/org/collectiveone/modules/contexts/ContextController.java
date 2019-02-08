@@ -93,11 +93,12 @@ public class ContextController extends BaseController {
 	 * - stageActionid: The id of the stageAction to be added 
 	 *  
 	 */
-	@RequestMapping(path = "/action/{actionId}/stage", method = RequestMethod.PUT)
+	@RequestMapping(path = "/persp/{perspectiveId}/actions", method = RequestMethod.GET)
 	public PostResult addStage(
-			@PathVariable(name="stageActionid") UUID stageActionid) {
+			@PathVariable(name="perspectiveId") UUID perspectiveId,
+			@RequestParam(name="levels", defaultValue="0") Integer levels) {
 		
-		return contextService.stageAction(stageActionid);
+		return contextService.getActions(perspectiveId);
 	} 
 	
 }	

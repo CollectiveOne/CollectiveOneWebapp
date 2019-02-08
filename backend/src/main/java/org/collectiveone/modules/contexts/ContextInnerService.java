@@ -265,6 +265,7 @@ public class ContextInnerService {
 		PerspectiveCache perspectiveCache = perspectiveCacheRepository.findByPerspectiveId(perspectiveId);
 		
 		PerspectiveDto perspectiveDto = new PerspectiveDto();
+		perspectiveDto.setId(perspectiveId.toString());
 		
 		perspectiveDto.setMetadata(perspectiveCache.getMetadata().toDto());
 		
