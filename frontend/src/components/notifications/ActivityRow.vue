@@ -65,13 +65,13 @@
 
           <span v-if="isNewPRAssigantionCreated" class="">
             {{ $t('notifications.CREATED_NEW_PR') }} <app-assignation-link :assignation="activity.assignation"></app-assignation-link>
-            {{ $t('notifications.AMOUNT_OF_FROM'), { amount:  activity.assignation.assets[0].value.toFixed(2), name: activity.assignation.assets[0].assetName } }}
+            {{ $t('notifications.AMOUNT_OF_FROM', { amount:  activity.assignation.assets[0].value.toFixed(2), name: activity.assignation.assets[0].assetName }) }}
             <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
           </span>
 
           <span v-if="isNewDAssigantionCreated" class="">
             {{ $t('notifications.MADE_DIRECT') }} <app-assignation-link :assignation="activity.assignation"></app-assignation-link> of
-            {{ $t('notifications.AMOUNT_OF_FROM'), { amount:  activity.assignation.assets[0].value.toFixed(2), name: activity.assignation.assets[0].assetName } }}
+            {{ $t('notifications.AMOUNT_OF_FROM', { amount:  activity.assignation.assets[0].value.toFixed(2), name: activity.assignation.assets[0].assetName }) }}
             <app-initiative-link :initiative="activity.initiative"></app-initiative-link>
             {{ $t('notifications.TO') }}
             <span v-for="(receiver, ix) in activity.assignation.receivers">{{ ix > 0 ? ', ' : '' }}<app-user-link :user="receiver.user"></app-user-link></span>
