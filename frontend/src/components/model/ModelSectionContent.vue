@@ -66,13 +66,12 @@ export default {
 .control-row {
   padding: 16px 18px 12px 36px;
   min-height: 62px;
-  flex-shrink: 0;
+  flex: 0 0 0;
 }
 
 .section-elements {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 </style>

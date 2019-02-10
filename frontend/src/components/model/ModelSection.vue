@@ -395,6 +395,7 @@ font-family: 'Merriweather', serif;
 
 .section-container {
   font-family: 'Open Sans', sans-serif;
+  height: 100%;
 }
 
 .title-row {

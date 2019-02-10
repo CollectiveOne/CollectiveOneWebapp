@@ -100,9 +100,6 @@ export default {
   flex-grow: 1;
   height: 100%;
   min-width: 350px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
 }
 
 .hide-nav-div-container {

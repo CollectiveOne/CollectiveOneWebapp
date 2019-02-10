@@ -118,7 +118,8 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  position: relative;
+  min-height: 0;
+  /*position: relative;*/
 }
 
 .hide-nail-container {
@@ -156,13 +157,12 @@ export default {
 
 .initiative-header-row {
   min-height: 50px;
-  flex-shrink: 0;
+  flex: 0 0 auto;
 }
 
 .initiative-content-row {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  flex: 1 0 auto;
+  min-height: 0;
 }
 
 .temp-content {

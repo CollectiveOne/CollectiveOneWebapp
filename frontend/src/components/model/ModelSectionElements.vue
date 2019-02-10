@@ -399,22 +399,18 @@ export default {
 
 .model-section-elements {
   height: 100%;
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
 }
 
 .model-section-elements-container {
   height: 100%;
   display: flex;
-  flex-grow: 1;
   flex-direction: column;
 }
 
 .elements-container {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .large-padding {

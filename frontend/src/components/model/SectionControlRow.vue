@@ -292,7 +292,7 @@ export default {
 .controls-row {
   margin: 12px 12px 6px 24px;
   min-height: 40px;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   white-space: nowrap;
   overflow-x: auto;
 }

@@ -283,21 +283,19 @@ export default {
 
 .thread-container {
   height: 100%;
-  max-height: 100vh;
   display: flex;
-  flex-grow: 1;
   flex-direction: column;
 }
 
 .history-container {
-  min-height: 60px;
   overflow: auto;
-  flex-grow: 1;
+  flex: 1 0 0;
+  min-height: 0px;
 }
 
 .bottom-container {
-  min-height: 50px;
-  flex-shrink: 0;
+  flex: 0 0 0;
+  min-height: 70px;
 }
 
 .only-messages-button {
