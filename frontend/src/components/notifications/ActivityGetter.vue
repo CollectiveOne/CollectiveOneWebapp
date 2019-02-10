@@ -63,6 +63,10 @@ export default {
       type: Boolean,
       default: false
     },
+    triggerShowmore: {
+      type: Boolean,
+      default: false
+    },
     addBorders: {
       type: Boolean,
       default: true
@@ -110,6 +114,9 @@ export default {
     },
     triggerRefresh () {
       this.getActivity('UPDATE')
+    },
+    triggerShowmore () {
+      this.showMoreClick()
     },
     levels () {
       this.getActivity('RESET')

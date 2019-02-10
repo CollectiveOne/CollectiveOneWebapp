@@ -1,6 +1,8 @@
 <template lang="html">
-  <div class="thread-container w3-display-container">
-    <div ref="historyContainer" class="w3-row history-container w3-border" >
+  <div class="thread-container w3-display-container"
+    :class="{'thread-container-is-flex': isFlex, 'thread-container-normal': !isFlex}">
+    <div ref="historyContainer" class="w3-row history-container w3-border"
+      :class="{'history-container-max': !isFlex}">
       <app-activity-getter
         :reverse="true"
         :addBorders="false"
@@ -9,6 +11,7 @@
         :showEvents="showEvents"
         :triggerRefresh="triggerRefresh"
         :triggerUpdate="triggerUpdate"
+        :triggerShowmore="triggerShowmore"
         :contextType="contextType"
         :contextElementId="contextElementId"
         :levels="levels"
@@ -88,6 +91,10 @@ export default {
     levels: {
       type: Number,
       default: 1
+    },
+    isFlex: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -105,6 +112,7 @@ export default {
       replyingToActivity: null,
       triggerRefresh: false,
       triggerUpdate: false,
+      triggerShowmore: false,
       sending: false
     }
   },
@@ -252,6 +260,12 @@ export default {
         }
       })
     },
+    checkIfScrollTop () {
+      if (this.$refs.historyContainer.scrollTop === 0) {
+        this.triggerShowmore = !this.triggerShowmore
+        console.log('auto showing more')
+      }
+    },
     showOnlyMessagesClicked () {
       this.showOnlyMessages = !this.showOnlyMessages
       this.triggerUpdate = !this.triggerUpdate
@@ -271,6 +285,7 @@ export default {
     this.showOnlyMessages = this.onlyMessagesInit
     this.scrollToBottom()
     window.addEventListener('keydown', this.atKeydown)
+    this.$refs.historyContainer.addEventListener('scroll', this.checkIfScrollTop)
   },
 
   destroyed () {
@@ -281,7 +296,10 @@ export default {
 
 <style scoped>
 
-.thread-container {
+.thread-container-normal {
+}
+
+.thread-container-is-flex {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -290,11 +308,15 @@ export default {
 .history-container {
   overflow: auto;
   flex: 1 0 0;
-  min-height: 0px;
+  min-height: 100px;
+}
+
+.history-container-max {
+  max-height: 70vh;
 }
 
 .bottom-container {
-  flex: 0 0 0;
+  flex: 0 0 auto;
   min-height: 70px;
 }
 

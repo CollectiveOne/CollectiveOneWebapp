@@ -200,6 +200,7 @@
               contextType="MODEL_CARD"
               :contextElementId="cardWrapperId"
               :contextOfContextElementId="inSectionId"
+              :isFlex="false"
               :showMessages="true"
               :showEvents="true">
             </app-message-thread>

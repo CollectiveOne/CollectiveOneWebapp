@@ -41,7 +41,8 @@
             :placeholder="$t('model.CONTENT')"
             v-model="editedCard.text"
             :keepBackup="false"
-            :showBorder="false">
+            :showBorder="false"
+            :limitMaxHeight="false">
           </app-markdown-editor>
         </div>
       </div>
@@ -524,7 +525,6 @@ export default {
 
 .limit-height {
   max-height: 250px;
-  overflow: hidden;
 }
 
 .card-container-slim {

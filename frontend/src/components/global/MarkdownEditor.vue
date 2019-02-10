@@ -100,6 +100,10 @@ export default {
     keepBackup: {
       type: Boolean,
       default: true
+    },
+    limitMaxHeight: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -140,14 +144,16 @@ export default {
       if (!this.sideBySide) {
         return {
           'w3-input': true,
-          'w3-border': this.showBorder
+          'w3-border': this.showBorder,
+          'limit-max-height': this.limitMaxHeight
         }
       } else {
         return {
           'w3-input': true,
           'w3-border': this.showBorder,
           'w3-col': true,
-          'm6': true
+          'm6': true,
+          'limit-max-height': this.limitMaxHeight
         }
       }
     },
@@ -269,7 +275,9 @@ export default {
       if (this.$refs.mdArea) {
         if (this.text !== '') {
           /* resize text area */
-          this.$refs.mdArea.style.height = (this.$refs.mdArea.scrollHeight) + 'px'
+          if (this.$refs.mdArea.scrollHeight > this.$refs.mdArea.clientHeight) {
+            this.$refs.mdArea.style.height = (this.$refs.mdArea.scrollHeight + 2) + 'px'
+          }
         } else {
           this.$refs.mdArea.style.height = '0px'
         }
@@ -345,8 +353,11 @@ export default {
 
 <style scoped>
 
-.this-textarea {
+.limit-max-height {
   max-height: 50vh;
+}
+
+.this-textarea {
   overflow-y: auto !important;
 }
 
