@@ -94,9 +94,14 @@ export default {
 
 .model-nav-container-large {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .model-nav-container {
+  flex: 1 0 0;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .controls-row {

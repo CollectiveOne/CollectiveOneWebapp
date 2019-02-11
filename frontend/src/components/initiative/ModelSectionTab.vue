@@ -84,7 +84,8 @@ export default {
   position: relative;
 }
 
-.section-nav-container{
+.section-nav-container {
+  height: 100%;
 }
 
 .vision-nav-cell {
