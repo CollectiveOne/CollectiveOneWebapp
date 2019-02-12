@@ -161,7 +161,7 @@ export default {
 }
 
 .initiative-content-row {
-  flex: 1 0 auto;
+  flex: 1 0 0;
   min-height: 0;
 }
 
