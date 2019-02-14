@@ -1,10 +1,10 @@
 package org.collectiveone.modules.contexts.dto;
 
-import org.collectiveone.modules.contexts.entities.StageAction;
-import org.collectiveone.modules.contexts.entities.StageStatus;
-import org.collectiveone.modules.contexts.entities.StageType;
+import org.collectiveone.modules.contexts.entities.enums.StageAction;
+import org.collectiveone.modules.contexts.entities.enums.StageStatus;
+import org.collectiveone.modules.contexts.entities.enums.StageType;
 
-public class StageElementDto {
+public class StagedElementDto {
 
 	private String id;
 	private StageType type;

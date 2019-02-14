@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -24,13 +25,13 @@ public class UserActivePerspective {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private AppUser user;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Context context;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Perspective perspective;
 	
 	public UserActivePerspective() {

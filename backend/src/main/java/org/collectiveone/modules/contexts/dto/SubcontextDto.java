@@ -5,8 +5,8 @@ import org.collectiveone.modules.users.AppUserDto;
 public class SubcontextDto {
 
 	private String id;
-	private PerspectiveDto onPerspective;
-	private PerspectiveDto perspective;
+	private String onPerspectiveId;
+	private String perspectiveId;
 	private AppUserDto adder;
 	
 	public String getId() {
@@ -15,17 +15,17 @@ public class SubcontextDto {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public PerspectiveDto getOnPerspective() {
-		return onPerspective;
+	public String getOnPerspectiveId() {
+		return onPerspectiveId;
 	}
-	public void setOnPerspective(PerspectiveDto onPerspective) {
-		this.onPerspective = onPerspective;
+	public void setOnPerspectiveId(String onPerspectiveId) {
+		this.onPerspectiveId = onPerspectiveId;
 	}
-	public PerspectiveDto getPerspective() {
-		return perspective;
+	public String getPerspectiveId() {
+		return perspectiveId;
 	}
-	public void setPerspective(PerspectiveDto perspective) {
-		this.perspective = perspective;
+	public void setPerspectiveId(String perspectiveId) {
+		this.perspectiveId = perspectiveId;
 	}
 	public AppUserDto getAdder() {
 		return adder;

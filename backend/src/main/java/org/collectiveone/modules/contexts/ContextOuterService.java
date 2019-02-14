@@ -1,7 +1,9 @@
 package org.collectiveone.modules.contexts;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -9,17 +11,22 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.contexts.dto.CommitDto;
 import org.collectiveone.modules.contexts.dto.ContextMetadataDto;
 import org.collectiveone.modules.contexts.dto.PerspectiveDto;
+import org.collectiveone.modules.contexts.dto.StagedElementDto;
 import org.collectiveone.modules.contexts.entities.Commit;
 import org.collectiveone.modules.contexts.entities.Perspective;
-import org.collectiveone.modules.contexts.entities.StageAction;
-import org.collectiveone.modules.contexts.entities.StageElement;
-import org.collectiveone.modules.contexts.entities.StageType;
+import org.collectiveone.modules.contexts.entities.StagedElement;
 import org.collectiveone.modules.contexts.entities.Subcontext;
+import org.collectiveone.modules.contexts.entities.enums.StageAction;
+import org.collectiveone.modules.contexts.entities.enums.StageStatus;
+import org.collectiveone.modules.contexts.entities.enums.StageType;
 import org.collectiveone.modules.contexts.repositories.CommitRepositoryIf;
 import org.collectiveone.modules.contexts.repositories.PerspectiveRepositoryIf;
+import org.collectiveone.modules.contexts.repositories.StagedElementRepositoryIf;
 import org.collectiveone.modules.contexts.repositories.SubcontextRepositoryIf;
+import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +50,12 @@ public class ContextOuterService {
 	@Autowired
 	private CommitRepositoryIf commitRepository;
 	
+	@Autowired
+	private StagedElementRepositoryIf stagedElementRepository;
+	
+	@Autowired
+	private AppUserRepositoryIf appUserRepository;
+	
 	
 	/* A new context is created as a subcontext of the parentPerspectiveId, it is not committed
 	 * but stored in the users workingCommit area for that parent perspective */
@@ -59,6 +72,7 @@ public class ContextOuterService {
 		
 		Subcontext subcontext = new Subcontext();
 		
+		subcontext.setAdder(appUserRepository.findOne(creatorId));
 		subcontext.setOnPerspective(parentPerspective);
 		subcontext.setPerspective(perspective);
 		
@@ -66,10 +80,10 @@ public class ContextOuterService {
 		
 		Commit workingCommit = perspectiveInnerService.getOrCreateWorkingCommit(parentPerspective.getId(), creatorId);
 		
-		StageElement stage = new StageElement(StageType.SUBCONTEXT, StageAction.ADD);
+		StagedElement stage = new StagedElement(StageType.SUBCONTEXT, StageAction.ADD);
 		stage.setSubcontext(subcontext);
 		
-		workingCommit.getElementsStaged().add(stage);
+		workingCommit.getStagedElements().add(stage);
 		workingCommit = commitRepository.save(workingCommit);
 		
 		logger.debug("added perspective {} of context {} as subcontext of perspective {} of context {}",
@@ -91,52 +105,71 @@ public class ContextOuterService {
 		return new GetResult<PerspectiveDto>(
 				"success", 
 				"default perspective retrieved", 
-				contextInnerService.getPerspectiveDto(
+				contextInnerService.getPerspectiveDtoRec(
 						perspectiveId,
 						requestBy,
 						levels,
 						addCards, 
-						new ArrayList<UUID>()));		
+						new HashSet<UUID>()));		
 	}
 	
 	@Transactional
 	public PostResult commitWorkingCommit(
 			UUID perspectiveId, 
+			CommitDto commitDto,
+			Integer levels,
 			UUID requestBy) {
 		
-		/* the default branch of this context for this user is retrieved */
-		contextInnerService.commitWorkingCommit(
-				perspectiveId,
-				requestBy);
-				
 		return new PostResult(
 				"success", 
 				"commit created", 
-				"");		
+				contextInnerService.commitWorkingCommit(
+						perspectiveId, commitDto, levels, requestBy).toString());
+					
 	}
 	
 	@Transactional
-	public GetResult<List<StageElementDto>> getActions(
-			UUID stageId) {
+	public GetResult<List<StagedElementDto>> getStagedElements(
+			UUID perspectiveId,
+			Integer levels,
+			UUID requestBy) {
 		
-		if (contextInnerService.addStage(stageId)) {
-			return new PostResult("success", "action staged", "");
-		} else {
-			return new PostResult("error", "action not staged", "");
-		}
+		List<StagedElement> stagedElements = 
+				contextInnerService.getStagedElements(perspectiveId, requestBy);
+		
+		List<StagedElementDto> stagedElementsDtos = 
+				stagedElements
+				.stream()
+				.map(stagedElement -> stagedElement.toDto())
+				.collect(Collectors.toList());
+		
+		return new GetResult<List<StagedElementDto>>(
+				"success", 
+				"staged elements retrieved", 
+				stagedElementsDtos);
 		
 	}
 	
 	@Transactional
-	public PostResult stageAction(
-			UUID stageId) {
+	public PostResult setStagedElementStatus(
+			UUID stagedElementId,
+			StageStatus status,
+			UUID requestBy) {
 		
-		if (contextInnerService.addStage(stageId)) {
-			return new PostResult("success", "action staged", "");
-		} else {
-			return new PostResult("error", "action not staged", "");
+		/* only author can change status of staged elemets */
+		UUID authorId = commitRepository.findAuthorIdFromStagedElementId(stagedElementId);
+		
+		if (!authorId.equals(requestBy)) {
+			return new PostResult("error", "only authors can change staged element status", null); 
 		}
 		
+		StagedElement stagedElement = stagedElementRepository.findOne(stagedElementId);
+		stagedElement.setStatus(status);
+		stagedElementRepository.save(stagedElement);
+		
+		return new PostResult("success", "staged element updated", stagedElement.getId().toString());
 	}
+	
+	
 	
 }

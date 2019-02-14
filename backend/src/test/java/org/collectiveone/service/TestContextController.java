@@ -4,8 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -13,9 +15,15 @@ import org.apache.logging.log4j.Logger;
 import org.collectiveone.AbstractTest;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.contexts.dto.CommitDto;
 import org.collectiveone.modules.contexts.dto.ContextMetadataDto;
 import org.collectiveone.modules.contexts.dto.NewCardDto;
 import org.collectiveone.modules.contexts.dto.PerspectiveDto;
+import org.collectiveone.modules.contexts.dto.StagedElementDto;
+import org.collectiveone.modules.contexts.entities.enums.CommitStatus;
+import org.collectiveone.modules.contexts.entities.enums.StageAction;
+import org.collectiveone.modules.contexts.entities.enums.StageStatus;
+import org.collectiveone.modules.contexts.entities.enums.StageType;
 import org.collectiveone.modules.users.AppUserDto;
 import org.junit.After;
 import org.junit.Before;
@@ -191,10 +199,10 @@ public class TestContextController extends AbstractTest {
         		200, result.getResponse().getStatus());
         
         @SuppressWarnings("serial")
-		Type resultType = new TypeToken<GetResult<PerspectiveDto>>(){}.getType();
+		Type perspectiveDtoresultType = new TypeToken<GetResult<PerspectiveDto>>(){}.getType();
         
         GetResult<PerspectiveDto> getResult = 
-        		gson.fromJson(result.getResponse().getContentAsString(), resultType);
+        		gson.fromJson(result.getResponse().getContentAsString(), perspectiveDtoresultType);
         
         assertEquals("error getting context: " + getResult.getMessage(),
         		"success", getResult.getResult());
@@ -219,7 +227,7 @@ public class TestContextController extends AbstractTest {
         
         @SuppressWarnings("serial")
 		GetResult<PerspectiveDto> getResult2 = 
-			gson.fromJson(result.getResponse().getContentAsString(), resultType);
+			gson.fromJson(result.getResponse().getContentAsString(), perspectiveDtoresultType);
         
         PerspectiveDto perspectiveDto2 = getResult2.getData();
         
@@ -228,6 +236,9 @@ public class TestContextController extends AbstractTest {
         
         assertEquals("unexpected number of subcontexts",
         		1, perspectiveDto2.getSubcontexts().size());
+        
+        assertEquals("unexpected commit status",
+        		CommitStatus.PENDING, perspectiveDto2.getSubcontexts().get(0).getCommitStatus());
         
         assertEquals("unexpected title",
         		title, perspectiveDto2.getSubcontexts().get(0).getMetadata().getTitle());
@@ -248,7 +259,7 @@ public class TestContextController extends AbstractTest {
         
         @SuppressWarnings("serial")
 		GetResult<PerspectiveDto> getResult3 = 
-			gson.fromJson(result.getResponse().getContentAsString(), resultType);
+			gson.fromJson(result.getResponse().getContentAsString(), perspectiveDtoresultType);
         
         PerspectiveDto perspectiveDto3 = getResult3.getData();
         
@@ -258,15 +269,167 @@ public class TestContextController extends AbstractTest {
         assertEquals("unexpected number of subcontexts",
         		0, perspectiveDto3.getSubcontexts().size());
         
-        /** Get actions on working commit */
+        /** Get list of staged elements on working commit for user 1 */
         result = this.mockMvc
-    	    	.perform(get("/1/persp/" + perspectiveDto3.getId() + "/actions")
+    	    	.perform(get("/1/persp/" + perspectiveDto3.getId() + "/stagedElements")
     	    	.param("levels", "0")
+    	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
+    	    	.andReturn();
+        
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        @SuppressWarnings("serial")
+		GetResult<List<StagedElementDto>> getResult4 = 
+			gson.fromJson(result.getResponse().getContentAsString(), 
+					new TypeToken<GetResult<List<StagedElementDto>>>(){}.getType());
+        
+        List<StagedElementDto> stagedElements = getResult4.getData();
+        
+        assertEquals("unexpected size",
+        		1, stagedElements.size());
+        
+        assertEquals("unexpected action",
+        		StageAction.ADD, stagedElements.get(0).getAction());
+        
+        assertEquals("unexpected action",
+        		StageStatus.PENDING, stagedElements.get(0).getStatus());
+        
+        assertEquals("unexpected type",
+        		StageType.SUBCONTEXT, stagedElements.get(0).getType());
+        
+        
+        /** Try to set the status as user 2 */
+        result = this.mockMvc
+    	    	.perform(put("/1/stagedElement/" + stagedElements.get(0).getId() + "/status")
+    	    	.param("newStatus", StageStatus.ADDED.toString())
     	    	.header("Authorization", "Bearer " + authorizationTokenUser2))
     	    	.andReturn();
         
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        postResult = gson.fromJson(result.getResponse().getContentAsString(), PostResult.class); 
+        
+        assertEquals("error preventing staged element status change",
+        		"error", postResult.getResult());
+        
+        /** Set the status of a staged element as user 1 */
+        result = this.mockMvc
+    	    	.perform(put("/1/stagedElement/" + stagedElements.get(0).getId() + "/status")
+    	    	.param("newStatus", StageStatus.ADDED.toString())
+    	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
+    	    	.andReturn();
+        
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        postResult = gson.fromJson(result.getResponse().getContentAsString(), PostResult.class); 
+        
+        assertEquals("error setting staged element status",
+        		"success", postResult.getResult());
+        
+        /** Get list of staged elements on working commit for user 1 */
+        result = this.mockMvc
+    	    	.perform(get("/1/persp/" + perspectiveDto3.getId() + "/stagedElements")
+    	    	.param("levels", "0")
+    	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
+    	    	.andReturn();
+        
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        @SuppressWarnings("serial")
+		GetResult<List<StagedElementDto>> getResult5 = 
+			gson.fromJson(result.getResponse().getContentAsString(), 
+					new TypeToken<GetResult<List<StagedElementDto>>>(){}.getType());
+        
+        stagedElements = getResult5.getData();
+        
+        assertEquals("unexpected size",
+        		1, stagedElements.size());
+        
+        assertEquals("unexpected action",
+        		StageAction.ADD, stagedElements.get(0).getAction());
+        
+        assertEquals("unexpected action",
+        		StageStatus.ADDED, stagedElements.get(0).getStatus());
+        
+        assertEquals("unexpected type",
+        		StageType.SUBCONTEXT, stagedElements.get(0).getType());
         
         
+        /** Now try to commit added stagedChanges as the author 2 */
+        String message = "I wanted to add this subcontext";
+    	
+    	CommitDto commitDto = new CommitDto(message);
+    	json = gson.toJson(commitDto);
+        
+        result = this.mockMvc
+    	    	.perform(put("/1/persp/" + perspectiveDto3.getId() + "/commit")
+    	    	.header("Authorization", "Bearer " + authorizationTokenUser1)
+    	    	.param("levels", "0")
+    	    	.contentType(MediaType.APPLICATION_JSON)
+    	    	.content(json))
+    	    	.andReturn();
+        
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        postResult = gson.fromJson(result.getResponse().getContentAsString(), PostResult.class); 
+        
+        String commitId = postResult.getElementId();
+        
+        /* get user root context and verify that subcontext is still there */
+        result = this.mockMvc
+    	    	.perform(get("/1/ctx/" + user1.getRootContextId())
+    	    	.param("levels", "1")
+    	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
+    	    	.andReturn();
+        
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        @SuppressWarnings("serial")
+		GetResult<PerspectiveDto> getResult6 = 
+			gson.fromJson(result.getResponse().getContentAsString(), perspectiveDtoresultType);
+        
+        PerspectiveDto perspectiveDto4 = getResult6.getData();
+        
+        assertEquals("unexpected title",
+        		"root context", perspectiveDto4.getMetadata().getTitle());
+        
+        assertEquals("unexpected number of subcontexts",
+        		1, perspectiveDto4.getSubcontexts().size());
+        
+        assertEquals("unexpected commit status",
+        		CommitStatus.COMMITTED, perspectiveDto4.getSubcontexts().get(0).getCommitStatus());
+        
+        assertEquals("unexpected title",
+        		title, perspectiveDto4.getSubcontexts().get(0).getMetadata().getTitle());
+        
+        assertEquals("unexpected description",
+        		description, perspectiveDto4.getSubcontexts().get(0).getMetadata().getDescription());
+        
+        /** get staged elements, they should be empty now*/
+        result = this.mockMvc
+    	    	.perform(get("/1/persp/" + perspectiveDto3.getId() + "/stagedElements")
+    	    	.param("levels", "0")
+    	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
+    	    	.andReturn();
+        
+        assertEquals("error in http request: " + result.getResponse().getErrorMessage(),
+        		200, result.getResponse().getStatus());
+        
+        @SuppressWarnings("serial")
+		GetResult<List<StagedElementDto>> getResult7 = 
+			gson.fromJson(result.getResponse().getContentAsString(), 
+					new TypeToken<GetResult<List<StagedElementDto>>>(){}.getType());
+        
+        stagedElements = getResult7.getData();
+        
+        assertEquals("unexpected size",
+        		0, stagedElements.size());
         
     }
     

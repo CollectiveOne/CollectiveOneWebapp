@@ -6,18 +6,23 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.contexts.cards.Card;
+import org.collectiveone.modules.contexts.dto.StagedElementDto;
+import org.collectiveone.modules.contexts.entities.enums.StageAction;
+import org.collectiveone.modules.contexts.entities.enums.StageStatus;
+import org.collectiveone.modules.contexts.entities.enums.StageType;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "staged_elements")
-public class StageElement {
+public class StagedElement {
 
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -36,42 +41,92 @@ public class StageElement {
 	private StageStatus status;
 	
 	/* Properties in case type = METADATA*/
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private ContextMetadata contextMetadata;
 	
 	/* Properties in case type = CARD*/
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private CardInP cardInP;
 	
 	/* in case action is EDIT, the new content is stored here */
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Card newVersion;
 	
 	/* in case action is EDIT, keep a reference to the previous version  */
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Card oldVersion;
 	
 	/* Properties in case type = SUBCONTEXT*/
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Subcontext subcontext;
 	
-	public StageElement() {
+	public StagedElement() {
 		super();
 		this.status = StageStatus.PENDING;
 	}
 	
-	public StageElement(StageType type) {
+	public StagedElement(StageType type) {
 		super();
 		this.status = StageStatus.PENDING;
 		this.type = type;
 	}
 	
-	public StageElement(StageType type, StageAction action) {
+	public StagedElement(StageType type, StageAction action) {
 		super();
 		this.status = StageStatus.PENDING;
 		this.type = type;
 		this.action = action;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StagedElement other = (StagedElement) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	public StagedElementDto toDto() {
+		StagedElementDto dto = new StagedElementDto();
+		
+		dto.setId(id.toString());
+		dto.setAction(action);
+		dto.setType(type);
+		dto.setStatus(status);
+		
+		switch (type) {
+			case METADATA:
+				dto.setContextMetadata(contextMetadata.toDto());
+				break;
+				
+			case SUBCONTEXT:
+				dto.setSubcontextDto(subcontext.toDto());
+				break;
+				
+			case CARD:
+				break;
+		}
+		
+		return dto;
+		
+	} 
 
 	public UUID getId() {
 		return id;

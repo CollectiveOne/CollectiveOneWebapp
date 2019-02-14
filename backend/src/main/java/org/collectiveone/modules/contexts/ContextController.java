@@ -1,12 +1,16 @@
 package org.collectiveone.modules.contexts;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.contexts.dto.CommitDto;
 import org.collectiveone.modules.contexts.dto.ContextMetadataDto;
 import org.collectiveone.modules.contexts.dto.PerspectiveDto;
+import org.collectiveone.modules.contexts.dto.StagedElementDto;
+import org.collectiveone.modules.contexts.entities.enums.StageStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -84,21 +88,58 @@ public class ContextController extends BaseController {
 		return contextService.getContext(contextId, getLoggedUserId(), levels, addCards);	
 	}
 	
-	/** Set the status of a stage action as added, meaning that it will be committed in the next commit 
+	/** Set the status of a staged element 
 	 * 
 	 * URLParams
 	 * 
-	 * - contextId: The id of the context.
-	 * - perspectiveId: The id of the perspective.
-	 * - stageActionid: The id of the stageAction to be added 
+	 * - stagedElementId: The id of the stagedElement
+	 * 
+	 * Request Parameters
+	 * 
+	 * - newStatus: new status to be set (PENDING, ADDED, HOLD)
 	 *  
 	 */
-	@RequestMapping(path = "/persp/{perspectiveId}/actions", method = RequestMethod.GET)
-	public PostResult addStage(
+	@RequestMapping(path = "/stagedElement/{stageElementId}/status", method = RequestMethod.PUT)
+	public PostResult setStagedElementState(
+			@PathVariable(name="stageElementId") UUID stageElementId,
+			@RequestParam(name="newStatus", defaultValue="ADD") StageStatus newStatus) {
+		
+		return contextService.setStagedElementStatus(stageElementId, newStatus, getLoggedUserId());
+	} 
+	
+	/** Get the list of staged elements on a perspective and for a given user 
+	 * 
+	 * URLParams
+	 * 
+	 * - perspectiveId: The id of the perspective.
+	 * - levels: the number of levels of subperspectives whose staged 
+	 *   elements should be aggregated  
+	 *  
+	 */
+	@RequestMapping(path = "/persp/{perspectiveId}/stagedElements", method = RequestMethod.GET)
+	public GetResult<List<StagedElementDto>> getStagedElements(
 			@PathVariable(name="perspectiveId") UUID perspectiveId,
 			@RequestParam(name="levels", defaultValue="0") Integer levels) {
 		
-		return contextService.getActions(perspectiveId);
+		return contextService.getStagedElements(perspectiveId, levels, getLoggedUserId());
+	} 
+	
+	/** commit all ADDED changes of the working commit  
+	 * 
+	 * URLParams
+	 * 
+	 * - perspectiveId: The id of the perspective.
+	 * - levels: the number of levels of subperspectives whose ADDED staged 
+	 *   elements should be added too
+	 * - message: an optional message giving context to the commit  
+	 */
+	@RequestMapping(path = "/persp/{perspectiveId}/commit", method = RequestMethod.PUT)
+	public PostResult commitStagedElements(
+			@PathVariable(name="perspectiveId") UUID perspectiveId,
+			@RequestParam(name="levels", defaultValue="0") Integer levels,
+			@RequestBody CommitDto commitDto) {
+		
+		return contextService.commitWorkingCommit(perspectiveId, commitDto, levels, getLoggedUserId());
 	} 
 	
 }	

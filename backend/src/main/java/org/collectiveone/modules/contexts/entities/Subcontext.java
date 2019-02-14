@@ -5,11 +5,13 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.contexts.dto.SubcontextDto;
 import org.collectiveone.modules.users.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -24,10 +26,10 @@ public class Subcontext {
 	@Column(name = "id", updatable = false, nullable = false)
 	private UUID id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Perspective onPerspective;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Perspective perspective;
 	
 	/* double-linked list determines the order */
@@ -71,6 +73,17 @@ public class Subcontext {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	public SubcontextDto toDto() {
+		SubcontextDto dto = new SubcontextDto();
+		
+		dto.setId(id.toString());
+		dto.setAdder(adder.toDtoLight());
+		dto.setOnPerspectiveId(onPerspective.getId().toString());
+		dto.setPerspectiveId(perspective.getId().toString());
+		
+		return dto;
 	}
 
 	public UUID getId() {
