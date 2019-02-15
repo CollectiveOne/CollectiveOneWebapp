@@ -17,7 +17,6 @@ import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
 import org.collectiveone.modules.contexts.dto.CommitDto;
 import org.collectiveone.modules.contexts.dto.ContextMetadataDto;
-import org.collectiveone.modules.contexts.dto.NewCardDto;
 import org.collectiveone.modules.contexts.dto.PerspectiveDto;
 import org.collectiveone.modules.contexts.dto.StagedElementDto;
 import org.collectiveone.modules.contexts.entities.enums.CommitStatus;
@@ -34,6 +33,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -87,6 +87,10 @@ public class TestContextController extends AbstractTest {
 	private AppUserDto user1;
 	
 	private AppUserDto user2;
+	
+	final String title = "My Title";
+	final String description = "My Description";
+	static private String subperspectiveId;
     
 	@Before
     public void setUp() throws Exception {
@@ -158,10 +162,8 @@ public class TestContextController extends AbstractTest {
     }
     
     @Test
+    @Rollback(false)
     public void createContext() throws Exception {
-    	
-    	String title = "My Title";
-    	String description = "My Description";
     	
     	ContextMetadataDto contextDto = new ContextMetadataDto(title, description);
     	
@@ -262,6 +264,7 @@ public class TestContextController extends AbstractTest {
 			gson.fromJson(result.getResponse().getContentAsString(), perspectiveDtoresultType);
         
         PerspectiveDto perspectiveDto3 = getResult3.getData();
+        subperspectiveId = perspectiveDto3.getId();        
         
         assertEquals("unexpected title",
         		"root context", perspectiveDto3.getMetadata().getTitle());
@@ -269,9 +272,19 @@ public class TestContextController extends AbstractTest {
         assertEquals("unexpected number of subcontexts",
         		0, perspectiveDto3.getSubcontexts().size());
         
-        /** Get list of staged elements on working commit for user 1 */
+    }
+    
+    @Test
+    @Rollback(false)
+    public void stageAndCommit() throws Exception {
+    	
+    	MvcResult result = null;
+    	PostResult postResult = null;
+    	String json = null;
+    	
+    	/** Get list of staged elements on working commit for user 1 */
         result = this.mockMvc
-    	    	.perform(get("/1/persp/" + perspectiveDto3.getId() + "/stagedElements")
+    	    	.perform(get("/1/persp/" + subperspectiveId + "/stagedElements")
     	    	.param("levels", "0")
     	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
     	    	.andReturn();
@@ -331,7 +344,7 @@ public class TestContextController extends AbstractTest {
         
         /** Get list of staged elements on working commit for user 1 */
         result = this.mockMvc
-    	    	.perform(get("/1/persp/" + perspectiveDto3.getId() + "/stagedElements")
+    	    	.perform(get("/1/persp/" + subperspectiveId + "/stagedElements")
     	    	.param("levels", "0")
     	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
     	    	.andReturn();
@@ -366,7 +379,7 @@ public class TestContextController extends AbstractTest {
     	json = gson.toJson(commitDto);
         
         result = this.mockMvc
-    	    	.perform(put("/1/persp/" + perspectiveDto3.getId() + "/commit")
+    	    	.perform(put("/1/persp/" + subperspectiveId + "/commit")
     	    	.header("Authorization", "Bearer " + authorizationTokenUser1)
     	    	.param("levels", "0")
     	    	.contentType(MediaType.APPLICATION_JSON)
@@ -391,6 +404,9 @@ public class TestContextController extends AbstractTest {
         		200, result.getResponse().getStatus());
         
         @SuppressWarnings("serial")
+		Type perspectiveDtoresultType = new TypeToken<GetResult<PerspectiveDto>>(){}.getType();
+        
+        @SuppressWarnings("serial")
 		GetResult<PerspectiveDto> getResult6 = 
 			gson.fromJson(result.getResponse().getContentAsString(), perspectiveDtoresultType);
         
@@ -413,7 +429,7 @@ public class TestContextController extends AbstractTest {
         
         /** get staged elements, they should be empty now*/
         result = this.mockMvc
-    	    	.perform(get("/1/persp/" + perspectiveDto3.getId() + "/stagedElements")
+    	    	.perform(get("/1/persp/" + subperspectiveId + "/stagedElements")
     	    	.param("levels", "0")
     	    	.header("Authorization", "Bearer " + authorizationTokenUser1))
     	    	.andReturn();
@@ -430,7 +446,6 @@ public class TestContextController extends AbstractTest {
         
         assertEquals("unexpected size",
         		0, stagedElements.size());
-        
     }
     
     
