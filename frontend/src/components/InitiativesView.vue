@@ -12,7 +12,9 @@
   <div class="w3-row initiatives-row">
 
     <transition name="slideRightLeft">
-      <div v-show="expandNav" class="dark-gray nav-container-cell w3-sidebar">
+      <div v-show="expandNav" class="dark-gray nav-container-cell w3-sidebar"
+        @touchstart="touchStart($event)"
+        @touchend="touchEnd($event)">
         <app-initiatives-nav @initiative-selected="initiativeSelected()" @new-initiative="showNewInitiativeModal = true">
         </app-initiatives-nav>
       </div>
@@ -66,6 +68,20 @@ export default {
   methods: {
     initiativeSelected () {
       this.$store.commit('setExpandNav', false)
+    },
+    touchStart (event) {
+      this.touchStartX = event.changedTouches[0].clientX
+    },
+    touchEnd (event) {
+      let deltaX = event.changedTouches[0].clientX - this.touchStartX
+      let eps = 30;
+      if (deltaX > eps) {
+        this.$store.commit('setExpandNav', true)
+      } else {
+        if (deltaX < (-1*eps)) {
+          this.$store.commit('setExpandNav', false)
+        }
+      }
     }
   },
 

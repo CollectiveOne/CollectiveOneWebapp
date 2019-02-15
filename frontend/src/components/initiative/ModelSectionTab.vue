@@ -1,6 +1,8 @@
 <template lang="html">
   <div class="w3-row section-content-tab">
-    <div class="section-nav-container">
+    <div class="section-nav-container"
+      @touchstart="touchStart($event)"
+      @touchend="touchEnd($event)" >
       <transition name="slideRightLeft">
         <div v-show="expandModelNav" class="vision-nav-cell light-grey drop-shadow-br w3-border-top">
           <app-model-nav @section-selected="sectionSelected()">
@@ -16,6 +18,10 @@
     </div>
     <div class="vision-content">
       <router-view></router-view>
+      <div class="touch-area"
+        @touchstart="touchStart($event)"
+        @touchend="touchEnd($event)" >
+      </div>
     </div>
   </div>
 </template>
@@ -30,6 +36,7 @@ export default {
 
   data () {
     return {
+      touchStartX: 0
     }
   },
 
@@ -63,6 +70,20 @@ export default {
         } else {
           console.log('redirecting to ModelSectionContent with sectionId: ' + this.initiative.topModelSection.id)
           this.$router.replace({ name: 'ModelSectionContent', params: { sectionId: this.initiative.topModelSection.id } })
+        }
+      }
+    },
+    touchStart (event) {
+      this.touchStartX = event.changedTouches[0].clientX
+    },
+    touchEnd (event) {
+      let deltaX = event.changedTouches[0].clientX - this.touchStartX
+      let eps = 30;
+      if (deltaX > eps) {
+        this.$store.commit('setExpandModelNav', true)
+      } else {
+        if (deltaX < (-1*eps)) {
+          this.$store.commit('setExpandModelNav', false)
         }
       }
     }
@@ -101,6 +122,15 @@ export default {
   flex-grow: 1;
   height: 100%;
   min-width: 350px;
+  position: relative;
+}
+
+.touch-area {
+  height: 100%;
+  width: 50px;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .hide-nav-div-container {
@@ -119,6 +149,7 @@ export default {
   padding-top: 7px;
   padding-left: 6px;
   cursor: pointer;
+  z-index: 2;
 }
 
 .hide-nav-div:hover {

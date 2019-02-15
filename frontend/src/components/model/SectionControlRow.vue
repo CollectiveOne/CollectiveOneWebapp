@@ -295,6 +295,7 @@ export default {
   flex: 0 0 auto;
   white-space: nowrap;
   overflow-x: auto;
+  z-index: 2;
 }
 
 .control-group {

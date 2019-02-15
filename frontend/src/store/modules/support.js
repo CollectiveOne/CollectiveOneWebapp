@@ -40,6 +40,9 @@ const mutations = {
   toggleExpandNav: (state) => {
     state.expandNav = !state.expandNav
   },
+  setExpandModelNav: (state, payload) => {
+    state.expandModelNav = payload
+  },
   toggleExpandModelNav: (state) => {
     state.expandModelNav = !state.expandModelNav
   },

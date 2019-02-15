@@ -4,7 +4,9 @@
       <div class="w3-row initiative-row">
 
         <transition name="slideDownUp">
-          <div v-show="!hideTopBar" class="w3-row initiative-header-row">
+          <div v-show="!hideTopBar" class="w3-row initiative-header-row"
+            @touchstart="touchStart($event)"
+            @touchend="touchEnd($event)">
             <app-header :inInitiative="true"></app-header>
           </div>
         </transition>
@@ -45,7 +47,8 @@ export default {
 
   data () {
     return {
-      hideTopBar: false
+      hideTopBar: false,
+      touchStartY: 0
     }
   },
 
@@ -93,6 +96,20 @@ export default {
     },
     logoutUser () {
       this.$store.dispatch('logoutUser')
+    },
+    touchStart (event) {
+      this.touchStartY = event.changedTouches[0].clientY
+    },
+    touchEnd (event) {
+      let deltaY = event.changedTouches[0].clientY - this.touchStartY
+      let eps = 30;
+      if (deltaY > eps) {
+        this.hideTopBar = false
+      } else {
+        if (deltaY < (-1*eps)) {
+          this.hideTopBar = true
+        }
+      }
     }
   },
 
