@@ -259,6 +259,7 @@ export default {
 
 .transfer-section {
   overflow: auto;
+  height: 100%;
 }
 
 .section-container {

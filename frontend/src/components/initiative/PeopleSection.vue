@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="this-container">
+  <div class="people-container">
     <div v-if="showWantToContribute" class="w3-row w3-center top-button-row">
       <div class="w3-row">
         <button @click="wantToContributeSelected = !wantToContributeSelected"
@@ -274,10 +274,11 @@ export default {
 
 <style scoped>
 
-.this-container {
+.people-container {
   overflow: auto;
   padding-top: 0px !important;
   padding-bottom: 25px !important;
+  height: 100%;
 }
 
 .top-button-row {

@@ -156,7 +156,7 @@ export default {
       sectionLoadedOnceLevels: 0,
       orderType: 'sections',
       showMessages: true,
-      showEvents: true,
+      showEvents: false,
       newCardQuery: '',
       cardQuery: '',
       cardSortBy: 'CREATION_DATE_DESC',
