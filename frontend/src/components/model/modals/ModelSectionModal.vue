@@ -177,7 +177,7 @@
             </button>
             <button class="w3-button app-button" name="button"
               @click="closeThis()">
-              {{ $t('general.Confirm') }}
+              {{ $t('general.CONFIRM') }}
             </button>
           </div>
         </div>
@@ -446,7 +446,7 @@ export default {
           this.sendingData = true
           this.axios.put('/1/model/section/' + sectionDto.id, sectionDto, {
             params: {
-              parentSectionId: this.inSection.id
+              parentSectionId: this.inSection ? this.inSection.id : ''
             }
           }).then((response) => {
             this.sendingData = false

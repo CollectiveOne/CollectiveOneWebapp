@@ -304,6 +304,7 @@ export default {
   padding: 0px !important;
   color: white !important;
   background-color: #cccccc !important;
+  margin-left: 15px;
 }
 
 .drop-menu {

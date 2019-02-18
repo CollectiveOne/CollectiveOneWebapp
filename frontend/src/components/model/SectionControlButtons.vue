@@ -55,8 +55,8 @@
 
     </div>
 
-    <popper :append-to-body="true" trigger="click":options="popperOptions" class="" :toggleShow="toggleMenu">
-      <div class="">
+    <popper :append-to-body="true" trigger="click" :options="popperOptions" class="" :toggleShow="toggleMenu">
+      <div class="append-to-body-popper">
         <app-drop-down-menu
           class="drop-menu"
           @addCard="addCard()"

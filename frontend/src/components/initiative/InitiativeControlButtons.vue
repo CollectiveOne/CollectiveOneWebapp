@@ -29,7 +29,7 @@
     </div>
 
     <popper :append-to-body="true" trigger="click" :options="popperOptions" class="">
-      <div class="">
+      <div class="append-to-body-popper">
         <app-drop-down-menu
           class="drop-menu"
           @notifications="showNotifications()"

@@ -1,3 +1,6 @@
+.append-to-body-popper {
+  z-index: 4;
+}
 
 .popper {
   width: auto;
