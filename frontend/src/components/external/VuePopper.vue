@@ -113,7 +113,7 @@
       trigger: {
         type: String,
         default: 'hover',
-        validator: value => ['click', 'hover'].indexOf(value) > -1
+        validator: value => ['click', 'hover', 'long-press'].indexOf(value) > -1
       },
       delayOnMouseOut: {
         type: Number,
@@ -216,6 +216,12 @@
           on(this.referenceElm, 'mouseout', this.onMouseOut);
           on(this.popper, 'mouseout', this.onMouseOut);
           break;
+        case 'long-press':
+          on(this.referenceElm, 'touchstart', this.onTouchStarted);
+          on(this.referenceElm, 'contextmenu', (e) => e.preventDefault());
+          on(this.referenceElm, 'touchend', this.onTouchEnded);
+          on(document, 'touchstart', this.handleDocumentClick);
+          break;
       }
     },
 
@@ -292,7 +298,11 @@
         off(this.referenceElm, 'blur', this.doClose);
         off(this.referenceElm, 'mouseout', this.onMouseOut);
         off(this.referenceElm, 'mouseover', this.onMouseOver);
+        off(this.referenceElm, 'touchstart', this.onTouchStarted);
+        off(this.referenceElm, 'contextmenu');
+        off(this.referenceElm, 'touchend', this.onTouchEnded);
         off(document, 'click', this.handleDocumentClick);
+        off(document, 'touchstart', this.handleDocumentClick);
 
         this.showPopper = false;
         this.doDestroy();
@@ -327,6 +337,17 @@
         this._timerOut = setTimeout(() => {
           this.showPopper = false;
         }, this.delayOnMouseOut);
+      },
+
+      onTouchStarted(event) {
+        clearTimeout(this._timerTouch);
+        this._timerTouch = setTimeout(() => {
+          this.showPopper = true;
+        }, 800);
+      },
+
+      onTouchEnded() {
+        clearTimeout(this._timerTouch);
       },
 
       handleDocumentClick(e) {

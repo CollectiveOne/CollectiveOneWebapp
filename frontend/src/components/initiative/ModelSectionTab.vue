@@ -36,7 +36,8 @@ export default {
 
   data () {
     return {
-      touchStartX: 0
+      touchStartX: 0,
+      touchStartY: 0
     }
   },
 
@@ -75,15 +76,19 @@ export default {
     },
     touchStart (event) {
       this.touchStartX = event.changedTouches[0].clientX
+      this.touchStartY = event.changedTouches[0].clientY
     },
     touchEnd (event) {
       let deltaX = event.changedTouches[0].clientX - this.touchStartX
-      let eps = 30;
-      if (deltaX > eps) {
-        this.$store.commit('setExpandModelNav', true)
-      } else {
-        if (deltaX < (-1*eps)) {
-          this.$store.commit('setExpandModelNav', false)
+      let deltaY = event.changedTouches[0].clientY - this.touchStartY
+      let eps = 30
+      if (Math.abs(deltaY) < (2 * eps)) {
+        if (deltaX > eps) {
+          this.$store.commit('setExpandModelNav', true)
+        } else {
+          if (deltaX < (-1 * eps)) {
+            this.$store.commit('setExpandModelNav', false)
+          }
         }
       }
     }

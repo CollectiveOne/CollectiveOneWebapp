@@ -48,7 +48,8 @@ export default {
   data () {
     return {
       hideTopBar: false,
-      touchStartY: 0
+      touchStartY: 0,
+      touchStartX: 0
     }
   },
 
@@ -98,16 +99,20 @@ export default {
       this.$store.dispatch('logoutUser')
     },
     touchStart (event) {
+      this.touchStartX = event.changedTouches[0].clientX
       this.touchStartY = event.changedTouches[0].clientY
     },
     touchEnd (event) {
+      let deltaX = event.changedTouches[0].clientX - this.touchStartX
       let deltaY = event.changedTouches[0].clientY - this.touchStartY
-      let eps = 30;
-      if (deltaY > eps) {
-        this.hideTopBar = false
-      } else {
-        if (deltaY < (-1*eps)) {
-          this.hideTopBar = true
+      let eps = 30
+      if (Math.abs(deltaX) < (2 * eps)) {
+        if (deltaY > eps) {
+          this.hideTopBar = false
+        } else {
+          if (deltaY < (-1 * eps)) {
+            this.hideTopBar = true
+          }
         }
       }
     }

@@ -13,7 +13,9 @@
       <div class="img-div noselect">
 
         <popper
-          trigger="hover" :options="popperOptions"
+          :key="$store.state.support.isTouchScreen"
+          :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+          :options="popperOptions"
           :toggleShow="toggleShow"
           :disabled="showName || !enableHover" class="w3-left"
           :delay-on-mouse-in="750" :delay-on-mouse-out="100">

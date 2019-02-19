@@ -101,7 +101,10 @@
                 <div class="w3-col s12">
                   <div class="w3-row">
                     <label class=""><b>{{ $t('general.CONFIGURATION') }}</b>
-                      <popper trigger="hover" :options="popperOptions" :delay-on-mouse-in="600" :delay-on-mouse-out="800">
+                      <popper
+                        :key="$store.state.support.isTouchScreen"
+                        :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+                        :options="popperOptions" :delay-on-mouse-in="600" :delay-on-mouse-out="800">
                         <app-help-popper
                           :title="$t('help.PEER-REV-CONFIG-TT')"
                           :details="$t('help.PEER-REV-CONFIG-DET')">

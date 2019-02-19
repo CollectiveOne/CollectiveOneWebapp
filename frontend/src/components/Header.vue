@@ -67,7 +67,10 @@
       <div class="w3-col s12 m8">
         <div class="w3-col s6">
           <div v-if="inInitiative && !accessDenied" class="tab-btns-container w3-xlarge">
-            <popper trigger="hover":options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
+            <popper
+              :key="$store.state.support.isTouchScreen"
+              :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+              :options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
               <app-help-popper
                 :title="$t('help.CONTENT-TAB-TT')"
                 :details="$t('help.CONTENT-TAB-DET')">
@@ -81,7 +84,10 @@
               </router-link>
             </popper>
 
-            <popper trigger="hover":options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
+            <popper
+              :key="$store.state.support.isTouchScreen"
+              :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+              :options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
               <app-help-popper
                 :title="$t('help.MEMBERS-TAB-TT')"
                 :details="$t('help.MEMBERS-TAB-DET')">
@@ -95,7 +101,10 @@
               </router-link>
             </popper>
 
-            <popper trigger="hover":options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
+            <popper
+              :key="$store.state.support.isTouchScreen"
+              :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+              :options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
               <app-help-popper
                 :title="$t('help.TRANSFERS-TAB-TT')"
                 :details="$t('help.TRANSFERS-TAB-DET')">
@@ -152,7 +161,10 @@
             </button>
           </div>
 
-          <popper trigger="hover" :options="popperOptions"  :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
+          <popper
+            :key="$store.state.support.isTouchScreen"
+            :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+            :options="popperOptions"  :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
             <app-help-popper
               :title="$t('help.LANDING-BUTTON-TT')"
               :details="$t('help.LANDING-BUTTON-DET')">
@@ -161,7 +173,10 @@
             <router-link slot="reference" :to="{ name: 'Landing', query: { demos: true }}" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-question-circle"></i></router-link>
           </popper>
 
-          <popper trigger="hover" :options="popperOptions"  :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
+          <popper
+            :key="$store.state.support.isTouchScreen"
+            :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+            :options="popperOptions"  :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
             <app-help-popper
               :title="$t('help.HOME-BUTTON-TT')"
               :details="$t('help.HOME-BUTTON-DET')">
