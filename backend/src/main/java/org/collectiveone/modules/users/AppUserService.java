@@ -130,7 +130,19 @@ public class AppUserService {
 		return new PostResult("success", "locale set", profile.getId().toString());
 	}
 	
-
+	@Transactional
+	public PostResult setEndpoint(UUID userId, String endpoint) {
+		AppUserProfile profile = appUserProfileRepository.findByUser_C1Id(userId);
+		
+		if (!appUserProfileRepository.isEndpoint(userId, endpoint)) {
+			profile.getEndpoints().add(endpoint);
+			appUserProfileRepository.save(profile);
+		}
+		
+		return new PostResult("success", "locale set", profile.getId().toString());
+	}
+	
+	
 	@Transactional
 	public GetResult<List<AppUserDto>> searchBy(String q) {
 		List<AppUser> appUsers = appUserRepository.findTop10ByProfile_NicknameLikeIgnoreCase("%"+q+"%");

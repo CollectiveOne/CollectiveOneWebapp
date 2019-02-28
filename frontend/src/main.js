@@ -28,13 +28,12 @@ import HelpPopper from '@/components/HelpPopper.vue'
 
 Vue.config.productionTip = false
 
+Vue.use(VueI18n)
 Vue.use(VueAxios, axios)
 Vue.use(VueAnalytics, {
   id: 'UA-92543820-1',
   router
 })
-
-Vue.use(VueI18n)
 
 const getLang = function () {
   if (navigator.languages !== undefined) {

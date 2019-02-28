@@ -102,7 +102,7 @@
                   <div class="w3-row">
                     <label class=""><b>{{ $t('general.CONFIGURATION') }}</b>
                       <popper
-                        :key="$store.state.support.isTouchScreen"
+                        :key="$store.state.support.isTouchScreen + Math.random()*100000000"
                         :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
                         :options="popperOptions" :delay-on-mouse-in="600" :delay-on-mouse-out="800">
                         <app-help-popper

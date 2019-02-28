@@ -1,6 +1,8 @@
-import Vue from 'vue'
+import Vue from 'vue';
 import router from '@/router'
+import { i18n } from '@/lang/lang_init'
 import { swRegistration } from '@/registerServiceWorker.js'
+import { showNotification } from '@/lib/notifHelper.js'
 
 const state = {
   pushedIds: []
@@ -45,27 +47,15 @@ const actions = {
           if (ok) {
             if (!context.rootState.support.windowIsFocus) {
               console.log('Creating Notification')
+              showNotification(swRegistration, notification)
 
-              let user = notification.activity.triggerUser
-
-              var notify = swRegistration.showNotification(user.nickname + ' ' + notification.title, {
-                body: notification.message,
-                tag: notification.activity.id,
-                icon: user.pictureUrl,
-                data: {
-                  url: notification.url
-                },
-                badge: 'https://image.ibb.co/mgQn1a/imago_red.png',
-                vibrate: [150]
-              })
             } else {
               console.log('notifications not pushed because window is focused')
+              Vue.axios.put('/1/notifications/pushed/' + notification.id, {}).then((response) => {
+              }).catch(function (error) {
+                console.log(error)
+              })
             }
-
-            Vue.axios.put('/1/notifications/pushed/' + notification.id, {}).then((response) => {
-            }).catch(function (error) {
-              console.log(error)
-            })
           }
         }
       }

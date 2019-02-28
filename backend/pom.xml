@@ -112,6 +112,11 @@
 		    <optional>true</optional>
 		</dependency>
 		
+		<dependency>
+		    <groupId>nl.martijndwars</groupId>
+		    <artifactId>web-push</artifactId>
+		    <version>5.0.1</version>
+		</dependency>
 		
 	</dependencies>
 

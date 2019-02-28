@@ -15,10 +15,10 @@ module.exports = {
     },
 
     // configure the workbox plugin
-    workboxPluginMode: 'GenerateSW',
+    workboxPluginMode: 'InjectManifest',
     workboxOptions: {
       // swSrc is required in InjectManifest mode.
-      skipWaiting: true
+      swSrc: 'public/service-worker.js'
       // ...other Workbox options...
     }
   },

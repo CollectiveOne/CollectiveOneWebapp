@@ -1,8 +1,10 @@
 package org.collectiveone.modules.users;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -30,6 +32,10 @@ public class AppUserProfile {
 	
 	@OneToOne
 	private AppUser user;
+	
+	@ElementCollection
+	@Column(name="endpoint")
+	private List<String> endpoints;
 	
 	@Column(name = "nickname", length = 32)
 	private String nickname;
@@ -82,13 +88,21 @@ public class AppUserProfile {
 	public void setUser(AppUser user) {
 		this.user = user;
 	}
-
+	
 	public String getNickname() {
 		return nickname;
 	}
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+	
+	public List<String> getEndpoints() {
+		return endpoints;
+	}
+
+	public void setEndpoints(List<String> endpoints) {
+		this.endpoints = endpoints;
 	}
 
 	public String getPictureUrl() {

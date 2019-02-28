@@ -4,7 +4,7 @@
 
     <div v-if="this.$store.state.user.authenticated" class="control-group">
       <div class="">
-        <popper :key="$store.state.support.isTouchScreen"
+        <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
           :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
@@ -17,7 +17,7 @@
           </div>
         </popper>
 
-        <popper :key="$store.state.support.isTouchScreen"
+        <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
           :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
@@ -30,7 +30,7 @@
           </div>
         </popper>
 
-        <popper :key="$store.state.support.isTouchScreen"
+        <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
           :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
@@ -47,7 +47,7 @@
     </div>
 
     <div class="control-group">
-      <popper :key="$store.state.support.isTouchScreen"
+      <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
         :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
         :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
         <app-help-popper

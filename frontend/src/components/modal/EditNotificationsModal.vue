@@ -331,6 +331,14 @@ export default {
   },
 
   computed: {
+    loggedUser () {
+      if (this.$store.state.user) {
+        return this.$store.state.user.profile
+      }
+
+      return null
+    },
+
     applicableSubscriber () {
       if (this.subscriber) {
         if (this.subscriber.inheritConfig === 'CUSTOM') {
@@ -464,13 +472,21 @@ export default {
         swRegistration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: applicationServerKey
-        }).then(
-          function (pushSubscription) {
-            console.log(pushSubscription.subscriptionId)
-            console.log(pushSubscription.endpoint)
-          }, function (error) {
+        }).then((pushSubscription) => {
+          console.log('p256dh: ' + pushSubscription.getKey('p256dh'))
+          console.log('auth: ' + pushSubscription.getKey('auth'))
+
+          SEND THE KEYS!!!
+            this.axios.put('/1/user/' + this.loggedUser.c1Id + '/endpoint', {}, {
+              params: {
+                endpoint: pushSubscription.endpoint
+              }
+            })
+          }, (error) => {
             console.log('pushManager.subscribe Error:' + error)
           })
+      } else {
+        console.log(subscription)
       }
     }).catch((error) => {
       console.log('error getting subscription')

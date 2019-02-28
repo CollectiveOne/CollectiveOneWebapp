@@ -395,7 +395,8 @@ const translations = {
       'TO_SECTION_CM': 'To Section',
       'TO_CARD_CM': 'To Card',
       'CONVERT_TO_CARD': 'convert to card',
-      'DELETE_MSG_WARNING': '<b>Warning:</b> Are you sure you want to delete this message? This cannot be undone.'
+      'DELETE_MSG_WARNING': '<b>Warning:</b> Are you sure you want to delete this message? This cannot be undone.',
+      'NEW_UPDATES': 'New events in your initiatives'
     },
     model: {
       'SECTION': 'section',

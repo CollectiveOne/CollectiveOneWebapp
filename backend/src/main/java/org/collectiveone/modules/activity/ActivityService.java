@@ -62,6 +62,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import nl.martijndwars.webpush.PushService;
+
 @Service
 public class ActivityService {
 	
@@ -104,7 +106,10 @@ public class ActivityService {
 	
 	
 	@Autowired
-	SimpMessagingTemplate template;
+	private SimpMessagingTemplate template;
+	
+	@Autowired
+	private PushService pushService;
 	
 	@Transactional
 	public void sendWantToContributeEmails() throws IOException {
@@ -1520,6 +1525,20 @@ public class ActivityService {
 						break;
 				}
 			}
+			
+//			/* push notification to user endpoint */
+//			if (notification.getPushState() == NotificationState.PENDING) {
+//				if (notification.getSubscriber().getUser().getOnlineStatus() == UserOnlineStatus.OFFLINE) {
+//					for (String endpoint : notification.getSubscriber().getUser().getProfile().getEndpoints()) {
+//						nl.martijndwars.webpush.Notification pushNotification 
+//							= new nl.martijndwars.webpush.Notification(
+//									endpoint,
+//									);
+//						
+//						pushService.sendAsync(pushNotification);
+//					}
+//				}
+//			}
 			
 			notification = notificationRepository.save(notification);
 			

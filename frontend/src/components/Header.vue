@@ -68,7 +68,7 @@
         <div class="w3-col s6">
           <div v-if="inInitiative && !accessDenied" class="tab-btns-container w3-xlarge">
             <popper
-              :key="$store.state.support.isTouchScreen"
+              :key="$store.state.support.isTouchScreen + Math.random()*100000000"
               :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
               :options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
               <app-help-popper
@@ -85,7 +85,7 @@
             </popper>
 
             <popper
-              :key="$store.state.support.isTouchScreen"
+              :key="$store.state.support.isTouchScreen + Math.random()*100000000"
               :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
               :options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
               <app-help-popper
@@ -102,7 +102,7 @@
             </popper>
 
             <popper
-              :key="$store.state.support.isTouchScreen"
+              :key="$store.state.support.isTouchScreen + Math.random()*100000000"
               :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
               :options="popperOptions" class="btn-div" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
               <app-help-popper
@@ -162,7 +162,7 @@
           </div>
 
           <popper
-            :key="$store.state.support.isTouchScreen"
+            :key="$store.state.support.isTouchScreen + Math.random()*100000000"
             :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
             :options="popperOptions"  :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
             <app-help-popper
@@ -174,7 +174,7 @@
           </popper>
 
           <popper
-            :key="$store.state.support.isTouchScreen"
+            :key="$store.state.support.isTouchScreen + Math.random()*100000000"
             :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
             :options="popperOptions"  :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
             <app-help-popper

@@ -13,7 +13,7 @@
       <div class="img-div noselect">
 
         <popper
-          :key="$store.state.support.isTouchScreen"
+          :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
           :options="popperOptions"
           :toggleShow="toggleShow"

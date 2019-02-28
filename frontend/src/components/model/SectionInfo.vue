@@ -8,7 +8,7 @@
           </div>
 
           <div class="title-buttons">
-            <popper :key="$store.state.support.isTouchScreen"
+            <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
               :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
               :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
               <app-help-popper
@@ -30,7 +30,7 @@
               </app-section-control-buttons>
             </div>
 
-            <popper :key="$store.state.support.isTouchScreen"
+            <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
               :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
               :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
               <app-help-popper
