@@ -3,6 +3,7 @@ package org.collectiveone.modules.model;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -110,7 +111,10 @@ public class ModelService {
 	
 	@Transactional(rollbackOn = Exception.class)
 	public Initiative getSectionInitiative (UUID sectionId) {
-		return modelSectionRepository.findById(sectionId).get().getInitiative();
+		Optional<ModelSection> sectionOpt = modelSectionRepository.findById(sectionId);
+		return sectionOpt.isPresent() ? 
+				sectionOpt.get().getInitiative() :
+					null;
 	}
 	
 	@Transactional(rollbackOn = Exception.class)

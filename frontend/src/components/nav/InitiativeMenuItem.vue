@@ -24,7 +24,7 @@
         </router-link>
       </div>
 
-      <div class="notification-div">
+      <div v-if="$store.state.user.authenticated" class="notification-div">
         <app-notifications-list
           :element="initiative"
           contextType="INITIATIVE">

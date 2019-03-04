@@ -132,7 +132,7 @@ export default {
 
 .touch-area {
   height: 100%;
-  width: 50px;
+  width: 20px;
   position: absolute;
   left: 0;
   top: 0;

@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -33,9 +33,8 @@ public class AppUserProfile {
 	@OneToOne
 	private AppUser user;
 	
-	@ElementCollection
-	@Column(name="endpoint")
-	private List<String> endpoints;
+	@OneToMany(mappedBy = "profile")
+	private List<PushSubscription> subscriptions;
 	
 	@Column(name = "nickname", length = 32)
 	private String nickname;
@@ -97,12 +96,12 @@ public class AppUserProfile {
 		this.nickname = nickname;
 	}
 	
-	public List<String> getEndpoints() {
-		return endpoints;
+	public List<PushSubscription> getSubscriptions() {
+		return subscriptions;
 	}
 
-	public void setEndpoints(List<String> endpoints) {
-		this.endpoints = endpoints;
+	public void setSubscriptions(List<PushSubscription> subscriptions) {
+		this.subscriptions = subscriptions;
 	}
 
 	public String getPictureUrl() {

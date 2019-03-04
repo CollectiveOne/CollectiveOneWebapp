@@ -11,15 +11,15 @@ public interface AppUserProfileRepositoryIf extends CrudRepository<AppUserProfil
 	
 	AppUserProfile findByUsername(String username);
 	
-	@Query("SELECT endpoint FROM AppUserProfile profile "
-			+ "JOIN profile.endpoints endpoint "
+	@Query("SELECT subs.endpoint FROM AppUserProfile profile "
+			+ "JOIN profile.subscriptions subs "
 			+ "WHERE profile.user.c1Id = :userId "
-			+ "AND endpoint = :endpoint")
+			+ "AND subs.endpoint = :endpoint")
 	String getEndpoint(
 			@Param("userId") UUID userId,
 			@Param("endpoint") String endpoint);
 	
-	default Boolean isEndpoint(UUID userId, String endpoint) {
+	default Boolean endpointExists(UUID userId, String endpoint) {
 		String endpointCheck = getEndpoint(userId, endpoint);
 		return endpointCheck != null;
 	} 

@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <div v-if="section" class="notification-div">
+      <div v-if="$store.state.user.authenticated && section" class="notification-div">
         <app-notifications-list
           :element="section"
           :forceUpdate="forceUpdateNotifications"

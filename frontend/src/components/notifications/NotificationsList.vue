@@ -211,7 +211,7 @@ export default {
     triggerUpdateNotifications () {
       /* only update if there is notifications to be removed */
       if (this.notifications.length > 0) {
-        console.log('updating notifications in ' + this.url + ' due to triggerUpdateNotifications watch')
+        // console.log('updating notifications in ' + this.url + ' due to triggerUpdateNotifications watch')
         this.updateNotifications()
       }
     },
@@ -258,7 +258,7 @@ export default {
           }
 
           /* push all notifications */
-          console.log('pushing notifications ' + this.notifications.length + ' from ' + this.url)
+          // console.log('pushing notifications ' + this.notifications.length + ' from ' + this.url)
           this.$store.dispatch('addPushNotifications', this.notifications)
         }).catch(function (error) {
           console.log(error)
@@ -292,7 +292,7 @@ export default {
         /* check that new notifications arrived */
         this.toggleShow = !this.toggleShow
         this.$store.commit('triggerUpdateNotifications')
-        console.log('updating notifications in ' + this.url + ' due to allNotificationsRead response')
+        // console.log('updating notifications in ' + this.url + ' due to allNotificationsRead response')
         this.updateNotifications()
         this.hide()
       }).catch(function (error) {
@@ -306,7 +306,7 @@ export default {
         this.axios.put('/1/notifications/read', idsList).then((response) => {
           /* check that new notifications arrived */
           this.$store.commit('triggerUpdateNotifications')
-          console.log('updating notifications in ' + this.url + ' due to messageNotificationsRead response')
+          // console.log('updating notifications in ' + this.url + ' due to messageNotificationsRead response')
           this.updateNotifications(false)
         }).catch(function (error) {
           console.log(error)
@@ -375,7 +375,7 @@ export default {
           // console.log(tick)
           var message = tick.body
           if (message === 'UPDATE') {
-            console.log('updating notifications in ' + this.url + ' due to socket message')
+            // console.log('updating notifications in ' + this.url + ' due to socket message')
             this.updateNotifications(true)
           }
         }
@@ -384,7 +384,7 @@ export default {
   },
 
   created () {
-    console.log('updating notifications in ' + this.url + ' due to component creation')
+    // console.log('updating notifications in ' + this.url + ' due to component creation')
     this.updateNotifications(true)
     this.handleSocket()
   },

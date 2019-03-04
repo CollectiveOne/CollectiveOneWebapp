@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { register } from 'register-service-worker'
+import { store } from './store/store.js'
 
 var swRegistration
 
@@ -13,6 +14,9 @@ register(`${process.env.BASE_URL}service-worker.js`, {
   },
   registered (registration) {
     swRegistration = registration
+    // if (store) {
+    //   store.dispatch('updateSubscription')
+    // }
     console.log('SW Registered')
   },
   cached (registration) {
@@ -30,7 +34,6 @@ register(`${process.env.BASE_URL}service-worker.js`, {
     console.error('Error during service worker registration:', error)
   }
 })
-
 
 export {
   swRegistration

@@ -76,8 +76,9 @@ public class UsersController extends BaseController {
 		
 	}
 	
-	@RequestMapping(path = "/user/{userId}/endpoint",  method = RequestMethod.PUT)
-    public PostResult setPushEndpoint(@PathVariable("userId") UUID userId, @RequestParam String endpoint) {
+	@RequestMapping(path = "/user/{userId}/subscription",  method = RequestMethod.PUT)
+    public PostResult setPushEndpoint(@PathVariable("userId") UUID userId, 
+    		@RequestBody SubscriptionDto subscription) {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -87,7 +88,7 @@ public class UsersController extends BaseController {
 			return new PostResult("error", "only the profile owner can edit a profile", "");
 		}
 		
-		return appUserService.setEndpoint(userId, endpoint);
+		return appUserService.setSubscription(userId, subscription);
 	}
 	
 	

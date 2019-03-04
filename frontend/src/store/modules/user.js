@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { swRegistration } from '@/registerServiceWorker.js'
 
 const state = {
   lock: null,
@@ -50,6 +51,27 @@ const actions = {
         console.log(error)
         context.dispatch('logoutUser')
       })
+    }
+  },
+
+  updateSubscription: (context) => {
+    if (swRegistration) {
+      swRegistration.pushManager.getSubscription().then((subscription) => {
+        if (subscription != null) {
+          // TODO: update subscription
+          // let subscriptionDto = {
+          //   endpoint: pushSubscription.endpoint,
+          //   p256dh: pushSubscription.getKey('p256dh'),
+          //   auth: pushSubscription.getKey('auth')
+          // }
+          // Vue.axios.put('/1/user/' + context.state.profile.c1Id + '/subscription', subscriptionDto)
+        }
+      }).catch((error) => {
+        console.log('error getting subscription')
+        console.log(error)
+      })
+    } else {
+      console.log('SW not ready for subscription update')
     }
   },
 

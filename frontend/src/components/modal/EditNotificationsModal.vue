@@ -473,18 +473,18 @@ export default {
           userVisibleOnly: true,
           applicationServerKey: applicationServerKey
         }).then((pushSubscription) => {
-          console.log('p256dh: ' + pushSubscription.getKey('p256dh'))
-          console.log('auth: ' + pushSubscription.getKey('auth'))
-
-          SEND THE KEYS!!!
-            this.axios.put('/1/user/' + this.loggedUser.c1Id + '/endpoint', {}, {
-              params: {
-                endpoint: pushSubscription.endpoint
-              }
-            })
-          }, (error) => {
-            console.log('pushManager.subscribe Error:' + error)
-          })
+          // TODO: add subscription data
+          // console.log(pushSubscription.getKey('p256dh')
+          // console.log(pushSubscription.getKey('auth'))
+          // let subscriptionDto = {
+          //   endpoint: pushSubscription.endpoint,
+          //   p256dh: pushSubscription.getKey('p256dh'),
+          //   auth: pushSubscription.getKey('auth')
+          // }
+          // this.axios.put('/1/user/' + this.loggedUser.c1Id + '/subscription', subscriptionDto)
+        }, (error) => {
+          console.log('pushManager.subscribe Error:' + error)
+        })
       } else {
         console.log(subscription)
       }

@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 const showNotification = function(swRegistration, notification) {
   let user = notification.activity.triggerUser
   swRegistration.getNotifications().then((currentNotifications) => {
@@ -29,9 +27,5 @@ const showNotification = function(swRegistration, notification) {
     }
   })
 
-  Vue.axios.put('/1/notifications/pushed/' + notification.id, true)
-}
-
-export {
-  showNotification
+  fetch('/1/notifications/pushed/' + notification.id);
 }

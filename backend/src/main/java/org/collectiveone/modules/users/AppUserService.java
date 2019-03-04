@@ -40,6 +40,11 @@ public class AppUserService {
 	@Autowired
 	private SubscriberRepositoryIf subscriberRepository;
 	
+	@Autowired
+	private PushSubscriptionRepositoryIf pushSubscriptionRespository;
+	
+	
+	
 
 	@Transactional
 	public AppUser getOrCreateFromAuth0Id(String auth0Id) {
@@ -131,15 +136,24 @@ public class AppUserService {
 	}
 	
 	@Transactional
-	public PostResult setEndpoint(UUID userId, String endpoint) {
+	public PostResult setSubscription(UUID userId, SubscriptionDto subscriptionDto) {
 		AppUserProfile profile = appUserProfileRepository.findByUser_C1Id(userId);
 		
-		if (!appUserProfileRepository.isEndpoint(userId, endpoint)) {
-			profile.getEndpoints().add(endpoint);
+		if (!appUserProfileRepository.endpointExists(userId, subscriptionDto.getEndpoint())) {
+			
+			PushSubscription subscription = new PushSubscription(
+					subscriptionDto.getEndpoint(),
+					subscriptionDto.getP256dh(),
+					subscriptionDto.getAuth());
+			
+			subscription.setProfile(profile);
+			subscription = pushSubscriptionRespository.save(subscription);
+						
+			profile.getSubscriptions().add(subscription);
 			appUserProfileRepository.save(profile);
 		}
 		
-		return new PostResult("success", "locale set", profile.getId().toString());
+		return new PostResult("success", "subscription added", profile.getId().toString());
 	}
 	
 	
