@@ -79,8 +79,12 @@ public class NotificationDtoBuilder {
 		String cardText = "";
 		if (modelCardWrapper != null) {
 			String text = modelCardWrapper.getCard().getText();
-			cardText = isHtml ? text : (text.length() > 60 ? text.substring(0, 60) + "..." : text);
-			cardText = modelCardWrapper.getCard().getTitle() + (isHtml ? "" : " - ") + checkHtml("</p><p>") + cardText; 
+			if (text != null) {
+				cardText = isHtml ? text : (text.length() > 60 ? text.substring(0, 60) + "..." : text);
+				cardText = modelCardWrapper.getCard().getTitle() + (isHtml ? "" : " - ") + checkHtml("</p><p>") + cardText;	
+			} else {
+				cardText = "";
+			}
 		}
 		
 		String title = "";
