@@ -245,7 +245,11 @@ export default {
     alsoInSections () {
       if (this.section) {
         return this.section.inSections.filter((section) => {
-          return this.inSection.id !== section.id
+          if (this.inSection) {
+            return this.inSection.id !== section.id
+          } else {
+            return []
+          }
         })
       }
       return []
