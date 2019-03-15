@@ -231,39 +231,44 @@ export default {
     },
     updateNotifications (markMessagesRead) {
       markMessagesRead = markMessagesRead || false
-
-      this.loading = true
-
       if (!this.showingMoreNotifications) {
         /* dont update if the user is scrolling down de notifications */
-        this.axios.get(this.url, {
-          params: {
-            page: 0,
-            size: 10,
-            onlyUnread: !this.showingAll
-          }
-        }).then((response) => {
-          this.loading = false
-          /* check that new notifications arrived */
-          this.notifications = response.data.data.notifications
-          this.totalUnread = response.data.data.totalUnread
-
-          this.allShown = this.notifications.length < 10
-
-          if (markMessagesRead) {
-            if (this.isSelected && this.$route.name === 'ModelSectionMessages') {
-              /* autoread message notifications of this section */
-              this.messageNotificationsRead()
-            }
-          }
-
-          /* push all notifications */
-          // console.log('pushing notifications ' + this.notifications.length + ' from ' + this.url)
-          this.$store.dispatch('addPushNotifications', this.notifications)
-        }).catch(function (error) {
-          console.log(error)
-        })
+        /* delay the update to let other requests go before (like adding a card and so on) */
+        setTimeout(() => {
+          this.updateNotificationsDelayed(markMessagesRead)
+        }, 5000)
       }
+    },
+
+    updateNotificationsDelayed (markMessagesRead) {
+      this.loading = true
+      this.axios.get(this.url, {
+        params: {
+          page: 0,
+          size: 10,
+          onlyUnread: !this.showingAll
+        }
+      }).then((response) => {
+        this.loading = false
+        /* check that new notifications arrived */
+        this.notifications = response.data.data.notifications
+        this.totalUnread = response.data.data.totalUnread
+
+        this.allShown = this.notifications.length < 10
+
+        if (markMessagesRead) {
+          if (this.isSelected && this.$route.name === 'ModelSectionMessages') {
+            /* autoread message notifications of this section */
+            this.messageNotificationsRead()
+          }
+        }
+
+        /* push all notifications */
+        // console.log('pushing notifications ' + this.notifications.length + ' from ' + this.url)
+        this.$store.dispatch('addPushNotifications', this.notifications)
+      }).catch(function (error) {
+        console.log(error)
+      })
     },
 
     addNotifications () {

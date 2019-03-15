@@ -14,6 +14,7 @@ import org.collectiveone.modules.activity.Subscriber;
 import org.collectiveone.modules.activity.enums.SubscriberInheritConfig;
 import org.collectiveone.modules.activity.enums.SubscriptionElementType;
 import org.collectiveone.modules.activity.repositories.SubscriberRepositoryIf;
+import org.collectiveone.modules.crypto.CryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,9 +44,10 @@ public class AppUserService {
 	@Autowired
 	private PushSubscriptionRepositoryIf pushSubscriptionRespository;
 	
+	@Autowired
+	private CryptoService cryptoService;
 	
 	
-
 	@Transactional
 	public AppUser getOrCreateFromAuth0Id(String auth0Id) {
 		
@@ -136,15 +138,15 @@ public class AppUserService {
 	}
 	
 	@Transactional
-	public PostResult setSubscription(UUID userId, SubscriptionDto subscriptionDto) {
+	public PostResult addSubscription(UUID userId, SubscriptionDto subscriptionDto) {
 		AppUserProfile profile = appUserProfileRepository.findByUser_C1Id(userId);
 		
 		if (!appUserProfileRepository.endpointExists(userId, subscriptionDto.getEndpoint())) {
 			
 			PushSubscription subscription = new PushSubscription(
 					subscriptionDto.getEndpoint(),
-					subscriptionDto.getP256dh(),
-					subscriptionDto.getAuth());
+					cryptoService.encrypt(subscriptionDto.getP256dh()),
+					cryptoService.encrypt(subscriptionDto.getAuth()));
 			
 			subscription.setProfile(profile);
 			subscription = pushSubscriptionRespository.save(subscription);
@@ -265,7 +267,6 @@ public class AppUserService {
 		AppUser user = appUserRepository.findByC1Id(userId);
 		user.setEmailNotificationsEnabled(false);
 		return new PostResult("success", "email notifications disabled", "");
-	}
-	
+	}	
 
 }

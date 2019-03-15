@@ -9,8 +9,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -45,10 +43,6 @@ public class AppUser {
 	
 	@OneToOne(mappedBy="user")
 	private AppUserProfile profile;
-	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "online_status")
-	private UserOnlineStatus onlineStatus;
 	
 	private Timestamp lastSeen;
 	
@@ -145,12 +139,6 @@ public class AppUser {
 	}
 	public void setLastSeen(Timestamp lastSeen) {
 		this.lastSeen = lastSeen;
-	}
-	public UserOnlineStatus getOnlineStatus() {
-		return onlineStatus;
-	}
-	public void setOnlineStatus(UserOnlineStatus onlineStatus) {
-		this.onlineStatus = onlineStatus;
 	}
 	
 }

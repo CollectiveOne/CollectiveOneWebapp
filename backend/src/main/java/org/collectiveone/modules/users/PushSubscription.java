@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 @Entity
-@Table( name = "users_push_subscriptions" )
+@Table( name = "app_users_push_subscriptions" )
 public class PushSubscription {
 
 	@Id
@@ -30,13 +30,17 @@ public class PushSubscription {
 	@Column(length = 2084)
 	private String endpoint;
 	
-	@Column(length = 2084)
-	private String p256dh;
+	@Column(length = 256)
+	private byte[] p256dh;
 	
-	@Column(length = 2084)
-	private String auth;
+	@Column(length = 256)
+	private byte[] auth;
 	
-	public PushSubscription(String endpoint, String p256dh, String auth) {
+	public PushSubscription() {
+		super();
+	}
+	
+	public PushSubscription(String endpoint, byte[] p256dh, byte[] auth) {
 		super();
 		this.endpoint = endpoint;
 		this.p256dh = p256dh;
@@ -67,19 +71,19 @@ public class PushSubscription {
 		this.endpoint = endpoint;
 	}
 
-	public String getP256dh() {
+	public byte[] getP256dh() {
 		return p256dh;
 	}
 
-	public void setP256dh(String p256dh) {
+	public void setP256dh(byte[] p256dh) {
 		this.p256dh = p256dh;
 	}
 
-	public String getAuth() {
+	public byte[] getAuth() {
 		return auth;
 	}
 
-	public void setAuth(String auth) {
+	public void setAuth(byte[] auth) {
 		this.auth = auth;
 	}
 	

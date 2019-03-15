@@ -55,16 +55,21 @@ const actions = {
   },
 
   updateSubscription: (context) => {
+    console.log('updating subscription')
     if (swRegistration) {
+      console.log('sw ready')
       swRegistration.pushManager.getSubscription().then((subscription) => {
         if (subscription != null) {
-          // TODO: update subscription
-          // let subscriptionDto = {
-          //   endpoint: pushSubscription.endpoint,
-          //   p256dh: pushSubscription.getKey('p256dh'),
-          //   auth: pushSubscription.getKey('auth')
-          // }
-          // Vue.axios.put('/1/user/' + context.state.profile.c1Id + '/subscription', subscriptionDto)
+          console.log('subscription found')
+          console.log(JSON.stringify(subscription))
+          let subscriptionDto = {
+            endpoint: subscription.endpoint,
+            p256dh: btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('p256dh')))),
+            auth: btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('auth'))))
+          }
+          Vue.axios.put('/1/user/' + context.state.profile.c1Id + '/subscription', subscriptionDto)
+        } else {
+          console.log('subscription not found')
         }
       }).catch((error) => {
         console.log('error getting subscription')

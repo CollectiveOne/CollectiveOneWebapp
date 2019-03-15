@@ -35,6 +35,7 @@ import org.collectiveone.modules.activity.repositories.SubscriberRepositoryIf;
 import org.collectiveone.modules.assignations.Assignation;
 import org.collectiveone.modules.conversations.Message;
 import org.collectiveone.modules.conversations.MessageThreadContextType;
+import org.collectiveone.modules.crypto.CryptoService;
 import org.collectiveone.modules.initiatives.Initiative;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.initiatives.Member;
@@ -56,12 +57,14 @@ import org.collectiveone.modules.tokens.TokenMint;
 import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
+import org.collectiveone.modules.users.PushSubscription;
 import org.collectiveone.modules.users.UserOnlineStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import nl.martijndwars.webpush.Base64Encoder;
 import nl.martijndwars.webpush.PushService;
 
 @Service
@@ -76,6 +79,9 @@ public class ActivityService {
 	@Autowired
 	private EmailService emailService;
 	
+	@Autowired
+	private TimeService timeService;
+		
 	@Autowired
 	private NotificationDtoBuilder notificationDtoBuilder;
 	
@@ -111,10 +117,13 @@ public class ActivityService {
 	@Autowired
 	private PushService pushService;
 	
+	@Autowired
+	private CryptoService cryptoService;
+	
+	
+	
 	@Transactional
 	public void sendWantToContributeEmails() throws IOException {
-		
-		
 	}
 	
 	@Transactional
@@ -1418,7 +1427,8 @@ public class ActivityService {
 			notification.setActivity(activity);
 			notification.setSubscriber(subscriber);
 			
-			Boolean isOnline = subscriber.getUser().getOnlineStatus() == UserOnlineStatus.ONLINE;
+			Boolean isOnline = user.getLastSeen().getTime() > timeService.fiveMinutesAgo().getTime();
+			
 			if (isOnline) {
 				/* if the user is online, notification is marker as delivered */
 				notification.setInAppState(NotificationState.DELIVERED);
@@ -1526,19 +1536,27 @@ public class ActivityService {
 				}
 			}
 			
-//			/* push notification to user endpoint */
-//			if (notification.getPushState() == NotificationState.PENDING) {
-//				if (notification.getSubscriber().getUser().getOnlineStatus() == UserOnlineStatus.OFFLINE) {
-//					for (String endpoint : notification.getSubscriber().getUser().getProfile().getEndpoints()) {
-//						nl.martijndwars.webpush.Notification pushNotification 
-//							= new nl.martijndwars.webpush.Notification(
-//									endpoint,
-//									);
-//						
-//						pushService.sendAsync(pushNotification);
-//					}
-//				}
-//			}
+			/* push notification to user endpoint */
+			if (notification.getPushState() == NotificationState.PENDING) {
+				byte[] payload = {};
+				if (!isOnline) {
+					for (PushSubscription subscription : notification.getSubscriber().getUser().getProfile().getSubscriptions()) {
+						nl.martijndwars.webpush.Notification pushNotification;
+						try {
+							pushNotification = new nl.martijndwars.webpush.Notification(
+									subscription.getEndpoint(),
+									cryptoService.decrypt(subscription.getP256dh()),
+									cryptoService.decrypt(subscription.getAuth()),
+									payload);
+							
+							pushService.sendAsync(pushNotification);
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
 			
 			notification = notificationRepository.save(notification);
 			

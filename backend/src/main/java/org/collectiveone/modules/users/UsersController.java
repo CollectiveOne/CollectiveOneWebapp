@@ -77,7 +77,7 @@ public class UsersController extends BaseController {
 	}
 	
 	@RequestMapping(path = "/user/{userId}/subscription",  method = RequestMethod.PUT)
-    public PostResult setPushEndpoint(@PathVariable("userId") UUID userId, 
+    public PostResult setPushSubscription(@PathVariable("userId") UUID userId, 
     		@RequestBody SubscriptionDto subscription) {
 		
 		if (getLoggedUser() == null) {
@@ -88,7 +88,7 @@ public class UsersController extends BaseController {
 			return new PostResult("error", "only the profile owner can edit a profile", "");
 		}
 		
-		return appUserService.setSubscription(userId, subscription);
+		return appUserService.addSubscription(userId, subscription);
 	}
 	
 	
