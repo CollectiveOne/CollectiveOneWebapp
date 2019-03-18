@@ -58,13 +58,14 @@ import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.collectiveone.modules.users.PushSubscription;
-import org.collectiveone.modules.users.UserOnlineStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import nl.martijndwars.webpush.Base64Encoder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import nl.martijndwars.webpush.PushService;
 
 @Service
@@ -1423,6 +1424,8 @@ public class ActivityService {
 			AppUser user = subscriber.getUser();
 			
 			Notification notification = new Notification();
+			notification = notificationRepository.save(notification);
+			
 			notification.setCreationDate(new Timestamp(System.currentTimeMillis()));
 			notification.setActivity(activity);
 			notification.setSubscriber(subscriber);
@@ -1534,25 +1537,34 @@ public class ActivityService {
 					case ALL_EVENTS:
 						break;
 				}
-			}
-			
-			/* push notification to user endpoint */
-			if (notification.getPushState() == NotificationState.PENDING) {
-				byte[] payload = {};
-				if (!isOnline) {
-					for (PushSubscription subscription : notification.getSubscriber().getUser().getProfile().getSubscriptions()) {
-						nl.martijndwars.webpush.Notification pushNotification;
-						try {
-							pushNotification = new nl.martijndwars.webpush.Notification(
-									subscription.getEndpoint(),
-									cryptoService.decrypt(subscription.getP256dh()),
-									cryptoService.decrypt(subscription.getAuth()),
-									payload);
-							
-							pushService.sendAsync(pushNotification);
-							
-						} catch (Exception e) {
-							e.printStackTrace();
+				
+				/* push notification to user endpoint */
+				if (notification.getPushState() == NotificationState.PENDING) {
+					
+					byte[] payload = {};
+					
+					ObjectMapper mapper = new ObjectMapper();
+					try {
+						payload = mapper.writeValueAsString(notificationDtoBuilder.getNotificationDto(notification, false)).getBytes();
+					} catch (JsonProcessingException e1) {
+						e1.printStackTrace();
+					}
+					
+					if (!isOnline) {
+						for (PushSubscription subscription : notification.getSubscriber().getUser().getProfile().getSubscriptions()) {
+							nl.martijndwars.webpush.Notification pushNotification;
+							try {
+								pushNotification = new nl.martijndwars.webpush.Notification(
+										subscription.getEndpoint(),
+										cryptoService.decrypt(subscription.getP256dh()),
+										cryptoService.decrypt(subscription.getAuth()),
+										payload);
+								
+								pushService.sendAsync(pushNotification);
+								
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
