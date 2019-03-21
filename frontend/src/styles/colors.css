@@ -8,6 +8,11 @@
   color: white;
 }
 
+.app-button-bg {
+  background-color: #15a5cc !important;
+  color: white;
+}
+
 .gray-1 {
   background-color: #637484;
   color: white;

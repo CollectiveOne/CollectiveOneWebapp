@@ -1739,7 +1739,10 @@ public class ModelService {
 			UUID userId, 
 			Integer level) {
 		
-		GraphNode subsection = getSectionNode(sectionId, false, true, level, userId, false);
+		Boolean isMemberOfEcosystem = initiativeService.isMemberOfEcosystem(
+				modelSectionRepository.findById(sectionId).get().getInitiative().getId(), userId);
+		
+		GraphNode subsection = getSectionNode(sectionId, false, true, level, userId, isMemberOfEcosystem);
 		return subsection.toList(false, true);
 	}
 	

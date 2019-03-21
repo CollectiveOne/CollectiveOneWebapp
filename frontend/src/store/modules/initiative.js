@@ -112,7 +112,8 @@ const actions = {
         }
       }
     }).catch((error) => {
-      console.log(error)
+      router.push({ name: 'AppView' })
+      console.error(error)
     })
   },
 

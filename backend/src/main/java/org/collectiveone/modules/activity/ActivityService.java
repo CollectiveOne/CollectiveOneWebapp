@@ -235,34 +235,40 @@ public class ActivityService {
 			}
 			
 			notifications = notificationRepository.findOfUserInSections(userId, states, allSectionIds, cardsIds, page);
-			totalUnread = notificationRepository.countOfUserInSections(userId, allSectionIds, cardsIds);
+			totalUnread = notificationRepository.countPendingOfUserInSections(userId, allSectionIds, cardsIds);
 			
 		} else {
-			UUID topModelSectionId = initiativeRepository.findTopModelSectionIdById(elementId);
-			
-			allSectionIds = modelService.getAllSubsectionsIds(topModelSectionId, userId, null);
-			
-			if (allSectionIds.size() == 0) {
-				allSectionIds.add(UUID.randomUUID());
+			if (contextType == NotificationContextType.INITIATIVE) {
+				UUID topModelSectionId = initiativeRepository.findTopModelSectionIdById(elementId);
+				
+				allSectionIds = modelService.getAllSubsectionsIds(topModelSectionId, userId, null);
+				
+				if (allSectionIds.size() == 0) {
+					allSectionIds.add(UUID.randomUUID());
+				}
+				
+				cardsIds = new ArrayList<UUID>();
+				cardsIds.add(topModelSectionId);
+				cardsIds = modelCardWrapperAdditionRepository.findAllCardWrapperIdsOfSections(allSectionIds);
+				
+				if (cardsIds.size() == 0) {
+					cardsIds.add(UUID.randomUUID());
+				}
+				
+				List<InitiativeDto> subinitiativesTree = initiativeService.getSubinitiativesTree(elementId, null);
+				
+				List<UUID> allInitiativesIds = new ArrayList<UUID>();
+				
+				allInitiativesIds.add(elementId);
+				allInitiativesIds.addAll(extractAllIdsFromInitiativesTree(subinitiativesTree, new ArrayList<UUID>()));
+				
+				notifications = notificationRepository.findOfUserInInitiativesAndSection(userId, states, allInitiativesIds, allSectionIds, cardsIds, page);
+				totalUnread = notificationRepository.countPendingOfUserInInitiativesAndSection(userId, allInitiativesIds, allSectionIds, cardsIds);	
+			} else {
+				/* all notifications of user */
+				notifications = notificationRepository.findOfUser(userId, states, page);
+				totalUnread = notificationRepository.countPendingOfUser(userId);	
 			}
-			
-			cardsIds = new ArrayList<UUID>();
-			cardsIds.add(topModelSectionId);
-			cardsIds = modelCardWrapperAdditionRepository.findAllCardWrapperIdsOfSections(allSectionIds);
-			
-			if (cardsIds.size() == 0) {
-				cardsIds.add(UUID.randomUUID());
-			}
-			
-			List<InitiativeDto> subinitiativesTree = initiativeService.getSubinitiativesTree(elementId, null);
-			
-			List<UUID> allInitiativesIds = new ArrayList<UUID>();
-			
-			allInitiativesIds.add(elementId);
-			allInitiativesIds.addAll(extractAllIdsFromInitiativesTree(subinitiativesTree, new ArrayList<UUID>()));
-			
-			notifications = notificationRepository.findOfUserInInitiativesAndSection(userId, states, allInitiativesIds, allSectionIds, cardsIds, page);
-			totalUnread = notificationRepository.countOfUserInInitiativesAndSection(userId, allInitiativesIds, allSectionIds, cardsIds);
 		}
 		
 		NotificationsPack notificationsPack = new NotificationsPack();
@@ -477,14 +483,14 @@ public class ActivityService {
 		SubscriberDto subscriberDto = null;
 		
 		if (subscriber == null) {
+			
+			/* this is a dummy subscriber element that is 
+			 * compatible with the dto conversion function */
 			subscriber = new Subscriber();
 			
 			subscriber.setType(type);
 			subscriber.setElementId(elementId);
 			subscriber.setInheritConfig(SubscriberInheritConfig.INHERIT);
-			
-			initDefaultSubscriber(subscriber);
-			
 			subscriber.setUser(appUserRepository.findByC1Id(userId));
 			
 			subscriberDto = getSubscriberDto(subscriber);
@@ -522,11 +528,13 @@ public class ActivityService {
 	}
 	
 	public void initDefaultSubscriber(Subscriber subscriber) {
+		
+		/* this MUST coincide with one of the prototype configurations on the frontend */
 		subscriber.setInAppConfig(SubscriberInAppConfig.ALL_EVENTS);
-		subscriber.setPushConfig(SubscriberPushConfig.ONLY_MESSAGES);
-		subscriber.setEmailNowConfig(SubscriberEmailNowConfig.DISABLED);
+		subscriber.setPushConfig(SubscriberPushConfig.ONLY_MENTIONS);
+		subscriber.setEmailNowConfig(SubscriberEmailNowConfig.ONLY_MENTIONS);
 		subscriber.setEmailSummaryConfig(SubscriberEmailSummaryConfig.ALL_EVENTS);
-		subscriber.setEmailSummaryPeriodConfig(SubscriberEmailSummaryPeriodConfig.DAILY);
+		subscriber.setEmailSummaryPeriodConfig(SubscriberEmailSummaryPeriodConfig.WEEKLY);
 	}
 	
 	/**
@@ -1430,11 +1438,15 @@ public class ActivityService {
 			notification.setActivity(activity);
 			notification.setSubscriber(subscriber);
 			
-			Boolean isOnline = user.getLastSeen().getTime() > timeService.fiveMinutesAgo().getTime();
+			Boolean isOnline = false;
+			
+			if (user.getLastSeen() != null) {
+				isOnline = user.getLastSeen().getTime() > timeService.fiveMinutesAgo().getTime();	
+			}
 			
 			if (isOnline) {
-				/* if the user is online, notification is marker as delivered */
-				notification.setInAppState(NotificationState.DELIVERED);
+				/* if the user is online, notification are only shown in app */
+				notification.setInAppState(NotificationState.PENDING);
 				notification.setPushState(NotificationState.DELIVERED);
 				notification.setEmailNowState(NotificationState.DELIVERED);
 				notification.setEmailSummaryState(NotificationState.DELIVERED);
@@ -1569,6 +1581,9 @@ public class ActivityService {
 					}
 				}
 			}
+			
+			/* send a socket message to update the user notifications list */
+			template.convertAndSend("/channel/activity/user/" + user.getC1Id(), "UPDATE");
 			
 			notification = notificationRepository.save(notification);
 			

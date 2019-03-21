@@ -61,7 +61,6 @@ const actions = {
       swRegistration.pushManager.getSubscription().then((subscription) => {
         if (subscription != null) {
           console.log('subscription found')
-          console.log(JSON.stringify(subscription))
           let subscriptionDto = {
             endpoint: subscription.endpoint,
             p256dh: btoa(String.fromCharCode.apply(null, new Uint8Array(subscription.getKey('p256dh')))),

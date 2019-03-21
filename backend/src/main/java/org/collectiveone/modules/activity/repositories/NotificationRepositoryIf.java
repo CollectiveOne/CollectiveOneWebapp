@@ -21,8 +21,22 @@ public interface NotificationRepositoryIf extends CrudRepository<Notification, U
 	@Query("SELECT notif FROM Notification notif WHERE notif.subscriber.user.c1Id = ?1 AND notif.id IN ?2")
 	List<Notification> findByIdIn(UUID userId, List<UUID> notificationIds);
 	
-	@Query("SELECT notif FROM Notification notif JOIN notif.activity act WHERE notif.subscriber.user.c1Id = ?1 ORDER BY act.timestamp DESC")
-	List<Notification> findOfUser(UUID userId, Pageable page);
+	@Query("SELECT notif FROM Notification notif "
+			+ "JOIN notif.activity act "
+			+ "WHERE notif.subscriber.user.c1Id = :userId "
+			+ "AND notif.inAppState IN :states "
+			+ "ORDER BY act.timestamp DESC")
+	List<Notification> findOfUser(
+			@Param("userId") UUID userId, 
+			@Param("states") List<NotificationState> states, 
+			Pageable page);
+	
+	@Query("SELECT COUNT(notif) FROM Notification notif "
+			+ "JOIN notif.activity act "
+			+ "WHERE notif.subscriber.user.c1Id = :userId "
+			+ "AND notif.inAppState = 'PENDING' ")
+	Integer countPendingOfUser(
+			@Param("userId") UUID userId);
 	
 	@Query("SELECT notif FROM Notification notif "
 			+ "JOIN notif.activity act "
@@ -61,7 +75,7 @@ public interface NotificationRepositoryIf extends CrudRepository<Notification, U
 			+ "OR subsec.parentSection.id IN :sectionIds "
 			+ "OR crdWrpAdd.section.id IN :sectionIds "
 			+ "OR crdWrpAdd.cardWrapper.id IN :cardWrappersIds)")
-	Integer countOfUserInSections(
+	Integer countPendingOfUserInSections(
 			@Param("userId") UUID userId, 
 			@Param("sectionIds") List<UUID> sectionIds, 
 			@Param("cardWrappersIds") List<UUID> cardWrappersIds);	
@@ -106,7 +120,7 @@ public interface NotificationRepositoryIf extends CrudRepository<Notification, U
 			+ "OR subsec.parentSection.id IN :sectionIds "
 			+ "OR crdWrpAdd.section.id IN :sectionIds "
 			+ "OR crdWrpAdd.cardWrapper.id IN :cardWrappersIds)")
-    Integer countOfUserInInitiativesAndSection(
+    Integer countPendingOfUserInInitiativesAndSection(
     		@Param("userId") UUID userId, 
     		@Param("initsIds") List<UUID> initiativeIds, 
     		@Param("sectionIds") List<UUID> sectionIds,

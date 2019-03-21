@@ -18,14 +18,6 @@
         </app-edit-initiative-modal>
       </transition>
 
-      <transition name="slideDownUp">
-        <app-edit-notifications-modal
-          v-if="showEditNotificationsModal"
-          type="INITIATIVE"
-          :initiative="initiative"
-          @close="showEditNotificationsModal = false">
-        </app-edit-notifications-modal>
-      </transition>
     </div>
 
     <popper :append-to-body="true" trigger="click" :options="popperOptions" class="">
@@ -70,13 +62,11 @@
 <script>
 import NewSubInitiativeModal from '@/components/modal/NewSubInitiativeModal.vue'
 import EditInitiativeModal from '@/components/modal/EditInitiativeModal.vue'
-import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
 
 export default {
   components: {
     'app-new-subinitiative-modal': NewSubInitiativeModal,
-    'app-edit-initiative-modal': EditInitiativeModal,
-    'app-edit-notifications-modal': EditNotificationsModal
+    'app-edit-initiative-modal': EditInitiativeModal
   },
   props: {
     initiative: {
@@ -89,8 +79,7 @@ export default {
     return {
       deleteIntent: false,
       showNewSubInitiativeModal: false,
-      showEditInitiativeModal: false,
-      showEditNotificationsModal: false
+      showEditInitiativeModal: false
     }
   },
 

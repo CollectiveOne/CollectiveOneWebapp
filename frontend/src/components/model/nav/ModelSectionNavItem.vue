@@ -54,7 +54,8 @@
         <app-notifications-list
           :element="section"
           :forceUpdate="forceUpdateNotifications"
-          :isSelected="isSelected">
+          :isSelected="isSelected"
+          :parentIsSelected="parentIsSelected">
         </app-notifications-list>
       </div>
 
@@ -588,6 +589,7 @@ export default {
   position: relative;
   border-left-style: solid;
   border-width: 2px;
+  overflow: hidden;
 }
 
 .subsections-container {
@@ -696,6 +698,7 @@ export default {
   float: left;
   padding: 3px 0px;
   transition: all 300ms ease;
+  white-space: nowrap;
 }
 
 .control-div {

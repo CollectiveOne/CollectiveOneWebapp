@@ -44,13 +44,6 @@
           </app-model-section-modal>
         </transition>
 
-        <transition name="slideDownUp">
-          <app-edit-notifications-modal
-            v-if="showEditNotificationsModal"
-            :section="section"
-            @close="showEditNotificationsModal = false">
-          </app-edit-notifications-modal>
-        </transition>
       </div>
 
     </div>
@@ -132,11 +125,9 @@
 </template>
 
 <script>
-import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
 
 export default {
   components: {
-    'app-edit-notifications-modal': EditNotificationsModal
   },
 
   props: {
@@ -208,11 +199,6 @@ export default {
             faIcon: 'fa-plus' })
         }
       }
-
-      menuItems.push({
-        text: this.$t('general.NOTIFICATIONS'),
-        value: 'configNotifications',
-        faIcon: 'fa-cog' })
 
       if (this.isLoggedAnEditor && this.inSection !== null) {
         menuItems.push({

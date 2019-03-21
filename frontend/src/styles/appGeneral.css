@@ -85,6 +85,7 @@
   color: white;
   border-radius: 12px;
   line-height: 16px;
+  transition:all 0.3s ease-out;
 }
 
 .app-button-green {
@@ -92,6 +93,7 @@
   color: white;
   border-radius: 12px;
   line-height: 16px;
+  transition:all 0.3s ease-out;
 }
 
 .danger-btn {
