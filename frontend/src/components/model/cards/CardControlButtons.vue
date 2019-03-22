@@ -29,6 +29,30 @@
             @update="$emit('update')">
           </app-model-card-modal>
         </transition>
+
+        <transition name="slideDownUp">
+          <app-model-card-modal
+            v-if="showEditCardModal"
+            :isNew="false"
+            :cardWrapperId="cardWrapper.id"
+            :inSectionId="inSection.id"
+            :inSectionTitle="inSection.title"
+            :editingInit="true"
+            @close="showEditCardModal = false"
+            @update="$emit('update')">
+          </app-model-card-modal>
+        </transition>
+
+        <!-- <transition name="slideDownUp">
+          <app-move-card-modal
+            v-if="showMoveCardModal"
+            :isMove="false"
+            :cardWrapperId="cardWrapper.id"
+            :fromSection="inSection"
+            @close="showMoveCardModal = false"
+            @update="$emit('updateCards')">
+          </app-move-card-modal>
+        </transition> -->
       </div>
     </div>
 
@@ -42,6 +66,8 @@
           @stopConsent="stopConsent()"
           @addCardBefore="addCardLocation('before')"
           @addCardAfter="addCardLocation('after')"
+          @addToSection="addToSection()"
+          @moveToSection="moveToSection()"
           @remove="remove()"
           :items="menuItems">
         </app-drop-down-menu>
@@ -89,7 +115,6 @@
 
 <script>
 export default {
-
   props: {
     cardWrapper: {
       type: Object,
@@ -110,6 +135,7 @@ export default {
       showNewCardModal: false,
       newCardLocation: 'end',
       showEditCardModal: false,
+      showMoveCardModal: false,
       detachIntent: false,
       removeIntent: false,
       togglePopperShow: false
@@ -180,6 +206,20 @@ export default {
           faIcon: 'fa-plus' })
       }
 
+      // if (this.isLoggedAnEditor) {
+      //   menuItems.push({
+      //     text: this.$t('model.ADD_TO_SECTION'),
+      //     value: 'addToSection',
+      //     faIcon: 'fa-clone' })
+      // }
+      //
+      // if (this.isLoggedAnEditor) {
+      //   menuItems.push({
+      //     text: this.$t('model.MOVE_TO_SECTION'),
+      //     value: 'moveToSection',
+      //     faIcon: 'fa-arrow-right' })
+      // }
+
       if (this.isLoggedAnEditor && !this.isConsent) {
         menuItems.push({
           text: this.$t('model.START_CONSENT'),
@@ -233,6 +273,9 @@ export default {
       this.$store.commit('createNewCardLocation', location)
       this.$emit('createNew')
       this.togglePopperShow = !this.togglePopperShow
+    },
+    addToSection () {
+
     },
     edit () {
       //  this.showEditCardModal = true

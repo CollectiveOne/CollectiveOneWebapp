@@ -21,8 +21,7 @@ CREATE SERVER master FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'localhost'
 CREATE USER MAPPING FOR postgres SERVER master OPTIONS (user 'postgres', password 'iristra');
 IMPORT FOREIGN SCHEMA public FROM SERVER master INTO masterschema;
 
--- message threads were also removed, this force manual migration of some tables
-
+-- online status not present anymore
 INSERT INTO public.app_users (
   c1id,
   email,
@@ -34,6 +33,29 @@ SELECT
   email_notifications_enabled,
   last_seen
 FROM masterschema.app_users;
+
+-- notifications subscription must comply with presets
+
+DELETE FROM notifications WHERE subscriber_id IN (SELECT id FROM subscribers WHERE type = 'SECTION');
+DELETE FROM subscribers WHERE type = 'SECTION';
+
+UPDATE subscribers SET 
+in_app_config = 'ALL_EVENTS',
+push_config = 'ONLY_MENTIONS',
+emails_now_config = 'ONLY_MENTIONS',
+emails_summary_config = 'ALL_EVENTS',
+emails_summary_period_config = 'WEEKLY',
+inherit_config = 'CUSTOM'
+WHERE type = 'COLLECTIVEONE';
+
+UPDATE subscribers SET 
+in_app_config = null,
+push_config = null,
+emails_now_config = null,
+emails_summary_config = null,
+emails_summary_period_config = null,
+inherit_config = 'INHERIT'
+WHERE type = 'INITIATIVE';
 
 --------------------------------------------------------
 -- DROP masterschema

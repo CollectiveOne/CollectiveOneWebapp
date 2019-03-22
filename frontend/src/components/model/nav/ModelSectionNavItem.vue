@@ -55,7 +55,8 @@
           :element="section"
           :forceUpdate="forceUpdateNotifications"
           :isSelected="isSelected"
-          :parentIsSelected="parentIsSelected">
+          :parentIsSelected="parentIsSelected"
+          :key="section.id">
         </app-notifications-list>
       </div>
 
@@ -397,7 +398,7 @@ export default {
           url: '/channel/activity/model/section/' + this.section.id,
           onMessage: (tick) => {
             var message = tick.body
-            if (message === 'UPDATE') {
+            if (message === 'UPDATE_CONTENTS') {
               this.updateInTree()
             }
           }

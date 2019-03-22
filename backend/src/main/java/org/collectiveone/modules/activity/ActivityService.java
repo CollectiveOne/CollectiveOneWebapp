@@ -855,18 +855,6 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelNewSubsection(ModelSection section, ModelSection onSection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, null); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_CREATED);
-		activity.setModelSection(section);
-		activity.setOnSection(onSection);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
 	public void modelSubsectionAdded(ModelSubsection subsection, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, null); 
 		
@@ -1188,6 +1176,27 @@ public class ActivityService {
 				break;			
 		}
 		return isInModel;
+	}
+	
+	private List<UUID> changesSectionTree(Activity activity) {
+		List<UUID> changes = new ArrayList<UUID>();
+		/* subscribers are derived from the sections if activity is on a card or section*/
+		switch (activity.getType()) {
+			case MODEL_SECTION_ADDED:
+			case MODEL_SECTION_CREATED:
+			case MODEL_SECTION_REMOVED:
+				changes.add(activity.getModelSubsection().getParentSection().getId());
+				break;
+				
+			case MODEL_SECTION_MOVED:
+				changes.add(activity.getModelSubsection().getParentSection().getId());
+				changes.add(activity.getFromSection().getId());
+				break;
+				
+			default:
+				break;			
+		}
+		return changes;
 	}
 	
 	private void addInitiativeActivityNotifications (Activity activity) {
@@ -1737,6 +1746,13 @@ public class ActivityService {
 			for (UUID id : initiativesIds) {
 	            template.convertAndSend("/channel/activity/model/initiative/" + id, "UPDATE");
 	        }
+		}
+		
+		/* send a websocket message to update the section content in the nav tree */
+		List<UUID> changesSectionTree = changesSectionTree(activity);
+		
+		for (UUID sectionId : changesSectionTree) {
+			template.convertAndSend("/channel/activity/model/section/" + sectionId, "UPDATE_CONTENTS");
 		}
 		
 		/* all events are broadcasted to their initaitive channel and their parents */

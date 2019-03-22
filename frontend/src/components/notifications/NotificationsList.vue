@@ -106,7 +106,7 @@
                 <div class="w3-row w3-center w3-margin-top  w3-margin-bottom">
                   <button @click="setCustom()"
                     class="w3-button app-button">
-                urlB64ToUint8Array    {{ $t('notifications.CHANGE') }}
+                      {{ $t('notifications.CHANGE') }}
                   </button>
                 </div>
               </div>

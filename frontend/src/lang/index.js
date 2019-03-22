@@ -456,7 +456,9 @@ const translations = {
       'ADD_SECTION_BEFORE': 'add section before',
       'ADD_SECTION_AFTER': 'add section after',
       'BEFORE_SECTION': 'before section',
-      'AFTER_SECTION': 'after section'
+      'AFTER_SECTION': 'after section',
+      'MOVE_TO_SECTION': 'move to section',
+      'ADD_TO_SECTION': 'add to section'
     },
     help: {
       'MESSAGES-TAB-TT': 'messages',
