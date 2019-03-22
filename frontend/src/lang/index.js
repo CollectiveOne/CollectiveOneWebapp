@@ -305,7 +305,7 @@ const translations = {
       'EDIT_NOTIFICATIONS_OF': 'Edit notifications for the {title} {type}',
       'EDIT_GLOBAL_NOTIFICATIONS': 'Edit your global notification preferences',
       'GENERAL_CONF': 'General configuration',
-      'INHERITING_FROM': 'Inhereting notification preferences from: <br><b>{name}</b>',
+      'INHERITING_FROM': 'Inhereting notification preferences from: <br><b>{name}</b><br>Current configuration is:',
       'DISABLE': 'disable',
       'ONLY_MENTIONS': 'only mentions',
       'ONLY_MESSAGES': 'only messages',
@@ -396,7 +396,16 @@ const translations = {
       'TO_CARD_CM': 'To Card',
       'CONVERT_TO_CARD': 'convert to card',
       'DELETE_MSG_WARNING': '<b>Warning:</b> Are you sure you want to delete this message? This cannot be undone.',
-      'NEW_UPDATES': 'New events in your initiatives'
+      'NEW_UPDATES': 'New events in your initiatives',
+      'YOUR_NOTIFICATIONS_UNDER': 'Your notifications for "{elementName}"',
+      'YOUR_NOTIFICATIONS_IN_COLLECTIVEONE': 'All your notifications',
+      'MARK_AS_READ': 'mark as read',
+      'DISABLE_DESC': 'Disable notifications of all types',
+      'ONAPP_DESC': 'See notifications marks, but dont send a push notification or an email',
+      'PUSH_DESC': 'Send me a push notification or an email',
+      'INHERIT_DESC': 'Inherit notification configuration',
+      'CHANGE': 'change',
+      'UNREAD': 'unread'
     },
     model: {
       'SECTION': 'section',
@@ -759,7 +768,7 @@ const translations = {
       'EDIT_NOTIFICATIONS_OF': 'Configurar las notifications para la {type} {title}',
       'EDIT_GLOBAL_NOTIFICATIONS': 'Configuración global de las notificaciones',
       'GENERAL_CONF': 'Configuración General',
-      'INHERITING_FROM': 'Heredar las preferencias de notificación de: <br><b>{name}</b>',
+      'INHERITING_FROM': 'Heredar las preferencias de notificación de: <br><b>{name}</b><br>La configuración actual es:',
       'DISABLE': 'desactivar',
       'ONLY_MENTIONS': 'sólo menciones',
       'ONLY_MESSAGES': 'sólo mensajes',
@@ -849,7 +858,16 @@ const translations = {
       'TO_SECTION_CM': 'A Section',
       'TO_CARD_CM': 'A Tarjeta',
       'CONVERT_TO_CARD': 'convertir en tarjeta',
-      'DELETE_MSG_WARNING': '<b>Atención:</b> Esta seguro de querer borrar este mensaje? Esta acción no es reversible.'
+      'DELETE_MSG_WARNING': '<b>Atención:</b> Esta seguro de querer borrar este mensaje? Esta acción no es reversible.',
+      'YOUR_NOTIFICATIONS_UNDER': 'Notificationes dentro de "{elementName}"',
+      'YOUR_NOTIFICATIONS_IN_COLLECTIVEONE': 'Todas tus notificaciones',
+      'MARK_AS_READ': 'marcar leíadas',
+      'DISABLE_DESC': 'Desactivar todo tipo de notificaciones',
+      'ONAPP_DESC': 'Mostrar notificaciones en el app, pero no enviar al móvil ni al email',
+      'PUSH_DESC': 'Mostrar notificaciones en el móvil o enviarme un email',
+      'INHERIT_DESC': 'Heredar la configuración de notificaciones',
+      'CHANGE': 'cambiar',
+      'UNREAD': 'sin leer'
     },
     model: {
       'SECTION': 'sección',

@@ -102,6 +102,7 @@ import ModelSection from '@/components/model/ModelSection'
 import SectionControlRow from '@/components/model/SectionControlRow'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer'
 import { getSortedCardWrappers, getSortedSubsections } from '@/lib/sortAlgorithm.js'
+import { saveAs } from 'file-saver'
 
 const sectionToMarkdown = function (section, level, showCommon, showShared, showPrivate) {
   var text = ''
@@ -111,7 +112,7 @@ const sectionToMarkdown = function (section, level, showCommon, showShared, show
   text += section.title + '\r\n'
 
   if (section.description !== '') {
-    text += section.description + '\r\n'
+    text += (section.description ? section.description : '') + '\r\n'
   }
 
   let sortedCardWrappers = getSortedCardWrappers(section, showCommon, showShared, showPrivate)
@@ -374,16 +375,10 @@ export default {
       this.$router.replace({ name: 'ModelSectionCards' })
     },
     downloadContent () {
-      let fileContent = 'data:text/plain;charset=utf-8,'
-      fileContent += sectionToMarkdown(this.section, 1, this.showCommon, this.showShared, this.showPrivate)
-
-      var encodedUri = encodeURI(fileContent)
-      var link = document.createElement('a')
-      link.setAttribute('href', encodedUri)
-      link.setAttribute('download', this.section.title + '.md')
-      document.body.appendChild(link)
-
-      link.click()
+      let fileContent = new Blob(
+        [sectionToMarkdown(this.section, 1, this.showCommon, this.showShared, this.showPrivate)],
+        { type: 'text/plain;charset=utf-8' })
+      saveAs(fileContent, this.section.title + '.md')
     }
   },
 

@@ -38,8 +38,8 @@ public class ActivityController extends BaseController {
 			@RequestParam(name="size", defaultValue="10") Integer size,
 			@RequestParam(name="isHtml", defaultValue="false") Boolean isHtml,
 			@RequestParam(name="onlyUnread", defaultValue="false") Boolean onlyUnread,
-			@PathVariable(name="contextElementType") String contextElementType,
-			@PathVariable("elementId") String elementId) {
+			@PathVariable(name="contextElementType") NotificationContextType contextElementType,
+			@PathVariable("elementId") UUID elementId) {
 		
 		if (getLoggedUser() == null) {
 			return new GetResult<NotificationsPackDto>("error", "endpoint enabled users only", null);
@@ -47,8 +47,8 @@ public class ActivityController extends BaseController {
 		
 		return activityService.getUserNotifications(
 				getLoggedUserId(),
-				NotificationContextType.valueOf(contextElementType),
-				UUID.fromString(elementId),
+				contextElementType,
+				elementId,
 				PageRequest.of(page, size),
 				isHtml,
 				onlyUnread);
@@ -99,13 +99,13 @@ public class ActivityController extends BaseController {
 	
 	@RequestMapping(path = "/notifications/subscriber/{elementType}/{elementId}", method = RequestMethod.GET)
 	public GetResult<SubscriberDto> getSubscriber(
-				@PathVariable("elementId") String elementId,
-				@PathVariable(name="elementType") String elementType ) {
+				@PathVariable("elementId") UUID elementId,
+				@PathVariable(name="elementType") SubscriptionElementType elementType ) {
 		if (getLoggedUser() == null) {
 			return new GetResult<SubscriberDto>("error", "endpoint enabled users only", null);
 		}
 		
-		return activityService.getSubscriber(getLoggedUserId(), UUID.fromString(elementId), SubscriptionElementType.valueOf(elementType));
+		return activityService.getSubscriber(getLoggedUserId(), elementId, elementType);
 	}
 	
 	@RequestMapping(path = "/notifications/subscriber/{elementType}/{elementId}/inheritFrom", method = RequestMethod.GET)

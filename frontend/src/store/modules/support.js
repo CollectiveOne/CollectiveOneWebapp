@@ -3,6 +3,7 @@ const state = {
   triggerUpdateAssets: false,
   triggerUpdateSectionCards: false,
   triggerUpdateNotifications: false,
+  triggerUpdateSubscriber: false,
   userEmailNotVerified: false,
   expandNav: false,
   expandModelNav: true,
@@ -30,6 +31,9 @@ const mutations = {
   },
   triggerUpdateNotifications: (state) => {
     state.triggerUpdateNotifications = !state.triggerUpdateNotifications
+  },
+  triggerUpdateSubscriber: (state) => {
+    state.triggerUpdateSubscriber = !state.triggerUpdateSubscriber
   },
   setUserEmailNotVerified: (state, payload) => {
     state.userEmailNotVerified = payload

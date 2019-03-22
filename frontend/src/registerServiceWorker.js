@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 import { register } from 'register-service-worker'
-import { store } from './store/store.js'
-
 var swRegistration
 
 register(`${process.env.BASE_URL}service-worker.js`, {
@@ -14,9 +12,6 @@ register(`${process.env.BASE_URL}service-worker.js`, {
   },
   registered (registration) {
     swRegistration = registration
-    // if (store) {
-    //   store.dispatch('updateSubscription')
-    // }
     console.log('SW Registered')
   },
   cached (registration) {

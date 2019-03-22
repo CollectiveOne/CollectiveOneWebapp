@@ -248,7 +248,7 @@ export default {
       let controlsClass = {}
 
       controlsClass['w3-row bottom-row light-grey'] = this.type === 'card'
-      controlsClass['w3-col m4 right-div-top controls w3-display-bottom'] = this.type === 'summary'
+      controlsClass['w3-col m4 controls-summary'] = this.type === 'summary'
 
       return controlsClass
     },
@@ -461,18 +461,7 @@ export default {
   width: 100%;
 }
 
-.controls {
-  height: 50%;
-  position: absolute;
-  right: 0;
-}
-
-.right-div-top {
-  top: 0;
-}
-
-.right-div-bottom {
-  bottom: 0;
+.controls-summary {
 }
 
 .highlight:hover {

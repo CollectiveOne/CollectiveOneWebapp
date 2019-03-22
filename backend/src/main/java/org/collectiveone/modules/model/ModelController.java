@@ -19,6 +19,7 @@ import org.collectiveone.modules.model.dto.ModelSectionDto;
 import org.collectiveone.modules.model.dto.ModelSectionLinkedDto;
 import org.collectiveone.modules.model.enums.ElementConsentPositionColor;
 import org.collectiveone.modules.model.enums.SimpleConsentState;
+import org.collectiveone.modules.model.exceptions.WrongLinkOfElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -426,7 +427,7 @@ public class ModelController extends BaseController {
 			@PathVariable("sectionId") String sectionIdStr,
 			@RequestBody ModelCardDto cardDto,
 			@RequestParam(name="onCardWrapperId", defaultValue="") String onCardWrapperIdStr,
-			@RequestParam(name = "isBefore", defaultValue="false") Boolean isBefore) {
+			@RequestParam(name = "isBefore", defaultValue="false") Boolean isBefore) throws WrongLinkOfElement {
 		
 		if (getLoggedUser() == null) {
 			return new PostResult("error", "endpoint enabled users only", null);
@@ -441,18 +442,14 @@ public class ModelController extends BaseController {
 		
 		UUID onCardWrapperId = onCardWrapperIdStr.equals("") ? null : UUID.fromString(onCardWrapperIdStr);
 		
-		try {
-			return modelService.createCardWrapper(
-					cardDto, 
-					sectionId, 
-					getLoggedUserId(), 
-					onCardWrapperId, 
-					isBefore,
-					null);
-			
-		} catch(Exception e) {
-			return new PostResult("error", e.getMessage(), "");
-		}
+		return modelService.createCardWrapper(
+				cardDto, 
+				sectionId, 
+				getLoggedUserId(), 
+				onCardWrapperId, 
+				isBefore,
+				null);
+	
 	}
 	
 	@RequestMapping(path = "/model/cardWrapperAddition/{cardWrapperId}", method = RequestMethod.GET) 

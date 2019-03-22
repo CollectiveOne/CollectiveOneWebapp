@@ -1,13 +1,5 @@
 <template lang="html">
   <div class="">
-    <transition name="slideDownUp">
-      <app-edit-notifications-modal
-        v-if="showEditNotificationsModal"
-        type="COLLECTIVEONE"
-        @close="showEditNotificationsModal = false">
-      </app-edit-notifications-modal>
-    </transition>
-
     <div class="w3-row header-row drop-shadow-br light-grey">
       <div class="w3-col s12 m4 initiatives-breadcrumb-container">
 
@@ -161,17 +153,12 @@
             </button>
           </div>
 
-          <popper
-            :key="$store.state.support.isTouchScreen + Math.random()*100000000"
-            :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
-            :options="popperOptions"  :delay-on-mouse-in="1200" :delay-on-mouse-out="800" class="btn-div">
-            <app-help-popper
-              :title="$t('help.LANDING-BUTTON-TT')"
-              :details="$t('help.LANDING-BUTTON-DET')">
-            </app-help-popper>
-
-            <router-link slot="reference" :to="{ name: 'Landing', query: { demos: true }}" class="fa-button info-button w3-right"><i class="w3-xlarge fa fa-question-circle"></i></router-link>
-          </popper>
+          <div v-if="$store.state.user.authenticated" class="notification-div w3-right">
+            <app-notifications-list
+              contextType="COLLECTIVEONE"
+              :largeIcon="true">
+            </app-notifications-list>
+          </div>
 
           <popper
             :key="$store.state.support.isTouchScreen + Math.random()*100000000"
@@ -197,13 +184,11 @@
 
 <script>
 import InitiativeControlButtons from '@/components/initiative/InitiativeControlButtons.vue'
-import EditNotificationsModal from '@/components/modal/EditNotificationsModal.vue'
 import NotificationsList from '@/components/notifications/NotificationsList.vue'
 
 export default {
   components: {
     'app-initiative-control-buttons': InitiativeControlButtons,
-    'app-edit-notifications-modal': EditNotificationsModal,
     'app-notifications-list': NotificationsList
   },
 
@@ -220,7 +205,6 @@ export default {
 
   data () {
     return {
-      showEditNotificationsModal: false,
       draggingBC: false,
       crumbTooLong: false,
       scrollOnLeft: false,
@@ -292,11 +276,6 @@ export default {
           text: this.$t('general.PROFILE'),
           value: 'profile',
           faIcon: 'fa-user'
-        },
-        {
-          text: this.$t('general.NOTIFICATIONS'),
-          value: 'notifications',
-          faIcon: 'fa-cog'
         },
         {
           text: this.$t('general.LOGOUT'),

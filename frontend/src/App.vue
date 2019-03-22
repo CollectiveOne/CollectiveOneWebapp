@@ -76,6 +76,11 @@ export default {
     /* check if touch device */
     window.addEventListener('touchstart', this.setIsTouchScreen)
 
+    /* update subscription after having given time for SW registry */
+    setTimeout(() => {
+      this.$store.dispatch('updateSubscription')
+    }, 10*1000)
+
   }
 }
 </script>

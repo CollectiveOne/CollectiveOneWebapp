@@ -54,7 +54,8 @@
         <app-notifications-list
           :element="section"
           :forceUpdate="forceUpdateNotifications"
-          :isSelected="isSelected">
+          :isSelected="isSelected"
+          :parentIsSelected="parentIsSelected">
         </app-notifications-list>
       </div>
 
@@ -235,7 +236,6 @@ export default {
     sectionTitle () {
       if (this.section) {
         return this.section.title
-        // return this.section.isTopModelSection ? 'All' : this.section.title
       }
       return ''
     },
@@ -372,9 +372,9 @@ export default {
       this.$store.commit('levelUp')
     },
     updateInTree () {
-      // if (this.section) {
-      //   this.$store.dispatch('updateSectionDataInTree', {sectionId: this.section.id})
-      // }
+      if (this.section) {
+        this.$store.dispatch('updateSectionDataInTree', {sectionId: this.section.id})
+      }
     },
     updateParentInTree () {
       if (this.inSection) {
@@ -592,6 +592,7 @@ export default {
   position: relative;
   border-left-style: solid;
   border-width: 2px;
+  overflow: hidden;
 }
 
 .subsections-container {
@@ -700,6 +701,7 @@ export default {
   float: left;
   padding: 3px 0px;
   transition: all 300ms ease;
+  white-space: nowrap;
 }
 
 .control-div {
