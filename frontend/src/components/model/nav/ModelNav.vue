@@ -19,9 +19,9 @@
         @click="showControls = !showControls">
         <i class="fa" :class="{'fa-chevron-down': !showControls, 'fa-chevron-up': showControls}" aria-hidden="true"></i>
       </div>
-      <div class="slider-container w3-left">
+      <div class="slider-container w3-left control-btns-slider">
         <transition name="slideDownUp">
-          <div v-if="showControls" class="controls-btns">
+          <div v-if="showControls" class="controls-btns w3-row">
             <app-model-nav-control-buttons>
             </app-model-nav-control-buttons>
           </div>
@@ -85,8 +85,12 @@ export default {
 
 <style scoped>
 
+.control-btns-slider {
+  width: 100%;
+}
+
 .controls-btns {
-  width: 350px;
+  width: 100%;
   height: 56px;
   padding: 6px 6px;
   background-color: #313942;

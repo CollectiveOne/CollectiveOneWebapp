@@ -236,7 +236,6 @@ export default {
     sectionTitle () {
       if (this.section) {
         return this.section.title
-        // return this.section.isTopModelSection ? 'All' : this.section.title
       }
       return ''
     },
@@ -369,9 +368,9 @@ export default {
       this.$store.commit('levelUp')
     },
     updateInTree () {
-      // if (this.section) {
-      //   this.$store.dispatch('updateSectionDataInTree', {sectionId: this.section.id})
-      // }
+      if (this.section) {
+        this.$store.dispatch('updateSectionDataInTree', {sectionId: this.section.id})
+      }
     },
     updateParentInTree () {
       if (this.inSection) {

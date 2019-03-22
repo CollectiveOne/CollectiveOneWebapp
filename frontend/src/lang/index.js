@@ -402,7 +402,7 @@ const translations = {
       'MARK_AS_READ': 'mark as read',
       'DISABLE_DESC': 'Disable notifications of all types',
       'ONAPP_DESC': 'See notifications marks, but dont send a push notification or an email',
-      'PUSH_DESC': 'Snd send me a push notification or an email',
+      'PUSH_DESC': 'Send me a push notification or an email',
       'INHERIT_DESC': 'Inherit notification configuration',
       'CHANGE': 'change',
       'UNREAD': 'unread'

@@ -187,7 +187,12 @@ public class ModelService {
 			subsection.setSection(modelSectionRepository.findById(sectionId).get());
 		}
 		
-		ModelSectionDto sectionDto = getSubsectionDto(subsection);
+		ModelSectionDto sectionDto = null;
+		if (subsection != null) {
+			sectionDto = getSubsectionDto(subsection);
+		} else {
+			sectionDto = new ModelSectionDto();
+		}
 		
 		if(level > 0) {
 			sectionDto = addSectionSubElements(sectionDto, sectionId, level - 1, requestByUserId, onlySections);
@@ -972,6 +977,7 @@ public class ModelService {
 	
 	@Transactional
 	private ModelSectionDto getSubsectionDto(ModelSubsection subsection) {
+		
 		ModelSectionDto sectionDto = subsection.getSection().toDto();
 		
 		sectionDto.setScope(subsection.getScope());

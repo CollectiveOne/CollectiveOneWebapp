@@ -106,7 +106,7 @@
                 <div class="w3-row w3-center w3-margin-top  w3-margin-bottom">
                   <button @click="setCustom()"
                     class="w3-button app-button">
-                    {{ $t('notifications.CHANGE') }}
+                urlB64ToUint8Array    {{ $t('notifications.CHANGE') }}
                   </button>
                 </div>
               </div>
@@ -218,7 +218,8 @@
 
 <script>
 import ActivityTable from './ActivityTable.vue'
-
+import { swRegistration } from '@/registerServiceWorker.js'
+import { urlB64ToUint8Array } from '@/lib/common.js'
 export default {
 
   components: {
@@ -542,6 +543,7 @@ export default {
     },
 
     setPush () {
+      this.checkAndSubscribeToPushNots()
       this.copySubscriberConfig(this.subscriber, this.notsPushProto)
       this.saveSubscriber()
     },
@@ -788,6 +790,29 @@ export default {
           this.inheritedFrom = this.subscriber.applicableSubscriber
         }
       })
+    },
+
+    checkAndSubscribeToPushNots () {
+      swRegistration.pushManager.getSubscription().then((subscription) => {
+        if (subscription == null) {
+          let applicationServerKey = urlB64ToUint8Array(process.env.VUE_APP_SEVER_PUBLIC_KEY)
+
+          console.log('subscribing')
+          swRegistration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: applicationServerKey
+          }).then((pushSubscription) => {
+            this.$store.dispatch('updateSubscription')
+          }, (error) => {
+            console.log('pushManager.subscribe Error:' + error)
+          })
+        } else {
+          console.log(subscription)
+        }
+      }).catch((error) => {
+        console.log('error getting subscription')
+        console.log(error)
+      })
     }
   },
 
@@ -886,6 +911,7 @@ export default {
   height: 32px;
   border-radius: 12px;
   cursor: pointer;
+  background-color: #eff3f6;
   transition:all 0.3s ease-out;
 }
 
@@ -924,6 +950,7 @@ export default {
   width: 100%;
   font-size: 13px;
   border-collapse: collapse;
+  text-align: left;
 }
 
 .config-table .icon-column {
