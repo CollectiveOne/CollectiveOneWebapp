@@ -105,11 +105,6 @@ export default {
         })
       }
 
-      items.push({
-        text: this.$t('general.NOTIFICATIONS'),
-        value: 'notifications',
-        faIcon: 'fa-cog' })
-
       if (this.isLoggedAnAdmin) {
         items.push({
           text: this.$t('general.DELETE'),
