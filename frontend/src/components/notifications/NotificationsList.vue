@@ -304,7 +304,7 @@ export default {
       return false
     },
     loadedAll () {
-      return !this.loading && !this.gettingConfiguration
+      return this.applicableSubscriber != null
     },
 
     applicableSubscriber () {
