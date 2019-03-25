@@ -638,6 +638,7 @@ const translations = {
       'MY_INITIATIVES': 'Mis Iniciativas',
       'PUBLIC_INITIATIVES': 'Iniciativas Públicas',
       'MY_INITS_EMPTY': 'aún no haces parte de ninguna iniciativa',
+      'MY_INITS_STARRED_EMPTY': 'aún no has seleccionado ninguna iniciativa como favorita',
       'NEW_SUBINITIATIVE': 'crear subiniciativa',
       'CREATE_ONE': 'crear una',
       'NEW': 'nueva iniciativa',
@@ -662,7 +663,9 @@ const translations = {
       'CONFIRM_DELETE_MSG': '<b>Atención:</b> Se borrará la iniciativa junto con todas sus subiniciativas y, en caso de haber una iniciativa madre, se le transferirán todos los tokens a ella. Por favor confirme.',
       'DELETE_WARNING': '<b>Atención:</b> Confirma que desea borrar la iniciativa "{name}"? Esto borrará todos sus contenidos.',
       'SUBINITIATIVES': 'SUB-INICIATIVAS',
-      'ACCESS_DENIED': 'Lo sentimos, al parecer no tienes acceso a este contenido.'
+      'ACCESS_DENIED': 'Lo sentimos, al parecer no tienes acceso a este contenido.',
+      'ADD_TO_FAVORITES': 'añadir a favoritos',
+      'REMOVE_FROM_FAVORITES': 'quitar de favoritos'
     },
     members: {
       'WANT_TO_CONTRIB_Q': 'Quieres contribuir?',
