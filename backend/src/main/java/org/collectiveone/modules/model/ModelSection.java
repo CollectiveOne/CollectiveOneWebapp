@@ -1,5 +1,6 @@
 package org.collectiveone.modules.model;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -34,6 +35,8 @@ public class ModelSection {
 	
 	@Column(name = "title", length = 42)
 	private String title;
+	
+	private Timestamp creationDate;
 	
 	@Lob
 	@Type(type = "org.hibernate.type.TextType")
@@ -112,6 +115,14 @@ public class ModelSection {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public Timestamp getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Timestamp creationDate) {
+		this.creationDate = creationDate;
+	}
 
 	public List<ModelSubsection> getOriginSubsections() {
 		return originSubsections;
@@ -119,8 +130,6 @@ public class ModelSection {
 
 	public void setOriginSubsections(List<ModelSubsection> originSubsections) {
 		this.originSubsections = originSubsections;
-	}
-
-	
+	}	
 	
 }

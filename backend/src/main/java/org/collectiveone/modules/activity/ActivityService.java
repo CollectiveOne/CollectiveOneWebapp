@@ -784,17 +784,6 @@ public class ActivityService {
 	}
 	
 	@Transactional
-	public void modelSectionCreated(ModelSubsection subsection, AppUser triggerUser) {
-		Activity activity = getBaseActivity(triggerUser, null); 
-		
-		activity.setType(ActivityType.MODEL_SECTION_CREATED);
-		activity.setModelSubsection(subsection);
-		activity = activityRepository.save(activity);
-		
-		addInitiativeActivityNotifications(activity);
-	}
-	
-	@Transactional
 	public void modelSectionCreatedOnSection(ModelSubsection subsection, ModelSection onSection, AppUser triggerUser) {
 		Activity activity = getBaseActivity(triggerUser, null); 
 		

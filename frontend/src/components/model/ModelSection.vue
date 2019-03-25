@@ -99,7 +99,6 @@
 </template>
 
 <script>
-import ModelSectionHeader from '@/components/model/ModelSectionHeader.vue'
 import ModelCardsContainer from '@/components/model/cards/ModelCardsContainer.vue'
 import InModelSectionsTags from '@/components/model/InModelSectionsTags.vue'
 import { getSortedCardWrappers, getSortedSubsections } from '@/lib/sortAlgorithm.js'
@@ -108,7 +107,6 @@ export default {
   name: 'app-model-section',
 
   components: {
-    'app-model-section-header': ModelSectionHeader,
     'app-model-cards-container': ModelCardsContainer,
     'app-in-model-sections-tags': InModelSectionsTags
   },

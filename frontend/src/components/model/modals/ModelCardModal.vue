@@ -498,8 +498,10 @@ export default {
       })
     },
     cardSelected (cardWrapper) {
-      this.existingCard = cardWrapper
-      this.existingCardNewScope = cardWrapper.scope
+      if (cardWrapper) {
+        this.existingCard = cardWrapper
+        this.existingCardNewScope = 'COMMON'
+      }
     },
     clickOutside () {
       if (this.enableClickOutside) {

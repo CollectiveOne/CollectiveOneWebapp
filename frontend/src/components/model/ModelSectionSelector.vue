@@ -12,9 +12,7 @@
           @click="sectionClicked(section)">
 
           <app-model-section-header
-            :section="section"
-            :level="0"
-            :floating="true">
+            :section="section">
           </app-model-section-header>
 
         </div>
@@ -25,9 +23,7 @@
     </div>
     <div v-show="sectionSelected !== null" class="w3-row w3-display-container w3-margin-top w3-border gray-1-border w3-round">
       <app-model-section-header
-        :section="sectionSelected"
-        :level="0"
-        :floating="true">
+        :section="sectionSelected">
       </app-model-section-header>
 
       <div class="delete-selected gray-1-color w3-display-topright w3-xlarge"

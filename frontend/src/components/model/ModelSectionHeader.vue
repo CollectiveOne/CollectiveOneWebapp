@@ -3,47 +3,19 @@
     class="section-title-container w3-leftbar gray-1-border">
 
     <div class="w3-row title-row">
-        <router-link tag="a" :to="{ name: 'ModelSectionContent', params: { sectionId: section.id } }"
-          class="section-title cursor-pointer w3-left" :style="sectionTitleStyle">
+        <div class="section-title cursor-pointer w3-left">
           {{ section.title }}
-        </router-link>
-        <div v-if="showMessagesIndicator" class="w3-left comments-indicator cursor-pointer"
-          @click="$emit('show-messages')">
-          <app-indicator
-            :initiativeId="section.initiativeId"
-            contextType="MODEL_SECTION"
-            :contextElementId="section.id"
-            :size="18"
-            type="messages"
-            :forceUpdate="forceUpdate">
-          </app-indicator>
         </div>
     </div>
 
     <div class="also-in-container">
-      <div v-if="floating" class="w3-row">
+      <div class="w3-row">
         <div class="w3-left">
           <i>in:</i>
         </div>
         <div v-for="parentSection in section.inSections" class="in-tag-container w3-left">
-          <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: parentSection.id } }"
-            class="gray-1 w3-tag w3-round w3-small">
+          <div class="gray-1 w3-tag w3-round w3-small">
             {{ parentSection.title }}
-          </router-link>
-        </div>
-      </div>
-      <div v-if="!floating" class="w3-row w3-small also-in-row">
-        <div v-if="sectionIsInOtherPlaces" class="">
-          <div class="w3-left">
-            <i>also in:</i>
-          </div>
-          <div v-for="parentSection in section.inSections" class="in-tag-container w3-left">
-            <div v-if="parentSection.id !== inElementId" class="">
-              <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: parentSection.id } }"
-                class="gray-1 w3-tag w3-round w3-small">
-                {{ parentSection.title }}
-              </router-link>
-            </div>
           </div>
         </div>
       </div>
@@ -63,14 +35,6 @@ export default {
       type: Object,
       defaul: null
     },
-    level: {
-      type: Number,
-      default: 0
-    },
-    floating: {
-      type: Boolean,
-      default: false
-    },
     inElementId: {
       type: String,
       default: ''
@@ -79,10 +43,6 @@ export default {
       type: Boolean,
       default: true
     },
-    showMessagesIndicator: {
-      type: Boolean,
-      default: false
-    },
     forceUpdate: {
       type: Boolean,
       default: false
@@ -90,10 +50,6 @@ export default {
   },
 
   computed: {
-    sectionTitleStyle () {
-      var fontsize = this.level < 4 ? 22 - 4 * this.level : 12
-      return { 'font-size': fontsize + 'px' }
-    },
     sectionIsInOtherPlaces () {
       var ix
       for (ix in this.section.inSections) {
@@ -121,6 +77,10 @@ export default {
 
 .title-row {
   margin-bottom: 4px;
+}
+
+.section-title {
+  font-size: 22px;
 }
 
 .comments-indicator {

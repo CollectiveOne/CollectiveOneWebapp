@@ -4,60 +4,20 @@
     <div class="modals">
       <div class="slider-container">
         <transition name="slideDownUp">
-          <app-model-card-modal
-            v-if="showNewCardModal"
-            :isNew="true"
-            :inSectionId="inSection.id"
-            :inSectionTitle="inSection.title"
-            :atCardWrapper="cardWrapper"
-            :newCardLocation="newCardLocation"
-            @close="showNewCardModal = false"
-            @update="$emit('update')"
-            @updateCards="$emit('updateCards')">
-          </app-model-card-modal>
-        </transition>
-
-        <transition name="slideDownUp">
-          <app-model-card-modal
-            v-if="showEditCardModal"
-            :isNew="false"
-            :cardWrapperId="cardWrapper.id"
-            :inSectionId="inSection.id"
-            :inSectionTitle="inSection.title"
-            :editingInit="true"
-            @close="showEditCardModal = false"
-            @update="$emit('update')">
-          </app-model-card-modal>
-        </transition>
-
-        <transition name="slideDownUp">
-          <app-model-card-modal
-            v-if="showEditCardModal"
-            :isNew="false"
-            :cardWrapperId="cardWrapper.id"
-            :inSectionId="inSection.id"
-            :inSectionTitle="inSection.title"
-            :editingInit="true"
-            @close="showEditCardModal = false"
-            @update="$emit('update')">
-          </app-model-card-modal>
-        </transition>
-
-        <!-- <transition name="slideDownUp">
           <app-move-card-modal
             v-if="showMoveCardModal"
-            :isMove="false"
-            :cardWrapperId="cardWrapper.id"
+            :isMove="isMove"
+            :cardWrapperToMove="cardWrapper"
             :fromSection="inSection"
             @close="showMoveCardModal = false"
             @update="$emit('updateCards')">
           </app-move-card-modal>
-        </transition> -->
+        </transition>
       </div>
     </div>
 
     <popper :append-to-body="true" trigger="click" :options="popperOptions" :toggleShow="togglePopperShow" class="">
-      <div class="">
+      <div class="drop-menu-div">
         <app-drop-down-menu
           class="drop-menu"
           @edit="edit()"
@@ -114,7 +74,13 @@
 </template>
 
 <script>
+import MoveCardModal from '@/components/model/modals/MoveCardModal.vue'
+
 export default {
+  components: {
+    'app-move-card-modal': MoveCardModal
+  },
+
   props: {
     cardWrapper: {
       type: Object,
@@ -138,7 +104,8 @@ export default {
       showMoveCardModal: false,
       detachIntent: false,
       removeIntent: false,
-      togglePopperShow: false
+      togglePopperShow: false,
+      isMove: false
     }
   },
 
@@ -206,19 +173,19 @@ export default {
           faIcon: 'fa-plus' })
       }
 
-      // if (this.isLoggedAnEditor) {
-      //   menuItems.push({
-      //     text: this.$t('model.ADD_TO_SECTION'),
-      //     value: 'addToSection',
-      //     faIcon: 'fa-clone' })
-      // }
-      //
-      // if (this.isLoggedAnEditor) {
-      //   menuItems.push({
-      //     text: this.$t('model.MOVE_TO_SECTION'),
-      //     value: 'moveToSection',
-      //     faIcon: 'fa-arrow-right' })
-      // }
+      if (this.isLoggedAnEditor) {
+        menuItems.push({
+          text: this.$t('model.ADD_TO_SECTION'),
+          value: 'addToSection',
+          faIcon: 'fa-clone' })
+      }
+
+      if (this.isLoggedAnEditor) {
+        menuItems.push({
+          text: this.$t('model.MOVE_TO_SECTION'),
+          value: 'moveToSection',
+          faIcon: 'fa-arrow-right' })
+      }
 
       if (this.isLoggedAnEditor && !this.isConsent) {
         menuItems.push({
@@ -250,7 +217,7 @@ export default {
     },
     popperOptions () {
       return {
-        placement: 'bottom',
+        placement: 'bottom-start',
         modifiers: {
           preventOverflow: {
             enabled: false
@@ -275,10 +242,14 @@ export default {
       this.togglePopperShow = !this.togglePopperShow
     },
     addToSection () {
-
+      this.isMove = false
+      this.showMoveCardModal = true
+    },
+    moveToSection () {
+      this.isMove = true
+      this.showMoveCardModal = true
     },
     edit () {
-      //  this.showEditCardModal = true
       this.$emit('edit')
       this.togglePopperShow = !this.togglePopperShow
     },
@@ -332,9 +303,13 @@ export default {
 }
 
 .drop-menu {
-  width: 250px;
+  width: 220px;
   text-align: left;
   font-size: 15px;
+}
+
+.drop-menu-div {
+  z-index: 3;
 }
 
 .delete-intent-div {

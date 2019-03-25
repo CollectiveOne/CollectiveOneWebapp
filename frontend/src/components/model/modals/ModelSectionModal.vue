@@ -77,7 +77,7 @@
                 </div>
 
                 <div class="w3-row w3-margin-top">
-                  <b>{{ $t('model.LINK_STATUS_WITH_SECTION', { title: existingSection ? ("\"" + existingSection.title + "\""): '' }) }}</b>
+                  <b>{{ $t('model.LINK_STATUS_WITH_SECTION', { title: '"' + existingSectionTitle + '"' }) }}</b>
                 </div>
                 <div class="w3-row-padding modal-bottom-btns-row">
                   <div class="w3-col m6">
@@ -254,6 +254,11 @@ export default {
   },
 
   computed: {
+    existingSectionTitle () {
+      if (this.existingSection) {
+        return this.existingSection ? this.existingSection.title : ''
+      }
+    },
     selectorExistingBorderClass () {
       let cClass = {}
       switch (this.existingSectionNewScope) {

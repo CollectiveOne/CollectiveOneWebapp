@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 public interface ModelSectionRepositoryIf extends CrudRepository<ModelSection, UUID> {
 
@@ -22,9 +23,16 @@ public interface ModelSectionRepositoryIf extends CrudRepository<ModelSection, U
 		return res != null;
 	}
 	
-	@Query("SELECT sec FROM ModelSection sec " +
-			"WHERE (LOWER(sec.title) LIKE ?1 OR LOWER(sec.description) LIKE ?1) " +
-			"AND sec.initiative.id IN ?2")
-	public Page<ModelSection> searchBy(String query, List<UUID> initiativeId, Pageable page);
+	@Query("SELECT DISTINCT sec FROM ModelSubsection subsection " +
+			"JOIN subsection.section sec " +
+			"WHERE (LOWER(sec.title) LIKE :query OR LOWER(sec.description) LIKE :query) " +
+			"AND sec.initiative.id IN :initiativeIds " +
+			"AND (subsection.scope != 'PRIVATE' OR subsection.adder.c1Id = :requestBy) " +
+			"ORDER BY sec.creationDate DESC")			
+	public Page<ModelSection> searchBy(
+			@Param("query") String query, 
+			@Param("initiativeIds") List<UUID> initiativeId, 
+			@Param("requestBy") UUID requestBy,
+			Pageable page);
 
 }

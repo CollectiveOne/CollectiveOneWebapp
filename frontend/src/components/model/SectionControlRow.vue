@@ -4,6 +4,7 @@
     <div class="control-group">
       <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
         :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+        :append-to-body="true"
         :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
         <app-help-popper
           :title="$t('help.MESSAGES-TAB-TT')"
@@ -17,6 +18,7 @@
 
       <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
         :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+        :append-to-body="true"
         :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
         <app-help-popper
           :title="$t('help.CARDS-SUMMARY-TAB-TT')"
@@ -30,6 +32,7 @@
 
       <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
         :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+        :append-to-body="true"
         :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
         <app-help-popper
           :title="$t('help.CARDS-TAB-TT')"
@@ -43,6 +46,7 @@
 
       <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
         :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+        :append-to-body="true"
         :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
         <app-help-popper
           :title="$t('help.CARDS-DOC-VIEW-TT')"
@@ -61,6 +65,7 @@
         <div class="w3-left zoom-controls-enabled">
           <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
             :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+            :append-to-body="true"
             :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
             <app-help-popper
               :title="$t('help.REDUCE-LEVELS-TT')"
@@ -78,6 +83,7 @@
 
           <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
             :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+            :append-to-body="true"
             :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
             <app-help-popper
               :title="$t('help.INCREASE-LEVELS-TT')"
@@ -95,6 +101,7 @@
 
         <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+          :append-to-body="true"
           :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="$t('help.SEE-ALL-LEVELS-TT')"
@@ -113,6 +120,7 @@
       <div class="">
         <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+          :append-to-body="true"
           :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="(showPrivate ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.PRIVATE-CARDS-TT')"
@@ -126,6 +134,7 @@
 
         <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+          :append-to-body="true"
           :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="(showShared ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHARED-CARDS-TT')"
@@ -139,6 +148,7 @@
 
         <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+          :append-to-body="true"
           :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="(showCommon ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.COMMON-CARDS-TT')"
@@ -157,6 +167,7 @@
       <div class="">
         <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+          :append-to-body="true"
           :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="$t('help.SHOW-SECTION-ORDER-TT')"
@@ -170,6 +181,7 @@
 
         <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+          :append-to-body="true"
           :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="$t('help.SEARCH-CARDS-TT')"
@@ -187,6 +199,7 @@
     <div v-if="!isCardsContent" class="control-group" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
       <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
         :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+        :append-to-body="true"
         :options="popperOptions">
         <app-help-popper
           :title="(showMessages ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHOW-MESSAGES-TT')"
@@ -200,6 +213,7 @@
 
       <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
         :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+        :append-to-body="true"
         :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
         <app-help-popper
         :title="(showEvents ? $t('general.HIDE') : $t('general.SHOW')) + ' ' + $t('help.SHOW-EVENTS-TT')"
@@ -242,6 +256,7 @@
 
         <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+          :append-to-body="true"
           :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="$t('help.DOWNLOAD-CONTENT-TT')"
@@ -255,6 +270,7 @@
 
         <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
+          :append-to-body="true" 
           :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="(isDraggable ? $t('general.DISABLE') : $t('general.ENABLE')) + ' ' + $t('help.ENABLE-DRAG-AND-DROP-TT')"
@@ -395,6 +411,10 @@ export default {
 
 .section-cards-container {
   margin-top: 15px;
+}
+
+.help-container-div {
+  z-index: 3;
 }
 
 </style>

@@ -215,7 +215,11 @@ public class ModelService {
 	public GetResult<Page<ModelSectionDto>> searchSection(String query, PageRequest page, UUID initiativeId, UUID requestByUserId) {
 		
 		List<UUID> initiativeEcosystemIds = initiativeService.findAllInitiativeEcosystemIds(initiativeId);
-		Page<ModelSection> enititiesPage = modelSectionRepository.searchBy("%"+query.toLowerCase()+"%", initiativeEcosystemIds, page);
+		Page<ModelSection> enititiesPage = modelSectionRepository.searchBy(
+				"%"+query.toLowerCase()+"%", 
+				initiativeEcosystemIds,
+				requestByUserId,
+				page);
 		
 		List<ModelSectionDto> sectionDtos = new ArrayList<ModelSectionDto>();
 		
