@@ -168,6 +168,11 @@ export default {
     },
     sectionData () {
       this.updateSubsectionsDataFiltered()
+      /** auto expand if top level section */
+      if (this.inSection == null && this.sectionData != null) {
+        console.log('autoepanding first level subsections')
+        this.expandSubsections()
+      }
     }
   },
 

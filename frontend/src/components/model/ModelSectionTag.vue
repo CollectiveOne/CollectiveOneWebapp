@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <router-link :to="{ name: 'ModelSectionContent', params: { sectionId: section.id } }"
+    <router-link :to="{ name: 'ModelSectionContent', params: { initiativeId: section.initiativeId, sectionId: section.id } }"
       class="w3-tag w3-round w3-small" :class="tagClass">
       {{ section.title }}
     </router-link>

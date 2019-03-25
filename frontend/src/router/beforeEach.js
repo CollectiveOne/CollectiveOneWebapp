@@ -65,7 +65,8 @@ export default (to, from, next) => {
       let nextPars = {
         name: toName,
         params: {
-          sectionId: to.params.sectionId
+          sectionId: to.params.sectionId,
+          initiativeId: to.params.initiativeId
         },
         replace: true
       }

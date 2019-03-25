@@ -82,7 +82,7 @@ const mutations = {
           section: payload.sectionData.section,
           subsectionsData: payload.sectionData.subsectionsData,
           subsectionsDataSet: true,
-          expand: true
+          expand: false
         }]
         return
       }
