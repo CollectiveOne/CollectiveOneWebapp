@@ -3,6 +3,7 @@ import Vue from 'vue'
 const state = {
   myInitiativesTree: [],
   loadingMyInitiatives: false,
+  starredOnly: true,
   currentInitiativeTree: []
 }
 
@@ -97,17 +98,36 @@ const mutations = {
   },
   setCurrentInitiativeTree: (state, payload) => {
     state.currentInitiativeTree = payload
+  },
+  setStarredOnly: (state, payload) => {
+    state.starredOnly = payload
   }
 }
 
 const actions = {
+
+  viewStarredOnlyInitiatives: (context) => {
+    context.commit('setStarredOnly', true)
+    context.dispatch('updateMyInitiatives')
+  },
+
+  viewAllInitiatives: (context) => {
+    context.commit('setStarredOnly', false)
+    context.dispatch('updateMyInitiatives')
+  },
+
   updateMyInitiatives: (context) => {
     context.commit('setLoadingMyInitiatives', true)
-    Vue.axios.get('/1/initiatives/mines').then((response) => {
+    Vue.axios.get('/1/initiatives/mines', {
+      params: {
+        starredOnly: context.state.starredOnly
+      }
+    }).then((response) => {
       context.commit('setMyInitiativesTree', response.data.data)
       context.commit('setLoadingMyInitiatives', false)
     })
   },
+
   updateCurrentInitiativeTree: (context, initiativeId) => {
     Vue.axios.get('/1/initiative/' + initiativeId, {
       params: {

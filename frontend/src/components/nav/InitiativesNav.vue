@@ -22,23 +22,35 @@
         </div>
       </div>
 
-      <div class="w3-row my-initiatives-row">
+      <div v-if="$store.state.user.authenticated" class="w3-row my-initiatives-row">
+        <div class="w3-col s6" :class="{'border-blue-app': starredOnly}">
+          <button @click="viewStarredOnly()" class="w3-button">
+            <img v-if="starredOnly" src="./../../assets/star-on.png" alt="">
+            <img v-else src="./../../assets/star.png" alt="">
+          </button>
+        </div>
+        <div class="w3-col s6 all" :class="{'border-blue-app': !starredOnly}">
+          <button @click="viewAll()" class="w3-button">
+            <b>{{ $t('general.ALL') }}</b>
+          </button>
+        </div>
+      </div>
+      <div v-else class="w3-row">
         <h6 class="w3-center white-text noselect">
-          <span v-if="$store.state.user.authenticated">
-            <i>{{ $t('initiatives.MY_INITIATIVES') }}</i>
-          </span>
-          <span v-else="$store.state.user.authenticated">
             <i>{{ $t('initiatives.CURRENT_INITIATIVE') }}</i>
-          </span>
         </h6>
       </div>
 
-      <div v-if="!loading" class="">
+      <div v-if="!loading" class="initiatives-nav-tree">
         <app-initiative-menu-item v-for="(initiative, ix) in menuInitiatives"
           :initiative="initiative" :key="initiative.id"
           :coord="[ ix ]" class="top-menu-item"
           @initiative-selected="$emit('initiative-selected')">
         </app-initiative-menu-item>
+        <div v-if="menuInitiatives.length === 0" class="w3-center">
+          <i v-if="!starredOnly">{{ $t('initiatives.MY_INITS_EMPTY') }}</i>
+          <i v-else>{{ $t('initiatives.MY_INITS_STARRED_EMPTY') }}</i>
+        </div>
       </div>
       <div v-else class="w3-row w3-center loader-gif-container">
         <img class="loader-gif" src="../../assets/loading.gif" alt="">
@@ -67,6 +79,9 @@ export default {
     },
     menuInitiatives () {
       return this.$store.getters.initiativesTree()
+    },
+    starredOnly () {
+      return this.$store.state.initiativesTree.starredOnly
     }
   },
 
@@ -83,6 +98,12 @@ export default {
     swipeLeft () {
       console.log('swiped left detected')
       this.$store.commit('setExpandNav', false)
+    },
+    viewAll () {
+      this.$store.dispatch('viewAllInitiatives')
+    },
+    viewStarredOnly () {
+      this.$store.dispatch('viewStarredOnlyInitiatives')
     }
   }
 }
@@ -126,6 +147,28 @@ export default {
 }
 
 .my-initiatives-row {
+  text-align: center;
+}
+
+.my-initiatives-row .w3-col {
+  border-bottom: 3px solid;
+  font-size: 18px;
+}
+
+.my-initiatives-row .w3-col button {
+  height: 46px;
+}
+
+.my-initiatives-row .w3-button {
+  width: 100%;
+}
+
+.my-initiatives-row img {
+  width: 25px;
+}
+
+.initiatives-nav-tree {
+  padding-top: 16px;
 }
 
 </style>

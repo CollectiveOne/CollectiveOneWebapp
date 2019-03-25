@@ -7,6 +7,20 @@
       </app-new-initiative-modal>
     </transition>
 
+    <div class="w3-row my-initiatives-row">
+      <div class="w3-col s6" :class="{'border-blue-app': starredOnly}">
+        <button @click="viewStarredOnly()" class="w3-button">
+          <img v-if="starredOnly" src="./../assets/star-on.png" alt="">
+          <img v-else src="./../assets/star.png" alt="">
+        </button>
+      </div>
+      <div class="w3-col s6 all" :class="{'border-blue-app': !starredOnly}">
+        <button @click="viewAll()" class="w3-button">
+          <b>{{ $t('general.ALL') }}</b>
+        </button>
+      </div>
+    </div>
+
     <div v-if="!loading" class="w3-row-padding">
       <div v-if="myInitiatives.length > 0" class="">
         <div v-for="initiative in myInitiatives" class="initiative-card-col">
@@ -19,9 +33,10 @@
       </div>
       <div v-else class="w3-center">
         <div class="w3-row w3-margin-top">
-          <i>{{ $t('initiatives.MY_INITS_EMPTY') }}</i>
+          <i v-if="!starredOnly">{{ $t('initiatives.MY_INITS_EMPTY') }}</i>
+          <i v-else>{{ $t('initiatives.MY_INITS_STARRED_EMPTY') }}</i>
         </div>
-        <div class="w3-row w3-margin-top">
+        <div v-if="!starredOnly" class="w3-row w3-margin-top">
           <button @click="showNewInitiativeModal = true" class="w3-button app-button">
             {{ $t('initiatives.CREATE_ONE') }}
           </button>
@@ -56,18 +71,46 @@ export default {
     },
     myInitiatives () {
       return this.$store.getters.initiativesTreeTop()
+    },
+    starredOnly () {
+      return this.$store.state.initiativesTree.starredOnly
     }
   },
 
   methods: {
     updateCurrentInitiative (id) {
       this.$store.dispatch('updateCurrentInitiativeTree', id)
+    },
+    viewAll () {
+      this.$store.dispatch('viewAllInitiatives')
+    },
+    viewStarredOnly () {
+      this.$store.dispatch('viewStarredOnlyInitiatives')
     }
   }
 }
 </script>
 
 <style scoped>
+
+.my-initiatives-row {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.my-initiatives-row .w3-col {
+  border-bottom: 6px solid #ccc;
+  font-size: 18px;
+}
+
+.my-initiatives-row img {
+  width: 30px;
+}
+
+.my-initiatives-row button {
+  width: 100%;
+  height: 45px;
+}
 
 .initiative-card-col {
   margin-bottom: 32px;

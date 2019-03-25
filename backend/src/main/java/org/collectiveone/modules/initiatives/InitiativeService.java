@@ -55,6 +55,8 @@ import org.collectiveone.modules.tokens.repositories.InitiativeTransferRepositor
 import org.collectiveone.modules.tokens.repositories.TokenMintRepositoryIf;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserDto;
+import org.collectiveone.modules.users.AppUserProfile;
+import org.collectiveone.modules.users.AppUserProfileRepositoryIf;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -119,6 +121,9 @@ public class InitiativeService {
 	
 	@Autowired
 	private ModelSubsectionRepositoryIf modelSubsectionRepository;
+	
+	@Autowired
+	private AppUserProfileRepositoryIf appUserProfileRepository;
 	  
 	
 	@Transactional
@@ -622,15 +627,21 @@ public class InitiativeService {
 	}
 	
 	@Transactional
-	public GetResult<List<InitiativeDto>> getOfUser(UUID userC1Id) {
+	public GetResult<List<InitiativeDto>> getOfUser(UUID userC1Id, Boolean starredOnly) {
 		/* return all super-initiatives (initiatives without parent initiatives) 
 		 * and include all sub-initiativespf each of them */
 		
 		AppUser user = appUserRepository.findByC1Id(userC1Id);
 		
-		/* get all initiatives in which the user is a contributor */
-		List<Initiative> superInitiatives = getSuperInitiativesOfMember(user.getC1Id());
+		List<Initiative> superInitiatives = null;
 		
+		if (starredOnly) {
+			superInitiatives = appUserProfileRepository.getStarredInitiatives(userC1Id);
+		} else {
+			/* get all initiatives in which the user is a contributor */
+			superInitiatives = getSuperInitiativesOfMember(user.getC1Id());
+		}
+			
 		List<InitiativeDto> initiativesDtos = new ArrayList<InitiativeDto>();
 		for (Initiative initiative : superInitiatives) {
 			if (initiative.getStatus() == InitiativeStatus.ENABLED) {
@@ -646,7 +657,7 @@ public class InitiativeService {
 			}
 		}
 		
-		return new GetResult<List<InitiativeDto>>("success", "initiatives retrieved", initiativesDtos);
+		return new GetResult<List<InitiativeDto>>("success", "initiatives retrieved", initiativesDtos);	
 	}
 	
 	@Transactional
@@ -1040,5 +1051,26 @@ public class InitiativeService {
 		
 		return new GetResult<Page<ActivityDto>>("succes", "actvity returned", dtosPage);
 	}
+	
+	@Transactional
+	public PostResult star(UUID initiativeId, Boolean add, UUID userId) {
+		AppUserProfile profile = appUserProfileRepository.findByUser_C1Id(userId);
+		
+		if (add) {
+			profile.getStarredInitiatives().add(initiativeRepository.findById(initiativeId).get());
+		} else {
+			profile.getStarredInitiatives().remove(initiativeRepository.findById(initiativeId).get());
+		}
+				
+		appUserProfileRepository.save(profile);
+		
+		return new PostResult("success", "initiative added to favorites", "");
+	}
+	
+	@Transactional
+	public Boolean isStarred(UUID initiativeId, UUID userId) {
+		return appUserProfileRepository.isStarredInitiative(userId, initiativeId);
+	}
+	
 	
 }

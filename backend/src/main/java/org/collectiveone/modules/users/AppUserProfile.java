@@ -1,5 +1,6 @@
 package org.collectiveone.modules.users;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.collectiveone.modules.files.FileStored;
+import org.collectiveone.modules.initiatives.Initiative;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -70,6 +72,9 @@ public class AppUserProfile {
 	
 	@Column(name = "preferred_locale", length = 32)
 	private String preferredLocale;
+	
+	@OneToMany
+	private List<Initiative> starredInitiatives = new ArrayList<Initiative>();
 	
 
 	public UUID getId() {
@@ -183,7 +188,13 @@ public class AppUserProfile {
 	public void setPreferredLocale(String preferredLocale) {
 		this.preferredLocale = preferredLocale;
 	}
-	
-	
 
+	public List<Initiative> getStarredInitiatives() {
+		return starredInitiatives;
+	}
+
+	public void setStarredInitiatives(List<Initiative> starredInitiatives) {
+		this.starredInitiatives = starredInitiatives;
+	}
+	
 }

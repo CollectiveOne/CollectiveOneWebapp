@@ -21,6 +21,7 @@ public class InitiativeDto {
 	private List<InitiativeDto> parents = new ArrayList<InitiativeDto>();
 	private InitiativeMembersDto initiativeMembers;
 	private List<MemberDto> loggedMembership;
+	private Boolean isStarred;
 	
 	private ModelSectionDto topModelSection;
 	
@@ -89,6 +90,12 @@ public class InitiativeDto {
 	}
 	public void setTopModelSection(ModelSectionDto topModelSection) {
 		this.topModelSection = topModelSection;
+	}
+	public Boolean getIsStarred() {
+		return isStarred;
+	}
+	public void setIsStarred(Boolean isStarred) {
+		this.isStarred = isStarred;
 	}
 	
 }

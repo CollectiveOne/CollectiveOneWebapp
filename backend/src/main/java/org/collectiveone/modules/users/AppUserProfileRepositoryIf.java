@@ -1,7 +1,9 @@
 package org.collectiveone.modules.users;
 
+import java.util.List;
 import java.util.UUID;
 
+import org.collectiveone.modules.initiatives.Initiative;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +25,20 @@ public interface AppUserProfileRepositoryIf extends CrudRepository<AppUserProfil
 		String endpointCheck = getEndpoint(userId, endpoint);
 		return endpointCheck != null;
 	} 
+	
+	@Query("SELECT COUNT(inits) FROM AppUserProfile profile "
+			+ "JOIN profile.starredInitiatives inits "
+			+ "WHERE inits.id = :initiativeId "
+			+ "AND profile.user.c1Id = :userId")
+	Integer countStarred(@Param("userId") UUID userId, @Param("initiativeId") UUID initiativeId);
+	
+	default Boolean isStarredInitiative(UUID userId, UUID initiativeId) {
+		return countStarred(userId, initiativeId) > 0;
+	}
+	
+	@Query("SELECT inits FROM AppUserProfile profile "
+			+ "JOIN profile.starredInitiatives inits "
+			+ "WHERE profile.user.c1Id = :userId "
+			+ "ORDER BY inits.meta.name ASC")
+	List<Initiative> getStarredInitiatives(@Param("userId") UUID userId);
 }

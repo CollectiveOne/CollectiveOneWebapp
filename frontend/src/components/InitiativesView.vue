@@ -11,10 +11,15 @@
   <!-- Initiatives View -->
   <div class="w3-row initiatives-row">
 
-    <transition name="slideRightLeft">
+    <transition name="slideRightLeft"
+      @after-enter="enabledClickOutside = true"
+      @before-leave="enabledClickOutside = false">
+
       <div v-show="expandNav" class="dark-gray nav-container-cell w3-sidebar"
         @touchstart="touchStart($event)"
-        @touchend="touchEnd($event)">
+        @touchend="touchEnd($event)"
+        v-click-outside="clickedOutside">
+
         <app-initiatives-nav @initiative-selected="initiativeSelected()" @new-initiative="showNewInitiativeModal = true">
         </app-initiatives-nav>
       </div>
@@ -48,7 +53,8 @@ export default {
       showContent: true,
       showNewInitiativeModal: false,
       touchStartX: 0,
-      touchStartY: 0
+      touchStartY: 0,
+      enabledClickOutside: false
     }
   },
 
@@ -87,6 +93,11 @@ export default {
             this.$store.commit('setExpandNav', false)
           }
         }
+      }
+    },
+    clickedOutside () {
+      if (this.enabledClickOutside) {
+        this.$store.commit('setExpandNav', false)
       }
     }
   },

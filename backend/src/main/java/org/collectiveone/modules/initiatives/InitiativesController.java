@@ -98,14 +98,12 @@ public class InitiativesController extends BaseController {
 	
 	@RequestMapping(path = "/initiative/{initiativeId}", method = RequestMethod.GET)
 	public GetResult<InitiativeDto> getInitiative(
-			@PathVariable("initiativeId") String initiativeIdStr, 
+			@PathVariable("initiativeId") UUID initiativeId, 
 			@RequestParam(defaultValue = "false") boolean addAssetsIds,
 			@RequestParam(defaultValue = "false") boolean addSubinitiatives,
 			@RequestParam(defaultValue = "false") boolean addParents,
 			@RequestParam(defaultValue = "false") boolean addMembers,
 			@RequestParam(defaultValue = "false") boolean addLoggedUser) {
-		
-		UUID initiativeId = UUID.fromString(initiativeIdStr);
 		
 		if (!initiativeService.canAccess(initiativeId, getLoggedUserId())) {
 			return new GetResult<InitiativeDto>("error", "access denied", null);
@@ -114,6 +112,8 @@ public class InitiativesController extends BaseController {
 		InitiativeDto initiativeDto = null;
 		
 		initiativeDto = initiativeService.getLight(initiativeId);
+		
+		initiativeDto.setIsStarred(initiativeService.isStarred(initiativeId, getLoggedUserId()));
 		
 		if(addAssetsIds) {
 			initiativeDto.setAssets(initiativeService.getInitiativeAssetsDtoLight(initiativeId, false));
@@ -154,12 +154,14 @@ public class InitiativesController extends BaseController {
 	}
 	
 	@RequestMapping(path = "/initiatives/mines", method = RequestMethod.GET)
-	public GetResult<List<InitiativeDto>> myInitiatives() {
+	public GetResult<List<InitiativeDto>> myInitiatives(
+			@RequestParam(name = "starredOnly", defaultValue = "false") Boolean starredOnly) {
+		
 		if (getLoggedUser() == null) {
 			return new GetResult<List<InitiativeDto>>("error", "endpoint enabled users only", null);
 		}
 		
-		return initiativeService.getOfUser(getLoggedUser().getC1Id());
+		return initiativeService.getOfUser(getLoggedUserId(), starredOnly);
 	}
 	
 	@RequestMapping(path = "/initiatives/search", method = RequestMethod.PUT)
@@ -359,6 +361,34 @@ public class InitiativesController extends BaseController {
 		}
 		
 		return initiativeService.getActivityUnderInitiative(initiativeId, PageRequest.of(page, size), onlyMessages);
+	}
+	
+	@RequestMapping(path = "/initiative/{initiativeId}/star", method = RequestMethod.PUT) 
+	public PostResult favorite(
+			@PathVariable("initiativeId") UUID initiativeId) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		return initiativeService.star(
+				initiativeId, 
+				true,
+				getLoggedUserId());
+	}
+	
+	@RequestMapping(path = "/initiative/{initiativeId}/unstar", method = RequestMethod.PUT) 
+	public PostResult unfavorite(
+			@PathVariable("initiativeId") UUID initiativeId) {
+		
+		if (getLoggedUser() == null) {
+			return new PostResult("error", "endpoint enabled users only", null);
+		}
+		
+		return initiativeService.star(
+				initiativeId, 
+				false,
+				getLoggedUserId());
 	}
 	
 }

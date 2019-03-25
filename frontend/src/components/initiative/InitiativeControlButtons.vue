@@ -28,6 +28,7 @@
           @edit="showEditInitiative()"
           @newSubinitiative="showNewSubInitiative()"
           @delete="deleteInitiative()"
+          @addFavorite="toggleFavorite()"
           :items="menuItems">
         </app-drop-down-menu>
 
@@ -87,8 +88,14 @@ export default {
     isLoggedAnAdmin () {
       return this.$store.getters.isLoggedAnAdmin
     },
+
+    isStarred () {
+      return this.initiative.isStarred
+    },
+
     menuItems () {
       let items = []
+
       if (this.isLoggedAnAdmin) {
         items.push({
           text: this.$t('general.EDIT'),
@@ -112,6 +119,12 @@ export default {
           faIcon: 'fa-times'
         })
       }
+
+      items.push({
+        text: this.isStarred ? this.$t('initiatives.REMOVE_FROM_FAVORITES') : this.$t('initiatives.ADD_TO_FAVORITES'),
+        value: 'addFavorite',
+        faIcon: 'fa-star'
+      })
 
       return items
     },
@@ -161,6 +174,13 @@ export default {
     },
     clickOutsideMenu () {
       this.expanded = false
+    },
+    toggleFavorite () {
+      this.axios.put('/1/initiative/' + this.initiative.id + (this.isStarred ? '/unstar' : '/star'))
+     .then((response) => {
+       this.$store.dispatch('refreshInitiative')
+       this.$store.dispatch('updateMyInitiatives')
+     })
     }
   },
 

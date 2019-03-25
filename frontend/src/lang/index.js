@@ -110,7 +110,8 @@ const translations = {
       'SETTINGS': 'Settings',
       'LANGUAGE': 'Language',
       'MOVE': 'move',
-      'IN': 'in'
+      'IN': 'in',
+      'ALL': 'All'
     },
     landing: {
       'PRINCIPLES': 'PRINCIPLES',
@@ -152,6 +153,7 @@ const translations = {
       'MY_INITIATIVES': 'My Initiatives',
       'PUBLIC_INITIATIVES': 'Public Initiatives',
       'MY_INITS_EMPTY': 'you are not yet part of any initiative',
+      'MY_INITS_STARRED_EMPTY': 'you dont have any starred initiative',
       'NEW_SUBINITIATIVE': 'new subinitiative',
       'CREATE_ONE': 'create one',
       'NEW': 'new initiative',
@@ -176,7 +178,9 @@ const translations = {
       'CONFIRM_DELETE_MSG': '<b>Warning:</b> This will delete this initiative and all its subinitiatives and, if there is a parent initiative, transfer all its assets back to it. Please confirm.',
       'DELETE_WARNING': '<b>Warning:</b> Are you sure you want to completely delete the initiative "{name}"? This will delete all its contents.',
       'SUBINITIATIVES': 'SUBINITIATIVES',
-      'ACCESS_DENIED': 'Sorry, it seems you dont have access to this content.'
+      'ACCESS_DENIED': 'Sorry, it seems you dont have access to this content.',
+      'ADD_TO_FAVORITES': 'add to favorites',
+      'REMOVE_FROM_FAVORITES': 'remove from favorites'
     },
     members: {
       'WANT_TO_CONTRIB_Q': 'Want to contribute?',
