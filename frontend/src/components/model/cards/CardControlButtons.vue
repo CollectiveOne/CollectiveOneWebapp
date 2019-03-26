@@ -29,6 +29,7 @@
           @addToSection="addToSection()"
           @moveToSection="moveToSection()"
           @remove="remove()"
+          @enableDrag="enableDrag()"
           :items="menuItems">
         </app-drop-down-menu>
 
@@ -187,6 +188,15 @@ export default {
           faIcon: 'fa-arrow-right' })
       }
 
+      if (this.isLoggedAnEditor) {
+        menuItems.push({
+          text: this.$store.state.support.enableCardDraggingState ?
+            this.$t('model.DISABLE_DRAG_AND_DROP') :
+            this.$t('model.ENABLE_DRAG_AND_DROP'),
+          value: 'enableDrag',
+          faIcon: 'fa-arrows' })
+      }
+
       if (this.isLoggedAnEditor && !this.isConsent) {
         menuItems.push({
           text: this.$t('model.START_CONSENT'),
@@ -255,6 +265,10 @@ export default {
     },
     remove () {
       this.removeIntent = true
+    },
+    enableDrag () {
+      this.togglePopperShow = !this.togglePopperShow
+      this.$store.commit('setCardDraggingState', true)
     },
     detachConfirmed () {
       this.axios.put('/1/model/section/' + this.inSection.id + '/detachCardWrapper/' + this.cardWrapper.id,

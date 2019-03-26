@@ -2,7 +2,7 @@
   <div v-if="cardWrapper" class="card-base-div">
 
     <div class="card-content-container"
-      :draggable="$store.state.support.triggerCardDraggingState && isDraggable"
+      :draggable="$store.state.support.enableCardDraggingState && isDraggable"
       @dragstart="dragStart($event)">
 
       <component
@@ -23,11 +23,14 @@
       </component>
 
       <transition name="fadeenter">
-        <div v-if="$store.state.support.triggerCardDraggingState" class="cover-when-draggable">
+        <div v-if="$store.state.support.enableCardDraggingState" class="cover-when-draggable">
           <div class="cover-when-draggable-content">
-            <span>
+            <button class="w3-button app-button">
               <i class="fa fa-arrows" aria-hidden="true"></i> move
-            </span>
+            </button>
+            <button @click="cancelDrag()" class="w3-button app-button-light w3-margin-left">
+              <i class="fa fa-times" aria-hidden="true"></i> cancel
+            </button>
           </div>
         </div>
       </transition>
@@ -172,6 +175,9 @@ export default {
         fromSection: this.inSection
       }
       this.$store.commit('setDraggingElement', moveCardElement)
+    },
+    cancelDrag () {
+      this.$store.commit('setCardDraggingState', false)
     }
   },
 
@@ -205,13 +211,6 @@ export default {
 }
 
 .cover-when-draggable-content {
-  max-width: 80%;
-  max-height: 80%;
-  margin: 0 auto;
-  background-color: #15a5cc;
-  color: white;
-  border-radius: 12px;
-  padding: 3px 12px;
 }
 
 .card-content-container,

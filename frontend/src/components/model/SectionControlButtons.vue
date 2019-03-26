@@ -63,6 +63,7 @@
           @configNotifications="configNotifications()"
           @resetSubsectionsOrder="resetSubsectionsOrder()"
           @resetCardsOrder="resetCardsOrder()"
+          @enableDrag="enableDrag()"
           :items="menuItems">
         </app-drop-down-menu>
 
@@ -202,6 +203,15 @@ export default {
 
       if (this.isLoggedAnEditor && this.inSection !== null) {
         menuItems.push({
+          text: this.$store.state.support.enableSectionDraggingState ?
+            this.$t('model.DISABLE_DRAG_AND_DROP') :
+            this.$t('model.ENABLE_DRAG_AND_DROP'),
+          value: 'enableDrag',
+          faIcon: 'fa-arrows' })
+      }
+
+      if (this.isLoggedAnEditor && this.inSection !== null) {
+        menuItems.push({
           text: this.$t('general.REMOVE'),
           value: 'remove',
           faIcon: 'fa-times' })
@@ -328,8 +338,9 @@ export default {
           console.log(error)
         })
     },
-    clickOutsideMenu () {
-      this.expanded = false
+    enableDrag () {
+      this.toggleMenu = !this.toggleMenu
+      this.$store.commit('setSectionDraggingState', true)
     }
   },
 

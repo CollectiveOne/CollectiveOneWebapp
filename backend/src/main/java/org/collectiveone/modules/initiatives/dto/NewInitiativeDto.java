@@ -1,5 +1,6 @@
 package org.collectiveone.modules.initiatives.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.collectiveone.modules.tokens.dto.AssetsDto;
@@ -15,12 +16,23 @@ public class NewInitiativeDto {
 	private String color;
 	private Boolean modelEnabled;
 	private String visibility;
-	private List<MemberDto> members;
+	private List<MemberDto> members = new ArrayList<MemberDto>();
 	private boolean createToken;
 	private AssetsDto ownTokens;
-	private List<TransferDto> assetsTransfers;
-	private List<InitiativeTagDto> tags;
+	private List<TransferDto> assetsTransfers = new ArrayList<TransferDto>();
+	private List<InitiativeTagDto> tags = new ArrayList<InitiativeTagDto>();
 	
+	
+	public NewInitiativeDto() {
+		super();
+	}
+	
+	public NewInitiativeDto(String name, String driver) {
+		super();
+		this.name = name;
+		this.driver = driver;
+		this.createToken = false;
+	}
 	
 	public boolean getAsSubinitiative() {
 		return asSubinitiative;

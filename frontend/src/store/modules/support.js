@@ -11,8 +11,8 @@ const state = {
   windowIsFocus: true,
   isTouchScreen: false,
   draggingElement: null,
-  triggerSectionDraggingState: false,
-  triggerCardDraggingState: false,
+  enableSectionDraggingState: false,
+  enableCardDraggingState: false,
   createNewCardLocation: null
 }
 
@@ -62,11 +62,17 @@ const mutations = {
   setDraggingElement: (state, payload) => {
     state.draggingElement = payload
   },
-  triggerSectionDraggingState: (state) => {
-    state.triggerSectionDraggingState = !state.triggerSectionDraggingState
+  toggleSectionDraggingState: (state) => {
+    state.enableSectionDraggingState = !state.enableSectionDraggingState
   },
-  triggerCardDraggingState: (state) => {
-    state.triggerCardDraggingState = !state.triggerCardDraggingState
+  setSectionDraggingState: (state, payload) => {
+    state.enableSectionDraggingState = payload
+  },
+  toggleCardDraggingState: (state) => {
+    state.enableCardDraggingState = !state.enableCardDraggingState
+  },
+  setCardDraggingState: (state, payload) => {
+    state.enableCardDraggingState = payload
   },
   createNewCardLocation: (state, payload) => {
     state.createNewCardLocation = payload

@@ -59,6 +59,7 @@ import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.collectiveone.modules.users.PushSubscription;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -70,6 +71,9 @@ import nl.martijndwars.webpush.PushService;
 
 @Service
 public class ActivityService {
+	
+	@Autowired
+	private Environment env;
 	
 	@Autowired
 	private InitiativeService initiativeService;
@@ -1549,7 +1553,8 @@ public class ActivityService {
 				}
 				
 				/* push notification to user endpoint */
-				if (notification.getPushState() == NotificationState.PENDING) {
+				if (notification.getPushState() == NotificationState.PENDING
+						&& env.getProperty("collectiveone.webapp.send-push-enabled").equalsIgnoreCase("true")) {
 					
 					byte[] payload = {};
 					

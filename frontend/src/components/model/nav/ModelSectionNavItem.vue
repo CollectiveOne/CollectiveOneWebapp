@@ -3,7 +3,7 @@
   <div class="w3-row section-nav-item-container">
     <div class="w3-row section-nav-item-first-row"
       :class="rowClass"
-      :draggable="$store.state.support.triggerSectionDraggingState"
+      :draggable="$store.state.support.enableSectionDraggingState"
       @dragstart="dragStart($event)"
       @dragover.prevent="draggingOver($event)"
       @dragleave.prevent="draggingLeave()"
@@ -66,7 +66,7 @@
         <app-section-control-buttons
           :section="section"
           :inSection="inSection"
-          :draggable="$store.state.support.triggerSectionDraggingState"
+          :draggable="$store.state.support.enableSectionDraggingState"
           :showDetach="alsoInSections.length > 0"
           @section-removed="sectionRemoved()"
           @section-detached="sectionDetached($event)"
@@ -75,7 +75,12 @@
       </div>
 
       <div v-if="draggingEnabled" class="drag-message-div">
-        <span><i class="fa fa-arrows" aria-hidden="true"></i></span>
+        <button class="w3-button app-button">
+          <i class="fa fa-arrows" aria-hidden="true"></i> move
+        </button>
+        <button @click="cancelDrag()" class="w3-button app-button-light w3-margin-left">
+          <i class="fa fa-times" aria-hidden="true"></i> cancel
+        </button>
       </div>
     </div>
 
@@ -282,7 +287,7 @@ export default {
       }
     },
     draggingEnabled () {
-      return this.$store.state.support.triggerSectionDraggingState
+      return this.$store.state.support.enableSectionDraggingState
     },
     popperOptions () {
       return {
@@ -550,6 +555,9 @@ export default {
       }
 
       this.$store.commit('setDraggingElement', null)
+    },
+    cancelDrag () {
+      this.$store.commit('setSectionDraggingState', false)
     }
   },
 
@@ -725,14 +733,14 @@ export default {
 }
 
 .drag-message-div {
-  top: 4px;
-  right: 12px;
   position: absolute;
-  background-color: rgba(21, 165, 204, 0.8);
-  color: white;
-  border-radius: 6px;
-  padding: 3px 6px;
-  cursor: move;
+  right: 10px;
+  top: 6px;
+}
+
+.drag-message-div .w3-button {
+  height: 22px;
+  padding: 3px 12px;
 }
 
 </style>

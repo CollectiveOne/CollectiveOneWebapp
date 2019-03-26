@@ -841,6 +841,12 @@ public class ModelService {
 		ModelCardWrapper cardWrapper = modelCardWrapperRepository.findById(cardWrapperId).get();
 		ModelSection section = modelSectionRepository.findById(sectionId).get();
 		
+		ModelCardWrapperAddition onCardWrapperAddition = getOnCardWrapperAdditionFromId(
+				onCardWrapperId, 
+				sectionId, 
+				scope, 
+				requestByUserId);
+		
 		/* check if this card was already deleted by this adder in this section */
 		ModelCardWrapperAddition cardWrapperAddition = null;
 		
@@ -863,12 +869,6 @@ public class ModelService {
 		
 		cardWrapperAddition = modelCardWrapperAdditionRepository.save(cardWrapperAddition);
 		
-		ModelCardWrapperAddition onCardWrapperAddition = getOnCardWrapperAdditionFromId(
-				onCardWrapperId, 
-				sectionId, 
-				scope, 
-				requestByUserId);
-				
 		if (onCardWrapperAddition != null) {
 			String result = linkOrderedElement(cardWrapperAddition, onCardWrapperAddition, isBefore); 
 			if (result != "success") {
@@ -1419,6 +1419,12 @@ public class ModelService {
 		ModelCardWrapperAddition cardWrapperAdditionFrom = 
 				modelCardWrapperAdditionRepository.findBySectionAndCardWrapperVisibleToUser(fromSectionId, cardWrapperId, requestedById);
 		
+		ModelCardWrapperAddition onCardWrapperAddition = getOnCardWrapperAdditionFromId(
+				onCardWrapperId, 
+				toSectionId,
+				cardWrapperAdditionFrom.getScope(), 
+				requestedById);
+		
 		ModelCardWrapperAddition cardWrapperAdditionTo = null;
 		
 		if (!fromSectionId.equals(toSectionId)) {
@@ -1448,12 +1454,6 @@ public class ModelService {
 			unlinkOrderedElement(cardWrapperAdditionFrom);
 			cardWrapperAdditionTo = cardWrapperAdditionFrom;
 		}
-		
-		ModelCardWrapperAddition onCardWrapperAddition = getOnCardWrapperAdditionFromId(
-				onCardWrapperId, 
-				toSectionId,
-				cardWrapperAdditionFrom.getScope(), 
-				requestedById);
 		
 		/* save after finding the onCardWrapperAddition */
 		modelCardWrapperAdditionRepository.save(cardWrapperAdditionTo);

@@ -43,7 +43,7 @@ export const sectionElementsMixin = {
       return this.orderType === 'sections'
     },
     isDraggable () {
-      return this.$store.state.support.triggerCardDraggingState
+      return this.$store.state.support.enableCardDraggingState
     },
     isLoggedAnEditor () {
       return this.$store.getters.isLoggedAnEditor

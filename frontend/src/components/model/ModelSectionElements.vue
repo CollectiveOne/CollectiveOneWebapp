@@ -50,7 +50,7 @@
         @updateQuery="updateQuery()"
         @cardsSortByUpdated="cardSortBy = $event"
         @downloadContent="downloadContent()"
-        @enableDraggable="enableDraggable()">
+        @toggleDraggable="toggleDraggable()">
       </app-section-control-row>
 
       <div class="elements-container"
@@ -215,8 +215,8 @@ export default {
   },
 
   methods: {
-    enableDraggable () {
-      this.$store.commit('triggerCardDraggingState')
+    toggleDraggable () {
+      this.$store.commit('toggleCardDraggingState')
     },
     messagesContent () {
       if (this.$route.name !== 'ModelSectionMessages') {

@@ -270,14 +270,14 @@
 
         <popper :key="$store.state.support.isTouchScreen + Math.random()*100000000"
           :trigger="$store.state.support.isTouchScreen ? 'long-press' : 'hover'"
-          :append-to-body="true" 
+          :append-to-body="true"
           :options="popperOptions" :delay-on-mouse-in="1200" :delay-on-mouse-out="800">
           <app-help-popper
             :title="(isDraggable ? $t('general.DISABLE') : $t('general.ENABLE')) + ' ' + $t('help.ENABLE-DRAG-AND-DROP-TT')"
             :details="$t('help.ENABLE-DRAG-AND-DROP-CARDS-DET')">
           </app-help-popper>
 
-          <div slot="reference" v-if="isLoggedAnEditor" @click="$emit('enableDraggable')" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
+          <div slot="reference" v-if="isLoggedAnEditor" @click="$emit('toggleDraggable')" class="w3-left control-btn" :class="{'control-btn-selected': isDraggable}">
             <img src="./../../assets/move-icon.svg" alt="">
           </div>
         </popper>

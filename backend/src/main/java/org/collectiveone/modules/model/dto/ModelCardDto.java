@@ -14,6 +14,17 @@ public class ModelCardDto {
 	private ModelScope newScope;
 	private FileStoredDto imageFile;
 	
+	
+	public ModelCardDto() {
+		super();
+	}
+	
+	public ModelCardDto(String text, ModelScope newScope) {
+		super();
+		this.text = text;
+		this.newScope = newScope;
+	}
+
 	public ModelCard toEntity(ModelCard card, ModelCardDto cardDto, FileStored imageFile) {
 		
 		if (card == null) card = new ModelCard();

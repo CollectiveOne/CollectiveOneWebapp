@@ -465,7 +465,9 @@ const translations = {
       'ADD_TO_SECTION': 'add to section',
       'MOVE_CARD': 'Move Card',
       'MOVE_TO': 'Move to',
-      'ADD_ALSO_TO': 'Add also in'
+      'ADD_ALSO_TO': 'Add also in',
+      'ENABLE_DRAG_AND_DROP': 'move manually',
+      'DISABLE_DRAG_AND_DROP': 'disable manual move'
     },
     help: {
       'MESSAGES-TAB-TT': 'messages',

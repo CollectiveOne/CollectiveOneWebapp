@@ -37,6 +37,17 @@ public class ModelSectionDto {
 	private List<ModelSubsectionDto> originSubsections = new ArrayList<ModelSubsectionDto>();
 	
 	
+	public ModelSectionDto() {
+		super();
+	}
+
+	public ModelSectionDto(String title, String description, ModelScope scope) {
+		super();
+		this.title = title;
+		this.description = description;
+		this.scope = scope;
+	}
+
 	public ModelSection toEntity(ModelSection section, ModelSectionDto sectionDto) {
 		
 		if (section == null) section = new ModelSection();

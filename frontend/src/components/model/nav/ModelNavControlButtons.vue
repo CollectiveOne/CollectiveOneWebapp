@@ -81,7 +81,7 @@ export default {
 
   computed: {
     isDraggable () {
-      return this.$store.state.support.triggerSectionDraggingState
+      return this.$store.state.support.enableSectionDraggingState
     },
     showPrivate () {
       return this.$store.state.viewParameters.showPrivateSections
@@ -109,7 +109,7 @@ export default {
 
   methods: {
     toggleDraggable () {
-      this.$store.commit('triggerSectionDraggingState')
+      this.$store.commit('toggleSectionDraggingState')
     },
     showPrivateClick () {
       this.$store.commit('toggleShowPrivateSections')
