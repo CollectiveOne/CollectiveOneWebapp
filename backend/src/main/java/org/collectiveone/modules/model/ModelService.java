@@ -670,7 +670,12 @@ public class ModelService {
 				break;
 				
 			case PRIVATE:
-			case SHARED:				
+			case SHARED:
+				if (onElement.getScope() == ModelScope.COMMON) {
+					/* Non common elements must be placed relative to common ones */
+					isBefore = false;
+				}
+				
 				break;
 		}
 		

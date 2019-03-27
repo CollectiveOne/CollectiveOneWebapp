@@ -441,6 +441,12 @@ export default {
         }
 
         if (draggingElement.type === 'MOVE_SECTION') {
+
+          /* prepvent common sections from being placed relative to non common sections */
+          if (draggingElement.section.scope === 'COMMON' && this.section.scope !== 'COMMON') {
+            return
+          }
+
           let ratioX = (event.clientX - event.currentTarget.offsetLeft) / event.currentTarget.offsetWidth
           // let ratioY = (event.clientY - event.currentTarget.offsetTop) / event.currentTarget.offsetHeight
           if (ratioX < 0.5) {
@@ -501,6 +507,10 @@ export default {
       }
 
       if (dragData.type === 'MOVE_SECTION') {
+        if (dragData.scope === 'COMMON' && this.section.scope !== 'COMMON') {
+          return
+        }
+
         if (!event.ctrlKey && dragData.fromSectionId !== '') {
           moveFlag = true
         } else {

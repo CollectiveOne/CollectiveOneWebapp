@@ -268,7 +268,7 @@ public class InitiativeService {
 		/* Basic properties*/
 		initiative.setCreator(creator);
 		initiative.setStatus(InitiativeStatus.ENABLED);
-		
+				
 		InitiativeMeta meta = new InitiativeMeta();
 		
 		meta.setName(initiativeDto.getName());
@@ -293,6 +293,9 @@ public class InitiativeService {
 		initiative.setGovernance(governance);
 		
 		initiative = initiativeRepository.save(initiative);
+		
+		creator.getProfile().getStarredInitiatives().add(initiative);
+		appUserRepository.save(creator);
 		
 		activityService.newInitiativeCreated(initiative, initiative.getCreator());
 		

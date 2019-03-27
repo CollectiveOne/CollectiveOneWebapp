@@ -177,6 +177,7 @@ export default {
         this.draggingOverCardWrapper = cardWrapper
       } else {
         this.draggingOverCardWrapper = null
+        return
       }
 
       let ratioY = (event.screenY - event.currentTarget.getBoundingClientRect().top - 100) / event.currentTarget.offsetHeight
