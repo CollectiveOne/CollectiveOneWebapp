@@ -136,12 +136,12 @@ public interface NotificationRepositoryIf extends CrudRepository<Notification, U
 	
 	@Query("SELECT notif FROM Notification notif "
 			+ "JOIN notif.subscriber subs "
-			+ "WHERE subs.emailSummaryPeriodConfig = ?1 "
-			+ "AND notif.emailSummaryState < ?2 "
+			+ "WHERE subs.emailSummaryPeriodConfig = :emailSummaryCongif "
+			+ "AND notif.emailSummaryState = :notifEmailState "
 			+ "ORDER BY subs.user.c1Id")
 	List<Notification> findByPeriodConfigAndEmailSummaryStateOrderedByUser(
-			SubscriberEmailSummaryPeriodConfig config, 
-			NotificationState notificationEmailState);
+			@Param("emailSummaryCongif") SubscriberEmailSummaryPeriodConfig config, 
+			@Param("notifEmailState") NotificationState notificationEmailState);
 	
 	@Modifying
 	@Query("DELETE FROM Notification notif "

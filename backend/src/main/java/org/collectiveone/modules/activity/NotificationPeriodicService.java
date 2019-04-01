@@ -87,7 +87,8 @@ public class NotificationPeriodicService {
 		
 		/* delete repeated entries */
 		if (emailTrackings.size() > 1) {
-			notificationEmailTrackingRepository.deleteAll(emailTrackings.subList(1, emailTrackings.size() - 1));
+			List<NotificationEmailTracking> toDelete = emailTrackings.subList(1, emailTrackings.size());
+			notificationEmailTrackingRepository.deleteAll(toDelete);
 			emailTracking = emailTrackings.get(0);
 		}
 		
@@ -120,7 +121,7 @@ public class NotificationPeriodicService {
 		
 		/* delete repeated entries */
 		if (emailTrackings.size() > 1) {
-			notificationEmailTrackingRepository.deleteAll(emailTrackings.subList(1, emailTrackings.size() - 1));
+			notificationEmailTrackingRepository.deleteAll(emailTrackings.subList(1, emailTrackings.size()));
 			emailTracking = emailTrackings.get(0);
 		}
 		
